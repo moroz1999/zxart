@@ -1,0 +1,1 @@
+{foreach from=$partiesList item=party name=partiesList}<a class='' href='{$party->URL}'>{$party->title}</a>, {$party->getCountryTitle()}, {$party->getCityTitle()}, {$party->getYear()}<br>{/foreach}

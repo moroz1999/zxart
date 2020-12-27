@@ -1,0 +1,1 @@
+{include file=$theme->template("search.set.game.tpl")}

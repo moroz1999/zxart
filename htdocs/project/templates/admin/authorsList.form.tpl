@@ -1,0 +1,43 @@
+{assign var='formData' value=$element->getFormData()}
+{assign var='formErrors' value=$element->getFormErrors()}
+{assign var='formNames' value=$element->getFormNames()}
+<form action="{$element->URL}" method="post" enctype="multipart/form-data">
+	<table class='form_table'>
+		<tr {if $formErrors.title} class="form_error"{/if}>
+			<td class="form_label">
+				{translations name='field.name'}:
+			</td>
+			<td colspan='2'>
+				<input class='input_component' type="text" value="{$formData.title}" name="{$formNames.title}" />
+			</td>
+		</tr>
+		<tr {if $formErrors.type} class="form_error"{/if}>
+			<td class="form_label">
+				{translations name='field.type'}:
+			</td>
+			<td colspan='2'>
+				<select class="dropdown_placeholder" name="{$formNames.type}" autocomplete='off'>
+					<option value=''></option>
+					<option value='latest' {if $formData.type == 'latest'}selected="selected"{/if}>latest</option>
+					<option value='popular' {if $formData.type == 'popular'}selected="selected"{/if}>popular</option>
+					<option value='active' {if $formData.type == 'active'}selected="selected"{/if}>active</option>
+					<option value='letters' {if $formData.type == 'letters'}selected="selected"{/if}>letters</option>
+				</select>
+			</td>
+		</tr>
+		<tr {if $formErrors.items} class="form_error"{/if}>
+			<td class="form_label">
+				{translations name='field.items'}:
+			</td>
+			<td colspan='2'>
+				<select class="dropdown_placeholder" name="{$formNames.items}" autocomplete='off'>
+					<option value=''></option>
+					<option value='graphics' {if $formData.items == 'graphics'}selected="selected"{/if}>graphics</option>
+					<option value='music' {if $formData.items == 'music'}selected="selected"{/if}>music</option>
+					<option value='all' {if $formData.items == 'all'}selected="selected"{/if}>all</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+	{include file=$theme->template('block.controls.tpl')}
+</form>

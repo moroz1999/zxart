@@ -1,0 +1,1 @@
+{$number}. <a class='' href='{$element->getUrl()}'>{$element->title}</a> {$element->getCountryTitle()} {$element->getCityTitle()}<br>

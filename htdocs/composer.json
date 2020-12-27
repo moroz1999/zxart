@@ -1,0 +1,12 @@
+{
+  "name": "artweb-ou/project",
+  "description": "Trickster CMS based project",
+  "license": "proprietary",
+  "require": {
+    "artweb-ou/trickster-cms": "^4.0",
+    "moroz1999/sxg": "*",
+    "moroz1999/zx-image": "5.2.0.1",
+    "moroz1999/zx-files": "*",
+    "ext-json": "*"
+  }
+}

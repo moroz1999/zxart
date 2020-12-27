@@ -1,0 +1,1 @@
+{section start=0 loop=80 name='hr'}{$symbol}{/section}

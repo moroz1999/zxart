@@ -1,0 +1,10 @@
+.idea
+/db
+/design
+/htdocs/temporary
+/htdocs/trickster
+/htdocs/uploads
+/htdocs/uploads_releases
+/htdocs/userfiles
+/htdocs/vendor
+/htdocs/project/config/live

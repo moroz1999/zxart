@@ -1,0 +1,1 @@
+{if isset($lettersInfo)}{foreach from=$lettersInfo item=letter}<a href="{$letter.url}">{$letter.title}</a> {/foreach}{/if}

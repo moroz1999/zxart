@@ -1,0 +1,1 @@
+{$number}. <a class='' href='{$element->getUrl()}'>{$element->title}</a> {if $groupElement = $element->getGroupElement()}<a href="{$groupElement->getUrl()}">{$groupElement->title}</a>{/if}<br>

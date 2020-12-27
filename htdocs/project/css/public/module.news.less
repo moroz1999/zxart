@@ -1,0 +1,20 @@
+/********************************************************
+/*  COMPONENT
+/********************************************************/
+.latestnews_news.news_list {
+	.grid_container;
+}
+
+.news_tiny {
+	.grid_item(4);
+	background-color: @secondary_color;
+	font-size: 0.9em;
+	min-height: 8em;
+}
+
+@media (max-width: @screen_breakpoint_sm_max) {
+
+	.news_tiny {
+		min-height: auto;
+	}
+}

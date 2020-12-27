@@ -1,0 +1,1 @@
+{if !empty($breadcrumbsManager)}{if $currentLocation = $breadcrumbsManager->getBreadcrumbs()}{foreach $currentLocation as $key=>$locationElement}<a href="{$locationElement.URL}">{$locationElement.title}</a>{if !$locationElement@last} / {/if}{/foreach}{/if}{/if}

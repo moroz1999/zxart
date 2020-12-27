@@ -1,0 +1,2 @@
+{$number}. <a class='' href='{$element->getUrl()}'>{$element->title}</a> {foreach $element->getGroupsList() as $groupElement}<a href="{$groupElement->getUrl()}">{$groupElement->title}</a>{if !$groupElement@last}, {/if}{/foreach}<br>
+{if $element->realName}{$element->realName}, {/if}{if $element->getCountryTitle()}{$element->getCountryTitle()}, {/if}{if $element->getCityTitle()}{$element->getCityTitle()}{/if}<br><br>

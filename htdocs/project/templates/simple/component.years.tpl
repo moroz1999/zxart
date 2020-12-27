@@ -1,0 +1,1 @@
+{if isset($yearsInfo)}{foreach from=$yearsInfo item=year}<a href="{$year.url}">{$year.title}</a> {/foreach}{/if}

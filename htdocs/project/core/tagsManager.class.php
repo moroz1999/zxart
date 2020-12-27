@@ -1,0 +1,248 @@
+<?php
+
+class tagsManager extends errorLogger implements DependencyInjectionContextInterface
+{
+    use DependencyInjectionContextTrait;
+
+    protected $elementsIndex = [];
+    /** @var tagsManager */
+    public static $instance = false;
+    protected $collection;
+
+    /**
+     * @return tagsManager
+     * @deprecated
+     */
+    public static function getInstance()
+    {
+        if (!self::$instance) {
+            self::$instance = new tagsManager();
+        }
+        return self::$instance;
+    }
+
+    public function joinTags($parentTagId, $joinedTagId)
+    {
+        if ($parentTagId != $joinedTagId) {
+            if ($parentTagElement = $this->getTagElement($parentTagId)) {
+                if ($joinedTagElement = $this->getTagElement($joinedTagId)) {
+                    $linksManager = $this->getService('linksManager');
+                    if ($links = $linksManager->getElementsLinks($joinedTagId, 'tagLink', 'parent')) {
+                        foreach ($links as $link) {
+                            $elementId = $link->childStructureId;
+                            $linksManager->unLinkElements($joinedTagId, $elementId, 'tagLink');
+                            $linksManager->linkElements($parentTagId, $elementId, 'tagLink');
+                        }
+                    }
+                    $languagesManager = languagesManager::getInstance();
+                    foreach ($languagesManager->getLanguagesIdList('public_root') as $languageId) {
+                        $joinedTitle = $joinedTagElement->getLanguageValue("title", $languageId);
+                        $parentSynonym = $parentTagElement->getLanguageValue("synonym", $languageId);
+                        if ($joinedTitle != $parentTagElement->getLanguageValue("title", $languageId)) {
+                            if (!stripos(mb_strtolower($parentSynonym), mb_strtolower($joinedTitle))) {
+                                if ($parentSynonym) {
+                                    $parentSynonym .= ", " . $joinedTitle;
+                                } else {
+                                    $parentSynonym .= $joinedTitle;
+                                }
+                                $parentTagElement->setValue("synonym", $parentSynonym, $languageId);
+                            }
+                        }
+                    }
+                    $parentTagElement->updateAmount();
+                    $parentTagElement->persistElementData();
+                    $joinedTagElement->deleteElementData();
+                }
+            }
+        }
+    }
+
+    public function getTagElement($id)
+    {
+        if (!isset($this->elementsIndex[$id])) {
+            $this->elementsIndex[$id] = false;
+            $structureManager = $this->getService('structureManager');
+            if ($tagElement = $structureManager->getElementById($id)) {
+                $this->elementsIndex[$id] = $tagElement;
+            }
+        }
+
+        return $this->elementsIndex[$id];
+    }
+
+    public function getElementSuggestedTags($elementId, $amount)
+    {
+        $result = [];
+        if (is_array($tagsIdList = $this->getTagsIdList($elementId))) {
+            if ($suggestedIds = $this->getSuggestedTagsIds($tagsIdList, $amount)) {
+                foreach ($suggestedIds as $tagId) {
+                    if ($tag = $this->getTagElement($tagId)) {
+                        $result[] = $tag;
+                    }
+                }
+            }
+        }
+        $sort = [];
+        foreach ($result as $tagElement) {
+            $sort[] = mb_strtolower($tagElement->title);
+        }
+        array_multisort($sort, SORT_ASC, $result);
+
+        return $result;
+    }
+
+    public function getSuggestedTagsIds($idList, $amount = 10)
+    {
+        $result = [];
+        $collection = persistableCollection::getInstance('structure_links');
+
+        if ($childIds = $this->getConnectedElementIds($idList)) {
+            $counts = $collection->conditionalLoad(
+                [
+                    'parentStructureId',
+                    'count(childStructureId)',
+                ],
+                [
+                    ['childStructureId', 'in', $childIds],
+                    ['parentStructureId', 'not in', $idList],
+                    ['type', '=', 'tagLink'],
+                ],
+                ['count(childStructureId)' => 0],
+                $amount,
+                'parentStructureId',
+                true
+            );
+            foreach ($counts as $row) {
+                $result[] = $row['parentStructureId'];
+            }
+        }
+        return $result;
+    }
+
+    public function getConnectedElementIds($tagsIdList, $filterIdList = false)
+    {
+        $query = $this->getService('db')
+            ->table('structure_links')
+            ->whereIn('parentStructureId', $tagsIdList)
+            ->where('type', '=', 'tagLink');
+
+
+        if (is_array($filterIdList)) {
+            $query->whereIn('childStructureId', $filterIdList);
+        }
+        $childIds = [];
+        if ($records = $query->get(['childStructureId'])) {
+            $childIds = array_column($records, 'childStructureId');
+        }
+
+        return $childIds;
+    }
+
+    public function getTagsIdList($elementId)
+    {
+        $linksManager = $this->getService('linksManager');
+        $result = $linksManager->getConnectedIdList($elementId, 'tagLink', 'child');
+        return $result;
+    }
+
+    public function getConnectedElementIdsByNames($names, $intersect = true)
+    {
+        //can't be array, used in getConnectedElementIds
+        $result = false;
+        if ($tags = $this->getTagElementsByNames($names, false)) {
+            foreach ($tags as $tagElement) {
+                if ($intersect) {
+                    $result = $this->getConnectedElementIds([$tagElement->id], $result);
+                } else {
+                    if (!$result) {
+                        $result = [];
+                    }
+                    $result = array_merge($result, $this->getConnectedElementIds([$tagElement->id]));
+                }
+            }
+        }
+        if ($result) {
+            return $result;
+        } else {
+            return [];
+        }
+    }
+
+    public function getTagElementsByNames($names, $createNew = false)
+    {
+        $result = [];
+        foreach ($names as $name) {
+            if ($tagElement = $this->getTagElementByName($name, $createNew)) {
+                $result[] = $tagElement;
+            }
+        }
+        return $result;
+    }
+
+    public function getTagElementByName($tagName, $createNew = false)
+    {
+        $tagElement = false;
+        $tagName = mb_convert_case(trim($tagName), MB_CASE_TITLE, "UTF-8");
+        if ($tagName != '') {
+            if (!($tagElement = $this->loadTagElement($tagName)) && $createNew) {
+                $tagElement = $this->createTagElement($tagName);
+            }
+        }
+        return $tagElement;
+    }
+
+    public function loadTagElement($tagName)
+    {
+        $result = false;
+
+        $query = $this->getService('db')
+            ->table('module_tag')
+            ->select('id')
+            ->where('title', '=', $tagName)->limit(1);
+        //            ->orWhere('synonym', 'like', '%' . $tagName . '%');
+        if ($records = $query->get()) {
+            foreach ($records as $record) {
+                $structureManager = $this->getService('structureManager');
+                if ($result = $structureManager->getElementById($record['id'])) {
+                    break;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    public function createTagElement($tagName)
+    {
+        $tagElement = false;
+        $structureManager = $this->getService('structureManager');
+        if ($tagsElementId = $structureManager->getElementIdByMarker('tags')) {
+            if ($tagElement = $structureManager->createElement('tag', 'show', $structureManager->rootElementId)) {
+                $tagElement->prepareActualData();
+                $tagElement->structureName = $tagName;
+                $tagElement->title = $tagName;
+                $tagElement->userId = $this->getService('user')->id;
+                $tagElement->persistElementData();
+                $structureManager->moveElement($structureManager->rootElementId, $tagsElementId, $tagElement->id);
+            }
+        }
+        return $tagElement;
+    }
+
+    public function addTag($tagName, $elementId)
+    {
+        if ($tagElement = $this->getTagElementByName($tagName, true)) {
+            $this->getService('linksManager')->linkElements($tagElement->id, $elementId, 'tagLink', true);
+            $tagElement->updateAmount();
+        }
+        return $tagElement;
+    }
+
+    public function removeTag($tagName, $elementId)
+    {
+        if ($tagElement = $this->getTagElementByName($tagName, false)) {
+            $this->getService('linksManager')->unLinkElements($tagElement->id, $elementId, 'tagLink');
+            $tagElement->updateAmount();
+        }
+    }
+}

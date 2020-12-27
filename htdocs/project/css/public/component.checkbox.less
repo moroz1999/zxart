@@ -1,0 +1,34 @@
+/********************************************************
+/*  CHECKBOX
+/********************************************************/
+.checkbox_placeholder {
+	display: inline-block;
+	margin: 0;
+	vertical-align: middle;
+}
+
+.checkbox {
+	position: relative;
+	height: 1.3em;
+	width: 1.3em;
+	background-color: #ccc;
+	border: 1px solid #404040;
+	border-radius: 0.3em;
+}
+
+.checkbox:hover,
+.checkbox:focus {
+}
+
+.checkbox.checked:after {
+	content: "✓";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	line-height: 110%;
+	text-align: center;
+	font-weight: bold;
+	color: #404040;
+}

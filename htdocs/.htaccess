@@ -1,0 +1,56 @@
+<IfModule mod_rewrite.c>
+	Options +SymLinksIfOwnerMatch
+
+	RewriteEngine On
+	RewriteBase /
+	
+	RewriteCond %{HTTP_HOST} ^zx.maros.pri.ee [NC]
+	RewriteCond %{REQUEST_URI} !^/stats
+	RewriteCond %{REQUEST_URI} !^/crontab
+	RewriteCond %{REQUEST_URI} !^/wos
+	RewriteRule ^(.*)$ http://zxart.ee/$1 [L,R=301,NC]
+
+	#301 redirect to ensure there is no WWW in query domain
+	RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+	RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+	#301 redirect to no-index.php URL
+	RewriteCond %{THE_REQUEST} index\.php [NC]
+	RewriteRule ^.* http://%{HTTP_HOST}/ [R=301,L]
+
+	#internal redirect for 404 urls to index.php
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule .* index.php [L]
+</IfModule>
+
+<IfModule mod_expires.c>
+	ExpiresActive On
+	ExpiresDefault A0
+
+	<IfModule mod_headers.c>
+
+		<filesMatch "\.(flv|ico|pdf|avi|mov|ppt|doc|mp3|wmv|wav|woff|ttf|otf|eot|svg)$">
+			ExpiresDefault A29030400
+			Header append Cache-Control "public"
+		</filesMatch>
+
+		<filesMatch "\.(gif|jpg|jpeg|png|swf)$">
+			ExpiresDefault A604800
+			Header append Cache-Control "public"
+		</filesMatch>
+	</IfModule>
+
+	ExpiresByType audio/ogg "access plus 1 month"
+	ExpiresByType image/gif "access plus 1 month"
+	ExpiresByType image/jpeg "access plus 1 month"
+	ExpiresByType image/png "access plus 1 month"
+	ExpiresByType image/svg+xml "access plus 1 month"
+	ExpiresByType application/x-font-woff "access plus 1 month"
+</IfModule>
+
+<ifmodule mod_deflate.c>
+	AddOutputFilterByType DEFLATE image/svg+xml
+	AddOutputFilterByType DEFLATE application/x-font-woff
+</ifmodule>
+AddType application/wasm wasm

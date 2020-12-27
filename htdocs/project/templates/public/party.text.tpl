@@ -1,0 +1,1 @@
+<pre>{$element->getText($textType)}</pre>

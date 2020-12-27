@@ -1,0 +1,22 @@
+<?php return [
+    'minLevel' => 2,
+    'minAmount' => 2,
+    'allowedElementTypes' => [
+        'zxProdCategory',
+        'folder',
+        'zxProd',
+        'zxRelease',
+        'letter',
+        'author',
+        'authorAlias',
+        'group',
+        'groupAlias',
+        'year',
+        'party',
+        'zxPicture',
+        'zxMusic',
+        'countriesList',
+        'country',
+        'city',
+    ],
+];

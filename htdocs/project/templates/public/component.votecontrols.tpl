@@ -1,0 +1,1 @@
+<div class='vote_controls' id="vote_id_{$element->id}"></div>

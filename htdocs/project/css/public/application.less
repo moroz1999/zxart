@@ -1,0 +1,273 @@
+/********************************************************
+/*  BASIC SETTINGS
+/********************************************************/
+
+html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: scroll;
+}
+
+body {
+  min-height: 100%;
+  width: 100%;
+  margin: 0;
+  position: relative;
+  background-color: @primary_color;
+  padding-bottom: 3em;
+}
+
+.main_block {
+  position: relative;
+  margin: 0 auto;
+}
+
+.center_block {
+  position: relative;
+  margin: 0 auto;
+  padding: 1em 1em 2em 1em;
+}
+
+@media (max-width: @screen_breakpoint_sm_max) {
+  .center_block {
+    padding: 1em 0.3em 2em 0.3em;
+  }
+}
+
+.breadcrumbs_block {
+  margin-bottom: 1rem;
+}
+
+.center_banner {
+  margin-right: 230px;
+  text-align: center;
+}
+
+.center_banner .banner {
+  display: inline-block;
+}
+
+.zxbn img {
+  max-width: 100%;
+  height: auto !important;
+  margin: 0 auto;
+  display: block;
+}
+
+.zxbn iframe {
+  max-width: 100%;
+  margin: 0 auto;
+  display: block;
+}
+
+.zxbn {
+  margin-bottom: 1em;
+}
+
+/********************************************************
+/*  CURRENT LOCATION BLOCK
+/********************************************************/
+.current_location_block {
+  vertical-align: middle;
+  margin-bottom: 1em;
+}
+
+.current_location_delimiter {
+  font-size: 1.2em;
+}
+
+/********************************************************
+/*  FIRSTPAGE
+/********************************************************/
+.firstpage_top_block {
+  margin-bottom: 50px;
+  padding-top: 60px;
+  padding-right: 0;
+}
+
+.lastcomments {
+  margin-bottom: 1em;
+}
+
+.lastcomments h3 {
+  font-size: 1.07em;
+  font-weight: bold;
+}
+
+.lastcomments_allcomments {
+  display: block;
+  vertical-align: middle;
+}
+
+.lastcomments_allcomments img {
+  display: inline-block;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+.lastnews {
+  margin-bottom: 50px;
+  padding-top: 14px;
+}
+
+.lastnews h3 {
+  font-size: 1.07em;
+  font-weight: bold;
+}
+
+.news_short_block .news_short_date {
+  color: #cfb580;
+  font-size: 0.85em;
+}
+
+.news_short_block {
+  font-size: 0.9em;
+  margin-bottom: 15px;
+}
+
+.facebook {
+
+}
+
+.firstpage_latestupdates_controls {
+  margin: 5px 5px 20px;
+  font-size: 0.9em;
+  text-align: right;
+}
+
+.firstpage_latestupdates_controls a {
+  color: #cfb580;
+}
+
+/********************************************************
+/*  zxitemslist
+/********************************************************/
+.zxitemslist_controls {
+  margin: 0.5em 0.5em 1.5em;
+  font-size: 0.9em;
+  text-align: right;
+}
+
+.zxitemslist_link {
+  color: #cfb580;
+}
+
+/********************************************************
+/*  PARTIES LIST
+/********************************************************/
+.parties_list_table {
+  margin: 0;
+  border-collapse: collapse;
+}
+
+.parties_list_table thead td {
+  border-collapse: collapse;
+  padding: 0 5px 5px;
+  font-size: 0.85em;
+  text-align: center;
+}
+
+.parties_list_table tbody td {
+  vertical-align: middle;
+  border-collapse: collapse;
+  padding: 3px 15px 5px;
+}
+
+
+/********************************************************
+/*  ZX GALLERY
+/********************************************************/
+.zxgallery_item {
+  border: 1px solid #000;
+}
+
+/********************************************************
+/*  FULLSCREEN BLOCK
+/********************************************************/
+.fullscreen_title {
+  font-size: 1.6em;
+}
+
+/********************************************************
+/*  SHARE BLOCK
+/********************************************************/
+.share_block {
+  position: absolute;
+  white-space: nowrap;
+  right: 251px;
+  top: 18px;
+}
+
+/********************************************************
+/*  LAYOUT
+/********************************************************/
+.columns_table {
+
+  .right_column {
+    padding-top: 3em;
+    padding-left: 2%;
+  }
+}
+
+/********************************************************
+/*  LAST VOTES
+/********************************************************/
+.lastvotes {
+  margin-bottom: 1em;
+
+  .votes_list_table {
+    width: 100%;
+  }
+
+  .votes_list_table td {
+    font-size: 0.9em;
+  }
+}
+
+.lastvotes h3 {
+  font-size: 1.07em;
+  font-weight: bold;
+}
+
+/********************************************************
+/*  SHARE
+/********************************************************/
+.picture_details_share {
+  margin: 10px 0;
+  vertical-align: middle;
+}
+
+.share_item {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 1em;
+}
+
+.artweb {
+  right: 2em;
+}
+.columned{
+  @media (min-width: @screen_breakpoint_xxs) {
+    columns: 2;
+  }
+  @media (min-width: @screen_breakpoint_xs) {
+    columns: 3;
+  }
+  @media (min-width: @screen_breakpoint_sm) {
+    columns: 4;
+  }
+  @media (min-width: @screen_breakpoint_md) {
+    columns: 4;
+  }
+  @media (min-width: @screen_breakpoint_lg) {
+    columns: 5;
+  }
+  @media (min-width: @screen_breakpoint_xl) {
+    columns: 6;
+  }
+  @media (min-width: @screen_breakpoint_xxl) {
+    columns: 7;
+  }
+}
