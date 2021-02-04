@@ -26,6 +26,7 @@ trait MusicSettingsProvider
     public function getFrequencies()
     {
         return [
+            '1714286',
             '1750000',
             '1770000',
             '1773400',

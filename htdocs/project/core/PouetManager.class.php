@@ -5,7 +5,7 @@ class PouetManager extends errorLogger
     protected $timeLimit = 60 * 29;
     protected $maxTime;
     protected $maxCounter = 1000;
-    protected $maxId = 87563;
+    protected $maxId = 87889;
     protected $minCounter = 0;
 //    protected $debugEntry = 6148;
     protected $debugEntry;
@@ -111,6 +111,7 @@ class PouetManager extends errorLogger
         'other (guest part)' => 'guest',
         'editor' => 'editing',
         'co-editor' => 'editing',
+        'story' => 'story',
         'script' => 'story',
         'txt' => 'text',
         'lyrics' => 'story',
@@ -146,6 +147,7 @@ class PouetManager extends errorLogger
         'logo' => 'logo',
         'other' => 'unknown',
         'code (additional)' => 'code',
+        'basic' => 'code',
         'some code' => 'code',
         'support' => 'support',
         'sound' => 'sfx',
@@ -201,6 +203,7 @@ class PouetManager extends errorLogger
         'oldskool demo' => 'demo',
         'alternative demo' => 'demo',
         'combined demo' => 'demo',
+        'lowend intro' => 'intro',
         'oldskool intro' => 'intro',
         'zx intro' => 'intro',
         '4k intro' => 'intro',
@@ -459,16 +462,10 @@ class PouetManager extends errorLogger
                                 $prodInfo['youtubeId'] = substr($link['link'], strlen('https://youtu.be/'));
                             }
                             if (stripos($link['link'], 'https://www.youtube.com/watch?v=') === 0) {
-                                $prodInfo['youtubeId'] = substr(
-                                    $link['link'],
-                                    strlen('https://www.youtube.com/watch?v=')
-                                );
+                                $prodInfo['youtubeId'] = substr($link['link'], strlen('https://www.youtube.com/watch?v='));
                             }
                             if (stripos($link['link'], 'http://www.youtube.com/watch?v=') === 0) {
-                                $prodInfo['youtubeId'] = substr(
-                                    $link['link'],
-                                    strlen('http://www.youtube.com/watch?v=')
-                                );
+                                $prodInfo['youtubeId'] = substr($link['link'], strlen('http://www.youtube.com/watch?v='));
                             }
                         }
                     }
@@ -502,10 +499,7 @@ class PouetManager extends errorLogger
 
                     if ($prodElement = $this->prodsManager->importProd($prodInfo, $this->origin)) {
                         $this->updateReport($id, 'success');
-                        $this->markProgress(
-                            'prod ' . $id . ' imported ' . $this->counter . ' ' . $prodInfo['title'] . ' ' . $prodElement->id . ' ' . $prodElement->getUrl(
-                            )
-                        );
+                        $this->markProgress('prod ' . $id . ' imported ' . $this->counter . ' ' . $prodInfo['title'] . ' ' . $prodElement->id . ' ' . $prodElement->getUrl());
                     }
                 } else {
                     $this->updateReport($id, 'skipped');
@@ -515,8 +509,7 @@ class PouetManager extends errorLogger
             $id++;
 //            usleep(100);
 
-        } while ((!$this->maxCounter || ($this->counter < $this->maxCounter)) && (time(
-            ) <= $this->maxTime) && ($id <= $this->maxId));
+        } while ((!$this->maxCounter || ($this->counter < $this->maxCounter)) && (time() <= $this->maxTime) && ($id <= $this->maxId));
     }
 
     protected function download($id)
@@ -559,16 +552,12 @@ class PouetManager extends errorLogger
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt(
-            $ch,
-            CURLOPT_HTTPHEADER,
-            [
-                'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0',
-                'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                'Accept-Language: en-US,en;q=0.5',
-                'Cache-Control: max-age=0',
-            ]
-        );
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0',
+            'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language: en-US,en;q=0.5',
+            'Cache-Control: max-age=0',
+        ]);
         curl_setopt($ch, CURLOPT_VERBOSE, true);
         $verbose = fopen('php://temp', 'w+');
         curl_setopt($ch, CURLOPT_STDERR, $verbose);

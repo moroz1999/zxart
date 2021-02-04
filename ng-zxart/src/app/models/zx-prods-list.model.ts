@@ -1,14 +1,9 @@
 import {StructureElement} from './structure-element';
 
 export class ZxProdsList implements StructureElement {
-  id: number;
-  title: string;
-
   constructor(
-    id: number,
-    title: string
+    public id: number,
+    public title: string
   ) {
-    this.id = id;
-    this.title = title;
   }
 }

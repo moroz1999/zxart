@@ -2,8 +2,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map, catchError} from 'rxjs/operators';
-import {ZxProd} from '../../models/zx-prod.model';
-import {StructureElement} from '../../models/structure-element';
 import {JsonResponse} from '../../json-response';
 import {ZxProdsList} from '../../models/zx-prods-list.model';
 
@@ -16,7 +14,7 @@ export class ElementsService {
   constructor(private http: HttpClient) {
   }
 
-  getModel(elementId: number): Observable<StructureElement> {
+  getModel(elementId: number): Observable<ZxProdsList> {
     const options: Object = {
       'params': {
         'elementId': elementId,
@@ -30,7 +28,6 @@ export class ElementsService {
           return new ZxProdsList(data.id, data.title);
         }
         ),
-        // catchError(errro)
       );
   }
 }
