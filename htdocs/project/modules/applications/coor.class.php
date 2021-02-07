@@ -10,6 +10,7 @@ class coorApplication extends controllerApplication
      * @var structureManager
      */
     protected $structureManager;
+    protected $key;
 
     public function initialize()
     {
@@ -27,7 +28,7 @@ class coorApplication extends controllerApplication
             $language = 'eng';
         }
         $configManager = $this->getService('ConfigManager');
-
+        $this->key = $configManager->get('main.ga_key');
         /**
          * @var languagesManager $languagesManager
          */
@@ -102,7 +103,7 @@ class coorApplication extends controllerApplication
 
         $requestString = 'https://maps.google.com/maps/api/geocode/json?address=' . urlencode(
                 $queryString
-            ) . '&sensor=false&key=AIzaSyB1oHRRkXybd1LpmJS0IUpItkvup1KXzGg';
+            ) . '&sensor=false&key=' . $this->key;
         if (function_exists('curl_init')) {
             $curl = curl_init();
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
