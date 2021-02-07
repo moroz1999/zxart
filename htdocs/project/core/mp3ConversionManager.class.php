@@ -5,20 +5,11 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
     use DependencyInjectionContextTrait;
 
     const CONVERSION_SERVER_ADDRESS = 'http://converter.dev.artweb.ee/index.php';
-    protected $ftpDomain;
-    protected $ftpLogin;
-    protected $ftpPassword;
-    protected $ftpPath;
 
     protected $collection;
 
     public function __construct()
     {
-        $configManager = $this->getService('ConfigManager');
-        $this->ftpDomain = $configManager->get('zx.mp3FtpDomain');
-        $this->ftpLogin = $configManager->get('zx.mp3FtpLogin');
-        $this->ftpPassword = $configManager->get('zx.mp3FtpPass');
-        $this->ftpPath = $configManager->get('zx.mp3FtpPath');
         $this->collection = persistableCollection::getInstance('conversion_queue');
     }
 

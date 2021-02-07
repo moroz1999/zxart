@@ -8,3 +8,7 @@
 /htdocs/userfiles
 /htdocs/vendor
 /htdocs/project/config/live
+/htdocs/crontab
+/htdocs/pouet
+/htdocs/stats
+/htdocs/wos
