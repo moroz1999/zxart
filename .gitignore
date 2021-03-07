@@ -1,7 +1,7 @@
 .idea
 /design
 /htdocs/temporary
-/htdocs/trickster
+/htdocs/trickster-cms
 /htdocs/uploads
 /htdocs/uploads_releases
 /htdocs/userfiles
@@ -11,3 +11,4 @@
 /htdocs/pouet
 /htdocs/stats
 /htdocs/wos
+/db/live

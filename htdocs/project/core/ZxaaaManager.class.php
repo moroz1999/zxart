@@ -3,9 +3,9 @@
 class ZxaaaManager extends errorLogger
 {
     protected $maxCounter = 20000;
-    protected $pagesAmount = 423;
+    protected $pagesAmount = 425;
     protected $minId = 1;
-    //    protected $debugEntry = 11235;
+//    protected $debugEntry = 1312;
     protected $debugEntry;
     protected $ignore = [7955, 11487, 11506, 11542];
 
@@ -367,9 +367,8 @@ class ZxaaaManager extends errorLogger
         return trim(preg_replace('!\s+!', ' ', $string), " \t\n\r\0\x0B" . chr(0xC2) . chr(0xA0));
     }
 
-    protected function loadHtml(
-        $url
-    ) {
+    protected function loadHtml($url)
+    {
         if ($contents = file_get_contents($url)) {
             $dom = new DOMDocument;
             $dom->strictErrorChecking = false;
@@ -385,9 +384,8 @@ class ZxaaaManager extends errorLogger
         return false;
     }
 
-    protected function markProgress(
-        $text
-    ) {
+    protected function markProgress($text)
+    {
         static $previousTime;
 
         if ($previousTime === null) {
