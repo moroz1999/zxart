@@ -2,6 +2,7 @@
 
 $moduleActions = [];
 $moduleActions[] = 'delete';
+$moduleActions[] = 'deleteAuthor';
 $moduleActions[] = 'receive';
 $moduleActions[] = 'show';
 $moduleActions[] = 'showForm';
