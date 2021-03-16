@@ -2,19 +2,21 @@
 /*  FILE INPUT BLOCK
 /********************************************************/
 .file_input_container {
-	position: relative;
-	white-space: nowrap;
-	display: inline-block;
+  position: relative;
+  white-space: nowrap;
+  display: inline-flex;
 }
 
 .file_input_field {
-	overflow: hidden;
-	vertical-align: middle;
+  overflow: hidden;
+  vertical-align: middle;
+  flex-grow: 1;
 }
 
 .file_input_button {
-	display: inline-block;
-	vertical-align: middle;
-	text-align: center;
-	margin-left: 0.5em;
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  margin-left: 0.5em;
+  flex-shrink: 0;
 }

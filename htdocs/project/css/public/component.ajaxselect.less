@@ -4,8 +4,6 @@
 .ajaxselect_container {
     display: inline-block;
 
-    .input_component();
-
     .ajaxselect_item:last-of-type {
         margin-bottom: 1em;
     }
@@ -19,9 +17,8 @@
 }
 
 .ajaxselect_searchinput {
-    padding: 0;
-    background: transparent;
-    border: none;
+    .input_component();
+    width: 100%;
 }
 
 .ajaxselect_item {
@@ -53,6 +50,9 @@
     margin-top: 3px;
     height: 19px;
     width: 19px;
+    background-image: url(getImageUrl("icons/remove.png"));
+    background-position: center;
+    background-size: contain;
 }
 
 

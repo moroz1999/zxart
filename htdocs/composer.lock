@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "da2d8d0ba14ed413c3e633abd1fff7f5",
+    "content-hash": "a701cf4d9dbe4483c1f968f5e70262c7",
     "packages": [
         {
             "name": "artweb-ou/trickster-cms",
-            "version": "4.0.0",
+            "version": "4.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/artweb-ou/trickster-cms.git",
-                "reference": "d662ea6fea1f0542042c1bc28fabe3e13d4bc1d3"
+                "reference": "a1631585683bb090ac8288c1ccee4e8d505af2e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artweb-ou/trickster-cms/zipball/d662ea6fea1f0542042c1bc28fabe3e13d4bc1d3",
-                "reference": "d662ea6fea1f0542042c1bc28fabe3e13d4bc1d3",
+                "url": "https://api.github.com/repos/artweb-ou/trickster-cms/zipball/a1631585683bb090ac8288c1ccee4e8d505af2e6",
+                "reference": "a1631585683bb090ac8288c1ccee4e8d505af2e6",
                 "shasum": ""
             },
             "require": {
@@ -30,6 +30,7 @@
                 "illuminate/database": "5.2.*",
                 "jaybizzle/crawler-detect": "1.2.*",
                 "leafo/lessphp": "0.5.0",
+                "maksekeskus/maksekeskus-php": "v1.1",
                 "mk-j/php_xlsxwriter": "^0.36",
                 "moroz1999/cache": "1.*",
                 "moroz1999/ckeditor-html5-video": "1.*",
@@ -52,9 +53,9 @@
             "description": "Trickster CMS packages",
             "support": {
                 "issues": "https://github.com/artweb-ou/trickster-cms/issues",
-                "source": "https://github.com/artweb-ou/trickster-cms/tree/4.0.0"
+                "source": "https://github.com/artweb-ou/trickster-cms/tree/4.1.1"
             },
-            "time": "2020-10-04T11:19:55+00:00"
+            "time": "2021-03-16T15:59:13+00:00"
         },
         {
             "name": "ckeditor/ckeditor",
@@ -690,6 +691,56 @@
             "time": "2014-11-24T18:39:20+00:00"
         },
         {
+            "name": "maksekeskus/maksekeskus-php",
+            "version": "v1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/maksekeskus/maksekeskus-php.git",
+                "reference": "6a5386cf442dd37095e226a7dff353c60520b0f7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/maksekeskus/maksekeskus-php/zipball/6a5386cf442dd37095e226a7dff353c60520b0f7",
+                "reference": "6a5386cf442dd37095e226a7dff353c60520b0f7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "nategood/httpful": "*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Maksekeskus\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mihkel Karu",
+                    "email": "mihkel@maksekeskus.ee"
+                }
+            ],
+            "description": "Maksekeskus PHP SDK",
+            "homepage": "http://maksekeskus.ee",
+            "keywords": [
+                "api",
+                "billing",
+                "maksekeskus",
+                "payments"
+            ],
+            "support": {
+                "issues": "https://github.com/maksekeskus/maksekeskus-php/issues",
+                "source": "https://github.com/maksekeskus/maksekeskus-php/tree/v1.1"
+            },
+            "time": "2016-11-17T10:44:44+00:00"
+        },
+        {
             "name": "mk-j/php_xlsxwriter",
             "version": "0.36",
             "source": {
@@ -999,25 +1050,24 @@
         },
         {
             "name": "moroz1999/zx-image",
-            "version": "5.2.0.1",
+            "version": "5.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/moroz1999/zx-image.git",
-                "reference": "45010345b18e2dd1f7600d24106e29e20f93d007"
+                "reference": "eb0cce0957ea0ceb497ce8eb7b3a8b5353d7e682"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/moroz1999/zx-image/zipball/45010345b18e2dd1f7600d24106e29e20f93d007",
-                "reference": "45010345b18e2dd1f7600d24106e29e20f93d007",
+                "url": "https://api.github.com/repos/moroz1999/zx-image/zipball/eb0cce0957ea0ceb497ce8eb7b3a8b5353d7e682",
+                "reference": "eb0cce0957ea0ceb497ce8eb7b3a8b5353d7e682",
                 "shasum": ""
             },
             "require": {
                 "moroz1999/gif-creator": "*",
-                "php": ">=7.0"
+                "php": ">=7.4"
             },
             "require-dev": {
-                "rector/rector": "^0.8.56",
-                "vimeo/psalm": "^4"
+                "vimeo/psalm": "^3.13"
             },
             "type": "package",
             "autoload": {
@@ -1039,9 +1089,9 @@
             ],
             "support": {
                 "issues": "https://github.com/moroz1999/zx-image/issues",
-                "source": "https://github.com/moroz1999/zx-image/tree/5.2.0.1"
+                "source": "https://github.com/moroz1999/zx-image/tree/5.2.1"
             },
-            "time": "2020-12-05T21:25:50+00:00"
+            "time": "2020-12-05T21:28:18+00:00"
         },
         {
             "name": "mpdf/mpdf",
@@ -1175,6 +1225,60 @@
                 }
             ],
             "time": "2020-11-13T09:40:50+00:00"
+        },
+        {
+            "name": "nategood/httpful",
+            "version": "0.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nategood/httpful.git",
+                "reference": "0cded3ea97ba905600de9ceb9ef13f3ab681587c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nategood/httpful/zipball/0cded3ea97ba905600de9ceb9ef13f3ab681587c",
+                "reference": "0cded3ea97ba905600de9ceb9ef13f3ab681587c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Httpful": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nate Good",
+                    "email": "me@nategood.com",
+                    "homepage": "http://nategood.com"
+                }
+            ],
+            "description": "A Readable, Chainable, REST friendly, PHP HTTP Client",
+            "homepage": "http://github.com/nategood/httpful",
+            "keywords": [
+                "api",
+                "curl",
+                "http",
+                "requests",
+                "rest",
+                "restful"
+            ],
+            "support": {
+                "issues": "https://github.com/nategood/httpful/issues",
+                "source": "https://github.com/nategood/httpful/tree/v0.3.2"
+            },
+            "time": "2020-01-25T01:13:13+00:00"
         },
         {
             "name": "nesbot/carbon",
