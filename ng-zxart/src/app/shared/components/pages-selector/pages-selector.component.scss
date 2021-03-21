@@ -1,0 +1,89 @@
+@import 'shared/vars';
+@import 'shared/breakpoints';
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.pages-selector {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.pages-item {
+  text-align: center;
+  user-select: none;
+  list-style-type: none;
+  padding: $padding-md;
+}
+
+.pages-button:not(.pages-button-inactive) {
+  cursor: pointer;
+
+  &:hover {
+    background-color: $gray1;
+  }
+}
+
+.pages-page:not(.pages-page-selected) {
+  cursor: pointer;
+
+  &:hover {
+    background-color: $gray1;
+  }
+}
+
+.pages-page-selected {
+  text-decoration: underline;
+}
+
+.pages-button-inactive {
+  opacity: 0.3;
+}
+
+.pages-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pages-button-previous {
+  margin-right: $padding-lg;
+
+  .pages-button-text {
+    margin-left: $padding-sm;
+  }
+}
+
+.pages-button-next {
+  margin-left: $padding-lg;
+
+  .pages-button-text {
+    margin-right: $padding-sm;
+  }
+}
+
+@include media-breakpoint-down(md)  {
+  .pages-item {
+    padding: $padding-md $padding-sm;
+    flex-basis: 11%;
+  }
+  .pages-button-previous,
+  .pages-button-next {
+    .pages-button-text {
+      display: none;
+    }
+  }
+  .pages-button-previous {
+    margin-right: 0;
+  }
+  .pages-button-next {
+    margin-left: 0;
+  }
+  .pages-page {
+    flex-grow: 1;
+  }
+}

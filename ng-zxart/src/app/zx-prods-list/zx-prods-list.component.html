@@ -1,4 +1,6 @@
 <p>zx-prods-list works! {{ elementId }}</p>
+<app-pages-selector [pagesAmount]="pagesAmount" [currentPage]="currentPage"
+                    (clickCallback)="setCurrentPage($event)"></app-pages-selector>
 <span *ngIf="model">
   {{ model.title }}
 </span>

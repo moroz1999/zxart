@@ -1,0 +1,53 @@
+@import 'functions';
+
+$assetsUrl: "/assets/";
+$assetsUrl: "/public/assets/";
+$imageAssetsUrl: "#{$assetsUrl}images/";
+$svgAssetsUrl: "#{$assetsUrl}svg/";
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+) !default;
+
+$padding-xs: 0.25rem;
+$padding-sm: $padding-xs*2;
+$padding-md: $padding-sm*2;
+$padding-lg: $padding-md*2;
+$padding-xl: $padding-md*3;
+
+$white: #fff;
+$gray1: #edebeb;
+$gray2: #dadada;
+$gray3: #c7c7c7;
+$gray4: #a1a1a1;
+$gray5: #8a8a8a;
+$gray6: #555555;
+$gray7: #333333;
+$red: #cc0000;
+$black: #000000;
+$green: #74ba01;
+$orange: rgba(255, 104, 38, 1);
+
+$font-md: rem(14px);
+$font-sm: 0.9 * $font-md;
+$font-lg: $font-md * 1.2;
+
+$radius-md: rem(3px);
+$radius-lg: $radius-md*2;
+$radius-xl: $radius-lg*2;
+$radius-sm: $radius-md/2;
+$radius-xs: $radius-sm/2;
+
+$controls-padding: $padding-sm;
+$controls-height: 2.4rem;
+$controls-transition-time: 0.25s;
+$controls-border-radius: $radius-md;
+
+$text-line-height: 1.8;
+
+$error-color: $red;
