@@ -15,6 +15,7 @@ trait ZxProdsList
      */
     protected array $prods;
     protected $pager;
+    protected int $prodsAmount;
 
     abstract public function getProdsListBaseQuery();
 
@@ -65,11 +66,20 @@ trait ZxProdsList
                 ->setLimit($amountOnPage)->setStart($amountOnPage * ($currentPage - 1))->setOrder($order);
             if ($result = $apiQuery->getQueryResult()) {
                 $this->prods = $result['zxProd'];
+                $this->prodsAmount = $result['totalAmount'];
                 $this->pager = new pager($url, $result['totalAmount'], $amountOnPage, $currentPage);
             }
         }
 
         return $this->prods;
+    }
+
+    public function getProdsAmount()
+    {
+        if (!isset($this->prodsAmount)) {
+            $this->getProds();
+        }
+        return $this->prodsAmount;
     }
 
     protected function getProdsQuery()

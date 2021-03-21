@@ -13,6 +13,7 @@ class zxProdCategoryDataResponseConverter extends StructuredDataResponseConverte
             'structureType' => 'structureType',
             'categoriesIds' => 'getCategoriesIds',
             'prods' => 'getProdsInfo',
+            'prodsAmount' => 'getProdsAmount',
         ];
     }
 
@@ -34,7 +35,8 @@ class zxProdCategoryDataResponseConverter extends StructuredDataResponseConverte
                 'id',
                 'title',
                 'url',
-                'categoriesIds',
+                'categories',
+                'prodsAmount',
                 'prods',
             ],
         ];

@@ -5,6 +5,10 @@ import {map} from 'rxjs/operators';
 import {JsonResponse} from '../models/json-response';
 import {StructureElement} from '../models/structure-element';
 
+interface PostParameters {
+  [key: string]: Primitive;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -14,11 +18,10 @@ export class ElementsService {
   constructor(private http: HttpClient) {
   }
 
-  getModel<T, U extends StructureElement>(elementId: number, c: { new (dto: T): U }): Observable<U> {
+  getModel<T, U extends StructureElement>(elementId: number, c: { new(dto: T): U }, parameters: PostParameters): Observable<U> {
+    parameters.elementId = elementId;
     const options: Object = {
-      'params': {
-        'elementId': elementId,
-      },
+      'params': parameters,
     };
     return this.http
       .get<JsonResponse<T>>(this.apiUrl, options)

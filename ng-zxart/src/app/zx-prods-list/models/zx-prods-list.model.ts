@@ -1,14 +1,16 @@
 import {StructureElement} from '../../shared/models/structure-element';
 import {ZxProdCategoryResponseDto} from './zx-prod-category-response-dto';
+import {ZxProdCategoryDto} from './zx-prod-category-dto';
 
-export class ZxProdsList implements StructureElement {
-  public id: number;
+export class ZxProdsList extends StructureElement {
   public title: string;
+  public prodsAmount: number;
 
   constructor(
-    dto: ZxProdCategoryResponseDto,
+    data: ZxProdCategoryResponseDto,
   ) {
-    this.id = dto.zxProdCategory.id;
-    this.title = dto.zxProdCategory.title;
+    super(data.zxProdCategory);
+    this.title = data.zxProdCategory.title;
+    this.prodsAmount = data.zxProdCategory.prodsAmount;
   }
 }

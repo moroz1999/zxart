@@ -12,6 +12,7 @@ export class ZxProdsListComponent implements OnInit {
   public model?: ZxProdsList;
   public pagesAmount = 0;
   public currentPage = 1;
+  public elementsOnPage = 100;
 
   @Input() elementId: number = 0;
 
@@ -25,10 +26,13 @@ export class ZxProdsListComponent implements OnInit {
   }
 
   private fetchModel(): void {
-
-    this.elementsService.getModel<ZxProdCategoryResponseDto, ZxProdsList>(this.elementId, ZxProdsList).subscribe(
+    const parameters = {
+      elementsOnPage: this.elementsOnPage
+    }
+    this.elementsService.getModel<ZxProdCategoryResponseDto, ZxProdsList>(this.elementId, ZxProdsList, parameters).subscribe(
       model => {
         this.model = model;
+        this.pagesAmount = this.model.prodsAmount / this.elementsOnPage;
       },
     );
   }
