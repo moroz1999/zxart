@@ -37,12 +37,15 @@ trait ZxProdsList
             $this->prods = [];
             $this->getSubCategoriesTreeIds($subcategoriesIds);
             $subcategoriesIds = array_unique($subcategoriesIds);
+            $controller = $this->getService('controller');
 
             $url = $this->getFilterUrl();
-            $amountOnPage = 100;
+            $elementsOnPage = (int)$controller->getParameter('elementsOnPage');
+            if (!$elementsOnPage) {
+                $elementsOnPage = 100;
+            }
             $order = ['title' => 'asc'];
-            $controller = $this->getService('controller');
-            $currentPage = $controller->getParameter('page');
+            $currentPage = (int)$controller->getParameter('page');
             if (!$currentPage) {
                 $currentPage = 1;
             }
@@ -63,11 +66,11 @@ trait ZxProdsList
              */
             $apiQueriesManager = $this->getService('ApiQueriesManager');
             $apiQuery = $apiQueriesManager->getQuery()->setExportType('zxProd')->setFiltrationParameters($filters)
-                ->setLimit($amountOnPage)->setStart($amountOnPage * ($currentPage - 1))->setOrder($order);
+                ->setLimit($elementsOnPage)->setStart($elementsOnPage * ($currentPage - 1))->setOrder($order);
             if ($result = $apiQuery->getQueryResult()) {
                 $this->prods = $result['zxProd'];
                 $this->prodsAmount = $result['totalAmount'];
-                $this->pager = new pager($url, $result['totalAmount'], $amountOnPage, $currentPage);
+                $this->pager = new pager($url, $result['totalAmount'], $elementsOnPage, $currentPage);
             }
         }
 
