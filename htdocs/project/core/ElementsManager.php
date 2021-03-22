@@ -24,6 +24,8 @@ class ElementsManager extends errorLogger
     {
         if ($query === null) {
             $query = $this->db->table(static::TABLE);
+        } else {
+            $query = clone($query);
         }
         if (is_array($sort)) {
             foreach ($sort as $property => $order) {
