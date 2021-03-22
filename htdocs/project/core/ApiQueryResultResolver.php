@@ -21,12 +21,12 @@ class ApiQueryResultResolver implements DependencyInjectionContextInterface
             $exportTypeQuery = null;
         }
         $resolvers = [
-            'zxPicture' => 'PicturesManager',
-            'zxProd' => 'ProdsManager',
-            'zxMusic' => 'MusicManager',
-            'author' => 'AuthorsManager',
-            'group' => 'GroupsManager',
-            'party' => 'PartiesManager',
+            'zxPicture' => PicturesManager::class,
+            'zxProd' => ProdsManager::class,
+            'zxMusic' => MusicManager::class,
+            'author' => AuthorsManager::class,
+            'group' => GroupsManager::class,
+            'party' => PartiesManager::class,
         ];
         if (isset($resolvers[$exportType])) {
             $resolverClass = $resolvers[$exportType];

@@ -1,6 +1,11 @@
-<p>zx-prods-list works! {{ elementId }}</p>
-<app-pages-selector [pagesAmount]="pagesAmount" [currentPage]="currentPage"
-                    (clickCallback)="setCurrentPage($event)"></app-pages-selector>
-<span *ngIf="model">
+<div *ngIf="model">
+  <app-pages-selector [pagesAmount]="pagesAmount" [currentPage]="currentPage"
+                      (clickCallback)="setCurrentPage($event)"></app-pages-selector>
   {{ model.title }}
-</span>
+  <div *ngIf="model.prods" class="zxprods">
+    <app-zx-prod
+      class="subcontentmodule_component subcontentmodule_square zxprod_short"
+      *ngFor="let zxProd of model.prods"
+      [model]="zxProd"></app-zx-prod>
+  </div>
+</div>

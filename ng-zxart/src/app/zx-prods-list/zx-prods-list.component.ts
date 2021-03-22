@@ -27,16 +27,16 @@ export class ZxProdsListComponent implements OnInit {
 
   private fetchModel(): void {
     const parameters = {
-      elementsOnPage: this.elementsOnPage
-    }
+      elementsOnPage: this.elementsOnPage,
+      page: this.currentPage,
+    };
     this.elementsService.getModel<ZxProdCategoryResponseDto, ZxProdsList>(this.elementId, ZxProdsList, parameters).subscribe(
       model => {
         this.model = model;
-        this.pagesAmount = this.model.prodsAmount / this.elementsOnPage;
+        this.pagesAmount = Math.ceil(this.model.prodsAmount / this.elementsOnPage);
       },
     );
   }
-
 
   setCurrentPage(newPage: number): void {
     this.currentPage = newPage;

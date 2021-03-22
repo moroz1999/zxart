@@ -1,0 +1,15 @@
+<a href="{{ model.url }}" class="zxprod_short_images">
+  <img
+    *ngIf="model.imageUrl"
+    class="zxprod_short_image"
+    src="{{ model.imageUrl }}"
+    alt="{{ model.title }}"/>
+  <img
+    *ngIf="model.image2Url"
+    class="zxprod_short_image_second"
+    src="{{ model.image2Url }}"
+    alt="{{ model.title }}"/>
+</a>
+<span class="zxprod_short_title"><span class="zxprod_short_title_controls"></span>
+    <a href="{{ model.url }}">{{ model.title }}</a>
+</span>

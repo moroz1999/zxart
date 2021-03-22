@@ -9,6 +9,7 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {PagesSelectorComponent} from './shared/components/pages-selector/pages-selector.component';
 import {environment} from '../environments/environment';
+import { ZxProdComponent } from './zx-prod/zx-prod.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(httpClient, `${environment.assetsUrl}i18n/`);
@@ -18,6 +19,7 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   declarations: [
     ZxProdsListComponent,
     PagesSelectorComponent,
+    ZxProdComponent,
   ],
   imports: [
     CommonModule,
