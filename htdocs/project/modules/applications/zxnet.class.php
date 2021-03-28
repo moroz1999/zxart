@@ -36,7 +36,7 @@ class zxnetApplication extends controllerApplication
         } else {
             $page = 0;
         }
-        if ($pageAmount = $controller->getParameter('l')) {
+        if ($pageAmount = $controller->getParameter('q')) {
             $pageAmount = intval($pageAmount);
         }
 
@@ -125,13 +125,7 @@ class zxnetApplication extends controllerApplication
             $queryParameters['zxPictureType'] = $pictureType;
 
             if ($search) {
-                $queryParameters1 = $queryParameters;
-                $queryParameters1['zxPictureSearch'] = $search;
-                $queryParameters2 = $queryParameters;
-                $queryParameters2['authorSearch'] = $search;
-                $queryParameters = [$queryParameters1, $queryParameters2];
-            } else {
-                $queryParameters = [$queryParameters];
+                $queryParameters['authorSearch'] = $search;
             }
         }
         $start = $page * $pageAmount;
