@@ -1,6 +1,8 @@
 http://zxart.ee/zxnet/
 
 GET parameters:
+p (page) - number of page for pagination (default 0)
+q (quantity) - items quantity on one page (default 100)
 a (action):
 	g - graphics (default)
 	m - music

@@ -1,0 +1,671 @@
+<h2>Common description</h2>
+
+<ol>
+<li>
+<p>API is publicly accessable via HTTP and JSON</p>
+</li>
+<li>
+<p>Information accuracy is not guaranteed, the information in databased is constantly being cleaned/rechecked/added.</p>
+</li>
+<li>
+<p>Information copying/backing up/usage for other databases is totally encouraged</p>
+</li>
+<li>
+<p>API format is subject to change without notification</p>
+</li>
+</ol>
+
+<h3>Common parameters:</h3>
+
+<ul>
+<li>
+<p>export - entity name quieried from API. All limiting and sorting parameters are being applied to this list.<br />
+Possible values:</p>
+
+<ul>
+<li>
+<p>author</p>
+</li>
+<li>
+<p>authorAlias</p>
+</li>
+<li>
+<p>group</p>
+</li>
+<li>
+<p>groupAlias</p>
+</li>
+<li>
+<p>zxProdCategory</p>
+</li>
+<li>
+<p>zxProd</p>
+</li>
+<li>
+<p>zxRelease</p>
+</li>
+<li>
+<p>zxPicture</p>
+</li>
+<li>
+<p>zxMusic</p>
+</li>
+</ul>
+</li>
+<li>
+<p>language - language code for all translatable information.<br />
+Possible values:</p>
+
+<ul>
+<li>
+<p>eng</p>
+</li>
+<li>
+<p>rus</p>
+</li>
+<li>
+<p>spa</p>
+</li>
+</ul>
+</li>
+<li>
+<p>start - number of the first required element from list</p>
+</li>
+<li>
+<p>limit - quantity of elements in list</p>
+</li>
+<li>
+<p>filter - can vary for different types of entities. Please contact if you require any specific filtration functionality</p>
+</li>
+</ul>
+
+<h3>External database codenames:</h3>
+
+<ul>
+<li>
+<p>3a - ZXAAA</p>
+</li>
+<li>
+<p>dzoo - DemoZoo</p>
+</li>
+<li>
+<p>pouet - Pouet.net</p>
+</li>
+<li>
+<p>sc - Spectrum Computing or ZXDB</p>
+</li>
+<li>
+<p>wos - World Of Spectrum</p>
+</li>
+<li>
+<p>vt - Virtual TR-DOS</p>
+</li>
+<li>
+<p>zxd - Demotopia</p>
+</li>
+</ul>
+
+<h2>Software category</h2>
+
+<p>All the software production are grouped into the software categories by genre or type.</p>
+
+<p>Query example to get all the available software categories:<br />
+<a href="http://zxart.ee/api/export:zxProdCategory/filter:zxProdCategoryAll/">http://zxart.ee/api/export:zxProdCategory/filter:zxProdCategoryAll/</a></p>
+
+<p>Fields:</p>
+
+<ul>
+<li>
+<p>id</p>
+</li>
+<li>
+<p>title</p>
+</li>
+<li>
+<p>categories - a list of subcategory IDs residing in this category.</p>
+</li>
+</ul>
+
+<h2>Software production</h2>
+
+<p>This entity groups all the related releases into a single page.</p>
+
+<p>First 10 productions:<br />
+<a href="http://zxart.ee/api/export:zxProd/limit:10/">http://zxart.ee/api/export:zxProd/limit:10/</a></p>
+
+<p>First 10 prods sorted by title:<br />
+<a href="/api/export:zxProd/limit:10/order:title,asc">http://zxart.ee/api/export:zxProd/limit:10/order:title,asc</a><br />
+<br />
+Last 10 uploaded prods:<br />
+<a href="/api/export:zxProd/limit:10/order:date,desc">http://zxart.ee/api/export:zxProd/limit:10/order:date,desc</a></p>
+
+<p>First 10 productions for category with ID 92177:<br />
+<a href="http://zxart.ee/api/export:zxProd/start:0/limit:10/filter:zxProdCategory=92177/" style="text-decoration:none;">http://zxart.ee/api/export:zxProd/start:0/limit:10/filter:zxProdCategory=92177/</a></p>
+
+<p>Production with ID 92841:<br />
+<a href="http://zxart.ee/api/export:zxProd/filter:zxProdId=92841">http://zxart.ee/api/export:zxProd/filter:zxProdId=92841</a></p>
+
+<h3>Fields:</h3>
+
+<ul>
+<li>
+<p>id</p>
+</li>
+<li>
+<p>title</p>
+</li>
+<li>
+<p>dateCreated - creation date’s timestamp</p>
+</li>
+<li>
+<p>dateModified - modification date’s timestamp</p>
+</li>
+<li>
+<p>language - ISO 639-1 codes of supported languages</p>
+</li>
+<li>
+<p>partyId - ID of demoparty/competition</p>
+</li>
+<li>
+<p>partyPlace - place taken in party</p>
+</li>
+<li>
+<p>compo - compo name</p>
+</li>
+<li>
+<p>year - year of first publication</p>
+</li>
+<li>
+<p>youtubeId - youtube video ID</p>
+</li>
+<li>
+<p>description - description text</p>
+</li>
+<li>
+<p>legalStatus - status of distribution</p>
+</li>
+<li>
+<p>groupsIds - producing groups IDs</p>
+</li>
+<li>
+<p>publishersIds - publisher groups IDs</p>
+</li>
+<li>
+<p>releasesIds - IDs of releases</p>
+</li>
+<li>
+<p>maps - list of game maps images URLs</p>
+</li>
+<li>
+<p>authorsInfo - authorship information</p>
+
+<ul>
+<li>
+<p>authorId</p>
+</li>
+<li>
+<p>roles</p>
+</li>
+</ul>
+</li>
+<li>
+<p>importIds - IDs used for this production in other databases.</p>
+</li>
+</ul>
+
+<h2>Software production release</h2>
+
+<p>This is a version or release of a software production.</p>
+
+<p>First 10 releases:<br />
+<a href="http://zxart.ee/api/action:filter/export:zxRelease/limit:10/">http://zxart.ee/api/action:filter/export:zxRelease/limit:10/</a></p>
+
+<p>Last 10 uploaded releases:<br />
+<a href="/api/action:filter/export:zxRelease/limit:10/order:date,desc">http://zxart.ee/api/action:filter/export:zxRelease/limit:10/order:date,desc</a></p>
+
+<p>Releases of production with ID 92841:<br />
+<a href="http://zxart.ee/api/action:filter/export:zxRelease/filter:zxProdId=92841" style="text-decoration:none;">http://zxart.ee/api/action:filter/export:zxRelease/filter:zxProdId=92841</a></p>
+
+<p>Release with ID 92844:<br />
+<a href="http://zxart.ee/api/action:filter/export:zxRelease/filter:zxReleaseId=92844">http://zxart.ee/api/action:filter/export:zxRelease/filter:zxReleaseId=92844</a></p>
+
+<h3>Fields:</h3>
+
+<ul>
+<li>
+<p>id</p>
+</li>
+<li>
+<p>title</p>
+</li>
+<li>
+<p>dateCreated - creation date’s timestamp</p>
+</li>
+<li>
+<p>dateModified - modification date’s timestamp</p>
+</li>
+<li>
+<p>file - URL of file download</p>
+</li>
+<li>
+<p>fileName - original filename</p>
+</li>
+<li>
+<p>year - year of first publication. Zero if it’s the same as production’s one</p>
+</li>
+<li>
+<p>publishersIds - publisher groups IDs</p>
+</li>
+<li>
+<p>language - ISO 639-1 codes of supported languages. Empty if it’s the same as production’s one</p>
+</li>
+<li>
+<p>description</p>
+</li>
+<li>
+<p>authorsInfo - additional authors of this release</p>
+
+<ul>
+<li>
+<p>authorId</p>
+</li>
+<li>
+<p>roles</p>
+</li>
+</ul>
+</li>
+<li>
+<p>hardwareRequired - list of minimum required hardware</p>
+</li>
+<li>
+<p>hardwareOptional - list of additionally supported hardware</p>
+</li>
+<li>
+<p>releaseType - type of release</p>
+
+<ul>
+<li>
+<p>unknown</p>
+</li>
+<li>
+<p>original</p>
+</li>
+<li>
+<p>rerelease</p>
+</li>
+<li>
+<p>adaptation</p>
+</li>
+<li>
+<p>localization</p>
+</li>
+<li>
+<p>mod</p>
+</li>
+<li>
+<p>crack</p>
+</li>
+<li>
+<p>mia</p>
+</li>
+<li>
+<p>corrupted</p>
+</li>
+<li>
+<p>compilation</p>
+</li>
+<li>
+<p>incomplete</p>
+</li>
+<li>
+<p>demoversion</p>
+</li>
+</ul>
+</li>
+<li>
+<p>releaseFormat</p>
+
+<ul>
+<li>
+<p>dsk</p>
+</li>
+<li>
+<p>tzx</p>
+</li>
+<li>
+<p>tap</p>
+</li>
+<li>
+<p>trd</p>
+</li>
+<li>
+<p>scl</p>
+</li>
+<li>
+<p>bin</p>
+</li>
+<li>
+<p>sna</p>
+</li>
+<li>
+<p>z80</p>
+</li>
+<li>
+<p>fdi</p>
+</li>
+<li>
+<p>udi</p>
+</li>
+<li>
+<p>td0</p>
+</li>
+<li>
+<p>rom</p>
+</li>
+<li>
+<p>spg</p>
+</li>
+</ul>
+</li>
+<li>
+<p>version - version number of a release</p>
+</li>
+<li>
+<p>inlays - URLs of cover inlay files</p>
+</li>
+<li>
+<p>ads - URLs of advertisement files</p>
+</li>
+<li>
+<p>instructions - URLs of manuals</p>
+</li>
+<li>
+<p>importIds - IDs used for this release in other databases.</p>
+</li>
+</ul>
+
+<h2>Author</h2>
+
+<p>Author is a person.</p>
+
+<p>All authors:<br />
+<a href="http://zxart.ee/api/export:author/limit:10/filter:authorAll" style="text-decoration:none;">http://zxart.ee/api/export:author/limit:10/filter:authorAll</a></p>
+
+<p>10 last added authors:<br />
+<a href="http://zxart.ee/api/export:author/limit:10/filter:authorAll/order:date,desc">http://zxart.ee/api/export:author/limit:10/filter:authorAll/order:date,desc</a></p>
+
+<p>Author with ID 2202:<br />
+<a href="http://zxart.ee/api/export:author/filter:authorId=2202">http://zxart.ee/api/export:author/filter:authorId=2202</a></p>
+
+<h3>Fields:</h3>
+
+<ul>
+<li>
+<p>id</p>
+</li>
+<li>
+<p>title - author’s nickname</p>
+</li>
+<li>
+<p>url - URL on ZX-Art</p>
+</li>
+<li>
+<p>dateCreated</p>
+</li>
+<li>
+<p>dateModified</p>
+</li>
+<li>
+<p>realName</p>
+</li>
+<li>
+<p>tunesQuantity</p>
+</li>
+<li>
+<p>picturesQuantity</p>
+</li>
+<li>
+<p>city - name of author’s city</p>
+</li>
+<li>
+<p>country - name of author’s country</p>
+</li>
+<li>
+<p>importIds - IDs used for this author in other databases</p>
+</li>
+<li>
+<p>aliases - list of author’s aliases IDs</p>
+</li>
+</ul>
+
+<h2>Author’s alias</h2>
+
+<p>Author’s alias is an alternative nickname of author.</p>
+
+<p>All authors’ aliases:<br />
+<a href="http://zxart.ee/api/export:authorAlias/filter:authorAliasAll">http://zxart.ee/api/export:authorAlias/filter:authorAliasAll</a></p>
+
+<p>Author’s alias with ID 86146:<br />
+<a href="http://zxart.ee/api/export:authorAlias/filter:authorAliasId=86146">http://zxart.ee/api/export:authorAlias/filter:authorAliasId=86146</a></p>
+
+<h3>Fields:</h3>
+
+<ul>
+<li>
+<p>id</p>
+</li>
+<li>
+<p>title - author aliases nickname</p>
+</li>
+<li>
+<p>url - URL on ZX-Art</p>
+</li>
+<li>
+<p>authorId - original author ID</p>
+</li>
+<li>
+<p>importIds - IDs used for this author alias in other databases</p>
+</li>
+</ul>
+
+<h2>Picture</h2>
+
+<p>A picture of author.</p>
+
+<p>First 10 pictures:<br />
+<a href="http://zxart.ee/api/export:zxPicture/filter:zxPicture/limit:10" style="text-decoration:none;">http://zxart.ee/api/export:zxPicture/filter:zxPicture/limit:10</a></p>
+
+<p>10 last added pictures:<br />
+<a href="/api/export:zxPicture/filter:zxPicture/limit:10/order:date,desc">http://zxart.ee/api/export:zxPicture/filter:zxPicture/limit:10/order:date,desc</a></p>
+
+<p>Picture with ID 2232:<br />
+<a href="http://zxart.ee/api/export:zxPicture/limit:10/filter:zxPictureId=2232" style="text-decoration:none;">http://zxart.ee/api/export:zxPicture/limit:10/filter:zxPictureId=2232</a></p>
+
+<h3>Fields:</h3>
+
+<ul>
+<li>
+<p>id</p>
+</li>
+<li>
+<p>title - picture name</p>
+</li>
+<li>
+<p>url - URL on ZX-Art</p>
+</li>
+<li>
+<p>dateCreated - creation date’s timestamp</p>
+</li>
+<li>
+<p>dateModified - modification date’s timestamp</p>
+</li>
+<li>
+<p>partyId - ID of demoparty/competition</p>
+</li>
+<li>
+<p>partyPlace - place taken in party</p>
+</li>
+<li>
+<p>compo - compo name</p>
+</li>
+<li>
+<p>authorIds - list of picture authors’ IDs</p>
+</li>
+<li>
+<p>tags - tag names in selected language</p>
+</li>
+<li>
+<p>type - image format type</p>
+</li>
+<li>
+<p>rating - ZX-Art’s rating</p>
+</li>
+<li>
+<p>views - quantity of views</p>
+</li>
+<li>
+<p>year - year of publication</p>
+</li>
+<li>
+<p>description</p>
+</li>
+<li>
+<p>imageUrl - image URL in PC format</p>
+</li>
+<li>
+<p>originalUrl - original binary file’s URL</p>
+</li>
+</ul>
+
+<h2>Tune</h2>
+
+<p>Musical tune of author.</p>
+
+<p>First 10 tunes:<br />
+<a href="http://zxart.ee/api/export:zxMusic/limit:10/">http://zxart.ee/api/export:zxMusic/limit:10/</a></p>
+
+<p>Last 10 added tunes:<br />
+<a href="/api/export:zxMusic/limit:10/order:date,desc">http://zxart.ee/api/export:zxMusic/limit:10/order:date,desc</a></p>
+
+<p>Tune with ID 19717:<br />
+<a href="http://zxart.ee/api/export:zxMusic/limit:10/filter:zxMusicId=19717" style="text-decoration:none;">http://zxart.ee/api/export:zxMusic/limit:10/filter:zxMusicId=19717</a></p>
+
+<h3>Fields:</h3>
+
+<ul>
+<li>
+<p>id</p>
+</li>
+<li>
+<p>title - tune name</p>
+</li>
+<li>
+<p>url - URL on ZX-Art</p>
+</li>
+<li>
+<p>dateCreated - creation date’s timestamp</p>
+</li>
+<li>
+<p>dateModified - modification date’s timestamp</p>
+</li>
+<li>
+<p>partyId - ID of demoparty/competition</p>
+</li>
+<li>
+<p>partyPlace - place taken in party</p>
+</li>
+<li>
+<p>compo - compo name</p>
+</li>
+<li>
+<p>authorIds - list of picture authors’ IDs</p>
+</li>
+<li>
+<p>time - duration of tune</p>
+</li>
+<li>
+<p>originalUrl - original binary file’s URL</p>
+</li>
+</ul>
+
+<h2>Group</h2>
+
+<p>Group can be a demoscene group, publisher, company or any other group of authors.</p>
+
+<p>First 10 groups:<br />
+<a href="http://zxart.ee/api/export:group/limit:10/">http://zxart.ee/api/export:group/limit:10/</a></p>
+
+<p>Group with ID 87126:</p>
+
+<p><a href="http://zxart.ee/api/export:group/filter:groupId=87126">http://zxart.ee/api/export:group/filter:groupId=87126</a></p>
+
+<h3>Fields</h3>
+
+<ul>
+<li>
+<p>id</p>
+</li>
+<li>
+<p>title - group name</p>
+</li>
+<li>
+<p>url - URL on ZX-Art</p>
+</li>
+<li>
+<p>dateCreated - creation date’s timestamp</p>
+</li>
+<li>
+<p>dateModified - modification date’s timestamp</p>
+</li>
+<li>
+<p>city - name of group’s city</p>
+</li>
+<li>
+<p>country - name of group’s country</p>
+</li>
+<li>
+<p>subGroupIds - group’s subgroups. Appropriate for associations.</p>
+</li>
+<li>
+<p>importIds - IDs used for this group in other databases</p>
+</li>
+<li>
+<p>aliases - list of group aliases’ IDs</p>
+</li>
+</ul>
+
+<h2>Group’s alias</h2>
+
+<p>Group’s alias is an alternative title of group.</p>
+
+<p>All groups’ aliases:<br />
+<a href="http://zxart.ee/api/export:groupAlias/filter:groupAliasAll">http://zxart.ee/api/export:groupAlias/filter:groupAliasAll</a></p>
+
+<p>Group’s alias with ID 86117610946:<br />
+<a href="http://zxart.ee/api/export:authorAlias/filter:authorAliasId=176109">http://zxart.ee/api/export:authorAlias/filter:authorAliasId=176109</a></p>
+
+<h3>Fields:</h3>
+
+<ul>
+<li>
+<p>id</p>
+</li>
+<li>
+<p>title - author aliases nickname</p>
+</li>
+<li>
+<p>url - URL on ZX-Art</p>
+</li>
+<li>
+<p>dateCreated - creation date’s timestamp</p>
+</li>
+<li>
+<p>dateModified - modification date’s timestamp</p>
+</li>
+<li>
+<p>groupId - parent group ID</p>
+</li>
+<li>
+<p>importIds - IDs used for this group’s alias in other databases</p>
+</li>
+</ul>
