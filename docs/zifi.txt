@@ -38,7 +38,7 @@ http://zxart.ee/zxnet/?a=m&o=p - most listened music
 
 http://zxart.ee/zxnet/?a=g&o=y - top of last year published 6912
 http://zxart.ee/zxnet/?a=g&o=y&t=giga - top of last year published gigascreens
-http://zxart.ee/zxnet/?a=g&o=y&t=giga - most viewed gigascreens
+http://zxart.ee/zxnet/?a=g&o=p&t=giga - most viewed gigascreens
 http://zxart.ee/zxnet/?a=g&o=w&t=multi - winner-places multicolors
 http://zxart.ee/zxnet/?a=g&o=r&t=color - top-rated extended palette
 http://zxart.ee/zxnet/?a=g&o=r&t=pixel - top-rated color/pixel images
