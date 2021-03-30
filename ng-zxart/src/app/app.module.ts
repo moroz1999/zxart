@@ -9,7 +9,14 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {PagesSelectorComponent} from './shared/components/pages-selector/pages-selector.component';
 import {environment} from '../environments/environment';
-import { ZxProdComponent } from './zx-prod/zx-prod.component';
+import {ZxProdComponent} from './zx-prod/zx-prod.component';
+import {FormsModule} from '@angular/forms';
+import {YearSelectorComponent} from './shared/components/year-selector/year-selector.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {YearSelectorDialogComponent} from './shared/components/year-selector/year-selector-dialog/year-selector-dialog.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(httpClient, `${environment.assetsUrl}i18n/`);
@@ -20,6 +27,8 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
     ZxProdsListComponent,
     PagesSelectorComponent,
     ZxProdComponent,
+    YearSelectorComponent,
+    YearSelectorDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -33,10 +42,15 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
       },
     }),
     AngularSvgIconModule.forRoot(),
+    FormsModule,
+    BrowserAnimationsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatCheckboxModule,
   ],
   providers: [],
   bootstrap: [],
-  entryComponents: [ZxProdsListComponent]
+  entryComponents: [ZxProdsListComponent],
 })
 export class AppModule {
 

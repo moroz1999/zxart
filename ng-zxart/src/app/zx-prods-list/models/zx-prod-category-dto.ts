@@ -5,4 +5,5 @@ export interface ZxProdCategoryDto extends StructureElementDto {
   readonly title: string;
   readonly prods: Array<ZxProdDto>;
   readonly prodsAmount: number;
+  readonly years: Array<number>;
 }

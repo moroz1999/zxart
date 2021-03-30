@@ -46,7 +46,7 @@ class zxProdCategoryElement extends structureElement implements MetadataProvider
     protected $viewName = 'short';
 
     protected $lettersSelectorInfo;
-    protected $yearsSelectorInfo;
+    protected $yearsSelector;
 
     protected function setModuleStructure(&$moduleStructure)
     {

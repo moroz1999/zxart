@@ -1,0 +1,12 @@
+@import "shared/dialogs";
+@import "shared/vars";
+
+.years {
+  column-count: 5;
+  column-gap: $padding-lg;
+}
+
+.year {
+  padding-bottom: $padding-sm;
+  break-inside: avoid;
+}

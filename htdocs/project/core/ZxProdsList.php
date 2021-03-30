@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Connection;
+use Illuminate\Database\Query\Builder;
 
 const ZXPRODS_TABLE = 'module_zxprod';
 
@@ -14,8 +15,11 @@ trait ZxProdsList
      * @var zxProdElement[]
      */
     protected array $prods;
-    protected $pager;
     protected int $prodsAmount;
+
+    protected ApiQuery $apiQuery;
+    protected ?Builder $filteredQuery;
+    protected ?Builder $baseQuery;
 
     abstract public function getProdsListBaseQuery();
 
@@ -35,11 +39,55 @@ trait ZxProdsList
     {
         if (!isset($this->prods)) {
             $this->prods = [];
+            if ($apiQuery = $this->getApiQuery()) {
+                if ($result = $apiQuery->getQueryResult()) {
+                    $this->prods = $result['zxProd'];
+                    $this->prodsAmount = $result['totalAmount'];
+                }
+            }
+        }
+
+        return $this->prods;
+    }
+
+    public function getApiQuery()
+    {
+        if (!isset($this->apiQuery)) {
             $this->getSubCategoriesTreeIds($subcategoriesIds);
             $subcategoriesIds = array_unique($subcategoriesIds);
             $controller = $this->getService('controller');
 
-            $url = $this->getFilterUrl();
+            $filters = ['zxProdCategory' => $subcategoriesIds];
+            /**
+             * @var ApiQueriesManager $apiQueriesManager
+             */
+            $apiQueriesManager = $this->getService('ApiQueriesManager');
+            $apiQuery = $apiQueriesManager->getQuery()->setExportType('zxProd')->setFiltrationParameters($filters);
+            $this->baseQuery = $apiQuery->getExportFilteredQuery();
+
+            if ($letter = $controller->getParameter('letter')) {
+                if (in_array($letter, self::$letters)) {
+                    $filters['zxProdFirstLetter'] = $letter;
+                }
+            }
+            $filterYears = [];
+            $yearFrom = (int)$controller->getParameter('yearFrom');
+            $yearTo = (int)$controller->getParameter('yearTo');
+            if ($yearFrom && $yearTo && $yearFrom < $yearTo) {
+                for ($year = $yearFrom; $year <= $yearTo; $year++) {
+                    $filterYears[] = $year;
+                }
+            } elseif ($yearFrom) {
+                $filterYears[] = $yearFrom;
+            } elseif ($yearTo) {
+                $filterYears[] = $yearTo;
+            }
+            if ($filterYears) {
+                $filters['zxProdYear'] = $filterYears;
+            }
+            $this->apiQuery = $apiQueriesManager->getQuery()->setExportType('zxProd')->setFiltrationParameters($filters);
+            $this->filteredQuery = clone($this->apiQuery->getExportFilteredQuery());
+
             $elementsOnPage = (int)$controller->getParameter('elementsOnPage');
             if (!$elementsOnPage) {
                 $elementsOnPage = 100;
@@ -49,32 +97,11 @@ trait ZxProdsList
             if (!$currentPage) {
                 $currentPage = 1;
             }
-            $filters = ['zxProdCategory' => $subcategoriesIds];
-            if ($letter = $controller->getParameter('letter')) {
-                if (in_array($letter, self::$letters)) {
-                    $filters['zxProdFirstLetter'] = $letter;
-                }
-            }
-            if ($year = (int)$controller->getParameter('year')) {
-                if ($year > 0) {
-                    $filters['zxProdYear'] = $year;
-                }
-            }
-
-            /**
-             * @var ApiQueriesManager $apiQueriesManager
-             */
-            $apiQueriesManager = $this->getService('ApiQueriesManager');
-            $apiQuery = $apiQueriesManager->getQuery()->setExportType('zxProd')->setFiltrationParameters($filters)
-                ->setLimit($elementsOnPage)->setStart($elementsOnPage * ($currentPage - 1))->setOrder($order);
-            if ($result = $apiQuery->getQueryResult()) {
-                $this->prods = $result['zxProd'];
-                $this->prodsAmount = $result['totalAmount'];
-                $this->pager = new pager($url, $result['totalAmount'], $elementsOnPage, $currentPage);
-            }
+            $this->apiQuery->setLimit($elementsOnPage)
+                ->setStart($elementsOnPage * ($currentPage - 1))
+                ->setOrder($order);
         }
-
-        return $this->prods;
+        return $this->apiQuery;
     }
 
     public function getProdsAmount()
@@ -104,27 +131,6 @@ trait ZxProdsList
         return $query;
     }
 
-    protected $prodsListBaseOptimizedQuery;
-
-    protected function getProdsListBaseOptimizedQuery()
-    {
-        if ($this->prodsListBaseOptimizedQuery === null) {
-            /**
-             * @var Connection $db
-             */
-            $db = $this->getService('db');
-
-            $prodsListBaseQuery = $this->getProdsListBaseQuery();
-            $db->insert($db->raw("DROP TABLE IF EXISTS engine_baseprods"));
-            $db->insert(
-                $db->raw("CREATE TEMPORARY TABLE engine_baseprods " . $prodsListBaseQuery->toSql()),
-                $prodsListBaseQuery->getBindings()
-            );
-            $this->prodsListBaseOptimizedQuery = $db->table('baseprods')->select('id');
-        }
-        return $this->prodsListBaseOptimizedQuery;
-    }
-
     /**
      * @return zxProdCategoryElement[]
      */
@@ -136,30 +142,6 @@ trait ZxProdsList
         }
 
         return $this->categories;
-    }
-
-    public function getPager()
-    {
-        if ($this->pager === null) {
-            $this->getProds();
-        }
-        return $this->pager;
-    }
-
-    protected function getFilterUrl($ignore = false)
-    {
-        $controller = $this->getService('controller');
-
-        $url = $this->getUrl();
-        if (($ignore != 'letter') && $letter = $controller->getParameter('letter')) {
-            if (in_array($letter, self::$letters)) {
-                $url .= 'letter:' . $letter . '/';
-            }
-        }
-        if (($ignore != 'year') && $year = $controller->getParameter('year')) {
-            $url .= 'year:' . (int)$year . '/';
-        }
-        return $url;
     }
 
     /**
@@ -174,43 +156,73 @@ trait ZxProdsList
         return $result;
     }
 
-    public function getYearsSelectorInfo()
+    public function getYearsSelector(): array
     {
-        if ($this->yearsSelectorInfo === null) {
-            $this->yearsSelectorInfo = [];
-            $url = $this->getFilterUrl('year');
-            /**
-             * @var Connection $db
-             */
-            $db = $this->getService('db');
-            $query = $db->table(ZXPRODS_TABLE)->select('year')->groupBy('year');
-            if ($records = $query->get()) {
-                foreach ($records as $record) {
-                    if ($record['year']) {
-                        $this->yearsSelectorInfo[] = [
-                            'url' => $url . 'year:' . $record['year'] . '/',
-                            'title' => $record['year'],
-                        ];
-                    }
+        if ($this->yearsSelector === null) {
+            $this->yearsSelector = [];
+            $values = $this->getSelectorValues('year');
+            $values = explode(',', $values);
+            if ($values) {
+                $query = clone($this->getBaseQuery());
+            } else {
+                $query = clone($this->getFilteredQuery());
+            }
+            if ($query) {
+                $years = $query
+                    ->distinct()
+                    ->orderBy('year', 'asc')
+                    ->where('year', '!=', 0)
+                    ->pluck('year');
+
+                foreach ($years as $year) {
+                    $this->yearsSelector[] = [
+                        'value' => $year,
+                        'title' => $year,
+                        'selected' => in_array($year, $values),
+                    ];
                 }
             }
         }
-        return $this->yearsSelectorInfo;
+        return $this->yearsSelector;
     }
 
-    public function getLettersSelectorInfo()
+    private function getSelectorValues(string $name): ?string
     {
-        if ($this->lettersSelectorInfo === null) {
-            $this->lettersSelectorInfo = [];
-            $url = $this->getFilterUrl('letter');
-            foreach (self::$letters as $letter) {
-                $this->lettersSelectorInfo[] = [
-                    'url' => $url . 'letter:' . $letter . '/',
-                    'title' => $letter,
-                ];
-            }
+        if ($value = controller::getInstance()->getParameter($name)) {
+            return $value;
         }
-
-        return $this->lettersSelectorInfo;
+        return null;
     }
+
+    private function getFilteredQuery(): ?Builder
+    {
+        if (!$this->filteredQuery) {
+            $this->getApiQuery();
+        }
+        return $this->filteredQuery;
+    }
+
+    private function getBaseQuery(): ?Builder
+    {
+        if (!$this->baseQuery) {
+            $this->getApiQuery();
+        }
+        return $this->baseQuery;
+    }
+
+//    public function getLettersSelectorInfo()
+//    {
+//        if ($this->lettersSelectorInfo === null) {
+//            $this->lettersSelectorInfo = [];
+//            $url = $this->getFilterUrl('letter');
+//            foreach (self::$letters as $letter) {
+//                $this->lettersSelectorInfo[] = [
+//                    'url' => $url . 'letter:' . $letter . '/',
+//                    'title' => $letter,
+//                ];
+//            }
+//        }
+//
+//        return $this->lettersSelectorInfo;
+//    }
 }

@@ -1,6 +1,8 @@
 <div *ngIf="model">
-  <app-pages-selector [pagesAmount]="pagesAmount" [currentPage]="currentPage"
-                      (clickCallback)="setCurrentPage($event)"></app-pages-selector>
+  <app-year-selector
+    [years]="model.years"
+    (selectedYears)="yearsChanged($event)"
+  >{{ 'prods-list.filters.year.select' | translate }}</app-year-selector>
   {{ model.title }}
   <div *ngIf="model.prods" class="zxprods">
     <app-zx-prod
@@ -8,4 +10,6 @@
       *ngFor="let zxProd of model.prods"
       [model]="zxProd"></app-zx-prod>
   </div>
+  <app-pages-selector [pagesAmount]="pagesAmount" [currentPage]="currentPage"
+                      (clickCallback)="setCurrentPage($event)"></app-pages-selector>
 </div>

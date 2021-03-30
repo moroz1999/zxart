@@ -13,6 +13,7 @@ export class ZxProdsListComponent implements OnInit {
   public pagesAmount = 0;
   public currentPage = 1;
   public elementsOnPage = 100;
+  public years: Array<number> = [];
 
   @Input() elementId: number = 0;
 
@@ -29,6 +30,7 @@ export class ZxProdsListComponent implements OnInit {
     const parameters = {
       elementsOnPage: this.elementsOnPage,
       page: this.currentPage,
+      years: this.years.join(','),
     };
     this.elementsService.getModel<ZxProdCategoryResponseDto, ZxProdsList>(this.elementId, ZxProdsList, parameters).subscribe(
       model => {
@@ -40,6 +42,11 @@ export class ZxProdsListComponent implements OnInit {
 
   setCurrentPage(newPage: number): void {
     this.currentPage = newPage;
+    this.fetchModel();
+  }
+
+  yearsChanged(years: Array<number>) {
+    this.years = years;
     this.fetchModel();
   }
 }

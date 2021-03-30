@@ -3,7 +3,9 @@
 
 :host {
   display: block;
-  width: 100%;
+  position: sticky;
+  bottom: 0;
+  right: 0;
 }
 
 .pages-selector {

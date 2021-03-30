@@ -6,7 +6,7 @@ export class ZxProdsList extends StructureElement {
   public title: string;
   public prodsAmount: number;
   public prods: Array<ZxProd>;
-
+  public years: Array<number> = [];
   constructor(
     data: ZxProdCategoryResponseDto,
   ) {
@@ -14,5 +14,6 @@ export class ZxProdsList extends StructureElement {
     this.title = data.zxProdCategory.title;
     this.prods = data.zxProdCategory.prods.map(item => new ZxProd(item));
     this.prodsAmount = data.zxProdCategory.prodsAmount;
+    this.years = data.zxProdCategory.years;
   }
 }
