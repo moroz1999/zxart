@@ -21,6 +21,9 @@ trait ZxProdsList
     protected ?Builder $filteredQuery;
     protected ?Builder $baseQuery;
 
+    protected array $yearsSelector;
+    protected array $lettersSelector;
+
     abstract public function getProdsListBaseQuery();
 
     public function getProdsInfo(): array
@@ -146,7 +149,7 @@ trait ZxProdsList
 
     public function getYearsSelector(): array
     {
-        if ($this->yearsSelector === null) {
+        if (!isset($this->yearsSelector)) {
             $this->yearsSelector = [];
             $values = $this->getSelectorValues('years');
             $values = explode(',', $values);
@@ -173,6 +176,35 @@ trait ZxProdsList
         }
         return $this->yearsSelector;
     }
+    public function getLettersSelector(): array
+    {
+        if (!isset($this->lettersSelector)) {
+            $this->lettersSelector = [];
+            $values = $this->getSelectorValues('letters');
+            $values = explode(',', $values);
+            if ($values) {
+                $query = clone($this->getBaseQuery());
+            } else {
+                $query = clone($this->getFilteredQuery());
+            }
+            if ($query) {
+                $letters = $query
+                    ->distinct()
+                    ->selectRaw("LEFT(title, 1) AS letter")
+                    ->orderBy('letter', 'asc')
+                    ->pluck('letter');
+
+                foreach ($letters as $letter) {
+                    $this->lettersSelector[] = [
+                        'value' => $letter,
+                        'title' => $letter,
+                        'selected' => in_array($letter, $values),
+                    ];
+                }
+            }
+        }
+        return $this->lettersSelector;
+    }
 
     private function getSelectorValues(string $name): ?string
     {
@@ -197,20 +229,4 @@ trait ZxProdsList
         }
         return $this->baseQuery;
     }
-
-//    public function getLettersSelectorInfo()
-//    {
-//        if ($this->lettersSelectorInfo === null) {
-//            $this->lettersSelectorInfo = [];
-//            $url = $this->getFilterUrl('letter');
-//            foreach (self::$letters as $letter) {
-//                $this->lettersSelectorInfo[] = [
-//                    'url' => $url . 'letter:' . $letter . '/',
-//                    'title' => $letter,
-//                ];
-//            }
-//        }
-//
-//        return $this->lettersSelectorInfo;
-//    }
 }

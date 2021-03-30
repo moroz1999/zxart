@@ -13,40 +13,8 @@ class zxProdCategoryElement extends structureElement implements MetadataProvider
     public $allowedTypes = ['zxProdCategory', 'soft'];
     public $defaultActionName = 'show';
     public $role = 'container';
-    protected static $letters = [
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'M',
-        'N',
-        'O',
-        'P',
-        'Q',
-        'R',
-        'S',
-        'T',
-        'U',
-        'V',
-        'W',
-        'X',
-        'Y',
-        'Z',
-        '#',
-    ];
 
     protected $viewName = 'short';
-
-    protected $lettersSelectorInfo;
-    protected $yearsSelector;
 
     protected function setModuleStructure(&$moduleStructure)
     {

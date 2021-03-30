@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {YearSelectorDialogComponent} from './year-selector-dialog/year-selector-dialog.component';
-import {YearSelectorDto, YearSelectorValue} from '../../models/year-selector-dto';
+import {SelectorDto, SelectorValue} from '../../models/selector-dto';
 
 @Component({
   selector: 'app-year-selector',
@@ -9,7 +9,7 @@ import {YearSelectorDto, YearSelectorValue} from '../../models/year-selector-dto
   styleUrls: ['./year-selector.component.scss'],
 })
 export class YearSelectorComponent implements OnInit, OnChanges {
-  @Input() yearsSelector!: YearSelectorDto;
+  @Input() yearsSelector!: SelectorDto;
   selectedYears: Array<string> = [];
   @Output() newValues = new EventEmitter<Array<number>>();
   public value = 0;

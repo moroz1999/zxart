@@ -15,6 +15,7 @@ export class ZxProd extends StructureElement {
     this.imagesUrls = data.imagesUrls;
     this.votes = data.votes;
     this.votePercent = data.votePercent;
+    this.imagesUrls = this.imagesUrls.map(image => image.replace('http://localhost', 'https://zxart.ee'));
 
     if (this.imagesUrls) {
       if (this.imagesUrls.length > 0) {

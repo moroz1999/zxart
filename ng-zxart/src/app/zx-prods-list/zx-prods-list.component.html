@@ -1,9 +1,11 @@
 <div *ngIf="model">
+  <h1>{{ model.h1 }}</h1>
   <app-year-selector
     [yearsSelector]="model.yearsSelector"
     (newValues)="yearsChanged($event)"
   ></app-year-selector>
-  {{ model.title }}
+  <app-letter-selector
+    [lettersSelector]="model.lettersSelector"></app-letter-selector>
   <div *ngIf="model.prods" class="zxprods">
     <app-zx-prod
       class="subcontentmodule_component subcontentmodule_square zxprod_short"
@@ -12,4 +14,5 @@
   </div>
   <app-pages-selector [pagesAmount]="pagesAmount" [currentPage]="currentPage"
                       (clickCallback)="setCurrentPage($event)"></app-pages-selector>
+
 </div>

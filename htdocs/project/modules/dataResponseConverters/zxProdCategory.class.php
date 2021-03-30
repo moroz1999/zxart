@@ -9,11 +9,13 @@ class zxProdCategoryDataResponseConverter extends StructuredDataResponseConverte
         return [
             'id' => 'id',
             'title' => 'title',
+            'h1' => 'getH1',
             'url' => 'getUrl',
             'structureType' => 'structureType',
             'categoriesIds' => 'getCategoriesIds',
             'prods' => 'getProdsInfo',
             'yearsSelector' => 'getYearsSelector',
+            'lettersSelector' => 'getLettersSelector',
             'prodsAmount' => 'getProdsAmount',
         ];
     }
@@ -34,12 +36,14 @@ class zxProdCategoryDataResponseConverter extends StructuredDataResponseConverte
             ],
             'details' => [
                 'id',
+                'h1',
                 'title',
                 'url',
                 'categories',
                 'prodsAmount',
                 'prods',
                 'yearsSelector',
+                'lettersSelector',
             ],
         ];
     }
