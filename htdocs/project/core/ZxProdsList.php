@@ -70,20 +70,8 @@ trait ZxProdsList
                     $filters['zxProdFirstLetter'] = $letter;
                 }
             }
-            $filterYears = [];
-            $yearFrom = (int)$controller->getParameter('yearFrom');
-            $yearTo = (int)$controller->getParameter('yearTo');
-            if ($yearFrom && $yearTo && $yearFrom < $yearTo) {
-                for ($year = $yearFrom; $year <= $yearTo; $year++) {
-                    $filterYears[] = $year;
-                }
-            } elseif ($yearFrom) {
-                $filterYears[] = $yearFrom;
-            } elseif ($yearTo) {
-                $filterYears[] = $yearTo;
-            }
-            if ($filterYears) {
-                $filters['zxProdYear'] = $filterYears;
+            if ($values = $this->getSelectorValues('years')) {
+                $filters['zxProdYear'] = explode(',', $values);
             }
             $this->apiQuery = $apiQueriesManager->getQuery()->setExportType('zxProd')->setFiltrationParameters($filters);
             $this->filteredQuery = clone($this->apiQuery->getExportFilteredQuery());
@@ -160,7 +148,7 @@ trait ZxProdsList
     {
         if ($this->yearsSelector === null) {
             $this->yearsSelector = [];
-            $values = $this->getSelectorValues('year');
+            $values = $this->getSelectorValues('years');
             $values = explode(',', $values);
             if ($values) {
                 $query = clone($this->getBaseQuery());

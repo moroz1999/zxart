@@ -5,7 +5,7 @@ import {map} from 'rxjs/operators';
 import {JsonResponse} from '../models/json-response';
 import {StructureElement} from '../models/structure-element';
 
-interface PostParameters {
+export interface PostParameters {
   [key: string]: Primitive;
 }
 

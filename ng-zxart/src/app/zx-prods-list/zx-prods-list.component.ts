@@ -1,7 +1,8 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {ElementsService} from '../shared/services/elements.service';
+import {ElementsService, PostParameters} from '../shared/services/elements.service';
 import {ZxProdsList} from './models/zx-prods-list.model';
 import {ZxProdCategoryResponseDto} from './models/zx-prod-category-response-dto';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-zx-prods-list',
@@ -18,20 +19,25 @@ export class ZxProdsListComponent implements OnInit {
   @Input() elementId: number = 0;
 
   constructor(
+    public translate: TranslateService,
     private elementsService: ElementsService,
   ) {
   }
 
   ngOnInit(): void {
+    this.translate.addLangs(['en']);
+    this.translate.setDefaultLang('en');
     this.fetchModel();
   }
 
   private fetchModel(): void {
-    const parameters = {
+    const parameters: PostParameters = {
       elementsOnPage: this.elementsOnPage,
       page: this.currentPage,
-      years: this.years.join(','),
     };
+    if (this.years.length) {
+      parameters.years = this.years.join(',');
+    }
     this.elementsService.getModel<ZxProdCategoryResponseDto, ZxProdsList>(this.elementId, ZxProdsList, parameters).subscribe(
       model => {
         this.model = model;

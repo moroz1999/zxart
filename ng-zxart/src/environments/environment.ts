@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  assetsUrl: `//${location.hostname}/assets/`,
+  assetsUrl: `//${location.hostname}:${location.port}/assets/`,
 };

@@ -11,12 +11,12 @@ import {PagesSelectorComponent} from './shared/components/pages-selector/pages-s
 import {environment} from '../environments/environment';
 import {ZxProdComponent} from './zx-prod/zx-prod.component';
 import {FormsModule} from '@angular/forms';
-import {YearSelectorComponent} from './shared/components/year-selector/year-selector.component';
+import {YearSelectorComponent} from './zx-prods-list/components/year-selector/year-selector.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {YearSelectorDialogComponent} from './shared/components/year-selector/year-selector-dialog/year-selector-dialog.component';
+import {YearSelectorDialogComponent} from './zx-prods-list/components/year-selector/year-selector-dialog/year-selector-dialog.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(httpClient, `${environment.assetsUrl}i18n/`);

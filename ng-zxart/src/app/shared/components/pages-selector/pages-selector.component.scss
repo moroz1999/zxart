@@ -2,17 +2,18 @@
 @import 'shared/breakpoints';
 
 :host {
-  display: block;
+  display: flex;
   position: sticky;
   bottom: 0;
   right: 0;
+  justify-content: flex-end;
 }
 
 .pages-selector {
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content: center;
+  background: $gray7;
 }
 
 .pages-item {

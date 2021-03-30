@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {KeyValue} from '@angular/common';
+import {YearSelectorDto} from '../../../models/year-selector-dto';
 
 
 @Component({
@@ -9,11 +9,16 @@ import {KeyValue} from '@angular/common';
   styleUrls: ['./year-selector-dialog.component.scss'],
 })
 export class YearSelectorDialogComponent implements OnInit {
-  selectedYears: { [key: number]: number; } = {};
+  selectedYears: { [key: number]: boolean; } = {};
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public years: Array<number>,
+    @Inject(MAT_DIALOG_DATA) public yearsSelector: YearSelectorDto,
   ) {
+    for (const year of yearsSelector) {
+      if (year.selected) {
+        this.selectedYears[year.value] = true;
+      }
+    }
   }
 
   ngOnInit(): void {

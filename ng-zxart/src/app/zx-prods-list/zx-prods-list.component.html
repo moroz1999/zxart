@@ -1,8 +1,8 @@
 <div *ngIf="model">
   <app-year-selector
-    [years]="model.years"
-    (selectedYears)="yearsChanged($event)"
-  >{{ 'prods-list.filters.year.select' | translate }}</app-year-selector>
+    [yearsSelector]="model.yearsSelector"
+    (newValues)="yearsChanged($event)"
+  ></app-year-selector>
   {{ model.title }}
   <div *ngIf="model.prods" class="zxprods">
     <app-zx-prod
