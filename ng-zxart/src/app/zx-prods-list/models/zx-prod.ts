@@ -3,7 +3,7 @@ import {ZxProdDto} from './zx-prod-dto';
 
 export class ZxProd extends StructureElement {
   public title: string;
-  public imagesUrls: Array<string>;
+  public imagesUrls: Array<string> = [];
   public votes: number;
   public votePercent: number;
   public imageUrl?: string;
@@ -12,10 +12,12 @@ export class ZxProd extends StructureElement {
   constructor(data: ZxProdDto) {
     super(data);
     this.title = data.title;
-    this.imagesUrls = data.imagesUrls;
+    if (data.imagesUrls){
+      this.imagesUrls = data.imagesUrls;
+      this.imagesUrls = this.imagesUrls.map(image => image.replace('http://localhost', 'https://zxart.ee'));
+    }
     this.votes = data.votes;
     this.votePercent = data.votePercent;
-    this.imagesUrls = this.imagesUrls.map(image => image.replace('http://localhost', 'https://zxart.ee'));
 
     if (this.imagesUrls) {
       if (this.imagesUrls.length > 0) {

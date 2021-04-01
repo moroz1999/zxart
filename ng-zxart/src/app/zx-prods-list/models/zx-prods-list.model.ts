@@ -10,6 +10,7 @@ export class ZxProdsList extends StructureElement {
   public prods: Array<ZxProd> = [];
   public lettersSelector: SelectorDto = [];
   public yearsSelector: SelectorDto = [];
+  public sortingSelector: SelectorDto = [];
   constructor(
     data: ZxProdCategoryResponseDto,
   ) {
@@ -22,5 +23,6 @@ export class ZxProdsList extends StructureElement {
     this.prodsAmount = data.zxProdCategory.prodsAmount;
     this.lettersSelector = data.zxProdCategory.lettersSelector;
     this.yearsSelector = data.zxProdCategory.yearsSelector;
+    this.sortingSelector = data.zxProdCategory.sortingSelector;
   }
 }

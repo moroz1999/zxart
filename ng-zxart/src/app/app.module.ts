@@ -17,7 +17,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {YearSelectorDialogComponent} from './zx-prods-list/components/year-selector/year-selector-dialog/year-selector-dialog.component';
-import { LetterSelectorComponent } from './zx-prods-list/components/letter-selector/letter-selector.component';
+import {LetterSelectorComponent} from './zx-prods-list/components/letter-selector/letter-selector.component';
+import {SortingSelectorComponent} from './zx-prods-list/components/sorting-selector/sorting-selector.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(httpClient, `${environment.assetsUrl}i18n/`);
@@ -31,6 +32,7 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
     YearSelectorComponent,
     YearSelectorDialogComponent,
     LetterSelectorComponent,
+    SortingSelectorComponent,
   ],
   imports: [
     CommonModule,

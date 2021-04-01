@@ -4,6 +4,10 @@
     [yearsSelector]="model.yearsSelector"
     (newValues)="yearsChanged($event)"
   ></app-year-selector>
+  <app-sorting-selector
+    [sortingSelector]="model.sortingSelector"
+    (sortingSelected)="sortingSelected($event)"
+  ></app-sorting-selector>
   <app-letter-selector
     [lettersSelector]="model.lettersSelector"
     (letterSelected)="letterSelected($event)"

@@ -9,6 +9,7 @@ class zxProdQueryFilterConverter extends QueryFilterConverter
         'title',
         'year',
         'dateAdded',
+        'votes',
     ];
     public function convert($sourceData, $sourceType)
     {

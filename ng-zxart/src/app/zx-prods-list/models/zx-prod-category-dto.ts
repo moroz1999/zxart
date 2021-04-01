@@ -9,4 +9,5 @@ export interface ZxProdCategoryDto extends StructureElementDto {
   readonly prodsAmount: number;
   readonly lettersSelector: SelectorDto;
   readonly yearsSelector: SelectorDto;
+  readonly sortingSelector: SelectorDto;
 }

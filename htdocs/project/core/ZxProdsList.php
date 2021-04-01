@@ -23,6 +23,7 @@ trait ZxProdsList
 
     protected array $yearsSelector;
     protected array $lettersSelector;
+    protected array $sortingSelector;
 
     abstract public function getProdsListBaseQuery();
 
@@ -79,14 +80,16 @@ trait ZxProdsList
             if (!$elementsOnPage) {
                 $elementsOnPage = 100;
             }
-            $order = ['title' => 'asc'];
+            if ($value = $this->getSelectorValue('sorting')) {
+                $sort = [$value[0] => $value[1]];
+            }
             $currentPage = (int)$controller->getParameter('page');
             if (!$currentPage) {
                 $currentPage = 1;
             }
             $this->apiQuery->setLimit($elementsOnPage)
                 ->setStart($elementsOnPage * ($currentPage - 1))
-                ->setOrder($order);
+                ->setOrder($sort);
         }
         return $this->apiQuery;
     }
@@ -159,12 +162,39 @@ trait ZxProdsList
                     $this->yearsSelector[] = [
                         'value' => $year,
                         'title' => $year,
-                        'selected' => in_array($year, $values),
+                        'selected' => $values && in_array($year, $values),
                     ];
                 }
             }
         }
         return $this->yearsSelector;
+    }
+
+    public function getSortingSelector(): array
+    {
+        $sortTypes = [
+            'votes,asc',
+            'votes,desc',
+            'title,asc',
+            'title,desc',
+            'year,asc',
+            'year,desc',
+            'date,asc',
+            'date,desc',
+        ];
+        if (!isset($this->sortingSelector)) {
+            $values = $this->getSelectorValue('sorting');
+            $value = implode(',', $values);
+            $this->sortingSelector = [];
+            foreach ($sortTypes as $sortType) {
+                $this->sortingSelector[] = [
+                    'value' => $sortType,
+                    'title' => $sortType,
+                    'selected' => $sortType === $value,
+                ];
+            }
+        }
+        return $this->sortingSelector;
     }
 
     public function getLettersSelector(): array
@@ -179,12 +209,24 @@ trait ZxProdsList
                     ->orderBy('letter', 'asc')
                     ->pluck('letter');
 
+                $numericExists = true;
                 foreach ($letters as $letter) {
-                    $this->lettersSelector[] = [
-                        'value' => $letter,
-                        'title' => $letter,
+                    if (preg_match('/[a-zA-Z]/', $letter)) {
+                        $this->lettersSelector[] = [
+                            'value' => $letter,
+                            'title' => $letter,
+                            'selected' => $letter === $value,
+                        ];
+                    } else {
+                        $numericExists = true;
+                    }
+                }
+                if ($numericExists) {
+                    array_unshift($this->lettersSelector, [
+                        'value' => '#',
+                        'title' => '0-9',
                         'selected' => $letter === $value,
-                    ];
+                    ]);
                 }
             }
         }
@@ -206,6 +248,7 @@ trait ZxProdsList
     {
         if (!isset($this->selectorValues)) {
             $this->selectorValues = [
+                'sorting' => ['votes', 'desc'],
                 'years' => null,
                 'letter' => null,
             ];

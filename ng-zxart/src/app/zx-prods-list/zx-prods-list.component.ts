@@ -16,6 +16,7 @@ export class ZxProdsListComponent implements OnInit {
   public elementsOnPage = 100;
   public years: Array<string> = [];
   public letter?: string;
+  public sorting?: string;
 
   @Input() elementId: number = 0;
 
@@ -42,6 +43,9 @@ export class ZxProdsListComponent implements OnInit {
     if (this.letter) {
       parameters.letter = this.letter;
     }
+    if (this.sorting) {
+      parameters.sorting = this.sorting;
+    }
     this.elementsService.getModel<ZxProdCategoryResponseDto, ZxProdsList>(this.elementId, ZxProdsList, parameters).subscribe(
       model => {
         this.model = model;
@@ -62,6 +66,11 @@ export class ZxProdsListComponent implements OnInit {
 
   letterSelected(letter: string) {
     this.letter = letter;
+    this.fetchModel();
+  }
+
+  sortingSelected(sorting: string) {
+    this.sorting = sorting;
     this.fetchModel();
   }
 }
