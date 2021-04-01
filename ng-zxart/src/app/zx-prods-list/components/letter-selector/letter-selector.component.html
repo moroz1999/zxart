@@ -1,4 +1,7 @@
 <div class="letters">
+<button mat-button (pointerdown)="selectLetter('')">
+  All
+</button>
 <button mat-button *ngFor="let letter of lettersSelector" (pointerdown)="selectLetter(letter.value)">
   {{letter.title}}
 </button>

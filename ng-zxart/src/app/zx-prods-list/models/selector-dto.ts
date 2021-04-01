@@ -1,5 +1,5 @@
 export interface SelectorValue {
-  readonly value: Primitive;
+  readonly value: string;
   readonly title: string;
   readonly selected: boolean;
 }

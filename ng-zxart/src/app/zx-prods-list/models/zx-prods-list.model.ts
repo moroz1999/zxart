@@ -7,7 +7,7 @@ export class ZxProdsList extends StructureElement {
   public h1: string;
   public title: string;
   public prodsAmount: number;
-  public prods: Array<ZxProd>;
+  public prods: Array<ZxProd> = [];
   public lettersSelector: SelectorDto = [];
   public yearsSelector: SelectorDto = [];
   constructor(
@@ -16,7 +16,9 @@ export class ZxProdsList extends StructureElement {
     super(data.zxProdCategory);
     this.h1 = data.zxProdCategory.h1;
     this.title = data.zxProdCategory.title;
-    this.prods = data.zxProdCategory.prods.map(item => new ZxProd(item));
+    if (data.zxProdCategory.prods){
+      this.prods = data.zxProdCategory.prods.map(item => new ZxProd(item));
+    }
     this.prodsAmount = data.zxProdCategory.prodsAmount;
     this.lettersSelector = data.zxProdCategory.lettersSelector;
     this.yearsSelector = data.zxProdCategory.yearsSelector;

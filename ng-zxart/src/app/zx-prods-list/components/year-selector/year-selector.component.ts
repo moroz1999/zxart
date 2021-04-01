@@ -11,7 +11,7 @@ import {SelectorDto, SelectorValue} from '../../models/selector-dto';
 export class YearSelectorComponent implements OnInit, OnChanges {
   @Input() yearsSelector!: SelectorDto;
   selectedYears: Array<string> = [];
-  @Output() newValues = new EventEmitter<Array<number>>();
+  @Output() newValues = new EventEmitter<Array<string>>();
   public value = 0;
 
   constructor(
@@ -37,13 +37,13 @@ export class YearSelectorComponent implements OnInit, OnChanges {
       width: '30rem',
       data: this.yearsSelector,
     });
-    dialogRef.afterClosed().subscribe((result: { [key: number]: boolean; }) => {
-      let years = [] as Array<number>;
+    dialogRef.afterClosed().subscribe((result: { [key: string]: boolean; }) => {
+      let years = [] as Array<string>;
       if (result) {
         for (let year in result) {
           if (result.hasOwnProperty(year)) {
             if (result[year]) {
-              years.push(+year);
+              years.push(year);
             }
           }
         }

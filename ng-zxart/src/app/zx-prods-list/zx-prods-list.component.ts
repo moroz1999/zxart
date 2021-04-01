@@ -14,7 +14,8 @@ export class ZxProdsListComponent implements OnInit {
   public pagesAmount = 0;
   public currentPage = 1;
   public elementsOnPage = 100;
-  public years: Array<number> = [];
+  public years: Array<string> = [];
+  public letter?: string;
 
   @Input() elementId: number = 0;
 
@@ -38,6 +39,9 @@ export class ZxProdsListComponent implements OnInit {
     if (this.years.length) {
       parameters.years = this.years.join(',');
     }
+    if (this.letter) {
+      parameters.letter = this.letter;
+    }
     this.elementsService.getModel<ZxProdCategoryResponseDto, ZxProdsList>(this.elementId, ZxProdsList, parameters).subscribe(
       model => {
         this.model = model;
@@ -51,8 +55,13 @@ export class ZxProdsListComponent implements OnInit {
     this.fetchModel();
   }
 
-  yearsChanged(years: Array<number>) {
+  yearsChanged(years: Array<string>) {
     this.years = years;
+    this.fetchModel();
+  }
+
+  letterSelected(letter: string) {
+    this.letter = letter;
     this.fetchModel();
   }
 }

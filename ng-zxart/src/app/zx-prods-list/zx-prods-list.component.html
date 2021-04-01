@@ -5,7 +5,9 @@
     (newValues)="yearsChanged($event)"
   ></app-year-selector>
   <app-letter-selector
-    [lettersSelector]="model.lettersSelector"></app-letter-selector>
+    [lettersSelector]="model.lettersSelector"
+    (letterSelected)="letterSelected($event)"
+  ></app-letter-selector>
   <div *ngIf="model.prods" class="zxprods">
     <app-zx-prod
       class="subcontentmodule_component subcontentmodule_square zxprod_short"

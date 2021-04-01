@@ -67,18 +67,14 @@ trait ZxProdsList
             $apiQueriesManager = $this->getService('ApiQueriesManager');
             $apiQuery = $apiQueriesManager->getQuery()->setExportType('zxProd')->setFiltrationParameters($filters);
             $this->baseQuery = $apiQuery->getExportFilteredQuery();
-
             if ($letter = $controller->getParameter('letter')) {
-                if (in_array($letter, self::$letters)) {
-                    $filters['zxProdFirstLetter'] = $letter;
-                }
+                $filters['zxProdFirstLetter'] = $letter;
             }
-            if ($values = $this->getSelectorValues('years')) {
-                $filters['zxProdYear'] = explode(',', $values);
+            if ($values = $this->getSelectorValue('years')) {
+                $filters['zxProdYear'] = $values;
             }
             $this->apiQuery = $apiQueriesManager->getQuery()->setExportType('zxProd')->setFiltrationParameters($filters);
             $this->filteredQuery = clone($this->apiQuery->getExportFilteredQuery());
-
             $elementsOnPage = (int)$controller->getParameter('elementsOnPage');
             if (!$elementsOnPage) {
                 $elementsOnPage = 100;
@@ -151,14 +147,8 @@ trait ZxProdsList
     {
         if (!isset($this->yearsSelector)) {
             $this->yearsSelector = [];
-            $values = $this->getSelectorValues('years');
-            $values = explode(',', $values);
-            if ($values) {
-                $query = clone($this->getBaseQuery());
-            } else {
-                $query = clone($this->getFilteredQuery());
-            }
-            if ($query) {
+            if ($query = $this->getSelectorQuery('years')) {
+                $values = $this->getSelectorValue('years');
                 $years = $query
                     ->distinct()
                     ->orderBy('year', 'asc')
@@ -176,18 +166,13 @@ trait ZxProdsList
         }
         return $this->yearsSelector;
     }
+
     public function getLettersSelector(): array
     {
         if (!isset($this->lettersSelector)) {
             $this->lettersSelector = [];
-            $values = $this->getSelectorValues('letters');
-            $values = explode(',', $values);
-            if ($values) {
-                $query = clone($this->getBaseQuery());
-            } else {
-                $query = clone($this->getFilteredQuery());
-            }
-            if ($query) {
+            if ($query = $this->getSelectorQuery('letter')) {
+                $value = $this->getSelectorValue('letter');
                 $letters = $query
                     ->distinct()
                     ->selectRaw("LEFT(title, 1) AS letter")
@@ -198,7 +183,7 @@ trait ZxProdsList
                     $this->lettersSelector[] = [
                         'value' => $letter,
                         'title' => $letter,
-                        'selected' => in_array($letter, $values),
+                        'selected' => $letter === $value,
                     ];
                 }
             }
@@ -206,12 +191,36 @@ trait ZxProdsList
         return $this->lettersSelector;
     }
 
-    private function getSelectorValues(string $name): ?string
+    private function getSelectorQuery(string $selectorName)
     {
-        if ($value = controller::getInstance()->getParameter($name)) {
-            return $value;
+        $values = $this->getSelectorValue($selectorName);
+        if ($values) {
+            $query = clone($this->getBaseQuery());
+        } else {
+            $query = clone($this->getFilteredQuery());
         }
-        return null;
+        return $query;
+    }
+
+    private function getSelectorValue(string $name): ?array
+    {
+        if (!isset($this->selectorValues)) {
+            $this->selectorValues = [
+                'years' => null,
+                'letter' => null,
+            ];
+            foreach ($this->selectorValues as $selectorName => $selectorValue) {
+                if ($parameter = controller::getInstance()->getParameter($selectorName)) {
+                    $values = explode(',', $parameter);
+                    $this->selectorValues[$selectorName] = [];
+                    foreach ($values as $value) {
+                        $this->selectorValues[$selectorName][] = trim($value);
+                    }
+                }
+            }
+        }
+
+        return $this->selectorValues[$name];
     }
 
     private function getFilteredQuery(): ?Builder
