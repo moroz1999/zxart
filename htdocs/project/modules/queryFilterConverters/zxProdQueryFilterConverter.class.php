@@ -3,27 +3,36 @@
 class zxProdQueryFilterConverter extends QueryFilterConverter
 {
     use LinkedQueryFilterTrait;
-    protected array $fields = [
-        'id',
-        'partyplace',
-        'title',
-        'year',
-        'dateAdded',
-        'votes',
-    ];
+    
+    protected function getFields(): array
+    {
+        return [
+            $this->getTable() . '.id',
+            $this->getTable() . '.partyplace',
+            $this->getTable() . '.title',
+            $this->getTable() . '.year',
+            $this->getTable() . '.dateAdded',
+            $this->getStructureTable() . '.dateCreated',
+            $this->getTable() . '..votes',
+        ];
+    }
+
     public function convert($sourceData, $sourceType)
     {
         if ($sourceType == 'zxPicture') {
-            $query = $this->generateParentQuery($sourceData, 'module_zxprod', 'authorPicture', false);
+            $query = $this->generateParentQuery($sourceData, $this->getTable(), 'authorPicture', false);
         } elseif ($sourceType == 'zxRelease') {
-            $query = $this->generateParentQuery($sourceData, 'module_zxprod', 'structure', false);
+            $query = $this->generateParentQuery($sourceData, $this->getTable(), 'structure', false);
         } elseif ($sourceType == 'structure') {
             $query = $this->getService('db')
-                ->table('module_zxprod')
-                ->whereIn('id', $sourceData)
-                ->select($this->fields);
+                ->table($this->getTable())
+                ->whereIn($this->getTable() . '.id', $sourceData)
+                ->leftJoin($this->getStructureTable(), $this->getStructureTable() . '.id', '=', $this->getTable() . '.id')
+                ->select($this->getFields());
         } else {
-            $query = $this->getService('db')->table('module_zxprod')->select($this->fields);
+            $query = $this->getService('db')->table($this->getTable())
+                ->leftJoin($this->getStructureTable(), $this->getStructureTable() . '.id', '=', $this->getTable() . '.id')
+                ->select($this->getFields());
         }
         return $query;
     }

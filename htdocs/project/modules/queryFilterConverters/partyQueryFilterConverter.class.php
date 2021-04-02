@@ -4,11 +4,13 @@ class partyQueryFilterConverter extends QueryFilterConverter
 {
     use LinkedQueryFilterTrait;
 
-    protected array $fields = [
-        'id',
-        'title',
-    ];
-
+    protected function getFields(): array
+    {
+        return [
+            'id',
+            'title',
+        ];
+    }
     public function convert($sourceData, $sourceType)
     {
         if ($sourceType == 'zxMusic') {
@@ -16,7 +18,7 @@ class partyQueryFilterConverter extends QueryFilterConverter
         } elseif ($sourceType == 'zxPicture') {
             $query = $this->generateParentQuery($sourceData, 'module_party', 'partyPicture');
         } else {
-            $query = $this->getService('db')->table('module_party')->select($this->fields);
+            $query = $this->getService('db')->table('module_party')->select($this->getFields());
         }
         return $query;
     }

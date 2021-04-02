@@ -15,10 +15,13 @@ import {DialogSelectorComponent} from './zx-prods-list/components/year-selector/
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatIconModule} from '@angular/material/icon';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DialogSelectorDialogComponent} from './zx-prods-list/components/year-selector/year-selector-dialog/dialog-selector-dialog.component';
 import {LetterSelectorComponent} from './zx-prods-list/components/letter-selector/letter-selector.component';
 import {SortingSelectorComponent} from './zx-prods-list/components/sorting-selector/sorting-selector.component';
+import {TagsSelectorComponent} from './zx-prods-list/components/tags-selector/tags-selector.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(httpClient, `${environment.assetsUrl}i18n/`);
@@ -33,6 +36,7 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
     DialogSelectorDialogComponent,
     LetterSelectorComponent,
     SortingSelectorComponent,
+    TagsSelectorComponent,
   ],
   imports: [
     CommonModule,
@@ -51,6 +55,8 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
     MatDialogModule,
     MatButtonModule,
     MatCheckboxModule,
+    MatChipsModule,
+    MatIconModule,
   ],
   providers: [],
   bootstrap: [],

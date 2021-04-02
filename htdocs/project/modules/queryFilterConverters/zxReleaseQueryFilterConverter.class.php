@@ -3,13 +3,16 @@
 class zxReleaseQueryFilterConverter extends QueryFilterConverter
 {
     use LinkedQueryFilterTrait;
-
-    protected array $fields = [
-        'id',
-        'title',
-        'dateCreated',
-        'year',
-    ];
+    
+    protected function getFields(): array
+    {
+        return [
+            $this->getTable() . 'id',
+            $this->getTable() . 'title',
+            $this->getStructureTable() . 'dateCreated',
+            $this->getTable() . 'year',
+        ];
+    }
 
     /**
      * @param \Illuminate\Database\Query\Builder $sourceData
@@ -19,9 +22,11 @@ class zxReleaseQueryFilterConverter extends QueryFilterConverter
     public function convert($sourceData, $sourceType)
     {
         if ($sourceType == 'zxProd') {
-            $query = $this->generateChildQuery($sourceData, 'module_zxrelease', 'structure', false);
+            $query = $this->generateChildQuery($sourceData, $this->getTable(), 'structure', false);
         } else {
-            $query = $this->getService('db')->table('module_zxrelease')->select($this->fields);
+            $query = $this->getService('db')->table($this->getTable())
+                ->leftJoin($this->getStructureTable(), $this->getStructureTable() . '.id', '=', $this->getTable() . '.id')
+                ->select($this->getFields());
         }
 
         return $query;

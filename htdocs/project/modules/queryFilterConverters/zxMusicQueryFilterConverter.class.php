@@ -4,16 +4,19 @@ class zxMusicQueryFilterConverter extends QueryFilterConverter
 {
     use LinkedQueryFilterTrait;
 
-    protected array $fields = [
-        'id',
-        'partyplace',
-        'title',
-        'year',
-        'dateAdded',
-        'votes',
-        'plays',
-        'commentsAmount',
-    ];
+    protected function getFields(): array
+    {
+        return [
+            'id',
+            'partyplace',
+            'title',
+            'year',
+            'dateAdded',
+            'votes',
+            'plays',
+            'commentsAmount',
+        ];
+    }
 
     public function convert($sourceData, $sourceType)
     {
@@ -26,7 +29,7 @@ class zxMusicQueryFilterConverter extends QueryFilterConverter
         } elseif ($sourceType == 'tag') {
             $query = $this->generateChildQuery($sourceData, 'module_zxmusic', 'tagLink');
         } else {
-            $query = $this->getService('db')->table('module_zxmusic')->select($this->fields);
+            $query = $this->getService('db')->table('module_zxmusic')->select($this->getFields());
         }
         return $query;
     }

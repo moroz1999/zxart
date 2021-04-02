@@ -16,7 +16,7 @@ class zxProdAjaxSearchQueryFilter extends ajaxSearchQueryFilter
     {
         $query = parent::getFilteredIdList($argument, $query);
         $query->whereNotIn(
-            'id',
+            'module_zxprod.id',
             function ($subQuery) {
                 $subQuery->from('structure_links')->select('childStructureId')->where('parentStructureId', '=', 92171);
             }

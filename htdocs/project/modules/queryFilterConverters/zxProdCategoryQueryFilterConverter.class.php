@@ -9,7 +9,7 @@ class zxProdCategoryQueryFilterConverter extends QueryFilterConverter
         if ($sourceType == 'zxProd') {
             $query = $this->generateParentQuery($sourceData, 'module_zxprodcategory', 'authorPicture', true);
         } else {
-            $query = $this->getService('db')->table('module_zxprodcategory')->select($this->fields)->distinct();
+            $query = $this->getService('db')->table('module_zxprodcategory')->select($this->getFields())->distinct();
         }
         return $query;
     }

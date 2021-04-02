@@ -11,7 +11,7 @@ class tagQueryFilterConverter extends QueryFilterConverter
         } elseif ($sourceType == 'zxPicture') {
             $query = $this->generateParentQuery($sourceData, 'module_tag', 'tagLink', true);
         } else {
-            $query = $this->getService('db')->table('module_tag')->select($this->fields)->distinct();
+            $query = $this->getService('db')->table('module_tag')->select($this->getFields())->distinct();
         }
         return $query;
     }

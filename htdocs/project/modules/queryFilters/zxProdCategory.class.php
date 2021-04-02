@@ -23,7 +23,7 @@ class zxProdCategoryQueryFilter extends QueryFilter
             }
         }
         $query->whereIn(
-            'id',
+            'module_zxprod.id',
             function ($subQuery) use ($ids) {
                 $subQuery->from('structure_links')->select('childStructureId')->where(
                     'type',

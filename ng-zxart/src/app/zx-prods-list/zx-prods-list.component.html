@@ -12,6 +12,8 @@
     [lettersSelector]="model.lettersSelector"
     (letterSelected)="letterSelected($event)"
   ></app-letter-selector>
+  <app-tags-selector
+  ></app-tags-selector>
   <div *ngIf="model.prods" class="zxprods">
     <app-zx-prod
       class="subcontentmodule_component subcontentmodule_square zxprod_short"
