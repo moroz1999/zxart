@@ -1,9 +1,9 @@
 <div *ngIf="model">
   <h1>{{ model.h1 }}</h1>
-  <app-year-selector
-    [yearsSelector]="model.yearsSelector"
+  <app-dialog-selector
+    [selectorData]="model.yearsSelector"
     (newValues)="yearsChanged($event)"
-  ></app-year-selector>
+  ></app-dialog-selector>
   <app-sorting-selector
     [sortingSelector]="model.sortingSelector"
     (sortingSelected)="sortingSelected($event)"

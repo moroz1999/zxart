@@ -1,7 +1,7 @@
 <button mat-raised-button
   (pointerdown)="clickHandler()"
 >
-  <ng-container *ngIf="selectedYears.length; else other">
+  <ng-container *ngIf="selectedValues.length; else other">
     {{ 'prods-list.filters.year.label' | translate }} {{ getSelectedYearsString() }}
   </ng-container>
   <ng-template #other>

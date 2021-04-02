@@ -1,8 +1,8 @@
 <h1 mat-dialog-title [innerHtml]="'prods-list.filters.year.title' | translate"></h1>
 <div mat-dialog-content>
   <div class="years">
-    <div class="year" *ngFor="let year of yearsSelector">
-      <mat-checkbox class="example-margin" [(ngModel)]="selectedYears[year.value]">{{ year.title }}</mat-checkbox>
+    <div class="year" *ngFor="let year of selectorData">
+      <mat-checkbox class="example-margin" [(ngModel)]="selectedValues[year.value]">{{ year.title }}</mat-checkbox>
     </div>
   </div>
 </div>
@@ -10,5 +10,5 @@
   <button mat-raised-button class=""
           mat-dialog-close>{{'prods-list.filters.reset' | translate}}</button>
   <button mat-raised-button class=""
-          [mat-dialog-close]="selectedYears">{{'prods-list.filters.apply' | translate}}</button>
+          [mat-dialog-close]="selectedValues">{{'prods-list.filters.apply' | translate}}</button>
 </div>

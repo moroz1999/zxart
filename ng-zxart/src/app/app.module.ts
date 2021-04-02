@@ -11,12 +11,12 @@ import {PagesSelectorComponent} from './shared/components/pages-selector/pages-s
 import {environment} from '../environments/environment';
 import {ZxProdComponent} from './zx-prod/zx-prod.component';
 import {FormsModule} from '@angular/forms';
-import {YearSelectorComponent} from './zx-prods-list/components/year-selector/year-selector.component';
+import {DialogSelectorComponent} from './zx-prods-list/components/year-selector/dialog-selector.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {YearSelectorDialogComponent} from './zx-prods-list/components/year-selector/year-selector-dialog/year-selector-dialog.component';
+import {DialogSelectorDialogComponent} from './zx-prods-list/components/year-selector/year-selector-dialog/dialog-selector-dialog.component';
 import {LetterSelectorComponent} from './zx-prods-list/components/letter-selector/letter-selector.component';
 import {SortingSelectorComponent} from './zx-prods-list/components/sorting-selector/sorting-selector.component';
 
@@ -29,8 +29,8 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
     ZxProdsListComponent,
     PagesSelectorComponent,
     ZxProdComponent,
-    YearSelectorComponent,
-    YearSelectorDialogComponent,
+    DialogSelectorComponent,
+    DialogSelectorDialogComponent,
     LetterSelectorComponent,
     SortingSelectorComponent,
   ],

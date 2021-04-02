@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { YearSelectorDialogComponent } from './year-selector-dialog.component';
+import { DialogSelectorDialogComponent } from './dialog-selector-dialog.component';
 
 describe('YearSelectorDialogComponent', () => {
-  let component: YearSelectorDialogComponent;
-  let fixture: ComponentFixture<YearSelectorDialogComponent>;
+  let component: DialogSelectorDialogComponent;
+  let fixture: ComponentFixture<DialogSelectorDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ YearSelectorDialogComponent ]
+      declarations: [ DialogSelectorDialogComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(YearSelectorDialogComponent);
+    fixture = TestBed.createComponent(DialogSelectorDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
