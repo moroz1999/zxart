@@ -12,7 +12,7 @@ class zxProdMinRatingQueryFilter extends QueryFilter
         if (is_array($argument)) {
             $argument = reset($argument);
         }
-        $query->where('votes', '>=', $argument);
+        $query->where($this->getTable() . '.votes', '>=', $argument);
 
         return $query;
     }

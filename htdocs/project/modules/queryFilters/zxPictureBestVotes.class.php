@@ -13,7 +13,7 @@ class zxPictureBestVotesQueryFilter extends QueryFilter
             $argument = reset($argument);
         }
 
-        $query->limit($argument)->orderBy('votes', 'desc');
+        $query->limit($argument)->orderBy($this->getTable() . '.votes', 'desc');
         return $query;
     }
 }

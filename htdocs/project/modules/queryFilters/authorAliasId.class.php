@@ -10,7 +10,7 @@ class authorAliasIdQueryFilter extends QueryFilter
     public function getFilteredIdList($argument, $query)
     {
         $authorAliases = (array)$argument;
-        $query->whereIn('id', $authorAliases);
+        $query->whereIn($this->getTable() . '.id', $authorAliases);
 
         return $query;
     }

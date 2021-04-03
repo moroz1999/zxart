@@ -13,7 +13,7 @@ class zxProdYearQueryFilter extends QueryFilter
         if (in_array('this', $argument)) {
             $argument = [date('Y'), date('Y') - 1];
         }
-        $query->whereIn('year', $argument);
+        $query->whereIn($this->getTable() . '.year', $argument);
 
         return $query;
     }

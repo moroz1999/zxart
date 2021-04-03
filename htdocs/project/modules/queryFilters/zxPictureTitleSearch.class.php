@@ -12,7 +12,7 @@ class zxPictureTitleSearchQueryFilter extends QueryFilter
         if (is_array($argument)) {
             $argument = reset($argument);
         }
-        $query->where('title', 'like', '%' . $argument . '%');
+        $query->where($this->getTable() . '.title', 'like', '%' . $argument . '%');
 
         return $query;
     }

@@ -18,12 +18,12 @@ class zxPictureAddedDaysQueryFilter extends QueryFilter
         $date = time() - $days * 24 * 60 * 60;
 
         $query->whereIn(
-            'id',
+            $this->getTable() . '.id',
             function ($query) use ($date) {
-                $query->select('id')
+                $query->select('structure_elements.id')
                     ->from('structure_elements')
-                    ->where('structureType', '=', 'zxPicture')
-                    ->where('dateCreated', '>=', $date);
+                    ->where('structure_elements.structureType', '=', 'zxPicture')
+                    ->where('structure_elements.dateCreated', '>=', $date);
             }
         );
 

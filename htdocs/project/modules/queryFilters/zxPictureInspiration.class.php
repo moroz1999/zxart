@@ -13,9 +13,9 @@ class zxPictureInspirationQueryFilter extends QueryFilter
             $argument = reset($argument);
         }
         if ($argument) {
-            $query->where('inspiredName', '!=', '');
+            $query->where($this->getTable() . '.inspiredName', '!=', '');
         } else {
-            $query->where('inspiredName', '==', '');
+            $query->where($this->getTable() . '.inspiredName', '=', '');
         }
         return $query;
     }

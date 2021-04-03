@@ -23,6 +23,7 @@ class ApiQueryResultResolver implements DependencyInjectionContextInterface
         $resolvers = [
             'zxPicture' => PicturesManager::class,
             'zxProd' => ProdsManager::class,
+            'zxRelease' => ReleasesResolver::class,
             'zxMusic' => MusicManager::class,
             'author' => AuthorsManager::class,
             'group' => GroupsManager::class,
@@ -42,26 +43,7 @@ class ApiQueryResultResolver implements DependencyInjectionContextInterface
             if ($exportTypeQuery) {
                 $queryResult['totalAmount'] = $exportTypeQuery->count();
             } else {
-                $queryResult['totalAmount'] = 0;
-            }
-            foreach ($queryResult[$exportType] as $entity) {
-                $exportedTypeIdList[] = $entity->id;
-            }
-        } elseif ($exportType === 'zxProd') {
-            /**
-             * @var ProdsManager $prodsManager
-             */
-            $prodsManager = $this->getService('ProdsManager');
-            $queryResult[$exportType] = $prodsManager->getElementsByQuery(
-                $exportTypeQuery,
-                $order,
-                $start,
-                $limit
-            );
-            if ($exportTypeQuery) {
-                $queryResult['totalAmount'] = $exportTypeQuery->count();
-            } else {
-                $queryResult['totalAmount'] = 0;
+                $queryResult['totalAmount'] = $resolverManager->makeQuery()->count();
             }
             foreach ($queryResult[$exportType] as $entity) {
                 $exportedTypeIdList[] = $entity->id;

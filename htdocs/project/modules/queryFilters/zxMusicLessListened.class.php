@@ -9,7 +9,7 @@ class zxMusicLessListenedQueryFilter extends QueryFilter
 
     public function getFilteredIdList($argument, $query)
     {
-        $query->where('plays', '>', 0);
+        $query->where($this->getTable() . '.plays', '>', 0);
         return $query;
     }
 }

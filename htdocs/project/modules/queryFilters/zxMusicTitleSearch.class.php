@@ -12,10 +12,11 @@ class zxMusicTitleSearchQueryFilter extends QueryFilter
         if (is_array($argument)) {
             $argument = reset($argument);
         }
+        $table = $this->getTable();
         $query->where(
-            function ($query) use ($argument) {
-                $query->where('title', 'like', '%' . $argument . '%');
-                $query->orWhere('internalTitle', 'like', '%' . $argument . '%');
+            function ($query) use ($argument, $table) {
+                $query->where($table . '.title', 'like', '%' . $argument . '%');
+                $query->orWhere($table . '.internalTitle', 'like', '%' . $argument . '%');
             }
         );
 

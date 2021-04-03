@@ -20,10 +20,10 @@ class zxMusicAddedDaysQueryFilter extends QueryFilter
         $query->whereIn(
             'id',
             function ($query) use ($date) {
-                $query->select('id')
+                $query->select('structure_elements.id')
                     ->from('structure_elements')
-                    ->where('structureType', '=', 'zxMusic')
-                    ->where('dateCreated', '>=', $date);
+                    ->where('structure_elements.structureType', '=', 'zxMusic')
+                    ->where('structure_elements.dateCreated', '>=', $date);
             }
         );
 

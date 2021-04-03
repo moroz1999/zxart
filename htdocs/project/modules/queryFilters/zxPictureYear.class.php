@@ -10,7 +10,7 @@ class zxPictureYearQueryFilter extends QueryFilter
     public function getFilteredIdList($argument, $query)
     {
         $argument = (array)$argument;
-        $query->whereIn('year', $argument);
+        $query->whereIn($this->getTable() . '.year', $argument);
 
         return $query;
     }

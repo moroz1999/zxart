@@ -7,10 +7,10 @@ class zxReleaseQueryFilterConverter extends QueryFilterConverter
     protected function getFields(): array
     {
         return [
-            $this->getTable() . 'id',
-            $this->getTable() . 'title',
-            $this->getStructureTable() . 'dateCreated',
-            $this->getTable() . 'year',
+            $this->getTable() . '.id',
+            $this->getTable() . '.title',
+//            $this->getStructureTable() . '.dateCreated',
+            $this->getTable() . '.year',
         ];
     }
 
@@ -25,7 +25,7 @@ class zxReleaseQueryFilterConverter extends QueryFilterConverter
             $query = $this->generateChildQuery($sourceData, $this->getTable(), 'structure', false);
         } else {
             $query = $this->getService('db')->table($this->getTable())
-                ->leftJoin($this->getStructureTable(), $this->getStructureTable() . '.id', '=', $this->getTable() . '.id')
+//                ->leftJoin($this->getStructureTable(), $this->getStructureTable() . '.id', '=', $this->getTable() . '.id')
                 ->select($this->getFields());
         }
 

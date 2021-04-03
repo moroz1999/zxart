@@ -14,12 +14,12 @@ class zxMusicNotVotedByQueryFilter extends QueryFilter
             $argument = [$currentUser->id];
         }
         $query->whereNotIn(
-            'id',
+            $this->getTable() . '.id',
             function ($query) use ($argument) {
-                $query->select('elementId')
+                $query->select('votes_history.elementId')
                     ->from('votes_history')
-                    ->where('type', '=', 'zxMusic')
-                    ->whereIn('userId', $argument);
+                    ->where('votes_history.type', '=', 'zxMusic')
+                    ->whereIn('votes_history.userId', $argument);
             }
         );
 

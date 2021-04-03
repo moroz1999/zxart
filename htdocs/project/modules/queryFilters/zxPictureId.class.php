@@ -9,7 +9,7 @@ class zxPictureIdQueryFilter extends QueryFilter
 
     public function getFilteredIdList($argument, $query)
     {
-        $query->whereIn('id', (array)$argument);
+        $query->whereIn($this->getTable() . '.id', (array)$argument);
         return $query;
     }
 }

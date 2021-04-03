@@ -23,13 +23,13 @@ class zxProdCategoryQueryFilter extends QueryFilter
             }
         }
         $query->whereIn(
-            'module_zxprod.id',
+            $this->getTable() . '.id',
             function ($subQuery) use ($ids) {
-                $subQuery->from('structure_links')->select('childStructureId')->where(
-                    'type',
+                $subQuery->from('structure_links')->select('structure_links.childStructureId')->where(
+                    'structure_links.type',
                     '=',
                     'zxProdCategory'
-                )->whereIn('parentStructureId', $ids);
+                )->whereIn('structure_links.parentStructureId', $ids);
             }
         );
 

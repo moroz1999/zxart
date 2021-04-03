@@ -23,7 +23,7 @@ class ElementsManager extends errorLogger
     protected function loadElements(?Builder $query, ?array $sort = [], ?int $start = null, ?int $amount = null)
     {
         if ($query === null) {
-            $query = $this->db->table(static::TABLE);
+            $query = $this->makeQuery();
         } else {
             $query = clone($query);
         }
@@ -58,7 +58,7 @@ class ElementsManager extends errorLogger
             }
         }
         $result = [];
-        if ($start !== null) {
+        if ($start !== null && $start > 0) {
             $query->offset($start);
         }
         if ($amount !== null) {
@@ -74,6 +74,11 @@ class ElementsManager extends errorLogger
         }
 
         return $result;
+    }
+
+    public function makeQuery()
+    {
+        return $this->db->table(static::TABLE);
     }
 
     public function setStructureManager(structureManager $structureManager)

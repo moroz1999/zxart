@@ -17,15 +17,15 @@ class zxPictureNotVotedByQueryFilter extends QueryFilter
             'id',
             function ($query) use ($argument) {
                 if (is_array($argument)) {
-                    $query->select('elementId')
+                    $query->select('votes_history.elementId')
                         ->from('votes_history')
-                        ->where('type', '=', 'zxPicture')
-                        ->whereIn('userId', $argument);
+                        ->where('votes_history.type', '=', 'zxPicture')
+                        ->whereIn('votes_history.userId', $argument);
                 } else {
-                    $query->select('elementId')
+                    $query->select('votes_history.elementId')
                         ->from('votes_history')
-                        ->where('type', '=', 'zxPicture')
-                        ->where('userId', '=', $argument);
+                        ->where('votes_history.type', '=', 'zxPicture')
+                        ->where('votes_history.userId', '=', $argument);
                 }
             }
         );

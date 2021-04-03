@@ -23,9 +23,9 @@ class authorAliasOfItemTypeQueryFilter extends QueryFilter
         }
 
         if ($graphics && !$music) {
-            $query->where('displayInGraphics', '=', 1);
+            $query->where($this->getTable() . '.displayInGraphics', '=', 1);
         } elseif (!$graphics && $music) {
-            $query->where('displayInMusic', '=', 1);
+            $query->where($this->getTable() . '.displayInMusic', '=', 1);
         }
 
         return $query;

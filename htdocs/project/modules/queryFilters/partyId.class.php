@@ -9,6 +9,6 @@ class partyIdQueryFilter extends QueryFilter
 
     public function getFilteredIdList($argument, $query)
     {
-        return $query->whereIn('id', (array)$argument);
+        return $query->whereIn($this->getTable() . '.id', (array)$argument);
     }
 }

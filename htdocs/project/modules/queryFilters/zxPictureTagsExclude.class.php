@@ -14,7 +14,7 @@ class zxPictureTagsExcludeQueryFilter extends QueryFilter
          */
         $tagsManager = $this->getService('tagsManager');
         if ($idList = $tagsManager->getConnectedElementIdsByNames($argument, false)) {
-            $query->whereNotIn('id', $idList);
+            $query->whereNotIn($this->getTable() . '.id', $idList);
         }
         return $query;
     }

@@ -9,7 +9,7 @@ class zxMusicYearQueryFilter extends QueryFilter
 
     public function getFilteredIdList($argument, $query)
     {
-        $query->whereIn('year', $argument);
+        $query->whereIn($this->getTable() . '.year', $argument);
         return $query;
     }
 }

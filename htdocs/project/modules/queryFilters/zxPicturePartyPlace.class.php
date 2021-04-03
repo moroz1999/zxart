@@ -12,7 +12,7 @@ class zxPicturePartyPlaceQueryFilter extends QueryFilter
         if (!is_array($argument)) {
             $argument = (array)$argument;
         }
-        $query->whereIn('partyplace', $argument);
+        $query->whereIn($this->getTable() . '.partyplace', $argument);
         return $query;
     }
 }

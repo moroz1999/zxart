@@ -9,7 +9,7 @@ class zxMusicPlayableQueryFilter extends QueryFilter
 
     public function getFilteredIdList($argument, $query)
     {
-        $query->where('mp3Name', '!=', '');
+        $query->where($this->getTable() . '.mp3Name', '!=', '');
         return $query;
     }
 }

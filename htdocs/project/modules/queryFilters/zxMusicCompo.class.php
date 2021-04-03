@@ -10,9 +10,9 @@ class zxMusicCompoQueryFilter extends QueryFilter
     public function getFilteredIdList($argument, $query)
     {
         if (is_array($argument)) {
-            $query->whereIn('compo', $argument);
+            $query->whereIn($this->getTable() . '.compo', $argument);
         } else {
-            $query->where('compo', '=', $argument);
+            $query->where($this->getTable() . '.compo', '=', $argument);
         }
 
         return $query;

@@ -9,7 +9,7 @@ class authorCityQueryFilter extends QueryFilter
 
     public function getFilteredIdList($argument, $query)
     {
-        $query->whereIn('city', $argument);
+        $query->whereIn($this->getTable() . '.city', $argument);
         return $query;
     }
 }

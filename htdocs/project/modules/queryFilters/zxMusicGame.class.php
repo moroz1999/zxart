@@ -9,7 +9,7 @@ class zxMusicGameQueryFilter extends QueryFilter
 
     public function getFilteredIdList($argument, $query)
     {
-        $query->where('game', '!=', '0');
+        $query->where($this->getTable() . '.game', '!=', '0');
         return $query;
     }
 }

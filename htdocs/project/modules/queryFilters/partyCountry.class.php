@@ -9,7 +9,7 @@ class partyCountryQueryFilter extends QueryFilter
 
     public function getFilteredIdList($argument, $query)
     {
-        $query->whereIn('country', $argument);
+        $query->whereIn($this->getTable() . '.country', $argument);
         return $query;
     }
 }

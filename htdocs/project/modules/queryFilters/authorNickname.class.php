@@ -9,7 +9,7 @@ class authorNicknameQueryFilter extends QueryFilter
 
     public function getFilteredIdList($argument, $query)
     {
-        $query->whereIn('title', $argument);
+        $query->whereIn($this->getTable() . '.title', $argument);
 
         return $query;
     }

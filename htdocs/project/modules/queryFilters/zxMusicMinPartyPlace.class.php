@@ -12,8 +12,8 @@ class zxMusicMinPartyPlaceQueryFilter extends QueryFilter
         if (is_array($argument)) {
             $argument = reset($argument);
         }
-        $query->where('partyplace', '<=', $argument);
-        $query->where('partyplace', '!=', 0);
+        $query->where($this->getTable() . '.partyplace', '<=', $argument);
+        $query->where($this->getTable() . '.partyplace', '!=', 0);
 
         return $query;
     }

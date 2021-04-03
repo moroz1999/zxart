@@ -13,7 +13,7 @@ class zxMusicMinRatingQueryFilter extends QueryFilter
             $argument = reset($argument);
         }
 
-        $query->where('votes', '>=', $argument);
+        $query->where($this->getTable() . '.votes', '>=', $argument);
 
         return $query;
     }

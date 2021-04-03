@@ -10,9 +10,9 @@ class groupFirstLetterQueryFilter extends QueryFilter
     public function getFilteredIdList($argument, $query)
     {
         if (is_array($argument)) {
-            $query->where('title', 'like', reset($argument) . '%');
+            $query->where($this->getTable() . '.title', 'like', reset($argument) . '%');
         } else {
-            $query->where('title', 'like', $argument . '%');
+            $query->where($this->getTable() . '.title', 'like', $argument . '%');
         }
         return $query;
     }

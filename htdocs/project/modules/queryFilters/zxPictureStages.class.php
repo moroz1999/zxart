@@ -13,9 +13,9 @@ class zxPictureStagesQueryFilter extends QueryFilter
             $argument = reset($argument);
         }
         if ($argument) {
-            $query->where('sequenceName', '!=', '');
+            $query->where($this->getTable() . '.sequenceName', '!=', '');
         } else {
-            $query->where('sequenceName', '==', '');
+            $query->where($this->getTable() . '.sequenceName', '==', '');
         }
         return $query;
     }

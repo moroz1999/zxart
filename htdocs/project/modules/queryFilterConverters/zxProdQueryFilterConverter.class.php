@@ -12,8 +12,8 @@ class zxProdQueryFilterConverter extends QueryFilterConverter
             $this->getTable() . '.title',
             $this->getTable() . '.year',
             $this->getTable() . '.dateAdded',
-            $this->getStructureTable() . '.dateCreated',
-            $this->getTable() . '..votes',
+//            $this->getStructureTable() . '.dateCreated',
+            $this->getTable() . '.votes',
         ];
     }
 
@@ -27,11 +27,11 @@ class zxProdQueryFilterConverter extends QueryFilterConverter
             $query = $this->getService('db')
                 ->table($this->getTable())
                 ->whereIn($this->getTable() . '.id', $sourceData)
-                ->leftJoin($this->getStructureTable(), $this->getStructureTable() . '.id', '=', $this->getTable() . '.id')
+//                ->leftJoin($this->getStructureTable(), $this->getStructureTable() . '.id', '=', $this->getTable() . '.id')
                 ->select($this->getFields());
         } else {
             $query = $this->getService('db')->table($this->getTable())
-                ->leftJoin($this->getStructureTable(), $this->getStructureTable() . '.id', '=', $this->getTable() . '.id')
+//                ->leftJoin($this->getStructureTable(), $this->getStructureTable() . '.id', '=', $this->getTable() . '.id')
                 ->select($this->getFields());
         }
         return $query;

@@ -11,20 +11,20 @@ class partyOfItemTypeQueryFilter extends QueryFilter
     {
         if (is_array($argument)) {
             $query->whereIn(
-                'id',
+                'structure_links.id',
                 function ($query) use ($argument) {
-                    $query->select('parentStructureId')
+                    $query->select('structure_links.parentStructureId')
                         ->from('structure_links')
-                        ->whereIn('type', $argument);
+                        ->whereIn('structure_links.type', $argument);
                 }
             );
         } else {
             $query->whereIn(
-                'id',
+                'structure_links.id',
                 function ($query) use ($argument) {
-                    $query->select('parentStructureId')
+                    $query->select('structure_links.parentStructureId')
                         ->from('structure_links')
-                        ->where('type', '=', $argument);
+                        ->where('structure_links.type', '=', $argument);
                 }
             );
         }
