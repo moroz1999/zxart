@@ -13,7 +13,7 @@ class ReleasesResolverServiceContainer extends DependencyInjectionServiceContain
      */
     public function makeInjections($instance)
     {
-        $this->injectService($instance, 'prodsManager');
+        $this->injectService($instance, 'ProdsManager');
 
         return $instance;
     }

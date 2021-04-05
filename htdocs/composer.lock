@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "artweb-ou/trickster-cms",
-            "version": "4.1.1",
+            "version": "4.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/artweb-ou/trickster-cms.git",
-                "reference": "a1631585683bb090ac8288c1ccee4e8d505af2e6"
+                "reference": "c2682772a3a44093606b6d3282d9e09af8e0c2e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artweb-ou/trickster-cms/zipball/a1631585683bb090ac8288c1ccee4e8d505af2e6",
-                "reference": "a1631585683bb090ac8288c1ccee4e8d505af2e6",
+                "url": "https://api.github.com/repos/artweb-ou/trickster-cms/zipball/c2682772a3a44093606b6d3282d9e09af8e0c2e6",
+                "reference": "c2682772a3a44093606b6d3282d9e09af8e0c2e6",
                 "shasum": ""
             },
             "require": {
@@ -53,9 +53,9 @@
             "description": "Trickster CMS packages",
             "support": {
                 "issues": "https://github.com/artweb-ou/trickster-cms/issues",
-                "source": "https://github.com/artweb-ou/trickster-cms/tree/4.1.1"
+                "source": "https://github.com/artweb-ou/trickster-cms/tree/4.1.2"
             },
-            "time": "2021-03-16T15:59:13+00:00"
+            "time": "2021-04-05T19:48:52+00:00"
         },
         {
             "name": "ckeditor/ckeditor",
@@ -1950,16 +1950,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v4.4.20",
+            "version": "v4.4.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "2271b6d577018a7dea75a9162a08ac84f8234deb"
+                "reference": "eb8f5428cc3b40d6dffe303b195b084f1c5fbd14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/2271b6d577018a7dea75a9162a08ac84f8234deb",
-                "reference": "2271b6d577018a7dea75a9162a08ac84f8234deb",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/eb8f5428cc3b40d6dffe303b195b084f1c5fbd14",
+                "reference": "eb8f5428cc3b40d6dffe303b195b084f1c5fbd14",
                 "shasum": ""
             },
             "require": {
@@ -2018,7 +2018,7 @@
             "description": "Provides tools to internationalize your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/translation/tree/v4.4.20"
+                "source": "https://github.com/symfony/translation/tree/v4.4.21"
             },
             "funding": [
                 {
@@ -2034,7 +2034,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-02-26T13:53:48+00:00"
+            "time": "2021-03-23T16:25:01+00:00"
         },
         {
             "name": "symfony/translation-contracts",
