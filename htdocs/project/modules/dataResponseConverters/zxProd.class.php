@@ -67,6 +67,8 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 'maps',
                 'authorsInfo',
                 'importIds',
+                'votes',
+                'userVote',
             ],
             'apiShort' => [
                 'id',

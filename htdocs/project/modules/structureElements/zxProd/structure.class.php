@@ -629,6 +629,4 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         }
         return $this->textContent;
     }
-
-
 }

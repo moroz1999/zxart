@@ -15,7 +15,7 @@ class zxProdFirstLetterQueryFilter extends QueryFilter
             if (preg_match('/[a-zA-Z]/', $argument)) {
                 $query->where($this->getTable() . '.title', 'like', $argument . '%');
             } else {
-                $query->whereRaw($this->getTable() . ".title NOT RLIKE '^[A-Z]'");
+                $query->whereRaw('engine_' . $this->getTable() . ".title NOT RLIKE '^[A-Z]'");
             }
         }
         return $query;

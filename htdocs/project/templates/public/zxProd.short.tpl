@@ -22,7 +22,7 @@
 		{/if}
     <script>
 		if (!window.prodsList) window.prodsList = [];
-		window.prodsList.push({$element->getJsonInfo()});
+		window.prodsList.push({$element->getJsonInfo('list')});
     </script>
 {/capture}
 {$moduleSubContent = $moduleContent}

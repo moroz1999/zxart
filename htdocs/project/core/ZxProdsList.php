@@ -209,23 +209,25 @@ trait ZxProdsList
                     ->orderBy('letter', 'asc')
                     ->pluck('letter');
 
-                $numericExists = true;
+                $numericExists = false;
                 foreach ($letters as $letter) {
                     if (preg_match('/[a-zA-Z]/', $letter)) {
+                        $selected = $value ? in_array($letter, $value) : false;
                         $this->lettersSelector[] = [
                             'value' => $letter,
                             'title' => $letter,
-                            'selected' => $letter === $value,
+                            'selected' => $selected
                         ];
                     } else {
                         $numericExists = true;
                     }
                 }
                 if ($numericExists) {
+                    $selected = $value ? in_array('0-9', $value) : false;
                     array_unshift($this->lettersSelector, [
-                        'value' => '#',
+                        'value' => '0-9',
                         'title' => '0-9',
-                        'selected' => $letter === $value,
+                        'selected' => $selected
                     ]);
                 }
             }
