@@ -65,7 +65,9 @@ class projectDesignTheme extends DesignTheme
             'component.playlistControls.js',
             'component.SettingsBlock.js',
             'component.ZxMap.js',
-            // 'app.js',
+            'ng-zxart/main.js',
+            'ng-zxart/polyfills.js',
+            'ng-zxart/runtime.js',
         ];
     }
 }

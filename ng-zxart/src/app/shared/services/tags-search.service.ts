@@ -28,9 +28,11 @@ export class TagsSearchService {
       .pipe(
         map(response => {
             const tags = [] as Array<Tag>;
-            response.responseData.tag.forEach(
-              item => tags.push(new Tag(item)),
-            );
+            if (response.responseData.tag) {
+              response.responseData.tag.forEach(
+                item => tags.push(new Tag(item)),
+              );
+            }
             return tags;
           },
         ),

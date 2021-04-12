@@ -3,6 +3,7 @@ import {ElementsService, PostParameters} from '../shared/services/elements.servi
 import {ZxProdsList} from './models/zx-prods-list.model';
 import {ZxProdCategoryResponseDto} from './models/zx-prod-category-response-dto';
 import {TranslateService} from '@ngx-translate/core';
+import {Tag} from '../shared/models/tag';
 
 @Component({
   selector: 'app-zx-prods-list',
@@ -15,8 +16,10 @@ export class ZxProdsListComponent implements OnInit {
   public currentPage = 1;
   public elementsOnPage = 100;
   public years: Array<string> = [];
+  public hw: Array<string> = [];
   public letter?: string;
   public sorting?: string;
+  public tags: Array<number> = [];
 
   @Input() elementId: number = 0;
 
@@ -40,11 +43,17 @@ export class ZxProdsListComponent implements OnInit {
     if (this.years.length) {
       parameters.years = this.years.join(',');
     }
+    if (this.hw.length) {
+      parameters.hw = this.hw.join(',');
+    }
     if (this.letter) {
       parameters.letter = this.letter;
     }
     if (this.sorting) {
       parameters.sorting = this.sorting;
+    }
+    if (this.tags.length) {
+      parameters.tags = this.tags.join(',');
     }
     this.elementsService.getModel<ZxProdCategoryResponseDto, ZxProdsList>(this.elementId, ZxProdsList, parameters).subscribe(
       model => {
@@ -64,6 +73,11 @@ export class ZxProdsListComponent implements OnInit {
     this.fetchModel();
   }
 
+  hardwareChanged(hw: Array<string>) {
+    this.hw = hw;
+    this.fetchModel();
+  }
+
   letterSelected(letter: string) {
     this.letter = letter;
     this.fetchModel();
@@ -71,6 +85,11 @@ export class ZxProdsListComponent implements OnInit {
 
   sortingSelected(sorting: string) {
     this.sorting = sorting;
+    this.fetchModel();
+  }
+
+  tagsSelected(tags: Array<Tag>) {
+    this.tags = tags.map(tag => tag.id);
     this.fetchModel();
   }
 }

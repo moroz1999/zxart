@@ -1,0 +1,23 @@
+<mat-chip-list #chipList aria-label="Fruit selection">
+  <mat-chip
+    *ngFor="let tag of tagsSelector"
+    [selectable]="true"
+    [removable]="true"
+    (removed)="remove(tag)"
+    >
+    {{tag.title}}
+    <mat-icon matChipRemove>cancel</mat-icon>
+  </mat-chip>
+</mat-chip-list>
+<input
+  type="text"
+  (keyup)="change()"
+  [(ngModel)]="tagText"
+  [matAutocomplete]="auto"
+  #input
+/>
+<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+  <mat-option *ngFor="let tag of foundTags | async" [value]="tag">
+    {{tag.title}}
+  </mat-option>
+</mat-autocomplete>

@@ -1,0 +1,17 @@
+{
+  "pages": {
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "prods-list": {
+    "filters": {
+      "reset": "Reset",
+      "apply": "Apply",
+      "year": {
+        "label": "Years: ",
+        "select": "Select years",
+        "title": "Select years"
+      }
+    }
+  }
+}

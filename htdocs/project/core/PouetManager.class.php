@@ -5,7 +5,7 @@ class PouetManager extends errorLogger
     protected $timeLimit = 60 * 29;
     protected $maxTime;
     protected $maxCounter = 1000;
-    protected $maxId = 87889;
+    protected $maxId = 88664;
     protected $minCounter = 0;
 //    protected $debugEntry = 6148;
     protected $debugEntry;
@@ -57,6 +57,7 @@ class PouetManager extends errorLogger
         'all' => 'unknown',
         'coder' => 'code',
         'coding' => 'code',
+        'code. graphics' => 'code',
         'code etc.' => 'code',
         'code' => 'code',
         'fpga' => 'code',
@@ -149,6 +150,9 @@ class PouetManager extends errorLogger
         'code (additional)' => 'code',
         'basic' => 'code',
         'some code' => 'code',
+        'rework of rotatrix' => 'code',
+        'characters in border' => 'code',
+        'gigascreen simulation' => 'code',
         'support' => 'support',
         'sound' => 'sfx',
         'fx' => 'sfx',
@@ -178,6 +182,7 @@ class PouetManager extends errorLogger
         'ascii art' => 'ascii',
         'ascii' => 'ascii',
         'asci' => 'ascii',
+        'graphics (ascii artistry)' => 'ascii',
         'bug hunting' => 'testing',
         'digital cover design' => 'illustrating',
         'translation' => 'localization',
@@ -210,7 +215,11 @@ class PouetManager extends errorLogger
         '1k procedural gfx' => 'procedural1k',
         '4k procedural gfx' => 'procedural4k',
         'combined 256b' => 'intro256',
+        'oldskool 128b intro' => 'intro128',
+        'oldskool 256b intro' => 'intro256',
         'combined 128b' => 'intro128',
+        'combined 32b' => 'intro32',
+        'combined 64b' => 'intro64',
         'zx 256b' => 'intro256',
         'zx 512b' => 'intro512',
         '8bit 1k' => 'intro1k',

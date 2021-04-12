@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, Output, EventEmitter, OnChanges} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {DialogSelectorDialogComponent} from './year-selector-dialog/dialog-selector-dialog.component';
+import {DialogSelectorDialogComponent} from './dialog-selector-dialog/dialog-selector-dialog.component';
 import {SelectorDto} from '../../models/selector-dto';
 
 @Component({
@@ -10,6 +10,8 @@ import {SelectorDto} from '../../models/selector-dto';
 })
 export class DialogSelectorComponent implements OnInit, OnChanges {
   @Input() selectorData!: SelectorDto;
+  @Input() selectedValuesLabel!: string;
+  @Input() selectValuesLabel!: string;
   selectedValues: Array<string> = [];
   @Output() newValues = new EventEmitter<Array<string>>();
   public value = 0;
@@ -25,9 +27,11 @@ export class DialogSelectorComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     this.selectedValues = [];
-    for (const year of this.selectorData) {
-      if (year.selected) {
-        this.selectedValues.push(year.title);
+    if (this.selectorData) {
+      for (const year of this.selectorData) {
+        if (year.selected) {
+          this.selectedValues.push(year.title);
+        }
       }
     }
   }
@@ -52,7 +56,7 @@ export class DialogSelectorComponent implements OnInit, OnChanges {
     });
   }
 
-  getSelectedYearsString() {
+  getSelectedValuesString() {
     return this.selectedValues.join(', ');
   }
 }

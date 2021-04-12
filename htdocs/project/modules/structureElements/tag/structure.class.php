@@ -1,7 +1,9 @@
 <?php
 
-class tagElement extends structureElement
+class tagElement extends structureElement implements JsonDataProvider
 {
+    use JsonDataProviderElement;
+
     public $dataResourceName = 'module_tag';
     public $allowedTypes = [];
     public $defaultActionName = 'show';
