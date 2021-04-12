@@ -47,7 +47,7 @@
               },
               {
                 "glob": "**/styles.css",
-                "input": "../htdocs/public/js/public/ng-zxart",
+                "input": "../htdocs/project/js/public/ng-zxart",
                 "output": "/../../../css/public"
               }
             ],

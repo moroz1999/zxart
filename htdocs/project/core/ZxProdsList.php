@@ -79,6 +79,9 @@ trait ZxProdsList
             if ($values = $this->getSelectorValue('tags')) {
                 $filters['zxProdTagsInclude'] = $values;
             }
+            if ($values = $this->getSelectorValue('hw')) {
+                $filters['zxReleaseHardware'] = $values;
+            }
             $this->apiQuery = $apiQueriesManager->getQuery()->setExportType('zxProd')->setFiltrationParameters($filters);
             $this->filteredQuery = clone($this->apiQuery->getExportFilteredQuery());
             $elementsOnPage = (int)$controller->getParameter('elementsOnPage');
@@ -174,39 +177,46 @@ trait ZxProdsList
         }
         return $this->yearsSelector;
     }
+
     public function getHardwareSelector(): array
     {
         if (!isset($this->hardwareSelector)) {
             $this->hardwareSelector = [];
             if ($query = $this->getSelectorQuery('hw')) {
                 $values = $this->getSelectorValue('hw');
-//                $years = $query
-//                    ->distinct()
-//                    ->orderBy('year', 'asc')
-//                    ->where('year', '!=', 0)
-//                    ->pluck('year');
-//
-//                foreach ($years as $year) {
-//                    $this->yearsSelector[] = [
-//                        'value' => $year,
-//                        'title' => $year,
-//                        'selected' => $values && in_array($year, $values),
-//                    ];
-//                }
+                $db = $this->getService('db');
+                /**
+                 * @var QueryFiltersManager $queryFiltersManager
+                 */
+                $queryFiltersManager = $this->getService('QueryFiltersManager');
+                $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
+                $hwItems = $db->table('module_zxrelease_hw_required')
+                    ->whereIn('elementId', $query)
+                    ->distinct()
+                    ->pluck('value');
+
+                foreach ($hwItems as $hwItem) {
+                    $this->hardwareSelector[] = [
+                        'value' => $hwItem,
+                        'title' => $hwItem,
+                        'selected' => $values && in_array($hwItem, $values),
+                    ];
+                }
             }
         }
-        return $this->yearsSelector;
+        return $this->hardwareSelector;
     }
 
     public function getTagsSelector(): array
     {
         if (!isset($this->tagsSelector)) {
             $this->tagsSelector = [];
-            $values = $this->getSelectorValue('tags');
-            $structureManager = $this->getService('structureManager');
-            foreach ($values as $id) {
-                if ($tagElement = $structureManager->getElementById($id)) {
-                    $this->tagsSelector[] = $tagElement->getElementData();
+            if ($values = $this->getSelectorValue('tags')) {
+                $structureManager = $this->getService('structureManager');
+                foreach ($values as $id) {
+                    if ($tagElement = $structureManager->getElementById($id)) {
+                        $this->tagsSelector[] = $tagElement->getElementData();
+                    }
                 }
             }
         }
@@ -294,6 +304,7 @@ trait ZxProdsList
         if (!isset($this->selectorValues)) {
             $this->selectorValues = [
                 'sorting' => ['votes', 'desc'],
+                'hw' => null,
                 'tags' => null,
                 'years' => null,
                 'letter' => null,
