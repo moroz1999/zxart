@@ -2,7 +2,7 @@
 
 trait HardwareProviderTrait
 {
-    public function getHardwareList()
+    public function getHardwareList(): array
     {
         return [
             "computers" => [

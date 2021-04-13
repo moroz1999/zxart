@@ -4,4 +4,9 @@ export interface SelectorValue {
   readonly selected: boolean;
 }
 
-export type SelectorDto = Array<SelectorValue>;
+interface SelectorGroup {
+  readonly title: string;
+  readonly values: Array<SelectorValue>;
+}
+
+export type SelectorDto = Array<SelectorGroup>;

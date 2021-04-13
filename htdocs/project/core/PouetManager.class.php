@@ -485,7 +485,6 @@ class PouetManager extends errorLogger
 //                        'releaseType' => 'original',
                         'language' => [],
                         'hardwareRequired' => [],
-                        'hardwareOptional' => [],
                         'images' => [],
                         'inlayImages' => [],
                         'infoFiles' => [],

@@ -577,7 +577,7 @@ class WosManager extends errorLogger
                                     $releaseInfo['hardwareRequired'] = [$this->minMachines[$download['machinetype_id']]];
                                 }
                                 if (isset($this->optionalMachines[$download['machinetype_id']])) {
-                                    $releaseInfo['hardwareOptional'][] = $this->optionalMachines[$download['machinetype_id']];
+                                    $releaseInfo['hardwareRequired'][] = $this->optionalMachines[$download['machinetype_id']];
                                 }
 
                                 if (isset($unusedReleases[$download['release_seq']])) {
@@ -630,7 +630,6 @@ class WosManager extends errorLogger
                     'year' => $release['release_year'],
                     'language' => [],
                     'hardwareRequired' => [],
-                    'hardwareOptional' => [],
                     'images' => [],
                     'inlayImages' => [],
                     'infoFiles' => [],
@@ -646,7 +645,7 @@ class WosManager extends errorLogger
                     ->get()) {
                     foreach ($controls as $control) {
                         if (isset($this->featureGroups[$control['group_id']])) {
-                            $releaseInfo['hardwareOptional'][] = $this->featureGroups[$control['group_id']];
+                            $releaseInfo['hardwareRequired'][] = $this->featureGroups[$control['group_id']];
                         }
                     }
                 }

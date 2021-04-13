@@ -25,10 +25,10 @@ export class ZxProdsList extends StructureElement {
       this.prods = data.zxProdCategory.prods.map(item => new ZxProd(item));
     }
     this.prodsAmount = data.zxProdCategory.prodsAmount;
-    this.lettersSelector = data.zxProdCategory.lettersSelector;
-    this.hardwareSelector = data.zxProdCategory.hardwareSelector;
-    this.yearsSelector = data.zxProdCategory.yearsSelector;
-    this.sortingSelector = data.zxProdCategory.sortingSelector;
+    this.lettersSelector = data.zxProdCategory.lettersSelector ? data.zxProdCategory.lettersSelector : [];
+    this.hardwareSelector = data.zxProdCategory.hardwareSelector? data.zxProdCategory.hardwareSelector : [];
+    this.yearsSelector = data.zxProdCategory.yearsSelector? data.zxProdCategory.yearsSelector : [];
+    this.sortingSelector = data.zxProdCategory.sortingSelector? data.zxProdCategory.sortingSelector : [];
     if (data.zxProdCategory.tagsSelector) {
       this.tagsSelector = data.zxProdCategory.tagsSelector.map(item => new Tag(item));
     }

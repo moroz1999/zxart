@@ -13,9 +13,11 @@ export class DialogSelectorDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public selectorData: SelectorDto,
   ) {
-    for (const value of selectorData) {
-      if (value.selected) {
-        this.selectedValues[value.value] = true;
+    for (const group of selectorData) {
+      for (const value of group.values) {
+        if (value.selected) {
+          this.selectedValues[value.value] = true;
+        }
       }
     }
   }

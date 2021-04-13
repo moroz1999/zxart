@@ -7,6 +7,8 @@ const ZXPRODS_TABLE = 'module_zxprod';
 
 trait ZxProdsList
 {
+    use HardwareProviderTrait;
+
     /**
      * @var zxProdCategoryElement[]
      */
@@ -158,6 +160,7 @@ trait ZxProdsList
     {
         if (!isset($this->yearsSelector)) {
             $this->yearsSelector = [];
+            $selectorValues = [];
             if ($query = $this->getSelectorQuery('years')) {
                 $values = $this->getSelectorValue('years');
                 $years = $query
@@ -167,12 +170,18 @@ trait ZxProdsList
                     ->pluck('year');
 
                 foreach ($years as $year) {
-                    $this->yearsSelector[] = [
+                    $selectorValues[] = [
                         'value' => $year,
                         'title' => $year,
                         'selected' => $values && in_array($year, $values),
                     ];
                 }
+            }
+            if ($selectorValues) {
+                $this->yearsSelector[] = [
+                    'title' => '',
+                    'values' => $selectorValues
+                ];
             }
         }
         return $this->yearsSelector;
@@ -194,14 +203,23 @@ trait ZxProdsList
                     ->whereIn('elementId', $query)
                     ->distinct()
                     ->pluck('value');
-
-                foreach ($hwItems as $hwItem) {
-                    $this->hardwareSelector[] = [
-                        'value' => $hwItem,
-                        'title' => $hwItem,
-                        'selected' => $values && in_array($hwItem, $values),
-                    ];
+                foreach ($this->getHardwareList() as $groupName => $groupValues) {
+                    if ($intersected = array_intersect($groupValues, $hwItems)) {
+                        $group = [
+                            'title' => "hardware.group_{$groupName}",
+                            'values' => []
+                        ];
+                        foreach ($intersected as $hwItem) {
+                            $group['values'][] = [
+                                'value' => $hwItem,
+                                'title' => $hwItem,
+                                'selected' => $values && in_array($hwItem, $values),
+                            ];
+                        }
+                        $this->hardwareSelector[] = $group;
+                    }
                 }
+
             }
         }
         return $this->hardwareSelector;
@@ -225,25 +243,32 @@ trait ZxProdsList
 
     public function getSortingSelector(): array
     {
-        $sortTypes = [
-            'votes,asc',
-            'votes,desc',
-            'title,asc',
-            'title,desc',
-            'year,asc',
-            'year,desc',
-            'date,asc',
-            'date,desc',
-        ];
         if (!isset($this->sortingSelector)) {
+            $sortTypes = [
+                'votes,asc',
+                'votes,desc',
+                'title,asc',
+                'title,desc',
+                'year,asc',
+                'year,desc',
+                'date,asc',
+                'date,desc',
+            ];
+            $selectorValues = [];
             $values = $this->getSelectorValue('sorting');
             $value = implode(',', $values);
             $this->sortingSelector = [];
             foreach ($sortTypes as $sortType) {
-                $this->sortingSelector[] = [
+                $selectorValues[] = [
                     'value' => $sortType,
                     'title' => $sortType,
                     'selected' => $sortType === $value,
+                ];
+            }
+            if ($selectorValues) {
+                $this->sortingSelector[] = [
+                    'title' => '',
+                    'values' => $selectorValues
                 ];
             }
         }
@@ -254,6 +279,7 @@ trait ZxProdsList
     {
         if (!isset($this->lettersSelector)) {
             $this->lettersSelector = [];
+            $selectorValues = [];
             if ($query = $this->getSelectorQuery('letter')) {
                 $value = $this->getSelectorValue('letter');
                 $letters = $query
@@ -266,7 +292,7 @@ trait ZxProdsList
                 foreach ($letters as $letter) {
                     if (preg_match('/[a-zA-Z]/', $letter)) {
                         $selected = $value ? in_array($letter, $value) : false;
-                        $this->lettersSelector[] = [
+                        $selectorValues[] = [
                             'value' => $letter,
                             'title' => $letter,
                             'selected' => $selected
@@ -277,12 +303,18 @@ trait ZxProdsList
                 }
                 if ($numericExists) {
                     $selected = $value ? in_array('0-9', $value) : false;
-                    array_unshift($this->lettersSelector, [
+                    array_unshift($selectorValues, [
                         'value' => '0-9',
                         'title' => '0-9',
                         'selected' => $selected
                     ]);
                 }
+            }
+            if ($selectorValues) {
+                $this->lettersSelector[] = [
+                    'title' => '',
+                    'values' => $selectorValues
+                ];
             }
         }
         return $this->lettersSelector;

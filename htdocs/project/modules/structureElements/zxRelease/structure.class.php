@@ -12,7 +12,6 @@ use ZxFiles\BasicFile;
  * @property string $description
  * @property string $version
  * @property array $hardwareRequired
- * @property array $hardwareOptional
  * @property array $language
  * @property array $releaseFormat
  * @property float $votes
@@ -91,12 +90,6 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
             'DBValueSet',
             [
                 'tableName' => $this->dataResourceName . '_hw_required',
-            ],
-        ];
-        $moduleStructure['hardwareOptional'] = [
-            'DBValueSet',
-            [
-                'tableName' => $this->dataResourceName . '_hw_optional',
             ],
         ];
         $moduleStructure['language'] = [

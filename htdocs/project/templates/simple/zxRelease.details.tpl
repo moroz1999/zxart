@@ -42,18 +42,6 @@
 				</td>
 			</tr>
 		{/if}
-		{if $element->hardwareOptional}
-			<tr>
-				<td class='info_table_label'>
-					{translations name='zxRelease.hardwareOptional'}:
-				</td>
-				<td class='info_table_value'>
-					{foreach $element->hardwareOptional as $hardwareItem}
-						{translations name="hardware.item_{$hardwareItem}"}
-					{/foreach}
-				</td>
-			</tr>
-		{/if}
 		{if $element->language}
 			<tr>
 				<td class='info_table_label'>

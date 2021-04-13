@@ -83,9 +83,6 @@
 		{foreach $element->hardwareRequired as $hardware}
 			<div class="zxrelease_table_hardware_item">{translations name="hardware.item_{$hardware}"}</div>
 		{/foreach}
-		{foreach $element->hardwareOptional as $hardware}
-			<div class="zxrelease_table_hardware_item">{translations name="hardware.item_{$hardware}"}</div>
-		{/foreach}
 	</td>
 	<td class='zxrelease_table_links'>
 		{include file=$theme->template('component.links.icons.tpl')}

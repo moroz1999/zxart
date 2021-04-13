@@ -59,7 +59,6 @@ class publicAddZxRelease extends structureElementAction
             'releaseFormat',
             'language',
             'hardwareRequired',
-            'hardwareOptional',
             'addAuthor',
             'addAuthorRole',
             'publishers',

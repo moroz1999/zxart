@@ -59,7 +59,6 @@ class ZxaaaManager extends errorLogger
         'SAA' => 'saa',
         'MS' => 'zxm',
     ];
-    //hardwareOptional
     protected $softCategoriesWords = [
         'Crack Intro' => 92171,
         'Intro' => 92163,

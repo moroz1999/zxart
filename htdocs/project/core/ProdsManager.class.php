@@ -637,10 +637,6 @@ class ProdsManager extends ElementsManager
             $element->hardwareRequired = $releaseInfo['hardwareRequired'];
             $changed = true;
         }
-        if (!$element->hardwareOptional && !empty($releaseInfo['hardwareOptional'])) {
-            $element->hardwareOptional = $releaseInfo['hardwareOptional'];
-            $changed = true;
-        }
         if (!$element->releaseType && !empty($releaseInfo['releaseType'])) {
             $element->releaseType = $releaseInfo['releaseType'];
             $changed = true;

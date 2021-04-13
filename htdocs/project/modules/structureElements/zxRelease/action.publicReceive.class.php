@@ -49,7 +49,6 @@ class publicReceiveZxRelease extends structureElementAction
             'releaseFormat',
             'language',
             'hardwareRequired',
-            'hardwareOptional',
             'addAuthor',
             'addAuthorRole',
             'publishers',

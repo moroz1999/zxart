@@ -1,9 +1,10 @@
 <select
   [(ngModel)]="sorting"
   (ngModelChange)="dataChanged($event)"
+  *ngIf="sortingSelector[0]"
 >
   <option
-    *ngFor="let option of sortingSelector"
+    *ngFor="let option of sortingSelector[0].values"
     [ngValue]="option.value"
     [selected]="option.selected"
   >{{option.title | translate}}</option>

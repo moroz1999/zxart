@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {SelectorValue} from '../../models/selector-dto';
+import {SelectorDto} from '../../models/selector-dto';
 
 @Component({
   selector: 'app-letter-selector',
@@ -7,7 +7,7 @@ import {SelectorValue} from '../../models/selector-dto';
   styleUrls: ['./letter-selector.component.scss'],
 })
 export class LetterSelectorComponent implements OnInit {
-  @Input() lettersSelector!: Array<SelectorValue>;
+  @Input() lettersSelector!: SelectorDto;
   @Output() letterSelected = new EventEmitter<string>();
 
   constructor() {

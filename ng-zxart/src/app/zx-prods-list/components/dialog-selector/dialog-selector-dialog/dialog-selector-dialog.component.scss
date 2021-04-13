@@ -1,12 +1,15 @@
 @import "../../../../shared/dialogs";
 @import "../../../../shared/vars";
 
-.years {
-  column-count: 5;
-  column-gap: $padding-lg;
+.groups {
+  display: flex;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
-.year {
+.group {
+}
+
+.value {
   padding-bottom: $padding-sm;
   break-inside: avoid;
 }

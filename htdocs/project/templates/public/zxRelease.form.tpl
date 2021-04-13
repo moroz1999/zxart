@@ -150,23 +150,6 @@
 				{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="hardwareRequired"}
 			</td>
 		</tr>
-		<tr {if $formErrors.hardwareOptional} class="form_error"{/if}>
-			<td class="form_label">
-				{translations name='zxRelease.hardwareOptional'}:
-			</td>
-			<td class="form_field">
-				<select class="select_multiple" name="{$formNames.hardwareOptional}[]" multiple="multiple" >
-					{foreach from=$element->getHardwareList() key=groupName item=hardwareList}
-						<optgroup label="{translations name="hardware.group_{$groupName}"}">
-						{foreach $hardwareList as $hardwareItem}
-							<option value='{$hardwareItem}' {if in_array($hardwareItem, $formData.hardwareOptional)}selected='selected'{/if}>{translations name="hardware.item_{$hardwareItem}"}</option>
-						{/foreach}
-						</optgroup>
-					{/foreach}
-				</select>
-				{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="hardwareOptional"}
-			</td>
-		</tr>
 		<tr>
 			<td colspan="2">
 				<h3>{translations name='zxprod.authors'}:</h3>
