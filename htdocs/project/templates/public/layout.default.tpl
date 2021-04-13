@@ -5,7 +5,5 @@
 		{include file=$theme->template('component.column.left.tpl')}
 	{/if}
 	{include file=$theme->template('component.column.center.tpl')}
-	{*{if $currentLanguage->getRightColumnElementsList()}*}
-		{include file=$theme->template('component.column.right.tpl')}
-	{*{/if}*}
+	{include file=$theme->template('component.column.right.tpl')}
 </div>

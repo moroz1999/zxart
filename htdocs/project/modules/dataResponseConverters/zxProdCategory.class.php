@@ -12,7 +12,7 @@ class zxProdCategoryDataResponseConverter extends StructuredDataResponseConverte
             'h1' => 'getH1',
             'url' => 'getUrl',
             'structureType' => 'structureType',
-            'categoriesIds' => 'getCategoriesIds',
+            'categories' => 'getCategoriesIds',
             'prods' => 'getProdsInfo',
             'yearsSelector' => 'getYearsSelector',
             'hardwareSelector' => 'getHardwareSelector',

@@ -2,7 +2,6 @@
 
 class zxProdCategoryQueryFilter extends QueryFilter
 {
-
     public function getRequiredType()
     {
         return 'zxProd';
