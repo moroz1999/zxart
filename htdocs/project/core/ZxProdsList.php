@@ -26,6 +26,7 @@ trait ZxProdsList
     protected array $tagsSelector;
     protected array $yearsSelector;
     protected array $hardwareSelector;
+    protected array $countriesSelector;
     protected array $lettersSelector;
     protected array $sortingSelector;
 
@@ -80,6 +81,9 @@ trait ZxProdsList
             }
             if ($values = $this->getSelectorValue('tags')) {
                 $filters['zxProdTagsInclude'] = $values;
+            }
+            if ($values = $this->getSelectorValue('countries')) {
+                $filters['zxProdCountryId'] = $values;
             }
             if ($values = $this->getSelectorValue('hw')) {
                 $filters['zxReleaseHardware'] = $values;
@@ -225,6 +229,41 @@ trait ZxProdsList
         return $this->hardwareSelector;
     }
 
+    public function getCountriesSelector(): array
+    {
+        if (!isset($this->countriesSelector)) {
+            $this->countriesSelector = [];
+            if ($query = $this->getSelectorQuery('countries')) {
+                $query->select(['id']);
+                $values = $this->getSelectorValue('countries');
+                $db = $this->getService('db');
+
+                $languageId = $this->getService('LanguagesManager')->getCurrentLanguageId();
+                $countries = $db->table('module_country')
+                    ->whereIn('id', function ($countriesQuery) use ($query) {
+                        $countriesQuery->from('module_group')->select('country')->whereIn('id', function ($producersQuery) use ($query) {
+                            $producersQuery->from('structure_links')->whereIn('childStructureId', $query)->where('type', '=', 'zxProdGroups')->select('parentStructureId');
+                        });
+                    })
+                    ->select('title', 'id')
+                    ->orderBy('title', 'asc')
+                    ->where('languageId', '=', $languageId)
+                    ->get();
+
+                foreach ($countries as $country) {
+                    $group['values'][] = [
+                        'value' => $country['id'],
+                        'title' => $country['title'],
+                        'selected' => $values && in_array($country['id'], $values),
+                    ];
+                }
+                $this->countriesSelector[] = $group;
+
+            }
+        }
+        return $this->countriesSelector;
+    }
+
     public function getTagsSelector(): array
     {
         if (!isset($this->tagsSelector)) {
@@ -336,6 +375,7 @@ trait ZxProdsList
         if (!isset($this->selectorValues)) {
             $this->selectorValues = [
                 'sorting' => ['votes', 'desc'],
+                'countries' => null,
                 'hw' => null,
                 'tags' => null,
                 'years' => null,

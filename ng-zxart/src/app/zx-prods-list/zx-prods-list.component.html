@@ -1,42 +1,52 @@
 <div *ngIf="model">
   <h1>{{ model.h1 }}</h1>
-  <div class="selectors">
-    <app-dialog-selector
-      [selectorData]="model.yearsSelector"
-      (newValues)="yearsChanged($event)"
-      [selectedValuesLabel]="'prods-list.filters.year.label' | translate"
-      [selectValuesLabel]="'prods-list.filters.year.select' | translate"
-    ></app-dialog-selector>
-    <app-dialog-selector
-      [selectorData]="model.hardwareSelector"
-      (newValues)="hardwareChanged($event)"
-      [selectedValuesLabel]="'prods-list.filters.hardware.label' | translate"
-      [selectValuesLabel]="'prods-list.filters.hardware.select' | translate"
-    ></app-dialog-selector>
+  <div class="zx-prods-list-content">
+    <div class="zx-prods-list-left">
+      <app-dialog-selector
+        [selectorData]="model.countriesSelector"
+        (newValues)="countriesChanged($event)"
+        [selectedValuesLabel]="'prods-list.filters.country.label' | translate"
+        [selectValuesLabel]="'prods-list.filters.country.select' | translate"
+      ></app-dialog-selector>
+    </div>
+    <div class="zx-prods-list-right">
+      <div class="selectors">
+        <app-dialog-selector
+          [selectorData]="model.yearsSelector"
+          (newValues)="yearsChanged($event)"
+          [selectedValuesLabel]="'prods-list.filters.year.label' | translate"
+          [selectValuesLabel]="'prods-list.filters.year.select' | translate"
+        ></app-dialog-selector>
+        <app-dialog-selector
+          [selectorData]="model.hardwareSelector"
+          (newValues)="hardwareChanged($event)"
+          [selectedValuesLabel]="'prods-list.filters.hardware.label' | translate"
+          [selectValuesLabel]="'prods-list.filters.hardware.select' | translate"
+        ></app-dialog-selector>
 
-    <app-tags-selector
-      [tagsSelector]="model.tagsSelector"
-      (tagsSelected)="tagsSelected($event)"
-    ></app-tags-selector>
+        <app-tags-selector
+          [tagsSelector]="model.tagsSelector"
+          (tagsSelected)="tagsSelected($event)"
+        ></app-tags-selector>
 
-    <app-sorting-selector
-      [sortingSelector]="model.sortingSelector"
-      (sortingSelected)="sortingSelected($event)"
-    ></app-sorting-selector>
+        <app-sorting-selector
+          [sortingSelector]="model.sortingSelector"
+          (sortingSelected)="sortingSelected($event)"
+        ></app-sorting-selector>
+      </div>
+
+      <app-letter-selector
+        [lettersSelector]="model.lettersSelector"
+        (letterSelected)="letterSelected($event)"
+      ></app-letter-selector>
+
+      <div *ngIf="model.prods" class="zx-prods">
+        <app-zx-prod
+          *ngFor="let zxProd of model.prods"
+          [model]="zxProd"></app-zx-prod>
+      </div>
+      <app-pages-selector [pagesAmount]="pagesAmount" [currentPage]="currentPage"
+                          (clickCallback)="setCurrentPage($event)"></app-pages-selector>
+    </div>
   </div>
-
-  <app-letter-selector
-    [lettersSelector]="model.lettersSelector"
-    (letterSelected)="letterSelected($event)"
-  ></app-letter-selector>
-
-  <div *ngIf="model.prods" class="zxprods">
-    <app-zx-prod
-      class="subcontentmodule_component subcontentmodule_square zxprod_short"
-      *ngFor="let zxProd of model.prods"
-      [model]="zxProd"></app-zx-prod>
-  </div>
-  <app-pages-selector [pagesAmount]="pagesAmount" [currentPage]="currentPage"
-                      (clickCallback)="setCurrentPage($event)"></app-pages-selector>
-
 </div>

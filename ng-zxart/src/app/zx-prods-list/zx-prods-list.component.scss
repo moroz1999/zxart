@@ -1,4 +1,18 @@
-.zxprods {
+.zx-prods-list-content {
+  display: flex;
+}
+
+.zx-prods-list-left {
+  flex-basis: 15%;
+  min-width: 20rem;
+}
+
+.zx-prods-list-right {
+  flex-basis: 85%;
+  flex-grow: 1;
+}
+
+.zx-prods {
   display: flex;
   flex-wrap: wrap;
 }

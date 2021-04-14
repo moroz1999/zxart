@@ -20,6 +20,7 @@ export class ZxProdsListComponent implements OnInit {
   public letter?: string;
   public sorting?: string;
   public tags: Array<number> = [];
+  public countries: Array<string> = [];
 
   @Input() elementId: number = 0;
 
@@ -54,6 +55,9 @@ export class ZxProdsListComponent implements OnInit {
     }
     if (this.tags.length) {
       parameters.tags = this.tags.join(',');
+    }
+    if (this.countries.length) {
+      parameters.countries = this.countries.join(',');
     }
     this.elementsService.getModel<ZxProdCategoryResponseDto, ZxProdsList>(this.elementId, ZxProdsList, parameters).subscribe(
       model => {
@@ -90,6 +94,11 @@ export class ZxProdsListComponent implements OnInit {
 
   tagsSelected(tags: Array<Tag>) {
     this.tags = tags.map(tag => tag.id);
+    this.fetchModel();
+  }
+
+  countriesChanged(countries: Array<string>) {
+    this.countries = countries;
     this.fetchModel();
   }
 }
