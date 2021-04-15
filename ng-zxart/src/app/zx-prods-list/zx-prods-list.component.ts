@@ -17,6 +17,8 @@ export class ZxProdsListComponent implements OnInit {
   public elementsOnPage = 100;
   public years: Array<string> = [];
   public hw: Array<string> = [];
+  public languages: Array<string> = [];
+  public formats: Array<string> = [];
   public letter?: string;
   public sorting?: string;
   public tags: Array<number> = [];
@@ -46,6 +48,12 @@ export class ZxProdsListComponent implements OnInit {
     }
     if (this.hw.length) {
       parameters.hw = this.hw.join(',');
+    }
+    if (this.languages.length) {
+      parameters.languages = this.languages.join(',');
+    }
+    if (this.formats.length) {
+      parameters.formats = this.formats.join(',');
     }
     if (this.letter) {
       parameters.letter = this.letter;
@@ -79,6 +87,16 @@ export class ZxProdsListComponent implements OnInit {
 
   hardwareChanged(hw: Array<string>) {
     this.hw = hw;
+    this.fetchModel();
+  }
+
+  formatsChanged(formats: Array<string>) {
+    this.formats = formats;
+    this.fetchModel();
+  }
+
+  languagesChanged(languages: Array<string>) {
+    this.languages = languages;
     this.fetchModel();
   }
 

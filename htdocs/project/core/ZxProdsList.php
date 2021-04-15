@@ -8,6 +8,7 @@ const ZXPRODS_TABLE = 'module_zxprod';
 trait ZxProdsList
 {
     use HardwareProviderTrait;
+    use ReleaseFormatsProvider;
 
     /**
      * @var zxProdCategoryElement[]
@@ -27,6 +28,8 @@ trait ZxProdsList
     protected array $yearsSelector;
     protected array $hardwareSelector;
     protected array $countriesSelector;
+    protected array $formatsSelector;
+    protected array $languagesSelector;
     protected array $lettersSelector;
     protected array $sortingSelector;
 
@@ -87,6 +90,12 @@ trait ZxProdsList
             }
             if ($values = $this->getSelectorValue('hw')) {
                 $filters['zxReleaseHardware'] = $values;
+            }
+            if ($values = $this->getSelectorValue('formats')) {
+                $filters['zxReleaseFormat'] = $values;
+            }
+            if ($values = $this->getSelectorValue('languages')) {
+                $filters['zxReleaseLanguage'] = $values;
             }
             $this->apiQuery = $apiQueriesManager->getQuery()->setExportType('zxProd')->setFiltrationParameters($filters);
             $this->filteredQuery = clone($this->apiQuery->getExportFilteredQuery());
@@ -264,6 +273,77 @@ trait ZxProdsList
         return $this->countriesSelector;
     }
 
+    public function getFormatsSelector(): array
+    {
+        if (!isset($this->formatsSelector)) {
+            $this->formatsSelector = [];
+            if ($query = $this->getSelectorQuery('formats')) {
+                $values = $this->getSelectorValue('formats');
+                $db = $this->getService('db');
+                /**
+                 * @var QueryFiltersManager $queryFiltersManager
+                 */
+                $queryFiltersManager = $this->getService('QueryFiltersManager');
+                $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
+                $hwItems = $db->table('module_zxrelease_format')
+                    ->whereIn('elementId', $query)
+                    ->distinct()
+                    ->pluck('value');
+                foreach ($this->getGroupedReleaseFormats() as $groupName => $groupValues) {
+                    if ($intersected = array_intersect($groupValues, $hwItems)) {
+                        $group = [
+                            'title' => "formats.group_{$groupName}",
+                            'values' => []
+                        ];
+                        foreach ($intersected as $format) {
+                            $group['values'][] = [
+                                'value' => $format,
+                                'title' => $format,
+                                'selected' => $values && in_array($format, $values),
+                            ];
+                        }
+                        $this->formatsSelector[] = $group;
+                    }
+                }
+
+            }
+        }
+        return $this->formatsSelector;
+    }
+
+    public function getLanguagesSelector(): array
+    {
+        if (!isset($this->languagesSelector)) {
+            $this->languagesSelector = [];
+            if ($query = $this->getSelectorQuery('languages')) {
+                $values = $this->getSelectorValue('languages');
+                $db = $this->getService('db');
+                /**
+                 * @var QueryFiltersManager $queryFiltersManager
+                 */
+                $queryFiltersManager = $this->getService('QueryFiltersManager');
+                $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
+                $languages = $db->table('module_zxrelease_language')
+                    ->whereIn('elementId', $query)
+                    ->distinct()
+                    ->pluck('value');
+                $group = [
+                    'title' => "languages.group",
+                    'values' => []
+                ];
+                foreach ($languages as $language) {
+                    $group['values'][] = [
+                        'value' => $language,
+                        'title' => $language,
+                        'selected' => $values && in_array($language, $values),
+                    ];
+                }
+                $this->languagesSelector[] = $group;
+            }
+        }
+        return $this->languagesSelector;
+    }
+
     public function getTagsSelector(): array
     {
         if (!isset($this->tagsSelector)) {
@@ -376,6 +456,8 @@ trait ZxProdsList
             $this->selectorValues = [
                 'sorting' => ['votes', 'desc'],
                 'countries' => null,
+                'languages' => null,
+                'formats' => null,
                 'hw' => null,
                 'tags' => null,
                 'years' => null,

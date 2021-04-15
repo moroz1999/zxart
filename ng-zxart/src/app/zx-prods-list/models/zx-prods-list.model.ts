@@ -11,6 +11,8 @@ export class ZxProdsList extends StructureElement {
   public prods: Array<ZxProd> = [];
   public lettersSelector: SelectorDto = [];
   public yearsSelector: SelectorDto = [];
+  public languagesSelector: SelectorDto = [];
+  public formatsSelector: SelectorDto = [];
   public countriesSelector: SelectorDto = [];
   public hardwareSelector: SelectorDto = [];
   public sortingSelector: SelectorDto = [];
@@ -30,6 +32,8 @@ export class ZxProdsList extends StructureElement {
     this.hardwareSelector = data.zxProdCategory.hardwareSelector? data.zxProdCategory.hardwareSelector : [];
     this.yearsSelector = data.zxProdCategory.yearsSelector? data.zxProdCategory.yearsSelector : [];
     this.countriesSelector = data.zxProdCategory.countriesSelector? data.zxProdCategory.countriesSelector : [];
+    this.languagesSelector = data.zxProdCategory.languagesSelector? data.zxProdCategory.languagesSelector : [];
+    this.formatsSelector = data.zxProdCategory.formatsSelector? data.zxProdCategory.formatsSelector : [];
     this.sortingSelector = data.zxProdCategory.sortingSelector? data.zxProdCategory.sortingSelector : [];
     if (data.zxProdCategory.tagsSelector) {
       this.tagsSelector = data.zxProdCategory.tagsSelector.map(item => new Tag(item));

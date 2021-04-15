@@ -12,6 +12,7 @@ trait ReleaseFormatsProvider
             'scl',
             'bin',
             'sna',
+            'szx',
             'z80',
             'fdi',
             'udi',
@@ -20,4 +21,33 @@ trait ReleaseFormatsProvider
             'spg',
         ];
     }
+
+    public function getGroupedReleaseFormats()
+    {
+        return [
+            'disk' => [
+                'dsk',
+                'trd',
+                'scl',
+                'fdi',
+                'udi',
+                'td0',
+            ],
+            'tape' => [
+                'tzx',
+                'tap',
+            ],
+            'rom' => [
+                'bin',
+                'rom',
+                'spg',
+            ],
+            'snapshot' => [
+                'sna',
+                'szx',
+                'z80',
+            ],
+        ];
+    }
+
 }

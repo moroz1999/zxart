@@ -8,6 +8,18 @@
         [selectedValuesLabel]="'prods-list.filters.country.label' | translate"
         [selectValuesLabel]="'prods-list.filters.country.select' | translate"
       ></app-dialog-selector>
+      <app-dialog-selector
+        [selectorData]="model.formatsSelector"
+        (newValues)="formatsChanged($event)"
+        [selectedValuesLabel]="'prods-list.filters.formats.label' | translate"
+        [selectValuesLabel]="'prods-list.filters.formats.select' | translate"
+      ></app-dialog-selector>
+      <app-dialog-selector
+        [selectorData]="model.languagesSelector"
+        (newValues)="languagesChanged($event)"
+        [selectedValuesLabel]="'prods-list.filters.languages.label' | translate"
+        [selectValuesLabel]="'prods-list.filters.languages.select' | translate"
+      ></app-dialog-selector>
     </div>
     <div class="zx-prods-list-right">
       <div class="selectors">
