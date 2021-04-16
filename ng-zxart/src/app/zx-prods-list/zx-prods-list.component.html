@@ -20,6 +20,12 @@
         [selectedValuesLabel]="'prods-list.filters.languages.label' | translate"
         [selectValuesLabel]="'prods-list.filters.languages.select' | translate"
       ></app-dialog-selector>
+      <app-dialog-selector
+        [selectorData]="model.legalStatusesSelector"
+        (newValues)="legalStatusesChanged($event)"
+        [selectedValuesLabel]="'prods-list.filters.legal-statuses.label' | translate"
+        [selectValuesLabel]="'prods-list.filters.legal-statuses.select' | translate"
+      ></app-dialog-selector>
     </div>
     <div class="zx-prods-list-right">
       <div class="selectors">

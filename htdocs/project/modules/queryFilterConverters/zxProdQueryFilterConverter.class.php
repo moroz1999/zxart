@@ -11,6 +11,7 @@ class zxProdQueryFilterConverter extends QueryFilterConverter
             $this->getTable() . '.partyplace',
             $this->getTable() . '.title',
             $this->getTable() . '.year',
+            $this->getTable() . '.legalStatus',
             $this->getTable() . '.dateAdded',
 //            $this->getStructureTable() . '.dateCreated',
             $this->getTable() . '.votes',

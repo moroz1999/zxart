@@ -18,6 +18,7 @@ export class ZxProdsListComponent implements OnInit {
   public years: Array<string> = [];
   public hw: Array<string> = [];
   public languages: Array<string> = [];
+  public legalStatuses: Array<string> = [];
   public formats: Array<string> = [];
   public letter?: string;
   public sorting?: string;
@@ -51,6 +52,9 @@ export class ZxProdsListComponent implements OnInit {
     }
     if (this.languages.length) {
       parameters.languages = this.languages.join(',');
+    }
+    if (this.legalStatuses.length) {
+      parameters.statuses = this.legalStatuses.join(',');
     }
     if (this.formats.length) {
       parameters.formats = this.formats.join(',');
@@ -97,6 +101,11 @@ export class ZxProdsListComponent implements OnInit {
 
   languagesChanged(languages: Array<string>) {
     this.languages = languages;
+    this.fetchModel();
+  }
+
+  legalStatusesChanged(legalStatuses: Array<string>) {
+    this.legalStatuses = legalStatuses;
     this.fetchModel();
   }
 

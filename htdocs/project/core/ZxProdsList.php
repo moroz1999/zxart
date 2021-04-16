@@ -26,6 +26,7 @@ trait ZxProdsList
 
     protected array $tagsSelector;
     protected array $yearsSelector;
+    protected array $legalStatusesSelector;
     protected array $hardwareSelector;
     protected array $countriesSelector;
     protected array $formatsSelector;
@@ -81,6 +82,9 @@ trait ZxProdsList
             }
             if ($values = $this->getSelectorValue('years')) {
                 $filters['zxProdYear'] = $values;
+            }
+            if ($values = $this->getSelectorValue('statuses')) {
+                $filters['zxProdStatus'] = $values;
             }
             if ($values = $this->getSelectorValue('tags')) {
                 $filters['zxProdTagsInclude'] = $values;
@@ -198,6 +202,36 @@ trait ZxProdsList
             }
         }
         return $this->yearsSelector;
+    }
+
+    public function getLegalStatusesSelector(): array
+    {
+        if (!isset($this->legalStatusesSelector)) {
+            $this->legalStatusesSelector = [];
+            $selectorValues = [];
+            if ($query = $this->getSelectorQuery('statuses')) {
+                $values = $this->getSelectorValue('statuses');
+                $statuses = $query
+                    ->where('legalStatus', '!=', '')
+                    ->distinct()
+                    ->pluck('legalStatus');
+
+                foreach ($statuses as $status) {
+                    $selectorValues[] = [
+                        'value' => $status,
+                        'title' => $status,
+                        'selected' => $values && in_array($status, $values),
+                    ];
+                }
+            }
+            if ($selectorValues) {
+                $this->legalStatusesSelector[] = [
+                    'title' => '',
+                    'values' => $selectorValues
+                ];
+            }
+        }
+        return $this->legalStatusesSelector;
     }
 
     public function getHardwareSelector(): array
@@ -461,6 +495,7 @@ trait ZxProdsList
                 'hw' => null,
                 'tags' => null,
                 'years' => null,
+                'statuses' => null,
                 'letter' => null,
             ];
             foreach ($this->selectorValues as $selectorName => $selectorValue) {
