@@ -3,12 +3,14 @@ import {ZxProdCategoryResponseDto} from './zx-prod-category-response-dto';
 import {ZxProd} from './zx-prod';
 import {SelectorDto} from './selector-dto';
 import {Tag} from '../../shared/models/tag';
+import {CategoriesSelectorDto} from '../../categories-selector-dto';
 
 export class ZxProdsList extends StructureElement {
   public h1: string;
   public title: string;
   public prodsAmount: number;
   public prods: Array<ZxProd> = [];
+  public categoriesSelector: CategoriesSelectorDto = [];
   public lettersSelector: SelectorDto = [];
   public yearsSelector: SelectorDto = [];
   public legalStatusesSelector: SelectorDto = [];
@@ -29,14 +31,15 @@ export class ZxProdsList extends StructureElement {
       this.prods = data.zxProdCategory.prods.map(item => new ZxProd(item));
     }
     this.prodsAmount = data.zxProdCategory.prodsAmount;
+    this.categoriesSelector = data.zxProdCategory.categoriesSelector ? data.zxProdCategory.categoriesSelector : [];
     this.lettersSelector = data.zxProdCategory.lettersSelector ? data.zxProdCategory.lettersSelector : [];
-    this.hardwareSelector = data.zxProdCategory.hardwareSelector? data.zxProdCategory.hardwareSelector : [];
-    this.yearsSelector = data.zxProdCategory.yearsSelector? data.zxProdCategory.yearsSelector : [];
-    this.legalStatusesSelector = data.zxProdCategory.legalStatusesSelector? data.zxProdCategory.legalStatusesSelector : [];
-    this.countriesSelector = data.zxProdCategory.countriesSelector? data.zxProdCategory.countriesSelector : [];
-    this.languagesSelector = data.zxProdCategory.languagesSelector? data.zxProdCategory.languagesSelector : [];
-    this.formatsSelector = data.zxProdCategory.formatsSelector? data.zxProdCategory.formatsSelector : [];
-    this.sortingSelector = data.zxProdCategory.sortingSelector? data.zxProdCategory.sortingSelector : [];
+    this.hardwareSelector = data.zxProdCategory.hardwareSelector ? data.zxProdCategory.hardwareSelector : [];
+    this.yearsSelector = data.zxProdCategory.yearsSelector ? data.zxProdCategory.yearsSelector : [];
+    this.legalStatusesSelector = data.zxProdCategory.legalStatusesSelector ? data.zxProdCategory.legalStatusesSelector : [];
+    this.countriesSelector = data.zxProdCategory.countriesSelector ? data.zxProdCategory.countriesSelector : [];
+    this.languagesSelector = data.zxProdCategory.languagesSelector ? data.zxProdCategory.languagesSelector : [];
+    this.formatsSelector = data.zxProdCategory.formatsSelector ? data.zxProdCategory.formatsSelector : [];
+    this.sortingSelector = data.zxProdCategory.sortingSelector ? data.zxProdCategory.sortingSelector : [];
     if (data.zxProdCategory.tagsSelector) {
       this.tagsSelector = data.zxProdCategory.tagsSelector.map(item => new Tag(item));
     }

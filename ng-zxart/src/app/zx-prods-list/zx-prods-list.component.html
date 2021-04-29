@@ -2,6 +2,9 @@
   <h1>{{ model.h1 }}</h1>
   <div class="zx-prods-list-content">
     <div class="zx-prods-list-left">
+      <app-categories-tree-selector
+        [selectorData]="model.categoriesSelector"
+      ></app-categories-tree-selector>
       <app-dialog-selector
         [selectorData]="model.countriesSelector"
         (newValues)="countriesChanged($event)"

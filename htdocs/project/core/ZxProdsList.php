@@ -25,6 +25,7 @@ trait ZxProdsList
     protected ?Builder $baseQuery;
 
     protected array $tagsSelector;
+    protected array $categoriesSelector;
     protected array $yearsSelector;
     protected array $legalStatusesSelector;
     protected array $hardwareSelector;
@@ -202,6 +203,69 @@ trait ZxProdsList
             }
         }
         return $this->yearsSelector;
+    }
+
+    private function getCategoriesCatalogue()
+    {
+        /**
+         * @var structureManager $structureManager
+         */
+        $structureManager = $this->getService('structureManager');
+
+        $id = $this->id;
+        while (($parentElement = $structureManager->getElementsFirstParent($id)) && ($parentElement->structureType === 'zxProdsCategory')) {
+            $id = $parentElement->id;
+        }
+        $elements = $parentElement->getChildrenList();
+        return reset($elements);
+    }
+
+    public function getCategoriesSelector(): array
+    {
+        if (!isset($this->categoriesSelector)) {
+            $this->categoriesSelector = [];
+            $selectorValues = [];
+            $values = $this->getSelectorValue('categories');
+            $catalogue = $this->getCategoriesCatalogue();
+            $categories = $catalogue->getCategories();
+            foreach ($categories as $category)
+                $this->getRecursiveCategorySelectorValues($category, $selectorValues, $values);
+//            if ($query = $this->getSelectorQuery('years')) {
+//                $years = $query
+//                    ->distinct()
+//                    ->orderBy('year', 'asc')
+//                    ->where('year', '!=', 0)
+//                    ->pluck('year');
+
+//                foreach ($years as $year) {
+//                    $selectorValues[] = [
+//                        'value' => $year,
+//                        'title' => $year,
+//                        'selected' => $values && in_array($year, $values),
+//                    ];
+//                }
+//            }
+            if ($selectorValues) {
+                $this->categoriesSelector = $selectorValues;
+            }
+        }
+        return $this->categoriesSelector;
+    }
+
+    private function getRecursiveCategorySelectorValues(zxProdCategoryElement $category, &$selectorValues, $values)
+    {
+        $data = [
+            'name' => $category->title,
+            'value' => $category->id,
+            'selected' => false,
+        ];
+        if ($categories = $category->getCategories()) {
+            $data['children'] = [];
+            foreach ($categories as $subCategory) {
+                $this->getRecursiveCategorySelectorValues($subCategory, $data['children'], $values);
+            }
+        }
+        $selectorValues[] = $data;
     }
 
     public function getLegalStatusesSelector(): array

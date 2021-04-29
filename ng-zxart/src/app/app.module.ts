@@ -18,11 +18,13 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatTreeModule} from '@angular/material/tree';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DialogSelectorDialogComponent} from './zx-prods-list/components/dialog-selector/dialog-selector-dialog/dialog-selector-dialog.component';
 import {LetterSelectorComponent} from './zx-prods-list/components/letter-selector/letter-selector.component';
 import {SortingSelectorComponent} from './zx-prods-list/components/sorting-selector/sorting-selector.component';
 import {TagsSelectorComponent} from './shared/components/tags-selector/tags-selector.component';
+import {CategoriesTreeSelectorComponent} from './zx-prods-list/components/categories-tree-selector/categories-tree-selector.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(httpClient, `${environment.assetsUrl}i18n/`);
@@ -38,6 +40,7 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
     LetterSelectorComponent,
     SortingSelectorComponent,
     TagsSelectorComponent,
+    CategoriesTreeSelectorComponent,
   ],
   imports: [
     CommonModule,
@@ -59,6 +62,7 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
     MatChipsModule,
     MatIconModule,
     MatAutocompleteModule,
+    MatTreeModule,
   ],
   providers: [],
   bootstrap: [],
