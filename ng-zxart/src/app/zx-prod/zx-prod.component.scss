@@ -1,76 +1,78 @@
+@import "shared/vars";
 
-/********************************************************
-/*  ZXPROD SHORT
-/********************************************************/
-.zxprod_short {
+$amount: 5;
+$margin: $amount * $padding-md/($amount - 1);
+
+$width: 100%/$amount;
+
+:host {
+  display: block;
+  width: calc(#{$width} - #{$margin});
 }
 
-.zxprod_short_images {
+.zx-prod-images {
+  display: block;
   position: relative;
-  display: block;
-  margin: 0 auto 1em;
-  flex-basis: 100%;
+  width: 256px;
+  height: 192px;
 }
 
-.zxprod_short_image {
-  display: block;
-  max-width: 100%;
-}
-
-.zxprod_short_image_second {
+.zx-prod-loading {
   display: block;
   top: 0;
   left: 0;
   position: absolute;
-  opacity: 0;
-  max-width: 100%;
-
-  .zxprod_short:hover & {
-    opacity: 1;
-  }
-
-  transition: opacity 0.5s;
+  width: 100%;
 }
 
-.zxprod_short_title {
+.zx-prod-screenshots {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
   display: block;
-  position: relative;
-  text-align: left;
-  vertical-align: middle;
-  box-sizing: border-box;
+  overflow: hidden;
 }
 
-.zxprod_short_title_controls {
-  float: right;
-  margin: 0 0 0.5em 0.5em;
+.zx-prod-screenshot {
+  display: block;
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.zx-prod-screenshots-selector {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   display: flex;
-  align-items: center;
-
-  .vote_controls {
-    margin-right: 0.5em;
-  }
 }
 
-.zxprod_short_party {
-  vertical-align: middle;
-  text-align: left;
+.zx-prod-screenshots-button {
+  width: 1rem;
+  height: 1rem;
+  background: #fff;
+  display: block;
 }
 
-.zxprod_short_party img {
-  vertical-align: middle;
-  display: inline-block;
+.zx-prod-hardware {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
 }
-//
-//@media (max-width: @screen_breakpoint_sm_max) {
-//  .zxprod_short_images {
-//    margin: 0 0 1em;
-//  }
-//
-//  .zxprod_short_image {
-//    width: 100%;
-//  }
-//
-//  .zxprod_short_image_second {
-//    width: 100%;
-//  }
-//}
+
+.zx-prod-hardware-item {
+  display: block;
+}
+
+.zx-prod-title {
+  display: block;
+}
+
+.zx-prod-additional {
+
+}

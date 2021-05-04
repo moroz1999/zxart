@@ -25,7 +25,7 @@
  * @property array[] $splitData
  */
 class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPathInterface, CommentsHolderInterface,
-                                                 JsonDataProvider
+    JsonDataProvider
 {
     use AuthorshipProviderTrait;
     use AuthorshipPersister;
@@ -101,7 +101,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         $moduleStructure['language'] = [
             'DBValueSet',
             [
-                'tableName' => $this->dataResourceName . '_language',
+                'tableName' => 'zxitem_language',
             ],
         ];
         $moduleStructure['compilationProds'] = [
@@ -195,11 +195,11 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     }
 
     //used in API
-    public function getImagesUrls()
+    public function getImagesUrls($preset = 'prodImage')
     {
         $urls = [];
         foreach ($this->getFilesList('connectedFile') as $fileElement) {
-            $urls[] = $fileElement->getImageUrl('prodImage');
+            $urls[] = $fileElement->getImageUrl($preset);
         }
         return $urls;
     }
@@ -443,21 +443,17 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         }
         foreach ($this->getAuthorsInfo('prod') as $authorInfo) {
             if ($authorElement = $authorInfo['authorElement']) {
-                $data['authors'][$authorInfo['id']] = $authorElement->id . ' <a target="_blank" href="' . $authorElement->getUrl(
-                    ) . '">' . $authorElement->getSearchTitle() . '</a>';
+                $data['authors'][$authorInfo['id']] = $authorElement->id . ' <a target="_blank" href="' . $authorElement->getUrl() . '">' . $authorElement->getSearchTitle() . '</a>';
             }
         }
         foreach ($this->publishers as $publisher) {
-            $data['publishers'][$publisher->id] = $publisher->id . ' <a target="_blank" href="' . $publisher->getUrl(
-                ) . '">' . $publisher->getSearchTitle() . '</a>';
+            $data['publishers'][$publisher->id] = $publisher->id . ' <a target="_blank" href="' . $publisher->getUrl() . '">' . $publisher->getSearchTitle() . '</a>';
         }
         foreach ($this->groups as $group) {
-            $data['groups'][$group->id] = $group->id . ' <a target="_blank" href="' . $group->getUrl(
-                ) . '">' . $group->getSearchTitle() . '</a>';
+            $data['groups'][$group->id] = $group->id . ' <a target="_blank" href="' . $group->getUrl() . '">' . $group->getSearchTitle() . '</a>';
         }
         foreach ($this->getReleasesList() as $releaseElement) {
-            $data['releases'][$releaseElement->id] = $releaseElement->id . ' <a target="_blank" href="' . $releaseElement->getUrl(
-                ) . '">' . $releaseElement->getSearchTitle() . '</a>';
+            $data['releases'][$releaseElement->id] = $releaseElement->id . ' <a target="_blank" href="' . $releaseElement->getUrl() . '">' . $releaseElement->getSearchTitle() . '</a>';
         }
         foreach ($this->getFilesList('connectedFile') as $fileElement) {
             $data['screenshots'][$fileElement->id] = $fileElement->id . ' <img style="height: 5rem" src="' . $fileElement->getImageUrl(
@@ -628,5 +624,75 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
             }
         }
         return $this->textContent;
+    }
+
+    public function getHardware()
+    {
+        $db = $this->getService('db');
+        /**
+         * @var QueryFiltersManager $queryFiltersManager
+         */
+        $query = $db->table($this->dataResourceName)->where('id', $this->id);
+
+        $queryFiltersManager = $this->getService('QueryFiltersManager');
+        $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
+        $hwItems = $db->table('module_zxrelease_hw_required')
+            ->whereIn('elementId', $query)
+            ->distinct()
+            ->pluck('value');
+        return $hwItems;
+    }
+
+    public function getPublisherTitles()
+    {
+        $titles = [];
+        foreach ($this->publishers as $publisher) {
+            $titles[] = $publisher->title;
+        }
+        return $titles;
+    }
+
+    public function getGroupsTitles()
+    {
+        $titles = [];
+        foreach ($this->groups as $group) {
+            $titles[] = $group->title;
+        }
+        return $titles;
+    }
+
+    public function getLanguageTitles()
+    {
+        $db = $this->getService('db');
+        /**
+         * @var QueryFiltersManager $queryFiltersManager
+         */
+        $query = $db->table($this->dataResourceName)->where('id', $this->id);
+
+        $queryFiltersManager = $this->getService('QueryFiltersManager');
+        $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
+        $languages = $db->table('zxitem_language')
+            ->whereIn('elementId', $query)
+            ->orWhere('elementId', $this->id)
+            ->distinct()
+            ->pluck('value');
+        return $languages;
+    }
+
+    public function getCategoriesTitles()
+    {
+        $titles = [];
+        foreach ($this->getConnectedCategories() as $category) {
+            $titles[] = $category->title;
+        }
+        return $titles;
+    }
+
+    public function getPartyTitle()
+    {
+        if ($party = $this->getPartyElement()){
+            return $party->title;
+        }
+        return '';
     }
 }

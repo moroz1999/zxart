@@ -27,9 +27,18 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             'description' => 'description',
             'legalStatus' => 'getLegalStatus',
             'groupsIds' => 'getGroupsIds',
+            'languageTitles' => 'getLanguageTitles',
+            'categoriesTitles' => 'getCategoriesTitles',
+            'partyTitle' => 'getPartyTitle',
+            'publishersTitles' => 'getPublisherTitles',
+            'groupsTitles' => 'getGroupsTitles',
             'publishersIds' => 'getPublishersIds',
             'releasesIds' => 'getReleasesIds',
             'imagesUrls' => 'getImagesUrls',
+            'listImagesUrls' => function ($element) {
+                return $element->getImagesUrls('listProdImage');
+            },
+            'hardware' => 'getHardware',
             'maps' => function ($element) {
                 return $element->getFilesUrlList('mapFilesSelector', 'release');
             },
@@ -79,10 +88,18 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 'id',
                 'title',
                 'url',
-                'imagesUrls',
+                'listImagesUrls',
+                'hardware',
                 "votes",
                 "userVote",
                 "votePercent",
+                "year",
+                "partyPlace",
+                "partyTitle",
+                "languageTitles",
+                "categoriesTitles",
+                "groupsTitles",
+                "publishersTitles",
             ],
             'search' => [
                 'id',

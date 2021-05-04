@@ -86,46 +86,80 @@ export class ZxProdsListComponent implements OnInit {
 
   yearsChanged(years: Array<string>) {
     this.years = years;
+    this.currentPage = 0;
+
     this.fetchModel();
   }
 
   hardwareChanged(hw: Array<string>) {
     this.hw = hw;
+    this.currentPage = 0;
+
     this.fetchModel();
   }
 
   formatsChanged(formats: Array<string>) {
     this.formats = formats;
+    this.currentPage = 0;
+
     this.fetchModel();
   }
 
   languagesChanged(languages: Array<string>) {
     this.languages = languages;
+    this.currentPage = 0;
+
     this.fetchModel();
   }
 
   legalStatusesChanged(legalStatuses: Array<string>) {
     this.legalStatuses = legalStatuses;
+    this.currentPage = 0;
+
     this.fetchModel();
   }
 
   letterSelected(letter: string) {
     this.letter = letter;
+    this.currentPage = 0;
+
     this.fetchModel();
   }
 
   sortingSelected(sorting: string) {
     this.sorting = sorting;
+    this.currentPage = 0;
+
     this.fetchModel();
   }
 
   tagsSelected(tags: Array<Tag>) {
     this.tags = tags.map(tag => tag.id);
+    this.currentPage = 0;
+
     this.fetchModel();
   }
 
   countriesChanged(countries: Array<string>) {
     this.countries = countries;
+    this.currentPage = 0;
+
+    this.fetchModel();
+  }
+
+  categoryChanged(categoryId: number) {
+    this.elementId = categoryId;
+
+    this.years = [];
+    this.hw = [];
+    this.languages = [];
+    this.legalStatuses = [];
+    this.formats = [];
+    this.letter = '';
+    this.tags = [];
+    this.countries = [];
+    this.currentPage = 0;
+
     this.fetchModel();
   }
 }

@@ -95,7 +95,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         $moduleStructure['language'] = [
             'DBValueSet',
             [
-                'tableName' => $this->dataResourceName . '_language',
+                'tableName' => 'zxitem_language',
             ],
         ];
 
@@ -215,8 +215,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     public function getFileUrl($play = false)
     {
         if ($play) {
-            $url = controller::getInstance(
-                )->baseURL . 'release/play:1/id:' . $this->id . '/filename:' . $this->getFileName();
+            $url = controller::getInstance()->baseURL . 'release/play:1/id:' . $this->id . '/filename:' . $this->getFileName();
         } else {
             $url = controller::getInstance()->baseURL . 'release/id:' . $this->id . '/filename:' . $this->getFileName();
         }
@@ -232,7 +231,8 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         $addParty = true,
         $addPartyPlace = false,
         $addId = false
-    ) {
+    )
+    {
         return $this->fileName;
     }
 
@@ -297,8 +297,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
                         case 'pc_image':
                             $controller = controller::getInstance();
                             if ($fileId = (int)$controller->getParameter('fileId')) {
-                                return "<img src='" . $controller->baseURL . "zxfile/id:" . $this->id . "/fileId:" . $fileId . "/" . $file->getItemName(
-                                    ) . "' />";
+                                return "<img src='" . $controller->baseURL . "zxfile/id:" . $this->id . "/fileId:" . $fileId . "/" . $file->getItemName() . "' />";
                             }
                             break;
                         case 'zx_basic':

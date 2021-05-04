@@ -4,6 +4,7 @@
     <div class="zx-prods-list-left">
       <app-categories-tree-selector
         [selectorData]="model.categoriesSelector"
+        (categoryChanged)="categoryChanged($event)"
       ></app-categories-tree-selector>
       <app-dialog-selector
         [selectorData]="model.countriesSelector"

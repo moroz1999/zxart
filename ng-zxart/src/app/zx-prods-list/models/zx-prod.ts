@@ -3,29 +3,55 @@ import {ZxProdDto} from './zx-prod-dto';
 
 export class ZxProd extends StructureElement {
   public title: string;
+  public year: string = '';
   public imagesUrls: Array<string> = [];
+  public hardware: Array<string> = [];
+  public groupsTitles: Array<string> = [];
+  public publishersTitles: Array<string> = [];
+  public categoriesTitles: Array<string> = [];
+  public languageTitles: Array<string> = [];
+  public partyTitle: string = '';
+  public partyPlace: number = 0;
   public votes: number;
   public votePercent: number;
-  public imageUrl?: string;
-  public image2Url?: string;
+  public loadingImageUrl?: string;
 
   constructor(data: ZxProdDto) {
     super(data);
     this.title = data.title;
-    if (data.imagesUrls){
-      this.imagesUrls = data.imagesUrls;
+    if (data.year) {
+      this.year = data.year;
+    }
+    if (data.hardware) {
+      this.hardware = data.hardware;
+    }
+    if (data.groupsTitles) {
+      this.groupsTitles = data.groupsTitles;
+    }
+    if (data.publishersTitles) {
+      this.publishersTitles = data.publishersTitles;
+    }
+    if (data.categoriesTitles) {
+      this.categoriesTitles = data.categoriesTitles;
+    }
+    if (data.languageTitles) {
+      this.languageTitles = data.languageTitles;
+    }
+    if (data.partyTitle) {
+      this.partyTitle = data.partyTitle;
+    }
+    if (data.partyPlace) {
+      this.partyPlace = data.partyPlace;
+    }
+    if (data.listImagesUrls) {
+      this.imagesUrls = data.listImagesUrls;
       this.imagesUrls = this.imagesUrls.map(image => image.replace('http://localhost', 'https://zxart.ee'));
     }
     this.votes = data.votes;
     this.votePercent = data.votePercent;
 
-    if (this.imagesUrls) {
-      if (this.imagesUrls.length > 0) {
-        this.imageUrl = this.imagesUrls[0];
-      }
-      if (this.imagesUrls.length > 1) {
-        this.image2Url = this.imagesUrls[1];
-      }
+    if (this.imagesUrls.length > 0) {
+      this.loadingImageUrl = this.imagesUrls.splice(0, 1)[0];
     }
   }
 }

@@ -10,7 +10,7 @@ class zxReleaseLanguageQueryFilter extends QueryFilter
     public function getFilteredIdList($argument, $query)
     {
         $query->whereIn($this->getTable() . '.id', function ($subQuery) use ($argument) {
-            $subQuery->from('module_zxrelease_language')->select('elementId')->whereIn('value', $argument);
+            $subQuery->from('zxitem_language')->select('elementId')->whereIn('value', $argument);
         });
         return $query;
     }

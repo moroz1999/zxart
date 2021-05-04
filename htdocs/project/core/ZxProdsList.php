@@ -230,21 +230,6 @@ trait ZxProdsList
             $categories = $catalogue->getCategories();
             foreach ($categories as $category)
                 $this->getRecursiveCategorySelectorValues($category, $selectorValues, $values);
-//            if ($query = $this->getSelectorQuery('years')) {
-//                $years = $query
-//                    ->distinct()
-//                    ->orderBy('year', 'asc')
-//                    ->where('year', '!=', 0)
-//                    ->pluck('year');
-
-//                foreach ($years as $year) {
-//                    $selectorValues[] = [
-//                        'value' => $year,
-//                        'title' => $year,
-//                        'selected' => $values && in_array($year, $values),
-//                    ];
-//                }
-//            }
             if ($selectorValues) {
                 $this->categoriesSelector = $selectorValues;
             }
@@ -256,8 +241,9 @@ trait ZxProdsList
     {
         $data = [
             'name' => $category->title,
-            'value' => $category->id,
-            'selected' => false,
+            'id' => $category->id,
+            'url' => $category->getUrl(),
+            'selected' => $category->requested,
         ];
         if ($categories = $category->getCategories()) {
             $data['children'] = [];
@@ -420,9 +406,11 @@ trait ZxProdsList
                  * @var QueryFiltersManager $queryFiltersManager
                  */
                 $queryFiltersManager = $this->getService('QueryFiltersManager');
+                $prodQuery = clone($query);
                 $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
-                $languages = $db->table('module_zxrelease_language')
+                $languages = $db->table('zxitem_language')
                     ->whereIn('elementId', $query)
+                    ->orWhereIn('elementId', $prodQuery->select('id'))
                     ->distinct()
                     ->pluck('value');
                 $group = [

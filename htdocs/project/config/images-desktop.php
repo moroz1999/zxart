@@ -66,6 +66,21 @@
         ],
         'path' => 'releases',
     ],
+    'listProdImage' => [
+        'filters' => [
+            [
+                'crop',
+                'width=256, height=192',
+            ],
+        ],
+        'format' => [
+            null,
+            'png',
+            '',
+            100,
+        ],
+        'path' => 'releases',
+    ],
     'inspired2Image' => [
         'filters' => [
             [
