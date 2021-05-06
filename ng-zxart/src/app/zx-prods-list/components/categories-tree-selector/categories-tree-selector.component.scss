@@ -1,10 +1,14 @@
-.example-tree-invisible {
+.categories-tree-invisible {
   display: none;
 }
 
-.example-tree ul,
-.example-tree li {
+.categories-tree ul,
+.categories-tree li {
   margin-top: 0;
   margin-bottom: 0;
   list-style-type: none;
+}
+
+a {
+  color: inherit;
 }

@@ -1,10 +1,10 @@
 @import "shared/vars";
 
 $amount: 5;
-$margin: $padding-md;
 
 .zx-prods-list-content {
   display: flex;
+  gap: $padding-xl;
 }
 
 .zx-prods-list-left {
@@ -21,9 +21,10 @@ $margin: $padding-md;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: $margin;
+  gap: $padding-md;
 }
 
 .selectors {
   display: flex;
+  gap: $padding-md;
 }

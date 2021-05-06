@@ -9,25 +9,25 @@
       <app-dialog-selector
         [selectorData]="model.countriesSelector"
         (newValues)="countriesChanged($event)"
-        [selectedValuesLabel]="'prods-list.filters.country.label' | translate"
-        [selectValuesLabel]="'prods-list.filters.country.select' | translate"
+        [selectedValuesLabel]="'prods-list.filters.countries.selected' | translate"
+        [selectValuesLabel]="'prods-list.filters.countries.select' | translate"
       ></app-dialog-selector>
       <app-dialog-selector
         [selectorData]="model.formatsSelector"
         (newValues)="formatsChanged($event)"
-        [selectedValuesLabel]="'prods-list.filters.formats.label' | translate"
+        [selectedValuesLabel]="'prods-list.filters.formats.selected' | translate"
         [selectValuesLabel]="'prods-list.filters.formats.select' | translate"
       ></app-dialog-selector>
       <app-dialog-selector
         [selectorData]="model.languagesSelector"
         (newValues)="languagesChanged($event)"
-        [selectedValuesLabel]="'prods-list.filters.languages.label' | translate"
+        [selectedValuesLabel]="'prods-list.filters.languages.selected' | translate"
         [selectValuesLabel]="'prods-list.filters.languages.select' | translate"
       ></app-dialog-selector>
       <app-dialog-selector
         [selectorData]="model.legalStatusesSelector"
         (newValues)="legalStatusesChanged($event)"
-        [selectedValuesLabel]="'prods-list.filters.legal-statuses.label' | translate"
+        [selectedValuesLabel]="'prods-list.filters.legal-statuses.selected' | translate"
         [selectValuesLabel]="'prods-list.filters.legal-statuses.select' | translate"
       ></app-dialog-selector>
     </div>
@@ -36,13 +36,13 @@
         <app-dialog-selector
           [selectorData]="model.yearsSelector"
           (newValues)="yearsChanged($event)"
-          [selectedValuesLabel]="'prods-list.filters.year.label' | translate"
+          [selectedValuesLabel]="'prods-list.filters.year.selected' | translate"
           [selectValuesLabel]="'prods-list.filters.year.select' | translate"
         ></app-dialog-selector>
         <app-dialog-selector
           [selectorData]="model.hardwareSelector"
           (newValues)="hardwareChanged($event)"
-          [selectedValuesLabel]="'prods-list.filters.hardware.label' | translate"
+          [selectedValuesLabel]="'prods-list.filters.hardware.selected' | translate"
           [selectValuesLabel]="'prods-list.filters.hardware.select' | translate"
         ></app-dialog-selector>
 

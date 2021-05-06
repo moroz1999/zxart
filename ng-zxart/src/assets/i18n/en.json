@@ -8,9 +8,28 @@
       "reset": "Reset",
       "apply": "Apply",
       "year": {
-        "label": "Years: ",
-        "select": "Select years",
-        "title": "Select years"
+        "selected": "Years:",
+        "select": "Select years"
+      },
+      "hardware": {
+        "selected": "Hardware:",
+        "select": "Select hardware"
+      },
+      "languages": {
+        "selected": "Languages:",
+        "select": "Select languages"
+      },
+      "countries": {
+        "selected": "Countries:",
+        "select": "Select countries"
+      },
+      "formats": {
+        "selected": "Release formats:",
+        "select": "Select formats"
+      },
+      "legal-statuses": {
+        "selected": "Legal statuses:",
+        "select": "Select legal statuses"
       }
     }
   },
