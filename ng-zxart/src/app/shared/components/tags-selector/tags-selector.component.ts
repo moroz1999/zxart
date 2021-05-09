@@ -1,4 +1,4 @@
-import {Component, ContentChild, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {TagsSearchService} from '../../services/tags-search.service';
 import {Tag} from '../../models/tag';
 import {Subject} from 'rxjs';
@@ -15,6 +15,7 @@ export class TagsSelectorComponent implements OnInit {
   @Input() tagsSelector: Array<Tag> = [];
   foundTags = new Subject<Tag[]>();
   @Output() tagsSelected = new EventEmitter<Array<Tag>>();
+  @ViewChild('input') inputElement?: HTMLInputElement;
 
   constructor(
     private tagsSearch: TagsSearchService,
@@ -41,6 +42,9 @@ export class TagsSelectorComponent implements OnInit {
     this.tagsSelector.push(event.option.value);
     this.tagsSelected.emit(this.tagsSelector);
     this.tagText = '';
+    if (this.inputElement) {
+      this.inputElement.value = '';
+    }
   }
 
   ngOnInit() {

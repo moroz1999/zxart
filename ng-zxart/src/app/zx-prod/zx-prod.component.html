@@ -1,36 +1,37 @@
-<a
-  href="{{ model.url }}"
-  class="zx-prod-images"
->
-  <img
-    *ngIf="model.loadingImageUrl"
-    class="zx-prod-loading"
-    src="{{ model.loadingImageUrl }}"
-    alt="{{ model.title }}"
-    loading="lazy"
-  />
-  <span *ngIf="model.imagesUrls && displayScreenshots" class="zx-prod-screenshots">
-    <ng-container *ngFor="let imageUrl of model.imagesUrls">
+<div class="zx-prod-internal">
+  <a
+    href="{{ model.url }}"
+    class="zx-prod-images"
+  >
     <img
-      *ngIf="imageUrl === activeScreenshotUrl"
-      class="zx-prod-screenshot"
-      src="{{ imageUrl }}"
+      *ngIf="model.loadingImageUrl"
+      class="zx-prod-loading"
+      src="{{ model.loadingImageUrl }}"
       alt="{{ model.title }}"
       loading="lazy"
     />
+    <span *ngIf="model.imagesUrls && displayScreenshots" class="zx-prod-screenshots" @fadeInOut>
+      <ng-container *ngFor="let imageUrl of model.imagesUrls" @fadeInOut>
+      <img
+        class="zx-prod-screenshot"
+        [ngClass]="{'zx-prod-screenshot-selected': imageUrl === activeScreenshotUrl}"
+        src="{{ imageUrl }}"
+        alt="{{ model.title }}"
+        loading="lazy"
+      />
       </ng-container>
-    <span class="zx-prod-screenshots-selector" *ngIf="model.imagesUrls.length > 1">
-      <span
-        *ngFor="let imageUrl of model.imagesUrls"
-        class="zx-prod-screenshots-button"
-        (pointerenter)="setActiveScreenshotUrl(imageUrl)"
-      >*</span>
+      <span class="zx-prod-screenshots-selector" *ngIf="model.imagesUrls.length > 1">
+        <span
+          *ngFor="let imageUrl of model.imagesUrls"
+          class="zx-prod-screenshots-button"
+          (pointerenter)="setActiveScreenshotUrl(imageUrl)"
+        ></span>
+      </span>
     </span>
-  </span>
-  <span
-    *ngIf="model.hardware.length > 0"
-    class="zx-prod-hardware"
-  >
+    <span
+      *ngIf="model.hardware.length > 0"
+      class="zx-prod-hardware"
+    >
     <span
       *ngFor="let item of model.hardware"
       class="zx-prod-hardware-item"
@@ -38,32 +39,41 @@
       {{item}}
     </span>
   </span>
-</a>
-<a class="zxprod-title" href="{{ model.url }}">{{ model.title }}</a>
-<div class="zx-prod-year">{{model.year}}</div>
-<ng-container *ngIf="model.groupsTitles.length">
-  <div *ngFor="let group of model.groupsTitles">{{group}} </div>
-</ng-container>
-<ng-container *ngIf="!model.groupsTitles.length && model.publishersTitles.length">
-  <div *ngFor="let publisher of model.publishersTitles">{{publisher}} </div>
-</ng-container>
-<div class="zx-prod-additional" *ngIf="displayAdditions">
-  <ng-container *ngIf="model.publishersTitles.length">
-    <div *ngFor="let publisher of model.publishersTitles">{{publisher}} </div>
-  </ng-container>
-  <ng-container *ngIf="model.categoriesTitles.length">
-    <div *ngFor="let category of model.categoriesTitles">{{category}} </div>
-  </ng-container>
-  <ng-container *ngIf="model.languageTitles.length">
-    <div *ngFor="let language of model.languageTitles">{{language}} </div>
-  </ng-container>
-  <ng-container *ngIf="model.partyTitle">
-    <span *ngIf="model.partyPlace > 0">{{model.partyPlace}}{{"prod.at" | translate}}</span>
-    <span>{{model.partyTitle}}</span>
-  </ng-container>
-  <div class="zx-prod-buttons">
-    <button mat-raised-button>{{"prod.play" | translate}}</button>
-    <button mat-raised-button>{{"prod.video" | translate}}</button>
-    <a href="" mat-raised-button>{{"prod.open" | translate}}</a>
+  </a>
+  <div class="zx-prod-bottom">
+    <div class="zx-prod-year">{{model.year}}</div>
+    <a class="zx-prod-title" href="{{ model.url }}">{{ model.title }}</a>
+    <div *ngIf="model.groupsTitles.length">
+      <div *ngFor="let group of model.groupsTitles">{{group}} </div>
+    </div>
+    <div *ngIf="!model.groupsTitles.length && model.publishersTitles.length">
+      <div *ngFor="let publisher of model.publishersTitles">{{publisher}} </div>
+    </div>
+    <div class="zx-prod-additional" *ngIf="displayAdditions" @slideInOut>
+      <div class="zx-prod-row zx-prod-publisher" *ngIf="model.publishersTitles.length">
+        <div class="zx-prod-row-label">{{ "prod.publishers" | translate }}</div>
+        <div class="zx-prod-row-value" *ngFor="let publisher of model.publishersTitles">{{publisher}} </div>
+      </div>
+      <div class="zx-prod-row zx-prod-categories" *ngIf="model.categoriesTitles.length">
+        <div class="zx-prod-row-label">{{ "prod.categories" | translate }}</div>
+        <div class="zx-prod-row-value" *ngFor="let category of model.categoriesTitles">{{category}} </div>
+      </div>
+      <div class="zx-prod-row zx-prod-languages" *ngIf="model.languageTitles.length">
+        <div class="zx-prod-row-label">{{ "prod.languages" | translate }}</div>
+        <div class="zx-prod-row-value" *ngFor="let language of model.languageTitles">{{language}} </div>
+      </div>
+      <div class="zx-prod-row zx-prod-parties" *ngIf="model.partyTitle">
+        <div class="zx-prod-row-label">{{ "prod.parties" | translate }}</div>
+        <div class="zx-prod-row-value">
+          <span *ngIf="model.partyPlace > 0">{{model.partyPlace}}{{"prod.at" | translate}}</span>
+          <span>{{model.partyTitle}}</span>
+        </div>
+      </div>
+      <div class="zx-prod-buttons">
+        <button color="primary" mat-raised-button>{{"prod.play" | translate}}</button>
+        <button color="primary" mat-raised-button>{{"prod.video" | translate}}</button>
+        <a [href]="model.url" mat-raised-button>{{"prod.open" | translate}}</a>
+      </div>
+    </div>
   </div>
 </div>

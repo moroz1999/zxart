@@ -1,3 +1,5 @@
+@import "shared/vars";
+
 .categories-tree-invisible {
   display: none;
 }
@@ -11,4 +13,13 @@
 
 a {
   color: inherit;
+}
+
+.mat-tree {
+  background: transparent;
+  color: $white;
+}
+
+.mat-tree-node, .mat-nested-tree-node {
+  color: $white;
 }

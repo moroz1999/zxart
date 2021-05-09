@@ -1,8 +1,8 @@
 <div class="letters" *ngIf="lettersSelector[0]">
   <button mat-button (pointerdown)="selectLetter('')">
-    All
+    {{ "prods-list.filters.letters.all" | translate }}
   </button>
-  <button mat-button *ngFor="let letter of lettersSelector[0].values" (pointerdown)="selectLetter(letter.value)">
+  <button class="letter" mat-button *ngFor="let letter of lettersSelector[0].values" (pointerdown)="selectLetter(letter.value)">
     {{letter.title}}
   </button>
 </div>

@@ -30,10 +30,16 @@
       "legal-statuses": {
         "selected": "Legal statuses:",
         "select": "Select legal statuses"
+      },
+      "letters": {
+        "all": "All"
       }
     }
   },
   "prod": {
-    "at": " at "
+    "at": " at ",
+    "play": "Play",
+    "video": "Video",
+    "open": "Open"
   }
 }

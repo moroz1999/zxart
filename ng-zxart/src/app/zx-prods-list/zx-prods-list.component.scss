@@ -8,8 +8,11 @@ $amount: 5;
 }
 
 .zx-prods-list-left {
-  flex-basis: 15%;
-  min-width: 20rem;
+  flex-basis: 10%;
+  min-width: 15rem;
+  display: flex;
+  flex-direction: column;
+  gap: $padding-md;
 }
 
 .zx-prods-list-right {
@@ -18,13 +21,20 @@ $amount: 5;
 }
 
 .zx-prods {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: $padding-md;
+  display: grid;
+  grid-template-columns: 256px 256px 256px 256px 256px;
+  gap: $padding-lg;
 }
 
 .selectors {
   display: flex;
   gap: $padding-md;
+}
+
+app-letter-selector {
+  margin: $padding-sm 0 $padding-md;
+}
+
+app-pages-selector {
+  z-index: 10;
 }

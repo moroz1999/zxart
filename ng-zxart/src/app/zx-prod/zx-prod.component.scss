@@ -1,13 +1,14 @@
 @import "shared/vars";
 
-$amount: 5;
-$margin: $amount * $padding-md/($amount - 1);
-
-$width: 100%/$amount;
-
 :host {
   display: block;
-  width: calc(#{$width} - #{$margin});
+  width: 256px;
+}
+
+.zx-prod-internal {
+  background: $gray8;
+  border-radius: $radius-xl;
+  box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 0.27);
 }
 
 .zx-prod-images {
@@ -15,6 +16,9 @@ $width: 100%/$amount;
   position: relative;
   width: 256px;
   height: 192px;
+  border-top-right-radius: $radius-xl;
+  border-top-left-radius: $radius-xl;
+  overflow: hidden;
 }
 
 .zx-prod-loading {
@@ -41,6 +45,12 @@ $width: 100%/$amount;
   left: 0;
   position: absolute;
   width: 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.zx-prod-screenshot-selected {
+  opacity: 1;
 }
 
 .zx-prod-screenshots-selector {
@@ -48,14 +58,34 @@ $width: 100%/$amount;
   bottom: 0;
   left: 0;
   width: 100%;
+  height: 100%;
   display: flex;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 35%);
 }
 
 .zx-prod-screenshots-button {
-  width: 1rem;
-  height: 1rem;
-  background: #fff;
+  width: 15%;
+  height: 100%;
   display: block;
+  position: relative;
+
+  &::after {
+    display: block;
+    content: "";
+    position: absolute;
+    bottom: $padding-sm;
+    left: $padding-xs;
+    right: $padding-xs;
+    background: $white;
+    opacity: 0.7;
+    border-radius: $radius-md;
+    height: 0.4rem;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  &:hover::after {
+    opacity: 1;
+  }
 }
 
 .zx-prod-hardware {
@@ -69,10 +99,65 @@ $width: 100%/$amount;
   display: block;
 }
 
+
+.zx-prod-bottom {
+  padding: $padding-md;
+}
+
 .zx-prod-title {
   display: block;
+  color: currentColor;
+  font-size: $font-lg;
+  margin-bottom: $padding-md;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.zx-prod-year {
+  float: right;
+  margin: 0 0 $padding-md $padding-md;
 }
 
 .zx-prod-additional {
 
+}
+
+.zx-prod-publisher,
+.zx-prod-categories,
+.zx-prod-languages,
+.zx-prod-parties {
+  display: block;
+  padding-bottom: $padding-sm;
+}
+
+.zx-prod-row {
+  display: flex;
+  flex-wrap: nowrap;
+  font-size: $font-sm;
+  border-bottom: 1px solid $gray7;
+  padding: $padding-md 0;
+  justify-content: space-between;
+
+  &:last-of-type {
+    border-bottom: 0;
+  }
+}
+
+.zx-prod-row-label {
+  margin-right: 1rem;
+  color: $gray6;
+}
+
+.zx-prod-row-value {
+  text-align: right;
+}
+
+.zx-prod-buttons {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  margin-top: $padding-lg;
 }

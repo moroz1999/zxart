@@ -1,4 +1,15 @@
+@import 'shared/vars';
+
+:host {
+  display: block;
+}
+
 .letters {
   display: flex;
   flex-wrap: wrap;
+}
+
+.letter {
+  padding: 0 $padding-md;
+  min-width: 1rem;
 }
