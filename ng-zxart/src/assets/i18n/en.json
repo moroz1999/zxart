@@ -40,6 +40,10 @@
     "at": " at ",
     "play": "Play",
     "video": "Video",
+    "categories": "Genres",
+    "parties": "Competitions",
+    "languages": "Languages",
+    "publishers": "Publishers",
     "open": "Open"
   }
 }

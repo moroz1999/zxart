@@ -1,7 +1,7 @@
 import {Component, ElementRef, Input, OnInit} from '@angular/core';
 import {ZxProd} from '../zx-prods-list/models/zx-prod';
 import {FadeInOut} from '../shared/animations/fade-in-out';
-import {trigger} from '@angular/animations';
+import {trigger, AnimationEvent} from '@angular/animations';
 import {SlideInOut} from '../shared/animations/slide-in-out';
 
 @Component({
@@ -19,6 +19,9 @@ export class ZxProdComponent implements OnInit {
   displayAdditions: boolean = false;
   activeScreenshotUrl = '';
 
+  slideOpenInProgress = false;
+  slideCloseInProgress = false;
+
   constructor(private element: ElementRef) {
   }
 
@@ -28,22 +31,46 @@ export class ZxProdComponent implements OnInit {
   }
 
   enterHandler(): void {
-    this.displayScreenshots = true;
+    if (this.model.imagesUrls.length > 0) {
+      this.displayScreenshots = true;
+    }
     this.displayAdditions = true;
     this.activeScreenshotUrl = this.model.imagesUrls[0];
-
-    let height = this.element.nativeElement.scrollHeight;
-    this.element.nativeElement.style.height = height + 'px';
-    this.element.nativeElement.style.zIndex = 10;
   }
 
   leaveHandler(): void {
     this.displayScreenshots = false;
     this.displayAdditions = false;
-    this.element.nativeElement.style.zIndex = 0;
   }
 
   setActiveScreenshotUrl(imageUrl: string): void {
     this.activeScreenshotUrl = imageUrl;
+  }
+
+  captureStartEvent(event: AnimationEvent) {
+    if (event.fromState === 'void' && event.toState === null) {
+      this.slideOpenInProgress = true;
+    }
+    if (event.fromState === null && event.toState === 'void') {
+      this.slideCloseInProgress = true;
+    }
+    if (this.slideOpenInProgress && !this.slideCloseInProgress) {
+      let height = this.element.nativeElement.scrollHeight;
+      this.element.nativeElement.style.height = height + 'px';
+      this.element.nativeElement.style.zIndex = 10;
+    }
+  }
+
+  captureDoneEvent(event: AnimationEvent) {
+    if (event.fromState === 'void' && event.toState === null) {
+      this.slideOpenInProgress = false;
+    }
+    if (event.fromState === null && event.toState === 'void') {
+      if (!this.slideOpenInProgress && this.slideCloseInProgress) {
+        this.element.nativeElement.style.height = 'auto';
+        this.element.nativeElement.style.zIndex = 0;
+      }
+      this.slideCloseInProgress = false;
+    }
   }
 }

@@ -11,8 +11,9 @@
       loading="lazy"
     />
     <span *ngIf="model.imagesUrls && displayScreenshots" class="zx-prod-screenshots" @fadeInOut>
-      <ng-container *ngFor="let imageUrl of model.imagesUrls" @fadeInOut>
+      <ng-container *ngFor="let imageUrl of model.imagesUrls">
       <img
+        @fadeInOut
         class="zx-prod-screenshot"
         [ngClass]="{'zx-prod-screenshot-selected': imageUrl === activeScreenshotUrl}"
         src="{{ imageUrl }}"
@@ -49,7 +50,12 @@
     <div *ngIf="!model.groupsTitles.length && model.publishersTitles.length">
       <div *ngFor="let publisher of model.publishersTitles">{{publisher}} </div>
     </div>
-    <div class="zx-prod-additional" *ngIf="displayAdditions" @slideInOut>
+    <div class="zx-prod-additional"
+         *ngIf="displayAdditions"
+         @slideInOut
+         (@slideInOut.start)=captureStartEvent($event)
+         (@slideInOut.done)=captureDoneEvent($event)
+    >
       <div class="zx-prod-row zx-prod-publisher" *ngIf="model.publishersTitles.length">
         <div class="zx-prod-row-label">{{ "prod.publishers" | translate }}</div>
         <div class="zx-prod-row-value" *ngFor="let publisher of model.publishersTitles">{{publisher}} </div>
