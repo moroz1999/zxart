@@ -1,5 +1,5 @@
 import {StructureElement} from '../../shared/models/structure-element';
-import {ZxProdDto} from './zx-prod-dto';
+import {ZxProdDto, ZxProdInfo} from './zx-prod-dto';
 
 export class ZxProd extends StructureElement {
   public title: string;
@@ -9,7 +9,7 @@ export class ZxProd extends StructureElement {
   public groupsTitles: Array<string> = [];
   public publishersTitles: Array<string> = [];
   public categoriesTitles: Array<string> = [];
-  public languageTitles: Array<string> = [];
+  public languagesInfo: ZxProdInfo = [];
   public partyTitle: string = '';
   public partyPlace: number = 0;
   public votes: number;
@@ -34,8 +34,8 @@ export class ZxProd extends StructureElement {
     if (data.categoriesTitles) {
       this.categoriesTitles = data.categoriesTitles;
     }
-    if (data.languageTitles) {
-      this.languageTitles = data.languageTitles;
+    if (data.languagesInfo) {
+      this.languagesInfo = data.languagesInfo;
     }
     if (data.partyTitle) {
       this.partyTitle = data.partyTitle;

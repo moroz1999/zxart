@@ -661,7 +661,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return $titles;
     }
 
-    public function getLanguageTitles()
+    public function getLanguagesInfo()
     {
         $db = $this->getService('db');
         /**
@@ -671,11 +671,24 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
 
         $queryFiltersManager = $this->getService('QueryFiltersManager');
         $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
-        $languages = $db->table('zxitem_language')
+        $languageCodes = $db->table('zxitem_language')
             ->whereIn('elementId', $query)
             ->orWhere('elementId', $this->id)
             ->distinct()
             ->pluck('value');
+        $languages = [];
+        /**
+         * @var translationsManager $translationsManager
+         */
+        $translationsManager = $this->getService('translationsManager');
+
+        foreach ($languageCodes as $languageCode) {
+            $languages[] = [
+                'id' => $languageCode,
+                'title' => $translationsManager->getTranslationByName('language.item_' . $languageCode),
+                'url' => null,
+            ];
+        }
         return $languages;
     }
 
@@ -690,7 +703,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
 
     public function getPartyTitle()
     {
-        if ($party = $this->getPartyElement()){
+        if ($party = $this->getPartyElement()) {
             return $party->title;
         }
         return '';

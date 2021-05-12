@@ -58,15 +58,21 @@
     >
       <div class="zx-prod-row zx-prod-publisher" *ngIf="model.publishersTitles.length">
         <div class="zx-prod-row-label">{{ "prod.publishers" | translate }}</div>
-        <div class="zx-prod-row-value" *ngFor="let publisher of model.publishersTitles">{{publisher}} </div>
+        <div class="zx-prod-row-value" >
+          <span *ngFor="let publisher of model.publishersTitles">{{publisher}} </span>
+        </div>
       </div>
       <div class="zx-prod-row zx-prod-categories" *ngIf="model.categoriesTitles.length">
         <div class="zx-prod-row-label">{{ "prod.categories" | translate }}</div>
-        <div class="zx-prod-row-value" *ngFor="let category of model.categoriesTitles">{{category}} </div>
+        <div class="zx-prod-row-value">
+          <span *ngFor="let category of model.categoriesTitles">{{category}} </span>
+        </div>
       </div>
-      <div class="zx-prod-row zx-prod-languages" *ngIf="model.languageTitles.length">
+      <div class="zx-prod-row zx-prod-languages" *ngIf="model.languagesInfo.length">
         <div class="zx-prod-row-label">{{ "prod.languages" | translate }}</div>
-        <div class="zx-prod-row-value" *ngFor="let language of model.languageTitles">{{language}} </div>
+        <div class="zx-prod-row-value">
+          <ng-container *ngFor="let language of model.languagesInfo; last as last"><a href="">{{language.title}}</a><span *ngIf="!last">, </span></ng-container>
+        </div>
       </div>
       <div class="zx-prod-row zx-prod-parties" *ngIf="model.partyTitle">
         <div class="zx-prod-row-label">{{ "prod.parties" | translate }}</div>
