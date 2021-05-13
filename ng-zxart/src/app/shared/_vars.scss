@@ -37,9 +37,10 @@ $orange: rgba(255, 104, 38, 1);
 
 
 $font-md: rem(14px);
-$font-sm: 0.9 * $font-md;
-$font-lg: $font-md * 1.5;
-$font-xl: $font-md * 2;
+$font-xs: 0.7 * $font-md;
+$font-sm: 0.85 * $font-md;
+$font-lg: $font-md * 1.25;
+$font-xl: $font-md * 1.5;
 
 $radius-md: rem(3px);
 $radius-lg: $radius-md*2;
@@ -54,4 +55,5 @@ $controls-border-radius: $radius-md;
 
 $text-line-height: 1.8;
 
+$text-color: $gray8;
 $error-color: $red;

@@ -474,7 +474,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
 //            "@context" => "http://schema.org/",
 //            "@type" => "VisualArtwork",
 //            "name" => $this->title,
-//            "url" => $this->URL,
+//            "url" => $this->getUrl(),
 //        ];
 //        $data["description"] = $this->getTextContent();
 //        if ($imageUrl = $this->getImageUrl(1, true)) {
@@ -643,22 +643,47 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return $hwItems;
     }
 
-    public function getPublisherTitles()
+    public function getHardwareInfo()
     {
-        $titles = [];
-        foreach ($this->publishers as $publisher) {
-            $titles[] = $publisher->title;
+        $publishersInfo = [];
+        /**
+         * @var translationsManager $translationsManager
+         */
+        $translationsManager = $this->getService('translationsManager');
+        foreach ($this->getHardware() as $item) {
+            $publishersInfo[] = [
+                'id' => $item,
+                'title' => $translationsManager->getTranslationByName('hardware.item_short_' . $item),
+            ];
         }
-        return $titles;
+        return $publishersInfo;
+
     }
 
-    public function getGroupsTitles()
+    public function getPublishersInfo()
     {
-        $titles = [];
-        foreach ($this->groups as $group) {
-            $titles[] = $group->title;
+        $publishersInfo = [];
+        foreach ($this->publishers as $publisher) {
+            $publishersInfo[] = [
+                'id' => $publisher->id,
+                'title' => $publisher->title,
+                'url' => $publisher->getUrl(),
+            ];
         }
-        return $titles;
+        return $publishersInfo;
+    }
+
+    public function getGroupsInfo()
+    {
+        $groupsInfo = [];
+        foreach ($this->groups as $group) {
+            $groupsInfo[] = [
+                'id' => $group->id,
+                'title' => $group->title,
+                'url' => $group->getUrl(),
+            ];
+        }
+        return $groupsInfo;
     }
 
     public function getLanguagesInfo()
@@ -692,19 +717,27 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return $languages;
     }
 
-    public function getCategoriesTitles()
+    public function getCategoriesInfo()
     {
-        $titles = [];
+        $categoriesInfo = [];
         foreach ($this->getConnectedCategories() as $category) {
-            $titles[] = $category->title;
+            $categoriesInfo[] = [
+                'id' => $category->id,
+                'title' => $category->title,
+                'url' => $category->getUrl(),
+            ];
         }
-        return $titles;
+        return $categoriesInfo;
     }
 
-    public function getPartyTitle()
+    public function getPartyInfo()
     {
         if ($party = $this->getPartyElement()) {
-            return $party->title;
+            return [
+                'id' => $party->id,
+                'title' => $party->title,
+                'url' => $party->getUrl(),
+            ];
         }
         return '';
     }

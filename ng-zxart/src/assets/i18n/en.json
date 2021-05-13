@@ -36,7 +36,7 @@
       }
     }
   },
-  "prod": {
+  "zx-prod": {
     "at": " at ",
     "play": "Play",
     "video": "Video",

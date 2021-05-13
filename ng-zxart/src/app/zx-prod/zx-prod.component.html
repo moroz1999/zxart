@@ -30,25 +30,25 @@
       </span>
     </span>
     <span
-      *ngIf="model.hardware.length > 0"
+      *ngIf="model.hardwareInfo.length > 0"
       class="zx-prod-hardware"
     >
     <span
-      *ngFor="let item of model.hardware"
+      *ngFor="let item of model.hardwareInfo"
       class="zx-prod-hardware-item"
     >
-      {{item}}
+      {{item.title}}
     </span>
   </span>
   </a>
   <div class="zx-prod-bottom">
     <div class="zx-prod-year">{{model.year}}</div>
     <a class="zx-prod-title" href="{{ model.url }}">{{ model.title }}</a>
-    <div *ngIf="model.groupsTitles.length">
-      <div *ngFor="let group of model.groupsTitles">{{group}} </div>
+    <div *ngIf="model.groupsInfo.length">
+      <ng-container *ngFor="let group of model.groupsInfo; last as last"><a [href]="group.url">{{group.title}}</a><span *ngIf="!last">, </span></ng-container>
     </div>
-    <div *ngIf="!model.groupsTitles.length && model.publishersTitles.length">
-      <div *ngFor="let publisher of model.publishersTitles">{{publisher}} </div>
+    <div *ngIf="!model.groupsInfo.length && model.publishersInfo.length">
+      <ng-container *ngFor="let publisher of model.publishersInfo; last as last"><a [href]="publisher.url">{{publisher.title}}</a><span *ngIf="!last">, </span></ng-container>
     </div>
     <div class="zx-prod-additional"
          *ngIf="displayAdditions"
@@ -56,35 +56,35 @@
          (@slideInOut.start)=captureStartEvent($event)
          (@slideInOut.done)=captureDoneEvent($event)
     >
-      <div class="zx-prod-row zx-prod-publisher" *ngIf="model.publishersTitles.length">
-        <div class="zx-prod-row-label">{{ "prod.publishers" | translate }}</div>
-        <div class="zx-prod-row-value" >
-          <span *ngFor="let publisher of model.publishersTitles">{{publisher}} </span>
+      <div class="zx-prod-row zx-prod-publisher" *ngIf="model.publishersInfo.length">
+        <div class="zx-prod-row-label">{{ "zx-prod.publishers" | translate }}</div>
+        <div class="zx-prod-row-value">
+          <ng-container *ngFor="let publisher of model.publishersInfo; last as last"><a [href]="publisher.url">{{publisher.title}}</a><span *ngIf="!last">, </span></ng-container>
         </div>
       </div>
-      <div class="zx-prod-row zx-prod-categories" *ngIf="model.categoriesTitles.length">
-        <div class="zx-prod-row-label">{{ "prod.categories" | translate }}</div>
+      <div class="zx-prod-row zx-prod-categories" *ngIf="model.categoriesInfo.length">
+        <div class="zx-prod-row-label">{{ "zx-prod.categories" | translate }}</div>
         <div class="zx-prod-row-value">
-          <span *ngFor="let category of model.categoriesTitles">{{category}} </span>
+          <ng-container *ngFor="let category of model.categoriesInfo; last as last"><a href="">{{category.title}}</a><span *ngIf="!last">, </span></ng-container>
         </div>
       </div>
       <div class="zx-prod-row zx-prod-languages" *ngIf="model.languagesInfo.length">
-        <div class="zx-prod-row-label">{{ "prod.languages" | translate }}</div>
+        <div class="zx-prod-row-label">{{ "zx-prod.languages" | translate }}</div>
         <div class="zx-prod-row-value">
           <ng-container *ngFor="let language of model.languagesInfo; last as last"><a href="">{{language.title}}</a><span *ngIf="!last">, </span></ng-container>
         </div>
       </div>
-      <div class="zx-prod-row zx-prod-parties" *ngIf="model.partyTitle">
-        <div class="zx-prod-row-label">{{ "prod.parties" | translate }}</div>
+      <div class="zx-prod-row zx-prod-parties" *ngIf="model.partyInfo">
+        <div class="zx-prod-row-label">{{ "zx-prod.parties" | translate }}</div>
         <div class="zx-prod-row-value">
-          <span *ngIf="model.partyPlace > 0">{{model.partyPlace}}{{"prod.at" | translate}}</span>
-          <span>{{model.partyTitle}}</span>
+          <span *ngIf="model.partyPlace > 0">{{model.partyPlace}}{{"zx-prod.at" | translate}}</span>
+          <a [href]="model.partyInfo.url">{{model.partyInfo.title}}</a>
         </div>
       </div>
       <div class="zx-prod-buttons">
-        <button color="primary" mat-raised-button>{{"prod.play" | translate}}</button>
-        <button color="primary" mat-raised-button>{{"prod.video" | translate}}</button>
-        <a [href]="model.url" mat-raised-button>{{"prod.open" | translate}}</a>
+        <button color="primary" mat-raised-button>{{"zx-prod.play" | translate}}</button>
+        <button color="primary" mat-raised-button>{{"zx-prod.video" | translate}}</button>
+        <a [href]="model.url" mat-raised-button>{{"zx-prod.open" | translate}}</a>
       </div>
     </div>
   </div>

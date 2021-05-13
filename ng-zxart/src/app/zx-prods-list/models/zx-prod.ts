@@ -1,16 +1,16 @@
 import {StructureElement} from '../../shared/models/structure-element';
-import {ZxProdDto, ZxProdInfo} from './zx-prod-dto';
+import {ZxProdDto, ZxProdConnectedItems, ZxProdConnectedItem} from './zx-prod-dto';
 
 export class ZxProd extends StructureElement {
   public title: string;
   public year: string = '';
   public imagesUrls: Array<string> = [];
-  public hardware: Array<string> = [];
-  public groupsTitles: Array<string> = [];
-  public publishersTitles: Array<string> = [];
-  public categoriesTitles: Array<string> = [];
-  public languagesInfo: ZxProdInfo = [];
-  public partyTitle: string = '';
+  public hardwareInfo: ZxProdConnectedItems = [];
+  public groupsInfo: ZxProdConnectedItems = [];
+  public publishersInfo: ZxProdConnectedItems = [];
+  public categoriesInfo: ZxProdConnectedItems = [];
+  public languagesInfo: ZxProdConnectedItems = [];
+  public partyInfo?: ZxProdConnectedItem;
   public partyPlace: number = 0;
   public votes: number;
   public votePercent: number;
@@ -22,23 +22,23 @@ export class ZxProd extends StructureElement {
     if (data.year) {
       this.year = data.year;
     }
-    if (data.hardware) {
-      this.hardware = data.hardware;
+    if (data.hardwareInfo) {
+      this.hardwareInfo = data.hardwareInfo;
     }
-    if (data.groupsTitles) {
-      this.groupsTitles = data.groupsTitles;
+    if (data.groupsInfo) {
+      this.groupsInfo = data.groupsInfo;
     }
-    if (data.publishersTitles) {
-      this.publishersTitles = data.publishersTitles;
+    if (data.publishersInfo) {
+      this.publishersInfo = data.publishersInfo;
     }
-    if (data.categoriesTitles) {
-      this.categoriesTitles = data.categoriesTitles;
+    if (data.categoriesInfo) {
+      this.categoriesInfo = data.categoriesInfo;
     }
     if (data.languagesInfo) {
       this.languagesInfo = data.languagesInfo;
     }
-    if (data.partyTitle) {
-      this.partyTitle = data.partyTitle;
+    if (data.partyInfo) {
+      this.partyInfo = data.partyInfo;
     }
     if (data.partyPlace) {
       this.partyPlace = data.partyPlace;
