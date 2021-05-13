@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import {ZxProd} from '../zx-prods-list/models/zx-prod';
 import {FadeInOut} from '../shared/animations/fade-in-out';
 import {trigger, AnimationEvent} from '@angular/animations';
@@ -15,6 +15,9 @@ import {SlideInOut} from '../shared/animations/slide-in-out';
 })
 export class ZxProdComponent implements OnInit {
   @Input() model!: ZxProd;
+  @Output() categoryChanged = new EventEmitter<number>();
+  @Output() hardwareChanged = new EventEmitter<Array<string>>();
+  @Output() languageChanged = new EventEmitter<Array<string>>();
   displayScreenshots: boolean = false;
   displayAdditions: boolean = false;
   activeScreenshotUrl = '';
@@ -72,5 +75,20 @@ export class ZxProdComponent implements OnInit {
       }
       this.slideCloseInProgress = false;
     }
+  }
+
+  categoryClicked(event: Event, categoryId: number): void {
+    event.preventDefault();
+    this.categoryChanged.emit(categoryId);
+  }
+
+  hardwareClicked(event: Event, hardware: string): void {
+    event.preventDefault();
+    this.hardwareChanged.emit([hardware]);
+  }
+
+  languageClicked(event: Event, language: string): void {
+    event.preventDefault();
+    this.languageChanged.emit([language]);
   }
 }

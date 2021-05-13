@@ -65,7 +65,11 @@
       <div *ngIf="model.prods" class="zx-prods">
         <app-zx-prod
           *ngFor="let zxProd of model.prods"
-          [model]="zxProd"></app-zx-prod>
+          [model]="zxProd"
+          (categoryChanged)="categoryChanged($event)"
+          (hardwareChanged)="hardwareChanged($event)"
+          (languageChanged)="languagesChanged($event)"
+        ></app-zx-prod>
       </div>
       <app-pages-selector [pagesAmount]="pagesAmount" [currentPage]="currentPage"
                           (clickCallback)="setCurrentPage($event)"></app-pages-selector>

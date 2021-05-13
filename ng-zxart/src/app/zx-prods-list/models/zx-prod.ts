@@ -1,16 +1,21 @@
 import {StructureElement} from '../../shared/models/structure-element';
-import {ZxProdDto, ZxProdConnectedItems, ZxProdConnectedItem} from './zx-prod-dto';
+import {
+  ZxProdDto,
+  ZxProdConnectedItems,
+  ZxProdConnectedElements,
+  ZxProdConnectedElementDto,
+} from './zx-prod-dto';
 
 export class ZxProd extends StructureElement {
   public title: string;
   public year: string = '';
   public imagesUrls: Array<string> = [];
   public hardwareInfo: ZxProdConnectedItems = [];
-  public groupsInfo: ZxProdConnectedItems = [];
-  public publishersInfo: ZxProdConnectedItems = [];
-  public categoriesInfo: ZxProdConnectedItems = [];
+  public groupsInfo: ZxProdConnectedElements = [];
+  public publishersInfo: ZxProdConnectedElements = [];
+  public categoriesInfo: ZxProdConnectedElements = [];
   public languagesInfo: ZxProdConnectedItems = [];
-  public partyInfo?: ZxProdConnectedItem;
+  public partyInfo?: ZxProdConnectedElementDto;
   public partyPlace: number = 0;
   public votes: number;
   public votePercent: number;
