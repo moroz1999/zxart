@@ -67,6 +67,7 @@
           *ngFor="let zxProd of model.prods"
           [model]="zxProd"
           (categoryChanged)="categoryChanged($event)"
+          (yearChanged)="yearsChanged($event)"
           (hardwareChanged)="hardwareChanged($event)"
           (languageChanged)="languagesChanged($event)"
         ></app-zx-prod>

@@ -43,7 +43,9 @@
   </span>
   </a>
   <div class="zx-prod-bottom">
-    <div class="zx-prod-year">{{model.year}}</div>
+    <div class="zx-prod-year"
+         (click)="yearClicked($event, model.year)"
+    >{{model.year}}</div>
     <a class="zx-prod-title" href="{{ model.url }}">{{ model.title }}</a>
     <div *ngIf="model.groupsInfo.length">
       <ng-container *ngFor="let group of model.groupsInfo; last as last"><a [href]="group.url">{{group.title}}</a><span

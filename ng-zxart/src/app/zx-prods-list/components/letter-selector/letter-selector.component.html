@@ -1,8 +1,31 @@
 <div class="letters" *ngIf="lettersSelector[0]">
-  <button mat-button (pointerdown)="selectLetter('')">
-    {{ "prods-list.filters.letters.all" | translate }}
-  </button>
-  <button class="letter" mat-button *ngFor="let letter of lettersSelector[0].values" (pointerdown)="selectLetter(letter.value)">
-    {{letter.title}}
-  </button>
+  <button
+    mat-button
+    *ngIf="this.selectedLetter !== ''"
+    (pointerdown)="selectLetter('')"
+  >{{ "prods-list.filters.letters.all" | translate }}</button>
+  <button
+    mat-raised-button
+    color="primary"
+    *ngIf="this.selectedLetter === ''"
+    (pointerdown)="selectLetter('')"
+  >{{ "prods-list.filters.letters.all" | translate }}</button>
+  <ng-container
+    *ngFor="let letter of lettersSelector[0].values"
+  >
+    <button
+      *ngIf="letter.selected"
+      mat-raised-button
+      class="letter"
+      color="primary"
+      (pointerdown)="selectLetter(letter.value)"
+    >{{letter.title}}</button>
+    <button
+      *ngIf="!letter.selected"
+      mat-button
+      class="letter"
+      (pointerdown)="selectLetter(letter.value)"
+    >{{letter.title}}</button>
+  </ng-container>
+
 </div>

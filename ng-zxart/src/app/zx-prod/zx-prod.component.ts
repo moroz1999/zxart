@@ -16,6 +16,7 @@ import {SlideInOut} from '../shared/animations/slide-in-out';
 export class ZxProdComponent implements OnInit {
   @Input() model!: ZxProd;
   @Output() categoryChanged = new EventEmitter<number>();
+  @Output() yearChanged = new EventEmitter<Array<string>>();
   @Output() hardwareChanged = new EventEmitter<Array<string>>();
   @Output() languageChanged = new EventEmitter<Array<string>>();
   displayScreenshots: boolean = false;
@@ -85,6 +86,12 @@ export class ZxProdComponent implements OnInit {
   hardwareClicked(event: Event, hardware: string): void {
     event.preventDefault();
     this.hardwareChanged.emit([hardware]);
+  }
+
+
+  yearClicked(event: Event, year: string): void {
+    event.preventDefault();
+    this.yearChanged.emit([year]);
   }
 
   languageClicked(event: Event, language: string): void {
