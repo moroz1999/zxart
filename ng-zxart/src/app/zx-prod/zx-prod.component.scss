@@ -116,7 +116,7 @@
   display: block;
   color: currentColor;
   font-size: $font-lg;
-  margin-bottom: $padding-md;
+  margin-bottom: $padding-sm;
   text-decoration: none;
 
   &:hover {
@@ -130,7 +130,7 @@
 }
 
 .zx-prod-additional {
-
+  width: 100%;
 }
 
 .zx-prod-publisher,
@@ -148,6 +148,7 @@
   border-bottom: 1px solid $gray7;
   padding: $padding-md 0;
   justify-content: space-between;
+  width: 100%;
 
   &:last-of-type {
     border-bottom: 0;
@@ -161,6 +162,7 @@
 
 .zx-prod-row-value {
   text-align: right;
+  flex-grow: 1;
 }
 
 .zx-prod-buttons {
@@ -168,4 +170,10 @@
   flex-wrap: nowrap;
   justify-content: space-between;
   margin-top: $padding-lg;
+}
+
+.zx-prod-button {
+  &:hover {
+    text-decoration: inherit;
+  }
 }

@@ -18,6 +18,7 @@ export type ZxProdConnectedElements = Array<ZxProdConnectedElementDto>;
 export interface ZxProdDto extends StructureElementDto {
   readonly title: string;
   readonly year?: string;
+  readonly youtubeId?: string;
   readonly listImagesUrls?: Array<string>;
   readonly hardwareInfo?: ZxProdConnectedItems;
   readonly groupsInfo?: ZxProdConnectedElements;

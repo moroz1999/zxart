@@ -16,7 +16,7 @@ export class LetterSelectorComponent implements OnChanges {
 
   ngOnChanges(): void {
     this.selectedLetter = '';
-    if (this.lettersSelector) {
+    if (this.lettersSelector && this.lettersSelector[0]) {
       for (let letter of this.lettersSelector[0].values) {
         if (letter.selected) {
           this.selectedLetter = letter.value;

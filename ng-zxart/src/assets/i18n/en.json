@@ -7,6 +7,9 @@
     "filters": {
       "reset": "Reset",
       "apply": "Apply",
+      "tags": {
+        "select": "Select tags"
+      },
       "year": {
         "selected": "Years:",
         "select": "Select years"
@@ -34,6 +37,16 @@
       "letters": {
         "all": "All"
       }
+    },
+    "sorting": {
+      "votes,asc": "Rating, asc",
+      "votes,desc": "Rating, desc",
+      "title,asc": "Title A-Z, asc",
+      "title,desc": "Title A-Z, desc",
+      "year,asc": "Year of release, asc",
+      "year,desc": "Year of release, desc",
+      "date,asc": "Date of upload, asc",
+      "date,desc": "Date of upload, desc"
     }
   },
   "zx-prod": {

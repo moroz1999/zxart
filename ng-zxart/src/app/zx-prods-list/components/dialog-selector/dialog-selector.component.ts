@@ -12,6 +12,7 @@ export class DialogSelectorComponent implements OnInit, OnChanges {
   @Input() selectorData!: SelectorDto;
   @Input() selectedValuesLabel!: string;
   @Input() selectValuesLabel!: string;
+  @Input() width = '30rem';
   selectedValues: Array<string> = [];
   @Output() newValues = new EventEmitter<Array<string>>();
   public value = 0;
@@ -40,8 +41,11 @@ export class DialogSelectorComponent implements OnInit, OnChanges {
 
   clickHandler() {
     let dialogRef = this.dialog.open(DialogSelectorDialogComponent, {
-      width: '30rem',
-      data: this.selectorData,
+      width: this.width,
+      data: {
+        selectorData: this.selectorData,
+        selectValuesLabel: this.selectValuesLabel,
+      },
     });
     dialogRef.afterClosed().subscribe((result: { [key: string]: boolean; }) => {
       let values = [] as Array<string>;

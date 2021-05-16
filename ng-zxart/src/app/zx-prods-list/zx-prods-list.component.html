@@ -9,18 +9,21 @@
       <app-dialog-selector
         [selectorData]="model.countriesSelector"
         (newValues)="countriesChanged($event)"
+        [width]="'60rem'"
         [selectedValuesLabel]="'prods-list.filters.countries.selected' | translate"
         [selectValuesLabel]="'prods-list.filters.countries.select' | translate"
       ></app-dialog-selector>
       <app-dialog-selector
         [selectorData]="model.formatsSelector"
         (newValues)="formatsChanged($event)"
+        [width]="'60rem'"
         [selectedValuesLabel]="'prods-list.filters.formats.selected' | translate"
         [selectValuesLabel]="'prods-list.filters.formats.select' | translate"
       ></app-dialog-selector>
       <app-dialog-selector
         [selectorData]="model.languagesSelector"
         (newValues)="languagesChanged($event)"
+        [width]="'50rem'"
         [selectedValuesLabel]="'prods-list.filters.languages.selected' | translate"
         [selectValuesLabel]="'prods-list.filters.languages.select' | translate"
       ></app-dialog-selector>
@@ -36,21 +39,21 @@
         <app-dialog-selector
           [selectorData]="model.yearsSelector"
           (newValues)="yearsChanged($event)"
+          [width]="'40rem'"
           [selectedValuesLabel]="'prods-list.filters.year.selected' | translate"
           [selectValuesLabel]="'prods-list.filters.year.select' | translate"
         ></app-dialog-selector>
         <app-dialog-selector
           [selectorData]="model.hardwareSelector"
           (newValues)="hardwareChanged($event)"
+          [width]="'60rem'"
           [selectedValuesLabel]="'prods-list.filters.hardware.selected' | translate"
           [selectValuesLabel]="'prods-list.filters.hardware.select' | translate"
         ></app-dialog-selector>
-
         <app-tags-selector
           [tagsSelector]="model.tagsSelector"
           (tagsSelected)="tagsSelected($event)"
         ></app-tags-selector>
-
         <app-sorting-selector
           [sortingSelector]="model.sortingSelector"
           (sortingSelected)="sortingSelected($event)"

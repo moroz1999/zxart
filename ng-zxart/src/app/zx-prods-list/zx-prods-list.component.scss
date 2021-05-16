@@ -24,6 +24,7 @@ $amount: 5;
   display: grid;
   grid-template-columns: 256px 256px 256px 256px;
   gap: $padding-lg;
+  justify-content: space-between
 }
 
 .selectors {

@@ -103,6 +103,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 "categoriesInfo",
                 "groupsInfo",
                 "publishersInfo",
+                "youtubeId",
             ],
             'search' => [
                 'id',

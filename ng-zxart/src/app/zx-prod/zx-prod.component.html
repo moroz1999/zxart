@@ -95,9 +95,20 @@
         </div>
       </div>
       <div class="zx-prod-buttons">
-        <button color="primary" mat-raised-button>{{"zx-prod.play" | translate}}</button>
-        <button color="primary" mat-raised-button>{{"zx-prod.video" | translate}}</button>
-        <a [href]="model.url" mat-raised-button>{{"zx-prod.open" | translate}}</a>
+        <button
+          color="primary"
+          mat-raised-button
+        >{{"zx-prod.play" | translate}}</button>
+        <button
+          color="primary"
+          *ngIf="model.youtubeId"
+          mat-raised-button
+        >{{"zx-prod.video" | translate}}</button>
+        <a
+          [href]="model.url"
+          mat-raised-button
+          class="zx-prod-button"
+        >{{"zx-prod.open" | translate}}</a>
       </div>
     </div>
   </div>

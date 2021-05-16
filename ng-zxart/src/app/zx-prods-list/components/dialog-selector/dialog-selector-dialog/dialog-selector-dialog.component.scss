@@ -1,12 +1,33 @@
-@import "../../../../shared/dialogs";
-@import "../../../../shared/vars";
+@import "shared/vars";
 
-.groups {
-  display: flex;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+.dialog-title {
+  color: currentColor;
 }
 
-.group {
+.value-groups {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.value-group {
+  margin-right: $padding-lg;
+  margin-bottom: $padding-lg;
+
+  &:last-of-type {
+    margin-right: 0;
+  }
+}
+
+.value-group-title {
+  color: $gray5;
+  font-weight: 500;
+  margin-bottom: $padding-md;
+}
+
+.value-columns {
+  column-gap: $padding-lg;
+  column-fill: balance;
+  //column
 }
 
 .value {

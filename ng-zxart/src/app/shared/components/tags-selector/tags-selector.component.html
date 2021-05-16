@@ -12,6 +12,7 @@
 <input
   type="text"
   class="input_component"
+  [placeholder]="'prods-list.filters.tags.select' | translate"
   (keyup)="change()"
   [(ngModel)]="tagText"
   [matAutocomplete]="auto"

@@ -9,6 +9,7 @@ import {
 export class ZxProd extends StructureElement {
   public title: string;
   public year: string = '';
+  public youtubeId: string = '';
   public imagesUrls: Array<string> = [];
   public hardwareInfo: ZxProdConnectedItems = [];
   public groupsInfo: ZxProdConnectedElements = [];
@@ -26,6 +27,9 @@ export class ZxProd extends StructureElement {
     this.title = data.title;
     if (data.year) {
       this.year = data.year;
+    }
+    if (data.youtubeId) {
+      this.youtubeId = data.youtubeId;
     }
     if (data.hardwareInfo) {
       this.hardwareInfo = data.hardwareInfo;

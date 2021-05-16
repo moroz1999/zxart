@@ -260,6 +260,11 @@ trait ZxProdsList
             $this->legalStatusesSelector = [];
             $selectorValues = [];
             if ($query = $this->getSelectorQuery('statuses')) {
+                /**
+                 * @var translationsManager $translationsManager
+                 */
+                $translationsManager = $this->getService('translationsManager');
+
                 $values = $this->getSelectorValue('statuses');
                 $statuses = $query
                     ->where('legalStatus', '!=', '')
@@ -269,7 +274,7 @@ trait ZxProdsList
                 foreach ($statuses as $status) {
                     $selectorValues[] = [
                         'value' => $status,
-                        'title' => $status,
+                        'title' => $translationsManager->getTranslationByName("legalstatus.{$status}"),
                         'selected' => $values && in_array($status, $values),
                     ];
                 }
@@ -292,6 +297,11 @@ trait ZxProdsList
                 $values = $this->getSelectorValue('hw');
                 $db = $this->getService('db');
                 /**
+                 * @var translationsManager $translationsManager
+                 */
+                $translationsManager = $this->getService('translationsManager');
+
+                /**
                  * @var QueryFiltersManager $queryFiltersManager
                  */
                 $queryFiltersManager = $this->getService('QueryFiltersManager');
@@ -303,13 +313,13 @@ trait ZxProdsList
                 foreach ($this->getHardwareList() as $groupName => $groupValues) {
                     if ($intersected = array_intersect($groupValues, $hwItems)) {
                         $group = [
-                            'title' => "hardware.group_{$groupName}",
+                            'title' => $translationsManager->getTranslationByName("hardware.group_{$groupName}"),
                             'values' => []
                         ];
                         foreach ($intersected as $hwItem) {
                             $group['values'][] = [
                                 'value' => $hwItem,
-                                'title' => $hwItem,
+                                'title' => $translationsManager->getTranslationByName('hardware.item_' . $hwItem),
                                 'selected' => $values && in_array($hwItem, $values),
                             ];
                         }
@@ -365,6 +375,11 @@ trait ZxProdsList
                 $values = $this->getSelectorValue('formats');
                 $db = $this->getService('db');
                 /**
+                 * @var translationsManager $translationsManager
+                 */
+                $translationsManager = $this->getService('translationsManager');
+
+                /**
                  * @var QueryFiltersManager $queryFiltersManager
                  */
                 $queryFiltersManager = $this->getService('QueryFiltersManager');
@@ -376,13 +391,13 @@ trait ZxProdsList
                 foreach ($this->getGroupedReleaseFormats() as $groupName => $groupValues) {
                     if ($intersected = array_intersect($groupValues, $hwItems)) {
                         $group = [
-                            'title' => "formats.group_{$groupName}",
+                            'title' => $translationsManager->getTranslationByName("formats.group_{$groupName}"),
                             'values' => []
                         ];
                         foreach ($intersected as $format) {
                             $group['values'][] = [
                                 'value' => $format,
-                                'title' => $format,
+                                'title' => $translationsManager->getTranslationByName("zxRelease.filetype_{$format}"),
                                 'selected' => $values && in_array($format, $values),
                             ];
                         }
@@ -403,6 +418,11 @@ trait ZxProdsList
                 $values = $this->getSelectorValue('languages');
                 $db = $this->getService('db');
                 /**
+                 * @var translationsManager $translationsManager
+                 */
+                $translationsManager = $this->getService('translationsManager');
+
+                /**
                  * @var QueryFiltersManager $queryFiltersManager
                  */
                 $queryFiltersManager = $this->getService('QueryFiltersManager');
@@ -414,16 +434,19 @@ trait ZxProdsList
                     ->distinct()
                     ->pluck('value');
                 $group = [
-                    'title' => "languages.group",
+                    'title' => "",
                     'values' => []
                 ];
+                $order = [];
                 foreach ($languages as $language) {
                     $group['values'][] = [
                         'value' => $language,
-                        'title' => $language,
+                        'title' => $translationsManager->getTranslationByName("language.item_{$language}"),
                         'selected' => $values && in_array($language, $values),
                     ];
+                    $order[] = $translationsManager->getTranslationByName("language.item_{$language}");
                 }
+                array_multisort($order, SORT_ASC, $group['values']);
                 $this->languagesSelector[] = $group;
             }
         }
