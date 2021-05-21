@@ -66,7 +66,26 @@
         ],
         'path' => 'releases',
     ],
-    'listProdImage' => [
+    'prodListInlay' => [
+        'filters' => [
+            [
+                'reduce',
+                'height=400',
+            ],
+            [
+                'crop',
+                'width=400, height=400, soft=1',
+            ],
+        ],
+        'format' => [
+            null,
+            'jpg',
+            '',
+            100,
+        ],
+        'path' => 'releases',
+    ],
+    'prodListImage' => [
         'filters' => [
             [
                 'crop',

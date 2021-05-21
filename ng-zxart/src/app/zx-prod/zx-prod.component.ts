@@ -1,8 +1,20 @@
-import {Component, ElementRef, Input, OnInit, Output, EventEmitter} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  Output,
+  EventEmitter,
+  HostBinding,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import {ZxProd} from '../zx-prods-list/models/zx-prod';
 import {FadeInOut} from '../shared/animations/fade-in-out';
 import {trigger, AnimationEvent} from '@angular/animations';
 import {SlideInOut} from '../shared/animations/slide-in-out';
+
+type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
 
 @Component({
   selector: 'app-zx-prod',
@@ -13,12 +25,18 @@ import {SlideInOut} from '../shared/animations/slide-in-out';
     trigger('slideInOut', SlideInOut),
   ],
 })
-export class ZxProdComponent implements OnInit {
+export class ZxProdComponent implements OnInit, OnChanges {
+  @Input() imagesLayout: ZxProdsListLayout = 'loading';
   @Input() model!: ZxProd;
   @Output() categoryChanged = new EventEmitter<number>();
   @Output() yearChanged = new EventEmitter<Array<string>>();
   @Output() hardwareChanged = new EventEmitter<Array<string>>();
   @Output() languageChanged = new EventEmitter<Array<string>>();
+
+  @HostBinding('class.inlays') get inlays(): boolean {
+    return this.imagesLayout === 'inlays';
+  }
+
   displayScreenshots: boolean = false;
   displayAdditions: boolean = false;
   activeScreenshotUrl = '';
@@ -34,12 +52,27 @@ export class ZxProdComponent implements OnInit {
     this.element.nativeElement.addEventListener('pointerleave', this.leaveHandler.bind(this));
   }
 
-  enterHandler(): void {
-    if (this.model.imagesUrls.length > 0) {
-      this.displayScreenshots = true;
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.imagesLayout) {
+      if (this.imagesLayout !== 'inlays' && this.model.imagesUrls.length > 0) {
+        this.activeScreenshotUrl = this.model.imagesUrls[0];
+      } else if (this.imagesLayout === 'inlays' && this.model.inlaysUrls.length > 0) {
+        this.activeScreenshotUrl = this.model.inlaysUrls[0];
+      }
     }
+  }
+
+  enterHandler(): void {
     this.displayAdditions = true;
-    this.activeScreenshotUrl = this.model.imagesUrls[0];
+
+    if (this.imagesLayout === 'inlays') {
+      this.activeScreenshotUrl = this.model.inlaysUrls[0];
+    } else {
+      if (this.model.imagesUrls.length > 0) {
+        this.displayScreenshots = true;
+      }
+      this.activeScreenshotUrl = this.model.imagesUrls[0];
+    }
   }
 
   leaveHandler(): void {

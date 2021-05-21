@@ -1,5 +1,5 @@
-
 $mat-tree-node-height: 24px;
+$mat-button-toggle-standard-height: 34px;
 @import '~@angular/material/theming';
 @include mat-core();
 $ng-zxart-primary: mat-palette($mat-gray, 800, 900, 300);

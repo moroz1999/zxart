@@ -20,6 +20,7 @@ export interface ZxProdDto extends StructureElementDto {
   readonly year?: string;
   readonly youtubeId?: string;
   readonly listImagesUrls?: Array<string>;
+  readonly inlaysUrls?: Array<string>;
   readonly hardwareInfo?: ZxProdConnectedItems;
   readonly groupsInfo?: ZxProdConnectedElements;
   readonly publishersInfo?: ZxProdConnectedElements;

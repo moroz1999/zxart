@@ -1,24 +1,31 @@
 @import "shared/vars";
 
+$fixedWidth: 256px;
+$fixedHeight: 192px;
 :host {
   display: block;
-  width: 256px;
 }
 
 .zx-prod-internal {
   background: $gray8;
   border-radius: $radius-xl;
-  box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 0.27);
+  box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.27);
 }
 
 .zx-prod-images {
   display: block;
   position: relative;
-  width: 256px;
-  height: 192px;
+  height: $fixedHeight;
   border-top-right-radius: $radius-xl;
   border-top-left-radius: $radius-xl;
   overflow: hidden;
+}
+
+:host.inlays {
+  .zx-prod-images {
+    height: auto;
+    padding-top: 100%;
+  }
 }
 
 .zx-prod-loading {

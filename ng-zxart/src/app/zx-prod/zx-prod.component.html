@@ -4,13 +4,17 @@
     class="zx-prod-images"
   >
     <img
-      *ngIf="model.loadingImageUrl"
+      *ngIf="model.loadingImageUrl && (imagesLayout === 'loading' || !activeScreenshotUrl)"
       class="zx-prod-loading"
       src="{{ model.loadingImageUrl }}"
       alt="{{ model.title }}"
       loading="lazy"
     />
-    <span *ngIf="model.imagesUrls && displayScreenshots" class="zx-prod-screenshots" @fadeInOut>
+    <span
+      *ngIf="model.imagesUrls && (displayScreenshots && imagesLayout === 'loading' || imagesLayout === 'screenshots')"
+      class="zx-prod-screenshots"
+      @fadeInOut
+    >
       <ng-container *ngFor="let imageUrl of model.imagesUrls">
       <img
         @fadeInOut
@@ -29,17 +33,40 @@
         ></span>
       </span>
     </span>
+
+    <span
+      *ngIf="model.inlaysUrls &&  imagesLayout === 'inlays'"
+      class="zx-prod-screenshots zx-prod-inlays"
+      @fadeInOut
+    >
+      <ng-container *ngFor="let imageUrl of model.inlaysUrls">
+      <img
+        @fadeInOut
+        class="zx-prod-screenshot"
+        [ngClass]="{'zx-prod-screenshot-selected': imageUrl === activeScreenshotUrl}"
+        src="{{ imageUrl }}"
+        alt="{{ model.title }}"
+        loading="lazy"
+      />
+      </ng-container>
+      <span class="zx-prod-screenshots-selector" *ngIf="model.inlaysUrls.length > 1">
+        <span
+          *ngFor="let imageUrl of model.inlaysUrls"
+          class="zx-prod-screenshots-button"
+          (pointerenter)="setActiveScreenshotUrl(imageUrl)"
+        ></span>
+      </span>
+    </span>
+
     <span
       *ngIf="model.hardwareInfo.length > 0"
       class="zx-prod-hardware"
     >
-    <span
-      *ngFor="let item of model.hardwareInfo"
-      (click)="hardwareClicked($event, item.id)"
-      class="zx-prod-hardware-item"
-    >
-      {{item.title}}
-    </span>
+      <span
+        *ngFor="let item of model.hardwareInfo"
+        (click)="hardwareClicked($event, item.id)"
+        class="zx-prod-hardware-item"
+      >{{item.title}}</span>
   </span>
   </a>
   <div class="zx-prod-bottom">

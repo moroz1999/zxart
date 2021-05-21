@@ -204,6 +204,32 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return $urls;
     }
 
+
+    public function getInlaysUrls()
+    {
+        $db = $this->getService('db');
+        /**
+         * @var QueryFiltersManager $queryFiltersManager
+         */
+        $releaseIdsQuery = $db->table($this->dataResourceName)->where('id', $this->id);
+
+        $queryFiltersManager = $this->getService('QueryFiltersManager');
+        $releaseIdsQuery = $queryFiltersManager->convertTypeData($releaseIdsQuery, 'zxRelease', 'zxProd', [])->select('id');
+        $urls = [];
+        if ($imageIds = $db->table('structure_links')
+            ->whereIn('parentStructureId', $releaseIdsQuery)
+            ->whereIn('type', ['inlayFilesSelector', 'adFilesSelector'])
+            ->pluck('childStructureId')
+        ) {
+            $controller = $this->getService('controller');
+            foreach ($imageIds as $imageId) {
+                $urls[] = $controller->baseURL . 'image/type:prodListInlay/id:' . $imageId;
+            }
+        }
+
+        return $urls;
+    }
+
     public function getImageUrl($number = 0)
     {
         if ($image = $this->getImage($number)) {

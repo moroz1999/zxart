@@ -47,6 +47,9 @@
       "year,desc": "Year of release, desc",
       "date,asc": "Date of upload, asc",
       "date,desc": "Date of upload, desc"
+    },
+    "layout": {
+      "select": "Layout:"
     }
   },
   "zx-prod": {

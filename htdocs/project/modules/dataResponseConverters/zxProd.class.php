@@ -36,9 +36,10 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             'groupsInfo' => 'getGroupsInfo',
             'publishersIds' => 'getPublishersIds',
             'releasesIds' => 'getReleasesIds',
+            'inlaysUrls' => 'getInlaysUrls',
             'imagesUrls' => 'getImagesUrls',
             'listImagesUrls' => function ($element) {
-                return $element->getImagesUrls('listProdImage');
+                return $element->getImagesUrls('prodListImage');
             },
             'hardware' => 'getHardware',
             'hardwareInfo' => 'getHardwareInfo',
@@ -91,6 +92,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 'id',
                 'title',
                 'url',
+                'inlaysUrls',
                 'listImagesUrls',
                 'hardwareInfo',
                 "votes",

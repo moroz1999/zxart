@@ -11,6 +11,7 @@ export class ZxProd extends StructureElement {
   public year: string = '';
   public youtubeId: string = '';
   public imagesUrls: Array<string> = [];
+  public inlaysUrls: Array<string> = [];
   public hardwareInfo: ZxProdConnectedItems = [];
   public groupsInfo: ZxProdConnectedElements = [];
   public publishersInfo: ZxProdConnectedElements = [];
@@ -55,6 +56,10 @@ export class ZxProd extends StructureElement {
     if (data.listImagesUrls) {
       this.imagesUrls = data.listImagesUrls;
       this.imagesUrls = this.imagesUrls.map(image => image.replace('http://localhost', 'https://zxart.ee'));
+    }
+    if (data.inlaysUrls) {
+      this.inlaysUrls = data.inlaysUrls;
+      this.inlaysUrls = this.inlaysUrls.map(image => image.replace('http://localhost', 'https://zxart.ee'));
     }
     this.votes = data.votes;
     this.votePercent = data.votePercent;

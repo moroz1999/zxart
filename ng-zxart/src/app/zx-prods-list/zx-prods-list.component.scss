@@ -5,9 +5,12 @@ $amount: 5;
 .zx-prods-list-content {
   display: flex;
   gap: $padding-xl;
+  align-items: flex-start;
 }
 
 .zx-prods-list-left {
+  position: sticky;
+  top: 0;
   flex-basis: 10%;
   min-width: 15rem;
   display: flex;
@@ -24,11 +27,32 @@ $amount: 5;
   display: grid;
   grid-template-columns: 256px 256px 256px 256px;
   gap: $padding-lg;
-  justify-content: space-between
+  justify-content: space-between;
+}
+
+:host.inlays {
+  .zx-prods {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
 }
 
 .selectors {
+  position: sticky;
+  top: 0;
+  background: $gray9;
+  z-index: 100;
+}
+
+.selectors-top {
   display: flex;
+  gap: $padding-md;
+}
+
+.layout-selector {
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   gap: $padding-md;
 }
 
