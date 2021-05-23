@@ -1,0 +1,10 @@
+@import "vars";
+@mixin pseudo-link {
+  color: $yellow;
+  text-decoration: none;
+  cursor: pointer;
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+}

@@ -1,4 +1,5 @@
 @import "shared/vars";
+@import "shared/mixins";
 
 $amount: 5;
 
@@ -23,7 +24,7 @@ $amount: 5;
   flex-grow: 1;
 }
 
-.zx-prods {
+.zx-prods-gallery {
   display: grid;
   grid-template-columns: 256px 256px 256px 256px;
   gap: $padding-lg;
@@ -31,7 +32,7 @@ $amount: 5;
 }
 
 :host.inlays {
-  .zx-prods {
+  .zx-prods-gallery {
     grid-template-columns: 1fr 1fr 1fr 1fr;
   }
 }
@@ -41,6 +42,9 @@ $amount: 5;
   top: 0;
   background: $gray9;
   z-index: 100;
+  padding-top: $padding-md;
+  padding-bottom: $padding-md;
+  box-shadow: $shadow-md;
 }
 
 .selectors-top {
@@ -57,9 +61,36 @@ $amount: 5;
 }
 
 app-letter-selector {
-  margin: $padding-sm 0 $padding-md;
+  margin: $padding-md 0 0;
 }
 
 app-pages-selector {
   z-index: 10;
+  margin-top: $padding-xl;
+}
+
+.zx-prods-table {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  border-collapse: collapse;
+
+  thead td {
+    padding: $padding-sm $padding-md;
+    font-size: $font-sm;
+    color: $text-light-color;
+    vertical-align: bottom;
+    &.zx-prods-table-sortable {
+      @include pseudo-link;
+    }
+
+  }
+
+  ::ng-deep app-zx-prod-row td {
+    padding: $padding-sm $padding-md;
+  }
+
+  ::ng-deep app-zx-prod-row:nth-of-type(2n-1) td {
+    background-color: $gray8;
+  }
 }

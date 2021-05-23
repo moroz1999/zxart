@@ -35,8 +35,10 @@ $red: #cc0000;
 $black: #000000;
 $green: #74ba01;
 $orange: rgba(255, 104, 38, 1);
-
-
+$yellow: #dbd0a9;
+$yellow: #dbcaa9;
+$yellow: #e3d7b6;
+//#ABCBFF
 $font-md: rem(14px);
 $font-xs: 0.7 * $font-md;
 $font-sm: 0.85 * $font-md;
@@ -57,4 +59,8 @@ $controls-border-radius: $radius-md;
 $text-line-height: 1.8;
 
 $text-color: $gray8;
+$text-white-color: $white;
+$text-light-color: $gray4;
 $error-color: $red;
+
+$shadow-md: 0 3px 10px 3px rgba(0, 0, 0, 0.27);

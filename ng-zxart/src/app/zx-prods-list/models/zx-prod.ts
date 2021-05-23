@@ -10,6 +10,7 @@ export class ZxProd extends StructureElement {
   public title: string;
   public year: string = '';
   public youtubeId: string = '';
+  public dateCreated: number;
   public imagesUrls: Array<string> = [];
   public inlaysUrls: Array<string> = [];
   public hardwareInfo: ZxProdConnectedItems = [];
@@ -26,6 +27,7 @@ export class ZxProd extends StructureElement {
   constructor(data: ZxProdDto) {
     super(data);
     this.title = data.title;
+    this.dateCreated = data.dateCreated * 1000;
     if (data.year) {
       this.year = data.year;
     }

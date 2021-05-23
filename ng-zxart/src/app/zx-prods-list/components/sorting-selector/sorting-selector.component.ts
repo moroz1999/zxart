@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {SelectorDto, SelectorValue} from '../../models/selector-dto';
 
 @Component({
@@ -6,7 +6,7 @@ import {SelectorDto, SelectorValue} from '../../models/selector-dto';
   templateUrl: './sorting-selector.component.html',
   styleUrls: ['./sorting-selector.component.scss'],
 })
-export class SortingSelectorComponent implements OnInit {
+export class SortingSelectorComponent implements OnChanges {
   @Input() sortingSelector!: SelectorDto;
   @Output() sortingSelected = new EventEmitter<string>();
   sorting: string = '';
@@ -14,7 +14,7 @@ export class SortingSelectorComponent implements OnInit {
   constructor() {
   }
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     for (const group of this.sortingSelector) {
       for (const sorting of group.values) {
         if (sorting.selected) {

@@ -9,7 +9,7 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {PagesSelectorComponent} from './shared/components/pages-selector/pages-selector.component';
 import {environment} from '../environments/environment';
-import {ZxProdComponent} from './zx-prod/zx-prod.component';
+import {ZxProdBlockComponent} from './zx-prod/zx-prod-block.component';
 import {FormsModule} from '@angular/forms';
 import {DialogSelectorComponent} from './zx-prods-list/components/dialog-selector/dialog-selector.component';
 import {MatDialogModule} from '@angular/material/dialog';
@@ -27,6 +27,7 @@ import {LetterSelectorComponent} from './zx-prods-list/components/letter-selecto
 import {SortingSelectorComponent} from './zx-prods-list/components/sorting-selector/sorting-selector.component';
 import {TagsSelectorComponent} from './shared/components/tags-selector/tags-selector.component';
 import {CategoriesTreeSelectorComponent} from './zx-prods-list/components/categories-tree-selector/categories-tree-selector.component';
+import {ZxProdRowComponent} from './zx-prod-row/zx-prod-row.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(httpClient, `${environment.assetsUrl}i18n/`);
@@ -36,13 +37,14 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   declarations: [
     ZxProdsListComponent,
     PagesSelectorComponent,
-    ZxProdComponent,
+    ZxProdBlockComponent,
     DialogSelectorComponent,
     DialogSelectorDialogComponent,
     LetterSelectorComponent,
     SortingSelectorComponent,
     TagsSelectorComponent,
     CategoriesTreeSelectorComponent,
+    ZxProdRowComponent,
   ],
   imports: [
     CommonModule,

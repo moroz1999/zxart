@@ -53,12 +53,16 @@
     }
   },
   "zx-prod": {
+    "title": "Title",
     "at": " at ",
     "play": "Play",
     "video": "Video",
+    "year": "Year",
+    "date-created": "Uploaded",
     "categories": "Genres",
     "parties": "Competitions",
     "languages": "Languages",
+    "developers": "Developers",
     "publishers": "Publishers",
     "open": "Open"
   }

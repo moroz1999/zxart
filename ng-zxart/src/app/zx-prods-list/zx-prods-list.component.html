@@ -82,8 +82,8 @@
           (letterSelected)="letterSelected($event)"
         ></app-letter-selector>
       </div>
-      <div *ngIf="model.prods" class="zx-prods">
-        <app-zx-prod
+      <div *ngIf="model.prods && layout!=='table'" class="zx-prods-gallery">
+        <app-zx-prod-block
           *ngFor="let zxProd of model.prods"
           [model]="zxProd"
           [imagesLayout]="layout"
@@ -91,8 +91,28 @@
           (yearChanged)="yearsChanged($event)"
           (hardwareChanged)="hardwareChanged($event)"
           (languageChanged)="languagesChanged($event)"
-        ></app-zx-prod>
+        ></app-zx-prod-block>
       </div>
+      <table *ngIf="layout==='table'" class="zx-prods-table">
+        <thead>
+        <tr>
+          <td class="zx-prods-table-sortable" (click)="tableSortingClicked('title')">{{'zx-prod.title' | translate}}</td>
+          <td>{{'zx-prod.categories' | translate}}</td>
+          <td>{{'zx-prod.developers' | translate}}</td>
+          <td>{{'zx-prod.publishers' | translate}}</td>
+          <td class="zx-prods-table-sortable" (click)="tableSortingClicked('year')">{{'zx-prod.year' | translate}}</td>
+          <td class="zx-prods-table-sortable" (click)="tableSortingClicked('date')">{{'zx-prod.date-created' | translate}}</td>
+        </tr>
+        </thead>
+        <app-zx-prod-row
+          *ngFor="let zxProd of model.prods"
+          [model]="zxProd"
+          (categoryChanged)="categoryChanged($event)"
+          (yearChanged)="yearsChanged($event)"
+          (hardwareChanged)="hardwareChanged($event)"
+          (languageChanged)="languagesChanged($event)"
+        ></app-zx-prod-row>
+      </table>
       <app-pages-selector [pagesAmount]="pagesAmount" [currentPage]="currentPage"
                           (clickCallback)="setCurrentPage($event)"></app-pages-selector>
     </div>

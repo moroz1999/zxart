@@ -5,7 +5,7 @@ import {ZxProdCategoryResponseDto} from './models/zx-prod-category-response-dto'
 import {TranslateService} from '@ngx-translate/core';
 import {Tag} from '../shared/models/tag';
 
-type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
+export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
 
 @Component({
   selector: 'app-zx-prods-list',
@@ -24,7 +24,7 @@ export class ZxProdsListComponent implements OnInit {
   public formats: Array<string> = [];
   public letter?: string;
   public sorting?: string;
-  public layout: ZxProdsListLayout = 'loading';
+  public layout: ZxProdsListLayout = 'table';
   public tags: Array<number> = [];
   public countries: Array<string> = [];
 
@@ -167,6 +167,15 @@ export class ZxProdsListComponent implements OnInit {
     this.countries = [];
     this.currentPage = 0;
 
+    this.fetchModel();
+  }
+
+  tableSortingClicked(type: string) {
+    if (this.sorting === type + ',desc') {
+      this.sorting = type + ',asc';
+    } else {
+      this.sorting = type + ',desc';
+    }
     this.fetchModel();
   }
 }

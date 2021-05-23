@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ZxProdComponent } from './zx-prod.component';
+import { ZxProdBlockComponent } from './zx-prod-block.component';
 
 describe('ZxProdComponent', () => {
-  let component: ZxProdComponent;
-  let fixture: ComponentFixture<ZxProdComponent>;
+  let component: ZxProdBlockComponent;
+  let fixture: ComponentFixture<ZxProdBlockComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ZxProdComponent ]
+      declarations: [ ZxProdBlockComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ZxProdComponent);
+    fixture = TestBed.createComponent(ZxProdBlockComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

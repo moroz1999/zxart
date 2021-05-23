@@ -1,0 +1,18 @@
+@import "shared/vars";
+@import "shared/mixins";
+
+:host {
+  display: table-row;
+}
+
+.zx-prod-year {
+  width: 5rem;
+}
+
+.zx-prod-category-link {
+  @include pseudo-link;
+}
+
+.zx-prod-year-link {
+  @include pseudo-link;
+}

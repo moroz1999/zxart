@@ -1,6 +1,6 @@
 <button
   mat-raised-button
-  color="primary"
+  [color]="selectedValues.length? null: 'primary'"
   (pointerdown)="clickHandler()"
 >
   <ng-container *ngIf="selectedValues.length; else other">
