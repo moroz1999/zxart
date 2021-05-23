@@ -24,7 +24,7 @@ export class ZxProdsListComponent implements OnInit {
   public formats: Array<string> = [];
   public letter?: string;
   public sorting?: string;
-  public layout: ZxProdsListLayout = 'table';
+  public layout: ZxProdsListLayout = 'loading';
   public tags: Array<number> = [];
   public countries: Array<string> = [];
 

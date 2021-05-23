@@ -1,4 +1,6 @@
 @import "shared/vars";
+@import "shared/mixins";
+
 
 $fixedWidth: 256px;
 $fixedHeight: 192px;
@@ -132,6 +134,7 @@ $fixedHeight: 192px;
 }
 
 .zx-prod-year {
+  @include pseudo-link;
   float: right;
   margin: 0 0 $padding-md $padding-md;
 }
@@ -146,6 +149,14 @@ $fixedHeight: 192px;
 .zx-prod-parties {
   display: block;
   padding-bottom: $padding-sm;
+}
+
+.zx-prod-language {
+  @include pseudo-link;
+}
+
+.zx-prod-category {
+  @include pseudo-link;
 }
 
 .zx-prod-row {

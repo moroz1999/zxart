@@ -99,18 +99,20 @@
         <div class="zx-prod-row-label">{{ "zx-prod.categories" | translate }}</div>
         <div class="zx-prod-row-value">
           <ng-container *ngFor="let category of model.categoriesInfo; last as last">
-            <a href=""
+            <span
+              class="zx-prod-category"
                (click)="categoryClicked($event, category.id)"
-            >{{category.title}}</a><span *ngIf="!last">, </span></ng-container>
+            >{{category.title}}</span><span *ngIf="!last">, </span></ng-container>
         </div>
       </div>
       <div class="zx-prod-row zx-prod-languages" *ngIf="model.languagesInfo.length">
         <div class="zx-prod-row-label">{{ "zx-prod.languages" | translate }}</div>
         <div class="zx-prod-row-value">
           <ng-container *ngFor="let language of model.languagesInfo; last as last">
-            <a href=""
+            <span
+               class="zx-prod-language"
                (click)="languageClicked($event, language.id)"
-            >{{language.title}}</a><span *ngIf="!last">, </span>
+            >{{language.title}}</span><span *ngIf="!last">, </span>
           </ng-container>
         </div>
       </div>

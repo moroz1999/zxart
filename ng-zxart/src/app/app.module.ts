@@ -9,7 +9,7 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {PagesSelectorComponent} from './shared/components/pages-selector/pages-selector.component';
 import {environment} from '../environments/environment';
-import {ZxProdBlockComponent} from './zx-prod/zx-prod-block.component';
+import {ZxProdBlockComponent} from './zx-prod-block/zx-prod-block.component';
 import {FormsModule} from '@angular/forms';
 import {DialogSelectorComponent} from './zx-prods-list/components/dialog-selector/dialog-selector.component';
 import {MatDialogModule} from '@angular/material/dialog';
