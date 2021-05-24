@@ -213,7 +213,7 @@ trait ZxProdsList
         $structureManager = $this->getService('structureManager');
 
         $id = $this->id;
-        while (($parentElement = $structureManager->getElementsFirstParent($id)) && ($parentElement->structureType === 'zxProdsCategory')) {
+        while (($parentElement = $structureManager->getElementsFirstParent($id)) && ($parentElement->structureType === 'zxProdCategory')) {
             $id = $parentElement->id;
         }
         $elements = $parentElement->getChildrenList();

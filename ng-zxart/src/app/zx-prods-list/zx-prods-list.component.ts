@@ -27,6 +27,7 @@ export class ZxProdsListComponent implements OnInit {
   public layout: ZxProdsListLayout = 'loading';
   public tags: Array<number> = [];
   public countries: Array<string> = [];
+  public loading = false;
 
   @HostBinding('class.inlays') get inlays(): boolean {
     return this.layout === 'inlays';
@@ -47,6 +48,7 @@ export class ZxProdsListComponent implements OnInit {
   }
 
   private fetchModel(): void {
+    this.loading = true;
     const parameters: PostParameters = {
       elementsOnPage: this.elementsOnPage,
       page: this.currentPage,
@@ -82,6 +84,12 @@ export class ZxProdsListComponent implements OnInit {
       model => {
         this.model = model;
         this.pagesAmount = Math.ceil(this.model.prodsAmount / this.elementsOnPage);
+      },
+      () => {
+
+      },
+      () => {
+        this.loading = false;
       },
     );
   }

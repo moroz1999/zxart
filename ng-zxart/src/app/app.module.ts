@@ -21,6 +21,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatTreeModule} from '@angular/material/tree';
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DialogSelectorDialogComponent} from './zx-prods-list/components/dialog-selector/dialog-selector-dialog/dialog-selector-dialog.component';
 import {LetterSelectorComponent} from './zx-prods-list/components/letter-selector/letter-selector.component';
@@ -69,6 +70,7 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
     MatTreeModule,
     MatCardModule,
     MatButtonToggleModule,
+    MatProgressSpinnerModule,
   ],
   providers: [],
   bootstrap: [],
