@@ -1,7 +1,10 @@
 <div *ngIf="model">
   <h1>{{ model.h1 }}</h1>
   <div class="zx-prods-list-content">
-    <div class="zx-prods-list-left">
+    <div
+      class="zx-prods-list-left"
+      [ngClass]="{'disabled': loading}"
+    >
       <app-categories-tree-selector
         [selectorData]="model.categoriesSelector"
         (categoryChanged)="categoryChanged($event)"
@@ -35,7 +38,10 @@
       ></app-dialog-selector>
     </div>
     <div class="zx-prods-list-right">
-      <div class="selectors">
+      <div
+        class="selectors"
+        [ngClass]="{'disabled': loading}"
+      >
         <div class="selectors-top">
           <app-dialog-selector
             [selectorData]="model.yearsSelector"

@@ -19,6 +19,7 @@ $amount: 5;
   gap: $padding-md;
   max-height: 100vh;
   overflow: auto;
+  transition: opacity $animation-md ease-in-out;
 }
 
 .zx-prods-list-right {
@@ -47,6 +48,12 @@ $amount: 5;
   padding-top: $padding-md;
   padding-bottom: $padding-md;
   box-shadow: $shadow-md;
+  transition: opacity $animation-md ease-in-out;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
 }
 
 .selectors-top {

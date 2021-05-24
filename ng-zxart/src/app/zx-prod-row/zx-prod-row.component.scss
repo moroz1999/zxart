@@ -9,6 +9,11 @@
   width: 5rem;
 }
 
+.zx-prod-date {
+  width: 10rem;
+  white-space: nowrap;
+}
+
 .zx-prod-category-link {
   @include pseudo-link;
 }
