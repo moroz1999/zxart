@@ -225,11 +225,11 @@ trait ZxProdsList
         if (!isset($this->categoriesSelector)) {
             $this->categoriesSelector = [];
             $selectorValues = [];
-            $values = $this->getSelectorValue('categories');
             $catalogue = $this->getCategoriesCatalogue();
             $categories = $catalogue->getCategories();
-            foreach ($categories as $category)
-                $this->getRecursiveCategorySelectorValues($category, $selectorValues, $values);
+            foreach ($categories as $category) {
+                $this->getRecursiveCategorySelectorValues($category, $selectorValues);
+            }
             if ($selectorValues) {
                 $this->categoriesSelector = $selectorValues;
             }
@@ -237,20 +237,25 @@ trait ZxProdsList
         return $this->categoriesSelector;
     }
 
-    private function getRecursiveCategorySelectorValues(zxProdCategoryElement $category, &$selectorValues, $values)
+    private function getRecursiveCategorySelectorValues(zxProdCategoryElement $category, &$selectorValues, &$selected = false)
     {
+        $selected = $category->id === $this->id;
         $data = [
             'name' => $category->title,
             'id' => $category->id,
             'url' => $category->getUrl(),
-            'selected' => $category->requested,
         ];
         if ($categories = $category->getCategories()) {
             $data['children'] = [];
             foreach ($categories as $subCategory) {
-                $this->getRecursiveCategorySelectorValues($subCategory, $data['children'], $values);
+                $childSelected = false;
+                $this->getRecursiveCategorySelectorValues($subCategory, $data['children'], $childSelected);
+                if ($childSelected) {
+                    $selected = true;
+                }
             }
         }
+        $data['selected'] = $selected;
         $selectorValues[] = $data;
     }
 
