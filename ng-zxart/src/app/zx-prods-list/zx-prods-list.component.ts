@@ -1,9 +1,9 @@
 import {Component, OnInit, Input, HostBinding} from '@angular/core';
 import {ElementsService, PostParameters} from '../shared/services/elements.service';
 import {ZxProdsList} from './models/zx-prods-list.model';
-import {ZxProdCategoryResponseDto} from './models/zx-prod-category-response-dto';
 import {TranslateService} from '@ngx-translate/core';
 import {Tag} from '../shared/models/tag';
+import {ZxProdCategoryDto} from './models/zx-prod-category-dto';
 
 export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
 
@@ -80,11 +80,12 @@ export class ZxProdsListComponent implements OnInit {
     if (this.countries.length) {
       parameters.countries = this.countries.join(',');
     }
-    this.elementsService.getModel<ZxProdCategoryResponseDto, ZxProdsList>(this.elementId, ZxProdsList, parameters).subscribe(
+    let reqUrl = '';
+    this.elementsService.getModel<ZxProdCategoryDto, ZxProdsList>(this.elementId, 'zxProdCategory', ZxProdsList, parameters).subscribe(
       model => {
-        console.log(model)
         this.model = model;
         this.pagesAmount = Math.ceil(this.model.prodsAmount / this.elementsOnPage);
+        window.history.pushState([parameters], '', reqUrl);
       },
       () => {
 

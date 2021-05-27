@@ -1,9 +1,9 @@
 import {StructureElement} from '../../shared/models/structure-element';
-import {ZxProdCategoryResponseDto} from './zx-prod-category-response-dto';
 import {ZxProd} from './zx-prod';
 import {SelectorDto} from './selector-dto';
 import {Tag} from '../../shared/models/tag';
 import {CategoriesSelectorDto} from '../../categories-selector-dto';
+import {ZxProdCategoryDto} from './zx-prod-category-dto';
 
 export class ZxProdsList extends StructureElement {
   public h1: string;
@@ -22,26 +22,26 @@ export class ZxProdsList extends StructureElement {
   public tagsSelector: Array<Tag> = [];
 
   constructor(
-    data: ZxProdCategoryResponseDto,
+    data: ZxProdCategoryDto,
   ) {
-    super(data.zxProdCategory);
-    this.h1 = data.zxProdCategory.h1;
-    this.title = data.zxProdCategory.title;
-    if (data.zxProdCategory.prods) {
-      this.prods = data.zxProdCategory.prods.map(item => new ZxProd(item));
+    super(data);
+    this.h1 = data.h1;
+    this.title = data.title;
+    if (data.prods) {
+      this.prods = data.prods.map(item => new ZxProd(item));
     }
-    this.prodsAmount = data.zxProdCategory.prodsAmount;
-    this.categoriesSelector = data.zxProdCategory.categoriesSelector ? data.zxProdCategory.categoriesSelector : [];
-    this.lettersSelector = data.zxProdCategory.lettersSelector ? data.zxProdCategory.lettersSelector : [];
-    this.hardwareSelector = data.zxProdCategory.hardwareSelector ? data.zxProdCategory.hardwareSelector : [];
-    this.yearsSelector = data.zxProdCategory.yearsSelector ? data.zxProdCategory.yearsSelector : [];
-    this.legalStatusesSelector = data.zxProdCategory.legalStatusesSelector ? data.zxProdCategory.legalStatusesSelector : [];
-    this.countriesSelector = data.zxProdCategory.countriesSelector ? data.zxProdCategory.countriesSelector : [];
-    this.languagesSelector = data.zxProdCategory.languagesSelector ? data.zxProdCategory.languagesSelector : [];
-    this.formatsSelector = data.zxProdCategory.formatsSelector ? data.zxProdCategory.formatsSelector : [];
-    this.sortingSelector = data.zxProdCategory.sortingSelector ? data.zxProdCategory.sortingSelector : [];
-    if (data.zxProdCategory.tagsSelector) {
-      this.tagsSelector = data.zxProdCategory.tagsSelector.map(item => new Tag(item));
+    this.prodsAmount = data.prodsAmount;
+    this.categoriesSelector = data.categoriesSelector ? data.categoriesSelector : [];
+    this.lettersSelector = data.lettersSelector ? data.lettersSelector : [];
+    this.hardwareSelector = data.hardwareSelector ? data.hardwareSelector : [];
+    this.yearsSelector = data.yearsSelector ? data.yearsSelector : [];
+    this.legalStatusesSelector = data.legalStatusesSelector ? data.legalStatusesSelector : [];
+    this.countriesSelector = data.countriesSelector ? data.countriesSelector : [];
+    this.languagesSelector = data.languagesSelector ? data.languagesSelector : [];
+    this.formatsSelector = data.formatsSelector ? data.formatsSelector : [];
+    this.sortingSelector = data.sortingSelector ? data.sortingSelector : [];
+    if (data.tagsSelector) {
+      this.tagsSelector = data.tagsSelector.map(item => new Tag(item));
     }
   }
 }
