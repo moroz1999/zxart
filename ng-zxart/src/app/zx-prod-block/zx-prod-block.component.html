@@ -4,11 +4,12 @@
     class="zx-prod-images"
   >
     <img
-      *ngIf="model.loadingImageUrl && (imagesLayout === 'loading' || !activeScreenshotUrl)"
+      *ngIf="model.loadingImageUrl && (imagesLayout === 'loading' && !displayScreenshots)"
       class="zx-prod-loading"
       src="{{ model.loadingImageUrl }}"
       alt="{{ model.title }}"
       loading="lazy"
+      @fadeInOut
     />
     <span
       *ngIf="model.imagesUrls.length && (displayScreenshots && imagesLayout === 'loading' || imagesLayout === 'screenshots')"

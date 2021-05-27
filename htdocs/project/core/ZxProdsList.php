@@ -241,7 +241,7 @@ trait ZxProdsList
     {
         $selected = $category->id === $this->id;
         $data = [
-            'name' => $category->title,
+            'name' => html_entity_decode($category->title, ENT_QUOTES),
             'id' => $category->id,
             'url' => $category->getUrl(),
         ];

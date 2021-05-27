@@ -82,6 +82,7 @@ export class ZxProdsListComponent implements OnInit {
     }
     this.elementsService.getModel<ZxProdCategoryResponseDto, ZxProdsList>(this.elementId, ZxProdsList, parameters).subscribe(
       model => {
+        console.log(model)
         this.model = model;
         this.pagesAmount = Math.ceil(this.model.prodsAmount / this.elementsOnPage);
       },

@@ -23,3 +23,7 @@ a {
 .mat-tree-node, .mat-nested-tree-node {
   color: $white;
 }
+
+.mat-tree-node-selected {
+  font-weight: bold;
+}

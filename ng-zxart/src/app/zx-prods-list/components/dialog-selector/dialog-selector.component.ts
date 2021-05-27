@@ -48,17 +48,19 @@ export class DialogSelectorComponent implements OnInit, OnChanges {
       },
     });
     dialogRef.afterClosed().subscribe((result: { [key: string]: boolean; }) => {
-      let values = [] as Array<string>;
-      if (result) {
-        for (let value in result) {
-          if (result.hasOwnProperty(value)) {
-            if (result[value]) {
-              values.push(value);
+      if (result !== undefined) {
+        let values = [] as Array<string>;
+        if (result) {
+          for (let value in result) {
+            if (result.hasOwnProperty(value)) {
+              if (result[value]) {
+                values.push(value);
+              }
             }
           }
         }
+        this.newValues.emit(values);
       }
-      this.newValues.emit(values);
     });
   }
 
