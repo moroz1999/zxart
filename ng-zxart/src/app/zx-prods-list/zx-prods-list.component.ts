@@ -4,6 +4,7 @@ import {ZxProdsList} from './models/zx-prods-list.model';
 import {TranslateService} from '@ngx-translate/core';
 import {Tag} from '../shared/models/tag';
 import {ZxProdCategoryDto} from './models/zx-prod-category-dto';
+import {environment} from '../../environments/environment';
 
 export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
 
@@ -39,6 +40,27 @@ export class ZxProdsListComponent implements OnInit {
     public translate: TranslateService,
     private elementsService: ElementsService,
   ) {
+    window.addEventListener('popstate', this.historyUpdateHandler.bind(this));
+  }
+
+  historyUpdateHandler(event: PopStateEvent): void {
+    if (typeof event.state != 'undefined') {
+      if (event.state.elementId === this.elementId) {
+        this.loading = true;
+
+        this.elementsService.getModel<ZxProdCategoryDto, ZxProdsList>(this.elementId, 'zxProdCategory', ZxProdsList, event.state.parameters).subscribe(
+          model => {
+            this.model = model;
+            this.pagesAmount = Math.ceil(this.model.prodsAmount / this.elementsOnPage);
+          },
+          () => {
+          },
+          () => {
+            this.loading = false;
+          },
+        );
+      }
+    }
   }
 
   ngOnInit(): void {
@@ -49,10 +71,10 @@ export class ZxProdsListComponent implements OnInit {
 
   private fetchModel(): void {
     this.loading = true;
-    const parameters: PostParameters = {
-      elementsOnPage: this.elementsOnPage,
-      page: this.currentPage,
-    };
+    const parameters: PostParameters = {};
+    if (this.currentPage > 1) {
+      parameters.page = this.currentPage;
+    }
     if (this.years.length) {
       parameters.years = this.years.join(',');
     }
@@ -80,12 +102,17 @@ export class ZxProdsListComponent implements OnInit {
     if (this.countries.length) {
       parameters.countries = this.countries.join(',');
     }
-    let reqUrl = '';
+    let reqUrl = this.model ? this.model.url : '';
+    for (const [key, value] of Object.entries(parameters)) {
+      reqUrl += '/' + key + ':' + value;
+    }
     this.elementsService.getModel<ZxProdCategoryDto, ZxProdsList>(this.elementId, 'zxProdCategory', ZxProdsList, parameters).subscribe(
       model => {
         this.model = model;
         this.pagesAmount = Math.ceil(this.model.prodsAmount / this.elementsOnPage);
-        window.history.pushState([parameters], '', reqUrl);
+        if (environment.production){
+          window.history.pushState({parameters, elementId: this.elementId}, '', reqUrl);
+        }
       },
       () => {
 

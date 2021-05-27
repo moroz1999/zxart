@@ -1,5 +1,6 @@
 @import "shared/vars";
 @import "shared/mixins";
+@import "shared/breakpoints";
 
 
 $fixedWidth: 256px;
@@ -17,10 +18,15 @@ $fixedHeight: 192px;
 .zx-prod-images {
   display: block;
   position: relative;
-  height: $fixedHeight;
   border-top-right-radius: $radius-xl;
   border-top-left-radius: $radius-xl;
   overflow: hidden;
+  @include media-breakpoint-up(sm) {
+    height: $fixedHeight;
+  }
+  @include media-breakpoint-down(sm) {
+    padding-top: 75%;
+  }
 }
 
 :host.inlays {

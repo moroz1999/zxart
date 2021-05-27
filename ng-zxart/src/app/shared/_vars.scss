@@ -6,13 +6,13 @@ $imageAssetsUrl: "#{$assetsUrl}images/";
 $svgAssetsUrl: "#{$assetsUrl}svg/";
 
 $grid-breakpoints: (
-  xs: 0,
+  xs: 320px,
   sm: 576px,
   md: 768px,
   lg: 992px,
   xl: 1200px,
   xxl: 1400px
-) !default;
+);
 
 $padding-xs: 0.25rem;
 $padding-sm: $padding-xs*2;
