@@ -21,10 +21,10 @@ $fixedHeight: 192px;
   border-top-right-radius: $radius-xl;
   border-top-left-radius: $radius-xl;
   overflow: hidden;
-  @include media-breakpoint-up(sm) {
+  @media (min-width: 1000px) {
     height: $fixedHeight;
   }
-  @include media-breakpoint-down(sm) {
+  @media (max-width: 999px) {
     padding-top: 75%;
   }
 }

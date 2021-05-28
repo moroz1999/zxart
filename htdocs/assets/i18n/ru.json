@@ -3,4 +3,68 @@
     "previous": "Предыдущая",
     "next": "Следующая"
   }
+  },
+  "prods-list": {
+    "filters": {
+      "reset": "Сбросить",
+      "apply": "Применить",
+      "tags": {
+        "select": "Выбрать теги"
+      },
+      "year": {
+        "selected": "Года:",
+        "select": "Выбрать года"
+      },
+      "hardware": {
+        "selected": "Железо:",
+        "select": "Выбрать железо"
+      },
+      "languages": {
+        "selected": "Языки:",
+        "select": "Выбрать языки"
+      },
+      "countries": {
+        "selected": "Страны:",
+        "select": "Выбрать страны"
+      },
+      "formats": {
+        "selected": "Форматы релизов:",
+        "select": "Выбрать форматы"
+      },
+      "legal-statuses": {
+        "selected": "Официальный статус:",
+        "select": "Выбрать статус"
+      },
+      "letters": {
+        "all": "Все"
+      }
+    },
+    "sorting": {
+      "votes,asc": "Рейтинг, возр.",
+      "votes,desc": "Рейтинг, убыв.",
+      "title,asc": "Название A-Z, возр.",
+      "title,desc": "Название A-Z, убыв.",
+      "year,asc": "Год издания, возр.",
+      "year,desc": "Год издания, убыв.",
+      "date,asc": "Дата добавления, возр.",
+      "date,desc": "Дата добавления, убыв."
+    },
+    "layout": {
+      "select": "Расположение:"
+    }
+  },
+  "zx-prod": {
+    "title": "Название",
+    "at": " в ",
+    "play": "Играть",
+    "video": "Видео",
+    "year": "Год",
+    "date-created": "Добавлено",
+    "categories": "Жанры",
+    "parties": "Конкурсы",
+    "languages": "Языки",
+    "developers": "Разработчики",
+    "publishers": "Издатели",
+    "open": "Открыть"
+  }
 }
