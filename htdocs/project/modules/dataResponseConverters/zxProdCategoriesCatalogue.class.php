@@ -1,6 +1,6 @@
 <?php
 
-class zxProdCategoryDataResponseConverter extends StructuredDataResponseConverter
+class zxProdCategoriesCatalogueDataResponseConverter extends StructuredDataResponseConverter
 {
     protected $defaultPreset = 'api';
 
@@ -31,17 +31,6 @@ class zxProdCategoryDataResponseConverter extends StructuredDataResponseConverte
     protected function getPresetsStructure()
     {
         return [
-            'api' => [
-                'id',
-                'title',
-                'categories',
-            ],
-            'search' => [
-                'id',
-                'title',
-                'url',
-                'structureType',
-            ],
             'zxProdsList' => [
                 'id',
                 'h1',

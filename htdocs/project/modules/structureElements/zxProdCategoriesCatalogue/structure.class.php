@@ -1,8 +1,10 @@
 <?php
 
-class zxProdCategoriesCatalogueElement extends structureElement
+class zxProdCategoriesCatalogueElement extends structureElement implements JsonDataProvider
 {
     use ZxProdCategoriesTreeProviderTrait;
+    use ZxProdsList;
+    use JsonDataProviderElement;
 
     public $languagesParentElementMarker = 'adminLanguages';
     public $dataResourceName = 'module_generic';
@@ -39,6 +41,19 @@ class zxProdCategoriesCatalogueElement extends structureElement
         }
 
         return $this->categories;
+    }
+
+    public function getSubCategoriesTreeIds(&$ids)
+    {
+        foreach ($this->getCategories() as $category) {
+            $category->getSubCategoriesTreeIds($ids);
+        }
+        return $ids;
+    }
+
+    public function getProdsListBaseQuery()
+    {
+        return $this->getProdsQuery();
     }
 }
 

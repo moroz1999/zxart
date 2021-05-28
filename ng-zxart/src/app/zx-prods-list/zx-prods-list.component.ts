@@ -35,6 +35,7 @@ export class ZxProdsListComponent implements OnInit {
   }
 
   @Input() elementId: number = 0;
+  @Input() structureType: string = '';
 
   constructor(
     public translate: TranslateService,
@@ -48,7 +49,7 @@ export class ZxProdsListComponent implements OnInit {
       if (event.state.elementId === this.elementId) {
         this.loading = true;
 
-        this.elementsService.getModel<ZxProdCategoryDto, ZxProdsList>(this.elementId, 'zxProdCategory', ZxProdsList, event.state.parameters).subscribe(
+        this.elementsService.getModel<ZxProdCategoryDto, ZxProdsList>(this.elementId, this.structureType, ZxProdsList, event.state.parameters, 'zxProdsList').subscribe(
           model => {
             this.model = model;
             this.pagesAmount = Math.ceil(this.model.prodsAmount / this.elementsOnPage);
@@ -106,11 +107,11 @@ export class ZxProdsListComponent implements OnInit {
     for (const [key, value] of Object.entries(parameters)) {
       reqUrl += '/' + key + ':' + value;
     }
-    this.elementsService.getModel<ZxProdCategoryDto, ZxProdsList>(this.elementId, 'zxProdCategory', ZxProdsList, parameters).subscribe(
+    this.elementsService.getModel<ZxProdCategoryDto, ZxProdsList>(this.elementId, this.structureType, ZxProdsList, parameters, 'zxProdsList').subscribe(
       model => {
         this.model = model;
         this.pagesAmount = Math.ceil(this.model.prodsAmount / this.elementsOnPage);
-        if (environment.production){
+        if (environment.production) {
           window.history.pushState({parameters, elementId: this.elementId}, '', reqUrl);
         }
       },

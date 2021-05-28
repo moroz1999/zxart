@@ -67,6 +67,7 @@ trait ZxProdsList
     public function getApiQuery()
     {
         if (!isset($this->apiQuery)) {
+            $subcategoriesIds = [];
             $this->getSubCategoriesTreeIds($subcategoriesIds);
             $subcategoriesIds = array_unique($subcategoriesIds);
             $controller = $this->getService('controller');
