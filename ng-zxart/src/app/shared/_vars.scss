@@ -14,7 +14,8 @@ $grid-breakpoints: (
   xxl: 1400px
 );
 
-$padding-xs: 0.25rem;
+$padding-xxs: 0.125rem;
+$padding-xs: $padding-xxs * 2;
 $padding-sm: $padding-xs*2;
 $padding-md: $padding-sm*2;
 $padding-lg: $padding-md*2;

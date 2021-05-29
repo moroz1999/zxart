@@ -2,7 +2,7 @@
   <li
     class="pages-item pages-button pages-button-previous"
     [ngClass]="{'pages-button-inactive': !previousPageActive()}"
-    (click)="pageClicked(currentPage - 1)"
+    (click)="pageClicked($event, currentPage - 1)"
   >
     <svg-icon class="pages-button-icon" name="arrow-left"
               [svgStyle]="{'display':'block', 'width.rem':'0.54rem' , 'height.rem':'1' }"></svg-icon>
@@ -10,17 +10,17 @@
   </li>
   <li
     *ngFor="let page of pageItems"
-    (click)="pageClicked(page.number)"
+    (click)="pageClicked($event, page.number)"
     class="pages-item"
     [ngClass]="{'pages-page-selected': page.number === currentPage, 'pages-page': page.type === 'page'}"
   >
-    {{page.text}}
+    <a [href]="makeHref(page.number)">{{page.text}}</a>
   </li>
 
   <li
     class="pages-item pages-button pages-button-next"
     [ngClass]="{'pages-button-inactive': !nextPageActive()}"
-    (click)="pageClicked(currentPage + 1)"
+    (click)="pageClicked($event,currentPage + 1)"
   >
     <span class="pages-button-text">{{'pages.next' | translate }}</span>
     <svg-icon class="pages-button-icon" name="arrow-right"

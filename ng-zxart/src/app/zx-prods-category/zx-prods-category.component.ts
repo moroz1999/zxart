@@ -28,6 +28,7 @@ export class ZxProdsCategoryComponent implements OnInit {
   public tags: Array<number> = [];
   public countries: Array<string> = [];
   public loading = false;
+  public urlBase = '';
 
   @HostBinding('class.inlays') get inlays(): boolean {
     return this.layout === 'inlays';
@@ -68,9 +69,6 @@ export class ZxProdsCategoryComponent implements OnInit {
   private fetchModel(): void {
     this.loading = true;
     const parameters: PostParameters = {};
-    if (this.currentPage > 1) {
-      parameters.page = this.currentPage;
-    }
     if (this.years.length) {
       parameters.years = this.years.join(',');
     }
@@ -98,10 +96,17 @@ export class ZxProdsCategoryComponent implements OnInit {
     if (this.countries.length) {
       parameters.countries = this.countries.join(',');
     }
+
     let reqUrl = this.model ? this.model.url : '';
     for (const [key, value] of Object.entries(parameters)) {
       reqUrl += '/' + key + ':' + value;
     }
+    this.urlBase = reqUrl;
+    if (this.currentPage > 1) {
+      parameters.page = this.currentPage;
+      reqUrl += '/page:' + this.currentPage;
+    }
+
     this.elementsService.getModel<ZxProdCategoryDto, ZxProdCategory>(this.elementId, ZxProdCategory, parameters, 'zxProdsList').subscribe(
       model => {
         this.model = model;

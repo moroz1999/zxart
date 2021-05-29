@@ -124,8 +124,12 @@
             (languageChanged)="languagesChanged($event)"
           ></app-zx-prod-row>
         </table>
-        <app-pages-selector [pagesAmount]="pagesAmount" [currentPage]="currentPage"
-                            (clickCallback)="setCurrentPage($event)"></app-pages-selector>
+        <app-pages-selector
+          [pagesAmount]="pagesAmount"
+          [currentPage]="currentPage"
+          (clickCallback)="setCurrentPage($event)"
+          [urlBase]="urlBase"
+        ></app-pages-selector>
       </ng-container>
     </div>
   </div>

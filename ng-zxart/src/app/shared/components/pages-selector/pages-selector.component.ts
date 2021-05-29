@@ -10,6 +10,7 @@ export class PagesSelectorComponent implements OnChanges {
   @Input() currentPage = 0;
   @Input() pagesAmount = 0;
   @Input() visibleAmount = 1;
+  @Input() urlBase = '';
   @Output() clickCallback: EventEmitter<any> = new EventEmitter();
   pageItems: Array<PageItemInterface> = [];
 
@@ -86,7 +87,9 @@ export class PagesSelectorComponent implements OnChanges {
     }
   }
 
-  pageClicked(newPageNumber: number): void {
+  pageClicked(event: MouseEvent, newPageNumber: number): void {
+    event.stopPropagation();
+    event.preventDefault();
     if (newPageNumber > 0 && newPageNumber <= this.pagesAmount) {
       this.clickCallback.emit(newPageNumber);
     }
@@ -98,5 +101,9 @@ export class PagesSelectorComponent implements OnChanges {
 
   nextPageActive(): boolean {
     return this.currentPage < this.pagesAmount;
+  }
+
+  makeHref(number: number): string {
+    return this.urlBase + 'page:' + number;
   }
 }
