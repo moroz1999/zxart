@@ -76,6 +76,19 @@ class playlistElement extends structureElement
         }
         return $this->zxProdsList;
     }
+
+    public function getZxProdsListData()
+    {
+        $prods = $this->getZxProdsList();
+        $data = [
+            'prods' => [],
+            'prodsAmount' => count($prods)
+        ];
+        foreach ($prods as $prod) {
+            $data['prods'][] = $prod->getElementData('list');
+        }
+        return json_encode($data);
+    }
 }
 
 

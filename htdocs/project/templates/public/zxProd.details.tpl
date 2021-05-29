@@ -211,11 +211,11 @@
 
     {if $element->compilationProds}
         <h3>{translations name='zxprod.compilationProds'}</h3>
-        <div class="zxprods_list">
-            {foreach $element->compilationProds as $prod}
-                {include file=$theme->template('zxProd.short.tpl') element=$prod}
-            {/foreach}
-        </div>
+        <script>
+            window.elementsData = window.elementsData ? window.elementsData : { };
+            window.elementsData[{$element->id}] = {$element->getCompilationJsonData()};
+        </script>
+        <app-zx-prods-list element-id="{$element->id}"></app-zx-prods-list>
     {/if}
 
 

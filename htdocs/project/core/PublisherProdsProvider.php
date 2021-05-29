@@ -7,6 +7,19 @@ trait PublisherProdsProvider
 {
     protected $publisherProds;
 
+    public function getPublisherProdsJson()
+    {
+        $prods = $this->getPublisherProds();
+        $data = [
+            'prods' => [],
+            'prodsAmount' => count($prods)
+        ];
+        foreach ($prods as $prod) {
+            $data['prods'][] = $prod->getElementData('list');
+        }
+        return json_encode($data);
+    }
+
     public function getPublisherProds()
     {
         if ($this->publisherProds === null) {

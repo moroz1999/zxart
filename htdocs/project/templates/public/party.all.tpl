@@ -24,13 +24,15 @@
 		</div>
 		<a class="button" href="{$element->getSaveUrl()}">{translations name='party.save'}</a>
 	<div class='party_compos'>
-		{foreach from=$element->getProdsCompos() key=compoType item=compo}
+		{foreach from=$element->getProdsComposJson() key=compoType item=compo}
 			{assign "compoTitle" "compo_"|cat:$compoType}
 			<div class='party_compos_item'>
 				<h2>{translations name='label.compo'}: {translations name="party.$compoTitle"}</h2>
-				<div class="zxprods_list">
-					{foreach from=$compo item=prod}{include file=$theme->template("zxProd.short.tpl") element=$prod}{/foreach}
-				</div>
+				<script>
+					window.elementsData = window.elementsData ? window.elementsData : { };
+					window.elementsData['{$element->id}{$compoType}'] = {$compo};
+				</script>
+				<app-zx-prods-list element-id="{$element->id}{$compoType}"></app-zx-prods-list>
 			</div>
 		{/foreach}
 	</div>

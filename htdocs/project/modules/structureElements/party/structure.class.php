@@ -93,6 +93,22 @@ class partyElement extends structureElement implements CommentsHolderInterface
         return $this->prodsCompos;
     }
 
+    public function getProdsComposJson()
+    {
+        $json = [];
+        foreach ($this->getProdsCompos() as $compo => $prods) {
+            $compoData = [
+                'prods' => [],
+                'prodsAmount' => count($prods)
+            ];
+            foreach ($prods as $prod) {
+                $compoData['prods'][] = $prod->getElementData('list');
+            }
+            $json[$compo] = json_encode($compoData);
+        }
+        return $json;
+    }
+
     public function getTunesCompos()
     {
         if ($this->tunesCompos === null) {
@@ -164,8 +180,7 @@ class partyElement extends structureElement implements CommentsHolderInterface
                 $text .= "\n\n\n";
                 $text .= '[b]' . $translationsManager->getTranslationByName('musiccompo.compo_' . $compo) . "[/b]\n\n";
                 foreach ($items as $key => $item) {
-                    $text .= '[url=' . $item->getUrl(
-                        ) . ']' . $item->title . '[/url] by ' . $item->getAuthorNamesString();
+                    $text .= '[url=' . $item->getUrl() . ']' . $item->title . '[/url] by ' . $item->getAuthorNamesString();
                     if ($path = $item->getMp3FilePath()) {
                         $text .= ' - [url=' . $path . ']mp3[/url] ';
                     }
@@ -238,8 +253,7 @@ class partyElement extends structureElement implements CommentsHolderInterface
     public function getImageUrl($preset = 'partyFull')
     {
         if ($this->image) {
-            return controller::getInstance(
-                )->baseURL . 'image/type:' . $preset . '/id:' . $this->image . '/filename:' . $this->originalName;
+            return controller::getInstance()->baseURL . 'image/type:' . $preset . '/id:' . $this->image . '/filename:' . $this->originalName;
         }
         return $imageUrl = controller::getInstance()->baseURL . 'project/images/public/zxprod_default.png';
     }

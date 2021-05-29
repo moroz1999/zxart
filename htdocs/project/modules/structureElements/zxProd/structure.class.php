@@ -767,4 +767,15 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         }
         return '';
     }
+
+    public function getCompilationJsonData(){
+        $data = [
+            'prods' => [],
+            'prodsAmount' => count($this->compilationProds)
+        ];
+        foreach ($this->compilationProds as $prod) {
+            $data['prods'][] = $prod->getElementData('list');
+        }
+        return json_encode($data);
+    }
 }
