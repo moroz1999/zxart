@@ -6,6 +6,5 @@
 			window.elementsData[{$element->id}] = {$element->getPublisherProdsJson()};
 		</script>
 		<app-zx-prods-list element-id="{$element->id}"></app-zx-prods-list>
-
 	</div>
 {/if}
