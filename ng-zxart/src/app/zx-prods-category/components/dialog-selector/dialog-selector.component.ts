@@ -30,9 +30,11 @@ export class DialogSelectorComponent implements OnInit, OnChanges {
     this.selectedValues = [];
     if (this.selectorData) {
       for (const group of this.selectorData) {
-        for (const value of group.values) {
-          if (value.selected) {
-            this.selectedValues.push(value.title);
+        if (group && group.values) {
+          for (const value of group.values) {
+            if (value.selected) {
+              this.selectedValues.push(value.title);
+            }
           }
         }
       }

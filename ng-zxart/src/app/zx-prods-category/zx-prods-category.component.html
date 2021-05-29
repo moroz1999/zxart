@@ -1,5 +1,47 @@
 <div *ngIf="model">
   <h1>{{ model.h1 }}</h1>
+  <div class="zx-prods-list-presets">
+    <button
+      mat-raised-button
+      color="primary"
+      *ngIf="recentPresetActive()"
+      (click)="recentPresetClicked()"
+    >{{ 'prods-list.presets.recent' | translate}}</button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="topPresetClicked()"
+    >{{ 'prods-list.presets.top' | translate}}</button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="updatesPresetClicked()"
+    >{{ 'prods-list.presets.updates' | translate}}</button>
+    <button
+      mat-raised-button
+      color="primary"
+      *ngIf="hwPresetActive(['zxnext'])"
+      (click)="hwPresetClicked(['zxnext'])"
+    >{{ 'prods-list.presets.next' | translate}}</button>
+    <button
+      mat-raised-button
+      color="primary"
+      *ngIf="hwPresetActive(['tsconf', 'baseconf', 'zxevolution'])"
+      (click)="hwPresetClicked(['tsconf', 'baseconf', 'zxevolution'])"
+    >{{ 'prods-list.presets.evolution' | translate}}</button>
+    <button
+      mat-raised-button
+      color="primary"
+      *ngIf="hwPresetActive(['zx812', 'zx811', 'zx8116', 'zx80'])"
+      (click)="hwPresetClicked(['zx812', 'zx811', 'zx8116', 'zx80'])"
+    >{{ 'prods-list.presets.zx81' | translate}}</button>
+    <button
+      mat-raised-button
+      color="primary"
+      *ngIf="hwPresetActive(['samcoupe'])"
+      (click)="hwPresetClicked(['samcoupe'])"
+    >{{ 'prods-list.presets.samcoupe' | translate}}</button>
+  </div>
   <div class="zx-prods-list-content">
     <div
       class="zx-prods-list-left"

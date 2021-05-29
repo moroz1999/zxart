@@ -4,6 +4,15 @@
     "next": "Next"
   },
   "prods-list": {
+    "presets": {
+      "recent": "Best recent releases",
+      "top": "All time top",
+      "updates": "Lately uploaded",
+      "next": "ZX Spectrum Next",
+      "evolution": "ZX Evolution",
+      "zx81": "ZX80/ZX81",
+      "samcoupe": "SAM Coupé"
+    },
     "filters": {
       "reset": "Reset",
       "apply": "Apply",

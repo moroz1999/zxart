@@ -1,0 +1,78 @@
+{
+  "pages": {
+    "previous": "Anterior",
+    "next": "Siguiente"
+  },
+  "prods-list": {
+    "presets": {
+      "recent": "Mejores lanzamientos recientes",
+      "top": "Top de todos los tiempos",
+      "updates": "Subido últimamente",
+      "next": "ZX Spectrum Next",
+      "evolution": "ZX Evolution",
+      "zx81": "ZX80/ZX81",
+      "samcoupe": "SAM Coupé"
+    },
+    "filters": {
+      "reset": "Reset",
+      "apply": "Aplicar",
+      "tags": {
+        "select": "Seleccionar etiquetas"
+      },
+      "year": {
+        "selected": "Años:",
+        "select": "Seleccionar años"
+      },
+      "hardware": {
+        "selected": "Hardware:",
+        "select": "Seleccionar hardware"
+      },
+      "languages": {
+        "selected": "Idiomas:",
+        "select": "Seleccionar idiomas"
+      },
+      "countries": {
+        "selected": "Países:",
+        "select": "Seleccionar países"
+      },
+      "formats": {
+        "selected": "Formatos de lanzamiento:",
+        "select": "Seleccionar formatos"
+      },
+      "legal-statuses": {
+        "selected": "Estados legales:",
+        "select": "Seleccionar estados legales"
+      },
+      "letters": {
+        "all": "Todo"
+      }
+    },
+    "sorting": {
+      "votes,asc": "Calificación, asc",
+      "votes,desc": "Calificación, desc",
+      "title,asc": "Título A-Z, asc",
+      "title,desc": "Título A-Z, desc",
+      "year,asc": "Año de lanzamiento, asc",
+      "year,desc": "Año de lanzamiento, desc",
+      "date,asc": "Fecha de subida, asc",
+      "date,desc": "Fecha de subida, desc"
+    },
+    "layout": {
+      "select": "Diseño:"
+    }
+  },
+  "zx-prod": {
+    "title": "Título",
+    "at": " en ",
+    "play": "Jugar",
+    "video": "Video",
+    "year": "Año",
+    "date-created": "Subido",
+    "categories": "Géneros",
+    "parties": "Competiciones",
+    "languages": "Idiomas",
+    "developers": "Desarrolladores",
+    "publishers": "Editores",
+    "open": "Abierto"
+  }
+}

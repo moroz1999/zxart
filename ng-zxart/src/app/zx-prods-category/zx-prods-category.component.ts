@@ -193,18 +193,8 @@ export class ZxProdsCategoryComponent implements OnInit {
   }
 
   categoryChanged(categoryId: number) {
+    this.resetSelectors();
     this.elementId = categoryId;
-
-    this.years = [];
-    this.hw = [];
-    this.languages = [];
-    this.legalStatuses = [];
-    this.formats = [];
-    this.letter = '';
-    this.tags = [];
-    this.countries = [];
-    this.currentPage = 0;
-
     this.fetchModel();
   }
 
@@ -215,5 +205,67 @@ export class ZxProdsCategoryComponent implements OnInit {
       this.sorting = type + ',desc';
     }
     this.fetchModel();
+  }
+
+  recentPresetActive(): boolean {
+    if (this.model?.yearsSelector && this.model.yearsSelector[0]) {
+      const currentYear = new Date().getFullYear();
+      const selector = this.model.yearsSelector[0];
+      const lastValue = selector.values[selector.values.length - 1];
+      if (lastValue.value.toString() === currentYear.toString() || lastValue.value.toString() === (currentYear - 1).toString()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  recentPresetClicked(): void {
+    this.resetSelectors();
+    const currentYear = new Date().getFullYear();
+    this.years = [(currentYear - 2).toString(), (currentYear - 1).toString(), currentYear.toString()];
+    this.fetchModel();
+  }
+
+  topPresetClicked(): void {
+    this.resetSelectors();
+    this.fetchModel();
+  }
+
+  updatesPresetClicked(): void {
+    this.resetSelectors();
+    this.sorting = 'date,desc';
+    this.fetchModel();
+  }
+
+  hwPresetActive(hwValues: Array<string>): boolean {
+    if (this.model?.hardwareSelector) {
+      for (const group of this.model.hardwareSelector) {
+        for (const value of group.values) {
+          if (hwValues.indexOf(value.value) >= 0) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  hwPresetClicked(hwValues: Array<string>): void {
+    this.resetSelectors();
+    this.hw = hwValues;
+    this.fetchModel();
+  }
+
+  private resetSelectors(): void {
+    this.sorting = 'votes,desc';
+    this.years = [];
+    this.hw = [];
+    this.languages = [];
+    this.legalStatuses = [];
+    this.formats = [];
+    this.letter = '';
+    this.tags = [];
+    this.countries = [];
+    this.currentPage = 0;
   }
 }

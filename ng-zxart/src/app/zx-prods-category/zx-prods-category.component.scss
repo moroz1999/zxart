@@ -3,6 +3,11 @@
 @import "../shared/breakpoints";
 
 $amount: 5;
+.zx-prods-list-presets {
+  display: flex;
+  gap: $padding-md;
+  margin-bottom: $padding-xl;
+}
 
 .zx-prods-list-content {
   @include media-breakpoint-up(sm) {
