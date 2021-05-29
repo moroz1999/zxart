@@ -25,6 +25,8 @@ class authorDataResponseConverter extends StructuredDataResponseConverter
             'country' => 'getCountryTitle',
             'importIds' => 'getImportIdsIndex',
             'aliases' => 'getAliasElementsIds',
+            'prods' => 'getProdsInfo',
+            'prodsAmount' => 'getProdsAmount',
         ];
     }
 
@@ -55,6 +57,13 @@ class authorDataResponseConverter extends StructuredDataResponseConverter
                 'searchTitle',
                 'url',
                 'structureType',
+            ],
+            'zxProdsList' => [
+                'id',
+                'title',
+                'url',
+                'prodsAmount',
+                'prods',
             ],
         ];
     }

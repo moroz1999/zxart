@@ -21,7 +21,7 @@ export class ElementsService {
   constructor(private http: HttpClient) {
   }
 
-  getModel<T, U extends StructureElement>(elementId: number, elementType: string, className: { new(dto: T): U }, parameters: PostParameters, preset: string): Observable<U> {
+  getModel<T, U extends StructureElement>(elementId: number, className: { new(dto: T): U }, parameters: PostParameters, preset: string): Observable<U> {
     if (elementsData && elementsData[elementId]) {
       const model = new className(elementsData[elementId] as T);
       delete elementsData[elementId];
@@ -36,8 +36,7 @@ export class ElementsService {
         .get<JsonResponse<ElementResponseData<T>>>(this.apiUrl, options)
         .pipe(
           map(response => {
-            console.log(response.responseData[elementType]);
-            return new className(response.responseData[elementType]);
+            return new className(response.responseData.elementData);
           }),
         );
     }

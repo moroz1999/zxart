@@ -22,6 +22,8 @@ class groupAliasDataResponseConverter extends StructuredDataResponseConverter
             'endDate' => 'endDate',
             'groupId' => 'groupId',
             'importIds' => 'getImportIdsIndex',
+            'prods' => 'getProdsInfo',
+            'prodsAmount' => 'getProdsAmount',
         ];
     }
 
@@ -49,6 +51,13 @@ class groupAliasDataResponseConverter extends StructuredDataResponseConverter
                 'searchTitle',
                 'url',
                 'structureType',
+            ],
+            'zxProdsList' => [
+                'id',
+                'title',
+                'url',
+                'prodsAmount',
+                'prods',
             ],
         ];
     }

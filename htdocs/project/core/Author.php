@@ -1,11 +1,10 @@
 <?php
 
-trait AuthorTrait
+trait Author
 {
     protected $years = [];
     protected $worksList;
     protected $linksInfo;
-
     public function getYearsWorks($type = 'authorPicture')
     {
         if (!isset($this->years[$type])) {
@@ -166,4 +165,18 @@ trait AuthorTrait
     abstract public function getWorksList($types);
 
     abstract public function getGroupsList();
+
+    public function getProdsInfo(): array
+    {
+        $prodsInfo = [];
+        foreach ($this->getProds() as $prod) {
+            $prodsInfo[] = $prod->getElementData('list');
+        }
+        return $prodsInfo;
+    }
+
+    public function getProdsAmount(): int
+    {
+        return count($this->getProds());
+    }
 }

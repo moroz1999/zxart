@@ -1,4 +1,4 @@
-import {StructureElementDto} from '../../shared/models/structure-element-dto';
+import {StructureElementDto} from './structure-element-dto';
 
 export interface ZxProdConnectedItem {
   readonly id: string;

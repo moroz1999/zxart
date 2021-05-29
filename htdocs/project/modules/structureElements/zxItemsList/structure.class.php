@@ -1,8 +1,9 @@
 <?php
 
-class zxItemsListElement extends structureElement
+class zxItemsListElement extends structureElement implements JsonDataProvider
 {
     use CacheOperatingElement;
+    use JsonDataProviderElement;
 
     public $dataResourceName = 'module_zxitemslist';
     public $allowedTypes = [];
@@ -20,6 +21,20 @@ class zxItemsListElement extends structureElement
         $moduleStructure['searchFormParametersString'] = 'text';
         $moduleStructure['layout'] = 'text';
         $moduleStructure['requiresUser'] = 'checkbox';
+    }
+
+    public function getProdsInfo(): array
+    {
+        $prodsInfo = [];
+        foreach ($this->getItemsList() as $prod) {
+            $prodsInfo[] = $prod->getElementData('list');
+        }
+        return $prodsInfo;
+    }
+
+    public function getProdsAmount(): int
+    {
+        return count($this->getItemsList());
     }
 
     public function getItemsList()

@@ -1,0 +1,159 @@
+@import "../shared/vars";
+@import "../shared/mixins";
+@import "../shared/breakpoints";
+
+$amount: 5;
+
+.zx-prods-list-content {
+  @include media-breakpoint-up(sm) {
+    display: flex;
+    align-items: flex-start;
+    gap: $padding-xl;
+  }
+}
+
+.zx-prods-list-left {
+  display: flex;
+  gap: $padding-md;
+  overflow: auto;
+  transition: opacity $animation-md ease-in-out;
+  @include media-breakpoint-up(sm) {
+    position: sticky;
+    top: 0;
+    flex-basis: 10%;
+    min-width: 15rem;
+    flex-direction: column;
+    max-height: 100vh;
+  }
+  @include media-breakpoint-down(sm) {
+    flex-wrap: wrap;
+    app-categories-tree-selector {
+      flex-basis: 100%;
+    }
+  }
+}
+
+.zx-prods-list-right {
+  @include media-breakpoint-up(sm) {
+    flex-basis: 85%;
+    flex-grow: 1;
+  }
+}
+
+:host:not(.inlays) {
+  .zx-prods-gallery {
+    display: grid;
+    gap: $padding-lg;
+    justify-content: space-between;
+
+    grid-template-columns: 1fr;
+
+    @media (min-width: 1000px) {
+      grid-template-columns: 256px 256px;
+    }
+    @media (min-width: 1420px) {
+      grid-template-columns: 256px 256px 256px;
+    }
+    @media (min-width: 1850px) {
+      grid-template-columns: 256px 256px 256px 256px;
+    }
+  }
+}
+
+:host.inlays {
+
+  .zx-prods-gallery {
+    display: grid;
+    gap: $padding-lg;
+    justify-content: space-between;
+
+    @include media-breakpoint-down(md) {
+      grid-template-columns: 1fr;
+    }
+    @include media-breakpoint-up(xl) {
+      grid-template-columns: 1fr 1fr;
+    }
+    @include media-breakpoint-up(xxl) {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+}
+
+.selectors {
+  background: $gray9;
+  padding-top: $padding-md;
+  padding-bottom: $padding-md;
+  box-shadow: $shadow-md;
+  transition: opacity $animation-md ease-in-out;
+  @include media-breakpoint-up(sm) {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.selectors-top {
+  display: flex;
+  gap: $padding-md;
+
+  @media (max-width: 1640px) {
+    flex-wrap: wrap;
+  }
+}
+
+.layout-selector {
+  display: flex;
+  align-items: center;
+  gap: $padding-md;
+  @include media-breakpoint-up(sm) {
+    justify-content: flex-end;
+    flex-grow: 1;
+  }
+}
+
+app-letter-selector {
+  margin: $padding-md 0 0;
+}
+
+app-pages-selector {
+  z-index: 10;
+  margin-top: $padding-xl;
+}
+
+.zx-prods-table {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  border-collapse: collapse;
+
+  thead td {
+    padding: $padding-sm $padding-md;
+    font-size: $font-sm;
+    color: $text-light-color;
+    vertical-align: bottom;
+
+    &.zx-prods-table-sortable {
+      @include pseudo-link;
+    }
+
+  }
+
+  ::ng-deep app-zx-prod-row td {
+    padding: $padding-sm $padding-md;
+  }
+
+  ::ng-deep app-zx-prod-row:nth-of-type(2n-1) td {
+    background-color: $gray8;
+  }
+}
+
+mat-spinner {
+  display: block;
+  margin: $padding-xl auto;
+}

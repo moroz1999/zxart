@@ -100,4 +100,17 @@ trait Group
             'unknown',
         ];
     }
+    public function getProdsInfo(): array
+    {
+        $prodsInfo = [];
+        foreach ($this->getGroupProds() as $prod) {
+            $prodsInfo[] = $prod->getElementData('list');
+        }
+        return $prodsInfo;
+    }
+
+    public function getProdsAmount(): int
+    {
+        return count($this->getGroupProds());
+    }
 }

@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {Injector, NgModule} from '@angular/core';
-import {ZxProdsListComponent} from './zx-prods-list/zx-prods-list.component';
+import {ZxProdsCategoryComponent} from './zx-prods-category/zx-prods-category.component';
 import {createCustomElement} from '@angular/elements';
 import {AngularSvgIconModule} from 'angular-svg-icon';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
@@ -11,7 +11,7 @@ import {PagesSelectorComponent} from './shared/components/pages-selector/pages-s
 import {environment} from '../environments/environment';
 import {ZxProdBlockComponent} from './zx-prod-block/zx-prod-block.component';
 import {FormsModule} from '@angular/forms';
-import {DialogSelectorComponent} from './zx-prods-list/components/dialog-selector/dialog-selector.component';
+import {DialogSelectorComponent} from './zx-prods-category/components/dialog-selector/dialog-selector.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -23,12 +23,14 @@ import {MatCardModule} from '@angular/material/card';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {DialogSelectorDialogComponent} from './zx-prods-list/components/dialog-selector/dialog-selector-dialog/dialog-selector-dialog.component';
-import {LetterSelectorComponent} from './zx-prods-list/components/letter-selector/letter-selector.component';
-import {SortingSelectorComponent} from './zx-prods-list/components/sorting-selector/sorting-selector.component';
+import {DialogSelectorDialogComponent} from './zx-prods-category/components/dialog-selector/dialog-selector-dialog/dialog-selector-dialog.component';
+import {LetterSelectorComponent} from './zx-prods-category/components/letter-selector/letter-selector.component';
+import {SortingSelectorComponent} from './zx-prods-category/components/sorting-selector/sorting-selector.component';
 import {TagsSelectorComponent} from './shared/components/tags-selector/tags-selector.component';
-import {CategoriesTreeSelectorComponent} from './zx-prods-list/components/categories-tree-selector/categories-tree-selector.component';
+import {CategoriesTreeSelectorComponent} from './zx-prods-category/components/categories-tree-selector/categories-tree-selector.component';
 import {ZxProdRowComponent} from './zx-prod-row/zx-prod-row.component';
+import {ZxProdsListComponent} from './zx-prods-list/zx-prods-list.component';
+import {AppComponent} from './app.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(httpClient, `${environment.assetsUrl}i18n/`);
@@ -36,7 +38,8 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
 
 @NgModule({
   declarations: [
-    ZxProdsListComponent,
+    AppComponent,
+    ZxProdsCategoryComponent,
     PagesSelectorComponent,
     ZxProdBlockComponent,
     DialogSelectorComponent,
@@ -46,6 +49,7 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
     TagsSelectorComponent,
     CategoriesTreeSelectorComponent,
     ZxProdRowComponent,
+    ZxProdsListComponent,
   ],
   imports: [
     CommonModule,
@@ -74,13 +78,18 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   ],
   providers: [],
   bootstrap: [],
-  entryComponents: [ZxProdsListComponent],
+  entryComponents: [AppComponent, ZxProdsCategoryComponent, ZxProdsListComponent],
 })
 export class AppModule {
 
   constructor(private injector: Injector) {
-    const el = createCustomElement(ZxProdsListComponent, {injector: this.injector});
-    customElements.define('app-zx-prods-list', el);
+    const appRoot = createCustomElement(AppComponent, {injector: this.injector});
+    customElements.define('app-root', appRoot);
+
+    const el = createCustomElement(ZxProdsCategoryComponent, {injector: this.injector});
+    customElements.define('app-zx-prods-category', el);
+    const el2 = createCustomElement(ZxProdsListComponent, {injector: this.injector});
+    customElements.define('app-zx-prods-list', el2);
   }
 
   ngDoBootstrap(): void {

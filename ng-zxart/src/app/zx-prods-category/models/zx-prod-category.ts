@@ -1,11 +1,11 @@
 import {StructureElement} from '../../shared/models/structure-element';
-import {ZxProd} from './zx-prod';
+import {ZxProd} from '../../shared/models/zx-prod';
 import {SelectorDto} from './selector-dto';
 import {Tag} from '../../shared/models/tag';
 import {CategoriesSelectorDto} from '../../categories-selector-dto';
 import {ZxProdCategoryDto} from './zx-prod-category-dto';
 
-export class ZxProdsList extends StructureElement {
+export class ZxProdCategory extends StructureElement {
   public h1: string;
   public title: string;
   public prodsAmount: number;

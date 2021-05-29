@@ -8,8 +8,9 @@
  * @property int endDate
  * @property int groupId
  */
-class groupAliasElement extends structureElement implements CommentsHolderInterface
+class groupAliasElement extends structureElement implements CommentsHolderInterface, JsonDataProvider
 {
+    use JsonDataProviderElement;
     use AuthorshipPersister;
     use ImportedItemTrait;
     use Group;

@@ -10,7 +10,7 @@ import {
 import {FadeInOut} from '../shared/animations/fade-in-out';
 import {trigger, AnimationEvent} from '@angular/animations';
 import {SlideInOut} from '../shared/animations/slide-in-out';
-import {ZxProdsListLayout} from '../zx-prods-list/zx-prods-list.component';
+import {ZxProdsListLayout} from '../zx-prods-category/zx-prods-category.component';
 import {ZxProdComponent} from '../shared/components/zx-prod-component';
 
 @Component({

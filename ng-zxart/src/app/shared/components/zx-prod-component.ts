@@ -1,5 +1,5 @@
 import {Directive, EventEmitter, Input, Output} from '@angular/core';
-import {ZxProd} from '../../zx-prods-list/models/zx-prod';
+import {ZxProd} from '../models/zx-prod';
 
 @Directive()
 export abstract class ZxProdComponent {

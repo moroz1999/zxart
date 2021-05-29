@@ -25,14 +25,15 @@
  * @property string $email
  * @property string $site
  */
-class authorElement extends structureElement implements CommentsHolderInterface, AliasesHolder
+class authorElement extends structureElement implements CommentsHolderInterface, AliasesHolder, JsonDataProvider
 {
+    use JsonDataProviderElement;
     use CacheOperatingElement;
     use LocationProviderTrait;
     use ChartDataProviderTrait;
     use UserElementProviderTrait;
     use LettersElementsListProviderTrait;
-    use AuthorTrait;
+    use Author;
     use AuthorshipProviderTrait;
     use AliasElementsProvider;
     use CommentsTrait;

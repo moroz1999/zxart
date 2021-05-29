@@ -1,4 +1,4 @@
-import {StructureElement} from '../../shared/models/structure-element';
+import {StructureElement} from './structure-element';
 import {
   ZxProdDto,
   ZxProdConnectedItems,

@@ -7,9 +7,10 @@
  * @property int $authorId
  * @property int $joinAndDelete
  */
-class authorAliasElement extends structureElement implements CommentsHolderInterface
+class authorAliasElement extends structureElement implements CommentsHolderInterface, JsonDataProvider
 {
-    use AuthorTrait;
+    use JsonDataProviderElement;
+    use Author;
     use AuthorshipProviderTrait;
     use LettersElementsListProviderTrait;
     use ImportedItemTrait;
