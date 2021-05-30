@@ -545,14 +545,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
     {
         if ($this->votesHistory === null) {
             if (!$this->votesHistory = $this->getCacheKey('votes')) {
-                $this->votesHistory = $this->getService('votesManager')->getLatestVotes(
-                    $limit,
-                    [
-                        'zxProd',
-                        'zxPicture',
-                        'zxMusic',
-                    ]
-                );
+                $this->votesHistory = $this->getService('votesManager')->getLatestVotes($limit);
                 $this->setCacheKey('v', $this->votesHistory, 300);
             }
         }

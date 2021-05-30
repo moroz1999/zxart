@@ -159,7 +159,7 @@ class votesManager implements DependencyInjectionContextInterface
         if ($types) {
             $query->whereIn('type', $types);
         }
-        $query->orderBy('date', 'desc')->limit($limit);
+        $query->orderBy('id', 'desc')->limit($limit);
 
         if ($votesList = $query->get()) {
             $structureManager = $this->getService('structureManager');

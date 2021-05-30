@@ -56,6 +56,8 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     protected $firstImage;
     protected $images = [];
     protected $bestPictures;
+    protected $languagesInfo;
+    protected $hardwareInfo;
 
     protected function setModuleStructure(&$moduleStructure)
     {
@@ -671,18 +673,23 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
 
     public function getHardwareInfo()
     {
-        $publishersInfo = [];
-        /**
-         * @var translationsManager $translationsManager
-         */
-        $translationsManager = $this->getService('translationsManager');
-        foreach ($this->getHardware() as $item) {
-            $publishersInfo[] = [
-                'id' => $item,
-                'title' => $translationsManager->getTranslationByName('hardware.item_short_' . $item),
-            ];
+        if (!isset($this->hardwareInfo)) {
+            if (($this->hardwareInfo = $this->getCacheKey('hw')) === false) {
+                $this->hardwareInfo = [];
+                /**
+                 * @var translationsManager $translationsManager
+                 */
+                $translationsManager = $this->getService('translationsManager');
+                foreach ($this->getHardware() as $item) {
+                    $this->hardwareInfo[] = [
+                        'id' => $item,
+                        'title' => $translationsManager->getTranslationByName('hardware_short.item_' . $item),
+                    ];
+                }
+                $this->setCacheKey('hw', $this->hardwareInfo, 24 * 60 * 60);
+            }
         }
-        return $publishersInfo;
+        return $this->hardwareInfo;
 
     }
 
@@ -714,33 +721,40 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
 
     public function getLanguagesInfo()
     {
-        $db = $this->getService('db');
-        /**
-         * @var QueryFiltersManager $queryFiltersManager
-         */
-        $query = $db->table($this->dataResourceName)->where('id', $this->id);
+        if (!isset($this->languagesInfo)) {
+            if (($this->languagesInfo = $this->getCacheKey('li')) === false) {
+                $this->languagesInfo = [];
 
-        $queryFiltersManager = $this->getService('QueryFiltersManager');
-        $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
-        $languageCodes = $db->table('zxitem_language')
-            ->whereIn('elementId', $query)
-            ->orWhere('elementId', $this->id)
-            ->distinct()
-            ->pluck('value');
-        $languages = [];
-        /**
-         * @var translationsManager $translationsManager
-         */
-        $translationsManager = $this->getService('translationsManager');
+                $db = $this->getService('db');
+                /**
+                 * @var QueryFiltersManager $queryFiltersManager
+                 */
+                $query = $db->table($this->dataResourceName)->where('id', $this->id);
 
-        foreach ($languageCodes as $languageCode) {
-            $languages[] = [
-                'id' => $languageCode,
-                'title' => $translationsManager->getTranslationByName('language.item_' . $languageCode),
-                'url' => null,
-            ];
+                $queryFiltersManager = $this->getService('QueryFiltersManager');
+                $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
+                $languageCodes = $db->table('zxitem_language')
+                    ->whereIn('elementId', $query)
+                    ->orWhere('elementId', $this->id)
+                    ->distinct()
+                    ->pluck('value');
+                /**
+                 * @var translationsManager $translationsManager
+                 */
+                $translationsManager = $this->getService('translationsManager');
+
+                foreach ($languageCodes as $languageCode) {
+                    $this->languagesInfo[] = [
+                        'id' => $languageCode,
+                        'title' => $translationsManager->getTranslationByName('language.item_' . $languageCode),
+                        'url' => null,
+                    ];
+                }
+                $this->setCacheKey('li', $this->languagesInfo, 24 * 60 * 60);
+            }
         }
-        return $languages;
+
+        return $this->languagesInfo;
     }
 
     public function getCategoriesInfo()
@@ -768,7 +782,8 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return '';
     }
 
-    public function getCompilationJsonData(){
+    public function getCompilationJsonData()
+    {
         $data = [
             'prods' => [],
             'prodsAmount' => count($this->compilationProds)
