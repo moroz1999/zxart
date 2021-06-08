@@ -346,7 +346,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         }
         if ($extension == 'pok' || $extension == 'diz' || $extension == 'nfo') {
             return 'plain_text';
-        } elseif ($extension == 't' || $extension == 'w' || $extension == 'txt') {
+        } elseif ($extension == 't' || $extension == 'w' || $extension == 'txt'|| $extension == 'asm'|| $extension == 'a80' || $extension == 'bbs') {
             return 'cp866_text';
         } elseif ($extension == 'jpg' || $extension == 'png' || $extension == 'bmp') {
             return 'pc_image';

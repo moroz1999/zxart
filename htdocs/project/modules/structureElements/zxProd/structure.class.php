@@ -674,7 +674,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     public function getHardwareInfo()
     {
         if (!isset($this->hardwareInfo)) {
-            if (($this->hardwareInfo = $this->getCacheKey('hw')) === false) {
+            if (($this->hardwareInfo = $this->getCacheKey('hw' . $this->currentLanguage)) === false) {
                 $this->hardwareInfo = [];
                 /**
                  * @var translationsManager $translationsManager
@@ -686,7 +686,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
                         'title' => $translationsManager->getTranslationByName('hardware_short.item_' . $item),
                     ];
                 }
-                $this->setCacheKey('hw', $this->hardwareInfo, 24 * 60 * 60);
+                $this->setCacheKey('hw' . $this->currentLanguage, $this->hardwareInfo, 24 * 60 * 60);
             }
         }
         return $this->hardwareInfo;
@@ -722,7 +722,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     public function getLanguagesInfo()
     {
         if (!isset($this->languagesInfo)) {
-            if (($this->languagesInfo = $this->getCacheKey('li')) === false) {
+            if (($this->languagesInfo = $this->getCacheKey('li' . $this->currentLanguage)) === false) {
                 $this->languagesInfo = [];
 
                 $db = $this->getService('db');
@@ -750,7 +750,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
                         'url' => null,
                     ];
                 }
-                $this->setCacheKey('li', $this->languagesInfo, 24 * 60 * 60);
+                $this->setCacheKey('li' . $this->currentLanguage, $this->languagesInfo, 24 * 60 * 60);
             }
         }
 
