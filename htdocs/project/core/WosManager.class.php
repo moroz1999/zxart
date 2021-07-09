@@ -367,7 +367,8 @@ class WosManager extends errorLogger
     public function setProdsManager(ProdsManager $prodsManager)
     {
         $this->prodsManager = $prodsManager;
-        $this->prodsManager->setUpdateExistingProds(true);
+        $this->prodsManager->setForceUpdateYoutube(true);
+//        $this->prodsManager->setUpdateExistingProds(true);
 //        $this->prodsManager->setForceUpdateAuthors(true);
 //        $this->prodsManager->setForceUpdateTitles(true);
 //        $this->prodsManager->setForceUpdateCategories(true);
@@ -640,12 +641,12 @@ class WosManager extends errorLogger
                 $releaseInfo['id'] = $release['entry_id'] . '_' . $release['release_seq'];
 
                 if ($controls = $this->zxdb->table('members')
-                    ->select('group_id')
+                    ->select('tag_id')
                     ->where('entry_id', '=', $entryId)
                     ->get()) {
                     foreach ($controls as $control) {
-                        if (isset($this->featureGroups[$control['group_id']])) {
-                            $releaseInfo['hardwareRequired'][] = $this->featureGroups[$control['group_id']];
+                        if (isset($this->featureGroups[$control['tag_id']])) {
+                            $releaseInfo['hardwareRequired'][] = $this->featureGroups[$control['tag_id']];
                         }
                     }
                 }
@@ -737,7 +738,6 @@ class WosManager extends errorLogger
                     }
                 }
 
-                $teamInfo = null;
                 if ($rows = $this->zxdb->table('authors')
                     ->select('*')
                     ->where('label_id', '=', $labelId)

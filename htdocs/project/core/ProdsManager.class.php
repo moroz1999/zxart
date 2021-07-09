@@ -10,6 +10,7 @@ class ProdsManager extends ElementsManager
     protected $forceUpdateYear = false;
     protected $forceUpdateYoutube = false;
     protected $forceUpdateCategories = false;
+    protected $forceUpdateImages = false;
     protected $forceUpdateTitles = false;
     protected $forceUpdateAuthors = false;
     protected $forceUpdateGroups = false;
@@ -60,6 +61,14 @@ class ProdsManager extends ElementsManager
             'title' => ['LOWER(title)' => true],
             'date' => ['dateCreated' => true, 'id' => true],
         ];
+    }
+
+    /**
+     * @param bool $forceUpdateImages
+     */
+    public function setForceUpdateImages(bool $forceUpdateImages): void
+    {
+        $this->forceUpdateImages = $forceUpdateImages;
     }
 
     /**
@@ -362,8 +371,8 @@ class ProdsManager extends ElementsManager
             }
         }
 
-        if (!empty($prodInfo['authors'])) {
-            if ($this->forceUpdateAuthors || !$element->getAuthorsInfo('prod')) {
+        if ($this->forceUpdateAuthors && !empty($prodInfo['authors'])) {
+            if (!$element->getAuthorsInfo('prod')) {
                 foreach ($prodInfo['authors'] as $importAuthorId => $roles) {
                     if ($authorId = $this->getElementIdByImportId($importAuthorId, $origin, 'author')) {
                         $this->authorsManager->checkAuthorship($element->id, $authorId, 'prod', $roles);
@@ -371,8 +380,8 @@ class ProdsManager extends ElementsManager
                 }
             }
         }
-        if (!empty($prodInfo['groups'])) {
-            if (!$element->groups || $this->forceUpdateGroups) {
+        if ($this->forceUpdateGroups && !empty($prodInfo['groups'])) {
+            if (!$element->groups) {
                 $linksIndex = $this->linksManager->getElementsLinksIndex($element->id, 'zxProdGroups', 'child');
                 foreach ($prodInfo['groups'] as $importGroupId) {
                     if ($groupId = $this->getElementIdByImportId($importGroupId, $origin, 'group')) {
@@ -387,8 +396,8 @@ class ProdsManager extends ElementsManager
                 }
             }
         }
-        if (!empty($prodInfo['publishers'])) {
-            if (!$element->publishers || $this->forceUpdatePublishers) {
+        if ( $this->forceUpdatePublishers && !empty($prodInfo['publishers'])) {
+            if (!$element->publishers) {
                 $linksIndex = $this->linksManager->getElementsLinksIndex($element->id, 'zxProdPublishers', 'child');
                 foreach ($prodInfo['publishers'] as $importPublisherId) {
                     if (($publisherId = $this->getElementIdByImportId($importPublisherId, $origin, 'group'))
@@ -413,8 +422,8 @@ class ProdsManager extends ElementsManager
                 }
             }
         }
-        if (!empty($prodInfo['categories'])) {
-            if ($this->forceUpdateCategories || !$element->getConnectedCategoriesIds()) {
+        if ($this->forceUpdateCategories && !empty($prodInfo['categories'])) {
+            if (!$element->getConnectedCategoriesIds()) {
                 $linksIndex = $this->linksManager->getElementsLinksIndex($element->id, 'zxProdCategory', 'child');
                 foreach ($prodInfo['categories'] as $importCategoryId) {
                     if ($categoryId = $this->getElementIdByImportId($importCategoryId, $origin, 'category')) {
@@ -429,7 +438,7 @@ class ProdsManager extends ElementsManager
                 }
             }
         }
-        if (!empty($prodInfo['images'])) {
+        if (!empty($prodInfo['images']) && $this->forceUpdateImages) {
             $this->importElementImages($element, $prodInfo['images']);
         }
 

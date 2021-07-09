@@ -47,6 +47,9 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     protected $currentReleaseFile;
     protected $imagesUrls;
     protected $prodElement;
+    protected static $textExtensions = [
+        't', 'w', 'txt', 'asm', 'a80', 'bbs', 'me', 'd', 'nfo', 'nf0', 'diz'
+    ];
 
     protected function setModuleStructure(&$moduleStructure)
     {
@@ -346,7 +349,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         }
         if ($extension == 'pok' || $extension == 'diz' || $extension == 'nfo') {
             return 'plain_text';
-        } elseif ($extension == 't' || $extension == 'w' || $extension == 'txt'|| $extension == 'asm'|| $extension == 'a80' || $extension == 'bbs' || $extension == 'me'|| $extension == 'd') {
+        } elseif (in_array($extension, self::$textExtensions)) {
             return 'cp866_text';
         } elseif ($extension == 'jpg' || $extension == 'png' || $extension == 'bmp') {
             return 'pc_image';
