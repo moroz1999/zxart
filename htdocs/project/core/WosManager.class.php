@@ -6,7 +6,7 @@ class WosManager extends errorLogger
     protected $counter = 0;
     protected $maxCounter;
     protected $minCounter = 0;
-//    protected $debugEntry = 26106;
+//    protected $debugEntry = 37772;
 
     /**
      * @var ProdsManager
@@ -44,7 +44,6 @@ class WosManager extends errorLogger
     protected $adFileTypes;
     protected $categories;
     protected $origin = 'zxdb';
-    protected $downloadMissingFiles = false;
     protected $releasesInfo = [];
     protected $legalStatuses = [
         'D' => 'forbidden',
@@ -368,12 +367,13 @@ class WosManager extends errorLogger
     {
         $this->prodsManager = $prodsManager;
         $this->prodsManager->setForceUpdateYoutube(true);
-//        $this->prodsManager->setUpdateExistingProds(true);
+        $this->prodsManager->setUpdateExistingProds(true);
 //        $this->prodsManager->setForceUpdateAuthors(true);
 //        $this->prodsManager->setForceUpdateTitles(true);
 //        $this->prodsManager->setForceUpdateCategories(true);
 //        $this->prodsManager->setForceUpdatePublishers(true);
 //        $this->prodsManager->setForceUpdateGroups(true);
+        $this->prodsManager->setForceUpdateImages(true);
     }
 
     public function importAll()

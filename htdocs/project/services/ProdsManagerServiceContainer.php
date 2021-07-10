@@ -71,6 +71,8 @@ class ProdsManagerServiceContainer extends DependencyInjectionServiceContainer
             $instance->setPrivilegesManager($this->registry->getService('privilegesManager'));
         }
 
+        $this->injectService($instance, 'PathsManager');
+
         return $instance;
     }
 }

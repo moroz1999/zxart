@@ -29,21 +29,9 @@ class ProdsDownloader extends errorLogger
         if ($url) {
             $filePath = $this->getFilePath($url);
             if (!is_file($filePath)) {
-                if ($contents = file_get_contents($url)) {
-                    file_put_contents($filePath, $contents);
-                } else {
-                    $this->logError('File downloading failed: ' . $url);
-                }
+                $this->downloadUrl($url, $filePath);
             }
             return $filePath;
-        }
-        return false;
-    }
-
-    public function getFileContentsMd5($url)
-    {
-        if ($contents = $this->getFileContents($url)) {
-            return md5($contents);
         }
         return false;
     }
@@ -77,5 +65,23 @@ class ProdsDownloader extends errorLogger
             return $folder . $md5;
         }
         return false;
+    }
+
+    public function downloadUrl(string $url, string $destination): void
+    {
+        $fp = fopen($destination, 'w+');
+
+        $ch = curl_init(str_replace(" ", "%20", $url));
+        curl_setopt($ch, CURLOPT_TIMEOUT, 50);
+        curl_setopt($ch, CURLOPT_FILE, $fp);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0');
+        curl_setopt($ch, CURLOPT_REFERER, 'https://spectrumcomputing.co.uk/');
+
+        if (curl_exec($ch) === false) {
+            $this->logError(curl_error($ch));
+        };
+        curl_close($ch);
     }
 }

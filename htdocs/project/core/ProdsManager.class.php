@@ -47,6 +47,10 @@ class ProdsManager extends ElementsManager
      * @var privilegesManager
      */
     protected $privilegesManager;
+    /**
+     * @var PathsManager
+     */
+    protected $pathsManager;
 
     public function __construct()
     {
@@ -133,6 +137,14 @@ class ProdsManager extends ElementsManager
     public function setForceUpdateAuthors($forceUpdateAuthors)
     {
         $this->forceUpdateAuthors = $forceUpdateAuthors;
+    }
+
+    /**
+     * @param PathsManager $pathsManager
+     */
+    public function setPathsManager(PathsManager $pathsManager): void
+    {
+        $this->pathsManager = $pathsManager;
     }
 
     /**
@@ -253,7 +265,7 @@ class ProdsManager extends ElementsManager
 
                 $element->dateAdded = time();
                 $this->saveImportId($element->getId(), $prodInfo['id'], $origin, 'prod');
-                $this->updateProd($element, $prodInfo, $origin);
+                $this->updateProd($element, $prodInfo, $origin, true);
             }
         }
         return $element;
@@ -296,7 +308,7 @@ class ProdsManager extends ElementsManager
      * @param $origin
      * @return zxProdElement
      */
-    protected function updateProd($element, $prodInfo, $origin)
+    protected function updateProd($element, $prodInfo, $origin, $justCreated = false)
     {
         $changed = false;
         if (!empty($prodInfo['title']) && ($element->title != $prodInfo['title'])) {
@@ -310,7 +322,7 @@ class ProdsManager extends ElementsManager
             $changed = true;
             $element->legalStatus = $prodInfo['legalStatus'];
         }
-        if (!empty($prodInfo['year']) && (($element->year != $prodInfo['year']) || $this->forceUpdateYear)) {
+        if (!empty($prodInfo['year']) && (($element->year != $prodInfo['year']) && ($this->forceUpdateYear || $justCreated))) {
             $changed = true;
             $element->year = $prodInfo['year'];
         }
@@ -335,7 +347,7 @@ class ProdsManager extends ElementsManager
                 }
             }
         }
-        if (!empty($prodInfo['youtubeId']) && (($element->youtubeId != $prodInfo['youtubeId']) || $this->forceUpdateYoutube)) {
+        if (!empty($prodInfo['youtubeId']) && (($element->youtubeId != $prodInfo['youtubeId']) && ($this->forceUpdateYoutube || $justCreated))) {
             $changed = true;
             $element->youtubeId = $prodInfo['youtubeId'];
         }
@@ -350,7 +362,7 @@ class ProdsManager extends ElementsManager
             $this->importLabelsInfo($prodInfo['labels'], $origin);
         }
         if (!empty($prodInfo['directCategories'])) {
-            if ($this->forceUpdateCategories || !$element->getConnectedCategoriesIds()) {
+            if ($this->forceUpdateCategories || $justCreated || !$element->getConnectedCategoriesIds()) {
                 foreach ($prodInfo['directCategories'] as $categoryId) {
                     $this->linksManager->linkElements($categoryId, $element->id, 'zxProdCategory');
                 }
@@ -371,7 +383,7 @@ class ProdsManager extends ElementsManager
             }
         }
 
-        if ($this->forceUpdateAuthors && !empty($prodInfo['authors'])) {
+        if (($this->forceUpdateAuthors || $justCreated) && !empty($prodInfo['authors'])) {
             if (!$element->getAuthorsInfo('prod')) {
                 foreach ($prodInfo['authors'] as $importAuthorId => $roles) {
                     if ($authorId = $this->getElementIdByImportId($importAuthorId, $origin, 'author')) {
@@ -380,7 +392,7 @@ class ProdsManager extends ElementsManager
                 }
             }
         }
-        if ($this->forceUpdateGroups && !empty($prodInfo['groups'])) {
+        if (($this->forceUpdateGroups || $justCreated) && !empty($prodInfo['groups'])) {
             if (!$element->groups) {
                 $linksIndex = $this->linksManager->getElementsLinksIndex($element->id, 'zxProdGroups', 'child');
                 foreach ($prodInfo['groups'] as $importGroupId) {
@@ -396,7 +408,7 @@ class ProdsManager extends ElementsManager
                 }
             }
         }
-        if ( $this->forceUpdatePublishers && !empty($prodInfo['publishers'])) {
+        if (($this->forceUpdatePublishers || $justCreated) && !empty($prodInfo['publishers'])) {
             if (!$element->publishers) {
                 $linksIndex = $this->linksManager->getElementsLinksIndex($element->id, 'zxProdPublishers', 'child');
                 foreach ($prodInfo['publishers'] as $importPublisherId) {
@@ -422,23 +434,21 @@ class ProdsManager extends ElementsManager
                 }
             }
         }
-        if ($this->forceUpdateCategories && !empty($prodInfo['categories'])) {
-            if (!$element->getConnectedCategoriesIds()) {
-                $linksIndex = $this->linksManager->getElementsLinksIndex($element->id, 'zxProdCategory', 'child');
-                foreach ($prodInfo['categories'] as $importCategoryId) {
-                    if ($categoryId = $this->getElementIdByImportId($importCategoryId, $origin, 'category')) {
-                        if (!isset($linksIndex[$categoryId])) {
-                            $this->linksManager->linkElements($categoryId, $element->id, 'zxProdCategory');
-                        }
-                        unset($linksIndex[$categoryId]);
+        if (!empty($prodInfo['categories'] && (!$element->getConnectedCategoriesIds() || $this->forceUpdateCategories || $justCreated))) {
+            $linksIndex = $this->linksManager->getElementsLinksIndex($element->id, 'zxProdCategory', 'child');
+            foreach ($prodInfo['categories'] as $importCategoryId) {
+                if ($categoryId = $this->getElementIdByImportId($importCategoryId, $origin, 'category')) {
+                    if (!isset($linksIndex[$categoryId])) {
+                        $this->linksManager->linkElements($categoryId, $element->id, 'zxProdCategory');
                     }
-                }
-                foreach ($linksIndex as $key => &$link) {
-                    $link->delete();
+                    unset($linksIndex[$categoryId]);
                 }
             }
+            foreach ($linksIndex as $link) {
+                $link->delete();
+            }
         }
-        if (!empty($prodInfo['images']) && $this->forceUpdateImages) {
+        if (!empty($prodInfo['images']) && ($this->forceUpdateImages || $justCreated)) {
             $this->importElementImages($element, $prodInfo['images']);
         }
 
@@ -467,8 +477,10 @@ class ProdsManager extends ElementsManager
         $this->structureManager->setNewElementLinkType($element->getConnectedFileType($propertyName));
         $existingFiles = $element->getFilesList($propertyName);
         if (!$existingFiles || $this->addImages) {
-            foreach ($images as $file) {
-                $originalFileName = basename($file);
+            $uploadsPath = $this->pathsManager->getPath('uploads');
+
+            foreach ($images as $imageUrl) {
+                $originalFileName = basename($imageUrl);
                 $fileExists = false;
                 foreach ($existingFiles as $existingFile) {
                     if ($originalFileName == urldecode($existingFile->fileName)) {
@@ -480,24 +492,26 @@ class ProdsManager extends ElementsManager
                 /**
                  * @var fileElement $fileElement
                  */
-                if (!$fileExists && $fileElement = $this->structureManager->createElement(
-                        'file',
-                        'showForm',
-                        $element->getId()
-                    )) {
-                    $destinationFolder = $element->getUploadedFilesPath($propertyName);
+                if (!$fileExists) {
+                    $filePath = $uploadsPath . $originalFileName;
+                    $this->prodsDownloader->downloadUrl($imageUrl, $filePath);
+                    if ($filePath && $fileElement = $this->structureManager->createElement(
+                            'file',
+                            'showForm',
+                            $element->getId()
+                        )) {
+                        $destinationFolder = $element->getUploadedFilesPath($propertyName);
 
-                    $info = pathinfo($file);
-                    $fileElement->title = str_replace('_', ' ', ucfirst($info['filename']));
-                    $fileElement->structureName = $fileElement->title;
-                    $fileElement->file = $fileElement->getId();
-                    $fileElement->fileName = $originalFileName;
+                        $info = pathinfo($imageUrl);
+                        $fileElement->title = str_replace('_', ' ', ucfirst($info['filename']));
+                        $fileElement->structureName = $fileElement->title;
+                        $fileElement->file = $fileElement->getId();
+                        $fileElement->fileName = $originalFileName;
+                        rename($filePath, $destinationFolder . $fileElement->file);
+                        $fileElement->persistElementData();
 
-                    copy($file, $destinationFolder . $fileElement->file);
-
-                    $fileElement->persistElementData();
-
-                    $element->appendFileToList($fileElement, $propertyName);
+                        $element->appendFileToList($fileElement, $propertyName);
+                    }
                 }
             }
         }
