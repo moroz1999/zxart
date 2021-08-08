@@ -763,7 +763,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         foreach ($this->getConnectedCategories() as $category) {
             $categoriesInfo[] = [
                 'id' => $category->id,
-                'title' => $category->title,
+                'title' => html_entity_decode($category->title, ENT_QUOTES),
                 'url' => $category->getUrl(),
             ];
         }

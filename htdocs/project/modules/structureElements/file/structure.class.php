@@ -67,6 +67,8 @@ class fileElement extends structureElement implements StructureElementUploadedFi
             $url = $controller->baseURL . 'zxscreen/type:standard/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
         } elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'img')) {
             $url = $controller->baseURL . 'zxscreen/type:gigascreen/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
+        }elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'ssx')) {
+            $url = $controller->baseURL . 'zxscreen/type:ssx/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
         } elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'mlt')) {
             $url = $controller->baseURL . 'zxscreen/type:mlt/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
         } elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'ifl')) {
@@ -113,7 +115,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
             if (!empty($info['extension'])) {
                 if (in_array(
                     strtolower($info['extension']),
-                    ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff', 'scr', 'mlt', 'ifl', 'img']
+                    ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff', 'scr', 'mlt', 'ifl', 'img', 'ssx']
                 )) {
                     return true;
                 }

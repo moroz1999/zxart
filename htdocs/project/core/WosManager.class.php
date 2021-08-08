@@ -367,7 +367,7 @@ class WosManager extends errorLogger
     {
         $this->prodsManager = $prodsManager;
         $this->prodsManager->setForceUpdateYoutube(true);
-//        $this->prodsManager->setUpdateExistingProds(true);
+        $this->prodsManager->setUpdateExistingProds(true);
 //        $this->prodsManager->setForceUpdateAuthors(true);
 //        $this->prodsManager->setForceUpdateTitles(true);
 //        $this->prodsManager->setForceUpdateCategories(true);

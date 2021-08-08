@@ -447,8 +447,9 @@ class ProdsManager extends ElementsManager
             foreach ($linksIndex as $link) {
                 $link->delete();
             }
+
         }
-        if (!empty($prodInfo['images']) && ($this->forceUpdateImages || $justCreated)) {
+        if (!empty($prodInfo['images']) && ($this->forceUpdateImages || $justCreated || !$element->getFilesList('connectedFile'))) {
             $this->importElementImages($element, $prodInfo['images']);
         }
 

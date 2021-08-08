@@ -74,7 +74,7 @@ window.PlaylistControlsPopupComponent = function() {
 		listElement = self.makeElement('div', 'playlist_controls_list', componentElement);
 		bottomElement = self.makeElement('div', 'playlist_controls_bottom', componentElement);
 		inputElement = self.makeElement('input', {
-			'className': 'playlist_controls_input input_components',
+			'className': 'playlist_controls_input input_component',
 			'type': 'text',
 			'placeholder': translationsLogics.get('playlist.add_placeholder')
 		}, bottomElement);

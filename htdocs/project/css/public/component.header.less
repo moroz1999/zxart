@@ -2,31 +2,31 @@
 /*  HEADER BLOCK
 /********************************************************/
 .header_block {
-	padding-top: 0.5em;
-	padding-bottom: 0.5em;
-	min-height: 8em;
-	position: relative;
-	background-color: @secondary_color;
-	z-index: 5;
+  padding: 0.5rem 1rem;
+  position: relative;
+  background-color: @secondary_color;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header_column {
+  margin: 0 1rem;
 }
 
 .logo_block {
-	position: relative;
-	margin-top: 1.2em;
-	margin-left: 1.9em;
-	color: inherit;
-	text-decoration: none;
-	display: block;
-	float: left;
+  position: relative;
+  margin-top: 1.2em;
+  color: inherit;
+  text-decoration: none;
+  display: block;
 }
 
 .settings_block {
-	position: absolute;
-	right: 20em;
-	top: 4em;
-	font-size: 0.8em;
-	.button {
-		padding: 0.05em 0.1em;
-		line-height: 1.1em;
-	}
+  font-size: 0.8em;
+
+  .button {
+    padding: 0.05em 0.1em;
+    line-height: 1.1em;
+  }
 }
