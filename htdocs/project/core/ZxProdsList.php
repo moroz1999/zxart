@@ -358,7 +358,10 @@ trait ZxProdsList
                     ->orderBy('title', 'asc')
                     ->where('languageId', '=', $languageId)
                     ->get();
-
+                $group = [
+                    'title' => '',
+                    'values' => []
+                ];
                 foreach ($countries as $country) {
                     $group['values'][] = [
                         'value' => $country['id'],

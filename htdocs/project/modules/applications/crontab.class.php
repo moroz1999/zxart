@@ -41,24 +41,30 @@ class crontabApplication extends controllerApplication
 
             $mp3ConversionManager = $this->getService('mp3ConversionManager');
             $mp3ConversionManager->convertQueueItems();
-
+            $counter = 0;
+            $skipIds = [];
+            /**
+             * @var \Illuminate\Database\Connection $db
+             */
             $db = $this->getService('db');
-            $query = $db->table('module_zxrelease')
-                ->select('id')
-                ->where('parsed', '=', 0)
-                ->where('fileName', '!=', '')
-                ->limit(10000)
-                ->orderBy('id');
-            if ($records = $query->get()) {
-                $counter = 0;
-                //                $records = [['id'=>105567]];
-                foreach ($records as $record) {
+            while ($counter++ <= 3) {
+                $query = $db->table('module_zxrelease')
+                    ->select('id')
+                    ->where('parsed', '=', 0)
+                    ->where('fileName', '!=', '')
+                    ->whereNotIn('id', $skipIds)
+                    ->limit(1)
+                    ->orderBy('id');
+                if ($record = $query->first()) {
                     echo $counter . ' ';
                     echo $record['id'] . ' ';
                     /**
                      * @var zxReleaseElement $releaseElement
                      */
                     if ($releaseElement = $structureManager->getElementById($record['id'])) {
+                        $releaseElement->parsed = 1;
+                        $releaseElement->persistElementData();
+
                         echo $releaseElement->id . ' ';
                         echo $releaseElement->title . ' ';
                         /**
@@ -76,13 +82,13 @@ class crontabApplication extends controllerApplication
                                 $releaseElement->releaseFormat = $files;
                             }
                         }
-                        $releaseElement->parsed = 1;
                         $releaseElement->persistElementData();
+                    } else {
+                        echo 'skipped ';
+                        $skipIds[] = $record['id'];
                     }
                     echo '<br />';
                     flush();
-
-                    $counter++;
                 }
             }
         }

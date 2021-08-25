@@ -20,6 +20,7 @@ class ApiQueryResultResolver implements DependencyInjectionContextInterface
         } else {
             $exportTypeQuery = null;
         }
+        $resolverClass = null;
         $resolvers = [
             'zxPicture' => PicturesManager::class,
             'zxProd' => ProdsManager::class,

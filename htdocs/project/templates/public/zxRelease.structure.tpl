@@ -9,7 +9,6 @@
 				{else}
 					{$item.fileName}
 				{/if}
-
 			{/if}
 		</td>
 		<td>{$item.size}</td>
