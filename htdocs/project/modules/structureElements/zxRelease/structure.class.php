@@ -48,7 +48,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     protected $imagesUrls;
     protected $prodElement;
     protected static $textExtensions = [
-        't', 'w', 'txt', 'asm', 'a80', 'bbs', 'me', 'd', 'nfo', 'nf0', 'diz'
+        't', 'w', 'txt', 'asm', 'a80', 'bbs', 'me', 'd', 'nfo', 'nf0', 'diz', 'a',
     ];
 
     protected function setModuleStructure(&$moduleStructure)
