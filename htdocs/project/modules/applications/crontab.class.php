@@ -47,7 +47,7 @@ class crontabApplication extends controllerApplication
              * @var \Illuminate\Database\Connection $db
              */
             $db = $this->getService('db');
-            while ($counter++ <= 3) {
+            while ($counter++ <= 5000) {
                 $query = $db->table('module_zxrelease')
                     ->select('id')
                     ->where('parsed', '=', 0)

@@ -622,20 +622,21 @@
         },
         {
             "name": "moroz1999/gif-creator",
-            "version": "1.1.1",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/moroz1999/GifCreator.git",
-                "reference": "c8128b0382cf0357f5746ae5aaef8e4aa40363e8"
+                "reference": "c412e59f222569a174a1240fe8aa6a0f5c74cb82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/moroz1999/GifCreator/zipball/c8128b0382cf0357f5746ae5aaef8e4aa40363e8",
-                "reference": "c8128b0382cf0357f5746ae5aaef8e4aa40363e8",
+                "url": "https://api.github.com/repos/moroz1999/GifCreator/zipball/c412e59f222569a174a1240fe8aa6a0f5c74cb82",
+                "reference": "c412e59f222569a174a1240fe8aa6a0f5c74cb82",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "ext-gd": "*",
+                "php": "^8.0"
             },
             "type": "library",
             "autoload": {
@@ -664,9 +665,9 @@
                 "php"
             ],
             "support": {
-                "source": "https://github.com/moroz1999/GifCreator/tree/master"
+                "source": "https://github.com/moroz1999/GifCreator/tree/1.2.0"
             },
-            "time": "2017-06-21T19:23:03+00:00"
+            "time": "2021-09-18T18:40:11+00:00"
         },
         {
             "name": "moroz1999/image-process",

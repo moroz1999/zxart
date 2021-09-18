@@ -1,9 +1,9 @@
 <?php return [
-	'enabledPlugins' => [
-	        'cms' => 'cms/',
-	        'homepage' => 'homepage/',
-		'project' => 'project/',
-	],
+    'enabledPlugins' => [
+        'cms' => 'cms/',
+        'homepage' => 'homepage/',
+        'project' => 'project/',
+    ],
     'publicSessionLifeTime' => 3600,
     'adminSessionLifeTime' => 86400,
     'defaultSessionLifeTime' => 1440,
@@ -12,7 +12,7 @@
     'googleAnalyticsDomain' => 'zxart.ee',
     'googleAnalyticsId' => 'UA-3287749-14',
     'pageAmountProducts' => 10,
-    'availablePageAmountProducts' => [20,30,50],
+    'availablePageAmountProducts' => [20, 30, 50],
     'timeZone' => 'Europe/Tallinn',
     'errorReporting' => 'E_ALL | E_STRICT',
     'protocol' => 'http://',

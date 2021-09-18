@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Connection;
 
-class ZxParsingManager
+class ZxParsingManager extends errorLogger
 {
     const table = 'files_registry';
     protected $index = [];
@@ -40,6 +40,9 @@ class ZxParsingManager
      */
     protected function saveFileStructureLevel($structure, $elementId, $parentId = null)
     {
+        if (!is_array($structure)){
+            $this->logError("File parsing problem: $elementId, $parentId");
+        }
         foreach ($structure as $item) {
             $info = [
                 'type' => $item->getType(),

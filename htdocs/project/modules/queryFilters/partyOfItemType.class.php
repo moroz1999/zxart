@@ -11,7 +11,7 @@ class partyOfItemTypeQueryFilter extends QueryFilter
     {
         if (is_array($argument)) {
             $query->whereIn(
-                'structure_links.id',
+                'id',
                 function ($query) use ($argument) {
                     $query->select('structure_links.parentStructureId')
                         ->from('structure_links')
@@ -20,7 +20,7 @@ class partyOfItemTypeQueryFilter extends QueryFilter
             );
         } else {
             $query->whereIn(
-                'structure_links.id',
+                'id',
                 function ($query) use ($argument) {
                     $query->select('structure_links.parentStructureId')
                         ->from('structure_links')
