@@ -4,7 +4,7 @@ class PouetManager extends errorLogger
 {
     protected $timeLimit = 60 * 29;
     protected $maxTime;
-    protected $maxCounter = 100;
+    protected $maxCounter = 1000;
     protected $maxId = 0;
     protected $debugEntry;
     protected $report = [];
@@ -44,6 +44,7 @@ class PouetManager extends errorLogger
         'slideshow' => 315121,
         'votedisk' => 92174,
         'wild' => 92159,
+        'bbstro' => 364978,
     ];
     protected $platforms = [
         'ZX Spectrum' => 'zx48',
@@ -187,13 +188,17 @@ class PouetManager extends errorLogger
         'english language help' => 'localization',
         'choreography' => 'organizing',
         'organisation' => 'organizing',
+        'photo' => 'organizing',
         'photos' => 'organizing',
         'fixing' => 'adaptation',
         'remixing' => 'adaptation',
         'game port' => 'adaptation',
+        'adaptation' => 'adaptation',
         'everything' => 'code',
         'beer director' => 'support',
         'code optimization' => 'code',
+        'maintainer' => 'support',
+        'music (original)' => 'music',
     ];
 
     protected $compos = [
@@ -557,6 +562,12 @@ class PouetManager extends errorLogger
             $verboseLog = stream_get_contents($verbose);
         }
         return $string;
+    }
+
+    protected function logError($message, $level = null, $throwException = true)
+    {
+        $this->markProgress($message);
+        parent::logError($message, $level, $throwException);
     }
 
     protected function markProgress($text)

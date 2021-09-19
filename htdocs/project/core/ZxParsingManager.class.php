@@ -40,9 +40,6 @@ class ZxParsingManager extends errorLogger
      */
     protected function saveFileStructureLevel($structure, $elementId, $parentId = null)
     {
-        if (!is_array($structure)){
-            $this->logError("File parsing problem: $elementId, $parentId");
-        }
         foreach ($structure as $item) {
             $info = [
                 'type' => $item->getType(),
@@ -58,7 +55,9 @@ class ZxParsingManager extends errorLogger
                 ->where('elementId', '=', $elementId)
                 ->insertGetId($info)
             ) {
-                $this->saveFileStructureLevel($item->getItems(), $elementId, $newParentId);
+                if ($subStructure = $item->getItems()) {
+                    $this->saveFileStructureLevel($subStructure, $elementId, $newParentId);
+                }
             }
         }
     }
