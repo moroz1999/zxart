@@ -4,10 +4,8 @@ class PouetManager extends errorLogger
 {
     protected $timeLimit = 60 * 29;
     protected $maxTime;
-    protected $maxCounter = 1000;
-    protected $maxId = 88664;
-    protected $minCounter = 0;
-//    protected $debugEntry = 6148;
+    protected $maxCounter = 100;
+    protected $maxId = 0;
     protected $debugEntry;
     protected $report = [];
     protected $ignore = [];
@@ -268,7 +266,6 @@ class PouetManager extends errorLogger
      */
     protected $countriesManager;
     protected $origin = 'pouet';
-    protected $rootUrl = 'http://api.pouet.net/v1/prod/';
 
     /**
      * @param \Illuminate\Database\Connection $db
@@ -318,28 +315,16 @@ class PouetManager extends errorLogger
     public function importAll()
     {
         $this->maxTime = time() + $this->timeLimit;
-        $reportFile = ROOT_PATH . 'pouet.json';
 
-        if (is_file($reportFile)) {
-            $this->report = json_decode(file_get_contents($reportFile), true);
-        }
         if (!empty($this->debugEntry)) {
             $id = $this->debugEntry;
             $this->maxCounter = 1;
         } else {
-            $id = 1;
+            $id = $this->loadMaxImportedId() + 1;
+            $this->maxId = $this->loadMaxPossibleId();
         }
-
-        do {
-            if (isset($this->report[$id])) {
-                if ($this->report[$id] == 'success'
-                    || $this->report[$id] == 'notexists'
-                    || $this->report[$id] == 'skipped'
-                ) {
-                    $id++;
-                    continue;
-                }
-            }
+        while ((!$this->maxCounter || ($this->counter < $this->maxCounter)) && (time() <= $this->maxTime) && ($id <= $this->maxId)) {
+            $this->maxCounter--;
             if ($prodData = $this->download($id)) {
                 $platformSupported = false;
                 foreach ($prodData['platforms'] as $platform) {
@@ -349,10 +334,6 @@ class PouetManager extends errorLogger
                 }
                 if ($platformSupported) {
                     $this->counter++;
-
-                    if ($this->counter < $this->minCounter) {
-                        continue;
-                    }
 
                     $prodInfo = [
                         'title' => $prodData['name'],
@@ -515,15 +496,13 @@ class PouetManager extends errorLogger
                 }
             }
             $id++;
-//            usleep(100);
-
-        } while ((!$this->maxCounter || ($this->counter < $this->maxCounter)) && (time() <= $this->maxTime) && ($id <= $this->maxId));
+        }
     }
 
     protected function download($id)
     {
         $prodData = false;
-        $link = $this->rootUrl . '?id=' . $id;
+        $link = 'http://api.pouet.net/v1/prod/?id=' . $id;
         $string = $this->attemptDownload($link);
         if (!$string) {
             $this->markProgress('prod ' . $id . ' download attempt 2');
@@ -590,14 +569,51 @@ class PouetManager extends errorLogger
         $endTime = microtime(true);
         echo $text . ' ' . sprintf("%.2f", $endTime - $previousTime) . '<br/>';
         flush();
-        file_put_contents(ROOT_PATH . 'pouetimport.log', date('H:i') . ' ' . $text . "\n", FILE_APPEND);
         $previousTime = $endTime;
     }
 
     protected function updateReport($id, $status)
     {
-        $this->report[$id] = $status;
-        $reportFile = ROOT_PATH . 'pouet.json';
-        file_put_contents($reportFile, json_encode($this->report));
+        $this->db->table('import_pouet')->insert([
+            ['id' => $id, 'status' => $status]
+        ]);
+    }
+
+    protected function loadMaxImportedId()
+    {
+        if ($record = $this->db->table('import_pouet')
+            ->whereIn('status', ['notexists', 'success', 'skipped'])
+            ->orderBy('id', 'desc')
+            ->limit(1)
+            ->value('id')) {
+            return $record;
+        }
+    }
+
+    protected function loadMaxPossibleId()
+    {
+        $link = 'https://api.pouet.net/v1/front-page/latest-added/';
+        $string = $this->attemptDownload($link);
+        if (!$string) {
+            $this->markProgress('Max possible id download attempt 2');
+
+            sleep(3);
+            $string = $this->attemptDownload($link);
+        }
+        if (!$string) {
+            $this->markProgress('Max possible id download attempt 3');
+
+            sleep(20);
+            $string = $this->attemptDownload($link);
+        }
+        if ($string) {
+            if ($json = json_decode($string, true)) {
+                if (!empty($json['success']) && !empty($json['prods']) && !empty($json['prods'][0])) {
+                    $prodData = $json['prods'][0];
+                    return $prodData['id'];
+                }
+            }
+        }
+        return null;
     }
 }

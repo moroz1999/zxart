@@ -16,6 +16,7 @@ class aaaApplication extends controllerApplication
 
     public function execute($controller)
     {
+        exit;
         /**
          * @var Cache $cache
          */

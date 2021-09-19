@@ -1,0 +1,1 @@
+CREATE TABLE `engine_import_pouet` ( `id` INT NOT NULL , `status` VARCHAR(20) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB; 
