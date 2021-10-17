@@ -8,6 +8,7 @@
     "moroz1999/zx-image": "*",
     "moroz1999/zx-files": "*",
     "ext-json": "*",
-    "ext-curl": "*"
+    "ext-curl": "*",
+    "ext-gd": "*"
   }
 }

@@ -42,7 +42,7 @@
 			<td class="form_field">
 				<select class="select_multiple" name="{$formNames.language}[]" multiple="multiple">
 					{foreach from=$element->getLanguageCodes() item=languageItem}
-						<option value='{$languageItem}' {if in_array($languageItem, $formData.language)}selected='selected'{/if}>{translations name="language.item_{$languageItem}"}</option>
+						<option value='{$languageItem}' {if $formData.language && in_array($languageItem, $formData.language)}selected='selected'{/if}>{translations name="language.item_{$languageItem}"}</option>
 					{/foreach}
 				</select>
 				{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="language"}

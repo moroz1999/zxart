@@ -145,6 +145,7 @@ class PouetManager extends errorLogger
         'graphics (logo)' => 'logo',
         'logos' => 'logo',
         'logo' => 'logo',
+        'original logo' => 'logo',
         'other' => 'unknown',
         'code (additional)' => 'code',
         'basic' => 'code',

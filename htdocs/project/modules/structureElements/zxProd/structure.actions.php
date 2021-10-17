@@ -23,3 +23,4 @@ $moduleActions[] = 'showJoinForm';
 $moduleActions[] = 'join';
 $moduleActions[] = 'showSplitForm';
 $moduleActions[] = 'split';
+$moduleActions[] = 'resize';
