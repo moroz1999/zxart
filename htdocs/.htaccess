@@ -9,6 +9,7 @@
 	RewriteCond %{REQUEST_URI} !^/crontab
 	RewriteCond %{REQUEST_URI} !^/wos
 	RewriteCond %{REQUEST_URI} !^/pouet
+	RewriteCond %{REQUEST_URI} !^/tslabs
 	RewriteRule ^(.*)$ http://zxart.ee/$1 [L,R=301,NC]
 
 	#301 redirect to ensure there is no WWW in query domain

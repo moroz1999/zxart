@@ -17,6 +17,16 @@ class ProdsManager extends ElementsManager
     protected $forceUpdatePublishers = false;
     protected $updateExistingProds = false;
     protected $addImages = false;
+    protected $resizeImages = false;
+
+    /**
+     * @param bool $resizeImages
+     */
+    public function setResizeImages(bool $resizeImages): void
+    {
+        $this->resizeImages = $resizeImages;
+    }
+
     protected $columnRelations = [];
     protected $releaseColumnRelations = [];
     /**
@@ -451,6 +461,9 @@ class ProdsManager extends ElementsManager
         }
         if (!empty($prodInfo['images']) && ($this->forceUpdateImages || $justCreated || !$element->getFilesList('connectedFile'))) {
             $this->importElementImages($element, $prodInfo['images']);
+            if ($this->resizeImages) {
+                $element->resizeImages();
+            }
         }
 
         if (!empty($prodInfo['maps'])) {
@@ -545,20 +558,19 @@ class ProdsManager extends ElementsManager
 
     protected function findProdBestMatch($prodInfo)
     {
-        $query = $this->db->table('module_zxprod')
-            ->where(
-                function ($query) use ($prodInfo) {
-                    $query->orWhere('title', '=', htmlentities($prodInfo['title'], ENT_QUOTES));
-                    $query->orWhere('title', '=', $prodInfo['title']);
-                }
-            );
         if (!empty($prodInfo['year'])) {
+            $query = $this->db->table('module_zxprod')
+                ->where(
+                    function ($query) use ($prodInfo) {
+                        $query->orWhere('title', '=', htmlentities($prodInfo['title'], ENT_QUOTES));
+                        $query->orWhere('title', '=', $prodInfo['title']);
+                    }
+                );
             $query->where('year', '=', $prodInfo['year']);
+            if ($id = $query->value('id')) {
+                return $this->structureManager->getElementById($id);
+            }
         }
-        if ($id = $query->value('id')) {
-            return $this->structureManager->getElementById($id);
-        }
-
         return false;
     }
 

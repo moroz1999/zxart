@@ -793,4 +793,30 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         }
         return json_encode($data);
     }
+
+    public function resizeImages()
+    {
+        $pathsManager = $this->getService('PathsManager');
+        $configManager = $this->getService('ConfigManager');
+        if ($images = $this->getFilesList('connectedFile')) {
+            foreach ($images as $image) {
+                $filePath = $this->getUploadedFilesPath() . $image->id;
+                if (is_file($filePath)) {
+                    $info = getimagesize($filePath);
+                    $width = $info[0];
+                    if ($width > 500) {
+                        $imageProcess = new \ImageProcess\ImageProcess($pathsManager->getPath('imagesCache'));
+                        $imageProcess->setDefaultCachePermissions($configManager->get('paths.defaultCachePermissions'));
+                        $imageProcess->registerImage('canvas', $filePath);
+                        $imageProcess->registerFilter(
+                            'aspectedResize',
+                            'width=' . $width / 2 . ', interpolation=' . IMG_NEAREST_NEIGHBOUR
+                        );
+                        $imageProcess->registerExport('canvas', null, $filePath);
+                        $imageProcess->executeProcess();
+                    }
+                }
+            }
+        }
+    }
 }

@@ -9,6 +9,7 @@
     "moroz1999/zx-files": "*",
     "ext-json": "*",
     "ext-curl": "*",
-    "ext-gd": "*"
+    "ext-gd": "*",
+    "ext-dom": "*"
   }
 }
