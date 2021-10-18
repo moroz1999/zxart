@@ -69,6 +69,7 @@ class ApiQueryResultResolver implements DependencyInjectionContextInterface
                 $exportedTypeIdList[] = $entity->id;
             }
         } else {
+            $queryResult[$exportType] = [];
             $structureManager = $this->getService('structureManager');
             if ($records = $exportTypeQuery->get()) {
                 foreach ($records as $record) {
