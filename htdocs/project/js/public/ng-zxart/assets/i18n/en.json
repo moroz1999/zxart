@@ -5,7 +5,8 @@
   },
   "prods-list": {
     "presets": {
-      "recent": "Best recent releases",
+      "year": "This year",
+      "recent": "Last 3 years",
       "top": "All time top",
       "updates": "Lately uploaded",
       "next": "ZX Spectrum Next",

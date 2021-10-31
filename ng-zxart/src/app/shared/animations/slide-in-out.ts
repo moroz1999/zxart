@@ -18,8 +18,8 @@ const inToken = {
   paddingTop: '*',
   paddingBottom: '*',
 };
-const inEase = '200ms ease-in-out';
-const outEase = '100ms ease-in-out';
+const inEase = '300ms ease-in-out';
+const outEase = '120ms ease-in-out';
 
 export const SlideInOut = [
   transition(':enter', [

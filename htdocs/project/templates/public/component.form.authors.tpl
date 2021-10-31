@@ -50,7 +50,7 @@
                             multiple="multiple">
                         {foreach $element->getAuthorRoles() as $role}
                             <option value="{$role}"
-                                    {if in_array($role, $info.roles)}selected{/if}>{translations name="$translationsGroup.role_$role"}</option>
+                                    {if $info.roles && in_array($role, $info.roles)}selected{/if}>{translations name="$translationsGroup.role_$role"}</option>
                         {/foreach}
                     </select>
                 </div>

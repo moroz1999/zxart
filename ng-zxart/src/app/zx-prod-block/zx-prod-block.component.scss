@@ -105,21 +105,35 @@ $fixedHeight: 192px;
 
 .zx-prod-hardware {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 2px;
+  right: 3px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
 }
 
+.zx-prod-hardware-opaque {
+  .zx-prod-hardware-item {
+    opacity: 0.5;
+  }
+
+  .zx-prod-hardware-item:hover {
+    opacity: 1;
+  }
+}
+
 .zx-prod-hardware-item {
+  position: relative;
   display: block;
   font-size: $font-xs;
   padding: $padding-xxs $padding-xs;
-  border-radius: 2px;
-  background: $white;
-  color: $text-color;
+  border-radius: 7px;
+  background: $gray8;
+  color: $text-white-color;
   margin-bottom: $padding-xs;
+  border: $gray7 1px solid;
+  transition: opacity 250ms ease-in-out;
+  opacity: 1;
 }
 
 

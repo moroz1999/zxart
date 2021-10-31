@@ -2,63 +2,58 @@
 /*  COMPONENT
 /********************************************************/
 .ajaxselect_container {
-    display: inline-block;
+  display: inline-block;
 
-    .ajaxselect_item:last-of-type {
-        margin-bottom: 1em;
-    }
+  .ajaxselect_item:last-of-type {
+    margin-bottom: 1em;
+  }
 
-    .icon_search {
-        color: #000000;
-        position: absolute;
-        top: 0;
-        right: @10pt;
-    }
+  .icon_search {
+    color: #000000;
+    position: absolute;
+    top: 0;
+    right: @10pt;
+  }
 }
 
 .ajaxselect_searchinput {
-    .input_component();
-    width: 100%;
+  .input_component();
+  width: 100%;
 }
 
 .ajaxselect_item {
-    border-bottom: 1px solid #dadada;
-    font-size: 11px;
-    font-weight: bold;
-    line-height: 24px;
-    margin: 0 8px;
-    white-space: nowrap;
-    overflow: hidden;
+  border-bottom: 1px solid #dadada;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 24px;
+  margin: 0 8px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .ajaxselect_item:after {
-    content: "";
-    border-bottom: 1px solid #ffffff;
-    display: block;
+  content: "";
+  border-bottom: 1px solid #ffffff;
+  display: block;
 }
 
 .ajaxselect_item_description {
 }
 
+.ajaxselect_item_remover,
 .ajaxitemsearch_result_remover {
-    .icon;
-    .icon_delete;
+  cursor: pointer;
+  float: right;
+  margin-top: 3px;
+  height: 19px;
+  width: 19px;
+  .icon;
+  .icon_delete;
 }
-.ajaxselect_item_remover, .ajaxitemsearch_result_remover {
-    cursor: pointer;
-    float: right;
-    margin-top: 3px;
-    height: 19px;
-    width: 19px;
-    background-image: url(getImageUrl("icons/remove.png"));
-    background-position: center;
-    background-size: contain;
-}
-
 
 .ajaxsearch_results_item .icon {
-    margin-right: .5em;
-    width: 16px;
-    height: 16px;
-    display: inline-block;
+  margin-right: .5em;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
 }

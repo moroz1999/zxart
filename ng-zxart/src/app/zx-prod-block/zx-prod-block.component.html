@@ -62,6 +62,7 @@
     <span
       *ngIf="model.hardwareInfo.length > 0"
       class="zx-prod-hardware"
+      [ngClass]="{'zx-prod-hardware-opaque':displayScreenshots}"
     >
       <span
         *ngFor="let item of model.hardwareInfo"
