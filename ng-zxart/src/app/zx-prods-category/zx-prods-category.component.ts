@@ -226,6 +226,25 @@ export class ZxProdsCategoryComponent implements OnInit {
     this.fetchModel();
   }
 
+  yearPresetActive(): boolean {
+    if (this.model?.yearsSelector && this.model.yearsSelector[0]) {
+      const currentYear = new Date().getFullYear();
+      const selector = this.model.yearsSelector[0];
+      const lastValue = selector.values[selector.values.length - 1];
+      if (lastValue.value.toString() === currentYear.toString()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  yearPresetClicked(): void {
+    this.resetSelectors();
+    const currentYear = new Date().getFullYear();
+    this.years = [currentYear.toString()];
+    this.fetchModel();
+  }
+
   topPresetClicked(): void {
     this.resetSelectors();
     this.fetchModel();

@@ -1,0 +1,11 @@
+svg-icon {
+  display: inline-flex;
+  align-items: center;
+
+  svg {
+    display: block;
+    max-height: 100%;
+    width: 100%;
+    fill: currentColor;
+  }
+}

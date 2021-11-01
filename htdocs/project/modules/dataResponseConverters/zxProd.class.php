@@ -59,6 +59,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             "votes" => 'votes',
             "userVote" => 'getUserVote',
             "votePercent" => 'getVotePercent',
+            "denyVoting" => 'denyVoting',
         ];
     }
 
@@ -104,7 +105,6 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 'hardwareInfo',
                 "votes",
                 "userVote",
-                "votePercent",
                 "year",
                 "partyPlace",
                 "partyInfo",
@@ -113,6 +113,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 "groupsInfo",
                 "publishersInfo",
                 "youtubeId",
+                "denyVoting",
             ],
             'search' => [
                 'id',

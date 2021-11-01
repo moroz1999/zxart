@@ -30,5 +30,6 @@ export interface ZxProdDto extends StructureElementDto {
   readonly partyInfo?: ZxProdConnectedElementDto;
   readonly partyPlace?: number;
   readonly votes: number;
-  readonly votePercent: number;
+  readonly userVote: number;
+  readonly denyVoting?: boolean;
 }

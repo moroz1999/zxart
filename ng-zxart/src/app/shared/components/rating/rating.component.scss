@@ -1,0 +1,46 @@
+@import "shared/svg-icons";
+@import "shared/vars";
+@import "shared/breakpoints";
+
+:host {
+  display: block;
+  position: relative;
+  --star-size: 1rem;
+  width: calc(var(--star-size) * 5);
+  @include media-breakpoint-down(md) {
+    --star-size: 2rem;
+  }
+}
+
+.bg-rating {
+  white-space: nowrap;
+
+  .star {
+    color: $gray6;
+    cursor: pointer;
+
+    &.voted {
+      stroke-width: 40;
+      stroke: $red;
+    }
+  }
+}
+
+.star {
+  width: var(--star-size);
+  height: var(--star-size);
+}
+
+.interactive {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: width 100ms ease-out;
+
+  .star {
+    color: $yellow;
+  }
+}

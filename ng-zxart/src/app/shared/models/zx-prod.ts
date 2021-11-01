@@ -21,7 +21,8 @@ export class ZxProd extends StructureElement {
   public partyInfo?: ZxProdConnectedElementDto;
   public partyPlace: number = 0;
   public votes: number;
-  public votePercent: number;
+  public userVote: number;
+  public denyVoting: boolean;
   public loadingImageUrl?: string;
 
   constructor(data: ZxProdDto) {
@@ -64,7 +65,8 @@ export class ZxProd extends StructureElement {
       this.inlaysUrls = this.inlaysUrls.map(image => image.replace('http://localhost', 'https://zxart.ee'));
     }
     this.votes = data.votes;
-    this.votePercent = data.votePercent;
+    this.userVote = data.userVote;
+    this.denyVoting = data.denyVoting ?? false;
 
     if (this.imagesUrls.length > 0) {
       this.loadingImageUrl = this.imagesUrls.splice(0, 1)[0];

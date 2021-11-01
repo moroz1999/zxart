@@ -19,7 +19,6 @@ export abstract class ZxProdComponent {
     this.hardwareChanged.emit([hardware]);
   }
 
-
   yearClicked(event: Event, year: string): void {
     event.preventDefault();
     this.yearChanged.emit([year]);
@@ -28,5 +27,9 @@ export abstract class ZxProdComponent {
   languageClicked(event: Event, language: string): void {
     event.preventDefault();
     this.languageChanged.emit([language]);
+  }
+
+  vote(rating: number) {
+
   }
 }

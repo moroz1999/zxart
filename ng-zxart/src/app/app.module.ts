@@ -31,6 +31,7 @@ import {CategoriesTreeSelectorComponent} from './zx-prods-category/components/ca
 import {ZxProdRowComponent} from './zx-prod-row/zx-prod-row.component';
 import {ZxProdsListComponent} from './zx-prods-list/zx-prods-list.component';
 import {AppComponent} from './app.component';
+import { RatingComponent } from './shared/components/rating/rating.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(httpClient, `${environment.assetsUrl}i18n/`);
@@ -50,6 +51,7 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
     CategoriesTreeSelectorComponent,
     ZxProdRowComponent,
     ZxProdsListComponent,
+    RatingComponent,
   ],
   imports: [
     CommonModule,

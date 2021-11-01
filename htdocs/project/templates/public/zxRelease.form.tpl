@@ -165,7 +165,7 @@
 
 		<tr>
 			<td colspan="2">
-				<h3>{translations name='zxprod.inlays'}:</h3>
+				<h3>{translations name='zxrelease.inlays'}:</h3>
 			</td>
 		</tr>
 		{include file=$theme->template('component.form.files.tpl') element=$element propertyName='inlayFilesSelector' imagePreset='prodImageSmall'}

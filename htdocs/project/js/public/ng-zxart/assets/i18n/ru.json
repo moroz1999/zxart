@@ -5,13 +5,15 @@
   },
   "prods-list": {
     "presets": {
-      "recent": "Лучшие недавние релизы",
+      "year": "Лучшее за год",
+      "recent": "Лучшее за три года",
       "top": "Топ за всё время",
       "updates": "Последние закачанные",
       "next": "ZX Spectrum Next",
       "evolution": "ZX Evolution",
       "zx81": "ZX80/ZX81",
-      "samcoupe": "SAM Coupé"
+      "samcoupe": "SAM Coupé",
+      "gs": "General Sound"
     },
     "filters": {
       "reset": "Сбросить",

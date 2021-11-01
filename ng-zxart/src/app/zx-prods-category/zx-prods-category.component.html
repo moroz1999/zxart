@@ -4,6 +4,17 @@
     <button
       mat-raised-button
       color="primary"
+      (click)="updatesPresetClicked()"
+    >{{ 'prods-list.presets.updates' | translate}}</button>
+    <button
+      mat-raised-button
+      color="primary"
+      *ngIf="yearPresetActive()"
+      (click)="yearPresetClicked()"
+    >{{ 'prods-list.presets.year' | translate}}</button>
+    <button
+      mat-raised-button
+      color="primary"
       *ngIf="recentPresetActive()"
       (click)="recentPresetClicked()"
     >{{ 'prods-list.presets.recent' | translate}}</button>
@@ -12,11 +23,6 @@
       color="primary"
       (click)="topPresetClicked()"
     >{{ 'prods-list.presets.top' | translate}}</button>
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="updatesPresetClicked()"
-    >{{ 'prods-list.presets.updates' | translate}}</button>
     <button
       mat-raised-button
       color="primary"
@@ -41,6 +47,12 @@
       *ngIf="hwPresetActive(['samcoupe'])"
       (click)="hwPresetClicked(['samcoupe'])"
     >{{ 'prods-list.presets.samcoupe' | translate}}</button>
+    <button
+      mat-raised-button
+      color="primary"
+      *ngIf="hwPresetActive(['gs'])"
+      (click)="hwPresetClicked(['gs'])"
+    >{{ 'prods-list.presets.gs' | translate}}</button>
   </div>
   <div class="zx-prods-list-content">
     <div

@@ -5,13 +5,15 @@
   },
   "prods-list": {
     "presets": {
-      "recent": "Mejores lanzamientos recientes",
+      "year": "Este año",
+      "recent": "Últimos 3 años",
       "top": "Top de todos los tiempos",
       "updates": "Subido últimamente",
       "next": "ZX Spectrum Next",
       "evolution": "ZX Evolution",
       "zx81": "ZX80/ZX81",
-      "samcoupe": "SAM Coupé"
+      "samcoupe": "SAM Coupé",
+      "gs": "General Sound"
     },
     "filters": {
       "reset": "Reset",

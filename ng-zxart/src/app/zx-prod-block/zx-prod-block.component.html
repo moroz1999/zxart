@@ -69,13 +69,19 @@
         (click)="hardwareClicked($event, item.id)"
         class="zx-prod-hardware-item"
       >{{item.title}}</span>
-  </span>
+    </span>
   </a>
   <div class="zx-prod-bottom">
     <div class="zx-prod-year"
          (click)="yearClicked($event, model.year)"
     >{{model.year}}</div>
     <a class="zx-prod-title" href="{{ model.url }}">{{ model.title }}</a>
+    <app-rating
+      *ngIf="!model.denyVoting"
+      [overallRating]="model.votes"
+      [userRating]="model.userVote"
+      (vote)="vote($event)"
+    ></app-rating>
     <div *ngIf="model.groupsInfo.length">
       <ng-container *ngFor="let group of model.groupsInfo; last as last"><a [href]="group.url">{{group.title}}</a><span
         *ngIf="!last">, </span></ng-container>
@@ -103,7 +109,7 @@
           <ng-container *ngFor="let category of model.categoriesInfo; last as last">
             <span
               class="zx-prod-category"
-               (click)="categoryClicked($event, category.id)"
+              (click)="categoryClicked($event, category.id)"
             >{{category.title}}</span><span *ngIf="!last">, </span></ng-container>
         </div>
       </div>
@@ -112,8 +118,8 @@
         <div class="zx-prod-row-value">
           <ng-container *ngFor="let language of model.languagesInfo; last as last">
             <span
-               class="zx-prod-language"
-               (click)="languageClicked($event, language.id)"
+              class="zx-prod-language"
+              (click)="languageClicked($event, language.id)"
             >{{language.title}}</span><span *ngIf="!last">, </span>
           </ng-container>
         </div>
@@ -126,15 +132,15 @@
         </div>
       </div>
       <div class="zx-prod-buttons">
-<!--        <button-->
-<!--          color="primary"-->
-<!--          mat-raised-button-->
-<!--        >{{"zx-prod.play" | translate}}</button>-->
-<!--        <button-->
-<!--          color="primary"-->
-<!--          *ngIf="model.youtubeId"-->
-<!--          mat-raised-button-->
-<!--        >{{"zx-prod.video" | translate}}</button>-->
+        <!--        <button-->
+        <!--          color="primary"-->
+        <!--          mat-raised-button-->
+        <!--        >{{"zx-prod.play" | translate}}</button>-->
+        <!--        <button-->
+        <!--          color="primary"-->
+        <!--          *ngIf="model.youtubeId"-->
+        <!--          mat-raised-button-->
+        <!--        >{{"zx-prod.video" | translate}}</button>-->
         <a
           [href]="model.url"
           mat-raised-button
