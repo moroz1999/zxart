@@ -96,22 +96,26 @@ export class ZxProdsCategoryComponent implements OnInit {
     if (this.countries.length) {
       parameters.countries = this.countries.join(',');
     }
-
-    let reqUrl = this.model ? this.model.url : '';
-    for (const [key, value] of Object.entries(parameters)) {
-      reqUrl += '/' + key + ':' + value;
-    }
-    this.urlBase = reqUrl;
+    const baseParameters = {...parameters};
     if (this.currentPage > 1) {
       parameters.page = this.currentPage;
-      reqUrl += '/page:' + this.currentPage;
     }
-
     this.elementsService.getModel<ZxProdCategoryDto, ZxProdCategory>(this.elementId, ZxProdCategory, parameters, 'zxProdsList').subscribe(
       model => {
         this.model = model;
+        let reqUrl = this.model.url;
+        if (reqUrl.slice(-1) === '/') {
+          reqUrl = reqUrl.slice(0, -1);
+        }
+        for (const [key, value] of Object.entries(baseParameters)) {
+          reqUrl += '/' + key + ':' + value;
+        }
+        this.urlBase = reqUrl;
         this.pagesAmount = Math.ceil(this.model.prodsAmount / this.elementsOnPage);
         if (environment.production) {
+          if (this.currentPage > 1) {
+            reqUrl += '/page:' + this.currentPage;
+          }
           window.history.pushState({parameters, elementId: this.elementId}, '', reqUrl);
         }
       },

@@ -104,6 +104,9 @@ export class PagesSelectorComponent implements OnChanges {
   }
 
   makeHref(number: number): string {
-    return this.urlBase + 'page:' + number;
+    if (this.urlBase.slice(-1) === '/') {
+      return this.urlBase + 'page:' + number;
+    }
+    return this.urlBase + '/page:' + number;
   }
 }
