@@ -1,4 +1,4 @@
 export interface JsonResponse<T> {
-  responseStatus: ['success', 'fail'];
+  responseStatus: 'success' | 'fail';
   responseData: T;
 }

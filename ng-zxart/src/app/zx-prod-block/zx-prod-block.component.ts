@@ -5,13 +5,14 @@ import {
   OnInit,
   HostBinding,
   OnChanges,
-  SimpleChanges,
+  SimpleChanges, ChangeDetectorRef,
 } from '@angular/core';
 import {FadeInOut} from '../shared/animations/fade-in-out';
 import {trigger, AnimationEvent} from '@angular/animations';
 import {SlideInOut} from '../shared/animations/slide-in-out';
 import {ZxProdsListLayout} from '../zx-prods-category/zx-prods-category.component';
 import {ZxProdComponent} from '../shared/components/zx-prod-component';
+import {VoteService} from '../shared/services/vote.service';
 
 @Component({
   selector: 'app-zx-prod-block',
@@ -36,7 +37,11 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
   slideOpenInProgress = false;
   slideCloseInProgress = false;
 
-  constructor(private element: ElementRef) {
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private element: ElementRef,
+    private voting: VoteService,
+  ) {
     super();
   }
 
@@ -104,5 +109,13 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
       }
       this.slideCloseInProgress = false;
     }
+  }
+
+  vote(rating: number) {
+    this.voting.send<'zxProd'>(this.model.id, rating, 'zxProd').subscribe(value => {
+      this.model.votes = value;
+      this.model.userVote = rating;
+      this.cdr.detectChanges();
+    });
   }
 }

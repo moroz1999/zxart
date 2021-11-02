@@ -1,5 +1,6 @@
 import {Directive, EventEmitter, Input, Output} from '@angular/core';
 import {ZxProd} from '../models/zx-prod';
+import {VoteService} from '../services/vote.service';
 
 @Directive()
 export abstract class ZxProdComponent {
@@ -27,9 +28,5 @@ export abstract class ZxProdComponent {
   languageClicked(event: Event, language: string): void {
     event.preventDefault();
     this.languageChanged.emit([language]);
-  }
-
-  vote(rating: number) {
-
   }
 }

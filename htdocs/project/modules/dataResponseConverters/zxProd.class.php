@@ -56,7 +56,9 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 return $element->getAuthorsRecords('prod');
             },
             'importIds' => 'getImportIdsIndex',
-            "votes" => 'votes',
+            "votes"  => function ($element) {
+                return (float)$element->votes;
+            },
             "userVote" => 'getUserVote',
             "votePercent" => 'getVotePercent',
             "denyVoting" => 'denyVoting',

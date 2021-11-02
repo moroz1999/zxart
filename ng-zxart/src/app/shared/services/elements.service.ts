@@ -5,6 +5,7 @@ import {map, take} from 'rxjs/operators';
 import {JsonResponse} from '../models/json-response';
 import {StructureElement} from '../models/structure-element';
 import {ElementResponseData} from '../models/element-response-data';
+import {environment} from '../../../environments/environment';
 
 export interface PostParameters {
   [key: string]: Primitive;
@@ -16,7 +17,7 @@ declare var elementsData: { [key: number]: any };
   providedIn: 'root',
 })
 export class ElementsService {
-  private apiUrl: string = `//${location.hostname}/jsonElementData/`;
+  private apiUrl: string = `//${environment.apiBaseUrl}/jsonElementData/`;
 
   constructor(private http: HttpClient) {
   }

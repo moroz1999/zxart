@@ -153,10 +153,17 @@ $fixedHeight: 192px;
   }
 }
 
+.zx-prod-bottom-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-top: $padding-md;
+}
+
 .zx-prod-year {
   @include pseudo-link;
-  float: right;
-  margin: 0 0 $padding-md $padding-md;
+  margin-left: $padding-md;
 }
 
 .zx-prod-additional {

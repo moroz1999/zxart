@@ -3,32 +3,53 @@
 @import "shared/breakpoints";
 
 :host {
-  display: block;
-  position: relative;
-  --star-size: 1rem;
-  width: calc(var(--star-size) * 5);
+  display: flex;
+  flex-wrap: nowrap;
+  --star-size: 1.1rem;
   @include media-breakpoint-down(md) {
     --star-size: 2rem;
   }
 }
 
+.stars {
+  position: relative;
+  width: calc(var(--star-size) * 5);
+}
+
+.skip-vote {
+  display: flex;
+  align-items: center;
+
+  .skip {
+    color: $gray6;
+    cursor: pointer;
+    margin-right: $padding-sm;
+    width: calc(var(--star-size) * 0.6);
+    transition: opacity $animation-sm ease-in-out;
+  }
+
+  .skip-vote-hovered {
+    color: $yellow;
+  }
+}
+
 .bg-rating {
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
 
   .star {
     color: $gray6;
     cursor: pointer;
-
-    &.voted {
-      stroke-width: 40;
-      stroke: $red;
-    }
   }
 }
 
 .star {
   width: var(--star-size);
   height: var(--star-size);
+  box-sizing: border-box;
+  flex-shrink: 0;
+  padding-right: $padding-xxs;
 }
 
 .interactive {
@@ -36,11 +57,22 @@
   top: 0;
   left: 0;
   overflow: hidden;
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
   pointer-events: none;
   transition: width 100ms ease-out;
 
   .star {
     color: $yellow;
   }
+}
+
+.user-vote {
+  color: $yellow;
+  font-size: $font-sm;
+  margin-left: $padding-sm;
+  display: flex;
+  align-items: center;
+  line-height: 1;
 }
