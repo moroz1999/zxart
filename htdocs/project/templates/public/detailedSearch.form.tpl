@@ -149,6 +149,9 @@
 								<option value='sxg' {if $formData.pictureType=='sxg'}selected='selected'{/if}>
 									ZX Evolution (SXG)
 								</option>
+								<option value='grf' {if $formData.pictureType=='grf'}selected='selected'{/if}>
+									Profi (GRF)
+								</option>
 								<option value='nxi' {if $formData.pictureType=='nxi'}selected='selected'{/if}>ZX Spectrum Next (nxi)</option>
 							</select>
 						</td>

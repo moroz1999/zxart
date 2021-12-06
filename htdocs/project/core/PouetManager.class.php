@@ -16,6 +16,7 @@ class PouetManager extends errorLogger
     protected $db;
     protected $categories = [
         'demo' => 92159,
+        '64k' => 92159,
         '64b' => 262452,
         '128b' => 262453,
         '256b' => 92169,
@@ -154,6 +155,7 @@ class PouetManager extends errorLogger
         'characters in border' => 'code',
         'gigascreen simulation' => 'code',
         'support' => 'support',
+        'audio' => 'sfx',
         'sound' => 'sfx',
         'fx' => 'sfx',
         'noise' => 'sfx',
@@ -362,7 +364,7 @@ class PouetManager extends errorLogger
                         if (!empty($this->categories[$type])) {
                             $prodInfo['directCategories'][] = $this->categories[$type];
                         } elseif (!isset($this->categories[$type])) {
-                            $this->logError('Pouet: missing category ' . $type);
+                            $this->logError('Pouet: missing category ' . $type . ' ' . $prodData['name'] . ' ' . $prodData['id']);
                             exit;
                         }
                     }

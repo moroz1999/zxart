@@ -165,6 +165,7 @@
 					<option value='zxevo' {if $formData.type=='zxevo'}selected='selected'{/if}>ZX Evolution (BMP)</option>
 					<option value='sxg' {if $formData.type=='sxg'}selected='selected'{/if}>ZX Evolution (SXG)</option>
 					<option value='nxi' {if $formData.type=='nxi'}selected='selected'{/if}>ZX Spectrum Next (nxi)</option>
+					<option value='grf' {if $formData.type=='grf'}selected='selected'{/if}>Profi (grf)</option>
 				</select>
 				{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="type"}
 			</td>

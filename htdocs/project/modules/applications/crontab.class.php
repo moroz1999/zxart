@@ -34,11 +34,14 @@ class crontabApplication extends controllerApplication
                 'structureManager',
                 [
                     'rootUrl' => $controller->rootURL,
-                    'rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin'),
+                    'rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerPublic'),
                 ],
                 true
             );
 
+            $languagesManager = $this->getService('LanguagesManager');
+            $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
+            $structureManager->setPrivilegeChecking(false);
             $mp3ConversionManager = $this->getService('mp3ConversionManager');
             $mp3ConversionManager->convertQueueItems();
             $counter = 0;
@@ -63,6 +66,7 @@ class crontabApplication extends controllerApplication
                      */
                     if ($releaseElement = $structureManager->getElementById($record['id'])) {
                         $releaseElement->parsed = 1;
+
                         $releaseElement->persistElementData();
 
                         echo $releaseElement->id . ' ';
@@ -89,6 +93,8 @@ class crontabApplication extends controllerApplication
                     }
                     echo '<br />';
                     flush();
+                } else {
+                    break;
                 }
             }
         }
