@@ -1021,6 +1021,7 @@ class ProdsManager extends ElementsManager
                                 }
                             }
                         }
+                        $this->structureManager->clearElementCache($mainZxProd->id);
                     }
                 }
             }

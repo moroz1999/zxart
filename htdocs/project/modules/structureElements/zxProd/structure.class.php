@@ -463,7 +463,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     public function getSplitData()
     {
         $data = [];
-        $properties = ['title', 'year'];
+        $properties = ['title', 'year', 'youtube'];
         foreach ($properties as $property) {
             if ($this->$property) {
                 $data['properties'][$property] = $this->$property;
