@@ -6,7 +6,7 @@
  * @property int $denyComments
  */
 abstract class ZxArtItem extends structureElement implements MetadataProviderInterface, VotesHolderInterface,
-                                                             CommentsHolderInterface, LdJsonProviderInterface
+    CommentsHolderInterface, LdJsonProviderInterface
 {
     use ChartDataProviderTrait;
     use AuthorElementsProviderTrait;
@@ -46,7 +46,8 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         $addParty = true,
         $addPartyPlace = false,
         $addId = false
-    ) {
+    )
+    {
         $fileName = '';
         if ($this->fileExists($extensionType)) {
             if ($addPartyPlace) {
@@ -235,7 +236,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         $tagsIndex = $this->getTagsIndex();
 
         $updatedTagsStrings = 0;
-        $amountBeforeUpdate = $this->tagsAmount;
+        $amountBeforeUpdate = (int)$this->tagsAmount;
 
         $tagsStrings = explode(',', $this->tagsText);
         $tagsManager = $this->getService('tagsManager');
@@ -483,17 +484,17 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
     public function isRealtime()
     {
         return in_array($this->compo,
-                        [
-                            'realtime',
-                            'realtimec',
-                            'realtimeay',
-                            'realtimebeeper',
-                            'realtime_coding',
-                            'realtimep',
-                            'paintover',
-                            'online',
-                            'onlineattr',
-                        ]
+            [
+                'realtime',
+                'realtimec',
+                'realtimeay',
+                'realtimebeeper',
+                'realtime_coding',
+                'realtimep',
+                'paintover',
+                'online',
+                'onlineattr',
+            ]
         );
     }
 }

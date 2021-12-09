@@ -273,11 +273,12 @@
 			<td class="form_field">
 				{if $element->originalName != ""}
 					<img src='{$element->getImageUrl()}' />
-					<a href="{$element->URL}id:{$element->id}/file:image/action:deleteFile/" class="form_deletefile">{translations name='zxpicture.deletefile'} {$element->originalName}</a>
-				{else}
+						<a href="{$element->URL}id:{$element->id}/file:image/action:deleteFile/" class="form_deletefile">{translations name='zxpicture.deletefile'} {$element->originalName}</a>
+				{/if}
+				<div>
 					<input class="fileinput_placeholder" type="file" name="{$formNames.image}" />
 					{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="image"}
-				{/if}
+				</div>
 			</td>
 		</tr>
 	</table>

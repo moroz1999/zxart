@@ -260,7 +260,7 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
         $element->channels = $info->channels;
         $element->conversionChannelsType = $element->getChannelsType();
         $element->conversionChipType = $element->getChipType();
-        $element->conversionFrequency = $element->getChipType();
+        $element->conversionFrequency = $element->getFrequency();
         $element->conversionIntFrequency = $element->getIntFrequency();
         $element->converterVersion = "4440";
         $element->mp3Name = $info->mp3Name;

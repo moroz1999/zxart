@@ -168,7 +168,7 @@
 			<td class="form_field">
 				<select class="dropdown_placeholder" name="{$formNames.frequency}" >
 					{foreach $element->getFrequencies() as $frequency}
-						<option value='{$frequency}' {if $frequency == $formData.frequency}selected='selected'{/if}>{translations name="zxmusic.frequency_{$frequency}"}</option>
+						<option value='{$frequency}' {if $frequency == $formData.frequency || !$formData.frequency && $frequency == 1750000}selected='selected'{/if}>{translations name="zxmusic.frequency_{$frequency}"}</option>
 					{/foreach}
 				</select>
 			</td>

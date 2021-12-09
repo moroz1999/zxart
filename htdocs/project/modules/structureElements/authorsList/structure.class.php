@@ -89,22 +89,19 @@ class authorsListElement extends structureElement
         if ($authors === null) {
             $year = date('Y');
             $years = [];
-            for ($i = 0; $i < 4; $i++) {
+            for ($i = 0; $i < 2; $i++) {
                 $years[] = $year - $i;
             }
 
             $queriesManager = $this->getService('ApiQueriesManager');
 
+            $parameters = [];
             if ($this->items == 'music') {
-                $filter = 'zxMusicYear';
+                $parameters['zxMusicYear'] = $years;
             } else {
-                $filter = 'zxPictureYear';
+                $parameters['zxPictureYear'] = $years;
+                $parameters['zxPictureNotType'] = 'attributes';
             }
-
-            $parameters = [
-                $filter => $years,
-                'authorOfItemType' => $this->getAuthorTypes(),
-            ];
 
             $query = $queriesManager->getQuery();
             $query->setFiltrationParameters($parameters);
