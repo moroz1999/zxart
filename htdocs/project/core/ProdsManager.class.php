@@ -9,9 +9,18 @@ class ProdsManager extends ElementsManager
 
     protected $forceUpdateYear = false;
     protected $forceUpdateYoutube = false;
+    protected $forceUpdateExternalLink = false;
     protected $forceUpdateCategories = false;
     protected $forceUpdateImages = false;
     protected $forceUpdateTitles = false;
+
+    /**
+     * @param bool $forceUpdateExternalLink
+     */
+    public function setForceUpdateExternalLink(bool $forceUpdateExternalLink): void
+    {
+        $this->forceUpdateExternalLink = $forceUpdateExternalLink;
+    }
     protected $forceUpdateAuthors = false;
     protected $forceUpdateGroups = false;
     protected $forceUpdatePublishers = false;
@@ -361,6 +370,10 @@ class ProdsManager extends ElementsManager
             $changed = true;
             $element->youtubeId = $prodInfo['youtubeId'];
         }
+        if (!empty($prodInfo['externalLink']) && (($element->externalLink != $prodInfo['externalLink']) && ($this->forceUpdateExternalLink || $justCreated))) {
+            $changed = true;
+            $element->externalLink = $prodInfo['externalLink'];
+        }
         if (!empty($prodInfo['language']) && $element->language != $prodInfo['language']) {
             $changed = true;
             $element->language = $prodInfo['language'];
@@ -673,7 +686,7 @@ class ProdsManager extends ElementsManager
             $element->hardwareRequired = $releaseInfo['hardwareRequired'];
             $changed = true;
         }
-        if (!$element->releaseType && !empty($releaseInfo['releaseType'])) {
+        if ((!$element->releaseType || $element->releaseType === 'unknown') && !empty($releaseInfo['releaseType'])) {
             $element->releaseType = $releaseInfo['releaseType'];
             $changed = true;
         }
@@ -716,9 +729,9 @@ class ProdsManager extends ElementsManager
 
         if (!empty($releaseInfo['undetermined'])) {
             foreach ($releaseInfo['undetermined'] as $undeterminedId => $roles) {
-                if ($elementId = $this->getElementIdByImportId($undeterminedId, $origin, 'group')) {
+                if ($this->getElementIdByImportId($undeterminedId, $origin, 'group')) {
                     $releaseInfo['publishers'][] = $undeterminedId;
-                } elseif ($elementId = $this->getElementIdByImportId($undeterminedId, $origin, 'author')) {
+                } elseif ($this->getElementIdByImportId($undeterminedId, $origin, 'author')) {
                     $releaseInfo['authors'][$undeterminedId] = $roles;
                 }
             }

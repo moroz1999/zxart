@@ -1,4 +1,4 @@
 <?php return [
-    'enabled' => true,
+    'enabled' => false,
     'driver' => 'File',
 ];

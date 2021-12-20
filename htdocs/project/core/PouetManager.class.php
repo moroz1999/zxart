@@ -56,6 +56,8 @@ class PouetManager extends errorLogger
     protected $roles = [
         'all' => 'unknown',
         'coder' => 'code',
+        'scroll code' => 'code',
+        'all wired code' => 'code',
         'coding' => 'code',
         'code. graphics' => 'code',
         'code etc.' => 'code',
@@ -173,6 +175,7 @@ class PouetManager extends errorLogger
         'graphic' => 'graphics',
         'fullscreen picture' => 'graphics',
         'end pic.' => 'graphics',
+        'anims' => 'graphics',
         'animation' => 'graphics',
         '2d animation' => 'graphics',
         '2d graphics' => 'graphics',

@@ -6,7 +6,7 @@ class WosManager extends errorLogger
     protected $counter = 0;
     protected $maxCounter;
     protected $minCounter = 0;
-//    protected $debugEntry = 37772;
+    protected $debugEntry = 36667;
 
     /**
      * @var ProdsManager
@@ -38,7 +38,6 @@ class WosManager extends errorLogger
     protected $releaseFileTypes;
     protected $releaseTypes;
     protected $inlayFileTypes;
-    protected $ayFileTypes;
     protected $mapFileTypes;
     protected $infoFileTypes;
     protected $adFileTypes;
@@ -47,11 +46,15 @@ class WosManager extends errorLogger
     protected $releasesInfo = [];
     protected $legalStatuses = [
         'D' => 'forbidden',
-        'd' => 'insales',
+        'S' => 'insales',
         'A' => 'unknown',
         '?' => 'mia',
         'N' => 'unreleased',
         'R' => 'recovered',
+    ];
+    protected $webRefIds = [
+        16,
+        31, //itch.io
     ];
     protected $minMachines = [
         "24" => "atm",
@@ -79,7 +82,13 @@ class WosManager extends errorLogger
         "22" => "zx8132",
         "23" => "zx8164",
     ];
-
+    protected $optionalMachines = [
+        "9" => "zx128+3",
+        "13" => "timex2068",
+        "6" => "zx128",
+        "4" => "zx128",
+        "2" => "zx48",
+    ];
     protected $roles = [
         "C" => "code",
         "D" => "gamedesign",
@@ -91,14 +100,6 @@ class WosManager extends errorLogger
         "M" => "music",
         "X" => "sfx",
         "W" => "story",
-    ];
-
-    protected $optionalMachines = [
-        "9" => "zx128+3",
-        "13" => "timex2068",
-        "6" => "zx128",
-        "4" => "zx128",
-        "2" => "zx48",
     ];
     protected $featureGroups = [
         "9003" => "cursor",
@@ -192,7 +193,6 @@ class WosManager extends errorLogger
             'H' => 'crack',
             '-' => 'mia',
             'B' => 'corrupted',
-            'i' => 'incomplete',
             'C' => 'compilation',
             'c' => 'compilation',
         ];
@@ -368,6 +368,7 @@ class WosManager extends errorLogger
         $this->prodsManager = $prodsManager;
         $this->prodsManager->setForceUpdateYoutube(true);
         $this->prodsManager->setUpdateExistingProds(true);
+        $this->prodsManager->setForceUpdateExternalLink(true);
 //        $this->prodsManager->setForceUpdateAuthors(true);
 //        $this->prodsManager->setForceUpdateTitles(true);
 //        $this->prodsManager->setForceUpdateCategories(true);
@@ -444,10 +445,10 @@ class WosManager extends errorLogger
                         }
                     }
 
-                    if ($records = $this->zxdb->table('compilations')
+                    if ($records = $this->zxdb->table('contents')
                         ->select('entry_id')
-                        ->where('compilation_id', '=', $entry['id'])
-                        ->orderBy('prog_seq', 'asc')
+                        ->where('container_id', '=', $entry['id'])
+                        ->orderBy('prog_seq')
                         ->get()
                     ) {
                         foreach ($records as $record) {
@@ -510,12 +511,15 @@ class WosManager extends errorLogger
                     }
                     if ($rows = $this->zxdb->table('webrefs')
                         ->where('entry_id', '=', $entry['id'])
-                        ->where('website_id', '=', 16)
-                        ->limit(1)
+                        ->whereIn('website_id', $this->webRefIds)
                         ->get()) {
                         foreach ($rows as $row) {
-                            if (stripos($row['link'], 'https://youtu.be/') === 0) {
-                                $prodInfo['youtubeId'] = substr($row['link'], strlen('https://youtu.be/'));
+                            if ($row['website_id'] === 16) {
+                                if (stripos($row['link'], 'https://youtu.be/') === 0) {
+                                    $prodInfo['youtubeId'] = substr($row['link'], strlen('https://youtu.be/'));
+                                }
+                            } elseif ($row['website_id'] === 31) {
+                                $prodInfo['externalLink'] = $row['link'];
                             }
                         }
                     }
@@ -593,11 +597,26 @@ class WosManager extends errorLogger
                             }
                         }
                     }
+
                     foreach ($unusedReleases as $unusedRelease) {
                         $unusedRelease['id'] = md5($unusedRelease['id']);
                         $prodInfo['releases'][] = $unusedRelease;
                     }
-
+                    //some releases dont have downloads, so release type should be determined be release_seq
+                    foreach ($prodInfo['releases'] as &$release) {
+                        if (!$release['releaseType']) {
+                            if ($release['seq'] === 0) {
+                                $release['releaseType'] = 'original';
+                            } else {
+                                $release['releaseType'] = 'rerelease';
+                            }
+                        }
+                        if (!$release['hardwareRequired']) {
+                            if (isset($this->minMachines[$entry['machinetype_id']])) {
+                                $release['hardwareRequired'] = [$this->minMachines[$entry['machinetype_id']]];
+                            }
+                        }
+                    }
                     if ($this->prodsManager->importProd($prodInfo, $this->origin)) {
                         $this->markProgress(
                             'prod ' . $this->counter . '/' . count(
@@ -636,8 +655,8 @@ class WosManager extends errorLogger
                     'infoFiles' => [],
                     'fileUrl' => false,
                     'version' => '',
+                    'seq' => $release_seq,
                 ];
-
                 $releaseInfo['id'] = $release['entry_id'] . '_' . $release['release_seq'];
 
                 if ($controls = $this->zxdb->table('members')
