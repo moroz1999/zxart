@@ -103,6 +103,7 @@
 				</td>
 			</tr>
 		{/if}
+		{$prod = $element->getProd()}
 		{if $element->isDownloadable()}
 			{if $element->fileName}
 				<tr>
@@ -115,7 +116,18 @@
 					</td>
 				</tr>
 			{/if}
+		{elseif $prod->externalLink}
+			<tr>
+				<td class='info_table_label'>
+					{translations name='zxprod.externallink'}:
+				</td>
+				<td class='info_table_value'>
+					<a class="button" href="{$prod->externalLink}"
+					   target="_blank">{translations name='zxprod.open_externallink'}</a>
+				</td>
+			</tr>
 		{/if}
+
 		{include file=$theme->template('component.links.tpl')}
 		{*{if $element->getTagsList()}*}
 		{*<tr>*}

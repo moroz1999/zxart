@@ -1,3 +1,4 @@
+{$prod = $element->getProd()}
 <tr class="zxrelease">
 	<td class='zxrelease_table_number'>
 		{$number}
@@ -8,31 +9,9 @@
 				<img src="{$theme->getImageUrl("clock.png")}" title="{translations name="zxPicture.$compoTitle"}" />{/if}
 		</a>
 	</td>
-	{*<td class='zxrelease_table_authors'>*}
-	{*{foreach from=$element->getAuthorsList() item=author name=authors}*}
-	{*<a href='{$author->getUrl()}'>{$author->title}</a>{if !$smarty.foreach.authors.last}, {/if}*}
-	{*{/foreach}*}
-	{*</td>*}
 	<td class='zxrelease_table_year'>
 		{$element->getYear()}
 	</td>
-	{*<td class='zxrelease_table_votecontrols'>*}
-	{*{include file=$theme->template("component.votecontrols.tpl") element=$element}*}
-	{*{include file=$theme->template("component.playlist.tpl") element=$element}*}
-	{*</td>*}
-	{*<td class='zxrelease_table_votesamount'>*}
-	{*{if $element->votesAmount > 0}{$element->votesAmount}{/if}*}
-	{*</td>*}
-	{*<td class='zxrelease_table_commentsamount'>*}
-	{*{if $element->commentsAmount > 0}*}
-	{*{$element->commentsAmount}*}
-	{*{/if}*}
-	{*</td>*}
-	{*<td class='zxrelease_table_views'>*}
-	{*{if $element->views > 0}*}
-	{*{$element->views}*}
-	{*{/if}*}
-	{*</td>*}
 	<td class='zxrelease_table_play zxrelease_play'>
 		{if $element->isPlayable() && $element->isDownloadable()}
 			<button class="button" onclick="emulatorComponent.start('{$element->getFileUrl('play')}')">{translations name="zxrelease.play"}</button>
@@ -92,6 +71,9 @@
 			{if $element->fileName}
 				<a rel="nofollow" href="{$element->getFileUrl()}"><img src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'} {$element->getFileName('original', false)}" /></a>
 			{/if}
+		{elseif $prod->externalLink}
+			<a class="button" href="{$prod->externalLink}"
+			   target="_blank">{translations name='zxprod.externallink'}</a>
 		{/if}
 	</td>
 	<td class='zxrelease_table_downloaded'>

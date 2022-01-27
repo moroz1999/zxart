@@ -6,7 +6,7 @@ class WosManager extends errorLogger
     protected $counter = 0;
     protected $maxCounter;
     protected $minCounter = 0;
-    protected $debugEntry = 36667;
+//    protected $debugEntry = 36921;
 
     /**
      * @var ProdsManager
