@@ -12,6 +12,7 @@
  * @property int[] $categories
  * @property int[] $publishers
  * @property int[] $groups
+ * @property string $externalLink
  * @property string $year
  * @property string $description
  * @property int $denyVoting
@@ -48,21 +49,9 @@ class zxProdsUploadFormElement extends ZxArtItemUploadFormElement
         $moduleStructure['youtubeId'] = 'text';
         $moduleStructure['description'] = 'pre';
 
-        $moduleStructure['categories'] = 'numbersArray';
-        $moduleStructure['publishers'] = [
-            'ConnectedElements',
-            [
-                'linkType' => 'zxProdPublishers',
-                'role' => 'child',
-            ],
-        ];
-        $moduleStructure['groups'] = [
-            'ConnectedElements',
-            [
-                'linkType' => 'zxProdGroups',
-                'role' => 'child',
-            ],
-        ];
+        $moduleStructure['categories'] = 'array';
+        $moduleStructure['publishers'] = 'array';
+        $moduleStructure['groups'] = 'array';
         $moduleStructure['tagsText'] = 'text';
         $moduleStructure['description'] = 'pre';
         $moduleStructure['denyVoting'] = 'checkbox';
@@ -72,6 +61,8 @@ class zxProdsUploadFormElement extends ZxArtItemUploadFormElement
         $moduleStructure['addAuthorRole'] = 'array';
 
         $moduleStructure['legalStatus'] = 'text';
+        $moduleStructure['externalLink'] = 'url';
+        $moduleStructure['language'] = 'array';
         $moduleStructure['file'] = 'files';
     }
 

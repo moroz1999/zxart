@@ -10,7 +10,7 @@
  * @property string $legalStatus
  * @property string $compo
  * @property string[] $language
- * @property string[] $externalLink
+ * @property string $externalLink
  * @property int $party
  * @property int[] $categories
  * @property groupElement[] $publishers

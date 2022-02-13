@@ -143,6 +143,7 @@
             </td>
             <td class="form_field">
                 <select class="dropdown_placeholder" name="{$formNames.compo}">
+                    <option value=""></option>
                     {foreach $element->getCompoTypes() as $compoType}
                         <option value='{$compoType}'
                                 {if $formData.compo=={$compoType}}selected='selected'{/if}>{translations name="party.compo_{$compoType}"}</option>

@@ -21,6 +21,7 @@ class ProdsManager extends ElementsManager
     {
         $this->forceUpdateExternalLink = $forceUpdateExternalLink;
     }
+
     protected $forceUpdateAuthors = false;
     protected $forceUpdateGroups = false;
     protected $forceUpdatePublishers = false;
@@ -274,19 +275,17 @@ class ProdsManager extends ElementsManager
      */
     protected function createProd($prodInfo, $origin)
     {
-        $element = false;
-        if ($zxProdsElement = $this->structureManager->getElementByMarker('zxProds')) {
-            /**
-             * @var zxProdElement $element
-             */
-            if ($element = $this->structureManager->createElement('zxProd', 'show', $zxProdsElement->id)) {
-                $element->persistStructureLinks();
+        /**
+         * @var zxProdElement $element
+         */
+        if ($element = $this->structureManager->createElement('zxProd', 'show', 0)) {
+            $element->persistStructureLinks();
 
-                $element->dateAdded = time();
-                $this->saveImportId($element->getId(), $prodInfo['id'], $origin, 'prod');
-                $this->updateProd($element, $prodInfo, $origin, true);
-            }
+            $element->dateAdded = time();
+            $this->saveImportId($element->getId(), $prodInfo['id'], $origin, 'prod');
+            $this->updateProd($element, $prodInfo, $origin, true);
         }
+
         return $element;
     }
 
@@ -968,74 +967,71 @@ class ProdsManager extends ElementsManager
     public function splitZxProd($prodId, $data)
     {
         $newProdElement = false;
-        if ($zxProdsElementId = $this->structureManager->getElementIdByMarker('zxProds')) {
-            /**
-             * @var zxProdElement $mainZxProd
-             */
-            if ($mainZxProd = $this->structureManager->getElementById($prodId)) {
-                if ($firstParent = $mainZxProd->getFirstParentElement()) {
-                    if ($newProdElement = $this->structureManager->createElement('zxProd', 'show', $firstParent->id)) {
-                        $newProdElement->persistElementData();
-                        /*
-                         * categories
-                         */
-                        $this->linksManager->linkElements($zxProdsElementId, $newProdElement->id, 'structure');
+        /**
+         * @var zxProdElement $mainZxProd
+         */
+        if ($mainZxProd = $this->structureManager->getElementById($prodId)) {
+            if ($firstParent = $mainZxProd->getFirstParentElement()) {
+                if ($newProdElement = $this->structureManager->createElement('zxProd', 'show', $firstParent->id)) {
+                    $newProdElement->persistElementData();
+                    /*
+                     * categories
+                     */
 
-                        if ($categoriesIds = $mainZxProd->getConnectedCategoriesIds()) {
-                            foreach ($categoriesIds as $categoryId) {
-                                $this->linksManager->linkElements($categoryId, $newProdElement->id, 'zxProdCategory');
-                            }
+                    if ($categoriesIds = $mainZxProd->getConnectedCategoriesIds()) {
+                        foreach ($categoriesIds as $categoryId) {
+                            $this->linksManager->linkElements($categoryId, $newProdElement->id, 'zxProdCategory');
                         }
-                        foreach ($data['properties'] as $property => $value) {
-                            $newProdElement->$property = $mainZxProd->$property;
-                        }
-                        $newProdElement->structureName = $newProdElement->title;
-                        $newProdElement->persistElementData();
-
-                        if (!empty($data['authors'])) {
-                            $authorshipIds = array_keys($data['authors']);
-                            $this->authorsManager->moveAuthorship($newProdElement->id, $authorshipIds);
-                        }
-                        if (!empty($data['groups'])) {
-                            foreach ($data['groups'] as $id => $value) {
-                                $this->linksManager->unLinkElements($id, $mainZxProd->id, 'zxProdGroups');
-                                $this->linksManager->linkElements($id, $newProdElement->id, 'zxProdGroups');
-                            }
-                        }
-                        if (!empty($data['publishers'])) {
-                            foreach ($data['publishers'] as $id => $value) {
-                                $this->linksManager->unLinkElements($id, $mainZxProd->id, 'zxProdPublishers');
-                                $this->linksManager->linkElements($id, $newProdElement->id, 'zxProdPublishers');
-                            }
-                        }
-                        if (!empty($data['releases'])) {
-                            foreach ($data['releases'] as $id => $value) {
-                                $this->linksManager->unLinkElements($mainZxProd->id, $id, 'structure');
-                                $this->linksManager->linkElements($newProdElement->id, $id, 'structure');
-                            }
-                        }
-                        if (!empty($data['screenshots'])) {
-                            foreach ($data['screenshots'] as $id => $value) {
-                                $this->linksManager->unLinkElements($mainZxProd->id, $id, 'connectedFile');
-                                $this->linksManager->linkElements($newProdElement->id, $id, 'connectedFile');
-                            }
-                        }
-                        if (!empty($data['links'])) {
-                            foreach ($data['links'] as $string => $value) {
-                                $parts = explode(';', $string);
-                                if (($origin = $parts[0]) && ($importId = $parts[1])) {
-                                    $this->moveImportId(
-                                        $mainZxProd->id,
-                                        $newProdElement->id,
-                                        $importId,
-                                        $origin,
-                                        'prod'
-                                    );
-                                }
-                            }
-                        }
-                        $this->structureManager->clearElementCache($mainZxProd->id);
                     }
+                    foreach ($data['properties'] as $property => $value) {
+                        $newProdElement->$property = $mainZxProd->$property;
+                    }
+                    $newProdElement->structureName = $newProdElement->title;
+                    $newProdElement->persistElementData();
+
+                    if (!empty($data['authors'])) {
+                        $authorshipIds = array_keys($data['authors']);
+                        $this->authorsManager->moveAuthorship($newProdElement->id, $authorshipIds);
+                    }
+                    if (!empty($data['groups'])) {
+                        foreach ($data['groups'] as $id => $value) {
+                            $this->linksManager->unLinkElements($id, $mainZxProd->id, 'zxProdGroups');
+                            $this->linksManager->linkElements($id, $newProdElement->id, 'zxProdGroups');
+                        }
+                    }
+                    if (!empty($data['publishers'])) {
+                        foreach ($data['publishers'] as $id => $value) {
+                            $this->linksManager->unLinkElements($id, $mainZxProd->id, 'zxProdPublishers');
+                            $this->linksManager->linkElements($id, $newProdElement->id, 'zxProdPublishers');
+                        }
+                    }
+                    if (!empty($data['releases'])) {
+                        foreach ($data['releases'] as $id => $value) {
+                            $this->linksManager->unLinkElements($mainZxProd->id, $id, 'structure');
+                            $this->linksManager->linkElements($newProdElement->id, $id, 'structure');
+                        }
+                    }
+                    if (!empty($data['screenshots'])) {
+                        foreach ($data['screenshots'] as $id => $value) {
+                            $this->linksManager->unLinkElements($mainZxProd->id, $id, 'connectedFile');
+                            $this->linksManager->linkElements($newProdElement->id, $id, 'connectedFile');
+                        }
+                    }
+                    if (!empty($data['links'])) {
+                        foreach ($data['links'] as $string => $value) {
+                            $parts = explode(';', $string);
+                            if (($origin = $parts[0]) && ($importId = $parts[1])) {
+                                $this->moveImportId(
+                                    $mainZxProd->id,
+                                    $newProdElement->id,
+                                    $importId,
+                                    $origin,
+                                    'prod'
+                                );
+                            }
+                        }
+                    }
+                    $this->structureManager->clearElementCache($mainZxProd->id);
                 }
             }
         }

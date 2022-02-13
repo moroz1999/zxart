@@ -1,5 +1,11 @@
 {capture assign="moduleTitle"}{if $element->title}{$element->title}{/if}{/capture}
 {capture assign="moduleContent"}
+    <div class="editing_controls">
+        {if isset($privileges.zxProdsUploadForm.batchUploadForm) && $privileges.zxProdsUploadForm.batchUploadForm == true}
+            <a class="button"
+               href="{$element->URL}type:zxProdsUploadForm/action:batchUploadForm/">{translations name='zxProdCategory.upload'}</a>
+        {/if}
+    </div>
     <script>
         window.elementsData = window.elementsData ? window.elementsData : {};
         window.elementsData[{$element->id}] = {$element->getJsonInfo('zxProdsList')};
