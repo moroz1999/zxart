@@ -44,6 +44,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                     $zxProdElement->partyplace = $structureElement->partyplace;
                     $zxProdElement->groups = $structureElement->groups;
                     $zxProdElement->categories = $structureElement->categories;
+                    $zxProdElement->publishers = $structureElement->publishers;
                     $zxProdElement->year = $structureElement->year;
                     $zxProdElement->description = $structureElement->description;
                     $zxProdElement->denyVoting = $structureElement->denyVoting;
@@ -52,6 +53,10 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                     $zxProdElement->language = $structureElement->language;
                     $zxProdElement->youtubeId = $structureElement->youtubeId;
                     $zxProdElement->tagsText = $structureElement->tagsText;
+                    $zxProdElement->addAuthor = $structureElement->addAuthor;
+                    $zxProdElement->addAuthorRole = $structureElement->addAuthorRole;
+                    $zxProdElement->connectedFile = $structureElement->connectedFile;
+                    $zxProdElement->mapFilesSelector = $structureElement->mapFilesSelector;
 
                     $zxProdElement->dateAdded = $zxProdElement->dateCreated;
                     $zxProdElement->userId = $this->getService('user')->id;
@@ -65,6 +70,9 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                     $zxProdElement->renewPartyLink();
                     $zxProdElement->updateTagsInfo();
                     $zxProdElement->updateYear();
+                    $zxProdElement->persistAuthorship('prod');
+
+                    $zxProdElement->executeAction('receiveFiles');
 
                     $zxProdElement->persistElementData();
                     $zxProdElement->logCreation();
@@ -114,12 +122,12 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                         $zxReleaseElement->persistElementData();
                     }
 
-                    $user->refreshPrivileges();
                 }
             }
+            $user->refreshPrivileges();
         }
-
-        $controller->redirect($firstProd->URL);
+        exit;
+//        $controller->redirect($firstProd->URL);
     }
 
     public function setExpectedFields(&$expectedFields)
@@ -142,6 +150,10 @@ class batchUploadZxProdsUploadForm extends structureElementAction
             'file',
             'youtubeId',
             'tagsText',
+            'addAuthor',
+            'addAuthorRole',
+            'connectedFile',
+            'mapFilesSelector',
         ];
     }
 

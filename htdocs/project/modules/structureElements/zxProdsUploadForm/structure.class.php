@@ -6,6 +6,9 @@
  * @property string $title
  * @property string $prodTitle
  * @property string $legalStatus
+ * @property string $tagsText
+ * @property string[] $language
+ * @property string $youtubeId
  * @property int $party
  * @property int $partyplace
  * @property string $compo
@@ -17,7 +20,6 @@
  * @property string $description
  * @property int $denyVoting
  * @property int $denyComments
- * @property [] $files
  */
 class zxProdsUploadFormElement extends ZxArtItemUploadFormElement
 {
@@ -64,6 +66,8 @@ class zxProdsUploadFormElement extends ZxArtItemUploadFormElement
         $moduleStructure['externalLink'] = 'url';
         $moduleStructure['language'] = 'array';
         $moduleStructure['file'] = 'files';
+        $moduleStructure['connectedFile'] = 'files';
+        $moduleStructure['mapFilesSelector'] = 'files';
     }
 
     protected function setMultiLanguageFields(&$multiLanguageFields)

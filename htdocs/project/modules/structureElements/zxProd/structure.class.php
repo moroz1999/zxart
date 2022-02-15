@@ -9,6 +9,7 @@
  * @property string $description
  * @property string $legalStatus
  * @property string $compo
+ * @property string $tagsText
  * @property string[] $language
  * @property string $externalLink
  * @property int $party
