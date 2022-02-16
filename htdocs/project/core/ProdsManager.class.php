@@ -275,15 +275,16 @@ class ProdsManager extends ElementsManager
      */
     protected function createProd($prodInfo, $origin)
     {
-        /**
-         * @var zxProdElement $element
-         */
-        if ($element = $this->structureManager->createElement('zxProd', 'show', 0)) {
-            $element->persistStructureLinks();
-
-            $element->dateAdded = time();
-            $this->saveImportId($element->getId(), $prodInfo['id'], $origin, 'prod');
-            $this->updateProd($element, $prodInfo, $origin, true);
+        $element = false;
+        if ($prodInfo['directCategories']) {
+            /**
+             * @var zxProdElement $element
+             */
+            if ($element = $this->structureManager->createElement('zxProd', 'show', reset($prodInfo['directCategories']))) {
+                $element->dateAdded = time();
+                $this->saveImportId($element->getId(), $prodInfo['id'], $origin, 'prod');
+                $this->updateProd($element, $prodInfo, $origin, true);
+            }
         }
 
         return $element;

@@ -203,6 +203,7 @@ class PouetManager extends errorLogger
         'everything' => 'code',
         'beer director' => 'support',
         'code optimization' => 'code',
+        'optimisations' => 'code',
         'maintainer' => 'support',
         'music (original)' => 'music',
     ];
@@ -221,16 +222,23 @@ class PouetManager extends errorLogger
         'oldskool intro' => 'intro',
         'zx intro' => 'intro',
         '4k intro' => 'intro',
+        'oldskool procedural gfx' => 'procedural',
         '1k procedural gfx' => 'procedural1k',
         '4k procedural gfx' => 'procedural4k',
         'combined 256b' => 'intro256',
         'oldskool 128b intro' => 'intro128',
+        'oldskool 128b' => 'intro128',
         'oldskool 256b intro' => 'intro256',
+        'oldskool 256b' => 'intro256',
         'combined 128b' => 'intro128',
+        'oldskool 32b' => 'intro32',
         'combined 32b' => 'intro32',
+        'oldskool 16b' => 'intro16',
         'combined 64b' => 'intro64',
+        'oldskool 64b' => 'intro64',
         'zx 256b' => 'intro256',
         'zx 512b' => 'intro512',
+        'oldskool 512b' => 'intro512',
         '8bit 1k' => 'intro1k',
         '8bit 4k' => 'intro4k',
         'pc 4k' => 'intro4k',
@@ -257,7 +265,6 @@ class PouetManager extends errorLogger
     ];
 
 
-    protected $prodsIndex = [];
     protected $urls = [];
 
     /**
@@ -319,8 +326,8 @@ class PouetManager extends errorLogger
         $this->prodsManager->setForceUpdateCategories(true);
         $this->prodsManager->setForceUpdateYoutube(true);
         $this->prodsManager->setForceUpdateGroups(true);
-        $this->prodsManager->setForceUpdateAuthors(true);
-        $this->prodsManager->setAddImages(true);
+        $this->prodsManager->setForceUpdateAuthors(false);
+        $this->prodsManager->setAddImages(false);
     }
 
     public function importAll()

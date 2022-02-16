@@ -5,8 +5,8 @@
   "require": {
     "artweb-ou/trickster-cms": "^4.2",
     "moroz1999/sxg": "*",
-    "moroz1999/zx-image": "*",
-    "moroz1999/zx-files": "*",
+    "moroz1999/zx-image": "^5.4",
+    "moroz1999/zx-files": "^3.0",
     "ext-json": "*",
     "ext-curl": "*",
     "ext-gd": "*",
