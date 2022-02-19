@@ -126,8 +126,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
             }
             $user->refreshPrivileges();
         }
-        exit;
-//        $controller->redirect($firstProd->URL);
+        $controller->redirect($firstProd->URL);
     }
 
     public function setExpectedFields(&$expectedFields)

@@ -260,6 +260,18 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
             $this->dateAdded = time();
         }
         parent::persistElementData();
+
+        $structureManager = $this->getService('structureManager');
+        if ($elements = $structureManager->getElementsByType('zxItemsList')) {
+            foreach ($elements as $element) {
+                if ($element->items = 'zxProd') {
+                    $structureManager->clearElementCache($element->id);
+                }
+            }
+        }
+        foreach ($this->categories as $categoryId) {
+            $structureManager->clearElementCache($categoryId);
+        }
     }
 
     public function getBestPictures($limit = false, $excludeId = null)

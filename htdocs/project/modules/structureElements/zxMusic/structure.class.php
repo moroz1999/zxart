@@ -145,6 +145,15 @@ class zxMusicElement extends ZxArtItem
     {
         parent::persistElementData();
         $this->checkIfReconversionNeeded();
+
+        $structureManager = $this->getService('structureManager');
+        if ($elements = $structureManager->getElementsByType('zxItemsList')) {
+            foreach ($elements as $element) {
+                if ($element->items = 'music') {
+                    $structureManager->clearElementCache($element->id);
+                }
+            }
+        }
     }
 
     public function checkIfReconversionNeeded()

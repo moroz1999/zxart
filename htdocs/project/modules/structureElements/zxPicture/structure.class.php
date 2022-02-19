@@ -439,4 +439,18 @@ class zxPictureElement extends ZxArtItem
         }
         return $data;
     }
+
+    public function persistElementData()
+    {
+        parent::persistElementData();
+        $structureManager = $this->getService('structureManager');
+        if ($elements = $structureManager->getElementsByType('zxItemsList')) {
+            foreach ($elements as $element) {
+                if ($element->items = 'graphics') {
+                    $structureManager->clearElementCache($element->id);
+                }
+            }
+        }
+    }
+
 }

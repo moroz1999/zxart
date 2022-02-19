@@ -37,6 +37,17 @@
                 {$element->title}
             </td>
         </tr>
+        {if $element->externalLink}
+            <tr>
+                <td class='info_table_label'>
+                    {translations name='zxprod.externallink'}:
+                </td>
+                <td class='info_table_value'>
+                    <a class="button" href="{$element->externalLink}"
+                       target="_blank">{translations name='zxprod.open_externallink'}</a>
+                </td>
+            </tr>
+        {/if}
         {if $categories = $element->getConnectedCategories()}
             <tr>
                 <td class='info_table_label'>
@@ -47,17 +58,6 @@
                         <a
                         href="{$categoryElement->URL}">{$categoryElement->title}</a>{if !$categoryElement@last}, {/if}
                     {/foreach}
-                </td>
-            </tr>
-        {/if}
-        {if $element->externalLink}
-            <tr>
-                <td class='info_table_label'>
-                    {translations name='zxprod.externallink'}:
-                </td>
-                <td class='info_table_value'>
-                    <a class="button" href="{$element->externalLink}"
-                       target="_blank">{translations name='zxprod.open_externallink'}</a>
                 </td>
             </tr>
         {/if}

@@ -426,9 +426,16 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return array_merge($this->getFilesList('inlayFilesSelector'), $this->getFilesList('adFilesSelector'));
     }
 
-    public function isPlayable()
+    public function isPlayable(): bool
     {
-        return $this->releaseFormat && !array_diff($this->releaseFormat, ['trd', 'tap', 'z80', 'sna', 'tzx', 'scl']);
+        if ($this->releaseFormat) {
+            foreach ($this->releaseFormat as $format) {
+                if (in_array($format, ['trd', 'tap', 'z80', 'sna', 'tzx', 'scl'])) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public function isDownloadable()
