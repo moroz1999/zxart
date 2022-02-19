@@ -114,7 +114,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
-        $moduleStructure['iso6392'] = 'text';
+        $moduleStructure['iso6391'] = 'text';
         $moduleStructure['iso6393'] = 'text';
         $moduleStructure['group'] = 'text';
         $moduleStructure['originalName'] = 'fileName';

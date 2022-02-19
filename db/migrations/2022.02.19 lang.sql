@@ -1,0 +1,1 @@
+ALTER TABLE `engine_module_language` CHANGE `iso6392` `iso6391` VARCHAR(2) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL; 
