@@ -61,9 +61,9 @@ class SpeccyMapsManager extends errorLogger
                 $id = $output['id'];
 
                 $this->downloadProd($mapUrl, $id);
-                if ($this->counter >= 10) {
-                    break;
-                }
+//                if ($this->counter >= 10) {
+//                    break;
+//                }
             }
             foreach ($this->prodsIndex as $key => $prodInfo2) {
                 if ($prodElement = $this->prodsManager->importProd($prodInfo2, $this->origin)) {

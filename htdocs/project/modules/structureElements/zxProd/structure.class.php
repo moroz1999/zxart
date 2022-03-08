@@ -556,148 +556,6 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return false;
     }
 
-    public function getTemplatedMetaTitle()
-    {
-        if ($categoryMetaTitleTemplate = $this->getFirstDataFromParents('metaTitleTemplate')) {
-            return $this->populateSeoTemplate($categoryMetaTitleTemplate);
-        }
-        return '';
-    }
-
-    public function getTemplatedH1()
-    {
-        if ($categoryH1Template = $this->getFirstDataFromParents('metaH1Template')) {
-            return $this->populateSeoTemplate($categoryH1Template);
-        }
-        return '';
-    }
-
-    private function getFirstDataFromParents($parameterName)
-    {
-        $categories = [];
-
-        foreach ($this->getConnectedCategories() as $category) {
-            $element = $category;
-            $level = 0;
-
-            if (!empty($category->{$parameterName})) {
-                $parameter = $category->{$parameterName};
-                $parameterLevel = 0;
-            } else {
-                $parameter = '';
-                $parameterLevel = false;
-            }
-
-            while ($element) {
-                $element = $element->getCurrentParentElement();
-                if ($element && $element->structureType == 'zxProdCategory') {
-                    $level++;
-
-                    if (!$parameter && $element->{$parameterName}) {
-                        $parameter = $element->{$parameterName};
-                        $parameterLevel = $level;
-                    }
-                }
-            }
-
-            if ($parameter) {
-                $categories[$level][$parameterLevel] = $parameter;
-            }
-        }
-
-        krsort($categories);
-        $parameters = array_shift($categories);
-        if ($parameters) {
-            ksort($parameters);
-            $parameter = array_shift($parameters);
-        } else {
-            $parameter = '';
-        }
-
-        return $parameter;
-    }
-
-    protected function populateSeoTemplate($template)
-    {
-        $translationsManager = $this->getService('translationsManager');
-
-        preg_match_all("|{(.*)}|sUi", $template, $results);
-        $search = [];
-        $replace = [];
-        foreach ($results[1] as $result) {
-            $search[] = '{' . $result . '}';
-            switch ($result) {
-                case 'title':
-                {
-                    $replace[] = $this->title;
-                    break;
-                }
-                case 'category':
-                {
-                    if ($category = $this->getRequestedParentCategory()) {
-                        $replace[] = $category->title;
-                    }
-                    break;
-                }
-                case 'topCategory':
-                {
-                    if ($category = $this->getRequestedTopCategory()) {
-                        $replace[] = $category->title;
-                    }
-                    break;
-                }
-                case 'brand':
-                {
-                    $brand = $this->getBrandElement();
-                    $replace[] = $brand->title;
-                    break;
-                }
-                case 'price':
-                {
-                    $replace[] = $this->getPrice();
-                    break;
-                }
-                case 'availability':
-                {
-                    $replace[] = $translationsManager->getTranslationByName('product.' . $this->availability);
-                    break;
-                }
-                case 'deliveryStatus':
-                {
-                    $replace[] = $this->getDeliveryStatus();
-                    break;
-                }
-                case (stripos($result, 'parameterValue:') !== false):
-                {
-                    $id = (int)substr($result, 15);
-                    if ($value = $this->getParameterValueById($id)) {
-                        $replace[] = mb_strtolower($value);
-                    } else {
-                        $replace[] = '';
-                    }
-                    break;
-                }
-                default:
-                    $replace[] = '';
-            }
-        }
-
-        return str_replace($search, $replace, $template);
-    }
-
-    public function getTextContent()
-    {
-        if ($this->textContent === null) {
-            $this->textContent = '';
-            if ($this->final) {
-                if ($categoryMetaDescriptionTemplate = $this->getFirstDataFromParents('metaDescriptionTemplate')) {
-                    $this->textContent = $this->populateSeoTemplate($categoryMetaDescriptionTemplate);
-                }
-            }
-        }
-        return $this->textContent;
-    }
-
     public function getHardware()
     {
         $db = $this->getService('db');
@@ -863,4 +721,24 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
             }
         }
     }
+
+    public function getMetaTitle()
+    {
+        $title = null;
+
+        /**
+         * @var translationsManager $translationsManager
+         */
+//        $translationsManager = $this->getService('translationsManager');
+        if ($categories = $this->getConnectedCategories()) {
+            $category = last($categories);
+        }
+        if ($category) {
+            $title = 'ZX Spectrum ' . $category->title . ': ' . $this->title;
+        }
+        return $title;
+
+    }
+
+//    public function getMetaDescription();
 }

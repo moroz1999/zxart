@@ -469,7 +469,7 @@ class ProdsManager extends ElementsManager
                 }
             }
         }
-        if (!empty($prodInfo['categories'] && (!$element->getConnectedCategoriesIds() || $this->forceUpdateCategories || $justCreated))) {
+        if (!empty($prodInfo['categories']) && (!$element->getConnectedCategoriesIds() || $this->forceUpdateCategories || $justCreated)) {
             $linksIndex = $this->linksManager->getElementsLinksIndex($element->id, 'zxProdCategory', 'child');
             foreach ($prodInfo['categories'] as $importCategoryId) {
                 if ($categoryId = $this->getElementIdByImportId($importCategoryId, $origin, 'category')) {
