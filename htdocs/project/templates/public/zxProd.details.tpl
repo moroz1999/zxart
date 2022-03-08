@@ -184,19 +184,25 @@
     </div>
     {include $theme->template("component.emulator.tpl")}
     <div class="gallery_static galleryid_{$element->id}">
+        {if $filesList = $element->getFilesList('connectedFile')}
+            {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false}
+        {/if}
         {if $releasesList=$element->getReleasesList()}
             <div class="zxprod_details_releases">
                 {include file=$theme->template('component.releasestable.tpl') releasesList=$releasesList pager=false}
             </div>
         {/if}
-        {if $filesList = $element->getFilesList('connectedFile')}
-            {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false}
-        {/if}
         {if $filesList = $element->getFilesList('mapFilesSelector')}
             <h3>{translations name='zxprod.maps'}</h3>
-            {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodMapImage' displayTitle=true}
+            {$linkInfo = $element->getLinkInfo('maps')}
+            {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodMapImage' displayTitle=true url=$linkInfo['url']}
         {/if}
     </div>
+    {if $filesList = $element->getFilesList('rzx')}
+        {$linkInfo = $element->getLinkInfo('rzx')}
+        <h3>{translations name='zxprod.rzx'}</h3>
+        {include file=$theme->template('zxItem.files.tpl') filesList = $filesList url=$linkInfo['url'] newWindow=true}
+    {/if}
     <script>
         /*<![CDATA[*/
         window.galleriesInfo = window.galleriesInfo || {ldelim}{rdelim};
@@ -212,7 +218,7 @@
     {if $element->compilationProds}
         <h3>{translations name='zxprod.compilationProds'}</h3>
         <script>
-            window.elementsData = window.elementsData ? window.elementsData : { };
+            window.elementsData = window.elementsData ? window.elementsData : {};
             window.elementsData[{$element->id}] = {$element->getCompilationJsonData()};
         </script>
         <app-zx-prods-list element-id="{$element->id}"></app-zx-prods-list>

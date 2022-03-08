@@ -1,0 +1,1 @@
+ALTER TABLE `engine_module_file` ADD `author` VARCHAR(100) NOT NULL AFTER `imageFileName`;

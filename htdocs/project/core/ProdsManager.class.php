@@ -244,8 +244,20 @@ class ProdsManager extends ElementsManager
          */
         $prodId = $prodInfo['id'];
         $prodInfo['title'] = $this->sanitizeTitle($prodInfo['title']);
-
-        $element = $this->getElementByImportId($prodId, $origin, 'prod');
+        $element = null;
+        if (!$element) {
+            $element = $this->getElementByImportId($prodId, $origin, 'prod');
+        }
+        if (!$element) {
+            if (isset($prodInfo['ids'])) {
+                foreach ($prodInfo['ids'] as $idOrigin => $id) {
+                    if ($element = $this->getElementByImportId($id, $idOrigin, 'prod')) {
+                        $this->saveImportId($element->id, $prodId, $origin, 'prod');
+                        break;
+                    }
+                }
+            }
+        }
         if (!$element) {
             if ($element = $this->getProdByReleaseMd5($prodInfo)) {
                 $this->saveImportId($element->id, $prodId, $origin, 'prod');
@@ -473,14 +485,22 @@ class ProdsManager extends ElementsManager
 
         }
         if (!empty($prodInfo['images']) && ($this->forceUpdateImages || $justCreated || !$element->getFilesList('connectedFile'))) {
-            $this->importElementImages($element, $prodInfo['images']);
+            $this->importElementFiles($element, $prodInfo['images']);
             if ($this->resizeImages) {
                 $element->resizeImages();
             }
         }
 
         if (!empty($prodInfo['maps'])) {
-            $this->importElementImages($element, $prodInfo['maps'], 'mapFilesSelector');
+            foreach ($prodInfo['maps'] as $map){
+                $this->importElementFile($element, $map['url'], $map['author'], 'mapFilesSelector');
+            }
+        }
+
+        if (!empty($prodInfo['rzx'])) {
+            foreach ($prodInfo['rzx'] as $rzx){
+                $this->importElementFile($element, $rzx['url'], $rzx['author'], 'rzx');
+            }
         }
 
         if (!empty($prodInfo['importIds'])) {
@@ -494,55 +514,62 @@ class ProdsManager extends ElementsManager
         return $element;
     }
 
-    /**
-     * @param FilesElementTrait $element
-     * @param $images
-     * @param string $propertyName
-     */
-    protected function importElementImages($element, $images, $propertyName = 'connectedFile')
+    private function importElementFile($element, $fileUrl, $fileAuthor = '', $propertyName = 'connectedFile')
     {
         $this->structureManager->setNewElementLinkType($element->getConnectedFileType($propertyName));
         $existingFiles = $element->getFilesList($propertyName);
         if (!$existingFiles || $this->addImages) {
             $uploadsPath = $this->pathsManager->getPath('uploads');
 
-            foreach ($images as $imageUrl) {
-                $originalFileName = basename($imageUrl);
-                $fileExists = false;
-                foreach ($existingFiles as $existingFile) {
-                    if ($originalFileName == urldecode($existingFile->fileName)) {
-                        $fileExists = true;
-                        break;
-                    }
+            $originalFileName = basename($fileUrl);
+            $fileExists = false;
+            foreach ($existingFiles as $existingFile) {
+                if ($originalFileName == urldecode($existingFile->fileName)) {
+                    $fileExists = true;
+                    break;
                 }
+            }
 
-                /**
-                 * @var fileElement $fileElement
-                 */
-                if (!$fileExists) {
-                    $filePath = $uploadsPath . $originalFileName;
-                    $this->prodsDownloader->downloadUrl($imageUrl, $filePath);
-                    if ($filePath && $fileElement = $this->structureManager->createElement(
-                            'file',
-                            'showForm',
-                            $element->getId()
-                        )) {
-                        $destinationFolder = $element->getUploadedFilesPath($propertyName);
+            /**
+             * @var fileElement $fileElement
+             */
+            if (!$fileExists) {
+                $filePath = $uploadsPath . $originalFileName;
+                $this->prodsDownloader->downloadUrl($fileUrl, $filePath);
+                if ($filePath && $fileElement = $this->structureManager->createElement(
+                        'file',
+                        'showForm',
+                        $element->getId()
+                    )) {
+                    $destinationFolder = $element->getUploadedFilesPath($propertyName);
 
-                        $info = pathinfo($imageUrl);
-                        $fileElement->title = str_replace('_', ' ', ucfirst($info['filename']));
-                        $fileElement->structureName = $fileElement->title;
-                        $fileElement->file = $fileElement->getId();
-                        $fileElement->fileName = $originalFileName;
-                        rename($filePath, $destinationFolder . $fileElement->file);
-                        $fileElement->persistElementData();
+                    $info = pathinfo($fileUrl);
+                    $fileElement->title = str_replace('_', ' ', ucfirst($info['filename']));
+                    $fileElement->structureName = $fileElement->title;
+                    $fileElement->file = $fileElement->getId();
+                    $fileElement->fileName = $originalFileName;
+                    $fileElement->author = $fileAuthor;
+                    rename($filePath, $destinationFolder . $fileElement->file);
+                    $fileElement->persistElementData();
 
-                        $element->appendFileToList($fileElement, $propertyName);
-                    }
+                    $element->appendFileToList($fileElement, $propertyName);
                 }
             }
         }
         $this->structureManager->setNewElementLinkType();
+
+    }
+
+    /**
+     * @param FilesElementTrait $element
+     * @param $images
+     * @param string $propertyName
+     */
+    protected function importElementFiles($element, $images, $propertyName = 'connectedFile')
+    {
+        foreach ($images as $imageUrl) {
+            $this->importElementFile($element, $imageUrl, '', $propertyName);
+        }
     }
 
     protected function linkReleaseWithAuthor($authorId, $prodId, $roles = [])
@@ -637,7 +664,7 @@ class ProdsManager extends ElementsManager
             return $this->createRelease($releaseInfo, $prodId, $origin);
         }
 
-        return $this->updateRelease($element, $releaseInfo, $origin);
+        return $element;
     }
 
     /**
@@ -762,13 +789,13 @@ class ProdsManager extends ElementsManager
 
 
         if (!empty($releaseInfo['inlayImages'])) {
-            $this->importElementImages($element, $releaseInfo['inlayImages'], 'inlayFilesSelector');
+            $this->importElementFiles($element, $releaseInfo['inlayImages'], 'inlayFilesSelector');
         }
         if (isset($releaseInfo['infoFiles'])) {
-            $this->importElementImages($element, $releaseInfo['infoFiles'], 'infoFilesSelector');
+            $this->importElementFiles($element, $releaseInfo['infoFiles'], 'infoFilesSelector');
         }
         if (isset($releaseInfo['adFiles'])) {
-            $this->importElementImages($element, $releaseInfo['adFiles'], 'adFilesSelector');
+            $this->importElementFiles($element, $releaseInfo['adFiles'], 'adFilesSelector');
         }
 
         $this->prodsDownloader->removeFile($releaseInfo['fileUrl']);

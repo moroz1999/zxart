@@ -52,6 +52,9 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             'maps' => function ($element) {
                 return $element->getFilesUrlList('mapFilesSelector', 'release');
             },
+            'rzx' => function ($element) {
+                return $element->getFilesUrlList('rzx', 'release');
+            },
             'authorsInfo' => function ($element) {
                 return $element->getAuthorsRecords('prod');
             },
@@ -91,6 +94,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 'importIds',
                 'votes',
                 'userVote',
+                'rzx',
             ],
             'apiShort' => [
                 'id',

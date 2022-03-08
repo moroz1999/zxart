@@ -1,6 +1,6 @@
 <?php return [
     'adminAllowed' => [
-
+        'zxProdCategory'
     ],
     'publicAllowed' => [
         'authorsCatalogue',
@@ -17,5 +17,6 @@
         'infoFilesSelector',
         'adFilesSelector',
         'mapFilesSelector',
+        'rzx',
     ],
 ];

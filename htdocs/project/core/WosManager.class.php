@@ -552,7 +552,10 @@ class WosManager extends errorLogger
                             } elseif ($download['filetype_id'] == '2') {
                                 $prodInfo['images'][] = $this->getArchiveLink($download['file_link']);
                             } elseif (in_array($download['filetype_id'], $this->mapFileTypes)) {
-                                $prodInfo['maps'][] = $this->getArchiveLink($download['file_link']);
+                                $prodInfo['maps'][] = [
+                                    'url' => $this->getArchiveLink($download['file_link']),
+                                    'author' => ''
+                                ];
                             }
                         }
                     }

@@ -8,9 +8,10 @@
  * @property string $fileName
  * @property string $image
  * @property string $imageFileName
+ * @property string $author
  */
 class fileElement extends structureElement implements StructureElementUploadedFilesPathInterface,
-                                                      ImageUrlProviderInterface
+    ImageUrlProviderInterface
 {
     use ImageUrlProviderTrait;
 
@@ -25,6 +26,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         $moduleStructure['fileName'] = 'fileName';
         $moduleStructure['image'] = 'image';
         $moduleStructure['imageFileName'] = 'fileName';
+        $moduleStructure['author'] = 'text';
     }
 
     public function getUploadedFilesPath()
@@ -67,7 +69,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
             $url = $controller->baseURL . 'zxscreen/type:standard/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
         } elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'img')) {
             $url = $controller->baseURL . 'zxscreen/type:gigascreen/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
-        }elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'ssx')) {
+        } elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'ssx')) {
             $url = $controller->baseURL . 'zxscreen/type:ssx/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
         } elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'mlt')) {
             $url = $controller->baseURL . 'zxscreen/type:mlt/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';

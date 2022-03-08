@@ -120,7 +120,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
 
     public function getFileSelectorPropertyNames()
     {
-        return ['connectedFile', 'mapFilesSelector'];
+        return ['connectedFile', 'mapFilesSelector', 'rzx'];
     }
 
     public function getPartyId()
@@ -357,6 +357,16 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return $result;
     }
 
+    public function getLinkInfo($type)
+    {
+        foreach ($this->getLinksInfo() as $linkInfo) {
+            if ($linkInfo['type'] === $type) {
+                return $linkInfo;
+            }
+        }
+        return null;
+    }
+
     public function getLinksInfo()
     {
         if ($this->linksInfo === null) {
@@ -368,9 +378,9 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
             $db = $this->getService('db');
 
             if ($this->is3aDenied()) {
-                $types = ['zxdb', 'vt', 'dzoo', 'pouet', 'zxd'];
+                $types = ['zxdb', 'vt', 'dzoo', 'pouet', 'zxd', 'rzx', 'maps'];
             } else {
-                $types = ['3a', 'zxdb', 'vt', 'dzoo', 'pouet', 'zxd'];
+                $types = ['3a', 'zxdb', 'vt', 'dzoo', 'pouet', 'zxd', 'rzx', 'maps'];
             }
 
             $query = $db->table('import_origin')
@@ -429,6 +439,27 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
                             'image' => 'icon_zxd.png',
                             'name' => $translationsManager->getTranslationByName('links.link_zxd'),
                             'url' => 'http://zxdemo.org/productions/' . $row['importId'] . '/',
+                            'id' => $row['importId'],
+                        ];
+                    } elseif ($row['importOrigin'] == 'rzx') {
+                        if (is_numeric(substr($this->title, 0, 1))) {
+                            $letter = '0';
+                        } else {
+                            $letter = strtolower(substr(trim($this->title), 0, 1));
+                        }
+                        $this->linksInfo[] = [
+                            'type' => 'rzx',
+                            'image' => 'icon_rzx.png',
+                            'name' => $translationsManager->getTranslationByName('links.link_rzx'),
+                            'url' => 'https://www.rzxarchive.co.uk/' . $letter . '.php#' . $row['importId'],
+                            'id' => $row['importId'],
+                        ];
+                    } elseif ($row['importOrigin'] == 'maps') {
+                        $this->linksInfo[] = [
+                            'type' => 'maps',
+                            'image' => 'icon_maps.png',
+                            'name' => $translationsManager->getTranslationByName('links.link_maps'),
+                            'url' => 'https://maps.speccy.cz/map.php?id=' . $row['importId'] . '&sort=0&part=0&ath=0',
                             'id' => $row['importId'],
                         ];
                     }

@@ -53,34 +53,8 @@ class sxgApplication extends controllerApplication
                         }
                     }
                     if ($gdObject) {
-//                    $width = 360;
-//                    $height = 288;
-//                    $image->setWidth($width);
-//                    $image->setHeight($height);
 
                         $image = new Sxg\Image();
-//                        $palette = [
-//                            0x000000,
-//                            0x0000ff,
-//                            0xff0000,
-//                            0xff00ff,
-//
-//                            0x00ff00,
-//                            0x00ffff,
-//                            0xffff00,
-//                            0xffffff,
-//
-//                            0x000000,
-//                            0x0000cd,
-//                            0xcd0000,
-//                            0xcd00cd,
-//
-//                            0x00cd00,
-//                            0x00cdcd,
-//                            0xcdcd00,
-//                            0xcdcdcd,
-//                        ];
-//                        $image->setRgbPalette($palette);
                         $image->setColorFormat($image::SXG_COLOR_FORMAT_256);
                         $image->setPaletteType($image::SXG_PALETTE_FORMAT_PWM);
                         $image->importFromGd($gdObject);
@@ -88,17 +62,6 @@ class sxgApplication extends controllerApplication
                         header('Content-type: image/sxg');
                         header('Content-disposition: inline; filename="' . $id . '.sxg"');
                         echo $image->getSxgData();
-//                        if (file_put_contents(ROOT_PATH . 'sxg.sxg', $image->getSxgData())) {
-//                            $zxImageConverter = new \ZxImage\Converter();
-//                            $zxImageConverter->setSize(2);
-//                            $zxImageConverter->setType('sxg');
-//                            $zxImageConverter->setCacheEnabled(false);
-//                            $zxImageConverter->setPath(ROOT_PATH . 'sxg.sxg');
-//                            header('Content-type: image/png');
-//
-//                            echo $zxImageConverter->getBinary();
-//
-//                        }
                     }
                 }
             }
