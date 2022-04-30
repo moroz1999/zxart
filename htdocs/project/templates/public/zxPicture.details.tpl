@@ -70,7 +70,7 @@
 	{if $element->denyVoting}<p>{translations name="zxitem.votingdenied"}</p>{/if}
 	{stripdomspaces}
 			{if $element->getChartData()}
-				<script src="{$controller->baseURL}vendor/nnnick/chartjs/dist/Chart.js"></script>
+				<script defer src="{$controller->baseURL}vendor/nnnick/chartjs/dist/Chart.js"></script>
 				<div class="picture_details_stats">
 					<h2 class="picture_details_views_title">{translations name="zxpicture.views_chart"}</h2>
 					<canvas class="picture_details_views_chart chart_component" data-chartid="{$element->id}_views" width="700" height="200"></canvas>

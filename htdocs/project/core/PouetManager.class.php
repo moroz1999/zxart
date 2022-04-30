@@ -206,6 +206,7 @@ class PouetManager extends errorLogger
         'optimisations' => 'code',
         'maintainer' => 'support',
         'music (original)' => 'music',
+        'technical assistance' => 'support',
     ];
 
     protected $compos = [

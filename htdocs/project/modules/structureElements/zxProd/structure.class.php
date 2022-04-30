@@ -445,7 +445,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
                         if (is_numeric(substr($this->title, 0, 1))) {
                             $letter = '0';
                         } else {
-                            $letter = strtolower(substr(trim($this->title), 0, 1));
+                            $letter = strtolower(mb_substr(trim($row['importId']), 0, 1));
                         }
                         $this->linksInfo[] = [
                             'type' => 'rzx',

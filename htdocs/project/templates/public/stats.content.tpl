@@ -7,7 +7,7 @@
 	{/capture}
 {/if}
 {capture assign="moduleContent"}
-	<script src="{$controller->baseURL}vendor/nnnick/chartjs/dist/Chart.js"></script>
+	<script defer src="{$controller->baseURL}vendor/nnnick/chartjs/dist/Chart.js"></script>
 	<div class="stats_section">
 		<h2 class="stats_all_years_description">{translations name="stats.all_years"}</h2>
 		<canvas class="stats_chart chart_component" data-chartid="{$element->id}_all" width="700" height="200"></canvas>

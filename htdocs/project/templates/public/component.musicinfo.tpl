@@ -1,14 +1,3 @@
-<div class="music_details_share">
-	<div class="share_item">
-		<div class="social_tags_item social_tags_google">
-			<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
-			<g:plusone href="{$currentElement->URL}" size="small"></g:plusone>
-		</div>
-	</div>
-	<div class="share_item">
-		<div id="fb-root"></div><script src="//connect.facebook.net/en_US/all.js#appId=228531633858861&amp;xfbml=1"></script><fb:like href="{$currentElement->URL}" send="false" layout="button_count" width="100" show_faces="false" font=""></fb:like>
-	</div>
-</div>
 {if $element->description}
 	<div class="music_details_description">
 		{$element->description}
