@@ -71,13 +71,9 @@
 			<td class="form_field">
 				<select class="dropdown_placeholder" name="{$formNames.channelsType}" >
 					<option value='' {if !$formData.channelsType}selected='selected'{/if}>{translations name="zxmusic.channelstype_default"}</option>
-					<option value='ABC' {if $formData.channelsType=='ABC'}selected='selected'{/if}>ABC</option>
-					<option value='ACB' {if $formData.channelsType=='ACB'}selected='selected'{/if}>ACB</option>
-					<option value='BAC' {if $formData.channelsType=='BAC'}selected='selected'{/if}>BAC</option>
-					<option value='BCA' {if $formData.channelsType=='BCA'}selected='selected'{/if}>BCA</option>
-					<option value='CBA' {if $formData.channelsType=='CBA'}selected='selected'{/if}>CBA</option>
-					<option value='CAB' {if $formData.channelsType=='CAB'}selected='selected'{/if}>CAB</option>
-					<option value='mono' {if $formData.channelsType=='mono'}selected='selected'{/if}>mono</option>
+					{foreach $element->getChannelsTypes() as $type}
+						<option value='{$type}' {if $type == $formData.channelsType}selected='selected'{/if}>{translations name="zxmusic.channelstype_{$type}"}</option>
+					{/foreach}
 				</select>
 				{include file=$theme->template('component.form_help.tpl') structureType="zxMusic" name="channelstype"}
 			</td>
@@ -105,12 +101,9 @@
 			<td class="form_field">
 				<select class="dropdown_placeholder" name="{$formNames.intFrequency}" >
 					<option value='' {if !$formData.intFrequency}selected='selected'{/if}>{translations name="zxmusic.frequency_default"}</option>
-					<option value='48.828125' {if $formData.intFrequency=='48.828125'}selected='selected'{/if}>48.828125 Hz (Pentagon) </option>
-					<option value='50' {if $formData.intFrequency=='50'}selected='selected'{/if}>50 Hz (Standard ZX) </option>
-					<option value='60' {if $formData.intFrequency=='60'}selected='selected'{/if}>60 Hz (MSX) </option>
-					<option value='100' {if $formData.intFrequency=='100'}selected='selected'{/if}>100 Hz (Enhanced) </option>
-					<option value='200' {if $formData.intFrequency=='200'}selected='selected'{/if}>200 Hz (Atari) </option>
-					<option value='1000' {if $formData.intFrequency=='1000'}selected='selected'{/if}>1000 Hz (Enhanced) </option>
+					{foreach $element->getIntFrequencies() as $type}
+						<option value='{$type}' {if $type == $formData.intFrequency}selected='selected'{/if}>{translations name="zxmusic.intfrequency_{$type|replace:'.':''}"}</option>
+					{/foreach}
 				</select>
 			</td>
 		</tr>		<tr {if $formErrors.party} class="form_error"{/if}>
@@ -142,25 +135,13 @@
 			</td>
 			<td class="form_field">
 				<select class="dropdown_placeholder" name="{$formNames.compo}" >
-					<option value='standard' {if $formData.compo=='standard'}selected='selected'{/if}>General compo (AY/Beeper/TS/...)</option>
-					<option value='ay' {if $formData.compo=='ay'}selected='selected'{/if}>Ay</option>
-					<option value='beeper' {if $formData.compo=='beeper'}selected='selected'{/if}>Beeper</option>
-					<option value='copyay' {if $formData.compo=='copyay'}selected='selected'{/if}>Ay (Copy)</option>
-					<option value='nocopyay' {if $formData.compo=='nocopyay'}selected='selected'{/if}>Ay (No-Copy)</option>
-					<option value='realtime' {if $formData.compo=='realtime'}selected='selected'{/if}>Realtime</option>
-					<option value='realtimeay' {if $formData.compo=='realtimeay'}selected='selected'{/if}>Realtime AY</option>
-					<option value='realtimebeeper' {if $formData.compo=='realtimebeeper'}selected='selected'{/if}>Realtime Beeper</option>
-					<option value='realtimec' {if $formData.compo=='realtimec'}selected='selected'{/if}>Realtime cover</option>
-					<option value='out' {if $formData.compo=='out'}selected='selected'{/if}>Out of compo</option>
-					<option value='wild' {if $formData.compo=='wild'}selected='selected'{/if}>Wild</option>
-					<option value='experimental' {if $formData.compo=='experimental'}selected='selected'{/if}>Experimental Sound</option>
-					<option value='oldschool' {if $formData.compo=='oldschool'}selected='selected'{/if}>Oldschool Music</option>
-					<option value='mainstream' {if $formData.compo=='mainstream'}selected='selected'{/if}>Mainstream Music</option>
-					<option value='progressive' {if $formData.compo=='progressive'}selected='selected'{/if}>Progressive Music</option>
-					<option value='tsfm' {if $formData.compo=='tsfm'}selected='selected'{/if}>TurboFM Music Compo</option>
-					<option value='related' {if $formData.compo=='related'}selected='selected'{/if}>Party-related works</option>
+					<option value=''></option>
+					{foreach $element->getCompoTypes() as $type}
+						<option value='{$type}' {if $formData.compo===$type}selected='selected'{/if}>{translations name="musiccompo.compo_$type"}</option>
+					{/foreach}
 				</select>
 				{include file=$theme->template('component.form_help.tpl') structureType="zxMusic" name="compo"}
+
 			</td>
 		</tr>
 		<tr {if $formErrors.year} class="form_error"{/if}>

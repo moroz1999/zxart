@@ -179,12 +179,9 @@
 			</td>
 			<td class="form_field">
 				<select class="dropdown_placeholder" name="{$formNames.intFrequency}" >
-					<option value='48.828125' {if $formData.intFrequency=='48.828125'}selected='selected'{/if}>{translations name="zxmusic.intfrequency_48828125"}</option>
-					<option value='50' {if $formData.intFrequency=='50'}selected='selected'{/if}>{translations name="zxmusic.intfrequency_50"}</option>
-					<option value='60' {if $formData.intFrequency=='60'}selected='selected'{/if}>{translations name="zxmusic.intfrequency_60"}</option>
-					<option value='100' {if $formData.intFrequency=='100'}selected='selected'{/if}>{translations name="zxmusic.intfrequency_100"}</option>
-					<option value='200' {if $formData.intFrequency=='200'}selected='selected'{/if}>{translations name="zxmusic.intfrequency_200"}</option>
-					<option value='1000' {if $formData.intFrequency=='1000'}selected='selected'{/if}>{translations name="zxmusic.intfrequency_1000"}</option>
+					{foreach $element->getIntFrequencies() as $type}
+						<option value='{$type}' {if $type == $formData.intFrequency}selected='selected'{/if}>{translations name="zxmusic.intfrequency_{$type|replace:'.':''}"}</option>
+					{/foreach}
 				</select>
 			</td>
 		</tr>

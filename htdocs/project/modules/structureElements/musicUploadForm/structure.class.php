@@ -4,6 +4,7 @@ class musicUploadFormElement extends ZxArtItemUploadFormElement
 {
     use AuthorElementsProviderTrait;
     use PartyElementProviderTrait;
+    use MusicSettingsProvider;
 
     public $languagesParentElementMarker = 'adminLanguages';
     public $dataResourceName = 'module_generic';
