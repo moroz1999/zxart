@@ -21,6 +21,7 @@ $fixedHeight: 192px;
   border-top-right-radius: $radius-xl;
   border-top-left-radius: $radius-xl;
   overflow: hidden;
+  image-rendering: pixelated;
   @media (min-width: 1000px) {
     height: $fixedHeight;
   }
