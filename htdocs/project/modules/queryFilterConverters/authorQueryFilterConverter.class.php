@@ -20,6 +20,10 @@ class authorQueryFilterConverter extends QueryFilterConverter
             $query = $this->generateParentQuery($sourceData, 'module_author', 'authorMusic', true);
         } elseif ($sourceType == 'zxPicture') {
             $query = $this->generateParentQuery($sourceData, 'module_author', 'authorPicture', true);
+        } elseif ($sourceType == 'zxProd') {
+            $query = $this->getService('db')->table('module_author')->select($this->getFields())->distinct()->whereIn('id', function ($query) use ($sourceData) {
+                $query->from('authorship')->whereIn('elementId', $sourceData->select('id'))->select('authorId');
+            });
         } else {
             $query = $this->getService('db')->table('module_author')->select($this->getFields())->distinct();
         }

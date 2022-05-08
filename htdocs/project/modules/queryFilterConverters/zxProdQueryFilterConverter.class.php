@@ -3,7 +3,7 @@
 class zxProdQueryFilterConverter extends QueryFilterConverter
 {
     use LinkedQueryFilterTrait;
-    
+
     protected function getFields(): array
     {
         return [
@@ -24,16 +24,17 @@ class zxProdQueryFilterConverter extends QueryFilterConverter
             $query = $this->generateParentQuery($sourceData, $this->getTable(), 'authorPicture', false);
         } elseif ($sourceType == 'zxRelease') {
             $query = $this->generateParentQuery($sourceData, $this->getTable(), 'structure', false);
+        } elseif ($sourceType == 'author') {
+            $query = $this->getService('db')->table($this->getTable())->select($this->getFields())->distinct()->whereIn('id', function ($query) use ($sourceData) {
+                $query->from('authorship')->whereIn('authorId', $sourceData->select('id'))->select('elementId');
+            });
         } elseif ($sourceType == 'structure') {
             $query = $this->getService('db')
                 ->table($this->getTable())
                 ->whereIn($this->getTable() . '.id', $sourceData)
-//                ->leftJoin($this->getStructureTable(), $this->getStructureTable() . '.id', '=', $this->getTable() . '.id')
                 ->select($this->getFields());
         } else {
-            $query = $this->getService('db')->table($this->getTable())
-//                ->leftJoin($this->getStructureTable(), $this->getStructureTable() . '.id', '=', $this->getTable() . '.id')
-                ->select($this->getFields());
+            $query = $this->getService('db')->table($this->getTable())->select($this->getFields());
         }
         return $query;
     }
