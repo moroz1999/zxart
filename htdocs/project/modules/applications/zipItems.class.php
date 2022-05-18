@@ -116,10 +116,12 @@ class zipItemsApplication extends controllerApplication
                                 if ($structure === 'authors') {
                                     foreach ($itemElement->getRealAuthorsList() as $author) {
                                         if (!$requestedAuthors || in_array($author->id, $requestedAuthors)) {
-                                            $location = preg_replace(
-                                                '#[\?\/\<\>\\\:\*\|\"\.]*#ui',
-                                                '',
-                                                html_entity_decode($author->title)
+                                            $location = TranslitHelper::convert(
+                                                preg_replace(
+                                                    '#[\?\/\<\>\\\:\*\|\"\.]*#ui',
+                                                    '',
+                                                    html_entity_decode($author->title, ENT_QUOTES)
+                                                )
                                             );
                                             $path = $location . '/';
                                             if ($content = $this->generateAuthorText($author)) {
@@ -135,10 +137,12 @@ class zipItemsApplication extends controllerApplication
                                     $fileName = $itemElement->getFileName('original', false, false, false, false);
                                 } elseif ($structure === 'parties') {
                                     if ($party = $itemElement->getPartyElement()) {
-                                        $location = preg_replace(
-                                            '#[\?\/\<\>\\\:\*\|\"]*#ui',
-                                            '',
-                                            html_entity_decode($party->title)
+                                        $location = TranslitHelper::convert(
+                                            preg_replace(
+                                                '#[\?\/\<\>\\\:\*\|\"]*#ui',
+                                                '',
+                                                html_entity_decode($party->title, ENT_QUOTES)
+                                            )
                                         );
                                         $path = $location . '/';
                                         if ($itemElement->compo) {
@@ -174,7 +178,6 @@ class zipItemsApplication extends controllerApplication
                                 $originalPath = $itemElement->getOriginalPath();
                                 if (is_file($originalPath)) {
                                     foreach ($paths as $path) {
-                                        $path = TranslitHelper::convert($path);
                                         $zipArchive->addFile($originalPath, $path . $fileName);
                                     }
                                 }
@@ -193,7 +196,7 @@ class zipItemsApplication extends controllerApplication
 
     protected function sanitizeName($fileName)
     {
-        $fileName = html_entity_decode($fileName);
+        $fileName = html_entity_decode($fileName, ENT_QUOTES);
         $fileName = TranslitHelper::convert($fileName);
         $fileName = preg_replace('/[^a-z0-9.]+/i', '-', $fileName);
         return $fileName;

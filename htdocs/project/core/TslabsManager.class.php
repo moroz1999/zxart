@@ -16,6 +16,7 @@ class TslabsManager extends errorLogger
         'Text' => 'text',
         'Idea' => 'concept',
         'Producer' => 'organizing',
+        'Support' => 'support',
         'Remake' => 'adaptation',
         'Sound FX' => 'sfx',
     ];
