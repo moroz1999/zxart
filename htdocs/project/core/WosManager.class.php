@@ -4,9 +4,9 @@ class WosManager extends errorLogger
 {
     protected $maxTime;
     protected $counter = 0;
-    protected $maxCounter;
+    protected $maxCounter = 0;
     protected $minCounter = 0;
-//    protected $debugEntry = 36921;
+    protected $debugEntry;
 
     /**
      * @var ProdsManager
@@ -374,7 +374,8 @@ class WosManager extends errorLogger
 //        $this->prodsManager->setForceUpdateCategories(true);
 //        $this->prodsManager->setForceUpdatePublishers(true);
 //        $this->prodsManager->setForceUpdateGroups(true);
-//        $this->prodsManager->setForceUpdateImages(true);
+        $this->prodsManager->setForceUpdateImages(true);
+        $this->prodsManager->setAddImages(true);
     }
 
     public function importAll()
@@ -607,7 +608,7 @@ class WosManager extends errorLogger
                     }
                     //some releases dont have downloads, so release type should be determined be release_seq
                     foreach ($prodInfo['releases'] as &$release) {
-                        if (!$release['releaseType']) {
+                        if ($release['releaseType']) {
                             if ($release['seq'] === 0) {
                                 $release['releaseType'] = 'original';
                             } else {
@@ -650,6 +651,7 @@ class WosManager extends errorLogger
                 $release_seq = $release['release_seq'];
                 $releaseInfo = [
                     'title' => $entry['title'],
+                    'releaseType' => '',
                     'year' => $release['release_year'],
                     'language' => [],
                     'hardwareRequired' => [],
