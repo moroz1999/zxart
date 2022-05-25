@@ -20,12 +20,13 @@ class wosApplication extends controllerApplication
          * @var Cache $cache
          */
         $cache = $this->getService('Cache');
-        $cache->enable(false, false, false);
+        $cache->enable(false, false, true);
         $renderer = $this->getService('renderer');
         $renderer->endOutputBuffering();
         while (ob_get_level()) {
             ob_end_flush();
         }
+
         $user = $this->getService('user');
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
@@ -34,6 +35,7 @@ class wosApplication extends controllerApplication
                 'structureManager',
                 ['rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin')]
             );
+
             /**
              * @var WosManager $wosManager
              */

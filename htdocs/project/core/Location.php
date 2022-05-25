@@ -105,7 +105,7 @@ trait Location
     public function getPartiesList()
     {
         if ($this->partiesList === null) {
-            $key = 'grp';
+            $key = 'prt';
             $cache = $this->getElementsListCache($key, 60 * 60 * 24 * 7);
             if (($this->partiesList = $cache->load()) === false) {
                 $this->partiesList = [];

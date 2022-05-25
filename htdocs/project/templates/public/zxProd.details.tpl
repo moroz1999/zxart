@@ -193,15 +193,17 @@
             </div>
         {/if}
         {if $filesList = $element->getFilesList('mapFilesSelector')}
-            <h3>{translations name='zxprod.maps'}</h3>
-            {$linkInfo = $element->getLinkInfo('maps')}
-            {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodMapImage' displayTitle=true url=$linkInfo['url']}
+            {if $linkInfo = $element->getLinkInfo('maps')}
+                <h3>{translations name='zxprod.maps'}</h3>
+                {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodMapImage' displayTitle=true url=$linkInfo['url']}
+            {/if}
         {/if}
     </div>
     {if $filesList = $element->getFilesList('rzx')}
-        {$linkInfo = $element->getLinkInfo('rzx')}
-        <h3>{translations name='zxprod.rzx'}</h3>
-        {include file=$theme->template('zxItem.files.tpl') filesList = $filesList url=$linkInfo['url'] newWindow=true}
+        {if $linkInfo = $element->getLinkInfo('rzx')}
+            <h3>{translations name='zxprod.rzx'}</h3>
+            {include file=$theme->template('zxItem.files.tpl') filesList = $filesList url=$linkInfo['url'] newWindow=true}
+        {/if}
     {/if}
     <script>
         /*<![CDATA[*/

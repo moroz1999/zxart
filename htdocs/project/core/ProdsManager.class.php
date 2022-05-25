@@ -287,16 +287,17 @@ class ProdsManager extends ElementsManager
      */
     protected function createProd($prodInfo, $origin)
     {
-        $element = false;
+        $category = null;
         if ($prodInfo['directCategories']) {
-            /**
-             * @var zxProdElement $element
-             */
-            if ($element = $this->structureManager->createElement('zxProd', 'show', reset($prodInfo['directCategories']))) {
-                $element->dateAdded = time();
-                $this->saveImportId($element->getId(), $prodInfo['id'], $origin, 'prod');
-                $this->updateProd($element, $prodInfo, $origin, true);
-            }
+            $category = reset($prodInfo['directCategories']);
+        }
+        /**
+         * @var zxProdElement $element
+         */
+        if ($element = $this->structureManager->createElement('zxProd', 'show', $category)) {
+            $element->dateAdded = time();
+            $this->saveImportId($element->getId(), $prodInfo['id'], $origin, 'prod');
+            $this->updateProd($element, $prodInfo, $origin, true);
         }
 
         return $element;
@@ -492,13 +493,13 @@ class ProdsManager extends ElementsManager
         }
 
         if (!empty($prodInfo['maps'])) {
-            foreach ($prodInfo['maps'] as $map){
+            foreach ($prodInfo['maps'] as $map) {
                 $this->importElementFile($element, $map['url'], $map['author'], 'mapFilesSelector');
             }
         }
 
         if (!empty($prodInfo['rzx'])) {
-            foreach ($prodInfo['rzx'] as $rzx){
+            foreach ($prodInfo['rzx'] as $rzx) {
                 $this->importElementFile($element, $rzx['url'], $rzx['author'], 'rzx');
             }
         }
@@ -663,7 +664,9 @@ class ProdsManager extends ElementsManager
         if (!$element) {
             return $this->createRelease($releaseInfo, $prodId, $origin);
         }
-
+        if ($element) {
+            $this->updateRelease($element, $releaseInfo, $origin);
+        }
         return $element;
     }
 
