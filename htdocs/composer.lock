@@ -54,16 +54,16 @@
         },
         {
             "name": "ckeditor/ckeditor",
-            "version": "4.17.2",
+            "version": "4.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ckeditor/ckeditor4-releases.git",
-                "reference": "0a402ca86b1821418e90cef026910fc723a930a6"
+                "reference": "db9342ad88e04de66dcf9b132ff41061727778c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ckeditor/ckeditor4-releases/zipball/0a402ca86b1821418e90cef026910fc723a930a6",
-                "reference": "0a402ca86b1821418e90cef026910fc723a930a6",
+                "url": "https://api.github.com/repos/ckeditor/ckeditor4-releases/zipball/db9342ad88e04de66dcf9b132ff41061727778c5",
+                "reference": "db9342ad88e04de66dcf9b132ff41061727778c5",
                 "shasum": ""
             },
             "type": "library",
@@ -98,7 +98,7 @@
                 "source": "https://github.com/ckeditor/ckeditor4",
                 "wiki": "https://ckeditor.com/docs/ckeditor4/latest/"
             },
-            "time": "2022-02-09T12:00:32+00:00"
+            "time": "2022-05-18T10:49:44+00:00"
         },
         {
             "name": "doctrine/inflector",
@@ -132,8 +132,8 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Doctrine\\Common\\Inflector\\": "lib/Doctrine/Common/Inflector",
-                    "Doctrine\\Inflector\\": "lib/Doctrine/Inflector"
+                    "Doctrine\\Inflector\\": "lib/Doctrine/Inflector",
+                    "Doctrine\\Common\\Inflector\\": "lib/Doctrine/Common/Inflector"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -418,16 +418,16 @@
         },
         {
             "name": "jaybizzle/crawler-detect",
-            "version": "v1.2.110",
+            "version": "v1.2.111",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JayBizzle/Crawler-Detect.git",
-                "reference": "f9d63a3581428fd8a3858e161d072f0b9debc26f"
+                "reference": "d572ed4a65a70a2d2871dc5137c9c5b7e69745ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/f9d63a3581428fd8a3858e161d072f0b9debc26f",
-                "reference": "f9d63a3581428fd8a3858e161d072f0b9debc26f",
+                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/d572ed4a65a70a2d2871dc5137c9c5b7e69745ab",
+                "reference": "d572ed4a65a70a2d2871dc5137c9c5b7e69745ab",
                 "shasum": ""
             },
             "require": {
@@ -464,9 +464,9 @@
             ],
             "support": {
                 "issues": "https://github.com/JayBizzle/Crawler-Detect/issues",
-                "source": "https://github.com/JayBizzle/Crawler-Detect/tree/v1.2.110"
+                "source": "https://github.com/JayBizzle/Crawler-Detect/tree/v1.2.111"
             },
-            "time": "2021-12-07T18:35:06+00:00"
+            "time": "2022-03-15T22:19:01+00:00"
         },
         {
             "name": "kylekatarnls/update-helper",
@@ -798,16 +798,16 @@
         },
         {
             "name": "moroz1999/zx-image",
-            "version": "5.4.1",
+            "version": "5.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/moroz1999/zx-image.git",
-                "reference": "4b68d2a805abacb64f534731f6a7a6ba8d2baae6"
+                "reference": "417f9e86696ef1c0dde3b167de473c79a106f4cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/moroz1999/zx-image/zipball/4b68d2a805abacb64f534731f6a7a6ba8d2baae6",
-                "reference": "4b68d2a805abacb64f534731f6a7a6ba8d2baae6",
+                "url": "https://api.github.com/repos/moroz1999/zx-image/zipball/417f9e86696ef1c0dde3b167de473c79a106f4cb",
+                "reference": "417f9e86696ef1c0dde3b167de473c79a106f4cb",
                 "shasum": ""
             },
             "require": {
@@ -837,9 +837,9 @@
             ],
             "support": {
                 "issues": "https://github.com/moroz1999/zx-image/issues",
-                "source": "https://github.com/moroz1999/zx-image/tree/5.4.1"
+                "source": "https://github.com/moroz1999/zx-image/tree/5.5.0"
             },
-            "time": "2021-12-28T17:21:38+00:00"
+            "time": "2022-03-05T13:35:11+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -1226,16 +1226,16 @@
         },
         {
             "name": "smarty/smarty",
-            "version": "v3.1.44",
+            "version": "v3.1.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-php/smarty.git",
-                "reference": "99085d8dc65eeb5e55ae3cba74d3dc6b3bb0205e"
+                "reference": "a2713ab89e6d773bc4819f11857af7f6b2e353a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/99085d8dc65eeb5e55ae3cba74d3dc6b3bb0205e",
-                "reference": "99085d8dc65eeb5e55ae3cba74d3dc6b3bb0205e",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/a2713ab89e6d773bc4819f11857af7f6b2e353a9",
+                "reference": "a2713ab89e6d773bc4819f11857af7f6b2e353a9",
                 "shasum": ""
             },
             "require": {
@@ -1283,9 +1283,9 @@
                 "forum": "http://www.smarty.net/forums/",
                 "irc": "irc://irc.freenode.org/smarty",
                 "issues": "https://github.com/smarty-php/smarty/issues",
-                "source": "https://github.com/smarty-php/smarty/tree/v3.1.44"
+                "source": "https://github.com/smarty-php/smarty/tree/v3.1.45"
             },
-            "time": "2022-01-17T23:12:04+00:00"
+            "time": "2022-05-17T12:57:52+00:00"
         },
         {
             "name": "symfony/css-selector",
@@ -1355,7 +1355,7 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.24.0",
+            "version": "v1.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
@@ -1418,7 +1418,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.24.0"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.25.0"
             },
             "funding": [
                 {
@@ -1438,16 +1438,16 @@
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.24.0",
+            "version": "v1.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "57b712b08eddb97c762a8caa32c84e037892d2e9"
+                "reference": "4407588e0d3f1f52efb65fbe92babe41f37fe50c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/57b712b08eddb97c762a8caa32c84e037892d2e9",
-                "reference": "57b712b08eddb97c762a8caa32c84e037892d2e9",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/4407588e0d3f1f52efb65fbe92babe41f37fe50c",
+                "reference": "4407588e0d3f1f52efb65fbe92babe41f37fe50c",
                 "shasum": ""
             },
             "require": {
@@ -1501,7 +1501,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.24.0"
+                "source": "https://github.com/symfony/polyfill-php80/tree/v1.25.0"
             },
             "funding": [
                 {
@@ -1517,20 +1517,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-09-13T13:58:33+00:00"
+            "time": "2022-03-04T08:16:47+00:00"
         },
         {
             "name": "symfony/translation",
-            "version": "v4.4.37",
+            "version": "v4.4.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "4ce00d6875230b839f5feef82e51971f6c886e00"
+                "reference": "dcb67eae126e74507e0b4f0b9ac6ef35b37c3331"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/4ce00d6875230b839f5feef82e51971f6c886e00",
-                "reference": "4ce00d6875230b839f5feef82e51971f6c886e00",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/dcb67eae126e74507e0b4f0b9ac6ef35b37c3331",
+                "reference": "dcb67eae126e74507e0b4f0b9ac6ef35b37c3331",
                 "shasum": ""
             },
             "require": {
@@ -1590,7 +1590,7 @@
             "description": "Provides tools to internationalize your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/translation/tree/v4.4.37"
+                "source": "https://github.com/symfony/translation/tree/v4.4.41"
             },
             "funding": [
                 {
@@ -1606,20 +1606,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-02T09:41:36+00:00"
+            "time": "2022-04-21T07:22:34+00:00"
         },
         {
             "name": "symfony/translation-contracts",
-            "version": "v2.5.0",
+            "version": "v2.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation-contracts.git",
-                "reference": "d28150f0f44ce854e942b671fc2620a98aae1b1e"
+                "reference": "1211df0afa701e45a04253110e959d4af4ef0f07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation-contracts/zipball/d28150f0f44ce854e942b671fc2620a98aae1b1e",
-                "reference": "d28150f0f44ce854e942b671fc2620a98aae1b1e",
+                "url": "https://api.github.com/repos/symfony/translation-contracts/zipball/1211df0afa701e45a04253110e959d4af4ef0f07",
+                "reference": "1211df0afa701e45a04253110e959d4af4ef0f07",
                 "shasum": ""
             },
             "require": {
@@ -1668,7 +1668,7 @@
                 "standards"
             ],
             "support": {
-                "source": "https://github.com/symfony/translation-contracts/tree/v2.5.0"
+                "source": "https://github.com/symfony/translation-contracts/tree/v2.5.1"
             },
             "funding": [
                 {
@@ -1684,7 +1684,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-08-17T14:20:01+00:00"
+            "time": "2022-01-02T09:53:40+00:00"
         },
         {
             "name": "tedivm/jshrink",

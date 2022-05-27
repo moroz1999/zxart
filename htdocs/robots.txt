@@ -1,10 +1,13 @@
 User-agent: *
-
 Disallow: /simple
 Disallow: /release
 Disallow: /zxfile
 Disallow: /remote
 Disallow: /banner
+Disallow: /api
+Disallow: /zipItems
+Disallow: /file
+Disallow: /print
 
 User-agent: BLEXBot
 Disallow: /
@@ -23,4 +26,6 @@ Disallow: /
 User-agent: MegaIndex.ru
 Disallow: /
 User-agent: megaIndex.ru
+Disallow: /
+User-agent: dotbot
 Disallow: /
