@@ -41,7 +41,7 @@ class zxItemsListElement extends structureElement implements JsonDataProvider
     {
         if ($this->itemsList === null) {
             $cache = $this->getElementsListCache('il', 60 * 60 * 7);
-            if (($this->itemsList = $cache->load()) === false) {
+            if ($this->requireUser || ($this->itemsList = $cache->load()) === false) {
                 $structureType = '';
                 if ((!$this->items) || $this->items == 'graphics') {
                     $structureType = 'zxPicture';

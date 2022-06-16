@@ -385,7 +385,7 @@ class PouetManager extends errorLogger
                             'title' => $group['name'],
                             'countryId' => false,
                             'abbreviation' => false,
-                            'isGroup' => true,
+                            'isGroup' => false,
                             'isPerson' => false,
                             'isAlias' => false,
                         ];

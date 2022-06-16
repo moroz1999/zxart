@@ -74,7 +74,6 @@ trait AuthorshipProviderTrait
             'intro_code',
             'intro_graphics',
             'intro_music',
-            'testing',
             'ascii',
             'illustrating',
             'tools',
