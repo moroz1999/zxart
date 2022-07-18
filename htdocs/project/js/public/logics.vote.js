@@ -6,9 +6,6 @@ window.votesLogics = new function() {
 				picturesInfo[window.picturesList[i].id] = window.picturesList[i];
 			}
 		}
-		if ((document.location.href.indexOf('z' + ('x')) < 0) && (document.location.href.indexOf('localhost') < 0)) {
-			document.body.innerHTML = 'oops';
-		}
 	};
 	var initComponents = function() {
 		var elements = _('.vote_controls');

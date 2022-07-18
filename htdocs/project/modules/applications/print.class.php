@@ -89,8 +89,7 @@ class printApplication extends controllerApplication
                     }
                     $text .= $zxPictureElement->title;
 
-                    $fileName = $zxPictureElement->getFileName('original', true, false);
-
+                    $fileName = $zxPictureElement->getFileName('image', true, false).'.png';
                     if (is_file($filePath)) {
                         $configManager = $this->getService('ConfigManager');
                         $pathsManager = $this->getService('PathsManager');
