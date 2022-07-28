@@ -1,9 +1,11 @@
 <?php
 
+use ZxImage\Converter;
+
 /**
  * Class zxScreenRendererPlugin
  *
- * @property \zxImage\Converter renderingEngine
+ * @property Converter renderingEngine
  */
 class zxScreenRendererPlugin extends rendererPlugin
 {
@@ -16,7 +18,7 @@ class zxScreenRendererPlugin extends rendererPlugin
         $this->requestHeadersManager = $this->getService('requestHeadersManager');
         $this->httpResponse = httpResponse::getInstance();
 
-        $this->renderingEngine = new \ZxImage\Converter();
+        $this->renderingEngine = new Converter();
         if (!is_dir($this->getService('PathsManager')->getPath('zxCache'))) {
             mkdir(
                 $this->getService('PathsManager')->getPath('zxCache'),
@@ -52,12 +54,12 @@ class zxScreenRendererPlugin extends rendererPlugin
             $this->renderingEngine->setBorder($value);
         } elseif ($attributeName == 'zoom') {
             $this->renderingEngine->setZoom($value);
-        } elseif ($attributeName == 'size') {
-            $this->renderingEngine->setSize($value);
         } elseif ($attributeName == 'rotation') {
             $this->renderingEngine->setRotation($value);
         } elseif ($attributeName == 'fileContents') {
             $this->renderingEngine->setSourceFileContents($value);
+        } elseif ($attributeName == 'cacheEnabled') {
+            $this->renderingEngine->setCacheEnabled($value);
         }
     }
 
@@ -100,7 +102,7 @@ class zxScreenRendererPlugin extends rendererPlugin
 
     protected function renderContent()
     {
-        $this->binary = $this->renderingEngine->generateCacheFile();
+        $this->binary = $this->renderingEngine->getBinary();
     }
 
     protected function getContentTextPart()

@@ -37,6 +37,9 @@ class zxscreenApplication extends controllerApplication
             $this->renderer->assign('border', $this->border);
             $this->renderer->assign('zoom', $this->zoom);
             $this->renderer->assign('rotation', $this->rotation);
+            if ($this->zoom !== 1 && $this->zoom !== 2 && $this->zoom !== 3) {
+                $this->renderer->assign('cacheEnabled', false);
+            }
             if ($this->download) {
                 $this->renderer->setContentDisposition('attachment');
             } else {
@@ -64,7 +67,7 @@ class zxscreenApplication extends controllerApplication
         }
         $this->border = $border;
 
-        $this->zoom = $controller->getParameter('zoom');
+        $this->zoom = (int)$controller->getParameter('zoom');
         $this->rotation = $controller->getParameter('rotation');
         $this->download = (boolean)$controller->getParameter('download');
     }

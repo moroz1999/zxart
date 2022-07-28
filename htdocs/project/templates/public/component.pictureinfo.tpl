@@ -112,14 +112,9 @@
 		</td>
 		<td class='info_table_value'>
 			<a rel="nofollow" class='picture_details_download' href="{$element->getImageUrl(1, true)}"><img src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'}" />{translations name='zxpicture.download_pc'}</a>
-		</td>
-	</tr>
-	<tr>
-		<td class='info_table_label'>
-
-		</td>
-		<td class='info_table_value'>
-			<a rel="nofollow" class='picture_details_download' href="{$element->getImageUrl(2, true)}"><img src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'}" />{translations name='zxpicture.download_pc_2x'}</a>
+			<a rel="nofollow" class='picture_details_download' href="{$element->getImageUrl(2, true)}">2X</a>
+			<a rel="nofollow" class='picture_details_download' href="{$element->getImageUrl(3, true)}">3X</a>
+			<a rel="nofollow" class='picture_details_download' href="{$element->getImageUrl(4, true)}">4X</a>
 		</td>
 	</tr>
 	<tr>
