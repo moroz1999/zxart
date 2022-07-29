@@ -116,6 +116,7 @@ class printApplication extends controllerApplication
                             )
                         );
                         $imageProcess->registerExport('canvas', 'png', ROOT_PATH . $fileName);
+                        $imageProcess->setImagesCaching(false);
                         $imageProcess->executeProcess();
                         header('Content-type: image/png');
                         header('Content-Disposition: attachment; filename="' . $fileName . '"');

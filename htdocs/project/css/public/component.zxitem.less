@@ -1,31 +1,44 @@
 .zxitem_images {
-	display: flex;
-	flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .zxitem_image_block {
-	margin: 0.5rem 1rem;
+  margin: 0.5rem 1rem;
+  position: relative;
+
+  &:hover .zxitem_image_download {
+    opacity: 1;
+  }
 }
 
 .zxitem_image {
-	max-width: 100%;
+  max-width: 100%;
 }
 
 .zxitem_image_link {
-	display: block;
+  display: block;
 }
 
-.zxitem_image_title {
-	display: block;
-	margin-top: 0.5rem;
-	text-align: center;
-}
-
-.zxitem_files {
-
+.zxitem_image_download {
+  display: block;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-image: url(getImageUrl('download.svg'));
+  background-position: center;
+  background-size: 1.5rem 1.5rem;
+  background-repeat: no-repeat;
+  width: 2rem;
+  height: 2rem;
+  background-color: #252525;
+  border: 1px solid #333;
+  border-radius: 7px;
+  opacity: 0;
+  transition: opacity 0.25s ease-in-out;
 }
 
 .zxitem_file_block {
-	display: block;
-	margin-bottom: 0.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
 }

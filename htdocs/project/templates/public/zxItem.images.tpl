@@ -12,11 +12,7 @@
                         <img class="zxitem_image galleryimageid_{$file->id}" src='{$file->getImageUrl($preset)}'
                              alt="{$file->title}"/>
                     </a>
-                    {if !empty($displayTitle)}
-                        <a href="{$file->getDownloadUrl('view', 'release')}" class="zxitem_image_title">
-                            {$file->getFileName(true)}
-                        </a>
-                    {/if}
+                    <a href="{$file->getDownloadUrl('view', 'release')}" class="zxitem_image_download" title="{$file->getFileName(true)}"></a>
                 {/if}
             </div>
         {/if}

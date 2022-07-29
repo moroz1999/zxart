@@ -1,5 +1,5 @@
 <?php return [
-    'host' => '192.168.1.233',
+    'host' => 'cache',
     'port' => '6379',
-    'pass' => 'test',
+    'pass' => 'eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81',
 ];
