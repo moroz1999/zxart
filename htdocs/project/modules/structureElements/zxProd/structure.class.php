@@ -26,7 +26,7 @@
  * @property array[] $splitData
  */
 class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPathInterface, CommentsHolderInterface,
-    JsonDataProvider
+    JsonDataProvider, OpenGraphDataProviderInterface
 {
     use AuthorshipProviderTrait;
     use AuthorshipPersister;
@@ -741,4 +741,17 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     }
 
 //    public function getMetaDescription();
+    public function getOpenGraphData()
+    {
+        $languagesManager = $this->getService('languagesManager');
+        $data = [
+            'title' => $this->getMetaTitle(),
+            'url' => $this->getUrl(),
+            'image' => $this->getImage()?->getImageUrl(),
+            'description' => $this->getMetaDescription(),
+            'locale' => $languagesManager->getCurrentLanguage()->iso6391,
+        ];
+        return $data;
+    }
+
 }

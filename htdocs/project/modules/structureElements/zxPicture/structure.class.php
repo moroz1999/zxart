@@ -10,7 +10,7 @@
  * @property int $year
  * @property string $palette
  */
-class zxPictureElement extends ZxArtItem
+class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterface
 {
     use PaletteTypesProvider;
     use GraphicsCompoProvider;
@@ -452,5 +452,16 @@ class zxPictureElement extends ZxArtItem
             }
         }
     }
-
+    public function getOpenGraphData()
+    {
+        $languagesManager = $this->getService('languagesManager');
+        $data = [
+            'title' => $this->getMetaTitle(),
+            'url' => $this->getUrl(),
+            'image' => $this->getImageUrl(),
+            'description' => $this->getMetaDescription(),
+            'locale' => $languagesManager->getCurrentLanguage()->iso6391,
+        ];
+        return $data;
+    }
 }
