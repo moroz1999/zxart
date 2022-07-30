@@ -1,4 +1,4 @@
 <?php return [
-    'enabled' => false,
+    'enabled' => true,
     'driver' => 'Redis',
 ];

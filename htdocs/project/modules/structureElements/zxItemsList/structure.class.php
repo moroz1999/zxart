@@ -59,9 +59,9 @@ class zxItemsListElement extends structureElement implements JsonDataProvider
                         $this->itemsList = $result[$structureType];
                     }
                 }
-		if (!$this->requireUser) {
-			$cache->save($this->itemsList);
-		}
+                if (!$this->requiresUser) {
+                    $cache->save($this->itemsList);
+                }
             }
         }
         return $this->itemsList;
