@@ -11,7 +11,7 @@ class BannerGenerator
      */
     protected $apiQueriesManager;
     /**
-     * @var languagesManager
+     * @var LanguagesManager
      */
     protected $languagesManager;
     /**
@@ -67,9 +67,6 @@ class BannerGenerator
         $this->apiQueriesManager = $apiQueriesManager;
     }
 
-    /**
-     * @param languagesManager $languagesManager
-     */
     public function setLanguagesManager($languagesManager)
     {
         $this->languagesManager = $languagesManager;

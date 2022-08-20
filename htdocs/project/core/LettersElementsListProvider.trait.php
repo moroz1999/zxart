@@ -8,7 +8,7 @@ trait LettersElementsListProviderTrait
     protected function getLetterElements()
     {
         /**
-         * @var languagesManager $languagesManager
+         * @var LanguagesManager $languagesManager
          */
         if (!empty($this->languagesManager)) {
             $languagesManager = $this->languagesManager;

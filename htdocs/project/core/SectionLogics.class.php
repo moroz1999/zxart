@@ -10,7 +10,7 @@ class SectionLogics
      */
     protected $structureManager;
     /**
-     * @var languagesManager
+     * @var LanguagesManager
      */
     protected $languagesManager;
 
@@ -22,9 +22,6 @@ class SectionLogics
         $this->structureManager = $structureManager;
     }
 
-    /**
-     * @param languagesManager $languagesManager
-     */
     public function setLanguagesManager($languagesManager)
     {
         $this->languagesManager = $languagesManager;

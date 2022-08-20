@@ -56,9 +56,6 @@ class GroupsManager extends ElementsManager
         $this->privilegesManager = $privilegesManager;
     }
 
-    /**
-     * @param languagesManager $languagesManager
-     */
     public function setLanguagesManager($languagesManager)
     {
         $this->languagesManager = $languagesManager;

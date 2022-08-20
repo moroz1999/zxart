@@ -454,7 +454,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     }
     public function getOpenGraphData()
     {
-        $languagesManager = $this->getService('languagesManager');
+        $languagesManager = $this->getService('LanguagesManager');
         $data = [
             'title' => $this->getMetaTitle(),
             'url' => $this->getUrl(),

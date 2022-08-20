@@ -13,9 +13,6 @@ class PartiesManager extends ElementsManager
         ];
     }
 
-    /**
-     * @param languagesManager $languagesManager
-     */
     public function setLanguagesManager($languagesManager)
     {
         $this->languagesManager = $languagesManager;

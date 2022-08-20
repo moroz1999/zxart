@@ -15,7 +15,7 @@ trait CategoryElementsSelectorProviderTrait
              */
             $structureManager = $this->getService('structureManager');
             /**
-             * @var languagesManager $languagesManager
+             * @var LanguagesManager $languagesManager
              */
             $languagesManager = $this->getService('LanguagesManager');
             if ($connectedIds = $this->getConnectedCategoriesIds()) {

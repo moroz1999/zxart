@@ -236,7 +236,7 @@ class authorElement extends structureElement implements CommentsHolderInterface,
     public function getSaveUrl($type)
     {
         /**
-         * @var languagesManager $languagesManager
+         * @var LanguagesManager $languagesManager
          */
         $languagesManager = $this->getService('LanguagesManager');
         $controller = controller::getInstance();

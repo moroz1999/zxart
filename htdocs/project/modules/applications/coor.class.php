@@ -30,7 +30,7 @@ class coorApplication extends controllerApplication
         $configManager = $this->getService('ConfigManager');
         $this->key = $configManager->get('main.ga_key');
         /**
-         * @var languagesManager $languagesManager
+         * @var LanguagesManager $languagesManager
          */
         $languagesManager = $this->getService('LanguagesManager');
         $languagesManager->setCurrentLanguageCode($language, $configManager->get('main.rootMarkerAdmin'));

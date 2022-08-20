@@ -34,7 +34,7 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
                             $linksManager->linkElements($parentTagId, $elementId, 'tagLink');
                         }
                     }
-                    $languagesManager = languagesManager::getInstance();
+                    $languagesManager = LanguagesManager::getInstance();
                     foreach ($languagesManager->getLanguagesIdList('public_root') as $languageId) {
                         $joinedTitle = $joinedTagElement->getLanguageValue("title", $languageId);
                         $parentSynonym = $parentTagElement->getLanguageValue("synonym", $languageId);
