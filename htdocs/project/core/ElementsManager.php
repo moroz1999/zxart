@@ -6,9 +6,18 @@ use Illuminate\Database\Query\Builder;
 class ElementsManager extends errorLogger
 {
     protected structureManager $structureManager;
+    protected LanguagesManager $languagesManager;
     protected array $elementsIndex = [];
 
     protected Connection $db;
+
+    /**
+     * @param LanguagesManager $languagesManager
+     */
+    public function setLanguagesManager(LanguagesManager $languagesManager)
+    {
+        $this->languagesManager = $languagesManager;
+    }
 
     public function setDb(Connection $db)
     {
@@ -67,7 +76,7 @@ class ElementsManager extends errorLogger
 
         if ($records = $query->select($query->from . '.id')->get()) {
             $idList = array_column($records, 'id');
-            $result = $this->structureManager->getElementsByIdList($idList);
+            $result = $this->structureManager->getElementsByIdList($idList, $this->languagesManager->getCurrentLanguageId());
             foreach ($result as $element) {
                 $this->elementsIndex[$element->id] = $element;
             }

@@ -11,6 +11,7 @@ class MusicManagerServiceContainer extends DependencyInjectionServiceContainer
     {
         $musicManager = $instance;
         $this->injectService($instance, 'db');
+        $this->injectService($instance, 'LanguagesManager');
 
         if ($structureManager = $this->getOption('structureManager')) {
             $musicManager->setStructureManager($structureManager);

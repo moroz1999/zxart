@@ -19,10 +19,6 @@ class GroupsManager extends ElementsManager
      */
     protected $countriesManager;
     /**
-     * @var languagesManager
-     */
-    protected $languagesManager;
-    /**
      * @var configManager
      */
     protected $configManager;

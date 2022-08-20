@@ -5,11 +5,6 @@ class PartiesManager extends ElementsManager
     const TABLE = 'module_party';
     protected $columnRelations = [];
 
-    /**
-     * @var languagesManager
-     */
-    protected $languagesManager;
-
     public function __construct()
     {
         $this->columnRelations = [

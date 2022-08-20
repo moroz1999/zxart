@@ -70,7 +70,7 @@ class ProdsManagerServiceContainer extends DependencyInjectionServiceContainer
         } else {
             $instance->setPrivilegesManager($this->registry->getService('privilegesManager'));
         }
-
+        $this->injectService($instance, 'LanguagesManager');
         $this->injectService($instance, 'PathsManager');
 
         return $instance;

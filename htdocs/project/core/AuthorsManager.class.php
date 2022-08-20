@@ -11,10 +11,6 @@ class AuthorsManager extends ElementsManager
     protected $importedAuthors = [];
     protected $importedAuthorAliases = [];
     /**
-     * @var languagesManager
-     */
-    protected $languagesManager;
-    /**
      * @var linksManager
      */
     protected $linksManager;
@@ -47,15 +43,6 @@ class AuthorsManager extends ElementsManager
     public function setConfigManager($configManager)
     {
         $this->configManager = $configManager;
-    }
-
-
-    /**
-     * @param languagesManager $languagesManager
-     */
-    public function setLanguagesManager($languagesManager)
-    {
-        $this->languagesManager = $languagesManager;
     }
 
     /**

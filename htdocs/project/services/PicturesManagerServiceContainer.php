@@ -10,6 +10,7 @@ class PicturesManagerServiceContainer extends DependencyInjectionServiceContaine
     public function makeInjections($instance)
     {
         $this->injectService($instance, 'db');
+        $this->injectService($instance, 'LanguagesManager');
         $this->injectService($instance, 'structureManager');
         return $instance;
     }
