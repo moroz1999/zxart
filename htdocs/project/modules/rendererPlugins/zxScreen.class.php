@@ -12,6 +12,7 @@ class zxScreenRendererPlugin extends rendererPlugin
     protected $binary = false;
     protected $contentRead = false;
     protected $cacheFileName = '';
+    private $fileName = '';
 
     public function init()
     {
@@ -44,7 +45,7 @@ class zxScreenRendererPlugin extends rendererPlugin
             if ($value === 'hidden') {
                 $this->renderingEngine->setCacheEnabled(false);
             }
-        } elseif ($attributeName == 'filename') {
+        } elseif ($attributeName == 'path') {
             $this->renderingEngine->setPath($value);
         } elseif ($attributeName == 'mode') {
             $this->renderingEngine->setGigascreenMode($value);
@@ -60,16 +61,19 @@ class zxScreenRendererPlugin extends rendererPlugin
             $this->renderingEngine->setSourceFileContents($value);
         } elseif ($attributeName == 'cacheEnabled') {
             $this->renderingEngine->setCacheEnabled($value);
+        } elseif ($attributeName == 'fileName') {
+            $this->fileName = $value;
         }
     }
 
     public function getFileName()
     {
+        $fileName = $this->fileName ? $this->fileName : 'image';
         if ($mime = $this->renderingEngine->getResultMime()) {
             if ($mime == 'image/png') {
-                return 'image.png';
+                return $fileName . '.png';
             } elseif ($mime == 'image/gif') {
-                return 'image.gif';
+                return $fileName . '.gif';
             }
         }
         return false;

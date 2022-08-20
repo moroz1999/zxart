@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "artweb-ou/trickster-cms",
-            "version": "4.2.4",
+            "version": "4.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/artweb-ou/trickster-cms.git",
-                "reference": "ce5951485de310f4cc53fa9a482513847dd066de"
+                "reference": "8d8654a27927f19e6f8c0c3f72ce17ba4c66cae0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artweb-ou/trickster-cms/zipball/ce5951485de310f4cc53fa9a482513847dd066de",
-                "reference": "ce5951485de310f4cc53fa9a482513847dd066de",
+                "url": "https://api.github.com/repos/artweb-ou/trickster-cms/zipball/8d8654a27927f19e6f8c0c3f72ce17ba4c66cae0",
+                "reference": "8d8654a27927f19e6f8c0c3f72ce17ba4c66cae0",
                 "shasum": ""
             },
             "require": {
@@ -48,9 +48,9 @@
             "description": "Trickster CMS packages",
             "support": {
                 "issues": "https://github.com/artweb-ou/trickster-cms/issues",
-                "source": "https://github.com/artweb-ou/trickster-cms/tree/4.2.4"
+                "source": "https://github.com/artweb-ou/trickster-cms/tree/4.2.5"
             },
-            "time": "2022-08-04T20:38:56+00:00"
+            "time": "2022-08-20T18:50:55+00:00"
         },
         {
             "name": "ckeditor/ckeditor",

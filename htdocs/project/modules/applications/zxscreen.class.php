@@ -26,13 +26,12 @@ class zxscreenApplication extends controllerApplication
     public function execute($controller)
     {
         $this->processRequestParameters();
-
         $filePath = $this->getService('PathsManager')->getPath('uploads') . $this->id;
         if (!is_file($filePath)) {
             $filePath = $this->getService('PathsManager')->getPath('releases') . $this->id;
         }
         if (is_file($filePath)) {
-            $this->renderer->assign('filename', $filePath);
+            $this->renderer->assign('path', $filePath);
             $this->renderer->assign('type', $this->type);
             $this->renderer->assign('mode', $this->mode);
             $this->renderer->assign('palette', $this->palette);
@@ -44,11 +43,31 @@ class zxscreenApplication extends controllerApplication
             }
             if ($this->download) {
                 $this->renderer->setContentDisposition('attachment');
+                $structureManager = $this->getService(
+                    'structureManager',
+                    [
+                        'rootUrl' => $controller->rootURL,
+                        'rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerPublic'),
+                    ],
+                    true
+                );
+
+                $languagesManager = $this->getService('LanguagesManager');
+                $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
+                /**
+                 * @var zxPictureElement $zxPictureElement
+                 */
+                if ($zxPictureElement = $structureManager->getElementById($this->id)) {
+                    $fileName = $zxPictureElement->getFileName('image', true, false);
+                    if ($this->zoom !== 1) {
+                        $fileName .= "_($this->zoom)";
+                    }
+                    $this->renderer->assign('fileName', $fileName);
+                }
             } else {
                 $this->renderer->setContentDisposition('inline');
             }
 
-            $this->renderer->assign('fileName', $this->fileName);
             $this->renderer->display();
         } else {
             $this->renderer->fileNotFound();
