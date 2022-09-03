@@ -24,8 +24,6 @@ class receiveUser extends structureElementAction
                 $structureElement->userGroupsList[] = $userGroup;
             }
 
-            $structureElement->changeConnectedAuthor($structureElement->newAuthorId);
-
             $structureElement->structureName = $structureElement->userName;
             $structureElement->persistElementData();
 
@@ -91,7 +89,6 @@ class receiveUser extends structureElementAction
             'password',
             'website',
             'showemail',
-            'newAuthorId',
             'userGroups',
         ];
     }

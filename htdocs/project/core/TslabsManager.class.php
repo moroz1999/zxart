@@ -50,6 +50,8 @@ class TslabsManager extends errorLogger
     public function setAuthorsManager($authorsManager)
     {
         $this->authorsManager = $authorsManager;
+        $authorsManager->setForceUpdateCountry(false);
+        $authorsManager->setForceUpdateCity(false);
     }
 
     /**

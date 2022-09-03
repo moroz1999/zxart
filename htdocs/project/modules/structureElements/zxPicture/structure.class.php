@@ -279,8 +279,8 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
             $textContent = str_ireplace('%p', "", $textContent);
         }
 
-        if ($this->getGameElement()) {
-            $textContent = str_ireplace('%g', $this->getGameElement()->title, $textContent);
+        if ($this->getReleaseElement()) {
+            $textContent = str_ireplace('%g', $this->getReleaseElement()->title, $textContent);
         } else {
             $textContent = str_ireplace('%g', $this->release, $textContent);
         }
@@ -345,7 +345,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
                 }
             }
         }
-        if ($game = $this->getGameElement()) {
+        if ($game = $this->getReleaseElement()) {
             if ($gameMaterials = $game->getMaterialsList()) {
                 $number = 0;
                 foreach ($gameMaterials as $element) {

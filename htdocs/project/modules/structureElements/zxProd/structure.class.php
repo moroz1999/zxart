@@ -734,21 +734,23 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
             $category = last($categories);
         }
         if ($category) {
-            $title = 'ZX Spectrum ' . $category->title . ': ' . $this->title;
+            $title = $this->title . ' - ZX Spectrum ' . $category->title;
+        }
+        if ($this->year) {
+            $title .= ' (' . $this->year . ')';
         }
         return $title;
 
     }
 
-//    public function getMetaDescription();
     public function getOpenGraphData()
     {
-	
+
         $languagesManager = $this->getService('LanguagesManager');
         $data = [
             'title' => $this->getMetaTitle(),
             'url' => $this->getUrl(),
-            'image' => $this->getImage()?$this->getImage()->getImageUrl() : '',
+            'image' => $this->getImage() ? $this->getImage()->getImageUrl() : '',
             'description' => $this->getMetaDescription(),
             'locale' => $languagesManager->getCurrentLanguage()->iso6391,
         ];

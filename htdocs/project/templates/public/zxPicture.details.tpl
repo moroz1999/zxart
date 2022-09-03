@@ -80,8 +80,8 @@
 					window.chartsData["{$element->id}_views"] = {$element->getChartData()};
 				</script>
 			{/if}
-		{if $element->getGameElement()}
-			{assign bestPictures $element->getGameElement()->getBestPictures(3, $element->id)}
+		{if $element->getReleaseElement()}
+			{assign bestPictures $element->getReleaseElement()->getBestPictures(3, $element->id)}
 			{if $bestPictures}
 			<div class="picture_details_more_game gallery_pictures">
 				<h2>{translations name="picture.morefromgame"}</h2>

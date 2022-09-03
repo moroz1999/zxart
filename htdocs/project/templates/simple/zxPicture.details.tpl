@@ -5,8 +5,8 @@
 {if $element->denyComments}<p>{translations name="zxitem.commentsdenied"}</p>{/if}
 {include file=$theme->template('component.voteslist.tpl')}
 {if $element->denyVoting}<p>{translations name="zxitem.votingdenied"}</p>{/if}
-{if $element->getGameElement()}
-{assign bestPictures $element->getGameElement()->getBestPictures(3, $element->id)}
+{if $element->getReleaseElement()}
+{assign bestPictures $element->getReleaseElement()->getBestPictures(3, $element->id)}
 {if $bestPictures}
 {translations name="picture.morefromgame"}<br><br>
 {foreach from=$bestPictures item=picture}

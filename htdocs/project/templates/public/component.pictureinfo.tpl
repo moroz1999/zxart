@@ -67,13 +67,13 @@
 			</td>
 		</tr>
 	{/if}
-	{if $element->getGameElement()}
+	{if $element->getReleaseElement()}
 		<tr>
 			<td class='info_table_label'>
 				{translations name='zxpicture.release'}:
 			</td>
 			<td class='info_table_value'>
-				<a href='{$element->getGameElement()->URL}'>{$element->getGameElement()->title}</a>
+				<a href='{$element->getReleaseElement()->URL}'>{$element->getReleaseElement()->title}</a>
 			</td>
 		</tr>
 	{/if}

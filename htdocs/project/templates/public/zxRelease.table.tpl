@@ -47,16 +47,9 @@
 		{if $element->releaseType}{translations name="zxRelease.type_{$element->releaseType}"}{/if}
 	</td>
 	<td class='zxrelease_table_releaseby'>
-		{if $authors=$element->getAuthorsInfo('release', ['release'])}
-			{foreach $authors as $info}
-				<a href="{$info.authorElement->getUrl()}">{$info.authorElement->title}</a>{if !$info@last}, {/if}
-			{/foreach}
-		{/if}
-		{if $publishers = $element->publishers}
-			{foreach from=$publishers item=publisher}
-				<a href="{$publisher->getUrl()}">{$publisher->title}</a>{if !$publisher@last}, {/if}
-			{/foreach}
-		{/if}
+		{foreach $element->getReleaseBy() as $info}
+			<a href="{$info->getUrl()}">{$info->title}</a>{if !$info@last}, {/if}
+		{/foreach}
 	</td>
 	<td class='zxrelease_table_hardware'>
 		{foreach $element->hardwareRequired as $hardware}

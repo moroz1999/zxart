@@ -19,7 +19,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
     protected $authorIds;
     protected $votesList;
     protected $tagsList;
-    protected $gameElement;
+    protected $releaseElement;
     protected $votesType;
     protected $authorLinkType;
     protected $partyLinkType;
@@ -301,7 +301,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
             if ($party = $this->getPartyElement()) {
                 $this->year = $party->getYear();
             }
-            if ($game = $this->getGameElement()) {
+            if ($game = $this->getReleaseElement()) {
                 $this->year = $game->year;
             }
         }
@@ -398,15 +398,15 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         return $linksManager->getConnectedIdList($this->id, 'playlist', 'child');
     }
 
-    public function getGameElement()
+    public function getReleaseElement()
     {
-        if ($this->gameElement === null) {
-            $this->gameElement = false;
+        if ($this->releaseElement === null) {
+            $this->releaseElement = false;
             if ($this->game) {
-                $this->gameElement = $this->getService('structureManager')->getElementById($this->game);
+                $this->releaseElement = $this->getService('structureManager')->getElementById($this->game);
             }
         }
-        return $this->gameElement;
+        return $this->releaseElement;
     }
 
     public function recalculate()

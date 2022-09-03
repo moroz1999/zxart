@@ -3,5 +3,5 @@
 {$element->type}{if $showYear} {if $element->year != 0}{$element->year}{/if}{/if}
 <br>
 {if $partyElement = $element->getPartyElement()}<a href='{$partyElement->URL}'>{$partyElement->title}</a> {if $partyElement}{if $element->partyplace != 0}({$element->partyplace}) {/if}{/if}<br>{/if}
-{if $element->getGameElement()}<a href='{$element->getGameElement()->URL}'>{$element->getGameElement()->title}</a><br>{/if}
+{if $element->getReleaseElement()}<a href='{$element->getReleaseElement()->URL}'>{$element->getReleaseElement()->title}</a><br>{/if}
 <br>

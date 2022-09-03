@@ -25,8 +25,8 @@
 {if $element->getPartyElement()}<b>{translations name='field.party'}:</b>
 	{assign 'compoTitle' "compo_"|cat:$element->compo}<a href='{$element->getPartyElement()->URL}'>{$element->getPartyElement()->title}</a> ({if !empty($element->partyplace)}{$element->partyplace}, {/if}{translations name="zxPicture.$compoTitle"})<br>
 {/if}
-{if $element->getGameElement()}
-	<b>{translations name='zxpicture.release'}:</b><a href='{$element->getGameElement()->URL}'>{$element->getGameElement()->title}</a><br>
+{if $element->getReleaseElement()}
+	<b>{translations name='zxpicture.release'}:</b><a href='{$element->getReleaseElement()->URL}'>{$element->getReleaseElement()->title}</a><br>
 {/if}
 {if $element->year != '0'}
 	<b>{translations name='field.year'}:</b> <a href="{$picturesDetailedSearchElement->URL}startYear:{$element->year}/endYear:{$element->year}/">{$element->year}</a><br>

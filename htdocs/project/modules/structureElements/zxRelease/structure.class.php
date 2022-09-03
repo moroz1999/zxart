@@ -56,7 +56,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         $moduleStructure['title'] = 'text';
 
         $moduleStructure['file'] = 'file';
-        $moduleStructure['fileName'] = 'text';
+        $moduleStructure['fileName'] = 'fileName';
 
         $moduleStructure['version'] = 'text';
         $moduleStructure['downloads'] = 'text';
@@ -553,5 +553,44 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     public function getBestPictures()
     {
         return [];
+    }
+
+    public function getReleaseBy()
+    {
+        $list = [];
+
+        foreach ($this->publishers as $publisher) {
+            $list[] = $publisher;
+        }
+        if ($authors = $this->getAuthorsInfo('release', ['release'])) {
+            foreach ($authors as $author) {
+                $list[] = $author['authorElement'];
+            }
+        }
+        return $list;
+    }
+
+    public function getMetaTitle()
+    {
+        $translationsManager = $this->getService('translationsManager');
+        $title = $this->title;
+        $title .= ' - ZX Spectrum release';
+
+        if ($info = $this->getReleaseBy()) {
+            $title .= ' by ';
+            foreach ($info as $item) {
+                $title .= $item->getTitle();
+            }
+
+        }
+        if ($this->releaseType){
+            $title .= ', '.$translationsManager->getTranslationByName('zxRelease.type_'.$this->releaseType);
+        }
+        if ($this->year) {
+            $title .= ' ' . $this->year;
+        }
+
+        return $title;
+
     }
 }

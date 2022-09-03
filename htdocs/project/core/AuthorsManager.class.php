@@ -6,7 +6,8 @@ class AuthorsManager extends ElementsManager
     use LettersElementsListProviderTrait;
 
     const TABLE = 'module_author';
-
+    protected $forceUpdateCountry = false;
+    protected $forceUpdateCity = false;
     protected $columnRelations = [];
     protected $importedAuthors = [];
     protected $importedAuthorAliases = [];
@@ -35,6 +36,22 @@ class AuthorsManager extends ElementsManager
             'graphicsRating' => ['graphicsRating' => true, 'title' => false],
             'musicRating' => ['musicRating' => true, 'title' => false],
         ];
+    }
+
+    /**
+     * @param bool $forceUpdateCountry
+     */
+    public function setForceUpdateCountry(bool $forceUpdateCountry): void
+    {
+        $this->forceUpdateCountry = $forceUpdateCountry;
+    }
+
+    /**
+     * @param bool $forceUpdateCity
+     */
+    public function setForceUpdateCity(bool $forceUpdateCity): void
+    {
+        $this->forceUpdateCity = $forceUpdateCity;
     }
 
     /**
@@ -354,16 +371,20 @@ class AuthorsManager extends ElementsManager
         if (!empty($authorInfo['locationLabel'])) {
             if ($locationElement = $this->countriesManager->getLocationByName($authorInfo['locationLabel'])) {
                 if ($locationElement->structureType == 'country') {
-                    if ($element->country != $locationElement->id) {
-                        $changed = true;
-                        $element->country = $locationElement->id;
+                    if (!$element->country || $this->forceUpdateCountry) {
+                        if ($element->country != $locationElement->id) {
+                            $changed = true;
+                            $element->country = $locationElement->id;
+                        }
                     }
                 } elseif ($locationElement->structureType == 'city') {
-                    if ($element->city != $locationElement->id) {
-                        $changed = true;
-                        $element->city = $locationElement->id;
-                        if ($countryId = $locationElement->getCountryId()) {
-                            $element->country = $countryId;
+                    if (!$element->city || $this->forceUpdateCity) {
+                        if ($element->city != $locationElement->id) {
+                            $changed = true;
+                            $element->city = $locationElement->id;
+                            if ($countryId = $locationElement->getCountryId()) {
+                                $element->country = $countryId;
+                            }
                         }
                     }
                 }

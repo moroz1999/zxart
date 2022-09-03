@@ -40,8 +40,8 @@
 		{if $partyElement}
 			<a href='{$partyElement->URL}'>{if $partyElement->abbreviation}{$partyElement->abbreviation}{else}{$partyElement->title}{/if}</a>
 		{/if}
-		{if $picture->getGameElement()}
-			<a href='{$picture->getGameElement()->URL}'>{$picture->getGameElement()->title}</a>
+		{if $picture->getReleaseElement()}
+			<a href='{$picture->getReleaseElement()->URL}'>{$picture->getReleaseElement()->title}</a>
 		{/if}
 	</td>
 	<td class='pictures_list_partyplace'>

@@ -72,10 +72,10 @@
 			</td>
 			<td class="form_field">
 				<select class="zxitem_form_prodrelease_select" name="{$formNames.game}" autocomplete='off'>
-					{assign var="gameElement" value=$element->getGameElement()}
-					{if $gameElement}
-						<option value='{$gameElement->id}' selected="selected">
-							{$gameElement->title}
+					{assign var="releaseElement" value=$element->getReleaseElement()}
+					{if $releaseElement}
+						<option value='{$releaseElement->id}' selected="selected">
+							{$releaseElement->title}
 						</option>
 					{/if}
 				</select>

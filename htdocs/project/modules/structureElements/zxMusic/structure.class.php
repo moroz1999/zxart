@@ -11,7 +11,7 @@
  * @property float $votes
  * @property int $votesAmount
  */
-class zxMusicElement extends ZxArtItem
+class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
 {
     use MusicSettingsProvider;
 
@@ -122,10 +122,10 @@ class zxMusicElement extends ZxArtItem
             $textContent = str_ireplace('%p', "", $textContent);
         }
 
-        if ($this->getGameElement()) {
-            $textContent = str_ireplace('%g', $this->getGameElement()->title, $textContent);
+        if ($this->getReleaseElement()) {
+            $textContent = str_ireplace('%g', $this->getReleaseElement()->title, $textContent);
         } else {
-            $textContent = str_ireplace('%g', $this->release, $textContent);
+            $textContent = str_ireplace('%g ', '', $textContent);
         }
 
         if ($this->year) {
@@ -409,6 +409,20 @@ class zxMusicElement extends ZxArtItem
         if ($tags = $this->generateTagsText()) {
             $data['keywords'] = $tags;
         }
+        return $data;
+    }
+
+    public function getOpenGraphData()
+    {
+
+        $languagesManager = $this->getService('LanguagesManager');
+        $data = [
+            'title' => $this->getMetaTitle(),
+            'url' => $this->getUrl(),
+            'image' => '/project/images/public/logo_og.png',
+            'description' => $this->getMetaDescription(),
+            'locale' => $languagesManager->getCurrentLanguage()->iso6391,
+        ];
         return $data;
     }
 }

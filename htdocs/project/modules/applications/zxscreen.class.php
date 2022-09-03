@@ -60,7 +60,7 @@ class zxscreenApplication extends controllerApplication
                 if ($zxPictureElement = $structureManager->getElementById($this->id)) {
                     $fileName = $zxPictureElement->getFileName('image', true, false);
                     if ($this->zoom !== 1) {
-                        $fileName .= "_($this->zoom)";
+                        $fileName .= "_{$this->zoom}x";
                     }
                     $this->renderer->assign('fileName', $fileName);
                 }

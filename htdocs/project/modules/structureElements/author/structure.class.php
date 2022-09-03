@@ -172,8 +172,24 @@ class authorElement extends structureElement implements CommentsHolderInterface,
         if ($this->picturesQuantity > 0) {
             $this->displayInGraphics = 1;
         }
+        $this->checkCountry();
 
         $this->persistElementData();
+    }
+
+    public function checkCountry()
+    {
+        if ($country = $this->getCountryElement()) {
+            if ($city = $this->getCityElement()) {
+                $parentCountry = $city->getFirstParentElement();
+                if ($parentCountry !== $country) {
+                    $this->countryElement = null;
+                    $this->country = $parentCountry->id;
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public function recalculatePicturesData()

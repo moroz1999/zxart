@@ -47,8 +47,8 @@
 		{if $partyElement}
 			<a href='{$partyElement->URL}'>{if $partyElement->abbreviation}{$partyElement->abbreviation}{else}{$partyElement->title}{/if}</a>
 		{/if}
-		{if $element->getGameElement()}
-			<a href='{$element->getGameElement()->URL}'>{$element->getGameElement()->title}</a>
+		{if $element->getReleaseElement()}
+			<a href='{$element->getReleaseElement()->URL}'>{$element->getReleaseElement()->title}</a>
 		{/if}
 	</td>
 	<td class='music_list_compo'>
