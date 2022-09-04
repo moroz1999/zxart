@@ -1,0 +1,14 @@
+<div class="name" [ngStyle]="{paddingLeft: level*20 + 'px'}">{{data.name}}</div>
+<div class="type">{{data.type}}</div>
+<div class="md5">{{data.md5}}</div>
+<div class="releases">
+  <button mat-raised-button color="primary" type="button" (click)="showReleases()" *ngIf="data.releases.length">Show releases ({{data.releases?.length}})</button>
+</div>
+<div class="files" *ngIf="data.files.length">
+  <app-parsed-file
+    class="result-item"
+    *ngFor="let file of data.files"
+    [data]="file"
+    [level]="level+1"
+  ></app-parsed-file>
+</div>

@@ -9,7 +9,7 @@
  * @property string $originalName
  */
 class folderElement extends menuDependantStructureElement implements ConfigurableLayoutsProviderInterface,
-                                                                     ColumnsTypeProvider
+    ColumnsTypeProvider
 {
     use ConfigurableLayoutsProviderTrait;
     use LettersElementsListProviderTrait;

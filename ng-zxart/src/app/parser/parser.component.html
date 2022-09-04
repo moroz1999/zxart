@@ -1,0 +1,6 @@
+<input type="file" (change)="fileChanged($event)"/>
+<button mat-raised-button color="primary" type="button" (click)="load()" [disabled]="!!error">Load</button>
+<div *ngIf=error class="">{{ error }}</div>
+<div class="results" *ngIf="data">
+  <app-parsed-file class="result-item" *ngFor="let file of data" [data]="file"></app-parsed-file>
+</div>

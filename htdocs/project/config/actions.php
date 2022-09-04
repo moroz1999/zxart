@@ -9,4 +9,5 @@
     'zxProdCategory'=>'showFullList',
     'zxProd'=>'showForm',
     'zxRelease'=>'showForm',
+    'parser'=>'showForm',
 ];

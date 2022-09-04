@@ -12,7 +12,6 @@ class fixApplication extends controllerApplication
 
     public function initialize()
     {
-        $this->startSession('public');
         $this->createRenderer();
     }
 

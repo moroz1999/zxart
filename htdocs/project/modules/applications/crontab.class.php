@@ -12,7 +12,6 @@ class crontabApplication extends controllerApplication
     {
         ignore_user_abort(1);
         set_time_limit(60 * 60);
-        $this->startSession('crontab');
         $this->createRenderer();
     }
 

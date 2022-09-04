@@ -581,10 +581,9 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
             foreach ($info as $item) {
                 $title .= $item->getTitle();
             }
-
         }
-        if ($this->releaseType){
-            $title .= ', '.$translationsManager->getTranslationByName('zxRelease.type_'.$this->releaseType);
+        if ($this->releaseType) {
+            $title .= ', ' . $translationsManager->getTranslationByName('zxRelease.type_' . $this->releaseType);
         }
         if ($this->year) {
             $title .= ' ' . $this->year;

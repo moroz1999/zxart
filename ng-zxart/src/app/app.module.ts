@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
-import {Injector, NgModule} from '@angular/core';
+import {Injector, NgModule, Type} from '@angular/core';
 import {ZxProdsCategoryComponent} from './zx-prods-category/zx-prods-category.component';
 import {createCustomElement} from '@angular/elements';
 import {AngularSvgIconModule} from 'angular-svg-icon';
@@ -31,7 +31,10 @@ import {CategoriesTreeSelectorComponent} from './zx-prods-category/components/ca
 import {ZxProdRowComponent} from './zx-prod-row/zx-prod-row.component';
 import {ZxProdsListComponent} from './zx-prods-list/zx-prods-list.component';
 import {AppComponent} from './app.component';
-import { RatingComponent } from './shared/components/rating/rating.component';
+import {RatingComponent} from './shared/components/rating/rating.component';
+import {ParserComponent} from './parser/parser.component';
+import { ParsedFileComponent } from './parser/parsed-file/parsed-file.component';
+import { ParsedReleasesComponent } from './parser/parsed-releases/parsed-releases.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(httpClient, `${environment.assetsUrl}i18n/`);
@@ -52,6 +55,9 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
     ZxProdRowComponent,
     ZxProdsListComponent,
     RatingComponent,
+    ParserComponent,
+    ParsedFileComponent,
+    ParsedReleasesComponent,
   ],
   imports: [
     CommonModule,
@@ -83,17 +89,19 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   entryComponents: [AppComponent, ZxProdsCategoryComponent, ZxProdsListComponent],
 })
 export class AppModule {
-
   constructor(private injector: Injector) {
-    const appRoot = createCustomElement(AppComponent, {injector: this.injector});
-    customElements.define('app-root', appRoot);
-
-    const el = createCustomElement(ZxProdsCategoryComponent, {injector: this.injector});
-    customElements.define('app-zx-prods-category', el);
-    const el2 = createCustomElement(ZxProdsListComponent, {injector: this.injector});
-    customElements.define('app-zx-prods-list', el2);
   }
 
-  ngDoBootstrap(): void {
+  public ngDoBootstrap(): void {
+    const elements = {
+      'app-root': AppComponent,
+      'app-zx-prods-category': ZxProdsCategoryComponent,
+      'app-zx-prods-list': ZxProdsListComponent,
+      'app-parser': ParserComponent,
+    } as { [key: string]: Type<Object> };
+    for (const selector of Object.keys(elements)) {
+      const element = createCustomElement(elements[selector], {injector: this.injector});
+      customElements.define(selector, element);
+    }
   }
 }

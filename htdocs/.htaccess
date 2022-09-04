@@ -56,3 +56,8 @@
 	AddOutputFilterByType DEFLATE application/x-font-woff
 </ifmodule>
 AddType application/wasm wasm
+
+SetEnvIf Origin "^(.*localhost:4200)$" ORIGIN_SUB_DOMAIN=$0
+<IfModule mod_headers.c>
+	Header set Access-Control-Allow-Origin "*" env=ORIGIN_SUB_DOMAIN
+</IfModule>

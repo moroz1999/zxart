@@ -1,0 +1,39 @@
+@import "shared/vars";
+
+:host {
+  display: grid;
+  align-items: center;
+  grid-template-areas:
+    "name type md5 releases"
+    "files files files files";
+  grid-template-columns: 1fr 50px 220px 1fr;
+  gap: $padding-md $padding-xl;
+
+  &.zx-file {
+    background: $gray8;
+    border-radius: 5px;
+  }
+}
+
+.name {
+  grid-area: name;
+}
+
+.type {
+  grid-area: type;
+}
+
+.md5 {
+  grid-area: md5;
+  color: $gray5;
+  font-size: $font-sm;
+}
+
+.releases {
+  grid-area: releases;
+  display: flex;
+}
+
+.files {
+  grid-area: files;
+}
