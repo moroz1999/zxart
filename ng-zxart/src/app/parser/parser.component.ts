@@ -11,6 +11,7 @@ export class ParserComponent {
   private file?: File;
   public error?: string;
   public data?: ParserData[];
+  public loading = false;
 
   constructor(
     private parser: ParserService,
@@ -29,8 +30,12 @@ export class ParserComponent {
 
   public load() {
     if (this.file) {
+      this.loading = true;
       this.parser.parseData(this.file).subscribe(
-        response => this.data = response,
+        response => {
+          this.data = response;
+          this.loading = false;
+        },
       );
     }
   }

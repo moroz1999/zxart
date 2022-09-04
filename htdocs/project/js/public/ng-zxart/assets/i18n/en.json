@@ -76,5 +76,10 @@
     "developers": "Developers",
     "publishers": "Publishers",
     "open": "Open"
+  },
+  "parser": {
+    "upload":  "Upload and parse",
+    "notfound":  "Not found",
+    "show-releases": "Show releases"
   }
 }

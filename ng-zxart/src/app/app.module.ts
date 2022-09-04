@@ -35,6 +35,7 @@ import {RatingComponent} from './shared/components/rating/rating.component';
 import {ParserComponent} from './parser/parser.component';
 import { ParsedFileComponent } from './parser/parsed-file/parsed-file.component';
 import { ParsedReleasesComponent } from './parser/parsed-releases/parsed-releases.component';
+import { ParsedReleaseComponent } from './parser/parsed-release/parsed-release.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(httpClient, `${environment.assetsUrl}i18n/`);
@@ -58,6 +59,7 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
     ParserComponent,
     ParsedFileComponent,
     ParsedReleasesComponent,
+    ParsedReleaseComponent,
   ],
   imports: [
     CommonModule,

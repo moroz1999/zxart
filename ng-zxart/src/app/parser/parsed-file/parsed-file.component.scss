@@ -1,4 +1,5 @@
 @import "shared/vars";
+@import "shared/svg-icons";
 
 :host {
   display: grid;
@@ -13,6 +14,11 @@
     background: $gray8;
     border-radius: 5px;
   }
+}
+
+svg-icon {
+  width: 20px;
+  height: 20px;
 }
 
 .name {
@@ -36,4 +42,8 @@
 
 .files {
   grid-area: files;
+}
+
+.attention {
+  color: $red;
 }

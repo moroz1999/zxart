@@ -13,7 +13,7 @@ export class ParserService {
   private apiUrl: string = `//${environment.apiBaseUrl}parser/`;
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
   ) {
   }
 

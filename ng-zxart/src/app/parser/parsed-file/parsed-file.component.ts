@@ -2,8 +2,25 @@ import {Component, HostBinding, Input, OnInit} from '@angular/core';
 import {ParserData} from '../models/parser-data';
 import {MatDialog} from '@angular/material/dialog';
 import {ParsedReleasesComponent} from '../parsed-releases/parsed-releases.component';
+import {SvgIconRegistryService} from 'angular-svg-icon';
+import {environment} from '../../../environments/environment';
 
-const zxFiles = ['scl', 'trd', 'tap', 'tzx']
+const zxFiles = [
+  'dsk',
+  'tzx',
+  'tap',
+  'trd',
+  'scl',
+  'bin',
+  'sna',
+  'szx',
+  'z80',
+  'fdi',
+  'udi',
+  'td0',
+  'rom',
+  'spg',
+];
 
 @Component({
   selector: 'app-parsed-file',
@@ -13,13 +30,17 @@ const zxFiles = ['scl', 'trd', 'tap', 'tzx']
 export class ParsedFileComponent {
   @Input() public data!: ParserData;
   @Input() public level = 0;
-  @HostBinding('class.zx-file') get isZx(): boolean {
+  @Input() public insideZx = false;
+
+  @HostBinding('class.zx-file') get isZxContainer(): boolean {
     return zxFiles.indexOf(this.data.type) !== -1;
   }
 
   constructor(
     public dialog: MatDialog,
+    private iconReg: SvgIconRegistryService,
   ) {
+    this.iconReg.loadSvg(`${environment.svgUrl}disc.svg`, 'disc').subscribe();
   }
 
 
