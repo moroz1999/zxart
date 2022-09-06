@@ -1,0 +1,8 @@
+@import "shared/vars";
+
+.form {
+  display: flex;
+  gap: $padding-lg;
+  margin-bottom: $padding-xl;
+  align-items: center;
+}

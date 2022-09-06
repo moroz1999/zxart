@@ -4,6 +4,12 @@ class publicReceiveZxMusic extends structureElementAction
 {
     protected $loggable = true;
 
+    /**
+     * @param structureManager $structureManager
+     * @param controller $controller
+     * @param zxMusicElement $structureElement
+     * @return mixed|void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated) {
@@ -29,14 +35,10 @@ class publicReceiveZxMusic extends structureElementAction
             if (!is_null($structureElement->getDataChunk("file")->originalName)) {
                 $structureElement->file = $structureElement->id;
                 $structureElement->fileName = $structureElement->getDataChunk("file")->originalName;
-                $structureElement->calculateMd5($cachePath . $structureElement->getDataChunk("file")->temporaryName);
             }
             if (!is_null($structureElement->getDataChunk("trackerFile")->originalName)) {
                 $structureElement->trackerFile = $structureElement->id . '_tracker';
                 $structureElement->trackerFileName = $structureElement->getDataChunk("trackerFile")->originalName;
-                $structureElement->calculateMd5(
-                    $cachePath . $structureElement->getDataChunk("trackerFile")->temporaryName
-                );
             }
 
             $structureElement->structureName = $structureElement->title;
@@ -57,6 +59,7 @@ class publicReceiveZxMusic extends structureElementAction
             $structureElement->updateYear();
 
             $structureElement->persistElementData();
+            $structureElement->updateMd5($this->getService('PathsManager')->getPath('uploads') . $structureElement->file, $structureElement->fileName);
 
             $controller->redirect($structureElement->URL);
         } else {

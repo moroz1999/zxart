@@ -1,6 +1,6 @@
 <?php
 
-trait ZxProdCategoriesTreeProviderTrait
+trait ZxProdCategoriesTreeProvider
 {
     public function getCategoriesTree(&$result = [])
     {

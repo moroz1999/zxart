@@ -179,16 +179,6 @@
 		</td>
 	</tr>
 	{/if}
-	{if $element->md5}
-		<tr>
-			<td class='info_table_label'>
-				{translations name='picture.md5'}:
-			</td>
-			<td class='info_table_value'>
-				{$element->md5}
-			</td>
-		</tr>
-	{/if}
 	{assign var="userElement" value=$element->getUser()}
 	{if $userElement}
 	<tr>

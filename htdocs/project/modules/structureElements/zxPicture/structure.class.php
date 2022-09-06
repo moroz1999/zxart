@@ -8,6 +8,8 @@
  * @property int $votesAmount
  * @property int $commentsAmount
  * @property int $year
+ * @property string $image
+ * @property string $originalName
  * @property string $palette
  */
 class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterface
@@ -64,7 +66,6 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         $moduleStructure['denyVoting'] = 'checkbox';
         $moduleStructure['denyComments'] = 'checkbox';
         $moduleStructure['artCityId'] = 'text';
-        $moduleStructure['md5'] = 'text';
         $moduleStructure['palette'] = 'text';
     }
 

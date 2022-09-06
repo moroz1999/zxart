@@ -10,6 +10,8 @@
     "ext-json": "*",
     "ext-curl": "*",
     "ext-gd": "*",
-    "ext-dom": "*"
+    "ext-dom": "*",
+    "ext-zip": "*",
+    "ext-rar": "*"
   }
 }

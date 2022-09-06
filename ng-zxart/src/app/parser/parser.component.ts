@@ -36,6 +36,10 @@ export class ParserComponent {
           this.data = response;
           this.loading = false;
         },
+        error => {
+          this.error = error.message;
+          this.loading = false;
+        },
       );
     }
   }

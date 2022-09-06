@@ -5,7 +5,7 @@ class zxProdCategoryElement extends structureElement implements MetadataProvider
 {
     use MetadataProviderTrait;
     use ImportedItemTrait;
-    use ZxProdCategoriesTreeProviderTrait;
+    use ZxProdCategoriesTreeProvider;
     use ZxProdsList;
     use JsonDataProviderElement;
 

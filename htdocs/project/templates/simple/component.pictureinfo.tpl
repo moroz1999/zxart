@@ -38,7 +38,6 @@
 	<b>{translations name='field.tags'}: </b>{foreach from=$element->getTagsList() item=tag name=tags}<a href='{$tag->URL}'>{$tag->title}</a>{if !$smarty.foreach.tags.last}, {/if}
 {/foreach}
 <br>{/if}
-{if $element->md5}<b>{translations name='picture.md5'}:</b> {$element->md5}<br>{/if}
 {if $userElement = $element->getUser()}
 	<b>{translations name='picture.addedby'}:</b> {$userElement->userName}, {$element->dateCreated}<br>
 {/if}

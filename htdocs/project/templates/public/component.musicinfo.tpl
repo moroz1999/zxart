@@ -265,16 +265,6 @@
 			{$element->plays}
 		</td>
 	</tr>
-	{if $element->md5}
-		<tr>
-			<td class='info_table_label'>
-				{translations name='zxmusic.md5'}:
-			</td>
-			<td class='info_table_value'>
-				{$element->md5}
-			</td>
-		</tr>
-	{/if}
 
 	{if $element->converterVersion}
 		<tr>

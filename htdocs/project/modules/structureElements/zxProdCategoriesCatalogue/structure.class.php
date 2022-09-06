@@ -2,7 +2,7 @@
 
 class zxProdCategoriesCatalogueElement extends structureElement implements JsonDataProvider
 {
-    use ZxProdCategoriesTreeProviderTrait;
+    use ZxProdCategoriesTreeProvider;
     use ZxProdsList;
     use JsonDataProviderElement;
 

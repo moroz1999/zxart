@@ -4,6 +4,12 @@ class publicReceiveZxPicture extends structureElementAction
 {
     protected $loggable = true;
 
+    /**
+     * @param structureManager $structureManager
+     * @param controller $controller
+     * @param zxPictureElement $structureElement
+     * @return mixed|void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated) {
@@ -23,11 +29,8 @@ class publicReceiveZxPicture extends structureElementAction
             }
             $structureElement->dateAdded = $structureElement->dateCreated;
             if (!is_null($structureElement->getDataChunk("image")->originalName)) {
-                $cachePath = $this->getService('PathsManager')->getPath('uploadsCache');
-
                 $structureElement->image = $structureElement->id;
                 $structureElement->originalName = $structureElement->getDataChunk("image")->originalName;
-                $structureElement->calculateMd5($cachePath . $structureElement->getDataChunk("image")->temporaryName);
             }
             if (!is_null($structureElement->getDataChunk("inspired")->originalName)) {
                 $structureElement->inspired = $structureElement->id . '_inspired';
@@ -64,7 +67,7 @@ class publicReceiveZxPicture extends structureElementAction
             $structureElement->checkGameTag();
 
             $structureElement->persistElementData();
-
+            $structureElement->updateMd5($this->getService('PathsManager')->getPath('uploads') . $structureElement->image, $structureElement->originalName);
             $controller->redirect($structureElement->URL);
         } else {
             $structureElement->setViewName('form');

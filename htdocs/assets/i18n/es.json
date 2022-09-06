@@ -76,5 +76,10 @@
     "developers": "Desarrolladores",
     "publishers": "Editores",
     "open": "Abierto"
+  },
+  "parser": {
+    "upload":  "Subir y analizar",
+    "notfound":  "Extraviado",
+    "show-releases": "Mostrar lanzamientos"
   }
 }

@@ -4,6 +4,7 @@
  * Class ZxArtItem
  *
  * @property int $denyComments
+ * @property int $year
  */
 abstract class ZxArtItem extends structureElement implements MetadataProviderInterface, VotesHolderInterface,
     CommentsHolderInterface, LdJsonProviderInterface
@@ -471,13 +472,31 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         return $this->party;
     }
 
-    public function calculateMd5($filePath)
+    public function updateMd5($filePath, $fileName)
     {
+        /**
+         * @var \Illuminate\Database\Connection $db
+         */
+        $db = $this->getService('db');
         if (is_file($filePath)) {
             $contents = file_get_contents($filePath);
-            $this->md5 = md5($contents);
+            $md5 = md5($contents);
+            $db
+                ->table('files_registry')
+                ->updateOrInsert(
+                    ['elementId' => $this->id],
+                    [
+                        'md5' => $md5,
+                        'parentId' => 0,
+                        'elementId' => $this->id,
+                        'fileName' => $fileName,
+                        'size' => strlen($contents),
+                        'type' => 'file',
+                    ]
+                );
             return true;
         }
+        $db->table('files_registry')->where('elementId', '=', $this->id)->delete();
         return false;
     }
 
@@ -496,5 +515,10 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
                 'onlineattr',
             ]
         );
+    }
+
+    public function getYear()
+    {
+        return $this->year;
     }
 }

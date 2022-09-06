@@ -8,6 +8,8 @@
  * @property int $commentsAmount
  * @property string $title
  * @property string $mp3Name
+ * @property string $file
+ * @property string $fileName
  * @property float $votes
  * @property int $votesAmount
  */
@@ -73,7 +75,6 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         $moduleStructure['converterVersion'] = 'text';
         $moduleStructure['trackerFile'] = 'file';
         $moduleStructure['trackerFileName'] = 'fileName';
-        $moduleStructure['md5'] = 'text';
     }
 
     public function getElementData()

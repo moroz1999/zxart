@@ -105,19 +105,35 @@ class parserApplication extends controllerApplication
             ->groupBy('elementId')
             ->get();
         foreach ($result as $item) {
-            /**
-             * @var zxReleaseElement $element
-             */
             if ($element = $this->structureManager->getElementById($item['elementId'])) {
-                $authors = $element->getReleaseBy();
-                $releaseBy = [];
-                foreach ($authors as $author) {
-                    $releaseBy[] = [
-                        'url' => $author->getUrl(),
-                        'title' => $author->getTitle(),
-                        'id' => $author->getId(),
-                        'type' => $author->structureType,
-                    ];
+                if ($element->structureType === 'zxRelease'){
+                    /**
+                     * @var zxReleaseElement $element
+                     */
+                    $authors = $element->getReleaseBy();
+                    $releaseBy = [];
+                    foreach ($authors as $author) {
+                        $releaseBy[] = [
+                            'url' => $author->getUrl(),
+                            'title' => $author->getTitle(),
+                            'id' => $author->getId(),
+                            'type' => $author->structureType,
+                        ];
+                    }
+                } else {
+                    /**
+                     * @var ZxArtItem
+                     */
+                    $authors = $element->getAuthorsList();
+                    $releaseBy = [];
+                    foreach ($authors as $author) {
+                        $releaseBy[] = [
+                            'url' => $author->getUrl(),
+                            'title' => $author->getTitle(),
+                            'id' => $author->getId(),
+                            'type' => $author->structureType,
+                        ];
+                    }
                 }
                 $releases[] = [
                     'title' => $element->getTitle(),
