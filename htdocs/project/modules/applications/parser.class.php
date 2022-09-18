@@ -84,12 +84,16 @@ class parserApplication extends controllerApplication
             'type' => $item->getType(),
             'md5' => $item->getMd5(),
             'files' => [],
+            'notFound' => false,
         ];
         $export['releases'] = $this->loadReleasesData($item->getMd5());
+        $export['notFound'] = !$export['releases'];
         if ($subItems = $item->getItems()) {
             foreach ($subItems as $subItem) {
                 if ($subItem) {
-                    $export['files'][] = $this->exportItem($subItem);
+                    $item = $this->exportItem($subItem);
+                    $export['files'][] = $item;
+                    $export['notFound'] = $export['notFound'] | $item['notFound'];
                 }
             }
         }
@@ -106,7 +110,7 @@ class parserApplication extends controllerApplication
             ->get();
         foreach ($result as $item) {
             if ($element = $this->structureManager->getElementById($item['elementId'])) {
-                if ($element->structureType === 'zxRelease'){
+                if ($element->structureType === 'zxRelease') {
                     /**
                      * @var zxReleaseElement $element
                      */
