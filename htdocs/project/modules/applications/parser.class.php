@@ -18,7 +18,7 @@ class parserApplication extends controllerApplication
     public function initialize()
     {
         ignore_user_abort(1);
-        set_time_limit(60 * 60);
+        set_time_limit(3 * 60);
         $this->createRenderer();
     }
 
@@ -26,7 +26,7 @@ class parserApplication extends controllerApplication
     {
         if (!empty($_FILES) && !empty($_FILES['file'])) {
             $file = $_FILES['file'];
-            if (is_file($file['tmp_name']) && $file['size'] <= 1024 * 1024 * 100) {
+            if (is_file($file['tmp_name']) && $file['size'] <= 1024 * 1024 * 50) {
                 $this->fileName = $file['name'];
                 $this->filePath = $cachePath = $this->getService('PathsManager')->getPath('uploadsCache') . uniqid($this->fileName);
                 if (move_uploaded_file($file['tmp_name'], $this->filePath)) {

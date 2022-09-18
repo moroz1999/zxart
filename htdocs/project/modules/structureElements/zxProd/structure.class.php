@@ -147,9 +147,9 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     /**
      * @return zxReleaseElement[]
      */
-    public function getReleasesList()
+    public function getReleasesList($forceUpdate = false)
     {
-        if ($this->releasesList === null) {
+        if ($forceUpdate || $this->releasesList === null) {
             /**
              * @var structureManager $structureManager
              */

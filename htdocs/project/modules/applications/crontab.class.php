@@ -46,7 +46,7 @@ class crontabApplication extends controllerApplication
             $mp3ConversionManager = $this->getService('mp3ConversionManager');
             $mp3ConversionManager->convertQueueItems();
 
-//            $this->parseReleases();
+            $this->parseReleases();
             $this->parseArtItems('module_zxpicture', 'image', 'originalName');
             $this->parseArtItems('module_zxmusic', 'file', 'fileName');
         }

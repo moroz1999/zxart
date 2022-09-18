@@ -161,28 +161,28 @@
 				<h3>{translations name='zxprod.screenshots'}:</h3>
 			</td>
 		</tr>
-		{include file=$theme->template('component.form.files.tpl') element=$element propertyName='screenshotsSelector' imagePreset='prodImageSmall'}
+		{include file=$theme->template('component.form.files.tpl') element=$element propertyName='screenshotsSelector' imagePreset='prodImage'}
 
 		<tr>
 			<td colspan="2">
 				<h3>{translations name='zxrelease.inlays'}:</h3>
 			</td>
 		</tr>
-		{include file=$theme->template('component.form.files.tpl') element=$element propertyName='inlayFilesSelector' imagePreset='prodImageSmall'}
+		{include file=$theme->template('component.form.files.tpl') element=$element propertyName='inlayFilesSelector' imagePreset='prodImage'}
 
 		<tr>
 			<td colspan="2">
 				<h3>{translations name='zxrelease.ads'}</h3>
 			</td>
 		</tr>
-		{include file=$theme->template('component.form.files.tpl') element=$element propertyName='adFilesSelector' imagePreset='prodImageSmall'}
+		{include file=$theme->template('component.form.files.tpl') element=$element propertyName='adFilesSelector' imagePreset='prodImage'}
 
 		<tr>
 			<td colspan="2">
 				<h3>{translations name='zxrelease.instructions'}</h3>
 			</td>
 		</tr>
-		{include file=$theme->template('component.form.files.tpl') element=$element propertyName='infoFilesSelector' imagePreset='prodImageSmall'}
+		{include file=$theme->template('component.form.files.tpl') element=$element propertyName='infoFilesSelector' imagePreset='prodImage'}
 
 	</table>
 	{if $element->hasActualStructureInfo()}

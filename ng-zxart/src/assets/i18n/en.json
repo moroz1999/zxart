@@ -78,6 +78,7 @@
     "open": "Open"
   },
   "parser": {
+    "description": "The search accepts zip-archives containing trd, scl, tap files no larger than 50 MB. After downloading, the system will analyze the structure of the archive and show which release from the ZX-Art database used the downloaded files, including pictures and music.",
     "upload":  "Upload and parse",
     "notfound":  "Not found",
     "show-releases": "Show releases"

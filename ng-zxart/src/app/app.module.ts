@@ -10,7 +10,7 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {PagesSelectorComponent} from './shared/components/pages-selector/pages-selector.component';
 import {environment} from '../environments/environment';
 import {ZxProdBlockComponent} from './zx-prod-block/zx-prod-block.component';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {DialogSelectorComponent} from './zx-prods-category/components/dialog-selector/dialog-selector.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
@@ -33,9 +33,9 @@ import {ZxProdsListComponent} from './zx-prods-list/zx-prods-list.component';
 import {AppComponent} from './app.component';
 import {RatingComponent} from './shared/components/rating/rating.component';
 import {ParserComponent} from './parser/parser.component';
-import { ParsedFileComponent } from './parser/parsed-file/parsed-file.component';
-import { ParsedReleasesComponent } from './parser/parsed-releases/parsed-releases.component';
-import { ParsedReleaseComponent } from './parser/parsed-release/parsed-release.component';
+import {ParsedFileComponent} from './parser/parsed-file/parsed-file.component';
+import {ParsedReleasesComponent} from './parser/parsed-releases/parsed-releases.component';
+import {ParsedReleaseComponent} from './parser/parsed-release/parsed-release.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(httpClient, `${environment.assetsUrl}i18n/`);
@@ -85,6 +85,7 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
     MatCardModule,
     MatButtonToggleModule,
     MatProgressSpinnerModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [],

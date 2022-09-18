@@ -3,6 +3,23 @@
 .form {
   display: flex;
   gap: $padding-lg;
-  margin-bottom: $padding-xl;
+
   align-items: center;
+}
+
+.description {
+  font-size: $font-sm;
+  margin-bottom: $padding-md;
+}
+
+.error {
+  color: $error-color;
+}
+
+.parser-top {
+  margin-bottom: $padding-xl;
+}
+
+.results-controls {
+  margin-bottom: $padding-md;
 }

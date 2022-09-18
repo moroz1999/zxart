@@ -5,5 +5,6 @@ export interface ParserData {
   md5: string,
   name: string,
   type: string,
+  notFound: boolean,
   releases: ReleaseData[],
 }

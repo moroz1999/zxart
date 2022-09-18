@@ -1,9 +1,16 @@
-<div class="form">
-  <input type="file" (change)="fileChanged($event)"/>
-  <button mat-raised-button color="primary" type="button" (click)="load()" [disabled]="!!error">{{'parser.upload' | translate}}</button>
+<div class="parser-top">
+  <div class="description">{{ 'parser.description' | translate}}</div>
+  <div class="form">
+    <input type="file" (change)="fileChanged($event)"/>
+    <button mat-raised-button color="primary" type="button" (click)="load()"
+            [disabled]="!!error">{{'parser.upload' | translate}}</button>
+  </div>
+  <mat-spinner *ngIf="loading" diameter="100" strokeWidth="10"></mat-spinner>
+  <div *ngIf=error class="error">{{ error }}</div>
 </div>
-<mat-spinner *ngIf="loading" diameter="100" strokeWidth="10"></mat-spinner>
-<div *ngIf=error class="">{{ error }}</div>
 <div class="results" *ngIf="data">
-  <app-parsed-file class="result-item" *ngFor="let file of data" [data]="file"></app-parsed-file>
+  <div class="results-controls">
+    <mat-checkbox class="" [formControl]="notFoundOnly">{{ 'parser.non-found-only'  | translate }}</mat-checkbox>
+  </div>
+  <app-parsed-file [notFoundOnly]="notFoundOnly.value" class="result-item" *ngFor="let file of data" [data]="file"></app-parsed-file>
 </div>

@@ -7,8 +7,8 @@ class fixApplication extends controllerApplication
     protected $applicationName = 'fix';
     public $rendererName = 'smarty';
     protected $structureManager;
-    private $path = ROOT_PATH . 'fixcountries.txt';
-    private $log = ROOT_PATH . 'fixcountries.log';
+    private $log = ROOT_PATH . 'zxChip.log';
+    private $idLog = ROOT_PATH . 'zxChipIds.log';
 
     public function initialize()
     {
@@ -35,67 +35,57 @@ class fixApplication extends controllerApplication
              */
             $languagesManager = $this->getService('LanguagesManager');
             $languagesManager->setCurrentLanguageCode('eng');
-            $this->fixCountries();
+            $this->fixZxChip();
         }
     }
 
 
-    private function loadIds()
+    private function loadIds($term)
     {
-
-        $lastId = $this->getLastId();
-
         /**
          * @var \Illuminate\Database\Connection $db
          */
         $db = $this->getService('db');
-        $result = $db->table('module_author')
+        $result = $db->table('module_zxprod')
             ->orderBy('id')
-            ->where('id', '>', $lastId)
-            ->distinct()
+            ->where('title', 'like', '%'.$term.'%')
             ->get(['id']);
         return array_column($result, 'id');
 
     }
 
-    private function getLastId()
+    private function fixZxChip()
     {
-        if (is_file($this->path)) {
-            return (int)file_get_contents($this->path);
-        }
-        return 0;
-    }
-
-    private function fixCountries()
-    {
-        $ids = $this->loadIds();
+        $ids = $this->loadIds('zx chip');
+        $ids = array_merge($ids, $this->loadIds('zx tunes'));
         if ($ids) {
             foreach ($ids as $id) {
                 /**
-                 * @var authorElement $author
+                 * @var zxProdElement $prod
                  */
-                $author = $this->structureManager->getElementById($id);
-                if ($author) {
-                    $old = $author->getCountryTitle();
-                    if (!$author->checkCountry()) {
-                        $string = $author->getImportOriginId('zxdb') . ' ';
-                        $string .= $author->title . ' ';
-                        $string .= $author->realName . ' ';
-                        $string .= $old . ' ';
-
-                        $author->persistElementData();
-
-                        $string .= $author->getCountryTitle() . ' ';
-                        $string .= $author->getCityTitle() . ' ';
-                        $string .= "\n";
-                        file_put_contents($this->log, $string, FILE_APPEND);
-                        echo $string . '<br>';
-                        flush();
+                $prod = $this->structureManager->getElementById($id);
+                if ($prod) {
+                    $releases = $prod->getReleasesList();
+                    /**
+                     * @var zxReleaseElement $release
+                     */
+                    foreach ($releases as $key => $release) {
+                        copy($release->getFilePath(), ROOT_PATH . 'temporary/zxchip/' . $release->fileName);
                     }
+                    $string = $prod->getImportOriginId('zxdb') . ' ';
+                    $string .= $prod->getImportOriginId('3a') . ' ';
+                    $string .= $prod->title . ' ';
+
+                    $string .= "\n";
+                    file_put_contents($this->log, $string, FILE_APPEND);
+                    file_put_contents($this->idLog, $prod->getImportOriginId('zxdb') . ',', FILE_APPEND);
+                    echo $string . '<br>';
+                    flush();
+                    $prod->deleteElementData();
+
                 } else {
-                    echo 'failed author ' . $id . '<br>';
+                    echo 'failed prod ' . $id . '<br>';
                 }
-                file_put_contents($this->path, $id);
             }
         }
     }
