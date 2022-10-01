@@ -49,25 +49,6 @@ class ApiQueryResultResolver implements DependencyInjectionContextInterface
             foreach ($queryResult[$exportType] as $entity) {
                 $exportedTypeIdList[] = $entity->id;
             }
-        } elseif ($exportType === 'zxRelease') {
-            /**
-             * @var ProdsManager $prodsManager
-             */
-            $prodsManager = $this->getService('ProdsManager');
-            $queryResult[$exportType] = $prodsManager->getReleasesByIdList(
-                $exportTypeQuery,
-                $order,
-                $start,
-                $limit
-            );
-            if ($exportTypeQuery) {
-                $queryResult['totalAmount'] = $exportTypeQuery->count();
-            } else {
-                $queryResult['totalAmount'] = 0;
-            }
-            foreach ($queryResult[$exportType] as $entity) {
-                $exportedTypeIdList[] = $entity->id;
-            }
         } else {
             $queryResult[$exportType] = [];
             $structureManager = $this->getService('structureManager');

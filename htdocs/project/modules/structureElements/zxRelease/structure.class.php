@@ -21,7 +21,7 @@ use ZxFiles\BasicFile;
  * @property int $userId
  * @property int $parsed
  */
-class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFilesPathInterface, CommentsHolderInterface
+class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFilesPathInterface, CommentsHolderInterface, JsonDataProvider
 {
     use AuthorshipProviderTrait;
     use AuthorshipPersister;
@@ -34,6 +34,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     use FilesElementTrait;
     use ReleaseFormatsProvider;
     use GalleryInfoProviderTrait;
+    use JsonDataProviderElement;
 
     public $dataResourceName = 'module_zxrelease';
     public $allowedTypes = [];
@@ -134,18 +135,6 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
             $result[] = $this->getConnectedFileType($propertyName);
         }
         return $result;
-    }
-
-    public function getElementData()
-    {
-        // generic
-        $data["id"] = $this->id;
-        $data["title"] = $this->title;
-        $data["link"] = $this->URL;
-        $data["votes"] = $this->votes;
-        $data["userVote"] = $this->getUserVote();
-        $data["votePercent"] = $this->getVotePercent();
-        return $data;
     }
 
     protected function setMultiLanguageFields(&$multiLanguageFields)
@@ -592,4 +581,28 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return $title;
 
     }
+
+    //used in API
+    public function getImagesUrls($preset = 'prodImage')
+    {
+        $urls = [];
+        foreach ($this->getFilesList('screenshotsSelector') as $fileElement) {
+            $urls[] = $fileElement->getImageUrl($preset);
+        }
+        return $urls;
+    }
+
+    public function getPublishersInfo()
+    {
+        $publishersInfo = [];
+        foreach ($this->publishers as $publisher) {
+            $publishersInfo[] = [
+                'id' => $publisher->id,
+                'title' => $publisher->title,
+                'url' => $publisher->getUrl(),
+            ];
+        }
+        return $publishersInfo;
+    }
+
 }

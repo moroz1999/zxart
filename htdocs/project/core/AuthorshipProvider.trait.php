@@ -14,7 +14,7 @@ trait AuthorshipProviderTrait
                 $result = $info;
             } else {
                 foreach ($info as $item) {
-                    if (!array_diff($roles, $item['roles'])) {
+                    if ($item['roles'] && !array_diff($roles, $item['roles'])) {
                         $result[] = $item;
                     }
                 }

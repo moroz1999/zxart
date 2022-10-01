@@ -21,5 +21,10 @@
 }
 
 .results-controls {
-  margin-bottom: $padding-md;
+  display: block;
+  margin-bottom: $padding-xl;
+
+  input {
+    margin-right: $padding-sm;
+  }
 }

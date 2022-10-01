@@ -14,10 +14,11 @@ class ReleasesResolver
 
     public function getElementsByQuery(?Builder $query, ?array $sort = [], ?int $start = null, ?int $amount = null)
     {
-        return $this->prodsManager->getElementsByQuery($query, $sort, $start, $amount);
+        return $this->prodsManager->getReleasesByIdList($query, $sort, $start, $amount);
     }
+
     public function makeQuery()
     {
-        return $this->prodsManager->makeQuery();
+        return $this->prodsManager->makeReleasesQuery();
     }
 }

@@ -37,6 +37,8 @@ trait ZxProdsList
 
     abstract public function getProdsListBaseQuery();
 
+    private $type = 'zxProd';
+
     public function getProdsInfo(): array
     {
         $prodsInfo = [];
@@ -54,15 +56,27 @@ trait ZxProdsList
         if (!isset($this->prods)) {
             $this->prods = [];
             if ($apiQuery = $this->getApiQuery()) {
-                if ($result = $apiQuery->getQueryResult()) {
-                    $this->prods = $result['zxProd'];
-                    $this->prodsAmount = $result['totalAmount'];
+                $controller = $this->getService('controller');
+                if ($controller->getParameter('releases') === '1') {
+                    $apiQuery->setExportType('zxRelease');
+                    $apiQuery->setResultTypes(['zxRelease']);
+                    if ($result = $apiQuery->getQueryResult()) {
+                        $this->prods = $result['zxRelease'];
+                        $this->prodsAmount = $result['totalAmount'];
+                    }
                 }
+                else {
+                    if ($result = $apiQuery->getQueryResult()) {
+                        $this->prods = $result[$this->type];
+                        $this->prodsAmount = $result['totalAmount'];
+                    }
+                }
+
             }
         }
-
         return $this->prods;
     }
+
 
     public function getApiQuery()
     {
@@ -77,7 +91,7 @@ trait ZxProdsList
              * @var ApiQueriesManager $apiQueriesManager
              */
             $apiQueriesManager = $this->getService('ApiQueriesManager');
-            $apiQuery = $apiQueriesManager->getQuery()->setExportType('zxProd')->setFiltrationParameters($filters);
+            $apiQuery = $apiQueriesManager->getQuery()->setExportType($this->type)->setFiltrationParameters($filters);
             $this->baseQuery = $apiQuery->getExportFilteredQuery();
             if ($letter = $controller->getParameter('letter')) {
                 $filters['zxProdFirstLetter'] = $letter;
@@ -103,7 +117,7 @@ trait ZxProdsList
             if ($values = $this->getSelectorValue('languages')) {
                 $filters['zxReleaseLanguage'] = $values;
             }
-            $this->apiQuery = $apiQueriesManager->getQuery()->setExportType('zxProd')->setFiltrationParameters($filters);
+            $this->apiQuery = $apiQueriesManager->getQuery()->setExportType($this->type)->setFiltrationParameters($filters);
             $this->filteredQuery = clone($this->apiQuery->getExportFilteredQuery());
             $elementsOnPage = (int)$controller->getParameter('elementsOnPage');
             if (!$elementsOnPage) {

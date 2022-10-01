@@ -79,16 +79,19 @@ class parserApplication extends controllerApplication
      */
     private function exportItem($item)
     {
+        $releases = $this->loadReleasesData($item->getMd5());
+        $subItems = $item->getItems();
+
         $export = [
             'name' => $item->getItemName(),
             'type' => $item->getType(),
             'md5' => $item->getMd5(),
             'files' => [],
-            'notFound' => false,
+            'notFound' => !$releases && !$subItems,
+            'releases' => $releases,
         ];
-        $export['releases'] = $this->loadReleasesData($item->getMd5());
-        $export['notFound'] = !$export['releases'];
-        if ($subItems = $item->getItems()) {
+
+        if ($subItems) {
             foreach ($subItems as $subItem) {
                 if ($subItem) {
                     $item = $this->exportItem($subItem);
@@ -97,6 +100,7 @@ class parserApplication extends controllerApplication
                 }
             }
         }
+
 
         return $export;
     }

@@ -49,6 +49,7 @@
         "all": "Todo"
       }
     },
+    "releases": "Lanzamientos",
     "sorting": {
       "votes,asc": "Calificación, asc",
       "votes,desc": "Calificación, desc",
@@ -81,6 +82,7 @@
     "description": "La búsqueda acepta archivos zip que contengan archivos trd, scl, tap que no superen los 50 MB. Después de la descarga, el sistema analizará la estructura del archivo y mostrará qué versión de la base de datos ZX-Art usó los archivos descargados, incluidas imágenes y música.",
     "upload":  "Subir y analizar",
     "notfound":  "Extraviado",
+    "not-found-only":  "Mostrar solo archivos no encontrados",
     "show-releases": "Mostrar lanzamientos"
   }
 }

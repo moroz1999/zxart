@@ -9,8 +9,8 @@
   <div *ngIf=error class="error">{{ error }}</div>
 </div>
 <div class="results" *ngIf="data">
-  <div class="results-controls">
-    <mat-checkbox class="" [formControl]="notFoundOnly">{{ 'parser.non-found-only'  | translate }}</mat-checkbox>
-  </div>
+  <label class="results-controls">
+    <input type="checkbox" class="" [formControl]="notFoundOnly">{{ 'parser.not-found-only'  | translate }}
+  </label>
   <app-parsed-file [notFoundOnly]="notFoundOnly.value" class="result-item" *ngFor="let file of data" [data]="file"></app-parsed-file>
 </div>

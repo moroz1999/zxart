@@ -811,6 +811,11 @@ class ProdsManager extends ElementsManager
         return $result;
     }
 
+    public function makeReleasesQuery()
+    {
+        return $this->db->table('module_zxrelease');
+    }
+
     protected function loadReleases($idList = false, $sort = [], $start = null, $amount = null)
     {
         if ($idList instanceof Illuminate\Database\Query\Builder) {

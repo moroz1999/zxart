@@ -111,6 +111,13 @@ $amount: 5;
   }
 }
 
+.releases-selector {
+  display: flex;
+  align-items: center;
+  gap: $padding-sm;
+  flex-wrap: nowrap;
+}
+
 .layout-selector {
   display: flex;
   align-items: center;

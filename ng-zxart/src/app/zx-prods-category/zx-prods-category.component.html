@@ -115,6 +115,9 @@
             [tagsSelector]="model.tagsSelector"
             (tagsSelected)="tagsSelected($event)"
           ></app-tags-selector>
+          <label class="releases-selector">
+            <input type="checkbox" [(ngModel)]="releases" (change)="releasesSelected()"> {{ 'prods-list.releases' | translate }}
+          </label>
           <app-sorting-selector
             [sortingSelector]="model.sortingSelector"
             (sortingSelected)="sortingSelected($event)"

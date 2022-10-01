@@ -12,10 +12,10 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
             'searchTitle' => 'getSearchTitle',
             'url' => 'getUrl',
             'structureType' => 'structureType',
-            'dateCreated' => function ($element) {
+            'dateCreated' => function (zxReleaseElement $element) {
                 return $element->getValue('dateCreated');
             },
-            'dateModified' => function ($element) {
+            'dateModified' => function (zxReleaseElement $element) {
                 return $element->getValue('dateModified');
             },
             'file' => 'getFileUrl',
@@ -23,24 +23,38 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
             'year' => 'year',
             'publishersIds' => 'getPublishersIds',
             'language' => 'language',
+            'languagesInfo' => 'getLanguagesInfo',
             'description' => 'description',
             'hardwareRequired' => 'hardwareRequired',
             'releaseType' => 'releaseType',
             'releaseFormat' => 'releaseFormat',
             'version' => 'version',
-            'authorsInfo' => function ($element) {
+            'publishersInfo' => 'getPublishersInfo',
+            'groupsInfo' => 'getGroupsInfo',
+            'authorsInfo' => function (zxReleaseElement $element) {
                 return $element->getAuthorsRecords('release');
             },
-            'inlays' => function ($element) {
+            'listImagesUrls' => function (zxReleaseElement $element) {
+                $urls = $element->getImagesUrls('prodListImage');
+                if (!$urls) {
+                    if ($prod = $element->getProd()) {
+                        $urls = $prod->getImagesUrls('prodListImage');
+                    }
+                }
+                return $urls;
+            },
+            'hardwareInfo' => 'getHardwareInfo',
+            'inlaysUrls' => 'getInlaysUrls',
+            'inlays' => function (zxReleaseElement $element) {
                 return $element->getFilesUrlList('inlayFilesSelector', 'release');
             },
-            'ads' => function ($element) {
+            'ads' => function (zxReleaseElement $element) {
                 return $element->getFilesUrlList('adFilesSelector', 'release');
             },
-            'instructions' => function ($element) {
+            'instructions' => function (zxReleaseElement $element) {
                 return $element->getFilesUrlList('infoFilesSelector', 'release');
             },
-            'releaseStructure' => function ($element) {
+            'releaseStructure' => function (zxReleaseElement $element) {
                 if ($element->parsed && $element->isDownloadable()) {
                     if ($structure = $element->getReleaseStructure()) {
                         return $structure;
@@ -76,6 +90,22 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
                 'instructions',
                 'importIds',
                 'releaseStructure',
+            ],
+            'list' => [
+                'id',
+                'title',
+                'dateCreated',
+                'url',
+                'inlaysUrls',
+                'listImagesUrls',
+                'hardwareInfo',
+                "year",
+                "partyPlace",
+                "partyInfo",
+                "languagesInfo",
+                "categoriesInfo",
+                "groupsInfo",
+                "publishersInfo",
             ],
             'search' => [
                 'id',
