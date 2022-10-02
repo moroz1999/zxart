@@ -534,9 +534,9 @@ trait ZxProdsList
             if ($query = $this->getSelectorQuery('letter')) {
                 $value = $this->getSelectorValue('letter');
                 $letters = $query
-                    ->distinct()
                     ->selectRaw("LEFT(title, 1) AS letter")
                     ->orderBy('letter', 'asc')
+                    ->groupBy('letter')
                     ->pluck('letter');
 
                 $numericExists = false;

@@ -3,7 +3,7 @@
 class zxReleaseQueryFilterConverter extends QueryFilterConverter
 {
     use LinkedQueryFilterTrait;
-    
+
     protected function getFields(): array
     {
         return [
@@ -25,7 +25,6 @@ class zxReleaseQueryFilterConverter extends QueryFilterConverter
             $query = $this->generateChildQuery($sourceData, $this->getTable(), 'structure', false);
         } else {
             $query = $this->getService('db')->table($this->getTable())
-//                ->leftJoin($this->getStructureTable(), $this->getStructureTable() . '.id', '=', $this->getTable() . '.id')
                 ->select($this->getFields());
         }
 

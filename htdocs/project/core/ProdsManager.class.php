@@ -816,35 +816,28 @@ class ProdsManager extends ElementsManager
         return $this->db->table('module_zxrelease');
     }
 
-    protected function loadReleases($idList = false, $sort = [], $start = null, $amount = null)
+    protected function loadReleases(Illuminate\Database\Query\Builder $query, $sort = [], $start = null, $amount = null)
     {
-        if ($idList instanceof Illuminate\Database\Query\Builder) {
-            $query = $idList;
-        } else {
-            $query = $this->db->table('module_zxrelease')->select('module_zxrelease.id');
-            if (is_array($idList)) {
-                $query->whereIn('module_zxrelease.id', $idList);
-            }
-        }
         if (is_array($sort)) {
             foreach ($sort as $property => &$order) {
                 if (isset($this->releaseColumnRelations[$property])) {
+                    $srcTableName = $this->db->getTablePrefix().$query->from;
                     foreach ($this->releaseColumnRelations[$property] as $criteria => $orderDirection) {
                         if ($criteria == 'dateCreated') {
-                            $query->leftJoin('structure_elements', 'structure_elements.id', '=', 'module_zxrelease.id');
+                            $query->leftJoin('structure_elements', 'structure_elements.id', '=', $query->from.'.id');
                             $query->orderBy("structure_elements.dateCreated", $orderDirection);
                         } else {
                             if ($orderDirection === true) {
-                                $query->orderByRaw("$criteria $order");
+                                $query->orderByRaw("$srcTableName.$criteria $order");
                             } else {
                                 if ($orderDirection === false) {
                                     if ($order == 'desc') {
-                                        $query->orderByRaw("$criteria asc");
+                                        $query->orderByRaw("$srcTableName.$criteria asc");
                                     } else {
-                                        $query->orderByRaw("$criteria desc");
+                                        $query->orderByRaw("$srcTableName.$criteria desc");
                                     }
                                 } else {
-                                    $query->orderByRaw("$criteria $orderDirection");
+                                    $query->orderByRaw("$srcTableName.$criteria $orderDirection");
                                 }
                             }
                         }
