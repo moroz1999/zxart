@@ -8,7 +8,9 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
     {
         return [
             'id' => 'id',
-            'title' => 'title',
+            'title' => function ($element) {
+                return html_entity_decode($element->title, ENT_QUOTES);
+            },
             'searchTitle' => 'getSearchTitle',
             'url' => 'getUrl',
             'structureType' => 'structureType',
@@ -33,6 +35,9 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
             'groupsInfo' => 'getGroupsInfo',
             'authorsInfo' => function (zxReleaseElement $element) {
                 return $element->getAuthorsRecords('release');
+            },
+            'authorsInfoShort' => function (zxReleaseElement $element) {
+                return $element->getShortAuthorship('release');
             },
             'listImagesUrls' => function (zxReleaseElement $element) {
                 $urls = $element->getImagesUrls('prodListImage');
@@ -106,6 +111,7 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
                 "categoriesInfo",
                 "groupsInfo",
                 "publishersInfo",
+                "authorsInfoShort",
             ],
             'search' => [
                 'id',

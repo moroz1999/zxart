@@ -404,7 +404,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         if (!empty($this->year)) {
             return $this->year;
         }
-        if ($zxProd = $this->getProd()) {
+        if ($this->releaseType === 'original' && $zxProd = $this->getProd()) {
             return $zxProd->year;
         }
         return false;

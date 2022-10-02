@@ -8,7 +8,9 @@ class authorDataResponseConverter extends StructuredDataResponseConverter
     {
         return [
             'id' => 'id',
-            'title' => 'title',
+            'title' => function ($element) {
+                return html_entity_decode($element->title, ENT_QUOTES);
+            },
             'searchTitle' => 'getSearchTitle',
             'url' => 'getUrl',
             'structureType' => 'structureType',

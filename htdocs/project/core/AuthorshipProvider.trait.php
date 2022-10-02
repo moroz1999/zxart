@@ -87,4 +87,19 @@ trait AuthorshipProviderTrait
             'guest',
         ];
     }
+
+    public function getShortAuthorship(string $type): array
+    {
+        $result = [];
+        foreach ($this->getAuthorsInfo($type) as $item) {
+            if ($item['authorElement']) {
+                $result[] = [
+                    'title' => $item['authorElement']->getTitle(),
+                    'url' => $item['authorElement']->getTitle(),
+                    'roles' => $item['roles']
+                ];
+            }
+        }
+        return $result;
+    }
 }

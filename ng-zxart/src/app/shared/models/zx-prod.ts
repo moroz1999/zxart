@@ -3,7 +3,7 @@ import {
   ZxProdDto,
   ZxProdConnectedItems,
   ZxProdConnectedElements,
-  ZxProdConnectedElementDto,
+  ZxProdConnectedElementDto, ZxProdAuthorship,
 } from './zx-prod-dto';
 
 export class ZxProd extends StructureElement {
@@ -16,6 +16,7 @@ export class ZxProd extends StructureElement {
   public hardwareInfo: ZxProdConnectedItems = [];
   public groupsInfo: ZxProdConnectedElements = [];
   public publishersInfo: ZxProdConnectedElements = [];
+  public authorsInfoShort: ZxProdAuthorship[] = [];
   public categoriesInfo: ZxProdConnectedElements = [];
   public languagesInfo: ZxProdConnectedItems = [];
   public partyInfo?: ZxProdConnectedElementDto;
@@ -43,6 +44,9 @@ export class ZxProd extends StructureElement {
     }
     if (data.publishersInfo) {
       this.publishersInfo = data.publishersInfo;
+    }
+    if (data.authorsInfoShort) {
+      this.authorsInfoShort = data.authorsInfoShort;
     }
     if (data.categoriesInfo) {
       this.categoriesInfo = data.categoriesInfo;

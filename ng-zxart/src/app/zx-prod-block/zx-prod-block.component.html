@@ -81,15 +81,21 @@
       <ng-container *ngFor="let publisher of model.publishersInfo; last as last"><a
         [href]="publisher.url">{{publisher.title}}</a><span *ngIf="!last">, </span></ng-container>
     </div>
+    <div *ngIf="!model.groupsInfo.length && !model.publishersInfo.length && model.authorsInfoShort.length">
+      <ng-container *ngFor="let author of model.authorsInfoShort; last as last"><a
+        [href]="author.url">{{author.title}}</a><span *ngIf="!last">, </span></ng-container>
+    </div>
     <div class="zx-prod-bottom-row">
       <app-rating
-        *ngIf="!model.denyVoting"
+        *ngIf="!model.denyVoting && votingEnabled"
         [overallRating]="model.votes"
         [userRating]="model.userVote"
         (voted)="vote($event)"
       ></app-rating>
-      <div class="zx-prod-year"
-           (click)="yearClicked($event, model.year)"
+      <div
+        class="zx-prod-year"
+        *ngIf="model.year"
+        (click)="yearClicked($event, model.year)"
       >{{model.year}}</div>
     </div>
     <div class="zx-prod-additional"
@@ -103,6 +109,18 @@
         <div class="zx-prod-row-value">
           <ng-container *ngFor="let publisher of model.publishersInfo; last as last"><a
             [href]="publisher.url">{{publisher.title}}</a><span *ngIf="!last">, </span></ng-container>
+        </div>
+      </div>
+      <div class="zx-prod-row zx-prod-author" *ngIf="model.authorsInfoShort.length">
+        <div class="zx-prod-row-label">{{ "zx-prod.authors" | translate }}</div>
+        <div class="zx-prod-row-value">
+          <ng-container *ngFor="let author of model.authorsInfoShort; last as last"><a
+            [href]="author.url">{{author.title}}</a>
+            <ng-container *ngIf="author.roles.length"> (
+              <ng-container *ngFor="let role of author.roles">{{"author.role." + role | translate}}</ng-container>
+              )
+            </ng-container>
+            <span *ngIf="!last">, </span></ng-container>
         </div>
       </div>
       <div class="zx-prod-row zx-prod-categories" *ngIf="model.categoriesInfo.length">

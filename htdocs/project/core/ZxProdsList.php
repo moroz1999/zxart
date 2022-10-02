@@ -56,16 +56,14 @@ trait ZxProdsList
         if (!isset($this->prods)) {
             $this->prods = [];
             if ($apiQuery = $this->getApiQuery()) {
-                $controller = $this->getService('controller');
-                if ($controller->getParameter('releases') === '1') {
+                if ($this->releases()) {
                     $apiQuery->setExportType('zxRelease');
                     $apiQuery->setResultTypes(['zxRelease']);
                     if ($result = $apiQuery->getQueryResult()) {
                         $this->prods = $result['zxRelease'];
                         $this->prodsAmount = $result['totalAmount'];
                     }
-                }
-                else {
+                } else {
                     if ($result = $apiQuery->getQueryResult()) {
                         $this->prods = $result[$this->type];
                         $this->prodsAmount = $result['totalAmount'];
@@ -495,16 +493,29 @@ trait ZxProdsList
     public function getSortingSelector(): array
     {
         if (!isset($this->sortingSelector)) {
-            $sortTypes = [
-                'votes,asc',
-                'votes,desc',
-                'title,asc',
-                'title,desc',
-                'year,asc',
-                'year,desc',
-                'date,asc',
-                'date,desc',
-            ];
+            if ($this->releases()){
+                $sortTypes = [
+                    'title,asc',
+                    'title,desc',
+                    'year,asc',
+                    'year,desc',
+                    'date,asc',
+                    'date,desc',
+                ];
+
+            } else{
+                $sortTypes = [
+                    'votes,asc',
+                    'votes,desc',
+                    'title,asc',
+                    'title,desc',
+                    'year,asc',
+                    'year,desc',
+                    'date,asc',
+                    'date,desc',
+                ];
+            }
+
             $selectorValues = [];
             $values = $this->getSelectorValue('sorting');
             $value = implode(',', $values);
@@ -624,5 +635,11 @@ trait ZxProdsList
             $this->getApiQuery();
         }
         return $this->baseQuery;
+    }
+
+    private function releases(): bool
+    {
+        $controller = $this->getService('controller');
+        return $controller->getParameter('releases') === '1';
     }
 }

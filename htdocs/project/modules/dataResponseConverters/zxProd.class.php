@@ -55,11 +55,14 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             'rzx' => function ($element) {
                 return $element->getFilesUrlList('rzx', 'release');
             },
-            'authorsInfo' => function ($element) {
+            'authorsInfo' => function (zxProdElement $element) {
                 return $element->getAuthorsRecords('prod');
             },
+            'authorsInfoShort' => function (zxProdElement $element) {
+                return $element->getShortAuthorship('prod');
+            },
             'importIds' => 'getImportIdsIndex',
-            "votes"  => function ($element) {
+            "votes" => function ($element) {
                 return (float)$element->votes;
             },
             "userVote" => 'getUserVote',
@@ -118,6 +121,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 "categoriesInfo",
                 "groupsInfo",
                 "publishersInfo",
+                "authorsInfoShort",
                 "youtubeId",
                 "denyVoting",
             ],

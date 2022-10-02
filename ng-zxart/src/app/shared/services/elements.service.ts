@@ -17,7 +17,7 @@ declare var elementsData: { [key: number]: any };
   providedIn: 'root',
 })
 export class ElementsService {
-  private apiUrl: string = `//${environment.apiBaseUrl}/jsonElementData/`;
+  private apiUrl: string = `//${environment.apiBaseUrl}jsonElementData/`;
 
   constructor(private http: HttpClient) {
   }

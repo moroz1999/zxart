@@ -13,6 +13,12 @@ export interface ZxProdConnectedElementDto extends StructureElementDto {
   readonly url: string;
 }
 
+export interface ZxProdAuthorship {
+  readonly title: string;
+  readonly url: string;
+  readonly roles: string[];
+}
+
 export type ZxProdConnectedElements = Array<ZxProdConnectedElementDto>;
 
 export interface ZxProdDto extends StructureElementDto {
@@ -25,6 +31,7 @@ export interface ZxProdDto extends StructureElementDto {
   readonly hardwareInfo?: ZxProdConnectedItems;
   readonly groupsInfo?: ZxProdConnectedElements;
   readonly publishersInfo?: ZxProdConnectedElements;
+  readonly authorsInfoShort?: ZxProdAuthorship[];
   readonly categoriesInfo?: ZxProdConnectedElements;
   readonly languagesInfo?: ZxProdConnectedItems;
   readonly partyInfo?: ZxProdConnectedElementDto;
