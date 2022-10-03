@@ -87,11 +87,15 @@
     </div>
     <div class="zx-prod-bottom-row">
       <app-rating
-        *ngIf="!model.denyVoting && votingEnabled"
+        *ngIf="!model.denyVoting && model.structureType === 'zxProd'"
         [overallRating]="model.votes"
         [userRating]="model.userVote"
         (voted)="vote($event)"
       ></app-rating>
+      <div
+        class="zx-prod-release-type"
+        *ngIf="model.releaseType && model.structureType === 'zxRelease'"
+      >{{'zx-prod.release-type.'+model.releaseType | translate}}</div>
       <div
         class="zx-prod-year"
         *ngIf="model.year"
@@ -116,11 +120,9 @@
         <div class="zx-prod-row-value">
           <ng-container *ngFor="let author of model.authorsInfoShort; last as last"><a
             [href]="author.url">{{author.title}}</a>
-            <ng-container *ngIf="author.roles.length"> (
-              <ng-container *ngFor="let role of author.roles">{{"author.role." + role | translate}}</ng-container>
-              )
-            </ng-container>
-            <span *ngIf="!last">, </span></ng-container>
+            <ng-container *ngIf="author.roles && author.roles.length">
+              (<ng-container *ngFor="let role of author.roles; last as last2">{{"author.role." + role | translate}}<ng-container *ngIf="!last2">, </ng-container></ng-container>)</ng-container><ng-container *ngIf="!last">, </ng-container>
+          </ng-container>
         </div>
       </div>
       <div class="zx-prod-row zx-prod-categories" *ngIf="model.categoriesInfo.length">

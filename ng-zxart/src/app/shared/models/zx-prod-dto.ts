@@ -23,6 +23,7 @@ export type ZxProdConnectedElements = Array<ZxProdConnectedElementDto>;
 
 export interface ZxProdDto extends StructureElementDto {
   readonly title: string;
+  readonly structureType: 'zxProd' | 'zxRelease';
   readonly dateCreated: number;
   readonly year?: string;
   readonly youtubeId?: string;
@@ -35,6 +36,8 @@ export interface ZxProdDto extends StructureElementDto {
   readonly categoriesInfo?: ZxProdConnectedElements;
   readonly languagesInfo?: ZxProdConnectedItems;
   readonly partyInfo?: ZxProdConnectedElementDto;
+  readonly releaseType?: string;
+  readonly releaseFormat?: string;
   readonly partyPlace?: number;
   readonly votes: number;
   readonly userVote: number;

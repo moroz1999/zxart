@@ -26,6 +26,7 @@ class receiveZxItemsList extends structureElementAction
             'apiString',
             'searchFormParametersString',
             'requiresUser',
+            'buttonTitle',
         ];
     }
 

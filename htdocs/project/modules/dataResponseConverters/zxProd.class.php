@@ -106,6 +106,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             ],
             'list' => [
                 'id',
+                'structureType',
                 'title',
                 'dateCreated',
                 'url',

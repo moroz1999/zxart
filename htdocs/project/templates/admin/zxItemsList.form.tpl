@@ -27,6 +27,14 @@
 				<input class='input_component' type="text" value="{$formData.searchFormParametersString}" name="{$formNames.searchFormParametersString}" />
 			</td>
 		</tr>
+		<tr {if $formErrors.buttonTitle} class="form_error"{/if}>
+			<td class="form_label">
+				{translations name='zxitemslist.buttontitle'}:
+			</td>
+			<td colspan='2'>
+				<input class='input_component' type="text" value="{$formData.buttonTitle}" name="{$formNames.buttonTitle}" />
+			</td>
+		</tr>
 		<tr>
 			<td class="form_label">
 				{translations name='zxitemslist.requiresuser'}:
@@ -46,6 +54,7 @@
 					<option value='graphics' {if $formData.items == 'graphics'}selected="selected"{/if}>graphics</option>
 					<option value='music' {if $formData.items == 'music'}selected="selected"{/if}>music</option>
 					<option value='zxProd' {if $formData.items == 'zxProd'}selected="selected"{/if}>zxProd</option>
+					<option value='zxRelease' {if $formData.items == 'zxRelease'}selected="selected"{/if}>zxRelease</option>
 					<option value='all' {if $formData.items == 'all'}selected="selected"{/if}>all</option>
 				</select>
 			</td>

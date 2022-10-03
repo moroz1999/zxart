@@ -56,7 +56,7 @@ trait ZxProdsList
         if (!isset($this->prods)) {
             $this->prods = [];
             if ($apiQuery = $this->getApiQuery()) {
-                if ($this->releases()) {
+                if ($this->getReleasesValue()) {
                     $apiQuery->setExportType('zxRelease');
                     $apiQuery->setResultTypes(['zxRelease']);
                     if ($result = $apiQuery->getQueryResult()) {
@@ -194,6 +194,9 @@ trait ZxProdsList
             $selectorValues = [];
             if ($query = $this->getSelectorQuery('years')) {
                 $values = $this->getSelectorValue('years');
+                if ($values[0] === 'this') {
+                    $values = [date('Y'), date('Y') - 1];
+                }
                 $years = $query
                     ->distinct()
                     ->orderBy('year', 'asc')
@@ -493,7 +496,7 @@ trait ZxProdsList
     public function getSortingSelector(): array
     {
         if (!isset($this->sortingSelector)) {
-            if ($this->releases()){
+            if ($this->getReleasesValue()) {
                 $sortTypes = [
                     'title,asc',
                     'title,desc',
@@ -503,7 +506,7 @@ trait ZxProdsList
                     'date,desc',
                 ];
 
-            } else{
+            } else {
                 $sortTypes = [
                     'votes,asc',
                     'votes,desc',
@@ -556,7 +559,7 @@ trait ZxProdsList
                         $selected = $value ? in_array($letter, $value) : false;
                         $selectorValues[] = [
                             'value' => $letter,
-                            'title' => $letter,
+                            'title' => mb_strtoupper($letter),
                             'selected' => $selected
                         ];
                     } else {
@@ -637,9 +640,35 @@ trait ZxProdsList
         return $this->baseQuery;
     }
 
-    private function releases(): bool
+    private function getReleasesValue(): bool
     {
         $controller = $this->getService('controller');
         return $controller->getParameter('releases') === '1';
     }
+
+    public function getUrl($action = null)
+    {
+        if ($this->final) {
+            $controller = $this->getService('controller');
+            return parent::getUrl($action) . $controller->getParametersString();
+        }
+        return parent::getUrl($action);
+    }
+
+    public function getSelectorValues(): array
+    {
+        $controller = $this->getService('controller');
+        return [
+            'letter' => $controller->getParameter('letter') ?? '',
+            'years' => $this->getSelectorValue('years') ?? [],
+            'statuses' => $this->getSelectorValue('statuses') ?? [],
+            'tags' => $this->getSelectorValue('tags') ?? [],
+            'countries' => $this->getSelectorValue('countries') ?? [],
+            'hw' => $this->getSelectorValue('hw') ?? [],
+            'formats' => $this->getSelectorValue('formats') ?? [],
+            'languages' => $this->getSelectorValue('languages') ?? [],
+            'releases' => $this->getReleasesValue(),
+        ];
+    }
+
 }

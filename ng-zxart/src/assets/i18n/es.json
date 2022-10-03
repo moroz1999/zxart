@@ -77,7 +77,21 @@
     "developers": "Desarrolladores",
     "publishers": "Editores",
     "authors": "Autores",
-    "open": "Abierto"
+    "open": "Abierto",
+    "release-type": {
+      "original": "Original",
+      "rerelease": "Relanzamiento",
+      "unknown": "Desconocido",
+      "adaptation": "Adaptación",
+      "mod": "Modificación",
+      "crack": "Agrietado",
+      "localization": "Localización",
+      "demoversion": "Versión de demostración",
+      "compilation": "Compilacion",
+      "corrupted": "Corrupto",
+      "mia": "MIA",
+      "incomplete": "Incompleto"
+    }
   },
   "parser": {
     "description": "La búsqueda acepta archivos zip que contengan archivos trd, scl, tap que no superen los 50 MB. Después de la descarga, el sistema analizará la estructura del archivo y mostrará qué versión de la base de datos ZX-Art usó los archivos descargados, incluidas imágenes y música.",

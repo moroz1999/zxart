@@ -3,6 +3,7 @@ import {StructureElementDto} from '../../shared/models/structure-element-dto';
 import {SelectorDto} from './selector-dto';
 import {TagDto} from '../../shared/models/tag-dto';
 import {CategoriesSelectorDto} from '../../categories-selector-dto';
+import {SelectorValues} from './selector-values';
 
 export interface ZxProdCategoryDto extends StructureElementDto {
   readonly h1: string;
@@ -19,4 +20,5 @@ export interface ZxProdCategoryDto extends StructureElementDto {
   readonly hardwareSelector?: SelectorDto;
   readonly sortingSelector?: SelectorDto;
   readonly tagsSelector?: Array<TagDto>;
+  readonly selectorValues: SelectorValues;
 }

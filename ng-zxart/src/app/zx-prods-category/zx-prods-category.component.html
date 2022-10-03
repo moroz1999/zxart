@@ -152,7 +152,6 @@
             *ngFor="let zxProd of model.prods"
             [model]="zxProd"
             [imagesLayout]="layout"
-            [votingEnabled]="!releases"
             (categoryChanged)="categoryChanged($event)"
             (yearChanged)="yearsChanged($event)"
             (hardwareChanged)="hardwareChanged($event)"

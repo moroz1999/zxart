@@ -17,6 +17,7 @@ export class ZxProdsCategoryComponent implements OnInit {
   public pagesAmount = 0;
   public currentPage = 1;
   public elementsOnPage = 100;
+
   public years: Array<string> = [];
   public hw: Array<string> = [];
   public languages: Array<string> = [];
@@ -24,10 +25,11 @@ export class ZxProdsCategoryComponent implements OnInit {
   public formats: Array<string> = [];
   public letter?: string;
   public sorting?: string;
-  public layout: ZxProdsListLayout = 'loading';
-  public releases = false;
   public tags: Array<number> = [];
   public countries: Array<string> = [];
+  public releases = false;
+
+  public layout: ZxProdsListLayout = 'loading';
   public loading = false;
   public urlBase = '';
 
@@ -122,6 +124,17 @@ export class ZxProdsCategoryComponent implements OnInit {
           }
           window.history.pushState({parameters, elementId: this.elementId}, '', reqUrl);
         }
+
+        this.letter = this.model.selectorValues.letter;
+        this.years = this.model.selectorValues.years;
+        this.legalStatuses = this.model.selectorValues.statuses;
+        // this.tags = this.model.selectorValues.tags;
+        this.countries = this.model.selectorValues.countries;
+        this.hw = this.model.selectorValues.hw;
+        this.formats = this.model.selectorValues.formats;
+        this.languages = this.model.selectorValues.languages;
+        this.releases = this.model.selectorValues.releases;
+
       },
       () => {
 

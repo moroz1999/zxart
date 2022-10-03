@@ -4,6 +4,7 @@ import {SelectorDto} from './selector-dto';
 import {Tag} from '../../shared/models/tag';
 import {CategoriesSelectorDto} from '../../categories-selector-dto';
 import {ZxProdCategoryDto} from './zx-prod-category-dto';
+import {SelectorValues} from './selector-values';
 
 export class ZxProdCategory extends StructureElement {
   public h1: string;
@@ -20,6 +21,7 @@ export class ZxProdCategory extends StructureElement {
   public hardwareSelector: SelectorDto = [];
   public sortingSelector: SelectorDto = [];
   public tagsSelector: Array<Tag> = [];
+  public selectorValues: SelectorValues;
 
   constructor(
     data: ZxProdCategoryDto,
@@ -43,5 +45,6 @@ export class ZxProdCategory extends StructureElement {
     if (data.tagsSelector) {
       this.tagsSelector = data.tagsSelector.map(item => new Tag(item));
     }
+    this.selectorValues = data.selectorValues;
   }
 }

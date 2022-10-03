@@ -605,4 +605,25 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return $publishersInfo;
     }
 
+    public function getHardwareInfo()
+    {
+        if (!isset($this->hardwareInfo)) {
+            if (($this->hardwareInfo = $this->getCacheKey('hw' . $this->currentLanguage)) === false) {
+                $this->hardwareInfo = [];
+                /**
+                 * @var translationsManager $translationsManager
+                 */
+                $translationsManager = $this->getService('translationsManager');
+                foreach ($this->hardwareRequired as $item) {
+                    $this->hardwareInfo[] = [
+                        'id' => $item,
+                        'title' => $translationsManager->getTranslationByName('hardware_short.item_' . $item),
+                    ];
+                }
+                $this->setCacheKey('hw' . $this->currentLanguage, $this->hardwareInfo, 24 * 60 * 60);
+            }
+        }
+        return $this->hardwareInfo;
+
+    }
 }

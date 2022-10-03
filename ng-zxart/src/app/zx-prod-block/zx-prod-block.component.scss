@@ -160,11 +160,15 @@ $fixedHeight: 192px;
   align-items: flex-start;
   justify-content: space-between;
   margin-top: $padding-md;
+  gap: $padding-md;
+
+  &:empty {
+    display: none;
+  }
 }
 
 .zx-prod-year {
   @include pseudo-link;
-  margin-left: $padding-md;
 }
 
 .zx-prod-additional {

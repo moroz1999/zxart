@@ -25,7 +25,6 @@ import {VoteService} from '../shared/services/vote.service';
 })
 export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnChanges {
   @Input() imagesLayout: ZxProdsListLayout = 'loading';
-  @Input() votingEnabled = true;
 
   @HostBinding('class.inlays') get inlays(): boolean {
     return this.imagesLayout === 'inlays';

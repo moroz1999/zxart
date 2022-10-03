@@ -16,7 +16,7 @@
             </div>
         {/if}
     {/capture}
-    {assign moduleClass "zxitemslist zxitemslist_zxprod"}
+    {assign moduleClass "zxitemslist zxitemslist_zxrelease"}
     {assign moduleTitleClass ""}
     {assign moduleContentClass ""}
 

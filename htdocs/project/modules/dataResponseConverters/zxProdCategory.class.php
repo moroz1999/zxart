@@ -25,6 +25,7 @@ class zxProdCategoryDataResponseConverter extends StructuredDataResponseConverte
             'sortingSelector' => 'getSortingSelector',
             'tagsSelector' => 'getTagsSelector',
             'prodsAmount' => 'getProdsAmount',
+            'selectorValues' => 'getSelectorValues',
         ];
     }
 
@@ -59,6 +60,7 @@ class zxProdCategoryDataResponseConverter extends StructuredDataResponseConverte
                 'hardwareSelector',
                 'lettersSelector',
                 'sortingSelector',
+                'selectorValues',
             ],
         ];
     }

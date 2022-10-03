@@ -94,8 +94,8 @@ trait AuthorshipProviderTrait
         foreach ($this->getAuthorsInfo($type) as $item) {
             if ($item['authorElement']) {
                 $result[] = [
-                    'title' => $item['authorElement']->getTitle(),
-                    'url' => $item['authorElement']->getTitle(),
+                    'title' => html_entity_decode($item['authorElement']->getTitle(), ENT_QUOTES),
+                    'url' => $item['authorElement']->getUrl(),
                     'roles' => $item['roles']
                 ];
             }

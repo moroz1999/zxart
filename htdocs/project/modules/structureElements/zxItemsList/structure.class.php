@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @property string title
+ * @property string searchFormParametersString
+ * @property string items
+ * @property string apiString
+ * @property string layout
+ * @property bool requiresUser
+ */
 class zxItemsListElement extends structureElement implements JsonDataProvider
 {
     use CacheOperatingElement;
@@ -20,6 +28,7 @@ class zxItemsListElement extends structureElement implements JsonDataProvider
         $moduleStructure['apiString'] = 'text';
         $moduleStructure['searchFormParametersString'] = 'text';
         $moduleStructure['layout'] = 'text';
+        $moduleStructure['buttonTitle'] = 'text';
         $moduleStructure['requiresUser'] = 'checkbox';
     }
 
@@ -49,6 +58,8 @@ class zxItemsListElement extends structureElement implements JsonDataProvider
                     $structureType = 'zxMusic';
                 } elseif ($this->items == 'zxProd') {
                     $structureType = 'zxProd';
+                } elseif ($this->items == 'zxRelease') {
+                    $structureType = 'zxRelease';
                 }
                 /**
                  * @var ApiQueriesManager $apiQueriesManager
@@ -65,6 +76,26 @@ class zxItemsListElement extends structureElement implements JsonDataProvider
             }
         }
         return $this->itemsList;
+    }
+
+    public function getCatalogueUrl(): string|null
+    {
+        if ($this->searchFormParametersString) {
+            if ($this->items === 'zxProd' || $this->items === 'zxRelease') {
+                $languagesManager = $this->getService('LanguagesManager');
+                $currentLanguageId = $languagesManager->getCurrentLanguageId();
+
+                /**
+                 * @var structureManager $structureManager
+                 */
+                $structureManager = $this->getService('structureManager');
+                if ($catalogueElements = $structureManager->getElementsByType('zxprodcategoriescatalogue', $currentLanguageId)) {
+                    $catalogueElement = reset($catalogueElements);
+                    return $catalogueElement->getFirstParentElement()->getUrl() . $this->searchFormParametersString;
+                }
+            }
+        }
+        return null;
     }
 }
 

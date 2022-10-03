@@ -98,6 +98,7 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
             ],
             'list' => [
                 'id',
+                'structureType',
                 'title',
                 'dateCreated',
                 'url',
@@ -112,6 +113,8 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
                 "groupsInfo",
                 "publishersInfo",
                 "authorsInfoShort",
+                'releaseType' => 'releaseType',
+                'releaseFormat' => 'releaseFormat',
             ],
             'search' => [
                 'id',
