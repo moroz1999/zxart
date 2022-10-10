@@ -26,6 +26,7 @@ trait HardwareProviderTrait
                 "zxmphoenix",
                 "zxevolution",
                 "zxnext",
+                "elementzxmb",
                 "zxuno",
                 "samcoupe",
                 "zx80",
@@ -44,6 +45,7 @@ trait HardwareProviderTrait
                 '3dosdisk',
                 'betadisk',
                 'hdd',
+                'divsd',
             ],
             "sound" => [
                 'ay',
