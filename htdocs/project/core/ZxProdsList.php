@@ -187,6 +187,29 @@ trait ZxProdsList
         return $result;
     }
 
+    private $yearsSelectorInfo;
+
+    public function getYearsSelectorInfo()
+    {
+        if (!isset($this->yearsSelectorInfo)) {
+            if ($yearsSelector = $this->getYearsSelector()) {
+                $this->yearsSelectorInfo = [];
+                $controller = $this->getService('controller');
+
+                if ($years = $yearsSelector[0]['values']) {
+                    foreach ($years as $letter) {
+                        $this->yearsSelectorInfo[] = [
+                            'url' => $controller->pathURL . 'year:' . $letter['value'],
+                            'title' => $letter['title'],
+                        ];
+                    }
+                }
+            }
+
+        }
+        return $this->yearsSelectorInfo;
+    }
+
     public function getYearsSelector(): array
     {
         if (!isset($this->yearsSelector)) {
@@ -540,6 +563,29 @@ trait ZxProdsList
         return $this->sortingSelector;
     }
 
+    private $lettersSelectorInfo;
+
+    public function getLettersSelectorInfo()
+    {
+        if (!isset($this->lettersSelectorInfo)) {
+            if ($lettersSelector = $this->getLettersSelector()) {
+                $this->lettersSelectorInfo = [];
+                $controller = $this->getService('controller');
+
+                if ($letters = $lettersSelector[0]['values']) {
+                    foreach ($letters as $letter) {
+                        $this->lettersSelectorInfo[] = [
+                            'url' => $controller->pathURL . 'letter:' . $letter['value'],
+                            'title' => $letter['title'],
+                        ];
+                    }
+                }
+            }
+
+        }
+        return $this->lettersSelectorInfo;
+    }
+
     public function getLettersSelector(): array
     {
         if (!isset($this->lettersSelector)) {
@@ -626,7 +672,7 @@ trait ZxProdsList
 
     private function getFilteredQuery(): ?Builder
     {
-        if (!$this->filteredQuery) {
+        if (!isset($this->filteredQuery)) {
             $this->getApiQuery();
         }
         return $this->filteredQuery;
@@ -634,7 +680,7 @@ trait ZxProdsList
 
     private function getBaseQuery(): ?Builder
     {
-        if (!$this->baseQuery) {
+        if (!isset($this->baseQuery)) {
             $this->getApiQuery();
         }
         return $this->baseQuery;

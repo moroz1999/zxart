@@ -5,9 +5,9 @@
 <br>
 <br>
 {if $prods = $element->getProds()}
-    {include file=$theme->template("pager.tpl") pager=$element->getPager()}
+{*    {include file=$theme->template("pager.tpl") pager=$element->getPager()}*}
     {foreach $prods as $prod}
         {include file=$theme->template('zxProd.short.tpl') element=$prod}
     {/foreach}
-    {include file=$theme->template("pager.tpl") pager=$element->getPager()}
+{*    {include file=$theme->template("pager.tpl") pager=$element->getPager()}*}
 {/if}

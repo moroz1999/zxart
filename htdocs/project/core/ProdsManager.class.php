@@ -821,10 +821,10 @@ class ProdsManager extends ElementsManager
         if (is_array($sort)) {
             foreach ($sort as $property => &$order) {
                 if (isset($this->releaseColumnRelations[$property])) {
-                    $srcTableName = $this->db->getTablePrefix().$query->from;
+                    $srcTableName = $this->db->getTablePrefix() . $query->from;
                     foreach ($this->releaseColumnRelations[$property] as $criteria => $orderDirection) {
                         if ($criteria == 'dateCreated') {
-                            $query->leftJoin('structure_elements', 'structure_elements.id', '=', $query->from.'.id');
+                            $query->leftJoin('structure_elements', 'structure_elements.id', '=', $query->from . '.id');
                             $query->orderBy("structure_elements.dateCreated", $orderDirection);
                         } else {
                             if ($orderDirection === true) {
@@ -847,7 +847,7 @@ class ProdsManager extends ElementsManager
         }
 
         $result = [];
-        if ($start !== null) {
+        if ($start !== null && $start > 0) {
             $query->offset($start);
         }
         if ($amount !== null) {
