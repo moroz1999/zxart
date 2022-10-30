@@ -4,6 +4,7 @@ window.emulatorComponent = new function () {
     let canvasElement;
     let componentElement;
     let fullscreenButton;
+    let test;
     const init = function () {
         if ((componentElement = document.querySelector('.emulator'))) {
             if ((canvasElement = componentElement.querySelector('.emulator_canvas'))) {
@@ -12,6 +13,11 @@ window.emulatorComponent = new function () {
                 }
             }
         }
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'F2') {
+                setTimeout(sendContents, 300);
+            }
+        });
     };
     const spawnModule = function () {
         window.Module = {
@@ -22,6 +28,27 @@ window.emulatorComponent = new function () {
             }
         };
     };
+    const sendContents = function () {
+        const dir = url.substring(0, url.lastIndexOf('/') + 1);
+        const file = FS.readdir(dir);
+        if (file[2]) {
+            FS.chdir(dir);
+            const fileContents = FS.readFile(file[2]);
+            // FS.unlink(file[2]);
+            const screenData = fileContents.slice(27, 27 + 6912);
+            const submitUrl = window.currentElementURL + 'id:' + window.currentElementId + '/action:uploadScreenshot/'
+            const blob = new Blob([screenData]);
+            fetch(submitUrl, {method: "POST", body: blob})
+                .then(response => {
+                    if (response.ok) return response;
+                    else throw Error(`Server returned ${response.status}: ${response.statusText}`)
+                })
+                .then(response => console.log(response.text()))
+                .catch(err => {
+                    alert(err);
+                });
+        }
+    }
     const emulatorReadyHandler = function () {
         // Module.setCanvasSize(960, 720);
         Module.ccall('OpenFile', // name of C function

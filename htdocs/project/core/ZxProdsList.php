@@ -217,7 +217,7 @@ trait ZxProdsList
             $selectorValues = [];
             if ($query = $this->getSelectorQuery('years')) {
                 $values = $this->getSelectorValue('years');
-                if ($values[0] === 'this') {
+                if ($values && $values[0] === 'this') {
                     $values = [date('Y'), date('Y') - 1];
                 }
                 $years = $query
