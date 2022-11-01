@@ -81,11 +81,9 @@
 	</td>
 </tr>
 {$files1List = $element->getImagesList()}
-{$files2List = $element->getFilesList('screenshotsSelector')}
-{if $files1List  || $files2List}
+{if $files1List}
 	<tr class="zxrelease">
 		<td class='zxrelease_table_images' colspan="15">
-			{include file=$theme->template('zxItem.images.tpl') filesList = $files2List preset='prodImage'}
 			{include file=$theme->template('zxItem.images.tpl') filesList = $files1List preset='prodImage'}
 		</td>
 	</tr>

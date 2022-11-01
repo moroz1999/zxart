@@ -17,3 +17,4 @@ $moduleActions[] = 'showPrivileges';
 $moduleActions[] = 'receivePrivileges';
 $moduleActions[] = 'vote';
 $moduleActions[] = 'viewFile';
+$moduleActions[] = 'uploadScreenshot';

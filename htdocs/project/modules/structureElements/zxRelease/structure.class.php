@@ -412,7 +412,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
 
     public function getImagesList()
     {
-        return array_merge($this->getFilesList('inlayFilesSelector'), $this->getFilesList('adFilesSelector'));
+        return array_merge($this->getFilesList('screenshotsSelector'), $this->getFilesList('inlayFilesSelector'), $this->getFilesList('adFilesSelector'));
     }
 
     public function isPlayable(): bool

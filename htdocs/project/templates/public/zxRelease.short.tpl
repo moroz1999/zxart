@@ -1,10 +1,10 @@
 {capture assign="moduleContent"}
-    <a href="{$release->getUrl()}">
+    <a href="{$element->getUrl()}">
         <span class="zxrelease_short_images">
-            <img class="zxrelease_short_image" src="{$release->getImageUrl(0)}"/>
-            <img class="zxrelease_short_image_second" src="{$release->getImageUrl(1)}"/>
+            <img class="zxrelease_short_image" src="{$element->getImageUrl(0)}"/>
+            <img class="zxrelease_short_image_second" src="{$element->getImageUrl(1)}"/>
         </span>
-        <span class="zxrelease_short_title">{$release->getHumanReadableName()}</span>
+        <span class="zxrelease_short_title">{$element->getHumanReadableName()}</span>
     </a>
 {/capture}
 {$moduleSubContent = $moduleContent}

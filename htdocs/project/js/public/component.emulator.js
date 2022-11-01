@@ -4,20 +4,23 @@ window.emulatorComponent = new function () {
     let canvasElement;
     let componentElement;
     let fullscreenButton;
-    let test;
+    let selector;
     const init = function () {
         if ((componentElement = document.querySelector('.emulator'))) {
             if ((canvasElement = componentElement.querySelector('.emulator_canvas'))) {
                 if ((fullscreenButton = componentElement.querySelector('.emulator_fullscreen'))) {
                     fullscreenButton.addEventListener('click', fullscreenClick);
                 }
+                if (selector = componentElement.querySelector(('.emulator_type'))) {
+                    window.addEventListener('keydown', (event) => {
+                        if (event.key === 'F2') {
+                            setTimeout(sendContents, 300);
+                        }
+                    });
+                }
             }
         }
-        window.addEventListener('keydown', (event) => {
-            if (event.key === 'F2') {
-                setTimeout(sendContents, 300);
-            }
-        });
+
     };
     const spawnModule = function () {
         window.Module = {
@@ -34,10 +37,18 @@ window.emulatorComponent = new function () {
         if (file[2]) {
             FS.chdir(dir);
             const fileContents = FS.readFile(file[2]);
-            // FS.unlink(file[2]);
-            const screenData = fileContents.slice(27, 27 + 6912);
+
+            let blob;
+            if (selector.value === '48') {
+                const screenData = fileContents.slice(27, 27 + 6912);
+                blob = new Blob([screenData]);
+            } else {
+                const screenData = fileContents.slice(27, 27 + 6912);
+                const start2 = 27 + 16384 * 3 + 4 + 16384 * 4;
+                const screenData2 = fileContents.slice(start2, start2 + 6912);
+                blob = new Blob([screenData, screenData2]);
+            }
             const submitUrl = window.currentElementURL + 'id:' + window.currentElementId + '/action:uploadScreenshot/'
-            const blob = new Blob([screenData]);
             fetch(submitUrl, {method: "POST", body: blob})
                 .then(response => {
                     if (response.ok) return response;

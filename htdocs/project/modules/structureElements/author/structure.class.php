@@ -179,14 +179,13 @@ class authorElement extends structureElement implements CommentsHolderInterface,
 
     public function checkCountry()
     {
-        if ($country = $this->getCountryElement()) {
-            if ($city = $this->getCityElement()) {
-                $parentCountry = $city->getFirstParentElement();
-                if ($parentCountry !== $country) {
-                    $this->countryElement = null;
-                    $this->country = $parentCountry->id;
-                    return false;
-                }
+        if ($city = $this->getCityElement()) {
+            $country = $this->getCountryElement();
+            $parentCountry = $city->getFirstParentElement();
+            if ($parentCountry !== $country) {
+                $this->countryElement = null;
+                $this->country = $parentCountry->id;
+                return false;
             }
         }
         return true;
