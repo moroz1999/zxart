@@ -44,7 +44,7 @@ window.emulatorComponent = new function () {
                 blob = new Blob([screenData]);
             } else {
                 const screenData = fileContents.slice(27, 27 + 6912);
-                const start2 = 27 + 16384 * 3 + 4 + 16384 * 4;
+                const start2 = 27 + 16384 * 3 + 4 + 16384 * 5;
                 const screenData2 = fileContents.slice(start2, start2 + 6912);
                 blob = new Blob([screenData, screenData2]);
             }
