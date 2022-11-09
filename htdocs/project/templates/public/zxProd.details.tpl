@@ -184,24 +184,27 @@
     </div>
     {include $theme->template("component.emulator.tpl")}
     <div class="gallery_static galleryid_{$element->id}">
-        {if $filesList = $element->getFilesList('connectedFile')}
-            {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false}
-        {/if}
+        <div class="zxprod_gallery">
+            {if $filesList = $element->getFilesList('connectedFile')}
+                {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false}
+            {/if}
+        </div>
         {if $releasesList=$element->getReleasesList()}
+            <h2>{translations name='zxprod.releases'}</h2>
             <div class="zxprod_details_releases">
                 {include file=$theme->template('component.releasestable.tpl') releasesList=$releasesList pager=false}
             </div>
         {/if}
         {if $filesList = $element->getFilesList('mapFilesSelector')}
             {if $linkInfo = $element->getLinkInfo('maps')}
-                <h3>{translations name='zxprod.maps'}</h3>
+                <h2>{translations name='zxprod.maps'}</h2>
                 {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodMapImage' displayTitle=true url=$linkInfo['url']}
             {/if}
         {/if}
     </div>
     {if $filesList = $element->getFilesList('rzx')}
         {if $linkInfo = $element->getLinkInfo('rzx')}
-            <h3>{translations name='zxprod.rzx'}</h3>
+            <h2>{translations name='zxprod.rzx'}</h2>
             {include file=$theme->template('zxItem.files.tpl') filesList = $filesList url=$linkInfo['url'] newWindow=true}
         {/if}
     {/if}
@@ -218,9 +221,9 @@
     {/if}
 
     {if $element->compilationProds}
-        <h3>{translations name='zxprod.compilationProds'}</h3>
+        <h2>{translations name='zxprod.compilationProds'}</h2>
         <script>
-            window.elementsData = window.elementsData ? window.elementsData : {};
+            window.elementsData = window.elementsData ? window.elementsData : { };
             window.elementsData[{$element->id}] = {$element->getCompilationJsonData()};
         </script>
         <app-zx-prods-list element-id="{$element->id}" property="prods"></app-zx-prods-list>
