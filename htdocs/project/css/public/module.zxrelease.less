@@ -26,6 +26,43 @@
  */
 /*  ZXRELEASE TABLE
 /********************************************************/
+.releases_list_table {
+  border-style: none;
+  border-spacing: 0;
+
+  thead {
+    position: sticky;
+    top: 0;
+    left: 0;
+    background: @primary_color;
+    z-index: 10;
+  }
+
+  th {
+    padding: .5rem 1rem;
+    font-size: 0.8rem;
+    color: gray;
+    vertical-align: bottom;
+  }
+
+  td {
+    padding: 0.5rem 0.5rem;
+    border-style: none;
+  }
+}
+
+@media (max-width: @screen_breakpoint_xl) {
+  .zxrelease_table_language {
+    display: none;
+  }
+}
+@media (max-width: @screen_breakpoint_xxl) {
+  .zxrelease_table_plays,
+  .zxrelease_table_downloaded {
+    display: none;
+  }
+}
+
 @media (max-width: @screen_breakpoint_sm_max) {
   .zxrelease_table_source,
   .zxrelease_table_partyplace,
@@ -33,8 +70,12 @@
   .zxrelease_table_download,
   .zxrelease_table_downloaded,
   .zxrelease_table_plays,
+  .zxrelease_table_language,
+  .zxrelease_table_version,
+  .zxrelease_table_releasetype,
+  .zxrelease_table_hardware,
   .zxrelease_table_hardware_item,
-  .zxrelease_table_number {
+  .zxrelease_table_links {
     display: none;
   }
 
@@ -45,6 +86,27 @@
 
 .zxrelease_table_hardware_item {
   white-space: nowrap;
+  font-size: 0.8em;
+}
+
+.zxrelease {
+  background-color: @secondary_color;
+
+  td {
+    border-top: solid 2rem @primary_color;
+  }
+
+  &:first-child {
+    border-top: none;
+  }
+}
+
+.zxrelease-images {
+  background-color: @secondary_color;
+}
+
+.zxrelease_table_manuals {
+  margin-top: 2rem;
 }
 
 /********************************************************

@@ -159,10 +159,14 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
             $structureManager = $this->getService('structureManager');
             $this->releasesList = $structureManager->getElementsChildren($this->id);
             usort($this->releasesList, function ($a, $b) {
-                $aYear = $a->year === '0' ? 3000 : $a->year;
-                $bYear = $b->year === '0' ? 3000 : $b->year;
+                $aYear = !$a->getYear() ? 3000 : $a->getYear();
+                $bYear = !$b->getYear() ? 3000 : $b->getYear();
+                $c1 = ($aYear - $bYear);
+                $c2 = (($a->releaseType === 'original') && $b->releaseType !== 'original') ? -1 : ((($a->releaseType !== 'original') && $b->releaseType === 'original') ? 1 : 0);
+                $c3 = strcmp($a->version, $b->version);
+                $c4 = ($a->id - $b->id);
 
-                return ($aYear - $bYear) ?? strcmp($a->version, $b->version) ?? ($a->id - $b->id);
+                return $c1 !== 0 ? $c1 : ($c2 !== 0 ? $c2 : ($c3 !== 0 ? $c3 : $c4));
             });
         }
         return $this->releasesList;

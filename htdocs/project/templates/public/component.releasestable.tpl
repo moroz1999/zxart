@@ -6,12 +6,9 @@
 {if !isset($number)}{$number=1}{/if}
 
 <div class='releases_list_block gallery_releases'>
-	<table class='releases_list_table table_component'>
+	<table class='releases_list_table'>
 		<thead>
 			<tr>
-				<th class='zxrelease_table_number'>
-
-				</th>
 				<th class='zxrelease_table_title'>
 					{translations name='label.table_title'}
 				</th>
@@ -27,10 +24,12 @@
 				<th class='zxrelease_table_format'>
 				</th>
 				<th class='zxrelease_table_language'>
+					{translations name='zxrelease.language'}
 				</th>
 				<th class='zxrelease_table_version'>
 				</th>
 				<th class='zxrelease_table_releasetype'>
+					{translations name='zxrelease.releasetype'}
 				</th>
 				<th class='zxrelease_table_releaseby'>
 					{translations name='zxrelease.releaseby'}
@@ -52,11 +51,7 @@
 		</thead>
 		<tbody>
 			{foreach from=$releasesList item=release name=releasesList}
-				{if $smarty.foreach.releasesList.iteration is odd}
-					{include file=$theme->template("zxRelease.table.tpl") element=$release odd=1 number=$number}
-				{else}
-					{include file=$theme->template("zxRelease.table.tpl") element=$release odd=0 number=$number}
-				{/if}
+				{include file=$theme->template("zxRelease.table.tpl") element=$release odd=1 number=$number}
 				{$number=$number+1}
 			{/foreach}
 		</tbody>

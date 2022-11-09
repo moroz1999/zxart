@@ -218,7 +218,7 @@
     </div>
     {if $filesList = $element->getFilesList('infoFilesSelector')}
         <h3>{translations name='zxrelease.instructions'}</h3>
-        {include file=$theme->template('zxItem.files.tpl') filesList = $filesList}
+        {include file=$theme->template('zxItem.files.tpl') filesList = $filesList newWindow=true}
     {/if}
 
     {include file=$theme->template('component.comments.tpl')}

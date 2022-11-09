@@ -1,9 +1,5 @@
 {$prod = $element->getProd()}
 <tr class="zxrelease">
-	<td class='zxrelease_table_number'>
-		{$number}
-	</td>
-
 	<td class='zxrelease_table_title'>
 		<a class='' href='{$element->getUrl()}'>{$element->getHumanReadableName()} {if $element->isRealtime()}{assign 'compoTitle' "compo_"|cat:$element->compo}
 				<img src="{$theme->getImageUrl("clock.png")}" title="{translations name="zxPicture.$compoTitle"}" />{/if}
@@ -82,9 +78,15 @@
 </tr>
 {$files1List = $element->getImagesList()}
 {if $files1List}
-	<tr class="zxrelease">
-		<td class='zxrelease_table_images' colspan="15">
+	<tr class="zxrelease-images">
+		<td class='zxrelease_table_images' colspan="16">
 			{include file=$theme->template('zxItem.images.tpl') filesList = $files1List preset='prodImage'}
+			{if $filesList = $element->getFilesList('infoFilesSelector')}
+				<div class="zxrelease_table_manuals">
+					{include file=$theme->template('zxItem.files.tpl') filesList = $filesList newWindow=true}
+				</div>
+			{/if}
+
 		</td>
 	</tr>
 {/if}
