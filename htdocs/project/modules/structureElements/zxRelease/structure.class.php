@@ -429,7 +429,11 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
 
     public function isDownloadable()
     {
-        return !in_array($this->getLegalStatus(), ['forbidden', 'forbiddenzxart', 'insales']) || $this->releaseType === 'demoversion';
+        $user = $this->getService('user');
+        return
+            !in_array($this->getLegalStatus(), ['forbidden', 'forbiddenzxart', 'insales']) ||
+            $this->releaseType === 'demoversion' ||
+            $this->getLegalStatus() !== 'insales' && $user->isAuthorized() && $this->getProd()?->year !== 0 && $this->getProd()?->year < (date('Y') - 20);
     }
 
     public function getLinksInfo()

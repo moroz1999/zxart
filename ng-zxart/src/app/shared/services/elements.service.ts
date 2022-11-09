@@ -25,7 +25,7 @@ export class ElementsService {
   getModel<T, U extends StructureElement>(elementId: number, className: { new(dto: T): U }, postParameters: PostParameters, preset: string): Observable<U> {
     if (elementsData && elementsData[elementId]) {
       const model = new className(elementsData[elementId] as T);
-      delete elementsData[elementId];
+      setTimeout(() => delete elementsData[elementId], 1000);
       return new BehaviorSubject<U>(model).pipe(take(1));
     } else {
       postParameters.elementId = elementId;

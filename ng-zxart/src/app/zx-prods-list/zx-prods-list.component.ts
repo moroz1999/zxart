@@ -2,6 +2,12 @@ import {Component, Input, OnInit} from '@angular/core';
 import {ZxProdsList} from './models/zx-prods-list';
 import {ElementsService, PostParameters} from '../shared/services/elements.service';
 import {ZxProdsListDto} from './models/zx-prods-list-dto';
+import {ZxProd} from '../shared/models/zx-prod';
+
+export interface YearProds {
+  readonly year: number,
+  readonly items: ZxProd[],
+}
 
 @Component({
   selector: 'app-zx-prods-list',
@@ -10,7 +16,10 @@ import {ZxProdsListDto} from './models/zx-prods-list-dto';
 })
 export class ZxProdsListComponent implements OnInit {
   public model?: ZxProdsList;
+  @Input() public property: 'prods' | 'publishedProds' | 'releases' = 'prods';
   @Input() elementId: number = 0;
+  @Input() layout: 'years' | 'list' = 'list';
+  private yearsList?: YearProds[];
 
   constructor(
     private elementsService: ElementsService,
@@ -26,7 +35,39 @@ export class ZxProdsListComponent implements OnInit {
     this.elementsService.getModel<ZxProdsListDto, ZxProdsList>(this.elementId, ZxProdsList, parameters, 'zxProdsList').subscribe(
       model => {
         this.model = model;
+        this.yearsList = undefined;
       },
     );
+  }
+
+  public get items(): Array<ZxProd> | undefined {
+    switch (this.property) {
+      case 'publishedProds':
+        return this.model?.publishedProds;
+      case 'releases':
+        return this.model?.releases;
+      case 'prods':
+      default:
+        return this.model?.prods;
+    }
+  }
+
+  public get years(): Array<YearProds> {
+    if (this.yearsList) return this.yearsList;
+    let years = [] as Array<YearProds>;
+    this.items?.map(zxProd => {
+      let prodYear = years.find(year => year.year === +zxProd.year);
+      if (!prodYear) {
+        prodYear = {
+          year: +zxProd.year,
+          items: [],
+        };
+        years.push(prodYear);
+      }
+      prodYear.items.push(zxProd);
+    });
+    years.sort((a, b) => a.year - b.year);
+    this.yearsList = years;
+    return years;
   }
 }

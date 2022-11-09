@@ -17,6 +17,7 @@ class authorAliasElement extends structureElement implements CommentsHolderInter
     use CommentsTrait;
     use CacheOperatingElement;
     use PublisherProdsProvider;
+    use ReleasesProvider;
 
     public $dataResourceName = 'module_authoralias';
     public $allowedTypes = [];

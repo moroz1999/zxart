@@ -11,6 +11,16 @@
                 <select class="zxitem_form_prod_select" name="{$formNames.joinAndDelete}" autocomplete='off'></select>
             </td>
         </tr>
+        <tr>
+            <td class="form_label">
+                {translations name='zxprod.releasesOnly'}:
+            </td>
+            <td class="form_field">
+                <input class='checkbox_placeholder' type="checkbox" value="1"
+                       autocomplete="off"
+                       name="{$formNames.releasesOnly}"{if $element->releasesOnly} checked="checked"{/if}/>
+            </td>
+        </tr>
     </table>
     {include file=$theme->template('component.controls.tpl') action='join'}
 </form>

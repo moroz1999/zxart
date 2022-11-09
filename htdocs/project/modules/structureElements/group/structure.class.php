@@ -25,6 +25,7 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
     use ImportedItemTrait;
     use Group;
     use PublisherProdsProvider;
+    use ReleasesProvider;
     use CommentsTrait;
 
     const SUBGROUP_LINK_TYPE = 'groupSub';

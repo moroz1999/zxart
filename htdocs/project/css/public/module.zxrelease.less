@@ -1,25 +1,50 @@
 /********************************************************
+/*  ZXRELEASE DETAILS
+/********************************************************/
+@media (min-width: @screen_breakpoint_md) {
+  .zxrelease-layout {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .zxrelease-layout-left {
+    flex-grow: 1;
+  }
+
+  .zxrelease-layout-right {
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    .zxitem_images {
+      flex-direction: column;
+    }
+  }
+}
+
+/********************************************************
+ */
 /*  ZXRELEASE TABLE
 /********************************************************/
 @media (max-width: @screen_breakpoint_sm_max) {
-    .zxrelease_table_source,
-    .zxrelease_table_partyplace,
-    .zxrelease_table_format,
-    .zxrelease_table_download,
-    .zxrelease_table_downloaded,
-    .zxrelease_table_plays,
-    .zxrelease_table_hardware_item,
-    .zxrelease_table_number {
-        display: none;
-    }
+  .zxrelease_table_source,
+  .zxrelease_table_partyplace,
+  .zxrelease_table_format,
+  .zxrelease_table_download,
+  .zxrelease_table_downloaded,
+  .zxrelease_table_plays,
+  .zxrelease_table_hardware_item,
+  .zxrelease_table_number {
+    display: none;
+  }
 
-    .zxrelease_filestructure_table {
-        font-size: 0.8em;
-    }
+  .zxrelease_filestructure_table {
+    font-size: 0.8em;
+  }
 }
 
 .zxrelease_table_hardware_item {
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
 /********************************************************
@@ -27,52 +52,52 @@
 /********************************************************/
 
 .zxreleases_list {
-    .grid_container
+  .grid_container
 }
 
 .zxreleases_list:after {
-    content: "";
-    flex: auto;
+  content: "";
+  flex: auto;
 }
 
 /********************************************************
 /*  ZXRELEASE SHORT
 /********************************************************/
 .zxrelease_short {
-    .grid_item(8, 1rem, 0.5rem, 4, 3, 2)
+  .grid_item(8, 1rem, 0.5rem, 4, 3, 2)
 }
 
 .zxrelease_short_images {
-    position: relative;
-    display: block;
-    margin: 0 auto;
+  position: relative;
+  display: block;
+  margin: 0 auto;
 }
 
 .zxrelease_short_image {
-    display: block;
-    max-width: 100%;
+  display: block;
+  max-width: 100%;
 
 }
 
 .zxrelease_short_image_second {
-    display: block;
-    top: 0;
-    left: 0;
-    position: absolute;
-    opacity: 0;
-    max-width: 100%;
+  display: block;
+  top: 0;
+  left: 0;
+  position: absolute;
+  opacity: 0;
+  max-width: 100%;
 
-    .zxrelease_short:hover & {
-        opacity: 1;
-    }
+  .zxrelease_short:hover & {
+    opacity: 1;
+  }
 
-    transition: opacity 0.5s;
+  transition: opacity 0.5s;
 }
 
 .zxrelease_short_title {
-    display: block;
-    position: relative;
-    text-align: left;
-    vertical-align: middle;
-    box-sizing: border-box;
+  display: block;
+  position: relative;
+  text-align: left;
+  vertical-align: middle;
+  box-sizing: border-box;
 }

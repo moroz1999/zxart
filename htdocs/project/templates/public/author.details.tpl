@@ -36,6 +36,10 @@
 			<a class="button delete_button" href="{$element->URL}id:{$element->id}/action:publicDelete/">{translations name='author.delete'}</a>
 		{/if}
 	</div>
+	<script>
+		window.elementsData = window.elementsData ? window.elementsData : { };
+		window.elementsData[{$element->id}] = {$element->getJsonInfo('zxProdsList')};
+	</script>
 
 	{include file=$theme->template('author.pictures.tpl')}
 	{include file=$theme->template('author.music.tpl')}

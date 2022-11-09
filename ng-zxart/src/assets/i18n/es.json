@@ -4,6 +4,7 @@
     "next": "Siguiente"
   },
   "prods-list": {
+    "unknown-year": "Año de lanzamiento desconocido",
     "presets": {
       "year": "Este año",
       "recent": "Últimos 3 años",

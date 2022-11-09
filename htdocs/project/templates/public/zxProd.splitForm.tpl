@@ -8,7 +8,7 @@
                 <td colspan="2"><h3>{$groupKey}</h3></td>
             </tr>
             {foreach $itemsGroup as $key=>$item}
-                <tr class="{if $formErrors.joinAndDelete} form_error{/if}">
+                <tr class="{if $formErrors.splitData} form_error{/if}">
                     <td class="form_label">
                         {$key}:
                     </td>

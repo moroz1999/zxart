@@ -22,6 +22,10 @@
 			<a class="button delete_button" href="{$element->URL}id:{$element->id}/action:publicDelete/">{translations name='groupalias.delete'}</a>
 		{/if}
 	</div>
+	<script>
+		window.elementsData = window.elementsData ? window.elementsData : { };
+		window.elementsData[{$element->id}] = {$element->getJsonInfo('zxProdsList')};
+	</script>
 	{if $authors=$element->getAuthorsInfo('group')}
 		{include file=$theme->template('component.groupauthors.tpl')}
 	{/if}

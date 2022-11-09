@@ -24,6 +24,8 @@ class groupAliasDataResponseConverter extends StructuredDataResponseConverter
             'importIds' => 'getImportIdsIndex',
             'prods' => 'getProdsInfo',
             'prodsAmount' => 'getProdsAmount',
+            'publishedProds' => 'getPublisherProdsInfo',
+            'releases' => 'getReleasesInfo',
         ];
     }
 
@@ -56,8 +58,9 @@ class groupAliasDataResponseConverter extends StructuredDataResponseConverter
                 'id',
                 'title',
                 'url',
-                'prodsAmount',
                 'prods',
+                'publishedProds',
+                'releases',
             ],
         ];
     }

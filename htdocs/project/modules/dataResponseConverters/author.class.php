@@ -29,6 +29,8 @@ class authorDataResponseConverter extends StructuredDataResponseConverter
             'aliases' => 'getAliasElementsIds',
             'prods' => 'getProdsInfo',
             'prodsAmount' => 'getProdsAmount',
+            'publishedProds' => 'getPublisherProdsInfo',
+            'releases' => 'getReleasesInfo',
         ];
     }
 
@@ -64,8 +66,9 @@ class authorDataResponseConverter extends StructuredDataResponseConverter
                 'id',
                 'title',
                 'url',
-                'prodsAmount',
                 'prods',
+                'publishedProds',
+                'releases',
             ],
         ];
     }

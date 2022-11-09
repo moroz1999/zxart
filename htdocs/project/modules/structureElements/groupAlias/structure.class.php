@@ -15,6 +15,7 @@ class groupAliasElement extends structureElement implements CommentsHolderInterf
     use ImportedItemTrait;
     use Group;
     use PublisherProdsProvider;
+    use ReleasesProvider;
     use CommentsTrait;
 
     public $dataResourceName = 'module_groupalias';

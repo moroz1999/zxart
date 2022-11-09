@@ -223,7 +223,7 @@
             window.elementsData = window.elementsData ? window.elementsData : {};
             window.elementsData[{$element->id}] = {$element->getCompilationJsonData()};
         </script>
-        <app-zx-prods-list element-id="{$element->id}"></app-zx-prods-list>
+        <app-zx-prods-list element-id="{$element->id}" property="prods"></app-zx-prods-list>
     {/if}
 
 

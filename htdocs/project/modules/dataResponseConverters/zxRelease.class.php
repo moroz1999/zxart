@@ -41,11 +41,10 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
             },
             'listImagesUrls' => function (zxReleaseElement $element) {
                 $urls = $element->getImagesUrls('prodListImage');
-                if (!$urls) {
-                    if ($prod = $element->getProd()) {
-                        $urls = $prod->getImagesUrls('prodListImage');
-                    }
+                if ($prod = $element->getProd()) {
+                    $urls = array_merge($urls, $prod->getImagesUrls('prodListImage'));
                 }
+
                 return $urls;
             },
             'hardwareInfo' => 'getHardwareInfo',

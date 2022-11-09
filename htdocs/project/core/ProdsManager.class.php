@@ -885,7 +885,7 @@ class ProdsManager extends ElementsManager
         return $title;
     }
 
-    public function joinDeleteZxProd($mainZxProdId, $joinedZxProdId)
+    public function joinDeleteZxProd($mainZxProdId, $joinedZxProdId, $releasesOnly = false)
     {
         if ($joinedZxProdId == $mainZxProdId) {
             return false;
@@ -899,8 +899,9 @@ class ProdsManager extends ElementsManager
              */
             if ($joinedZxProd = $this->structureManager->getElementById($joinedZxProdId)) {
                 if ($mainZxProd) {
-                    $this->privilegesManager->copyPrivileges($joinedZxProd->id, $mainZxProdId);
-
+                    if (!$releasesOnly) {
+                        $this->privilegesManager->copyPrivileges($joinedZxProd->id, $mainZxProdId);
+                    }
                     //join releases, materials
                     if ($links = $this->linksManager->getElementsLinks($joinedZxProdId, null, 'parent')) {
                         foreach ($links as $link) {
@@ -912,75 +913,77 @@ class ProdsManager extends ElementsManager
                             );
                         }
                     }
-                    //join publishers, groups, categories
-                    if ($links = $this->linksManager->getElementsLinks($joinedZxProdId, null, 'child')) {
-                        foreach ($links as $link) {
-                            $this->linksManager->unLinkElements($link->parentStructureId, $joinedZxProdId, $link->type);
-                            $this->linksManager->linkElements(
-                                $link->parentStructureId,
-                                $mainZxProd->getId(),
-                                $link->type
-                            );
+                    if (!$releasesOnly) {
+                        //join publishers, groups, categories
+                        if ($links = $this->linksManager->getElementsLinks($joinedZxProdId, null, 'child')) {
+                            foreach ($links as $link) {
+                                $this->linksManager->unLinkElements($link->parentStructureId, $joinedZxProdId, $link->type);
+                                $this->linksManager->linkElements(
+                                    $link->parentStructureId,
+                                    $mainZxProd->getId(),
+                                    $link->type
+                                );
+                            }
                         }
-                    }
 
-                    if (!$mainZxProd->party) {
-                        $mainZxProd->party = $joinedZxProd->party;
-                    }
-                    if (!$mainZxProd->partyplace) {
-                        $mainZxProd->partyplace = $joinedZxProd->partyplace;
-                    }
-                    if (!$mainZxProd->compo) {
-                        $mainZxProd->compo = $joinedZxProd->compo;
-                    }
-                    if (!$mainZxProd->year) {
-                        $mainZxProd->year = $joinedZxProd->year;
-                    }
-                    if (!$mainZxProd->youtubeId) {
-                        $mainZxProd->youtubeId = $joinedZxProd->youtubeId;
-                    }
-                    if (!$mainZxProd->description) {
-                        $mainZxProd->description = $joinedZxProd->description;
-                    }
-                    if (!$mainZxProd->legalStatus || $mainZxProd->legalStatus == 'unknown') {
-                        $mainZxProd->legalStatus = $joinedZxProd->legalStatus;
-                    }
-                    if (!$mainZxProd->userId) {
-                        $mainZxProd->userId = $joinedZxProd->userId;
-                    }
-                    if (!$mainZxProd->denyVoting) {
-                        $mainZxProd->denyVoting = $joinedZxProd->denyVoting;
-                    }
-                    if (!$mainZxProd->denyComments) {
-                        $mainZxProd->denyComments = $joinedZxProd->denyComments;
-                    }
-                    if (!$mainZxProd->language) {
-                        $mainZxProd->language = $joinedZxProd->language;
+                        if (!$mainZxProd->party) {
+                            $mainZxProd->party = $joinedZxProd->party;
+                        }
+                        if (!$mainZxProd->partyplace) {
+                            $mainZxProd->partyplace = $joinedZxProd->partyplace;
+                        }
+                        if (!$mainZxProd->compo) {
+                            $mainZxProd->compo = $joinedZxProd->compo;
+                        }
+                        if (!$mainZxProd->year) {
+                            $mainZxProd->year = $joinedZxProd->year;
+                        }
+                        if (!$mainZxProd->youtubeId) {
+                            $mainZxProd->youtubeId = $joinedZxProd->youtubeId;
+                        }
+                        if (!$mainZxProd->description) {
+                            $mainZxProd->description = $joinedZxProd->description;
+                        }
+                        if (!$mainZxProd->legalStatus || $mainZxProd->legalStatus == 'unknown') {
+                            $mainZxProd->legalStatus = $joinedZxProd->legalStatus;
+                        }
+                        if (!$mainZxProd->userId) {
+                            $mainZxProd->userId = $joinedZxProd->userId;
+                        }
+                        if (!$mainZxProd->denyVoting) {
+                            $mainZxProd->denyVoting = $joinedZxProd->denyVoting;
+                        }
+                        if (!$mainZxProd->denyComments) {
+                            $mainZxProd->denyComments = $joinedZxProd->denyComments;
+                        }
+                        if (!$mainZxProd->language) {
+                            $mainZxProd->language = $joinedZxProd->language;
+                        }
                     }
 
                     $mainZxProd->persistElementData();
                     $mainZxProd->recalculate();
-
-                    //take existing authors
-                    $existingAuthorIds = [];
-                    if ($existingAuthorShipRecords = $this->authorsManager->getElementAuthorsRecords($mainZxProdId)) {
-                        foreach ($existingAuthorShipRecords as $record) {
-                            $existingAuthorIds[] = $record['authorId'];
+                    if (!$releasesOnly) {
+                        //take existing authors
+                        $existingAuthorIds = [];
+                        if ($existingAuthorShipRecords = $this->authorsManager->getElementAuthorsRecords($mainZxProdId)) {
+                            foreach ($existingAuthorShipRecords as $record) {
+                                $existingAuthorIds[] = $record['authorId'];
+                            }
                         }
-                    }
 
-                    //delete duplicates from joined zxProd
-                    if ($existingAuthorIds) {
+                        //delete duplicates from joined zxProd
+                        if ($existingAuthorIds) {
+                            $this->db->table('authorship')
+                                ->where('elementId', '=', $joinedZxProdId)
+                                ->whereIn('authorId', $existingAuthorIds)
+                                ->delete();
+                        }
+                        //now move all non-duplicated author records to main zxProd
                         $this->db->table('authorship')
                             ->where('elementId', '=', $joinedZxProdId)
-                            ->whereIn('authorId', $existingAuthorIds)
-                            ->delete();
+                            ->update(['elementId' => $mainZxProd->id]);
                     }
-                    //now move all non-duplicated author records to main zxProd
-                    $this->db->table('authorship')
-                        ->where('elementId', '=', $joinedZxProdId)
-                        ->update(['elementId' => $mainZxProd->id]);
-
                     //move all import origin IDs to main prod
                     $this->db->table('import_origin')
                         ->where('elementId', '=', $joinedZxProdId)

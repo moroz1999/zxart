@@ -14,7 +14,7 @@
 	</td>
 	<td class='zxrelease_table_play zxrelease_play'>
 		{if $element->isPlayable() && $element->isDownloadable()}
-			<button class="button" onclick="emulatorComponent.start('{$element->getFileUrl('play')}')">{translations name="zxrelease.play"}</button>
+			<button class="button" onclick="emulatorComponent.start('{$element->getFileUrl('play')|escape:'quotes'}')">{translations name="zxrelease.play"}</button>
 		{/if}
 	</td>
 	<td class='zxrelease_table_source'>

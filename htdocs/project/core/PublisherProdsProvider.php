@@ -1,23 +1,17 @@
 <?php
 
-/**
- * Trait PublisherProdsProvider
- */
 trait PublisherProdsProvider
 {
     protected $publisherProds;
 
-    public function getPublisherProdsJson()
+    public function getPublisherProdsInfo()
     {
+        $data = [];
         $prods = $this->getPublisherProds();
-        $data = [
-            'prods' => [],
-            'prodsAmount' => count($prods)
-        ];
         foreach ($prods as $prod) {
-            $data['prods'][] = $prod->getElementData('list');
+            $data[] = $prod->getElementData('list');
         }
-        return json_encode($data);
+        return $data;
     }
 
     public function getPublisherProds()

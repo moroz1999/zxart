@@ -41,6 +41,7 @@ class authorElement extends structureElement implements CommentsHolderInterface,
     use MusicSettingsProvider;
     use PaletteTypesProvider;
     use PublisherProdsProvider;
+    use ReleasesProvider;
 
     public $dataResourceName = 'module_author';
     public $allowedTypes = [];

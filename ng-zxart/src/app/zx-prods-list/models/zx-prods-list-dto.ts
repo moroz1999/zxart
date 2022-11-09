@@ -4,5 +4,7 @@ import {StructureElementDto} from '../../shared/models/structure-element-dto';
 export interface ZxProdsListDto extends StructureElementDto {
   readonly title: string;
   readonly prods?: Array<ZxProdDto>;
+  readonly publishedProds?: Array<ZxProdDto>;
+  readonly releases?: Array<ZxProdDto>;
   readonly prodsAmount: number;
 }

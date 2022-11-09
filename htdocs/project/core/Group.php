@@ -4,6 +4,11 @@ trait Group
 {
     protected $linksInfo;
 
+    public function getReleases()
+    {
+        return $this->publishedReleases;
+    }
+
     public function getAuthorsInfo($type)
     {
         /**
@@ -100,6 +105,7 @@ trait Group
             'unknown',
         ];
     }
+
     public function getProdsInfo(): array
     {
         $prodsInfo = [];

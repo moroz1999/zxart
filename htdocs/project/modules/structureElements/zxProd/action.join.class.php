@@ -19,7 +19,7 @@ class joinZxProd extends structureElementAction
             $prodsManager = $this->getService('ProdsManager');
 
             if ($structureElement->joinAndDelete) {
-                $prodsManager->joinDeleteZxProd($structureElement->id, $structureElement->joinAndDelete);
+                $prodsManager->joinDeleteZxProd($structureElement->id, $structureElement->joinAndDelete, $structureElement->releasesOnly);
             }
 
             $controller->redirect($structureElement->getUrl());
@@ -32,6 +32,7 @@ class joinZxProd extends structureElementAction
     {
         $expectedFields = [
             'joinAndDelete',
+            'releasesOnly',
         ];
     }
 }

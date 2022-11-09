@@ -23,6 +23,8 @@
  * @property int $denyComments
  * @property int $dateAdded
  * @property int $userId
+ * @property int $joinAndDelete
+ * @property boolean $releasesOnly
  * @property array[] $splitData
  */
 class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPathInterface, CommentsHolderInterface,
@@ -115,6 +117,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
             ],
         ];
         $moduleStructure['joinAndDelete'] = 'text';
+        $moduleStructure['releasesOnly'] = 'checkbox';
         $moduleStructure['splitData'] = 'array';
     }
 

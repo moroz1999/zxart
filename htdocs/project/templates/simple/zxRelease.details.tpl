@@ -150,7 +150,7 @@
 					{translations name='zxrelease.play'}:
 				</td>
 				<td class='info_table_value'>
-					<button class="button" onclick="emulatorComponent.start('{$element->getFileUrl('play')}')">{translations name="zxrelease.play"}</button>
+					<button class="button" onclick="emulatorComponent.start('{$element->getFileUrl('play')|escape:'quotes'}')">{translations name="zxrelease.play"}</button>
 				</td>
 			</tr>
 		{/if}

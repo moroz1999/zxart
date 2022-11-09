@@ -24,6 +24,11 @@
                href="{$element->URL}id:{$element->id}/action:publicDelete/">{translations name='group.delete'}</a>
         {/if}
     </div>
+    <script>
+        window.elementsData = window.elementsData ? window.elementsData : { };
+        window.elementsData[{$element->id}] = {$element->getJsonInfo('zxProdsList')};
+    </script>
+
     {if $subGroups=$element->getSubGroups()}
         <h2>{translations name='group.subgroups'}</h2>
         <ul>
@@ -37,7 +42,7 @@
         {include file=$theme->template('component.groupauthors.tpl') element=$aliasElement}
     {/foreach}
 
-    {include file=$theme->template('group.zxProds.groups.tpl')}
+    {include file=$theme->template('group.producedProds.tpl')}
 	{include file=$theme->template('publisher.zxProds.tpl')}
 	{include file=$theme->template('group.publishedReleases.tpl')}
 

@@ -40,10 +40,8 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             'imagesUrls' => 'getImagesUrls',
             'listImagesUrls' => function ($element) {
                 $urls = $element->getImagesUrls('prodListImage');
-                if (!$urls) {
-                    foreach ($element->compilationProds as $prod) {
-                        $urls = array_merge($urls, $prod->getImagesUrls('prodListImage'));
-                    }
+                foreach ($element->compilationProds as $prod) {
+                    $urls = array_merge($urls, $prod->getImagesUrls('prodListImage'));
                 }
                 return $urls;
             },

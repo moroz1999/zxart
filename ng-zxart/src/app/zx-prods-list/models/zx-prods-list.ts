@@ -6,6 +6,8 @@ export class ZxProdsList extends StructureElement {
   public title: string;
   public prodsAmount: number;
   public prods: Array<ZxProd> = [];
+  public publishedProds: Array<ZxProd> = [];
+  public releases: Array<ZxProd> = [];
 
   constructor(
     data: ZxProdsListDto,
@@ -15,6 +17,12 @@ export class ZxProdsList extends StructureElement {
     if (data.prods) {
       this.prods = data.prods.map(item => new ZxProd(item));
     }
-    this.prodsAmount = data.prodsAmount;
+    if (data.publishedProds) {
+      this.publishedProds = data.publishedProds.map(item => new ZxProd(item));
+    }
+    if (data.releases) {
+      this.releases = data.releases.map(item => new ZxProd(item));
+    }
+    this.prodsAmount = data.prodsAmount ?? 0;
   }
 }

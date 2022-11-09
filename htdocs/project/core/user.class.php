@@ -117,7 +117,7 @@ class user
 
     public function isAdmin()
     {
-        if ($this->userName === 'anonymous') {
+        if (!$this->isAuthorized()) {
             return false;
         }
         $groups = array_flip($this->getGroupMarkers());
@@ -192,7 +192,7 @@ class user
                     $this->privileges[$elementId][$elementType][$actionName] = $type;
                 }
             }
-            if ($this->userName !== 'anonymous') {
+            if ($this->isAuthorized()) {
                 $this->storePrivileges();
             }
         }
@@ -410,7 +410,7 @@ class user
                         $this->groupsIdList[] = $row['parentStructureId'];
                     }
                 }
-                if ($this->userName !== 'anonymous') {
+                if ($this->isAuthorized()) {
                     $this->setStorageAttribute('userGroupsIdList', $this->groupsIdList);
                 }
             }
@@ -454,5 +454,10 @@ class user
             $name = $this->email;
         }
         return $name;
+    }
+
+    public function isAuthorized()
+    {
+        return $this->userName !== 'anonymous';
     }
 }
