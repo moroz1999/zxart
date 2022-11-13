@@ -5,6 +5,7 @@ window.emulatorComponent = new function () {
     let componentElement;
     let fullscreenButton;
     let selector;
+    let blob;
     const init = function () {
         if ((componentElement = document.querySelector('.emulator'))) {
             if ((canvasElement = componentElement.querySelector('.emulator_canvas'))) {
@@ -14,7 +15,7 @@ window.emulatorComponent = new function () {
                 if (selector = componentElement.querySelector(('.emulator_type'))) {
                     window.addEventListener('keydown', (event) => {
                         if (event.key === 'F2') {
-                            setTimeout(sendContents, 300);
+                            setTimeout(getScreenshot, 300);
                         }
                     });
                 }
@@ -31,34 +32,55 @@ window.emulatorComponent = new function () {
             }
         };
     };
-    const sendContents = function () {
+    const getScreenshot = function () {
         const dir = url.substring(0, url.lastIndexOf('/') + 1);
         const file = FS.readdir(dir);
         if (file[2]) {
             FS.chdir(dir);
             const fileContents = FS.readFile(file[2]);
 
-            let blob;
             if (selector.value === '48') {
                 const screenData = fileContents.slice(27, 27 + 6912);
                 blob = new Blob([screenData]);
-            } else {
+                sendScreenshot();
+            }
+            else if (selector.value === '128') {
+                const start2 = 27 + 16384 * 3 + 4 + 16384 * 4;
+                const screenData = fileContents.slice(start2, start2 + 6912);
+                blob = new Blob([screenData]);
+                sendScreenshot();
+            } else if (selector.value === 'giga') {
                 const screenData = fileContents.slice(27, 27 + 6912);
                 const start2 = 27 + 16384 * 3 + 4 + 16384 * 4;
                 const screenData2 = fileContents.slice(start2, start2 + 6912);
                 blob = new Blob([screenData, screenData2]);
+                sendScreenshot();
+            } else if (selector.value === 'double') {
+                const screenData = fileContents.slice(27, 27 + 6912);
+                setTimeout(()=>{
+                    FS.chdir('/');
+
+                    const fileContents = FS.readFile(file[2]);
+                    const screenData2 = fileContents.slice(27, 27 + 6912);
+                    blob = new Blob([screenData, screenData2]);
+                    sendScreenshot();
+
+                }, 30);
             }
-            const submitUrl = window.currentElementURL + 'id:' + window.currentElementId + '/action:uploadScreenshot/'
-            fetch(submitUrl, {method: "POST", body: blob})
-                .then(response => {
-                    if (response.ok) return response;
-                    else throw Error(`Server returned ${response.status}: ${response.statusText}`)
-                })
-                .then(response => console.log(response.text()))
-                .catch(err => {
-                    alert(err);
-                });
+
         }
+    }
+    const sendScreenshot = function (){
+        const submitUrl = window.currentElementURL + 'id:' + window.currentElementId + '/action:uploadScreenshot/'
+        fetch(submitUrl, {method: "POST", body: blob})
+            .then(response => {
+                if (response.ok) return response;
+                else throw Error(`Server returned ${response.status}: ${response.statusText}`)
+            })
+            .then(response => console.log(response.text()))
+            .catch(err => {
+                console.log(err);
+            });
     }
     const emulatorReadyHandler = function () {
         // Module.setCanvasSize(960, 720);

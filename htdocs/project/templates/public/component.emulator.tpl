@@ -5,7 +5,9 @@
 		{if !empty($currentElementPrivileges.uploadScreenshot)}
 		<select class="emulator_type dropdown_block">
 			<option value="48">48</option>
+			<option value="128">128</option>
 			<option value="giga">giga</option>
+{*			<option value="double">double 48</option>*}
 		</select>
 		{/if}
 	</div>
