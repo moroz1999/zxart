@@ -22,6 +22,7 @@ class ZxParsingManager extends errorLogger
 
     public function saveFileStructure($elementId, $path, $fileName = null)
     {
+        $this->deleteFileStructure($elementId);
         if ($structure = $this->getFileStructure($path, $fileName)) {
             $this->saveFileStructureLevel($structure, $elementId);
         }

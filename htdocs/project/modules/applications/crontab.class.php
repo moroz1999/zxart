@@ -13,7 +13,7 @@ class crontabApplication extends controllerApplication
     public function initialize()
     {
         ignore_user_abort(1);
-        set_time_limit(60 * 60);
+        set_time_limit(60 * 5);
         $this->createRenderer();
     }
 
@@ -61,7 +61,7 @@ class crontabApplication extends controllerApplication
         $counter = 0;
         $skipIds = [];
 
-        while ($counter++ <= 5000) {
+        while ($counter++ <= 10) {
             $query = $db->table($table)
                 ->select('id')
                 ->where($fileNameColumn, '!=', '')
@@ -69,28 +69,31 @@ class crontabApplication extends controllerApplication
                 ->whereNotIn('id', function ($query) {
                     $query->from('files_registry')->select('elementId');
                 })
-                ->limit(1)
+                ->limit(500)
                 ->orderBy('id');
-            if ($record = $query->first()) {
-                echo $counter . ' ';
-                echo $record['id'] . ' ';
-                /**
-                 * @var ZxArtItem $element
-                 */
-                if ($element = $this->structureManager->getElementById($record['id'])) {
-                    echo $element->getId() . ' ';
-                    echo $element->getTitle() . ' ';
-                    $result = $element->updateMd5($this->getService('PathsManager')->getPath('uploads') . $element->$fileColumn, $element->$fileNameColumn);
-                    if (!$result) {
-                        echo 'file not found';
+            $records = $query->get();
+            if ($records) {
+                foreach ($records as $record) {
+                    echo $counter . ' ';
+                    echo $record['id'] . ' ';
+                    /**
+                     * @var ZxArtItem $element
+                     */
+                    if ($element = $this->structureManager->getElementById($record['id'])) {
+                        echo $element->getId() . ' ';
+                        echo $element->getTitle() . ' ';
+                        $result = $element->updateMd5($this->getService('PathsManager')->getPath('uploads') . $element->$fileColumn, $element->$fileNameColumn);
+                        if (!$result) {
+                            echo 'file not found';
+                            $skipIds[] = $record['id'];
+                        }
+                    } else {
+                        echo 'skipped ';
                         $skipIds[] = $record['id'];
                     }
-                } else {
-                    echo 'skipped ';
-                    $skipIds[] = $record['id'];
+                    echo '<br />';
+                    flush();
                 }
-                echo '<br />';
-                flush();
             } else {
                 break;
             }
@@ -106,54 +109,56 @@ class crontabApplication extends controllerApplication
         $counter = 0;
         $skipIds = [];
 
-        while ($counter++ <= 5000) {
+        while ($counter++ <= 10) {
             $query = $db->table('module_zxrelease')
                 ->select('id')
-                ->where('parsed', '=', 0)
+                ->where('parsed', '!=', 1)
                 ->where('fileName', '!=', '')
                 ->whereNotIn('id', $skipIds)
-                ->limit(1)
+                ->limit(500)
                 ->orderBy('id');
-            if ($record = $query->first()) {
-                echo $counter . ' ';
-                echo $record['id'] . ' ';
-                /**
-                 * @var zxReleaseElement $releaseElement
-                 */
-                if ($releaseElement = $this->structureManager->getElementById($record['id'])) {
-                    $releaseElement->parsed = 1;
-
-                    $releaseElement->persistElementData();
-
-                    echo $releaseElement->id . ' ';
-                    echo $releaseElement->title . ' ';
+            $records = $query->get();
+            if ($records) {
+                foreach ($records as $record) {
+                    echo $counter . ' ';
+                    echo $record['id'] . ' ';
                     /**
-                     * @var ZxParsingManager $zxParsingManager
+                     * @var zxReleaseElement $releaseElement
                      */
-                    $zxParsingManager = $this->getService('ZxParsingManager');
-                    $zxParsingManager->deleteFileStructure($releaseElement->getId());
-                    if ($structure = $zxParsingManager->saveFileStructure(
-                        $releaseElement->getId(),
-                        $releaseElement->getFilePath(),
-                        $releaseElement->fileName
-                    )) {
-                        if ($files = $this->gatherReleaseFiles($structure)) {
-                            $files = array_unique($files);
-                            $releaseElement->releaseFormat = $files;
+                    if ($releaseElement = $this->structureManager->getElementById($record['id'])) {
+                        $releaseElement->parsed = 1;
+
+                        $releaseElement->persistElementData();
+
+                        echo $releaseElement->id . ' ';
+                        echo $releaseElement->title . ' ';
+                        /**
+                         * @var ZxParsingManager $zxParsingManager
+                         */
+                        $zxParsingManager = $this->getService('ZxParsingManager');
+                        $zxParsingManager->deleteFileStructure($releaseElement->getId());
+                        if ($structure = $zxParsingManager->saveFileStructure(
+                            $releaseElement->getId(),
+                            $releaseElement->getFilePath(),
+                            $releaseElement->fileName
+                        )) {
+                            if ($files = $this->gatherReleaseFiles($structure)) {
+                                $files = array_unique($files);
+                                $releaseElement->releaseFormat = $files;
+                            }
                         }
+                        $releaseElement->persistElementData();
+                    } else {
+                        echo 'skipped ';
+                        $skipIds[] = $record['id'];
                     }
-                    $releaseElement->persistElementData();
-                } else {
-                    echo 'skipped ';
-                    $skipIds[] = $record['id'];
+                    echo '<br />';
+                    flush();
                 }
-                echo '<br />';
-                flush();
             } else {
                 break;
             }
         }
-
     }
 }
 

@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ee87bb39daa8f6b0ff984086809ea101",
+    "content-hash": "2e2cbb388bf35e946874dec14c06088b",
     "packages": [
         {
             "name": "artweb-ou/trickster-cms",
-            "version": "4.2.5",
+            "version": "4.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/artweb-ou/trickster-cms.git",
-                "reference": "8d8654a27927f19e6f8c0c3f72ce17ba4c66cae0"
+                "reference": "b8326e5cee910b189e48c84552639fe261728e71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artweb-ou/trickster-cms/zipball/8d8654a27927f19e6f8c0c3f72ce17ba4c66cae0",
-                "reference": "8d8654a27927f19e6f8c0c3f72ce17ba4c66cae0",
+                "url": "https://api.github.com/repos/artweb-ou/trickster-cms/zipball/b8326e5cee910b189e48c84552639fe261728e71",
+                "reference": "b8326e5cee910b189e48c84552639fe261728e71",
                 "shasum": ""
             },
             "require": {
@@ -48,22 +48,22 @@
             "description": "Trickster CMS packages",
             "support": {
                 "issues": "https://github.com/artweb-ou/trickster-cms/issues",
-                "source": "https://github.com/artweb-ou/trickster-cms/tree/4.2.5"
+                "source": "https://github.com/artweb-ou/trickster-cms/tree/4.2.6"
             },
-            "time": "2022-08-20T18:50:55+00:00"
+            "time": "2022-11-13T16:04:13+00:00"
         },
         {
             "name": "ckeditor/ckeditor",
-            "version": "4.19.1",
+            "version": "4.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ckeditor/ckeditor4-releases.git",
-                "reference": "f6a3be3da4abf485b7d95d3edd3e9f120a6ed95e"
+                "reference": "f7495b8148ec55a1a01e41bbeab97b4d73d5a6f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ckeditor/ckeditor4-releases/zipball/f6a3be3da4abf485b7d95d3edd3e9f120a6ed95e",
-                "reference": "f6a3be3da4abf485b7d95d3edd3e9f120a6ed95e",
+                "url": "https://api.github.com/repos/ckeditor/ckeditor4-releases/zipball/f7495b8148ec55a1a01e41bbeab97b4d73d5a6f6",
+                "reference": "f7495b8148ec55a1a01e41bbeab97b4d73d5a6f6",
                 "shasum": ""
             },
             "type": "library",
@@ -98,7 +98,7 @@
                 "source": "https://github.com/ckeditor/ckeditor4",
                 "wiki": "https://ckeditor.com/docs/ckeditor4/latest/"
             },
-            "time": "2022-07-20T12:00:00+00:00"
+            "time": "2022-09-28T13:37:19+00:00"
         },
         {
             "name": "doctrine/inflector",
@@ -418,16 +418,16 @@
         },
         {
             "name": "jaybizzle/crawler-detect",
-            "version": "v1.2.111",
+            "version": "v1.2.112",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JayBizzle/Crawler-Detect.git",
-                "reference": "d572ed4a65a70a2d2871dc5137c9c5b7e69745ab"
+                "reference": "2c555ce35a07a5c1c808cee7d5bb52c41a4c7b2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/d572ed4a65a70a2d2871dc5137c9c5b7e69745ab",
-                "reference": "d572ed4a65a70a2d2871dc5137c9c5b7e69745ab",
+                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/2c555ce35a07a5c1c808cee7d5bb52c41a4c7b2f",
+                "reference": "2c555ce35a07a5c1c808cee7d5bb52c41a4c7b2f",
                 "shasum": ""
             },
             "require": {
@@ -464,9 +464,9 @@
             ],
             "support": {
                 "issues": "https://github.com/JayBizzle/Crawler-Detect/issues",
-                "source": "https://github.com/JayBizzle/Crawler-Detect/tree/v1.2.111"
+                "source": "https://github.com/JayBizzle/Crawler-Detect/tree/v1.2.112"
             },
-            "time": "2022-03-15T22:19:01+00:00"
+            "time": "2022-10-05T21:52:44+00:00"
         },
         {
             "name": "kylekatarnls/update-helper",
@@ -753,16 +753,16 @@
         },
         {
             "name": "moroz1999/zx-files",
-            "version": "3.0.1",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/moroz1999/zx-files.git",
-                "reference": "53ebd982c88a9daf80daa23d34716bb59b894758"
+                "reference": "44751a818b8b35a5c639fb4636be3d972adb7929"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/moroz1999/zx-files/zipball/53ebd982c88a9daf80daa23d34716bb59b894758",
-                "reference": "53ebd982c88a9daf80daa23d34716bb59b894758",
+                "url": "https://api.github.com/repos/moroz1999/zx-files/zipball/44751a818b8b35a5c639fb4636be3d972adb7929",
+                "reference": "44751a818b8b35a5c639fb4636be3d972adb7929",
                 "shasum": ""
             },
             "require": {
@@ -792,9 +792,9 @@
             ],
             "support": {
                 "issues": "https://github.com/moroz1999/zx-files/issues",
-                "source": "https://github.com/moroz1999/zx-files/tree/3.0.1"
+                "source": "https://github.com/moroz1999/zx-files/tree/3.1.0"
             },
-            "time": "2022-09-07T19:30:03+00:00"
+            "time": "2022-11-13T16:03:02+00:00"
         },
         {
             "name": "moroz1999/zx-image",
@@ -1355,16 +1355,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.26.0",
+            "version": "v1.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "9344f9cb97f3b19424af1a21a3b0e75b0a7d8d7e"
+                "reference": "8ad114f6b39e2c98a8b0e3bd907732c207c2b534"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/9344f9cb97f3b19424af1a21a3b0e75b0a7d8d7e",
-                "reference": "9344f9cb97f3b19424af1a21a3b0e75b0a7d8d7e",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/8ad114f6b39e2c98a8b0e3bd907732c207c2b534",
+                "reference": "8ad114f6b39e2c98a8b0e3bd907732c207c2b534",
                 "shasum": ""
             },
             "require": {
@@ -1379,7 +1379,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.26-dev"
+                    "dev-main": "1.27-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -1418,7 +1418,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.26.0"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.27.0"
             },
             "funding": [
                 {
@@ -1434,20 +1434,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-24T11:49:31+00:00"
+            "time": "2022-11-03T14:55:06+00:00"
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.26.0",
+            "version": "v1.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "cfa0ae98841b9e461207c13ab093d76b0fa7bace"
+                "reference": "7a6ff3f1959bb01aefccb463a0f2cd3d3d2fd936"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/cfa0ae98841b9e461207c13ab093d76b0fa7bace",
-                "reference": "cfa0ae98841b9e461207c13ab093d76b0fa7bace",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/7a6ff3f1959bb01aefccb463a0f2cd3d3d2fd936",
+                "reference": "7a6ff3f1959bb01aefccb463a0f2cd3d3d2fd936",
                 "shasum": ""
             },
             "require": {
@@ -1456,7 +1456,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.26-dev"
+                    "dev-main": "1.27-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -1501,7 +1501,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.26.0"
+                "source": "https://github.com/symfony/polyfill-php80/tree/v1.27.0"
             },
             "funding": [
                 {
@@ -1517,20 +1517,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-10T07:21:04+00:00"
+            "time": "2022-11-03T14:55:06+00:00"
         },
         {
             "name": "symfony/translation",
-            "version": "v4.4.45",
+            "version": "v4.4.47",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "4e6b4c0dbeb04d6f004ed7f43eb0905ce8396def"
+                "reference": "45036b1d53accc48fe9bab71ccd86d57eba0dd94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/4e6b4c0dbeb04d6f004ed7f43eb0905ce8396def",
-                "reference": "4e6b4c0dbeb04d6f004ed7f43eb0905ce8396def",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/45036b1d53accc48fe9bab71ccd86d57eba0dd94",
+                "reference": "45036b1d53accc48fe9bab71ccd86d57eba0dd94",
                 "shasum": ""
             },
             "require": {
@@ -1590,7 +1590,7 @@
             "description": "Provides tools to internationalize your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/translation/tree/v4.4.45"
+                "source": "https://github.com/symfony/translation/tree/v4.4.47"
             },
             "funding": [
                 {
@@ -1606,7 +1606,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-08-02T12:44:49+00:00"
+            "time": "2022-10-03T15:15:11+00:00"
         },
         {
             "name": "symfony/translation-contracts",
