@@ -170,6 +170,9 @@ class AuthorsManager extends ElementsManager
                 }
 
                 $record['roles'] = json_decode($record['roles'], true);
+                if (!$record['roles']) {
+                    $record['roles'] = ['unknown'];
+                }
             }
         }
         return $records;
@@ -215,6 +218,35 @@ class AuthorsManager extends ElementsManager
             }
         }
         return $records;
+    }
+
+    public function checkDuplicates($info)
+    {
+        if ($info) {
+            if ($records = $this->db
+                ->table('module_authoralias')
+                ->whereIn('id', array_keys($info))
+                ->get(['id', 'authorId'])
+            ) {
+                $foundAuthors = [];
+                foreach ($records as $record) {
+                    if (isset($foundAuthors[$record['authorId']])) {
+                        //this is not the only alias of same author within list, let's delete it
+                        unset($info[$record['id']]);
+                    } else {
+                        $foundAuthors[$record['authorId']] = true;
+                        if (isset($info[$record['authorId']])) {
+                            //main author should be removed if there is appropriate alias in list
+                            if (!empty($info[$record['authorId']]['roles'])) {
+                                $info[$record['id']]['roles'] = $info[$record['authorId']]['roles'];
+                            }
+                            unset($info[$record['authorId']]);
+                        }
+                    }
+                }
+            }
+        }
+        return $info;
     }
 
     public function checkAuthorship($elementId, $personId, $type, $roles = [], $startDate = 0, $endDate = 0)

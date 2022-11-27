@@ -8,6 +8,7 @@ trait AuthorshipPersister
          * @var AuthorsManager $authorsManager
          */
         $authorsManager = $this->getService('AuthorsManager');
+        $existingRecords = $authorsManager->getElementAuthorsRecords($this->id, $type);
 
         $rolesInfo = $this->getValue('addAuthorRole');
         $startDates = $this->getValue('addAuthorStartDate');
@@ -41,8 +42,9 @@ trait AuthorshipPersister
                 $info[$authorId]['endDate'] = $endDate;
             }
         }
+        $info = $authorsManager->checkDuplicates($info);
         foreach ($info as $authorId => $item) {
-            $roles = !empty($item['roles']) ? $item['roles'] : [];
+            $roles = !empty($item['roles']) ? $item['roles'] : ['unknown'];
             $startDate = !empty($item['startDate']) ? strtotime($item['startDate']) : 0;
             $endDate = !empty($item['endDate']) ? strtotime($item['endDate']) : 0;
             $authorsManager->checkAuthorship(
@@ -54,5 +56,12 @@ trait AuthorshipPersister
                 $endDate
             );
         }
+        foreach ($existingRecords as $record) {
+            if (!isset($info[$record['authorId']])){
+                $authorsManager->deleteAuthorship($this->id, $record['authorId'], $type);
+            }
+        }
+
+
     }
 }

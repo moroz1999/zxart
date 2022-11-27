@@ -753,16 +753,16 @@
         },
         {
             "name": "moroz1999/zx-files",
-            "version": "3.1.0",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/moroz1999/zx-files.git",
-                "reference": "44751a818b8b35a5c639fb4636be3d972adb7929"
+                "reference": "0b7ede69afcd11a9832592d03d4aa8ad587dddd5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/moroz1999/zx-files/zipball/44751a818b8b35a5c639fb4636be3d972adb7929",
-                "reference": "44751a818b8b35a5c639fb4636be3d972adb7929",
+                "url": "https://api.github.com/repos/moroz1999/zx-files/zipball/0b7ede69afcd11a9832592d03d4aa8ad587dddd5",
+                "reference": "0b7ede69afcd11a9832592d03d4aa8ad587dddd5",
                 "shasum": ""
             },
             "require": {
@@ -792,9 +792,9 @@
             ],
             "support": {
                 "issues": "https://github.com/moroz1999/zx-files/issues",
-                "source": "https://github.com/moroz1999/zx-files/tree/3.1.0"
+                "source": "https://github.com/moroz1999/zx-files/tree/3.2.0"
             },
-            "time": "2022-11-13T16:03:02+00:00"
+            "time": "2022-11-22T21:15:17+00:00"
         },
         {
             "name": "moroz1999/zx-image",

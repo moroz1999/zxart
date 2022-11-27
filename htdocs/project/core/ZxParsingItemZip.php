@@ -41,6 +41,8 @@ class ZxParsingItemZip extends ZxParsingItem
                                     $type = $this->zxParsingManager->detectType($part, $content);
                                     if ($type == 'tap') {
                                         $partItem = new ZxParsingItemTap($this->zxParsingManager);
+                                    } elseif ($type == 'tzx') {
+                                        $partItem = new ZxParsingItemTzx($this->zxParsingManager);
                                     } elseif ($type == 'scl') {
                                         $partItem = new ZxParsingItemScl($this->zxParsingManager);
                                     } elseif ($type == 'trd') {

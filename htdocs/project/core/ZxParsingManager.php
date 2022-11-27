@@ -75,6 +75,8 @@ class ZxParsingManager extends errorLogger
             if ($type = $this->detectType($path, null, $fileName)) {
                 if ($type == 'tap') {
                     $file = new ZxParsingItemTap($this);
+                } elseif ($type == 'tzx') {
+                    $file = new ZxParsingItemTzx($this);
                 } elseif ($type == 'scl') {
                     $file = new ZxParsingItemScl($this);
                 } elseif ($type == 'trd') {

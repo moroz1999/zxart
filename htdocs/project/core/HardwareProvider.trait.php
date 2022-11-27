@@ -68,6 +68,7 @@ trait HardwareProviderTrait
                 'int2_1',
                 'int2_2',
                 'kempstonmouse',
+                'aymouse',
             ],
             "expansion" => [
                 'smuc',
