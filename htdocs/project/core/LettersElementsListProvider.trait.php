@@ -50,7 +50,7 @@ trait LettersElementsListProviderTrait
     protected function getLetterId($title)
     {
         $letterId = false;
-        if ($firstLetter = substr(TranslitHelper::convert(mb_strtolower(mb_substr(trim($title), 0, 1))), 0, 1)) {
+        if (($firstLetter = substr(TranslitHelper::convert(mb_strtolower(mb_substr(trim($title), 0, 1))), 0, 1)) !== false) {
             if ($letters = $this->getLetterElements()) {
                 foreach ($letters as $letter) {
                     if (!$letterId && $letter->title == '#') {
