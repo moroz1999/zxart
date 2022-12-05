@@ -19,6 +19,7 @@ trait ReleaseFormatsProvider
             'td0',
             'rom',
             'spg',
+            'mdr',
         ];
     }
 
@@ -36,6 +37,7 @@ trait ReleaseFormatsProvider
             'tape' => [
                 'tzx',
                 'tap',
+                'mdr',
             ],
             'rom' => [
                 'bin',

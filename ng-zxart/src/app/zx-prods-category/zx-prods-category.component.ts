@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, HostBinding} from '@angular/core';
+import {Component, OnInit, Input, HostBinding, ViewChild, ElementRef} from '@angular/core';
 import {ElementsService, PostParameters} from '../shared/services/elements.service';
 import {ZxProdCategory} from './models/zx-prod-category';
 import {Tag} from '../shared/models/tag';
@@ -33,6 +33,8 @@ export class ZxProdsCategoryComponent implements OnInit {
   public loading = false;
   public urlBase = '';
 
+  @ViewChild('contentElement') contentElement?: ElementRef<HTMLElement>;
+
   @HostBinding('class.inlays') get inlays(): boolean {
     return this.layout === 'inlays';
   }
@@ -59,6 +61,7 @@ export class ZxProdsCategoryComponent implements OnInit {
           },
           () => {
             this.loading = false;
+            this.contentElement?.nativeElement.scrollIntoView({block: 'start', inline: 'start', behavior: 'smooth'});
           },
         );
       }
@@ -134,13 +137,15 @@ export class ZxProdsCategoryComponent implements OnInit {
         this.formats = this.model.selectorValues.formats;
         this.languages = this.model.selectorValues.languages;
         this.releases = this.model.selectorValues.releases;
-
+        this.sorting = this.model.sortingSelector[0]?.values.find(item => item.selected)?.value;
       },
       () => {
 
       },
       () => {
         this.loading = false;
+        console.log(this.contentElement);
+        this.contentElement?.nativeElement.scrollIntoView({block: 'start', inline: 'start', behavior: 'smooth'});
       },
     );
   }

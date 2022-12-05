@@ -79,6 +79,10 @@
     "publishers": "Editores",
     "authors": "Autores",
     "open": "Abierto",
+    "legal-status": {
+      "mia": "Perdida",
+      "unreleased": "Inédita"
+    },
     "release-type": {
       "original": "Original",
       "rerelease": "Relanzamiento",

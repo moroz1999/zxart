@@ -137,6 +137,19 @@ $fixedHeight: 192px;
   opacity: 1;
 }
 
+.zx-prod-status {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: $font-xl;
+  color: $gray6;
+  text-transform: uppercase;
+}
 
 .zx-prod-bottom {
   padding: $padding-md;

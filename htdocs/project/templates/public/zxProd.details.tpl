@@ -111,7 +111,7 @@
                 <td class='info_table_value'>
                     {foreach $authors as $info}
                         <a
-                        href="{$info.authorElement->getUrl()}">{$info.authorElement->title}</a>{if $info.roles} ({foreach $info.roles as $role}{translations name="zxprod.role_$role"}{if !$role@last}, {/if}{/foreach}){/if}{if !$info@last}, {/if}
+                        href="{$info.authorElement->getUrl()}">{$info.authorElement->title}</a>{if $info.roles && $info.roles[0] !== 'unknown'} ({foreach $info.roles as $role}{translations name="zxprod.role_$role"}{if !$role@last}, {/if}{/foreach}){/if}{if !$info@last}, {/if}
                     {/foreach}
                 </td>
             </tr>

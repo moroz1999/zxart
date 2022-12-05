@@ -50,7 +50,7 @@
         "all": "All"
       }
     },
-    "releases": "releases",
+    "releases": "Releases",
     "sorting": {
       "votes,asc": "Rating, asc",
       "votes,desc": "Rating, desc",
@@ -79,6 +79,10 @@
     "publishers": "Publishers",
     "authors": "Authors",
     "open": "Open",
+    "legal-status": {
+      "mia": "MIA",
+      "unreleased": "Unreleased"
+    },
     "release-type": {
       "original": "Original",
       "rerelease": "Re-release",

@@ -7,6 +7,7 @@ trait LanguageCodesProviderTrait
         return [
             "be",
             "bs",
+            "by",
             "ca",
             "cs",
             "da",

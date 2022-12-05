@@ -21,6 +21,17 @@ export interface ZxProdAuthorship {
 
 export type ZxProdConnectedElements = Array<ZxProdConnectedElementDto>;
 
+export type LegalStatus =
+  'unknown' |
+  'allowed' |
+  'allowedzxart' |
+  'forbidden' |
+  'forbiddenzxart' |
+  'insales' |
+  'mia' |
+  'unreleased' |
+  'recovered';
+
 export interface ZxProdDto extends StructureElementDto {
   readonly title: string;
   readonly structureType: 'zxProd' | 'zxRelease';
@@ -42,4 +53,5 @@ export interface ZxProdDto extends StructureElementDto {
   readonly votes: number;
   readonly userVote: number;
   readonly denyVoting?: boolean;
+  readonly legalStatus?: LegalStatus;
 }

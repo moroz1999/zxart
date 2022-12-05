@@ -79,6 +79,10 @@
     "publishers": "Издатели",
     "authors": "Авторы",
     "open": "Открыть",
+    "legal-status": {
+      "mia": "Потеряна",
+      "unreleased": "Не выпущена"
+    },
     "release-type": {
       "original": "Оригинальный",
       "rerelease": "Переиздание",

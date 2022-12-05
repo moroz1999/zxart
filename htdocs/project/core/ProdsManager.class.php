@@ -288,7 +288,7 @@ class ProdsManager extends ElementsManager
     protected function createProd($prodInfo, $origin)
     {
         $category = null;
-        if ($prodInfo['directCategories']) {
+        if (!empty($prodInfo['directCategories'])) {
             $category = reset($prodInfo['directCategories']);
         }
         /**

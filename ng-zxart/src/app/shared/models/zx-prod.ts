@@ -3,7 +3,7 @@ import {
   ZxProdDto,
   ZxProdConnectedItems,
   ZxProdConnectedElements,
-  ZxProdConnectedElementDto, ZxProdAuthorship,
+  ZxProdConnectedElementDto, ZxProdAuthorship, LegalStatus,
 } from './zx-prod-dto';
 
 export class ZxProd extends StructureElement {
@@ -27,6 +27,7 @@ export class ZxProd extends StructureElement {
   public votes: number;
   public userVote: number;
   public denyVoting: boolean;
+  public legalStatus: LegalStatus;
   public loadingImageUrl?: string;
 
   constructor(data: ZxProdDto) {
@@ -81,6 +82,7 @@ export class ZxProd extends StructureElement {
     this.votes = data.votes;
     this.userVote = data.userVote;
     this.denyVoting = data.denyVoting ?? false;
+    this.legalStatus = data.legalStatus ?? 'unknown';
 
     if (this.imagesUrls.length > 0) {
       this.loadingImageUrl = this.imagesUrls.splice(0, 1)[0];

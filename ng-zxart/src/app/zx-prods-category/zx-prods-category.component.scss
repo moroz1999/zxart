@@ -21,11 +21,11 @@ $amount: 5;
   display: flex;
   gap: $padding-md;
   overflow: auto;
-  transition: opacity $animation-md ease-in-out;
+  transition: opacity $animation-md ease-out;
   @include media-breakpoint-up(sm) {
     position: sticky;
     top: 0;
-    flex-basis: 10%;
+    width: 15%;
     min-width: 15rem;
     flex-direction: column;
     max-height: 100vh;
@@ -40,17 +40,31 @@ $amount: 5;
 
 .zx-prods-list-right {
   @include media-breakpoint-up(sm) {
-    flex-basis: 85%;
+    width: calc(85% - 3rem);
     flex-grow: 1;
   }
 }
 
+.zx-prods-list-center {
+  position: relative;
+}
+
+.zx-prods-list-spinner {
+  position: fixed;
+  top: calc(50% - 50px);
+  left: 0;
+  right: 0;
+}
+
+.zx-prods-gallery {
+  transition: opacity $animation-md ease-out;
+  display: grid;
+  gap: $padding-lg;
+  justify-content: space-between;
+}
+
 :host:not(.inlays) {
   .zx-prods-gallery {
-    display: grid;
-    gap: $padding-lg;
-    justify-content: space-between;
-
     grid-template-columns: 1fr;
 
     @media (min-width: 768px) {
@@ -67,10 +81,6 @@ $amount: 5;
 
 :host.inlays {
   .zx-prods-gallery {
-    display: grid;
-    gap: $padding-lg;
-    justify-content: space-between;
-
     @include media-breakpoint-down(md) {
       grid-template-columns: 1fr;
     }
@@ -167,4 +177,10 @@ app-pages-selector {
 mat-spinner {
   display: block;
   margin: $padding-xl auto;
+}
+
+.selectors-top {
+  app-dialog-selector {
+    max-width: 15%;
+  }
 }

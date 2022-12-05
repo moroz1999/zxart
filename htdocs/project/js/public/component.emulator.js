@@ -38,39 +38,29 @@ window.emulatorComponent = new function () {
         if (file[2]) {
             FS.chdir(dir);
             const fileContents = FS.readFile(file[2]);
+            const reg7ffd = fileContents[27 + 49152 + 2];
+            const start2 = (reg7ffd & 0b111 === 7) ?
+                (27 + 32768) :
+                27 + 16384 * 3 + 4 + 16384 * 4
+            ;
 
             if (selector.value === '48') {
                 const screenData = fileContents.slice(27, 27 + 6912);
                 blob = new Blob([screenData]);
                 sendScreenshot();
-            }
-            else if (selector.value === '128') {
-                const start2 = 27 + 16384 * 3 + 4 + 16384 * 4;
+            } else if (selector.value === '128') {
                 const screenData = fileContents.slice(start2, start2 + 6912);
                 blob = new Blob([screenData]);
                 sendScreenshot();
             } else if (selector.value === 'giga') {
                 const screenData = fileContents.slice(27, 27 + 6912);
-                const start2 = 27 + 16384 * 3 + 4 + 16384 * 4;
                 const screenData2 = fileContents.slice(start2, start2 + 6912);
                 blob = new Blob([screenData, screenData2]);
                 sendScreenshot();
-            } else if (selector.value === 'double') {
-                const screenData = fileContents.slice(27, 27 + 6912);
-                setTimeout(()=>{
-                    FS.chdir('/');
-
-                    const fileContents = FS.readFile(file[2]);
-                    const screenData2 = fileContents.slice(27, 27 + 6912);
-                    blob = new Blob([screenData, screenData2]);
-                    sendScreenshot();
-
-                }, 30);
             }
-
         }
     }
-    const sendScreenshot = function (){
+    const sendScreenshot = function () {
         const submitUrl = window.currentElementURL + 'id:' + window.currentElementId + '/action:uploadScreenshot/'
         fetch(submitUrl, {method: "POST", body: blob})
             .then(response => {

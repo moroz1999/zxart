@@ -3,7 +3,7 @@
 class VtrdosManager extends errorLogger
 {
     protected $counter = 0;
-    protected $maxCounter = 20000;
+    protected $maxCounter = 1000;
     /**
      * @var ProdsManager
      */
@@ -213,8 +213,6 @@ class VtrdosManager extends errorLogger
     public function setAuthorsManager($authorsManager)
     {
         $this->authorsManager = $authorsManager;
-        $authorsManager->setForceUpdateCountry(false);
-        $authorsManager->setForceUpdateCity(false);
     }
 
     /**
@@ -280,22 +278,15 @@ class VtrdosManager extends errorLogger
                 $tdNodes = $releaseNode->getElementsByTagName('td');
                 if ($td1 = $tdNodes->item(0)) {
                     $url = false;
-                    $title = false;
+                    $prodTitle = false;
                     $prodId = false;
 
                     if ($aNode = $td1->getElementsByTagName('a')->item(0)) {
                         $url = $aNode->getAttribute('href');
-                        $title = trim(
-                            preg_replace('!\s+!', ' ', $aNode->textContent),
-                            " \t\n\r\0\x0B" . chr(0xC2) . chr(0xA0)
-                        );
-                        $prodTitle = $title;
-                        if (strtolower(substr($prodTitle, -4)) == 'demo') {
-                            $prodTitle = trim(mb_substr($prodTitle, 0, -4));
-                        }
+                        $prodTitle = $this->processTitle($aNode->textContent);
                         $prodId = md5($prodTitle);
                     }
-                    if ($url && $title) {
+                    if ($url && $prodTitle) {
                         $releaseInfo = [];
 
                         if (!isset($prodsIndex[$prodId])) {
@@ -308,7 +299,6 @@ class VtrdosManager extends errorLogger
                         }
                         $releaseInfo['fileUrl'] = $this->rootUrl . $url;
                         $releaseInfo['id'] = md5(basename($url));
-                        $releaseInfo['title'] = $title;
                         $releaseInfo['labels'] = [];
 
                         if ($td2 = $tdNodes->item(1)) {
@@ -320,6 +310,7 @@ class VtrdosManager extends errorLogger
                                 $roles = $settings['release']['authorRoles'];
                             }
                         }
+                        $roles[] = 'release';
                         if ($td3 = $tdNodes->item(2)) {
                             $this->parseAuthorsString((string)$td3->nodeValue, $releaseInfo, $roles, 'publishers');
                         }
@@ -339,7 +330,7 @@ class VtrdosManager extends errorLogger
                                 $prodsIndex[$prodId]['directCategories'] = $settings['prod']['directCategories'];
                             }
                         }
-
+                        $this->parseANode($aNode, $releaseInfo);
                         $prodsIndex[$prodId]['releases'][] = $releaseInfo;
                     }
                 }
@@ -463,7 +454,8 @@ class VtrdosManager extends errorLogger
         $node,
         &$prodInfo,
         $roles = []
-    ) {
+    )
+    {
         $text = trim($node->textContent);
         if (strtolower(substr($text, 0, 3)) == 'by ') {
             $text = substr($text, 3);
@@ -474,14 +466,27 @@ class VtrdosManager extends errorLogger
     protected function parseANode(
         $node,
         &$releaseInfo
-    ) {
+    )
+    {
         $hwIndex = [
+            '(km)' => 'kempstonmouse',
+            '(kemp8bit)' => 'kempston8b',
+            '(cvx)' => 'covox',
+            '(dma)' => 'dmausc',
+            '(gs)' => 'gs',
+            '(sd)' => 'soundrive',
+            '(for 48k)' => 'zx48',
+            '(48k only)' => 'zx48',
+            '(128k only)' => 'zx128',
+            '(1024k)' => 'pentagon1024',
+            '(256k)' => 'scorpion',
+            '(ts)' => 'ts',
             'hdd' => 'hdd',
             '48k' => 'zx48',
             'Pentagon 512k' => 'pentagon512',
-            'Byte' => 'byte',
             'Pentagon 1024k' => 'pentagon1024',
             'Scorpion ZS 256' => 'scorpion',
+            'Byte' => 'byte',
             'ATM Turbo' => 'atm',
             'smuc' => 'smuc',
             'Covox' => 'covox',
@@ -493,6 +498,7 @@ class VtrdosManager extends errorLogger
             'AY' => 'ay',
             'DMA UltraSound Card' => 'dmausc',
             'Beeper' => 'beeper',
+            'AY Mouse' => 'aymouse',
         ];
         $releaseInfo['fileUrl'] = $this->rootUrl . $node->getAttribute('href');
         $text = $node->textContent;
@@ -502,14 +508,23 @@ class VtrdosManager extends errorLogger
                 $releaseInfo['hardwareRequired'][] = $value;
             }
         }
-        if (($start = stripos($text, '(for')) !== false) {
-            if (($end = stripos($text, ')', $start)) !== false) {
-                $text = trim(substr_replace($text, '', $start, $end - $start + 1));
-            }
+        if ((stripos($text, '(dsk)')) !== false) {
+            $releaseInfo['releaseType'] = 'adaptation';
         }
-        if (($start = stripos($text, '(rus)')) !== false) {
-            $text = trim(substr_replace($text, '', $start, 5));
+        if ((stripos($text, '(mod)')) !== false) {
+            $releaseInfo['releaseType'] = 'mod';
+        }
+        if ((stripos($text, '(rus)')) !== false) {
             $releaseInfo['language'] = ['ru'];
+        }
+        if ((stripos($text, '(ita)')) !== false) {
+            $releaseInfo['language'] = ['it'];
+        }
+        if ((stripos($text, '(pol)')) !== false) {
+            $releaseInfo['language'] = ['pl'];
+        }
+        if ((stripos($text, '(eng)')) !== false) {
+            $releaseInfo['language'] = ['en'];
         }
         if (preg_match('#(v[0-9]\.[0-9])#i', $text, $matches, PREG_OFFSET_CAPTURE)) {
             $offset = $matches[0][1];
@@ -517,15 +532,30 @@ class VtrdosManager extends errorLogger
             $text = trim(substr_replace($text, '', $offset));
             $releaseInfo['version'] = $versionString;
         }
-        $releaseInfo['title'] = $text;
+        $releaseInfo['title'] = $this->processTitle($text);
     }
 
+    private function processTitle($text){
+
+        //remove (..)
+        $text = preg_replace('#([(].*[)])*#', '', $text);
+        //remove double spaces
+        $text = trim(
+            preg_replace('!\s+!', ' ', $text),
+            " \t\n\r\0\x0B" . chr(0xC2) . chr(0xA0)
+        );
+        if (strtolower(substr($text, -4)) == 'demo') {
+            $text = trim(mb_substr($text, 0, -4));
+        }
+        return $text;
+}
     protected function parseAuthorsString(
         $string,
         &$info,
         $roles = [],
         $groupField = 'groups'
-    ) {
+    )
+    {
         $string = trim(preg_replace('!\s+!', ' ', $string), " \t\n\r\0\x0B" . chr(0xC2) . chr(0xA0));
         if ($string !== 'n/a' && $string !== 'author') {
             $parts = explode(',', $string);
@@ -600,7 +630,8 @@ class VtrdosManager extends errorLogger
 
     protected function loadHtml(
         $url
-    ) {
+    )
+    {
         if ($contents = file_get_contents($url)) {
             $dom = new DOMDocument;
             $dom->strictErrorChecking = false;
@@ -618,7 +649,8 @@ class VtrdosManager extends errorLogger
 
     protected function markProgress(
         $text
-    ) {
+    )
+    {
         static $previousTime;
 
         if ($previousTime === null) {

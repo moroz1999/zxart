@@ -123,6 +123,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 "authorsInfoShort",
                 "youtubeId",
                 "denyVoting",
+                "legalStatus",
             ],
             'search' => [
                 'id',

@@ -65,6 +65,7 @@ trait HardwareProviderTrait
             "controls" => [
                 'cursor',
                 'kempston',
+                'kempston8b',
                 'int2_1',
                 'int2_2',
                 'kempstonmouse',
@@ -73,7 +74,8 @@ trait HardwareProviderTrait
             "expansion" => [
                 'smuc',
                 'zxpand',
-                'Cache',
+                'сache',
+                'gmx',
             ],
         ];
     }
