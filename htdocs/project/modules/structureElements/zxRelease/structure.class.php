@@ -405,9 +405,11 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
             return $this->year;
         }
         if ($this->releaseType === 'original' && $zxProd = $this->getProd()) {
-            return $zxProd->year;
+            if (!empty($zxProd->year)){
+                return $zxProd->year;
+            }
         }
-        return false;
+        return '';
     }
 
     public function getImagesList()
@@ -602,7 +604,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         foreach ($this->publishers as $publisher) {
             $publishersInfo[] = [
                 'id' => $publisher->id,
-                'title' => $publisher->title,
+                'title' => html_entity_decode($publisher->title, ENT_QUOTES),
                 'url' => $publisher->getUrl(),
             ];
         }

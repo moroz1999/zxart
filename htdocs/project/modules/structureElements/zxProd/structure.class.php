@@ -614,7 +614,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         foreach ($this->publishers as $publisher) {
             $publishersInfo[] = [
                 'id' => $publisher->id,
-                'title' => $publisher->title,
+                'title' => html_entity_decode($publisher->title, ENT_QUOTES),
                 'url' => $publisher->getUrl(),
             ];
         }
@@ -627,7 +627,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         foreach ($this->groups as $group) {
             $groupsInfo[] = [
                 'id' => $group->id,
-                'title' => $group->title,
+                'title' => html_entity_decode($group->title, ENT_QUOTES),
                 'url' => $group->getUrl(),
             ];
         }

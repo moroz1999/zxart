@@ -183,6 +183,7 @@ class PouetManager extends errorLogger
         'fullscreen picture' => 'graphics',
         'end pic.' => 'graphics',
         'anims' => 'graphics',
+        'animaion' => 'graphics',
         'animation' => 'graphics',
         '2d animation' => 'graphics',
         '2d graphics' => 'graphics',
