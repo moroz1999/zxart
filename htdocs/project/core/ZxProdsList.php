@@ -9,6 +9,7 @@ trait ZxProdsList
 {
     use HardwareProviderTrait;
     use ReleaseFormatsProvider;
+    use QueryDebugger;
 
     /**
      * @var zxProdCategoryElement[]
@@ -375,6 +376,7 @@ trait ZxProdsList
         }
         return $this->hardwareSelector;
     }
+
     public function getCountriesSelector(): array
     {
         if (!isset($this->countriesSelector)) {
@@ -385,16 +387,24 @@ trait ZxProdsList
                 $db = $this->getService('db');
 
                 $languageId = $this->getService('LanguagesManager')->getCurrentLanguageId();
-                $countries = $db->table('module_country')
+                $countriesQuery = $db->table('module_country')
                     ->whereIn('id', function ($countriesQuery) use ($query) {
                         $countriesQuery->from('module_group')->select('country')->whereIn('id', function ($producersQuery) use ($query) {
                             $producersQuery->from('structure_links')->whereIn('childStructureId', $query)->where('type', '=', 'zxProdGroups')->select('parentStructureId');
                         });
                     })
+                    ->orWhereIn('id', function ($subQuery) use ($query) {
+                        $subQuery->from('module_author')->select('country')->whereIn('id', function ($subQuery) use ($query) {
+                            $subQuery->from('authorship')->whereIn('elementId', $query)->select('authorId');
+                        });
+                    })
                     ->select('title', 'id')
                     ->orderBy('title', 'asc')
-                    ->where('languageId', '=', $languageId)
-                    ->get();
+                    ->groupBy('id')
+                    ->where('languageId', '=', $languageId);
+//                $this->debugQuery($countriesQuery);
+
+                $countries = $countriesQuery->get();
                 $group = [
                     'title' => '',
                     'values' => []
@@ -412,53 +422,6 @@ trait ZxProdsList
         }
         return $this->countriesSelector;
     }
-
-//    public function getCountriesSelector(): array
-//    {
-//        if (!isset($this->countriesSelector)) {
-//            $this->countriesSelector = [];
-//            if ($query = $this->getSelectorQuery('countries')) {
-//                $query->select(['id']);
-//                $values = $this->getSelectorValue('countries');
-//                $db = $this->getService('db');
-//
-//                $records = $query->get('id');
-//                $ids = array_column($records, 'id');
-//
-//                $languageId = $this->getService('LanguagesManager')->getCurrentLanguageId();
-//                $countries = $db->table('module_country')
-//                    ->whereIn('id', function ($countriesQuery) use ($ids) {
-//                        $countriesQuery->from('module_group')->select('country')->whereIn('id', function ($producersQuery) use ($ids) {
-//                            $producersQuery->from('structure_links')->whereIn('childStructureId', $ids)->where('type', '=', 'zxProdGroups')->select('parentStructureId');
-//                        });
-//                    })
-//                    ->orWhereIn('id', function ($subQuery) use ($ids) {
-//                        $subQuery->from('module_author')->select('country')->whereIn('id', function ($subQuery) use ($ids) {
-//                            $subQuery->from('authorship')->whereIn('elementId', $ids)->select('authorId');
-//                        });
-//                    })
-//                    ->select('title', 'id')
-//                    ->orderBy('title', 'asc')
-//                    ->groupBy('id')
-//                    ->where('languageId', '=', $languageId)
-//                    ->get();
-//                $group = [
-//                    'title' => '',
-//                    'values' => []
-//                ];
-//                foreach ($countries as $country) {
-//                    $group['values'][] = [
-//                        'value' => $country['id'],
-//                        'title' => $country['title'],
-//                        'selected' => $values && in_array($country['id'], $values),
-//                    ];
-//                }
-//                $this->countriesSelector[] = $group;
-//
-//            }
-//        }
-//        return $this->countriesSelector;
-//    }
 
     public function getFormatsSelector(): array
     {

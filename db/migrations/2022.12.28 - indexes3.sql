@@ -1,0 +1,1 @@
+ALTER TABLE `engine_structure_elements` ADD UNIQUE (`structureType`, `dateCreated`, `id`); 
