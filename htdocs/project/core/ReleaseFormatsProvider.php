@@ -20,6 +20,7 @@ trait ReleaseFormatsProvider
             'rom',
             'spg',
             'mdr',
+            'd80',
         ];
     }
 
@@ -33,6 +34,7 @@ trait ReleaseFormatsProvider
                 'fdi',
                 'udi',
                 'td0',
+                'd80',
             ],
             'tape' => [
                 'tzx',

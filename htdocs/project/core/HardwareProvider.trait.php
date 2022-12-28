@@ -46,6 +46,9 @@ trait HardwareProviderTrait
                 'betadisk',
                 'hdd',
                 'divsd',
+                'divide',
+                'divmmc',
+                'smuc',
             ],
             "sound" => [
                 'ay',
@@ -72,7 +75,6 @@ trait HardwareProviderTrait
                 'aymouse',
             ],
             "expansion" => [
-                'smuc',
                 'zxpand',
                 'сache',
                 'gmx',
