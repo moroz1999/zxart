@@ -87,6 +87,7 @@ class user
             [
                 'id' => $userId,
                 'languageId' => '0',
+                'banned' => 0
             ]
         )
         ) {
@@ -252,7 +253,7 @@ class user
         $sessionName = $this->serverSessionManager->getSessionName();
 
         $userCollection = persistableCollection::getInstance($this->userResourceName);
-        $elements = $userCollection->load(['userName' => $userName, 'id' => $userId]);
+        $elements = $userCollection->load(['userName' => $userName, 'id' => $userId, 'banned' => 0]);
 
         if (count($elements) == 1) {
             $userDataObject = reset($elements);
@@ -271,25 +272,37 @@ class user
 
     public function checkUser($userName, $password, $ignorePassword = false)
     {
-        $userID = false;
+        $userId = false;
 
         $userCollection = persistableCollection::getInstance($this->userResourceName);
         $searchFields = [
             'userName' => $userName,
+            'banned' => 0
         ];
         $users = $userCollection->load($searchFields);
 
-        if (count($users) == 1) {
+        if (!$users) {
+            $searchFields = [
+                'email' => $userName,
+                'banned' => 0
+            ];
+            $users = $userCollection->load($searchFields);
+        }
+
+        if ($users) {
             $user = $users[0];
             $storedPassword = $user->password;
             if (password_verify($password, $storedPassword) || $ignorePassword) {
                 $userDataObject = reset($users);
-                $userID = $userDataObject->id;
+                if ($userDataObject->verified) {
+                    $userId = $userDataObject->id;
+                }
             } // TODO: delete this md5 password check in 2020
             elseif ($storedPassword == md5($password)) {
                 $userDataObject = reset($users);
-                $userID = $userDataObject->id;
-
+                if ($userDataObject->verified) {
+                    $userId = $userDataObject->id;
+                }
                 // renew the hash from md5 to the new password_hash
                 $user->password = password_hash($password, PASSWORD_DEFAULT);
                 $user->persist();
@@ -298,12 +311,12 @@ class user
             $errorLog = errorLog::getInstance();
             $errorLog->logMessage(__CLASS__, 'Non-unique user "' . $userName . '" in database');
         }
-        return $userID;
+        return $userId;
     }
 
-    public function checkExistance($userName)
+    public function checkExistance($userName, $email)
     {
-        return !!$this->queryUserData(['userName' => $userName]);
+        return (!!$this->queryUserData(['userName' => $userName])) || (!!$this->queryUserData(['email' => $email]));
     }
 
     public function queryUserData($conditions)
@@ -360,7 +373,7 @@ class user
                 if ($cookieContents && count($cookieContents) == 2) {
                     $userName = $cookieContents['0'];
                     $userCollection = persistableCollection::getInstance($this->userResourceName);
-                    $elements = $userCollection->load(['userName' => $userName]);
+                    $elements = $userCollection->load(['userName' => $userName, 'banned' => 0]);
 
                     if (count($elements) == 1) {
                         $userDataObject = reset($elements);

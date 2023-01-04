@@ -31,6 +31,9 @@ class userElement extends structureElement
         $moduleStructure['additionalData'] = 'array';
         $moduleStructure['authorId'] = 'text';
         $moduleStructure['newAuthorId'] = 'text';
+        $moduleStructure['verified'] = 'checkbox';
+        $moduleStructure['banned'] = 'checkbox';
+        $moduleStructure['comments'] = 'checkbox';
     }
 
     public function getAdditionalData()
@@ -273,7 +276,14 @@ class userElement extends structureElement
         }
     }
 
-    public function deleteElementData()
+    public function ban()
+    {
+        $this->removeExtras();
+        $db = $this->getService('db');
+        $db->table('module_user')->where('id', '=', $this->id)->update(['banned' => 1]);
+    }
+
+    public function removeExtras()
     {
         $this->getService('SocialDataManager')->removeSocialUser($this->id);
         $structureManager = $this->getService('structureManager');
@@ -288,12 +298,13 @@ class userElement extends structureElement
         }
         try {
             $db->table('votes_history')->where('userId', '=', $this->id)->delete();
-            //            $db->table('actions_log')->where('userId', '=', $this->id)->delete();
-            //            $db->table('events_log')->where('userId', '=', $this->id)->delete();
         } catch (Exception $e) {
         }
+    }
 
-
+    public function deleteElementData()
+    {
+        $this->removeExtras();
         parent::deleteElementData();
     }
 

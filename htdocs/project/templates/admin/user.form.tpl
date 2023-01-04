@@ -172,5 +172,5 @@
 			</tr>
 		{/foreach}
 	</table>
-	{include file=$theme->template('block.controls.tpl')}
+	{include file=$theme->template('component.controls.tpl')}
 </form>

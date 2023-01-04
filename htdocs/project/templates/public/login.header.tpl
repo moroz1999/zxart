@@ -17,6 +17,7 @@
 		<a class='button login_status_logout' href='{$controller->fullURL}/id:{$element->id}/action:logout'>{translations name='login.logout'}</a>
 	{else}
 		<div class="">
+			{if $element->errorMessage}{$element->errorMessage}{/if}
 			<form action="{$controller->fullURL}" class='login_form' method="post" enctype="multipart/form-data">
 				<input class="input_component{if $formErrors.userName} form_error{/if}" type="text" value="" name="{$formNames.userName}" placeholder="{translations name='login.user'}"/>
 				<input class="input_component{if $formErrors.password} form_error{/if}" type="password" value="" name="{$formNames.password}" placeholder="{translations name='login.password'}"/>
