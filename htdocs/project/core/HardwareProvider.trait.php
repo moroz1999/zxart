@@ -44,11 +44,23 @@ trait HardwareProviderTrait
                 'tape',
                 '3dosdisk',
                 'betadisk',
-                'hdd',
+                'cd',
+                'profiide',
+                'nemoide',
+                'zcontroller',
+                'atmide',
                 'divsd',
                 'divide',
                 'divmmc',
                 'smuc',
+            ],
+            "dos" => [
+                'trdos',
+                'isdos',
+                'cpm',
+                'esxdos',
+                'mbdos',
+                '3dos',
             ],
             "sound" => [
                 'ay',
@@ -76,7 +88,7 @@ trait HardwareProviderTrait
             ],
             "expansion" => [
                 'zxpand',
-                'сache',
+                'cache',
                 'gmx',
             ],
         ];

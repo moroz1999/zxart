@@ -589,7 +589,12 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     public function getHardwareInfo()
     {
         if (!isset($this->hardwareInfo)) {
-            if (($this->hardwareInfo = $this->getCacheKey('hw' . $this->currentLanguage)) === false) {
+            /**
+             * @var languagesManager $languagesManager
+             */
+            $languagesManager = $this->getService('languagesManager');
+            $key = 'hw' . $languagesManager->getCurrentLanguageId();
+            if (($this->hardwareInfo = $this->getCacheKey($key)) === false) {
                 $this->hardwareInfo = [];
                 /**
                  * @var translationsManager $translationsManager
@@ -601,11 +606,10 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
                         'title' => $translationsManager->getTranslationByName('hardware_short.item_' . $item),
                     ];
                 }
-                $this->setCacheKey('hw' . $this->currentLanguage, $this->hardwareInfo, 24 * 60 * 60);
+                $this->setCacheKey($key, $this->hardwareInfo, 24 * 60 * 60);
             }
         }
         return $this->hardwareInfo;
-
     }
 
     public function getPublishersInfo()
