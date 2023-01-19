@@ -21,12 +21,12 @@ use ZxFiles\BasicFile;
  * @property int $userId
  * @property int $parsed
  */
-class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFilesPathInterface, CommentsHolderInterface, JsonDataProvider
+class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFilesPathInterface, CommentsHolderInterface, JsonDataProvider, ZxSoftInterface
 {
     use AuthorshipProviderTrait;
     use AuthorshipPersister;
     use ImportedItemTrait;
-    use HardwareProviderTrait;
+    use HardwareProvider;
     use LanguageCodesProviderTrait;
     use LinksPersistingTrait;
     use PublisherGroupProviderTrait;
@@ -35,6 +35,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     use ReleaseFormatsProvider;
     use GalleryInfoProviderTrait;
     use JsonDataProviderElement;
+    use ZxSoft;
 
     public $dataResourceName = 'module_zxrelease';
     public $allowedTypes = [];

@@ -58,7 +58,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
     public function getImageUrl($preset = 'adminImage', $mobile = false)
     {
         $full = false;
-        if (stripos($preset, 'full')) {
+        if (stripos($preset, 'full') !== false) {
             $full = true;
             $zoom = 3;
         } else {

@@ -28,7 +28,7 @@
  * @property array[] $splitData
  */
 class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPathInterface, CommentsHolderInterface,
-    JsonDataProvider, OpenGraphDataProviderInterface
+    JsonDataProvider, OpenGraphDataProviderInterface, ZxSoftInterface
 {
     use AuthorshipProviderTrait;
     use AuthorshipPersister;
@@ -43,6 +43,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     use GalleryInfoProviderTrait;
     use DemoCompoTypesProvider;
     use JsonDataProviderElement;
+    use ZxSoft;
 
     public $dataResourceName = 'module_zxprod';
     public $allowedTypes = [];
@@ -585,6 +586,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
             ->pluck('value');
         return $hwItems;
     }
+
 
     public function getHardwareInfo()
     {

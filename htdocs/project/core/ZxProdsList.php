@@ -7,7 +7,7 @@ const ZXPRODS_TABLE = 'module_zxprod';
 
 trait ZxProdsList
 {
-    use HardwareProviderTrait;
+    use HardwareProvider;
     use ReleaseFormatsProvider;
     use QueryDebugger;
 
