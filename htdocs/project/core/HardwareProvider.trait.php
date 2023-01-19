@@ -59,7 +59,7 @@ trait HardwareProviderTrait
                 'isdos',
                 'cpm',
                 'esxdos',
-                'mbdos',
+                'mdos',
                 '3dos',
             ],
             "sound" => [
