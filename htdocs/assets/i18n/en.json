@@ -46,6 +46,10 @@
         "selected": "Legal statuses:",
         "select": "Select legal statuses"
       },
+      "release-types": {
+        "selected": "Release types:",
+        "select": "Select release types"
+      },
       "letters": {
         "all": "All"
       }

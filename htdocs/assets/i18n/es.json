@@ -46,6 +46,10 @@
         "selected": "Estados legales:",
         "select": "Seleccionar estados legales"
       },
+      "release-types": {
+        "selected": "Tipos de lanzamiento:",
+        "select": "Seleccionar tipos de lanzamiento"
+      },
       "letters": {
         "all": "Todo"
       }

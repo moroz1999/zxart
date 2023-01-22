@@ -72,13 +72,6 @@
         [selectValuesLabel]="'prods-list.filters.countries.select' | translate"
       ></app-dialog-selector>
       <app-dialog-selector
-        [selectorData]="model.formatsSelector"
-        (newValues)="formatsChanged($event)"
-        [width]="'60rem'"
-        [selectedValuesLabel]="'prods-list.filters.formats.selected' | translate"
-        [selectValuesLabel]="'prods-list.filters.formats.select' | translate"
-      ></app-dialog-selector>
-      <app-dialog-selector
         [selectorData]="model.languagesSelector"
         (newValues)="languagesChanged($event)"
         [width]="'50rem'"
@@ -90,6 +83,19 @@
         (newValues)="legalStatusesChanged($event)"
         [selectedValuesLabel]="'prods-list.filters.legal-statuses.selected' | translate"
         [selectValuesLabel]="'prods-list.filters.legal-statuses.select' | translate"
+      ></app-dialog-selector>
+      <app-dialog-selector
+        [selectorData]="model.formatsSelector"
+        (newValues)="formatsChanged($event)"
+        [width]="'60rem'"
+        [selectedValuesLabel]="'prods-list.filters.formats.selected' | translate"
+        [selectValuesLabel]="'prods-list.filters.formats.select' | translate"
+      ></app-dialog-selector>
+      <app-dialog-selector
+        [selectorData]="model.releaseTypesSelector"
+        (newValues)="releaseTypesChanged($event)"
+        [selectedValuesLabel]="'prods-list.filters.release-types.selected' | translate"
+        [selectValuesLabel]="'prods-list.filters.release-types.select' | translate"
       ></app-dialog-selector>
     </div>
     <div class="zx-prods-list-right">

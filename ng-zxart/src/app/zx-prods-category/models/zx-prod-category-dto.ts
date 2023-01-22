@@ -16,6 +16,7 @@ export interface ZxProdCategoryDto extends StructureElementDto {
   readonly countriesSelector?: SelectorDto;
   readonly languagesSelector?: SelectorDto;
   readonly legalStatusesSelector?: SelectorDto;
+  readonly releaseTypesSelector?: SelectorDto;
   readonly formatsSelector?: SelectorDto;
   readonly hardwareSelector?: SelectorDto;
   readonly sortingSelector?: SelectorDto;

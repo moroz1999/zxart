@@ -394,7 +394,7 @@ class ProdsManager extends ElementsManager
         if ($changed) {
             $element->persistElementData();
         }
-        if (!empty($prodInfo['labels'])) {
+        if (!empty($prodInfo['labels']) && ($this->forceUpdatePublishers || $this->forceUpdateGroups || $this->forceUpdateAuthors || $justCreated)) {
             $this->importLabelsInfo($prodInfo['labels'], $origin);
         }
         if (!empty($prodInfo['directCategories'])) {

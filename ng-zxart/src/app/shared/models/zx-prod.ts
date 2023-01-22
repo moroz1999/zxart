@@ -83,6 +83,7 @@ export class ZxProd extends StructureElement {
     this.userVote = data.userVote;
     this.denyVoting = data.denyVoting ?? false;
     this.legalStatus = data.legalStatus ?? 'unknown';
+    this.legalStatus = 'insales';
 
     if (this.imagesUrls.length > 0) {
       this.loadingImageUrl = this.imagesUrls.splice(0, 1)[0];

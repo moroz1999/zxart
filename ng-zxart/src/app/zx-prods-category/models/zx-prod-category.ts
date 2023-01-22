@@ -15,6 +15,7 @@ export class ZxProdCategory extends StructureElement {
   public lettersSelector: SelectorDto = [];
   public yearsSelector: SelectorDto = [];
   public legalStatusesSelector: SelectorDto = [];
+  public releaseTypesSelector: SelectorDto = [];
   public languagesSelector: SelectorDto = [];
   public formatsSelector: SelectorDto = [];
   public countriesSelector: SelectorDto = [];
@@ -38,6 +39,7 @@ export class ZxProdCategory extends StructureElement {
     this.hardwareSelector = data.hardwareSelector ? data.hardwareSelector : [];
     this.yearsSelector = data.yearsSelector ? data.yearsSelector : [];
     this.legalStatusesSelector = data.legalStatusesSelector ? data.legalStatusesSelector : [];
+    this.releaseTypesSelector = data.releaseTypesSelector ? data.releaseTypesSelector : [];
     this.countriesSelector = data.countriesSelector ? data.countriesSelector : [];
     this.languagesSelector = data.languagesSelector ? data.languagesSelector : [];
     this.formatsSelector = data.formatsSelector ? data.formatsSelector : [];

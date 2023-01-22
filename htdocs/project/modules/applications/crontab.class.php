@@ -19,6 +19,10 @@ class crontabApplication extends controllerApplication
 
     public function execute($controller)
     {
+        //start this before ending output buffering
+        $languagesManager = $this->getService('LanguagesManager');
+        $currentLanguageCode = $languagesManager->getCurrentLanguageCode();
+
         /**
          * @var Cache $cache
          */
@@ -40,8 +44,7 @@ class crontabApplication extends controllerApplication
                 true
             );
 
-            $languagesManager = $this->getService('LanguagesManager');
-            $this->structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
+            $this->structureManager->setRequestedPath([$currentLanguageCode]);
             $this->structureManager->setPrivilegeChecking(false);
             $mp3ConversionManager = $this->getService('mp3ConversionManager');
             $mp3ConversionManager->convertQueueItems();

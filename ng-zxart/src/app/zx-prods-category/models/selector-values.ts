@@ -6,6 +6,7 @@ export interface SelectorValues {
   readonly countries: string[];
   readonly hw: string[];
   readonly formats: string[];
+  readonly releaseTypes: string[];
   readonly languages: string[];
   readonly releases: boolean;
 }

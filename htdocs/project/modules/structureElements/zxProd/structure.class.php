@@ -273,6 +273,9 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         if (!$this->hasActualStructureInfo()) {
             $this->dateAdded = time();
         }
+        if (!$this->legalStatus) {
+            $this->legalStatus = 'unknown';
+        }
         parent::persistElementData();
 
         $structureManager = $this->getService('structureManager');

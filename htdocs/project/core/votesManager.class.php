@@ -163,7 +163,7 @@ class votesManager implements DependencyInjectionContextInterface
 
         if ($votesList = $query->get()) {
             $structureManager = $this->getService('structureManager');
-            foreach ($votesList as $vote) {
+            foreach ($votesList as $key => $vote) {
                 if (($artItemElement = $structureManager->getElementById(
                         $vote['elementId']
                     )) && !$artItemElement->isVotingDenied()
@@ -181,6 +181,8 @@ class votesManager implements DependencyInjectionContextInterface
 
                     $vote['date'] = date('d.m.Y h:i', $vote['date']);
                     $votes[] = $vote;
+                } else {
+                    unset($votes[$key]);
                 }
             }
         }
