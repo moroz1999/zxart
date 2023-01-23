@@ -48,8 +48,8 @@ $font-xl: $font-md * 1.5;
 $radius-md: rem(3px);
 $radius-lg: $radius-md*2;
 $radius-xl: $radius-lg*2;
-$radius-sm: $radius-md/2;
-$radius-xs: $radius-sm/2;
+$radius-sm: $radius-md*0.5;
+$radius-xs: $radius-sm*0.5;
 
 $controls-padding: $padding-sm;
 $controls-height: 2.4rem;
