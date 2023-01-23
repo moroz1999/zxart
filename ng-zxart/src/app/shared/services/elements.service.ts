@@ -28,8 +28,8 @@ export class ElementsService {
       setTimeout(() => delete elementsData[elementId], 1000);
       return new BehaviorSubject<U>(model).pipe(take(1));
     } else {
-      postParameters.elementId = elementId;
-      postParameters.preset = preset;
+      postParameters['elementId'] = elementId;
+      postParameters['preset'] = preset;
       const options: Object = {
         'params': postParameters,
       };

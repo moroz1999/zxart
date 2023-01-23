@@ -1,14 +1,13 @@
-<mat-chip-list #chipList aria-label="Fruit selection">
+<mat-chip-set #chipList aria-label="Fruit selection">
   <mat-chip
     *ngFor="let tag of tagsSelector"
-    [selectable]="true"
     [removable]="true"
     (removed)="remove(tag)"
     >
     {{tag.title}}
     <mat-icon matChipRemove>cancel</mat-icon>
   </mat-chip>
-</mat-chip-list>
+</mat-chip-set>
 <input
   type="text"
   class="input_component"

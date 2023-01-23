@@ -11,7 +11,7 @@
   <div class="md5">{{data.md5}}</div>
   <div class="releases">
     <button mat-raised-button color="primary" type="button" (click)="showReleases()"
-            *ngIf="data.releases.length > 1">{{'parser.show-releases' | translate}} ({{data.releases?.length}})
+            *ngIf="data.releases.length > 1">{{'parser.show-releases' | translate}} ({{data.releases.length}})
     </button>
     <app-parsed-release *ngIf="data.releases.length === 1" [release]="data.releases[0]"></app-parsed-release>
     <span class="attention"
