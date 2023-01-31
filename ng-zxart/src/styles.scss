@@ -1,16 +1,40 @@
-$mat-tree-node-height: 24px;
-$mat-button-toggle-standard-height: 34px;
-@import '~@angular/material/theming';
-@include mat-core();
-$ng-zxart-primary: mat-palette($mat-gray, 800, 900, 300);
-$ng-zxart-accent: $ng-zxart-primary;
-$ng-zxart-warn: mat-palette($mat-red);
+@use '@angular/material' as mat;
 
-$ng-zxart-theme: mat-light-theme((
+@include mat.core();
+
+$zxart-primary: mat.define-palette(mat.$gray-palette, 800, 900, 300);
+$zxart-accent: $zxart-primary;
+$ng-zxart-warn: mat.define-palette(mat.$red-palette);
+
+$zxart-typography: mat.define-typography-config(
+  $font-family: Roboto,
+  $button: mat.define-typography-level(
+    $font-weight: 400,
+    $font-size: 14px,
+    $line-height: 1,
+    $letter-spacing: normal,
+  ),
+);
+
+$zxart-theme: mat.define-light-theme((
   color: (
-    primary: $ng-zxart-primary,
-    accent: $ng-zxart-accent,
-    warn: $ng-zxart-warn,
-  )
+    primary: $zxart-primary,
+    accent: $zxart-accent,
+  ),
+  typography: $zxart-typography,
+  density: 0,
 ));
-@include angular-material-theme($ng-zxart-theme);
+$zxart-tree-theme: mat.define-light-theme((
+  color: (
+    primary: $zxart-primary,
+    accent: $zxart-accent,
+  ),
+  typography: $zxart-typography,
+  density: -3
+));
+
+@include mat.tree-theme($zxart-tree-theme);
+@include mat.icon-button-theme($zxart-tree-theme);
+@include mat.button-toggle-theme($zxart-tree-theme);
+@include mat.button-theme($zxart-theme);
+@include mat.checkbox-theme($zxart-tree-theme);

@@ -41,7 +41,7 @@ export class ParsedFileComponent {
     public dialog: MatDialog,
     private iconReg: SvgIconRegistryService,
   ) {
-    this.iconReg.loadSvg(`${environment.svgUrl}disc.svg`, 'disc').subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}disc.svg`, 'disc')?.subscribe();
   }
 
 

@@ -7,7 +7,7 @@ const ZXPRODS_TABLE = 'module_zxprod';
 
 trait ZxProdsList
 {
-    use HardwareProviderTrait;
+    use HardwareProvider;
     use ReleaseFormatsProvider;
     use QueryDebugger;
 
@@ -29,12 +29,15 @@ trait ZxProdsList
     protected array $categoriesSelector;
     protected array $yearsSelector;
     protected array $legalStatusesSelector;
+    protected array $releaseTypesSelector;
     protected array $hardwareSelector;
     protected array $countriesSelector;
     protected array $formatsSelector;
     protected array $languagesSelector;
     protected array $lettersSelector;
     protected array $sortingSelector;
+
+    protected array $selectorValues;
 
     abstract public function getProdsListBaseQuery();
 
@@ -112,6 +115,9 @@ trait ZxProdsList
             }
             if ($values = $this->getSelectorValue('formats')) {
                 $filters['zxReleaseFormat'] = $values;
+            }
+            if ($values = $this->getSelectorValue('types')) {
+                $filters['zxReleaseReleaseType'] = $values;
             }
             if ($values = $this->getSelectorValue('languages')) {
                 $filters['zxReleaseLanguage'] = $values;
@@ -333,6 +339,46 @@ trait ZxProdsList
         }
         return $this->legalStatusesSelector;
     }
+
+    public function getReleaseTypesSelector(): array
+    {
+        if (!isset($this->releaseTypesSelector)) {
+            $this->releaseTypesSelector = [];
+            if ($query = $this->getSelectorQuery('types')) {
+                $values = $this->getSelectorValue('types');
+                $db = $this->getService('db');
+                /**
+                 * @var translationsManager $translationsManager
+                 */
+                $translationsManager = $this->getService('translationsManager');
+
+                /**
+                 * @var QueryFiltersManager $queryFiltersManager
+                 */
+                $queryFiltersManager = $this->getService('QueryFiltersManager');
+                $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
+                $hwItems = $db->table('module_zxrelease')
+                    ->whereIn('id', $query)
+                    ->distinct()
+                    ->pluck('releaseType');
+
+                $group = [
+                    'title' => $translationsManager->getTranslationByName("zxrelease.releaseType"),
+                    'values' => []
+                ];
+                foreach ($hwItems as $format) {
+                    $group['values'][] = [
+                        'value' => $format,
+                        'title' => $translationsManager->getTranslationByName("zxRelease.type_{$format}"),
+                        'selected' => $values && in_array($format, $values),
+                    ];
+                }
+                $this->releaseTypesSelector[] = $group;
+            }
+        }
+        return $this->releaseTypesSelector;
+    }
+
 
     public function getHardwareSelector(): array
     {
@@ -663,6 +709,7 @@ trait ZxProdsList
                 'tags' => null,
                 'years' => null,
                 'statuses' => null,
+                'types' => null,
                 'letter' => null,
             ];
             foreach ($this->selectorValues as $selectorName => $selectorValue) {
@@ -672,6 +719,8 @@ trait ZxProdsList
                     foreach ($values as $value) {
                         $this->selectorValues[$selectorName][] = trim($value);
                     }
+                } elseif ($selectorName === 'statuses') {
+                    $this->selectorValues[$selectorName] = ['allowed', 'forbidden', 'insales', 'recovered', 'unknown', 'unreleased'];
                 }
             }
         }
@@ -722,6 +771,7 @@ trait ZxProdsList
             'hw' => $this->getSelectorValue('hw') ?? [],
             'formats' => $this->getSelectorValue('formats') ?? [],
             'languages' => $this->getSelectorValue('languages') ?? [],
+            'releaseTypes' => $this->getSelectorValue('types') ?? [],
             'releases' => $this->getReleasesValue(),
         ];
     }

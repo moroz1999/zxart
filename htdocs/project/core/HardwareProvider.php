@@ -1,6 +1,6 @@
 <?php
 
-trait HardwareProviderTrait
+trait HardwareProvider
 {
     public function getHardwareList(): array
     {
@@ -20,6 +20,7 @@ trait HardwareProviderTrait
                 "pentagon128",
                 "pentagon512",
                 "pentagon1024",
+                "pentagon2666",
                 "profi",
                 "scorpion",
                 "byte",
@@ -44,11 +45,24 @@ trait HardwareProviderTrait
                 'tape',
                 '3dosdisk',
                 'betadisk',
-                'hdd',
+                'cd',
+                'profiide',
+                'nemoide',
+                'zcontroller',
+                'atmide',
                 'divsd',
                 'divide',
                 'divmmc',
                 'smuc',
+            ],
+            "dos" => [
+                'trdos',
+                'isdos',
+                'cpm',
+                'esxdos',
+                'mdos',
+                '3dos',
+                'nedoos',
             ],
             "sound" => [
                 'ay',
@@ -76,7 +90,7 @@ trait HardwareProviderTrait
             ],
             "expansion" => [
                 'zxpand',
-                'сache',
+                'cache',
                 'gmx',
             ],
         ];

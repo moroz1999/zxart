@@ -23,6 +23,7 @@ export class ZxProdsCategoryComponent implements OnInit {
   public languages: Array<string> = [];
   public legalStatuses: Array<string> = [];
   public formats: Array<string> = [];
+  public releaseTypes: Array<string> = [];
   public letter?: string;
   public sorting?: string;
   public tags: Array<number> = [];
@@ -90,6 +91,9 @@ export class ZxProdsCategoryComponent implements OnInit {
     if (this.formats.length) {
       parameters.formats = this.formats.join(',');
     }
+    if (this.releaseTypes.length) {
+      parameters.types = this.releaseTypes.join(',');
+    }
     if (this.letter) {
       parameters.letter = this.letter;
     }
@@ -135,6 +139,7 @@ export class ZxProdsCategoryComponent implements OnInit {
         this.countries = this.model.selectorValues.countries;
         this.hw = this.model.selectorValues.hw;
         this.formats = this.model.selectorValues.formats;
+        this.releaseTypes = this.model.selectorValues.releaseTypes;
         this.languages = this.model.selectorValues.languages;
         this.releases = this.model.selectorValues.releases;
         this.sorting = this.model.sortingSelector[0]?.values.find(item => item.selected)?.value;
@@ -144,7 +149,6 @@ export class ZxProdsCategoryComponent implements OnInit {
       },
       () => {
         this.loading = false;
-        console.log(this.contentElement);
         this.contentElement?.nativeElement.scrollIntoView({block: 'start', inline: 'start', behavior: 'smooth'});
       },
     );
@@ -171,6 +175,13 @@ export class ZxProdsCategoryComponent implements OnInit {
 
   formatsChanged(formats: Array<string>) {
     this.formats = formats;
+    this.currentPage = 0;
+
+    this.fetchModel();
+  }
+
+  releaseTypesChanged(releaseTypes: Array<string>) {
+    this.releaseTypes = releaseTypes;
     this.currentPage = 0;
 
     this.fetchModel();
@@ -313,6 +324,7 @@ export class ZxProdsCategoryComponent implements OnInit {
     this.languages = [];
     this.legalStatuses = [];
     this.formats = [];
+    this.releaseTypes = [];
     this.letter = '';
     this.tags = [];
     this.countries = [];

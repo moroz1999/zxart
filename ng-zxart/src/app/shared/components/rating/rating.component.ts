@@ -15,8 +15,8 @@ export class RatingComponent implements OnChanges {
   public activeStar?: number = undefined;
 
   constructor(private iconReg: SvgIconRegistryService) {
-    this.iconReg.loadSvg(`${environment.svgUrl}star.svg`, 'star').subscribe();
-    this.iconReg.loadSvg(`${environment.svgUrl}x.svg`, 'x').subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}star.svg`, 'star')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}x.svg`, 'x')?.subscribe();
   }
 
   ngOnChanges(): void {

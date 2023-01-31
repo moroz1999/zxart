@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
-import {SelectorDto, SelectorValue} from '../../models/selector-dto';
+import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {SelectorDto} from '../../models/selector-dto';
 
 @Component({
   selector: 'app-sorting-selector',
@@ -24,7 +24,7 @@ export class SortingSelectorComponent implements OnChanges {
     }
   }
 
-  dataChanged(value: string) {
-    this.sortingSelected.emit(value);
+  dataChanged() {
+    this.sortingSelected.emit(this.sorting);
   }
 }

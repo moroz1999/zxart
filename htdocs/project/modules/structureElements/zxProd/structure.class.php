@@ -28,7 +28,7 @@
  * @property array[] $splitData
  */
 class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPathInterface, CommentsHolderInterface,
-    JsonDataProvider, OpenGraphDataProviderInterface
+    JsonDataProvider, OpenGraphDataProviderInterface, ZxSoftInterface
 {
     use AuthorshipProviderTrait;
     use AuthorshipPersister;
@@ -43,6 +43,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     use GalleryInfoProviderTrait;
     use DemoCompoTypesProvider;
     use JsonDataProviderElement;
+    use ZxSoft;
 
     public $dataResourceName = 'module_zxprod';
     public $allowedTypes = [];
@@ -271,6 +272,9 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     {
         if (!$this->hasActualStructureInfo()) {
             $this->dateAdded = time();
+        }
+        if (!$this->legalStatus) {
+            $this->legalStatus = 'unknown';
         }
         parent::persistElementData();
 
@@ -586,10 +590,16 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return $hwItems;
     }
 
+
     public function getHardwareInfo()
     {
         if (!isset($this->hardwareInfo)) {
-            if (($this->hardwareInfo = $this->getCacheKey('hw' . $this->currentLanguage)) === false) {
+            /**
+             * @var languagesManager $languagesManager
+             */
+            $languagesManager = $this->getService('languagesManager');
+            $key = 'hw' . $languagesManager->getCurrentLanguageId();
+            if (($this->hardwareInfo = $this->getCacheKey($key)) === false) {
                 $this->hardwareInfo = [];
                 /**
                  * @var translationsManager $translationsManager
@@ -601,11 +611,10 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
                         'title' => $translationsManager->getTranslationByName('hardware_short.item_' . $item),
                     ];
                 }
-                $this->setCacheKey('hw' . $this->currentLanguage, $this->hardwareInfo, 24 * 60 * 60);
+                $this->setCacheKey($key, $this->hardwareInfo, 24 * 60 * 60);
             }
         }
         return $this->hardwareInfo;
-
     }
 
     public function getPublishersInfo()

@@ -8,6 +8,7 @@ class AuthorsManager extends ElementsManager
     const TABLE = 'module_author';
     protected $forceUpdateCountry = false;
     protected $forceUpdateCity = false;
+    protected $forceUpdateGroups = false;
     protected $columnRelations = [];
     protected $importedAuthors = [];
     protected $importedAuthorAliases = [];
@@ -36,6 +37,14 @@ class AuthorsManager extends ElementsManager
             'graphicsRating' => ['graphicsRating' => true, 'title' => false],
             'musicRating' => ['musicRating' => true, 'title' => false],
         ];
+    }
+
+    /**
+     * @param bool $forceUpdateGroups
+     */
+    public function setForceUpdateGroups(bool $forceUpdateGroups): void
+    {
+        $this->forceUpdateGroups = $forceUpdateGroups;
     }
 
     /**
@@ -422,7 +431,7 @@ class AuthorsManager extends ElementsManager
                 }
             }
         }
-        if (!empty($authorInfo['countryId'])) {
+        if ($this->forceUpdateCountry && !empty($authorInfo['countryId'])) {
             $countryElement = $this->getElementByImportId($authorInfo['countryId'], $origin, 'country');
             if ($countryElement && $element->country != $countryElement->id) {
                 $changed = true;
@@ -431,10 +440,11 @@ class AuthorsManager extends ElementsManager
         }
 
         if ($changed) {
+            $element->checkCountry();
             $element->persistElementData();
         }
 
-        if (isset($authorInfo['groups'])) {
+        if ($this->forceUpdateGroups && isset($authorInfo['groups'])) {
             foreach ($authorInfo['groups'] as $groupId) {
                 if ($groupElement = $this->getElementByImportId($groupId, $origin, 'group')) {
                     $this->checkAuthorship($groupElement->id, $element->getId(), 'group', []);
