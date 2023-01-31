@@ -44,15 +44,14 @@ class recalculateApplication extends controllerApplication
                 ],
                 true
             );
-
-            foreach ($this->getAuthorsList() as $key => $author) {
-                echo $key . ' ' . $author->id . ' ' . $author->title . ' start ' . memory_get_usage() . '<br/>';
-                //                $author->recalculatePicturesData();
-                //                $author->recalculateMusicData();
+		$authors = $this->getAuthorsList();
+            foreach ($authors as $key => $author) {
+                echo $key . ' ' . $author->id . ' ' . $author->title . ' ' . (memory_get_usage() / (1024*1024)) . '<br/>';
+//                $author->recalculatePicturesData();
+//                $author->recalculateMusicData();
                 $author->recalculateAuthorData();
                 echo $author->graphicsRating . ' ' . $author->musicRating . '<br/>';
                 flush();
-//                exit;
             }
         }
     }
