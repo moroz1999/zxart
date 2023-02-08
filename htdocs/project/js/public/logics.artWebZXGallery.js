@@ -9,6 +9,10 @@ window.feedbackFormLogics = new function() {
 		for (var i = 0; i < elements.length; i++) {
 			new SettingsBlockComponent(elements[i]);
 		}
+		elements = _('.flicker_image');
+		for (var i = 0; i < elements.length; i++) {
+			new FlickerImageComponent(elements[i]);
+		}
 	};
 	window.controller.addListener('initDom', initComponents);
 };
