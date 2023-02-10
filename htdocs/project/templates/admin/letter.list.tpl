@@ -5,12 +5,12 @@
 
 	<form class="content_list_form" action="{$currentElement->getFormActionURL()}" method="post" enctype="multipart/form-data">
 
-		{if $currentElement->getAllowedChildStructureTypes("showForm")}
+		{if $currentElement->getAllowedTypes("showForm")}
 			<div class='controls_block content_list_controls'>
 				<input type="hidden" value="{$rootNode->id}" name="id" />
 				<input type="hidden" class="content_list_form_action" value="deleteElements" name="action" />
 
-				{include file=$theme->template('component.buttons.tpl') allowedTypes=$currentElement->getAllowedChildStructureTypes("showForm")}
+				{include file=$theme->template('component.buttons.tpl') allowedTypes=$currentElement->getAllowedTypes("showForm")}
 			</div>
 		{/if}
 		{include file=$theme->template('shared.contentTable.tpl') contentList=$currentElement->getContentList()}
