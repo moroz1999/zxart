@@ -18,3 +18,4 @@ $moduleActions[] = 'receivePrivileges';
 $moduleActions[] = 'vote';
 $moduleActions[] = 'viewFile';
 $moduleActions[] = 'uploadScreenshot';
+$moduleActions[] = 'downloadDenied';

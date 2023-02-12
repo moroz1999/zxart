@@ -145,22 +145,24 @@
                 {/if}
 
                 {include file=$theme->template('component.links.tpl')}
-                <tr>
-                    <td class='info_table_label'>
-                        {translations name='zxrelease.downloads'}:
-                    </td>
-                    <td class='info_table_value'>
-                        {$element->downloads}
-                    </td>
-                </tr>
-                <tr>
-                    <td class='info_table_label'>
-                        {translations name='zxrelease.plays'}:
-                    </td>
-                    <td class='info_table_value'>
-                        {$element->plays}
-                    </td>
-                </tr>
+                {if $element->isDownloadable()}
+                    <tr>
+                        <td class='info_table_label'>
+                            {translations name='zxrelease.downloads'}:
+                        </td>
+                        <td class='info_table_value'>
+                            {$element->downloads}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class='info_table_label'>
+                            {translations name='zxrelease.plays'}:
+                        </td>
+                        <td class='info_table_value'>
+                            {$element->plays}
+                        </td>
+                    </tr>
+                {/if}
                 {assign var="userElement" value=$element->getUser()}
                 {if $userElement}
                     <tr>
