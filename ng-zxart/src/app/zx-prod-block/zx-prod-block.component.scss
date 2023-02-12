@@ -155,15 +155,42 @@ $fixedHeight: 192px;
   padding: $padding-md;
 }
 
+.zx-prod-bottom-top {
+  display: flex;
+  margin-bottom: $padding-sm;
+}
+
 .zx-prod-title {
   display: block;
   color: currentColor;
   font-size: $font-lg;
-  margin-bottom: $padding-sm;
   text-decoration: none;
+  flex-grow: 1;
 
   &:hover {
     text-decoration: none;
+  }
+}
+
+.zx-prod-cart {
+  flex-grow: 0;
+  display: flex;
+  padding-top: 2px;
+  margin-left: 10px;
+  svg-icon {
+    width: 25px;
+    height: 25px;
+    display: block;
+    transition: opacity 200ms ease-in-out;
+
+    &:focus,
+    &:hover {
+      opacity: 0.6;
+    }
+  }
+
+  svg {
+    fill: $yellow;
   }
 }
 

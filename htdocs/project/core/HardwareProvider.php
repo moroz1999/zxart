@@ -23,6 +23,7 @@ trait HardwareProvider
                 "pentagon2666",
                 "profi",
                 "scorpion",
+                "scorpion1024",
                 "byte",
                 "zxmphoenix",
                 "zxevolution",
@@ -78,6 +79,7 @@ trait HardwareProvider
                 'dmausc',
                 'saa',
                 'zxm',
+                'sid',
             ],
             "controls" => [
                 'cursor',
@@ -92,6 +94,8 @@ trait HardwareProvider
                 'zxpand',
                 'cache',
                 'gmx',
+		'flashcolor',
+		'ulaplus'
             ],
         ];
     }

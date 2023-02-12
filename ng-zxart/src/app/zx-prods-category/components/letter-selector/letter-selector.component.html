@@ -1,6 +1,7 @@
 <div class="letters" *ngIf="lettersSelector[0]">
   <button
     mat-button
+    class="transparent"
     *ngIf="this.selectedLetter !== ''"
     (pointerdown)="selectLetter('')"
   >{{ "prods-list.filters.letters.all" | translate }}</button>
@@ -23,7 +24,7 @@
     <button
       *ngIf="!letter.selected"
       mat-button
-      class="letter"
+      class="letter transparent"
       (pointerdown)="selectLetter(letter.value)"
     >{{letter.title}}</button>
   </ng-container>

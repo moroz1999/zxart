@@ -54,4 +54,5 @@ export interface ZxProdDto extends StructureElementDto {
   readonly userVote: number;
   readonly denyVoting?: boolean;
   readonly legalStatus?: LegalStatus;
+  readonly externalLink?: string;
 }

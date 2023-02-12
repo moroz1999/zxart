@@ -33,19 +33,19 @@ class tagsElement extends structureElement
                 array_multisort($sortParameter, SORT_ASC, $tagsList);
 
                 $controller = controller::getInstance();
-                if ($controller->getParameter('view') == 'rare') {
+                if ($controller->getParameter('filter') == 'rare') {
                     foreach ($tagsList as $element) {
                         if ($element->amount <= 1) {
                             $this->tagsList[] = $element;
                         }
                     }
-                } elseif ($controller->getParameter('view') == 'nonverified') {
+                } elseif ($controller->getParameter('filter') == 'nonverified') {
                     foreach ($tagsList as $element) {
                         if (!$element->verified) {
                             $this->tagsList[] = $element;
                         }
                     }
-                } elseif ($controller->getParameter('view') == 'duplicates') {
+                } elseif ($controller->getParameter('filter') == 'duplicates') {
                     foreach ($tagsList as $element) {
                         if ($id = $this->searchDuplicates($element)) {
                             if ($duplicate = $structureManager->getElementById($id)) {
@@ -54,7 +54,7 @@ class tagsElement extends structureElement
                             }
                         }
                     }
-                } elseif ($controller->getParameter('view') == 'untranslated') {
+                } elseif ($controller->getParameter('filter') == 'untranslated') {
                     foreach ($tagsList as $element) {
                         if ($element->detectUntranslated()) {
                             $this->tagsList[] = $element;

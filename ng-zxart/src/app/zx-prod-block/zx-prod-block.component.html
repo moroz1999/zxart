@@ -70,11 +70,20 @@
         class="zx-prod-hardware-item"
       >{{item.title}}</span>
     </span>
-    <span class="zx-prod-status" *ngIf="(model.legalStatus === 'mia' || model.legalStatus === 'unreleased') && !model.loadingImageUrl"
+    <span class="zx-prod-status"
+          *ngIf="(model.legalStatus === 'mia' || model.legalStatus === 'unreleased') && !model.loadingImageUrl"
     >{{'zx-prod.legal-status.' + model.legalStatus | translate}}</span>
   </a>
   <div class="zx-prod-bottom">
-    <a class="zx-prod-title" href="{{ model.url }}">{{ model.title }}</a>
+    <div class="zx-prod-bottom-top">
+      <a class="zx-prod-title" href="{{ model.url }}">{{ model.title }}</a>
+      <a
+        class="zx-prod-cart"
+        href="{{model.externalLink}}"
+        *ngIf="model.legalStatus==='insales' && model.externalLink"
+        target="_blank"
+      ><svg-icon name="cart"></svg-icon></a>
+    </div>
     <div *ngIf="model.groupsInfo.length">
       <ng-container *ngFor="let group of model.groupsInfo; last as last"><a [href]="group.url">{{group.title}}</a><span
         *ngIf="!last">, </span></ng-container>
@@ -122,8 +131,8 @@
         <div class="zx-prod-row-value">
           <ng-container *ngFor="let author of model.authorsInfoShort; last as last"><a
             [href]="author.url">{{author.title}}</a>
-            <ng-container *ngIf="author.roles && author.roles.length">
-              (<ng-container *ngFor="let role of author.roles; last as last2">{{"author.role." + role | translate}}<ng-container *ngIf="!last2">, </ng-container></ng-container>)</ng-container><ng-container *ngIf="!last">, </ng-container>
+            <ng-container *ngIf="author.roles && author.roles.length">(<ng-container *ngFor="let role of author.roles; last as last2">{{"author.role." + role | translate}}<ng-container *ngIf="!last2">, </ng-container></ng-container>)</ng-container>
+            <ng-container *ngIf="!last">, </ng-container>
           </ng-container>
         </div>
       </div>

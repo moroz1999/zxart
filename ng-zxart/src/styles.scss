@@ -38,3 +38,9 @@ $zxart-tree-theme: mat.define-light-theme((
 @include mat.button-toggle-theme($zxart-tree-theme);
 @include mat.button-theme($zxart-theme);
 @include mat.checkbox-theme($zxart-tree-theme);
+
+.mdc-button .mdc-button__label {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

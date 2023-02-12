@@ -1,5 +1,7 @@
 <?php return [
     'country'=>'showFullList',
+    'tags'=>'showFullList',
+    'tag'=>'showForm',
     'city'=>'showForm',
     'zxPicture'=>'showForm',
     'author'=>'showForm',

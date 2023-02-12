@@ -67,6 +67,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             "userVote" => 'getUserVote',
             "votePercent" => 'getVotePercent',
             "denyVoting" => 'denyVoting',
+            "externalLink" => 'externalLink',
         ];
     }
 
@@ -97,6 +98,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 'votes',
                 'userVote',
                 'rzx',
+                'externalLink',
             ],
             'apiShort' => [
                 'id',
@@ -125,6 +127,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 "youtubeId",
                 "denyVoting",
                 "legalStatus",
+                "externalLink",
             ],
             'search' => [
                 'id',

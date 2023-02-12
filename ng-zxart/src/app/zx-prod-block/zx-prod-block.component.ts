@@ -13,6 +13,8 @@ import {SlideInOut} from '../shared/animations/slide-in-out';
 import {ZxProdsListLayout} from '../zx-prods-category/zx-prods-category.component';
 import {ZxProdComponent} from '../shared/components/zx-prod-component';
 import {VoteService} from '../shared/services/vote.service';
+import {SvgIconRegistryService, SvgLoader} from 'angular-svg-icon';
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-zx-prod-block',
@@ -41,6 +43,7 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
     private cdr: ChangeDetectorRef,
     private element: ElementRef,
     private voting: VoteService,
+    private iconReg: SvgIconRegistryService,
   ) {
     super();
   }
@@ -48,6 +51,7 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
   ngOnInit(): void {
     this.element.nativeElement.addEventListener('pointerenter', this.enterHandler.bind(this));
     this.element.nativeElement.addEventListener('pointerleave', this.leaveHandler.bind(this));
+    this.iconReg.loadSvg(`${environment.svgUrl}cart.svg`, 'cart')?.subscribe();
   }
 
   ngOnChanges(changes: SimpleChanges) {
