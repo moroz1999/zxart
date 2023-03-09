@@ -91,11 +91,11 @@ class zxnetApplication extends controllerApplication
             if ($typeParameter == 'giga') {
                 $pictureType = ['gigascreen', 'mg8'];
             } elseif ($typeParameter == 'color') {
-                $pictureType = ['flash', 'gigascreen', 'mg8', 'sam4', 'lowresgs', 'ulaplus', 'stellar', 'nxi'];
+                $pictureType = ['flash', 'gigascreen', 'mg8', 'sam4', 'lowresgs', 'ulaplus', 'stellar', 'nxi', 'sl2'];
             } elseif ($typeParameter == 'multi') {
                 $pictureType = ['multicolor', 'multicolor4', 'timex81', 'bmc4', 'mc', 'mlt', 'mg1', 'mg2', 'mg4'];
             } elseif ($typeParameter == 'pixel') {
-                $pictureType = ['tricolor', 'sam4', 'zxevo', 'sxg', 'nxi'];
+                $pictureType = ['tricolor', 'sam4', 'zxevo', 'sxg', 'nxi', 'sl2'];
             } elseif ($typeParameter == 'lowres') {
                 $pictureType = ['attributes', 'lowresgs', 'stellar'];
             } else {

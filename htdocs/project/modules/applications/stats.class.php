@@ -28,6 +28,13 @@ class statsApplication extends controllerApplication
     {
         ini_set("memory_limit", "2048M");
         ini_set("max_execution_time", "7200");
+
+        $this->aggregate();
+        $this->checkINodes();
+    }
+
+    public function aggregate()
+    {
         $eventsLog = $this->getService('eventsLog');
         $todayStart = strtotime("today");
 
@@ -51,5 +58,30 @@ class statsApplication extends controllerApplication
 
         $eventsLog->aggregateEvents('tagAdded', $todayStart, 'userId');
         $eventsLog->deleteEvents('tagAdded', $todayStart);
+    }
+
+    public function checkINodes()
+    {
+        $path = $this->getService('PathsManager')->getPath('zxCache');
+        $this->clearInodes($path);
+        $path = $this->getService('PathsManager')->getPath('imagesCache');
+        $this->clearInodes($path);
+    }
+
+    private function clearInodes($path)
+    {
+        if (is_dir($path)) {
+            $iterator = new FilesystemIterator($path, FilesystemIterator::SKIP_DOTS);
+            $count = iterator_count($iterator);
+            echo($path . ' ' . $count);
+            foreach ($iterator as $file) {
+                if ($count > 30000) {
+                    $count--;
+                    unlink($file);
+                } else {
+                    break;
+                }
+            }
+        }
     }
 }

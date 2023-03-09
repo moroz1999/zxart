@@ -159,11 +159,7 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
 
     public function checkIfReconversionNeeded()
     {
-        if ($this->fileName && (!$this->mp3Name || ($this->getChannelsType(
-                    ) != $this->conversionChannelsType || $this->getChipType(
-                    ) != $this->conversionChipType || $this->getFrequency(
-                    ) != $this->conversionFrequency || $this->getIntFrequency(
-                    ) != $this->conversionIntFrequency) && $this->hasChipChannelsType())) {
+        if ($this->fileName && (!$this->mp3Name || ($this->getChannelsType() != $this->conversionChannelsType || $this->getChipType() != $this->conversionChipType || $this->getFrequency() != $this->conversionFrequency || $this->getIntFrequency() != $this->conversionIntFrequency) && $this->hasChipChannelsType())) {
             $linksManager = $this->getService('linksManager');
             if ($parentIds = $linksManager->getConnectedIdList($this->id, 'ayTrack', 'child')) {
                 $parentId = reset($parentIds);
@@ -415,11 +411,12 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
 
     public function getOpenGraphData()
     {
-
         $languagesManager = $this->getService('LanguagesManager');
         $data = [
             'title' => $this->getMetaTitle(),
             'url' => $this->getUrl(),
+            'type' => 'music:song',
+            'og:audio' => $this->getMp3FilePath(),
             'image' => '/project/images/public/logo_og.png',
             'description' => $this->getMetaDescription(),
             'locale' => $languagesManager->getCurrentLanguage()->iso6391,

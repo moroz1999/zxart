@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Database\Connection;
+use Illuminate\Database\Query\Builder;
+
 class SpeccyMapsManager extends errorLogger
 {
     protected $urls = [
@@ -14,6 +17,7 @@ class SpeccyMapsManager extends errorLogger
     protected $rootUrl = 'https://maps.speccy.cz/';
     protected $prodsIndex;
     private $counter = 0;
+    protected Connection $db;
 
     /**
      * @param mixed $prodsManager
@@ -23,6 +27,11 @@ class SpeccyMapsManager extends errorLogger
         $this->prodsManager = $prodsManager;
         $this->prodsManager->setUpdateExistingProds(true);
         $this->prodsManager->setAddImages(true);
+    }
+
+    public function setDb(Connection $db)
+    {
+        $this->db = $db;
     }
 
     public function importAll()
@@ -59,11 +68,12 @@ class SpeccyMapsManager extends errorLogger
                 $info = parse_url($mapUrl);
                 parse_str($info['query'], $output);
                 $id = $output['id'];
-
-                $this->downloadProd($mapUrl, $id);
+                if (!$this->mapExists($id)) {
+                    $this->downloadProd($mapUrl, $id);
 //                if ($this->counter >= 10) {
 //                    break;
 //                }
+                }
             }
             foreach ($this->prodsIndex as $key => $prodInfo2) {
                 if ($prodElement = $this->prodsManager->importProd($prodInfo2, $this->origin)) {
@@ -74,6 +84,11 @@ class SpeccyMapsManager extends errorLogger
             }
             $this->markProgress('end of prods index');
         }
+    }
+
+    private function mapExists($id)
+    {
+        return $this->db->table('import_origin')->where('importId', '=', $id)->first();
     }
 
     private function downloadProd($pageUrl, $mapsId)

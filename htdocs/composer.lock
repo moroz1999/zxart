@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "artweb-ou/trickster-cms",
-            "version": "4.2.6",
+            "version": "4.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/artweb-ou/trickster-cms.git",
-                "reference": "b8326e5cee910b189e48c84552639fe261728e71"
+                "reference": "b53b95b34d045fcf4b9a7a99ae77c8bd5e9d2612"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artweb-ou/trickster-cms/zipball/b8326e5cee910b189e48c84552639fe261728e71",
-                "reference": "b8326e5cee910b189e48c84552639fe261728e71",
+                "url": "https://api.github.com/repos/artweb-ou/trickster-cms/zipball/b53b95b34d045fcf4b9a7a99ae77c8bd5e9d2612",
+                "reference": "b53b95b34d045fcf4b9a7a99ae77c8bd5e9d2612",
                 "shasum": ""
             },
             "require": {
@@ -48,9 +48,9 @@
             "description": "Trickster CMS packages",
             "support": {
                 "issues": "https://github.com/artweb-ou/trickster-cms/issues",
-                "source": "https://github.com/artweb-ou/trickster-cms/tree/4.2.6"
+                "source": "https://github.com/artweb-ou/trickster-cms/tree/4.2.7"
             },
-            "time": "2022-11-13T16:04:13+00:00"
+            "time": "2023-01-21T14:00:07+00:00"
         },
         {
             "name": "ckeditor/ckeditor",
@@ -418,16 +418,16 @@
         },
         {
             "name": "jaybizzle/crawler-detect",
-            "version": "v1.2.112",
+            "version": "v1.2.113",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JayBizzle/Crawler-Detect.git",
-                "reference": "2c555ce35a07a5c1c808cee7d5bb52c41a4c7b2f"
+                "reference": "6710b75871da2b718550c2bc33388315a3b20151"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/2c555ce35a07a5c1c808cee7d5bb52c41a4c7b2f",
-                "reference": "2c555ce35a07a5c1c808cee7d5bb52c41a4c7b2f",
+                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/6710b75871da2b718550c2bc33388315a3b20151",
+                "reference": "6710b75871da2b718550c2bc33388315a3b20151",
                 "shasum": ""
             },
             "require": {
@@ -464,9 +464,9 @@
             ],
             "support": {
                 "issues": "https://github.com/JayBizzle/Crawler-Detect/issues",
-                "source": "https://github.com/JayBizzle/Crawler-Detect/tree/v1.2.112"
+                "source": "https://github.com/JayBizzle/Crawler-Detect/tree/v1.2.113"
             },
-            "time": "2022-10-05T21:52:44+00:00"
+            "time": "2023-02-02T21:01:40+00:00"
         },
         {
             "name": "kylekatarnls/update-helper",
@@ -798,16 +798,16 @@
         },
         {
             "name": "moroz1999/zx-image",
-            "version": "5.5.2",
+            "version": "5.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/moroz1999/zx-image.git",
-                "reference": "70d638a720539af26bb72b7bb943133339ca7838"
+                "reference": "c6abbd9650e3518564358f201326f4182897fc61"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/moroz1999/zx-image/zipball/70d638a720539af26bb72b7bb943133339ca7838",
-                "reference": "70d638a720539af26bb72b7bb943133339ca7838",
+                "url": "https://api.github.com/repos/moroz1999/zx-image/zipball/c6abbd9650e3518564358f201326f4182897fc61",
+                "reference": "c6abbd9650e3518564358f201326f4182897fc61",
                 "shasum": ""
             },
             "require": {
@@ -837,9 +837,9 @@
             ],
             "support": {
                 "issues": "https://github.com/moroz1999/zx-image/issues",
-                "source": "https://github.com/moroz1999/zx-image/tree/5.5.2"
+                "source": "https://github.com/moroz1999/zx-image/tree/5.6.0"
             },
-            "time": "2022-07-28T13:12:39+00:00"
+            "time": "2023-02-13T19:52:38+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -1289,16 +1289,16 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v5.4.17",
+            "version": "v5.4.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
-                "reference": "052ef49b660f9ad2a3adb311c555c9bc11ba61f4"
+                "reference": "f4a7d150f5b9e8f974f6f127d8167e420d11fc62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/052ef49b660f9ad2a3adb311c555c9bc11ba61f4",
-                "reference": "052ef49b660f9ad2a3adb311c555c9bc11ba61f4",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/f4a7d150f5b9e8f974f6f127d8167e420d11fc62",
+                "reference": "f4a7d150f5b9e8f974f6f127d8167e420d11fc62",
                 "shasum": ""
             },
             "require": {
@@ -1335,7 +1335,7 @@
             "description": "Converts CSS selectors to XPath expressions",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/css-selector/tree/v5.4.17"
+                "source": "https://github.com/symfony/css-selector/tree/v5.4.19"
             },
             "funding": [
                 {
@@ -1351,7 +1351,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-12-23T11:40:44+00:00"
+            "time": "2023-01-01T08:32:19+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",

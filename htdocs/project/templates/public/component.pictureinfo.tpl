@@ -34,16 +34,10 @@
 			{translations name='field.format'}:
 		</td>
 		<td class='info_table_value'>
-			{if $element->type === 'chr$'}
-				{assign "formatname" 'field.format_chr'}
-			{else}
-				{assign "formatname" 'field.format_'|cat:$element->type}
-			{/if}
-
 			{if isset($picturesDetailedSearchElement)}
-				<a href="{$picturesDetailedSearchElement->URL}pictureType:{$element->type}/">{translations name=$formatname}</a>
+				<a href="{$picturesDetailedSearchElement->URL}pictureType:{$element->type}/">{translations name=$element->getZxPictureTypeTranslation($element->type)}</a>
 			{else}
-				{translations name=$formatname}
+				{translations name=$element->getZxPictureTypeTranslation($element->type)}
 			{/if}
 		</td>
 	</tr>

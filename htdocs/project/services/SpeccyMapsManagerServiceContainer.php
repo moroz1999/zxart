@@ -14,14 +14,10 @@ class SpeccyMapsManagerServiceContainer extends DependencyInjectionServiceContai
     public function makeInjections($instance)
     {
         $speccyMapsManager = $instance;
-        /**
-         * @var ProdsManager $prodsManager
-         */
-        if ($prodsManager = $this->getOption('ProdsManager')) {
-            $speccyMapsManager->setProdsManager($prodsManager);
-        } else {
-            $speccyMapsManager->setProdsManager($this->registry->getService('ProdsManager'));
-        }
+
+        $this->injectService($speccyMapsManager, 'ProdsManager');
+        $this->injectService($speccyMapsManager, 'db');
+
         return $speccyMapsManager;
     }
 }

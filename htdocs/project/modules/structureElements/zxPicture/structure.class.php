@@ -16,6 +16,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
 {
     use PaletteTypesProvider;
     use GraphicsCompoProvider;
+    use ZxPictureTypesProvider;
 
     const TAG_LOADINGSCREEN = "Loading Screen";
     const TAG_GAMEGRAPHICS = "Game graphics";
@@ -172,22 +173,10 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
                 $extension = '.flash.scr';
             } elseif ($type == 'tricolor') {
                 $extension = '.3';
-            } elseif ($type == 'mg1') {
-                $extension = '.mg1';
-            } elseif ($type == 'mg2') {
-                $extension = '.mg2';
-            } elseif ($type == 'mg4') {
-                $extension = '.mg4';
-            } elseif ($type == 'mg8') {
-                $extension = '.mg8';
             } elseif ($type == 'multicolor') {
                 $extension = '.ifl';
             } elseif ($type == 'multicolor4') {
                 $extension = '.ifl';
-            } elseif ($type == 'mc') {
-                $extension = '.mc';
-            } elseif ($type == 'mlt') {
-                $extension = '.mlt';
             } elseif ($type == 'attributes') {
                 $extension = '.atr';
             } elseif ($type == 'lowresgs') {
@@ -202,22 +191,14 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
                 $extension = '.hrg';
             } elseif ($type == 'sam4') {
                 $extension = '.ss4';
-            } elseif ($type == 'bsc') {
-                $extension = '.bsc';
-            } elseif ($type == 'bsp') {
-                $extension = '.bsp';
-            } elseif ($type == 'bmc4') {
-                $extension = '.bmc4';
             } elseif ($type == 'ulaplus') {
                 $extension = '.ulaplus.scr';
             } elseif ($type == 'zxevo') {
                 $extension = '.bmp';
-            } elseif ($type == 'sxg') {
-                $extension = '.sxg';
             } elseif ($type == 'stellar') {
                 $extension = '.stl';
-            } elseif ($type == 'nxi') {
-                $extension = '.nxi';
+            } else {
+                $extension = '.' . $type;
             }
         } elseif ($extensionType == 'exe') {
             if ($this->exeFileName) {
@@ -453,13 +434,15 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
             }
         }
     }
+
     public function getOpenGraphData()
     {
         $languagesManager = $this->getService('LanguagesManager');
         $data = [
             'title' => $this->getMetaTitle(),
             'url' => $this->getUrl(),
-            'image' => $this->getImageUrl(),
+            'type' => 'article',
+            'image' => $this->getImageUrl(2),
             'description' => $this->getMetaDescription(),
             'locale' => $languagesManager->getCurrentLanguage()->iso6391,
         ];

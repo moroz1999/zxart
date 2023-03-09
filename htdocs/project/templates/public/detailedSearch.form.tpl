@@ -67,92 +67,12 @@
 						
 						<td class='form_field'>
 							<select class='detailedsearch_picturetype dropdown_placeholder' name='{$formNames.pictureType}'>
-								<option value="" {if $formData.pictureType == ''}selected="selected"{/if}>{translations name='detailedsearch.alltypes'}</option>
-								<option value="standard" {if $formData.pictureType == 'standard'}selected="selected"{/if}>
-									Standard (.scr)
-								</option>
-								<option value="flash" {if $formData.pictureType == 'flash'}selected="selected"{/if}>
-									Flash
-								</option>
-								<option value="monochrome" {if $formData.pictureType == 'monochrome'}selected="selected"{/if}>
-									Monochrome (6144)
-								</option>
-								<option value="tricolor" {if $formData.pictureType == 'tricolor'}selected="selected"{/if}>
-									Tricolor RGB(.+)
-								</option>
-								<option value="multicolor" {if $formData.pictureType == 'multicolor'}selected="selected"{/if}>
-									Multicolor (8*2)
-								</option>
-								<option value="multicolor4" {if $formData.pictureType == 'multicolor4'}selected="selected"{/if}>
-									Multicolor (8*4)
-								</option>
-								<option value="timex81" {if $formData.pictureType == 'timex81'}selected="selected"{/if}>
-									Timex (8*1)
-								</option>
-								<option value="timexhr" {if $formData.pictureType == 'timexhr'}selected="selected"{/if}>
-									Timex hi-res 512*192 (12289)
-								</option>
-								<option value="timexhrg" {if $formData.pictureType == 'timexhrg'}selected="selected"{/if}>
-									Timex hi-res Gigascreen 512*192 (24578)
-								</option>
-								<option value="sam4" {if $formData.pictureType == 'sam4'}selected="selected"{/if}>
-									Sam Coupe mode 4
-								</option>
-								<option value="bsc" {if $formData.pictureType == 'bsc'}selected="selected"{/if}>
-									BSC
-								</option>
-								<option value="bsp" {if $formData.pictureType == 'bsp'}selected="selected"{/if}>
-									BSP
-								</option>
-								<option value="bmc4" {if $formData.pictureType == 'bmc4'}selected="selected"{/if}>
-									BMC4
-								</option>
-								<option value="mlt" {if $formData.pictureType == 'mlt'}selected="selected"{/if}>
-									Multicolor (.mlt 8*1)
-								</option>
-								<option value="mc" {if $formData.pictureType == 'mc'}selected="selected"{/if}>
-									Multicolor (.mc 8*1)
-								</option>
-								<option value="gigascreen" {if $formData.pictureType == 'gigascreen'}selected="selected"{/if}>
-									Gigascreen (.img)
-								</option>
-								<option value="mg1" {if $formData.pictureType == 'mg1'}selected="selected"{/if}>
-									Multiartist (.mg1)
-								</option>
-								<option value="mg2" {if $formData.pictureType == 'mg2'}selected="selected"{/if}>
-									Multiartist (.mg2)
-								</option>
-								<option value="mg4" {if $formData.pictureType == 'mg4'}selected="selected"{/if}>
-									Multiartist (.mg4)
-								</option>
-								<option value="mg8" {if $formData.pictureType == 'mg8'}selected="selected"{/if}>
-									Multiartist (.mg8)
-								</option>
-								<option value="attributes" {if $formData.pictureType == 'attributes'}selected="selected"{/if}>
-									Attributes (768)
-								</option>
-								<option value="lowresgs" {if $formData.pictureType == 'lowresgs'}selected="selected"{/if}>
-									Attributes Gigascreen (1628)
-								</option>
-								<option value='stellar' {if $formData.pictureType=='stellar'}selected='selected'{/if}>
-									Stellar Mode (lowres multicolor+gigascreen 64*48)
-								</option>
-								<option value="chr$" {if $formData.pictureType == 'chr$'}selected="selected"{/if}>
-									CHR$
-								</option>
-								<option value="ulaplus" {if $formData.pictureType == 'ulaplus'}selected="selected"{/if}>
-									ULA+
-								</option>
-								<option value='zxevo' {if $formData.pictureType=='zxevo'}selected='selected'{/if}>
-									ZX Evolution (BMP)
-								</option>
-								<option value='sxg' {if $formData.pictureType=='sxg'}selected='selected'{/if}>
-									ZX Evolution (SXG)
-								</option>
-								<option value='grf' {if $formData.pictureType=='grf'}selected='selected'{/if}>
-									Profi (GRF)
-								</option>
-								<option value='nxi' {if $formData.pictureType=='nxi'}selected='selected'{/if}>ZX Spectrum Next (nxi)</option>
+								<option value="" {if $formData.pictureType === ''}selected="selected"{/if}>{translations name='detailedsearch.alltypes'}</option>
+								{foreach $element->getZxPictureTypes() as $type=>$translation}
+									<option value="{$type}" {if $formData.pictureType === $type}selected="selected"{/if}>
+										{translations name=$element->getZxPictureTypeTranslation($type)}
+									</option>
+								{/foreach}
 							</select>
 						</td>
 					</tr>

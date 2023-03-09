@@ -3,6 +3,7 @@
 class detailedSearchElement extends structureElement
 {
     use LocationProviderTrait;
+    use ZxPictureTypesProvider;
 
     public $dataResourceName = 'module_detailedsearch';
     public $defaultActionName = 'show';

@@ -119,35 +119,11 @@
 			</td>
 			<td class="form_field">
 				<select class="dropdown_placeholder" name="{$formNames.type}" >
-					<option value='standard' {if $formData.type=='standard'}selected='selected'{/if}>Standard</option>
-					<option value='gigascreen' {if $formData.type=='gigascreen'}selected='selected'{/if}>Gigascreen (img)</option>
-					<option value='monochrome' {if $formData.type=='monochrome'}selected='selected'{/if}>Monochrome (6144)</option>
-					<option value='flash' {if $formData.type=='flash'}selected='selected'{/if}>Flash</option>
-					<option value='tricolor' {if $formData.type=='tricolor'}selected='selected'{/if}>Tricolor RGB(.+)</option>
-					<option value='mg1' {if $formData.type=='mg1'}selected='selected'{/if}>Multiartist (.mg1)</option>
-					<option value='mg2' {if $formData.type=='mg2'}selected='selected'{/if}>Multiartist (.mg2)</option>
-					<option value='mg4' {if $formData.type=='mg4'}selected='selected'{/if}>Multiartist (.mg4)</option>
-					<option value='mg8' {if $formData.type=='mg8'}selected='selected'{/if}>Multiartist (.mg8)</option>
-					<option value='mlt' {if $formData.type=='mlt'}selected='selected'{/if}>Multicolor (.mlt 8*1)</option>
-					<option value='mc' {if $formData.type=='mc'}selected='selected'{/if}>Multicolor (.mc 8*1)</option>
-					<option value='multicolor' {if $formData.type=='multicolor'}selected='selected'{/if}>Multicolor (8*2)</option>
-					<option value='multicolor4' {if $formData.type=='multicolor4'}selected='selected'{/if}>Multicolor (8*4)</option>
-					<option value='attributes' {if $formData.type=='attributes'}selected='selected'{/if}>Attributes (768)</option>
-					<option value='lowresgs' {if $formData.type=='lowresgs'}selected='selected'{/if}>Lowres Gigascreen (1628)</option>
-					<option value='stellar' {if $formData.type=='stellar'}selected='selected'{/if}>Stellar Mode (lowres multicolor+gigascreen 64*48)</option>
-					<option value='chr$' {if $formData.type=='chr$'}selected='selected'{/if}>CHR$ (ch$)</option>
-					<option value='timex81' {if $formData.type=='timex81'}selected='selected'{/if}>timex 8*1 (12288)</option>
-					<option value='timexhr' {if $formData.type=='timexhr'}selected='selected'{/if}>Timex hi-res 512*192 (12289)</option>
-					<option value='timexhrg' {if $formData.type=='timexhrg'}selected='selected'{/if}>Timex hi-res Gigascreen 512*192 (24578)</option>
-					<option value='sam4' {if $formData.type=='sam4'}selected='selected'{/if}>Sam Coupe mode 4 (.ss4)</option>
-					<option value='bsc' {if $formData.type=='bsc'}selected='selected'{/if}>BSC (11136)</option>
-					<option value='bsp' {if $formData.type=='bsp'}selected='selected'{/if}>BSP</option>
-					<option value='bmc4' {if $formData.type=='bmc4'}selected='selected'{/if}>BMC4 (11904)</option>
-					<option value='ulaplus' {if $formData.type=='ulaplus'}selected='selected'{/if}>ULA+ (6976)</option>
-					<option value='zxevo' {if $formData.type=='zxevo'}selected='selected'{/if}>ZX Evolution (BMP)</option>
-					<option value='sxg' {if $formData.type=='sxg'}selected='selected'{/if}>ZX Evolution (SXG)</option>
-					<option value='nxi' {if $formData.type=='nxi'}selected='selected'{/if}>ZX Spectrum Next (nxi)</option>
-					<option value='grf' {if $formData.type=='grf'}selected='selected'{/if}>Profi (grf)</option>
+					{foreach $element->getZxPictureTypes() as $type=>$translation}
+						<option value="{$type}" {if $formData.type === $type}selected="selected"{/if}>
+							{translations name=$element->getZxPictureTypeTranslation($type)}
+						</option>
+					{/foreach}
 				</select>
 				{include file=$theme->template('component.form_help.tpl') structureType='zxPicture' name="type"}
 			</td>

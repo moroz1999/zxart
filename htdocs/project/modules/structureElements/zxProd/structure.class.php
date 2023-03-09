@@ -767,12 +767,12 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
 
     public function getOpenGraphData()
     {
-
         $languagesManager = $this->getService('LanguagesManager');
         $data = [
             'title' => $this->getMetaTitle(),
             'url' => $this->getUrl(),
-            'image' => $this->getImage() ? $this->getImage()->getImageUrl() : '',
+            'type' => 'article',
+            'image' => $this->getImage() ? $this->getImage()->getImageUrl('full', false, true) : '',
             'description' => $this->getMetaDescription(),
             'locale' => $languagesManager->getCurrentLanguage()->iso6391,
         ];

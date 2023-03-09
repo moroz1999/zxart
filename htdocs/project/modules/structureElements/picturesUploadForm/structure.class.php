@@ -5,6 +5,7 @@ class picturesUploadFormElement extends ZxArtItemUploadFormElement
     use GraphicsCompoProvider;
     use AuthorElementsProviderTrait;
     use PartyElementProviderTrait;
+    use ZxPictureTypesProvider;
 
     public $languagesParentElementMarker = 'adminLanguages';
     public $dataResourceName = 'module_generic';

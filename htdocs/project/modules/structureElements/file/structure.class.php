@@ -55,20 +55,21 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         return $this->fileName;
     }
 
-    public function getImageUrl($preset = 'adminImage', $mobile = false)
+    public function getImageUrl($preset = 'original', $mobile = false, $full = false, $zoom = 1)
     {
-        $full = false;
         if (stripos($preset, 'full') !== false) {
             $full = true;
-            $zoom = 3;
-        } else {
-            $zoom = 1;
+            $zoom = 2;
         }
         $controller = $this->getService('controller');
         if (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'scr')) {
             $url = $controller->baseURL . 'zxscreen/type:standard/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
         } elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'img')) {
             $url = $controller->baseURL . 'zxscreen/type:gigascreen/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
+        } elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'nxi')) {
+            $url = $controller->baseURL . 'zxscreen/type:nxi/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
+        } elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'sl2')) {
+            $url = $controller->baseURL . 'zxscreen/type:sl2/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
         } elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'ssx')) {
             $url = $controller->baseURL . 'zxscreen/type:ssx/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
         } elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'mlt')) {

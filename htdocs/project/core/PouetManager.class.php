@@ -86,6 +86,7 @@ class PouetManager extends errorLogger
         'intro coding' => 'intro_code',
         'hype intro coding' => 'intro_code',
         'intro' => 'intro_code',
+        'directing' => 'direction',
         'direction' => 'direction',
         'jingles for hype and album intros' => 'music',
         '1-bit / beeper music' => 'music',
