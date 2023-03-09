@@ -94,10 +94,9 @@ trait HardwareProvider
                 'zxpand',
                 'cache',
                 'gmx',
-		'flashcolor',
-		'ulaplus'
+                'flashcolor',
+                'ulaplus'
             ],
         ];
     }
-
 }

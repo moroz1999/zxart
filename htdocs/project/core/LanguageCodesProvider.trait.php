@@ -10,6 +10,7 @@ trait LanguageCodesProviderTrait
             "by",
             "ca",
             "cs",
+            "cz",
             "da",
             "de",
             "el",
