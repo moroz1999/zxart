@@ -12,6 +12,10 @@ class publicAddParty extends structureElementAction
             if ($structureElement->structureName == '') {
                 $structureElement->structureName = $structureElement->title;
             }
+			if (!is_null($structureElement->getDataChunk("image")->originalName)) {
+				$structureElement->image = $structureElement->id;
+				$structureElement->originalName = $structureElement->getDataChunk("image")->originalName;
+			}
 
             $structureElement->persistElementData();
 
@@ -39,7 +43,8 @@ class publicAddParty extends structureElementAction
             'structureName',
             'city',
             'country',
-        ];
+			'image',
+		];
     }
 
     public function setValidators(&$validators)

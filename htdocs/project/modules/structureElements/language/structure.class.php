@@ -356,7 +356,8 @@ class languageElement extends structureElement implements MetadataProviderInterf
         $linkType = 'structure',
         $allowedTypes = null,
         $restrictLinkTypes = false
-    ) {
+    )
+    {
         $controller = controller::getInstance();
         $applicationName = $controller->getApplicationName();
         // TODO: perhaps check for admin app instead
@@ -510,6 +511,10 @@ class languageElement extends structureElement implements MetadataProviderInterf
         return $result;
     }
 
+    public function clearCommentsCache()
+    {
+        $this->deleteCache('lc');
+    }
 
     public function getLatestComments($limit = 4)
     {
