@@ -65,6 +65,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
                         } else {
                             $pictureElement->author = $structureElement->author;
                         }
+                        $pictureElement->originalAuthor = $structureElement->originalAuthor;
                         $pictureElement->dateAdded = $pictureElement->dateCreated;
                         $pictureElement->userId = $this->getService('user')->id;
 
@@ -78,6 +79,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
 
                         $pictureElement->renewPartyLink();
                         $pictureElement->renewAuthorLink();
+                        $pictureElement->renewOriginalAuthorLink();
                         $pictureElement->updateProdLink();
                         $pictureElement->updateTagsInfo();
                         $pictureElement->updateYear();
@@ -140,6 +142,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
             'game',
             'compo',
             'author',
+            'originalAuthor',
             'year',
             'party',
             'partyplace',

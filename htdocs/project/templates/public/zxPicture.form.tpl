@@ -43,6 +43,7 @@
 			</td>
 			<td class="form_field">
 				<select class="dropdown_placeholder" name="{$formNames.compo}" >
+					<option value=''></option>
 					{foreach $element->getCompoTypes() as $compoType}
 						<option value='{$compoType}' {if $compoType == $formData.compo}selected='selected'{/if}>{translations name="zxPicture.compo_{$compoType}"}</option>
 					{/foreach}
