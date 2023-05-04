@@ -151,6 +151,7 @@ class PouetManager extends errorLogger
         'chiptune music' => 'music',
         'music (cover)' => 'music',
         'digital music' => 'music',
+        'digital sound' => 'music',
         'graphics (logo)' => 'logo',
         'logos' => 'logo',
         'logo' => 'logo',
