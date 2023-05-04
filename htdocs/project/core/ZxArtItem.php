@@ -16,6 +16,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
     use CommentsTrait;
     use MetadataProviderTrait;
 
+    protected $originalAuthors;
     protected $userVote;
     protected $authorIds;
     protected $votesList;
@@ -138,17 +139,19 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
 
     public function renewAuthorLink()
     {
+        $linkType = $this->authorLinkType;
+
         $linksManager = $this->getService('linksManager');
 
         $compiledLinks = [];
-        $elementLinks = $linksManager->getElementsLinks($this->id, $this->authorLinkType, 'child');
+        $elementLinks = $linksManager->getElementsLinks($this->id, $linkType, 'child');
         foreach ($elementLinks as $link) {
             $compiledLinks[$link->parentStructureId] = $link;
         }
 
         foreach ($this->author as $authorId) {
             if (!isset($compiledLinks[$authorId])) {
-                $linksManager->linkElements($authorId, $this->id, $this->authorLinkType);
+                $linksManager->linkElements($authorId, $this->id, $linkType);
             }
             unset($compiledLinks[$authorId]);
         }
@@ -521,4 +524,60 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
     {
         return $this->year;
     }
+
+    /**
+     * returns list of authors and aliases directly connected to zxItem
+     *
+     * @return authorElement[]|authorAliasElement[]
+     */
+    public function getOriginalAuthorsList()
+    {
+        if ($this->originalAuthors === null) {
+            $cache = $this->getElementsListCache('oal', 60 * 60);
+            if (($this->originalAuthors = $cache->load()) === false) {
+                $structureManager = $this->getService('structureManager');
+                $this->originalAuthors = [];
+
+                $originalAuthorIds = $this->getService('linksManager')->getConnectedIdList(
+                    $this->id,
+                    "originalAuthor",
+                    'child'
+                );
+
+                foreach ($originalAuthorIds as $authorId) {
+                    if ($author = $structureManager->getElementById($authorId)) {
+                        $this->originalAuthors[] = $author;
+                    }
+                }
+
+                $cache->save($this->originalAuthors);
+            }
+        }
+        return $this->originalAuthors;
+    }
+
+    public function renewOriginalAuthorLink()
+    {
+        $linkType = "originalAuthor";
+
+        $linksManager = $this->getService('linksManager');
+
+        $compiledLinks = [];
+        $elementLinks = $linksManager->getElementsLinks($this->id, $linkType, 'child');
+        foreach ($elementLinks as $link) {
+            $compiledLinks[$link->parentStructureId] = $link;
+        }
+
+        foreach ($this->originalAuthor as $authorId) {
+            if (!isset($compiledLinks[$authorId])) {
+                $linksManager->linkElements($authorId, $this->id, $linkType);
+            }
+            unset($compiledLinks[$authorId]);
+        }
+
+        foreach ($compiledLinks as $link) {
+            $link->delete();
+        }
+    }
+
 }

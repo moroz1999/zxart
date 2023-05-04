@@ -29,6 +29,24 @@
 			{/foreach}
 		</td>
 	</tr>
+	{if $originalAuthors = $element->getOriginalAuthorsList()}
+	<tr>
+		<td class='info_table_label'>
+			{translations name='zxPicture.original_author'}:
+		</td>
+		<td class='info_table_value'>
+			{foreach from=$originalAuthors item=author name=authors}
+				<a href='{$author->getUrl()}'>{$author->title}</a>
+				{if $author->structureType == 'authorAlias'}
+					{if $realAuthor = $author->getAuthorElement()}
+						(<a href='{$realAuthor->getUrl()}'>{$realAuthor->title}</a>)
+					{/if}
+				{/if}
+				{if !$smarty.foreach.authors.last}, {/if}
+			{/foreach}
+		</td>
+	</tr>
+	{/if}
 	<tr>
 		<td class='info_table_label'>
 			{translations name='field.format'}:

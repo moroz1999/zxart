@@ -61,6 +61,7 @@ class publicReceiveZxPicture extends structureElementAction
 
             $structureElement->renewPartyLink();
             $structureElement->renewAuthorLink();
+            $structureElement->renewOriginalAuthorLink();
             $structureElement->updateProdLink();
             $structureElement->updateTagsInfo();
             $structureElement->updateYear();
@@ -82,6 +83,7 @@ class publicReceiveZxPicture extends structureElementAction
             'game',
             'compo',
             'author',
+            'originalAuthor',
             'year',
             'party',
             'partyplace',

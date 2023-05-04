@@ -43,6 +43,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         $moduleStructure['compo'] = 'text';
         $moduleStructure['game'] = 'text';
         $moduleStructure['author'] = 'numbersArray';
+        $moduleStructure['originalAuthor'] = 'numbersArray';
         $moduleStructure['type'] = 'text';
         $moduleStructure['year'] = 'text';
         $moduleStructure['votes'] = 'floatNumber';

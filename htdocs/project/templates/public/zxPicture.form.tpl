@@ -66,6 +66,22 @@
 				{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="author"}
 			</td>
 		</tr>
+		<tr {if $formErrors.originalAuthor} class="form_error"{/if}>
+			<td class="form_label">
+				{translations name='zxPicture.original_author'}:
+			</td>
+			<td class="form_field">
+				<select class="select_multiple zxitem_form_authors_select" multiple="multiple" name="{$formNames.originalAuthor}[]" autocomplete='off'>
+					<option value=''></option>
+					{foreach from=$element->getOriginalAuthorsList() item=originalAuthor}
+						<option value='{$originalAuthor->id}' selected="selected">
+							{$originalAuthor->title}
+						</option>
+					{/foreach}
+				</select>
+				{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="originalAuthor"}
+			</td>
+		</tr>
 		<tr {if $formErrors.game} class="form_error"{/if}>
 			<td class="form_label">
 				{translations name='zxpicture.release'}:
