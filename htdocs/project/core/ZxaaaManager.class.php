@@ -32,7 +32,7 @@ class ZxaaaManager extends errorLogger
     protected $hwWords = [
         '(NeoGS)' => 'ngs',
         '(Pentagon)' => 'pentagon128',
-        '(Covox)' => 'covox',
+        '(Covox)' => 'covoxfb',
         '(ATM Turbo 2+)' => 'atm2',
         '(ATM Turbo)' => 'atm',
         '(Pentagon 1024SL v2.x)' => 'pentagon1024',

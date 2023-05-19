@@ -471,7 +471,7 @@ class VtrdosManager extends errorLogger
         $hwIndex = [
             '(km)' => 'kempstonmouse',
             '(kemp8bit)' => 'kempston8b',
-            '(cvx)' => 'covox',
+            '(cvx)' => 'covoxfb',
             '(dma)' => 'dmausc',
             '(gs)' => 'gs',
             '(sd)' => 'soundrive',
@@ -489,7 +489,7 @@ class VtrdosManager extends errorLogger
             'Byte' => 'byte',
             'ATM Turbo' => 'atm',
             'smuc' => 'smuc',
-            'Covox' => 'covox',
+            'Covox' => 'covoxfb',
             'General Sound' => 'gs',
             'Cache' => 'Cache',
             'SounDrive' => 'soundrive',
