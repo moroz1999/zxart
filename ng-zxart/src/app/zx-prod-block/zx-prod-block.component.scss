@@ -166,6 +166,8 @@ $fixedHeight: 192px;
   font-size: $font-lg;
   text-decoration: none;
   flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   &:hover {
     text-decoration: none;

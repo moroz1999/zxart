@@ -78,7 +78,7 @@ class randomTuneApplication extends controllerApplication
 
             $parameters = [
                 'zxMusicNotVotedBy' => [$currentUser->id],
-                'zxMusicBestVotes' => 5000,
+                'zxMusicBestVotes' => 100,
             ];
         } elseif ($type == 'underground') {
             $parameters = [
