@@ -123,7 +123,7 @@ class parserApplication extends controllerApplication
                     foreach ($authors as $author) {
                         $releaseBy[] = [
                             'url' => $author->getUrl(),
-                            'title' => $author->getTitle(),
+                            'title' => html_entity_decode($author->getTitle(), ENT_QUOTES),
                             'id' => $author->getId(),
                             'type' => $author->structureType,
                         ];
@@ -137,14 +137,14 @@ class parserApplication extends controllerApplication
                     foreach ($authors as $author) {
                         $releaseBy[] = [
                             'url' => $author->getUrl(),
-                            'title' => $author->getTitle(),
+                            'title' => html_entity_decode($author->getTitle(), ENT_QUOTES),
                             'id' => $author->getId(),
                             'type' => $author->structureType,
                         ];
                     }
                 }
                 $releases[] = [
-                    'title' => $element->getTitle(),
+                    'title' => html_entity_decode($element->getTitle(), ENT_QUOTES),
                     'id' => $element->getId(),
                     'url' => $element->getUrl(),
                     'year' => $element->getYear(),

@@ -37,7 +37,10 @@ svg-icon {
 
 .releases {
   grid-area: releases;
-  display: flex;
+}
+
+.app-parsed-release {
+  display: inline;
 }
 
 .files {
