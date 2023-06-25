@@ -11,9 +11,12 @@
   <div class="md5">{{data.md5}}</div>
   <div class="releases">
     <button mat-raised-button color="primary" type="button" (click)="showReleases()"
-            *ngIf="data.releases.length > 1">{{'parser.show-releases' | translate}} ({{data.releases.length}})
+            *ngIf="data.releases.length > 2">{{'parser.show-releases' | translate}} ({{data.releases.length}})
     </button>
     <app-parsed-release *ngIf="data.releases.length === 1" [release]="data.releases[0]"></app-parsed-release>
+    <ng-container *ngIf="data.releases.length === 2">
+      , <app-parsed-release [release]="data.releases[1]"></app-parsed-release>
+    </ng-container>
     <span class="attention"
           *ngIf="!data.releases.length && insideZx && !isZxContainer">{{'parser.notfound' | translate}}</span>
   </div>
