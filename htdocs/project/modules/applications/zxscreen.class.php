@@ -2,8 +2,6 @@
 
 class zxscreenApplication extends controllerApplication
 {
-    use CrawlerFilterTrait;
-
     protected $width;
     protected $height;
     protected $id;
@@ -38,7 +36,7 @@ class zxscreenApplication extends controllerApplication
             $this->renderer->assign('border', $this->border);
             $this->renderer->assign('zoom', $this->zoom);
             $this->renderer->assign('rotation', $this->rotation);
-            if (!in_array($this->zoom, [1, 2, 3]) || $this->download || $this->type === 'hidden' || $this->isCrawlerDetected()) {
+            if (!in_array($this->zoom, [1, 2, 3]) || $this->download || $this->type === 'hidden') {
                 $this->renderer->assign('cacheEnabled', false);
             }
             if ($this->download) {

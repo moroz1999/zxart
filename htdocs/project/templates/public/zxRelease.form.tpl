@@ -122,7 +122,7 @@
 				{translations name='zxprod.publishers'}:
 			</td>
 			<td class="form_field">
-				<select class="select_multiple zxitem_form_groups_select" multiple="multiple" name="{$formNames.publishers}[]" autocomplete='off'>
+				<select class="select_multiple zxitem_form_publishers_select" multiple="multiple" name="{$formNames.publishers}[]" autocomplete='off'>
 					<option value=''></option>
 					{foreach $formData.publishers as $publisher}
 						<option value='{$publisher->id}' selected="selected">
