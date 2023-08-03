@@ -7,6 +7,9 @@ class tagsListElement extends structureElement
     public $defaultActionName = 'show';
     public $role = 'container';
 
+    /**
+     * @var tagElement[]
+     */
     protected $tagsList;
 
     protected function setModuleStructure(&$moduleStructure)
@@ -17,6 +20,9 @@ class tagsListElement extends structureElement
     public function getAllTags()
     {
         if ($this->tagsList === null) {
+            /**
+             * @var ApiQueriesManager $apiQueriesManager
+             */
             $apiQueriesManager = $this->getService('ApiQueriesManager');
             $sectionsLogics = $this->getService('SectionLogics');;
             if (($type = $sectionsLogics->getArtItemsType()) == 'graphics') {
@@ -31,13 +37,18 @@ class tagsListElement extends structureElement
                 $parameters = [];
             }
 
-
             $query = $apiQueriesManager->getQuery();
             $query->setFiltrationParameters($parameters);
             $query->setOrder(['title' => 'asc']);
             $query->setExportType('tag');
-            if ($result = $query->getQueryResult()) {
-                $this->tagsList = $result['tag'];
+            if ($queries = $query->getFilterQueries()) {
+                $result = $queries['tag']->get();
+                $idList = array_column($result, 'id');
+                /**
+                 * @var structureManager $structureManager
+                 */
+                $structureManager = $this->getService('structureManager');
+                $this->tagsList = $structureManager->getElementsByIdList($idList, $this->id, true);
             }
 
             $sort = [];

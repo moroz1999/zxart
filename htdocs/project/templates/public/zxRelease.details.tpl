@@ -127,7 +127,7 @@
                                 <a rel="nofollow"
                                    href="{$controller->baseURL}release/id:{$element->id}/filename:{$element->getFileName()}"><img
                                             src="{$theme->getImageUrl("disk.png")}"
-                                            alt="{translations name='label.download'} {$element->getFileName('original', false)}"/> {$element->fileName}
+                                            alt="{translations name='label.download'} {$element->getFileName('original', false)}"/> {$element->fileName|urldecode}
                                 </a>
                             </td>
                         </tr>
@@ -225,8 +225,8 @@
     {*{if $element->denyVoting}<p>{translations name="zxitem.votingdenied"}</p>{/if}*}
 
     {if $element->getTunes()}
+        <h2>{translations name="zxrelease.music"}</h2>
         <div class="game_tunes">
-            <h2>{translations name="zxrelease.music"}</h2>
             {include file=$theme->template("component.musictable.tpl") musicList=$element->getTunes() element=$element}
         </div>
     {/if}

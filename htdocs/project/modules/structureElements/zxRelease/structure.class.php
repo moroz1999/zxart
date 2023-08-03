@@ -183,6 +183,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
                     } else {
                         $structure[$key]['viewable'] = true;
                     }
+                    $structure[$key]['fileName'] = urldecode($structure[$key]['fileName']);
                 }
 
                 $groups = [];

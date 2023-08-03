@@ -239,8 +239,8 @@
     {include file=$theme->template('component.pictureslist.tpl') pictures=$element->getPictures() class="game_graphics"}
 
     {if $element->getTunes()}
+        <h2>{translations name="zxprod.music"}</h2>
         <div class="game_tunes">
-            <h2>{translations name="zxprod.music"}</h2>
             {include file=$theme->template("component.musictable.tpl") musicList=$element->getTunes() element=$element}
         </div>
     {/if}
