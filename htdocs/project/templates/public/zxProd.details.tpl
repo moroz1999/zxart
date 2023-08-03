@@ -240,6 +240,7 @@
 
     {if $element->getTunes()}
         <div class="game_tunes">
+            <h2>{translations name="zxprod.music"}</h2>
             {include file=$theme->template("component.musictable.tpl") musicList=$element->getTunes() element=$element}
         </div>
     {/if}

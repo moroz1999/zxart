@@ -189,11 +189,6 @@
             {include $theme->template("component.emulator.tpl")}
 
             {include file=$theme->template('component.pictureslist.tpl') pictures=$element->getPictures()}
-            {if $element->getTunes()}
-                <div class="game_tunes">
-                    {include file=$theme->template("component.musictable.tpl") musicList=$element->getTunes() element=$element}
-                </div>
-            {/if}
             <div class="gallery_static galleryid_{$element->id}">
                 {if $filesList = $element->getFilesList('screenshotsSelector')}
                     {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false}
@@ -229,8 +224,16 @@
     {*{include file=$theme->template('component.voteslist.tpl')}*}
     {*{if $element->denyVoting}<p>{translations name="zxitem.votingdenied"}</p>{/if}*}
 
+    {if $element->getTunes()}
+        <div class="game_tunes">
+            <h2>{translations name="zxrelease.music"}</h2>
+            {include file=$theme->template("component.musictable.tpl") musicList=$element->getTunes() element=$element}
+        </div>
+    {/if}
+
     {if $element->parsed && $element->isDownloadable()}
         {if $structure = $element->getReleaseStructure()}
+            <h2>{translations name="zxrelease.structure"}</h2>
             <table class="table_component zxrelease_filestructure_table">
                 {include $theme->template('zxRelease.structure.tpl') structure=$structure level=0}
             </table>

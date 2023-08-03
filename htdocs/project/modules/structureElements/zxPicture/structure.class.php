@@ -17,6 +17,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     use PaletteTypesProvider;
     use GraphicsCompoProvider;
     use ZxPictureTypesProvider;
+    use CrawlerFilterTrait;
 
     const TAG_LOADINGSCREEN = "Loading Screen";
     const TAG_GAMEGRAPHICS = "Game graphics";
@@ -303,18 +304,14 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
 
     public function logView()
     {
-        if (!isset($_SERVER['HTTP_USER_AGENT']) || !preg_match(
-                '/bot|crawl|slurp|spider/i',
-                $_SERVER['HTTP_USER_AGENT']
-            )) {
-            //$text = date('d.m.Y H:i') . "\t" . $_SERVER['REMOTE_ADDR'] . "\t" . $_SERVER['REQUEST_URI'] . "\t" . $_SERVER['HTTP_USER_AGENT'] . "\n";
-            //file_put_contents(ROOT_PATH . date('d.m.Y') . '-view.txt', $text, FILE_APPEND);
-
-
+        if (!$this->isCrawlerDetected()) {
             $this->views++;
             $this->getService('eventsLog')->logEvent($this->id, 'view');
             $collection = persistableCollection::getInstance($this->dataResourceName);
             $collection->updateData(['views' => $this->views], ['id' => $this->id]);
+
+            $structureManager = $this->getService('structureManager');
+            $structureManager->clearElementCache($this->id);
         }
     }
 

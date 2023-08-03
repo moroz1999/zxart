@@ -6,6 +6,7 @@ class showZxPicture extends structureElementAction
     {
         if ($structureElement->final) {
             $structureElement->setViewName('details');
+            $structureElement->logView();
         }
     }
 }

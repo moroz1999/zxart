@@ -19,6 +19,12 @@ class releaseApplication extends controllerApplication
 
     public function execute($controller)
     {
+        /**
+         * @var Cache $cache
+         */
+        $cache = $this->getService('Cache');
+        $cache->enable(true, true, true);
+
         $structureManager = $this->getService(
             'structureManager',
             [
@@ -42,6 +48,7 @@ class releaseApplication extends controllerApplication
                             'downloads'
                         );
                     }
+                    $structureManager->clearElementCache($element->id);
                 }
                 if ($this->mode == 'view') {
                     $this->renderer->setContentDisposition('inline');

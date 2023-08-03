@@ -271,6 +271,9 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         $this->getService('eventsLog')->logEvent($this->id, 'play');
         $collection = persistableCollection::getInstance($this->dataResourceName);
         $collection->updateData(['plays' => $this->plays], ['id' => $this->id]);
+
+        $structureManager = $this->getService('structureManager');
+        $structureManager->clearElementCache($this->id);
     }
 
     public function getIso8601Duration()
