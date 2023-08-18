@@ -120,6 +120,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                         }
 
                         $zxReleaseElement->persistElementData();
+                        $zxReleaseElement->updateFileStructure();
                     }
 
                 }

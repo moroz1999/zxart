@@ -29,7 +29,7 @@ class publicReceiveZxRelease extends structureElementAction
             $structureElement->persistAuthorship('release');
 
             $structureElement->executeAction('receiveFiles');
-
+            $structureElement->updateFileStructure();
             $controller->redirect($structureElement->URL);
         }
         $structureElement->setViewName('form');

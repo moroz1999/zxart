@@ -120,6 +120,12 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         $moduleStructure['joinAndDelete'] = 'text';
         $moduleStructure['releasesOnly'] = 'checkbox';
         $moduleStructure['splitData'] = 'array';
+        $moduleStructure['series'] = [
+            'DBValueSet',
+            [
+                'tableName' => 'zxprod_series',
+            ],
+        ];
     }
 
     public function getFileSelectorPropertyNames()
@@ -276,6 +282,9 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         if (!$this->legalStatus) {
             $this->legalStatus = 'unknown';
         }
+        $this->optimizeAliases('groups');
+        $this->optimizeAliases('publishers');
+
         parent::persistElementData();
 
         $structureManager = $this->getService('structureManager');

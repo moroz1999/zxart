@@ -26,7 +26,8 @@ trait HardwareProvider
                 "scorpion1024",
                 "byte",
                 "zxmphoenix",
-                "zxevolution",
+                'baseconf',
+                'tsconf',
                 "zxnext",
                 "elementzxmb",
                 "zxuno",
@@ -38,10 +39,6 @@ trait HardwareProvider
                 "zx8132",
                 "zx8164",
                 "sprinter",
-            ],
-            "configuration" => [
-                'baseconf',
-                'tsconf',
             ],
             "storage" => [
                 'tape',
@@ -94,6 +91,9 @@ trait HardwareProvider
                 'int2_2',
                 'kempstonmouse',
                 'aymouse',
+                'gunstick',
+                'magnumlight',
+                'novina',
             ],
             "expansion" => [
                 'zxpand',

@@ -14,7 +14,6 @@ class releaseApplication extends controllerApplication
     {
         $this->startSession('public');
         $this->createRenderer();
-        return !$this->isCrawlerDetected();
     }
 
     public function execute($controller)
@@ -39,7 +38,7 @@ class releaseApplication extends controllerApplication
         if ($element = $structureManager->getElementById($this->id)) {
             $filePath = $this->getService('PathsManager')->getPath('releases') . $element->file;
             if (strpos($this->id, '/') === false && strpos($this->id, '\\') === false && is_file($filePath)) {
-                if ($element->structureType == 'zxRelease') {
+                if ($element->structureType == 'zxRelease' && !$this->isCrawlerDetected()) {
                     $db = $this->getService('db');
                     if ($controller->getParameter('play')) {
                         $db->table('module_zxrelease')->where('id', '=', $element->id)->limit(1)->increment('plays');

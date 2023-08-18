@@ -230,7 +230,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
             }
         }
 
-        if (!$linkExists && $this->game != 0) {
+        if (!$linkExists && $this->game) {
             $linksManager->linkElements($this->game, $this->id, 'gameLink');
         }
     }
@@ -305,8 +305,8 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
             if ($party = $this->getPartyElement()) {
                 $this->year = $party->getYear();
             }
-            if ($game = $this->getReleaseElement()) {
-                $this->year = $game->year;
+            if ($releaseElement = $this->getReleaseElement()) {
+                $this->year = $releaseElement->year;
             }
         }
     }
@@ -580,4 +580,24 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         }
     }
 
+    protected function optimizeAliases($property)
+    {
+        $foundParents = [];
+        foreach ($this->$property as $element) {
+            if ($element->structureType === 'authorAlias' && $author = $element->getAuthorElement()) {
+                $foundParents[] = $author->id;
+            }
+            if ($element->structureType === 'groupAlias' && $group = $element->getGroupElement()) {
+                $foundParents[] = $group->id;
+            }
+        }
+
+        $finalList = [];
+        foreach ($this->$property as $element) {
+            if (!in_array($element->id, $foundParents)) {
+                $finalList[] = $element->id;
+            }
+        }
+        $this->$property = $finalList;
+    }
 }

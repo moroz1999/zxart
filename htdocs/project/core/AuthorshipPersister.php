@@ -57,11 +57,9 @@ trait AuthorshipPersister
             );
         }
         foreach ($existingRecords as $record) {
-            if (!isset($info[$record['authorId']])){
+            if (!isset($info[$record['authorId']])) {
                 $authorsManager->deleteAuthorship($this->id, $record['authorId'], $type);
             }
         }
-
-
     }
 }

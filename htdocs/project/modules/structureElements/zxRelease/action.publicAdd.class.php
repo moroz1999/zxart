@@ -40,6 +40,7 @@ class publicAddZxRelease extends structureElementAction
             $privilegesManager->setPrivilege($user->id, $structureElement->id, 'zxRelease', 'deleteFile', 'allow');
             $user->refreshPrivileges();
 
+            $structureElement->updateFileStructure();
             $controller->redirect($structureElement->URL);
         }
         $structureElement->setViewName('form');

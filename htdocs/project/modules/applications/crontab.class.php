@@ -5,8 +5,6 @@ class crontabApplication extends controllerApplication
     protected $applicationName = 'crontab';
     public $rendererName = 'smarty';
     public $requestParameters = [];
-    use ReleaseFormatsProvider;
-    use ReleaseFileTypesGatherer;
 
     private $structureManager;
 
@@ -46,6 +44,9 @@ class crontabApplication extends controllerApplication
 
             $this->structureManager->setRequestedPath([$currentLanguageCode]);
             $this->structureManager->setPrivilegeChecking(false);
+            /**
+             * @var mp3ConversionManager $mp3ConversionManager
+             */
             $mp3ConversionManager = $this->getService('mp3ConversionManager');
             $mp3ConversionManager->convertQueueItems();
 
@@ -129,28 +130,9 @@ class crontabApplication extends controllerApplication
                      * @var zxReleaseElement $releaseElement
                      */
                     if ($releaseElement = $this->structureManager->getElementById($record['id'])) {
-                        $releaseElement->parsed = 1;
-
-                        $releaseElement->persistElementData();
-
                         echo $releaseElement->id . ' ';
                         echo $releaseElement->title . ' ';
-                        /**
-                         * @var ZxParsingManager $zxParsingManager
-                         */
-                        $zxParsingManager = $this->getService('ZxParsingManager');
-                        $zxParsingManager->deleteFileStructure($releaseElement->getId());
-                        if ($structure = $zxParsingManager->saveFileStructure(
-                            $releaseElement->getId(),
-                            $releaseElement->getFilePath(),
-                            $releaseElement->fileName
-                        )) {
-                            if ($files = $this->gatherReleaseFiles($structure)) {
-                                $files = array_unique($files);
-                                $releaseElement->releaseFormat = $files;
-                            }
-                        }
-                        $releaseElement->persistElementData();
+                        $releaseElement->updateFileStructure();
                     } else {
                         echo 'skipped ';
                         $skipIds[] = $record['id'];
