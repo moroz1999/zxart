@@ -93,6 +93,9 @@ window.artWebZXGallery = function(galleryElement) {
                 this.checkImageObject();
             }
         }
+        if (typeof ym !== "undefined"){
+            ym(94686067,'reachGoal','viewimage')
+        }
     };
     this.displayComponent = function() {
         self.componentElement.style.display = 'block';

@@ -48,9 +48,7 @@ class PouetManager extends errorLogger
         'bbstro' => 364978,
     ];
     protected $platforms = [
-        'ZX Spectrum' => 'zx48',
         'SAM Coupé' => 'samcoupe',
-        'ZX Enhanced' => 'zxevolution',
         'ZX-81' => 'zx811',
     ];
     protected $roles = [

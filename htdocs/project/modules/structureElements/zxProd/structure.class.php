@@ -120,12 +120,12 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         $moduleStructure['joinAndDelete'] = 'text';
         $moduleStructure['releasesOnly'] = 'checkbox';
         $moduleStructure['splitData'] = 'array';
-        $moduleStructure['series'] = [
-            'DBValueSet',
-            [
-                'tableName' => 'zxprod_series',
-            ],
-        ];
+//        $moduleStructure['series'] = [
+//            'DBValueSet',
+//            [
+//                'tableName' => 'zxprod_series',
+//            ],
+//        ];
     }
 
     public function getFileSelectorPropertyNames()

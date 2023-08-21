@@ -339,7 +339,9 @@ class AuthorsManager extends ElementsManager
              */
             if (!($element = $this->getElementByImportId($authorInfo['id'], $origin, 'author'))) {
                 if ($element = $this->getAuthorByName($authorInfo['title'])) {
-                    $this->saveImportId($element->id, $authorInfo['id'], $origin, 'author');
+                    if ($origin) {
+                        $this->saveImportId($element->id, $authorInfo['id'], $origin, 'author');
+                    }
                     $this->updateAuthor($element, $authorInfo, $origin);
                 } elseif ($createNew) {
                     $element = $this->createAuthor($authorInfo, $origin);
@@ -362,9 +364,9 @@ class AuthorsManager extends ElementsManager
         $element = false;
         $firstLetter = mb_strtolower(mb_substr($authorInfo['title'], 0, 1));
         $translitHelper = new TranslitHelper();
-        $firstLetter = $translitHelper->convert($firstLetter);
-        if (is_numeric($firstLetter)) {
-            $firstLetter = '0-9';
+        $firstLetter = mb_substr($translitHelper->convert($firstLetter), 0, 1);
+        if (!preg_match('/[a-zA-Z]/', $firstLetter)) {
+            $firstLetter = '#';
         }
         if ($authorsElement = $this->structureManager->getElementByMarker('authors')) {
             $authorLetterElement = null;
@@ -387,7 +389,9 @@ class AuthorsManager extends ElementsManager
                      * @var authorElement $element
                      */
                     $this->updateAuthor($element, $authorInfo, $origin);
-                    $this->saveImportId($element->id, $authorInfo['id'], $origin, 'author');
+                    if ($origin) {
+                        $this->saveImportId($element->id, $authorInfo['id'], $origin, 'author');
+                    }
                 }
             }
         }

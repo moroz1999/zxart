@@ -86,6 +86,10 @@ window.emulatorComponent = new function () {
             null,
             ['string'],
             ['filtering=off']);
+
+        if (typeof ym !== "undefined") {
+            ym(94686067, 'reachGoal', 'emulatorstart')
+        }
     };
     const fullscreenClick = function () {
         Module.ccall('OnCommand',

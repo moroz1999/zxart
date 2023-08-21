@@ -8,6 +8,9 @@
  * @property int $votesAmount
  * @property int $commentsAmount
  * @property int $year
+ * @property int $party
+ * @property int $partyplace
+ * @property string $compo
  * @property string $image
  * @property string $originalName
  * @property string $palette
@@ -26,6 +29,9 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     public $allowedTypes = [];
     public $defaultActionName = 'show';
     public $role = 'content';
+    /**
+     * @var int|mixed|null
+     */
     protected $viewName = 'short';
     protected $votesType = 'zxPicture';
     protected $authorLinkType = 'authorPicture';
