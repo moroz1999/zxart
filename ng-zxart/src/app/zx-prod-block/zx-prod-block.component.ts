@@ -16,6 +16,8 @@ import {VoteService} from '../shared/services/vote.service';
 import {SvgIconRegistryService, SvgLoader} from 'angular-svg-icon';
 import {environment} from '../../environments/environment';
 
+declare function ym(a: number, b: string, c: string, params: any, callback: CallableFunction): any;
+
 @Component({
   selector: 'app-zx-prod-block',
   templateUrl: './zx-prod-block.component.html',
@@ -51,6 +53,8 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
   ngOnInit(): void {
     this.element.nativeElement.addEventListener('pointerenter', this.enterHandler.bind(this));
     this.element.nativeElement.addEventListener('pointerleave', this.leaveHandler.bind(this));
+    this.element.nativeElement.addEventListener('pointermove', (event: Event) => event.preventDefault());
+    this.element.nativeElement.addEventListener('contextmenu', (event: Event) => event.preventDefault());
     this.iconReg.loadSvg(`${environment.svgUrl}cart.svg`, 'cart')?.subscribe();
   }
 
@@ -66,7 +70,8 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
     }
   }
 
-  enterHandler(): void {
+  enterHandler(event: PointerEvent): void {
+    event.preventDefault();
     this.displayAdditions = true;
 
     if (this.imagesLayout === 'inlays') {
@@ -79,7 +84,9 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
     }
   }
 
-  leaveHandler(): void {
+  leaveHandler(event: PointerEvent): void {
+    event.preventDefault();
+
     this.displayScreenshots = false;
     this.displayAdditions = false;
   }
@@ -121,5 +128,12 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
       this.model.userVote = rating;
       this.cdr.detectChanges();
     });
+  }
+
+  cartClicked(event: MouseEvent) {
+    event.preventDefault();
+    if (typeof ym !== 'undefined') {
+      ym(94686067, 'reachGoal', 'open-cart-link', {}, () => window.open(this.model.externalLink));
+    }
   }
 }

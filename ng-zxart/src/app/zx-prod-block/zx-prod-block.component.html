@@ -82,6 +82,7 @@
         href="{{model.externalLink}}"
         *ngIf="model.legalStatus==='insales' && model.externalLink"
         target="_blank"
+        (click)="cartClicked($event)"
       ><svg-icon name="cart"></svg-icon></a>
     </div>
     <div *ngIf="model.groupsInfo.length">
