@@ -32,58 +32,62 @@ class coorApplication extends controllerApplication
         /**
          * @var LanguagesManager $languagesManager
          */
-        $languagesManager = $this->getService('LanguagesManager');
-        $languagesManager->setCurrentLanguageCode($language, $configManager->get('main.rootMarkerAdmin'));
-        $this->structureManager = $this->getService(
-            'structureManager',
-            [
-                'rootUrl' => $controller->rootURL,
-                'rootMarker' => $configManager->get('main.rootMarkerAdmin'),
-            ],
-            true
-        );
+        $user = $this->getService('user');
+        if ($userId = $user->checkUser('crontab', null, true)) {
+            $user->switchUser($userId);
+            $languagesManager = $this->getService('LanguagesManager');
+            $languagesManager->setCurrentLanguageCode($language, $configManager->get('main.rootMarkerAdmin'));
+            $this->structureManager = $this->getService(
+                'structureManager',
+                [
+                    'rootUrl' => $controller->rootURL,
+                    'rootMarker' => $configManager->get('main.rootMarkerAdmin'),
+                ],
+                true
+            );
 
-        if ($countries = $this->structureManager->getElementsByType('country')) {
-            foreach ($countries as $counter => $country) {
-                if ($country->latitude == '0.00') {
-                    if ($record = $this->queryGooglePlacesApi($country->getValue('title', 2105), '')) {
-                        $country->latitude = $record[0];
-                        $country->longitude = $record[1];
-                        $country->persistElementData();
-                        echo $counter . ' success ' . $country->title;
-                    } else {
-                        echo $counter . ' fail ' . $country->title;
-                    }
-                    echo "<br/>";
-                    flush();
-                }
-            }
-        }
-        if ($cities = $this->structureManager->getElementsByType('city')) {
-            foreach ($cities as $counter => $city) {
-                if (!$city->getValue('title', 84102) || ($city->getValue('title', 930) == $city->getValue(
-                            'title',
-                            84102
-                        ))) {
-                    $city->setValue('title', $city->getValue('title', 2105), 84102);
-                    $city->persistElementData();
-                }
-
-                if ($city->latitude == '0.00') {
-                    if ($country = $city->getFirstParentElement()) {
-                        if ($record = $this->queryGooglePlacesApi(
-                            $country->getValue('title', 2105),
-                            $city->getValue('title', 2105)
-                        )) {
-                            $city->latitude = $record[0];
-                            $city->longitude = $record[1];
-                            $city->persistElementData();
-                            echo $counter . ' success ' . $country->title . ' ' . $city->title;
+            if ($countries = $this->structureManager->getElementsByType('country')) {
+                foreach ($countries as $counter => $country) {
+                    if ($country->latitude == '0.00') {
+                        if ($record = $this->queryGooglePlacesApi($country->getValue('title', 2105), '')) {
+                            $country->latitude = $record[0];
+                            $country->longitude = $record[1];
+                            $country->persistElementData();
+                            echo $counter . ' success ' . $country->title;
                         } else {
-                            echo $counter . ' fail ' . $country->title . ' ' . $city->title;
+                            echo $counter . ' fail ' . $country->title;
                         }
                         echo "<br/>";
                         flush();
+                    }
+                }
+            }
+            if ($cities = $this->structureManager->getElementsByType('city')) {
+                foreach ($cities as $counter => $city) {
+                    if (!$city->getValue('title', 84102) || ($city->getValue('title', 930) == $city->getValue(
+                                'title',
+                                84102
+                            ))) {
+                        $city->setValue('title', $city->getValue('title', 2105), 84102);
+                        $city->persistElementData();
+                    }
+
+                    if ($city->latitude == '0.00') {
+                        if ($country = $city->getFirstParentElement()) {
+                            if ($record = $this->queryGooglePlacesApi(
+                                $country->getValue('title', 2105),
+                                $city->getValue('title', 2105)
+                            )) {
+                                $city->latitude = $record[0];
+                                $city->longitude = $record[1];
+                                $city->persistElementData();
+                                echo $counter . ' success ' . $country->title . ' ' . $city->title;
+                            } else {
+                                echo $counter . ' fail ' . $country->title . ' ' . $city->title;
+                            }
+                            echo "<br/>";
+                            flush();
+                        }
                     }
                 }
             }
