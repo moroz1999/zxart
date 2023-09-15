@@ -30,9 +30,6 @@
 				<img src="{$theme->getImageUrl("bronze_cup.png")}" alt='{translations name='label.thirdplace'}'/>{/if}
 		{/if}
 	</td>
-	<td class='zxrelease_table_format'>
-		{foreach $element->releaseFormat as $format}{translations name="zxRelease.filetype_$format"} {/foreach}
-	</td>
 	<td class='zxrelease_table_language'>
 		{$element->getSupportedLanguageString()}
 	</td>
@@ -52,8 +49,8 @@
 			<div class="zxrelease_table_hardware_item">{translations name="hardware.item_{$hardware}"}</div>
 		{/foreach}
 	</td>
-	<td class='zxrelease_table_links'>
-		{include file=$theme->template('component.links.icons.tpl')}
+	<td class='zxrelease_table_format'>
+		{foreach $element->releaseFormat as $format}{translations name="zxRelease.filetype_$format"} {/foreach}
 	</td>
 	<td class='zxrelease_table_download'>
 		{if $element->isDownloadable()}
@@ -74,6 +71,9 @@
 		{if $element->isDownloadable()}
 			{$element->plays}
 		{/if}
+	</td>
+	<td class='zxrelease_table_links'>
+		{include file=$theme->template('component.links.icons.tpl')}
 	</td>
 </tr>
 {$files1List = $element->getImagesList()}

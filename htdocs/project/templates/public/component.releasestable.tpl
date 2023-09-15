@@ -21,8 +21,6 @@
 				</th>
 				<th class='zxrelease_table_partyplace'>
 				</th>
-				<th class='zxrelease_table_format'>
-				</th>
 				<th class='zxrelease_table_language'>
 					{translations name='zxrelease.language'}
 				</th>
@@ -37,7 +35,7 @@
 				<th class='zxrelease_table_hardware'>
 					{translations name='zxrelease.hardware'}
 				</th>
-				<th class='zxrelease_table_links'>
+				<th class='zxrelease_table_format'>
 				</th>
 				<th class='zxrelease_table_download'>
 				</th>
@@ -46,6 +44,8 @@
 				</th>
 				<th class='zxrelease_table_plays'>
 					{translations name='zxrelease.plays'}
+				</th>
+				<th class='zxrelease_table_links'>
 				</th>
 			</tr>
 		</thead>

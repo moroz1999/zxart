@@ -110,7 +110,7 @@
 						{translations name='zxrelease.file'}:
 					</td>
 					<td class='info_table_value'>
-						<a rel="nofollow" href="{$controller->baseURL}release/id:{$element->id}/filename:{$element->getFileName()}"><img src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'} {$element->getFileName('original', false)}" /> {$element->fileName}
+						<a rel="nofollow" href="{$element->getFileUrl()}"><img src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'} {$element->getFileName('original', false)}" /> {$element->fileName}
 						</a>
 					</td>
 				</tr>

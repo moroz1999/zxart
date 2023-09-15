@@ -8,11 +8,11 @@
                     </a>
                     <div>by {$file->author}</div>
                 {else}
-                    <a href="{$file->getDownloadUrl('view', 'release')}" class="zxitem_image_link">
+                    <a href="{$file->getScreenshotUrl()}" class="zxitem_image_link">
                         <img class="zxitem_image galleryimageid_{$file->id}" src='{$file->getImageUrl($preset)}'
                              alt="{$file->title}"/>
                     </a>
-                    <a href="{$file->getDownloadUrl('view', 'release')}" class="zxitem_image_download" title="{$file->getFileName(true)}"></a>
+                    <a href="{$file->getScreenshotUrl()}" class="zxitem_image_download" title="{$file->getFileName(true)}"></a>
                 {/if}
             </div>
         {/if}

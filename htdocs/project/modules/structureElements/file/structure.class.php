@@ -77,7 +77,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         } elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'ifl')) {
             $url = $controller->baseURL . 'zxscreen/type:multicolor/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
         } elseif ($full) {
-            $url = $controller->baseURL . 'release/id:' . $this->file . '/mode:view/filename:' . $this->fileName;
+            $url = $controller->baseURL . 'screenshot/id:' . $this->file . '/filename:' . $this->fileName;
         } else {
             $filename = pathinfo($this->fileName, PATHINFO_FILENAME);
             $url = $controller->baseURL . 'image/type:' . $preset . '/id:' . $this->file . '/filename:' . $filename . '.webp';
@@ -109,6 +109,14 @@ class fileElement extends structureElement implements StructureElementUploadedFi
     {
         $controller = $this->getService('controller');
         $url = $controller->baseURL . $appName . '/id:' . $this->file . '/mode:' . $mode . '/filename:' . $this->fileName;
+
+        return $url;
+    }
+
+    public function getScreenshotUrl()
+    {
+        $controller = $this->getService('controller');
+        $url = $controller->baseURL . 'screenshot' . '/id:' . $this->file . '/filename:' . $this->fileName;
 
         return $url;
     }
