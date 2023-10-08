@@ -65,10 +65,19 @@ class votesManager implements DependencyInjectionContextInterface
         return $this->elementVotesCounts[$elementId];
     }
 
+    public function getElementFilteredVotes($elementId)
+    {
+        $votesList = $this->getElementVotesList($elementId);
+        $votes = array_column($votesList, 'value');
+        $analyzer = new VoteAnalyzer();
+        $filteredVotes = $analyzer->removeAnomalies($votes);
+        return $filteredVotes;
+    }
+
     public function getElementVotesList($elementId)
     {
         if (!isset($this->elementVotesList[$elementId])) {
-            $this->elementVotesList[$elementId] = 0;
+            $this->elementVotesList[$elementId] = [];
 
             $db = $this->getService('db');
             if ($votes = $db->table('votes_history')

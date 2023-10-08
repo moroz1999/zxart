@@ -10,6 +10,10 @@ trait DemoCompoTypesProvider
             'demo',
             'enhanced',
             'intro',
+            'intro8',
+            'intro16',
+            'intro32',
+            'intro64',
             'intro128',
             'intro256',
             'intro512',
@@ -33,3 +37,12 @@ trait DemoCompoTypesProvider
         ];
     }
 }
+
+
+
+
+
+
+
+
+

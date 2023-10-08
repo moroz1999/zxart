@@ -222,6 +222,7 @@ class PouetManager extends errorLogger
     ];
 
     protected $compos = [
+        'combined oldskool demo/intro' => 'demo',
         'zx enhanced demo' => 'enhanced',
         'combined demo/intro' => 'demo',
         'megademo' => 'demo',
