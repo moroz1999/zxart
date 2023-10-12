@@ -44,16 +44,26 @@ class crontabApplication extends controllerApplication
 
             $this->structureManager->setRequestedPath([$currentLanguageCode]);
             $this->structureManager->setPrivilegeChecking(false);
-            /**
-             * @var mp3ConversionManager $mp3ConversionManager
-             */
-            $mp3ConversionManager = $this->getService('mp3ConversionManager');
-            $mp3ConversionManager->convertQueueItems();
-
-            $this->parseReleases();
-            $this->parseArtItems('module_zxpicture', 'image', 'originalName');
-            $this->parseArtItems('module_zxmusic', 'file', 'fileName');
+            $this->queryAiItems();
+//            $this->convertMp3();
+//            $this->parseReleases();
+//            $this->parseArtItems('module_zxpicture', 'image', 'originalName');
+//            $this->parseArtItems('module_zxmusic', 'file', 'fileName');
         }
+    }
+
+    private function queryAiItems()
+    {
+
+    }
+
+    private function convertMp3()
+    {
+        /**
+         * @var mp3ConversionManager $mp3ConversionManager
+         */
+        $mp3ConversionManager = $this->getService('mp3ConversionManager');
+        $mp3ConversionManager->convertQueueItems();
     }
 
     private function parseArtItems($table, $fileColumn, $fileNameColumn)

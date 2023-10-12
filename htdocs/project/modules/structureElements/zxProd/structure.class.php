@@ -26,9 +26,14 @@
  * @property int $joinAndDelete
  * @property boolean $releasesOnly
  * @property array[] $splitData
+ * @property boolean hasAiData
+ * @property string h1
+ * @property string metaTitle
+ * @property string metaDescription
+ * @property string generatedDescription
  */
 class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPathInterface, CommentsHolderInterface,
-    JsonDataProvider, OpenGraphDataProviderInterface, ZxSoftInterface
+    JsonDataProvider, OpenGraphDataProviderInterface, ZxSoftInterface, MetadataProviderInterface
 {
     use AuthorshipProviderTrait;
     use AuthorshipPersister;
@@ -57,7 +62,6 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
      * @var zxReleaseElement[]
      */
     protected $releasesList;
-    protected $firstImage;
     protected $images = [];
     protected $bestPictures;
     protected $languagesInfo;
@@ -120,6 +124,13 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         $moduleStructure['joinAndDelete'] = 'text';
         $moduleStructure['releasesOnly'] = 'checkbox';
         $moduleStructure['splitData'] = 'array';
+
+        $moduleStructure['hasAiData'] = 'checkbox';
+        $moduleStructure['metaTitle'] = 'text';
+        $moduleStructure['h1'] = 'text';
+        $moduleStructure['metaDescription'] = 'text';
+        $moduleStructure['generatedDescription'] = 'text';
+
 //        $moduleStructure['series'] = [
 //            'DBValueSet',
 //            [
@@ -756,6 +767,9 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     public function getMetaTitle()
     {
         $title = null;
+        if ($this->metaTitle) {
+            return $this->metaTitle;
+        }
 
         /**
          * @var translationsManager $translationsManager
@@ -787,5 +801,17 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         ];
         return $data;
     }
+
+    public function getDescription()
+    {
+        if ($this->description) {
+            return $this->description;
+        }
+        if ($this->generatedDescription) {
+            return $this->generatedDescription;
+        }
+        return '';
+    }
+
 
 }

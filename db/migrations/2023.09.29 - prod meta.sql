@@ -1,0 +1,1 @@
+ALTER TABLE `engine_module_zxprod` ADD `hasAiData` TINYINT NOT NULL AFTER `externalLink`, ADD `metaTitle` VARCHAR(255) NOT NULL AFTER `hasAiData`, ADD `h1` VARCHAR(255) NOT NULL AFTER `metaTitle`, ADD `metaDescription` TEXT NOT NULL AFTER `h1`, ADD `generatedDescription` TEXT NOT NULL AFTER `metaDescription`; 

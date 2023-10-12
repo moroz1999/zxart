@@ -55,8 +55,8 @@
     {*{include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodMapImage' displayTitle=true}*}
 {*{/if}*}
 <br>{include file=$theme->template("component.hr.tpl") symbol="-"}<br><br>
-{if $element->description}
-    {$element->description}
+{if $description = $element->getDescription()}
+    {$description}
     <br>{include file=$theme->template("component.hr.tpl") symbol="-"}<br><br>
 {/if}
 

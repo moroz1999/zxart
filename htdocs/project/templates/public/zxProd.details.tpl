@@ -214,9 +214,9 @@
         window.galleriesInfo['{$element->id}'] = {$element->getGalleryJsonInfo(['descriptionType'=>'hidden', 'imageResizeLogics'=>'contain'], 'prodImage')};
         /*]]>*/
     </script>
-    {if $element->description}
+    {if $description = $element->getDescription()}
         <div class="zxprod_details_description">
-            {$element->description}
+            {$description}
         </div>
     {/if}
 
