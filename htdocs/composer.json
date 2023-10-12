@@ -3,7 +3,7 @@
   "description": "Trickster CMS based project",
   "license": "proprietary",
   "require": {
-    "artweb-ou/trickster-cms": "^4.2",
+    "artweb-ou/trickster-cms": "^4.3",
     "moroz1999/sxg": "*",
     "moroz1999/zx-image": "^5.4",
     "moroz1999/zx-files": "^3.1",

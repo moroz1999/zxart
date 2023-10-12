@@ -46,7 +46,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
 
     protected $votesType = 'zxRelease';
     protected $partyLinkType = 'partyProd';
-
+    protected $hardwareInfo;
     protected $currentReleaseFile;
     protected $imagesUrls;
     protected $prodElement;

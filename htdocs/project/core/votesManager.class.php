@@ -171,6 +171,7 @@ class votesManager implements DependencyInjectionContextInterface
         $query->orderBy('id', 'desc')->limit($limit);
 
         if ($votesList = $query->get()) {
+            $votes = [];
             $structureManager = $this->getService('structureManager');
             foreach ($votesList as $key => $vote) {
                 if (($artItemElement = $structureManager->getElementById(

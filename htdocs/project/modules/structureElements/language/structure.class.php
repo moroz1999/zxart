@@ -58,7 +58,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
             $this->mainMenuElements = [];
             if ($childElements = $this->getChildrenList()) {
                 foreach ($childElements as $childElement) {
-                    if (!$childElement->hidden) {
+                    if (!empty($childElement->hidden)) {
                         $this->mainMenuElements[] = $childElement;
                     }
                 }

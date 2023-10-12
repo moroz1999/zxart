@@ -19,6 +19,8 @@ class user
     public $website;
     public $userType;
     public $subscribe;
+    public $showemail;
+    public $authorId;
     protected $groupsIdList;
     protected $userDataObject;
     /** @var \Illuminate\Database\Connection */
@@ -292,7 +294,7 @@ class user
         if ($users) {
             $user = $users[0];
             $storedPassword = $user->password;
-            if (password_verify($password, $storedPassword) || $ignorePassword) {
+            if (($password !== null && password_verify($password, $storedPassword)) || $ignorePassword) {
                 $userDataObject = reset($users);
                 if ($userDataObject->verified) {
                     $userId = $userDataObject->id;
