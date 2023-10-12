@@ -12,7 +12,11 @@
     "ext-gd": "*",
     "ext-dom": "*",
     "ext-zip": "*",
-    "ext-rar": "*",
     "sobak/scrawler": "^0.3.0"
+  },
+  "config": {
+    "allow-plugins": {
+      "kylekatarnls/update-helper": true
+    }
   }
 }
