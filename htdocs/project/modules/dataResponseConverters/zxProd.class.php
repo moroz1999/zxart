@@ -64,6 +64,112 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             "votes" => function ($element) {
                 return (float)$element->votes;
             },
+            "partyString" => function (zxProdElement $element) {
+                $partyString = '';
+                if ($element->party) {
+                    $party = $element->getPartyElement();
+                    if ($element->partyplace) {
+                        $partyString .= $element->partyplace . ' at ';
+                    }
+                    $partyString .= $party->getTitle();
+                }
+                return $partyString;
+            },
+            "groupsString" => function (zxProdElement $element) {
+                $groups = [];
+                foreach ($element->groups as $group) {
+                    $groups[] = html_entity_decode($group->title, ENT_QUOTES);
+                }
+
+                return implode(', ', $groups);
+            },
+            "publishersString" => function (zxProdElement $element) {
+                $publishers = [];
+                foreach ($element->publishers as $publisher) {
+                    $publishers[] = html_entity_decode($publisher->title, ENT_QUOTES);
+                }
+
+                return implode(', ', $publishers);
+            },
+            "authorsInfoString" => function (zxProdElement $element) {
+                $authors = [];
+                foreach ($element->getShortAuthorship('prod') as $author) {
+                    $roles = implode(', ', $author['roles']); // concatenate roles with a comma
+                    $authors[] = "{$author['title']} ({$roles})";
+                }
+                return implode(', ', $authors);
+            },
+            "categoriesString" => function (zxProdElement $element) {
+                $categories = [];
+                foreach ($element->getCategoriesInfo() as $category) {
+                    $categories[] = $category['title'];
+                }
+                return implode(', ', $categories);
+            },
+            "languageString" => function (zxProdElement $element) {
+                $languages = [];
+                foreach ($element->getLanguagesInfo() as $language) {
+                    $languages[] = $language['title'];
+                }
+                return implode(', ', $languages);
+            },
+            "hardwareString" => function (zxProdElement $element) {
+                $hwList = [];
+
+                foreach ($element->getHardwareInfo(false) as $hardware) {
+                    $hwList[] = $hardware['title'];
+                }
+                return implode(', ', $hwList);
+            },
+            "manualString" => function (zxProdElement $element) {
+                foreach ($element->getReleasesList() as $releaseElement) {
+                    foreach ($releaseElement->getFilesList('infoFilesSelector') as $fileElement) {
+                        if ($fileElement->getFileExtension() === 'txt') {
+                            $content = file_get_contents($fileElement->getFilePath());
+                            if ($content) {
+                                return $content;
+                            }
+                        } else if ($fileElement->getFileExtension() === 'pdf') {
+                            $parser = new \Smalot\PdfParser\Parser();
+
+                            $file = $fileElement->getFilePath();
+                            try {
+                                $pdf = $parser->parseFile($file);
+                                $textContent = $pdf->getText();
+                            } catch (Exception $exception) {
+                                errorLog::getInstance()->logMessage(self::class, $exception->getMessage() . ' ' . $releaseElement->getTitle());
+                            }
+
+                            if ($textContent) {
+                                return $textContent;
+                            }
+                        }
+                    }
+                }
+                return '';
+            },
+            "releaseFileDescription" => function (zxProdElement $element) {
+                foreach ($element->getReleasesList() as $releaseElement) {
+                    foreach ($releaseElement->getReleaseFlatStructure() as $item) {
+                        if ($item['type'] === 'file' && $item['viewable']) {
+                            if ($item['internalType'] === 'plain_text' || $item['internalType'] === 'cp866_text'){
+                                if ($file = $releaseElement->getReleaseFile($item['id'])){
+                                    return $releaseElement->getFormattedFileContent($file);
+                                }
+                            }
+                        }
+                    }
+                }
+                return '';
+            },
+            "isPlayable" => function (zxProdElement $element) {
+                foreach ($element->getReleasesList() as $releaseElement) {
+                    if ($releaseElement->isPlayable()) {
+                        return true;
+                    }
+                }
+                return false;
+            },
             "userVote" => 'getUserVote',
             "votePercent" => 'getVotePercent',
             "denyVoting" => 'denyVoting',
@@ -74,6 +180,22 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
     protected function getPresetsStructure()
     {
         return [
+            'ai' => [
+                'title',
+                'description',
+                'languageString',
+                'partyString',
+                'year',
+                'description',
+                'groupsString',
+                'publishersString',
+                'authorsInfoString',
+                'hardwareString',
+                'manualString',
+                'releaseFileDescription',
+                'categoriesString',
+                'isPlayable',
+            ],
             'api' => [
                 'id',
                 'title',

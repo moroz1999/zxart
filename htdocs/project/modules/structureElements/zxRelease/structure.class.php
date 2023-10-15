@@ -171,6 +171,25 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
 
     public function getReleaseStructure()
     {
+        if ($structure = $this->getReleaseFlatStructure()) {
+
+            $groups = [];
+            foreach ($structure as $key => $item) {
+                $groups[$item['parentId']][] = &$structure[$key];
+            }
+            foreach ($structure as $key => $item) {
+                if (isset($groups[$item['id']])) {
+                    $structure[$key]['items'] = $groups[$item['id']];
+                }
+            }
+            return $groups['0'];
+        }
+
+        return false;
+    }
+
+    public function getReleaseFlatStructure()
+    {
         if ($path = $this->getFilePath()) {
             /**
              * @var ZxParsingManager $zxParsingManager
@@ -185,19 +204,10 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
                         $structure[$key]['viewable'] = true;
                     }
                     $structure[$key]['fileName'] = urldecode($structure[$key]['fileName']);
+                    $structure[$key]['internalType'] = $type;
                 }
-
-                $groups = [];
-                foreach ($structure as $key => $item) {
-                    $groups[$item['parentId']][] = &$structure[$key];
-                }
-                foreach ($structure as $key => $item) {
-                    if (isset($groups[$item['id']])) {
-                        $structure[$key]['items'] = $groups[$item['id']];
-                    }
-                }
-                return $groups['0'];
             }
+            return $structure;
         }
         return false;
     }
@@ -279,55 +289,61 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     public function getCurrentReleaseContentFormatted()
     {
         if ($file = $this->getCurrentReleaseFile()) {
-            if ($fileType = $this->getInternalFileType('', $file->getItemExtension(), $file->getSize())) {
-                if ($content = $file->getContent()) {
-                    switch ($fileType) {
-                        case 'plain_text':
-                            return '<pre>' . htmlspecialchars($content) . '</pre>';
-                        case 'cp866_text':
-                            return '<pre>' . htmlspecialchars(
-                                    mb_convert_encoding($content, 'UTF-8', 'CP866')
-                                ) . '</pre>';
+            return $this->getFormattedFileContent($file);
+        }
+        return false;
+    }
 
-                        case 'pc_image':
-                            $controller = controller::getInstance();
-                            if ($fileId = (int)$controller->getParameter('fileId')) {
-                                return "<img src='" . $controller->baseURL . "zxfile/id:" . $this->id . "/fileId:" . $fileId . "/" . $file->getItemName() . "' />";
-                            }
-                            break;
-                        case 'zx_basic':
+    public function getFormattedFileContent($file)
+    {
+        if ($fileType = $this->getInternalFileType('', $file->getItemExtension(), $file->getSize())) {
+            if ($content = $file->getContent()) {
+                switch ($fileType) {
+                    case 'plain_text':
+                        return '<pre>' . htmlspecialchars($content) . '</pre>';
+                    case 'cp866_text':
+                        return '<pre>' . htmlspecialchars(
+                                mb_convert_encoding($content, 'UTF-8', 'CP866')
+                            ) . '</pre>';
 
-                            $basic = new BasicFile();
-                            $basic->setBinary($content);
-                            return '<pre>' . htmlspecialchars($basic->getAsText()) . '</pre>';
-                        case 'zx_image_standard':
-                            $controller = controller::getInstance();
-                            if ($fileId = (int)$controller->getParameter('fileId')) {
-                                return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:standard/' />";
-                            }
-                            break;
-                        case 'zx_image_monochrome':
-                            $controller = controller::getInstance();
-                            if ($fileId = (int)$controller->getParameter('fileId')) {
-                                return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:monochrome/' />";
-                            }
-                            break;
-                        case 'zx_image_tricolor':
-                            $controller = controller::getInstance();
-                            if ($fileId = (int)$controller->getParameter('fileId')) {
-                                return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:tricolor/' />";
-                            }
-                            break;
-                        case 'zx_image_gigascreen':
-                            $controller = controller::getInstance();
-                            if ($fileId = (int)$controller->getParameter('fileId')) {
-                                return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:gigascreen/' />";
-                            }
-                            break;
-                        default:
-                            $hex = new HexViewer();
-                            return '<pre>' . htmlspecialchars($hex->getFormatted($content)) . '</pre>';
-                    }
+                    case 'pc_image':
+                        $controller = controller::getInstance();
+                        if ($fileId = (int)$controller->getParameter('fileId')) {
+                            return "<img src='" . $controller->baseURL . "zxfile/id:" . $this->id . "/fileId:" . $fileId . "/" . $file->getItemName() . "' />";
+                        }
+                        break;
+                    case 'zx_basic':
+
+                        $basic = new BasicFile();
+                        $basic->setBinary($content);
+                        return '<pre>' . htmlspecialchars($basic->getAsText()) . '</pre>';
+                    case 'zx_image_standard':
+                        $controller = controller::getInstance();
+                        if ($fileId = (int)$controller->getParameter('fileId')) {
+                            return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:standard/' />";
+                        }
+                        break;
+                    case 'zx_image_monochrome':
+                        $controller = controller::getInstance();
+                        if ($fileId = (int)$controller->getParameter('fileId')) {
+                            return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:monochrome/' />";
+                        }
+                        break;
+                    case 'zx_image_tricolor':
+                        $controller = controller::getInstance();
+                        if ($fileId = (int)$controller->getParameter('fileId')) {
+                            return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:tricolor/' />";
+                        }
+                        break;
+                    case 'zx_image_gigascreen':
+                        $controller = controller::getInstance();
+                        if ($fileId = (int)$controller->getParameter('fileId')) {
+                            return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:gigascreen/' />";
+                        }
+                        break;
+                    default:
+                        $hex = new HexViewer();
+                        return '<pre>' . htmlspecialchars($hex->getFormatted($content)) . '</pre>';
                 }
             }
         }

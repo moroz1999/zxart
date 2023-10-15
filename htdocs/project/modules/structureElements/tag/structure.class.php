@@ -40,6 +40,10 @@ class tagElement extends structureElement implements JsonDataProvider
 
     public function getFontSize($maxAmount = 10)
     {
+        if ($maxAmount === 0){
+            $maxAmount = 10;
+        }
+
         $min = 1;
         $max = 4;
 

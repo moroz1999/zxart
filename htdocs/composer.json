@@ -12,11 +12,18 @@
     "ext-gd": "*",
     "ext-dom": "*",
     "ext-zip": "*",
-    "sobak/scrawler": "^0.3.0"
+    "sobak/scrawler": "^0.3.0",
+    "openai-php/client": "^0.7.3",
+    "http-interop/http-factory-guzzle": "^1.2",
+    "guzzlehttp/guzzle": "^6.5",
+    "php-http/discovery": "^1.19",
+    "php-http/guzzle6-adapter": "^2.0",
+    "smalot/pdfparser": "^2.7"
   },
   "config": {
     "allow-plugins": {
-      "kylekatarnls/update-helper": true
+      "kylekatarnls/update-helper": true,
+      "php-http/discovery": true
     }
   }
 }

@@ -14,9 +14,10 @@
     'pageAmountProducts' => 10,
     'availablePageAmountProducts' => [20, 30, 50],
     'timeZone' => 'Europe/Tallinn',
-    'errorReporting' => 'E_ALL | E_STRICT',
+    'errorReporting' => E_ERROR,
     'protocol' => 'http://',
     'defaultRootElementId' => '1',
     'rootMarkerPublic' => 'public_root',
     'rootMarkerAdmin' => 'admin_root',
+    'ai_key' => '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',
 ];

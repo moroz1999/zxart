@@ -39,6 +39,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     protected $sectionType = 'graphics';
     protected $imageName;
     protected $bestAuthorsPictures;
+    protected $metaTitle;
 
     protected function setModuleStructure(&$moduleStructure)
     {
@@ -243,7 +244,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
 
         $authorNames = $this->getAuthorNames();
 
-        $this->metaTitle = $translationsManager->getTranslationByName("titles.picture");
+        $this->metaTitle = $translationsManager->getTranslationByName("titles.picture") ?? '';
         $this->metaTitle = str_ireplace('%t', $this->title, $this->metaTitle);
 
         if ($authorNames) {
@@ -256,7 +257,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     {
         $translationsManager = $this->getService('translationsManager');
 
-        $textContent = $translationsManager->getTranslationByName("descriptions.picture");
+        $textContent = $translationsManager->getTranslationByName("descriptions.picture") ?? '';
         $textContent = str_ireplace('%t', $this->title, $textContent);
 
         if ($authorNames = $this->getAuthorNames()) {
@@ -272,7 +273,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         if ($this->getReleaseElement()) {
             $textContent = str_ireplace('%g', $this->getReleaseElement()->title, $textContent);
         } else {
-            $textContent = str_ireplace('%g', $this->release, $textContent);
+            $textContent = str_ireplace('%g', $this->release ?? '', $textContent);
         }
 
         if ($this->year) {

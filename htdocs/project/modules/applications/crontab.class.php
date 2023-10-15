@@ -7,6 +7,7 @@ class crontabApplication extends controllerApplication
     public $requestParameters = [];
 
     private $structureManager;
+    private $aiManager;
 
     public function initialize()
     {
@@ -44,16 +45,112 @@ class crontabApplication extends controllerApplication
 
             $this->structureManager->setRequestedPath([$currentLanguageCode]);
             $this->structureManager->setPrivilegeChecking(false);
+            $this->convertMp3();
+            $this->parseReleases();
+            $this->parseArtItems('module_zxpicture', 'image', 'originalName');
+            $this->parseArtItems('module_zxmusic', 'file', 'fileName');
             $this->queryAiItems();
-//            $this->convertMp3();
-//            $this->parseReleases();
-//            $this->parseArtItems('module_zxpicture', 'image', 'originalName');
-//            $this->parseArtItems('module_zxmusic', 'file', 'fileName');
         }
     }
 
     private function queryAiItems()
     {
+        $aiManager = $this->getService(AiManager::class);
+        $languagesManager = $this->getService(LanguagesManager::class);
+        $spa = $languagesManager->getLanguageId('spa');
+        $eng = $languagesManager->getLanguageId('eng');
+        $rus = $languagesManager->getLanguageId('rus');
+        /**
+         * @var \Illuminate\Database\Connection $db
+         */
+        $db = $this->getService('db');
+        $counter = 0;
+
+        $query = $db->table('module_zxprod')
+            ->select('id')
+            ->where('hasAiData', '!=', 1)
+            ->where('legalStatus', '!=', 'mia')
+            ->limit(20)
+            ->orderBy('votes', 'desc');
+//                ->orderBy('id');
+        $records = $query->get();
+        $totalExecution = 0;
+
+        if ($records) {
+            foreach ($records as $record) {
+                $counter++;
+                echo $counter . ' AI request ';
+                echo $record['id'] . ' ';
+                /**
+                 * @var zxProdElement $prodElement
+                 */
+                if ($prodElement = $this->structureManager->getElementById($record['id'])) {
+//                    if ($prodElement = $this->structureManager->getElementById(404101)) {
+                    $start_time = microtime(true);
+
+                    echo $prodElement->id . ' ';
+                    echo $prodElement->title . ' ';
+                    $metaData = $aiManager->getProdData($prodElement);
+                    if ($metaData) {
+                        $db->table('module_zxprod_meta')
+                            ->updateOrInsert(
+                                [
+                                    'id' => $prodElement->id,
+                                    'languageId' => $spa
+                                ],
+                                [
+                                    'id' => $prodElement->id,
+                                    'metaTitle' => $metaData['spa']['pageTitle'],
+                                    'h1' => $metaData['spa']['h1'],
+                                    'metaDescription' => $metaData['spa']['metaDescription'],
+                                    'generatedDescription' => $metaData['spa']['intro'] ?? '',
+                                    'languageId' => $spa
+                                ]);
+                        $db->table('module_zxprod_meta')
+                            ->updateOrInsert(
+                                [
+                                    'id' => $prodElement->id,
+                                    'languageId' => $eng
+                                ],
+                                [
+                                    'id' => $prodElement->id,
+                                    'metaTitle' => $metaData['eng']['pageTitle'],
+                                    'h1' => $metaData['eng']['h1'],
+                                    'metaDescription' => $metaData['eng']['metaDescription'],
+                                    'generatedDescription' => $metaData['eng']['intro'] ?? '',
+                                    'languageId' => $eng
+                                ]);
+                        $db->table('module_zxprod_meta')
+                            ->updateOrInsert(
+                                [
+                                    'id' => $prodElement->id,
+                                    'languageId' => $rus
+                                ],
+                                [
+                                    'id' => $prodElement->id,
+                                    'metaTitle' => $metaData['rus']['pageTitle'],
+                                    'h1' => $metaData['rus']['h1'],
+                                    'metaDescription' => $metaData['rus']['metaDescription'],
+                                    'generatedDescription' => $metaData['rus']['intro'] ?? '',
+                                    'languageId' => $rus
+                                ]);
+                        $prodElement->hasAiData = true;
+                        $prodElement->persistElementData();
+                    }
+
+                }
+                $end_time = microtime(true);
+                $execution_time = $end_time - $start_time;
+                $totalExecution += $execution_time;
+                echo ' ' . round($execution_time) . 's<br />';
+                flush();
+
+                if ($totalExecution > 5 * 60) {
+                    return;
+                }
+            }
+
+        }
 
     }
 

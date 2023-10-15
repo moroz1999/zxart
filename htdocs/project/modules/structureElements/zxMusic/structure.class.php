@@ -26,7 +26,7 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
     protected $authorLinkType = 'authorMusic';
     protected $partyLinkType = 'partyMusic';
     protected $sectionType = 'music';
-
+    protected $metaTitle;
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';

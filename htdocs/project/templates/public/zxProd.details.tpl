@@ -189,6 +189,11 @@
                 {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false}
             {/if}
         </div>
+        {if $description = $element->getGeneratedDescription()}
+            <div class="zxprod_details_description">
+                {$description}
+            </div>
+        {/if}
         {if $releasesList=$element->getReleasesList()}
             <h2>{translations name='zxprod.releases'}</h2>
             <div class="zxprod_details_releases">

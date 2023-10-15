@@ -46,6 +46,9 @@
     <br>
 {/if}
 <br>{include file=$theme->template("component.hr.tpl") symbol="-"}<br><br>
+{if $description = $element->getGeneratedDescription()}
+    {$description}
+{/if}
 {if $releasesList=$element->getReleasesList()}{include file=$theme->template('component.releasestable.tpl') releasesList=$releasesList pager=false}{/if}
 {if $filesList = $element->getFilesList('connectedFile')}
     {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false}

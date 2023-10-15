@@ -8,7 +8,7 @@ class authorsListElement extends structureElement
     public $allowedTypes = [];
     public $defaultActionName = 'show';
     public $role = 'content';
-
+    protected $lettersSelectorInfo;
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';

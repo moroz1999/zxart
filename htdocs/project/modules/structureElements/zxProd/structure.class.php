@@ -27,10 +27,6 @@
  * @property boolean $releasesOnly
  * @property array[] $splitData
  * @property boolean hasAiData
- * @property string h1
- * @property string metaTitle
- * @property string metaDescription
- * @property string generatedDescription
  */
 class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPathInterface, CommentsHolderInterface,
     JsonDataProvider, OpenGraphDataProviderInterface, ZxSoftInterface, MetadataProviderInterface
@@ -66,6 +62,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     protected $bestPictures;
     protected $languagesInfo;
     protected $hardwareInfo;
+    private $metaData;
 
     protected function setModuleStructure(&$moduleStructure)
     {
@@ -126,10 +123,6 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         $moduleStructure['splitData'] = 'array';
 
         $moduleStructure['hasAiData'] = 'checkbox';
-        $moduleStructure['metaTitle'] = 'text';
-        $moduleStructure['h1'] = 'text';
-        $moduleStructure['metaDescription'] = 'text';
-        $moduleStructure['generatedDescription'] = 'text';
 
 //        $moduleStructure['series'] = [
 //            'DBValueSet',
@@ -611,7 +604,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     }
 
 
-    public function getHardwareInfo()
+    public function getHardwareInfo($short = true)
     {
         if (!isset($this->hardwareInfo)) {
             /**
@@ -628,7 +621,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
                 foreach ($this->getHardware() as $item) {
                     $this->hardwareInfo[] = [
                         'id' => $item,
-                        'title' => $translationsManager->getTranslationByName('hardware_short.item_' . $item),
+                        'title' => $translationsManager->getTranslationByName($short ? 'hardware_short.item_' . $item : 'hardware.item_' . $item),
                     ];
                 }
                 $this->setCacheKey($key, $this->hardwareInfo, 24 * 60 * 60);
@@ -767,8 +760,9 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     public function getMetaTitle()
     {
         $title = null;
-        if ($this->metaTitle) {
-            return $this->metaTitle;
+        if ($this->hasAiData) {
+            $metaData = $this->getMetaData();
+            return $metaData['metaTitle'];
         }
 
         /**
@@ -807,11 +801,48 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         if ($this->description) {
             return $this->description;
         }
-        if ($this->generatedDescription) {
-            return $this->generatedDescription;
+        return '';
+    }
+
+    public function getGeneratedDescription()
+    {
+        if ($this->hasAiData) {
+            $metaData = $this->getMetaData();
+            return $metaData['generatedDescription'];
         }
         return '';
     }
 
 
+    private function getMetaData()
+    {
+        if (!$this->metaData) {
+            $db = $this->getService('db');
+            $languagesManager = $this->getService(LanguagesManager::class);
+            $this->metaData = $db->table('module_zxprod_meta')
+                ->select(['metaTitle', 'h1', 'metaDescription', 'generatedDescription'])
+                ->where('id', '=', $this->id)
+                ->where('languageId', '=', $languagesManager->getCurrentLanguageId())
+                ->first();
+        }
+        return $this->metaData;
+    }
+
+    public function getMetaDescription()
+    {
+        if ($this->hasAiData) {
+            $metaData = $this->getMetaData();
+            return $metaData['metaDescription'];
+        }
+        return '';
+    }
+
+    public function getH1()
+    {
+        if ($this->hasAiData) {
+            $metaData = $this->getMetaData();
+            return $metaData['h1'];
+        }
+        return '';
+    }
 }

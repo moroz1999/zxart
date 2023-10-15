@@ -39,6 +39,11 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         return false;
     }
 
+    public function getFilePath()
+    {
+        return $this->getUploadedFilesPath().$this->getId();
+    }
+
     public function getImageId($mobile = false)
     {
         if ($this->image) {
@@ -98,7 +103,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
     {
         if ($info = pathinfo($this->fileName)) {
             if (!empty($info['extension'])) {
-                return $info['extension'];
+                return strtolower($info['extension']);
             }
         }
 

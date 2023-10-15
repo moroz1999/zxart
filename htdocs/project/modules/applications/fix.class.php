@@ -17,6 +17,7 @@ class fixApplication extends controllerApplication
 
     public function execute($controller)
     {
+        exit;
         ini_set("memory_limit", "2048M");
         ini_set("max_execution_time", 60);
         $renderer = $this->getService('renderer');
@@ -36,6 +37,7 @@ class fixApplication extends controllerApplication
             $languagesManager = $this->getService('LanguagesManager');
             $languagesManager->setCurrentLanguageCode('eng');
             $this->fixZxChip();
+            $this->fixWlodek();
         }
     }
 
@@ -71,6 +73,40 @@ class fixApplication extends controllerApplication
                      */
                     foreach ($releases as $key => $release) {
                         copy($release->getFilePath(), ROOT_PATH . 'temporary/zxchip/' . $release->fileName);
+                    }
+                    $string = $prod->getImportOriginId('zxdb') . ' ';
+                    $string .= $prod->getImportOriginId('3a') . ' ';
+                    $string .= $prod->title . ' ';
+
+                    $string .= "\n";
+                    file_put_contents($this->log, $string, FILE_APPEND);
+                    file_put_contents($this->idLog, $prod->getImportOriginId('zxdb') . ',', FILE_APPEND);
+                    echo $string . '<br>';
+                    flush();
+                    $prod->deleteElementData();
+
+                } else {
+                    echo 'failed prod ' . $id . '<br>';
+                }
+            }
+        }
+    }
+    private function fixWlodek()
+    {
+        $ids = $this->loadIds('demo collection');
+        if ($ids) {
+            foreach ($ids as $id) {
+                /**
+                 * @var zxProdElement $prod
+                 */
+                $prod = $this->structureManager->getElementById($id);
+                if ($prod) {
+                    $releases = $prod->getReleasesList();
+                    /**
+                     * @var zxReleaseElement $release
+                     */
+                    foreach ($releases as $key => $release) {
+                        copy($release->getFilePath(), ROOT_PATH . 'temporary/wlodek/' . $release->fileName);
                     }
                     $string = $prod->getImportOriginId('zxdb') . ' ';
                     $string .= $prod->getImportOriginId('3a') . ' ';
