@@ -48,15 +48,19 @@
                 </td>
             </tr>
         {/if}
-        {if $categories = $element->getConnectedCategories()}
+        {if $categoriesPaths = $element->getCategoriesPaths()}
             <tr>
                 <td class='info_table_label'>
                     {translations name='zxprod.categories'}:
                 </td>
                 <td class='info_table_value'>
-                    {foreach $categories as $categoryElement}
-                        <a
-                        href="{$categoryElement->URL}">{$categoryElement->title}</a>{if !$categoryElement@last}, {/if}
+                    {foreach $categoriesPaths as $categories}
+                        <div>
+                        {foreach $categories as $categoryElement}
+                            <a
+                            href="{$categoryElement->URL}">{$categoryElement->title}</a>{if !$categoryElement@last} / {/if}
+                        {/foreach}
+                        </div>
                     {/foreach}
                 </td>
             </tr>
@@ -228,7 +232,7 @@
     {if $element->compilationProds}
         <h2>{translations name='zxprod.compilationProds'}</h2>
         <script>
-            window.elementsData = window.elementsData ? window.elementsData : { };
+            window.elementsData = window.elementsData ? window.elementsData : {};
             window.elementsData[{$element->id}] = {$element->getCompilationJsonData()};
         </script>
         <app-zx-prods-list element-id="{$element->id}" property="prods"></app-zx-prods-list>

@@ -43,6 +43,9 @@ trait CategoryElementsSelectorProviderTrait
         return $this->categoriesInfo;
     }
 
+    /**
+     * @return zxProdCategoryElement[]
+     */
     public function getConnectedCategories()
     {
         if ($this->connectedCategories === null) {

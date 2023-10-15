@@ -707,6 +707,27 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return $categoriesInfo;
     }
 
+    public function getCategoriesPaths()
+    {
+        $usedCategories = [];
+        $paths = [];
+        foreach ($this->getConnectedCategories() as $category) {
+            if (!isset($usedCategories[$category->id])) {
+                $path = [$category];
+
+                $usedCategories[$category->id] = true;
+                while ($parentCategory = $category->getParentCategory()) {
+                    $category = $parentCategory;
+
+                    $usedCategories[$parentCategory->id] = true;
+                    array_unshift($path, $parentCategory);
+                }
+                $paths[] = $path;
+            }
+        }
+        return $paths;
+    }
+
     public function getPartyInfo()
     {
         if ($party = $this->getPartyElement()) {

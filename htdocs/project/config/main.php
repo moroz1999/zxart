@@ -19,5 +19,5 @@
     'defaultRootElementId' => '1',
     'rootMarkerPublic' => 'public_root',
     'rootMarkerAdmin' => 'admin_root',
-    'ai_key' => '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',
+    'ai_key' => '',
 ];

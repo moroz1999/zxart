@@ -27,7 +27,7 @@
 				</td>
 			</tr>
 		</table>
-		<div>{$element->getCurrentReleaseContentFormatted()}</div>
+		<pre>{$element->getCurrentReleaseContentFormatted()}</pre>
 	{/capture}
 
 	{assign moduleClass "zxrelease_details"}

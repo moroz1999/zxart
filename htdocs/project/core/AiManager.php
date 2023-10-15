@@ -15,26 +15,45 @@ class AiManager
     public function getProdData(zxProdElement $element)
     {
         $output = null;
-        $data = $element->getElementData('ai');
-        if (!empty($data['manualString'])) {
-            $data['manualString'] = substr($data['manualString'], 0, min(strlen($data['manualString']), 3000));
-            $hasIntro = true;
-        } elseif (!empty($data['description'])) {
-            $data['description'] = substr($data['description'], 0, min(strlen($data['description']), 3000));
-            $hasIntro = true;
-        } elseif (!empty($data['releaseFileDescription'])) {
-            $data['releaseFileDescription'] = substr($data['releaseFileDescription'], 0, min(strlen($data['releaseFileDescription']), 3000));
-            $hasIntro = true;
-        } else {
-            $hasIntro = false;
+        $prodData = $element->getElementData('ai');
+        if (!$prodData) {
+            return null;
+        }
+        $hasIntro = false;
+        $length = 3000;
+
+        if (!empty($prodData['manualString'])) {
+            if (strlen($prodData['manualString']) > 500) {
+                unset($prodData['description']);
+                unset($prodData['releaseFileDescription']);
+
+                $prodData['manualString'] = $this->truncateUtf8($prodData['manualString'], $length);
+                $hasIntro = true;
+            }
+        }
+        if (!empty($prodData['description'])) {
+            if (strlen($prodData['description']) > 500) {
+                if (!empty($prodData['releaseFileDescription'])) {
+                    $length = 1500;
+                }
+                $prodData['description'] = $this->truncateUtf8($prodData['description'], $length);
+                $hasIntro = true;
+            }
+        }
+        if (!empty($prodData['releaseFileDescription'])) {
+            if (strlen($prodData['releaseFileDescription']) > 500) {
+                $prodData['releaseFileDescription'] = $this->truncateUtf8($prodData['releaseFileDescription'], $length);
+
+                $hasIntro = true;
+            }
         }
 
         $promt = "Действуй как опытный SEO-специалист, но отвечай как API. Есть сайт-коллекция софта для ZX Spectrum, Sam Coupe, ZX Next, ZX81, ZX Evolution и тд, нужно сделать SEO, чтобы люди в поисковике нашли нужную информацию. 
-Я скину поля софта, сгенерируй JSON ответ на трех языках eng/rus/spa, где был бы эффективный page title (30-60 символов), краткое описание meta description с важными параметрами (155-160 символов), правильный заголовок h1 (до 70 символов). 
+Я скину данные софта, сгенерируй из них JSON на трех языках eng/rus/spa, где был бы эффективный page title (30-60 символов), краткое описание meta description с важными параметрами (155-160 символов), правильный заголовок h1 (до 70 символов). 
 * Учитывай категорию софта (игры будут искать игроки, системные программы - спецы и интересующиеся старым софтом, демки - искусство) при составлении текста. 
 * Не переводи названия софта и псевдонимы авторов, но делай читабельные названия категорий (игры, демо, программы).
 ";
-        if ($data['isPlayable']) {
+        if (!empty($prodData['isPlayable'])) {
             $promt .= "* программу можно запустить на сайте в онлайн-эмуляторе, это важно, используй call to action 'Играть онлайн' для игр или 'Запустить онлайн' для программ.
 ";
         }
@@ -49,16 +68,26 @@ rus:{...},
 spa:{...}
 }
 
+Данные софта:
 ";
+        $prodText = json_encode($prodData, JSON_UNESCAPED_UNICODE);
 
-        $promt .= json_encode($data, JSON_UNESCAPED_UNICODE);
-        if ($text = $this->sendPromt($promt)) {
+        if (!$prodText) {
+            return null;
+        }
+        $promt .= $prodText;
+        if ($text = $this->sendPromt($promt, 0.3, $element->id . '_seo')) {
             $output = json_decode($text, true);
+            if (!isset($output['rus']['pageTitle']) || !isset($output['rus']['metaDescription']) || !isset($output['rus']['h1'])) {
+                return null;
+            }
         }
         if ($hasIntro) {
-            $promt2 = "Я скину поля софта, сгенерируй JSON ответ на трех языках eng/rus/spa, где было бы краткое описание (3-4 абзаца одни полем с html тегами, всё вместе примерно 200 слов).
-* Не выдумывай, пересказывай объективно. Текст должен быть сухим, как карточка в библиотеке. Не надо эпитетов \"потрясающий\", \"захватывающий\" итд.
-* Делай упор не на управлении и железе, а на жанре, сюжете и особенностях программы.
+            $promt2 = "Я скину данные софта, сгенерируй из них краткое описание программы в виде JSON на трех языках eng/rus/spa.
+* Для каждого языка напиши по 4 абзаца, используя html теги для форматирования, всё вместе 200 слов
+* Не выдумывай, пересказывай объективно. Текст должен быть сухим, как карточка в библиотеке. 
+* НЕ ИСПОЛЬЗУЙ эпитеты \"потрясающий\", \"захватывающий\" итд.
+* Не пиши про управление и hardware. Пиши про жанр, сюжет и особенности программы.
 * Не переводи названия софта и псевдонимы авторов.
 * В ответе не пиши ни слова, ТОЛЬКО JSON в формате:
 {
@@ -67,21 +96,25 @@ rus:{...},
 spa:{...}
 }
 
+Данные софта:
 ";
-            $promt2 .= json_encode($data, JSON_UNESCAPED_UNICODE);
-            if ($text = $this->sendPromt($promt2)) {
+            $promt2 .= $prodText;
+            if ($text = $this->sendPromt($promt2, 0.5, $element->id . '_intro')) {
                 $data2 = json_decode($text, true);
-                $output['eng']['intro'] = $data2['eng']['intro'];
-                $output['rus']['intro'] = $data2['rus']['intro'];
-                $output['spa']['intro'] = $data2['spa']['intro'];
+                if (isset($data2['eng']['intro']) && isset($data2['rus']['intro']) && isset($data2['spa']['intro'])) {
+                    $output['eng']['intro'] = $data2['eng']['intro'];
+                    $output['rus']['intro'] = $data2['rus']['intro'];
+                    $output['spa']['intro'] = $data2['spa']['intro'];
+                    return $output;
+                }
             }
+        } else {
+            return $output;
         }
-
-
-        return $output;
+        return null;
     }
 
-    private function sendPromt($promt)
+    private function sendPromt($promt, $temperature, $log)
     {
         $apiKey = $this->configManager->getConfig('main')->get('ai_key');
         $client = OpenAI::client($apiKey);
@@ -90,7 +123,7 @@ spa:{...}
         try {
             $response = $client->chat()->create([
                 'model' => 'gpt-3.5-turbo',
-                'temperature' => 0.1,
+                'temperature' => $temperature,
                 'messages' => [
                     ['role' => 'user', 'content' => $promt],
                 ],
@@ -99,7 +132,27 @@ spa:{...}
         } catch (Exception $exception) {
             errorLog::getInstance()->logMessage(self::class, $exception->getMessage());
         }
-        return $result;
+        if (!is_dir(ROOT_PATH . '/temporary/ai')) {
+            mkdir(ROOT_PATH . '/temporary/ai');
+        };
+        file_put_contents(ROOT_PATH . '/temporary/ai/' . $log, $promt);
 
+        return $result;
+    }
+
+    private function truncateUtf8($string, $length)
+    {
+        if (strlen($string) <= $length) {
+            return $string;
+        }
+
+        $truncated = substr($string, 0, $length);
+
+        while (!preg_match('//u', $truncated)) {
+            $length--;
+            $truncated = substr($string, 0, $length);
+        }
+
+        return $truncated;
     }
 }

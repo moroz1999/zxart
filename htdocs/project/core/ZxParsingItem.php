@@ -55,7 +55,7 @@ abstract class ZxParsingItem
      */
     public function getContent()
     {
-        if (!$this->content && is_file($this->path)) {
+        if (!$this->content && $this->path && is_file($this->path)) {
             $this->content = file_get_contents($this->path);
         }
         return $this->content;

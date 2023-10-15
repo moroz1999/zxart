@@ -7,7 +7,7 @@ class crontabApplication extends controllerApplication
     public $requestParameters = [];
 
     private $structureManager;
-    private $aiManager;
+    private string $logFilePath;
 
     public function initialize()
     {
@@ -18,6 +18,11 @@ class crontabApplication extends controllerApplication
 
     public function execute($controller)
     {
+        $pathsManager = $this->getService(PathsManager::class);
+        $todayDate = date('Y-m-d');
+        $this->logFilePath = $pathsManager->getPath('logs') . 'cron' . $todayDate . '.txt';
+
+
         //start this before ending output buffering
         $languagesManager = $this->getService('LanguagesManager');
         $currentLanguageCode = $languagesManager->getCurrentLanguageCode();
@@ -53,6 +58,13 @@ class crontabApplication extends controllerApplication
         }
     }
 
+    private function logMessage($message, $seconds)
+    {
+        $text = date('Y-m-d H:i:s') . " - " . $seconds . " - " . $message;
+        echo $text . '<br/>';
+        file_put_contents($this->logFilePath, $text . PHP_EOL, FILE_APPEND);
+    }
+
     private function queryAiItems()
     {
         $aiManager = $this->getService(AiManager::class);
@@ -72,24 +84,19 @@ class crontabApplication extends controllerApplication
             ->where('legalStatus', '!=', 'mia')
             ->limit(20)
             ->orderBy('votes', 'desc');
-//                ->orderBy('id');
         $records = $query->get();
         $totalExecution = 0;
 
         if ($records) {
             foreach ($records as $record) {
                 $counter++;
-                echo $counter . ' AI request ';
-                echo $record['id'] . ' ';
                 /**
                  * @var zxProdElement $prodElement
                  */
+//                if ($prodElement = $this->structureManager->getElementById(406707)) {
                 if ($prodElement = $this->structureManager->getElementById($record['id'])) {
-//                    if ($prodElement = $this->structureManager->getElementById(404101)) {
                     $start_time = microtime(true);
 
-                    echo $prodElement->id . ' ';
-                    echo $prodElement->title . ' ';
                     $metaData = $aiManager->getProdData($prodElement);
                     if ($metaData) {
                         $db->table('module_zxprod_meta')
@@ -142,8 +149,8 @@ class crontabApplication extends controllerApplication
                 $end_time = microtime(true);
                 $execution_time = $end_time - $start_time;
                 $totalExecution += $execution_time;
-                echo ' ' . round($execution_time) . 's<br />';
-                flush();
+
+                $this->logMessage($counter . ' AI request ' . $prodElement->id . ' ' . $prodElement->title, round($execution_time));
 
                 if ($totalExecution > 5 * 60) {
                     return;
@@ -185,25 +192,23 @@ class crontabApplication extends controllerApplication
             $records = $query->get();
             if ($records) {
                 foreach ($records as $record) {
-                    echo $counter . ' ';
-                    echo $record['id'] . ' ';
+                    $start_time = microtime(true);
                     /**
                      * @var ZxArtItem $element
                      */
                     if ($element = $this->structureManager->getElementById($record['id'])) {
-                        echo $element->getId() . ' ';
-                        echo $element->getTitle() . ' ';
                         $result = $element->updateMd5($this->getService('PathsManager')->getPath('uploads') . $element->$fileColumn, $element->$fileNameColumn);
                         if (!$result) {
-                            echo 'file not found';
                             $skipIds[] = $record['id'];
+                            $this->logMessage($counter . ' parse art item ' . $record['id'] . ' ' . $element->getId() . ' ' . $element->getTitle() . ' - file not found', 0);
+                        } else {
+                            $end_time = microtime(true);
+                            $this->logMessage($counter . ' parse art item ' . $record['id'] . ' ' . $element->getId() . ' ' . $element->getTitle(), round($end_time - $start_time, 2));
                         }
                     } else {
-                        echo 'skipped ';
                         $skipIds[] = $record['id'];
+                        $this->logMessage($counter . ' parse art item ' . $record['id'] . ' - skipped ', 0);
                     }
-                    echo '<br />';
-                    flush();
                 }
             } else {
                 break;
@@ -231,21 +236,18 @@ class crontabApplication extends controllerApplication
             $records = $query->get();
             if ($records) {
                 foreach ($records as $record) {
-                    echo $counter . ' ';
-                    echo $record['id'] . ' ';
+                    $start_time = microtime(true);
                     /**
                      * @var zxReleaseElement $releaseElement
                      */
                     if ($releaseElement = $this->structureManager->getElementById($record['id'])) {
-                        echo $releaseElement->id . ' ';
-                        echo $releaseElement->title . ' ';
                         $releaseElement->updateFileStructure();
+                        $end_time = microtime(true);
+                        $this->logMessage($counter . ' parse release ' . $record['id'] . ' ' . $releaseElement->id . ' ' . $releaseElement->title, round($end_time - $start_time, 2));
                     } else {
-                        echo 'skipped ';
                         $skipIds[] = $record['id'];
+                        $this->logMessage($counter . ' parse release ' . $record['id'] . ' - skipped ', 0);
                     }
-                    echo '<br />';
-                    flush();
                 }
             } else {
                 break;

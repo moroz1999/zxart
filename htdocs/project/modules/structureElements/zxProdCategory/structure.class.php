@@ -81,7 +81,22 @@ class zxProdCategoryElement extends structureElement implements MetadataProvider
             }
         }
 
-
+        return false;
+    }
+    /**
+     * @return bool|structureElement
+     */
+    public function getParentCategory()
+    {
+        /**
+         * @var structureManager $structureManager
+         */
+        $structureManager = $this->getService('structureManager');
+        if ($parentElement = $structureManager->getElementsFirstParent($this->id, false, 'structure')) {
+            if ($parentElement->structureType == 'zxProdCategory') {
+                return $parentElement;
+            }
+        }
         return false;
     }
 

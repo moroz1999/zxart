@@ -27,5 +27,5 @@
 				</td>
 			</tr>
 		</table>
-		<div>{$element->getCurrentReleaseContentFormatted()}</div>
+		<pre>{$element->getCurrentReleaseContentFormatted()}</pre>
 {/if}

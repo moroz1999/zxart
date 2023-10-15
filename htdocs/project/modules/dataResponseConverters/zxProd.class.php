@@ -101,8 +101,10 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             },
             "categoriesString" => function (zxProdElement $element) {
                 $categories = [];
-                foreach ($element->getCategoriesInfo() as $category) {
-                    $categories[] = $category['title'];
+                foreach ($element->getCategoriesPaths() as $path) {
+                    foreach ($path as $category){
+                        $categories[] = $category->title;
+                    }
                 }
                 return implode(', ', $categories);
             },
@@ -126,6 +128,16 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                     foreach ($releaseElement->getFilesList('infoFilesSelector') as $fileElement) {
                         if ($fileElement->getFileExtension() === 'txt') {
                             $content = file_get_contents($fileElement->getFilePath());
+                            $encoding = mb_detect_encoding($content, 'UTF-8, ISO-8859-1, Windows-1252, Windows-1251, IBM866, KOI8-R', true);
+
+                            if ($encoding === false) {
+                                continue;
+                            }
+
+                            if ($encoding !== 'UTF-8') {
+                                $content = mb_convert_encoding($content, 'UTF-8', $encoding);
+                            }
+
                             if ($content) {
                                 return $content;
                             }

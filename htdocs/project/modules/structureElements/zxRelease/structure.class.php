@@ -51,7 +51,10 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     protected $imagesUrls;
     protected $prodElement;
     protected static $textExtensions = [
-        't', 'w', 'txt', 'asm', 'a80', 'bbs', 'me', 'd', 'nfo', 'nf0', 'diz', 'a', 'md'
+        't', 'w', 'txt', 'bbs', 'me', 'nfo', 'nf0', 'diz', 'md'
+    ];
+    protected static $asmExtensions = [
+        'asm', 'a80', 'd', 'a'
     ];
 
     protected function setModuleStructure(&$moduleStructure)
@@ -300,12 +303,11 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
             if ($content = $file->getContent()) {
                 switch ($fileType) {
                     case 'plain_text':
-                        return '<pre>' . htmlspecialchars($content) . '</pre>';
+                        return htmlspecialchars($content);
                     case 'cp866_text':
-                        return '<pre>' . htmlspecialchars(
-                                mb_convert_encoding($content, 'UTF-8', 'CP866')
-                            ) . '</pre>';
-
+                        return htmlspecialchars(
+                            mb_convert_encoding($content, 'UTF-8', 'CP866')
+                        );
                     case 'pc_image':
                         $controller = controller::getInstance();
                         if ($fileId = (int)$controller->getParameter('fileId')) {
@@ -316,7 +318,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
 
                         $basic = new BasicFile();
                         $basic->setBinary($content);
-                        return '<pre>' . htmlspecialchars($basic->getAsText()) . '</pre>';
+                        return htmlspecialchars($basic->getAsText());
                     case 'zx_image_standard':
                         $controller = controller::getInstance();
                         if ($fileId = (int)$controller->getParameter('fileId')) {
@@ -343,7 +345,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
                         break;
                     default:
                         $hex = new HexViewer();
-                        return '<pre>' . htmlspecialchars($hex->getFormatted($content)) . '</pre>';
+                        return htmlspecialchars($hex->getFormatted($content));
                 }
             }
         }
@@ -359,6 +361,8 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
             return 'plain_text';
         } elseif (in_array($extension, self::$textExtensions)) {
             return 'cp866_text';
+        } elseif (in_array($extension, self::$asmExtensions)) {
+            return 'asm_text';
         } elseif ($extension == 'jpg' || $extension == 'png' || $extension == 'bmp') {
             return 'pc_image';
         } elseif ($extension == 'b') {
