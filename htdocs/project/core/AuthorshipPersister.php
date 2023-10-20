@@ -19,8 +19,8 @@ trait AuthorshipPersister
                 $addAuthorId,
                 $type,
                 json_encode($rolesInfo['new']),
-                $startDates['new'],
-                $endDates['new']
+                $startDates['new'] ?? 0,
+                $endDates['new'] ?? 0
             );
             unset($rolesInfo['new']);
             unset($startDates['new']);

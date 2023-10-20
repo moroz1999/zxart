@@ -20,7 +20,7 @@ class AiManager
             return null;
         }
         $hasIntro = false;
-        $length = 3000;
+        $length = 2700;
 
         if (!empty($prodData['manualString'])) {
             if (strlen($prodData['manualString']) > 500) {
@@ -76,9 +76,15 @@ spa:{...}
             return null;
         }
         $promt .= $prodText;
-        if ($text = $this->sendPromt($promt, 0.3, $element->id . '_seo')) {
+        if ($text = $this->sendPromt($promt, 0.3, $element->id . '_seo', $prodData)) {
             $output = json_decode($text, true);
-            if (!isset($output['rus']['pageTitle']) || !isset($output['rus']['metaDescription']) || !isset($output['rus']['h1'])) {
+            if (empty($output['rus']['pageTitle']) || empty($output['rus']['metaDescription']) || empty($output['rus']['h1'])) {
+                return null;
+            }
+            if (empty($output['eng']['pageTitle']) || empty($output['eng']['metaDescription']) || empty($output['eng']['h1'])) {
+                return null;
+            }
+            if (empty($output['spa']['pageTitle']) || empty($output['spa']['metaDescription']) || empty($output['spa']['h1'])) {
                 return null;
             }
         }
@@ -99,9 +105,9 @@ spa:{...}
 Данные софта:
 ";
             $promt2 .= $prodText;
-            if ($text = $this->sendPromt($promt2, 0.5, $element->id . '_intro')) {
+            if ($text = $this->sendPromt($promt2, 0.5, $element->id . '_intro', $prodData)) {
                 $data2 = json_decode($text, true);
-                if (isset($data2['eng']['intro']) && isset($data2['rus']['intro']) && isset($data2['spa']['intro'])) {
+                if (!empty($data2['eng']['intro']) && !empty($data2['rus']['intro']) && !empty($data2['spa']['intro'])) {
                     $output['eng']['intro'] = $data2['eng']['intro'];
                     $output['rus']['intro'] = $data2['rus']['intro'];
                     $output['spa']['intro'] = $data2['spa']['intro'];
@@ -114,7 +120,7 @@ spa:{...}
         return null;
     }
 
-    private function sendPromt($promt, $temperature, $log)
+    private function sendPromt($promt, $temperature, $log, $prodData)
     {
         $apiKey = $this->configManager->getConfig('main')->get('ai_key');
         $client = OpenAI::client($apiKey);
@@ -130,7 +136,7 @@ spa:{...}
             ]);
             $result = $response->choices[0]->message->content;
         } catch (Exception $exception) {
-            errorLog::getInstance()->logMessage(self::class, $exception->getMessage());
+            errorLog::getInstance()->logMessage(self::class, $exception->getMessage() . ': '.$prodData['title']);
         }
         if (!is_dir(ROOT_PATH . '/temporary/ai')) {
             mkdir(ROOT_PATH . '/temporary/ai');

@@ -25,7 +25,7 @@ class HexViewer
         $sourceFileSize = strlen($binary);
         $outputFileHandle = '';
         // Auto Left Pad, prepends a zero for elegance.
-        $leftPad = strlen(dechex($sourceFileSize / $chunkSize)) + 1;
+        $leftPad = strlen(dechex((int)($sourceFileSize / $chunkSize))) + 1;
         // Draw Header table with ruler
         $xHeader = $xHeaderRule = str_repeat(' ', $leftPad) . '   ';
         for ($i = 0; $i < $chunkSize; $i++) {

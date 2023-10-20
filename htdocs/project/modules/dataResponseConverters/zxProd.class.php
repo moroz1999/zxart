@@ -148,7 +148,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                             try {
                                 $pdf = $parser->parseFile($file);
                                 $textContent = $pdf->getText();
-                            } catch (Exception $exception) {
+                            } catch (Throwable $exception) {
                                 errorLog::getInstance()->logMessage(self::class, $exception->getMessage() . ' ' . $releaseElement->getTitle());
                             }
 
@@ -164,7 +164,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 foreach ($element->getReleasesList() as $releaseElement) {
                     foreach ($releaseElement->getReleaseFlatStructure() as $item) {
                         if ($item['type'] === 'file' && $item['viewable']) {
-                            if ($item['internalType'] === 'plain_text' || $item['internalType'] === 'cp866_text'){
+                            if ($item['internalType'] === 'plain_text'){
                                 if ($file = $releaseElement->getReleaseFile($item['id'])){
                                     return $releaseElement->getFormattedFileContent($file);
                                 }

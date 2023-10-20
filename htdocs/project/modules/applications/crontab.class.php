@@ -12,7 +12,7 @@ class crontabApplication extends controllerApplication
     public function initialize()
     {
         ignore_user_abort(1);
-        set_time_limit(60 * 5);
+        set_time_limit(60 * 10);
         $this->createRenderer();
     }
 
@@ -67,6 +67,9 @@ class crontabApplication extends controllerApplication
 
     private function queryAiItems()
     {
+        /**
+         * @var AiManager $aiManager
+         */
         $aiManager = $this->getService(AiManager::class);
         $languagesManager = $this->getService(LanguagesManager::class);
         $spa = $languagesManager->getLanguageId('spa');
@@ -97,6 +100,7 @@ class crontabApplication extends controllerApplication
                 if ($prodElement = $this->structureManager->getElementById($record['id'])) {
                     $start_time = microtime(true);
 
+                    $this->logMessage($counter . ' AI request start ' . $prodElement->id . ' ' . $prodElement->title, 0);
                     $metaData = $aiManager->getProdData($prodElement);
                     if ($metaData) {
                         $db->table('module_zxprod_meta')
@@ -145,14 +149,17 @@ class crontabApplication extends controllerApplication
                         $prodElement->persistElementData();
                     }
 
-                }
-                $end_time = microtime(true);
-                $execution_time = $end_time - $start_time;
-                $totalExecution += $execution_time;
+                    $end_time = microtime(true);
+                    $execution_time = $end_time - $start_time;
+                    $totalExecution += $execution_time;
 
-                $this->logMessage($counter . ' AI request ' . $prodElement->id . ' ' . $prodElement->title, round($execution_time));
+                    $this->logMessage($counter . ' AI request success ' . $prodElement->id . ' ' . $prodElement->title, round($execution_time));
+                } else {
+                    $this->logMessage($counter . ' AI request prod not found ' . $record['id'], 0);
+                }
 
                 if ($totalExecution > 5 * 60) {
+                    $this->logMessage(' AI requesting completed with total execution time ' . $totalExecution, 0);
                     return;
                 }
             }

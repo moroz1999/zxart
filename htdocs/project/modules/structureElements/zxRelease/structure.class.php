@@ -51,7 +51,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     protected $imagesUrls;
     protected $prodElement;
     protected static $textExtensions = [
-        't', 'w', 'txt', 'bbs', 'me', 'nfo', 'nf0', 'diz', 'md'
+        't', 'w', 'txt', 'bbs', 'me', 'nfo', 'nf0', 'diz', 'md', 'pok'
     ];
     protected static $asmExtensions = [
         'asm', 'a80', 'd', 'a'
@@ -200,14 +200,16 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
             $zxParsingManager = $this->getService('ZxParsingManager');
             if ($structure = $zxParsingManager->getFileStructureById($this->id)) {
                 foreach ($structure as $key => $fileInfo) {
-                    $type = $this->getInternalFileType($fileInfo['fileName'], $fileInfo['type'], $fileInfo['size']);
-                    if ($type == 'binary') {
-                        $structure[$key]['viewable'] = false;
-                    } else {
-                        $structure[$key]['viewable'] = true;
+                    if ($file = $zxParsingManager->extractFile($this->getFilePath(), $fileInfo['id'])) {
+                        $type = $this->getInternalFileType($fileInfo['fileName'], $fileInfo['type'], $fileInfo['size'], $file->getContent());
+                        if ($type == 'binary') {
+                            $structure[$key]['viewable'] = false;
+                        } else {
+                            $structure[$key]['viewable'] = true;
+                        }
+                        $structure[$key]['fileName'] = urldecode($structure[$key]['fileName']);
+                        $structure[$key]['internalType'] = $type;
                     }
-                    $structure[$key]['fileName'] = urldecode($structure[$key]['fileName']);
-                    $structure[$key]['internalType'] = $type;
                 }
             }
             return $structure;
@@ -299,15 +301,17 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
 
     public function getFormattedFileContent($file)
     {
-        if ($fileType = $this->getInternalFileType('', $file->getItemExtension(), $file->getSize())) {
+        if ($fileType = $this->getInternalFileType('', $file->getItemExtension(), $file->getSize(), $file->getContent())) {
             if ($content = $file->getContent()) {
                 switch ($fileType) {
                     case 'plain_text':
+                        $encoding = mb_detect_encoding($content, 'UTF-8, ISO-8859-1, Windows-1252, Windows-1251, IBM866, KOI8-R', true);
+
+                        if ($encoding !== 'UTF-8') {
+                            $content = mb_convert_encoding($content, 'UTF-8', $encoding);
+                        }
+
                         return htmlspecialchars($content);
-                    case 'cp866_text':
-                        return htmlspecialchars(
-                            mb_convert_encoding($content, 'UTF-8', 'CP866')
-                        );
                     case 'pc_image':
                         $controller = controller::getInstance();
                         if ($fileId = (int)$controller->getParameter('fileId')) {
@@ -352,15 +356,26 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return false;
     }
 
-    protected function getInternalFileType($fileName, $extension, $size)
+    protected function getInternalFileType($fileName, $extension, $size, $content)
     {
         if ($extension === 'file') {
             $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
         }
-        if ($extension == 'pok' || $extension == 'diz' || $extension == 'nfo') {
-            return 'plain_text';
-        } elseif (in_array($extension, self::$textExtensions)) {
-            return 'cp866_text';
+        if (in_array($extension, self::$textExtensions  )) {
+            $encoding = mb_detect_encoding($content, 'UTF-8, ISO-8859-1, Windows-1252, Windows-1251, IBM866, KOI8-R', true);
+
+            if ($encoding === false) {
+                return 'binary';
+            }
+
+            if ($encoding !== 'UTF-8') {
+                $content = mb_convert_encoding($content, 'UTF-8', $encoding);
+            }
+
+            if ($this->isMostlyPrintable($content)) {
+                return 'plain_text';
+            }
+            return 'binary';
         } elseif (in_array($extension, self::$asmExtensions)) {
             return 'asm_text';
         } elseif ($extension == 'jpg' || $extension == 'png' || $extension == 'bmp') {
@@ -378,6 +393,21 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         } else {
             return 'binary';
         }
+    }
+
+    private function isMostlyPrintable($str)
+    {
+        $length = min(mb_strlen($str), 100);
+        $nonPrintable = 0;
+
+        for ($i = 0; $i < $length; $i++) {
+            $char = mb_substr($str, $i, 1);
+            if (!preg_match("/[[:print:]\p{Cyrillic}\s]/u", $char)) {
+                $nonPrintable++;
+            }
+        }
+
+        return ($nonPrintable / $length) < 0.1;
     }
 
     public function getCurrentReleaseFile()
