@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "artweb-ou/trickster-cms",
-            "version": "4.3.4",
+            "version": "4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/artweb-ou/trickster-cms.git",
-                "reference": "e30dd5f0e49b5a4337d444a4c356cdddc950fa96"
+                "reference": "885952fca109e968a1994cb7824333f8f70f7378"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artweb-ou/trickster-cms/zipball/e30dd5f0e49b5a4337d444a4c356cdddc950fa96",
-                "reference": "e30dd5f0e49b5a4337d444a4c356cdddc950fa96",
+                "url": "https://api.github.com/repos/artweb-ou/trickster-cms/zipball/885952fca109e968a1994cb7824333f8f70f7378",
+                "reference": "885952fca109e968a1994cb7824333f8f70f7378",
                 "shasum": ""
             },
             "require": {
@@ -48,9 +48,9 @@
             "description": "Trickster CMS packages",
             "support": {
                 "issues": "https://github.com/artweb-ou/trickster-cms/issues",
-                "source": "https://github.com/artweb-ou/trickster-cms/tree/4.3.4"
+                "source": "https://github.com/artweb-ou/trickster-cms/tree/4.4.0"
             },
-            "time": "2023-10-13T22:54:22+00:00"
+            "time": "2023-10-23T11:30:56+00:00"
         },
         {
             "name": "bopoda/robots-txt-parser",
@@ -1412,39 +1412,39 @@
         },
         {
             "name": "openai-php/client",
-            "version": "v0.7.3",
+            "version": "v0.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/openai-php/client.git",
-                "reference": "86ffa2abe167d6192f01d4df90f83a97c8533303"
+                "reference": "bfa2f7e15909c01317064021cd3b15bc5bbd929b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openai-php/client/zipball/86ffa2abe167d6192f01d4df90f83a97c8533303",
-                "reference": "86ffa2abe167d6192f01d4df90f83a97c8533303",
+                "url": "https://api.github.com/repos/openai-php/client/zipball/bfa2f7e15909c01317064021cd3b15bc5bbd929b",
+                "reference": "bfa2f7e15909c01317064021cd3b15bc5bbd929b",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.1.0",
-                "php-http/discovery": "^1.19.0",
+                "php-http/discovery": "^1.19.1",
                 "php-http/multipart-stream-builder": "^1.3.0",
-                "psr/http-client": "^1.0.2",
+                "psr/http-client": "^1.0.3",
                 "psr/http-client-implementation": "^1.0.1",
                 "psr/http-factory-implementation": "*",
                 "psr/http-message": "^1.1.0|^2.0.0"
             },
             "require-dev": {
-                "guzzlehttp/guzzle": "^7.7.0",
-                "guzzlehttp/psr7": "^2.5.0",
-                "laravel/pint": "^1.10.3",
-                "nunomaduro/collision": "^7.7.0",
-                "pestphp/pest": "^2.16.0",
-                "pestphp/pest-plugin-arch": "^2.2.1",
+                "guzzlehttp/guzzle": "^7.8.0",
+                "guzzlehttp/psr7": "^2.6.1",
+                "laravel/pint": "^1.13.2",
+                "nunomaduro/collision": "^7.9.0",
+                "pestphp/pest": "^2.19.2",
+                "pestphp/pest-plugin-arch": "^2.3.3",
                 "pestphp/pest-plugin-mock": "^2.0.0",
-                "pestphp/pest-plugin-type-coverage": "^2.0.0",
-                "phpstan/phpstan": "^1.10.25",
+                "pestphp/pest-plugin-type-coverage": "^2.2.0",
+                "phpstan/phpstan": "^1.10.35",
                 "rector/rector": "^0.16.0",
-                "symfony/var-dumper": "^6.3.1"
+                "symfony/var-dumper": "^6.3.4"
             },
             "type": "library",
             "autoload": {
@@ -1484,7 +1484,7 @@
             ],
             "support": {
                 "issues": "https://github.com/openai-php/client/issues",
-                "source": "https://github.com/openai-php/client/tree/v0.7.3"
+                "source": "https://github.com/openai-php/client/tree/v0.7.4"
             },
             "funding": [
                 {
@@ -1500,7 +1500,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-09-08T08:48:59+00:00"
+            "time": "2023-10-21T09:00:06+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -1557,29 +1557,29 @@
         },
         {
             "name": "pelago/emogrifier",
-            "version": "v7.0.0",
+            "version": "v7.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MyIntervals/emogrifier.git",
-                "reference": "547b8c814794aec871e3c98b1c712f416755f4eb"
+                "reference": "1945460af992d0c14ad08e7b4567d7d0dd3a2f94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MyIntervals/emogrifier/zipball/547b8c814794aec871e3c98b1c712f416755f4eb",
-                "reference": "547b8c814794aec871e3c98b1c712f416755f4eb",
+                "url": "https://api.github.com/repos/MyIntervals/emogrifier/zipball/1945460af992d0c14ad08e7b4567d7d0dd3a2f94",
+                "reference": "1945460af992d0c14ad08e7b4567d7d0dd3a2f94",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-libxml": "*",
-                "php": "~7.3.0 || ~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0",
+                "php": "~7.3.0 || ~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0",
                 "sabberworm/php-css-parser": "^8.4.0",
                 "symfony/css-selector": "^4.4.23 || ^5.4.0 || ^6.0.0"
             },
             "require-dev": {
-                "php-parallel-lint/php-parallel-lint": "^1.3.2",
-                "phpunit/phpunit": "^9.5.25",
-                "rawr/cross-data-providers": "^2.3.0"
+                "php-parallel-lint/php-parallel-lint": "1.3.2",
+                "phpunit/phpunit": "9.6.11",
+                "rawr/cross-data-providers": "2.4.0"
             },
             "type": "library",
             "extra": {
@@ -1631,7 +1631,7 @@
                 "issues": "https://github.com/MyIntervals/emogrifier/issues",
                 "source": "https://github.com/MyIntervals/emogrifier"
             },
-            "time": "2022-11-01T17:53:29+00:00"
+            "time": "2023-10-20T15:34:30+00:00"
         },
         {
             "name": "php-http/discovery",

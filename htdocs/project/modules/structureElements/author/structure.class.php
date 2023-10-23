@@ -357,7 +357,7 @@ class authorElement extends structureElement implements CommentsHolderInterface,
         } elseif ($this->realName) {
             return $this->realName;
         }
-        return parent::getHumanReadableName();
+        return '';
     }
 
     public function getGroupsList()

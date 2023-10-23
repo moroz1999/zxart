@@ -10,7 +10,7 @@
 				{include file=$theme->template("component.votecontrols.tpl") element=$element}
 				{include file=$theme->template("component.playlist.tpl") element=$element}
 			</div>
-			<a href="{$element->getUrl()}">{$element->getHumanReadableName()}</a>
+			<a href="{$element->getUrl()}">{$element->getTitle()}</a>
 		</span>
 		{if $element->getPartyElement()}
             <div class='zxprod_short_party'>

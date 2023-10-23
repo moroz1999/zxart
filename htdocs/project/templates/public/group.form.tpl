@@ -115,7 +115,7 @@
 					<option value=''></option>
 					{foreach from=$subGroups item=subgroup}
 						<option value="{$subgroup->id}" selected="selected">
-							{$subgroup->getHumanReadableName()}
+							{$subgroup->getTitle()}
 						</option>
 					{/foreach}
 				</select>

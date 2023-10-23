@@ -23,7 +23,7 @@
 		}
 		window.commentsList.push({$element->getJsonInfo()});
 	</script>
-	<a class="comment_content_link" href="{$prodElement->getUrl()}">{$prodElement->getHumanReadableName()}</a>
+	<a class="comment_content_link" href="{$prodElement->getUrl()}">{$prodElement->getTitle()}</a>
 	<div class='comment_content'>
 		{$element->content}
 	</div>

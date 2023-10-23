@@ -4,7 +4,7 @@
 		{if !$smarty.foreach.currentLocation.last}
 			<a href='{$currentLocationElement->URL}'>{$currentLocationElement->title}</a> <span class='current_location_delimiter'>></span>
 		{else}
-			{$currentLocationElement->getHumanReadableName()}
+			{$currentLocationElement->getTitle()}
 		{/if}
 	{/foreach}
 	</div>

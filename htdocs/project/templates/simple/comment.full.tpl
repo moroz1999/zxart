@@ -7,7 +7,7 @@
    {$user->userName}
 {/if} {$element->dateCreated} <br/>
 {/if}
-{if isset($displayTarget) && $displayTarget}{if $initialTarget = $element->getInitialTarget()}<a href="{$initialTarget->getUrl()}">{$initialTarget->getHumanReadableName()}</a><br/>{/if}{/if}
+{if isset($displayTarget) && $displayTarget}{if $initialTarget = $element->getInitialTarget()}<a href="{$initialTarget->getUrl()}">{$initialTarget->getTitle()}</a><br/>{/if}{/if}
 <br/>
 {$element->content}
 <br><br>{include file=$theme->template("component.hr.tpl") symbol="."}<br><br><br>

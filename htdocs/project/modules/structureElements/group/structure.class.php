@@ -214,7 +214,7 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
             }
             $sort = [];
             foreach ($this->groupProds as $prod) {
-                $sort[] = trim($prod->getHumanReadableName());
+                $sort[] = trim($prod->getTitle());
             }
             array_multisort($sort, SORT_ASC, $this->groupProds);
         }

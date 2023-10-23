@@ -4,7 +4,7 @@
             <img class="zxrelease_short_image" src="{$element->getImageUrl(0)}"/>
             <img class="zxrelease_short_image_second" src="{$element->getImageUrl(1)}"/>
         </span>
-        <span class="zxrelease_short_title">{$element->getHumanReadableName()}</span>
+        <span class="zxrelease_short_title">{$element->getTitle()}</span>
     </a>
 {/capture}
 {$moduleSubContent = $moduleContent}

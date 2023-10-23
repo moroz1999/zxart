@@ -43,7 +43,7 @@ trait PublisherProdsProvider
             }
             $sort = [];
             foreach ($this->publisherProds as $prod) {
-                $sort[] = trim($prod->getHumanReadableName());
+                $sort[] = trim($prod->getTitle());
             }
             array_multisort($sort, SORT_ASC, $this->publisherProds);
         }

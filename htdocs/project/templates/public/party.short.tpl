@@ -5,7 +5,7 @@
 {/capture}
 {assign moduleClass "party_short"}
 {assign moduleAttributes ""}
-{assign moduleTitle $element->getHumanReadableName()}
+{assign moduleTitle $element->getTitle()}
 {assign moduleTitleClass "party_short_title"}
 {assign moduleContentClass ""}
 {include file=$theme->template("component.subcontentmodule_square.tpl")}

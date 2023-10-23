@@ -4,6 +4,21 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
 {
     protected $defaultPreset = 'api';
 
+    private function isMostlyPrintable($str)
+    {
+        $length = min(mb_strlen($str), 100);
+        $nonPrintable = 0;
+
+        for ($i = 0; $i < $length; $i++) {
+            $char = mb_substr($str, $i, 1);
+            if (!preg_match("/[[:print:]\p{Cyrillic}\s]/u", $char)) {
+                $nonPrintable++;
+            }
+        }
+
+        return ($nonPrintable / $length) < 0.1;
+    }
+
     protected function getRelationStructure()
     {
         return [
@@ -102,7 +117,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             "categoriesString" => function (zxProdElement $element) {
                 $categories = [];
                 foreach ($element->getCategoriesPaths() as $path) {
-                    foreach ($path as $category){
+                    foreach ($path as $category) {
                         $categories[] = $category->title;
                     }
                 }
@@ -143,18 +158,18 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                             }
                         } else if ($fileElement->getFileExtension() === 'pdf') {
                             $parser = new \Smalot\PdfParser\Parser();
-
                             $file = $fileElement->getFilePath();
                             try {
                                 $pdf = $parser->parseFile($file);
                                 $textContent = $pdf->getText();
+                                if ($this->isMostlyPrintable($textContent)) {
+                                    return $textContent;
+                                }
                             } catch (Throwable $exception) {
                                 errorLog::getInstance()->logMessage(self::class, $exception->getMessage() . ' ' . $releaseElement->getTitle());
                             }
 
-                            if ($textContent) {
-                                return $textContent;
-                            }
+                            return '';
                         }
                     }
                 }
@@ -164,8 +179,8 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 foreach ($element->getReleasesList() as $releaseElement) {
                     foreach ($releaseElement->getReleaseFlatStructure() as $item) {
                         if ($item['type'] === 'file' && $item['viewable']) {
-                            if ($item['internalType'] === 'plain_text'){
-                                if ($file = $releaseElement->getReleaseFile($item['id'])){
+                            if ($item['internalType'] === 'plain_text') {
+                                if ($file = $releaseElement->getReleaseFile($item['id'])) {
                                     return $releaseElement->getFormattedFileContent($file);
                                 }
                             }

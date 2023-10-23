@@ -1,7 +1,7 @@
 {$prod = $element->getProd()}
 <tr class="zxrelease">
 	<td class='zxrelease_table_title'>
-		<a class='' href='{$element->getUrl()}'>{$element->getHumanReadableName()} {if $element->isRealtime()}{assign 'compoTitle' "compo_"|cat:$element->compo}
+		<a class='' href='{$element->getUrl()}'>{$element->getTitle()} {if $element->isRealtime()}{assign 'compoTitle' "compo_"|cat:$element->compo}
 				<img src="{$theme->getImageUrl("clock.png")}" title="{translations name="zxPicture.$compoTitle"}" />{/if}
 		</a>
 	</td>

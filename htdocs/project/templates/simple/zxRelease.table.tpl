@@ -1,5 +1,5 @@
 {$number}.
-<a class='' href='{$element->getUrl()}'>{$element->getHumanReadableName()}</a> {$element->getYear()} {foreach $element->releaseFormat as $format}{translations name="zxRelease.filetype_$format"} {/foreach}<br>
+<a class='' href='{$element->getUrl()}'>{$element->getTitle()}</a> {$element->getYear()} {foreach $element->releaseFormat as $format}{translations name="zxRelease.filetype_$format"} {/foreach}<br>
 {if $partyElement = $element->getPartyElement()}<a href='{$partyElement->URL}'>{$partyElement->title}</a>{/if}{if $element->partyplace>0}({$element->partyplace}){/if}
 {$element->getSupportedLanguageString()} {$element->version} {if $element->releaseType}{translations name="zxRelease.type_{$element->releaseType}"}{/if} <br>
 {if $authors=$element->getAuthorsInfo('release', ['release'])}
