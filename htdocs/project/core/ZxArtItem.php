@@ -438,13 +438,15 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
             $votesAmount = 0;
         } else {
             $vote = 0;
+
             $votesManager = $this->getService('votesManager');
             $overallAverageVote = $votesManager->getOverallAverageVote();
             $elementVotes = $votesManager->getElementFilteredVotes($this->id);
             $votesAmount = count($elementVotes);
-            $elementAverageVote = array_sum($elementVotes) / $votesAmount;
-            $objectiveVotesCount = 10;
             if ($votesAmount > 0) {
+                $elementAverageVote = array_sum($elementVotes) / $votesAmount;
+                $objectiveVotesCount = 10;
+
                 $vote = ($elementAverageVote * $votesAmount + $overallAverageVote * $objectiveVotesCount) / ($votesAmount + $objectiveVotesCount);
             }
         }

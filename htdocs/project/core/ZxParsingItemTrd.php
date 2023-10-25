@@ -13,8 +13,7 @@ class ZxParsingItemTrd extends ZxParsingItem
 
         $disk = new \ZxFiles\Disk\Trd();
         $disk->setBinary($this->getContent());
-        $files = $disk->getFiles();
-        if ($files) {
+        if ($files = $disk->getFiles()) {
             foreach ($files as $file) {
                 $item = new ZxParsingItemFile($this->zxParsingManager);
 

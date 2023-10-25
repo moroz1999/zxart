@@ -143,7 +143,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                     foreach ($releaseElement->getFilesList('infoFilesSelector') as $fileElement) {
                         if ($fileElement->getFileExtension() === 'txt') {
                             $content = file_get_contents($fileElement->getFilePath());
-                            $encoding = mb_detect_encoding($content, 'UTF-8, ISO-8859-1, Windows-1252, Windows-1251, IBM866, KOI8-R', true);
+                            $encoding = mb_detect_encoding($content, 'UTF-8, ISO-8859-1, IBM866, KOI8-R, Windows-1251, Windows-1252', true);
 
                             if ($encoding === false) {
                                 continue;

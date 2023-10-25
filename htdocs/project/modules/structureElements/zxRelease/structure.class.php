@@ -51,10 +51,10 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     protected $imagesUrls;
     protected $prodElement;
     protected static $textExtensions = [
-        't', 'w', 'txt', 'bbs', 'me', 'nfo', 'nf0', 'diz', 'md', 'pok'
+        't', 'w', 'txt', 'bbs', 'me', 'nfo', 'nf0', 'diz', 'md', 'pok', 'd'
     ];
     protected static $asmExtensions = [
-        'asm', 'a80', 'd', 'a'
+        'asm', 'a80', 'a'
     ];
 
     protected function setModuleStructure(&$moduleStructure)
@@ -199,6 +199,9 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
              */
             $zxParsingManager = $this->getService('ZxParsingManager');
             if ($structure = $zxParsingManager->getFileStructureById($this->id)) {
+                if (count($structure) > 100) {
+                    return [];
+                }
                 foreach ($structure as $key => $fileInfo) {
                     if ($file = $zxParsingManager->extractFile($this->getFilePath(), $fileInfo['id'])) {
                         $type = $this->getInternalFileType($fileInfo['fileName'], $fileInfo['type'], $fileInfo['size'], $file->getContent());
@@ -305,7 +308,8 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
             if ($content = $file->getContent()) {
                 switch ($fileType) {
                     case 'plain_text':
-                        $encoding = mb_detect_encoding($content, 'UTF-8, ISO-8859-1, Windows-1252, Windows-1251, IBM866, KOI8-R', true);
+                    case 'asm_text':
+                        $encoding = mb_detect_encoding($content, 'UTF-8, ISO-8859-1, IBM866, KOI8-R, Windows-1251, Windows-1252', true);
 
                         if ($encoding !== 'UTF-8') {
                             $content = mb_convert_encoding($content, 'UTF-8', $encoding);
@@ -361,8 +365,8 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         if ($extension === 'file') {
             $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
         }
-        if (in_array($extension, self::$textExtensions  )) {
-            $encoding = mb_detect_encoding($content, 'UTF-8, ISO-8859-1, Windows-1252, Windows-1251, IBM866, KOI8-R', true);
+        if (in_array($extension, self::$textExtensions)) {
+            $encoding = mb_detect_encoding($content, 'UTF-8, ISO-8859-1, IBM866, KOI8-R, Windows-1251, Windows-1252', true);
 
             if ($encoding === false) {
                 return 'binary';
@@ -398,11 +402,14 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     private function isMostlyPrintable($str)
     {
         $length = min(mb_strlen($str), 100);
+        if (!$length) {
+            return false;
+        }
         $nonPrintable = 0;
 
         for ($i = 0; $i < $length; $i++) {
             $char = mb_substr($str, $i, 1);
-            if (!preg_match("/[[:print:]\p{Cyrillic}\s]/u", $char)) {
+            if (!preg_match("/[[:print:]\p{Cyrillic}\s\n\r]/u", $char)) {
                 $nonPrintable++;
             }
         }

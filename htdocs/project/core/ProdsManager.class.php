@@ -26,8 +26,17 @@ class ProdsManager extends ElementsManager
     protected $forceUpdateGroups = false;
     protected $forceUpdatePublishers = false;
     protected $updateExistingProds = false;
+    protected $updateExistingReleases = false;
     protected $addImages = false;
     protected $resizeImages = false;
+
+    /**
+     * @param bool $updateExistingReleases
+     */
+    public function setUpdateExistingReleases(bool $updateExistingReleases): void
+    {
+        $this->updateExistingReleases = $updateExistingReleases;
+    }
 
     /**
      * @param bool $resizeImages
@@ -270,14 +279,19 @@ class ProdsManager extends ElementsManager
         }
 
         if (!$element) {
-            return $this->createProd($prodInfo, $origin);
+            $element = $this->createProd($prodInfo, $origin);
         }
 
-        if ($this->updateExistingProds) {
-            return $this->updateProd($element, $prodInfo, $origin);
-        } else {
-            return $element;
+        if ($element) {
+            if ($this->updateExistingProds) {
+                $element = $this->updateProd($element, $prodInfo, $origin);
+            }
+            foreach ($prodInfo['releases'] as $releaseInfo) {
+                $this->importRelease($releaseInfo, $prodInfo['id'], $origin);
+            }
         }
+
+        return $element;
     }
 
     /**
@@ -403,10 +417,6 @@ class ProdsManager extends ElementsManager
                     $this->linksManager->linkElements($categoryId, $element->id, 'zxProdCategory');
                 }
             }
-        }
-
-        foreach ($prodInfo['releases'] as $releaseInfo) {
-            $this->importRelease($releaseInfo, $prodInfo['id'], $origin);
         }
 
         if (!empty($prodInfo['undetermined'])) {
@@ -664,7 +674,7 @@ class ProdsManager extends ElementsManager
         if (!$element) {
             return $this->createRelease($releaseInfo, $prodId, $origin);
         }
-        if ($element) {
+        if ($element && $this->updateExistingReleases) {
             $this->updateRelease($element, $releaseInfo, $origin);
         }
         return $element;

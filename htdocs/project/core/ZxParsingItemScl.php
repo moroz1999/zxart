@@ -14,15 +14,17 @@ class ZxParsingItemScl extends ZxParsingItem
 
             $disk = new \ZxFiles\Disk\Scl();
             $disk->setBinary($this->getContent());
-            foreach ($disk->getFiles() as $file) {
-                $item = new ZxParsingItemFile($this->zxParsingManager);
+            if ($files = $disk->getFiles()) {
+                foreach ($files as $file) {
+                    $item = new ZxParsingItemFile($this->zxParsingManager);
 
-                $item->setContent($file->getContents());
-                $item->setParentMd5($this->getMd5());
-                $item->setItemName($file->getFullName());
-                $this->zxParsingManager->registerFile($item);
+                    $item->setContent($file->getContents());
+                    $item->setParentMd5($this->getMd5());
+                    $item->setItemName($file->getFullName());
+                    $this->zxParsingManager->registerFile($item);
 
-                $this->items[] = $item;
+                    $this->items[] = $item;
+                }
             }
         }
     }

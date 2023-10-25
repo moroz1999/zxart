@@ -14,15 +14,17 @@ class ZxParsingItemTap extends ZxParsingItem
 
             $tape = new \ZxFiles\Tape\Tap();
             $tape->setBinary($this->getContent());
-            foreach ($tape->getFiles() as $file) {
-                $item = new ZxParsingItemFile($this->zxParsingManager);
+            if ($files = $tape->getFiles()) {
+                foreach ($files as $file) {
+                    $item = new ZxParsingItemFile($this->zxParsingManager);
 
-                $item->setContent($file->getContents());
-                $item->setParentMd5($this->getMd5());
-                $item->setItemName($file->getFullName());
-                $this->zxParsingManager->registerFile($item);
+                    $item->setContent($file->getContents());
+                    $item->setParentMd5($this->getMd5());
+                    $item->setItemName($file->getFullName());
+                    $this->zxParsingManager->registerFile($item);
 
-                $this->items[] = $item;
+                    $this->items[] = $item;
+                }
             }
         }
     }

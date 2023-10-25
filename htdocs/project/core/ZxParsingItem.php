@@ -119,7 +119,7 @@ abstract class ZxParsingItem
 
     public function getItemByName($itemName)
     {
-        if ($items = $this->getItems()) {
+        if ($items = $this->items) {
             foreach ($items as $item) {
                 if ($item->getItemName() == $itemName) {
                     return $item;

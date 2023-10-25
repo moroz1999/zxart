@@ -3,7 +3,7 @@
 class VtrdosManager extends errorLogger
 {
     protected $counter = 0;
-    protected $maxCounter = 1000;
+    protected $maxCounter = 10;
     /**
      * @var ProdsManager
      */
