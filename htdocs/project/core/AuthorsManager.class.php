@@ -261,6 +261,7 @@ class AuthorsManager extends ElementsManager
     public function checkAuthorship($elementId, $personId, $type, $roles = [], $startDate = 0, $endDate = 0)
     {
         if (is_array($roles)) {
+            $roles = array_unique($roles);
             $roles = json_encode($roles);
         }
         if ($record = $this->db

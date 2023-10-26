@@ -87,6 +87,8 @@ spa:{...}
             if (empty($output['spa']['pageTitle']) || empty($output['spa']['metaDescription']) || empty($output['spa']['h1'])) {
                 return null;
             }
+        } else {
+            return null;
         }
         if ($hasIntro) {
             $promt2 = "Я скину данные софта, сгенерируй из них краткое описание программы в виде JSON на трех языках eng/rus/spa.
@@ -113,6 +115,8 @@ spa:{...}
                     $output['spa']['intro'] = $data2['spa']['intro'];
                     return $output;
                 }
+            } else {
+                return null;
             }
         } else {
             return $output;
@@ -136,7 +140,7 @@ spa:{...}
             ]);
             $result = $response->choices[0]->message->content;
         } catch (Exception $exception) {
-            errorLog::getInstance()->logMessage(self::class, $exception->getMessage() . ': '.$prodData['title']);
+            errorLog::getInstance()->logMessage(self::class, $exception->getMessage() . ': ' . $prodData['title']);
         }
         if (!is_dir(ROOT_PATH . '/temporary/ai')) {
             mkdir(ROOT_PATH . '/temporary/ai');

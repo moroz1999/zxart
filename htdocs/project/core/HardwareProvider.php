@@ -59,6 +59,7 @@ trait HardwareProvider
             "dos" => [
                 'trdos',
                 'isdos',
+                'tasis',
                 'cpm',
                 'esxdos',
                 'mdos',

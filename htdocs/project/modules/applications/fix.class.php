@@ -17,7 +17,7 @@ class fixApplication extends controllerApplication
 
     public function execute($controller)
     {
-        exit;
+//        exit;
         ini_set("memory_limit", "2048M");
         ini_set("max_execution_time", 60);
         $renderer = $this->getService('renderer');
@@ -36,11 +36,42 @@ class fixApplication extends controllerApplication
              */
             $languagesManager = $this->getService('LanguagesManager');
             $languagesManager->setCurrentLanguageCode('eng');
-            $this->fixZxChip();
-            $this->fixWlodek();
+//            $this->fixProds();
+//            $this->fixZxChip();
+//            $this->fixWlodek();
         }
     }
 
+    private function fixProds()
+    {
+        /**
+         * @var \Illuminate\Database\Connection $db
+         */
+        $db = $this->getService('db');
+        /**
+         * @var linksManager $linksManager
+         */
+        $linksManager = $this->getService(linksManager::class);
+        $result = $db->table('module_zxprod')
+            ->orderBy('id')
+            ->get(['id']);
+        $ids = array_column($result, 'id');
+        $count = count($ids);
+        $counter = 0;
+        foreach ($ids as $id) {
+
+            $prod = $this->structureManager->getElementById($id);
+            echo $counter . ' ' . round(100* $counter / $count) . '% ';
+            if (!$prod) {
+                $linksManager->linkElements(418662, $id, 'zxProdCategory');
+                echo 'fixed' . $id . '<br>';
+            } else {
+                echo 'exists' . $id . '<br>';
+            }
+            $counter++;
+            flush();
+        }
+    }
 
     private function loadIds($term)
     {
@@ -50,7 +81,7 @@ class fixApplication extends controllerApplication
         $db = $this->getService('db');
         $result = $db->table('module_zxprod')
             ->orderBy('id')
-            ->where('title', 'like', '%'.$term.'%')
+            ->where('title', 'like', '%' . $term . '%')
             ->get(['id']);
         return array_column($result, 'id');
 
@@ -91,6 +122,7 @@ class fixApplication extends controllerApplication
             }
         }
     }
+
     private function fixWlodek()
     {
         $ids = $this->loadIds('demo collection');

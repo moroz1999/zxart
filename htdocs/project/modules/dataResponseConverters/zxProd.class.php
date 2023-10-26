@@ -7,6 +7,9 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
     private function isMostlyPrintable($str)
     {
         $length = min(mb_strlen($str), 100);
+        if (!$length) {
+            return false;
+        }
         $nonPrintable = 0;
 
         for ($i = 0; $i < $length; $i++) {

@@ -3,7 +3,7 @@
 class VtrdosManager extends errorLogger
 {
     protected $counter = 0;
-    protected $maxCounter = 10;
+    protected $maxCounter = 30;
     /**
      * @var ProdsManager
      */
@@ -52,145 +52,235 @@ class VtrdosManager extends errorLogger
         'y',
         'z',
     ];
+    protected $hwIndex = [
+        '(DMA UltraSound Card)' => 'dmausc',
+        '(km)' => 'kempstonmouse',
+        '(kemp8bit)' => 'kempston8b',
+        '(cvx)' => 'covoxfb',
+        '(dma)' => 'dmausc',
+        '(gs)' => 'gs',
+        '(sd)' => 'soundrive',
+        '(for 48k)' => 'zx48',
+        '(48k only)' => 'zx48',
+        '(128k only)' => 'zx128',
+        '(1024k)' => 'pentagon1024',
+        '(256k)' => 'scorpion',
+        '(ts)' => 'ts',
+        'hdd' => 'hdd',
+        '48k' => 'zx48',
+        'Pentagon 512k' => 'pentagon512',
+        'Pentagon 1024k' => 'pentagon1024',
+        'Pentagon 1024SL' => 'pentagon1024',
+        'Scorpion ZS 256' => 'scorpion',
+        'Byte' => 'byte',
+        'ATM Turbo' => 'atm',
+        'smuc' => 'smuc',
+        'SMUC' => 'smuc',
+        'Sprinter' => 'sprinter',
+        'Covox' => 'covoxfb',
+        'General Sound' => 'gs',
+        'Cache' => 'Cache',
+        'SounDrive' => 'soundrive',
+        'Turbo Sound' => 'ts',
+        'TurboSound FM' => 'tsfm',
+        'ZXM-MoonSound' => 'zxm',
+        'AY' => 'ay',
+        'DMA UltraSound Card' => 'dmausc',
+        'DMA USC' => 'dmausc',
+        'Beeper' => 'beeper',
+        'AY Mouse' => 'aymouse',
+        'CP/M' => 'cpm',
+        '(for Profi)' => 'profi',
+        '(Base Conf)' => 'baseconf',
+        '(TS Conf)' => 'tsconf',
+        'ATM Turbo 2' => 'atm2',
+        'neoGS-SD' => 'sdneogs',
+        'NEMO-HDD' => 'nemoide',
+        'Nemo HDD' => 'nemoide',
+        'ZSD' => 'zcontroller',
+        'iS-DOS' => 'isdos',
+        'TASiS' => 'tasis',
+        'CD-ROM' => 'cd',
+        'CD' => 'cd',
+        'GMX' => 'gmx',
+    ];
+
+    protected $categoryHardware = [
+        'Инфа и утилиты для TurboSound FM:' => 'tsfm',
+        'Инфа, игры, утилиты для DMA Ultrasound Card:' => 'dmausc',
+        'Софт для Profi компьютера:' => 'profi',
+        'Дисковая операционная система CP/M:' => 'cpm',
+        'Дисковая система iS-DOS от питерской IskraSoft:' => 'isdos',
+        'Информационные сборники Евгения Илясова (под iS-DOS):' => 'isdos',
+        'Анекдоты, юмор (под iS-DOS):' => 'isdos',
+    ];
     protected $categories = [
-        'Архиваторы:' => '244886',
-        'Ассемблеры:' => '92552',
-        'Буты:' => '204150',
-        'Графические Редакторы:' => '244860',
-        'Графические Утилиты:' => '92587',
-        'Дебаггеры:' => '244863',
-        'Дисковые утилиты:' => '244864',
-        'Записные книжки:' => '244865',
-        'Каталогизаторы:' => '92569',
-        'Командеры:' => '92187',
-        'Конвертеры Экранов:' => '244866',
-        'Копир MS-DOS - TR-DOS:' => '244867',
-        'Копировщики:' => '244869',
-        'Копировщики Disk -> Tape:' => '244868',
-        'Музыкальные Плейеры:' => '244870',
-        'Музыкальные редакторы для AY:' => '244871',
-        'Музыкальные редакторы для beeper:' => '244872',
-        'Музыкальные Утилиты для работы с AY-звуком:' => '244873',
-        'Музыкальные утилиты для работы с цифровым звуком:' => '244874',
-        'Операционные системы:' => '244875',
-        'Программаторы:' => '244876',
-        'Просмотрщики графики:' => '244862',
-        'Просмотрщики текстов:' => '244877',
-        'Прошивки ПЗУ:' => '244878',
-        'Работа с сетями:' => '202587',
-        'Разное:' => '92590',
-        'Редакторы звуков:' => '244881',
-        'Редакторы игр:' => '202586',
-        'Редакторы Шрифтов:' => '92573',
-        'Системные тесты:' => '244882',
-        'Спрайтовые Редакторы:' => '244883',
-        'Текстовые редакторы:' => '244884',
-        'Универсальные просмотрщики:' => '244885',
-        'Упаковщики данных:' => '244887',
-        'Упаковщики экранов:' => '244888',
-        'Утилиты для защиты данных:' => '244890',
-        'Утилиты для работы с текстом:' => '244889',
-        'Утилиты для снятия защиты:' => '244891',
-        'Цифровые музыкальные редакторы:' => '244892',
-        'Языки программирования:' => '244893',
+        'Архиваторы:' => 244886,
+        'Ассемблеры:' => 92552,
+        'Буты:' => 204150,
+        'Графические Редакторы:' => 244860,
+        'Графические Утилиты:' => 92587,
+        'Дебаггеры:' => 244863,
+        'Дисковые утилиты:' => 244864,
+        'Записные книжки:' => 244865,
+        'Каталогизаторы:' => 92569,
+        'Командеры:' => 92187,
+        'Конвертеры Экранов:' => 244866,
+        'Копир MS-DOS - TR-DOS:' => 244867,
+        'Копировщики:' => 244869,
+        'Копировщики Disk -> Tape:' => 244868,
+        'Музыкальные Плейеры:' => 244870,
+        'Музыкальные редакторы для AY:' => 244871,
+        'Музыкальные редакторы для beeper:' => 244872,
+        'Музыкальные Утилиты для работы с AY-звуком:' => 244873,
+        'Музыкальные утилиты для работы с цифровым звуком:' => 244874,
+        'Операционные системы:' => 244875,
+        'Программаторы:' => 244876,
+        'Просмотрщики графики:' => 244862,
+        'Просмотрщики текстов:' => 244877,
+        'Прошивки ПЗУ:' => 244878,
+        'Работа с сетями:' => 202587,
+        'Разное:' => 92590,
+        'Редакторы звуков:' => 244881,
+        'Редакторы игр:' => 202586,
+        'Редакторы Шрифтов:' => 92573,
+        'Системные тесты:' => 244882,
+        'Спрайтовые Редакторы:' => 244883,
+        'Текстовые редакторы:' => 244884,
+        'Универсальные просмотрщики:' => 244885,
+        'Упаковщики данных:' => 244887,
+        'Упаковщики экранов:' => 244888,
+        'Утилиты для защиты данных:' => 244890,
+        'Утилиты для работы с текстом:' => 244889,
+        'Утилиты для снятия защиты:' => 244891,
+        'Цифровые музыкальные редакторы:' => 244892,
+        'Языки программирования:' => 244893,
+        'Различные тексты:' => 92181,
+        'Статьи и правила конкурсов:' => 92181,
+        'Сборники разной музыки:' => 92175,
+        'Инфа и утилиты для TurboSound FM:' => 244871,
+        'Инфа, игры, утилиты для DMA Ultrasound Card:' => 244871,
+        'Схемы и девайсы:' => 92181,
+        'Дисковая операционная система CP/M:' => 244875,
+        'Софт для Profi компьютера:' => 92183,
+        'Софт для клона ZX-Evolution:' => 92177,
+        'Софт для ATM Turbo компьютера:' => 92177,
+        'Дисковая система iS-DOS от питерской IskraSoft:' => 92183,
+        'Информационные сборники Евгения Илясова (под iS-DOS):' => 92181,
+        'Анекдоты, юмор (под iS-DOS):' => 92181,
+        'Сборники игрушек, не вписывающиеся в мои таблицы:' => 202590,
+        'Пакетное создание прессы на ZX:' => 418662,
+        'Графика, гифты и поздравления:' => 92172,
+        'Хиромантия, гадания и прочее:' => 92582,
+        'Различные психологические тесты:' => 418663,
+        'Разнообразный софт:' => 92188,
     ];
 
     public function __construct()
     {
-        $this->urlsSettings['https://vtrd.in/games.php?t=translat'] = [
-            [
-                'type' => 'table',
-                'prod' => [
-                    'directCategories' => [92177],
-                ],
-                'release' => [
-                    'language' => ['ru'],
-                    'releaseType' => 'localization',
-                    'authorRoles' => ['localization', 'release'],
-                ],
-            ],
-        ];
-        $this->urlsSettings['https://vtrd.in/games.php?t=full_ver'] = [
-            [
-                'type' => 'table',
-                'prod' => [
-                    'directCategories' => [92177],
-                ],
-            ],
-        ];
-        $this->urlsSettings['https://vtrd.in/games.php?t=demo_ver'] = [
-            [
-                'type' => 'table',
-                'prod' => [
-                    'directCategories' => [92177],
-                ],
-                'release' => [
-                    'releaseType' => 'demoversion',
-                ],
-            ],
-        ];
-        $this->urlsSettings['https://vtrd.in/system.php'] = [
-            [],
-            [
-                'type' => 'list',
-            ],
-        ];
-        $this->urlsSettings['https://vtrd.in/gs.php'] = [
-            [],
-            [
-                'type' => 'list',
-                'prod' => [
-                    'directCategories' => [244894],
-                ],
-                'release' => [
-                    'hardwareRequired' => ['gs'],
-                ],
-            ],
-            [],
-            [
-                'type' => 'table',
-                'prod' => [
-                    'directCategories' => [92177],
-                ],
-                'release' => [
-                    'hardwareRequired' => ['gs'],
-                ],
-            ],
-            [
-                'type' => 'table',
-                'prod' => [
-                    'directCategories' => [92177],
-                ],
-                'release' => [
-                    'releaseType' => 'mod',
-                    'hardwareRequired' => ['gs'],
-                    'authorRoles' => ['sfx', 'release'],
-                ],
-            ],
-            [
-                'type' => 'table',
-                'prod' => [
-                    'directCategories' => [92177],
-                ],
-                'release' => [
-                    'releaseType' => 'mod',
-                    'hardwareRequired' => ['gs'],
-                    'authorRoles' => ['intro_code', 'release'],
-                ],
-            ],
-        ];
-        $this->urlsSettings['https://vtrd.in/games.php?t=remix'] = [
-            [
-                'type' => 'table',
-                'prod' => [
-                    'directCategories' => [92177],
-                ],
-                'release' => [
-                    'releaseType' => 'mod',
-                    'authorRoles' => ['adaptation', 'release'],
-                ],
-            ],
-        ];
+//        $this->urlsSettings['https://vtrd.in/games.php?t=translat'] = [
+//            [
+//                'type' => 'table',
+//                'prod' => [
+//                    'directCategories' => [92177],
+//                ],
+//                'release' => [
+//                    'language' => ['ru'],
+//                    'releaseType' => 'localization',
+//                    'authorRoles' => ['localization', 'release'],
+//                ],
+//            ],
+//        ];
+//        $this->urlsSettings['https://vtrd.in/games.php?t=full_ver'] = [
+//            [
+//                'type' => 'table',
+//                'prod' => [
+//                    'directCategories' => [92177],
+//                ],
+//            ],
+//        ];
+//        $this->urlsSettings['https://vtrd.in/games.php?t=demo_ver'] = [
+//            [
+//                'type' => 'table',
+//                'prod' => [
+//                    'directCategories' => [92177],
+//                ],
+//                'release' => [
+//                    'releaseType' => 'demoversion',
+//                ],
+//            ],
+//        ];
+//        $this->urlsSettings['https://vtrd.in/system.php'] = [
+//            [],
+//            [
+//                'type' => 'system',
+//            ],
+//        ];
+//        $this->urlsSettings['https://vtrd.in/sbor.php'] = [
+//            [],
+//            [
+//                'type' => 'sbor',
+//                'release' => [
+//                    'hardwareRequired' => [],
+//                ],
+//            ],
+//        ];
+//        $this->urlsSettings['https://vtrd.in/gs.php'] = [
+//            [],
+//            [
+//                'type' => 'list',
+//                'prod' => [
+//                    'directCategories' => [92581],
+//                ],
+//                'release' => [
+//                    'hardwareRequired' => ['gs'],
+//                ],
+//            ],
+//            [],
+//            [
+//                'type' => 'table',
+//                'prod' => [
+//                    'directCategories' => [92177],
+//                ],
+//                'release' => [
+//                    'hardwareRequired' => ['gs'],
+//                ],
+//            ],
+//            [
+//                'type' => 'table',
+//                'prod' => [
+//                    'directCategories' => [92177],
+//                ],
+//                'release' => [
+//                    'releaseType' => 'mod',
+//                    'hardwareRequired' => ['gs'],
+//                    'authorRoles' => ['sfx', 'release'],
+//                ],
+//            ],
+//            [
+//                'type' => 'table',
+//                'prod' => [
+//                    'directCategories' => [92177],
+//                ],
+//                'release' => [
+//                    'releaseType' => 'mod',
+//                    'hardwareRequired' => ['gs'],
+//                    'authorRoles' => ['intro_code', 'release'],
+//                ],
+//            ],
+//        ];
+//        $this->urlsSettings['https://vtrd.in/games.php?t=remix'] = [
+//            [
+//                'type' => 'table',
+//                'prod' => [
+//                    'directCategories' => [92177],
+//                ],
+//                'release' => [
+//                    'releaseType' => 'mod',
+//                    'authorRoles' => ['adaptation', 'release'],
+//                ],
+//            ],
+//        ];
         foreach ($this->alphabet as $item) {
             $this->urlsSettings['https://vtrd.in/games.php?t=' . $item] = [
                 [
@@ -254,9 +344,13 @@ class VtrdosManager extends errorLogger
             foreach ($tableNodes as $tableNode) {
                 $settings = array_shift($allSettings);
                 if (!empty($settings['type'])) {
-                    if ($settings['type'] == 'list') {
+                    if ($settings['type'] === 'list') {
                         $this->parseList($tableNode, $xPath, $settings);
-                    } elseif ($settings['type'] == 'table') {
+                    } elseif ($settings['type'] === 'system') {
+                        $this->parseSystem($tableNode, $xPath, $settings);
+                    } elseif ($settings['type'] === 'sbor') {
+                        $this->parseSbor($tableNode, $xPath, $settings);
+                    } elseif ($settings['type'] === 'table') {
                         $this->parseTable($tableNode, $xPath, $settings);
                     }
                 }
@@ -281,10 +375,14 @@ class VtrdosManager extends errorLogger
                     $prodTitle = false;
                     $prodId = false;
 
-                    if ($aNode = $td1->getElementsByTagName('a')->item(0)) {
-                        $url = $aNode->getAttribute('href');
-                        $prodTitle = $this->processTitle($aNode->textContent);
-                        $prodId = md5($prodTitle);
+                    if ($aNodes = $td1->getElementsByTagName('a')) {
+                        foreach ($aNodes as $aNode) {
+                            if (!str_contains($aNode->getAttribute('class'), 'details')) {
+                                $url = $aNode->getAttribute('href');
+                                $prodTitle = $this->processTitle($aNode->textContent);
+                                $prodId = md5($prodTitle);
+                            }
+                        }
                     }
                     if ($url && $prodTitle) {
                         $releaseInfo = [];
@@ -335,18 +433,139 @@ class VtrdosManager extends errorLogger
                     }
                 }
             }
-            foreach ($prodsIndex as $key => $prodInfo) {
-                $this->counter++;
-                if ($this->counter > $this->maxCounter) {
-                    exit;
+            $this->importProdsIndex($prodsIndex);
+        }
+    }
+
+    /**
+     * @param $node
+     * @param DOMXPath $xPath
+     * @param $settings
+     */
+    protected function parseSystem($node, $xPath, $settings)
+    {
+        $prodsIndex = [];
+        $divNodes = $xPath->query(".//tr/td[@colspan='3']/div[@align='center']", $node);
+        if ($divNodes->length === 1) {
+            foreach ($divNodes as $divNode) {
+                $currentCategory = [];
+                if (isset($settings['prod']['directCategories'])) {
+                    $currentCategory = $settings['prod']['directCategories'];
                 }
-                if ($this->prodsManager->importProd($prodInfo, $this->origin)) {
-                    $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodInfo['title']);
-                } else {
-                    $this->markProgress('prod failed ' . $prodInfo['title']);
+
+                foreach ($divNode->childNodes as $childNode) {
+                    if ($childNode->nodeType == XML_ELEMENT_NODE) {
+                        if (strtolower($childNode->tagName) == 'p') {
+                            $aNodes = $xPath->query(".//b/font/a", $childNode);
+                            if ($aNodes->length > 0) {
+                                $aNode = $aNodes->item(0);
+                                $name = trim($aNode->textContent);
+                                if (isset($this->categories[$name])) {
+                                    $currentCategory = [$this->categories[$name]];
+                                }
+                            }
+                        }
+                        if ($currentCategory) {
+                            $liNodes = $xPath->query(".//li[@class='padding']", $childNode);
+                            if ($liNodes->length > 0) {
+                                foreach ($liNodes as $liNode) {
+                                    $aNode = false;
+                                    $textNode = false;
+                                    foreach ($liNode->childNodes as $contentNode) {
+                                        if ($contentNode->nodeType == XML_ELEMENT_NODE) {
+                                            if (strtolower($contentNode->tagName) == 'a' && !str_contains($contentNode->getAttribute('class'), 'details')) {
+                                                $aNode = $contentNode;
+                                            }
+                                        }
+                                        if ($aNode) {
+                                            if (substr(trim($contentNode->textContent), 0, 2) == 'by') {
+                                                $textNode = $contentNode;
+                                            }
+                                        }
+
+                                        if ($aNode && $textNode) {
+                                            $this->parseListItemRelease($aNode, $textNode, $currentCategory, $settings, $prodsIndex);
+
+                                            $aNode = false;
+                                            $textNode = false;
+                                        }
+                                    }
+                                }
+                                $currentCategory = false;
+                            }
+                        }
+                    }
                 }
             }
         }
+        $this->importProdsIndex($prodsIndex);
+    }
+
+    /**
+     * @param $node
+     * @param DOMXPath $xPath
+     * @param $settings
+     */
+    protected function parseSbor($node, $xPath, $settings)
+    {
+        $prodsIndex = [];
+        $divNodes = $xPath->query(".//tr/td[@colspan='3']/div[@align='center']", $node);
+        if ($divNodes->length === 1) {
+            foreach ($divNodes as $divNode) {
+                $currentCategory = [];
+                if (isset($settings['prod']['directCategories'])) {
+                    $currentCategory = $settings['prod']['directCategories'];
+                }
+
+                foreach ($divNode->childNodes as $childNode) {
+                    if ($childNode->nodeType == XML_ELEMENT_NODE) {
+                        if (strtolower($childNode->tagName) == 'p') {
+                            $aNodes = $xPath->query(".//b/font", $childNode);
+                            if ($aNodes->length > 0) {
+                                $aNode = $aNodes->item(0);
+                                $name = trim($aNode->textContent);
+                                if (isset($this->categories[$name])) {
+                                    $currentCategory = [$this->categories[$name]];
+                                }
+                                if (isset($this->categoryHardware[$name])) {
+                                    $settings['release']['hardwareRequired'][] = $this->categoryHardware[$name];
+                                }
+                            }
+                        }
+                        if ($currentCategory) {
+                            $liNodes = $xPath->query(".//li", $childNode);
+                            if ($liNodes->length > 0) {
+                                foreach ($liNodes as $liNode) {
+                                    $aNode = false;
+                                    $textNode = false;
+                                    foreach ($liNode->childNodes as $contentNode) {
+                                        if ($contentNode->nodeType == XML_ELEMENT_NODE) {
+                                            if (strtolower($contentNode->tagName) == 'a' && !str_contains($contentNode->getAttribute('class'), 'details')) {
+                                                $aNode = $contentNode;
+                                            }
+                                        }
+                                        if ($aNode) {
+                                            if (substr(trim($contentNode->textContent), 0, 2) == 'by') {
+                                                $textNode = $contentNode;
+                                            }
+                                        }
+
+                                        if ($aNode && $textNode) {
+                                            $this->parseListItemRelease($aNode, $textNode, $currentCategory, $settings, $prodsIndex);
+
+                                            $aNode = false;
+                                            $textNode = false;
+                                        }
+                                    }
+                                }
+                                $currentCategory = [];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $this->importProdsIndex($prodsIndex);
     }
 
     /**
@@ -357,102 +576,102 @@ class VtrdosManager extends errorLogger
     protected function parseList($node, $xPath, $settings)
     {
         $prodsIndex = [];
-        $fontNodes = $xPath->query(".//font", $node);
         $currentCategory = [];
         if (isset($settings['prod']['directCategories'])) {
             $currentCategory = $settings['prod']['directCategories'];
         }
-        foreach ($fontNodes as $fontNode) {
-            $aNode = false;
-            $textNode = false;
-            foreach ($fontNode->childNodes as $contentNode) {
-                $name = trim($contentNode->textContent);
-                if (isset($this->categories[$name])) {
-                    $currentCategory = [$this->categories[$name]];
-                }
-                if ($contentNode->nodeType == XML_ELEMENT_NODE) {
-                    if (strtolower($contentNode->tagName) == 'a') {
-                        $aNode = $contentNode;
-                    }
-                }
-                if ($aNode) {
-                    if (substr(trim($contentNode->textContent), 0, 2) == 'by') {
-                        $textNode = $contentNode;
-                    }
-                }
 
-                if ($aNode && $textNode) {
-                    $releaseInfo = [
-                        'id' => null,
-                        'title' => null,
-                        'fileUrl' => null,
-                        'hardwareRequired' => [],
-                    ];
-                    $this->parseANode($aNode, $releaseInfo);
-                    $releaseInfo['id'] = md5(basename($releaseInfo['fileUrl']));
-                    if ($releaseInfo['fileUrl'] && $releaseInfo['title']) {
-                        $prodTitle = $releaseInfo['title'];
-                        if (strtolower(substr($prodTitle, -4)) == 'demo') {
-                            $prodTitle = trim(mb_substr($prodTitle, 0, -4));
+        $liNodes = $xPath->query(".//li[@class='padding']", $node);
+        if ($liNodes->length > 0) {
+            foreach ($liNodes as $liNode) {
+                $aNode = false;
+                $textNode = false;
+                foreach ($liNode->childNodes as $contentNode) {
+                    if ($contentNode->nodeType == XML_ELEMENT_NODE) {
+                        if (strtolower($contentNode->tagName) == 'a' && !str_contains($contentNode->getAttribute('class'), 'details')) {
+                            $aNode = $contentNode;
                         }
-                        $prodId = md5($prodTitle);
-                        if (!isset($prodsIndex[$prodId])) {
-                            $prodsIndex[$prodId] = [
-                                'id' => $prodId,
-                                'title' => $prodTitle,
-                                'labels' => [],
-                                'directCategories' => $currentCategory,
-                                'releases' => [],
-                            ];
-                        }
-                        $roles = [];
-                        if (isset($settings['release'])) {
-                            if (isset($settings['release']['authorRoles'])) {
-                                $roles = $settings['release']['authorRoles'];
-                            }
-                        }
-                        $prodInfo = &$prodsIndex[$prodId];
-                        $this->parseTextNode($textNode, $prodInfo, $roles);
-
-                        if (isset($settings['release'])) {
-                            if (isset($settings['release']['language'])) {
-                                $releaseInfo['language'] = $settings['release']['language'];
-                            }
-                            if (isset($settings['release']['releaseType'])) {
-                                $releaseInfo['releaseType'] = $settings['release']['releaseType'];
-                            }
-                            if (isset($settings['release']['hardwareRequired'])) {
-                                $releaseInfo['hardwareRequired'] = $settings['release']['hardwareRequired'];
-                            }
-                        }
-                        if (isset($settings['prod'])) {
-                            if (isset($settings['prod']['directCategories'])) {
-                                $prodInfo['directCategories'] = $settings['prod']['directCategories'];
-                            }
-                        }
-                        $prodInfo['releases'][] = $releaseInfo;
                     }
-                    $aNode = false;
-                    $textNode = false;
+                    if ($aNode) {
+                        if (substr(trim($contentNode->textContent), 0, 2) == 'by') {
+                            $textNode = $contentNode;
+                        }
+                    }
+
+                    if ($aNode && $textNode) {
+                        $this->parseListItemRelease($aNode, $textNode, $currentCategory, $settings, $prodsIndex);
+
+                        $aNode = false;
+                        $textNode = false;
+                    }
                 }
             }
         }
-        foreach ($prodsIndex as $key => $prodInfo) {
-            $this->counter++;
-            if ($this->counter > $this->maxCounter) {
-                exit;
+
+        $this->importProdsIndex($prodsIndex);
+    }
+
+    private function parseListItemRelease($aNode, $textNode, $currentCategory, $settings, &$prodsIndex)
+    {
+        $releaseInfo = [
+            'id' => null,
+            'title' => null,
+            'fileUrl' => null,
+            'hardwareRequired' => [],
+        ];
+        $this->parseANode($aNode, $releaseInfo);
+        $fileName = basename($releaseInfo['fileUrl']);
+        $releaseInfo['id'] = md5($fileName);
+        if ($releaseInfo['fileUrl'] && $releaseInfo['title']) {
+            $prodTitle = $releaseInfo['title'];
+            if (strtolower(substr($prodTitle, -4)) == 'demo') {
+                $prodTitle = trim(mb_substr($prodTitle, 0, -4));
             }
-            if ($this->prodsManager->importProd($prodInfo, $this->origin)) {
-                $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodInfo['title']);
-            } else {
-                $this->markProgress('prod failed ' . $prodInfo['title']);
+            $prodId = md5($prodTitle);
+            if (!isset($prodsIndex[$prodId])) {
+                $prodsIndex[$prodId] = [
+                    'id' => $prodId,
+                    'title' => $prodTitle,
+                    'labels' => [],
+                    'directCategories' => $currentCategory,
+                    'releases' => [],
+                ];
             }
+
+            $roles = [];
+            if (isset($settings['release'])) {
+                if (isset($settings['release']['authorRoles'])) {
+                    $roles = $settings['release']['authorRoles'];
+                }
+            }
+            $prodInfo = &$prodsIndex[$prodId];
+
+            if (isset($settings['release'])) {
+                if (!empty($settings['release']['language'])) {
+                    $releaseInfo['language'] = $settings['release']['language'];
+                }
+                if (!empty($settings['release']['releaseType'])) {
+                    $releaseInfo['releaseType'] = $settings['release']['releaseType'];
+                }
+                if (!empty($settings['release']['hardwareRequired'])) {
+                    $releaseInfo['hardwareRequired'] = $settings['release']['hardwareRequired'];
+                }
+            }
+            if (isset($settings['prod'])) {
+                if (isset($settings['prod']['directCategories'])) {
+                    $prodInfo['directCategories'] = $settings['prod']['directCategories'];
+                }
+            }
+            $this->parseTextNode($textNode, $prodInfo, $releaseInfo, $roles);
+
+            $prodInfo['releases'][] = $releaseInfo;
         }
     }
 
     protected function parseTextNode(
         $node,
         &$prodInfo,
+        &$releaseInfo,
         $roles = []
     )
     {
@@ -460,7 +679,31 @@ class VtrdosManager extends errorLogger
         if (strtolower(substr($text, 0, 3)) == 'by ') {
             $text = substr($text, 3);
         }
-        $this->parseAuthorsString($text, $prodInfo, $roles);
+        if (str_contains($text, ' - ')) {
+            $strings = explode(' - ', $text);
+            $this->parseAuthorsString($strings[0], $prodInfo, $roles);
+            $this->parseDescription($strings[1], $prodInfo, $releaseInfo);
+        } else {
+            $this->parseAuthorsString($text, $prodInfo, $roles);
+        }
+
+    }
+
+    protected function parseDescription($text, &$prodInfo, &$releaseInfo)
+    {
+        foreach ($this->hwIndex as $key => $value) {
+            if (stripos($text, $key) !== false) {
+                if (str_contains($key, '(')) {
+                    $text = str_ireplace($key, '', $text);
+                }
+
+                $releaseInfo['hardwareRequired'][] = $value;
+            }
+        }
+        $text = trim($text);
+        if ($text) {
+            $prodInfo['description'] = $text;
+        }
     }
 
     protected function parseANode(
@@ -468,62 +711,40 @@ class VtrdosManager extends errorLogger
         &$releaseInfo
     )
     {
-        $hwIndex = [
-            '(km)' => 'kempstonmouse',
-            '(kemp8bit)' => 'kempston8b',
-            '(cvx)' => 'covoxfb',
-            '(dma)' => 'dmausc',
-            '(gs)' => 'gs',
-            '(sd)' => 'soundrive',
-            '(for 48k)' => 'zx48',
-            '(48k only)' => 'zx48',
-            '(128k only)' => 'zx128',
-            '(1024k)' => 'pentagon1024',
-            '(256k)' => 'scorpion',
-            '(ts)' => 'ts',
-            'hdd' => 'hdd',
-            '48k' => 'zx48',
-            'Pentagon 512k' => 'pentagon512',
-            'Pentagon 1024k' => 'pentagon1024',
-            'Scorpion ZS 256' => 'scorpion',
-            'Byte' => 'byte',
-            'ATM Turbo' => 'atm',
-            'smuc' => 'smuc',
-            'Covox' => 'covoxfb',
-            'General Sound' => 'gs',
-            'Cache' => 'Cache',
-            'SounDrive' => 'soundrive',
-            'Turbo Sound' => 'ts',
-            'ZXM-MoonSound' => 'zxm',
-            'AY' => 'ay',
-            'DMA UltraSound Card' => 'dmausc',
-            'Beeper' => 'beeper',
-            'AY Mouse' => 'aymouse',
-        ];
         $releaseInfo['fileUrl'] = $this->rootUrl . $node->getAttribute('href');
         $text = $node->textContent;
 
-        foreach ($hwIndex as $key => $value) {
+        foreach ($this->hwIndex as $key => $value) {
             if (stripos($text, $key) !== false) {
+                if (str_contains($key, '(')) {
+                    $text = str_ireplace($key, '', $text);
+                }
+
                 $releaseInfo['hardwareRequired'][] = $value;
             }
         }
         if ((stripos($text, '(dsk)')) !== false) {
+            $text = str_ireplace('(dsk)', '', $text);
             $releaseInfo['releaseType'] = 'adaptation';
         }
         if ((stripos($text, '(mod)')) !== false) {
+            $text = str_ireplace('(mod)', '', $text);
             $releaseInfo['releaseType'] = 'mod';
         }
         if ((stripos($text, '(rus)')) !== false) {
+            $text = str_ireplace('(rus)', '', $text);
             $releaseInfo['language'] = ['ru'];
         }
         if ((stripos($text, '(ita)')) !== false) {
+            $text = str_ireplace('(ita)', '', $text);
             $releaseInfo['language'] = ['it'];
         }
         if ((stripos($text, '(pol)')) !== false) {
+            $text = str_ireplace('(pol)', '', $text);
             $releaseInfo['language'] = ['pl'];
         }
         if ((stripos($text, '(eng)')) !== false) {
+            $text = str_ireplace('(eng)', '', $text);
             $releaseInfo['language'] = ['en'];
         }
         if (preg_match('#(v[0-9]\.[0-9])#i', $text, $matches, PREG_OFFSET_CAPTURE)) {
@@ -535,7 +756,8 @@ class VtrdosManager extends errorLogger
         $releaseInfo['title'] = $this->processTitle($text);
     }
 
-    private function processTitle($text){
+    private function processTitle($text)
+    {
 
         //remove (..)
         $text = preg_replace('#([(].*[)])*#', '', $text);
@@ -548,7 +770,8 @@ class VtrdosManager extends errorLogger
             $text = trim(mb_substr($text, 0, -4));
         }
         return $text;
-}
+    }
+
     protected function parseAuthorsString(
         $string,
         &$info,
@@ -557,6 +780,9 @@ class VtrdosManager extends errorLogger
     )
     {
         $string = trim(preg_replace('!\s+!', ' ', $string), " \t\n\r\0\x0B" . chr(0xC2) . chr(0xA0));
+        if ($string === 'author') {
+            $info['releaseType'] = 'original';
+        }
         if ($string !== 'n/a' && $string !== 'author') {
             $parts = explode(',', $string);
             foreach ($parts as $part) {
@@ -634,7 +860,6 @@ class VtrdosManager extends errorLogger
     {
         if ($contents = file_get_contents($url)) {
             $dom = new DOMDocument;
-            $dom->strictErrorChecking = false;
             $dom->encoding = 'UTF-8';
             $dom->recover = true;
             $dom->substituteEntities = true;
@@ -661,5 +886,24 @@ class VtrdosManager extends errorLogger
         flush();
         file_put_contents(ROOT_PATH . 'import.log', date('H:i') . ' ' . $text . "\n", FILE_APPEND);
         $previousTime = $endTime;
+    }
+
+    /**
+     * @param array $prodsIndex
+     * @return void
+     */
+    protected function importProdsIndex(array $prodsIndex): void
+    {
+        foreach ($prodsIndex as $key => $prodInfo) {
+            $this->counter++;
+            if ($this->counter > $this->maxCounter) {
+                exit;
+            }
+            if ($this->prodsManager->importProd($prodInfo, $this->origin)) {
+                $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodInfo['title']);
+            } else {
+                $this->markProgress('prod failed ' . $prodInfo['title']);
+            }
+        }
     }
 }

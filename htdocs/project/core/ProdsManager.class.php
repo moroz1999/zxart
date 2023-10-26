@@ -723,7 +723,7 @@ class ProdsManager extends ElementsManager
             $changed = true;
         }
         if (!$element->hardwareRequired && !empty($releaseInfo['hardwareRequired'])) {
-            $element->hardwareRequired = $releaseInfo['hardwareRequired'];
+            $element->hardwareRequired = array_unique($releaseInfo['hardwareRequired']);
             $changed = true;
         }
         if ((!$element->releaseType || $element->releaseType === 'unknown') && !empty($releaseInfo['releaseType'])) {

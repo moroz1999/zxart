@@ -200,7 +200,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
             $zxParsingManager = $this->getService('ZxParsingManager');
             if ($structure = $zxParsingManager->getFileStructureById($this->id)) {
                 if (count($structure) > 100) {
-                    return [];
+                    $structure = array_slice($structure, 0, 100);
                 }
                 foreach ($structure as $key => $fileInfo) {
                     if ($file = $zxParsingManager->extractFile($this->getFilePath(), $fileInfo['id'])) {
