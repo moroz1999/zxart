@@ -7,4 +7,6 @@ export interface ZxProdsListDto extends StructureElementDto {
   readonly publishedProds?: Array<ZxProdDto>;
   readonly releases?: Array<ZxProdDto>;
   readonly prodsAmount: number;
+  readonly compilations?: Array<ZxProdDto>;
+  readonly seriesProds?: Array<ZxProdDto>;
 }

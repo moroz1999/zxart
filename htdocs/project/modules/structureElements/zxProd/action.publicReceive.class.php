@@ -53,6 +53,7 @@ class publicReceiveZxProd extends structureElementAction
             'language',
             'categories',
             'compilationProds',
+            'seriesProds',
             'externalLink',
         ];
     }

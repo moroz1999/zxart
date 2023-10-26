@@ -17,6 +17,9 @@
  * @property groupElement[] $publishers
  * @property groupElement[] $groups
  * @property zxProdElement[] $compilationProds
+ * @property zxProdElement[] $seriesProds
+ * @property zxProdElement[] $compilations
+ * @property zxProdElement[] $series
  * @property float $votes
  * @property int $partyplace
  * @property int $denyVoting
@@ -116,6 +119,27 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
             [
                 'linkType' => 'compilation',
                 'role' => 'parent',
+            ],
+        ];
+        $moduleStructure['seriesProds'] = [
+            'ConnectedElements',
+            [
+                'linkType' => 'series',
+                'role' => 'parent',
+            ],
+        ];
+        $moduleStructure['compilations'] = [
+            'ConnectedElements',
+            [
+                'linkType' => 'compilation',
+                'role' => 'child',
+            ],
+        ];
+        $moduleStructure['series'] = [
+            'ConnectedElements',
+            [
+                'linkType' => 'series',
+                'role' => 'child',
             ],
         ];
         $moduleStructure['joinAndDelete'] = 'text';
@@ -744,10 +768,18 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     {
         $data = [
             'prods' => [],
-            'prodsAmount' => count($this->compilationProds)
+            'prodsAmount' => count($this->compilationProds),
+            'compilations' => [],
+            'seriesProds' => [],
         ];
         foreach ($this->compilationProds as $prod) {
             $data['prods'][] = $prod->getElementData('list');
+        }
+        foreach ($this->seriesProds as $prod) {
+            $data['seriesProds'][] = $prod->getElementData('list');
+        }
+        foreach ($this->compilations as $prod) {
+            $data['compilations'][] = $prod->getElementData('list');
         }
         return json_encode($data);
     }

@@ -16,7 +16,7 @@ export interface YearProds {
 })
 export class ZxProdsListComponent implements OnInit {
   public model?: ZxProdsList;
-  @Input() public property: 'prods' | 'publishedProds' | 'releases' = 'prods';
+  @Input() public property: 'prods' | 'publishedProds' | 'releases' | 'compilations' | 'seriesProds' = 'prods';
   @Input() elementId: number = 0;
   @Input() layout: 'years' | 'list' = 'list';
   private yearsList?: YearProds[];
@@ -42,6 +42,10 @@ export class ZxProdsListComponent implements OnInit {
 
   public get items(): Array<ZxProd> | undefined {
     switch (this.property) {
+      case 'compilations':
+        return this.model?.compilations;
+      case 'seriesProds':
+        return this.model?.seriesProds;
       case 'publishedProds':
         return this.model?.publishedProds;
       case 'releases':

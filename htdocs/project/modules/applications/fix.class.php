@@ -36,7 +36,7 @@ class fixApplication extends controllerApplication
              */
             $languagesManager = $this->getService('LanguagesManager');
             $languagesManager->setCurrentLanguageCode('eng');
-//            $this->fixProds();
+            $this->fixProds();
 //            $this->fixZxChip();
 //            $this->fixWlodek();
         }

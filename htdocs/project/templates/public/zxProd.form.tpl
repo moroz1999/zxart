@@ -187,6 +187,23 @@
                 {include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="groups"}
             </td>
         </tr>
+        <tr {if $formErrors.seriesProds} class="form_error"{/if}>
+            <td class="form_label">
+                {translations name='zxprod.seriesProds'}:
+            </td>
+            <td class="form_field">
+                <select class="select_multiple zxitem_form_prod_select" multiple="multiple"
+                        name="{$formNames.seriesProds}[]" autocomplete='off'>
+                    <option value=''></option>
+                    {foreach from=$formData.seriesProds item=prod}
+                        <option value='{$prod->id}' selected="selected">
+                            {$prod->title}
+                        </option>
+                    {/foreach}
+                </select>
+                {include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="groups"}
+            </td>
+        </tr>
         <tr {if $formErrors.description} class="form_error"{/if}>
             <td class="form_label">
                 {translations name='zxprod.description'}:

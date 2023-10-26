@@ -480,6 +480,17 @@ class ProdsManager extends ElementsManager
                 }
             }
         }
+
+        if (!empty($prodInfo['seriesProds'])) {
+            if (!$element->seriesProds) {
+                foreach ($prodInfo['seriesProds'] as $importProdId) {
+                    if ($prodId = $this->getElementIdByImportId($importProdId, $origin, 'prod')) {
+                        $this->linksManager->linkElements($element->id, $prodId, 'series');
+                    }
+                }
+            }
+        }
+
         if (!empty($prodInfo['categories']) && (!$element->getConnectedCategoriesIds() || $this->forceUpdateCategories || $justCreated)) {
             $linksIndex = $this->linksManager->getElementsLinksIndex($element->id, 'zxProdCategory', 'child');
             foreach ($prodInfo['categories'] as $importCategoryId) {
@@ -493,8 +504,8 @@ class ProdsManager extends ElementsManager
             foreach ($linksIndex as $link) {
                 $link->delete();
             }
-
         }
+
         if (!empty($prodInfo['images']) && ($this->forceUpdateImages || $justCreated || !$element->getFilesList('connectedFile'))) {
             $this->importElementFiles($element, $prodInfo['images']);
             if ($this->resizeImages) {

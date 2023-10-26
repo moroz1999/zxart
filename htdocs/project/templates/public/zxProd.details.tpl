@@ -56,10 +56,10 @@
                 <td class='info_table_value'>
                     {foreach $categoriesPaths as $categories}
                         <div>
-                        {foreach $categories as $categoryElement}
-                            <a
-                            href="{$categoryElement->URL}">{$categoryElement->title}</a>{if !$categoryElement@last} / {/if}
-                        {/foreach}
+                            {foreach $categories as $categoryElement}
+                                <a
+                                href="{$categoryElement->URL}">{$categoryElement->title}</a>{if !$categoryElement@last} / {/if}
+                            {/foreach}
                         </div>
                     {/foreach}
                 </td>
@@ -229,15 +229,26 @@
         </div>
     {/if}
 
-    {if $element->compilationProds}
-        <h2>{translations name='zxprod.compilationProds'}</h2>
+    {if $element->compilationProds || $element->compilations || $element->seriesProds}
         <script>
             window.elementsData = window.elementsData ? window.elementsData : {};
             window.elementsData[{$element->id}] = {$element->getCompilationJsonData()};
         </script>
+    {/if}
+    {if $element->compilationProds}
+        <h2>{translations name='zxprod.compilationProds'}</h2>
         <app-zx-prods-list element-id="{$element->id}" property="prods"></app-zx-prods-list>
     {/if}
 
+    {if $element->seriesProds}
+        <h2>{translations name='zxprod.seriesProds'}</h2>
+        <app-zx-prods-list element-id="{$element->id}" property="seriesProds"></app-zx-prods-list>
+    {/if}
+
+    {if $element->compilations}
+        <h2>{translations name='zxprod.compilations'}</h2>
+        <app-zx-prods-list element-id="{$element->id}" property="compilations"></app-zx-prods-list>
+    {/if}
 
     {include file=$theme->template('component.comments.tpl')}
     {if $element->denyComments}<p>{translations name="zxitem.commentsdenied"}</p>{/if}
@@ -259,6 +270,18 @@
         }
         window.prodsList.push({$element->getJsonInfo()});
     </script>
+
+    {if $element->series}
+        {foreach $element->series as $seriesElement}
+            <script>
+                window.elementsData = window.elementsData ? window.elementsData : {};
+                window.elementsData[{$seriesElement->id}] = {$seriesElement->getCompilationJsonData()};
+            </script>
+            <h2>{translations name='zxprod.series'}: {$seriesElement->title}</h2>
+            <app-zx-prods-list element-id="{$seriesElement->id}" property="seriesProds"></app-zx-prods-list>
+        {/foreach}
+    {/if}
+
 {/capture}
 
 {assign moduleClass "zxprod_details gallery_pictures"}

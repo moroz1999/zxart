@@ -19,16 +19,20 @@ class batchUploadZxProdsUploadForm extends structureElementAction
             $user = $this->getService('user');
 
             $cachePath = $this->getService('PathsManager')->getPath('uploadsCache');
+            if (!$structureElement->categories) {
+                $structureElement->categories = [92188];
+            }
+            $firstCategoryId = reset($structureElement->categories);
 
-            foreach ($filesInfo as $imageInfo) {
+            foreach ($filesInfo as $fileInfo) {
                 /**
                  * @var zxProdElement $zxProdElement
                  */
-                if ($zxProdElement = $structureManager->createElement('zxProd', 'show', $structureElement->id)) {
+                if ($zxProdElement = $structureManager->createElement('zxProd', 'show', $firstCategoryId)) {
                     if (!$firstProd) {
                         $firstProd = $zxProdElement;
                     }
-                    $originalFileName = $imageInfo['name'];
+                    $originalFileName = $fileInfo['name'];
                     $info = pathinfo($originalFileName);
 
                     if ($structureElement->prodTitle) {
@@ -61,10 +65,6 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                     $zxProdElement->dateAdded = $zxProdElement->dateCreated;
                     $zxProdElement->userId = $this->getService('user')->id;
 
-                    if (!$zxProdElement->categories) {
-                        $zxProdElement->categories = [92188];
-                    }
-
                     $zxProdElement->checkLinks('categories', 'zxProdCategory');
 
                     $zxProdElement->renewPartyLink();
@@ -88,41 +88,41 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                             $privilege[2]
                         );
                     }
+                    if ($fileInfo['tmp_name']) {
+                        /**
+                         * @var zxReleaseElement $zxReleaseElement
+                         */
+                        if ($zxReleaseElement = $structureManager->createElement(
+                            'zxRelease',
+                            'show',
+                            $zxProdElement->getId()
+                        )) {
+                            if ($zxProdElement->title) {
+                                $zxReleaseElement->title = $zxProdElement->title;
+                            } else {
+                                $zxReleaseElement->title = str_replace('_', ' ', ucfirst(ucfirst($info['filename'])));
+                            }
 
-                    /**
-                     * @var zxReleaseElement $zxReleaseElement
-                     */
-                    if ($zxReleaseElement = $structureManager->createElement(
-                        'zxRelease',
-                        'show',
-                        $zxProdElement->getId()
-                    )) {
-                        if ($zxProdElement->title) {
-                            $zxReleaseElement->title = $zxProdElement->title;
-                        } else {
-                            $zxReleaseElement->title = str_replace('_', ' ', ucfirst(ucfirst($info['filename'])));
+                            $zxReleaseElement->structureName = $zxReleaseElement->title;
+                            $zxReleaseElement->file = $zxReleaseElement->getId();
+                            $zxReleaseElement->dateAdded = $zxReleaseElement->dateCreated;
+                            $zxReleaseElement->userId = $this->getService('user')->id;
+
+                            $zxReleaseElement->persistElementData();
+
+                            if ($temporaryFile = $cachePath . basename($fileInfo['tmp_name'])) {
+                                $zxReleaseElement->fileName = $fileInfo['name'];
+                                copy(
+                                    $temporaryFile,
+                                    $this->getService('PathsManager')->getPath('releases') . $zxReleaseElement->file
+                                );
+                                unlink($temporaryFile);
+                            }
+
+                            $zxReleaseElement->persistElementData();
+                            $zxReleaseElement->updateFileStructure();
                         }
-
-                        $zxReleaseElement->structureName = $zxReleaseElement->title;
-                        $zxReleaseElement->file = $zxReleaseElement->getId();
-                        $zxReleaseElement->dateAdded = $zxReleaseElement->dateCreated;
-                        $zxReleaseElement->userId = $this->getService('user')->id;
-
-                        $zxReleaseElement->persistElementData();
-
-                        if ($temporaryFile = $cachePath . basename($imageInfo['tmp_name'])) {
-                            $zxReleaseElement->fileName = $imageInfo['name'];
-                            copy(
-                                $temporaryFile,
-                                $this->getService('PathsManager')->getPath('releases') . $zxReleaseElement->file
-                            );
-                            unlink($temporaryFile);
-                        }
-
-                        $zxReleaseElement->persistElementData();
-                        $zxReleaseElement->updateFileStructure();
                     }
-
                 }
             }
             $user->refreshPrivileges();

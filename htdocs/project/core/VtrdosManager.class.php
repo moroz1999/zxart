@@ -3,7 +3,7 @@
 class VtrdosManager extends errorLogger
 {
     protected $counter = 0;
-    protected $maxCounter = 30;
+    protected $maxCounter = 50;
     /**
      * @var ProdsManager
      */
@@ -174,10 +174,30 @@ class VtrdosManager extends errorLogger
         'Хиромантия, гадания и прочее:' => 92582,
         'Различные психологические тесты:' => 418663,
         'Разнообразный софт:' => 92188,
+        'Game // exUSSR' => 244871,
+        'Game // English' => 244871,
+        'Game // Demo version' => 244871,
+        'Game // Translated' => 244871,
+        'GS' => 244871,
     ];
 
     public function __construct()
     {
+//        $this->urlsSettings['https://vtrd.in/press.php?l=1'] = [
+//            [
+//                'type' => 'press',
+//            ],
+//        ];
+//        $this->urlsSettings['https://vtrd.in/press.php?l=2'] = [
+//            [
+//                'type' => 'press',
+//            ],
+//        ];
+//        $this->urlsSettings['https://vtrd.in/updates.php'] = [
+//            [
+//                'type' => 'updates',
+//            ],
+//        ];
 //        $this->urlsSettings['https://vtrd.in/games.php?t=translat'] = [
 //            [
 //                'type' => 'table',
@@ -281,20 +301,20 @@ class VtrdosManager extends errorLogger
 //                ],
 //            ],
 //        ];
-        foreach ($this->alphabet as $item) {
-            $this->urlsSettings['https://vtrd.in/games.php?t=' . $item] = [
-                [
-                    'type' => 'table',
-                    'prod' => [
-                        'directCategories' => [92177],
-                    ],
-                    'release' => [
-                        'releaseType' => 'adaptation',
-                        'authorRoles' => ['adaptation', 'release'],
-                    ],
-                ],
-            ];
-        }
+//        foreach ($this->alphabet as $item) {
+//            $this->urlsSettings['https://vtrd.in/games.php?t=' . $item] = [
+//                [
+//                    'type' => 'table',
+//                    'prod' => [
+//                        'directCategories' => [92177],
+//                    ],
+//                    'release' => [
+//                        'releaseType' => 'adaptation',
+//                        'authorRoles' => ['adaptation', 'release'],
+//                    ],
+//                ],
+//            ];
+//        }
     }
 
     /**
@@ -352,6 +372,10 @@ class VtrdosManager extends errorLogger
                         $this->parseSbor($tableNode, $xPath, $settings);
                     } elseif ($settings['type'] === 'table') {
                         $this->parseTable($tableNode, $xPath, $settings);
+                    } elseif ($settings['type'] === 'updates') {
+                        $this->parseUpdates($tableNode, $xPath, $settings);
+                    } elseif ($settings['type'] === 'press') {
+                        $this->parsePress($tableNode, $xPath, $settings);
                     }
                 }
             }
@@ -411,6 +435,186 @@ class VtrdosManager extends errorLogger
                         $roles[] = 'release';
                         if ($td3 = $tdNodes->item(2)) {
                             $this->parseAuthorsString((string)$td3->nodeValue, $releaseInfo, $roles, 'publishers');
+                        }
+                        if (isset($settings['release'])) {
+                            if (isset($settings['release']['language'])) {
+                                $releaseInfo['language'] = $settings['release']['language'];
+                            }
+                            if (isset($settings['release']['releaseType'])) {
+                                $releaseInfo['releaseType'] = $settings['release']['releaseType'];
+                            }
+                            if (isset($settings['release']['hardwareRequired'])) {
+                                $releaseInfo['hardwareRequired'] = $settings['release']['hardwareRequired'];
+                            }
+                        }
+                        if (isset($settings['prod'])) {
+                            if (isset($settings['prod']['directCategories'])) {
+                                $prodsIndex[$prodId]['directCategories'] = $settings['prod']['directCategories'];
+                            }
+                        }
+                        $this->parseANode($aNode, $releaseInfo);
+                        $prodsIndex[$prodId]['releases'][] = $releaseInfo;
+                    }
+                }
+            }
+            $this->importProdsIndex($prodsIndex);
+        }
+    }
+
+    /**
+     * @param $node
+     * @param DOMXPath $xPath
+     * @param $settings
+     */
+    protected function parsePress($node, $xPath, $settings)
+    {
+        $prodsIndex = [];
+        $rowNodes = $xPath->query(".//tr", $node);
+        if ($rowNodes->length > 0) {
+            foreach ($rowNodes as $rowNode) {
+                $tdNodes = $rowNode->getElementsByTagName('td');
+                if ($td1 = $tdNodes->item(0)) {
+                    $pressTitle = '';
+
+                    if ($bNodes = $td1->getElementsByTagName('b')) {
+                        foreach ($bNodes as $bNode) {
+                            $pressTitle = trim($bNode->textContent);
+                        }
+                    }
+                    if ($pressTitle && ($td2 = $tdNodes->item(1))) {
+                        if ($aNodes = $td2->getElementsByTagName('a')) {
+                            $seriesProdsIds = [];
+                            if ($aNodes->length > 20) {
+                                $directCategories = [92182];
+                            } else {
+                                $directCategories = [92179];
+                            }
+                            foreach ($aNodes as $aNode) {
+                                $url = false;
+                                $prodTitle = false;
+                                $prodId = false;
+                                if (!str_contains($aNode->getAttribute('class'), 'rpad')) {
+                                    $url = $aNode->getAttribute('href');
+                                    $prodTitle = $this->processTitle($pressTitle . ' #' . $aNode->textContent);
+                                    $prodId = md5($pressTitle . ' #' . $aNode->textContent);
+                                }
+
+
+                                if ($url && $prodTitle) {
+                                    $releaseInfo = [];
+
+                                    if (!isset($prodsIndex[$prodId])) {
+                                        $prodsIndex[$prodId] = [
+                                            'id' => $prodId,
+                                            'title' => $prodTitle,
+                                            'labels' => [],
+                                            'releases' => [],
+                                        ];
+                                        $prodsIndex[$prodId]['directCategories'] = $directCategories;
+                                    }
+                                    $seriesProdsIds[] = $prodId;
+                                    $releaseInfo['fileUrl'] = $this->rootUrl . $url;
+                                    $releaseInfo['title'] = $prodTitle;
+                                    $releaseInfo['id'] = md5(basename($url));
+                                    $releaseInfo['releaseType'] = 'original';
+                                    $releaseInfo['labels'] = [];
+                                    $releaseInfo['language'] = ['ru'];
+                                    $releaseInfo['hardwareRequired'] = ['pentagon128'];
+
+                                    $prodsIndex[$prodId]['releases'][] = $releaseInfo;
+                                }
+
+                            }
+                            if ($seriesProdsIds) {
+                                $seriesProdId = md5($pressTitle);
+
+                                $prodsIndex[$seriesProdId] = [
+                                    'id' => $seriesProdId,
+                                    'title' => $pressTitle,
+                                    'seriesProds' => $seriesProdsIds,
+                                    'directCategories' => $directCategories
+                                ];
+
+                            }
+                        }
+
+                    }
+
+                }
+            }
+            $this->importProdsIndex($prodsIndex);
+        }
+    }
+
+    /**
+     * @param $node
+     * @param DOMXPath $xPath
+     * @param $settings
+     */
+    protected function parseUpdates($node, $xPath, $settings)
+    {
+        $prodsIndex = [];
+        $releaseNodes = $xPath->query(".//tr", $node);
+        if ($releaseNodes->length > 0) {
+            foreach ($releaseNodes as $releaseNode) {
+                $tdNodes = $releaseNode->getElementsByTagName('td');
+                if ($td2 = $tdNodes->item(1)) {
+                    $url = false;
+                    $prodTitle = false;
+                    $prodId = false;
+                    $currentCategory = false;
+
+                    if ($aNodes = $td2->getElementsByTagName('a')) {
+                        foreach ($aNodes as $aNode) {
+                            if (!str_contains($aNode->getAttribute('class'), 'details')) {
+                                $url = $aNode->getAttribute('href');
+                                $prodTitle = $this->processTitle($aNode->textContent);
+                                $prodId = md5($prodTitle);
+                                break;
+                            }
+                        }
+                    }
+                    if ($td3 = $tdNodes->item(2)) {
+                        $name = trim($td3->textContent);
+                        if (isset($this->categories[$name])) {
+                            $currentCategory = [$this->categories[$name]];
+                        }
+                        if (isset($this->categories[$name . ':'])) {
+                            $currentCategory = [$this->categories[$name . ':']];
+                        }
+                    }
+                    if ($url && $prodTitle && !$currentCategory) {
+                        $this->markProgress('Category parsing failed: ' . $prodTitle . ' ' . $url);
+                        exit;
+                    }
+                    if ($url && $prodTitle && $currentCategory) {
+                        $releaseInfo = [];
+
+                        if (!isset($prodsIndex[$prodId])) {
+                            $prodsIndex[$prodId] = [
+                                'id' => $prodId,
+                                'title' => $prodTitle,
+                                'directCategories' => $currentCategory,
+                                'labels' => [],
+                                'releases' => [],
+                            ];
+                        }
+                        $releaseInfo['fileUrl'] = $this->rootUrl . $url;
+                        $releaseInfo['id'] = md5(basename($url));
+                        $releaseInfo['labels'] = [];
+
+                        if ($td4 = $tdNodes->item(3)) {
+                            $this->parseAuthorsString((string)$td4->nodeValue, $prodsIndex[$prodId]);
+                        }
+                        $roles = [];
+                        if (isset($settings['release'])) {
+                            if (isset($settings['release']['authorRoles'])) {
+                                $roles = $settings['release']['authorRoles'];
+                            }
+                        }
+                        $roles[] = 'release';
+                        if ($td5 = $tdNodes->item(4)) {
+                            $this->parseAuthorsString((string)$td5->nodeValue, $releaseInfo, $roles, 'publishers');
                         }
                         if (isset($settings['release'])) {
                             if (isset($settings['release']['language'])) {
@@ -758,7 +962,6 @@ class VtrdosManager extends errorLogger
 
     private function processTitle($text)
     {
-
         //remove (..)
         $text = preg_replace('#([(].*[)])*#', '', $text);
         //remove double spaces

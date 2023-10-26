@@ -8,6 +8,8 @@ export class ZxProdsList extends StructureElement {
   public prods: Array<ZxProd> = [];
   public publishedProds: Array<ZxProd> = [];
   public releases: Array<ZxProd> = [];
+  public compilations: Array<ZxProd> = [];
+  public seriesProds: Array<ZxProd> = [];
 
   constructor(
     data: ZxProdsListDto,
@@ -20,6 +22,13 @@ export class ZxProdsList extends StructureElement {
     if (data.publishedProds) {
       this.publishedProds = data.publishedProds.map(item => new ZxProd(item));
     }
+    if (data.compilations) {
+      this.compilations = data.compilations.map(item => new ZxProd(item));
+    }
+    if (data.seriesProds) {
+      this.seriesProds = data.seriesProds.map(item => new ZxProd(item));
+    }
+
     if (data.releases) {
       this.releases = data.releases.map(item => new ZxProd(item));
     }
