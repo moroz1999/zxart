@@ -69,9 +69,9 @@ trait Author
             $translationsManager = $this->getService('translationsManager');
 
             if ($this->is3aDenied()) {
-                $types = ['zxdb', 'pouet'];
+                $types = ['zxdb', 'pouet', 's4e'];
             } else {
-                $types = ['3a', 'zxdb', 'pouet'];
+                $types = ['3a', 'zxdb', 'pouet', 's4e'];
             }
 
             /**
@@ -114,6 +114,14 @@ trait Author
                             'image' => 'icon_pouet.png',
                             'name' => $translationsManager->getTranslationByName('links.link_pouet'),
                             'url' => 'https://www.pouet.net/user.php?who=' . $row['importId'],
+                            'id' => $row['importId'],
+                        ];
+                    }elseif ($row['importOrigin'] == 's4e') {
+                        $this->linksInfo[] = [
+                            'type' => 's4e',
+                            'image' => 'icon_s4e.png',
+                            'name' => $translationsManager->getTranslationByName('links.link_s4e'),
+                            'url' => 'https://spectrum4ever.org/fulltape.php?go=releases&id=' . $row['importId'].'&by=cracker',
                             'id' => $row['importId'],
                         ];
                     }

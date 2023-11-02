@@ -33,7 +33,7 @@ trait Group
              */
             $translationsManager = $this->getService('translationsManager');
 
-            $types = ['3a', 'zxdb'];
+            $types = ['3a', 'zxdb', 's4e'];
 
 
             /**
@@ -59,6 +59,14 @@ trait Group
                             'type' => '3a',
                             'image' => 'icon_3a.png',
                             'name' => $translationsManager->getTranslationByName('links.link_3a'),
+                            'url' => 'https://zxaaa.net/view_demos.php?a=' . $row['importId'],
+                            'id' => $row['importId'],
+                        ];
+                    }elseif ($row['importOrigin'] == 's4e') {
+                        $this->linksInfo[] = [
+                            'type' => 's4e',
+                            'image' => 'icon_s4e.png',
+                            'name' => $translationsManager->getTranslationByName('links.link_s4e'),
                             'url' => 'https://zxaaa.net/view_demos.php?a=' . $row['importId'],
                             'id' => $row['importId'],
                         ];

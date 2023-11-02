@@ -258,6 +258,13 @@
 
         <tr>
             <td colspan="2">
+                <h3>{translations name='zxrelease.inlays'}:</h3>
+            </td>
+        </tr>
+        {include file=$theme->template('component.form.files.tpl') element=$element propertyName='inlayFilesSelector' imagePreset='prodImage'}
+
+        <tr>
+            <td colspan="2">
                 <h3>{translations name='zxprod.maps'}:</h3>
             </td>
         </tr>

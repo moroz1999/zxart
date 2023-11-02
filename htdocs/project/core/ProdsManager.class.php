@@ -566,10 +566,14 @@ class ProdsManager extends ElementsManager
             }
         }
 
-        if (!empty($prodInfo['maps'])) {
+        if (!empty($prodInfo['maps']) && ($this->forceUpdateImages || $justCreated || !$element->getFilesList('mapFilesSelector'))) {
             foreach ($prodInfo['maps'] as $map) {
                 $this->importElementFile($element, $map['url'], $map['author'], 'mapFilesSelector');
             }
+        }
+
+        if (!empty($prodInfo['inlayImages']) && ($this->forceUpdateImages || $justCreated || !$element->getFilesList('inlayFilesSelector'))) {
+            $this->importElementFiles($element, $prodInfo['inlayImages'], 'inlayFilesSelector');
         }
 
         if (!empty($prodInfo['rzx'])) {

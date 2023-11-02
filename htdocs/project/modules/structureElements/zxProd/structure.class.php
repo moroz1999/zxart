@@ -158,7 +158,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
 
     public function getFileSelectorPropertyNames()
     {
-        return ['connectedFile', 'mapFilesSelector', 'rzx'];
+        return ['connectedFile', 'inlayFilesSelector', 'mapFilesSelector', 'rzx'];
     }
 
     public function getPartyId()
@@ -406,6 +406,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         foreach ($this->getReleasesList() as $releaseElement) {
             $result = array_merge($result, $releaseElement->getImagesList());
         }
+        $result = array_merge($result, $this->getFilesList('inlayFilesSelector'));
         $result = array_merge($result, $this->getFilesList('mapFilesSelector'));
 
         return $result;

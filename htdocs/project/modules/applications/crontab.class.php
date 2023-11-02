@@ -248,6 +248,7 @@ class crontabApplication extends controllerApplication
                      * @var zxReleaseElement $releaseElement
                      */
                     if ($releaseElement = $this->structureManager->getElementById($record['id'])) {
+                        $this->logMessage($counter . ' parse release ' . $record['id'] . ' started ' . $releaseElement->id . ' ' . $releaseElement->title, 0);
                         $releaseElement->updateFileStructure();
                         $end_time = microtime(true);
                         $this->logMessage($counter . ' parse release ' . $record['id'] . ' ' . $releaseElement->id . ' ' . $releaseElement->title, round($end_time - $start_time, 2));

@@ -204,6 +204,12 @@
                 {include file=$theme->template('component.releasestable.tpl') releasesList=$releasesList pager=false}
             </div>
         {/if}
+
+        {if $filesList = $element->getFilesList('inlayFilesSelector')}
+            <h3>{translations name='zxrelease.inlays'}</h3>
+            {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage'}
+        {/if}
+
         {if $filesList = $element->getFilesList('mapFilesSelector')}
             {if $linkInfo = $element->getLinkInfo('maps')}
                 <h2>{translations name='zxprod.maps'}</h2>

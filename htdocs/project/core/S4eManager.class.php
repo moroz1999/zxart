@@ -3,7 +3,7 @@
 class S4eManager extends errorLogger
 {
     protected int $counter = 0;
-    protected int $maxCounter = 700;
+    protected int $maxCounter = 500;
     protected ProdsManager $prodsManager;
     protected AuthorsManager $authorsManager;
     protected GroupsManager $groupsManager;
@@ -56,7 +56,7 @@ class S4eManager extends errorLogger
         $this->parseReleasers();
         $this->parseStudios();
         $this->parseReleases();
-        $this->parseCompilations();
+//        $this->parseCompilations();
         $this->import();
     }
 
@@ -76,9 +76,7 @@ class S4eManager extends errorLogger
         }
 
         $this->importProdsIndex($prodsIndex);
-        $this->counter = 0;
-        $this->maxCounter = 20;
-        $this->importProdsIndex($this->compilations);
+//        $this->importProdsIndex($this->compilations);
     }
 
     private function parseCompilations()
@@ -133,7 +131,7 @@ class S4eManager extends errorLogger
                                     'id' => $prodId,
                                     'title' => $prodTitle,
                                     'description' => $description,
-                                    'images' => $images,
+                                    'inlayImages' => $images,
                                     'compilationItems' => $compilationItems,
                                     'labels' => [$studio],
                                     'directCategories' => [92177],
