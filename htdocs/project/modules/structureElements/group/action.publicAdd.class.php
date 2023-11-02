@@ -54,6 +54,7 @@ class publicAddGroup extends structureElementAction
             'startDate',
             'endDate',
             'slogan',
+            'type',
             'addAuthor',
             'addAuthorStartDate',
             'addAuthorEndDate',

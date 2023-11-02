@@ -31,7 +31,7 @@
                         autocomplete='off' multiple="multiple">
                     {foreach $element->getCategoriesSelectorInfo() as $categoryInfo}
                         <option value='{$categoryInfo.id}'
-                                {if $categoryInfo.selected}selected="selected"{/if} >{for $level=0 to $categoryInfo.level-4}&nbsp;{/for}{$categoryInfo.title}</option>
+                                {if $categoryInfo.selected}selected="selected"{/if} >{for $level=0 to $categoryInfo.level-4}&nbsp;&nbsp;&nbsp;&nbsp;{/for}{$categoryInfo.title}</option>
                     {/foreach}
                 </select>
                 {include file=$theme->template('component.form_help.tpl') structureType='zxProd' name="categories"}
@@ -89,7 +89,7 @@
                     <option value=''></option>
                     {foreach from=$formData.groups item=group}
                         <option value='{$group->id}' selected="selected">
-                            {$group->title}
+                            {$group->getSearchTitle()}
                         </option>
                     {/foreach}
                 </select>
@@ -106,7 +106,7 @@
                     <option value=''></option>
                     {foreach $formData.publishers as $publisher}
                         <option value='{$publisher->id}' selected="selected">
-                            {$publisher->title}
+                            {$publisher->getSearchTitle()}
                         </option>
                     {/foreach}
                 </select>
@@ -170,17 +170,17 @@
                 {include file=$theme->template('component.form_help.tpl') structureType='zxProd' name="youtubeId"}
             </td>
         </tr>
-        <tr {if $formErrors.compilationProds} class="form_error"{/if}>
+        <tr {if $formErrors.compilationItems} class="form_error"{/if}>
             <td class="form_label">
-                {translations name='zxprod.compilationProds'}:
+                {translations name='zxprod.compilationItems'}:
             </td>
             <td class="form_field">
-                <select class="select_multiple zxitem_form_prod_select" multiple="multiple"
-                        name="{$formNames.compilationProds}[]" autocomplete='off'>
+                <select class="select_multiple zxitem_form_prodrelease_select" multiple="multiple"
+                        name="{$formNames.compilationItems}[]" autocomplete='off'>
                     <option value=''></option>
-                    {foreach from=$formData.compilationProds item=prod}
+                    {foreach from=$formData.compilationItems item=prod}
                         <option value='{$prod->id}' selected="selected">
-                            {$prod->title}
+                            {$prod->getSearchTitle()}
                         </option>
                     {/foreach}
                 </select>
@@ -197,7 +197,7 @@
                     <option value=''></option>
                     {foreach from=$formData.seriesProds item=prod}
                         <option value='{$prod->id}' selected="selected">
-                            {$prod->title}
+                            {$prod->getSearchTitle()}
                         </option>
                     {/foreach}
                 </select>

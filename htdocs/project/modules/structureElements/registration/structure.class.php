@@ -11,7 +11,8 @@ class registrationElement extends menuDependantStructureElement
     protected $connectedFields;
     protected $connectedFieldsIndex;
     protected $dynamicFieldsErrors = [];
-
+    public $resultMessage;
+    public $errorMessage;
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';

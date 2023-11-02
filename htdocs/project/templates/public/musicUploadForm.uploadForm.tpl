@@ -21,7 +21,7 @@
 				<select class="select_multiple zxitem_form_authors_select" multiple="multiple" name="{$formNames.author}[]" autocomplete='off'>
 					{foreach from=$element->getAuthorsList() item=author}
 						<option value='{$author->id}' selected="selected">
-							{$author->title}
+							{$author->getSearchTitle}
 						</option>
 					{/foreach}
 				</select>

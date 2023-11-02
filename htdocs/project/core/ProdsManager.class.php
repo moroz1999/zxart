@@ -13,38 +13,18 @@ class ProdsManager extends ElementsManager
     protected $forceUpdateCategories = false;
     protected $forceUpdateImages = false;
     protected $forceUpdateTitles = false;
-
-    /**
-     * @param bool $forceUpdateExternalLink
-     */
-    public function setForceUpdateExternalLink(bool $forceUpdateExternalLink): void
-    {
-        $this->forceUpdateExternalLink = $forceUpdateExternalLink;
-    }
-
+    protected $matchProdsWithoutYear = false;
     protected $forceUpdateAuthors = false;
     protected $forceUpdateGroups = false;
     protected $forceUpdatePublishers = false;
     protected $updateExistingProds = false;
     protected $updateExistingReleases = false;
+    protected $forceUpdateReleaseAuthors = false;
+    protected $forceUpdateReleasePublishers = false;
+    protected $forceUpdateReleaseType = false;
+    protected $forceUpdateReleaseFiles = false;
     protected $addImages = false;
     protected $resizeImages = false;
-
-    /**
-     * @param bool $updateExistingReleases
-     */
-    public function setUpdateExistingReleases(bool $updateExistingReleases): void
-    {
-        $this->updateExistingReleases = $updateExistingReleases;
-    }
-
-    /**
-     * @param bool $resizeImages
-     */
-    public function setResizeImages(bool $resizeImages): void
-    {
-        $this->resizeImages = $resizeImages;
-    }
 
     protected $columnRelations = [];
     protected $releaseColumnRelations = [];
@@ -80,6 +60,70 @@ class ProdsManager extends ElementsManager
      * @var PathsManager
      */
     protected $pathsManager;
+
+    /**
+     * @param bool $forceUpdateExternalLink
+     */
+    public function setForceUpdateExternalLink(bool $forceUpdateExternalLink): void
+    {
+        $this->forceUpdateExternalLink = $forceUpdateExternalLink;
+    }
+
+    /**
+     * @param bool $matchProdsWithoutYear
+     */
+    public function setMatchProdsWithoutYear(bool $matchProdsWithoutYear): void
+    {
+        $this->matchProdsWithoutYear = $matchProdsWithoutYear;
+    }
+
+    /**
+     * @param bool $forceUpdateReleaseFiles
+     */
+    public function setForceUpdateReleaseFiles(bool $forceUpdateReleaseFiles): void
+    {
+        $this->forceUpdateReleaseFiles = $forceUpdateReleaseFiles;
+    }
+
+    /**
+     * @param bool $forceUpdateReleaseType
+     */
+    public function setForceUpdateReleaseType(bool $forceUpdateReleaseType): void
+    {
+        $this->forceUpdateReleaseType = $forceUpdateReleaseType;
+    }
+
+    /**
+     * @param bool $forceUpdateReleaseAuthors
+     */
+    public function setForceUpdateReleaseAuthors(bool $forceUpdateReleaseAuthors): void
+    {
+        $this->forceUpdateReleaseAuthors = $forceUpdateReleaseAuthors;
+    }
+
+    /**
+     * @param bool $forceUpdateReleasePublishers
+     */
+    public function setForceUpdateReleasePublishers(bool $forceUpdateReleasePublishers): void
+    {
+        $this->forceUpdateReleasePublishers = $forceUpdateReleasePublishers;
+    }
+
+    /**
+     * @param bool $updateExistingReleases
+     */
+    public function setUpdateExistingReleases(bool $updateExistingReleases): void
+    {
+        $this->updateExistingReleases = $updateExistingReleases;
+    }
+
+    /**
+     * @param bool $resizeImages
+     */
+    public function setResizeImages(bool $resizeImages): void
+    {
+        $this->resizeImages = $resizeImages;
+    }
 
     public function __construct()
     {
@@ -286,8 +330,10 @@ class ProdsManager extends ElementsManager
             if ($this->updateExistingProds) {
                 $element = $this->updateProd($element, $prodInfo, $origin);
             }
-            foreach ($prodInfo['releases'] as $releaseInfo) {
-                $this->importRelease($releaseInfo, $prodInfo['id'], $origin);
+            if (!empty($prodInfo['releases'])) {
+                foreach ($prodInfo['releases'] as $releaseInfo) {
+                    $this->importRelease($releaseInfo, $prodInfo['id'], $origin);
+                }
             }
         }
 
@@ -375,6 +421,10 @@ class ProdsManager extends ElementsManager
         if (!empty($prodInfo['compo']) && ($element->compo != $prodInfo['compo'])) {
             $changed = true;
             $element->compo = $prodInfo['compo'];
+        }
+        if (!empty($prodInfo['description']) && !$element->description) {
+            $changed = true;
+            $element->description = $prodInfo['description'];
         }
         if (!empty($prodInfo['party']) && (!$element->party || (!empty($prodInfo['party']['place']) && !$element->partyplace))) {
             if (($partyTitle = $prodInfo['party']['title']) && ($partyYear = $prodInfo['party']['year'])) {
@@ -471,11 +521,14 @@ class ProdsManager extends ElementsManager
                 }
             }
         }
-        if (!empty($prodInfo['compilations'])) {
-            if (!$element->compilationProds) {
-                foreach ($prodInfo['compilations'] as $importProdId) {
-                    if ($prodId = $this->getElementIdByImportId($importProdId, $origin, 'prod')) {
+        if (!empty($prodInfo['compilationItems'])) {
+            if (!$element->compilationItems) {
+                foreach ($prodInfo['compilationItems'] as $importItemId) {
+                    if ($prodId = $this->getElementIdByImportId($importItemId, $origin, 'prod')) {
                         $this->linksManager->linkElements($element->id, $prodId, 'compilation');
+                    }
+                    elseif ($releaseId = $this->getElementIdByImportId($importItemId, $origin, 'release')) {
+                        $this->linksManager->linkElements($element->id, $releaseId, 'compilation');
                     }
                 }
             }
@@ -483,8 +536,8 @@ class ProdsManager extends ElementsManager
 
         if (!empty($prodInfo['seriesProds'])) {
             if (!$element->seriesProds) {
-                foreach ($prodInfo['seriesProds'] as $importProdId) {
-                    if ($prodId = $this->getElementIdByImportId($importProdId, $origin, 'prod')) {
+                foreach ($prodInfo['seriesProds'] as $importItemId) {
+                    if ($prodId = $this->getElementIdByImportId($importItemId, $origin, 'prod')) {
                         $this->linksManager->linkElements($element->id, $prodId, 'series');
                     }
                 }
@@ -536,48 +589,61 @@ class ProdsManager extends ElementsManager
         return $element;
     }
 
-    private function importElementFile($element, $fileUrl, $fileAuthor = '', $propertyName = 'connectedFile')
+    private function importElementFile($element, $fileUrl, $existingFiles, $fileAuthor = '', $propertyName = 'connectedFile')
     {
         $this->structureManager->setNewElementLinkType($element->getConnectedFileType($propertyName));
-        $existingFiles = $element->getFilesList($propertyName);
-        if (!$existingFiles || $this->addImages) {
-            $uploadsPath = $this->pathsManager->getPath('uploads');
+        $uploadsPath = $this->pathsManager->getPath('uploads');
 
-            $originalFileName = basename($fileUrl);
-            $fileExists = false;
-            foreach ($existingFiles as $existingFile) {
-                if ($originalFileName == urldecode($existingFile->fileName)) {
-                    $fileExists = true;
-                    break;
-                }
-            }
-
-            /**
-             * @var fileElement $fileElement
-             */
-            if (!$fileExists) {
-                $filePath = $uploadsPath . $originalFileName;
-                $this->prodsDownloader->downloadUrl($fileUrl, $filePath);
-                if ($filePath && $fileElement = $this->structureManager->createElement(
-                        'file',
-                        'showForm',
-                        $element->getId()
-                    )) {
-                    $destinationFolder = $element->getUploadedFilesPath($propertyName);
-
-                    $info = pathinfo($fileUrl);
-                    $fileElement->title = str_replace('_', ' ', ucfirst($info['filename']));
-                    $fileElement->structureName = $fileElement->title;
-                    $fileElement->file = $fileElement->getId();
-                    $fileElement->fileName = $originalFileName;
-                    $fileElement->author = $fileAuthor;
-                    rename($filePath, $destinationFolder . $fileElement->file);
-                    $fileElement->persistElementData();
-
-                    $element->appendFileToList($fileElement, $propertyName);
-                }
+        $originalFileName = basename($fileUrl);
+        $fileExists = false;
+        foreach ($existingFiles as $existingFile) {
+            if ($originalFileName == urldecode($existingFile->fileName)) {
+                $fileExists = true;
+                break;
             }
         }
+
+        /**
+         * @var fileElement $fileElement
+         */
+        if (!$fileExists) {
+            $filePath = $uploadsPath . $originalFileName;
+            $this->prodsDownloader->downloadUrl($fileUrl, $filePath);
+            if ($filePath && $fileElement = $this->structureManager->createElement(
+                    'file',
+                    'showForm',
+                    $element->getId()
+                )) {
+                $destinationFolder = $element->getUploadedFilesPath($propertyName);
+
+                $info = pathinfo($fileUrl);
+                if (empty($info['extension'])) {
+                    if ($mimeType = mime_content_type($filePath)) {
+                        $mimeTypes = [
+                            'image/jpeg' => 'jpg',
+                            'image/png' => 'png',
+                            'image/gif' => 'png',
+                            'application/pdf' => 'pdf',
+                        ];
+
+                        $extension = isset($mimeTypes[$mimeType]) ? $mimeTypes[$mimeType] : null;
+                        if ($extension) {
+                            $originalFileName .= '.' . $extension;
+                        }
+                    }
+                }
+                $fileElement->title = str_replace('_', ' ', ucfirst($info['filename']));
+                $fileElement->structureName = $fileElement->title;
+                $fileElement->file = $fileElement->getId();
+                $fileElement->fileName = $originalFileName;
+                $fileElement->author = $fileAuthor;
+                rename($filePath, $destinationFolder . $fileElement->file);
+                $fileElement->persistElementData();
+
+                $element->appendFileToList($fileElement, $propertyName);
+            }
+        }
+
         $this->structureManager->setNewElementLinkType();
 
     }
@@ -589,8 +655,11 @@ class ProdsManager extends ElementsManager
      */
     protected function importElementFiles($element, $images, $propertyName = 'connectedFile')
     {
-        foreach ($images as $imageUrl) {
-            $this->importElementFile($element, $imageUrl, '', $propertyName);
+        $existingFiles = $element->getFilesList($propertyName);
+        if (!$existingFiles || $this->addImages) {
+            foreach ($images as $imageUrl) {
+                $this->importElementFile($element, $imageUrl, $existingFiles, '', $propertyName);
+            }
         }
     }
 
@@ -620,7 +689,7 @@ class ProdsManager extends ElementsManager
 
     protected function findProdBestMatch($prodInfo)
     {
-        if (!empty($prodInfo['year'])) {
+        if (!empty($prodInfo['year']) || $this->matchProdsWithoutYear) {
             $query = $this->db->table('module_zxprod')
                 ->where(
                     function ($query) use ($prodInfo) {
@@ -628,7 +697,9 @@ class ProdsManager extends ElementsManager
                         $query->orWhere('title', '=', $prodInfo['title']);
                     }
                 );
-            $query->where('year', '=', $prodInfo['year']);
+            if (!empty($prodInfo['year'])) {
+                $query->where('year', '=', $prodInfo['year']);
+            }
             if ($id = $query->value('id')) {
                 return $this->structureManager->getElementById($id);
             }
@@ -707,7 +778,7 @@ class ProdsManager extends ElementsManager
                  * @var zxReleaseElement $element
                  */
                 $this->saveImportId($element->getId(), $releaseInfo['id'], $origin, 'release');
-                $this->updateRelease($element, $releaseInfo, $origin);
+                $this->updateRelease($element, $releaseInfo, $origin, true);
             }
         }
 
@@ -719,15 +790,13 @@ class ProdsManager extends ElementsManager
      * @param $releaseInfo
      * @param $origin
      */
-    protected function updateRelease($element, $releaseInfo, $origin)
+    protected function updateRelease($element, $releaseInfo, $origin, $justCreated = false)
     {
         $changed = false;
         if (($this->forceUpdateTitles || !$element->title) && !empty($releaseInfo['title'])) {
-            if (!$element->title || $this->forceUpdateTitles) {
-                $element->title = $releaseInfo['title'];
-                $element->structureName = $releaseInfo['title'];
-                $changed = true;
-            }
+            $element->title = $releaseInfo['title'];
+            $element->structureName = $releaseInfo['title'];
+            $changed = true;
         }
         if ((!$element->year || $this->forceUpdateYear) && !empty($releaseInfo['year'])) {
             $element->year = $releaseInfo['year'];
@@ -737,7 +806,7 @@ class ProdsManager extends ElementsManager
             $element->hardwareRequired = array_unique($releaseInfo['hardwareRequired']);
             $changed = true;
         }
-        if ((!$element->releaseType || $element->releaseType === 'unknown') && !empty($releaseInfo['releaseType'])) {
+        if (($this->forceUpdateReleaseType || $justCreated) && (!$element->releaseType || $element->releaseType === 'unknown') && !empty($releaseInfo['releaseType'])) {
             $element->releaseType = $releaseInfo['releaseType'];
             $changed = true;
         }
@@ -749,35 +818,46 @@ class ProdsManager extends ElementsManager
             $element->version = $releaseInfo['version'];
             $changed = true;
         }
-        if (!empty($releaseInfo['filePath'])) {
-            $destinationFolder = $element->getUploadedFilesPath();
+        if (($this->forceUpdateReleaseFiles || $justCreated)) {
+            if (!empty($releaseInfo['filePath'])) {
+                $destinationFolder = $element->getUploadedFilesPath();
 
-            $info = pathinfo($releaseInfo['filePath']);
-            $element->file = $element->getId();
-            $element->fileName = $info['filename'] . '.' . $info['extension'];
-            $element->parsed = 0;
-
-            $changed = true;
-
-            copy($releaseInfo['filePath'], $destinationFolder . $element->file);
-        } elseif (!empty($releaseInfo['fileUrl'])) {
-            $info = pathinfo($releaseInfo['fileUrl']);
-            $fileName = $info['filename'] . '.' . $info['extension'];
-
-            if ($element->fileName != $fileName || !is_file($element->getFilePath())) {
-                $changed = true;
-
+                $info = pathinfo($releaseInfo['filePath']);
                 $element->file = $element->getId();
-                $element->fileName = $fileName;
+                $element->fileName = $info['filename'] . '.' . $info['extension'];
                 $element->parsed = 0;
 
-                $this->prodsDownloader->moveFileContents($element->getFilePath(), $releaseInfo['fileUrl']);
+                $changed = true;
+
+                copy($releaseInfo['filePath'], $destinationFolder . $element->file);
+            } elseif (!empty($releaseInfo['fileUrl'])) {
+                $info = pathinfo($releaseInfo['fileUrl']);
+                if (!empty($releaseInfo['fileName'])) {
+                    $fileName = $releaseInfo['fileName'];
+                } else {
+                    $fileName = $info['filename'] . '.' . $info['extension'];
+                }
+
+                if ($element->fileName != $fileName || !is_file($element->getFilePath())) {
+                    $changed = true;
+
+                    $element->file = $element->getId();
+                    $element->fileName = $fileName;
+                    $element->parsed = 0;
+
+                    $this->prodsDownloader->moveFileContents($element->getFilePath(), $releaseInfo['fileUrl']);
+                }
             }
         }
-        if (!empty($releaseInfo['labels'])) {
-            $this->importLabelsInfo($releaseInfo['labels'], $origin);
+
+        if (!empty($releaseInfo['description']) && !$element->description) {
+            $element->description = $releaseInfo['description'];
+            $changed = true;
         }
 
+        if (($this->forceUpdateReleasePublishers || $this->forceUpdateReleaseAuthors || $justCreated) && !empty($releaseInfo['labels'])) {
+            $this->importLabelsInfo($releaseInfo['labels'], $origin);
+        }
         if (!empty($releaseInfo['undetermined'])) {
             foreach ($releaseInfo['undetermined'] as $undeterminedId => $roles) {
                 if ($this->getElementIdByImportId($undeterminedId, $origin, 'group')) {
@@ -788,14 +868,16 @@ class ProdsManager extends ElementsManager
             }
         }
 
-        if (!empty($releaseInfo['authors'])) {
-            foreach ($releaseInfo['authors'] as $importAuthorId => $roles) {
-                if ($authorId = $this->getElementIdByImportId($importAuthorId, $origin, 'author')) {
-                    $this->linkReleaseWithAuthor($authorId, $element->id, $roles);
+        if (($this->forceUpdateReleaseAuthors || $justCreated) && !empty($releaseInfo['authors'])) {
+            if (!$element->getAuthorsInfo('release')) {
+                foreach ($releaseInfo['authors'] as $importAuthorId => $roles) {
+                    if ($authorId = $this->getElementIdByImportId($importAuthorId, $origin, 'author')) {
+                        $this->linkReleaseWithAuthor($authorId, $element->id, $roles);
+                    }
                 }
             }
         }
-        if (!empty($releaseInfo['publishers'])) {
+        if (($this->forceUpdateReleasePublishers || $justCreated) && !empty($releaseInfo['publishers'])) {
             if (!$element->getPublishersIds()) {
                 foreach ($releaseInfo['publishers'] as $importPublisherId) {
                     if ($publisherId = $this->getElementIdByImportId($importPublisherId, $origin, 'group')) {
@@ -811,7 +893,9 @@ class ProdsManager extends ElementsManager
             $element->persistElementData();
         }
 
-
+        if (!empty($releaseInfo['images']) && ($this->forceUpdateImages || $justCreated || !$element->getFilesList('screenshotsSelector'))) {
+            $this->importElementFiles($element, $releaseInfo['images'], 'screenshotsSelector');
+        }
         if (!empty($releaseInfo['inlayImages'])) {
             $this->importElementFiles($element, $releaseInfo['inlayImages'], 'inlayFilesSelector');
         }

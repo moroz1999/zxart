@@ -58,7 +58,7 @@
 				<select class="select_multiple zxitem_form_authors_select" multiple="multiple" name="{$formNames.author}[]" autocomplete='off'>
 					{foreach from=$element->getAuthorsList() item=author}
 						<option value='{$author->id}' selected="selected">
-							{$author->title}
+							{$author->getSearchTitle()}
 						</option>
 					{/foreach}
 				</select>
@@ -71,11 +71,6 @@
 			</td>
 			<td class="form_field">
 				<select class="select_multiple zxitem_form_authors_select" multiple="multiple" name="{$formNames.originalAuthor}[]" autocomplete='off'>
-{*					{foreach from=$element->getOriginalAuthorsList() item=originalAuthor}*}
-{*						<option value='{$originalAuthor->id}' selected="selected">*}
-{*							{$originalAuthor->title}*}
-{*						</option>*}
-{*					{/foreach}*}
 				</select>
 				{include file=$theme->template('component.form_help.tpl') structureType='zxPicture' name="originalAuthor"}
 			</td>

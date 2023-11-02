@@ -1,0 +1,1 @@
+ALTER TABLE `engine_module_group` ADD `type` ENUM( 'company', 'studio', 'scene', 'education', 'store','science') NOT NULL AFTER `slogan`;

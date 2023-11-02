@@ -48,6 +48,7 @@ class publicReceiveGroup extends structureElementAction
             'startDate',
             'endDate',
             'slogan',
+            'type',
             'addAuthor',
             'addAuthorStartDate',
             'addAuthorEndDate',

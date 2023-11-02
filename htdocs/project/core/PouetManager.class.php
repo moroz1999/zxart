@@ -384,7 +384,6 @@ class PouetManager extends errorLogger
                         'publishers' => [],
                         'groups' => [],
                         'releases' => [],
-                        'compilations' => [],
                         'importIds' => [],
                     ];
                     foreach ($prodData['types'] as $type) {

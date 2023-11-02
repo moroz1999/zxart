@@ -22,7 +22,7 @@
 					<option value=''></option>
 					{foreach from=$element->getAuthorsList() item=author}
 						<option value='{$author->id}' selected="selected">
-							{$author->title}
+							{$author->getSearchTitle()}
 						</option>
 					{/foreach}
 				</select>

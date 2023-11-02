@@ -126,7 +126,7 @@
 					<option value=''></option>
 					{foreach $formData.publishers as $publisher}
 						<option value='{$publisher->id}' selected="selected">
-							{$publisher->title}
+							{$publisher->getSearchTitle()}
 						</option>
 					{/foreach}
 				</select>

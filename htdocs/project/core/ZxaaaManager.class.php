@@ -289,7 +289,7 @@ class ZxaaaManager extends errorLogger
                                     $label = [
                                         'id' => $name,
                                         'title' => $name,
-                                        'locationLabel' => $location,
+                                        'locationName' => $location,
                                         'isGroup' => null,
                                         'isPerson' => null,
                                         'isAlias' => null,

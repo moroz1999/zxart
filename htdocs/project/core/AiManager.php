@@ -22,6 +22,21 @@ class AiManager
         $hasIntro = false;
         $length = 2700;
 
+        if (!empty($prodData['seriesProds'])) {
+            unset($prodData['seriesProds']);
+            $prodData['type'] = 'Series of software';
+        }
+        if (!empty($prodData['isPlayable'])) {
+            unset($prodData['isPlayable']);
+            $prodData['isRunnableOnline'] = true;
+        }
+        if (!empty($prodData['compilationItems'])) {
+            unset($prodData['compilationItems']);
+            $prodData['type'] = 'Compilation of software';
+        }
+        if (!empty($prodData['seriesProds'])) {
+            $prodData['type'] = 'Series of software';
+        }
         if (!empty($prodData['manualString'])) {
             if (strlen($prodData['manualString']) > 500) {
                 unset($prodData['description']);
@@ -53,7 +68,7 @@ class AiManager
 * Учитывай категорию софта (игры будут искать игроки, системные программы - спецы и интересующиеся старым софтом, демки - искусство) при составлении текста. 
 * Не переводи названия софта и псевдонимы авторов, но делай читабельные названия категорий (игры, демо, программы).
 ";
-        if (!empty($prodData['isPlayable'])) {
+        if (!empty($prodData['isRunnableOnline'])) {
             $promt .= "* программу можно запустить на сайте в онлайн-эмуляторе, это важно, используй call to action 'Играть онлайн' для игр или 'Запустить онлайн' для программ.
 ";
         }

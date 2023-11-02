@@ -6,6 +6,7 @@ class AuthorsManager extends ElementsManager
     use LettersElementsListProviderTrait;
 
     const TABLE = 'module_author';
+    protected $forceUpdateRealName = false;
     protected $forceUpdateCountry = false;
     protected $forceUpdateCity = false;
     protected $forceUpdateGroups = false;
@@ -37,6 +38,14 @@ class AuthorsManager extends ElementsManager
             'graphicsRating' => ['graphicsRating' => true, 'title' => false],
             'musicRating' => ['musicRating' => true, 'title' => false],
         ];
+    }
+
+    /**
+     * @param bool $forceUpdateRealName
+     */
+    public function setForceUpdateRealName(bool $forceUpdateRealName): void
+    {
+        $this->forceUpdateRealName = $forceUpdateRealName;
     }
 
     /**
@@ -95,7 +104,7 @@ class AuthorsManager extends ElementsManager
         $this->linksManager = $linksManager;
     }
 
-    public function getAuthorByName($authorName)
+    public function getAuthorByName($authorName, $countryName = null, $cityName = null)
     {
         $authorElement = false;
 
@@ -339,7 +348,9 @@ class AuthorsManager extends ElementsManager
              * @var authorElement $element
              */
             if (!($element = $this->getElementByImportId($authorInfo['id'], $origin, 'author'))) {
-                if ($element = $this->getAuthorByName($authorInfo['title'])) {
+                $countryName = !empty($authorInfo['countryName']) ? $authorInfo['countryName'] : null;
+                $cityName = !empty($authorInfo['cityName']) ? $authorInfo['cityName'] : null;
+                if ($element = $this->getAuthorByName($authorInfo['title'], $countryName, $cityName)) {
                     if ($origin) {
                         $this->saveImportId($element->id, $authorInfo['id'], $origin, 'author');
                     }
@@ -414,8 +425,8 @@ class AuthorsManager extends ElementsManager
                 $element->structureName = $authorInfo['title'];
             }
         }
-        if (!empty($authorInfo['locationLabel'])) {
-            if ($locationElement = $this->countriesManager->getLocationByName($authorInfo['locationLabel'])) {
+        if (!empty($authorInfo['locationName'])) {
+            if ($locationElement = $this->countriesManager->getLocationByName($authorInfo['locationName'])) {
                 if ($locationElement->structureType == 'country') {
                     if (!$element->country || $this->forceUpdateCountry) {
                         if ($element->country != $locationElement->id) {
@@ -436,12 +447,37 @@ class AuthorsManager extends ElementsManager
                 }
             }
         }
+        if (!empty($authorInfo['countryName'])) {
+            if ($locationElement = $this->countriesManager->getLocationByName($authorInfo['countryName'])) {
+                if ($locationElement->structureType === 'country') {
+                    if ($element->country != $locationElement->id) {
+                        $changed = true;
+                        $element->country = $locationElement->id;
+                    }
+                }
+            }
+        }
+        if (!empty($authorInfo['cityName'])) {
+            if ($locationElement = $this->countriesManager->getLocationByName($authorInfo['cityName'])) {
+                if ($locationElement->structureType === 'city') {
+                    if ($element->city != $locationElement->id) {
+                        $changed = true;
+                        $element->city = $locationElement->id;
+                    }
+                }
+            }
+        }
         if ($this->forceUpdateCountry && !empty($authorInfo['countryId'])) {
             $countryElement = $this->getElementByImportId($authorInfo['countryId'], $origin, 'country');
             if ($countryElement && $element->country != $countryElement->id) {
                 $changed = true;
                 $element->country = $countryElement->id;
             }
+        }
+
+        if (($this->forceUpdateRealName || !$element->realName) && !empty($authorInfo['realName'])) {
+            $changed = true;
+            $element->realName = $authorInfo['realName'];
         }
 
         if ($changed) {

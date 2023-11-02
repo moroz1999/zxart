@@ -439,7 +439,7 @@ class WosManager extends errorLogger
                         'publishers' => [],
                         'groups' => [],
                         'releases' => [],
-                        'compilations' => [],
+                        'compilationItems' => [],
                     ];
 
                     if ($entry['language_id']) {
@@ -460,7 +460,7 @@ class WosManager extends errorLogger
                         ->get()
                     ) {
                         foreach ($records as $record) {
-                            $prodInfo['compilations'][] = $record['entry_id'];
+                            $prodInfo['compilationItems'][] = $record['entry_id'];
                         }
                     }
                     if ($publishers = $this->zxdb->table('publishers')

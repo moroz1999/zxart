@@ -52,7 +52,7 @@ class publicReceiveZxProd extends structureElementAction
             'legalStatus',
             'language',
             'categories',
-            'compilationProds',
+            'compilationItems',
             'seriesProds',
             'externalLink',
         ];

@@ -18,7 +18,8 @@
     "guzzlehttp/guzzle": "^6.5",
     "php-http/discovery": "^1.19",
     "php-http/guzzle6-adapter": "^2.0",
-    "smalot/pdfparser": "^2.7"
+    "smalot/pdfparser": "^2.7",
+    "ext-fileinfo": "*"
   },
   "config": {
     "allow-plugins": {

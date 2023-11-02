@@ -8,6 +8,7 @@
  * @property string $website
  * @property string $wikiLink
  * @property string $slogan
+ * @property string $type
  * @property int $city
  * @property int $country
  * @property int[] $subGroupsSelector
@@ -27,6 +28,7 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
     use PublisherProdsProvider;
     use ReleasesProvider;
     use CommentsTrait;
+    use GroupTypeProvider;
 
     const SUBGROUP_LINK_TYPE = 'groupSub';
     public $dataResourceName = 'module_group';
@@ -52,6 +54,7 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
         $moduleStructure['startDate'] = 'date';
         $moduleStructure['endDate'] = 'date';
         $moduleStructure['slogan'] = 'text';
+        $moduleStructure['type'] = 'text';
 
         $moduleStructure['subGroupsSelector'] = 'numbersArray';
 

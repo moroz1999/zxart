@@ -54,7 +54,7 @@ class crontabApplication extends controllerApplication
             $this->parseReleases();
             $this->parseArtItems('module_zxpicture', 'image', 'originalName');
             $this->parseArtItems('module_zxmusic', 'file', 'fileName');
-            $this->queryAiItems();
+//            $this->queryAiItems();
         }
     }
 

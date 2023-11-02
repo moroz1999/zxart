@@ -78,7 +78,6 @@ class TslabsManager extends errorLogger
         $this->prodsManager = $prodsManager;
         $this->prodsManager->setUpdateExistingProds(true);
         $this->prodsManager->setForceUpdateYoutube(true);
-        $this->prodsManager->setResizeImages(true);
     }
 
     public function importAll()
@@ -179,7 +178,7 @@ class TslabsManager extends errorLogger
                             $label = [
                                 'id' => $groupTitle,
                                 'title' => $groupTitle,
-                                'locationLabel' => '',
+                                'locationName' => '',
                                 'isGroup' => true,
                                 'isPerson' => null,
                                 'isAlias' => null,
@@ -207,7 +206,7 @@ class TslabsManager extends errorLogger
                                         $label = [
                                             'id' => $labelName,
                                             'title' => $labelName,
-                                            'locationLabel' => '',
+                                            'locationName' => '',
                                             'isGroup' => null,
                                             'isPerson' => true,
                                             'isAlias' => null,

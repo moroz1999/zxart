@@ -186,9 +186,13 @@
                     </tr>
                 {/if}
             </table>
+
             {include $theme->template("component.emulator.tpl")}
 
-            {include file=$theme->template('component.pictureslist.tpl') pictures=$element->getPictures()}
+            {if $pictures=$element->getPictures()}
+                {include file=$theme->template('component.pictureslist.tpl') pictures=$pictures}
+            {/if}
+
             <div class="gallery_static galleryid_{$element->id}">
                 {if $filesList = $element->getFilesList('screenshotsSelector')}
                     {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false}
@@ -204,6 +208,9 @@
                     {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage'}
                 {/if}
             </div>
+            <div class="zxrelease_description">
+                {$element->description}
+            </div>
         </div>
         {if $prod = $element->getProd()}
             <div class="zxrelease-layout-right">
@@ -216,6 +223,18 @@
     {if $filesList = $element->getFilesList('infoFilesSelector')}
         <h3>{translations name='zxrelease.instructions'}</h3>
         {include file=$theme->template('zxItem.files.tpl') filesList = $filesList newWindow=true}
+    {/if}
+
+
+    {if $element->compilations}
+        <script>
+            window.elementsData = window.elementsData ? window.elementsData : {};
+            window.elementsData[{$element->id}] = {$element->getCompilationJsonData()};
+        </script>
+    {/if}
+    {if $element->compilations}
+        <h2>{translations name='zxprod.compilations'}</h2>
+        <app-zx-prods-list element-id="{$element->id}" property="compilations"></app-zx-prods-list>
     {/if}
 
     {include file=$theme->template('component.comments.tpl')}

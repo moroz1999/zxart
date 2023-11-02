@@ -48,6 +48,9 @@
 		{foreach $element->hardwareRequired as $hardware}
 			<div class="zxrelease_table_hardware_item">{translations name="hardware.item_{$hardware}"}</div>
 		{/foreach}
+		<div class="zxrelease_table_description">
+			{$element->description}
+		</div>
 	</td>
 	<td class='zxrelease_table_format'>
 		{foreach $element->releaseFormat as $format}{translations name="zxRelease.filetype_$format"} {/foreach}

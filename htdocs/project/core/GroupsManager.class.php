@@ -208,8 +208,14 @@ class GroupsManager extends ElementsManager
                 $element->website = $groupInfo['website'];
             }
         }
-        if (!empty($groupInfo['locationLabel'])) {
-            if ($locationElement = $this->countriesManager->getLocationByName($groupInfo['locationLabel'])) {
+        if (!empty($groupInfo['type']) && $element->type != $groupInfo['type']) {
+            if (!$element->type || $element->type === 'unknown') {
+                $changed = true;
+                $element->type = $groupInfo['type'];
+            }
+        }
+        if (!empty($groupInfo['locationName'])) {
+            if ($locationElement = $this->countriesManager->getLocationByName($groupInfo['locationName'])) {
                 if ($locationElement->structureType == 'country') {
                     if ($element->country != $locationElement->id) {
                         $changed = true;
@@ -222,6 +228,26 @@ class GroupsManager extends ElementsManager
                         if ($countryId = $locationElement->getCountryId()) {
                             $element->country = $countryId;
                         }
+                    }
+                }
+            }
+        }
+        if (!empty($groupInfo['countryName'])) {
+            if ($locationElement = $this->countriesManager->getLocationByName($groupInfo['countryName'])) {
+                if ($locationElement->structureType === 'country') {
+                    if ($element->country != $locationElement->id) {
+                        $changed = true;
+                        $element->country = $locationElement->id;
+                    }
+                }
+            }
+        }
+        if (!empty($groupInfo['cityName'])) {
+            if ($locationElement = $this->countriesManager->getLocationByName($groupInfo['cityName'])) {
+                if ($locationElement->structureType === 'city') {
+                    if ($element->city != $locationElement->id) {
+                        $changed = true;
+                        $element->city = $locationElement->id;
                     }
                 }
             }

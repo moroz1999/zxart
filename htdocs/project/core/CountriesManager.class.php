@@ -35,19 +35,30 @@ class CountriesManager extends errorLogger
         return $element;
     }
 
-    public function getLocationByName($countryName)
+    public function getLocationByName($locationName)
     {
         $locationElement = false;
         $structureManager = $this->structureManager;
 
         if ($record = $this->db->table('module_country')
             ->select('id')
-            ->where('title', 'like', $countryName)
+            ->where('title', 'like', $locationName)
             ->limit(1)
             ->first()
         ) {
             /**
-             * @var countryElement|cityElement $locationElement
+             * @var countryElement $locationElement
+             */
+            $locationElement = $structureManager->getElementById($record['id']);
+        }
+        if ($record = $this->db->table('module_city')
+            ->select('id')
+            ->where('title', 'like', $locationName)
+            ->limit(1)
+            ->first()
+        ) {
+            /**
+             * @var cityElement $locationElement
              */
             $locationElement = $structureManager->getElementById($record['id']);
         }

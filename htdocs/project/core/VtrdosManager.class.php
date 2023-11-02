@@ -3,7 +3,7 @@
 class VtrdosManager extends errorLogger
 {
     protected $counter = 0;
-    protected $maxCounter = 50;
+    protected $maxCounter = 4000;
     /**
      * @var ProdsManager
      */
@@ -66,14 +66,12 @@ class VtrdosManager extends errorLogger
         '(1024k)' => 'pentagon1024',
         '(256k)' => 'scorpion',
         '(ts)' => 'ts',
-        'hdd' => 'hdd',
         '48k' => 'zx48',
         'Pentagon 512k' => 'pentagon512',
         'Pentagon 1024k' => 'pentagon1024',
         'Pentagon 1024SL' => 'pentagon1024',
         'Scorpion ZS 256' => 'scorpion',
         'Byte' => 'byte',
-        'ATM Turbo' => 'atm',
         'smuc' => 'smuc',
         'SMUC' => 'smuc',
         'Sprinter' => 'sprinter',
@@ -115,6 +113,8 @@ class VtrdosManager extends errorLogger
         'Анекдоты, юмор (под iS-DOS):' => 'isdos',
     ];
     protected $categories = [
+        'Работа с AY, FM и beep - звуком на PC' => 0,
+        'Компрессоры' => 0,
         'Архиваторы:' => 244886,
         'Ассемблеры:' => 92552,
         'Буты:' => 204150,
@@ -174,11 +174,12 @@ class VtrdosManager extends errorLogger
         'Хиромантия, гадания и прочее:' => 92582,
         'Различные психологические тесты:' => 418663,
         'Разнообразный софт:' => 92188,
-        'Game // exUSSR' => 244871,
-        'Game // English' => 244871,
-        'Game // Demo version' => 244871,
-        'Game // Translated' => 244871,
-        'GS' => 244871,
+        'Game // exUSSR' => 92177,
+        'Game // English' => 92177,
+        'Game // Demo version' => 92177,
+        'Game // Translated' => 92177,
+        'GS' => 92177,
+        'Demo Party' => 315126,
     ];
 
     public function __construct()
@@ -188,11 +189,11 @@ class VtrdosManager extends errorLogger
 //                'type' => 'press',
 //            ],
 //        ];
-//        $this->urlsSettings['https://vtrd.in/press.php?l=2'] = [
-//            [
-//                'type' => 'press',
-//            ],
-//        ];
+        $this->urlsSettings['https://vtrd.in/press.php?l=2'] = [
+            [
+                'type' => 'press',
+            ],
+        ];
 //        $this->urlsSettings['https://vtrd.in/updates.php'] = [
 //            [
 //                'type' => 'updates',
@@ -347,6 +348,7 @@ class VtrdosManager extends errorLogger
     public function setProdsManager(ProdsManager $prodsManager)
     {
         $this->prodsManager = $prodsManager;
+        $this->prodsManager->setUpdateExistingReleases(true);
     }
 
     public function importAll()
@@ -397,34 +399,47 @@ class VtrdosManager extends errorLogger
                 if ($td1 = $tdNodes->item(0)) {
                     $url = false;
                     $prodTitle = false;
-                    $prodId = false;
-
+                    $detailsUrl = false;
+                    $aNode = false;
                     if ($aNodes = $td1->getElementsByTagName('a')) {
-                        foreach ($aNodes as $aNode) {
-                            if (!str_contains($aNode->getAttribute('class'), 'details')) {
-                                $url = $aNode->getAttribute('href');
-                                $prodTitle = $this->processTitle($aNode->textContent);
-                                $prodId = md5($prodTitle);
+                        foreach ($aNodes as $aNodeItem) {
+                            if (!str_contains($aNodeItem->getAttribute('class'), 'details')) {
+                                $url = $aNodeItem->getAttribute('href');
+                                $prodTitle = $this->processTitle($aNodeItem->textContent);
+                                $aNode = $aNodeItem;
+                            } else {
+                                $detailsUrl = $this->rootUrl . $aNodeItem->getAttribute('href');
                             }
                         }
                     }
+                    if ($td5 = $tdNodes->item(4)) {
+                        if ($aNodes = $td5->getElementsByTagName('a')) {
+                            foreach ($aNodes as $aNodeItem) {
+                                $detailsUrl = $this->rootUrl . $aNodeItem->getAttribute('href');
+                                break;
+                            }
+                        }
+                    }
+
                     if ($url && $prodTitle) {
                         $releaseInfo = [];
 
-                        if (!isset($prodsIndex[$prodId])) {
-                            $prodsIndex[$prodId] = [
-                                'id' => $prodId,
-                                'title' => $prodTitle,
-                                'labels' => [],
-                                'releases' => [],
-                            ];
-                        }
+                        $prodInfo = [
+                            'id' => '',
+                            'year' => '',
+                            'title' => $prodTitle,
+                            'labels' => [],
+                            'releases' => [],
+                        ];
+
+                        $releaseInfo['title'] = $prodTitle;
                         $releaseInfo['fileUrl'] = $this->rootUrl . $url;
                         $releaseInfo['id'] = md5(basename($url));
                         $releaseInfo['labels'] = [];
+//                        $this->requestReleaseDetails($detailsUrl, $releaseInfo);
 
                         if ($td2 = $tdNodes->item(1)) {
-                            $this->parseAuthorsString((string)$td2->nodeValue, $prodsIndex[$prodId]);
+                            $this->parseAuthorsString((string)$td2->nodeValue, $prodInfo);
                         }
                         $roles = [];
                         if (isset($settings['release'])) {
@@ -449,10 +464,17 @@ class VtrdosManager extends errorLogger
                         }
                         if (isset($settings['prod'])) {
                             if (isset($settings['prod']['directCategories'])) {
-                                $prodsIndex[$prodId]['directCategories'] = $settings['prod']['directCategories'];
+                                $prodInfo['directCategories'] = $settings['prod']['directCategories'];
                             }
                         }
                         $this->parseANode($aNode, $releaseInfo);
+                        $prodId = md5($prodTitle . $prodInfo['year']);
+                        $prodInfo['id'] = $prodId;
+                        if (!isset($prodsIndex[$prodId])) {
+                            $prodsIndex[$prodId] = $prodInfo;
+                        } else {
+                            $prodsIndex[$prodId] = array_merge($prodInfo, $prodsIndex[$prodId]);
+                        }
                         $prodsIndex[$prodId]['releases'][] = $releaseInfo;
                     }
                 }
@@ -525,7 +547,7 @@ class VtrdosManager extends errorLogger
                                 }
 
                             }
-                            if ($seriesProdsIds) {
+                            if ($seriesProdsIds && (count($seriesProdsIds) > 1)) {
                                 $seriesProdId = md5($pressTitle);
 
                                 $prodsIndex[$seriesProdId] = [
@@ -559,17 +581,15 @@ class VtrdosManager extends errorLogger
             foreach ($releaseNodes as $releaseNode) {
                 $tdNodes = $releaseNode->getElementsByTagName('td');
                 if ($td2 = $tdNodes->item(1)) {
-                    $url = false;
+                    $detailsUrl = false;
                     $prodTitle = false;
-                    $prodId = false;
-                    $currentCategory = false;
+                    $currentCategory = null;
 
                     if ($aNodes = $td2->getElementsByTagName('a')) {
                         foreach ($aNodes as $aNode) {
                             if (!str_contains($aNode->getAttribute('class'), 'details')) {
-                                $url = $aNode->getAttribute('href');
+                                $detailsUrl = $this->rootUrl . $aNode->getAttribute('href');
                                 $prodTitle = $this->processTitle($aNode->textContent);
-                                $prodId = md5($prodTitle);
                                 break;
                             }
                         }
@@ -583,28 +603,27 @@ class VtrdosManager extends errorLogger
                             $currentCategory = [$this->categories[$name . ':']];
                         }
                     }
-                    if ($url && $prodTitle && !$currentCategory) {
-                        $this->markProgress('Category parsing failed: ' . $prodTitle . ' ' . $url);
-                        exit;
+                    if ($detailsUrl && $prodTitle && ($currentCategory === null)) {
+                        $this->markProgress('Category parsing failed: ' . $prodTitle . ' ' . $detailsUrl);
+                        continue;
                     }
-                    if ($url && $prodTitle && $currentCategory) {
+                    if ($detailsUrl && $prodTitle && $currentCategory) {
                         $releaseInfo = [];
 
-                        if (!isset($prodsIndex[$prodId])) {
-                            $prodsIndex[$prodId] = [
-                                'id' => $prodId,
-                                'title' => $prodTitle,
-                                'directCategories' => $currentCategory,
-                                'labels' => [],
-                                'releases' => [],
-                            ];
-                        }
-                        $releaseInfo['fileUrl'] = $this->rootUrl . $url;
-                        $releaseInfo['id'] = md5(basename($url));
+                        $prodInfo = [
+                            'id' => '',
+                            'year' => '',
+                            'title' => $prodTitle,
+                            'directCategories' => $currentCategory,
+                            'labels' => [],
+                            'releases' => [],
+                        ];
+                        $this->requestReleaseDetails($detailsUrl, $releaseInfo);
+                        $releaseInfo['id'] = md5(basename($detailsUrl));
                         $releaseInfo['labels'] = [];
 
                         if ($td4 = $tdNodes->item(3)) {
-                            $this->parseAuthorsString((string)$td4->nodeValue, $prodsIndex[$prodId]);
+                            $this->parseAuthorsString((string)$td4->nodeValue, $prodInfo);
                         }
                         $roles = [];
                         if (isset($settings['release'])) {
@@ -629,15 +648,37 @@ class VtrdosManager extends errorLogger
                         }
                         if (isset($settings['prod'])) {
                             if (isset($settings['prod']['directCategories'])) {
-                                $prodsIndex[$prodId]['directCategories'] = $settings['prod']['directCategories'];
+                                $prodInfo['directCategories'] = $settings['prod']['directCategories'];
                             }
                         }
                         $this->parseANode($aNode, $releaseInfo);
+                        $prodId = md5($prodTitle . $prodInfo['year']);
+                        $prodInfo['id'] = $prodId;
+                        if (!isset($prodsIndex[$prodId])) {
+                            $prodsIndex[$prodId] = $prodInfo;
+                        } else {
+                            $prodsIndex[$prodId] = array_merge($prodInfo, $prodsIndex[$prodId]);
+                        }
                         $prodsIndex[$prodId]['releases'][] = $releaseInfo;
                     }
                 }
             }
             $this->importProdsIndex($prodsIndex);
+        }
+    }
+
+    private function requestReleaseDetails($detailsUrl, &$releaseInfo)
+    {
+        if ($html = $this->loadHtml($detailsUrl)) {
+            $xPath = new DOMXPath($html);
+            $aNodes = $xPath->query("//a[contains(@style, 'font-size:20px')]");
+            if ($aNode = $aNodes->item(0)) {
+                $releaseInfo['fileUrl'] = $this->rootUrl . $aNode->getAttribute('href');
+            }
+            $divNodes = $xPath->query("//div[@class='details']");
+            if ($divNode = $divNodes->item(0)) {
+                $this->parseDescription($html->saveHTML($divNode), $releaseInfo, $releaseInfo);
+            }
         }
     }
 
@@ -732,7 +773,9 @@ class VtrdosManager extends errorLogger
                                     $currentCategory = [$this->categories[$name]];
                                 }
                                 if (isset($this->categoryHardware[$name])) {
-                                    $settings['release']['hardwareRequired'][] = $this->categoryHardware[$name];
+                                    $settings['release']['hardwareRequired'] = [$this->categoryHardware[$name]];
+                                } else {
+                                    $settings['release']['hardwareRequired'] = [];
                                 }
                             }
                         }
@@ -831,16 +874,15 @@ class VtrdosManager extends errorLogger
             if (strtolower(substr($prodTitle, -4)) == 'demo') {
                 $prodTitle = trim(mb_substr($prodTitle, 0, -4));
             }
-            $prodId = md5($prodTitle);
-            if (!isset($prodsIndex[$prodId])) {
-                $prodsIndex[$prodId] = [
-                    'id' => $prodId,
-                    'title' => $prodTitle,
-                    'labels' => [],
-                    'directCategories' => $currentCategory,
-                    'releases' => [],
-                ];
-            }
+
+            $prodInfo = [
+                'id' => '',
+                'year' => '',
+                'title' => $prodTitle,
+                'labels' => [],
+                'directCategories' => $currentCategory,
+                'releases' => [],
+            ];
 
             $roles = [];
             if (isset($settings['release'])) {
@@ -848,7 +890,6 @@ class VtrdosManager extends errorLogger
                     $roles = $settings['release']['authorRoles'];
                 }
             }
-            $prodInfo = &$prodsIndex[$prodId];
 
             if (isset($settings['release'])) {
                 if (!empty($settings['release']['language'])) {
@@ -867,8 +908,14 @@ class VtrdosManager extends errorLogger
                 }
             }
             $this->parseTextNode($textNode, $prodInfo, $releaseInfo, $roles);
-
-            $prodInfo['releases'][] = $releaseInfo;
+            $prodId = md5($prodTitle . $prodInfo['year']);
+            $prodInfo['id'] = $prodId;
+            if (!isset($prodsIndex[$prodId])) {
+                $prodsIndex[$prodId] = $prodInfo;
+            } else {
+                $prodsIndex[$prodId] = array_merge($prodInfo, $prodsIndex[$prodId]);
+            }
+            $prodsIndex[$prodId]['releases'][] = $releaseInfo;
         }
     }
 
@@ -893,7 +940,7 @@ class VtrdosManager extends errorLogger
 
     }
 
-    protected function parseDescription($text, &$prodInfo, &$releaseInfo)
+    protected function parseDescription($text, &$info, &$releaseInfo)
     {
         foreach ($this->hwIndex as $key => $value) {
             if (stripos($text, $key) !== false) {
@@ -906,7 +953,9 @@ class VtrdosManager extends errorLogger
         }
         $text = trim($text);
         if ($text) {
-            $prodInfo['description'] = $text;
+            $text = str_ireplace('<div class="details">', '', $text);
+            $text = str_ireplace('</div>', '', $text);
+            $info['description'] = $text;
         }
     }
 
@@ -950,6 +999,10 @@ class VtrdosManager extends errorLogger
         if ((stripos($text, '(eng)')) !== false) {
             $text = str_ireplace('(eng)', '', $text);
             $releaseInfo['language'] = ['en'];
+        }
+        if ((stripos($text, '(ukr)')) !== false) {
+            $text = str_ireplace('(ukr)', '', $text);
+            $releaseInfo['language'] = ['ua'];
         }
         if (preg_match('#(v[0-9]\.[0-9])#i', $text, $matches, PREG_OFFSET_CAPTURE)) {
             $offset = $matches[0][1];
@@ -1070,6 +1123,9 @@ class VtrdosManager extends errorLogger
             $dom->formatOutput = false;
             @$dom->loadHTML('<?xml version="1.0" encoding="UTF-8"?>' . $contents);
             $dom->normalizeDocument();
+
+            $this->markProgress('html loaded ' . $url);
+
             return $dom;
         }
         return false;

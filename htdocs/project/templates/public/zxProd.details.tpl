@@ -188,11 +188,11 @@
     </div>
     {include $theme->template("component.emulator.tpl")}
     <div class="gallery_static galleryid_{$element->id}">
-        <div class="zxprod_gallery">
-            {if $filesList = $element->getFilesList('connectedFile')}
+        {if $filesList = $element->getFilesList('connectedFile')}
+            <div class="zxprod_gallery">
                 {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false}
-            {/if}
-        </div>
+            </div>
+        {/if}
         {if $description = $element->getGeneratedDescription()}
             <div class="zxprod_details_description">
                 {$description}
@@ -229,14 +229,14 @@
         </div>
     {/if}
 
-    {if $element->compilationProds || $element->compilations || $element->seriesProds}
+    {if $element->compilationItems || $element->compilations || $element->seriesProds}
         <script>
             window.elementsData = window.elementsData ? window.elementsData : {};
             window.elementsData[{$element->id}] = {$element->getCompilationJsonData()};
         </script>
     {/if}
-    {if $element->compilationProds}
-        <h2>{translations name='zxprod.compilationProds'}</h2>
+    {if $element->compilationItems}
+        <h2>{translations name='zxprod.compilationItems'}</h2>
         <app-zx-prods-list element-id="{$element->id}" property="prods"></app-zx-prods-list>
     {/if}
 
@@ -270,14 +270,14 @@
         }
         window.prodsList.push({$element->getJsonInfo()});
     </script>
-
     {if $element->series}
         {foreach $element->series as $seriesElement}
             <script>
                 window.elementsData = window.elementsData ? window.elementsData : {};
                 window.elementsData[{$seriesElement->id}] = {$seriesElement->getCompilationJsonData()};
             </script>
-            <h2>{translations name='zxprod.series'}: {$seriesElement->title}</h2>
+            <h2>{translations name='zxprod.series'}: <a href="{$seriesElement->getUrl()}">{$seriesElement->title}</a>
+            </h2>
             <app-zx-prods-list element-id="{$seriesElement->id}" property="seriesProds"></app-zx-prods-list>
         {/foreach}
     {/if}

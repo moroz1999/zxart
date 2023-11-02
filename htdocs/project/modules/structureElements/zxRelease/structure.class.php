@@ -82,7 +82,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
                 'role' => 'child',
             ],
         ];
-        $moduleStructure['description'] = 'pre';
+        $moduleStructure['description'] = 'html';
         $moduleStructure['denyVoting'] = 'checkbox';
         $moduleStructure['denyComments'] = 'checkbox';
 
@@ -105,6 +105,13 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
             'DBValueSet',
             [
                 'tableName' => 'zxitem_language',
+            ],
+        ];
+        $moduleStructure['compilations'] = [
+            'ConnectedElements',
+            [
+                'linkType' => 'compilation',
+                'role' => 'child',
             ],
         ];
 
@@ -731,4 +738,16 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         }
         $this->persistElementData();
     }
+
+    public function getCompilationJsonData()
+    {
+        $data = [
+            'compilations' => [],
+        ];
+        foreach ($this->compilations as $prod) {
+            $data['compilations'][] = $prod->getElementData('list');
+        }
+        return json_encode($data);
+    }
+
 }

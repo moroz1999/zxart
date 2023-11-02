@@ -9,7 +9,7 @@ class sendEmailRegistration extends structureElementAction
 
             $formData = $structureElement->getFormData();
 
-            $email = $formData['email'] ? $formData['email'] : '';
+            $email = $formData['email'] ?: '';
             $fieldsInfo = [];
             foreach ($structureElement->getConnectedFields() as $field) {
                 if ($field->autocomplete == 'passwordRepeat' || $field->autocomplete == 'password') {

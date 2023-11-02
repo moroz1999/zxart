@@ -56,11 +56,20 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             'releasesIds' => 'getReleasesIds',
             'inlaysUrls' => 'getInlaysUrls',
             'imagesUrls' => 'getImagesUrls',
+            'compilationItems' => 'compilationItems',
+            'seriesProds' => 'seriesProds',
             'listImagesUrls' => function (zxProdElement $element) {
                 $preset = $element->getListImagePreset();
                 $urls = $element->getImagesUrls($preset);
-                foreach ($element->compilationProds as $prod) {
-                    $urls = array_merge($urls, $prod->getImagesUrls($preset));
+                foreach ($element->compilationItems as $prod) {
+                    if ($prodUrls = $prod->getImagesUrls($preset)) {
+                        $urls[] = reset($prodUrls);
+                    }
+                }
+                foreach ($element->seriesProds as $prod) {
+                    if ($prodUrls = $prod->getImagesUrls($preset)) {
+                        $urls[] = reset($prodUrls);
+                    }
                 }
                 return $urls;
             },
@@ -225,6 +234,8 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 'releaseFileDescription',
                 'categoriesString',
                 'isPlayable',
+                'compilationItems',
+                'seriesProds',
             ],
             'api' => [
                 'id',
@@ -251,6 +262,8 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 'userVote',
                 'rzx',
                 'externalLink',
+                'compilationItems',
+                'seriesProds',
             ],
             'apiShort' => [
                 'id',

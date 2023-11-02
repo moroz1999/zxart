@@ -16,7 +16,7 @@
  * @property int[] $categories
  * @property groupElement[] $publishers
  * @property groupElement[] $groups
- * @property zxProdElement[] $compilationProds
+ * @property zxProdElement[] $compilationItems
  * @property zxProdElement[] $seriesProds
  * @property zxProdElement[] $compilations
  * @property zxProdElement[] $series
@@ -114,7 +114,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
                 'tableName' => 'zxitem_language',
             ],
         ];
-        $moduleStructure['compilationProds'] = [
+        $moduleStructure['compilationItems'] = [
             'ConnectedElements',
             [
                 'linkType' => 'compilation',
@@ -236,7 +236,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         if (isset($result[$number])) {
             return $result[$number];
         }
-        foreach ($this->compilationProds as $prod) {
+        foreach ($this->compilationItems as $prod) {
             if ($image = $prod->getImage($number)) {
                 return $image;
             }
@@ -541,6 +541,14 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         if ($this->year) {
             $searchTitle .= ' (' . $this->year . ')';
         }
+        $groups=[];
+        foreach ($this->groups as $group) {
+            $groups[] = $group->getTitle();
+        }
+        if ($groups){
+            $searchTitle .= ' / ' . implode(', ', $groups);
+        }
+
         return $searchTitle;
     }
 
@@ -768,11 +776,11 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     {
         $data = [
             'prods' => [],
-            'prodsAmount' => count($this->compilationProds),
+            'prodsAmount' => count($this->compilationItems),
             'compilations' => [],
             'seriesProds' => [],
         ];
-        foreach ($this->compilationProds as $prod) {
+        foreach ($this->compilationItems as $prod) {
             $data['prods'][] = $prod->getElementData('list');
         }
         foreach ($this->seriesProds as $prod) {

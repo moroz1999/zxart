@@ -60,7 +60,7 @@
 					<option value=''></option>
 					{foreach from=$element->getAuthorsList() item=author}
 						<option value='{$author->id}' selected="selected">
-							{$author->title}
+							{$author->getSearchTitle()}
 						</option>
 					{/foreach}
 				</select>
@@ -76,7 +76,7 @@
 					<option value=''></option>
 					{foreach from=$element->getOriginalAuthorsList() item=originalAuthor}
 						<option value='{$originalAuthor->id}' selected="selected">
-							{$originalAuthor->title}
+							{$originalAuthor->getSearchTitle()}
 						</option>
 					{/foreach}
 				</select>
