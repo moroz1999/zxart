@@ -7,6 +7,7 @@
         'groupAlias',
         'zxProd',
         'zxPicture',
-        'zxMusic'
+        'zxMusic',
+        'pressArticle'
     ],
 ];

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6934d3c6d95240253ba5c7416e29986a",
+    "content-hash": "3d768538b715c81599aa546b635eb532",
     "packages": [
         {
             "name": "artweb-ou/trickster-cms",
@@ -106,16 +106,16 @@
         },
         {
             "name": "ckeditor/ckeditor",
-            "version": "4.22.1",
+            "version": "4.23.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ckeditor/ckeditor4-releases.git",
-                "reference": "0d51138b0a258165ac09724e8f5cda67cf9126a3"
+                "reference": "13a70b2385e6ff7805c2faff1278fca6e42646f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ckeditor/ckeditor4-releases/zipball/0d51138b0a258165ac09724e8f5cda67cf9126a3",
-                "reference": "0d51138b0a258165ac09724e8f5cda67cf9126a3",
+                "url": "https://api.github.com/repos/ckeditor/ckeditor4-releases/zipball/13a70b2385e6ff7805c2faff1278fca6e42646f7",
+                "reference": "13a70b2385e6ff7805c2faff1278fca6e42646f7",
                 "shasum": ""
             },
             "type": "library",
@@ -150,7 +150,7 @@
                 "source": "https://github.com/ckeditor/ckeditor4",
                 "wiki": "https://ckeditor.com/docs/ckeditor4/latest/"
             },
-            "time": "2023-06-30T13:35:30+00:00"
+            "time": "2023-08-24T13:32:10+00:00"
         },
         {
             "name": "doctrine/inflector",
@@ -1212,16 +1212,16 @@
         },
         {
             "name": "moroz1999/zx-files",
-            "version": "3.2.0",
+            "version": "3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/moroz1999/zx-files.git",
-                "reference": "0b7ede69afcd11a9832592d03d4aa8ad587dddd5"
+                "reference": "145a92c5555046ee803bb09e2e6fe647e3bc3402"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/moroz1999/zx-files/zipball/0b7ede69afcd11a9832592d03d4aa8ad587dddd5",
-                "reference": "0b7ede69afcd11a9832592d03d4aa8ad587dddd5",
+                "url": "https://api.github.com/repos/moroz1999/zx-files/zipball/145a92c5555046ee803bb09e2e6fe647e3bc3402",
+                "reference": "145a92c5555046ee803bb09e2e6fe647e3bc3402",
                 "shasum": ""
             },
             "require": {
@@ -1251,9 +1251,9 @@
             ],
             "support": {
                 "issues": "https://github.com/moroz1999/zx-files/issues",
-                "source": "https://github.com/moroz1999/zx-files/tree/3.2.0"
+                "source": "https://github.com/moroz1999/zx-files/tree/3.2.1"
             },
-            "time": "2022-11-22T21:15:17+00:00"
+            "time": "2023-11-05T12:19:11+00:00"
         },
         {
             "name": "moroz1999/zx-image",
@@ -1893,31 +1893,26 @@
         },
         {
             "name": "php-http/promise",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/promise.git",
-                "reference": "4c4c1f9b7289a2ec57cde7f1e9762a5789506f88"
+                "reference": "ef4905bfb492ff389eb7f12e26925a0f20073050"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/promise/zipball/4c4c1f9b7289a2ec57cde7f1e9762a5789506f88",
-                "reference": "4c4c1f9b7289a2ec57cde7f1e9762a5789506f88",
+                "url": "https://api.github.com/repos/php-http/promise/zipball/ef4905bfb492ff389eb7f12e26925a0f20073050",
+                "reference": "ef4905bfb492ff389eb7f12e26925a0f20073050",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1 || ^8.0"
             },
             "require-dev": {
-                "friends-of-phpspec/phpspec-code-coverage": "^4.3.2",
-                "phpspec/phpspec": "^5.1.2 || ^6.2"
+                "friends-of-phpspec/phpspec-code-coverage": "^4.3.2 || ^6.3",
+                "phpspec/phpspec": "^5.1.2 || ^6.2 || ^7.4"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Http\\Promise\\": "src/"
@@ -1944,9 +1939,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-http/promise/issues",
-                "source": "https://github.com/php-http/promise/tree/1.1.0"
+                "source": "https://github.com/php-http/promise/tree/1.2.0"
             },
-            "time": "2020-07-07T09:29:14+00:00"
+            "time": "2023-10-24T09:20:26+00:00"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -3816,7 +3811,8 @@
         "ext-curl": "*",
         "ext-gd": "*",
         "ext-dom": "*",
-        "ext-zip": "*"
+        "ext-zip": "*",
+        "ext-fileinfo": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.6.0"

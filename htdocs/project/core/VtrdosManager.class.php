@@ -3,7 +3,7 @@
 class VtrdosManager extends errorLogger
 {
     protected $counter = 0;
-    protected $maxCounter = 4000;
+    protected $maxCounter = 5000;
     /**
      * @var ProdsManager
      */
@@ -189,11 +189,11 @@ class VtrdosManager extends errorLogger
 //                'type' => 'press',
 //            ],
 //        ];
-        $this->urlsSettings['https://vtrd.in/press.php?l=2'] = [
-            [
-                'type' => 'press',
-            ],
-        ];
+//        $this->urlsSettings['https://vtrd.in/press.php?l=2'] = [
+//            [
+//                'type' => 'press',
+//            ],
+//        ];
 //        $this->urlsSettings['https://vtrd.in/updates.php'] = [
 //            [
 //                'type' => 'updates',
@@ -302,20 +302,20 @@ class VtrdosManager extends errorLogger
 //                ],
 //            ],
 //        ];
-//        foreach ($this->alphabet as $item) {
-//            $this->urlsSettings['https://vtrd.in/games.php?t=' . $item] = [
-//                [
-//                    'type' => 'table',
-//                    'prod' => [
-//                        'directCategories' => [92177],
-//                    ],
-//                    'release' => [
-//                        'releaseType' => 'adaptation',
-//                        'authorRoles' => ['adaptation', 'release'],
-//                    ],
-//                ],
-//            ];
-//        }
+        foreach ($this->alphabet as $item) {
+            $this->urlsSettings['https://vtrd.in/games.php?t=' . $item] = [
+                [
+                    'type' => 'table',
+                    'prod' => [
+                        'directCategories' => [92177],
+                    ],
+                    'release' => [
+                        'releaseType' => 'adaptation',
+                        'authorRoles' => ['adaptation', 'release'],
+                    ],
+                ],
+            ];
+        }
     }
 
     /**

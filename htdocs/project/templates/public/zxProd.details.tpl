@@ -185,6 +185,10 @@
             <a class="button"
                href="{$element->URL}type:zxRelease/action:showPublicForm/">{translations name='zxprod.addrelease'}</a>
         {/if}
+        {if !empty($privileges.pressArticle.publicReceive)}
+            <a class="button"
+               href="{$element->URL}type:pressArticle/action:showPublicForm/">{translations name='zxprod.addpressarticle'}</a>
+        {/if}
     </div>
     {include $theme->template("component.emulator.tpl")}
     <div class="gallery_static galleryid_{$element->id}">
@@ -197,6 +201,10 @@
             <div class="zxprod_details_description">
                 {$description}
             </div>
+        {/if}
+        {if $element->articles}
+            <h2>{translations name='zxprod.articles'}</h2>
+            {include file=$theme->template('component.pressArticles.tpl') articles= $element->articles pager=false}
         {/if}
         {if $releasesList=$element->getReleasesList()}
             <h2>{translations name='zxprod.releases'}</h2>

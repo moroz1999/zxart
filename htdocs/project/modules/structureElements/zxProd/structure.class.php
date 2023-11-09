@@ -94,6 +94,13 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
                 'role' => 'child',
             ],
         ];
+        $moduleStructure['articles'] = [
+            'ConnectedElements',
+            [
+                'linkType' => 'prodArticle',
+                'role' => 'parent',
+            ],
+        ];
         $moduleStructure['tagsText'] = 'text';
         $moduleStructure['tagsAmount'] = 'text';
         $moduleStructure['votesAmount'] = 'text';
@@ -267,6 +274,11 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         $queryFiltersManager = $this->getService('QueryFiltersManager');
         $releaseIdsQuery = $queryFiltersManager->convertTypeData($releaseIdsQuery, 'zxRelease', 'zxProd', [])->select('id');
         $urls = [];
+
+        foreach ($this->getFilesList('inlayFilesSelector') as $fileElement) {
+            $urls[] = $fileElement->getImageUrl('prodListInlay');
+        }
+
         if ($imageIds = $db->table('structure_links')
             ->whereIn('parentStructureId', $releaseIdsQuery)
             ->whereIn('type', ['inlayFilesSelector', 'adFilesSelector'])

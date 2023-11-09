@@ -34,9 +34,8 @@
         ></span>
       </span>
     </span>
-
     <span
-      *ngIf="model.inlaysUrls.length &&  imagesLayout === 'inlays'"
+      *ngIf="model.inlaysUrls.length && (imagesLayout === 'inlays' || model.imagesUrls.length === 0)"
       class="zx-prod-screenshots zx-prod-inlays"
       @fadeInOut
     >
@@ -44,7 +43,7 @@
       <img
         @fadeInOut
         class="zx-prod-screenshot"
-        [ngClass]="{'zx-prod-screenshot-selected': imageUrl === activeScreenshotUrl}"
+        [ngClass]="{'zx-prod-screenshot-selected': (imageUrl === activeScreenshotUrl) || model.imagesUrls.length === 0}"
         src="{{ imageUrl }}"
         alt="{{ model.title }}"
         loading="lazy"

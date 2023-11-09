@@ -9,11 +9,12 @@
 	</div>
 	<div class='comments_list gallery_pictures' id="gallery_{$element->id}">
 	{foreach from=$element->getCommentsList() item=comment}
-		{if $comment->getInitialTarget()->structureType == 'zxPicture'}
+		{$target = $comment->getInitialTarget()}
+		{if $target && $target->structureType == 'zxPicture'}
 			{include file=$theme->template("comment.picture.tpl") galleryId=$element->id element=$comment displaySubComments=false}
-		{elseif $comment->getInitialTarget()->structureType == 'zxMusic'}
+		{elseif $target && $target->structureType == 'zxMusic'}
 			{include file=$theme->template("comment.music.tpl") element=$comment displaySubComments=false}
-		{elseif $comment->getInitialTarget()->structureType == 'zxProd'}
+		{elseif $target && $target->structureType == 'zxProd'}
 			{include file=$theme->template("comment.zxProd.tpl") element=$comment displaySubComments=false}
 		{else}
 			{include file=$theme->template("comment.full.tpl") element=$comment displaySubComments=false displayTarget=true}

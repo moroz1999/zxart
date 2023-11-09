@@ -3,7 +3,7 @@
 class S4eManager extends errorLogger
 {
     protected int $counter = 0;
-    protected int $maxCounter = 500;
+    protected int $maxCounter = 4000;
     protected ProdsManager $prodsManager;
     protected AuthorsManager $authorsManager;
     protected GroupsManager $groupsManager;
@@ -48,7 +48,6 @@ class S4eManager extends errorLogger
     public function setProdsManager(ProdsManager $prodsManager)
     {
         $this->prodsManager = $prodsManager;
-        $prodsManager->setMatchProdsWithoutYear(true);
     }
 
     public function importAll()
@@ -56,7 +55,7 @@ class S4eManager extends errorLogger
         $this->parseReleasers();
         $this->parseStudios();
         $this->parseReleases();
-//        $this->parseCompilations();
+        $this->parseCompilations();
         $this->import();
     }
 
@@ -74,79 +73,89 @@ class S4eManager extends errorLogger
             }
             $prodsIndex[$release['prodId']]['releases'][] = $release;
         }
-
+        $this->prodsManager->setMatchProdsWithoutYear(true);
         $this->importProdsIndex($prodsIndex);
-//        $this->importProdsIndex($this->compilations);
+
+        $this->prodsManager->setMatchProdsWithoutYear(false);
+        $this->importProdsIndex($this->compilations);
     }
 
     private function parseCompilations()
     {
         foreach ($this->studios as $id => $studio) {
-            if ($id === 3) {
-                if ($html = $this->loadHtml($studio['studioPageUrl'])) {
-                    $xPath = new DOMXPath($html);
-                    $tableNodes = $xPath->query("//table");
-                    foreach ($tableNodes as $tableNode) {
-                        $prodTitle = null;
-                        $description = null;
-                        $prodId = null;
-                        $images = [];
-                        $compilationItems = [];
-                        $imgNodes = $xPath->query(".//img[@class='cover_img']", $tableNode);
-                        if ($imgNodes->length) {
-                            $imgNode = $imgNodes->item(0);
-                            $image = $imgNode->getAttribute('onclick');
-                            $prodId = (int)$imgNode->getAttribute('idtp');
-                            $image = str_ireplace("img('", '', $image);
-                            $image = str_ireplace("')", '', $image);
-                            $images[] = $image;
-
-                            $bigNodes = $xPath->query(".//big", $tableNode);
-                            if ($bigNodes->length > 0) {
-                                $bigNode = $bigNodes->item(0);
-                                $prodTitle = $this->sanitize($bigNode->textContent);
-                            }
-                            $spanNodes = $xPath->query(".//span[@class='grn']", $tableNode);
-                            if ($spanNodes->length > 0) {
-                                $spanNode = $spanNodes->item(0);
-                                $description = $this->sanitize($spanNode->textContent);
-                            }
-                            $liNodes = $xPath->query(".//li", $tableNode);
-                            foreach ($liNodes as $liNode) {
-                                $aNodes = $xPath->query(".//a[@class='yel']", $liNode);
-                                if ($aNodes->length > 0) {
-                                    $aNode = $aNodes->item(0);
-                                    $prodUrl = $aNode->getAttribute('href');
-                                    parse_str(parse_url($prodUrl, PHP_URL_QUERY), $result);
-                                    $releaseId = (int)$result['id'];
-                                    if (!empty($this->releases[$releaseId])) {
-                                        $compilationItems[] = $releaseId;
-                                        $this->releases[$releaseId]['labels'][] = $studio;
-                                        $this->releases[$releaseId]['publishers'] = [$studio['id']];
-                                    }
-                                }
-                            }
-                            if ($prodId) {
-                                $prodInfo = [
-                                    'id' => $prodId,
-                                    'title' => $prodTitle,
-                                    'description' => $description,
-                                    'inlayImages' => $images,
-                                    'compilationItems' => $compilationItems,
-                                    'labels' => [$studio],
-                                    'directCategories' => [92177],
-                                    'publishers' => [$studio['id']]
-                                ];
-                                if (!empty($this->compilations[$prodId])) {
-                                    echo 'Compilation exists: ' . $prodTitle . ' ' . $prodId . ' ' . $studio['studioPageUrl'];
-                                    exit;
-                                }
-                                $this->compilations[$prodId] = $prodInfo;
+//            if ($id !== 9) continue;
+            if ($html = $this->loadHtml($studio['studioPageUrl'])) {
+                $xPath = new DOMXPath($html);
+                $tableNodes = $xPath->query("//table");
+                foreach ($tableNodes as $tableNode) {
+                    $prodTitle = null;
+                    $description = null;
+                    $prodId = null;
+                    $images = [];
+                    $image = '';
+                    $compilationItems = [];
+                    $imgNodes = $xPath->query(".//img[@class='cover_img']", $tableNode);
+                    if ($imgNodes->length > 0) {
+                        $imgNode = $imgNodes->item(0);
+                        $image = $imgNode->getAttribute('onclick');
+                        $prodId = (int)$imgNode->getAttribute('idtp');
+                        $image = str_ireplace("img('", '', $image);
+                        $image = str_ireplace("')", '', $image);
+                        $images[] = $image;
+                    }
+                    if (!$prodId) {
+                        $aNodes = $xPath->query(".//a[@class='orange']", $tableNode);
+                        if ($aNodes->length > 0) {
+                            $aNode = $aNodes->item(0);
+                            $url = $aNode->getAttribute('href');
+                            parse_str(parse_url($url, PHP_URL_QUERY), $result);
+                            $prodId = (int)$result['id'];
+                        }
+                    }
+                    $bigNodes = $xPath->query(".//big", $tableNode);
+                    if ($bigNodes->length > 0) {
+                        $bigNode = $bigNodes->item(0);
+                        $prodTitle = $this->sanitize($bigNode->textContent);
+                    }
+                    $spanNodes = $xPath->query(".//span[@class='grn']", $tableNode);
+                    if ($spanNodes->length > 0) {
+                        $spanNode = $spanNodes->item(0);
+                        $description = $this->sanitize($spanNode->textContent);
+                    }
+                    $liNodes = $xPath->query(".//li", $tableNode);
+                    foreach ($liNodes as $liNode) {
+                        $aNodes = $xPath->query(".//a[@class='yel']", $liNode);
+                        if ($aNodes->length > 0) {
+                            $aNode = $aNodes->item(0);
+                            $prodUrl = $aNode->getAttribute('href');
+                            parse_str(parse_url($prodUrl, PHP_URL_QUERY), $result);
+                            $releaseId = (int)$result['id'];
+                            if (!empty($this->releases[$releaseId])) {
+                                $compilationItems[] = $releaseId;
+                                $this->releases[$releaseId]['labels'][] = $studio;
+                                $this->releases[$releaseId]['publishers'] = [$studio['id']];
                             }
                         }
                     }
+                    if ($prodId) {
+                        $prodId = 'comp' . $prodId;
+                        $prodInfo = [
+                            'id' => $prodId,
+                            'title' => $prodTitle,
+                            'description' => $description,
+                            'inlayImages' => $images,
+                            'compilationItems' => $compilationItems,
+                            'labels' => [$studio],
+                            'directCategories' => [92177],
+                            'publishers' => [$studio['id']]
+                        ];
+                        if (!empty($this->compilations[$prodId])) {
+                            echo 'Compilation exists: ' . $prodTitle . ' ' . $prodId . ' ' . $studio['studioPageUrl'];
+                            exit;
+                        }
+                        $this->compilations[$prodId] = $prodInfo;
+                    }
                 }
-                break;
             }
         }
     }

@@ -3,6 +3,7 @@
     'minAmount' => 2,
     'allowedElementTypes' => [
         'zxProdCategory',
+        'pressArticle',
         'folder',
         'zxProd',
         'zxRelease',

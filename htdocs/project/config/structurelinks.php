@@ -18,5 +18,6 @@
         'adFilesSelector',
         'mapFilesSelector',
         'rzx',
+        'prodArticle',
     ],
 ];

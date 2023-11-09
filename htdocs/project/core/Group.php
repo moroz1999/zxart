@@ -62,12 +62,12 @@ trait Group
                             'url' => 'https://zxaaa.net/view_demos.php?a=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    }elseif ($row['importOrigin'] == 's4e') {
+                    } elseif ($row['importOrigin'] == 's4e') {
                         $this->linksInfo[] = [
                             'type' => 's4e',
                             'image' => 'icon_s4e.png',
                             'name' => $translationsManager->getTranslationByName('links.link_s4e'),
-                            'url' => 'https://zxaaa.net/view_demos.php?a=' . $row['importId'],
+                            'url' => 'https://spectrum4ever.org/fulltape.php?go=studio&id=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
                     }

@@ -54,10 +54,13 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             'groupsInfo' => 'getGroupsInfo',
             'publishersIds' => 'getPublishersIds',
             'releasesIds' => 'getReleasesIds',
-            'inlaysUrls' => 'getInlaysUrls',
             'imagesUrls' => 'getImagesUrls',
             'compilationItems' => 'compilationItems',
             'seriesProds' => 'seriesProds',
+            'inlaysUrls' => 'getInlaysUrls',
+            'inlays' => function (zxReleaseElement $element) {
+                return $element->getFilesUrlList('inlayFilesSelector', 'release');
+            },
             'listImagesUrls' => function (zxProdElement $element) {
                 $preset = $element->getListImagePreset();
                 $urls = $element->getImagesUrls($preset);

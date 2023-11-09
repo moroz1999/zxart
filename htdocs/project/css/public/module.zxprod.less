@@ -76,3 +76,25 @@
 .import_link_image {
   margin-right: 0.5em;
 }
+
+
+@media (min-width: @screen_breakpoint_md) {
+  .pressarticle-layout {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .pressarticle-layout-left {
+    flex-grow: 1;
+  }
+
+  .pressarticle-layout-right {
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    .zxitem_images {
+      flex-direction: column;
+    }
+  }
+}

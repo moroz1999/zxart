@@ -36,6 +36,7 @@ class fixApplication extends controllerApplication
              */
             $languagesManager = $this->getService('LanguagesManager');
             $languagesManager->setCurrentLanguageCode('eng');
+//            $this->deleteProds();
 //            $this->fixProds();
 //            $this->fixZxChip();
 //            $this->fixWlodek();
@@ -72,35 +73,36 @@ class fixApplication extends controllerApplication
             flush();
         }
     }
-//    private function deleteProds()
-//    {
-//        /**
-//         * @var \Illuminate\Database\Connection $db
-//         */
-//        $db = $this->getService('db');
-//        /**
-//         * @var linksManager $linksManager
-//         */
-//        $linksManager = $this->getService(linksManager::class);
-//        $result = $db->table('module_zxrelease')
-//            ->where('id', '>', 423345)
-//            ->orderBy('id')
-//            ->get(['id']);
-//        $ids = array_column($result, 'id');
-//        $count = count($ids);
-//        $counter = 0;
-//        foreach ($ids as $id) {
-//
-//            $prod = $this->structureManager->getElementById($id);
-//            echo $counter . ' ' . round(100* $counter / $count) . '% ';
-//            if ($prod) {
-//                $prod->deleteElementData();
-//                echo 'deleted' . $id . '<br>';
-//            }
-//            $counter++;
-//            flush();
-//        }
-//    }
+    private function deleteProds()
+    {
+        /**
+         * @var \Illuminate\Database\Connection $db
+         */
+        $db = $this->getService('db');
+        /**
+         * @var linksManager $linksManager
+         */
+        $linksManager = $this->getService(linksManager::class);
+        $result = $db->table('module_zxprod')
+            ->where('id', '>=', 449890)
+            ->where('id', '<', 451065)
+            ->orderBy('id')
+            ->get(['id']);
+        $ids = array_column($result, 'id');
+        $count = count($ids);
+        $counter = 0;
+        foreach ($ids as $id) {
+
+            $prod = $this->structureManager->getElementById($id);
+            echo $counter . ' ' . round(100* $counter / $count) . '% ';
+            if ($prod) {
+                $prod->deleteElementData();
+                echo 'deleted' . $id . '<br>';
+            }
+            $counter++;
+            flush();
+        }
+    }
 
     private function loadIds($term)
     {

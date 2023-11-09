@@ -75,7 +75,7 @@ class statsApplication extends controllerApplication
             $count = iterator_count($iterator);
             echo($path . ' ' . $count);
             foreach ($iterator as $file) {
-                if ($count > 30000) {
+                if ($count > 25000) {
                     $count--;
                     unlink($file);
                 } else {

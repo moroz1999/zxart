@@ -6,21 +6,27 @@ trait ReleaseFormatsProvider
     {
         return [
             'dsk',
-            'tzx',
-            'tap',
             'trd',
             'scl',
-            'bin',
-            'sna',
-            'szx',
-            'z80',
             'fdi',
             'udi',
             'td0',
+            'd80',
+            'mgt',
+
+            'tzx',
+            'tap',
+            'mdr',
+
+            'bin',
             'rom',
             'spg',
-            'mdr',
-            'd80',
+
+            'sna',
+            'szx',
+            'dck',
+            'z80',
+
         ];
     }
 
@@ -35,20 +41,25 @@ trait ReleaseFormatsProvider
                 'udi',
                 'td0',
                 'd80',
+                'mgt',
             ],
+
             'tape' => [
                 'tzx',
                 'tap',
                 'mdr',
             ],
+
             'rom' => [
                 'bin',
                 'rom',
                 'spg',
             ],
+
             'snapshot' => [
                 'sna',
                 'szx',
+                'dck',
                 'z80',
             ],
         ];
