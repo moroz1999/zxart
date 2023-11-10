@@ -19,3 +19,4 @@ $moduleActions[] = 'vote';
 $moduleActions[] = 'viewFile';
 $moduleActions[] = 'uploadScreenshot';
 $moduleActions[] = 'downloadDenied';
+$moduleActions[] = 'moveScreenshots';

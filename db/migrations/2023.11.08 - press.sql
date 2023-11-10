@@ -1,4 +1,4 @@
-CREATE TABLE `engine_module_pressarticle2` (
+CREATE TABLE `engine_module_pressarticle` (
                                                `id` int(11) NOT NULL,
                                                `languageId` tinyint(4) NOT NULL,
                                                `introduction` varchar(255) CHARACTER SET utf8mb4 NOT NULL,

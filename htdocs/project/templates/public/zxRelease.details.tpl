@@ -188,13 +188,19 @@
             </table>
 
             {include $theme->template("component.emulator.tpl")}
-
             {if $pictures=$element->getPictures()}
                 {include file=$theme->template('component.pictureslist.tpl') pictures=$pictures}
             {/if}
 
             <div class="gallery_static galleryid_{$element->id}">
                 {if $filesList = $element->getFilesList('screenshotsSelector')}
+                    <div class="zxrelease_editing_controls editing_controls">
+                        {if isset($currentElementPrivileges.moveScreenshots) && $currentElementPrivileges.moveScreenshots}
+                            <a class="button"
+                               href="{$element->URL}id:{$element->id}/action:moveScreenshots/">{translations name='zxrelease.move_screenshots'}</a>
+                        {/if}
+                    </div>
+
                     {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false}
                 {/if}
 

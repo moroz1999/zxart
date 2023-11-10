@@ -459,7 +459,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
                     if ($row['importOrigin'] == 'zxdb') {
                         if ($this->structureType == 'zxProd') {
                             $this->linksInfo[] = [
-                                'type' => 'sc',
+                                'type' => 'zxdb',
                                 'image' => 'icon_sc.png',
                                 'name' => $translationsManager->getTranslationByName('links.link_sc'),
                                 'url' => 'http://spectrumcomputing.co.uk/index.php?cat=96&id=' . $row['importId'],
@@ -609,7 +609,9 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         }
 
         foreach ($this->getLinksInfo() as $linkInfo) {
-            $data['links'][$linkInfo['type'] . ';' . $linkInfo['id']] = $linkInfo['type'] . ' <a target="_blank" href="' . $linkInfo['url'] . '">' . $linkInfo['id'] . '</a>';;
+            if ($linkInfo['type'] !== 'wos'){
+                $data['links'][$linkInfo['type'] . ';' . $linkInfo['id']] = $linkInfo['type'] . ' <a target="_blank" href="' . $linkInfo['url'] . '">' . $linkInfo['id'] . '</a>';;
+            }
         }
 
         return $data;
