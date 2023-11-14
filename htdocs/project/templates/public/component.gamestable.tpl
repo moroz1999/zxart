@@ -30,7 +30,7 @@
 					</td>
 					<td>
 						{if $game->wosURL}
-							<a class='newwindow_link' href="{$game->wosURL}"><img src="{$theme->getImageUrl("wos.png")}" /></a>
+							<a class='newwindow_link' href="{$game->wosURL}"><img loading="lazy" src="{$theme->getImageUrl("wos.png")}" /></a>
 						{/if}
 					</td>
 				</tr>

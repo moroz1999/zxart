@@ -6,30 +6,30 @@
 {capture assign="moduleContent"}
 	<div class='picture_details_top'>
 		<div class='picture_details_main'>
-			<img rel="image_src" class='picture_details_main_image zxgallery_item{if $currentMode.mode != 'mix' && $element->isFlickering()} flicker_image{/if}' src='{$element->getImageUrl(1)}' alt='{$element->title}'/>
+			<img loading="lazy" rel="image_src" class='picture_details_main_image zxgallery_item{if $currentMode.mode != 'mix' && $element->isFlickering()} flicker_image{/if}' src='{$element->getImageUrl(1)}' alt='{$element->title}'/>
 		</div>
 		<div class='picture_details_main picture_details_main_2x'>
-			<img rel="image_src" class='picture_details_main_image zxgallery_item{if $currentMode.mode != 'mix' && $element->isFlickering()} flicker_image{/if}' src='{$element->getImageUrl(2)}' alt='{$element->title}'/>
+			<img loading="lazy" rel="image_src" class='picture_details_main_image zxgallery_item{if $currentMode.mode != 'mix' && $element->isFlickering()} flicker_image{/if}' src='{$element->getImageUrl(2)}' alt='{$element->title}'/>
 		</div>
 		<div class='picture_details_main picture_details_main_3x'>
-			<img rel="image_src" class='picture_details_main_image zxgallery_item{if $currentMode.mode != 'mix' && $element->isFlickering()} flicker_image{/if}' src='{$element->getImageUrl(3)}' alt='{$element->title}'/>
+			<img loading="lazy" rel="image_src" class='picture_details_main_image zxgallery_item{if $currentMode.mode != 'mix' && $element->isFlickering()} flicker_image{/if}' src='{$element->getImageUrl(3)}' alt='{$element->title}'/>
 		</div>
 	</div>
 	<div class="picture_details_materials">
 		{if $element->sequenceName != ""}
 			<div class="picture_details_sequence">
-				<img class="picture_details_sequence_image stage_animation_gif" src='{$controller->baseURL}file/id:{$element->sequence}/filename:{$element->sequenceName}' alt="{$element->title} phases" />
+				<img loading="lazy" class="picture_details_sequence_image stage_animation_gif" src='{$controller->baseURL}file/id:{$element->sequence}/filename:{$element->sequenceName}' alt="{$element->title} phases" />
 				<a class="picture_details_sequence_link" href="{$controller->baseURL}file/id:{$element->sequence}/filename:{$element->sequenceName}">{translations name="label.stages_download"}</a>
 			</div>
 		{/if}
 		{if $element->inspiredName != ""}
 			<div class="picture_details_inspired">
-				<img class="picture_details_inspired_image" src='{$controller->baseURL}image/type:inspiredImage/id:{$element->inspired}/filename:{$element->inspiredName}' alt="{$element->title} inspiration" />
+				<img loading="lazy" class="picture_details_inspired_image" src='{$controller->baseURL}image/type:inspiredImage/id:{$element->inspired}/filename:{$element->inspiredName}' alt="{$element->title} inspiration" />
 			</div>
 		{/if}
 		{if $element->inspired2Name != ""}
 			<div class="picture_details_inspired">
-				<img class="picture_details_inspired_image" src='{$controller->baseURL}image/type:inspired2Image/id:{$element->inspired2}/filename:{$element->inspired2Name}' alt="{$element->title} another inspiration" />
+				<img loading="lazy" class="picture_details_inspired_image" src='{$controller->baseURL}image/type:inspired2Image/id:{$element->inspired2}/filename:{$element->inspired2Name}' alt="{$element->title} another inspiration" />
 			</div>
 		{/if}
 	</div>

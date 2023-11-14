@@ -29,7 +29,7 @@ class zxScreenRendererPlugin extends rendererPlugin
         }
         $this->renderingEngine->setCachePath($this->getService('PathsManager')->getPath('zxCache'));
         $this->renderingEngine->setCacheEnabled(true);
-        $this->maxAge = 8 * 60 * 60 * 24;
+        $this->maxAge = 365 * 60 * 60 * 24;
         $this->setCacheControl('public');
         $this->preferredEncodings = ['identity'];
     }
@@ -83,6 +83,15 @@ class zxScreenRendererPlugin extends rendererPlugin
     {
         $exportHash = $this->renderingEngine->getHash();
         return $exportHash;
+    }
+
+    protected function getLastModified()
+    {
+        $imageFilePath = $this->renderingEngine->getCacheFileName();
+        if (file_exists($imageFilePath)) {
+            $this->lastModified = filemtime($imageFilePath);
+        }
+        return $this->lastModified;
     }
 
     protected function getContentLength()

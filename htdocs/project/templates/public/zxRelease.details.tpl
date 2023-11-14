@@ -126,6 +126,7 @@
                             <td class='info_table_value'>
                                 <a rel="nofollow"
                                    href="{$element->getFileUrl()}"><img
+                                            loading="lazy"
                                             src="{$theme->getImageUrl("disk.png")}"
                                             alt="{translations name='label.download'} {$element->getFileName('original', false)}"/> {$element->fileName|urldecode}
                                 </a>
@@ -200,7 +201,6 @@
                                href="{$element->URL}id:{$element->id}/action:moveScreenshots/">{translations name='zxrelease.move_screenshots'}</a>
                         {/if}
                     </div>
-
                     {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false}
                 {/if}
 

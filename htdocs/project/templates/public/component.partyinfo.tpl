@@ -1,5 +1,5 @@
 <div class="party_details_logo">
-	<img class="party_details_logo_image" src='{$element->getImageUrl('partyDetails')}' alt="{$element->title}" />
+	<img loading="lazy" class="party_details_logo_image" src='{$element->getImageUrl('partyDetails')}' alt="{$element->title}" />
 </div>
 <table class='party_details_info info_table'>
 	<tr>

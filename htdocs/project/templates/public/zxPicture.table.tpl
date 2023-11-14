@@ -4,11 +4,11 @@
 	</td>
 	<td class='pictures_list_image'>
 		<a href="{$picture->getUrl()}" class="pictures_list_image_link" onclick="return false;">
-			<img id='image_{$picture->id}' class='zxgallery_item{if $currentMode.mode != 'mix' && $element->isFlickering()} flicker_image{/if}' src='{$element->getImageUrl(1, false,false)}' alt='{$picture->title}'/>
+			<img loading="lazy" id='image_{$picture->id}' class='zxgallery_item{if $currentMode.mode != 'mix' && $element->isFlickering()} flicker_image{/if}' src='{$element->getImageUrl(1, false,false)}' alt='{$picture->title}'/>
 		</a>
 	</td>
 	<td class='pictures_list_title'>
-		<a class='' href='{$picture->getUrl()}'>{$picture->title} {if $picture->isRealtime()}{assign 'compoTitle' "compo_"|cat:$picture->compo}<img src="{$theme->getImageUrl("clock.png")}" title="{translations name="zxPicture.$compoTitle"}" />{/if}</a>
+		<a class='' href='{$picture->getUrl()}'>{$picture->title} {if $picture->isRealtime()}{assign 'compoTitle' "compo_"|cat:$picture->compo}<img loading="lazy" src="{$theme->getImageUrl("clock.png")}" title="{translations name="zxPicture.$compoTitle"}" />{/if}</a>
 	</td>
 	<td class='pictures_list_authors'>
 		{foreach from=$picture->getAuthorsList() item=author name=authors}
@@ -47,13 +47,13 @@
 	<td class='pictures_list_partyplace'>
 		{if $partyElement}
 			{if $picture->partyplace!='0'}{$picture->partyplace}{/if}
-			{if $picture->partyplace=='1'}<img src="{$theme->getImageUrl("gold_cup.png")}" alt='{translations name='label.firstplace'}'/>{/if}
-			{if $picture->partyplace=='2'}<img src="{$theme->getImageUrl("silver_cup.png")}" alt='{translations name='label.secondplace'}'/>{/if}
-			{if $picture->partyplace=='3'}<img src="{$theme->getImageUrl("bronze_cup.png")}" alt='{translations name='label.thirdplace'}'/>{/if}
+			{if $picture->partyplace=='1'}<img loading="lazy" src="{$theme->getImageUrl("gold_cup.png")}" alt='{translations name='label.firstplace'}'/>{/if}
+			{if $picture->partyplace=='2'}<img loading="lazy" src="{$theme->getImageUrl("silver_cup.png")}" alt='{translations name='label.secondplace'}'/>{/if}
+			{if $picture->partyplace=='3'}<img loading="lazy" src="{$theme->getImageUrl("bronze_cup.png")}" alt='{translations name='label.thirdplace'}'/>{/if}
 		{/if}
 	</td>
 	<td class='pictures_list_download'>
-		<a rel="nofollow" href="{$controller->baseURL}file/id:{$picture->id}/filename:{$picture->getFileName()}"><img src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'} {$picture->getFileName('original', false)}" /></a>
+		<a rel="nofollow" href="{$controller->baseURL}file/id:{$picture->id}/filename:{$picture->getFileName()}"><img loading="lazy" src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'} {$picture->getFileName('original', false)}" /></a>
 	</td>
 </tr>
 <script>

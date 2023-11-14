@@ -14,9 +14,9 @@
 		</span>
 		{if $element->getPartyElement()}
             <div class='zxprod_short_party'>
-				{if $element->partyplace=='1'}<img src="{$theme->getImageUrl("gold_cup.png")}" alt='{translations name='label.firstplace'}'/>{/if}
-				{if $element->partyplace=='2'}<img src="{$theme->getImageUrl("silver_cup.png")}" alt='{translations name='label.secondplace'}'/>{/if}
-				{if $element->partyplace=='3'}<img src="{$theme->getImageUrl("bronze_cup.png")}" alt='{translations name='label.thirdplace'}'/>{/if}
+				{if $element->partyplace=='1'}<img loading="lazy" src="{$theme->getImageUrl("gold_cup.png")}" alt='{translations name='label.firstplace'}'/>{/if}
+				{if $element->partyplace=='2'}<img loading="lazy" src="{$theme->getImageUrl("silver_cup.png")}" alt='{translations name='label.secondplace'}'/>{/if}
+				{if $element->partyplace=='3'}<img loading="lazy" src="{$theme->getImageUrl("bronze_cup.png")}" alt='{translations name='label.thirdplace'}'/>{/if}
                 <a href='{$element->getPartyElement()->URL}'>{$element->getPartyElement()->title}</a>{if $element->partyplace > 0}({$element->partyplace}){/if}
             </div>
 		{/if}

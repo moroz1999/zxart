@@ -12,3 +12,46 @@
   max-width: 50rem;
   color: #8a8a8a;
 }
+
+
+
+@media (min-width: @screen_breakpoint_md) {
+  .pressarticle-layout {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .pressarticle-layout-left {
+    flex-grow: 1;
+  }
+
+  .pressarticle-layout-right {
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    .zxitem_images {
+      flex-direction: column;
+    }
+  }
+}
+
+.pressarticle_content {
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.search_result_set_pressArticle {
+  .search_result_set_title {
+    margin-top: 2rem;
+  }
+
+  .search_result_set_items {
+    gap: 2rem;
+  }
+
+  .subcontentmodule_component {
+    flex-basis:  e('calc(50% - 1rem)');
+  }
+}

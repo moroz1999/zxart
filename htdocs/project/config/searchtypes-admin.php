@@ -1,5 +1,5 @@
 <?php return [
-    'search'   => [
+    'search' => [
         'author',
         'party',
         'zxPicture',
@@ -12,6 +12,7 @@
         'translation',
         'folder',
         'user',
+        'pressArticle'
     ],
     'linkListItem' => [
         'detailedSearch',

@@ -115,7 +115,7 @@
 
 		</td>
 		<td class='info_table_value'>
-			<a rel="nofollow" class='picture_details_download' href="{$controller->baseURL}file/id:{$element->id}/filename:{$element->getFileName()}"><img src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'} {$element->getFileName('original', false)}" />{translations name='field.originalfile'}</a>
+			<a rel="nofollow" class='picture_details_download' href="{$controller->baseURL}file/id:{$element->id}/filename:{$element->getFileName()}"><img loading="lazy" src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'} {$element->getFileName('original', false)}" />{translations name='field.originalfile'}</a>
 		</td>
 	</tr>
 	<tr>
@@ -123,7 +123,7 @@
 
 		</td>
 		<td class='info_table_value'>
-			<a rel="nofollow" class='picture_details_download' href="{$element->getImageUrl(1, true)}"><img src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'}" />{translations name='zxpicture.download_pc'}</a>
+			<a rel="nofollow" class='picture_details_download' href="{$element->getImageUrl(1, true)}"><img loading="lazy" src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'}" />{translations name='zxpicture.download_pc'}</a>
 			<a rel="nofollow" class='picture_details_download' href="{$element->getImageUrl(2, true)}">2X</a>
 			<a rel="nofollow" class='picture_details_download' href="{$element->getImageUrl(3, true)}">3X</a>
 			<a rel="nofollow" class='picture_details_download' href="{$element->getImageUrl(4, true)}">4X</a>
@@ -134,7 +134,7 @@
 
 		</td>
 		<td class='info_table_value'>
-			<a rel="nofollow" class='picture_details_download' href="{$controller->baseURL}print/id:{$element->image}/fileName:{$element->getFileName('image', true, true)}/"><img src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'}" />{translations name='zxpicture.download_print'}</a>
+			<a rel="nofollow" class='picture_details_download' href="{$controller->baseURL}print/id:{$element->image}/fileName:{$element->getFileName('image', true, true)}/"><img loading="lazy" src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'}" />{translations name='zxpicture.download_print'}</a>
 		</td>
 	</tr>
 	{/if}
@@ -144,7 +144,7 @@
 			{translations name='field.exefile'}:
 		</td>
 		<td class='info_table_value'>
-			<a rel="nofollow" class='picture_details_download' href="{$controller->baseURL}file/id:{$element->exeFile}/filename:{$element->getFileName('exe')}"><img src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'} {$element->getFileName('original', false)}" />{$element->getFileName('exe', false, false)}</a>
+			<a rel="nofollow" class='picture_details_download' href="{$controller->baseURL}file/id:{$element->exeFile}/filename:{$element->getFileName('exe')}"><img loading="lazy" src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'} {$element->getFileName('original', false)}" />{$element->getFileName('exe', false, false)}</a>
 		</td>
 	</tr>
 	{/if}

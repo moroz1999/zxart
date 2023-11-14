@@ -1,6 +1,7 @@
 <?php return [
     'adminAllowed' => [
-        'zxProdCategory'
+        'zxProdCategory',
+        'prodArticle'
     ],
     'publicAllowed' => [
         'authorsCatalogue',

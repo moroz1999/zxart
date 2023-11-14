@@ -63,7 +63,8 @@ class pressArticleElement extends structureElement implements SearchContentHolde
 
     public function getSearchTitle(): string
     {
-        return $this->title;
+        $prod = $this->getFirstParentElement();
+        return $prod->title . ' / ' . $this->title;
     }
 
     public function getSearchContent(): string
@@ -139,7 +140,7 @@ class pressArticleElement extends structureElement implements SearchContentHolde
             $metaData = $this->getMetaData();
             return $metaData['metaDescription'];
         }
-        return mb_substr($this->content, 0, 180);
+        return mb_substr(strip_tags($this->content), 0, 180);
     }
 
     public function getGeneratedDescription()

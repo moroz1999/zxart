@@ -3,7 +3,7 @@
 class ZxPressManager extends errorLogger
 {
     protected int $counter = 0;
-    protected int $maxCounter = 1;
+    protected int $maxCounter = 10000;
     protected ProdsManager $prodsManager;
     protected string $origin = 'zxp';
     protected string $rootUrl = 'https://zxpress.ru/';
@@ -17,22 +17,11 @@ class ZxPressManager extends errorLogger
     public function setProdsManager(ProdsManager $prodsManager)
     {
         $this->prodsManager = $prodsManager;
+        $this->prodsManager->setMatchProdsWithoutYear(true);
+        $this->prodsManager->setUpdateExistingProds(true);
     }
 
     public function importAll()
-    {
-        $this->parsePress();
-        $this->import();
-    }
-
-    private function import()
-    {
-        $this->parsePress();
-        $this->prodsManager->setMatchProdsWithoutYear(true);
-//        $this->importProdsIndex($this->prodsIndex);
-    }
-
-    private function parsePress()
     {
         $pageUrl = $this->rootUrl . 'ezines.php';
         if ($html = $this->loadHtml($pageUrl)) {
@@ -42,8 +31,8 @@ class ZxPressManager extends errorLogger
                 $aNodes = $xPath->query(".//td[@class='catalog']/a", $trNode);
                 if ($aNodes->length) {
                     $aNode = $aNodes->item(0);
-                    $this->parseIssuesPage($aNode->getAttribute('href'));
-                    break;
+                    $issuesPageUrl = $aNode->getAttribute('href');
+                    $this->parseIssuesPage($issuesPageUrl);
                 }
             }
         }
@@ -51,11 +40,11 @@ class ZxPressManager extends errorLogger
 
     private function parseIssuesPage($pageUrl)
     {
+        $this->prodsIndex = [];
         if ($html = $this->loadHtml($pageUrl)) {
             $xPath = new DOMXPath($html);
             $divNodes = $xPath->query("//div[@style='padding-top: 6px']");
 
-            $prodInfo = false;
             $prodTitle = '';
             $prodYear = '';
             $prodId = '';
@@ -68,7 +57,7 @@ class ZxPressManager extends errorLogger
                         if ($aNodes->length > 0) {
                             $aNode = $aNodes->item(0);
                             $articleUrl = $aNode->getAttribute('href');
-                            parse_str(parse_url($articleUrl, PHP_URL_QUERY), $result);
+                            parse_str(parse_url($pageUrl, PHP_URL_QUERY), $result);
                             $fragment = parse_url($articleUrl, PHP_URL_FRAGMENT);
                             $prodId = trim($result['id']) . '#' . $fragment;
                             $prodTitle = $this->sanitize($aNode->textContent);
@@ -92,11 +81,14 @@ class ZxPressManager extends errorLogger
                                 'year' => $prodYear,
                                 'articles' => [],
                             ];
-
-                            $prodInfo = &$this->prodsIndex[$prodId];
                         }
                     }
-                    if ($prodInfo && $subDivNode->getAttribute('style') === 'font: 13pt/14pt Times; text-align: left') {
+                    if (!empty($this->prodsIndex[$prodId]) && $subDivNode->getAttribute('style') === 'font: 13pt/14pt Times; text-align: left') {
+                        $prodElement = $this->prodsManager->getElementByImportId($prodId, $this->origin, 'prod');
+                        if ($prodElement && $prodElement->articles) {
+                            continue;
+                        }
+
                         $aNodes = $xPath->query(".//a", $subDivNode);
                         if ($aNodes->length) {
                             $aNode = $aNodes->item(0);
@@ -117,8 +109,8 @@ class ZxPressManager extends errorLogger
                             }
                             if ($articleUrl && $articleTitle) {
                                 if ($articleContent = $this->parseArticleContent($articleUrl)) {
-                                    $prodInfo['articles'][] = [
-                                        'url' => $articleUrl,
+                                    $this->prodsIndex[$prodId]['articles'][] = [
+                                        'externalLink' => $articleUrl,
                                         'title' => $articleTitle,
                                         'introduction' => $articleIntroduction,
                                         'content' => $articleContent,
@@ -129,8 +121,8 @@ class ZxPressManager extends errorLogger
                     }
                 }
             }
-
         }
+        $this->importProdsIndex($this->prodsIndex);
     }
 
     private function parseArticleContent($pageUrl)
@@ -145,8 +137,45 @@ class ZxPressManager extends errorLogger
                     $innerHTML .= $html->saveHTML($child);
                 }
             }
+            $innerHTML = $this->copyImagesAndUpdateHtml($innerHTML);
         }
         return $innerHTML;
+    }
+
+    private function copyImagesAndUpdateHtml($html)
+    {
+        $sourceDomain = $this->rootUrl;
+        $destinationUrl = '/userfiles/images';
+        $destinationPath = ROOT_PATH . $destinationUrl;
+        $pattern = '/<img.*?src="([^"]+)"/i';
+        $newHtml = $html;
+
+        if (preg_match_all($pattern, $html, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $match) {
+                $imageUrl = $match[1];
+
+                if (!filter_var($imageUrl, FILTER_VALIDATE_URL)) {
+                    $absoluteUrl = rtrim($sourceDomain, '/') . '/' . ltrim($imageUrl, '/');
+                    $imagePathInfo = pathinfo($imageUrl);
+
+                    $destinationDir = rtrim($destinationPath, '/') . '/' . ltrim($imagePathInfo['dirname'], '/');
+                    if (!is_dir($destinationDir)) {
+                        mkdir($destinationDir, 0755, true);
+                    }
+
+                    $destinationFilePath = $destinationDir . '/' . $imagePathInfo['basename'];
+
+                    if (!file_exists($destinationFilePath)) {
+                        file_put_contents($destinationFilePath, file_get_contents($absoluteUrl));
+                    }
+
+                    $relativeNewImagePath = rtrim($destinationUrl, '/') . '/' . ltrim($imageUrl, '/');
+                    $newHtml = str_replace($match[0], str_replace($imageUrl, $relativeNewImagePath, $match[0]), $newHtml);
+                }
+            }
+        }
+
+        return $newHtml;
     }
 
     private function sanitize($value)

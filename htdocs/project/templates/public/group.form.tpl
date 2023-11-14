@@ -61,7 +61,7 @@
             </td>
             <td class="form_field">
                 {if $element->originalName != ""}
-                    <img src='{$controller->baseURL}image/type:adminImage/id:{$element->image}/filename:{$element->originalName}'/>
+                    <img loading="lazy" src='{$controller->baseURL}image/type:adminImage/id:{$element->image}/filename:{$element->originalName}'/>
                     <br/>
                     <a href="{$element->URL}id:{$element->id}/action:deleteFile/file:image/">{translations name='label.deleteimage'}</a>
                 {else}

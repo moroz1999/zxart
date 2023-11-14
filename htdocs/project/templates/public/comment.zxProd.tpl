@@ -1,7 +1,7 @@
 {capture assign="moduleContent"}
 	{assign "prodElement" $element->getInitialTarget()}
 	<div class="comment_image">
-		<img src='{$prodElement->getImageUrl()}' alt='{$prodElement->title}'/>
+		<img loading="lazy" src='{$prodElement->getImageUrl()}' alt='{$prodElement->title}'/>
 	</div>
 	{assign "user" $element->getUser()}
 	{if $user}

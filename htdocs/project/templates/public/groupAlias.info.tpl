@@ -1,9 +1,9 @@
 {if $groupElement = $element->getGroupElement()}
 	<div class="group_details_photo">
 		{if $groupElement->originalName != ""}
-			<img class="group_details_photo_image" src='{$controller->baseURL}image/type:groupPhoto/id:{$groupElement->image}/filename:{$groupElement->originalName}' alt="{$groupElement->title}" />
+			<img loading="lazy" class="group_details_photo_image" src='{$controller->baseURL}image/type:groupPhoto/id:{$groupElement->image}/filename:{$groupElement->originalName}' alt="{$groupElement->title}" />
 		{else}
-			<img class="group_details_photo_image" src='{$theme->getImageUrl('group.svg')}' alt="" />
+			<img loading="lazy" class="group_details_photo_image" src='{$theme->getImageUrl('group.svg')}' alt="" />
 		{/if}
 	</div>
 	<table class='group_details_info info_table'>

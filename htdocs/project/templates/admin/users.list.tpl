@@ -59,7 +59,7 @@
                 {if method_exists ($contentItem, 'getImageUrl')}
                     <td class='image_column'>
                         {if $contentItem->image}
-                            <img src='{$contentItem->getImageUrl()}' alt=" "/>
+                            <img loading="lazy" src='{$contentItem->getImageUrl()}' alt=" "/>
                         {/if}
                     </td>
                 {/if}

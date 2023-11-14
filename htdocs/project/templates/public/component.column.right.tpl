@@ -26,7 +26,7 @@
 	{/foreach}
 	{if isset($commentsElement) && $commentsElement}
 	    <a class="lastcomments_allcomments" href="{$commentsElement->getParentUrl()}">
-	        <img src="{$theme->getImageUrl("icon_comment.png")}" alt="{translations name='label.allcomments'}"/>{translations name='label.allcomments'}
+	        <img loading="lazy" src="{$theme->getImageUrl("icon_comment.png")}" alt="{translations name='label.allcomments'}"/>{translations name='label.allcomments'}
 	    </a>
 	{/if}
 </div>

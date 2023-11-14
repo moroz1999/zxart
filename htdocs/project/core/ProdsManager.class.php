@@ -7,6 +7,7 @@ class ProdsManager extends ElementsManager
     use ReleaseFormatsProvider;
     use ReleaseFileTypesGatherer;
 
+    protected $defaultCategoryId = 92188;
     protected $forceUpdateYear = false;
     protected $forceUpdateYoutube = false;
     protected $forceUpdateExternalLink = false;
@@ -351,6 +352,9 @@ class ProdsManager extends ElementsManager
         if (!empty($prodInfo['directCategories'])) {
             $category = reset($prodInfo['directCategories']);
         }
+        if (!$category) {
+            $category = $this->defaultCategoryId;
+        }
         /**
          * @var zxProdElement $element
          */
@@ -414,7 +418,7 @@ class ProdsManager extends ElementsManager
             $changed = true;
             $element->legalStatus = $prodInfo['legalStatus'];
         }
-        if (!empty($prodInfo['year']) && (($element->year != $prodInfo['year']) && ($this->forceUpdateYear || $justCreated))) {
+        if (!empty($prodInfo['year']) && (($element->year != $prodInfo['year']) && (!$element->year || $this->forceUpdateYear || $justCreated))) {
             $changed = true;
             $element->year = $prodInfo['year'];
         }
@@ -526,8 +530,7 @@ class ProdsManager extends ElementsManager
                 foreach ($prodInfo['compilationItems'] as $importItemId) {
                     if ($prodId = $this->getElementIdByImportId($importItemId, $origin, 'prod')) {
                         $this->linksManager->linkElements($element->id, $prodId, 'compilation');
-                    }
-                    elseif ($releaseId = $this->getElementIdByImportId($importItemId, $origin, 'release')) {
+                    } elseif ($releaseId = $this->getElementIdByImportId($importItemId, $origin, 'release')) {
                         $this->linksManager->linkElements($element->id, $releaseId, 'compilation');
                     }
                 }
@@ -539,6 +542,29 @@ class ProdsManager extends ElementsManager
                 foreach ($prodInfo['seriesProds'] as $importItemId) {
                     if ($prodId = $this->getElementIdByImportId($importItemId, $origin, 'prod')) {
                         $this->linksManager->linkElements($element->id, $prodId, 'series');
+                    }
+                }
+            }
+        }
+        if (!empty($prodInfo['articles'])) {
+            if (!$element->articles) {
+                foreach ($prodInfo['articles'] as $articleData) {
+                    /**
+                     * @var pressArticleElement $articleElement
+                     */
+                    if ($articleElement = $this->structureManager->createElement(
+                        'pressArticle',
+                        'showForm',
+                        $element->getId(),
+                        false,
+                        'prodArticle'
+                    )) {
+                        $articleElement->title = $articleData['title'];
+                        $articleElement->structureName = $articleElement->title;
+                        $articleElement->introduction = $articleData['introduction'];
+                        $articleElement->externalLink = $articleData['externalLink'];
+                        $articleElement->content = $articleData['content'];
+                        $articleElement->persistElementData();
                     }
                 }
             }
@@ -683,9 +709,11 @@ class ProdsManager extends ElementsManager
      */
     protected function getProdByReleaseMd5($prodInfo)
     {
-        foreach ($prodInfo['releases'] as $releaseInfo) {
-            if ($releaseElement = $this->getReleaseByMd5($releaseInfo)) {
-                return $releaseElement->getProd();
+        if (!empty($prodInfo['releases'])) {
+            foreach ($prodInfo['releases'] as $releaseInfo) {
+                if ($releaseElement = $this->getReleaseByMd5($releaseInfo)) {
+                    return $releaseElement->getProd();
+                }
             }
         }
         return false;
@@ -693,7 +721,22 @@ class ProdsManager extends ElementsManager
 
     protected function findProdBestMatch($prodInfo)
     {
-        if (!empty($prodInfo['year']) || $this->matchProdsWithoutYear) {
+        $element = false;
+        $query = $this->db->table('module_zxprod')
+            ->where(
+                function ($query) use ($prodInfo) {
+                    $query->orWhere('title', '=', htmlentities($prodInfo['title'], ENT_QUOTES));
+                    $query->orWhere('title', '=', $prodInfo['title']);
+                }
+            );
+        if (!empty($prodInfo['year'])) {
+            $query->where('year', '=', $prodInfo['year']);
+            if ($id = $query->value('id')) {
+                $element = $this->structureManager->getElementById($id);
+            }
+        }
+
+        if (!$element && $this->matchProdsWithoutYear) {
             $query = $this->db->table('module_zxprod')
                 ->where(
                     function ($query) use ($prodInfo) {
@@ -701,14 +744,12 @@ class ProdsManager extends ElementsManager
                         $query->orWhere('title', '=', $prodInfo['title']);
                     }
                 );
-            if (!empty($prodInfo['year'])) {
-                $query->where('year', '=', $prodInfo['year']);
-            }
             if ($id = $query->value('id')) {
-                return $this->structureManager->getElementById($id);
+                $element = $this->structureManager->getElementById($id);
             }
         }
-        return false;
+
+        return $element;
     }
 
     /**

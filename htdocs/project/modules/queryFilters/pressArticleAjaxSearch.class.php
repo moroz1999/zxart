@@ -9,6 +9,6 @@ class pressArticleAjaxSearchQueryFilter extends ajaxSearchQueryFilter
 
     protected function getTitleFieldNames()
     {
-        return ['title', 'introduction', 'content'];
+        return ['title', 'introduction'];
     }
 }

@@ -169,7 +169,7 @@
 			</td>
 			<td class="form_field">
 				{if $element->sequenceName != ""}
-					<img src='{$controller->baseURL}file/id:{$element->sequence}/filename:{$element->sequenceName}' />
+					<img loading="lazy" src='{$controller->baseURL}file/id:{$element->sequence}/filename:{$element->sequenceName}' />
 					<a href="{$element->URL}id:{$element->id}/file:sequence/action:deleteFile/" class="form_deletefile" >{translations name='zxpicture.deletefile'} {$element->sequenceName}</a>
 				{else}
 					<input class="fileinput_placeholder" type="file" name="{$formNames.sequence}" />
@@ -183,7 +183,7 @@
 			</td>
 			<td class="form_field">
 				{if $element->inspiredName != ""}
-					<img src='{$controller->baseURL}image/type:adminImage/id:{$element->inspired}/filename:{$element->inspiredName}' />
+					<img loading="lazy" src='{$controller->baseURL}image/type:adminImage/id:{$element->inspired}/filename:{$element->inspiredName}' />
 					<a href="{$element->URL}id:{$element->id}/file:inspired/action:deleteFile/" class="form_deletefile">{translations name='zxpicture.deletefile'} {$element->inspiredName}</a>
 				{else}
 					<input class="fileinput_placeholder" type="file" name="{$formNames.inspired}" />
@@ -197,7 +197,7 @@
 			</td>
 			<td class="form_field">
 				{if $element->inspired2Name != ""}
-					<img src='{$controller->baseURL}image/type:adminImage/id:{$element->inspired2}/filename:{$element->inspired2Name}' />
+					<img loading="lazy" src='{$controller->baseURL}image/type:adminImage/id:{$element->inspired2}/filename:{$element->inspired2Name}' />
 					<a href="{$element->URL}id:{$element->id}/file:inspired2/action:deleteFile/" class="form_deletefile">{translations name='zxpicture.deletefile'} {$element->inspired2Name}</a>
 				{else}
 					<input class="fileinput_placeholder" type="file" name="{$formNames.inspired2}" />
@@ -265,7 +265,7 @@
 			</td>
 			<td class="form_field">
 				{if $element->originalName != ""}
-					<img src='{$element->getImageUrl()}' />
+					<img loading="lazy" src='{$element->getImageUrl()}' />
 						<a href="{$element->URL}id:{$element->id}/file:image/action:deleteFile/" class="form_deletefile">{translations name='zxpicture.deletefile'} {$element->originalName}</a>
 				{/if}
 				<div>

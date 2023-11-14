@@ -2,7 +2,7 @@
 <tr class="zxrelease">
 	<td class='zxrelease_table_title'>
 		<a class='' href='{$element->getUrl()}'>{$element->getTitle()} {if $element->isRealtime()}{assign 'compoTitle' "compo_"|cat:$element->compo}
-				<img src="{$theme->getImageUrl("clock.png")}" title="{translations name="zxPicture.$compoTitle"}" />{/if}
+				<img loading="lazy" src="{$theme->getImageUrl("clock.png")}" title="{translations name="zxPicture.$compoTitle"}" />{/if}
 		</a>
 	</td>
 	<td class='zxrelease_table_year'>
@@ -23,11 +23,11 @@
 		{if $partyElement}
 			{if $element->partyplace!='0'}{$element->partyplace}{/if}
 			{if $element->partyplace=='1'}
-				<img src="{$theme->getImageUrl("gold_cup.png")}" alt='{translations name='label.firstplace'}'/>{/if}
+				<img loading="lazy" src="{$theme->getImageUrl("gold_cup.png")}" alt='{translations name='label.firstplace'}'/>{/if}
 			{if $element->partyplace=='2'}
-				<img src="{$theme->getImageUrl("silver_cup.png")}" alt='{translations name='label.secondplace'}'/>{/if}
+				<img loading="lazy" src="{$theme->getImageUrl("silver_cup.png")}" alt='{translations name='label.secondplace'}'/>{/if}
 			{if $element->partyplace=='3'}
-				<img src="{$theme->getImageUrl("bronze_cup.png")}" alt='{translations name='label.thirdplace'}'/>{/if}
+				<img loading="lazy" src="{$theme->getImageUrl("bronze_cup.png")}" alt='{translations name='label.thirdplace'}'/>{/if}
 		{/if}
 	</td>
 	<td class='zxrelease_table_language'>
@@ -58,7 +58,7 @@
 	<td class='zxrelease_table_download'>
 		{if $element->isDownloadable()}
 			{if $element->fileName}
-				<a rel="nofollow" href="{$element->getFileUrl()}"><img src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'} {$element->getFileName('original', false)}" /></a>
+				<a rel="nofollow" href="{$element->getFileUrl()}"><img loading="lazy" src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'} {$element->getFileName('original', false)}" /></a>
 			{/if}
 		{elseif $prod->externalLink}
 			<a class="button" href="{$prod->externalLink}"

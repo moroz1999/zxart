@@ -20,6 +20,7 @@
  * @property zxProdElement[] $seriesProds
  * @property zxProdElement[] $compilations
  * @property zxProdElement[] $series
+ * @property pressArticleElement[] $articles
  * @property float $votes
  * @property int $partyplace
  * @property int $denyVoting

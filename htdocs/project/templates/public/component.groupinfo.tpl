@@ -1,8 +1,8 @@
 <div class="group_details_photo">
 	{if $element->originalName != ""}
-		<img class="group_details_photo_image" src='{$controller->baseURL}image/type:groupImage/id:{$element->image}/filename:{$element->originalName}' alt="{$element->title}" />
+		<img loading="lazy" class="group_details_photo_image" src='{$controller->baseURL}image/type:groupImage/id:{$element->image}/filename:{$element->originalName}' alt="{$element->title}" />
 	{else}
-		<img class="group_details_photo_image" src='{$theme->getImageUrl('group.svg')}' alt="" />
+		<img loading="lazy" class="group_details_photo_image" src='{$theme->getImageUrl('group.svg')}' alt="" />
 	{/if}
 </div>
 <table class='group_details_info info_table'>

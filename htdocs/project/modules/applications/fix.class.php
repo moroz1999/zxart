@@ -37,6 +37,8 @@ class fixApplication extends controllerApplication
             $languagesManager = $this->getService('LanguagesManager');
             $languagesManager->setCurrentLanguageCode('eng');
 //            $this->deleteProds();
+//            $this->fixPress();
+//            $this->deletePress();
 //            $this->fixProds();
 //            $this->fixZxChip();
 //            $this->fixWlodek();
@@ -62,7 +64,7 @@ class fixApplication extends controllerApplication
         foreach ($ids as $id) {
 
             $prod = $this->structureManager->getElementById($id);
-            echo $counter . ' ' . round(100* $counter / $count) . '% ';
+            echo $counter . ' ' . round(100 * $counter / $count) . '% ';
             if (!$prod) {
                 $linksManager->linkElements(418662, $id, 'zxProdCategory');
                 echo 'fixed' . $id . '<br>';
@@ -73,6 +75,84 @@ class fixApplication extends controllerApplication
             flush();
         }
     }
+
+    private function fixPress()
+    {
+        $prodsManager = $this->getService('ProdsManager');
+
+        /**
+         * @var \Illuminate\Database\Connection $db
+         */
+        $db = $this->getService('db');
+        /**
+         * @var linksManager $linksManager
+         */
+        $result = $db->table('module_zxprod')
+            ->where('title', 'like', 'Erotic #%')
+            ->orderBy('id')
+            ->get(['id']);
+        $ids = array_column($result, 'id');
+        $count = count($ids);
+        $counter = 0;
+        foreach ($ids as $id) {
+            $prod = $this->structureManager->getElementById($id);
+            if (!$prod) {
+                echo 'failed ' . $id;
+            }
+            $split = explode('#', $prod->title);
+
+            $result = $db->table('module_zxprod')
+                ->where('title', 'like', 'Erotic ' . $split[1])
+                ->orWhere('title', 'like', 'Erotic ' . (int)$split[1])
+                ->orderBy('id')
+                ->first(['id']);
+
+            $prod2 = $this->structureManager->getElementById($result['id']);
+            if ($prod2) {
+                $prod2->title = $prod->title;
+
+                $prodsManager->joinDeleteZxProd($prod2->id, $prod->id, false);
+            }
+
+            echo $counter . ' ' . round(100 * $counter / $count) . '% ';
+            if ($prod) {
+                echo 'fixed' . $prod->title . ' ' . $prod2->title . '<br>';
+            }
+            $counter++;
+            flush();
+        }
+    }
+
+
+    private function deletePress()
+    {
+        /**
+         * @var \Illuminate\Database\Connection $db
+         */
+        $db = $this->getService('db');
+        /**
+         * @var linksManager $linksManager
+         */
+        $linksManager = $this->getService(linksManager::class);
+        $result = $db->table('module_pressarticle')
+            ->orderBy('id')
+            ->get(['id']);
+        $ids = array_column($result, 'id');
+        $count = count($ids);
+        $counter = 0;
+        foreach ($ids as $id) {
+
+            $prod = $this->structureManager->getElementById($id);
+            echo $counter . ' ' . round(100 * $counter / $count) . '% ';
+            if ($prod) {
+                $prod->deleteElementData();
+                echo 'deleted' . $id . '<br>';
+            }
+            $counter++;
+            flush();
+        }
+    }
+
     private function deleteProds()
     {
         /**
@@ -84,8 +164,7 @@ class fixApplication extends controllerApplication
          */
         $linksManager = $this->getService(linksManager::class);
         $result = $db->table('module_zxprod')
-            ->where('id', '>=', 449890)
-            ->where('id', '<', 451065)
+            ->where('id', '>=', 453563)
             ->orderBy('id')
             ->get(['id']);
         $ids = array_column($result, 'id');
@@ -94,7 +173,7 @@ class fixApplication extends controllerApplication
         foreach ($ids as $id) {
 
             $prod = $this->structureManager->getElementById($id);
-            echo $counter . ' ' . round(100* $counter / $count) . '% ';
+            echo $counter . ' ' . round(100 * $counter / $count) . '% ';
             if ($prod) {
                 $prod->deleteElementData();
                 echo 'deleted' . $id . '<br>';

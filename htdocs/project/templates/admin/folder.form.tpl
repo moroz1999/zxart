@@ -64,7 +64,7 @@
 				</td>
 				<td>
 				{if $element->originalName != ""}
-					<img class="form_image" src='{$controller->baseURL}image/type:adminImage/id:{$element->image}/filename:{$element->originalName}' />
+					<img class="form_image" loading="lazy" src='{$controller->baseURL}image/type:adminImage/id:{$element->image}/filename:{$element->originalName}' />
 					<a href="{$element->URL}id:{$element->id}/action:deleteFile/file:image/">{translations name='label.deleteimage'}</a>
 					{else}
 					<input type="file" class="fileinput_placeholder" name="{$formNames.image}" />

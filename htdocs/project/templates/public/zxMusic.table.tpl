@@ -8,7 +8,7 @@
 		{/if}
 	</td>
 	<td class='music_list_title'>
-		<a class='music_list_title_link' href='{$element->getUrl()}'>{$element->getTitle()} {if $element->isRealtime()}{assign 'compoTitle' "compo_"|cat:$element->compo}<img src="{$theme->getImageUrl("clock.png")}" title="{translations name="musiccompo.$compoTitle"}" />{/if}</a>
+		<a class='music_list_title_link' href='{$element->getUrl()}'>{$element->getTitle()} {if $element->isRealtime()}{assign 'compoTitle' "compo_"|cat:$element->compo}<img loading="lazy" src="{$theme->getImageUrl("clock.png")}" title="{translations name="musiccompo.$compoTitle"}" />{/if}</a>
 	</td>
 	{if $showAuthors}
 	<td class='music_list_authors'>
@@ -54,15 +54,15 @@
 	<td class='music_list_compo'>
 		{if $partyElement}
 			{if $element->partyplace != 0}{$element->partyplace} {/if}
-			{if $element->partyplace=='1'}<img src="{$theme->getImageUrl("gold_cup.png")}" alt='{translations name='label.firstplace'}'/>{/if}
-			{if $element->partyplace=='2'}<img src="{$theme->getImageUrl("silver_cup.png")}" alt='{translations name='label.secondplace'}'/>{/if}
-			{if $element->partyplace=='3'}<img src="{$theme->getImageUrl("bronze_cup.png")}" alt='{translations name='label.thirdplace'}'/>{/if}
+			{if $element->partyplace=='1'}<img loading="lazy" src="{$theme->getImageUrl("gold_cup.png")}" alt='{translations name='label.firstplace'}'/>{/if}
+			{if $element->partyplace=='2'}<img loading="lazy" src="{$theme->getImageUrl("silver_cup.png")}" alt='{translations name='label.secondplace'}'/>{/if}
+			{if $element->partyplace=='3'}<img loading="lazy" src="{$theme->getImageUrl("bronze_cup.png")}" alt='{translations name='label.thirdplace'}'/>{/if}
 		{/if}
 	</td>
 	<td class='music_list_download'>
-		{if $element->getFileName('original')}<a rel="nofollow" href="{$controller->baseURL}file/id:{$element->file}/filename:{$element->getFileName('original')}"><img class="music_list_original" src="{$theme->getImageUrl("music.png")}" alt="{translations name='label.download'} {$element->getFileName('original', false)}" /> </a>{/if}
-		{if $element->getFileName('tracker')}<a rel="nofollow" href="{$controller->baseURL}file/id:{$element->trackerFile}/filename:{$element->getFileName('tracker')}"><img class="music_list_tracker" src="{$theme->getImageUrl("tracker.png")}" alt="{translations name='label.download'} {$element->getFileName('tracker', false)}" /> </a>{/if}
-		{if $element->getMp3FilePath()}<a rel="nofollow" href="{$element->getMp3FilePath()}"><img class="music_list_mp3" src="{$theme->getImageUrl("mp3.png")}" alt="{translations name='label.download'} {$element->getFileName('mp3', false)}" /> </a>{/if}
+		{if $element->getFileName('original')}<a rel="nofollow" href="{$controller->baseURL}file/id:{$element->file}/filename:{$element->getFileName('original')}"><img loading="lazy" class="music_list_original" src="{$theme->getImageUrl("music.png")}" alt="{translations name='label.download'} {$element->getFileName('original', false)}" /> </a>{/if}
+		{if $element->getFileName('tracker')}<a rel="nofollow" href="{$controller->baseURL}file/id:{$element->trackerFile}/filename:{$element->getFileName('tracker')}"><img loading="lazy" class="music_list_tracker" src="{$theme->getImageUrl("tracker.png")}" alt="{translations name='label.download'} {$element->getFileName('tracker', false)}" /> </a>{/if}
+		{if $element->getMp3FilePath()}<a rel="nofollow" href="{$element->getMp3FilePath()}"><img loading="lazy" class="music_list_mp3" src="{$theme->getImageUrl("mp3.png")}" alt="{translations name='label.download'} {$element->getFileName('mp3', false)}" /> </a>{/if}
 	</td>
 </tr>
 <script>

@@ -1,6 +1,6 @@
 {capture assign="moduleContent"}
 	<a href="{$element->getUrl()}">
-		<img class="party_short_image" src="{$element->getImageUrl('partyShort')}"/>
+		<img loading="lazy" class="party_short_image" src="{$element->getImageUrl('partyShort')}"/>
 	</a>
 {/capture}
 {assign moduleClass "party_short"}

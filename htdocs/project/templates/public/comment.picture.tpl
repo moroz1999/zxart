@@ -1,7 +1,7 @@
 {capture assign="moduleContent"}
 	{assign "pictureElement" $element->getInitialTarget()}
 	<div class="comment_image">
-		<img id='image_{$pictureElement->id}' class='zxgallery_item {if $currentMode.mode != 'mix' && $pictureElement->isFlickering()} flicker_image{/if}' src='{$pictureElement->getImageUrl()}' alt='{$pictureElement->title}'/>
+		<img loading="lazy" id='image_{$pictureElement->id}' class='zxgallery_item {if $currentMode.mode != 'mix' && $pictureElement->isFlickering()} flicker_image{/if}' src='{$pictureElement->getImageUrl()}' alt='{$pictureElement->title}'/>
 	</div>
 	{assign "user" $element->getUser()}
 	{if $user}
