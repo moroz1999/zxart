@@ -7,7 +7,6 @@ class PouetManager extends errorLogger
     protected $maxCounter = 1000;
     protected $maxId = 0;
     protected $debugEntry;
-    protected $report = [];
     protected $ignore = [];
     protected $counter = 0;
     /**
@@ -48,7 +47,9 @@ class PouetManager extends errorLogger
         'bbstro' => 364978,
     ];
     protected $platforms = [
+        'ZX Spectrum' => 'zx48',
         'SAM Coupé' => 'samcoupe',
+        'ZX Enhanced' => '',
         'ZX-81' => 'zx811',
     ];
     protected $roles = [
@@ -169,6 +170,7 @@ class PouetManager extends errorLogger
         'fx' => 'sfx',
         'sfx' => 'sfx',
         'noise' => 'sfx',
+        'samples' => 'sfx',
         'other (fonts)' => 'font',
         'fonts' => 'font',
         'font' => 'font',
@@ -245,6 +247,7 @@ class PouetManager extends errorLogger
         'oldskool 128b' => 'intro128',
         'oldskool 256b intro' => 'intro256',
         'oldskool 256b' => 'intro256',
+        'pc 256b' => 'intro256',
         'combined 128b' => 'intro128',
         'oldskool 32b' => 'intro32',
         'combined 32b' => 'intro32',
@@ -514,7 +517,7 @@ class PouetManager extends errorLogger
                         $releaseInfo['fileUrl'] = $url;
                     }
                     foreach ($prodData['platforms'] as $platform) {
-                        if (isset($this->platforms[$platform['name']])) {
+                        if (!empty($this->platforms[$platform['name']])) {
                             $releaseInfo['hardwareRequired'][] = $this->platforms[$platform['name']];
                         }
                     }

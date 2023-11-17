@@ -316,11 +316,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
                 switch ($fileType) {
                     case 'plain_text':
                     case 'asm_text':
-                        $encoding = mb_detect_encoding($content, 'UTF-8, ISO-8859-1, IBM866, KOI8-R, Windows-1251, Windows-1252', true);
-
-                        if ($encoding !== 'UTF-8') {
-                            $content = mb_convert_encoding($content, 'UTF-8', $encoding);
-                        }
+                        $content = EncodingDetector::decodeText($content);
 
                         return htmlspecialchars($content);
                     case 'pc_image':
@@ -373,20 +369,11 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
             $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
         }
         if (in_array($extension, self::$textExtensions)) {
-            $encoding = mb_detect_encoding($content, 'UTF-8, ISO-8859-1, IBM866, KOI8-R, Windows-1251, Windows-1252', true);
-
-            if ($encoding === false) {
+            $content = EncodingDetector::decodeText($content);
+            if (!$content) {
                 return 'binary';
             }
-
-            if ($encoding !== 'UTF-8') {
-                $content = mb_convert_encoding($content, 'UTF-8', $encoding);
-            }
-
-            if ($this->isMostlyPrintable($content)) {
-                return 'plain_text';
-            }
-            return 'binary';
+            return 'plain_text';
         } elseif (in_array($extension, self::$asmExtensions)) {
             return 'asm_text';
         } elseif ($extension == 'jpg' || $extension == 'png' || $extension == 'bmp') {
@@ -404,24 +391,6 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         } else {
             return 'binary';
         }
-    }
-
-    private function isMostlyPrintable($str)
-    {
-        $length = min(mb_strlen($str), 100);
-        if (!$length) {
-            return false;
-        }
-        $nonPrintable = 0;
-
-        for ($i = 0; $i < $length; $i++) {
-            $char = mb_substr($str, $i, 1);
-            if (!preg_match("/[[:print:]\p{Cyrillic}\s\n\r]/u", $char)) {
-                $nonPrintable++;
-            }
-        }
-
-        return ($nonPrintable / $length) < 0.1;
     }
 
     public function getCurrentReleaseFile()

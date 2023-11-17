@@ -4,24 +4,6 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
 {
     protected $defaultPreset = 'api';
 
-    private function isMostlyPrintable($str)
-    {
-        $length = min(mb_strlen($str), 100);
-        if (!$length) {
-            return false;
-        }
-        $nonPrintable = 0;
-
-        for ($i = 0; $i < $length; $i++) {
-            $char = mb_substr($str, $i, 1);
-            if (!preg_match("/[[:print:]\p{Cyrillic}\s]/u", $char)) {
-                $nonPrintable++;
-            }
-        }
-
-        return ($nonPrintable / $length) < 0.1;
-    }
-
     protected function getRelationStructure()
     {
         return [
@@ -158,15 +140,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                     foreach ($releaseElement->getFilesList('infoFilesSelector') as $fileElement) {
                         if ($fileElement->getFileExtension() === 'txt') {
                             $content = file_get_contents($fileElement->getFilePath());
-                            $encoding = mb_detect_encoding($content, 'UTF-8, ISO-8859-1, IBM866, KOI8-R, Windows-1251, Windows-1252', true);
-
-                            if ($encoding === false) {
-                                continue;
-                            }
-
-                            if ($encoding !== 'UTF-8') {
-                                $content = mb_convert_encoding($content, 'UTF-8', $encoding);
-                            }
+                            $content = EncodingDetector::decodeText($content);
 
                             if ($content) {
                                 return $content;
@@ -177,7 +151,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                             try {
                                 $pdf = $parser->parseFile($file);
                                 $textContent = $pdf->getText();
-                                if ($this->isMostlyPrintable($textContent)) {
+                                if (EncodingDetector::isMostlyPrintable($textContent)) {
                                     return $textContent;
                                 }
                             } catch (Throwable $exception) {
