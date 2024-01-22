@@ -1,11 +1,4 @@
 {if $authorElement = $element->getAuthorElement()}
-	<div class="author_details_photo">
-		{if $authorElement->originalName != ""}
-			<img loading="lazy" class="author_details_photo_image" src='{$controller->baseURL}image/type:authorPhoto/id:{$authorElement->image}/filename:{$authorElement->originalName}' alt="{$authorElement->title}" />
-		{else}
-			<img loading="lazy" class="author_details_photo_image" src='{$theme->getImageUrl('author.png')}' alt="" />
-		{/if}
-	</div>
 	<table class='author_details_info info_table'>
 		{if $authorElement->title != ''}
 			<tr>

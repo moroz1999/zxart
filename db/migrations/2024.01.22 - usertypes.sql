@@ -1,0 +1,1 @@
+ALTER TABLE `engine_module_user` ADD `supporter` TINYINT NOT NULL AFTER `authorId`, ADD `vip` TINYINT NOT NULL AFTER `supporter`, ADD `volunteer` TINYINT NOT NULL AFTER `vip`;

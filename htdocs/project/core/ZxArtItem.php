@@ -203,9 +203,11 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
                     if ($user = $structureManager->getElementById($vote['userId'], null, true)) {
                         $vote['userName'] = $user->userName;
                         $vote['userUrl'] = $user->getAuthorUrl();
+                        $vote['userType'] = $user->getBadgetTypesString();
                     } else {
                         $vote['userName'] = '';
                         $vote['userUrl'] = false;
+                        $vote['userType'] = false;
                     }
                     $vote['date'] = date('d.m.Y H:i', $vote['date']);
                     $votesHistory[] = $vote;

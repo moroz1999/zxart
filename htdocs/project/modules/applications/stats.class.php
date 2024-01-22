@@ -53,6 +53,9 @@ class statsApplication extends controllerApplication
         $eventsLog->aggregateEvents('addZxMusic', $todayStart, 'userId');
         $eventsLog->deleteEvents('addZxMusic', $todayStart);
 
+        $eventsLog->aggregateEvents('addZxProd', $todayStart, 'userId');
+        $eventsLog->deleteEvents('addZxProd', $todayStart);
+
         $eventsLog->aggregateEvents('comment', $todayStart, 'userId');
         $eventsLog->deleteEvents('comment', $todayStart);
 

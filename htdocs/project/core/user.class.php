@@ -21,6 +21,9 @@ class user
     public $subscribe;
     public $showemail;
     public $authorId;
+    public $supporter;
+    public $vip;
+    public $volunteer;
     protected $groupsIdList;
     protected $userDataObject;
     /** @var \Illuminate\Database\Connection */
@@ -99,7 +102,6 @@ class user
                 $this->company = $this->userDataObject->company;
                 $this->firstName = $this->userDataObject->firstName;
                 $this->lastName = $this->userDataObject->lastName;
-                $this->address = $this->userDataObject->address;
                 $this->city = $this->userDataObject->city;
                 $this->postIndex = $this->userDataObject->postIndex;
                 $this->country = $this->userDataObject->country;
@@ -110,6 +112,9 @@ class user
                 $this->address = $this->userDataObject->address;
                 $this->subscribe = $this->userDataObject->subscribe;
                 $this->showemail = $this->userDataObject->showemail;
+                $this->supporter = $this->userDataObject->supporter;
+                $this->vip = $this->userDataObject->vip;
+                $this->volunteer = $this->userDataObject->volunteer;
                 $this->IP = $_SERVER['REMOTE_ADDR'];
                 $this->authorId = $this->userDataObject->authorId;
 
@@ -474,5 +479,10 @@ class user
     public function isAuthorized()
     {
         return $this->userName !== 'anonymous';
+    }
+
+    public function hasAds()
+    {
+        return !$this->vip && !$this->volunteer && !$this->supporter;
     }
 }

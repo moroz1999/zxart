@@ -54,7 +54,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         't', 'w', 'txt', 'bbs', 'me', 'nfo', 'nf0', 'diz', 'md', 'pok', 'd'
     ];
     protected static $asmExtensions = [
-        'asm', 'a80', 'a'
+        'asm', 'a80', 'a', 'bat', 'cmd'
     ];
 
     protected function setModuleStructure(&$moduleStructure)

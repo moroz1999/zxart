@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @property bool $volunteer
+ * @property bool $supporter
+ * @property bool $vip
+ */
 class userElement extends structureElement
 {
     use AuthorElementsProviderTrait;
@@ -34,6 +39,9 @@ class userElement extends structureElement
         $moduleStructure['verified'] = 'checkbox';
         $moduleStructure['banned'] = 'checkbox';
         $moduleStructure['comments'] = 'checkbox';
+        $moduleStructure['vip'] = 'checkbox';
+        $moduleStructure['supporter'] = 'checkbox';
+        $moduleStructure['volunteer'] = 'checkbox';
     }
 
     public function getAdditionalData()
@@ -319,5 +327,20 @@ class userElement extends structureElement
 
     public function setTrackingCode()
     {
+    }
+
+    public function getBadgetTypes(): array
+    {
+        $result = [];
+        if ($this->volunteer) $result[]= 'volunteer';
+        if ($this->vip) $result[]= 'vip';
+        if ($this->supporter) $result[]= 'supporter';
+        $result = ['volunteer', 'vip', 'supporter'];
+        return $result;
+    }
+
+    public function getBadgetTypesString(): string
+    {
+        return implode(' ', $this->getBadgetTypes());
     }
 }

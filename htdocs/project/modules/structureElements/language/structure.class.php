@@ -516,7 +516,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
         $this->deleteCache('lc');
     }
 
-    public function getLatestComments($limit = 4)
+    public function getLatestComments($limit = 10)
     {
         $cache = $this->getElementsListCache('lc', 180);
         if (($comments = $cache->load()) === false) {

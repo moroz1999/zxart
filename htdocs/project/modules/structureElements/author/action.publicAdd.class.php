@@ -50,7 +50,6 @@ class publicAddAuthor extends structureElementAction
         $expectedFields = [
             'title',
             'realName',
-            'group',
             'country',
             'city',
             'wikiLink',

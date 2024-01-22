@@ -180,8 +180,12 @@ class votesManager implements DependencyInjectionContextInterface
                 ) {
                     if ($user = $structureManager->getElementById($vote['userId'], null, true)) {
                         $vote['userName'] = $user->userName;
+                        $vote['userUrl'] = $user->getUrl();
+                        $vote['userType'] = $user->getBadgetTypesString();
                     } else {
                         $vote['userName'] = '';
+                        $vote['userUrl'] = '';
+                        $vote['userType'] = '';
                     }
                     if ($vote['value'] == 0) {
                         $vote['value'] = 'x';

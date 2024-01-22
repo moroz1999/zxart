@@ -81,6 +81,12 @@ class statsElement extends structureElement
         $this->chartDataEventTypes = ['view'];
         return $this->getChartData();
     }
+    public function getRunsHistoryData()
+    {
+        $this->resetChartData();
+        $this->chartDataEventTypes = ['view'];
+        return $this->getChartData();
+    }
 
     public function getPlaysHistoryData()
     {
@@ -120,9 +126,33 @@ class statsElement extends structureElement
         return $this->chartDataEventTypes;
     }
 
+    public function getTopActionsUsers(string $moduleType, string $actionType, int $limit)
+    {
+        $data = [];
+        /**
+         * @var ActionsLogRepository $actionsLogRepository
+         */
+        if ($actionsLogRepository = $this->getService(ActionsLogRepository::class)) {
+            if ($records = $actionsLogRepository->getTopUsersByAction($moduleType, $actionType, $limit)) {
+                foreach ($records as $record) {
+                    if ($userElement = $this->getUser($record['userId'])) {
+                        $data[] = [
+                            'user' => $userElement,
+                            'count' => $record['amount']
+                        ];
+                    }
+                }
+            }
+        }
+        return $data;
+    }
+
     public function getTopWorksUsers($type = 'addZxPicture', $limit = 10)
     {
         $data = [];
+        /**
+         * @var eventsLog $eventsLog
+         */
         if ($eventsLog = $this->getService('eventsLog')) {
             if ($counts = $eventsLog->countEvents([$type], null, null, null, null, 'count', 'desc', $limit, 'userId')) {
                 foreach ($counts as $userId => $count) {

@@ -6,6 +6,7 @@ class tagsListElement extends structureElement
     public $allowedTypes = [];
     public $defaultActionName = 'show';
     public $role = 'container';
+    public $maxAmount = 0;
 
     /**
      * @var tagElement[]
@@ -68,5 +69,3 @@ class tagsListElement extends structureElement
         return $this->tagsList;
     }
 }
-
-

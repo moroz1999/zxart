@@ -19,8 +19,28 @@
 {assign moduleContentClass ""}
 {include file=$theme->template("component.columnmodule.tpl")}
 
+{if $currentUser->hasAds()}
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6845376753120137"
+            crossorigin="anonymous"></script>
+    <!-- right column -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-6845376753120137"
+         data-ad-slot="1817296316"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+    {$supportElement = $structureManager->getElementByMarker('support', $currentLanguage->id)}
+    {if $supportElement}
+        <a href="{$supportElement->getUrl()}">{translations name="label.remove_ads"}</a>
+    {/if}
+{/if}
+
 <div class="lastcomments">
-    <h3>{translations name='label.comments'}</h3>
+    <div class="columnmodule_title">{translations name='label.comments'}</div>
 	{foreach from=$currentLanguage->getLatestComments() item=comment}
 		{include file=$theme->template("comment.column.tpl") element=$comment}
 	{/foreach}
@@ -31,40 +51,17 @@
 	{/if}
 </div>
 <div class="lastvotes">
-    <h3>{translations name='label.votes'}</h3>
+    <div class="columnmodule_title">{translations name='label.votes'}</h3>
 		<table class="votes_list_table table_component">
 		<tbody>
-			{foreach from=$currentLanguage->getLatestVotes() item=voteInfo name=votes}
+			{foreach from=$currentLanguage->getLatestVotes(20) item=voteInfo name=votes}
 			<tr class="">
-				<td>{$voteInfo.userName}</td>
+				<td>{include file=$theme->template("component.username.tpl") userName=$voteInfo.userName userUrl=$voteInfo.userUrl userType=$voteInfo.userType}</td>
 				<td>{$voteInfo.value}</td>
 				<td><a href="{$voteInfo.imageUrl}">{$voteInfo.imageTitle}</a></td>
 			</tr>
 			{/foreach}
 		</tbody>
 	</table>
-</div>
-<div class="zxbn">
-	{if $currentLanguage->iso6393 == 'rus'}
-		<!--/*
-		  *
-		  * Revive Adserver Asynchronous JS Tag
-		  * - Generated with Revive Adserver v4.0.1
-		  *
-		  */-->
-
-		<ins data-revive-zoneid="2" data-revive-target="_blank" data-revive-id="7b21834437781b35285bb6ea887b8b50"></ins>
-		<script async src="//zxbn.maros.pri.ee/www/delivery/asyncjs.php"></script>
-	{else}
-		<!--/*
-		  *
-		  * Revive Adserver Asynchronous JS Tag
-		  * - Generated with Revive Adserver v4.0.1
-		  *
-		  */-->
-
-		<ins data-revive-zoneid="3" data-revive-id="7b21834437781b35285bb6ea887b8b50"></ins>
-		<script async src="//zxbn.maros.pri.ee/www/delivery/asyncjs.php"></script>
-	{/if}
 </div>
 </aside>

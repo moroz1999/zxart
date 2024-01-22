@@ -4,6 +4,10 @@
 	{/capture}
 {/if}
 {capture assign="moduleContent"}
+	<div class="author-right">
+		{include file=$theme->template("component.authorimage.tpl")}
+		{include file=$theme->template("component.authorbadges.tpl")}
+	</div>
 	{include file=$theme->template("component.authorinfo.tpl")}
 	<div class="author_editing_controls editing_controls">
 		{if $element->getUserId() != $currentUser->id}

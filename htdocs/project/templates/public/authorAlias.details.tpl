@@ -5,6 +5,10 @@
 {/if}
 {capture assign="moduleContent"}
 {if $authorElement=$element->getAuthorElement()}
+	<div class="author-right">
+		{include file=$theme->template("component.authorimage.tpl") element=$authorElement}
+		{include file=$theme->template("component.authorbadges.tpl")}
+	</div>
 	{include file=$theme->template("authorAlias.info.tpl")}
 {/if}
 

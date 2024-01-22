@@ -31,7 +31,7 @@
 				{*<div class="footer_block">{translations name="email.footer"}</div>*}
 			</div>
 
-			{if $unsubscribeLink}
+			{if !empty($unsubscribeLink)}
 				<div class="email_unsubscribelink">
 					<a href="{$unsubscribeLink}">{translations name="email.unsubscribe"}</a>
 				</div>

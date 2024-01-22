@@ -17,7 +17,7 @@
 		<tbody>
 		{foreach from=$element->getVotesHistory() item=voteInfo name=votes}
 			<tr class="">
-				<td>{if $voteInfo.userUrl}<a href="{$voteInfo.userUrl}">{/if}{$voteInfo.userName}{if $voteInfo.userUrl}</a>{/if}</td>
+				<td>{include file=$theme->template("component.username.tpl") userName=$voteInfo.userName userUrl=$voteInfo.userUrl userType=$voteInfo.userType}</td>
 				<td>{$voteInfo.value}</td>
 				<td>{$voteInfo.date}</td>
 			</tr>

@@ -9,6 +9,7 @@ class playlistElement extends structureElement
     protected $picturesList;
     protected $musicList;
     protected $zxProdsList;
+    private $connectedElements;
 
     protected function setModuleStructure(&$moduleStructure)
     {
@@ -29,18 +30,42 @@ class playlistElement extends structureElement
         ];
     }
 
+    private function getStructuredList($structureType)
+    {
+        if (!isset($this->connectedElements)) {
+            $this->connectedElements = [];
+            /**
+             * @var structureManager $structureManager
+             */
+            $structureManager = $this->getService('structureManager');
+            /**
+             * @var linksManager $linksManager
+             */
+            $linksManager = $this->getService('linksManager');
+            $elementsIds = $linksManager->getConnectedIdList($this->id, 'playlist', 'parent');
+            $this->connectedElements = $structureManager->getElementsByIdList($elementsIds);
+        }
+        $targetList = [];
+        foreach ($this->connectedElements as $element) {
+            if ($element->structureType == $structureType) {
+                $targetList[] = $element;
+            }
+        }
+        return $targetList;
+    }
+
+    public function getZxProdsList()
+    {
+        if ($this->zxProdsList === null) {
+            $this->zxProdsList = $this->getStructuredList('zxProd');
+        }
+        return $this->zxProdsList;
+    }
+
     public function getPicturesList()
     {
         if ($this->picturesList === null) {
-            $this->picturesList = [];
-            $structureManager = $this->getService('structureManager');
-            if ($connectedElements = $structureManager->getElementsChildren($this->id, null, 'playlist')) {
-                foreach ($connectedElements as $element) {
-                    if ($element->structureType == 'zxPicture') {
-                        $this->picturesList[] = $element;
-                    }
-                }
-            }
+            $this->picturesList = $this->getStructuredList('zxPicture');
         }
         return $this->picturesList;
     }
@@ -48,33 +73,9 @@ class playlistElement extends structureElement
     public function getMusicList()
     {
         if ($this->musicList === null) {
-            $this->musicList = [];
-            $structureManager = $this->getService('structureManager');
-            if ($connectedElements = $structureManager->getElementsChildren($this->id, null, 'playlist')) {
-                foreach ($connectedElements as $element) {
-                    if ($element->structureType == 'zxMusic') {
-                        $this->musicList[] = $element;
-                    }
-                }
-            }
+            $this->musicList = $this->getStructuredList('zxMusic');
         }
         return $this->musicList;
-    }
-
-    public function getZxProdsList()
-    {
-        if ($this->zxProdsList === null) {
-            $this->zxProdsList = [];
-            $structureManager = $this->getService('structureManager');
-            if ($connectedElements = $structureManager->getElementsChildren($this->id, null, 'playlist')) {
-                foreach ($connectedElements as $element) {
-                    if ($element->structureType == 'zxProd') {
-                        $this->zxProdsList[] = $element;
-                    }
-                }
-            }
-        }
-        return $this->zxProdsList;
     }
 
     public function getZxProdsListData()
