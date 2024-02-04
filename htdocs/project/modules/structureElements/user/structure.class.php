@@ -335,7 +335,7 @@ class userElement extends structureElement
         if ($this->volunteer) $result[]= 'volunteer';
         if ($this->vip) $result[]= 'vip';
         if ($this->supporter) $result[]= 'supporter';
-        $result = ['volunteer', 'vip', 'supporter'];
+//        $result = ['volunteer', 'vip', 'supporter'];
         return $result;
     }
 

@@ -4,6 +4,7 @@
  * Class zxProdElement
  *
  * @property string $title
+ * @property string $altTitle
  * @property string $year
  * @property string $youtubeId
  * @property string $description
@@ -71,6 +72,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
+        $moduleStructure['altTitle'] = 'text';
 
         $moduleStructure['party'] = 'text';
         $moduleStructure['partyplace'] = 'text';
@@ -266,28 +268,31 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
 
     public function getInlaysUrls()
     {
-        $db = $this->getService('db');
-        /**
-         * @var QueryFiltersManager $queryFiltersManager
-         */
-        $releaseIdsQuery = $db->table($this->dataResourceName)->where('id', $this->id);
+        if (($urls = $this->getCacheKey('inlays')) === false) {
+            $db = $this->getService('db');
+            /**
+             * @var QueryFiltersManager $queryFiltersManager
+             */
+            $releaseIdsQuery = $db->table($this->dataResourceName)->where('id', $this->id);
 
-        $queryFiltersManager = $this->getService('QueryFiltersManager');
-        $releaseIdsQuery = $queryFiltersManager->convertTypeData($releaseIdsQuery, 'zxRelease', 'zxProd', [])->select('id');
-        $urls = [];
+            $queryFiltersManager = $this->getService('QueryFiltersManager');
+            $releaseIdsQuery = $queryFiltersManager->convertTypeData($releaseIdsQuery, 'zxRelease', 'zxProd', [])->select('id');
+            $urls = [];
 
-        foreach ($this->getFilesList('inlayFilesSelector') as $fileElement) {
-            $urls[] = $fileElement->getImageUrl('prodListInlay');
-        }
+            foreach ($this->getFilesList('inlayFilesSelector') as $fileElement) {
+                $urls[] = $fileElement->getImageUrl('prodListInlay');
+            }
 
-        if ($imageIds = $db->table('structure_links')
-            ->whereIn('parentStructureId', $releaseIdsQuery)
-            ->whereIn('type', ['inlayFilesSelector', 'adFilesSelector'])
-            ->pluck('childStructureId')
-        ) {
-            $controller = $this->getService('controller');
-            foreach ($imageIds as $imageId) {
-                $urls[] = $controller->baseURL . 'image/type:prodListInlay/id:' . $imageId;
+            if ($imageIds = $db->table('structure_links')
+                ->whereIn('parentStructureId', $releaseIdsQuery)
+                ->whereIn('type', ['inlayFilesSelector', 'adFilesSelector'])
+                ->pluck('childStructureId')
+            ) {
+                $controller = $this->getService('controller');
+                foreach ($imageIds as $imageId) {
+                    $urls[] = $controller->baseURL . 'image/type:prodListInlay/id:' . $imageId;
+                }
+                $this->setCacheKey('inlays', $urls, 3600 * 24);
             }
         }
 
@@ -555,11 +560,11 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         if ($this->year) {
             $searchTitle .= ' (' . $this->year . ')';
         }
-        $groups=[];
+        $groups = [];
         foreach ($this->groups as $group) {
             $groups[] = $group->getTitle();
         }
-        if ($groups){
+        if ($groups) {
             $searchTitle .= ' / ' . implode(', ', $groups);
         }
 
@@ -610,7 +615,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         }
 
         foreach ($this->getLinksInfo() as $linkInfo) {
-            if ($linkInfo['type'] !== 'wos'){
+            if ($linkInfo['type'] !== 'wos') {
                 $data['links'][$linkInfo['type'] . ';' . $linkInfo['id']] = $linkInfo['type'] . ' <a target="_blank" href="' . $linkInfo['url'] . '">' . $linkInfo['id'] . '</a>';;
             }
         }

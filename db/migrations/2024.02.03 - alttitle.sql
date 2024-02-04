@@ -1,0 +1,1 @@
+ALTER TABLE `engine_module_zxprod` ADD `altTitle` VARCHAR(255) NOT NULL AFTER `title`; 

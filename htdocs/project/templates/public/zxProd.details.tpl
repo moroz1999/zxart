@@ -37,6 +37,16 @@
                 {$element->title}
             </td>
         </tr>
+        {if $element->altTitle}
+        <tr>
+            <td class='info_table_label'>
+                {translations name='zxprod.altTitle'}:
+            </td>
+            <td class='info_table_value'>
+                {$element->altTitle}
+            </td>
+        </tr>
+        {/if}
         {if $element->externalLink}
             <tr>
                 <td class='info_table_label'>
@@ -245,7 +255,7 @@
 
     {if $element->compilationItems || $element->compilations || $element->seriesProds}
         <script>
-            window.elementsData = window.elementsData ? window.elementsData : {};
+            window.elementsData = window.elementsData ? window.elementsData : { };
             window.elementsData[{$element->id}] = {$element->getCompilationJsonData()};
         </script>
     {/if}
@@ -287,7 +297,7 @@
     {if $element->series}
         {foreach $element->series as $seriesElement}
             <script>
-                window.elementsData = window.elementsData ? window.elementsData : {};
+                window.elementsData = window.elementsData ? window.elementsData : { };
                 window.elementsData[{$seriesElement->id}] = {$seriesElement->getCompilationJsonData()};
             </script>
             <h2>{translations name='zxprod.series'}: <a href="{$seriesElement->getUrl()}">{$seriesElement->title}</a>

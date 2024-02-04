@@ -8,11 +8,14 @@ class crontabApplication extends controllerApplication
 
     private $structureManager;
     private string $logFilePath;
-
+    const STATUS_TODO = 0;
+    const STATUS_INPROGRESS = 1;
+    const STATUS_SUCCESS = 2;
+    const STATUS_FAIL = 3;
     public function initialize()
     {
         ignore_user_abort(1);
-        set_time_limit(60 * 10);
+        set_time_limit(60 * 6);
         $this->createRenderer();
     }
 
@@ -21,7 +24,6 @@ class crontabApplication extends controllerApplication
         $pathsManager = $this->getService(PathsManager::class);
         $todayDate = date('Y-m-d');
         $this->logFilePath = $pathsManager->getPath('logs') . 'cron' . $todayDate . '.txt';
-
 
         //start this before ending output buffering
         $languagesManager = $this->getService('LanguagesManager');
@@ -51,10 +53,49 @@ class crontabApplication extends controllerApplication
             $this->structureManager->setRequestedPath([$currentLanguageCode]);
             $this->structureManager->setPrivilegeChecking(false);
             $this->convertMp3();
+            $this->recalculate();
             $this->parseReleases();
             $this->parseArtItems('module_zxpicture', 'image', 'originalName');
             $this->parseArtItems('module_zxmusic', 'file', 'fileName');
 //            $this->queryAiItems();
+        }
+    }
+
+    private function recalculate()
+    {
+        $start_time = microtime(true);
+
+        $limit = 5000;
+        $db = $this->getService('db');
+        while ($limit) {
+            $limit--;
+            $records = $db->table('queue')
+                ->select('elementId')
+                ->where('status', '=', self::STATUS_TODO)
+                ->limit(1)
+                ->orderBy('elementId', 'desc')
+                ->get();
+            foreach ($records as $record) {
+                $elementId = $record['elementId'];
+
+                $status = self::STATUS_INPROGRESS;
+                $db->table('queue')->where('elementId', '=', $elementId)->update(['status' => $status]);
+
+
+                $status = self::STATUS_FAIL;
+                if ($element = $this->structureManager->getElementById($elementId)) {
+                    if ($element instanceof Recalculable) {
+                        $element->recalculate();
+                        $end_time = microtime(true);
+                        $execution_time = $end_time - $start_time;
+                        $status = self::STATUS_SUCCESS;
+                        $this->logMessage('Recalculated ' . $element->getId() . ' ' . $element->structureType . ' ' . $element->getTitle(), round($execution_time));
+                    }
+                } else {
+                    $this->logMessage('Unable to read ' . $elementId, 0);
+                }
+                $db->table('queue')->where('elementId', '=', $elementId)->update(['status' => $status]);
+            }
         }
     }
 

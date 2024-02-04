@@ -24,7 +24,7 @@ class joinAuthor extends structureElementAction
             if ($structureElement->joinAndDelete) {
                 $authorsManager->joinDeleteAuthor($structureElement->id, $structureElement->joinAndDelete);
             }
-            $structureElement->recalculateAuthorData();
+            $structureElement->recalculate();
 
             $controller->redirect($structureElement->getUrl());
         }

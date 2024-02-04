@@ -10,7 +10,7 @@
  * @property int $picturesQuantity
  * @property int $tunesQuantity
  */
-class partyElement extends structureElement implements CommentsHolderInterface
+class partyElement extends structureElement implements CommentsHolderInterface, Recalculable
 {
     use LocationProviderTrait;
     use CommentsTrait;
@@ -73,6 +73,7 @@ class partyElement extends structureElement implements CommentsHolderInterface
         } else {
             $this->tunesQuantity = 0;
         }
+        $this->checkCountry();
         $this->persistElementData();
     }
 
@@ -255,6 +256,6 @@ class partyElement extends structureElement implements CommentsHolderInterface
         if ($this->image) {
             return controller::getInstance()->baseURL . 'image/type:' . $preset . '/id:' . $this->image . '/filename:' . $this->originalName;
         }
-        return $imageUrl = controller::getInstance()->baseURL . 'project/images/public/zxprod_default.png';
+        return controller::getInstance()->baseURL . 'project/images/public/zxprod_default.png';
     }
 }

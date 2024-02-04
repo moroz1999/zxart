@@ -5,6 +5,7 @@
  *
  * @property string $title
  * @property string $prodTitle
+ * @property string $prodAltTitle
  * @property string $legalStatus
  * @property string $tagsText
  * @property string[] $language
@@ -40,6 +41,7 @@ class zxProdsUploadFormElement extends ZxArtItemUploadFormElement
     {
         $moduleStructure['title'] = 'text';
         $moduleStructure['prodTitle'] = 'text';
+        $moduleStructure['prodAltTitle'] = 'text';
 
         $moduleStructure['party'] = 'text';
         $moduleStructure['partyplace'] = 'text';

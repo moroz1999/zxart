@@ -414,6 +414,10 @@ class ProdsManager extends ElementsManager
                 $element->structureName = $prodInfo['title'];
             }
         }
+        if (!empty($prodInfo['altTitle']) && ($element->altTitle != $prodInfo['altTitle'])) {
+            $changed = true;
+            $element->altTitle = $prodInfo['altTitle'];
+        }
         if (!empty($prodInfo['legalStatus']) && $element->legalStatus != $prodInfo['legalStatus']) {
             $changed = true;
             $element->legalStatus = $prodInfo['legalStatus'];

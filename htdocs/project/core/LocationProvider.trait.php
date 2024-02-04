@@ -70,5 +70,19 @@ trait LocationProviderTrait
     abstract protected function getCityId();
 
     abstract protected function getCountryId();
+
+    public function checkCountry(): bool
+    {
+        if ($city = $this->getCityElement()) {
+            $country = $this->getCountryElement();
+            $parentCountry = $city->getFirstParentElement();
+            if ($parentCountry !== $country) {
+                $this->countryElement = null;
+                $this->country = $parentCountry->id;
+                return false;
+            }
+        }
+        return true;
+    }
 }
 

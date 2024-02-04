@@ -36,6 +36,7 @@ class publicReceiveZxProd extends structureElementAction
     {
         $expectedFields = [
             'title',
+            'altTitle',
             'party',
             'partyplace',
             'compo',

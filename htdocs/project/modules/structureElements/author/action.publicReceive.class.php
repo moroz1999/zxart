@@ -28,7 +28,7 @@ class publicReceiveAuthor extends structureElementAction
             $structureElement->persistElementData();
             $structureElement->checkParentLetter();
 
-            $structureElement->recalculateAuthorData();
+            $structureElement->recalculate();
             $structureElement->reconvertMusic();
 
             $controller->redirect($structureElement->URL);

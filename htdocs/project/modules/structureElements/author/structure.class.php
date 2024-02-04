@@ -12,8 +12,8 @@
  * @property int $denyVoting
  * @property int $deny3a
  * @property int $graphicsRating
+ * @property int $picturesQuantity
  * @property int $musicRating
- * @property int $picturesQuantityf
  * @property int $tunesQuantity
  * @property int $joinAsAlias
  * @property int $joinAndDelete
@@ -25,7 +25,7 @@
  * @property string $email
  * @property string $site
  */
-class authorElement extends structureElement implements CommentsHolderInterface, AliasesHolder, JsonDataProvider
+class authorElement extends structureElement implements CommentsHolderInterface, AliasesHolder, JsonDataProvider, Recalculable
 {
     use JsonDataProviderElement;
     use CacheOperatingElement;
@@ -142,7 +142,7 @@ class authorElement extends structureElement implements CommentsHolderInterface,
         return $result;
     }
 
-    public function recalculateAuthorData()
+    public function recalculate()
     {
         $average = $this->getService('ConfigManager')->get('zx.averageVote');
         $votes = 0;
@@ -178,19 +178,6 @@ class authorElement extends structureElement implements CommentsHolderInterface,
         $this->persistElementData();
     }
 
-    public function checkCountry()
-    {
-        if ($city = $this->getCityElement()) {
-            $country = $this->getCountryElement();
-            $parentCountry = $city->getFirstParentElement();
-            if ($parentCountry !== $country) {
-                $this->countryElement = null;
-                $this->country = $parentCountry->id;
-                return false;
-            }
-        }
-        return true;
-    }
 
     public function recalculatePicturesData()
     {

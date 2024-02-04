@@ -7,7 +7,7 @@
  * @property int $year
  */
 abstract class ZxArtItem extends structureElement implements MetadataProviderInterface, VotesHolderInterface,
-    CommentsHolderInterface, LdJsonProviderInterface
+    CommentsHolderInterface, LdJsonProviderInterface, Recalculable
 {
     use ChartDataProviderTrait;
     use AuthorElementsProviderTrait;
@@ -461,7 +461,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
             ->update(['votes' => $this->votes, 'votesAmount' => $this->votesAmount]);
 
         foreach ($this->getAuthorsList() as $authorElement) {
-            $authorElement->recalculateAuthorData();
+            $authorElement->recalculate();
         }
     }
 

@@ -1,7 +1,6 @@
 {assign var='formData' value=$element->getFormData()}
 {assign var='formErrors' value=$element->getFormErrors()}
 {assign var='formNames' value=$element->getFormNames()}
-{*<div class="zxProdsUploadForm_topnotice">{translations name="zxProdsUploadForm.topnotice"}</div>*}
 <form action="{$element->URL}" method="post" class="zxitem_form" enctype="multipart/form-data">
 	<table class='form_table'>
 		<tr {if $formErrors.prodTitle} class="form_error"{/if}>
@@ -11,6 +10,15 @@
 			<td class="form_field">
 				<input class='input_component' type="text" value="{$formData.prodTitle}" name="{$formNames.prodTitle}" />
 				{include file=$theme->template('component.form_help.tpl') structureType='zxProd' name="title"}
+			</td>
+		</tr>
+		<tr {if $formErrors.prodAltTitle} class="form_error"{/if}>
+			<td class="form_label">
+				{translations name='zxProd.altTitle'}:
+			</td>
+			<td class="form_field">
+				<input class='input_component' type="text" value="{$formData.prodAltTitle}" name="{$formNames.prodAltTitle}" />
+				{include file=$theme->template('component.form_help.tpl') structureType='zxProd' name="altTitle"}
 			</td>
 		</tr>
 		<tr {if $formErrors.externalLink} class="form_error"{/if}>

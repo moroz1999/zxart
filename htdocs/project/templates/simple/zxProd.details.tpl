@@ -1,5 +1,8 @@
 {if $element->title}{include file=$theme->template('component.heading.tpl') value=$element->title}{/if}
 <b>{translations name='zxprod.title'}:</b> {$element->title}<br>
+{if $element->altTitle}
+    <b>{translations name='zxprod.altTitle'}:</b> {$element->altTitle}
+{/if}
 {if $element->language}
     <b>{translations name='zxprod.language'}: </b>{$element->getSupportedLanguageString()}<br>
 {/if}

@@ -21,7 +21,7 @@ use ZxFiles\BasicFile;
  * @property int $userId
  * @property int $parsed
  */
-class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFilesPathInterface, CommentsHolderInterface, JsonDataProvider, ZxSoftInterface
+class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFilesPathInterface, CommentsHolderInterface, JsonDataProvider, ZxSoftInterface, Recalculable
 {
     use AuthorshipProviderTrait;
     use AuthorshipPersister;
@@ -719,4 +719,8 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return json_encode($data);
     }
 
+    public function recalculate()
+    {
+        $this->persistElementData();
+    }
 }

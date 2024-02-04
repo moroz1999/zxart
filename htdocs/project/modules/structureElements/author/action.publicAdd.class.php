@@ -30,7 +30,7 @@ class publicAddAuthor extends structureElementAction
 
             $structureElement->recalculatePicturesData();
             $structureElement->recalculateMusicData();
-            $structureElement->recalculateAuthorData();
+            $structureElement->recalculate();
 
             $privilegesManager = $this->getService('privilegesManager');
             $user = $this->getService('user');

@@ -12,6 +12,15 @@
                 {include file=$theme->template('component.form_help.tpl') structureType='zxProd' name="title"}
             </td>
         </tr>
+        <tr {if $formErrors.altTitle} class="form_error"{/if}>
+            <td class="form_label">
+                {translations name='zxprod.altTitle'}:
+            </td>
+            <td class="form_field">
+                <input class='input_component' type="text" value="{$formData.altTitle}" name="{$formNames.altTitle}"/>
+                {include file=$theme->template('component.form_help.tpl') structureType='zxProd' name="altTitle"}
+            </td>
+        </tr>
         <tr {if $formErrors.externalLink} class="form_error"{/if}>
             <td class="form_label">
                 {translations name='zxprod.externalLink'}:

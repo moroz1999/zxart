@@ -8,7 +8,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
      * @param structureManager $structureManager
      * @param controller $controller
      * @param zxProdsUploadFormElement $structureElement
-     * @return mixed|void
+     * @return void
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
@@ -41,6 +41,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                         $zxProdElement->title = str_replace('_', ' ', ucfirst(ucfirst($info['filename'])));
                     }
 
+                    $zxProdElement->altTitle = $structureElement->prodAltTitle;
                     $zxProdElement->structureName = $zxProdElement->title;
                     $zxProdElement->externalLink = $structureElement->externalLink;
                     $zxProdElement->party = $structureElement->party;
@@ -134,6 +135,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
     {
         $expectedFields = [
             'prodTitle',
+            'prodAltTitle',
             'party',
             'partyplace',
             'compo',

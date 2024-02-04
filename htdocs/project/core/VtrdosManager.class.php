@@ -556,7 +556,6 @@ class VtrdosManager extends errorLogger
                                     'seriesProds' => $seriesProdsIds,
                                     'directCategories' => $directCategories
                                 ];
-
                             }
                         }
 

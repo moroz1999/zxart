@@ -16,7 +16,7 @@
  * @property int $joinAndDelete
  * @property zxReleaseElement[] $publishedReleases
  */
-class groupElement extends structureElement implements AliasesHolder, CommentsHolderInterface, JsonDataProvider
+class groupElement extends structureElement implements AliasesHolder, CommentsHolderInterface, JsonDataProvider, Recalculable
 {
     use JsonDataProviderElement;
     use AuthorshipPersister;
@@ -243,5 +243,11 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
             }
         }
         return $searchTitle;
+    }
+
+    public function recalculate()
+    {
+        $this->checkCountry();
+        $this->persistElementData();
     }
 }
