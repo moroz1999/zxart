@@ -8,6 +8,7 @@ class aaaApplication extends controllerApplication
 
     public function initialize()
     {
+        exit;
         ini_set("max_execution_time", 60 * 60 * 1);
         ignore_user_abort(true);
         $this->startSession('crontab');

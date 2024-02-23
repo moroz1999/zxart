@@ -43,6 +43,8 @@ trait ZxProdsList
 
     private $type = 'zxProd';
 
+    const defaultStatuses = ['allowed', 'forbidden', 'insales', 'recovered', 'unknown', 'unreleased'];
+
     public function getProdsInfo(): array
     {
         $prodsInfo = [];
@@ -131,15 +133,24 @@ trait ZxProdsList
             if ($value = $this->getSelectorValue('sorting')) {
                 $sort = [$value[0] => $value[1]];
             }
-            $currentPage = (int)$controller->getParameter('page');
-            if (!$currentPage) {
-                $currentPage = 1;
-            }
+            $currentPage = $this->getCurrentPage();
+
             $this->apiQuery->setLimit($elementsOnPage)
                 ->setStart($elementsOnPage * ($currentPage - 1))
                 ->setOrder($sort);
         }
         return $this->apiQuery;
+    }
+
+    public function getCurrentPage(): int
+    {
+        $controller = $this->getService('controller');
+
+        $currentPage = (int)$controller->getParameter('page');
+        if (!$currentPage) {
+            $currentPage = 1;
+        }
+        return $currentPage;
     }
 
     public function getProdsAmount()
@@ -720,7 +731,7 @@ trait ZxProdsList
                         $this->selectorValues[$selectorName][] = trim($value);
                     }
                 } elseif ($selectorName === 'statuses') {
-                    $this->selectorValues[$selectorName] = ['allowed', 'forbidden', 'insales', 'recovered', 'unknown', 'unreleased'];
+                    $this->selectorValues[$selectorName] = self::defaultStatuses;
                 }
             }
         }
@@ -776,4 +787,29 @@ trait ZxProdsList
         ];
     }
 
+    public function hasDefaultSelectors(): bool
+    {
+        $selectors = $this->getSelectorValues();
+        $difference1 = array_diff($selectors['statuses'], self::defaultStatuses);
+        $difference2 = array_diff(self::defaultStatuses, $selectors['statuses']);
+        $statusesDefault = !($difference1 && $difference2);
+
+        return !$selectors['letter']
+            && !$selectors['years']
+            && $statusesDefault
+            && !$selectors['tags']
+            && !$selectors['countries']
+            && !$selectors['hw']
+            && !$selectors['formats']
+            && !$selectors['languages']
+            && !$selectors['releaseTypes']
+            && !$selectors['releases'];
+    }
+
+    public function hasDefaultSorting(): bool {
+        if ($value = $this->getSelectorValue('sorting')) {
+            return $value[0] === 'votes' && $value[1] === 'desc';
+        }
+        return false;
+    }
 }

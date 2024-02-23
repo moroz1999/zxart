@@ -21,6 +21,7 @@ trait ReleaseFormatsProvider
             'bin',
             'rom',
             'spg',
+            'nex',
 
             'sna',
             'szx',
@@ -54,6 +55,7 @@ trait ReleaseFormatsProvider
                 'bin',
                 'rom',
                 'spg',
+                'nex',
             ],
 
             'snapshot' => [

@@ -53,8 +53,13 @@
                     {translations name='zxprod.externallink'}:
                 </td>
                 <td class='info_table_value'>
-                    <a class="button" href="{$element->externalLink}"
-                       target="_blank">{translations name='zxprod.open_externallink'}</a>
+                    {if $element->getLegalStatus() === 'insales'}
+                        <a class="button release-sales-button" href="{$element->externalLink}"
+                           target="_blank">{translations name='zxprod.purchase'}</a>
+                    {else}
+                        <a class="button" href="{$element->externalLink}"
+                           target="_blank">{translations name='zxprod.open_externallink'}</a>
+                    {/if}
                 </td>
             </tr>
         {/if}

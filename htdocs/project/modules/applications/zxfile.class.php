@@ -41,6 +41,13 @@ class zxfileApplication extends controllerApplication
                 $file = $zxParsingManager->extractFile($element->getFilePath(), $this->fileId);
             }
             if ($file) {
+                if ($element->structureType == 'zxRelease' && !$this->isCrawlerDetected()) {
+                    if ($controller->getParameter('play')) {
+                        $element->incrementPlays();
+                    }
+                    $structureManager->clearElementCache($element->id);
+                }
+
                 header('Content-type: application/octet-stream');
                 header('Content-Disposition: attachment; filename="' . $file->getItemName() . '"');
                 echo $file->getContent();

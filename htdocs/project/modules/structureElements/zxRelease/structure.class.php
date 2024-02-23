@@ -182,7 +182,6 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     public function getReleaseStructure()
     {
         if ($structure = $this->getReleaseFlatStructure()) {
-
             $groups = [];
             foreach ($structure as $key => $item) {
                 $groups[$item['parentId']][] = &$structure[$key];
@@ -481,6 +480,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     public function getLinksInfo()
     {
         if ($this->linksInfo === null) {
+            $prod = $this->getProd();
             $this->linksInfo = [];
             $translationsManager = $this->getService('translationsManager');
             /**
@@ -501,7 +501,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
                             'url' => 'http://www.pouet.net/prod.php?which=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] == 'vt') {
+                    } elseif ($row['importOrigin'] == 'vt' && $prod->getLegalStatus() !== 'insales') {
                         $this->linksInfo[] = [
                             'type' => 'vt',
                             'image' => 'icon_vt.png',
@@ -700,9 +700,11 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
             $this->getFilePath(),
             $this->fileName
         )) {
-            if ($files = $this->gatherReleaseFiles($structure)) {
-                $files = array_unique($files);
-                $this->releaseFormat = $files;
+            if (!$this->releaseFormat) {
+                if ($files = $this->gatherReleaseFiles($structure)) {
+                    $files = array_unique($files);
+                    $this->releaseFormat = $files;
+                }
             }
         }
         $this->persistElementData();
@@ -722,5 +724,21 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     public function recalculate()
     {
         $this->persistElementData();
+    }
+
+    public function incrementPlays()
+    {
+        $db = $this->getService('db');
+        $db->table('module_zxrelease')->where('id', '=', $this->id)->limit(1)->increment('plays');
+        $structureManager = $this->getService('structureManager');
+        $structureManager->clearElementCache($this->id);
+    }
+
+    public function incrementDownloads()
+    {
+        $db = $this->getService('db');
+        $db->table('module_zxrelease')->where('id', '=', $this->id)->limit(1)->increment('downloads');
+        $structureManager = $this->getService('structureManager');
+        $structureManager->clearElementCache($this->id);
     }
 }

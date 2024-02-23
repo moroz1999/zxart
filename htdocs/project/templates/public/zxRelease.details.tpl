@@ -96,6 +96,16 @@
                         </td>
                     </tr>
                 {/if}
+                {if $element->releaseFormat}
+                    <tr>
+                        <td class='info_table_label'>
+                            {translations name='zxrelease.releaseFormat'}:
+                        </td>
+                        <td class='info_table_value'>
+                            {foreach $element->releaseFormat as $format}{translations name="zxRelease.filetype_$format"} {/foreach}
+                        </td>
+                    </tr>
+                {/if}
                 {if $element->releaseType}
                     <tr>
                         <td class='info_table_label'>
@@ -139,8 +149,13 @@
                             {translations name='zxprod.externallink'}:
                         </td>
                         <td class='info_table_value'>
-                            <a class="button" href="{$prod->externalLink}"
-                               target="_blank">{translations name='zxprod.open_externallink'}</a>
+                            {if $prod->getLegalStatus() === 'insales'}
+                                <a class="button release-sales-button" href="{$prod->externalLink}"
+                                   target="_blank">{translations name='zxprod.purchase'}</a>
+                            {else}
+                                <a class="button" href="{$prod->externalLink}"
+                                   target="_blank">{translations name='zxprod.open_externallink'}</a>
+                            {/if}
                         </td>
                     </tr>
                 {/if}
@@ -270,10 +285,16 @@
         window.galleriesInfo['{$element->id}'] = {$element->getGalleryJsonInfo(['descriptionType'=>'hidden'], 'prodImage')};
         /*]]>*/
     </script>
+    <script>
+        /*<![CDATA[*/
+        window.releasesInfo = window.releasesInfo ?? {ldelim}{rdelim};
+        window.releasesInfo['{$element->id}'] = {$element->getJsonInfo('details')};
+        /*]]>*/
+    </script>
 {/capture}
 
 {assign moduleClass "zxrelease_details"}
-{assign moduleAttributes ""}
+{assign moduleAttributes "data-id={$element->id}"}
 {assign moduleTitleClass ""}
 {assign moduleContentClass ""}
 

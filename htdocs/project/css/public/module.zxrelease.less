@@ -48,11 +48,6 @@
     color: gray;
     vertical-align: bottom;
   }
-
-  td {
-    padding: 0.5rem 0.5rem;
-    border-style: none;
-  }
 }
 
 @media (max-width: @screen_breakpoint_xl) {
@@ -103,7 +98,10 @@
   background-color: @secondary_color;
 
   td {
+    border-style: none;
     border-top: solid 2rem @primary_color;
+    padding: 0.25rem 0.5rem;
+    vertical-align: middle;
   }
 
   &:first-child {
@@ -115,6 +113,10 @@
 
 .zxrelease-images {
   background-color: @secondary_color;
+
+  td {
+    padding: 0 0.5rem 0.5rem;
+  }
 }
 
 .zxrelease_table_manuals {

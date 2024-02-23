@@ -29,3 +29,5 @@ User-agent: megaIndex.ru
 Disallow: /
 User-agent: dotbot
 Disallow: /
+User-agent: Amazonbot
+Disallow: /

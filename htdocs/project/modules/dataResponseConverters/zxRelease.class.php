@@ -68,6 +68,9 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
                 return [];
             },
             'importIds' => 'getImportIdsIndex',
+            'playUrl' =>function (zxReleaseElement $element) {
+                return $element->getFileUrl(true);
+            },
         ];
     }
 
@@ -115,6 +118,13 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
                 "authorsInfoShort",
                 'releaseType' => 'releaseType',
                 'releaseFormat' => 'releaseFormat',
+            ],
+            'details' => [
+                'id',
+                'structureType',
+                'title',
+                'playUrl',
+                'url',
             ],
             'search' => [
                 'id',

@@ -61,8 +61,13 @@
 				<a rel="nofollow" href="{$element->getFileUrl()}"><img loading="lazy" src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'} {$element->getFileName('original', false)}" /></a>
 			{/if}
 		{elseif $prod->externalLink}
-			<a class="button" href="{$prod->externalLink}"
-			   target="_blank">{translations name='zxprod.externallink'}</a>
+			{if $prod->getLegalStatus() === 'insales'}
+				<a class="button release-sales-button" href="{$prod->externalLink}"
+				   target="_blank">{translations name='zxprod.purchase'}</a>
+			{else}
+				<a class="button" href="{$prod->externalLink}"
+				   target="_blank">{translations name='zxprod.open_externallink'}</a>
+			{/if}
 		{/if}
 	</td>
 	<td class='zxrelease_table_downloaded'>

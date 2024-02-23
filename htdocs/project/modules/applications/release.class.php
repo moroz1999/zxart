@@ -39,15 +39,11 @@ class releaseApplication extends controllerApplication
             $filePath = $this->getService('PathsManager')->getPath('releases') . $element->file;
             if (strpos($this->id, '/') === false && strpos($this->id, '\\') === false && is_file($filePath)) {
                 if ($element->structureType == 'zxRelease' && !$this->isCrawlerDetected()) {
-                    $db = $this->getService('db');
                     if ($controller->getParameter('play')) {
-                        $db->table('module_zxrelease')->where('id', '=', $element->id)->limit(1)->increment('plays');
+                        $element->incrementPlays();
                     } else {
-                        $db->table('module_zxrelease')->where('id', '=', $element->id)->limit(1)->increment(
-                            'downloads'
-                        );
+                        $element->incrementDownloads();
                     }
-                    $structureManager->clearElementCache($element->id);
                 }
                 if ($this->mode == 'view') {
                     $this->renderer->setContentDisposition('inline');

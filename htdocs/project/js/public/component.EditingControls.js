@@ -13,6 +13,10 @@ window.EditingControlsComponent = function(componentElement) {
 		for (i = elements.length; i--;) {
 			new ConvertButtonComponent(elements[i]);
 		}
+		elements = _('.release-sales-button', componentElement);
+		for (i = elements.length; i--;) {
+			new PurchaseButtonComponent(elements[i]);
+		}
 	};
 	init();
 };

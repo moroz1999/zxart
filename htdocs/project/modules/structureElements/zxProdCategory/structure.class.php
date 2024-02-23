@@ -1,13 +1,16 @@
 <?php
 
 class zxProdCategoryElement extends structureElement implements MetadataProviderInterface, ZxProdsProvider,
-                                                                JsonDataProvider
+    JsonDataProvider
 {
     use MetadataProviderTrait;
     use ImportedItemTrait;
     use ZxProdCategoriesTreeProvider;
     use ZxProdsList;
-    use JsonDataProviderElement;
+    use CacheOperatingElement;
+    use JsonDataProviderElement {
+        JsonDataProviderElement::getElementData as public traitGetElementData;
+    }
 
     public $dataResourceName = 'module_zxprodcategory';
     public $allowedTypes = ['zxProdCategory', 'soft'];
@@ -83,6 +86,7 @@ class zxProdCategoryElement extends structureElement implements MetadataProvider
 
         return false;
     }
+
     /**
      * @return bool|structureElement
      */
@@ -113,5 +117,33 @@ class zxProdCategoryElement extends structureElement implements MetadataProvider
     public function getProdsListBaseQuery()
     {
         return $this->getProdsQuery();
+    }
+
+
+    public function getElementData(?string $preset = null): ?array
+    {
+        $selectorsUnChanged = $this->hasDefaultSelectors() && $this->hasDefaultSorting();
+        if ($selectorsUnChanged) {
+            /**
+             * @var languagesManager $languagesManager
+             */
+            $languagesManager = $this->getService('languagesManager');
+
+            $page = $this->getCurrentPage();
+            $ttl = $page === 1 ? 60 * 60 * 24 : 60 * 60 * 2;
+            $key = $this->id . $page . $languagesManager->getCurrentLanguageId();
+            if ($data = $this->getCacheKey($key)) {
+                return $data;
+            }
+        }
+
+        if ($data = $this->traitGetElementData($preset)) {
+            if ($selectorsUnChanged) {
+                $this->setCacheKey($key, $data, $ttl);
+            }
+            return $data;
+        }
+
+        return null;
     }
 }

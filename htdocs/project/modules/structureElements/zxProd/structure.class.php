@@ -157,13 +157,6 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         $moduleStructure['splitData'] = 'array';
 
         $moduleStructure['hasAiData'] = 'checkbox';
-
-//        $moduleStructure['series'] = [
-//            'DBValueSet',
-//            [
-//                'tableName' => 'zxprod_series',
-//            ],
-//        ];
     }
 
     public function getFileSelectorPropertyNames()
