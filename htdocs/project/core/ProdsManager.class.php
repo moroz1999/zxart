@@ -642,7 +642,14 @@ class ProdsManager extends ElementsManager
          */
         if (!$fileExists) {
             $filePath = $uploadsPath . $originalFileName;
-            $this->prodsDownloader->downloadUrl($fileUrl, $filePath);
+            $downloaded = $this->prodsDownloader->downloadUrl($fileUrl, $filePath);
+            if (!$downloaded) {
+                sleep(10);
+                $downloaded = $this->prodsDownloader->downloadUrl($fileUrl, $filePath);
+            }
+            if (!$downloaded) {
+                throw new \Exception('Unable to download release ' . $element->id . ' ' . $fileUrl);
+            }
             if ($filePath && $fileElement = $this->structureManager->createElement(
                     'file',
                     'showForm',
@@ -763,7 +770,15 @@ class ProdsManager extends ElementsManager
     protected function getReleaseByMd5($releaseInfo)
     {
         if (empty($releaseInfo['md5'])) {
-            if ($path = $this->prodsDownloader->getDownloadedPath($releaseInfo['fileUrl'])) {
+            $path = $this->prodsDownloader->getDownloadedPath($releaseInfo['fileUrl']);
+            if (!$path) {
+                sleep(10);
+                $path = $this->prodsDownloader->getDownloadedPath($releaseInfo['fileUrl']);
+            }
+            if (!$path) {
+                throw new \Exception('Unable to download release ' . $releaseInfo['fileUrl']);
+            }
+            if ($path) {
                 if ($structure = $this->zxParsingManager->getFileStructure($path)) {
                     $releaseFiles = $this->gatherReleaseFiles($structure);
                     $index = [];

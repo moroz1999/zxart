@@ -51,6 +51,11 @@ class routeApplication extends controllerApplication
                 }
             }
         }
+        if ($id = (int)$controller->getParameter('id')){
+            if ($element = $structureManager->getElementById($id)) {
+                $controller->redirect($element->getUrl());
+            }
+        }
     }
 
     public function getUrlName()

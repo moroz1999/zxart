@@ -36,6 +36,7 @@ class fixApplication extends controllerApplication
              */
             $languagesManager = $this->getService('LanguagesManager');
             $languagesManager->setCurrentLanguageCode('eng');
+            $this->fixReleases();
 //            $this->deleteProds();
 //            $this->fixPress();
 //            $this->deletePress();
@@ -73,6 +74,60 @@ class fixApplication extends controllerApplication
             }
             $counter++;
             flush();
+        }
+    }
+
+    private function fixReleases()
+    {
+        /**
+         * @var \Illuminate\Database\Connection $db
+         */
+        $db = $this->getService('db');
+        $result = $db->table('structure_elements')
+            ->where('structureType', '=', 'zxRelease')
+            ->where('dateCreated', '>', 1674768000)
+            ->orderBy('id')
+            ->get(['id']);
+        $ids = array_column($result, 'id');
+        $count = count($ids);
+        $counter = 0;
+        foreach ($ids as $id) {
+            $delete = false;
+            /** @var zxReleaseElement $release */
+            $release = $this->structureManager->getElementById($id);
+            if (!$release) {
+                echo 'release missing ' . $id . '<br>';
+            } else {
+                $filePath = $release->getFilePath();
+                $fileName = $release->getFileName();
+                if ($filePath && $fileName) {
+                    if (is_file($filePath)) {
+                        if ((filesize($filePath) <= 20)) {
+                            $delete = true;
+                        }
+                        if (pathinfo($fileName, PATHINFO_EXTENSION) === 'zip') {
+                            $zip = new ZipArchive();
+                            if ($zip->open($filePath) === TRUE) {
+                                $zip->close();
+                            } else {
+                                $delete = true;
+                            }
+                        }
+
+                        if ($delete) {
+                            echo 'delete ' . $release->getId() . ' ' . $release->getTitle() . '<br>';
+                            $release->deleteElementData();
+                        }
+                    } else {
+                        echo 'file missing <a href="/route/id:' . $release->getId() . '">' . $release->getTitle() . '</a> ' . $filePath . '<br>';
+                    }
+                }
+            }
+            $counter++;
+            flush();
+            if ($counter > 30000) {
+                exit;
+            }
         }
     }
 

@@ -67,8 +67,9 @@ class ProdsDownloader extends errorLogger
         return false;
     }
 
-    public function downloadUrl(string $url, string $destination): void
+    public function downloadUrl(string $url, string $destination): bool
     {
+        $result = false;
         $fp = fopen($destination, 'w+');
 
         $ch = curl_init(str_replace(" ", "%20", $url));
@@ -79,10 +80,24 @@ class ProdsDownloader extends errorLogger
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0');
         curl_setopt($ch, CURLOPT_REFERER, 'https://spectrumcomputing.co.uk/');
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         if (curl_exec($ch) === false) {
             $this->logError(curl_error($ch));
-        };
+        } else {
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            if ($httpcode != 200) {
+                $this->logError("Ошибка при скачивании: HTTP статус $httpcode");
+                fclose($fp);
+                unlink($destination);
+                curl_close($ch);
+            } else {
+                $result = true;
+            }
+        }
         curl_close($ch);
+        fclose($fp);
+        return $result;
     }
 }
