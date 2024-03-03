@@ -235,6 +235,12 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
             }
             $additional .= $country;
         }
+        if ($city = $this->getCityTitle()) {
+            if ($additional) {
+                $additional .= ', ';
+            }
+            $additional .= $city;
+        }
         if ($additional) {
             if ($searchTitle) {
                 $searchTitle .= ' (' . $additional . ')';

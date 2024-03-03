@@ -174,7 +174,6 @@ class authorElement extends structureElement implements CommentsHolderInterface,
             $this->displayInGraphics = 1;
         }
         $this->checkCountry();
-
         $this->persistElementData();
     }
 
@@ -387,6 +386,12 @@ class authorElement extends structureElement implements CommentsHolderInterface,
                 $additional .= ', ';
             }
             $additional .= $country;
+        }
+        if ($city = $this->getCityTitle()) {
+            if ($additional) {
+                $additional .= ', ';
+            }
+            $additional .= $city;
         }
         if ($additional) {
             if ($searchTitle) {

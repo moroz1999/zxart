@@ -18,3 +18,6 @@
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/94686067" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 {/literal}
+{if $currentUser->userName === 'anonymous'}
+<script id="cookieyes" type="text/javascript" src="https://cdn-cookieyes.com/client_data/ecc901cad4290f76cac8a500/script.js"></script>
+{/if}

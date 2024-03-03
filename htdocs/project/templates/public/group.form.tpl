@@ -11,6 +11,20 @@
                 <input class='input_component' type="text" value="{$formData.title}" name="{$formNames.title}"/>
             </td>
         </tr>
+        <tr {if $formErrors.type} class="form_error"{/if}>
+            <td class="form_label">
+                {translations name='group.type'}:
+            </td>
+            <td class="form_field">
+                <select class="dropdown_placeholder" name="{$formNames.type}" autocomplete='off'>
+                    {foreach $element->getGroupTypes() as $type}
+                        <option value='{$type}' {if $element->type === $type} selected="selected"{/if}>
+                            {translations name="group.type_{$type}"}
+                        </option>
+                    {/foreach}
+                </select>
+            </td>
+        </tr>
         <tr {if $formErrors.country} class="form_error"{/if}>
             <td class="form_label">
                 {translations name='group.country'}:
@@ -23,20 +37,6 @@
                             {$countryElement->title}
                         </option>
                     {/if}
-                </select>
-            </td>
-        </tr>
-        <tr {if $formErrors.country} class="form_error"{/if}>
-            <td class="form_label">
-                {translations name='group.type'}:
-            </td>
-            <td class="form_field">
-                <select class="dropdown_placeholder" name="{$formNames.type}" autocomplete='off'>
-                    {foreach $element->getGroupTypes() as $type}
-                        <option value='{$type}' {if $element->type === $type} selected="selected"{/if}>
-                            {$type}
-                        </option>
-                    {/foreach}
                 </select>
             </td>
         </tr>

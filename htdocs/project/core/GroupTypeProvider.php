@@ -7,6 +7,7 @@ trait GroupTypeProvider
         return [
             'unknown',
             'company',
+            'crack',
             'studio',
             'scene',
             'education',

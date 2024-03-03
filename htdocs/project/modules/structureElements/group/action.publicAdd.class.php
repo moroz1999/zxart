@@ -24,6 +24,7 @@ class publicAddGroup extends structureElementAction
             $structureElement->checkParentLetter();
             $structureElement->persistSubGroupConnections();
             $structureElement->persistAuthorship('group');
+            $structureElement->recalculate();
 
             $privilegesManager = $this->getService('privilegesManager');
             $user = $this->getService('user');

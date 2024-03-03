@@ -1,5 +1,9 @@
 <?php
 
+use App\Queue\QueueType;
+use App\Queue\QueueService;
+use Illuminate\Database\Connection;
+
 class crontabApplication extends controllerApplication
 {
     protected $applicationName = 'crontab';
@@ -8,10 +12,8 @@ class crontabApplication extends controllerApplication
 
     private $structureManager;
     private string $logFilePath;
-    const STATUS_TODO = 0;
-    const STATUS_INPROGRESS = 1;
-    const STATUS_SUCCESS = 2;
-    const STATUS_FAIL = 3;
+
+
     public function initialize()
     {
         ignore_user_abort(1);
@@ -63,41 +65,39 @@ class crontabApplication extends controllerApplication
 
     private function recalculate()
     {
+        /**
+         * @var QueueService $queueService
+         */
+        $queueService = $this->getService('QueueService');
         $start_time = microtime(true);
 
         $limit = 5000;
-        $db = $this->getService('db');
+
         while ($limit) {
             $limit--;
-            $records = $db->table('queue')
-                ->select('elementId')
-                ->where('status', '=', self::STATUS_TODO)
-                ->limit(1)
-                ->orderBy('elementId', 'desc')
-                ->get();
+            $records = $queueService->getNextElement(QueueType::RECALCULATION);
             foreach ($records as $record) {
                 $elementId = $record['elementId'];
 
-                $status = self::STATUS_INPROGRESS;
-                $db->table('queue')->where('elementId', '=', $elementId)->update(['status' => $status]);
+                $queueService->updateStatus($elementId, QueueType::RECALCULATION, QueueService::STATUS_INPROGRESS);
 
-
-                $status = self::STATUS_FAIL;
+                $status = QueueService::STATUS_FAIL;
                 if ($element = $this->structureManager->getElementById($elementId)) {
                     if ($element instanceof Recalculable) {
                         $element->recalculate();
                         $end_time = microtime(true);
                         $execution_time = $end_time - $start_time;
-                        $status = self::STATUS_SUCCESS;
+                        $status = QueueService::STATUS_SUCCESS;
                         $this->logMessage('Recalculated ' . $element->getId() . ' ' . $element->structureType . ' ' . $element->getTitle(), round($execution_time));
                     }
                 } else {
                     $this->logMessage('Unable to read ' . $elementId, 0);
                 }
-                $db->table('queue')->where('elementId', '=', $elementId)->update(['status' => $status]);
+                $queueService->updateStatus($elementId, QueueType::RECALCULATION, $status);
             }
         }
     }
+    
 
     private function logMessage($message, $seconds)
     {
@@ -117,7 +117,7 @@ class crontabApplication extends controllerApplication
         $eng = $languagesManager->getLanguageId('eng');
         $rus = $languagesManager->getLanguageId('rus');
         /**
-         * @var \Illuminate\Database\Connection $db
+         * @var Connection $db
          */
         $db = $this->getService('db');
         $counter = 0;
@@ -221,7 +221,7 @@ class crontabApplication extends controllerApplication
     private function parseArtItems($table, $fileColumn, $fileNameColumn)
     {
         /**
-         * @var \Illuminate\Database\Connection $db
+         * @var Connection $db
          */
         $db = $this->getService('db');
         $counter = 0;
@@ -267,7 +267,7 @@ class crontabApplication extends controllerApplication
     private function parseReleases()
     {
         /**
-         * @var \Illuminate\Database\Connection $db
+         * @var Connection $db
          */
         $db = $this->getService('db');
         $counter = 0;

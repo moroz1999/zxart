@@ -21,12 +21,11 @@ class publicReceiveGroup extends structureElementAction
                 $structureElement->image = $structureElement->getId();
                 $structureElement->originalName = $structureElement->getDataChunk("image")->originalName;
             }
-
             $structureElement->persistElementData();
             $structureElement->checkParentLetter();
             $structureElement->persistSubGroupConnections();
-
             $structureElement->persistAuthorship('group');
+            $structureElement->recalculate();
 
             $controller->redirect($structureElement->URL);
         }
