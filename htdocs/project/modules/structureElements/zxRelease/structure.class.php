@@ -199,6 +199,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
 
     public function getReleaseFlatStructure()
     {
+        return false;
         if ($path = $this->getFilePath()) {
             /**
              * @var ZxParsingManager $zxParsingManager
