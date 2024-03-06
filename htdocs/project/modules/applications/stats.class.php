@@ -27,7 +27,7 @@ class statsApplication extends controllerApplication
     public function execute($controller)
     {
         ini_set("memory_limit", "2048M");
-        ini_set("max_execution_time", "7200");
+        ini_set("max_execution_time", 60);
 
         $this->aggregate();
         $this->checkINodes();

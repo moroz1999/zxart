@@ -39,6 +39,8 @@ class zxscreenApplication extends controllerApplication
             if (!in_array($this->zoom, [1, 2, 3]) || $this->download || $this->type === 'hidden') {
                 $this->renderer->assign('cacheEnabled', false);
             }
+            $this->renderer->assign('cacheEnabled', false);
+
             if ($this->download) {
                 $this->renderer->setContentDisposition('attachment');
                 $structureManager = $this->getService(

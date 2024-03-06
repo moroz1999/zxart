@@ -8,7 +8,8 @@ class vtrdosApplication extends controllerApplication
 
     public function initialize()
     {
-        ini_set("max_execution_time", 60 * 60 * 15);
+        exit;
+        ini_set("max_execution_time", 60 * 15);
         ignore_user_abort(true);
         $this->startSession('crontab');
         $this->createRenderer();

@@ -8,7 +8,7 @@ class tslabsApplication extends controllerApplication
 
     public function initialize()
     {
-        ini_set("max_execution_time", 60 * 60 * 1);
+        ini_set("max_execution_time", 60);
         ignore_user_abort(true);
         $this->startSession('crontab');
         $this->createRenderer();

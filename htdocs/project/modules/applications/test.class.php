@@ -22,7 +22,7 @@ class testApplication extends controllerApplication
 
     public function execute($controller)
     {
-        echo 123; exit;
+        echo 123;
         $redis = $this->getService('Redis');
         echo 1;
         $keys = $redis->keys('reqlog:*');

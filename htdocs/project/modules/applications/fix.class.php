@@ -17,7 +17,7 @@ class fixApplication extends controllerApplication
 
     public function execute($controller)
     {
-//        exit;
+        exit;
         ini_set("memory_limit", "2048M");
         ini_set("max_execution_time", 60);
         $renderer = $this->getService('renderer');
