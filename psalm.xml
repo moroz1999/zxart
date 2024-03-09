@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <psalm
         errorLevel="1"
+        errorBaseline="psalm-baseline.xml"
+        findUnusedBaselineEntry="true"
+        findUnusedCode="true"
 >
     <projectFiles>
         <directory name="project" />

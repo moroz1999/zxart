@@ -1,0 +1,1 @@
+vendor/bin/psalm --use-baseline=psalm-baseline.xml
