@@ -2,6 +2,9 @@
 
 class receiveCity extends structureElementAction
 {
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated) {
@@ -17,7 +20,7 @@ class receiveCity extends structureElementAction
         $structureElement->setViewName('form');
     }
 
-    protected function joinCities($structureElement)
+    protected function joinCities(structureElement $structureElement): bool
     {
         $structureManager = $this->getService('structureManager');
         if ($structureElement->joinCity == $structureElement->id) {
@@ -44,7 +47,7 @@ class receiveCity extends structureElementAction
         return true;
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'title',
@@ -52,7 +55,7 @@ class receiveCity extends structureElementAction
         ];
     }
 
-    public function setValidators(&$validators)
+    public function setValidators(&$validators): void
     {
     }
 }

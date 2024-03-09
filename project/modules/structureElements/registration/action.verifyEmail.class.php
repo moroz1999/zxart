@@ -2,6 +2,9 @@
 
 class verifyEmailRegistration extends structureElementAction
 {
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         $translationsManager = $this->getService('translationsManager');

@@ -14,7 +14,7 @@
     'pageAmountProducts' => 10,
     'availablePageAmountProducts' => [20, 30, 50],
     'timeZone' => 'Europe/Tallinn',
-    'errorReporting' => E_ERROR,
+    'errorReporting' => E_ALL,
     'protocol' => 'http://',
     'defaultRootElementId' => '1',
     'rootMarkerPublic' => 'public_root',

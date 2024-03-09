@@ -335,7 +335,7 @@ class WosManager extends errorLogger
     /**
      * @param \Illuminate\Database\MySqlConnection $zxdbConfig
      */
-    public function setZxdbConfig($zxdbConfig)
+    public function setZxdbConfig($zxdbConfig): void
     {
         $this->zxdbConfig = $zxdbConfig;
         $this->makeZxdb();
@@ -344,7 +344,7 @@ class WosManager extends errorLogger
     /**
      * @param AuthorsManager $authorsManager
      */
-    public function setAuthorsManager($authorsManager)
+    public function setAuthorsManager($authorsManager): void
     {
         $this->authorsManager = $authorsManager;
         $authorsManager->setForceUpdateCountry(false);
@@ -355,7 +355,7 @@ class WosManager extends errorLogger
     /**
      * @param GroupsManager $groupsManager
      */
-    public function setGroupsManager($groupsManager)
+    public function setGroupsManager($groupsManager): void
     {
         $this->groupsManager = $groupsManager;
     }
@@ -363,7 +363,7 @@ class WosManager extends errorLogger
     /**
      * @param CountriesManager $countriesManager
      */
-    public function setCountriesManager($countriesManager)
+    public function setCountriesManager($countriesManager): void
     {
         $this->countriesManager = $countriesManager;
     }
@@ -371,7 +371,7 @@ class WosManager extends errorLogger
     /**
      * @param mixed $prodsManager
      */
-    public function setProdsManager(ProdsManager $prodsManager)
+    public function setProdsManager(ProdsManager $prodsManager): void
     {
         $this->prodsManager = $prodsManager;
 //        $this->prodsManager->setForceUpdateYoutube(false);
@@ -386,7 +386,7 @@ class WosManager extends errorLogger
 //        $this->prodsManager->setAddImages(true);
     }
 
-    public function importAll()
+    public function importAll(): void
     {
         $this->maxTime = time() + 60 * 28;
         if (is_file($this->getStatusPath()) && empty($this->debugEntry)) {
@@ -398,7 +398,7 @@ class WosManager extends errorLogger
         }
     }
 
-    public function importCountries()
+    public function importCountries(): void
     {
         if ($countries = $this->zxdb->table('countries')->select('*')->get()) {
             foreach ($countries as $key => $country) {
@@ -416,7 +416,7 @@ class WosManager extends errorLogger
         }
     }
 
-    public function importSeries()
+    public function importSeries(): void
     {
         if ($tags = $this->zxdb->table('tags')
             ->where('tagtype_id', 'like', 'S')
@@ -463,7 +463,7 @@ class WosManager extends errorLogger
         }
     }
 
-    public function importZxdbProds()
+    public function importZxdbProds(): bool
     {
         if ($entries = $this->zxdb->table('entries')->select('*')->get()) {
             foreach ($entries as $entry) {
@@ -714,7 +714,7 @@ class WosManager extends errorLogger
         return true;
     }
 
-    protected function getReleasesInfo($entry)
+    protected function getReleasesInfo($entry): void
     {
         $entryId = $entry['id'];
         if ($releases = $this->zxdb->table('releases')
@@ -768,7 +768,7 @@ class WosManager extends errorLogger
         }
     }
 
-    protected function getArchiveLink($link, $archive = false)
+    protected function getArchiveLink($link, bool $archive = false): string
     {
         if (stripos($link, 'zxdb') !== false) {
             return 'https://spectrumcomputing.co.uk/' . $link;
@@ -784,7 +784,10 @@ class WosManager extends errorLogger
         }
     }
 
-    protected function gatherLabelsInfo(&$infoIndex, $labelId, $isGroup = false, $isPerson = false, $isAlias = false)
+    /**
+     * @param false $isPerson
+     */
+    protected function gatherLabelsInfo(array &$infoIndex, $labelId, bool $isGroup = false, bool $isPerson = false, $isAlias = false)
     {
         if (!isset($infoIndex[$labelId])) {
             $infoIndex[$labelId] = [];
@@ -851,7 +854,7 @@ class WosManager extends errorLogger
         return $infoIndex[$labelId];
     }
 
-    protected function makeZxdb()
+    protected function makeZxdb(): void
     {
         if ($this->zxdb === null) {
             $manager = new Illuminate\Database\Capsule\Manager();
@@ -872,7 +875,7 @@ class WosManager extends errorLogger
         }
     }
 
-    protected function markProgress($text)
+    protected function markProgress(string $text): void
     {
         static $previousTime;
 
@@ -886,7 +889,7 @@ class WosManager extends errorLogger
         $previousTime = $endTime;
     }
 
-    protected function getStatusPath()
+    protected function getStatusPath(): string
     {
         return PUBLIC_PATH . 'wos.txt';
     }

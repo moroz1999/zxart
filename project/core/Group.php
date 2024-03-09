@@ -4,7 +4,12 @@ trait Group
 {
     protected $linksInfo;
 
-    public function getReleases()
+    /**
+     * @return zxReleaseElement[]
+     *
+     * @psalm-return array<zxReleaseElement>
+     */
+    public function getReleases(): array
     {
         return $this->publishedReleases;
     }
@@ -98,7 +103,12 @@ trait Group
         return $this->linksInfo;
     }
 
-    public function getAuthorRoles()
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{'coder', 'cracker', 'graphician', 'hardware', 'musician', 'organizer', 'support', 'tester', 'gamedesigner', 'unknown'}
+     */
+    public function getAuthorRoles(): array
     {
         return [
             'coder',

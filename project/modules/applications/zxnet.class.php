@@ -5,11 +5,17 @@ class zxnetApplication extends controllerApplication
     protected $applicationName = 'zxnet';
     public $rendererName = 'smarty';
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         $this->createRenderer();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         $structureManager = $this->getService(

@@ -8,7 +8,8 @@ class joinGroup extends structureElementAction
      * @param structureManager $structureManager
      * @param controller $controller
      * @param groupElement $structureElement
-     * @return mixed|void
+     *
+     * @return void
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
@@ -31,7 +32,7 @@ class joinGroup extends structureElementAction
         $structureElement->setViewName('form');
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'joinAsAlias',

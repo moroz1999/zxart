@@ -8,7 +8,8 @@ class publicReceiveZxPicture extends structureElementAction
      * @param structureManager $structureManager
      * @param controller $controller
      * @param zxPictureElement $structureElement
-     * @return mixed|void
+     *
+     * @return void
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
@@ -75,7 +76,7 @@ class publicReceiveZxPicture extends structureElementAction
         }
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'title',
@@ -102,7 +103,7 @@ class publicReceiveZxPicture extends structureElementAction
         ];
     }
 
-    public function setValidators(&$validators)
+    public function setValidators(&$validators): void
     {
     }
 }

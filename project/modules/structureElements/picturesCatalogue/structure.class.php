@@ -20,6 +20,9 @@ class picturesCatalogueElement extends structureElement
     protected $authorsList;
     protected $authorsIDList;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -38,7 +41,7 @@ class picturesCatalogueElement extends structureElement
         $moduleStructure['tagsText'] = 'text';
     }
 
-    protected function setMultiLanguageFields(&$multiLanguageFields)
+    protected function setMultiLanguageFields(&$multiLanguageFields): void
     {
         $multiLanguageFields[] = 'title';
     }

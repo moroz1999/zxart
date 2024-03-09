@@ -19,6 +19,9 @@ class zxProdCategoryElement extends structureElement implements MetadataProvider
 
     protected $viewName = 'short';
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -34,7 +37,7 @@ class zxProdCategoryElement extends structureElement implements MetadataProvider
         $moduleStructure['h1'] = 'text';
     }
 
-    protected function setMultiLanguageFields(&$multiLanguageFields)
+    protected function setMultiLanguageFields(&$multiLanguageFields): void
     {
         $multiLanguageFields[] = 'title';
         $multiLanguageFields[] = 'metaTitle';
@@ -45,6 +48,11 @@ class zxProdCategoryElement extends structureElement implements MetadataProvider
         $multiLanguageFields[] = 'h1';
     }
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{'showForm', 'showSeoForm', 'showPositions', 'showPrivileges'}
+     */
     protected function getTabsList()
     {
         return [
@@ -70,9 +78,9 @@ class zxProdCategoryElement extends structureElement implements MetadataProvider
     }
 
     /**
-     * @return int
+     * @return false|int
      */
-    public function getParentCategoryId()
+    public function getParentCategoryId(): int|false
     {
         /**
          * @var structureManager $structureManager
@@ -104,7 +112,7 @@ class zxProdCategoryElement extends structureElement implements MetadataProvider
         return false;
     }
 
-    public function getSubCategoriesTreeIds(&$ids = [])
+    public function getSubCategoriesTreeIds(array &$ids = []): void
     {
         $ids[] = $this->id;
         if ($subcategories = $this->getCategories()) {

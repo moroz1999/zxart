@@ -18,6 +18,11 @@ class folderElement extends menuDependantStructureElement implements Configurabl
     public $defaultActionName = 'show';
     public $role = 'container';
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{'showFullList', 'showForm', 'showSeoForm', 'showLayoutForm', 'showPositions', 'showPrivileges', 'showLanguageForm'}
+     */
     protected function getTabsList()
     {
         return [
@@ -54,6 +59,9 @@ class folderElement extends menuDependantStructureElement implements Configurabl
         return $this->textContent;
     }
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -82,7 +90,16 @@ class folderElement extends menuDependantStructureElement implements Configurabl
         return $this->getContentElements('structure');
     }
 
-    public function getContentElements($types = null)
+    /**
+     * @param null|string $types
+     *
+     * @psalm-param 'structure'|null $types
+     *
+     * @return structureElement[]
+     *
+     * @psalm-return array<structureElement>
+     */
+    public function getContentElements(string|null $types = null): array
     {
         return $this->getChildrenList('content', $types, null, true);
     }
@@ -107,6 +124,9 @@ class folderElement extends menuDependantStructureElement implements Configurabl
         return $subMenus;
     }
 
+    /**
+     * @return string
+     */
     public function getColumnsType()
     {
         return $this->columns;
@@ -130,7 +150,10 @@ class folderElement extends menuDependantStructureElement implements Configurabl
         return parent::getAllowedTypes($currentAction);
     }
 
-    protected function getLettersListMarker($type)
+    /**
+     * @psalm-param 'admin'|'public' $type
+     */
+    protected function getLettersListMarker(string $type)
     {
         return $this->structureMarker;
     }

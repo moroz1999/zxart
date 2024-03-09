@@ -19,6 +19,9 @@ class fileElement extends structureElement implements StructureElementUploadedFi
     public $defaultActionName = 'show';
     public $role = 'content';
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -39,11 +42,14 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         return false;
     }
 
-    public function getFilePath()
+    public function getFilePath(): string
     {
         return $this->getUploadedFilesPath().$this->getId();
     }
 
+    /**
+     * @return string
+     */
     public function getImageId($mobile = false)
     {
         if ($this->image) {
@@ -52,6 +58,9 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         return $this->file;
     }
 
+    /**
+     * @return string
+     */
     public function getImageName($mobile = false)
     {
         if ($this->imageFileName) {
@@ -60,7 +69,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         return $this->fileName;
     }
 
-    public function getImageUrl($preset = 'original', $mobile = false, $full = false, $zoom = 1)
+    public function getImageUrl(string $preset = 'original', $mobile = false, $full = false, $zoom = 1)
     {
         if (stripos($preset, 'full') !== false) {
             $full = true;
@@ -90,7 +99,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         return $url;
     }
 
-    public function getFileName($encoded = false)
+    public function getFileName($encoded = false): string
     {
         if ($encoded) {
             return $this->fileName;
@@ -99,7 +108,10 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         }
     }
 
-    public function getFileExtension()
+    /**
+     * @return false|string
+     */
+    public function getFileExtension(): string|false
     {
         if ($info = pathinfo($this->fileName)) {
             if (!empty($info['extension'])) {
@@ -110,7 +122,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         return false;
     }
 
-    public function getDownloadUrl($mode = 'download', $appName = 'file')
+    public function getDownloadUrl(string $mode = 'download', string $appName = 'file'): string
     {
         $controller = $this->getService('controller');
         $url = $controller->baseURL . $appName . '/id:' . $this->file . '/mode:' . $mode . '/filename:' . $this->fileName;
@@ -118,7 +130,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         return $url;
     }
 
-    public function getScreenshotUrl()
+    public function getScreenshotUrl(): string
     {
         $controller = $this->getService('controller');
         $url = $controller->baseURL . 'screenshot' . '/id:' . $this->file . '/filename:' . $this->fileName;
@@ -126,7 +138,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         return $url;
     }
 
-    public function isImage()
+    public function isImage(): bool
     {
         if ($info = pathinfo($this->fileName)) {
             if (!empty($info['extension'])) {

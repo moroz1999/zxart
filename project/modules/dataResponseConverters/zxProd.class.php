@@ -4,6 +4,11 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
 {
     protected $defaultPreset = 'api';
 
+    /**
+     * @return (Closure|string)[]
+     *
+     * @psalm-return array{id: 'id', title: Closure(mixed):string, searchTitle: 'getSearchTitle', url: 'getUrl', structureType: 'structureType', dateCreated: Closure(mixed):mixed, dateModified: Closure(mixed):mixed, language: 'language', partyId: 'getPartyId', partyPlace: 'partyplace', compo: 'compo', year: 'year', youtubeId: 'youtubeId', description: 'description', legalStatus: 'getLegalStatus', groupsIds: 'getGroupsIds', languagesInfo: 'getLanguagesInfo', categoriesInfo: 'getCategoriesInfo', partyInfo: 'getPartyInfo', publishersInfo: 'getPublishersInfo', groupsInfo: 'getGroupsInfo', publishersIds: 'getPublishersIds', releasesIds: 'getReleasesIds', imagesUrls: 'getImagesUrls', compilationItems: 'compilationItems', seriesProds: 'seriesProds', inlaysUrls: 'getInlaysUrls', inlays: Closure(zxReleaseElement):array<fileElement>, listImagesUrls: Closure(zxProdElement):(list{mixed,...}|mixed), hardware: 'getHardware', hardwareInfo: 'getHardwareInfo', maps: Closure(mixed):mixed, rzx: Closure(mixed):mixed, authorsInfo: Closure(zxProdElement):mixed, authorsInfoShort: Closure(zxProdElement):array, importIds: 'getImportIdsIndex', votes: Closure(mixed):float, partyString: Closure(zxProdElement):string, groupsString: Closure(zxProdElement):string, publishersString: Closure(zxProdElement):string, authorsInfoString: Closure(zxProdElement):string, categoriesString: Closure(zxProdElement):string, languageString: Closure(zxProdElement):string, hardwareString: Closure(zxProdElement):string, manualString: Closure(zxProdElement):string, releaseFileDescription: Closure(zxProdElement):(''|mixed), isPlayable: Closure(zxProdElement):bool, userVote: 'getUserVote', votePercent: 'getVotePercent', denyVoting: 'denyVoting', externalLink: 'externalLink'}
+     */
     protected function getRelationStructure()
     {
         return [
@@ -193,6 +198,11 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
         ];
     }
 
+    /**
+     * @return string[][]
+     *
+     * @psalm-return array{ai: list{'title', 'description', 'languageString', 'partyString', 'year', 'description', 'groupsString', 'publishersString', 'authorsInfoString', 'hardwareString', 'manualString', 'releaseFileDescription', 'categoriesString', 'isPlayable', 'compilationItems', 'seriesProds'}, api: list{'id', 'title', 'url', 'dateCreated', 'dateModified', 'language', 'partyId', 'partyPlace', 'compo', 'year', 'youtubeId', 'description', 'legalStatus', 'groupsIds', 'publishersIds', 'releasesIds', 'imagesUrls', 'maps', 'authorsInfo', 'importIds', 'votes', 'userVote', 'rzx', 'externalLink', 'compilationItems', 'seriesProds'}, apiShort: list{'id', 'dateModified', 'releasesIds'}, list: list{'id', 'structureType', 'title', 'dateCreated', 'url', 'inlaysUrls', 'listImagesUrls', 'hardwareInfo', 'votes', 'userVote', 'year', 'partyPlace', 'partyInfo', 'languagesInfo', 'categoriesInfo', 'groupsInfo', 'publishersInfo', 'authorsInfoShort', 'youtubeId', 'denyVoting', 'legalStatus', 'externalLink'}, search: list{'id', 'searchTitle', 'url', 'structureType'}}
+     */
     protected function getPresetsStructure()
     {
         return [

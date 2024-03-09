@@ -2,6 +2,9 @@
 
 class claimAuthor extends structureElementAction
 {
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         $user = $this->getService('user');

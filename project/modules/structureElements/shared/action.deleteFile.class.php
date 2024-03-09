@@ -4,6 +4,9 @@ class deleteFileShared extends structureElementAction
 {
     protected $loggable = true;
 
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         $language = false;

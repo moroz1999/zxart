@@ -4,6 +4,9 @@ class batchUploadPicturesCatalogue extends structureElementAction
 {
     protected $loggable = true;
 
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($imagesInfo = $structureElement->image) {
@@ -52,7 +55,7 @@ class batchUploadPicturesCatalogue extends structureElementAction
         $controller->redirect($structureElement->URL);
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'border',

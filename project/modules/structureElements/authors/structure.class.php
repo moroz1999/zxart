@@ -8,12 +8,15 @@ class authorsElement extends structureElement
     public $defaultActionName = 'showFullList';
     public $role = 'container';
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
     }
 
-    protected function setMultiLanguageFields(&$multiLanguageFields)
+    protected function setMultiLanguageFields(&$multiLanguageFields): void
     {
         $multiLanguageFields[] = 'title';
     }

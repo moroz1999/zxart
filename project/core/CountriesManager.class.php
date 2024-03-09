@@ -12,12 +12,15 @@ class CountriesManager extends errorLogger
     /**
      * @param linksManager $linksManager
      */
-    public function setLinksManager($linksManager)
+    public function setLinksManager($linksManager): void
     {
         $this->linksManager = $linksManager;
     }
 
-    public function importCountry($countryInfo, $origin)
+    /**
+     * @psalm-param array{id: mixed, title: mixed} $countryInfo
+     */
+    public function importCountry(array $countryInfo, $origin)
     {
         /**
          * @var countryElement $element
@@ -35,7 +38,10 @@ class CountriesManager extends errorLogger
         return $element;
     }
 
-    public function getLocationByName($locationName)
+    /**
+     * @return cityElement|countryElement|false
+     */
+    public function getLocationByName($locationName): countryElement|cityElement|false
     {
         $locationElement = false;
         $structureManager = $this->structureManager;
@@ -91,7 +97,7 @@ class CountriesManager extends errorLogger
      * @param countryElement $element
      * @param $countryInfo
      */
-    protected function updateCountry($element, $countryInfo)
+    protected function updateCountry($element, array $countryInfo): void
     {
         if (!$element->title) {
             $element->title = $countryInfo['title'];
@@ -100,7 +106,7 @@ class CountriesManager extends errorLogger
         $element->persistElementData();
     }
 
-    public function joinCountries($mainCountryId, $joinedCountryId)
+    public function joinCountries(int $mainCountryId, int $joinedCountryId): bool
     {
         if ($joinedCountryId == $mainCountryId) {
             return false;

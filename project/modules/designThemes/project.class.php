@@ -4,6 +4,9 @@ class projectDesignTheme extends DesignTheme
 {
     use InheritedThemesTrait;
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         $this->generateInheritedThemesNames('public');

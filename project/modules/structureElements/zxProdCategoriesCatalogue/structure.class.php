@@ -18,6 +18,9 @@ class zxProdCategoriesCatalogueElement extends structureElement implements JsonD
      */
     protected $categories;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -43,7 +46,7 @@ class zxProdCategoriesCatalogueElement extends structureElement implements JsonD
         return $this->categories;
     }
 
-    public function getSubCategoriesTreeIds(&$ids)
+    public function getSubCategoriesTreeIds(array &$ids)
     {
         foreach ($this->getCategories() as $category) {
             $category->getSubCategoriesTreeIds($ids);

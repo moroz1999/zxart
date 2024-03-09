@@ -40,6 +40,9 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
     protected $subGroupIds;
     protected $groupProds;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -74,11 +77,17 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
         ];
     }
 
+    /**
+     * @return int
+     */
     protected function getCityId()
     {
         return $this->city;
     }
 
+    /**
+     * @return int
+     */
     protected function getCountryId()
     {
         return $this->country;
@@ -89,7 +98,12 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
         return $this->getService('linksManager')->getConnectedIdList($this->id, $type, 'parent');
     }
 
-    public function getChartDataEventTypes($type = null)
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{'play'|'view'}
+     */
+    public function getChartDataEventTypes($type = null): array
     {
         if ($type == 'groupMusic') {
             return ['play'];
@@ -98,7 +112,7 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
         }
     }
 
-    public function getSaveUrl($type)
+    public function getSaveUrl($type): string
     {
         $controller = controller::getInstance();
         $url = $controller->baseURL . 'zipItems/';
@@ -110,7 +124,7 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
         return $url;
     }
 
-    public function checkParentLetter()
+    public function checkParentLetter(): void
     {
         /**
          * @var linksManager $linksManager
@@ -132,7 +146,14 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
         }
     }
 
-    protected function getLettersListMarker($type)
+    /**
+     * @psalm-param 'admin'|'public' $type
+     *
+     * @return string
+     *
+     * @psalm-return 'groups'|'groupsmenu'
+     */
+    protected function getLettersListMarker(string $type)
     {
         if ($type == 'admin') {
             return 'groups';
@@ -172,7 +193,7 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
         return $this->subGroupIds;
     }
 
-    public function persistSubGroupConnections()
+    public function persistSubGroupConnections(): void
     {
         /**
          * @var linksManager $linksManager
@@ -251,6 +272,9 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
         return $searchTitle;
     }
 
+    /**
+     * @return void
+     */
     public function recalculate()
     {
         $this->checkCountry();

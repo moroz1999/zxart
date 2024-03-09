@@ -17,11 +17,19 @@ class generateBannerApplication extends controllerApplication implements Applica
         return !$this->isCrawlerDetected();
     }
 
+    /**
+     * @return string
+     *
+     * @psalm-return 'image/png'
+     */
     public function getContentType()
     {
         return 'image/png';
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         $structureManager = $this->getService(
@@ -61,6 +69,11 @@ class generateBannerApplication extends controllerApplication implements Applica
         }
     }
 
+    /**
+     * @return int
+     *
+     * @psalm-return 3600
+     */
     public function getCacheExpirationTime()
     {
         return 1 * 60 * 60;

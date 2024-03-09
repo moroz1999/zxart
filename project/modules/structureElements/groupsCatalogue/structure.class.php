@@ -11,13 +11,19 @@ class groupsCatalogueElement extends structureElement
     protected $replacementElements;
     protected $lettersSelectorInfo;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
         $moduleStructure['items'] = 'text';
     }
 
-    public function getReplacementElements($roles)
+    /**
+     * @psalm-return array<never, never>
+     */
+    public function getReplacementElements($roles): array
     {
         return [];
     }
@@ -53,6 +59,9 @@ class groupsCatalogueElement extends structureElement
         }
     }
 
+    /**
+     * @return void
+     */
     public function deleteElementData()
     {
         $structureManager = $this->getService('structureManager');

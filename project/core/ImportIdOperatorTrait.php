@@ -9,17 +9,17 @@ trait ImportIdOperatorTrait
 
     protected Connection $db;
 
-    public function setDb(Connection $db)
+    /**
+     * @return void
+     */
+    public function setDb(Connection $db): void
     {
         $this->db = $db;
     }
 
     protected structureManager $structureManager;
 
-    /**
-     * @param structureManager $structureManager
-     */
-    public function setStructureManager(structureManager $structureManager)
+    public function setStructureManager(structureManager $structureManager):void
     {
         $this->structureManager = $structureManager;
     }
@@ -60,7 +60,7 @@ trait ImportIdOperatorTrait
         return $this->cacheId[$origin][$type][$importId];
     }
 
-    protected function saveImportId($elementId, $importId, $origin, $type)
+    protected function saveImportId($elementId, $importId, $origin, $type): bool
     {
         unset($this->cache[$origin][$type][$importId]);
         $this->cacheId[$origin][$type][$importId] = $elementId;
@@ -74,7 +74,7 @@ trait ImportIdOperatorTrait
         );
     }
 
-    protected function moveImportId($oldElementId, $newElementId, $importId, $origin, $type)
+    protected function moveImportId($oldElementId, $newElementId, $importId, $origin, $type): int
     {
         unset($this->cache[$origin][$type][$importId]);
         return $this->db

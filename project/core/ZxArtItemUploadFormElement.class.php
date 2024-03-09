@@ -8,7 +8,12 @@
  */
 abstract class ZxArtItemUploadFormElement extends structureElement
 {
-    public function getAuthorIds()
+    /**
+     * @return int[]|null
+     *
+     * @psalm-return array<int>|null
+     */
+    public function getAuthorIds(): array|null
     {
         return $this->author;
     }

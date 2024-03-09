@@ -12,7 +12,7 @@ class votesManager implements DependencyInjectionContextInterface
     private static $instance;
     protected $elementsTypesIndex = [];
 
-    public static function getInstance()
+    public static function getInstance(): self
     {
         if (is_null(self::$instance)) {
             self::$instance = new votesManager();
@@ -65,7 +65,7 @@ class votesManager implements DependencyInjectionContextInterface
         return $this->elementVotesCounts[$elementId];
     }
 
-    public function getElementFilteredVotes($elementId)
+    public function getElementFilteredVotes($elementId): array
     {
         $votesList = $this->getElementVotesList($elementId);
         $votes = array_column($votesList, 'value');
@@ -119,7 +119,10 @@ class votesManager implements DependencyInjectionContextInterface
         return $this->elementsTypesIndex[$type][$id];
     }
 
-    protected function loadVotesByIdList($idList)
+    /**
+     * @psalm-param list{0?: mixed,...} $idList
+     */
+    protected function loadVotesByIdList(array $idList)
     {
         $records = false;
         if ($idList) {
@@ -137,7 +140,12 @@ class votesManager implements DependencyInjectionContextInterface
         return $records;
     }
 
-    public function vote($elementId, $type, $value)
+    /**
+     * @psalm-param int<min, max> $value
+     *
+     * @return true
+     */
+    public function vote(int $elementId, string $type, int $value): bool
     {
         $collection = persistableCollection::getInstance('votes_history');
         $user = $this->getService('user');
@@ -161,7 +169,10 @@ class votesManager implements DependencyInjectionContextInterface
         return true;
     }
 
-    public function getLatestVotes($limit, $types = null)
+    /**
+     * @psalm-return array{0?: mixed,...}|false
+     */
+    public function getLatestVotes($limit, $types = null): array|false
     {
         $votes = false;
         $query = $this->getService('db')->table('votes_history')->select('*');

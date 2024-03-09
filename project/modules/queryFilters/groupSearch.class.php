@@ -2,7 +2,7 @@
 
 class groupSearchQueryFilter extends searchQueryFilter
 {
-    public function getTypeName()
+    public function getTypeName(): string
     {
         return 'group';
     }

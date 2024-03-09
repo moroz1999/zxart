@@ -14,14 +14,14 @@ class ZxPressManager extends errorLogger
     {
     }
 
-    public function setProdsManager(ProdsManager $prodsManager)
+    public function setProdsManager(ProdsManager $prodsManager): void
     {
         $this->prodsManager = $prodsManager;
         $this->prodsManager->setMatchProdsWithoutYear(true);
         $this->prodsManager->setUpdateExistingProds(true);
     }
 
-    public function importAll()
+    public function importAll(): void
     {
         $pageUrl = $this->rootUrl . 'ezines.php';
         if ($html = $this->loadHtml($pageUrl)) {
@@ -38,7 +38,7 @@ class ZxPressManager extends errorLogger
         }
     }
 
-    private function parseIssuesPage($pageUrl)
+    private function parseIssuesPage($pageUrl): void
     {
         $this->prodsIndex = [];
         if ($html = $this->loadHtml($pageUrl)) {
@@ -142,7 +142,7 @@ class ZxPressManager extends errorLogger
         return $innerHTML;
     }
 
-    private function copyImagesAndUpdateHtml($html)
+    private function copyImagesAndUpdateHtml(string $html)
     {
         $sourceDomain = $this->rootUrl;
         $destinationUrl = '/userfiles/images';
@@ -178,7 +178,7 @@ class ZxPressManager extends errorLogger
         return $newHtml;
     }
 
-    private function sanitize($value)
+    private function sanitize($value): string
     {
         $value = str_ireplace("\r", '', $value);
         $value = str_ireplace("\n", ' ', $value);
@@ -186,8 +186,8 @@ class ZxPressManager extends errorLogger
     }
 
     private function loadHtml(
-        $url
-    )
+        string $url
+    ): DOMDocument|false
     {
         if ($contents = file_get_contents($url)) {
             $dom = new DOMDocument;
@@ -207,8 +207,8 @@ class ZxPressManager extends errorLogger
     }
 
     private function markProgress(
-        $text
-    )
+        string $text
+    ): void
     {
         static $previousTime;
 

@@ -4,6 +4,9 @@ class projectAdminDesignTheme extends DesignTheme
 {
     use InheritedThemesTrait;
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         $this->generateInheritedThemesNames('admin');

@@ -16,11 +16,17 @@ class zxFileScreenApplication extends controllerApplication
     protected $fileId;
     public $rendererName = 'zxScreen';
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         $this->createRenderer();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         $structureManager = $this->getService(
@@ -64,7 +70,7 @@ class zxFileScreenApplication extends controllerApplication
         }
     }
 
-    public function processRequestParameters()
+    public function processRequestParameters(): void
     {
         $controller = controller::getInstance();
         $this->fileName = $controller->getParameter('fileName');

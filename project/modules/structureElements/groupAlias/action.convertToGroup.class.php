@@ -8,7 +8,8 @@ class convertToGroupGroupAlias extends structureElementAction
      * @param structureManager $structureManager
      * @param controller $controller
      * @param groupAliasElement $structureElement
-     * @return mixed|void
+     *
+     * @return void
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {

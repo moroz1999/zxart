@@ -21,7 +21,7 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
         return self::$instance;
     }
 
-    public function joinTags($parentTagId, $joinedTagId)
+    public function joinTags($parentTagId, $joinedTagId): void
     {
         if ($parentTagId != $joinedTagId) {
             if ($parentTagElement = $this->getTagElement($parentTagId)) {
@@ -70,7 +70,10 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
         return $this->elementsIndex[$id];
     }
 
-    public function getElementSuggestedTags($elementId, $amount)
+    /**
+     * @psalm-return list{0?: mixed,...}
+     */
+    public function getElementSuggestedTags($elementId, $amount): array
     {
         $result = [];
         if (is_array($tagsIdList = $this->getTagsIdList($elementId))) {
@@ -91,7 +94,10 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
         return $result;
     }
 
-    public function getSuggestedTagsIds($idList, $amount = 10)
+    /**
+     * @psalm-return list{0?: mixed,...}
+     */
+    public function getSuggestedTagsIds(array $idList, $amount = 10): array
     {
         $result = [];
         $collection = persistableCollection::getInstance('structure_links');
@@ -119,7 +125,14 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
         return $result;
     }
 
-    public function getConnectedElementIds($tagsIdList, $filterIdList = false)
+    /**
+     * @param false $filterIdList
+     *
+     * @psalm-param list{mixed} $tagsIdList
+     *
+     * @psalm-return list<mixed>
+     */
+    public function getConnectedElementIds(array $tagsIdList, bool $filterIdList = false): array
     {
         $query = $this->getService('db')
             ->table('structure_links')
@@ -145,7 +158,7 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
         return $result;
     }
 
-    public function getConnectedElementIdsByNames($names, $intersect = true)
+    public function getConnectedElementIdsByNames($names, bool $intersect = true)
     {
         //can't be array, used in getConnectedElementIds
         $result = false;
@@ -168,7 +181,12 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
         }
     }
 
-    public function getTagElementsByNames($names, $createNew = false)
+    /**
+     * @param false $createNew
+     *
+     * @psalm-return list{0?: mixed,...}
+     */
+    public function getTagElementsByNames($names, bool $createNew = false): array
     {
         $result = [];
         foreach ($names as $name) {
@@ -179,7 +197,7 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
         return $result;
     }
 
-    public function getTagElementByName($tagName, $createNew = false)
+    public function getTagElementByName($tagName, bool $createNew = false)
     {
         $tagElement = false;
         $tagName = mb_convert_case(trim($tagName), MB_CASE_TITLE, "UTF-8");
@@ -191,7 +209,7 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
         return $tagElement;
     }
 
-    public function loadTagElement($tagName)
+    public function loadTagElement(string $tagName)
     {
         $result = false;
 
@@ -212,7 +230,7 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
         return $result;
     }
 
-    public function createTagElement($tagName)
+    public function createTagElement(string $tagName)
     {
         $tagElement = false;
         $structureManager = $this->getService('structureManager');
@@ -238,7 +256,7 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
         return $tagElement;
     }
 
-    public function removeTag($tagName, $elementId)
+    public function removeTag($tagName, $elementId): void
     {
         if ($tagElement = $this->getTagElementByName($tagName, false)) {
             $this->getService('linksManager')->unLinkElements($tagElement->id, $elementId, 'tagLink');

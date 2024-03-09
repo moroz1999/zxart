@@ -75,7 +75,7 @@ class AuthorsManager extends ElementsManager
     /**
      * @param ConfigManager $configManager
      */
-    public function setConfigManager($configManager)
+    public function setConfigManager($configManager): void
     {
         $this->configManager = $configManager;
     }
@@ -83,7 +83,7 @@ class AuthorsManager extends ElementsManager
     /**
      * @param CountriesManager $countriesManager
      */
-    public function setCountriesManager($countriesManager)
+    public function setCountriesManager($countriesManager): void
     {
         $this->countriesManager = $countriesManager;
     }
@@ -91,7 +91,7 @@ class AuthorsManager extends ElementsManager
     /**
      * @param privilegesManager $privilegesManager
      */
-    public function setPrivilegesManager($privilegesManager)
+    public function setPrivilegesManager($privilegesManager): void
     {
         $this->privilegesManager = $privilegesManager;
     }
@@ -99,12 +99,12 @@ class AuthorsManager extends ElementsManager
     /**
      * @param linksManager $linksManager
      */
-    public function setLinksManager($linksManager)
+    public function setLinksManager($linksManager): void
     {
         $this->linksManager = $linksManager;
     }
 
-    public function getAuthorByName($authorName, $countryName = null, $cityName = null)
+    public function getAuthorByName($authorName, $countryName = null, $cityName = null): bool|structureElement
     {
         $authorElement = false;
 
@@ -127,7 +127,7 @@ class AuthorsManager extends ElementsManager
         return $authorElement;
     }
 
-    public function getAuthorAliasByName($authorName)
+    public function getAuthorAliasByName($authorName): bool|structureElement
     {
         $authorAliasElement = false;
 
@@ -149,7 +149,12 @@ class AuthorsManager extends ElementsManager
         return $authorAliasElement;
     }
 
-    public function getAuthorsInfo($elementId, $type)
+    /**
+     * @psalm-param 'group' $type
+     *
+     * @psalm-return list{0?: mixed,...}
+     */
+    public function getAuthorsInfo(int $elementId, string $type): array
     {
         $info = [];
         if ($records = $this->getElementAuthorsRecords($elementId, $type)
@@ -164,7 +169,12 @@ class AuthorsManager extends ElementsManager
         return $info;
     }
 
-    public function getElementAuthorsRecords($elementId, $type = null)
+    /**
+     * @return (\Illuminate\Database\Query\Builder|mixed)[]
+     *
+     * @psalm-return array<\Illuminate\Database\Query\Builder|mixed>
+     */
+    public function getElementAuthorsRecords(int $elementId, $type = null): array
     {
         $query = $this->db
             ->table('authorship')
@@ -196,7 +206,10 @@ class AuthorsManager extends ElementsManager
         return $records;
     }
 
-    public function getAuthorshipInfo($authorId, $type)
+    /**
+     * @psalm-param 'prod'|'release' $type
+     */
+    public function getAuthorshipInfo(int $authorId, string $type)
     {
         if ($records = $this->getAuthorshipRecords($authorId, $type)) {
             foreach ($records as $key => &$record) {
@@ -210,7 +223,12 @@ class AuthorsManager extends ElementsManager
         return $records;
     }
 
-    public function getAuthorshipRecords($authorId, $type = null)
+    /**
+     * @return (\Illuminate\Database\Query\Builder|mixed)[]
+     *
+     * @psalm-return array<\Illuminate\Database\Query\Builder|mixed>
+     */
+    public function getAuthorshipRecords(int $authorId, $type = null): array
     {
         $query = $this->db
             ->table('authorship')
@@ -238,7 +256,12 @@ class AuthorsManager extends ElementsManager
         return $records;
     }
 
-    public function checkDuplicates($info)
+    /**
+     * @param array[] $info
+     *
+     * @psalm-param array<array{roles: mixed, startDate?: mixed, endDate?: mixed}> $info
+     */
+    public function checkDuplicates(array $info)
     {
         if ($info) {
             if ($records = $this->db
@@ -267,7 +290,7 @@ class AuthorsManager extends ElementsManager
         return $info;
     }
 
-    public function checkAuthorship($elementId, $personId, $type, $roles = [], $startDate = 0, $endDate = 0)
+    public function checkAuthorship(int $elementId, int $personId, string $type, array|string|false $roles = [], int|false $startDate = 0, int|false $endDate = 0): void
     {
         if (is_array($roles)) {
             $roles = array_unique($roles);
@@ -314,7 +337,7 @@ class AuthorsManager extends ElementsManager
         }
     }
 
-    public function deleteAuthorship($elementId, $authorId, $type)
+    public function deleteAuthorship(int $elementId, $authorId, string $type): bool
     {
         if ($this->db
             ->table('authorship')
@@ -329,7 +352,7 @@ class AuthorsManager extends ElementsManager
         }
     }
 
-    public function moveAuthorship($newElementId, $recordIds)
+    public function moveAuthorship(int $newElementId, array $recordIds): void
     {
         $this->db
             ->table('authorship')
@@ -418,7 +441,7 @@ class AuthorsManager extends ElementsManager
      * @param $authorInfo
      * @param $origin
      */
-    protected function updateAuthor($element, $authorInfo, $origin)
+    protected function updateAuthor($element, array $authorInfo, $origin): void
     {
         $changed = false;
         if (!empty($authorInfo['title']) && $element->title != $authorInfo['title']) {
@@ -497,7 +520,7 @@ class AuthorsManager extends ElementsManager
         }
     }
 
-    public function importAuthorAlias($authorAliasInfo, $origin, $createNew = true)
+    public function importAuthorAlias($authorAliasInfo, $origin, bool $createNew = true)
     {
         if (!isset($this->importedAuthorAliases[$origin][$authorAliasInfo['id']])) {
             /**
@@ -548,7 +571,7 @@ class AuthorsManager extends ElementsManager
         return false;
     }
 
-    public function manufactureAuthorElement($title)
+    public function manufactureAuthorElement(string $title): bool|structureElement
     {
         if ($letterId = $this->getLetterId($title)) {
             if ($letterElement = $this->structureManager->getElementById($letterId)) {
@@ -565,7 +588,7 @@ class AuthorsManager extends ElementsManager
      * @param $authorAliasInfo
      * @param $origin
      */
-    protected function updateAuthorAlias($element, $authorAliasInfo, $origin)
+    protected function updateAuthorAlias($element, array $authorAliasInfo, $origin): void
     {
         $changed = false;
 
@@ -591,17 +614,17 @@ class AuthorsManager extends ElementsManager
         }
     }
 
-    public function joinDeleteAuthor($mainAuthorId, $joinedAuthorId)
+    public function joinDeleteAuthor(int $mainAuthorId, int $joinedAuthorId): void
     {
         $this->joinAuthor($mainAuthorId, $joinedAuthorId, false);
     }
 
-    public function joinAuthorAsAlias($mainAuthorId, $joinedAuthorId)
+    public function joinAuthorAsAlias(int $mainAuthorId, int $joinedAuthorId): void
     {
         $this->joinAuthor($mainAuthorId, $joinedAuthorId, true);
     }
 
-    protected function joinAuthor($mainAuthorId, $joinedAuthorId, $makeAlias = true)
+    protected function joinAuthor($mainAuthorId, $joinedAuthorId, bool $makeAlias = true): bool
     {
         if ($joinedAuthorId == $mainAuthorId) {
             return false;
@@ -720,7 +743,7 @@ class AuthorsManager extends ElementsManager
         return true;
     }
 
-    public function convertAliasToAuthor($aliasId)
+    public function convertAliasToAuthor(int $aliasId)
     {
         $newAuthorElement = false;
         /**
@@ -763,7 +786,14 @@ class AuthorsManager extends ElementsManager
         return $newAuthorElement;
     }
 
-    protected function getLettersListMarker($type)
+    /**
+     * @psalm-param 'admin'|'public' $type
+     *
+     * @return string
+     *
+     * @psalm-return 'authors'|'authorsmenu'
+     */
+    protected function getLettersListMarker(string $type)
     {
         if ($type == 'admin') {
             return 'authors';

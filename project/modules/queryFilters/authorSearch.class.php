@@ -2,7 +2,7 @@
 
 class authorSearchQueryFilter extends searchQueryFilter
 {
-    public function getTypeName()
+    public function getTypeName(): string
     {
         return 'author';
     }
@@ -12,6 +12,9 @@ class authorSearchQueryFilter extends searchQueryFilter
         return ['title', 'realName'];
     }
 
+    /**
+     * @return void
+     */
     protected function getContentFieldNames()
     {
     }

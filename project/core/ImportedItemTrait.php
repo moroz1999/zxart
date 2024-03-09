@@ -17,7 +17,7 @@ trait ImportedItemTrait
             ->where('elementId', '=', $this->id)->where('importOrigin', '=', $origin)->limit(1)->value('importId');
     }
 
-    public function getImportIdsIndex()
+    public function getImportIdsIndex(): array
     {
         $result = [];
         foreach ($this->getLinksInfo() as $linkInfo) {
@@ -26,6 +26,9 @@ trait ImportedItemTrait
         return $result;
     }
 
+    /**
+     * @return void
+     */
     public function deleteElementData()
     {
         $this->deleteImportOriginRows();

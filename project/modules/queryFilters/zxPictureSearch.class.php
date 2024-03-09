@@ -3,7 +3,7 @@
 class zxPictureSearchQueryFilter extends searchQueryFilter
 {
 
-    protected function getTypeName()
+    protected function getTypeName(): string
     {
         return 'zxPicture';
     }

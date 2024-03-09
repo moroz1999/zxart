@@ -10,6 +10,9 @@ class loginElement extends menuDependantStructureElement
     protected $userDataForm;
     protected $passwordReminderForm;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -101,7 +104,12 @@ class loginElement extends menuDependantStructureElement
         return $passwordReminderFormUrl;
     }
 
-    public function getSocialPluginsOptions()
+    /**
+     * @return (mixed|string)[][]
+     *
+     * @psalm-return list{0?: array{title: mixed, code: mixed, url: mixed, icon: string},...}
+     */
+    public function getSocialPluginsOptions(): array
     {
         $result = [];
         $controller = controller::getInstance();
@@ -123,7 +131,7 @@ class loginElement extends menuDependantStructureElement
         return $result;
     }
 
-    public function displayForm()
+    public function displayForm(): bool
     {
         $user = $this->getService('user');
         if ($user->userName == 'anonymous') {

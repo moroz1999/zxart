@@ -2,7 +2,7 @@
 
 class zxReleaseAjaxSearchQueryFilter extends ajaxSearchQueryFilter
 {
-    protected function getTypeName()
+    protected function getTypeName(): string
     {
         return 'zxRelease';
     }

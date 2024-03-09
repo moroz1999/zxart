@@ -28,6 +28,9 @@ class groupAliasElement extends structureElement implements CommentsHolderInterf
      */
     protected $groupElement;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -94,7 +97,10 @@ class groupAliasElement extends structureElement implements CommentsHolderInterf
         return $this->groupProds;
     }
 
-    public function getAliasElements()
+    /**
+     * @return false
+     */
+    public function getAliasElements(): bool
     {
         return false;
     }

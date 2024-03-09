@@ -14,6 +14,9 @@ class zxScreenRendererPlugin extends rendererPlugin
     protected $cacheFileName = '';
     private $fileName = '';
 
+    /**
+     * @return void
+     */
     public function init()
     {
         $this->requestHeadersManager = $this->getService('requestHeadersManager');
@@ -34,10 +37,16 @@ class zxScreenRendererPlugin extends rendererPlugin
         $this->preferredEncodings = ['identity'];
     }
 
+    /**
+     * @return void
+     */
     public function fetch()
     {
     }
 
+    /**
+     * @return void
+     */
     public function assign($attributeName, $value)
     {
         if ($attributeName == 'type') {
@@ -66,6 +75,9 @@ class zxScreenRendererPlugin extends rendererPlugin
         }
     }
 
+    /**
+     * @return false|string
+     */
     public function getFileName()
     {
         $fileName = $this->fileName ? $this->fileName : 'image';
@@ -94,6 +106,9 @@ class zxScreenRendererPlugin extends rendererPlugin
         return $this->lastModified;
     }
 
+    /**
+     * @return false|int
+     */
     protected function getContentLength()
     {
         $imageFilePath = $this->renderingEngine->getCacheFileName();
@@ -113,6 +128,9 @@ class zxScreenRendererPlugin extends rendererPlugin
         return $this->contentDisposition;
     }
 
+    /**
+     * @return void
+     */
     protected function renderContent()
     {
         $this->binary = $this->renderingEngine->getBinary();
@@ -127,6 +145,9 @@ class zxScreenRendererPlugin extends rendererPlugin
         return false;
     }
 
+    /**
+     * @return void
+     */
     protected function compress($encoding)
     {
     }

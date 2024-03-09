@@ -306,7 +306,7 @@ class PouetManager extends errorLogger
     /**
      * @param \Illuminate\Database\Connection $db
      */
-    public function setDb($db)
+    public function setDb($db): void
     {
         $this->db = $db;
     }
@@ -314,7 +314,7 @@ class PouetManager extends errorLogger
     /**
      * @param AuthorsManager $authorsManager
      */
-    public function setAuthorsManager($authorsManager)
+    public function setAuthorsManager($authorsManager): void
     {
         $this->authorsManager = $authorsManager;
         $authorsManager->setForceUpdateCountry(false);
@@ -324,7 +324,7 @@ class PouetManager extends errorLogger
     /**
      * @param GroupsManager $groupsManager
      */
-    public function setGroupsManager($groupsManager)
+    public function setGroupsManager($groupsManager): void
     {
         $this->groupsManager = $groupsManager;
     }
@@ -332,7 +332,7 @@ class PouetManager extends errorLogger
     /**
      * @param CountriesManager $countriesManager
      */
-    public function setCountriesManager($countriesManager)
+    public function setCountriesManager($countriesManager): void
     {
         $this->countriesManager = $countriesManager;
     }
@@ -340,7 +340,7 @@ class PouetManager extends errorLogger
     /**
      * @param mixed $prodsManager
      */
-    public function setProdsManager(ProdsManager $prodsManager)
+    public function setProdsManager(ProdsManager $prodsManager): void
     {
         $this->prodsManager = $prodsManager;
         $this->prodsManager->setForceUpdateCategories(true);
@@ -350,6 +350,9 @@ class PouetManager extends errorLogger
         $this->prodsManager->setAddImages(false);
     }
 
+    /**
+     * @return void
+     */
     public function importAll()
     {
         $this->maxTime = time() + $this->timeLimit;
@@ -569,7 +572,7 @@ class PouetManager extends errorLogger
         return $prodData;
     }
 
-    protected function attemptDownload($link)
+    protected function attemptDownload(string $link): bool|string
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $link);
@@ -596,13 +599,16 @@ class PouetManager extends errorLogger
         return $string;
     }
 
-    protected function logError($message, $level = null, $throwException = true)
+    /**
+     * @return void
+     */
+    protected function logError(string $message, $level = null, $throwException = true)
     {
         $this->markProgress($message);
         parent::logError($message, $level, $throwException);
     }
 
-    protected function markProgress($text)
+    protected function markProgress(string $text): void
     {
         static $previousTime;
 
@@ -615,7 +621,7 @@ class PouetManager extends errorLogger
         $previousTime = $endTime;
     }
 
-    protected function updateReport($id, $status)
+    protected function updateReport($id, string $status): void
     {
         $this->db->table('import_pouet')->insert([
             ['id' => $id, 'status' => $status]

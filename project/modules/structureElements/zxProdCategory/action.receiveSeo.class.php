@@ -4,6 +4,9 @@ class receiveSeoZxProdCategory extends structureElementAction
 {
     protected $loggable = true;
 
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated) {
@@ -17,7 +20,7 @@ class receiveSeoZxProdCategory extends structureElementAction
         $structureElement->executeAction("showSeoForm");
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'structureName',

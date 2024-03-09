@@ -2,6 +2,9 @@
 
 class receiveStats extends structureElementAction
 {
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated === true) {
@@ -17,12 +20,12 @@ class receiveStats extends structureElementAction
         }
     }
 
-    public function setValidators(&$validators)
+    public function setValidators(&$validators): void
     {
         $validators['title'][] = 'notEmpty';
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = ['title'];
     }

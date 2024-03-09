@@ -144,7 +144,12 @@ abstract class ZxParsingItem
 
     abstract protected function parse();
 
-    public function getFileByChain($chain)
+    /**
+     * @param string[] $chain
+     *
+     * @psalm-param array<string> $chain
+     */
+    public function getFileByChain(array $chain)
     {
         if ($md5 = array_pop($chain)) {
             if ($this->getMd5() == $md5) {

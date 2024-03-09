@@ -2,7 +2,7 @@
 
 class partySearchQueryFilter extends searchQueryFilter
 {
-    public function getTypeName()
+    public function getTypeName(): string
     {
         return 'party';
     }
@@ -12,7 +12,10 @@ class partySearchQueryFilter extends searchQueryFilter
         return ['title'];
     }
 
-    protected function getContentFieldNames()
+    /**
+     * @return false
+     */
+    protected function getContentFieldNames(): bool
     {
         return false;
     }

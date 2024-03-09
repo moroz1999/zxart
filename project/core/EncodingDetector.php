@@ -4,7 +4,10 @@ class EncodingDetector
 {
     static array $encodings = ['UTF-8', 'Windows-1251', 'ISO-8859-1', 'IBM866', 'KOI8-R', 'Windows-1252'];
 
-    public static function decodeText($content): string|false
+    /**
+     * @param false|string $content
+     */
+    public static function decodeText(string|false $content): string|false
     {
         $autoEncoding = mb_detect_encoding($content, implode(', ', self::$encodings), true);
         if ($autoEncoding !== 'UTF-8') {

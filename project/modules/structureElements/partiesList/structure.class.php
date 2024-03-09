@@ -12,6 +12,9 @@ class partiesListElement extends structureElement
     protected $latestParties;
     protected $recentParties;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';

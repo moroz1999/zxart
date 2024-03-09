@@ -11,13 +11,19 @@ class partiesCatalogueElement extends structureElement
     protected $replacementElements;
     protected $yearsSelectorInfo;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
         $moduleStructure['items'] = 'text';
     }
 
-    public function getReplacementElements($roles)
+    /**
+     * @psalm-return array<never, never>
+     */
+    public function getReplacementElements($roles): array
     {
         return [];
     }

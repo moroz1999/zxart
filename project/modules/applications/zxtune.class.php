@@ -20,6 +20,9 @@ class zxtuneApplication extends controllerApplication
         'filters',
     ];
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         $this->mode = 'public';
@@ -28,6 +31,9 @@ class zxtuneApplication extends controllerApplication
         $this->createRenderer();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         $structureManager = $this->getService(

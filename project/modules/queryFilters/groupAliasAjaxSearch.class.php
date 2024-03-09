@@ -2,7 +2,7 @@
 
 class groupAliasAjaxSearchQueryFilter extends ajaxSearchQueryFilter
 {
-    protected function getTypeName()
+    protected function getTypeName(): string
     {
         return 'groupAlias';
     }

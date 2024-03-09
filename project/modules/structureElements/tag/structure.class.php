@@ -13,6 +13,9 @@ class tagElement extends structureElement implements JsonDataProvider
     protected $pictures;
     protected $tunes;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -24,14 +27,14 @@ class tagElement extends structureElement implements JsonDataProvider
         $moduleStructure['verified'] = 'checkbox';
     }
 
-    protected function setMultiLanguageFields(&$multiLanguageFields)
+    protected function setMultiLanguageFields(&$multiLanguageFields): void
     {
         $multiLanguageFields[] = 'title';
         $multiLanguageFields[] = 'synonym';
         $multiLanguageFields[] = 'description';
     }
 
-    public function updateAmount()
+    public function updateAmount(): void
     {
         $linksManager = $this->getService('linksManager');
         $this->amount = count($linksManager->getConnectedIdList($this->id, 'tagLink', 'parent'));
@@ -54,7 +57,7 @@ class tagElement extends structureElement implements JsonDataProvider
         }
     }
 
-    public function updateTagsListLinks()
+    public function updateTagsListLinks(): void
     {
         // connect all tagslists configured to show all tags
         $structureManager = $this->getService('structureManager');
@@ -66,6 +69,9 @@ class tagElement extends structureElement implements JsonDataProvider
         }
     }
 
+    /**
+     * @return void
+     */
     public function persistElementData()
     {
         parent::persistElementData();
@@ -112,7 +118,12 @@ class tagElement extends structureElement implements JsonDataProvider
         return false;
     }
 
-    protected function loadElementsByType($type)
+    /**
+     * @psalm-param 'zxMusic'|'zxPicture' $type
+     *
+     * @psalm-return list{0?: mixed,...}
+     */
+    protected function loadElementsByType(string $type): array
     {
         $elements = [];
         $linksManager = $this->getService('linksManager');

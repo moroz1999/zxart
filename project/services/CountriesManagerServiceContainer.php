@@ -2,6 +2,9 @@
 
 class CountriesManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return CountriesManager
+     */
     public function makeInstance()
     {
         return new CountriesManager();

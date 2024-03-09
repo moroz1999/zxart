@@ -37,6 +37,9 @@ class zxProdsUploadFormElement extends ZxArtItemUploadFormElement
 
     protected $partiesList;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -72,7 +75,7 @@ class zxProdsUploadFormElement extends ZxArtItemUploadFormElement
         $moduleStructure['mapFilesSelector'] = 'files';
     }
 
-    protected function setMultiLanguageFields(&$multiLanguageFields)
+    protected function setMultiLanguageFields(&$multiLanguageFields): void
     {
         $multiLanguageFields[] = 'title';
     }
@@ -90,6 +93,11 @@ class zxProdsUploadFormElement extends ZxArtItemUploadFormElement
         return $this->connectedCategoriesIds;
     }
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return array<string>
+     */
     public function getSupportedLanguageCodes()
     {
         return $this->language;

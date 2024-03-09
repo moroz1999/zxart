@@ -2,7 +2,7 @@
 
 class groupAliasSearchQueryFilter extends searchQueryFilter
 {
-    public function getTypeName()
+    public function getTypeName(): string
     {
         return 'groupAlias';
     }

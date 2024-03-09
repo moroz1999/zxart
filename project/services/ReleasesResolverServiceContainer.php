@@ -2,6 +2,9 @@
 
 class ReleasesResolverServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return ReleasesResolver
+     */
     public function makeInstance()
     {
         return new ReleasesResolver();

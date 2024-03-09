@@ -27,6 +27,9 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
     protected $partyLinkType = 'partyMusic';
     protected $sectionType = 'music';
     protected $metaTitle;
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -77,6 +80,11 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         $moduleStructure['trackerFileName'] = 'fileName';
     }
 
+    /**
+     * @return (float|int|mixed|string)[]
+     *
+     * @psalm-return array{id: int, author: mixed, title: string, link: mixed, votes: float, userVote: mixed, votePercent: mixed, mp3FilePath: mixed, url: mixed,...}
+     */
     public function getElementData()
     {
         $data["id"] = $this->id;
@@ -91,6 +99,11 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         return $data;
     }
 
+    /**
+     * @return string|string[]
+     *
+     * @psalm-return array<string>|string
+     */
     public function getMetaTitle()
     {
         $translationsManager = $this->getService('translationsManager');
@@ -106,6 +119,11 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         return $this->metaTitle;
     }
 
+    /**
+     * @return string|string[]
+     *
+     * @psalm-return array<string>|string
+     */
     public function getTextContent()
     {
         $translationsManager = $this->getService('translationsManager');
@@ -142,6 +160,9 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         return $textContent;
     }
 
+    /**
+     * @return void
+     */
     public function persistElementData()
     {
         parent::persistElementData();
@@ -157,7 +178,7 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         }
     }
 
-    public function checkIfReconversionNeeded()
+    public function checkIfReconversionNeeded(): bool
     {
         if ($this->fileName && (!$this->mp3Name || ($this->getChannelsType() != $this->conversionChannelsType || $this->getChipType() != $this->conversionChipType || $this->getFrequency() != $this->conversionFrequency || $this->getIntFrequency() != $this->conversionIntFrequency) && $this->hasChipChannelsType())) {
             $linksManager = $this->getService('linksManager');
@@ -176,13 +197,16 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         return false;
     }
 
-    public function reconvertMp3()
+    public function reconvertMp3(): void
     {
         $mp3ConversionManager = $this->getService('mp3ConversionManager');
         $mp3ConversionManager->addToConversionQueue($this->id);
     }
 
-    public function getOriginalFilePath()
+    /**
+     * @return false|string
+     */
+    public function getOriginalFilePath(): string|false
     {
         $result = false;
         if ($this->fileName) {
@@ -191,12 +215,15 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         return $result;
     }
 
-    public function isPlayable()
+    public function isPlayable(): bool
     {
         return ($this->mp3Name && !$this->denyPlaying);
     }
 
-    public function getMp3FilePath()
+    /**
+     * @return false|string
+     */
+    public function getMp3FilePath(): string|false
     {
         if ($this->mp3Name) {
             return self::MP3_STORAGE_PATH . $this->mp3Name;
@@ -204,7 +231,7 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         return false;
     }
 
-    public function generateConvertedBaseName($extraText = '')
+    public function generateConvertedBaseName($extraText = ''): string|null
     {
         $name = $this->id . ' ' . implode(",", $this->getAuthorNames()) . ' ' . $this->title;
         if ($extraText) {
@@ -215,6 +242,9 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         return $name;
     }
 
+    /**
+     * @return string
+     */
     public function getFileExtension($extensionType)
     {
         $extension = '';
@@ -235,6 +265,9 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         return $extension;
     }
 
+    /**
+     * @return bool
+     */
     protected function fileExists($extensionType)
     {
         if ($extensionType == 'original') {
@@ -250,7 +283,10 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         return false;
     }
 
-    public function getZxTunesUrl()
+    /**
+     * @return false|string
+     */
+    public function getZxTunesUrl(): string|false
     {
         $result = false;
         if ($this->zxTunesId > 0) {
@@ -265,7 +301,7 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         return $result;
     }
 
-    public function logPlay()
+    public function logPlay(): void
     {
         $this->plays++;
         $this->getService('eventsLog')->logEvent($this->id, 'play');
@@ -276,7 +312,7 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         $structureManager->clearElementCache($this->id);
     }
 
-    public function getIso8601Duration()
+    public function getIso8601Duration(): string
     {
         $duration = '';
         try {
@@ -286,6 +322,11 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         return $duration;
     }
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{'play'}
+     */
     public function getChartDataEventTypes($type = null)
     {
         return ['play'];
@@ -359,12 +400,15 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         return $channelsType;
     }
 
-    public function hasChipChannelsType()
+    public function hasChipChannelsType(): bool
     {
         return in_array($this->formatGroup, ['ay', 'ts', 'tsfm', 'fm', 'aydigitalay', 'aycovox']);
     }
 
-    public function getOriginalPath()
+    /**
+     * @return false|string
+     */
+    public function getOriginalPath(): string|false
     {
         if ($this->file) {
             return $this->getService('PathsManager')->getPath('uploads') . $this->file;
@@ -372,6 +416,11 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         return false;
     }
 
+    /**
+     * @return ((float|int|mixed|string)[]|int|mixed|string)[]
+     *
+     * @psalm-return array{'@context': 'http://schema.org/', '@type': 'MusicRecording', encodingFormat: 'audio/mpeg', name: string, url: mixed, description: mixed, commentCount: int, author: array{'@type': 'Person', name: mixed}, byArtist: array{'@type': 'Person', name: mixed}, aggregateRating?: array{'@type': 'AggregateRating', ratingValue: float, 'ratingCount ': int}, audio?: mixed, duration?: mixed, datePublished?: int, keywords?: mixed}
+     */
     public function getLdJsonScriptData()
     {
         $data = [
@@ -412,6 +461,11 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         return $data;
     }
 
+    /**
+     * @return (mixed|string)[]
+     *
+     * @psalm-return array{title: mixed, url: mixed, type: 'music:song', 'og:audio': mixed, image: '/images/logo_og.png', description: mixed, locale: mixed}
+     */
     public function getOpenGraphData()
     {
         $languagesManager = $this->getService('LanguagesManager');

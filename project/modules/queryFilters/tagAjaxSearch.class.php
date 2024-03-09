@@ -2,7 +2,7 @@
 
 class tagAjaxSearchQueryFilter extends ajaxSearchQueryFilter
 {
-    protected function getTypeName()
+    protected function getTypeName(): string
     {
         return 'tag';
     }

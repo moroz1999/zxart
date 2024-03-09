@@ -2,6 +2,9 @@
 
 class RzxArchiveManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return RzxArchiveManager
+     */
     public function makeInstance()
     {
         return new RzxArchiveManager();

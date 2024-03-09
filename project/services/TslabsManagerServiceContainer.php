@@ -2,6 +2,9 @@
 
 class TslabsManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return TslabsManager
+     */
     public function makeInstance()
     {
         return new TslabsManager();

@@ -31,7 +31,10 @@ class VoteAnalyzer
         return array_sum($values) / count($values);
     }
 
-    protected function calculateStandardDeviation(array $values, $mean): float
+    /**
+     * @param float|int $mean
+     */
+    protected function calculateStandardDeviation(array $values, int|float $mean): float
     {
         $squares = array_map(function ($value) use ($mean) {
             return pow($value - $mean, 2);

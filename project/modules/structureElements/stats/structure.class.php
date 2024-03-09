@@ -13,12 +13,18 @@ class statsElement extends structureElement
 
     private $chartDataEventTypes;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
     }
 
-    public function getAllYearsData($table = 'zxpicture')
+    /**
+     * @return false|string
+     */
+    public function getAllYearsData($table = 'zxpicture'): string|false
     {
         $yearsData = [
             'labels' => [],
@@ -44,7 +50,10 @@ class statsElement extends structureElement
         return json_encode($yearsData);
     }
 
-    public function getRatedYearsData($table = 'zxpicture')
+    /**
+     * @return false|string
+     */
+    public function getRatedYearsData($table = 'zxpicture'): string|false
     {
         $yearsData = [
             'labels' => [],
@@ -126,7 +135,12 @@ class statsElement extends structureElement
         return $this->chartDataEventTypes;
     }
 
-    public function getTopActionsUsers(string $moduleType, string $actionType, int $limit)
+    /**
+     * @return array[]
+     *
+     * @psalm-return list{0?: array{user: mixed, count: mixed},...}
+     */
+    public function getTopActionsUsers(string $moduleType, string $actionType, int $limit): array
     {
         $data = [];
         /**
@@ -147,7 +161,12 @@ class statsElement extends structureElement
         return $data;
     }
 
-    public function getTopWorksUsers($type = 'addZxPicture', $limit = 10)
+    /**
+     * @return array[]
+     *
+     * @psalm-return list{0?: array{user: mixed, count: mixed},...}
+     */
+    public function getTopWorksUsers($type = 'addZxPicture', $limit = 10): array
     {
         $data = [];
         /**
@@ -165,7 +184,12 @@ class statsElement extends structureElement
         return $data;
     }
 
-    public function getTopVotesUsers($limit = 10)
+    /**
+     * @return array[]
+     *
+     * @psalm-return list{0?: array{user: mixed, count: mixed},...}
+     */
+    public function getTopVotesUsers($limit = 10): array
     {
         $data = [];
 

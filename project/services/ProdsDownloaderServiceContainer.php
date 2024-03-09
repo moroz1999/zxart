@@ -2,6 +2,9 @@
 
 class ProdsDownloaderServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return ProdsDownloader
+     */
     public function makeInstance()
     {
         return new ProdsDownloader();

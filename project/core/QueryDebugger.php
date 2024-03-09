@@ -2,6 +2,9 @@
 
 trait QueryDebugger
 {
+    /**
+     * @return never
+     */
     protected function debugQuery(\Illuminate\Database\Query\Builder $query){
         $sql = $query->toSql();
         $bindings = $query->getBindings();

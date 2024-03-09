@@ -10,12 +10,18 @@ class screenshotApplication extends controllerApplication
     protected $mode;
     public $rendererName = 'fileReader';
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         $this->startSession('public');
         $this->createRenderer();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         /**
@@ -51,7 +57,7 @@ class screenshotApplication extends controllerApplication
         }
     }
 
-    public function processRequestParameters()
+    public function processRequestParameters(): void
     {
         $controller = controller::getInstance();
         if ($controller->getParameter('id')) {

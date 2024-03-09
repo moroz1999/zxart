@@ -14,6 +14,9 @@ class crontabApplication extends controllerApplication
     private string $logFilePath;
 
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         ignore_user_abort(1);
@@ -21,6 +24,9 @@ class crontabApplication extends controllerApplication
         $this->createRenderer();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         $pathsManager = $this->getService(PathsManager::class);
@@ -63,7 +69,7 @@ class crontabApplication extends controllerApplication
         }
     }
 
-    private function recalculate()
+    private function recalculate(): void
     {
         /**
          * @var QueueService $queueService
@@ -99,13 +105,16 @@ class crontabApplication extends controllerApplication
     }
     
 
-    private function logMessage($message, $seconds)
+    private function logMessage(string $message, int|float $seconds): void
     {
         $text = date('Y-m-d H:i:s') . " - " . $seconds . " - " . $message;
         echo $text . '<br/>';
         file_put_contents($this->logFilePath, $text . PHP_EOL, FILE_APPEND);
     }
 
+    /**
+     * @return void
+     */
     private function queryAiItems()
     {
         /**
@@ -209,7 +218,7 @@ class crontabApplication extends controllerApplication
 
     }
 
-    private function convertMp3()
+    private function convertMp3(): void
     {
         /**
          * @var mp3ConversionManager $mp3ConversionManager
@@ -218,7 +227,7 @@ class crontabApplication extends controllerApplication
         $mp3ConversionManager->convertQueueItems();
     }
 
-    private function parseArtItems($table, $fileColumn, $fileNameColumn)
+    private function parseArtItems(string $table, string $fileColumn, string $fileNameColumn): void
     {
         /**
          * @var Connection $db
@@ -264,7 +273,7 @@ class crontabApplication extends controllerApplication
         }
     }
 
-    private function parseReleases()
+    private function parseReleases(): void
     {
         /**
          * @var Connection $db

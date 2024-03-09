@@ -2,6 +2,9 @@
 
 class DmdManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return DmdManager
+     */
     public function makeInstance()
     {
         return new DmdManager();

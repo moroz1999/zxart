@@ -57,6 +57,9 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         'asm', 'a80', 'a', 'bat', 'cmd'
     ];
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -120,7 +123,12 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         $moduleStructure['parsed'] = 'checkbox';
     }
 
-    public function getFileSelectorPropertyNames()
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{'screenshotsSelector', 'inlayFilesSelector', 'infoFilesSelector', 'adFilesSelector'}
+     */
+    public function getFileSelectorPropertyNames(): array
     {
         return ['screenshotsSelector', 'inlayFilesSelector', 'infoFilesSelector', 'adFilesSelector'];
     }
@@ -130,17 +138,28 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return $this->getService('PathsManager')->getPath('releases');
     }
 
-    public function getFileUploadSuccessUrl()
+    /**
+     * @return false
+     */
+    public function getFileUploadSuccessUrl(): bool
     {
         return false;
     }
 
-    public function isPrivilegesSettingRequired()
+    /**
+     * @return true
+     */
+    public function isPrivilegesSettingRequired(): bool
     {
         return true;
     }
 
-    protected function getDeletionLinkTypes()
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{0: string, 1?: string,...}
+     */
+    protected function getDeletionLinkTypes(): array
     {
         $result = ['structure'];
         foreach ($this->getFileSelectorPropertyNames() as $propertyName) {
@@ -149,10 +168,13 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return $result;
     }
 
-    protected function setMultiLanguageFields(&$multiLanguageFields)
+    protected function setMultiLanguageFields(&$multiLanguageFields): void
     {
     }
 
+    /**
+     * @return false|string
+     */
     public function getFileExtension($extensionType)
     {
         $extension = false;
@@ -166,6 +188,9 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return $extension;
     }
 
+    /**
+     * @return bool
+     */
     protected function fileExists($extensionType)
     {
         if (file_exists($this->getFilePath())) {
@@ -174,12 +199,20 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return false;
     }
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{'view'}
+     */
     public function getChartDataEventTypes($type = null)
     {
         return ['view'];
     }
 
-    public function getReleaseStructure()
+    /**
+     * @psalm-return false|non-empty-list<mixed>
+     */
+    public function getReleaseStructure(): array|false
     {
         if ($structure = $this->getReleaseFlatStructure()) {
             $groups = [];
@@ -209,7 +242,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
                     $structure = array_slice($structure, 0, 100);
                 }
                 foreach ($structure as $key => $fileInfo) {
-                    if ($file = $zxParsingManager->extractFile($this->getFilePath(), $fileInfo['id'])) {
+                    if ($file = $zxParsingManager->extractFile($path, $fileInfo['id'])) {
                         $type = $this->getInternalFileType($fileInfo['fileName'], $fileInfo['type'], $fileInfo['size'], $file->getContent());
                         if ($type == 'binary') {
                             $structure[$key]['viewable'] = false;
@@ -225,12 +258,12 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return false;
     }
 
-    public function getFilePath()
+    public function getFilePath(): string
     {
         return $this->getUploadedFilesPath() . $this->file;
     }
 
-    public function getFileUrl($play = false)
+    public function getFileUrl(bool $play = false): string
     {
         if ($play) {
             $url = controller::getInstance()->baseURL . 'release/play:1/id:' . $this->id . '/filename:' . $this->getFileName();
@@ -240,6 +273,9 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return $url;
     }
 
+    /**
+     * @return string
+     */
     public function getFileName(
         $extensionType = 'original',
         $escapeSpaces = true,
@@ -281,7 +317,12 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return $this->getProd()->getLegalStatus();
     }
 
-    public function getReleaseTypes()
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{'unknown', 'original', 'rerelease', 'adaptation', 'localization', 'mod', 'crack', 'mia', 'corrupted', 'compilation', 'incomplete', 'demoversion'}
+     */
+    public function getReleaseTypes(): array
     {
         return [
             'unknown',
@@ -307,7 +348,10 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return false;
     }
 
-    public function getFormattedFileContent($file)
+    /**
+     * @return false|string
+     */
+    public function getFormattedFileContent($file): string|false
     {
         if ($fileType = $this->getInternalFileType('', $file->getItemExtension(), $file->getSize(), $file->getContent())) {
             if ($content = $file->getContent()) {
@@ -361,7 +405,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return false;
     }
 
-    protected function getInternalFileType($fileName, $extension, $size, $content)
+    protected function getInternalFileType(string $fileName, $extension, $size, $content): string
     {
         if ($extension === 'file') {
             $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
@@ -402,7 +446,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return $this->currentReleaseFile;
     }
 
-    public function getReleaseFile($fileId)
+    public function getReleaseFile(int $fileId)
     {
         /**
          * @var ZxParsingManager $zxParsingManager
@@ -433,6 +477,9 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return [];
     }
 
+    /**
+     * @return string
+     */
     public function getYear()
     {
         if (!empty($this->year)) {
@@ -446,6 +493,11 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return '';
     }
 
+    /**
+     * @return fileElement[]
+     *
+     * @psalm-return array<fileElement>
+     */
     public function getImagesList()
     {
         return array_merge($this->getFilesList('screenshotsSelector'), $this->getFilesList('inlayFilesSelector'), $this->getFilesList('adFilesSelector'));
@@ -463,7 +515,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return false;
     }
 
-    public function isDownloadable()
+    public function isDownloadable(): bool
     {
         $user = $this->getService('user');
         $privileges = $this->getService('privilegesManager')->getElementPrivileges($this->id);
@@ -516,7 +568,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return $this->linksInfo;
     }
 
-    public function getSearchTitle()
+    public function getSearchTitle(): string
     {
         $searchTitle = $this->title;
         $additions = '';
@@ -558,7 +610,10 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return false;
     }
 
-    public function getImage($number = 0)
+    /**
+     * @return false|fileElement
+     */
+    public function getImage($number = 0): fileElement|false
     {
         if ($images = $this->getFilesList('screenshotsSelector')) {
             if (isset($images[$number])) {
@@ -568,6 +623,9 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return false;
     }
 
+    /**
+     * @return false
+     */
     public function getLdJsonScriptData()
     {
 //        $data = [
@@ -584,12 +642,18 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return false;
     }
 
-    public function getBestPictures()
+    /**
+     * @psalm-return array<never, never>
+     */
+    public function getBestPictures(): array
     {
         return [];
     }
 
-    public function getReleaseBy()
+    /**
+     * @psalm-return list{0?: mixed,...}
+     */
+    public function getReleaseBy(): array
     {
         $list = [];
 
@@ -604,6 +668,9 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return $list;
     }
 
+    /**
+     * @return string
+     */
     public function getMetaTitle()
     {
         $translationsManager = $this->getService('translationsManager');
@@ -628,7 +695,10 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     }
 
     //used in API
-    public function getImagesUrls($preset = 'prodImage')
+    /**
+     * @psalm-return list{0?: mixed,...}
+     */
+    public function getImagesUrls($preset = 'prodImage'): array
     {
         $urls = [];
         foreach ($this->getFilesList('screenshotsSelector') as $fileElement) {
@@ -637,7 +707,12 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return $urls;
     }
 
-    public function getPublishersInfo()
+    /**
+     * @return (mixed|string)[][]
+     *
+     * @psalm-return list{0?: array{id: mixed, title: string, url: mixed},...}
+     */
+    public function getPublishersInfo(): array
     {
         $publishersInfo = [];
         foreach ($this->publishers as $publisher) {
@@ -676,6 +751,9 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return $this->hardwareInfo;
     }
 
+    /**
+     * @return void
+     */
     public function persistElementData()
     {
         $this->optimizeAliases('publishers');
@@ -686,7 +764,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         parent::persistElementData(); // TODO: Change the autogenerated stub
     }
 
-    public function updateFileStructure()
+    public function updateFileStructure(): void
     {
         $this->parsed = 1;
         /**
@@ -709,7 +787,10 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         $this->persistElementData();
     }
 
-    public function getCompilationJsonData()
+    /**
+     * @return false|string
+     */
+    public function getCompilationJsonData(): string|false
     {
         $data = [
             'compilations' => [],
@@ -720,12 +801,15 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         return json_encode($data);
     }
 
+    /**
+     * @return void
+     */
     public function recalculate()
     {
         $this->persistElementData();
     }
 
-    public function incrementPlays()
+    public function incrementPlays(): void
     {
         $db = $this->getService('db');
         $db->table('module_zxrelease')->where('id', '=', $this->id)->limit(1)->increment('plays');
@@ -733,7 +817,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         $structureManager->clearElementCache($this->id);
     }
 
-    public function incrementDownloads()
+    public function incrementDownloads(): void
     {
         $db = $this->getService('db');
         $db->table('module_zxrelease')->where('id', '=', $this->id)->limit(1)->increment('downloads');

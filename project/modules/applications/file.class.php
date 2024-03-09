@@ -8,6 +8,9 @@ class fileApplication extends controllerApplication
     protected $mode;
     public $rendererName = 'fileReader';
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         $configManager = $this->getService('ConfigManager');
@@ -15,6 +18,9 @@ class fileApplication extends controllerApplication
         $this->createRenderer();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         $this->processRequestParameters();
@@ -40,7 +46,7 @@ class fileApplication extends controllerApplication
         }
     }
 
-    public function processRequestParameters()
+    public function processRequestParameters(): void
     {
         $controller = controller::getInstance();
         if ($controller->getParameter('id')) {
@@ -54,7 +60,10 @@ class fileApplication extends controllerApplication
         }
     }
 
-    public function deprecatedParametersRedirection()
+    /**
+     * @return true
+     */
+    public function deprecatedParametersRedirection(): bool
     {
         return true;
     }

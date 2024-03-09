@@ -2,6 +2,9 @@
 
 class receivePartiesList extends structureElementAction
 {
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated) {
@@ -17,12 +20,12 @@ class receivePartiesList extends structureElementAction
         $structureElement->setViewName('form');
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = ['title', 'type'];
     }
 
-    public function setValidators(&$validators)
+    public function setValidators(&$validators): void
     {
     }
 }

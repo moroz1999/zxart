@@ -2,6 +2,9 @@
 
 class VtrdosManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return VtrdosManager
+     */
     public function makeInstance()
     {
         return new VtrdosManager();

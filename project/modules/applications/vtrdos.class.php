@@ -6,6 +6,9 @@ class vtrdosApplication extends controllerApplication
     public $rendererName = 'smarty';
     public $requestParameters = [];
 
+    /**
+     * @return never
+     */
     public function initialize()
     {
         exit;
@@ -15,6 +18,9 @@ class vtrdosApplication extends controllerApplication
         $this->createRenderer();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         /**

@@ -4,6 +4,11 @@ class pressArticleDataResponseConverter extends StructuredDataResponseConverter
 {
     protected $defaultPreset = 'api';
 
+    /**
+     * @return (Closure|string)[]
+     *
+     * @psalm-return array{id: 'id', structureType: 'structureType', title: Closure(mixed):string, introduction: 'introduction', content: 'content', url: 'getUrl', searchTitle: 'getSearchTitle'}
+     */
     protected function getRelationStructure()
     {
         return [
@@ -19,6 +24,11 @@ class pressArticleDataResponseConverter extends StructuredDataResponseConverter
         ];
     }
 
+    /**
+     * @return string[][]
+     *
+     * @psalm-return array{ai: list{'title', 'introduction', 'content'}, api: list{'id', 'title', 'introduction', 'content'}, search: list{'id', 'searchTitle', 'url', 'structureType'}}
+     */
     protected function getPresetsStructure()
     {
         return [

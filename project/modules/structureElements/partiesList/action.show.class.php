@@ -2,6 +2,9 @@
 
 class showPartiesList extends structureElementAction
 {
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         $type = 'latest';

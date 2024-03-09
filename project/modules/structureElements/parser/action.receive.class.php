@@ -2,6 +2,9 @@
 
 class receiveParser extends structureElementAction
 {
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated) {
@@ -13,14 +16,14 @@ class receiveParser extends structureElementAction
         $structureElement->setViewName('form');
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'title',
         ];
     }
 
-    public function setValidators(&$validators)
+    public function setValidators(&$validators): void
     {
     }
 }

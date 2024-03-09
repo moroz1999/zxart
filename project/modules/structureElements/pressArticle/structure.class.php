@@ -27,6 +27,9 @@ class pressArticleElement extends structureElement implements SearchContentHolde
     }
 
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -107,7 +110,7 @@ class pressArticleElement extends structureElement implements SearchContentHolde
         return $searchContent;
     }
 
-    public function getH1()
+    public function getH1(): string
     {
         $parentElement = $this->getParent();
         return $parentElement->getTitle() . ': ' . $this->title . ' - ' . $this->introduction;

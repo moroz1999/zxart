@@ -47,7 +47,10 @@ trait LettersElementsListProviderTrait
         return false;
     }
 
-    protected function getLetterId($title)
+    /**
+     * @return false|int
+     */
+    protected function getLetterId($title): int|false
     {
         $letterId = false;
         if (($firstLetter = substr(TranslitHelper::convert(mb_strtolower(mb_substr(trim($title), 0, 1))), 0, 1)) !== false) {
@@ -66,5 +69,5 @@ trait LettersElementsListProviderTrait
         return $letterId;
     }
 
-    abstract protected function getLettersListMarker($type);
+    abstract protected function getLettersListMarker(string $type);
 }

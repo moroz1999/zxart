@@ -2,6 +2,9 @@
 
 class logoutLogin extends structureElementAction
 {
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         $user = $this->getService('user');
@@ -9,7 +12,7 @@ class logoutLogin extends structureElementAction
         $controller->redirect($this->getRedirectDestination($structureManager, $controller));
     }
 
-    protected function getRedirectDestination($structureManager, $controller)
+    protected function getRedirectDestination(structureManager $structureManager, controller $controller)
     {
         if (stripos($_SERVER['HTTP_REFERER'], $controller->domainURL) === 0) {
             $destination = $_SERVER['HTTP_REFERER'];

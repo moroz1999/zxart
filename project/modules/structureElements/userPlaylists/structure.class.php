@@ -9,12 +9,15 @@ class userPlaylistsElement extends structureElement
 
     protected $userPlaylists;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
     }
 
-    protected function setMultiLanguageFields(&$multiLanguageFields)
+    protected function setMultiLanguageFields(&$multiLanguageFields): void
     {
     }
 
@@ -34,7 +37,10 @@ class userPlaylistsElement extends structureElement
         return $this->userPlaylists;
     }
 
-    public function getJson()
+    /**
+     * @return false|string
+     */
+    public function getJson(): string|false
     {
         $result = [];
         if ($playlists = $this->getPlaylists()) {

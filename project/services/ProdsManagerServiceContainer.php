@@ -2,6 +2,9 @@
 
 class ProdsManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return ProdsManager
+     */
     public function makeInstance()
     {
         return new ProdsManager();

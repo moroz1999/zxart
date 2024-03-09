@@ -2,7 +2,7 @@
 
 class pressArticleAjaxSearchQueryFilter extends ajaxSearchQueryFilter
 {
-    protected function getTypeName()
+    protected function getTypeName(): string
     {
         return 'pressArticle';
     }

@@ -2,7 +2,7 @@
 
 class authorAliasSearchQueryFilter extends searchQueryFilter
 {
-    protected function getTypeName()
+    protected function getTypeName(): string
     {
         return 'authorAlias';
     }
@@ -12,7 +12,10 @@ class authorAliasSearchQueryFilter extends searchQueryFilter
         return ['title'];
     }
 
-    protected function getContentFieldNames()
+    /**
+     * @return false
+     */
+    protected function getContentFieldNames(): bool
     {
         return false;
     }

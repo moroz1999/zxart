@@ -6,7 +6,8 @@ class batchUploadFormPicturesUploadForm extends structureElementAction
      * @param structureManager $structureManager
      * @param controller $controller
      * @param picturesUploadFormElement $structureElement
-     * @return mixed|void
+     *
+     * @return void
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {

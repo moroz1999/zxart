@@ -2,6 +2,9 @@
 
 class WosManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return WosManager
+     */
     public function makeInstance()
     {
         return new WosManager();

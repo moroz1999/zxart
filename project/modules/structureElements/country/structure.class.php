@@ -47,6 +47,9 @@ class countryElement extends structureElement
         return $this->citiesList;
     }
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -55,12 +58,15 @@ class countryElement extends structureElement
         $moduleStructure['longitude'] = 'floatNumber';
     }
 
-    protected function setMultiLanguageFields(&$multiLanguageFields)
+    protected function setMultiLanguageFields(&$multiLanguageFields): void
     {
         $multiLanguageFields[] = 'title';
     }
 
-    public function getMapData()
+    /**
+     * @return false|string
+     */
+    public function getMapData(): string|false
     {
         $data = [];
         $data['markers'] = [];
@@ -77,7 +83,12 @@ class countryElement extends structureElement
         return json_encode($data);
     }
 
-    public function getMapMarkerData()
+    /**
+     * @return (float|mixed)[]
+     *
+     * @psalm-return array{title: mixed, amount: mixed, latitude: float, longitude: float, url: mixed}
+     */
+    public function getMapMarkerData(): array
     {
         $data = [];
         $data['title'] = $this->getTitle();

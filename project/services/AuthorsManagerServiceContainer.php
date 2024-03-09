@@ -2,6 +2,9 @@
 
 class AuthorsManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return AuthorsManager
+     */
     public function makeInstance()
     {
         return new AuthorsManager();

@@ -13,12 +13,20 @@ class tagsListElement extends structureElement
      */
     protected $tagsList;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
     }
 
-    public function getAllTags()
+    /**
+     * @return structureElement[]
+     *
+     * @psalm-return array<structureElement>
+     */
+    public function getAllTags(): array
     {
         if ($this->tagsList === null) {
             /**

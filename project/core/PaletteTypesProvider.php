@@ -2,7 +2,12 @@
 
 trait PaletteTypesProvider
 {
-    public function getPaletteTypes()
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{'srgb', 'pulsar', 'alone', 'electroscale'}
+     */
+    public function getPaletteTypes(): array
     {
         return [
             'srgb',

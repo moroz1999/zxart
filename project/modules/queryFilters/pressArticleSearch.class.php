@@ -3,7 +3,7 @@
 class pressArticleSearchQueryFilter extends searchQueryFilter
 {
 
-    protected function getTypeName()
+    protected function getTypeName(): string
     {
         return 'pressArticle';
     }

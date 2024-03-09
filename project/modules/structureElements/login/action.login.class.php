@@ -2,6 +2,9 @@
 
 class loginLogin extends structureElementAction
 {
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         $validated = false;
@@ -39,14 +42,14 @@ class loginLogin extends structureElementAction
         }
     }
 
-    public function setValidators(&$validators)
+    public function setValidators(&$validators): void
     {
         $validators['userName'][] = 'notEmpty';
         $validators['password'][] = 'notEmpty';
         $validators['password'][] = 'password';
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'userName',

@@ -9,18 +9,30 @@ class ZxParsingManager extends errorLogger
 
     protected Connection $db;
 
-    public function setDb(Connection $db)
+    public function setDb(Connection $db): void
     {
         $this->db = $db;
     }
 
-    public function getFileStructureById($id)
+    /**
+     * @return (\Illuminate\Database\Query\Builder|mixed)[]
+     *
+     * @psalm-return array<\Illuminate\Database\Query\Builder|mixed>
+     */
+    public function getFileStructureById(int $id): array
     {
         $query = $this->db->table(self::table)->where('elementId', '=', $id);
         return $query->get();
     }
 
-    public function saveFileStructure($elementId, $path, $fileName = null)
+    /**
+     * @param null|string $fileName
+     *
+     * @return ZxParsingItem[]
+     *
+     * @psalm-return array<ZxParsingItem>
+     */
+    public function saveFileStructure(int $elementId, string $path, string|null $fileName = null): array
     {
         $this->deleteFileStructure($elementId);
         if ($structure = $this->getFileStructure($path, $fileName)) {
@@ -29,7 +41,7 @@ class ZxParsingManager extends errorLogger
         return $structure;
     }
 
-    public function deleteFileStructure($elementId)
+    public function deleteFileStructure(int $elementId): void
     {
         $this->db->table(self::table)->where('elementId', '=', $elementId)->delete();
     }
@@ -39,7 +51,7 @@ class ZxParsingManager extends errorLogger
      * @param $elementId
      * @param null $parentId
      */
-    protected function saveFileStructureLevel($structure, $elementId, $parentId = null)
+    protected function saveFileStructureLevel($structure, $elementId, $parentId = null): void
     {
         foreach ($structure as $item) {
             $info = [
@@ -68,7 +80,7 @@ class ZxParsingManager extends errorLogger
      * @param null $fileName
      * @return ZxParsingItem[]
      */
-    public function getFileStructure($path, $fileName = null)
+    public function getFileStructure(string $path, $fileName = null)
     {
         $structure = [];
         if (is_file($path)) {
@@ -104,7 +116,7 @@ class ZxParsingManager extends errorLogger
      * @param null|string $path
      * @param null|string $content
      */
-    public function detectType(string|null $path = null, string|null $content = null, $fileName = null)
+    public function detectType(string|null $path = null, string|null $content = null, $fileName = null): string
     {
         if ($fileName && ($extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION)))) {
             return $extension;
@@ -124,13 +136,13 @@ class ZxParsingManager extends errorLogger
     /**
      * @param ZxParsingItem $file
      */
-    public function registerFile($file)
+    public function registerFile($file): void
     {
         $this->index[$file->getMd5()] = $file;
     }
 
 
-    public function extractFile($path, $id)
+    public function extractFile($path, $id): bool|ZxParsingItem
     {
         $chain = [];
         $fileName = false;

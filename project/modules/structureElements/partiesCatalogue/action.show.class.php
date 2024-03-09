@@ -6,7 +6,8 @@ class showPartiesCatalogue extends structureElementAction
      * @param structureManager $structureManager
      * @param controller $controller
      * @param partiesCatalogueElement $structureElement
-     * @return mixed|void
+     *
+     * @return void
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {

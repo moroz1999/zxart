@@ -14,6 +14,9 @@ class cityElement extends structureElement
     public $role = 'content';
     protected $locationPropertyName = 'city';
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -22,7 +25,7 @@ class cityElement extends structureElement
         $moduleStructure['longitude'] = 'floatNumber';
     }
 
-    protected function setMultiLanguageFields(&$multiLanguageFields)
+    protected function setMultiLanguageFields(&$multiLanguageFields): void
     {
         $multiLanguageFields[] = 'title';
     }
@@ -37,7 +40,12 @@ class cityElement extends structureElement
         return false;
     }
 
-    public function getMapMarkerData()
+    /**
+     * @return (int|mixed)[]
+     *
+     * @psalm-return array{id: int, title: mixed, amount: mixed, latitude: mixed, longitude: mixed, url: mixed}
+     */
+    public function getMapMarkerData(): array
     {
         $data = [];
         $data['id'] = $this->id;

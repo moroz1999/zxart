@@ -19,11 +19,17 @@ class statsApplication extends controllerApplication
         'plugin',
     ];
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         $this->createRenderer();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         ini_set("memory_limit", "2048M");
@@ -33,7 +39,7 @@ class statsApplication extends controllerApplication
         $this->checkINodes();
     }
 
-    public function aggregate()
+    public function aggregate(): void
     {
         $eventsLog = $this->getService('eventsLog');
         $todayStart = strtotime("today");
@@ -63,7 +69,7 @@ class statsApplication extends controllerApplication
         $eventsLog->deleteEvents('tagAdded', $todayStart);
     }
 
-    public function checkINodes()
+    public function checkINodes(): void
     {
         $path = $this->getService('PathsManager')->getPath('zxCache');
         $this->clearInodes($path);
@@ -71,7 +77,7 @@ class statsApplication extends controllerApplication
         $this->clearInodes($path);
     }
 
-    private function clearInodes($path)
+    private function clearInodes($path): void
     {
         if (is_dir($path)) {
             $iterator = new FilesystemIterator($path, FilesystemIterator::SKIP_DOTS);

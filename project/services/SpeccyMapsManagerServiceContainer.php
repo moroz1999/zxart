@@ -2,6 +2,9 @@
 
 class SpeccyMapsManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return SpeccyMapsManager
+     */
     public function makeInstance()
     {
         return new SpeccyMapsManager();

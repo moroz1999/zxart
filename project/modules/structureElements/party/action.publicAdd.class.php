@@ -4,6 +4,9 @@ class publicAddParty extends structureElementAction
 {
     protected $loggable = true;
 
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated) {
@@ -35,7 +38,7 @@ class publicAddParty extends structureElementAction
         $structureElement->setViewName('form');
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'title',
@@ -47,7 +50,7 @@ class publicAddParty extends structureElementAction
 		];
     }
 
-    public function setValidators(&$validators)
+    public function setValidators(&$validators): void
     {
     }
 }

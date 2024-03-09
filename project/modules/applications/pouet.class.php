@@ -6,6 +6,9 @@ class pouetApplication extends controllerApplication
     public $rendererName = 'smarty';
     public $requestParameters = [];
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         ini_set("max_execution_time", 60 * 15);
@@ -14,6 +17,9 @@ class pouetApplication extends controllerApplication
         $this->createRenderer();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         /**

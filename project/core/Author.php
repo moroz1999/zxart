@@ -28,7 +28,7 @@ trait Author
         return $this->years[$type];
     }
 
-    public function checkParentLetter()
+    public function checkParentLetter(): void
     {
         /**
          * @var linksManager $linksManager
@@ -50,7 +50,12 @@ trait Author
         }
     }
 
-    protected function getLettersListMarker($type)
+    /**
+     * @return string
+     *
+     * @psalm-return 'authors'|'authorsmenu'
+     */
+    protected function getLettersListMarker(string $type)
     {
         if ($type == 'admin') {
             return 'authors';
@@ -170,7 +175,7 @@ trait Author
         return $this->linksInfo;
     }
 
-    abstract public function getWorksList($types);
+    abstract public function getWorksList(array $types);
 
     abstract public function getGroupsList();
 

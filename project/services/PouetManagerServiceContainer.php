@@ -2,6 +2,9 @@
 
 class PouetManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return PouetManager
+     */
     public function makeInstance()
     {
         return new PouetManager();

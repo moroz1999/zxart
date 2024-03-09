@@ -15,6 +15,9 @@ class parserApplication extends controllerApplication
      */
     private $structureManager;
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         ignore_user_abort(1);
@@ -22,7 +25,7 @@ class parserApplication extends controllerApplication
         $this->createRenderer();
     }
 
-    private function acceptFile()
+    private function acceptFile(): bool
     {
         if (!empty($_FILES) && !empty($_FILES['file'])) {
             $file = $_FILES['file'];
@@ -37,6 +40,9 @@ class parserApplication extends controllerApplication
         return false;
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         if ($this->acceptFile()) {
@@ -64,7 +70,16 @@ class parserApplication extends controllerApplication
         $this->renderer->display();
     }
 
-    private function prepareResponse($structure)
+    /**
+     * @param ZxParsingItem[] $structure
+     *
+     * @psalm-param array<ZxParsingItem> $structure
+     *
+     * @return array[]
+     *
+     * @psalm-return list{0?: array,...}
+     */
+    private function prepareResponse(array $structure): array
     {
         $response = [];
         foreach ($structure as $item) {
@@ -105,7 +120,12 @@ class parserApplication extends controllerApplication
         return $export;
     }
 
-    private function loadReleasesData($md5)
+    /**
+     * @return ((mixed|string)[][]|int|mixed|string)[][]
+     *
+     * @psalm-return list{0?: array{title: string, id: int, url: mixed, year: mixed, authors: list{0?: array{url: mixed, title: string, id: mixed, type: mixed},...}},...}
+     */
+    private function loadReleasesData($md5): array
     {
         $releases = [];
         $result = $this->db->table('files_registry')

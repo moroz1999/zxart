@@ -34,11 +34,18 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
 
     abstract protected function fileExists($extensionType);
 
-    public function getJsonInfo()
+
+    public function getJsonInfo(?string $preset = null): ?string
     {
-        return json_encode($this->getElementData());
+        if ($data = $this->getElementData($preset)) {
+            return json_encode($data);
+        }
+        return null;
     }
 
+    /**
+     * @return string
+     */
     public function getFileName(
         $extensionType = 'original',
         $escapeSpaces = true,
@@ -99,6 +106,8 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
 
     /**
      * @param mixed $userVote
+     *
+     * @return void
      */
     public function setUserVote($userVote)
     {
@@ -117,7 +126,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         return $this->userVote;
     }
 
-    public function renewPartyLink()
+    public function renewPartyLink(): void
     {
         $linksManager = $this->getService('linksManager');
 
@@ -137,7 +146,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         }
     }
 
-    public function renewAuthorLink()
+    public function renewAuthorLink(): void
     {
         $linkType = $this->authorLinkType;
 
@@ -161,12 +170,15 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         }
     }
 
-    public function makeAuthorLink($authorId)
+    public function makeAuthorLink($authorId): void
     {
         $linksManager = $this->getService('linksManager');
         $linksManager->linkElements($authorId, $this->id, $this->authorLinkType);
     }
 
+    /**
+     * @return bool
+     */
     public function isVotingDenied()
     {
         if ($this->denyVoting) {
@@ -181,6 +193,9 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         return false;
     }
 
+    /**
+     * @return bool
+     */
     public function areCommentsAllowed()
     {
         if ($this->denyComments) {
@@ -217,7 +232,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         return $votesHistory;
     }
 
-    public function updateProdLink()
+    public function updateProdLink(): void
     {
         $linksManager = $this->getService('linksManager');
 
@@ -237,7 +252,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         }
     }
 
-    public function updateTagsInfo()
+    public function updateTagsInfo(): void
     {
         $tagsIndex = $this->getTagsIndex();
 
@@ -267,7 +282,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         }
     }
 
-    public function getTagsIndex()
+    public function getTagsIndex(): array
     {
         $index = [];
         foreach ($this->getTagsList() as $tag) {
@@ -301,7 +316,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         return $this->tagsList;
     }
 
-    public function updateYear()
+    public function updateYear(): void
     {
         if (!is_numeric($this->year) || $this->year < 1983) {
             if ($party = $this->getPartyElement()) {
@@ -313,7 +328,12 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         }
     }
 
-    public function hasTag($text)
+    /**
+     * @return false|int
+     *
+     * @psalm-return false|int<0, max>
+     */
+    public function hasTag($text): int|false
     {
         $result = false;
         if ($tagsTexts = $this->getTagsTexts()) {
@@ -332,7 +352,10 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         return $tagsIdList = $tagsManager->getElementSuggestedTags($this->id, 25);
     }
 
-    public function getTagsTexts()
+    /**
+     * @psalm-return list{0?: mixed,...}
+     */
+    public function getTagsTexts(): array
     {
         $tagsTexts = [];
         foreach ($this->getTagsList() as $tag) {
@@ -341,7 +364,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         return $tagsTexts;
     }
 
-    public function generateTagsText()
+    public function generateTagsText(): string
     {
         return implode(', ', $this->getTagsTexts());
     }
@@ -355,7 +378,12 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         }
     }
 
-    public function getAuthorNames()
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{0?: string,...}
+     */
+    public function getAuthorNames(): array
     {
         $authorNames = [];
         if ($authors = $this->getAuthorsList()) {
@@ -366,7 +394,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         return $authorNames;
     }
 
-    public function getAuthorNamesString()
+    public function getAuthorNamesString(): string
     {
         $result = '';
         if ($authorNames = $this->getAuthorNames()) {
@@ -415,6 +443,9 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         return $this->releaseElement;
     }
 
+    /**
+     * @return void
+     */
     public function recalculate()
     {
         $this->recalculateVotes();
@@ -424,6 +455,9 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         $this->persistElementData();
     }
 
+    /**
+     * @return void
+     */
     public function recalculateComments()
     {
         $this->commentsAmount = $this->getCommentsAmount();
@@ -433,6 +467,9 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
             ->update(['commentsAmount' => $this->commentsAmount]);
     }
 
+    /**
+     * @return void
+     */
     public function recalculateVotes()
     {
         if ($this->isVotingDenied()) {
@@ -465,12 +502,17 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         }
     }
 
+    /**
+     * @return int[]
+     *
+     * @psalm-return list{int}
+     */
     public function getChartDataIds($type = null)
     {
         return [$this->id];
     }
 
-    public function logCreation($userId = null)
+    public function logCreation($userId = null): void
     {
         $this->getService('eventsLog')->logEvent($this->id, 'add' . ucfirst($this->structureType), $userId);
     }
@@ -480,7 +522,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         return $this->party;
     }
 
-    public function updateMd5(string $filePath, string $fileName)
+    public function updateMd5(string $filePath, string $fileName): bool
     {
         /**
          * @var \Illuminate\Database\Connection $db
@@ -508,7 +550,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         return false;
     }
 
-    public function isRealtime()
+    public function isRealtime(): bool
     {
         return in_array($this->compo,
             [
@@ -525,6 +567,9 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         );
     }
 
+    /**
+     * @return int
+     */
     public function getYear()
     {
         return $this->year;
@@ -561,7 +606,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         return $this->originalAuthors;
     }
 
-    public function renewOriginalAuthorLink()
+    public function renewOriginalAuthorLink(): void
     {
         $linkType = "originalAuthor";
 
@@ -585,7 +630,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         }
     }
 
-    protected function optimizeAliases($property)
+    protected function optimizeAliases(string $property): void
     {
         $foundParents = [];
         foreach ($this->$property as $element) {

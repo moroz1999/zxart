@@ -82,7 +82,7 @@ trait ZxProdsList
     }
 
 
-    public function getApiQuery()
+    public function getApiQuery(): ApiQuery
     {
         if (!isset($this->apiQuery)) {
             $subcategoriesIds = [];
@@ -153,7 +153,7 @@ trait ZxProdsList
         return $currentPage;
     }
 
-    public function getProdsAmount()
+    public function getProdsAmount(): int
     {
         if (!isset($this->prodsAmount)) {
             $this->getProds();
@@ -161,7 +161,7 @@ trait ZxProdsList
         return $this->prodsAmount;
     }
 
-    protected function getProdsQuery()
+    protected function getProdsQuery(): \Illuminate\Database\Query\Builder
     {
         /**
          * @var Connection $db
@@ -294,7 +294,7 @@ trait ZxProdsList
         return $this->categoriesSelector;
     }
 
-    private function getRecursiveCategorySelectorValues(zxProdCategoryElement $category, &$selectorValues, &$selected = false)
+    private function getRecursiveCategorySelectorValues(zxProdCategoryElement $category, &$selectorValues, &$selected = false): void
     {
         $selected = $category->id === $this->id;
         $data = [

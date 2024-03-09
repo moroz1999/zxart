@@ -5,9 +5,12 @@ trait ReleaseFileTypesGatherer
     /**
      * @param ZxParsingItem[] $items
      * @param ZxParsingItem[] $result
-     * @return ZxParsingItem[]
+     *
+     * @return (ZxParsingItem|string)[]
+     *
+     * @psalm-return array<ZxParsingItem|string>
      */
-    protected function gatherReleaseFiles($items, &$result = [])
+    protected function gatherReleaseFiles($items, &$result = []): array
     {
         foreach ($items as $item) {
             if ($extension = $item->getItemExtension()) {

@@ -11,6 +11,9 @@ class printApplication extends controllerApplication
         return !$this->isCrawlerDetected();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         if ($id = (int)$controller->getParameter('id')) {

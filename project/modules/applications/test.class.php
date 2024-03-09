@@ -12,6 +12,9 @@ class testApplication extends controllerApplication
     protected $structureManager;
     protected $key;
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         ini_set("display_errors", 1);
@@ -20,6 +23,9 @@ class testApplication extends controllerApplication
         $this->createRenderer();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         echo 123;

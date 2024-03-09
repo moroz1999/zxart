@@ -152,7 +152,7 @@ class ProdsManager extends ElementsManager
     /**
      * @param bool $updateExistingProds
      */
-    public function setUpdateExistingProds($updateExistingProds)
+    public function setUpdateExistingProds($updateExistingProds): void
     {
         $this->updateExistingProds = $updateExistingProds;
     }
@@ -160,7 +160,7 @@ class ProdsManager extends ElementsManager
     /**
      * @param bool $forceUpdateYear
      */
-    public function setForceUpdateYear($forceUpdateYear)
+    public function setForceUpdateYear($forceUpdateYear): void
     {
         $this->forceUpdateYear = $forceUpdateYear;
     }
@@ -168,7 +168,7 @@ class ProdsManager extends ElementsManager
     /**
      * @param bool $forceUpdateYoutube
      */
-    public function setForceUpdateYoutube($forceUpdateYoutube)
+    public function setForceUpdateYoutube($forceUpdateYoutube): void
     {
         $this->forceUpdateYoutube = $forceUpdateYoutube;
     }
@@ -176,7 +176,7 @@ class ProdsManager extends ElementsManager
     /**
      * @param bool $forceUpdateGroups
      */
-    public function setForceUpdateGroups($forceUpdateGroups)
+    public function setForceUpdateGroups($forceUpdateGroups): void
     {
         $this->forceUpdateGroups = $forceUpdateGroups;
     }
@@ -184,7 +184,7 @@ class ProdsManager extends ElementsManager
     /**
      * @param bool $forceUpdatePublishers
      */
-    public function setForceUpdatePublishers($forceUpdatePublishers)
+    public function setForceUpdatePublishers($forceUpdatePublishers): void
     {
         $this->forceUpdatePublishers = $forceUpdatePublishers;
     }
@@ -192,7 +192,7 @@ class ProdsManager extends ElementsManager
     /**
      * @param privilegesManager $privilegesManager
      */
-    public function setPrivilegesManager($privilegesManager)
+    public function setPrivilegesManager($privilegesManager): void
     {
         $this->privilegesManager = $privilegesManager;
     }
@@ -200,7 +200,7 @@ class ProdsManager extends ElementsManager
     /**
      * @param PartiesManager $partiesManager
      */
-    public function setPartiesManager($partiesManager)
+    public function setPartiesManager($partiesManager): void
     {
         $this->partiesManager = $partiesManager;
     }
@@ -208,7 +208,7 @@ class ProdsManager extends ElementsManager
     /**
      * @param bool $forceUpdateAuthors
      */
-    public function setForceUpdateAuthors($forceUpdateAuthors)
+    public function setForceUpdateAuthors($forceUpdateAuthors): void
     {
         $this->forceUpdateAuthors = $forceUpdateAuthors;
     }
@@ -224,7 +224,7 @@ class ProdsManager extends ElementsManager
     /**
      * @param bool $forceUpdateCategories
      */
-    public function setForceUpdateCategories($forceUpdateCategories)
+    public function setForceUpdateCategories($forceUpdateCategories): void
     {
         $this->forceUpdateCategories = $forceUpdateCategories;
     }
@@ -232,7 +232,7 @@ class ProdsManager extends ElementsManager
     /**
      * @param bool $addImages
      */
-    public function setAddImages($addImages)
+    public function setAddImages($addImages): void
     {
         $this->addImages = $addImages;
     }
@@ -240,7 +240,7 @@ class ProdsManager extends ElementsManager
     /**
      * @param bool $forceUpdateTitles
      */
-    public function setForceUpdateTitles($forceUpdateTitles)
+    public function setForceUpdateTitles($forceUpdateTitles): void
     {
         $this->forceUpdateTitles = $forceUpdateTitles;
     }
@@ -248,7 +248,7 @@ class ProdsManager extends ElementsManager
     /**
      * @param ZxParsingManager $zxParsingManager
      */
-    public function setZxParsingManager($zxParsingManager)
+    public function setZxParsingManager($zxParsingManager): void
     {
         $this->zxParsingManager = $zxParsingManager;
     }
@@ -256,7 +256,7 @@ class ProdsManager extends ElementsManager
     /**
      * @param ProdsDownloader $prodsDownloader
      */
-    public function setProdsDownloader($prodsDownloader)
+    public function setProdsDownloader($prodsDownloader): void
     {
         $this->prodsDownloader = $prodsDownloader;
     }
@@ -264,7 +264,7 @@ class ProdsManager extends ElementsManager
     /**
      * @param GroupsManager $groupsManager
      */
-    public function setGroupsManager($groupsManager)
+    public function setGroupsManager($groupsManager): void
     {
         $this->groupsManager = $groupsManager;
     }
@@ -272,7 +272,7 @@ class ProdsManager extends ElementsManager
     /**
      * @param AuthorsManager $authorsManager
      */
-    public function setAuthorsManager($authorsManager)
+    public function setAuthorsManager($authorsManager): void
     {
         $this->authorsManager = $authorsManager;
     }
@@ -280,18 +280,21 @@ class ProdsManager extends ElementsManager
     /**
      * @param linksManager $linksManager
      */
-    public function setLinksManager($linksManager)
+    public function setLinksManager($linksManager): void
     {
         $this->linksManager = $linksManager;
     }
 
 
     /**
-     * @param $prodInfo
+     * @param ((((mixed|string)[]|false|mixed|null|string)[]|int|mixed|null|string)[]|int|mixed|string)[] $prodInfo
      * @param $origin
+     *
      * @return bool|zxProdElement
+     *
+     * @psalm-param array{title: mixed|string, year?: int|mixed|string, compo?: ''|mixed, legalStatus?: ''|'insales'|mixed, id: int|mixed|string, language?: array|mixed, categories?: array<int<0, max>, mixed>, images?: list{0?: mixed|string,...}, labels?: list{0?: array{id: mixed|string, title: mixed|string, countryId?: false, abbreviation?: false|mixed, isGroup: bool|null, isPerson: bool|null, isAlias: false|null, website?: mixed, locationName?: ''|'Lviv'|'Rostov-on-Don'|mixed},...}, authors?: array<array-key|mixed, list{0?: mixed,...}>, publishers?: list{0?: mixed,...}, groups?: list{0?: mixed|string,...}, releases?: list{0?: array{id: mixed|string, title: false|mixed, year?: false, language?: array, hardwareRequired: list{0?: 'zxevolution'|mixed, 1?: 'tsconf'|mixed,...}, images?: array, inlayImages?: array, infoFiles?: array, fileUrl: false|mixed|null|string, version?: string, releaseType?: 'original', labels?: array}|mixed,...}, importIds?: array{dzoo?: mixed, zxd?: mixed}, directCategories?: list{0?: mixed,...}, party?: array{title?: mixed, year?: int|mixed, website?: mixed, place?: int|mixed|null}, youtubeId?: mixed|string, rzx?: list{array{url: string, author: null|string}}, ids?: array{zxdb: int}, seriesProds?: list{0?: mixed,...}, altTitle?: ''|mixed, externalLink?: ''|mixed, compilationItems?: list{0?: mixed,...}, maps?: list{array{url: mixed, author: ''},...}, undetermined?: array<array>} $prodInfo
      */
-    public function importProd($prodInfo, $origin)
+    public function importProd(array $prodInfo, string $origin)
     {
         /**
          * @var zxProdElement $element
@@ -367,7 +370,7 @@ class ProdsManager extends ElementsManager
         return $element;
     }
 
-    protected function importLabelsInfo($infoIndex, $origin)
+    protected function importLabelsInfo($infoIndex, $origin): void
     {
         $infoIndex = array_reverse($infoIndex);
         foreach ($infoIndex as $gatheredInfo) {
@@ -404,7 +407,7 @@ class ProdsManager extends ElementsManager
      * @param $origin
      * @return zxProdElement
      */
-    protected function updateProd($element, $prodInfo, $origin, $justCreated = false)
+    protected function updateProd($element, array $prodInfo, $origin, bool $justCreated = false)
     {
         $changed = false;
         if (!empty($prodInfo['title']) && ($element->title != $prodInfo['title'])) {
@@ -623,7 +626,12 @@ class ProdsManager extends ElementsManager
         return $element;
     }
 
-    private function importElementFile($element, $fileUrl, $existingFiles, $fileAuthor = '', $propertyName = 'connectedFile')
+    /**
+     * @psalm-param ''|'mapFilesSelector'|'rzx' $fileAuthor
+     *
+     * @return void
+     */
+    private function importElementFile(FilesElementTrait|zxProdElement $element, $fileUrl, $existingFiles, string $fileAuthor = '', string $propertyName = 'connectedFile')
     {
         $this->structureManager->setNewElementLinkType($element->getConnectedFileType($propertyName));
         $uploadsPath = $this->pathsManager->getPath('uploads');
@@ -694,7 +702,7 @@ class ProdsManager extends ElementsManager
      * @param $images
      * @param string $propertyName
      */
-    protected function importElementFiles($element, $images, $propertyName = 'connectedFile')
+    protected function importElementFiles($element, $images, $propertyName = 'connectedFile'): void
     {
         $existingFiles = $element->getFilesList($propertyName);
         if (!$existingFiles || $this->addImages) {
@@ -704,12 +712,12 @@ class ProdsManager extends ElementsManager
         }
     }
 
-    protected function linkReleaseWithAuthor($authorId, $prodId, $roles = [])
+    protected function linkReleaseWithAuthor($authorId, int $prodId, $roles = []): void
     {
         $this->authorsManager->checkAuthorship($prodId, $authorId, 'release', $roles);
     }
 
-    protected function linkReleaseWithPublisher($publisherId, $prodId)
+    protected function linkReleaseWithPublisher($publisherId, int $prodId): void
     {
         $this->linksManager->linkElements($publisherId, $prodId, 'zxReleasePublishers');
     }
@@ -730,7 +738,7 @@ class ProdsManager extends ElementsManager
         return false;
     }
 
-    protected function findProdBestMatch($prodInfo)
+    protected function findProdBestMatch($prodInfo): bool|structureElement
     {
         $element = false;
         $query = $this->db->table('module_zxprod')
@@ -804,7 +812,7 @@ class ProdsManager extends ElementsManager
     }
 
 
-    public function importRelease($releaseInfo, $prodId, $origin)
+    public function importRelease($releaseInfo, $prodId, $origin): bool|zxReleaseElement
     {
         $releaseId = $releaseInfo['id'];
         $releaseInfo['title'] = $this->sanitizeTitle($releaseInfo['title']);
@@ -854,7 +862,7 @@ class ProdsManager extends ElementsManager
      * @param $releaseInfo
      * @param $origin
      */
-    protected function updateRelease($element, $releaseInfo, $origin, $justCreated = false)
+    protected function updateRelease($element, array $releaseInfo, $origin, bool $justCreated = false): void
     {
         $changed = false;
         if (($this->forceUpdateTitles || !$element->title) && !empty($releaseInfo['title'])) {
@@ -980,12 +988,15 @@ class ProdsManager extends ElementsManager
         return $result;
     }
 
-    public function makeReleasesQuery()
+    public function makeReleasesQuery(): \Illuminate\Database\Query\Builder
     {
         return $this->db->table('module_zxrelease');
     }
 
-    protected function loadReleases(Illuminate\Database\Query\Builder $query, $sort = [], $start = null, $amount = null)
+    /**
+     * @psalm-return list{0?: mixed,...}
+     */
+    protected function loadReleases(Illuminate\Database\Query\Builder $query, array|null $sort = [], int|null $start = null, int|null $amount = null): array
     {
         if (is_array($sort)) {
             foreach ($sort as $property => &$order) {
@@ -1054,7 +1065,7 @@ class ProdsManager extends ElementsManager
         return $title;
     }
 
-    public function joinDeleteZxProd($mainZxProdId, $joinedZxProdId, $releasesOnly = false)
+    public function joinDeleteZxProd(int $mainZxProdId, int $joinedZxProdId, bool $releasesOnly = false): bool
     {
         if ($joinedZxProdId == $mainZxProdId) {
             return false;
@@ -1165,7 +1176,7 @@ class ProdsManager extends ElementsManager
         return true;
     }
 
-    public function splitZxProd($prodId, $data)
+    public function splitZxProd(int $prodId, array $data): bool|structureElement
     {
         $newProdElement = false;
         /**

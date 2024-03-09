@@ -4,11 +4,17 @@ class sxgApplication extends controllerApplication
 {
     public $rendererName = 'zxScreen';
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         $this->createRenderer();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         if ($id = (int)$controller->getParameter('id')) {

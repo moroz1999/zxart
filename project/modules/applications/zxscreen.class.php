@@ -16,11 +16,17 @@ class zxscreenApplication extends controllerApplication
     protected $download;
     public $rendererName = 'zxScreen';
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         $this->createRenderer();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         $this->processRequestParameters();
@@ -74,7 +80,7 @@ class zxscreenApplication extends controllerApplication
         }
     }
 
-    public function processRequestParameters()
+    public function processRequestParameters(): void
     {
         $controller = controller::getInstance();
         $this->id = $controller->getParameter('id');

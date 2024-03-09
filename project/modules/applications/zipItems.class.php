@@ -28,6 +28,9 @@ class zipItemsApplication extends controllerApplication
         return !$this->isCrawlerDetected();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         $this->renderer->endOutputBuffering();
@@ -194,7 +197,12 @@ class zipItemsApplication extends controllerApplication
         unlink($zipPath);
     }
 
-    protected function sanitizeName($fileName)
+    /**
+     * @return null|string|string[]
+     *
+     * @psalm-return array<string>|null|string
+     */
+    protected function sanitizeName($fileName): array|string|null
     {
         $fileName = html_entity_decode($fileName, ENT_QUOTES);
         $fileName = TranslitHelper::convert($fileName);
@@ -202,7 +210,7 @@ class zipItemsApplication extends controllerApplication
         return $fileName;
     }
 
-    public function generateAuthorText($author)
+    public function generateAuthorText($author): string
     {
         $text = '';
         if ($author->realName != $author->title) {

@@ -8,6 +8,8 @@ class publicReceivePressArticle extends structureElementAction
      * @param structureManager $structureManager
      * @param controller $controller
      * @param pressArticleElement $structureElement
+     *
+     * @return void
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
@@ -29,7 +31,7 @@ class publicReceivePressArticle extends structureElementAction
         $structureElement->setViewName('form');
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'title',
@@ -41,7 +43,7 @@ class publicReceivePressArticle extends structureElementAction
         ];
     }
 
-    public function setValidators(&$validators)
+    public function setValidators(&$validators): void
     {
     }
 }

@@ -7,10 +7,16 @@ class redisApplication extends controllerApplication
     use ReleaseFormatsProvider;
     use ReleaseFileTypesGatherer;
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         $cache = $this->getService(Cache::class);

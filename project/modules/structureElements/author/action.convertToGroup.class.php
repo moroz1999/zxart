@@ -8,7 +8,8 @@ class convertToGroupAuthor extends structureElementAction
      * @param structureManager $structureManager
      * @param controller $controller
      * @param authorElement $structureElement
-     * @return mixed|void
+     *
+     * @return void
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {

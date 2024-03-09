@@ -10,6 +10,9 @@ class fixApplication extends controllerApplication
     private $log = PUBLIC_PATH . 'zxChip.log';
     private $idLog = PUBLIC_PATH . 'zxChipIds.log';
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         $this->createRenderer();
@@ -46,7 +49,7 @@ class fixApplication extends controllerApplication
         }
     }
 
-    private function fixProds()
+    private function fixProds(): void
     {
         /**
          * @var \Illuminate\Database\Connection $db
@@ -77,6 +80,9 @@ class fixApplication extends controllerApplication
         }
     }
 
+    /**
+     * @return void
+     */
     private function fixReleases()
     {
         /**
@@ -131,7 +137,7 @@ class fixApplication extends controllerApplication
         }
     }
 
-    private function fixPress()
+    private function fixPress(): void
     {
         $prodsManager = $this->getService('ProdsManager');
 
@@ -179,7 +185,7 @@ class fixApplication extends controllerApplication
     }
 
 
-    private function deletePress()
+    private function deletePress(): void
     {
         /**
          * @var \Illuminate\Database\Connection $db
@@ -208,7 +214,7 @@ class fixApplication extends controllerApplication
         }
     }
 
-    private function deleteProds()
+    private function deleteProds(): void
     {
         /**
          * @var \Illuminate\Database\Connection $db
@@ -238,7 +244,12 @@ class fixApplication extends controllerApplication
         }
     }
 
-    private function loadIds($term)
+    /**
+     * @psalm-param 'demo collection'|'zx chip'|'zx tunes' $term
+     *
+     * @psalm-return list<mixed>
+     */
+    private function loadIds(string $term): array
     {
         /**
          * @var \Illuminate\Database\Connection $db
@@ -252,7 +263,7 @@ class fixApplication extends controllerApplication
 
     }
 
-    private function fixZxChip()
+    private function fixZxChip(): void
     {
         $ids = $this->loadIds('zx chip');
         $ids = array_merge($ids, $this->loadIds('zx tunes'));
@@ -288,7 +299,7 @@ class fixApplication extends controllerApplication
         }
     }
 
-    private function fixWlodek()
+    private function fixWlodek(): void
     {
         $ids = $this->loadIds('demo collection');
         if ($ids) {

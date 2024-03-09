@@ -2,7 +2,10 @@
 
 trait ReleasesProvider
 {
-    public function getReleasesInfo()
+    /**
+     * @psalm-return list{0?: mixed,...}
+     */
+    public function getReleasesInfo(): array
     {
         $data = [];
         $releases = $this->getReleases();

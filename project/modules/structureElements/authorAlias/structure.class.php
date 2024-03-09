@@ -28,6 +28,9 @@ class authorAliasElement extends structureElement implements CommentsHolderInter
     protected $releases;
     protected $authorElement;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -39,7 +42,14 @@ class authorAliasElement extends structureElement implements CommentsHolderInter
         $moduleStructure['joinAndDelete'] = 'text';
     }
 
-    public function getWorksList($types = ['authorPicture', 'authorMusic'])
+    /**
+     * @param (mixed|string)[] $types
+     *
+     * @psalm-param list{0: 'authorPicture'|mixed, 1?: 'authorMusic'} $types
+     *
+     * @return array
+     */
+    public function getWorksList(array $types = ['authorPicture', 'authorMusic'])
     {
         $result = [];
         foreach ($types as $type) {
@@ -135,6 +145,11 @@ class authorAliasElement extends structureElement implements CommentsHolderInter
         return $this->releases;
     }
 
+    /**
+     * @return array
+     *
+     * @psalm-return list{0?: mixed,...}
+     */
     public function getGroupsList()
     {
         $groupsList = [];
@@ -146,7 +161,7 @@ class authorAliasElement extends structureElement implements CommentsHolderInter
         return $groupsList;
     }
 
-    public function getSearchTitle()
+    public function getSearchTitle(): string
     {
         $searchTitle = $this->title;
         if ($author = $this->getAuthorElement()) {
@@ -155,7 +170,10 @@ class authorAliasElement extends structureElement implements CommentsHolderInter
         return $searchTitle;
     }
 
-    public function getAliasElements()
+    /**
+     * @return false
+     */
+    public function getAliasElements(): bool
     {
         return false;
     }

@@ -2,7 +2,7 @@
 
 class zxMusicSearchQueryFilter extends searchQueryFilter
 {
-    protected function getTypeName()
+    protected function getTypeName(): string
     {
         return 'zxMusic';
     }

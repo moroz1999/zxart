@@ -7,6 +7,9 @@ class zxProdCategoriesElement extends structureElement
     public $defaultActionName = 'showFullList';
     public $role = 'container';
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';

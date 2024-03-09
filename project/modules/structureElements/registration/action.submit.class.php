@@ -5,6 +5,9 @@ class submitRegistration extends structureElementAction
     use AjaxFormTrait;
     protected $loggable = true;
 
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         $user = $this->getService('user');
@@ -150,11 +153,11 @@ class submitRegistration extends structureElementAction
         $this->sendAjaxFormResponse($structureElement, $reset);
     }
 
-    public function setValidators(&$validators)
+    public function setValidators(&$validators): void
     {
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'subscribe',

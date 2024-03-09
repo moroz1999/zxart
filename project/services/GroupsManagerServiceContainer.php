@@ -2,6 +2,9 @@
 
 class GroupsManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return GroupsManager
+     */
     public function makeInstance()
     {
         return new GroupsManager();

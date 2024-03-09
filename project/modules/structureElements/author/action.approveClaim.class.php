@@ -2,6 +2,9 @@
 
 class approveClaimAuthor extends structureElementAction
 {
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         $claimApproved = false;

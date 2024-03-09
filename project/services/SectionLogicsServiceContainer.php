@@ -2,6 +2,9 @@
 
 class SectionLogicsServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return SectionLogics
+     */
     public function makeInstance()
     {
         return new SectionLogics();

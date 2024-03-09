@@ -2,6 +2,9 @@
 
 class S4eManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return S4eManager
+     */
     public function makeInstance()
     {
         return new S4eManager();

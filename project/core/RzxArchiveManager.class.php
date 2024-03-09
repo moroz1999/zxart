@@ -43,13 +43,13 @@ class RzxArchiveManager extends errorLogger
     /**
      * @param mixed $prodsManager
      */
-    public function setProdsManager(ProdsManager $prodsManager)
+    public function setProdsManager(ProdsManager $prodsManager): void
     {
         $this->prodsManager = $prodsManager;
         $this->prodsManager->setUpdateExistingProds(true);
     }
 
-    public function importAll()
+    public function importAll(): void
     {
         foreach ($this->urls as $key => $url) {
             $this->importUrlProds($url);
@@ -57,7 +57,7 @@ class RzxArchiveManager extends errorLogger
         }
     }
 
-    public function importUrlProds($pageUrl)
+    public function importUrlProds($pageUrl): void
     {
         if ($html = $this->loadHtml($pageUrl)) {
             $xPath = new DOMXPath($html);
@@ -69,10 +69,10 @@ class RzxArchiveManager extends errorLogger
     }
 
     /**
-     * @param $node
+     * @param DOMNameSpaceNode|DOMNode $node
      * @param DOMXPath $xPath
      */
-    protected function parseTable($node, $xPath)
+    protected function parseTable(DOMNode|DOMNameSpaceNode $node, $xPath): void
     {
         $this->prodsIndex = [];
         $prodNodes = $xPath->query("./tr", $node);
@@ -141,12 +141,12 @@ class RzxArchiveManager extends errorLogger
         }
     }
 
-    protected function sanitizeString($string)
+    protected function sanitizeString($string): string
     {
         return trim(preg_replace('!\s+!', ' ', $string), " \t\n\r\0\x0B" . chr(0xC2) . chr(0xA0));
     }
 
-    protected function loadHtml($url)
+    protected function loadHtml($url): DOMDocument|false
     {
         if ($contents = file_get_contents($url)) {
             $dom = new DOMDocument;
@@ -164,7 +164,7 @@ class RzxArchiveManager extends errorLogger
         return false;
     }
 
-    protected function markProgress($text)
+    protected function markProgress(string $text): void
     {
         static $previousTime;
 

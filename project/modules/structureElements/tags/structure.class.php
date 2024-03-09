@@ -10,12 +10,15 @@ class tagsElement extends structureElement
 
     protected $tagsList;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
     }
 
-    protected function setMultiLanguageFields(&$multiLanguageFields)
+    protected function setMultiLanguageFields(&$multiLanguageFields): void
     {
         $multiLanguageFields[] = 'title';
     }
@@ -94,7 +97,10 @@ class tagsElement extends structureElement
         return false;
     }
 
-    public function getTagsListCount()
+    /**
+     * @psalm-return int<0, max>
+     */
+    public function getTagsListCount(): int
     {
         return count($this->getTagsList());
     }

@@ -2,6 +2,9 @@
 
 class MusicManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return MusicManager
+     */
     public function makeInstance()
     {
         return new MusicManager();

@@ -4,7 +4,10 @@ trait PublisherProdsProvider
 {
     protected $publisherProds;
 
-    public function getPublisherProdsInfo()
+    /**
+     * @psalm-return list{0?: mixed,...}
+     */
+    public function getPublisherProdsInfo(): array
     {
         $data = [];
         $prods = $this->getPublisherProds();

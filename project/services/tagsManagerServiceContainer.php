@@ -2,6 +2,9 @@
 
 class tagsManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return tagsManager
+     */
     public function makeInstance()
     {
         return new tagsManager();

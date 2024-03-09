@@ -11,6 +11,9 @@ class generateBannerLinkApplication extends controllerApplication
         return !$this->isCrawlerDetected();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         $structureManager = $this->getService(

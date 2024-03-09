@@ -9,6 +9,9 @@ class authorsListElement extends structureElement
     public $defaultActionName = 'show';
     public $role = 'content';
     protected $lettersSelectorInfo;
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -40,7 +43,12 @@ class authorsListElement extends structureElement
         return $authors;
     }
 
-    protected function getAuthorTypes()
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{0: 'authorMusic'|'authorPicture', 1?: 'authorPicture'}
+     */
+    protected function getAuthorTypes(): array
     {
         if ($this->items == 'music') {
             return ['authorMusic'];
@@ -149,7 +157,14 @@ class authorsListElement extends structureElement
         return $this->lettersSelectorInfo;
     }
 
-    protected function getLettersListMarker($type)
+    /**
+     * @psalm-param 'admin'|'public' $type
+     *
+     * @return string
+     *
+     * @psalm-return 'authors'|'authorsmenu'
+     */
+    protected function getLettersListMarker(string $type)
     {
         if ($type == 'admin') {
             return 'authors';

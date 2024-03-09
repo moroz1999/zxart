@@ -5,6 +5,9 @@ class authorClaimEmailDispatchmentType extends designThemeEmailDispatchmentType
     protected $displayUnsubscribeLink = false;
     protected $displayWebLink = false;
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         $this->cssThemeFilesStructure = [

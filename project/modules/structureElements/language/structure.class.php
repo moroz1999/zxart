@@ -33,6 +33,11 @@ class languageElement extends structureElement implements MetadataProviderInterf
     protected $mainMenuElements;
     protected $firstPageElement;
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{'showFullList', 'showForm', 'headerContent', 'leftColumn', 'rightColumn', 'bottomMenu', 'mobileMenu', 'showPositions', 'showPrivileges'}
+     */
     protected function getTabsList()
     {
         return [
@@ -48,7 +53,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
         ];
     }
 
-    public function getMainMenuElements($ignoreHidden = false)
+    public function getMainMenuElements(bool $ignoreHidden = false)
     {
         if ($ignoreHidden) {
             if ($childElements = $this->getChildrenList(null, ['structure', 'catalogue'])) {
@@ -111,6 +116,9 @@ class languageElement extends structureElement implements MetadataProviderInterf
         return $this->textContent;
     }
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -147,7 +155,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
         return $this->getElementsTypesIndexFromContext('mobileMenu');
     }
 
-    public function getElementFromMobileHeader()
+    public function getElementFromMobileHeader(): void
     {
         $this->logError('Deprecated method used ' . __CLASS__ . ' ' . __METHOD__);
     }
@@ -162,12 +170,18 @@ class languageElement extends structureElement implements MetadataProviderInterf
         return $this->getElementsTypesIndexFromContext('headerContent');
     }
 
-    public function getElementFromHeader($structureType, $number = 0)
+    /**
+     * @psalm-param 'gallery' $structureType
+     */
+    public function getElementFromHeader(string $structureType, $number = 0)
     {
         return $this->getElementFromContextByType('headerContent', $structureType, $number);
     }
 
-    public function getElementsFromHeader($structureType)
+    /**
+     * @psalm-param 'gallery' $structureType
+     */
+    public function getElementsFromHeader(string $structureType)
     {
         return $this->getElementsFromContextByType('headerContent', $structureType);
     }
@@ -192,7 +206,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
         return $this->getElementsFromContextByType('bottomMenu', $structureType);
     }
 
-    public function getSecondaryElements()
+    public function getSecondaryElements(): array
     {
         return array_merge($this->getHeaderElementsList(), $this->getLeftColumnElementsList());
     }
@@ -263,6 +277,9 @@ class languageElement extends structureElement implements MetadataProviderInterf
         return $result;
     }
 
+    /**
+     * @return void
+     */
     protected function loadElements($context)
     {
         if (isset($this->elementsList[$context])) {
@@ -283,28 +300,37 @@ class languageElement extends structureElement implements MetadataProviderInterf
         }
     }
 
-    protected function getElementsFromContext($context)
+    protected function getElementsFromContext(string $context)
     {
         $this->loadElements($context);
         return isset($this->elementsList[$context])
             ? $this->elementsList[$context] : [];
     }
 
-    protected function getElementsTypesIndexFromContext($context)
+    /**
+     * @psalm-param 'bottomMenu'|'headerContent'|'mobileMenu' $context
+     */
+    protected function getElementsTypesIndexFromContext(string $context)
     {
         $this->loadElements($context);
         return isset($this->elementsIndex[$context])
             ? $this->elementsIndex[$context] : [];
     }
 
-    protected function getElementsFromContextByType($context, $type)
+    /**
+     * @psalm-param 'bottomMenu'|'headerContent'|'mobileMenu' $context
+     */
+    protected function getElementsFromContextByType(string $context, $type)
     {
         $this->loadElements($context);
         return isset($this->elementsIndex[$context][$type])
             ? $this->elementsIndex[$context][$type] : [];
     }
 
-    protected function getElementFromContextByType($context, $type, $number = 0)
+    /**
+     * @psalm-param 'bottomMenu'|'headerContent'|'mobileMenu' $context
+     */
+    protected function getElementFromContextByType(string $context, $type, $number = 0)
     {
         $elements = $this->getElementsFromContextByType($context, $type);
         return isset($elements[$number]) ? $elements[$number] : [];
@@ -487,7 +513,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
         }
     }
 
-    public function getLogoImageUrl($preset = 'logo')
+    public function getLogoImageUrl($preset = 'logo'): string
     {
         $result = '';
         if ($this->logoImage) {
@@ -511,7 +537,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
         return $result;
     }
 
-    public function clearCommentsCache()
+    public function clearCommentsCache(): void
     {
         $this->deleteCache('lc');
     }
@@ -571,7 +597,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
         return $this->sectionsList;
     }
 
-    protected function filterTopMenus()
+    protected function filterTopMenus(): void
     {
         $this->sectionsList = [];
 

@@ -2,6 +2,9 @@
 
 class voteShared extends structureElementAction
 {
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         $structureElement->executeAction('show');

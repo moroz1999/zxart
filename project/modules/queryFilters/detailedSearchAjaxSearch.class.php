@@ -2,7 +2,7 @@
 
 class detailedSearchAjaxSearchQueryFilter extends ajaxSearchQueryFilter
 {
-    protected function getTypeName()
+    protected function getTypeName(): string
     {
         return 'detailedSearch';
     }

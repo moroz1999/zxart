@@ -8,7 +8,8 @@ class moveScreenshotsZxRelease extends structureElementAction
      * @param structureManager $structureManager
      * @param controller $controller
      * @param zxReleaseElement $structureElement
-     * @return mixed|void
+     *
+     * @return void
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {

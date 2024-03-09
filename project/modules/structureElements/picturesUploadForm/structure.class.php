@@ -17,6 +17,9 @@ class picturesUploadFormElement extends ZxArtItemUploadFormElement
     protected $authorsList;
     protected $authorsIDList;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -42,7 +45,7 @@ class picturesUploadFormElement extends ZxArtItemUploadFormElement
         $moduleStructure['denyComments'] = 'checkbox';
     }
 
-    protected function setMultiLanguageFields(&$multiLanguageFields)
+    protected function setMultiLanguageFields(&$multiLanguageFields): void
     {
         $multiLanguageFields[] = 'title';
     }

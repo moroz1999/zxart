@@ -2,7 +2,7 @@
 
 trait AuthorshipPersister
 {
-    public function persistAuthorship($type)
+    public function persistAuthorship($type): void
     {
         /**
          * @var AuthorsManager $authorsManager

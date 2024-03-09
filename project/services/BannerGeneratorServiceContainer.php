@@ -2,6 +2,9 @@
 
 class BannerGeneratorServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return BannerGenerator
+     */
     public function makeInstance()
     {
         return new BannerGenerator();

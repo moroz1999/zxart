@@ -2,7 +2,7 @@
 
 class tagSearchQueryFilter extends searchQueryFilter
 {
-    public function getTypeName()
+    public function getTypeName(): string
     {
         return 'tag';
     }
@@ -12,7 +12,10 @@ class tagSearchQueryFilter extends searchQueryFilter
         return ['title', 'synonym'];
     }
 
-    protected function getContentFieldNames()
+    /**
+     * @return false
+     */
+    protected function getContentFieldNames(): bool
     {
         return false;
     }

@@ -13,7 +13,7 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
         $this->collection = persistableCollection::getInstance('conversion_queue');
     }
 
-    public function addToConversionQueue($elementId)
+    public function addToConversionQueue($elementId): void
     {
         if (!$this->checkInQueue($elementId)) {
             $this->saveToQueue($elementId);
@@ -22,7 +22,7 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
         }
     }
 
-    protected function checkInQueue($elementId)
+    protected function checkInQueue($elementId): bool
     {
         $conditions = [
             ['elementId', '=', $elementId],
@@ -34,7 +34,7 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
         }
     }
 
-    protected function saveToQueue($elementId)
+    protected function saveToQueue($elementId): void
     {
         $object = $this->collection->getEmptyObject();
         $object->status = 'awaiting';
@@ -43,7 +43,7 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
         $object->persist();
     }
 
-    protected function updateInQueue($elementId)
+    protected function updateInQueue($elementId): void
     {
         $db = $this->getService('db');
         $db->table('conversion_queue')->where('elementId', $elementId)->update(
@@ -54,7 +54,7 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
         );
     }
 
-    protected function updateQueueItemStatus(persistableObject $item, $status, $extra = '')
+    protected function updateQueueItemStatus(persistableObject $item, string $status, $extra = ''): void
     {
         $item->status = $status;
         $item->dateAttempted = time();
@@ -64,7 +64,7 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
         flush();
     }
 
-    public function convertQueueItems()
+    public function convertQueueItems(): void
     {
         $linksManager = $this->getService('linksManager');
         $structureManager = $this->getService('structureManager');
@@ -134,7 +134,7 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
         $chipType,
         $frequency,
         $intFrequency
-    ) {
+    ): string|bool {
         $channelsIndex = [
             'ABC' => 0,
             'ACB' => 1,
@@ -192,7 +192,7 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
         return $result;
     }
 
-    protected function applyData($data, $element, $item)
+    protected function applyData($data, $element, persistableObject $item): bool
     {
         $result = false;
         if ($infoList = json_decode($data)) {
@@ -243,7 +243,10 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
         return $result;
     }
 
-    protected function updateElement($info, zxMusicElement $element, $item)
+    /**
+     * @return true
+     */
+    protected function updateElement($info, zxMusicElement $element, $item): bool
     {
         $this->updateQueueItemStatus($item, 'updateelement_start', $info->id);
 

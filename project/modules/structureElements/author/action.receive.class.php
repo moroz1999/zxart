@@ -8,7 +8,8 @@ class receiveAuthor extends structureElementAction
      * @param structureManager $structureManager
      * @param controller $controller
      * @param authorElement $structureElement
-     * @return mixed|void
+     *
+     * @return void
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
@@ -44,7 +45,7 @@ class receiveAuthor extends structureElementAction
         $structureElement->setViewName('form');
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'title',
@@ -68,7 +69,7 @@ class receiveAuthor extends structureElementAction
         ];
     }
 
-    public function setValidators(&$validators)
+    public function setValidators(&$validators): void
     {
     }
 }

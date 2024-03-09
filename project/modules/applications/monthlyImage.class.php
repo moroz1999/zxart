@@ -12,11 +12,19 @@ class monthlyImageApplication extends controllerApplication implements Applicati
         return !$this->isCrawlerDetected();
     }
 
+    /**
+     * @return string
+     *
+     * @psalm-return 'image/png'
+     */
     public function getContentType()
     {
         return 'image/png';
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         $structureManager = $this->getService(
@@ -48,6 +56,11 @@ class monthlyImageApplication extends controllerApplication implements Applicati
         }
     }
 
+    /**
+     * @return int
+     *
+     * @psalm-return 3600
+     */
     public function getCacheExpirationTime()
     {
         return 1 * 60 * 60;

@@ -18,6 +18,9 @@ class musicCatalogueElement extends structureElement
     protected $authorsList;
     protected $authorsIDList;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -41,7 +44,7 @@ class musicCatalogueElement extends structureElement
         $moduleStructure['formatGroup'] = 'text';
     }
 
-    protected function setMultiLanguageFields(&$multiLanguageFields)
+    protected function setMultiLanguageFields(&$multiLanguageFields): void
     {
         $multiLanguageFields[] = 'title';
     }

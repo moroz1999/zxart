@@ -4,6 +4,9 @@ class receiveLogin extends structureElementAction
 {
     protected $loggable = true;
 
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated === true) {
@@ -22,12 +25,12 @@ class receiveLogin extends structureElementAction
         }
     }
 
-    public function setValidators(&$validators)
+    public function setValidators(&$validators): void
     {
         $validators['title'][] = 'notEmpty';
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'title',

@@ -22,6 +22,9 @@ class detailedSearchElement extends structureElement
     protected $filtrationResult;
     const ELEMENTS_ON_PAGE = 60;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -49,7 +52,10 @@ class detailedSearchElement extends structureElement
         $moduleStructure['format'] = 'text';
     }
 
-    public function getMusicFormats()
+    /**
+     * @psalm-return list<mixed>
+     */
+    public function getMusicFormats(): array
     {
         $db = $this->getService('db');
         $formats = [];
@@ -75,7 +81,12 @@ class detailedSearchElement extends structureElement
         return $this->authorCountry;
     }
 
-    public function getParameterNames()
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{0?: 'titleWord', 1?: 'startYear', 2?: 'endYear', 3?: 'rating', 4?: 'country', 5?: 'city', 6?: 'partyPlace', 7?: 'sortParameter', 8?: 'sortOrder', 9?: 'formatGroup'|'pictureType', 10?: 'format'|'realtime', 11?: 'inspiration'|'realtime', 12?: 'stages'|'tagsInclude', 13?: 'tagsExclude'|'tagsInclude', 14?: 'authorCountry'|'tagsExclude', 15?: 'authorCity'|'authorCountry', 16?: 'authorCity'|'resultsType', 17?: 'resultsType'}
+     */
+    public function getParameterNames(): array
     {
         $parametersNames = [];
         if ($this->items == 'graphics') {
@@ -142,7 +153,7 @@ class detailedSearchElement extends structureElement
         return $this->parameters;
     }
 
-    protected function applyParameters()
+    protected function applyParameters(): void
     {
         if ($parameters = $this->getParametersInfo()) {
             foreach ($parameters as $name => &$value) {
@@ -360,7 +371,7 @@ class detailedSearchElement extends structureElement
         return $this->getResultsType();
     }
 
-    public function getResultsType()
+    public function getResultsType(): string
     {
         $type = 'zxPicture';
         if ($parameters = $this->getParametersInfo()) {
@@ -378,7 +389,7 @@ class detailedSearchElement extends structureElement
         return $type;
     }
 
-    public function getElementsOnPage()
+    public function getElementsOnPage(): int
     {
         return self::ELEMENTS_ON_PAGE;
     }
@@ -429,7 +440,7 @@ class detailedSearchElement extends structureElement
         return $this->filtrationResult;
     }
 
-    public function getApiUrl()
+    public function getApiUrl(): string
     {
         $controller = controller::getInstance();
         $url = $controller->baseURL . 'api/';
@@ -451,7 +462,7 @@ class detailedSearchElement extends structureElement
         return $url;
     }
 
-    public function getSaveUrl()
+    public function getSaveUrl(): string
     {
         $controller = controller::getInstance();
         $url = $controller->baseURL . 'zipItems/';
@@ -464,7 +475,7 @@ class detailedSearchElement extends structureElement
         return $url;
     }
 
-    protected function generateQueryString()
+    protected function generateQueryString(): string
     {
         $string = '';
         if ($parameters = $this->getQueryParameters()) {

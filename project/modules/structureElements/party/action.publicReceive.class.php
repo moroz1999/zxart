@@ -8,6 +8,8 @@ class publicReceiveParty extends structureElementAction
      * @param structureManager $structureManager
      * @param controller $controller
      * @param partyElement $structureElement
+     *
+     * @return void
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
@@ -32,7 +34,7 @@ class publicReceiveParty extends structureElementAction
         $structureElement->setViewName('form');
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'title',
@@ -43,7 +45,7 @@ class publicReceiveParty extends structureElementAction
         ];
     }
 
-    public function setValidators(&$validators)
+    public function setValidators(&$validators): void
     {
     }
 }

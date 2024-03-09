@@ -6,6 +6,9 @@ class wosApplication extends controllerApplication
     public $rendererName = 'smarty';
     public $requestParameters = [];
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         ini_set("max_execution_time", 60 * 30);
@@ -14,6 +17,9 @@ class wosApplication extends controllerApplication
         $this->createRenderer();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         /**

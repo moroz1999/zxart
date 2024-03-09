@@ -13,6 +13,9 @@ class yearElement extends structureElement implements ColumnsTypeProvider
     protected $partiesList;
     protected $yearsSelectorInfo;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -41,13 +44,16 @@ class yearElement extends structureElement implements ColumnsTypeProvider
         return $this->partiesList;
     }
 
+    /**
+     * @return void
+     */
     public function persistElementData()
     {
         parent::persistElementData();
         $this->updateCataloguesLinks();
     }
 
-    public function updateCataloguesLinks()
+    public function updateCataloguesLinks(): void
     {
         $structureManager = $this->getService('structureManager');
         if ($partiesCatalogues = $structureManager->getElementsByType('partiesCatalogue')) {

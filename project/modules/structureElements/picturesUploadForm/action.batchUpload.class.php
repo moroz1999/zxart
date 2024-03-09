@@ -8,7 +8,8 @@ class batchUploadPicturesUploadForm extends structureElementAction
      * @param structureManager $structureManager
      * @param controller $controller
      * @param picturesUploadFormElement $structureElement
-     * @return mixed|void
+     *
+     * @return void
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
@@ -131,7 +132,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
         $controller->redirect($structureElement->URL);
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'pictureTitle',

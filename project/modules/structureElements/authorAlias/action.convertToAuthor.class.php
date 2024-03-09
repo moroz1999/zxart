@@ -4,6 +4,9 @@ class convertToAuthorAuthorAlias extends structureElementAction
 {
     protected $loggable = true;
 
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($structureElement->final) {

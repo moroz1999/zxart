@@ -69,6 +69,9 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     protected $hardwareInfo;
     private $metaData;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -159,27 +162,48 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         $moduleStructure['hasAiData'] = 'checkbox';
     }
 
-    public function getFileSelectorPropertyNames()
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{'connectedFile', 'inlayFilesSelector', 'mapFilesSelector', 'rzx'}
+     */
+    public function getFileSelectorPropertyNames(): array
     {
         return ['connectedFile', 'inlayFilesSelector', 'mapFilesSelector', 'rzx'];
     }
 
+    /**
+     * @return int
+     */
     public function getPartyId()
     {
         return $this->party;
     }
 
+    /**
+     * @return string
+     *
+     * @psalm-return ''
+     */
     public function getFileExtension($extensionType)
     {
         $extension = '';
         return $extension;
     }
 
+    /**
+     * @return false
+     */
     protected function fileExists($extensionType)
     {
         return false;
     }
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{'view'}
+     */
     public function getChartDataEventTypes($type = null)
     {
         return ['view'];
@@ -249,7 +273,10 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     }
 
     //used in API
-    public function getImagesUrls($preset = 'prodImage')
+    /**
+     * @psalm-return list{0?: mixed,...}
+     */
+    public function getImagesUrls($preset = 'prodImage'): array
     {
         $urls = [];
         foreach ($this->getFilesList('connectedFile') as $fileElement) {
@@ -308,11 +335,19 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return false;
     }
 
-    protected function getDeletionLinkTypes()
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{'structure', string}
+     */
+    protected function getDeletionLinkTypes(): array
     {
         return ['structure', $this->getConnectedFileType()];
     }
 
+    /**
+     * @return void
+     */
     public function persistElementData()
     {
         if (!$this->hasActualStructureInfo()) {
@@ -369,7 +404,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return $this->bestPictures;
     }
 
-    public function getLegalStatus()
+    public function getLegalStatus(): string
     {
         if ($this->legalStatus) {
             return $this->legalStatus;
@@ -393,21 +428,37 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return $this->connectedCategoriesIds;
     }
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return array<string>
+     */
     public function getSupportedLanguageCodes()
     {
         return $this->language;
     }
 
-    public function getFileUploadSuccessUrl()
+    /**
+     * @return false
+     */
+    public function getFileUploadSuccessUrl(): bool
     {
         return false;
     }
 
-    public function isPrivilegesSettingRequired()
+    /**
+     * @return true
+     */
+    public function isPrivilegesSettingRequired(): bool
     {
         return true;
     }
 
+    /**
+     * @return (fileElement|mixed)[]
+     *
+     * @psalm-return array<fileElement|mixed>
+     */
     public function getImagesList()
     {
         $result = [];
@@ -547,7 +598,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return $this->linksInfo;
     }
 
-    public function getSearchTitle()
+    public function getSearchTitle(): string
     {
         $searchTitle = $this->title;
         if ($this->year) {
@@ -564,7 +615,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return $searchTitle;
     }
 
-    public function is3aDenied()
+    public function is3aDenied(): bool
     {
         if ($authors = $this->getAuthorsInfo('prod')) {
             foreach ($authors as $author) {
@@ -578,7 +629,12 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return false;
     }
 
-    public function getSplitData()
+    /**
+     * @return (mixed|string)[][]
+     *
+     * @psalm-return array{properties?: array{youtube?: mixed, year?: mixed, title?: mixed}, authors?: array<string>, publishers?: array<int, string>, groups?: array<int, string>, releases?: array<int, string>, screenshots?: array<int, string>, links?: array<string, string>}
+     */
+    public function getSplitData(): array
     {
         $data = [];
         $properties = ['title', 'year', 'youtube'];
@@ -616,6 +672,9 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return $data;
     }
 
+    /**
+     * @return false
+     */
     public function getLdJsonScriptData()
     {
 //        $data = [
@@ -650,7 +709,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     }
 
 
-    public function getHardwareInfo($short = true)
+    public function getHardwareInfo(bool $short = true)
     {
         if (!isset($this->hardwareInfo)) {
             /**
@@ -676,7 +735,12 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return $this->hardwareInfo;
     }
 
-    public function getPublishersInfo()
+    /**
+     * @return (int|mixed|string)[][]
+     *
+     * @psalm-return list{0?: array{id: int, title: string, url: mixed},...}
+     */
+    public function getPublishersInfo(): array
     {
         $publishersInfo = [];
         foreach ($this->publishers as $publisher) {
@@ -689,7 +753,12 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return $publishersInfo;
     }
 
-    public function getGroupsInfo()
+    /**
+     * @return (int|mixed|string)[][]
+     *
+     * @psalm-return list{0?: array{id: int, title: string, url: mixed},...}
+     */
+    public function getGroupsInfo(): array
     {
         $groupsInfo = [];
         foreach ($this->groups as $group) {
@@ -740,7 +809,12 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return $this->languagesInfo;
     }
 
-    public function getCategoriesInfo()
+    /**
+     * @return (int|mixed|string)[][]
+     *
+     * @psalm-return list{0?: array{id: int, title: string, url: mixed},...}
+     */
+    public function getCategoriesInfo(): array
     {
         $categoriesInfo = [];
         foreach ($this->getConnectedCategories() as $category) {
@@ -753,7 +827,12 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return $categoriesInfo;
     }
 
-    public function getCategoriesPaths()
+    /**
+     * @return (structureElement|true|zxProdCategoryElement)[][]
+     *
+     * @psalm-return list{0?: list{0: structureElement|true, 1?: structureElement|true, 2?: zxProdCategoryElement},...}
+     */
+    public function getCategoriesPaths(): array
     {
         $usedCategories = [];
         $paths = [];
@@ -774,7 +853,10 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return $paths;
     }
 
-    public function getPartyInfo()
+    /**
+     * @psalm-return ''|array{id: mixed, title: mixed, url: mixed}
+     */
+    public function getPartyInfo(): array|string
     {
         if ($party = $this->getPartyElement()) {
             return [
@@ -786,7 +868,10 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return '';
     }
 
-    public function getCompilationJsonData()
+    /**
+     * @return false|string
+     */
+    public function getCompilationJsonData(): string|false
     {
         $data = [
             'prods' => [],
@@ -806,7 +891,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return json_encode($data);
     }
 
-    public function resizeImages()
+    public function resizeImages(): void
     {
         $pathsManager = $this->getService('PathsManager');
         $configManager = $this->getService('ConfigManager');
@@ -857,6 +942,11 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
 
     }
 
+    /**
+     * @return (mixed|string)[]
+     *
+     * @psalm-return array{title: mixed, url: mixed, type: 'article', image: ''|mixed, description: mixed, locale: mixed}
+     */
     public function getOpenGraphData()
     {
         $languagesManager = $this->getService('LanguagesManager');
@@ -871,7 +961,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         return $data;
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         if ($this->description) {
             return $this->description;

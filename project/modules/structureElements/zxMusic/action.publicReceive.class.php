@@ -8,7 +8,8 @@ class publicReceiveZxMusic extends structureElementAction
      * @param structureManager $structureManager
      * @param controller $controller
      * @param zxMusicElement $structureElement
-     * @return mixed|void
+     *
+     * @return void
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
@@ -67,7 +68,7 @@ class publicReceiveZxMusic extends structureElementAction
         }
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'title',
@@ -94,7 +95,7 @@ class publicReceiveZxMusic extends structureElementAction
         ];
     }
 
-    public function setValidators(&$validators)
+    public function setValidators(&$validators): void
     {
     }
 }

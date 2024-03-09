@@ -56,7 +56,7 @@ trait ChartDataProviderTrait
         return $this->chartData[$type];
     }
 
-    protected function resetChartData()
+    protected function resetChartData(): void
     {
         $this->chartData = null;
     }

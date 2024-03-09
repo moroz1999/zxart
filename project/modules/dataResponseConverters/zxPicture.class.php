@@ -4,6 +4,11 @@ class zxPictureDataResponseConverter extends StructuredDataResponseConverter
 {
     protected $defaultPreset = 'api';
 
+    /**
+     * @return (Closure|string)[]
+     *
+     * @psalm-return array{id: 'id', title: 'title', url: 'getUrl', structureType: 'structureType', dateCreated: Closure(mixed):mixed, dateModified: Closure(mixed):mixed, partyId: 'getPartyId', compo: 'compo', partyPlace: 'partyplace', authorIds: 'getAuthorIds', tags: 'getTagsTexts', type: 'type', rating: 'votes', views: 'views', year: 'year', description: 'description', imageUrl: 'getImageUrl', originalUrl: Closure(mixed):(false|string)}
+     */
     protected function getRelationStructure()
     {
         return [
@@ -42,6 +47,11 @@ class zxPictureDataResponseConverter extends StructuredDataResponseConverter
         ];
     }
 
+    /**
+     * @return string[][]
+     *
+     * @psalm-return array{api: list{'id', 'title', 'url', 'dateCreated', 'dateModified', 'partyId', 'compo', 'partyPlace', 'authorIds', 'tags', 'type', 'rating', 'views', 'year', 'description', 'imageUrl', 'originalUrl'}, apiShort: list{'id', 'dateModified'}, search: list{'id', 'title', 'url', 'structureType'}}
+     */
     protected function getPresetsStructure()
     {
         return [

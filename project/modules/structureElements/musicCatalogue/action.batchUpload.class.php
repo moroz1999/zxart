@@ -4,6 +4,9 @@ class batchUploadMusicCatalogue extends structureElementAction
 {
     protected $loggable = true;
 
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($musicsInfo = $structureElement->music) {
@@ -56,7 +59,7 @@ class batchUploadMusicCatalogue extends structureElementAction
         $controller->redirect($structureElement->URL);
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'music',

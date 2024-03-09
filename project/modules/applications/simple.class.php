@@ -5,6 +5,9 @@ class simpleApplication extends publicApplication implements ThemeCodeProviderIn
     protected $applicationName = 'simple';
     protected $protocolRedirection = false;
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         parent::initialize();

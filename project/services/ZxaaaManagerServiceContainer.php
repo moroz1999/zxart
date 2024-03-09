@@ -2,6 +2,9 @@
 
 class ZxaaaManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return ZxaaaManager
+     */
     public function makeInstance()
     {
         return new ZxaaaManager();

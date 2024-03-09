@@ -131,7 +131,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
         $controller->redirect($firstProd->URL);
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'prodTitle',

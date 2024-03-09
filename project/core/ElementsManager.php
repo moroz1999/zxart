@@ -13,13 +13,15 @@ class ElementsManager extends errorLogger
 
     /**
      * @param LanguagesManager $languagesManager
+     *
+     * @return void
      */
     public function setLanguagesManager(LanguagesManager $languagesManager)
     {
         $this->languagesManager = $languagesManager;
     }
 
-    public function setDb(Connection $db)
+    public function setDb(Connection $db): void
     {
         $this->db = $db;
     }
@@ -29,7 +31,12 @@ class ElementsManager extends errorLogger
         return $this->loadElements($query, $sort, $start, $amount);
     }
 
-    protected function loadElements(?Builder $query, ?array $sort = [], ?int $start = null, ?int $amount = null)
+    /**
+     * @return structureElement[]
+     *
+     * @psalm-return array<structureElement>
+     */
+    protected function loadElements(?Builder $query, ?array $sort = [], ?int $start = null, ?int $amount = null): array
     {
         if ($query === null) {
             $query = $this->makeQuery();
@@ -85,17 +92,17 @@ class ElementsManager extends errorLogger
         return $result;
     }
 
-    public function makeQuery()
+    public function makeQuery(): Builder
     {
         return $this->db->table(static::TABLE);
     }
 
-    public function setStructureManager(structureManager $structureManager)
+    public function setStructureManager(structureManager $structureManager): void
     {
         $this->structureManager = $structureManager;
     }
 
-    protected function manufactureElement($id)
+    protected function manufactureElement($id): bool|structureElement
     {
         $result = false;
         if ($structureElement = $this->structureManager->getElementById($id)) {

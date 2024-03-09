@@ -8,7 +8,8 @@ class splitZxProd extends structureElementAction
      * @param structureManager $structureManager
      * @param controller $controller
      * @param zxProdElement $structureElement
-     * @return mixed|void
+     *
+     * @return void
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
@@ -28,7 +29,7 @@ class splitZxProd extends structureElementAction
         $structureElement->setViewName('splitForm');
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'splitData',

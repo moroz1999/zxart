@@ -12,12 +12,18 @@ class coorApplication extends controllerApplication
     protected $structureManager;
     protected $key;
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         $this->startSession('public');
         $this->createRenderer();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         ini_set("memory_limit", "2048M");
@@ -99,7 +105,12 @@ class coorApplication extends controllerApplication
         return '';
     }
 
-    protected function queryGooglePlacesApi($country, $city)
+    /**
+     * @psalm-param '' $city
+     *
+     * @psalm-return false|list{mixed, mixed}
+     */
+    protected function queryGooglePlacesApi($country, string $city): array|false
     {
         $coordinates = false;
         $queryString = $country . ', ';

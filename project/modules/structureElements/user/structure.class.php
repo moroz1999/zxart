@@ -14,6 +14,9 @@ class userElement extends structureElement
     public $role = 'content';
     protected $authorElement;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['userName'] = 'text';
@@ -50,7 +53,10 @@ class userElement extends structureElement
         return $collection->load(['userId' => $this->id], [], 'fieldId');
     }
 
-    public function getAdditionalDataFields()
+    /**
+     * @psalm-return list{0?: mixed,...}
+     */
+    public function getAdditionalDataFields(): array
     {
         $fields = [];
         if ($records = $this->getAdditionalData()) {
@@ -65,7 +71,7 @@ class userElement extends structureElement
         return $fields;
     }
 
-    public function persistAdditionalDataFromFields($fields)
+    public function persistAdditionalDataFromFields($fields): void
     {
         $collection = persistableCollection::getInstance('module_user_additional_data');
         $existingData = $this->getAdditionalData();
@@ -83,7 +89,7 @@ class userElement extends structureElement
         }
     }
 
-    public function generatePassword($length = 8)
+    public function generatePassword($length = 8): void
     {
         $password = "";
         $possible = '0123456789' . 'abcdefghjkmnpqqrstuvwxyz' . 'ABCDEFGHJKMNPQQRSTUVWXYZ' . '-._+/*$#€@=()';
@@ -108,9 +114,10 @@ class userElement extends structureElement
 
     /**
      * @param $subscribeOrNot
+     *
      * @deprecated - use NewsMailSubscription service instead!
      */
-    public function checkSubscription($subscribeOrNot)
+    public function checkSubscription($subscribeOrNot): void
     {
         if ($email = $this->email) {
             /**
@@ -196,6 +203,11 @@ class userElement extends structureElement
         }
     }
 
+    /**
+     * @return array
+     *
+     * @psalm-return list{mixed}
+     */
     public function getAuthorIds()
     {
         if ($this->newAuthorId) {
@@ -228,7 +240,7 @@ class userElement extends structureElement
         return $this->getAuthorUrl();
     }
 
-    public function changeConnectedAuthor($newAuthorId)
+    public function changeConnectedAuthor($newAuthorId): void
     {
         if ($this->authorId != $newAuthorId) {
             $privilegesManager = $this->getService('privilegesManager');
@@ -284,14 +296,14 @@ class userElement extends structureElement
         }
     }
 
-    public function ban()
+    public function ban(): void
     {
         $this->removeExtras();
         $db = $this->getService('db');
         $db->table('module_user')->where('id', '=', $this->id)->update(['banned' => 1]);
     }
 
-    public function removeExtras()
+    public function removeExtras(): void
     {
         $this->getService('SocialDataManager')->removeSocialUser($this->id);
         $structureManager = $this->getService('structureManager');
@@ -310,13 +322,21 @@ class userElement extends structureElement
         }
     }
 
+    /**
+     * @return void
+     */
     public function deleteElementData()
     {
         $this->removeExtras();
         parent::deleteElementData();
     }
 
-    public function getElementData()
+    /**
+     * @return (int|mixed)[]
+     *
+     * @psalm-return array{userId: int, firstName: mixed, lastName: mixed}
+     */
+    public function getElementData(): array
     {
         return [
             'userId' => $this->id,
@@ -325,7 +345,7 @@ class userElement extends structureElement
         ];
     }
 
-    public function setTrackingCode()
+    public function setTrackingCode(): void
     {
     }
 

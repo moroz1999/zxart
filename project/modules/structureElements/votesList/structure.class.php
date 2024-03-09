@@ -7,6 +7,9 @@ class votesListElement extends structureElement
     public $defaultActionName = 'show';
     public $role = 'content';
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';

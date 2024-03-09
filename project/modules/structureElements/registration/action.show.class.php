@@ -6,7 +6,8 @@ class showRegistration extends structureElementAction
      * @param structureManager $structureManager
      * @param controller $controller
      * @param registrationElement $structureElement
-     * @return mixed|void
+     *
+     * @return void
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {

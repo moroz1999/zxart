@@ -12,6 +12,9 @@ class countriesListElement extends metadataProvider
      */
     protected $countriesList;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -35,7 +38,10 @@ class countriesListElement extends metadataProvider
         return $this->countriesList;
     }
 
-    public function getMapData()
+    /**
+     * @return false|string
+     */
+    public function getMapData(): string|false
     {
         $data = [];
         $data['markers'] = [];
@@ -53,7 +59,10 @@ class countriesListElement extends metadataProvider
         return json_encode($data);
     }
 
-    public function getAmountInLocation($type)
+    /**
+     * @return true
+     */
+    public function getAmountInLocation($type): bool
     {
         return true;
     }

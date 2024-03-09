@@ -11,17 +11,25 @@ class playlistElement extends structureElement
     protected $zxProdsList;
     private $connectedElements;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
         $moduleStructure['userId'] = 'text';
     }
 
-    protected function setMultiLanguageFields(&$multiLanguageFields)
+    protected function setMultiLanguageFields(&$multiLanguageFields): void
     {
     }
 
-    public function getElementData()
+    /**
+     * @return (int|mixed)[]
+     *
+     * @psalm-return array{id: int, title: mixed, url: mixed}
+     */
+    public function getElementData(): array
     {
         return [
             'id' => $this->id,
@@ -30,7 +38,12 @@ class playlistElement extends structureElement
         ];
     }
 
-    private function getStructuredList($structureType)
+    /**
+     * @psalm-param 'zxMusic'|'zxPicture'|'zxProd' $structureType
+     *
+     * @psalm-return list<mixed>
+     */
+    private function getStructuredList(string $structureType): array
     {
         if (!isset($this->connectedElements)) {
             $this->connectedElements = [];
@@ -78,7 +91,10 @@ class playlistElement extends structureElement
         return $this->musicList;
     }
 
-    public function getZxProdsListData()
+    /**
+     * @return false|string
+     */
+    public function getZxProdsListData(): string|false
     {
         $prods = $this->getZxProdsList();
         $data = [

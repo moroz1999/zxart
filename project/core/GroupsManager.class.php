@@ -43,7 +43,7 @@ class GroupsManager extends ElementsManager
     /**
      * @param AuthorsManager $authorsManager
      */
-    public function setAuthorsManager($authorsManager)
+    public function setAuthorsManager($authorsManager): void
     {
         $this->authorsManager = $authorsManager;
     }
@@ -51,11 +51,14 @@ class GroupsManager extends ElementsManager
     /**
      * @param privilegesManager $privilegesManager
      */
-    public function setPrivilegesManager($privilegesManager)
+    public function setPrivilegesManager($privilegesManager): void
     {
         $this->privilegesManager = $privilegesManager;
     }
 
+    /**
+     * @return void
+     */
     public function setLanguagesManager($languagesManager)
     {
         $this->languagesManager = $languagesManager;
@@ -64,7 +67,7 @@ class GroupsManager extends ElementsManager
     /**
      * @param linksManager $linksManager
      */
-    public function setLinksManager($linksManager)
+    public function setLinksManager($linksManager): void
     {
         $this->linksManager = $linksManager;
     }
@@ -72,7 +75,7 @@ class GroupsManager extends ElementsManager
     /**
      * @param CountriesManager $countriesManager
      */
-    public function setCountriesManager($countriesManager)
+    public function setCountriesManager($countriesManager): void
     {
         $this->countriesManager = $countriesManager;
     }
@@ -81,12 +84,12 @@ class GroupsManager extends ElementsManager
     /**
      * @param ConfigManager $configManager
      */
-    public function setConfigManager($configManager)
+    public function setConfigManager($configManager): void
     {
         $this->configManager = $configManager;
     }
 
-    public function getGroupByName($groupName)
+    public function getGroupByName($groupName): bool|structureElement
     {
         $groupElement = false;
         $structureManager = $this->structureManager;
@@ -108,7 +111,7 @@ class GroupsManager extends ElementsManager
         return $groupElement;
     }
 
-    public function getGroupAliasByName($groupAliasName)
+    public function getGroupAliasByName($groupAliasName): bool|structureElement
     {
         $groupAliasElement = false;
         $structureManager = $this->structureManager;
@@ -130,7 +133,7 @@ class GroupsManager extends ElementsManager
         return $groupAliasElement;
     }
 
-    public function importGroup($groupInfo, $origin, $createNew = true)
+    public function importGroup($groupInfo, $origin, bool $createNew = true)
     {
         if (!isset($this->importedGroups[$origin][$groupInfo['id']])) {
             /**
@@ -169,7 +172,7 @@ class GroupsManager extends ElementsManager
      * @param $title
      * @return bool|groupElement
      */
-    public function manufactureGroupElement($title)
+    public function manufactureGroupElement(string $title)
     {
         if ($letterId = $this->getLetterId($title)) {
             if ($letterElement = $this->structureManager->getElementById($letterId)) {
@@ -186,7 +189,7 @@ class GroupsManager extends ElementsManager
      * @param $groupInfo
      * @param $origin
      */
-    protected function updateGroup($element, $groupInfo, $origin)
+    protected function updateGroup($element, array $groupInfo, $origin): void
     {
         $changed = false;
         if (!empty($groupInfo['title']) && $element->title != $groupInfo['title']) {
@@ -264,7 +267,7 @@ class GroupsManager extends ElementsManager
         }
     }
 
-    public function importGroupAlias($groupAliasInfo, $origin, $createNew = true)
+    public function importGroupAlias($groupAliasInfo, $origin, bool $createNew = true)
     {
         if (!isset($this->importedGroupAliases[$origin][$groupAliasInfo['id']])) {
             /**
@@ -322,7 +325,7 @@ class GroupsManager extends ElementsManager
      * @param $groupAliasInfo
      * @param $origin
      */
-    protected function updateGroupAlias($element, $groupAliasInfo, $origin)
+    protected function updateGroupAlias($element, array $groupAliasInfo, $origin): void
     {
         $changed = false;
         if (!empty($groupAliasInfo['title']) && $element->title != $groupAliasInfo['title']) {
@@ -445,7 +448,14 @@ class GroupsManager extends ElementsManager
         return $groupElement;
     }
 
-    protected function getLettersListMarker($type)
+    /**
+     * @psalm-param 'admin'|'public' $type
+     *
+     * @return string
+     *
+     * @psalm-return 'groups'|'groupsmenu'
+     */
+    protected function getLettersListMarker(string $type)
     {
         if ($type == 'admin') {
             return 'groups';
@@ -454,17 +464,17 @@ class GroupsManager extends ElementsManager
         }
     }
 
-    public function joinDeleteGroup($mainGroupId, $joinedGroupId)
+    public function joinDeleteGroup(int $mainGroupId, int $joinedGroupId): void
     {
         $this->joinGroup($mainGroupId, $joinedGroupId, false);
     }
 
-    public function joinGroupAsAlias($mainGroupId, $joinedGroupId)
+    public function joinGroupAsAlias(int $mainGroupId, int $joinedGroupId): void
     {
         $this->joinGroup($mainGroupId, $joinedGroupId, true);
     }
 
-    protected function joinGroup($targetId, $joinedId, $makeAlias = true)
+    protected function joinGroup($targetId, $joinedId, bool $makeAlias = true): bool
     {
         if ($joinedId == $targetId) {
             return false;

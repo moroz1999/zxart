@@ -6,6 +6,9 @@ class aaaApplication extends controllerApplication
     public $rendererName = 'smarty';
     public $requestParameters = [];
 
+    /**
+     * @return never
+     */
     public function initialize()
     {
         exit;

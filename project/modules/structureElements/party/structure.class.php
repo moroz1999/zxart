@@ -29,6 +29,9 @@ class partyElement extends structureElement implements CommentsHolderInterface, 
     protected $picturesCompos;
     protected $tunesCompos;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -42,17 +45,23 @@ class partyElement extends structureElement implements CommentsHolderInterface, 
         $moduleStructure['website'] = 'url';
     }
 
+    /**
+     * @return int
+     */
     protected function getCityId()
     {
         return $this->city;
     }
 
+    /**
+     * @return int
+     */
     protected function getCountryId()
     {
         return $this->country;
     }
 
-    public function getYear()
+    public function getYear(): string
     {
         if (is_null($this->yearElement)) {
             $structureManager = $this->getService('structureManager');
@@ -61,6 +70,9 @@ class partyElement extends structureElement implements CommentsHolderInterface, 
         return $this->yearElement->title;
     }
 
+    /**
+     * @return void
+     */
     public function recalculate()
     {
         if ($pictureIds = $this->getService('linksManager')->getConnectedIdList($this->id, 'partyPicture', 'parent')) {
@@ -94,7 +106,12 @@ class partyElement extends structureElement implements CommentsHolderInterface, 
         return $this->prodsCompos;
     }
 
-    public function getProdsComposJson()
+    /**
+     * @return (false|string)[]
+     *
+     * @psalm-return array<false|string>
+     */
+    public function getProdsComposJson(): array
     {
         $json = [];
         foreach ($this->getProdsCompos() as $compo => $prods) {
@@ -118,7 +135,16 @@ class partyElement extends structureElement implements CommentsHolderInterface, 
         return $this->tunesCompos;
     }
 
-    protected function getCompos($linkTypes)
+    /**
+     * @param string[] $linkTypes
+     *
+     * @psalm-param list{'partyMusic'|'partyPicture'|'partyProd'} $linkTypes
+     *
+     * @return array[]
+     *
+     * @psalm-return array<non-empty-list<non-empty-mixed>>
+     */
+    protected function getCompos(array $linkTypes): array
     {
         $compos = [];
         $idList = $this->getService('linksManager')->getConnectedIdList($this->id, $linkTypes, 'parent');
@@ -146,7 +172,7 @@ class partyElement extends structureElement implements CommentsHolderInterface, 
         return $compos;
     }
 
-    public function getSaveUrl()
+    public function getSaveUrl(): string
     {
         $controller = controller::getInstance();
         $url = $controller->baseURL . 'zipItems/';
@@ -157,7 +183,7 @@ class partyElement extends structureElement implements CommentsHolderInterface, 
         return $url;
     }
 
-    public function getText($textType)
+    public function getText($textType): string
     {
         $text = '';
         $translationsManager = $this->getService('translationsManager');
@@ -251,7 +277,7 @@ class partyElement extends structureElement implements CommentsHolderInterface, 
         return htmlentities($text, ENT_QUOTES);
     }
 
-    public function getImageUrl($preset = 'partyFull')
+    public function getImageUrl($preset = 'partyFull'): string
     {
         if ($this->image) {
             return controller::getInstance()->baseURL . 'image/type:' . $preset . '/id:' . $this->image . '/filename:' . $this->originalName;

@@ -13,6 +13,9 @@ class registrationElement extends menuDependantStructureElement
     protected $dynamicFieldsErrors = [];
     public $resultMessage;
     public $errorMessage;
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -39,7 +42,12 @@ class registrationElement extends menuDependantStructureElement
         $moduleStructure['dynamicFieldsData'] = 'array';
     }
 
-    public function getSocialPluginsOptions()
+    /**
+     * @return (bool|mixed|string)[][]
+     *
+     * @psalm-return list{0?: array{title: mixed, code: mixed, url: mixed, connected: bool, icon: string},...}
+     */
+    public function getSocialPluginsOptions(): array
     {
         $result = [];
         $existingConnections = [];
@@ -124,12 +132,12 @@ class registrationElement extends menuDependantStructureElement
         return $this->getService('linksManager')->getConnectedIdList($this->id, self::USER_GROUP_LINK_TYPE, 'parent');
     }
 
-    public function setDynamicFieldError($fieldId)
+    public function setDynamicFieldError($fieldId): void
     {
         $this->dynamicFieldsErrors[$fieldId] = true;
     }
 
-    public function getDynamicFieldError($fieldId)
+    public function getDynamicFieldError($fieldId): bool
     {
         return isset($this->dynamicFieldsErrors[$fieldId]);
     }
@@ -167,7 +175,12 @@ class registrationElement extends menuDependantStructureElement
         return $value;
     }
 
-    public function getUserGroupsOptions()
+    /**
+     * @return (bool|mixed)[][]
+     *
+     * @psalm-return list{0?: array{id: mixed, title: mixed, select: bool},...}
+     */
+    public function getUserGroupsOptions(): array
     {
         $userGroups = [];
         $structureManager = $this->getService('structureManager');
@@ -195,7 +208,12 @@ class registrationElement extends menuDependantStructureElement
         return $formData;
     }
 
-    public function getRegistrationFields()
+    /**
+     * @return (bool|mixed)[][]
+     *
+     * @psalm-return list{0?: array{id: mixed, title: mixed, select: bool},...}
+     */
+    public function getRegistrationFields(): array
     {
         $regestrationElements = [];
         $structureManager = $this->getService('structureManager');

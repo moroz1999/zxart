@@ -2,7 +2,12 @@
 
 trait LanguageCodesProviderTrait
 {
-    public function getLanguageCodes()
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{'be', 'bs', 'by', 'ca', 'cs', 'da', 'de', 'el', 'en', 'eo', 'es', 'eu', 'fi', 'fr', 'gl', 'hr', 'hu', 'is', 'it', 'la', 'lt', 'lv', 'm-', 'nl', 'no', 'pl', 'pt', 'ro', 'ru', 'sh', 'sk', 'sl', 'sr', 'sv', 'tr', 'ua'}
+     */
+    public function getLanguageCodes(): array
     {
         return [
             "be",
@@ -44,7 +49,10 @@ trait LanguageCodesProviderTrait
         ];
     }
 
-    public function getSupportedLanguageNames()
+    /**
+     * @psalm-return list{0?: mixed,...}
+     */
+    public function getSupportedLanguageNames(): array
     {
         $names = [];
         /**
@@ -57,7 +65,7 @@ trait LanguageCodesProviderTrait
         return $names;
     }
 
-    public function getSupportedLanguageString()
+    public function getSupportedLanguageString(): string
     {
         return implode(', ', $this->getSupportedLanguageNames());
     }

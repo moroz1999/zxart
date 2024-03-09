@@ -2,6 +2,9 @@
 
 class showLetter extends structureElementAction
 {
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($structureElement->requested) {

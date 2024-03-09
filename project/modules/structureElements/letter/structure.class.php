@@ -24,6 +24,9 @@ class letterElement extends structureElement implements ColumnsTypeProvider
     protected $groupsList;
     protected $lettersSelectorInfo;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -132,7 +135,7 @@ class letterElement extends structureElement implements ColumnsTypeProvider
         return $this->contentList;
     }
 
-    public function updateCataloguesLinks()
+    public function updateCataloguesLinks(): void
     {
         $structureManager = $this->getService('structureManager');
         if ($authorsCatalogues = $structureManager->getElementsByType('authorsCatalogue')) {
@@ -145,6 +148,9 @@ class letterElement extends structureElement implements ColumnsTypeProvider
         }
     }
 
+    /**
+     * @return void
+     */
     public function persistElementData()
     {
         parent::persistElementData();

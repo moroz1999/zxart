@@ -4,6 +4,11 @@ class zxMusicDataResponseConverter extends StructuredDataResponseConverter
 {
     protected $defaultPreset = 'api';
 
+    /**
+     * @return (Closure|string)[]
+     *
+     * @psalm-return array{id: 'id', title: 'title', internalTitle: 'internalTitle', url: 'getUrl', structureType: 'structureType', dateCreated: Closure(mixed):mixed, dateModified: Closure(mixed):mixed, autoplayUrl: Closure(mixed):string, time: 'time', partyId: 'getPartyId', compo: 'compo', partyPlace: 'partyplace', authorIds: 'getAuthorIds', tags: 'getTagsTexts', type: 'type', rating: 'votes', plays: 'plays', year: 'year', description: 'description', mp3FilePath: 'getMp3FilePath', originalUrl: Closure(mixed):(false|string), originalFileName: Closure(mixed):mixed}
+     */
     protected function getRelationStructure()
     {
         return [
@@ -46,6 +51,11 @@ class zxMusicDataResponseConverter extends StructuredDataResponseConverter
         ];
     }
 
+    /**
+     * @return string[][]
+     *
+     * @psalm-return array{api: list{'id', 'title', 'internalTitle', 'url', 'dateCreated', 'dateModified', 'time', 'partyId', 'compo', 'partyPlace', 'authorIds', 'tags', 'type', 'rating', 'plays', 'year', 'description', 'imageUrl', 'originalUrl', 'originalFileName', 'mp3FilePath'}, apiShort: list{'id', 'dateModified'}, search: list{'id', 'title', 'url', 'structureType'}}
+     */
     protected function getPresetsStructure()
     {
         return [

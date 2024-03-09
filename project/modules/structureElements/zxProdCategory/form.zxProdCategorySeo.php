@@ -38,6 +38,11 @@ class ZxProdCategorySeoStructure extends ElementForm
     ];
 
 
+    /**
+     * @return string
+     *
+     * @psalm-return 'seo'
+     */
     public function getTranslationGroup()
     {
         return 'seo';

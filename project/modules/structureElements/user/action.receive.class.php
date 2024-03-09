@@ -8,7 +8,8 @@ class receiveUser extends structureElementAction
      * @param structureManager $structureManager
      * @param controller $controller
      * @param userElement $structureElement
-     * @return mixed|void
+     *
+     * @return void
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
@@ -67,12 +68,12 @@ class receiveUser extends structureElementAction
         }
     }
 
-    public function setValidators(&$validators)
+    public function setValidators(&$validators): void
     {
         $validators['userName'][] = 'notEmpty';
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'company',

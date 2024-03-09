@@ -2,7 +2,7 @@
 
 trait LinksPersistingTrait
 {
-    public function checkLinks($property, $linkType = null)
+    public function checkLinks($property, $linkType = null): void
     {
         if ($linkType === null) {
             $linkType = $this->structureType . ucfirst($property);

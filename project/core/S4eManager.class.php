@@ -30,27 +30,27 @@ class S4eManager extends errorLogger
     {
     }
 
-    public function setAuthorsManager(AuthorsManager $authorsManager)
+    public function setAuthorsManager(AuthorsManager $authorsManager): void
     {
         $this->authorsManager = $authorsManager;
     }
 
-    public function setGroupsManager(GroupsManager $groupsManager)
+    public function setGroupsManager(GroupsManager $groupsManager): void
     {
         $this->groupsManager = $groupsManager;
     }
 
-    public function setCountriesManager(CountriesManager $countriesManager)
+    public function setCountriesManager(CountriesManager $countriesManager): void
     {
         $this->countriesManager = $countriesManager;
     }
 
-    public function setProdsManager(ProdsManager $prodsManager)
+    public function setProdsManager(ProdsManager $prodsManager): void
     {
         $this->prodsManager = $prodsManager;
     }
 
-    public function importAll()
+    public function importAll(): void
     {
         $this->parseReleasers();
         $this->parseStudios();
@@ -59,7 +59,7 @@ class S4eManager extends errorLogger
         $this->import();
     }
 
-    private function import()
+    private function import(): void
     {
         $prodsIndex = [];
         foreach ($this->releases as $release) {
@@ -80,6 +80,9 @@ class S4eManager extends errorLogger
         $this->importProdsIndex($this->compilations);
     }
 
+    /**
+     * @return void
+     */
     private function parseCompilations()
     {
         foreach ($this->studios as $id => $studio) {
@@ -160,7 +163,7 @@ class S4eManager extends errorLogger
         }
     }
 
-    private function parseReleases()
+    private function parseReleases(): void
     {
         $pageUrl = $this->rootUrl . 'fulltape.php?go=releases';
         if ($html = $this->loadHtml($pageUrl)) {
@@ -269,7 +272,7 @@ class S4eManager extends errorLogger
         }
     }
 
-    private function parseReleasers()
+    private function parseReleasers(): void
     {
         $pageUrl = $this->rootUrl . 'fulltape.php?go=authors';
         if ($html = $this->loadHtml($pageUrl)) {
@@ -336,7 +339,7 @@ class S4eManager extends errorLogger
         }
     }
 
-    private function parseStudios()
+    private function parseStudios(): void
     {
         $pageUrl = $this->rootUrl . 'fulltape.php?go=studios';
         if ($html = $this->loadHtml($pageUrl)) {
@@ -406,7 +409,7 @@ class S4eManager extends errorLogger
         }
     }
 
-    private function sanitize($value)
+    private function sanitize($value): string
     {
         $value = str_ireplace("\r", '', $value);
         $value = str_ireplace("\n", '', $value);
@@ -414,8 +417,8 @@ class S4eManager extends errorLogger
     }
 
     private function loadHtml(
-        $url
-    )
+        string $url
+    ): DOMDocument|false
     {
         if ($contents = file_get_contents($url)) {
             $dom = new DOMDocument;
@@ -435,8 +438,8 @@ class S4eManager extends errorLogger
     }
 
     private function markProgress(
-        $text
-    )
+        string $text
+    ): void
     {
         static $previousTime;
 

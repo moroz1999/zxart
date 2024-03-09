@@ -2,6 +2,9 @@
 
 class showLogin extends structureElementAction
 {
+    /**
+     * @return void
+     */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         $structureElement->hidden = true;

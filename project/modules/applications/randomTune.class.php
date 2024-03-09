@@ -8,12 +8,18 @@ class randomTuneApplication extends controllerApplication
         'type',
     ];
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         $this->startSession('public');
         $this->createRenderer();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         /**

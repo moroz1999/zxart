@@ -8,7 +8,8 @@ class publicAddGroupAlias extends structureElementAction
      * @param structureManager $structureManager
      * @param controller $controller
      * @param groupAliasElement $structureElement
-     * @return mixed|void
+     *
+     * @return void
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
@@ -50,7 +51,7 @@ class publicAddGroupAlias extends structureElementAction
         $structureElement->setViewName('form');
     }
 
-    public function setExpectedFields(&$expectedFields)
+    public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
             'title',

@@ -41,6 +41,9 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     protected $bestAuthorsPictures;
     protected $metaTitle;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -79,6 +82,11 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         $moduleStructure['palette'] = 'text';
     }
 
+    /**
+     * @return (float|int|mixed|string)[]
+     *
+     * @psalm-return array{id: int, title: string, link: mixed, votes: float, userVote: mixed, votePercent: mixed,...}
+     */
     public function getElementData()
     {
         // generic
@@ -91,7 +99,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         return $data;
     }
 
-    public function getImageUrl($zoom = 1, $download = false, $border = null)
+    public function getImageUrl(int $zoom = 1, $download = false, $border = null): string
     {
         $controller = controller::getInstance();
         if ($this->image) {
@@ -145,7 +153,10 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         return $palette;
     }
 
-    public function getImageContents()
+    /**
+     * @return false|string
+     */
+    public function getImageContents(): string|false
     {
         $zxImageConverter = new \ZxImage\Converter();
         $zxImageConverter->setType($this->type);
@@ -161,7 +172,10 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         return $contents;
     }
 
-    public function getOriginalPath()
+    /**
+     * @return false|string
+     */
+    public function getOriginalPath(): string|false
     {
         if ($this->image) {
             return $this->getService('PathsManager')->getPath('uploads') . $this->image;
@@ -169,6 +183,9 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         return false;
     }
 
+    /**
+     * @return string
+     */
     public function getFileExtension($extensionType)
     {
         $extension = '';
@@ -220,6 +237,9 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         return $extension;
     }
 
+    /**
+     * @return bool
+     */
     protected function fileExists($extensionType)
     {
         if ($extensionType == 'original') {
@@ -238,6 +258,9 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         return false;
     }
 
+    /**
+     * @return string
+     */
     public function getMetaTitle()
     {
         $translationsManager = $this->getService('translationsManager');
@@ -253,6 +276,9 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         return $this->metaTitle;
     }
 
+    /**
+     * @return string
+     */
     public function getTextContent()
     {
         $translationsManager = $this->getService('translationsManager');
@@ -290,7 +316,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     }
 
 
-    public function isFlickering()
+    public function isFlickering(): bool
     {
         return in_array(
             $this->type,
@@ -309,7 +335,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         );
     }
 
-    public function logView()
+    public function logView(): void
     {
         if (!$this->isCrawlerDetected()) {
             $this->views++;
@@ -322,6 +348,9 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         }
     }
 
+    /**
+     * @return void
+     */
     public function checkGameTag()
     {
         $gameTags = [13843, 46245, 13983, 47883, 46237];
@@ -386,11 +415,21 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         return $this->bestAuthorsPictures;
     }
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{'view'}
+     */
     public function getChartDataEventTypes($type = null)
     {
         return ['view'];
     }
 
+    /**
+     * @return ((float|int|mixed|string)[]|int|mixed|string)[]
+     *
+     * @psalm-return array{'@context': 'http://schema.org/', '@type': 'MediaObject', encodingFormat: 'image/png', name: string, url: mixed, description: mixed, commentCount: int, author: array{'@type': 'Person', name: mixed}, aggregateRating?: array{'@type': 'AggregateRating', ratingValue: float, 'ratingCount ': int}, image?: mixed, thumbnailUrl?: mixed, datePublished?: int, keywords?: mixed}
+     */
     public function getLdJsonScriptData()
     {
         $data = [
@@ -427,6 +466,9 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         return $data;
     }
 
+    /**
+     * @return void
+     */
     public function persistElementData()
     {
         parent::persistElementData();
@@ -440,6 +482,11 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         }
     }
 
+    /**
+     * @return (mixed|string)[]
+     *
+     * @psalm-return array{title: mixed, url: mixed, type: 'article', image: mixed, description: mixed, locale: mixed}
+     */
     public function getOpenGraphData()
     {
         $languagesManager = $this->getService('LanguagesManager');

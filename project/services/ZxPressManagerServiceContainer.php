@@ -2,6 +2,9 @@
 
 class ZxPressManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return ZxPressManager
+     */
     public function makeInstance()
     {
         return new ZxPressManager();

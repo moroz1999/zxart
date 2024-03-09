@@ -10,7 +10,7 @@ class ProdsDownloader extends errorLogger
     /**
      * @param ConfigManager $configManager
      */
-    public function setConfigManager($configManager)
+    public function setConfigManager($configManager): void
     {
         $this->configManager = $configManager;
     }
@@ -36,7 +36,7 @@ class ProdsDownloader extends errorLogger
         return false;
     }
 
-    public function moveFileContents($path, $url)
+    public function moveFileContents($path, $url): bool
     {
         $filePath = $this->getFilePath($url);
         if ($this->getFileContents($url)) {
@@ -45,7 +45,7 @@ class ProdsDownloader extends errorLogger
         return false;
     }
 
-    public function removeFile($url)
+    public function removeFile($url): bool
     {
         $filePath = $this->getFilePath($url);
         if (is_file($filePath)) {
@@ -54,7 +54,10 @@ class ProdsDownloader extends errorLogger
         return false;
     }
 
-    protected function getFilePath($url)
+    /**
+     * @return false|string
+     */
+    protected function getFilePath($url): string|false
     {
         if ($url) {
             $md5 = md5($url);

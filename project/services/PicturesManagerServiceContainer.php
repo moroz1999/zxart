@@ -2,6 +2,9 @@
 
 class PicturesManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return PicturesManager
+     */
     public function makeInstance()
     {
         return new PicturesManager();

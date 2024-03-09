@@ -2,6 +2,9 @@
 
 class ZxParsingManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return ZxParsingManager
+     */
     public function makeInstance()
     {
         return new ZxParsingManager();

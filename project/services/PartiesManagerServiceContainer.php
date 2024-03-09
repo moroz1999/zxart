@@ -2,6 +2,9 @@
 
 class PartiesManagerServiceContainer extends DependencyInjectionServiceContainer
 {
+    /**
+     * @return PartiesManager
+     */
     public function makeInstance()
     {
         return new PartiesManager();

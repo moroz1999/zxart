@@ -17,6 +17,9 @@ class zxfileApplication extends controllerApplication
         return !$this->isCrawlerDetected();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         $structureManager = $this->getService(
@@ -57,7 +60,7 @@ class zxfileApplication extends controllerApplication
         }
     }
 
-    public function processRequestParameters()
+    public function processRequestParameters(): void
     {
         $controller = controller::getInstance();
         if ($controller->getParameter('id')) {

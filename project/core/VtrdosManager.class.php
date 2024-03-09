@@ -321,7 +321,7 @@ class VtrdosManager extends errorLogger
     /**
      * @param AuthorsManager $authorsManager
      */
-    public function setAuthorsManager($authorsManager)
+    public function setAuthorsManager($authorsManager): void
     {
         $this->authorsManager = $authorsManager;
     }
@@ -329,7 +329,7 @@ class VtrdosManager extends errorLogger
     /**
      * @param GroupsManager $groupsManager
      */
-    public function setGroupsManager($groupsManager)
+    public function setGroupsManager($groupsManager): void
     {
         $this->groupsManager = $groupsManager;
     }
@@ -337,7 +337,7 @@ class VtrdosManager extends errorLogger
     /**
      * @param CountriesManager $countriesManager
      */
-    public function setCountriesManager($countriesManager)
+    public function setCountriesManager($countriesManager): void
     {
         $this->countriesManager = $countriesManager;
     }
@@ -345,20 +345,20 @@ class VtrdosManager extends errorLogger
     /**
      * @param mixed $prodsManager
      */
-    public function setProdsManager(ProdsManager $prodsManager)
+    public function setProdsManager(ProdsManager $prodsManager): void
     {
         $this->prodsManager = $prodsManager;
         $this->prodsManager->setUpdateExistingReleases(true);
     }
 
-    public function importAll()
+    public function importAll(): void
     {
         foreach ($this->urlsSettings as $url => $settings) {
             $this->importUrlProds($url, $settings);
         }
     }
 
-    public function importUrlProds($pageUrl, $allSettings)
+    public function importUrlProds($pageUrl, $allSettings): void
     {
         if ($html = $this->loadHtml($pageUrl)) {
             $xPath = new DOMXPath($html);
@@ -385,11 +385,11 @@ class VtrdosManager extends errorLogger
     }
 
     /**
-     * @param $node
+     * @param DOMNameSpaceNode|DOMNode $node
      * @param DOMXPath $xPath
      * @param $settings
      */
-    protected function parseTable($node, $xPath, $settings)
+    protected function parseTable(DOMNode|DOMNameSpaceNode $node, $xPath, $settings): void
     {
         $prodsIndex = [];
         $releaseNodes = $xPath->query(".//tr", $node);
@@ -484,11 +484,11 @@ class VtrdosManager extends errorLogger
     }
 
     /**
-     * @param $node
+     * @param DOMNameSpaceNode|DOMNode $node
      * @param DOMXPath $xPath
      * @param $settings
      */
-    protected function parsePress($node, $xPath, $settings)
+    protected function parsePress(DOMNode|DOMNameSpaceNode $node, $xPath, $settings): void
     {
         $prodsIndex = [];
         $rowNodes = $xPath->query(".//tr", $node);
@@ -568,11 +568,11 @@ class VtrdosManager extends errorLogger
     }
 
     /**
-     * @param $node
+     * @param DOMNameSpaceNode|DOMNode $node
      * @param DOMXPath $xPath
      * @param $settings
      */
-    protected function parseUpdates($node, $xPath, $settings)
+    protected function parseUpdates(DOMNode|DOMNameSpaceNode $node, $xPath, $settings): void
     {
         $prodsIndex = [];
         $releaseNodes = $xPath->query(".//tr", $node);
@@ -666,7 +666,7 @@ class VtrdosManager extends errorLogger
         }
     }
 
-    private function requestReleaseDetails($detailsUrl, &$releaseInfo)
+    private function requestReleaseDetails(string $detailsUrl, array &$releaseInfo): void
     {
         if ($html = $this->loadHtml($detailsUrl)) {
             $xPath = new DOMXPath($html);
@@ -682,11 +682,11 @@ class VtrdosManager extends errorLogger
     }
 
     /**
-     * @param $node
+     * @param DOMNameSpaceNode|DOMNode $node
      * @param DOMXPath $xPath
      * @param $settings
      */
-    protected function parseSystem($node, $xPath, $settings)
+    protected function parseSystem(DOMNode|DOMNameSpaceNode $node, $xPath, $settings): void
     {
         $prodsIndex = [];
         $divNodes = $xPath->query(".//tr/td[@colspan='3']/div[@align='center']", $node);
@@ -746,11 +746,11 @@ class VtrdosManager extends errorLogger
     }
 
     /**
-     * @param $node
+     * @param DOMNameSpaceNode|DOMNode $node
      * @param DOMXPath $xPath
      * @param $settings
      */
-    protected function parseSbor($node, $xPath, $settings)
+    protected function parseSbor(DOMNode|DOMNameSpaceNode $node, $xPath, $settings): void
     {
         $prodsIndex = [];
         $divNodes = $xPath->query(".//tr/td[@colspan='3']/div[@align='center']", $node);
@@ -815,11 +815,11 @@ class VtrdosManager extends errorLogger
     }
 
     /**
-     * @param $node
+     * @param DOMNameSpaceNode|DOMNode $node
      * @param DOMXPath $xPath
      * @param $settings
      */
-    protected function parseList($node, $xPath, $settings)
+    protected function parseList(DOMNode|DOMNameSpaceNode $node, $xPath, $settings): void
     {
         $prodsIndex = [];
         $currentCategory = [];
@@ -857,7 +857,7 @@ class VtrdosManager extends errorLogger
         $this->importProdsIndex($prodsIndex);
     }
 
-    private function parseListItemRelease($aNode, $textNode, $currentCategory, $settings, &$prodsIndex)
+    private function parseListItemRelease($aNode, $textNode, $currentCategory, $settings, array &$prodsIndex): void
     {
         $releaseInfo = [
             'id' => null,
@@ -920,10 +920,10 @@ class VtrdosManager extends errorLogger
 
     protected function parseTextNode(
         $node,
-        &$prodInfo,
+        array &$prodInfo,
         &$releaseInfo,
         $roles = []
-    )
+    ): void
     {
         $text = trim($node->textContent);
         if (strtolower(substr($text, 0, 3)) == 'by ') {
@@ -939,7 +939,7 @@ class VtrdosManager extends errorLogger
 
     }
 
-    protected function parseDescription($text, &$info, &$releaseInfo)
+    protected function parseDescription(string $text, &$info, &$releaseInfo): void
     {
         foreach ($this->hwIndex as $key => $value) {
             if (stripos($text, $key) !== false) {
@@ -960,8 +960,8 @@ class VtrdosManager extends errorLogger
 
     protected function parseANode(
         $node,
-        &$releaseInfo
-    )
+        array &$releaseInfo
+    ): void
     {
         $releaseInfo['fileUrl'] = $this->rootUrl . $node->getAttribute('href');
         $text = $node->textContent;
@@ -1012,7 +1012,7 @@ class VtrdosManager extends errorLogger
         $releaseInfo['title'] = $this->processTitle($text);
     }
 
-    private function processTitle($text)
+    private function processTitle(string $text): string
     {
         //remove (..)
         $text = preg_replace('#([(].*[)])*#', '', $text);
@@ -1028,11 +1028,11 @@ class VtrdosManager extends errorLogger
     }
 
     protected function parseAuthorsString(
-        $string,
-        &$info,
+        string $string,
+        array &$info,
         $roles = [],
-        $groupField = 'groups'
-    )
+        string $groupField = 'groups'
+    ): void
     {
         $string = trim(preg_replace('!\s+!', ' ', $string), " \t\n\r\0\x0B" . chr(0xC2) . chr(0xA0));
         if ($string === 'author') {
@@ -1111,7 +1111,7 @@ class VtrdosManager extends errorLogger
 
     protected function loadHtml(
         $url
-    )
+    ): DOMDocument|false
     {
         if ($contents = file_get_contents($url)) {
             $dom = new DOMDocument;
@@ -1131,8 +1131,8 @@ class VtrdosManager extends errorLogger
     }
 
     protected function markProgress(
-        $text
-    )
+        string $text
+    ): void
     {
         static $previousTime;
 

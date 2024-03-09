@@ -54,6 +54,9 @@ class authorElement extends structureElement implements CommentsHolderInterface,
 
     protected $groupsList;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         //data
@@ -91,32 +94,45 @@ class authorElement extends structureElement implements CommentsHolderInterface,
         $moduleStructure['joinAndDelete'] = 'text';
     }
 
-    protected function setMultiLanguageFields(&$multiLanguageFields)
+    protected function setMultiLanguageFields(&$multiLanguageFields): void
     {
         $multiLanguageFields[] = 'realName';
     }
 
+    /**
+     * @return int
+     */
     protected function getCityId()
     {
         return $this->city;
     }
 
+    /**
+     * @return int
+     */
     protected function getCountryId()
     {
         return $this->country;
     }
 
-    public function isVotingDenied()
+    public function isVotingDenied(): int
     {
         return $this->denyVoting;
     }
 
-    public function is3aDenied()
+    public function is3aDenied(): int
     {
         return $this->deny3a;
     }
 
-    public function getWorksList($types)
+    /**
+     * @param (mixed|string)[] $types
+     *
+     * @psalm-param list{0: 'authorMusic'|'authorPicture'|mixed, 1?: 'authorPicture'} $types
+     *
+     * @return array
+     */
+    public function getWorksList(array $types)
     {
         $result = [];
         foreach ($types as $type) {
@@ -142,6 +158,9 @@ class authorElement extends structureElement implements CommentsHolderInterface,
         return $result;
     }
 
+    /**
+     * @return void
+     */
     public function recalculate()
     {
         $average = $this->getService('ConfigManager')->get('zx.averageVote');
@@ -178,7 +197,7 @@ class authorElement extends structureElement implements CommentsHolderInterface,
     }
 
 
-    public function recalculatePicturesData()
+    public function recalculatePicturesData(): void
     {
         if ($pictures = $this->getWorksList(['authorPicture'])) {
             foreach ($pictures as $picture) {
@@ -187,7 +206,7 @@ class authorElement extends structureElement implements CommentsHolderInterface,
         }
     }
 
-    public function recalculateMusicData()
+    public function recalculateMusicData(): void
     {
         if ($musicList = $this->getWorksList(['authorMusic'])) {
             foreach ($musicList as $music) {
@@ -196,7 +215,7 @@ class authorElement extends structureElement implements CommentsHolderInterface,
         }
     }
 
-    public function reconvertMusic()
+    public function reconvertMusic(): void
     {
         if ($musicList = $this->getWorksList(['authorMusic'])) {
             foreach ($musicList as $music) {
@@ -226,6 +245,11 @@ class authorElement extends structureElement implements CommentsHolderInterface,
         return $linksManager->getConnectedIdList($this->id, $type, 'parent');
     }
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{'play'|'view'}
+     */
     public function getChartDataEventTypes($type = null)
     {
         if ($type == 'authorMusic') {
@@ -235,7 +259,7 @@ class authorElement extends structureElement implements CommentsHolderInterface,
         }
     }
 
-    public function getSaveUrl($type)
+    public function getSaveUrl($type): string
     {
         /**
          * @var LanguagesManager $languagesManager
@@ -336,6 +360,9 @@ class authorElement extends structureElement implements CommentsHolderInterface,
         return $this->releases;
     }
 
+    /**
+     * @return string
+     */
     public function getTitle()
     {
         if ($this->title) {
@@ -374,7 +401,7 @@ class authorElement extends structureElement implements CommentsHolderInterface,
         return $this->groupsList;
     }
 
-    public function getSearchTitle()
+    public function getSearchTitle(): string
     {
         $searchTitle = $this->title;
         $additional = '';

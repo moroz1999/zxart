@@ -4,6 +4,11 @@ class groupDataResponseConverter extends StructuredDataResponseConverter
 {
     protected $defaultPreset = 'api';
 
+    /**
+     * @return (Closure|string)[]
+     *
+     * @psalm-return array{id: 'id', title: Closure(mixed):string, searchTitle: 'getSearchTitle', url: 'getUrl', structureType: 'structureType', dateCreated: Closure(mixed):mixed, dateModified: Closure(mixed):mixed, city: 'getCityTitle', country: 'getCountryTitle', subGroupIds: 'getSubGroupIds', importIds: 'getImportIdsIndex', aliases: 'getAliasElementsIds', prods: 'getProdsInfo', prodsAmount: 'getProdsAmount', publishedProds: 'getPublisherProdsInfo', releases: 'getReleasesInfo'}
+     */
     protected function getRelationStructure()
     {
         return [
@@ -32,6 +37,11 @@ class groupDataResponseConverter extends StructuredDataResponseConverter
         ];
     }
 
+    /**
+     * @return string[][]
+     *
+     * @psalm-return array{api: list{'id', 'title', 'url', 'dateCreated', 'dateModified', 'city', 'country', 'subGroupIds', 'importIds', 'aliases'}, apiShort: list{'id', 'title', 'dateModified'}, search: list{'id', 'searchTitle', 'url', 'structureType'}, zxProdsList: list{'id', 'title', 'url', 'prods', 'publishedProds', 'releases'}}
+     */
     protected function getPresetsStructure()
     {
         return [

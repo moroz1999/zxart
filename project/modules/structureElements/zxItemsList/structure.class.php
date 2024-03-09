@@ -20,6 +20,9 @@ class zxItemsListElement extends structureElement implements JsonDataProvider
 
     protected $itemsList;
 
+    /**
+     * @return void
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';

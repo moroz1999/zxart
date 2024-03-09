@@ -6,6 +6,9 @@ class routeApplication extends controllerApplication
     public $rendererName = 'smarty';
     public $requestParameters = [];
 
+    /**
+     * @return void
+     */
     public function initialize()
     {
         set_time_limit(60 * 60);
@@ -13,6 +16,9 @@ class routeApplication extends controllerApplication
         $this->createRenderer();
     }
 
+    /**
+     * @return void
+     */
     public function execute($controller)
     {
         $renderer = $this->getService('renderer');
