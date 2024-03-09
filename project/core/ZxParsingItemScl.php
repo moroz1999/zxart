@@ -2,11 +2,19 @@
 
 class ZxParsingItemScl extends ZxParsingItem
 {
+    /**
+     * @return string
+     *
+     * @psalm-return 'scl'
+     */
     public function getType()
     {
         return 'scl';
     }
 
+    /**
+     * @return void
+     */
     protected function parse()
     {
         if ($this->items === null) {

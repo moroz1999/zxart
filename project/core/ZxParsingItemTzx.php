@@ -2,11 +2,19 @@
 
 class ZxParsingItemTzx extends ZxParsingItem
 {
+    /**
+     * @return string
+     *
+     * @psalm-return 'tzx'
+     */
     public function getType()
     {
         return 'tzx';
     }
 
+    /**
+     * @return void
+     */
     protected function parse()
     {
         if ($this->items === null) {

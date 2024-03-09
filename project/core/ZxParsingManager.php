@@ -100,7 +100,11 @@ class ZxParsingManager extends errorLogger
         return $structure;
     }
 
-    public function detectType($path = null, $content = null, $fileName = null)
+    /**
+     * @param null|string $path
+     * @param null|string $content
+     */
+    public function detectType(string|null $path = null, string|null $content = null, $fileName = null)
     {
         if ($fileName && ($extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION)))) {
             return $extension;

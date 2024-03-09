@@ -54,7 +54,7 @@ class DmdManager
         $this->prodsDownloader = $prodsDownloader;
     }
 
-    public function importAll()
+    public function importAll(): void
     {
         $path = PUBLIC_PATH . "output/dmd/images";
         $directoryIterator = new DirectoryIterator($path);

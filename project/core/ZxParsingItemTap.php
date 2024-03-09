@@ -2,11 +2,19 @@
 
 class ZxParsingItemTap extends ZxParsingItem
 {
+    /**
+     * @return string
+     *
+     * @psalm-return 'tap'
+     */
     public function getType()
     {
         return 'tap';
     }
 
+    /**
+     * @return void
+     */
     protected function parse()
     {
         if ($this->items === null) {

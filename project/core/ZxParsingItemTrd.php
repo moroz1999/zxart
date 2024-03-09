@@ -2,11 +2,19 @@
 
 class ZxParsingItemTrd extends ZxParsingItem
 {
+    /**
+     * @return string
+     *
+     * @psalm-return 'trd'
+     */
     public function getType()
     {
         return 'trd';
     }
 
+    /**
+     * @return void
+     */
     protected function parse()
     {
         $this->items = [];

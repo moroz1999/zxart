@@ -33,28 +33,19 @@
       <code><![CDATA[$apiKey]]></code>
       <code><![CDATA[$length]]></code>
     </MixedAssignment>
-    <MixedMethodCall>
-      <code><![CDATA[get]]></code>
-    </MixedMethodCall>
     <MixedOperand>
       <code><![CDATA[$length]]></code>
       <code><![CDATA[$log]]></code>
     </MixedOperand>
+    <PossiblyInvalidMethodCall>
+      <code><![CDATA[get]]></code>
+    </PossiblyInvalidMethodCall>
     <PossiblyUnusedParam>
-      <code><![CDATA[$configManager]]></code>
       <code><![CDATA[$element]]></code>
     </PossiblyUnusedParam>
     <UndefinedClass>
-      <code><![CDATA[$this->configManager]]></code>
-      <code><![CDATA[ConfigManager]]></code>
-      <code><![CDATA[ConfigManager]]></code>
       <code><![CDATA[errorLog]]></code>
     </UndefinedClass>
-    <UndefinedConstant>
-      <code><![CDATA[ROOT_PATH]]></code>
-      <code><![CDATA[ROOT_PATH]]></code>
-      <code><![CDATA[ROOT_PATH]]></code>
-    </UndefinedConstant>
     <UnusedClass>
       <code><![CDATA[AiManager]]></code>
     </UnusedClass>
@@ -279,6 +270,12 @@
       <code><![CDATA[false]]></code>
       <code><![CDATA[false]]></code>
     </InvalidArgument>
+    <InvalidClass>
+      <code><![CDATA[configManager]]></code>
+      <code><![CDATA[configManager]]></code>
+      <code><![CDATA[pathsManager]]></code>
+      <code><![CDATA[pathsManager]]></code>
+    </InvalidClass>
     <MissingConstructor>
       <code><![CDATA[$apiQueriesManager]]></code>
       <code><![CDATA[$configManager]]></code>
@@ -585,6 +582,17 @@
       <code><![CDATA[setStart]]></code>
     </MixedMethodCall>
     <MixedOperand>
+      <code><![CDATA[$fileName]]></code>
+      <code><![CDATA[$fileName]]></code>
+      <code><![CDATA[$fileName]]></code>
+      <code><![CDATA[$fileName]]></code>
+      <code><![CDATA[$fileName]]></code>
+      <code><![CDATA[$fileName]]></code>
+      <code><![CDATA[$fileName]]></code>
+      <code><![CDATA[$fileName]]></code>
+      <code><![CDATA[$fileName]]></code>
+      <code><![CDATA[$this->pathsManager->getPath('uploads')]]></code>
+      <code><![CDATA[$this->pathsManager->getPath('uploads')]]></code>
       <code><![CDATA[$type]]></code>
       <code><![CDATA[$zxMusicElement->partyplace]]></code>
     </MixedOperand>
@@ -602,8 +610,6 @@
     </MixedPropertyFetch>
     <PossiblyUnusedParam>
       <code><![CDATA[$apiQueriesManager]]></code>
-      <code><![CDATA[$configManager]]></code>
-      <code><![CDATA[$pathsManager]]></code>
       <code><![CDATA[$structureManager]]></code>
       <code><![CDATA[$translationsManager]]></code>
     </PossiblyUnusedParam>
@@ -611,46 +617,16 @@
       <code><![CDATA[$zxImageConverter->getBinary()]]></code>
       <code><![CDATA[$zxImageConverter->getBinary()]]></code>
     </RiskyTruthyFalsyComparison>
-    <UndefinedConstant>
-      <code><![CDATA[PUBLIC_PATH]]></code>
-      <code><![CDATA[PUBLIC_PATH]]></code>
-      <code><![CDATA[PUBLIC_PATH]]></code>
-      <code><![CDATA[PUBLIC_PATH]]></code>
-      <code><![CDATA[PUBLIC_PATH]]></code>
-      <code><![CDATA[ROOT_PATH]]></code>
-      <code><![CDATA[ROOT_PATH]]></code>
-      <code><![CDATA[ROOT_PATH]]></code>
-      <code><![CDATA[ROOT_PATH]]></code>
-      <code><![CDATA[ROOT_PATH]]></code>
-      <code><![CDATA[ROOT_PATH]]></code>
-      <code><![CDATA[ROOT_PATH]]></code>
-      <code><![CDATA[ROOT_PATH]]></code>
-      <code><![CDATA[ROOT_PATH]]></code>
-    </UndefinedConstant>
     <UndefinedDocblockClass>
-      <code><![CDATA[$configManager]]></code>
-      <code><![CDATA[$configManager]]></code>
-      <code><![CDATA[$configManager]]></code>
-      <code><![CDATA[$pathsManager]]></code>
-      <code><![CDATA[$pathsManager]]></code>
-      <code><![CDATA[$pathsManager]]></code>
       <code><![CDATA[$this->apiQueriesManager]]></code>
       <code><![CDATA[$this->languagesManager]]></code>
       <code><![CDATA[$this->languagesManager]]></code>
-      <code><![CDATA[$this->pathsManager]]></code>
-      <code><![CDATA[$this->pathsManager]]></code>
-      <code><![CDATA[$this->pathsManager]]></code>
-      <code><![CDATA[$this->pathsManager]]></code>
       <code><![CDATA[$this->structureManager]]></code>
       <code><![CDATA[$translationsManager]]></code>
       <code><![CDATA[$translationsManager]]></code>
       <code><![CDATA[ApiQueriesManager]]></code>
       <code><![CDATA[ApiQueriesManager]]></code>
       <code><![CDATA[LanguagesManager]]></code>
-      <code><![CDATA[configManager]]></code>
-      <code><![CDATA[configManager]]></code>
-      <code><![CDATA[pathsManager]]></code>
-      <code><![CDATA[pathsManager]]></code>
       <code><![CDATA[structureManager]]></code>
       <code><![CDATA[structureManager]]></code>
       <code><![CDATA[translationsManager]]></code>
@@ -822,27 +798,21 @@
       <code><![CDATA[$json['author']]]></code>
       <code><![CDATA[$json['name']]]></code>
       <code><![CDATA[$json['place']]]></code>
+      <code><![CDATA[$this->pathsManager->getPath('uploads')]]></code>
     </MixedOperand>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$info['extension']]]></code>
     </PossiblyUndefinedArrayOffset>
     <PossiblyUnusedParam>
       <code><![CDATA[$authorsManager]]></code>
-      <code><![CDATA[$pathsManager]]></code>
       <code><![CDATA[$prodsDownloader]]></code>
       <code><![CDATA[$structureManager]]></code>
     </PossiblyUnusedParam>
     <UndefinedClass>
-      <code><![CDATA[PathsManager]]></code>
       <code><![CDATA[structureManager]]></code>
     </UndefinedClass>
-    <UndefinedConstant>
-      <code><![CDATA[PUBLIC_PATH]]></code>
-    </UndefinedConstant>
     <UndefinedDocblockClass>
-      <code><![CDATA[$this->pathsManager]]></code>
       <code><![CDATA[$this->structureManager]]></code>
-      <code><![CDATA[PathsManager]]></code>
       <code><![CDATA[structureManager]]></code>
     </UndefinedDocblockClass>
     <UndefinedMethod>
@@ -1152,9 +1122,11 @@
       <code><![CDATA[$this->getModeInfo()['hidden']]]></code>
       <code><![CDATA[$this->getModeInfo()['mode']]]></code>
     </MixedArrayAccess>
-    <UndefinedClass>
-      <code><![CDATA[controller]]></code>
-    </UndefinedClass>
+    <MixedAssignment>
+      <code><![CDATA[$border]]></code>
+      <code><![CDATA[$gMode]]></code>
+      <code><![CDATA[$hidden]]></code>
+    </MixedAssignment>
     <UnusedClass>
       <code><![CDATA[PicturesModesManager]]></code>
     </UnusedClass>
@@ -1906,9 +1878,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$content = file_get_contents($path)]]></code>
     </RiskyTruthyFalsyComparison>
-    <UndefinedConstant>
-      <code><![CDATA[ROOT_PATH]]></code>
-    </UndefinedConstant>
   </file>
   <file src="project/core/ZxParsingItemScl.php">
     <DocblockTypeContradiction>
@@ -2152,6 +2121,14 @@
       <code><![CDATA[mp3ConversionManager]]></code>
     </UnusedClass>
   </file>
+  <file src="project/core/psalm-bootstrap.php">
+    <InvalidArgument>
+      <code><![CDATA[dirname(__FILE__) . '/../project/config/']]></code>
+    </InvalidArgument>
+    <UnusedVariable>
+      <code><![CDATA[$controller]]></code>
+    </UnusedVariable>
+  </file>
   <file src="project/core/tagsManager.class.php">
     <PossiblyUnusedParam>
       <code><![CDATA[$amount]]></code>
@@ -2269,9 +2246,11 @@
       <code><![CDATA[writeStorage]]></code>
     </MissingReturnType>
     <MixedArgument>
+      <code><![CDATA[$cookieContents]]></code>
       <code><![CDATA[$this->getGroupMarkers()]]></code>
     </MixedArgument>
     <MixedArrayAccess>
+      <code><![CDATA[$cookieContents['0']]]></code>
       <code><![CDATA[$this->storage[$name]]]></code>
       <code><![CDATA[$this->storage[$name]]]></code>
       <code><![CDATA[$this->storage['currentUserId']]]></code>
@@ -2294,27 +2273,36 @@
     </MixedArrayOffset>
     <MixedAssignment>
       <code><![CDATA[$anonymousId]]></code>
+      <code><![CDATA[$cookieContents]]></code>
       <code><![CDATA[$groupsIds]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$name]]></code>
+      <code><![CDATA[$salt]]></code>
+      <code><![CDATA[$sessionName]]></code>
+      <code><![CDATA[$sessionName]]></code>
       <code><![CDATA[$storage]]></code>
       <code><![CDATA[$this->db]]></code>
       <code><![CDATA[$userId]]></code>
       <code><![CDATA[$userId]]></code>
+      <code><![CDATA[$userName]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
     <MixedOperand>
       <code><![CDATA[$name]]></code>
+      <code><![CDATA[$sessionName]]></code>
+      <code><![CDATA[$sessionName]]></code>
       <code><![CDATA[$this->lastName]]></code>
     </MixedOperand>
+    <PossiblyInvalidArrayOffset>
+      <code><![CDATA[$_COOKIE['loginremember_' . $sessionName]]]></code>
+    </PossiblyInvalidArrayOffset>
     <PossiblyUnusedMethod>
       <code><![CDATA[checkExistance]]></code>
       <code><![CDATA[clearStorage]]></code>
       <code><![CDATA[forgetUser]]></code>
       <code><![CDATA[getInstance]]></code>
       <code><![CDATA[getName]]></code>
-      <code><![CDATA[getStorageAttribute]]></code>
       <code><![CDATA[hasAds]]></code>
       <code><![CDATA[isAdmin]]></code>
       <code><![CDATA[logout]]></code>
@@ -2323,7 +2311,6 @@
       <code><![CDATA[setDb]]></code>
       <code><![CDATA[setPrivilegesManager]]></code>
       <code><![CDATA[setServerSessionManager]]></code>
-      <code><![CDATA[setStorageAttribute]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedParam>
       <code><![CDATA[$conditions]]></code>
@@ -2364,8 +2351,8 @@
       <code><![CDATA[$this->privilegesManager]]></code>
     </RedundantConditionGivenDocblockType>
     <UndefinedClass>
-      <code><![CDATA[controller]]></code>
-      <code><![CDATA[controller]]></code>
+      <code><![CDATA[persistableCollection]]></code>
+      <code><![CDATA[persistableCollection]]></code>
       <code><![CDATA[persistableCollection]]></code>
       <code><![CDATA[persistableCollection]]></code>
       <code><![CDATA[persistableCollection]]></code>
@@ -2374,6 +2361,8 @@
     </UndefinedClass>
     <UndefinedDocblockClass>
       <code><![CDATA[$this->privilegesManager]]></code>
+      <code><![CDATA[$this->serverSessionManager]]></code>
+      <code><![CDATA[$this->serverSessionManager]]></code>
       <code><![CDATA[$this->serverSessionManager]]></code>
       <code><![CDATA[$this->serverSessionManager]]></code>
       <code><![CDATA[$this->serverSessionManager]]></code>

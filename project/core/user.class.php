@@ -36,7 +36,7 @@ class user
     /**
      * @param privilegesManager $privilegesManager
      */
-    public function setPrivilegesManager($privilegesManager)
+    public function setPrivilegesManager($privilegesManager): void
     {
         $this->privilegesManager = $privilegesManager;
     }
@@ -44,12 +44,12 @@ class user
     /**
      * @param ServerSessionManager $serverSessionManager
      */
-    public function setServerSessionManager($serverSessionManager)
+    public function setServerSessionManager($serverSessionManager): void
     {
         $this->serverSessionManager = $serverSessionManager;
     }
 
-    public function setDb($db)
+    public function setDb($db): void
     {
         $this->db = $db;
     }
@@ -81,7 +81,7 @@ class user
         self::$instance = $this;
     }
 
-    public function initialize()
+    public function initialize(): void
     {
         $this->readStorage();
         $userId = $this->readUserId();
@@ -123,7 +123,7 @@ class user
         }
     }
 
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         if (!$this->isAuthorized()) {
             return false;
@@ -147,7 +147,7 @@ class user
         return $result;
     }
 
-    private function loadPrivileges()
+    private function loadPrivileges(): void
     {
         if (!$this->checkStoredPrivileges()) {
             $relationsDataCollection = persistableCollection::getInstance($this->relationsResourceName);
@@ -206,7 +206,7 @@ class user
         }
     }
 
-    private function checkStoredPrivileges()
+    private function checkStoredPrivileges(): bool
     {
         if (!empty($this->storage['userPrivileges'])) {
             $this->privileges = $this->storage['userPrivileges'];
@@ -215,12 +215,12 @@ class user
         return false;
     }
 
-    private function storePrivileges()
+    private function storePrivileges(): void
     {
         $this->storage['userPrivileges'] = $this->privileges;
     }
 
-    public function refreshPrivileges()
+    public function refreshPrivileges(): void
     {
         $this->deleteStorageAttribute('userPrivileges');
         $this->loadPrivileges();
@@ -231,14 +231,14 @@ class user
         $this->writeStorage();
     }
 
-    protected function readStorage()
+    protected function readStorage(): void
     {
         if ($storage = $this->serverSessionManager->get('storage')) {
             $this->storage = $storage;
         }
     }
 
-    protected function writeStorage()
+    protected function writeStorage(): void
     {
         if ($this->storage) {
             $this->serverSessionManager->set('storage', $this->storage);
@@ -247,13 +247,13 @@ class user
         }
     }
 
-    public function logout()
+    public function logout(): void
     {
         $anonymousId = $this->checkUser('anonymous', null, true);
         $this->switchUser($anonymousId);
     }
 
-    public function rememberUser($userName, $userId)
+    public function rememberUser($userName, $userId): void
     {
         $controller = controller::getInstance();
         $salt = $controller->domainURL;
@@ -272,12 +272,15 @@ class user
         }
     }
 
-    public function forgetUser()
+    public function forgetUser(): void
     {
         setcookie('loginremember_' . $this->serverSessionManager->getSessionName(), '', 0, '/');
     }
 
-    public function checkUser($userName, $password, $ignorePassword = false)
+    /**
+     * @psalm-param 'anonymous' $userName
+     */
+    public function checkUser(string $userName, $password, bool $ignorePassword = false)
     {
         $userId = false;
 
@@ -321,12 +324,15 @@ class user
         return $userId;
     }
 
-    public function checkExistance($userName, $email)
+    public function checkExistance($userName, $email): bool
     {
         return (!!$this->queryUserData(['userName' => $userName])) || (!!$this->queryUserData(['email' => $email]));
     }
 
-    public function queryUserData($conditions)
+    /**
+     * @psalm-param array{userName?: mixed, email?: mixed} $conditions
+     */
+    public function queryUserData(array $conditions)
     {
         $userCollection = persistableCollection::getInstance($this->userResourceName);
         $records = $userCollection->load($conditions) ?: [];
@@ -336,7 +342,7 @@ class user
         return null;
     }
 
-    public function switchUser($userId, $resetLivePrivileges = true)
+    public function switchUser($userId, $resetLivePrivileges = true): void
     {
         unset($this->storage['userPrivileges']);
         unset($this->storage['userGroupsIdList']);
@@ -361,7 +367,7 @@ class user
         }
     }
 
-    public function clearStorage()
+    public function clearStorage(): void
     {
         $this->storage = [];
     }
@@ -439,19 +445,22 @@ class user
         return $this->groupsIdList;
     }
 
-    public function deleteStorageAttribute($name)
+    public function deleteStorageAttribute(string $name): void
     {
         if (isset($this->storage[$name])) {
             unset($this->storage[$name]);
         }
     }
 
-    public function setStorageAttribute($name, $value)
+    public function setStorageAttribute(string $name, array $value): void
     {
         $this->storage[$name] = $value;
     }
 
-    public function getStorageAttribute($name)
+    /**
+     * @psalm-param 'border'|'hidden'|'mode' $name
+     */
+    public function getStorageAttribute(string $name)
     {
         $value = false;
         if (isset($this->storage[$name])) {
@@ -476,12 +485,12 @@ class user
         return $name;
     }
 
-    public function isAuthorized()
+    public function isAuthorized(): bool
     {
         return $this->userName !== 'anonymous';
     }
 
-    public function hasAds()
+    public function hasAds(): bool
     {
         return !$this->vip && !$this->volunteer && !$this->supporter;
     }

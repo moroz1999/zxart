@@ -11,7 +11,7 @@ class PicturesModesManager
     /**
      * @param user $user
      */
-    public function setUser($user)
+    public function setUser($user): void
     {
         $this->user = $user;
     }

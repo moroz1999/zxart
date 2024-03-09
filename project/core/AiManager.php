@@ -12,7 +12,12 @@ class AiManager
         $this->configManager = $configManager;
     }
 
-    public function getProdData(zxProdElement $element)
+    /**
+     * @return (ArrayAccess|array|mixed)[]|ArrayAccess|null
+     *
+     * @psalm-return ArrayAccess|array{rus: ArrayAccess|array{h1: mixed, metaDescription: mixed, pageTitle: mixed,...}|mixed, eng: ArrayAccess|array{h1: mixed, metaDescription: mixed, pageTitle: mixed,...}|mixed, spa: ArrayAccess|array{h1: mixed, metaDescription: mixed, pageTitle: mixed,...}|mixed,...}|null
+     */
+    public function getProdData(zxProdElement $element): array|ArrayAccess|null
     {
         $output = null;
         $prodData = $element->getElementData('ai');
@@ -139,7 +144,10 @@ spa:{...}
         return null;
     }
 
-    private function sendPromt($promt, $temperature, $log, $prodData)
+    /**
+     * @return false|null|string
+     */
+    private function sendPromt(string $promt, float $temperature, string $log, $prodData): string|false|null
     {
         $apiKey = $this->configManager->getConfig('main')->get('ai_key');
         $client = OpenAI::client($apiKey);
@@ -165,7 +173,10 @@ spa:{...}
         return $result;
     }
 
-    private function truncateUtf8($string, $length)
+    /**
+     * @psalm-param 1500|2700 $length
+     */
+    private function truncateUtf8($string, int $length)
     {
         if (strlen($string) <= $length) {
             return $string;

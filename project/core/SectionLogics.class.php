@@ -17,12 +17,12 @@ class SectionLogics
     /**
      * @param structureManager $structureManager
      */
-    public function setStructureManager($structureManager)
+    public function setStructureManager($structureManager): void
     {
         $this->structureManager = $structureManager;
     }
 
-    public function setLanguagesManager($languagesManager)
+    public function setLanguagesManager($languagesManager): void
     {
         $this->languagesManager = $languagesManager;
     }
@@ -88,7 +88,12 @@ class SectionLogics
         return false;
     }
 
-    public function getAuthorLinkTypes()
+    /**
+     * @return string[]
+     *
+     * @psalm-return list{0: 'authorMusic'|'authorPicture', 1?: 'authorMusic'}
+     */
+    public function getAuthorLinkTypes(): array
     {
         $sectionType = $this->getArtItemsType();
         if ($sectionType == 'graphics') {
@@ -102,7 +107,12 @@ class SectionLogics
         return $types;
     }
 
-    public function getPartyLinkTypes()
+    /**
+     * @return string|string[]
+     *
+     * @psalm-return 'partyMusic'|'partyPicture'|list{'partyMusic'}
+     */
+    public function getPartyLinkTypes(): array|string
     {
         $types = ['partyMusic'];
         $sectionType = $this->getArtItemsType();

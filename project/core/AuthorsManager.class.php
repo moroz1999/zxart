@@ -341,7 +341,10 @@ class AuthorsManager extends ElementsManager
             );
     }
 
-    public function importAuthor($authorInfo, $origin, $createNew = true)
+    /**
+     * @psalm-param array{id: mixed, title: mixed} $authorInfo
+     */
+    public function importAuthor(array $authorInfo, $origin, $createNew = true)
     {
         if (!isset($this->importedAuthors[$origin][$authorInfo['id']])) {
             /**

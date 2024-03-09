@@ -4,6 +4,7 @@
         errorBaseline="psalm-baseline.xml"
         findUnusedBaselineEntry="true"
         findUnusedCode="true"
+        autoloader="project/core/psalm-bootstrap.php"
 >
     <projectFiles>
         <directory name="project" />

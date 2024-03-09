@@ -2,11 +2,21 @@
 
 class ZxParsingItemZip extends ZxParsingItem
 {
+    /**
+     * @return string
+     *
+     * @psalm-return 'zip'
+     */
     public function getType()
     {
         return 'zip';
     }
 
+    /**
+     * @return ZxParsingItem[]
+     *
+     * @psalm-return array<ZxParsingItem>
+     */
     protected function parse()
     {
         if ($this->items === null) {

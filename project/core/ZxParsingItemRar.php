@@ -2,11 +2,21 @@
 
 class ZxParsingItemRar extends ZxParsingItem
 {
+    /**
+     * @return string
+     *
+     * @psalm-return 'rar'
+     */
     public function getType()
     {
         return 'rar';
     }
 
+    /**
+     * @return ZxParsingItem[]
+     *
+     * @psalm-return array<ZxParsingItem>
+     */
     protected function parse()
     {
         if ($this->items === null) {

@@ -480,7 +480,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         return $this->party;
     }
 
-    public function updateMd5($filePath, $fileName)
+    public function updateMd5(string $filePath, string $fileName)
     {
         /**
          * @var \Illuminate\Database\Connection $db

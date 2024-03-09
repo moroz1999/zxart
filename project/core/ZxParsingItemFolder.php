@@ -2,11 +2,19 @@
 
 class ZxParsingItemFolder extends ZxParsingItem
 {
+    /**
+     * @return string
+     *
+     * @psalm-return 'folder'
+     */
     public function getType()
     {
         return 'folder';
     }
 
+    /**
+     * @return void
+     */
     protected function parse()
     {
     }

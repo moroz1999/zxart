@@ -30,7 +30,7 @@ class BannerGenerator
     /**
      * @param pathsManager $pathsManager
      */
-    public function setPathsManager($pathsManager)
+    public function setPathsManager($pathsManager): void
     {
         $this->pathsManager = $pathsManager;
     }
@@ -38,7 +38,7 @@ class BannerGenerator
     /**
      * @param translationsManager $translationsManager
      */
-    public function setTranslationsManager($translationsManager)
+    public function setTranslationsManager($translationsManager): void
     {
         $this->translationsManager = $translationsManager;
     }
@@ -46,7 +46,7 @@ class BannerGenerator
     /**
      * @param configManager $configManager
      */
-    public function setConfigManager($configManager)
+    public function setConfigManager($configManager): void
     {
         $this->configManager = $configManager;
     }
@@ -54,7 +54,7 @@ class BannerGenerator
     /**
      * @param structureManager $structureManager
      */
-    public function setStructureManager($structureManager)
+    public function setStructureManager($structureManager): void
     {
         $this->structureManager = $structureManager;
     }
@@ -62,17 +62,20 @@ class BannerGenerator
     /**
      * @param ApiQueriesManager $apiQueriesManager
      */
-    public function setApiQueriesManager($apiQueriesManager)
+    public function setApiQueriesManager($apiQueriesManager): void
     {
         $this->apiQueriesManager = $apiQueriesManager;
     }
 
-    public function setLanguagesManager($languagesManager)
+    public function setLanguagesManager($languagesManager): void
     {
         $this->languagesManager = $languagesManager;
     }
 
-    public function getMonthBest($type, $language)
+    /**
+     * @psalm-param 'zxMusic'|'zxPicture' $type
+     */
+    public function getMonthBest(string $type, $language)
     {
         $this->languagesManager->setCurrentLanguageCode($language);
         $this->structureManager->setRequestedPath([$this->languagesManager->getCurrentLanguageCode()]);
@@ -93,7 +96,10 @@ class BannerGenerator
         return $element;
     }
 
-    public function generateMonthBestPicture($lang)
+    /**
+     * @return false|string
+     */
+    public function generateMonthBestPicture($lang): string|false
     {
         /**
          * @var zxPictureElement $zxPictureElement
@@ -193,7 +199,10 @@ class BannerGenerator
         return false;
     }
 
-    public function generateBestPicture($lang)
+    /**
+     * @return false|string
+     */
+    public function generateBestPicture($lang): string|false
     {
         /**
          * @var zxPictureElement $zxPictureElement
@@ -234,7 +243,10 @@ class BannerGenerator
         return false;
     }
 
-    public function generateMonthBestTune($lang)
+    /**
+     * @return false|string
+     */
+    public function generateMonthBestTune($lang): string|false
     {
         /**
          * @var zxMusicElement $zxMusicElement

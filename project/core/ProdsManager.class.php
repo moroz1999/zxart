@@ -973,7 +973,7 @@ class ProdsManager extends ElementsManager
         $this->prodsDownloader->removeFile($releaseInfo['fileUrl']);
     }
 
-    public function getReleasesByIdList($idList, $sort = [], $start = null, $amount = null)
+    public function getReleasesByIdList(\Illuminate\Database\Query\Builder|null $idList, array|null $sort = [], int|null $start = null, int|null $amount = null)
     {
         $result = $this->loadReleases($idList, $sort, $start, $amount);
 

@@ -25,7 +25,10 @@ class EncodingDetector
         return false;
     }
 
-    public static function isMostlyPrintable($str): bool
+    /**
+     * @param false|string $str
+     */
+    public static function isMostlyPrintable(string|false $str): bool
     {
         $length = min(mb_strlen($str), 100);
         if (!$length) {

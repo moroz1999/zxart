@@ -2,7 +2,7 @@
 
 class HexViewer
 {
-    public function getFormatted($binary)
+    public function getFormatted($binary): string
     {
         $chunkSize = 16;
         $eolString = PHP_EOL;

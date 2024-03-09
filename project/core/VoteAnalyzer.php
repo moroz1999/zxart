@@ -2,7 +2,7 @@
 
 class VoteAnalyzer
 {
-    public function removeAnomalies(array $votes, $threshold = 1.96)
+    public function removeAnomalies(array $votes, $threshold = 1.96): array
     {
         if (count($votes) <= 1) {
             return $votes;
@@ -26,12 +26,12 @@ class VoteAnalyzer
         return $filteredVotes;
     }
 
-    protected function calculateMean(array $values)
+    protected function calculateMean(array $values): float|int
     {
         return array_sum($values) / count($values);
     }
 
-    protected function calculateStandardDeviation(array $values, $mean)
+    protected function calculateStandardDeviation(array $values, $mean): float
     {
         $squares = array_map(function ($value) use ($mean) {
             return pow($value - $mean, 2);

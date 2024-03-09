@@ -29,7 +29,7 @@ abstract class ZxParsingItem
     /**
      * @param mixed $parentMd5
      */
-    public function setParentMd5($parentMd5)
+    public function setParentMd5($parentMd5): void
     {
         $this->parentMd5 = $parentMd5;
     }
@@ -45,7 +45,7 @@ abstract class ZxParsingItem
     /**
      * @param mixed $path
      */
-    public function setPath($path)
+    public function setPath($path): void
     {
         $this->path = $path;
     }
@@ -64,7 +64,7 @@ abstract class ZxParsingItem
     /**
      * @param mixed $content
      */
-    public function setContent($content)
+    public function setContent($content): void
     {
         $this->content = $content;
     }
@@ -88,7 +88,10 @@ abstract class ZxParsingItem
         return $this->md5;
     }
 
-    public function getSize()
+    /**
+     * @psalm-return int<0, max>
+     */
+    public function getSize(): int
     {
         return strlen($this->getContent());
     }
@@ -101,7 +104,7 @@ abstract class ZxParsingItem
         return $this->itemName;
     }
 
-    public function getItemExtension()
+    public function getItemExtension(): string
     {
         if ($itemName = $this->getItemName()) {
             return strtolower(pathinfo($itemName, PATHINFO_EXTENSION));
@@ -112,12 +115,15 @@ abstract class ZxParsingItem
     /**
      * @param mixed $itemName
      */
-    public function setItemName($itemName)
+    public function setItemName($itemName): void
     {
         $this->itemName = $itemName;
     }
 
-    public function getItemByName($itemName)
+    /**
+     * @return false|self
+     */
+    public function getItemByName(string $itemName): self|false
     {
         if ($items = $this->items) {
             foreach ($items as $item) {
@@ -129,7 +135,7 @@ abstract class ZxParsingItem
         return false;
     }
 
-    public function addItem($item)
+    public function addItem(ZxParsingItemFile|ZxParsingItemRar|ZxParsingItemTrd|ZxParsingItemScl|ZxParsingItemTzx|ZxParsingItemTap|ZxParsingItemFolder|ZxParsingItemZip $item): void
     {
         $this->items[] = $item;
     }

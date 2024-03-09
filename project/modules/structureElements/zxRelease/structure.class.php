@@ -199,7 +199,6 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
 
     public function getReleaseFlatStructure()
     {
-        return false;
         if ($path = $this->getFilePath()) {
             /**
              * @var ZxParsingManager $zxParsingManager
@@ -217,7 +216,6 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
                         } else {
                             $structure[$key]['viewable'] = true;
                         }
-                        $structure[$key]['fileName'] = urldecode($structure[$key]['fileName']);
                         $structure[$key]['internalType'] = $type;
                     }
                 }
@@ -698,7 +696,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         $zxParsingManager->deleteFileStructure($this->getId());
         if ($structure = $zxParsingManager->saveFileStructure(
             $this->getId(),
-            $this->getFilePath(),
+            urldecode($this->getFilePath()),
             $this->fileName
         )) {
             if (!$this->releaseFormat) {
