@@ -1,1 +1,1 @@
-vendor/bin/psalm --use-baseline=psalm-baseline.xml
+vendor/bin/psalm --use-baseline=psalm-baseline.xml --no-cache

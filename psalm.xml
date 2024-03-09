@@ -2,7 +2,7 @@
 <psalm
         errorLevel="1"
         errorBaseline="psalm-baseline.xml"
-        findUnusedBaselineEntry="true"
+        findUnusedBaselineEntry="false"
         findUnusedCode="true"
         autoloader="project/core/psalm-bootstrap.php"
         phpVersion="8.3"

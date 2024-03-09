@@ -1,4 +1,17 @@
 <?php
+/**
+ * @psalm-type EngineFileRegistryRow = array{
+ *     id: int,
+ *     md5: string,
+ *     parentId: int,
+ *     fileName: string,
+ *     size: int,
+ *     elementId: int,
+ *     type: 'folder'|'trd'|'tap'|'scl'|'file'|'zip'|'7z'|'rar'|'tar'|'tzx',
+ *     encoding: 'UTF-8'|'Windows-1251'|'ISO-8859-1'|'IBM866'|'CP866'|'KOI8-R'|'Windows-1252'|'none',
+ *     internalType: 'plain_text'|'source_code'|'pc_image'|'zx_basic'|'zx_image_standard'|'zx_image_monochrome'|'zx_image_tricolor'|'zx_image_gigascreen'|'binary'
+ * }
+ */
 
 use Illuminate\Database\Connection;
 
@@ -9,20 +22,30 @@ class ZxParsingManager extends errorLogger
 
     protected Connection $db;
 
+    protected static array $textExtensions = [
+        't', 'w', 'txt', 'bbs', 'me', 'nfo', 'nf0', 'diz', 'md', 'pok', 'd'
+    ];
+    protected static array $sourceCodeExtensions = [
+        'asm', 'a80', 'a', 'bat', 'cmd'
+    ];
+
+
     public function setDb(Connection $db): void
     {
         $this->db = $db;
     }
 
     /**
-     * @return (\Illuminate\Database\Query\Builder|mixed)[]
-     *
-     * @psalm-return array<\Illuminate\Database\Query\Builder|mixed>
+     * @psalm-return EngineFileRegistryRow[]
      */
     public function getFileStructureById(int $id): array
     {
         $query = $this->db->table(self::table)->where('elementId', '=', $id);
-        return $query->get();
+        $records = $query->get();
+        foreach ($records as $key => $record) {
+            $records[$key]['viewable'] = ($record['internalType'] !== 'binary' && $record['internalType']);
+        }
+        return $records;
     }
 
     /**
@@ -32,7 +55,7 @@ class ZxParsingManager extends errorLogger
      *
      * @psalm-return array<ZxParsingItem>
      */
-    public function saveFileStructure(int $elementId, string $path, string|null $fileName = null): array
+    public function updateFileStructure(int $elementId, string $path, string|null $fileName = null): array
     {
         $this->deleteFileStructure($elementId);
         if ($structure = $this->getFileStructure($path, $fileName)) {
@@ -48,19 +71,29 @@ class ZxParsingManager extends errorLogger
 
     /**
      * @param ZxParsingItem[] $structure
-     * @param $elementId
-     * @param null $parentId
+     * @param int $elementId
+     * @param int|null $parentId
      */
-    protected function saveFileStructureLevel($structure, $elementId, $parentId = null): void
+    protected function saveFileStructureLevel(array $structure, int $elementId, ?int $parentId = null): void
     {
         foreach ($structure as $item) {
+            $internalType = $this->getInternalFileType($item->getItemName(), $item->getType(), $item->getSize(), $item->getContent());
+            if ($internalType === 'plain_text') {
+                $encoding = EncodingDetector::detectEncoding($item->getContent());
+            } else {
+                $encoding = 'none';
+            }
+
             $info = [
                 'type' => $item->getType(),
                 'fileName' => $item->getItemName(),
                 'md5' => $item->getMd5(),
                 'size' => $item->getSize(),
+                'internalType' => $internalType,
+                'encoding' => $encoding ?: 'none',
                 'elementId' => $elementId,
             ];
+
             if ($parentId) {
                 $info['parentId'] = $parentId;
             }
@@ -74,6 +107,37 @@ class ZxParsingManager extends errorLogger
             }
         }
     }
+
+    protected function getInternalFileType(string $fileName, string $extension, int $size, string $content): string
+    {
+        if ($extension === 'file') {
+            $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        }
+        if (in_array($extension, self::$textExtensions)) {
+            $content = EncodingDetector::decodeText($content);
+            if (!$content) {
+                return 'binary';
+            }
+            return 'plain_text';
+        } elseif (in_array($extension, self::$sourceCodeExtensions)) {
+            return 'source_code';
+        } elseif ($extension === 'jpg' || $extension === 'jpeg' || $extension === 'png' || $extension === 'bmp') {
+            return 'pc_image';
+        } elseif ($extension == 'b') {
+            return 'zx_basic';
+        } elseif ($size === 6912) {
+            return 'zx_image_standard';
+        } elseif ($size === 6144) {
+            return 'zx_image_monochrome';
+        } elseif ($size === 18432) {
+            return 'zx_image_tricolor';
+        } elseif ($size === 13824) {
+            return 'zx_image_gigascreen';
+        } else {
+            return 'binary';
+        }
+    }
+
 
     /**
      * @param $path
@@ -141,20 +205,20 @@ class ZxParsingManager extends errorLogger
         $this->index[$file->getMd5()] = $file;
     }
 
+    public function getFileRecord(int $id)
+    {
+        return $this->db->table(self::table)->where('id', '=', $id)->limit(1)->first();
+    }
 
-    public function extractFile($path, $id): bool|ZxParsingItem
+    public function extractFile(string $path, int $id): bool|ZxParsingItem
     {
         $chain = [];
         $fileName = false;
         do {
-            if ($record = $this->db->table(self::table)->where('id', '=', $id)->limit(1)->first(
-                [
-                    'fileName',
-                    'parentId',
-                    'md5',
-                ]
-            )
-            ) {
+            /**
+             * @var EngineFileRegistryRow|null $record
+             */
+            if ($record = $this->getFileRecord($id)) {
                 $fileName = $record['fileName'];
 
                 $chain[] = $record['md5'];

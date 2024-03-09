@@ -67,7 +67,7 @@ class zxfileApplication extends controllerApplication
             $this->id = $controller->getParameter('id');
         }
         if ($controller->getParameter('fileId')) {
-            $this->fileId = $controller->getParameter('fileId');
+            $this->fileId = (int)$controller->getParameter('fileId');
         }
         if ($controller->getParameter('filename')) {
             $this->fileName = $controller->getParameter('filename');

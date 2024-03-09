@@ -13,7 +13,7 @@ class zxFileScreenApplication extends controllerApplication
     protected $rotation;
     protected $originalName;
     protected $download;
-    protected $fileId;
+    protected int $fileId;
     public $rendererName = 'zxScreen';
 
     /**

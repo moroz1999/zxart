@@ -14,6 +14,7 @@ use ZxFiles\BasicFile;
  * @property array $hardwareRequired
  * @property array $language
  * @property array $releaseFormat
+ * @property zxProdElement[] $compilations
  * @property float $votes
  * @property int $denyVoting
  * @property int $denyComments
@@ -47,15 +48,9 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     protected $votesType = 'zxRelease';
     protected $partyLinkType = 'partyProd';
     protected $hardwareInfo;
-    protected $currentReleaseFile;
+    protected $currentReleaseFileInfo;
     protected $imagesUrls;
     protected $prodElement;
-    protected static $textExtensions = [
-        't', 'w', 'txt', 'bbs', 'me', 'nfo', 'nf0', 'diz', 'md', 'pok', 'd'
-    ];
-    protected static $sourceCodeExtensions = [
-        'asm', 'a80', 'a', 'bat', 'cmd'
-    ];
 
     /**
      * @return void
@@ -232,28 +227,12 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
 
     public function getReleaseFlatStructure()
     {
-        if ($path = $this->getFilePath()) {
+        if ($this->getFilePath()) {
             /**
              * @var ZxParsingManager $zxParsingManager
              */
             $zxParsingManager = $this->getService('ZxParsingManager');
-            if ($structure = $zxParsingManager->getFileStructureById($this->id)) {
-                if (count($structure) > 100) {
-                    $structure = array_slice($structure, 0, 100);
-                }
-                foreach ($structure as $key => $fileInfo) {
-                    if ($file = $zxParsingManager->extractFile($path, $fileInfo['id'])) {
-                        $type = $this->getInternalFileType($fileInfo['fileName'], $fileInfo['type'], $fileInfo['size'], $file->getContent());
-                        if ($type == 'binary') {
-                            $structure[$key]['viewable'] = false;
-                        } else {
-                            $structure[$key]['viewable'] = true;
-                        }
-                        $structure[$key]['internalType'] = $type;
-                    }
-                }
-            }
-            return $structure;
+            return $zxParsingManager->getFileStructureById($this->id);
         }
         return false;
     }
@@ -342,108 +321,93 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
 
     public function getCurrentReleaseContentFormatted()
     {
-        if ($file = $this->getCurrentReleaseFile()) {
+        if ($file = $this->getCurrentReleaseFileInfo()) {
             return $this->getFormattedFileContent($file);
         }
         return false;
     }
 
     /**
+     * @param $file
      * @return false|string
      */
-    public function getFormattedFileContent($file): string|false
+    public function getFormattedFileContent($fileRecord): string|false
     {
-        if ($fileType = $this->getInternalFileType('', $file->getItemExtension(), $file->getSize(), $file->getContent())) {
-            if ($content = $file->getContent()) {
-                switch ($fileType) {
-                    case 'plain_text':
-                    case 'source_code':
-                        $content = EncodingDetector::decodeText($content);
+        /**
+         * @var ZxParsingManager $zxParsingManager
+         */
+        $zxParsingManager = $this->getService('ZxParsingManager');
 
-                        return htmlspecialchars($content);
-                    case 'pc_image':
-                        $controller = controller::getInstance();
-                        if ($fileId = (int)$controller->getParameter('fileId')) {
-                            return "<img src='" . $controller->baseURL . "zxfile/id:" . $this->id . "/fileId:" . $fileId . "/" . $file->getItemName() . "' />";
-                        }
-                        break;
-                    case 'zx_basic':
-
-                        $basic = new BasicFile();
-                        $basic->setBinary($content);
-                        return htmlspecialchars($basic->getAsText());
-                    case 'zx_image_standard':
-                        $controller = controller::getInstance();
-                        if ($fileId = (int)$controller->getParameter('fileId')) {
-                            return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:standard/' />";
-                        }
-                        break;
-                    case 'zx_image_monochrome':
-                        $controller = controller::getInstance();
-                        if ($fileId = (int)$controller->getParameter('fileId')) {
-                            return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:monochrome/' />";
-                        }
-                        break;
-                    case 'zx_image_tricolor':
-                        $controller = controller::getInstance();
-                        if ($fileId = (int)$controller->getParameter('fileId')) {
-                            return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:tricolor/' />";
-                        }
-                        break;
-                    case 'zx_image_gigascreen':
-                        $controller = controller::getInstance();
-                        if ($fileId = (int)$controller->getParameter('fileId')) {
-                            return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:gigascreen/' />";
-                        }
-                        break;
-                    default:
-                        $hex = new HexViewer();
-                        return htmlspecialchars($hex->getFormatted($content));
-                }
+        $extractedFile = $zxParsingManager->extractFile($this->getFilePath(), $fileRecord['id']);
+        if (!$extractedFile) {
+            return false;
+        }
+        if ($content = $extractedFile->getContent()) {
+            switch ($fileRecord['internalType']) {
+                case 'plain_text':
+                case 'source_code':
+                    return htmlspecialchars(mb_convert_encoding($content, 'UTF-8', $fileRecord['encoding']));
+                case 'pc_image':
+                    $controller = controller::getInstance();
+                    if ($fileId = (int)$controller->getParameter('fileId')) {
+                        return "<img src='" . $controller->baseURL . "zxfile/id:" . $this->id . "/fileId:" . $fileId . "/" . $extractedFile->getItemName() . "' />";
+                    }
+                    break;
+                case 'zx_basic':
+                    $basic = new BasicFile();
+                    $basic->setBinary($content);
+                    return htmlspecialchars($basic->getAsText());
+                case 'zx_image_standard':
+                    $controller = controller::getInstance();
+                    if ($fileId = (int)$controller->getParameter('fileId')) {
+                        return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:standard/' />";
+                    }
+                    break;
+                case 'zx_image_monochrome':
+                    $controller = controller::getInstance();
+                    if ($fileId = (int)$controller->getParameter('fileId')) {
+                        return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:monochrome/' />";
+                    }
+                    break;
+                case 'zx_image_tricolor':
+                    $controller = controller::getInstance();
+                    if ($fileId = (int)$controller->getParameter('fileId')) {
+                        return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:tricolor/' />";
+                    }
+                    break;
+                case 'zx_image_gigascreen':
+                    $controller = controller::getInstance();
+                    if ($fileId = (int)$controller->getParameter('fileId')) {
+                        return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:gigascreen/' />";
+                    }
+                    break;
+                default:
+                    $hex = new HexViewer();
+                    return htmlspecialchars($hex->getFormatted($content));
             }
         }
+
         return false;
     }
 
-    protected function getInternalFileType(string $fileName, $extension, $size, $content): string
+    /**
+     * @psalm-return EngineFileRegistryRow|null
+     */
+    public function getCurrentReleaseFileInfo(): array
     {
-        if ($extension === 'file') {
-            $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-        }
-        if (in_array($extension, self::$textExtensions)) {
-            $content = EncodingDetector::decodeText($content);
-            if (!$content) {
-                return 'binary';
-            }
-            return 'plain_text';
-        } elseif (in_array($extension, self::$sourceCodeExtensions)) {
-            return 'source_code';
-        } elseif ($extension === 'jpg' || $extension === 'jpeg' || $extension === 'png' || $extension === 'bmp') {
-            return 'pc_image';
-        } elseif ($extension == 'b') {
-            return 'zx_basic';
-        } elseif ($size == 6912) {
-            return 'zx_image_standard';
-        } elseif ($size == 6144) {
-            return 'zx_image_monochrome';
-        } elseif ($size == 18432) {
-            return 'zx_image_tricolor';
-        } elseif ($size == 13824) {
-            return 'zx_image_gigascreen';
-        } else {
-            return 'binary';
-        }
-    }
-
-    public function getCurrentReleaseFile()
-    {
-        if ($this->currentReleaseFile === null) {
+        if ($this->currentReleaseFileInfo === null) {
             $controller = controller::getInstance();
             if ($fileId = (int)$controller->getParameter('fileId')) {
-                $this->currentReleaseFile = $this->getReleaseFile($fileId);
+                /**
+                 * @var ZxParsingManager $zxParsingManager
+                 */
+                $zxParsingManager = $this->getService('ZxParsingManager');
+                if ($fileInfo = $zxParsingManager->getFileRecord($fileId)) {
+                    $this->currentReleaseFileInfo = $fileInfo;
+                }
             }
         }
-        return $this->currentReleaseFile;
+        return $this->currentReleaseFileInfo;
     }
 
     public function getReleaseFile(int $fileId)
@@ -461,8 +425,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
 
     public function getFormData()
     {
-        $test = parent::getFormData();
-        return $test;
+        return parent::getFormData();
     }
 
     public function getSupportedLanguageCodes()
@@ -695,6 +658,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     }
 
     //used in API
+
     /**
      * @psalm-return list{0?: mixed,...}
      */
@@ -771,8 +735,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
          * @var ZxParsingManager $zxParsingManager
          */
         $zxParsingManager = $this->getService('ZxParsingManager');
-        $zxParsingManager->deleteFileStructure($this->getId());
-        if ($structure = $zxParsingManager->saveFileStructure(
+        if ($structure = $zxParsingManager->updateFileStructure(
             $this->getId(),
             urldecode($this->getFilePath()),
             $this->fileName
