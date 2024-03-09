@@ -3,21 +3,13 @@
 class AiManager
 {
     private ConfigManager $configManager;
-
-    /**
-     * @param ConfigManager $configManager
-     */
+    
     public function setConfigManager(ConfigManager $configManager): void
     {
         $this->configManager = $configManager;
     }
 
-    /**
-     * @return (ArrayAccess|array|mixed)[]|ArrayAccess|null
-     *
-     * @psalm-return ArrayAccess|array{rus: ArrayAccess|array{h1: mixed, metaDescription: mixed, pageTitle: mixed,...}|mixed, eng: ArrayAccess|array{h1: mixed, metaDescription: mixed, pageTitle: mixed,...}|mixed, spa: ArrayAccess|array{h1: mixed, metaDescription: mixed, pageTitle: mixed,...}|mixed,...}|null
-     */
-    public function getProdData(zxProdElement $element): array|ArrayAccess|null
+    public function getProdData(zxProdElement $element): array|null
     {
         $output = null;
         $prodData = $element->getElementData('ai');

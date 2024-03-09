@@ -11,7 +11,7 @@ abstract class ZxParsingItem
     protected $items;
     protected $parentMd5;
     protected $md5;
-    protected $zxParsingManager;
+    protected ZxParsingManager $zxParsingManager;
 
     public function __construct(ZxParsingManager $zxParsingManager)
     {

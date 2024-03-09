@@ -8,35 +8,24 @@
       <code><![CDATA[zxProdElement]]></code>
     </MissingDependency>
     <MissingParamType>
-      <code><![CDATA[$length]]></code>
-      <code><![CDATA[$log]]></code>
       <code><![CDATA[$prodData]]></code>
-      <code><![CDATA[$promt]]></code>
       <code><![CDATA[$string]]></code>
-      <code><![CDATA[$temperature]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[getProdData]]></code>
-      <code><![CDATA[sendPromt]]></code>
       <code><![CDATA[truncateUtf8]]></code>
     </MissingReturnType>
     <MixedArgument>
       <code><![CDATA[$apiKey]]></code>
-      <code><![CDATA[$length]]></code>
-      <code><![CDATA[$length]]></code>
-      <code><![CDATA[$promt]]></code>
       <code><![CDATA[$string]]></code>
       <code><![CDATA[$string]]></code>
       <code><![CDATA[$string]]></code>
     </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$apiKey]]></code>
-      <code><![CDATA[$length]]></code>
     </MixedAssignment>
-    <MixedOperand>
-      <code><![CDATA[$length]]></code>
-      <code><![CDATA[$log]]></code>
-    </MixedOperand>
+    <MixedInferredReturnType>
+      <code><![CDATA[array|null]]></code>
+    </MixedInferredReturnType>
     <PossiblyInvalidMethodCall>
       <code><![CDATA[get]]></code>
     </PossiblyInvalidMethodCall>
@@ -120,13 +109,13 @@
       <code><![CDATA[$type]]></code>
     </PossiblyUnusedParam>
   </file>
-  <file src="project/core/AuthorElementsProvider.trait.php">
+  <file src="project/core/AuthorElementsProviderTrait.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getAuthorsList]]></code>
       <code><![CDATA[getRealAuthorsList]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/AuthorsManager.class.php">
+  <file src="project/core/AuthorsManager.php">
     <MissingDependency>
       <code><![CDATA[ElementsManager]]></code>
     </MissingDependency>
@@ -247,7 +236,7 @@
       <code><![CDATA[$type]]></code>
     </PossiblyUnusedParam>
   </file>
-  <file src="project/core/AuthorshipProvider.trait.php">
+  <file src="project/core/AuthorshipProviderTrait.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getAuthorRoles]]></code>
       <code><![CDATA[getAuthorsInfo]]></code>
@@ -502,19 +491,9 @@
       <code><![CDATA[$lang]]></code>
       <code><![CDATA[$language]]></code>
       <code><![CDATA[$languagesManager]]></code>
-      <code><![CDATA[$type]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[generateBestPicture]]></code>
-      <code><![CDATA[generateMonthBestPicture]]></code>
-      <code><![CDATA[generateMonthBestTune]]></code>
       <code><![CDATA[getMonthBest]]></code>
-      <code><![CDATA[setApiQueriesManager]]></code>
-      <code><![CDATA[setConfigManager]]></code>
-      <code><![CDATA[setLanguagesManager]]></code>
-      <code><![CDATA[setPathsManager]]></code>
-      <code><![CDATA[setStructureManager]]></code>
-      <code><![CDATA[setTranslationsManager]]></code>
     </MissingReturnType>
     <MixedArgument>
       <code><![CDATA[$party->title]]></code>
@@ -542,9 +521,6 @@
     <MixedArrayAccess>
       <code><![CDATA[$result[$type]]]></code>
     </MixedArrayAccess>
-    <MixedArrayOffset>
-      <code><![CDATA[$result[$type]]]></code>
-    </MixedArrayOffset>
     <MixedAssignment>
       <code><![CDATA[$element]]></code>
       <code><![CDATA[$fileName]]></code>
@@ -593,7 +569,6 @@
       <code><![CDATA[$fileName]]></code>
       <code><![CDATA[$this->pathsManager->getPath('uploads')]]></code>
       <code><![CDATA[$this->pathsManager->getPath('uploads')]]></code>
-      <code><![CDATA[$type]]></code>
       <code><![CDATA[$zxMusicElement->partyplace]]></code>
     </MixedOperand>
     <MixedPropertyFetch>
@@ -636,13 +611,13 @@
       <code><![CDATA[BannerGenerator]]></code>
     </UnusedClass>
   </file>
-  <file src="project/core/CategoryElementsSelectorProvider.trait.php">
+  <file src="project/core/CategoryElementsSelectorProviderTrait.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getCategoriesSelectorInfo]]></code>
       <code><![CDATA[getConnectedCategories]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ChartDataProvider.trait.php">
+  <file src="project/core/ChartDataProviderTrait.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getChartData]]></code>
       <code><![CDATA[getChartDataEventTypes]]></code>
@@ -769,9 +744,6 @@
       <code><![CDATA[ProdsDownloader]]></code>
       <code><![CDATA[ProdsDownloader]]></code>
     </MissingDependency>
-    <MissingReturnType>
-      <code><![CDATA[importAll]]></code>
-    </MissingReturnType>
     <MixedArgument>
       <code><![CDATA[$json['image']]]></code>
     </MixedArgument>
@@ -877,14 +849,12 @@
     </InvalidReturnStatement>
     <MissingParamType>
       <code><![CDATA[$content]]></code>
-      <code><![CDATA[$str]]></code>
     </MissingParamType>
     <MixedArgument>
       <code><![CDATA[$content]]></code>
       <code><![CDATA[$content]]></code>
       <code><![CDATA[$content]]></code>
-      <code><![CDATA[$str]]></code>
-      <code><![CDATA[$str]]></code>
+      <code><![CDATA[$content]]></code>
       <code><![CDATA[$testEncoding]]></code>
     </MixedArgument>
     <MixedArgumentTypeCoercion>
@@ -899,6 +869,12 @@
     <MixedReturnStatement>
       <code><![CDATA[$content]]></code>
     </MixedReturnStatement>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$content]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyInvalidCast>
+      <code><![CDATA[$content]]></code>
+    </PossiblyInvalidCast>
     <UnusedClass>
       <code><![CDATA[EncodingDetector]]></code>
     </UnusedClass>
@@ -961,9 +937,6 @@
     <MissingParamType>
       <code><![CDATA[$binary]]></code>
     </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getFormatted]]></code>
-    </MissingReturnType>
     <MixedArgument>
       <code><![CDATA[$binary]]></code>
       <code><![CDATA[$binary]]></code>
@@ -976,7 +949,7 @@
       <code><![CDATA[HexViewer]]></code>
     </UnusedClass>
   </file>
-  <file src="project/core/ImportIdOperator.trait.php">
+  <file src="project/core/ImportIdOperatorTrait.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getElementByImportId]]></code>
       <code><![CDATA[getElementByImportId]]></code>
@@ -1007,7 +980,7 @@
       <code><![CDATA[$type]]></code>
     </PossiblyUnusedParam>
   </file>
-  <file src="project/core/ImportedItem.trait.php">
+  <file src="project/core/ImportedItemTrait.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[deleteElementData]]></code>
       <code><![CDATA[deleteImportOriginRows]]></code>
@@ -1018,14 +991,14 @@
       <code><![CDATA[$origin]]></code>
     </PossiblyUnusedParam>
   </file>
-  <file src="project/core/LanguageCodesProvider.trait.php">
+  <file src="project/core/LanguageCodesProviderTrait.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getLanguageCodes]]></code>
       <code><![CDATA[getSupportedLanguageNames]]></code>
       <code><![CDATA[getSupportedLanguageString]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/LettersElementsListProvider.trait.php">
+  <file src="project/core/LettersElementsListProviderTrait.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getLetterElements]]></code>
       <code><![CDATA[getLetterId]]></code>
@@ -1034,7 +1007,7 @@
       <code><![CDATA[$title]]></code>
     </PossiblyUnusedParam>
   </file>
-  <file src="project/core/LinksPersisting.trait.php">
+  <file src="project/core/LinksPersistingTrait.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[checkLinks]]></code>
     </PossiblyUnusedMethod>
@@ -1049,7 +1022,7 @@
       <code><![CDATA[$type]]></code>
     </PossiblyUnusedParam>
   </file>
-  <file src="project/core/MaterialsProvider.trait.php">
+  <file src="project/core/MaterialsProviderTrait.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getMaterialsList]]></code>
       <code><![CDATA[getPictures]]></code>
@@ -1090,7 +1063,7 @@
       <code><![CDATA[PartiesManager]]></code>
     </UnusedClass>
   </file>
-  <file src="project/core/PartyElementProvider.trait.php">
+  <file src="project/core/PartyElementProviderTrait.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getPartyElement]]></code>
     </PossiblyUnusedMethod>
@@ -1115,8 +1088,12 @@
       <code><![CDATA[getHidden]]></code>
       <code><![CDATA[getMode]]></code>
       <code><![CDATA[getModeInfo]]></code>
-      <code><![CDATA[setUser]]></code>
     </MissingReturnType>
+    <MixedArgument>
+      <code><![CDATA[$this->mode['border']]]></code>
+      <code><![CDATA[$this->mode['hidden']]]></code>
+      <code><![CDATA[$this->mode['mode']]]></code>
+    </MixedArgument>
     <MixedArrayAccess>
       <code><![CDATA[$this->getModeInfo()['border']]]></code>
       <code><![CDATA[$this->getModeInfo()['hidden']]]></code>
@@ -1341,7 +1318,7 @@
       <code><![CDATA[importElementFile]]></code>
     </UnusedMethod>
   </file>
-  <file src="project/core/PublisherGroupProvider.trait.php">
+  <file src="project/core/PublisherGroupProviderTrait.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getConnectedIds]]></code>
       <code><![CDATA[getConnectedList]]></code>
@@ -1447,13 +1424,9 @@
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[getArtItemsType]]></code>
-      <code><![CDATA[getAuthorLinkTypes]]></code>
       <code><![CDATA[getCurrentSectionId]]></code>
-      <code><![CDATA[getPartyLinkTypes]]></code>
       <code><![CDATA[getSectionIdByType]]></code>
       <code><![CDATA[getSectionsInfo]]></code>
-      <code><![CDATA[setLanguagesManager]]></code>
-      <code><![CDATA[setStructureManager]]></code>
     </MissingReturnType>
     <MixedArrayAccess>
       <code><![CDATA[$info[$marker]]]></code>
@@ -1552,19 +1525,12 @@
       <code><![CDATA[$mean]]></code>
       <code><![CDATA[$threshold]]></code>
     </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[calculateMean]]></code>
-      <code><![CDATA[calculateStandardDeviation]]></code>
-      <code><![CDATA[removeAnomalies]]></code>
-    </MissingReturnType>
     <MixedArgument>
       <code><![CDATA[$value - $mean]]></code>
       <code><![CDATA[$zScore]]></code>
     </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$filteredVotes[]]]></code>
-      <code><![CDATA[$mean]]></code>
-      <code><![CDATA[$stdDev]]></code>
       <code><![CDATA[$vote]]></code>
       <code><![CDATA[$zScore]]></code>
     </MixedAssignment>
@@ -1738,11 +1704,10 @@
   <file src="project/core/ZxParsingItem.php">
     <MissingDependency>
       <code><![CDATA[ZxParsingManager]]></code>
+      <code><![CDATA[ZxParsingManager]]></code>
     </MissingDependency>
     <MissingParamType>
       <code><![CDATA[$chain]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$itemName]]></code>
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$content]]></code>
@@ -1752,18 +1717,10 @@
       <code><![CDATA[$path]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[addItem]]></code>
       <code><![CDATA[getFileByChain]]></code>
-      <code><![CDATA[getItemByName]]></code>
-      <code><![CDATA[getItemExtension]]></code>
       <code><![CDATA[getMd5]]></code>
-      <code><![CDATA[getSize]]></code>
       <code><![CDATA[getType]]></code>
       <code><![CDATA[parse]]></code>
-      <code><![CDATA[setContent]]></code>
-      <code><![CDATA[setItemName]]></code>
-      <code><![CDATA[setParentMd5]]></code>
-      <code><![CDATA[setPath]]></code>
     </MissingReturnType>
     <MixedArgument>
       <code><![CDATA[$chain]]></code>
@@ -1778,9 +1735,6 @@
       <code><![CDATA[$itemName]]></code>
       <code><![CDATA[$md5]]></code>
     </MixedAssignment>
-    <MixedPropertyTypeCoercion>
-      <code><![CDATA[$this->items]]></code>
-    </MixedPropertyTypeCoercion>
     <PossiblyUnusedMethod>
       <code><![CDATA[getFileByChain]]></code>
       <code><![CDATA[getItemExtension]]></code>
@@ -1798,10 +1752,6 @@
     </PropertyNotSetInConstructor>
   </file>
   <file src="project/core/ZxParsingItemFile.php">
-    <MissingReturnType>
-      <code><![CDATA[getType]]></code>
-      <code><![CDATA[parse]]></code>
-    </MissingReturnType>
     <PossiblyUnusedMethod>
       <code><![CDATA[getType]]></code>
     </PossiblyUnusedMethod>
@@ -1810,10 +1760,6 @@
     </PropertyNotSetInConstructor>
   </file>
   <file src="project/core/ZxParsingItemFolder.php">
-    <MissingReturnType>
-      <code><![CDATA[getType]]></code>
-      <code><![CDATA[parse]]></code>
-    </MissingReturnType>
     <MixedOperand>
       <code><![CDATA[$this->itemName]]></code>
       <code><![CDATA[$this->parentMd5]]></code>
@@ -1834,10 +1780,6 @@
       <code><![CDATA[$this->zxParsingManager]]></code>
       <code><![CDATA[$this->zxParsingManager]]></code>
     </MissingDependency>
-    <MissingReturnType>
-      <code><![CDATA[getType]]></code>
-      <code><![CDATA[parse]]></code>
-    </MissingReturnType>
     <MixedArgument>
       <code><![CDATA[$fp]]></code>
       <code><![CDATA[$itemFileName]]></code>
@@ -1846,29 +1788,26 @@
       <code><![CDATA[$this->content]]></code>
     </MixedArgument>
     <MixedAssignment>
-      <code><![CDATA[$currentParent]]></code>
       <code><![CDATA[$entry]]></code>
       <code><![CDATA[$itemFileName]]></code>
-      <code><![CDATA[$partItem]]></code>
       <code><![CDATA[$rar]]></code>
       <code><![CDATA[$rarFilePath]]></code>
       <code><![CDATA[$type]]></code>
     </MixedAssignment>
     <MixedMethodCall>
-      <code><![CDATA[addItem]]></code>
       <code><![CDATA[close]]></code>
       <code><![CDATA[extract]]></code>
       <code><![CDATA[getEntries]]></code>
-      <code><![CDATA[getItemByName]]></code>
       <code><![CDATA[getName]]></code>
       <code><![CDATA[getName]]></code>
     </MixedMethodCall>
     <MixedOperand>
       <code><![CDATA[$entry->getName()]]></code>
     </MixedOperand>
-    <ParadoxicalCondition>
-      <code><![CDATA[$type == 'rar']]></code>
-    </ParadoxicalCondition>
+    <PossiblyFalseReference>
+      <code><![CDATA[addItem]]></code>
+      <code><![CDATA[getItemByName]]></code>
+    </PossiblyFalseReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getType]]></code>
     </PossiblyUnusedMethod>
@@ -1886,10 +1825,6 @@
     <MissingDependency>
       <code><![CDATA[$this->zxParsingManager]]></code>
     </MissingDependency>
-    <MissingReturnType>
-      <code><![CDATA[getType]]></code>
-      <code><![CDATA[parse]]></code>
-    </MissingReturnType>
     <PossiblyUnusedMethod>
       <code><![CDATA[getType]]></code>
     </PossiblyUnusedMethod>
@@ -1904,10 +1839,6 @@
     <MissingDependency>
       <code><![CDATA[$this->zxParsingManager]]></code>
     </MissingDependency>
-    <MissingReturnType>
-      <code><![CDATA[getType]]></code>
-      <code><![CDATA[parse]]></code>
-    </MissingReturnType>
     <PossiblyUnusedMethod>
       <code><![CDATA[getType]]></code>
     </PossiblyUnusedMethod>
@@ -1919,10 +1850,6 @@
     <MissingDependency>
       <code><![CDATA[$this->zxParsingManager]]></code>
     </MissingDependency>
-    <MissingReturnType>
-      <code><![CDATA[getType]]></code>
-      <code><![CDATA[parse]]></code>
-    </MissingReturnType>
     <PossiblyUnusedMethod>
       <code><![CDATA[getType]]></code>
     </PossiblyUnusedMethod>
@@ -1937,10 +1864,6 @@
     <MissingDependency>
       <code><![CDATA[$this->zxParsingManager]]></code>
     </MissingDependency>
-    <MissingReturnType>
-      <code><![CDATA[getType]]></code>
-      <code><![CDATA[parse]]></code>
-    </MissingReturnType>
     <PossiblyUnusedMethod>
       <code><![CDATA[getType]]></code>
     </PossiblyUnusedMethod>
@@ -1957,25 +1880,19 @@
       <code><![CDATA[$this->zxParsingManager]]></code>
       <code><![CDATA[$this->zxParsingManager]]></code>
     </MissingDependency>
-    <MissingReturnType>
-      <code><![CDATA[getType]]></code>
-      <code><![CDATA[parse]]></code>
-    </MissingReturnType>
     <MixedArgument>
       <code><![CDATA[$fp]]></code>
       <code><![CDATA[$this->content]]></code>
       <code><![CDATA[$zipFilePath]]></code>
     </MixedArgument>
     <MixedAssignment>
-      <code><![CDATA[$currentParent]]></code>
-      <code><![CDATA[$partItem]]></code>
       <code><![CDATA[$type]]></code>
       <code><![CDATA[$zipFilePath]]></code>
     </MixedAssignment>
-    <MixedMethodCall>
+    <PossiblyFalseReference>
       <code><![CDATA[addItem]]></code>
       <code><![CDATA[getItemByName]]></code>
-    </MixedMethodCall>
+    </PossiblyFalseReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getType]]></code>
     </PossiblyUnusedMethod>
@@ -2170,21 +2087,14 @@
       <code><![CDATA[is_null(self::$instance)]]></code>
     </DocblockTypeContradiction>
     <MissingParamType>
-      <code><![CDATA[$conditions]]></code>
       <code><![CDATA[$db]]></code>
       <code><![CDATA[$email]]></code>
-      <code><![CDATA[$ignorePassword]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$name]]></code>
       <code><![CDATA[$password]]></code>
       <code><![CDATA[$resetLivePrivileges]]></code>
       <code><![CDATA[$userId]]></code>
       <code><![CDATA[$userId]]></code>
       <code><![CDATA[$userName]]></code>
       <code><![CDATA[$userName]]></code>
-      <code><![CDATA[$userName]]></code>
-      <code><![CDATA[$value]]></code>
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$IP]]></code>
@@ -2216,34 +2126,13 @@
       <code><![CDATA[$website]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[checkExistance]]></code>
-      <code><![CDATA[checkStoredPrivileges]]></code>
       <code><![CDATA[checkUser]]></code>
-      <code><![CDATA[clearStorage]]></code>
-      <code><![CDATA[deleteStorageAttribute]]></code>
-      <code><![CDATA[forgetUser]]></code>
       <code><![CDATA[getGroupMarkers]]></code>
       <code><![CDATA[getGroupsIdList]]></code>
       <code><![CDATA[getName]]></code>
       <code><![CDATA[getStorageAttribute]]></code>
-      <code><![CDATA[hasAds]]></code>
-      <code><![CDATA[initialize]]></code>
-      <code><![CDATA[isAdmin]]></code>
-      <code><![CDATA[isAuthorized]]></code>
-      <code><![CDATA[loadPrivileges]]></code>
-      <code><![CDATA[logout]]></code>
       <code><![CDATA[queryUserData]]></code>
-      <code><![CDATA[readStorage]]></code>
       <code><![CDATA[readUserId]]></code>
-      <code><![CDATA[refreshPrivileges]]></code>
-      <code><![CDATA[rememberUser]]></code>
-      <code><![CDATA[setDb]]></code>
-      <code><![CDATA[setPrivilegesManager]]></code>
-      <code><![CDATA[setServerSessionManager]]></code>
-      <code><![CDATA[setStorageAttribute]]></code>
-      <code><![CDATA[storePrivileges]]></code>
-      <code><![CDATA[switchUser]]></code>
-      <code><![CDATA[writeStorage]]></code>
     </MissingReturnType>
     <MixedArgument>
       <code><![CDATA[$cookieContents]]></code>
@@ -2264,13 +2153,6 @@
       <code><![CDATA[$this->storage['currentUserId']]]></code>
       <code><![CDATA[$this->storage['userPrivileges']]]></code>
     </MixedArrayAssignment>
-    <MixedArrayOffset>
-      <code><![CDATA[$this->storage[$name]]]></code>
-      <code><![CDATA[$this->storage[$name]]]></code>
-      <code><![CDATA[$this->storage[$name]]]></code>
-      <code><![CDATA[$this->storage[$name]]]></code>
-      <code><![CDATA[$this->storage[$name]]]></code>
-    </MixedArrayOffset>
     <MixedAssignment>
       <code><![CDATA[$anonymousId]]></code>
       <code><![CDATA[$cookieContents]]></code>

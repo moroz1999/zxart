@@ -2,14 +2,13 @@
 
 class votesManagerServiceContainer extends DependencyInjectionServiceContainer
 {
-    public function makeInstance()
+    public function makeInstance(): votesManager
     {
         return new votesManager();
     }
 
-    public function makeInjections($instance)
+    public function makeInjections($instance): votesManager
     {
-        $votesManager = $instance;
-        return $votesManager;
+        return $instance;
     }
 }

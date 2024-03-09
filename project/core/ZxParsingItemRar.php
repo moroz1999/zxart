@@ -61,8 +61,6 @@ class ZxParsingItemRar extends ZxParsingItem
                                         $partItem = new ZxParsingItemTrd($this->zxParsingManager);
                                     } elseif ($type == 'rar') {
                                         $partItem = new ZxParsingItemRar($this->zxParsingManager);
-                                    } elseif ($type == 'rar') {
-                                        $partItem = new ZxParsingItemRar($this->zxParsingManager);
                                     } else {
                                         $partItem = new ZxParsingItemFile($this->zxParsingManager);
                                     }
