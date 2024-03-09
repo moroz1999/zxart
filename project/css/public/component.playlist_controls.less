@@ -1,0 +1,75 @@
+/********************************************************
+/*  COMPONENT
+/********************************************************/
+.playlist_controls {
+	width: 1em;
+	height: 1em;
+	background-size: contain;
+	background: url(getImageUrl('favorites.svg')) no-repeat center;
+	display: inline-block;
+	cursor: pointer;
+	vertical-align: top;
+}
+
+.playlist_controls_popup {
+	background: #181818;
+	display: none;
+	width: 20em;
+	position: absolute;
+	z-index: 20;
+}
+
+.playlist_controls_bottom {
+	position: relative;
+	white-space: nowrap;
+}
+
+.playlist_controls_input {
+	width: 78%;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.playlist_controls_button {
+	width: 20%;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.playlist_controls_list {
+	max-height: 30em;
+	overflow-y: auto;
+}
+
+.playlist_controls_item_description {
+	display: none;
+	float: right;
+	margin-left: 1em;
+}
+
+.playlist_controls_item_icon {
+	display: block;
+	float: right;
+	width: 1em;
+	height: 1em;
+	background: url(getImageUrl('check.svg')) no-repeat center;
+	background-size: contain;
+}
+
+.playlist_controls_item {
+	display: block;
+	padding: 0.3em 0.5em;
+	font-size: 0.8em;
+	min-height: 1em;
+	cursor: default;
+}
+
+.playlist_controls_item:hover {
+	background: #404040;
+	.playlist_controls_item_description {
+		display: block;
+	}
+	.playlist_controls_item_icon {
+		display: none !important;
+	}
+}

@@ -1,0 +1,1 @@
+ALTER TABLE `engine_files_registry` ADD `encoding` ENUM('UTF-8','Windows-1251','ISO-8859-1','IBM866','KOI8-R','Windows-1252','none') NOT NULL AFTER `type`, ADD `internalType` ENUM('plain_text','source_code','pc_image','zx_basic','zx_image_standard','zx_image_monochrome','zx_image_tricolor','zx_image_gigascreen','binary') NOT NULL AFTER `encoding`; 

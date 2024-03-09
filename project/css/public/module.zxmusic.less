@@ -1,0 +1,336 @@
+/********************************************************
+/*  ZX MUSIC TABLE
+/********************************************************/
+.music_list_table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.music_list_table td {
+    font-size: 0.9em;
+}
+
+.music_list_number {
+    width: 3em;
+}
+
+.music_list_player {
+    width: 2rem;
+
+    .music_details_controls & {
+        width: 3rem;
+    }
+}
+
+@media (max-width: @screen_breakpoint_sm_max) {
+    .music_list_player {
+        width: 3rem;
+    }
+}
+
+@media (max-width: @screen_breakpoint_xs_max) {
+    .music_list_player {
+        width: 1.5rem;
+    }
+}
+
+.music_list_authors {
+    width: 9em;
+
+    @media (max-width: @screen_breakpoint_xs_max) {
+        width: 7rem;
+    }
+}
+
+.music_list_format {
+    width: 3em;
+}
+
+.music_list_year {
+    width: 2em;
+}
+
+
+.music_list_votesamount {
+    width: 1em;
+}
+
+.music_list_commentsamount {
+    width: 1em;
+}
+
+.music_list_plays {
+    width: 1em;
+}
+
+.music_list_source {
+
+}
+
+.music_list_internaltitle {
+}
+
+.music_list_compo {
+    width: 2em;
+    white-space: nowrap;
+}
+
+.music_list_votecontrols {
+    width: 11em;
+    white-space: nowrap;
+    text-align: right;
+}
+
+.music_list_votecontrols .playlist_controls {
+    margin-left: 1em;
+}
+
+.music_list_download {
+    width: 4em;
+    white-space: nowrap;
+}
+
+.music_list_original {
+    height: 1.5em;
+}
+
+.music_list_tracker {
+    height: 1.5em;
+}
+
+.music_list_mp3 {
+    height: 1.5em;
+}
+
+/********************************************************
+/*  ZX MUSIC DETAILS
+/********************************************************/
+.music_details_controls {
+    margin: 1em 0;
+    padding: 1em;
+    background-color: @secondary_color;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.music_details_controls .music_controls_short {
+    vertical-align: middle;
+    width: 3em;
+    height: 3em;
+}
+
+.music_details_embed {
+    float: right;
+}
+
+.music_controls_label {
+    vertical-align: middle;
+    margin-left: 1em;
+}
+
+.music_details_description {
+    margin: 1em 0 3em;
+}
+
+.music_details_share {
+    margin: 1em 0 3em;
+}
+
+.music_details_info .playlist_controls {
+    margin-left: 0.5em;
+}
+
+.music_details_download {
+    display: block;
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    img {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 5px;
+    }
+
+}
+
+.music_details_original {
+    height: 1.5em;
+}
+
+.music_details_tracker {
+    height: 1.5em;
+}
+
+.music_details_mp3 {
+    height: 1.5em;
+}
+
+/********************************************************
+/*  ZX MUSIC SHORT COMPONENT
+/********************************************************/
+
+.music_controls_short {
+    height: 2em;
+    width: 2em;
+    display: none;
+}
+
+/********************************************************
+/*  ZX MUSIC BUTTONS
+/********************************************************/
+.music_controls_button {
+    display: inline-block;
+    height: 2rem;
+    width: 2rem;
+    background-size: cover;
+    cursor: pointer;
+}
+
+@media (max-width: @screen_breakpoint_sm_max) {
+    .music_controls_button {
+        height: 3rem;
+        width: 3rem;
+    }
+}
+
+@media (max-width: @screen_breakpoint_xs_max) {
+    .music_controls_button {
+        height: 1.5rem;
+        width: 1.5rem;
+    }
+}
+
+.music_controls_button:hover {
+    opacity: 0.8;
+}
+
+.music_controls_button.pause {
+    background-image: url(getImageUrl("pause.png"));
+}
+
+.music_controls_button.play {
+    background-image: url(getImageUrl("play.png"));
+}
+
+.music_controls_button.next {
+    background-image: url(getImageUrl("next.png"));
+}
+
+.music_controls_button.previous {
+    background-image: url(getImageUrl("previous.png"));
+}
+
+.music_controls_button.stop {
+    background-image: url(getImageUrl("stop.png"));
+}
+
+/********************************************************
+/*  ZX MUSIC FULL COMPONENT
+/********************************************************/
+.music_controls_full_fixed {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 2em;
+    border-top-left-radius: 0.8em;
+    border-top-right-radius: 0.8em;
+    z-index: 10;
+}
+
+.music_controls_full_static {
+    white-space: nowrap;
+    width: 100%;
+    height: 100%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 0.8em;
+}
+
+.music_controls_full {
+    padding: 1em;
+    background-color: @secondary_color;
+    line-height: 100%;
+}
+
+.music_controls_buttons {
+    display: inline-block;
+    margin-right: 0.3em;
+    vertical-align: middle;
+}
+
+.music_controls_buttons .music_controls_button {
+    margin-right: 0.3em;
+}
+
+.music_controls_progress {
+    position: relative;
+    padding: 0.3em;
+    display: inline-block;
+    box-sizing: border-box;
+    height: 2em;
+    line-height: 1.1em;
+    width: 20em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background-color: #222222;
+    border-radius: 0.2em;
+    vertical-align: middle;
+}
+
+.music_controls_progress_body {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    background: #606060;
+    z-index: 1;
+}
+
+.music_controls_title {
+    position: relative;
+    z-index: 2;
+    display: inline;
+    font-size: 0.8em;
+}
+
+.music_controls_link {
+    position: relative;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    margin-left: 1em;
+    vertical-align: middle;
+    background: url(getImageUrl('link.svg')) center;
+    background-size: contain;
+}
+
+.music_controls_ratings {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 1em;
+}
+
+.music_controls_ratings .playlist_controls {
+    margin-left: 1em;
+}
+
+.musicuploadform_topnotice {
+    margin: 0 0 1em 0;
+}
+
+@media (max-width: @screen_breakpoint_sm_max) {
+    .music_list_number,
+    .music_list_votesamount,
+    .music_list_year,
+    .music_list_format,
+    .music_list_plays,
+    .music_list_source,
+    .music_list_compo,
+    .music_list_download,
+    .music_list_commentsamount {
+        display: none;
+    }
+}

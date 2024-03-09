@@ -1,0 +1,45 @@
+.zxitem_images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.zxitem_image_block {
+  position: relative;
+  max-width: 320px;
+
+  &:hover .zxitem_image_download {
+    opacity: 1;
+  }
+}
+
+.zxitem_image {
+  max-width: 100%;
+}
+
+.zxitem_image_link {
+  display: block;
+}
+
+.zxitem_image_download {
+  display: block;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-image: url(getImageUrl('download.svg'));
+  background-position: center;
+  background-size: 1.5rem 1.5rem;
+  background-repeat: no-repeat;
+  width: 2rem;
+  height: 2rem;
+  background-color: #252525;
+  border: 1px solid #333;
+  border-radius: 7px;
+  opacity: 0;
+  transition: opacity 0.25s ease-in-out;
+}
+
+.zxitem_file_block {
+  display: block;
+  margin-bottom: 0.5rem;
+}

@@ -1,0 +1,54 @@
+/********************************************************
+/*  PARTIES LIST
+/********************************************************/
+.partieslist_parties {
+	.grid_container;
+}
+
+/********************************************************
+/*  PARTY SHORT
+/********************************************************/
+.party_short {
+	.grid_item(6);
+}
+
+.party_short_image {
+	max-width: 100%;
+	margin: 0 auto;
+	display: block;
+}
+
+/********************************************************
+/*  PARTY DETAILS
+/********************************************************/
+.party_details {
+}
+
+.party_compos {
+	clear: both;
+	margin: 2em 0;
+}
+
+.party_compos_item {
+	margin-bottom: 2em;
+}
+
+.party_details_logo_image {
+	max-width: 100%;
+}
+
+.party_details_logo {
+	max-width: 30%;
+	float: right;
+	margin-left: 1em;
+	margin-bottom: 1em;
+}
+
+@media (max-width: @screen_breakpoint_sm_max) {
+	.party_details_logo {
+		float: none;
+		width: 100%;
+		max-width: 320px;
+		margin: 0 auto 1em;
+	}
+}

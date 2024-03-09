@@ -1,0 +1,70 @@
+.user-name {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: 4px;
+  align-items: center;
+
+  &.supporter .user-icon {
+    .svg-bg(star, #ffffff, #ffffff);
+  }
+
+  &.vip .user-icon {
+    .svg-bg(star, #ffc933, #ffc933);
+    width: 11px;
+    height: 11px;
+  }
+
+  &.volunteer .user-icon {
+    .svg-bg(volunteer, #ffffff, #ffffff);
+    width: 11px;
+    height: 11px;
+  }
+}
+
+
+.user-icon {
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 10px;
+  height: 10px;
+}
+
+.user-badges {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.user-badge {
+  display: block;
+  width: 80px;
+  text-align: center;
+
+  &.supporter .user-badge-image {
+    .svg-bg(star, #ffffff, #ffffff);
+  }
+
+  &.vip .user-badge-image {
+    .svg-bg(star, #ffc933, #ffc933);
+  }
+
+  &.volunteer .user-badge-image {
+    .svg-bg(volunteer, #ffffff, #ffffff);
+  }
+}
+
+.user-badge-image {
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: block;
+  width: 5rem;
+  height: 5rem;
+  margin: 0 auto 4px;
+}
+
+.user-badge-title {
+  display: block;
+  text-transform: capitalize;
+}

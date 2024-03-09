@@ -1,0 +1,179 @@
+/********************************************************
+/*  ZXRELEASE DETAILS
+/********************************************************/
+@media (min-width: @screen_breakpoint_md) {
+  .zxrelease-layout {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .zxrelease-layout-left {
+    flex-grow: 1;
+  }
+
+  .zxrelease-layout-right {
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    .zxitem_images {
+      flex-direction: column;
+    }
+  }
+}
+
+.zxrelease_description {
+
+}
+
+/********************************************************
+ */
+/*  ZXRELEASE TABLE
+/********************************************************/
+.releases_list_table {
+  border-style: none;
+  border-spacing: 0;
+
+  thead {
+    position: sticky;
+    top: 0;
+    left: 0;
+    background: @primary_color;
+    z-index: 10;
+  }
+
+  th {
+    padding: .5rem 1rem;
+    font-size: 0.8rem;
+    color: gray;
+    vertical-align: bottom;
+  }
+}
+
+@media (max-width: @screen_breakpoint_xl) {
+  .zxrelease_table_language {
+    display: none;
+  }
+}
+
+@media (max-width: @screen_breakpoint_xxl) {
+  .zxrelease_table_plays,
+  .zxrelease_table_downloaded {
+    display: none;
+  }
+}
+
+@media (max-width: @screen_breakpoint_sm_max) {
+  .zxrelease_table_source,
+  .zxrelease_table_partyplace,
+  .zxrelease_table_format,
+  .zxrelease_table_download,
+  .zxrelease_table_downloaded,
+  .zxrelease_table_plays,
+  .zxrelease_table_language,
+  .zxrelease_table_version,
+  .zxrelease_table_releasetype,
+  .zxrelease_table_hardware,
+  .zxrelease_table_hardware_item,
+  .zxrelease_table_description,
+  .zxrelease_table_links {
+    display: none;
+  }
+
+  .zxrelease_filestructure_table {
+    font-size: 0.8em;
+  }
+}
+
+.zxrelease_table_hardware_item {
+  white-space: nowrap;
+  font-size: 0.8em;
+}
+
+.zxrelease_table_description {
+  font-size: 0.8em;
+}
+
+.zxrelease {
+  background-color: @secondary_color;
+
+  td {
+    border-style: none;
+    border-top: solid 2rem @primary_color;
+    padding: 0.25rem 0.5rem;
+    vertical-align: middle;
+  }
+
+  &:first-child {
+    td {
+      border-top: none;
+    }
+  }
+}
+
+.zxrelease-images {
+  background-color: @secondary_color;
+
+  td {
+    padding: 0 0.5rem 0.5rem;
+  }
+}
+
+.zxrelease_table_manuals {
+  margin-top: 2rem;
+}
+
+/********************************************************
+/*  ZXRELEASES LIST
+/********************************************************/
+
+.zxreleases_list {
+  .grid_container
+}
+
+.zxreleases_list:after {
+  content: "";
+  flex: auto;
+}
+
+/********************************************************
+/*  ZXRELEASE SHORT
+/********************************************************/
+.zxrelease_short {
+  .grid_item(8, 1rem, 0.5rem, 4, 3, 2)
+}
+
+.zxrelease_short_images {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+}
+
+.zxrelease_short_image {
+  display: block;
+  max-width: 100%;
+
+}
+
+.zxrelease_short_image_second {
+  display: block;
+  top: 0;
+  left: 0;
+  position: absolute;
+  opacity: 0;
+  max-width: 100%;
+
+  .zxrelease_short:hover & {
+    opacity: 1;
+  }
+
+  transition: opacity 0.5s;
+}
+
+.zxrelease_short_title {
+  display: block;
+  position: relative;
+  text-align: left;
+  vertical-align: middle;
+  box-sizing: border-box;
+}

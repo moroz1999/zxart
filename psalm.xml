@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<psalm
+        errorLevel="1"
+>
+    <projectFiles>
+        <directory name="project" />
+    </projectFiles>
+</psalm>

@@ -1,0 +1,57 @@
+<?php
+
+class receiveZxProdCategoriesCatalogue extends structureElementAction
+{
+    public function execute(&$structureManager, &$controller, &$structureElement)
+    {
+        if ($this->validated) {
+            $structureElement->prepareActualData();
+
+            if ($structureElement->structureName == '') {
+                $structureElement->structureName = $structureElement->title;
+            }
+            $structureElement->persistElementData();
+            if ($firstParent = $structureManager->getElementsFirstParent($structureElement->id)) {
+                if ($zxProdCategoriesElement = $structureManager->getElementByMarker('zxProdCategories')) {
+                    if ($categoriesList = $structureManager->getElementsChildren($zxProdCategoriesElement->id)) {
+                        $linksManager = $this->getService('linksManager');
+                        $linksIndex = $linksManager->getElementsLinksIndex(
+                            $firstParent->id,
+                            'softCatalogue',
+                            'parent'
+                        );
+                        foreach ($categoriesList as $letter) {
+                            if (!isset($linksIndex[$letter->id])) {
+                                $linksManager->linkElements($firstParent->id, $letter->id, 'softCatalogue');
+                            }
+                            unset($linksIndex[$letter->id]);
+                        }
+                        foreach ($linksIndex as $link) {
+                            $linksManager->unLinkElements(
+                                $firstParent->id,
+                                $link->childStructureId,
+                                'softCatalogue'
+                            );
+                        }
+                    }
+                }
+            }
+
+            $controller->restart($structureElement->URL);
+        }
+
+        $structureElement->setViewName('form');
+    }
+
+    public function setExpectedFields(&$expectedFields)
+    {
+        $expectedFields = [
+            'title',
+        ];
+    }
+
+    public function setValidators(&$validators)
+    {
+    }
+}
+
