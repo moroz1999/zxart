@@ -345,8 +345,9 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         if ($content = $extractedFile->getContent()) {
             switch ($fileRecord['internalType']) {
                 case 'plain_text':
-                case 'source_code':
                     return htmlspecialchars(mb_convert_encoding($content, 'UTF-8', $fileRecord['encoding']));
+                case 'source_code':
+                    return htmlspecialchars($content);
                 case 'pc_image':
                     $controller = controller::getInstance();
                     if ($fileId = (int)$controller->getParameter('fileId')) {

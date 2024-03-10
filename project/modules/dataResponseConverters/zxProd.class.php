@@ -173,7 +173,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 foreach ($element->getReleasesList() as $releaseElement) {
                     foreach ($releaseElement->getReleaseFlatStructure() as $item) {
                         if ($item['type'] === 'file' && $item['viewable']) {
-                            if ($item['internalType'] === 'plain_text') {
+                            if ($item['internalType'] === 'plain_text' && $item['encoding'] !== 'none') {
                                 if ($file = $releaseElement->getReleaseFile($item['id'])) {
                                     return $releaseElement->getFormattedFileContent($file);
                                 }

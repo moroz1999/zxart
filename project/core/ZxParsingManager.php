@@ -44,6 +44,9 @@ class ZxParsingManager extends errorLogger
         $records = $query->get();
         foreach ($records as $key => $record) {
             $records[$key]['viewable'] = ($record['internalType'] !== 'binary' && $record['internalType']);
+            if ($record['internalType'] === 'plain_text' && $record['encoding'] === 'none'){
+                $records[$key]['viewable'] = false;
+            }
         }
         return $records;
     }
