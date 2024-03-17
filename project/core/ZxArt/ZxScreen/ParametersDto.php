@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ZxScreen;
+namespace ZxArt\ZxScreen;
 
 class ParametersDto
 {

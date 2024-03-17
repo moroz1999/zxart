@@ -1,7 +1,7 @@
 <?php
 
-use App\Queue\QueueType;
-use App\Queue\QueueService;
+use ZxArt\Queue\QueueType;
+use ZxArt\Queue\QueueService;
 use Illuminate\Database\Connection;
 
 class crontabApplication extends controllerApplication

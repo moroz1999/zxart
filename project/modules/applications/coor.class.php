@@ -17,7 +17,6 @@ class coorApplication extends controllerApplication
      */
     public function initialize()
     {
-        $this->startSession('public');
         $this->createRenderer();
     }
 
@@ -27,7 +26,7 @@ class coorApplication extends controllerApplication
     public function execute($controller)
     {
         ini_set("memory_limit", "2048M");
-        ini_set("max_execution_time", 60 * 60);
+        ini_set("max_execution_time", 60);
         $renderer = $this->getService('renderer');
         $renderer->endOutputBuffering();
         if (!($language = $controller->getParameter('lang'))) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Queue;
+namespace ZxArt\Queue;
 class QueueService
 {
     protected $db;

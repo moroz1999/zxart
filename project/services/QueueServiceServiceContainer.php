@@ -1,7 +1,7 @@
 <?php
 
 
-use App\Queue\QueueService;
+use ZxArt\Queue\QueueService;
 
 class QueueServiceServiceContainer extends DependencyInjectionServiceContainer
 {

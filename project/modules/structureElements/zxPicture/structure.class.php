@@ -1,7 +1,7 @@
 <?php
 
-use App\ZxScreen\Helper;
-use App\ZxScreen\ParametersDto;
+use ZxArt\ZxScreen\Helper;
+use ZxArt\ZxScreen\ParametersDto;
 
 /**
  * Class zxPictureElement

@@ -277,7 +277,7 @@ class partyElement extends structureElement implements CommentsHolderInterface, 
         return htmlentities($text, ENT_QUOTES);
     }
 
-    public function getImageUrl($preset = 'partyFull'): string
+    public function getImageUrl(string $preset = 'partyFull'): string
     {
         if ($this->image) {
             return controller::getInstance()->baseURL . 'image/type:' . $preset . '/id:' . $this->image . '/filename:' . $this->originalName;

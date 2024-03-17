@@ -1,7 +1,7 @@
 <?php
 
-use App\ZxScreen\Helper;
-use App\ZxScreen\ParametersDto;
+use ZxArt\ZxScreen\Helper;
+use ZxArt\ZxScreen\ParametersDto;
 
 /**
  * Class fileElement
@@ -13,8 +13,7 @@ use App\ZxScreen\ParametersDto;
  * @property string $imageFileName
  * @property string $author
  */
-class fileElement extends structureElement implements StructureElementUploadedFilesPathInterface,
-    ImageUrlProviderInterface
+class fileElement extends structureElement implements StructureElementUploadedFilesPathInterface
 {
     use ImageUrlProviderTrait;
 
