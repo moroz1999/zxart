@@ -1,5 +1,8 @@
 <?php
 
+use App\ZxScreen\Helper;
+use App\ZxScreen\ParametersDto;
+
 /**
  * Class fileElement
  *
@@ -44,7 +47,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
 
     public function getFilePath(): string
     {
-        return $this->getUploadedFilesPath().$this->getId();
+        return $this->getUploadedFilesPath() . $this->getId();
     }
 
     /**
@@ -69,34 +72,47 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         return $this->fileName;
     }
 
-    public function getImageUrl(string $preset = 'original', $mobile = false, $full = false, $zoom = 1)
+    public function getImageUrl(string $preset = 'original', $mobile = false, $full = false, $zoom = 1): ?string
     {
+        $controller = $this->getService('controller');
+        $extension = strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION));
+
         if (stripos($preset, 'full') !== false) {
             $full = true;
             $zoom = 2;
         }
-        $controller = $this->getService('controller');
-        if (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'scr')) {
-            $url = $controller->baseURL . 'zxscreen/type:standard/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
-        } elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'img')) {
-            $url = $controller->baseURL . 'zxscreen/type:gigascreen/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
-        } elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'nxi')) {
-            $url = $controller->baseURL . 'zxscreen/type:nxi/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
-        } elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'sl2')) {
-            $url = $controller->baseURL . 'zxscreen/type:sl2/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
-        } elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'ssx')) {
-            $url = $controller->baseURL . 'zxscreen/type:ssx/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
-        } elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'mlt')) {
-            $url = $controller->baseURL . 'zxscreen/type:mlt/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
-        } elseif (strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION) == 'ifl')) {
-            $url = $controller->baseURL . 'zxscreen/type:multicolor/id:' . $this->file . '/zoom:' . $zoom . '/filename:image.png';
-        } elseif ($full) {
-            $url = $controller->baseURL . 'screenshot/id:' . $this->file . '/filename:' . $this->fileName;
-        } else {
+
+
+        $type = match ($extension) {
+            'scr' => 'standard',
+            'img' => 'gigascreen',
+            'nxi' => 'nxi',
+            'sl2' => 'sl2',
+            'ssx' => 'ssx',
+            'mlt' => 'mlt',
+            'ifl' => 'multicolor',
+            default => null
+        };
+
+        if (!$type) {
+            if ($full) {
+                return $controller->baseURL . 'screenshot/id:' . $this->file . '/filename:' . $this->fileName;
+            }
             $filename = pathinfo($this->fileName, PATHINFO_FILENAME);
-            $url = $controller->baseURL . 'image/type:' . $preset . '/id:' . $this->file . '/filename:' . $filename . '.webp';
+            return $controller->baseURL . 'image/type:' . $preset . '/id:' . $this->file . '/filename:' . $filename . '.webp';
         }
-        return $url;
+
+        $fileName = 'image.png';
+
+        $params = new ParametersDto(
+            baseURL: $controller->baseURL,
+            type: $type,
+            zoom: $zoom,
+            id: $this->file,
+            fileName: $fileName
+        );
+
+        return Helper::getUrl($params);
     }
 
     public function getFileName($encoded = false): string

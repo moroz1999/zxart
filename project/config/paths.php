@@ -1,5 +1,6 @@
 <?php return [
-    'releases' => 'uploads_releases/',
+    'uploads' => 'zx/uploads/',
+    'releases' => 'zx/uploads_releases/',
     'zxCache' => 'temporary/zx/',
-    'trickster' => 'trickster-cms/',
+    'trickster' => 'vendor/artweb-ou/trickster-cms/',
 ];

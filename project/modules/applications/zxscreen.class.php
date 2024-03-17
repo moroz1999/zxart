@@ -44,8 +44,9 @@ class zxscreenApplication extends controllerApplication
             $this->renderer->assign('rotation', $this->rotation);
             if (!in_array($this->zoom, [1, 2, 3]) || $this->download || $this->type === 'hidden') {
                 $this->renderer->assign('cacheEnabled', false);
+            } else {
+                $this->renderer->assign('cacheEnabled', true);
             }
-            $this->renderer->assign('cacheEnabled', false);
 
             if ($this->download) {
                 $this->renderer->setContentDisposition('attachment');
@@ -95,6 +96,9 @@ class zxscreenApplication extends controllerApplication
         $this->border = $border;
 
         $this->zoom = (int)$controller->getParameter('zoom');
+        if (!$this->zoom) {
+            $this->zoom = 1;
+        }
         $this->rotation = $controller->getParameter('rotation');
         $this->download = (boolean)$controller->getParameter('download');
     }

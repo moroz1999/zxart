@@ -6,7 +6,7 @@
     m[i].l=1*new Date();
     for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
     k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-    (window, document, "script", "https://zxart.ee/project/js/tag.js", "ym");
+    (window, document, "script", "/js/tag.js", "ym");
 
     ym(94686067, "init", {
         clickmap:true,
@@ -19,5 +19,5 @@
 <noscript><div><img src="https://mc.yandex.ru/watch/94686067" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 {/literal}
 {if $currentUser->userName === 'anonymous'}
-<script id="cookieyes" type="text/javascript" src="https://cdn-cookieyes.com/client_data/ecc901cad4290f76cac8a500/script.js"></script>
+    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="c7938aaa-74a3-4feb-8ce6-f096014febca" data-blockingmode="auto" type="text/javascript"></script>
 {/if}

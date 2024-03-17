@@ -12,7 +12,7 @@
     'googleAnalyticsDomain' => 'zxart.ee',
     'googleAnalyticsId' => 'UA-3287749-14',
     'pageAmountProducts' => 10,
-    'availablePageAmountProducts' => [20, 30, 50],
+    'availablePageAmountProducts' => [20,30,50],
     'timeZone' => 'Europe/Tallinn',
     'errorReporting' => E_ALL,
     'protocol' => 'http://',

@@ -154,7 +154,7 @@ class AuthorsManager extends ElementsManager
      *
      * @psalm-return list{0?: mixed,...}
      */
-    public function getAuthorsInfo(int $elementId, string $type): array
+    public function getAuthorsInfo(int|string $elementId, string $type): array
     {
         $info = [];
         if ($records = $this->getElementAuthorsRecords($elementId, $type)
@@ -174,7 +174,7 @@ class AuthorsManager extends ElementsManager
      *
      * @psalm-return array<\Illuminate\Database\Query\Builder|mixed>
      */
-    public function getElementAuthorsRecords(int $elementId, $type = null): array
+    public function getElementAuthorsRecords(int|string $elementId, $type = null): array
     {
         $query = $this->db
             ->table('authorship')

@@ -452,7 +452,7 @@ class user
         }
     }
 
-    public function setStorageAttribute(string $name, array $value): void
+    public function setStorageAttribute(string $name, mixed $value): void
     {
         $this->storage[$name] = $value;
     }

@@ -1,5 +1,8 @@
 <?php
 
+use App\ZxScreen\Helper;
+use App\ZxScreen\ParametersDto;
+
 /**
  * Class zxPictureElement
  *
@@ -14,6 +17,9 @@
  * @property string $image
  * @property string $originalName
  * @property string $palette
+ * @property string $type
+ * @property int $rotation
+ * @property int $border
  */
 class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterface
 {
@@ -101,39 +107,20 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
 
     public function getImageUrl(int $zoom = 1, $download = false, $border = null): string
     {
-        $controller = controller::getInstance();
-        if ($this->image) {
-            /**
-             * @var PicturesModesManager $picturesModesManager
-             */
-            $picturesModesManager = $this->getService('PicturesModesManager');
+        $params = new ParametersDto(
+            controller::getInstance()->baseURL,
+            type: $this->type == 'standard' && $this->getService('PicturesModesManager')->getHidden() ? 'hidden' : $this->type,
+            zoom: $zoom,
+            id: $this->image,
+            download: $download,
+            border: $border === null || $border ? $this->border : null,
+            rotation: $this->rotation > 0 ? (int)$this->rotation : null,
+            mode: $this->getService('PicturesModesManager')->getMode(),
+            palette: $this->getPalette(),
+            hidden: $this->type == 'standard' && $this->getService('PicturesModesManager')->getHidden()
+        );
 
-            $imageUrl = $controller->baseURL . 'zxscreen/';
-            if ($this->rotation > 0) {
-                $imageUrl .= 'rotation:' . $this->rotation . '/';
-            }
-            if ($border === null || $border) {
-                if ($picturesModesManager->getBorder()) {
-                    $imageUrl .= 'border:' . $this->border . '/';
-                }
-            }
-
-            if ($download) {
-                $imageUrl .= 'download:' . $download . '/';
-            }
-            $imageUrl .= 'mode:' . $picturesModesManager->getMode() . '/';
-            $imageUrl .= 'pal:' . $this->getPalette() . '/';
-            if ($this->type == 'standard' && $picturesModesManager->getHidden()) {
-                $imageUrl .= 'type:hidden/';
-            } else {
-                $imageUrl .= 'type:' . $this->type . '/';
-            }
-            $imageUrl .= 'zoom:' . $zoom . '/';
-            $imageUrl .= 'id:' . $this->image . '/';
-        } else {
-            $imageUrl = $controller->baseURL . 'images/zxprod_default.png';
-        }
-        return $imageUrl;
+        return Helper::getUrl($params);
     }
 
     public function getPalette()

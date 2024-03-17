@@ -394,7 +394,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     /**
      * @psalm-return EngineFileRegistryRow|null
      */
-    public function getCurrentReleaseFileInfo(): array
+    public function getCurrentReleaseFileInfo(): ?array
     {
         if ($this->currentReleaseFileInfo === null) {
             $controller = controller::getInstance();
