@@ -93,8 +93,7 @@ class zxScreenRendererPlugin extends rendererPlugin
 
     protected function getEtag()
     {
-        $exportHash = $this->renderingEngine->getHash();
-        return $exportHash;
+        return $this->renderingEngine->getHash();
     }
 
     protected function getLastModified()

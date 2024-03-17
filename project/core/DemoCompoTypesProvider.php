@@ -25,6 +25,8 @@ trait DemoCompoTypesProvider
             'intro1k',
             'intro4k',
             'invitation',
+            'procedural256',
+            'procedural512',
             'procedural1k',
             'procedural4k',
             'realtime_coding',
