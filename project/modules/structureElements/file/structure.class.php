@@ -72,60 +72,37 @@ class fileElement extends structureElement implements StructureElementUploadedFi
     }
 
     public function getZxImageUrl(bool $full = false, int $zoom = 1) {
-        $controller = $this->getService('controller');
-        $extension = strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION));
-        $preset = 'original';
-
-        if ($full) {
-            $zoom = 2;
-        }
-
-        $type = match ($extension) {
-            'scr' => 'standard',
-            'img' => 'gigascreen',
-            'nxi' => 'nxi',
-            'sl2' => 'sl2',
-            'ssx' => 'ssx',
-            'mlt' => 'mlt',
-            'ifl' => 'multicolor',
-            default => null
-        };
-
-        if (!$type) {
-            if ($full) {
-                return $controller->baseURL . 'screenshot/id:' . $this->file . '/filename:' . $this->fileName;
-            }
-            $filename = pathinfo($this->fileName, PATHINFO_FILENAME);
-            return $controller->baseURL . 'image/type:' . $preset . '/id:' . $this->file . '/filename:' . $filename . '.webp';
-        }
-
-        $fileName = 'image.png';
-
-        $params = new ParametersDto(
-            baseURL: $controller->baseURL,
-            type: $type,
-            zoom: $zoom,
-            id: $this->file,
-            fileName: $fileName
-        );
-
-        return Helper::getUrl($params);
-
+        return $this->generateImageUrl($full, $zoom, 'original');
     }
 
-    public function getImageUrl(string $preset = 'original', $mobile = false): ?string
-    {
-        $controller = $this->getService('controller');
-        $extension = strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION));
+    public function getImageUrl(string $preset = 'original', $mobile = false): ?string {
+        $full = stripos($preset, 'full') !== false;
+        $zoom = $full ? 2 : 1;
+        return $this->generateImageUrl($full, $zoom, $preset);
+    }
 
-        $zoom = 1;
-        $full = false;
-        if (stripos($preset, 'full') !== false) {
-            $full = true;
-            $zoom = 2;
+    private function generateImageUrl(bool $full, int $zoom, string $preset): ?string {
+        $baseUrl = $this->getService('controller')->baseURL;
+        $extension = strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION));
+        $type = $this->resolveFileType($extension);
+
+        if (!$type) {
+            return $this->buildFallbackUrl($baseUrl, $full, $preset);
         }
 
-        $type = match ($extension) {
+        $params = new ParametersDto(
+            baseURL: $baseUrl,
+            type: $type,
+            zoom: $zoom,
+            id: $this->file,
+            fileName: 'image.png'
+        );
+
+        return Helper::getUrl($params);
+    }
+
+    private function resolveFileType(string $extension): ?string {
+        return match ($extension) {
             'scr' => 'standard',
             'img' => 'gigascreen',
             'nxi' => 'nxi',
@@ -135,26 +112,14 @@ class fileElement extends structureElement implements StructureElementUploadedFi
             'ifl' => 'multicolor',
             default => null
         };
+    }
 
-        if (!$type) {
-            if ($full) {
-                return $controller->baseURL . 'screenshot/id:' . $this->file . '/filename:' . $this->fileName;
-            }
-            $filename = pathinfo($this->fileName, PATHINFO_FILENAME);
-            return $controller->baseURL . 'image/type:' . $preset . '/id:' . $this->file . '/filename:' . $filename . '.webp';
+    private function buildFallbackUrl(string $baseUrl, bool $full, string $preset): string {
+        if ($full) {
+            return $baseUrl . 'screenshot/id:' . $this->file . '/filename:' . $this->fileName;
         }
-
-        $fileName = 'image.png';
-
-        $params = new ParametersDto(
-            baseURL: $controller->baseURL,
-            type: $type,
-            zoom: $zoom,
-            id: $this->file,
-            fileName: $fileName
-        );
-
-        return Helper::getUrl($params);
+        $filename = pathinfo($this->fileName, PATHINFO_FILENAME);
+        return $baseUrl . 'image/type:' . $preset . '/id:' . $this->file . '/filename:' . $filename . '.webp';
     }
 
     public function getFileName($encoded = false): string

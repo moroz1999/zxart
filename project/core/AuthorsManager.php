@@ -290,7 +290,7 @@ class AuthorsManager extends ElementsManager
         return $info;
     }
 
-    public function checkAuthorship(int $elementId, int $personId, string $type, array|string|false $roles = [], int|false $startDate = 0, int|false $endDate = 0): void
+    public function checkAuthorship(int $elementId, int|string $personId, string $type, array|string|false $roles = [], int|string|false $startDate = 0, int|string|false $endDate = 0): void
     {
         if (is_array($roles)) {
             $roles = array_unique($roles);
