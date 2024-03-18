@@ -13,7 +13,7 @@ use ZxArt\ZxScreen\ParametersDto;
  * @property string $imageFileName
  * @property string $author
  */
-class fileElement extends structureElement implements StructureElementUploadedFilesPathInterface
+class fileElement extends structureElement implements StructureElementUploadedFilesPathInterface, ImageUrlProviderInterface
 {
     use ImageUrlProviderTrait;
 
@@ -71,16 +71,59 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         return $this->fileName;
     }
 
-    public function getImageUrl(string $preset = 'original', $mobile = false, $full = false, $zoom = 1): ?string
+    public function getZxImageUrl(bool $full = false, int $zoom = 1) {
+        $controller = $this->getService('controller');
+        $extension = strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION));
+        $preset = 'original';
+
+        if ($full) {
+            $zoom = 2;
+        }
+
+        $type = match ($extension) {
+            'scr' => 'standard',
+            'img' => 'gigascreen',
+            'nxi' => 'nxi',
+            'sl2' => 'sl2',
+            'ssx' => 'ssx',
+            'mlt' => 'mlt',
+            'ifl' => 'multicolor',
+            default => null
+        };
+
+        if (!$type) {
+            if ($full) {
+                return $controller->baseURL . 'screenshot/id:' . $this->file . '/filename:' . $this->fileName;
+            }
+            $filename = pathinfo($this->fileName, PATHINFO_FILENAME);
+            return $controller->baseURL . 'image/type:' . $preset . '/id:' . $this->file . '/filename:' . $filename . '.webp';
+        }
+
+        $fileName = 'image.png';
+
+        $params = new ParametersDto(
+            baseURL: $controller->baseURL,
+            type: $type,
+            zoom: $zoom,
+            id: $this->file,
+            fileName: $fileName
+        );
+
+        return Helper::getUrl($params);
+
+    }
+
+    public function getImageUrl(string $preset = 'original', $mobile = false): ?string
     {
         $controller = $this->getService('controller');
         $extension = strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION));
 
+        $zoom = 1;
+        $full = false;
         if (stripos($preset, 'full') !== false) {
             $full = true;
             $zoom = 2;
         }
-
 
         $type = match ($extension) {
             'scr' => 'standard',

@@ -273,6 +273,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     }
 
     //used in API
+
     /**
      * @psalm-return list{0?: mixed,...}
      */
@@ -658,9 +659,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
             $data['releases'][$releaseElement->id] = $releaseElement->id . ' <a target="_blank" href="' . $releaseElement->getUrl() . '">' . $releaseElement->getSearchTitle() . '</a>';
         }
         foreach ($this->getFilesList('connectedFile') as $fileElement) {
-            $data['screenshots'][$fileElement->id] = $fileElement->id . ' <img style="height: 5rem" src="' . $fileElement->getImageUrl(
-                    'prodImage'
-                ) . '" />';
+            $data['screenshots'][$fileElement->id] = $fileElement->id . ' <img style="height: 5rem" src="' . $fileElement->getImageUrl('prodImage') . '" />';
         }
 
         foreach ($this->getLinksInfo() as $linkInfo) {
@@ -954,7 +953,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
             'title' => $this->getMetaTitle(),
             'url' => $this->getUrl(),
             'type' => 'article',
-            'image' => $this->getImage() ? $this->getImage()->getImageUrl('full', false, true) : '',
+            'image' => $this->getImage() ? $this->getImage()->getZxImageUrl(true, 1) : '',
             'description' => $this->getMetaDescription(),
             'locale' => $languagesManager->getCurrentLanguage()->iso6391,
         ];
