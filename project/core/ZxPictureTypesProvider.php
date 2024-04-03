@@ -25,6 +25,8 @@ trait ZxPictureTypesProvider
             'timex81' => 'field.format_timex81',
             'timexhr' => 'field.format_timexhr',
             'timexhrg' => 'field.format_timexhrg',
+            'sam2' => 'field.format_sam2',
+            'sam3' => 'field.format_sam3',
             'sam4' => 'field.format_sam4',
             'bsc' => 'field.format_bsc',
             'bsp' => 'field.format_bsp',
