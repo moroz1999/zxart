@@ -18,6 +18,7 @@ class ProdsDownloaderServiceContainer extends DependencyInjectionServiceContaine
         } else {
             $prodsDownloader->setConfigManager($this->registry->getService('ConfigManager'));
         }
+        $this->injectService($prodsDownloader, 'PathsManager');
 
         return $prodsDownloader;
     }

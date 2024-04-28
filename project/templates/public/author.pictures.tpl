@@ -10,16 +10,5 @@
 				</div>
 			{/foreach}
 		</div>
-{*		{if $chartData = $element->getChartData('authorPicture')}*}
-{*			<script defer src="{$controller->baseURL}vendor/nnnick/chartjs/dist/Chart.js"></script>*}
-{*			<div class="author_details_stats">*}
-{*				<h3 class="author_details_views_title">{translations name="author.views_chart"}</h3>*}
-{*				<canvas class="author_details_views_chart chart_component" data-chartid="{$element->id}_views" width="700" height="200"></canvas>*}
-{*			</div>*}
-{*			<script>*}
-{*				window.chartsData = window.chartsData || {ldelim}{rdelim};*}
-{*				window.chartsData["{$element->id}_views"] = {$chartData};*}
-{*			</script>*}
-{*		{/if}*}
 	</div>
 {/if}

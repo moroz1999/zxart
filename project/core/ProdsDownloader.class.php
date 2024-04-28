@@ -15,6 +15,16 @@ class ProdsDownloader extends errorLogger
         $this->configManager = $configManager;
     }
 
+    /**
+     * @var PathsManager
+     */
+    protected $pathsManager;
+
+    public function setPathsManager(PathsManager $pathsManager): void
+    {
+        $this->pathsManager = $pathsManager;
+    }
+
     public function getFileContents($url)
     {
         if ($filePath = $this->getDownloadedPath($url)) {
@@ -61,11 +71,12 @@ class ProdsDownloader extends errorLogger
     {
         if ($url) {
             $md5 = md5($url);
-            $folder = $this->configManager->get('paths.uploadsCache');
-            if (!is_dir($folder)) {
-                mkdir($folder, $this->configManager->get('paths.defaultCachePermissions'), true);
+            $cachePath = $this->pathsManager->getPath('uploadsCache');
+
+            if (!is_dir($cachePath)) {
+                mkdir($cachePath, $this->configManager->get('paths.defaultCachePermissions'), true);
             }
-            return $folder . $md5;
+            return $cachePath . $md5;
         }
         return false;
     }
@@ -81,14 +92,15 @@ class ProdsDownloader extends errorLogger
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0');
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0');
         curl_setopt($ch, CURLOPT_REFERER, 'https://spectrumcomputing.co.uk/');
         curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        if (curl_exec($ch) === false) {
+        $exec = curl_exec($ch);
+        if ($exec === false) {
             $this->logError(curl_error($ch));
         } else {
+            $test = curl_getinfo($ch);
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             if ($httpcode != 200) {
                 $this->logError("Ошибка при скачивании: HTTP статус $httpcode");

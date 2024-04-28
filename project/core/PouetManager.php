@@ -76,6 +76,7 @@ class PouetManager extends errorLogger
         'z80 code' => 'code',
         'x86 code' => 'code',
         'coding help' => 'code',
+        'original idea/code' => 'concept',
         'code (part 1)' => 'code',
         'code (part 2)' => 'code',
         'code (part 3)' => 'code',
@@ -364,7 +365,12 @@ class PouetManager extends errorLogger
             $id = $this->loadMaxImportedId() + 1;
             $this->maxId = $this->loadMaxPossibleId();
         }
-        while ((!$this->maxCounter || ($this->counter < $this->maxCounter)) && (time() <= $this->maxTime) && ($id <= $this->maxId)) {
+        while (
+            (!$this->maxCounter || ($this->counter < $this->maxCounter)) &&
+            (time() <= $this->maxTime) &&
+            ($id <= $this->maxId || $this->debugEntry)
+        )
+        {
             $this->maxCounter--;
             if ($prodData = $this->download($id)) {
                 $platformSupported = false;
@@ -602,7 +608,7 @@ class PouetManager extends errorLogger
     /**
      * @return void
      */
-    protected function logError(string $message, $level = null, $throwException = true)
+    protected function logError($message, $level = null, $throwException = true)
     {
         $this->markProgress($message);
         parent::logError($message, $level, $throwException);

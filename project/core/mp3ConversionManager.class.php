@@ -4,7 +4,7 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
 {
     use DependencyInjectionContextTrait;
 
-    const CONVERSION_SERVER_ADDRESS = 'http://converter.dev.artweb.ee/index.php';
+    const CONVERSION_SERVER_ADDRESS = 'http://music.zxart.ee/index.php';
 
     protected $collection;
 
@@ -195,7 +195,8 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
     protected function applyData($data, $element, persistableObject $item): bool
     {
         $result = false;
-        if ($infoList = json_decode($data)) {
+        if ($info = json_decode($data)) {
+            $infoList = $info->data;
             $result = true;
             $linksManager = $this->getService('linksManager');
             $structureManager = $this->getService('structureManager');

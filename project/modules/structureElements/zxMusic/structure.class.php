@@ -17,7 +17,7 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
 {
     use MusicSettingsProvider;
 
-    const MP3_STORAGE_PATH = 'https://converter.dev.artweb.ee/music/';
+    const MP3_STORAGE_PATH = 'https://music.zxart.ee/music/';
     public $dataResourceName = 'module_zxmusic';
     public $allowedTypes = [];
     public $defaultActionName = 'show';

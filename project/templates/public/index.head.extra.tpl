@@ -18,6 +18,3 @@
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/94686067" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 {/literal}
-{if $currentUser->userName === 'anonymous'}
-    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="c7938aaa-74a3-4feb-8ce6-f096014febca" data-blockingmode="auto" type="text/javascript"></script>
-{/if}

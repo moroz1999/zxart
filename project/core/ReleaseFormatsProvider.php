@@ -27,6 +27,7 @@ trait ReleaseFormatsProvider
             'rom',
             'spg',
             'nex',
+            'snx',
 
             'sna',
             'szx',
