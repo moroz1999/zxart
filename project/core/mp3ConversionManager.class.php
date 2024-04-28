@@ -86,7 +86,6 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
                 if ($file = $element->getOriginalFilePath()) {
                     $this->updateQueueItemStatus($item, 'sending_request');
 
-
                     if ($data = $this->sendConversionRequest(
                         $element->id,
                         $element->generateConvertedBaseName(),
@@ -94,7 +93,8 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
                         $element->getChannelsType(),
                         $element->getChipType(),
                         $element->getFrequency(),
-                        $element->getIntFrequency()
+                        $element->getIntFrequency(),
+                        $element->getFileExtension('original'),
                     )
                     ) {
                         $this->updateQueueItemStatus($item, 'info_decoding');
@@ -133,8 +133,10 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
         $channelsType,
         $chipType,
         $frequency,
-        $intFrequency
-    ): string|bool {
+        $intFrequency,
+        $extension,
+    ): string|bool
+    {
         $channelsIndex = [
             'ABC' => 0,
             'ACB' => 1,
@@ -167,7 +169,7 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
                 $post['frameDuration'] = round(1000000 / $intFrequency);
             }
             if (class_exists('CurlFile')) {
-                $post['original'] = new CurlFile($originalFilePath, 'application/octet-stream', 'original');
+                $post['original'] = new CurlFile($originalFilePath, 'application/octet-stream', 'original' . $extension);
             } else {
                 $post['original'] = '@' . $originalFilePath;
             }

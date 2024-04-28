@@ -27,6 +27,7 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
     protected $partyLinkType = 'partyMusic';
     protected $sectionType = 'music';
     protected $metaTitle;
+
     /**
      * @return void
      */
