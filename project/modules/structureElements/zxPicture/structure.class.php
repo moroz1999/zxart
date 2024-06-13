@@ -107,17 +107,21 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
 
     public function getImageUrl(int $zoom = 1, $download = false, $border = null): string
     {
+        /**
+         * @var PicturesModesManager $picturesModesManager
+         */
+        $picturesModesManager = $this->getService('PicturesModesManager');
         $params = new ParametersDto(
             controller::getInstance()->baseURL,
-            type: $this->type == 'standard' && $this->getService('PicturesModesManager')->getHidden() ? 'hidden' : $this->type,
+            type: $this->type === 'standard' && $picturesModesManager->getHidden() ? 'hidden' : $this->type,
             zoom: $zoom,
             id: $this->image,
             download: $download,
-            border: $border === null || $border ? $this->border : null,
+            border: ($border === null || $border) && $picturesModesManager->getBorder() ? $this->border : null,
             rotation: $this->rotation > 0 ? (int)$this->rotation : null,
-            mode: $this->getService('PicturesModesManager')->getMode(),
+            mode: $picturesModesManager->getMode(),
             palette: $this->getPalette(),
-            hidden: $this->type == 'standard' && $this->getService('PicturesModesManager')->getHidden()
+            hidden: $this->type === 'standard' && $picturesModesManager->getHidden()
         );
 
         return Helper::getUrl($params);
@@ -176,49 +180,49 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     public function getFileExtension($extensionType)
     {
         $extension = '';
-        if ($extensionType == 'original') {
+        if ($extensionType === 'original') {
             $type = $this->type;
-            if ($type == 'standard' || $type == 'monochrome') {
+            if ($type === 'standard' || $type === 'monochrome') {
                 $extension = '.scr';
-            } elseif ($type == 'gigascreen') {
+            } elseif ($type === 'gigascreen') {
                 $extension = '.img';
-            } elseif ($type == 'flash') {
+            } elseif ($type === 'flash') {
                 $extension = '.flash.scr';
-            } elseif ($type == 'tricolor') {
+            } elseif ($type === 'tricolor') {
                 $extension = '.3';
-            } elseif ($type == 'multicolor') {
+            } elseif ($type === 'multicolor') {
                 $extension = '.ifl';
-            } elseif ($type == 'multicolor4') {
+            } elseif ($type === 'multicolor4') {
                 $extension = '.ifl';
-            } elseif ($type == 'attributes') {
+            } elseif ($type === 'attributes') {
                 $extension = '.atr';
-            } elseif ($type == 'lowresgs') {
+            } elseif ($type === 'lowresgs') {
                 $extension = '.hlr';
-            } elseif ($type == 'chr$') {
+            } elseif ($type === 'chr$') {
                 $extension = '.ch$';
-            } elseif ($type == 'timex81') {
+            } elseif ($type === 'timex81') {
                 $extension = '.scr';
-            } elseif ($type == 'timexhr') {
+            } elseif ($type === 'timexhr') {
                 $extension = '.scr';
-            } elseif ($type == 'timexhrg') {
+            } elseif ($type === 'timexhrg') {
                 $extension = '.hrg';
-            } elseif ($type == 'sam4') {
+            } elseif ($type === 'sam4') {
                 $extension = '.ss4';
-            } elseif ($type == 'ulaplus') {
+            } elseif ($type === 'ulaplus') {
                 $extension = '.ulaplus.scr';
-            } elseif ($type == 'zxevo') {
+            } elseif ($type === 'zxevo') {
                 $extension = '.bmp';
-            } elseif ($type == 'stellar') {
+            } elseif ($type === 'stellar') {
                 $extension = '.stl';
             } else {
                 $extension = '.' . $type;
             }
-        } elseif ($extensionType == 'exe') {
+        } elseif ($extensionType === 'exe') {
             if ($this->exeFileName) {
                 $info = pathinfo($this->exeFileName);
                 $extension = "." . strtolower($info['extension']);
             }
-        } elseif ($extensionType == 'image') {
+        } elseif ($extensionType === 'image') {
             $extension = '';
         }
         return $extension;
@@ -229,15 +233,15 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
      */
     protected function fileExists($extensionType)
     {
-        if ($extensionType == 'original') {
+        if ($extensionType === 'original') {
             if ($this->originalName) {
                 return true;
             }
-        } elseif ($extensionType == 'exe') {
+        } elseif ($extensionType === 'exe') {
             if ($this->exeFileName) {
                 return true;
             }
-        } elseif ($extensionType == 'image') {
+        } elseif ($extensionType === 'image') {
             if ($this->image) {
                 return true;
             }
@@ -352,7 +356,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
             if ($gameMaterials = $game->getMaterialsList()) {
                 $number = 0;
                 foreach ($gameMaterials as $element) {
-                    if ($element->structureType == 'zxPicture') {
+                    if ($element->structureType === 'zxPicture') {
                         if ($element->id == $this->id) {
                             break;
                         }
