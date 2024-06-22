@@ -9,7 +9,7 @@ class zxProdAjaxSearchQueryFilter extends ajaxSearchQueryFilter
 
     protected function getTitleFieldNames()
     {
-        return ['title'];
+        return ['title', 'altTitle'];
     }
 
     public function getFilteredIdList($argument, $query)

@@ -1,0 +1,149 @@
+{
+  "pages": {
+    "previous": "Anterior",
+    "next": "Siguiente"
+  },
+  "prods-list": {
+    "unknown-year": "Año de lanzamiento desconocido",
+    "presets": {
+      "year": "Este año",
+      "recent": "Últimos 3 años",
+      "top": "Top de todos los tiempos",
+      "updates": "Subido últimamente",
+      "next": "ZX Spectrum Next",
+      "evolution": "ZX Evolution",
+      "zx81": "ZX80/ZX81",
+      "samcoupe": "SAM Coupé",
+      "gs": "General Sound"
+    },
+    "filters": {
+      "reset": "Reset",
+      "apply": "Aplicar",
+      "tags": {
+        "select": "Seleccionar etiquetas"
+      },
+      "year": {
+        "selected": "Años:",
+        "select": "Seleccionar años"
+      },
+      "hardware": {
+        "selected": "Hardware:",
+        "select": "Seleccionar hardware"
+      },
+      "languages": {
+        "selected": "Idiomas:",
+        "select": "Seleccionar idiomas"
+      },
+      "countries": {
+        "selected": "Países:",
+        "select": "Seleccionar países"
+      },
+      "formats": {
+        "selected": "Formatos de lanzamiento:",
+        "select": "Seleccionar formatos"
+      },
+      "legal-statuses": {
+        "selected": "Estados legales:",
+        "select": "Seleccionar estados legales"
+      },
+      "release-types": {
+        "selected": "Tipos de lanzamiento:",
+        "select": "Seleccionar tipos de lanzamiento"
+      },
+      "letters": {
+        "all": "Todo"
+      }
+    },
+    "releases": "Lanzamientos",
+    "sorting": {
+      "votes,asc": "Calificación, asc",
+      "votes,desc": "Calificación, desc",
+      "title,asc": "Título A-Z, asc",
+      "title,desc": "Título A-Z, desc",
+      "year,asc": "Año de lanzamiento, asc",
+      "year,desc": "Año de lanzamiento, desc",
+      "date,asc": "Fecha de subida, asc",
+      "date,desc": "Fecha de subida, desc"
+    },
+    "layout": {
+      "select": "Diseño:"
+    }
+  },
+  "zx-prod": {
+    "title": "Título",
+    "at": " en ",
+    "play": "Jugar",
+    "video": "Video",
+    "year": "Año",
+    "date-created": "Subido",
+    "categories": "Géneros",
+    "parties": "Competiciones",
+    "languages": "Idiomas",
+    "developers": "Desarrolladores",
+    "publishers": "Editores",
+    "authors": "Autores",
+    "open": "Abierto",
+    "legal-status": {
+      "mia": "Perdida",
+      "unreleased": "Inédita"
+    },
+    "release-type": {
+      "original": "Original",
+      "rerelease": "Relanzamiento",
+      "unknown": "Desconocido",
+      "adaptation": "Adaptación",
+      "mod": "Modificación",
+      "crack": "Agrietado",
+      "localization": "Localización",
+      "demoversion": "Versión de demostración",
+      "compilation": "Compilacion",
+      "corrupted": "Corrupto",
+      "mia": "MIA",
+      "incomplete": "Incompleto"
+    }
+  },
+  "parser": {
+    "description": "La búsqueda acepta archivos zip que contengan archivos trd, scl, tap que no superen los 50 MB. Después de la descarga, el sistema analizará la estructura del archivo y mostrará qué versión de la base de datos ZX-Art usó los archivos descargados, incluidas imágenes y música.",
+    "upload": "Subir y analizar",
+    "notfound": "Extraviado",
+    "not-found-only": "Mostrar solo archivos no encontrados",
+    "show-releases": "Mostrar lanzamientos"
+  },
+  "author": {
+    "role": {
+      "code": "Codificación",
+      "intro_code": "Intro codificación",
+      "intro_graphics": "Intro gráficos",
+      "music": "Música",
+      "intro_music": "Música de la introducción",
+      "graphics": "Gráficos",
+      "loading_screen": "Pantalla de carga",
+      "organizing": "Organizar",
+      "testing": "El ensayador",
+      "cracking": "Eliminación de protección",
+      "support": "Apoyo",
+      "ascii": "Ilustración ASCII / ANSI",
+      "illustrating": "Ilustraciones",
+      "unknown": "Desconocido",
+      "tools": "Herramientas",
+      "adaptation": "Adaptación",
+      "localization": "Localización",
+      "gamedesign": "Diseño de juego",
+      "leveldesign": "Diseño de nivel",
+      "release": "Lanzamiento",
+      "sfx": "Efectos de sonido",
+      "story": "Guión",
+      "direction": "Dirección",
+      "3dmodels": "Modelos 3D",
+      "design": "Diseño",
+      "logo": "Logo",
+      "font": "Hacen",
+      "concept": "Concepto",
+      "text": "Texto",
+      "editing": "Edición",
+      "guest": "Huésped",
+      "video": "Vídeo",
+      "translation": "Traducción"
+    }
+  }
+}

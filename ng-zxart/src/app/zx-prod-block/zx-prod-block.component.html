@@ -35,7 +35,7 @@
       </span>
     </span>
     <span
-      *ngIf="model.inlaysUrls.length && (imagesLayout === 'inlays' || model.imagesUrls.length === 0)"
+      *ngIf="model.inlaysUrls.length && (imagesLayout === 'inlays' || (model.imagesUrls.length === 0 && !model.loadingImageUrl))"
       class="zx-prod-screenshots zx-prod-inlays"
       @fadeInOut
     >

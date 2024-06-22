@@ -10,7 +10,7 @@ class zxProdSearchQueryFilter extends searchQueryFilter
 
     protected function getTitleFieldNames()
     {
-        return ['title'];
+        return ['title', 'altTitle'];
     }
 
     protected function getContentFieldNames()
