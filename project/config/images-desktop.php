@@ -25,6 +25,9 @@
         'format' => [
             null,
             'png',
+            '',
+            100,
+            true
         ],
     ],
     'groupImage' => [
@@ -37,6 +40,9 @@
         'format' => [
             null,
             'png',
+            '',
+            100,
+            true
         ],
     ],
     'inspiredImage' => [
@@ -63,6 +69,7 @@
             'png',
             '',
             100,
+            true
         ],
         'path' => 'releases',
     ],
@@ -97,6 +104,7 @@
             'png',
             '',
             100,
+            true
         ],
         'path' => 'releases',
     ],
@@ -126,6 +134,9 @@
         'format' => [
             null,
             'png',
+            '',
+            100,
+            true
         ],
     ],
 
@@ -140,7 +151,8 @@
             null,
             'png',
             '',
-            '100',
+            100,
+            true
         ],
         'path' => 'releases',
     ],
@@ -153,9 +165,10 @@
         ],
         'format' => [
             null,
-            'jpg',
+            'png',
             '',
             100,
+            true
         ],
         'path' => 'releases',
     ],
@@ -188,6 +201,9 @@
         'format' => [
             null,
             'png',
+            '',
+            100,
+            true
         ],
     ],
     'partyDetails' => [
@@ -200,6 +216,9 @@
         'format' => [
             null,
             'png',
+            '',
+            100,
+            true
         ],
     ],
 ];

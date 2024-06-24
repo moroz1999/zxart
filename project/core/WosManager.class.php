@@ -787,7 +787,7 @@ class WosManager extends errorLogger
     /**
      * @param false $isPerson
      */
-    protected function gatherLabelsInfo(array &$infoIndex, $labelId, bool $isGroup = false, bool $isPerson = false, $isAlias = false)
+    protected function gatherLabelsInfo(?array &$infoIndex, $labelId, bool $isGroup = false, bool $isPerson = false, $isAlias = false): array
     {
         if (!isset($infoIndex[$labelId])) {
             $infoIndex[$labelId] = [];
