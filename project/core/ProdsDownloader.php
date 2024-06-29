@@ -41,7 +41,10 @@ class ProdsDownloader extends errorLogger
             if (!is_file($filePath)) {
                 $this->downloadUrl($url, $filePath);
             }
-            return $filePath;
+            if (is_file($filePath)) {
+                return $filePath;
+            }
+            return false;
         }
         return false;
     }
@@ -84,7 +87,7 @@ class ProdsDownloader extends errorLogger
     public function downloadUrl(string $url, string $destination): bool
     {
         $result = false;
-        $fp = fopen($destination, 'w+');
+        $fp = fopen($destination, 'wb+');
 
         $ch = curl_init(str_replace(" ", "%20", $url));
         curl_setopt($ch, CURLOPT_TIMEOUT, 50);
@@ -92,27 +95,31 @@ class ProdsDownloader extends errorLogger
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0');
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0');
         curl_setopt($ch, CURLOPT_REFERER, 'https://spectrumcomputing.co.uk/');
         curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Accept-Encoding: identity',
+            'Pragma: no-cache',
+            'Cache-Control: no-cache'
+        ]);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 
         $exec = curl_exec($ch);
         if ($exec === false) {
             $this->logError(curl_error($ch));
         } else {
-            $test = curl_getinfo($ch);
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            if ($httpcode != 200) {
-                $this->logError("Ошибка при скачивании: HTTP статус $httpcode");
-                fclose($fp);
+            if ($httpcode !== 200) {
+                $this->logError("Ошибка при скачивании $url: HTTP статус $httpcode");
                 unlink($destination);
-                curl_close($ch);
             } else {
                 $result = true;
             }
         }
         curl_close($ch);
         fclose($fp);
+        sleep(5);
         return $result;
     }
 }

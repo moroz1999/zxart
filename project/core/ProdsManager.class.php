@@ -630,8 +630,9 @@ class ProdsManager extends ElementsManager
      * @psalm-param ''|'mapFilesSelector'|'rzx' $fileAuthor
      *
      * @return void
+     * @throws Exception
      */
-    private function importElementFile(FilesElementTrait|zxProdElement $element, $fileUrl, $existingFiles, string $fileAuthor = '', string $propertyName = 'connectedFile')
+    private function importElementFile(zxReleaseElement|zxProdElement $element, $fileUrl, $existingFiles, string $fileAuthor = '', string $propertyName = 'connectedFile')
     {
         $this->structureManager->setNewElementLinkType($element->getConnectedFileType($propertyName));
         $uploadsPath = $this->pathsManager->getPath('uploads');
@@ -777,6 +778,9 @@ class ProdsManager extends ElementsManager
      */
     protected function getReleaseByMd5($releaseInfo)
     {
+        if (!$releaseInfo['fileUrl']) {
+            return false;
+        }
         if (empty($releaseInfo['md5'])) {
             $path = $this->prodsDownloader->getDownloadedPath($releaseInfo['fileUrl']);
             if (!$path) {
@@ -784,7 +788,7 @@ class ProdsManager extends ElementsManager
                 $path = $this->prodsDownloader->getDownloadedPath($releaseInfo['fileUrl']);
             }
             if (!$path) {
-                throw new \Exception('Unable to download release ' . $releaseInfo['fileUrl']);
+                throw new \Exception('Unable to download release ' . $releaseInfo['title'] . ' ' . $releaseInfo['fileUrl']);
             }
             if ($path) {
                 if ($structure = $this->zxParsingManager->getFileStructure($path)) {

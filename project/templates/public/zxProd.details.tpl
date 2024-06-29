@@ -193,6 +193,15 @@
                     {$userElement->userName}, {$element->dateCreated}
                 </td>
             </tr>
+        {else}
+            <tr>
+                <td class='info_table_label'>
+                    {translations name='zxprod.added'}:
+                </td>
+                <td class='info_table_value'>
+                    {$element->dateCreated}
+                </td>
+            </tr>
         {/if}
     </table>
     <div class="zxprod_releases_controls editing_controls">
