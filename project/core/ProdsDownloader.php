@@ -27,6 +27,7 @@ class ProdsDownloader extends errorLogger
 
     public function getFileContents($url)
     {
+        $contents = null;
         if ($filePath = $this->getDownloadedPath($url)) {
             $contents = file_get_contents($filePath);
         }

@@ -889,9 +889,10 @@ class WosManager extends errorLogger
             $previousTime = microtime(true);
         }
         $endTime = microtime(true);
-        echo $text . ' ' . sprintf("%.2f", $endTime - $previousTime) . '<br/>';
+        $time = sprintf("%.2f", $endTime - $previousTime);
+        echo $text . ' ' . $time . '<br/>';
         flush();
-        file_put_contents(PUBLIC_PATH . 'import.log', date('H:i') . ' ' . $text . "\n", FILE_APPEND);
+        file_put_contents(PUBLIC_PATH . 'import.log', date('H:i') . ' ' . $text . ' ' . $time . "\n", FILE_APPEND);
         $previousTime = $endTime;
     }
 

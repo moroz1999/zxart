@@ -657,6 +657,10 @@ class ProdsManager extends ElementsManager
                 $downloaded = $this->prodsDownloader->downloadUrl($fileUrl, $filePath);
             }
             if (!$downloaded) {
+                sleep(20);
+                $downloaded = $this->prodsDownloader->downloadUrl($fileUrl, $filePath);
+            }
+            if (!$downloaded) {
                 throw new \Exception('Unable to download release ' . $element->id . ' ' . $fileUrl);
             }
             if ($filePath && $fileElement = $this->structureManager->createElement(
