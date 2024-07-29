@@ -10,7 +10,6 @@ class submitTagsShared extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated) {
-            $structureElement->prepareActualData();
             $structureElement->updateTagsInfo();
             $structureElement->persistElementData();
 

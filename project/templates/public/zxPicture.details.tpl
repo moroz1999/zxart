@@ -60,9 +60,9 @@
 			'flickering': '{$element->isFlickering() && ($currentMode.mode!='mix')}'
 		{rdelim};
 	</script>
-		{if isset($currentElementPrivileges.submitTags) && $currentElementPrivileges.submitTags == true}
-			{include file=$theme->template("tags.form.tpl") element=$element}
-		{/if}
+	{if isset($currentElementPrivileges.submitTags) && $currentElementPrivileges.submitTags == true}
+		{include file=$theme->template("tags.form.tpl") element=$element}
+	{/if}
 	{include file=$theme->template('component.comments.tpl')}
 	{if $element->denyComments}<p>{translations name="zxitem.commentsdenied"}</p>{/if}
 

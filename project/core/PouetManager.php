@@ -31,7 +31,7 @@ class PouetManager extends errorLogger
         'cracktro' => 92171,
         '32b' => 262451,
         'demopack' => 315126,
-        'demotool' => 316637,
+        'demotool' => 92183,
         'dentro' => 92162,
         'diskmag' => 92179,
         'fastdemo' => 315136,
@@ -42,7 +42,7 @@ class PouetManager extends errorLogger
         'procedural graphics' => 315137,
         'report' => 92159,
         'slideshow' => 315121,
-        'votedisk' => 92174,
+        'votedisk' => 315121,
         'wild' => 92159,
         'bbstro' => 364978,
     ];

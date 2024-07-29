@@ -1,0 +1,235 @@
+{
+  "Demoscene": {
+    "Demo": {
+      "Megademo": {},
+      "Trackmo": {},
+      "Fast demo": {}
+    },
+    "Dentro": {},
+    "Intro": {
+      "8b intro": {},
+      "16b intro": {},
+      "32b intro": {},
+      "64b intro": {},
+      "128b intro": {},
+      "256b intro": {},
+      "512b intro": {},
+      "1K intro": {},
+      "4K intro": {},
+      "8K intro": {},
+      "16K intro": {},
+      "32K intro": {},
+      "128k intro": {},
+      "BBStro": {},
+      "Cracktro": {}
+    },
+    "Gift": {},
+    "Invitation": {},
+    "Art Pack": {
+      "Music Collections": {},
+      "Graphics Collections": {},
+      "Demopack": {}
+    },
+    "Procedural Graphics": {}
+  },
+  "System Software": {
+    "Operating Systems": {},
+    "System Utilities": {
+      "Disk Utilities": {
+        "Hex Disk Editors": {},
+        "File Copiers": {},
+        "Disk Formatters": {},
+        "Disk Diagnostics": {},
+        "Protection Removal Utilities": {},
+        "Monoblock File Creators": {}
+      },
+      "Tape Utilities": {
+        "Copying": {},
+        "Backup": {}
+      },
+      "Media Administration": {
+        "Commanders (File Managers)": {},
+        "Boot": {}
+      },
+      "Memory and Hardware Testing": {
+        "Memory Testing": {},
+        "Microdrive Testing": {},
+        "IO Testing": {},
+        "ROM Testing": {}
+      }
+    },
+    "Programming and Debugging": {
+      "Programming Languages": {
+        "Assembler/Machine Code": {},
+        "Basic": {},
+        "Other": {}
+      },
+      "Compilers": {
+        "Basic Compilers": {}
+      },
+      "Debuggers": {},
+      "Tests": {}
+    },
+    "Copying and Backup": {
+      "MS-DOS Copiers": {},
+      "Disk/Tape Copiers": {},
+      "Disk Copiers": {}
+    },
+    "Packers and Archivers": {
+      "Packers": {
+        "Data Packers": {},
+        "Screen Packers": {}
+      },
+      "Archivers": {}
+    },
+    "Emulators": {}
+  },
+  "Application Software": {
+    "Business Applications": {},
+    "Office Applications": {
+      "Text Editors": {
+        "Notebooks": {},
+        "Text Viewers": {},
+        "Text Editors": {},
+        "Text Utilities": {},
+        "Publishing Systems": {}
+      },
+      "Spreadsheets": {}
+    },
+    "Multimedia": {
+      "Graphics": {
+        "Graphic Editors": {},
+        "Graphic Viewers": {},
+        "Graphic Converters": {},
+        "Clip Art": {},
+        "Graphic Utilities": {},
+        "Sprite Editors": {},
+        "Fonts/UDG": {}
+      },
+      "Sound": {
+        "Music Players": {},
+        "Music Editors": {
+          "AY Music Editors": {},
+          "Beeper Music Editors": {},
+          "Digital Music Editors": {}
+        },
+        "Sound Utilities": {
+          "AY Utilities": {},
+          "Digital Sound Utilities": {},
+          "Sound Editors": {}
+        }
+      }
+    },
+    "Printing": {},
+    "Internet Tools": {
+      "Time Synchronization": {},
+      "Browsers": {},
+      "Email Clients": {}
+    },
+    "Security Tools": {
+      "Cryptography": {},
+      "Data Protection": {
+        "Protection Installation Utilities": {},
+        "Protection Removal Utilities": {}
+      }
+    },
+    "Data Processing and Databases": {}
+  },
+  "Games": {
+    "Arcade": {
+      "Action": {},
+      "Platformers": {},
+      "Maze": {},
+      "Pinball": {},
+      "Endless Runners": {},
+      "Fighting Games": {},
+      "Beat 'em up": {},
+      "Shoot 'em up (Shmups)": {
+        "Vertical Shmups": {},
+        "Horizontal Shmups": {}
+      }
+    },
+    "Adventure": {
+      "Dungeon Crawls": {},
+      "Graphic Adventures": {},
+      "Icon/Menu Driven Adventures": {},
+      "Role-Playing Games (RPGs)": {},
+      "Text Adventures": {},
+      "Illustrated Text Adventures": {}
+    },
+    "Strategy": {
+      "War (Military Strategies)": {},
+      "Management": {},
+      "Turn-Based Strategies": {
+        "Tactical Turn-Based": {}
+      },
+      "Real-Time Strategies (RTS)": {}
+    },
+    "Simulators": {
+      "Flight Simulators": {},
+      "Racing Simulators": {},
+      "Sports Simulators": {},
+      "Life Simulations": {},
+      "Economic Simulations": {}
+    },
+    "Puzzle": {
+      "Logic Games": {},
+      "Word Games": {},
+      "Crosswords": {},
+      "Sudoku": {}
+    },
+    "Card and Board Games": {
+      "Poker": {},
+      "Solitaire": {},
+      "Chess": {},
+      "Checkers": {},
+      "Backgammon": {}
+    },
+    "Casino Games": {
+      "Casino": {},
+      "Roulette": {},
+      "Slots": {}
+    }
+  },
+  "Educational Software": {
+    "Educational Games": {},
+    "Learning Programs": {
+      "Mathematics": {},
+      "Languages": {},
+      "Science": {}
+    },
+    "Miscellaneous Educational Software": {}
+  },
+  "Collections": {
+    "Game Collections": {
+      "Educational Games": {},
+      "Arcade Games": {},
+      "Adventure Games": {},
+      "Strategy Games": {},
+      "Simulators": {},
+      "Puzzle Games": {},
+      "Card and Board Games": {},
+      "Casino Games": {}
+    },
+    "Utility Collections": {
+      "System Utilities": {},
+      "Application Utilities": {}
+    },
+    "Press Collections": {},
+    "Historical Collections": {}
+  },
+  "Press": {
+    "Electronic Magazines": {},
+    "Charts": {},
+    "Info": {},
+    "Newspapers": {},
+    "E-Books": {},
+    "E-Mail": {}
+  },
+  "Various": {}
+}
+
+
+
+
+

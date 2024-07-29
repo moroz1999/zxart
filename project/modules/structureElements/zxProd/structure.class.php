@@ -1,5 +1,8 @@
 <?php
 
+use ZxArt\Queue\QueueService;
+use ZxArt\Queue\QueueType;
+
 /**
  * Class zxProdElement
  *
@@ -31,7 +34,6 @@
  * @property int $joinAndDelete
  * @property boolean $releasesOnly
  * @property array[] $splitData
- * @property boolean hasAiData
  */
 class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPathInterface, CommentsHolderInterface,
     JsonDataProvider, OpenGraphDataProviderInterface, ZxSoftInterface, MetadataProviderInterface
@@ -68,6 +70,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     protected $languagesInfo;
     protected $hardwareInfo;
     private $metaData;
+    protected $sectionType = 'software';
 
     /**
      * @return void
@@ -158,8 +161,6 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         $moduleStructure['joinAndDelete'] = 'text';
         $moduleStructure['releasesOnly'] = 'checkbox';
         $moduleStructure['splitData'] = 'array';
-
-        $moduleStructure['hasAiData'] = 'checkbox';
     }
 
     /**
@@ -372,6 +373,16 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         }
         foreach ($this->categories as $categoryId) {
             $structureManager->clearElementCache($categoryId);
+        }
+        /**
+         * @var QueueService $queueService
+         */
+        $queueService = $this->getService('QueueService');
+
+        if ($this->legalStatus !== 'mia'){
+            $queueService->checkElementInQueue($this->getId(), [QueueType::AI_SEO, QueueType::AI_INTRO, QueueType::AI_CATEGORIES]);
+        } else {
+            $queueService->removeElementFromQueue($this->getId(), [QueueType::AI_SEO, QueueType::AI_INTRO, QueueType::AI_CATEGORIES]);
         }
     }
 
@@ -918,11 +929,11 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
 
     public function getMetaTitle()
     {
-        $title = null;
-        if ($this->hasAiData) {
-            $metaData = $this->getMetaData();
+        $metaData = $this->getMetaData();
+        if ($metaData) {
             return $metaData['metaTitle'];
         }
+        $title = null;
 
         /**
          * @var translationsManager $translationsManager
@@ -970,11 +981,8 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
 
     public function getGeneratedDescription()
     {
-        if ($this->hasAiData) {
-            $metaData = $this->getMetaData();
-            return $metaData['generatedDescription'];
-        }
-        return '';
+        $metaData = $this->getMetaData();
+        return $metaData ? $metaData['generatedDescription'] : '';
     }
 
 
@@ -994,19 +1002,13 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
 
     public function getMetaDescription()
     {
-        if ($this->hasAiData) {
-            $metaData = $this->getMetaData();
-            return $metaData['metaDescription'];
-        }
-        return '';
+        $metaData = $this->getMetaData();
+        return $metaData ? $metaData['metaDescription'] : '';
     }
 
     public function getH1()
     {
-        if ($this->hasAiData) {
-            $metaData = $this->getMetaData();
-            return $metaData['h1'];
-        }
-        return '';
+        $metaData = $this->getMetaData();
+        return $metaData ? $metaData['h1'] : '';
     }
 }

@@ -6,9 +6,11 @@ class tagQueryFilterConverter extends QueryFilterConverter
 
     public function convert($sourceData, $sourceType)
     {
-        if ($sourceType == 'zxMusic') {
+        if ($sourceType === 'zxMusic') {
             $query = $this->generateParentQuery($sourceData, 'module_tag', 'tagLink', true);
-        } elseif ($sourceType == 'zxPicture') {
+        } elseif ($sourceType === 'zxPicture') {
+            $query = $this->generateParentQuery($sourceData, 'module_tag', 'tagLink', true);
+        } elseif ($sourceType === 'zxProd') {
             $query = $this->generateParentQuery($sourceData, 'module_tag', 'tagLink', true);
         } else {
             $query = $this->getService('db')->table('module_tag')->select($this->getFields())->distinct();

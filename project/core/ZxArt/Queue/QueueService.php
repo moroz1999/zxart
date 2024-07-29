@@ -1,37 +1,47 @@
 <?php
+declare(strict_types=1);
 
 namespace ZxArt\Queue;
+
 class QueueService
 {
-    protected $db;
-
-    const STATUS_TODO = 0;
-    const STATUS_INPROGRESS = 1;
-    const STATUS_SUCCESS = 2;
-    const STATUS_FAIL = 3;
-
-
-    public function __construct($db)
+    public function __construct(
+        private readonly QueueRepository $queueRepository
+    )
     {
-        $this->db = $db;
+
     }
 
-    public function getNextElement(QueueType $type): array
+    public function getNextElementId(QueueType $type): ?int
     {
-        return $this->db->table('queue')
-            ->select('elementId')
-            ->where('status', '=', self::STATUS_TODO)
-            ->where('type', '=', $type->value)
-            ->limit(1)
-            ->orderBy('elementId', 'desc')
-            ->get();
+        return $this->queueRepository->getNextElementId($type);
     }
 
-    public function updateStatus(int $elementId, QueueType $type, string $status): void
+    public function updateStatus(int $elementId, QueueType $type, QueueStatus $status): void
     {
-        $this->db->table('queue')
-            ->where('elementId', '=', $elementId)
-            ->where('type', '=', $type->value)
-            ->update(['status' => $status]);
+        $this->queueRepository->updateStatus($elementId, $type, $status);
+    }
+
+    public function checkElementInQueue(int $elementId, array $types)
+    {
+        $records = $this->queueRepository->load($elementId, $types);
+
+        $existingTypes = array_reduce($records, static function ($result, $record) {
+            if ($record['status'] !== QueueStatus::STATUS_TODO) {
+                $result[] = $result['type'];
+            }
+            return $result;
+        }, []);
+
+        $missingTypes = array_diff($types, $existingTypes);
+        if (count($missingTypes) === 0) {
+            return;
+        }
+        $this->queueRepository->addElementRecords($elementId, $missingTypes, QueueStatus::STATUS_TODO);
+    }
+
+    public function removeElementFromQueue(int $elementId, array $types)
+    {
+        $this->queueRepository->deleteElementRecords($elementId, $types);
     }
 }

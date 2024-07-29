@@ -773,6 +773,8 @@ class WosManager extends errorLogger
 
     protected function resolveDownloadUrl($url, bool $useArchiveOrg = false): string
     {
+        $url = str_ireplace('+', '%2B', $url);
+
         if (stripos($url, 'zxdb') !== false) {
             return 'https://spectrumcomputing.co.uk/' . $url;
         } else {

@@ -604,7 +604,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
         $structureManager = $this->getService('structureManager');
         if ($menus = $structureManager->getElementsChildren($this->id, 'container')) {
             foreach ($menus as $menu) {
-                if ($menu->marker == 'graphics' || $menu->marker == 'music') {
+                if ($menu->marker === 'graphics' || $menu->marker === 'music' || $menu->marker === 'software') {
                     $this->sectionsList[] = $menu;
                 }
             }

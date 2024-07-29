@@ -67,7 +67,7 @@ class ZxaaaManager extends errorLogger
         'Mega demo' => 92160,
         'Dentro' => 92162,
         'Invitation' => 92173,
-        'Pack' => 92174,
+        'Pack' => 315121,
         'musicdisk' => 92175,
         'music collection' => 92175,
         'music disk' => 92175,

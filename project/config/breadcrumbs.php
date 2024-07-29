@@ -19,5 +19,6 @@
         'countriesList',
         'country',
         'city',
+        'tag',
     ],
 ];

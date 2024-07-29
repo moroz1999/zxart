@@ -1,15 +1,17 @@
 <?php
 
+use ZxArt\Ai\AiQueryService;
+
 class AiManagerServiceContainer extends DependencyInjectionServiceContainer
 {
-    public function makeInstance(): AiManager
+    public function makeInstance(): AiQueryService
     {
-        return new AiManager();
+        return new AiQueryService();
     }
 
     /**
-     * @param AiManager $instance
-     * @return AiManager
+     * @param AiQueryService $instance
+     * @return AiQueryService
      */
     public function makeInjections($instance)
     {

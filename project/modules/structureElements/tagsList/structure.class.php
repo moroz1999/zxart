@@ -34,13 +34,17 @@ class tagsListElement extends structureElement
              */
             $apiQueriesManager = $this->getService('ApiQueriesManager');
             $sectionsLogics = $this->getService('SectionLogics');;
-            if (($type = $sectionsLogics->getArtItemsType()) == 'graphics') {
+            if (($type = $sectionsLogics->getArtItemsType()) === 'graphics') {
                 $parameters = [
                     'zxPictureAll' => true,
                 ];
-            } elseif ($type == 'music') {
+            } elseif ($type === 'music') {
                 $parameters = [
                     'zxMusicAll' => true,
+                ];
+            } elseif ($type === 'software') {
+                $parameters = [
+                    'zxProdAll' => true,
                 ];
             } else {
                 $parameters = [];

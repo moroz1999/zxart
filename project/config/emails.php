@@ -7,4 +7,7 @@
     'smtpPort' => '',
     'smtpUser' => '',
     'smtpPassword' => '',
+    'verifyEmailKey'=>'',
+    'verifaliaUser'=>'',
+    'verifaliaPass'=>'',
 ];

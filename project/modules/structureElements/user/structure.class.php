@@ -13,6 +13,7 @@ class userElement extends structureElement
     public $defaultActionName = 'show';
     public $role = 'content';
     protected $authorElement;
+    public array $userGroupsList = [];
 
     /**
      * @return void

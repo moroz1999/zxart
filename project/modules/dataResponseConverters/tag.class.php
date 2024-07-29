@@ -1,28 +1,56 @@
 <?php
 
-class tagDataResponseConverter extends dataResponseConverter
+class tagDataResponseConverter extends StructuredDataResponseConverter
 {
-    public function convert($data)
-    {
-        $result = [];
-        foreach ($data as $element) {
-            $info = [];
-            $info['id'] = $element->id;
-            $info['structureType'] = $element->structureType;
-            $info['title'] = $element->title;
-            if ($element->synonym) {
-                $info['title'] .= ", " . $element->synonym;
-            }
-            if ($element->description) {
-                $info['title'] .= " (" . $element->description . ")";
-            }
-            $info['value'] = $element->title;
-            $info['synonym'] = $element->synonym;
-            $info['description'] = $element->description;
-            $info['url'] = $element->URL;
-            $result[] = $info;
-        }
+    protected $defaultPreset = 'api';
 
-        return $result;
+    protected function getRelationStructure()
+    {
+        return [
+            'id' => 'id',
+            'title' => function ($element) {
+                $title = $element->title;
+                if ($element->synonym) {
+                    $title .= ", " . $element->synonym;
+                }
+
+                if ($element->description) {
+                    $title .= " (" . $element->description . ")";
+                }
+                return html_entity_decode($title, ENT_QUOTES);
+            },
+            'value' => 'title',
+            'synonym' => 'synonym',
+            'description' => 'description',
+            'url' => 'getUrl',
+            'structureType' => 'structureType',
+            'prods' => 'getProdsInfo',
+        ];
+    }
+
+    /**
+     * @return string[][]
+     *
+     * @psalm-return array{api: list{'id', 'title', 'url', 'dateCreated', 'dateModified', 'city', 'country', 'subGroupIds', 'importIds', 'aliases'}, apiShort: list{'id', 'title', 'dateModified'}, search: list{'id', 'searchTitle', 'url', 'structureType'}, zxProdsList: list{'id', 'title', 'url', 'prods', 'publishedProds', 'releases'}}
+     */
+    protected function getPresetsStructure()
+    {
+        return [
+            'api' => [
+                'id',
+                'title',
+                'url',
+                'value',
+                'synonym',
+                'description',
+                'url',
+            ],
+            'zxProdsList' => [
+                'id',
+                'title',
+                'url',
+                'prods',
+            ],
+        ];
     }
 }

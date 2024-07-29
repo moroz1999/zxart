@@ -4,6 +4,7 @@
  * Class ZxArtItem
  *
  * @property int $denyComments
+ * @property int $tagsAmount
  * @property int $year
  */
 abstract class ZxArtItem extends structureElement implements MetadataProviderInterface, VotesHolderInterface,
@@ -262,7 +263,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         $tagsStrings = explode(',', $this->tagsText);
         $tagsManager = $this->getService('tagsManager');
         foreach ($tagsStrings as $tagName) {
-            if ($tagElement = $tagsManager->addTag($tagName, $this->id)) {
+            if ($tagElement = $tagsManager->addTag($tagName, $this->getId())) {
                 if (isset($tagsIndex[$tagElement->title])) {
                     unset($tagsIndex[$tagElement->title]);
                 }

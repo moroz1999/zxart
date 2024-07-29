@@ -12,6 +12,7 @@ class tagElement extends structureElement implements JsonDataProvider
     protected $isUntranslated;
     protected $pictures;
     protected $tunes;
+    protected $prods;
 
     /**
      * @return void
@@ -43,7 +44,7 @@ class tagElement extends structureElement implements JsonDataProvider
 
     public function getFontSize($maxAmount = 10)
     {
-        if (!$maxAmount){
+        if (!$maxAmount) {
             $maxAmount = 10;
         }
 
@@ -52,9 +53,9 @@ class tagElement extends structureElement implements JsonDataProvider
 
         if ($this->amount > $this->getService('ConfigManager')->get('zx.maxTagsAmount')) {
             return $min + ($max - $min) * (99) / $maxAmount;
-        } else {
-            return $min + ($max - $min) * ($this->amount - 1) / $maxAmount;
         }
+
+        return $min + ($max - $min) * ($this->amount - 1) / $maxAmount;
     }
 
     public function updateTagsListLinks(): void
@@ -108,12 +109,19 @@ class tagElement extends structureElement implements JsonDataProvider
     public function getItems()
     {
         $sectionsLogics = $this->getService('SectionLogics');;
-        if (($type = $sectionsLogics->getArtItemsType()) == 'graphics') {
+        if (($type = $sectionsLogics->getArtItemsType()) === 'graphics') {
             $this->pictures = $this->loadElementsByType('zxPicture');
             return $this->pictures;
-        } elseif ($type == 'music') {
+        }
+
+        if ($type === 'music') {
             $this->tunes = $this->loadElementsByType('zxMusic');
             return $this->tunes;
+        }
+
+        if ($type === 'software') {
+            $this->prods = $this->loadElementsByType('zxProd');
+            return $this->prods;
         }
         return false;
     }
@@ -147,4 +155,12 @@ class tagElement extends structureElement implements JsonDataProvider
         return $elements;
     }
 
+    public function getProdsInfo(): array
+    {
+        $prodsInfo = [];
+        foreach ($this->getItems() as $prod) {
+            $prodsInfo[] = $prod->getElementData('list');
+        }
+        return $prodsInfo;
+    }
 }

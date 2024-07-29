@@ -47,7 +47,7 @@ class SectionLogics
 
     public function getCurrentSectionId()
     {
-        if (is_null($this->sectionId)) {
+        if ($this->sectionId === null) {
             $this->sectionId = false;
             if ($currentLanguageElement = $this->structureManager->getElementById(
                 $this->languagesManager->getCurrentLanguageId()
@@ -63,7 +63,7 @@ class SectionLogics
 
     public function getSectionsInfo()
     {
-        if (is_null($this->typesIds)) {
+        if ($this->typesIds === null) {
             $this->typesIds = [];
             if ($currentLanguageElement = $this->structureManager->getElementById(
                 $this->languagesManager->getCurrentLanguageId()
@@ -96,9 +96,9 @@ class SectionLogics
     public function getAuthorLinkTypes(): array
     {
         $sectionType = $this->getArtItemsType();
-        if ($sectionType == 'graphics') {
+        if ($sectionType === 'graphics') {
             $types = ['authorPicture'];
-        } elseif ($sectionType == 'music') {
+        } elseif ($sectionType === 'music') {
             $types = ['authorMusic'];
         } else {
             $types = ['authorPicture', 'authorMusic'];
@@ -116,17 +116,15 @@ class SectionLogics
     {
         $types = ['partyMusic'];
         $sectionType = $this->getArtItemsType();
-        if ($sectionType == 'graphics') {
+        if ($sectionType === 'graphics') {
             $types = 'partyPicture';
-        } else {
-            if ($sectionType == 'music') {
-                $types = 'partyMusic';
-            } else {
-                if ($sectionType == 'all') {
-                    $types = 'partyMusic';
-                }
-            }
+        } elseif ($sectionType === 'music') {
+            $types = 'partyMusic';
+        } elseif ($sectionType === 'all') {
+            $types = 'partyMusic';
+
         }
+
         return $types;
     }
 }

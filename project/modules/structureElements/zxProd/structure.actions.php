@@ -25,3 +25,4 @@ $moduleActions[] = 'showSplitForm';
 $moduleActions[] = 'split';
 $moduleActions[] = 'resize';
 $moduleActions[] = 'uploadScreenshot';
+$moduleActions[] = 'submitTags';
