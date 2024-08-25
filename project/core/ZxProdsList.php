@@ -85,12 +85,16 @@ trait ZxProdsList
     public function getApiQuery(): ApiQuery
     {
         if (!isset($this->apiQuery)) {
-            $subcategoriesIds = [];
-            $this->getSubCategoriesTreeIds($subcategoriesIds);
-            $subcategoriesIds = array_unique($subcategoriesIds);
+            $categoriesIds = [];
+            if ($this->getIncludeSubcategoriesProdsValue()) {
+                $this->getSubCategoriesTreeIds($categoriesIds);
+                $categoriesIds = array_unique($categoriesIds);
+            } else {
+                $categoriesIds[] = $this->getId();
+            }
             $controller = $this->getService('controller');
 
-            $filters = ['zxProdCategory' => $subcategoriesIds];
+            $filters = ['zxProdCategoryStrict' => $categoriesIds];
             /**
              * @var ApiQueriesManager $apiQueriesManager
              */
@@ -255,7 +259,7 @@ trait ZxProdsList
             if ($selectorValues) {
                 $this->yearsSelector[] = [
                     'title' => '',
-                    'values' => $selectorValues
+                    'values' => $selectorValues,
                 ];
             }
         }
@@ -344,7 +348,7 @@ trait ZxProdsList
             if ($selectorValues) {
                 $this->legalStatusesSelector[] = [
                     'title' => '',
-                    'values' => $selectorValues
+                    'values' => $selectorValues,
                 ];
             }
         }
@@ -375,7 +379,7 @@ trait ZxProdsList
 
                 $group = [
                     'title' => $translationsManager->getTranslationByName("zxrelease.releaseType"),
-                    'values' => []
+                    'values' => [],
                 ];
                 foreach ($hwItems as $format) {
                     $group['values'][] = [
@@ -416,7 +420,7 @@ trait ZxProdsList
                     if ($intersected = array_intersect($groupValues, $hwItems)) {
                         $group = [
                             'title' => $translationsManager->getTranslationByName("hardware.group_{$groupName}"),
-                            'values' => []
+                            'values' => [],
                         ];
                         foreach ($intersected as $hwItem) {
                             $group['values'][] = [
@@ -464,7 +468,7 @@ trait ZxProdsList
                 $countries = $countriesQuery->get();
                 $group = [
                     'title' => '',
-                    'values' => []
+                    'values' => [],
                 ];
                 foreach ($countries as $country) {
                     $group['values'][] = [
@@ -505,7 +509,7 @@ trait ZxProdsList
                     if ($intersected = array_intersect($groupValues, $hwItems)) {
                         $group = [
                             'title' => $translationsManager->getTranslationByName("formats.group_{$groupName}"),
-                            'values' => []
+                            'values' => [],
                         ];
                         foreach ($intersected as $format) {
                             $group['values'][] = [
@@ -548,7 +552,7 @@ trait ZxProdsList
                     ->pluck('value');
                 $group = [
                     'title' => "",
-                    'values' => []
+                    'values' => [],
                 ];
                 $order = [];
                 foreach ($languages as $language) {
@@ -622,7 +626,7 @@ trait ZxProdsList
             if ($selectorValues) {
                 $this->sortingSelector[] = [
                     'title' => '',
-                    'values' => $selectorValues
+                    'values' => $selectorValues,
                 ];
             }
         }
@@ -672,7 +676,7 @@ trait ZxProdsList
                         $selectorValues[] = [
                             'value' => $letter,
                             'title' => mb_strtoupper($letter),
-                            'selected' => $selected
+                            'selected' => $selected,
                         ];
                     } else {
                         $numericExists = true;
@@ -683,14 +687,14 @@ trait ZxProdsList
                     array_unshift($selectorValues, [
                         'value' => '0-9',
                         'title' => '0-9',
-                        'selected' => $selected
+                        'selected' => $selected,
                     ]);
                 }
             }
             if ($selectorValues) {
                 $this->lettersSelector[] = [
                     'title' => '',
-                    'values' => $selectorValues
+                    'values' => $selectorValues,
                 ];
             }
         }
@@ -761,6 +765,12 @@ trait ZxProdsList
         return $controller->getParameter('releases') === '1';
     }
 
+    private function getIncludeSubcategoriesProdsValue(): bool
+    {
+        $controller = $this->getService('controller');
+        return $controller->getParameter('includeSubcategoriesProds') !== '0';
+    }
+
     public function getUrl($action = null)
     {
         if ($this->final) {
@@ -784,6 +794,7 @@ trait ZxProdsList
             'languages' => $this->getSelectorValue('languages') ?? [],
             'releaseTypes' => $this->getSelectorValue('types') ?? [],
             'releases' => $this->getReleasesValue(),
+            'includeSubcategoriesProds' => $this->getIncludeSubcategoriesProdsValue(),
         ];
     }
 
@@ -803,10 +814,12 @@ trait ZxProdsList
             && !$selectors['formats']
             && !$selectors['languages']
             && !$selectors['releaseTypes']
-            && !$selectors['releases'];
+            && !$selectors['releases']
+            && $selectors['includeSubcategoriesProds'];
     }
 
-    public function hasDefaultSorting(): bool {
+    public function hasDefaultSorting(): bool
+    {
         if ($value = $this->getSelectorValue('sorting')) {
             return $value[0] === 'votes' && $value[1] === 'desc';
         }

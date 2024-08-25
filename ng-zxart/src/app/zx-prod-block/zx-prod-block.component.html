@@ -4,7 +4,7 @@
     class="zx-prod-images"
   >
     <img
-      *ngIf="model.loadingImageUrl && (imagesLayout === 'loading' && !displayScreenshots)"
+      *ngIf="model.loadingImageUrl && ((imagesLayout === 'loading' && !displayScreenshots) || model.imagesUrls.length === 0)"
       class="zx-prod-loading"
       src="{{ model.loadingImageUrl }}"
       alt="{{ model.title }}"

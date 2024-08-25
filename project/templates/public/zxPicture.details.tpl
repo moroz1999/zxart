@@ -69,17 +69,6 @@
 	{include file=$theme->template('component.voteslist.tpl')}
 	{if $element->denyVoting}<p>{translations name="zxitem.votingdenied"}</p>{/if}
 	{stripdomspaces}
-			{if $element->getChartData()}
-				<script defer src="{$controller->baseURL}js/Chart.min.js"></script>
-				<div class="picture_details_stats">
-					<h2 class="picture_details_views_title">{translations name="zxpicture.views_chart"}</h2>
-					<canvas class="picture_details_views_chart chart_component" data-chartid="{$element->id}_views" width="700" height="200"></canvas>
-				</div>
-				<script>
-					window.chartsData = window.chartsData || {ldelim}{rdelim};
-					window.chartsData["{$element->id}_views"] = {$element->getChartData()};
-				</script>
-			{/if}
 		{if $element->getReleaseElement()}
 			{assign bestPictures $element->getReleaseElement()->getBestPictures(3, $element->id)}
 			{if $bestPictures}

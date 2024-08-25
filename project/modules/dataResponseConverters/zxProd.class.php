@@ -107,7 +107,11 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 $authors = [];
                 foreach ($element->getShortAuthorship('prod') as $author) {
                     $roles = implode(', ', $author['roles']); // concatenate roles with a comma
-                    $authors[] = "{$author['title']} ({$roles})";
+                    if ($roles === 'unknown') {
+                        $authors[] = $author['title'];
+                    } else {
+                        $authors[] = "{$author['title']} ({$roles})";
+                    }
                 }
                 return implode(', ', $authors);
             },
@@ -248,6 +252,14 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 'compilationItems',
                 'seriesProds',
                 'connectedCategoriesIds',
+                'categoriesString',
+            ],
+            'aiCategories' => [
+                'title',
+                'year',
+                'manualString',
+                'groupsString',
+                'publishersString',
             ],
             'apiShort' => [
                 'id',

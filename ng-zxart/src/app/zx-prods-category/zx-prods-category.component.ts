@@ -29,6 +29,7 @@ export class ZxProdsCategoryComponent implements OnInit {
   public tags: Array<number> = [];
   public countries: Array<string> = [];
   public releases = false;
+  public includeSubcategoriesProds = true;
 
   public layout: ZxProdsListLayout = 'loading';
   public loading = false;
@@ -106,6 +107,9 @@ export class ZxProdsCategoryComponent implements OnInit {
     if (this.releases) {
       parameters.releases = 1;
     }
+    if (!this.includeSubcategoriesProds) {
+      parameters.includeSubcategoriesProds = 0;
+    }
     if (this.countries.length) {
       parameters.countries = this.countries.join(',');
     }
@@ -142,6 +146,7 @@ export class ZxProdsCategoryComponent implements OnInit {
         this.releaseTypes = this.model.selectorValues.releaseTypes;
         this.languages = this.model.selectorValues.languages;
         this.releases = this.model.selectorValues.releases;
+        this.includeSubcategoriesProds = this.model.selectorValues.includeSubcategoriesProds;
         this.sorting = this.model.sortingSelector[0]?.values.find(item => item.selected)?.value;
       },
       () => {
@@ -223,6 +228,10 @@ export class ZxProdsCategoryComponent implements OnInit {
   }
 
   releasesSelected() {
+    this.fetchModel();
+  }
+
+  includeSubcategoriesProdsSelected() {
     this.fetchModel();
   }
 
@@ -319,6 +328,7 @@ export class ZxProdsCategoryComponent implements OnInit {
   private resetSelectors(): void {
     this.sorting = 'votes,desc';
     this.releases = false;
+    this.includeSubcategoriesProds = true;
     this.years = [];
     this.hw = [];
     this.languages = [];

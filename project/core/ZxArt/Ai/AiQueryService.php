@@ -1,24 +1,30 @@
 <?php
 
 namespace ZxArt\Ai;
+
 use ConfigManager;
 use errorLog;
 use JsonException;
 use OpenAI;
+use zxProdCategoryElement;
 use zxProdElement;
 
 class AiQueryService
 {
+    private const MODEL_4O = 'gpt-4o';
+    private const MODEL_4O_MINI = 'gpt-4o-mini';
     private ConfigManager $configManager;
     private const DESCRIPTION_LIMIT = 2700;
     private const MIN_DESCRIPTION_LIMIT = 500;
+    private const TAGS_MANUAL_LIMIT = 1000;
+    private const IMAGES_LIMIT = 5;
 
     public function setConfigManager(ConfigManager $configManager): void
     {
         $this->configManager = $configManager;
     }
 
-    private function getSeoPromt($isRunnable)
+    private function getSeoPromt($isRunnable): string
     {
         $promt = "Действуй как опытный SEO-специалист, но отвечай как API. Есть сайт-коллекция софта для ZX Spectrum, Sam Coupe, ZX Next, ZX81, ZX Evolution и тд, нужно сделать SEO, чтобы люди в поисковике нашли нужную информацию. 
 Я скину данные софта, сгенерируй из них JSON на трех языках eng/rus/spa, где был бы эффективный page title (30-60 символов), краткое описание meta description с важными параметрами (155-160 символов), правильный заголовок h1 (до 70 символов). 
@@ -100,6 +106,32 @@ spa:{}
         return true;
     }
 
+    private function validateCategoriesAndTagsResponse(array $output): bool
+    {
+        $fields = ['tags', 'category'];
+
+        foreach ($fields as $field) {
+            if (empty($output[$field])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function validateTagsResponse(array $output): bool
+    {
+        $fields = ['tags'];
+
+        foreach ($fields as $field) {
+            if (empty($output[$field])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private function getProdDataJson(array $prodData): ?string
     {
         try {
@@ -122,7 +154,8 @@ spa:{}
         $promt = $this->getSeoPromt($prodData['isRunnableOnline']);
         $promt .= $prodDataJson;
 
-        $output = $this->sendPromt($promt, 0.3, $prodElement->id . '_seo', $prodData);
+        $this->logAi($promt, $prodElement->id . '_seo');
+        $output = $this->sendPromt($promt, 0.3, $prodData);
         if (!$output) {
             return null;
         }
@@ -133,7 +166,7 @@ spa:{}
         return $output;
     }
 
-    private function getIntroPromt()
+    private function getIntroPromt(): string
     {
         return "Я скину данные софта, сгенерируй из них краткое описание программы в виде JSON на трех языках eng/rus/spa.
 * Для каждого языка напиши по 4 абзаца, используя html теги для форматирования, всё вместе 200 слов
@@ -152,7 +185,7 @@ spa:''
 ";
     }
 
-    public function queryIntroForProd(zxProdElement $prodElement)
+    public function queryIntroForProd(zxProdElement $prodElement): ?array
     {
         $result = [
             'eng' => '',
@@ -170,7 +203,8 @@ spa:''
 
             $promt = $this->getIntroPromt();
             $promt .= $prodDataJson;
-            $response = $this->sendPromt($promt, 0.5, $prodElement->id . '_intro', $prodData);
+            $this->logAi($promt, $prodElement->id . '_intro');
+            $response = $this->sendPromt($promt, 0.5, $prodData);
             if (!$response) {
                 return null;
             }
@@ -191,29 +225,47 @@ spa:''
             !empty($response['spa']['intro']);
     }
 
-    private function sendPromt(string $promt, float $temperature, string $log, array $prodData): ?array
+    private function sendPromt(string $promt, float $temperature, array $prodData, ?array $imageUrls = null): ?array
     {
         $apiKey = $this->configManager->getConfig('main')->get('ai_key');
         $client = OpenAI::client($apiKey);
 
         $result = null;
+
+        $content = [
+            [
+                "type" => "text",
+                "text" => $promt,
+            ],
+        ];
+        if ($imageUrls !== null) {
+            foreach ($imageUrls as $imageUrl) {
+                $content[] = [
+                    "type" => "image_url",
+                    "image_url" => [
+                        "url" => $imageUrl,
+                        "detail" => "low",
+                    ],
+                ];
+            }
+        }
+
+
         try {
             $response = $client->chat()->create([
-                'model' => 'gpt-3.5-turbo',
+                'model' => self::MODEL_4O,
+                'response_format' => ["type" => "json_object"],
                 'temperature' => $temperature,
                 'messages' => [
-                    ['role' => 'user', 'content' => $promt],
+                    ['role' => 'user',
+                        'content' => $content,
+                    ],
                 ],
             ]);
             $result = $response->choices[0]->message->content;
         } catch (Exception $exception) {
             errorLog::getInstance()?->logMessage(self::class, $exception->getMessage() . ': ' . $prodData['title']);
         }
-        if (!is_dir(ROOT_PATH . '/temporary/ai')) {
-            mkdir(ROOT_PATH . '/temporary/ai');
-        };
-        file_put_contents(ROOT_PATH . '/temporary/ai/' . $log, $promt);
-
 
         try {
             $data = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
@@ -222,6 +274,14 @@ spa:''
         }
 
         return $data;
+    }
+
+    private function logAi($message, $type)
+    {
+        if (!is_dir(ROOT_PATH . '/temporary/ai')) {
+            mkdir(ROOT_PATH . '/temporary/ai');
+        };
+        file_put_contents(ROOT_PATH . '/temporary/ai/' . $type, $message, FILE_APPEND);
     }
 
     /**
@@ -242,4 +302,187 @@ spa:''
 
         return $truncated;
     }
+
+    /**
+     * @throws AiQueryFailException
+     * @throws AiQuerySkipException
+     */
+    public function queryCategoriesAndTagsForProd(zxProdElement $prodElement, $queryCategories): array
+    {
+        if (count($prodElement->compilationItems) > 0) {
+            throw new AiQuerySkipException('Skip compilation. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
+        }
+
+        $prodData = $this->getTagsProdData($prodElement);
+        $prodDataString = $this->mapToCustomString($prodData);
+
+        $imageUrls = $prodElement->getImagesUrls();
+        //skip loading screen
+        if (count($imageUrls) > 1) {
+            $imageUrls = array_slice($imageUrls, 1);
+        }
+        $imageUrls = array_slice($imageUrls, 0, self::IMAGES_LIMIT);
+        if (count($imageUrls) === 0) {
+            throw new AiQuerySkipException('No images for prod. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
+        }
+
+        if ($queryCategories) {
+            $promt = $this->getCategoriesAndTagsPromt();
+            $categoriesStructure = $this->getParentCategoriesTreeData($prodElement);
+            $categoriesText = $this->jsonToIndentedString($categoriesStructure);
+            $promt = str_ireplace('%%categories%%', $categoriesText, $promt);
+        } else {
+            $promt = $this->getTagsPromt();
+        }
+        $promt = str_ireplace('%%prod%%', $prodDataString, $promt);
+        $this->logAi($promt, $prodElement->id . '_categories_tags');
+        $response = $this->sendPromt($promt, 1, $prodData, $imageUrls);
+        if (!$response) {
+            throw new AiQueryFailException('AI Response is null. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
+        }
+        $this->logAi(json_encode($response), $prodElement->id . '_categories_tags');
+
+        if ($queryCategories) {
+            $isValid = $this->validateCategoriesAndTagsResponse($response);
+        } else {
+            $isValid = $this->validateTagsResponse($response);
+        }
+        if (!$isValid) {
+            throw new AiQueryFailException('AI Response is invalid. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
+        }
+        return $response;
+    }
+
+    private function mapToCustomString(array $data)
+    {
+        $result = '';
+        foreach ($data as $key => $value) {
+            if (!empty($value)) {
+                $result .= $key . ' ' . $value . "\n";
+            }
+        }
+        return $result;
+    }
+
+    private function getParentCategoriesTreeData(zxProdElement $prodElement): array
+    {
+        $result = [];
+        $categoriesLists = $prodElement->getCategoriesPaths();
+        $mainCategoryIds = [];
+        foreach ($categoriesLists as $list) {
+            $mainCategory = $list[0] ?? null;
+            if ($mainCategory === null) {
+                continue;
+            }
+            $mainCategoryId = $mainCategory->getId();
+            if (!in_array($mainCategoryId, $mainCategoryIds)) {
+                $this->gatherCategoryStructure($mainCategory, $result);
+            }
+            $mainCategoryIds[] = $mainCategoryId;
+        }
+        return $result;
+    }
+
+    private function gatherCategoryStructure(zxProdCategoryElement $category, &$result)
+    {
+        $id = $category->getId();
+        $result[$id] = [
+            'name' => html_entity_decode($category->getTitle()),
+        ];
+        $subCategories = $category->getCategories();
+        $subResult = [];
+        foreach ($subCategories as $subCategory) {
+            $this->gatherCategoryStructure($subCategory, $subResult);
+        }
+        if (count($subResult) > 0) {
+            $result[$id]['sub'] = $subResult;
+        }
+    }
+
+    private function jsonToIndentedString(array $data, $level = 0)
+    {
+        $result = '';
+        $indent = str_repeat("\t", $level); // Уровень табуляции
+
+        foreach ($data as $key => $value) {
+            if (is_array($value) && isset($value['name'])) {
+                $result .= $indent . $key . ' ' . $value['name'] . "\n";
+                if (isset($value['sub'])) {
+                    $result .= $this->jsonToIndentedString($value['sub'], $level + 1);
+                }
+            } elseif (is_string($value)) {
+                $result .= $indent . $key . ' ' . $value . "\n";
+            }
+        }
+
+        return $result;
+    }
+
+    private function getTagsProdData(zxProdElement $prodElement): array
+    {
+        $prodData = $prodElement->getElementData('aiCategories');
+        if (!$prodData) {
+            throw new AiQueryFailException('Prod data is null. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
+        }
+        $manual = '';
+        if (!empty($prodData['manualString']) && strlen($prodData['manualString']) > self::MIN_DESCRIPTION_LIMIT) {
+            $manual = $this->cleanString($prodData['manualString']);
+            $length = self::TAGS_MANUAL_LIMIT;
+            $manual = $this->truncateUtf8($manual, $length);
+        }
+        $data = [
+            'title' => $prodData['title'],
+            'year' => $prodData['year'],
+            'produced' => $prodData['groupsString'],
+            'published' => $prodData['publishersString'],
+            'manual' => $manual,
+        ];
+        return $data;
+    }
+
+    private function cleanString($input)
+    {
+        $input = preg_replace('/\s+/', ' ', $input);
+        $output = preg_replace('/([^a-zA-Z0-9\s])\1+/', '$1', $input);
+        return trim($output);
+    }
+
+    private function getCategoriesAndTagsPromt(): string
+    {
+        return "You are an expert in software classification. 
+Assign category for the ZX Spectrum program and suggest 10-15 tags that would be useful for a visitor. 
+Base your analysis strictly on the visual layout and similarity to other programs of that genre. 
+Focus on the most relevant category the one you are confident in. 
+For tags, list only the theme, setting, celebrity characters (if any), and titles of movies or books (if any) IN ENGLISH. DO NOT INCLUDE genre, pixel art, retro, year, or ZX Spectrum in the tags.
+Example of good tags for game Predator:Predator,Movie-based,Schwarzenegger,Jungle,Survival,Warfare. 
+Determine category based solely on the screenshot, but don't contradict the theme from title or description; ignore setting and theme. Use your knowledge from Wikipedia where applicable.
+%%prod%%
+Categories tree (tabs denote children, the number is the ID):
+%%categories%%
+In the response, do not write ANYTHING except the JSON structure:
+{tags:['tag1', ...],category:id}
+";
+    }
+
+    private function getTagsPromt(): string
+    {
+        return "You are an expert in software classification. Using screenshots, suggest 10-15 tags that would be useful for a visitor. 
+For tags, list only the theme, setting, celebrity characters (if any), and titles of movies or books (if any) IN ENGLISH. DO NOT INCLUDE genre, pixel art, retro, year, or ZX Spectrum in the tags. 
+DO NOT INCLUDE producer, genre, pixel art, retro, year, or ZX Spectrum in the tags.
+Example of good tags for game Predator:Predator,Movie-based,Schwarzenegger,Jungle,Survival,Warfare.
+%%prod%%
+In the response, do not write ANYTHING except the JSON structure:
+{tags:['tag1', ...]}
+";
+    }
+}
+
+class AiQueryFailException extends \Exception
+{
+
+}
+
+class AiQuerySkipException extends \Exception
+{
+
 }

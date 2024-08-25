@@ -5,6 +5,7 @@
   },
   "prods-list": {
     "unknown-year": "Неизвестный год выпуска",
+    "include-subcategories-prods": "Показывать программы подкатегорий",
     "presets": {
       "year": "Лучшее за год",
       "recent": "Лучшее за три года",

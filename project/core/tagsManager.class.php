@@ -201,7 +201,7 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
     {
         $tagElement = false;
         $tagName = mb_convert_case(trim($tagName), MB_CASE_TITLE, "UTF-8");
-        if ($tagName != '') {
+        if ($tagName !== '') {
             if (!($tagElement = $this->loadTagElement($tagName)) && $createNew) {
                 $tagElement = $this->createTagElement($tagName);
             }

@@ -20,7 +20,7 @@ class zxProdAjaxSearchQueryFilter extends ajaxSearchQueryFilter
             function ($subQuery) {
                 $subQuery->from('structure_links')->select('structure_links.childStructureId')->where('structure_links.parentStructureId', '=', 92171);
             }
-        );
+        )->orderBy('title', 'asc');
 
         return $query;
     }

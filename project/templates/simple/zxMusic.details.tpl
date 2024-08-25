@@ -33,14 +33,3 @@
 
 	{include file=$theme->template('component.voteslist.tpl')}
 	{if $element->denyVoting}<p>{translations name="zxitem.votingdenied"}</p>{/if}
-	{if $element->getChartData()}
-		<script defer src="{$controller->baseURL}js/Chart.min.js"></script>
-		<div class="music_details_stats">
-			<h2 class="music_details_plays_title">{translations name="zxmusic.plays_chart"}</h2>
-			<canvas class="music_details_plays_chart chart_component" data-chartid="{$element->id}_plays" width="700" height="200"></canvas>
-		</div>
-		<script>
-			window.chartsData = window.chartsData || {ldelim}{rdelim};
-			window.chartsData["{$element->id}_plays"] = {$element->getChartData()};
-		</script>
-	{/if}

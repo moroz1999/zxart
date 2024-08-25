@@ -6,7 +6,7 @@ class cataloguesElement extends structureElement
     public $dataResourceName = 'module_generic';
     public $allowedTypes = [
         'groups',
-        'zxProdCategories',
+        'ZxProdCategories',
         'prods',
     ];
     public $defaultActionName = 'showFullList';

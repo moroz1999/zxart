@@ -282,7 +282,8 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     {
         $urls = [];
         foreach ($this->getFilesList('connectedFile') as $fileElement) {
-            $urls[] = $fileElement->getImageUrl($preset);
+            $url = $fileElement->getImageUrl($preset);
+            $urls[] = str_replace('http://zxart.loc', 'https://zxart.ee', $url);
         }
         return $urls;
     }
@@ -378,12 +379,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
          * @var QueueService $queueService
          */
         $queueService = $this->getService('QueueService');
-
-        if ($this->legalStatus !== 'mia'){
-            $queueService->checkElementInQueue($this->getId(), [QueueType::AI_SEO, QueueType::AI_INTRO, QueueType::AI_CATEGORIES]);
-        } else {
-            $queueService->removeElementFromQueue($this->getId(), [QueueType::AI_SEO, QueueType::AI_INTRO, QueueType::AI_CATEGORIES]);
-        }
+        $queueService->checkElementInQueue($this->getId(), [QueueType::AI_SEO, QueueType::AI_INTRO, QueueType::AI_CATEGORIES_TAGS]);
     }
 
     public function getBestPictures($limit = false, $excludeId = null)
@@ -838,9 +834,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     }
 
     /**
-     * @return (structureElement|true|zxProdCategoryElement)[][]
-     *
-     * @psalm-return list{0?: list{0: structureElement|true, 1?: structureElement|true, 2?: zxProdCategoryElement},...}
+     * @return zxProdCategoryElement[][]
      */
     public function getCategoriesPaths(): array
     {
@@ -861,6 +855,21 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
             }
         }
         return $paths;
+    }
+
+    public function getParentCategoriesMap(): array
+    {
+        $usedCategories = [];
+        foreach ($this->getConnectedCategories() as $category) {
+            if (!isset($usedCategories[$category->id])) {
+                $usedCategories[$category->id] = true;
+                while ($parentCategory = $category->getParentCategory()) {
+                    $category = $parentCategory;
+                    $usedCategories[$parentCategory->id] = true;
+                }
+            }
+        }
+        return $usedCategories;
     }
 
     /**
@@ -1010,5 +1019,40 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     {
         $metaData = $this->getMetaData();
         return $metaData ? $metaData['h1'] : '';
+    }
+
+    public function checkAndPersistCategories()
+    {
+        $checkedCategories = [];
+        /**
+         * @var structureManager $structureManager
+         */
+        $structureManager = $this->getService('structureManager');
+        foreach ($this->categories as $categoryId) {
+            /**
+             * @var zxProdCategoryElement $category
+             */
+            $category = $structureManager->getElementById($categoryId);
+            if (!$category) {
+                continue;
+            }
+            $childIds = [];
+            $category->getSubCategoriesTreeIds($childIds);
+            $isParentId = false;
+            foreach ($this->categories as $otherCategoriesId){
+                if ($otherCategoriesId === $categoryId){
+                    continue;
+                }
+                if (in_array($otherCategoriesId, $childIds)) {
+                    $isParentId = true;
+                    break;
+                }
+            }
+            if (!$isParentId){
+                $checkedCategories[] = $categoryId;
+            }
+        }
+        $this->categories = $checkedCategories;
+        $this->checkLinks('categories', 'zxProdCategory');
     }
 }

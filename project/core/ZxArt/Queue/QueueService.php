@@ -27,13 +27,15 @@ class QueueService
         $records = $this->queueRepository->load($elementId, $types);
 
         $existingTypes = array_reduce($records, static function ($result, $record) {
-            if ($record['status'] !== QueueStatus::STATUS_TODO) {
-                $result[] = $result['type'];
-            }
+            $result[] = $record['type'];
             return $result;
         }, []);
-
-        $missingTypes = array_diff($types, $existingTypes);
+        $missingTypes = [];
+        foreach ($types as $type) {
+            if (!in_array($type->value, $existingTypes, true)) {
+                $missingTypes[] = $type;
+            }
+        }
         if (count($missingTypes) === 0) {
             return;
         }

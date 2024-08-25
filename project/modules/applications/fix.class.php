@@ -1,14 +1,27 @@
 <?php
 
 use Illuminate\Database\Capsule\Manager;
+use Illuminate\Database\Connection;
+use ZxArt\Queue\QueueStatus;
+use ZxArt\Queue\QueueType;
 
 class fixApplication extends controllerApplication
 {
     protected $applicationName = 'fix';
     public $rendererName = 'smarty';
+    /**
+     * @var structureManager
+     */
     protected $structureManager;
+    /**
+     * @var Connection
+     */
+    protected $db;
     private $log = PUBLIC_PATH . 'zxChip.log';
     private $idLog = PUBLIC_PATH . 'zxChipIds.log';
+    private const CATEGORY_MAGAZINE = 92179;
+    private const CATEGORY_NEWSPAPER = 92182;
+    private const CATEGORY_MISC = 92188;
 
     /**
      * @return void
@@ -16,11 +29,11 @@ class fixApplication extends controllerApplication
     public function initialize()
     {
         $this->createRenderer();
+        $this->db = $this->getService('db');
     }
 
     public function execute($controller)
     {
-        exit;
         ini_set("memory_limit", "2048M");
         ini_set("max_execution_time", 60);
         $renderer = $this->getService('renderer');
@@ -39,27 +52,69 @@ class fixApplication extends controllerApplication
              */
             $languagesManager = $this->getService('LanguagesManager');
             $languagesManager->setCurrentLanguageCode('eng');
-            $this->fixReleases();
+//            $this->fixReleases();
 //            $this->deleteProds();
 //            $this->fixPress();
 //            $this->deletePress();
 //            $this->fixProds();
 //            $this->fixZxChip();
 //            $this->fixWlodek();
+            $this->addCategoryToQueue(92505, QueueStatus::STATUS_TODO, null);
         }
+    }
+
+    private function addCategoryToQueue(int $categoryId, QueueStatus $status, ?int $limit = null): void
+    {
+        /**
+         * @var zxProdCategoryElement $category
+         */
+        $category = $this->structureManager->getElementById($categoryId);
+        $subcategoriesIds = [];
+        $category->getSubCategoriesTreeIds($subcategoriesIds);
+        $filters = ['zxProdCategory' => $subcategoriesIds];
+        /**
+         * @var ApiQueriesManager $apiQueriesManager
+         */
+        $apiQueriesManager = $this->getService('ApiQueriesManager');
+        $apiQuery = $apiQueriesManager->getQuery()
+            ->setExportType('zxProd')
+            ->setFiltrationParameters($filters);
+        $dbQuery = $apiQuery->getExportFilteredQuery();
+        if (!$dbQuery) {
+            throw new RuntimeException('No db query provided');
+        }
+        if ($limit !== null) {
+            $dbQuery->limit($limit);
+        }
+        $ids = $dbQuery
+            ->whereNotIn('id', function ($query) {
+                $query->from('queue')
+                    ->select('elementId')
+                    ->where('type', '=', QueueType::AI_CATEGORIES_TAGS->value);
+            })
+            ->pluck('id');
+        $records = array_map(function ($id) use ($status) {
+            return [
+                'elementId' => $id,
+                'type' => QueueType::AI_CATEGORIES_TAGS->value,
+                'status' => $status->value,
+            ];
+        }, $ids);
+        if (count($records)) {
+            $this->db->table('queue')->insert($records);
+            echo 'Inserted category ' . $category->getTitle() . ' into queue. Records: ' . count($records) . '<br>';
+
+        }
+
     }
 
     private function fixProds(): void
     {
         /**
-         * @var \Illuminate\Database\Connection $db
-         */
-        $db = $this->getService('db');
-        /**
          * @var linksManager $linksManager
          */
         $linksManager = $this->getService(linksManager::class);
-        $result = $db->table('module_zxprod')
+        $result = $this->db->table('module_zxprod')
             ->orderBy('id')
             ->get(['id']);
         $ids = array_column($result, 'id');
@@ -85,11 +140,8 @@ class fixApplication extends controllerApplication
      */
     private function fixReleases()
     {
-        /**
-         * @var \Illuminate\Database\Connection $db
-         */
-        $db = $this->getService('db');
-        $result = $db->table('structure_elements')
+
+        $result = $this->db->table('structure_elements')
             ->where('structureType', '=', 'zxRelease')
             ->where('dateCreated', '>', 1674768000)
             ->orderBy('id')
@@ -113,7 +165,7 @@ class fixApplication extends controllerApplication
                         }
                         if (pathinfo($fileName, PATHINFO_EXTENSION) === 'zip') {
                             $zip = new ZipArchive();
-                            if ($zip->open($filePath) === TRUE) {
+                            if ($zip->open($filePath) === true) {
                                 $zip->close();
                             } else {
                                 $delete = true;
@@ -142,14 +194,13 @@ class fixApplication extends controllerApplication
         $prodsManager = $this->getService('ProdsManager');
 
         /**
-         * @var \Illuminate\Database\Connection $db
-         */
-        $db = $this->getService('db');
-        /**
          * @var linksManager $linksManager
          */
-        $result = $db->table('module_zxprod')
-            ->where('title', 'like', 'Erotic #%')
+        $linksManager = $this->getService(linksManager::class);
+        $name = 'Info Guide';
+//        $replacement = 'Oreh';
+        $result = $this->db->table('module_zxprod')
+            ->where('title', 'like', $name . ' #%')
             ->orderBy('id')
             ->get(['id']);
         $ids = array_column($result, 'id');
@@ -158,26 +209,38 @@ class fixApplication extends controllerApplication
         foreach ($ids as $id) {
             $prod = $this->structureManager->getElementById($id);
             if (!$prod) {
-                echo 'failed ' . $id;
+                echo 'failed ' . $id . ' ' . $prod->getTitle() . "<br>";
+                continue;
             }
             $split = explode('#', $prod->title);
 
-            $result = $db->table('module_zxprod')
-                ->where('title', 'like', 'Erotic ' . $split[1])
-                ->orWhere('title', 'like', 'Erotic ' . (int)$split[1])
+            $result = $this->db->table('module_zxprod')
+                ->where('title', 'like', $name . ' ' . $split[1])
+                ->orWhere('title', 'like', $name . ' ' . (int)$split[1])
+                ->orWhere('title', 'like', $name . ' #' . (int)$split[1])
+//                ->orWhere('title', 'like', $replacement . ' #' . $split[1])
+//                ->orWhere('title', 'like', $replacement . ' ' . $split[1])
+//                ->orWhere('title', 'like', $replacement . ' ' . (int)$split[1])
                 ->orderBy('id')
                 ->first(['id']);
+
+            $linksManager->unLinkElements(self::CATEGORY_MISC, $prod->id, 'zxProdCategory');
+//            $linksManager->unLinkElements(self::CATEGORY_MAGAZINE, $prod->id, 'zxProdCategory');
+//            $linksManager->linkElements(self::CATEGORY_NEWSPAPER, $prod->id, 'zxProdCategory');
+            $linksManager->linkElements(self::CATEGORY_MAGAZINE, $prod->id, 'zxProdCategory');
 
             $prod2 = $this->structureManager->getElementById($result['id']);
             if ($prod2) {
                 $prod2->title = $prod->title;
 
                 $prodsManager->joinDeleteZxProd($prod2->id, $prod->id, false);
+            } else {
+                echo 'failed to join press ' . $id . ' ' . $prod->getTitle() . "<br>";
             }
 
             echo $counter . ' ' . round(100 * $counter / $count) . '% ';
-            if ($prod) {
-                echo 'fixed' . $prod->title . ' ' . $prod2->title . '<br>';
+            if ($prod && $prod2) {
+                echo 'fixed ' . $prod->title . ' ' . $prod2->title . '<br>';
             }
             $counter++;
             flush();
@@ -188,14 +251,10 @@ class fixApplication extends controllerApplication
     private function deletePress(): void
     {
         /**
-         * @var \Illuminate\Database\Connection $db
-         */
-        $db = $this->getService('db');
-        /**
          * @var linksManager $linksManager
          */
         $linksManager = $this->getService(linksManager::class);
-        $result = $db->table('module_pressarticle')
+        $result = $this->db->table('module_pressarticle')
             ->orderBy('id')
             ->get(['id']);
         $ids = array_column($result, 'id');
@@ -217,14 +276,10 @@ class fixApplication extends controllerApplication
     private function deleteProds(): void
     {
         /**
-         * @var \Illuminate\Database\Connection $db
-         */
-        $db = $this->getService('db');
-        /**
          * @var linksManager $linksManager
          */
         $linksManager = $this->getService(linksManager::class);
-        $result = $db->table('module_zxprod')
+        $result = $this->db->table('module_zxprod')
             ->where('id', '>=', 453563)
             ->orderBy('id')
             ->get(['id']);
@@ -251,11 +306,7 @@ class fixApplication extends controllerApplication
      */
     private function loadIds(string $term): array
     {
-        /**
-         * @var \Illuminate\Database\Connection $db
-         */
-        $db = $this->getService('db');
-        $result = $db->table('module_zxprod')
+        $result = $this->db->table('module_zxprod')
             ->orderBy('id')
             ->where('title', 'like', '%' . $term . '%')
             ->get(['id']);

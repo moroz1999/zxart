@@ -22,8 +22,7 @@ class publicReceiveZxProd extends structureElementAction
             $structureElement->updateYear();
 
             $structureElement->persistElementData();
-
-            $structureElement->checkLinks('categories', 'zxProdCategory');
+            $structureElement->checkAndPersistCategories();
             $structureElement->persistAuthorship('prod');
 
             $structureElement->executeAction('receiveFiles');

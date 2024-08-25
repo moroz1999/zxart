@@ -55,7 +55,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         $addYear = true,
         $addParty = true,
         $addPartyPlace = false,
-        $addId = false
+        $addId = false,
     )
     {
         $fileName = '';
@@ -281,6 +281,16 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         foreach ($tagsIndex as $tagElement) {
             $tagsManager->removeTag($tagElement->title, $this->id);
         }
+    }
+
+    public function addTags(array $tagsStrings): void
+    {
+        $tagsManager = $this->getService('tagsManager');
+        foreach ($tagsStrings as $tagName) {
+            $tagsManager->addTag($tagName, $this->getId());
+        }
+        $this->tagsList = null;
+        $this->tagsAmount = count($this->getTagsList());
     }
 
     public function getTagsIndex(): array

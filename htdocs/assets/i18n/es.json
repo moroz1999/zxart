@@ -5,6 +5,7 @@
   },
   "prods-list": {
     "unknown-year": "Año de lanzamiento desconocido",
+    "include-subcategories-prods": "Mostrar programas de subcategorías",
     "presets": {
       "year": "Este año",
       "recent": "Últimos 3 años",

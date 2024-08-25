@@ -2,7 +2,7 @@
 
 use ZxArt\Ai\AiQueryService;
 
-class AiManagerServiceContainer extends DependencyInjectionServiceContainer
+class AiQueryServiceServiceContainer extends DependencyInjectionServiceContainer
 {
     public function makeInstance(): AiQueryService
     {
@@ -15,13 +15,13 @@ class AiManagerServiceContainer extends DependencyInjectionServiceContainer
      */
     public function makeInjections($instance)
     {
-        $aiManager = $instance;
+        $AiQueryService = $instance;
         if ($configManager = $this->getOption('ConfigManager')) {
-            $aiManager->setConfigManager($configManager);
+            $AiQueryService->setConfigManager($configManager);
         } else {
-            $aiManager->setConfigManager($this->registry->getService('ConfigManager'));
+            $AiQueryService->setConfigManager($this->registry->getService('ConfigManager'));
         }
 
-        return $aiManager;
+        return $AiQueryService;
     }
 }

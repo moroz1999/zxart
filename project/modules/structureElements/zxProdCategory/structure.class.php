@@ -96,7 +96,7 @@ class zxProdCategoryElement extends structureElement implements MetadataProvider
     }
 
     /**
-     * @return bool|structureElement
+     * @return ?structureElement
      */
     public function getParentCategory()
     {
@@ -105,11 +105,11 @@ class zxProdCategoryElement extends structureElement implements MetadataProvider
          */
         $structureManager = $this->getService('structureManager');
         if ($parentElement = $structureManager->getElementsFirstParent($this->id, false, 'structure')) {
-            if ($parentElement->structureType == 'zxProdCategory') {
+            if ($parentElement->structureType === 'zxProdCategory') {
                 return $parentElement;
             }
         }
-        return false;
+        return null;
     }
 
     public function getSubCategoriesTreeIds(array &$ids = []): void

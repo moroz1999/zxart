@@ -43,7 +43,7 @@
               {
                 "glob": "**/*",
                 "input": "src/assets/",
-                "output": "/../../../../assets/"
+                "output": "/../../../../htdocs/assets/"
               },
               {
                 "glob": "**/styles.css",

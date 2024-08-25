@@ -9,4 +9,5 @@ export interface SelectorValues {
   readonly releaseTypes: string[];
   readonly languages: string[];
   readonly releases: boolean;
+  readonly includeSubcategoriesProds: boolean;
 }

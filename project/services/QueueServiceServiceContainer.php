@@ -10,7 +10,7 @@ class QueueServiceServiceContainer extends DependencyInjectionServiceContainer
      */
     public function makeInstance()
     {
-        $queueRepository = $this->registry->getService('queueRepository');
+        $queueRepository = $this->registry->getService('QueueRepository');
         return new QueueService($queueRepository);
     }
 

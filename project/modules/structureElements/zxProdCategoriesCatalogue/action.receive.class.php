@@ -15,7 +15,7 @@ class receiveZxProdCategoriesCatalogue extends structureElementAction
             }
             $structureElement->persistElementData();
             if ($firstParent = $structureManager->getElementsFirstParent($structureElement->id)) {
-                if ($zxProdCategoriesElement = $structureManager->getElementByMarker('zxProdCategories')) {
+                if ($zxProdCategoriesElement = $structureManager->getElementByMarker('ZxProdCategories')) {
                     if ($categoriesList = $structureManager->getElementsChildren($zxProdCategoriesElement->id)) {
                         $linksManager = $this->getService('linksManager');
                         $linksIndex = $linksManager->getElementsLinksIndex(

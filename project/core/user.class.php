@@ -326,7 +326,7 @@ class user
 
     public function checkExistance($userName, $email): bool
     {
-        return (!!$this->queryUserData(['userName' => $userName])) || (!!$this->queryUserData(['email' => $email]));
+        return ($this->queryUserData(['userName' => $userName])) || ($this->queryUserData(['email' => $email]));
     }
 
     /**

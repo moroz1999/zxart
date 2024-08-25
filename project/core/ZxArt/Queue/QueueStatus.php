@@ -8,4 +8,5 @@ enum QueueStatus: int
     case STATUS_INPROGRESS = 1;
     case STATUS_SUCCESS = 2;
     case STATUS_FAIL = 3;
+    case STATUS_SKIP = 4;
 }

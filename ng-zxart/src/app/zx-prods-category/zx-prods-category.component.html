@@ -97,6 +97,10 @@
         [selectedValuesLabel]="'prods-list.filters.release-types.selected' | translate"
         [selectValuesLabel]="'prods-list.filters.release-types.select' | translate"
       ></app-dialog-selector>
+      <label class="include-subcategories-prods-selector">
+        <input type="checkbox" [(ngModel)]="includeSubcategoriesProds"
+               (change)="includeSubcategoriesProdsSelected()"> {{ 'prods-list.include-subcategories-prods' | translate }}
+      </label>
     </div>
     <div class="zx-prods-list-right">
       <div

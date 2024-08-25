@@ -1,10 +1,13 @@
 <?php
 
 use Illuminate\Database\Connection;
+use ZxArt\Ai\AiQueryFailException;
+use ZxArt\Ai\AiQuerySkipException;
 use ZxArt\Ai\AiQueryService;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
+use ZxArt\ZxProdCategories\Ids;
 
 class crontabApplication extends controllerApplication
 {
@@ -16,6 +19,8 @@ class crontabApplication extends controllerApplication
     private string $logFilePath;
     private QueueService $queueService;
     private Connection $db;
+    private ?AiQueryService $aiQueryService;
+    private ?array $languages = null;
 
     /**
      * @return void
@@ -27,6 +32,7 @@ class crontabApplication extends controllerApplication
         $this->createRenderer();
         $this->queueService = $this->getService('QueueService');
         $this->db = $this->getService('db');
+        $this->aiQueryService = $this->getService('AiQueryService');
     }
 
     /**
@@ -48,8 +54,14 @@ class crontabApplication extends controllerApplication
         $cache = $this->getService('Cache');
         $cache->enable(false, false, true);
 
+        /**
+         * @var rendererPlugin $renderer
+         */
         $renderer = $this->getService('renderer');
         $renderer->endOutputBuffering();
+        while (ob_get_level()) {
+            ob_end_flush();
+        }
 
         $user = $this->getService('user');
         if ($userId = $user->checkUser('crontab', null, true)) {
@@ -70,8 +82,9 @@ class crontabApplication extends controllerApplication
             $this->parseReleases();
             $this->parseArtItems('module_zxpicture', 'image', 'originalName');
             $this->parseArtItems('module_zxmusic', 'file', 'fileName');
-            $this->queryAiSeo();
-            $this->queryAiIntro();
+//            $this->queryAiSeo();
+//            $this->queryAiIntro();
+            $this->queryAiCategories();
         }
     }
 
@@ -108,15 +121,19 @@ class crontabApplication extends controllerApplication
     private function logMessage(string $message, int|float $seconds): void
     {
         $text = date('Y-m-d H:i:s') . " - " . $seconds . " - " . $message;
+        flush();
         echo $text . '<br/>';
         file_put_contents($this->logFilePath, $text . PHP_EOL, FILE_APPEND);
     }
 
     private function getLanguages(): array
     {
+        if ($this->languages !== null) {
+            return $this->languages;
+        }
         $languagesManager = $this->getService(LanguagesManager::class);
 
-        return [
+        return $this->languages = [
             'spa' => $languagesManager->getLanguageId('spa'),
             'eng' => $languagesManager->getLanguageId('eng'),
             'rus' => $languagesManager->getLanguageId('rus'),
@@ -128,11 +145,6 @@ class crontabApplication extends controllerApplication
      */
     private function queryAiSeo(): void
     {
-        /**
-         * @var AiQueryService $aiManager
-         */
-        $aiManager = $this->getService(AiQueryService::class);
-
         $counter = 0;
         $executionLimit = 60 * 2;
         $totalExecution = 0;
@@ -149,7 +161,7 @@ class crontabApplication extends controllerApplication
              * @var zxProdElement $prodElement
              */
             $prodElement = $this->structureManager->getElementById($elementId);
-//            $prodElement = $this->structureManager->getElementById(406707);
+
             if (!$prodElement) {
                 $this->queueService->updateStatus($elementId, QueueType::AI_SEO, QueueStatus::STATUS_FAIL);
                 $this->logMessage($counter . ' AI SEO request prod not found ' . $elementId, 0);
@@ -158,10 +170,12 @@ class crontabApplication extends controllerApplication
             $startTime = microtime(true);
 
             $this->logMessage($counter . ' AI SEO request start ' . $prodElement->id . ' ' . $prodElement->title, 0);
-            $metaData = $aiManager->querySeoForProd($prodElement);
-            if ($metaData) {
-                $this->updateProdSeo($prodElement->id, $metaData);
+            $metaData = $this->aiQueryService->querySeoForProd($prodElement);
+            if ($metaData === null) {
+                $this->logMessage($counter . ' AI SEO request wrong response ' . $prodElement->id . ' ' . $prodElement->title, 0);
+                continue;
             }
+            $this->updateProdSeo($prodElement->id, $metaData);
             $this->queueService->updateStatus($elementId, QueueType::AI_SEO, QueueStatus::STATUS_SUCCESS);
 
             $endTime = microtime(true);
@@ -177,11 +191,6 @@ class crontabApplication extends controllerApplication
      */
     private function queryAiIntro(): void
     {
-        /**
-         * @var AiQueryService $aiManager
-         */
-        $aiManager = $this->getService(AiQueryService::class);
-
         $counter = 0;
         $executionLimit = 60 * 2;
         $totalExecution = 0;
@@ -198,7 +207,7 @@ class crontabApplication extends controllerApplication
              * @var zxProdElement $prodElement
              */
             $prodElement = $this->structureManager->getElementById($elementId);
-//            $prodElement = $this->structureManager->getElementById(406707);
+
             if (!$prodElement) {
                 $this->queueService->updateStatus($elementId, QueueType::AI_INTRO, QueueStatus::STATUS_FAIL);
                 $this->logMessage($counter . ' AI Intro request prod not found ' . $elementId, 0);
@@ -207,10 +216,12 @@ class crontabApplication extends controllerApplication
             $startTime = microtime(true);
 
             $this->logMessage($counter . ' AI Intro request start ' . $prodElement->id . ' ' . $prodElement->title, 0);
-            $metaData = $aiManager->queryIntroForProd($prodElement);
-            if ($metaData) {
-                $this->updateProdIntro($prodElement->id, $metaData);
+            $metaData = $this->aiQueryService->queryIntroForProd($prodElement);
+            if ($metaData === null) {
+                $this->logMessage($counter . ' AI Intro request wrong response ' . $prodElement->id . ' ' . $prodElement->title, 0);
+                continue;
             }
+            $this->updateProdIntro($prodElement->id, $metaData);
 
             $this->queueService->updateStatus($elementId, QueueType::AI_INTRO, QueueStatus::STATUS_SUCCESS);
 
@@ -220,6 +231,71 @@ class crontabApplication extends controllerApplication
             $this->logMessage($counter . ' AI Intro request success ' . $prodElement->id . ' ' . $prodElement->title, round($executionTime));
         }
         $this->logMessage(' AI Intro requesting completed with total execution time ' . $totalExecution, 0);
+    }
+
+    private function isQueryCategoriesEnabled(zxProdElement $prodElement): bool
+    {
+        $disabledCategories = [
+            Ids::GAME_PINBALL->value,
+        ];
+        $parentCategoriesMap = $prodElement->getParentCategoriesMap();
+        foreach ($disabledCategories as $disabledCategory) {
+            if (isset($parentCategoriesMap[$disabledCategory])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private function queryAiCategories(): void
+    {
+        $languagesManager = $this->getService('LanguagesManager');
+        $languagesManager->setCurrentLanguageCode('eng');
+
+        $counter = 0;
+        $executionLimit = 60 * 5;
+        $totalExecution = 0;
+        while ($totalExecution <= $executionLimit) {
+            $counter++;
+
+            $elementId = $this->queueService->getNextElementId(QueueType::AI_CATEGORIES_TAGS);
+            if ($elementId === null) {
+                return;
+            }
+            $this->queueService->updateStatus($elementId, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_INPROGRESS);
+
+            /**
+             * @var zxProdElement $prodElement
+             */
+            $prodElement = $this->structureManager->getElementById($elementId);
+            $queryCategoriesEnabled = $this->isQueryCategoriesEnabled($prodElement);
+            if (!$prodElement) {
+                $this->queueService->updateStatus($elementId, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_FAIL);
+                $this->logMessage($counter . ' AI Categories request prod not found ' . $elementId, 0);
+                continue;
+            }
+            $startTime = microtime(true);
+            $metaData = null;
+            $this->logMessage($counter . ' AI Categories request start ' . $prodElement->id . ' ' . $prodElement->title, 0);
+            try {
+                $metaData = $this->aiQueryService->queryCategoriesAndTagsForProd($prodElement, $queryCategoriesEnabled);
+            } catch (AiQueryFailException $e) {
+                $this->logMessage($counter . ' AI Categories request failed. ' . $e->getMessage(), 0);
+                $this->queueService->updateStatus($elementId, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_FAIL);
+            } catch (AiQuerySkipException $e) {
+                $this->logMessage($counter . ' AI Categories request skipped. ' . $e->getMessage(), 0);
+                $this->queueService->updateStatus($elementId, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
+            }
+            if ($metaData) {
+                $this->updateProdCategoriesAndTags($prodElement, $metaData, $queryCategoriesEnabled);
+            }
+            $this->queueService->updateStatus($elementId, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SUCCESS);
+            $endTime = microtime(true);
+            $executionTime = $endTime - $startTime;
+            $totalExecution += $executionTime;
+            $this->logMessage($counter . ' AI Categories request success ' . $prodElement->id . ' ' . $prodElement->title, round($executionTime));
+        }
+        $this->logMessage(' AI Categories requesting completed with total execution time ' . $totalExecution, 0);
     }
 
     private function convertMp3(): void
@@ -309,6 +385,16 @@ class crontabApplication extends controllerApplication
         }
     }
 
+    private function updateProdCategoriesAndTags(zxProdElement $prodElement, array $metaData, bool $queryCategories): void
+    {
+        if ($queryCategories) {
+            $prodElement->categories = [$metaData['category']];
+            $prodElement->checkAndPersistCategories();
+        }
+        $prodElement->addTags($metaData['tags']);
+        $prodElement->persistElementData();
+    }
+
     private function updateProdSeo(int $prodElementId, array $metaData): void
     {
         $languages = $this->getLanguages();
@@ -317,14 +403,14 @@ class crontabApplication extends controllerApplication
                 ->updateOrInsert(
                     [
                         'id' => $prodElementId,
-                        'languageId' => $languageId
+                        'languageId' => $languageId,
                     ],
                     [
                         'id' => $prodElementId,
                         'metaTitle' => $metaData[$language]['pageTitle'],
                         'h1' => $metaData[$language]['h1'],
                         'metaDescription' => $metaData[$language]['metaDescription'],
-                        'languageId' => $languageId
+                        'languageId' => $languageId,
                     ]
                 );
         }
@@ -338,12 +424,12 @@ class crontabApplication extends controllerApplication
                 ->updateOrInsert(
                     [
                         'id' => $prodElementId,
-                        'languageId' => $languageId
+                        'languageId' => $languageId,
                     ],
                     [
                         'id' => $prodElementId,
                         'generatedDescription' => $metaData[$language]['intro'] ?? '',
-                        'languageId' => $languageId
+                        'languageId' => $languageId,
                     ]
                 );
         }

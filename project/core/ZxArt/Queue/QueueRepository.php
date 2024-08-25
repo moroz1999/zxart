@@ -14,7 +14,7 @@ class QueueRepository
     {
         $result = $this->db->table('queue')
             ->select('elementId')
-            ->where('status', QueueStatus::STATUS_TODO)
+            ->where('status', QueueStatus::STATUS_TODO->value)
             ->where('type', $type->value)
             ->orderBy('elementId', 'desc')
             ->first();
@@ -27,24 +27,26 @@ class QueueRepository
         $this->db->table('queue')
             ->where('elementId', '=', $elementId)
             ->where('type', '=', $type->value)
-            ->update(['status' => $status]);
+            ->update(['status' => $status->value]);
     }
 
     public function load(int $elementId, array $types): array
     {
+        $stringTypes = array_map(fn($type) => $type->value, $types);
         return $this->db->table('queue')
             ->where('elementId', '=', $elementId)
-            ->whereIn('type', $types)
+            ->whereIn('type', $stringTypes)
             ->get();
     }
 
-    public function addElementRecords(int $elementId, array $types, QueueStatus $status): array
+    public function addElementRecords(int $elementId, array $types, QueueStatus $status): bool
     {
         $data = [];
         foreach ($types as $type) {
             $data[] = [
-                'type' => $type,
-                'status' => $status,
+                'elementId' => $elementId,
+                'type' => $type->value,
+                'status' => $status->value,
             ];
         }
 
@@ -55,9 +57,10 @@ class QueueRepository
 
     public function deleteElementRecords(int $elementId, array $types): array
     {
+        $stringTypes = array_map(fn($type) => $type->value, $types);
         return $this->db->table('queue')
             ->where('elementId', '=', $elementId)
-            ->whereIn('type', $types)
+            ->whereIn('type', $stringTypes)
             ->delete();
     }
 }

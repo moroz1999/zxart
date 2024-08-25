@@ -37,9 +37,10 @@ class tagElement extends structureElement implements JsonDataProvider
 
     public function updateAmount(): void
     {
+        $db = $this->getService('db');
         $linksManager = $this->getService('linksManager');
-        $this->amount = count($linksManager->getConnectedIdList($this->id, 'tagLink', 'parent'));
-        $this->persistElementData();
+        $amount = count($linksManager->getConnectedIdList($this->id, 'tagLink', 'parent'));
+        $db->table('module_tag')->where('id', '=', $this->id)->update(['amount'=>$amount]);
     }
 
     public function getFontSize($maxAmount = 10)
