@@ -28,12 +28,12 @@ trait ImportIdOperatorTrait
      * @param $importId
      * @param $origin
      * @param $type
-     * @return structureElement
+     * @return structureElement|null
      */
     public function getElementByImportId($importId, $origin, $type)
     {
         if (!isset($this->cache[$origin][$type][$importId])) {
-            $this->cache[$origin][$type][$importId] = false;
+            $this->cache[$origin][$type][$importId] = null;
             if ($id = $this->getElementIdByImportId($importId, $origin, $type)) {
                 $this->cache[$origin][$type][$importId] = $this->structureManager->getElementById($id);
             }

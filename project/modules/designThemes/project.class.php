@@ -53,6 +53,7 @@ class projectDesignTheme extends DesignTheme
             'component.chart.js',
             'component.musicShort.js',
             'component.emulator.js',
+            'component.zx81Emulator.js',
             'component.artWebZXGallery.js',
             'component.stagesAnimation.js',
             'component.flickerImage.js',

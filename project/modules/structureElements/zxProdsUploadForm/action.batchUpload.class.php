@@ -1,5 +1,7 @@
 <?php
-
+use ZxArt\Queue\QueueService;
+use ZxArt\Queue\QueueType;
+use ZxArt\Queue\QueueStatus;
 class batchUploadZxProdsUploadForm extends structureElementAction
 {
     protected $loggable = true;
@@ -17,7 +19,10 @@ class batchUploadZxProdsUploadForm extends structureElementAction
             $privilegesManager = $this->getService('privilegesManager');
             $linksManager = $this->getService('linksManager');
             $user = $this->getService('user');
-
+            /**
+             * @var QueueService $queueService
+             */
+            $queueService = $this->getService('QueueService');
             $cachePath = $this->getService('PathsManager')->getPath('uploadsCache');
             if (!$structureElement->categories) {
                 $structureElement->categories = [92188];
@@ -74,6 +79,9 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                     $zxProdElement->persistAuthorship('prod');
 
                     $zxProdElement->executeAction('receiveFiles');
+
+                    $queueService->updateStatus($structureElement->getId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
+
 
                     $zxProdElement->persistElementData();
                     $zxProdElement->logCreation();

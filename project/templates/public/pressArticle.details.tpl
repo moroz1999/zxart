@@ -25,7 +25,7 @@
         </div>
         <div class="pressarticle-layout-right">
             {if $filesList = $parentElement->getFilesList('connectedFile')}
-                {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false}
+                {include file=$theme->template('zxItem.images.tpl') filesList=$filesList preset='prodImage' displayTitle=false linkType='connectedFile'}
             {/if}
         </div>
     </div>

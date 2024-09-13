@@ -1,4 +1,7 @@
 <?php
+use ZxArt\Queue\QueueService;
+use ZxArt\Queue\QueueType;
+use ZxArt\Queue\QueueStatus;
 
 class PouetManager extends errorLogger
 {
@@ -54,6 +57,8 @@ class PouetManager extends errorLogger
     ];
     protected $roles = [
         'all' => 'unknown',
+        'code and direction' => 'code',
+        'add code' => 'code',
         'coder' => 'code',
         'scroll code' => 'code',
         'all wired code' => 'code',
@@ -100,6 +105,7 @@ class PouetManager extends errorLogger
         'gfx (skull)' => 'graphics',
         'gfx conversions' => 'graphics',
         'art' => 'graphics',
+        'pixels' => 'graphics',
         'main gfx' => 'graphics',
         'some gfx' => 'graphics',
         'grapchics' => 'graphics',
@@ -509,7 +515,7 @@ class PouetManager extends errorLogger
                         'id' => $prodInfo['id'],
                         'title' => $prodInfo['title'],
                         'year' => false,
-//                        'releaseType' => 'original',
+                        'releaseType' => 'original',
                         'language' => [],
                         'hardwareRequired' => [],
                         'images' => [],
@@ -533,6 +539,8 @@ class PouetManager extends errorLogger
                     $prodInfo['releases'][] = $releaseInfo;
 
                     if ($prodElement = $this->prodsManager->importProd($prodInfo, $this->origin)) {
+                        $this->queueService->updateStatus($prodElement->getId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
+
                         $this->updateReport($id, 'success');
                         $this->markProgress('prod ' . $id . ' imported ' . $this->counter . ' ' . $prodInfo['title'] . ' ' . $prodElement->id . ' ' . $prodElement->getUrl());
                     }

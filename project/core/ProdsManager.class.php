@@ -285,16 +285,7 @@ class ProdsManager extends ElementsManager
         $this->linksManager = $linksManager;
     }
 
-
-    /**
-     * @param ((((mixed|string)[]|false|mixed|null|string)[]|int|mixed|null|string)[]|int|mixed|string)[] $prodInfo
-     * @param $origin
-     *
-     * @return bool|zxProdElement
-     *
-     * @psalm-param array{title: mixed|string, year?: int|mixed|string, compo?: ''|mixed, legalStatus?: ''|'insales'|mixed, id: int|mixed|string, language?: array|mixed, categories?: array<int<0, max>, mixed>, images?: list{0?: mixed|string,...}, labels?: list{0?: array{id: mixed|string, title: mixed|string, countryId?: false, abbreviation?: false|mixed, isGroup: bool|null, isPerson: bool|null, isAlias: false|null, website?: mixed, locationName?: ''|'Lviv'|'Rostov-on-Don'|mixed},...}, authors?: array<array-key|mixed, list{0?: mixed,...}>, publishers?: list{0?: mixed,...}, groups?: list{0?: mixed|string,...}, releases?: list{0?: array{id: mixed|string, title: false|mixed, year?: false, language?: array, hardwareRequired: list{0?: 'zxevolution'|mixed, 1?: 'tsconf'|mixed,...}, images?: array, inlayImages?: array, infoFiles?: array, fileUrl: false|mixed|null|string, version?: string, releaseType?: 'original', labels?: array}|mixed,...}, importIds?: array{dzoo?: mixed, zxd?: mixed}, directCategories?: list{0?: mixed,...}, party?: array{title?: mixed, year?: int|mixed, website?: mixed, place?: int|mixed|null}, youtubeId?: mixed|string, rzx?: list{array{url: string, author: null|string}}, ids?: array{zxdb: int}, seriesProds?: list{0?: mixed,...}, altTitle?: ''|mixed, externalLink?: ''|mixed, compilationItems?: list{0?: mixed,...}, maps?: list{array{url: mixed, author: ''},...}, undetermined?: array<array>} $prodInfo
-     */
-    public function importProd(array $prodInfo, string $origin)
+    public function importProd(array $prodInfo, string $origin):?zxProdElement
     {
         /**
          * @var zxProdElement $element
@@ -729,7 +720,7 @@ class ProdsManager extends ElementsManager
 
     /**
      * @param $prodInfo
-     * @return bool|zxProdElement
+     * @return null|zxProdElement
      */
     protected function getProdByReleaseMd5($prodInfo)
     {
@@ -740,7 +731,7 @@ class ProdsManager extends ElementsManager
                 }
             }
         }
-        return false;
+        return null;
     }
 
     protected function findProdBestMatch($prodInfo): bool|structureElement
@@ -778,12 +769,12 @@ class ProdsManager extends ElementsManager
 
     /**
      * @param $releaseInfo
-     * @return bool|zxReleaseElement
+     * @return null|zxReleaseElement
      */
     protected function getReleaseByMd5($releaseInfo)
     {
         if (!$releaseInfo['fileUrl']) {
-            return false;
+            return null;
         }
         if (empty($releaseInfo['md5'])) {
             $path = $this->prodsDownloader->getDownloadedPath($releaseInfo['fileUrl']);
@@ -806,7 +797,7 @@ class ProdsManager extends ElementsManager
                             $index[$record['elementId']][$record['md5']] = true;
                         }
                         foreach ($index as $elementId => $md5Index) {
-                            if (count($index[$elementId]) == count($releaseFiles)) {
+                            if (count($index[$elementId]) === count($releaseFiles)) {
                                 $foundReleaseId = $elementId;
                                 break;
                             }
@@ -816,7 +807,7 @@ class ProdsManager extends ElementsManager
                 }
             }
         }
-        return false;
+        return null;
     }
 
 

@@ -111,7 +111,7 @@ class ProdsDownloader extends errorLogger
             $this->logError(curl_error($ch));
         } else {
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            if ($httpcode !== 200) {
+            if ($httpcode !== 200 && $httpcode !== 226) {
                 if ($httpcode !== 429) {
                     $this->logError("Ошибка при скачивании $url: HTTP статус $httpcode");
                 }

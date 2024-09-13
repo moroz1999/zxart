@@ -30,6 +30,16 @@ class QueueRepository
             ->update(['status' => $status->value]);
     }
 
+    public function insertStatus(int $elementId, QueueType $type, QueueStatus $status): void
+    {
+        $this->db->table('queue')
+            ->insert([
+                'elementId' => $elementId,
+                'status' => $status->value,
+                'type' => $type->value,
+            ]);
+    }
+
     public function load(int $elementId, array $types): array
     {
         $stringTypes = array_map(fn($type) => $type->value, $types);

@@ -19,7 +19,12 @@ class QueueService
 
     public function updateStatus(int $elementId, QueueType $type, QueueStatus $status): void
     {
-        $this->queueRepository->updateStatus($elementId, $type, $status);
+        $records = $this->queueRepository->load($elementId, [$type]);
+        if ($records){
+            $this->queueRepository->updateStatus($elementId, $type, $status);
+        } else {
+            $this->queueRepository->insertStatus($elementId, $type, $status);
+        }
     }
 
     public function checkElementInQueue(int $elementId, array $types)

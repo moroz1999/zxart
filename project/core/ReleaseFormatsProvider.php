@@ -34,6 +34,8 @@ trait ReleaseFormatsProvider
             'dck',
             'z80',
 
+            'p',
+
         ];
     }
 

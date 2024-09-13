@@ -17,7 +17,7 @@ class AiQueryService
     private const DESCRIPTION_LIMIT = 2700;
     private const MIN_DESCRIPTION_LIMIT = 500;
     private const TAGS_MANUAL_LIMIT = 1000;
-    private const IMAGES_LIMIT = 5;
+    private const IMAGES_LIMIT = 10;
 
     public function setConfigManager(ConfigManager $configManager): void
     {

@@ -205,8 +205,7 @@
                             {translations name='zxrelease.play'}:
                         </td>
                         <td class='info_table_value'>
-                            <button class="button"
-                                    onclick="emulatorComponent.start('{$element->getFileUrl('play')|escape:'quotes'}')">{translations name="zxrelease.play"}</button>
+                            {include file=$theme->template('component.play-button.tpl') element=$element}
                         </td>
                     </tr>
                 {/if}
@@ -225,17 +224,17 @@
                                href="{$element->URL}id:{$element->id}/action:moveScreenshots/">{translations name='zxrelease.move_screenshots'}</a>
                         {/if}
                     </div>
-                    {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false}
+                    {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false linkType='screenshotsSelector'}
                 {/if}
 
                 {if $filesList = $element->getFilesList('inlayFilesSelector')}
                     <h3>{translations name='zxrelease.inlays'}</h3>
-                    {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage'}
+                    {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' linkType='inlayFilesSelector'}
                 {/if}
 
                 {if $filesList = $element->getFilesList('adFilesSelector')}
                     <h3>{translations name='zxrelease.ads'}</h3>
-                    {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage'}
+                    {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' linkType='adFilesSelector'}
                 {/if}
             </div>
             <div class="zxrelease_description">
@@ -245,7 +244,7 @@
         {if $prod = $element->getProd()}
             <div class="zxrelease-layout-right">
                 {if $filesList = $prod->getFilesList('connectedFile')}
-                    {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false}
+                    {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false linkType='connectedFile'}
                 {/if}
             </div>
         {/if}

@@ -51,6 +51,9 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     protected $currentReleaseFileInfo;
     protected $imagesUrls;
     protected $prodElement;
+    private const UspReleaseTypeRunnable = ['trd', 'tap', 'z80', 'sna', 'tzx', 'scl'];
+    private const Zx81HardwareRunnable = ["zx80", "zx8116", "zx811", "zx812", "zx8132", "zx8164"];
+    private const Zx81ReleaseTypeRunnable = ['tzx', 'p'];
 
     /**
      * @return void
@@ -263,7 +266,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         $addYear = true,
         $addParty = true,
         $addPartyPlace = false,
-        $addId = false
+        $addId = false,
     )
     {
         return $this->fileName;
@@ -469,14 +472,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
 
     public function isPlayable(): bool
     {
-        if ($this->releaseFormat) {
-            foreach ($this->releaseFormat as $format) {
-                if (in_array($format, ['trd', 'tap', 'z80', 'sna', 'tzx', 'scl'])) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return $this->getEmulatorType() !== null;
     }
 
     public function isDownloadable(): bool
@@ -787,5 +783,25 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
         $db->table('module_zxrelease')->where('id', '=', $this->id)->limit(1)->increment('downloads');
         $structureManager = $this->getService('structureManager');
         $structureManager->clearElementCache($this->id);
+    }
+
+    public function getEmulatorType(): ?string
+    {
+        $test = $this->hardwareRequired;
+        if (array_intersect($this->hardwareRequired, self::Zx81HardwareRunnable)) {
+            foreach ($this->releaseFormat as $format) {
+                if (in_array($format, self::Zx81ReleaseTypeRunnable, true)) {
+                    return 'zx81';
+                }
+            }
+        }
+        if ($this->releaseFormat) {
+            foreach ($this->releaseFormat as $format) {
+                if (in_array($format, self::UspReleaseTypeRunnable, true)) {
+                    return 'usp';
+                }
+            }
+        }
+        return null;
     }
 }

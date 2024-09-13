@@ -10,7 +10,7 @@
 	</td>
 	<td class='zxrelease_table_play zxrelease_play'>
 		{if $element->isPlayable() && $element->isDownloadable()}
-			<button class="button" onclick="emulatorComponent.start('{$element->getFileUrl('play')|escape:'quotes'}')">{translations name="zxrelease.play"}</button>
+			{include file=$theme->template('component.play-button.tpl') element=$element}
 		{/if}
 	</td>
 	<td class='zxrelease_table_source'>

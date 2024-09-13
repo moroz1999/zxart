@@ -1,5 +1,6 @@
 <div class="emulator">
 	<canvas class="emulator_canvas" id="canvas" tabindex="0"></canvas>
+	<div class="emulator_status"></div>
 	<div class="emulator_controls">
 		<button class="button emulator_fullscreen">{translations name="emulator.fullscreen"}</button>
 		{if !empty($currentElementPrivileges.uploadScreenshot)}
@@ -7,7 +8,6 @@
 			<option value="48">48</option>
 			<option value="128">128</option>
 			<option value="giga">giga</option>
-{*			<option value="double">double 48</option>*}
 		</select>
 		{/if}
 	</div>

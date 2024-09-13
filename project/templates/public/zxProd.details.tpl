@@ -218,7 +218,7 @@
     <div class="gallery_static galleryid_{$element->id}">
         {if $filesList = $element->getFilesList('connectedFile')}
             <div class="zxprod_gallery">
-                {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false}
+                {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false linkType='connectedFile'}
             </div>
         {/if}
         {if $description = $element->getGeneratedDescription()}
@@ -239,13 +239,13 @@
 
         {if $filesList = $element->getFilesList('inlayFilesSelector')}
             <h3>{translations name='zxrelease.inlays'}</h3>
-            {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage'}
+            {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' linkType='inlayFilesSelector'}
         {/if}
 
         {if $filesList = $element->getFilesList('mapFilesSelector')}
             {if $linkInfo = $element->getLinkInfo('maps')}
                 <h2>{translations name='zxprod.maps'}</h2>
-                {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodMapImage' displayTitle=true url=$linkInfo['url']}
+                {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodMapImage' displayTitle=true url=$linkInfo['url'] linkType='mapFilesSelector'}
             {/if}
         {/if}
     </div>

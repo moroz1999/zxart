@@ -1,5 +1,9 @@
 <?php
 
+use ZxArt\Queue\QueueService;
+use ZxArt\Queue\QueueType;
+use ZxArt\Queue\QueueStatus;
+
 class publicReceiveZxProd extends structureElementAction
 {
     protected $loggable = true;
@@ -20,6 +24,12 @@ class publicReceiveZxProd extends structureElementAction
             $structureElement->renewPartyLink();
             $structureElement->updateTagsInfo();
             $structureElement->updateYear();
+
+            /**
+             * @var QueueService $queueService
+             */
+            $queueService = $this->getService('QueueService');
+            $queueService->updateStatus($structureElement->getId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
 
             $structureElement->persistElementData();
             $structureElement->checkAndPersistCategories();

@@ -56,10 +56,6 @@
 {if $filesList = $element->getFilesList('connectedFile')}
     {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false}
 {/if}
-{*{if $filesList = $element->getFilesList('mapFilesSelector')}*}
-    {*<h3>{translations name='zxprod.maps'}</h3>*}
-    {*{include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodMapImage' displayTitle=true}*}
-{*{/if}*}
 <br>{include file=$theme->template("component.hr.tpl") symbol="-"}<br><br>
 {if $description = $element->getDescription()}
     {$description}
