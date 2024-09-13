@@ -2713,7 +2713,7 @@ function ZX81(t, e, n, r) {
         l = 0,
         g = r,
         p = new Z80(this);
-    1 == e ? tape.setP(t) : 3 == e ? tape.setPZIP(t) : 2 == e ? tape.setTZX(t) : 4 == e && tape.setTZXZIP(t), tape.setTrackNumber(n), this.start = function (t) {
+    5 == e ? tape.setZIP(t) : 1 == e ? tape.setP(t) : 3 == e ? tape.setPZIP(t) : 2 == e ? tape.setTZX(t) : 4 == e && tape.setTZXZIP(t), tape.setTrackNumber(n), this.start = function (t) {
         v.length = 0;
         var e = 0;
         v[e++] = new FileToLoad(zx81opts.rom, w, 0, 65536), 1 == zx81opts.chrgen && (v[e++] = new FileToLoad("dkchr.rom", w, 8192, 65536)), this.waitForFiles(t)
@@ -2881,7 +2881,6 @@ function ZX81Display(t, e) {
     };
     var l, g;
     this.setScale(1), this.setSpeed(100), this.start = function (t, e, n, r) {
-        console.log(t, e, n, r)
         o = new ZX81(t, e, n, r);
         var i = this;
         o.start(function () {
@@ -3440,6 +3439,25 @@ var zx81opts = {
         setP: function (t) {
             this.tracks.length = 0, this.currentTrack = 0, this.addTrack("", t)
         },
+        setZIP: function (t) {
+            this.tracks.length = 0;
+            var e = new JSUnzip(t);
+            if (e.isZipFile()) {
+                e.readEntries();
+                for (var n = 0; n < e.entries.length; n++) {
+                    var r = e.entries[n];
+                    var fileNameLower = r.fileName.toLowerCase();
+                    if (fileNameLower.endsWith('.p')) {
+                        this.setPZIP(t);
+                        return;
+                    }
+                    if (fileNameLower.endsWith('.tzx')) {
+                        this.setTZXZIP(t);
+                        return;
+                    }
+                }
+            }
+        },
         addTrack: function (t, e) {
             this.tracks.push(new Track(t, e))
         },
@@ -3493,5 +3511,6 @@ function determineFileType(tapeUrl) {
     if (lowerUrl.endsWith(".p.zip")) return 3;
     if (lowerUrl.endsWith(".tzx")) return 2;
     if (lowerUrl.endsWith(".tzx.zip")) return 4;
+    if (lowerUrl.endsWith(".zip")) return 5;
     return 0;
 }
