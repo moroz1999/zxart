@@ -57,6 +57,8 @@ class PouetManagerServiceContainer extends DependencyInjectionServiceContainer
         } else {
             $pouetManager->setDb($this->registry->getService('db'));
         }
+        $this->injectService($pouetManager, 'QueueService');
+
 
         return $pouetManager;
     }

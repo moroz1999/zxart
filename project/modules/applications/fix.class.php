@@ -59,8 +59,45 @@ class fixApplication extends controllerApplication
 //            $this->fixProds();
 //            $this->fixZxChip();
 //            $this->fixWlodek();
-            $this->addCategoryToQueue(92505, QueueStatus::STATUS_TODO, null);
+//            $this->fixZx81();
+//            $this->addCategoryToQueue(92505, QueueStatus::STATUS_TODO, null);
         }
+    }
+
+    private function fixZx81(): void
+    {
+        $apiQueriesManager = $this->getService('ApiQueriesManager');
+        $filters = ['zxReleaseHardware' => ["zx80",
+            "zx8116",
+            "zx811",
+            "zx812",
+            "zx8132",
+            "zx8164",]];
+
+        $apiQuery = $apiQueriesManager->getQuery()
+            ->setExportType('zxRelease')
+            ->setFiltrationParameters($filters);
+
+        $dbQuery = $apiQuery->getExportFilteredQuery();
+        $records = $dbQuery->get(['id']);
+        $ids = array_column($records, 'id');
+        $counter = 0;
+        $count = count($ids);
+        foreach ($ids as $id) {
+            echo $counter . ' ' . round(100 * $counter / $count) . '% ';
+            $release = $this->structureManager->getElementById($id);
+
+            if (!$release) {
+                echo 'failed ' . $id . '<br>';
+                continue;
+            }
+            $release->updateFileStructure();
+            echo 'fixed ' . $id . ' ' . $release->getTitle() . '<br>';
+
+            $counter++;
+            flush();
+        }
+
     }
 
     private function addCategoryToQueue(int $categoryId, QueueStatus $status, ?int $limit = null): void

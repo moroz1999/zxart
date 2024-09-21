@@ -16,6 +16,9 @@ window.zx81EmulatorComponent = new function () {
     const emulatorReadyHandler = function () {
         zx81opts.rom = '/libs/zx81/roms/zx81.rom';
         emulatorUI = new ZX81EmulatorUI(statusElement, canvasElement, url);
+        if (typeof ym !== "undefined") {
+            ym(94686067, 'reachGoal', 'emulatorstart')
+        }
     };
     self.start = function (newUrl) {
         if (emulatorUI) {

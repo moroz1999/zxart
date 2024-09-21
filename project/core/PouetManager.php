@@ -1,4 +1,5 @@
 <?php
+
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueType;
 use ZxArt\Queue\QueueStatus;
@@ -308,7 +309,13 @@ class PouetManager extends errorLogger
      * @var CountriesManager
      */
     protected $countriesManager;
+    private QueueService $queueService;
     protected $origin = 'pouet';
+
+    public function setQueueService(QueueService $queueService): void
+    {
+        $this->queueService = $queueService;
+    }
 
     /**
      * @param \Illuminate\Database\Connection $db
