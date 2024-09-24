@@ -10,4 +10,5 @@ export interface SelectorValues {
   readonly languages: string[];
   readonly releases: boolean;
   readonly includeSubcategoriesProds: boolean;
+  readonly page: number;
 }

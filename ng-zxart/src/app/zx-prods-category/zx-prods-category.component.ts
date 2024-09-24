@@ -113,29 +113,37 @@ export class ZxProdsCategoryComponent implements OnInit {
     if (this.countries.length) {
       parameters.countries = this.countries.join(',');
     }
-    const baseParameters = {...parameters};
     if (this.currentPage > 1) {
       parameters.page = this.currentPage;
+    }
+    const urlParameters = {...parameters};
+    if (urlParameters.statuses === 'allowed,forbidden,insales,recovered,unknown,unreleased') {
+      delete (urlParameters.statuses);
+    }
+    if (urlParameters.sorting === 'votes,desc') {
+      delete (urlParameters.sorting);
     }
     this.elementsService.getModel<ZxProdCategoryDto, ZxProdCategory>(this.elementId, ZxProdCategory, parameters, 'zxProdsList').subscribe(
       model => {
         this.model = model;
         let reqUrl = this.model.url;
-        if (reqUrl.slice(-1) === '/') {
-          reqUrl = reqUrl.slice(0, -1);
-        }
-        for (const [key, value] of Object.entries(baseParameters)) {
-          reqUrl += '/' + key + ':' + value;
-        }
-        this.urlBase = reqUrl;
-        this.pagesAmount = Math.ceil(this.model.prodsAmount / this.elementsOnPage);
-        if (environment.production) {
-          if (this.currentPage > 1) {
-            reqUrl += '/page:' + this.currentPage;
+        let urlBase = reqUrl;
+        for (const [key, value] of Object.entries(urlParameters)) {
+          reqUrl += key + ':' + value + '/';
+          if (key !== 'page') {
+            urlBase += key + ':' + value + '/';
           }
-          window.history.pushState({parameters, elementId: this.elementId}, '', reqUrl);
+        }
+        this.urlBase = urlBase;
+        this.pagesAmount = Math.ceil(this.model.prodsAmount / this.elementsOnPage);
+
+        if (environment.production) {
+          if (window.location.href !== reqUrl) {
+            window.history.pushState({parameters, elementId: this.elementId}, '', reqUrl);
+          }
         }
 
+        this.currentPage = this.model.selectorValues.page;
         this.letter = this.model.selectorValues.letter;
         this.years = this.model.selectorValues.years;
         this.legalStatuses = this.model.selectorValues.statuses;

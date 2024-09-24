@@ -43,7 +43,7 @@ trait ZxProdsList
 
     private $type = 'zxProd';
 
-    const defaultStatuses = ['allowed', 'forbidden', 'insales', 'recovered', 'unknown', 'unreleased'];
+    private const defaultStatuses = ['allowed', 'forbidden', 'insales', 'recovered', 'unknown', 'unreleased'];
 
     public function getProdsInfo(): array
     {
@@ -717,6 +717,7 @@ trait ZxProdsList
         if (!isset($this->selectorValues)) {
             $this->selectorValues = [
                 'sorting' => ['votes', 'desc'],
+                'page' => null,
                 'countries' => null,
                 'languages' => null,
                 'formats' => null,
@@ -736,6 +737,8 @@ trait ZxProdsList
                     }
                 } elseif ($selectorName === 'statuses') {
                     $this->selectorValues[$selectorName] = self::defaultStatuses;
+                } elseif ($selectorName === 'page') {
+                    $this->selectorValues[$selectorName] = $this->getCurrentPage();
                 }
             }
         }
@@ -784,6 +787,7 @@ trait ZxProdsList
     {
         $controller = $this->getService('controller');
         return [
+            'page' => (int)($controller->getParameter('page') ?? 1),
             'letter' => $controller->getParameter('letter') ?? '',
             'years' => $this->getSelectorValue('years') ?? [],
             'statuses' => $this->getSelectorValue('statuses') ?? [],
