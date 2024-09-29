@@ -21,7 +21,8 @@
     "smalot/pdfparser": "^2.7",
     "ext-fileinfo": "*",
     "php": "8.2.*",
-    "verifalia/sdk": "^3.0"
+    "verifalia/sdk": "^3.0",
+    "php-di/php-di": "^7.0"
   },
   "config": {
     "allow-plugins": {

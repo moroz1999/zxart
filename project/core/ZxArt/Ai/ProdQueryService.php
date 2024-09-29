@@ -2,27 +2,24 @@
 
 namespace ZxArt\Ai;
 
-use ConfigManager;
-use errorLog;
 use JsonException;
-use OpenAI;
 use zxProdCategoryElement;
 use zxProdElement;
 
-class AiQueryService
+class ProdQueryService
 {
-    private const MODEL_4O = 'gpt-4o';
-    private const MODEL_4O_MINI = 'gpt-4o-mini';
-    private ConfigManager $configManager;
     private const DESCRIPTION_LIMIT = 2700;
     private const MIN_DESCRIPTION_LIMIT = 500;
     private const TAGS_MANUAL_LIMIT = 1000;
     private const IMAGES_LIMIT = 10;
 
-    public function setConfigManager(ConfigManager $configManager): void
+    public function __construct(
+        private PromptSender $promptSender,
+    )
     {
-        $this->configManager = $configManager;
+
     }
+
 
     private function getSeoPromt($isRunnable): string
     {
@@ -155,7 +152,7 @@ spa:{}
         $promt .= $prodDataJson;
 
         $this->logAi($promt, $prodElement->id . '_seo');
-        $output = $this->sendPromt($promt, 0.3, $prodData);
+        $output = $this->promptSender->send($promt, 0.3, $prodData);
         if (!$output) {
             return null;
         }
@@ -204,7 +201,7 @@ spa:''
             $promt = $this->getIntroPromt();
             $promt .= $prodDataJson;
             $this->logAi($promt, $prodElement->id . '_intro');
-            $response = $this->sendPromt($promt, 0.5, $prodData);
+            $response = $this->promptSender->send($promt, 0.5, $prodData);
             if (!$response) {
                 return null;
             }
@@ -225,56 +222,6 @@ spa:''
             !empty($response['spa']['intro']);
     }
 
-    private function sendPromt(string $promt, float $temperature, array $prodData, ?array $imageUrls = null): ?array
-    {
-        $apiKey = $this->configManager->getConfig('main')->get('ai_key');
-        $client = OpenAI::client($apiKey);
-
-        $result = null;
-
-        $content = [
-            [
-                "type" => "text",
-                "text" => $promt,
-            ],
-        ];
-        if ($imageUrls !== null) {
-            foreach ($imageUrls as $imageUrl) {
-                $content[] = [
-                    "type" => "image_url",
-                    "image_url" => [
-                        "url" => $imageUrl,
-                        "detail" => "low",
-                    ],
-                ];
-            }
-        }
-
-
-        try {
-            $response = $client->chat()->create([
-                'model' => self::MODEL_4O,
-                'response_format' => ["type" => "json_object"],
-                'temperature' => $temperature,
-                'messages' => [
-                    ['role' => 'user',
-                        'content' => $content,
-                    ],
-                ],
-            ]);
-            $result = $response->choices[0]->message->content;
-        } catch (Exception $exception) {
-            errorLog::getInstance()?->logMessage(self::class, $exception->getMessage() . ': ' . $prodData['title']);
-        }
-
-        try {
-            $data = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            return null;
-        }
-
-        return $data;
-    }
 
     private function logAi($message, $type)
     {
@@ -304,13 +251,13 @@ spa:''
     }
 
     /**
-     * @throws AiQueryFailException
-     * @throws AiQuerySkipException
+     * @throws QueryFailException
+     * @throws QuerySkipException
      */
     public function queryCategoriesAndTagsForProd(zxProdElement $prodElement, $queryCategories): array
     {
         if (count($prodElement->compilationItems) > 0) {
-            throw new AiQuerySkipException('Skip compilation. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
+            throw new QuerySkipException('Skip compilation. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
         }
 
         $prodData = $this->getTagsProdData($prodElement);
@@ -323,7 +270,7 @@ spa:''
         }
         $imageUrls = array_slice($imageUrls, 0, self::IMAGES_LIMIT);
         if (count($imageUrls) === 0) {
-            throw new AiQuerySkipException('No images for prod. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
+            throw new QuerySkipException('No images for prod. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
         }
 
         if ($queryCategories) {
@@ -336,9 +283,9 @@ spa:''
         }
         $promt = str_ireplace('%%prod%%', $prodDataString, $promt);
         $this->logAi($promt, $prodElement->id . '_categories_tags');
-        $response = $this->sendPromt($promt, 1, $prodData, $imageUrls);
+        $response = $this->promptSender->send($promt, 0.3, $prodData, $imageUrls);
         if (!$response) {
-            throw new AiQueryFailException('AI Response is null. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
+            throw new QueryFailException('AI Response is null. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
         }
         $this->logAi(json_encode($response), $prodElement->id . '_categories_tags');
 
@@ -348,7 +295,7 @@ spa:''
             $isValid = $this->validateTagsResponse($response);
         }
         if (!$isValid) {
-            throw new AiQueryFailException('AI Response is invalid. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
+            throw new QueryFailException('AI Response is invalid. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
         }
         return $response;
     }
@@ -422,7 +369,7 @@ spa:''
     {
         $prodData = $prodElement->getElementData('aiCategories');
         if (!$prodData) {
-            throw new AiQueryFailException('Prod data is null. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
+            throw new QueryFailException('Prod data is null. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
         }
         $manual = '';
         if (!empty($prodData['manualString']) && strlen($prodData['manualString']) > self::MIN_DESCRIPTION_LIMIT) {
@@ -477,12 +424,3 @@ In the response, do not write ANYTHING except the JSON structure:
     }
 }
 
-class AiQueryFailException extends \Exception
-{
-
-}
-
-class AiQuerySkipException extends \Exception
-{
-
-}

@@ -12,7 +12,6 @@ class showPressArticle extends structureElementAction
     {
         if ($structureElement->final){
             $structureElement->setViewName('details');
-            $controller->redirect($structureElement->externalLink);
         }
     }
 }

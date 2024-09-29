@@ -19,7 +19,7 @@
                    target="_blank"
                 >{translations name='pressarticle.source'}</a>
             </div>
-            <pre class="pressarticle_content">{$element->content}</pre>
+            <div class="pressarticle_content">{$element->getFormattedContent()}</div>
             <h2>{translations name='pressarticle.morefromsame'}: <a href="{$parentElement->getUrl()}">{$parentElement->getTitle()}</a></h2>
             {include file=$theme->template('component.pressArticles.tpl') articles= $parentElement->articles pager=false}
         </div>

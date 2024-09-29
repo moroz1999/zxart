@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Connection;
+use ZxArt\Ai\TranslatorService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
 
@@ -245,8 +245,8 @@ class fixApplication extends controllerApplication
         $counter = 0;
         foreach ($ids as $id) {
             $prod = $this->structureManager->getElementById($id);
-            if (!$prod) {
-                echo 'failed ' . $id . ' ' . $prod->getTitle() . "<br>";
+            if ($prod === null) {
+                echo 'failed ' . $id . "<br>";
                 continue;
             }
             $split = explode('#', $prod->title);
