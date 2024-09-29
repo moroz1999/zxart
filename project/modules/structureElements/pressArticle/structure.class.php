@@ -6,7 +6,6 @@
  * @property string $introduction
  * @property string $content
  * @property boolean $allowComments
- * @property boolean $hasAiData
  * @property authorElement[]|authorAliasElement[] $authors
  */
 class pressArticleElement extends structureElement implements SearchContentHolder, MetadataProviderInterface
@@ -18,14 +17,11 @@ class pressArticleElement extends structureElement implements SearchContentHolde
     public $defaultActionName = 'show';
     public $role = 'content';
     private $searchTerm;
-    private $metaData;
-
 
     public function setSearchTerm(string $term): void
     {
         $this->searchTerm = $term;
     }
-
 
     /**
      * @return void
@@ -33,10 +29,11 @@ class pressArticleElement extends structureElement implements SearchContentHolde
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
-        $moduleStructure['externalLink'] = 'url';
         $moduleStructure['introduction'] = 'html';
         $moduleStructure['content'] = 'html';
+        $moduleStructure['shortContent'] = 'html';
         $moduleStructure['allowComments'] = 'checkbox';
+        $moduleStructure['externalLink'] = 'url';
         $moduleStructure['authors'] = [
             'ConnectedElements',
             [
@@ -44,7 +41,18 @@ class pressArticleElement extends structureElement implements SearchContentHolde
                 'role' => 'child',
             ],
         ];
-        $moduleStructure['hasAiData'] = 'checkbox';
+    }
+
+    protected function setMultiLanguageFields(&$multiLanguageFields): void
+    {
+        $multiLanguageFields[] = 'title';
+        $multiLanguageFields[] = 'introduction';
+        $multiLanguageFields[] = 'content';
+        $multiLanguageFields[] = 'shortContent';
+
+        $multiLanguageFields[] = 'h1';
+        $multiLanguageFields[] = 'metaTitle';
+        $multiLanguageFields[] = 'metaDescription';
     }
 
     public function getCommentFormActionURL()
@@ -61,7 +69,7 @@ class pressArticleElement extends structureElement implements SearchContentHolde
         if ($parent = $structureManager->getElementsFirstParent($this->id)) {
             return $parent;
         }
-        return false;
+        return null;
     }
 
     public function getSearchTitle(): string
@@ -116,44 +124,15 @@ class pressArticleElement extends structureElement implements SearchContentHolde
         return $parentElement->getTitle() . ': ' . $this->title . ' - ' . $this->introduction;
     }
 
-    public function getMetaTitle()
+    public function getFormattedContent(): string
     {
-        if ($this->hasAiData) {
-            $metaData = $this->getMetaData();
-            return $metaData['metaTitle'];
-        }
-        return $this->title . ' - ' . $this->introduction;
+        $originalContent = $this->content;
+        $content = strip_tags($originalContent, ['img', 'br']);
+        return str_replace(["-\n", "\r"], '', $content);
     }
 
-    private function getMetaData()
+    public function getWrappedContent(): string
     {
-        if (!$this->metaData) {
-            $db = $this->getService('db');
-            $this->metaData = $db->table('module_pressarticle_meta')
-                ->select(['metaTitle', 'metaDescription', 'generatedDescription'])
-                ->where('id', '=', $this->id)
-                ->first();
-        }
-        return $this->metaData;
+        return str_replace("\n", '<br />', $this->getFormattedContent());
     }
-
-    public function getMetaDescription()
-    {
-        if ($this->hasAiData) {
-            $metaData = $this->getMetaData();
-            return $metaData['metaDescription'];
-        }
-        return mb_substr(strip_tags($this->content), 0, 180);
-    }
-
-    public function getGeneratedDescription()
-    {
-        if ($this->hasAiData) {
-            $metaData = $this->getMetaData();
-            return $metaData['generatedDescription'];
-        }
-        return '';
-    }
-
-
 }

@@ -1,12 +1,15 @@
 <?php
 
 use Illuminate\Database\Connection;
-use ZxArt\Ai\AiQueryFailException;
-use ZxArt\Ai\AiQuerySkipException;
-use ZxArt\Ai\AiQueryService;
+use ZxArt\Ai\QueryFailException;
+use ZxArt\Ai\QuerySkipException;
+use ZxArt\Ai\ProdQueryService as AiQueueService;
+use ZxArt\Ai\TextBeautifier;
+use ZxArt\Ai\TranslatorService;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
+use ZxArt\Strings\LanguageDetector;
 use ZxArt\ZxProdCategories\Ids;
 
 class crontabApplication extends controllerApplication
@@ -19,8 +22,11 @@ class crontabApplication extends controllerApplication
     private string $logFilePath;
     private QueueService $queueService;
     private Connection $db;
-    private ?AiQueryService $aiQueryService;
+    private ?AiQueueService $aiQueryService;
     private ?array $languages = null;
+    private ?TranslatorService $translatorService;
+    private ?TextBeautifier $textBeautifier;
+    private ?LanguageDetector $languageDetector;
 
     /**
      * @return void
@@ -32,7 +38,10 @@ class crontabApplication extends controllerApplication
         $this->createRenderer();
         $this->queueService = $this->getService('QueueService');
         $this->db = $this->getService('db');
-        $this->aiQueryService = $this->getService('AiQueryService');
+        $this->aiQueryService = $this->getService(AiQueueService::class);
+        $this->textBeautifier = $this->getService(TextBeautifier::class);
+        $this->translatorService = $this->getService(TranslatorService::class);
+        $this->languageDetector = $this->getService(LanguageDetector::class);
     }
 
     /**
@@ -77,16 +86,135 @@ class crontabApplication extends controllerApplication
 
             $this->structureManager->setRequestedPath([$currentLanguageCode]);
             $this->structureManager->setPrivilegeChecking(false);
-            $this->convertMp3();
-            $this->recalculate();
-            $this->parseReleases();
-            $this->parseArtItems('module_zxpicture', 'image', 'originalName');
-            $this->parseArtItems('module_zxmusic', 'file', 'fileName');
+//            $this->convertMp3();
+//            $this->recalculate();
+//            $this->parseReleases();
+//            $this->parseArtItems('module_zxpicture', 'image', 'originalName');
+//            $this->parseArtItems('module_zxmusic', 'file', 'fileName');
 //            $this->queryAiSeo();
 //            $this->queryAiIntro();
-            $this->queryAiCategories();
+//            $this->queryAiCategories();
+            $this->queryAiPressBeautifier();
+            $this->queryAiPressTranslation();
         }
     }
+
+    private function queryAiPressBeautifier(): void
+    {
+        $languagesManager = $this->getService('LanguagesManager');
+        $languagesManager->setCurrentLanguageCode('rus');
+
+        $counter = 0;
+        $executionLimit = 60 * 5;
+        $totalExecution = 0;
+        while ($totalExecution <= $executionLimit) {
+            $counter++;
+
+            $elementId = $this->queueService->getNextElementId(QueueType::AI_PRESS_FIX);
+            if ($elementId === null) {
+                return;
+            }
+            $this->queueService->updateStatus($elementId, QueueType::AI_PRESS_FIX, QueueStatus::STATUS_INPROGRESS);
+
+            /**
+             * @var pressArticleElement $pressArticleElement
+             */
+            $pressArticleElement = $this->structureManager->getElementById($elementId);
+            if (!$pressArticleElement) {
+                $this->queueService->updateStatus($elementId, QueueType::AI_PRESS_FIX, QueueStatus::STATUS_FAIL);
+                $this->logMessage($counter . ' AI Fix article not found ' . $elementId, 0);
+                continue;
+            }
+            $startTime = microtime(true);
+            $updatedContent = null;
+            $this->logMessage($counter . ' AI Fix request start ' . $pressArticleElement->id . ' ' . $pressArticleElement->title, 0);
+            try {
+                $updatedContent = $this->textBeautifier->beautify(html_entity_decode($pressArticleElement->getFormattedContent()));
+            } catch (Exception $e) {
+                $this->logMessage($counter . ' AI Fix request failed. ' . $e->getMessage(), 0);
+                $this->queueService->updateStatus($elementId, QueueType::AI_PRESS_FIX, QueueStatus::STATUS_FAIL);
+            }
+            if ($updatedContent) {
+                $destLanguageId = $languagesManager->getLanguageId('rus');
+                $pressArticleElement->setValue('content', $updatedContent, $destLanguageId);
+                $pressArticleElement->persistElementData();
+            }
+
+            $endTime = microtime(true);
+            $executionTime = $endTime - $startTime;
+            $totalExecution += $executionTime;
+            $this->logMessage($counter . ' AI Fix request success ' . $pressArticleElement->id . ' ' . $pressArticleElement->title, round($executionTime));
+
+            $this->queueService->updateStatus($elementId, QueueType::AI_PRESS_FIX, QueueStatus::STATUS_SUCCESS);
+        }
+        $this->logMessage(' AI Fix requesting completed with total execution time ' . $totalExecution, 0);
+    }
+
+    private function queryAiPressTranslation(): void
+    {
+        $languagesManager = $this->getService('LanguagesManager');
+        $languagesManager->setCurrentLanguageCode('rus');
+
+        $allLanguageCodes = [
+            'rus' => ['eng', 'spa'],
+            'eng' => ['rus', 'spa'],
+            'spa' => ['eng', 'rus'],
+        ];
+
+        $counter = 0;
+        $executionLimit = 60 * 5;
+        $totalExecution = 0;
+        while ($totalExecution <= $executionLimit) {
+            $counter++;
+
+            $elementId = $this->queueService->getNextElementId(QueueType::AI_PRESS_TRANSLATE);
+            if ($elementId === null) {
+                return;
+            }
+            $this->queueService->updateStatus($elementId, QueueType::AI_PRESS_TRANSLATE, QueueStatus::STATUS_INPROGRESS);
+
+            /**
+             * @var pressArticleElement $pressArticleElement
+             */
+            $pressArticleElement = $this->structureManager->getElementById($elementId);
+            if (!$pressArticleElement) {
+                $this->queueService->updateStatus($elementId, QueueType::AI_PRESS_TRANSLATE, QueueStatus::STATUS_FAIL);
+                $this->logMessage($counter . ' AI Translation article not found ' . $elementId, 0);
+                continue;
+            }
+            $content = $pressArticleElement->getFormattedContent();
+            $contentLanguageCode = $this->languageDetector->detectLanguage($content);
+            $languageCodes = $allLanguageCodes[$contentLanguageCode];
+            if (!$languageCodes) {
+                $this->logMessage($counter . ' AI Translation request failed for ' . $elementId . '. Failed to detect language', 0);
+                continue;
+            }
+            foreach ($languageCodes as $languageCode) {
+                $startTime = microtime(true);
+                $translation = null;
+                $this->logMessage($counter . ' AI Translation request start ' . $pressArticleElement->id . ' ' . $pressArticleElement->title . ' ' . $languageCode, 0);
+                try {
+                    $translation = $this->translatorService->translate($pressArticleElement->getFormattedContent(), $contentLanguageCode, $languageCode);
+                } catch (Exception $e) {
+                    $this->logMessage($counter . ' AI Translation request failed. ' . $e->getMessage(), 0);
+                    $this->queueService->updateStatus($elementId, QueueType::AI_PRESS_TRANSLATE, QueueStatus::STATUS_FAIL);
+                }
+                if ($translation) {
+                    $destLanguageId = $languagesManager->getLanguageId($languageCode);
+                    $pressArticleElement->setValue('content', $translation, $destLanguageId);
+                    $pressArticleElement->persistElementData();
+                }
+
+                $endTime = microtime(true);
+                $executionTime = $endTime - $startTime;
+                $totalExecution += $executionTime;
+                $this->logMessage($counter . ' AI Translation request success ' . $pressArticleElement->id . ' ' . $pressArticleElement->title, round($executionTime));
+            }
+            $this->queueService->updateStatus($elementId, QueueType::AI_PRESS_TRANSLATE, QueueStatus::STATUS_SUCCESS);
+        }
+        $this->logMessage(' AI Translation requesting completed with total execution time ' . $totalExecution, 0);
+    }
+
 
     private function recalculate(): void
     {
@@ -279,10 +407,10 @@ class crontabApplication extends controllerApplication
             $this->logMessage($counter . ' AI Categories request start ' . $prodElement->id . ' ' . $prodElement->title, 0);
             try {
                 $metaData = $this->aiQueryService->queryCategoriesAndTagsForProd($prodElement, $queryCategoriesEnabled);
-            } catch (AiQueryFailException $e) {
+            } catch (QueryFailException $e) {
                 $this->logMessage($counter . ' AI Categories request failed. ' . $e->getMessage(), 0);
                 $this->queueService->updateStatus($elementId, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_FAIL);
-            } catch (AiQuerySkipException $e) {
+            } catch (QuerySkipException $e) {
                 $this->logMessage($counter . ' AI Categories request skipped. ' . $e->getMessage(), 0);
                 $this->queueService->updateStatus($elementId, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
             }
