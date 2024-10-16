@@ -86,11 +86,11 @@ class crontabApplication extends controllerApplication
 
             $this->structureManager->setRequestedPath([$currentLanguageCode]);
             $this->structureManager->setPrivilegeChecking(false);
-//            $this->convertMp3();
-//            $this->recalculate();
-//            $this->parseReleases();
-//            $this->parseArtItems('module_zxpicture', 'image', 'originalName');
-//            $this->parseArtItems('module_zxmusic', 'file', 'fileName');
+            $this->convertMp3();
+            $this->recalculate();
+            $this->parseReleases();
+            $this->parseArtItems('module_zxpicture', 'image', 'originalName');
+            $this->parseArtItems('module_zxmusic', 'file', 'fileName');
 //            $this->queryAiSeo();
 //            $this->queryAiIntro();
 //            $this->queryAiCategories();

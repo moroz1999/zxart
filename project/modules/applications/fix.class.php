@@ -55,6 +55,7 @@ class fixApplication extends controllerApplication
 //            $this->fixReleases();
 //            $this->deleteProds();
 //            $this->fixPress();
+            $this->fixPressCategories();
 //            $this->deletePress();
 //            $this->fixProds();
 //            $this->fixZxChip();
@@ -234,8 +235,8 @@ class fixApplication extends controllerApplication
          * @var linksManager $linksManager
          */
         $linksManager = $this->getService(linksManager::class);
-        $name = 'Info Guide';
-//        $replacement = 'Oreh';
+        $name = 'Nicron';
+        $replacement = 'Nicron issue';
         $result = $this->db->table('module_zxprod')
             ->where('title', 'like', $name . ' #%')
             ->orderBy('id')
@@ -255,19 +256,21 @@ class fixApplication extends controllerApplication
                 ->where('title', 'like', $name . ' ' . $split[1])
                 ->orWhere('title', 'like', $name . ' ' . (int)$split[1])
                 ->orWhere('title', 'like', $name . ' #' . (int)$split[1])
-//                ->orWhere('title', 'like', $replacement . ' #' . $split[1])
-//                ->orWhere('title', 'like', $replacement . ' ' . $split[1])
-//                ->orWhere('title', 'like', $replacement . ' ' . (int)$split[1])
+                ->orWhere('title', 'like', $replacement . ' #' . $split[1])
+                ->orWhere('title', 'like', $replacement . ' 0' . $split[1])
+                ->orWhere('title', 'like', $replacement . ' ' . $split[1])
+                ->orWhere('title', 'like', $replacement . ' ' . (int)$split[1])
                 ->orderBy('id')
                 ->first(['id']);
 
-            $linksManager->unLinkElements(self::CATEGORY_MISC, $prod->id, 'zxProdCategory');
-//            $linksManager->unLinkElements(self::CATEGORY_MAGAZINE, $prod->id, 'zxProdCategory');
-//            $linksManager->linkElements(self::CATEGORY_NEWSPAPER, $prod->id, 'zxProdCategory');
-            $linksManager->linkElements(self::CATEGORY_MAGAZINE, $prod->id, 'zxProdCategory');
-
             $prod2 = $this->structureManager->getElementById($result['id']);
             if ($prod2) {
+                $linksManager->unLinkElements(self::CATEGORY_MISC, $prod->id, 'zxProdCategory');
+                $linksManager->unLinkElements(self::CATEGORY_MAGAZINE, $prod->id, 'zxProdCategory');
+                $linksManager->linkElements(self::CATEGORY_NEWSPAPER, $prod->id, 'zxProdCategory');
+//            $linksManager->linkElements(self::CATEGORY_MAGAZINE, $prod->id, 'zxProdCategory');
+
+
                 $prod2->title = $prod->title;
 
                 $prodsManager->joinDeleteZxProd($prod2->id, $prod->id, false);
@@ -278,6 +281,42 @@ class fixApplication extends controllerApplication
             echo $counter . ' ' . round(100 * $counter / $count) . '% ';
             if ($prod && $prod2) {
                 echo 'fixed ' . $prod->title . ' ' . $prod2->title . '<br>';
+            }
+            $counter++;
+            flush();
+        }
+    }
+
+    private function fixPressCategories(): void
+    {
+        /**
+         * @var linksManager $linksManager
+         */
+        $linksManager = $this->getService(linksManager::class);
+        $name = 'Nicron';
+        $replacement = 'Nicron issue';
+        $result = $this->db->table('module_zxprod')
+            ->where('title', 'like', $name . ' #%')
+            ->orderBy('id')
+            ->get(['id']);
+        $ids = array_column($result, 'id');
+        $count = count($ids);
+        $counter = 0;
+        foreach ($ids as $id) {
+            $prod = $this->structureManager->getElementById($id);
+            if ($prod === null) {
+                echo 'failed ' . $id . "<br>";
+                continue;
+            }
+
+            $linksManager->unLinkElements(self::CATEGORY_MISC, $prod->id, 'zxProdCategory');
+            $linksManager->unLinkElements(self::CATEGORY_MAGAZINE, $prod->id, 'zxProdCategory');
+            $linksManager->linkElements(self::CATEGORY_NEWSPAPER, $prod->id, 'zxProdCategory');
+//            $linksManager->linkElements(self::CATEGORY_MAGAZINE, $prod->id, 'zxProdCategory');
+
+            echo $counter . ' ' . round(100 * $counter / $count) . '% ';
+            if ($prod) {
+                echo 'fixed ' . $prod->title . ' ' . '<br>';
             }
             $counter++;
             flush();
