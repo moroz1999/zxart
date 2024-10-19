@@ -159,7 +159,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                                     return $textContent;
                                 }
                             } catch (Throwable $exception) {
-                                errorLog::getInstance()->logMessage(self::class, $exception->getMessage() . ' ' . $releaseElement->getTitle());
+                                ErrorLog::getInstance()->logMessage(self::class, $exception->getMessage() . ' ' . $releaseElement->getTitle());
                             }
 
                             return '';

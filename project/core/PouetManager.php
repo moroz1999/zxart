@@ -3,6 +3,7 @@
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueType;
 use ZxArt\Queue\QueueStatus;
+use ZxArt\CategoryIds;
 
 class PouetManager extends errorLogger
 {
@@ -17,39 +18,7 @@ class PouetManager extends errorLogger
      * @var \Illuminate\Database\Connection
      */
     protected $db;
-    protected $categories = [
-        'demo' => 92159,
-        '64k' => 92159,
-        '64b' => 262452,
-        '128b' => 262453,
-        '256b' => 92169,
-        '512b' => 92168,
-        '1k' => 92167,
-        '4k' => 92166,
-        '8k' => 92165,
-        '16k' => 92164,
-        '32k' => 315119,
-        '40k' => 92163,
-        '128k' => 315120,
-        'artpack' => 315121,
-        'cracktro' => 92171,
-        '32b' => 262451,
-        'demopack' => 315126,
-        'demotool' => 92183,
-        'dentro' => 92162,
-        'diskmag' => 92179,
-        'fastdemo' => 315136,
-        'game' => 92177,
-        'intro' => 92163,
-        'invitation' => 92173,
-        'musicdisk' => 92175,
-        'procedural graphics' => 315137,
-        'report' => 92159,
-        'slideshow' => 315121,
-        'votedisk' => 315121,
-        'wild' => 92159,
-        'bbstro' => 364978,
-    ];
+    protected $categories;
     protected $platforms = [
         'ZX Spectrum' => 'zx48',
         'SAM Coupé' => 'samcoupe',
@@ -312,6 +281,44 @@ class PouetManager extends errorLogger
     private QueueService $queueService;
     protected $origin = 'pouet';
 
+    public function __construct()
+    {
+        $this->categories = [
+            'demo' => CategoryIds::DEMO->value,
+            '64k' => CategoryIds::DEMO->value,
+            '64b' => 262452,
+            '128b' => 262453,
+            '256b' => 92169,
+            '512b' => 92168,
+            '1k' => 92167,
+            '4k' => 92166,
+            '8k' => 92165,
+            '16k' => 92164,
+            '32k' => 315119,
+            '40k' => 92163,
+            '128k' => 315120,
+            'artpack' => 315121,
+            'cracktro' => 92171,
+            '32b' => 262451,
+            'demopack' => 315126,
+            'demotool' => 92183,
+            'dentro' => 92162,
+            'diskmag' => 92179,
+            'fastdemo' => 315136,
+            'game' => 92177,
+            'intro' => 92163,
+            'invitation' => 92173,
+            'musicdisk' => 92175,
+            'procedural graphics' => 315137,
+            'report' => CategoryIds::DEMO->value,
+            'slideshow' => 315121,
+            'votedisk' => 315121,
+            'wild' => CategoryIds::DEMO->value,
+            'bbstro' => 364978,
+        ];
+
+    }
+
     public function setQueueService(QueueService $queueService): void
     {
         $this->queueService = $queueService;
@@ -382,8 +389,7 @@ class PouetManager extends errorLogger
             (!$this->maxCounter || ($this->counter < $this->maxCounter)) &&
             (time() <= $this->maxTime) &&
             ($id <= $this->maxId || $this->debugEntry)
-        )
-        {
+        ) {
             $this->maxCounter--;
             if ($prodData = $this->download($id)) {
                 $platformSupported = false;
@@ -623,10 +629,10 @@ class PouetManager extends errorLogger
     /**
      * @return void
      */
-    protected function logError($message, $level = null, $throwException = true)
+    protected function logError($message, $level = null): void
     {
         $this->markProgress($message);
-        parent::logError($message, $level, $throwException);
+        parent::logError($message, $level);
     }
 
     protected function markProgress(string $text): void
@@ -645,7 +651,7 @@ class PouetManager extends errorLogger
     protected function updateReport($id, string $status): void
     {
         $this->db->table('import_pouet')->insert([
-            ['id' => $id, 'status' => $status]
+            ['id' => $id, 'status' => $status],
         ]);
     }
 

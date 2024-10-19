@@ -318,7 +318,7 @@ class user
                 $user->persist();
             }
         } elseif (count($users) > 1) {
-            $errorLog = errorLog::getInstance();
+            $errorLog = ErrorLog::getInstance();
             $errorLog->logMessage(__CLASS__, 'Non-unique user "' . $userName . '" in database');
         }
         return $userId;

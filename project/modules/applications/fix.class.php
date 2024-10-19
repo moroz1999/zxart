@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Database\Connection;
-use ZxArt\Ai\TranslatorService;
+use ZxArt\CategoryIds;
+use ZxArt\LinkTypes;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
 
@@ -55,7 +56,8 @@ class fixApplication extends controllerApplication
 //            $this->fixReleases();
 //            $this->deleteProds();
 //            $this->fixPress();
-            $this->fixPressCategories();
+            $this->fixDemoCategories();
+//            $this->fixPressCategories();
 //            $this->deletePress();
 //            $this->fixProds();
 //            $this->fixZxChip();
@@ -109,7 +111,7 @@ class fixApplication extends controllerApplication
         $category = $this->structureManager->getElementById($categoryId);
         $subcategoriesIds = [];
         $category->getSubCategoriesTreeIds($subcategoriesIds);
-        $filters = ['zxProdCategory' => $subcategoriesIds];
+        $filters = [LinkTypes::ZX_PROD_CATEGORY->value => $subcategoriesIds];
         /**
          * @var ApiQueriesManager $apiQueriesManager
          */
@@ -163,7 +165,7 @@ class fixApplication extends controllerApplication
             $prod = $this->structureManager->getElementById($id);
             echo $counter . ' ' . round(100 * $counter / $count) . '% ';
             if (!$prod) {
-                $linksManager->linkElements(418662, $id, 'zxProdCategory');
+                $linksManager->linkElements(418662, $id, LinkTypes::ZX_PROD_CATEGORY->value);
                 echo 'fixed' . $id . '<br>';
             } else {
                 echo 'exists' . $id . '<br>';
@@ -265,10 +267,10 @@ class fixApplication extends controllerApplication
 
             $prod2 = $this->structureManager->getElementById($result['id']);
             if ($prod2) {
-                $linksManager->unLinkElements(self::CATEGORY_MISC, $prod->id, 'zxProdCategory');
-                $linksManager->unLinkElements(self::CATEGORY_MAGAZINE, $prod->id, 'zxProdCategory');
-                $linksManager->linkElements(self::CATEGORY_NEWSPAPER, $prod->id, 'zxProdCategory');
-//            $linksManager->linkElements(self::CATEGORY_MAGAZINE, $prod->id, 'zxProdCategory');
+                $linksManager->unLinkElements(self::CATEGORY_MISC, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
+                $linksManager->unLinkElements(self::CATEGORY_MAGAZINE, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
+                $linksManager->linkElements(self::CATEGORY_NEWSPAPER, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
+//            $linksManager->linkElements(self::CATEGORY_MAGAZINE, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
 
 
                 $prod2->title = $prod->title;
@@ -284,6 +286,26 @@ class fixApplication extends controllerApplication
             }
             $counter++;
             flush();
+        }
+    }
+
+    private function fixDemoCategories(): void
+    {
+        /**
+         * @var linksManager $linksManager
+         */
+        $linksManager = $this->getService(linksManager::class);
+        $demoId = CategoryIds::DEMO->value;
+        $megaDemoId = CategoryIds::MEGA_DEMO->value;
+        $trackmoId = CategoryIds::TRACKMO->value;
+        $linkType = LinkTypes::ZX_PROD_CATEGORY->value;
+        $ids = $linksManager->getConnectedIdList($demoId, $linkType, 'parent');
+        foreach ($ids as $prodId) {
+            $categoryIdsMap = $linksManager->getConnectedIdIndex($prodId, $linkType, 'child');
+            if (isset($categoryIdsMap[$megaDemoId]) || isset($categoryIdsMap[$trackmoId])) {
+                $linksManager->unLinkElements($demoId, $prodId, $linkType);
+                echo 'fixed ' . $prodId . ' ' . '<br>';
+            }
         }
     }
 
@@ -309,10 +331,10 @@ class fixApplication extends controllerApplication
                 continue;
             }
 
-            $linksManager->unLinkElements(self::CATEGORY_MISC, $prod->id, 'zxProdCategory');
-            $linksManager->unLinkElements(self::CATEGORY_MAGAZINE, $prod->id, 'zxProdCategory');
-            $linksManager->linkElements(self::CATEGORY_NEWSPAPER, $prod->id, 'zxProdCategory');
-//            $linksManager->linkElements(self::CATEGORY_MAGAZINE, $prod->id, 'zxProdCategory');
+            $linksManager->unLinkElements(self::CATEGORY_MISC, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
+            $linksManager->unLinkElements(self::CATEGORY_MAGAZINE, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
+            $linksManager->linkElements(self::CATEGORY_NEWSPAPER, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
+//            $linksManager->linkElements(self::CATEGORY_MAGAZINE, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
 
             echo $counter . ' ' . round(100 * $counter / $count) . '% ';
             if ($prod) {
