@@ -147,6 +147,23 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         }
     }
 
+    public function getSearchTitle(): string
+    {
+        $searchTitle = $this->title;
+        if ($this->year) {
+            $searchTitle .= ' (' . $this->year . ')';
+        }
+        $authors = [];
+        foreach ($this->getAuthorsList() as $authorElement) {
+            $authors[] = $authorElement->getTitle();
+        }
+        if ($authors) {
+            $searchTitle .= ' / ' . implode(', ', $authors);
+        }
+
+        return $searchTitle;
+    }
+
     public function renewAuthorLink(): void
     {
         $linkType = $this->authorLinkType;

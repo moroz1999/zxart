@@ -5,6 +5,7 @@
  * @property string $externalLink
  * @property string $introduction
  * @property string $content
+ * @property string $h1
  * @property boolean $allowComments
  * @property authorElement[]|authorAliasElement[] $authors
  */
@@ -31,7 +32,11 @@ class pressArticleElement extends structureElement implements SearchContentHolde
         $moduleStructure['title'] = 'text';
         $moduleStructure['introduction'] = 'html';
         $moduleStructure['content'] = 'html';
-        $moduleStructure['shortContent'] = 'html';
+
+        $moduleStructure['h1'] = 'text';
+        $moduleStructure['metaTitle'] = 'text';
+        $moduleStructure['metaDescription'] = 'text';
+
         $moduleStructure['allowComments'] = 'checkbox';
         $moduleStructure['externalLink'] = 'url';
         $moduleStructure['authors'] = [
@@ -41,6 +46,49 @@ class pressArticleElement extends structureElement implements SearchContentHolde
                 'role' => 'child',
             ],
         ];
+        $moduleStructure['people'] = [
+            'ConnectedElements',
+            [
+                'linkType' => 'pressPeople',
+                'role' => 'child',
+            ],
+        ];
+        $moduleStructure['software'] = [
+            'ConnectedElements',
+            [
+                'linkType' => 'pressSoftware',
+                'role' => 'child',
+            ],
+        ];
+        $moduleStructure['groups'] = [
+            'ConnectedElements',
+            [
+                'linkType' => 'pressGroups',
+                'role' => 'child',
+            ],
+        ];
+        $moduleStructure['parties'] = [
+            'ConnectedElements',
+            [
+                'linkType' => 'pressParties',
+                'role' => 'child',
+            ],
+        ];
+        $moduleStructure['tunes'] = [
+            'ConnectedElements',
+            [
+                'linkType' => 'pressTunes',
+                'role' => 'child',
+            ],
+        ];
+        $moduleStructure['pictures'] = [
+            'ConnectedElements',
+            [
+                'linkType' => 'pressPictures',
+                'role' => 'child',
+            ],
+        ];
+
     }
 
     protected function setMultiLanguageFields(&$multiLanguageFields): void
@@ -48,7 +96,6 @@ class pressArticleElement extends structureElement implements SearchContentHolde
         $multiLanguageFields[] = 'title';
         $multiLanguageFields[] = 'introduction';
         $multiLanguageFields[] = 'content';
-        $multiLanguageFields[] = 'shortContent';
 
         $multiLanguageFields[] = 'h1';
         $multiLanguageFields[] = 'metaTitle';
@@ -63,7 +110,7 @@ class pressArticleElement extends structureElement implements SearchContentHolde
         return false;
     }
 
-    public function getParent()
+    public function getParent(): ?zxProdElement
     {
         $structureManager = $this->getService('structureManager');
         if ($parent = $structureManager->getElementsFirstParent($this->id)) {
@@ -121,14 +168,22 @@ class pressArticleElement extends structureElement implements SearchContentHolde
     public function getH1(): string
     {
         $parentElement = $this->getParent();
-        return $parentElement->getTitle() . ': ' . $this->title . ' - ' . $this->introduction;
+        if ($this->h1 !== ''){
+            return $parentElement->getTitle() . ': ' . $this->h1;
+        }
+        return $parentElement->getTitle() . ': ' . $this->title;
     }
 
-    public function getFormattedContent(): string
+    private function getFormattedContent(): string
     {
         $originalContent = $this->content;
         $content = strip_tags($originalContent, ['img', 'br']);
         return str_replace(["-\n", "\r"], '', $content);
+    }
+
+    public function getTextContent(): string
+    {
+        return html_entity_decode($this->getFormattedContent());
     }
 
     public function getWrappedContent(): string

@@ -1,8 +1,10 @@
 <?php
 
-namespace ZxArt\Ai;
+namespace ZxArt\Ai\Service;
 
 use JsonException;
+use ZxArt\Ai\QueryFailException;
+use ZxArt\Ai\QuerySkipException;
 use zxProdCategoryElement;
 use zxProdElement;
 
@@ -152,7 +154,7 @@ spa:{}
         $promt .= $prodDataJson;
 
         $this->logAi($promt, $prodElement->id . '_seo');
-        $output = $this->promptSender->send($promt, 0.3);
+        $output = $this->promptSender->send($promt, 0.3,null, true);
         if (!$output) {
             return null;
         }
@@ -201,7 +203,7 @@ spa:''
             $promt = $this->getIntroPromt();
             $promt .= $prodDataJson;
             $this->logAi($promt, $prodElement->id . '_intro');
-            $response = $this->promptSender->send($promt, 0.5);
+            $response = $this->promptSender->send($promt, 0.5, null, true);
             if (!$response) {
                 return null;
             }
@@ -283,7 +285,7 @@ spa:''
         }
         $promt = str_ireplace('%%prod%%', $prodDataString, $promt);
         $this->logAi($promt, $prodElement->id . '_categories_tags');
-        $response = $this->promptSender->send($promt, 0.3, $imageUrls);
+        $response = $this->promptSender->send($promt, 0.3, $imageUrls, true);
         if (!$response) {
             throw new QueryFailException('AI Response is null. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
         }

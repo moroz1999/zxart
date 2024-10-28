@@ -246,7 +246,7 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
         return $this->groupProds;
     }
 
-    public function getSearchTitle()
+    public function getSearchTitle(): string
     {
         $searchTitle = $this->getTitle();
         $additional = '';

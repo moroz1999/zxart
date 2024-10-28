@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace ZxArt\Ai;
+namespace ZxArt\Ai\Service;
 
-readonly class TranslatorService
+use ZxArt\Ai\ChunkProcessor;
+
+readonly class Translator
 {
     public function __construct(
         private ChunkProcessor $chunkProcessor,
@@ -22,16 +24,19 @@ readonly class TranslatorService
 Текст:<pre>{$chunk}</pre>";
         };
 
-        $processResponse = static fn(array $response): string => str_replace(
+        $processResponse = static fn(string $response): string => str_replace(
             ['```html', '```', "<pre>", "</pre>"],
             '',
-            $response['text']
+            $response
         );
 
         return $this->chunkProcessor->processText(
             $text,
             $createPrompt,
-            $processResponse
+            $processResponse,
+            0.5,
+            null,
+            false
         );
     }
 }

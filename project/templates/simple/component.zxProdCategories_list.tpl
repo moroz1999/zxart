@@ -1,1 +1,2 @@
+{if empty($pad)}{$pad = 0}{/if}
 {if $categories =$element->getCategories()}{foreach $categories as $category}{include file=$theme->template($category->getTemplate()) element=$category pad=$pad}{/foreach}{/if}

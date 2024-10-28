@@ -2,11 +2,13 @@
 declare(strict_types=1);
 
 
-namespace ZxArt\Ai;
+namespace ZxArt\Ai\Service;
 
 use ConfigManager;
 use JsonException;
 use OpenAI;
+use ZxArt\Ai\errorLog;
+use ZxArt\Ai\Exception;
 
 class PromptSender
 {
@@ -23,10 +25,10 @@ class PromptSender
     public function send(
         string $prompt,
         float  $temperature,
-        bool   $useJson = true,
         ?array $imageUrls = null,
+        bool $useJson = false,
         string $model = self::MODEL_4O,
-    ): ?array
+    ): ?string
     {
         $apiKey = $this->configManager->getConfig('main')->get('ai_key');
         $client = OpenAI::client($apiKey);
@@ -67,7 +69,7 @@ class PromptSender
             $response = $client->chat()->create($config);
             $result = $response->choices[0]->message->content;
 
-            $data = $useJson ? json_decode($result, true, 512, JSON_THROW_ON_ERROR) : ['text' => $result];
+            $data = $result;
         } catch (JsonException) {
             return null;
         } catch (Exception $exception) {

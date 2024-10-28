@@ -284,4 +284,9 @@ class partyElement extends structureElement implements CommentsHolderInterface, 
         }
         return controller::getInstance()->baseURL . 'images/zxprod_default.png';
     }
+
+    public function getSearchTitle(): string
+    {
+        return $this->title;
+    }
 }

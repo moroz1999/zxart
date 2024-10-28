@@ -19,9 +19,9 @@ class publicReceivePressArticle extends structureElementAction
             }
             $structureElement->persistElementData();
 
-            if ($parentElement = $structureElement->getFirstParentElement()){
+            if ($parentElement = $structureElement->getFirstParentElement()) {
                 $linksManager = $this->getService('linksManager');
-                $linksManager->unLinkElements($parentElement->id, $structureElement->id, 'structure');
+                $linksManager->unLinkElements($parentElement->id, $structureElement->id);
                 $linksManager->linkElements($parentElement->id, $structureElement->id, 'prodArticle');
             }
 
@@ -36,10 +36,16 @@ class publicReceivePressArticle extends structureElementAction
         $expectedFields = [
             'title',
             'externalLink',
+            'authors',
+            'people',
+            'software',
+            'groups',
+            'parties',
+            'tunes',
+            'pictures',
             'introduction',
             'content',
             'allowComments',
-            'authors',
         ];
     }
 

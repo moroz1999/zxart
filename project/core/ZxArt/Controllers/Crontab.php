@@ -1,32 +1,55 @@
 <?php
 
+namespace ZxArt\Controllers;
+
+use controllerApplication;
+use Exception;
+use Cache;
+use rendererPlugin;
+use mp3ConversionManager;
+use structureManager;
+use zxProdElement;
+use zxReleaseElement;
+use Recalculable;
 use Illuminate\Database\Connection;
+use LanguagesManager;
+use PathsManager;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use pressArticleElement;
 use ZxArt\Ai\QueryFailException;
 use ZxArt\Ai\QuerySkipException;
-use ZxArt\Ai\ProdQueryService as AiQueueService;
-use ZxArt\Ai\TextBeautifier;
-use ZxArt\Ai\TranslatorService;
+use ZxArt\Ai\Service\PressParser;
+use ZxArt\Ai\Service\ProdQueryService;
+use ZxArt\Ai\Service\TextBeautifier;
+use ZxArt\Ai\Service\Translator;
+use ZxArt\Press\DataUpdater;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
 use ZxArt\Strings\LanguageDetector;
 use ZxArt\ZxProdCategories\Ids;
 
-class crontabApplication extends controllerApplication
+class Crontab extends controllerApplication
 {
     protected $applicationName = 'crontab';
     public $rendererName = 'smarty';
     public $requestParameters = [];
 
-    private $structureManager;
+    private structureManager $structureManager;
     private string $logFilePath;
     private QueueService $queueService;
     private Connection $db;
-    private ?AiQueueService $aiQueryService;
+    private ?ProdQueryService $prodQueryService;
     private ?array $languages = null;
-    private ?TranslatorService $translatorService;
+    private ?Translator $translatorService;
+    private ?PressParser $pressParser;
     private ?TextBeautifier $textBeautifier;
     private ?LanguageDetector $languageDetector;
+    private ?LanguagesManager $languagesManager;
+    private ?Logger $logger;
+    private ?DataUpdater $pressDataUpdater;
 
     /**
      * @return void
@@ -38,10 +61,14 @@ class crontabApplication extends controllerApplication
         $this->createRenderer();
         $this->queueService = $this->getService('QueueService');
         $this->db = $this->getService('db');
-        $this->aiQueryService = $this->getService(AiQueueService::class);
+        $this->prodQueryService = $this->getService(ProdQueryService::class);
         $this->textBeautifier = $this->getService(TextBeautifier::class);
-        $this->translatorService = $this->getService(TranslatorService::class);
+        $this->translatorService = $this->getService(Translator::class);
         $this->languageDetector = $this->getService(LanguageDetector::class);
+        $this->languagesManager = $this->getService(LanguagesManager::class);
+        $this->pressParser = $this->getService(PressParser::class);
+        $this->pressDataUpdater = $this->getService(DataUpdater::class);
+        $this->logger = new Logger('error_log');
     }
 
     /**
@@ -52,10 +79,16 @@ class crontabApplication extends controllerApplication
         $pathsManager = $this->getService(PathsManager::class);
         $todayDate = date('Y-m-d');
         $this->logFilePath = $pathsManager->getPath('logs') . 'cron' . $todayDate . '.txt';
+        $streamHandler = new StreamHandler($this->logFilePath, Logger::DEBUG);
+
+        $formatter = new LineFormatter(null, null, true, true);
+        $streamHandler->setFormatter($formatter);
+
+        $this->logger->pushHandler($streamHandler);
+
 
         //start this before ending output buffering
-        $languagesManager = $this->getService('LanguagesManager');
-        $currentLanguageCode = $languagesManager->getCurrentLanguageCode();
+        $currentLanguageCode = $this->languagesManager->getCurrentLanguageCode();
 
         /**
          * @var Cache $cache
@@ -94,127 +127,296 @@ class crontabApplication extends controllerApplication
 //            $this->queryAiSeo();
 //            $this->queryAiIntro();
 //            $this->queryAiCategories();
-            $this->queryAiPressBeautifier();
-            $this->queryAiPressTranslation();
+//            $this->queryAiPressBeautifier();
+//            $this->queryAiPressTranslation();
+            $this->queryAiPressParser();
         }
     }
 
-    private function queryAiPressBeautifier(): void
+    private function processQueue(QueueType $queueType, callable $processElementCallback): void
     {
-        $languagesManager = $this->getService('LanguagesManager');
-        $languagesManager->setCurrentLanguageCode('rus');
+        $this->languagesManager->setCurrentLanguageCode('rus');
 
         $counter = 0;
         $executionLimit = 60 * 5;
         $totalExecution = 0;
+
         while ($totalExecution <= $executionLimit) {
             $counter++;
 
-            $elementId = $this->queueService->getNextElementId(QueueType::AI_PRESS_FIX);
+            $elementId = $this->queueService->getNextElementId($queueType);
+//            $elementId = 490629;
+            $elementId = 494533;
             if ($elementId === null) {
-                return;
+                break;
             }
-            $this->queueService->updateStatus($elementId, QueueType::AI_PRESS_FIX, QueueStatus::STATUS_INPROGRESS);
 
-            /**
-             * @var pressArticleElement $pressArticleElement
-             */
+            $this->queueService->updateStatus($elementId, $queueType, QueueStatus::STATUS_INPROGRESS);
+
+            /** @var pressArticleElement $pressArticleElement */
             $pressArticleElement = $this->structureManager->getElementById($elementId);
             if (!$pressArticleElement) {
-                $this->queueService->updateStatus($elementId, QueueType::AI_PRESS_FIX, QueueStatus::STATUS_FAIL);
-                $this->logMessage($counter . ' AI Fix article not found ' . $elementId, 0);
+                $this->queueService->updateStatus($elementId, $queueType, QueueStatus::STATUS_FAIL);
+                $this->logMessage("$counter $queueType->value article not found $elementId", 0);
                 continue;
             }
+
             $startTime = microtime(true);
-            $updatedContent = null;
-            $this->logMessage($counter . ' AI Fix request start ' . $pressArticleElement->id . ' ' . $pressArticleElement->title, 0);
+            $this->logMessage("$counter $queueType->value request start {$pressArticleElement->id} {$pressArticleElement->title}", 0);
+
             try {
-                $updatedContent = $this->textBeautifier->beautify(html_entity_decode($pressArticleElement->getFormattedContent()));
+                $processElementCallback($pressArticleElement, $counter);
+                $this->queueService->updateStatus($elementId, $queueType, QueueStatus::STATUS_SUCCESS);
             } catch (Exception $e) {
-                $this->logMessage($counter . ' AI Fix request failed. ' . $e->getMessage(), 0);
-                $this->queueService->updateStatus($elementId, QueueType::AI_PRESS_FIX, QueueStatus::STATUS_FAIL);
-            }
-            if ($updatedContent) {
-                $destLanguageId = $languagesManager->getLanguageId('rus');
-                $pressArticleElement->setValue('content', $updatedContent, $destLanguageId);
-                $pressArticleElement->persistElementData();
+                $this->logMessage("$counter $queueType->value request failed. {$e->getMessage()}", 0);
+                $this->queueService->updateStatus($elementId, $queueType, QueueStatus::STATUS_FAIL);
             }
 
             $endTime = microtime(true);
             $executionTime = $endTime - $startTime;
             $totalExecution += $executionTime;
-            $this->logMessage($counter . ' AI Fix request success ' . $pressArticleElement->id . ' ' . $pressArticleElement->title, round($executionTime));
-
-            $this->queueService->updateStatus($elementId, QueueType::AI_PRESS_FIX, QueueStatus::STATUS_SUCCESS);
+            exit;
+            $this->logMessage("$counter $queueType->value request completed in " . round($executionTime) . " seconds", 0);
         }
-        $this->logMessage(' AI Fix requesting completed with total execution time ' . $totalExecution, 0);
+
+        $this->logMessage("$queueType->value processing completed with total execution time $totalExecution seconds", 0);
+    }
+
+    private function queryAiPressParser(): void
+    {
+        $mergedContent = [
+            'shortContent' =>
+                [
+                    0 => 'eng: The article discusses the sales chart of ZX Spectrum software, highlighting the popularity and features of games and applications such as \'NLO-2\' and \'Micro Windows\'.',
+                    1 => 'spa: El artículo discute el cuadro de ventas de software para ZX Spectrum, destacando la popularidad y características de juegos y aplicaciones como \'NLO-2\' y \'Micro Windows\'.',
+                    2 => 'rus: В статье обсуждается хит-парад программного обеспечения для ZX Spectrum, с акцентом на популярность и особенности игр и приложений, таких как \'НЛО-2\' и \'Micro Windows\'.',
+                ],
+            'articleAuthors' =>
+                [
+                    0 =>
+                        [
+                            'nickName' => 'Миша Блюм',
+                            'group' =>
+                                [
+                                    0 =>
+                                        [
+                                            'name' => 'Zx-Masters',
+                                        ],
+                                ],
+                            'roles' =>
+                                [
+                                    0 => 'text',
+                                ],
+                        ],
+                ],
+            'people' =>
+                [
+                    0 =>
+                        [
+                            'realName' => 'Виктор',
+                        ],
+                    1 =>
+                        [
+                            'realName' => 'Валерий',
+                        ],
+                    2 =>
+                        [
+                            'realName' => 'Александр',
+                            'nickName' => 'MAC BUSTER',
+                        ],
+                ],
+            'groups' =>
+                [
+                    0 =>
+                        [
+                            'name' => 'Zx-Masters',
+                        ],
+                    1 =>
+                        [
+                            'name' => 'Welcome Corporation',
+                        ],
+                    2 =>
+                        [
+                            'name' => 'Magic Soft',
+                        ],
+                ],
+            'pressGroups' =>
+                [
+                    0 =>
+                        [
+                            'name' => 'Welcome',
+                        ],
+                ],
+            'software' =>
+                [
+                    0 =>
+                        [
+                            'name' => 'NLO-2',
+                        ],
+                    1 =>
+                        [
+                            'name' => 'Micro Windows',
+                        ],
+                    2 =>
+                        [
+                            'name' => 'Страна мифов',
+                        ],
+                    3 =>
+                        [
+                            'name' => 'Войны Эмбера',
+                        ],
+                    4 =>
+                        [
+                            'name' => 'Welcome Press',
+                        ],
+                    5 =>
+                        [
+                            'name' => 'Darkman',
+                            'groups' =>
+                                [
+                                    0 =>
+                                        [
+                                            'name' => 'Magic Soft',
+                                        ],
+                                ],
+                        ],
+                    6 =>
+                        [
+                            'name' => 'Cyberball',
+                        ],
+                    7 =>
+                        [
+                            'name' => 'Mercs+',
+                        ],
+                    8 =>
+                        [
+                            'name' => 'Super Cars',
+                        ],
+                    9 =>
+                        [
+                            'name' => 'Pang',
+                        ],
+                ],
+            'tags' =>
+                [
+                    0 => 'Новые программы',
+                    1 => 'Хит-парад',
+                    2 => 'ZX Spectrum',
+                    3 => 'Программное обеспечение',
+                    4 => 'Обзор',
+                    5 => 'Игры',
+                    6 => 'Системные программы',
+                    7 => 'Подборка игр',
+                    8 => 'Оболочка',
+                    9 => 'Интерфейс',
+                ],
+            'h1' =>
+                [
+                    'eng' => 'ZX Spectrum Software Sales Chart Highlights',
+                    'spa' => 'Aspectos Destacados de la Tabla de Ventas de Software para ZX Spectrum',
+                    'rus' => 'Основные моменты хит-парада программного обеспечения ZX Spectrum',
+                ],
+            'metaDescription' =>
+                [
+                    'eng' => 'Explore the top-selling ZX Spectrum software, including \'NLO-2\' and \'Micro Windows\', with unique features and user feedback.',
+                    'spa' => 'Explora el software más vendido para ZX Spectrum, incluyendo \'NLO-2\' y \'Micro Windows\', con características únicas y comentarios de usuarios.',
+                    'rus' => 'Изучите топовые программы для ZX Spectrum, включая \'НЛО-2\' и \'Micro Windows\', с уникальными особенностями и отзывами пользователей.',
+                ],
+            'pageTitle' =>
+                [
+                    'eng' => 'ZX Spectrum Software Rankings Revealed',
+                    'spa' => 'Se Revelan los Rankings de Software para ZX Spectrum',
+                    'rus' => 'Раскрыты рейтинги программ для ZX Spectrum',
+                ],
+        ];
+
+        $pressArticleElement = $this->structureManager->getElementById(494533);
+        $this->pressDataUpdater->updatePressArticleData($pressArticleElement, $mergedContent);
+        return;
+        $this->processQueue(QueueType::AI_PRESS_PARSE, function (pressArticleElement $pressArticleElement, $counter) {
+            $updatedContent = $this->pressParser->getParsedData($pressArticleElement->getTextContent());
+            if ($updatedContent) {
+                $mergedContent = $this->mergeArrays($updatedContent);
+                $this->pressDataUpdater->updatePressArticleData($pressArticleElement, $mergedContent);
+                $this->logMessage("$counter AI Fix content updated for article {$pressArticleElement->id}", 0);
+            }
+        });
+    }
+
+    private function mergeArrays(array $items): array
+    {
+        $result = [];
+
+        foreach ($items as $item) {
+            foreach ($item as $key => $value) {
+                if (!isset($result[$key])) {
+                    $result[$key] = $value;
+                    continue;
+                }
+
+                if (is_array($value)) {
+                    $result[$key] = array_merge($result[$key], $value);
+                } elseif (is_string($value)) {
+                    $result[$key] .= ' ' . $value;
+                } elseif (is_int($value) && $value !== 0) {
+                    $result[$key] = $value;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    private function queryAiPressBeautifier(): void
+    {
+        $this->processQueue(QueueType::AI_PRESS_FIX, function (pressArticleElement $pressArticleElement, $counter) {
+            $updatedContent = $this->textBeautifier->beautify($pressArticleElement->getTextContent());
+
+            if ($updatedContent) {
+                $destLanguageId = $this->languagesManager->getLanguageId('rus');
+                $pressArticleElement->setValue('content', $updatedContent, $destLanguageId);
+                $pressArticleElement->persistElementData();
+                $this->logMessage("$counter AI Fix content updated for article {$pressArticleElement->id}", 0);
+            }
+        });
     }
 
     private function queryAiPressTranslation(): void
     {
-        $languagesManager = $this->getService('LanguagesManager');
-        $languagesManager->setCurrentLanguageCode('rus');
-
         $allLanguageCodes = [
             'rus' => ['eng', 'spa'],
             'eng' => ['rus', 'spa'],
             'spa' => ['eng', 'rus'],
         ];
 
-        $counter = 0;
-        $executionLimit = 60 * 5;
-        $totalExecution = 0;
-        while ($totalExecution <= $executionLimit) {
-            $counter++;
-
-            $elementId = $this->queueService->getNextElementId(QueueType::AI_PRESS_TRANSLATE);
-            if ($elementId === null) {
-                return;
-            }
-            $this->queueService->updateStatus($elementId, QueueType::AI_PRESS_TRANSLATE, QueueStatus::STATUS_INPROGRESS);
-
-            /**
-             * @var pressArticleElement $pressArticleElement
-             */
-            $pressArticleElement = $this->structureManager->getElementById($elementId);
-            if (!$pressArticleElement) {
-                $this->queueService->updateStatus($elementId, QueueType::AI_PRESS_TRANSLATE, QueueStatus::STATUS_FAIL);
-                $this->logMessage($counter . ' AI Translation article not found ' . $elementId, 0);
-                continue;
-            }
-            $content = $pressArticleElement->getFormattedContent();
+        $this->processQueue(QueueType::AI_PRESS_TRANSLATE, function (pressArticleElement $pressArticleElement, $counter) use ($allLanguageCodes) {
+            $content = $pressArticleElement->getTextContent();
             $contentLanguageCode = $this->languageDetector->detectLanguage($content);
-            $languageCodes = $allLanguageCodes[$contentLanguageCode];
-            if (!$languageCodes) {
-                $this->logMessage($counter . ' AI Translation request failed for ' . $elementId . '. Failed to detect language', 0);
-                continue;
+            $languageCodes = $allLanguageCodes[$contentLanguageCode] ?? $allLanguageCodes['rus'];
+
+            if (!isset($allLanguageCodes[$contentLanguageCode])) {
+                $this->logMessage("$counter AI Translation {$pressArticleElement->id}: Failed to detect language, defaulting to 'rus'", 0);
             }
+
             foreach ($languageCodes as $languageCode) {
-                $startTime = microtime(true);
-                $translation = null;
-                $this->logMessage($counter . ' AI Translation request start ' . $pressArticleElement->id . ' ' . $pressArticleElement->title . ' ' . $languageCode, 0);
+                $this->logMessage("$counter AI Translation request start for {$pressArticleElement->id} to $languageCode", 0);
+
                 try {
-                    $translation = $this->translatorService->translate($pressArticleElement->getFormattedContent(), $contentLanguageCode, $languageCode);
+                    $translation = $this->translatorService->translate($content, $contentLanguageCode, $languageCode);
+
+                    if ($translation) {
+                        $destLanguageId = $this->languagesManager->getLanguageId($languageCode);
+                        $pressArticleElement->setValue('content', $translation, $destLanguageId);
+                        $pressArticleElement->persistElementData();
+                        $this->logMessage("$counter AI Translation successful for {$pressArticleElement->id} to $languageCode", 0);
+                    }
                 } catch (Exception $e) {
-                    $this->logMessage($counter . ' AI Translation request failed. ' . $e->getMessage(), 0);
-                    $this->queueService->updateStatus($elementId, QueueType::AI_PRESS_TRANSLATE, QueueStatus::STATUS_FAIL);
+                    $this->logMessage("$counter AI Translation failed for {$pressArticleElement->id} to $languageCode. {$e->getMessage()}", 0);
+                    throw $e; // Re-throw to update status to FAIL in the main method
                 }
-                if ($translation) {
-                    $destLanguageId = $languagesManager->getLanguageId($languageCode);
-                    $pressArticleElement->setValue('content', $translation, $destLanguageId);
-                    $pressArticleElement->persistElementData();
-                }
-
-                $endTime = microtime(true);
-                $executionTime = $endTime - $startTime;
-                $totalExecution += $executionTime;
-                $this->logMessage($counter . ' AI Translation request success ' . $pressArticleElement->id . ' ' . $pressArticleElement->title, round($executionTime));
             }
-            $this->queueService->updateStatus($elementId, QueueType::AI_PRESS_TRANSLATE, QueueStatus::STATUS_SUCCESS);
-        }
-        $this->logMessage(' AI Translation requesting completed with total execution time ' . $totalExecution, 0);
+        });
     }
-
 
     private function recalculate(): void
     {
@@ -259,12 +461,11 @@ class crontabApplication extends controllerApplication
         if ($this->languages !== null) {
             return $this->languages;
         }
-        $languagesManager = $this->getService(LanguagesManager::class);
 
         return $this->languages = [
-            'spa' => $languagesManager->getLanguageId('spa'),
-            'eng' => $languagesManager->getLanguageId('eng'),
-            'rus' => $languagesManager->getLanguageId('rus'),
+            'spa' => $this->languagesManager->getLanguageId('spa'),
+            'eng' => $this->languagesManager->getLanguageId('eng'),
+            'rus' => $this->languagesManager->getLanguageId('rus'),
         ];
     }
 
@@ -298,7 +499,7 @@ class crontabApplication extends controllerApplication
             $startTime = microtime(true);
 
             $this->logMessage($counter . ' AI SEO request start ' . $prodElement->id . ' ' . $prodElement->title, 0);
-            $metaData = $this->aiQueryService->querySeoForProd($prodElement);
+            $metaData = $this->prodQueryService->querySeoForProd($prodElement);
             if ($metaData === null) {
                 $this->logMessage($counter . ' AI SEO request wrong response ' . $prodElement->id . ' ' . $prodElement->title, 0);
                 continue;
@@ -344,7 +545,7 @@ class crontabApplication extends controllerApplication
             $startTime = microtime(true);
 
             $this->logMessage($counter . ' AI Intro request start ' . $prodElement->id . ' ' . $prodElement->title, 0);
-            $metaData = $this->aiQueryService->queryIntroForProd($prodElement);
+            $metaData = $this->prodQueryService->queryIntroForProd($prodElement);
             if ($metaData === null) {
                 $this->logMessage($counter . ' AI Intro request wrong response ' . $prodElement->id . ' ' . $prodElement->title, 0);
                 continue;
@@ -377,8 +578,8 @@ class crontabApplication extends controllerApplication
 
     private function queryAiCategories(): void
     {
-        $languagesManager = $this->getService('LanguagesManager');
-        $languagesManager->setCurrentLanguageCode('eng');
+        $this->languagesManager = $this->getService('LanguagesManager');
+        $this->languagesManager->setCurrentLanguageCode('eng');
 
         $counter = 0;
         $executionLimit = 60 * 5;
@@ -406,7 +607,7 @@ class crontabApplication extends controllerApplication
             $metaData = null;
             $this->logMessage($counter . ' AI Categories request start ' . $prodElement->id . ' ' . $prodElement->title, 0);
             try {
-                $metaData = $this->aiQueryService->queryCategoriesAndTagsForProd($prodElement, $queryCategoriesEnabled);
+                $metaData = $this->prodQueryService->queryCategoriesAndTagsForProd($prodElement, $queryCategoriesEnabled);
             } catch (QueryFailException $e) {
                 $this->logMessage($counter . ' AI Categories request failed. ' . $e->getMessage(), 0);
                 $this->queueService->updateStatus($elementId, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_FAIL);

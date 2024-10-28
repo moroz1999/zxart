@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace ZxArt\Ai;
 
+use ZxArt\Ai\Service\PromptSender;
+
 readonly class ChunkProcessor
 {
     private const MAX_TOKENS = 8000;
@@ -19,15 +21,16 @@ readonly class ChunkProcessor
         callable $processResponse,
         float    $temperature = 0.5,
         ?array   $imageUrls = null,
+        bool     $useJson = true,
         string   $model = PromptSender::MODEL_4O_MINI,
-    ): ?string
+    )
     {
         $chunks = $this->splitTextIntoChunks($text);
         $processedChunks = [];
 
         foreach ($chunks as $chunk) {
             $prompt = $createPrompt($chunk);
-            $response = $this->promptSender->send($prompt, $temperature, false, $imageUrls, $model);
+            $response = $this->promptSender->send($prompt, $temperature, $imageUrls, $useJson, $model);
             if ($response === null) {
                 return null;
             }
@@ -36,6 +39,32 @@ readonly class ChunkProcessor
         }
 
         return implode("", $processedChunks);
+    }
+
+    public function processJson(
+        string   $text,
+        callable $createPrompt,
+        callable $processResponse,
+        float    $temperature = 0.5,
+        ?array   $imageUrls = null,
+        bool     $useJson = true,
+        string   $model = PromptSender::MODEL_4O_MINI,
+    ): ?array
+    {
+        $chunks = $this->splitTextIntoChunks($text);
+        $processedChunks = [];
+
+        foreach ($chunks as $chunk) {
+            $prompt = $createPrompt($chunk);
+            $response = $this->promptSender->send($prompt, $temperature, $imageUrls, $useJson, $model);
+            if ($response === null) {
+                return null;
+            }
+            $processedText = $processResponse($response);
+            $processedChunks[] = $processedText;
+        }
+
+        return $processedChunks;
     }
 
     private function splitTextIntoChunks(string $text): array

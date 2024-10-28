@@ -14,6 +14,7 @@ class zxMusicDataResponseConverter extends StructuredDataResponseConverter
         return [
             'id' => 'id',
             'title' => 'title',
+            'searchTitle' => 'getSearchTitle',
             'internalTitle' => 'internalTitle',
             'url' => 'getUrl',
             'structureType' => 'structureType',
@@ -91,6 +92,7 @@ class zxMusicDataResponseConverter extends StructuredDataResponseConverter
                 'title',
                 'url',
                 'structureType',
+                'searchTitle',
             ],
         ];
     }

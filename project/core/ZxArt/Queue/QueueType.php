@@ -10,5 +10,5 @@ enum QueueType: string
     case AI_CATEGORIES_TAGS = 'ai_categories';
     case AI_PRESS_FIX = 'ai_press_fix';
     case AI_PRESS_TRANSLATE = 'ai_press_translate';
-    case OFFLINE = 'offline';
+    case AI_PRESS_PARSE = 'ai_press_parse';
 }

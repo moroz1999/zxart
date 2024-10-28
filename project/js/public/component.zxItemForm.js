@@ -13,6 +13,14 @@ window.ZxItemFormComponent = function(componentElement) {
         for (i = prodSelectElements.length; i--;) {
             new AjaxSelectComponent(prodSelectElements[i], 'zxProd', 'public');
         }
+        let pictureSelectElements = componentElement.querySelectorAll('.zxitem_form_pictures_select');
+        for (i = pictureSelectElements.length; i--;) {
+            new AjaxSelectComponent(pictureSelectElements[i], 'zxPicture', 'public');
+        }
+        let tunesSelectElements = componentElement.querySelectorAll('.zxitem_form_tunes_select');
+        for (i = tunesSelectElements.length; i--;) {
+            new AjaxSelectComponent(tunesSelectElements[i], 'zxMusic', 'public');
+        }
         let partySelectElements = componentElement.querySelectorAll('.zxitem_form_party_select');
         for (i = partySelectElements.length; i--;) {
             new AjaxSelectComponent(partySelectElements[i], 'party', 'public');

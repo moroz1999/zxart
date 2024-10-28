@@ -15,6 +15,7 @@ class zxPictureDataResponseConverter extends StructuredDataResponseConverter
             'id' => 'id',
             'title' => 'title',
             'url' => 'getUrl',
+            'searchTitle' => 'getSearchTitle',
             'structureType' => 'structureType',
             'dateCreated' => function ($element) {
                 return $element->getValue('dateCreated');
@@ -83,6 +84,7 @@ class zxPictureDataResponseConverter extends StructuredDataResponseConverter
                 'title',
                 'url',
                 'structureType',
+                'searchTitle',
             ],
         ];
     }
