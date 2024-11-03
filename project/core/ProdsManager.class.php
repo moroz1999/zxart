@@ -62,65 +62,41 @@ class ProdsManager extends ElementsManager
      */
     protected $pathsManager;
 
-    /**
-     * @param bool $forceUpdateExternalLink
-     */
     public function setForceUpdateExternalLink(bool $forceUpdateExternalLink): void
     {
         $this->forceUpdateExternalLink = $forceUpdateExternalLink;
     }
 
-    /**
-     * @param bool $matchProdsWithoutYear
-     */
     public function setMatchProdsWithoutYear(bool $matchProdsWithoutYear): void
     {
         $this->matchProdsWithoutYear = $matchProdsWithoutYear;
     }
 
-    /**
-     * @param bool $forceUpdateReleaseFiles
-     */
     public function setForceUpdateReleaseFiles(bool $forceUpdateReleaseFiles): void
     {
         $this->forceUpdateReleaseFiles = $forceUpdateReleaseFiles;
     }
 
-    /**
-     * @param bool $forceUpdateReleaseType
-     */
     public function setForceUpdateReleaseType(bool $forceUpdateReleaseType): void
     {
         $this->forceUpdateReleaseType = $forceUpdateReleaseType;
     }
 
-    /**
-     * @param bool $forceUpdateReleaseAuthors
-     */
     public function setForceUpdateReleaseAuthors(bool $forceUpdateReleaseAuthors): void
     {
         $this->forceUpdateReleaseAuthors = $forceUpdateReleaseAuthors;
     }
 
-    /**
-     * @param bool $forceUpdateReleasePublishers
-     */
     public function setForceUpdateReleasePublishers(bool $forceUpdateReleasePublishers): void
     {
         $this->forceUpdateReleasePublishers = $forceUpdateReleasePublishers;
     }
 
-    /**
-     * @param bool $updateExistingReleases
-     */
     public function setUpdateExistingReleases(bool $updateExistingReleases): void
     {
         $this->updateExistingReleases = $updateExistingReleases;
     }
 
-    /**
-     * @param bool $resizeImages
-     */
     public function setResizeImages(bool $resizeImages): void
     {
         $this->resizeImages = $resizeImages;
@@ -141,9 +117,6 @@ class ProdsManager extends ElementsManager
         ];
     }
 
-    /**
-     * @param bool $forceUpdateImages
-     */
     public function setForceUpdateImages(bool $forceUpdateImages): void
     {
         $this->forceUpdateImages = $forceUpdateImages;
@@ -213,9 +186,6 @@ class ProdsManager extends ElementsManager
         $this->forceUpdateAuthors = $forceUpdateAuthors;
     }
 
-    /**
-     * @param PathsManager $pathsManager
-     */
     public function setPathsManager(PathsManager $pathsManager): void
     {
         $this->pathsManager = $pathsManager;

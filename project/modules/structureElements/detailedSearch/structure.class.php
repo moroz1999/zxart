@@ -1,6 +1,6 @@
 <?php
 
-class detailedSearchElement extends structureElement
+class detailedSearchElement extends structureElement implements LocationProvider
 {
     use LocationProviderTrait;
     use ZxPictureTypesProvider;

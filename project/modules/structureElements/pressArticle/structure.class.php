@@ -8,6 +8,12 @@
  * @property string $h1
  * @property boolean $allowComments
  * @property authorElement[]|authorAliasElement[] $authors
+ * @property authorElement[]|authorAliasElement[] $people
+ * @property zxProdElement[]|zxReleaseElement $software
+ * @property groupElement[]|groupAliasElement[] $groups
+ * @property partyElement[] $parties
+ * @property zxMusicElement[] $tunes
+ * @property zxPictureElement[] $pictures
  */
 class pressArticleElement extends structureElement implements SearchContentHolder, MetadataProviderInterface
 {
@@ -122,7 +128,7 @@ class pressArticleElement extends structureElement implements SearchContentHolde
     public function getSearchTitle(): string
     {
         $prod = $this->getFirstParentElement();
-        return $prod->title . ' / ' . $this->title;
+        return $prod?->getTitle() . ' / ' . $this->getTitle();
     }
 
     public function getSearchContent(): string

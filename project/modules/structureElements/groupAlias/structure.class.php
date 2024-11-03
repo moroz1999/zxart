@@ -59,7 +59,7 @@ class groupAliasElement extends structureElement implements CommentsHolderInterf
             if ($groupId = $this->getGroupId()) {
                 $structureManager = $this->getService('structureManager');
                 if ($groupElement = $structureManager->getElementById($groupId)) {
-                    if ($groupElement->structureType == 'group') {
+                    if ($groupElement->structureType === 'group') {
                         $this->groupElement = $groupElement;
                     }
                 }

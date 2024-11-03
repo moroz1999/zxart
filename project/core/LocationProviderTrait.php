@@ -4,13 +4,13 @@ trait LocationProviderTrait
 {
     use CacheOperatingElement;
 
-    protected $cityElement;
-    protected $countryElement;
+    protected ?cityElement $cityElement;
+    protected ?countryElement $countryElement;
 
-    public function getCountryElement()
+    public function getCountryElement(): ?countryElement
     {
-        if ($this->countryElement === null) {
-            $this->countryElement = false;
+        if (!isset($this->countryElement)) {
+            $this->countryElement = null;
 
             $cache = $this->getElementsListCache('co', 60 * 60 * 24);
             if (($elements = $cache->load()) === false) {
@@ -29,10 +29,10 @@ trait LocationProviderTrait
         return $this->countryElement;
     }
 
-    public function getCityElement()
+    public function getCityElement(): ?cityElement
     {
-        if ($this->cityElement === null) {
-            $this->cityElement = false;
+        if (!isset($this->cityElement)) {
+            $this->cityElement = null;
 
             $cache = $this->getElementsListCache('ci', 60 * 60 * 24);
             if (($elements = $cache->load()) === false) {
@@ -51,20 +51,20 @@ trait LocationProviderTrait
         return $this->cityElement;
     }
 
-    public function getCityTitle()
+    public function getCityTitle(): ?string
     {
         if ($city = $this->getCityElement()) {
             return $city->title;
         }
-        return "";
+        return null;
     }
 
-    public function getCountryTitle()
+    public function getCountryTitle(): ?string
     {
         if ($country = $this->getCountryElement()) {
             return $country->title;
         }
-        return "";
+        return null;
     }
 
     abstract protected function getCityId();
@@ -76,13 +76,31 @@ trait LocationProviderTrait
         if ($city = $this->getCityElement()) {
             $country = $this->getCountryElement();
             $parentCountry = $city->getFirstParentElement();
-            if ($parentCountry !== $country) {
+            if ($parentCountry !== null && $parentCountry !== $country) {
                 $this->countryElement = null;
                 $this->country = $parentCountry->id;
                 return false;
             }
         }
         return true;
+    }
+
+    public function matchesCountry(string $country): bool
+    {
+        $countryElement = $this->getCountryElement();
+        if ($countryElement === null) {
+            return false;
+        }
+        return $countryElement->matchesTitle($country);
+    }
+
+    public function matchesCity(string $city): bool
+    {
+        $cityElement = $this->getCityElement();
+        if ($cityElement === null) {
+            return false;
+        }
+        return $cityElement->matchesTitle($city);
     }
 }
 

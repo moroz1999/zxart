@@ -135,9 +135,22 @@ trait Location
     public function getUrl($action = null)
     {
         $locationMode = $this->getLocationMode();
-        if ($locationMode == 'author') {
+        if ($locationMode === 'author') {
             return $this->URL;
         }
         return $this->URL . 'show:' . $locationMode . '/';
+    }
+
+    public function matchesTitle($title): bool
+    {
+        if ($languages = $this->getLanguagesList()) {
+            foreach ($languages as $languageId) {
+                $languageTitle = $this->getValue('title', $languageId);
+                if (trim($languageTitle) === trim($title)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

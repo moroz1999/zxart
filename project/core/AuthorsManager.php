@@ -1,5 +1,10 @@
 <?php
 
+use Illuminate\Database\Connection;
+use ZxArt\Labels\Label;
+use ZxArt\Labels\LabelResolver;
+use ZxArt\Labels\LabelType;
+
 class AuthorsManager extends ElementsManager
 {
     use ImportIdOperatorTrait;
@@ -13,24 +18,17 @@ class AuthorsManager extends ElementsManager
     protected $columnRelations = [];
     protected $importedAuthors = [];
     protected $importedAuthorAliases = [];
-    /**
-     * @var linksManager
-     */
-    protected $linksManager;
-    /**
-     * @var ConfigManager
-     */
-    protected $configManager;
-    /**
-     * @var CountriesManager
-     */
-    protected $countriesManager;
-    /**
-     * @var privilegesManager
-     */
-    protected $privilegesManager;
 
-    public function __construct()
+    public function __construct(
+        protected linksManager      $linksManager,
+        protected LanguagesManager  $languagesManager,
+        protected ConfigManager     $configManager,
+        protected CountriesManager  $countriesManager,
+        protected privilegesManager $privilegesManager,
+        protected Connection        $db,
+        protected structureManager  $structureManager,
+        private LabelResolver       $labelResolver,
+    )
     {
         $this->columnRelations = [
             'title' => ['LOWER(title)' => true],
@@ -40,91 +38,24 @@ class AuthorsManager extends ElementsManager
         ];
     }
 
-    /**
-     * @param bool $forceUpdateRealName
-     */
     public function setForceUpdateRealName(bool $forceUpdateRealName): void
     {
         $this->forceUpdateRealName = $forceUpdateRealName;
     }
 
-    /**
-     * @param bool $forceUpdateGroups
-     */
     public function setForceUpdateGroups(bool $forceUpdateGroups): void
     {
         $this->forceUpdateGroups = $forceUpdateGroups;
     }
 
-    /**
-     * @param bool $forceUpdateCountry
-     */
     public function setForceUpdateCountry(bool $forceUpdateCountry): void
     {
         $this->forceUpdateCountry = $forceUpdateCountry;
     }
 
-    /**
-     * @param bool $forceUpdateCity
-     */
     public function setForceUpdateCity(bool $forceUpdateCity): void
     {
         $this->forceUpdateCity = $forceUpdateCity;
-    }
-
-    /**
-     * @param ConfigManager $configManager
-     */
-    public function setConfigManager($configManager): void
-    {
-        $this->configManager = $configManager;
-    }
-
-    /**
-     * @param CountriesManager $countriesManager
-     */
-    public function setCountriesManager($countriesManager): void
-    {
-        $this->countriesManager = $countriesManager;
-    }
-
-    /**
-     * @param privilegesManager $privilegesManager
-     */
-    public function setPrivilegesManager($privilegesManager): void
-    {
-        $this->privilegesManager = $privilegesManager;
-    }
-
-    /**
-     * @param linksManager $linksManager
-     */
-    public function setLinksManager($linksManager): void
-    {
-        $this->linksManager = $linksManager;
-    }
-
-    public function getAuthorByName($authorName, $countryName = null, $cityName = null): bool|structureElement
-    {
-        $authorElement = false;
-
-        if ($record = $this->db->table('module_author')
-            ->select('id')
-            ->where('realName', 'like', $authorName)
-            ->orWhere('title', 'like', $authorName)
-            ->orWhere('title', 'like', htmlentities($authorName, ENT_QUOTES))
-            ->limit(1)
-            ->first()
-        ) {
-            /**
-             * @var authorElement $authorElement
-             */
-            if ($authorElement = $this->structureManager->getElementById($record['id'])) {
-                return $authorElement;
-            };
-        }
-
-        return $authorElement;
     }
 
     public function getAuthorAliasByName($authorName): bool|structureElement
@@ -290,7 +221,7 @@ class AuthorsManager extends ElementsManager
         return $info;
     }
 
-    public function checkAuthorship(int $elementId, int|string $personId, string $type, array|string|false $roles = [], int|string|false $startDate = 0, int|string|false $endDate = 0): void
+    public function checkAuthorship(int $elementId, int|string $authorId, string $type, array|string|false $roles = [], int|string|false $startDate = 0, int|string|false $endDate = 0): void
     {
         if (is_array($roles)) {
             $roles = array_unique($roles);
@@ -299,7 +230,7 @@ class AuthorsManager extends ElementsManager
         if ($record = $this->db
             ->table('authorship')
             ->where('elementId', '=', $elementId)
-            ->where('authorId', '=', $personId)
+            ->where('authorId', '=', $authorId)
             ->where('type', '=', $type)
             ->first()
         ) {
@@ -315,13 +246,13 @@ class AuthorsManager extends ElementsManager
             $this->db
                 ->table('authorship')
                 ->where('elementId', '=', $elementId)
-                ->where('authorId', '=', $personId)
+                ->where('authorId', '=', $authorId)
                 ->update($data);
         } else {
             $data = [
                 'elementId' => $elementId,
                 'type' => $type,
-                'authorId' => $personId,
+                'authorId' => $authorId,
                 'roles' => $roles,
             ];
             if ($startDate) {
@@ -365,7 +296,7 @@ class AuthorsManager extends ElementsManager
     }
 
     /**
-     * @psalm-param array{id: mixed, title: mixed} $authorInfo
+     * @psalm-param array{id: string|int, title: string, countryName?: string, cityName?: string} $authorInfo
      */
     public function importAuthor(array $authorInfo, $origin, $createNew = true)
     {
@@ -374,9 +305,14 @@ class AuthorsManager extends ElementsManager
              * @var authorElement $element
              */
             if (!($element = $this->getElementByImportId($authorInfo['id'], $origin, 'author'))) {
-                $countryName = !empty($authorInfo['countryName']) ? $authorInfo['countryName'] : null;
-                $cityName = !empty($authorInfo['cityName']) ? $authorInfo['cityName'] : null;
-                if ($element = $this->getAuthorByName($authorInfo['title'], $countryName, $cityName)) {
+                $label = new Label(
+                    name: $authorInfo['title'],
+                    city: $authorInfo['cityName'] ?? null,
+                    country: $authorInfo['countryName'] ?? null,
+                    type: LabelType::person,
+                    isAlias: false
+                );
+                if ($element = $this->labelResolver->resolve($label)) {
                     if ($origin) {
                         $this->saveImportId($element->id, $authorInfo['id'], $origin, 'author');
                     }
@@ -394,18 +330,18 @@ class AuthorsManager extends ElementsManager
 
     /**
      * @param array $authorInfo
-     * @param $origin
-     * @return bool|authorElement
      */
-    protected function createAuthor($authorInfo, $origin)
+    public function createAuthor($authorInfo, $origin): ?authorElement
     {
-        $element = false;
+        $element = null;
         $firstLetter = mb_strtolower(mb_substr($authorInfo['title'], 0, 1));
-        $translitHelper = new TranslitHelper();
-        $firstLetter = mb_substr($translitHelper->convert($firstLetter), 0, 1);
+        $firstLetter = mb_substr(TranslitHelper::convert($firstLetter), 0, 1);
         if (!preg_match('/[a-zA-Z]/', $firstLetter)) {
             $firstLetter = '#';
         }
+        /**
+         * @var authorsElement $authorsElement
+         */
         if ($authorsElement = $this->structureManager->getElementByMarker('authors')) {
             $authorLetterElement = null;
             /**
@@ -418,18 +354,13 @@ class AuthorsManager extends ElementsManager
                     break;
                 }
             }
-            if ($authorLetterElement) {
-                /**
-                 * @var authorElement $authorElement
-                 */
-                if ($element = $this->structureManager->createElement('author', 'show', $authorLetterElement->id)) {
-                    /**
-                     * @var authorElement $element
-                     */
-                    $this->updateAuthor($element, $authorInfo, $origin);
-                    if ($origin) {
-                        $this->saveImportId($element->id, $authorInfo['id'], $origin, 'author');
-                    }
+            /**
+             * @var authorElement $element
+             */
+            if ($authorLetterElement && ($element = $this->structureManager->createElement('author', 'show', $authorLetterElement->id))) {
+                $this->updateAuthor($element, $authorInfo, $origin);
+                if ($origin) {
+                    $this->saveImportId($element->id, $authorInfo['id'], $origin, 'author');
                 }
             }
         }
@@ -438,13 +369,11 @@ class AuthorsManager extends ElementsManager
 
     /**
      * @param authorElement $element
-     * @param $authorInfo
-     * @param $origin
      */
     protected function updateAuthor($element, array $authorInfo, $origin): void
     {
         $changed = false;
-        if (!empty($authorInfo['title']) && $element->title != $authorInfo['title']) {
+        if (!empty($authorInfo['title']) && $element->title !== $authorInfo['title']) {
             if (!$element->title) {
                 $changed = true;
                 $element->title = $authorInfo['title'];
@@ -453,14 +382,14 @@ class AuthorsManager extends ElementsManager
         }
         if (!empty($authorInfo['locationName'])) {
             if ($locationElement = $this->countriesManager->getLocationByName($authorInfo['locationName'])) {
-                if ($locationElement->structureType == 'country') {
+                if ($locationElement->structureType === 'country') {
                     if (!$element->country || $this->forceUpdateCountry) {
                         if ($element->country != $locationElement->id) {
                             $changed = true;
                             $element->country = $locationElement->id;
                         }
                     }
-                } elseif ($locationElement->structureType == 'city') {
+                } elseif ($locationElement->structureType === 'city') {
                     if (!$element->city || $this->forceUpdateCity) {
                         if ($element->city != $locationElement->id) {
                             $changed = true;
@@ -527,8 +456,15 @@ class AuthorsManager extends ElementsManager
              * @var authorAliasElement $element
              */
             if (!($element = $this->getElementByImportId($authorAliasInfo['id'], $origin, 'author'))) {
-                if ($element = $this->getAuthorAliasByName($authorAliasInfo['title'])) {
-                    $this->saveImportId($element->id, $authorAliasInfo['id'], $origin, 'author');
+                $label = new Label(
+                    name: $authorAliasInfo['title'],
+                    type: LabelType::person,
+                    isAlias: true
+                );
+                if ($element = $this->labelResolver->resolve($label)) {
+                    if ($origin) {
+                        $this->saveImportId($element->id, $authorAliasInfo['id'], $origin, 'author');
+                    }
                     $this->updateAuthorAlias($element, $authorAliasInfo, $origin);
                 } elseif ($createNew) {
                     $element = $this->createAuthorAlias($authorAliasInfo, $origin);
@@ -543,8 +479,7 @@ class AuthorsManager extends ElementsManager
 
     /**
      * @param array $authorAliasInfo
-     * @param $origin
-     * @return bool|authorAliasElement
+     * @return ?authorAliasElement
      */
     protected function createAuthorAlias($authorAliasInfo, $origin)
     {
@@ -557,7 +492,7 @@ class AuthorsManager extends ElementsManager
 
     /**
      * @param string $title
-     * @return authorAliasElement|bool
+     * @return ?authorAliasElement
      */
     protected function manufactureAliasElement($title = '')
     {
@@ -568,10 +503,10 @@ class AuthorsManager extends ElementsManager
                 }
             }
         }
-        return false;
+        return null;
     }
 
-    public function manufactureAuthorElement(string $title): bool|structureElement
+    public function manufactureAuthorElement(string $title): ?structureElement
     {
         if ($letterId = $this->getLetterId($title)) {
             if ($letterElement = $this->structureManager->getElementById($letterId)) {
@@ -580,13 +515,11 @@ class AuthorsManager extends ElementsManager
                 }
             }
         }
-        return false;
+        return null;
     }
 
     /**
      * @param authorAliasElement $element
-     * @param $authorAliasInfo
-     * @param $origin
      */
     protected function updateAuthorAlias($element, array $authorAliasInfo, $origin): void
     {
@@ -679,7 +612,10 @@ class AuthorsManager extends ElementsManager
                             }
                         }
                     }
-                    if ($joinedAuthor->structureType == 'author') {
+
+                    $mainAuthor->articles = array_merge($mainAuthor->articles, $joinedAuthor->articles);
+
+                    if ($joinedAuthor->structureType === 'author') {
                         if (!$mainAuthor->country) {
                             $mainAuthor->country = $joinedAuthor->country;
                         }

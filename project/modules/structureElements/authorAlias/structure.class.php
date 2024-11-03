@@ -40,6 +40,14 @@ class authorAliasElement extends structureElement implements CommentsHolderInter
         $moduleStructure['displayInMusic'] = 'checkbox';
         $moduleStructure['displayInGraphics'] = 'checkbox';
         $moduleStructure['joinAndDelete'] = 'text';
+
+        $moduleStructure['articles'] = [
+            'ConnectedElements',
+            [
+                'linkType' => 'pressAuthor',
+                'role' => 'parent',
+            ],
+        ];
     }
 
     /**

@@ -24,8 +24,14 @@
  * @property string $wikiLink
  * @property string $email
  * @property string $site
+ * @property pressArticleElement[] $articles
  */
-class authorElement extends structureElement implements CommentsHolderInterface, AliasesHolder, JsonDataProvider, Recalculable
+class authorElement extends structureElement implements
+    CommentsHolderInterface,
+    AliasesHolder,
+    JsonDataProvider,
+    Recalculable,
+    LocationProvider
 {
     use JsonDataProviderElement;
     use CacheOperatingElement;
@@ -92,6 +98,14 @@ class authorElement extends structureElement implements CommentsHolderInterface,
 
         $moduleStructure['joinAsAlias'] = 'text';
         $moduleStructure['joinAndDelete'] = 'text';
+
+        $moduleStructure['articles'] = [
+            'ConnectedElements',
+            [
+                'linkType' => 'pressAuthor',
+                'role' => 'parent',
+            ],
+        ];
     }
 
     protected function setMultiLanguageFields(&$multiLanguageFields): void

@@ -10,7 +10,7 @@
  * @property int $picturesQuantity
  * @property int $tunesQuantity
  */
-class partyElement extends structureElement implements CommentsHolderInterface, Recalculable
+class partyElement extends structureElement implements CommentsHolderInterface, Recalculable, LocationProvider
 {
     use LocationProviderTrait;
     use CommentsTrait;

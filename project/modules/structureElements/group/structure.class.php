@@ -16,7 +16,7 @@
  * @property int $joinAndDelete
  * @property zxReleaseElement[] $publishedReleases
  */
-class groupElement extends structureElement implements AliasesHolder, CommentsHolderInterface, JsonDataProvider, Recalculable
+class groupElement extends structureElement implements AliasesHolder, CommentsHolderInterface, JsonDataProvider, Recalculable, LocationProvider
 {
     use JsonDataProviderElement;
     use AuthorshipPersister;

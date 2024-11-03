@@ -19,6 +19,16 @@
                    target="_blank"
                 >{translations name='pressarticle.source'}</a>
             </div>
+
+            {if $element->authors}
+                <h3>{translations name='pressarticle.authors'}</h3>
+                {foreach $element->authors as $authors}
+                    <div>
+                        <a href="{$authors->getUrl()}">{$authors->getTitle()}</a>
+                    </div>
+                {/foreach}
+            {/if}
+
             <pre class="pressarticle_content">{$element->getWrappedContent()}</pre>
             <h2>{translations name='pressarticle.morefromsame'}: <a href="{$parentElement->getUrl()}">{$parentElement->getTitle()}</a></h2>
             {include file=$theme->template('component.pressArticles.tpl') articles= $parentElement->articles pager=false}

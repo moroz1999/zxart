@@ -50,6 +50,7 @@
 	{include file=$theme->template('author.zxProds.tpl')}
 	{include file=$theme->template('publisher.zxProds.tpl')}
 	{include file=$theme->template('author.zxReleases.tpl')}
+	{include file=$theme->template('author.articles.tpl')}
 
 	{include $theme->template('component.comments.tpl')}
 

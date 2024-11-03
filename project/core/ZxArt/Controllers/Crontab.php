@@ -2,34 +2,34 @@
 
 namespace ZxArt\Controllers;
 
+use Cache;
 use controllerApplication;
 use Exception;
-use Cache;
-use rendererPlugin;
-use mp3ConversionManager;
-use structureManager;
-use zxProdElement;
-use zxReleaseElement;
-use Recalculable;
 use Illuminate\Database\Connection;
 use LanguagesManager;
-use PathsManager;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use mp3ConversionManager;
+use PathsManager;
 use pressArticleElement;
+use Recalculable;
+use rendererPlugin;
+use structureManager;
 use ZxArt\Ai\QueryFailException;
 use ZxArt\Ai\QuerySkipException;
 use ZxArt\Ai\Service\PressParser;
 use ZxArt\Ai\Service\ProdQueryService;
 use ZxArt\Ai\Service\TextBeautifier;
 use ZxArt\Ai\Service\Translator;
-use ZxArt\Press\DataUpdater;
+use ZxArt\Press\DataUpdater\DataUpdater;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
 use ZxArt\Strings\LanguageDetector;
 use ZxArt\ZxProdCategories\Ids;
+use zxProdElement;
+use zxReleaseElement;
 
 class Crontab extends controllerApplication
 {
@@ -187,16 +187,16 @@ class Crontab extends controllerApplication
         $mergedContent = [
             'shortContent' =>
                 [
-                    0 => 'eng: The article discusses the sales chart of ZX Spectrum software, highlighting the popularity and features of games and applications such as \'NLO-2\' and \'Micro Windows\'.',
-                    1 => 'spa: El artículo discute el cuadro de ventas de software para ZX Spectrum, destacando la popularidad y características de juegos y aplicaciones como \'NLO-2\' y \'Micro Windows\'.',
-                    2 => 'rus: В статье обсуждается хит-парад программного обеспечения для ZX Spectrum, с акцентом на популярность и особенности игр и приложений, таких как \'НЛО-2\' и \'Micro Windows\'.',
+                    'eng' => 'The article offers a look at the latest software for ZX Spectrum, highlighting popular games and applications as well as improvements in recent releases. It discusses the emergence of a new operating shell, MICRO WINDOWS, and its features and shortcomings. It also corrects previous errors related to the presence of the MAGIC SOFT team in St. Petersburg.',
+                    'spa' => 'El artículo ofrece una visión del software más reciente para ZX Spectrum, destacando juegos populares y aplicaciones, así como mejoras en los lanzamientos recientes. Habla sobre la aparición de un nuevo shell operativo, MICRO WINDOWS, y sus características y defectos. También corrige errores anteriores relacionados con la presencia del equipo de MAGIC SOFT en San Petersburgo.',
+                    'rus' => 'Статья предлагает обзор новейшего программного обеспечения для ZX Spectrum, выделяя популярные игры и приложения, а также улучшения в последних версиях. Обсуждается появление новой оболочки MICRO WINDOWS и ее особенности и недостатки. Также исправляются ошибки, связанные с присутствием команды MAGIC SOFT в Санкт-Петербурге.',
                 ],
             'articleAuthors' =>
                 [
                     0 =>
                         [
                             'nickName' => 'Миша Блюм',
-                            'group' =>
+                            'groups' =>
                                 [
                                     0 =>
                                         [
@@ -209,57 +209,59 @@ class Crontab extends controllerApplication
                                 ],
                         ],
                 ],
-            'people' =>
-                [
-                    0 =>
-                        [
-                            'realName' => 'Виктор',
-                        ],
-                    1 =>
-                        [
-                            'realName' => 'Валерий',
-                        ],
-                    2 =>
-                        [
-                            'realName' => 'Александр',
-                            'nickName' => 'MAC BUSTER',
-                        ],
-                ],
             'groups' =>
                 [
                     0 =>
                         [
-                            'name' => 'Zx-Masters',
+                            'name' => 'ZX-Masters',
                         ],
                     1 =>
                         [
                             'name' => 'Welcome Corporation',
                         ],
-                    2 =>
-                        [
-                            'name' => 'Magic Soft',
-                        ],
                 ],
-            'pressGroups' =>
+            'people' =>
                 [
                     0 =>
                         [
-                            'name' => 'Welcome',
+                            'realName' => 'Виктор',
+                            'roles' =>
+                                [
+                                    0 => 'support',
+                                ],
+                        ],
+                    1 =>
+                        [
+                            'realName' => 'Валерий',
+                            'roles' =>
+                                [
+                                    0 => 'code',
+                                ],
+                        ],
+                    2 =>
+                        [
+                            'realName' => 'Александр',
+                            'nickName' => 'MAC BUSTER',
+                            'roles' =>
+                                [
+                                    0 => 'code',
+                                ],
                         ],
                 ],
             'software' =>
                 [
                     0 =>
                         [
-                            'name' => 'NLO-2',
+                            'name' => 'НЛО-2 "Дьяволы Бездны"',
                         ],
                     1 =>
                         [
-                            'name' => 'Micro Windows',
+                            'name' => 'MICRO WINDOWS',
+                            'year' => 1990,
                         ],
                     2 =>
                         [
-                            'name' => 'Страна мифов',
+                            'name' => 'Страна Мифов',
                         ],
                     3 =>
                         [
@@ -267,66 +269,72 @@ class Crontab extends controllerApplication
                         ],
                     4 =>
                         [
-                            'name' => 'Welcome Press',
+                            'name' => 'WELCOME PRESS',
                         ],
                     5 =>
                         [
-                            'name' => 'Darkman',
+                            'name' => 'DARKMAN',
                             'groups' =>
                                 [
                                     0 =>
                                         [
-                                            'name' => 'Magic Soft',
+                                            'name' => 'MAGIC SOFT',
                                         ],
                                 ],
                         ],
                     6 =>
                         [
-                            'name' => 'Cyberball',
+                            'name' => 'CYBERBALL',
                         ],
                     7 =>
                         [
-                            'name' => 'Mercs+',
+                            'name' => 'MERCS+',
                         ],
                     8 =>
                         [
-                            'name' => 'Super Cars',
+                            'name' => 'SUPER CARS',
                         ],
                     9 =>
                         [
-                            'name' => 'Pang',
+                            'name' => 'PANG',
                         ],
                 ],
             'tags' =>
                 [
-                    0 => 'Новые программы',
-                    1 => 'Хит-парад',
-                    2 => 'ZX Spectrum',
-                    3 => 'Программное обеспечение',
-                    4 => 'Обзор',
-                    5 => 'Игры',
-                    6 => 'Системные программы',
-                    7 => 'Подборка игр',
-                    8 => 'Оболочка',
-                    9 => 'Интерфейс',
+                    0 => 'Программное обеспечение',
+                    1 => 'Обзор',
+                    2 => 'Игры',
+                    3 => 'Программирование',
+                    4 => 'Хит-парад',
+                    5 => 'Продажи',
+                    6 => 'Оболочки',
+                    7 => 'Интерфейс',
+                    8 => 'Драйверы',
+                    9 => 'Лихой водила',
+                ],
+            'title' =>
+                [
+                    'eng' => 'New Programs',
+                    'spa' => 'Nuevos programas',
+                    'rus' => 'Новые программы',
                 ],
             'h1' =>
                 [
-                    'eng' => 'ZX Spectrum Software Sales Chart Highlights',
-                    'spa' => 'Aspectos Destacados de la Tabla de Ventas de Software para ZX Spectrum',
-                    'rus' => 'Основные моменты хит-парада программного обеспечения ZX Spectrum',
+                    'eng' => 'Latest Software Releases for ZX Spectrum',
+                    'spa' => 'Últimos lanzamientos de software para ZX Spectrum',
+                    'rus' => 'Последние релизы программ для ZX Spectrum',
                 ],
             'metaDescription' =>
                 [
-                    'eng' => 'Explore the top-selling ZX Spectrum software, including \'NLO-2\' and \'Micro Windows\', with unique features and user feedback.',
-                    'spa' => 'Explora el software más vendido para ZX Spectrum, incluyendo \'NLO-2\' y \'Micro Windows\', con características únicas y comentarios de usuarios.',
-                    'rus' => 'Изучите топовые программы для ZX Spectrum, включая \'НЛО-2\' и \'Micro Windows\', с уникальными особенностями и отзывами пользователей.',
+                    'eng' => 'Explore latest software for ZX Spectrum, popular games and new MICRO WINDOWS. Updates and corrections included.',
+                    'spa' => 'Descubre el último software para ZX Spectrum, juegos populares y el nuevo MICRO WINDOWS. Incluye actualizaciones y correcciones.',
+                    'rus' => 'Узнайте о новейшем ПО для ZX Spectrum, популярных играх и новой MICRO WINDOWS. Включены обновления и исправления.',
                 ],
             'pageTitle' =>
                 [
-                    'eng' => 'ZX Spectrum Software Rankings Revealed',
-                    'spa' => 'Se Revelan los Rankings de Software para ZX Spectrum',
-                    'rus' => 'Раскрыты рейтинги программ для ZX Spectrum',
+                    'eng' => 'ZX Spectrum New Software Overview',
+                    'spa' => 'Visión general del nuevo software para ZX Spectrum',
+                    'rus' => 'Обзор нового ПО для ZX Spectrum',
                 ],
         ];
 
