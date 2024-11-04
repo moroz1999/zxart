@@ -4,19 +4,15 @@ class ZxPressManager extends errorLogger
 {
     protected int $counter = 0;
     protected int $maxCounter = 10000;
-    protected ProdsManager $prodsManager;
     protected string $origin = 'zxp';
     protected string $rootUrl = 'https://zxpress.ru/';
 
     private $prodsIndex = [];
 
-    public function __construct()
+    public function __construct(
+        protected ProdsManager $prodsManager,
+    )
     {
-    }
-
-    public function setProdsManager(ProdsManager $prodsManager): void
-    {
-        $this->prodsManager = $prodsManager;
         $this->prodsManager->setMatchProdsWithoutYear(true);
         $this->prodsManager->setUpdateExistingProds(true);
     }
@@ -186,7 +182,7 @@ class ZxPressManager extends errorLogger
     }
 
     private function loadHtml(
-        string $url
+        string $url,
     ): DOMDocument|false
     {
         if ($contents = file_get_contents($url)) {
@@ -207,7 +203,7 @@ class ZxPressManager extends errorLogger
     }
 
     private function markProgress(
-        string $text
+        string $text,
     ): void
     {
         static $previousTime;

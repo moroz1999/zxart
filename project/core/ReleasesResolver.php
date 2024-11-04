@@ -5,19 +5,18 @@ use Illuminate\Database\Query\Builder;
 
 class ReleasesResolver
 {
-    protected ProdsManager $prodsManager;
-
-    public function setProdsManager(ProdsManager $prodsManager): void
+    public function __construct(
+        protected ProdsManager $prodsManager,
+    )
     {
-        $this->prodsManager = $prodsManager;
     }
 
-    public function getElementsByQuery(?Builder $query, ?array $sort = [], ?int $start = null, ?int $amount = null)
+    public function getElementsByQuery(?Builder $query, ?array $sort = [], ?int $start = null, ?int $amount = null): array
     {
         return $this->prodsManager->getReleasesByIdList($query, $sort, $start, $amount);
     }
 
-    public function makeQuery()
+    public function makeQuery(): Builder
     {
         return $this->prodsManager->makeReleasesQuery();
     }

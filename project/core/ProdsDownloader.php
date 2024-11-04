@@ -2,27 +2,13 @@
 
 class ProdsDownloader extends errorLogger
 {
-    /**
-     * @var ConfigManager
-     */
-    protected $configManager;
 
-    /**
-     * @param ConfigManager $configManager
-     */
-    public function setConfigManager($configManager): void
+    public function __construct(
+        private readonly ConfigManager $configManager,
+        private readonly PathsManager  $pathsManager,
+    )
     {
-        $this->configManager = $configManager;
-    }
 
-    /**
-     * @var PathsManager
-     */
-    protected $pathsManager;
-
-    public function setPathsManager(PathsManager $pathsManager): void
-    {
-        $this->pathsManager = $pathsManager;
     }
 
     public function getFileContents($url)
@@ -102,7 +88,7 @@ class ProdsDownloader extends errorLogger
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Accept-Encoding: identity',
             'Pragma: no-cache',
-            'Cache-Control: no-cache'
+            'Cache-Control: no-cache',
         ]);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 
