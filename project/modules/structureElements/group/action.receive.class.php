@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Authors\Repositories\AuthorshipRepository;
+
 class receiveGroup extends structureElementAction
 {
     protected $loggable = true;
@@ -26,11 +28,9 @@ class receiveGroup extends structureElementAction
             $structureElement->persistElementData();
             $structureElement->checkParentLetter();
             $structureElement->persistSubGroupConnections();
-            /**
-             * @var AuthorsManager $authorsManager
-             */
-            $authorsManager = $this->getService('AuthorsManager');
-            $authorsManager->checkAuthorship(
+
+            $authorshipRepository = $this->getService(AuthorshipRepository::class);
+            $authorshipRepository->checkAuthorship(
                 $structureElement->id,
                 $structureElement->getValue('addAuthor'),
                 'group',

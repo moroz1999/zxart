@@ -1,8 +1,11 @@
 <?php
 
+use Illuminate\Database\Connection;
+use ZxArt\Authors\Repositories\AuthorshipRepository;
+
 class ProdsManager extends ElementsManager
 {
-    const TABLE = 'module_zxprod';
+    protected const TABLE = 'module_zxprod';
     use ImportIdOperatorTrait;
     use ReleaseFormatsProvider;
     use ReleaseFileTypesGatherer;
@@ -29,38 +32,6 @@ class ProdsManager extends ElementsManager
 
     protected $columnRelations = [];
     protected $releaseColumnRelations = [];
-    /**
-     * @var PartiesManager
-     */
-    protected $partiesManager;
-    /**
-     * @var GroupsManager
-     */
-    protected $groupsManager;
-    /**
-     * @var ZxParsingManager
-     */
-    protected $zxParsingManager;
-    /**
-     * @var AuthorsManager
-     */
-    protected $authorsManager;
-    /**
-     * @var linksManager
-     */
-    protected $linksManager;
-    /**
-     * @var ProdsDownloader
-     */
-    protected $prodsDownloader;
-    /**
-     * @var privilegesManager
-     */
-    protected $privilegesManager;
-    /**
-     * @var PathsManager
-     */
-    protected $pathsManager;
 
     public function setForceUpdateExternalLink(bool $forceUpdateExternalLink): void
     {
@@ -102,7 +73,20 @@ class ProdsManager extends ElementsManager
         $this->resizeImages = $resizeImages;
     }
 
-    public function __construct()
+    public function __construct(
+        protected structureManager     $structureManager,
+        protected PartiesManager       $partiesManager,
+        protected GroupsManager        $groupsManager,
+        protected ZxParsingManager     $zxParsingManager,
+        protected AuthorsManager       $authorsManager,
+        protected linksManager         $linksManager,
+        protected ProdsDownloader      $prodsDownloader,
+        protected privilegesManager    $privilegesManager,
+        protected PathsManager         $pathsManager,
+        protected AuthorshipRepository $authorshipRepository,
+        protected Connection           $db,
+        protected LanguagesManager     $languagesManager,
+    )
     {
         $this->columnRelations = [
             'title' => ['LOWER(title)' => true],
@@ -255,7 +239,7 @@ class ProdsManager extends ElementsManager
         $this->linksManager = $linksManager;
     }
 
-    public function importProd(array $prodInfo, string $origin):?zxProdElement
+    public function importProd(array $prodInfo, string $origin): ?zxProdElement
     {
         /**
          * @var zxProdElement $element
@@ -444,7 +428,7 @@ class ProdsManager extends ElementsManager
         if (!empty($prodInfo['undetermined'])) {
             foreach ($prodInfo['undetermined'] as $undeterminedId => $roles) {
                 if ($elementId = $this->getElementIdByImportId($undeterminedId, $origin, 'group')) {
-                    $prodInfo['groups'][] = $undeterminedId;
+                    $prodInfo['groupsIds'][] = $undeterminedId;
                 } elseif ($elementId = $this->getElementIdByImportId($undeterminedId, $origin, 'author')) {
                     $prodInfo['authors'][$undeterminedId] = $roles;
                 }
@@ -455,7 +439,7 @@ class ProdsManager extends ElementsManager
             if (!$element->getAuthorsInfo('prod')) {
                 foreach ($prodInfo['authors'] as $importAuthorId => $roles) {
                     if ($authorId = $this->getElementIdByImportId($importAuthorId, $origin, 'author')) {
-                        $this->authorsManager->checkAuthorship($element->id, $authorId, 'prod', $roles);
+                        $this->authorshipRepository->checkAuthorship($element->id, $authorId, 'prod', $roles);
                     }
                 }
             }
@@ -680,7 +664,7 @@ class ProdsManager extends ElementsManager
 
     protected function linkReleaseWithAuthor($authorId, int $prodId, $roles = []): void
     {
-        $this->authorsManager->checkAuthorship($prodId, $authorId, 'release', $roles);
+        $this->authorshipRepository->checkAuthorship($prodId, $authorId, 'release', $roles);
     }
 
     protected function linkReleaseWithPublisher($publisherId, int $prodId): void
@@ -704,9 +688,9 @@ class ProdsManager extends ElementsManager
         return null;
     }
 
-    protected function findProdBestMatch($prodInfo): bool|structureElement
+    protected function findProdBestMatch($prodInfo): ?structureElement
     {
-        $element = false;
+        $element = null;
         $query = $this->db->table('module_zxprod')
             ->where(
                 function ($query) use ($prodInfo) {
@@ -1115,7 +1099,7 @@ class ProdsManager extends ElementsManager
                     if (!$releasesOnly) {
                         //take existing authors
                         $existingAuthorIds = [];
-                        if ($existingAuthorShipRecords = $this->authorsManager->getElementAuthorsRecords($mainZxProdId)) {
+                        if ($existingAuthorShipRecords = $this->authorshipRepository->getElementAuthorsRecords($mainZxProdId)) {
                             foreach ($existingAuthorShipRecords as $record) {
                                 $existingAuthorIds[] = $record['authorId'];
                             }
@@ -1172,7 +1156,7 @@ class ProdsManager extends ElementsManager
 
                     if (!empty($data['authors'])) {
                         $authorshipIds = array_keys($data['authors']);
-                        $this->authorsManager->moveAuthorship($newProdElement->id, $authorshipIds);
+                        $this->authorshipRepository->moveAuthorship($newProdElement->id, $authorshipIds);
                     }
                     if (!empty($data['groups'])) {
                         foreach ($data['groups'] as $id => $value) {

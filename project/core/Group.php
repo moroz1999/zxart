@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Authors\Repositories\AuthorshipRepository;
+
 trait Group
 {
     protected $linksInfo;
@@ -17,10 +19,10 @@ trait Group
     public function getAuthorsInfo($type)
     {
         /**
-         * @var AuthorsManager $authorsManager
+         * @var AuthorshipRepository $authorshipRepository
          */
-        $authorsManager = $this->getService('AuthorsManager');
-        $info = $authorsManager->getAuthorsInfo($this->id, $type);
+        $authorshipRepository = $this->getService(AuthorshipRepository::class);
+        $info = $authorshipRepository->getAuthorsInfo($this->id, $type);
         $sort = [];
         foreach ($info as $item) {
             $sort[] = $item['authorElement']->getTitle();

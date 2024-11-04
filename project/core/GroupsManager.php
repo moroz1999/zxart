@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Database\Connection;
+use ZxArt\Authors\Repositories\AuthorshipRepository;
+
 class GroupsManager extends ElementsManager
 {
     const TABLE = 'module_group';
@@ -7,86 +10,25 @@ class GroupsManager extends ElementsManager
     use LettersElementsListProviderTrait;
     use ImportIdOperatorTrait;
 
-    protected $columnRelations = [];
-    protected $importedGroups = [];
-    protected $importedGroupAliases = [];
-    /**
-     * @var linksManager
-     */
-    protected $linksManager;
-    /**
-     * @var CountriesManager
-     */
-    protected $countriesManager;
-    /**
-     * @var configManager
-     */
-    protected $configManager;
-    /**
-     * @var privilegesManager
-     */
-    protected $privilegesManager;
+    protected array $columnRelations = [];
+    protected array $importedGroups = [];
+    protected array $importedGroupAliases = [];
 
-    /**
-     * @var AuthorsManager
-     */
-    protected $authorsManager;
-
-    public function __construct()
+    public function __construct(
+        protected linksManager         $linksManager,
+        protected structureManager     $structureManager,
+        protected CountriesManager     $countriesManager,
+        protected configManager        $configManager,
+        protected privilegesManager    $privilegesManager,
+        protected AuthorshipRepository $authorshipRepository,
+        protected languagesManager     $languagesManager,
+        protected Connection           $db,
+    )
     {
         $this->columnRelations = [
             'title' => ['LOWER(title)' => true],
             'date' => ['id' => true],
         ];
-    }
-
-    /**
-     * @param AuthorsManager $authorsManager
-     */
-    public function setAuthorsManager($authorsManager): void
-    {
-        $this->authorsManager = $authorsManager;
-    }
-
-    /**
-     * @param privilegesManager $privilegesManager
-     */
-    public function setPrivilegesManager($privilegesManager): void
-    {
-        $this->privilegesManager = $privilegesManager;
-    }
-
-    /**
-     * @return void
-     */
-    public function setLanguagesManager($languagesManager)
-    {
-        $this->languagesManager = $languagesManager;
-    }
-
-    /**
-     * @param linksManager $linksManager
-     */
-    public function setLinksManager($linksManager): void
-    {
-        $this->linksManager = $linksManager;
-    }
-
-    /**
-     * @param CountriesManager $countriesManager
-     */
-    public function setCountriesManager($countriesManager): void
-    {
-        $this->countriesManager = $countriesManager;
-    }
-
-
-    /**
-     * @param ConfigManager $configManager
-     */
-    public function setConfigManager($configManager): void
-    {
-        $this->configManager = $configManager;
     }
 
     public function getGroupByName($groupName): bool|structureElement
@@ -304,20 +246,15 @@ class GroupsManager extends ElementsManager
         return $element;
     }
 
-    /**
-     * @param string $title
-     * @return groupAliasElement|bool
-     */
-    protected function manufactureAliasElement($title = '')
+    protected function manufactureAliasElement(string $title = ''): ?groupAliasElement
     {
-        if ($letterId = $this->getLetterId($title)) {
-            if ($letterElement = $this->structureManager->getElementById($letterId)) {
-                if ($element = $this->structureManager->createElement('groupAlias', 'show', $letterElement->id)) {
-                    return $element;
-                }
-            }
+        if ($this->getLetterId($title) &&
+            ($letterElement = $this->structureManager->getElementById($letterId)) &&
+            ($element = $this->structureManager->createElement('groupAlias', 'show', $letterElement->id))
+        ) {
+            return $element;
         }
-        return false;
+        return null;
     }
 
     /**
@@ -553,7 +490,7 @@ class GroupsManager extends ElementsManager
                 //disabled groupship moving to new group
                 //check if group already has groupship in same elements. we dont need duplicates
                 $existingAuthorIds = [];
-                if ($existingGroupShipRecords = $this->authorsManager->getAuthorsInfo($targetElement->id, 'group')) {
+                if ($existingGroupShipRecords = $this->authorshipRepository->getAuthorsInfo($targetElement->id, 'group')) {
                     foreach ($existingGroupShipRecords as $record) {
                         $existingAuthorIds[] = $record['authorId'];
                     }

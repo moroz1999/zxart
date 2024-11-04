@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Connection;
+use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Labels\Label;
 use ZxArt\Labels\LabelResolver;
 use ZxArt\Labels\LabelType;
@@ -10,24 +11,26 @@ class AuthorsManager extends ElementsManager
     use ImportIdOperatorTrait;
     use LettersElementsListProviderTrait;
 
-    const TABLE = 'module_author';
-    protected $forceUpdateRealName = false;
-    protected $forceUpdateCountry = false;
-    protected $forceUpdateCity = false;
-    protected $forceUpdateGroups = false;
-    protected $columnRelations = [];
-    protected $importedAuthors = [];
-    protected $importedAuthorAliases = [];
+    protected const TABLE = 'module_author';
+    protected bool $forceUpdateRealName = false;
+    protected bool $forceUpdateCountry = false;
+    protected bool $forceUpdateCity = false;
+    protected bool $forceUpdateGroups = false;
+    protected array $columnRelations = [];
+    protected array $importedAuthors = [];
+    protected array $importedAuthorAliases = [];
 
     public function __construct(
-        protected linksManager      $linksManager,
-        protected LanguagesManager  $languagesManager,
-        protected ConfigManager     $configManager,
-        protected CountriesManager  $countriesManager,
-        protected privilegesManager $privilegesManager,
-        protected Connection        $db,
-        protected structureManager  $structureManager,
-        private LabelResolver       $labelResolver,
+        protected linksManager         $linksManager,
+        protected LanguagesManager     $languagesManager,
+        protected ConfigManager        $configManager,
+        protected CountriesManager     $countriesManager,
+        protected privilegesManager    $privilegesManager,
+        protected Connection           $db,
+        protected structureManager     $structureManager,
+        protected GroupsManager        $groupsManager,
+        protected AuthorshipRepository $authorshipRepository,
+        private readonly LabelResolver $labelResolver,
     )
     {
         $this->columnRelations = [
@@ -56,243 +59,6 @@ class AuthorsManager extends ElementsManager
     public function setForceUpdateCity(bool $forceUpdateCity): void
     {
         $this->forceUpdateCity = $forceUpdateCity;
-    }
-
-    public function getAuthorAliasByName($authorName): bool|structureElement
-    {
-        $authorAliasElement = false;
-
-        if ($record = $this->db->table('module_authoralias')
-            ->select('id')
-            ->orWhere('title', 'like', $authorName)
-            ->orWhere('title', 'like', htmlentities($authorName, ENT_QUOTES))
-            ->limit(1)
-            ->first()
-        ) {
-            /**
-             * @var authorAliasElement $authorAliasElement
-             */
-            if ($authorAliasElement = $this->structureManager->getElementById($record['id'])) {
-                return $authorAliasElement;
-            };
-        }
-
-        return $authorAliasElement;
-    }
-
-    /**
-     * @psalm-param 'group' $type
-     *
-     * @psalm-return list{0?: mixed,...}
-     */
-    public function getAuthorsInfo(int|string $elementId, string $type): array
-    {
-        $info = [];
-        if ($records = $this->getElementAuthorsRecords($elementId, $type)
-        ) {
-            foreach ($records as $key => $record) {
-                if ($authorElement = $this->structureManager->getElementById($record['authorId'])) {
-                    $record['authorElement'] = $authorElement;
-                    $info[] = $record;
-                }
-            }
-        }
-        return $info;
-    }
-
-    /**
-     * @return (\Illuminate\Database\Query\Builder|mixed)[]
-     *
-     * @psalm-return array<\Illuminate\Database\Query\Builder|mixed>
-     */
-    public function getElementAuthorsRecords(int|string $elementId, $type = null): array
-    {
-        $query = $this->db
-            ->table('authorship')
-            ->select('id', 'authorId', 'startDate', 'endDate', 'roles')
-            ->where('elementId', '=', $elementId);
-        if ($type) {
-            $query->where('type', '=', $type);
-        }
-
-        if ($records = $query->get()) {
-            foreach ($records as $key => &$record) {
-                if ($record['startDate']) {
-                    $record['startDate'] = date('d.m.Y', $record['startDate']);
-                } else {
-                    $record['startDate'] = '';
-                }
-                if ($record['endDate']) {
-                    $record['endDate'] = date('d.m.Y', $record['endDate']);
-                } else {
-                    $record['endDate'] = '';
-                }
-
-                $record['roles'] = json_decode($record['roles'], true);
-                if (!$record['roles']) {
-                    $record['roles'] = ['unknown'];
-                }
-            }
-        }
-        return $records;
-    }
-
-    /**
-     * @psalm-param 'prod'|'release' $type
-     */
-    public function getAuthorshipInfo(int $authorId, string $type)
-    {
-        if ($records = $this->getAuthorshipRecords($authorId, $type)) {
-            foreach ($records as $key => &$record) {
-                if ($element = $this->structureManager->getElementById($record['elementId'])) {
-                    $record[$type . 'Element'] = $element;
-                } else {
-                    unset($records[$key]);
-                }
-            }
-        }
-        return $records;
-    }
-
-    /**
-     * @return (\Illuminate\Database\Query\Builder|mixed)[]
-     *
-     * @psalm-return array<\Illuminate\Database\Query\Builder|mixed>
-     */
-    public function getAuthorshipRecords(int $authorId, $type = null): array
-    {
-        $query = $this->db
-            ->table('authorship')
-            ->select('elementId', 'startDate', 'endDate', 'roles')
-            ->where('authorId', '=', $authorId);
-        if ($type) {
-            $query->where('type', '=', $type);
-        }
-        if ($records = $query->get()) {
-            foreach ($records as $key => &$record) {
-                if ($record['startDate']) {
-                    $record['startDate'] = date('d.m.Y', $record['startDate']);
-                } else {
-                    $record['startDate'] = '';
-                }
-                if ($record['endDate']) {
-                    $record['endDate'] = date('d.m.Y', $record['endDate']);
-                } else {
-                    $record['endDate'] = '';
-                }
-
-                $record['roles'] = json_decode($record['roles'], true);
-            }
-        }
-        return $records;
-    }
-
-    /**
-     * @param array[] $info
-     *
-     * @psalm-param array<array{roles: mixed, startDate?: mixed, endDate?: mixed}> $info
-     */
-    public function checkDuplicates(array $info)
-    {
-        if ($info) {
-            if ($records = $this->db
-                ->table('module_authoralias')
-                ->whereIn('id', array_keys($info))
-                ->get(['id', 'authorId'])
-            ) {
-                $foundAuthors = [];
-                foreach ($records as $record) {
-                    if (isset($foundAuthors[$record['authorId']])) {
-                        //this is not the only alias of same author within list, let's delete it
-                        unset($info[$record['id']]);
-                    } else {
-                        $foundAuthors[$record['authorId']] = true;
-                        if (isset($info[$record['authorId']])) {
-                            //main author should be removed if there is appropriate alias in list
-                            if (!empty($info[$record['authorId']]['roles'])) {
-                                $info[$record['id']]['roles'] = $info[$record['authorId']]['roles'];
-                            }
-                            unset($info[$record['authorId']]);
-                        }
-                    }
-                }
-            }
-        }
-        return $info;
-    }
-
-    public function checkAuthorship(int $elementId, int|string $authorId, string $type, array|string|false $roles = [], int|string|false $startDate = 0, int|string|false $endDate = 0): void
-    {
-        if (is_array($roles)) {
-            $roles = array_unique($roles);
-            $roles = json_encode($roles);
-        }
-        if ($record = $this->db
-            ->table('authorship')
-            ->where('elementId', '=', $elementId)
-            ->where('authorId', '=', $authorId)
-            ->where('type', '=', $type)
-            ->first()
-        ) {
-            $data = [
-                'roles' => $roles,
-            ];
-            if ($startDate) {
-                $data['startDate'] = $startDate;
-            }
-            if ($endDate) {
-                $data['endDate'] = $endDate;
-            }
-            $this->db
-                ->table('authorship')
-                ->where('elementId', '=', $elementId)
-                ->where('authorId', '=', $authorId)
-                ->update($data);
-        } else {
-            $data = [
-                'elementId' => $elementId,
-                'type' => $type,
-                'authorId' => $authorId,
-                'roles' => $roles,
-            ];
-            if ($startDate) {
-                $data['startDate'] = $startDate;
-            }
-            if ($endDate) {
-                $data['endDate'] = $endDate;
-            }
-
-            $this->db
-                ->table('authorship')
-                ->insert($data);
-        }
-    }
-
-    public function deleteAuthorship(int $elementId, $authorId, string $type): bool
-    {
-        if ($this->db
-            ->table('authorship')
-            ->where('elementId', '=', $elementId)
-            ->where('authorId', '=', $authorId)
-            ->where('type', '=', $type)
-            ->delete()
-        ) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function moveAuthorship(int $newElementId, array $recordIds): void
-    {
-        $this->db
-            ->table('authorship')
-            ->whereIn('id', $recordIds)
-            ->update(
-                [
-                    'elementId' => $newElementId,
-                ]
-            );
     }
 
     /**
@@ -440,10 +206,17 @@ class AuthorsManager extends ElementsManager
             $element->persistElementData();
         }
 
-        if ($this->forceUpdateGroups && isset($authorInfo['groups'])) {
-            foreach ($authorInfo['groups'] as $groupId) {
+        if ($this->forceUpdateGroups && isset($authorInfo['groupsIds'])) {
+            foreach ($authorInfo['groupsIds'] as $groupId) {
                 if ($groupElement = $this->getElementByImportId($groupId, $origin, 'group')) {
-                    $this->checkAuthorship($groupElement->id, $element->getId(), 'group', []);
+                    $this->authorshipRepository->checkAuthorship($groupElement->id, $element->getId(), 'group', []);
+                }
+            }
+        }
+        if (isset($authorInfo['groups'])) {
+            foreach ($authorInfo['groups'] as $groupData) {
+                if ($groupElement = $this->authorshipRepository->importGroup($groupData, $origin)) {
+                    $this->authorshipRepository->checkAuthorship($groupElement->id, $element->getId(), 'group', []);
                 }
             }
         }
@@ -649,7 +422,7 @@ class AuthorsManager extends ElementsManager
                     //disabled authorship moving to new author
                     //check if author already has authorship in same elements. we dont need duplicates
                     $existingElements = [];
-                    if ($existingAuthorShipRecords = $this->getAuthorshipRecords($mainAuthorId)) {
+                    if ($existingAuthorShipRecords = $this->authorshipRepository->getAuthorshipRecords($mainAuthorId)) {
                         foreach ($existingAuthorShipRecords as $record) {
                             $existingElements[] = $record['elementId'];
                         }
@@ -758,10 +531,10 @@ class AuthorsManager extends ElementsManager
                     $this->linksManager->linkElements($authorElement->id, $zxProd->id, 'zxProdPublishers');
                 }
                 foreach ($groupElement->getGroupProds() as $zxProd) {
-                    $this->checkAuthorship($zxProd->id, $authorElement->id, 'prod', []);
+                    $this->authorshipRepository->checkAuthorship($zxProd->id, $authorElement->id, 'prod', []);
                 }
                 foreach ($groupElement->publishedReleases as $zxRelease) {
-                    $this->checkAuthorship($zxRelease->id, $authorElement->id, 'release', ['release']);
+                    $this->authorshipRepository->checkAuthorship($zxRelease->id, $authorElement->id, 'release', ['release']);
                 }
 
                 if ($records = $this->db->table('import_origin')

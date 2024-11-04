@@ -42,6 +42,7 @@ final class AuthorsRepository
                 ->orWhere('realName', 'like', $realName)
                 ->orWhere('realName', 'like', $encodedRealName);
         }
+        $query->distinct();
         if ($ids = $query->pluck('id')) {
             return $ids;
         }

@@ -1095,8 +1095,8 @@ class VtrdosManager extends errorLogger
             }
             if (count($info['labels']) > 1) {
                 $last = last($info['labels']);
-                if (!empty($info['groups'])) {
-                    if (!in_array($last['id'], $info['groups'])) {
+                if (!empty($info['groupsIds'])) {
+                    if (!in_array($last['id'], $info['groupsIds'])) {
                         $info['publishers'][] = $last['id'];
                     }
                 }

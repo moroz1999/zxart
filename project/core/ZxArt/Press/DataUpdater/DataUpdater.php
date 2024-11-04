@@ -7,6 +7,7 @@ namespace ZxArt\Press\DataUpdater;
 use AuthorsManager;
 use LanguagesManager;
 use pressArticleElement;
+use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Labels\Label;
 use ZxArt\Labels\LabelResolver;
 use ZxArt\Labels\LabelType;
@@ -19,9 +20,10 @@ final class DataUpdater
     private const ORIGIN = 'zxp';
 
     public function __construct(
-        private readonly AuthorsManager   $authorsManager,
-        private readonly LanguagesManager $languagesManager,
-        private readonly LabelResolver    $labelResolver,
+        private readonly AuthorsManager       $authorsManager,
+        private readonly AuthorshipRepository $authorshipRepository,
+        private readonly LanguagesManager     $languagesManager,
+        private readonly LabelResolver        $labelResolver,
     )
     {
         $this->languageIdsMap = $this->languagesManager->getLanguagesIdsMap();
@@ -96,9 +98,14 @@ final class DataUpdater
 
     private function updatePressAuthors(array $pressAuthors, zxProdElement $pressElement): void
     {
+        $pressAuthors = [[
+            'nickName' => 'Some random guy',
+            'groups' => [['name' => 'XL-Design Inc']],
+        ]];
         $resolvedAuthorship = $this->prepareAuthorElements($pressAuthors);
+
         foreach ($resolvedAuthorship as $item) {
-            $this->authorsManager->checkAuthorship($pressElement->id, $item->author->id, 'prod', $item->roles);
+            $this->authorshipRepository->checkAuthorship($pressElement->id, $item->author->id, 'prod', $item->roles);
         }
     }
 
@@ -165,9 +172,9 @@ final class DataUpdater
     private function transformGroupToLabel($group): Label
     {
         return new Label(
-            name: $group['name'] ?? null,
-            city: $author['city'] ?? null,
-            country: $author['country'] ?? null,
+            name: $group['name'],
+            city: $group['city'] ?? null,
+            country: $group['country'] ?? null,
             type: LabelType::group,
         );
     }

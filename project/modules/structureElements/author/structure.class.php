@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Authors\Repositories\AuthorshipRepository;
+
 /**
  * Class authorElement
  *
@@ -308,11 +310,9 @@ class authorElement extends structureElement implements
     {
         if ($this->prods === null) {
             $this->prods = [];
-            /**
-             * @var AuthorsManager $authorsManager
-             */
-            $authorsManager = $this->getService('AuthorsManager');
-            if ($authorShip = $authorsManager->getAuthorshipInfo($this->id, 'prod')) {
+
+            $authorshipRepository = $this->getService(AuthorshipRepository::class);
+            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->id, 'prod')) {
                 foreach ($authorShip as $item) {
                     $this->prods[] = $item['prodElement'];
                 }
@@ -344,11 +344,8 @@ class authorElement extends structureElement implements
              * @var linksManager $linksManager
              */
 
-            /**
-             * @var AuthorsManager $authorsManager
-             */
-            $authorsManager = $this->getService('AuthorsManager');
-            if ($authorShip = $authorsManager->getAuthorshipInfo($this->id, 'release')) {
+            $authorshipRepository = $this->getService(AuthorshipRepository::class);
+            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->id, 'release')) {
                 foreach ($authorShip as $item) {
                     $this->releases[] = $item['releaseElement'];
                 }

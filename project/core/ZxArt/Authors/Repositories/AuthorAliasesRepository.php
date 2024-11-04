@@ -17,13 +17,14 @@ final class AuthorAliasesRepository
 
     }
 
-    public function findAliasIdsByName(?string $name = null, ?string $realName = null): ?array
+    public function findAliasIdsByName(?string $name = null): ?array
     {
         if ($name === null) {
             return null;
         }
 
         $query = $this->db->table(self::TABLE)->select(['id']);
+
         $name = trim($name);
         $encodedName = htmlentities($name, ENT_QUOTES);
 

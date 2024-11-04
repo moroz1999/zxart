@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Authors\Repositories\AuthorshipRepository;
+
 /**
  * Class authorAliasElement
  *
@@ -26,7 +28,7 @@ class authorAliasElement extends structureElement implements CommentsHolderInter
 
     protected $prods;
     protected $releases;
-    protected $authorElement;
+    protected ?authorElement $authorElement;
 
     /**
      * @return void
@@ -70,18 +72,18 @@ class authorAliasElement extends structureElement implements CommentsHolderInter
         return $result;
     }
 
-    /**
-     * @return authorElement|bool
-     */
-    public function getAuthorElement()
+    public function getAuthorElement(): ?authorElement
     {
-        if ($this->authorElement === null) {
-            $this->authorElement = false;
+        if (!isset($this->authorElement)) {
+            $this->authorElement = null;
             $cache = $this->getElementsListCache('a', 60 * 60 * 24);
             if (($authors = $cache->load()) === false) {
                 if ($authorId = $this->getAuthorId()) {
                     $structureManager = $this->getService('structureManager');
-                    $this->authorElement = $structureManager->getElementById($authorId);
+                    $authorElement = $structureManager->getElementById($authorId);
+                    if ($authorElement?->structureType === 'author'){
+                        $this->authorElement = $structureManager->getElementById($authorId);
+                    }
                 }
                 $cache->save([$this->authorElement]);
             } else {
@@ -121,11 +123,8 @@ class authorAliasElement extends structureElement implements CommentsHolderInter
     {
         if ($this->prods === null) {
             $this->prods = [];
-            /**
-             * @var AuthorsManager $authorsManager
-             */
-            $authorsManager = $this->getService('AuthorsManager');
-            if ($authorShip = $authorsManager->getAuthorshipInfo($this->id, 'prod')) {
+            $authorshipRepository = $this->getService(AuthorshipRepository::class);
+            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->id, 'prod')) {
                 foreach ($authorShip as $item) {
                     $this->prods[] = $item['prodElement'];
                 }
@@ -139,11 +138,9 @@ class authorAliasElement extends structureElement implements CommentsHolderInter
     {
         if ($this->releases === null) {
             $this->releases = [];
-            /**
-             * @var AuthorsManager $authorsManager
-             */
-            $authorsManager = $this->getService('AuthorsManager');
-            if ($authorShip = $authorsManager->getAuthorshipInfo($this->id, 'release')) {
+
+            $authorshipRepository = $this->getService(AuthorshipRepository::class);
+            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->id, 'release')) {
                 foreach ($authorShip as $item) {
                     $this->releases[] = $item['releaseElement'];
                 }

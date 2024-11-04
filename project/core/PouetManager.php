@@ -442,7 +442,7 @@ class PouetManager extends errorLogger
                             $label['website'] = $group['web'];
                         }
                         $prodInfo['labels'][] = $label;
-                        $prodInfo['groups'][] = $label['id'];
+                        $prodInfo['groupsIds'][] = $label['id'];
                     }
                     if (!empty($prodData['releaseDate'])) {
                         $prodInfo['year'] = date('Y', strtotime($prodData['releaseDate']));

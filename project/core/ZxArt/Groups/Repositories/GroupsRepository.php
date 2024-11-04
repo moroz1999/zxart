@@ -2,11 +2,11 @@
 declare(strict_types=1);
 
 
-namespace ZxArt\Authors\Repositories;
+namespace ZxArt\Groups\Repositories;
 
 use Illuminate\Database\Connection;
 
-final class GroupAliasesRepository
+final class GroupsRepository
 {
     private const TABLE = 'module_group';
 
@@ -17,7 +17,7 @@ final class GroupAliasesRepository
 
     }
 
-    public function findAliasIdsByName(?string $name = null): ?array
+    public function findGroupIdsByName(?string $name = null): ?array
     {
         if ($name === null) {
             return null;
@@ -29,7 +29,9 @@ final class GroupAliasesRepository
         $encodedName = htmlentities($name, ENT_QUOTES);
         $query
             ->where('title', 'like', $name)
-            ->orWhere('title', 'like', $encodedName);
+            ->orWhere('title', 'like', $encodedName)
+            ->orWhere('abbreviation', 'like', $name)
+            ->orWhere('abbreviation', 'like', $encodedName);
 
         if ($ids = $query->pluck('id')) {
             return $ids;

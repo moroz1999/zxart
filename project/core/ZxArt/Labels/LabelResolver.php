@@ -9,10 +9,10 @@ use groupAliasElement;
 use groupElement;
 use structureElement;
 use structureManager;
-use ZxArt\Authors\Repositories\AuthorsRepository;
 use ZxArt\Authors\Repositories\AuthorAliasesRepository;
-use ZxArt\Authors\Repositories\GroupsRepository;
-use ZxArt\Authors\Repositories\GroupAliasesRepository;
+use ZxArt\Authors\Repositories\AuthorsRepository;
+use ZxArt\Groups\Repositories\GroupAliasesRepository;
+use ZxArt\Groups\Repositories\GroupsRepository;
 
 final readonly class LabelResolver
 {
@@ -48,8 +48,11 @@ final readonly class LabelResolver
             $label,
             fn(string $name) => $this->groupsRepository->findGroupIdsByName($name),
             fn(string $name) => $this->groupAliasesRepository->findAliasIdsByName($name),
-            fn($alias) => $alias->getGroupElement(),
-            function (groupElement $element, ?string $name, Label $label) {
+            static fn($alias) => $alias->getGroupElement(),
+            /**
+             * @var groupElement|groupAliasElement $element
+             */
+            function (structureElement $element, ?string $name, Label $label) {
                 $score = 0;
                 if ($this->valueMatches($name, $label->name)) {
                     $score += 10;
@@ -74,8 +77,11 @@ final readonly class LabelResolver
             $label,
             fn(string $name) => $this->authorsRepository->findAuthorIdsByName($name, $label->realName),
             fn(string $name) => $this->authorAliasesRepository->findAliasIdsByName($name),
-            fn($alias) => $alias->getAuthorElement(),
-            function (authorElement $element, ?string $name, Label $label) {
+            static fn($alias) => $alias->getAuthorElement(),
+            /**
+             * @var authorElement|authorAliasElement $element
+             */
+            function (structureElement $element, ?string $name, Label $label) {
                 $score = 0;
                 if ($this->valueMatches($name, $label->name)) {
                     $score += 10;
@@ -89,6 +95,17 @@ final readonly class LabelResolver
                 if ($element->matchesCountry($label->country ?? '')) {
                     $score += 5;
                 }
+
+                $authorGroups = $element->getGroupsList();
+                $authorGroupTitles = array_map(fn($group) => $group->getTitle(), $authorGroups);
+                $labelGroupTitles = array_map(static fn($groupLabel) => $groupLabel->name, $label->groups ?? []);
+
+                // Check if any of the author's groups match any of the label's groups
+                $groupMatches = array_intersect($authorGroupTitles, $labelGroupTitles);
+                if ($groupMatches !== []) {
+                    $score += 20; // Increase the score significantly for group matches
+                }
+
                 return $score;
             }
         );

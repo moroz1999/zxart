@@ -17,7 +17,6 @@ final class Label
         public ?array     $groups = null,
         public ?LabelType $type = null,
         public ?bool      $isAlias = null,
-        public ?array     $groupNames = null,
     )
     {
 
@@ -31,10 +30,9 @@ final class Label
             'realName' => $this->realName,
             'cityName' => $this->city,
             'countryName' => $this->country,
-            'groups' => $this->groups,
+            'groups' => array_map(static fn($group) => $group->toArray(), $this->groups ?? []),
             'type' => $this->type,
             'isAlias' => $this->isAlias,
-            'groupNames' => $this->groupNames,
         ];
     }
 }

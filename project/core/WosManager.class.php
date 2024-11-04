@@ -852,7 +852,7 @@ class WosManager extends errorLogger
                     ->get()) {
                     foreach ($rows as $row) {
                         if ($teamInfo = $this->gatherLabelsInfo($infoIndex, $row['team_id'], true, false)) {
-                            $infoIndex[$labelId]['groups'][] = $teamInfo['id'];
+                            $infoIndex[$labelId]['groupsData'][] = $teamInfo['id'];
                         }
                     }
                     $infoIndex[$labelId]['isPerson'] = true;

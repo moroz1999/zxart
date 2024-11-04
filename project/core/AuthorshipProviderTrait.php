@@ -1,15 +1,17 @@
 <?php
 
+use ZxArt\Authors\Repositories\AuthorshipRepository;
+
 trait AuthorshipProviderTrait
 {
     public function getAuthorsInfo($type, $roles = null)
     {
         $result = [];
         /**
-         * @var AuthorsManager $authorsManager
+         * @var AuthorshipRepository $authorshipRepository
          */
-        $authorsManager = $this->getService('AuthorsManager');
-        if ($info = $authorsManager->getAuthorsInfo($this->id, $type)) {
+        $authorshipRepository = $this->getService(AuthorshipRepository::class);
+        if ($info = $authorshipRepository->getAuthorsInfo($this->id, $type)) {
             if (!$roles) {
                 $result = $info;
             } else {
@@ -26,28 +28,25 @@ trait AuthorshipProviderTrait
     public function getAuthorsRecords($type)
     {
         /**
-         * @var AuthorsManager $authorsManager
+         * @var AuthorshipRepository $authorshipRepository
          */
-        $authorsManager = $this->getService('AuthorsManager');
-        return $authorsManager->getElementAuthorsRecords($this->id, $type);
+        $authorshipRepository = $this->getService(AuthorshipRepository::class);
+        return $authorshipRepository->getElementAuthorsRecords($this->id, $type);
     }
 
     public function getAuthorshipInfo($type)
     {
         /**
-         * @var AuthorsManager $authorsManager
+         * @var AuthorshipRepository $authorshipRepository
          */
-        $authorsManager = $this->getService('AuthorsManager');
-        return $authorsManager->getAuthorshipInfo($this->id, $type);
+        $authorshipRepository = $this->getService(AuthorshipRepository::class);
+        return $authorshipRepository->getAuthorshipInfo($this->id, $type);
     }
 
     public function getAuthorshipRecords($type)
     {
-        /**
-         * @var AuthorsManager $authorsManager
-         */
-        $authorsManager = $this->getService('AuthorsManager');
-        return $authorsManager->getAuthorshipRecords($this->id, $type);
+        $authorshipRepository = $this->getService(AuthorshipRepository::class);
+        return $authorshipRepository->getAuthorshipRecords($this->id, $type);
     }
 
     /**
