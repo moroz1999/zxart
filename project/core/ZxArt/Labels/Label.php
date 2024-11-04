@@ -31,8 +31,9 @@ final class Label
             'cityName' => $this->city,
             'countryName' => $this->country,
             'groups' => array_map(static fn($group) => $group->toArray(), $this->groups ?? []),
-            'type' => $this->type,
             'isAlias' => $this->isAlias,
+            'isGroup' => $this->type === LabelType::group,
+            'isPerson' => $this->type === LabelType::person,
         ];
     }
 }

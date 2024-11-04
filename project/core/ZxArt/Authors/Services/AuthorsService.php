@@ -17,6 +17,7 @@ use letterElement;
 use LettersElementsListProviderTrait;
 use linksManager;
 use privilegesManager;
+use TranslitHelper;
 use structureElement;
 use structureManager;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
@@ -227,14 +228,14 @@ class AuthorsService extends ElementsManager
         if ($this->forceUpdateGroups && isset($authorInfo['groupsIds'])) {
             foreach ($authorInfo['groupsIds'] as $groupId) {
                 if ($groupElement = $this->getElementByImportId($groupId, $origin, 'group')) {
-                    $this->authorshipRepository->checkAuthorship($groupElement->id, $element->getId(), 'group', []);
+                    $this->authorshipRepository->checkAuthorship($groupElement->id, $element->getId(), 'group');
                 }
             }
         }
         if (isset($authorInfo['groups'])) {
             foreach ($authorInfo['groups'] as $groupData) {
-                if ($groupElement = $this->authorshipRepository->importGroup($groupData, $origin)) {
-                    $this->authorshipRepository->checkAuthorship($groupElement->id, $element->getId(), 'group', []);
+                if ($groupElement = $this->groupsManager->importGroup($groupData, $origin)) {
+                    $this->authorshipRepository->checkAuthorship($groupElement->id, $element->getId(), 'group');
                 }
             }
         }

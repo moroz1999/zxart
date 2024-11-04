@@ -36,7 +36,6 @@ final class DataUpdater
             throw new PressUpdateException("Prod could not be found for {$pressArticleElement->id} {$pressArticleElement->getTitle()}");
         }
 
-        $pressGroups = $mergedContent['pressGroups'] ?? null;
         $people = $mergedContent['people'] ?? null;
         $groups = $mergedContent['groups'] ?? null;
         $parties = $mergedContent['parties'] ?? null;
@@ -51,8 +50,14 @@ final class DataUpdater
             $this->updatePressAuthors($pressAuthors, $pressElement);
         }
 
+        $pressGroups = $mergedContent['pressGroups'] ?? null;
+        if ($pressGroups !== null) {
+            $this->updatePressGroups($pressGroups, $pressElement);
+        }
+
         $articleAuthors = $mergedContent['articleAuthors'] ?? null;
         if ($articleAuthors !== null) {
+            // article authors should also be added to press entity
             $this->updatePressAuthors($articleAuthors, $pressElement);
             $this->updatePressArticleAuthors($articleAuthors, $pressArticleElement);
         }
@@ -98,20 +103,26 @@ final class DataUpdater
 
     private function updatePressAuthors(array $pressAuthors, zxProdElement $pressElement): void
     {
-        $pressAuthors = [[
-            'nickName' => 'Some random guy',
-            'groups' => [['name' => 'XL-Design Inc']],
-        ]];
-        $resolvedAuthorship = $this->prepareAuthorElements($pressAuthors);
+        $resolvedAuthorship = $this->prepareAuthorship($pressAuthors);
 
         foreach ($resolvedAuthorship as $item) {
             $this->authorshipRepository->checkAuthorship($pressElement->id, $item->author->id, 'prod', $item->roles);
         }
     }
 
+    private function updatePressGroups(array $pressGroups, zxProdElement $pressElement): void
+    {
+        $resolvedGroups = $this->prepareGroups($pressGroups);
+        $groups = $pressElement->groups;
+        foreach ($resolvedGroups as $resolvedGroup) {
+            $groups[] = $resolvedGroup->group;
+        }
+        $pressElement->groups = $groups;
+    }
+
     private function updatePressArticleAuthors(array $pressAuthors, pressArticleElement $pressArticleElement): void
     {
-        $resolvedAuthorship = $this->prepareAuthorElements($pressAuthors);
+        $resolvedAuthorship = $this->prepareAuthorship($pressAuthors);
         $authors = $pressArticleElement->authors;
         foreach ($resolvedAuthorship as $item) {
             $authors[] = $item->author;
@@ -122,7 +133,7 @@ final class DataUpdater
     /**
      * @return ResolvedAuthorship[]
      */
-    private function prepareAuthorElements(array $parsedAuthors): array
+    private function prepareAuthorship(array $parsedAuthors): array
     {
         $elements = [];
         foreach ($parsedAuthors as $parsedAuthor) {
@@ -137,6 +148,29 @@ final class DataUpdater
                     label: $label,
                     author: $element,
                     roles: $parsedAuthor['roles'] ?? [],
+                );
+            }
+        }
+        return $elements;
+    }
+
+    /**
+     * @return ResolvedGroup[]
+     */
+    private function prepareGroups(array $parsedGroups): array
+    {
+        $elements = [];
+        foreach ($parsedGroups as $parsedGroup) {
+            $label = $this->transformGroupToLabel($parsedGroup);
+            $element = $this->labelResolver->resolve($label);
+            if ($element === null) {
+                $groupInfo = $label->toArray();
+                $element = $this->authorsManager->importAuthor($groupInfo, self::ORIGIN);
+            }
+            if ($element !== null) {
+                $elements[] = new ResolvedGroup(
+                    label: $label,
+                    group: $element,
                 );
             }
         }

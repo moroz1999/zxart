@@ -26,13 +26,14 @@ readonly class PressParser
 Если реальное имя указано как часть псевдонима, то используй это имя в поле realName, а псевдоним укажи отдельно в поле nickName.
 Если про человека известно только имя собственное, без фамили ИЛИ без группы, не указывай его.
 * Если в статье указаны авторы всего ЖУРНАЛА или ГАЗЕТЫ, то собери их в pressArticles.
-* Если в статье указаны группы,фирмы выпустившее САМ ЖУРНАЛ или ГАЗЕТу, то собери их в pressGroups.
+* Если в статье указаны группы, фирмы выпустившее САМ ЖУРНАЛ или ГАЗЕТУ, то собери их в pressGroups.
 * Собери упомянутые демопати (поле parties). Укажи год, город, страну, если это ЯВНО указано в статье. Формат PartyObj: {name: '', city?: '', country?: '', year: ''}
 * Собери ВСЕ упомянутые программы, игры и демо. Формат SoftwareObj: {name: '', authors?: [AuthorObj], groups?: [GroupObj], publishers?: [GroupObj], year?: 2002}
 * В названии программ НЕ ИСПОЛЬЗУЙ версии. 'Program v1.1' - это ПЛОХО. 'Program' - это ПРАВИЛЬНО.
 * Не переделывай названия в латиницу.   
 * Собери ВСЕ упомянутые аппаратные расширения ZX-Spectrum - модемы, звуковые карты, расширения графики итд. Формат HardwareObj: {name: '', authors?: [AuthorObj], groups?: [GroupObj], year?: 2002}
-* Собери ВСЕХ упомянутых в статье группы/фирмы ZX-Spectrum в формате GroupObj в поле groups. Формат GroupObj: {name: '', city?: '', country?: ''}
+* Собери ВСЕХ упомянутых в статье группы/фирмы ZX-Spectrum в формате GroupObj в поле groups. Формат GroupObj: {name: '', city?: '', country?: '', type?: GroupType}
+* Допустимые типы групп: GroupType:'unknown'|'company'|'crack'|'studio'|'scene'|'education'|'store'|'science' 
 * Собери ВСЕХ упомянутых отдельных людей в формате AuthorObj в поле people. Не пиши селебрити типа Билла Гейтса. Если человек связан с группой или фирмой по контексту, то укажи группу в его данных. 
 * Собери упомянутые мелодии ZX-Spectrum в формате TuneObj в поле tunes. Формат TuneObj: {name: '', authors?: [AuthorObj], year?: 2002}
 * Собери упомянутые картинки ZX-Spectrum в формате PictureObj в поле pictures. Формат PictureObj: {name: '', authors?: [AuthorObj], year?: 2002}

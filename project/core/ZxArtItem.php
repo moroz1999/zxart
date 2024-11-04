@@ -673,7 +673,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
         $finalList = [];
         foreach ($this->$property as $element) {
             if (!in_array($element->id, $foundParents)) {
-                $finalList[] = $element->id;
+                $finalList[] = $element;
             }
         }
         $this->$property = $finalList;

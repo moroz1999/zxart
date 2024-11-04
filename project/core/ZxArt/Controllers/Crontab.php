@@ -145,7 +145,6 @@ class Crontab extends controllerApplication
             $counter++;
 
             $elementId = $this->queueService->getNextElementId($queueType);
-//            $elementId = 490629;
             $elementId = 494533;
             if ($elementId === null) {
                 break;
@@ -209,6 +208,11 @@ class Crontab extends controllerApplication
                                 ],
                         ],
                 ],
+            'pressGroups' => [
+                [
+                    'name' => 'Zx-Masters',
+                ],
+            ],
             'groups' =>
                 [
                     0 =>

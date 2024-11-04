@@ -145,9 +145,11 @@ final readonly class LabelResolver
 
         foreach ($aliases as $alias) {
             $entity = $getElementFromAlias($alias);
+            // score must be calculated from main entity, which has all groups, locations and so on
+            // but alias title is for comparison
             $score = $calculateScoreForElement($entity, $alias->getTitle(), $label);
             $candidates[] = [
-                'element' => $entity,
+                'element' => $alias,
                 'score' => $score,
             ];
         }

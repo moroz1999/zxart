@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 class VoteAnalyzer
 {
@@ -11,7 +12,7 @@ class VoteAnalyzer
         $mean = $this->calculateMean($votes);
         $stdDev = $this->calculateStandardDeviation($votes, $mean);
 
-        if ($stdDev == 0) {
+        if ($stdDev === 0.0) {
             return $votes;
         }
 
@@ -31,13 +32,10 @@ class VoteAnalyzer
         return array_sum($values) / count($values);
     }
 
-    /**
-     * @param float|int $mean
-     */
     protected function calculateStandardDeviation(array $values, int|float $mean): float
     {
         $squares = array_map(function ($value) use ($mean) {
-            return pow($value - $mean, 2);
+            return ($value - $mean) ** 2;
         }, $values);
 
         return sqrt(array_sum($squares) / (count($values) - 1));

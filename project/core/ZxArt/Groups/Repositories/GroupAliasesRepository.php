@@ -8,7 +8,7 @@ use Illuminate\Database\Connection;
 
 final class GroupAliasesRepository
 {
-    private const TABLE = 'module_group';
+    private const TABLE = 'module_groupalias';
 
     public function __construct(
         private readonly Connection $db,
