@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\MySqlConnection;
+use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Groups\Services\GroupsService;
 
 class WosManager extends errorLogger
 {
@@ -15,11 +17,11 @@ class WosManager extends errorLogger
      */
     protected $prodsManager;
     /**
-     * @var AuthorsManager
+     * @var AuthorsService
      */
     protected $authorsManager;
     /**
-     * @var GroupsManager
+     * @var GroupsService
      */
     protected $groupsManager;
     /**
@@ -345,7 +347,7 @@ class WosManager extends errorLogger
     }
 
     /**
-     * @param AuthorsManager $authorsManager
+     * @param AuthorsService $authorsManager
      */
     public function setAuthorsManager($authorsManager): void
     {
@@ -356,7 +358,7 @@ class WosManager extends errorLogger
     }
 
     /**
-     * @param GroupsManager $groupsManager
+     * @param GroupsService $groupsManager
      */
     public function setGroupsManager($groupsManager): void
     {

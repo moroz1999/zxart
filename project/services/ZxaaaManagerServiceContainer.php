@@ -1,5 +1,8 @@
 <?php
 
+use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Groups\Services\GroupsService;
+
 class ZxaaaManagerServiceContainer extends DependencyInjectionServiceContainer
 {
     /**
@@ -26,15 +29,15 @@ class ZxaaaManagerServiceContainer extends DependencyInjectionServiceContainer
             $zxaaaManager->setProdsManager($this->registry->getService('ProdsManager'));
         }
         /**
-         * @var AuthorsManager $authorsManager
+         * @var AuthorsService $authorsManager
          */
         if ($authorsManager = $this->getOption('AuthorsManager')) {
             $zxaaaManager->setAuthorsManager($authorsManager);
         } else {
-            $zxaaaManager->setAuthorsManager($this->registry->getService('AuthorsManager'));
+            $zxaaaManager->setAuthorsManager($this->registry->getService(AuthorsService::class));
         }
         /**
-         * @var GroupsManager $groupsManager
+         * @var GroupsService $groupsManager
          */
         if ($groupsManager = $this->getOption('GroupsManager')) {
             $zxaaaManager->setGroupsManager($groupsManager);

@@ -1,12 +1,15 @@
 <?php
 
+use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Groups\Services\GroupsService;
+
 class S4eManager extends errorLogger
 {
     protected int $counter = 0;
     protected int $maxCounter = 4000;
     protected ProdsManager $prodsManager;
-    protected AuthorsManager $authorsManager;
-    protected GroupsManager $groupsManager;
+    protected AuthorsService $authorsManager;
+    protected GroupsService $groupsManager;
     protected CountriesManager $countriesManager;
     protected string $origin = 's4e';
     protected string $rootUrl = 'https://spectrum4ever.org/';
@@ -30,12 +33,12 @@ class S4eManager extends errorLogger
     {
     }
 
-    public function setAuthorsManager(AuthorsManager $authorsManager): void
+    public function setAuthorsManager(AuthorsService $authorsManager): void
     {
         $this->authorsManager = $authorsManager;
     }
 
-    public function setGroupsManager(GroupsManager $groupsManager): void
+    public function setGroupsManager(GroupsService $groupsManager): void
     {
         $this->groupsManager = $groupsManager;
     }

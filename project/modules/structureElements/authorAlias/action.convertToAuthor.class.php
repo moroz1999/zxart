@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Authors\Services\AuthorsService;
+
 class convertToAuthorAuthorAlias extends structureElementAction
 {
     protected $loggable = true;
@@ -11,9 +13,9 @@ class convertToAuthorAuthorAlias extends structureElementAction
     {
         if ($structureElement->final) {
             /**
-             * @var AuthorsManager $authorsManager
+             * @var AuthorsService $authorsManager
              */
-            $authorsManager = $this->getService('AuthorsManager');
+            $authorsManager = $this->getService(AuthorsService::class);
             if ($author = $authorsManager->convertAliasToAuthor($structureElement->id)) {
                 $controller->redirect($author->getUrl());
             }

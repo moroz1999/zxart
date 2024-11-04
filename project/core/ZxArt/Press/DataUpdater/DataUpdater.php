@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Press\DataUpdater;
 
-use AuthorsManager;
+use ZxArt\Authors\Services\AuthorsService;
 use LanguagesManager;
 use pressArticleElement;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
@@ -20,7 +20,7 @@ final class DataUpdater
     private const ORIGIN = 'zxp';
 
     public function __construct(
-        private readonly AuthorsManager       $authorsManager,
+        private readonly AuthorsService       $authorsManager,
         private readonly AuthorshipRepository $authorshipRepository,
         private readonly LanguagesManager     $languagesManager,
         private readonly LabelResolver        $labelResolver,

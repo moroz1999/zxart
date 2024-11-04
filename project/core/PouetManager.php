@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueType;
 use ZxArt\Queue\QueueStatus;
@@ -267,11 +269,11 @@ class PouetManager extends errorLogger
      */
     protected $prodsManager;
     /**
-     * @var AuthorsManager
+     * @var AuthorsService
      */
     protected $authorsManager;
     /**
-     * @var GroupsManager
+     * @var GroupsService
      */
     protected $groupsManager;
     /**
@@ -333,7 +335,7 @@ class PouetManager extends errorLogger
     }
 
     /**
-     * @param AuthorsManager $authorsManager
+     * @param AuthorsService $authorsManager
      */
     public function setAuthorsManager($authorsManager): void
     {
@@ -343,7 +345,7 @@ class PouetManager extends errorLogger
     }
 
     /**
-     * @param GroupsManager $groupsManager
+     * @param GroupsService $groupsManager
      */
     public function setGroupsManager($groupsManager): void
     {

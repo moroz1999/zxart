@@ -1,5 +1,8 @@
 <?php
 
+use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Groups\Services\GroupsService;
+
 class WosManagerServiceContainer extends DependencyInjectionServiceContainer
 {
     /**
@@ -22,15 +25,15 @@ class WosManagerServiceContainer extends DependencyInjectionServiceContainer
             $wosManager->setProdsManager($this->registry->getService('ProdsManager'));
         }
         /**
-         * @var AuthorsManager $authorsManager
+         * @var AuthorsService $authorsManager
          */
         if ($authorsManager = $this->getOption('AuthorsManager')) {
             $wosManager->setAuthorsManager($authorsManager);
         } else {
-            $wosManager->setAuthorsManager($this->registry->getService('AuthorsManager'));
+            $wosManager->setAuthorsManager($this->registry->getService(AuthorsService::class));
         }
         /**
-         * @var GroupsManager $groupsManager
+         * @var GroupsService $groupsManager
          */
         if ($groupsManager = $this->getOption('GroupsManager')) {
             $wosManager->setGroupsManager($groupsManager);

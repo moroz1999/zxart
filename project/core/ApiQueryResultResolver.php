@@ -1,6 +1,9 @@
 <?php
 
 
+use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Groups\Services\GroupsService;
+
 class ApiQueryResultResolver implements DependencyInjectionContextInterface
 {
     use DependencyInjectionContextTrait;
@@ -26,8 +29,8 @@ class ApiQueryResultResolver implements DependencyInjectionContextInterface
             'zxProd' => ProdsManager::class,
             'zxRelease' => ReleasesResolver::class,
             'zxMusic' => MusicManager::class,
-            'author' => AuthorsManager::class,
-            'group' => GroupsManager::class,
+            'author' => AuthorsService::class,
+            'group' => GroupsService::class,
             'party' => PartiesManager::class,
         ];
         if (isset($resolvers[$exportType])) {
@@ -77,7 +80,7 @@ class ApiQueryResultResolver implements DependencyInjectionContextInterface
                     $exportType,
                     $filterQueries
                 );
-                $authorsManager = $this->getService('AuthorsManager');
+                $authorsManager = $this->getService(AuthorsService::class);
                 $queryResult[$typeName] = $authorsManager->getElementsByQuery($query);
             } elseif (($typeName === 'authorAlias' || $typeName === 'groupAlias') && $typeName != $exportType) {
                 $query = $queryFiltersManager->convertTypeData(

@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Authors\Services\AuthorsService;
+
 class convertToAuthorGroup extends structureElementAction
 {
     protected $loggable = true;
@@ -15,9 +17,9 @@ class convertToAuthorGroup extends structureElementAction
     {
         if ($this->validated) {
             /**
-             * @var AuthorsManager $authorsManager
+             * @var AuthorsService $authorsManager
              */
-            $authorsManager = $this->getService('AuthorsManager');
+            $authorsManager = $this->getService(AuthorsService::class);
 
             if ($newElement = $authorsManager->convertGroupToAuthor($structureElement)) {
                 $controller->redirect($newElement->getUrl());

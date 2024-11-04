@@ -1,12 +1,30 @@
 <?php
 
+namespace ZxArt\Authors\Services;
+
+use authorAliasElement;
+use authorElement;
+use authorsElement;
+use ConfigManager;
+use CountriesManager;
+use ElementsManager;
+use groupElement;
+use ZxArt\Groups\Services\GroupsService;
 use Illuminate\Database\Connection;
+use ImportIdOperatorTrait;
+use LanguagesManager;
+use letterElement;
+use LettersElementsListProviderTrait;
+use linksManager;
+use privilegesManager;
+use structureElement;
+use structureManager;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Labels\Label;
 use ZxArt\Labels\LabelResolver;
 use ZxArt\Labels\LabelType;
 
-class AuthorsManager extends ElementsManager
+class AuthorsService extends ElementsManager
 {
     use ImportIdOperatorTrait;
     use LettersElementsListProviderTrait;
@@ -28,7 +46,7 @@ class AuthorsManager extends ElementsManager
         protected privilegesManager    $privilegesManager,
         protected Connection           $db,
         protected structureManager     $structureManager,
-        protected GroupsManager        $groupsManager,
+        protected GroupsService        $groupsManager,
         protected AuthorshipRepository $authorshipRepository,
         private readonly LabelResolver $labelResolver,
     )
@@ -252,9 +270,8 @@ class AuthorsManager extends ElementsManager
 
     /**
      * @param array $authorAliasInfo
-     * @return ?authorAliasElement
      */
-    protected function createAuthorAlias($authorAliasInfo, $origin)
+    protected function createAuthorAlias($authorAliasInfo, $origin): ?authorAliasElement
     {
         if ($element = $this->manufactureAliasElement($authorAliasInfo['title'])) {
             $this->updateAuthorAlias($element, $authorAliasInfo, $origin);
@@ -265,9 +282,8 @@ class AuthorsManager extends ElementsManager
 
     /**
      * @param string $title
-     * @return ?authorAliasElement
      */
-    protected function manufactureAliasElement($title = '')
+    protected function manufactureAliasElement($title = ''): ?authorAliasElement
     {
         if ($letterId = $this->getLetterId($title)) {
             if ($letterElement = $this->structureManager->getElementById($letterId)) {
@@ -452,7 +468,7 @@ class AuthorsManager extends ElementsManager
         return true;
     }
 
-    public function convertAliasToAuthor(int $aliasId)
+    public function convertAliasToAuthor(int $aliasId): authorElement|false
     {
         $newAuthorElement = false;
         /**
@@ -498,13 +514,11 @@ class AuthorsManager extends ElementsManager
     /**
      * @psalm-param 'admin'|'public' $type
      *
-     * @return string
      *
-     * @psalm-return 'authors'|'authorsmenu'
      */
-    protected function getLettersListMarker(string $type)
+    protected function getLettersListMarker(string $type): string
     {
-        if ($type == 'admin') {
+        if ($type === 'admin') {
             return 'authors';
         } else {
             return 'authorsmenu';
@@ -512,14 +526,10 @@ class AuthorsManager extends ElementsManager
     }
 
 
-    /**
-     * @param groupElement $groupElement
-     * @return bool|authorElement
-     */
-    public function convertGroupToAuthor($groupElement)
+    public function convertGroupToAuthor(groupElement $groupElement): authorElement|structureElement|bool|null
     {
         $authorElement = false;
-        if ($groupElement->structureType == 'group') {
+        if ($groupElement->structureType === 'group') {
             if ($authorElement = $this->manufactureAuthorElement($groupElement->title)) {
                 $authorElement->title = $groupElement->title;
                 $authorElement->structureName = $groupElement->title;

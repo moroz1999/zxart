@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Authors\Services\AuthorsService;
+
 class joinAuthorAlias extends structureElementAction
 {
     protected $loggable = true;
@@ -15,9 +17,9 @@ class joinAuthorAlias extends structureElementAction
     {
         if ($this->validated) {
             /**
-             * @var AuthorsManager $authorsManager
+             * @var AuthorsService $authorsManager
              */
-            $authorsManager = $this->getService('AuthorsManager');
+            $authorsManager = $this->getService(AuthorsService::class);
 
             if ($structureElement->joinAndDelete) {
                 $authorsManager->joinDeleteAuthor($structureElement->id, $structureElement->joinAndDelete);

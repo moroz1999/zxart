@@ -1,11 +1,25 @@
 <?php
 
+namespace ZxArt\Groups\Services;
+
+use authorElement;
+use configManager;
+use CountriesManager;
+use ElementsManager;
+use groupAliasElement;
+use groupElement;
 use Illuminate\Database\Connection;
+use ImportIdOperatorTrait;
+use languagesManager;
+use LettersElementsListProviderTrait;
+use linksManager;
+use privilegesManager;
+use structureManager;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 
-class GroupsManager extends ElementsManager
+class GroupsService extends ElementsManager
 {
-    const TABLE = 'module_group';
+    protected const TABLE = 'module_group';
 
     use LettersElementsListProviderTrait;
     use ImportIdOperatorTrait;
@@ -31,9 +45,9 @@ class GroupsManager extends ElementsManager
         ];
     }
 
-    public function getGroupByName($groupName): bool|structureElement
+    public function getGroupByName($groupName): ?groupElement
     {
-        $groupElement = false;
+        $groupElement = null;
         $structureManager = $this->structureManager;
 
         if ($record = $this->db->table('module_group')
@@ -53,9 +67,9 @@ class GroupsManager extends ElementsManager
         return $groupElement;
     }
 
-    public function getGroupAliasByName($groupAliasName): bool|structureElement
+    public function getGroupAliasByName($groupAliasName): ?groupAliasElement
     {
-        $groupAliasElement = false;
+        $groupAliasElement = null;
         $structureManager = $this->structureManager;
 
         if ($record = $this->db->table('module_groupalias')
@@ -69,7 +83,7 @@ class GroupsManager extends ElementsManager
              */
             if ($groupAliasElement = $structureManager->getElementById($record['id'])) {
                 return $groupAliasElement;
-            };
+            }
         }
 
         return $groupAliasElement;
@@ -96,12 +110,7 @@ class GroupsManager extends ElementsManager
         return $this->importedGroups[$origin][$groupInfo['id']];
     }
 
-    /**
-     * @param array $groupInfo
-     * @param $origin
-     * @return bool|groupElement
-     */
-    protected function createGroup($groupInfo, $origin)
+    protected function createGroup(array $groupInfo, $origin): ?groupElement
     {
         if ($element = $this->manufactureGroupElement($groupInfo['title'])) {
             $this->updateGroup($element, $groupInfo, $origin);
@@ -110,11 +119,7 @@ class GroupsManager extends ElementsManager
         return $element;
     }
 
-    /**
-     * @param $title
-     * @return bool|groupElement
-     */
-    public function manufactureGroupElement(string $title)
+    public function manufactureGroupElement(string $title): ?groupElement
     {
         if ($letterId = $this->getLetterId($title)) {
             if ($letterElement = $this->structureManager->getElementById($letterId)) {
@@ -123,15 +128,10 @@ class GroupsManager extends ElementsManager
                 }
             }
         }
-        return false;
+        return null;
     }
 
-    /**
-     * @param groupElement $element
-     * @param $groupInfo
-     * @param $origin
-     */
-    protected function updateGroup($element, array $groupInfo, $origin): void
+    protected function updateGroup(groupElement $element, array $groupInfo, $origin): void
     {
         $changed = false;
         if (!empty($groupInfo['title']) && $element->title != $groupInfo['title']) {
@@ -161,12 +161,12 @@ class GroupsManager extends ElementsManager
         }
         if (!empty($groupInfo['locationName'])) {
             if ($locationElement = $this->countriesManager->getLocationByName($groupInfo['locationName'])) {
-                if ($locationElement->structureType == 'country') {
+                if ($locationElement->structureType === 'country') {
                     if ($element->country != $locationElement->id) {
                         $changed = true;
                         $element->country = $locationElement->id;
                     }
-                } elseif ($locationElement->structureType == 'city') {
+                } elseif ($locationElement->structureType === 'city') {
                     if ($element->city != $locationElement->id) {
                         $changed = true;
                         $element->city = $locationElement->id;
@@ -231,12 +231,7 @@ class GroupsManager extends ElementsManager
         return $this->importedGroupAliases[$origin][$groupAliasInfo['id']];
     }
 
-    /**
-     * @param array $groupAliasInfo
-     * @param $origin
-     * @return bool|groupAliasElement
-     */
-    protected function createGroupAlias($groupAliasInfo, $origin)
+    protected function createGroupAlias(array $groupAliasInfo, $origin): ?groupAliasElement
     {
         if ($element = $this->manufactureAliasElement($groupAliasInfo['title'])) {
             $this->updateGroupAlias($element, $groupAliasInfo, $origin);
@@ -248,7 +243,7 @@ class GroupsManager extends ElementsManager
 
     protected function manufactureAliasElement(string $title = ''): ?groupAliasElement
     {
-        if ($this->getLetterId($title) &&
+        if (($letterId = $this->getLetterId($title)) &&
             ($letterElement = $this->structureManager->getElementById($letterId)) &&
             ($element = $this->structureManager->createElement('groupAlias', 'show', $letterElement->id))
         ) {
@@ -257,12 +252,7 @@ class GroupsManager extends ElementsManager
         return null;
     }
 
-    /**
-     * @param groupAliasElement $element
-     * @param $groupAliasInfo
-     * @param $origin
-     */
-    protected function updateGroupAlias($element, array $groupAliasInfo, $origin): void
+    protected function updateGroupAlias(groupAliasElement $element, array $groupAliasInfo, $origin): void
     {
         $changed = false;
         if (!empty($groupAliasInfo['title']) && $element->title != $groupAliasInfo['title']) {
@@ -283,14 +273,10 @@ class GroupsManager extends ElementsManager
         }
     }
 
-    /**
-     * @param authorElement $authorElement
-     * @return bool|groupElement
-     */
-    public function convertAuthorToGroup($authorElement)
+    public function convertAuthorToGroup(authorElement $authorElement): ?groupElement
     {
-        $groupElement = false;
-        if ($authorElement->structureType == 'author') {
+        $groupElement = null;
+        if ($authorElement->structureType === 'author') {
             if ($groupElement = $this->manufactureGroupElement($authorElement->title)) {
                 $groupElement->title = $authorElement->title;
                 $groupElement->structureName = $authorElement->title;
@@ -351,7 +337,7 @@ class GroupsManager extends ElementsManager
     public function convertGroupAliasToGroup($groupAliasElement)
     {
         $groupElement = false;
-        if ($groupAliasElement->structureType == 'groupAlias') {
+        if ($groupAliasElement->structureType === 'groupAlias') {
             if ($groupElement = $this->manufactureGroupElement($groupAliasElement->title)) {
                 $groupElement->title = $groupAliasElement->title;
                 $groupElement->structureName = $groupAliasElement->title;
@@ -385,20 +371,13 @@ class GroupsManager extends ElementsManager
         return $groupElement;
     }
 
-    /**
-     * @psalm-param 'admin'|'public' $type
-     *
-     * @return string
-     *
-     * @psalm-return 'groups'|'groupsmenu'
-     */
-    protected function getLettersListMarker(string $type)
+    protected function getLettersListMarker(string $type): string
     {
-        if ($type == 'admin') {
+        if ($type === 'admin') {
             return 'groups';
-        } else {
-            return 'groupsmenu';
         }
+
+        return 'groupsmenu';
     }
 
     public function joinDeleteGroup(int $mainGroupId, int $joinedGroupId): void
@@ -428,9 +407,9 @@ class GroupsManager extends ElementsManager
              * @var groupAliasElement|groupElement $targetElement
              */
             if ($targetElement = $this->structureManager->getElementById($targetId)) {
-                if ($targetElement->structureType == 'groupAlias') {
+                if ($targetElement->structureType === 'groupAlias') {
                     $targetGroupElement = $targetElement->getGroupElement();
-                } elseif ($targetElement->structureType == 'group') {
+                } elseif ($targetElement->structureType === 'group') {
                     $targetGroupElement = $targetElement;
                 }
                 if ($makeAlias) {
@@ -441,7 +420,7 @@ class GroupsManager extends ElementsManager
                 }
             }
             if ($targetElement && $targetGroupElement) {
-                if ($joinedElement->structureType == 'group') {
+                if ($joinedElement->structureType === 'group') {
                     if (!$targetGroupElement->country) {
                         $targetGroupElement->country = $joinedElement->country;
                     }

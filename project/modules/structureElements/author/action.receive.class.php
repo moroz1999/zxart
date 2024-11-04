@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Authors\Services\AuthorsService;
+
 class receiveAuthor extends structureElementAction
 {
     protected $loggable = true;
@@ -27,9 +29,9 @@ class receiveAuthor extends structureElementAction
             }
             if ($structureElement->joinAsAlias) {
                 /**
-                 * @var AuthorsManager $authorsManager
+                 * @var AuthorsService $authorsManager
                  */
-                $authorsManager = $this->getService('AuthorsManager');
+                $authorsManager = $this->getService(AuthorsService::class);
                 $authorsManager->joinAuthorAsAlias($structureElement->id, $structureElement->joinAsAlias);
             }
 

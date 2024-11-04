@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Authors\Services\AuthorsService;
+
 class DmdManager
 {
     /**
@@ -11,7 +13,7 @@ class DmdManager
      */
     private $structureManager;
     /**
-     * @var AuthorsManager
+     * @var AuthorsService
      */
     private $authorsManager;
     /**
@@ -31,9 +33,9 @@ class DmdManager
     }
 
     /**
-     * @param AuthorsManager $authorsManager
+     * @param AuthorsService $authorsManager
      */
-    public function setAuthorsManager(authorsManager $authorsManager): void
+    public function setAuthorsManager(AuthorsService $authorsManager): void
     {
         $this->authorsManager = $authorsManager;
     }

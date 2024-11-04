@@ -1,5 +1,8 @@
 <?php
 
+use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Groups\Services\GroupsService;
+
 class TslabsManagerServiceContainer extends DependencyInjectionServiceContainer
 {
     /**
@@ -26,15 +29,15 @@ class TslabsManagerServiceContainer extends DependencyInjectionServiceContainer
             $tslabsManager->setProdsManager($this->registry->getService('ProdsManager'));
         }
         /**
-         * @var AuthorsManager $authorsManager
+         * @var AuthorsService $authorsManager
          */
         if ($authorsManager = $this->getOption('AuthorsManager')) {
             $tslabsManager->setAuthorsManager($authorsManager);
         } else {
-            $tslabsManager->setAuthorsManager($this->registry->getService('AuthorsManager'));
+            $tslabsManager->setAuthorsManager($this->registry->getService(AuthorsService::class));
         }
         /**
-         * @var GroupsManager $groupsManager
+         * @var GroupsService $groupsManager
          */
         if ($groupsManager = $this->getOption('GroupsManager')) {
             $tslabsManager->setGroupsManager($groupsManager);

@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Groups\Services\GroupsService;
+
 class joinGroupAlias extends structureElementAction
 {
     protected $loggable = true;
@@ -15,7 +17,7 @@ class joinGroupAlias extends structureElementAction
     {
         if ($this->validated) {
             /**
-             * @var GroupsManager $groupsManager
+             * @var GroupsService $groupsManager
              */
             $groupsManager = $this->getService('GroupsManager');
 

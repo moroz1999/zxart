@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Connection;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Groups\Services\GroupsService;
 
 class ProdsManager extends ElementsManager
 {
@@ -76,9 +78,9 @@ class ProdsManager extends ElementsManager
     public function __construct(
         protected structureManager     $structureManager,
         protected PartiesManager       $partiesManager,
-        protected GroupsManager        $groupsManager,
+        protected GroupsService        $groupsManager,
         protected ZxParsingManager     $zxParsingManager,
-        protected AuthorsManager       $authorsManager,
+        protected AuthorsService       $authorsManager,
         protected linksManager         $linksManager,
         protected ProdsDownloader      $prodsDownloader,
         protected privilegesManager    $privilegesManager,
@@ -147,22 +149,6 @@ class ProdsManager extends ElementsManager
     }
 
     /**
-     * @param privilegesManager $privilegesManager
-     */
-    public function setPrivilegesManager($privilegesManager): void
-    {
-        $this->privilegesManager = $privilegesManager;
-    }
-
-    /**
-     * @param PartiesManager $partiesManager
-     */
-    public function setPartiesManager($partiesManager): void
-    {
-        $this->partiesManager = $partiesManager;
-    }
-
-    /**
      * @param bool $forceUpdateAuthors
      */
     public function setForceUpdateAuthors($forceUpdateAuthors): void
@@ -197,46 +183,6 @@ class ProdsManager extends ElementsManager
     public function setForceUpdateTitles($forceUpdateTitles): void
     {
         $this->forceUpdateTitles = $forceUpdateTitles;
-    }
-
-    /**
-     * @param ZxParsingManager $zxParsingManager
-     */
-    public function setZxParsingManager($zxParsingManager): void
-    {
-        $this->zxParsingManager = $zxParsingManager;
-    }
-
-    /**
-     * @param ProdsDownloader $prodsDownloader
-     */
-    public function setProdsDownloader($prodsDownloader): void
-    {
-        $this->prodsDownloader = $prodsDownloader;
-    }
-
-    /**
-     * @param GroupsManager $groupsManager
-     */
-    public function setGroupsManager($groupsManager): void
-    {
-        $this->groupsManager = $groupsManager;
-    }
-
-    /**
-     * @param AuthorsManager $authorsManager
-     */
-    public function setAuthorsManager($authorsManager): void
-    {
-        $this->authorsManager = $authorsManager;
-    }
-
-    /**
-     * @param linksManager $linksManager
-     */
-    public function setLinksManager($linksManager): void
-    {
-        $this->linksManager = $linksManager;
     }
 
     public function importProd(array $prodInfo, string $origin): ?zxProdElement

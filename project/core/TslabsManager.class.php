@@ -1,5 +1,8 @@
 <?php
 
+use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Groups\Services\GroupsService;
+
 class TslabsManager extends errorLogger
 {
     protected $typeCategories = [
@@ -30,11 +33,11 @@ class TslabsManager extends errorLogger
      */
     protected $prodsManager;
     /**
-     * @var AuthorsManager
+     * @var AuthorsService
      */
     protected $authorsManager;
     /**
-     * @var GroupsManager
+     * @var GroupsService
      */
     protected $groupsManager;
     /**
@@ -45,7 +48,7 @@ class TslabsManager extends errorLogger
     protected $rootUrl = 'http://prods.tslabs.info/';
 
     /**
-     * @param AuthorsManager $authorsManager
+     * @param AuthorsService $authorsManager
      */
     public function setAuthorsManager($authorsManager): void
     {
@@ -55,7 +58,7 @@ class TslabsManager extends errorLogger
     }
 
     /**
-     * @param GroupsManager $groupsManager
+     * @param GroupsService $groupsManager
      */
     public function setGroupsManager($groupsManager): void
     {
