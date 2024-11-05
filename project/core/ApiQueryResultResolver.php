@@ -3,6 +3,8 @@
 
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Parties\Services\PartiesService;
+use ZxArt\Prods\Services\ProdsService;
 
 class ApiQueryResultResolver implements DependencyInjectionContextInterface
 {
@@ -26,12 +28,12 @@ class ApiQueryResultResolver implements DependencyInjectionContextInterface
         $resolverClass = null;
         $resolvers = [
             'zxPicture' => PicturesManager::class,
-            'zxProd' => ProdsManager::class,
+            'zxProd' => ProdsService::class,
             'zxRelease' => ReleasesResolver::class,
             'zxMusic' => MusicManager::class,
             'author' => AuthorsService::class,
             'group' => GroupsService::class,
-            'party' => PartiesManager::class,
+            'party' => PartiesService::class,
         ];
         if (isset($resolvers[$exportType])) {
             $resolverClass = $resolvers[$exportType];
@@ -105,7 +107,7 @@ class ApiQueryResultResolver implements DependencyInjectionContextInterface
                     $exportType,
                     $filterQueries
                 );
-                $prodsManager = $this->getService('ProdsManager');
+                $prodsManager = $this->getService(ProdsService::class);
                 $queryResult[$typeName] = $prodsManager->getReleasesByIdList(
                     $query
                 );
@@ -116,7 +118,7 @@ class ApiQueryResultResolver implements DependencyInjectionContextInterface
                     $exportType,
                     $filterQueries
                 );
-                $prodsManager = $this->getService('ProdsManager');
+                $prodsManager = $this->getService(ProdsService::class);
                 $queryResult[$typeName] = $prodsManager->getElementsByQuery(
                     $query
                 );

@@ -1,6 +1,6 @@
 <?php
 
-namespace ZxArt\Labels;
+namespace ZxArt\Import\Labels;
 
 enum LabelType
 {

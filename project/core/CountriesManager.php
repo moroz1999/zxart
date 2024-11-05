@@ -1,21 +1,15 @@
 <?php
 
+use Illuminate\Database\Connection;
+
 class CountriesManager extends errorLogger
 {
     use ImportIdOperatorTrait;
-
-    /**
-     * @var linksManager
-     */
-    protected $linksManager;
-
-    /**
-     * @param linksManager $linksManager
-     */
-    public function setLinksManager($linksManager): void
-    {
-        $this->linksManager = $linksManager;
-    }
+    public function __construct(
+        protected linksManager $linksManager,
+        protected structureManager $structureManager,
+        protected Connection $db,
+    ){}
 
     /**
      * @psalm-param array{id: mixed, title: mixed} $countryInfo
@@ -38,9 +32,6 @@ class CountriesManager extends errorLogger
         return $element;
     }
 
-    /**
-     * @return cityElement|countryElement|false
-     */
     public function getLocationByName($locationName): countryElement|cityElement|false
     {
         $locationElement = false;
@@ -75,7 +66,6 @@ class CountriesManager extends errorLogger
 
     /**
      * @param array $countryInfo
-     * @param $origin
      * @return bool|countryElement
      */
     protected function createCountry($countryInfo, $origin)
@@ -95,7 +85,6 @@ class CountriesManager extends errorLogger
 
     /**
      * @param countryElement $element
-     * @param $countryInfo
      */
     protected function updateCountry($element, array $countryInfo): void
     {
@@ -108,7 +97,7 @@ class CountriesManager extends errorLogger
 
     public function joinCountries(int $mainCountryId, int $joinedCountryId): bool
     {
-        if ($joinedCountryId == $mainCountryId) {
+        if ($joinedCountryId === $mainCountryId) {
             return false;
         }
         if ($joinedCountry = $this->structureManager->getElementById($joinedCountryId)) {

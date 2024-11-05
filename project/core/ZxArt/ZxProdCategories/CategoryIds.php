@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace ZxArt;
+namespace ZxArt\ZxProdCategories;
 
 enum CategoryIds: int
 {

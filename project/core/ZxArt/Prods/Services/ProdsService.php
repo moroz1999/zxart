@@ -1,39 +1,65 @@
 <?php
 
+namespace ZxArt\Prods\Services;
+
+use ElementsManager;
+use Exception;
+use fileElement;
+use FilesElementTrait;
+use Illuminate;
 use Illuminate\Database\Connection;
+use Illuminate\Database\Query\Builder;
+use ImportIdOperatorTrait;
+use LanguagesManager;
+use linksManager;
+use ZxArt\Parties\Services\PartiesService;
+use PathsManager;
+use pressArticleElement;
+use privilegesManager;
+use ProdsDownloader;
+use ReleaseFileTypesGatherer;
+use ReleaseFormatsProvider;
+use structureElement;
+use structureManager;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Import\Prods\Prod;
+use ZxArt\Import\Prods\ProdResolver;
+use ZxArt\Prods\Repositories\ProdsRepository;
+use ZxParsingManager;
+use zxProdElement;
+use zxReleaseElement;
 
-class ProdsManager extends ElementsManager
+class ProdsService extends ElementsManager
 {
-    protected const TABLE = 'module_zxprod';
+    protected const TABLE = ProdsRepository::TABLE;
     use ImportIdOperatorTrait;
     use ReleaseFormatsProvider;
     use ReleaseFileTypesGatherer;
 
-    protected $defaultCategoryId = 92188;
-    protected $forceUpdateYear = false;
-    protected $forceUpdateYoutube = false;
-    protected $forceUpdateExternalLink = false;
-    protected $forceUpdateCategories = false;
-    protected $forceUpdateImages = false;
-    protected $forceUpdateTitles = false;
-    protected $matchProdsWithoutYear = false;
-    protected $forceUpdateAuthors = false;
-    protected $forceUpdateGroups = false;
-    protected $forceUpdatePublishers = false;
-    protected $updateExistingProds = false;
-    protected $updateExistingReleases = false;
-    protected $forceUpdateReleaseAuthors = false;
-    protected $forceUpdateReleasePublishers = false;
-    protected $forceUpdateReleaseType = false;
-    protected $forceUpdateReleaseFiles = false;
-    protected $addImages = false;
-    protected $resizeImages = false;
+    protected int $defaultCategoryId = 92188;
+    protected bool $forceUpdateYear = false;
+    protected bool $forceUpdateYoutube = false;
+    protected bool $forceUpdateExternalLink = false;
+    protected bool $forceUpdateCategories = false;
+    protected bool $forceUpdateImages = false;
+    protected bool $forceUpdateTitles = false;
+    protected bool $matchProdsWithoutYear = false;
+    protected bool $forceUpdateAuthors = false;
+    protected bool $forceUpdateGroups = false;
+    protected bool $forceUpdatePublishers = false;
+    protected bool $updateExistingProds = false;
+    protected bool $updateExistingReleases = false;
+    protected bool $forceUpdateReleaseAuthors = false;
+    protected bool $forceUpdateReleasePublishers = false;
+    protected bool $forceUpdateReleaseType = false;
+    protected bool $forceUpdateReleaseFiles = false;
+    protected bool $addImages = false;
+    protected bool $resizeImages = false;
 
-    protected $columnRelations = [];
-    protected $releaseColumnRelations = [];
+    protected array $columnRelations = [];
+    protected array $releaseColumnRelations = [];
 
     public function setForceUpdateExternalLink(bool $forceUpdateExternalLink): void
     {
@@ -77,7 +103,7 @@ class ProdsManager extends ElementsManager
 
     public function __construct(
         protected structureManager     $structureManager,
-        protected PartiesManager       $partiesManager,
+        protected PartiesService       $partiesService,
         protected GroupsService        $groupsManager,
         protected ZxParsingManager     $zxParsingManager,
         protected AuthorsService       $authorsManager,
@@ -88,6 +114,7 @@ class ProdsManager extends ElementsManager
         protected AuthorshipRepository $authorshipRepository,
         protected Connection           $db,
         protected LanguagesManager     $languagesManager,
+        protected ProdResolver         $prodResolver,
     )
     {
         $this->columnRelations = [
@@ -212,7 +239,12 @@ class ProdsManager extends ElementsManager
             }
         }
         if (!$element) {
-            if ($element = $this->findProdBestMatch($prodInfo)) {
+            $prod = new Prod(
+                id: $prodInfo['id'],
+                title: $prodInfo['title'],
+                year: $prodInfo['year'],
+            );
+            if ($element = $this->prodResolver->resolve($prod, $this->matchProdsWithoutYear)) {
                 $this->saveImportId($element->id, $prodId, $origin, 'prod');
             }
         }
@@ -235,12 +267,7 @@ class ProdsManager extends ElementsManager
         return $element;
     }
 
-    /**
-     * @param array $prodInfo
-     * @param $origin
-     * @return bool|zxProdElement
-     */
-    protected function createProd($prodInfo, $origin)
+    protected function createProd(array $prodInfo, string $origin): ?zxProdElement
     {
         $category = null;
         if (!empty($prodInfo['directCategories'])) {
@@ -292,13 +319,7 @@ class ProdsManager extends ElementsManager
         }
     }
 
-    /**
-     * @param zxProdElement $element
-     * @param $prodInfo
-     * @param $origin
-     * @return zxProdElement
-     */
-    protected function updateProd($element, array $prodInfo, $origin, bool $justCreated = false)
+    protected function updateProd(zxProdElement $element, array $prodInfo, $origin, bool $justCreated = false): zxProdElement
     {
         $changed = false;
         if (!empty($prodInfo['title']) && ($element->title != $prodInfo['title'])) {
@@ -329,8 +350,10 @@ class ProdsManager extends ElementsManager
             $element->description = $prodInfo['description'];
         }
         if (!empty($prodInfo['party']) && (!$element->party || (!empty($prodInfo['party']['place']) && !$element->partyplace))) {
-            if (($partyTitle = $prodInfo['party']['title']) && ($partyYear = $prodInfo['party']['year'])) {
-                if ($partyElement = $this->partiesManager->getPartyByTitle($partyTitle, $partyYear)) {
+            $partyTitle = $prodInfo['party']['title'] ?? null;
+            $partyYear = $prodInfo['party']['year'] ?? null;
+            if ($partyTitle && $partyYear) {
+                if ($partyElement = $this->partiesService->getPartyByTitleAndYear($partyTitle, $partyYear)) {
                     if ($element->party != $partyElement->id) {
                         $changed = true;
                         $element->party = $partyElement->id;
@@ -401,7 +424,7 @@ class ProdsManager extends ElementsManager
                         unset($linksIndex[$groupId]);
                     }
                 }
-                foreach ($linksIndex as $key => &$link) {
+                foreach ($linksIndex as $key => $link) {
                     $link->delete();
                 }
             }
@@ -418,7 +441,7 @@ class ProdsManager extends ElementsManager
                         unset($linksIndex[$publisherId]);
                     }
                 }
-                foreach ($linksIndex as $key => &$link) {
+                foreach ($linksIndex as $key => $link) {
                     $link->delete();
                 }
             }
@@ -507,9 +530,9 @@ class ProdsManager extends ElementsManager
         }
 
         if (!empty($prodInfo['importIds'])) {
-            foreach ($prodInfo['importIds'] as $origin => $id) {
-                if (!$this->getElementIdByImportId($id, $origin, 'prod')) {
-                    $this->saveImportId($element->getId(), $id, $origin, 'prod');
+            foreach ($prodInfo['importIds'] as $importOrigin => $id) {
+                if (!$this->getElementIdByImportId($id, $importOrigin, 'prod')) {
+                    $this->saveImportId($element->getId(), $id, $importOrigin, 'prod');
                 }
             }
         }
@@ -522,6 +545,7 @@ class ProdsManager extends ElementsManager
      *
      * @return void
      * @throws Exception
+     * @throws Exception
      */
     private function importElementFile(zxReleaseElement|zxProdElement $element, $fileUrl, $existingFiles, string $fileAuthor = '', string $propertyName = 'connectedFile')
     {
@@ -531,15 +555,12 @@ class ProdsManager extends ElementsManager
         $originalFileName = basename($fileUrl);
         $fileExists = false;
         foreach ($existingFiles as $existingFile) {
-            if ($originalFileName == urldecode($existingFile->fileName)) {
+            if ($originalFileName === urldecode($existingFile->fileName)) {
                 $fileExists = true;
                 break;
             }
         }
 
-        /**
-         * @var fileElement $fileElement
-         */
         if (!$fileExists) {
             $filePath = $uploadsPath . $originalFileName;
             $downloaded = $this->prodsDownloader->downloadUrl($fileUrl, $filePath);
@@ -552,13 +573,13 @@ class ProdsManager extends ElementsManager
                 $downloaded = $this->prodsDownloader->downloadUrl($fileUrl, $filePath);
             }
             if (!$downloaded) {
-                throw new \Exception('Unable to download release ' . $element->id . ' ' . $fileUrl);
+                throw new Exception('Unable to download release ' . $element->id . ' ' . $fileUrl);
             }
-            if ($filePath && $fileElement = $this->structureManager->createElement(
+            if ($filePath && ($fileElement = $this->structureManager->createElement(
                     'file',
                     'showForm',
                     $element->getId()
-                )) {
+                ))) {
                 $destinationFolder = $element->getUploadedFilesPath($propertyName);
 
                 $info = pathinfo($fileUrl);
@@ -621,6 +642,7 @@ class ProdsManager extends ElementsManager
     /**
      * @param $prodInfo
      * @return null|zxProdElement
+     * @throws Exception
      */
     protected function getProdByReleaseMd5($prodInfo)
     {
@@ -634,42 +656,10 @@ class ProdsManager extends ElementsManager
         return null;
     }
 
-    protected function findProdBestMatch($prodInfo): ?structureElement
-    {
-        $element = null;
-        $query = $this->db->table('module_zxprod')
-            ->where(
-                function ($query) use ($prodInfo) {
-                    $query->orWhere('title', '=', htmlentities($prodInfo['title'], ENT_QUOTES));
-                    $query->orWhere('title', '=', $prodInfo['title']);
-                }
-            );
-        if (!empty($prodInfo['year'])) {
-            $query->where('year', '=', $prodInfo['year']);
-            if ($id = $query->value('id')) {
-                $element = $this->structureManager->getElementById($id);
-            }
-        }
-
-        if (!$element && $this->matchProdsWithoutYear) {
-            $query = $this->db->table('module_zxprod')
-                ->where(
-                    function ($query) use ($prodInfo) {
-                        $query->orWhere('title', '=', htmlentities($prodInfo['title'], ENT_QUOTES));
-                        $query->orWhere('title', '=', $prodInfo['title']);
-                    }
-                );
-            if ($id = $query->value('id')) {
-                $element = $this->structureManager->getElementById($id);
-            }
-        }
-
-        return $element;
-    }
-
     /**
      * @param $releaseInfo
      * @return null|zxReleaseElement
+     * @throws Exception
      */
     protected function getReleaseByMd5($releaseInfo)
     {
@@ -683,7 +673,7 @@ class ProdsManager extends ElementsManager
                 $path = $this->prodsDownloader->getDownloadedPath($releaseInfo['fileUrl']);
             }
             if (!$path) {
-                throw new \Exception('Unable to download release ' . $releaseInfo['title'] . ' ' . $releaseInfo['fileUrl']);
+                throw new Exception('Unable to download release ' . $releaseInfo['title'] . ' ' . $releaseInfo['fileUrl']);
             }
             if ($path) {
                 if ($structure = $this->zxParsingManager->getFileStructure($path)) {
@@ -880,14 +870,14 @@ class ProdsManager extends ElementsManager
         $this->prodsDownloader->removeFile($releaseInfo['fileUrl']);
     }
 
-    public function getReleasesByIdList(\Illuminate\Database\Query\Builder|null $idList, array|null $sort = [], int|null $start = null, int|null $amount = null)
+    public function getReleasesByIdList(Builder|null $idList, array|null $sort = [], int|null $start = null, int|null $amount = null)
     {
         $result = $this->loadReleases($idList, $sort, $start, $amount);
 
         return $result;
     }
 
-    public function makeReleasesQuery(): \Illuminate\Database\Query\Builder
+    public function makeReleasesQuery(): Builder
     {
         return $this->db->table('module_zxrelease');
     }
@@ -895,7 +885,7 @@ class ProdsManager extends ElementsManager
     /**
      * @psalm-return list{0?: mixed,...}
      */
-    protected function loadReleases(Illuminate\Database\Query\Builder $query, array|null $sort = [], int|null $start = null, int|null $amount = null): array
+    protected function loadReleases(Builder $query, array|null $sort = [], int|null $start = null, int|null $amount = null): array
     {
         if (is_array($sort)) {
             foreach ($sort as $property => &$order) {

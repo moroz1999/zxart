@@ -1,10 +1,12 @@
 <?php
 
 use Illuminate\Database\Connection;
-use ZxArt\CategoryIds;
 use ZxArt\LinkTypes;
+use ZxArt\Prods\Repositories\ProdsRepository;
+use ZxArt\Prods\Services\ProdsService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
+use ZxArt\ZxProdCategories\CategoryIds;
 
 class fixApplication extends controllerApplication
 {
@@ -231,7 +233,7 @@ class fixApplication extends controllerApplication
 
     private function fixPress(): void
     {
-        $prodsManager = $this->getService('ProdsManager');
+        $prodsManager = $this->getService(ProdsService::class);
 
         /**
          * @var linksManager $linksManager
@@ -239,7 +241,7 @@ class fixApplication extends controllerApplication
         $linksManager = $this->getService(linksManager::class);
         $name = 'Nicron';
         $replacement = 'Nicron issue';
-        $result = $this->db->table('module_zxprod')
+        $result = $this->db->table(ProdsRepository::TABLE)
             ->where('title', 'like', $name . ' #%')
             ->orderBy('id')
             ->get(['id']);
@@ -254,7 +256,7 @@ class fixApplication extends controllerApplication
             }
             $split = explode('#', $prod->title);
 
-            $result = $this->db->table('module_zxprod')
+            $result = $this->db->table(ProdsRepository::TABLE)
                 ->where('title', 'like', $name . ' ' . $split[1])
                 ->orWhere('title', 'like', $name . ' ' . (int)$split[1])
                 ->orWhere('title', 'like', $name . ' #' . (int)$split[1])
@@ -317,7 +319,7 @@ class fixApplication extends controllerApplication
         $linksManager = $this->getService(linksManager::class);
         $name = 'Nicron';
         $replacement = 'Nicron issue';
-        $result = $this->db->table('module_zxprod')
+        $result = $this->db->table(ProdsRepository::TABLE)
             ->where('title', 'like', $name . ' #%')
             ->orderBy('id')
             ->get(['id']);
@@ -377,7 +379,7 @@ class fixApplication extends controllerApplication
          * @var linksManager $linksManager
          */
         $linksManager = $this->getService(linksManager::class);
-        $result = $this->db->table('module_zxprod')
+        $result = $this->db->table(ProdsRepository::TABLE)
             ->where('id', '>=', 453563)
             ->orderBy('id')
             ->get(['id']);
@@ -404,7 +406,7 @@ class fixApplication extends controllerApplication
      */
     private function loadIds(string $term): array
     {
-        $result = $this->db->table('module_zxprod')
+        $result = $this->db->table(ProdsRepository::TABLE)
             ->orderBy('id')
             ->where('title', 'like', '%' . $term . '%')
             ->get(['id']);

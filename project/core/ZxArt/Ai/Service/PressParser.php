@@ -13,28 +13,30 @@ readonly class PressParser
     )
     {
     }
-
+//todo: article title, year to prompt
     public function getParsedData(string $text): ?array
     {
         $createPrompt = static function (string $chunk): string {
             return "Я отправлю тебе текст статьи из журнала/газеты для ZX Spectrum.
 * Перескажи статью В ТРИ ПРЕДЛОЖЕНИЯ (поле Short Content). Читателю должно быть понятно, о чем статья. Понимай правильно опечатки при чтении. Укажи, если это новелла, описание, мануал, реклама итд. 
 * Если в статье ЯВНО указано, кто написал текст статьи, то укажи их информацию (поле articleAuthors). Если nickname нет, то укажи реальное имя. Если имя автора статьи неясно, не пиши поле articleAuthors в ответе. Укажи  город, страну и демогруппу/фирму, если это понятно из статьи.
-Формат AuthorObj: {realName?:'', nickName?:'',city?:'',country?:'', groups?:[GroupObj],roles?:[Role]}
-Используй ТОЛЬКО ТАКИЕ значения Role:code,music,support,testing,graphics,loading_screen,intro_code,intro_graphics,intro_music,design,logo,font,ascii,localization,concept,text,editing.            
+Формат AuthorObj: {realName?:'', nickName?:'',city?:'',country?:'', groups?:[GroupObj],prodRoles?:[ProdRole], groupRoles?:[GroupRole]}
+Для ролей автора в программе используй ТОЛЬКО ТАКИЕ значения ProdRole:code,music,support,testing,graphics,loading_screen,intro_code,intro_graphics,intro_music,design,logo,font,ascii,localization,concept,text,editing.            
+Для ролей человека в группе используй ТОЛЬКО ТАКИЕ значения GroupRole:coder,cracker,graphician,hardware,musician,organizer,support,tester,gamedesigner.            
 Не сочиняй realName, он не обязательное. Укажи его в тех случаях, когда имя и фамилия выглядят как реальные и общепринятые имена. Если псевдоним не соответствует этим критериям, оставляй поле пустым. Псевдонимы в поле realName использовать не следует. Используй формат \"Имя Фамилия\" в полной форме - например, вместо \"sasha\" пиши \"Александр\", вместо Misha - Михаил, итд.
 Если реальное имя указано как часть псевдонима, то используй это имя в поле realName, а псевдоним укажи отдельно в поле nickName.
 Если про человека известно только имя собственное, без фамили ИЛИ без группы, не указывай его.
 * Если в статье указаны авторы всего ЖУРНАЛА или ГАЗЕТЫ, то собери их в pressArticles.
 * Если в статье указаны группы, фирмы выпустившее САМ ЖУРНАЛ или ГАЗЕТУ, то собери их в pressGroups.
 * Собери упомянутые демопати (поле parties). Укажи год, город, страну, если это ЯВНО указано в статье. Формат PartyObj: {name: '', city?: '', country?: '', year: ''}
+Не выбрасывай год демопати из названия, если оно является частью названия.
 * Собери ВСЕ упомянутые программы, игры и демо. Формат SoftwareObj: {name: '', authors?: [AuthorObj], groups?: [GroupObj], publishers?: [GroupObj], year?: 2002}
 * В названии программ НЕ ИСПОЛЬЗУЙ версии. 'Program v1.1' - это ПЛОХО. 'Program' - это ПРАВИЛЬНО.
 * Не переделывай названия в латиницу.   
 * Собери ВСЕ упомянутые аппаратные расширения ZX-Spectrum - модемы, звуковые карты, расширения графики итд. Формат HardwareObj: {name: '', authors?: [AuthorObj], groups?: [GroupObj], year?: 2002}
 * Собери ВСЕХ упомянутых в статье группы/фирмы ZX-Spectrum в формате GroupObj в поле groups. Формат GroupObj: {name: '', city?: '', country?: '', type?: GroupType}
 * Допустимые типы групп: GroupType:'unknown'|'company'|'crack'|'studio'|'scene'|'education'|'store'|'science' 
-* Собери ВСЕХ упомянутых отдельных людей в формате AuthorObj в поле people. Не пиши селебрити типа Билла Гейтса. Если человек связан с группой или фирмой по контексту, то укажи группу в его данных. 
+* Собери ВСЕХ упомянутых отдельных людей в формате AuthorObj в поле people. Не пиши селебрити типа Билла Гейтса. Если человек связан с группой или фирмой по контексту, то укажи группу в его данных.  
 * Собери упомянутые мелодии ZX-Spectrum в формате TuneObj в поле tunes. Формат TuneObj: {name: '', authors?: [AuthorObj], year?: 2002}
 * Собери упомянутые картинки ZX-Spectrum в формате PictureObj в поле pictures. Формат PictureObj: {name: '', authors?: [AuthorObj], year?: 2002}
 * Собери 10 наиболее значимых тегов из фактов и темы статьи. Пример хороших тегов: \"Обзор\", \"Демопати\", \"Критика\", \"Графика\", \"Демосцена\", \"Техника рисования\"

@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\LinkTypes;
+
 /**
  * @property string $title
  * @property string $abbreviation
@@ -43,6 +45,13 @@ class partyElement extends structureElement implements CommentsHolderInterface, 
         $moduleStructure['image'] = 'image';
         $moduleStructure['originalName'] = 'text';
         $moduleStructure['website'] = 'url';
+        $moduleStructure['mentions'] = [
+            'ConnectedElements',
+            [
+                'linkType' => LinkTypes::PRESS_PARTIES->value,
+                'role' => 'parent',
+            ],
+        ];
     }
 
     /**

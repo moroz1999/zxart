@@ -1,5 +1,8 @@
 <?php
 
+use ZxArt\Groups\GroupTypeProvider;
+use ZxArt\LinkTypes;
+
 /**
  * Class groupElement
  *
@@ -53,7 +56,6 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
         $moduleStructure['wikiLink'] = 'text';
         $moduleStructure['website'] = 'url';
         $moduleStructure['abbreviation'] = 'text';
-        $moduleStructure['type'] = 'serializedIndex';
         $moduleStructure['startDate'] = 'date';
         $moduleStructure['endDate'] = 'date';
         $moduleStructure['slogan'] = 'text';
@@ -72,6 +74,13 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
             'ConnectedElements',
             [
                 'linkType' => 'zxReleasePublishers',
+                'role' => 'parent',
+            ],
+        ];
+        $moduleStructure['mentions'] = [
+            'ConnectedElements',
+            [
+                'linkType' => LinkTypes::PRESS_GROUPS->value,
                 'role' => 'parent',
             ],
         ];

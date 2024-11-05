@@ -2,11 +2,11 @@
 declare(strict_types=1);
 
 
-namespace ZxArt\Press\DataUpdater;
+namespace ZxArt\Import\Press\DataUpdater;
 
 use groupAliasElement;
 use groupElement;
-use ZxArt\Labels\Label;
+use ZxArt\Import\Labels\Label;
 
 final readonly class ResolvedGroup
 {

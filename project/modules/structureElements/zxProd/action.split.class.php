@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Prods\Services\ProdsService;
+
 class splitZxProd extends structureElementAction
 {
     protected $loggable = true;
@@ -15,9 +17,9 @@ class splitZxProd extends structureElementAction
     {
         if ($this->validated) {
             /**
-             * @var ProdsManager $prodsManager
+             * @var ProdsService $prodsManager
              */
-            $prodsManager = $this->getService('ProdsManager');
+            $prodsManager = $this->getService(ProdsService::class);
 
             if ($structureElement->splitData) {
                 if ($newElement = $prodsManager->splitZxProd($structureElement->id, $structureElement->splitData)) {

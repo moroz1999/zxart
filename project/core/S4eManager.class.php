@@ -2,12 +2,13 @@
 
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Prods\Services\ProdsService;
 
 class S4eManager extends errorLogger
 {
     protected int $counter = 0;
     protected int $maxCounter = 4000;
-    protected ProdsManager $prodsManager;
+    protected ProdsService $prodsManager;
     protected AuthorsService $authorsManager;
     protected GroupsService $groupsManager;
     protected CountriesManager $countriesManager;
@@ -48,7 +49,7 @@ class S4eManager extends errorLogger
         $this->countriesManager = $countriesManager;
     }
 
-    public function setProdsManager(ProdsManager $prodsManager): void
+    public function setProdsService(ProdsService $prodsManager): void
     {
         $this->prodsManager = $prodsManager;
     }

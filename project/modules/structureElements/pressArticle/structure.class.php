@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\LinkTypes;
+
 /**
  * @property string $title
  * @property string $externalLink
@@ -19,11 +21,14 @@ class pressArticleElement extends structureElement implements SearchContentHolde
 {
     use CommentsTrait;
     use MetadataProviderTrait;
+    use TagsHolder;
 
     public $dataResourceName = 'module_pressarticle';
     public $defaultActionName = 'show';
     public $role = 'content';
     private $searchTerm;
+
+    protected ?int $tagsAmount = null;
 
     public function setSearchTerm(string $term): void
     {
@@ -48,35 +53,35 @@ class pressArticleElement extends structureElement implements SearchContentHolde
         $moduleStructure['authors'] = [
             'ConnectedElements',
             [
-                'linkType' => 'pressAuthor',
+                'linkType' => LinkTypes::PRESS_AUTHOR->value,
                 'role' => 'child',
             ],
         ];
         $moduleStructure['people'] = [
             'ConnectedElements',
             [
-                'linkType' => 'pressPeople',
+                'linkType' => LinkTypes::PRESS_PEOPLE->value,
                 'role' => 'child',
             ],
         ];
         $moduleStructure['software'] = [
             'ConnectedElements',
             [
-                'linkType' => 'pressSoftware',
+                'linkType' => LinkTypes::PRESS_SOFTWARE->value,
                 'role' => 'child',
             ],
         ];
         $moduleStructure['groups'] = [
             'ConnectedElements',
             [
-                'linkType' => 'pressGroups',
+                'linkType' => LinkTypes::PRESS_GROUPS->value,
                 'role' => 'child',
             ],
         ];
         $moduleStructure['parties'] = [
             'ConnectedElements',
             [
-                'linkType' => 'pressParties',
+                'linkType' => LinkTypes::PRESS_PARTIES->value,
                 'role' => 'child',
             ],
         ];
@@ -174,7 +179,7 @@ class pressArticleElement extends structureElement implements SearchContentHolde
     public function getH1(): string
     {
         $parentElement = $this->getParent();
-        if ($this->h1 !== ''){
+        if ($this->h1 !== '') {
             return $parentElement->getTitle() . ': ' . $this->h1;
         }
         return $parentElement->getTitle() . ': ' . $this->title;

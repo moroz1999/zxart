@@ -2,6 +2,7 @@
 
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Prods\Services\ProdsService;
 
 class PouetManagerServiceContainer extends DependencyInjectionServiceContainer
 {
@@ -21,12 +22,12 @@ class PouetManagerServiceContainer extends DependencyInjectionServiceContainer
     {
         $pouetManager = $instance;
         /**
-         * @var ProdsManager $prodsManager
+         * @var ProdsService $prodsManager
          */
-        if ($prodsManager = $this->getOption('ProdsManager')) {
-            $pouetManager->setProdsManager($prodsManager);
+        if ($prodsManager = $this->getOption(ProdsService::class)) {
+            $pouetManager->setProdsService($prodsManager);
         } else {
-            $pouetManager->setProdsManager($this->registry->getService('ProdsManager'));
+            $pouetManager->setProdsService($this->registry->getService(ProdsService::class));
         }
         /**
          * @var AuthorsService $authorsManager

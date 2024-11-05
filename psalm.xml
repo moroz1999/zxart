@@ -5,7 +5,6 @@
         findUnusedBaselineEntry="false"
         findUnusedCode="true"
         autoloader="project/core/psalm-bootstrap.php"
-        phpVersion="8.3"
 >
     <projectFiles>
         <directory name="project" />

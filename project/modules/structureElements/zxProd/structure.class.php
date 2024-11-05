@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\LinkTypes;
+use ZxArt\Prods\Repositories\ProdsRepository;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueType;
 
@@ -53,7 +55,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     use JsonDataProviderElement;
     use ZxSoft;
 
-    public $dataResourceName = 'module_zxprod';
+    public $dataResourceName = ProdsRepository::TABLE;
     public $allowedTypes = [];
     public $defaultActionName = 'show';
     public $role = 'content';
@@ -161,6 +163,13 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
         $moduleStructure['joinAndDelete'] = 'text';
         $moduleStructure['releasesOnly'] = 'checkbox';
         $moduleStructure['splitData'] = 'array';
+        $moduleStructure['mentions'] = [
+            'ConnectedElements',
+            [
+                'linkType' => LinkTypes::PRESS_SOFTWARE->value,
+                'role' => 'parent',
+            ],
+        ];
     }
 
     /**
@@ -291,7 +300,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
 
     public function getInlaysUrls()
     {
-        if (($urls = $this->getCacheKey('inlays')) === false) {
+        if (($urls = $this->getCacheKey('inlays')) === null) {
             $db = $this->getService('db');
             /**
              * @var QueryFiltersManager $queryFiltersManager
@@ -723,7 +732,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
              */
             $languagesManager = $this->getService('languagesManager');
             $key = 'hw' . $languagesManager->getCurrentLanguageId();
-            if (($this->hardwareInfo = $this->getCacheKey($key)) === false) {
+            if (($this->hardwareInfo = $this->getCacheKey($key)) === null) {
                 $this->hardwareInfo = [];
                 /**
                  * @var translationsManager $translationsManager
@@ -780,7 +789,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
     public function getLanguagesInfo()
     {
         if (!isset($this->languagesInfo)) {
-            if (($this->languagesInfo = $this->getCacheKey('li' . $this->currentLanguage)) === false) {
+            if (($this->languagesInfo = $this->getCacheKey('li' . $this->currentLanguage)) === null) {
                 $this->languagesInfo = [];
 
                 $db = $this->getService('db');

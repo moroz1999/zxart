@@ -14,6 +14,20 @@
                        href="{$element->URL}id:{$element->id}/action:delete/">{translations name='pressarticle.delete'}</a>
                 {/if}
             </div>
+            {if $element->getTagsList()}
+                <div>
+                    <div class='info_table_label'>
+                        {translations name='zxprod.tags'}:
+                    </div>
+                    <div class='info_table_value'>
+                        {foreach from=$element->getTagsList() item=tag name=tags}
+                            <a href='{$tag->URL}'>{$tag->title}</a>{if !$smarty.foreach.tags.last}, {/if}
+                        {/foreach}
+                    </div>
+                </div>
+            {/if}
+
+
             <div class="">
                 <a href="{$element->externalLink}"
                    target="_blank"
@@ -22,9 +36,43 @@
 
             {if $element->authors}
                 <h3>{translations name='pressarticle.authors'}</h3>
-                {foreach $element->authors as $authors}
+                {foreach $element->authors as $author}
                     <div>
-                        <a href="{$authors->getUrl()}">{$authors->getTitle()}</a>
+                        <a href="{$author->getUrl()}">{$author->getTitle()}</a>
+                    </div>
+                {/foreach}
+            {/if}
+
+            {if $element->people}
+                <h3>{translations name='pressarticle.people'}</h3>
+                {foreach $element->people as $author}
+                    <div>
+                        <a href="{$author->getUrl()}">{$author->getTitle()}</a>
+                    </div>
+                {/foreach}
+            {/if}
+
+            {if $element->groups}
+                <h3>{translations name='pressarticle.groups'}</h3>
+                {foreach $element->groups as $group}
+                    <div>
+                        <a href="{$group->getUrl()}">{$group->getTitle()}</a>
+                    </div>
+                {/foreach}
+            {/if}
+            {if $element->software}
+                <h3>{translations name='pressarticle.software'}</h3>
+                {foreach $element->software as $prod}
+                    <div>
+                        <a href="{$prod->getUrl()}">{$prod->getTitle()}</a>
+                    </div>
+                {/foreach}
+            {/if}
+            {if $element->parties}
+                <h3>{translations name='pressarticle.parties'}</h3>
+                {foreach $element->parties as $party}
+                    <div>
+                        <a href="{$party->getUrl()}">{$party->getTitle()}</a>
                     </div>
                 {/foreach}
             {/if}

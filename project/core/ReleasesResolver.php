@@ -2,11 +2,12 @@
 
 
 use Illuminate\Database\Query\Builder;
+use ZxArt\Prods\Services\ProdsService;
 
 class ReleasesResolver
 {
     public function __construct(
-        protected ProdsManager $prodsManager,
+        protected ProdsService $prodsManager,
     )
     {
     }

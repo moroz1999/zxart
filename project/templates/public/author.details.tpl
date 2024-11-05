@@ -44,13 +44,14 @@
 		window.elementsData = window.elementsData ? window.elementsData : { };
 		window.elementsData[{$element->id}] = {$element->getJsonInfo('zxProdsList')};
 	</script>
-
+	{include file=$theme->template('author.articles.tpl')}
+	{include file=$theme->template('component.mentions.tpl')}
 	{include file=$theme->template('author.pictures.tpl')}
 	{include file=$theme->template('author.music.tpl')}
 	{include file=$theme->template('author.zxProds.tpl')}
 	{include file=$theme->template('publisher.zxProds.tpl')}
 	{include file=$theme->template('author.zxReleases.tpl')}
-	{include file=$theme->template('author.articles.tpl')}
+
 
 	{include $theme->template('component.comments.tpl')}
 

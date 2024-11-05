@@ -2,6 +2,7 @@
 
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Prods\Services\ProdsService;
 
 class ZxaaaManager extends errorLogger
 {
@@ -85,7 +86,7 @@ class ZxaaaManager extends errorLogger
     protected $counter = 0;
 
     /**
-     * @var ProdsManager
+     * @var ProdsService
      */
     protected $prodsManager;
     /**
@@ -139,7 +140,7 @@ class ZxaaaManager extends errorLogger
     /**
      * @param mixed $prodsManager
      */
-    public function setProdsManager(ProdsManager $prodsManager): void
+    public function setProdsService(ProdsService $prodsManager): void
     {
         $this->prodsManager = $prodsManager;
     }

@@ -2,11 +2,11 @@
 declare(strict_types=1);
 
 
-namespace ZxArt\Press\DataUpdater;
+namespace ZxArt\Import\Press\DataUpdater;
 
 use authorAliasElement;
 use authorElement;
-use ZxArt\Labels\Label;
+use ZxArt\Import\Labels\Label;
 
 final readonly class ResolvedAuthorship
 {

@@ -22,7 +22,7 @@ use ZxArt\Ai\Service\PressParser;
 use ZxArt\Ai\Service\ProdQueryService;
 use ZxArt\Ai\Service\TextBeautifier;
 use ZxArt\Ai\Service\Translator;
-use ZxArt\Press\DataUpdater\DataUpdater;
+use ZxArt\Import\Press\DataUpdater\DataUpdater;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
@@ -145,7 +145,7 @@ class Crontab extends controllerApplication
             $counter++;
 
             $elementId = $this->queueService->getNextElementId($queueType);
-            $elementId = 494533;
+            $elementId = 477718;
             if ($elementId === null) {
                 break;
             }
@@ -186,163 +186,435 @@ class Crontab extends controllerApplication
         $mergedContent = [
             'shortContent' =>
                 [
-                    'eng' => 'The article offers a look at the latest software for ZX Spectrum, highlighting popular games and applications as well as improvements in recent releases. It discusses the emergence of a new operating shell, MICRO WINDOWS, and its features and shortcomings. It also corrects previous errors related to the presence of the MAGIC SOFT team in St. Petersburg.',
-                    'spa' => 'El artículo ofrece una visión del software más reciente para ZX Spectrum, destacando juegos populares y aplicaciones, así como mejoras en los lanzamientos recientes. Habla sobre la aparición de un nuevo shell operativo, MICRO WINDOWS, y sus características y defectos. También corrige errores anteriores relacionados con la presencia del equipo de MAGIC SOFT en San Petersburgo.',
-                    'rus' => 'Статья предлагает обзор новейшего программного обеспечения для ZX Spectrum, выделяя популярные игры и приложения, а также улучшения в последних версиях. Обсуждается появление новой оболочки MICRO WINDOWS и ее особенности и недостатки. Также исправляются ошибки, связанные с присутствием команды MAGIC SOFT в Санкт-Петербурге.',
+                    'eng' => 'The article is an overview of the MilleniuM event, focusing on competition results and voting patterns in various categories like graphics and music. The author discusses the fairness and dynamics of the voting process, highlighting notable participants and statistics. It also addresses challenges faced in organizing a PC/Amiga segment for the event.',
+                    'spa' => 'El artículo es una revisión del evento MilleniuM, centrándose en los resultados de competencias y patrones de votación en categorías como gráficos y música. El autor discute la equidad y dinámica del proceso de votación, destacando participantes notables y estadísticas. También aborda los desafíos enfrentados en la organización de un segmento de PC/Amiga para el evento.',
+                    'rus' => 'Статья - это обзор события MilleniuM, сосредоточенный на результатах соревнований и тенденциях голосования в различных категориях, таких как графика и музыка. Автор обсуждает справедливость и динамику процесса голосования, выделяя заметных участников и статистику. Также рассматриваются проблемы, возникшие при попытке организовать сегмент PC/Amiga для мероприятия.',
                 ],
             'articleAuthors' =>
                 [
                     0 =>
                         [
-                            'nickName' => 'Миша Блюм',
+                            'nickName' => 'Diver',
                             'groups' =>
                                 [
                                     0 =>
                                         [
-                                            'name' => 'Zx-Masters',
+                                            'name' => '4th Dimension',
                                         ],
-                                ],
-                            'roles' =>
-                                [
-                                    0 => 'text',
                                 ],
                         ],
                 ],
-            'pressGroups' => [
-                [
-                    'name' => 'Zx-Masters',
-                ],
-            ],
             'groups' =>
                 [
                     0 =>
                         [
-                            'name' => 'ZX-Masters',
+                            'name' => 'Concern Chaos',
+                            'city' => 'Sydney',
+                            'country' => 'Australia',
+                            'type' => 'scene',
                         ],
                     1 =>
                         [
-                            'name' => 'Welcome Corporation',
+                            'name' => 'Raww Arse',
+                            'city' => 'Oxford',
+                            'country' => 'UK',
+                            'type' => 'scene',
+                        ],
+                    2 =>
+                        [
+                            'name' => 'WoMo-Team',
+                            'city' => 'Cologne',
+                            'country' => 'Germany',
+                            'type' => 'scene',
+                        ],
+                    3 =>
+                        [
+                            'name' => 'Phantasy',
+                            'city' => 'Vienna',
+                            'country' => 'Austria',
+                            'type' => 'scene',
+                        ],
+                    4 =>
+                        [
+                            'name' => 'K3L Corp.',
+                            'city' => 'Prague',
+                            'country' => 'Czech Republic',
+                            'type' => 'scene',
+                        ],
+                    5 =>
+                        [
+                            'name' => 'Euphoria',
+                            'city' => 'Veseli n. M.',
+                            'country' => 'Czech Republic',
+                            'type' => 'scene',
+                        ],
+                    6 =>
+                        [
+                            'name' => 'Claw/Exodus',
+                            'city' => 'Sulejowek',
+                            'country' => 'Poland',
+                            'type' => 'scene',
+                        ],
+                    7 =>
+                        [
+                            'name' => 'Hooy-Program',
+                            'city' => 'Krakow',
+                            'country' => 'Poland',
+                            'type' => 'scene',
+                        ],
+                    8 =>
+                        [
+                            'name' => 'eTc group/Scene',
+                            'city' => 'Черкассы',
+                            'country' => 'Ukraine',
+                            'type' => 'scene',
+                        ],
+                    9 =>
+                        [
+                            'name' => 'Ascendancy CL',
+                            'city' => 'Гродно',
+                            'country' => 'Беларусь',
+                            'type' => 'scene',
+                        ],
+                    10 =>
+                        [
+                            'name' => 'Accept Corp.',
+                            'city' => 'Армавир',
+                            'country' => 'Russia',
+                            'type' => 'scene',
+                        ],
+                    11 =>
+                        [
+                            'name' => 'Light Future Group',
+                            'city' => 'Глазов',
+                            'country' => 'Russia',
+                            'type' => 'scene',
+                        ],
+                    12 =>
+                        [
+                            'name' => 'Brainwave/XPJ',
+                            'city' => 'Йошкар-Ола',
+                            'country' => 'Russia',
+                            'type' => 'scene',
+                        ],
+                    13 =>
+                        [
+                            'name' => 'Eternity Industry',
+                            'city' => 'Ковров',
+                            'country' => 'Russia',
+                            'type' => 'scene',
+                        ],
+                    14 =>
+                        [
+                            'name' => 'Techno Lab',
+                            'city' => 'Краснодар',
+                            'country' => 'Russia',
+                            'type' => 'scene',
+                        ],
+                    15 =>
+                        [
+                            'name' => 'Antares',
+                            'city' => 'Москва',
+                            'country' => 'Russia',
+                            'type' => 'scene',
+                        ],
+                    16 =>
+                        [
+                            'name' => 'Diamond group',
+                            'city' => 'Москва',
+                            'country' => 'Russia',
+                            'type' => 'scene',
+                        ],
+                    17 =>
+                        [
+                            'name' => 'Digital Reality',
+                            'city' => 'Новгород Великий',
+                            'country' => 'Russia',
+                            'type' => 'scene',
+                        ],
+                    18 =>
+                        [
+                            'name' => 'Razzlers',
+                            'city' => 'Москва',
+                            'country' => 'Russia',
+                            'type' => 'scene',
+                        ],
+                    19 =>
+                        [
+                            'name' => 'Int. Hackers Group',
+                            'city' => 'Новомосковск',
+                            'country' => 'Russia',
+                            'type' => 'scene',
+                        ],
+                    20 =>
+                        [
+                            'name' => '4th Dimension',
+                            'city' => 'Москва',
+                            'country' => 'Russia',
+                            'type' => 'scene',
                         ],
                 ],
             'people' =>
                 [
                     0 =>
                         [
-                            'realName' => 'Виктор',
-                            'roles' =>
-                                [
-                                    0 => 'support',
-                                ],
-                        ],
-                    1 =>
-                        [
-                            'realName' => 'Валерий',
-                            'roles' =>
-                                [
-                                    0 => 'code',
-                                ],
-                        ],
-                    2 =>
-                        [
-                            'realName' => 'Александр',
-                            'nickName' => 'MAC BUSTER',
-                            'roles' =>
-                                [
-                                    0 => 'code',
-                                ],
-                        ],
-                ],
-            'software' =>
-                [
-                    0 =>
-                        [
-                            'name' => 'НЛО-2 "Дьяволы Бездны"',
-                        ],
-                    1 =>
-                        [
-                            'name' => 'MICRO WINDOWS',
-                            'year' => 1990,
-                        ],
-                    2 =>
-                        [
-                            'name' => 'Страна Мифов',
-                        ],
-                    3 =>
-                        [
-                            'name' => 'Войны Эмбера',
-                        ],
-                    4 =>
-                        [
-                            'name' => 'WELCOME PRESS',
-                        ],
-                    5 =>
-                        [
-                            'name' => 'DARKMAN',
+                            'nickName' => 'Diver',
                             'groups' =>
                                 [
                                     0 =>
                                         [
-                                            'name' => 'MAGIC SOFT',
+                                            'name' => '4th Dimension',
+                                        ],
+                                ],
+                            'prodRoles' =>
+                                [
+                                    0 => 'text',
+                                ],
+                            'groupRoles' =>
+                                [
+                                    0 => 'organizer',
+                                ],
+                        ],
+                ],
+            'parties' =>
+                [
+                    0 =>
+                        [
+                            'name' => 'Complex Compo',
+                            'year' => '2000',
+                        ],
+                    1 =>
+                        [
+                            'name' => 'Forever2E3',
+                            'year' => '2000',
+                        ],
+                ],
+            'tunes' =>
+                [
+                    0 =>
+                        [
+                            'name' => 'Take My Soul & Oni',
+                            'authors' =>
+                                [
+                                    0 =>
+                                        [
+                                            'nickName' => 'Neuronus',
+                                        ],
+                                    1 =>
+                                        [
+                                            'nickName' => 'Baby',
+                                        ],
+                                ],
+                        ],
+                    1 =>
+                        [
+                            'name' => 'Frozen',
+                            'authors' =>
+                                [
+                                    0 =>
+                                        [
+                                            'nickName' => 'Mast',
+                                        ],
+                                ],
+                        ],
+                    2 =>
+                        [
+                            'name' => 'My Heart Will Go On',
+                            'authors' =>
+                                [
+                                    0 =>
+                                        [
+                                            'nickName' => 'Andy Fer',
+                                        ],
+                                ],
+                        ],
+                    3 =>
+                        [
+                            'name' => 'Chronos',
+                            'authors' =>
+                                [
+                                    0 =>
+                                        [
+                                            'nickName' => 'JoeDassin',
+                                        ],
+                                ],
+                        ],
+                    4 =>
+                        [
+                            'name' => 'Love\'n\'Gun',
+                            'authors' =>
+                                [
+                                    0 =>
+                                        [
+                                            'nickName' => 'DNK',
+                                        ],
+                                ],
+                        ],
+                    5 =>
+                        [
+                            'name' => 'WhiteRoad remix',
+                            'authors' =>
+                                [
+                                    0 =>
+                                        [
+                                            'nickName' => 'DNK',
                                         ],
                                 ],
                         ],
                     6 =>
                         [
-                            'name' => 'CYBERBALL',
+                            'name' => 'Heart (amiga mod)',
+                            'authors' =>
+                                [
+                                    0 =>
+                                        [
+                                            'nickName' => 'Mm<M',
+                                        ],
+                                ],
                         ],
                     7 =>
                         [
-                            'name' => 'MERCS+',
+                            'name' => 'He Plays at Funerals and Dances',
+                            'authors' =>
+                                [
+                                    0 =>
+                                        [
+                                            'nickName' => 'Mm<M',
+                                        ],
+                                ],
                         ],
                     8 =>
                         [
-                            'name' => 'SUPER CARS',
+                            'name' => 'Phoney Phrase',
+                            'authors' =>
+                                [
+                                    0 =>
+                                        [
+                                            'nickName' => 'Deep Green',
+                                        ],
+                                ],
                         ],
                     9 =>
                         [
-                            'name' => 'PANG',
+                            'name' => 'Sexy Potion',
+                            'authors' =>
+                                [
+                                    0 =>
+                                        [
+                                            'nickName' => 'Deep Green',
+                                        ],
+                                ],
+                        ],
+                    10 =>
+                        [
+                            'name' => 'Suggest!ve',
+                            'authors' =>
+                                [
+                                    0 =>
+                                        [
+                                            'nickName' => 'Mm<M',
+                                        ],
+                                ],
+                        ],
+                ],
+            'pictures' =>
+                [
+                    0 =>
+                        [
+                            'name' => 'The Rage To Overcome',
+                            'authors' =>
+                                [
+                                    0 =>
+                                        [
+                                            'nickName' => 'Fil',
+                                        ],
+                                ],
+                        ],
+                    1 =>
+                        [
+                            'name' => 'Titanic',
+                            'authors' =>
+                                [
+                                    0 =>
+                                        [
+                                            'nickName' => 'Fil',
+                                        ],
+                                ],
+                        ],
+                    2 =>
+                        [
+                            'name' => 'Eruption!',
+                            'authors' =>
+                                [
+                                    0 =>
+                                        [
+                                            'nickName' => 'Flying',
+                                        ],
+                                ],
+                        ],
+                    3 =>
+                        [
+                            'name' => 'Paracels',
+                            'authors' =>
+                                [
+                                    0 =>
+                                        [
+                                            'nickName' => 'Paracels',
+                                        ],
+                                ],
+                        ],
+                    4 =>
+                        [
+                            'name' => 'Hazard',
+                            'authors' =>
+                                [
+                                    0 =>
+                                        [
+                                            'nickName' => 'Hazard',
+                                        ],
+                                ],
                         ],
                 ],
             'tags' =>
                 [
-                    0 => 'Программное обеспечение',
-                    1 => 'Обзор',
-                    2 => 'Игры',
-                    3 => 'Программирование',
-                    4 => 'Хит-парад',
-                    5 => 'Продажи',
-                    6 => 'Оболочки',
-                    7 => 'Интерфейс',
-                    8 => 'Драйверы',
-                    9 => 'Лихой водила',
+                    0 => 'MilleniuM',
+                    1 => 'Demoparty',
+                    2 => 'ZX Spectrum',
+                    3 => 'Graphics',
+                    4 => 'Music',
+                    5 => 'Voting',
+                    6 => 'Competitions',
+                    7 => 'Scene',
+                    8 => 'Statistics',
+                    9 => 'Organization',
                 ],
             'title' =>
                 [
-                    'eng' => 'New Programs',
-                    'spa' => 'Nuevos programas',
-                    'rus' => 'Новые программы',
+                    'eng' => 'MilleniuM: Analysis of Competitions',
+                    'spa' => 'MilleniuM: Análisis de Competencias',
+                    'rus' => 'MilleniuM: разбор полетов',
                 ],
             'h1' =>
                 [
-                    'eng' => 'Latest Software Releases for ZX Spectrum',
-                    'spa' => 'Últimos lanzamientos de software para ZX Spectrum',
-                    'rus' => 'Последние релизы программ для ZX Spectrum',
+                    'eng' => 'Detailed Overview of MilleniuM Event',
+                    'spa' => 'Visión Detallada del Evento MilleniuM',
+                    'rus' => 'Подробный обзор события MilleniuM',
                 ],
             'metaDescription' =>
                 [
-                    'eng' => 'Explore latest software for ZX Spectrum, popular games and new MICRO WINDOWS. Updates and corrections included.',
-                    'spa' => 'Descubre el último software para ZX Spectrum, juegos populares y el nuevo MICRO WINDOWS. Incluye actualizaciones y correcciones.',
-                    'rus' => 'Узнайте о новейшем ПО для ZX Spectrum, популярных играх и новой MICRO WINDOWS. Включены обновления и исправления.',
+                    'eng' => 'Explore the in-depth results and voting dynamics of the MilleniuM event, covering competitions in graphics and music categories.',
+                    'spa' => 'Explora los resultados detallados y la dinámica de votación del evento MilleniuM, abarcando competencias en categorías de gráficos y música.',
+                    'rus' => 'Углубленный анализ результатов и динамики голосования на событии MilleniuM, охватывающего конкурсы в категориях графики и музыки.',
                 ],
             'pageTitle' =>
                 [
-                    'eng' => 'ZX Spectrum New Software Overview',
-                    'spa' => 'Visión general del nuevo software para ZX Spectrum',
-                    'rus' => 'Обзор нового ПО для ZX Spectrum',
+                    'eng' => 'MilleniuM Event Results and Analysis',
+                    'spa' => 'Resultados y Análisis del Evento MilleniuM',
+                    'rus' => 'Анализ результатов мероприятия MilleniuM',
                 ],
         ];
 
-        $pressArticleElement = $this->structureManager->getElementById(494533);
+        $pressArticleElement = $this->structureManager->getElementById(477718);
         $this->pressDataUpdater->updatePressArticleData($pressArticleElement, $mergedContent);
         return;
         $this->processQueue(QueueType::AI_PRESS_PARSE, function (pressArticleElement $pressArticleElement, $counter) {

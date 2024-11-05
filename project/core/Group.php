@@ -107,8 +107,6 @@ trait Group
 
     /**
      * @return string[]
-     *
-     * @psalm-return list{'coder', 'cracker', 'graphician', 'hardware', 'musician', 'organizer', 'support', 'tester', 'gamedesigner', 'unknown'}
      */
     public function getAuthorRoles(): array
     {

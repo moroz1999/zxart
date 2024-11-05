@@ -2,13 +2,14 @@
 
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Prods\Services\ProdsService;
 
 class VtrdosManager extends errorLogger
 {
     protected $counter = 0;
     protected $maxCounter = 5000;
     /**
-     * @var ProdsManager
+     * @var ProdsService
      */
     protected $prodsManager;
     /**
@@ -348,7 +349,7 @@ class VtrdosManager extends errorLogger
     /**
      * @param mixed $prodsManager
      */
-    public function setProdsManager(ProdsManager $prodsManager): void
+    public function setProdsService(ProdsService $prodsManager): void
     {
         $this->prodsManager = $prodsManager;
         $this->prodsManager->setUpdateExistingReleases(true);

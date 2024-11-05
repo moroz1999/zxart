@@ -197,9 +197,9 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
         return $result;
     }
 
-    public function getTagElementByName($tagName, bool $createNew = false)
+    public function getTagElementByName($tagName, bool $createNew = false): ?tagElement
     {
-        $tagElement = false;
+        $tagElement = null;
         $tagName = mb_convert_case(trim($tagName), MB_CASE_TITLE, "UTF-8");
         if ($tagName !== '') {
             if (!($tagElement = $this->loadTagElement($tagName)) && $createNew) {
@@ -209,15 +209,14 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
         return $tagElement;
     }
 
-    public function loadTagElement(string $tagName)
+    public function loadTagElement(string $tagName): ?tagElement
     {
-        $result = false;
+        $result = null;
 
         $query = $this->getService('db')
             ->table('module_tag')
             ->select('id')
             ->where('title', '=', $tagName)->limit(1);
-        //            ->orWhere('synonym', 'like', '%' . $tagName . '%');
         if ($records = $query->get()) {
             foreach ($records as $record) {
                 $structureManager = $this->getService('structureManager');
@@ -230,9 +229,9 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
         return $result;
     }
 
-    public function createTagElement(string $tagName)
+    public function createTagElement(string $tagName): ?tagElement
     {
-        $tagElement = false;
+        $tagElement = null;
         $structureManager = $this->getService('structureManager');
         if ($tagsElementId = $structureManager->getElementIdByMarker('tags')) {
             if ($tagElement = $structureManager->createElement('tag', 'show', $structureManager->rootElementId)) {
@@ -247,7 +246,7 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
         return $tagElement;
     }
 
-    public function addTag($tagName, $elementId)
+    public function addTag($tagName, $elementId): ?tagElement
     {
         if ($tagElement = $this->getTagElementByName($tagName, true)) {
             $this->getService('linksManager')->linkElements($tagElement->id, $elementId, 'tagLink', true);

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace ZxArt\Labels;
+namespace ZxArt\Import\Labels;
 
 use authorAliasElement;
 use authorElement;
@@ -46,21 +46,29 @@ final readonly class LabelResolver
     {
         return $this->resolveEntity(
             $label,
-            fn(string $name) => $this->groupsRepository->findGroupIdsByName($name),
-            fn(string $name) => $this->groupAliasesRepository->findAliasIdsByName($name),
+            fn(?string $name) => $this->groupsRepository->findGroupIdsByName($name),
+            fn(?string $name) => $this->groupAliasesRepository->findAliasIdsByName($name),
             static fn($alias) => $alias->getGroupElement(),
             /**
-             * @var groupElement|groupAliasElement $element
+             * @var groupElement|groupAliasElement $groupElement
              */
-            function (structureElement $element, ?string $name, Label $label) {
+            function (structureElement $groupElement, ?string $elementName, Label $label) {
+                $elementCountryTitle = $groupElement->getCountryTitle();
+                $labelCountry = $label->country ?? null;
+
+                if ($elementCountryTitle !== null && $labelCountry !== null && !$groupElement->matchesCountry($labelCountry)) {
+                    return 0;
+                }
+
                 $score = 0;
-                if ($this->valueMatches($name, $label->name)) {
+
+                if ($this->valueMatches($elementName, $label->name)) {
                     $score += 10;
                 }
-                if ($element->matchesCity($label->city ?? '')) {
+                if ($groupElement->matchesCity($label->city ?? '')) {
                     $score += 5;
                 }
-                if ($element->matchesCountry($label->country ?? '')) {
+                if ($groupElement->matchesCountry($labelCountry ?? '')) {
                     $score += 5;
                 }
                 return $score;
@@ -75,35 +83,63 @@ final readonly class LabelResolver
     {
         return $this->resolveEntity(
             $label,
-            fn(string $name) => $this->authorsRepository->findAuthorIdsByName($name, $label->realName),
-            fn(string $name) => $this->authorAliasesRepository->findAliasIdsByName($name),
+            fn(?string $name) => $this->authorsRepository->findAuthorIdsByName($name, $label->realName),
+            fn(?string $name) => $this->authorAliasesRepository->findAliasIdsByName($name),
             static fn($alias) => $alias->getAuthorElement(),
             /**
-             * @var authorElement|authorAliasElement $element
+             * @var authorElement|authorAliasElement $author
              */
-            function (structureElement $element, ?string $name, Label $label) {
+            function (structureElement $author, ?string $elementName, Label $label) {
+                $authorGroups = $author->getGroupsList();
+                $authorRealName = $author->realName ?? '';
+                $labelName = $label->name;
+                $isRealNameFull = str_contains($authorRealName, ' ');
+                $isNickNameExisting = $labelName !== '' && $labelName !== null;
+                $areGroupsExisting = count($authorGroups) > 0;
+
+                if (!($isRealNameFull || $isNickNameExisting || $areGroupsExisting)) {
+                    return 0; //too few data for author to match it with existing
+                }
+
+                $authorCountry = $author->getCountryTitle();
+                $labelCountry = $label->country ?? null;
+
+                //don't match authors from different countries
+                if ($authorCountry !== null && $labelCountry !== null && !$author->matchesCountry($labelCountry)) {
+                    return 0;
+                }
+
+                $labelGroups = $label->groups ?? [];
+
+                // if both have groups, then exclude non-matching
+                if (count($authorGroups) > 0 && count($labelGroups) > 0) {
+                    $authorGroupTitles = array_map(static fn($authorGroup) => $authorGroup->getTitle(), $authorGroups);
+                    $labelGroupTitles = array_map(static fn($groupLabel) => $groupLabel->name, $labelGroups);
+
+                    $groupMatches = array_intersect($authorGroupTitles, $labelGroupTitles);
+
+                    if (count($groupMatches) === 0) {
+                        return 0;
+                    }
+                }
+
                 $score = 0;
-                if ($this->valueMatches($name, $label->name)) {
+
+                if ($this->valueMatches($elementName, $labelName)) {
                     $score += 10;
                 }
-                if ($this->valueMatches($element->realName, $label->realName)) {
-                    $score += 10;
+                if ($isRealNameFull && $this->valueMatches($authorRealName, $label->realName)) {
+                    $score += 20;
                 }
-                if ($element->matchesCity($label->city ?? '')) {
+                if ($author->matchesCity($label->city ?? '')) {
                     $score += 5;
                 }
-                if ($element->matchesCountry($label->country ?? '')) {
+                if ($author->matchesCountry($labelCountry ?? '')) {
                     $score += 5;
                 }
 
-                $authorGroups = $element->getGroupsList();
-                $authorGroupTitles = array_map(fn($group) => $group->getTitle(), $authorGroups);
-                $labelGroupTitles = array_map(static fn($groupLabel) => $groupLabel->name, $label->groups ?? []);
-
-                // Check if any of the author's groups match any of the label's groups
-                $groupMatches = array_intersect($authorGroupTitles, $labelGroupTitles);
-                if ($groupMatches !== []) {
-                    $score += 20; // Increase the score significantly for group matches
+                if (isset($groupMatches) && count($groupMatches) > 0) {
+                    $score += 20;
                 }
 
                 return $score;
@@ -137,6 +173,9 @@ final readonly class LabelResolver
 
         foreach ($entities as $entity) {
             $score = $calculateScoreForElement($entity, $entity->getTitle(), $label);
+            if ($score === 0) {
+                continue;
+            }
             $candidates[] = [
                 'element' => $entity,
                 'score' => $score,
@@ -148,6 +187,9 @@ final readonly class LabelResolver
             // score must be calculated from main entity, which has all groups, locations and so on
             // but alias title is for comparison
             $score = $calculateScoreForElement($entity, $alias->getTitle(), $label);
+            if ($score === 0) {
+                continue;
+            }
             $candidates[] = [
                 'element' => $alias,
                 'score' => $score,
@@ -161,6 +203,6 @@ final readonly class LabelResolver
 
     private function valueMatches(?string $value1, ?string $value2): bool
     {
-        return !empty($value1) && !empty($value2) && trim($value1) === trim($value2);
+        return !empty($value1) && !empty($value2) && mb_strtolower(trim($value1)) === mb_strtolower(trim($value2));
     }
 }

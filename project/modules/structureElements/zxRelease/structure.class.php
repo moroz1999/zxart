@@ -694,7 +694,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
              */
             $languagesManager = $this->getService('languagesManager');
             $key = 'hw' . $languagesManager->getCurrentLanguageId();
-            if (($this->hardwareInfo = $this->getCacheKey($key)) === false) {
+            if (($this->hardwareInfo = $this->getCacheKey($key)) === null) {
                 $this->hardwareInfo = [];
                 /**
                  * @var translationsManager $translationsManager

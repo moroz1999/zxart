@@ -1,6 +1,7 @@
 <?php
 
 use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\LinkTypes;
 
 /**
  * Class authorElement
@@ -104,7 +105,14 @@ class authorElement extends structureElement implements
         $moduleStructure['articles'] = [
             'ConnectedElements',
             [
-                'linkType' => 'pressAuthor',
+                'linkType' => LinkTypes::PRESS_AUTHOR->value,
+                'role' => 'parent',
+            ],
+        ];
+        $moduleStructure['mentions'] = [
+            'ConnectedElements',
+            [
+                'linkType' => LinkTypes::PRESS_PEOPLE->value,
                 'role' => 'parent',
             ],
         ];

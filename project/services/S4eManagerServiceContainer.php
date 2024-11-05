@@ -2,6 +2,7 @@
 
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Prods\Services\ProdsService;
 
 class S4eManagerServiceContainer extends DependencyInjectionServiceContainer
 {
@@ -21,12 +22,12 @@ class S4eManagerServiceContainer extends DependencyInjectionServiceContainer
     {
         $s4eManager = $instance;
         /**
-         * @var ProdsManager $prodsManager
+         * @var ProdsService $prodsManager
          */
-        if ($prodsManager = $this->getOption('ProdsManager')) {
-            $s4eManager->setProdsManager($prodsManager);
+        if ($prodsManager = $this->getOption(ProdsService::class)) {
+            $s4eManager->setProdsService($prodsManager);
         } else {
-            $s4eManager->setProdsManager($this->registry->getService('ProdsManager'));
+            $s4eManager->setProdsService($this->registry->getService(ProdsService::class));
         }
         /**
          * @var AuthorsService $authorsManager

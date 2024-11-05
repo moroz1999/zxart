@@ -38,6 +38,7 @@
         </ul>
     {/if}
     {include file=$theme->template('component.groupauthors.tpl')}
+    {include file=$theme->template('component.mentions.tpl')}
     {foreach $element->getAliasElements() as $aliasElement}
         {include file=$theme->template('component.groupauthors.tpl') element=$aliasElement}
     {/foreach}

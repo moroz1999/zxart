@@ -9,7 +9,6 @@ use ConfigManager;
 use CountriesManager;
 use ElementsManager;
 use groupElement;
-use ZxArt\Groups\Services\GroupsService;
 use Illuminate\Database\Connection;
 use ImportIdOperatorTrait;
 use LanguagesManager;
@@ -17,13 +16,14 @@ use letterElement;
 use LettersElementsListProviderTrait;
 use linksManager;
 use privilegesManager;
-use TranslitHelper;
 use structureElement;
 use structureManager;
+use TranslitHelper;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
-use ZxArt\Labels\Label;
-use ZxArt\Labels\LabelResolver;
-use ZxArt\Labels\LabelType;
+use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Import\Labels\Label;
+use ZxArt\Import\Labels\LabelResolver;
+use ZxArt\Import\Labels\LabelType;
 
 class AuthorsService extends ElementsManager
 {
@@ -91,6 +91,7 @@ class AuthorsService extends ElementsManager
              */
             if (!($element = $this->getElementByImportId($authorInfo['id'], $origin, 'author'))) {
                 $label = new Label(
+                    id: $authorInfo['id'] ?? null,
                     name: $authorInfo['title'],
                     city: $authorInfo['cityName'] ?? null,
                     country: $authorInfo['countryName'] ?? null,
@@ -119,6 +120,11 @@ class AuthorsService extends ElementsManager
     public function createAuthor($authorInfo, $origin): ?authorElement
     {
         $element = null;
+        $title = $authorInfo['title'] ?? null;
+        $realName = $authorInfo['realName'] ?? null;
+        if (($title === null || $title === '') && $realName !== null){
+            $authorInfo['title'] = $realName;
+        }
         $firstLetter = mb_strtolower(mb_substr($authorInfo['title'], 0, 1));
         $firstLetter = mb_substr(TranslitHelper::convert($firstLetter), 0, 1);
         if (!preg_match('/[a-zA-Z]/', $firstLetter)) {
@@ -134,7 +140,7 @@ class AuthorsService extends ElementsManager
              */
             $letters = $this->structureManager->getElementsChildren($authorsElement->id);
             foreach ($letters as $letterElement) {
-                if (mb_strtolower($letterElement->title) == $firstLetter) {
+                if (mb_strtolower($letterElement->title) === $firstLetter) {
                     $authorLetterElement = $letterElement;
                     break;
                 }
@@ -249,6 +255,7 @@ class AuthorsService extends ElementsManager
              */
             if (!($element = $this->getElementByImportId($authorAliasInfo['id'], $origin, 'author'))) {
                 $label = new Label(
+                    id: $authorAliasInfo['id'] ?? null,
                     name: $authorAliasInfo['title'],
                     type: LabelType::person,
                     isAlias: true
@@ -269,10 +276,7 @@ class AuthorsService extends ElementsManager
         return $this->importedAuthorAliases[$origin][$authorAliasInfo['id']];
     }
 
-    /**
-     * @param array $authorAliasInfo
-     */
-    protected function createAuthorAlias($authorAliasInfo, $origin): ?authorAliasElement
+    protected function createAuthorAlias(array $authorAliasInfo, $origin): ?authorAliasElement
     {
         if ($element = $this->manufactureAliasElement($authorAliasInfo['title'])) {
             $this->updateAuthorAlias($element, $authorAliasInfo, $origin);
@@ -281,10 +285,7 @@ class AuthorsService extends ElementsManager
         return $element;
     }
 
-    /**
-     * @param string $title
-     */
-    protected function manufactureAliasElement($title = ''): ?authorAliasElement
+    protected function manufactureAliasElement(string $title = ''): ?authorAliasElement
     {
         if ($letterId = $this->getLetterId($title)) {
             if ($letterElement = $this->structureManager->getElementById($letterId)) {
@@ -308,10 +309,7 @@ class AuthorsService extends ElementsManager
         return null;
     }
 
-    /**
-     * @param authorAliasElement $element
-     */
-    protected function updateAuthorAlias($element, array $authorAliasInfo, $origin): void
+    protected function updateAuthorAlias(authorAliasElement $element, array $authorAliasInfo, $origin): void
     {
         $changed = false;
 

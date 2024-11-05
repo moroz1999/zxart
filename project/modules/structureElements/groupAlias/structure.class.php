@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\LinkTypes;
+
 /**
  * Class groupAliasElement
  *
@@ -48,6 +50,13 @@ class groupAliasElement extends structureElement implements CommentsHolderInterf
             'ConnectedElements',
             [
                 'linkType' => 'zxReleasePublishers',
+                'role' => 'parent',
+            ],
+        ];
+        $moduleStructure['mentions'] = [
+            'ConnectedElements',
+            [
+                'linkType' => LinkTypes::PRESS_GROUPS->value,
                 'role' => 'parent',
             ],
         ];

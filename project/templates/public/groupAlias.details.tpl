@@ -29,6 +29,7 @@
 	{if $authors=$element->getAuthorsInfo('group')}
 		{include file=$theme->template('component.groupauthors.tpl')}
 	{/if}
+	{include file=$theme->template('component.mentions.tpl')}
 	{include file=$theme->template('group.zxProds.groups.tpl')}
 	{include file=$theme->template('publisher.zxProds.tpl')}
 	{include file=$theme->template('group.publishedReleases.tpl')}

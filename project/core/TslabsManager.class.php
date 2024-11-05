@@ -2,6 +2,7 @@
 
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Prods\Services\ProdsService;
 
 class TslabsManager extends errorLogger
 {
@@ -29,7 +30,7 @@ class TslabsManager extends errorLogger
         'http://prods.tslabs.info/'
     ];
     /**
-     * @var ProdsManager
+     * @var ProdsService
      */
     protected $prodsManager;
     /**
@@ -76,7 +77,7 @@ class TslabsManager extends errorLogger
     /**
      * @param mixed $prodsManager
      */
-    public function setProdsManager(ProdsManager $prodsManager): void
+    public function setProdsService(ProdsService $prodsManager): void
     {
         $this->prodsManager = $prodsManager;
         $this->prodsManager->setUpdateExistingProds(true);

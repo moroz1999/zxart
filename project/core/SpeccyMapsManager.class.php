@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Connection;
-use Illuminate\Database\Query\Builder;
+use ZxArt\Prods\Services\ProdsService;
 
 class SpeccyMapsManager extends errorLogger
 {
@@ -10,7 +10,7 @@ class SpeccyMapsManager extends errorLogger
         'https://maps.speccy.cz/index.php?sort=4&part=99&ath=0&wosid=0000000',
     ];
     /**
-     * @var ProdsManager
+     * @var ProdsService
      */
     protected $prodsManager;
     protected $origin = 'maps';
@@ -22,7 +22,7 @@ class SpeccyMapsManager extends errorLogger
     /**
      * @param mixed $prodsManager
      */
-    public function setProdsManager(ProdsManager $prodsManager): void
+    public function setProdsService(ProdsService $prodsManager): void
     {
         $this->prodsManager = $prodsManager;
         $this->prodsManager->setUpdateExistingProds(true);

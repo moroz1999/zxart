@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Prods\Services\ProdsService;
+
 class ZxPressManager extends errorLogger
 {
     protected int $counter = 0;
@@ -10,7 +12,7 @@ class ZxPressManager extends errorLogger
     private $prodsIndex = [];
 
     public function __construct(
-        protected ProdsManager $prodsManager,
+        protected ProdsService $prodsManager,
     )
     {
         $this->prodsManager->setMatchProdsWithoutYear(true);

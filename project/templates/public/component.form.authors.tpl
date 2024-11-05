@@ -54,7 +54,6 @@
                         {/foreach}
                     </select>
                 </div>
-
             </td>
         </tr>
     {/foreach}

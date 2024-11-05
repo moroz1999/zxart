@@ -3,7 +3,7 @@
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 
-class ElementsManager extends errorLogger
+abstract class ElementsManager extends errorLogger
 {
     protected structureManager $structureManager;
     protected LanguagesManager $languagesManager;
@@ -45,13 +45,13 @@ class ElementsManager extends errorLogger
         }
         if (is_array($sort)) {
             foreach ($sort as $property => $order) {
-                if ($order == 'rand' || $property == 'rand') {
+                if ($order === 'rand' || $property === 'rand') {
                     $query->inRandomOrder();
                     break;
                 }
                 if (isset($this->columnRelations[$property])) {
                     foreach ($this->columnRelations[$property] as $criteria => $orderDirection) {
-                        if ($criteria == 'dateCreated') {
+                        if ($criteria === 'dateCreated') {
                             $query->leftJoin('structure_elements', 'structure_elements.id', '=', $query->from . '.id');
                             $query->orderBy("structure_elements.dateCreated", $orderDirection);
                         } else {

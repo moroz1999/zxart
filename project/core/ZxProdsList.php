@@ -2,8 +2,9 @@
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use ZxArt\Prods\Repositories\ProdsRepository;
 
-const ZXPRODS_TABLE = 'module_zxprod';
+const ZXPRODS_TABLE = ProdsRepository::TABLE;
 
 trait ZxProdsList
 {

@@ -9,9 +9,6 @@ trait ImportIdOperatorTrait
 
     protected Connection $db;
 
-    /**
-     * @return void
-     */
     public function setDb(Connection $db): void
     {
         $this->db = $db;
@@ -25,9 +22,6 @@ trait ImportIdOperatorTrait
     }
 
     /**
-     * @param $importId
-     * @param $origin
-     * @param $type
      * @return structureElement|null
      */
     public function getElementByImportId($importId, $origin, $type)

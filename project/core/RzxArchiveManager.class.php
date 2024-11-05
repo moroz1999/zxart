@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Prods\Services\ProdsService;
+
 class RzxArchiveManager extends errorLogger
 {
     protected $urls = [
@@ -32,7 +34,7 @@ class RzxArchiveManager extends errorLogger
         'http://www.rzxarchive.co.uk/z.php',
     ];
     /**
-     * @var ProdsManager
+     * @var ProdsService
      */
     protected $prodsManager;
     protected $origin = 'rzx';
@@ -43,7 +45,7 @@ class RzxArchiveManager extends errorLogger
     /**
      * @param mixed $prodsManager
      */
-    public function setProdsManager(ProdsManager $prodsManager): void
+    public function setProdsService(ProdsService $prodsManager): void
     {
         $this->prodsManager = $prodsManager;
         $this->prodsManager->setUpdateExistingProds(true);

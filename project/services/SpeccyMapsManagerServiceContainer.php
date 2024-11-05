@@ -18,7 +18,7 @@ class SpeccyMapsManagerServiceContainer extends DependencyInjectionServiceContai
     {
         $speccyMapsManager = $instance;
 
-        $this->injectService($speccyMapsManager, 'ProdsManager');
+        $this->injectService($speccyMapsManager, ProdsService::class);
         $this->injectService($speccyMapsManager, 'db');
 
         return $speccyMapsManager;

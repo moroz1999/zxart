@@ -2,10 +2,11 @@
 
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Prods\Services\ProdsService;
 use ZxArt\Queue\QueueService;
-use ZxArt\Queue\QueueType;
 use ZxArt\Queue\QueueStatus;
-use ZxArt\CategoryIds;
+use ZxArt\Queue\QueueType;
+use ZxArt\ZxProdCategories\CategoryIds;
 
 class PouetManager extends errorLogger
 {
@@ -265,7 +266,7 @@ class PouetManager extends errorLogger
     protected $urls = [];
 
     /**
-     * @var ProdsManager
+     * @var ProdsService
      */
     protected $prodsManager;
     /**
@@ -359,11 +360,8 @@ class PouetManager extends errorLogger
     {
         $this->countriesManager = $countriesManager;
     }
-
-    /**
-     * @param mixed $prodsManager
-     */
-    public function setProdsManager(ProdsManager $prodsManager): void
+    
+    public function setProdsService(ProdsService $prodsManager): void
     {
         $this->prodsManager = $prodsManager;
         $this->prodsManager->setForceUpdateCategories(true);

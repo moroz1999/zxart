@@ -23,6 +23,7 @@
 			{/if}
 		</div>
 		<a class="button" href="{$element->getSaveUrl()}">{translations name='party.save'}</a>
+	{include file=$theme->template('component.mentions.tpl')}
 	<div class='party_compos'>
 		{foreach from=$element->getProdsComposJson() key=compoType item=compo}
 			{assign "compoTitle" "compo_"|cat:$compoType}

@@ -2,6 +2,7 @@
 
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Prods\Services\ProdsService;
 
 class VtrdosManagerServiceContainer extends DependencyInjectionServiceContainer
 {
@@ -21,12 +22,12 @@ class VtrdosManagerServiceContainer extends DependencyInjectionServiceContainer
     {
         $vtrdosManager = $instance;
         /**
-         * @var ProdsManager $prodsManager
+         * @var ProdsService $prodsManager
          */
-        if ($prodsManager = $this->getOption('ProdsManager')) {
-            $vtrdosManager->setProdsManager($prodsManager);
+        if ($prodsManager = $this->getOption(ProdsService::class)) {
+            $vtrdosManager->setProdsService($prodsManager);
         } else {
-            $vtrdosManager->setProdsManager($this->registry->getService('ProdsManager'));
+            $vtrdosManager->setProdsService($this->registry->getService(ProdsService::class));
         }
         /**
          * @var AuthorsService $authorsManager

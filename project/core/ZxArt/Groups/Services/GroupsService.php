@@ -3,19 +3,22 @@
 namespace ZxArt\Groups\Services;
 
 use authorElement;
-use configManager;
+use ConfigManager;
 use CountriesManager;
 use ElementsManager;
 use groupAliasElement;
 use groupElement;
 use Illuminate\Database\Connection;
 use ImportIdOperatorTrait;
-use languagesManager;
+use LanguagesManager;
 use LettersElementsListProviderTrait;
 use linksManager;
 use privilegesManager;
 use structureManager;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Import\Labels\Label;
+use ZxArt\Import\Labels\LabelResolver;
+use ZxArt\Import\Labels\LabelType;
 
 class GroupsService extends ElementsManager
 {
@@ -29,10 +32,11 @@ class GroupsService extends ElementsManager
     protected array $importedGroupAliases = [];
 
     public function __construct(
+        protected LabelResolver        $labelResolver,
         protected linksManager         $linksManager,
         protected structureManager     $structureManager,
         protected CountriesManager     $countriesManager,
-        protected configManager        $configManager,
+        protected ConfigManager        $configManager,
         protected privilegesManager    $privilegesManager,
         protected AuthorshipRepository $authorshipRepository,
         protected languagesManager     $languagesManager,
@@ -43,28 +47,6 @@ class GroupsService extends ElementsManager
             'title' => ['LOWER(title)' => true],
             'date' => ['id' => true],
         ];
-    }
-
-    public function getGroupByName($groupName): ?groupElement
-    {
-        $groupElement = null;
-        $structureManager = $this->structureManager;
-
-        if ($record = $this->db->table('module_group')
-            ->select('id')
-            ->where('title', 'like', $groupName)
-            ->limit(1)
-            ->first()
-        ) {
-            /**
-             * @var groupElement $groupElement
-             */
-            if ($groupElement = $structureManager->getElementById($record['id'])) {
-                return $groupElement;
-            };
-        }
-
-        return $groupElement;
     }
 
     public function getGroupAliasByName($groupAliasName): ?groupAliasElement
@@ -96,8 +78,18 @@ class GroupsService extends ElementsManager
              * @var groupElement $element
              */
             if (!($element = $this->getElementByImportId($groupInfo['id'], $origin, 'group'))) {
-                if ($element = $this->getGroupByName($groupInfo['title'])) {
-                    $this->saveImportId($element->id, $groupInfo['id'], $origin, 'group');
+                $label = new Label(
+                    id: $groupInfo['id'] ?? null,
+                    name: $groupInfo['title'],
+                    city: $groupInfo['cityName'] ?? null,
+                    country: $groupInfo['countryName'] ?? null,
+                    type: LabelType::group,
+                    isAlias: false
+                );
+                if ($element = $this->labelResolver->resolve($label)) {
+                    if ($origin) {
+                        $this->saveImportId($element->id, $groupInfo['id'], $origin, 'group');
+                    }
                     $this->updateGroup($element, $groupInfo, $origin);
                 } elseif ($createNew) {
                     $element = $this->createGroup($groupInfo, $origin);
@@ -134,26 +126,26 @@ class GroupsService extends ElementsManager
     protected function updateGroup(groupElement $element, array $groupInfo, $origin): void
     {
         $changed = false;
-        if (!empty($groupInfo['title']) && $element->title != $groupInfo['title']) {
+        if (!empty($groupInfo['title']) && $element->title !== $groupInfo['title']) {
             if (!$element->title) {
                 $changed = true;
                 $element->title = $groupInfo['title'];
                 $element->structureName = $groupInfo['title'];
             }
         }
-        if (!empty($groupInfo['abbreviation']) && $element->abbreviation != $groupInfo['abbreviation']) {
+        if (!empty($groupInfo['abbreviation']) && $element->abbreviation !== $groupInfo['abbreviation']) {
             if (!$element->abbreviation) {
                 $changed = true;
                 $element->abbreviation = $groupInfo['abbreviation'];
             }
         }
-        if (!empty($groupInfo['website']) && $element->website != $groupInfo['website']) {
+        if (!empty($groupInfo['website']) && $element->website !== $groupInfo['website']) {
             if (!$element->website) {
                 $changed = true;
                 $element->website = $groupInfo['website'];
             }
         }
-        if (!empty($groupInfo['type']) && $element->type != $groupInfo['type']) {
+        if (!empty($groupInfo['type']) && $element->type !== $groupInfo['type']) {
             if (!$element->type || $element->type === 'unknown') {
                 $changed = true;
                 $element->type = $groupInfo['type'];
@@ -216,8 +208,16 @@ class GroupsService extends ElementsManager
              * @var groupAliasElement $element
              */
             if (!($element = $this->getElementByImportId($groupAliasInfo['id'], $origin, 'group'))) {
-                if ($element = $this->getGroupAliasByName($groupAliasInfo['title'])) {
-                    $this->saveImportId($element->id, $groupAliasInfo['id'], $origin, 'group');
+                $label = new Label(
+                    id: $groupAliasInfo['id'] ?? null,
+                    name: $groupAliasInfo['title'],
+                    type: LabelType::group,
+                    isAlias: true
+                );
+                if ($element = $this->labelResolver->resolve($label)) {
+                    if ($origin) {
+                        $this->saveImportId($element->id, $groupAliasInfo['id'], $origin, 'group');
+                    }
                     $this->updateGroupAlias($element, $groupAliasInfo, $origin);
                 } elseif ($createNew) {
                     $element = $this->createGroupAlias($groupAliasInfo, $origin);

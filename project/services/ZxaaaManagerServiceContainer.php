@@ -2,6 +2,7 @@
 
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Prods\Services\ProdsService;
 
 class ZxaaaManagerServiceContainer extends DependencyInjectionServiceContainer
 {
@@ -21,12 +22,12 @@ class ZxaaaManagerServiceContainer extends DependencyInjectionServiceContainer
     {
         $zxaaaManager = $instance;
         /**
-         * @var ProdsManager $prodsManager
+         * @var ProdsService $prodsManager
          */
-        if ($prodsManager = $this->getOption('ProdsManager')) {
-            $zxaaaManager->setProdsManager($prodsManager);
+        if ($prodsManager = $this->getOption(ProdsService::class)) {
+            $zxaaaManager->setProdsService($prodsManager);
         } else {
-            $zxaaaManager->setProdsManager($this->registry->getService('ProdsManager'));
+            $zxaaaManager->setProdsService($this->registry->getService(ProdsService::class));
         }
         /**
          * @var AuthorsService $authorsManager

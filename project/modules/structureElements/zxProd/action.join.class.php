@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Prods\Services\ProdsService;
+
 class joinZxProd extends structureElementAction
 {
     protected $loggable = true;
@@ -15,9 +17,9 @@ class joinZxProd extends structureElementAction
     {
         if ($this->validated) {
             /**
-             * @var ProdsManager $prodsManager
+             * @var ProdsService $prodsManager
              */
-            $prodsManager = $this->getService('ProdsManager');
+            $prodsManager = $this->getService(ProdsService::class);
 
             if ($structureElement->joinAndDelete) {
                 $prodsManager->joinDeleteZxProd($structureElement->id, $structureElement->joinAndDelete, $structureElement->releasesOnly);

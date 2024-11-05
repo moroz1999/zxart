@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Prods\Services\ProdsService;
+
 class RzxArchiveManagerServiceContainer extends DependencyInjectionServiceContainer
 {
     /**
@@ -18,12 +20,12 @@ class RzxArchiveManagerServiceContainer extends DependencyInjectionServiceContai
     {
         $rzxArchiveManager = $instance;
         /**
-         * @var ProdsManager $prodsManager
+         * @var ProdsService $prodsManager
          */
-        if ($prodsManager = $this->getOption('ProdsManager')) {
-            $rzxArchiveManager->setProdsManager($prodsManager);
+        if ($prodsManager = $this->getOption(ProdsService::class)) {
+            $rzxArchiveManager->setProdsService($prodsManager);
         } else {
-            $rzxArchiveManager->setProdsManager($this->registry->getService('ProdsManager'));
+            $rzxArchiveManager->setProdsService($this->registry->getService(ProdsService::class));
         }
         return $rzxArchiveManager;
     }

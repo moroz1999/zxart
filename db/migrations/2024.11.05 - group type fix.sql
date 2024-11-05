@@ -1,0 +1,1 @@
+ALTER TABLE `engine_module_group` CHANGE `type` `type` ENUM('company','studio','scene','education','store','science','unknown') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'unknown';
