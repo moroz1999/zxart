@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace ZxArt\Import\Prods;
 
-use ZxArt\Import\Labels\Label;
+use ZxArt\Import\Labels\GroupLabel;
 
 readonly final class Prod
 {
     /**
-     * @param Label[]|null $groups
+     * @param GroupLabel[]|null $groups
      */
     public function __construct(
         public ?string $id = null,

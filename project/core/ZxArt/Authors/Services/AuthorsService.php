@@ -21,9 +21,9 @@ use structureManager;
 use TranslitHelper;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Groups\Services\GroupsService;
-use ZxArt\Import\Labels\Label;
+use ZxArt\Import\Labels\GroupLabel;
 use ZxArt\Import\Labels\LabelResolver;
-use ZxArt\Import\Labels\LabelType;
+use ZxArt\Import\Labels\PersonLabel;
 
 class AuthorsService extends ElementsManager
 {
@@ -85,33 +85,47 @@ class AuthorsService extends ElementsManager
      */
     public function importAuthor(array $authorInfo, $origin, $createNew = true)
     {
-        if (!isset($this->importedAuthors[$origin][$authorInfo['id']])) {
-            /**
-             * @var authorElement $element
-             */
-            if (!($element = $this->getElementByImportId($authorInfo['id'], $origin, 'author'))) {
-                $label = new Label(
-                    id: $authorInfo['id'] ?? null,
-                    name: $authorInfo['title'],
-                    city: $authorInfo['cityName'] ?? null,
-                    country: $authorInfo['countryName'] ?? null,
-                    type: LabelType::person,
-                    isAlias: false
-                );
-                if ($element = $this->labelResolver->resolve($label)) {
-                    if ($origin) {
-                        $this->saveImportId($element->id, $authorInfo['id'], $origin, 'author');
-                    }
-                    $this->updateAuthor($element, $authorInfo, $origin);
-                } elseif ($createNew) {
-                    $element = $this->createAuthor($authorInfo, $origin);
-                }
-            } else {
-                $this->updateAuthor($element, $authorInfo, $origin);
-            }
-            $this->importedAuthors[$origin][$authorInfo['id']] = $element;
+        if (isset($this->importedAuthors[$origin][$authorInfo['id']])) {
+            return $this->importedAuthors[$origin][$authorInfo['id']];
         }
-        return $this->importedAuthors[$origin][$authorInfo['id']];
+
+        $element = $this->getElementByImportId($authorInfo['id'], $origin, 'author');
+        /**
+         * @var authorElement $element
+         */
+        if ($element === null) {
+            $groups = array_map(static function ($groupInfo) use ($authorInfo) {
+                return new GroupLabel(
+                    id: $groupInfo['id'],
+                    name: $groupInfo['title'],
+                    city: $groupInfo['city'] ?? null,
+                    country: $groupInfo['country'] ?? null,
+                    memberNames: [$authorInfo['title']],
+                );
+            }, $authorInfo['groups']);
+
+            $label = new PersonLabel(
+                id: $authorInfo['id'] ?? null,
+                name: $authorInfo['title'],
+                realName: $authorInfo['realName'],
+                city: $authorInfo['cityName'] ?? null,
+                country: $authorInfo['countryName'] ?? null,
+                groups: $groups !== [] ? $groups : null,
+                isAlias: false
+            );
+            if ($element = $this->labelResolver->resolve($label)) {
+                if ($origin) {
+                    $this->saveImportId($element->id, $authorInfo['id'], $origin, 'author');
+                }
+                $this->updateAuthor($element, $authorInfo, $origin);
+            } elseif ($createNew) {
+                $element = $this->createAuthor($authorInfo, $origin);
+            }
+        } else {
+            $this->updateAuthor($element, $authorInfo, $origin);
+        }
+        $this->importedAuthors[$origin][$authorInfo['id']] = $element;
+        return $element;
     }
 
     /**
@@ -122,7 +136,7 @@ class AuthorsService extends ElementsManager
         $element = null;
         $title = $authorInfo['title'] ?? null;
         $realName = $authorInfo['realName'] ?? null;
-        if (($title === null || $title === '') && $realName !== null){
+        if (($title === null || $title === '') && $realName !== null) {
             $authorInfo['title'] = $realName;
         }
         $firstLetter = mb_strtolower(mb_substr($authorInfo['title'], 0, 1));
@@ -160,6 +174,7 @@ class AuthorsService extends ElementsManager
 
     /**
      * @param authorElement $element
+     * @throws \JsonException
      */
     protected function updateAuthor($element, array $authorInfo, $origin): void
     {
@@ -232,16 +247,10 @@ class AuthorsService extends ElementsManager
         }
 
         if ($this->forceUpdateGroups && isset($authorInfo['groupsIds'])) {
+            $roles = $authorInfo['groupRoles'] ?? [];
             foreach ($authorInfo['groupsIds'] as $groupId) {
                 if ($groupElement = $this->getElementByImportId($groupId, $origin, 'group')) {
-                    $this->authorshipRepository->checkAuthorship($groupElement->id, $element->getId(), 'group');
-                }
-            }
-        }
-        if (isset($authorInfo['groups'])) {
-            foreach ($authorInfo['groups'] as $groupData) {
-                if ($groupElement = $this->groupsManager->importGroup($groupData, $origin)) {
-                    $this->authorshipRepository->checkAuthorship($groupElement->id, $element->getId(), 'group');
+                    $this->authorshipRepository->checkAuthorship($groupElement->id, $element->getId(), 'group', $roles);
                 }
             }
         }
@@ -254,10 +263,21 @@ class AuthorsService extends ElementsManager
              * @var authorAliasElement $element
              */
             if (!($element = $this->getElementByImportId($authorAliasInfo['id'], $origin, 'author'))) {
-                $label = new Label(
+
+                $groups = array_map(static function ($groupInfo) use ($authorAliasInfo) {
+                    return new GroupLabel(
+                        id: $groupInfo['id'],
+                        name: $groupInfo['title'],
+                        city: $groupInfo['city'] ?? null,
+                        country: $groupInfo['country'] ?? null,
+                        memberNames: [$authorAliasInfo['title']],
+                    );
+                }, $authorAliasInfo['groups']);
+
+                $label = new PersonLabel(
                     id: $authorAliasInfo['id'] ?? null,
                     name: $authorAliasInfo['title'],
-                    type: LabelType::person,
+                    groups: $groups,
                     isAlias: true
                 );
                 if ($element = $this->labelResolver->resolve($label)) {
@@ -540,7 +560,7 @@ class AuthorsService extends ElementsManager
                     $this->linksManager->linkElements($authorElement->id, $zxProd->id, 'zxProdPublishers');
                 }
                 foreach ($groupElement->getGroupProds() as $zxProd) {
-                    $this->authorshipRepository->checkAuthorship($zxProd->id, $authorElement->id, 'prod', []);
+                    $this->authorshipRepository->checkAuthorship($zxProd->id, $authorElement->id, 'prod');
                 }
                 foreach ($groupElement->publishedReleases as $zxRelease) {
                     $this->authorshipRepository->checkAuthorship($zxRelease->id, $authorElement->id, 'release', ['release']);

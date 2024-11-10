@@ -9,6 +9,9 @@ use ZxArt\LinkTypes;
  * @property string $content
  * @property string $h1
  * @property boolean $allowComments
+ * @property boolean $aiRestartFix
+ * @property boolean $aiRestartTranslate
+ * @property boolean $aiRestartParse
  * @property authorElement[]|authorAliasElement[] $authors
  * @property authorElement[]|authorAliasElement[] $people
  * @property zxProdElement[]|zxReleaseElement $software
@@ -48,6 +51,9 @@ class pressArticleElement extends structureElement implements SearchContentHolde
         $moduleStructure['metaTitle'] = 'text';
         $moduleStructure['metaDescription'] = 'text';
 
+        $moduleStructure['aiRestartFix'] = 'checkbox';
+        $moduleStructure['aiRestartTranslate'] = 'checkbox';
+        $moduleStructure['aiRestartParse'] = 'checkbox';
         $moduleStructure['allowComments'] = 'checkbox';
         $moduleStructure['externalLink'] = 'url';
         $moduleStructure['authors'] = [
@@ -188,7 +194,9 @@ class pressArticleElement extends structureElement implements SearchContentHolde
     private function getFormattedContent(): string
     {
         $originalContent = $this->content;
-        $content = strip_tags($originalContent, ['img', 'br']);
+
+        $content = str_ireplace('mm<m', 'MMCM', $originalContent);
+        $content = strip_tags($content, ['img', 'br']);
         return str_replace(["-\n", "\r"], '', $content);
     }
 

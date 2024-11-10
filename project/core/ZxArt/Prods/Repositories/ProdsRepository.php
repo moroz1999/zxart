@@ -6,13 +6,15 @@ namespace ZxArt\Prods\Repositories;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use ZxArt\Helpers\AlphanumericColumnSearch;
 
 final class ProdsRepository
 {
     public const TABLE = 'module_zxprod';
 
     public function __construct(
-        private readonly Connection $db,
+        private readonly Connection               $db,
+        private readonly AlphanumericColumnSearch $alphanumericColumnSearch,
     )
     {
 
@@ -21,7 +23,7 @@ final class ProdsRepository
     public function getProdByTitleAndYear(?string $title, ?int $year): ?int
     {
         $query = $this->getSelectSql();
-        $query = $this->addSearchByTitle($query, $title);
+        $query = $this->alphanumericColumnSearch->addSearchByTitle($query, $title, 'title');
 
         $query->where('year', '=', $year);
         return $query->value('id');
@@ -30,7 +32,7 @@ final class ProdsRepository
     public function getProdByTitle(?string $title): ?int
     {
         $query = $this->getSelectSql();
-        $query = $this->addSearchByTitle($query, $title);
+        $query = $this->alphanumericColumnSearch->addSearchByTitle($query, $title, 'title');
 
         if ($id = $query->value('id')) {
             return $id;
@@ -44,20 +46,4 @@ final class ProdsRepository
         return $this->db->table(self::TABLE);
     }
 
-    private function addSearchByTitle(Builder $query, ?string $title): Builder
-    {
-        if ($title === null) {
-            return $query;
-        }
-
-        $alphanumericTitle = $this->toAlphanumeric($title);
-        $query->whereRaw("REGEXP_REPLACE(LOWER(title), '[^a-z0-9а-я]', '') = ?", [$alphanumericTitle]);
-
-        return $query;
-    }
-
-    private function toAlphanumeric(string $input): string
-    {
-        return preg_replace('/[^\p{L}\p{N}]/u', '', mb_strtolower($input));
-    }
 }

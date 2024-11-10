@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace ZxArt\Groups\Repositories;
 
 use Illuminate\Database\Connection;
+use ZxArt\Helpers\AlphanumericColumnSearch;
 
 final class GroupAliasesRepository
 {
     private const TABLE = 'module_groupalias';
 
     public function __construct(
-        private readonly Connection $db,
+        private readonly Connection               $db,
+        private readonly AlphanumericColumnSearch $alphanumericColumnSearch,
     )
     {
 
@@ -24,12 +26,7 @@ final class GroupAliasesRepository
         }
 
         $query = $this->db->table(self::TABLE)->select(['id']);
-
-        $name = trim($name);
-        $encodedName = htmlentities($name, ENT_QUOTES);
-        $query
-            ->where('title', 'like', $name)
-            ->orWhere('title', 'like', $encodedName);
+        $query = $this->alphanumericColumnSearch->addSearchByTitle($query, $name, 'title');
 
         if ($ids = $query->pluck('id')) {
             return $ids;

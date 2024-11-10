@@ -65,6 +65,8 @@ trait HardwareProvider
                 'mdos',
                 '3dos',
                 'nedoos',
+                'opd',
+                'disciple',
             ],
             "sound" => [
                 'ay',

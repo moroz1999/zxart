@@ -292,9 +292,7 @@ class ProdsService extends ElementsManager
     {
         $infoIndex = array_reverse($infoIndex);
         foreach ($infoIndex as $gatheredInfo) {
-            if ($gatheredInfo['isAlias'] && $gatheredInfo['isGroup']) {
-                $this->groupsManager->importGroupAlias($gatheredInfo, $origin);
-            } elseif ($gatheredInfo['isAlias'] && $gatheredInfo['isPerson']) {
+            if ($gatheredInfo['isAlias'] && $gatheredInfo['isPerson']) {
                 $this->authorsManager->importAuthorAlias($gatheredInfo, $origin);
             } elseif ($gatheredInfo['isGroup']) {
                 $this->groupsManager->importGroup($gatheredInfo, $origin);
@@ -306,10 +304,6 @@ class ProdsService extends ElementsManager
                 if (!$result) {
                     //search for author alias with that name
                     $result = $this->authorsManager->importAuthorAlias($gatheredInfo, $origin, false);
-                }
-                if (!$result) {
-                    //search for group alias with that name
-                    $result = $this->groupsManager->importGroupAlias($gatheredInfo, $origin, false);
                 }
                 if (!$result) {
                     //just create author by default.
@@ -616,8 +610,8 @@ class ProdsService extends ElementsManager
 
     /**
      * @param FilesElementTrait $element
-     * @param $images
      * @param string $propertyName
+     * @throws Exception
      */
     protected function importElementFiles($element, $images, $propertyName = 'connectedFile'): void
     {

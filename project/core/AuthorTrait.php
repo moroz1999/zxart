@@ -1,6 +1,6 @@
 <?php
 
-trait Author
+trait AuthorTrait
 {
     protected $years = [];
     protected $worksList;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Parties\Repositories;
 
 use Illuminate\Database\Connection;
+use ZxArt\Helpers\AlphanumericColumnSearch;
 
 final class PartiesRepository
 {
@@ -12,6 +13,7 @@ final class PartiesRepository
 
     public function __construct(
         private readonly Connection $db,
+        private readonly AlphanumericColumnSearch $alphanumericColumnSearch,
     )
     {
     }
@@ -22,9 +24,9 @@ final class PartiesRepository
     //WHERE engine_module_party.title LIKE 'dihalt%' AND engine_module_generic.title = 2008
     public function findPartyIdByTitleAndYear(string $title, int $year): ?int
     {
+
         $query = $this->db->table('module_party')
             ->select('module_party.id')
-            ->where('module_party.title', 'like', $title . '%')
             ->limit(1)
             ->leftJoin(
                 'structure_links',
@@ -34,6 +36,8 @@ final class PartiesRepository
                 }
             )->leftJoin('module_generic', 'structure_links.parentStructureId', '=', 'module_generic.id')
             ->where('module_generic.title', '=', $year);
+
+        $query = $this->alphanumericColumnSearch->addSearchByTitle($query, $title, 'engine_module_party.title');
 
 
         if ($record = $query->first()) {

@@ -23,22 +23,19 @@ readonly class ChunkProcessor
         ?array   $imageUrls = null,
         bool     $useJson = true,
         string   $model = PromptSender::MODEL_4O_MINI,
-    )
+    ): ?string
     {
-        $chunks = $this->splitTextIntoChunks($text);
-        $processedChunks = [];
+        $processedChunks = $this->processChunks(
+            $text,
+            $createPrompt,
+            $processResponse,
+            $temperature,
+            $imageUrls,
+            $useJson,
+            $model
+        );
 
-        foreach ($chunks as $chunk) {
-            $prompt = $createPrompt($chunk);
-            $response = $this->promptSender->send($prompt, $temperature, $imageUrls, $useJson, $model);
-            if ($response === null) {
-                return null;
-            }
-            $processedText = $processResponse($response);
-            $processedChunks[] = $processedText;
-        }
-
-        return implode("", $processedChunks);
+        return $processedChunks !== null ? implode("", $processedChunks) : null;
     }
 
     public function processJson(
@@ -51,17 +48,45 @@ readonly class ChunkProcessor
         string   $model = PromptSender::MODEL_4O_MINI,
     ): ?array
     {
+        return $this->processChunks(
+            $text,
+            $createPrompt,
+            $processResponse,
+            $temperature,
+            $imageUrls,
+            $useJson,
+            $model
+        );
+    }
+
+    private function processChunks(
+        string   $text,
+        callable $createPrompt,
+        callable $processResponse,
+        float    $temperature,
+        ?array   $imageUrls,
+        bool     $useJson,
+        string   $model,
+    ): ?array
+    {
         $chunks = $this->splitTextIntoChunks($text);
         $processedChunks = [];
 
         foreach ($chunks as $chunk) {
             $prompt = $createPrompt($chunk);
-            $response = $this->promptSender->send($prompt, $temperature, $imageUrls, $useJson, $model);
+            $response = $this->promptSender->send(
+                $prompt,
+                $temperature,
+                $imageUrls,
+                $useJson,
+                $model
+            );
+
             if ($response === null) {
                 return null;
             }
-            $processedText = $processResponse($response);
-            $processedChunks[] = $processedText;
+
+            $processedChunks[] = $processResponse($response);
         }
 
         return $processedChunks;

@@ -2,6 +2,7 @@
 
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\LinkTypes;
+use ZxArt\Authors\Entities\Author;
 
 /**
  * Class authorAliasElement
@@ -10,10 +11,13 @@ use ZxArt\LinkTypes;
  * @property int $authorId
  * @property int $joinAndDelete
  */
-class authorAliasElement extends structureElement implements CommentsHolderInterface, JsonDataProvider
+class authorAliasElement extends structureElement implements
+    CommentsHolderInterface,
+    JsonDataProvider,
+    Author
 {
     use JsonDataProviderElement;
-    use Author;
+    use AuthorTrait;
     use AuthorshipProviderTrait;
     use LettersElementsListProviderTrait;
     use ImportedItemTrait;
@@ -59,7 +63,14 @@ class authorAliasElement extends structureElement implements CommentsHolderInter
             ],
         ];
     }
-
+    public function gatherAuthorNames(): array
+    {
+        $authorNames = [];
+        if ($this->title !== '') {
+            $authorNames[] = $this->title;
+        }
+        return $authorNames;
+    }
     /**
      * @param (mixed|string)[] $types
      *
@@ -89,7 +100,7 @@ class authorAliasElement extends structureElement implements CommentsHolderInter
                 if ($authorId = $this->getAuthorId()) {
                     $structureManager = $this->getService('structureManager');
                     $authorElement = $structureManager->getElementById($authorId);
-                    if ($authorElement?->structureType === 'author'){
+                    if ($authorElement?->structureType === 'author') {
                         $this->authorElement = $structureManager->getElementById($authorId);
                     }
                 }

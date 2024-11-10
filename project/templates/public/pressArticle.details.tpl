@@ -9,6 +9,10 @@
                     <a class="button"
                        href="{$element->URL}id:{$element->id}/action:showPublicForm/">{translations name='pressarticle.edit'}</a>
                 {/if}
+                {if isset($currentElementPrivileges.showAiForm) && $currentElementPrivileges.showAiForm==1}
+                    <a class="button"
+                       href="{$element->URL}id:{$element->id}/action:showAiForm/">{translations name='pressarticle.showAiForm'}</a>
+                {/if}
                 {if isset($currentElementPrivileges.delete) && $currentElementPrivileges.delete}
                     <a class="button delete_button"
                        href="{$element->URL}id:{$element->id}/action:delete/">{translations name='pressarticle.delete'}</a>

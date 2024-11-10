@@ -6,7 +6,7 @@ namespace ZxArt\Import\Labels;
 final class Label
 {
     /**
-     * @param Label[]|null $groups
+     * @param GroupLabel[]|null $groups
      */
     public function __construct(
         public ?string    $id = null,
@@ -17,9 +17,10 @@ final class Label
         public ?array     $groups = null,
         public ?LabelType $type = null,
         public ?bool      $isAlias = null,
+        public ?array     $memberNames = null,
     )
     {
-
+        $this->id = $this->id ?: $this->name ?: $this->realName;
     }
 
     public function toArray(): array

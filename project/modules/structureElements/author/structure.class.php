@@ -1,6 +1,7 @@
 <?php
 
 use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Authors\Entities\Author;
 use ZxArt\LinkTypes;
 
 /**
@@ -34,7 +35,8 @@ class authorElement extends structureElement implements
     AliasesHolder,
     JsonDataProvider,
     Recalculable,
-    LocationProvider
+    LocationProvider,
+    Author
 {
     use JsonDataProviderElement;
     use CacheOperatingElement;
@@ -42,7 +44,7 @@ class authorElement extends structureElement implements
     use ChartDataProviderTrait;
     use UserElementProviderTrait;
     use LettersElementsListProviderTrait;
-    use Author;
+    use AuthorTrait;
     use AuthorshipProviderTrait;
     use AliasElementsProvider;
     use CommentsTrait;
@@ -121,6 +123,21 @@ class authorElement extends structureElement implements
     protected function setMultiLanguageFields(&$multiLanguageFields): void
     {
         $multiLanguageFields[] = 'realName';
+    }
+
+    public function gatherAuthorNames(): array
+    {
+        $authorNames = [];
+        foreach ($this->getAliasElements() as $aliasElement) {
+            $authorNames[] = $aliasElement->title;
+        }
+        if ($this->title !== '') {
+            $authorNames[] = $this->title;
+        }
+        if ($this->realName !== '') {
+            $authorNames[] = $this->realName;
+        }
+        return $authorNames;
     }
 
     /**
@@ -392,6 +409,9 @@ class authorElement extends structureElement implements
         return '';
     }
 
+    /**
+     * @return groupElement[]|groupAliasElement[]
+     */
     public function getGroupsList()
     {
         if ($this->groupsList === null) {

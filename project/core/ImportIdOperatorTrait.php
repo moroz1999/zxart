@@ -4,8 +4,8 @@ use Illuminate\Database\Connection;
 
 trait ImportIdOperatorTrait
 {
-    protected $cache = [];
-    protected $cacheId = [];
+    protected array $cache = [];
+    protected array $cacheId = [];
 
     protected Connection $db;
 
@@ -21,10 +21,7 @@ trait ImportIdOperatorTrait
         $this->structureManager = $structureManager;
     }
 
-    /**
-     * @return structureElement|null
-     */
-    public function getElementByImportId($importId, $origin, $type)
+    public function getElementByImportId($importId, $origin, $type): ?structureElement
     {
         if (!isset($this->cache[$origin][$type][$importId])) {
             $this->cache[$origin][$type][$importId] = null;
@@ -35,7 +32,7 @@ trait ImportIdOperatorTrait
         return $this->cache[$origin][$type][$importId];
     }
 
-    public function getElementIdByImportId($importId, $origin, $type = null)
+    public function getElementIdByImportId($importId, $origin, $type = null): ?int
     {
         if (!isset($this->cacheId[$origin][$type][$importId])) {
             $this->cacheId[$origin][$type][$importId] = false;

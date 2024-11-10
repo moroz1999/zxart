@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Authors\Repositories;
 
 use Illuminate\Database\Connection;
+use JsonException;
 use \structureManager;
 
 final class AuthorshipRepository
@@ -106,21 +107,28 @@ final class AuthorshipRepository
         return $records;
     }
 
-    public function checkAuthorship(int $elementId, int|string $authorId, string $type, array|string|false $roles = [], int|string|false $startDate = 0, int|string|false $endDate = 0): void
+    /**
+     * @throws JsonException
+     */
+    public function checkAuthorship(int $elementId, int|string $authorId, string $type, array $roles = [], int|string|false $startDate = 0, int|string|false $endDate = 0): void
     {
-        if (is_array($roles)) {
-            $roles = array_unique($roles);
-            $roles = json_encode($roles);
-        }
-        if ($this->db
+        if ($existingRecord = $this->db
             ->table('authorship')
+            ->select('roles')
             ->where('elementId', '=', $elementId)
             ->where('authorId', '=', $authorId)
             ->where('type', '=', $type)
             ->first()
         ) {
+            $existingRoles = json_decode($existingRecord['roles'], true, 512, JSON_THROW_ON_ERROR);
+
             $data = [
-                'roles' => $roles,
+                'roles' => json_encode(
+                    array_values(
+                        array_unique(
+                            array_merge($roles, $existingRoles)
+                        )
+                    ), JSON_THROW_ON_ERROR),
             ];
             if ($startDate) {
                 $data['startDate'] = $startDate;
@@ -138,7 +146,7 @@ final class AuthorshipRepository
                 'elementId' => $elementId,
                 'type' => $type,
                 'authorId' => $authorId,
-                'roles' => $roles,
+                'roles' => json_encode(array_unique($roles), JSON_THROW_ON_ERROR),
             ];
             if ($startDate) {
                 $data['startDate'] = $startDate;

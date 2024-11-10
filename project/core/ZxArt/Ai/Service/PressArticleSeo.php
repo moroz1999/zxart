@@ -1,0 +1,63 @@
+<?php
+declare(strict_types=1);
+
+namespace ZxArt\Ai\Service;
+
+use JsonException;
+use ZxArt\Ai\ChunkProcessor;
+
+readonly class PressArticleSeo
+{
+    public function __construct(
+        private ChunkProcessor $chunkProcessor,
+    )
+    {
+    }
+
+    public function getParsedData(string $text, string $pressTitle, ?int $pressYear): ?array
+    {
+        $createPrompt = static function (string $chunk) use ($pressTitle, $pressYear): string {
+            return "Отправляю тебе текст статьи из журнала/газеты для ZX Spectrum, прочитай и собери информацию.
+* заполни поле publicationYear ТОЛЬКО если в статье ЯВНО указана дата публикации самого ЖУРНАЛА или ГАЗЕТЫ. НЕ УГАДЫВАЙ.
+* Перескажи статью В ТРИ ПРЕДЛОЖЕНИЯ (поле Short Content). Читателю должно быть понятно, о чем статья. Понимай правильно опечатки при чтении. Укажи, если это новелла, описание, мануал, реклама итд.
+* Собери 10 наиболее значимых тегов из фактов и темы статьи. Пример хороших тегов: \"Обзор\", \"Демопати\", \"Критика\", \"Графика\", \"Демосцена\", \"Техника рисования\"
+* Переведи название статьи на три языка, используя поле title.
+* Сгенерируй реально полезные SEO поля для этой статьи на трех языках. Не переводи названия софта и псевдонимы авторов, но делай читабельные названия категорий (игры, демо, программы).
+* краткое описание meta description с важными параметрами (155-160 символов), его показывают в результатах поиска поисковики.
+* page title будет показан посетителю в поисковике (30-60 символов). Он должен подходить под требования поисковиков и содержать правильные ключевики для ранжирования.
+* h1 будет показан посетителю уже на сайте, это главный заголовок над текстом (до 70 символов). Он должен быть человекопонятным и сразу дать кратко понять, что это за статья. H1 должен отличаться от page title.
+* НЕ ПИШИ СВОЙСТВА ОБЪЕКТОВ, если они ПУСТЫЕ '', \"\", [] или null.
+* Используй сухой научный язык. НИКОГДА НЕ ИСПОЛЬЗУЙ call to action и кликбейтов. Не пиши \"Изучите события и размышления о сцене\". Пиши просто \"События и размышления о сцене\".
+* В ответе не пиши ничего лишнего, ТОЛЬКО JSON в формате:
+{
+shortContent:[eng:'', spa:'', rus:''],
+tags:['Tag in english'],
+title:[eng:'', spa:'', rus:''],
+h1:[eng:'', spa:'', rus:''],
+metaDescription:[eng:'', spa:'', rus:''],
+pageTitle:[eng:'', spa:'', rus:'']
+}
+
+Название издания:{$pressTitle}
+Год выпуска издания:{$pressYear}
+Кусок статьи:{$chunk}";
+        };
+
+        /**
+         * @throws JsonException
+         */
+        $processResponse = static function (string $response): array {
+            return json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+        };
+
+        return $this->chunkProcessor->processJson(
+            $text,
+            $createPrompt,
+            $processResponse,
+            0.8,
+            null,
+            true,
+            PromptSender::MODEL_4O
+        );
+    }
+}

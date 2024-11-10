@@ -20,7 +20,7 @@ trait AuthorshipPersister
                 $this->getId(),
                 $addAuthorId,
                 $type,
-                json_encode($rolesInfo['new']),
+                $rolesInfo['new'],
                 $startDates['new'] ?? 0,
                 $endDates['new'] ?? 0
             );
@@ -53,7 +53,7 @@ trait AuthorshipPersister
                 $this->getId(),
                 $authorId,
                 $type,
-                json_encode($roles),
+                $roles,
                 $startDate,
                 $endDate
             );

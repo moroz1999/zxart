@@ -56,6 +56,7 @@ class PromptSender
             $config = [
                 'model' => $model,
                 'temperature' => $temperature,
+                'top_p' => 0.95,
                 'messages' => [
                     [
                         'role' => 'user',

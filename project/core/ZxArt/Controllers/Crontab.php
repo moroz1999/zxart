@@ -18,11 +18,13 @@ use rendererPlugin;
 use structureManager;
 use ZxArt\Ai\QueryFailException;
 use ZxArt\Ai\QuerySkipException;
-use ZxArt\Ai\Service\PressParser;
+use ZxArt\Ai\Service\PressArticleSeo;
+use ZxArt\Ai\Service\PressArticleParser;
 use ZxArt\Ai\Service\ProdQueryService;
 use ZxArt\Ai\Service\TextBeautifier;
 use ZxArt\Ai\Service\Translator;
-use ZxArt\Import\Press\DataUpdater\DataUpdater;
+use ZxArt\Import\Press\DataUpdater\ArticleSeoDataUpdater;
+use ZxArt\Import\Press\DataUpdater\ArticleParsedDataUpdater;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
@@ -44,12 +46,14 @@ class Crontab extends controllerApplication
     private ?ProdQueryService $prodQueryService;
     private ?array $languages = null;
     private ?Translator $translatorService;
-    private ?PressParser $pressParser;
+    private ?PressArticleParser $pressParser;
+    private ?PressArticleSeo $pressArticleSeo;
+    private ?ArticleSeoDataUpdater $articleSeoDataUpdater;
     private ?TextBeautifier $textBeautifier;
     private ?LanguageDetector $languageDetector;
     private ?LanguagesManager $languagesManager;
     private ?Logger $logger;
-    private ?DataUpdater $pressDataUpdater;
+    private ?ArticleParsedDataUpdater $pressDataUpdater;
 
     /**
      * @return void
@@ -66,8 +70,10 @@ class Crontab extends controllerApplication
         $this->translatorService = $this->getService(Translator::class);
         $this->languageDetector = $this->getService(LanguageDetector::class);
         $this->languagesManager = $this->getService(LanguagesManager::class);
-        $this->pressParser = $this->getService(PressParser::class);
-        $this->pressDataUpdater = $this->getService(DataUpdater::class);
+        $this->pressArticleSeo = $this->getService(PressArticleSeo::class);
+        $this->articleSeoDataUpdater = $this->getService(ArticleSeoDataUpdater::class);
+        $this->pressParser = $this->getService(PressArticleParser::class);
+        $this->pressDataUpdater = $this->getService(ArticleParsedDataUpdater::class);
         $this->logger = new Logger('error_log');
     }
 
@@ -78,7 +84,7 @@ class Crontab extends controllerApplication
     {
         $pathsManager = $this->getService(PathsManager::class);
         $todayDate = date('Y-m-d');
-        $this->logFilePath = $pathsManager->getPath('logs') . 'cron' . $todayDate . '.txt';
+        $this->logFilePath = $pathsManager->getPath('logs') . 'cron' . $todayDate . '.log';
         $streamHandler = new StreamHandler($this->logFilePath, Logger::DEBUG);
 
         $formatter = new LineFormatter(null, null, true, true);
@@ -113,8 +119,7 @@ class Crontab extends controllerApplication
                 [
                     'rootUrl' => $controller->rootURL,
                     'rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerPublic'),
-                ],
-                true
+                ]
             );
 
             $this->structureManager->setRequestedPath([$currentLanguageCode]);
@@ -130,6 +135,7 @@ class Crontab extends controllerApplication
 //            $this->queryAiPressBeautifier();
 //            $this->queryAiPressTranslation();
             $this->queryAiPressParser();
+//            $this->queryAiPressSeo();
         }
     }
 
@@ -184,195 +190,372 @@ class Crontab extends controllerApplication
     private function queryAiPressParser(): void
     {
         $mergedContent = [
-            'shortContent' =>
-                [
-                    'eng' => 'The article is an overview of the MilleniuM event, focusing on competition results and voting patterns in various categories like graphics and music. The author discusses the fairness and dynamics of the voting process, highlighting notable participants and statistics. It also addresses challenges faced in organizing a PC/Amiga segment for the event.',
-                    'spa' => 'El artículo es una revisión del evento MilleniuM, centrándose en los resultados de competencias y patrones de votación en categorías como gráficos y música. El autor discute la equidad y dinámica del proceso de votación, destacando participantes notables y estadísticas. También aborda los desafíos enfrentados en la organización de un segmento de PC/Amiga para el evento.',
-                    'rus' => 'Статья - это обзор события MilleniuM, сосредоточенный на результатах соревнований и тенденциях голосования в различных категориях, таких как графика и музыка. Автор обсуждает справедливость и динамику процесса голосования, выделяя заметных участников и статистику. Также рассматриваются проблемы, возникшие при попытке организовать сегмент PC/Amiga для мероприятия.',
-                ],
-            'articleAuthors' =>
-                [
-                    0 =>
-                        [
-                            'nickName' => 'Diver',
-                            'groups' =>
-                                [
-                                    0 =>
-                                        [
-                                            'name' => '4th Dimension',
-                                        ],
-                                ],
-                        ],
-                ],
             'groups' =>
                 [
                     0 =>
                         [
-                            'name' => 'Concern Chaos',
-                            'city' => 'Sydney',
-                            'country' => 'Australia',
+                            'id' => '4th_dimension',
+                            'name' => '4th Dimension',
                             'type' => 'scene',
                         ],
                     1 =>
                         [
-                            'name' => 'Raww Arse',
-                            'city' => 'Oxford',
-                            'country' => 'UK',
+                            'id' => 'concern_chaos',
+                            'name' => 'Concern Chaos',
                             'type' => 'scene',
                         ],
                     2 =>
                         [
-                            'name' => 'WoMo-Team',
-                            'city' => 'Cologne',
-                            'country' => 'Germany',
+                            'id' => 'raww_arse',
+                            'name' => 'Raww Arse',
                             'type' => 'scene',
                         ],
                     3 =>
                         [
-                            'name' => 'Phantasy',
-                            'city' => 'Vienna',
-                            'country' => 'Austria',
+                            'id' => 'womo_team',
+                            'name' => 'WoMo-Team',
                             'type' => 'scene',
                         ],
                     4 =>
                         [
-                            'name' => 'K3L Corp.',
-                            'city' => 'Prague',
-                            'country' => 'Czech Republic',
+                            'id' => 'phantasy',
+                            'name' => 'Phantasy',
                             'type' => 'scene',
                         ],
                     5 =>
                         [
-                            'name' => 'Euphoria',
-                            'city' => 'Veseli n. M.',
-                            'country' => 'Czech Republic',
+                            'id' => 'k3l_corp',
+                            'name' => 'K3L Corp.',
                             'type' => 'scene',
                         ],
                     6 =>
                         [
-                            'name' => 'Claw/Exodus',
-                            'city' => 'Sulejowek',
-                            'country' => 'Poland',
+                            'id' => 'euphoria',
+                            'name' => 'Euphoria',
                             'type' => 'scene',
                         ],
                     7 =>
                         [
-                            'name' => 'Hooy-Program',
-                            'city' => 'Krakow',
-                            'country' => 'Poland',
+                            'id' => 'crazytronic',
+                            'name' => 'cRAZYTRONIc',
                             'type' => 'scene',
                         ],
                     8 =>
                         [
-                            'name' => 'eTc group/Scene',
-                            'city' => 'Черкассы',
-                            'country' => 'Ukraine',
+                            'id' => '3sc_hardcore',
+                            'name' => '3SC Hardcore',
                             'type' => 'scene',
                         ],
                     9 =>
                         [
-                            'name' => 'Ascendancy CL',
-                            'city' => 'Гродно',
-                            'country' => 'Беларусь',
+                            'id' => 'zeroteam',
+                            'name' => 'ZeroTeam',
                             'type' => 'scene',
                         ],
                     10 =>
                         [
-                            'name' => 'Accept Corp.',
-                            'city' => 'Армавир',
-                            'country' => 'Russia',
+                            'id' => 'claw_exodus',
+                            'name' => 'Claw/Exodus',
                             'type' => 'scene',
                         ],
                     11 =>
                         [
-                            'name' => 'Light Future Group',
-                            'city' => 'Глазов',
-                            'country' => 'Russia',
+                            'id' => 'kupasoft',
+                            'name' => 'KupaSoft',
                             'type' => 'scene',
                         ],
                     12 =>
                         [
-                            'name' => 'Brainwave/XPJ',
-                            'city' => 'Йошкар-Ола',
-                            'country' => 'Russia',
+                            'id' => 'hooy_program',
+                            'name' => 'Hooy-Program',
                             'type' => 'scene',
                         ],
                     13 =>
                         [
-                            'name' => 'Eternity Industry',
-                            'city' => 'Ковров',
-                            'country' => 'Russia',
+                            'id' => 'etc_group_scene',
+                            'name' => 'eTc group/Scene',
                             'type' => 'scene',
                         ],
                     14 =>
                         [
-                            'name' => 'Techno Lab',
-                            'city' => 'Краснодар',
-                            'country' => 'Russia',
+                            'id' => 'ascendancy_cl',
+                            'name' => 'Ascendancy CL',
                             'type' => 'scene',
                         ],
                     15 =>
                         [
-                            'name' => 'Antares',
-                            'city' => 'Москва',
-                            'country' => 'Russia',
+                            'id' => 'accept_corp',
+                            'name' => 'Accept Corp.',
                             'type' => 'scene',
                         ],
                     16 =>
                         [
-                            'name' => 'Diamond group',
-                            'city' => 'Москва',
-                            'country' => 'Russia',
+                            'id' => 'light_future_group',
+                            'name' => 'Light Future Group',
                             'type' => 'scene',
                         ],
                     17 =>
                         [
-                            'name' => 'Digital Reality',
-                            'city' => 'Новгород Великий',
-                            'country' => 'Russia',
+                            'id' => 'brainwave_xpj',
+                            'name' => 'Brainwave/XPJ',
                             'type' => 'scene',
                         ],
                     18 =>
                         [
-                            'name' => 'Razzlers',
-                            'city' => 'Москва',
-                            'country' => 'Russia',
+                            'id' => 'tns',
+                            'name' => 'TNS',
                             'type' => 'scene',
                         ],
                     19 =>
                         [
-                            'name' => 'Int. Hackers Group',
-                            'city' => 'Новомосковск',
-                            'country' => 'Russia',
+                            'id' => 'eternity_industry',
+                            'name' => 'Eternity Industry',
                             'type' => 'scene',
                         ],
                     20 =>
                         [
-                            'name' => '4th Dimension',
-                            'city' => 'Москва',
-                            'country' => 'Russia',
+                            'id' => 'techno_lab',
+                            'name' => 'Techno Lab',
+                            'type' => 'scene',
+                        ],
+                    21 =>
+                        [
+                            'id' => 'antares',
+                            'name' => 'Antares',
+                            'type' => 'scene',
+                        ],
+                    22 =>
+                        [
+                            'id' => 'diamond_group',
+                            'name' => 'Diamond group',
+                            'type' => 'scene',
+                        ],
+                    23 =>
+                        [
+                            'id' => 'digital_reality',
+                            'name' => 'Digital Reality',
+                            'type' => 'scene',
+                        ],
+                    24 =>
+                        [
+                            'id' => 'razzlers',
+                            'name' => 'Razzlers',
+                            'type' => 'scene',
+                        ],
+                    25 =>
+                        [
+                            'id' => 'int_hackers_group',
+                            'name' => 'Int. Hackers Group',
+                            'type' => 'scene',
+                        ],
+                    26 =>
+                        [
+                            'id' => 'aids',
+                            'name' => 'AIDS',
+                            'type' => 'scene',
+                        ],
+                    27 =>
+                        [
+                            'id' => 'de_bella_galica',
+                            'name' => 'De bella Galica',
+                            'type' => 'scene',
+                        ],
+                    28 =>
+                        [
+                            'id' => 'asa',
+                            'name' => 'ASA',
+                            'type' => 'scene',
+                        ],
+                    29 =>
+                        [
+                            'id' => 'extreme',
+                            'name' => 'Extreme',
+                            'type' => 'scene',
+                        ],
+                    30 =>
+                        [
+                            'id' => 'sage',
+                            'name' => 'Sage',
+                            'type' => 'scene',
+                        ],
+                    31 =>
+                        [
+                            'id' => 'stars_of_keladan',
+                            'name' => 'Stars of Keladan',
+                            'type' => 'scene',
+                        ],
+                    32 =>
+                        [
+                            'id' => 'hds',
+                            'name' => 'H.D.S.',
+                            'type' => 'scene',
+                        ],
+                    33 =>
+                        [
+                            'id' => 'technology_insys',
+                            'name' => 'Technology InSys',
+                            'type' => 'scene',
+                        ],
+                    34 =>
+                        [
+                            'id' => 'intentions_matrix',
+                            'name' => 'Intentions Matrix',
+                            'type' => 'scene',
+                        ],
+                    35 =>
+                        [
+                            'id' => 'kingdom_dreams',
+                            'name' => 'Kingdom Dreams',
+                            'type' => 'scene',
+                        ],
+                    36 =>
+                        [
+                            'id' => 'phantom_family',
+                            'name' => 'Phantom Family',
+                            'type' => 'scene',
+                        ],
+                    37 =>
+                        [
+                            'id' => 'triumph',
+                            'name' => 'Triumph',
+                            'type' => 'scene',
+                        ],
+                    38 =>
+                        [
+                            'id' => 'condorsoft',
+                            'name' => 'CondorSoft',
                             'type' => 'scene',
                         ],
                 ],
-            'people' =>
+            'persons' =>
                 [
                     0 =>
                         [
+                            'id' => 'diver',
                             'nickName' => 'Diver',
-                            'groups' =>
+                            'groupIds' =>
                                 [
-                                    0 =>
-                                        [
-                                            'name' => '4th Dimension',
-                                        ],
-                                ],
-                            'prodRoles' =>
-                                [
-                                    0 => 'text',
+                                    0 => '4th_dimension',
                                 ],
                             'groupRoles' =>
                                 [
                                     0 => 'organizer',
+                                ],
+                        ],
+                    1 =>
+                        [
+                            'id' => 'gasman',
+                            'nickName' => 'Gasman',
+                            'groupIds' =>
+                                [
+                                    0 => 'raww_arse',
+                                ],
+                            'groupRoles' =>
+                                [
+                                    0 => 'musician',
+                                ],
+                        ],
+                    2 =>
+                        [
+                            'id' => 'fil',
+                            'nickName' => 'Fil',
+                            'groupIds' =>
+                                [
+                                    0 => 'antares',
+                                ],
+                            'groupRoles' =>
+                                [
+                                    0 => 'graphician',
+                                ],
+                        ],
+                    3 =>
+                        [
+                            'id' => 'andy_fer',
+                            'nickName' => 'Andy Fer',
+                            'groupRoles' =>
+                                [
+                                    0 => 'musician',
+                                ],
+                        ],
+                    4 =>
+                        [
+                            'id' => 'mmcm',
+                            'nickName' => 'MMCM',
+                            'groupIds' =>
+                                [
+                                    0 => 'sage',
+                                ],
+                            'groupRoles' =>
+                                [
+                                    0 => 'musician',
+                                ],
+                        ],
+                    5 =>
+                        [
+                            'id' => 'gas_13',
+                            'nickName' => 'GAS 13',
+                        ],
+                    6 =>
+                        [
+                            'id' => 'wlodek_black',
+                            'nickName' => 'Wlodek Black',
+                        ],
+                    7 =>
+                        [
+                            'id' => 'paracels',
+                            'nickName' => 'Paracels',
+                            'groupIds' =>
+                                [
+                                    0 => 'eternity_industry',
+                                ],
+                            'groupRoles' =>
+                                [
+                                    0 => 'graphician',
+                                ],
+                        ],
+                    8 =>
+                        [
+                            'id' => 'arty_nooonzen',
+                            'nickName' => 'Arty NooonZen',
+                            'groupIds' =>
+                                [
+                                    0 => 'digital_reality',
+                                ],
+                        ],
+                    9 =>
+                        [
+                            'id' => 'zs',
+                            'nickName' => 'ZS',
+                        ],
+                    10 =>
+                        [
+                            'id' => 'unbeliever',
+                            'nickName' => 'UnBEL!EVER',
+                            'groupIds' =>
+                                [
+                                    0 => 'extreme',
+                                ],
+                        ],
+                    11 =>
+                        [
+                            'id' => 'habib',
+                            'nickName' => 'Habib',
+                            'groupIds' =>
+                                [
+                                    0 => 'hooy_program',
+                                ],
+                        ],
+                    12 =>
+                        [
+                            'id' => 'phantom_lord',
+                            'nickName' => 'Phantom Lord',
+                            'groupIds' =>
+                                [
+                                    0 => 'accept_corp',
+                                ],
+                            'groupRoles' =>
+                                [
+                                    0 => 'musician',
                                 ],
                         ],
                 ],
@@ -380,249 +563,194 @@ class Crontab extends controllerApplication
                 [
                     0 =>
                         [
-                            'name' => 'Complex Compo',
-                            'year' => '2000',
-                        ],
-                    1 =>
-                        [
-                            'name' => 'Forever2E3',
-                            'year' => '2000',
+                            'name' => 'MilleniuM',
                         ],
                 ],
-            'tunes' =>
+            'music' =>
                 [
                     0 =>
                         [
-                            'name' => 'Take My Soul & Oni',
-                            'authors' =>
+                            'name' => 'Frozen',
+                            'authorIds' =>
                                 [
-                                    0 =>
-                                        [
-                                            'nickName' => 'Neuronus',
-                                        ],
-                                    1 =>
-                                        [
-                                            'nickName' => 'Baby',
-                                        ],
+                                    0 => 'andy_fer',
                                 ],
                         ],
                     1 =>
                         [
-                            'name' => 'Frozen',
-                            'authors' =>
-                                [
-                                    0 =>
-                                        [
-                                            'nickName' => 'Mast',
-                                        ],
-                                ],
+                            'name' => 'My Heart Will Go On',
                         ],
                     2 =>
                         [
-                            'name' => 'My Heart Will Go On',
-                            'authors' =>
-                                [
-                                    0 =>
-                                        [
-                                            'nickName' => 'Andy Fer',
-                                        ],
-                                ],
+                            'name' => 'Chronos',
                         ],
                     3 =>
                         [
-                            'name' => 'Chronos',
-                            'authors' =>
-                                [
-                                    0 =>
-                                        [
-                                            'nickName' => 'JoeDassin',
-                                        ],
-                                ],
+                            'name' => 'Love\'n\'Gun',
                         ],
                     4 =>
                         [
-                            'name' => 'Love\'n\'Gun',
-                            'authors' =>
-                                [
-                                    0 =>
-                                        [
-                                            'nickName' => 'DNK',
-                                        ],
-                                ],
+                            'name' => 'WhiteRoad remix',
                         ],
                     5 =>
                         [
-                            'name' => 'WhiteRoad remix',
-                            'authors' =>
-                                [
-                                    0 =>
-                                        [
-                                            'nickName' => 'DNK',
-                                        ],
-                                ],
+                            'name' => 'DNK remix',
                         ],
                     6 =>
                         [
                             'name' => 'Heart (amiga mod)',
-                            'authors' =>
-                                [
-                                    0 =>
-                                        [
-                                            'nickName' => 'Mm<M',
-                                        ],
-                                ],
                         ],
                     7 =>
                         [
-                            'name' => 'He Plays at Funerals and Dances',
-                            'authors' =>
-                                [
-                                    0 =>
-                                        [
-                                            'nickName' => 'Mm<M',
-                                        ],
-                                ],
+                            'name' => 'Он играет на похоронах и танцах',
                         ],
                     8 =>
                         [
-                            'name' => 'Phoney Phrase',
-                            'authors' =>
-                                [
-                                    0 =>
-                                        [
-                                            'nickName' => 'Deep Green',
-                                        ],
-                                ],
+                            'name' => 'Suggest!ve',
                         ],
                     9 =>
                         [
-                            'name' => 'Sexy Potion',
-                            'authors' =>
-                                [
-                                    0 =>
-                                        [
-                                            'nickName' => 'Deep Green',
-                                        ],
-                                ],
+                            'name' => 'Millennium',
                         ],
                     10 =>
                         [
-                            'name' => 'Suggest!ve',
-                            'authors' =>
-                                [
-                                    0 =>
-                                        [
-                                            'nickName' => 'Mm<M',
-                                        ],
-                                ],
+                            'name' => 'Deep Green',
+                        ],
+                    11 =>
+                        [
+                            'name' => 'Phoney Phrase',
+                        ],
+                    12 =>
+                        [
+                            'name' => 'Sexy Potion',
                         ],
                 ],
             'pictures' =>
                 [
                     0 =>
                         [
-                            'name' => 'The Rage To Overcome',
-                            'authors' =>
-                                [
-                                    0 =>
-                                        [
-                                            'nickName' => 'Fil',
-                                        ],
-                                ],
+                            'name' => 'Take My Soul & Oni',
                         ],
                     1 =>
                         [
-                            'name' => 'Titanic',
-                            'authors' =>
-                                [
-                                    0 =>
-                                        [
-                                            'nickName' => 'Fil',
-                                        ],
-                                ],
+                            'name' => 'Neuronus & Baby',
                         ],
                     2 =>
                         [
-                            'name' => 'Eruption!',
-                            'authors' =>
-                                [
-                                    0 =>
-                                        [
-                                            'nickName' => 'Flying',
-                                        ],
-                                ],
+                            'name' => 'The Rage To Overcome',
                         ],
                     3 =>
                         [
-                            'name' => 'Paracels',
-                            'authors' =>
-                                [
-                                    0 =>
-                                        [
-                                            'nickName' => 'Paracels',
-                                        ],
-                                ],
+                            'name' => 'Titanic',
                         ],
                     4 =>
                         [
-                            'name' => 'Hazard',
-                            'authors' =>
-                                [
-                                    0 =>
-                                        [
-                                            'nickName' => 'Hazard',
-                                        ],
-                                ],
+                            'name' => 'Eruption!',
+                        ],
+                    5 =>
+                        [
+                            'name' => 'CCY2K',
+                        ],
+                    6 =>
+                        [
+                            'name' => 'Wild',
                         ],
                 ],
-            'tags' =>
+            'mentionedPersonIds' =>
                 [
-                    0 => 'MilleniuM',
-                    1 => 'Demoparty',
-                    2 => 'ZX Spectrum',
-                    3 => 'Graphics',
-                    4 => 'Music',
-                    5 => 'Voting',
-                    6 => 'Competitions',
-                    7 => 'Scene',
-                    8 => 'Statistics',
-                    9 => 'Organization',
+                    0 => 'diver',
+                    1 => 'gasman',
+                    2 => 'fil',
+                    3 => 'andy_fer',
+                    4 => 'mmcm',
+                    5 => 'gas_13',
+                    6 => 'wlodek_black',
+                    7 => 'paracels',
+                    8 => 'arty_nooonzen',
+                    9 => 'zs',
+                    10 => 'unbeliever',
+                    11 => 'habib',
+                    12 => 'phantom_lord',
                 ],
-            'title' =>
+            'mentionedGroupIds' =>
                 [
-                    'eng' => 'MilleniuM: Analysis of Competitions',
-                    'spa' => 'MilleniuM: Análisis de Competencias',
-                    'rus' => 'MilleniuM: разбор полетов',
+                    0 => '4th_dimension',
+                    1 => 'concern_chaos',
+                    2 => 'raww_arse',
+                    3 => 'womo_team',
+                    4 => 'phantasy',
+                    5 => 'k3l_corp',
+                    6 => 'euphoria',
+                    7 => 'crazytronic',
+                    8 => '3sc_hardcore',
+                    9 => 'zeroteam',
+                    10 => 'claw_exodus',
+                    11 => 'kupasoft',
+                    12 => 'hooy_program',
+                    13 => 'etc_group_scene',
+                    14 => 'ascendancy_cl',
+                    15 => 'accept_corp',
+                    16 => 'light_future_group',
+                    17 => 'brainwave_xpj',
+                    18 => 'tns',
+                    19 => 'eternity_industry',
+                    20 => 'techno_lab',
+                    21 => 'antares',
+                    22 => 'diamond_group',
+                    23 => 'digital_reality',
+                    24 => 'razzlers',
+                    25 => 'int_hackers_group',
+                    26 => 'aids',
+                    27 => 'de_bella_galica',
+                    28 => 'asa',
+                    29 => 'extreme',
+                    30 => 'sage',
+                    31 => 'stars_of_keladan',
+                    32 => 'hds',
+                    33 => 'technology_insys',
+                    34 => 'intentions_matrix',
+                    35 => 'kingdom_dreams',
+                    36 => 'phantom_family',
+                    37 => 'triumph',
+                    38 => 'condorsoft',
                 ],
-            'h1' =>
+            'articleAuthorIds' =>
                 [
-                    'eng' => 'Detailed Overview of MilleniuM Event',
-                    'spa' => 'Visión Detallada del Evento MilleniuM',
-                    'rus' => 'Подробный обзор события MilleniuM',
-                ],
-            'metaDescription' =>
-                [
-                    'eng' => 'Explore the in-depth results and voting dynamics of the MilleniuM event, covering competitions in graphics and music categories.',
-                    'spa' => 'Explora los resultados detallados y la dinámica de votación del evento MilleniuM, abarcando competencias en categorías de gráficos y música.',
-                    'rus' => 'Углубленный анализ результатов и динамики голосования на событии MilleniuM, охватывающего конкурсы в категориях графики и музыки.',
-                ],
-            'pageTitle' =>
-                [
-                    'eng' => 'MilleniuM Event Results and Analysis',
-                    'spa' => 'Resultados y Análisis del Evento MilleniuM',
-                    'rus' => 'Анализ результатов мероприятия MilleniuM',
+                    0 => 'diver',
                 ],
         ];
-
         $pressArticleElement = $this->structureManager->getElementById(477718);
         $this->pressDataUpdater->updatePressArticleData($pressArticleElement, $mergedContent);
         return;
         $this->processQueue(QueueType::AI_PRESS_PARSE, function (pressArticleElement $pressArticleElement, $counter) {
-            $updatedContent = $this->pressParser->getParsedData($pressArticleElement->getTextContent());
+            $pressElement = $pressArticleElement->getParent();
+            if ($pressElement === null) {
+                throw new CrontabException("Press is missing for article {$pressArticleElement->id}");
+            }
+            $pressYear = (int)$pressElement->year;
+            $year = $pressYear === 0 ? $pressYear : null;
+            $updatedContent = $this->pressParser->getParsedData($pressArticleElement->getTextContent(), $pressElement->title, $year);
             if ($updatedContent) {
                 $mergedContent = $this->mergeArrays($updatedContent);
                 $this->pressDataUpdater->updatePressArticleData($pressArticleElement, $mergedContent);
-                $this->logMessage("$counter AI Fix content updated for article {$pressArticleElement->id}", 0);
+                $this->logMessage("$counter AI press parse content updated for article {$pressArticleElement->id}", 0);
+            }
+        });
+    }
+
+    private function queryAiPressSeo(): void
+    {
+        $this->processQueue(QueueType::AI_PRESS_SEO, function (pressArticleElement $pressArticleElement, $counter) {
+            $pressElement = $pressArticleElement->getParent();
+            if ($pressElement === null) {
+                throw new CrontabException("Press is missing for article {$pressArticleElement->id}");
+            }
+            $pressYear = (int)$pressElement->year;
+            $year = $pressYear === 0 ? $pressYear : null;
+            $updatedContent = $this->pressArticleSeo->getParsedData($pressArticleElement->getTextContent(), $pressElement->title, $year);
+            if ($updatedContent !== null) {
+                $this->articleSeoDataUpdater->updatePressArticleData($pressArticleElement, $updatedContent);
+                $this->logMessage("$counter AI press seo updated for article {$pressArticleElement->id}", 0);
             }
         });
     }

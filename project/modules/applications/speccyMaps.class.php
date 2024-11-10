@@ -43,7 +43,7 @@ class speccyMapsApplication extends controllerApplication
             );
 
             /**
-             * @var RzxManager $speccyMaps
+             * @var SpeccyMapsManager $speccyMaps
              */
             $speccyMaps = $this->getService('SpeccyMapsManager');
             $speccyMaps->importAll();

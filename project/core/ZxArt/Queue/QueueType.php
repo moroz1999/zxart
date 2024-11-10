@@ -11,4 +11,5 @@ enum QueueType: string
     case AI_PRESS_FIX = 'ai_press_fix';
     case AI_PRESS_TRANSLATE = 'ai_press_translate';
     case AI_PRESS_PARSE = 'ai_press_parse';
+    case AI_PRESS_SEO = 'ai_press_seo';
 }

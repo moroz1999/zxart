@@ -2,17 +2,15 @@
 
 trait ZxSoft
 {
-    static private $extendedGraphics = ['zxevolution', 'zxnext', 'elementzxmb', 'zxuno', 'baseconf', 'tsconf', 'gmx'];
+    static private array $extendedGraphics = ['zxevolution', 'zxnext', 'elementzxmb', 'zxuno', 'baseconf', 'tsconf', 'gmx'];
 
     /**
-     * @return string
-     *
      * @psalm-return 'full'|'prodListImage'
      */
-    public function getListImagePreset()
+    public function getListImagePreset(): string
     {
         foreach ($this->getHardwareInfo() as $item) {
-            if (in_array($item['id'], self::$extendedGraphics)) {
+            if (in_array($item['id'], self::$extendedGraphics, true)) {
                 return 'full';
             }
         }

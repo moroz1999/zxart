@@ -44,7 +44,7 @@ class zxfileApplication extends controllerApplication
                 $file = $zxParsingManager->extractFile($element->getFilePath(), $this->fileId);
             }
             if ($file) {
-                if ($element->structureType == 'zxRelease' && !$this->isCrawlerDetected()) {
+                if ($element->structureType === 'zxRelease' && !$this->isCrawlerDetected()) {
                     if ($controller->getParameter('play')) {
                         $element->incrementPlays();
                     }
