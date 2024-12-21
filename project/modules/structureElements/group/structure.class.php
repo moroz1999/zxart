@@ -18,6 +18,7 @@ use ZxArt\LinkTypes;
  * @property int $joinAsAlias
  * @property int $joinAndDelete
  * @property zxReleaseElement[] $publishedReleases
+ * @property groupElement[] $parentGroups
  */
 class groupElement extends structureElement implements AliasesHolder, CommentsHolderInterface, JsonDataProvider, Recalculable, LocationProvider
 {
@@ -33,7 +34,6 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
     use CommentsTrait;
     use GroupTypeProvider;
 
-    const SUBGROUP_LINK_TYPE = 'groupSub';
     public $dataResourceName = 'module_group';
     public $allowedTypes = [];
     public $defaultActionName = 'show';
@@ -75,6 +75,13 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
             [
                 'linkType' => 'zxReleasePublishers',
                 'role' => 'parent',
+            ],
+        ];
+        $moduleStructure['parentGroups'] = [
+            'ConnectedElements',
+            [
+                'linkType' => LinkTypes::GROUP_SUBGROUP->value,
+                'role' => 'child',
             ],
         ];
         $moduleStructure['mentions'] = [
@@ -197,7 +204,7 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
              * @var linksManager $linksManager
              */
             $linksManager = $this->getService('linksManager');
-            $this->subGroupIds = $linksManager->getConnectedIdList($this->id, self::SUBGROUP_LINK_TYPE, "parent");
+            $this->subGroupIds = $linksManager->getConnectedIdList($this->id, LinkTypes::GROUP_SUBGROUP->value, "parent");
         }
         return $this->subGroupIds;
     }
@@ -211,12 +218,12 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
         if ($subGroupIds = $this->getSubGroupIds()) {
             foreach ($subGroupIds as $subGroupId) {
                 if (!in_array($subGroupId, $this->subGroupsSelector)) {
-                    $linksManager->unLinkElements($subGroupId, $this->id, self::SUBGROUP_LINK_TYPE);
+                    $linksManager->unLinkElements($subGroupId, $this->id, LinkTypes::GROUP_SUBGROUP->value);
                 }
             }
         }
         foreach ($this->subGroupsSelector as $id) {
-            $linksManager->linkElements($this->id, $id, self::SUBGROUP_LINK_TYPE);
+            $linksManager->linkElements($this->id, $id, LinkTypes::GROUP_SUBGROUP->value);
         }
     }
 

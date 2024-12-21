@@ -16,6 +16,7 @@ final class GroupLabel
         public ?array  $groups = null,
         public ?bool   $isAlias = null,
         public ?array  $memberNames = null,
+        public ?array  $parentGroupIds = null,
         public ?string $type = null,
     )
     {
@@ -30,6 +31,7 @@ final class GroupLabel
             'cityName' => $this->city,
             'countryName' => $this->country,
             'memberNames' => $this->memberNames,
+            'parentGroupIds' => $this->parentGroupIds,
             'groups' => array_map(static fn($group) => $group->toArray(), $this->groups ?? []),
             'isAlias' => $this->isAlias,
             'type' => $this->type,

@@ -12,6 +12,18 @@
 			</td>
 		</tr>
 		{/if}
+		{if $parentGroups = $element->parentGroups}
+		<tr>
+			<td class='info_table_label'>
+				{translations name='group.parent_groups'}:
+			</td>
+			<td class='info_table_value'>
+				{foreach $parentGroups as $parentGroup}
+					<a href="{$parentGroup->getUrl()}">{$parentGroup->title}</a>{if !$parentGroup@last}, {/if}
+				{/foreach}
+			</td>
+		</tr>
+		{/if}
 		{if $element->type}
 			<tr>
 				<td class='info_table_label'>

@@ -34,7 +34,9 @@ readonly final class ProdResolver
         // there is no prod with such year (or no year provided)
         if (!$prodHasYear || $matchProdsWithoutYear) {
             $id = $this->prodsRepository->getProdByTitle($prod->title);
-            $element = $this->structureManager->getElementById($id);
+            if ($id !== null) {
+                $element = $this->structureManager->getElementById($id);
+            }
         }
 
         return $element;

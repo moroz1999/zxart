@@ -15,7 +15,7 @@ class PouetManager extends errorLogger
     protected $maxCounter = 1000;
     protected $maxId = 0;
     protected $debugEntry;
-    protected $ignore = [];
+    protected $ignore = [539798];
     protected $counter = 0;
     /**
      * @var \Illuminate\Database\Connection

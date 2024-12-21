@@ -8,7 +8,7 @@ use ZxArt\Import\Labels\GroupLabel;
 readonly final class Prod
 {
     /**
-     * @param GroupLabel[]|null $groups
+     * @param GroupLabel[]|null $groupIds
      */
     public function __construct(
         public ?string $id = null,
@@ -23,20 +23,20 @@ readonly final class Prod
         public ?string $externalLink = null,
         public ?string $language = null,
         public ?array  $labels = null,
-        public ?array $directCategories = null,
-        public ?array $undetermined = null, // содержит подмассивы 'group' и 'author'
-        public ?array $authors = null, // ['importAuthorId' => роли]
-        public ?array $groups = null,
-        public ?array $publishers = null,
-        public ?array $compilationItems = null,
-        public ?array $seriesProds = null,
-        public ?array $articles = null, // массив с полями 'title', 'introduction', 'externalLink', 'content'
-        public ?array $categories = null,
-        public ?array $images = null,
-        public ?array $maps = null, // содержит ['url' => ..., 'author' => ...]
-        public ?array $inlayImages = null,
-        public ?array $rzx = null,
-        public ?array $importIds = null,
+        public ?array  $directCategories = null,
+        public ?array  $undetermined = null, // содержит подмассивы 'group' и 'author'
+        public ?array  $authorRoles = null, // массив <authorId, roles>
+        public ?array  $groupIds = null,
+        public ?array  $publisherIds = null,
+        public ?array  $compilationItems = null,
+        public ?array  $seriesProds = null,
+        public ?array  $articles = null, // массив с полями 'title', 'introduction', 'externalLink', 'content'
+        public ?array  $categories = null,
+        public ?array  $images = null,
+        public ?array  $maps = null, // содержит ['url' => ..., 'author' => ...]
+        public ?array  $inlayImages = null,
+        public ?array  $rzx = null,
+        public ?array  $importIds = null,
     )
     {
     }
@@ -58,9 +58,9 @@ readonly final class Prod
             'labels' => $this->labels,
             'directCategories' => $this->directCategories,
             'undetermined' => $this->undetermined,
-            'authors' => $this->authors,
-            'groups' => array_map(static fn($group) => $group->toArray(), $this->groups ?? []),
-            'publishers' => $this->publishers,
+            'authors' => $this->authorRoles,
+            'groups' => $this->groupIds,
+            'publishers' => $this->publisherIds,
             'compilationItems' => $this->compilationItems,
             'seriesProds' => $this->seriesProds,
             'articles' => $this->articles,

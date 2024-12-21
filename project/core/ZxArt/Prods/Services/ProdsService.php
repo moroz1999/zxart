@@ -242,7 +242,8 @@ class ProdsService extends ElementsManager
             $prod = new Prod(
                 id: $prodInfo['id'],
                 title: $prodInfo['title'],
-                year: $prodInfo['year'],
+                year: $prodInfo['year'] ?? null,
+                authorRoles: $prodInfo['authors'] ?? [],
             );
             if ($element = $this->prodResolver->resolve($prod, $this->matchProdsWithoutYear)) {
                 $this->saveImportId($element->id, $prodId, $origin, 'prod');
@@ -398,46 +399,42 @@ class ProdsService extends ElementsManager
             }
         }
 
-        if (($this->forceUpdateAuthors || $justCreated) && !empty($prodInfo['authors'])) {
-            if (!$element->getAuthorsInfo('prod')) {
-                foreach ($prodInfo['authors'] as $importAuthorId => $roles) {
-                    if ($authorId = $this->getElementIdByImportId($importAuthorId, $origin, 'author')) {
-                        $this->authorshipRepository->checkAuthorship($element->id, $authorId, 'prod', $roles);
-                    }
+        $authorsInfo = $element->getAuthorsInfo('prod');
+        if (($this->forceUpdateAuthors || $justCreated || !$authorsInfo) && !empty($prodInfo['authors'])) {
+            foreach ($prodInfo['authors'] as $importAuthorId => $roles) {
+                if ($authorId = $this->getElementIdByImportId($importAuthorId, $origin, 'author')) {
+                    $this->authorshipRepository->checkAuthorship($element->id, $authorId, 'prod', $roles);
                 }
             }
         }
-        if (($this->forceUpdateGroups || $justCreated) && !empty($prodInfo['groups'])) {
-            if (!$element->groups) {
-                $linksIndex = $this->linksManager->getElementsLinksIndex($element->id, 'zxProdGroups', 'child');
-                foreach ($prodInfo['groups'] as $importGroupId) {
-                    if ($groupId = $this->getElementIdByImportId($importGroupId, $origin, 'group')) {
-                        if (!isset($linksIndex[$groupId])) {
-                            $this->linksManager->linkElements($groupId, $element->id, 'zxProdGroups');
-                        }
-                        unset($linksIndex[$groupId]);
+
+        if (!empty($prodInfo['groups']) && (!$element->groups || $this->forceUpdateGroups)) {
+            $linksIndex = $this->linksManager->getElementsLinksIndex($element->id, 'zxProdGroups', 'child');
+            foreach ($prodInfo['groups'] as $importGroupId) {
+                if ($groupId = $this->getElementIdByImportId($importGroupId, $origin, 'group')) {
+                    if (!isset($linksIndex[$groupId])) {
+                        $this->linksManager->linkElements($groupId, $element->id, 'zxProdGroups');
                     }
-                }
-                foreach ($linksIndex as $key => $link) {
-                    $link->delete();
+                    unset($linksIndex[$groupId]);
                 }
             }
+            foreach ($linksIndex as $key => $link) {
+                $link->delete();
+            }
         }
-        if (($this->forceUpdatePublishers || $justCreated) && !empty($prodInfo['publishers'])) {
-            if (!$element->publishers) {
-                $linksIndex = $this->linksManager->getElementsLinksIndex($element->id, 'zxProdPublishers', 'child');
-                foreach ($prodInfo['publishers'] as $importPublisherId) {
-                    if (($publisherId = $this->getElementIdByImportId($importPublisherId, $origin, 'group'))
-                        || ($publisherId = $this->getElementIdByImportId($importPublisherId, $origin, 'author'))) {
-                        if (!isset($linksIndex[$publisherId])) {
-                            $this->linksManager->linkElements($publisherId, $element->id, 'zxProdPublishers');
-                        }
-                        unset($linksIndex[$publisherId]);
+        if (!empty($prodInfo['publishers']) && (!$element->publishers || $this->forceUpdatePublishers)) {
+            $linksIndex = $this->linksManager->getElementsLinksIndex($element->id, 'zxProdPublishers', 'child');
+            foreach ($prodInfo['publishers'] as $importPublisherId) {
+                if (($publisherId = $this->getElementIdByImportId($importPublisherId, $origin, 'group'))
+                    || ($publisherId = $this->getElementIdByImportId($importPublisherId, $origin, 'author'))) {
+                    if (!isset($linksIndex[$publisherId])) {
+                        $this->linksManager->linkElements($publisherId, $element->id, 'zxProdPublishers');
                     }
+                    unset($linksIndex[$publisherId]);
                 }
-                foreach ($linksIndex as $key => $link) {
-                    $link->delete();
-                }
+            }
+            foreach ($linksIndex as $key => $link) {
+                $link->delete();
             }
         }
         if (!empty($prodInfo['compilationItems'])) {

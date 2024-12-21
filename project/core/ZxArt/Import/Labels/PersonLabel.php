@@ -27,8 +27,8 @@ final class PersonLabel
     {
         return [
             'id' => $this->id ?: $this->name ?: $this->realName,
-            'title' => $this->name,
-            'realName' => $this->realName,
+            'title' => $this->name !== '' ? $this->name : null,
+            'realName' => $this->realName !== '' ? $this->realName : null,
             'cityName' => $this->city,
             'countryName' => $this->country,
             'groupsIds' => $this->groupsIds,

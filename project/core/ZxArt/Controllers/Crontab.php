@@ -151,7 +151,7 @@ class Crontab extends controllerApplication
             $counter++;
 
             $elementId = $this->queueService->getNextElementId($queueType);
-            $elementId = 477718;
+            $elementId = 493601;
             if ($elementId === null) {
                 break;
             }
@@ -189,537 +189,98 @@ class Crontab extends controllerApplication
 
     private function queryAiPressParser(): void
     {
-        $mergedContent = [
-            'groups' =>
-                [
-                    0 =>
-                        [
-                            'id' => '4th_dimension',
-                            'name' => '4th Dimension',
-                            'type' => 'scene',
-                        ],
-                    1 =>
-                        [
-                            'id' => 'concern_chaos',
-                            'name' => 'Concern Chaos',
-                            'type' => 'scene',
-                        ],
-                    2 =>
-                        [
-                            'id' => 'raww_arse',
-                            'name' => 'Raww Arse',
-                            'type' => 'scene',
-                        ],
-                    3 =>
-                        [
-                            'id' => 'womo_team',
-                            'name' => 'WoMo-Team',
-                            'type' => 'scene',
-                        ],
-                    4 =>
-                        [
-                            'id' => 'phantasy',
-                            'name' => 'Phantasy',
-                            'type' => 'scene',
-                        ],
-                    5 =>
-                        [
-                            'id' => 'k3l_corp',
-                            'name' => 'K3L Corp.',
-                            'type' => 'scene',
-                        ],
-                    6 =>
-                        [
-                            'id' => 'euphoria',
-                            'name' => 'Euphoria',
-                            'type' => 'scene',
-                        ],
-                    7 =>
-                        [
-                            'id' => 'crazytronic',
-                            'name' => 'cRAZYTRONIc',
-                            'type' => 'scene',
-                        ],
-                    8 =>
-                        [
-                            'id' => '3sc_hardcore',
-                            'name' => '3SC Hardcore',
-                            'type' => 'scene',
-                        ],
-                    9 =>
-                        [
-                            'id' => 'zeroteam',
-                            'name' => 'ZeroTeam',
-                            'type' => 'scene',
-                        ],
-                    10 =>
-                        [
-                            'id' => 'claw_exodus',
-                            'name' => 'Claw/Exodus',
-                            'type' => 'scene',
-                        ],
-                    11 =>
-                        [
-                            'id' => 'kupasoft',
-                            'name' => 'KupaSoft',
-                            'type' => 'scene',
-                        ],
-                    12 =>
-                        [
-                            'id' => 'hooy_program',
-                            'name' => 'Hooy-Program',
-                            'type' => 'scene',
-                        ],
-                    13 =>
-                        [
-                            'id' => 'etc_group_scene',
-                            'name' => 'eTc group/Scene',
-                            'type' => 'scene',
-                        ],
-                    14 =>
-                        [
-                            'id' => 'ascendancy_cl',
-                            'name' => 'Ascendancy CL',
-                            'type' => 'scene',
-                        ],
-                    15 =>
-                        [
-                            'id' => 'accept_corp',
-                            'name' => 'Accept Corp.',
-                            'type' => 'scene',
-                        ],
-                    16 =>
-                        [
-                            'id' => 'light_future_group',
-                            'name' => 'Light Future Group',
-                            'type' => 'scene',
-                        ],
-                    17 =>
-                        [
-                            'id' => 'brainwave_xpj',
-                            'name' => 'Brainwave/XPJ',
-                            'type' => 'scene',
-                        ],
-                    18 =>
-                        [
-                            'id' => 'tns',
-                            'name' => 'TNS',
-                            'type' => 'scene',
-                        ],
-                    19 =>
-                        [
-                            'id' => 'eternity_industry',
-                            'name' => 'Eternity Industry',
-                            'type' => 'scene',
-                        ],
-                    20 =>
-                        [
-                            'id' => 'techno_lab',
-                            'name' => 'Techno Lab',
-                            'type' => 'scene',
-                        ],
-                    21 =>
-                        [
-                            'id' => 'antares',
-                            'name' => 'Antares',
-                            'type' => 'scene',
-                        ],
-                    22 =>
-                        [
-                            'id' => 'diamond_group',
-                            'name' => 'Diamond group',
-                            'type' => 'scene',
-                        ],
-                    23 =>
-                        [
-                            'id' => 'digital_reality',
-                            'name' => 'Digital Reality',
-                            'type' => 'scene',
-                        ],
-                    24 =>
-                        [
-                            'id' => 'razzlers',
-                            'name' => 'Razzlers',
-                            'type' => 'scene',
-                        ],
-                    25 =>
-                        [
-                            'id' => 'int_hackers_group',
-                            'name' => 'Int. Hackers Group',
-                            'type' => 'scene',
-                        ],
-                    26 =>
-                        [
-                            'id' => 'aids',
-                            'name' => 'AIDS',
-                            'type' => 'scene',
-                        ],
-                    27 =>
-                        [
-                            'id' => 'de_bella_galica',
-                            'name' => 'De bella Galica',
-                            'type' => 'scene',
-                        ],
-                    28 =>
-                        [
-                            'id' => 'asa',
-                            'name' => 'ASA',
-                            'type' => 'scene',
-                        ],
-                    29 =>
-                        [
-                            'id' => 'extreme',
-                            'name' => 'Extreme',
-                            'type' => 'scene',
-                        ],
-                    30 =>
-                        [
-                            'id' => 'sage',
-                            'name' => 'Sage',
-                            'type' => 'scene',
-                        ],
-                    31 =>
-                        [
-                            'id' => 'stars_of_keladan',
-                            'name' => 'Stars of Keladan',
-                            'type' => 'scene',
-                        ],
-                    32 =>
-                        [
-                            'id' => 'hds',
-                            'name' => 'H.D.S.',
-                            'type' => 'scene',
-                        ],
-                    33 =>
-                        [
-                            'id' => 'technology_insys',
-                            'name' => 'Technology InSys',
-                            'type' => 'scene',
-                        ],
-                    34 =>
-                        [
-                            'id' => 'intentions_matrix',
-                            'name' => 'Intentions Matrix',
-                            'type' => 'scene',
-                        ],
-                    35 =>
-                        [
-                            'id' => 'kingdom_dreams',
-                            'name' => 'Kingdom Dreams',
-                            'type' => 'scene',
-                        ],
-                    36 =>
-                        [
-                            'id' => 'phantom_family',
-                            'name' => 'Phantom Family',
-                            'type' => 'scene',
-                        ],
-                    37 =>
-                        [
-                            'id' => 'triumph',
-                            'name' => 'Triumph',
-                            'type' => 'scene',
-                        ],
-                    38 =>
-                        [
-                            'id' => 'condorsoft',
-                            'name' => 'CondorSoft',
-                            'type' => 'scene',
-                        ],
-                ],
-            'persons' =>
-                [
-                    0 =>
-                        [
-                            'id' => 'diver',
-                            'nickName' => 'Diver',
-                            'groupIds' =>
-                                [
-                                    0 => '4th_dimension',
-                                ],
-                            'groupRoles' =>
-                                [
-                                    0 => 'organizer',
-                                ],
-                        ],
-                    1 =>
-                        [
-                            'id' => 'gasman',
-                            'nickName' => 'Gasman',
-                            'groupIds' =>
-                                [
-                                    0 => 'raww_arse',
-                                ],
-                            'groupRoles' =>
-                                [
-                                    0 => 'musician',
-                                ],
-                        ],
-                    2 =>
-                        [
-                            'id' => 'fil',
-                            'nickName' => 'Fil',
-                            'groupIds' =>
-                                [
-                                    0 => 'antares',
-                                ],
-                            'groupRoles' =>
-                                [
-                                    0 => 'graphician',
-                                ],
-                        ],
-                    3 =>
-                        [
-                            'id' => 'andy_fer',
-                            'nickName' => 'Andy Fer',
-                            'groupRoles' =>
-                                [
-                                    0 => 'musician',
-                                ],
-                        ],
-                    4 =>
-                        [
-                            'id' => 'mmcm',
-                            'nickName' => 'MMCM',
-                            'groupIds' =>
-                                [
-                                    0 => 'sage',
-                                ],
-                            'groupRoles' =>
-                                [
-                                    0 => 'musician',
-                                ],
-                        ],
-                    5 =>
-                        [
-                            'id' => 'gas_13',
-                            'nickName' => 'GAS 13',
-                        ],
-                    6 =>
-                        [
-                            'id' => 'wlodek_black',
-                            'nickName' => 'Wlodek Black',
-                        ],
-                    7 =>
-                        [
-                            'id' => 'paracels',
-                            'nickName' => 'Paracels',
-                            'groupIds' =>
-                                [
-                                    0 => 'eternity_industry',
-                                ],
-                            'groupRoles' =>
-                                [
-                                    0 => 'graphician',
-                                ],
-                        ],
-                    8 =>
-                        [
-                            'id' => 'arty_nooonzen',
-                            'nickName' => 'Arty NooonZen',
-                            'groupIds' =>
-                                [
-                                    0 => 'digital_reality',
-                                ],
-                        ],
-                    9 =>
-                        [
-                            'id' => 'zs',
-                            'nickName' => 'ZS',
-                        ],
-                    10 =>
-                        [
-                            'id' => 'unbeliever',
-                            'nickName' => 'UnBEL!EVER',
-                            'groupIds' =>
-                                [
-                                    0 => 'extreme',
-                                ],
-                        ],
-                    11 =>
-                        [
-                            'id' => 'habib',
-                            'nickName' => 'Habib',
-                            'groupIds' =>
-                                [
-                                    0 => 'hooy_program',
-                                ],
-                        ],
-                    12 =>
-                        [
-                            'id' => 'phantom_lord',
-                            'nickName' => 'Phantom Lord',
-                            'groupIds' =>
-                                [
-                                    0 => 'accept_corp',
-                                ],
-                            'groupRoles' =>
-                                [
-                                    0 => 'musician',
-                                ],
-                        ],
-                ],
-            'parties' =>
-                [
-                    0 =>
-                        [
-                            'name' => 'MilleniuM',
-                        ],
-                ],
-            'music' =>
-                [
-                    0 =>
-                        [
-                            'name' => 'Frozen',
-                            'authorIds' =>
-                                [
-                                    0 => 'andy_fer',
-                                ],
-                        ],
-                    1 =>
-                        [
-                            'name' => 'My Heart Will Go On',
-                        ],
-                    2 =>
-                        [
-                            'name' => 'Chronos',
-                        ],
-                    3 =>
-                        [
-                            'name' => 'Love\'n\'Gun',
-                        ],
-                    4 =>
-                        [
-                            'name' => 'WhiteRoad remix',
-                        ],
-                    5 =>
-                        [
-                            'name' => 'DNK remix',
-                        ],
-                    6 =>
-                        [
-                            'name' => 'Heart (amiga mod)',
-                        ],
-                    7 =>
-                        [
-                            'name' => 'Он играет на похоронах и танцах',
-                        ],
-                    8 =>
-                        [
-                            'name' => 'Suggest!ve',
-                        ],
-                    9 =>
-                        [
-                            'name' => 'Millennium',
-                        ],
-                    10 =>
-                        [
-                            'name' => 'Deep Green',
-                        ],
-                    11 =>
-                        [
-                            'name' => 'Phoney Phrase',
-                        ],
-                    12 =>
-                        [
-                            'name' => 'Sexy Potion',
-                        ],
-                ],
-            'pictures' =>
-                [
-                    0 =>
-                        [
-                            'name' => 'Take My Soul & Oni',
-                        ],
-                    1 =>
-                        [
-                            'name' => 'Neuronus & Baby',
-                        ],
-                    2 =>
-                        [
-                            'name' => 'The Rage To Overcome',
-                        ],
-                    3 =>
-                        [
-                            'name' => 'Titanic',
-                        ],
-                    4 =>
-                        [
-                            'name' => 'Eruption!',
-                        ],
-                    5 =>
-                        [
-                            'name' => 'CCY2K',
-                        ],
-                    6 =>
-                        [
-                            'name' => 'Wild',
-                        ],
-                ],
-            'mentionedPersonIds' =>
-                [
-                    0 => 'diver',
-                    1 => 'gasman',
-                    2 => 'fil',
-                    3 => 'andy_fer',
-                    4 => 'mmcm',
-                    5 => 'gas_13',
-                    6 => 'wlodek_black',
-                    7 => 'paracels',
-                    8 => 'arty_nooonzen',
-                    9 => 'zs',
-                    10 => 'unbeliever',
-                    11 => 'habib',
-                    12 => 'phantom_lord',
-                ],
-            'mentionedGroupIds' =>
-                [
-                    0 => '4th_dimension',
-                    1 => 'concern_chaos',
-                    2 => 'raww_arse',
-                    3 => 'womo_team',
-                    4 => 'phantasy',
-                    5 => 'k3l_corp',
-                    6 => 'euphoria',
-                    7 => 'crazytronic',
-                    8 => '3sc_hardcore',
-                    9 => 'zeroteam',
-                    10 => 'claw_exodus',
-                    11 => 'kupasoft',
-                    12 => 'hooy_program',
-                    13 => 'etc_group_scene',
-                    14 => 'ascendancy_cl',
-                    15 => 'accept_corp',
-                    16 => 'light_future_group',
-                    17 => 'brainwave_xpj',
-                    18 => 'tns',
-                    19 => 'eternity_industry',
-                    20 => 'techno_lab',
-                    21 => 'antares',
-                    22 => 'diamond_group',
-                    23 => 'digital_reality',
-                    24 => 'razzlers',
-                    25 => 'int_hackers_group',
-                    26 => 'aids',
-                    27 => 'de_bella_galica',
-                    28 => 'asa',
-                    29 => 'extreme',
-                    30 => 'sage',
-                    31 => 'stars_of_keladan',
-                    32 => 'hds',
-                    33 => 'technology_insys',
-                    34 => 'intentions_matrix',
-                    35 => 'kingdom_dreams',
-                    36 => 'phantom_family',
-                    37 => 'triumph',
-                    38 => 'condorsoft',
-                ],
-            'articleAuthorIds' =>
-                [
-                    0 => 'diver',
-                ],
-        ];
-        $pressArticleElement = $this->structureManager->getElementById(477718);
+        $mergedContent = json_decode('{
+  "groups": [
+    {
+      "id": "brokim_soft",
+      "name": "Brokim-soft",
+      "type": "scene"
+    },
+    {
+      "id": "bis_asm",
+      "name": "Bis/ASM",
+      "type": "scene"
+    },
+    {
+      "id": "rush",
+      "name": "Rush",
+      "type": "scene",
+      "parentGroupIds": ["bis_asm"]
+    }
+  ],
+  "persons": [
+    {
+      "id": "ticklish_jim",
+      "nickName": "Ticklish Jim",
+      "realName": "",
+      "groupIds": ["brokim_soft", "bis_asm"],
+      "groupRoles": ["coder"],
+      "city": "Черкассы",
+      "country": "Украина"
+    },
+    {
+      "id": "panda",
+      "nickName": "Panda",
+      "realName": "",
+      "groupIds": ["bis_asm", "rush"],
+      "groupRoles": ["graphician"]
+    },
+    {
+      "id": "slider",
+      "nickName": "Slider",
+      "realName": "",
+      "groupIds": ["bis_asm", "rush"],
+      "groupRoles": ["graphician"]
+    },
+    {
+      "id": "jam",
+      "nickName": "Jam",
+      "realName": "",
+      "groupRoles": ["support"]
+    },
+    {
+      "id": "andrey_bezugly",
+      "nickName": "",
+      "realName": "Андрей Безуглый",
+      "city": "Черкассы",
+      "country": "Украина"
+    }
+  ],
+  "software": [
+    {
+      "name": "Crime Santa Claus: Deja Vu",
+      "authorship": [
+        {"id": "ticklish_jim", "roles": ["code"]},
+        {"id": "panda", "roles": ["graphics"]},
+        {"id": "slider", "roles": ["graphics"]}
+      ],
+      "groupIds": ["bis_asm", "rush"]
+    },
+    {
+      "name": "Crime Santa Claus-2"
+    },
+    {
+      "name": "Цитадель"
+    },
+    {
+      "name": "ZX-POWER 3"
+    }
+  ],
+  "mentionedPersonIds": [
+    "ticklish_jim",
+    "panda",
+    "slider",
+    "jam",
+    "andrey_bezugly"
+  ],
+  "mentionedGroupIds": [
+    "brokim_soft",
+    "bis_asm",
+    "rush"
+  ],
+  "articleAuthorIds": ["jam"]
+}', true);
+        $pressArticleElement = $this->structureManager->getElementById(493601);
         $this->pressDataUpdater->updatePressArticleData($pressArticleElement, $mergedContent);
         return;
         $this->processQueue(QueueType::AI_PRESS_PARSE, function (pressArticleElement $pressArticleElement, $counter) {

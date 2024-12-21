@@ -9,6 +9,7 @@ enum LinkTypes: string
     case PRESS_AUTHOR = 'pressAuthor';
     case PRESS_PEOPLE = 'pressPeople';
     case PRESS_GROUPS = 'pressGroups';
+    case GROUP_SUBGROUP = 'groupSub';
     case PRESS_SOFTWARE = 'pressSoftware';
     case PRESS_PARTIES = 'pressParties';
 }

@@ -55,7 +55,8 @@ class GroupsService extends ElementsManager
             city: $groupInfo['cityName'] ?? null,
             country: $groupInfo['countryName'] ?? null,
             isAlias: $groupInfo['isAlias'] ?? null,
-            memberNames: $memberNames
+            memberNames: $memberNames,
+            parentGroupIds: $groupInfo['parentGroupIds'] ?? null
         );
 
         /**
@@ -182,6 +183,20 @@ class GroupsService extends ElementsManager
                 $element->country = $locationElement->id;
             }
         }
+
+        if (isset($groupInfo['parentGroupIds'])) {
+            $parentGroups = $element->parentGroups;
+            foreach ($groupInfo['parentGroupIds'] as $groupId) {
+                $groupElement = $this->getElementByImportId($groupId, $origin, 'group');
+                if ($groupElement !== null && !in_array($groupElement, $parentGroups, true)) {
+                    $parentGroups[] = $groupElement;
+                }
+            }
+            $changed = true;
+            $element->parentGroups = $parentGroups;
+        }
+
+
         if ($changed) {
             $element->persistElementData();
         }
