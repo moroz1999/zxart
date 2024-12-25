@@ -38,12 +38,12 @@ class PouetManagerServiceContainer extends DependencyInjectionServiceContainer
             $pouetManager->setAuthorsManager($this->registry->getService(AuthorsService::class));
         }
         /**
-         * @var GroupsService $groupsManager
+         * @var GroupsService $groupsService
          */
-        if ($groupsManager = $this->getOption('GroupsManager')) {
-            $pouetManager->setGroupsManager($groupsManager);
+        if ($groupsService = $this->getOption(GroupsService::class)) {
+            $pouetManager->setGroupsService($groupsService);
         } else {
-            $pouetManager->setGroupsManager($this->registry->getService('GroupsManager'));
+            $pouetManager->setGroupsService($this->registry->getService(GroupsService::class));
         }
         /**
          * @var CountriesManager $countriesManager

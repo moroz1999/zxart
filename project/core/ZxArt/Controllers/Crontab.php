@@ -131,9 +131,9 @@ class Crontab extends controllerApplication
             $this->parseArtItems('module_zxmusic', 'file', 'fileName');
 //            $this->queryAiSeo();
 //            $this->queryAiIntro();
-//            $this->queryAiCategories();
-//            $this->queryAiPressBeautifier();
-//            $this->queryAiPressTranslation();
+            $this->queryAiCategories();
+            $this->queryAiPressBeautifier();
+            $this->queryAiPressTranslation();
             $this->queryAiPressParser();
 //            $this->queryAiPressSeo();
         }
@@ -151,7 +151,6 @@ class Crontab extends controllerApplication
             $counter++;
 
             $elementId = $this->queueService->getNextElementId($queueType);
-            $elementId = 493601;
             if ($elementId === null) {
                 break;
             }
@@ -180,7 +179,6 @@ class Crontab extends controllerApplication
             $endTime = microtime(true);
             $executionTime = $endTime - $startTime;
             $totalExecution += $executionTime;
-            exit;
             $this->logMessage("$counter $queueType->value request completed in " . round($executionTime) . " seconds", 0);
         }
 
@@ -189,100 +187,6 @@ class Crontab extends controllerApplication
 
     private function queryAiPressParser(): void
     {
-        $mergedContent = json_decode('{
-  "groups": [
-    {
-      "id": "brokim_soft",
-      "name": "Brokim-soft",
-      "type": "scene"
-    },
-    {
-      "id": "bis_asm",
-      "name": "Bis/ASM",
-      "type": "scene"
-    },
-    {
-      "id": "rush",
-      "name": "Rush",
-      "type": "scene",
-      "parentGroupIds": ["bis_asm"]
-    }
-  ],
-  "persons": [
-    {
-      "id": "ticklish_jim",
-      "nickName": "Ticklish Jim",
-      "realName": "",
-      "groupIds": ["brokim_soft", "bis_asm"],
-      "groupRoles": ["coder"],
-      "city": "Черкассы",
-      "country": "Украина"
-    },
-    {
-      "id": "panda",
-      "nickName": "Panda",
-      "realName": "",
-      "groupIds": ["bis_asm", "rush"],
-      "groupRoles": ["graphician"]
-    },
-    {
-      "id": "slider",
-      "nickName": "Slider",
-      "realName": "",
-      "groupIds": ["bis_asm", "rush"],
-      "groupRoles": ["graphician"]
-    },
-    {
-      "id": "jam",
-      "nickName": "Jam",
-      "realName": "",
-      "groupRoles": ["support"]
-    },
-    {
-      "id": "andrey_bezugly",
-      "nickName": "",
-      "realName": "Андрей Безуглый",
-      "city": "Черкассы",
-      "country": "Украина"
-    }
-  ],
-  "software": [
-    {
-      "name": "Crime Santa Claus: Deja Vu",
-      "authorship": [
-        {"id": "ticklish_jim", "roles": ["code"]},
-        {"id": "panda", "roles": ["graphics"]},
-        {"id": "slider", "roles": ["graphics"]}
-      ],
-      "groupIds": ["bis_asm", "rush"]
-    },
-    {
-      "name": "Crime Santa Claus-2"
-    },
-    {
-      "name": "Цитадель"
-    },
-    {
-      "name": "ZX-POWER 3"
-    }
-  ],
-  "mentionedPersonIds": [
-    "ticklish_jim",
-    "panda",
-    "slider",
-    "jam",
-    "andrey_bezugly"
-  ],
-  "mentionedGroupIds": [
-    "brokim_soft",
-    "bis_asm",
-    "rush"
-  ],
-  "articleAuthorIds": ["jam"]
-}', true);
-        $pressArticleElement = $this->structureManager->getElementById(493601);
-        $this->pressDataUpdater->updatePressArticleData($pressArticleElement, $mergedContent);
-        return;
         $this->processQueue(QueueType::AI_PRESS_PARSE, function (pressArticleElement $pressArticleElement, $counter) {
             $pressElement = $pressArticleElement->getParent();
             if ($pressElement === null) {

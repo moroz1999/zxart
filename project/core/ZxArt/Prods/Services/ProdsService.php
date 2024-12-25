@@ -24,7 +24,7 @@ use structureManager;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
-use ZxArt\Import\Prods\Prod;
+use ZxArt\Import\Prods\ProdLabel;
 use ZxArt\Import\Prods\ProdResolver;
 use ZxArt\Prods\Repositories\ProdsRepository;
 use ZxParsingManager;
@@ -104,7 +104,7 @@ class ProdsService extends ElementsManager
     public function __construct(
         protected structureManager     $structureManager,
         protected PartiesService       $partiesService,
-        protected GroupsService        $groupsManager,
+        protected GroupsService        $groupsService,
         protected ZxParsingManager     $zxParsingManager,
         protected AuthorsService       $authorsManager,
         protected linksManager         $linksManager,
@@ -239,7 +239,7 @@ class ProdsService extends ElementsManager
             }
         }
         if (!$element) {
-            $prod = new Prod(
+            $prod = new ProdLabel(
                 id: $prodInfo['id'],
                 title: $prodInfo['title'],
                 year: $prodInfo['year'] ?? null,
@@ -296,12 +296,12 @@ class ProdsService extends ElementsManager
             if ($gatheredInfo['isAlias'] && $gatheredInfo['isPerson']) {
                 $this->authorsManager->importAuthorAlias($gatheredInfo, $origin);
             } elseif ($gatheredInfo['isGroup']) {
-                $this->groupsManager->importGroup($gatheredInfo, $origin);
+                $this->groupsService->importGroup($gatheredInfo, $origin);
             } elseif ($gatheredInfo['isPerson']) {
                 $this->authorsManager->importAuthor($gatheredInfo, $origin);
             } else {
                 //we don't know anything about this label. lets search for any group with that name
-                $result = $this->groupsManager->importGroup($gatheredInfo, $origin, false);
+                $result = $this->groupsService->importGroup($gatheredInfo, $origin, false);
                 if (!$result) {
                     //search for author alias with that name
                     $result = $this->authorsManager->importAuthorAlias($gatheredInfo, $origin, false);

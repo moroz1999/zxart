@@ -5,7 +5,7 @@ namespace ZxArt\Import\Prods;
 
 use ZxArt\Import\Labels\GroupLabel;
 
-readonly final class Prod
+readonly final class ProdLabel
 {
     /**
      * @param GroupLabel[]|null $groupIds

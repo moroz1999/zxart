@@ -38,12 +38,12 @@ class ZxaaaManagerServiceContainer extends DependencyInjectionServiceContainer
             $zxaaaManager->setAuthorsManager($this->registry->getService(AuthorsService::class));
         }
         /**
-         * @var GroupsService $groupsManager
+         * @var GroupsService $groupsService
          */
-        if ($groupsManager = $this->getOption('GroupsManager')) {
-            $zxaaaManager->setGroupsManager($groupsManager);
+        if ($groupsService = $this->getOption(GroupsService::class)) {
+            $zxaaaManager->setGroupsService($groupsService);
         } else {
-            $zxaaaManager->setGroupsManager($this->registry->getService('GroupsManager'));
+            $zxaaaManager->setGroupsService($this->registry->getService(GroupsService::class));
         }
         /**
          * @var CountriesManager $countriesManager

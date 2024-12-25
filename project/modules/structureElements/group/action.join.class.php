@@ -17,15 +17,15 @@ class joinGroup extends structureElementAction
     {
         if ($this->validated) {
             /**
-             * @var GroupsService $groupsManager
+             * @var GroupsService $groupsService
              */
-            $groupsManager = $this->getService('GroupsManager');
+            $groupsService = $this->getService(GroupsService::class);
 
             if ($structureElement->joinAsAlias) {
-                $groupsManager->joinGroupAsAlias($structureElement->id, $structureElement->joinAsAlias);
+                $groupsService->joinGroupAsAlias($structureElement->id, $structureElement->joinAsAlias);
             }
             if ($structureElement->joinAndDelete) {
-                $groupsManager->joinDeleteGroup($structureElement->id, $structureElement->joinAndDelete);
+                $groupsService->joinDeleteGroup($structureElement->id, $structureElement->joinAndDelete);
             }
 
             $controller->redirect($structureElement->getUrl());

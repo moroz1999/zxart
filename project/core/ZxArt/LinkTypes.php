@@ -12,4 +12,6 @@ enum LinkTypes: string
     case GROUP_SUBGROUP = 'groupSub';
     case PRESS_SOFTWARE = 'pressSoftware';
     case PRESS_PARTIES = 'pressParties';
+    case PRESS_TUNES = 'pressTunes';
+    case PRESS_PICTURES = 'pressPictures';
 }

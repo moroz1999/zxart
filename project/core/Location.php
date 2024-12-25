@@ -132,9 +132,11 @@ trait Location
         return $this->partiesList;
     }
 
-    public function getUrl($action = null)
+    public function getUrl($locationMode = null, $action = null)
     {
-        $locationMode = $this->getLocationMode();
+        if ($locationMode === null) {
+            $locationMode = $this->getLocationMode();
+        }
         if ($locationMode === 'author') {
             return $this->URL;
         }

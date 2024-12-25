@@ -17,11 +17,11 @@ class convertToGroupGroupAlias extends structureElementAction
     {
         if ($this->validated) {
             /**
-             * @var GroupsService $groupsManager
+             * @var GroupsService $groupsService
              */
-            $groupsManager = $this->getService('GroupsManager');
+            $groupsService = $this->getService(GroupsService::class);
 
-            if ($newElement = $groupsManager->convertGroupAliasToGroup($structureElement)) {
+            if ($newElement = $groupsService->convertGroupAliasToGroup($structureElement)) {
                 $controller->redirect($newElement->getUrl());
             }
         }

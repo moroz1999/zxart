@@ -1,11 +1,22 @@
 <?php
 
-class MusicManager extends ElementsManager
+namespace ZxArt\Pictures\Services;
+
+use ElementsManager;
+use Illuminate\Database\Connection;
+use LanguagesManager;
+use structureManager;
+
+class PicturesManager extends ElementsManager
 {
-    const TABLE = 'module_zxmusic';
+    const TABLE = 'module_zxpicture';
     protected $columnRelations = [];
 
-    public function __construct()
+    public function __construct(
+        protected Connection        $db,
+        protected LanguagesManager $languagesManager,
+        protected structureManager $structureManager,
+    )
     {
         $this->columnRelations = [
             'title' => ['LOWER(title)' => true],
@@ -13,7 +24,7 @@ class MusicManager extends ElementsManager
             'date' => ['dateAdded' => true, 'id' => true],
             'year' => ['year' => true, 'dateAdded' => true, 'id' => true],
             'votes' => ['votes' => true, 'if(partyplace,0,1), partyplace' => false, 'title' => true],
-            'plays' => ['plays' => true, 'id' => true],
+            'views' => ['views' => true, 'id' => true],
             'commentsAmount' => ['commentsAmount' => true, 'id' => true],
         ];
     }

@@ -9,12 +9,12 @@
         <td><a href="{$groupElement->getUrl()}">{$groupElement->title}</a></td>
         <td>
             {if $country = $groupElement->getCountryElement()}
-                <a href="{$country->URL}">{$country->title}</a>
+                <a href="{$country->getUrl('group')}">{$country->title}</a>
             {/if}
         </td>
         <td>
             {if $city = $groupElement->getCityElement()}
-                <a href="{$city->URL}">{$city->title}</a>
+                <a href="{$city->getUrl('group')}">{$city->title}</a>
             {/if}
         </td>
     </tr>

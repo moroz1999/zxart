@@ -9,9 +9,12 @@ trait ZxSoft
      */
     public function getListImagePreset(): string
     {
-        foreach ($this->getHardwareInfo() as $item) {
-            if (in_array($item['id'], self::$extendedGraphics, true)) {
-                return 'full';
+        $hardwareInfo = $this->getHardwareInfo();
+        if (!empty($hardwareInfo)) {
+            foreach ($this->getHardwareInfo() as $item) {
+                if (in_array($item['id'], self::$extendedGraphics, true)) {
+                    return 'full';
+                }
             }
         }
         return 'prodListImage';

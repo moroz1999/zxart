@@ -198,6 +198,7 @@ class GroupsService extends ElementsManager
 
 
         if ($changed) {
+            $element->checkCountry();
             $element->persistElementData();
         }
     }

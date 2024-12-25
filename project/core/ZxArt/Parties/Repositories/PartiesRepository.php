@@ -12,7 +12,7 @@ final class PartiesRepository
     public const TABLE = 'module_party';
 
     public function __construct(
-        private readonly Connection $db,
+        private readonly Connection               $db,
         private readonly AlphanumericColumnSearch $alphanumericColumnSearch,
     )
     {
@@ -31,14 +31,19 @@ final class PartiesRepository
             ->leftJoin(
                 'structure_links',
                 static function ($join) {
-                    $join->on('structure_links.childStructureId', '=', 'module_party.id');
-                    $join->where('structure_links.type', '=', 'structure');
+                    $join->on('structure_links.childStructureId', '=', 'module_party.id')
+                        ->where('structure_links.type', '=', 'structure');
                 }
-            )->leftJoin('module_generic', 'structure_links.parentStructureId', '=', 'module_generic.id')
-            ->where('module_generic.title', '=', $year);
-
-        $query = $this->alphanumericColumnSearch->addSearchByTitle($query, $title, 'engine_module_party.title');
-
+            )
+            ->leftJoin(
+                'module_generic',
+                static function ($join) use ($year) {
+                    $join->on('structure_links.childStructureId', '=', 'module_generic.id')
+                        ->where('module_generic.title', '=', $year);
+                }
+            );
+        $this->alphanumericColumnSearch->addSearchByTitle($query, $title, 'engine_module_party.title');
+        $this->alphanumericColumnSearch->addSearchByTitle($query, $title . ' ' . $year, 'engine_module_party.title');
 
         if ($record = $query->first()) {
             return $record['id'];

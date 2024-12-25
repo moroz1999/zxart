@@ -34,12 +34,12 @@ class WosManagerServiceContainer extends DependencyInjectionServiceContainer
             $wosManager->setAuthorsManager($this->registry->getService(AuthorsService::class));
         }
         /**
-         * @var GroupsService $groupsManager
+         * @var GroupsService $groupsService
          */
-        if ($groupsManager = $this->getOption('GroupsManager')) {
-            $wosManager->setGroupsManager($groupsManager);
+        if ($groupsService = $this->getOption(GroupsService::class)) {
+            $wosManager->setGroupsService($groupsService);
         } else {
-            $wosManager->setGroupsManager($this->registry->getService('GroupsManager'));
+            $wosManager->setGroupsService($this->registry->getService(GroupsService::class));
         }
         /**
          * @var CountriesManager $countriesManager

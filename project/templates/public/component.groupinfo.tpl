@@ -80,7 +80,7 @@
 					{translations name='group.country'}:
 				</td>
 				<td class='info_table_value'>
-					<a href="{$country->URL}">{$country->title}</a>
+					<a href="{$country->getUrl('group')}">{$country->title}</a>
 				</td>
 			</tr>
 		{/if}
@@ -90,7 +90,7 @@
 					{translations name='group.city'}:
 				</td>
 				<td class='info_table_value'>
-					<a href="{$city->URL}">{$city->title}</a>
+					<a href="{$city->getUrl('group')}">{$city->title}</a>
 				</td>
 			</tr>
 		{/if}

@@ -47,7 +47,7 @@ class AuthorsService extends ElementsManager
         protected privilegesManager    $privilegesManager,
         protected Connection           $db,
         protected structureManager     $structureManager,
-        protected GroupsService        $groupsManager,
+        protected GroupsService        $groupsService,
         protected AuthorshipRepository $authorshipRepository,
         private readonly LabelResolver $labelResolver,
     )
@@ -102,7 +102,7 @@ class AuthorsService extends ElementsManager
                     country: $groupInfo['country'] ?? null,
                     memberNames: [$authorInfo['title']],
                 );
-            }, $authorInfo['groups']);
+            }, $authorInfo['groups'] ?? []);
 
             $label = new PersonLabel(
                 id: $authorInfo['id'] ?? null,

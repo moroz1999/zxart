@@ -30,7 +30,7 @@ final class AlphanumericColumnSearch
         return $query;
     }
 
-    private function toAlphanumeric(string $input): string
+    public function toAlphanumeric(string $input): string
     {
         return preg_replace('/[^\p{L}\p{N}]/u', '', mb_strtolower(trim($input)));
     }

@@ -38,12 +38,12 @@ class TslabsManagerServiceContainer extends DependencyInjectionServiceContainer
             $tslabsManager->setAuthorsManager($this->registry->getService(AuthorsService::class));
         }
         /**
-         * @var GroupsService $groupsManager
+         * @var GroupsService $groupsService
          */
-        if ($groupsManager = $this->getOption('GroupsManager')) {
-            $tslabsManager->setGroupsManager($groupsManager);
+        if ($groupsService = $this->getOption(GroupsService::class)) {
+            $tslabsManager->setGroupsService($groupsService);
         } else {
-            $tslabsManager->setGroupsManager($this->registry->getService('GroupsManager'));
+            $tslabsManager->setGroupsService($this->registry->getService(GroupsService::class));
         }
         /**
          * @var CountriesManager $countriesManager

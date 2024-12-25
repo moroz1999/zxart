@@ -17,11 +17,11 @@ class convertToGroupAuthor extends structureElementAction
     {
         if ($this->validated) {
             /**
-             * @var GroupsService $groupsManager
+             * @var GroupsService $groupsService
              */
-            $groupsManager = $this->getService('GroupsManager');
+            $groupsService = $this->getService(GroupsService::class);
 
-            if ($newElement = $groupsManager->convertAuthorToGroup($structureElement)) {
+            if ($newElement = $groupsService->convertAuthorToGroup($structureElement)) {
                 $controller->redirect($newElement->getUrl());
             }
         }

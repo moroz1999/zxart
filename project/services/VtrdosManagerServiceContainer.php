@@ -38,12 +38,12 @@ class VtrdosManagerServiceContainer extends DependencyInjectionServiceContainer
             $vtrdosManager->setAuthorsManager($this->registry->getService(AuthorsService::class));
         }
         /**
-         * @var GroupsService $groupsManager
+         * @var GroupsService $groupsService
          */
-        if ($groupsManager = $this->getOption('GroupsManager')) {
-            $vtrdosManager->setGroupsManager($groupsManager);
+        if ($groupsService = $this->getOption(GroupsService::class)) {
+            $vtrdosManager->setGroupsService($groupsService);
         } else {
-            $vtrdosManager->setGroupsManager($this->registry->getService('GroupsManager'));
+            $vtrdosManager->setGroupsService($this->registry->getService(GroupsService::class));
         }
         /**
          * @var CountriesManager $countriesManager

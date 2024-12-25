@@ -15,7 +15,7 @@ class PouetManager extends errorLogger
     protected $maxCounter = 1000;
     protected $maxId = 0;
     protected $debugEntry;
-    protected $ignore = [539798];
+    protected $ignore = [];
     protected $counter = 0;
     /**
      * @var \Illuminate\Database\Connection
@@ -276,7 +276,7 @@ class PouetManager extends errorLogger
     /**
      * @var GroupsService
      */
-    protected $groupsManager;
+    protected $groupsService;
     /**
      * @var CountriesManager
      */
@@ -346,11 +346,11 @@ class PouetManager extends errorLogger
     }
 
     /**
-     * @param GroupsService $groupsManager
+     * @param GroupsService $groupsService
      */
-    public function setGroupsManager($groupsManager): void
+    public function setGroupsService($groupsService): void
     {
-        $this->groupsManager = $groupsManager;
+        $this->groupsService = $groupsService;
     }
 
     /**
@@ -360,7 +360,7 @@ class PouetManager extends errorLogger
     {
         $this->countriesManager = $countriesManager;
     }
-    
+
     public function setProdsService(ProdsService $prodsManager): void
     {
         $this->prodsManager = $prodsManager;
@@ -650,9 +650,16 @@ class PouetManager extends errorLogger
 
     protected function updateReport($id, string $status): void
     {
-        $this->db->table('import_pouet')->insert([
-            ['id' => $id, 'status' => $status],
-        ]);
+        $existingRecord = $this->db->table('import_pouet')->where('id', $id)->first();
+
+        if ($existingRecord) {
+            $this->db->table('import_pouet')->where('id', $id)->update(['status' => $status]);
+        } else {
+            $this->db->table('import_pouet')->insert([
+                'id' => $id,
+                'status' => $status,
+            ]);
+        }
     }
 
     protected function loadMaxImportedId()

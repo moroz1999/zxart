@@ -112,11 +112,6 @@ final readonly class LabelResolver
                     return 0;
                 }
 
-                //don't match authors if label doesn't have a country and author does
-                if ($authorCountry !== null && $labelCountry === null) {
-                    return 0;
-                }
-
                 $labelGroups = $label->groups ?? [];
 
                 // if both have groups, then exclude non-matching
@@ -132,6 +127,10 @@ final readonly class LabelResolver
                 }
 
                 $score = 0;
+                //don't match authors if label doesn't have a country and author does
+                if ($authorCountry !== null && $labelCountry === null) {
+                    $score += -1;
+                }
                 if ($this->valueMatches($elementName, $labelName)) {
                     $score += 10;
                 }
@@ -191,7 +190,7 @@ final readonly class LabelResolver
             // score must be calculated from main entity, which has all groups, locations and so on
             // but alias title is for comparison
             $score = $calculateScoreForElement($entity, $alias->getTitle(), $label);
-            if ($score === 0) {
+            if ($score <= 0) {
                 continue;
             }
             $candidates[] = [

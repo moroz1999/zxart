@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\LinkTypes;
+
 /**
  * Class zxMusicElement
  *
@@ -79,6 +81,13 @@ class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
         $moduleStructure['converterVersion'] = 'text';
         $moduleStructure['trackerFile'] = 'file';
         $moduleStructure['trackerFileName'] = 'fileName';
+        $moduleStructure['mentions'] = [
+            'ConnectedElements',
+            [
+                'linkType' => LinkTypes::PRESS_TUNES->value,
+                'role' => 'parent',
+            ],
+        ];
     }
 
     /**

@@ -35,9 +35,7 @@
 				{translations name='party.country'}:
 			</td>
 			<td class='info_table_value'>
-				{if $country = $element->getCountryElement()}
-					<a href="{$country->URL}">{$country->title}</a>
-				{/if}
+				<a href="{$country->getUrl('party')}">{$country->title}</a>
 			</td>
 		</tr>
 	{/if}
@@ -47,9 +45,7 @@
 				{translations name='field.city'}:
 			</td>
 			<td class='info_table_value'>
-				{if $city = $element->getCityElement()}
-					<a href="{$city->URL}">{$city->title}</a>
-				{/if}
+				<a href="{$city->getUrl('party')}">{$city->title}</a>
 			</td>
 		</tr>
 	{/if}

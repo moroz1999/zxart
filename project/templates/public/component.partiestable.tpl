@@ -24,12 +24,12 @@
 					</td>
 					<td>
 						{if $country = $party->getCountryElement()}
-							<a href="{$country->URL}">{$country->title}</a>
+							<a href="{$country->getUrl('party')}">{$country->title}</a>
 						{/if}
 					</td>
 					<td>
 						{if $city = $party->getCityElement()}
-							<a href="{$city->URL}">{$city->title}</a>
+							<a href="{$city->getUrl('party')}">{$city->title}</a>
 						{/if}
 					</td>
 					<td>

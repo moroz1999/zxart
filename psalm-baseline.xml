@@ -1475,7 +1475,7 @@
       <code><![CDATA[getTunes]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/MusicManager.class.php">
+  <file src="project/core/ZxArt\Tunes\Services\MusicManager.class.php">
     <MissingPropertyType>
       <code><![CDATA[$columnRelations]]></code>
     </MissingPropertyType>
@@ -1483,9 +1483,9 @@
       <code><![CDATA[$columnRelations]]></code>
     </PossiblyUnusedProperty>
     <PropertyNotSetInConstructor>
-      <code><![CDATA[MusicManager]]></code>
-      <code><![CDATA[MusicManager]]></code>
-      <code><![CDATA[MusicManager]]></code>
+      <code><![CDATA[ZxArt\Tunes\Services\MusicManager]]></code>
+      <code><![CDATA[ZxArt\Tunes\Services\MusicManager]]></code>
+      <code><![CDATA[ZxArt\Tunes\Services\MusicManager]]></code>
     </PropertyNotSetInConstructor>
   </file>
   <file src="project/core/MusicSettingsProvider.php">
@@ -1594,7 +1594,7 @@
       <code><![CDATA[getElementById]]></code>
     </PossiblyNullReference>
   </file>
-  <file src="project/core/PicturesManager.class.php">
+  <file src="project/core/ZxArt\Pictures\Services\PicturesManager.class.php">
     <MissingPropertyType>
       <code><![CDATA[$columnRelations]]></code>
     </MissingPropertyType>
@@ -1602,9 +1602,9 @@
       <code><![CDATA[$columnRelations]]></code>
     </PossiblyUnusedProperty>
     <PropertyNotSetInConstructor>
-      <code><![CDATA[PicturesManager]]></code>
-      <code><![CDATA[PicturesManager]]></code>
-      <code><![CDATA[PicturesManager]]></code>
+      <code><![CDATA[ZxArt\Pictures\Services\PicturesManager]]></code>
+      <code><![CDATA[ZxArt\Pictures\Services\PicturesManager]]></code>
+      <code><![CDATA[ZxArt\Pictures\Services\PicturesManager]]></code>
     </PropertyNotSetInConstructor>
   </file>
   <file src="project/core/PicturesModesManager.class.php">
@@ -1808,7 +1808,7 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$ignore]]></code>
       <code><![CDATA[$urls]]></code>
     </PossiblyUnusedProperty>
@@ -1816,7 +1816,7 @@
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
       <code><![CDATA[$db]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$prodsManager]]></code>
       <code><![CDATA[$queueService]]></code>
     </PropertyNotSetInConstructor>
@@ -2249,12 +2249,12 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
     </PossiblyUnusedProperty>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$prodsManager]]></code>
     </PropertyNotSetInConstructor>
     <RedundantConditionGivenDocblockType>
@@ -2564,7 +2564,7 @@
     <MissingConstructor>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$prodsManager]]></code>
     </MissingConstructor>
     <MissingParamType>
@@ -2630,7 +2630,7 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
     </PossiblyUnusedProperty>
     <RedundantConditionGivenDocblockType>
       <code><![CDATA[$labels = explode(',', $labelString)]]></code>
@@ -3025,12 +3025,12 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
     </PossiblyUnusedProperty>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$prodsManager]]></code>
     </PropertyNotSetInConstructor>
     <RedundantCondition>
@@ -3470,19 +3470,19 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[setAuthorsManager]]></code>
       <code><![CDATA[setCountriesManager]]></code>
-      <code><![CDATA[setGroupsManager]]></code>
+      <code><![CDATA[setGroupsService]]></code>
       <code><![CDATA[setProdsService]]></code>
       <code><![CDATA[setZxdbConfig]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
       <code><![CDATA[$authorsManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$wosFilesPath]]></code>
     </PossiblyUnusedProperty>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$prodsManager]]></code>
       <code><![CDATA[$zxdb]]></code>
       <code><![CDATA[$zxdbConfig]]></code>
@@ -6532,12 +6532,12 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
     </PossiblyUnusedProperty>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$prodsManager]]></code>
     </PropertyNotSetInConstructor>
     <RiskyTruthyFalsyComparison>
@@ -12153,7 +12153,7 @@
   </file>
   <file src="project/modules/structureElements/author/action.convertToGroup.class.php">
     <ArgumentTypeCoercion>
-      <code><![CDATA['GroupsManager']]></code>
+      <code><![CDATA['GroupsService']]></code>
     </ArgumentTypeCoercion>
     <MissingPropertyType>
       <code><![CDATA[$loggable]]></code>
@@ -12167,7 +12167,7 @@
       <code><![CDATA[convertToGroupAuthor]]></code>
     </PropertyNotSetInConstructor>
     <UndefinedClass>
-      <code><![CDATA['GroupsManager']]></code>
+      <code><![CDATA['GroupsService']]></code>
     </UndefinedClass>
     <UnusedClass>
       <code><![CDATA[convertToGroupAuthor]]></code>
@@ -14604,7 +14604,7 @@
   </file>
   <file src="project/modules/structureElements/group/action.join.class.php">
     <ArgumentTypeCoercion>
-      <code><![CDATA['GroupsManager']]></code>
+      <code><![CDATA['GroupsService']]></code>
     </ArgumentTypeCoercion>
     <MissingParamType>
       <code><![CDATA[$expectedFields]]></code>
@@ -14621,7 +14621,7 @@
       <code><![CDATA[joinGroup]]></code>
     </PropertyNotSetInConstructor>
     <UndefinedClass>
-      <code><![CDATA['GroupsManager']]></code>
+      <code><![CDATA['GroupsService']]></code>
     </UndefinedClass>
     <UnusedClass>
       <code><![CDATA[joinGroup]]></code>
@@ -14990,7 +14990,7 @@
   </file>
   <file src="project/modules/structureElements/groupAlias/action.convertToGroup.class.php">
     <ArgumentTypeCoercion>
-      <code><![CDATA['GroupsManager']]></code>
+      <code><![CDATA['GroupsService']]></code>
     </ArgumentTypeCoercion>
     <MissingPropertyType>
       <code><![CDATA[$loggable]]></code>
@@ -15007,7 +15007,7 @@
       <code><![CDATA[convertToGroupGroupAlias]]></code>
     </PropertyNotSetInConstructor>
     <UndefinedClass>
-      <code><![CDATA['GroupsManager']]></code>
+      <code><![CDATA['GroupsService']]></code>
     </UndefinedClass>
     <UnusedClass>
       <code><![CDATA[convertToGroupGroupAlias]]></code>
@@ -15015,7 +15015,7 @@
   </file>
   <file src="project/modules/structureElements/groupAlias/action.join.class.php">
     <ArgumentTypeCoercion>
-      <code><![CDATA['GroupsManager']]></code>
+      <code><![CDATA['GroupsService']]></code>
     </ArgumentTypeCoercion>
     <MissingParamType>
       <code><![CDATA[$expectedFields]]></code>
@@ -15032,7 +15032,7 @@
       <code><![CDATA[joinGroupAlias]]></code>
     </PropertyNotSetInConstructor>
     <UndefinedClass>
-      <code><![CDATA['GroupsManager']]></code>
+      <code><![CDATA['GroupsService']]></code>
     </UndefinedClass>
     <UnusedClass>
       <code><![CDATA[joinGroupAlias]]></code>
@@ -24653,10 +24653,10 @@
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
       <code><![CDATA[$db]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$prodsManager]]></code>
       <code><![CDATA[$this->registry->getService('CountriesManager')]]></code>
-      <code><![CDATA[$this->registry->getService('GroupsManager')]]></code>
+      <code><![CDATA[$this->registry->getService('GroupsService')]]></code>
       <code><![CDATA[$this->registry->getService('db')]]></code>
       <code><![CDATA[$this->registry->getService(AuthorsService::class)]]></code>
       <code><![CDATA[$this->registry->getService(ProdsService::class)]]></code>
@@ -24665,7 +24665,7 @@
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
       <code><![CDATA[$db]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$prodsManager]]></code>
     </MixedAssignment>
     <UnusedClass>
@@ -24709,17 +24709,17 @@
     <MixedArgument>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$prodsManager]]></code>
       <code><![CDATA[$this->registry->getService('CountriesManager')]]></code>
-      <code><![CDATA[$this->registry->getService('GroupsManager')]]></code>
+      <code><![CDATA[$this->registry->getService('GroupsService')]]></code>
       <code><![CDATA[$this->registry->getService(AuthorsService::class)]]></code>
       <code><![CDATA[$this->registry->getService(ProdsService::class)]]></code>
     </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$prodsManager]]></code>
     </MixedAssignment>
     <UnusedClass>
@@ -24760,15 +24760,15 @@
     <MixedArgument>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$this->registry->getService('CountriesManager')]]></code>
-      <code><![CDATA[$this->registry->getService('GroupsManager')]]></code>
+      <code><![CDATA[$this->registry->getService('GroupsService')]]></code>
       <code><![CDATA[$this->registry->getService(AuthorsService::class)]]></code>
     </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$prodsManager]]></code>
     </MixedAssignment>
     <UnusedClass>
@@ -24779,15 +24779,15 @@
     <MixedArgument>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$this->registry->getService('CountriesManager')]]></code>
-      <code><![CDATA[$this->registry->getService('GroupsManager')]]></code>
+      <code><![CDATA[$this->registry->getService('GroupsService')]]></code>
       <code><![CDATA[$this->registry->getService(AuthorsService::class)]]></code>
     </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$prodsManager]]></code>
     </MixedAssignment>
     <UnusedClass>
@@ -24804,7 +24804,7 @@
     <MixedAssignment>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$prodsManager]]></code>
       <code><![CDATA[$wosManager]]></code>
       <code><![CDATA[$zxdbConfig]]></code>
@@ -24815,8 +24815,8 @@
       <code><![CDATA[setAuthorsManager]]></code>
       <code><![CDATA[setCountriesManager]]></code>
       <code><![CDATA[setCountriesManager]]></code>
-      <code><![CDATA[setGroupsManager]]></code>
-      <code><![CDATA[setGroupsManager]]></code>
+      <code><![CDATA[setGroupsService]]></code>
+      <code><![CDATA[setGroupsService]]></code>
       <code><![CDATA[setProdsService]]></code>
       <code><![CDATA[setProdsService]]></code>
       <code><![CDATA[setZxdbConfig]]></code>
@@ -24848,15 +24848,15 @@
     <MixedArgument>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$this->registry->getService('CountriesManager')]]></code>
-      <code><![CDATA[$this->registry->getService('GroupsManager')]]></code>
+      <code><![CDATA[$this->registry->getService('GroupsService')]]></code>
       <code><![CDATA[$this->registry->getService(AuthorsService::class)]]></code>
     </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$authorsManager]]></code>
       <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsManager]]></code>
+      <code><![CDATA[$groupsService]]></code>
       <code><![CDATA[$prodsManager]]></code>
     </MixedAssignment>
     <UnusedClass>

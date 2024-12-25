@@ -12,7 +12,6 @@ abstract class ElementsManager extends errorLogger
     protected Connection $db;
 
     /**
-     * @param LanguagesManager $languagesManager
      *
      * @return void
      */

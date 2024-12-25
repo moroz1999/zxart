@@ -72,6 +72,22 @@
                     </div>
                 {/foreach}
             {/if}
+            {if $element->pictures}
+                <h3>{translations name='pressarticle.pictures'}</h3>
+                {foreach $element->pictures as $picture}
+                    <div>
+                        <a href="{$picture->getUrl()}">{$picture->getTitle()}</a>
+                    </div>
+                {/foreach}
+            {/if}
+            {if $element->tunes}
+                <h3>{translations name='pressarticle.tunes'}</h3>
+                {foreach $element->tunes as $tune}
+                    <div>
+                        <a href="{$tune->getUrl()}">{$tune->getTitle()}</a>
+                    </div>
+                {/foreach}
+            {/if}
             {if $element->parties}
                 <h3>{translations name='pressarticle.parties'}</h3>
                 {foreach $element->parties as $party}

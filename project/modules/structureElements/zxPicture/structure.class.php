@@ -1,5 +1,6 @@
 <?php
 
+use ZxArt\LinkTypes;
 use ZxArt\ZxScreen\Helper;
 use ZxArt\ZxScreen\ParametersDto;
 
@@ -10,7 +11,7 @@ use ZxArt\ZxScreen\ParametersDto;
  * @property float $votes
  * @property int $votesAmount
  * @property int $commentsAmount
- * @property int $year
+ * @property string $year
  * @property int $party
  * @property int $partyplace
  * @property string $compo
@@ -86,6 +87,13 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         $moduleStructure['denyComments'] = 'checkbox';
         $moduleStructure['artCityId'] = 'text';
         $moduleStructure['palette'] = 'text';
+        $moduleStructure['mentions'] = [
+            'ConnectedElements',
+            [
+                'linkType' => LinkTypes::PRESS_PICTURES->value,
+                'role' => 'parent',
+            ],
+        ];
     }
 
     /**

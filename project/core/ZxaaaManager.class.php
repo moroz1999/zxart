@@ -96,7 +96,7 @@ class ZxaaaManager extends errorLogger
     /**
      * @var GroupsService
      */
-    protected $groupsManager;
+    protected $groupsService;
     /**
      * @var CountriesManager
      */
@@ -122,11 +122,11 @@ class ZxaaaManager extends errorLogger
     }
 
     /**
-     * @param GroupsService $groupsManager
+     * @param GroupsService $groupsService
      */
-    public function setGroupsManager($groupsManager): void
+    public function setGroupsService($groupsService): void
     {
-        $this->groupsManager = $groupsManager;
+        $this->groupsService = $groupsService;
     }
 
     /**

@@ -4,17 +4,24 @@ declare(strict_types=1);
 
 namespace ZxArt\Import\Press\DataUpdater;
 
+use JsonException;
+use ZxArt\Authors\Repositories\AuthorshipRepository;
 use groupElement;
 use pressArticleElement;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Hardware\Services\HardwareService;
 use ZxArt\Import\Authors\AuthorSufficiencyChecker;
 use ZxArt\Import\Labels\PersonLabel;
 use ZxArt\Import\Labels\GroupLabel;
 use ZxArt\Import\Parties\Party;
 use ZxArt\Import\Parties\PartyResolver;
+use ZxArt\Import\Pictures\PictureLabel;
+use ZxArt\Import\Pictures\PictureResolver;
 use ZxArt\Import\Press\PressUpdateException;
-use ZxArt\Import\Prods\Prod;
+use ZxArt\Import\Prods\ProdLabel;
+use ZxArt\Import\Tunes\TuneLabel;
+use ZxArt\Import\Tunes\TuneResolver;
 use ZxArt\Prods\Services\ProdsService;
 use zxProdElement;
 use partyElement;
@@ -23,7 +30,7 @@ final class ArticleParsedDataUpdater
 {
     private const ORIGIN = 'zxp';
     /**
-     * @var Author[]
+     * @var authorElement[]
      */
     private array $authorsMap;
     /**
@@ -32,19 +39,41 @@ final class ArticleParsedDataUpdater
     private array $groupsMap;
     private array $memberNamesMap;
 
+    private array $rolesMap;
+
     public function __construct(
+        private readonly AuthorshipRepository     $authorshipRepository,
         private readonly AuthorsService           $authorsService,
         private readonly GroupsService            $groupsService,
         private readonly ProdsService             $prodsService,
         private readonly PartyResolver            $partyResolver,
         private readonly AuthorSufficiencyChecker $authorSufficiencyChecker,
+        private readonly PictureResolver          $pictureResolver,
+        private readonly TuneResolver             $tuneResolver,
+        private readonly HardwareService          $hardwareService,
     )
     {
         $this->authorsService->setForceUpdateGroups(true);
         $this->prodsService->setMatchProdsWithoutYear(true);
         $this->prodsService->setUpdateExistingProds(true);
+
+        $this->rolesMap = [
+            'coder' => 'code',
+            'cracker' => 'release',
+            'graphician' => 'graphics',
+            'hardware' => 'adaptation',
+            'musician' => 'music',
+            'organizer' => 'organizing',
+            'support' => 'support',
+            'tester' => 'testing',
+            'gamedesigner' => 'gamedesign',
+            'unknown' => 'unknown',
+        ];
     }
 
+    /**
+     * @throws JsonException
+     */
     public function updatePressArticleData(pressArticleElement $pressArticleElement, array $parsedData): void
     {
         $pressElement = $pressArticleElement->getParent();
@@ -60,21 +89,29 @@ final class ArticleParsedDataUpdater
         $this->prepareAuthorsMap($personsData, $groupsData);
 
         $pictures = $parsedData['pictures'] ?? null;
-        $tunes = $parsedData['tunes'] ?? null;
+        if ($pictures !== null) {
+            $this->updateArticlePictures($pictures, $pressArticleElement);
+        }
+        $tunes = $parsedData['music'] ?? null;
+        if ($tunes !== null) {
+            $this->updateArticleTunes($tunes, $pressArticleElement);
+        }
         $hardware = $parsedData['hardware'] ?? null;
-
+        if ($hardware !== null) {
+            $this->storeHardware($hardware, $pressArticleElement);
+        }
         $software = $parsedData['software'] ?? null;
         if ($software !== null) {
-            $this->updateArticleSoftware($software, $pressArticleElement);
+            $this->updateArticleSoftware($software, $pressArticleElement, $pressElement);
         }
         $parties = $parsedData['parties'] ?? null;
         if ($parties !== null) {
             $this->updateArticleParties($parties, $pressArticleElement);
         }
 
-        $pressAuthorIds = $parsedData['pressAuthorIds'] ?? null;
-        if ($pressAuthorIds !== null) {
-            $this->updatePressAuthors($pressAuthorIds, $pressElement);
+        $pressAuthorship = $parsedData['pressAuthorship'] ?? null;
+        if ($pressAuthorship !== null) {
+            $this->updatePressAuthorship($pressAuthorship, $pressElement);
         }
 
         $pressGroupIds = $parsedData['pressGroupIds'] ?? null;
@@ -84,7 +121,7 @@ final class ArticleParsedDataUpdater
 
         $mentionedGroupIds = $parsedData['mentionedGroupIds'] ?? null;
         if ($mentionedGroupIds !== null) {
-            $this->updatePressArticleGroups($mentionedGroupIds, $pressArticleElement);
+            $this->updateArticleGroups($mentionedGroupIds, $pressArticleElement);
         }
 
         $mentionedPersonIds = $parsedData['mentionedPersonIds'] ?? null;
@@ -94,8 +131,12 @@ final class ArticleParsedDataUpdater
 
         $articleAuthorIds = $parsedData['articleAuthorIds'] ?? null;
         if ($articleAuthorIds !== null) {
+            $pressAuthorship = [];
             // article authors should also be added to press entity
-            $this->updatePressAuthors($articleAuthorIds, $pressElement, ['text']);
+            foreach ($articleAuthorIds as $articleAuthorId) {
+                $pressAuthorship[] = ['id' => $articleAuthorId, 'softwareRoles' => ['text']];
+            }
+            $this->updatePressAuthorship($pressAuthorship, $pressElement);
             $this->updateArticleAuthors($articleAuthorIds, $pressArticleElement);
         }
 
@@ -124,13 +165,22 @@ final class ArticleParsedDataUpdater
         }
     }
 
-    private function updatePressAuthors(array $pressAuthorIds, zxProdElement $pressElement): void
+    /**
+     * @throws JsonException
+     */
+    private function updatePressAuthorship(array $pressAuthorship, zxProdElement $pressElement): void
     {
-        foreach ($pressAuthorIds as $authorId) {
-            $authors = $this->authorsMap[$authorId] ?? null;
-            if ($authors !== null) {
-                //todo: prod roles
-//                $this->authorsRepository->checkAuthors($pressElement->id, $authors->author->id, 'prod', $authors->prodRoles);
+        $authorRoles = [];
+        foreach ($pressAuthorship as $item) {
+            $authorRoles[$item['id']] = array_map(function ($role) {
+                return $this->rolesMap[$role] ?? $role;
+            }, $item['softwareRoles']);
+        }
+
+        foreach ($authorRoles as $authorId => $roles) {
+            $authorElement = $this->authorsMap[$authorId] ?? null;
+            if ($authorElement !== null) {
+                $this->authorshipRepository->checkAuthorship($pressElement->id, $authorElement->id, 'prod', $roles);
             }
         }
     }
@@ -147,7 +197,7 @@ final class ArticleParsedDataUpdater
         $pressElement->groups = $groups;
     }
 
-    private function updatePressArticleGroups(array $groupIds, pressArticleElement $pressArticleElement): void
+    private function updateArticleGroups(array $groupIds, pressArticleElement $pressArticleElement): void
     {
         $groups = $pressArticleElement->groups;
         foreach ($groupIds as $groupId) {
@@ -159,14 +209,66 @@ final class ArticleParsedDataUpdater
         $pressArticleElement->groups = $groups;
     }
 
-    private function updateArticleSoftware(array $parsedProds, pressArticleElement $pressArticleElement): void
+    private function updateArticleSoftware(array $parsedProds, pressArticleElement $pressArticleElement, zxProdElement $pressElement): void
     {
         $resolvedProds = $this->prepareProds($parsedProds);
         $articleProds = $pressArticleElement->software;
         foreach ($resolvedProds as $prod) {
-            $articleProds[] = $prod;
+            if ($prod->id === $pressElement->id) {
+                continue;
+            }
+            if ($prod !== null && !in_array($prod, $articleProds, true)) {
+                $articleProds[] = $prod;
+            }
         }
         $pressArticleElement->software = $articleProds;
+    }
+
+    private function updateArticlePictures(array $parsedPictures, pressArticleElement $pressArticleElement): void
+    {
+        $resolvedPictures = [];
+        foreach ($parsedPictures as $parsedPicture) {
+            $parsedPictureLabel = new PictureLabel(
+                title: $parsedPicture['name'],
+                year: $parsedPicture['year'] ?? null,
+            );
+            $resolvedPictures[] = $this->pictureResolver->resolve($parsedPictureLabel);
+        }
+
+        $articlePictures = $pressArticleElement->pictures;
+        foreach ($resolvedPictures as $picture) {
+            if ($picture !== null && !in_array($picture, $articlePictures, true)) {
+                $articlePictures[] = $picture;
+            }
+        }
+        $pressArticleElement->pictures = $articlePictures;
+    }
+
+    private function updateArticleTunes(array $parsedTunes, pressArticleElement $pressArticleElement): void
+    {
+        $resolvedTunes = [];
+        foreach ($parsedTunes as $parsedTune) {
+            $parsedTuneLabel = new TuneLabel(
+                title: $parsedTune['name'],
+                year: $parsedTune['year'] ?? null,
+            );
+            $resolvedTunes[] = $this->tuneResolver->resolve($parsedTuneLabel);
+        }
+
+        $articleTunes = $pressArticleElement->tunes;
+        foreach ($resolvedTunes as $tune) {
+            if ($tune !== null && !in_array($tune, $articleTunes, true)) {
+                $articleTunes[] = $tune;
+            }
+        }
+        $pressArticleElement->tunes = $articleTunes;
+    }
+
+    private function storeHardware($parsedHardware, pressArticleElement $pressArticleElement): void
+    {
+        foreach ($parsedHardware as $item) {
+            $this->hardwareService->storeHardwareData($item, $pressArticleElement->id);
+        }
     }
 
     private function updateArticleParties(array $parsedParties, pressArticleElement $pressArticleElement): void
@@ -262,9 +364,9 @@ final class ArticleParsedDataUpdater
     }
 
     /**
-     * @return Author[]
+     * @return void
      */
-    private function prepareAuthorsMap(array $parsedPersons, array $parsedGroups): array
+    private function prepareAuthorsMap(array $parsedPersons, array $parsedGroups): void
     {
         $groupsMap = [];
         foreach ($parsedGroups as $group) {
@@ -294,7 +396,6 @@ final class ArticleParsedDataUpdater
                 $this->authorsMap[$label->id] = $element;
             }
         }
-        return $this->authorsMap;
     }
 
     /**
@@ -390,16 +491,18 @@ final class ArticleParsedDataUpdater
         );
     }
 
-    private function transformToProd($parsedProd): Prod
+    private function transformToProd($parsedProd): ProdLabel
     {
         $groupIds = $parsedProd['groupIds'] ?? [];
         $publisherIds = $parsedProd['publisherIds'] ?? [];
         $authorRoles = [];
         foreach ($parsedProd['authorship'] ?? [] as $authorRoleDatum) {
-            $authorRoles[$authorRoleDatum['id']] = $authorRoleDatum['roles'];
+            $authorRoles[$authorRoleDatum['id']] = array_map(function ($role) {
+                return $this->rolesMap[$role] ?? $role;
+            }, $authorRoleDatum['softwareRoles']);
         }
 
-        return new Prod(
+        return new ProdLabel(
             title: $parsedProd['name'],
             year: $parsedProd['year'] ?? null,
             authorRoles: $authorRoles,

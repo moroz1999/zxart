@@ -4,7 +4,9 @@
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Parties\Services\PartiesService;
+use ZxArt\Pictures\Services\PicturesManager;
 use ZxArt\Prods\Services\ProdsService;
+use ZxArt\Tunes\Services\TunesManager;
 
 class ApiQueryResultResolver implements DependencyInjectionContextInterface
 {
@@ -30,7 +32,7 @@ class ApiQueryResultResolver implements DependencyInjectionContextInterface
             'zxPicture' => PicturesManager::class,
             'zxProd' => ProdsService::class,
             'zxRelease' => ReleasesResolver::class,
-            'zxMusic' => MusicManager::class,
+            'zxMusic' => TunesManager::class,
             'author' => AuthorsService::class,
             'group' => GroupsService::class,
             'party' => PartiesService::class,

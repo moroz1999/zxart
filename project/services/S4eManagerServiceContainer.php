@@ -38,12 +38,12 @@ class S4eManagerServiceContainer extends DependencyInjectionServiceContainer
             $s4eManager->setAuthorsManager($this->registry->getService(AuthorsService::class));
         }
         /**
-         * @var GroupsService $groupsManager
+         * @var GroupsService $groupsService
          */
-        if ($groupsManager = $this->getOption('GroupsManager')) {
-            $s4eManager->setGroupsManager($groupsManager);
+        if ($groupsService = $this->getOption(GroupsService::class)) {
+            $s4eManager->setGroupsService($groupsService);
         } else {
-            $s4eManager->setGroupsManager($this->registry->getService('GroupsManager'));
+            $s4eManager->setGroupsService($this->registry->getService(GroupsService::class));
         }
         /**
          * @var CountriesManager $countriesManager

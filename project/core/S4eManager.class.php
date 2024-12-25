@@ -10,7 +10,7 @@ class S4eManager extends errorLogger
     protected int $maxCounter = 4000;
     protected ProdsService $prodsManager;
     protected AuthorsService $authorsManager;
-    protected GroupsService $groupsManager;
+    protected GroupsService $groupsService;
     protected CountriesManager $countriesManager;
     protected string $origin = 's4e';
     protected string $rootUrl = 'https://spectrum4ever.org/';
@@ -39,9 +39,9 @@ class S4eManager extends errorLogger
         $this->authorsManager = $authorsManager;
     }
 
-    public function setGroupsManager(GroupsService $groupsManager): void
+    public function setGroupsService(GroupsService $groupsService): void
     {
-        $this->groupsManager = $groupsManager;
+        $this->groupsService = $groupsService;
     }
 
     public function setCountriesManager(CountriesManager $countriesManager): void

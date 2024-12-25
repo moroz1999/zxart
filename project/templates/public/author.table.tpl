@@ -13,12 +13,12 @@
 	</td>
 	<td class="author_table_country">
 		{if $country = $element->getCountryElement()}
-			<a href="{$country->URL}">{$country->title}</a>
+			<a href="{$country->getUrl('author')}">{$country->title}</a>
 		{/if}
 	</td>
 	<td class="author_table_city">
 		{if $city = $element->getCityElement()}
-			<a href="{$city->URL}">{$city->title}</a>
+			<a href="{$city->getUrl('author')}">{$city->title}</a>
 		{/if}
 	</td>
 	<td class="author_table_musicrating">

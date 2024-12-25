@@ -8,12 +8,12 @@
 	<td></td>
 	<td>
 		{if $country = $element->getCountryElement()}
-			<a href="{$country->URL}">{$country->title}</a>
+			<a href="{$country->getUrl('group')}">{$country->title}</a>
 		{/if}
 	</td>
 	<td>
 		{if $city = $element->getCityElement()}
-			<a href="{$city->URL}">{$city->title}</a>
+			<a href="{$city->getUrl('group')}">{$city->title}</a>
 		{/if}
 	</td>
 </tr>
