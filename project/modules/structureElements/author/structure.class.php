@@ -416,7 +416,7 @@ class authorElement extends structureElement implements
     {
         if ($this->groupsList === null) {
             $cache = $this->getElementsListCache('g', 60 * 60 * 24);
-            if (($this->groupsList = $cache->load()) === false) {
+            if (($this->groupsList = $cache->load()) === null) {
                 $this->groupsList = [];
                 if ($authorshipInfo = $this->getAuthorshipInfo('group')) {
                     foreach ($authorshipInfo as $item) {

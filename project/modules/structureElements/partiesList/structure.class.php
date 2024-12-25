@@ -53,7 +53,7 @@ class partiesListElement extends structureElement
     {
         if ($this->recentParties === null) {
             $cache = $this->getElementsListCache('rp', 60 * 60 * 3);
-            if (($this->recentParties = $cache->load()) === false) {
+            if (($this->recentParties = $cache->load()) === null) {
                 $this->recentParties = [];
 
                 $structureManager = $this->getService('structureManager');

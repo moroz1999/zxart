@@ -12,6 +12,7 @@ use ZxArt\LinkTypes;
  * @property boolean $aiRestartFix
  * @property boolean $aiRestartTranslate
  * @property boolean $aiRestartParse
+ * @property boolean $aiRestartSeo
  * @property authorElement[]|authorAliasElement[] $authors
  * @property authorElement[]|authorAliasElement[] $people
  * @property zxProdElement[]|zxReleaseElement $software
@@ -54,6 +55,7 @@ class pressArticleElement extends structureElement implements SearchContentHolde
         $moduleStructure['aiRestartFix'] = 'checkbox';
         $moduleStructure['aiRestartTranslate'] = 'checkbox';
         $moduleStructure['aiRestartParse'] = 'checkbox';
+        $moduleStructure['aiRestartSeo'] = 'checkbox';
         $moduleStructure['allowComments'] = 'checkbox';
         $moduleStructure['externalLink'] = 'url';
         $moduleStructure['authors'] = [

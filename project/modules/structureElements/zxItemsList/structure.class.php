@@ -51,27 +51,25 @@ class zxItemsListElement extends structureElement implements JsonDataProvider
 
     public function getItemsList()
     {
-        if ($this->itemsList === null) {
+        if (!isset($this->itemsList)) {
             $cache = $this->getElementsListCache('il', 60 * 60 * 7);
-            if (($this->itemsList = $cache->load()) === false) {
+            if (($this->itemsList = $cache->load()) === null) {
                 $structureType = '';
-                if ((!$this->items) || $this->items == 'graphics') {
+                if ((!$this->items) || $this->items === 'graphics') {
                     $structureType = 'zxPicture';
-                } elseif ($this->items == 'music') {
+                } elseif ($this->items === 'music') {
                     $structureType = 'zxMusic';
-                } elseif ($this->items == 'zxProd') {
+                } elseif ($this->items === 'zxProd') {
                     $structureType = 'zxProd';
-                } elseif ($this->items == 'zxRelease') {
+                } elseif ($this->items === 'zxRelease') {
                     $structureType = 'zxRelease';
                 }
                 /**
                  * @var ApiQueriesManager $apiQueriesManager
                  */
                 $apiQueriesManager = $this->getService('ApiQueriesManager');
-                if ($apiQuery = $apiQueriesManager->getQueryFromString($this->apiString)) {
-                    if ($result = $apiQuery->getQueryResult()) {
-                        $this->itemsList = $result[$structureType];
-                    }
+                if (($apiQuery = $apiQueriesManager->getQueryFromString($this->apiString)) && $result = $apiQuery->getQueryResult()) {
+                    $this->itemsList = $result[$structureType];
                 }
                 if (!$this->requiresUser) {
                     $cache->save($this->itemsList);

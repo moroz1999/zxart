@@ -42,7 +42,7 @@ class letterElement extends structureElement implements ColumnsTypeProvider
             $itemTypes = $sectionLogics->getAuthorLinkTypes();
             $key = implode('-', $itemTypes);
             $cache = $this->getElementsListCache($key, 60 * 60 * 24 * 7);
-            if (($this->authorsList = $cache->load()) === false) {
+            if (($this->authorsList = $cache->load()) === null) {
                 $this->authorsList = [];
                 $linksManager = $this->getService('linksManager');
                 $idList = $linksManager->getConnectedIdList($this->id, 'structure', 'parent');

@@ -30,6 +30,15 @@
                        name="{$formNames.aiRestartParse}"{if $element->aiRestartParse} checked="checked"{/if}/>
             </td>
         </tr>
+        <tr>
+            <td class="form_label">
+                {translations name='pressArticle.aiRestartSeo'}:
+            </td>
+            <td class="form_field">
+                <input class='checkbox_placeholder' type="checkbox" value="1"
+                       name="{$formNames.aiRestartSeo}"{if $element->aiRestartSeo} checked="checked"{/if}/>
+            </td>
+        </tr>
    </table>
 
     {include file=$theme->template('component.controls.tpl') action="receiveAiForm"}

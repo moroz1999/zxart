@@ -96,7 +96,7 @@ class authorAliasElement extends structureElement implements
         if (!isset($this->authorElement)) {
             $this->authorElement = null;
             $cache = $this->getElementsListCache('a', 60 * 60 * 24);
-            if (($authors = $cache->load()) === false) {
+            if (($authors = $cache->load()) === null) {
                 if ($authorId = $this->getAuthorId()) {
                     $structureManager = $this->getService('structureManager');
                     $authorElement = $structureManager->getElementById($authorId);

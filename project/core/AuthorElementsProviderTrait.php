@@ -15,7 +15,7 @@ trait AuthorElementsProviderTrait
     {
         if ($this->authors === null) {
             $cache = $this->getElementsListCache('al', 60 * 60);
-            if (($this->authors = $cache->load()) === false) {
+            if (($this->authors = $cache->load()) === null) {
                 $structureManager = $this->getService('structureManager');
                 $this->authors = [];
                 if ($authorsList = $this->getAuthorIds()) {

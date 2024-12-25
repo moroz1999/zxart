@@ -545,7 +545,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
     public function getLatestComments($limit = 10)
     {
         $cache = $this->getElementsListCache('lc', 180);
-        if (($comments = $cache->load()) === false) {
+        if (($comments = $cache->load()) === null) {
             $comments = [];
 
             $structureManager = $this->getService('structureManager');

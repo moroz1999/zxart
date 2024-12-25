@@ -12,7 +12,7 @@ trait PartyElementProviderTrait
             $this->partyElement = false;
 
             $cache = $this->getElementsListCache('p', 60 * 60 * 24);
-            if (($parties = $cache->load()) === false) {
+            if (($parties = $cache->load()) === null) {
                 if ($partyId = $this->getPartyId()) {
                     $structureManager = $this->getService('structureManager');
                     $this->partyElement = $structureManager->getElementById($partyId);

@@ -47,7 +47,7 @@ trait Location
         if ($this->authorsList === null) {
             $key = 'auth';
             $cache = $this->getElementsListCache($key, 60 * 60 * 24 * 7);
-            if (($this->authorsList = $cache->load()) === false) {
+            if (($this->authorsList = $cache->load()) === null) {
                 $this->authorsList = [];
                 /**
                  * @var ApiQueriesManager $queriesManager
@@ -77,7 +77,7 @@ trait Location
         if ($this->groupsList === null) {
             $key = 'grp';
             $cache = $this->getElementsListCache($key, 60 * 60 * 24 * 7);
-            if (($this->groupsList = $cache->load()) === false) {
+            if (($this->groupsList = $cache->load()) === null) {
                 $this->groupsList = [];
                 /**
                  * @var ApiQueriesManager $queriesManager
@@ -107,7 +107,7 @@ trait Location
         if ($this->partiesList === null) {
             $key = 'prt';
             $cache = $this->getElementsListCache($key, 60 * 60 * 24 * 7);
-            if (($this->partiesList = $cache->load()) === false) {
+            if (($this->partiesList = $cache->load()) === null) {
                 $this->partiesList = [];
                 /**
                  * @var ApiQueriesManager $queriesManager

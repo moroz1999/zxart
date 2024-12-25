@@ -13,7 +13,7 @@ trait LocationProviderTrait
             $this->countryElement = null;
 
             $cache = $this->getElementsListCache('co', 60 * 60 * 24);
-            if (($elements = $cache->load()) === false) {
+            if (($elements = $cache->load()) === null) {
                 if ($countryId = $this->getCountryId()) {
                     /**
                      * @var structureManager $structureManager
@@ -23,7 +23,7 @@ trait LocationProviderTrait
                 }
                 $cache->save([$this->countryElement]);
             } else {
-                $this->countryElement = reset($elements);
+                $this->countryElement = $elements[0] ?? null;;
             }
         }
         return $this->countryElement;
@@ -35,7 +35,7 @@ trait LocationProviderTrait
             $this->cityElement = null;
 
             $cache = $this->getElementsListCache('ci', 60 * 60 * 24);
-            if (($elements = $cache->load()) === false) {
+            if (($elements = $cache->load()) === null) {
                 if ($cityId = $this->getCityId()) {
                     /**
                      * @var structureManager $structureManager
@@ -45,7 +45,7 @@ trait LocationProviderTrait
                 }
                 $cache->save([$this->cityElement]);
             } else {
-                $this->cityElement = reset($elements);
+                $this->cityElement = $elements[0] ?? null;;
             }
         }
         return $this->cityElement;

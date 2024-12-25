@@ -498,7 +498,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
     {
         if ($this->originalAuthors === null) {
             $cache = $this->getElementsListCache('oal', 60 * 60);
-            if (($this->originalAuthors = $cache->load()) === false) {
+            if (($this->originalAuthors = $cache->load()) === null) {
                 $structureManager = $this->getService('structureManager');
                 $this->originalAuthors = [];
 

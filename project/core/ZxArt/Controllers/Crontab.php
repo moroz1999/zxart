@@ -131,7 +131,7 @@ class Crontab extends controllerApplication
             $this->parseArtItems('module_zxmusic', 'file', 'fileName');
 //            $this->queryAiSeo();
 //            $this->queryAiIntro();
-            $this->queryAiCategories();
+//            $this->queryAiCategories();
             $this->queryAiPressBeautifier();
             $this->queryAiPressTranslation();
             $this->queryAiPressParser();
@@ -474,12 +474,12 @@ class Crontab extends controllerApplication
              * @var zxProdElement $prodElement
              */
             $prodElement = $this->structureManager->getElementById($elementId);
-            $queryCategoriesEnabled = $this->isQueryCategoriesEnabled($prodElement);
             if (!$prodElement) {
                 $this->queueService->updateStatus($elementId, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_FAIL);
                 $this->logMessage($counter . ' AI Categories request prod not found ' . $elementId, 0);
                 continue;
             }
+            $queryCategoriesEnabled = $this->isQueryCategoriesEnabled($prodElement);
             $startTime = microtime(true);
             $metaData = null;
             $this->logMessage($counter . ' AI Categories request start ' . $prodElement->id . ' ' . $prodElement->title, 0);
