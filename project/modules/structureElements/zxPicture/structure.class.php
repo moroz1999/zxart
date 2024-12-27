@@ -21,6 +21,7 @@ use ZxArt\ZxScreen\ParametersDto;
  * @property string $type
  * @property int $rotation
  * @property int $border
+ * @property pressArticleElement[] $mentions
  */
 class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterface
 {

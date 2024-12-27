@@ -84,7 +84,7 @@
 					<option value=''></option>
 					{foreach from=$formData.groups item=group}
 						<option value='{$group->id}' selected="selected">
-							{$group}
+							{$group->title}
 						</option>
 					{/foreach}
 				</select>
@@ -100,7 +100,7 @@
 					<option value=''></option>
 					{foreach $formData.publishers as $publisher}
 						<option value='{$publisher->id}' selected="selected">
-							{$publisher}
+							{$publisher->title}
 						</option>
 					{/foreach}
 				</select>

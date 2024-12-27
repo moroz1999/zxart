@@ -46,6 +46,7 @@ readonly class ChunkProcessor
         ?array   $imageUrls = null,
         bool     $useJson = true,
         string   $model = PromptSender::MODEL_4O_MINI,
+        ?int     $id = null,
     ): ?array
     {
         return $this->processChunks(
@@ -55,7 +56,8 @@ readonly class ChunkProcessor
             $temperature,
             $imageUrls,
             $useJson,
-            $model
+            $model,
+            $id
         );
     }
 
@@ -67,6 +69,7 @@ readonly class ChunkProcessor
         ?array   $imageUrls,
         bool     $useJson,
         string   $model,
+        ?int     $id = null,
     ): ?array
     {
         $chunks = $this->splitTextIntoChunks($text);
@@ -79,7 +82,8 @@ readonly class ChunkProcessor
                 $temperature,
                 $imageUrls,
                 $useJson,
-                $model
+                $model,
+                $id
             );
 
             if ($response === null) {

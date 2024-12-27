@@ -37,8 +37,13 @@ use ZxArt\Queue\QueueType;
  * @property boolean $releasesOnly
  * @property array[] $splitData
  */
-class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPathInterface, CommentsHolderInterface,
-    JsonDataProvider, OpenGraphDataProviderInterface, ZxSoftInterface, MetadataProviderInterface
+class zxProdElement extends ZxArtItem implements
+    StructureElementUploadedFilesPathInterface,
+    CommentsHolderInterface,
+    JsonDataProvider,
+    OpenGraphDataProviderInterface,
+    ZxSoftInterface,
+    MetadataProviderInterface
 {
     use AuthorshipProviderTrait;
     use AuthorshipPersister;
@@ -1035,8 +1040,8 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
             $childIds = [];
             $category->getSubCategoriesTreeIds($childIds);
             $isParentId = false;
-            foreach ($this->categories as $otherCategoriesId){
-                if ($otherCategoriesId === $categoryId){
+            foreach ($this->categories as $otherCategoriesId) {
+                if ($otherCategoriesId === $categoryId) {
                     continue;
                 }
                 if (in_array($otherCategoriesId, $childIds)) {
@@ -1044,7 +1049,7 @@ class zxProdElement extends ZxArtItem implements StructureElementUploadedFilesPa
                     break;
                 }
             }
-            if (!$isParentId){
+            if (!$isParentId) {
                 $checkedCategories[] = $categoryId;
             }
         }

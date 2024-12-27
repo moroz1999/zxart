@@ -1,14 +1,23 @@
 <?php
 
+use ZxArt\Elements\PressMentionsProvider;
+use ZxArt\Press\Helpers\PressMentions;
+
 /**
  * Class ZxArtItem
  *
  * @property int $denyComments
  * @property int $tagsAmount
  * @property int $year
+ * @property pressArticleElement[] $mentions
  */
-abstract class ZxArtItem extends structureElement implements MetadataProviderInterface, VotesHolderInterface,
-    CommentsHolderInterface, LdJsonProviderInterface, Recalculable
+abstract class ZxArtItem extends structureElement implements
+    MetadataProviderInterface,
+    VotesHolderInterface,
+    CommentsHolderInterface,
+    LdJsonProviderInterface,
+    Recalculable,
+    PressMentionsProvider
 {
     use ChartDataProviderTrait;
     use AuthorElementsProviderTrait;
@@ -17,6 +26,7 @@ abstract class ZxArtItem extends structureElement implements MetadataProviderInt
     use CommentsTrait;
     use MetadataProviderTrait;
     use TagsHolder;
+    use PressMentions;
 
     protected $originalAuthors;
     protected $userVote;

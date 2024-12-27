@@ -1,6 +1,8 @@
 <?php
 
+use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\LinkTypes;
+use ZxArt\Press\Helpers\PressMentions;
 
 /**
  * @property string $title
@@ -11,11 +13,17 @@ use ZxArt\LinkTypes;
  * @property int $city
  * @property int $picturesQuantity
  * @property int $tunesQuantity
+ * @property pressArticleElement[] $mentions
  */
-class partyElement extends structureElement implements CommentsHolderInterface, Recalculable, LocationProvider
+class partyElement extends structureElement implements
+    CommentsHolderInterface,
+    Recalculable,
+    LocationProvider,
+    PressMentionsProvider
 {
     use LocationProviderTrait;
     use CommentsTrait;
+    use PressMentions;
 
     public $dataResourceName = 'module_party';
     public $allowedTypes = [];

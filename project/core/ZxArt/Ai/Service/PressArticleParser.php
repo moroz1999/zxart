@@ -12,9 +12,10 @@ readonly class PressArticleParser
         private ChunkProcessor $chunkProcessor,
     )
     {
+
     }
 
-    public function getParsedData(string $text, string $pressTitle, ?int $pressYear): ?array
+    public function getParsedData(string $text, int $articleId, string $pressTitle, ?int $pressYear): ?array
     {
         $createPrompt = static function (string $chunk) use ($pressTitle, $pressYear): string {
             return "Отправляю тебе через АПИ текст статьи из журнала/газеты для ZX Spectrum. Сделай всё правильно, я не смогу проверить и указать на ошибки. 
@@ -107,7 +108,8 @@ publicationYear?:int
             0.1,
             null,
             true,
-            PromptSender::MODEL_4O
+            PromptSender::MODEL_4O,
+            $articleId
         );
     }
 }

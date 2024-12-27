@@ -16,7 +16,7 @@ class ProdQueryService
     private const IMAGES_LIMIT = 10;
 
     public function __construct(
-        private PromptSender $promptSender,
+        private readonly PromptSender $promptSender,
     )
     {
 

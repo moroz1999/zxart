@@ -81,7 +81,7 @@ final class ArticleParsedDataUpdater
             throw new PressUpdateException("Prod could not be found for {$pressArticleElement->id} {$pressArticleElement->getTitle()}");
         }
 
-        $groupsData = $parsedData['groups'] ?? [];
+        $groupsData = $parsedData['teams'] ?? [];
         $personsData = $parsedData['persons'] ?? [];
 
         $this->prepareMemberNamesMap($personsData);
@@ -114,12 +114,12 @@ final class ArticleParsedDataUpdater
             $this->updatePressAuthorship($pressAuthorship, $pressElement);
         }
 
-        $pressGroupIds = $parsedData['pressGroupIds'] ?? null;
+        $pressGroupIds = $parsedData['pressTeamIds'] ?? null;
         if ($pressGroupIds !== null) {
             $this->updatePressGroups($pressGroupIds, $pressElement);
         }
 
-        $mentionedGroupIds = $parsedData['mentionedGroupIds'] ?? null;
+        $mentionedGroupIds = $parsedData['mentionedTeamIds'] ?? null;
         if ($mentionedGroupIds !== null) {
             $this->updateArticleGroups($mentionedGroupIds, $pressArticleElement);
         }
@@ -153,7 +153,7 @@ final class ArticleParsedDataUpdater
     {
         $this->memberNamesMap = [];
         foreach ($personsData as $datum) {
-            foreach ($datum['groupIds'] ?? [] as $groupId) {
+            foreach ($datum['teamIds'] ?? [] as $groupId) {
                 $this->memberNamesMap[$groupId] ??= [];
                 if (isset($datum['realName'])) {
                     $this->memberNamesMap[$groupId][] = $datum['realName'];
@@ -324,7 +324,7 @@ final class ArticleParsedDataUpdater
     {
         $parentIdsMap = [];
         foreach ($groups as $group) {
-            $parentIds = $group['parentGroupIds'] ?? [];
+            $parentIds = $group['parentTeamIds'] ?? [];
             foreach ($parentIds as $parentId) {
                 $parentIdsMap[$parentId] = true;
             }
@@ -377,7 +377,7 @@ final class ArticleParsedDataUpdater
         foreach ($parsedPersons as $parsedPerson) {
             $groupsInfo = array_map(static function (string $groupId) use ($groupsMap) {
                 return $groupsMap[$groupId] ?? null;
-            }, $parsedPerson['groupIds'] ?? []);
+            }, $parsedPerson['teamIds'] ?? []);
             $label = $this->transformAuthorToLabel(
                 parsedAuthor: $parsedPerson,
                 groupsInfo: $groupsInfo,
@@ -456,8 +456,8 @@ final class ArticleParsedDataUpdater
             city: $parsedAuthor['city'] ?? null,
             country: $parsedAuthor['country'] ?? null,
             groups: $groups,
-            groupsIds: $parsedAuthor['groupIds'] ?? null,
-            groupRoles: $parsedAuthor['groupRoles'] ?? null,
+            groupsIds: $parsedAuthor['teamIds'] ?? null,
+            groupRoles: $parsedAuthor['teamRoles'] ?? null,
         );
     }
 
@@ -476,7 +476,7 @@ final class ArticleParsedDataUpdater
             country: $parsedGroup['country'] ?? null,
             groups: $groups,
             memberNames: $memberNames,
-            parentGroupIds: $parsedGroup['parentGroupIds'] ?? null,
+            parentGroupIds: $parsedGroup['parentTeamIds'] ?? null,
             type: $parsedGroup['type'] ?? null
         );
     }
@@ -493,7 +493,7 @@ final class ArticleParsedDataUpdater
 
     private function transformToProd($parsedProd): ProdLabel
     {
-        $groupIds = $parsedProd['groupIds'] ?? [];
+        $groupIds = $parsedProd['teamIds'] ?? [];
         $publisherIds = $parsedProd['publisherIds'] ?? [];
         $authorRoles = [];
         foreach ($parsedProd['authorship'] ?? [] as $authorRoleDatum) {

@@ -1,7 +1,9 @@
 <?php
+
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueType;
 use ZxArt\Queue\QueueStatus;
+
 class batchUploadZxProdsUploadForm extends structureElementAction
 {
     protected $loggable = true;
@@ -27,7 +29,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
             if (!$structureElement->categories) {
                 $structureElement->categories = [92188];
             }
-            $firstCategoryId = reset($structureElement->categories);
+            $firstCategoryId = $structureElement->categories[0];
 
             foreach ($filesInfo as $fileInfo) {
                 /**
@@ -52,9 +54,9 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                     $zxProdElement->party = $structureElement->party;
                     $zxProdElement->compo = $structureElement->compo;
                     $zxProdElement->partyplace = $structureElement->partyplace;
-                    $zxProdElement->groups = $structureElement->groups;
+                    $zxProdElement->groups = array_map(static fn($id) => $structureManager->getElementById($id), $structureElement->groups);
                     $zxProdElement->categories = $structureElement->categories;
-                    $zxProdElement->publishers = $structureElement->publishers;
+                    $zxProdElement->publishers = array_map(static fn($id) => $structureManager->getElementById($id), $structureElement->publishers);
                     $zxProdElement->year = $structureElement->year;
                     $zxProdElement->description = $structureElement->description;
                     $zxProdElement->denyVoting = $structureElement->denyVoting;

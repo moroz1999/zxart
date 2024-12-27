@@ -15,7 +15,8 @@ use ZxArt\LinkTypes;
  * @property float $votes
  * @property int $votesAmount
  */
-class zxMusicElement extends ZxArtItem implements OpenGraphDataProviderInterface
+class zxMusicElement extends ZxArtItem implements
+    OpenGraphDataProviderInterface
 {
     use MusicSettingsProvider;
 

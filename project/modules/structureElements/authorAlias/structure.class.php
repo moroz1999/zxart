@@ -3,6 +3,8 @@
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\LinkTypes;
 use ZxArt\Authors\Entities\Author;
+use ZxArt\Elements\PressMentionsProvider;
+use ZxArt\Press\Helpers\PressMentions;
 
 /**
  * Class authorAliasElement
@@ -10,11 +12,13 @@ use ZxArt\Authors\Entities\Author;
  * @property string $title
  * @property int $authorId
  * @property int $joinAndDelete
+ * @property pressArticleElement[] $mentions
  */
 class authorAliasElement extends structureElement implements
     CommentsHolderInterface,
     JsonDataProvider,
-    Author
+    Author,
+    PressMentionsProvider
 {
     use JsonDataProviderElement;
     use AuthorTrait;
@@ -25,6 +29,7 @@ class authorAliasElement extends structureElement implements
     use CacheOperatingElement;
     use PublisherProdsProvider;
     use ReleasesProvider;
+    use PressMentions;
 
     public $dataResourceName = 'module_authoralias';
     public $allowedTypes = [];

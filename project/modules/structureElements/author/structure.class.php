@@ -2,6 +2,7 @@
 
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Authors\Entities\Author;
+use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\LinkTypes;
 
 /**
@@ -36,7 +37,8 @@ class authorElement extends structureElement implements
     JsonDataProvider,
     Recalculable,
     LocationProvider,
-    Author
+    Author,
+    PressMentionsProvider
 {
     use JsonDataProviderElement;
     use CacheOperatingElement;
@@ -512,5 +514,28 @@ class authorElement extends structureElement implements
             $channelsType = 'srgb';
         }
         return $channelsType;
+    }
+
+    public function getPressMentions(): array
+    {
+        $mentions = [$this->mentions];
+        if ($aliasElements = $this->getAliasElements()) {
+            foreach ($aliasElements as $aliasElement) {
+                $mentions[] = $aliasElement->getPressMentions();
+            }
+        }
+        $allArticles = array_merge(...$mentions);
+        usort($allArticles, static function ($a, $b) {
+            $press1 = $a->getParent();
+            $press2 = $b->getParent();
+            if ($a->year === $b->year) {
+                if ($press1->id === $press2->id){
+                    return strcmp($a->title, $b->title);
+                }
+                return strcmp($press1->title, $press2->title);
+            }
+            return $a->year - $b->year;
+        });
+        return $allArticles;
     }
 }

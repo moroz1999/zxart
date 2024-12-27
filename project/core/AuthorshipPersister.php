@@ -20,7 +20,7 @@ trait AuthorshipPersister
                 $this->getId(),
                 $addAuthorId,
                 $type,
-                $rolesInfo['new'],
+                $rolesInfo['new'] ?? [],
                 $startDates['new'] ?? 0,
                 $endDates['new'] ?? 0
             );

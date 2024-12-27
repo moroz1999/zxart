@@ -1,5 +1,6 @@
 <?php
 
+use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\Groups\GroupTypeProvider;
 use ZxArt\LinkTypes;
 
@@ -17,10 +18,17 @@ use ZxArt\LinkTypes;
  * @property int[] $subGroupsSelector
  * @property int $joinAsAlias
  * @property int $joinAndDelete
+ * @property pressArticleElement[] $mentions
  * @property zxReleaseElement[] $publishedReleases
  * @property groupElement[] $parentGroups
  */
-class groupElement extends structureElement implements AliasesHolder, CommentsHolderInterface, JsonDataProvider, Recalculable, LocationProvider
+class groupElement extends structureElement implements
+    AliasesHolder,
+    CommentsHolderInterface,
+    JsonDataProvider,
+    Recalculable,
+    LocationProvider,
+    PressMentionsProvider
 {
     use JsonDataProviderElement;
     use AuthorshipPersister;
@@ -295,5 +303,28 @@ class groupElement extends structureElement implements AliasesHolder, CommentsHo
     {
         $this->checkCountry();
         $this->persistElementData();
+    }
+
+    public function getPressMentions(): array
+    {
+        $mentions = [$this->mentions];
+        if ($aliasElements = $this->getAliasElements()) {
+            foreach ($aliasElements as $aliasElement) {
+                $mentions[] = $aliasElement->getPressMentions();
+            }
+        }
+        $allArticles = array_merge(...$mentions);
+        usort($allArticles, static function ($a, $b) {
+            $press1 = $a->getParent();
+            $press2 = $b->getParent();
+            if ($a->year === $b->year) {
+                if ($press1->id === $press2->id){
+                    return strcmp($a->title, $b->title);
+                }
+                return strcmp($press1->title, $press2->title);
+            }
+            return $a->year - $b->year;
+        });
+        return $allArticles;
     }
 }

@@ -96,14 +96,14 @@ class pressArticleElement extends structureElement implements SearchContentHolde
         $moduleStructure['tunes'] = [
             'ConnectedElements',
             [
-                'linkType' => 'pressTunes',
+                'linkType' => LinkTypes::PRESS_TUNES->value,
                 'role' => 'child',
             ],
         ];
         $moduleStructure['pictures'] = [
             'ConnectedElements',
             [
-                'linkType' => 'pressPictures',
+                'linkType' => LinkTypes::PRESS_PICTURES->value,
                 'role' => 'child',
             ],
         ];

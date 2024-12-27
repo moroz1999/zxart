@@ -1,6 +1,8 @@
 <?php
 
+use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\LinkTypes;
+use ZxArt\Press\Helpers\PressMentions;
 
 /**
  * Class groupAliasElement
@@ -9,8 +11,12 @@ use ZxArt\LinkTypes;
  * @property int startDate
  * @property int endDate
  * @property int groupId
+ * @property pressArticleElement[] $mentions
  */
-class groupAliasElement extends structureElement implements CommentsHolderInterface, JsonDataProvider
+class groupAliasElement extends structureElement implements
+    CommentsHolderInterface,
+    JsonDataProvider,
+    PressMentionsProvider
 {
     use JsonDataProviderElement;
     use AuthorshipPersister;
@@ -19,6 +25,7 @@ class groupAliasElement extends structureElement implements CommentsHolderInterf
     use PublisherProdsProvider;
     use ReleasesProvider;
     use CommentsTrait;
+    use PressMentions;
 
     public $dataResourceName = 'module_groupalias';
     public $allowedTypes = [];

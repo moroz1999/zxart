@@ -1,14 +1,12 @@
 <?php
 declare(strict_types=1);
 
-
 namespace ZxArt\Ai\Service;
 
-use ConfigManager;
 use JsonException;
 use OpenAI;
-use ZxArt\Ai\errorLog;
 use ZxArt\Ai\Exception;
+use ZxArt\Logs\Log;
 
 class PromptSender
 {
@@ -16,7 +14,8 @@ class PromptSender
     public const MODEL_4O_MINI = 'gpt-4o-mini';
 
     public function __construct(
-        private readonly ConfigManager $configManager,
+        private string $apiKey,
+        private Log    $log,
     )
     {
     }
@@ -26,12 +25,12 @@ class PromptSender
         string $prompt,
         float  $temperature,
         ?array $imageUrls = null,
-        bool $useJson = false,
+        bool   $useJson = false,
         string $model = self::MODEL_4O,
+        ?int   $id = null,
     ): ?string
     {
-        $apiKey = $this->configManager->getConfig('main')->get('ai_key');
-        $client = OpenAI::client($apiKey);
+        $client = OpenAI::client($this->apiKey);
 
         $content = [
             [
@@ -50,7 +49,7 @@ class PromptSender
                 ];
             }
         }
-
+        $this->log->logMessage(errorText: $prompt, id: $id);
         $data = null;
         try {
             $config = [
@@ -71,10 +70,12 @@ class PromptSender
             $result = $response->choices[0]->message->content;
 
             $data = $result;
+
+            $this->log->logMessage(errorText: $result, id: $id);
         } catch (JsonException) {
             return null;
         } catch (Exception $exception) {
-            errorLog::getInstance()?->logMessage(self::class, $exception->getMessage());
+            $this->log->logMessage(errorText: $exception->getMessage(), id: $id);
         }
         return $data;
     }

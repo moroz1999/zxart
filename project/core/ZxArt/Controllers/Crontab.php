@@ -132,8 +132,8 @@ class Crontab extends controllerApplication
 //            $this->queryAiSeo();
 //            $this->queryAiIntro();
 //            $this->queryAiCategories();
-            $this->queryAiPressBeautifier();
-            $this->queryAiPressTranslation();
+//            $this->queryAiPressBeautifier();
+//            $this->queryAiPressTranslation();
             $this->queryAiPressParser();
 //            $this->queryAiPressSeo();
         }
@@ -194,7 +194,7 @@ class Crontab extends controllerApplication
             }
             $pressYear = (int)$pressElement->year;
             $year = $pressYear === 0 ? $pressYear : null;
-            $updatedContent = $this->pressParser->getParsedData($pressArticleElement->getTextContent(), $pressElement->title, $year);
+            $updatedContent = $this->pressParser->getParsedData($pressArticleElement->getTextContent(), $pressArticleElement->id, $pressElement->title, $year);
             if ($updatedContent) {
                 $mergedContent = $this->mergeArrays($updatedContent);
                 $this->pressDataUpdater->updatePressArticleData($pressArticleElement, $mergedContent);

@@ -8,6 +8,9 @@
                 {translations name='group.table_author'}
             </th>
             <th>
+                {translations name='group.table_realname'}
+            </th>
+            <th>
                 {translations name='group.table_startdate'}
             </th>
             <th>
@@ -22,6 +25,9 @@
             <tr>
                 <td>
                     <a href="{$info.authorElement->getUrl()}">{$info.authorElement->title}</a>
+                </td>
+                <td>
+                    {$info.authorElement->realName}
                 </td>
                 <td>
                     {$info.startDate}

@@ -215,7 +215,6 @@
         {/if}
     </div>
     {include $theme->template("component.emulator.tpl")}
-    {include file=$theme->template('component.mentions.tpl')}
     <div class="gallery_static galleryid_{$element->id}">
         {if $filesList = $element->getFilesList('connectedFile')}
             <div class="zxprod_gallery">
@@ -250,6 +249,7 @@
             {/if}
         {/if}
     </div>
+    {include file=$theme->template('component.mentions.tpl')}
     {if $filesList = $element->getFilesList('rzx')}
         {if $linkInfo = $element->getLinkInfo('rzx')}
             <h2>{translations name='zxprod.rzx'}</h2>
