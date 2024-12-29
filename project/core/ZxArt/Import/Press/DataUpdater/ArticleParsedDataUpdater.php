@@ -447,6 +447,9 @@ final class ArticleParsedDataUpdater
     {
         $groups = [];
         foreach ($groupsInfo as $groupDatum) {
+            if ($groupDatum === null) {
+                continue;
+            }
             $groups[] = $this->transformGroupToLabel($groupDatum);
         }
         return new PersonLabel(
@@ -499,7 +502,7 @@ final class ArticleParsedDataUpdater
         foreach ($parsedProd['authorship'] ?? [] as $authorRoleDatum) {
             $authorRoles[$authorRoleDatum['id']] = array_map(function ($role) {
                 return $this->rolesMap[$role] ?? $role;
-            }, $authorRoleDatum['softwareRoles']);
+            }, $authorRoleDatum['softwareRoles'] ?? ['unknown']);
         }
 
         return new ProdLabel(

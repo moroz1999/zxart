@@ -30,6 +30,7 @@ use ZxArt\LinkTypes;
  * @property string $email
  * @property string $site
  * @property pressArticleElement[] $articles
+ * @property pressArticleElement[] $mentions
  */
 class authorElement extends structureElement implements
     CommentsHolderInterface,

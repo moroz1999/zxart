@@ -58,6 +58,7 @@ class receiveAiFormPressArticle extends structureElementAction
             'aiRestartFix',
             'aiRestartTranslate',
             'aiRestartParse',
+            'aiRestartSeo',
         ];
     }
 }

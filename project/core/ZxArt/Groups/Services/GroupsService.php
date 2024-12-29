@@ -18,6 +18,7 @@ use structureManager;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Import\Labels\LabelResolver;
 use ZxArt\Import\Labels\GroupLabel;
+use ZxArt\LinkTypes;
 
 class GroupsService extends ElementsManager
 {
@@ -256,17 +257,24 @@ class GroupsService extends ElementsManager
                 $groupElement->city = $authorElement->city;
                 $groupElement->persistElementData();
 
+                foreach ($authorElement->mentions as $article) {
+                    $this->linksManager->linkElements($groupElement->id, $article->id, LinkTypes::PRESS_GROUPS->value);
+                    $this->structureManager->clearElementCache($article->id);
+                }
                 foreach ($authorElement->getPublisherProds() as $zxProd) {
                     $this->linksManager->linkElements($groupElement->id, $zxProd->id, 'zxProdPublishers');
+                    $this->structureManager->clearElementCache($zxProd->id);
                 }
                 foreach ($authorElement->getAuthorshipRecords('prod') as $record) {
                     if ($zxProd = $this->structureManager->getElementById($record['elementId'])) {
                         $this->linksManager->linkElements($groupElement->id, $zxProd->getId(), 'zxProdGroups');
+                        $this->structureManager->clearElementCache($groupElement->id);
                     }
                 }
                 foreach ($authorElement->getAuthorshipRecords('release') as $record) {
                     if ($zxProd = $this->structureManager->getElementById($record['elementId'])) {
                         $this->linksManager->linkElements($groupElement->id, $zxProd->getId(), 'zxReleasePublishers');
+                        $this->structureManager->clearElementCache($groupElement->id);
                     }
                 }
                 if ($records = $this->db->table('import_origin')
@@ -413,6 +421,9 @@ class GroupsService extends ElementsManager
                     }
                     if (!$targetGroupElement->slogan) {
                         $targetGroupElement->slogan = $joinedElement->slogan;
+                    }
+                    if ($joinedElement->type !== 'unknown' && $targetGroupElement->type === 'unknown') {
+                        $targetGroupElement->type = $joinedElement->type;
                     }
                     $targetGroupElement->persistElementData();
                 }

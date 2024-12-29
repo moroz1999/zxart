@@ -132,10 +132,10 @@ class Crontab extends controllerApplication
 //            $this->queryAiSeo();
 //            $this->queryAiIntro();
 //            $this->queryAiCategories();
-//            $this->queryAiPressBeautifier();
-//            $this->queryAiPressTranslation();
+            $this->queryAiPressBeautifier();
+            $this->queryAiPressTranslation();
             $this->queryAiPressParser();
-//            $this->queryAiPressSeo();
+            $this->queryAiPressSeo();
         }
     }
 
@@ -175,7 +175,6 @@ class Crontab extends controllerApplication
                 $this->logMessage("$counter $queueType->value request failed. {$e->getMessage()}", 0);
                 $this->queueService->updateStatus($elementId, $queueType, QueueStatus::STATUS_FAIL);
             }
-
             $endTime = microtime(true);
             $executionTime = $endTime - $startTime;
             $totalExecution += $executionTime;
@@ -214,7 +213,8 @@ class Crontab extends controllerApplication
             $year = $pressYear === 0 ? $pressYear : null;
             $updatedContent = $this->pressArticleSeo->getParsedData($pressArticleElement->getTextContent(), $pressElement->title, $year);
             if ($updatedContent !== null) {
-                $this->articleSeoDataUpdater->updatePressArticleData($pressArticleElement, $updatedContent);
+                $mergedContent = $this->mergeArrays($updatedContent);
+                $this->articleSeoDataUpdater->updatePressArticleData($pressArticleElement, $mergedContent);
                 $this->logMessage("$counter AI press seo updated for article {$pressArticleElement->id}", 0);
             }
         });

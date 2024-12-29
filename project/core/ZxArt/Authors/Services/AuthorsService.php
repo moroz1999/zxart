@@ -24,6 +24,7 @@ use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Import\Labels\GroupLabel;
 use ZxArt\Import\Labels\LabelResolver;
 use ZxArt\Import\Labels\PersonLabel;
+use ZxArt\LinkTypes;
 
 class AuthorsService extends ElementsManager
 {
@@ -555,9 +556,13 @@ class AuthorsService extends ElementsManager
                 $authorElement->country = $groupElement->country;
                 $authorElement->city = $groupElement->city;
                 $authorElement->persistElementData();
-
+                foreach ($groupElement->mentions as $article) {
+                    $this->linksManager->linkElements($authorElement->id, $article->id, LinkTypes::PRESS_PEOPLE->value);
+                    $this->structureManager->clearElementCache($article->id);
+                }
                 foreach ($groupElement->getPublisherProds() as $zxProd) {
                     $this->linksManager->linkElements($authorElement->id, $zxProd->id, 'zxProdPublishers');
+                    $this->structureManager->clearElementCache($zxProd->id);
                 }
                 foreach ($groupElement->getGroupProds() as $zxProd) {
                     $this->authorshipRepository->checkAuthorship($zxProd->id, $authorElement->id, 'prod');

@@ -68,6 +68,7 @@ class authorAliasElement extends structureElement implements
             ],
         ];
     }
+
     public function gatherAuthorNames(): array
     {
         $authorNames = [];
@@ -76,6 +77,7 @@ class authorAliasElement extends structureElement implements
         }
         return $authorNames;
     }
+
     /**
      * @param (mixed|string)[] $types
      *
@@ -101,17 +103,18 @@ class authorAliasElement extends structureElement implements
         if (!isset($this->authorElement)) {
             $this->authorElement = null;
             $cache = $this->getElementsListCache('a', 60 * 60 * 24);
-            if (($authors = $cache->load()) === null) {
+            $authors = $cache->load();
+            if (empty($authors)) {
                 if ($authorId = $this->getAuthorId()) {
                     $structureManager = $this->getService('structureManager');
                     $authorElement = $structureManager->getElementById($authorId);
                     if ($authorElement?->structureType === 'author') {
                         $this->authorElement = $structureManager->getElementById($authorId);
+                        $cache->save([$this->authorElement]);
                     }
                 }
-                $cache->save([$this->authorElement]);
             } else {
-                $this->authorElement = reset($authors);
+                $this->authorElement = $authors[0] ?? null;
             }
         }
         return $this->authorElement;
