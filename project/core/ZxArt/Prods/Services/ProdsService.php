@@ -280,7 +280,7 @@ class ProdsService extends ElementsManager
         /**
          * @var zxProdElement $element
          */
-        if ($element = $this->structureManager->createElement('zxProd', 'show', $category)) {
+        if ($element = $this->structureManager->createElement('zxProd', 'show', $category, false, 'zxProdCategory')) {
             $element->dateAdded = time();
             $this->saveImportId($element->getId(), $prodInfo['id'], $origin, 'prod');
             $this->updateProd($element, $prodInfo, $origin, true);

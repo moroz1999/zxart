@@ -5,6 +5,8 @@ import {Tag} from '../shared/models/tag';
 import {ZxProdCategoryDto} from './models/zx-prod-category-dto';
 import {environment} from '../../environments/environment';
 
+const defaultStatuses: string[] = ['allowed', 'forbidden', 'forbiddenzxart', 'allowedzxart', 'insales', 'recovered', 'unknown', 'unreleased'];
+
 export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
 
 @Component({
@@ -71,12 +73,56 @@ export class ZxProdsCategoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fetchModel();
+    this.fetchPrefetchedModel();
   }
 
-  private fetchModel(): void {
-    this.loading = true;
+  private fetchPrefetchedModel(): void {
+    this.elementsService.getPrefetchedModel<ZxProdCategoryDto, ZxProdCategory>(this.elementId, ZxProdCategory).subscribe(
+      model => {
+        this.model = model;
+        this.pagesAmount = Math.ceil(this.model.prodsAmount / this.elementsOnPage);
+        this.currentPage = this.model.selectorValues.page;
+        this.letter = this.model.selectorValues.letter;
+        this.years = this.model.selectorValues.years;
+        this.legalStatuses = this.model.selectorValues.statuses;
+        // this.tags = this.model.selectorValues.tags;
+        this.countries = this.model.selectorValues.countries;
+        this.hw = this.model.selectorValues.hw;
+        this.formats = this.model.selectorValues.formats;
+        this.releaseTypes = this.model.selectorValues.releaseTypes;
+        this.languages = this.model.selectorValues.languages;
+        this.releases = this.model.selectorValues.releases;
+        this.includeSubcategoriesProds = this.model.selectorValues.includeSubcategoriesProds;
+        this.sorting = this.model.sortingSelector[0]?.values.find(item => item.selected)?.value;
+
+        let urlBase = this.model.url;
+        const parameters = this.gatherParameters();
+        for (const [key, value] of Object.entries(parameters)) {
+          if (key !== 'page') {
+            urlBase += `${key}:${value}/`;
+          }
+        }
+
+        this.urlBase = urlBase;
+      },
+      () => {
+
+      },
+      () => {
+        this.loading = false;
+        this.contentElement?.nativeElement.scrollIntoView({
+          block: 'start',
+          inline: 'start',
+          behavior: 'smooth',
+        });
+      },
+    );
+
+  }
+
+  private gatherParameters(): PostParameters {
     const parameters: PostParameters = {};
+
     if (this.years.length) {
       parameters.years = this.years.join(',');
     }
@@ -87,7 +133,15 @@ export class ZxProdsCategoryComponent implements OnInit {
       parameters.languages = this.languages.join(',');
     }
     if (this.legalStatuses.length) {
-      parameters.statuses = this.legalStatuses.join(',');
+      const defaultSet = new Set(defaultStatuses);
+      const selectedSet = new Set(this.legalStatuses);
+
+      const areStatusesEqual = defaultSet.size === selectedSet.size &&
+        [...defaultSet].every(elem => selectedSet.has(elem));
+
+      if (!areStatusesEqual) {
+        parameters.statuses = this.legalStatuses.join(',');
+      }
     }
     if (this.formats.length) {
       parameters.formats = this.formats.join(',');
@@ -98,7 +152,7 @@ export class ZxProdsCategoryComponent implements OnInit {
     if (this.letter) {
       parameters.letter = this.letter;
     }
-    if (this.sorting) {
+    if (this.sorting && this.sorting !== 'votes,desc') {
       parameters.sorting = this.sorting;
     }
     if (this.tags.length) {
@@ -116,33 +170,20 @@ export class ZxProdsCategoryComponent implements OnInit {
     if (this.currentPage > 1) {
       parameters.page = this.currentPage;
     }
-    const urlParameters = {...parameters};
-    if (urlParameters.statuses === 'allowed,forbidden,insales,recovered,unknown,unreleased') {
-      delete (urlParameters.statuses);
-    }
-    if (urlParameters.sorting === 'votes,desc') {
-      delete (urlParameters.sorting);
-    }
+    return parameters;
+  }
+
+  private fetchModel(): void {
+    this.loading = true;
+    const parameters = this.gatherParameters();
+    console.log('parameters', parameters);
     this.elementsService.getModel<ZxProdCategoryDto, ZxProdCategory>(this.elementId, ZxProdCategory, parameters, 'zxProdsList').subscribe(
       model => {
+
+        console.log(model);
+
         this.model = model;
-        let reqUrl = this.model.url;
-        let urlBase = reqUrl;
-        for (const [key, value] of Object.entries(urlParameters)) {
-          reqUrl += key + ':' + value + '/';
-          if (key !== 'page') {
-            urlBase += key + ':' + value + '/';
-          }
-        }
-        this.urlBase = urlBase;
         this.pagesAmount = Math.ceil(this.model.prodsAmount / this.elementsOnPage);
-
-        if (environment.production) {
-          if (window.location.href !== reqUrl) {
-            window.history.pushState({parameters, elementId: this.elementId}, '', reqUrl);
-          }
-        }
-
         this.currentPage = this.model.selectorValues.page;
         this.letter = this.model.selectorValues.letter;
         this.years = this.model.selectorValues.years;
@@ -156,13 +197,36 @@ export class ZxProdsCategoryComponent implements OnInit {
         this.releases = this.model.selectorValues.releases;
         this.includeSubcategoriesProds = this.model.selectorValues.includeSubcategoriesProds;
         this.sorting = this.model.sortingSelector[0]?.values.find(item => item.selected)?.value;
+
+        let reqUrl = this.model.url;
+        let urlBase = this.model.url;
+
+        for (const [key, value] of Object.entries(parameters)) {
+          reqUrl += `${key}:${value}/`;
+
+          if (key !== 'page') {
+            urlBase += `${key}:${value}/`;
+          }
+        }
+
+        this.urlBase = urlBase;
+        if (environment.production) {
+          console.log('reqUrl', reqUrl, this.currentPage);
+          if (window.location.href !== reqUrl) {
+            window.history.pushState({parameters, elementId: this.elementId}, '', reqUrl);
+          }
+        }
       },
       () => {
 
       },
       () => {
         this.loading = false;
-        this.contentElement?.nativeElement.scrollIntoView({block: 'start', inline: 'start', behavior: 'smooth'});
+        this.contentElement?.nativeElement.scrollIntoView({
+          block: 'start',
+          inline: 'start',
+          behavior: 'smooth',
+        });
       },
     );
   }

@@ -44,7 +44,7 @@ trait ZxProdsList
 
     private $type = 'zxProd';
 
-    private const defaultStatuses = ['allowed', 'forbidden', 'insales', 'recovered', 'unknown', 'unreleased'];
+    private const defaultStatuses = ['allowed', 'forbidden', 'forbiddenzxart', 'allowedzxart', 'insales', 'recovered', 'unknown', 'unreleased'];
 
     public function getProdsInfo(): array
     {
@@ -808,7 +808,7 @@ trait ZxProdsList
         $selectors = $this->getSelectorValues();
         $difference1 = array_diff($selectors['statuses'], self::defaultStatuses);
         $difference2 = array_diff(self::defaultStatuses, $selectors['statuses']);
-        $statusesDefault = !($difference1 && $difference2);
+        $statusesDefault = $difference1 === [] && $difference2 === [];
 
         return !$selectors['letter']
             && !$selectors['years']
