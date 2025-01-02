@@ -65,7 +65,7 @@ readonly final class TuneResolver
         elseif ($this->resolver->alphanumericValueMatches($tuneElementTitle, $tuneLabelTitle)) {
             $score += 5;
         } // alphanumeric title match
-        elseif ($this->resolver->valueStartMatches($tuneElementTitle, $tuneLabelTitle)) {
+        elseif ($this->resolver->valueStartsWith($tuneElementTitle, $tuneLabelTitle)) {
             $score += 2;
         }
 

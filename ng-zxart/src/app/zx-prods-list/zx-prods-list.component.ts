@@ -27,12 +27,11 @@ export class ZxProdsListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fetchModel();
+    this.fetchPrefetchedModel();
   }
 
-  private fetchModel(): void {
-    const parameters: PostParameters = {};
-    this.elementsService.getModel<ZxProdsListDto, ZxProdsList>(this.elementId, ZxProdsList, parameters, 'zxProdsList').subscribe(
+  private fetchPrefetchedModel(): void {
+    this.elementsService.getPrefetchedModel<ZxProdsListDto, ZxProdsList>(this.elementId, ZxProdsList).subscribe(
       model => {
         this.model = model;
         this.yearsList = undefined;

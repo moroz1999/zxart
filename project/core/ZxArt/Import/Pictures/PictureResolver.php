@@ -67,8 +67,8 @@ readonly final class PictureResolver
         } // alphanumeric title match
         elseif ($this->resolver->alphanumericValueMatches($pictureElementTitle, $pictureLabelTitle)) {
             $score += 5;
-        } // alphanumeric title match
-        elseif ($this->resolver->valueStartMatches($pictureElementTitle, $pictureLabelTitle)) {
+        } // partial start title match
+        elseif ($this->resolver->valueStartsWith($pictureElementTitle, $pictureLabelTitle)) {
             $score += 2;
         }
 

@@ -12,9 +12,9 @@ use zxProdElement;
 readonly final class ProdResolver
 {
     public function __construct(
-        private ProdsRepository          $prodsRepository,
-        private structureManager         $structureManager,
-        private Resolver $resolver,
+        private ProdsRepository  $prodsRepository,
+        private structureManager $structureManager,
+        private Resolver         $resolver,
     )
     {
 
@@ -26,7 +26,7 @@ readonly final class ProdResolver
             return null;
         }
 
-        $entityIds = $this->prodsRepository->findProdsByTitle($prodLabel->title);
+        $entityIds = $this->prodsRepository->findProdsByTitles($prodLabel->title);
 
         $entities = $entityIds ? array_map(fn(int $id) => $this->structureManager->getElementById($id), $entityIds) : [];
         $candidates = [];
@@ -55,8 +55,17 @@ readonly final class ProdResolver
         if (!$matchProdsWithoutYear && !$prodElementHasYear) {
             return 0;
         }
-        $prodElementTitle = mb_strtolower(trim(html_entity_decode($prodElement->title)));
-        $prodLabelTitle = mb_strtolower(trim($prodLabel->title));
+        $prodElementTitle = mb_strtolower(trim(html_entity_decode($prodElement->title ?? '')));
+        $prodElementAltTitle = mb_strtolower(trim(html_entity_decode($prodElement->altTitle ?? '')));
+        $prodLabelTitle = mb_strtolower(trim($prodLabel->title ?? ''));
+        $prodLabelTheTitle = 'the ' . $prodLabelTitle;
+
+        if (str_contains($prodLabelTitle, 'crack')) {
+            return 0;
+        }
+        if (str_contains($prodLabelTitle,  'intro')) {
+            return 0;
+        }
 
         // exact title match
         if ($this->resolver->valueMatches($prodElementTitle, $prodLabelTitle)) {
@@ -64,9 +73,31 @@ readonly final class ProdResolver
         } // alphanumeric title match
         elseif ($this->resolver->alphanumericValueMatches($prodElementTitle, $prodLabelTitle)) {
             $score += 5;
-        } // alphanumeric title match
-        elseif ($this->resolver->valueStartMatches($prodElementTitle, $prodLabelTitle)) {
+        } // start of title match
+        elseif ($this->resolver->valueStartsWith($prodElementTitle, $prodLabelTitle)) {
             $score += 2;
+        }
+
+        // exact alt title match
+        if ($this->resolver->valueMatches($prodElementAltTitle, $prodLabelTitle)) {
+            $score += 9;
+        } // alphanumeric alt title match
+        elseif ($this->resolver->alphanumericValueMatches($prodElementAltTitle, $prodLabelTitle)) {
+            $score += 5;
+        } // start of alt title match
+        elseif ($this->resolver->valueStartsWith($prodElementAltTitle, $prodLabelTitle)) {
+            $score += 2;
+        }
+
+        // exact 'the' title match
+        if ($this->resolver->valueMatches($prodElementTitle, $prodLabelTheTitle)) {
+            $score += 8;
+        } // alphanumeric title match
+        elseif ($this->resolver->alphanumericValueMatches($prodElementTitle, $prodLabelTheTitle)) {
+            $score += 4;
+        } // start of title match
+        elseif ($this->resolver->valueStartsWith($prodElementTitle, $prodLabelTheTitle)) {
+            $score += 1;
         }
 
         // both years are not empty and match

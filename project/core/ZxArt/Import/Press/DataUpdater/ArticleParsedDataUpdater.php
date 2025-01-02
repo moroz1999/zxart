@@ -39,7 +39,8 @@ final class ArticleParsedDataUpdater
     private array $groupsMap;
     private array $memberNamesMap;
 
-    private array $rolesMap;
+    private array $toSoftwareRolesMap;
+    private array $toGroupRolesMap;
 
     public function __construct(
         private readonly AuthorshipRepository     $authorshipRepository,
@@ -57,7 +58,7 @@ final class ArticleParsedDataUpdater
         $this->prodsService->setMatchProdsWithoutYear(true);
         $this->prodsService->setUpdateExistingProds(true);
 
-        $this->rolesMap = [
+        $this->toSoftwareRolesMap = [
             'coder' => 'code',
             'cracker' => 'release',
             'graphician' => 'graphics',
@@ -67,6 +68,18 @@ final class ArticleParsedDataUpdater
             'support' => 'support',
             'tester' => 'testing',
             'gamedesigner' => 'gamedesign',
+            'unknown' => 'unknown',
+        ];
+        $this->toGroupRolesMap = [
+            'code' => 'coder',
+            'release' => 'cracker',
+            'graphics' => 'graphician',
+            'adaptation' => 'coder',
+            'music' => 'musician',
+            'organizing' => 'organizer',
+            'support' => 'support',
+            'testing' => 'tester',
+            'gamedesign' => 'gamedesigner',
             'unknown' => 'unknown',
         ];
     }
@@ -173,8 +186,8 @@ final class ArticleParsedDataUpdater
         $authorRoles = [];
         foreach ($pressAuthorship as $item) {
             $authorRoles[$item['id']] = array_map(function ($role) {
-                return $this->rolesMap[$role] ?? $role;
-            }, $item['softwareRoles']);
+                return $this->toSoftwareRolesMap[$role] ?? $role;
+            }, $item['softwareRoles'] ?? ['unknown']);
         }
 
         foreach ($authorRoles as $authorId => $roles) {
@@ -452,6 +465,11 @@ final class ArticleParsedDataUpdater
             }
             $groups[] = $this->transformGroupToLabel($groupDatum);
         }
+
+        $groupRoles = array_map(function (string $role) {
+            return $this->toGroupRolesMap[$role] ?? $role;
+        }, $parsedAuthor['teamRoles'] ?? ['unknown']);
+
         return new PersonLabel(
             id: $parsedAuthor['id'],
             name: $parsedAuthor['nickName'] ?? null,
@@ -460,7 +478,7 @@ final class ArticleParsedDataUpdater
             country: $parsedAuthor['country'] ?? null,
             groups: $groups,
             groupsIds: $parsedAuthor['teamIds'] ?? null,
-            groupRoles: $parsedAuthor['teamRoles'] ?? null,
+            groupRoles: $groupRoles,
         );
     }
 
@@ -501,7 +519,7 @@ final class ArticleParsedDataUpdater
         $authorRoles = [];
         foreach ($parsedProd['authorship'] ?? [] as $authorRoleDatum) {
             $authorRoles[$authorRoleDatum['id']] = array_map(function ($role) {
-                return $this->rolesMap[$role] ?? $role;
+                return $this->toSoftwareRolesMap[$role] ?? $role;
             }, $authorRoleDatum['softwareRoles'] ?? ['unknown']);
         }
 

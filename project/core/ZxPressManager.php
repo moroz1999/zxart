@@ -36,7 +36,7 @@ class ZxPressManager extends errorLogger
         }
     }
 
-    private function parseIssuesPage($pageUrl): void
+    public function parseIssuesPage($pageUrl): void
     {
         $this->prodsIndex = [];
         if ($html = $this->loadHtml($pageUrl)) {
@@ -183,11 +183,31 @@ class ZxPressManager extends errorLogger
         return trim($value);
     }
 
+    protected function attemptDownload(string $link): null|string
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $link);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0',
+            'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language: en-US,en;q=0.5',
+            'Cache-Control: max-age=0',
+        ]);
+
+        $string = curl_exec($ch);
+        curl_close($ch);
+
+        return $string;
+    }
+
     private function loadHtml(
         string $url,
     ): DOMDocument|false
     {
-        if ($contents = file_get_contents($url)) {
+        if ($contents = $this->attemptDownload($url)) {
             $dom = new DOMDocument;
             $dom->encoding = 'UTF-8';
             $dom->recover = true;

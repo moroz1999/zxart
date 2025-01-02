@@ -25,8 +25,9 @@ final class GroupsRepository
         }
 
         $query = $this->db->table(self::TABLE)->select(['id']);
-        $query = $this->alphanumericColumnSearch->addSearchByTitle($query, $name, 'title');
-        $query = $this->alphanumericColumnSearch->addSearchByTitle($query, $name, 'abbreviation');
+        $query = $this->alphanumericColumnSearch->addSearchByAlphanumeric($query, $name, 'title');
+        $query = $this->alphanumericColumnSearch->addSearchByAlphanumeric($query, $name, 'abbreviation');
+        $query->orWhere('title', 'LIKE', $name . '%');
 
         if ($ids = $query->pluck('id')) {
             return $ids;

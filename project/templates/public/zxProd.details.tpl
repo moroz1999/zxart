@@ -1,15 +1,5 @@
 {$moduleTitle = $element->getH1()}
 {capture assign="moduleContent"}
-    {if !empty($element->youtubeId)}
-        <div class="zxprod_details_video">
-            <div class="zxprod_details_video_inner">
-                <iframe class="zxprod_details_video_iframe" width="320" height="240"
-                        src="https://www.youtube.com/embed/{$element->youtubeId}" frameborder="0"
-                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
-            </div>
-        </div>
-    {/if}
     <div class="zxprod_editing_controls editing_controls">
         {if isset($currentElementPrivileges.showPublicForm) && $currentElementPrivileges.showPublicForm==1}
             <a class="button"
@@ -28,7 +18,9 @@
                href="{$element->URL}id:{$element->id}/action:publicDelete/">{translations name='zxprod.delete'}</a>
         {/if}
     </div>
-    <table class='zxprod_details_info info_table'>
+
+    <div class='zxprod_details_info'>
+        <table class='zxprod_details_info_table info_table'>
         <tr>
             <td class='info_table_label'>
                 {translations name='zxprod.title'}:
@@ -204,6 +196,17 @@
             </tr>
         {/if}
     </table>
+        {if !empty($element->youtubeId)}
+            <div class="zxprod_details_video">
+                <div class="zxprod_details_video_inner">
+                    <iframe class="zxprod_details_video_iframe" width="320" height="240"
+                            src="https://www.youtube.com/embed/{$element->youtubeId}" frameborder="0"
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen></iframe>
+                </div>
+            </div>
+        {/if}
+    </div>
     <div class="zxprod_releases_controls editing_controls">
         {if isset($privileges.zxRelease.publicAdd) && $privileges.zxRelease.publicAdd == true}
             <a class="button"

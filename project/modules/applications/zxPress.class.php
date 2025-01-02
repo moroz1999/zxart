@@ -46,7 +46,8 @@ class zxPressApplication extends controllerApplication
              * @var zxPressManager $zxPressManager
              */
             $zxPressManager = $this->getService('ZxPressManager');
-            $zxPressManager->importAll();
+//            $zxPressManager->importAll();
+//            $zxPressManager->parseIssuesPage('https://zxpress.ru/issue.php?id=143');
         }
     }
 }

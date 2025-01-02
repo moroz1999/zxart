@@ -7,7 +7,7 @@ use Illuminate\Database\Query\Builder;
 
 final class AlphanumericColumnSearch
 {
-    public function addSearchByTitle(Builder $query, ?string $searchTerm, $propertyName): Builder
+    public function addSearchByAlphanumeric(Builder $query, ?string $searchTerm, $propertyName): Builder
     {
         if ($searchTerm === null) {
             return $query;

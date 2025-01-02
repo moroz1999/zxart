@@ -237,6 +237,8 @@ class PouetManager extends errorLogger
         'zx 256b' => 'intro256',
         'zx 512b' => 'intro512',
         'oldskool 512b' => 'intro512',
+        'oldskool 1k' => 'intro1k',
+        'oldskool 4k' => 'intro4k',
         '8bit 1k' => 'intro1k',
         '8bit 4k' => 'intro4k',
         'pc 4k' => 'intro4k',

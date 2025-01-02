@@ -26,6 +26,7 @@ class receiveAiFormPressArticle extends structureElementAction
             $queueService = $this->getService('QueueService');
             if ($structureElement->aiRestartFix) {
                 $this->restoreOriginalContent($structureElement);
+                $structureManager->clearElementCache($structureElement->id);
                 $queueService->updateStatus($structureElement->getId(), QueueType::AI_PRESS_FIX, QueueStatus::STATUS_TODO);
             }
 

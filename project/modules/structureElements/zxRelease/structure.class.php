@@ -22,7 +22,12 @@ use ZxFiles\BasicFile;
  * @property int $userId
  * @property int $parsed
  */
-class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFilesPathInterface, CommentsHolderInterface, JsonDataProvider, ZxSoftInterface, Recalculable
+class zxReleaseElement extends ZxArtItem implements
+    StructureElementUploadedFilesPathInterface,
+    CommentsHolderInterface,
+    JsonDataProvider,
+    ZxSoftInterface,
+    Recalculable
 {
     use AuthorshipProviderTrait;
     use AuthorshipPersister;
@@ -340,6 +345,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
          * @var ZxParsingManager $zxParsingManager
          */
         $zxParsingManager = $this->getService('ZxParsingManager');
+        $controller = controller::getInstance();
 
         $extractedFile = $zxParsingManager->extractFile($this->getFilePath(), $fileRecord['id']);
         if (!$extractedFile) {
@@ -352,8 +358,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
                 case 'source_code':
                     return htmlspecialchars($content);
                 case 'pc_image':
-                    $controller = controller::getInstance();
-                    if ($fileId = (int)$controller->getParameter('fileId')) {
+                    if ($fileId = $this->getFileId()) {
                         return "<img src='" . $controller->baseURL . "zxfile/id:" . $this->id . "/fileId:" . $fileId . "/" . $extractedFile->getItemName() . "' />";
                     }
                     break;
@@ -362,26 +367,22 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
                     $basic->setBinary($content);
                     return htmlspecialchars($basic->getAsText());
                 case 'zx_image_standard':
-                    $controller = controller::getInstance();
-                    if ($fileId = (int)$controller->getParameter('fileId')) {
+                    if ($fileId = $this->getFileId()) {
                         return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:standard/' />";
                     }
                     break;
                 case 'zx_image_monochrome':
-                    $controller = controller::getInstance();
-                    if ($fileId = (int)$controller->getParameter('fileId')) {
+                    if ($fileId = $this->getFileId()) {
                         return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:monochrome/' />";
                     }
                     break;
                 case 'zx_image_tricolor':
-                    $controller = controller::getInstance();
-                    if ($fileId = (int)$controller->getParameter('fileId')) {
+                    if ($fileId = $this->getFileId()) {
                         return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:tricolor/' />";
                     }
                     break;
                 case 'zx_image_gigascreen':
-                    $controller = controller::getInstance();
-                    if ($fileId = (int)$controller->getParameter('fileId')) {
+                    if ($fileId = $this->getFileId()) {
                         return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:gigascreen/' />";
                     }
                     break;
@@ -400,8 +401,7 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
     public function getCurrentReleaseFileInfo(): ?array
     {
         if ($this->currentReleaseFileInfo === null) {
-            $controller = controller::getInstance();
-            if ($fileId = (int)$controller->getParameter('fileId')) {
+            if ($fileId = $this->getFileId()) {
                 /**
                  * @var ZxParsingManager $zxParsingManager
                  */
@@ -787,7 +787,6 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
 
     public function getEmulatorType(): ?string
     {
-        $test = $this->hardwareRequired;
         if (array_intersect($this->hardwareRequired, self::Zx81HardwareRunnable)) {
             foreach ($this->releaseFormat as $format) {
                 if (in_array($format, self::Zx81ReleaseTypeRunnable, true)) {
@@ -803,5 +802,25 @@ class zxReleaseElement extends ZxArtItem implements StructureElementUploadedFile
             }
         }
         return null;
+    }
+
+    public function getCanonicalUrl()
+    {
+        $url = parent::getCanonicalUrl();
+        if ($this->actionName === 'viewFile') {
+            $fileId = $this->getFileId();
+            if ($fileId === null) {
+                return $url;
+            }
+            $url .= "action:viewFile/id:{$this->id}/fileId:{$fileId}/";
+        }
+        return $url;
+    }
+
+    private function getFileId(): ?int
+    {
+        $controller = controller::getInstance();
+        $fileId = $controller->getParameter('fileId');
+        return $fileId === false ? null : (int)$fileId;
     }
 }

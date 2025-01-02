@@ -44,7 +44,7 @@ trait ZxProdsList
 
     private $type = 'zxProd';
 
-    private const defaultStatuses = ['allowed', 'forbidden', 'forbiddenzxart', 'allowedzxart', 'insales', 'recovered', 'unknown', 'unreleased'];
+    private const defaultStatuses = ['allowed', 'forbidden', 'forbiddenzxart', 'allowedzxart', 'insales', 'recovered', 'unknown'];
 
     public function getProdsInfo(): array
     {

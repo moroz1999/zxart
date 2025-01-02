@@ -39,6 +39,7 @@ trait HardwareProvider
                 "zx8132",
                 "zx8164",
                 "sprinter",
+                "alf",
             ],
             "storage" => [
                 'tape',
@@ -97,13 +98,15 @@ trait HardwareProvider
                 'gunstick',
                 'magnumlight',
                 'novina',
+                'lightpen',
             ],
             "expansion" => [
                 'zxpand',
                 'cache',
                 'gmx',
                 'flashcolor',
-                'ulaplus'
+                'ulaplus',
+                'radastan',
             ],
         ];
     }

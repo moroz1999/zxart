@@ -19,26 +19,31 @@ final class ArticleSeoDataUpdater
         $this->languageIdsMap = $this->languagesManager->getLanguagesIdsMap();
     }
 
-    public function updatePressArticleData(pressArticleElement $pressArticleElement, array $updatedContentt): void
+    public function updatePressArticleData(pressArticleElement $pressArticleElement, array $updatedContent): void
     {
-        $shortContent = $updatedContentt['shortContent'] ?? null;
+        $shortContent = $updatedContent['shortContent'] ?? null;
         if ($shortContent !== null) {
             $this->updateArticleTranslatedProperty('introduction', $shortContent, $pressArticleElement);
         }
 
-        $h1 = $updatedContentt['h1'] ?? null;
+        $h1 = $updatedContent['h1'] ?? null;
         if ($h1 !== null) {
             $this->updateArticleTranslatedProperty('h1', $h1, $pressArticleElement);
         }
 
-        $metaDescription = $updatedContentt['metaDescription'] ?? null;
+        $metaDescription = $updatedContent['metaDescription'] ?? null;
         if ($metaDescription !== null) {
             $this->updateArticleTranslatedProperty('metaDescription', $metaDescription, $pressArticleElement);
         }
 
-        $pageTitle = $updatedContentt['pageTitle'] ?? null;
+        $pageTitle = $updatedContent['pageTitle'] ?? null;
         if ($pageTitle !== null) {
             $this->updateArticleTranslatedProperty('metaTitle', $pageTitle, $pressArticleElement);
+        }
+
+        $title = $updatedContent['title'] ?? null;
+        if ($title !== null) {
+            $this->updateArticleTranslatedProperty('title', $title, $pressArticleElement);
         }
 
         $tags = $parserData['tags'] ?? null;

@@ -1,6 +1,8 @@
 <?php
 
-class zxProdCategoryElement extends structureElement implements MetadataProviderInterface, ZxProdsProvider,
+class zxProdCategoryElement extends structureElement implements
+    MetadataProviderInterface,
+    ZxProdsProvider,
     JsonDataProvider
 {
     use MetadataProviderTrait;
@@ -153,5 +155,16 @@ class zxProdCategoryElement extends structureElement implements MetadataProvider
         }
 
         return null;
+    }
+
+    public function getCanonicalUrl()
+    {
+        $url = $this->URL;
+        $page = $this->getCurrentPage();
+
+        if ($page > 1) {
+            $url .= "page:{$page}/";
+        }
+        return $url;
     }
 }

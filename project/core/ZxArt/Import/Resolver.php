@@ -21,16 +21,22 @@ final readonly class Resolver
 
     public function valueMatches(?string $value1, ?string $value2): bool
     {
-        return !empty($value1) && !empty($value2) && $value1 === $value2;
+        $value1 = trim($value1 ?? '');
+        $value2 = trim($value2 ?? '');
+        return !empty($value1) && !empty($value2) && mb_strtolower($value1) === mb_strtolower($value2);
     }
 
     public function alphanumericValueMatches(?string $value1, ?string $value2): bool
     {
+        $value1 = trim($value1 ?? '');
+        $value2 = trim($value2 ?? '');
         return !empty($value1) && !empty($value2) && $this->alphanumericColumnSearch->toAlphanumeric($value1) === $this->alphanumericColumnSearch->toAlphanumeric($value2);
     }
 
-    public function valueStartMatches(?string $value1, ?string $value2): bool
+    public function valueStartsWith(?string $haystack, ?string $needle): bool
     {
-        return !empty($value1) && !empty($value2) && mb_stripos($value1, $value2) === 0;
+        $haystack = trim($haystack ?? '');
+        $needle = trim($needle ?? '');
+        return !empty($haystack) && !empty($needle) && mb_stripos($haystack, $needle) === 0;
     }
 }

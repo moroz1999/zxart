@@ -6,7 +6,7 @@ namespace ZxArt\Queue;
 class QueueService
 {
     public function __construct(
-        private readonly QueueRepository $queueRepository
+        private readonly QueueRepository $queueRepository,
     )
     {
 
@@ -20,7 +20,7 @@ class QueueService
     public function updateStatus(int $elementId, QueueType $type, QueueStatus $status): void
     {
         $records = $this->queueRepository->load($elementId, [$type]);
-        if ($records){
+        if ($records) {
             $this->queueRepository->updateStatus($elementId, $type, $status);
         } else {
             $this->queueRepository->insertStatus($elementId, $type, $status);
@@ -45,6 +45,11 @@ class QueueService
             return;
         }
         $this->queueRepository->addElementRecords($elementId, $missingTypes, QueueStatus::STATUS_TODO);
+    }
+
+    public function getStatus(int $elementId, QueueType $type): ?QueueStatus
+    {
+        return $this->queueRepository->loadStatus($elementId, $type);
     }
 
     public function removeElementFromQueue(int $elementId, array $types)

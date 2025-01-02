@@ -5,7 +5,7 @@ import {Tag} from '../shared/models/tag';
 import {ZxProdCategoryDto} from './models/zx-prod-category-dto';
 import {environment} from '../../environments/environment';
 
-const defaultStatuses: string[] = ['allowed', 'forbidden', 'forbiddenzxart', 'allowedzxart', 'insales', 'recovered', 'unknown', 'unreleased'];
+const defaultStatuses: string[] = ['allowed', 'forbidden', 'forbiddenzxart', 'allowedzxart', 'insales', 'recovered', 'unknown'];
 
 export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
 

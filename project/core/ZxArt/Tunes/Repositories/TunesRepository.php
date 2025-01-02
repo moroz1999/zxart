@@ -23,7 +23,7 @@ readonly final class TunesRepository
     public function findTunesByTitle(string $title): array
     {
         $query = $this->getSelectSql();
-        $query = $this->alphanumericColumnSearch->addSearchByTitle($query, $title, 'title');
+        $query = $this->alphanumericColumnSearch->addSearchByAlphanumeric($query, $title, 'title');
         $query->orWhere('title', 'like', $title);
         $query->orWhere('title', 'like', $title . '%');
         $query->orWhere('internalTitle', 'like', $title);

@@ -4,50 +4,76 @@ trait LocationProviderTrait
 {
     use CacheOperatingElement;
 
-    protected ?cityElement $cityElement;
     protected ?countryElement $countryElement;
+    protected ?cityElement $cityElement;
 
     public function getCountryElement(): ?countryElement
     {
-        if (!isset($this->countryElement)) {
-            $this->countryElement = null;
-
-            $cache = $this->getElementsListCache('co', 60 * 60 * 24);
-            if (($elements = $cache->load()) === null) {
-                if ($countryId = $this->getCountryId()) {
-                    /**
-                     * @var structureManager $structureManager
-                     */
-                    $structureManager = $this->getService('structureManager');
-                    $this->countryElement = $structureManager->getElementById($countryId);
-                }
-                $cache->save([$this->countryElement]);
-            } else {
-                $this->countryElement = $elements[0] ?? null;;
-            }
+        if (isset($this->countryElement)) {
+            return $this->countryElement;
         }
+
+        $this->countryElement = null;
+        $cache = $this->getElementsListCache('co', 86400);
+        $elements = $cache->load();
+
+        if ($elements !== null) {
+            $this->countryElement = $elements[0] ?? null;
+            return $this->countryElement;
+        }
+
+        $countryId = $this->getCountryId();
+        if (!$countryId) {
+            $cache->save([]);
+            return null;
+        }
+
+        /** @var structureManager $structureManager */
+        $structureManager = $this->getService('structureManager');
+        $element = $structureManager->getElementById($countryId);
+
+        if ($element instanceof countryElement) {
+            $this->countryElement = $element;
+            $cache->save([$element]);
+        } else {
+            $cache->save([]);
+        }
+
         return $this->countryElement;
     }
 
     public function getCityElement(): ?cityElement
     {
-        if (!isset($this->cityElement)) {
-            $this->cityElement = null;
-
-            $cache = $this->getElementsListCache('ci', 60 * 60 * 24);
-            if (($elements = $cache->load()) === null) {
-                if ($cityId = $this->getCityId()) {
-                    /**
-                     * @var structureManager $structureManager
-                     */
-                    $structureManager = $this->getService('structureManager');
-                    $this->cityElement = $structureManager->getElementById($cityId);
-                }
-                $cache->save([$this->cityElement]);
-            } else {
-                $this->cityElement = $elements[0] ?? null;;
-            }
+        if (isset($this->cityElement)) {
+            return $this->cityElement;
         }
+
+        $this->cityElement = null;
+        $cache = $this->getElementsListCache('ci', 86400);
+        $elements = $cache->load();
+
+        if ($elements !== null) {
+            $this->cityElement = $elements[0] ?? null;
+            return $this->cityElement;
+        }
+
+        $cityId = $this->getCityId();
+        if (!$cityId) {
+            $cache->save([]);
+            return null;
+        }
+
+        /** @var structureManager $structureManager */
+        $structureManager = $this->getService('structureManager');
+        $element = $structureManager->getElementById($cityId);
+
+        if ($element instanceof cityElement) {
+            $this->cityElement = $element;
+            $cache->save([$element]);
+        } else {
+            $cache->save([]);
+        }
+
         return $this->cityElement;
     }
 

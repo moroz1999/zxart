@@ -625,7 +625,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
         return $this->currentSection;
     }
 
-    public function getBreadcrumbsTitle()
+    public function getBreadcrumbsTitle(): string
     {
         $firstPageElement = $this->getFirstPageElement();
         if ($firstPageElement) {
@@ -634,12 +634,17 @@ class languageElement extends structureElement implements MetadataProviderInterf
         return $this->getTitle();
     }
 
-    public function getBreadcrumbsUrl()
+    public function getBreadcrumbsUrl(): string
     {
         $firstPageElement = $this->getFirstPageElement();
         if ($firstPageElement) {
             return $firstPageElement->getUrl();
         }
         return $this->getUrl();
+    }
+
+    public function isBreadCrumb(): bool
+    {
+        return true;
     }
 }

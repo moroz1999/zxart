@@ -26,6 +26,5 @@ final class PressArticleRepository
             return;
         }
         $this->db->table(self::TABLE)->where(['id' => $articleId])->update(['content' => $content]);
-
     }
 }

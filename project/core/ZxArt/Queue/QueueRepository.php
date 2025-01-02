@@ -49,6 +49,20 @@ class QueueRepository
             ->get();
     }
 
+    public function loadStatus(int $elementId, QueueType $type): ?QueueStatus
+    {
+        $value = $this->db->table('queue')
+            ->where('elementId', '=', $elementId)
+            ->where('type', '=', $type->value)
+            ->select('status')
+            ->value('status');
+        if ($value !== null){
+            return QueueStatus::from($value);
+        }
+
+        return null;
+    }
+
     public function addElementRecords(int $elementId, array $types, QueueStatus $status): bool
     {
         $data = [];

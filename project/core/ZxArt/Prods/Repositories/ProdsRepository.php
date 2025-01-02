@@ -20,12 +20,22 @@ readonly final class ProdsRepository
 
     }
 
-    public function findProdsByTitle(string $title): array
+    public function findProdsByTitles(string $title): array
     {
+        $theTitle = 'The ' . $title;
+
         $query = $this->getSelectSql();
-        $query = $this->alphanumericColumnSearch->addSearchByTitle($query, $title, 'title');
+        $query = $this->alphanumericColumnSearch->addSearchByAlphanumeric($query, $title, 'title');
         $query->orWhere('title', 'like', $title);
         $query->orWhere('title', 'like', $title . '%');
+
+        $query = $this->alphanumericColumnSearch->addSearchByAlphanumeric($query, $title, 'altTitle');
+        $query->orWhere('altTitle', 'like', $title);
+        $query->orWhere('altTitle', 'like', $title . '%');
+
+        $query = $this->alphanumericColumnSearch->addSearchByAlphanumeric($query, $theTitle, 'title');
+        $query->orWhere('title', 'like', $theTitle);
+        $query->orWhere('title', 'like', $theTitle . '%');
 
         return $query->pluck('id');
     }

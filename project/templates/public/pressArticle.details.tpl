@@ -32,70 +32,97 @@
             {/if}
 
 
-            <div class="">
+            <div class="pressarticle-external-link">
                 <a href="{$element->externalLink}"
                    target="_blank"
                 >{translations name='pressarticle.source'}</a>
             </div>
-
-            {if $element->authors}
-                <h3>{translations name='pressarticle.authors'}</h3>
-                {foreach $element->authors as $author}
-                    <div>
-                        <a href="{$author->getUrl()}">{$author->getTitle()}</a>
+            <div class="pressarticle-mentions-container">
+                {if $element->authors}
+                    <div class="pressarticle-mentions">
+                        <h3>{translations name='pressarticle.authors'}</h3>
+                        <div class="pressarticle-mentions-list{if count($element->authors) > 10} pressarticle-mentions-list-columns{/if}">
+                        {foreach $element->getSorted($element->authors) as $author}
+                            <div class="pressarticle-mentions-item">
+                                <a href="{$author->getUrl()}">{$author->getSearchTitle()}</a>
+                            </div>
+                        {/foreach}
+                        </div>
                     </div>
-                {/foreach}
-            {/if}
-
-            {if $element->people}
-                <h3>{translations name='pressarticle.people'}</h3>
-                {foreach $element->people as $author}
-                    <div>
-                        <a href="{$author->getUrl()}">{$author->getTitle()}</a>
+                {/if}
+                {if $element->people}
+                    <div class="pressarticle-mentions">
+                        <h3>{translations name='pressarticle.people'}</h3>
+                        <div class="pressarticle-mentions-list{if count($element->people) > 10} pressarticle-mentions-list-columns{/if}">
+                            {foreach $element->getSorted($element->people) as $author}
+                                <div class="pressarticle-mentions-item">
+                                    <a href="{$author->getUrl()}">{$author->getSearchTitle()}</a>
+                                </div>
+                            {/foreach}
+                        </div>
                     </div>
-                {/foreach}
-            {/if}
-
-            {if $element->groups}
-                <h3>{translations name='pressarticle.groups'}</h3>
-                {foreach $element->groups as $group}
-                    <div>
-                        <a href="{$group->getUrl()}">{$group->getTitle()}</a>
+                {/if}
+                {if $element->groups}
+                    <div class="pressarticle-mentions">
+                        <h3>{translations name='pressarticle.groups'}</h3>
+                        <div class="pressarticle-mentions-list{if count($element->groups) > 10} pressarticle-mentions-list-columns{/if}">
+                            {foreach $element->getSorted($element->groups) as $group}
+                                <div class="pressarticle-mentions-item">
+                                    <a href="{$group->getUrl()}">{$group->getSearchTitle()}</a>
+                                </div>
+                            {/foreach}
+                        </div>
                     </div>
-                {/foreach}
-            {/if}
-            {if $element->software}
-                <h3>{translations name='pressarticle.software'}</h3>
-                {foreach $element->software as $prod}
-                    <div>
-                        <a href="{$prod->getUrl()}">{$prod->getTitle()}</a>
+                {/if}
+                {if $element->software}
+                    <div class="pressarticle-mentions">
+                        <h3>{translations name='pressarticle.software'}</h3>
+                        <div class="pressarticle-mentions-list{if count($element->software) > 10} pressarticle-mentions-list-columns{/if}">
+                            {foreach $element->getSorted($element->software) as $prod}
+                                <div class="pressarticle-mentions-item">
+                                    <a href="{$prod->getUrl()}">{$prod->getSearchTitle()}</a>
+                                </div>
+                            {/foreach}
+                        </div>
                     </div>
-                {/foreach}
-            {/if}
-            {if $element->pictures}
-                <h3>{translations name='pressarticle.pictures'}</h3>
-                {foreach $element->pictures as $picture}
-                    <div>
-                        <a href="{$picture->getUrl()}">{$picture->getTitle()}</a>
+                {/if}
+                {if $element->pictures}
+                    <div class="pressarticle-mentions">
+                        <h3>{translations name='pressarticle.pictures'}</h3>
+                        <div class="pressarticle-mentions-list{if count($element->pictures) > 10} pressarticle-mentions-list-columns{/if}">
+                            {foreach $element->getSorted($element->pictures) as $picture}
+                                <div class="pressarticle-mentions-item">
+                                    <a href="{$picture->getUrl()}">{$picture->getSearchTitle()}</a>
+                                </div>
+                            {/foreach}
+                        </div>
                     </div>
-                {/foreach}
-            {/if}
-            {if $element->tunes}
-                <h3>{translations name='pressarticle.tunes'}</h3>
-                {foreach $element->tunes as $tune}
-                    <div>
-                        <a href="{$tune->getUrl()}">{$tune->getTitle()}</a>
+                {/if}
+                {if $element->tunes}
+                    <div class="pressarticle-mentions">
+                        <h3>{translations name='pressarticle.tunes'}</h3>
+                        <div class="pressarticle-mentions-list{if count($element->tunes) > 10} pressarticle-mentions-list-columns{/if}">
+                            {foreach $element->getSorted($element->tunes) as $tune}
+                                <div class="pressarticle-mentions-item">
+                                    <a href="{$tune->getUrl()}">{$tune->getSearchTitle()}</a>
+                                </div>
+                            {/foreach}
+                        </div>
                     </div>
-                {/foreach}
-            {/if}
-            {if $element->parties}
-                <h3>{translations name='pressarticle.parties'}</h3>
-                {foreach $element->parties as $party}
-                    <div>
-                        <a href="{$party->getUrl()}">{$party->getTitle()}</a>
+                {/if}
+                {if $element->parties}
+                    <div class="pressarticle-mentions">
+                        <h3>{translations name='pressarticle.parties'}</h3>
+                        <div class="pressarticle-mentions-list{if count($element->parties) > 10} pressarticle-mentions-list-columns{/if}">
+                            {foreach $element->getSorted($element->parties) as $party}
+                                <div class="pressarticle-mentions-item">
+                                    <a href="{$party->getUrl()}">{$party->getSearchTitle()}</a>
+                                </div>
+                            {/foreach}
+                        </div>
                     </div>
-                {/foreach}
-            {/if}
+                {/if}
+            </div>
 
             <pre class="pressarticle_content">{$element->getWrappedContent()}</pre>
             <h2>{translations name='pressarticle.morefromsame'}: <a href="{$parentElement->getUrl()}">{$parentElement->getTitle()}</a></h2>

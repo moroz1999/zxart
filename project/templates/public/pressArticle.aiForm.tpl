@@ -11,6 +11,9 @@
                 <input class='checkbox_placeholder' type="checkbox" value="1"
                        name="{$formNames.aiRestartFix}"{if $element->aiRestartFix} checked="checked"{/if}/>
             </td>
+            <td class="form_field">
+                {$element->getQueueStatus(ZxArt\Queue\QueueType::AI_PRESS_FIX)}
+            </td>
         </tr>
         <tr>
             <td class="form_label">
@@ -19,6 +22,9 @@
             <td class="form_field">
                 <input class='checkbox_placeholder' type="checkbox" value="1"
                        name="{$formNames.aiRestartTranslate}"{if $element->aiRestartTranslate} checked="checked"{/if}/>
+            </td>
+            <td class="form_field">
+                {$element->getQueueStatus(ZxArt\Queue\QueueType::AI_PRESS_TRANSLATE)}
             </td>
         </tr>
         <tr>
@@ -29,6 +35,9 @@
                 <input class='checkbox_placeholder' type="checkbox" value="1"
                        name="{$formNames.aiRestartParse}"{if $element->aiRestartParse} checked="checked"{/if}/>
             </td>
+            <td class="form_field">
+                {$element->getQueueStatus(ZxArt\Queue\QueueType::AI_PRESS_PARSE)}
+            </td>
         </tr>
         <tr>
             <td class="form_label">
@@ -37,6 +46,9 @@
             <td class="form_field">
                 <input class='checkbox_placeholder' type="checkbox" value="1"
                        name="{$formNames.aiRestartSeo}"{if $element->aiRestartSeo} checked="checked"{/if}/>
+            </td>
+            <td class="form_field">
+                {$element->getQueueStatus(ZxArt\Queue\QueueType::AI_PRESS_SEO)}
             </td>
         </tr>
    </table>

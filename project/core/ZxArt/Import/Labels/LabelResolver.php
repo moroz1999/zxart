@@ -7,13 +7,13 @@ use authorAliasElement;
 use authorElement;
 use groupAliasElement;
 use groupElement;
-use structureElement;
 use structureManager;
 use ZxArt\Authors\Repositories\AuthorAliasesRepository;
 use ZxArt\Authors\Repositories\AuthorsRepository;
 use ZxArt\Groups\Repositories\GroupAliasesRepository;
 use ZxArt\Groups\Repositories\GroupsRepository;
 use ZxArt\Import\Authors\AuthorSufficiencyChecker;
+use ZxArt\Import\Resolver;
 
 final readonly class LabelResolver
 {
@@ -24,6 +24,7 @@ final readonly class LabelResolver
         private GroupAliasesRepository   $groupAliasesRepository,
         private structureManager         $structureManager,
         private AuthorSufficiencyChecker $authorSufficiencyChecker,
+        private Resolver                 $resolver,
     )
     {
 
@@ -66,9 +67,14 @@ final readonly class LabelResolver
 
                 $score = 0;
 
-                if ($this->valueMatches($elementName, $label->name)) {
+                if ($this->resolver->valueMatches($elementName, $label->name)) {
                     $score += 10;
+                } elseif ($this->resolver->alphanumericValueMatches($elementName, $label->name)) {
+                    $score += 8;
+                } elseif ($this->resolver->valueStartsWith($elementName, $label->name)) {
+                    $score += 3;
                 }
+
                 if ($groupElement->matchesCity($label->city ?? '')) {
                     $score += 5;
                 }
@@ -104,11 +110,19 @@ final readonly class LabelResolver
                     return 0; //too few data for author to match it with existing
                 }
 
-                $authorCountry = $author->getCountryTitle();
-                $labelCountry = $label->country ?? null;
 
+                $authorCountry = $author->getCountryTitle();
+                $labelCountry = $label->country;
                 //don't match authors from different countries
                 if ($authorCountry !== null && $labelCountry !== null && !$author->matchesCountry($labelCountry)) {
+                    return 0;
+                }
+
+
+                $authorCity = $author->getCityTitle();
+                $labelCity = $label->city;
+                //don't match authors from different cities
+                if ($authorCity !== null && $labelCity !== null && !$author->matchesCity($labelCity)) {
                     return 0;
                 }
 
@@ -131,12 +145,17 @@ final readonly class LabelResolver
                 if ($authorCountry !== null && $labelCountry === null) {
                     $score += -1;
                 }
-                if ($this->valueMatches($elementName, $labelName)) {
+
+                if ($this->resolver->valueMatches($elementName, $labelName)) {
                     $score += 10;
+                } elseif ($this->resolver->alphanumericValueMatches($elementName, $labelName)) {
+                    $score += 8;
                 }
-                if ($isRealNameFull && $this->valueMatches($authorRealName, $label->realName)) {
+
+                if ($isRealNameFull && $this->resolver->valueMatches($authorRealName, $label->realName)) {
                     $score += 20;
                 }
+
                 if ($author->matchesCity($label->city ?? '')) {
                     $score += 5;
                 }
@@ -208,10 +227,5 @@ final readonly class LabelResolver
         usort($candidates, static fn($a, $b) => $b['score'] <=> $a['score']);
 
         return $candidates[0]['element'] ?? null;
-    }
-
-    private function valueMatches(?string $value1, ?string $value2): bool
-    {
-        return !empty($value1) && !empty($value2) && mb_strtolower(trim($value1)) === mb_strtolower(trim($value2));
     }
 }

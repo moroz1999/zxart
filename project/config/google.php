@@ -6,6 +6,6 @@
         'event_feedback_id' => '',
         'event_email_id' => '',
     ],
-    'analytics.id' => 'UA-3287749-14',
+    'analytics.id' => false,
     'ecommerce.enabled' => false,
 ];

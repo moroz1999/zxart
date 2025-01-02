@@ -22,7 +22,8 @@
     "ext-fileinfo": "*",
     "php": "8.2.*",
     "verifalia/sdk": "^3.0",
-    "php-di/php-di": "^7.0"
+    "php-di/php-di": "^7.0",
+    "ext-libxml": "*"
   },
   "config": {
     "allow-plugins": {

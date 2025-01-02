@@ -23,7 +23,7 @@ readonly final class PicturesRepository
     public function findPicturesByTitle(string $title): array
     {
         $query = $this->getSelectSql();
-        $query = $this->alphanumericColumnSearch->addSearchByTitle($query, $title, 'title');
+        $query = $this->alphanumericColumnSearch->addSearchByAlphanumeric($query, $title, 'title');
         $query->orWhere('title', 'like', $title);
         $query->orWhere('title', 'like', $title . '%');
 

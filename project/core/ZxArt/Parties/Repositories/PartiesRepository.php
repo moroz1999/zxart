@@ -42,8 +42,8 @@ final class PartiesRepository
                         ->where('module_generic.title', '=', $year);
                 }
             );
-        $this->alphanumericColumnSearch->addSearchByTitle($query, $title, 'engine_module_party.title');
-        $this->alphanumericColumnSearch->addSearchByTitle($query, $title . ' ' . $year, 'engine_module_party.title');
+        $this->alphanumericColumnSearch->addSearchByAlphanumeric($query, $title, 'engine_module_party.title');
+        $this->alphanumericColumnSearch->addSearchByAlphanumeric($query, $title . ' ' . $year, 'engine_module_party.title');
 
         if ($record = $query->first()) {
             return $record['id'];

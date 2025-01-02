@@ -212,7 +212,7 @@ class AuthorsService extends ElementsManager
         if (!empty($authorInfo['countryName'])) {
             if ($locationElement = $this->countriesManager->getLocationByName($authorInfo['countryName'])) {
                 if ($locationElement->structureType === 'country') {
-                    if ($element->country != $locationElement->id) {
+                    if (($this->forceUpdateCountry || !$element->country) && $element->country != $locationElement->id) {
                         $changed = true;
                         $element->country = $locationElement->id;
                     }
@@ -222,7 +222,7 @@ class AuthorsService extends ElementsManager
         if (!empty($authorInfo['cityName'])) {
             if ($locationElement = $this->countriesManager->getLocationByName($authorInfo['cityName'])) {
                 if ($locationElement->structureType === 'city') {
-                    if ($element->city != $locationElement->id) {
+                    if (($this->forceUpdateCity || !$element->city) && $element->city != $locationElement->id) {
                         $changed = true;
                         $element->city = $locationElement->id;
                     }

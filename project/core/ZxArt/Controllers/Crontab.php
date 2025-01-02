@@ -193,7 +193,7 @@ class Crontab extends controllerApplication
             }
             $pressYear = (int)$pressElement->year;
             $year = $pressYear === 0 ? $pressYear : null;
-            $updatedContent = $this->pressParser->getParsedData($pressArticleElement->getTextContent(), $pressArticleElement->id, $pressElement->title, $year);
+            $updatedContent = $this->pressParser->getParsedData($pressArticleElement->getAITextContent(), $pressArticleElement->id, $pressElement->title, $year);
             if ($updatedContent) {
                 $mergedContent = $this->mergeArrays($updatedContent);
                 $this->pressDataUpdater->updatePressArticleData($pressArticleElement, $mergedContent);
@@ -210,8 +210,8 @@ class Crontab extends controllerApplication
                 throw new CrontabException("Press is missing for article {$pressArticleElement->id}");
             }
             $pressYear = (int)$pressElement->year;
-            $year = $pressYear === 0 ? $pressYear : null;
-            $updatedContent = $this->pressArticleSeo->getParsedData($pressArticleElement->getTextContent(), $pressElement->title, $year);
+            $year = $pressYear > 0 ? $pressYear : null;
+            $updatedContent = $this->pressArticleSeo->getParsedData($pressArticleElement->getAITextContent(), $pressElement->title, $pressArticleElement->title, $year);
             if ($updatedContent !== null) {
                 $mergedContent = $this->mergeArrays($updatedContent);
                 $this->articleSeoDataUpdater->updatePressArticleData($pressArticleElement, $mergedContent);
@@ -247,7 +247,7 @@ class Crontab extends controllerApplication
     private function queryAiPressBeautifier(): void
     {
         $this->processQueue(QueueType::AI_PRESS_FIX, function (pressArticleElement $pressArticleElement, $counter) {
-            $updatedContent = $this->textBeautifier->beautify($pressArticleElement->getTextContent());
+            $updatedContent = $this->textBeautifier->beautify($pressArticleElement->getAITextContent());
 
             if ($updatedContent) {
                 $destLanguageId = $this->languagesManager->getLanguageId('rus');
@@ -267,7 +267,7 @@ class Crontab extends controllerApplication
         ];
 
         $this->processQueue(QueueType::AI_PRESS_TRANSLATE, function (pressArticleElement $pressArticleElement, $counter) use ($allLanguageCodes) {
-            $content = $pressArticleElement->getTextContent();
+            $content = $pressArticleElement->getAITextContent();
             $contentLanguageCode = $this->languageDetector->detectLanguage($content);
             $languageCodes = $allLanguageCodes[$contentLanguageCode] ?? $allLanguageCodes['rus'];
 

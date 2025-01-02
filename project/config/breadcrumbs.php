@@ -1,5 +1,5 @@
 <?php return [
-    'minLevel' => 2,
+    'minLevel' => 1,
     'minAmount' => 2,
     'allowedElementTypes' => [
         'zxProdCategory',

@@ -8,8 +8,10 @@
  * @property string $image
  * @property string $originalName
  */
-class folderElement extends menuDependantStructureElement implements ConfigurableLayoutsProviderInterface,
-    ColumnsTypeProvider
+class folderElement extends menuDependantStructureElement implements
+    ConfigurableLayoutsProviderInterface,
+    ColumnsTypeProvider,
+    BreadcrumbsInfoProvider
 {
     use ConfigurableLayoutsProviderTrait;
     use LettersElementsListProviderTrait;
@@ -177,5 +179,30 @@ class folderElement extends menuDependantStructureElement implements Configurabl
             }
         }
         return $this->lettersSelectorInfo;
+    }
+
+    public function isBreadCrumb(): bool
+    {
+        $structureManager = $this->getService('structureManager');
+        $languagesManager = $this->getService('languagesManager');
+
+        if ($currentLanguage = $structureManager->getElementById(
+            $languagesManager->getCurrentLanguageId()
+        )){
+            $firstPageElement = $currentLanguage->getFirstPageElement();
+            return $firstPageElement->id !== $this->id;
+        }
+
+        return true;
+    }
+
+    public function getBreadcrumbsTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getBreadcrumbsUrl(): string
+    {
+        return $this->URL;
     }
 }

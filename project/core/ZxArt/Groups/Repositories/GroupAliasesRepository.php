@@ -26,7 +26,8 @@ final class GroupAliasesRepository
         }
 
         $query = $this->db->table(self::TABLE)->select(['id']);
-        $query = $this->alphanumericColumnSearch->addSearchByTitle($query, $name, 'title');
+        $query = $this->alphanumericColumnSearch->addSearchByAlphanumeric($query, $name, 'title');
+        $query->orWhere('title', 'LIKE', $name . '%');
 
         if ($ids = $query->pluck('id')) {
             return $ids;

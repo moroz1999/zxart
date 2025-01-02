@@ -4,7 +4,6 @@
 .zxprod_details_video {
   width: 30%;
   max-width: 640px;
-  float: right;
   margin-bottom: 1rem;
   position: relative;
 
@@ -27,7 +26,6 @@
 
 @media (max-width: @screen_breakpoint_sm_max) {
   .zxprod_details_video {
-    float: none;
     width: 100%;
     max-width: 320px;
     margin: 0 auto 1em;
@@ -35,7 +33,17 @@
 }
 
 .zxprod_details_info {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: start;
   margin-bottom: 40px;
+}
+
+@media (max-width: @screen_breakpoint_sm_max) {
+  .zxprod_details_info {
+    display: block
+  }
 }
 
 .zxprod_gallery {
