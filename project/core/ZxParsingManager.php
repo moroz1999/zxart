@@ -213,7 +213,7 @@ class ZxParsingManager extends errorLogger
         return $this->db->table(self::table)->where('id', '=', $id)->limit(1)->first();
     }
 
-    public function extractFile(string $path, int $id): bool|ZxParsingItem
+    public function extractFile(string $path, int $id): ?ZxParsingItem
     {
         $chain = [];
         $fileName = false;
@@ -229,12 +229,10 @@ class ZxParsingManager extends errorLogger
             }
         } while ($record && $record['parentId']);
 
-        if ($chain) {
-            if ($file = $this->getFileByChain($path, $chain, $fileName)) {
-                return $file;
-            }
+        if ($chain && $file = $this->getFileByChain($path, $chain, $fileName)) {
+            return $file;
         }
-        return false;
+        return null;
     }
 
     /**

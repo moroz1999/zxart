@@ -6,13 +6,13 @@
 {capture assign="moduleContent"}
 	<div class='picture_details_top'>
 		<div class='picture_details_main'>
-			<img loading="lazy" rel="image_src" class='picture_details_main_image zxgallery_item{if $currentMode.mode != 'mix' && $element->isFlickering()} flicker_image{/if}' src='{$element->getImageUrl(1)}' alt='{$element->title}'/>
+			<img rel="image_src" class='picture_details_main_image zxgallery_item{if $currentMode.mode != 'mix' && $element->isFlickering()} flicker_image{/if}' src='{$element->getImageUrl(1)}' alt='{$element->title}'/>
 		</div>
 		<div class='picture_details_main picture_details_main_2x'>
 			<img loading="lazy" rel="image_src" class='picture_details_main_image zxgallery_item{if $currentMode.mode != 'mix' && $element->isFlickering()} flicker_image{/if}' src='{$element->getImageUrl(2)}' alt='{$element->title}'/>
 		</div>
 		<div class='picture_details_main picture_details_main_3x'>
-			<img loading="lazy" rel="image_src" class='picture_details_main_image zxgallery_item{if $currentMode.mode != 'mix' && $element->isFlickering()} flicker_image{/if}' src='{$element->getImageUrl(3)}' alt='{$element->title}'/>
+			<img rel="image_src" class='picture_details_main_image zxgallery_item{if $currentMode.mode != 'mix' && $element->isFlickering()} flicker_image{/if}' src='{$element->getImageUrl(3)}' alt='{$element->title}'/>
 		</div>
 	</div>
 	<div class="picture_details_materials">

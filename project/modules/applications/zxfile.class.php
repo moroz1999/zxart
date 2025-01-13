@@ -31,6 +31,8 @@ class zxfileApplication extends controllerApplication
             true
         );
         $this->processRequestParameters();
+        $play = (bool)$controller->getParameter('play');
+
         /**
          * @var zxReleaseElement $element
          */
@@ -39,13 +41,13 @@ class zxfileApplication extends controllerApplication
              * @var ZxParsingManager $zxParsingManager
              */
             $zxParsingManager = $this->getService('ZxParsingManager');
-            $file = false;
+            $file = null;
             if ($this->fileId) {
                 $file = $zxParsingManager->extractFile($element->getFilePath(), $this->fileId);
             }
-            if ($file) {
+            if ($file !== null) {
                 if ($element->structureType === 'zxRelease' && !$this->isCrawlerDetected()) {
-                    if ($controller->getParameter('play')) {
+                    if ($play === true) {
                         $element->incrementPlays();
                     }
                     $structureManager->clearElementCache($element->id);

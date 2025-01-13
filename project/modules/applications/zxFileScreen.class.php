@@ -46,11 +46,11 @@ class zxFileScreenApplication extends controllerApplication
              * @var ZxParsingManager $zxParsingManager
              */
             $zxParsingManager = $this->getService('ZxParsingManager');
-            $file = false;
+            $file = null;
             if ($this->fileId) {
                 $file = $zxParsingManager->extractFile($element->getFilePath(), $this->fileId);
             }
-            if ($file) {
+            if ($file !== null) {
                 $this->renderer->assign('fileContents', $file->getContent());
                 $this->renderer->assign('type', $this->type);
                 $this->renderer->assign('mode', $this->mode);

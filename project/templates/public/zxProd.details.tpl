@@ -217,7 +217,6 @@
                href="{$element->URL}type:pressArticle/action:showPublicForm/">{translations name='zxprod.addpressarticle'}</a>
         {/if}
     </div>
-    {include $theme->template("component.emulator.tpl")}
     <div class="gallery_static galleryid_{$element->id}">
         {if $filesList = $element->getFilesList('connectedFile')}
             <div class="zxprod_gallery">
@@ -233,6 +232,7 @@
             <h2>{translations name='zxprod.articles'}</h2>
             {include file=$theme->template('component.pressArticles.tpl') articles= $element->articles pager=false}
         {/if}
+        {include $theme->template("component.emulator.tpl")}
         {if $releasesList=$element->getReleasesList()}
             <h2>{translations name='zxprod.releases'}</h2>
             <div class="zxprod_details_releases">
@@ -246,10 +246,9 @@
         {/if}
 
         {if $filesList = $element->getFilesList('mapFilesSelector')}
-            {if $linkInfo = $element->getLinkInfo('maps')}
+                {$url = $element->getSpeccyMapsUrl()}
                 <h2>{translations name='zxprod.maps'}</h2>
-                {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodMapImage' displayTitle=true url=$linkInfo['url'] linkType='mapFilesSelector'}
-            {/if}
+                {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodMapImage' displayTitle=true url=$url linkType='mapFilesSelector'}
         {/if}
     </div>
     {include file=$theme->template('component.mentions.tpl')}

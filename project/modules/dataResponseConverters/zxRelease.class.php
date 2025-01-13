@@ -4,11 +4,6 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
 {
     protected $defaultPreset = 'api';
 
-    /**
-     * @return (Closure|string)[]
-     *
-     * @psalm-return array{id: 'id', title: Closure(mixed):string, searchTitle: 'getSearchTitle', url: 'getUrl', structureType: 'structureType', dateCreated: Closure(zxReleaseElement):mixed, dateModified: Closure(zxReleaseElement):mixed, file: 'getFileUrl', fileName: 'fileName', year: 'year', publishersIds: 'getPublishersIds', language: 'language', languagesInfo: 'getLanguagesInfo', description: 'description', hardwareRequired: 'hardwareRequired', releaseType: 'releaseType', releaseFormat: 'releaseFormat', version: 'version', publishersInfo: 'getPublishersInfo', groupsInfo: 'getGroupsInfo', authorsInfo: Closure(zxReleaseElement):mixed, authorsInfoShort: Closure(zxReleaseElement):array, listImagesUrls: Closure(zxReleaseElement):(array|mixed), hardwareInfo: 'getHardwareInfo', inlaysUrls: 'getInlaysUrls', inlays: Closure(zxReleaseElement):array<fileElement>, ads: Closure(zxReleaseElement):array<fileElement>, instructions: Closure(zxReleaseElement):array<fileElement>, releaseStructure: Closure(zxReleaseElement):(array<never, never>|mixed), importIds: 'getImportIdsIndex', playUrl: Closure(zxReleaseElement):mixed}
-     */
     protected function getRelationStructure()
     {
         return [

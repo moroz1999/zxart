@@ -57,8 +57,12 @@ class zxReleaseElement extends ZxArtItem implements
     protected $imagesUrls;
     protected $prodElement;
     private const UspReleaseTypeRunnable = ['trd', 'tap', 'z80', 'sna', 'tzx', 'scl'];
-    private const Zx81HardwareRunnable = ["zx80", "zx8116", "zx811", "zx812", "zx8132", "zx8164"];
     private const Zx81ReleaseTypeRunnable = ['tzx', 'p'];
+    private const RunnableTypes = [...self::UspReleaseTypeRunnable, ...self::Zx81ReleaseTypeRunnable, ...self::TsconfReleaseTypeRunnable];
+    private const Zx81HardwareRunnable = ["zx80", "zx8116", "zx811", "zx812", "zx8132", "zx8164"];
+
+    private const TsconfReleaseTypeRunnable = ['img', 'spg', 'trd', 'scl'];
+    private const TsconfHardwareRunnable = ["tsconf"];
 
     /**
      * @return void
@@ -252,12 +256,30 @@ class zxReleaseElement extends ZxArtItem implements
 
     public function getFileUrl(bool $play = false): string
     {
-        if ($play) {
-            $url = controller::getInstance()->baseURL . 'release/play:1/id:' . $this->id . '/filename:' . $this->getFileName();
-        } else {
-            $url = controller::getInstance()->baseURL . 'release/id:' . $this->id . '/filename:' . $this->getFileName();
+        $controller = $this->getService('controller');
+        return $controller->baseURL . 'release/id:' . $this->id . '/' . $this->getFileName();
+    }
+
+    public function getPlayUrl($serveZip = true): ?string
+    {
+        $controller = $this->getService('controller');
+        if ($serveZip) {
+            return $controller->baseURL . 'release/play:1/id:' . $this->id . '/' . $this->getFileName();
         }
-        return $url;
+        $structure = $this->getReleaseFlatStructure();
+
+        $runnableTypes = $this->getEmulatorType() === 'tsconf' ? self::TsconfReleaseTypeRunnable : self::Zx81ReleaseTypeRunnable;
+        foreach ($runnableTypes as $runnableType) {
+            foreach ($structure as $item) {
+                $fileName = $item['fileName'];
+                $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+                if ($extension === $runnableType) {
+                    return "{$controller->baseURL}zxfile/id:{$this->id}/fileId:{$item['id']}/play:1/{$fileName}";
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -335,11 +357,7 @@ class zxReleaseElement extends ZxArtItem implements
         return false;
     }
 
-    /**
-     * @param $file
-     * @return false|string
-     */
-    public function getFormattedFileContent($fileRecord): string|false
+    public function getFormattedFileContent(array $fileRecord): ?string
     {
         /**
          * @var ZxParsingManager $zxParsingManager
@@ -348,8 +366,8 @@ class zxReleaseElement extends ZxArtItem implements
         $controller = controller::getInstance();
 
         $extractedFile = $zxParsingManager->extractFile($this->getFilePath(), $fileRecord['id']);
-        if (!$extractedFile) {
-            return false;
+        if ($extractedFile === null) {
+            return null;
         }
         if ($content = $extractedFile->getContent()) {
             switch ($fileRecord['internalType']) {
@@ -392,7 +410,7 @@ class zxReleaseElement extends ZxArtItem implements
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -414,7 +432,7 @@ class zxReleaseElement extends ZxArtItem implements
         return $this->currentReleaseFileInfo;
     }
 
-    public function getReleaseFile(int $fileId)
+    public function getReleaseFile(int $fileId): ?ZxParsingItem
     {
         /**
          * @var ZxParsingManager $zxParsingManager
@@ -424,12 +442,7 @@ class zxReleaseElement extends ZxArtItem implements
             return $file;
         }
 
-        return false;
-    }
-
-    public function getFormData()
-    {
-        return parent::getFormData();
+        return null;
     }
 
     public function getSupportedLanguageCodes()
@@ -481,11 +494,15 @@ class zxReleaseElement extends ZxArtItem implements
         $privileges = $this->getService('privilegesManager')->getElementPrivileges($this->id);
 
 
-        return
-            !in_array($this->getLegalStatus(), ['forbidden', 'forbiddenzxart', 'insales']) ||
+        return !in_array($this->getLegalStatus(), ['forbidden', 'forbiddenzxart', 'insales']) ||
             $this->releaseType === 'demoversion' ||
             !empty($privileges['zxRelease']['downloadDenied']) ||
-            $this->getLegalStatus() !== 'insales' && $user->isAuthorized() && $this->getProd()?->year !== 0 && $this->getProd()?->year < (date('Y') - 20);
+            (
+                ($this->getLegalStatus() !== 'insales') &&
+                $user->isAuthorized() &&
+                ($this->getProd()?->year !== 0) &&
+                ($this->getProd()?->year < (date('Y') - 20))
+            );
     }
 
     public function getLinksInfo()
@@ -570,9 +587,6 @@ class zxReleaseElement extends ZxArtItem implements
         return false;
     }
 
-    /**
-     * @return false|fileElement
-     */
     public function getImage($number = 0): fileElement|false
     {
         if ($images = $this->getFilesList('screenshotsSelector')) {
@@ -793,6 +807,9 @@ class zxReleaseElement extends ZxArtItem implements
                     return 'zx81';
                 }
             }
+        }
+        if (array_intersect($this->hardwareRequired, self::TsconfHardwareRunnable)) {
+            return 'tsconf';
         }
         if ($this->releaseFormat) {
             foreach ($this->releaseFormat as $format) {

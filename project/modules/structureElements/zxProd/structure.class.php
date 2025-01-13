@@ -506,6 +506,12 @@ class zxProdElement extends ZxArtItem implements
         return null;
     }
 
+    public function getSpeccyMapsUrl(): ?string
+    {
+        $linkInfo = $this->getLinkInfo('maps');
+        return $linkInfo['url'] ?? null;
+    }
+
     public function getLinksInfo()
     {
         if ($this->linksInfo === null) {

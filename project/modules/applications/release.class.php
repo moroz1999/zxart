@@ -40,16 +40,17 @@ class releaseApplication extends controllerApplication
         );
 
         $this->processRequestParameters();
-
+        $play = (bool)$controller->getParameter('play');
         if ($element = $structureManager->getElementById($this->id)) {
             $filePath = $this->getService('PathsManager')->getPath('releases') . $element->file;
             if (strpos($this->id, '/') === false && strpos($this->id, '\\') === false && is_file($filePath)) {
                 if ($element->structureType == 'zxRelease' && !$this->isCrawlerDetected()) {
-                    if ($controller->getParameter('play')) {
+                    if ($play) {
                         $element->incrementPlays();
                     } else {
                         $element->incrementDownloads();
                     }
+                    $structureManager->clearElementCache($element->id);
                 }
                 if ($this->mode == 'view') {
                     $this->renderer->setContentDisposition('inline');
