@@ -304,7 +304,7 @@ class zxMusicElement extends ZxArtItem implements
             if ($authors = $this->getRealAuthorsList()) {
                 foreach ($authors as $author) {
                     if ($author->zxTunesId > 0) {
-                        $result = 'http://zxtunes.com/author.php?id=' . $author->zxTunesId . '&play=' . $this->zxTunesId;
+                        $result = 'https://zxtunes.com/author.php?id=' . $author->zxTunesId . '&play=' . $this->zxTunesId;
                     }
                 }
             }
@@ -427,11 +427,7 @@ class zxMusicElement extends ZxArtItem implements
         return false;
     }
 
-    /**
-     * @return ((float|int|mixed|string)[]|int|mixed|string)[]
-     *
-     * @psalm-return array{'@context': 'http://schema.org/', '@type': 'MusicRecording', encodingFormat: 'audio/mpeg', name: string, url: mixed, description: mixed, commentCount: int, author: array{'@type': 'Person', name: mixed}, byArtist: array{'@type': 'Person', name: mixed}, aggregateRating?: array{'@type': 'AggregateRating', ratingValue: float, 'ratingCount ': int}, audio?: mixed, duration?: mixed, datePublished?: int, keywords?: mixed}
-     */
+
     public function getLdJsonScriptData()
     {
         $data = [
@@ -456,7 +452,7 @@ class zxMusicElement extends ZxArtItem implements
             $data["aggregateRating"] = [
                 "@type" => 'AggregateRating',
                 "ratingValue" => $this->votes,
-                "ratingCount " => $this->votesAmount,
+                "ratingCount" => $this->votesAmount,
             ];
         }
         if ($path = $this->getMp3FilePath()) {

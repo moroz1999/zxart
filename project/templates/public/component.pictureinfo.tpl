@@ -187,7 +187,7 @@
 			{translations name='picture.artcity'}:
 		</td>
 		<td class='info_table_value'>
-			<a href="http://artcity.bitfellas.org/index.php?a=show&id={$element->artCityId}">http://artcity.bitfellas.org/index.php?a=show&id={$element->artCityId}</a>
+			<a href="https://artcity.bitfellas.org/index.php?a=show&id={$element->artCityId}">http://artcity.bitfellas.org/index.php?a=show&id={$element->artCityId}</a>
 		</td>
 	</tr>
 	{/if}

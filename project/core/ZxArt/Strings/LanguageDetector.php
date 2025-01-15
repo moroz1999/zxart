@@ -8,6 +8,8 @@ class LanguageDetector
 {
     public function detectLanguage(string $text): ?string
     {
+        $text = strip_tags($text);
+
         $engPattern = '/[a-zA-Z]/';
         $rusPattern = '/[а-яА-ЯёЁ]/u';
         $spaPattern = '/[áéíóúüñÁÉÍÓÚÜÑ]/u';

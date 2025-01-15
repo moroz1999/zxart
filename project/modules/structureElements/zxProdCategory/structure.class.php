@@ -79,28 +79,23 @@ class zxProdCategoryElement extends structureElement implements
         return $result;
     }
 
-    /**
-     * @return false|int
-     */
-    public function getParentCategoryId(): int|false
+    public function getParentCategoryId(): ?int
     {
         /**
          * @var structureManager $structureManager
          */
         $structureManager = $this->getService('structureManager');
         if ($parentElement = $structureManager->getElementsFirstParent($this->id, false, 'structure')) {
-            if ($parentElement->structureType == 'zxProdCategory') {
+            if ($parentElement->structureType === 'zxProdCategory') {
                 return $parentElement->id;
             }
         }
 
-        return false;
+        return null;
     }
 
-    /**
-     * @return ?structureElement
-     */
-    public function getParentCategory()
+
+    public function getParentCategory(): ?zxProdCategoryElement
     {
         /**
          * @var structureManager $structureManager
@@ -112,6 +107,15 @@ class zxProdCategoryElement extends structureElement implements
             }
         }
         return null;
+    }
+
+    public function getRootCategory(): ?zxProdCategoryElement
+    {
+        $rootCategory = $this;
+        while ($parentElement = $rootCategory->getParentCategory()) {
+            $rootCategory = $parentElement;
+        }
+        return $rootCategory;
     }
 
     public function getSubCategoriesTreeIds(array &$ids = []): void

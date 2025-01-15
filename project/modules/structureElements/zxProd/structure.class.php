@@ -19,6 +19,8 @@ use ZxArt\Queue\QueueType;
  * @property string[] $language
  * @property string $externalLink
  * @property int $party
+ * @property int $commentsAmount
+ * @property int $votesAmount
  * @property int[] $categories
  * @property groupElement[] $publishers
  * @property groupElement[] $groups
@@ -486,7 +488,6 @@ class zxProdElement extends ZxArtItem implements
         $result = [];
         $result = array_merge($result, $this->getFilesList('connectedFile'));
 
-
         foreach ($this->getReleasesList() as $releaseElement) {
             $result = array_merge($result, $releaseElement->getImagesList());
         }
@@ -540,7 +541,7 @@ class zxProdElement extends ZxArtItem implements
                                 'type' => 'zxdb',
                                 'image' => 'icon_sc.png',
                                 'name' => $translationsManager->getTranslationByName('links.link_sc'),
-                                'url' => 'http://spectrumcomputing.co.uk/index.php?cat=96&id=' . $row['importId'],
+                                'url' => 'https://spectrumcomputing.co.uk/index.php?cat=96&id=' . $row['importId'],
                                 'id' => $row['importId'],
                             ];
                             if ($row['importId'] < 28188) {
@@ -549,7 +550,7 @@ class zxProdElement extends ZxArtItem implements
                                     'type' => 'wos',
                                     'image' => 'icon_wos.png',
                                     'name' => $translationsManager->getTranslationByName('links.link_wos'),
-                                    'url' => 'http://www.worldofspectrum.org/infoseekid.cgi?id=' . $row['importId'] . '&loadpics=1',
+                                    'url' => 'https://worldofspectrum.org/software?id=' . $row['importId'],
                                     'id' => $row['importId'],
                                 ];
                             }
@@ -567,7 +568,7 @@ class zxProdElement extends ZxArtItem implements
                             'type' => 'pouet',
                             'image' => 'icon_pouet.png',
                             'name' => $translationsManager->getTranslationByName('links.link_pouet'),
-                            'url' => 'http://www.pouet.net/prod.php?which=' . $row['importId'],
+                            'url' => 'https://www.pouet.net/prod.php?which=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
                     } elseif ($row['importOrigin'] == 'dzoo') {
@@ -583,7 +584,7 @@ class zxProdElement extends ZxArtItem implements
                             'type' => 'zxd',
                             'image' => 'icon_zxd.png',
                             'name' => $translationsManager->getTranslationByName('links.link_zxd'),
-                            'url' => 'http://zxdemo.org/productions/' . $row['importId'] . '/',
+                            'url' => 'https://zxdemo.org/productions/' . $row['importId'] . '/',
                             'id' => $row['importId'],
                         ];
                     } elseif ($row['importOrigin'] == 'maps') {
@@ -616,6 +617,17 @@ class zxProdElement extends ZxArtItem implements
     public function getSearchTitle(): string
     {
         $searchTitle = $this->title;
+        /**
+         * @var translationsManager $translationsManager
+         */
+        $translationsManager = $this->getService('translationsManager');
+        if ($this->seriesProds) {
+            $searchTitle = $translationsManager->getTranslationByName('zxprod.seriesprod') . ': ' . $searchTitle;
+        }
+        if ($this->compilationItems) {
+            $searchTitle = $translationsManager->getTranslationByName('zxprod.compilation') . ': ' . $searchTitle;
+        }
+
         if ($this->year) {
             $searchTitle .= ' (' . $this->year . ')';
         }
@@ -685,23 +697,69 @@ class zxProdElement extends ZxArtItem implements
         return $data;
     }
 
-    /**
-     * @return false
-     */
     public function getLdJsonScriptData()
     {
-//        $data = [
-//            "@context" => "http://schema.org/",
-//            "@type" => "VisualArtwork",
-//            "name" => $this->title,
-//            "url" => $this->getUrl(),
-//        ];
-//        $data["description"] = $this->getTextContent();
-//        if ($imageUrl = $this->getImageUrl(1, true)) {
-//            $data['image'] = $imageUrl;
-//        }
-//        return $data;
-        return false;
+        $data = [
+            "@context" => "http://schema.org/",
+            "@type" => ["SoftwareApplication"],
+            "name" => $this->title,
+            "url" => $this->URL,
+        ];
+        $releases = $this->getReleasesList();
+        $release = $releases[0] ?? null;
+        if ($release !== null) {
+            $computersList = array_intersect($release->hardwareRequired, $release->getHardwareList()['computers']);
+            $dosList = array_intersect($release->hardwareRequired, $release->getHardwareList()['dos']);
+            $translationsManager = $this->getService('translationsManager');
+
+            $computersStrings = [];
+            foreach ($computersList as $computer) {
+                $computersStrings[] = $translationsManager->getTranslationByName('hardware.item_' . $computer);
+            }
+
+            $dosStrings = [];
+            foreach ($dosList as $dos) {
+                $dosStrings[] = $translationsManager->getTranslationByName('hardware.item_' . $dos);
+            }
+
+            $data['availableOnDevice'] = $computersStrings;
+            $data['operatingSystem'] = $dosStrings;
+
+            if ($release->isDownloadable()) {
+                $data['downloadUrl'] = $release->getFileUrl();
+            }
+        }
+
+        $data['applicationSubCategory'] = $this->getCategoriesString();
+        $data['applicationCategory'] = $this->getRootCategoriesString();
+
+        $data["description"] = $this->getTextContent();
+        $data["commentCount"] = $this->commentsAmount;
+        $data["author"] = [
+            "@type" => 'Person',
+            "name" => $this->getAuthorNamesString(),
+        ];
+        if ($this->votesAmount) {
+            $data["aggregateRating"] = [
+                "@type" => 'AggregateRating',
+                "ratingValue" => $this->votes,
+                "ratingCount" => $this->votesAmount,
+            ];
+        }
+        if ($imageUrl = $this->getImageUrl(1)) {
+            $data['screenshot'] = $imageUrl;
+            $data['image'] = $imageUrl;
+            $data['thumbnailUrl'] = $imageUrl;
+        }
+        if ($this->year) {
+            $data['datePublished'] = $this->year;
+        }
+
+
+        if ($tags = $this->generateTagsText()) {
+            $data['keywords'] = $tags;
+        }
+        return $data;
     }
 
     public function getHardware()
@@ -838,6 +896,25 @@ class zxProdElement extends ZxArtItem implements
             ];
         }
         return $categoriesInfo;
+    }
+
+    public function getCategoriesString(): string
+    {
+        $categoriesNames = [];
+        foreach ($this->getConnectedCategories() as $category) {
+            $categoriesNames[] = html_entity_decode($category->title, ENT_QUOTES);
+        }
+        return implode(', ', array_unique($categoriesNames));
+    }
+
+    public function getRootCategoriesString(): string
+    {
+        $categoriesNames = [];
+        foreach ($this->getConnectedCategories() as $category) {
+            $rootCategory = $category->getRootCategory();
+            $categoriesNames[] = html_entity_decode($rootCategory->title, ENT_QUOTES);
+        }
+        return implode(', ', array_unique($categoriesNames));
     }
 
     /**
@@ -1061,5 +1138,31 @@ class zxProdElement extends ZxArtItem implements
         }
         $this->categories = $checkedCategories;
         $this->checkLinks('categories', 'zxProdCategory');
+    }
+
+    public function getCategoriesCatalogue(): ?zxProdCategoriesCatalogueElement
+    {
+        $structureManager = $this->getService(structureManager::class);
+        $languagesManager = $this->getService(LanguagesManager::class);
+
+        if ($categoriesElements = $structureManager->getElementsByType(
+            'zxProdCategoriesCatalogue',
+            $languagesManager->getCurrentLanguageId()
+        )) {
+            if ($categoriesElement = reset($categoriesElements)) {
+                return $categoriesElement;
+            }
+        }
+        return null;
+    }
+
+    public function getCatalogueUrl($parameters): string
+    {
+        $categoriesCatalogue = $this->getCategoriesCatalogue();
+        $url = $categoriesCatalogue ? $categoriesCatalogue->getUrl() : "";
+        foreach ($parameters as $key => $value) {
+            $url .= $key . ':' . $value . '/';
+        }
+        return $url;
     }
 }

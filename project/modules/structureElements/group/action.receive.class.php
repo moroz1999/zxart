@@ -30,7 +30,7 @@ class receiveGroup extends structureElementAction
             $structureElement->persistSubGroupConnections();
 
             $authorshipRepository = $this->getService(AuthorshipRepository::class);
-            $authorshipRepository->checkAuthorship(
+            $authorshipRepository->saveAuthorship(
                 $structureElement->id,
                 $structureElement->getValue('addAuthor'),
                 'group',

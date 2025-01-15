@@ -50,9 +50,7 @@
                             {translations name='zxRelease.hardwareRequired'}:
                         </td>
                         <td class='info_table_value'>
-                            {foreach $element->hardwareRequired as $hardwareItem}
-                                {translations name="hardware.item_{$hardwareItem}"}
-                            {/foreach}
+                            {include file=$theme->template("component.hardware.tpl") element=$element}
                         </td>
                     </tr>
                 {/if}
@@ -62,7 +60,7 @@
                             {translations name='zxrelease.language'}:
                         </td>
                         <td class='info_table_value'>
-                            {$element->getSupportedLanguageString()}
+                            {include file=$theme->template("component.languagelinks.tpl") element=$element}
                         </td>
                     </tr>
                 {/if}
@@ -92,7 +90,7 @@
                             {translations name='zxrelease.year'}:
                         </td>
                         <td class='info_table_value'>
-                            <a href="{$picturesDetailedSearchElement->URL}startYear:{$element->year}/endYear:{$element->year}/">{$element->year}</a>
+                            <a href="{$element->getCatalogueUrl(['years' => $element->getYear()])}">{$element->getYear()}</a>
                         </td>
                     </tr>
                 {/if}

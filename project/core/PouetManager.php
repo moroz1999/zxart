@@ -571,7 +571,7 @@ class PouetManager extends errorLogger
     protected function download($id)
     {
         $prodData = false;
-        $link = 'http://api.pouet.net/v1/prod/?id=' . $id;
+        $link = 'https://api.pouet.net/v1/prod/?id=' . $id;
         $string = $this->attemptDownload($link);
         if (!$string) {
             $this->markProgress('prod ' . $id . ' download attempt 2');

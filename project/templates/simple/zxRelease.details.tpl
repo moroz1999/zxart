@@ -48,7 +48,7 @@
 					{translations name='zxrelease.language'}:
 				</td>
 				<td class='info_table_value'>
-					{$element->getSupportedLanguageString()}
+					{include file=$theme->template("component.languagelinks.tpl") element=$element}
 				</td>
 			</tr>
 		{/if}

@@ -94,7 +94,7 @@ trait AuthorTrait
                             'type' => 'sc',
                             'image' => 'icon_sc.png',
                             'name' => $translationsManager->getTranslationByName('links.link_sc'),
-                            'url' => 'http://spectrumcomputing.co.uk/index.php?cat=999&label_id=' . $row['importId'],
+                            'url' => 'https://spectrumcomputing.co.uk/index.php?cat=999&label_id=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
                     } elseif ($row['importOrigin'] == '3a') {
@@ -139,7 +139,7 @@ trait AuthorTrait
                     'type' => 'swiki',
                     'image' => 'icon_swiki.png',
                     'name' => $translationsManager->getTranslationByName('links.link_swiki'),
-                    'url' => 'http://speccy.info/' . $this->wikiLink,
+                    'url' => 'https://speccy.info/' . $this->wikiLink,
                     'id' => $this->wikiLink,
                 ];
             }
@@ -148,7 +148,7 @@ trait AuthorTrait
                     'type' => 'zxt',
                     'image' => 'icon_zxt.png',
                     'name' => $translationsManager->getTranslationByName('links.link_zxt'),
-                    'url' => 'http://zxtunes.com/author.php?id=' . $this->zxTunesId,
+                    'url' => 'https://zxtunes.com/author.php?id=' . $this->zxTunesId,
                     'id' => $this->zxTunesId,
                 ];
             }
@@ -157,7 +157,7 @@ trait AuthorTrait
                     'type' => 'ac',
                     'image' => 'icon_ac.png',
                     'name' => $translationsManager->getTranslationByName('links.link_ac'),
-                    'url' => 'http://artcity.bitfellas.org/index.php?a=artist&id=' . $this->artCityId,
+                    'url' => 'https://artcity.bitfellas.org/index.php?a=artist&id=' . $this->artCityId,
                     'id' => $this->artCityId,
                 ];
             }

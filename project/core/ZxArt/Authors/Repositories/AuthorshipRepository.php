@@ -6,7 +6,7 @@ namespace ZxArt\Authors\Repositories;
 
 use Illuminate\Database\Connection;
 use JsonException;
-use \structureManager;
+use structureManager;
 
 final class AuthorshipRepository
 {
@@ -110,7 +110,7 @@ final class AuthorshipRepository
     /**
      * @throws JsonException
      */
-    public function checkAuthorship(int $elementId, int|string $authorId, string $type, array $roles = [], int|string|false $startDate = 0, int|string|false $endDate = 0): void
+    public function addAuthorship(int $elementId, int|string $authorId, string $type, array $roles = [], int|string|false $startDate = 0, int|string|false $endDate = 0): void
     {
         if ($existingRecord = $this->db
             ->table('authorship')
@@ -121,44 +121,54 @@ final class AuthorshipRepository
             ->first()
         ) {
             $existingRoles = json_decode($existingRecord['roles'], true, 512, JSON_THROW_ON_ERROR);
-
-            $data = [
-                'roles' => json_encode(
-                    array_values(
-                        array_unique(
-                            array_merge($roles, $existingRoles)
-                        )
-                    ), JSON_THROW_ON_ERROR),
-            ];
-            if ($startDate) {
-                $data['startDate'] = $startDate;
+            if (!is_array($existingRoles)) {
+                $existingRoles = [];
             }
-            if ($endDate) {
-                $data['endDate'] = $endDate;
-            }
-            $this->db
-                ->table('authorship')
-                ->where('elementId', '=', $elementId)
-                ->where('authorId', '=', $authorId)
-                ->update($data);
+            $allRoles = array_unique(array_merge($roles, $existingRoles));
+            array_filter($allRoles, fn($role) => $role !== 'unknown');
+            $this->updateRoles($elementId, (int)$authorId, $type, $allRoles, (int)$startDate, (int)$endDate);
         } else {
-            $data = [
-                'elementId' => $elementId,
-                'type' => $type,
-                'authorId' => $authorId,
-                'roles' => json_encode(array_unique($roles), JSON_THROW_ON_ERROR),
-            ];
-            if ($startDate) {
-                $data['startDate'] = $startDate;
-            }
-            if ($endDate) {
-                $data['endDate'] = $endDate;
-            }
-
-            $this->db
-                ->table('authorship')
-                ->insert($data);
+            $this->insertRoles($elementId, (int)$authorId, $type, $roles, (int)$startDate, (int)$endDate);
         }
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function saveAuthorship(int $elementId, int|string $authorId, string $type, array $roles = [], int|string|false $startDate = 0, int|string|false $endDate = 0): void
+    {
+        if ($this->db
+            ->table('authorship')
+            ->where('elementId', '=', $elementId)
+            ->where('authorId', '=', $authorId)
+            ->where('type', '=', $type)
+            ->first()
+        ) {
+            $roles = array_filter($roles, fn($role) => $role !== 'unknown');
+            $this->updateRoles($elementId, (int)$authorId, $type, $roles, (int)$startDate, (int)$endDate);
+        } else {
+            $this->insertRoles($elementId, (int)$authorId, $type, $roles, (int)$startDate, (int)$endDate);
+        }
+    }
+
+    private function insertRoles(int $elementId, int $authorId, string $type, array $roles, int $startDate, int $endDate): void
+    {
+        $data = [
+            'elementId' => $elementId,
+            'type' => $type,
+            'authorId' => $authorId,
+            'roles' => json_encode(array_unique($roles), JSON_THROW_ON_ERROR),
+        ];
+        if ($startDate) {
+            $data['startDate'] = $startDate;
+        }
+        if ($endDate) {
+            $data['endDate'] = $endDate;
+        }
+
+        $this->db
+            ->table('authorship')
+            ->insert($data);
     }
 
     public function deleteAuthorship(int $elementId, $authorId, string $type): bool
@@ -212,6 +222,30 @@ final class AuthorshipRepository
             }
         }
         return $info;
+    }
+
+    private function updateRoles(int $elementId, int $authorId, string $type, array $roles, int $startDate, int $endDate): void
+    {
+        if ($roles === []) {
+            $roles = ['unknown'];
+        }
+        $updatedRoles = array_values($roles);
+
+        $data = [
+            'roles' => json_encode($updatedRoles, JSON_THROW_ON_ERROR),
+        ];
+        if ($startDate) {
+            $data['startDate'] = $startDate;
+        }
+        if ($endDate) {
+            $data['endDate'] = $endDate;
+        }
+        $this->db
+            ->table('authorship')
+            ->where('elementId', '=', $elementId)
+            ->where('authorId', '=', $authorId)
+            ->where('type', '=', $type)
+            ->update($data);
     }
 
 }

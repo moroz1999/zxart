@@ -6,7 +6,7 @@
 		</a>
 	</td>
 	<td class='zxrelease_table_year'>
-		{$element->getYear()}
+		<a href="{$element->getCatalogueUrl(['years' => $element->getYear()])}">{$element->getYear()}</a>
 	</td>
 	<td class='zxrelease_table_play zxrelease_play'>
 		{if $element->isPlayable() && $element->isDownloadable()}
@@ -31,7 +31,7 @@
 		{/if}
 	</td>
 	<td class='zxrelease_table_language'>
-		{$element->getSupportedLanguageString()}
+		{include file=$theme->template("component.languagelinks.tpl") element=$element}
 	</td>
 	<td class='zxrelease_table_version'>
 		{$element->version}
@@ -45,9 +45,7 @@
 		{/foreach}
 	</td>
 	<td class='zxrelease_table_hardware'>
-		{foreach $element->hardwareRequired as $hardware}
-			<div class="zxrelease_table_hardware_item">{translations name="hardware.item_{$hardware}"}</div>
-		{/foreach}
+		{include file=$theme->template("component.hardware.tpl") element=$element}
 		<div class="zxrelease_table_description">
 			{$element->description}
 		</div>

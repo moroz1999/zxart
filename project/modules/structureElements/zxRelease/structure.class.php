@@ -326,11 +326,6 @@ class zxReleaseElement extends ZxArtItem implements
         return $this->getProd()->getLegalStatus();
     }
 
-    /**
-     * @return string[]
-     *
-     * @psalm-return list{'unknown', 'original', 'rerelease', 'adaptation', 'localization', 'mod', 'crack', 'mia', 'corrupted', 'compilation', 'incomplete', 'demoversion'}
-     */
     public function getReleaseTypes(): array
     {
         return [
@@ -493,7 +488,6 @@ class zxReleaseElement extends ZxArtItem implements
         $user = $this->getService('user');
         $privileges = $this->getService('privilegesManager')->getElementPrivileges($this->id);
 
-
         return !in_array($this->getLegalStatus(), ['forbidden', 'forbiddenzxart', 'insales']) ||
             $this->releaseType === 'demoversion' ||
             !empty($privileges['zxRelease']['downloadDenied']) ||
@@ -526,7 +520,7 @@ class zxReleaseElement extends ZxArtItem implements
                             'type' => 'pouet',
                             'image' => 'icon_pouet.png',
                             'name' => $translationsManager->getTranslationByName('links.link_pouet'),
-                            'url' => 'http://www.pouet.net/prod.php?which=' . $row['importId'],
+                            'url' => 'https://www.pouet.net/prod.php?which=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
                     } elseif ($row['importOrigin'] == 'vt' && $prod->getLegalStatus() !== 'insales') {
@@ -597,24 +591,64 @@ class zxReleaseElement extends ZxArtItem implements
         return false;
     }
 
-    /**
-     * @return false
-     */
     public function getLdJsonScriptData()
     {
-//        $data = [
-//            "@context" => "http://schema.org/",
-//            "@type" => "VisualArtwork",
-//            "name" => $this->title,
-//            "url" => $this->URL,
-//        ];
-//        $data["description"] = $this->getTextContent();
-//        if ($imageUrl = $this->getImageUrl(1, true)) {
-//            $data['image'] = $imageUrl;
-//        }
-//        return $data;
-        return false;
+        $data = [
+            "@context" => "http://schema.org/",
+            "@type" => ["SoftwareApplication"],
+            "name" => $this->title,
+            "url" => $this->URL,
+        ];
+        $computersList = array_intersect($this->hardwareRequired, $this->getHardwareList()['computers']);
+        $dosList = array_intersect($this->hardwareRequired, $this->getHardwareList()['dos']);
+        $translationsManager = $this->getService('translationsManager');
+
+        $computersStrings = [];
+        foreach ($computersList as $computer) {
+            $computersStrings[] = $translationsManager->getTranslationByName('hardware.item_' . $computer);
+        }
+
+        $dosStrings = [];
+        foreach ($dosList as $dos) {
+            $dosStrings[] = $translationsManager->getTranslationByName('hardware.item_' . $dos);
+        }
+
+        $data['availableOnDevice'] = $computersStrings;
+        $data['operatingSystem'] = $dosStrings;
+        $data['applicationSubCategory'] = $this->getProd()->getCategoriesString();
+        $data['applicationCategory'] = $this->getProd()->getRootCategoriesString();
+
+        $data["description"] = $this->getTextContent();
+        $data["commentCount"] = $this->commentsAmount;
+        $data["author"] = [
+            "@type" => 'Person',
+            "name" => $this->getAuthorNamesString(),
+        ];
+        if ($this->votesAmount) {
+            $data["aggregateRating"] = [
+                "@type" => 'AggregateRating',
+                "ratingValue" => $this->votes,
+                "ratingCount" => $this->votesAmount,
+            ];
+        }
+        if ($imageUrl = $this->getImageUrl(1)) {
+            $data['screenshot'] = $imageUrl;
+            $data['image'] = $imageUrl;
+            $data['thumbnailUrl'] = $imageUrl;
+        }
+        if ($this->year) {
+            $data['datePublished'] = $this->year;
+        }
+        if ($this->isDownloadable()) {
+            $data['downloadUrl'] = $this->getFileUrl();
+        }
+
+        if ($tags = $this->generateTagsText()) {
+            $data['keywords'] = $tags;
+        }
+        return $data;
     }
+
 
     /**
      * @psalm-return array<never, never>
@@ -839,5 +873,50 @@ class zxReleaseElement extends ZxArtItem implements
         $controller = controller::getInstance();
         $fileId = $controller->getParameter('fileId');
         return $fileId === false ? null : (int)$fileId;
+    }
+
+    public function getCatalogueUrl($parameters): string
+    {
+        $prodElement = $this->getProd();
+        if (!$prodElement) {
+            return '';
+        }
+        return $prodElement->getCatalogueUrl($parameters);
+    }
+
+    public function getHardwareMap(): array
+    {
+        $tempMap = [];
+
+        foreach ($this->hardwareRequired as $item) {
+            $type = $this->getHardwareType($item);
+            if ($type === null) {
+                continue;
+            }
+            $tempMap[$type][] = $item;
+        }
+
+        $map = [];
+
+        foreach ($this->getHardwareList() as $type => $items) {
+            if (!empty($tempMap[$type])) {
+                $map[$type] = $tempMap[$type];
+            }
+        }
+
+        return $map;
+    }
+
+    public function getIconByHwType(string $hardwareType): string
+    {
+        return match ($hardwareType) {
+            'computers' => '🖥️',
+            'storage' => '💾',
+            'dos' => '🗂️',
+            'sound' => '🔊',
+            'controls' => '🎮',
+            'expansion' => '🛠️',
+            default => null,
+        };
     }
 }

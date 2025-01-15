@@ -16,7 +16,7 @@
 						<tr>
 							<td class="header_left">
 								<a class="logo_block" href="{$controller->baseURL}">
-									<img class="logo_image" src="{$imagesUrl}logo.png" alt=""/>
+									<img class="logo_image" src="{$imagesUrl}logo.png" alt="Logo"/>
 								</a>
 							</td>
 							<td class="header_right">

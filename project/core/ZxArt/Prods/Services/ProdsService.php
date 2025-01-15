@@ -403,7 +403,7 @@ class ProdsService extends ElementsManager
         if (($this->forceUpdateAuthors || $justCreated || !$authorsInfo) && !empty($prodInfo['authors'])) {
             foreach ($prodInfo['authors'] as $importAuthorId => $roles) {
                 if ($authorId = $this->getElementIdByImportId($importAuthorId, $origin, 'author')) {
-                    $this->authorshipRepository->checkAuthorship($element->id, $authorId, 'prod', $roles);
+                    $this->authorshipRepository->addAuthorship($element->id, $authorId, 'prod', $roles);
                 }
             }
         }
@@ -622,7 +622,7 @@ class ProdsService extends ElementsManager
 
     protected function linkReleaseWithAuthor($authorId, int $prodId, $roles = []): void
     {
-        $this->authorshipRepository->checkAuthorship($prodId, $authorId, 'release', $roles);
+        $this->authorshipRepository->addAuthorship($prodId, $authorId, 'release', $roles);
     }
 
     protected function linkReleaseWithPublisher($publisherId, int $prodId): void

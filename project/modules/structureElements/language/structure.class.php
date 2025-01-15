@@ -72,14 +72,14 @@ class languageElement extends structureElement implements MetadataProviderInterf
         return $this->mainMenuElements;
     }
 
-    public function getFirstPageElement()
+    public function getFirstPageElement(): ?structureElement
     {
         if ($this->firstPageElement === null) {
             $structureManager = $this->getService('structureManager');
             if ($mainMenuElements = $structureManager->getElementsChildren($this->id, 'container')) {
                 $this->firstPageElement = reset($mainMenuElements);
             } else {
-                $this->firstPageElement = false;
+                $this->firstPageElement = null;
             }
         }
         return $this->firstPageElement;
@@ -99,8 +99,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
             }
             if (!$this->currentMainMenu) {
                 $structureManager = $this->getService('structureManager');
-                $controller = $this->getService('controller');
-                if ($chain = $structureManager->getElementsChain($controller->requestedPath)) {
+                if ($chain = $structureManager->getElementsChain($structureManager->getRequestedPath())) {
                     $this->currentMainMenu = last($chain);
                 }
             }

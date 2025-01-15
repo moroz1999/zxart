@@ -56,14 +56,14 @@ class printApplication extends controllerApplication
                     $imageHCm = $canvasHCm - $canvasPaddingCm * 2 - $textPaddingCm;
                     $textTopCm = $canvasPaddingCm + $imageHCm + ($textPaddingCm - $fontSizeCm) / 2;
 
-                    $canvasWPx = round($canvasWCm / $inchCm * $dpi);
-                    $canvasHPx = round($canvasHCm / $inchCm * $dpi);
-                    $imageWPx = round($imageWCm / $inchCm * $dpi);
-                    $imageHPx = round($imageHCm / $inchCm * $dpi);
-                    $textPaddingPx = round($textPaddingCm / $inchCm * $dpi);
-                    $canvasPaddingPx = round($canvasPaddingCm / $inchCm * $dpi);
-                    $textTopPx = round($textTopCm / $inchCm * $dpi);
-                    $fontSizePx = round($fontSizeCm / $inchCm * $dpi);
+                    $canvasWPx = (int)round($canvasWCm / $inchCm * $dpi);
+                    $canvasHPx = (int)round($canvasHCm / $inchCm * $dpi);
+                    $imageWPx = (int)round($imageWCm / $inchCm * $dpi);
+                    $imageHPx = (int)round($imageHCm / $inchCm * $dpi);
+                    $textPaddingPx = (int)round($textPaddingCm / $inchCm * $dpi);
+                    $canvasPaddingPx = (int)round($canvasPaddingCm / $inchCm * $dpi);
+                    $textTopPx = (int)round($textTopCm / $inchCm * $dpi);
+                    $fontSizePx = (int)round($fontSizeCm / $inchCm * $dpi);
                     $fontPath = ROOT_PATH . 'project/fonts/Carlito-Regular.ttf';
                     $text = '';
                     $authors = [];
@@ -92,7 +92,7 @@ class printApplication extends controllerApplication
                     }
                     $text .= $zxPictureElement->title;
 
-                    $fileName = $zxPictureElement->getFileName('image', true, false).'_300dpi.png';
+                    $fileName = $zxPictureElement->getFileName('image', true, false) . '_300dpi.png';
                     if (is_file($filePath)) {
                         $configManager = $this->getService('ConfigManager');
                         $pathsManager = $this->getService('PathsManager');
@@ -100,24 +100,55 @@ class printApplication extends controllerApplication
                         $imageProcess = new \ImageProcess\ImageProcess($pathsManager->getPath('imagesCache'));
                         $imageProcess->setDefaultCachePermissions($configManager->get('paths.defaultCachePermissions'));
                         $imageProcess->registerImage('canvas', $filePath);
+                        $imageProcess = new \ImageProcess\ImageProcess($pathsManager->getPath('imagesCache'));
+                        $imageProcess->setDefaultCachePermissions($configManager->get('paths.defaultCachePermissions'));
+                        $imageProcess->registerImage('canvas', $filePath);
+
                         $imageProcess->registerFilter(
                             'aspectedResize',
-                            'width=' . $imageWPx . ', height=' . $imageHPx . ', interpolation=' . IMG_NEAREST_NEIGHBOUR
+                            [
+                                'width' => $imageWPx,
+                                'height' => $imageHPx,
+                                'interpolation' => IMG_NEAREST_NEIGHBOUR
+                            ]
                         );
+
                         $imageProcess->registerFilter(
                             'crop',
-                            'width=' . $imageWPx . ', height=' . ($imageHPx + $textPaddingPx) . ', color=ffffff, valign=top, halign=center'
+                            [
+                                'width' => $imageWPx,
+                                'height' => $imageHPx + $textPaddingPx,
+                                'color' => 'ffffff',
+                                'valign' => 'top',
+                                'halign' => 'center'
+                            ]
                         );
+
                         $imageProcess->registerFilter(
                             'crop',
-                            'width=' . $canvasWPx . ', height=' . $canvasHPx . ', color=ffffff, valign=center, halign=center'
+                            [
+                                'width' => $canvasWPx,
+                                'height' => $canvasHPx,
+                                'color' => 'ffffff',
+                                'valign' => 'center',
+                                'halign' => 'center'
+                            ]
                         );
+
                         $imageProcess->registerFilter(
                             'text',
-                            'fontFile=' . $fontPath . ', color=000000, align=center, left=' . $canvasPaddingPx . ', right=' . $canvasPaddingPx . ', top=' . $textTopPx . ', fontSize=' . $fontSizePx . ', text=' . urlencode(
-                                $text
-                            )
+                            [
+                                'fontFile' => $fontPath,
+                                'color' => '000000',
+                                'align' => 'center',
+                                'left' => $canvasPaddingPx,
+                                'right' => $canvasPaddingPx,
+                                'top' => $textTopPx,
+                                'fontSize' => $fontSizePx,
+                                'text' => urlencode($text)
+                            ]
                         );
+
                         $imageProcess->registerExport('canvas', 'png', ROOT_PATH . $fileName);
                         $imageProcess->setImagesCaching(false);
                         $imageProcess->executeProcess();

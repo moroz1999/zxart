@@ -205,14 +205,15 @@ class pressArticleElement extends structureElement implements SearchContentHolde
         return $content;
     }
 
-    public function getTextContent(): string
+    public function getTextContent(array $stripTags = ['div', 'p', 'span', 'img', 'br']): string
     {
-        return html_entity_decode($this->getFormattedContent(['div', 'p', 'span', 'img', 'br']));
+        return html_entity_decode($this->getFormattedContent($stripTags));
     }
 
-    public function getAITextContent(): string
+    public function getAITextContent(bool $stripImages = true): string
     {
-        $content = $this->getTextContent();
+        $stripTags = $stripImages ? ['div', 'p', 'span', 'img', 'br'] : ['div', 'p', 'span', 'br'];
+        $content = $this->getTextContent($stripTags);
         return str_replace(["-\n", "\r"], '', $content);
     }
 

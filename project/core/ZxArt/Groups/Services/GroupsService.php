@@ -331,10 +331,6 @@ class GroupsService extends ElementsManager
                 foreach ($groupAliasElement->getGroupProds() as $zxProd) {
                     $this->linksManager->linkElements($groupElement->id, $zxProd->getId(), 'zxProdGroups');
                 }
-//                foreach ($groupAliasElement->publishedReleases as $zxRelease) {
-//                    $this->checkAuthorship($zxRelease->id, $authorElement->id, 'release', ['release']);
-//                }
-
 
                 $this->db->table('authorship')
                     ->where('elementId', '=', $groupAliasElement->id)

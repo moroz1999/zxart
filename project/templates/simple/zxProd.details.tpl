@@ -4,7 +4,7 @@
     <b>{translations name='zxprod.altTitle'}:</b> {$element->altTitle}
 {/if}
 {if $element->language}
-    <b>{translations name='zxprod.language'}: </b>{$element->getSupportedLanguageString()}<br>
+    <b>{translations name='zxprod.language'}: </b>{include file=$theme->template("component.languagelinks.tpl") element=$element}<br>
 {/if}
 <b>{translations name='zxProd.legalstatus'}: </b> {translations name="legalstatus.{$element->getLegalStatus()}"}<br>
 {if $groups=$element->getGroupsList()}

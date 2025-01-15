@@ -425,16 +425,12 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         return ['view'];
     }
 
-    /**
-     * @return ((float|int|mixed|string)[]|int|mixed|string)[]
-     *
-     * @psalm-return array{'@context': 'http://schema.org/', '@type': 'MediaObject', encodingFormat: 'image/png', name: string, url: mixed, description: mixed, commentCount: int, author: array{'@type': 'Person', name: mixed}, aggregateRating?: array{'@type': 'AggregateRating', ratingValue: float, 'ratingCount ': int}, image?: mixed, thumbnailUrl?: mixed, datePublished?: int, keywords?: mixed}
-     */
+
     public function getLdJsonScriptData()
     {
         $data = [
             "@context" => "http://schema.org/",
-            "@type" => "MediaObject",
+            "@type" => ["VisualArtwork", "MediaObject"],
             "encodingFormat" => 'image/png',
             "name" => $this->title,
             "url" => $this->URL,
@@ -446,11 +442,15 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
             "@type" => 'Person',
             "name" => $this->getAuthorNamesString(),
         ];
+        $data["artist"] = [
+            "@type" => 'Person',
+            "name" => $this->getAuthorNamesString(),
+        ];
         if ($this->votesAmount) {
             $data["aggregateRating"] = [
                 "@type" => 'AggregateRating',
                 "ratingValue" => $this->votes,
-                "ratingCount " => $this->votesAmount,
+                "ratingCount" => $this->votesAmount,
             ];
         }
         if ($imageUrl = $this->getImageUrl(1)) {
@@ -463,6 +463,8 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         if ($tags = $this->generateTagsText()) {
             $data['keywords'] = $tags;
         }
+        $data['artMedium'] = 'Digital';
+        $data['artform'] = 'Drawing';
         return $data;
     }
 

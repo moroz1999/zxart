@@ -110,4 +110,14 @@ trait HardwareProvider
             ],
         ];
     }
+
+    public function getHardwareType($item): ?string
+    {
+        foreach ($this->getHardwareList() as $type => $list) {
+            if (in_array($item, $list, true)) {
+                return $type;
+            }
+        }
+        return null;
+    }
 }

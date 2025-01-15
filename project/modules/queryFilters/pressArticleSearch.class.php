@@ -1,7 +1,16 @@
 <?php
 
-class pressArticleSearchQueryFilter extends searchQueryFilter
+use Illuminate\Database\Query\Builder;
+use ZxArt\Search\ExtraSearchFiltersInterface;
+
+class pressArticleSearchQueryFilter extends searchQueryFilter implements ExtraSearchFiltersInterface
 {
+    public function assignExtraFilters(Builder $query): Builder
+    {
+        $languagesManager = $this->getService('LanguagesManager');
+        $query->where('languageId', '=', $languagesManager->getCurrentLanguageId());
+        return $query;
+    }
 
     protected function getTypeName(): string
     {

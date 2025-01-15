@@ -58,7 +58,7 @@ trait Group
                             'type' => 'sc',
                             'image' => 'icon_sc.png',
                             'name' => $translationsManager->getTranslationByName('links.link_sc'),
-                            'url' => 'http://spectrumcomputing.co.uk/index.php?cat=999&label_id=' . $row['importId'],
+                            'url' => 'https://spectrumcomputing.co.uk/index.php?cat=999&label_id=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
                     } elseif ($row['importOrigin'] == '3a') {
@@ -87,7 +87,7 @@ trait Group
                     'type' => 'swiki',
                     'image' => 'icon_swiki.png',
                     'name' => $translationsManager->getTranslationByName('links.link_swiki'),
-                    'url' => 'http://speccy.info/' . $this->wikiLink,
+                    'url' => 'https://speccy.info/' . $this->wikiLink,
                     'id' => $this->wikiLink,
                 ];
             }

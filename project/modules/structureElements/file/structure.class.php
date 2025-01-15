@@ -71,22 +71,25 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         return $this->fileName;
     }
 
-    public function getZxImageUrl(bool $full = false, int $zoom = 1) {
+    public function getZxImageUrl(bool $full = false, int $zoom = 1)
+    {
         return $this->generateImageUrl($full, $zoom, 'original');
     }
 
-    public function getImageUrl(string $preset = 'original', $mobile = false): ?string {
+    public function getImageUrl(string $preset = 'original', $mobile = false): ?string
+    {
         $full = stripos($preset, 'full') !== false;
         $zoom = $full ? 2 : 1;
         return $this->generateImageUrl($full, $zoom, $preset);
     }
 
-    private function generateImageUrl(bool $full, int $zoom, string $preset): ?string {
+    private function generateImageUrl(bool $full, int $zoom, string $preset): ?string
+    {
         $baseUrl = $this->getService('controller')->baseURL;
         $extension = strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION));
         $type = $this->resolveFileType($extension);
 
-        if (!$type) {
+        if ($type === null) {
             return $this->buildFallbackUrl($baseUrl, $full, $preset);
         }
 
@@ -101,7 +104,8 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         return Helper::getUrl($params);
     }
 
-    private function resolveFileType(string $extension): ?string {
+    private function resolveFileType(string $extension): ?string
+    {
         return match ($extension) {
             'scr' => 'standard',
             'img' => 'gigascreen',
@@ -114,8 +118,11 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         };
     }
 
-    private function buildFallbackUrl(string $baseUrl, bool $full, string $preset): string {
-        if ($full) {
+    private function buildFallbackUrl(string $baseUrl, bool $full, string $preset): string
+    {
+        $extension = $this->getFileExtension();
+
+        if ($full || $extension === 'gif') {
             return $baseUrl . 'screenshot/id:' . $this->file . '/filename:' . $this->fileName;
         }
         $filename = pathinfo($this->fileName, PATHINFO_FILENAME);

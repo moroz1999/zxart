@@ -16,7 +16,7 @@ trait AuthorshipPersister
         $startDates = $this->getValue('addAuthorStartDate');
         $endDates = $this->getValue('addAuthorEndDate');
         if ($addAuthorId = $this->getValue('addAuthor')) {
-            $authorshipRepository->checkAuthorship(
+            $authorshipRepository->saveAuthorship(
                 $this->getId(),
                 $addAuthorId,
                 $type,
@@ -49,7 +49,7 @@ trait AuthorshipPersister
             $roles = !empty($item['roles']) ? $item['roles'] : ['unknown'];
             $startDate = !empty($item['startDate']) ? strtotime($item['startDate']) : 0;
             $endDate = !empty($item['endDate']) ? strtotime($item['endDate']) : 0;
-            $authorshipRepository->checkAuthorship(
+            $authorshipRepository->saveAuthorship(
                 $this->getId(),
                 $authorId,
                 $type,

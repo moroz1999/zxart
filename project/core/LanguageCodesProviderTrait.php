@@ -49,25 +49,17 @@ trait LanguageCodesProviderTrait
         ];
     }
 
-    /**
-     * @psalm-return list{0?: mixed,...}
-     */
-    public function getSupportedLanguageNames(): array
+    public function getSupportedLanguagesMap(): array
     {
-        $names = [];
+        $languages = [];
         /**
          * @var translationsManager $translationsManager
          */
         $translationsManager = $this->getService('translationsManager');
         foreach ($this->getSupportedLanguageCodes() as $code) {
-            $names[] = $translationsManager->getTranslationByName('language.item_' . $code);
+            $languages[$code] = $translationsManager->getTranslationByName('language.item_' . $code);
         }
-        return $names;
-    }
-
-    public function getSupportedLanguageString(): string
-    {
-        return implode(', ', $this->getSupportedLanguageNames());
+        return $languages;
     }
 
     abstract public function getSupportedLanguageCodes();

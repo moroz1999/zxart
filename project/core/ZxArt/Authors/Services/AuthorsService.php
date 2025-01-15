@@ -251,7 +251,7 @@ class AuthorsService extends ElementsManager
             $roles = $authorInfo['groupRoles'] ?? [];
             foreach ($authorInfo['groupsIds'] as $groupId) {
                 if ($groupElement = $this->getElementByImportId($groupId, $origin, 'group')) {
-                    $this->authorshipRepository->checkAuthorship($groupElement->id, $element->getId(), 'group', $roles);
+                    $this->authorshipRepository->addAuthorship($groupElement->id, $element->getId(), 'group', $roles);
                 }
             }
         }
@@ -565,10 +565,10 @@ class AuthorsService extends ElementsManager
                     $this->structureManager->clearElementCache($zxProd->id);
                 }
                 foreach ($groupElement->getGroupProds() as $zxProd) {
-                    $this->authorshipRepository->checkAuthorship($zxProd->id, $authorElement->id, 'prod');
+                    $this->authorshipRepository->saveAuthorship($zxProd->id, $authorElement->id, 'prod');
                 }
                 foreach ($groupElement->publishedReleases as $zxRelease) {
-                    $this->authorshipRepository->checkAuthorship($zxRelease->id, $authorElement->id, 'release', ['release']);
+                    $this->authorshipRepository->saveAuthorship($zxRelease->id, $authorElement->id, 'release', ['release']);
                 }
 
                 if ($records = $this->db->table('import_origin')

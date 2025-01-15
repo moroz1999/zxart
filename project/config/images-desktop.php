@@ -3,23 +3,23 @@
         'filters' => [
             [
                 'fit',
-                'width=48, height=48',
+                ['width' => 48, 'height' => 48],
             ],
             [
                 'crop',
-                'width=48, height=48, soft=1',
+                ['width' => 48, 'height' => 48, 'soft' => 1],
             ],
             [
                 'sharpen',
-                'amount=50',
+                ['amount' => 50],
             ],
             [
                 'aspectedResize',
-                'width=192, height=192',
+                ['width' => 192, 'height' => 192],
             ],
             [
                 'dither',
-                'method=bayer,offset=0.7',
+                ['method' => 'bayer', 'offset' => 0.7],
             ],
         ],
         'format' => [
@@ -27,14 +27,14 @@
             'png',
             '',
             100,
-            true
+            true,
         ],
     ],
     'groupImage' => [
         'filters' => [
             [
                 'reduce',
-                'width=192, height=192',
+                ['width' => 192, 'height' => 192],
             ],
         ],
         'format' => [
@@ -42,14 +42,14 @@
             'png',
             '',
             100,
-            true
+            true,
         ],
     ],
     'inspiredImage' => [
         'filters' => [
             [
                 'reduce',
-                'width=500, height=400',
+                ['width' => 500, 'height' => 400],
             ],
         ],
         'format' => [
@@ -61,7 +61,7 @@
         'filters' => [
             [
                 'reduce',
-                'width=320, height=240',
+                ['width' => 320, 'height' => 240],
             ],
         ],
         'format' => [
@@ -69,7 +69,7 @@
             'png',
             '',
             100,
-            true
+            true,
         ],
         'path' => 'releases',
     ],
@@ -77,11 +77,11 @@
         'filters' => [
             [
                 'reduce',
-                'height=400',
+                ['height' => 400],
             ],
             [
                 'crop',
-                'width=400, height=400, soft=1',
+                ['width' => 400, 'height' => 400, 'soft' => 1],
             ],
         ],
         'format' => [
@@ -96,7 +96,7 @@
         'filters' => [
             [
                 'crop',
-                'width=256, height=192',
+                ['width' => 256, 'height' => 192],
             ],
         ],
         'format' => [
@@ -104,7 +104,7 @@
             'png',
             '',
             100,
-            true
+            true,
         ],
         'path' => 'releases',
     ],
@@ -112,7 +112,7 @@
         'filters' => [
             [
                 'reduce',
-                'width=400, height=300',
+                ['width' => 400, 'height' => 300],
             ],
         ],
         'format' => [
@@ -124,11 +124,11 @@
         'filters' => [
             [
                 'reduce',
-                'width=200, height=200',
+                ['width' => 200, 'height' => 200],
             ],
             [
                 'crop',
-                'width=200, height=200',
+                ['width' => 200, 'height' => 200],
             ],
         ],
         'format' => [
@@ -136,15 +136,14 @@
             'png',
             '',
             100,
-            true
+            true,
         ],
     ],
-
     'prodMapImage' => [
         'filters' => [
             [
                 'reduce',
-                'width=300, height=300',
+                ['width' => 300, 'height' => 300],
             ],
         ],
         'format' => [
@@ -152,7 +151,7 @@
             'png',
             '',
             100,
-            true
+            true,
         ],
         'path' => 'releases',
     ],
@@ -160,7 +159,7 @@
         'filters' => [
             [
                 'reduce',
-                'width=1920, height=1080',
+                ['width' => 1920, 'height' => 1080],
             ],
         ],
         'format' => [
@@ -168,7 +167,7 @@
             'png',
             '',
             100,
-            true
+            true,
         ],
         'path' => 'releases',
     ],
@@ -176,7 +175,7 @@
         'filters' => [
             [
                 'reduce',
-                'width=250, height=120',
+                ['width' => 250, 'height' => 120],
             ],
         ],
         'format' => [
@@ -191,11 +190,11 @@
         'filters' => [
             [
                 'reduce',
-                'width=270, height=200',
+                ['width' => 270, 'height' => 200],
             ],
             [
                 'crop',
-                'width=270, height=200',
+                ['width' => 270, 'height' => 200],
             ],
         ],
         'format' => [
@@ -203,14 +202,14 @@
             'png',
             '',
             100,
-            true
+            true,
         ],
     ],
     'partyDetails' => [
         'filters' => [
             [
                 'reduce',
-                'width=512, height=300',
+                ['width' => 512, 'height' => 300],
             ],
         ],
         'format' => [
@@ -218,7 +217,7 @@
             'png',
             '',
             100,
-            true
+            true,
         ],
     ],
 ];

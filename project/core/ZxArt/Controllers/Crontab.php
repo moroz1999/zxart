@@ -18,13 +18,13 @@ use rendererPlugin;
 use structureManager;
 use ZxArt\Ai\QueryFailException;
 use ZxArt\Ai\QuerySkipException;
-use ZxArt\Ai\Service\PressArticleSeo;
 use ZxArt\Ai\Service\PressArticleParser;
+use ZxArt\Ai\Service\PressArticleSeo;
 use ZxArt\Ai\Service\ProdQueryService;
 use ZxArt\Ai\Service\TextBeautifier;
 use ZxArt\Ai\Service\Translator;
-use ZxArt\Import\Press\DataUpdater\ArticleSeoDataUpdater;
 use ZxArt\Import\Press\DataUpdater\ArticleParsedDataUpdater;
+use ZxArt\Import\Press\DataUpdater\ArticleSeoDataUpdater;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
@@ -247,7 +247,7 @@ class Crontab extends controllerApplication
     private function queryAiPressBeautifier(): void
     {
         $this->processQueue(QueueType::AI_PRESS_FIX, function (pressArticleElement $pressArticleElement, $counter) {
-            $updatedContent = $this->textBeautifier->beautify($pressArticleElement->getAITextContent());
+            $updatedContent = $this->textBeautifier->beautify($pressArticleElement->getAITextContent(false));
 
             if ($updatedContent) {
                 $destLanguageId = $this->languagesManager->getLanguageId('rus');
@@ -267,7 +267,7 @@ class Crontab extends controllerApplication
         ];
 
         $this->processQueue(QueueType::AI_PRESS_TRANSLATE, function (pressArticleElement $pressArticleElement, $counter) use ($allLanguageCodes) {
-            $content = $pressArticleElement->getAITextContent();
+            $content = $pressArticleElement->getAITextContent(false);
             $contentLanguageCode = $this->languageDetector->detectLanguage($content);
             $languageCodes = $allLanguageCodes[$contentLanguageCode] ?? $allLanguageCodes['rus'];
 

@@ -193,7 +193,7 @@ final class ArticleParsedDataUpdater
         foreach ($authorRoles as $authorId => $roles) {
             $authorElement = $this->authorsMap[$authorId] ?? null;
             if ($authorElement !== null) {
-                $this->authorshipRepository->checkAuthorship($pressElement->id, $authorElement->id, 'prod', $roles);
+                $this->authorshipRepository->addAuthorship($pressElement->id, $authorElement->id, 'prod', $roles);
             }
         }
     }

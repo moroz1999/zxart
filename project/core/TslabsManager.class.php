@@ -27,7 +27,7 @@ class TslabsManager extends errorLogger
     protected $prodsIndex = [];
     protected $counter = 0;
     protected $urls = [
-        'http://prods.tslabs.info/'
+        'https://prods.tslabs.info/'
     ];
     /**
      * @var ProdsService
@@ -46,7 +46,7 @@ class TslabsManager extends errorLogger
      */
     protected $countriesManager;
     protected $origin = 'tsl';
-    protected $rootUrl = 'http://prods.tslabs.info/';
+    protected $rootUrl = 'https://prods.tslabs.info/';
 
     /**
      * @param AuthorsService $authorsManager
