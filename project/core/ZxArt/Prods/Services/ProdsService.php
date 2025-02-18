@@ -4,7 +4,6 @@ namespace ZxArt\Prods\Services;
 
 use ElementsManager;
 use Exception;
-use fileElement;
 use FilesElementTrait;
 use Illuminate;
 use Illuminate\Database\Connection;
@@ -12,7 +11,6 @@ use Illuminate\Database\Query\Builder;
 use ImportIdOperatorTrait;
 use LanguagesManager;
 use linksManager;
-use ZxArt\Parties\Services\PartiesService;
 use PathsManager;
 use pressArticleElement;
 use privilegesManager;
@@ -26,6 +24,7 @@ use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Import\Prods\ProdLabel;
 use ZxArt\Import\Prods\ProdResolver;
+use ZxArt\Parties\Services\PartiesService;
 use ZxArt\Prods\Repositories\ProdsRepository;
 use ZxParsingManager;
 use zxProdElement;
@@ -118,14 +117,14 @@ class ProdsService extends ElementsManager
     )
     {
         $this->columnRelations = [
-            'title' => ['LOWER(title)' => true],
+            'title' => ['title' => true],
             'place' => ['if(partyplace,0,1), partyplace' => true],
             'date' => ['dateCreated' => true, 'id' => true],
             'year' => ['year' => true, 'dateAdded' => true, 'id' => true],
             'votes' => ['votes' => true, 'if(partyplace,0,1), partyplace' => false, 'title' => true],
         ];
         $this->releaseColumnRelations = [
-            'title' => ['LOWER(title)' => true],
+            'title' => ['title' => true],
             'date' => ['dateCreated' => true, 'id' => true],
         ];
     }
@@ -328,7 +327,11 @@ class ProdsService extends ElementsManager
             $changed = true;
             $element->altTitle = $prodInfo['altTitle'];
         }
-        if (!empty($prodInfo['legalStatus']) && $element->legalStatus != $prodInfo['legalStatus']) {
+        if (
+            !empty($prodInfo['legalStatus']) &&
+            (empty($element->legalStatus) || $justCreated) &&
+            $element->legalStatus != $prodInfo['legalStatus']
+        ) {
             $changed = true;
             $element->legalStatus = $prodInfo['legalStatus'];
         }
@@ -505,8 +508,10 @@ class ProdsService extends ElementsManager
         }
 
         if (!empty($prodInfo['maps']) && ($this->forceUpdateImages || $justCreated || !$element->getFilesList('mapFilesSelector'))) {
+            $propertyName = 'mapFilesSelector';
+            $existingFiles = $element->getFilesList($propertyName);
             foreach ($prodInfo['maps'] as $map) {
-                $this->importElementFile($element, $map['url'], $map['author'], 'mapFilesSelector');
+                $this->importElementFile($element, $map['url'], $existingFiles, $map['author'], $propertyName);
             }
         }
 
@@ -515,8 +520,10 @@ class ProdsService extends ElementsManager
         }
 
         if (!empty($prodInfo['rzx'])) {
+            $propertyName = 'rzx';
+            $existingFiles = $element->getFilesList($propertyName);
             foreach ($prodInfo['rzx'] as $rzx) {
-                $this->importElementFile($element, $rzx['url'], $rzx['author'], 'rzx');
+                $this->importElementFile($element, $rzx['url'], $existingFiles, $rzx['author'], 'rzx');
             }
         }
 
@@ -532,13 +539,9 @@ class ProdsService extends ElementsManager
     }
 
     /**
-     * @psalm-param ''|'mapFilesSelector'|'rzx' $fileAuthor
-     *
-     * @return void
-     * @throws Exception
      * @throws Exception
      */
-    private function importElementFile(zxReleaseElement|zxProdElement $element, $fileUrl, $existingFiles, string $fileAuthor = '', string $propertyName = 'connectedFile')
+    private function importElementFile(zxReleaseElement|zxProdElement $element, string $fileUrl, array $existingFiles, string $fileAuthor = '', string $propertyName = 'connectedFile'): void
     {
         $this->structureManager->setNewElementLinkType($element->getConnectedFileType($propertyName));
         $uploadsPath = $this->pathsManager->getPath('uploads');
@@ -631,7 +634,6 @@ class ProdsService extends ElementsManager
     }
 
     /**
-     * @param $prodInfo
      * @return null|zxProdElement
      * @throws Exception
      */
@@ -648,7 +650,6 @@ class ProdsService extends ElementsManager
     }
 
     /**
-     * @param $releaseInfo
      * @return null|zxReleaseElement
      * @throws Exception
      */
@@ -716,8 +717,6 @@ class ProdsService extends ElementsManager
 
     /**
      * @param array $releaseInfo
-     * @param $prodId
-     * @param $origin
      * @return bool|zxReleaseElement
      */
     protected function createRelease($releaseInfo, $prodId, $origin)
@@ -739,8 +738,6 @@ class ProdsService extends ElementsManager
 
     /**
      * @param zxReleaseElement $element
-     * @param $releaseInfo
-     * @param $origin
      */
     protected function updateRelease($element, array $releaseInfo, $origin, bool $justCreated = false): void
     {
@@ -879,7 +876,7 @@ class ProdsService extends ElementsManager
     protected function loadReleases(Builder $query, array|null $sort = [], int|null $start = null, int|null $amount = null): array
     {
         if (is_array($sort)) {
-            foreach ($sort as $property => &$order) {
+            foreach ($sort as $property => $order) {
                 if (isset($this->releaseColumnRelations[$property])) {
                     $srcTableName = $this->db->getTablePrefix() . $query->from;
                     foreach ($this->releaseColumnRelations[$property] as $criteria => $orderDirection) {
@@ -887,17 +884,19 @@ class ProdsService extends ElementsManager
                             $query->leftJoin('structure_elements', 'structure_elements.id', '=', $query->from . '.id');
                             $query->orderBy("structure_elements.dateCreated", $orderDirection);
                         } else {
+                            $orderColumn = $criteria === 'title' ? "LOWER($srcTableName.$criteria)" : "$srcTableName.$criteria";
+
                             if ($orderDirection === true) {
-                                $query->orderByRaw("$srcTableName.$criteria $order");
+                                $query->orderByRaw("$orderColumn $order");
                             } else {
                                 if ($orderDirection === false) {
                                     if ($order == 'desc') {
-                                        $query->orderByRaw("$srcTableName.$criteria asc");
+                                        $query->orderByRaw("$orderColumn asc");
                                     } else {
-                                        $query->orderByRaw("$srcTableName.$criteria desc");
+                                        $query->orderByRaw("$orderColumn desc");
                                     }
                                 } else {
-                                    $query->orderByRaw("$srcTableName.$criteria $orderDirection");
+                                    $query->orderByRaw("$orderColumn $orderDirection");
                                 }
                             }
                         }

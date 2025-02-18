@@ -19,7 +19,7 @@ class TunesManager extends ElementsManager
     )
     {
         $this->columnRelations = [
-            'title' => ['LOWER(title)' => true],
+            'title' => ['title' => true],
             'place' => ['if(partyplace,0,1), partyplace' => true],
             'date' => ['dateAdded' => true, 'id' => true],
             'year' => ['year' => true, 'dateAdded' => true, 'id' => true],

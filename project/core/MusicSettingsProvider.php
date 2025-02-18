@@ -61,14 +61,10 @@ trait MusicSettingsProvider
         ];
     }
 
-    /**
-     * @return string[]
-     *
-     * @psalm-return list{'1714286', '1750000', '1770000', '1773400', '1789770', '2000000', '3500000'}
-     */
     public function getFrequencies(): array
     {
         return [
+            '750000',
             '1714286',
             '1750000',
             '1770000',

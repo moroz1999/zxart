@@ -33,6 +33,7 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
             'version' => 'version',
             'publishersInfo' => 'getPublishersInfo',
             'groupsInfo' => 'getGroupsInfo',
+            'playableFiles' => 'getPlayableFiles',
             'authorsInfo' => function (zxReleaseElement $element) {
                 return $element->getAuthorsRecords('release');
             },
@@ -74,11 +75,6 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
         ];
     }
 
-    /**
-     * @return string[][]
-     *
-     * @psalm-return array{api: list{'id', 'title', 'dateCreated', 'dateModified', 'file', 'fileName', 'year', 'publishersIds', 'language', 'description', 'authorsInfo', 'hardwareRequired', 'releaseType', 'releaseFormat', 'version', 'inlays', 'ads', 'instructions', 'importIds', 'releaseStructure'}, list: array{0: 'id', 1: 'structureType', 2: 'title', 3: 'dateCreated', 4: 'url', 5: 'inlaysUrls', 6: 'listImagesUrls', 7: 'hardwareInfo', 8: 'year', 9: 'partyPlace', 10: 'partyInfo', 11: 'languagesInfo', 12: 'categoriesInfo', 13: 'groupsInfo', 14: 'publishersInfo', 15: 'authorsInfoShort', releaseType: 'releaseType', releaseFormat: 'releaseFormat'}, details: list{'id', 'structureType', 'title', 'playUrl', 'url'}, search: list{'id', 'searchTitle', 'url', 'structureType'}}
-     */
     protected function getPresetsStructure()
     {
         return [
@@ -137,6 +133,12 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
                 'url',
                 'structureType',
             ],
+            'zxdb' => [
+                'id',
+                'title',
+                'playableFiles',
+                'year'
+            ]
         ];
     }
 

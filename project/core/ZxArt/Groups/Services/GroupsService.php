@@ -43,7 +43,7 @@ class GroupsService extends ElementsManager
     )
     {
         $this->columnRelations = [
-            'title' => ['LOWER(title)' => true],
+            'title' => ['title' => true],
             'date' => ['id' => true],
         ];
     }

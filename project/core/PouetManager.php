@@ -366,9 +366,9 @@ class PouetManager extends errorLogger
     public function setProdsService(ProdsService $prodsManager): void
     {
         $this->prodsManager = $prodsManager;
-        $this->prodsManager->setForceUpdateCategories(true);
+        $this->prodsManager->setForceUpdateCategories(false);
         $this->prodsManager->setForceUpdateYoutube(true);
-        $this->prodsManager->setForceUpdateGroups(true);
+        $this->prodsManager->setForceUpdateGroups(false);
         $this->prodsManager->setForceUpdateAuthors(false);
         $this->prodsManager->setAddImages(false);
     }

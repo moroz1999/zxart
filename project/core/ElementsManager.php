@@ -54,17 +54,19 @@ abstract class ElementsManager extends errorLogger
                             $query->leftJoin('structure_elements', 'structure_elements.id', '=', $query->from . '.id');
                             $query->orderBy("structure_elements.dateCreated", $orderDirection);
                         } else {
+                            $orderColumn = $criteria === 'title' ? "LOWER($criteria)" : "$criteria";
+
                             if ($orderDirection === true) {
-                                $query->orderByRaw("$criteria $order");
+                                $query->orderByRaw("$orderColumn $order");
                             } else {
                                 if ($orderDirection === false) {
                                     if ($order == 'desc') {
-                                        $query->orderByRaw("$criteria asc");
+                                        $query->orderByRaw("$orderColumn asc");
                                     } else {
-                                        $query->orderByRaw("$criteria desc");
+                                        $query->orderByRaw("$orderColumn desc");
                                     }
                                 } else {
-                                    $query->orderByRaw("$criteria $orderDirection");
+                                    $query->orderByRaw("$orderColumn $orderDirection");
                                 }
                             }
                         }

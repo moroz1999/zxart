@@ -29,6 +29,7 @@ readonly final class ProdResolver
         $entityIds = $this->prodsRepository->findProdsByTitles($prodLabel->title);
 
         $entities = $entityIds ? array_map(fn(int $id) => $this->structureManager->getElementById($id), $entityIds) : [];
+        $entities = array_filter($entities);
         $candidates = [];
 
         foreach ($entities as $entity) {
@@ -59,11 +60,13 @@ readonly final class ProdResolver
         $prodElementAltTitle = mb_strtolower(trim(html_entity_decode($prodElement->altTitle ?? '')));
         $prodLabelTitle = mb_strtolower(trim($prodLabel->title ?? ''));
         $prodLabelTheTitle = 'the ' . $prodLabelTitle;
-
+        if ($prodLabelHasYear && $prodElementHasYear && $prodLabel->year !== (int)$prodElement->year) {
+            return 0;
+        }
         if (str_contains($prodLabelTitle, 'crack')) {
             return 0;
         }
-        if (str_contains($prodLabelTitle,  'intro')) {
+        if (str_contains($prodLabelTitle, 'intro')) {
             return 0;
         }
 

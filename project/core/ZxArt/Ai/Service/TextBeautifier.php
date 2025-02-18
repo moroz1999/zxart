@@ -44,7 +44,7 @@ readonly class TextBeautifier
             $processResponse,
             1,
             null,
-            false
+            false,
         );
     }
 }

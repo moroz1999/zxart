@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Connection;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\Repositories\ProdsRepository;
 use ZxArt\Queue\QueueService;
@@ -497,7 +498,7 @@ class zxProdElement extends ZxArtItem implements
         return $result;
     }
 
-    public function getLinkInfo($type)
+    public function getLinkInfo($type): ?array
     {
         foreach ($this->getLinksInfo() as $linkInfo) {
             if ($linkInfo['type'] === $type) {
@@ -513,13 +514,13 @@ class zxProdElement extends ZxArtItem implements
         return $linkInfo['url'] ?? null;
     }
 
-    public function getLinksInfo()
+    public function getLinksInfo(): array
     {
         if ($this->linksInfo === null) {
             $this->linksInfo = [];
             $translationsManager = $this->getService('translationsManager');
             /**
-             * @var \Illuminate\Database\Connection $db
+             * @var Connection $db
              */
             $db = $this->getService('db');
 
@@ -535,27 +536,31 @@ class zxProdElement extends ZxArtItem implements
                 ->whereIn('importOrigin', $types);
             if ($rows = $query->get()) {
                 foreach ($rows as $row) {
-                    if ($row['importOrigin'] == 'zxdb') {
-                        if ($this->structureType == 'zxProd') {
+                    if ($row['importOrigin'] === 'zxdb') {
+                        if (str_contains($row['importId'], 'tag')) {
+                            $url = 'https://spectrumcomputing.co.uk/list?group_id=' . substr($row['importId'], 3);
+                        } else {
+                            $url = 'https://spectrumcomputing.co.uk/index.php?cat=96&id=' . $row['importId'];
+                        }
+
+                        $this->linksInfo[] = [
+                            'type' => 'zxdb',
+                            'image' => 'icon_sc.png',
+                            'name' => $translationsManager->getTranslationByName('links.link_sc'),
+                            'url' => $url,
+                            'id' => $row['importId'],
+                        ];
+                        if ($row['importId'] < 28188) {
+                            $row['importId'] = sprintf("%07d", $row['importId']);
                             $this->linksInfo[] = [
-                                'type' => 'zxdb',
-                                'image' => 'icon_sc.png',
-                                'name' => $translationsManager->getTranslationByName('links.link_sc'),
-                                'url' => 'https://spectrumcomputing.co.uk/index.php?cat=96&id=' . $row['importId'],
+                                'type' => 'wos',
+                                'image' => 'icon_wos.png',
+                                'name' => $translationsManager->getTranslationByName('links.link_wos'),
+                                'url' => 'https://worldofspectrum.org/software?id=' . $row['importId'],
                                 'id' => $row['importId'],
                             ];
-                            if ($row['importId'] < 28188) {
-                                $row['importId'] = sprintf("%07d", $row['importId']);
-                                $this->linksInfo[] = [
-                                    'type' => 'wos',
-                                    'image' => 'icon_wos.png',
-                                    'name' => $translationsManager->getTranslationByName('links.link_wos'),
-                                    'url' => 'https://worldofspectrum.org/software?id=' . $row['importId'],
-                                    'id' => $row['importId'],
-                                ];
-                            }
                         }
-                    } elseif ($row['importOrigin'] == '3a') {
+                    } elseif ($row['importOrigin'] === '3a') {
                         $this->linksInfo[] = [
                             'type' => '3a',
                             'image' => 'icon_3a.png',
@@ -563,7 +568,7 @@ class zxProdElement extends ZxArtItem implements
                             'url' => 'https://zxaaa.net/view_demo.php?id=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] == 'pouet') {
+                    } elseif ($row['importOrigin'] === 'pouet') {
                         $this->linksInfo[] = [
                             'type' => 'pouet',
                             'image' => 'icon_pouet.png',
@@ -571,7 +576,7 @@ class zxProdElement extends ZxArtItem implements
                             'url' => 'https://www.pouet.net/prod.php?which=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] == 'dzoo') {
+                    } elseif ($row['importOrigin'] === 'dzoo') {
                         $this->linksInfo[] = [
                             'type' => 'dzoo',
                             'image' => 'icon_dzoo.png',
@@ -579,7 +584,7 @@ class zxProdElement extends ZxArtItem implements
                             'url' => 'https://demozoo.org/productions/' . $row['importId'] . '/',
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] == 'zxd') {
+                    } elseif ($row['importOrigin'] === 'zxd') {
                         $this->linksInfo[] = [
                             'type' => 'zxd',
                             'image' => 'icon_zxd.png',
@@ -587,7 +592,7 @@ class zxProdElement extends ZxArtItem implements
                             'url' => 'https://zxdemo.org/productions/' . $row['importId'] . '/',
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] == 'maps') {
+                    } elseif ($row['importOrigin'] === 'maps') {
                         $this->linksInfo[] = [
                             'type' => 'maps',
                             'image' => 'icon_maps.png',

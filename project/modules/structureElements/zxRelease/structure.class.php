@@ -266,20 +266,42 @@ class zxReleaseElement extends ZxArtItem implements
         if ($serveZip) {
             return $controller->baseURL . 'release/play:1/id:' . $this->id . '/' . $this->getFileName();
         }
-        $structure = $this->getReleaseFlatStructure();
 
-        $runnableTypes = $this->getEmulatorType() === 'tsconf' ? self::TsconfReleaseTypeRunnable : self::Zx81ReleaseTypeRunnable;
-        foreach ($runnableTypes as $runnableType) {
+        $playableFiles = $this->getPlayableFiles();
+        $item = $playableFiles[0] ?? null;
+        if ($item === null) {
+            return null;
+        }
+
+        $fileName = $item['fileName'];
+        return "{$controller->baseURL}zxfile/id:{$this->id}/fileId:{$item['id']}/play:1/{$fileName}";
+    }
+
+    public function getPlayableFiles(): array
+    {
+        $structure = $this->getReleaseFlatStructure();
+        $playableFiles = [];
+        foreach ($this->getRunnableTypes() as $runnableType) {
             foreach ($structure as $item) {
                 $fileName = $item['fileName'];
-                $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+                $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
                 if ($extension === $runnableType) {
-                    return "{$controller->baseURL}zxfile/id:{$this->id}/fileId:{$item['id']}/play:1/{$fileName}";
+                    $playableFiles[] = $item;
                 }
             }
         }
 
-        return null;
+        return $playableFiles;
+    }
+
+    private function getRunnableTypes(): array
+    {
+        return match ($this->getEmulatorType()) {
+            'tsconf' => self::TsconfReleaseTypeRunnable,
+            'zx81' => self::Zx81ReleaseTypeRunnable,
+            'usp' => self::UspReleaseTypeRunnable,
+        };
+
     }
 
     /**

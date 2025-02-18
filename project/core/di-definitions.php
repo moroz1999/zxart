@@ -44,12 +44,11 @@ return [
     'parser_chunk_processor' => factory(static fn(ContainerInterface $c) => new ChunkProcessor($c->get('parser_prompt_sender'))),
     'beautifier_chunk_processor' => factory(static fn(ContainerInterface $c) => new ChunkProcessor($c->get('text_beautifier_prompt_sender'))),
     'translator_chunk_processor' => factory(static fn(ContainerInterface $c) => new ChunkProcessor($c->get('translator_prompt_sender'))),
-    'press_article_seo_chunk_processor' => factory(static fn(ContainerInterface $c) => new ChunkProcessor($c->get('press_article_seo_prompt_sender'))),
 
     // Main services
     ProdQueryService::class => autowire()->constructor(DI\get('prod_query_prompt_sender')),
     PressArticleParser::class => autowire()->constructor(DI\get('parser_chunk_processor')),
     TextBeautifier::class => autowire()->constructor(DI\get('beautifier_chunk_processor')),
     Translator::class => autowire()->constructor(DI\get('translator_chunk_processor')),
-    PressArticleSeo::class => autowire()->constructor(DI\get('press_article_seo_chunk_processor')),
+    PressArticleSeo::class => autowire()->constructor(DI\get('press_article_seo_prompt_sender')),
 ];

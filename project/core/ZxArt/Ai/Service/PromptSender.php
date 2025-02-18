@@ -10,6 +10,7 @@ use ZxArt\Logs\Log;
 
 class PromptSender
 {
+    public const MODEL_O3_MINI = 'o3-mini';
     public const MODEL_4O = 'gpt-4o';
     public const MODEL_4O_MINI = 'gpt-4o-mini';
 
@@ -23,7 +24,7 @@ class PromptSender
 
     public function send(
         string $prompt,
-        float  $temperature,
+        ?float $temperature,
         ?array $imageUrls = null,
         bool   $useJson = false,
         string $model = self::MODEL_4O,
@@ -54,8 +55,6 @@ class PromptSender
         try {
             $config = [
                 'model' => $model,
-                'temperature' => $temperature,
-                'top_p' => 0.95,
                 'messages' => [
                     [
                         'role' => 'user',
@@ -63,6 +62,12 @@ class PromptSender
                     ],
                 ],
             ];
+            if ($temperature !== null) {
+                $config['temperature'] = $temperature;
+            }
+            if ($model !== self::MODEL_O3_MINI) {
+                $config['top_p'] = 0.95;
+            }
             if ($useJson) {
                 $config['response_format'] = ["type" => "json_object"];
             }

@@ -212,11 +212,8 @@ class Crontab extends controllerApplication
             $pressYear = (int)$pressElement->year;
             $year = $pressYear > 0 ? $pressYear : null;
             $updatedContent = $this->pressArticleSeo->getParsedData($pressArticleElement->getAITextContent(), $pressElement->title, $pressArticleElement->title, $year);
-            if ($updatedContent !== null) {
-                $mergedContent = $this->mergeArrays($updatedContent);
-                $this->articleSeoDataUpdater->updatePressArticleData($pressArticleElement, $mergedContent);
-                $this->logMessage("$counter AI press seo updated for article {$pressArticleElement->id}", 0);
-            }
+            $this->articleSeoDataUpdater->updatePressArticleData($pressArticleElement, $updatedContent);
+            $this->logMessage("$counter AI press seo updated for article {$pressArticleElement->id}", 0);
         });
     }
 

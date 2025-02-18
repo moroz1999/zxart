@@ -85,12 +85,9 @@
 			<td class="form_field">
 				<select class="dropdown_placeholder" name="{$formNames.frequency}" >
 					<option value='' {if !$formData.frequency}selected='selected'{/if}>{translations name="zxmusic.frequency_default"}</option>
-					<option value='1750000' {if $formData.frequency=='1750000'}selected='selected'{/if}>1.75 MHz (Pentagon) </option>
-					<option value='1770000' {if $formData.frequency=='1770000'}selected='selected'{/if}>1.77 MHz (Standard ZX) </option>
-					<option value='1773400' {if $formData.frequency=='1773400'}selected='selected'{/if}>1.7734 MHz (Profi) </option>
-					<option value='1789770' {if $formData.frequency=='1789770'}selected='selected'{/if}>1.789 MHz (Melodik/Didaktik) </option>
-					<option value='2000000' {if $formData.frequency=='2000000'}selected='selected'{/if}>2.00 MHz (Atari) </option>
-					<option value='3500000' {if $formData.frequency=='3500000'}selected='selected'{/if}>3.50 MHz (Enhanced) </option>
+					{foreach $element->getFrequencies() as $frequency}
+						<option value='{$frequency}' {if $frequency == $formData.frequency}selected='selected'{/if}>{translations name="zxmusic.frequency_{$frequency}"}</option>
+					{/foreach}
 				</select>
 			</td>
 		</tr>

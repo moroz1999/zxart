@@ -5,41 +5,43 @@ use ZxArt\Prods\Services\ProdsService;
 class RzxArchiveManager extends errorLogger
 {
     protected $urls = [
-        'http://www.rzxarchive.co.uk/0.php',
-        'http://www.rzxarchive.co.uk/a.php',
-        'http://www.rzxarchive.co.uk/b.php',
-        'http://www.rzxarchive.co.uk/c.php',
-        'http://www.rzxarchive.co.uk/d.php',
-        'http://www.rzxarchive.co.uk/e.php',
-        'http://www.rzxarchive.co.uk/f.php',
-        'http://www.rzxarchive.co.uk/g.php',
-        'http://www.rzxarchive.co.uk/h.php',
-        'http://www.rzxarchive.co.uk/i.php',
-        'http://www.rzxarchive.co.uk/j.php',
-        'http://www.rzxarchive.co.uk/k.php',
-        'http://www.rzxarchive.co.uk/l.php',
-        'http://www.rzxarchive.co.uk/m.php',
-        'http://www.rzxarchive.co.uk/n.php',
-        'http://www.rzxarchive.co.uk/o.php',
-        'http://www.rzxarchive.co.uk/p.php',
-        'http://www.rzxarchive.co.uk/q.php',
-        'http://www.rzxarchive.co.uk/r.php',
-        'http://www.rzxarchive.co.uk/s.php',
-        'http://www.rzxarchive.co.uk/t.php',
-        'http://www.rzxarchive.co.uk/u.php',
-        'http://www.rzxarchive.co.uk/v.php',
-        'http://www.rzxarchive.co.uk/w.php',
-        'http://www.rzxarchive.co.uk/x.php',
-        'http://www.rzxarchive.co.uk/y.php',
-        'http://www.rzxarchive.co.uk/z.php',
+        'https://www.rzxarchive.co.uk/0.php',
+        'https://www.rzxarchive.co.uk/a.php',
+        'https://www.rzxarchive.co.uk/b.php',
+        'https://www.rzxarchive.co.uk/c.php',
+        'https://www.rzxarchive.co.uk/d.php',
+        'https://www.rzxarchive.co.uk/e.php',
+        'https://www.rzxarchive.co.uk/f.php',
+        'https://www.rzxarchive.co.uk/g.php',
+        'https://www.rzxarchive.co.uk/h.php',
+        'https://www.rzxarchive.co.uk/i.php',
+        'https://www.rzxarchive.co.uk/j.php',
+        'https://www.rzxarchive.co.uk/k.php',
+        'https://www.rzxarchive.co.uk/l.php',
+        'https://www.rzxarchive.co.uk/m.php',
+        'https://www.rzxarchive.co.uk/n.php',
+        'https://www.rzxarchive.co.uk/o.php',
+        'https://www.rzxarchive.co.uk/p.php',
+        'https://www.rzxarchive.co.uk/q.php',
+        'https://www.rzxarchive.co.uk/r.php',
+        'https://www.rzxarchive.co.uk/s.php',
+        'https://www.rzxarchive.co.uk/t.php',
+        'https://www.rzxarchive.co.uk/u.php',
+        'https://www.rzxarchive.co.uk/v.php',
+        'https://www.rzxarchive.co.uk/w.php',
+        'https://www.rzxarchive.co.uk/x.php',
+        'https://www.rzxarchive.co.uk/y.php',
+        'https://www.rzxarchive.co.uk/z.php',
     ];
+
     /**
      * @var ProdsService
      */
     protected $prodsManager;
     protected $origin = 'rzx';
-    protected $rootUrl = 'http://www.rzxarchive.co.uk/';
+    protected $rootUrl = 'https://www.rzxarchive.co.uk/';
     protected $prodsIndex;
+    private $debugEntry;
     private $counter = 0;
 
     /**
@@ -107,7 +109,9 @@ class RzxArchiveManager extends errorLogger
                         }
                     }
                 }
-
+                if ($this->debugEntry !== null && $zxDbId !== $this->debugEntry){
+                    continue;
+                }
 
                 if ($zxDbId && $rzxUrl && $rzxId) {
                     $this->prodsIndex[$zxDbId] = [
@@ -148,18 +152,38 @@ class RzxArchiveManager extends errorLogger
         return trim(preg_replace('!\s+!', ' ', $string), " \t\n\r\0\x0B" . chr(0xC2) . chr(0xA0));
     }
 
-    protected function loadHtml($url): DOMDocument|false
+    protected function attemptDownload(string $link): null|string
     {
-        if ($contents = file_get_contents($url)) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $link);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0',
+            'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language: en-US,en;q=0.5',
+            'Cache-Control: max-age=0',
+        ]);
+
+        $string = curl_exec($ch);
+        curl_close($ch);
+
+        return $string;
+    }
+
+    private function loadHtml(
+        string $url,
+    ): DOMDocument|false
+    {
+        if ($contents = $this->attemptDownload($url)) {
             $dom = new DOMDocument;
-            $dom->strictErrorChecking = false;
             $dom->encoding = 'UTF-8';
             $dom->recover = true;
             $dom->substituteEntities = true;
             $dom->strictErrorChecking = false;
             $dom->formatOutput = false;
             @$dom->loadHTML('<?xml version="1.0" encoding="UTF-8"?>' . $contents);
-//            $dom->loadHTML($contents);
             $dom->normalizeDocument();
             return $dom;
         }

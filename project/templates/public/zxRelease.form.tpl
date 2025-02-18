@@ -150,6 +150,15 @@
 				{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="hardwareRequired"}
 			</td>
 		</tr>
+		<tr {if $formErrors.description} class="form_error"{/if}>
+			<td class="form_label">
+				{translations name='zxprod.description'}:
+			</td>
+			<td class="form_field">
+				<textarea class='textarea_component' name="{$formNames.description}">{$formData.description}</textarea>
+				{include file=$theme->template('component.form_help.tpl') structureType='zxProd' name="description"}
+			</td>
+		</tr>
 		<tr>
 			<td colspan="2">
 				<h3>{translations name='zxprod.authors'}:</h3>

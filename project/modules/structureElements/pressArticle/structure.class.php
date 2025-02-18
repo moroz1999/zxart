@@ -198,7 +198,7 @@ class pressArticleElement extends structureElement implements SearchContentHolde
 
     private function getFormattedContent(array $stripTags): string
     {
-        $originalContent = $this->content;
+        $originalContent = $this->content ?? '';
 
         $content = HtmlTagsStripper::stripTags($originalContent, $stripTags);
         $content = str_replace(["\n\r", "\r\n", "\r"], "\n", $content);

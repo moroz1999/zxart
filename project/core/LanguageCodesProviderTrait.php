@@ -46,6 +46,7 @@ trait LanguageCodesProviderTrait
             "sv",
             "tr",
             "ua",
+            "he",
         ];
     }
 

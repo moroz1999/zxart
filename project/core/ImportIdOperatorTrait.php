@@ -16,7 +16,7 @@ trait ImportIdOperatorTrait
 
     protected structureManager $structureManager;
 
-    public function setStructureManager(structureManager $structureManager):void
+    public function setStructureManager(structureManager $structureManager): void
     {
         $this->structureManager = $structureManager;
     }
@@ -55,14 +55,30 @@ trait ImportIdOperatorTrait
     {
         unset($this->cache[$origin][$type][$importId]);
         $this->cacheId[$origin][$type][$importId] = $elementId;
-        return $this->db->table('import_origin')->insert(
-            [
-                'importId' => $importId,
-                'elementId' => $elementId,
-                'importOrigin' => $origin,
-                'type' => $type,
-            ]
-        );
+
+        $existing = $this->db->table('import_origin')
+            ->where('importId', $importId)
+            ->where('importOrigin', $origin)
+            ->where('type', $type)
+            ->first();
+
+        if ($existing) {
+            $updated = $this->db->table('import_origin')
+                ->where('importId', $importId)
+                ->where('importOrigin', $origin)
+                ->where('type', $type)
+                ->update([
+                    'elementId' => $elementId,
+                ]);
+            return (bool)$updated;
+        }
+
+        return $this->db->table('import_origin')->insert([
+            'importId' => $importId,
+            'elementId' => $elementId,
+            'importOrigin' => $origin,
+            'type' => $type,
+        ]);
     }
 
     protected function moveImportId($oldElementId, $newElementId, $importId, $origin, $type): int

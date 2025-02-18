@@ -87,6 +87,7 @@ class WosManager extends errorLogger
         "20" => "zx812",
         "22" => "zx8132",
         "23" => "zx8164",
+        "32" => "lambda8300",
     ];
     protected $optionalMachines = [
         "9" => "zx128+3",
@@ -338,6 +339,10 @@ class WosManager extends errorLogger
         ];
     }
 
+    private array $skipMachineTypes = [
+        28, // jupiter ace
+    ];
+
     /**
      * @param MySqlConnection $zxdbConfig
      */
@@ -382,7 +387,7 @@ class WosManager extends errorLogger
         $this->prodsManager = $prodsManager;
 //        $this->prodsManager->setForceUpdateYoutube(false);
         $this->prodsManager->setUpdateExistingProds(true);
-//        $this->prodsManager->setForceUpdateExternalLink(true);
+        $this->prodsManager->setForceUpdateExternalLink(true);
 //        $this->prodsManager->setForceUpdateAuthors(true);
 //        $this->prodsManager->setForceUpdateTitles(true);
 //        $this->prodsManager->setForceUpdateCategories(true);
@@ -484,11 +489,15 @@ class WosManager extends errorLogger
                 if (in_array($entry['id'], $this->ignoreIds)) {
                     continue;
                 }
+                if (in_array($entry['machinetype_id'], $this->skipMachineTypes, true)) {
+                    continue;
+                }
+
                 if (isset($this->categories[$entry['genretype_id']])) {
                     $prodInfo = [
                         'title' => $entry['title'],
                         'altTitle' => '',
-                        'year' => '',
+                        'year' => 0,
                         'externalLink' => '',
                         'legalStatus' => '',
                         'id' => $entry['id'],
@@ -634,7 +643,7 @@ class WosManager extends errorLogger
                             } elseif (in_array($download['filetype_id'], $this->mapFileTypes)) {
                                 $prodInfo['maps'][] = [
                                     'url' => $this->resolveDownloadUrl($download['file_link']),
-                                    'author' => ''
+                                    'author' => '',
                                 ];
                             }
                         }
@@ -688,7 +697,7 @@ class WosManager extends errorLogger
                     //some releases dont have downloads, so release type should be determined be release_seq
                     foreach ($prodInfo['releases'] as &$release) {
                         if ($release['releaseType']) {
-                            if ($release['seq'] === 0) {
+                            if ($release['release_seq'] === 0) {
                                 $release['releaseType'] = 'original';
                             } else {
                                 $release['releaseType'] = 'rerelease';
@@ -740,7 +749,7 @@ class WosManager extends errorLogger
                     'infoFiles' => [],
                     'fileUrl' => false,
                     'version' => '',
-                    'seq' => $release_seq,
+                    'release_seq' => $release_seq,
                 ];
                 $releaseInfo['id'] = $release['entry_id'] . '_' . $release['release_seq'];
 

@@ -252,10 +252,8 @@
     </div>
     {include file=$theme->template('component.mentions.tpl')}
     {if $filesList = $element->getFilesList('rzx')}
-        {if $linkInfo = $element->getLinkInfo('rzx')}
-            <h2>{translations name='zxprod.rzx'}</h2>
-            {include file=$theme->template('zxItem.files.tpl') filesList = $filesList newWindow=true}
-        {/if}
+        <h2>{translations name='zxprod.rzx'}</h2>
+        {include file=$theme->template('zxItem.files.tpl') filesList = $filesList newWindow=true}
     {/if}
     <script>
         /*<![CDATA[*/

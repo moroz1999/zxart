@@ -38,6 +38,7 @@ trait HardwareProvider
                 "zx812",
                 "zx8132",
                 "zx8164",
+                "lambda8300",
                 "sprinter",
                 "alf",
             ],

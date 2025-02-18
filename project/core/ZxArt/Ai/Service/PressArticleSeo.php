@@ -3,21 +3,17 @@ declare(strict_types=1);
 
 namespace ZxArt\Ai\Service;
 
-use JsonException;
-use ZxArt\Ai\ChunkProcessor;
-
 readonly class PressArticleSeo
 {
     public function __construct(
-        private ChunkProcessor $chunkProcessor,
+        private PromptSender $promptSender,
     )
     {
     }
 
     public function getParsedData(string $text, string $pressTitle, string $pressArticleTitle, ?int $pressYear): ?array
     {
-        $createPrompt = static function (string $chunk) use ($pressTitle, $pressArticleTitle, $pressYear): string {
-            return "Отправляю тебе через АПИ текст статьи из журнала/газеты для ZX Spectrum, прочитай и собери информацию. Сделай всё правильно с первой попытки, так как я не смогу проверить и указать на ошибки.
+        $prompt = "Отправляю тебе через АПИ текст статьи из журнала/газеты для ZX Spectrum, прочитай и собери информацию. Сделай всё правильно с первой попытки, так как я не смогу проверить и указать на ошибки.
 * Не пиши лишнюю воду, пиши сразу про что статья. 'Статья обсуждает эволюцию графических редакторов' - это плохо. 'Обсуждение эволюции графических редакторов' - это лучше. Будь краток, но полон фактов. Пиши ёмко, лаконично, интересно.
 * Перескажи статью В ТРИ ПРЕДЛОЖЕНИЯ (поле Short Content). Читателю должно быть понятно, о чем статья. Понимай правильно опечатки при чтении. Укажи, если это новелла, описание, мануал, реклама итд.
 * Собери 10 наиболее значимых тегов из фактов и темы статьи. Пример хороших тегов: \"Обзор\", \"Демопати\", \"Критика\", \"Графика\", \"Демосцена\", \"Техника рисования\"
@@ -42,24 +38,14 @@ pageTitle:{eng:'', spa:'', rus:''}
 Название статьи:{$pressArticleTitle}
 Кусок статьи:
 
-{$chunk}";
-        };
+{$text}";
 
-        /**
-         * @throws JsonException
-         */
-        $processResponse = static function (string $response): array {
-            return json_decode($response, true, 512, JSON_THROW_ON_ERROR);
-        };
-
-        return $this->chunkProcessor->processJson(
-            $text,
-            $createPrompt,
-            $processResponse,
+        $response = $this->promptSender->send(
+            $prompt,
             1,
             null,
             true,
-            PromptSender::MODEL_4O
         );
+        return json_decode($response, true, 512, JSON_THROW_ON_ERROR);
     }
 }

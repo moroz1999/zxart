@@ -54,7 +54,7 @@ class AuthorsService extends ElementsManager
     )
     {
         $this->columnRelations = [
-            'title' => ['LOWER(title)' => true],
+            'title' => ['title' => true],
             'date' => ['id' => true],
             'graphicsRating' => ['graphicsRating' => true, 'title' => false],
             'musicRating' => ['musicRating' => true, 'title' => false],
@@ -263,8 +263,8 @@ class AuthorsService extends ElementsManager
             /**
              * @var authorAliasElement $element
              */
-            if (!($element = $this->getElementByImportId($authorAliasInfo['id'], $origin, 'author'))) {
-
+            $element = $this->getElementByImportId($authorAliasInfo['id'], $origin, 'author');
+            if (!$element) {
                 $groups = array_map(static function ($groupInfo) use ($authorAliasInfo) {
                     return new GroupLabel(
                         id: $groupInfo['id'],
@@ -273,7 +273,7 @@ class AuthorsService extends ElementsManager
                         country: $groupInfo['country'] ?? null,
                         memberNames: [$authorAliasInfo['title']],
                     );
-                }, $authorAliasInfo['groups']);
+                }, $authorAliasInfo['groups'] ?? []);
 
                 $label = new PersonLabel(
                     id: $authorAliasInfo['id'] ?? null,
@@ -285,11 +285,13 @@ class AuthorsService extends ElementsManager
                     if ($origin) {
                         $this->saveImportId($element->id, $authorAliasInfo['id'], $origin, 'author');
                     }
-                    $this->updateAuthorAlias($element, $authorAliasInfo, $origin);
+                    if ($element->structureType === 'authorAlias') {
+                        $this->updateAuthorAlias($element, $authorAliasInfo, $origin);
+                    }
                 } elseif ($createNew) {
                     $element = $this->createAuthorAlias($authorAliasInfo, $origin);
                 }
-            } else {
+            } elseif ($element->structureType === 'authorAlias') {
                 $this->updateAuthorAlias($element, $authorAliasInfo, $origin);
             }
             $this->importedAuthorAliases[$origin][$authorAliasInfo['id']] = $element;
