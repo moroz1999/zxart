@@ -246,7 +246,7 @@ abstract class ZxArtItem extends structureElement implements
                     if ($user = $structureManager->getElementById($vote['userId'], null, true)) {
                         $vote['userName'] = $user->userName;
                         $vote['userUrl'] = $user->getAuthorUrl();
-                        $vote['userType'] = $user->getBadgetTypesString();
+                        $vote['userType'] = $user->getBadgeTypesString();
                     } else {
                         $vote['userName'] = '';
                         $vote['userUrl'] = false;

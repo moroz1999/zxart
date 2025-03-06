@@ -117,7 +117,7 @@
                 {foreach from=$element->getTopWorksUsers('addZxPicture', 10) item=data}
                     <tr>
                         <td>{$data['count']}</td>
-                        <td>{include file=$theme->template("component.username.tpl") userName=$data['user']->userName userUrl=$data['user']->getUrl() userType=$data['user']->getBadgetTypesString()}</td>
+                        <td>{include file=$theme->template("component.username.tpl") userName=$data['user']->userName userUrl=$data['user']->getUrl() userType=$data['user']->getBadgeTypesString()}</td>
                     </tr>
                 {/foreach}
             </table>
@@ -128,7 +128,7 @@
                 {foreach from=$element->getTopWorksUsers('addZxMusic', 10) item=data}
                     <tr>
                         <td>{$data['count']}</td>
-                        <td>{include file=$theme->template("component.username.tpl") userName=$data['user']->userName userUrl=$data['user']->getUrl() userType=$data['user']->getBadgetTypesString()}</td>
+                        <td>{include file=$theme->template("component.username.tpl") userName=$data['user']->userName userUrl=$data['user']->getUrl() userType=$data['user']->getBadgeTypesString()}</td>
                     </tr>
                 {/foreach}
             </table>
@@ -139,7 +139,7 @@
                 {foreach from=$element->getTopWorksUsers('comment', 30) item=data}
                     <tr>
                         <td>{$data['count']}</td>
-                        <td>{include file=$theme->template("component.username.tpl") userName=$data['user']->userName userUrl=$data['user']->getUrl() userType=$data['user']->getBadgetTypesString()}</td>
+                        <td>{include file=$theme->template("component.username.tpl") userName=$data['user']->userName userUrl=$data['user']->getUrl() userType=$data['user']->getBadgeTypesString()}</td>
                     </tr>
                 {/foreach}
             </table>
@@ -150,7 +150,7 @@
                 {foreach from=$element->getTopVotesUsers(20) item=data}
                     <tr>
                         <td>{$data['count']}</td>
-                        <td>{include file=$theme->template("component.username.tpl") userName=$data['user']->userName userUrl=$data['user']->getUrl() userType=$data['user']->getBadgetTypesString()}</td>
+                        <td>{include file=$theme->template("component.username.tpl") userName=$data['user']->userName userUrl=$data['user']->getUrl() userType=$data['user']->getBadgeTypesString()}</td>
                     </tr>
                 {/foreach}
             </table>
@@ -161,7 +161,7 @@
                 {foreach from=$element->getTopWorksUsers('tagAdded', 20) item=data}
                     <tr>
                         <td>{$data['count']}</td>
-                        <td>{include file=$theme->template("component.username.tpl") userName=$data['user']->userName userUrl=$data['user']->getUrl() userType=$data['user']->getBadgetTypesString()}</td>
+                        <td>{include file=$theme->template("component.username.tpl") userName=$data['user']->userName userUrl=$data['user']->getUrl() userType=$data['user']->getBadgeTypesString()}</td>
                     </tr>
                 {/foreach}
             </table>
@@ -172,7 +172,7 @@
                 {foreach from=$element->getTopWorksUsers('addZxProd', 10) item=data}
                     <tr>
                         <td>{$data['count']}</td>
-                        <td>{include file=$theme->template("component.username.tpl") userName=$data['user']->userName userUrl=$data['user']->getUrl() userType=$data['user']->getBadgetTypesString()}</td>
+                        <td>{include file=$theme->template("component.username.tpl") userName=$data['user']->userName userUrl=$data['user']->getUrl() userType=$data['user']->getBadgeTypesString()}</td>
                     </tr>
                 {/foreach}
             </table>

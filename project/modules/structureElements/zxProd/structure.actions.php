@@ -26,3 +26,5 @@ $moduleActions[] = 'split';
 $moduleActions[] = 'resize';
 $moduleActions[] = 'uploadScreenshot';
 $moduleActions[] = 'submitTags';
+$moduleActions[] = 'showAiForm';
+$moduleActions[] = 'receiveAiForm';

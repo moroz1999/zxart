@@ -192,7 +192,7 @@ class votesManager implements DependencyInjectionContextInterface
                     if ($user = $structureManager->getElementById($vote['userId'], null, true)) {
                         $vote['userName'] = $user->userName;
                         $vote['userUrl'] = $user->getUrl();
-                        $vote['userType'] = $user->getBadgetTypesString();
+                        $vote['userType'] = $user->getBadgeTypesString();
                     } else {
                         $vote['userName'] = '';
                         $vote['userUrl'] = '';

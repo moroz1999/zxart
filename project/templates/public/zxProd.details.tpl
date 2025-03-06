@@ -5,6 +5,10 @@
             <a class="button"
                href="{$element->URL}id:{$element->id}/action:showPublicForm/">{translations name='zxprod.edit'}</a>
         {/if}
+        {if isset($currentElementPrivileges.showAiForm) && $currentElementPrivileges.showAiForm==1}
+            <a class="button"
+               href="{$element->URL}id:{$element->id}/action:showAiForm/">{translations name='pressarticle.showAiForm'}</a>
+        {/if}
         {if !empty($currentElementPrivileges.join)}
             <a class="button"
                href="{$element->URL}id:{$element->id}/action:showJoinForm/">{translations name='zxprod.join'}</a>

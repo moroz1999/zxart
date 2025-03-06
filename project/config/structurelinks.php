@@ -4,6 +4,11 @@
         'prodArticle',
         'authorMusic',
         'authorPicture',
+        'screenshotsSelector',
+        'inlayFilesSelector',
+        'infoFilesSelector',
+        'adFilesSelector',
+        'mapFilesSelector',
     ],
     'publicAllowed' => [
         'authorsCatalogue',

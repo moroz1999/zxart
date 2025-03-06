@@ -9,7 +9,7 @@
 			{if $user->userName === 'anonymous'}
 				<span class='comment_author'>{$element->author}</span>
 			{elseif $url=$user->getUrl()}
-				<a href="{$url}" class='comment_author'>{$user->userName}</a>
+				{include file=$theme->template("component.username.tpl") userUrl=$url userClass='comment_author' userName=$user->userName userType=$user->getBadgeTypesString()}
 			{else}
 				<span class='comment_author'>{$user->userName}</span>
 			{/if}

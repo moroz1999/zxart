@@ -5492,7 +5492,7 @@
       <code><![CDATA[delete]]></code>
       <code><![CDATA[getAuthorElement]]></code>
       <code><![CDATA[getAuthorUrl]]></code>
-      <code><![CDATA[getBadgetTypesString]]></code>
+      <code><![CDATA[getBadgeTypesString]]></code>
       <code><![CDATA[getConnectedIdList]]></code>
       <code><![CDATA[getConnectedIdList]]></code>
       <code><![CDATA[getConnectedIdList]]></code>
@@ -7425,7 +7425,7 @@
       <code><![CDATA[get]]></code>
       <code><![CDATA[get]]></code>
       <code><![CDATA[get]]></code>
-      <code><![CDATA[getBadgetTypesString]]></code>
+      <code><![CDATA[getBadgeTypesString]]></code>
       <code><![CDATA[getElementById]]></code>
       <code><![CDATA[getElementById]]></code>
       <code><![CDATA[getEmptyObject]]></code>
@@ -21192,7 +21192,7 @@
       <code><![CDATA[changeConnectedAuthor]]></code>
       <code><![CDATA[generatePassword]]></code>
       <code><![CDATA[getAdditionalDataFields]]></code>
-      <code><![CDATA[getBadgetTypesString]]></code>
+      <code><![CDATA[getBadgeTypesString]]></code>
       <code><![CDATA[getElementData]]></code>
       <code><![CDATA[persistAdditionalDataFromFields]]></code>
       <code><![CDATA[setTrackingCode]]></code>

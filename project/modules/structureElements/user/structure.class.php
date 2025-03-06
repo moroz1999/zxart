@@ -360,7 +360,7 @@ class userElement extends structureElement
         return $result;
     }
 
-    public function getBadgetTypesString(): string
+    public function getBadgeTypesString(): string
     {
         return implode(' ', $this->getBadgetTypes());
     }

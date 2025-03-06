@@ -129,9 +129,10 @@ class Crontab extends controllerApplication
             $this->parseReleases();
             $this->parseArtItems('module_zxpicture', 'image', 'originalName');
             $this->parseArtItems('module_zxmusic', 'file', 'fileName');
-//            $this->queryAiSeo();
-//            $this->queryAiIntro();
+            $this->queryAiSeo();
+            $this->queryAiIntro();
 //            $this->queryAiCategories();
+
             $this->queryAiPressBeautifier();
             $this->queryAiPressTranslation();
             $this->queryAiPressParser();
@@ -356,7 +357,7 @@ class Crontab extends controllerApplication
 
             $elementId = $this->queueService->getNextElementId(QueueType::AI_SEO);
             if ($elementId === null) {
-                return;
+                break;
             }
             $this->queueService->updateStatus($elementId, QueueType::AI_SEO, QueueStatus::STATUS_INPROGRESS);
 
@@ -389,9 +390,6 @@ class Crontab extends controllerApplication
         $this->logMessage(' AI SEO requesting completed with total execution time ' . $totalExecution, 0);
     }
 
-    /**
-     * @return void
-     */
     private function queryAiIntro(): void
     {
         $counter = 0;
@@ -402,7 +400,7 @@ class Crontab extends controllerApplication
 
             $elementId = $this->queueService->getNextElementId(QueueType::AI_INTRO);
             if ($elementId === null) {
-                return;
+                break;
             }
             $this->queueService->updateStatus($elementId, QueueType::AI_INTRO, QueueStatus::STATUS_INPROGRESS);
 
@@ -433,7 +431,7 @@ class Crontab extends controllerApplication
             $totalExecution += $executionTime;
             $this->logMessage($counter . ' AI Intro request success ' . $prodElement->id . ' ' . $prodElement->title, round($executionTime));
         }
-        $this->logMessage(' AI Intro requesting completed with total execution time ' . $totalExecution, 0);
+        $this->logMessage('AI Intro requesting completed with total execution time ' . $totalExecution, 0);
     }
 
     private function isQueryCategoriesEnabled(zxProdElement $prodElement): bool
@@ -617,6 +615,7 @@ class Crontab extends controllerApplication
                     ]
                 );
         }
+        $this->structureManager->clearElementCache($prodElementId);
     }
 
     private function updateProdIntro(int $prodElementId, array $metaData): void
@@ -631,11 +630,12 @@ class Crontab extends controllerApplication
                     ],
                     [
                         'id' => $prodElementId,
-                        'generatedDescription' => $metaData[$language]['intro'] ?? '',
+                        'generatedDescription' => $metaData[$language] ?? '',
                         'languageId' => $languageId,
                     ]
                 );
         }
+        $this->structureManager->clearElementCache($prodElementId);
     }
 }
 

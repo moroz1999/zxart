@@ -32,10 +32,6 @@ class zxProdCategoryElement extends structureElement implements
         $moduleStructure['canonicalUrl'] = 'url';
         $moduleStructure['metaDenyIndex'] = 'checkbox';
 
-        $moduleStructure['metaDescriptionTemplate'] = 'text';
-        $moduleStructure['metaTitleTemplate'] = 'text';
-
-        $moduleStructure['metaH1Template'] = 'text';
         $moduleStructure['h1'] = 'text';
     }
 
@@ -44,9 +40,6 @@ class zxProdCategoryElement extends structureElement implements
         $multiLanguageFields[] = 'title';
         $multiLanguageFields[] = 'metaTitle';
         $multiLanguageFields[] = 'metaDescription';
-        $multiLanguageFields[] = 'metaDescriptionTemplate';
-        $multiLanguageFields[] = 'metaTitleTemplate';
-        $multiLanguageFields[] = 'metaH1Template';
         $multiLanguageFields[] = 'h1';
     }
 
@@ -170,5 +163,32 @@ class zxProdCategoryElement extends structureElement implements
             $url .= "page:{$page}/";
         }
         return $url;
+    }
+
+    public function getMetaTitle()
+    {
+        $parentCategory = $this->getParentCategory();
+        if ($parentCategory !== null) {
+            $metaTitle = $parentCategory->getMetaTitle() . ' / ';
+        } else {
+            $metaTitle = '';
+        }
+
+        if ($this->metaTitle) {
+            $metaTitle .= $this->metaTitle;
+        } else {
+            $metaTitle .= $this->title;
+        }
+
+        if ($this->final) {
+            $metaTitle .= ' ZX Spectrum';
+            $page = $this->getCurrentPage();
+
+            if ($page > 1) {
+                $translationsManager = $this->getService('translationsManager');
+                $metaTitle .= " (" . $translationsManager->getTranslationByName('zxprodcategory.page') . " {$page})";
+            }
+        }
+        return $metaTitle;
     }
 }

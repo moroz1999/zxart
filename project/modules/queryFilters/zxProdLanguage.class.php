@@ -1,10 +1,10 @@
 <?php
 
-class zxReleaseLanguageQueryFilter extends QueryFilter
+class zxProdLanguageQueryFilter extends QueryFilter
 {
     public function getRequiredType()
     {
-        return 'zxRelease';
+        return 'zxProd';
     }
 
     public function getFilteredIdList($argument, $query)
@@ -17,16 +17,12 @@ class zxReleaseLanguageQueryFilter extends QueryFilter
             })
                 ->orWhereIn($this->getTable() . '.id', static function ($subQuery) use ($argument) {
                     $subQuery->from('structure_links')
-                        ->select('childStructureId')
+                        ->select('parentStructureId')
                         ->where('type', 'structure')
-                        ->whereIn('parentStructureId', static function ($prodSubQuery) use ($argument) {
-                            $prodSubQuery->from('zxitem_language')
+                        ->whereIn('childStructureId', static function ($releaseSubQuery) use ($argument) {
+                            $releaseSubQuery->from('zxitem_language')
                                 ->select('elementId')
                                 ->whereIn('value', $argument);
-                        })
-                        ->whereNotIn('childStructureId', static function ($releaseSubQuery) {
-                            $releaseSubQuery->from('zxitem_language')
-                                ->select('elementId');
                         });
                 });
         });

@@ -158,6 +158,7 @@ class WosManager extends errorLogger
         "sr" => ["sr"],
         "sv" => ["sv"],
         "tr" => ["tr"],
+        "he" => ["he"],
         "y-" => ["sh"],
         "?r" => ["bs", "hr", "sr"],
         "?l" => ["ca", "en", "it", "es"],

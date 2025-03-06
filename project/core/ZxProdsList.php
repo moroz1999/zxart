@@ -127,7 +127,11 @@ trait ZxProdsList
                 $filters['zxReleaseReleaseType'] = $values;
             }
             if ($values = $this->getSelectorValue('languages')) {
-                $filters['zxReleaseLanguage'] = $values;
+                if ($this->getReleasesValue()){
+                    $filters['zxReleaseLanguage'] = $values;
+                } else {
+                    $filters['zxProdLanguage'] = $values;
+                }
             }
             $this->apiQuery = $apiQueriesManager->getQuery()->setExportType($this->type)->setFiltrationParameters($filters);
             $this->filteredQuery = clone($this->apiQuery->getExportFilteredQuery());

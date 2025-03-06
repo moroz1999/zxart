@@ -3,6 +3,7 @@
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueType;
 use ZxArt\Queue\QueueStatus;
+use ZxArt\ZxProdCategories\CategoryIds;
 
 class batchUploadZxProdsUploadForm extends structureElementAction
 {
@@ -27,7 +28,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
             $queueService = $this->getService('QueueService');
             $cachePath = $this->getService('PathsManager')->getPath('uploadsCache');
             if (!$structureElement->categories) {
-                $structureElement->categories = [92188];
+                $structureElement->categories = [CategoryIds::MISC->value];
             }
             $firstCategoryId = $structureElement->categories[0];
 

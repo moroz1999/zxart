@@ -1,10 +1,9 @@
 {capture assign="moduleContent"}
-	{assign "musicElement" $element->getInitialTarget()}
 	{assign "user" $element->getUser()}
 	{if $user}
 		<div class='comment_info'>
 			{if $user->userName === 'anonymous'}
-				<span class='comment_author'>{$element->author}</span>
+				<span>{$element->author}</span>
 			{elseif $url=$user->getUrl()}
 				{include file=$theme->template("component.username.tpl") userUrl=$url userClass='comment_author' userName=$user->userName userType=$user->getBadgeTypesString()}
 			{else}
@@ -20,7 +19,11 @@
 		}
 		window.commentsList.push({$element->getJsonInfo()});
 	</script>
-	<a class="comment_content_link" href="{$musicElement->getUrl()}">{$musicElement->title}</a>
+	{if isset($displayTarget) && $displayTarget}
+		{if $initialTarget = $element->getInitialTarget()}
+			<a class="comment_content_link" href="{$initialTarget->getUrl()}">{$initialTarget->getTitle()}</a>
+		{/if}
+	{/if}
 	<div class='comment_content'>
 		{$element->content}
 	</div>
@@ -35,7 +38,7 @@
 {/capture}
 {assign "moduleTitle" ""}
 {assign "moduleClass" "comment"}
-{assign "moduleAttributes" "id='vote_id_{$element->id}'"}
+{assign "moduleAttributes" "id='vote_id_{$element->id}' {if $element->areCommentsRegisteredOnly()}data-registered-only='true'{/if}"}
 {include file=$theme->template("component.subcontentmodule_wide.tpl")}
 {if !isset($displaySubComments) || $displaySubComments}
 	{if $commentsList = $element->getCommentsList()}

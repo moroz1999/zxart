@@ -31,14 +31,14 @@ final readonly class Log
     /**
      * @throws JsonException
      */
-    public function logMessage(string $errorText, ?int $level = null, ?int $id = null): void
+    public function logMessage(string $text, ?int $level = null, ?int $id = null): void
     {
         $logLevel = LogLevel::fromErrorLevel($level ?? E_ERROR);
 
         $logEntry = sprintf(
             "[%s] : %s",
             (string)($id ?? ''),
-            $errorText,
+            $text,
         );
 
         $this->logger->log($logLevel->value, $logEntry);

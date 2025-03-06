@@ -24,7 +24,6 @@ class fixApplication extends controllerApplication
     private $idLog = PUBLIC_PATH . 'zxChipIds.log';
     private const CATEGORY_MAGAZINE = 92179;
     private const CATEGORY_NEWSPAPER = 92182;
-    private const CATEGORY_MISC = 92188;
 
     /**
      * @return void
@@ -38,7 +37,7 @@ class fixApplication extends controllerApplication
     public function execute($controller)
     {
         ini_set("memory_limit", "2048M");
-        ini_set("max_execution_time", 60);
+        ini_set("max_execution_time", 1160);
         $renderer = $this->getService('renderer');
         $renderer->endOutputBuffering();
 
@@ -48,7 +47,7 @@ class fixApplication extends controllerApplication
 
             $this->structureManager = $this->getService(
                 'structureManager',
-                ['rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin')]
+                ['rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin')],
             );
             /**
              * @var LanguagesManager $languagesManager
@@ -58,14 +57,51 @@ class fixApplication extends controllerApplication
 //            $this->fixReleases();
 //            $this->deleteProds();
 //            $this->fixPress();
-            $this->fixDemoCategories();
+//            $this->fixMisc();
+//            $this->miscTemp();
+//            $this->fixDemoCategories();
 //            $this->fixPressCategories();
 //            $this->deletePress();
 //            $this->fixProds();
 //            $this->fixZxChip();
 //            $this->fixWlodek();
 //            $this->fixZx81();
-//            $this->addCategoryToQueue(92505, QueueStatus::STATUS_TODO, null);
+//            $this->addCategoryToQueue(92505, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_TODO, null);
+//            $this->addCategoryToQueue(204819, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
+        }
+    }
+
+    private function miscTemp(): void
+    {
+        /**
+         * @var linksManager $linksManager
+         */
+        $linksManager = $this->getService(linksManager::class);
+        $ids = $linksManager->getConnectedIdList(CategoryIds::MISC->value, LinkTypes::ZX_PROD_CATEGORY->value, 'parent');
+        foreach ($ids as $id) {
+            $parentIds = $linksManager->getConnectedIdList($id, LinkTypes::ZX_PROD_CATEGORY->value, 'child');
+            foreach ($parentIds as $parentId) {
+                if ($parentId !== CategoryIds::MISC->value) {
+                    echo "INSERT IGNORE INTO `engine_structure_links` (`parentStructureId`, `childStructureId`, `type`) VALUES ($parentId, $id, '" . LinkTypes::ZX_PROD_CATEGORY->value . "'); <br>";
+                }
+            }
+        }
+    }
+
+    private function fixMissingCategories(): void
+    {
+        /**
+         * @var linksManager $linksManager
+         */
+        $linksManager = $this->getService(linksManager::class);
+
+        $records = $this->db->table('module_zxprod')->whereNotIn('id',
+            static function ($query) {
+                $query->from('structure_links')->where('type', '=', LinkTypes::ZX_PROD_CATEGORY->value)->select('childStructureId');
+            },
+        )->get();
+        foreach ($records as $record) {
+            $linksManager->linkElements(CategoryIds::MISC->value, $record['id'], LinkTypes::ZX_PROD_CATEGORY->value);
         }
     }
 
@@ -105,7 +141,7 @@ class fixApplication extends controllerApplication
 
     }
 
-    private function addCategoryToQueue(int $categoryId, QueueStatus $status, ?int $limit = null): void
+    private function addCategoryToQueue(int $categoryId, QueueType $queueType, QueueStatus $status, ?int $limit = null): void
     {
         /**
          * @var zxProdCategoryElement $category
@@ -129,25 +165,23 @@ class fixApplication extends controllerApplication
             $dbQuery->limit($limit);
         }
         $ids = $dbQuery
-            ->whereNotIn('id', function ($query) {
+            ->whereNotIn('id', function ($query) use ($queueType) {
                 $query->from('queue')
                     ->select('elementId')
-                    ->where('type', '=', QueueType::AI_CATEGORIES_TAGS->value);
+                    ->where('type', '=', $queueType->value);
             })
             ->pluck('id');
-        $records = array_map(function ($id) use ($status) {
+        $records = array_map(function ($id) use ($queueType, $status) {
             return [
                 'elementId' => $id,
-                'type' => QueueType::AI_CATEGORIES_TAGS->value,
+                'type' => $queueType->value,
                 'status' => $status->value,
             ];
         }, $ids);
         if (count($records)) {
             $this->db->table('queue')->insert($records);
             echo 'Inserted category ' . $category->getTitle() . ' into queue. Records: ' . count($records) . '<br>';
-
         }
-
     }
 
     private function fixProds(): void
@@ -269,7 +303,7 @@ class fixApplication extends controllerApplication
 
             $prod2 = $this->structureManager->getElementById($result['id']);
             if ($prod2) {
-                $linksManager->unLinkElements(self::CATEGORY_MISC, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
+                $linksManager->unLinkElements(CategoryIds::MISC->value, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
                 $linksManager->unLinkElements(self::CATEGORY_MAGAZINE, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
                 $linksManager->linkElements(self::CATEGORY_NEWSPAPER, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
 //            $linksManager->linkElements(self::CATEGORY_MAGAZINE, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
@@ -311,6 +345,24 @@ class fixApplication extends controllerApplication
         }
     }
 
+    private function fixMisc(): void
+    {
+        echo 'fixMisc <br>';
+        /**
+         * @var linksManager $linksManager
+         */
+        $linksManager = $this->getService(linksManager::class);
+
+        $ids = $linksManager->getConnectedIdList(CategoryIds::MISC->value, LinkTypes::ZX_PROD_CATEGORY->value, 'parent');
+
+        foreach ($ids as $prodId) {
+            $prod = $this->structureManager->getElementById($prodId);
+            echo 'fixed ' . $prod->title . ' ' . '<br>';
+
+            $prod->checkAndPersistCategories();
+        }
+    }
+
     private function fixPressCategories(): void
     {
         /**
@@ -333,7 +385,7 @@ class fixApplication extends controllerApplication
                 continue;
             }
 
-            $linksManager->unLinkElements(self::CATEGORY_MISC, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
+            $linksManager->unLinkElements(CategoryIds::MISC->value, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
             $linksManager->unLinkElements(self::CATEGORY_MAGAZINE, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
             $linksManager->linkElements(self::CATEGORY_NEWSPAPER, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
 //            $linksManager->linkElements(self::CATEGORY_MAGAZINE, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);

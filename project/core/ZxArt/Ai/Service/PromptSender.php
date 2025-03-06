@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace ZxArt\Ai\Service;
 
-use JsonException;
 use OpenAI;
 use ZxArt\Ai\Exception;
 use ZxArt\Logs\Log;
@@ -49,8 +48,9 @@ class PromptSender
                     ],
                 ];
             }
+            $this->log->logMessage(text: implode(',', $imageUrls), id: $id);
         }
-        $this->log->logMessage(errorText: $prompt, id: $id);
+        $this->log->logMessage(text: $prompt, id: $id);
         $data = null;
         try {
             $config = [
@@ -76,11 +76,9 @@ class PromptSender
 
             $data = $result;
 
-            $this->log->logMessage(errorText: $result, id: $id);
-        } catch (JsonException) {
-            return null;
+            $this->log->logMessage(text: $result, id: $id);
         } catch (Exception $exception) {
-            $this->log->logMessage(errorText: $exception->getMessage(), id: $id);
+            $this->log->logMessage(text: $exception->getMessage(), id: $id);
         }
         return $data;
     }

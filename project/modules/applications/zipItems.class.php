@@ -20,7 +20,7 @@ class zipItemsApplication extends controllerApplication
 
     public function initialize()
     {
-        set_time_limit(3 * 60);
+        set_time_limit(30);
         $this->configManager = $this->getService('ConfigManager');
 
         $this->startSession($this->mode);

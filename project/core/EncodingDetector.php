@@ -2,12 +2,19 @@
 
 class EncodingDetector
 {
-    static array $encodings = ['UTF-8', 'Windows-1251', 'ISO-8859-1', 'IBM866',  'CP866', 'KOI8-R', 'Windows-1252'];
+    private static $letters = [
+        'о', 'е', 'а', 'и', 'н', 'т', 'с', 'р', 'в', 'л', 'к', 'м', 'д', 'п', 'у', 'я', 'ы', 'ь', 'г', 'з',
+        'б', 'ч', 'й', 'х', 'ж', 'ш', 'ю', 'ц', 'щ', 'э', 'ф', 'ъ', 'ё',
+    ];
 
-    /**
-     * @param string $content
-     * @return string|false
-     */
+    private static array $encodings = [
+        'Windows-1251',
+        'CP866',
+        'KOI8-R',
+        'ISO-8859-1',
+        'Windows-1252',
+    ];
+
     public static function decodeText(string $content): string|false
     {
         $encoding = self::detectEncoding($content);
@@ -18,30 +25,31 @@ class EncodingDetector
         return false;
     }
 
-    public static function detectEncoding(string $content)
+    public static function detectEncoding(string $content): ?string
     {
         $autoEncoding = mb_detect_encoding($content, implode(', ', self::$encodings), true);
-        if ($autoEncoding !== 'UTF-8') {
-            $content = mb_convert_encoding($content, 'UTF-8', $autoEncoding);
-        }
-        if (self::isMostlyPrintable($content)) {
-            return $autoEncoding;
-        }
-
-        foreach (self::$encodings as $testEncoding) {
-            $content = mb_convert_encoding($content, 'UTF-8', $testEncoding);
-
+        if ($autoEncoding === 'UTF-8') {
             if (self::isMostlyPrintable($content)) {
-                return $testEncoding;
+                return $autoEncoding;
             }
         }
 
-        return false;
+        $content = self::sanitizeText($content);
+        $textWeights = [];
+        foreach (self::$encodings as $encoding) {
+            $textWeights[$encoding] = self::countWeight($content, $encoding);
+        }
+        $result = array_search(max($textWeights), $textWeights, true);
+        if ($result !== false) {
+            return $result;
+        }
+
+        return null;
     }
 
     public static function isMostlyPrintable(string $str): bool
     {
-        $length = min(mb_strlen($str), 100);
+        $length = min(mb_strlen($str), 300);
         if (!$length) {
             return false;
         }
@@ -57,4 +65,16 @@ class EncodingDetector
         return ($nonPrintable / $length) < 0.1;
     }
 
+    private static function countWeight(string $text, string $encoding): int
+    {
+        $text = mb_convert_encoding($text, 'UTF-8', $encoding);
+        $letters = array_count_values(mb_str_split($text));
+        arsort($letters);
+        return count(array_intersect(self::$letters, array_keys($letters)));
+    }
+
+    private static function sanitizeText(string $text): string
+    {
+        return str_replace(["\n", "\r\n", "\r", " "], '', $text);
+    }
 }

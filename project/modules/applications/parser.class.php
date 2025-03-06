@@ -1,5 +1,5 @@
 <?php
-
+// parser app for search by file
 class parserApplication extends controllerApplication
 {
     public $rendererName = 'json';

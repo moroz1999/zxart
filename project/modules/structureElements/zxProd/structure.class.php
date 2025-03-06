@@ -4,7 +4,9 @@ use Illuminate\Database\Connection;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\Repositories\ProdsRepository;
 use ZxArt\Queue\QueueService;
+use ZxArt\Queue\QueueStatusProvider;
 use ZxArt\Queue\QueueType;
+use ZxArt\ZxProdCategories\CategoryIds;
 
 /**
  * Class zxProdElement
@@ -39,6 +41,9 @@ use ZxArt\Queue\QueueType;
  * @property int $joinAndDelete
  * @property boolean $releasesOnly
  * @property array[] $splitData
+ * @property boolean $aiRestartSeo
+ * @property boolean $aiRestartIntro
+ * @property boolean $aiRestartCategories
  */
 class zxProdElement extends ZxArtItem implements
     StructureElementUploadedFilesPathInterface,
@@ -48,6 +53,7 @@ class zxProdElement extends ZxArtItem implements
     ZxSoftInterface,
     MetadataProviderInterface
 {
+    use QueueStatusProvider;
     use AuthorshipProviderTrait;
     use AuthorshipPersister;
     use FilesElementTrait;
@@ -178,6 +184,9 @@ class zxProdElement extends ZxArtItem implements
                 'role' => 'parent',
             ],
         ];
+        $moduleStructure['aiRestartSeo'] = 'checkbox';
+        $moduleStructure['aiRestartIntro'] = 'checkbox';
+        $moduleStructure['aiRestartCategories'] = 'checkbox';
     }
 
     /**
@@ -392,11 +401,13 @@ class zxProdElement extends ZxArtItem implements
         foreach ($this->categories as $categoryId) {
             $structureManager->clearElementCache($categoryId);
         }
+
+        // for all prods created from import, mass-upload, ensure SEO and intro creation
         /**
          * @var QueueService $queueService
          */
         $queueService = $this->getService('QueueService');
-        $queueService->checkElementInQueue($this->getId(), [QueueType::AI_SEO, QueueType::AI_INTRO, QueueType::AI_CATEGORIES_TAGS]);
+        $queueService->checkElementInQueue($this->getId(), [QueueType::AI_SEO, QueueType::AI_INTRO]);
     }
 
     public function getBestPictures($limit = false, $excludeId = null)
@@ -1015,7 +1026,7 @@ class zxProdElement extends ZxArtItem implements
                         $imageProcess->registerImage('canvas', $filePath);
                         $imageProcess->registerFilter(
                             'aspectedResize',
-                            'width=' . $width / 2 . ', interpolation=' . IMG_NEAREST_NEIGHBOUR
+                            'width=' . $width / 2 . ', interpolation=' . IMG_NEAREST_NEIGHBOUR,
                         );
                         $imageProcess->registerExport('canvas', null, $filePath);
                         $imageProcess->executeProcess();
@@ -1125,6 +1136,11 @@ class zxProdElement extends ZxArtItem implements
             if (!$category) {
                 continue;
             }
+            // remove "misc" if there are another categories
+            if ($category->id === CategoryIds::MISC->value && count($this->categories) > 1) {
+                continue;
+            }
+
             $childIds = [];
             $category->getSubCategoriesTreeIds($childIds);
             $isParentId = false;
@@ -1152,7 +1168,7 @@ class zxProdElement extends ZxArtItem implements
 
         if ($categoriesElements = $structureManager->getElementsByType(
             'zxProdCategoriesCatalogue',
-            $languagesManager->getCurrentLanguageId()
+            $languagesManager->getCurrentLanguageId(),
         )) {
             if ($categoriesElement = reset($categoriesElements)) {
                 return $categoriesElement;

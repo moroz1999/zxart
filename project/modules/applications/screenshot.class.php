@@ -17,6 +17,7 @@ class screenshotApplication extends controllerApplication
     {
         $this->startSession('public');
         $this->createRenderer();
+        set_time_limit(5);
     }
 
     /**
@@ -45,6 +46,7 @@ class screenshotApplication extends controllerApplication
             $filePath = $this->getService('PathsManager')->getPath('releases') . $element->file;
             if (strpos($this->id, '/') === false && strpos($this->id, '\\') === false && is_file($filePath)) {
                 $this->renderer->setContentDisposition('inline');
+                $this->renderer->setContentType('application/octet-stream');
                 $this->renderer->assign('filePath', $filePath);
                 $this->renderer->assign('fileName', $element->fileName);
                 $this->renderer->display();

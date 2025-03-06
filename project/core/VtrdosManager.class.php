@@ -3,6 +3,7 @@
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Prods\Services\ProdsService;
+use ZxArt\ZxProdCategories\CategoryIds;
 
 class VtrdosManager extends errorLogger
 {
@@ -177,7 +178,7 @@ class VtrdosManager extends errorLogger
         'Графика, гифты и поздравления:' => 92172,
         'Хиромантия, гадания и прочее:' => 92582,
         'Различные психологические тесты:' => 418663,
-        'Разнообразный софт:' => 92188,
+        'Разнообразный софт:' => CategoryIds::MISC->value,
         'Game // exUSSR' => 92177,
         'Game // English' => 92177,
         'Game // Demo version' => 92177,

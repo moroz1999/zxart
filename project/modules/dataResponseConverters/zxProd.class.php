@@ -116,13 +116,15 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 return implode(', ', $authors);
             },
             "categoriesString" => function (zxProdElement $element) {
-                $categories = [];
+                $paths = [];
                 foreach ($element->getCategoriesPaths() as $path) {
+                    $categories = [];
                     foreach ($path as $category) {
                         $categories[] = $category->title;
                     }
                 }
-                return implode(', ', $categories);
+                $paths[] = implode('/', $categories);
+                return implode('; ', $paths);
             },
             "languageString" => function (zxProdElement $element) {
                 $languages = [];
@@ -149,12 +151,13 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                             if ($content) {
                                 return $content;
                             }
-                        } else if ($fileElement->getFileExtension() === 'pdf') {
+                        } elseif ($fileElement->getFileExtension() === 'pdf') {
                             $parser = new \Smalot\PdfParser\Parser();
                             $file = $fileElement->getFilePath();
                             try {
                                 $pdf = $parser->parseFile($file);
                                 $textContent = $pdf->getText();
+
                                 if (EncodingDetector::isMostlyPrintable($textContent)) {
                                     return $textContent;
                                 }
@@ -171,12 +174,12 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             "releaseFileDescription" => function (zxProdElement $element) {
                 foreach ($element->getReleasesList() as $releaseElement) {
                     foreach ($releaseElement->getReleaseFlatStructure() as $item) {
-                        if ($item['type'] === 'file' && $item['viewable']) {
-                            if ($item['internalType'] === 'plain_text' && $item['encoding'] !== 'none') {
-                                if ($file = $releaseElement->getReleaseFile($item['id'])) {
-                                    return $releaseElement->getFormattedFileContent($file);
-                                }
-                            }
+                        if ($item['type'] === 'file' &&
+                            $item['viewable'] &&
+                            $item['internalType'] === 'plain_text' &&
+                            $item['encoding'] !== 'none'
+                        ) {
+                            return $releaseElement->getFormattedFileContent($item);
                         }
                     }
                 }

@@ -8,6 +8,7 @@ Disallow: /api
 Disallow: /zipItems
 Disallow: /file
 Disallow: /print
+Disallow: /redirect
 
 User-agent: BLEXBot
 Disallow: /
@@ -35,3 +36,12 @@ User-agent: ClaudeBot
 Disallow: /
 User-agent: grapeshot
 Disallow: /
+
+User-agent: AwarioRssBot
+User-agent: AwarioSmartBot
+Disallow: /
+
+User-agent: Bingbot
+Disallow: /rus/poisk/
+Disallow: /eng/search/
+Disallow: /spa/buscar/

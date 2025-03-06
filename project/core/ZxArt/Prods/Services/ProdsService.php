@@ -26,6 +26,7 @@ use ZxArt\Import\Prods\ProdLabel;
 use ZxArt\Import\Prods\ProdResolver;
 use ZxArt\Parties\Services\PartiesService;
 use ZxArt\Prods\Repositories\ProdsRepository;
+use ZxArt\ZxProdCategories\CategoryIds;
 use ZxParsingManager;
 use zxProdElement;
 use zxReleaseElement;
@@ -37,7 +38,7 @@ class ProdsService extends ElementsManager
     use ReleaseFormatsProvider;
     use ReleaseFileTypesGatherer;
 
-    protected int $defaultCategoryId = 92188;
+    protected int $defaultCategoryId = CategoryIds::MISC->value;
     protected bool $forceUpdateYear = false;
     protected bool $forceUpdateYoutube = false;
     protected bool $forceUpdateExternalLink = false;

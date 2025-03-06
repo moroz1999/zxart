@@ -10,10 +10,12 @@ use zxProdElement;
 
 class ProdQueryService
 {
-    private const DESCRIPTION_LIMIT = 2700;
+    private const DESCRIPTION_LIMIT = 30000;
     private const MIN_DESCRIPTION_LIMIT = 500;
     private const TAGS_MANUAL_LIMIT = 1000;
-    private const IMAGES_LIMIT = 10;
+    private const IMAGES_LIMIT_FOR_CATEGORIES = 10;
+    private const IMAGES_LIMIT_FOR_INTRO = 15;
+    private const IMAGES_LIMIT_FOR_INTRO_NOTEXT = 30;
 
     public function __construct(
         private readonly PromptSender $promptSender,
@@ -25,27 +27,29 @@ class ProdQueryService
 
     private function getSeoPromt($isRunnable): string
     {
-        $promt = "Действуй как опытный SEO-специалист, но отвечай как API. Есть сайт-коллекция софта для ZX Spectrum, Sam Coupe, ZX Next, ZX81, ZX Evolution и тд, нужно сделать SEO, чтобы люди в поисковике нашли нужную информацию. 
-Я скину данные софта, сгенерируй из них JSON на трех языках eng/rus/spa, где был бы эффективный page title (30-60 символов), краткое описание meta description с важными параметрами (155-160 символов), правильный заголовок h1 (до 70 символов). 
-* Учитывай категорию софта (игры будут искать игроки, системные программы - спецы и интересующиеся старым софтом, демки - искусство) при составлении текста. 
+        $promt = "
+Отправляю тебе через API данные. Сделай всё правильно с первой попытки, так как я не смогу проверить и указать на ошибки. 
+Действуй как опытный SEO-специалист. Есть сайт-коллекция софта для ZX Spectrum, Sam Coupe, ZX Next, ZX81, ZX Evolution и тд, нужно сделать SEO, чтобы люди в поисковике нашли нужную информацию. 
+Я скину данные софта, сгенерируй из них JSON на трех языках eng/rus/spa с SEO полями. 
+* Учитывай категорию софта (игры будут искать игроки, системные программы - спецы и интересующиеся старым софтом, демки - искусство) при составлении текста. В игры играют, демо смотрят, софтом пользуются. 
 * Не переводи названия софта и псевдонимы авторов, но делай читабельные названия категорий (игры, демо, программы).
 ";
         if ($isRunnable) {
-            $promt .= "* программу можно запустить на сайте в онлайн-эмуляторе, это важно, используй call to action 'Играть онлайн' для игр или 'Запустить онлайн' для программ.
+            $promt .= "* программу можно запустить на сайте в онлайн-эмуляторе, это важно, используй call to action 'Можно играть на сайте', 'играть онлайн' для игр или 'Запустить онлайн' для программ, 'Посмотреть онлайн' для демо.
 ";
         }
         $promt .= "* Упомяни год выпуска если влезает.
-* page title будет показан посетителю в поисковике. Он должен содержать правильные ключевики для ранжирования.        
-* h1 будет показан посетителю уже на сайте, это главный заголовок над текстом. Он должен быть человекопонятным и сразу дать кратко понять, что это за программа.
-* В Meta description желательно указать компанию-производителя, издателя, год, язык
-* В ответе не пиши ни слова, ТОЛЬКО JSON в формате:
+* page title (65-70 символов) будет показан посетителю в поисковике. Хороший page title содержит название софта, его тип и платформу. Например: Satisfaction - мегадемо для ZX-Spectrum. Или: Turbo Copier - утилита копирования диска для Sam Coupe. Или например: Spectrofon #02 - электронный журнал для ZX Spectrum.  
+* h1 (100 символов) будет показан посетителю уже на сайте, это главный заголовок над текстом. Он должен быть человекопонятным и сразу дать кратко понять, что это за программа. Например, Экшен-платформер игра Captain Square Jaw. Не используй оценочных суждений типа 'Впечатляющий', 'Увлекательный' итд 
+* В Meta description нужно уместить краткое описание, увидев которого человек захотел бы кликнуть и посмотреть страницу среди других страниц в результатах поиска. Нужно выгодно выделиться информативностью и приятным стилем. Желательно указать компанию-производителя, издателя, год, язык, про что программа или игра, жанр. По возможности нужно использовать все 170 символов под завязку. 
+* В ответе пиши ТОЛЬКО JSON в формате:
 {
 eng:{pageTitle, metaDescription, h1},
 rus:{},
 spa:{}
 }
 
-Данные:
+Данные программы:
 ";
         return $promt;
     }
@@ -56,36 +60,51 @@ spa:{}
         if (!$prodData) {
             return null;
         }
+        $map = [
+            'seriesProds' => ['type', 'Series of software'],
+            'isPlayable' => ['isRunnableOnline', true],
+            'compilationItems' => ['type', 'Compilation of software'],
+            'authorsInfoString' => ['authors', null],
+            'languageString' => ['languages', null],
+            'categoriesString' => ['categories', null],
+            'hardwareString' => ['hardware', null],
+            'groupsString' => ['createdBy', null],
+            'partyString' => ['demoPartyCompetition', null],
+            'publishersString' => ['publishers', null],
+        ];
+
+        foreach ($map as $key => [$newKey, $value]) {
+            if (!empty($prodData[$key])) {
+                $prodData[$newKey] = $value ?? $prodData[$key];
+                unset($prodData[$key]);
+            }
+        }
+
+        return $this->processDescriptions($prodData);
+    }
+
+    private function processDescriptions(array $prodData): array
+    {
         $length = self::DESCRIPTION_LIMIT;
 
-        if (!empty($prodData['seriesProds'])) {
-            unset($prodData['seriesProds']);
-            $prodData['type'] = 'Series of software';
-        }
-        if (!empty($prodData['isPlayable'])) {
-            unset($prodData['isPlayable']);
-            $prodData['isRunnableOnline'] = true;
-        }
-        if (!empty($prodData['compilationItems'])) {
-            unset($prodData['compilationItems']);
-            $prodData['type'] = 'Compilation of software';
-        }
-
         if (!empty($prodData['manualString']) && strlen($prodData['manualString']) > self::MIN_DESCRIPTION_LIMIT) {
-            $manual = $prodData['manualString'];
-            unset($prodData['description'], $prodData['releaseFileDescription'], $prodData['manualString']);
+            $prodData['manual'] = $this->truncateUtf8($prodData['manualString'], $length);
+        }
 
-            $prodData['manual'] = $this->truncateUtf8($manual, $length);
+        if (!empty($prodData['releaseFileDescription'])) {
+            $length = (int)(self::DESCRIPTION_LIMIT * 0.8);
         }
-        if (!empty($prodData['description']) && strlen($prodData['description']) > self::MIN_DESCRIPTION_LIMIT) {
-            if (!empty($prodData['releaseFileDescription'])) {
-                $length = 1500;
+
+        foreach (['description', 'releaseFileDescription'] as $key) {
+            if (!empty($prodData[$key])) {
+                if (strlen($prodData[$key]) > self::MIN_DESCRIPTION_LIMIT) {
+                    $prodData[$key] = $this->truncateUtf8($prodData[$key], $length);
+                } else {
+                    unset($prodData[$key]);
+                }
             }
-            $prodData['description'] = $this->truncateUtf8($prodData['description'], $length);
         }
-        if (!empty($prodData['releaseFileDescription']) && strlen($prodData['releaseFileDescription']) > self::MIN_DESCRIPTION_LIMIT) {
-            $prodData['releaseFileDescription'] = $this->truncateUtf8($prodData['releaseFileDescription'], $length);
-        }
+
         return $prodData;
     }
 
@@ -154,25 +173,41 @@ spa:{}
         $promt .= $prodDataJson;
 
         $this->logAi($promt, $prodElement->id . '_seo');
-        $output = $this->promptSender->send($promt, 0.3,null, true);
-        if (!$output) {
+        $response = $this->promptSender->send(
+            $promt,
+            0.3,
+            null,
+            true,
+            PromptSender::MODEL_4O,
+        );
+        if (!$response) {
             return null;
         }
+        $response = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
 
-        if (!$this->validateSeoResponse($output)) {
+        if (!$this->validateSeoResponse($response)) {
             return null;
         }
-        return $output;
+        return $response;
     }
 
-    private function getIntroPromt(): string
+    private function getIntroPromt($hasTextDescriptions): string
     {
-        return "Я скину данные софта, сгенерируй из них краткое описание программы в виде JSON на трех языках eng/rus/spa.
-* Для каждого языка напиши по 4 абзаца, используя html теги для форматирования, всё вместе 200 слов
-* Не выдумывай, пересказывай объективно. Текст должен быть сухим, как карточка в библиотеке. 
+        $prompt = "
+Отправляю тебе через API данные. Сделай всё правильно с первой попытки, так как я не смогу проверить и указать на ошибки.         
+Я скину данные софта, сгенерируй из них краткое описание программы в виде JSON на трех языках eng/rus/spa. 
+Отправляю скриншоты из программы, распознай их и используй тексты и информацию с них.";
+        if ($hasTextDescriptions) {
+            $prompt .= "* Для каждого языка напиши по 4 абзаца, используя html теги для форматирования, ЖЕЛАТЕЛЬНО 150 слов";
+        } else {
+            $prompt .= "* Для каждого языка напиши по два абзаца, используя html теги для форматирования, всё вместе примерно 100 слов";
+        }
+        $prompt .= "
+* Не выдумывай факты, не пиши отсебятину, пересказывай объективно . Текст должен быть объективным, повествовательно-описательным. Это не картотека, нужны реально параграфы описания. ЕСЛИ НЕ ЗНАЕШЬ ЧТО ПИСАТЬ - ЛУЧШЕ НАПИШИ МЕНЬШЕ ТЕКСТА. 
 * НЕ ИСПОЛЬЗУЙ эпитеты \"потрясающий\", \"захватывающий\" итд.
 * Не пиши про управление и hardware. Пиши про жанр, сюжет и особенности программы.
 * Не переводи названия софта и псевдонимы авторов.
+* Пиши только интересное читателю, не надо 'воды' типа 'уникальные испытания и окружения' или 'Игроки проходят сложные уровни, преодолевая препятствия и выполняя точные прыжки для продвижения'. Пиши ТОЛЬКО самую конкретику.  
 * В ответе не пиши ни слова, ТОЛЬКО JSON в формате:
 {
 eng:'all text here',
@@ -182,6 +217,7 @@ spa:''
 
 Данные:
 ";
+        return $prompt;
     }
 
     public function queryIntroForProd(zxProdElement $prodElement): ?array
@@ -192,21 +228,35 @@ spa:''
             'spa' => '',
         ];
         $prodData = $this->getSeoProdData($prodElement);
-        $hasIntro = !empty($prodData['manual']) || !empty($prodData['description']) || !empty($prodData['releaseFileDescription']);
+        $hasTextDescriptions = !empty($prodData['manual']) || !empty($prodData['description']) || !empty($prodData['releaseFileDescription']);
 
-        if ($hasIntro) {
+        $imageUrls = $prodElement->getImagesUrls();
+        if ($hasTextDescriptions) {
+            $imageUrls = array_slice($imageUrls, 0, self::IMAGES_LIMIT_FOR_INTRO);
+        } else {
+            $imageUrls = array_slice($imageUrls, 0, self::IMAGES_LIMIT_FOR_INTRO_NOTEXT);
+        }
+
+        if ($hasTextDescriptions || $imageUrls) {
             $prodDataJson = $this->getProdDataJson($prodData);
             if ($prodDataJson === null) {
                 return null;
             }
 
-            $promt = $this->getIntroPromt();
+            $promt = $this->getIntroPromt($hasTextDescriptions);
             $promt .= $prodDataJson;
             $this->logAi($promt, $prodElement->id . '_intro');
-            $response = $this->promptSender->send($promt, 0.5, null, true);
+            $response = $this->promptSender->send(
+                $promt,
+                0.5,
+                $imageUrls,
+                true,
+                PromptSender::MODEL_4O,
+            );
             if (!$response) {
                 return null;
             }
+            $response = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
             $isValid = $this->validateIntroResponse($response);
             if (!$isValid) {
                 return null;
@@ -219,9 +269,9 @@ spa:''
     private function validateIntroResponse(array $response): bool
     {
         return
-            !empty($response['eng']['intro']) &&
-            !empty($response['rus']['intro']) &&
-            !empty($response['spa']['intro']);
+            !empty($response['eng']) &&
+            !empty($response['rus']) &&
+            !empty($response['spa']);
     }
 
 
@@ -270,7 +320,7 @@ spa:''
         if (count($imageUrls) > 1) {
             $imageUrls = array_slice($imageUrls, 1);
         }
-        $imageUrls = array_slice($imageUrls, 0, self::IMAGES_LIMIT);
+        $imageUrls = array_slice($imageUrls, 0, self::IMAGES_LIMIT_FOR_CATEGORIES);
         if (count($imageUrls) === 0) {
             throw new QuerySkipException('No images for prod. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
         }
@@ -285,10 +335,17 @@ spa:''
         }
         $promt = str_ireplace('%%prod%%', $prodDataString, $promt);
         $this->logAi($promt, $prodElement->id . '_categories_tags');
-        $response = $this->promptSender->send($promt, 0.3, $imageUrls, true);
+        $response = $this->promptSender->send(
+            $promt,
+            0.3,
+            $imageUrls,
+            true,
+        );
         if (!$response) {
             throw new QueryFailException('AI Response is null. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
         }
+        $response = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+
         $this->logAi(json_encode($response), $prodElement->id . '_categories_tags');
 
         if ($queryCategories) {
