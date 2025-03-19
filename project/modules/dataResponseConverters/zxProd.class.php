@@ -8,16 +8,16 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
     {
         return [
             'id' => 'id',
-            'title' => function ($element) {
+            'title' => static function ($element) {
                 return html_entity_decode($element->title, ENT_QUOTES);
             },
             'searchTitle' => 'getSearchTitle',
             'url' => 'getUrl',
             'structureType' => 'structureType',
-            'dateCreated' => function ($element) {
+            'dateCreated' => static function ($element) {
                 return $element->getValue('dateCreated');
             },
-            'dateModified' => function ($element) {
+            'dateModified' => static function ($element) {
                 return $element->getValue('dateModified');
             },
             'language' => 'language',
@@ -60,10 +60,10 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             },
             'hardware' => 'getHardware',
             'hardwareInfo' => 'getHardwareInfo',
-            'maps' => function ($element) {
+            'maps' => static function ($element) {
                 return $element->getFilesUrlList('mapFilesSelector', 'release');
             },
-            'rzx' => function ($element) {
+            'rzx' => static function ($element) {
                 return $element->getFilesUrlList('rzx', 'release');
             },
             'authorsInfo' => function (zxProdElement $element) {
@@ -73,7 +73,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 return $element->getShortAuthorship('prod');
             },
             'importIds' => 'getImportIdsIndex',
-            "votes" => function ($element) {
+            "votes" => static function ($element) {
                 return (float)$element->votes;
             },
             "partyString" => function (zxProdElement $element) {
@@ -87,7 +87,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 }
                 return $partyString;
             },
-            "groupsString" => function (zxProdElement $element) {
+            "groupsString" => static function (zxProdElement $element) {
                 $groups = [];
                 foreach ($element->groups as $group) {
                     $groups[] = html_entity_decode($group->title, ENT_QUOTES);
@@ -95,7 +95,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
 
                 return implode(', ', $groups);
             },
-            "publishersString" => function (zxProdElement $element) {
+            "publishersString" => static function (zxProdElement $element) {
                 $publishers = [];
                 foreach ($element->publishers as $publisher) {
                     $publishers[] = html_entity_decode($publisher->title, ENT_QUOTES);
@@ -140,6 +140,14 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                     $hwList[] = $hardware['title'];
                 }
                 return implode(', ', $hwList);
+            },
+            "articleIntros" => static function (zxProdElement $element) {
+                $articlesList = [];
+
+                foreach ($element->articles as $article) {
+                    $articlesList[] = ['title' => $article->title, 'description' => $article->introduction];
+                }
+                return $articlesList;
             },
             "manualString" => function (zxProdElement $element) {
                 foreach ($element->getReleasesList() as $releaseElement) {
@@ -226,6 +234,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 'isPlayable',
                 'compilationItems',
                 'seriesProds',
+                'articleIntros',
             ],
             'api' => [
                 'id',

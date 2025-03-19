@@ -66,11 +66,18 @@ class fixApplication extends controllerApplication
 //            $this->fixZxChip();
 //            $this->fixWlodek();
 //            $this->fixZx81();
-//            $this->addCategoryToQueue(92505, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_TODO, null);
+//            $this->addCategoryToQueue(92183, QueueType::AI_SEO, QueueStatus::STATUS_TODO, 5000);
+//            $this->addCategoryToQueue(92534, QueueType::AI_INTRO, QueueStatus::STATUS_TODO, 5000);
 //            $this->addCategoryToQueue(204819, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
         }
     }
-
+//92177
+//92183
+//92534
+//244858
+//244880
+//204819 - demoscene
+//202588 - compilation
     private function miscTemp(): void
     {
         /**

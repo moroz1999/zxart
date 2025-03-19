@@ -51,7 +51,7 @@ class PromptSender
             $this->log->logMessage(text: implode(',', $imageUrls), id: $id);
         }
         $this->log->logMessage(text: $prompt, id: $id);
-        $data = null;
+        $result = null;
         try {
             $config = [
                 'model' => $model,
@@ -74,13 +74,12 @@ class PromptSender
             $response = $client->chat()->create($config);
             $result = $response->choices[0]->message->content;
 
-            $data = $result;
-
-            $this->log->logMessage(text: $result, id: $id);
+            $logMessage = $result ?? 'Empty response received from: ' . json_encode($response, JSON_THROW_ON_ERROR);
+            $this->log->logMessage(text: $logMessage, id: $id);
         } catch (Exception $exception) {
             $this->log->logMessage(text: $exception->getMessage(), id: $id);
         }
-        return $data;
+        return $result;
     }
 
 }

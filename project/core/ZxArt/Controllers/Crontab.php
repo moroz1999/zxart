@@ -6,6 +6,7 @@ use Cache;
 use controllerApplication;
 use Exception;
 use Illuminate\Database\Connection;
+use JsonException;
 use LanguagesManager;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
@@ -61,7 +62,7 @@ class Crontab extends controllerApplication
     public function initialize()
     {
         ignore_user_abort(1);
-        set_time_limit(60 * 6);
+        set_time_limit(60 * 10);
         $this->createRenderer();
         $this->queueService = $this->getService('QueueService');
         $this->db = $this->getService('db');
@@ -145,7 +146,7 @@ class Crontab extends controllerApplication
         $this->languagesManager->setCurrentLanguageCode('rus');
 
         $counter = 0;
-        $executionLimit = 60 * 5;
+        $executionLimit = 60 * 2;
         $totalExecution = 0;
 
         while ($totalExecution <= $executionLimit) {
@@ -345,12 +346,12 @@ class Crontab extends controllerApplication
     }
 
     /**
-     * @return void
+     * @throws JsonException
      */
     private function queryAiSeo(): void
     {
         $counter = 0;
-        $executionLimit = 60 * 2;
+        $executionLimit = 60 * 4;
         $totalExecution = 0;
         while ($totalExecution <= $executionLimit) {
             $counter++;
@@ -393,7 +394,7 @@ class Crontab extends controllerApplication
     private function queryAiIntro(): void
     {
         $counter = 0;
-        $executionLimit = 60 * 2;
+        $executionLimit = 60 * 4;
         $totalExecution = 0;
         while ($totalExecution <= $executionLimit) {
             $counter++;
@@ -416,8 +417,15 @@ class Crontab extends controllerApplication
             }
             $startTime = microtime(true);
 
+            $metaData = null;
             $this->logMessage($counter . ' AI Intro request start ' . $prodElement->id . ' ' . $prodElement->title, 0);
-            $metaData = $this->prodQueryService->queryIntroForProd($prodElement);
+            try {
+                $metaData = $this->prodQueryService->queryIntroForProd($prodElement);
+            } catch (QuerySkipException $e) {
+                $this->logMessage($counter . ' AI Intro request skipped. ' . $e->getMessage(), 0);
+                $this->queueService->updateStatus($elementId, QueueType::AI_INTRO, QueueStatus::STATUS_SKIP);
+            }
+
             if ($metaData === null) {
                 $this->logMessage($counter . ' AI Intro request wrong response ' . $prodElement->id . ' ' . $prodElement->title, 0);
                 continue;
@@ -454,7 +462,7 @@ class Crontab extends controllerApplication
         $this->languagesManager->setCurrentLanguageCode('eng');
 
         $counter = 0;
-        $executionLimit = 60 * 5;
+        $executionLimit = 60 * 3;
         $totalExecution = 0;
         while ($totalExecution <= $executionLimit) {
             $counter++;

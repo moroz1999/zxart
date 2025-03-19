@@ -10,7 +10,7 @@ use zxProdElement;
 
 class ProdQueryService
 {
-    private const DESCRIPTION_LIMIT = 30000;
+    private const DESCRIPTION_LIMIT = 20000;
     private const MIN_DESCRIPTION_LIMIT = 500;
     private const TAGS_MANUAL_LIMIT = 1000;
     private const IMAGES_LIMIT_FOR_CATEGORIES = 10;
@@ -31,7 +31,8 @@ class ProdQueryService
 Отправляю тебе через API данные. Сделай всё правильно с первой попытки, так как я не смогу проверить и указать на ошибки. 
 Действуй как опытный SEO-специалист. Есть сайт-коллекция софта для ZX Spectrum, Sam Coupe, ZX Next, ZX81, ZX Evolution и тд, нужно сделать SEO, чтобы люди в поисковике нашли нужную информацию. 
 Я скину данные софта, сгенерируй из них JSON на трех языках eng/rus/spa с SEO полями. 
-* Учитывай категорию софта (игры будут искать игроки, системные программы - спецы и интересующиеся старым софтом, демки - искусство) при составлении текста. В игры играют, демо смотрят, софтом пользуются. 
+* Учитывай категорию софта (игры будут искать игроки, системные программы - спецы и интересующиеся старым софтом, демки - искусство) при составлении текста. В игры играют, демо смотрят, софтом пользуются.
+* Категории приведены в иерархическом виде через слэш. Слева - родительские, справа - дочерние. 
 * Не переводи названия софта и псевдонимы авторов, но делай читабельные названия категорий (игры, демо, программы).
 ";
         if ($isRunnable) {
@@ -41,6 +42,7 @@ class ProdQueryService
         $promt .= "* Упомяни год выпуска если влезает.
 * page title (65-70 символов) будет показан посетителю в поисковике. Хороший page title содержит название софта, его тип и платформу. Например: Satisfaction - мегадемо для ZX-Spectrum. Или: Turbo Copier - утилита копирования диска для Sam Coupe. Или например: Spectrofon #02 - электронный журнал для ZX Spectrum.  
 * h1 (100 символов) будет показан посетителю уже на сайте, это главный заголовок над текстом. Он должен быть человекопонятным и сразу дать кратко понять, что это за программа. Например, Экшен-платформер игра Captain Square Jaw. Не используй оценочных суждений типа 'Впечатляющий', 'Увлекательный' итд 
+* Не используй идиотских call to action типа 'Откройте для себя' - это не йогурт, это программы для ретро-компьютеров.
 * В Meta description нужно уместить краткое описание, увидев которого человек захотел бы кликнуть и посмотреть страницу среди других страниц в результатах поиска. Нужно выгодно выделиться информативностью и приятным стилем. Желательно указать компанию-производителя, издателя, год, язык, про что программа или игра, жанр. По возможности нужно использовать все 170 символов под завязку. 
 * В ответе пиши ТОЛЬКО JSON в формате:
 {
@@ -69,10 +71,10 @@ spa:{}
             'categoriesString' => ['categories', null],
             'hardwareString' => ['hardware', null],
             'groupsString' => ['createdBy', null],
+            'articleIntros' => ['articles', null],
             'partyString' => ['demoPartyCompetition', null],
             'publishersString' => ['publishers', null],
         ];
-
         foreach ($map as $key => [$newKey, $value]) {
             if (!empty($prodData[$key])) {
                 $prodData[$newKey] = $value ?? $prodData[$key];
@@ -178,7 +180,7 @@ spa:{}
             0.3,
             null,
             true,
-            PromptSender::MODEL_4O,
+            PromptSender::MODEL_4O_MINI,
         );
         if (!$response) {
             return null;
@@ -205,9 +207,13 @@ spa:{}
         $prompt .= "
 * Не выдумывай факты, не пиши отсебятину, пересказывай объективно . Текст должен быть объективным, повествовательно-описательным. Это не картотека, нужны реально параграфы описания. ЕСЛИ НЕ ЗНАЕШЬ ЧТО ПИСАТЬ - ЛУЧШЕ НАПИШИ МЕНЬШЕ ТЕКСТА. 
 * НЕ ИСПОЛЬЗУЙ эпитеты \"потрясающий\", \"захватывающий\" итд.
-* Не пиши про управление и hardware. Пиши про жанр, сюжет и особенности программы.
-* Не переводи названия софта и псевдонимы авторов.
-* Пиши только интересное читателю, не надо 'воды' типа 'уникальные испытания и окружения' или 'Игроки проходят сложные уровни, преодолевая препятствия и выполняя точные прыжки для продвижения'. Пиши ТОЛЬКО самую конкретику.  
+* Не пиши про управление и hardware. Больше всего пиши про сюжет (если это игра или демка), а ещё пиши про жанр и особенности программы. В системном и прикладном софте пиши про функционал.
+* Если произведение явно основано на фильме или книге, упомяни это обязательно и используй сюжет фильма и книги для дополнительных деталей в описании. 
+* Если видно музыкальную группу, селебрити - упомяни их.
+* Не переводи названия программ и псевдонимы авторов.
+* Не пиши общие фразы про то, что игра 'требует быструю реакцию и стратегическое мышление'. Лучше используй скриншоты и описывай сеттинг в общих чертах.
+* Не пиши про 'увлекательный игровой процесс', если ты не знаешь наверняка. Если это известная игра типа manic miner, то да, можно писать про её игровой процесс. А если у тебя НЕТ информации про неё в базе, то не надо сочинять.
+* Пиши только интересное читателю, не надо 'воды' типа 'уникальные испытания и окружения' или 'Игроки проходят сложные уровни, преодолевая препятствия и выполняя точные прыжки для продвижения'. Пиши ТОЛЬКО МАКСИМАЛЬНО самую конкретику.  
 * В ответе не пиши ни слова, ТОЛЬКО JSON в формате:
 {
 eng:'all text here',
@@ -220,6 +226,10 @@ spa:''
         return $prompt;
     }
 
+    /**
+     * @throws QuerySkipException
+     * @throws JsonException
+     */
     public function queryIntroForProd(zxProdElement $prodElement): ?array
     {
         $result = [
@@ -228,13 +238,24 @@ spa:''
             'spa' => '',
         ];
         $prodData = $this->getSeoProdData($prodElement);
-        $hasTextDescriptions = !empty($prodData['manual']) || !empty($prodData['description']) || !empty($prodData['releaseFileDescription']);
+
+        unset($prodData['isRunnableOnline']);
+
+        $hasTextDescriptions =
+            !empty($prodData['manual']) ||
+            !empty($prodData['description']) ||
+            !empty($prodData['releaseFileDescription']) ||
+            !empty($prodData['articles']);
 
         $imageUrls = $prodElement->getImagesUrls();
         if ($hasTextDescriptions) {
             $imageUrls = array_slice($imageUrls, 0, self::IMAGES_LIMIT_FOR_INTRO);
         } else {
             $imageUrls = array_slice($imageUrls, 0, self::IMAGES_LIMIT_FOR_INTRO_NOTEXT);
+        }
+
+        if (!$imageUrls) {
+            throw new QuerySkipException("Prod {$prodElement->id} {$prodElement->title} should have at least one screenshot to get the intro, now skipped");
         }
 
         if ($hasTextDescriptions || $imageUrls) {
@@ -283,9 +304,7 @@ spa:''
         file_put_contents(ROOT_PATH . '/temporary/ai/' . $type, $message, FILE_APPEND);
     }
 
-    /**
-     * @psalm-param 1500|2700 $length
-     */
+
     private function truncateUtf8($string, int $length)
     {
         if (strlen($string) <= $length) {

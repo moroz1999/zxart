@@ -13,6 +13,8 @@ readonly class PressArticleSeo
 
     public function getParsedData(string $text, string $pressTitle, string $pressArticleTitle, ?int $pressYear): ?array
     {
+        $textPart = $this->truncateUtf8($text, 40000);
+
         $prompt = "Отправляю тебе через АПИ текст статьи из журнала/газеты для ZX Spectrum, прочитай и собери информацию. Сделай всё правильно с первой попытки, так как я не смогу проверить и указать на ошибки.
 * Не пиши лишнюю воду, пиши сразу про что статья. 'Статья обсуждает эволюцию графических редакторов' - это плохо. 'Обсуждение эволюции графических редакторов' - это лучше. Будь краток, но полон фактов. Пиши ёмко, лаконично, интересно.
 * Перескажи статью В ТРИ ПРЕДЛОЖЕНИЯ (поле Short Content). Читателю должно быть понятно, о чем статья. Понимай правильно опечатки при чтении. Укажи, если это новелла, описание, мануал, реклама итд.
@@ -38,14 +40,31 @@ pageTitle:{eng:'', spa:'', rus:''}
 Название статьи:{$pressArticleTitle}
 Кусок статьи:
 
-{$text}";
+{$textPart}";
 
         $response = $this->promptSender->send(
             $prompt,
             1,
             null,
             true,
+            PromptSender::MODEL_4O_MINI
         );
         return json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+    }
+
+    private function truncateUtf8($string, int $length)
+    {
+        if (strlen($string) <= $length) {
+            return $string;
+        }
+
+        $truncated = substr($string, 0, $length);
+
+        while (!preg_match('//u', $truncated)) {
+            $length--;
+            $truncated = substr($string, 0, $length);
+        }
+
+        return $truncated;
     }
 }
