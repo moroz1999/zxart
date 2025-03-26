@@ -57,11 +57,12 @@ class zxReleaseElement extends ZxArtItem implements
     protected $imagesUrls;
     protected $prodElement;
     private const UspReleaseTypeRunnable = ['trd', 'tap', 'z80', 'sna', 'tzx', 'scl'];
-    private const Zx81ReleaseTypeRunnable = ['tzx', 'p'];
+    private const Zx81ReleaseTypeRunnable = ['tzx', 'p', 'o'];
     private const RunnableTypes = [...self::UspReleaseTypeRunnable, ...self::Zx81ReleaseTypeRunnable, ...self::TsconfReleaseTypeRunnable];
-    private const Zx81HardwareRunnable = ["zx80", "zx8116", "zx811", "zx812", "zx8132", "zx8164"];
+    private const Zx80HardwareRunnable = ["zx80"];
+    private const Zx81HardwareRunnable = ["zx8116", "zx811", "zx812", "zx8132", "zx8164"];
 
-    private const TsconfReleaseTypeRunnable = ['img', 'spg', 'trd', 'scl'];
+    private const TsconfReleaseTypeRunnable = ['spg', 'img', 'trd', 'scl'];
     private const TsconfHardwareRunnable = ["tsconf"];
 
     /**
@@ -298,6 +299,7 @@ class zxReleaseElement extends ZxArtItem implements
     {
         return match ($this->getEmulatorType()) {
             'tsconf' => self::TsconfReleaseTypeRunnable,
+            'zx80' => self::Zx81ReleaseTypeRunnable,
             'zx81' => self::Zx81ReleaseTypeRunnable,
             'usp' => self::UspReleaseTypeRunnable,
         };
@@ -857,6 +859,13 @@ class zxReleaseElement extends ZxArtItem implements
 
     public function getEmulatorType(): ?string
     {
+        if (array_intersect($this->hardwareRequired, self::Zx80HardwareRunnable)) {
+            foreach ($this->releaseFormat as $format) {
+                if (in_array($format, self::Zx81ReleaseTypeRunnable, true)) {
+                    return 'zx80';
+                }
+            }
+        }
         if (array_intersect($this->hardwareRequired, self::Zx81HardwareRunnable)) {
             foreach ($this->releaseFormat as $format) {
                 if (in_array($format, self::Zx81ReleaseTypeRunnable, true)) {

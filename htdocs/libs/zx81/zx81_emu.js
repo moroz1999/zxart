@@ -1,4 +1,6 @@
 function ZX81EmulatorUI(statusElement, canvasElement, tapeUrl) {
+    this.jtyOne;
+
     function getTrackPrefix(track) {
         return track.length === 0 ? "" : track[0] > "9" ? track[0].toLowerCase() : "0";
     }
@@ -25,12 +27,16 @@ function ZX81EmulatorUI(statusElement, canvasElement, tapeUrl) {
         tapeUrl = tapeUrl.substring(0, speedDelimiterIndex);
     }
 
-    const emulator = new JtyOne(canvasElement, statusElement);
-    emulator.start(tapeUrl, scaleFactor, speeds[speedIndex], isZX80, hiresOption);
+    this.jtyOne = new JtyOne(canvasElement, statusElement);
+    this.jtyOne.start(tapeUrl, scaleFactor, speeds[speedIndex], isZX80, hiresOption);
 }
 
 
 function JtyOne(t, e) {
+    this.getDisplayFile = function () {
+        return zx81Display.getDisplayFile();
+    }
+
     function n(t) {
         for (var e = new Uint8Array(t.length / 2), n = 0; n < t.length / 2; n++) e[n] = parseInt(t.substr(2 * n, 2), 16);
         return e
@@ -38,7 +44,7 @@ function JtyOne(t, e) {
 
     var r = e,
         i = t,
-        o = new ZX81Display(r, i),
+        zx81Display = new ZX81Display(r, i),
         a = new ZX81Keyboard;
     document.addEventListener("keydown", function (t) {
         a.keyDown(t)
@@ -60,8 +66,8 @@ function JtyOne(t, e) {
             scaleFactor = 1;
         }
 
-        o.setScale(scaleFactor);
-        o.setSpeed(speed);
+        zx81Display.setScale(scaleFactor);
+        zx81Display.setSpeed(speed);
 
         if (tapeUrl.length > 0) {
             let initialSpeed = 0;
@@ -97,13 +103,13 @@ function JtyOne(t, e) {
             this.start2(new Uint8Array(), 0, 0);
         }
     }, this.start2 = function (t, e, n) {
-        o.start(t, e, n, a.zxKeyboard)
+        zx81Display.start(t, e, n, a.zxKeyboard)
     }, this.setScale = function (t) {
-        return o.setScale(t)
+        return zx81Display.setScale(t)
     }, this.setSpeed = function (t) {
-        return o.setSpeed(t)
+        return zx81Display.setSpeed(t)
     }, this.stop = function (t) {
-        o.stop(t)
+        zx81Display.stop(t)
     }, this.keyDown = function (t) {
         a.keyDown(t)
     }, this.keyUp = function (t) {
@@ -2681,6 +2687,12 @@ function Z80(t) {
 }
 
 function ZX81(t, e, n, r) {
+    this.getDisplayFile = function () {
+        const dfileAddress = memory[16396] + memory[16397] * 256;
+        const varsAddress = memory[16400] + memory[16401] * 256;
+        return memory.slice(dfileAddress, varsAddress);
+    }
+
     function i() {
         var t = tape.getNextTrack();
         if (null != t) {
@@ -2692,9 +2704,9 @@ function ZX81(t, e, n, r) {
                 c = 0,
                 u = [n, r, 255 & i, i >> 8, 255 & o, o >> 8, a, 255 & c, c >> 8],
                 f = [118, 6, 0, 62];
-            for (e = 0; e < u.length; e++) w[16384 + e] = 255 & u[e];
-            for (e = 0; e < f.length; e++) w[i + e] = 255 & f[e];
-            for (e = 0; e < t.data.length; e++) w[16393 + e] = t.data[e];
+            for (e = 0; e < u.length; e++) memory[16384 + e] = 255 & u[e];
+            for (e = 0; e < f.length; e++) memory[i + e] = 255 & f[e];
+            for (e = 0; e < t.data.length; e++) memory[16393 + e] = t.data[e];
             p.setIY(16384), p.setI(30), p.setSP(i), p.setPC(519)
         }
     }
@@ -2708,7 +2720,7 @@ function ZX81(t, e, n, r) {
         d = 0,
         s = !1,
         h = new Uint8Array(1024),
-        w = new Uint8Array(65536),
+        memory = new Uint8Array(65536),
         v = new Array,
         l = 0,
         g = r,
@@ -2716,7 +2728,7 @@ function ZX81(t, e, n, r) {
     5 == e ? tape.setZIP(t) : 1 == e ? tape.setP(t) : 3 == e ? tape.setPZIP(t) : 2 == e ? tape.setTZX(t) : 4 == e && tape.setTZXZIP(t), tape.setTrackNumber(n), this.start = function (t) {
         v.length = 0;
         var e = 0;
-        v[e++] = new FileToLoad(zx81opts.rom, w, 0, 65536), 1 == zx81opts.chrgen && (v[e++] = new FileToLoad("dkchr.rom", w, 8192, 65536)), this.waitForFiles(t)
+        v[e++] = new FileToLoad(zx81opts.rom, memory, 0, 65536), 1 == zx81opts.chrgen && (v[e++] = new FileToLoad("dkchr.rom", memory, 8192, 65536)), this.waitForFiles(t)
     }, this.waitForFiles = function (t) {
         for (var e = !0, n = !1, r = 0; r < v.length; r++)
             if (v[r].loadedLen <= 0) {
@@ -2732,7 +2744,7 @@ function ZX81(t, e, n, r) {
         }
         var h = v[0].loadedLen;
         1 == zx81opts.chrgen && (h += v[1].loadedLen), ROMTOP = h - 1, memotechMode = 0;
-        for (var r = ROMTOP + 1; 65536 > r; r++) w[r] = 7;
+        for (var r = ROMTOP + 1; 65536 > r; r++) memory[r] = 7;
         a = !1, c = !1, s = !1, B = 0, f = 207, y = 0, d = 0, o = null, p.reset(), i(), t()
     }, this.doScanLine = function (t) {
         var e = 0,
@@ -2779,10 +2791,10 @@ function ZX81(t, e, n, r) {
         } while (t.rasterPos - n < 420 && 0 == t.scanSyncValid);
         return 2 == t.scanSyncValid && (f = 207, y = 0), e
     }, this.writeByte = function (t, e) {
-        2 == zx81opts.chrgen && t >= 33792 && 34815 >= t && (h[t - 33792] = e, zx81opts.enableqschrgen = !0), t > zx81opts.RAMTOP && (t &= zx81opts.RAMTOP), t <= ROMTOP && zx81opts.protectROM || (w[t] = e)
+        2 == zx81opts.chrgen && t >= 33792 && 34815 >= t && (h[t - 33792] = e, zx81opts.enableqschrgen = !0), t > zx81opts.RAMTOP && (t &= zx81opts.RAMTOP), t <= ROMTOP && zx81opts.protectROM || (memory[t] = e)
     }, this.readByte = function (t) {
         var e;
-        return e = t <= zx81opts.RAMTOP ? w[t] : w[(t & zx81opts.RAMTOP - 16384) + 16384]
+        return e = t <= zx81opts.RAMTOP ? memory[t] : memory[(t & zx81opts.RAMTOP - 16384) + 16384]
     }, this.opcodeFetch = function (t) {
         if (32768 > t) return this.readByte(t);
         var e, n = this.readByte(t >= 49152 ? 32767 & t : t),
@@ -2809,27 +2821,27 @@ function ZX81(t, e, n, r) {
         return 255
     }, this.patchTest = function () {
         var t = p.getPC();
-        if (851 == t && 254 == w[t]) {
+        if (851 == t && 254 == memory[t]) {
             if (null != o) return 0 == o.loadedLen ? (p.setPC(848), !0) : o.loadedLen < 0 ? (o = null, p.setSP(p.getSP() + 2), p.setPC(756), !0) : (o = null, p.setSP(p.getSP() + 2), p.setPC(519), !0);
             var e = p.getDE(),
                 n = "";
             if (!(32768 & e)) {
-                for (; !(128 & w[e]) && n.length < 128;) n += ZX81_TO_ASCII[63 & w[e++]];
-                n += ZX81_TO_ASCII[63 & w[e]]
+                for (; !(128 & memory[e]) && n.length < 128;) n += ZX81_TO_ASCII[63 & memory[e++]];
+                n += ZX81_TO_ASCII[63 & memory[e]]
             }
             var r = tape.getTrackName(n);
             if (null != r) {
-                for (var i = 0; i < r.data.length; i++) w[16393 + i] = r.data[i];
+                for (var i = 0; i < r.data.length; i++) memory[16393 + i] = r.data[i];
                 return p.addTs(6), p.setSP(p.getSP() + 2), p.setPC(519), !0
             }
             if (n.length > 0) {
                 var a = n[0];
                 a > "0" && "9" >= a && (a = "0");
                 var c = ("pfiles/" + a + "/" + n + ".p").toLowerCase();
-                return o = new FileToLoad(c, w, 16393, 65536), p.setPC(848), !0
+                return o = new FileToLoad(c, memory, 16393, 65536), p.setPC(848), !0
             }
-        } else if (546 == t && 62 == w[t]) {
-            for (var i = 0; i < currentProgram.length; i++) w[16384 + i] = currentProgram[i];
+        } else if (546 == t && 62 == memory[t]) {
+            for (var i = 0; i < currentProgram.length; i++) memory[16384 + i] = currentProgram[i];
             return p.addTs(6), p.setSP(p.getSP() + 2), p.setPC(515), !0
         }
         return !1
@@ -2854,13 +2866,17 @@ function Track(t, e) {
 }
 
 function ZX81Display(t, e) {
+    this.getDisplayFile = function () {
+        return zx81.getDisplayFile();
+    }
+
     function n() {
         var t = (new Date).getTime();
-        t - f >= 20 && (1 != l ? (h.getContext("2d").putImageData(s, -42, -32), d.fillStyle = "white", d.fillRect(0, 0, B.width, B.height), d.drawImage(h, 0, 0, 320 * l, 240 * l)) : d.putImageData(s, -42, -32), f = t)
+        t - f >= 20 && (1 != scale ? (canvasElement.getContext("2d").putImageData(s, -42, -32), d.fillStyle = "white", d.fillRect(0, 0, B.width, B.height), d.drawImage(canvasElement, 0, 0, 320 * scale, 240 * scale)) : d.putImageData(s, -42, -32), f = t)
     }
 
     this.rasterPos = 0, this.scanSyncLen = 0, this.scanSyncValid = 0;
-    var r, i, o, a = !1,
+    var r, i, zx81, a = !1,
         c = 0,
         u = 0,
         f = 0,
@@ -2870,20 +2886,20 @@ function ZX81Display(t, e) {
     d.webkitImageSmoothingEnabled = !1;
     var s = d.createImageData(417, 380);
     this.screenImageARGB = new Uint32Array(s.data.buffer);
-    var h = document.createElement("CANVAS");
-    h.width = 320, h.height = 240, r = (new Date).getTime();
+    var canvasElement = document.createElement("CANVAS");
+    canvasElement.width = 320, canvasElement.height = 240, r = (new Date).getTime();
     var w = !1,
         v = !1;
-    this.setScale = function (t) {
-        return 1 >= t && (t = 1), t >= 2 && (t = 2), l = t, B.width = 320 * l, B.height = 240 * l, l
+    this.setScale = function (newScale) {
+        return 1 >= newScale && (newScale = 1), newScale >= 2 && (newScale = 2), scale = newScale, B.width = 320 * scale, B.height = 240 * scale, scale
     }, this.setSpeed = function (t) {
         return 10 >= t && (t = 10), t >= 1e3 && (t = 1e3), g = t, i = 1e3 / (50 * (g / 100)), g
     };
-    var l, g;
+    var scale, g;
     this.setScale(1), this.setSpeed(100), this.start = function (t, e, n, r) {
-        o = new ZX81(t, e, n, r);
+        zx81 = new ZX81(t, e, n, r);
         var i = this;
-        o.start(function () {
+        zx81.start(function () {
             i.displayLoop()
         })
     }, this.displayLoop = function () {
@@ -2896,7 +2912,7 @@ function ZX81Display(t, e) {
             else {
                 c++;
                 for (var B = 64584 + u; B > 0;)
-                    if (B -= o.doScanLine(this), this.rasterPos >= 158043 && (this.scanSyncValid = 1), this.scanSyncLen < 10 && (this.scanSyncValid = 0), 0 != this.scanSyncValid) {
+                    if (B -= zx81.doScanLine(this), this.rasterPos >= 158043 && (this.scanSyncValid = 1), this.scanSyncLen < 10 && (this.scanSyncValid = 0), 0 != this.scanSyncValid) {
                         var d = this.rasterPos % 417;
                         d > 405 && (this.rasterPos += 417 - d);
                         var s = this.rasterPos / 417;
@@ -3047,18 +3063,19 @@ function ZX81Keyboard() {
         n[A] = new t(p[m][2], p[m][3], p[m][4], p[m][5])
     }
     var x;
+    const self = this;
     this.keyDown = function (t) {
         var r = e(t);
         if (!(0 >= r)) {
             x = (new Date).getTime();
             var i = n[r];
-            this.zxKeyboard[i.addr1] |= i.data1, 255 != i.addr2 && (this.zxKeyboard[i.addr2] |= i.data2)
+            self.zxKeyboard[i.addr1] |= i.data1, 255 != i.addr2 && (self.zxKeyboard[i.addr2] |= i.data2)
         }
     }, this.keyUp = function (t) {
         var r = e(t);
         if (!(0 >= r)) {
             var i = n[r];
-            this.zxKeyboard[i.addr1] &= ~i.data1, 255 == i.addr2 || t.shiftKey || (this.zxKeyboard[i.addr2] &= ~i.data2)
+            self.zxKeyboard[i.addr1] &= ~i.data1, 255 == i.addr2 || t.shiftKey || (self.zxKeyboard[i.addr2] &= ~i.data2)
         }
     }
 }

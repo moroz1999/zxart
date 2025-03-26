@@ -6,6 +6,8 @@ window.tsconfEmulatorComponent = new function () {
     let componentElement;
     let fullscreenButton;
     let emulator;
+    let inited = false;
+
     const init = function () {
         if ((componentElement = document.querySelector('.emulator'))) {
             if ((canvasElement = componentElement.querySelector('.emulator_canvas'))) {
@@ -50,7 +52,10 @@ window.tsconfEmulatorComponent = new function () {
         }
     };
     self.start = function (newUrl) {
-
+        if (!inited) {
+            inited = true;
+            init();
+        }
         if (canvasElement) {
             url = newUrl;
             componentElement.style.display = 'block';
@@ -64,5 +69,4 @@ window.tsconfEmulatorComponent = new function () {
     const fullscreenClick = function () {
         emulator.requestFullScreen()
     };
-    controller.addListener('initDom', init);
 };

@@ -108,6 +108,8 @@ class fileElement extends structureElement implements StructureElementUploadedFi
     {
         return match ($extension) {
             'scr' => 'standard',
+            's80' => 's80',
+            's81' => 's81',
             'img' => 'gigascreen',
             'nxi' => 'nxi',
             'sl2' => 'sl2',
@@ -174,7 +176,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
             if (!empty($info['extension'])) {
                 if (in_array(
                     strtolower($info['extension']),
-                    ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff', 'scr', 'mlt', 'ifl', 'img', 'ssx']
+                    ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff', 'scr', 'mlt', 'ifl', 'img', 'ssx', 's80', 's81']
                 )) {
                     return true;
                 }

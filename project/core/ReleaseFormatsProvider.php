@@ -21,6 +21,7 @@ trait ReleaseFormatsProvider
             'tap',
             'mdr',
             'p',
+            'o',
 
             'bin',
             'rom',
@@ -58,6 +59,7 @@ trait ReleaseFormatsProvider
                 'tap',
                 'mdr',
                 'p',
+                'o',
             ],
 
             'rom' => [

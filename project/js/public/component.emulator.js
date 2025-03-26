@@ -5,7 +5,7 @@ window.emulatorComponent = new function () {
     let componentElement;
     let fullscreenButton;
     let selector;
-    let blob;
+    let inited = false;
     const init = function () {
         if ((componentElement = document.querySelector('.emulator'))) {
             if ((canvasElement = componentElement.querySelector('.emulator_canvas'))) {
@@ -46,22 +46,22 @@ window.emulatorComponent = new function () {
 
             if (selector.value === '48') {
                 const screenData = fileContents.slice(27, 27 + 6912);
-                blob = new Blob([screenData]);
-                sendScreenshot();
+                const blob = new Blob([screenData]);
+                sendScreenshot(blob, 'standard');
             } else if (selector.value === '128') {
                 const screenData = fileContents.slice(start2, start2 + 6912);
-                blob = new Blob([screenData]);
-                sendScreenshot();
+                const blob = new Blob([screenData]);
+                sendScreenshot(blob, 'standard');
             } else if (selector.value === 'giga') {
                 const screenData = fileContents.slice(27, 27 + 6912);
                 const screenData2 = fileContents.slice(start2, start2 + 6912);
-                blob = new Blob([screenData, screenData2]);
-                sendScreenshot();
+                const blob = new Blob([screenData, screenData2]);
+                sendScreenshot(blob, 'gigascreen');
             }
         }
     }
-    const sendScreenshot = function () {
-        const submitUrl = window.currentElementURL + 'id:' + window.currentElementId + '/action:uploadScreenshot/'
+    const sendScreenshot = function (blob, format) {
+        const submitUrl = window.currentElementURL + 'id:' + window.currentElementId + '/action:uploadScreenshot/format:' + format
         fetch(submitUrl, {method: "POST", body: blob})
             .then(response => {
                 if (response.ok) return response;
@@ -98,6 +98,10 @@ window.emulatorComponent = new function () {
             ['full screen=on']);
     };
     self.start = function (newUrl) {
+        if (!inited) {
+            inited = true;
+            init();
+        }
         if (canvasElement) {
             url = newUrl;
             componentElement.style.display = 'block';
@@ -113,5 +117,4 @@ window.emulatorComponent = new function () {
             }
         }
     };
-    controller.addListener('initDom', init);
 };
