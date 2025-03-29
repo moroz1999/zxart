@@ -20,3 +20,4 @@ $moduleActions[] = 'viewFile';
 $moduleActions[] = 'uploadScreenshot';
 $moduleActions[] = 'downloadDenied';
 $moduleActions[] = 'moveScreenshots';
+$moduleActions[] = 'clone';

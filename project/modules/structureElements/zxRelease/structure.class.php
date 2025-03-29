@@ -7,6 +7,7 @@ use ZxFiles\BasicFile;
  * @property string $file
  * @property string $fileName
  * @property int $downloads
+ * @property int $plays
  * @property string $year
  * @property string $releaseType
  * @property string $description
@@ -15,6 +16,7 @@ use ZxFiles\BasicFile;
  * @property array $language
  * @property array $releaseFormat
  * @property zxProdElement[] $compilations
+ * @property authorElement[]|authorAliasElement[]|groupElement[]|groupAliasElement[] $publishers
  * @property float $votes
  * @property int $denyVoting
  * @property int $denyComments

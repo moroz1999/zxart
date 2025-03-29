@@ -39,6 +39,7 @@ class publicAddZxRelease extends structureElementAction
             $privilegesManager->setPrivilege($user->id, $structureElement->id, 'zxRelease', 'publicReceive', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->id, 'zxRelease', 'publicDelete', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->id, 'zxRelease', 'deleteFile', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->id, 'zxRelease', 'clone', 'allow');
             $user->refreshPrivileges();
 
             $structureElement->updateFileStructure();

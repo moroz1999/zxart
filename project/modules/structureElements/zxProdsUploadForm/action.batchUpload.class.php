@@ -186,6 +186,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
             ['zxRelease', 'deleteFile', 'allow'],
             ['zxRelease', 'deleteAuthor', 'allow'],
             ['zxRelease', 'submitTags', 'allow'],
+            ['zxRelease', 'clone', 'allow'],
             ['file', 'delete', 'allow'],
             ['file', 'receive', 'allow'],
         ];

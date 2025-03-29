@@ -1129,4 +1129,20 @@ class ProdsService extends ElementsManager
         }
         return $newProdElement;
     }
+
+    public function copyAuthorship($sourceElement, $targetElement): void
+    {
+        $sourceElementId = $sourceElement->id;
+        $targetElementId = $targetElement->id;
+        if ($existingAuthorShipRecords = $this->authorshipRepository->getElementAuthorsRecords($sourceElementId)) {
+            foreach ($existingAuthorShipRecords as $record) {
+                $this->authorshipRepository->saveAuthorship(
+                    $targetElementId,
+                    $record['authorId'],
+                    $record['type'],
+                    $record['roles'],
+                );
+            }
+        }
+    }
 }

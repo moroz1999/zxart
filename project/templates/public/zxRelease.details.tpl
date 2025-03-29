@@ -5,6 +5,10 @@
             <a class="button"
                href="{$element->URL}id:{$element->id}/action:showPublicForm/">{translations name='zxrelease.edit'}</a>
         {/if}
+        {if isset($currentElementPrivileges.clone) && $currentElementPrivileges.clone==1}
+            <a class="button"
+               href="{$element->URL}id:{$element->id}/action:clone/">{translations name='zxrelease.clone'}</a>
+        {/if}
         {if isset($currentElementPrivileges.publicDelete) && $currentElementPrivileges.publicDelete}
             <a class="button delete_button"
                href="{$element->URL}id:{$element->id}/action:publicDelete/">{translations name='zxrelease.delete'}</a>

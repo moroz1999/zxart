@@ -37,7 +37,7 @@ final class AuthorshipRepository
     {
         $query = $this->db
             ->table('authorship')
-            ->select('id', 'authorId', 'startDate', 'endDate', 'roles')
+            ->select('id', 'authorId', 'startDate', 'endDate', 'roles', 'type')
             ->where('elementId', '=', $elementId);
         if ($type) {
             $query->where('type', '=', $type);
