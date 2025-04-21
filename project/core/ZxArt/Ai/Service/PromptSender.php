@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Ai\Service;
 
+use GuzzleHttp\Client;
 use OpenAI;
 use ZxArt\Ai\Exception;
 use ZxArt\Logs\Log;
@@ -39,14 +40,23 @@ class PromptSender
             ],
         ];
         if ($imageUrls !== null) {
+            $guzzleClient = new Client();
             foreach ($imageUrls as $imageUrl) {
-                $content[] = [
-                    "type" => "image_url",
-                    "image_url" => [
-                        "url" => $imageUrl,
-                        "detail" => "low",
-                    ],
-                ];
+                try {
+                    $response = $guzzleClient->get($imageUrl);
+                    $body = $response->getBody()->getContents();
+                    $contentType = $response->getHeaderLine('Content-Type');
+                    $base64Image = 'data:' . $contentType . ';base64,' . base64_encode($body);
+                    $content[] = [
+                        "type" => "image_url",
+                        "image_url" => [
+                            "url" => $base64Image,
+                            "detail" => "low",
+                        ],
+                    ];
+                } catch (\Exception $e) {
+                    $this->log->logMessage(text: 'Image download failed: ' . $imageUrl . ' - ' . $e->getMessage(), id: $id);
+                }
             }
             $this->log->logMessage(text: implode(',', $imageUrls), id: $id);
         }
@@ -62,7 +72,7 @@ class PromptSender
                     ],
                 ],
             ];
-            if ($temperature !== null) {
+            if ($temperature !== null && $model !== self::MODEL_O3_MINI) {
                 $config['temperature'] = $temperature;
             }
             if ($model !== self::MODEL_O3_MINI) {
@@ -81,5 +91,4 @@ class PromptSender
         }
         return $result;
     }
-
 }

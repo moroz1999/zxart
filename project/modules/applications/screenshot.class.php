@@ -6,7 +6,6 @@ class screenshotApplication extends controllerApplication
 
     protected $applicationName = 'screenshot';
     protected $id;
-    protected $fileName;
     protected $mode;
     public $rendererName = 'fileReader';
 
@@ -46,7 +45,7 @@ class screenshotApplication extends controllerApplication
             $filePath = $this->getService('PathsManager')->getPath('releases') . $element->file;
             if (strpos($this->id, '/') === false && strpos($this->id, '\\') === false && is_file($filePath)) {
                 $this->renderer->setContentDisposition('inline');
-                $this->renderer->setContentType('application/octet-stream');
+                $this->renderer->setContentType(mime_content_type($filePath));
                 $this->renderer->assign('filePath', $filePath);
                 $this->renderer->assign('fileName', $element->fileName);
                 $this->renderer->display();
@@ -64,9 +63,6 @@ class screenshotApplication extends controllerApplication
         $controller = controller::getInstance();
         if ($controller->getParameter('id')) {
             $this->id = (int)$controller->getParameter('id');
-        }
-        if ($controller->getParameter('filename')) {
-            $this->fileName = $controller->getParameter('filename');
         }
     }
 }

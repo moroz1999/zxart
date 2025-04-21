@@ -5,7 +5,6 @@ class zxscreenApplication extends controllerApplication
     protected $width;
     protected $height;
     protected $id;
-    protected $fileName;
     protected $type;
     protected $mode;
     protected $palette;
@@ -85,7 +84,6 @@ class zxscreenApplication extends controllerApplication
     {
         $controller = controller::getInstance();
         $this->id = $controller->getParameter('id');
-        $this->fileName = $controller->getParameter('fileName');
         $this->type = $controller->getParameter('type');
         $this->mode = $controller->getParameter('mode');
         $this->palette = $controller->getParameter('pal');

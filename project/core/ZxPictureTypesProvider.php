@@ -49,6 +49,7 @@ trait ZxPictureTypesProvider
             'specscii' => 'field.format_specscii',
             's80' => 'field.format_s80',
             's81' => 'field.format_s81',
+            'sca' => 'field.format_sca',
         ];
     }
 

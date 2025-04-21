@@ -34,7 +34,7 @@ class Helper
         $url .= 'id:' . $params->id . '/';
 
         if ($params->fileName) {
-            $url .= 'filename:' . $params->fileName;
+            $url .= $params->fileName;
         }
 
         return $url;

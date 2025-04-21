@@ -7,6 +7,7 @@ use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatusProvider;
 use ZxArt\Queue\QueueType;
 use ZxArt\ZxProdCategories\CategoryIds;
+use ZxArt\ZxProdCategories\CompilationCategoryIds;
 
 /**
  * Class zxProdElement
@@ -374,11 +375,57 @@ class zxProdElement extends ZxArtItem implements
         return ['structure', $this->getConnectedFileType()];
     }
 
+    private function checkSeriesCategories(): void
+    {
+        if (!$this->seriesProds || $this->getReleasesList()) {
+            return;
+        }
+        $rootCategories = $this->getRootCategories();
+        $updateRequired = false;
+        foreach ($rootCategories as $category) {
+            if ($category->id !== CategoryIds::SERIES->value) {
+                $updateRequired = true;
+            }
+        }
+        if (!$updateRequired) {
+            return;
+        }
+        $this->categories = [CategoryIds::SERIES->value];
+        $this->checkAndPersistCategories();
+    }
+
+    private function checkCompilationCategories(): void
+    {
+        if (!$this->compilationItems) {
+            return;
+        }
+        $compilationCategoryIds = [];
+        $rootCategories = $this->getRootCategories();
+        $isPress = false;
+        foreach ($rootCategories as $category) {
+            $compiletionCategoryId = CompilationCategoryIds::getCompilationCategoryId($category->id);
+            if ($compiletionCategoryId !== null) {
+                $compilationCategoryIds[] = $compiletionCategoryId;
+            }
+            if ($category === CategoryIds::PRESS){
+                $isPress = true;
+            }
+        }
+
+        if ($compilationCategoryIds === []) {
+            $compilationCategoryIds = [CategoryIds::COMPILATION_GAMES->value];
+        }
+        $this->categories = $compilationCategoryIds;
+        $this->checkAndPersistCategories();
+    }
+
     /**
      * @return void
      */
     public function persistElementData()
     {
+        $this->checkCompilationCategories();
+        $this->checkSeriesCategories();
         if (!$this->hasActualStructureInfo()) {
             $this->dateAdded = time();
         }
@@ -455,7 +502,7 @@ class zxProdElement extends ZxArtItem implements
                 ->getConnectedIdList($this->id, 'zxProdCategory', 'child');
             if (!$this->connectedCategoriesIds) {
                 if ($element = $this->getFirstParentElement()) {
-                    if ($element->structureType == 'zxProdCategory') {
+                    if ($element->structureType === 'zxProdCategory') {
                         $this->connectedCategoriesIds = [$element->id];
                     }
                 }
@@ -923,11 +970,23 @@ class zxProdElement extends ZxArtItem implements
         return implode(', ', array_unique($categoriesNames));
     }
 
+    public function getRootCategories(): array
+    {
+        $rootCategories = [];
+        foreach ($this->getConnectedCategories() as $category) {
+            $rootCategory = $category->getRootCategory();
+            if ($rootCategory !== null) {
+                $rootCategories[] = $rootCategory;
+            }
+        }
+        return $rootCategories;
+    }
+
+
     public function getRootCategoriesString(): string
     {
         $categoriesNames = [];
-        foreach ($this->getConnectedCategories() as $category) {
-            $rootCategory = $category->getRootCategory();
+        foreach ($this->getRootCategories() as $rootCategory) {
             $categoriesNames[] = html_entity_decode($rootCategory->title, ENT_QUOTES);
         }
         return implode(', ', array_unique($categoriesNames));

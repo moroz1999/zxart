@@ -63,6 +63,9 @@ class fixApplication extends controllerApplication
 //            $this->fixPressCategories();
 //            $this->deletePress();
 //            $this->fixProds();
+//            $this->fixCompilations();
+//            $this->fixSeries();
+            $this->showErrors();
 //            $this->fixZxChip();
 //            $this->fixWlodek();
 //            $this->fixZx81();
@@ -218,6 +221,76 @@ class fixApplication extends controllerApplication
         }
     }
 
+    private function fixCompilations(): void
+    {
+        $result = $this->db->table('structure_links')
+            ->where('type', '=', LinkTypes::COMPILATION->value)
+            ->groupBy('parentStructureId')
+            ->get(['parentStructureId']);
+        $ids = array_column($result, 'parentStructureId');
+        $count = count($ids);
+        $counter = 0;
+        foreach ($ids as $id) {
+            $prod = $this->structureManager->getElementById($id);
+            echo $counter . ' ' . round(100 * $counter / $count) . '% ';
+            if ($prod) {
+                $prod->persistElementData();
+                echo 'updated' . $id . ' ' . $prod->getTitle() . '<br>';
+            } else {
+                echo 'not found ' . $id . '<br>';
+            }
+            $counter++;
+            flush();
+        }
+    }
+
+    private function fixSeries(): void
+    {
+        $result = $this->db->table('structure_links')
+            ->where('type', '=', LinkTypes::SERIES->value)
+            ->groupBy('parentStructureId')
+            ->get(['parentStructureId']);
+        $ids = array_column($result, 'parentStructureId');
+        $count = count($ids);
+        $counter = 0;
+        foreach ($ids as $id) {
+            $prod = $this->structureManager->getElementById($id);
+            echo $counter . ' ' . round(100 * $counter / $count) . '% ';
+            if ($prod) {
+                $prod->persistElementData();
+                echo 'updated' . $id . ' ' . $prod->getTitle() . '<br>';
+            } else {
+                echo 'not found ' . $id . '<br>';
+            }
+            $counter++;
+            flush();
+        }
+    }
+
+    private function showErrors(): void
+    {
+        $result = $this->db->table('structure_links')
+            ->whereIn('type', [LinkTypes::SERIES->value])
+            ->groupBy('parentStructureId')
+            ->get(['parentStructureId']);
+        $ids = array_column($result, 'parentStructureId');
+        $count = count($ids);
+        $counter = 0;
+        foreach ($ids as $id) {
+            /**
+             * @var zxProdElement $prod
+             */
+            $prod = $this->structureManager->getElementById($id);
+            if ($prod && $prod->getReleasesList()) {
+                echo $counter . ' ' . round(100 * $counter / $count) . '% ';
+
+                echo 'not series ' . $id . ' ' . $prod->getTitle() . '<br>';
+            }
+            $counter++;
+            flush();
+        }
+    }
+
     /**
      * @return void
      */
@@ -338,8 +411,8 @@ class fixApplication extends controllerApplication
          * @var linksManager $linksManager
          */
         $linksManager = $this->getService(linksManager::class);
-        $demoId = CategoryIds::DEMO->value;
-        $megaDemoId = CategoryIds::MEGA_DEMO->value;
+        $demoId = CategoryIds::DEMOS->value;
+        $megaDemoId = CategoryIds::MEGADEMO->value;
         $trackmoId = CategoryIds::TRACKMO->value;
         $linkType = LinkTypes::ZX_PROD_CATEGORY->value;
         $ids = $linksManager->getConnectedIdList($demoId, $linkType, 'parent');

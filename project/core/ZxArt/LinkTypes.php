@@ -14,4 +14,6 @@ enum LinkTypes: string
     case PRESS_PARTIES = 'pressParties';
     case PRESS_TUNES = 'pressTunes';
     case PRESS_PICTURES = 'pressPictures';
+    case SERIES = 'series';
+    case COMPILATION = 'compilation';
 }

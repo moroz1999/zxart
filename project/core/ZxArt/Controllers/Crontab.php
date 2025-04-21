@@ -130,6 +130,10 @@ class Crontab extends controllerApplication
             $this->parseReleases();
             $this->parseArtItems('module_zxpicture', 'image', 'originalName');
             $this->parseArtItems('module_zxmusic', 'file', 'fileName');
+
+            $this->languagesManager = $this->getService('LanguagesManager');
+            $this->languagesManager->setCurrentLanguageCode('eng');
+
             $this->queryAiSeo();
             $this->queryAiIntro();
 //            $this->queryAiCategories();
@@ -375,7 +379,12 @@ class Crontab extends controllerApplication
             $startTime = microtime(true);
 
             $this->logMessage($counter . ' AI SEO request start ' . $prodElement->id . ' ' . $prodElement->title, 0);
-            $metaData = $this->prodQueryService->querySeoForProd($prodElement);
+            try {
+                $metaData = $this->prodQueryService->querySeoForProd($prodElement);
+            } catch (Exception $e) {
+                $this->logMessage($counter . ' AI SEO request failed. ' . $e->getMessage(), 0);
+                $this->queueService->updateStatus($elementId, QueueType::AI_SEO, QueueStatus::STATUS_FAIL);
+            }
             if ($metaData === null) {
                 $this->logMessage($counter . ' AI SEO request wrong response ' . $prodElement->id . ' ' . $prodElement->title, 0);
                 continue;
@@ -424,6 +433,9 @@ class Crontab extends controllerApplication
             } catch (QuerySkipException $e) {
                 $this->logMessage($counter . ' AI Intro request skipped. ' . $e->getMessage(), 0);
                 $this->queueService->updateStatus($elementId, QueueType::AI_INTRO, QueueStatus::STATUS_SKIP);
+            } catch (Exception $e) {
+                $this->logMessage($counter . ' AI Intro request failed. ' . $e->getMessage(), 0);
+                $this->queueService->updateStatus($elementId, QueueType::AI_INTRO, QueueStatus::STATUS_FAIL);
             }
 
             if ($metaData === null) {
@@ -458,9 +470,6 @@ class Crontab extends controllerApplication
 
     private function queryAiCategories(): void
     {
-        $this->languagesManager = $this->getService('LanguagesManager');
-        $this->languagesManager->setCurrentLanguageCode('eng');
-
         $counter = 0;
         $executionLimit = 60 * 3;
         $totalExecution = 0;
@@ -491,9 +500,9 @@ class Crontab extends controllerApplication
             } catch (QueryFailException $e) {
                 $this->logMessage($counter . ' AI Categories request failed. ' . $e->getMessage(), 0);
                 $this->queueService->updateStatus($elementId, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_FAIL);
-            } catch (QuerySkipException $e) {
-                $this->logMessage($counter . ' AI Categories request skipped. ' . $e->getMessage(), 0);
-                $this->queueService->updateStatus($elementId, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
+            } catch (Exception $e) {
+                $this->logMessage($counter . ' AI Categories request failed. ' . $e->getMessage(), 0);
+                $this->queueService->updateStatus($elementId, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_FAIL);
             }
             if ($metaData) {
                 $this->updateProdCategoriesAndTags($prodElement, $metaData, $queryCategoriesEnabled);

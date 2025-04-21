@@ -512,7 +512,11 @@ class ProdsService extends ElementsManager
             $propertyName = 'mapFilesSelector';
             $existingFiles = $element->getFilesList($propertyName);
             foreach ($prodInfo['maps'] as $map) {
-                $this->importElementFile($element, $map['url'], $existingFiles, $map['author'], $propertyName);
+                try {
+                    $this->importElementFile($element, $map['url'], $existingFiles, $map['author'], $propertyName);
+                } catch (ReleaseDownloadException $e) {
+                    $this->logError($e->getMessage());
+                }
             }
         }
 
@@ -524,7 +528,11 @@ class ProdsService extends ElementsManager
             $propertyName = 'rzx';
             $existingFiles = $element->getFilesList($propertyName);
             foreach ($prodInfo['rzx'] as $rzx) {
-                $this->importElementFile($element, $rzx['url'], $existingFiles, $rzx['author'], 'rzx');
+                try {
+                    $this->importElementFile($element, $rzx['url'], $existingFiles, $rzx['author'], 'rzx');
+                } catch (ReleaseDownloadException $e) {
+                    $this->logError($e->getMessage());
+                }
             }
         }
 
@@ -540,7 +548,7 @@ class ProdsService extends ElementsManager
     }
 
     /**
-     * @throws Exception
+     * @throws ReleaseDownloadException
      */
     private function importElementFile(zxReleaseElement|zxProdElement $element, string $fileUrl, array $existingFiles, string $fileAuthor = '', string $propertyName = 'connectedFile'): void
     {
@@ -551,8 +559,11 @@ class ProdsService extends ElementsManager
         $fileExists = false;
         foreach ($existingFiles as $existingFile) {
             if ($originalFileName === urldecode($existingFile->fileName)) {
-                $fileExists = true;
-                break;
+                $size = filesize($uploadsPath . $existingFile->fileName);
+                if ($size > 0) {
+                    $fileExists = true;
+                    break;
+                }
             }
         }
 
@@ -568,7 +579,7 @@ class ProdsService extends ElementsManager
                 $downloaded = $this->prodsDownloader->downloadUrl($fileUrl, $filePath);
             }
             if (!$downloaded) {
-                throw new Exception('Unable to download release ' . $element->id . ' ' . $fileUrl);
+                throw new ReleaseDownloadException('Unable to download release ' . $element->id . ' ' . $fileUrl);
             }
             if ($filePath && ($fileElement = $this->structureManager->createElement(
                     'file',
@@ -619,7 +630,11 @@ class ProdsService extends ElementsManager
         $existingFiles = $element->getFilesList($propertyName);
         if (!$existingFiles || $this->addImages) {
             foreach ($images as $imageUrl) {
-                $this->importElementFile($element, $imageUrl, $existingFiles, '', $propertyName);
+                try {
+                    $this->importElementFile($element, $imageUrl, $existingFiles, '', $propertyName);
+                } catch (ReleaseDownloadException $e) {
+                    $this->logError($e->getMessage());
+                }
             }
         }
     }
@@ -635,15 +650,18 @@ class ProdsService extends ElementsManager
     }
 
     /**
-     * @return null|zxProdElement
      * @throws Exception
      */
-    protected function getProdByReleaseMd5($prodInfo)
+    protected function getProdByReleaseMd5($prodInfo): ?zxProdElement
     {
         if (!empty($prodInfo['releases'])) {
             foreach ($prodInfo['releases'] as $releaseInfo) {
-                if ($releaseElement = $this->getReleaseByMd5($releaseInfo)) {
-                    return $releaseElement->getProd();
+                try {
+                    if ($releaseElement = $this->getReleaseByMd5($releaseInfo, $prodInfo['id'])) {
+                        return $releaseElement->getProd();
+                    }
+                } catch (ReleaseDownloadException $e) {
+                    $this->logError($e->getMessage());
                 }
             }
         }
@@ -651,10 +669,9 @@ class ProdsService extends ElementsManager
     }
 
     /**
-     * @return null|zxReleaseElement
-     * @throws Exception
+     * @throws ReleaseDownloadException
      */
-    protected function getReleaseByMd5($releaseInfo)
+    private function getReleaseByMd5($releaseInfo, $prodId): ?zxReleaseElement
     {
         if (!$releaseInfo['fileUrl']) {
             return null;
@@ -666,7 +683,7 @@ class ProdsService extends ElementsManager
                 $path = $this->prodsDownloader->getDownloadedPath($releaseInfo['fileUrl']);
             }
             if (!$path) {
-                throw new Exception('Unable to download release ' . $releaseInfo['title'] . ' ' . $releaseInfo['fileUrl']);
+                throw new ReleaseDownloadException('Unable to download release ' . $prodId . ' ' . $releaseInfo['id'] . ' ' . $releaseInfo['title'] . ' ' . $releaseInfo['fileUrl']);
             }
             if ($path) {
                 if ($structure = $this->zxParsingManager->getFileStructure($path)) {
@@ -703,8 +720,12 @@ class ProdsService extends ElementsManager
          */
         $element = $this->getElementByImportId($releaseId, $origin, 'release');
         if (!$element) {
-            if ($element = $this->getReleaseByMd5($releaseInfo)) {
-                $this->saveImportId($element->id, $releaseId, $origin, 'release');
+            try {
+                if ($element = $this->getReleaseByMd5($releaseInfo, $prodId)) {
+                    $this->saveImportId($element->id, $releaseId, $origin, 'release');
+                }
+            } catch (ReleaseDownloadException $e) {
+                $this->logError($e->getMessage());
             }
         }
         if (!$element) {

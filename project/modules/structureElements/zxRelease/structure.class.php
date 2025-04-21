@@ -777,7 +777,7 @@ class zxReleaseElement extends ZxArtItem implements
                 foreach ($this->hardwareRequired as $item) {
                     $this->hardwareInfo[] = [
                         'id' => $item,
-                        'title' => $translationsManager->getTranslationByName('hardware_short.item_' . $item),
+                        'title' => html_entity_decode($translationsManager->getTranslationByName('hardware_short.item_' . $item), ENT_QUOTES),
                     ];
                 }
                 $this->setCacheKey($key, $this->hardwareInfo, 24 * 60 * 60);

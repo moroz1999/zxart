@@ -289,8 +289,8 @@ class PouetManager extends errorLogger
     public function __construct()
     {
         $this->categories = [
-            'demo' => CategoryIds::DEMO->value,
-            '64k' => CategoryIds::DEMO->value,
+            'demo' => CategoryIds::DEMOS->value,
+            '64k' => CategoryIds::DEMOS->value,
             '64b' => 262452,
             '128b' => 262453,
             '256b' => 92169,
@@ -315,10 +315,10 @@ class PouetManager extends errorLogger
             'invitation' => 92173,
             'musicdisk' => 92175,
             'procedural graphics' => 315137,
-            'report' => CategoryIds::DEMO->value,
+            'report' => CategoryIds::DEMOS->value,
             'slideshow' => 315121,
             'votedisk' => 315121,
-            'wild' => CategoryIds::DEMO->value,
+            'wild' => CategoryIds::DEMOS->value,
             'bbstro' => 364978,
         ];
 

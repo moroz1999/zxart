@@ -125,7 +125,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         $extension = $this->getFileExtension();
 
         if ($full || $extension === 'gif') {
-            return $baseUrl . 'screenshot/id:' . $this->file . '/filename:' . $this->fileName;
+            return $baseUrl . 'screenshot/id:' . $this->file . '/' . $this->fileName;
         }
         $filename = pathinfo($this->fileName, PATHINFO_FILENAME);
         return $baseUrl . 'image/type:' . $preset . '/id:' . $this->file . '/filename:' . $filename . '.webp';
@@ -157,17 +157,13 @@ class fileElement extends structureElement implements StructureElementUploadedFi
     public function getDownloadUrl(string $mode = 'download', string $appName = 'file'): string
     {
         $controller = $this->getService('controller');
-        $url = $controller->baseURL . $appName . '/id:' . $this->file . '/mode:' . $mode . '/filename:' . $this->fileName;
-
-        return $url;
+        return $controller->baseURL . $appName . '/id:' . $this->file . '/mode:' . $mode . '/filename:' . $this->fileName;
     }
 
     public function getScreenshotUrl(): string
     {
         $controller = $this->getService('controller');
-        $url = $controller->baseURL . 'screenshot' . '/id:' . $this->file . '/filename:' . $this->fileName;
-
-        return $url;
+        return $controller->baseURL . 'screenshot' . '/id:' . $this->file . '/' . $this->fileName;
     }
 
     public function isImage(): bool

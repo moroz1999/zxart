@@ -29,6 +29,8 @@ $amount: 5;
     min-width: 15rem;
     flex-direction: column;
     max-height: 100vh;
+    padding-bottom: 50px;
+    box-sizing: border-box;
   }
   @include media-breakpoint-down(sm) {
     flex-wrap: wrap;
