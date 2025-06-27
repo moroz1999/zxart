@@ -28,6 +28,7 @@ trait ReleaseFormatsProvider
             'spg',
             'nex',
             'snx',
+            'tar',
 
             'sna',
             'szx',
@@ -68,6 +69,7 @@ trait ReleaseFormatsProvider
                 'spg',
                 'nex',
                 'snx',
+                'tar',
             ],
 
             'snapshot' => [

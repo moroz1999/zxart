@@ -278,6 +278,12 @@
             </td>
         </tr>
         {include file=$theme->template('component.form.files.tpl') element=$element propertyName='mapFilesSelector' imagePreset='prodImage'}
+        <tr>
+            <td colspan="2">
+                <h3>{translations name='zxprod.rzx'}:</h3>
+            </td>
+        </tr>
+        {include file=$theme->template('component.form.files.tpl') element=$element propertyName='rzx' imagePreset='rzx'}
     </table>
 
 

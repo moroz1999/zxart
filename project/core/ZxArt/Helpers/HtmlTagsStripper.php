@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ZxArt\Helpers;
 
 use DOMDocument;
+use DOMXPath;
 
 final class HtmlTagsStripper
 {
@@ -47,19 +48,26 @@ final class HtmlTagsStripper
     {
         $dom = self::createDom($string);
         $result = '';
-        foreach ($dom->childNodes as $c) {
-            $tagName = $c->tagName ?? null;
-            if ($tagName !== null && in_array($c->tagName, $tags)) {
-                foreach ($c->childNodes as $cc) {
-                    $result .= $cc->ownerDocument->saveHTML($cc);
+
+        $xpath = new DOMXPath($dom);
+        foreach ($tags as $tag) {
+            $elements = $xpath->query("//{$tag}");
+            if ($elements) {
+                foreach ($elements as $element) {
+                    $fragment = $dom->createDocumentFragment();
+                    while ($element->firstChild) {
+                        $fragment->appendChild($element->firstChild);
+                    }
+                    $element->parentNode->replaceChild($fragment, $element);
                 }
-            } else {
-                $result .= $c->ownerDocument->saveHTML($c);
             }
         }
 
-        return $result;
+        foreach ($dom->childNodes as $node) {
+            $result .= $dom->saveHTML($node);
+        }
 
+        return $result;
     }
 
     /**

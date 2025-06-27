@@ -1,9 +1,10 @@
 <?php
 
-use ZxArt\Authors\Repositories\AuthorshipRepository;
-use ZxArt\LinkTypes;
+use ZxArt\Authors\Constants;
 use ZxArt\Authors\Entities\Author;
+use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Elements\PressMentionsProvider;
+use ZxArt\LinkTypes;
 use ZxArt\Press\Helpers\PressMentions;
 
 /**
@@ -81,11 +82,9 @@ class authorAliasElement extends structureElement implements
     /**
      * @param (mixed|string)[] $types
      *
-     * @psalm-param list{0: 'authorPicture'|mixed, 1?: 'authorMusic'} $types
-     *
      * @return array
      */
-    public function getWorksList(array $types = ['authorPicture', 'authorMusic'])
+    public function getWorksList(array $types = [LinkTypes::AUTHOR_PICTURE->value, 'authorMusic'])
     {
         $result = [];
         foreach ($types as $type) {
@@ -133,7 +132,7 @@ class authorAliasElement extends structureElement implements
         if ($this->authorId) {
             return $this->authorId;
         }
-        return $this->getService('ConfigManager')->get('zx.unknownAuthorId');
+        return Constants::UNKNOWN_ID;
     }
 
     public function __call($methodName, $arguments)

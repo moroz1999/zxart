@@ -367,7 +367,7 @@ class ProdsService extends ElementsManager
                 }
             }
         }
-        if (!empty($prodInfo['youtubeId']) && (($element->youtubeId != $prodInfo['youtubeId']) && ($this->forceUpdateYoutube || $justCreated))) {
+        if (!empty($prodInfo['youtubeId']) && ($element->youtubeId != $prodInfo['youtubeId']) && ($this->forceUpdateYoutube || $justCreated)) {
             $changed = true;
             $element->youtubeId = $prodInfo['youtubeId'];
         }
@@ -559,8 +559,9 @@ class ProdsService extends ElementsManager
         $fileExists = false;
         foreach ($existingFiles as $existingFile) {
             if ($originalFileName === urldecode($existingFile->fileName)) {
-                $size = filesize($uploadsPath . $existingFile->fileName);
-                if ($size > 0) {
+                $path = $existingFile->getFilePath();
+                $size = filesize($path);
+                if (is_file($path) && $size > 0) {
                     $fileExists = true;
                     break;
                 }
@@ -867,6 +868,7 @@ class ProdsService extends ElementsManager
         if (!empty($releaseInfo['images']) && ($this->forceUpdateImages || $justCreated || !$element->getFilesList('screenshotsSelector'))) {
             $this->importElementFiles($element, $releaseInfo['images'], 'screenshotsSelector');
         }
+        
         if (!empty($releaseInfo['inlayImages'])) {
             $this->importElementFiles($element, $releaseInfo['inlayImages'], 'inlayFilesSelector');
         }

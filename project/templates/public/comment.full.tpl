@@ -25,7 +25,7 @@
 		{/if}
 	{/if}
 	<div class='comment_content'>
-		{$element->content}
+		{$element->getDecoratedContent()}
 	</div>
 	{if isset($privileges.comment.publicReceive) && $privileges.comment.publicReceive}
 		{if $element->areCommentsAllowed()}

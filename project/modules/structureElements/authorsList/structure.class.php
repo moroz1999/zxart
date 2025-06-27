@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\LinkTypes;
+
 class authorsListElement extends structureElement
 {
     use LettersElementsListProviderTrait;
@@ -9,6 +11,7 @@ class authorsListElement extends structureElement
     public $defaultActionName = 'show';
     public $role = 'content';
     protected $lettersSelectorInfo;
+
     /**
      * @return void
      */
@@ -45,8 +48,6 @@ class authorsListElement extends structureElement
 
     /**
      * @return string[]
-     *
-     * @psalm-return list{0: 'authorMusic'|'authorPicture', 1?: 'authorPicture'}
      */
     protected function getAuthorTypes(): array
     {
@@ -54,9 +55,9 @@ class authorsListElement extends structureElement
             return ['authorMusic'];
         } else {
             if ($this->items == 'all') {
-                return ['authorMusic', 'authorPicture'];
+                return ['authorMusic', LinkTypes::AUTHOR_PICTURE->value];
             } else {
-                return ['authorPicture'];
+                return [LinkTypes::AUTHOR_PICTURE->value];
             }
         }
     }

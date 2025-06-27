@@ -58,6 +58,9 @@ class zxReleaseElement extends ZxArtItem implements
     protected $currentReleaseFileInfo;
     protected $imagesUrls;
     protected $prodElement;
+    private const MbReleaseTypeRunnable = ['tar'];
+    private const MbHardwareRunnable = ["elementzxmb"];
+
     private const UspReleaseTypeRunnable = ['trd', 'tap', 'z80', 'sna', 'tzx', 'scl'];
     private const Zx81ReleaseTypeRunnable = ['tzx', 'p', 'o'];
     private const RunnableTypes = [...self::UspReleaseTypeRunnable, ...self::Zx81ReleaseTypeRunnable, ...self::TsconfReleaseTypeRunnable];
@@ -304,8 +307,9 @@ class zxReleaseElement extends ZxArtItem implements
             'zx80' => self::Zx81ReleaseTypeRunnable,
             'zx81' => self::Zx81ReleaseTypeRunnable,
             'usp' => self::UspReleaseTypeRunnable,
+            'mb' => self::MbReleaseTypeRunnable,
+            default => [],
         };
-
     }
 
     /**
@@ -877,6 +881,9 @@ class zxReleaseElement extends ZxArtItem implements
         }
         if (array_intersect($this->hardwareRequired, self::TsconfHardwareRunnable)) {
             return 'tsconf';
+        }
+        if (array_intersect($this->hardwareRequired, self::MbHardwareRunnable)) {
+            return 'mb';
         }
         if ($this->releaseFormat) {
             foreach ($this->releaseFormat as $format) {

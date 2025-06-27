@@ -45,3 +45,6 @@ User-agent: Bingbot
 Disallow: /rus/poisk/
 Disallow: /eng/search/
 Disallow: /spa/buscar/
+
+User-agent: proximic
+Disallow: /

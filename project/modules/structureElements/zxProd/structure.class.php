@@ -407,7 +407,7 @@ class zxProdElement extends ZxArtItem implements
             if ($compiletionCategoryId !== null) {
                 $compilationCategoryIds[] = $compiletionCategoryId;
             }
-            if ($category === CategoryIds::PRESS){
+            if ($category === CategoryIds::PRESS) {
                 $isPress = true;
             }
         }
@@ -943,20 +943,29 @@ class zxProdElement extends ZxArtItem implements
         return $this->languagesInfo;
     }
 
-    /**
-     * @return (int|mixed|string)[][]
-     *
-     * @psalm-return list{0?: array{id: int, title: string, url: mixed},...}
-     */
+    private function makeCategoryInfo($category): array
+    {
+        return [
+            'id' => $category->id,
+            'title' => html_entity_decode($category->title, ENT_QUOTES),
+            'url' => $category->getUrl(),
+        ];
+    }
+
     public function getCategoriesInfo(): array
     {
         $categoriesInfo = [];
         foreach ($this->getConnectedCategories() as $category) {
-            $categoriesInfo[] = [
-                'id' => $category->id,
-                'title' => html_entity_decode($category->title, ENT_QUOTES),
-                'url' => $category->getUrl(),
-            ];
+            $categoriesInfo[] = $this->makeCategoryInfo($category);
+        }
+        return $categoriesInfo;
+    }
+
+    public function getRootCategoriesInfo(): array
+    {
+        $categoriesInfo = [];
+        foreach ($this->getRootCategories() as $category) {
+            $categoriesInfo[] = $this->makeCategoryInfo($category);
         }
         return $categoriesInfo;
     }
@@ -975,7 +984,7 @@ class zxProdElement extends ZxArtItem implements
         $rootCategories = [];
         foreach ($this->getConnectedCategories() as $category) {
             $rootCategory = $category->getRootCategory();
-            if ($rootCategory !== null) {
+            if (($rootCategory !== null) && !in_array($rootCategory, $rootCategories, true)) {
                 $rootCategories[] = $rootCategory;
             }
         }

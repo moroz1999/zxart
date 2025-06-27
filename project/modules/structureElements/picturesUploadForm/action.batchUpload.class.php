@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Authors\Constants;
+
 class batchUploadPicturesUploadForm extends structureElementAction
 {
     protected $loggable = true;
@@ -61,7 +63,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
                     $pictureElement->denyVoting = $structureElement->denyVoting;
                     $pictureElement->denyComments = $structureElement->denyComments;
                     if (!$structureElement->author) {
-                        $pictureElement->author = [$this->getService('ConfigManager')->get('zx.unknownAuthorId')];
+                        $pictureElement->author = [Constants::UNKNOWN_ID];
                     } else {
                         $pictureElement->author = $structureElement->author;
                     }

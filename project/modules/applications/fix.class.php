@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Connection;
+use ZxArt\Authors\Constants;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\Repositories\ProdsRepository;
 use ZxArt\Prods\Services\ProdsService;
@@ -54,21 +55,7 @@ class fixApplication extends controllerApplication
              */
             $languagesManager = $this->getService('LanguagesManager');
             $languagesManager->setCurrentLanguageCode('eng');
-//            $this->fixReleases();
-//            $this->deleteProds();
-//            $this->fixPress();
-//            $this->fixMisc();
-//            $this->miscTemp();
-//            $this->fixDemoCategories();
-//            $this->fixPressCategories();
-//            $this->deletePress();
-//            $this->fixProds();
-//            $this->fixCompilations();
-//            $this->fixSeries();
-            $this->showErrors();
-//            $this->fixZxChip();
-//            $this->fixWlodek();
-//            $this->fixZx81();
+            $this->fixDisconnectedImages();
 //            $this->addCategoryToQueue(92183, QueueType::AI_SEO, QueueStatus::STATUS_TODO, 5000);
 //            $this->addCategoryToQueue(92534, QueueType::AI_INTRO, QueueStatus::STATUS_TODO, 5000);
 //            $this->addCategoryToQueue(204819, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
@@ -81,6 +68,100 @@ class fixApplication extends controllerApplication
 //244880
 //204819 - demoscene
 //202588 - compilation
+
+    private function fixDisconnectedImages(): void
+    {
+        /**
+         * @var linksManager $linksManager
+         */
+        $linksManager = $this->getService(linksManager::class);
+        $result = $this->db->table('module_zxpicture')
+            ->orderBy('id')
+            ->get(['id']);
+        $ids = array_column($result, 'id');
+
+        foreach ($ids as $id) {
+            /**
+             * @var zxPictureElement $picture
+             */
+            $picture = $this->structureManager->getElementById($id);
+            if ($picture === null) {
+                $linksManager->linkElements(Constants::UNKNOWN_ID, $id, LinkTypes::AUTHOR_PICTURE->value);
+                echo "restored <a href='/route/id:$id' target='_blank'>" . $id . "</a><br>";
+            }
+        }
+    }
+
+    private function fixProdInvalidImages()
+    {
+        /**
+         * @var linksManager $linksManager
+         */
+        $linksManager = $this->getService(linksManager::class);
+        $result = $this->db->table('module_zxprod')
+            ->orderBy('id')
+            ->get(['id']);
+        $ids = array_column($result, 'id');
+        $count = count($ids);
+        $counter = 0;
+        foreach ($ids as $id) {
+            if ($counter < 35845) {
+                $counter++;
+                continue;
+            }
+            /**
+             * @var zxProdElement $prod
+             */
+            $prod = $this->structureManager->getElementById($id);
+            echo $counter . ' ' . round(100 * $counter / $count) . '% ';
+            if ($prod) {
+                echo $prod->getId() . ' ' . $prod->getTitle() . '<br>';
+                $this->deleteInvalidImages($prod, 'connectedFile');
+                $this->deleteInvalidImages($prod, 'inlayFilesSelector');
+                $this->deleteInvalidImages($prod, 'mapFilesSelector');
+                $this->deleteInvalidImages($prod, 'rzx');
+                $releases = $prod->getReleasesList();
+                foreach ($releases as $release) {
+                    $this->deleteInvalidImages($release, 'screenshotsSelector');
+                    $this->deleteInvalidImages($release, 'inlayFilesSelector');
+                    $this->deleteInvalidImages($release, 'infoFilesSelector');
+                    $this->deleteInvalidImages($release, 'adFilesSelector');
+                    $this->structureManager->clearElementCache($release->id);
+                }
+                $this->structureManager->clearElementCache($prod->id);
+            }
+            $counter++;
+//            if ($counter > 10) {
+//                break;
+//            }
+            flush();
+        }
+    }
+
+    private function deleteInvalidImages(zxProdElement|zxReleaseElement $element, $propertyName)
+    {
+        $md5s = [];
+        $prodImages = $element->getFilesList($propertyName);
+        foreach ($prodImages as $prodImage) {
+            $filePath = $prodImage->getFilePath();
+            if (!is_file($filePath) || filesize($filePath) === 0) {
+                echo 'deleted missing image element ' . $prodImage->getId() . ' ' . $propertyName . '<br>';
+                $prodImage->deleteElementData();
+                continue;
+            }
+
+            $md5 = md5(file_get_contents($filePath));
+            $existing = isset($md5s[$md5]);
+            if ($existing) {
+                echo 'deleted duplicated image element ' . $prodImage->getId() . ' ' . $propertyName . '<br>';
+                $prodImage->deleteElementData();
+                continue;
+            }
+            $md5s[$md5] = true;
+        }
+    }
+
+
     private function miscTemp(): void
     {
         /**
@@ -617,7 +698,8 @@ class fixApplication extends controllerApplication
         }
     }
 
-    public function getUrlName()
+    public
+    function getUrlName()
     {
         return '';
     }

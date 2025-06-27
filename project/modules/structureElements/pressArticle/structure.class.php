@@ -219,8 +219,32 @@ class pressArticleElement extends structureElement implements SearchContentHolde
 
     public function getWrappedContent(): string
     {
-        return str_replace("\n", '<br />', $this->getFormattedContent(['div', 'p', 'span']));
+        $content = $this->content ?? '';
+
+        $dom = new DOMDocument();
+        @$dom->loadHTML(
+            $content,
+            LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+        );
+
+        $images = $dom->getElementsByTagName('img');
+        $imgHtmlList = [];
+
+        foreach ($images as $img) {
+            $imgHtmlList[] = $dom->saveHTML($img);
+        }
+
+        $stripped = HtmlTagsStripper::stripTags($content, ['div', 'p', 'span']);
+        $stripped = str_replace(["\n\r", "\r\n", "\r"], "\n", $stripped);
+
+        $encoded = htmlspecialchars($stripped, ENT_QUOTES, 'UTF-8', false);
+        foreach ($imgHtmlList as $imgHtml) {
+            $encodedImg = htmlspecialchars($imgHtml, ENT_QUOTES, 'UTF-8', false);
+            $encoded = str_replace($encodedImg, $imgHtml, $encoded);
+        }
+        return str_replace("\n", '<br>', $encoded);
     }
+
 
     public function getSorted($array)
     {

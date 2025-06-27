@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Authors\Constants;
+
 class batchUploadMusicUploadForm extends structureElementAction
 {
     protected $loggable = true;
@@ -53,7 +55,7 @@ class batchUploadMusicUploadForm extends structureElementAction
                     $zxMusicElement->denyVoting = $structureElement->denyVoting;
                     $zxMusicElement->denyComments = $structureElement->denyComments;
                     if (!$structureElement->author) {
-                        $zxMusicElement->author = [$this->getService('ConfigManager')->get('zx.unknownAuthorId')];
+                        $zxMusicElement->author = [Constants::UNKNOWN_ID];
                     } else {
                         $zxMusicElement->author = $structureElement->author;
                     }

@@ -1,7 +1,7 @@
 {capture assign="moduleTitle"}{if $element->title}{$element->title}{/if}{/capture}
 {capture assign="moduleContent"}
     <div class="zxrelease_editing_controls editing_controls">
-        {if isset($currentElementPrivileges.showPublicForm) && $currentElementPrivileges.showPublicForm==1}
+        {if !empty($currentElementPrivileges.showPublicForm) && !empty($currentElementPrivileges.publicReceive)}
             <a class="button"
                href="{$element->URL}id:{$element->id}/action:showPublicForm/">{translations name='zxrelease.edit'}</a>
         {/if}

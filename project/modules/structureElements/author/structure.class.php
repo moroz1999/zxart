@@ -1,7 +1,7 @@
 <?php
 
-use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Authors\Entities\Author;
+use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\LinkTypes;
 
@@ -171,9 +171,6 @@ class authorElement extends structureElement implements
 
     /**
      * @param (mixed|string)[] $types
-     *
-     * @psalm-param list{0: 'authorMusic'|'authorPicture'|mixed, 1?: 'authorPicture'} $types
-     *
      * @return array
      */
     public function getWorksList(array $types)

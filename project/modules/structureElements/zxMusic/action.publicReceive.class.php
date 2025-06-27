@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Authors\Constants;
+
 class publicReceiveZxMusic extends structureElementAction
 {
     protected $loggable = true;
@@ -50,7 +52,7 @@ class publicReceiveZxMusic extends structureElementAction
 
             //if no author is selected, select automatically Unknown author
             if (!$structureElement->author) {
-                $structureElement->author = [$this->getService('ConfigManager')->get('zx.unknownAuthorId')];
+                $structureElement->author = [Constants::UNKNOWN_ID];
             }
 
             $structureElement->renewPartyLink();

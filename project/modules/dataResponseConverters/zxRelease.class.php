@@ -25,7 +25,6 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
             'year' => 'year',
             'publishersIds' => 'getPublishersIds',
             'language' => 'language',
-            'languagesInfo' => 'getLanguagesInfo',
             'description' => 'description',
             'hardwareRequired' => 'hardwareRequired',
             'releaseType' => 'releaseType',
@@ -36,6 +35,9 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
             'playableFiles' => 'getPlayableFiles',
             'authorsInfo' => function (zxReleaseElement $element) {
                 return $element->getAuthorsRecords('release');
+            },
+            'prodId' => function (zxReleaseElement $element): int {
+                return $element->getProd()?->id ?? 0;
             },
             'authorsInfoShort' => function (zxReleaseElement $element) {
                 return $element->getShortAuthorship('release');
@@ -69,7 +71,7 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
                 return [];
             },
             'importIds' => 'getImportIdsIndex',
-            'playUrl' =>function (zxReleaseElement $element) {
+            'playUrl' => function (zxReleaseElement $element) {
                 return $element->getFileUrl(true);
             },
         ];
@@ -137,7 +139,22 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
                 'id',
                 'title',
                 'playableFiles',
+                'authorsInfoShort',
+                'publishersInfo',
+                'releaseType',
+                'language',
                 'year'
+            ],
+            'offline' => [
+                'id',
+                'title',
+                'dateModified',
+                'playableFiles',
+                'prodId',
+                'releaseType',
+                'year',
+                'language',
+                'publishersInfo',
             ]
         ];
     }

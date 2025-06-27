@@ -15,6 +15,7 @@ class WosManager extends errorLogger
     private const FILETYPE_LOADING = 1;
     private const FILETYPE_RUNNING = 2;
     private const FILETYPE_OPENING = 3;
+    private const FILETYPE_RZX = 63;
     protected array $ignoreIds = [
         'tag3885',
         'tag3866',
@@ -80,7 +81,7 @@ class WosManager extends errorLogger
      * @var MySqlConnection
      */
     protected $zxdb;
-    protected $wosLink = 'https://www.worldofspectrum.org/pub/';
+    protected $wosLink = 'https://spectrumcomputing.co.uk/pub/';
     protected $archiveLink = 'https://archive.org/download/World_of_Spectrum_June_2017_Mirror/World%20of%20Spectrum%20June%202017%20Mirror.zip/World%20of%20Spectrum%20June%202017%20Mirror/';
     protected $nvgLink = 'https://archive.org/download/mirror-ftp-nvg/Mirror_ftp_nvg.zip/';
     protected $wosFilesPath;
@@ -102,7 +103,8 @@ class WosManager extends errorLogger
         'R' => 'recovered',
     ];
     protected $webRefIds = [
-        16,
+        36, //Modern ZX-Retro Gaming
+        56, //SC rzx
         31, //itch.io
     ];
     protected $minMachines = [
@@ -432,11 +434,13 @@ class WosManager extends errorLogger
         $this->prodsManager->setForceUpdateYoutube(true);
         $this->prodsManager->setUpdateExistingProds(true);
         $this->prodsManager->setForceUpdateExternalLink(false);
+        $this->prodsManager->setForceUpdateReleaseType(true);
 //        $this->prodsManager->setForceUpdateAuthors(true);
 //        $this->prodsManager->setForceUpdateTitles(true);
 //        $this->prodsManager->setForceUpdateCategories(true);
 //        $this->prodsManager->setForceUpdatePublishers(true);
 //        $this->prodsManager->setForceUpdateGroups(true);
+        $this->prodsManager->setUpdateExistingReleases(true);
         $this->prodsManager->setForceUpdateImages(true);
         $this->prodsManager->setAddImages(true);
     }
@@ -557,6 +561,7 @@ class WosManager extends errorLogger
                         'groups' => [],
                         'releases' => [],
                         'compilationItems' => [],
+                        'rzx' => [],
                     ];
 
                     if ($entry['language_id']) {
@@ -646,7 +651,10 @@ class WosManager extends errorLogger
                         ->whereIn('website_id', $this->webRefIds)
                         ->get()) {
                         foreach ($rows as $row) {
-                            if ($row['website_id'] === 16) {
+                            if ($row['website_id'] === 36 || $row['website_id'] === 56) {
+                                if ($row['website_id'] !== 56 && !empty($prodInfo['youtubeId'])) {
+                                    continue;
+                                }
                                 if (stripos($row['link'], 'https://youtu.be/') === 0) {
                                     $prodInfo['youtubeId'] = substr($row['link'], strlen('https://youtu.be/'));
                                 }
@@ -692,10 +700,15 @@ class WosManager extends errorLogger
                                 }
                             } elseif ($download['filetype_id'] === self::FILETYPE_OPENING) {
                                 $prodInfo['images'][] = $this->resolveDownloadUrl($download['file_link']);
+                            } elseif ($download['filetype_id'] === self::FILETYPE_RZX) {
+                                $prodInfo['rzx'][] = [
+                                    'url' => $this->resolveDownloadUrl($download['file_link']),
+                                    'author' => $download['comments'] ?? '',
+                                ];
                             } elseif (in_array($download['filetype_id'], $this->mapFileTypes)) {
                                 $prodInfo['maps'][] = [
                                     'url' => $this->resolveDownloadUrl($download['file_link']),
-                                    'author' => '',
+                                    'author' => $download['comments'] ?? '',
                                 ];
                             }
                         }
@@ -838,9 +851,14 @@ class WosManager extends errorLogger
     protected function resolveDownloadUrl($url, bool $useArchiveOrg = false): string
     {
         $url = str_ireplace('+', '%2B', $url);
-
+        if (stripos($url, 'archive.org') !== false) {
+            return $url;
+        }
         if (stripos($url, 'zxdb') !== false) {
-            return 'https://spectrumcomputing.co.uk/' . $url;
+            if (!str_starts_with($url, '/')) {
+                $url = '/' . $url;
+            }
+            return 'https://spectrumcomputing.co.uk' . $url;
         } else {
             if (str_starts_with($url, '/nvg/')) {
                 return $this->nvgLink . substr($url, 5);

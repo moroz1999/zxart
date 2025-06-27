@@ -9,6 +9,7 @@
         'infoFilesSelector',
         'adFilesSelector',
         'mapFilesSelector',
+        'rzx',
     ],
     'publicAllowed' => [
         'authorsCatalogue',

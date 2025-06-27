@@ -193,7 +193,7 @@ abstract class ZxArtItem extends structureElement implements
             unset($compiledLinks[$authorId]);
         }
 
-        foreach ($compiledLinks as $key => &$link) {
+        foreach ($compiledLinks as $link) {
             $link->delete();
         }
     }

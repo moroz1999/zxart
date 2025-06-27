@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\LinkTypes;
+
 class SectionLogics
 {
     protected $sectionType;
@@ -90,18 +92,16 @@ class SectionLogics
 
     /**
      * @return string[]
-     *
-     * @psalm-return list{0: 'authorMusic'|'authorPicture', 1?: 'authorMusic'}
      */
     public function getAuthorLinkTypes(): array
     {
         $sectionType = $this->getArtItemsType();
         if ($sectionType === 'graphics') {
-            $types = ['authorPicture'];
+            $types = [LinkTypes::AUTHOR_PICTURE->value];
         } elseif ($sectionType === 'music') {
             $types = ['authorMusic'];
         } else {
-            $types = ['authorPicture', 'authorMusic'];
+            $types = [LinkTypes::AUTHOR_PICTURE->value, 'authorMusic'];
         }
 
         return $types;

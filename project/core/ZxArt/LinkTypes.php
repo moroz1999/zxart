@@ -5,6 +5,7 @@ namespace ZxArt;
 
 enum LinkTypes: string
 {
+    case AUTHOR_PICTURE = 'authorPicture';
     case ZX_PROD_CATEGORY = 'zxProdCategory';
     case PRESS_AUTHOR = 'pressAuthor';
     case PRESS_PEOPLE = 'pressPeople';

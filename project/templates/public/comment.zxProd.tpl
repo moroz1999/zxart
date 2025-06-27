@@ -25,7 +25,7 @@
 	</script>
 	<a class="comment_content_link" href="{$prodElement->getUrl()}">{$prodElement->getTitle()}</a>
 	<div class='comment_content'>
-		{$element->content}
+		{$element->getDecoratedContent()}
 	</div>
 	{if isset($privileges.comment.publicReceive) && $privileges.comment.publicReceive}
 		{if $element->areCommentsAllowed()}

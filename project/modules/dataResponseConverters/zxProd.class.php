@@ -31,6 +31,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             'groupsIds' => 'getGroupsIds',
             'languagesInfo' => 'getLanguagesInfo',
             'categoriesInfo' => 'getCategoriesInfo',
+            'rootCategoriesInfo' => 'getRootCategoriesInfo',
             'partyInfo' => 'getPartyInfo',
             'publishersInfo' => 'getPublishersInfo',
             'groupsInfo' => 'getGroupsInfo',
@@ -308,6 +309,16 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 'url',
                 'structureType',
             ],
+            'offline' => [
+                'id',
+                'title',
+                'dateModified',
+                'year',
+                'legalStatus',
+                'rootCategoriesInfo',
+                'language',
+                'publishersInfo',
+            ]
         ];
     }
 }
