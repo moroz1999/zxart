@@ -1,6 +1,6 @@
-<a [href]="release.url" target="_blank">{{release.title}}</a>
+<a [href]="release.url" target="_blank">{{ release.title }}</a>
 <ng-container *ngIf="release.authors.length"> by
-  <span *ngFor="let author of release.authors;let last = last">{{author.title}}
-    <ng-container *ngIf="!last">, </ng-container> </span>
+    <span *ngFor="let author of release.authors;let last = last">{{ author.title }}
+        <ng-container *ngIf="!last">, </ng-container> </span>
 </ng-container>
-<ng-container *ngIf="release.year > 0"> ({{release.year}})</ng-container>
+<ng-container *ngIf="release.year > 0"> ({{ release.year }})</ng-container>

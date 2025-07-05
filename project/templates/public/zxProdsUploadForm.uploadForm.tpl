@@ -71,6 +71,7 @@
 					<option value='mia' {if $formData.legalStatus=='mia'}selected='selected'{/if}>{translations name='legalstatus.mia'}</option>
 					<option value='unreleased' {if $formData.legalStatus=='unreleased'}selected='selected'{/if}>{translations name='legalstatus.unreleased'}</option>
 					<option value='recovered' {if $formData.legalStatus=='recovered'}selected='selected'{/if}>{translations name='legalstatus.recovered'}</option>
+					<option value='donationware' {if $formData.legalStatus=='donationware'}selected='selected'{/if}>{translations name='legalstatus.donationware'}</option>
 				</select>
 				{include file=$theme->template('component.form_help.tpl') structureType='zxProd' name="legalStatus"}
 			</td>

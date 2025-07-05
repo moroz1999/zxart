@@ -3,6 +3,7 @@
 use Illuminate\Database\MySqlConnection;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Prods\LegalStatus;
 use ZxArt\Prods\Services\ProdsService;
 
 class WosManager extends errorLogger
@@ -95,12 +96,12 @@ class WosManager extends errorLogger
     protected $origin = 'zxdb';
     protected $releasesInfo = [];
     protected $legalStatuses = [
-        'D' => 'forbidden',
-        'S' => 'insales',
-        'A' => 'unknown',
-        '?' => 'mia',
-        'N' => 'unreleased',
-        'R' => 'recovered',
+        'D' => LegalStatus::forbidden,
+        'S' => LegalStatus::insales,
+        'A' => LegalStatus::unknown,
+        '?' => LegalStatus::mia,
+        'N' => LegalStatus::unreleased,
+        'R' => LegalStatus::recovered,
     ];
     protected $webRefIds = [
         36, //Modern ZX-Retro Gaming
@@ -571,7 +572,7 @@ class WosManager extends errorLogger
                     }
                     if (!empty($entry['availabletype_id'])) {
                         if (isset($this->legalStatuses[$entry['availabletype_id']])) {
-                            $prodInfo['legalStatus'] = $this->legalStatuses[$entry['availabletype_id']];
+                            $prodInfo['legalStatus'] = $this->legalStatuses[$entry['availabletype_id']]->name;
                         }
                     }
 
@@ -663,8 +664,8 @@ class WosManager extends errorLogger
                             }
                         }
                     }
-                    if ($prodInfo['externalLink'] && $prodInfo['legalStatus'] === 'forbidden') {
-                        $prodInfo['legalStatus'] = 'insales';
+                    if ($prodInfo['externalLink'] && $prodInfo['legalStatus'] === LegalStatus::forbidden->name) {
+                        $prodInfo['legalStatus'] = LegalStatus::insales->name;
                     }
 
 

@@ -3,10 +3,16 @@
 
 :host {
   display: flex;
-  position: sticky;
   bottom: 0;
   right: 0;
-  justify-content: flex-end;
+
+  @include media-breakpoint-down(xs) {
+    position: fixed;
+  }
+  @include media-breakpoint-up(sm) {
+    position: sticky;
+    justify-content: flex-end;
+  }
 }
 
 .pages-selector {

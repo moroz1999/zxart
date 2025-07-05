@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Press\Repositories\PressArticleRepository;
+
 class publicReceivePressArticle extends structureElementAction
 {
     protected $loggable = true;
@@ -18,6 +20,8 @@ class publicReceivePressArticle extends structureElementAction
                 $structureElement->structureName = $structureElement->title;
             }
             $structureElement->persistElementData();
+            $pressArticleRepository = $this->getService(PressArticleRepository::class);
+            $pressArticleRepository->saveOriginalContent($structureElement->id, $structureElement->originalContent);
 
             if ($parentElement = $structureElement->getFirstParentElement()) {
                 $linksManager = $this->getService('linksManager');
@@ -45,6 +49,7 @@ class publicReceivePressArticle extends structureElementAction
             'pictures',
             'introduction',
             'content',
+            'originalContent',
             'allowComments',
         ];
     }

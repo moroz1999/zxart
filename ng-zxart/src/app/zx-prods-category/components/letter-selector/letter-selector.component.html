@@ -1,32 +1,36 @@
 <div class="letters" *ngIf="lettersSelector[0]">
-  <button
-    mat-button
-    class="transparent"
-    *ngIf="this.selectedLetter !== ''"
-    (pointerdown)="selectLetter('')"
-  >{{ "prods-list.filters.letters.all" | translate }}</button>
-  <button
-    mat-raised-button
-    color="primary"
-    *ngIf="this.selectedLetter === ''"
-    (pointerdown)="selectLetter('')"
-  >{{ "prods-list.filters.letters.all" | translate }}</button>
-  <ng-container
-    *ngFor="let letter of lettersSelector[0].values"
-  >
     <button
-      *ngIf="letter.selected"
-      mat-raised-button
-      class="letter"
-      color="primary"
-      (pointerdown)="selectLetter(letter.value)"
-    >{{letter.title}}</button>
+            mat-button
+            class="transparent"
+            *ngIf="this.selectedLetter !== ''"
+            (click)="selectLetter('')"
+    >{{ "prods-list.filters.letters.all" | translate }}
+    </button>
     <button
-      *ngIf="!letter.selected"
-      mat-button
-      class="letter transparent"
-      (pointerdown)="selectLetter(letter.value)"
-    >{{letter.title}}</button>
-  </ng-container>
+            mat-raised-button
+            color="primary"
+            *ngIf="this.selectedLetter === ''"
+            (click)="selectLetter('')"
+    >{{ "prods-list.filters.letters.all" | translate }}
+    </button>
+    <ng-container
+            *ngFor="let letter of lettersSelector[0].values"
+    >
+        <button
+                *ngIf="letter.selected"
+                mat-raised-button
+                class="letter"
+                color="primary"
+                (click)="selectLetter(letter.value)"
+        >{{ letter.title }}
+        </button>
+        <button
+                *ngIf="!letter.selected"
+                mat-button
+                class="letter transparent"
+                (click)="selectLetter(letter.value)"
+        >{{ letter.title }}
+        </button>
+    </ng-container>
 
 </div>

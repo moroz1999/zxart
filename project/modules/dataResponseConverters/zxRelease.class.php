@@ -32,7 +32,7 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
             'version' => 'version',
             'publishersInfo' => 'getPublishersInfo',
             'groupsInfo' => 'getGroupsInfo',
-            'playableFiles' => 'getPlayableFiles',
+            'playableFiles' => 'getArchiveFilesForHardware',
             'authorsInfo' => function (zxReleaseElement $element) {
                 return $element->getAuthorsRecords('release');
             },
@@ -71,6 +71,7 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
                 return [];
             },
             'importIds' => 'getImportIdsIndex',
+            'archiveFiles' => 'getArchiveFilesForHardware',
             'playUrl' => function (zxReleaseElement $element) {
                 return $element->getFileUrl(true);
             },
@@ -149,12 +150,15 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
                 'id',
                 'title',
                 'dateModified',
-                'playableFiles',
                 'prodId',
                 'releaseType',
                 'year',
                 'language',
+                'authorsInfoShort',
                 'publishersInfo',
+                'archiveFiles',
+                'hardwareRequired',
+                'version',
             ]
         ];
     }

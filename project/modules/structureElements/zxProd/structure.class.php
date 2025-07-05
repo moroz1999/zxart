@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Connection;
 use ZxArt\LinkTypes;
+use ZxArt\Prods\LegalStatus;
 use ZxArt\Prods\Repositories\ProdsRepository;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatusProvider;
@@ -353,11 +354,15 @@ class zxProdElement extends ZxArtItem implements
     {
         if ($image = $this->getImage($number)) {
             return $image->getImageUrl('prodImage');
-        } elseif ($number == 0) {
+        }
+
+        if ($number === 0) {
             $controller = $this->getService('controller');
-            if ($this->legalStatus == 'unreleased') {
+            if ($this->legalStatus === LegalStatus::unreleased->name) {
                 return $controller->baseURL . 'images/zxprod_unreleased.png';
-            } elseif ($this->legalStatus == 'mia') {
+            }
+
+            if ($this->legalStatus === LegalStatus::mia->name) {
                 return $controller->baseURL . 'images/zxprod_mia.png';
             }
             return $controller->baseURL . 'images/zxprod_default.png';

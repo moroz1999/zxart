@@ -20,7 +20,7 @@
     "php-http/guzzle6-adapter": "^2.0",
     "smalot/pdfparser": "^2.7",
     "ext-fileinfo": "*",
-    "php": "8.2.*",
+    "php": "8.3.*",
     "verifalia/sdk": "^3.0",
     "php-di/php-di": "^7.0",
     "ext-libxml": "*"

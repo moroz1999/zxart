@@ -1,24 +1,24 @@
 <mat-chip-set #chipList aria-label="Fruit selection">
-  <mat-chip
-    *ngFor="let tag of tagsSelector"
-    [removable]="true"
-    (removed)="remove(tag)"
+    <mat-chip
+            *ngFor="let tag of tagsSelector"
+            [removable]="true"
+            (removed)="remove(tag)"
     >
-    {{tag.title}}
-    <mat-icon matChipRemove>cancel</mat-icon>
-  </mat-chip>
+        {{ tag.title }}
+        <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
 </mat-chip-set>
 <input
-  type="text"
-  class="input_component"
-  [placeholder]="'prods-list.filters.tags.select' | translate"
-  (keyup)="change()"
-  [(ngModel)]="tagText"
-  [matAutocomplete]="auto"
-  #input
+        type="text"
+        class="input_component"
+        [placeholder]="'prods-list.filters.tags.select' | translate"
+        (keyup)="change()"
+        [(ngModel)]="tagText"
+        [matAutocomplete]="auto"
+        #input
 />
 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-  <mat-option *ngFor="let tag of foundTags | async" [value]="tag">
-    {{tag.title}}
-  </mat-option>
+    <mat-option *ngFor="let tag of foundTags | async" [value]="tag">
+        {{ tag.title }}
+    </mat-option>
 </mat-autocomplete>

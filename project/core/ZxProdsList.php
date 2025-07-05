@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use ZxArt\Prods\LegalStatus;
 use ZxArt\Prods\Repositories\ProdsRepository;
 
 const ZXPRODS_TABLE = ProdsRepository::TABLE;
@@ -44,7 +45,16 @@ trait ZxProdsList
 
     private $type = 'zxProd';
 
-    private const defaultStatuses = ['allowed', 'forbidden', 'forbiddenzxart', 'allowedzxart', 'insales', 'recovered', 'unknown'];
+    private const defaultStatuses = [
+        LegalStatus::allowed,
+        LegalStatus::forbidden,
+        LegalStatus::forbiddenzxart,
+        LegalStatus::allowedzxart,
+        LegalStatus::donationware,
+        LegalStatus::insales,
+        LegalStatus::recovered,
+        LegalStatus::unknown
+    ];
 
     public function getProdsInfo(): array
     {
@@ -127,7 +137,7 @@ trait ZxProdsList
                 $filters['zxReleaseReleaseType'] = $values;
             }
             if ($values = $this->getSelectorValue('languages')) {
-                if ($this->getReleasesValue()){
+                if ($this->getReleasesValue()) {
                     $filters['zxReleaseLanguage'] = $values;
                 } else {
                     $filters['zxProdLanguage'] = $values;
@@ -741,7 +751,7 @@ trait ZxProdsList
                         $this->selectorValues[$selectorName][] = trim($value);
                     }
                 } elseif ($selectorName === 'statuses') {
-                    $this->selectorValues[$selectorName] = self::defaultStatuses;
+                    $this->selectorValues[$selectorName] = $this->getDefaultStatuses();
                 } elseif ($selectorName === 'page') {
                     $this->selectorValues[$selectorName] = $this->getCurrentPage();
                 }
@@ -749,6 +759,11 @@ trait ZxProdsList
         }
 
         return $this->selectorValues[$name];
+    }
+
+    private function getDefaultStatuses(): array
+    {
+        return array_map(static fn(LegalStatus $value) => $value->name, self::defaultStatuses);
     }
 
     private function getFilteredQuery(): ?Builder
@@ -810,8 +825,8 @@ trait ZxProdsList
     public function hasDefaultSelectors(): bool
     {
         $selectors = $this->getSelectorValues();
-        $difference1 = array_diff($selectors['statuses'], self::defaultStatuses);
-        $difference2 = array_diff(self::defaultStatuses, $selectors['statuses']);
+        $difference1 = array_diff($selectors['statuses'], $this->getDefaultStatuses());
+        $difference2 = array_diff($this->getDefaultStatuses(), $selectors['statuses']);
         $statusesDefault = $difference1 === [] && $difference2 === [];
 
         return !$selectors['letter']

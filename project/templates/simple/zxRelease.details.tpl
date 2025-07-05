@@ -144,16 +144,6 @@
 				</td>
 			</tr>
 		{/if}
-		{if $element->isDownloadable()}
-			<tr>
-				<td class='info_table_label'>
-					{translations name='zxrelease.play'}:
-				</td>
-				<td class='info_table_value'>
-					<button class="button" onclick="emulatorComponent.start('{$element->getFileUrl('play')|escape:'quotes'}')">{translations name="zxrelease.play"}</button>
-				</td>
-			</tr>
-		{/if}
 	</table>
 	{if $filesList = $element->getFilesList('screenshotsSelector')}
 		{include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodImage' displayTitle=false}

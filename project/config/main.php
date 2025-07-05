@@ -19,5 +19,6 @@
     'defaultRootElementId' => '1',
     'rootMarkerPublic' => 'public_root',
     'rootMarkerAdmin' => 'admin_root',
+    'ai_key' => '',
     'bestGuesssTypes' => ['zxProd', 'zxRelease'],
 ];

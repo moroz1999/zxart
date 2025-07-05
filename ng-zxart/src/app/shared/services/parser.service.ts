@@ -7,29 +7,29 @@ import {JsonResponse} from '../models/json-response';
 import {ParserData} from '../../parser/models/parser-data';
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class ParserService {
-  private apiUrl: string = `//${environment.apiBaseUrl}parser/`;
+    private apiUrl: string = `//${environment.apiBaseUrl}parser/`;
 
-  constructor(
-    private http: HttpClient,
-  ) {
-  }
+    constructor(
+        private http: HttpClient,
+    ) {
+    }
 
-  public parseData(file: File): Observable<ParserData[]> {
-    let formData = new FormData();
-    formData.append('file', file);
+    public parseData(file: File): Observable<ParserData[]> {
+        let formData = new FormData();
+        formData.append('file', file);
 
-    return this.http.post<JsonResponse<ParserData[]>>(this.apiUrl, formData).pipe(
-      map(
-        response => {
-          if (response.responseStatus === 'success') {
-            return response.responseData;
-          }
-          return [] as ParserData[];
-        },
-      ),
-    );
-  }
+        return this.http.post<JsonResponse<ParserData[]>>(this.apiUrl, formData).pipe(
+            map(
+                response => {
+                    if (response.responseStatus === 'success') {
+                        return response.responseData;
+                    }
+                    return [] as ParserData[];
+                },
+            ),
+        );
+    }
 }

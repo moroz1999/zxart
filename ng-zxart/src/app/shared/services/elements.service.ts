@@ -8,45 +8,45 @@ import {ElementResponseData} from '../models/element-response-data';
 import {environment} from '../../../environments/environment';
 
 export interface PostParameters {
-  [key: string]: Primitive;
+    [key: string]: Primitive;
 }
 
 declare var elementsData: { [key: number]: any };
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class ElementsService {
-  private apiUrl: string = `//${environment.apiBaseUrl}jsonElementData/`;
+    private apiUrl: string = `//${environment.apiBaseUrl}jsonElementData/`;
 
-  constructor(private http: HttpClient) {
-  }
+    constructor(private http: HttpClient) {
+    }
 
-  getPrefetchedModel<T, U extends StructureElement>(elementId: number, className: {
-    new(dto: T): U
-  }): Observable<U> {
-    const model = new className(elementsData[elementId] as T);
-    setTimeout(() => delete elementsData[elementId], 1000);
-    return new BehaviorSubject<U>(model).pipe(take(1));
-  }
+    getPrefetchedModel<T, U extends StructureElement>(elementId: number, className: {
+        new(dto: T): U
+    }): Observable<U> {
+        const model = new className(elementsData[elementId] as T);
+        setTimeout(() => delete elementsData[elementId], 1000);
+        return new BehaviorSubject<U>(model).pipe(take(1));
+    }
 
-  getModel<T, U extends StructureElement>(elementId: number, className: {
-    new(dto: T): U
-  }, postParameters: PostParameters, preset: string): Observable<U> {
-    const allParameters = {
-      ...postParameters,
-      elementId,
-      preset,
-    };
-    const options: Object = {
-      'params': allParameters,
-    };
-    return this.http
-      .get<JsonResponse<ElementResponseData<T>>>(this.apiUrl, options)
-      .pipe(
-        map(response => {
-          return new className(response.responseData.elementData);
-        }),
-      );
-  }
+    getModel<T, U extends StructureElement>(elementId: number, className: {
+        new(dto: T): U
+    }, postParameters: PostParameters, preset: string): Observable<U> {
+        const allParameters = {
+            ...postParameters,
+            elementId,
+            preset,
+        };
+        const options: Object = {
+            'params': allParameters,
+        };
+        return this.http
+            .get<JsonResponse<ElementResponseData<T>>>(this.apiUrl, options)
+            .pipe(
+                map(response => {
+                    return new className(response.responseData.elementData);
+                }),
+            );
+    }
 }

@@ -14,8 +14,6 @@
             class="button"
             onclick="tsconfEmulatorComponent.start('{$element->getPlayUrl(false)|escape:'quotes'}')"
     >{translations name="zxrelease.play"}</button>
-    {if $emulatorType === 'tsconf'}
-        <script type="text/javascript" src="/libs/mame/es6-promise.js"></script>
-        <script type="text/javascript" src="/libs/mame/browserfs.min.js"></script>
-    {/if}
+    <script type="text/javascript" src="/libs/mame/es6-promise.js"></script>
+    <script type="text/javascript" src="/libs/mame/browserfs.min.js"></script>
 {/if}

@@ -49,7 +49,11 @@ class ApiQueryResultResolver implements DependencyInjectionContextInterface
                 $limit
             );
             if ($exportTypeQuery) {
-                $queryResult['totalAmount'] = $exportTypeQuery->count();
+                $copy = clone $exportTypeQuery;
+                if (!empty($copy->offset)){
+                    $copy->offset(null);
+                }
+                $queryResult['totalAmount'] = $copy->count();
             } else {
                 $queryResult['totalAmount'] = $resolverManager->makeQuery()->count();
             }

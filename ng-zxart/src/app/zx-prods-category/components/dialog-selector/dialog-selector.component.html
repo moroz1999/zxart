@@ -1,12 +1,12 @@
 <button
-  mat-raised-button
-  [color]="selectedValues.length? null: 'primary'"
-  (pointerdown)="clickHandler()"
+        mat-raised-button
+        [color]="selectedValues.length? null: 'primary'"
+        (click)="clickHandler()"
 >
-  <ng-container *ngIf="selectedValues.length; else other">
-    {{ selectedValuesLabel }} {{ getSelectedValuesString() }}
-  </ng-container>
-  <ng-template #other>
-    {{ selectValuesLabel }}
-  </ng-template>
+    <ng-container *ngIf="selectedValues.length; else other">
+        {{ selectedValuesLabel }} {{ getSelectedValuesString() }}
+    </ng-container>
+    <ng-template #other>
+        {{ selectValuesLabel }}
+    </ng-template>
 </button>

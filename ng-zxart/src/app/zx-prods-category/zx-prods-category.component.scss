@@ -7,6 +7,7 @@ $amount: 5;
   display: flex;
   gap: $padding-md;
   margin-bottom: $padding-xl;
+  flex-wrap: wrap;
 }
 
 .zx-prods-list-content {
@@ -150,7 +151,9 @@ app-letter-selector {
 
 app-pages-selector {
   z-index: 10;
-  margin-top: $padding-xl;
+  @include media-breakpoint-up(sm) {
+    margin-top: $padding-xl;
+  }
 }
 
 .zx-prods-table {

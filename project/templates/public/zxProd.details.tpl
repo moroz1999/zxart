@@ -52,6 +52,9 @@
                     {if $element->getLegalStatus() === 'insales'}
                         <a class="button release-sales-button" href="{$element->externalLink}"
                            target="_blank">{translations name='zxprod.purchase'}</a>
+                    {elseif $element->getLegalStatus() === 'donationware'}
+                        <a class="button release-sales-button" href="{$element->externalLink}"
+                           target="_blank">{translations name='zxprod.donate'}</a>
                     {else}
                         <a class="button" href="{$element->externalLink}"
                            target="_blank">{translations name='zxprod.open_externallink'}</a>
@@ -258,7 +261,7 @@
     {if $filesList = $element->getFilesList('rzx')}
         <h2>{translations name='zxprod.rzx'}</h2>
         {$url = false}
-        {include file=$theme->template('zxItem.files.tpl') filesList = $filesList newWindow=true}
+{*        {include file=$theme->template('zxItem.files.tpl') filesList = $filesList newWindow=true}*}
     {/if}
     <script>
         /*<![CDATA[*/

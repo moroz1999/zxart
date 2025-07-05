@@ -7,30 +7,30 @@ $zxart-accent: $zxart-primary;
 $ng-zxart-warn: mat.define-palette(mat.$red-palette);
 
 $zxart-typography: mat.define-typography-config(
-  $font-family: Roboto,
-  $button: mat.define-typography-level(
-    $font-weight: 400,
-    $font-size: 14px,
-    $line-height: 1,
-    $letter-spacing: normal,
-  ),
+        $font-family: Roboto,
+        $button: mat.define-typography-level(
+                $font-weight: 400,
+                $font-size: 14px,
+                $line-height: 1,
+                $letter-spacing: normal,
+        ),
 );
 
 $zxart-theme: mat.define-light-theme((
-  color: (
-    primary: $zxart-primary,
-    accent: $zxart-accent,
-  ),
-  typography: $zxart-typography,
-  density: 0,
+        color: (
+                primary: $zxart-primary,
+                accent: $zxart-accent,
+        ),
+        typography: $zxart-typography,
+        density: 0,
 ));
 $zxart-tree-theme: mat.define-light-theme((
-  color: (
-    primary: $zxart-primary,
-    accent: $zxart-accent,
-  ),
-  typography: $zxart-typography,
-  density: -3
+        color: (
+                primary: $zxart-primary,
+                accent: $zxart-accent,
+        ),
+        typography: $zxart-typography,
+        density: -3
 ));
 
 @include mat.tree-theme($zxart-tree-theme);

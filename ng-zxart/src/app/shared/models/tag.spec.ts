@@ -1,6 +1,6 @@
-import { Tag } from './tag';
+import {Tag} from './tag';
 
 describe('Tag', () => {
-  it('should create an instance', () => {
-  });
+    it('should create an instance', () => {
+    });
 });

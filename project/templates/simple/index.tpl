@@ -5,10 +5,16 @@
 {if $firstPageElement = $currentLanguage->getFirstPageElement()}<a href="{$firstPageElement->getUrl()}">ZX-Art</a>{/if}
 {if count($languagesList)>1}
     {foreach $languagesList as $language}
-        <a href='{$controller->baseURL}redirect/application:simple/type:language/element:{$currentElement->id}/code:{$language->iso6393}/'>{$language->title}</a>
+        {if !empty($languageLinks[$language->iso6391])}
+            {$url = $languageLinks[$language->iso6391]}
+        {else}
+            {$url = $language->getFirstPageElement()->getUrl()}
+        {/if}
+        <a href='{$url}' title="{$language->title}">{$language->title}</a>
     {/foreach}
     <br><br>
 {/if}
+
 {if $subMenuList = $currentLanguage->getElementFromHeader('subMenuList')}
     {foreach $subMenuList->getSubMenuList() as $subMenu}
         <a href="{$subMenu->URL}">{$subMenu->title}</a>

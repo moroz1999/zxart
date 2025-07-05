@@ -5,48 +5,48 @@ import {Subject} from 'rxjs';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 
 @Component({
-  selector: 'app-tags-selector',
-  templateUrl: './tags-selector.component.html',
-  styleUrls: ['./tags-selector.component.scss'],
+    selector: 'app-tags-selector',
+    templateUrl: './tags-selector.component.html',
+    styleUrls: ['./tags-selector.component.scss'],
 })
 export class TagsSelectorComponent implements OnInit {
-  tagText = '';
-  timeout: number = 0;
-  @Input() tagsSelector: Array<Tag> = [];
-  foundTags = new Subject<Tag[]>();
-  @Output() tagsSelected = new EventEmitter<Array<Tag>>();
-  @ViewChild('input') inputElement?: ElementRef<HTMLInputElement>;
+    tagText = '';
+    timeout: number = 0;
+    @Input() tagsSelector: Array<Tag> = [];
+    foundTags = new Subject<Tag[]>();
+    @Output() tagsSelected = new EventEmitter<Array<Tag>>();
+    @ViewChild('input') inputElement?: ElementRef<HTMLInputElement>;
 
-  constructor(
-    private tagsSearch: TagsSearchService,
-  ) {
-  }
-
-  change(): void {
-    if (this.timeout) {
-      clearTimeout(this.timeout);
+    constructor(
+        private tagsSearch: TagsSearchService,
+    ) {
     }
-    if (this.tagText.length > 2) {
-      this.timeout = setTimeout(() => this.tagsSearch.search(this.tagText).subscribe(
-        (tags: Array<Tag>) => this.foundTags.next(tags),
-      ), 300);
+
+    change(): void {
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+        }
+        if (this.tagText.length > 2) {
+            this.timeout = setTimeout(() => this.tagsSearch.search(this.tagText).subscribe(
+                (tags: Array<Tag>) => this.foundTags.next(tags),
+            ), 300);
+        }
     }
-  }
 
-  remove(tag: Tag) {
-    this.tagsSelector.splice(this.tagsSelector.indexOf(tag), 1);
-    this.tagsSelected.emit(this.tagsSelector);
-  }
-
-  selected(event: MatAutocompleteSelectedEvent) {
-    this.tagsSelector.push(event.option.value);
-    this.tagsSelected.emit(this.tagsSelector);
-    this.tagText = '';
-    if (this.inputElement) {
-      this.inputElement.nativeElement.value = '';
+    remove(tag: Tag) {
+        this.tagsSelector.splice(this.tagsSelector.indexOf(tag), 1);
+        this.tagsSelected.emit(this.tagsSelector);
     }
-  }
 
-  ngOnInit() {
-  }
+    selected(event: MatAutocompleteSelectedEvent) {
+        this.tagsSelector.push(event.option.value);
+        this.tagsSelected.emit(this.tagsSelector);
+        this.tagText = '';
+        if (this.inputElement) {
+            this.inputElement.nativeElement.value = '';
+        }
+    }
+
+    ngOnInit() {
+    }
 }

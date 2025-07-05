@@ -1,22 +1,23 @@
 <td class="zx-prod-title">
-  <a [href]="model.url">
-    {{model.title}}
-  </a>
+    <a [href]="model.url">
+        {{ model.title }}
+    </a>
 </td>
 <td class="zx-prod-categories">
-  <ng-container *ngFor="let category of model.categoriesInfo; last as last">
+    <ng-container *ngFor="let category of model.categoriesInfo; last as last">
     <span class="zx-prod-category-link"
           (click)="categoryClicked($event, category.id)"
-    >{{category.title}}</span><span *ngIf="!last">, </span></ng-container>
+    >{{ category.title }}</span><span *ngIf="!last">, </span></ng-container>
 </td>
 <td class="zx-prod-groups">
-  <ng-container *ngFor="let group of model.groupsInfo; last as last"><a
-    [href]="group.url">{{group.title}}</a><span *ngIf="!last">, </span></ng-container>
+    <ng-container *ngFor="let group of model.groupsInfo; last as last"><a
+            [href]="group.url">{{ group.title }}</a><span *ngIf="!last">, </span></ng-container>
 </td>
 <td class="zx-prod-publishers">
-  <ng-container *ngFor="let publisher of model.publishersInfo; last as last"><a
-    [href]="publisher.url">{{publisher.title}}</a><span *ngIf="!last">, </span></ng-container>
+    <ng-container *ngFor="let publisher of model.publishersInfo; last as last"><a
+            [href]="publisher.url">{{ publisher.title }}</a><span *ngIf="!last">, </span></ng-container>
 </td>
-<td class="zx-prod-year"><span class="zx-prod-year-link" (click)="yearClicked($event, model.year)">{{model.year}}</span>
+<td class="zx-prod-year"><span class="zx-prod-year-link"
+                               (click)="yearClicked($event, model.year)">{{ model.year }}</span>
 </td>
-<td class="zx-prod-date">{{model.dateCreated | date: 'mediumDate' }}</td>
+<td class="zx-prod-date">{{ model.dateCreated | date: 'mediumDate' }}</td>

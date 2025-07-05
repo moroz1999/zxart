@@ -134,7 +134,14 @@
                 </select>
             </td>
         </tr>
-
+        <tr {if $formErrors.originalContent} class="form_error"{/if}>
+            <td class="form_label">
+                {translations name='zxprod.originalContent'}:
+            </td>
+            <td class="form_field">
+                <textarea class='textarea_component' name="{$formNames.originalContent}">{$formData.originalContent}</textarea>
+            </td>
+        </tr>
         {foreach from=$formData.introduction key=languageId item=introduction}
             <tr {if $formErrors.introduction.$languageId} class="form_error"{/if}>
                 <td class="form_label">

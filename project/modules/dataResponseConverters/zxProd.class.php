@@ -317,6 +317,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 'legalStatus',
                 'rootCategoriesInfo',
                 'language',
+                'groupsInfo',
                 'publishersInfo',
             ]
         ];

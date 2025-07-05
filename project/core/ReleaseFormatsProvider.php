@@ -16,6 +16,7 @@ trait ReleaseFormatsProvider
             'opd',
             'mbd',
             'img',
+            'sad',
 
             'tzx',
             'tap',
@@ -34,6 +35,7 @@ trait ReleaseFormatsProvider
             'szx',
             'dck',
             'z80',
+            'z81',
             'slt',
         ];
     }
@@ -53,6 +55,7 @@ trait ReleaseFormatsProvider
                 'opd',
                 'mbd',
                 'img',
+                'sad',
             ],
 
             'tape' => [
@@ -77,6 +80,7 @@ trait ReleaseFormatsProvider
                 'szx',
                 'dck',
                 'z80',
+                'z81',
                 'slt',
             ],
         ];

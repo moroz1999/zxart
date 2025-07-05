@@ -23,11 +23,15 @@ import {MatCardModule} from '@angular/material/card';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {DialogSelectorDialogComponent} from './zx-prods-category/components/dialog-selector/dialog-selector-dialog/dialog-selector-dialog.component';
+import {
+    DialogSelectorDialogComponent,
+} from './zx-prods-category/components/dialog-selector/dialog-selector-dialog/dialog-selector-dialog.component';
 import {LetterSelectorComponent} from './zx-prods-category/components/letter-selector/letter-selector.component';
 import {SortingSelectorComponent} from './zx-prods-category/components/sorting-selector/sorting-selector.component';
 import {TagsSelectorComponent} from './shared/components/tags-selector/tags-selector.component';
-import {CategoriesTreeSelectorComponent} from './zx-prods-category/components/categories-tree-selector/categories-tree-selector.component';
+import {
+    CategoriesTreeSelectorComponent,
+} from './zx-prods-category/components/categories-tree-selector/categories-tree-selector.component';
 import {ZxProdRowComponent} from './zx-prod-row/zx-prod-row.component';
 import {ZxProdsListComponent} from './zx-prods-list/zx-prods-list.component';
 import {AppComponent} from './app.component';
@@ -38,73 +42,73 @@ import {ParsedReleasesComponent} from './parser/parsed-releases/parsed-releases.
 import {ParsedReleaseComponent} from './parser/parsed-release/parsed-release.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
-  return new TranslateHttpLoader(httpClient, `${environment.assetsUrl}i18n/`);
+    return new TranslateHttpLoader(httpClient, `${environment.assetsUrl}i18n/`);
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ZxProdsCategoryComponent,
-    PagesSelectorComponent,
-    ZxProdBlockComponent,
-    DialogSelectorComponent,
-    DialogSelectorDialogComponent,
-    LetterSelectorComponent,
-    SortingSelectorComponent,
-    TagsSelectorComponent,
-    CategoriesTreeSelectorComponent,
-    ZxProdRowComponent,
-    ZxProdsListComponent,
-    RatingComponent,
-    ParserComponent,
-    ParsedFileComponent,
-    ParsedReleasesComponent,
-    ParsedReleaseComponent,
-  ],
-  imports: [
-    CommonModule,
-    BrowserModule,
-    HttpClientModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient],
-      },
-    }),
-    AngularSvgIconModule.forRoot(),
-    FormsModule,
-    BrowserAnimationsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatChipsModule,
-    MatIconModule,
-    MatAutocompleteModule,
-    MatTreeModule,
-    MatCardModule,
-    MatButtonToggleModule,
-    MatProgressSpinnerModule,
-    ReactiveFormsModule,
-  ],
-  providers: [],
-  bootstrap: [],
-  entryComponents: [AppComponent, ZxProdsCategoryComponent, ZxProdsListComponent],
+    declarations: [
+        AppComponent,
+        ZxProdsCategoryComponent,
+        PagesSelectorComponent,
+        ZxProdBlockComponent,
+        DialogSelectorComponent,
+        DialogSelectorDialogComponent,
+        LetterSelectorComponent,
+        SortingSelectorComponent,
+        TagsSelectorComponent,
+        CategoriesTreeSelectorComponent,
+        ZxProdRowComponent,
+        ZxProdsListComponent,
+        RatingComponent,
+        ParserComponent,
+        ParsedFileComponent,
+        ParsedReleasesComponent,
+        ParsedReleaseComponent,
+    ],
+    imports: [
+        CommonModule,
+        BrowserModule,
+        HttpClientModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient],
+            },
+        }),
+        AngularSvgIconModule.forRoot(),
+        FormsModule,
+        BrowserAnimationsModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatChipsModule,
+        MatIconModule,
+        MatAutocompleteModule,
+        MatTreeModule,
+        MatCardModule,
+        MatButtonToggleModule,
+        MatProgressSpinnerModule,
+        ReactiveFormsModule,
+    ],
+    providers: [],
+    bootstrap: [],
+    entryComponents: [AppComponent, ZxProdsCategoryComponent, ZxProdsListComponent],
 })
 export class AppModule {
-  constructor(private injector: Injector) {
-  }
-
-  public ngDoBootstrap(): void {
-    const elements = {
-      'app-root': AppComponent,
-      'app-zx-prods-category': ZxProdsCategoryComponent,
-      'app-zx-prods-list': ZxProdsListComponent,
-      'app-parser': ParserComponent,
-    } as { [key: string]: Type<Object> };
-    for (const selector of Object.keys(elements)) {
-      const element = createCustomElement(elements[selector], {injector: this.injector});
-      customElements.define(selector, element);
+    constructor(private injector: Injector) {
     }
-  }
+
+    public ngDoBootstrap(): void {
+        const elements = {
+            'app-root': AppComponent,
+            'app-zx-prods-category': ZxProdsCategoryComponent,
+            'app-zx-prods-list': ZxProdsListComponent,
+            'app-parser': ParserComponent,
+        } as { [key: string]: Type<Object> };
+        for (const selector of Object.keys(elements)) {
+            const element = createCustomElement(elements[selector], {injector: this.injector});
+            customElements.define(selector, element);
+        }
+    }
 }

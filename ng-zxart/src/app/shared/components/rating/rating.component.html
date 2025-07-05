@@ -1,18 +1,26 @@
-<div class="skip-vote"><svg-icon [ngClass]="{'skip-vote-hovered': activeStar === 0}" class="skip" name="x" (pointerup)="starPressed(0)" (pointerenter)="starPointed(0)" (pointerleave)="starLeft()"></svg-icon></div>
+<div class="skip-vote">
+    <svg-icon [ngClass]="{'skip-vote-hovered': activeStar === 0}" class="skip" name="x" (pointerup)="starPressed(0)"
+              (pointerenter)="starPointed(0)" (pointerleave)="starLeft()"></svg-icon>
+</div>
 <div class="stars">
-  <div class="bg-rating">
-    <svg-icon class="star" name="star" (pointerup)="starPressed(1)" (pointerenter)="starPointed(1)" (pointerleave)="starLeft()"></svg-icon>
-    <svg-icon class="star" name="star" (pointerup)="starPressed(2)" (pointerenter)="starPointed(2)" (pointerleave)="starLeft()"></svg-icon>
-    <svg-icon class="star" name="star" (pointerup)="starPressed(3)" (pointerenter)="starPointed(3)" (pointerleave)="starLeft()"></svg-icon>
-    <svg-icon class="star" name="star" (pointerup)="starPressed(4)" (pointerenter)="starPointed(4)" (pointerleave)="starLeft()"></svg-icon>
-    <svg-icon class="star" name="star" (pointerup)="starPressed(5)" (pointerenter)="starPointed(5)" (pointerleave)="starLeft()"></svg-icon>
-  </div>
-  <div class="interactive" [ngStyle]="{'width.%': width}">
-    <svg-icon class="star" name="star"></svg-icon>
-    <svg-icon class="star" name="star"></svg-icon>
-    <svg-icon class="star" name="star"></svg-icon>
-    <svg-icon class="star" name="star"></svg-icon>
-    <svg-icon class="star" name="star"></svg-icon>
-  </div>
+    <div class="bg-rating">
+        <svg-icon class="star" name="star" (pointerup)="starPressed(1)" (pointerenter)="starPointed(1)"
+                  (pointerleave)="starLeft()"></svg-icon>
+        <svg-icon class="star" name="star" (pointerup)="starPressed(2)" (pointerenter)="starPointed(2)"
+                  (pointerleave)="starLeft()"></svg-icon>
+        <svg-icon class="star" name="star" (pointerup)="starPressed(3)" (pointerenter)="starPointed(3)"
+                  (pointerleave)="starLeft()"></svg-icon>
+        <svg-icon class="star" name="star" (pointerup)="starPressed(4)" (pointerenter)="starPointed(4)"
+                  (pointerleave)="starLeft()"></svg-icon>
+        <svg-icon class="star" name="star" (pointerup)="starPressed(5)" (pointerenter)="starPointed(5)"
+                  (pointerleave)="starLeft()"></svg-icon>
+    </div>
+    <div class="interactive" [ngStyle]="{'width.%': width}">
+        <svg-icon class="star" name="star"></svg-icon>
+        <svg-icon class="star" name="star"></svg-icon>
+        <svg-icon class="star" name="star"></svg-icon>
+        <svg-icon class="star" name="star"></svg-icon>
+        <svg-icon class="star" name="star"></svg-icon>
+    </div>
 </div>
 <div *ngIf="userRating" class="user-vote">{{ userRating }}</div>

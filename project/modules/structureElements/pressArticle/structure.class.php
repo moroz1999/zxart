@@ -9,6 +9,7 @@ use ZxArt\Queue\QueueStatusProvider;
  * @property string $externalLink
  * @property string $introduction
  * @property string $content
+ * @property string $originalContent
  * @property string $h1
  * @property boolean $allowComments
  * @property boolean $aiRestartFix
@@ -50,6 +51,7 @@ class pressArticleElement extends structureElement implements SearchContentHolde
         $moduleStructure['title'] = 'text';
         $moduleStructure['introduction'] = 'html';
         $moduleStructure['content'] = 'html';
+        $moduleStructure['originalContent'] = 'html';
 
         $moduleStructure['h1'] = 'text';
         $moduleStructure['metaTitle'] = 'text';
@@ -196,30 +198,12 @@ class pressArticleElement extends structureElement implements SearchContentHolde
         return $parentElement->getTitle() . ': ' . $this->title;
     }
 
-    private function getFormattedContent(array $stripTags): string
-    {
-        $originalContent = $this->content ?? '';
-
-        $content = HtmlTagsStripper::stripTags($originalContent, $stripTags);
-        $content = str_replace(["\n\r", "\r\n", "\r"], "\n", $content);
-        return $content;
-    }
-
-    public function getTextContent(array $stripTags = ['div', 'p', 'span', 'img', 'br']): string
-    {
-        return html_entity_decode($this->getFormattedContent($stripTags));
-    }
-
-    public function getAITextContent(bool $stripImages = true): string
-    {
-        $stripTags = $stripImages ? ['div', 'p', 'span', 'img', 'br'] : ['div', 'p', 'span', 'br'];
-        $content = $this->getTextContent($stripTags);
-        return str_replace(["-\n", "\r"], '', $content);
-    }
-
     public function getWrappedContent(): string
     {
-        $content = $this->content ?? '';
+        if (!$this->content) {
+            return '';
+        }
+        $content = $this->content;
 
         $dom = new DOMDocument();
         @$dom->loadHTML(

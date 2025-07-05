@@ -26,6 +26,7 @@ use ZxArt\Ai\Service\TextBeautifier;
 use ZxArt\Ai\Service\Translator;
 use ZxArt\Import\Press\DataUpdater\ArticleParsedDataUpdater;
 use ZxArt\Import\Press\DataUpdater\ArticleSeoDataUpdater;
+use ZxArt\Press\Helpers\AiTextContent;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
@@ -55,6 +56,8 @@ class Crontab extends controllerApplication
     private ?LanguagesManager $languagesManager;
     private ?Logger $logger;
     private ?ArticleParsedDataUpdater $pressDataUpdater;
+    private ?AiTextContent $aiTextContent;
+
 
     /**
      * @return void
@@ -75,6 +78,7 @@ class Crontab extends controllerApplication
         $this->articleSeoDataUpdater = $this->getService(ArticleSeoDataUpdater::class);
         $this->pressParser = $this->getService(PressArticleParser::class);
         $this->pressDataUpdater = $this->getService(ArticleParsedDataUpdater::class);
+        $this->aiTextContent = $this->getService(AiTextContent::class);
         $this->logger = new Logger('error_log');
     }
 
@@ -199,7 +203,7 @@ class Crontab extends controllerApplication
             }
             $pressYear = (int)$pressElement->year;
             $year = $pressYear === 0 ? $pressYear : null;
-            $updatedContent = $this->pressParser->getParsedData($pressArticleElement->getAITextContent(), $pressArticleElement->id, $pressElement->title, $year);
+            $updatedContent = $this->pressParser->getParsedData($this->aiTextContent->getAITextContent($pressArticleElement), $pressArticleElement->id, $pressElement->title, $year);
             if ($updatedContent) {
                 $mergedContent = $this->mergeArrays($updatedContent);
                 $this->pressDataUpdater->updatePressArticleData($pressArticleElement, $mergedContent);
@@ -217,7 +221,7 @@ class Crontab extends controllerApplication
             }
             $pressYear = (int)$pressElement->year;
             $year = $pressYear > 0 ? $pressYear : null;
-            $updatedContent = $this->pressArticleSeo->getParsedData($pressArticleElement->getAITextContent(), $pressElement->title, $pressArticleElement->title, $year);
+            $updatedContent = $this->pressArticleSeo->getParsedData($this->aiTextContent->getAITextContent($pressArticleElement), $pressElement->title, $pressArticleElement->title, $year);
             $this->articleSeoDataUpdater->updatePressArticleData($pressArticleElement, $updatedContent);
             $this->logMessage("$counter AI press seo updated for article {$pressArticleElement->id}", 0);
         });
@@ -250,10 +254,13 @@ class Crontab extends controllerApplication
     private function queryAiPressBeautifier(): void
     {
         $this->processQueue(QueueType::AI_PRESS_FIX, function (pressArticleElement $pressArticleElement, $counter) {
-            $updatedContent = $this->textBeautifier->beautify($pressArticleElement->getAITextContent(false));
+            $textContent = $this->aiTextContent->getOriginalTextContent($pressArticleElement->id, false);
+
+            $updatedContent = $this->textBeautifier->beautify($textContent);
 
             if ($updatedContent) {
-                $destLanguageId = $this->languagesManager->getLanguageId('rus');
+                $contentLanguageCode = $this->languageDetector->detectLanguage($textContent);
+                $destLanguageId = $this->languagesManager->getLanguageId($contentLanguageCode);
                 $pressArticleElement->setValue('content', $updatedContent, $destLanguageId);
                 $pressArticleElement->persistElementData();
                 $this->logMessage("$counter AI Fix content updated for article {$pressArticleElement->id}", 0);
@@ -270,7 +277,7 @@ class Crontab extends controllerApplication
         ];
 
         $this->processQueue(QueueType::AI_PRESS_TRANSLATE, function (pressArticleElement $pressArticleElement, $counter) use ($allLanguageCodes) {
-            $content = $pressArticleElement->getAITextContent(false);
+            $content = $this->aiTextContent->getAITextContent($pressArticleElement, false);
             $contentLanguageCode = $this->languageDetector->detectLanguage($content);
             $languageCodes = $allLanguageCodes[$contentLanguageCode] ?? $allLanguageCodes['rus'];
 
