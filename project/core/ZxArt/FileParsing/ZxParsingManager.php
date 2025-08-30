@@ -42,7 +42,7 @@ final class ZxParsingManager extends errorLogger
     /**
      * @psalm-return EngineFileRegistryRow[]
      */
-    public function getFileStructureById(int $elementId): array
+    public function getStructureRecordsById(int $elementId): array
     {
         $query = $this->db->table(self::table)->where('elementId', '=', $elementId);
         $records = $query->get();
@@ -57,7 +57,7 @@ final class ZxParsingManager extends errorLogger
 
     public function getTopFileRecord(int $elementId): array|null
     {
-        $records = $this->getFileStructureById($elementId);
+        $records = $this->getStructureRecordsById($elementId);
         if ($records !== []) {
             $record = array_find($records, static fn(array $record): bool => $record['parentId'] === 0);
             return $record;
@@ -259,4 +259,86 @@ final class ZxParsingManager extends errorLogger
         }
         return false;
     }
+
+    /**
+     * @psalm-return ZxParsingItem[]
+     */
+    public function getFileStructure(int $elementId): array
+    {
+        $rows = $this->getStructureRecordsById($elementId);
+
+        if ($rows === []) {
+            return [];
+        }
+
+        // index by parentId
+        $grouped = [];
+        foreach ($rows as $row) {
+            $parentId = $row['parentId'] ?? 0;
+            $grouped[$parentId][] = $row;
+        }
+
+        return $this->buildItemsFromRows($grouped, 0);
+    }
+
+    /**
+     * @psalm-return ZxParsingItem[]
+     */
+    private function buildItemsFromRows(array $grouped, int $parentId): array
+    {
+        $items = [];
+
+        foreach ($grouped[$parentId] ?? [] as $row) {
+            $item = $this->rowToItem($row);
+
+            if (!empty($grouped[$row['id']] ?? [])) {
+                $children = $this->buildItemsFromRows($grouped, $row['id']);
+                foreach ($children as $child) {
+                    $item->addItem($child);
+                }
+            }
+
+            $items[] = $item;
+        }
+
+        return $items;
+    }
+
+    private function rowToItem(array $row): ZxParsingItem
+    {
+        switch ($row['type']) {
+            case 'tap':
+                $item = new ZxParsingItemTap($this);
+                break;
+            case 'tzx':
+                $item = new ZxParsingItemTzx($this);
+                break;
+            case 'scl':
+                $item = new ZxParsingItemScl($this);
+                break;
+            case 'trd':
+                $item = new ZxParsingItemTrd($this);
+                break;
+            case 'rar':
+                $item = new ZxParsingItemRar($this);
+                break;
+            case 'zip':
+                $item = new ZxParsingItemZip($this);
+                break;
+            case 'folder':
+                $item = new ZxParsingItemFolder($this);
+                break;
+            default:
+                $item = new ZxParsingItemFile($this);
+                break;
+        }
+
+        $item->setItemName($row['fileName']);
+        $item->setContent(''); // optional: можно подтягивать контент при запросе
+        $item->setParentMd5($row['parentId'] ? (string)$row['parentId'] : '');
+        $item->setPath(''); // тут уже ничего не узнаешь, если путь не хранится в БД
+
+        return $item;
+    }
+
 }

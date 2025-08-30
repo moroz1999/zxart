@@ -260,7 +260,7 @@ class zxReleaseElement extends ZxArtItem implements
              * @var ZxParsingManager $zxParsingManager
              */
             $zxParsingManager = $this->getService(ZxParsingManager::class);
-            return $zxParsingManager->getFileStructureById($this->id);
+            return $zxParsingManager->getStructureRecordsById($this->id);
         }
         return false;
     }
@@ -829,38 +829,33 @@ class zxReleaseElement extends ZxArtItem implements
         $zxParsingManager = $this->getService(ZxParsingManager::class);
 
         $filePath = $this->getFilePath();
-        $id       = $this->getId();
+        $id = $this->getId();
 
         if (empty($filePath) || !is_file($filePath)) {
             $zxParsingManager->deleteFileStructure($id);
             $this->parsed = 1;
+            $this->releaseFormat = [];
             $this->persistElementData();
             return;
         }
 
         $actualMd5 = md5_file($filePath);
         $topRecord = $zxParsingManager->getTopFileRecord($id);
-        $baseMd5   = $topRecord['md5'] ?? null;
-
-        $nextReleaseFormat = $this->releaseFormat;
+        $baseMd5 = $topRecord['md5'] ?? null;
 
         if ($baseMd5 === null || $baseMd5 !== $actualMd5) {
-            $structure = $zxParsingManager->updateFileStructure(
+            $zxParsingManager->updateFileStructure(
                 $id,
                 urldecode($filePath),
                 $this->fileName
             );
-
-            if ($structure && empty($nextReleaseFormat)) {
-                $files = $this->gatherReleaseFiles($structure);
-                if (!empty($files)) {
-                    $nextReleaseFormat = array_values(array_unique($files));
-                }
-            }
         }
-
-        if ($nextReleaseFormat !== $this->releaseFormat) {
-            $this->releaseFormat = $nextReleaseFormat;
+        $structure = $zxParsingManager->getFileStructure($id);
+        if ($structure) {
+            $files = $this->gatherReleaseFiles($structure);
+            if (!empty($files)) {
+                $this->releaseFormat = array_values(array_unique($files));
+            }
         }
 
         $this->parsed = 1;

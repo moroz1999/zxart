@@ -1,9 +1,8 @@
 {
-  "name": "artweb-ou/project",
-  "description": "Trickster CMS based project",
-  "license": "proprietary",
+  "name": "moroz1999/zxart",
+  "description": "ZX-Art",
   "require": {
-    "artweb-ou/trickster-cms": "^4.3",
+    "artweb-ou/trickster-cms": "^4.8",
     "moroz1999/sxg": "*",
     "moroz1999/zx-image": "^5.4",
     "moroz1999/zx-files": "^3.1",
@@ -18,7 +17,6 @@
     "php-http/discovery": "^1.19",
     "smalot/pdfparser": "^2.7",
     "ext-fileinfo": "*",
-    "php": "8.4.*",
     "verifalia/sdk": "^3.0",
     "php-di/php-di": "^7.0",
     "ext-libxml": "*",
@@ -29,7 +27,5 @@
       "kylekatarnls/update-helper": true,
       "php-http/discovery": true
     }
-  },
-  "require-dev": {
   }
 }
