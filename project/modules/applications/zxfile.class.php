@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\FileParsing\ZxParsingManager;
+
 class zxfileApplication extends controllerApplication
 {
     use CrawlerFilterTrait;
@@ -40,7 +42,7 @@ class zxfileApplication extends controllerApplication
             /**
              * @var ZxParsingManager $zxParsingManager
              */
-            $zxParsingManager = $this->getService('ZxParsingManager');
+            $zxParsingManager = $this->getService(ZxParsingManager::class);
             $file = null;
             if ($this->fileId) {
                 $file = $zxParsingManager->extractFile($element->getFilePath(), $this->fileId);

@@ -1,23 +1,15 @@
 <?php
 
+namespace ZxArt\FileParsing;
+
 class ZxParsingItemRar extends ZxParsingItem
 {
-    /**
-     * @return string
-     *
-     * @psalm-return 'rar'
-     */
-    public function getType()
+    #[Override] public function getType(): string
     {
         return 'rar';
     }
 
-    /**
-     * @return ZxParsingItem[]
-     *
-     * @psalm-return array<ZxParsingItem>
-     */
-    protected function parse()
+    #[Override] protected function parse(): void
     {
         if ($this->items === null) {
             $this->items = [];
@@ -33,7 +25,7 @@ class ZxParsingItemRar extends ZxParsingItem
                 $rar = RarArchive::open($rarFilePath);
                 foreach ($rar->getEntries() as $entry) {
                     $itemFileName = $entry->getName();
-                    if ($isDir = (substr($itemFileName, -1, 1) == '/')) {
+                    if ($isDir = (str_ends_with($itemFileName, '/'))) {
                         $itemFileName = substr($itemFileName, 0, -1);
                     }
                     $parts = explode('/', $itemFileName);
@@ -45,21 +37,20 @@ class ZxParsingItemRar extends ZxParsingItem
                                 $partItem = new ZxParsingItemFolder($this->zxParsingManager);
                                 $partItem->setParentMd5($this->getMd5());
                                 $partItem->setItemName($part);
-                                $this->zxParsingManager->registerFile($partItem);
                             } else {
                                 $path = ROOT_PATH . 'temporary/' . md5($entry->getName() . $rarFilePath);
                                 $entry->extract(null, $path);
                                 if ($content = file_get_contents($path)) {
                                     $type = $this->zxParsingManager->detectType($part, $content);
-                                    if ($type == 'tap') {
+                                    if ($type === 'tap') {
                                         $partItem = new ZxParsingItemTap($this->zxParsingManager);
-                                    } elseif ($type == 'tzx') {
+                                    } elseif ($type === 'tzx') {
                                         $partItem = new ZxParsingItemTzx($this->zxParsingManager);
-                                    } elseif ($type == 'scl') {
+                                    } elseif ($type === 'scl') {
                                         $partItem = new ZxParsingItemScl($this->zxParsingManager);
-                                    } elseif ($type == 'trd') {
+                                    } elseif ($type === 'trd') {
                                         $partItem = new ZxParsingItemTrd($this->zxParsingManager);
-                                    } elseif ($type == 'rar') {
+                                    } elseif ($type === 'rar') {
                                         $partItem = new ZxParsingItemRar($this->zxParsingManager);
                                     } else {
                                         $partItem = new ZxParsingItemFile($this->zxParsingManager);
@@ -68,7 +59,6 @@ class ZxParsingItemRar extends ZxParsingItem
                                     $partItem->setParentMd5($this->getMd5());
                                     $partItem->setItemName($part);
                                     $partItem->getItems();
-                                    $this->zxParsingManager->registerFile($partItem);
                                     unlink($path);
                                 }
                             }
@@ -86,6 +76,5 @@ class ZxParsingItemRar extends ZxParsingItem
                 }
             }
         }
-        return $this->items;
     }
 }

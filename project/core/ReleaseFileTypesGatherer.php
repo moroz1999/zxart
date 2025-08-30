@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\FileParsing\ZxParsingItem;
+
 trait ReleaseFileTypesGatherer
 {
     /**
@@ -10,13 +12,12 @@ trait ReleaseFileTypesGatherer
      *
      * @psalm-return array<ZxParsingItem|string>
      */
-    protected function gatherReleaseFiles($items, &$result = []): array
+    protected function gatherReleaseFiles(array $items, array &$result = []): array
     {
         foreach ($items as $item) {
-            if ($extension = $item->getItemExtension()) {
-                if (in_array($extension, $this->getReleaseFormats())) {
-                    $result[$item->getMd5()] = $extension;
-                }
+            $extension = $item->getItemExtension();
+            if ($extension && in_array($extension, $this->getReleaseFormats(), true)) {
+                $result[$item->getMd5()] = $extension;
             }
             if ($subItems = $item->getItems()) {
                 $this->gatherReleaseFiles($subItems, $result);

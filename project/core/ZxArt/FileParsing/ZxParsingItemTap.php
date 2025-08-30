@@ -1,26 +1,24 @@
 <?php
 
+namespace ZxArt\FileParsing;
+
+use ZxFiles\Tape\Tap;
+
 class ZxParsingItemTap extends ZxParsingItem
 {
-    /**
-     * @return string
-     *
-     * @psalm-return 'tap'
-     */
-    public function getType()
+
+    #[Override] public function getType(): string
     {
         return 'tap';
     }
 
-    /**
-     * @return void
-     */
-    protected function parse()
+
+    #[Override] protected function parse(): void
     {
         if ($this->items === null) {
             $this->items = [];
 
-            $tape = new \ZxFiles\Tape\Tap();
+            $tape = new Tap();
             $tape->setBinary($this->getContent());
             if ($files = $tape->getFiles()) {
                 foreach ($files as $file) {
@@ -29,7 +27,6 @@ class ZxParsingItemTap extends ZxParsingItem
                     $item->setContent($file->getContents());
                     $item->setParentMd5($this->getMd5());
                     $item->setItemName($file->getFullName());
-                    $this->zxParsingManager->registerFile($item);
 
                     $this->items[] = $item;
                 }

@@ -1,25 +1,20 @@
 <?php
 
+namespace ZxArt\FileParsing;
+
 class ZxParsingItemFolder extends ZxParsingItem
 {
-    /**
-     * @return string
-     *
-     * @psalm-return 'folder'
-     */
-    public function getType()
+
+    #[Override] public function getType(): string
     {
         return 'folder';
     }
 
-    /**
-     * @return void
-     */
-    protected function parse()
+    #[Override] protected function parse(): void
     {
     }
 
-    public function getContent()
+    #[Override] public function getContent(): ?string
     {
         if (!$this->content) {
             $this->content = $this->parentMd5 . '/' . $this->itemName;

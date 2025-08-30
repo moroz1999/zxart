@@ -21,13 +21,13 @@ use structureElement;
 use structureManager;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\FileParsing\ZxParsingManager;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Import\Prods\ProdLabel;
 use ZxArt\Import\Prods\ProdResolver;
 use ZxArt\Parties\Services\PartiesService;
 use ZxArt\Prods\Repositories\ProdsRepository;
 use ZxArt\ZxProdCategories\CategoryIds;
-use ZxParsingManager;
 use zxProdElement;
 use zxReleaseElement;
 

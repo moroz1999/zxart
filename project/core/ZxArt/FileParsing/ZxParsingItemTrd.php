@@ -1,25 +1,23 @@
 <?php
 
+namespace ZxArt\FileParsing;
+
+use ZxFiles\Disk\Trd;
+
 class ZxParsingItemTrd extends ZxParsingItem
 {
-    /**
-     * @return string
-     *
-     * @psalm-return 'trd'
-     */
-    public function getType()
+
+    public function getType(): string
     {
         return 'trd';
     }
 
-    /**
-     * @return void
-     */
-    protected function parse()
+
+    protected function parse(): void
     {
         $this->items = [];
 
-        $disk = new \ZxFiles\Disk\Trd();
+        $disk = new Trd();
         $disk->setBinary($this->getContent());
         if ($files = $disk->getFiles()) {
             foreach ($files as $file) {
@@ -28,7 +26,6 @@ class ZxParsingItemTrd extends ZxParsingItem
                 $item->setContent($file->getContents());
                 $item->setParentMd5($this->getMd5());
                 $item->setItemName($file->getFullName());
-                $this->zxParsingManager->registerFile($item);
 
                 $this->items[] = $item;
             }

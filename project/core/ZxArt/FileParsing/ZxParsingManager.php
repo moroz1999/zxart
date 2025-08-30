@@ -13,27 +13,31 @@
  * }
  */
 
+namespace ZxArt\FileParsing;
+
+use EncodingDetector;
+use EngineFileRegistryRow;
+use errorLogger;
 use Illuminate\Database\Connection;
 
-class ZxParsingManager extends errorLogger
+final class ZxParsingManager extends errorLogger
 {
     const string table = 'files_registry';
-    protected array $index = [];
 
-    protected Connection $db;
-
-    protected static array $textExtensions = [
+    private static array $textExtensions = [
         't', 'w', 'txt', 'bbs', 'me', 'nfo', 'nf0', 'diz', 'md', 'pok', 'd'
     ];
-    protected static array $sourceCodeExtensions = [
+    private static array $sourceCodeExtensions = [
         'asm', 'a80', 'a', 'bat', 'cmd'
     ];
 
-
-    public function setDb(Connection $db): void
+    public function __construct(
+        private readonly Connection $db
+    )
     {
-        $this->db = $db;
+
     }
+
 
     /**
      * @psalm-return EngineFileRegistryRow[]
@@ -178,7 +182,6 @@ class ZxParsingManager extends errorLogger
             if ($fileName) {
                 $file->setItemName($fileName);
             }
-            $this->registerFile($file);
             $file->getItems();
             $structure = [$file];
         }
@@ -202,11 +205,6 @@ class ZxParsingManager extends errorLogger
             }
         }
         return $extension;
-    }
-
-    public function registerFile(ZxParsingItem $file): void
-    {
-        $this->index[$file->getMd5()] = $file;
     }
 
     public function getFileRecord(int $id)

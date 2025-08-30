@@ -1,35 +1,30 @@
 <?php
 
-class ZxParsingItemTzx extends ZxParsingItem
+namespace ZxArt\FileParsing;
+
+use ZxFiles\Disk\Scl;
+
+class ZxParsingItemScl extends ZxParsingItem
 {
-    /**
-     * @return string
-     *
-     * @psalm-return 'tzx'
-     */
-    public function getType()
+    #[Override] public function getType(): string
     {
-        return 'tzx';
+        return 'scl';
     }
 
-    /**
-     * @return void
-     */
-    protected function parse()
+    #[Override] protected function parse(): void
     {
         if ($this->items === null) {
             $this->items = [];
 
-            $tape = new \ZxFiles\Tape\Tzx();
-            $tape->setBinary($this->getContent());
-            if ($files = $tape->getFiles()) {
+            $disk = new Scl();
+            $disk->setBinary($this->getContent());
+            if ($files = $disk->getFiles()) {
                 foreach ($files as $file) {
                     $item = new ZxParsingItemFile($this->zxParsingManager);
 
                     $item->setContent($file->getContents());
                     $item->setParentMd5($this->getMd5());
                     $item->setItemName($file->getFullName());
-                    $this->zxParsingManager->registerFile($item);
 
                     $this->items[] = $item;
                 }

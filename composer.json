@@ -12,18 +12,17 @@
     "ext-gd": "*",
     "ext-dom": "*",
     "ext-zip": "*",
-    "sobak/scrawler": "^0.3.0",
     "openai-php/client": "^0.7.3",
     "http-interop/http-factory-guzzle": "^1.2",
-    "guzzlehttp/guzzle": "^6.5",
+    "guzzlehttp/guzzle": "^7",
     "php-http/discovery": "^1.19",
-    "php-http/guzzle6-adapter": "^2.0",
     "smalot/pdfparser": "^2.7",
     "ext-fileinfo": "*",
-    "php": "8.3.*",
+    "php": "8.4.*",
     "verifalia/sdk": "^3.0",
     "php-di/php-di": "^7.0",
-    "ext-libxml": "*"
+    "ext-libxml": "*",
+    "ext-redis": "*"
   },
   "config": {
     "allow-plugins": {
@@ -32,6 +31,5 @@
     }
   },
   "require-dev": {
-    "vimeo/psalm": "^5.22"
   }
 }

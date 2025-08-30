@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\FileParsing\ZxParsingItem;
+use ZxArt\FileParsing\ZxParsingManager;
 use ZxArt\Prods\LegalStatus;
 use ZxArt\Releases\Services\ArchiveFileResolverService;
 use ZxArt\Releases\Services\EmulatorResolverService;
@@ -257,7 +259,7 @@ class zxReleaseElement extends ZxArtItem implements
             /**
              * @var ZxParsingManager $zxParsingManager
              */
-            $zxParsingManager = $this->getService('ZxParsingManager');
+            $zxParsingManager = $this->getService(ZxParsingManager::class);
             return $zxParsingManager->getFileStructureById($this->id);
         }
         return false;
@@ -400,7 +402,7 @@ class zxReleaseElement extends ZxArtItem implements
         /**
          * @var ZxParsingManager $zxParsingManager
          */
-        $zxParsingManager = $this->getService('ZxParsingManager');
+        $zxParsingManager = $this->getService(ZxParsingManager::class);
         $controller = controller::getInstance();
 
         $extractedFile = $zxParsingManager->extractFile($this->getFilePath(), $fileRecord['id']);
@@ -461,7 +463,7 @@ class zxReleaseElement extends ZxArtItem implements
                 /**
                  * @var ZxParsingManager $zxParsingManager
                  */
-                $zxParsingManager = $this->getService('ZxParsingManager');
+                $zxParsingManager = $this->getService(ZxParsingManager::class);
                 if ($fileInfo = $zxParsingManager->getFileRecord($fileId)) {
                     $this->currentReleaseFileInfo = $fileInfo;
                 }
@@ -475,7 +477,7 @@ class zxReleaseElement extends ZxArtItem implements
         /**
          * @var ZxParsingManager $zxParsingManager
          */
-        $zxParsingManager = $this->getService('ZxParsingManager');
+        $zxParsingManager = $this->getService(ZxParsingManager::class);
         if ($file = $zxParsingManager->extractFile($this->getFilePath(), $fileId)) {
             return $file;
         }
@@ -827,7 +829,7 @@ class zxReleaseElement extends ZxArtItem implements
         /**
          * @var ZxParsingManager $zxParsingManager
          */
-        $zxParsingManager = $this->getService('ZxParsingManager');
+        $zxParsingManager = $this->getService(ZxParsingManager::class);
         if ($structure = $zxParsingManager->updateFileStructure(
             $this->getId(),
             urldecode($this->getFilePath()),

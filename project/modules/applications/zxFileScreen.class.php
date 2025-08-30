@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\FileParsing\ZxParsingManager;
+
 class zxFileScreenApplication extends controllerApplication
 {
     protected $width;
@@ -45,7 +47,7 @@ class zxFileScreenApplication extends controllerApplication
             /**
              * @var ZxParsingManager $zxParsingManager
              */
-            $zxParsingManager = $this->getService('ZxParsingManager');
+            $zxParsingManager = $this->getService(ZxParsingManager::class);
             $file = null;
             if ($this->fileId) {
                 $file = $zxParsingManager->extractFile($element->getFilePath(), $this->fileId);

@@ -1,5 +1,8 @@
 <?php
 // parser app for search by file
+use ZxArt\FileParsing\ZxParsingItem;
+use ZxArt\FileParsing\ZxParsingManager;
+
 class parserApplication extends controllerApplication
 {
     public $rendererName = 'json';
@@ -57,7 +60,7 @@ class parserApplication extends controllerApplication
             /**
              * @var ZxParsingManager $zxParsingManager
              */
-            $zxParsingManager = $this->getService('ZxParsingManager');
+            $zxParsingManager = $this->getService(ZxParsingManager::class);
             if ($structure = $zxParsingManager->getFileStructure($this->filePath, $this->fileName)) {
                 $response = $this->prepareResponse($structure);
                 $this->renderer->assign('responseStatus', 'success');
