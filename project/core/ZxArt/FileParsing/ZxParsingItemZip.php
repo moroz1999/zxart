@@ -2,6 +2,9 @@
 
 namespace ZxArt\FileParsing;
 
+use Override;
+use ZipArchive;
+
 class ZxParsingItemZip extends ZxParsingItem
 {
 

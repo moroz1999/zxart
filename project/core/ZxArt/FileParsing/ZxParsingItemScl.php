@@ -2,6 +2,7 @@
 
 namespace ZxArt\FileParsing;
 
+use Override;
 use ZxFiles\Disk\Scl;
 
 class ZxParsingItemScl extends ZxParsingItem

@@ -2,18 +2,19 @@
 
 namespace ZxArt\FileParsing;
 
+use Override;
 use ZxFiles\Disk\Trd;
 
 class ZxParsingItemTrd extends ZxParsingItem
 {
 
-    public function getType(): string
+    #[Override] public function getType(): string
     {
         return 'trd';
     }
 
 
-    protected function parse(): void
+    #[Override] protected function parse(): void
     {
         $this->items = [];
 

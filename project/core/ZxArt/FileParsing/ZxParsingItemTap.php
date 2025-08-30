@@ -2,6 +2,7 @@
 
 namespace ZxArt\FileParsing;
 
+use Override;
 use ZxFiles\Tape\Tap;
 
 class ZxParsingItemTap extends ZxParsingItem

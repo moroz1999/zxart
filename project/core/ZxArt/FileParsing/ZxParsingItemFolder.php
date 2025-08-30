@@ -1,6 +1,7 @@
 <?php
 
 namespace ZxArt\FileParsing;
+use Override;
 
 class ZxParsingItemFolder extends ZxParsingItem
 {
@@ -12,6 +13,7 @@ class ZxParsingItemFolder extends ZxParsingItem
 
     #[Override] protected function parse(): void
     {
+        $this->items = [];
     }
 
     #[Override] public function getContent(): ?string

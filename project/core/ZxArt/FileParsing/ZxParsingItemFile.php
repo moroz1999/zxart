@@ -1,6 +1,7 @@
 <?php
 
 namespace ZxArt\FileParsing;
+use Override;
 
 class ZxParsingItemFile extends ZxParsingItem
 {
@@ -11,5 +12,6 @@ class ZxParsingItemFile extends ZxParsingItem
 
     #[Override] protected function parse(): void
     {
+        $this->items = [];
     }
 }

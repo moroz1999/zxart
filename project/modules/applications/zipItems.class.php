@@ -85,7 +85,7 @@ class zipItemsApplication extends controllerApplication
             $structure = $requestParameters['structure'];
         }
 
-        $zipArchive = new ZipArchive();
+        $zipArchive = new \ZipArchive();
         $zipName = 'zxart_files_' . time() . '.zip';
         $cachePath = $this->getService('PathsManager')->getPath('uploadsCache');
         $zipPath = $cachePath . $zipName;

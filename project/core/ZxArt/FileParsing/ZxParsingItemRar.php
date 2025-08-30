@@ -1,6 +1,7 @@
 <?php
 
 namespace ZxArt\FileParsing;
+use Override;
 
 class ZxParsingItemRar extends ZxParsingItem
 {

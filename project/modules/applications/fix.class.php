@@ -401,7 +401,7 @@ class fixApplication extends controllerApplication
                             $delete = true;
                         }
                         if (pathinfo($fileName, PATHINFO_EXTENSION) === 'zip') {
-                            $zip = new ZipArchive();
+                            $zip = new \ZipArchive();
                             if ($zip->open($filePath) === true) {
                                 $zip->close();
                             } else {
