@@ -42,9 +42,9 @@ final class ZxParsingManager extends errorLogger
     /**
      * @psalm-return EngineFileRegistryRow[]
      */
-    public function getFileStructureById(int $id): array
+    public function getFileStructureById(int $elementId): array
     {
-        $query = $this->db->table(self::table)->where('elementId', '=', $id);
+        $query = $this->db->table(self::table)->where('elementId', '=', $elementId);
         $records = $query->get();
         foreach ($records as $key => $record) {
             $records[$key]['viewable'] = ($record['internalType'] !== 'binary' && $record['internalType']);
@@ -53,6 +53,16 @@ final class ZxParsingManager extends errorLogger
             }
         }
         return $records;
+    }
+
+    public function getTopFileRecord(int $elementId): array|null
+    {
+        $records = $this->getFileStructureById($elementId);
+        if ($records !== []) {
+            $record = array_find($records, static fn(array $record): bool => $record['parentId'] === 0);
+            return $record;
+        }
+        return null;
     }
 
     /**
@@ -64,7 +74,7 @@ final class ZxParsingManager extends errorLogger
     public function updateFileStructure(int $elementId, string $path, string|null $fileName = null): array
     {
         $this->deleteFileStructure($elementId);
-        if ($structure = $this->getFileStructure($path, $fileName)) {
+        if ($structure = $this->parseFileStructure($path, $fileName)) {
             $this->saveFileStructureLevel($structure, $elementId);
         }
         return $structure;
@@ -78,7 +88,7 @@ final class ZxParsingManager extends errorLogger
     /**
      * @param ZxParsingItem[] $structure
      */
-    protected function saveFileStructureLevel(array $structure, int $elementId, ?int $parentId = null): void
+    private function saveFileStructureLevel(array $structure, int $elementId, ?int $parentId = null): void
     {
         foreach ($structure as $item) {
             $internalType = $this->getInternalFileType($item->getItemName(), $item->getType(), $item->getSize(), $item->getContent());
@@ -88,7 +98,7 @@ final class ZxParsingManager extends errorLogger
                 $encoding = 'none';
             }
 
-            $info = [
+            $data = [
                 'type' => $item->getType(),
                 'fileName' => $item->getItemName(),
                 'md5' => $item->getMd5(),
@@ -99,18 +109,18 @@ final class ZxParsingManager extends errorLogger
             ];
 
             if ($parentId) {
-                $info['parentId'] = $parentId;
+                $data['parentId'] = $parentId;
             }
             $newParentId = $this->db->table(self::table)
                 ->where('elementId', '=', $elementId)
-                ->insertGetId($info);
+                ->insertGetId($data);
             if ($newParentId && $subStructure = $item->getItems()) {
                 $this->saveFileStructureLevel($subStructure, $elementId, $newParentId);
             }
         }
     }
 
-    protected function getInternalFileType(string $fileName, string $extension, int $size, string $content): string
+    private function getInternalFileType(string $fileName, string $extension, int $size, string $content): string
     {
         if ($extension === 'file') {
             $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
@@ -159,7 +169,7 @@ final class ZxParsingManager extends errorLogger
      * @param null $fileName
      * @return ZxParsingItem[]
      */
-    public function getFileStructure(string $path, $fileName = null): array
+    public function parseFileStructure(string $path, $fileName = null): array
     {
         $structure = [];
         if (is_file($path) && ($type = $this->detectType($path, null, $fileName))) {
@@ -240,7 +250,7 @@ final class ZxParsingManager extends errorLogger
      */
     public function getFileByChain(string $path, array $chain, $fileName = null): ZxParsingItem|bool
     {
-        if ($structure = $this->getFileStructure($path, $fileName)) {
+        if ($structure = $this->parseFileStructure($path, $fileName)) {
             foreach ($structure as $item) {
                 if ($file = $item->getFileByChain($chain)) {
                     return $file;

@@ -825,21 +825,45 @@ class zxReleaseElement extends ZxArtItem implements
 
     public function updateFileStructure(): void
     {
-        $this->parsed = 1;
-        /**
-         * @var ZxParsingManager $zxParsingManager
-         */
+        /** @var ZxParsingManager $zxParsingManager */
         $zxParsingManager = $this->getService(ZxParsingManager::class);
-        if ($structure = $zxParsingManager->updateFileStructure(
-            $this->getId(),
-            urldecode($this->getFilePath()),
-            $this->fileName
-        )) {
-            if (!$this->releaseFormat && ($files = $this->gatherReleaseFiles($structure))) {
-                $files = array_unique($files);
-                $this->releaseFormat = $files;
+
+        $filePath = $this->getFilePath();
+        $id       = $this->getId();
+
+        if (empty($filePath) || !is_file($filePath)) {
+            $zxParsingManager->deleteFileStructure($id);
+            $this->parsed = 1;
+            $this->persistElementData();
+            return;
+        }
+
+        $actualMd5 = md5_file($filePath);
+        $topRecord = $zxParsingManager->getTopFileRecord($id);
+        $baseMd5   = $topRecord['md5'] ?? null;
+
+        $nextReleaseFormat = $this->releaseFormat;
+
+        if ($baseMd5 === null || $baseMd5 !== $actualMd5) {
+            $structure = $zxParsingManager->updateFileStructure(
+                $id,
+                urldecode($filePath),
+                $this->fileName
+            );
+
+            if ($structure && empty($nextReleaseFormat)) {
+                $files = $this->gatherReleaseFiles($structure);
+                if (!empty($files)) {
+                    $nextReleaseFormat = array_values(array_unique($files));
+                }
             }
         }
+
+        if ($nextReleaseFormat !== $this->releaseFormat) {
+            $this->releaseFormat = $nextReleaseFormat;
+        }
+
+        $this->parsed = 1;
         $this->persistElementData();
     }
 

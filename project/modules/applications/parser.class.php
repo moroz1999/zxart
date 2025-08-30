@@ -61,7 +61,7 @@ class parserApplication extends controllerApplication
              * @var ZxParsingManager $zxParsingManager
              */
             $zxParsingManager = $this->getService(ZxParsingManager::class);
-            if ($structure = $zxParsingManager->getFileStructure($this->filePath, $this->fileName)) {
+            if ($structure = $zxParsingManager->parseFileStructure($this->filePath, $this->fileName)) {
                 $response = $this->prepareResponse($structure);
                 $this->renderer->assign('responseStatus', 'success');
                 $this->renderer->assign('responseData', $response);

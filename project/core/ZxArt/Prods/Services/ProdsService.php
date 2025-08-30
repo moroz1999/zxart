@@ -687,7 +687,7 @@ class ProdsService extends ElementsManager
                 throw new ReleaseDownloadException('Unable to download release ' . $prodId . ' ' . $releaseInfo['id'] . ' ' . $releaseInfo['title'] . ' ' . $releaseInfo['fileUrl']);
             }
             if ($path) {
-                if ($structure = $this->zxParsingManager->getFileStructure($path)) {
+                if ($structure = $this->zxParsingManager->parseFileStructure($path)) {
                     $releaseFiles = $this->gatherReleaseFiles($structure);
                     $index = [];
                     if ($records = $this->db->table('files_registry')
