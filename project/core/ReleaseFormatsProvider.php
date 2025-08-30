@@ -5,7 +5,7 @@ trait ReleaseFormatsProvider
     /**
      * Centralized definition of all release formats grouped by category
      */
-    private const array FORMATS = [
+    private const FORMATS = [
         'disk' => [
             'dsk',
             'trd',
@@ -19,6 +19,8 @@ trait ReleaseFormatsProvider
             'mbd',
             'img',
             'sad',
+            'd40',
+            'd80',
         ],
         'tape' => [
             'tzx',

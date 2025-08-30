@@ -17,8 +17,8 @@ use Illuminate\Database\Connection;
 
 class ZxParsingManager extends errorLogger
 {
-    const table = 'files_registry';
-    protected $index = [];
+    const string table = 'files_registry';
+    protected array $index = [];
 
     protected Connection $db;
 
@@ -44,7 +44,7 @@ class ZxParsingManager extends errorLogger
         $records = $query->get();
         foreach ($records as $key => $record) {
             $records[$key]['viewable'] = ($record['internalType'] !== 'binary' && $record['internalType']);
-            if ($record['internalType'] === 'plain_text' && $record['encoding'] === 'none'){
+            if ($record['internalType'] === 'plain_text' && $record['encoding'] === 'none') {
                 $records[$key]['viewable'] = false;
             }
         }
@@ -52,7 +52,6 @@ class ZxParsingManager extends errorLogger
     }
 
     /**
-     * @param null|string $fileName
      *
      * @return ZxParsingItem[]
      *
@@ -74,8 +73,6 @@ class ZxParsingManager extends errorLogger
 
     /**
      * @param ZxParsingItem[] $structure
-     * @param int $elementId
-     * @param int|null $parentId
      */
     protected function saveFileStructureLevel(array $structure, int $elementId, ?int $parentId = null): void
     {
@@ -100,13 +97,11 @@ class ZxParsingManager extends errorLogger
             if ($parentId) {
                 $info['parentId'] = $parentId;
             }
-            if ($newParentId = $this->db->table(self::table)
+            $newParentId = $this->db->table(self::table)
                 ->where('elementId', '=', $elementId)
-                ->insertGetId($info)
-            ) {
-                if ($subStructure = $item->getItems()) {
-                    $this->saveFileStructureLevel($subStructure, $elementId, $newParentId);
-                }
+                ->insertGetId($info);
+            if ($newParentId && $subStructure = $item->getItems()) {
+                $this->saveFileStructureLevel($subStructure, $elementId, $newParentId);
             }
         }
     }
@@ -116,94 +111,100 @@ class ZxParsingManager extends errorLogger
         if ($extension === 'file') {
             $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
         }
-        if (in_array($extension, self::$textExtensions)) {
-            $content = EncodingDetector::decodeText($content);
-            if (!$content) {
+        if (in_array($extension, self::$textExtensions, true)) {
+            $decoded = EncodingDetector::decodeText($content);
+            if (!$decoded) {
                 return 'binary';
             }
             return 'plain_text';
-        } elseif (in_array($extension, self::$sourceCodeExtensions)) {
-            return 'source_code';
-        } elseif ($extension === 'jpg' || $extension === 'jpeg' || $extension === 'png' || $extension === 'bmp') {
-            return 'pc_image';
-        } elseif ($extension == 'b') {
-            return 'zx_basic';
-        } elseif ($size === 6912) {
-            return 'zx_image_standard';
-        } elseif ($size === 6144) {
-            return 'zx_image_monochrome';
-        } elseif ($size === 18432) {
-            return 'zx_image_tricolor';
-        } elseif ($size === 13824) {
-            return 'zx_image_gigascreen';
-        } else {
-            return 'binary';
         }
+
+        if (in_array($extension, self::$sourceCodeExtensions, true)) {
+            return 'source_code';
+        }
+
+        if ($extension === 'jpg' || $extension === 'jpeg' || $extension === 'png' || $extension === 'bmp') {
+            return 'pc_image';
+        }
+
+        if ($extension === 'b') {
+            return 'zx_basic';
+        }
+
+        if ($size === 6912) {
+            return 'zx_image_standard';
+        }
+
+        if ($size === 6144) {
+            return 'zx_image_monochrome';
+        }
+
+        if ($size === 18432) {
+            return 'zx_image_tricolor';
+        }
+
+        if ($size === 13824) {
+            return 'zx_image_gigascreen';
+        }
+
+        return 'binary';
     }
 
 
     /**
-     * @param $path
      * @param null $fileName
      * @return ZxParsingItem[]
      */
-    public function getFileStructure(string $path, $fileName = null)
+    public function getFileStructure(string $path, $fileName = null): array
     {
         $structure = [];
-        if (is_file($path)) {
-            if ($type = $this->detectType($path, null, $fileName)) {
-                if ($type == 'tap') {
-                    $file = new ZxParsingItemTap($this);
-                } elseif ($type == 'tzx') {
-                    $file = new ZxParsingItemTzx($this);
-                } elseif ($type == 'scl') {
-                    $file = new ZxParsingItemScl($this);
-                } elseif ($type == 'trd') {
-                    $file = new ZxParsingItemTrd($this);
-                } elseif ($type == 'rar') {
-                    $file = new ZxParsingItemRar($this);
-                } elseif ($type == 'zip') {
-                    $file = new ZxParsingItemZip($this);
-                } else {
-                    $file = new ZxParsingItemFile($this);
-                }
-                $file->setPath($path);
-                if ($fileName) {
-                    $file->setItemName($fileName);
-                }
-                $this->registerFile($file);
-                $file->getItems();
-                $structure = [$file];
+        if (is_file($path) && ($type = $this->detectType($path, null, $fileName))) {
+            if ($type === 'tap') {
+                $file = new ZxParsingItemTap($this);
+            } elseif ($type === 'tzx') {
+                $file = new ZxParsingItemTzx($this);
+            } elseif ($type === 'scl') {
+                $file = new ZxParsingItemScl($this);
+            } elseif ($type === 'trd') {
+                $file = new ZxParsingItemTrd($this);
+            } elseif ($type === 'rar') {
+                $file = new ZxParsingItemRar($this);
+            } elseif ($type === 'zip') {
+                $file = new ZxParsingItemZip($this);
+            } else {
+                $file = new ZxParsingItemFile($this);
             }
+            $file->setPath($path);
+            if ($fileName) {
+                $file->setItemName($fileName);
+            }
+            $this->registerFile($file);
+            $file->getItems();
+            $structure = [$file];
         }
         return $structure;
     }
 
-    /**
-     * @param null|string $path
-     * @param null|string $content
-     */
     public function detectType(string|null $path = null, string|null $content = null, $fileName = null): string
     {
         if ($fileName && ($extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION)))) {
             return $extension;
-        } elseif ($extension = strtolower(pathinfo($path, PATHINFO_EXTENSION))) {
-            return $extension;
-        } elseif ($content || ($content = file_get_contents($path))) {
-            if (str_starts_with($content, 'PK')) {
-                return 'zip';
-            }
-            if (str_starts_with($content, 'Rar')) {
-                return 'rar';
+        }
+
+        if (!($extension = strtolower(pathinfo($path, PATHINFO_EXTENSION)))) {
+            if ($content || ($content = file_get_contents($path))) {
+                if (str_starts_with($content, 'PK')) {
+                    return 'zip';
+                }
+                if (str_starts_with($content, 'Rar')) {
+                    return 'rar';
+                }
             }
         }
         return $extension;
     }
 
-    /**
-     * @param ZxParsingItem $file
-     */
-    public function registerFile($file): void
+    public function registerFile(ZxParsingItem $file): void
     {
         $this->index[$file->getMd5()] = $file;
     }
@@ -236,11 +237,10 @@ class ZxParsingManager extends errorLogger
     }
 
     /**
-     * @param string $path
      * @param string[] $chain
-     * @return ZxParsingItem|boolean
+     * @param null $fileName
      */
-    public function getFileByChain($path, $chain, $fileName = null)
+    public function getFileByChain(string $path, array $chain, $fileName = null): ZxParsingItem|bool
     {
         if ($structure = $this->getFileStructure($path, $fileName)) {
             foreach ($structure as $item) {

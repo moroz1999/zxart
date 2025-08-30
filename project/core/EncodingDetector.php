@@ -15,14 +15,14 @@ class EncodingDetector
         'Windows-1252',
     ];
 
-    public static function decodeText(string $content): string|false
+    public static function decodeText(string $content): string|null
     {
         $encoding = self::detectEncoding($content);
         if ($encoding) {
             return mb_convert_encoding($content, 'UTF-8', $encoding);
         }
 
-        return false;
+        return null;
     }
 
     public static function detectEncoding(string $content): ?string

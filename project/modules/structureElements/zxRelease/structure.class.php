@@ -833,11 +833,9 @@ class zxReleaseElement extends ZxArtItem implements
             urldecode($this->getFilePath()),
             $this->fileName
         )) {
-            if (!$this->releaseFormat) {
-                if ($files = $this->gatherReleaseFiles($structure)) {
-                    $files = array_unique($files);
-                    $this->releaseFormat = $files;
-                }
+            if (!$this->releaseFormat && ($files = $this->gatherReleaseFiles($structure))) {
+                $files = array_unique($files);
+                $this->releaseFormat = $files;
             }
         }
         $this->persistElementData();
