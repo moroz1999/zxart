@@ -1,3 +1,3 @@
 {foreach $element->getSupportedLanguagesMap() as $code => $title}
-    <a href="{$element->getCatalogueUrl(['languages' => $code])}">{$title}</a>{if !$title@last}, {/if}
+<a class="language-link" href="{$element->getCatalogueUrl(['languages' => $code])}"><span class="language-link-icon">{$element->getLanguageEmoji($code)}</span> {$title}</a>{if !$title@last}, {/if}
 {/foreach}

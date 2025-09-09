@@ -55,7 +55,7 @@ class fixApplication extends controllerApplication
              */
             $languagesManager = $this->getService('LanguagesManager');
             $languagesManager->setCurrentLanguageCode('eng');
-            $this->fixDisconnectedImages();
+            $this->fixPressCategories();
 //            $this->addCategoryToQueue(92183, QueueType::AI_SEO, QueueStatus::STATUS_TODO, 5000);
 //            $this->addCategoryToQueue(92534, QueueType::AI_INTRO, QueueStatus::STATUS_TODO, 5000);
 //            $this->addCategoryToQueue(204819, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
@@ -199,13 +199,14 @@ class fixApplication extends controllerApplication
     private function fixZx81(): void
     {
         $apiQueriesManager = $this->getService('ApiQueriesManager');
-        $filters = ['zxReleaseHardware' => ["zx80",
-            "zx8116",
-            "zx811",
-            "zx812",
-            "zx8132",
-            "zx8164",]];
-
+//        $filters = ['zxReleaseHardware' => ["zx80",
+//            "zx8116",
+//            "zx811",
+//            "zx812",
+//            "zx8132",
+//            "zx8164",]
+//        ];
+        $filters = [];
         $apiQuery = $apiQueriesManager->getQuery()
             ->setExportType('zxRelease')
             ->setFiltrationParameters($filters);
@@ -216,6 +217,9 @@ class fixApplication extends controllerApplication
         $counter = 0;
         $count = count($ids);
         foreach ($ids as $id) {
+            if ($id < 343149) {
+                continue;
+            }
             echo $counter . ' ' . round(100 * $counter / $count) . '% ';
             $release = $this->structureManager->getElementById($id);
 
@@ -530,10 +534,9 @@ class fixApplication extends controllerApplication
          * @var linksManager $linksManager
          */
         $linksManager = $this->getService(linksManager::class);
-        $name = 'Nicron';
-        $replacement = 'Nicron issue';
+        $name = 'Outlet issue';
         $result = $this->db->table(ProdsRepository::TABLE)
-            ->where('title', 'like', $name . ' #%')
+            ->where('title', 'like', $name . '%')
             ->orderBy('id')
             ->get(['id']);
         $ids = array_column($result, 'id');
@@ -546,10 +549,8 @@ class fixApplication extends controllerApplication
                 continue;
             }
 
-            $linksManager->unLinkElements(CategoryIds::MISC->value, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
-            $linksManager->unLinkElements(self::CATEGORY_MAGAZINE, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
-            $linksManager->linkElements(self::CATEGORY_NEWSPAPER, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
-//            $linksManager->linkElements(self::CATEGORY_MAGAZINE, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
+            $linksManager->unLinkElements(CategoryIds::COMPILATION_GAMES->value, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
+            $linksManager->linkElements(CategoryIds::PRESS_MAGAZINES->value, $prod->id, LinkTypes::ZX_PROD_CATEGORY->value);
 
             echo $counter . ' ' . round(100 * $counter / $count) . '% ';
             if ($prod) {

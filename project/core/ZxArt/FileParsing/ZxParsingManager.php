@@ -334,9 +334,10 @@ final class ZxParsingManager extends errorLogger
         }
 
         $item->setItemName($row['fileName']);
-        $item->setContent(''); // optional: можно подтягивать контент при запросе
+        $item->setContent('');
         $item->setParentMd5($row['parentId'] ? (string)$row['parentId'] : '');
-        $item->setPath(''); // тут уже ничего не узнаешь, если путь не хранится в БД
+        $item->setMd5($row['md5']);
+        $item->setPath('');
 
         return $item;
     }

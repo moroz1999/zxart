@@ -64,4 +64,54 @@ trait LanguageCodesProviderTrait
     }
 
     abstract public function getSupportedLanguageCodes();
+
+    public function getLanguageEmojiMap(): array
+    {
+        return [
+            'be' => '🇧🇾',
+            'bs' => '🇧🇦',
+            'by' => '🇧🇾',
+            'ca' => '🇪🇸',
+            'cs' => '🇨🇿',
+            'da' => '🇩🇰',
+            'de' => '🇩🇪',
+            'el' => '🇬🇷',
+            'en' => '🇬🇧',
+            'eo' => '🌍',
+            'es' => '🇪🇸',
+            'eu' => '🇪🇸',
+            'fi' => '🇫🇮',
+            'fr' => '🇫🇷',
+            'gl' => '🇪🇸',
+            'hr' => '🇭🇷',
+            'hu' => '🇭🇺',
+            'is' => '🇮🇸',
+            'it' => '🇮🇹',
+            'la' => '🏛️',
+            'lt' => '🇱🇹',
+            'lv' => '🇱🇻',
+            'm-' => '❓',
+            'nl' => '🇳🇱',
+            'no' => '🇳🇴',
+            'pl' => '🇵🇱',
+            'pt' => '🇵🇹',
+            'ro' => '🇷🇴',
+            'ru' => '🇷🇺',
+            'sh' => '🇷🇸',
+            'sk' => '🇸🇰',
+            'sl' => '🇸🇮',
+            'sr' => '🇷🇸',
+            'sv' => '🇸🇪',
+            'tr' => '🇹🇷',
+            'ua' => '🇺🇦',
+            'he' => '🇮🇱',
+        ];
+    }
+
+    public function getLanguageEmoji(string $code): string
+    {
+        $map = $this->getLanguageEmojiMap();
+        return $map[$code] ?? '';
+    }
+
 }

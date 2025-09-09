@@ -23,7 +23,7 @@
 				<input class="input_component{if $formErrors.password} form_error{/if}" type="password" value="" name="{$formNames.password}" placeholder="{translations name='login.password'}"/>
 				<div class="login_remember">
 					<label>
-						<input class="login_remember_checkbox checkbox_placeholder" type="checkbox" name='{$formNames.remember}' value="1" {if $formData.remember == 1 || is_null($formData.remember)}checked="checked"{/if} />
+						<input class="login_remember_checkbox checkbox_placeholder" type="checkbox" name='{$formNames.remember}' value="1" {if $formData.remember == 1 || $formData.remember === null}checked="checked"{/if} />
 						{translations name='login.remember'}
 					</label>
 				</div>

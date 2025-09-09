@@ -5,23 +5,26 @@ namespace ZxArt\Releases\Services;
 
 final class ArchiveFileResolverService
 {
-    private const ARCHIVE_FILE_TYPES = [
-        'samcoupe' => ['dsk', 'mgt'],
-        'esxdos' => ['zip', 'rar', '7z', 'tar'],
-        'zxnext' => ['zip', 'rar', '7z', 'tap', 'trd', 'nex', 'nxs', 'bas'],
+    private const array ARCHIVE_FILE_TYPES = [
+        'samcoupe' => ['dsk', 'mgt', 'sad', 'cpm', 'tap', 'tzx'],
+        'esxdos' => ['tar', 'zip', 'rar', '7z'],
+        'zxnext' => ['tar', 'zip', 'rar', '7z', 'tap', 'trd', 'nex', 'nxs', 'bas', 'snx'],
         'zx80' => ['o', 'tap', 'tzx'],
         'zx81' => ['p', 'tap', 'tzx', 'z81'],
-        'tsconf' => ['spg', 'trd', 'scl'],
-        'zx128' => ['tap', 'tzx', 'trd', 'scl', 'dsk', 'fdi', 'udi', 'td0', 'mdr', 'sna', 'szx', 'dck', 'z80', 'slt', '$c', '$b', 'd40', 'd80'],
-        'elementzxmb' => ['tar'],
+        'tsconf' => ['tar', 'zip', 'rar', '7z', 'spg', 'trd', 'scl'],
+        'zx128' => ['tap', 'tzx', 'trd', 'scl', 'dsk', 'fdi', 'udi', 'td0', 'mdr', 'sna', 'szx', 'dck', 'z80',
+            'slt', '$c', '$b', 'd40', 'd80', 'opd', 'mgt', 'mbd', 'rom', 'mld', 'bin', 'tar', 'iso'],
+        'elementzxmb' => ['tar', 'zip', 'rar', '7z', 'img', 'bin', 'tap'],
+        'zxuno' => ['tar', 'zip', 'rar', '7z', 'img', 'bin', 'tap'],
+        'sinclairql' => ['tar', 'zip', 'rar', '7z', 'img', 'bin', 'tap'],
     ];
 
-    private const ZX81_CODES = ['zx8116', 'zx811', 'zx812', 'zx8132', 'zx8164', 'lambda8300'];
-    private const TOP_LEVEL_PARENT_VALUES = [null, 0];
-    private const HOBETA_FILE_TYPES = ['$c', '$b'];
+    private const array ZX81_CODES = ['zx8116', 'zx811', 'zx812', 'zx8132', 'zx8164', 'lambda8300'];
+    private const array TOP_LEVEL_PARENT_VALUES = [null, 0];
+    private const array HOBETA_FILE_TYPES = ['$c', '$b'];
 
     /** @var string[] */
-    private const CONTAINER_FILE_TYPES = ['zip', 'rar', '7z', 'tar'];
+    private const array CONTAINER_FILE_TYPES = ['zip', 'rar', '7z', 'tar'];
 
     private function getArchiveFileTypesForHardware(array $hardwareCodes): array
     {
@@ -109,7 +112,7 @@ final class ArchiveFileResolverService
 
     private function requiresTopLevelOnly(array $hardwareCodes): bool
     {
-        return (bool)array_intersect($hardwareCodes, ['zxnext', 'esxdos']);
+        return (bool)array_intersect($hardwareCodes, ['tsconf', 'zxnext', 'esxdos', 'zxuno', 'elementzxmb', 'sinclairql']);
     }
 
     /**

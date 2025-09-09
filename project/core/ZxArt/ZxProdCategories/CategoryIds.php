@@ -8,6 +8,7 @@ enum CategoryIds: int
     case MISC = 92188;
     case DEMOS = 92159;
     case PRESS = 244858;
+    case PRESS_MAGAZINES = 92179;
     case MEGADEMO = 92160;
     case TRACKMO = 92161;
     case SERIES = 551860;

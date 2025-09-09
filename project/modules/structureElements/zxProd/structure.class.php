@@ -401,6 +401,7 @@ class zxProdElement extends ZxArtItem implements
 
     private function checkCompilationCategories(): void
     {
+        return;
         if (!$this->compilationItems) {
             return;
         }

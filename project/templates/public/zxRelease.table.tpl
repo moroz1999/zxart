@@ -50,9 +50,15 @@
 			{$element->description}
 		</div>
 	</td>
-	<td class='zxrelease_table_format'>
-		{foreach $element->releaseFormat as $format}{translations name="zxRelease.filetype_$format"} {/foreach}
+	<td class="zxrelease_table_format">
+		{foreach from=$element->releaseFormat item=format name=rf}
+			{if not $smarty.foreach.rf.first}, {/if}
+			<a href="{$element->getCatalogueUrlByFiletype($format)}" class="zxrelease-format-link">
+				{$element->getFormatEmoji($format)} {translations name="zxRelease.filetype_{$format}"}
+			</a>
+		{/foreach}
 	</td>
+
 	<td class='zxrelease_table_download'>
 		<div class="zxrelease_table_download_buttons">
 			{if $prod->getLegalStatus() === 'donationware'}

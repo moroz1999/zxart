@@ -56,7 +56,7 @@ class QueueRepository
             ->where('type', '=', $type->value)
             ->select('status')
             ->value('status');
-        if ($value !== null){
+        if ($value !== null) {
             return QueueStatus::from($value);
         }
 

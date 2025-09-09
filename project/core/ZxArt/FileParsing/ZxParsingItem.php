@@ -13,11 +13,17 @@ abstract class ZxParsingItem
     protected array|null $items = null;
     protected string|null $parentMd5 = null;
     protected string|null $md5 = null;
+
     protected ZxParsingManager $zxParsingManager;
 
     public function __construct(ZxParsingManager $zxParsingManager)
     {
         $this->zxParsingManager = $zxParsingManager;
+    }
+
+    public function setMd5(?string $md5): void
+    {
+        $this->md5 = $md5;
     }
 
     public function setParentMd5(string $parentMd5): void

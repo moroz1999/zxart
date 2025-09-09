@@ -19,6 +19,7 @@ trait ReleaseFileTypesGatherer
             if ($extension && in_array($extension, $this->getReleaseFormats(), true)) {
                 $result[$item->getMd5()] = $extension;
             }
+
             if ($subItems = $item->getItems()) {
                 $this->gatherReleaseFiles($subItems, $result);
             }

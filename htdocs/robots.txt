@@ -1,4 +1,5 @@
 User-agent: *
+Disallow: /about/contact-us/
 Disallow: /simple
 Disallow: /release
 Disallow: /zxfile
@@ -36,8 +37,12 @@ User-agent: ClaudeBot
 Disallow: /
 User-agent: grapeshot
 Disallow: /
-
+User-agent: TerraCotta
+Disallow: /
+User-agent: Bytespider
+Disallow: /
 User-agent: AwarioRssBot
+Disallow: /
 User-agent: AwarioSmartBot
 Disallow: /
 
@@ -45,6 +50,17 @@ User-agent: Bingbot
 Disallow: /rus/poisk/
 Disallow: /eng/search/
 Disallow: /spa/buscar/
+Disallow: /about/contact-us/
+Disallow: /simple
+Disallow: /release
+Disallow: /zxfile
+Disallow: /remote
+Disallow: /banner
+Disallow: /api
+Disallow: /zipItems
+Disallow: /file
+Disallow: /print
+Disallow: /redirect
 
 User-agent: proximic
 Disallow: /
