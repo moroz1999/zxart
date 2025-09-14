@@ -277,6 +277,7 @@ window.artWebAuthorThumbnail = function(imageInfo, parentComponent) {
         this.componentElement.style.display = 'inline-block';
 
         this.imageElement = document.createElement('img');
+        this.imageElement.loading = 'lazy';
         this.imageElement.src = imageInfo.smallImage;
         this.imageElement.style.display = 'block';
         this.imageElement.style.maxWidth = '100%';
@@ -339,6 +340,7 @@ window.artWebAuthorLargeImage = function(imageInfo, parentComponent) {
     var canvasReplaced = false;
     this.init = function() {
         this.componentElement = document.createElement('img');
+        this.componentElement.loading = 'lazy';
         this.componentElement.src = imageInfo.largeImage;
         this.componentElement.style.maxWidth = '100%';
         this.componentElement.style.position = 'absolute';

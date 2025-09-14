@@ -12,6 +12,7 @@ final class ArchiveFileResolverService
         'zx80' => ['o', 'tap', 'tzx'],
         'zx81' => ['p', 'tap', 'tzx', 'z81'],
         'tsconf' => ['tar', 'zip', 'rar', '7z', 'spg', 'trd', 'scl'],
+        'sprinter' => ['tar', 'zip', 'rar', '7z', 'trd', 'scl', 'tap', 'tzx'],
         'zx128' => ['tap', 'tzx', 'trd', 'scl', 'dsk', 'fdi', 'udi', 'td0', 'mdr', 'sna', 'szx', 'dck', 'z80',
             'slt', '$c', '$b', 'd40', 'd80', 'opd', 'mgt', 'mbd', 'rom', 'mld', 'bin', 'tar', 'iso'],
         'elementzxmb' => ['tar', 'zip', 'rar', '7z', 'img', 'bin', 'tap'],
@@ -112,7 +113,17 @@ final class ArchiveFileResolverService
 
     private function requiresTopLevelOnly(array $hardwareCodes): bool
     {
-        return (bool)array_intersect($hardwareCodes, ['tsconf', 'zxnext', 'esxdos', 'zxuno', 'elementzxmb', 'sinclairql']);
+        return (bool)array_intersect($hardwareCodes, [
+            'tsconf',
+            'zxnext',
+            'esxdos',
+            'zxuno',
+            'elementzxmb',
+            'sinclairql',
+            'isdos',
+            'tasis',
+            'sprinter'
+        ]);
     }
 
     /**

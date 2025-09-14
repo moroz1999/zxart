@@ -23,7 +23,7 @@
 
 		if (!window.imageInfoIndex) window.imageInfoIndex = {ldelim}{rdelim};
 		window.imageInfoIndex['{$pictureElement->id}'] = {ldelim}
-			'smallImage': "{$pictureElement->getImageUrl(1, false, false)}",
+			'smallImage': "{$pictureElement->getImageUrl(1)}",
 			'largeImage': "{$pictureElement->getImageUrl(2)}",
 			'detailsURL': '{$pictureElement->URL}',
 			'title': "{$pictureElement->title|escape:'javascript'}",

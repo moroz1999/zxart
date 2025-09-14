@@ -52,7 +52,7 @@
 
 		if (!window.imageInfoIndex) window.imageInfoIndex = {ldelim}{rdelim};
 		window.imageInfoIndex['{$element->id}'] = {ldelim}
-			'smallImage': "{$element->getImageUrl(1,false, false)}",
+			'smallImage': "{$element->getImageUrl(1)}",
 			'largeImage': "{$element->getImageUrl(2)}",
 			'detailsURL': '{$element->URL}',
 			'title': "{$element->title|escape:'javascript'}",

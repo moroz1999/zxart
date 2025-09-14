@@ -16,7 +16,11 @@ final class UAGuard
     /** When true, empty UA is banned. */
     private bool $blockEmpty;
 
-    public function __construct(IpBanService $banService, array $blocked = [], bool $blockEmpty = true)
+    public function __construct(
+        IpBanService $banService,
+        array $blocked = [],
+        bool $blockEmpty = false
+    )
     {
         $this->banService = $banService;
         $this->blocked = $blocked !== [] ? $blocked : $this->defaultList();
@@ -43,7 +47,6 @@ final class UAGuard
         return false;
     }
 
-    /** Default blacklist based on your list. */
     private function defaultList(): array
     {
         return [
@@ -73,6 +76,7 @@ final class UAGuard
             'Bytespider',
             'keys-so-bot',
             'compatible; crawler',
+            'UptimeRobot',
         ];
     }
 }
