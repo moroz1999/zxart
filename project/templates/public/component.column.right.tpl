@@ -1,4 +1,12 @@
 <aside class="right_column">
+{capture assign="moduleTitle"}{/capture}
+{capture assign="moduleContent"}
+	<a target="_blank" class="button" href="/userfiles/file/zxart_offline.torrent">📦 {translations name="site.download"}</a>
+{/capture}
+{assign moduleClass ""}
+{assign moduleTitleClass ""}
+{assign moduleContentClass ""}
+{include file=$theme->template("component.columnmodule.tpl")}
 {capture assign="moduleTitle"}
 	{translations name="radiocontrols.title"}
 {/capture}

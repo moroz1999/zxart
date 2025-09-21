@@ -77,6 +77,12 @@ final class UAGuard
             'keys-so-bot',
             'compatible; crawler',
             'UptimeRobot',
+            'IbouBot',
+            'AliyunSecBot',
+            'Brightbot',
+	    'Applebot',
+	    'LinkupBot',
+	    'PetalBot',
         ];
     }
 }
