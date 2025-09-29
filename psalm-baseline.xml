@@ -18950,7 +18950,6 @@
       <code><![CDATA[getH1]]></code>
       <code><![CDATA[getSearchContent]]></code>
       <code><![CDATA[getSearchTitle]]></code>
-      <code><![CDATA[getWrappedContent]]></code>
       <code><![CDATA[setMultiLanguageFields]]></code>
     </PossiblyUnusedMethod>
     <PropertyNotSetInConstructor>

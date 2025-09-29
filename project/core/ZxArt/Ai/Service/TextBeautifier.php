@@ -28,15 +28,19 @@ readonly class TextBeautifier
 8. Если ВЕСЬ ТЕКСТ НАПИСАН КАПСЛОКОМ, то приведи его к нормальному регистру.
 9. НЕ используй python - читай внимательно и осознанно.
 10. НЕ УДАЛЯЙ IMG теги.
-11. Внимательно читай каждую строчку и вникай в смысл. Учитывай смысл при форматировании.
+11. HTML теги возвращай некодированными. Остальные HTML символы возвращай как HTML entities. 
+12. Внимательно читай каждую строчку и вникай в смысл. Учитывай смысл при форматировании.
 Текст:<pre>{$chunk}</pre>";
         };
 
-        $processResponse = static fn(string $response): string => str_replace(
-            ['```html', '```', "<pre>", "</pre>"],
-            '',
-            $response
-        );
+        $processResponse = static function (string $response): string {
+            $response = str_replace("\n", '<br>', $response);;
+            return str_replace(
+                ['```html', '```', "<pre>", "</pre>"],
+                '',
+                $response
+            );
+        };
 
         return $this->chunkProcessor->processText(
             $text,

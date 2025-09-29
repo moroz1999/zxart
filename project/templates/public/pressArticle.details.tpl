@@ -124,7 +124,7 @@
                 {/if}
             </div>
 
-            <pre class="pressarticle_content">{$element->getWrappedContent()}</pre>
+            <pre class="pressarticle_content">{$element->content}</pre>
             <h2>{translations name='pressarticle.morefromsame'}: <a href="{$parentElement->getUrl()}">{$parentElement->getTitle()}</a></h2>
             {include file=$theme->template('component.pressArticles.tpl') articles= $parentElement->articles pager=false}
         </div>

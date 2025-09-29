@@ -20,10 +20,10 @@ final class AiTextContent
     {
     }
 
-    public function getOriginalTextContent($articleId, bool $stripImages = true): ?string
+    public function getOriginalTextContent($articleId): ?string
     {
         $content = $this->repository->getOriginalContent($articleId);
-        return $this->process($content, $stripImages);
+        return $this->process($content);
     }
 
     public function getAITextContent(pressArticleElement $article, bool $stripImages = true): ?string
@@ -35,17 +35,19 @@ final class AiTextContent
         return $this->process($article->getValue('content', $languageId) ?? '', $stripImages);
     }
 
-    private function process(string $content, bool $stripImages = true): ?string
+    private function process(string $content): ?string
     {
         if ($content === '' || $content === null) {
             return null;
         }
-        $stripTags = $stripImages ? ['div', 'p', 'span', 'img', 'br'] : ['div', 'p', 'span', 'br'];
+        $content = html_entity_decode($content, ENT_QUOTES);
+        $content = str_ireplace('src="illustrations', 'src="/userfiles/images/illustrations', $content);
+        $content = str_ireplace('src=\'illustrations', 'src=\'/userfiles/images/illustrations', $content);
+        $content = str_ireplace(["<br>", "\n\r", "\r\n", "\r"], "\n", $content);
 
+        $stripTags = ['div', 'p', 'span', 'br'];
         $content = HtmlTagsStripper::stripTags($content, $stripTags);
-        $content = str_replace(["\n\r", "\r\n", "\r"], "\n", $content);
 
-        $content = html_entity_decode($content);
         return str_replace(["-\n", "\r"], '', $content);
     }
 }
