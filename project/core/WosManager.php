@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Database\MySqlConnection;
+use Illuminate\Database\Connection;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Prods\LegalStatus;
@@ -63,7 +63,7 @@ class WosManager extends errorLogger
     protected GroupsService $groupsService;
     protected CountriesManager $countriesManager;
     protected Config $zxdbConfig;
-    protected MySqlConnection|null $zxdb = null;
+    protected Connection|null $zxdb = null;
     protected string $wosLink = 'https://spectrumcomputing.co.uk/pub/';
     protected string $archiveLink = 'https://archive.org/download/World_of_Spectrum_June_2017_Mirror/World%20of%20Spectrum%20June%202017%20Mirror.zip/World%20of%20Spectrum%20June%202017%20Mirror/';
     protected string $nvgLink = 'https://archive.org/download/mirror-ftp-nvg/Mirror_ftp_nvg.zip/';
@@ -460,6 +460,7 @@ class WosManager extends errorLogger
         if ($tags = $this->zxdb->table('tags')
             ->where('tagtype_id', 'like', 'S')
             ->select('*')->get()) {
+
             foreach ($tags as $tag) {
                 $prodInfo = [
                     'title' => $tag['name'],
@@ -467,40 +468,41 @@ class WosManager extends errorLogger
                     'categories' => [],
                     'seriesProds' => [],
                 ];
-                if (in_array($prodInfo['id'], $this->ignoreIds)) {
+
+                if (in_array($prodInfo['id'], $this->ignoreIds, true)) {
                     continue;
                 }
 
                 $records = $this->zxdb->table('members')
                     ->where('tag_id', '=', $tag['id'])
                     ->select('*')->get();
+
                 $entryIds = array_column($records, 'entry_id');
-                foreach ($entryIds as $entryId) {
-                    if ($entries = $this->zxdb->table('entries')
-                        ->whereIn('id', $entryIds)
-                        ->select('*')
-                        ->get()) {
-                        foreach ($entries as $entry) {
-                            if (isset($this->categories[$entry['genretype_id']])) {
-                                $prodInfo['categories'][] = $entry['genretype_id'];
-                                $prodInfo['seriesProds'][] = $entry['id'];
-                            }
+
+                if ($entries = $this->zxdb->table('entries')
+                    ->whereIn('id', $entryIds)
+                    ->select('*')
+                    ->get()) {
+                    foreach ($entries as $entry) {
+                        if (isset($this->categories[$entry['genretype_id']])) {
+                            $prodInfo['categories'][] = $entry['genretype_id'];
+                            $prodInfo['seriesProds'][] = $entry['id'];
                         }
                     }
                 }
-                $prodInfo['categories'] = array_unique($prodInfo['categories']);
-                if ($this->prodsManager->importProd($prodInfo, $this->origin)) {
-                    $this->counter++;
 
+                $prodInfo['categories'] = array_unique($prodInfo['categories']);
+
+                $dto = ProdImportDTO::fromArray($prodInfo);
+                if ($this->prodsManager->importProdDTO($dto, $this->origin)) {
+                    $this->counter++;
                     $this->markProgress(
-                        'series ' . $this->counter . '/' . count(
-                            $entries
-                        ) . ' imported ' . $prodInfo['id'] . ' ' . $prodInfo['title']
+                        'series ' . $this->counter . '/' . count($entries ?? []) .
+                        ' imported ' . $prodInfo['id'] . ' ' . $prodInfo['title']
                     );
                 } else {
                     $this->markProgress('series failed ' . $prodInfo['id'] . ' ' . $prodInfo['title']);
                 }
-
             }
         }
     }
@@ -513,233 +515,252 @@ class WosManager extends errorLogger
                 if ($this->counter < $this->minCounter) {
                     continue;
                 }
-
                 if (!empty($this->debugEntry) && $entry['id'] != $this->debugEntry) {
                     continue;
                 }
-                if (in_array($entry['id'], $this->ignoreIds)) {
+                if (in_array($entry['id'], $this->ignoreIds, true)) {
                     continue;
                 }
                 if (in_array($entry['machinetype_id'], $this->skipMachineTypes, true)) {
                     continue;
                 }
 
-                if (isset($this->categories[$entry['genretype_id']])) {
-                    $prodInfo = [
-                        'title' => $entry['title'],
-                        'altTitle' => '',
-                        'year' => 0,
-                        'externalLink' => '',
-                        'legalStatus' => '',
-                        'id' => $entry['id'],
-                        'language' => [],
-                        'categories' => [$entry['genretype_id']],
-                        'images' => [],
-                        'labels' => [],
-                        'authors' => [],
-                        'publishers' => [],
-                        'groups' => [],
-                        'releases' => [],
-                        'compilationItems' => [],
-                        'rzx' => [],
-                    ];
+                if (!isset($this->categories[$entry['genretype_id']])) {
+                    file_put_contents($this->getStatusPath(), $this->counter);
+                    if (($this->maxCounter && ($this->counter >= $this->maxCounter)) || time() >= $this->maxTime) {
+                        return false;
+                    }
+                    continue;
+                }
 
-                    if ($entry['language_id']) {
-                        if (isset($this->languages[$entry['language_id']])) {
-                            $prodInfo['language'] = $this->languages[$entry['language_id']];
-                        }
-                    }
-                    if (!empty($entry['availabletype_id'])) {
-                        if (isset($this->legalStatuses[$entry['availabletype_id']])) {
-                            $prodInfo['legalStatus'] = $this->legalStatuses[$entry['availabletype_id']]->name;
-                        }
-                    }
+                $prodInfo = [
+                    'title' => $entry['title'],
+                    'altTitle' => '',
+                    'year' => 0,
+                    'externalLink' => '',
+                    'legalStatus' => '',
+                    'id' => $entry['id'],
+                    'language' => null,
+                    'categories' => [$entry['genretype_id']],
+                    'images' => [],
+                    'labels' => [],
+                    'authors' => [],
+                    'publishers' => [],
+                    'groups' => [],
+                    'releases' => [],
+                    'compilationItems' => [],
+                    'rzx' => [],
+                    'maps' => [],
+                ];
 
-                    if ($record = $this->zxdb->table('aliases')
-                        ->where('entry_id', '=', $entry['id'])
-                        ->limit(1)
-                        ->first()
-                    ) {
-                        $prodInfo['altTitle'] = $record['title'];
+                if ($entry['language_id']) {
+                    if (isset($this->languages[$entry['language_id']])) {
+                        $prodInfo['language'] = $this->languages[$entry['language_id']] ?? null;
                     }
-                    if ($records = $this->zxdb->table('contents')
-                        ->select('entry_id')
-                        ->where('container_id', '=', $entry['id'])
-                        ->orderBy('prog_seq')
-                        ->get()
-                    ) {
-                        foreach ($records as $record) {
-                            $prodInfo['compilationItems'][] = $record['entry_id'];
-                        }
-                    }
-                    if ($publishers = $this->zxdb->table('publishers')
-                        ->select('*')
-                        ->where('entry_id', '=', $entry['id'])
-                        ->where('release_seq', '=', 0)
-                        ->orderBy('publisher_seq', 'asc')
-                        ->get()
-                    ) {
-                        foreach ($publishers as $publisher) {
-                            $labelId = $publisher['label_id'];
-                            $labelInfo = $this->gatherLabelsInfo($prodInfo['labels'], $labelId);
-                            if ($labelInfo) {
-                                $prodInfo['publishers'][] = $labelInfo['id'];
-                            }
-                        }
-                    }
-                    $query = $this->zxdb->table('authors')
-                        ->select(['authors.label_id', 'roles.roletype_id'])
-                        ->leftJoin(
-                            'roles',
-                            function ($join) {
-                                $join->on('authors.entry_id', '=', 'roles.entry_id')
-                                    ->on('authors.label_id', '=', 'roles.label_id');
-                            }
-                        )
-                        ->where('authors.entry_id', '=', $entry['id'])
-                        ->orderBy('author_seq', 'asc');
-                    if ($authors = $query->get()
-                    ) {
-                        foreach ($authors as $author) {
-                            $labelId = $author['label_id'];
-                            $labelInfo = $this->gatherLabelsInfo($prodInfo['labels'], $labelId);
-                            if ($labelInfo) {
-                                if ($labelInfo['isPerson']) {
-                                    if (isset($this->roles[$author['roletype_id']])) {
-                                        $prodInfo['authors'][$labelInfo['id']] = [$this->roles[$author['roletype_id']]];
-                                    } else {
-                                        $prodInfo['authors'][$labelInfo['id']] = [];
-                                    }
-                                } elseif ($labelInfo['isGroup']) {
-                                    $prodInfo['groups'][] = $labelInfo['id'];
-                                }
-                            }
-                        }
-                    }
-                    if ($rows = $this->zxdb->table('authors')
-                        ->select('*')
-                        ->where('entry_id', '=', $entry['id'])
-                        ->where('team_id', '>', 0)
-                        ->groupBy('team_id')
-                        ->get()) {
-                        foreach ($rows as $row) {
-                            $prodInfo['groups'][] = $row['team_id'];
-                        }
-                    }
-                    if ($rows = $this->zxdb->table('webrefs')
-                        ->where('entry_id', '=', $entry['id'])
-                        ->whereIn('website_id', $this->webRefIds)
-                        ->get()) {
-                        foreach ($rows as $row) {
-                            if ($row['website_id'] === 36 || $row['website_id'] === 56) {
-                                if ($row['website_id'] !== 56 && !empty($prodInfo['youtubeId'])) {
-                                    continue;
-                                }
-                                if (stripos($row['link'], 'https://youtu.be/') === 0) {
-                                    $prodInfo['youtubeId'] = substr($row['link'], strlen('https://youtu.be/'));
-                                }
-                            } elseif ($row['website_id'] === 31) {
-                                $prodInfo['externalLink'] = $row['link'];
-                            }
-                        }
-                    }
-                    if ($prodInfo['externalLink'] && $prodInfo['legalStatus'] === LegalStatus::forbidden->name) {
-                        $prodInfo['legalStatus'] = LegalStatus::insales->name;
-                    }
+                }
 
+                if (!empty($entry['availabletype_id']) && isset($this->legalStatuses[$entry['availabletype_id']])) {
+                    $prodInfo['legalStatus'] = $this->legalStatuses[$entry['availabletype_id']]->name;
+                }
 
-                    $this->getReleasesInfo($entry);
-                    foreach ($this->releasesInfo[$entry['id']] as $releaseInfo) {
-                        if ($releaseInfo['year'] && (!$prodInfo['year'] || $releaseInfo['year'] < $prodInfo['year'])) {
-                            $prodInfo['year'] = $releaseInfo['year'];
+                if ($record = $this->zxdb->table('aliases')
+                    ->where('entry_id', '=', $entry['id'])
+                    ->limit(1)
+                    ->first()) {
+                    $prodInfo['altTitle'] = $record['title'];
+                }
+
+                if ($records = $this->zxdb->table('contents')
+                    ->select('entry_id')
+                    ->where('container_id', '=', $entry['id'])
+                    ->orderBy('prog_seq')
+                    ->get()) {
+                    foreach ($records as $record) {
+                        $prodInfo['compilationItems'][] = $record['entry_id'];
+                    }
+                }
+
+                if ($publishers = $this->zxdb->table('publishers')
+                    ->select('*')
+                    ->where('entry_id', '=', $entry['id'])
+                    ->where('release_seq', '=', 0)
+                    ->orderBy('publisher_seq', 'asc')
+                    ->get()) {
+                    foreach ($publishers as $publisher) {
+                        $labelId = $publisher['label_id'];
+                        $labelInfo = $this->gatherLabelsInfo($prodInfo['labels'], $labelId);
+                        if ($labelInfo) {
+                            $prodInfo['publishers'][] = $labelInfo['id'];
                         }
                     }
-                    //distribut all images across prod object and appropriate releases
-                    if ($downloads = $this->zxdb->table('downloads')
-                        ->select('*')
-                        ->where('entry_id', '=', $entry['id'])
-                        ->orderBy('release_seq', 'asc')
-                        ->get()) {
-                        foreach ($downloads as $download) {
-                            if ($releaseInfo = &$this->releasesInfo[$download['entry_id']][$download['release_seq']]) {
-                                if (in_array($download['filetype_id'], $this->inlayFileTypes)) {
-                                    $releaseInfo['inlayImages'][] = $this->resolveDownloadUrl($download['file_link'], true);
-                                } elseif (in_array($download['filetype_id'], $this->infoFileTypes)) {
-                                    $releaseInfo['infoFiles'][] = $this->resolveDownloadUrl($download['file_link']);
-                                } elseif (in_array($download['filetype_id'], $this->adFileTypes)) {
-                                    $releaseInfo['adFiles'][] = $this->resolveDownloadUrl($download['file_link']);
-                                }
-                            }
-                            unset($releaseInfo);
-                            if ($download['filetype_id'] === self::FILETYPE_LOADING) {
-                                $prodInfo['images'][] = $this->resolveDownloadUrl($download['file_link']);
-                            } elseif ($download['filetype_id'] === self::FILETYPE_RUNNING) {
-                                $isGif = str_contains($download['file_link'], '.gif');
-                                if (!$isGif) {
-                                    $prodInfo['images'][] = $this->resolveDownloadUrl($download['file_link']);
-                                }
-                            } elseif ($download['filetype_id'] === self::FILETYPE_OPENING) {
-                                $prodInfo['images'][] = $this->resolveDownloadUrl($download['file_link']);
-                            } elseif ($download['filetype_id'] === self::FILETYPE_RZX) {
-                                $prodInfo['rzx'][] = [
-                                    'url' => $this->resolveDownloadUrl($download['file_link']),
-                                    'author' => $download['comments'] ?? '',
-                                ];
-                            } elseif (in_array($download['filetype_id'], $this->mapFileTypes)) {
-                                $prodInfo['maps'][] = [
-                                    'url' => $this->resolveDownloadUrl($download['file_link']),
-                                    'author' => $download['comments'] ?? '',
-                                ];
-                            }
-                        }
-                    }
-                    //compile complete list of all releases - all files in all formats separately, plus all releases without downloads
-                    $unusedReleases = $this->releasesInfo[$entry['id']];
-                    foreach ($downloads as $download) {
-                        if (in_array($download['filetype_id'], $this->releaseFileTypes)) {
-                            if ($releaseInfo = $this->releasesInfo[$download['entry_id']][$download['release_seq']]) {
-                                if ($download['language_id'] != $entry['language_id']) {
-                                    if (isset($this->languages[$download['language_id']])) {
-                                        $releaseInfo['language'] = $this->languages[$download['language_id']];
-                                    }
-                                }
-                                $releaseInfo['fileUrl'] = $this->resolveDownloadUrl($download['file_link'], true);
-                                $releaseInfo['id'] .= '_' . basename($download['file_link']);
-                                $releaseInfo['id'] = md5($releaseInfo['id']);
-                                if (!empty($download['comments'])) {
-                                    $releaseInfo['version'] = $download['comments'];
-                                }
-                                if (isset($this->releaseTypes[$download['sourcetype_id']])) {
-                                    $releaseInfo['releaseType'] = $this->releaseTypes[$download['sourcetype_id']];
-                                }
-                                if (empty($download['machinetype_id'])) {
-                                    $download['machinetype_id'] = $entry['machinetype_id'];
-                                }
-                                if (isset($this->minMachines[$download['machinetype_id']])) {
-                                    $releaseInfo['hardwareRequired'] = [$this->minMachines[$download['machinetype_id']]];
-                                }
-                                if (isset($this->optionalMachines[$download['machinetype_id']])) {
-                                    $releaseInfo['hardwareRequired'][] = $this->optionalMachines[$download['machinetype_id']];
-                                }
+                }
 
-                                if (isset($unusedReleases[$download['release_seq']])) {
-                                    unset($unusedReleases[$download['release_seq']]);
+                $query = $this->zxdb->table('authors')
+                    ->select(['authors.label_id', 'roles.roletype_id'])
+                    ->leftJoin('roles',
+                        static function ($join) {
+                            $join->on('authors.entry_id', '=', 'roles.entry_id')
+                                ->on('authors.label_id', '=', 'roles.label_id');
+                        }
+                    )
+                    ->where('authors.entry_id', '=', $entry['id'])
+                    ->orderBy('author_seq', 'asc');
+
+                if ($authors = $query->get()) {
+                    foreach ($authors as $author) {
+                        $labelId = $author['label_id'];
+                        $labelInfo = $this->gatherLabelsInfo($prodInfo['labels'], $labelId);
+                        if ($labelInfo) {
+                            if ($labelInfo['isPerson']) {
+                                if (isset($this->roles[$author['roletype_id']])) {
+                                    $prodInfo['authors'][$labelInfo['id']] = [$this->roles[$author['roletype_id']]];
                                 } else {
-                                    //this is not the first time we use this release as a separate release, so we should not duplicate the inlay files.
-                                    unset($releaseInfo['inlayImages']);
-                                    unset($releaseInfo['adFiles']);
-                                    unset($releaseInfo['infoFiles']);
+                                    $prodInfo['authors'][$labelInfo['id']] = [];
                                 }
-
-                                if ($releaseInfo['releaseType'] === ''){
-                                    if ($releaseInfo['release_seq'] === 0){
-                                        $releaseInfo['releaseType'] = 'original';
-                                    }
-                                }
-
-                                $prodInfo['releases'][] = $releaseInfo;
+                            } elseif ($labelInfo['isGroup']) {
+                                $prodInfo['groups'][] = $labelInfo['id'];
                             }
                         }
+                    }
+                }
+
+                if ($rows = $this->zxdb->table('authors')
+                    ->select('*')
+                    ->where('entry_id', '=', $entry['id'])
+                    ->where('team_id', '>', 0)
+                    ->groupBy('team_id')
+                    ->get()) {
+                    foreach ($rows as $row) {
+                        $prodInfo['groups'][] = $row['team_id'];
+                    }
+                }
+
+                if ($rows = $this->zxdb->table('webrefs')
+                    ->where('entry_id', '=', $entry['id'])
+                    ->whereIn('website_id', $this->webRefIds)
+                    ->get()) {
+                    foreach ($rows as $row) {
+                        if ($row['website_id'] === 36 || $row['website_id'] === 56) {
+                            if ($row['website_id'] !== 56 && !empty($prodInfo['youtubeId'])) {
+                                continue;
+                            }
+                            if (stripos($row['link'], 'https://youtu.be/') === 0) {
+                                $prodInfo['youtubeId'] = substr($row['link'], strlen('https://youtu.be/'));
+                            }
+                        } elseif ($row['website_id'] === 31) {
+                            $prodInfo['externalLink'] = $row['link'];
+                        }
+                    }
+                }
+
+                if ($prodInfo['externalLink'] && $prodInfo['legalStatus'] === LegalStatus::forbidden->name) {
+                    $prodInfo['legalStatus'] = LegalStatus::insales->name;
+                }
+
+                $this->getReleasesInfo($entry);
+
+                foreach ($this->releasesInfo[$entry['id']] as $releaseInfo) {
+                    if (!empty($releaseInfo['year']) && (empty($prodInfo['year']) || $releaseInfo['year'] < $prodInfo['year'])) {
+                        $prodInfo['year'] = $releaseInfo['year'];
+                    }
+                }
+                //distribute all images across prod object and appropriate releases
+                if ($downloads = $this->zxdb->table('downloads')
+                    ->select('*')
+                    ->where('entry_id', '=', $entry['id'])
+                    ->orderBy('release_seq', 'asc')
+                    ->get()) {
+
+                    foreach ($downloads as $download) {
+                        $releaseInfo = null;
+                        if (isset($this->releasesInfo[$download['entry_id']][$download['release_seq']])) {
+                            $releaseInfo = &$this->releasesInfo[$download['entry_id']][$download['release_seq']];
+                        }
+                        if ($releaseInfo !== null) {
+                            if (in_array($download['filetype_id'], $this->inlayFileTypes, true)) {
+                                $releaseInfo['inlayImages'][] = $this->resolveDownloadUrl($download['file_link'], true);
+                            } elseif (in_array($download['filetype_id'], $this->infoFileTypes, true)) {
+                                $releaseInfo['infoFiles'][] = $this->resolveDownloadUrl($download['file_link']);
+                            } elseif (in_array($download['filetype_id'], $this->adFileTypes, true)) {
+                                $releaseInfo['adFiles'][] = $this->resolveDownloadUrl($download['file_link']);
+                            }
+                        }
+                        unset($releaseInfo);
+
+                        if ($download['filetype_id'] === self::FILETYPE_LOADING) {
+                            $prodInfo['images'][] = $this->resolveDownloadUrl($download['file_link']);
+                        } elseif ($download['filetype_id'] === self::FILETYPE_RUNNING) {
+                            $isGif = str_contains($download['file_link'], '.gif');
+                            if (!$isGif) {
+                                $prodInfo['images'][] = $this->resolveDownloadUrl($download['file_link']);
+                            }
+                        } elseif ($download['filetype_id'] === self::FILETYPE_OPENING) {
+                            $prodInfo['images'][] = $this->resolveDownloadUrl($download['file_link']);
+                        } elseif ($download['filetype_id'] === self::FILETYPE_RZX) {
+                            $prodInfo['rzx'][] = [
+                                'url' => $this->resolveDownloadUrl($download['file_link']),
+                                'author' => $download['comments'] ?? '',
+                            ];
+                        } elseif (in_array($download['filetype_id'], $this->mapFileTypes, true)) {
+                            $prodInfo['maps'][] = [
+                                'url' => $this->resolveDownloadUrl($download['file_link']),
+                                'author' => $download['comments'] ?? '',
+                            ];
+                        }
+                    }
+
+                    $unusedReleases = $this->releasesInfo[$entry['id']];
+
+                    foreach ($downloads as $download) {
+                        if (!in_array($download['filetype_id'], $this->releaseFileTypes, true)) {
+                            continue;
+                        }
+                        $releaseInfo = $this->releasesInfo[$download['entry_id']][$download['release_seq']] ?? null;
+                        if (!$releaseInfo) {
+                            continue;
+                        }
+
+                        if ($download['language_id'] !== $entry['language_id'] && isset($this->languages[$download['language_id']])) {
+                            $codes = $this->languages[$download['language_id']];
+                            $releaseInfo['language'] = $codes ?? null;
+                        }
+
+                        $releaseInfo['fileUrl'] = $this->resolveDownloadUrl($download['file_link'], true);
+                        $releaseInfo['id'] .= '_' . basename($download['file_link']);
+                        $releaseInfo['id'] = md5($releaseInfo['id']);
+
+                        if (!empty($download['comments'])) {
+                            $releaseInfo['version'] = $download['comments'];
+                        }
+
+                        if (isset($this->releaseTypes[$download['sourcetype_id']])) {
+                            $releaseInfo['releaseType'] = $this->releaseTypes[$download['sourcetype_id']];
+                        }
+
+                        if (empty($download['machinetype_id'])) {
+                            $download['machinetype_id'] = $entry['machinetype_id'];
+                        }
+                        if (isset($this->minMachines[$download['machinetype_id']])) {
+                            $releaseInfo['hardwareRequired'] = [$this->minMachines[$download['machinetype_id']]];
+                        }
+                        if (isset($this->optionalMachines[$download['machinetype_id']])) {
+                            $releaseInfo['hardwareRequired'][] = $this->optionalMachines[$download['machinetype_id']];
+                        }
+
+                        if (isset($unusedReleases[$download['release_seq']])) {
+                            unset($unusedReleases[$download['release_seq']]);
+                        } else {
+                            //this is not the first time we use this release as a separate release, so we should not duplicate the inlay files.
+                            unset($releaseInfo['inlayImages'], $releaseInfo['adFiles'], $releaseInfo['infoFiles']);
+                        }
+
+                        if ($releaseInfo['releaseType'] === '' && $releaseInfo['release_seq'] === 0) {
+                            $releaseInfo['releaseType'] = 'original';
+                        }
+
+                        $this->releasesInfo[$download['entry_id']][$download['release_seq']] = $releaseInfo;
+
+                        $prodInfo['releases'][] = $releaseInfo;
                     }
 
                     foreach ($unusedReleases as $unusedRelease) {
@@ -748,31 +769,29 @@ class WosManager extends errorLogger
                     }
                     //some releases dont have downloads, so release type should be determined by release_seq
                     foreach ($prodInfo['releases'] as &$release) {
-                        if ($release['releaseType']) {
-                            if ($release['release_seq'] === 0) {
-                                $release['releaseType'] = 'original';
-                            } else {
-                                $release['releaseType'] = 'rerelease';
-                            }
+                        if (empty($release['releaseType'])) {
+                            $release['releaseType'] = ($release['release_seq'] === 0) ? 'original' : 'rerelease';
                         }
-                        if (!$release['hardwareRequired']) {
+                        if (empty($release['hardwareRequired'])) {
                             if (isset($this->minMachines[$entry['machinetype_id']])) {
                                 $release['hardwareRequired'] = [$this->minMachines[$entry['machinetype_id']]];
                             }
                         }
                     }
-                    if ($this->prodsManager->importProd($prodInfo, $this->origin)) {
-                        $this->markProgress(
-                            'prod ' . $this->counter . '/' . count(
-                                $entries
-                            ) . ' imported ' . $prodInfo['id'] . ' ' . $prodInfo['title']
-                        );
-                    } else {
-                        $this->markProgress('prod failed ' . $prodInfo['id'] . ' ' . $prodInfo['title']);
-                    }
+                    unset($release);
                 }
-                file_put_contents($this->getStatusPath(), $this->counter);
 
+                $dto = ProdImportDTO::fromArray($prodInfo);
+                if ($this->prodsManager->importProdDTO($dto, $this->origin)) {
+                    $this->markProgress(
+                        'prod ' . $this->counter . '/' . count($entries) .
+                        ' imported ' . $prodInfo['id'] . ' ' . $prodInfo['title']
+                    );
+                } else {
+                    $this->markProgress('prod failed ' . $prodInfo['id'] . ' ' . $prodInfo['title']);
+                }
+
+                file_put_contents($this->getStatusPath(), $this->counter);
                 if (($this->maxCounter && ($this->counter >= $this->maxCounter)) || time() >= $this->maxTime) {
                     return false;
                 }
@@ -788,20 +807,24 @@ class WosManager extends errorLogger
             ->select('*')
             ->where('entry_id', '=', $entryId)
             ->get()) {
+
             foreach ($releases as $release) {
                 $release_seq = $release['release_seq'];
                 $releaseInfo = [
                     'title' => $entry['title'],
                     'releaseType' => '',
                     'year' => $release['release_year'],
-                    'language' => [],
+                    'language' => null,
                     'hardwareRequired' => [],
                     'images' => [],
                     'inlayImages' => [],
                     'infoFiles' => [],
+                    'adFiles' => [],
                     'fileUrl' => false,
                     'version' => '',
                     'release_seq' => $release_seq,
+                    'publishers' => [],
+                    'labels' => [],
                 ];
                 $releaseInfo['id'] = $release['entry_id'] . '_' . $release['release_seq'];
 
@@ -815,13 +838,13 @@ class WosManager extends errorLogger
                         }
                     }
                 }
+
                 if ($publishers = $this->zxdb->table('publishers')
                     ->select('*')
                     ->where('entry_id', '=', $entry['id'])
                     ->where('release_seq', '=', $release['release_seq'])
                     ->orderBy('publisher_seq', 'asc')
-                    ->get()
-                ) {
+                    ->get()) {
                     foreach ($publishers as $publisher) {
                         $labelId = $publisher['label_id'];
                         $labelInfo = $this->gatherLabelsInfo($releaseInfo['labels'], $labelId);
@@ -830,6 +853,7 @@ class WosManager extends errorLogger
                         }
                     }
                 }
+
                 $this->releasesInfo[$entryId][$release_seq] = $releaseInfo;
             }
         }
@@ -846,19 +870,19 @@ class WosManager extends errorLogger
                 $url = '/' . $url;
             }
             return 'https://spectrumcomputing.co.uk' . $url;
-        } else {
-            if (str_starts_with($url, '/nvg/')) {
-                return $this->nvgLink . substr($url, 5);
-            }
-            if (str_starts_with($url, '/pub/')) {
-                $url = substr($url, 5);
-            }
-            if ($useArchiveOrg) {
-                return $this->archiveLink . $url;
-            } else {
-                return $this->wosLink . $url;
-            }
         }
+
+        if (str_starts_with($url, '/nvg/')) {
+            return $this->nvgLink . substr($url, 5);
+        }
+        if (str_starts_with($url, '/pub/')) {
+            $url = substr($url, 5);
+        }
+        if ($useArchiveOrg) {
+            return $this->archiveLink . $url;
+        }
+
+        return $this->wosLink . $url;
     }
 
     /**

@@ -60,7 +60,7 @@ abstract class ElementsManager extends errorLogger
                                 $query->orderByRaw("$orderColumn $order");
                             } else {
                                 if ($orderDirection === false) {
-                                    if ($order == 'desc') {
+                                    if ($order === 'desc') {
                                         $query->orderByRaw("$orderColumn asc");
                                     } else {
                                         $query->orderByRaw("$orderColumn desc");
@@ -103,9 +103,9 @@ abstract class ElementsManager extends errorLogger
         $this->structureManager = $structureManager;
     }
 
-    protected function manufactureElement($id): bool|structureElement
+    protected function manufactureElement($id): structureElement|null
     {
-        $result = false;
+        $result = null;
         if ($structureElement = $this->structureManager->getElementById($id)) {
             $result = $structureElement;
         }
