@@ -6,6 +6,12 @@ final class HoneypotGuard
 {
     private IpBanService $banService;
     private array $trapPaths;
+    private array $whitelistAgents = [
+        'google',
+        'bing',
+        'facebook',
+        'yandex',
+    ];
 
     public function __construct(IpBanService $banService, array $trapPaths = [
         '/project/images/public/disk.png', //botnet
@@ -39,12 +45,27 @@ final class HoneypotGuard
         return false;
     }
 
+    private function isWhitelisted(?string $userAgent): bool
+    {
+        if ($userAgent === null || $userAgent === '') {
+            return false;
+        }
+
+        $uaLower = strtolower($userAgent);
+        return array_any($this->whitelistAgents, static fn($allowedAgent) => str_contains($uaLower, $allowedAgent));
+    }
+
     /** If trap hit: ban and return true. */
     public function handle(string $path, string $ip, ?string $userAgent): bool
     {
         if (!$this->isTrapPath($path)) {
             return false;
         }
+
+        if ($this->isWhitelisted($userAgent)) {
+            return false;
+        }
+
         $this->banService->ban($ip, 'honeypot', $userAgent, $path);
         return true;
     }

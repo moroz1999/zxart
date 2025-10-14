@@ -42,10 +42,6 @@ final readonly class RequestGuard
             $this->ipBanService->ban($ip, 'abuse', $userAgent, $path);
             return false;
         }
-        if (str_starts_with($ip, '52.167.144.')) {
-            $this->ipBanService->ban($ip, 'abuse', $userAgent, $path);
-            return false;
-        }
 
         return true;
     }
