@@ -432,7 +432,7 @@ class fixApplication extends controllerApplication
 
     private function fixPress(): void
     {
-        $prodsManager = $this->getService(ProdsService::class);
+        $prodsService = $this->getService(ProdsService::class);
 
         /**
          * @var linksManager $linksManager
@@ -476,7 +476,7 @@ class fixApplication extends controllerApplication
 
                 $prod2->title = $prod->title;
 
-                $prodsManager->joinDeleteZxProd($prod2->id, $prod->id, false);
+                $prodsService->joinDeleteZxProd($prod2->id, $prod->id, false);
             } else {
                 echo 'failed to join press ' . $id . ' ' . $prod->getTitle() . "<br>";
             }

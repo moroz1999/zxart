@@ -3,8 +3,7 @@
 namespace ZxArt\Prods\Services;
 
 use ElementsManager;
-use Exception;
-use FilesElementTrait;
+use fileElement;
 use Illuminate;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
@@ -12,6 +11,7 @@ use ImportIdOperatorTrait;
 use LanguagesManager;
 use linksManager;
 use PathsManager;
+use pressArticleElement;
 use privilegesManager;
 use ProdsDownloader;
 use ReleaseFileTypesGatherer;
@@ -107,7 +107,7 @@ class ProdsService extends ElementsManager
         protected PartiesService       $partiesService,
         protected GroupsService        $groupsService,
         protected ZxParsingManager     $zxParsingManager,
-        protected AuthorsService       $authorsManager,
+        protected AuthorsService       $authorsService,
         protected linksManager         $linksManager,
         protected ProdsDownloader      $prodsDownloader,
         protected privilegesManager    $privilegesManager,
@@ -213,12 +213,12 @@ class ProdsService extends ElementsManager
         $this->forceUpdateTitles = $forceUpdateTitles;
     }
 
-    public function importProd(array $prodInfo, string $origin): ?zxProdElement
+    public function importProdOld(array $prodInfo, string $origin): ?zxProdElement
     {
-        return $this->importProdDTO(ProdImportDTO::fromArray($prodInfo), $origin);
+        return $this->importProd(ProdImportDTO::fromArray($prodInfo), $origin);
     }
 
-    public function importProdDTO(ProdImportDTO $prod, string $origin): ?zxProdElement
+    public function importProd(ProdImportDTO $prod, string $origin): ?zxProdElement
     {
         $prodId = $prod->id;
         $sanitizedTitle = $this->sanitizeTitle($prod->title);
@@ -255,7 +255,7 @@ class ProdsService extends ElementsManager
         }
 
         if (!$element) {
-            $element = $this->createProdDTO(
+            $element = $this->createProd(
                 new ProdImportDTO(
                     id: $prod->id,
                     title: $sanitizedTitle,
@@ -291,28 +291,23 @@ class ProdsService extends ElementsManager
         }
 
         if ($element && $this->updateExistingProds) {
-            $element = $this->updateProdDTO($element, $prod, $origin);
+            $element = $this->updateProd($element, $prod, $origin);
         }
 
         if ($element && $prod->releases) {
             foreach ($prod->releases as $release) {
-                $this->importReleaseDTO($release, $prod->id, $origin);
+                $this->importRelease($release, $prod->id, $origin);
             }
         }
 
         return $element;
     }
 
-    protected function createProd(array $prodInfo, string $origin): ?zxProdElement
-    {
-        return $this->createProdDTO(ProdImportDTO::fromArray($prodInfo), $origin);
-    }
-
-    protected function createProdDTO(ProdImportDTO $prod, string $origin): ?zxProdElement
+    private function createProd(ProdImportDTO $dto, string $origin): ?zxProdElement
     {
         $category = null;
-        if (!empty($prod->directCategories)) {
-            $category = $prod->directCategories[0];
+        if (!empty($dto->directCategories)) {
+            $category = $dto->directCategories[0];
         }
         if (!$category) {
             $category = $this->defaultCategoryId;
@@ -321,77 +316,72 @@ class ProdsService extends ElementsManager
         $element = $this->structureManager->createElement('zxProd', 'show', $category, false, 'zxProdCategory');
         if ($element instanceof zxProdElement) {
             $element->dateAdded = time();
-            $this->saveImportId($element->getId(), $prod->id, $origin, 'prod');
-            $this->updateProdDTO($element, $prod, $origin, true);
+            $this->saveImportId($element->getId(), $dto->id, $origin, 'prod');
+            $this->updateProd($element, $dto, $origin, true);
             return $element;
         }
         return null;
     }
 
-    protected function importLabelsInfo($infoIndex, $origin): void
+    private function importLabelsInfo(array $infoIndex, string $origin): void
     {
         $infoIndex = array_reverse($infoIndex);
-        foreach ($infoIndex as $gatheredInfo) {
-            if ($gatheredInfo['isAlias'] && $gatheredInfo['isPerson']) {
-                $this->authorsManager->importAuthorAlias($gatheredInfo, $origin);
-            } elseif ($gatheredInfo['isGroup']) {
-                $this->groupsService->importGroup($gatheredInfo, $origin);
-            } elseif ($gatheredInfo['isPerson']) {
-                $this->authorsManager->importAuthor($gatheredInfo, $origin);
+        foreach ($infoIndex as $labelDTO) {
+            if ($labelDTO->isAlias && $labelDTO->isPerson) {
+                $this->authorsService->importAuthorAlias($labelDTO, $origin);
+            } elseif ($labelDTO->isGroup) {
+                $this->groupsService->importGroup($labelDTO, $origin);
+            } elseif ($labelDTO->isPerson) {
+                $this->authorsService->importAuthor($labelDTO, $origin);
             } else {
                 //we don't know anything about this label. lets search for any group with that name
-                $result = $this->groupsService->importGroup($gatheredInfo, $origin, false);
+                $result = $this->groupsService->importGroup($labelDTO, $origin, false);
                 if (!$result) {
                     //search for author alias with that name
-                    $result = $this->authorsManager->importAuthorAlias($gatheredInfo, $origin, false);
+                    $result = $this->authorsService->importAuthorAlias($labelDTO, $origin, false);
                 }
                 if (!$result) {
                     //just create author by default.
-                    $this->authorsManager->importAuthor($gatheredInfo, $origin);
+                    $this->authorsService->importAuthor($labelDTO, $origin);
                 }
             }
         }
     }
 
-    protected function updateProd(zxProdElement $element, array $prodInfo, $origin, bool $justCreated = false): zxProdElement
-    {
-        return $this->updateProdDTO($element, ProdImportDTO::fromArray($prodInfo), (string)$origin, $justCreated);
-    }
-
-    protected function updateProdDTO(zxProdElement $element, ProdImportDTO $prod, string $origin, bool $justCreated = false): zxProdElement
+    private function updateProd(zxProdElement $element, ProdImportDTO $dto, string $origin, bool $justCreated = false): zxProdElement
     {
         $changed = false;
 
-        if (!empty($prod->title) && ($element->title != $prod->title)) {
+        if (!empty($dto->title) && ($element->title != $dto->title)) {
             if (!$element->title || $this->forceUpdateTitles) {
-                $element->title = $prod->title;
-                $element->structureName = $prod->title;
+                $element->title = $dto->title;
+                $element->structureName = $dto->title;
                 $changed = true;
             }
         }
-        if (!empty($prod->altTitle) && ($element->altTitle != $prod->altTitle)) {
-            $element->altTitle = $prod->altTitle;
+        if (!empty($dto->altTitle) && ($element->altTitle != $dto->altTitle)) {
+            $element->altTitle = $dto->altTitle;
             $changed = true;
         }
-        if (!empty($prod->legalStatus) && (empty($element->legalStatus) || $justCreated) && $element->legalStatus != $prod->legalStatus) {
-            $element->legalStatus = $prod->legalStatus;
+        if (!empty($dto->legalStatus) && (empty($element->legalStatus) || $justCreated) && $element->legalStatus != $dto->legalStatus) {
+            $element->legalStatus = $dto->legalStatus;
             $changed = true;
         }
-        if (!empty($prod->year) && (($element->year != $prod->year) && (!$element->year || $this->forceUpdateYear || $justCreated))) {
-            $element->year = $prod->year;
+        if (!empty($dto->year) && (($element->year != $dto->year) && (!$element->year || $this->forceUpdateYear || $justCreated))) {
+            $element->year = $dto->year;
             $changed = true;
         }
-        if (!empty($prod->compo) && ($element->compo != $prod->compo)) {
-            $element->compo = $prod->compo;
+        if (!empty($dto->compo) && ($element->compo != $dto->compo)) {
+            $element->compo = $dto->compo;
             $changed = true;
         }
-        if (!empty($prod->description) && !$element->description) {
-            $element->description = $prod->description;
+        if (!empty($dto->description) && !$element->description) {
+            $element->description = $dto->description;
             $changed = true;
         }
-        if (!empty($prod->party) && (!$element->party || (!empty($prod->party->place) && !$element->partyplace))) {
-            $partyTitle = $prod->party->title ?? null;
-            $partyYear = $prod->party->year ?? null;
+        if (!empty($dto->party) && (!$element->party || (!empty($dto->party->place) && !$element->partyplace))) {
+            $partyTitle = $dto->party->title ?? null;
+            $partyYear = $dto->party->year ?? null;
             if ($partyTitle && $partyYear) {
                 if ($partyElement = $this->partiesService->getPartyByTitleAndYear($partyTitle, $partyYear)) {
                     if ($element->party != $partyElement->id) {
@@ -399,25 +389,25 @@ class ProdsService extends ElementsManager
                         $element->renewPartyLink();
                         $changed = true;
                     }
-                    if (!empty($prod->party->place)) {
-                        if ($element->partyplace != $prod->party->place) {
-                            $element->partyplace = $prod->party->place;
+                    if (!empty($dto->party->place)) {
+                        if ($element->partyplace != $dto->party->place) {
+                            $element->partyplace = $dto->party->place;
                             $changed = true;
                         }
                     }
                 }
             }
         }
-        if (!empty($prod->youtubeId) && ($element->youtubeId != $prod->youtubeId) && ($this->forceUpdateYoutube || $justCreated)) {
-            $element->youtubeId = $prod->youtubeId;
+        if (!empty($dto->youtubeId) && ($element->youtubeId != $dto->youtubeId) && ($this->forceUpdateYoutube || $justCreated)) {
+            $element->youtubeId = $dto->youtubeId;
             $changed = true;
         }
-        if (!empty($prod->externalLink) && (($element->externalLink != $prod->externalLink) && ($this->forceUpdateExternalLink || $justCreated))) {
-            $element->externalLink = $prod->externalLink;
+        if (!empty($dto->externalLink) && (($element->externalLink != $dto->externalLink) && ($this->forceUpdateExternalLink || $justCreated))) {
+            $element->externalLink = $dto->externalLink;
             $changed = true;
         }
-        if (!empty($prod->language) && $element->language != $prod->language) {
-            $element->language = $prod->language;
+        if (!empty($dto->language) && $element->language != $dto->language) {
+            $element->language = $dto->language;
             $changed = true;
         }
 
@@ -425,20 +415,20 @@ class ProdsService extends ElementsManager
             $element->persistElementData();
         }
 
-        if (!empty($prod->labels) && ($this->forceUpdatePublishers || $this->forceUpdateGroups || $this->forceUpdateAuthors || $justCreated)) {
-            $this->importLabelsInfo(array_map(static fn($l) => $l->toArray(), $prod->labels), $origin);
+        if (!empty($dto->labels) && ($this->forceUpdatePublishers || $this->forceUpdateGroups || $this->forceUpdateAuthors || $justCreated)) {
+            $this->importLabelsInfo($dto->labels, $origin);
         }
 
-        if (!empty($prod->directCategories)) {
+        if (!empty($dto->directCategories)) {
             if ($this->forceUpdateCategories || $justCreated || !$element->getConnectedCategoriesIds()) {
-                foreach ($prod->directCategories as $categoryId) {
+                foreach ($dto->directCategories as $categoryId) {
                     $this->linksManager->linkElements($categoryId, $element->id, 'zxProdCategory');
                 }
             }
         }
 
-        if (!empty($prod->undetermined)) {
-            foreach ($prod->undetermined as $undeterminedId => $roles) {
+        if (!empty($dto->undetermined)) {
+            foreach ($dto->undetermined as $undeterminedId => $roles) {
                 if ($this->getElementIdByImportId($undeterminedId, $origin, 'group')) {
                     // noop
                 } elseif ($authorId = $this->getElementIdByImportId($undeterminedId, $origin, 'author')) {
@@ -448,17 +438,17 @@ class ProdsService extends ElementsManager
         }
 
         $authorsInfo = $element->getAuthorsInfo('prod');
-        if (($this->forceUpdateAuthors || $justCreated || !$authorsInfo) && !empty($prod->authors)) {
-            foreach ($prod->authors as $importAuthorId => $roles) {
+        if (($this->forceUpdateAuthors || $justCreated || !$authorsInfo) && !empty($dto->authors)) {
+            foreach ($dto->authors as $importAuthorId => $roles) {
                 if ($authorId = $this->getElementIdByImportId($importAuthorId, $origin, 'author')) {
                     $this->authorshipRepository->addAuthorship($element->id, $authorId, 'prod', $roles);
                 }
             }
         }
 
-        if (!empty($prod->groups) && (!$element->groups || $this->forceUpdateGroups)) {
+        if (!empty($dto->groups) && (!$element->groups || $this->forceUpdateGroups)) {
             $linksIndex = $this->linksManager->getElementsLinksIndex($element->id, 'zxProdGroups', 'child');
-            foreach ($prod->groups as $importGroupId) {
+            foreach ($dto->groups as $importGroupId) {
                 if ($groupId = $this->getElementIdByImportId($importGroupId, $origin, 'group')) {
                     if (!isset($linksIndex[$groupId])) {
                         $this->linksManager->linkElements($groupId, $element->id, 'zxProdGroups');
@@ -471,9 +461,9 @@ class ProdsService extends ElementsManager
             }
         }
 
-        if (!empty($prod->publishers) && (!$element->publishers || $this->forceUpdatePublishers)) {
+        if (!empty($dto->publishers) && (!$element->publishers || $this->forceUpdatePublishers)) {
             $linksIndex = $this->linksManager->getElementsLinksIndex($element->id, 'zxProdPublishers', 'child');
-            foreach ($prod->publishers as $importPublisherId) {
+            foreach ($dto->publishers as $importPublisherId) {
                 $publisherId = $this->getElementIdByImportId($importPublisherId, $origin, 'group')
                     ?: $this->getElementIdByImportId($importPublisherId, $origin, 'author');
                 if ($publisherId) {
@@ -488,9 +478,9 @@ class ProdsService extends ElementsManager
             }
         }
 
-        if (!empty($prod->compilationItems)) {
+        if (!empty($dto->compilationItems)) {
             if (!$element->compilationItems) {
-                foreach ($prod->compilationItems as $importItemId) {
+                foreach ($dto->compilationItems as $importItemId) {
                     if ($prodId = $this->getElementIdByImportId($importItemId, $origin, 'prod')) {
                         $this->linksManager->linkElements($element->id, $prodId, 'compilation');
                     } elseif ($releaseId = $this->getElementIdByImportId($importItemId, $origin, 'release')) {
@@ -500,9 +490,9 @@ class ProdsService extends ElementsManager
             }
         }
 
-        if (!empty($prod->seriesProds)) {
+        if (!empty($dto->seriesProds)) {
             if (!$element->seriesProds) {
-                foreach ($prod->seriesProds as $importItemId) {
+                foreach ($dto->seriesProds as $importItemId) {
                     if ($prodId = $this->getElementIdByImportId($importItemId, $origin, 'prod')) {
                         $this->linksManager->linkElements($element->id, $prodId, 'series');
                     }
@@ -510,9 +500,12 @@ class ProdsService extends ElementsManager
             }
         }
 
-        if (!empty($prod->articles)) {
+        if (!empty($dto->articles)) {
             if (!$element->articles) {
-                foreach ($prod->articles as $article) {
+                foreach ($dto->articles as $article) {
+                    /**
+                     * @var pressArticleElement $articleElement
+                     */
                     if ($articleElement = $this->structureManager->createElement(
                         'pressArticle',
                         'showForm',
@@ -531,9 +524,9 @@ class ProdsService extends ElementsManager
             }
         }
 
-        if (!empty($prod->categories) && (!$element->getConnectedCategoriesIds() || $this->forceUpdateCategories || $justCreated)) {
+        if (!empty($dto->categories) && (!$element->getConnectedCategoriesIds() || $this->forceUpdateCategories || $justCreated)) {
             $linksIndex = $this->linksManager->getElementsLinksIndex($element->id, 'zxProdCategory', 'child');
-            foreach ($prod->categories as $importCategoryId) {
+            foreach ($dto->categories as $importCategoryId) {
                 if ($categoryId = $this->getElementIdByImportId($importCategoryId, $origin, 'category')) {
                     if (!isset($linksIndex[$categoryId])) {
                         $this->linksManager->linkElements($categoryId, $element->id, 'zxProdCategory');
@@ -546,17 +539,17 @@ class ProdsService extends ElementsManager
             }
         }
 
-        if (!empty($prod->images) && ($this->forceUpdateImages || $justCreated || !$element->getFilesList('connectedFile'))) {
-            $this->importElementFiles($element, $prod->images);
+        if (!empty($dto->images) && ($this->forceUpdateImages || $justCreated || !$element->getFilesList('connectedFile'))) {
+            $this->importElementFiles($element, $dto->images);
             if ($this->resizeImages) {
                 $element->resizeImages();
             }
         }
 
-        if (!empty($prod->maps) && ($this->forceUpdateImages || $justCreated || !$element->getFilesList('mapFilesSelector'))) {
+        if (!empty($dto->maps) && ($this->forceUpdateImages || $justCreated || !$element->getFilesList('mapFilesSelector'))) {
             $propertyName = 'mapFilesSelector';
             $existingFiles = $element->getFilesList($propertyName);
-            foreach ($prod->maps as $map) {
+            foreach ($dto->maps as $map) {
                 try {
                     $this->importElementFile($element, $map->url, $existingFiles, $map->author, $propertyName);
                 } catch (ReleaseDownloadException $e) {
@@ -565,14 +558,14 @@ class ProdsService extends ElementsManager
             }
         }
 
-        if (!empty($prod->inlayImages) && ($this->forceUpdateImages || $justCreated || !$element->getFilesList('inlayFilesSelector'))) {
-            $this->importElementFiles($element, $prod->inlayImages, 'inlayFilesSelector');
+        if (!empty($dto->inlayImages) && ($this->forceUpdateImages || $justCreated || !$element->getFilesList('inlayFilesSelector'))) {
+            $this->importElementFiles($element, $dto->inlayImages, 'inlayFilesSelector');
         }
 
-        if (!empty($prod->rzx)) {
+        if (!empty($dto->rzx)) {
             $propertyName = 'rzx';
             $existingFiles = $element->getFilesList($propertyName);
-            foreach ($prod->rzx as $rzx) {
+            foreach ($dto->rzx as $rzx) {
                 try {
                     $this->importElementFile($element, $rzx->url, $existingFiles, $rzx->author, $propertyName);
                 } catch (ReleaseDownloadException $e) {
@@ -581,8 +574,8 @@ class ProdsService extends ElementsManager
             }
         }
 
-        if (!empty($prod->importIds)) {
-            foreach ($prod->importIds as $importOrigin => $id) {
+        if (!empty($dto->importIds)) {
+            foreach ($dto->importIds as $importOrigin => $id) {
                 if (!$this->getElementIdByImportId($id, $importOrigin, 'prod')) {
                     $this->saveImportId($element->getId(), $id, $importOrigin, 'prod');
                 }
@@ -606,7 +599,7 @@ class ProdsService extends ElementsManager
             if ($originalFileName === urldecode($existingFile->fileName)) {
                 $path = $existingFile->getFilePath();
                 $size = filesize($path);
-                if (is_file($path) && $size > 0) {
+                if ($size > 0 && is_file($path)) {
                     $fileExists = true;
                     break;
                 }
@@ -627,15 +620,15 @@ class ProdsService extends ElementsManager
             if (!$downloaded) {
                 throw new ReleaseDownloadException('Unable to download release ' . $element->id . ' ' . $fileUrl);
             }
-
+            /**
+             * @var fileElement $fileElement
+             */
             if ($filePath && ($fileElement = $this->structureManager->createElement(
                     'file',
                     'showForm',
                     $element->getId()
                 ))) {
-                /**
-                 * @var fileElement $fileElement
-                 */
+
                 $destinationFolder = $element->getUploadedFilesPath($propertyName);
 
                 $info = pathinfo($fileUrl);
@@ -670,12 +663,7 @@ class ProdsService extends ElementsManager
 
     }
 
-    /**
-     * @param FilesElementTrait $element
-     * @param string $propertyName
-     * @throws Exception
-     */
-    protected function importElementFiles($element, $images, $propertyName = 'connectedFile'): void
+    protected function importElementFiles(zxReleaseElement|zxProdElement $element, array $images, string $propertyName = 'connectedFile'): void
     {
         $existingFiles = $element->getFilesList($propertyName);
         if (!$existingFiles || $this->addImages) {
@@ -705,7 +693,7 @@ class ProdsService extends ElementsManager
         if (!empty($prod->releases)) {
             foreach ($prod->releases as $release) {
                 try {
-                    if ($releaseElement = $this->getReleaseByMd5DTO($release, $prod->id)) {
+                    if ($releaseElement = $this->getReleaseByMd5($release, $prod->id)) {
                         return $releaseElement->getProd();
                     }
                 } catch (ReleaseDownloadException $e) {
@@ -716,19 +704,19 @@ class ProdsService extends ElementsManager
         return null;
     }
 
-    private function getReleaseByMd5DTO(ReleaseImportDTO $release, string $prodId): ?zxReleaseElement
+    private function getReleaseByMd5(ReleaseImportDTO $dto, string $prodId): ?zxReleaseElement
     {
-        if (!$release->fileUrl) {
+        if (!$dto->fileUrl) {
             return null;
         }
-        if (empty($release->md5)) {
-            $path = $this->prodsDownloader->getDownloadedPath($release->fileUrl);
+        if (empty($dto->md5)) {
+            $path = $this->prodsDownloader->getDownloadedPath($dto->fileUrl);
             if (!$path) {
                 sleep(10);
-                $path = $this->prodsDownloader->getDownloadedPath($release->fileUrl);
+                $path = $this->prodsDownloader->getDownloadedPath($dto->fileUrl);
             }
             if (!$path) {
-                throw new ReleaseDownloadException('Unable to download release ' . $prodId . ' ' . $release->id . ' ' . $release->title . ' ' . $release->fileUrl);
+                throw new ReleaseDownloadException('Unable to download release ' . $prodId . ' ' . $dto->id . ' ' . $dto->title . ' ' . $dto->fileUrl);
             }
             if ($path) {
                 if ($structure = $this->zxParsingManager->parseFileStructure($path)) {
@@ -755,21 +743,15 @@ class ProdsService extends ElementsManager
         return null;
     }
 
-
-    public function importRelease($releaseInfo, $prodId, $origin): bool|zxReleaseElement
+    private function importRelease(ReleaseImportDTO $dto, string $prodId, string $origin): bool|zxReleaseElement
     {
-        return $this->importReleaseDTO(ReleaseImportDTO::fromArray($releaseInfo), (string)$prodId, (string)$origin);
-    }
-
-    public function importReleaseDTO(ReleaseImportDTO $release, string $prodId, string $origin): bool|zxReleaseElement
-    {
-        $releaseId = $release->id;
-        $sanitizedTitle = $this->sanitizeTitle($release->title);
+        $releaseId = $dto->id;
+        $sanitizedTitle = $this->sanitizeTitle($dto->title);
 
         $element = $this->getElementByImportId($releaseId, $origin, 'release');
         if (!$element) {
             try {
-                if ($candidate = $this->getReleaseByMd5DTO($release, $prodId)) {
+                if ($candidate = $this->getReleaseByMd5($dto, $prodId)) {
                     $element = $candidate;
                     $this->saveImportId($element->id, $releaseId, $origin, 'release');
                 }
@@ -778,140 +760,133 @@ class ProdsService extends ElementsManager
             }
         }
         if (!$element) {
-            $element = $this->createReleaseDTO(
+            $element = $this->createRelease(
                 new ReleaseImportDTO(
-                    id: $release->id,
+                    id: $dto->id,
                     title: $sanitizedTitle,
-                    year: $release->year,
-                    language: $release->language,
-                    version: $release->version,
-                    releaseType: $release->releaseType,
-                    filePath: $release->filePath,
-                    fileUrl: $release->fileUrl,
-                    fileName: $release->fileName,
-                    description: $release->description,
-                    hardwareRequired: $release->hardwareRequired,
-                    labels: $release->labels,
-                    authors: $release->authors,
-                    publishers: $release->publishers,
-                    undetermined: $release->undetermined,
-                    images: $release->images,
-                    inlayImages: $release->inlayImages,
-                    infoFiles: $release->infoFiles,
-                    adFiles: $release->adFiles,
-                    md5: $release->md5,
+                    year: $dto->year,
+                    language: $dto->language,
+                    version: $dto->version,
+                    releaseType: $dto->releaseType,
+                    filePath: $dto->filePath,
+                    fileUrl: $dto->fileUrl,
+                    fileName: $dto->fileName,
+                    description: $dto->description,
+                    hardwareRequired: $dto->hardwareRequired,
+                    labels: $dto->labels,
+                    authors: $dto->authors,
+                    publishers: $dto->publishers,
+                    undetermined: $dto->undetermined,
+                    images: $dto->images,
+                    inlayImages: $dto->inlayImages,
+                    infoFiles: $dto->infoFiles,
+                    adFiles: $dto->adFiles,
+                    md5: $dto->md5,
                 ),
                 $prodId,
                 $origin
             );
         }
         if ($element && $this->updateExistingReleases) {
-            $this->updateReleaseDTO($element, $release, $origin);
+            $this->updateRelease($element, $dto, $origin);
         }
         return $element;
     }
 
-    protected function createRelease($releaseInfo, $prodId, $origin)
-    {
-        return $this->createReleaseDTO(ReleaseImportDTO::fromArray($releaseInfo), (string)$prodId, (string)$origin);
-    }
-
-    protected function createReleaseDTO(ReleaseImportDTO $release, string $prodId, string $origin): bool|zxReleaseElement
+    protected function createRelease(ReleaseImportDTO $dto, string $prodId, string $origin): bool|zxReleaseElement
     {
         $element = false;
         if ($prodElement = $this->getElementByImportId($prodId, $origin, 'prod')) {
+            /**
+             * @var zxReleaseElement $element
+             */
             if ($element = $this->structureManager->createElement('zxRelease', 'show', $prodElement->id)) {
                 $element->persistStructureLinks();
-                $this->saveImportId($element->getId(), $release->id, $origin, 'release');
-                $this->updateReleaseDTO($element, $release, $origin, true);
+                $this->saveImportId($element->getId(), $dto->id, $origin, 'release');
+                $this->updateRelease($element, $dto, $origin, true);
             }
         }
         return $element;
     }
 
-    protected function updateRelease($element, array $releaseInfo, $origin, bool $justCreated = false): void
-    {
-        $this->updateReleaseDTO($element, ReleaseImportDTO::fromArray($releaseInfo), (string)$origin, $justCreated);
-    }
-
-    protected function updateReleaseDTO(zxReleaseElement $element, ReleaseImportDTO $release, string $origin, bool $justCreated = false): void
+    private function updateRelease(zxReleaseElement $element, ReleaseImportDTO $dto, string $origin, bool $justCreated = false): void
     {
         $changed = false;
 
-        if (($this->forceUpdateTitles || !$element->title) && !empty($release->title)) {
-            $element->title = $release->title;
-            $element->structureName = $release->title;
+        if (($this->forceUpdateTitles || !$element->title) && !empty($dto->title)) {
+            $element->title = $dto->title;
+            $element->structureName = $dto->title;
             $changed = true;
         }
-        if ((!$element->year || $this->forceUpdateYear) && !empty($release->year)) {
-            $element->year = $release->year;
+        if ((!$element->year || $this->forceUpdateYear) && !empty($dto->year)) {
+            $element->year = $dto->year;
             $changed = true;
         }
-        if (!$element->hardwareRequired && !empty($release->hardwareRequired)) {
-            $element->hardwareRequired = array_unique($release->hardwareRequired);
+        if (!$element->hardwareRequired && !empty($dto->hardwareRequired)) {
+            $element->hardwareRequired = array_unique($dto->hardwareRequired);
             $changed = true;
         }
-        if (($this->forceUpdateReleaseType || $justCreated) && (!$element->releaseType || $element->releaseType === 'unknown') && !empty($release->releaseType)) {
-            $element->releaseType = $release->releaseType;
+        if (($this->forceUpdateReleaseType || $justCreated) && (!$element->releaseType || $element->releaseType === 'unknown') && !empty($dto->releaseType)) {
+            $element->releaseType = $dto->releaseType;
             $changed = true;
         }
-        if (!$element->language && !empty($release->language)) {
-            $element->language = $release->language;
+        if (!$element->language && !empty($dto->language)) {
+            $element->language = $dto->language;
             $changed = true;
         }
-        if (!$element->version && !empty($release->version)) {
-            $element->version = $release->version;
+        if (!$element->version && !empty($dto->version)) {
+            $element->version = $dto->version;
             $changed = true;
         }
 
         if (($this->forceUpdateReleaseFiles || $justCreated)) {
-            if (!empty($release->filePath)) {
+            if (!empty($dto->filePath)) {
                 $destinationFolder = $element->getUploadedFilesPath();
-                $info = pathinfo($release->filePath);
+                $info = pathinfo($dto->filePath);
                 $element->file = $element->getId();
                 $element->fileName = $info['filename'] . '.' . $info['extension'];
                 $element->parsed = 0;
                 $changed = true;
-                copy($release->filePath, $destinationFolder . $element->file);
-            } elseif (!empty($release->fileUrl)) {
-                $info = pathinfo($release->fileUrl);
-                $fileName = !empty($release->fileName)
-                    ? $release->fileName
+                copy($dto->filePath, $destinationFolder . $element->file);
+            } elseif (!empty($dto->fileUrl)) {
+                $info = pathinfo($dto->fileUrl);
+                $fileName = !empty($dto->fileName)
+                    ? $dto->fileName
                     : ($info['filename'] . '.' . ($info['extension'] ?? ''));
                 if ($element->fileName != $fileName || !is_file($element->getFilePath())) {
                     $changed = true;
                     $element->file = $element->getId();
                     $element->fileName = $fileName;
                     $element->parsed = 0;
-                    $this->prodsDownloader->moveFileContents($element->getFilePath(), $release->fileUrl);
+                    $this->prodsDownloader->moveFileContents($element->getFilePath(), $dto->fileUrl);
                 }
             }
         }
 
-        if (!empty($release->description) && !$element->description) {
-            $element->description = $release->description;
+        if (!empty($dto->description) && !$element->description) {
+            $element->description = $dto->description;
             $changed = true;
         }
 
-        if (($this->forceUpdateReleasePublishers || $this->forceUpdateReleaseAuthors || $justCreated) && !empty($release->labels)) {
-            $this->importLabelsInfo(array_map(static fn($l) => $l->toArray(), $release->labels), $origin);
+        if (($this->forceUpdateReleasePublishers || $this->forceUpdateReleaseAuthors || $justCreated) && !empty($dto->labels)) {
+            $this->importLabelsInfo($dto->labels, $origin);
         }
 
-        if (!empty($release->undetermined)) {
-            foreach ($release->undetermined as $undeterminedId => $roles) {
+        if (!empty($dto->undetermined)) {
+            foreach ($dto->undetermined as $undeterminedId => $roles) {
                 if ($this->getElementIdByImportId($undeterminedId, $origin, 'group')) {
-                    $releasePublishers = $release->publishers ?? [];
+                    $releasePublishers = $dto->publishers ?? [];
                     $releasePublishers[] = $undeterminedId;
                 } elseif ($this->getElementIdByImportId($undeterminedId, $origin, 'author')) {
-                    $releaseAuthors = $release->authors ?? [];
+                    $releaseAuthors = $dto->authors ?? [];
                     $releaseAuthors[$undeterminedId] = $roles;
                 }
             }
         }
 
-        if (($this->forceUpdateReleaseAuthors || $justCreated) && !empty($release->authors)) {
+        if (($this->forceUpdateReleaseAuthors || $justCreated) && !empty($dto->authors)) {
             if (!$element->getAuthorsInfo('release')) {
-                foreach ($release->authors as $importAuthorId => $roles) {
+                foreach ($dto->authors as $importAuthorId => $roles) {
                     if ($authorId = $this->getElementIdByImportId($importAuthorId, $origin, 'author')) {
                         $this->linkReleaseWithAuthor($authorId, $element->id, $roles);
                     }
@@ -919,9 +894,9 @@ class ProdsService extends ElementsManager
             }
         }
 
-        if (($this->forceUpdateReleasePublishers || $justCreated) && !empty($release->publishers)) {
+        if (($this->forceUpdateReleasePublishers || $justCreated) && !empty($dto->publishers)) {
             if (!$element->getPublishersIds()) {
-                foreach ($release->publishers as $importPublisherId) {
+                foreach ($dto->publishers as $importPublisherId) {
                     if ($publisherId = $this->getElementIdByImportId($importPublisherId, $origin, 'group')) {
                         $this->linkReleaseWithPublisher($publisherId, $element->id);
                     } elseif ($publisherId = $this->getElementIdByImportId($importPublisherId, $origin, 'author')) {
@@ -935,21 +910,21 @@ class ProdsService extends ElementsManager
             $element->persistElementData();
         }
 
-        if (!empty($release->images) && ($this->forceUpdateImages || $justCreated || !$element->getFilesList('screenshotsSelector'))) {
-            $this->importElementFiles($element, $release->images, 'screenshotsSelector');
+        if (!empty($dto->images) && ($this->forceUpdateImages || $justCreated || !$element->getFilesList('screenshotsSelector'))) {
+            $this->importElementFiles($element, $dto->images, 'screenshotsSelector');
         }
-        if (!empty($release->inlayImages)) {
-            $this->importElementFiles($element, $release->inlayImages, 'inlayFilesSelector');
+        if (!empty($dto->inlayImages)) {
+            $this->importElementFiles($element, $dto->inlayImages, 'inlayFilesSelector');
         }
-        if (isset($release->infoFiles)) {
-            $this->importElementFiles($element, $release->infoFiles, 'infoFilesSelector');
+        if (isset($dto->infoFiles)) {
+            $this->importElementFiles($element, $dto->infoFiles, 'infoFilesSelector');
         }
-        if (isset($release->adFiles)) {
-            $this->importElementFiles($element, $release->adFiles, 'adFilesSelector');
+        if (isset($dto->adFiles)) {
+            $this->importElementFiles($element, $dto->adFiles, 'adFilesSelector');
         }
 
-        if (!empty($release->fileUrl)) {
-            $this->prodsDownloader->removeFile($release->fileUrl);
+        if (!empty($dto->fileUrl)) {
+            $this->prodsDownloader->removeFile($dto->fileUrl);
         }
     }
 
@@ -963,9 +938,6 @@ class ProdsService extends ElementsManager
         return $this->db->table('module_zxrelease');
     }
 
-    /**
-     * @psalm-return list{0?: mixed,...}
-     */
     protected function loadReleases(Builder $query, array|null $sort = [], int|null $start = null, int|null $amount = null): array
     {
         if (is_array($sort)) {
@@ -973,7 +945,7 @@ class ProdsService extends ElementsManager
                 if (isset($this->releaseColumnRelations[$property])) {
                     $srcTableName = $this->db->getTablePrefix() . $query->from;
                     foreach ($this->releaseColumnRelations[$property] as $criteria => $orderDirection) {
-                        if ($criteria == 'dateCreated') {
+                        if ($criteria === 'dateCreated') {
                             $query->leftJoin('structure_elements', 'structure_elements.id', '=', $query->from . '.id');
                             $query->orderBy("structure_elements.dateCreated", $orderDirection);
                         } else {
@@ -983,7 +955,7 @@ class ProdsService extends ElementsManager
                                 $query->orderByRaw("$orderColumn $order");
                             } else {
                                 if ($orderDirection === false) {
-                                    if ($order == 'desc') {
+                                    if ($order === 'desc') {
                                         $query->orderByRaw("$orderColumn asc");
                                     } else {
                                         $query->orderByRaw("$orderColumn desc");
@@ -1029,9 +1001,6 @@ class ProdsService extends ElementsManager
             if (mb_stripos($title, $search) !== false) {
                 $title = $article . ' ' . mb_substr($title, 0, mb_strlen($search) * (-1));
             }
-        }
-        if (mb_substr($title, -2) == ' 1') {
-            //$title = mb_substr($title, 0, -1);
         }
 
         return $title;

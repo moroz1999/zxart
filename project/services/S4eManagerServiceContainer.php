@@ -22,10 +22,10 @@ class S4eManagerServiceContainer extends DependencyInjectionServiceContainer
     {
         $s4eManager = $instance;
         /**
-         * @var ProdsService $prodsManager
+         * @var ProdsService $prodsService
          */
-        if ($prodsManager = $this->getOption(ProdsService::class)) {
-            $s4eManager->setProdsService($prodsManager);
+        if ($prodsService = $this->getOption(ProdsService::class)) {
+            $s4eManager->setProdsService($prodsService);
         } else {
             $s4eManager->setProdsService($this->registry->getService(ProdsService::class));
         }

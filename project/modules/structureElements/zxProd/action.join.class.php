@@ -17,12 +17,12 @@ class joinZxProd extends structureElementAction
     {
         if ($this->validated) {
             /**
-             * @var ProdsService $prodsManager
+             * @var ProdsService $prodsService
              */
-            $prodsManager = $this->getService(ProdsService::class);
+            $prodsService = $this->getService(ProdsService::class);
 
             if ($structureElement->joinAndDelete) {
-                $prodsManager->joinDeleteZxProd($structureElement->id, $structureElement->joinAndDelete, $structureElement->releasesOnly);
+                $prodsService->joinDeleteZxProd($structureElement->id, $structureElement->joinAndDelete, $structureElement->releasesOnly);
             }
 
             $controller->redirect($structureElement->getUrl());

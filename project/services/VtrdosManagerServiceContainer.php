@@ -22,10 +22,10 @@ class VtrdosManagerServiceContainer extends DependencyInjectionServiceContainer
     {
         $vtrdosManager = $instance;
         /**
-         * @var ProdsService $prodsManager
+         * @var ProdsService $prodsService
          */
-        if ($prodsManager = $this->getOption(ProdsService::class)) {
-            $vtrdosManager->setProdsService($prodsManager);
+        if ($prodsService = $this->getOption(ProdsService::class)) {
+            $vtrdosManager->setProdsService($prodsService);
         } else {
             $vtrdosManager->setProdsService($this->registry->getService(ProdsService::class));
         }

@@ -22,10 +22,10 @@ class TslabsManagerServiceContainer extends DependencyInjectionServiceContainer
     {
         $tslabsManager = $instance;
         /**
-         * @var ProdsService $prodsManager
+         * @var ProdsService $prodsService
          */
-        if ($prodsManager = $this->getOption(ProdsService::class)) {
-            $tslabsManager->setProdsService($prodsManager);
+        if ($prodsService = $this->getOption(ProdsService::class)) {
+            $tslabsManager->setProdsService($prodsService);
         } else {
             $tslabsManager->setProdsService($this->registry->getService(ProdsService::class));
         }

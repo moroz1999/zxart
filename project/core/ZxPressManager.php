@@ -2,6 +2,9 @@
 
 use ZxArt\Prods\Services\ProdsService;
 
+/**
+ * todo: re-implement import operations
+ */
 class ZxPressManager extends errorLogger
 {
     protected int $counter = 0;
@@ -12,11 +15,11 @@ class ZxPressManager extends errorLogger
     private $prodsIndex = [];
 
     public function __construct(
-        protected ProdsService $prodsManager,
+        protected ProdsService $prodsService,
     )
     {
-        $this->prodsManager->setMatchProdsWithoutYear(true);
-        $this->prodsManager->setUpdateExistingProds(true);
+        $this->prodsService->setMatchProdsWithoutYear(true);
+        $this->prodsService->setUpdateExistingProds(true);
     }
 
     public function importAll(): void
@@ -82,7 +85,7 @@ class ZxPressManager extends errorLogger
                         }
                     }
                     if (!empty($this->prodsIndex[$prodId]) && $subDivNode->getAttribute('style') === 'font: 13pt/14pt Times; text-align: left') {
-                        $prodElement = $this->prodsManager->getElementByImportId($prodId, $this->origin, 'prod');
+                        $prodElement = $this->prodsService->getElementByImportId($prodId, $this->origin, 'prod');
                         if ($prodElement && $prodElement->articles) {
                             continue;
                         }
@@ -251,7 +254,7 @@ class ZxPressManager extends errorLogger
             if ($this->counter > $this->maxCounter) {
                 return;
             }
-            if ($this->prodsManager->importProd($prodInfo, $this->origin)) {
+            if ($this->prodsService->importProdOld($prodInfo, $this->origin)) {
                 $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodInfo['title']);
             } else {
                 $this->markProgress('prod failed ' . $prodInfo['title']);

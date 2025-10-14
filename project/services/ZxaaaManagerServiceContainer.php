@@ -22,10 +22,10 @@ class ZxaaaManagerServiceContainer extends DependencyInjectionServiceContainer
     {
         $zxaaaManager = $instance;
         /**
-         * @var ProdsService $prodsManager
+         * @var ProdsService $prodsService
          */
-        if ($prodsManager = $this->getOption(ProdsService::class)) {
-            $zxaaaManager->setProdsService($prodsManager);
+        if ($prodsService = $this->getOption(ProdsService::class)) {
+            $zxaaaManager->setProdsService($prodsService);
         } else {
             $zxaaaManager->setProdsService($this->registry->getService(ProdsService::class));
         }

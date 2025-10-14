@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace ZxArt\Import\Press\DataUpdater;
 
-use JsonException;
-use ZxArt\Authors\Repositories\AuthorshipRepository;
 use groupElement;
+use JsonException;
+use partyElement;
 use pressArticleElement;
+use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Hardware\Services\HardwareService;
 use ZxArt\Import\Authors\AuthorSufficiencyChecker;
-use ZxArt\Import\Labels\PersonLabel;
 use ZxArt\Import\Labels\GroupLabel;
+use ZxArt\Import\Labels\PersonLabel;
 use ZxArt\Import\Parties\Party;
 use ZxArt\Import\Parties\PartyResolver;
 use ZxArt\Import\Pictures\PictureLabel;
@@ -24,7 +25,6 @@ use ZxArt\Import\Tunes\TuneLabel;
 use ZxArt\Import\Tunes\TuneResolver;
 use ZxArt\Prods\Services\ProdsService;
 use zxProdElement;
-use partyElement;
 
 final class ArticleParsedDataUpdater
 {
@@ -326,7 +326,7 @@ final class ArticleParsedDataUpdater
         $groupLabels = $this->makeGroupLabels($sortedGroups);
         foreach ($groupLabels as $label) {
             $groupInfo = $label->toArray();
-            $element = $this->groupsService->importGroup($groupInfo, self::ORIGIN);
+            $element = $this->groupsService->importGroupOld($groupInfo, self::ORIGIN);
             if ($element !== null) {
                 $this->groupsMap[$label->id] = $element;
             }
@@ -404,7 +404,7 @@ final class ArticleParsedDataUpdater
                 continue;
             }
             $authorInfo = $label->toArray();
-            $element = $this->authorsService->importAuthor($authorInfo, self::ORIGIN);
+            $element = $this->authorsService->importAuthorOld($authorInfo, self::ORIGIN);
             if ($element !== null) {
                 $this->authorsMap[$label->id] = $element;
             }
@@ -420,7 +420,7 @@ final class ArticleParsedDataUpdater
         foreach ($parsedProds as $parsedProd) {
             $prod = $this->transformToProd($parsedProd);
             $prodInfo = $prod->toArray();
-            $element = $this->prodsService->importProd($prodInfo, self::ORIGIN);
+            $element = $this->prodsService->importProdOld($prodInfo, self::ORIGIN);
 
             if ($element !== null) {
                 $elements[] = $element;

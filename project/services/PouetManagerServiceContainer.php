@@ -22,10 +22,10 @@ class PouetManagerServiceContainer extends DependencyInjectionServiceContainer
     {
         $pouetManager = $instance;
         /**
-         * @var ProdsService $prodsManager
+         * @var ProdsService $prodsService
          */
-        if ($prodsManager = $this->getOption(ProdsService::class)) {
-            $pouetManager->setProdsService($prodsManager);
+        if ($prodsService = $this->getOption(ProdsService::class)) {
+            $pouetManager->setProdsService($prodsService);
         } else {
             $pouetManager->setProdsService($this->registry->getService(ProdsService::class));
         }

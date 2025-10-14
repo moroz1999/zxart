@@ -20,10 +20,10 @@ class RzxArchiveManagerServiceContainer extends DependencyInjectionServiceContai
     {
         $rzxArchiveManager = $instance;
         /**
-         * @var ProdsService $prodsManager
+         * @var ProdsService $prodsService
          */
-        if ($prodsManager = $this->getOption(ProdsService::class)) {
-            $rzxArchiveManager->setProdsService($prodsManager);
+        if ($prodsService = $this->getOption(ProdsService::class)) {
+            $rzxArchiveManager->setProdsService($prodsService);
         } else {
             $rzxArchiveManager->setProdsService($this->registry->getService(ProdsService::class));
         }

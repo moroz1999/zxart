@@ -113,8 +113,8 @@ class ApiQueryResultResolver implements DependencyInjectionContextInterface
                     $exportType,
                     $filterQueries
                 );
-                $prodsManager = $this->getService(ProdsService::class);
-                $queryResult[$typeName] = $prodsManager->getReleasesByIdList(
+                $prodsService = $this->getService(ProdsService::class);
+                $queryResult[$typeName] = $prodsService->getReleasesByIdList(
                     $query
                 );
             } elseif (($typeName === 'zxProd') && $typeName != $exportType) {
@@ -124,8 +124,8 @@ class ApiQueryResultResolver implements DependencyInjectionContextInterface
                     $exportType,
                     $filterQueries
                 );
-                $prodsManager = $this->getService(ProdsService::class);
-                $queryResult[$typeName] = $prodsManager->getElementsByQuery(
+                $prodsService = $this->getService(ProdsService::class);
+                $queryResult[$typeName] = $prodsService->getElementsByQuery(
                     $query
                 );
             }

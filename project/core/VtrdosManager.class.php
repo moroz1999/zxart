@@ -5,6 +5,9 @@ use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Prods\Services\ProdsService;
 use ZxArt\ZxProdCategories\CategoryIds;
 
+/**
+ * todo: re-implement import operations
+ */
 class VtrdosManager extends errorLogger
 {
     protected $counter = 0;
@@ -12,7 +15,7 @@ class VtrdosManager extends errorLogger
     /**
      * @var ProdsService
      */
-    protected $prodsManager;
+    protected $prodsService;
     /**
      * @var AuthorsService
      */
@@ -348,12 +351,12 @@ class VtrdosManager extends errorLogger
     }
 
     /**
-     * @param mixed $prodsManager
+     * @param mixed $prodsService
      */
-    public function setProdsService(ProdsService $prodsManager): void
+    public function setProdsService(ProdsService $prodsService): void
     {
-        $this->prodsManager = $prodsManager;
-        $this->prodsManager->setUpdateExistingReleases(true);
+        $this->prodsService = $prodsService;
+        $this->prodsService->setUpdateExistingReleases(true);
     }
 
     public function importAll(): void
@@ -1162,7 +1165,7 @@ class VtrdosManager extends errorLogger
             if ($this->counter > $this->maxCounter) {
                 exit;
             }
-            if ($this->prodsManager->importProd($prodInfo, $this->origin)) {
+            if ($this->prodsService->importProdOld($prodInfo, $this->origin)) {
                 $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodInfo['title']);
             } else {
                 $this->markProgress('prod failed ' . $prodInfo['title']);

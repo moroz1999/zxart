@@ -7,18 +7,18 @@ use ZxArt\Prods\Services\ProdsService;
 class ReleasesResolver
 {
     public function __construct(
-        protected ProdsService $prodsManager,
+        protected ProdsService $prodsService,
     )
     {
     }
 
     public function getElementsByQuery(?Builder $query, ?array $sort = [], ?int $start = null, ?int $amount = null): array
     {
-        return $this->prodsManager->getReleasesByIdList($query, $sort, $start, $amount);
+        return $this->prodsService->getReleasesByIdList($query, $sort, $start, $amount);
     }
 
     public function makeQuery(): Builder
     {
-        return $this->prodsManager->makeReleasesQuery();
+        return $this->prodsService->makeReleasesQuery();
     }
 }

@@ -4,11 +4,14 @@ use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Prods\Services\ProdsService;
 
+/**
+ * todo: re-implement import operations
+ */
 class S4eManager extends errorLogger
 {
     protected int $counter = 0;
     protected int $maxCounter = 4000;
-    protected ProdsService $prodsManager;
+    protected ProdsService $prodsService;
     protected AuthorsService $authorsManager;
     protected GroupsService $groupsService;
     protected CountriesManager $countriesManager;
@@ -49,9 +52,9 @@ class S4eManager extends errorLogger
         $this->countriesManager = $countriesManager;
     }
 
-    public function setProdsService(ProdsService $prodsManager): void
+    public function setProdsService(ProdsService $prodsService): void
     {
-        $this->prodsManager = $prodsManager;
+        $this->prodsService = $prodsService;
     }
 
     public function importAll(): void
@@ -77,10 +80,10 @@ class S4eManager extends errorLogger
             }
             $prodsIndex[$release['prodId']]['releases'][] = $release;
         }
-        $this->prodsManager->setMatchProdsWithoutYear(true);
+        $this->prodsService->setMatchProdsWithoutYear(true);
         $this->importProdsIndex($prodsIndex);
 
-        $this->prodsManager->setMatchProdsWithoutYear(false);
+        $this->prodsService->setMatchProdsWithoutYear(false);
         $this->importProdsIndex($this->compilations);
     }
 
@@ -468,7 +471,7 @@ class S4eManager extends errorLogger
             if ($this->counter > $this->maxCounter) {
                 return;
             }
-            if ($this->prodsManager->importProd($prodInfo, $this->origin)) {
+            if ($this->prodsService->importProdOld($prodInfo, $this->origin)) {
                 $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodInfo['title']);
             } else {
                 $this->markProgress('prod failed ' . $prodInfo['title']);

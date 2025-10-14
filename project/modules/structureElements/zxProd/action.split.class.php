@@ -17,12 +17,12 @@ class splitZxProd extends structureElementAction
     {
         if ($this->validated) {
             /**
-             * @var ProdsService $prodsManager
+             * @var ProdsService $prodsService
              */
-            $prodsManager = $this->getService(ProdsService::class);
+            $prodsService = $this->getService(ProdsService::class);
 
             if ($structureElement->splitData) {
-                if ($newElement = $prodsManager->splitZxProd($structureElement->id, $structureElement->splitData)) {
+                if ($newElement = $prodsService->splitZxProd($structureElement->id, $structureElement->splitData)) {
                     $controller->redirect($newElement->getUrl());
                 }
             }

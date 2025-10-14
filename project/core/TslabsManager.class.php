@@ -4,6 +4,9 @@ use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Prods\Services\ProdsService;
 
+/**
+ * todo: re-implement import operations
+ */
 class TslabsManager extends errorLogger
 {
     protected $typeCategories = [
@@ -32,7 +35,7 @@ class TslabsManager extends errorLogger
     /**
      * @var ProdsService
      */
-    protected $prodsManager;
+    protected $prodsService;
     /**
      * @var AuthorsService
      */
@@ -75,13 +78,13 @@ class TslabsManager extends errorLogger
     }
 
     /**
-     * @param mixed $prodsManager
+     * @param mixed $prodsService
      */
-    public function setProdsService(ProdsService $prodsManager): void
+    public function setProdsService(ProdsService $prodsService): void
     {
-        $this->prodsManager = $prodsManager;
-        $this->prodsManager->setUpdateExistingProds(true);
-        $this->prodsManager->setForceUpdateYoutube(true);
+        $this->prodsService = $prodsService;
+        $this->prodsService->setUpdateExistingProds(true);
+        $this->prodsService->setForceUpdateYoutube(true);
     }
 
     public function importAll(): void
@@ -235,7 +238,7 @@ class TslabsManager extends errorLogger
             }
             foreach ($this->prodsIndex as $key => $prodInfo2) {
                 $this->counter++;
-                if ($this->prodsManager->importProd($prodInfo2, $this->origin)) {
+                if ($this->prodsService->importProdOld($prodInfo2, $this->origin)) {
                     $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodInfo2['title']);
                 } else {
                     $this->markProgress('prod failed ' . $prodInfo2['title']);

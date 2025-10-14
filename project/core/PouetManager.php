@@ -8,6 +8,9 @@ use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
 use ZxArt\ZxProdCategories\CategoryIds;
 
+/**
+ * todo: re-implement import operations
+ */
 class PouetManager extends errorLogger
 {
     protected $timeLimit = 60 * 29;
@@ -270,7 +273,7 @@ class PouetManager extends errorLogger
     /**
      * @var ProdsService
      */
-    protected $prodsManager;
+    protected $prodsService;
     /**
      * @var AuthorsService
      */
@@ -363,14 +366,14 @@ class PouetManager extends errorLogger
         $this->countriesManager = $countriesManager;
     }
 
-    public function setProdsService(ProdsService $prodsManager): void
+    public function setProdsService(ProdsService $prodsService): void
     {
-        $this->prodsManager = $prodsManager;
-        $this->prodsManager->setForceUpdateCategories(false);
-        $this->prodsManager->setForceUpdateYoutube(true);
-        $this->prodsManager->setForceUpdateGroups(false);
-        $this->prodsManager->setForceUpdateAuthors(false);
-        $this->prodsManager->setAddImages(false);
+        $this->prodsService = $prodsService;
+        $this->prodsService->setForceUpdateCategories(false);
+        $this->prodsService->setForceUpdateYoutube(true);
+        $this->prodsService->setForceUpdateGroups(false);
+        $this->prodsService->setForceUpdateAuthors(false);
+        $this->prodsService->setAddImages(false);
     }
 
     /**
@@ -553,7 +556,7 @@ class PouetManager extends errorLogger
                     }
                     $prodInfo['releases'][] = $releaseInfo;
 
-                    if ($prodElement = $this->prodsManager->importProd($prodInfo, $this->origin)) {
+                    if ($prodElement = $this->prodsService->importProdOld($prodInfo, $this->origin)) {
                         $this->queueService->updateStatus($prodElement->getId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
 
                         $this->updateReport($id, 'success');

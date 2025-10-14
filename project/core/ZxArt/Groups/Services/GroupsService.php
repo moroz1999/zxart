@@ -16,19 +16,18 @@ use linksManager;
 use privilegesManager;
 use structureManager;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
-use ZxArt\Import\Labels\LabelResolver;
 use ZxArt\Import\Labels\GroupLabel;
+use ZxArt\Import\Labels\LabelResolver;
 use ZxArt\LinkTypes;
 
 class GroupsService extends ElementsManager
 {
-    protected const TABLE = 'module_group';
+    protected const string TABLE = 'module_group';
 
     use LettersElementsListProviderTrait;
     use ImportIdOperatorTrait;
 
     protected array $columnRelations = [];
-    protected array $importedGroups = [];
 
     public function __construct(
         protected LabelResolver        $labelResolver,
@@ -48,21 +47,28 @@ class GroupsService extends ElementsManager
         ];
     }
 
-    public function importGroup($groupInfo, ?string $origin = null, bool $createNew = true, ?array $memberNames = null): GroupAliasElement|GroupElement|null
+    /**
+     * @deprecated
+     */
+    public function importGroupOld(array $groupInfo, ?string $origin = null, bool $createNew = true, ?array $memberNames = null): groupAliasElement|groupElement|null
+    {
+        $dto = LabelGatheredInfoDTO::fromArray($groupInfo);
+        return $this->importGroup($dto, $origin, $createNew, $memberNames);
+    }
+
+    public function importGroup(LabelGatheredInfoDTO $dto, ?string $origin = null, bool $createNew = true, ?array $memberNames = null): groupAliasElement|groupElement|null
     {
         $label = new GroupLabel(
-            id: $groupInfo['id'] ?? null,
-            name: $groupInfo['title'],
-            city: $groupInfo['cityName'] ?? null,
-            country: $groupInfo['countryName'] ?? null,
-            isAlias: $groupInfo['isAlias'] ?? null,
+            id: $dto->id ?? null,
+            name: $dto->title,
+            city: $dto->cityName ?? null,
+            country: $dto->countryName ?? null,
+            isAlias: $dto->isAlias ?? null,
             memberNames: $memberNames,
-            parentGroupIds: $groupInfo['parentGroupIds'] ?? null
+            parentGroupIds: $dto->groupsData ?? null
         );
 
-        /**
-         * @var groupElement|groupAliasElement|null $element
-         */
+        /** @var groupElement|groupAliasElement|null $element */
         $element = $this->getElementByImportId($label->id, $origin, 'group');
         if ($element === null) {
             $element = $this->labelResolver->resolve($label);
@@ -77,34 +83,39 @@ class GroupsService extends ElementsManager
 
         if ($element === null) {
             if ($label->isAlias) {
-                $element = $this->createGroupAlias($groupInfo, $origin);
+                $element = $this->createGroupAlias($dto, $origin);
             } else {
-                $element = $this->createGroup($groupInfo, $origin);
+                $element = $this->createGroup($dto, $origin);
             }
         }
 
         if ($element instanceof groupAliasElement) {
-            $this->updateGroupAlias($element, $groupInfo, $origin);
+            $this->updateGroupAlias($element, $dto, $origin);
         } else {
-            $this->updateGroup($element, $groupInfo, $origin);
+            $this->updateGroup($element, $dto, $origin);
         }
 
         return $element;
     }
 
-    protected function createGroup(array $groupInfo, $origin): ?groupElement
+    private function createGroup(LabelGatheredInfoDTO $dto, string $origin): ?groupElement
     {
-        if ($element = $this->manufactureGroupElement($groupInfo['title'])) {
-            $this->updateGroup($element, $groupInfo, $origin);
-            $this->saveImportId($element->id, $groupInfo['id'], $origin, 'group');
+        if ($element = $this->manufactureGroupElement($dto->title ?? '')) {
+            $this->updateGroup($element, $dto, $origin);
+            if ($dto->id !== null) {
+                $this->saveImportId($element->id, (string)$dto->id, $origin, 'group');
+            }
         }
-        return $element;
+        return $element ?? null;
     }
 
-    public function manufactureGroupElement(string $title): ?groupElement
+    private function manufactureGroupElement(string $title): ?groupElement
     {
         if ($letterId = $this->getLetterId($title)) {
             if ($letterElement = $this->structureManager->getElementById($letterId)) {
+                /**
+                 * @var groupElement $element
+                 */
                 if ($element = $this->structureManager->createElement('group', 'show', $letterElement->id)) {
                     return $element;
                 }
@@ -113,34 +124,40 @@ class GroupsService extends ElementsManager
         return null;
     }
 
-    protected function updateGroup(groupElement $element, array $groupInfo, $origin): void
+    private function updateGroup(groupElement $element, LabelGatheredInfoDTO $dto, string $origin): void
     {
         $changed = false;
-        if (!empty($groupInfo['title']) && $element->title !== $groupInfo['title'] && !$element->title) {
+
+        if (!empty($dto->title) && $element->title !== $dto->title && !$element->title) {
             $changed = true;
-            $element->title = $groupInfo['title'];
-            $element->structureName = $groupInfo['title'];
+            $element->title = $dto->title;
+            $element->structureName = $dto->title;
         }
-        if (!empty($groupInfo['type']) && $element->type !== $groupInfo['type'] && !$element->type) {
+
+        if (!empty($dto->type) && $element->type !== $dto->type && !$element->type) {
             $changed = true;
-            $element->type = $groupInfo['type'];
+            $element->type = $dto->type;
         }
-        if (!empty($groupInfo['abbreviation']) && $element->abbreviation !== $groupInfo['abbreviation'] && !$element->abbreviation) {
+
+        if (!empty($dto->abbreviation) && $element->abbreviation !== $dto->abbreviation && !$element->abbreviation) {
             $changed = true;
-            $element->abbreviation = $groupInfo['abbreviation'];
+            $element->abbreviation = $dto->abbreviation;
         }
-        if (!empty($groupInfo['website']) && $element->website !== $groupInfo['website'] && !$element->website) {
+
+        if (!empty($dto->website) && $element->website !== $dto->website && !$element->website) {
             $changed = true;
-            $element->website = $groupInfo['website'];
+            $element->website = $dto->website;
         }
-        if (!empty($groupInfo['type']) && $element->type !== $groupInfo['type']) {
+
+        if (!empty($dto->type) && $element->type !== $dto->type) {
             if (!$element->type || $element->type === 'unknown') {
                 $changed = true;
-                $element->type = $groupInfo['type'];
+                $element->type = $dto->type;
             }
         }
-        if (!empty($groupInfo['locationName'])) {
-            if ($locationElement = $this->countriesManager->getLocationByName($groupInfo['locationName'])) {
+
+        if (!empty($dto->locationName)) {
+            if ($locationElement = $this->countriesManager->getLocationByName($dto->locationName)) {
                 if ($locationElement->structureType === 'country') {
                     if ($element->country != $locationElement->id) {
                         $changed = true;
@@ -157,8 +174,9 @@ class GroupsService extends ElementsManager
                 }
             }
         }
-        if (!empty($groupInfo['countryName'])) {
-            if ($locationElement = $this->countriesManager->getLocationByName($groupInfo['countryName'])) {
+
+        if (!empty($dto->countryName)) {
+            if ($locationElement = $this->countriesManager->getLocationByName($dto->countryName)) {
                 if ($locationElement->structureType === 'country') {
                     if ($element->country != $locationElement->id) {
                         $changed = true;
@@ -167,8 +185,9 @@ class GroupsService extends ElementsManager
                 }
             }
         }
-        if (!empty($groupInfo['cityName'])) {
-            if ($locationElement = $this->countriesManager->getLocationByName($groupInfo['cityName'])) {
+
+        if (!empty($dto->cityName)) {
+            if ($locationElement = $this->countriesManager->getLocationByName($dto->cityName)) {
                 if ($locationElement->structureType === 'city') {
                     if ($element->city != $locationElement->id) {
                         $changed = true;
@@ -177,18 +196,19 @@ class GroupsService extends ElementsManager
                 }
             }
         }
-        if (!empty($groupInfo['countryId'])) {
-            $locationElement = $this->getElementByImportId($groupInfo['countryId'], $origin, 'country');
+
+        if (!empty($dto->countryId)) {
+            $locationElement = $this->getElementByImportId((string)$dto->countryId, $origin, 'country');
             if ($locationElement && $element->country != $locationElement->id) {
                 $changed = true;
                 $element->country = $locationElement->id;
             }
         }
 
-        if (isset($groupInfo['parentGroupIds'])) {
+        if (is_array($dto->groupsData)) {
             $parentGroups = $element->parentGroups;
-            foreach ($groupInfo['parentGroupIds'] as $groupId) {
-                $groupElement = $this->getElementByImportId($groupId, $origin, 'group');
+            foreach ($dto->groupsData as $groupId) {
+                $groupElement = $this->getElementByImportId((string)$groupId, $origin, 'group');
                 if ($groupElement !== null && !in_array($groupElement, $parentGroups, true)) {
                     $parentGroups[] = $groupElement;
                 }
@@ -204,18 +224,22 @@ class GroupsService extends ElementsManager
         }
     }
 
-    protected function createGroupAlias(array $groupAliasInfo, $origin): ?groupAliasElement
+    private function createGroupAlias(LabelGatheredInfoDTO $dto, string $origin): ?groupAliasElement
     {
-        if ($element = $this->manufactureAliasElement($groupAliasInfo['title'])) {
-            $this->updateGroupAlias($element, $groupAliasInfo, $origin);
-            $this->saveImportId($element->id, $groupAliasInfo['id'], $origin, 'group');
+        if ($element = $this->manufactureAliasElement($dto->title ?? '')) {
+            $this->updateGroupAlias($element, $dto, $origin);
+            if ($dto->id !== null) {
+                $this->saveImportId($element->id, (string)$dto->id, $origin, 'group');
+            }
         }
-
-        return $element;
+        return $element ?? null;
     }
 
-    protected function manufactureAliasElement(string $title = ''): ?groupAliasElement
+    private function manufactureAliasElement(string $title = ''): ?groupAliasElement
     {
+        /**
+         * @var groupAliasElement $element
+         */
         if (($letterId = $this->getLetterId($title)) &&
             ($letterElement = $this->structureManager->getElementById($letterId)) &&
             ($element = $this->structureManager->createElement('groupAlias', 'show', $letterElement->id))
@@ -225,18 +249,20 @@ class GroupsService extends ElementsManager
         return null;
     }
 
-    protected function updateGroupAlias(groupAliasElement $element, array $groupAliasInfo, $origin): void
+    private function updateGroupAlias(groupAliasElement $element, LabelGatheredInfoDTO $groupAlias, string $origin): void
     {
         $changed = false;
-        if (!empty($groupAliasInfo['title']) && $element->title != $groupAliasInfo['title']) {
+
+        if (!empty($groupAlias->title) && $element->title != $groupAlias->title) {
             if (!$element->title) {
                 $changed = true;
-                $element->title = $groupAliasInfo['title'];
-                $element->structureName = $groupAliasInfo['title'];
+                $element->title = $groupAlias->title;
+                $element->structureName = $groupAlias->title;
             }
         }
-        if (!empty($groupAliasInfo['groupId']) && !$element->groupId) {
-            if ($groupElement = $this->getElementByImportId($groupAliasInfo['groupId'], $origin, 'group')) {
+
+        if (!empty($groupAlias->groupId) && !$element->groupId) {
+            if ($groupElement = $this->getElementByImportId((string)$groupAlias->groupId, $origin, 'group')) {
                 $changed = true;
                 $element->groupId = $groupElement->getId();
             }

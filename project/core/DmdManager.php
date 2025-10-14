@@ -2,6 +2,9 @@
 
 use ZxArt\Authors\Services\AuthorsService;
 
+/**
+ * todo: re-implement import operations
+ */
 class DmdManager
 {
     /**
@@ -71,7 +74,7 @@ class DmdManager
                     'id' => $json['author'],
                     'title' => $json['author'],
                 ];
-                $authorElement = $this->authorsManager->importAuthor($gatheredInfo, null);
+                $authorElement = $this->authorsManager->importAuthorOld($gatheredInfo, null);
 
 
                 /**

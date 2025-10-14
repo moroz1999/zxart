@@ -3,6 +3,9 @@
 use Illuminate\Database\Connection;
 use ZxArt\Prods\Services\ProdsService;
 
+/**
+ * todo: re-implement import operations
+ */
 class SpeccyMapsManager extends errorLogger
 {
     protected $urls = [
@@ -12,7 +15,7 @@ class SpeccyMapsManager extends errorLogger
     /**
      * @var ProdsService
      */
-    protected $prodsManager;
+    protected $prodsService;
     protected $origin = 'maps';
     protected $rootUrl = 'https://maps.speccy.cz/';
     protected $prodsIndex;
@@ -20,13 +23,13 @@ class SpeccyMapsManager extends errorLogger
     protected Connection $db;
 
     /**
-     * @param mixed $prodsManager
+     * @param mixed $prodsService
      */
-    public function setProdsService(ProdsService $prodsManager): void
+    public function setProdsService(ProdsService $prodsService): void
     {
-        $this->prodsManager = $prodsManager;
-        $this->prodsManager->setUpdateExistingProds(true);
-        $this->prodsManager->setAddImages(true);
+        $this->prodsService = $prodsService;
+        $this->prodsService->setUpdateExistingProds(true);
+        $this->prodsService->setAddImages(true);
     }
 
     public function setDb(Connection $db): void
@@ -76,7 +79,7 @@ class SpeccyMapsManager extends errorLogger
                 }
             }
             foreach ($this->prodsIndex as $key => $prodInfo2) {
-                if ($prodElement = $this->prodsManager->importProd($prodInfo2, $this->origin)) {
+                if ($prodElement = $this->prodsService->importProdOld($prodInfo2, $this->origin)) {
                     $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodElement->title);
                 } else {
                     $this->markProgress('prod failed ' . $prodInfo2['id']);

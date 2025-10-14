@@ -2,6 +2,9 @@
 
 use ZxArt\Prods\Services\ProdsService;
 
+/**
+ * todo: re-implement import operations
+ */
 class RzxArchiveManager extends errorLogger
 {
     protected $urls = [
@@ -37,7 +40,7 @@ class RzxArchiveManager extends errorLogger
     /**
      * @var ProdsService
      */
-    protected $prodsManager;
+    protected $prodsService;
     protected $origin = 'rzx';
     protected $rootUrl = 'https://www.rzxarchive.co.uk/';
     protected $prodsIndex;
@@ -45,12 +48,12 @@ class RzxArchiveManager extends errorLogger
     private $counter = 0;
 
     /**
-     * @param mixed $prodsManager
+     * @param mixed $prodsService
      */
-    public function setProdsService(ProdsService $prodsManager): void
+    public function setProdsService(ProdsService $prodsService): void
     {
-        $this->prodsManager = $prodsManager;
-        $this->prodsManager->setUpdateExistingProds(true);
+        $this->prodsService = $prodsService;
+        $this->prodsService->setUpdateExistingProds(true);
     }
 
     public function importAll(): void
@@ -134,7 +137,7 @@ class RzxArchiveManager extends errorLogger
             }
             foreach ($this->prodsIndex as $key => $prodInfo2) {
                 $this->counter++;
-                if ($prodElement = $this->prodsManager->importProd($prodInfo2, $this->origin)) {
+                if ($prodElement = $this->prodsService->importProdOld($prodInfo2, $this->origin)) {
                     $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodElement->title);
                 } else {
                     $this->markProgress('prod failed ' . $prodInfo2['id']);

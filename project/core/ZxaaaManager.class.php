@@ -4,6 +4,9 @@ use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Prods\Services\ProdsService;
 
+/**
+ * todo: re-implement import operations
+ */
 class ZxaaaManager extends errorLogger
 {
     protected $maxCounter = 20000;
@@ -88,7 +91,7 @@ class ZxaaaManager extends errorLogger
     /**
      * @var ProdsService
      */
-    protected $prodsManager;
+    protected $prodsService;
     /**
      * @var AuthorsService
      */
@@ -138,11 +141,11 @@ class ZxaaaManager extends errorLogger
     }
 
     /**
-     * @param mixed $prodsManager
+     * @param mixed $prodsService
      */
-    public function setProdsService(ProdsService $prodsManager): void
+    public function setProdsService(ProdsService $prodsService): void
     {
-        $this->prodsManager = $prodsManager;
+        $this->prodsService = $prodsService;
     }
 
     public function importAll(): void
@@ -359,7 +362,7 @@ class ZxaaaManager extends errorLogger
                     exit;
                 }
 
-                if ($this->prodsManager->importProd($prodInfo2, $this->origin)) {
+                if ($this->prodsService->importProdOld($prodInfo2, $this->origin)) {
                     $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodInfo2['title']);
                 } else {
                     $this->markProgress('prod failed ' . $prodInfo2['title']);
