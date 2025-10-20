@@ -8,9 +8,9 @@
 					<a class="button" href="{$element->URL}type:authorAlias/action:showPublicForm/">{translations name='letter.add_authoralias'}</a>
 				{/if}
 			</div>
-{*		{if $authorsList = $element->getLetterAuthors()}*}
-{*			{include file=$theme->template("component.authorstable.tpl") authorsList=$authorsList}*}
-{*		{/if}*}
+		{if $authorsList = $element->getLetterAuthors()}
+			{include file=$theme->template("component.authorstable.tpl") authorsList=$authorsList}
+		{/if}
 	{/capture}
 	{assign moduleTitle ""}
 	{assign moduleClass ""}

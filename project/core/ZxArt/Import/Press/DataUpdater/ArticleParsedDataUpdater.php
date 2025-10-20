@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ZxArt\Import\Press\DataUpdater;
 
+use authorElement;
 use groupElement;
-use JsonException;
 use partyElement;
 use pressArticleElement;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
@@ -28,7 +28,7 @@ use zxProdElement;
 
 final class ArticleParsedDataUpdater
 {
-    private const ORIGIN = 'zxp';
+    private const string ORIGIN = 'zxp';
     /**
      * @var authorElement[]
      */
@@ -85,13 +85,13 @@ final class ArticleParsedDataUpdater
     }
 
     /**
-     * @throws JsonException
+     * @throws PressUpdateException
      */
     public function updatePressArticleData(pressArticleElement $pressArticleElement, array $parsedData): void
     {
         $pressElement = $pressArticleElement->getParent();
         if (!$pressElement) {
-            throw new PressUpdateException("Prod could not be found for {$pressArticleElement->id} {$pressArticleElement->getTitle()}");
+            throw new PressUpdateException("Prod could not be found for $pressArticleElement->id {$pressArticleElement->getTitle()}");
         }
 
         $groupsData = $parsedData['teams'] ?? [];
@@ -178,9 +178,6 @@ final class ArticleParsedDataUpdater
         }
     }
 
-    /**
-     * @throws JsonException
-     */
     private function updatePressAuthorship(array $pressAuthorship, zxProdElement $pressElement): void
     {
         $authorRoles = [];
@@ -325,8 +322,7 @@ final class ArticleParsedDataUpdater
         $this->groupsMap = [];
         $groupLabels = $this->makeGroupLabels($sortedGroups);
         foreach ($groupLabels as $label) {
-            $groupInfo = $label->toArray();
-            $element = $this->groupsService->importGroupOld($groupInfo, self::ORIGIN);
+            $element = $this->groupsService->importGroup($label, self::ORIGIN);
             if ($element !== null) {
                 $this->groupsMap[$label->id] = $element;
             }
@@ -377,6 +373,8 @@ final class ArticleParsedDataUpdater
     }
 
     /**
+     * @param array $parsedPersons
+     * @param array $parsedGroups
      * @return void
      */
     private function prepareAuthorsMap(array $parsedPersons, array $parsedGroups): void
@@ -403,8 +401,7 @@ final class ArticleParsedDataUpdater
             )) {
                 continue;
             }
-            $authorInfo = $label->toArray();
-            $element = $this->authorsService->importAuthorOld($authorInfo, self::ORIGIN);
+            $element = $this->authorsService->importAuthor($label, self::ORIGIN);
             if ($element !== null) {
                 $this->authorsMap[$label->id] = $element;
             }
@@ -419,8 +416,7 @@ final class ArticleParsedDataUpdater
         $elements = [];
         foreach ($parsedProds as $parsedProd) {
             $prod = $this->transformToProd($parsedProd);
-            $prodInfo = $prod->toArray();
-            $element = $this->prodsService->importProdOld($prodInfo, self::ORIGIN);
+            $element = $this->prodsService->importProd($prod, self::ORIGIN);
 
             if ($element !== null) {
                 $elements[] = $element;

@@ -34,10 +34,11 @@ use zxReleaseElement;
 
 class ProdsService extends ElementsManager
 {
-    protected const TABLE = ProdsRepository::TABLE;
     use ImportIdOperatorTrait;
     use ReleaseFormatsProvider;
     use ReleaseFileTypesGatherer;
+
+    protected const string TABLE = ProdsRepository::TABLE;
 
     protected int $defaultCategoryId = CategoryIds::MISC->value;
     protected bool $forceUpdateYear = false;
@@ -429,10 +430,12 @@ class ProdsService extends ElementsManager
 
         if (!empty($dto->undetermined)) {
             foreach ($dto->undetermined as $undeterminedId => $roles) {
-                if ($this->getElementIdByImportId($undeterminedId, $origin, 'group')) {
-                    // noop
-                } elseif ($authorId = $this->getElementIdByImportId($undeterminedId, $origin, 'author')) {
-                    $this->authorshipRepository->addAuthorship($element->id, $authorId, 'prod', $roles);
+                $existingElement = $this->getElementIdByImportId($undeterminedId, $origin, 'group');
+                if ($existingElement === null) {
+                    $authorId = $this->getElementIdByImportId($undeterminedId, $origin, 'author');
+                    if ($authorId !== null) {
+                        $this->authorshipRepository->addAuthorship($element->id, $authorId, 'prod', $roles);
+                    }
                 }
             }
         }
@@ -588,7 +591,7 @@ class ProdsService extends ElementsManager
     /**
      * @throws ReleaseDownloadException
      */
-    private function importElementFile(zxReleaseElement|zxProdElement $element, string $fileUrl, array $existingFiles, string $fileAuthor = '', string $propertyName = 'connectedFile'): void
+    private function importElementFile(zxReleaseElement|zxProdElement $element, string $fileUrl, array $existingFiles, string|null $fileAuthor = null, string $propertyName = 'connectedFile'): void
     {
         $this->structureManager->setNewElementLinkType($element->getConnectedFileType($propertyName));
         $uploadsPath = $this->pathsManager->getPath('uploads');
@@ -598,10 +601,12 @@ class ProdsService extends ElementsManager
         foreach ($existingFiles as $existingFile) {
             if ($originalFileName === urldecode($existingFile->fileName)) {
                 $path = $existingFile->getFilePath();
-                $size = filesize($path);
-                if ($size > 0 && is_file($path)) {
-                    $fileExists = true;
-                    break;
+                if (is_file($path)) {
+                    $size = filesize($path);
+                    if ($size > 0 && is_file($path)) {
+                        $fileExists = true;
+                        break;
+                    }
                 }
             }
         }
@@ -651,7 +656,7 @@ class ProdsService extends ElementsManager
                 $fileElement->structureName = $fileElement->title;
                 $fileElement->file = $fileElement->getId();
                 $fileElement->fileName = $originalFileName;
-                $fileElement->author = $fileAuthor;
+                $fileElement->author = $fileAuthor ?? '';
                 rename($filePath, $destinationFolder . $fileElement->file);
                 $fileElement->persistElementData();
 

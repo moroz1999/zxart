@@ -28,5 +28,8 @@
       "kylekatarnls/update-helper": true,
       "php-http/discovery": true
     }
+  },
+  "require-dev": {
+    "vimeo/psalm": "^6.13"
   }
 }

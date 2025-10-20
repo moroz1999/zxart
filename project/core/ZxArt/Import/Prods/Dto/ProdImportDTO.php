@@ -61,23 +61,23 @@ final readonly class ProdImportDTO
     public static function fromArray(array $a): self
     {
         $labels = isset($a['labels'])
-            ? array_map(fn($x) => LabelGatheredInfoDTO::fromArray($x), (array)$a['labels'])
+            ? array_map(static fn($x) => LabelGatheredInfoDTO::fromArray($x), (array)$a['labels'])
             : null;
 
         $maps = isset($a['maps'])
-            ? array_map(fn($x) => FileWithAuthorDTO::fromArray($x), (array)$a['maps'])
+            ? array_map(static fn($x) => FileWithAuthorDTO::fromArray($x), (array)$a['maps'])
             : null;
 
         $rzx = isset($a['rzx'])
-            ? array_map(fn($x) => FileWithAuthorDTO::fromArray($x), (array)$a['rzx'])
+            ? array_map(static fn($x) => FileWithAuthorDTO::fromArray($x), (array)$a['rzx'])
             : null;
 
         $articles = isset($a['articles'])
-            ? array_map(fn($x) => ArticleDTO::fromArray($x), (array)$a['articles'])
+            ? array_map(static fn($x) => ArticleDTO::fromArray($x), (array)$a['articles'])
             : null;
 
         $releases = isset($a['releases'])
-            ? array_map(fn($x) => ReleaseImportDTO::fromArray($x), (array)$a['releases'])
+            ? array_map(static fn($x) => ReleaseImportDTO::fromArray($x), (array)$a['releases'])
             : null;
 
         return new self(

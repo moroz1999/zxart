@@ -47,16 +47,8 @@ class GroupsService extends ElementsManager
         ];
     }
 
-    /**
-     * @deprecated
-     */
-    public function importGroupOld(array $groupInfo, ?string $origin = null, bool $createNew = true, ?array $memberNames = null): groupAliasElement|groupElement|null
-    {
-        $dto = LabelGatheredInfoDTO::fromArray($groupInfo);
-        return $this->importGroup($dto, $origin, $createNew, $memberNames);
-    }
 
-    public function importGroup(LabelGatheredInfoDTO $dto, ?string $origin = null, bool $createNew = true, ?array $memberNames = null): groupAliasElement|groupElement|null
+    public function importGroup(GroupLabel $dto, ?string $origin = null, bool $createNew = true, ?array $memberNames = null): groupAliasElement|groupElement|null
     {
         $label = new GroupLabel(
             id: $dto->id ?? null,
@@ -98,7 +90,7 @@ class GroupsService extends ElementsManager
         return $element;
     }
 
-    private function createGroup(LabelGatheredInfoDTO $dto, string $origin): ?groupElement
+    private function createGroup(GroupLabel $dto, string $origin): ?groupElement
     {
         if ($element = $this->manufactureGroupElement($dto->title ?? '')) {
             $this->updateGroup($element, $dto, $origin);
@@ -124,7 +116,7 @@ class GroupsService extends ElementsManager
         return null;
     }
 
-    private function updateGroup(groupElement $element, LabelGatheredInfoDTO $dto, string $origin): void
+    private function updateGroup(groupElement $element, GroupLabel $dto, string $origin): void
     {
         $changed = false;
 
@@ -224,7 +216,7 @@ class GroupsService extends ElementsManager
         }
     }
 
-    private function createGroupAlias(LabelGatheredInfoDTO $dto, string $origin): ?groupAliasElement
+    private function createGroupAlias(GroupLabel $dto, string $origin): ?groupAliasElement
     {
         if ($element = $this->manufactureAliasElement($dto->title ?? '')) {
             $this->updateGroupAlias($element, $dto, $origin);
@@ -249,7 +241,7 @@ class GroupsService extends ElementsManager
         return null;
     }
 
-    private function updateGroupAlias(groupAliasElement $element, LabelGatheredInfoDTO $groupAlias, string $origin): void
+    private function updateGroupAlias(groupAliasElement $element, GroupLabel $groupAlias, string $origin): void
     {
         $changed = false;
 

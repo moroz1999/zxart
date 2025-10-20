@@ -63,17 +63,17 @@ class zxReleaseElement extends ZxArtItem implements
     protected $currentReleaseFileInfo;
     protected $imagesUrls;
     protected $prodElement;
-    private const MbReleaseTypeRunnable = ['tar'];
-    private const MbHardwareRunnable = ["elementzxmb"];
+    private const array MbReleaseTypeRunnable = ['tar'];
+    private const array MbHardwareRunnable = ["elementzxmb"];
 
-    private const UspReleaseTypeRunnable = ['trd', 'tap', 'z80', 'sna', 'tzx', 'scl'];
-    private const Zx81ReleaseTypeRunnable = ['tzx', 'p', 'o'];
-    private const RunnableTypes = [...self::UspReleaseTypeRunnable, ...self::Zx81ReleaseTypeRunnable, ...self::TsconfReleaseTypeRunnable];
-    private const Zx80HardwareRunnable = ["zx80"];
-    private const Zx81HardwareRunnable = ["zx8116", "zx811", "zx812", "zx8132", "zx8164"];
+    private const array UspReleaseTypeRunnable = ['trd', 'tap', 'z80', 'sna', 'tzx', 'scl'];
+    private const array Zx81ReleaseTypeRunnable = ['tzx', 'p', 'o'];
+    private const array RunnableTypes = [...self::UspReleaseTypeRunnable, ...self::Zx81ReleaseTypeRunnable, ...self::TsconfReleaseTypeRunnable];
+    private const array Zx80HardwareRunnable = ["zx80"];
+    private const array Zx81HardwareRunnable = ["zx8116", "zx811", "zx812", "zx8132", "zx8164"];
 
-    private const TsconfReleaseTypeRunnable = ['spg', 'img', 'trd', 'scl'];
-    private const TsconfHardwareRunnable = ["tsconf"];
+    private const array TsconfReleaseTypeRunnable = ['spg', 'img', 'trd', 'scl'];
+    private const array TsconfHardwareRunnable = ["tsconf"];
 
     public function __construct($rootMarkerPublic)
     {

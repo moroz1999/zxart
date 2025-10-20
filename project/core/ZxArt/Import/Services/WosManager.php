@@ -1,7 +1,16 @@
 <?php
 
+namespace ZxArt\Import\Services;
+
+use Config;
+use ConfigManager;
+use CountriesManager;
+use errorLogger;
+use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Connection;
+use PDO;
 use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Prods\LegalStatus;
 use ZxArt\Prods\Services\ProdsService;
 
@@ -11,7 +20,7 @@ class WosManager extends errorLogger
     protected int $counter = 0;
     protected int $maxCounter = 0;
     protected int $minCounter = 0;
-    protected ?int $debugEntry = null;
+    protected ?int $debugEntry = 43280;
     private const int FILETYPE_LOADING = 1;
     private const int FILETYPE_RUNNING = 2;
     private const int FILETYPE_OPENING = 3;
@@ -924,7 +933,7 @@ class WosManager extends errorLogger
     protected function makeZxdb(): void
     {
         if ($this->zxdb === null) {
-            $manager = new Illuminate\Database\Capsule\Manager();
+            $manager = new Manager();
             $manager->addConnection(
                 [
                     'driver' => 'mysql',
