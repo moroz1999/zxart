@@ -219,15 +219,15 @@ class ProdsService extends ElementsManager
         return $this->importProd(ProdImportDTO::fromArray($prodInfo), $origin);
     }
 
-    public function importProd(ProdImportDTO $prod, string $origin): ?zxProdElement
+    public function importProd(ProdImportDTO $dto, string $origin): ?zxProdElement
     {
-        $prodId = $prod->id;
-        $sanitizedTitle = $this->sanitizeTitle($prod->title);
+        $prodId = $dto->id;
+        $sanitizedTitle = $this->sanitizeTitle($dto->title);
 
         $element = $this->getElementByImportId($prodId, $origin, 'prod');
 
-        if (!$element && $prod->ids) {
-            foreach ($prod->ids as $idOrigin => $id) {
+        if (!$element && $dto->ids !== null) {
+            foreach ($dto->ids as $idOrigin => $id) {
                 if ($element = $this->getElementByImportId($id, $idOrigin, 'prod')) {
                     $this->saveImportId($element->id, $prodId, $origin, 'prod');
                     break;
@@ -236,20 +236,14 @@ class ProdsService extends ElementsManager
         }
 
         if (!$element) {
-            if ($candidate = $this->getProdByReleaseMd5DTO($prod)) {
+            if ($candidate = $this->getProdByReleaseMd5DTO($dto)) {
                 $element = $candidate;
                 $this->saveImportId($element->id, $prodId, $origin, 'prod');
             }
         }
 
         if (!$element) {
-            $label = new ProdLabel(
-                id: $prod->id,
-                title: $sanitizedTitle,
-                year: $prod->year,
-                authorRoles: $prod->authors
-            );
-            if ($resolved = $this->prodResolver->resolve($label, $this->matchProdsWithoutYear)) {
+            if ($resolved = $this->prodResolver->resolve($dto, $this->matchProdsWithoutYear)) {
                 $element = $resolved;
                 $this->saveImportId($element->id, $prodId, $origin, 'prod');
             }
@@ -258,46 +252,46 @@ class ProdsService extends ElementsManager
         if (!$element) {
             $element = $this->createProd(
                 new ProdImportDTO(
-                    id: $prod->id,
+                    id: $dto->id,
                     title: $sanitizedTitle,
-                    altTitle: $prod->altTitle,
-                    description: $prod->description,
-                    language: $prod->language,
-                    legalStatus: $prod->legalStatus,
-                    youtubeId: $prod->youtubeId,
-                    externalLink: $prod->externalLink,
-                    compo: $prod->compo,
-                    year: $prod->year,
-                    ids: $prod->ids,
-                    importIds: $prod->importIds,
-                    labels: $prod->labels,
-                    authors: $prod->authors,
-                    groups: $prod->groups,
-                    publishers: $prod->publishers,
-                    undetermined: $prod->undetermined,
-                    party: $prod->party,
-                    directCategories: $prod->directCategories,
-                    categories: $prod->categories,
-                    images: $prod->images,
-                    maps: $prod->maps,
-                    inlayImages: $prod->inlayImages,
-                    rzx: $prod->rzx,
-                    compilationItems: $prod->compilationItems,
-                    seriesProds: $prod->seriesProds,
-                    articles: $prod->articles,
-                    releases: $prod->releases,
+                    altTitle: $dto->altTitle,
+                    description: $dto->description,
+                    language: $dto->language,
+                    legalStatus: $dto->legalStatus,
+                    youtubeId: $dto->youtubeId,
+                    externalLink: $dto->externalLink,
+                    compo: $dto->compo,
+                    year: $dto->year,
+                    ids: $dto->ids,
+                    importIds: $dto->importIds,
+                    labels: $dto->labels,
+                    authorRoles: $dto->authorRoles,
+                    groups: $dto->groups,
+                    publishers: $dto->publishers,
+                    undetermined: $dto->undetermined,
+                    party: $dto->party,
+                    directCategories: $dto->directCategories,
+                    categories: $dto->categories,
+                    images: $dto->images,
+                    maps: $dto->maps,
+                    inlayImages: $dto->inlayImages,
+                    rzx: $dto->rzx,
+                    compilationItems: $dto->compilationItems,
+                    seriesProds: $dto->seriesProds,
+                    articles: $dto->articles,
+                    releases: $dto->releases,
                 ),
                 $origin
             );
         }
 
         if ($element && $this->updateExistingProds) {
-            $element = $this->updateProd($element, $prod, $origin);
+            $element = $this->updateProd($element, $dto, $origin);
         }
 
-        if ($element && $prod->releases) {
-            foreach ($prod->releases as $release) {
-                $this->importRelease($release, $prod->id, $origin);
+        if ($element && $dto->releases !== null) {
+            foreach ($dto->releases as $release) {
+                $this->importRelease($release, $dto->id, $origin);
             }
         }
 
@@ -352,15 +346,15 @@ class ProdsService extends ElementsManager
     private function updateProd(zxProdElement $element, ProdImportDTO $dto, string $origin, bool $justCreated = false): zxProdElement
     {
         $changed = false;
-
-        if (!empty($dto->title) && ($element->title != $dto->title)) {
+        $dtoTitle = $dto->title ?? '';
+        if ($dtoTitle !== '' && ($element->title !== $dtoTitle)) {
             if (!$element->title || $this->forceUpdateTitles) {
-                $element->title = $dto->title;
-                $element->structureName = $dto->title;
+                $element->title = $dtoTitle;
+                $element->structureName = $dtoTitle;
                 $changed = true;
             }
         }
-        if (!empty($dto->altTitle) && ($element->altTitle != $dto->altTitle)) {
+        if (!empty($dto->altTitle) && ($element->altTitle !== $dto->altTitle)) {
             $element->altTitle = $dto->altTitle;
             $changed = true;
         }
@@ -385,13 +379,13 @@ class ProdsService extends ElementsManager
             $partyYear = $dto->party->year ?? null;
             if ($partyTitle && $partyYear) {
                 if ($partyElement = $this->partiesService->getPartyByTitleAndYear($partyTitle, $partyYear)) {
-                    if ($element->party != $partyElement->id) {
+                    if ($element->party !== $partyElement->id) {
                         $element->party = $partyElement->id;
                         $element->renewPartyLink();
                         $changed = true;
                     }
                     if (!empty($dto->party->place)) {
-                        if ($element->partyplace != $dto->party->place) {
+                        if ($element->partyplace !== $dto->party->place) {
                             $element->partyplace = $dto->party->place;
                             $changed = true;
                         }
@@ -441,8 +435,9 @@ class ProdsService extends ElementsManager
         }
 
         $authorsInfo = $element->getAuthorsInfo('prod');
-        if (($this->forceUpdateAuthors || $justCreated || !$authorsInfo) && !empty($dto->authors)) {
-            foreach ($dto->authors as $importAuthorId => $roles) {
+        $authorRoles = $dto->authorRoles ?? [];
+        if (($this->forceUpdateAuthors || $justCreated || !$authorsInfo) && ($authorRoles !== [])) {
+            foreach ($authorRoles as $importAuthorId => $roles) {
                 if ($authorId = $this->getElementIdByImportId($importAuthorId, $origin, 'author')) {
                     $this->authorshipRepository->addAuthorship($element->id, $authorId, 'prod', $roles);
                 }

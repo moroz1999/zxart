@@ -201,7 +201,7 @@ class Crontab extends controllerApplication
             if ($pressElement === null) {
                 throw new CrontabException("Press is missing for article {$pressArticleElement->id}");
             }
-            $pressYear = (int)$pressElement->year;
+            $pressYear = $pressElement->year;
             $year = $pressYear === 0 ? $pressYear : null;
             $updatedContent = $this->pressParser->getParsedData($this->aiTextContent->getAITextContent($pressArticleElement), $pressArticleElement->id, $pressElement->title, $year);
             if ($updatedContent) {
@@ -219,7 +219,7 @@ class Crontab extends controllerApplication
             if ($pressElement === null) {
                 throw new CrontabException("Press is missing for article {$pressArticleElement->id}");
             }
-            $pressYear = (int)$pressElement->year;
+            $pressYear = $pressElement->year;
             $year = $pressYear > 0 ? $pressYear : null;
             $updatedContent = $this->pressArticleSeo->getParsedData($this->aiTextContent->getAITextContent($pressArticleElement), $pressElement->title, $pressArticleElement->title, $year);
             $this->articleSeoDataUpdater->updatePressArticleData($pressArticleElement, $updatedContent);

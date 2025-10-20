@@ -20,12 +20,67 @@ use ZxArt\Import\Parties\PartyResolver;
 use ZxArt\Import\Pictures\PictureLabel;
 use ZxArt\Import\Pictures\PictureResolver;
 use ZxArt\Import\Press\PressUpdateException;
-use ZxArt\Import\Prods\ProdLabel;
+use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Import\Tunes\TuneLabel;
 use ZxArt\Import\Tunes\TuneResolver;
 use ZxArt\Prods\Services\ProdsService;
 use zxProdElement;
 
+/**
+ * @psalm-type ParsedParty = array{
+ *     name: string,
+ *     city?: string,
+ *     country?: string,
+ *     year: string,
+ * }
+ * @psalm-type ParsedGroup = array{
+ *     parentTeamIds: array,
+ *     id: string,
+ *     name: string,
+ *     city?: string,
+ *     country?: string,
+ *     type?: string,
+ * }
+ * @psalm-type ParsedTune = array{
+ * }
+ * @psalm-type ParsedPicture = array{
+ * }
+ * @psalm-type ParsedAuthor = array{
+ *     id: string,
+ *     nickName?: string,
+ *     realName?: string,
+ *     city?: string,
+ *     country?: string,
+ *     teamIds?: string[],
+ *     teamRoles?: string[],
+ * }
+ * @psalm-type ParsedAuthorRole = array{
+ *     id: string,
+ *     softwareRoles?: string[],
+ * }
+ * @psalm-type ParsedProd = array{
+ *     name: string,
+ *     year: int|null,
+ *     teamIds: string[],
+ *     publisherIds: string[],
+ *     authorship: ParsedAuthorRole[],
+ * }
+ * @psalm-type ParsedData = array{
+ *     software: ParsedProd[],
+ *     teams: ParsedGroup[],
+ *     persons: ParsedAuthor[],
+ *     pictures: ParsedPicture[],
+ *     music: ParsedTune[],
+ *     hardware: array,
+ *     pressAuthorship: array,
+ *     pressTeamIds: string[],
+ *     articleAuthorIds: string[],
+ *     mentionedTeamIds: string[],
+ *     mentionedPersonIds: string[],
+ *     publicationYear: string,
+ *     parties: ParsedParty[],
+ * }
+ */
 final class ArticleParsedDataUpdater
 {
     private const string ORIGIN = 'zxp';
@@ -39,7 +94,13 @@ final class ArticleParsedDataUpdater
     private array $groupsMap;
     private array $memberNamesMap;
 
+    /**
+     * @var array<string, string>
+     */
     private array $toSoftwareRolesMap;
+    /**
+     * @var array<string, string>
+     */
     private array $toGroupRolesMap;
 
     public function __construct(
@@ -85,6 +146,7 @@ final class ArticleParsedDataUpdater
     }
 
     /**
+     * @param ParsedData $parsedData
      * @throws PressUpdateException
      */
     public function updatePressArticleData(pressArticleElement $pressArticleElement, array $parsedData): void
@@ -153,7 +215,7 @@ final class ArticleParsedDataUpdater
             $this->updateArticleAuthors($articleAuthorIds, $pressArticleElement);
         }
 
-        $publicationYear = $parsedData['publicationYear'] ?? null;
+        $publicationYear = $parsedData['publicationYear'] ? (int)$parsedData['publicationYear'] : null;
         if ($publicationYear !== null) {
             $this->updatePressYear($publicationYear, $pressElement);
         }
@@ -219,6 +281,9 @@ final class ArticleParsedDataUpdater
         $pressArticleElement->groups = $groups;
     }
 
+    /**
+     * @param ParsedProd[] $parsedProds
+     */
     private function updateArticleSoftware(array $parsedProds, pressArticleElement $pressArticleElement, zxProdElement $pressElement): void
     {
         $resolvedProds = $this->prepareProds($parsedProds);
@@ -281,6 +346,9 @@ final class ArticleParsedDataUpdater
         }
     }
 
+    /**
+     * @param ParsedParty[] $parsedParties
+     */
     private function updateArticleParties(array $parsedParties, pressArticleElement $pressArticleElement): void
     {
         $resolvedParties = $this->prepareParties($parsedParties);
@@ -315,6 +383,9 @@ final class ArticleParsedDataUpdater
         $pressArticleElement->authors = $authors;
     }
 
+    /**
+     * @param ParsedGroup[] $parsedGroups
+     */
     private function prepareGroupsMap(array $parsedGroups): void
     {
         $sortedGroups = $this->sortGroupsByParent($parsedGroups);
@@ -329,6 +400,10 @@ final class ArticleParsedDataUpdater
         }
     }
 
+    /**
+     * @param ParsedGroup[] $groups
+     * @return ParsedGroup[]
+     */
     private function sortGroupsByParent(array $groups): array
     {
         $parentIdsMap = [];
@@ -355,6 +430,7 @@ final class ArticleParsedDataUpdater
     }
 
     /**
+     * @param ParsedGroup[] $parsedGroups
      * @return GroupLabel[]
      */
     private function makeGroupLabels(array $parsedGroups): array
@@ -366,6 +442,9 @@ final class ArticleParsedDataUpdater
         return $groupLabels;
     }
 
+    /**
+     * @param ParsedGroup $parsedGroup
+     */
     private function makeGroupLabel(array $parsedGroup): GroupLabel
     {
         $memberNames = $this->memberNamesMap[$parsedGroup['id']] ?? null;
@@ -373,9 +452,8 @@ final class ArticleParsedDataUpdater
     }
 
     /**
-     * @param array $parsedPersons
-     * @param array $parsedGroups
-     * @return void
+     * @param ParsedAuthor[] $parsedPersons
+     * @param ParsedGroup[] $parsedGroups
      */
     private function prepareAuthorsMap(array $parsedPersons, array $parsedGroups): void
     {
@@ -409,6 +487,7 @@ final class ArticleParsedDataUpdater
     }
 
     /**
+     * @param ParsedProd[] $parsedProds
      * @return zxProdElement[]
      */
     private function prepareProds(array $parsedProds): array
@@ -426,6 +505,7 @@ final class ArticleParsedDataUpdater
     }
 
     /**
+     * @param ParsedParty[] $parsedParties
      * @return partyElement[]
      */
     private function prepareParties(array $parsedParties): array
@@ -441,7 +521,7 @@ final class ArticleParsedDataUpdater
         return $elements;
     }
 
-    private function updatePressYear($year, zxProdElement $pressElement): void
+    private function updatePressYear(int $year, zxProdElement $pressElement): void
     {
         if ($pressElement->year > 0) {
             return;
@@ -449,6 +529,10 @@ final class ArticleParsedDataUpdater
         $pressElement->year = $year;
     }
 
+    /**
+     * @param ParsedAuthor $parsedAuthor
+     * @param Array<ParsedGroup|null> $groupsInfo
+     */
     private function transformAuthorToLabel(
         array $parsedAuthor,
         array $groupsInfo,
@@ -481,10 +565,11 @@ final class ArticleParsedDataUpdater
     private function transformGroupToLabel(array $parsedGroup, ?array $memberNames = null): GroupLabel
     {
         $groups = [];
-        $groupsData = $parsedGroup['parentGroups'] ?? [];
-        foreach ($groupsData as $groupDatum) {
-            $groups[] = $this->transformGroupToLabel($groupDatum);
-        }
+        //todo: fix
+//        $groupsData = $parsedGroup['parentTeamIds'] ?? [];
+//        foreach ($groupsData as $groupDatum) {
+//            $groups[] = $this->transformGroupToLabel($groupDatum);
+//        }
 
         return new GroupLabel(
             id: $parsedGroup['id'],
@@ -498,7 +583,10 @@ final class ArticleParsedDataUpdater
         );
     }
 
-    private function transformToParty($parsedParty): Party
+    /**
+     * @param ParsedParty $parsedParty
+     */
+    private function transformToParty(array $parsedParty): Party
     {
         return new Party(
             title: $parsedParty['name'],
@@ -508,23 +596,29 @@ final class ArticleParsedDataUpdater
         );
     }
 
-    private function transformToProd($parsedProd): ProdLabel
+    /**
+     * @param ParsedProd $parsedProd
+     */
+    private function transformToProd(array $parsedProd): ProdImportDTO
     {
         $groupIds = $parsedProd['teamIds'] ?? [];
         $publisherIds = $parsedProd['publisherIds'] ?? [];
         $authorRoles = [];
         foreach ($parsedProd['authorship'] ?? [] as $authorRoleDatum) {
-            $authorRoles[$authorRoleDatum['id']] = array_map(function ($role) {
-                return $this->toSoftwareRolesMap[$role] ?? $role;
-            }, $authorRoleDatum['softwareRoles'] ?? ['unknown']);
+            $authorRoles[$authorRoleDatum['id']] = array_map(
+                function (string $role): string {
+                    return $this->toSoftwareRolesMap[$role] ?? $role;
+                },
+                $authorRoleDatum['softwareRoles'] ?? ['unknown']);
         }
 
-        return new ProdLabel(
+        return new ProdImportDTO(
+            id: $parsedProd['name'],
             title: $parsedProd['name'],
             year: $parsedProd['year'] ?? null,
             authorRoles: $authorRoles,
-            groupIds: $groupIds,
-            publisherIds: $publisherIds,
+            groups: $groupIds,
+            publishers: $publisherIds,
         );
     }
 }

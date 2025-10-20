@@ -14,7 +14,11 @@ class moveScreenshotsZxRelease extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         $linksManager = $this->getService(linksManager::class);
-        $prodId = $structureElement->getProd()->id;
+        $prod = $structureElement->getProd();
+        if ($prod === null) {
+            throw new \RuntimeException('Prod is not set');
+        }
+        $prodId = $prod->id;
         foreach ($structureElement->getFilesList('screenshotsSelector') as $screenShot) {
             $linksManager->unLinkElements($structureElement->id, $screenShot->id, 'screenshotsSelector');
             $linksManager->linkElements($prodId, $screenShot->id, 'connectedFile');
@@ -23,6 +27,10 @@ class moveScreenshotsZxRelease extends structureElementAction
         $structureManager->clearElementCache($prodId);
         $structureManager->clearElementCache($structureElement->id);
 
-        $controller->redirect($structureElement->getProd()->URL);
+        $prod = $structureElement->getProd();
+        if ($prod === null) {
+            throw new \RuntimeException('Prod is not set');
+        }
+        $controller->redirect($prod->getUrl());
     }
 }

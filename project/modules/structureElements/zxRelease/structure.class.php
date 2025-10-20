@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Connection;
 use ZxArt\FileParsing\ZxParsingItem;
 use ZxArt\FileParsing\ZxParsingManager;
 use ZxArt\Prods\LegalStatus;
@@ -13,7 +14,7 @@ use ZxFiles\BasicFile;
  * @property string $fileName
  * @property int $downloads
  * @property int $plays
- * @property string $year
+ * @property int $year
  * @property string $releaseType
  * @property string $description
  * @property string $version
@@ -62,7 +63,7 @@ class zxReleaseElement extends ZxArtItem implements
     protected $hardwareInfo;
     protected $currentReleaseFileInfo;
     protected $imagesUrls;
-    protected $prodElement;
+    protected zxProdElement|null $prodElement = null;
     private const array MbReleaseTypeRunnable = ['tar'];
     private const array MbHardwareRunnable = ["elementzxmb"];
 
@@ -93,7 +94,7 @@ class zxReleaseElement extends ZxArtItem implements
         $moduleStructure['version'] = 'text';
         $moduleStructure['downloads'] = 'text';
         $moduleStructure['plays'] = 'text';
-        $moduleStructure['year'] = 'text';
+        $moduleStructure['year'] = 'number';
         $moduleStructure['publishers'] = [
             'ConnectedElements',
             [
@@ -344,31 +345,35 @@ class zxReleaseElement extends ZxArtItem implements
         return $this->fileName;
     }
 
-    /**
-     * @return zxProdElement
-     */
-    public function getProd()
+    public function getProd(): zxProdElement|null
     {
-        if ($this->prodElement === null) {
-            $this->prodElement = false;
-            if ($parent = $this->getFirstParentElement()) {
-                if ($parent->structureType === 'zxProd') {
-                    $this->prodElement = $parent;
-                }
-            }
-            if ($parent = $this->getRequestedParentElement()) {
-                if ($parent->structureType === 'zxProd') {
-                    $this->prodElement = $parent;
-                }
-            }
+        if ($this->prodElement !== null) {
+            return $this->prodElement;
+        }
+        $parent = $this->getFirstParentElement();
+        if ($parent !== null && $parent->structureType === 'zxProd') {
+            /**
+             * @var zxProdElement $parent
+             */
+            $this->prodElement = $parent;
+            return $this->prodElement;
         }
 
-        return $this->prodElement;
+        $parent = $this->getRequestedParentElement();
+        if ($parent !== null && $parent->structureType === 'zxProd') {
+            /**
+             * @var zxProdElement $parent
+             */
+            $this->prodElement = $parent;
+            return $this->prodElement;
+        }
+
+        return null;
     }
 
     public function getLegalStatus()
     {
-        return $this->getProd()->getLegalStatus();
+        return $this->getProd()?->getLegalStatus() ?? LegalStatus::unknown->name;
     }
 
     public function getReleaseTypes(): array
@@ -497,20 +502,19 @@ class zxReleaseElement extends ZxArtItem implements
         return [];
     }
 
-    /**
-     * @return string
-     */
-    public function getYear()
+    #[\Override]
+    public function getYear(): int|null
     {
-        if (!empty($this->year)) {
+        if ($this->year > 0) {
             return $this->year;
         }
-        if ($this->releaseType === 'original' && $zxProd = $this->getProd()) {
-            if (!empty($zxProd->year)) {
+        if ($this->releaseType === 'original') {
+            $zxProd = $this->getProd();
+            if ($zxProd !== null && $zxProd->year > 0) {
                 return $zxProd->year;
             }
         }
-        return '';
+        return null;
     }
 
     /**
@@ -548,10 +552,11 @@ class zxReleaseElement extends ZxArtItem implements
     {
         if ($this->linksInfo === null) {
             $prod = $this->getProd();
+            $prodStatus = $prod?->getLegalStatus() ?? LegalStatus::unknown->name;
             $this->linksInfo = [];
             $translationsManager = $this->getService('translationsManager');
             /**
-             * @var \Illuminate\Database\Connection $db
+             * @var Connection $db
              */
             $db = $this->getService('db');
             $query = $db->table('import_origin')
@@ -560,7 +565,7 @@ class zxReleaseElement extends ZxArtItem implements
                 ->whereIn('importOrigin', ['vt', 'pouet']);
             if ($rows = $query->get()) {
                 foreach ($rows as $row) {
-                    if ($row['importOrigin'] == 'pouet') {
+                    if ($row['importOrigin'] === 'pouet') {
                         $this->linksInfo[] = [
                             'type' => 'pouet',
                             'image' => 'icon_pouet.png',
@@ -568,7 +573,7 @@ class zxReleaseElement extends ZxArtItem implements
                             'url' => 'https://www.pouet.net/prod.php?which=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] == 'vt' && $prod->getLegalStatus() !== LegalStatus::insales->name) {
+                    } elseif ($row['importOrigin'] === 'vt' && $prodStatus !== LegalStatus::insales->name) {
                         $this->linksInfo[] = [
                             'type' => 'vt',
                             'image' => 'icon_vt.png',
@@ -658,10 +663,12 @@ class zxReleaseElement extends ZxArtItem implements
             $dosStrings[] = $translationsManager->getTranslationByName('hardware.item_' . $dos);
         }
 
+        $prod = $this->getProd();
+
         $data['availableOnDevice'] = $computersStrings;
         $data['operatingSystem'] = $dosStrings;
-        $data['applicationSubCategory'] = $this->getProd()->getCategoriesString();
-        $data['applicationCategory'] = $this->getProd()->getRootCategoriesString();
+        $data['applicationSubCategory'] = $prod?->getCategoriesString();
+        $data['applicationCategory'] = $prod?->getRootCategoriesString();
 
         $data["description"] = $this->getTextContent();
         $data["commentCount"] = $this->commentsAmount;
@@ -812,7 +819,7 @@ class zxReleaseElement extends ZxArtItem implements
     {
         if ($this->title === '') {
             $prod = $this->getProd();
-            $this->title = $prod->title;
+            $this->title = $prod?->title ?? '';
             $this->structureName = $this->title;
         }
         $this->optimizeAliases('publishers');

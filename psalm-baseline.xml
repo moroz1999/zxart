@@ -3807,6 +3807,9 @@
       <code><![CDATA[$record['id']]]></code>
       <code><![CDATA[$result[$key]]]></code>
     </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$mergedContent]]></code>
+    </MixedArgumentTypeCoercion>
     <MixedArrayAccess>
       <code><![CDATA[$metaData[$language]['h1']]]></code>
       <code><![CDATA[$metaData[$language]['metaDescription']]]></code>
@@ -4807,104 +4810,44 @@
   <file src="project/core/ZxArt/Import/Press/DataUpdater/ArticleParsedDataUpdater.php">
     <InvalidArgument>
       <code><![CDATA[$label]]></code>
-      <code><![CDATA[$prod]]></code>
     </InvalidArgument>
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->groupsMap]]></code>
     </InvalidPropertyAssignmentValue>
     <MissingClosureParamType>
       <code><![CDATA[$role]]></code>
-      <code><![CDATA[$role]]></code>
     </MissingClosureParamType>
-    <MissingClosureReturnType>
-      <code><![CDATA[function ($role) {]]></code>
-      <code><![CDATA[function ($role) {]]></code>
-    </MissingClosureReturnType>
     <MissingParamType>
       <code><![CDATA[$parsedHardware]]></code>
-      <code><![CDATA[$parsedParty]]></code>
-      <code><![CDATA[$parsedProd]]></code>
-      <code><![CDATA[$year]]></code>
     </MissingParamType>
     <MixedArgument>
-      <code><![CDATA[$articleAuthorIds]]></code>
-      <code><![CDATA[$authorRoleDatum['softwareRoles'] ?? ['unknown']]]></code>
-      <code><![CDATA[$groupDatum]]></code>
-      <code><![CDATA[$groupDatum]]></code>
-      <code><![CDATA[$groupIds]]></code>
-      <code><![CDATA[$groupsData]]></code>
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$item['softwareRoles'] ?? ['unknown']]]></code>
       <code><![CDATA[$memberNames]]></code>
-      <code><![CDATA[$mentionedGroupIds]]></code>
-      <code><![CDATA[$mentionedPersonIds]]></code>
-      <code><![CDATA[$parsedAuthor['city'] ?? null]]></code>
-      <code><![CDATA[$parsedAuthor['country'] ?? null]]></code>
-      <code><![CDATA[$parsedAuthor['id']]]></code>
-      <code><![CDATA[$parsedAuthor['nickName'] ?? null]]></code>
-      <code><![CDATA[$parsedAuthor['realName'] ?? null]]></code>
-      <code><![CDATA[$parsedAuthor['teamIds'] ?? null]]></code>
-      <code><![CDATA[$parsedAuthor['teamRoles'] ?? ['unknown']]]></code>
-      <code><![CDATA[$parsedGroup]]></code>
       <code><![CDATA[$parsedGroup['city'] ?? null]]></code>
       <code><![CDATA[$parsedGroup['country'] ?? null]]></code>
       <code><![CDATA[$parsedGroup['id']]]></code>
       <code><![CDATA[$parsedGroup['name']]]></code>
       <code><![CDATA[$parsedGroup['parentTeamIds'] ?? null]]></code>
       <code><![CDATA[$parsedGroup['type'] ?? null]]></code>
-      <code><![CDATA[$parsedParty['city'] ?? null]]></code>
-      <code><![CDATA[$parsedParty['country'] ?? null]]></code>
-      <code><![CDATA[$parsedParty['name']]]></code>
-      <code><![CDATA[$parsedPerson]]></code>
-      <code><![CDATA[$parsedPerson['teamIds'] ?? []]]></code>
       <code><![CDATA[$parsedPicture['name']]]></code>
       <code><![CDATA[$parsedPicture['year'] ?? null]]></code>
-      <code><![CDATA[$parsedProd['name']]]></code>
-      <code><![CDATA[$parsedProd['year'] ?? null]]></code>
       <code><![CDATA[$parsedTune['name']]]></code>
       <code><![CDATA[$parsedTune['year'] ?? null]]></code>
-      <code><![CDATA[$parties]]></code>
-      <code><![CDATA[$personsData]]></code>
-      <code><![CDATA[$pictures]]></code>
-      <code><![CDATA[$pressAuthorship]]></code>
-      <code><![CDATA[$pressGroupIds]]></code>
-      <code><![CDATA[$publisherIds]]></code>
-      <code><![CDATA[$software]]></code>
-      <code><![CDATA[$tunes]]></code>
     </MixedArgument>
     <MixedArrayAccess>
-      <code><![CDATA[$authorRoleDatum['id']]]></code>
-      <code><![CDATA[$authorRoleDatum['softwareRoles']]]></code>
       <code><![CDATA[$datum['nickName']]]></code>
       <code><![CDATA[$datum['realName']]]></code>
       <code><![CDATA[$datum['teamIds']]]></code>
-      <code><![CDATA[$group['id']]]></code>
-      <code><![CDATA[$group['id']]]></code>
-      <code><![CDATA[$group['id']]]></code>
-      <code><![CDATA[$group['parentTeamIds']]]></code>
       <code><![CDATA[$item['id']]]></code>
       <code><![CDATA[$item['softwareRoles']]]></code>
-      <code><![CDATA[$parsedParty['city']]]></code>
-      <code><![CDATA[$parsedParty['country']]]></code>
-      <code><![CDATA[$parsedParty['name']]]></code>
-      <code><![CDATA[$parsedParty['year']]]></code>
-      <code><![CDATA[$parsedPerson['teamIds']]]></code>
       <code><![CDATA[$parsedPicture['name']]]></code>
       <code><![CDATA[$parsedPicture['year']]]></code>
-      <code><![CDATA[$parsedProd['authorship']]]></code>
-      <code><![CDATA[$parsedProd['name']]]></code>
-      <code><![CDATA[$parsedProd['publisherIds']]]></code>
-      <code><![CDATA[$parsedProd['teamIds']]]></code>
-      <code><![CDATA[$parsedProd['year']]]></code>
       <code><![CDATA[$parsedTune['name']]]></code>
       <code><![CDATA[$parsedTune['year']]]></code>
     </MixedArrayAccess>
     <MixedArrayOffset>
-      <code><![CDATA[$authorRoles[$authorRoleDatum['id']]]]></code>
       <code><![CDATA[$authorRoles[$item['id']]]]></code>
-      <code><![CDATA[$groupsMap[$group['id']]]]></code>
-      <code><![CDATA[$parentIdsMap[$group['id']]]]></code>
-      <code><![CDATA[$parentIdsMap[$group['id']]]]></code>
       <code><![CDATA[$parentIdsMap[$parentId]]]></code>
       <code><![CDATA[$this->authorsMap[$personId]]]></code>
       <code><![CDATA[$this->authorsMap[$personId]]]></code>
@@ -4914,55 +4857,21 @@
       <code><![CDATA[$this->memberNamesMap[$groupId]]]></code>
       <code><![CDATA[$this->memberNamesMap[$groupId]]]></code>
       <code><![CDATA[$this->memberNamesMap[$groupId]]]></code>
-      <code><![CDATA[$this->memberNamesMap[$parsedGroup['id']]]]></code>
-      <code><![CDATA[$this->toSoftwareRolesMap[$role]]]></code>
       <code><![CDATA[$this->toSoftwareRolesMap[$role]]]></code>
     </MixedArrayOffset>
     <MixedAssignment>
-      <code><![CDATA[$articleAuthorId]]></code>
-      <code><![CDATA[$articleAuthorIds]]></code>
-      <code><![CDATA[$authorRoleDatum]]></code>
       <code><![CDATA[$datum]]></code>
-      <code><![CDATA[$group]]></code>
-      <code><![CDATA[$group]]></code>
-      <code><![CDATA[$group]]></code>
-      <code><![CDATA[$group]]></code>
-      <code><![CDATA[$groupDatum]]></code>
-      <code><![CDATA[$groupDatum]]></code>
       <code><![CDATA[$groupId]]></code>
       <code><![CDATA[$groupId]]></code>
       <code><![CDATA[$groupId]]></code>
-      <code><![CDATA[$groupIds]]></code>
-      <code><![CDATA[$groupsData]]></code>
-      <code><![CDATA[$groupsData]]></code>
-      <code><![CDATA[$groupsMap[$group['id']]]]></code>
-      <code><![CDATA[$hardware]]></code>
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$memberNames]]></code>
-      <code><![CDATA[$mentionedGroupIds]]></code>
-      <code><![CDATA[$mentionedPersonIds]]></code>
       <code><![CDATA[$parentId]]></code>
-      <code><![CDATA[$parentIds]]></code>
-      <code><![CDATA[$parsedGroup]]></code>
-      <code><![CDATA[$parsedParty]]></code>
-      <code><![CDATA[$parsedPerson]]></code>
       <code><![CDATA[$parsedPicture]]></code>
-      <code><![CDATA[$parsedProd]]></code>
       <code><![CDATA[$parsedTune]]></code>
-      <code><![CDATA[$parties]]></code>
       <code><![CDATA[$personId]]></code>
       <code><![CDATA[$personId]]></code>
-      <code><![CDATA[$personsData]]></code>
-      <code><![CDATA[$pictures]]></code>
-      <code><![CDATA[$pressAuthorship]]></code>
-      <code><![CDATA[$pressGroupIds]]></code>
-      <code><![CDATA[$publicationYear]]></code>
-      <code><![CDATA[$publisherIds]]></code>
-      <code><![CDATA[$result[]]]></code>
-      <code><![CDATA[$result[]]]></code>
-      <code><![CDATA[$software]]></code>
-      <code><![CDATA[$tunes]]></code>
     </MixedAssignment>
     <PossiblyInvalidArgument>
       <code><![CDATA[$articleProds]]></code>
@@ -5090,14 +4999,6 @@
       <code><![CDATA[isset($a['publishers']) ? array_values((array)$a['publishers']) : null]]></code>
       <code><![CDATA[isset($a['undetermined']) ? (array)$a['undetermined'] : null]]></code>
     </MixedArgumentTypeCoercion>
-  </file>
-  <file src="project/core/ZxArt/Import/Prods/ProdLabel.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[toArray]]></code>
-    </PossiblyUnusedMethod>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$this->id]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="project/core/ZxArt/Import/Prods/ProdResolver.php">
     <ArgumentTypeCoercion>
@@ -5900,8 +5801,6 @@
       <code><![CDATA[bool|structureElement]]></code>
     </InvalidNullableReturnType>
     <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$dto->year]]></code>
-      <code><![CDATA[$dto->year]]></code>
       <code><![CDATA[$element->getId()]]></code>
       <code><![CDATA[$element->getId()]]></code>
     </InvalidPropertyAssignmentValue>
@@ -5946,7 +5845,6 @@
       <code><![CDATA[$record['roles']]]></code>
       <code><![CDATA[$record['type']]]></code>
       <code><![CDATA[$roles]]></code>
-      <code><![CDATA[$sanitizedTitle]]></code>
       <code><![CDATA[$sanitizedTitle]]></code>
       <code><![CDATA[$sanitizedTitle]]></code>
       <code><![CDATA[$sourceElementId]]></code>
@@ -6083,15 +5981,12 @@
       <code><![CDATA[!$this->getElementIdByImportId($id, $importOrigin, 'prod')]]></code>
       <code><![CDATA[$authorId = $this->getElementIdByImportId($importAuthorId, $origin, 'author')]]></code>
       <code><![CDATA[$authorId = $this->getElementIdByImportId($importAuthorId, $origin, 'author')]]></code>
-      <code><![CDATA[$authorId = $this->getElementIdByImportId($undeterminedId, $origin, 'author')]]></code>
       <code><![CDATA[$categoryId = $this->getElementIdByImportId($importCategoryId, $origin, 'category')]]></code>
       <code><![CDATA[$foundReleaseId]]></code>
       <code><![CDATA[$groupId = $this->getElementIdByImportId($importGroupId, $origin, 'group')]]></code>
       <code><![CDATA[$mimeType = mime_content_type($filePath)]]></code>
       <code><![CDATA[$partyTitle]]></code>
       <code><![CDATA[$partyYear]]></code>
-      <code><![CDATA[$prod->ids]]></code>
-      <code><![CDATA[$prod->releases]]></code>
       <code><![CDATA[$prodId = $this->getElementIdByImportId($importItemId, $origin, 'prod')]]></code>
       <code><![CDATA[$prodId = $this->getElementIdByImportId($importItemId, $origin, 'prod')]]></code>
       <code><![CDATA[$publisherId]]></code>
@@ -6101,10 +5996,8 @@
       <code><![CDATA[$this->getElementIdByImportId($importPublisherId, $origin, 'group')]]></code>
       <code><![CDATA[$this->getElementIdByImportId($undeterminedId, $origin, 'author')]]></code>
       <code><![CDATA[$this->getElementIdByImportId($undeterminedId, $origin, 'group')]]></code>
-      <code><![CDATA[$this->getElementIdByImportId($undeterminedId, $origin, 'group')]]></code>
       <code><![CDATA[empty($dto->altTitle)]]></code>
       <code><![CDATA[empty($dto->articles)]]></code>
-      <code><![CDATA[empty($dto->authors)]]></code>
       <code><![CDATA[empty($dto->authors)]]></code>
       <code><![CDATA[empty($dto->categories)]]></code>
       <code><![CDATA[empty($dto->compilationItems)]]></code>
@@ -11745,9 +11638,6 @@
     <ClassMustBeFinal>
       <code><![CDATA[zxReleaseDataResponseConverter]]></code>
     </ClassMustBeFinal>
-    <DocblockTypeContradiction>
-      <code><![CDATA[$element->getProd()]]></code>
-    </DocblockTypeContradiction>
     <MissingClosureParamType>
       <code><![CDATA[$element]]></code>
     </MissingClosureParamType>
@@ -11773,10 +11663,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$element->title]]></code>
     </MixedPropertyFetch>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[$element->getProd()?->id]]></code>
-      <code><![CDATA[$prod = $element->getProd()]]></code>
-    </RedundantConditionGivenDocblockType>
     <UnusedClass>
       <code><![CDATA[zxReleaseDataResponseConverter]]></code>
     </UnusedClass>
@@ -28529,22 +28415,9 @@
     <ClassMustBeFinal>
       <code><![CDATA[zxReleaseElement]]></code>
     </ClassMustBeFinal>
-    <DocblockTypeContradiction>
-      <code><![CDATA[!$prodElement]]></code>
-      <code><![CDATA[$prodElement]]></code>
-      <code><![CDATA[$this->getProd()]]></code>
-      <code><![CDATA[$this->getProd()]]></code>
-      <code><![CDATA[$this->getProd()?->year !== 0]]></code>
-    </DocblockTypeContradiction>
     <EmptyArrayAccess>
       <code><![CDATA[$strings[]]]></code>
     </EmptyArrayAccess>
-    <FalsableReturnStatement>
-      <code><![CDATA[$this->prodElement]]></code>
-    </FalsableReturnStatement>
-    <ImplementedReturnTypeMismatch>
-      <code><![CDATA[string]]></code>
-    </ImplementedReturnTypeMismatch>
     <InvalidArgument>
       <code><![CDATA[$file]]></code>
     </InvalidArgument>
@@ -28570,7 +28443,6 @@
       <code><![CDATA[public function getSearchTitle(): string]]></code>
       <code><![CDATA[public function getSupportedLanguageCodes()]]></code>
       <code><![CDATA[public function getUploadedFilesPath($propertyName = 'connectedFile')]]></code>
-      <code><![CDATA[public function getYear()]]></code>
       <code><![CDATA[public function persistElementData()]]></code>
       <code><![CDATA[public function recalculate()]]></code>
     </MissingOverrideAttribute>
@@ -28604,7 +28476,6 @@
       <code><![CDATA[$hardwareInfo]]></code>
       <code><![CDATA[$imagesUrls]]></code>
       <code><![CDATA[$partyLinkType]]></code>
-      <code><![CDATA[$prodElement]]></code>
       <code><![CDATA[$role]]></code>
       <code><![CDATA[$viewName]]></code>
       <code><![CDATA[$votesType]]></code>
@@ -28785,10 +28656,6 @@
       <code><![CDATA[$parent->structureType]]></code>
       <code><![CDATA[$publisher->title]]></code>
     </MixedPropertyFetch>
-    <MixedReturnStatement>
-      <code><![CDATA[$this->prodElement]]></code>
-      <code><![CDATA[$this->prodElement]]></code>
-    </MixedReturnStatement>
     <NullableReturnStatement>
       <code><![CDATA[match ($hardwareType) {
             'computers' => '🖥️',
@@ -28863,10 +28730,6 @@
     </PropertyNotSetInConstructor>
     <RedundantConditionGivenDocblockType>
       <code><![CDATA[$info = pathinfo($this->fileName)]]></code>
-      <code><![CDATA[$this->getProd()?->year]]></code>
-      <code><![CDATA[$this->getProd()?->year]]></code>
-      <code><![CDATA[$zxProd = $this->getProd()]]></code>
-      <code><![CDATA[$zxProd = $this->getProd()]]></code>
     </RedundantConditionGivenDocblockType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$content = $extractedFile->getContent()]]></code>

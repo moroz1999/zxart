@@ -121,6 +121,7 @@ final class AuthorshipRepository
             ->first()
         ) {
             $existingRoles = json_decode($existingRecord['roles'], true, 512, JSON_THROW_ON_ERROR);
+
             if (!is_array($existingRoles)) {
                 $existingRoles = [];
             }

@@ -7,7 +7,7 @@ final readonly class ProdImportDTO
 {
     public function __construct(
         public string       $id,
-        public string       $title,
+        public ?string      $title = null,
         public ?string      $altTitle = null,
         public ?string      $description = null,
         /** @var string[]|null */
@@ -24,7 +24,7 @@ final readonly class ProdImportDTO
         /** @var LabelGatheredInfoDTO[]|null */
         public ?array       $labels = null,
         /** @var array<string,string[]>|null map importAuthorId => roles[] */
-        public ?array       $authors = null,
+        public ?array       $authorRoles = null,
         /** @var string[]|null importGroupId[] */
         public ?array       $groups = null,
         /** @var string[]|null importPublisherId[] */
@@ -94,7 +94,7 @@ final readonly class ProdImportDTO
             ids: isset($a['ids']) ? (array)$a['ids'] : null,
             importIds: isset($a['importIds']) ? (array)$a['importIds'] : null,
             labels: $labels,
-            authors: isset($a['authors']) ? (array)$a['authors'] : null,
+            authorRoles: isset($a['authors']) ? (array)$a['authors'] : null,
             groups: isset($a['groups']) ? array_values((array)$a['groups']) : null,
             publishers: isset($a['publishers']) ? array_values((array)$a['publishers']) : null,
             undetermined: isset($a['undetermined']) ? (array)$a['undetermined'] : null,

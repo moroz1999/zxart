@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Import\Prods;
 
 use structureManager;
+use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Import\Resolver;
 use ZxArt\Prods\Repositories\ProdsRepository;
 use zxProdElement;
@@ -20,7 +21,7 @@ readonly final class ProdResolver
 
     }
 
-    public function resolve(ProdLabel $prodLabel, $matchProdsWithoutYear = false): ?zxProdElement
+    public function resolve(ProdImportDTO $prodLabel, $matchProdsWithoutYear = false): ?zxProdElement
     {
         if ($prodLabel->title === null) {
             return null;
@@ -48,7 +49,7 @@ readonly final class ProdResolver
         return $candidates[0]['element'] ?? null;
     }
 
-    private function calculateScoreForElement(zxProdElement $prodElement, ProdLabel $prodLabel, bool $matchProdsWithoutYear): int
+    private function calculateScoreForElement(zxProdElement $prodElement, ProdImportDTO $prodLabel, bool $matchProdsWithoutYear): int
     {
         $score = 0;
         $prodLabelHasYear = $prodLabel->year !== null && $prodLabel->year > 0;
@@ -60,7 +61,7 @@ readonly final class ProdResolver
         $prodElementAltTitle = mb_strtolower(trim(html_entity_decode($prodElement->altTitle ?? '')));
         $prodLabelTitle = mb_strtolower(trim($prodLabel->title ?? ''));
         $prodLabelTheTitle = 'the ' . $prodLabelTitle;
-        if ($prodLabelHasYear && $prodElementHasYear && $prodLabel->year !== (int)$prodElement->year) {
+        if ($prodLabelHasYear && $prodElementHasYear && $prodLabel->year !== $prodElement->year) {
             return 0;
         }
         if (str_contains($prodLabelTitle, 'crack')) {
@@ -104,7 +105,7 @@ readonly final class ProdResolver
         }
 
         // both years are not empty and match
-        if ($this->resolver->intMatches((int)$prodElement->year, $prodLabel->year)) {
+        if ($this->resolver->intMatches($prodElement->year, $prodLabel->year)) {
             $score += 10;
         }
         // neither one has year.

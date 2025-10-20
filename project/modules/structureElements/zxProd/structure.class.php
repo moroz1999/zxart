@@ -15,7 +15,7 @@ use ZxArt\ZxProdCategories\CompilationCategoryIds;
  *
  * @property string $title
  * @property string $altTitle
- * @property string $year
+ * @property int $year
  * @property string $youtubeId
  * @property string $description
  * @property string $legalStatus
@@ -101,7 +101,7 @@ class zxProdElement extends ZxArtItem implements
         $moduleStructure['party'] = 'text';
         $moduleStructure['partyplace'] = 'text';
         $moduleStructure['compo'] = 'text';
-        $moduleStructure['year'] = 'text';
+        $moduleStructure['year'] = 'number';
         $moduleStructure['youtubeId'] = 'text';
         $moduleStructure['description'] = 'pre';
         $moduleStructure['votes'] = 'floatNumber';

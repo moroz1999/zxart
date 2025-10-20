@@ -491,10 +491,7 @@ abstract class ZxArtItem extends structureElement implements
         );
     }
 
-    /**
-     * @return int
-     */
-    public function getYear()
+    public function getYear(): int|null
     {
         return $this->year;
     }
