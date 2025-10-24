@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace ZxArt\Prods\Services;
 
@@ -22,9 +23,10 @@ use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\FileParsing\ZxParsingManager;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Import\Labels\Label;
+use ZxArt\Import\Labels\LabelTransformer;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Import\Prods\Dto\ReleaseImportDTO;
-use ZxArt\Import\Prods\ProdLabel;
 use ZxArt\Import\Prods\ProdResolver;
 use ZxArt\Parties\Services\PartiesService;
 use ZxArt\Prods\Repositories\ProdsRepository;
@@ -117,6 +119,7 @@ class ProdsService extends ElementsManager
         protected Connection           $db,
         protected LanguagesManager     $languagesManager,
         protected ProdResolver         $prodResolver,
+        private LabelTransformer       $labelTransformer,
     )
     {
         $this->columnRelations = [
@@ -137,50 +140,32 @@ class ProdsService extends ElementsManager
         $this->forceUpdateImages = $forceUpdateImages;
     }
 
-    /**
-     * @param bool $updateExistingProds
-     */
-    public function setUpdateExistingProds($updateExistingProds): void
+    public function setUpdateExistingProds(bool $updateExistingProds): void
     {
         $this->updateExistingProds = $updateExistingProds;
     }
 
-    /**
-     * @param bool $forceUpdateYear
-     */
-    public function setForceUpdateYear($forceUpdateYear): void
+    public function setForceUpdateYear(bool $forceUpdateYear): void
     {
         $this->forceUpdateYear = $forceUpdateYear;
     }
 
-    /**
-     * @param bool $forceUpdateYoutube
-     */
-    public function setForceUpdateYoutube($forceUpdateYoutube): void
+    public function setForceUpdateYoutube(bool $forceUpdateYoutube): void
     {
         $this->forceUpdateYoutube = $forceUpdateYoutube;
     }
 
-    /**
-     * @param bool $forceUpdateGroups
-     */
-    public function setForceUpdateGroups($forceUpdateGroups): void
+    public function setForceUpdateGroups(bool $forceUpdateGroups): void
     {
         $this->forceUpdateGroups = $forceUpdateGroups;
     }
 
-    /**
-     * @param bool $forceUpdatePublishers
-     */
-    public function setForceUpdatePublishers($forceUpdatePublishers): void
+    public function setForceUpdatePublishers(bool $forceUpdatePublishers): void
     {
         $this->forceUpdatePublishers = $forceUpdatePublishers;
     }
 
-    /**
-     * @param bool $forceUpdateAuthors
-     */
-    public function setForceUpdateAuthors($forceUpdateAuthors): void
+    public function setForceUpdateAuthors(bool $forceUpdateAuthors): void
     {
         $this->forceUpdateAuthors = $forceUpdateAuthors;
     }
@@ -190,26 +175,17 @@ class ProdsService extends ElementsManager
         $this->pathsManager = $pathsManager;
     }
 
-    /**
-     * @param bool $forceUpdateCategories
-     */
-    public function setForceUpdateCategories($forceUpdateCategories): void
+    public function setForceUpdateCategories(bool $forceUpdateCategories): void
     {
         $this->forceUpdateCategories = $forceUpdateCategories;
     }
 
-    /**
-     * @param bool $addImages
-     */
-    public function setAddImages($addImages): void
+    public function setAddImages(bool $addImages): void
     {
         $this->addImages = $addImages;
     }
 
-    /**
-     * @param bool $forceUpdateTitles
-     */
-    public function setForceUpdateTitles($forceUpdateTitles): void
+    public function setForceUpdateTitles(bool $forceUpdateTitles): void
     {
         $this->forceUpdateTitles = $forceUpdateTitles;
     }
@@ -222,8 +198,6 @@ class ProdsService extends ElementsManager
     public function importProd(ProdImportDTO $dto, string $origin): ?zxProdElement
     {
         $prodId = $dto->id;
-        $sanitizedTitle = $this->sanitizeTitle($dto->title);
-
         $element = $this->getElementByImportId($prodId, $origin, 'prod');
 
         if (!$element && $dto->ids !== null) {
@@ -249,43 +223,9 @@ class ProdsService extends ElementsManager
             }
         }
 
-        if (!$element) {
-            $element = $this->createProd(
-                new ProdImportDTO(
-                    id: $dto->id,
-                    title: $sanitizedTitle,
-                    altTitle: $dto->altTitle,
-                    description: $dto->description,
-                    language: $dto->language,
-                    legalStatus: $dto->legalStatus,
-                    youtubeId: $dto->youtubeId,
-                    externalLink: $dto->externalLink,
-                    compo: $dto->compo,
-                    year: $dto->year,
-                    ids: $dto->ids,
-                    importIds: $dto->importIds,
-                    labels: $dto->labels,
-                    authorRoles: $dto->authorRoles,
-                    groups: $dto->groups,
-                    publishers: $dto->publishers,
-                    undetermined: $dto->undetermined,
-                    party: $dto->party,
-                    directCategories: $dto->directCategories,
-                    categories: $dto->categories,
-                    images: $dto->images,
-                    maps: $dto->maps,
-                    inlayImages: $dto->inlayImages,
-                    rzx: $dto->rzx,
-                    compilationItems: $dto->compilationItems,
-                    seriesProds: $dto->seriesProds,
-                    articles: $dto->articles,
-                    releases: $dto->releases,
-                ),
-                $origin
-            );
-        }
-
-        if ($element && $this->updateExistingProds) {
+        if ($element === null) {
+            $element = $this->createProd($dto, $origin);
+        } elseif ($this->updateExistingProds) {
             $element = $this->updateProd($element, $dto, $origin);
         }
 
@@ -318,27 +258,41 @@ class ProdsService extends ElementsManager
         return null;
     }
 
-    private function importLabelsInfo(array $infoIndex, string $origin): void
+    /**
+     * @param Label[] $labelsList
+     */
+    private function importLabelsInfo(array $labelsList, string $origin): void
     {
-        $infoIndex = array_reverse($infoIndex);
-        foreach ($infoIndex as $labelDTO) {
-            if ($labelDTO->isAlias && $labelDTO->isPerson) {
-                $this->authorsService->importAuthorAlias($labelDTO, $origin);
-            } elseif ($labelDTO->isGroup) {
-                $this->groupsService->importGroup($labelDTO, $origin);
-            } elseif ($labelDTO->isPerson) {
-                $this->authorsService->importAuthor($labelDTO, $origin);
+        $labelsList = array_reverse($labelsList);
+        foreach ($labelsList as $label) {
+            $personLabel = $this->labelTransformer->toPersonLabel($label);
+            $groupLabel = $this->labelTransformer->toGroupLabel($label);
+
+            if ($label->isAlias && $label->isPerson) {
+                $this->authorsService->importAuthorAlias($personLabel, $origin);
+            } elseif ($label->isGroup) {
+                $this->groupsService->importGroup($groupLabel, $origin);
+            } elseif ($label->isPerson) {
+                $this->authorsService->importAuthor($personLabel, $origin);
             } else {
                 //we don't know anything about this label. lets search for any group with that name
-                $result = $this->groupsService->importGroup($labelDTO, $origin, false);
-                if (!$result) {
-                    //search for author alias with that name
-                    $result = $this->authorsService->importAuthorAlias($labelDTO, $origin, false);
+                $element = $this->groupsService->resolveGroupByLabel($groupLabel, $origin);
+                if ($element !== null) {
+                    continue;
                 }
-                if (!$result) {
-                    //just create author by default.
-                    $this->authorsService->importAuthor($labelDTO, $origin);
+                //search for author alias with that name
+                $element = $this->authorsService->resolveAuthorAliasByLabel($personLabel, $origin);
+                if ($element !== null) {
+                    continue;
                 }
+                //search for author with that name
+                $element = $this->authorsService->resolveAuthorByLabel($personLabel, $origin);
+                if ($element !== null) {
+                    continue;
+                }
+
+                //just create author by default.
+                $this->authorsService->importAuthor($personLabel, $origin);
             }
         }
     }
@@ -346,7 +300,7 @@ class ProdsService extends ElementsManager
     private function updateProd(zxProdElement $element, ProdImportDTO $dto, string $origin, bool $justCreated = false): zxProdElement
     {
         $changed = false;
-        $dtoTitle = $dto->title ?? '';
+        $dtoTitle = $this->sanitizeTitle($dto->title ?? '');
         if ($dtoTitle !== '' && ($element->title !== $dtoTitle)) {
             if (!$element->title || $this->forceUpdateTitles) {
                 $element->title = $dtoTitle;
@@ -928,9 +882,9 @@ class ProdsService extends ElementsManager
         }
     }
 
-    public function getReleasesByIdList(Builder|null $idList, array|null $sort = [], int|null $start = null, int|null $amount = null)
+    public function getReleasesByIdList(Builder|null $idList, array|null $sort = [], int|null $start = null, int|null $amount = null): ?array
     {
-        return $this->loadReleases($idList, $sort, $start, $amount);
+        return $idList !== null ? $this->loadReleases($idList, $sort, $start, $amount) : null;
     }
 
     public function makeReleasesQuery(): Builder
@@ -1008,7 +962,7 @@ class ProdsService extends ElementsManager
 
     public function joinDeleteZxProd(int $mainZxProdId, int $joinedZxProdId, bool $releasesOnly = false): bool
     {
-        if ($joinedZxProdId == $mainZxProdId) {
+        if ($joinedZxProdId === $mainZxProdId) {
             return false;
         }
         /**
@@ -1065,7 +1019,7 @@ class ProdsService extends ElementsManager
                         if (!$mainZxProd->description) {
                             $mainZxProd->description = $joinedZxProd->description;
                         }
-                        if (!$mainZxProd->legalStatus || $mainZxProd->legalStatus == 'unknown') {
+                        if (!$mainZxProd->legalStatus || $mainZxProd->legalStatus === 'unknown') {
                             $mainZxProd->legalStatus = $joinedZxProd->legalStatus;
                         }
                         if (!$mainZxProd->userId) {

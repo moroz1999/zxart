@@ -10,12 +10,12 @@ use zxProdElement;
 
 class ProdQueryService
 {
-    private const DESCRIPTION_LIMIT = 20000;
-    private const MIN_DESCRIPTION_LIMIT = 500;
-    private const TAGS_MANUAL_LIMIT = 1000;
-    private const IMAGES_LIMIT_FOR_CATEGORIES = 10;
-    private const IMAGES_LIMIT_FOR_INTRO = 15;
-    private const IMAGES_LIMIT_FOR_INTRO_NOTEXT = 30;
+    private const int DESCRIPTION_LIMIT = 20000;
+    private const int MIN_DESCRIPTION_LIMIT = 500;
+    private const int TAGS_MANUAL_LIMIT = 1000;
+    private const int IMAGES_LIMIT_FOR_CATEGORIES = 10;
+    private const int IMAGES_LIMIT_FOR_INTRO = 15;
+    private const int IMAGES_LIMIT_FOR_INTRO_NOTEXT = 30;
 
     public function __construct(
         private readonly PromptSender $promptSender,

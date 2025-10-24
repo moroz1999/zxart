@@ -23,9 +23,9 @@ class DmdManager
      * @var PathsManager
      */
     private $pathsManager;
-    const PARTY_ID = 413942;
+    const int PARTY_ID = 413942;
 //    const PARTY_ID = 410569;
-    const COMPO = 'onlineattr';
+    const string COMPO = 'onlineattr';
 
     /**
      * @param PathsManager $pathsManager

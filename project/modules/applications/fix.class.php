@@ -23,8 +23,8 @@ class fixApplication extends controllerApplication
     protected $db;
     private $log = PUBLIC_PATH . 'zxChip.log';
     private $idLog = PUBLIC_PATH . 'zxChipIds.log';
-    private const CATEGORY_MAGAZINE = 92179;
-    private const CATEGORY_NEWSPAPER = 92182;
+    private const int CATEGORY_MAGAZINE = 92179;
+    private const int CATEGORY_NEWSPAPER = 92182;
 
     /**
      * @return void

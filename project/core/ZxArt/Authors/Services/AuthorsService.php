@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace ZxArt\Authors\Services;
 
@@ -8,6 +9,7 @@ use authorsElement;
 use ConfigManager;
 use CountriesManager;
 use ElementsManager;
+use fluxbb\cache\Exception;
 use groupElement;
 use Illuminate\Database\Connection;
 use ImportIdOperatorTrait;
@@ -20,10 +22,8 @@ use structureManager;
 use TranslitHelper;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Groups\Services\GroupsService;
-use ZxArt\Import\Labels\GroupLabel;
 use ZxArt\Import\Labels\LabelResolver;
 use ZxArt\Import\Labels\PersonLabel;
-use ZxArt\Import\Prods\Dto\LabelGatheredInfoDTO;
 use ZxArt\LinkTypes;
 
 class AuthorsService extends ElementsManager
@@ -31,7 +31,7 @@ class AuthorsService extends ElementsManager
     use ImportIdOperatorTrait;
     use LettersElementsListProviderTrait;
 
-    protected const TABLE = 'module_author';
+    protected const string TABLE = 'module_author';
     protected bool $forceUpdateRealName = false;
     protected bool $forceUpdateCountry = false;
     protected bool $forceUpdateCity = false;
@@ -81,65 +81,37 @@ class AuthorsService extends ElementsManager
         $this->forceUpdateCity = $forceUpdateCity;
     }
 
-    public function importAuthor(LabelGatheredInfoDTO $dto, string $origin, bool $createNew = true): ?authorElement
+    public function importAuthor(PersonLabel $label, string $origin, bool $createNew = true): ?authorElement
     {
-        $authorId = $dto->id;
+        $authorId = $label->id;
         if ($authorId === null) {
             return null;
         }
 
-        if (isset($this->importedAuthors[$origin][$authorId])) {
-            return $this->importedAuthors[$origin][$authorId];
-        }
-
-        /** @var authorElement|null $element */
-        $element = $this->getElementByImportId($authorId, $origin, 'author');
+        $element = $this->resolveAuthorByLabel($label, $origin);
 
         if ($element === null) {
-            $groups = [];
-            if ($dto->groupsData !== null) {
-                foreach ($dto->groupsData as $groupId => $groupInfo) {
-                    $groups[] = new GroupLabel(
-                        id: is_array($groupInfo) ? ($groupInfo['id'] ?? $groupId) : $groupInfo,
-                        name: is_array($groupInfo) ? ($groupInfo['title'] ?? '') : null,
-                        city: is_array($groupInfo) ? ($groupInfo['city'] ?? null) : null,
-                        country: is_array($groupInfo) ? ($groupInfo['country'] ?? null) : null,
-                        memberNames: [$dto->title ?? ''],
-                    );
-                }
-            }
-
-            $label = new PersonLabel(
-                id: $dto->id,
-                name: $dto->title ?? '',
-                realName: $dto->realName ?? null,
-                city: $dto->cityName ?? null,
-                country: $dto->countryName ?? null,
-                groups: $groups ?: null,
-                isAlias: false,
-            );
-
             if ($resolved = $this->labelResolver->resolve($label)) {
                 $element = $resolved;
                 if ($origin) {
                     $this->saveImportId($element->id, $authorId, $origin, 'author');
                 }
-                $this->updateAuthor($element, $dto, $origin);
+                $this->updateAuthor($element, $label, $origin);
             } elseif ($createNew) {
-                $this->createAuthor($element, $dto, $origin);
+                $this->createAuthor($label, $origin);
             }
         } else {
-            $this->updateAuthor($element, $dto, $origin);
+            $this->updateAuthor($element, $label, $origin);
         }
 
         $this->importedAuthors[$origin][$authorId] = $element;
         return $element;
     }
 
-    public function createAuthor($dto, $origin): ?authorElement
+    public function createAuthor(PersonLabel $dto, $origin): ?authorElement
     {
         $title = trim((string)($dto->title ?? ''));
-        $realName = trim((string)($dto->realName ?? ''));
+        $realName = trim($dto->realName ?? '');
 
         if ($title === '' && $realName !== '') {
             $title = $realName;
@@ -189,7 +161,7 @@ class AuthorsService extends ElementsManager
         return $element;
     }
 
-    protected function updateAuthor(authorElement $element, LabelGatheredInfoDTO $label, $origin): void
+    protected function updateAuthor(authorElement $element, PersonLabel $label, $origin): void
     {
         $changed = false;
 
@@ -199,25 +171,25 @@ class AuthorsService extends ElementsManager
             $element->structureName = $title;
             $changed = true;
         }
+
         if (($this->forceUpdateRealName || !$element->realName) && !empty($label->realName) && $element->realName !== $label->realName) {
             $element->realName = $label->realName;
             $changed = true;
         }
-
 
         if (!empty($label->locationName)) {
             $locationElement = $this->countriesManager->getLocationByName($label->locationName);
             if ($locationElement) {
                 if ($locationElement->structureType === 'country') {
                     if (!$element->country || $this->forceUpdateCountry) {
-                        if ($element->country != $locationElement->id) {
+                        if ($element->country !== $locationElement->id) {
                             $element->country = $locationElement->id;
                             $changed = true;
                         }
                     }
                 } elseif ($locationElement->structureType === 'city') {
                     if (!$element->city || $this->forceUpdateCity) {
-                        if ($element->city != $locationElement->id) {
+                        if ($element->city !== $locationElement->id) {
                             $element->city = $locationElement->id;
                             if ($countryId = $locationElement->getCountryId()) {
                                 $element->country = $countryId;
@@ -252,14 +224,14 @@ class AuthorsService extends ElementsManager
 
         if ($this->forceUpdateCountry && $label->countryId !== null) {
             $countryElement = $this->getElementByImportId((string)$label->countryId, $origin, 'country');
-            if ($countryElement && $element->country != $countryElement->id) {
+            if ($countryElement && $element->country !== $countryElement->id) {
                 $element->country = $countryElement->id;
                 $changed = true;
             }
         }
         if ($this->forceUpdateCity && $label->cityId !== null) {
             $cityElement = $this->getElementByImportId((string)$label->cityId, $origin, 'city');
-            if ($cityElement && $element->city != $cityElement->id) {
+            if ($cityElement && $element->city !== $cityElement->id) {
                 $element->city = $cityElement->id;
                 $changed = true;
             }
@@ -270,48 +242,35 @@ class AuthorsService extends ElementsManager
             $element->persistElementData();
         }
 
-        if ($this->forceUpdateGroups && is_array($label->groupsData) && $label->groupsData !== []) {
+        if ($this->forceUpdateGroups && is_array($label->groupImportIds) && $label->groupImportIds !== []) {
             $roles = $label->groupRoles ?? [];
-            foreach ($label->groupsData as $groupImportId) {
+            foreach ($label->groupImportIds as $groupImportId) {
                 if ($groupImportId === null || $groupImportId === '') {
                     continue;
                 }
-                if ($groupElement = $this->getElementByImportId((string)$groupImportId, $origin, 'group')) {
+                if ($groupElement = $this->getElementByImportId($groupImportId, $origin, 'group')) {
                     $this->authorshipRepository->addAuthorship($groupElement->id, $element->getId(), 'group', $roles);
                 }
             }
         }
     }
 
-    public function importAuthorAlias(LabelGatheredInfoDTO $label, string $origin, bool $createNew = true)
+    public function importAuthorAlias(PersonLabel $personLabel, string $origin, bool $createNew = true)
     {
-        $importId = (string)$label->id;
-        if (isset($this->importedAuthorAliases[$origin][$importId])) {
-            return $this->importedAuthorAliases[$origin][$importId];
-        }
-
-        /** @var authorAliasElement|null $element */
-        $element = $this->getElementByImportId($importId, $origin, 'author');
+        $element = $this->resolveAuthorAliasByLabel($personLabel, $origin);
         if (!$element) {
-            $personLabel = new PersonLabel(
-                id: $importId,
-                name: $label->title ?? '',
-                groups: null,
-                isAlias: true
-            );
-
             if ($element = $this->labelResolver->resolve($personLabel)) {
                 if ($origin) {
                     $this->saveImportId($element->id, $importId, $origin, 'author');
                 }
                 if ($element->structureType === 'authorAlias') {
-                    $this->updateAuthorAlias($element, $label, $origin);
+                    $this->updateAuthorAlias($element, $personLabel, $origin);
                 }
             } elseif ($createNew) {
-                $element = $this->createAuthorAlias($label, $origin);
+                $element = $this->createAuthorAlias($personLabel, $origin);
             }
         } elseif ($element->structureType === 'authorAlias') {
-            $this->updateAuthorAlias($element, $label, $origin);
+            $this->updateAuthorAlias($element, $personLabel, $origin);
         }
 
         $this->importedAuthorAliases[$origin][$importId] = $element;
@@ -323,20 +282,12 @@ class AuthorsService extends ElementsManager
      */
     public function importAuthorOld(array $authorInfo, string $origin, bool $createNew = true)
     {
-        $dto = LabelGatheredInfoDTO::fromArray($authorInfo);
-        return $this->importAuthor($dto, $origin, $createNew);
+        throw new Exception('Deprecated');
+//        $dto = PersonLabel::fromArray($authorInfo);
+//        return $this->importAuthor($dto, $origin, $createNew);
     }
 
-    /**
-     * @deprecated
-     */
-    public function importAuthorAliasOld($authorAliasInfo, $origin, bool $createNew = true)
-    {
-        $dto = LabelGatheredInfoDTO::fromArray((array)$authorAliasInfo);
-        return $this->importAuthorAlias($dto, (string)$origin, $createNew);
-    }
-
-    protected function createAuthorAlias(LabelGatheredInfoDTO $authorAlias, string $origin): ?authorAliasElement
+    protected function createAuthorAlias(PersonLabel $authorAlias, string $origin): ?authorAliasElement
     {
         $title = trim((string)($authorAlias->title ?? ''));
         if ($title === '') {
@@ -392,11 +343,11 @@ class AuthorsService extends ElementsManager
         return null;
     }
 
-    protected function updateAuthorAlias(authorAliasElement $element, LabelGatheredInfoDTO $authorAlias, string $origin): void
+    protected function updateAuthorAlias(authorAliasElement $element, PersonLabel $authorAlias, string $origin): void
     {
         $changed = false;
 
-        $title = trim(($authorAlias->title ?? ''));
+        $title = trim($authorAlias->title ?? '');
         if ($title !== '' && !$element->title) {
             $element->title = $title;
             $element->structureName = $title;
@@ -404,7 +355,7 @@ class AuthorsService extends ElementsManager
         }
 
         if ($authorAlias->authorId !== null && !$element->authorId) {
-            if ($authorElement = $this->getElementByImportId((string)$authorAlias->authorId, $origin, 'author')) {
+            if ($authorElement = $this->getElementByImportId((string)$authorAlias->authorId, $origin, 'authorAlias')) {
                 if ($authorElement->id !== $element->authorId) {
                     $element->authorId = $authorElement->id;
                     $changed = true;
@@ -594,6 +545,16 @@ class AuthorsService extends ElementsManager
         return $newAuthorElement;
     }
 
+    public function resolveAuthorByLabel(PersonLabel $label, string $origin): authorElement|null
+    {
+        $authorId = $label->id;
+        if (isset($this->importedAuthors[$origin][$authorId])) {
+            return $this->importedAuthors[$origin][$authorId];
+        }
+
+        return $this->getElementByImportId($authorId, $origin, 'author');
+    }
+
     /**
      * @psalm-param 'admin'|'public' $type
      *
@@ -601,13 +562,8 @@ class AuthorsService extends ElementsManager
      */
     protected function getLettersListMarker(string $type): string
     {
-        if ($type === 'admin') {
-            return 'authors';
-        } else {
-            return 'authorsmenu';
-        }
+        return $type === 'admin' ? 'authors' : 'authorsmenu';
     }
-
 
     public function convertGroupToAuthor(groupElement $groupElement): authorElement|null
     {
@@ -665,5 +621,15 @@ class AuthorsService extends ElementsManager
             }
         }
         return $authorElement;
+    }
+
+    public function resolveAuthorAliasByLabel(PersonLabel $personLabel, string $origin): authorAliasElement|null
+    {
+        $importId = (string)$personLabel->id;
+        if (isset($this->importedAuthorAliases[$origin][$importId])) {
+            return $this->importedAuthorAliases[$origin][$importId];
+        }
+
+        return $this->getElementByImportId($importId, $origin, 'authorAlias');
     }
 }

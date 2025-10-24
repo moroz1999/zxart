@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace ZxArt\Import\Services;
 
@@ -80,7 +81,7 @@ class WosManager extends errorLogger
     protected array $mapFileTypes;
     protected array $infoFileTypes;
     protected array $adFileTypes;
-    protected array $categories;
+    protected array $allowedCategoryIdsMap;
     protected string $origin = 'zxdb';
     protected array $releasesInfo = [];
     protected array $legalStatuses = [
@@ -309,7 +310,7 @@ class WosManager extends errorLogger
             59,
             60,
         ];
-        $this->categories = [
+        $this->allowedCategoryIdsMap = [
             1 => true,
             2 => true,
             3 => true,
@@ -463,7 +464,7 @@ class WosManager extends errorLogger
                     ->select('*')
                     ->get()) {
                     foreach ($entries as $entry) {
-                        if (isset($this->categories[$entry['genretype_id']])) {
+                        if (isset($this->allowedCategoryIdsMap[$entry['genretype_id']])) {
                             $prodInfo['categories'][] = $entry['genretype_id'];
                             $prodInfo['seriesProds'][] = $entry['id'];
                         }
@@ -504,7 +505,7 @@ class WosManager extends errorLogger
                     continue;
                 }
 
-                if (!isset($this->categories[$entry['genretype_id']])) {
+                if (!isset($this->allowedCategoryIdsMap[$entry['genretype_id']])) {
                     file_put_contents($this->getStatusPath(), $this->counter);
                     if (($this->maxCounter && ($this->counter >= $this->maxCounter)) || time() >= $this->maxTime) {
                         return false;

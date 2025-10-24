@@ -9,7 +9,7 @@ use structureManager;
 
 class TunesManager extends ElementsManager
 {
-    const TABLE = 'module_zxmusic';
+    const string TABLE = 'module_zxmusic';
     protected $columnRelations = [];
 
     public function __construct(

@@ -10,9 +10,9 @@ use ZxArt\Logs\Log;
 
 class PromptSender
 {
-    public const MODEL_O3_MINI = 'o3-mini';
-    public const MODEL_4O = 'gpt-4o';
-    public const MODEL_4O_MINI = 'gpt-4o-mini';
+    public const string MODEL_O3_MINI = 'o3-mini';
+    public const string MODEL_4O = 'gpt-4o';
+    public const string MODEL_4O_MINI = 'gpt-4o-mini';
 
     public function __construct(
         private string $apiKey,

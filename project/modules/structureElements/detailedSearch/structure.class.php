@@ -20,7 +20,7 @@ class detailedSearchElement extends structureElement implements LocationProvider
     protected $endElementNumber;
     protected $totalAmount;
     protected $filtrationResult;
-    const ELEMENTS_ON_PAGE = 60;
+    const int ELEMENTS_ON_PAGE = 60;
 
     /**
      * @return void

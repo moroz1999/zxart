@@ -2,8 +2,8 @@
 
 class registrationElement extends menuDependantStructureElement
 {
-    const FIELD_LINK_TYPE = 'registrationField';
-    const USER_GROUP_LINK_TYPE = 'registrationUserGroup';
+    const string FIELD_LINK_TYPE = 'registrationField';
+    const string USER_GROUP_LINK_TYPE = 'registrationUserGroup';
     public $dataResourceName = 'module_registration';
     public $defaultActionName = 'show';
     public $role = 'content';

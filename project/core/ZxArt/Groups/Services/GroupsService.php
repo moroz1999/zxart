@@ -48,43 +48,25 @@ class GroupsService extends ElementsManager
     }
 
 
-    public function importGroup(GroupLabel $dto, ?string $origin = null, bool $createNew = true, ?array $memberNames = null): groupAliasElement|groupElement|null
+    public function importGroup(GroupLabel $label, ?string $origin = null): groupAliasElement|groupElement|null
     {
-        $label = new GroupLabel(
-            id: $dto->id ?? null,
-            name: $dto->title,
-            city: $dto->cityName ?? null,
-            country: $dto->countryName ?? null,
-            isAlias: $dto->isAlias ?? null,
-            memberNames: $memberNames,
-            parentGroupIds: $dto->groupsData ?? null
-        );
-
-        /** @var groupElement|groupAliasElement|null $element */
-        $element = $this->getElementByImportId($label->id, $origin, 'group');
-        if ($element === null) {
-            $element = $this->labelResolver->resolve($label);
-
-            if (($element !== null) && $origin !== null) {
-                $this->saveImportId($element->id, $label->id, $origin, 'group');
-            }
-        }
-        if ($createNew === false && $element === null) {
-            return null;
+        $element = $this->resolveGroupByLabel($label, $origin);
+        if (($element !== null) && $origin !== null) {
+            $this->saveImportId($element->id, $label->id, $origin, 'group');
         }
 
         if ($element === null) {
             if ($label->isAlias) {
-                $element = $this->createGroupAlias($dto, $origin);
+                $element = $this->createGroupAlias($label, $origin);
             } else {
-                $element = $this->createGroup($dto, $origin);
+                $element = $this->createGroup($label, $origin);
             }
         }
 
         if ($element instanceof groupAliasElement) {
-            $this->updateGroupAlias($element, $dto, $origin);
+            $this->updateGroupAlias($element, $label, $origin);
         } else {
-            $this->updateGroup($element, $dto, $origin);
+            $this->updateGroup($element, $label, $origin);
         }
 
         return $element;
@@ -92,7 +74,7 @@ class GroupsService extends ElementsManager
 
     private function createGroup(GroupLabel $dto, string $origin): ?groupElement
     {
-        if ($element = $this->manufactureGroupElement($dto->title ?? '')) {
+        if ($element = $this->manufactureGroupElement($dto->name ?? '')) {
             $this->updateGroup($element, $dto, $origin);
             if ($dto->id !== null) {
                 $this->saveImportId($element->id, (string)$dto->id, $origin, 'group');
@@ -120,35 +102,30 @@ class GroupsService extends ElementsManager
     {
         $changed = false;
 
-        if (!empty($dto->title) && $element->title !== $dto->title && !$element->title) {
+        if (($dto->name !== '' && $dto->name !== null) && $element->title !== $dto->name && !$element->title) {
             $changed = true;
-            $element->title = $dto->title;
-            $element->structureName = $dto->title;
+            $element->title = $dto->name;
+            $element->structureName = $dto->name;
         }
 
-        if (!empty($dto->type) && $element->type !== $dto->type && !$element->type) {
-            $changed = true;
-            $element->type = $dto->type;
-        }
-
-        if (!empty($dto->abbreviation) && $element->abbreviation !== $dto->abbreviation && !$element->abbreviation) {
-            $changed = true;
-            $element->abbreviation = $dto->abbreviation;
-        }
-
-        if (!empty($dto->website) && $element->website !== $dto->website && !$element->website) {
-            $changed = true;
-            $element->website = $dto->website;
-        }
-
-        if (!empty($dto->type) && $element->type !== $dto->type) {
+        if (($dto->type !== '' && $dto->type !== null) && $element->type !== $dto->type) {
             if (!$element->type || $element->type === 'unknown') {
                 $changed = true;
                 $element->type = $dto->type;
             }
         }
 
-        if (!empty($dto->locationName)) {
+        if (($dto->abbreviation !== '' && $dto->abbreviation !== null) && $element->abbreviation !== $dto->abbreviation && !$element->abbreviation) {
+            $changed = true;
+            $element->abbreviation = $dto->abbreviation;
+        }
+
+        if (($dto->website !== '' && $dto->website !== null) && $element->website !== $dto->website && !$element->website) {
+            $changed = true;
+            $element->website = $dto->website;
+        }
+
+        if ($dto->locationName !== '' && $dto->locationName !== null) {
             if ($locationElement = $this->countriesManager->getLocationByName($dto->locationName)) {
                 if ($locationElement->structureType === 'country') {
                     if ($element->country != $locationElement->id) {
@@ -167,10 +144,10 @@ class GroupsService extends ElementsManager
             }
         }
 
-        if (!empty($dto->countryName)) {
+        if ($dto->countryName !== '' && $dto->countryName !== null) {
             if ($locationElement = $this->countriesManager->getLocationByName($dto->countryName)) {
                 if ($locationElement->structureType === 'country') {
-                    if ($element->country != $locationElement->id) {
+                    if ($element->country !== $locationElement->id) {
                         $changed = true;
                         $element->country = $locationElement->id;
                     }
@@ -178,10 +155,10 @@ class GroupsService extends ElementsManager
             }
         }
 
-        if (!empty($dto->cityName)) {
+        if ($dto->cityName !== '' && $dto->cityName !== null) {
             if ($locationElement = $this->countriesManager->getLocationByName($dto->cityName)) {
                 if ($locationElement->structureType === 'city') {
-                    if ($element->city != $locationElement->id) {
+                    if ($element->city !== $locationElement->id) {
                         $changed = true;
                         $element->city = $locationElement->id;
                     }
@@ -189,17 +166,17 @@ class GroupsService extends ElementsManager
             }
         }
 
-        if (!empty($dto->countryId)) {
+        if ($dto->countryId !== 0 && $dto->countryId !== null) {
             $locationElement = $this->getElementByImportId((string)$dto->countryId, $origin, 'country');
-            if ($locationElement && $element->country != $locationElement->id) {
+            if ($locationElement && $element->country !== $locationElement->id) {
                 $changed = true;
                 $element->country = $locationElement->id;
             }
         }
 
-        if (is_array($dto->groupsData)) {
+        if (is_array($dto->parentGroupIds)) {
             $parentGroups = $element->parentGroups;
-            foreach ($dto->groupsData as $groupId) {
+            foreach ($dto->parentGroupIds as $groupId) {
                 $groupElement = $this->getElementByImportId((string)$groupId, $origin, 'group');
                 if ($groupElement !== null && !in_array($groupElement, $parentGroups, true)) {
                     $parentGroups[] = $groupElement;
@@ -218,7 +195,7 @@ class GroupsService extends ElementsManager
 
     private function createGroupAlias(GroupLabel $dto, string $origin): ?groupAliasElement
     {
-        if ($element = $this->manufactureAliasElement($dto->title ?? '')) {
+        if ($element = $this->manufactureAliasElement($dto->name ?? '')) {
             $this->updateGroupAlias($element, $dto, $origin);
             if ($dto->id !== null) {
                 $this->saveImportId($element->id, (string)$dto->id, $origin, 'group');
@@ -245,16 +222,16 @@ class GroupsService extends ElementsManager
     {
         $changed = false;
 
-        if (!empty($groupAlias->title) && $element->title != $groupAlias->title) {
+        if (($groupAlias->name !== null && $groupAlias->name !== '') && $element->title !== $groupAlias->name) {
             if (!$element->title) {
                 $changed = true;
-                $element->title = $groupAlias->title;
-                $element->structureName = $groupAlias->title;
+                $element->title = $groupAlias->name;
+                $element->structureName = $groupAlias->name;
             }
         }
 
-        if (!empty($groupAlias->groupId) && !$element->groupId) {
-            if ($groupElement = $this->getElementByImportId((string)$groupAlias->groupId, $origin, 'group')) {
+        if (($groupAlias->groupId !== null) && !$element->groupId) {
+            if ($groupElement = $this->getElementByImportId($groupAlias->groupId, $origin, 'group')) {
                 $changed = true;
                 $element->groupId = $groupElement->getId();
             }
@@ -327,14 +304,9 @@ class GroupsService extends ElementsManager
         return $groupElement;
     }
 
-
-    /**
-     * @param groupAliasElement $groupAliasElement
-     * @return bool|groupElement
-     */
-    public function convertGroupAliasToGroup($groupAliasElement)
+    public function convertGroupAliasToGroup(groupAliasElement $groupAliasElement): ?groupElement
     {
-        $groupElement = false;
+        $groupElement = null;
         if ($groupAliasElement->structureType === 'groupAlias') {
             if ($groupElement = $this->manufactureGroupElement($groupAliasElement->title)) {
                 $groupElement->title = $groupAliasElement->title;
@@ -363,6 +335,16 @@ class GroupsService extends ElementsManager
             }
         }
         return $groupElement;
+    }
+
+    public function resolveGroupByLabel(GroupLabel $label, ?string $origin): groupElement|groupAliasElement|null
+    {
+        /** @var groupElement|null $element */
+        $element = $this->getElementByImportId($label->id, $origin, 'group');
+        if ($element === null) {
+            $element = $this->labelResolver->resolveGroup($label);
+        }
+        return $element;
     }
 
     protected function getLettersListMarker(string $type): string

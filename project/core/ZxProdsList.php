@@ -45,7 +45,7 @@ trait ZxProdsList
 
     private $type = 'zxProd';
 
-    private const defaultStatuses = [
+    private const array defaultStatuses = [
         LegalStatus::allowed,
         LegalStatus::forbidden,
         LegalStatus::forbiddenzxart,

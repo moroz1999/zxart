@@ -42,7 +42,7 @@ final readonly class LabelResolver
         return $this->resolveUnknown($label);
     }
 
-    private function resolveGroup(GroupLabel $label): groupElement|groupAliasElement|null
+    public function resolveGroup(GroupLabel $label): groupElement|groupAliasElement|null
     {
         return $this->resolveEntity(
             $label,
@@ -52,7 +52,7 @@ final readonly class LabelResolver
 
             function (groupElement|groupAliasElement $groupElement, ?string $elementName, GroupLabel $label) {
                 $elementCountryTitle = $groupElement->getCountryTitle();
-                $labelCountry = $label->country ?? null;
+                $labelCountry = $label->countryName ?? null;
 
                 $labelMembers = $label->memberNames ?? [];
                 $authorsInfo = $groupElement->getAuthorsInfo('group');
@@ -75,7 +75,7 @@ final readonly class LabelResolver
                     $score += 3;
                 }
 
-                if ($groupElement->matchesCity($label->city ?? '')) {
+                if ($groupElement->matchesCity($label->cityName ?? '')) {
                     $score += 5;
                 }
                 if ($groupElement->matchesCountry($labelCountry ?? '')) {
@@ -112,7 +112,7 @@ final readonly class LabelResolver
 
 
                 $authorCountry = $author->getCountryTitle();
-                $labelCountry = $label->country;
+                $labelCountry = $label->countryName;
                 //don't match authors from different countries
                 if ($authorCountry !== null && $labelCountry !== null && !$author->matchesCountry($labelCountry)) {
                     return 0;
@@ -120,13 +120,13 @@ final readonly class LabelResolver
 
 
                 $authorCity = $author->getCityTitle();
-                $labelCity = $label->city;
+                $labelCity = $label->cityName;
                 //don't match authors from different cities
                 if ($authorCity !== null && $labelCity !== null && !$author->matchesCity($labelCity)) {
                     return 0;
                 }
 
-                $labelGroups = $label->groups ?? [];
+                $labelGroups = $label->groupImportIds ?? [];
 
                 // if both have groups, then exclude non-matching
                 if (count($authorGroups) > 0 && count($labelGroups) > 0) {
@@ -156,7 +156,7 @@ final readonly class LabelResolver
                     $score += 20;
                 }
 
-                if ($author->matchesCity($label->city ?? '')) {
+                if ($author->matchesCity($label->cityName ?? '')) {
                     $score += 5;
                 }
                 if ($author->matchesCountry($labelCountry ?? '')) {

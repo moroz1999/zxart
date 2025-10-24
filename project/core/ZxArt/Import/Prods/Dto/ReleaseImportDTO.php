@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace ZxArt\Import\Prods\Dto;
 
+use ZxArt\Import\Labels\Label;
+
 readonly final class ReleaseImportDTO
 {
     public function __construct(
@@ -19,7 +21,7 @@ readonly final class ReleaseImportDTO
         public ?string  $description = null,
         /** @var string[]|null */
         public ?array   $hardwareRequired = null,
-        /** @var LabelGatheredInfoDTO[]|null */
+        /** @var Label[]|null */
         public ?array   $labels = null,
         /** @var array<string,string[]>|null map importAuthorId => roles[] */
         public ?array   $authors = null,
@@ -41,7 +43,7 @@ readonly final class ReleaseImportDTO
     public static function fromArray(array $a): self
     {
         $labels = isset($a['labels'])
-            ? array_map(fn($x) => LabelGatheredInfoDTO::fromArray($x), (array)$a['labels'])
+            ? array_map(fn($x) => Label::fromArray($x), (array)$a['labels'])
             : null;
 
         return new self(

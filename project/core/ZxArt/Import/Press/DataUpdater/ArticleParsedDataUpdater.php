@@ -474,7 +474,7 @@ final class ArticleParsedDataUpdater
             if (!$this->authorSufficiencyChecker::isDataSufficient(
                 $label->realName ?? '',
                 $label->name ?? '',
-                $label->groups ?? [],
+                $label->groupImportIds ?? [],
                 $label->groupsIds ?? [],
             )) {
                 continue;
@@ -554,9 +554,9 @@ final class ArticleParsedDataUpdater
             id: $parsedAuthor['id'],
             name: $parsedAuthor['nickName'] ?? null,
             realName: $parsedAuthor['realName'] ?? null,
-            city: $parsedAuthor['city'] ?? null,
-            country: $parsedAuthor['country'] ?? null,
-            groups: $groups,
+            cityName: $parsedAuthor['city'] ?? null,
+            countryName: $parsedAuthor['country'] ?? null,
+            groupImportIds: $groups,
             groupsIds: $parsedAuthor['teamIds'] ?? null,
             groupRoles: $groupRoles,
         );
@@ -574,8 +574,8 @@ final class ArticleParsedDataUpdater
         return new GroupLabel(
             id: $parsedGroup['id'],
             name: $parsedGroup['name'],
-            city: $parsedGroup['city'] ?? null,
-            country: $parsedGroup['country'] ?? null,
+            cityName: $parsedGroup['city'] ?? null,
+            countryName: $parsedGroup['country'] ?? null,
             groups: $groups,
             memberNames: $memberNames,
             parentGroupIds: $parsedGroup['parentTeamIds'] ?? null,
