@@ -478,9 +478,9 @@ class PouetImport extends errorLogger
                         }
                     }
 
-                    $releaseImages = [];
+                    $prodImages = [];
                     if (!empty($prodData['screenshot'])) {
-                        $releaseImages[] = (string)$prodData['screenshot'];
+                        $prodImages[] = (string)$prodData['screenshot'];
                     }
 
                     $releaseFileUrl = null;
@@ -516,7 +516,7 @@ class PouetImport extends errorLogger
                         authors: null,
                         publishers: null,
                         undetermined: null,
-                        images: $releaseImages ?: null,
+                        images: null,
                         inlayImages: null,
                         infoFiles: null,
                         adFiles: null,
@@ -558,7 +558,7 @@ class PouetImport extends errorLogger
                         party: $partyDto,
                         directCategories: $directCategories ?: null,
                         categories: null,
-                        images: $releaseImages ?: null,
+                        images: $prodImages ?: null,
                         maps: null,
                         inlayImages: null,
                         rzx: null,
