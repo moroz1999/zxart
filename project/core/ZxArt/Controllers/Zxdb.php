@@ -49,9 +49,6 @@ class Zxdb extends controllerApplication
                 ['rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin')]
             );
 
-            /**
-             * @var ZxdbImport $zxdbImport
-             */
             $zxdbImport = $this->getService(ZxdbImport::class);
             $zxdbImport->importAll();
         }

@@ -16,9 +16,6 @@ class joinGroup extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated) {
-            /**
-             * @var GroupsService $groupsService
-             */
             $groupsService = $this->getService(GroupsService::class);
 
             if ($structureElement->joinAsAlias) {

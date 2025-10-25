@@ -55,11 +55,7 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
         this.element.nativeElement.addEventListener('pointerenter', this.enterHandler.bind(this));
         this.element.nativeElement.addEventListener('pointerleave', this.leaveHandler.bind(this));
         this.element.nativeElement.addEventListener('pointermove', (event: Event) => event.preventDefault());
-        this.element.nativeElement.addEventListener('contextmenu', (event: Event) => {
-            if (event instanceof TouchEvent) {
-                event.preventDefault();
-            }
-        });
+        this.element.nativeElement.addEventListener('contextmenu', (event: Event) => {});
         this.iconReg.loadSvg(`${environment.svgUrl}cart.svg`, 'cart')?.subscribe();
     }
 

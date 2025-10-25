@@ -16,9 +16,6 @@ class joinAuthor extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated) {
-            /**
-             * @var AuthorsService $authorsManager
-             */
             $authorsManager = $this->getService(AuthorsService::class);
 
             if ($structureElement->joinAsAlias) {

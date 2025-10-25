@@ -2,11 +2,14 @@
 declare(strict_types=1);
 
 namespace ZxArt\Queue;
+
 use Illuminate\Database\Connection;
 
 readonly class QueueRepository
 {
-    public function __construct(private Connection $db)
+    public function __construct(
+        private Connection $db
+    )
     {
     }
 
@@ -19,7 +22,7 @@ readonly class QueueRepository
             ->orderBy('elementId', 'desc')
             ->first();
 
-        return $result ? $result['elementId'] : null;
+        return $result !== null ? $result['elementId'] : null;
     }
 
     public function updateStatus(int $elementId, QueueType $type, QueueStatus $status): void
@@ -79,7 +82,7 @@ readonly class QueueRepository
             ->insert($data);
     }
 
-    public function deleteElementRecords(int $elementId, array $types): array
+    public function deleteElementRecords(int $elementId, array $types): int
     {
         $stringTypes = array_map(fn($type) => $type->value, $types);
         return $this->db->table('queue')

@@ -7,9 +7,6 @@ trait AuthorshipProviderTrait
     public function getAuthorsInfo($type, $roles = null)
     {
         $result = [];
-        /**
-         * @var AuthorshipRepository $authorshipRepository
-         */
         $authorshipRepository = $this->getService(AuthorshipRepository::class);
         if ($info = $authorshipRepository->getAuthorsInfo($this->id, $type)) {
             if (!$roles) {
@@ -27,18 +24,12 @@ trait AuthorshipProviderTrait
 
     public function getAuthorsRecords($type)
     {
-        /**
-         * @var AuthorshipRepository $authorshipRepository
-         */
         $authorshipRepository = $this->getService(AuthorshipRepository::class);
         return $authorshipRepository->getElementAuthorsRecords($this->id, $type);
     }
 
     public function getAuthorshipInfo($type)
     {
-        /**
-         * @var AuthorshipRepository $authorshipRepository
-         */
         $authorshipRepository = $this->getService(AuthorshipRepository::class);
         return $authorshipRepository->getAuthorshipInfo($this->getId(), $type);
     }

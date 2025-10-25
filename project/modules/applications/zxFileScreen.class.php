@@ -44,9 +44,6 @@ class zxFileScreenApplication extends controllerApplication
          * @var zxReleaseElement $element
          */
         if ($element = $structureManager->getElementById($this->id)) {
-            /**
-             * @var ZxParsingManager $zxParsingManager
-             */
             $zxParsingManager = $this->getService(ZxParsingManager::class);
             $file = null;
             if ($this->fileId) {

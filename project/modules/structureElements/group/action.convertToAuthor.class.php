@@ -16,9 +16,6 @@ class convertToAuthorGroup extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated) {
-            /**
-             * @var AuthorsService $authorsManager
-             */
             $authorsManager = $this->getService(AuthorsService::class);
 
             if ($newElement = $authorsManager->convertGroupToAuthor($structureElement)) {

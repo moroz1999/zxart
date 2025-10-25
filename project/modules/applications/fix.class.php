@@ -71,9 +71,6 @@ class fixApplication extends controllerApplication
 
     private function fixDisconnectedImages(): void
     {
-        /**
-         * @var linksManager $linksManager
-         */
         $linksManager = $this->getService(linksManager::class);
         $result = $this->db->table('module_zxpicture')
             ->orderBy('id')
@@ -94,10 +91,6 @@ class fixApplication extends controllerApplication
 
     private function fixProdInvalidImages()
     {
-        /**
-         * @var linksManager $linksManager
-         */
-        $linksManager = $this->getService(linksManager::class);
         $result = $this->db->table('module_zxprod')
             ->orderBy('id')
             ->get(['id']);
@@ -164,9 +157,6 @@ class fixApplication extends controllerApplication
 
     private function miscTemp(): void
     {
-        /**
-         * @var linksManager $linksManager
-         */
         $linksManager = $this->getService(linksManager::class);
         $ids = $linksManager->getConnectedIdList(CategoryIds::MISC->value, LinkTypes::ZX_PROD_CATEGORY->value, 'parent');
         foreach ($ids as $id) {
@@ -181,9 +171,6 @@ class fixApplication extends controllerApplication
 
     private function fixMissingCategories(): void
     {
-        /**
-         * @var linksManager $linksManager
-         */
         $linksManager = $this->getService(linksManager::class);
 
         $records = $this->db->table('module_zxprod')->whereNotIn('id',
@@ -281,9 +268,6 @@ class fixApplication extends controllerApplication
 
     private function fixProds(): void
     {
-        /**
-         * @var linksManager $linksManager
-         */
         $linksManager = $this->getService(linksManager::class);
         $result = $this->db->table('module_zxprod')
             ->orderBy('id')
@@ -434,9 +418,6 @@ class fixApplication extends controllerApplication
     {
         $prodsService = $this->getService(ProdsService::class);
 
-        /**
-         * @var linksManager $linksManager
-         */
         $linksManager = $this->getService(linksManager::class);
         $name = 'Nicron';
         $replacement = 'Nicron issue';
@@ -492,9 +473,6 @@ class fixApplication extends controllerApplication
 
     private function fixDemoCategories(): void
     {
-        /**
-         * @var linksManager $linksManager
-         */
         $linksManager = $this->getService(linksManager::class);
         $demoId = CategoryIds::DEMOS->value;
         $megaDemoId = CategoryIds::MEGADEMO->value;
@@ -513,9 +491,6 @@ class fixApplication extends controllerApplication
     private function fixMisc(): void
     {
         echo 'fixMisc <br>';
-        /**
-         * @var linksManager $linksManager
-         */
         $linksManager = $this->getService(linksManager::class);
 
         $ids = $linksManager->getConnectedIdList(CategoryIds::MISC->value, LinkTypes::ZX_PROD_CATEGORY->value, 'parent');
@@ -530,9 +505,6 @@ class fixApplication extends controllerApplication
 
     private function fixPressCategories(): void
     {
-        /**
-         * @var linksManager $linksManager
-         */
         $linksManager = $this->getService(linksManager::class);
         $name = 'Outlet issue';
         $result = $this->db->table(ProdsRepository::TABLE)
@@ -564,9 +536,6 @@ class fixApplication extends controllerApplication
 
     private function deletePress(): void
     {
-        /**
-         * @var linksManager $linksManager
-         */
         $linksManager = $this->getService(linksManager::class);
         $result = $this->db->table('module_pressarticle')
             ->orderBy('id')
@@ -589,9 +558,6 @@ class fixApplication extends controllerApplication
 
     private function deleteProds(): void
     {
-        /**
-         * @var linksManager $linksManager
-         */
         $linksManager = $this->getService(linksManager::class);
         $result = $this->db->table(ProdsRepository::TABLE)
             ->where('id', '>=', 453563)

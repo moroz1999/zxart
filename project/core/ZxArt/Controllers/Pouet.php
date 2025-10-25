@@ -49,9 +49,6 @@ class Pouet extends controllerApplication
                 ['rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin')]
             );
 
-            /**
-             * @var PouetImport $pouetImport
-             */
             $pouetImport = $this->getService(PouetImport::class);
             $pouetImport->importAll();
         }

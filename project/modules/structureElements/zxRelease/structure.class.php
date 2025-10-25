@@ -257,9 +257,6 @@ class zxReleaseElement extends ZxArtItem implements
     public function getReleaseFlatStructure()
     {
         if ($this->getFilePath()) {
-            /**
-             * @var ZxParsingManager $zxParsingManager
-             */
             $zxParsingManager = $this->getService(ZxParsingManager::class);
             return $zxParsingManager->getStructureRecordsById($this->getId());
         }
@@ -404,9 +401,6 @@ class zxReleaseElement extends ZxArtItem implements
 
     public function getFormattedFileContent(array $fileRecord): ?string
     {
-        /**
-         * @var ZxParsingManager $zxParsingManager
-         */
         $zxParsingManager = $this->getService(ZxParsingManager::class);
         $controller = controller::getInstance();
 
@@ -479,9 +473,6 @@ class zxReleaseElement extends ZxArtItem implements
 
     public function getReleaseFile(int $fileId): ?ZxParsingItem
     {
-        /**
-         * @var ZxParsingManager $zxParsingManager
-         */
         $zxParsingManager = $this->getService(ZxParsingManager::class);
         if ($file = $zxParsingManager->extractFile($this->getFilePath(), $fileId)) {
             return $file;
@@ -832,7 +823,6 @@ class zxReleaseElement extends ZxArtItem implements
 
     public function updateFileStructure(): void
     {
-        /** @var ZxParsingManager $zxParsingManager */
         $zxParsingManager = $this->getService(ZxParsingManager::class);
 
         $filePath = $this->getFilePath();

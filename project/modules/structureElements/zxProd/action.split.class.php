@@ -16,9 +16,6 @@ class splitZxProd extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated) {
-            /**
-             * @var ProdsService $prodsService
-             */
             $prodsService = $this->getService(ProdsService::class);
 
             if ($structureElement->splitData) {

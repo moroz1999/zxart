@@ -18,8 +18,8 @@ final class LabelTransformer
             memberNames: $label->memberNames,
             parentGroupIds: null,
             type: $label->type?->value ?? null,
-            abbreviation: null,
-            website: null,
+            abbreviation: $label->abbreviation,
+            website: $label->website,
             groupId: $label->groupId,
         );
     }

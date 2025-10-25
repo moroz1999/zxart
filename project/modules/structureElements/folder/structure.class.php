@@ -165,18 +165,18 @@ class folderElement extends menuDependantStructureElement implements
         if ($this->lettersSelectorInfo === null) {
             $this->lettersSelectorInfo = [];
 
-            if ($structureManager = $this->getService('structureManager')) {
-                foreach ($structureManager->getElementsChildren($this->getId()) as $letter) {
-                    if ($letter->structureType == 'letter') {
-                        $letter->setViewName('games');
-                        $letter->template = 'letter.games.tpl';
-                        $this->lettersSelectorInfo[] = [
-                            'url' => $letter->getUrl(),
-                            'title' => $letter->title,
-                        ];
-                    }
+            $structureManager = $this->getService('structureManager');
+            foreach ($structureManager->getElementsChildren($this->getId()) as $letter) {
+                if ($letter->structureType === 'letter') {
+                    $letter->setViewName('games');
+                    $letter->template = 'letter.games.tpl';
+                    $this->lettersSelectorInfo[] = [
+                        'url' => $letter->getUrl(),
+                        'title' => $letter->title,
+                    ];
                 }
             }
+
         }
         return $this->lettersSelectorInfo;
     }
@@ -188,7 +188,7 @@ class folderElement extends menuDependantStructureElement implements
 
         if ($currentLanguage = $structureManager->getElementById(
             $languagesManager->getCurrentLanguageId()
-        )){
+        )) {
             $firstPageElement = $currentLanguage->getFirstPageElement();
             return $firstPageElement->getId() !== $this->getId();
         }

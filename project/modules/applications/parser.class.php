@@ -57,9 +57,6 @@ class parserApplication extends controllerApplication
                 ],
             );
             $this->db = $this->getService('db');
-            /**
-             * @var ZxParsingManager $zxParsingManager
-             */
             $zxParsingManager = $this->getService(ZxParsingManager::class);
             if ($structure = $zxParsingManager->parseFileStructure($this->filePath, $this->fileName)) {
                 $response = $this->prepareResponse($structure);

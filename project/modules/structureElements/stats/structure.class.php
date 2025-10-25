@@ -90,6 +90,7 @@ class statsElement extends structureElement
         $this->chartDataEventTypes = ['view'];
         return $this->getChartData();
     }
+
     public function getRunsHistoryData()
     {
         $this->resetChartData();
@@ -143,21 +144,19 @@ class statsElement extends structureElement
     public function getTopActionsUsers(string $moduleType, string $actionType, int $limit): array
     {
         $data = [];
-        /**
-         * @var ActionsLogRepository $actionsLogRepository
-         */
-        if ($actionsLogRepository = $this->getService(ActionsLogRepository::class)) {
-            if ($records = $actionsLogRepository->getTopUsersByAction($moduleType, $actionType, $limit)) {
-                foreach ($records as $record) {
-                    if ($userElement = $this->getUser($record['userId'])) {
-                        $data[] = [
-                            'user' => $userElement,
-                            'count' => $record['amount']
-                        ];
-                    }
+
+        $actionsLogRepository = $this->getService(ActionsLogRepository::class);
+        if ($records = $actionsLogRepository->getTopUsersByAction($moduleType, $actionType, $limit)) {
+            foreach ($records as $record) {
+                if ($userElement = $this->getUser($record['userId'])) {
+                    $data[] = [
+                        'user' => $userElement,
+                        'count' => $record['amount']
+                    ];
                 }
             }
         }
+
         return $data;
     }
 
@@ -172,15 +171,16 @@ class statsElement extends structureElement
         /**
          * @var eventsLog $eventsLog
          */
-        if ($eventsLog = $this->getService('eventsLog')) {
-            if ($counts = $eventsLog->countEvents([$type], null, null, null, null, 'count', 'desc', $limit, 'userId')) {
-                foreach ($counts as $userId => $count) {
-                    if ($userElement = $this->getUser($userId)) {
-                        $data[] = ['user' => $userElement, 'count' => $count];
-                    }
+        $eventsLog = $this->getService('eventsLog');
+
+        if ($counts = $eventsLog->countEvents([$type], null, null, null, null, 'count', 'desc', $limit, 'userId')) {
+            foreach ($counts as $userId => $count) {
+                if ($userElement = $this->getUser($userId)) {
+                    $data[] = ['user' => $userElement, 'count' => $count];
                 }
             }
         }
+
         return $data;
     }
 
@@ -214,9 +214,7 @@ class statsElement extends structureElement
 
     public function getUser($userId)
     {
-        $structureManager = $this->getService('structureManager');
-        $user = $structureManager->getElementById($userId, null, true);
-        return $user;
+        return $this->getService('structureManager')->getElementById($userId, null, true);
     }
 }
 

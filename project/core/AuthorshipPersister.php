@@ -6,9 +6,6 @@ trait AuthorshipPersister
 {
     public function persistAuthorship($type): void
     {
-        /**
-         * @var AuthorshipRepository $authorshipRepository
-         */
         $authorshipRepository = $this->getService(AuthorshipRepository::class);
         $existingRecords = $authorshipRepository->getElementAuthorsRecords($this->id, $type);
 

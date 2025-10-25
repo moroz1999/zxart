@@ -18,9 +18,6 @@ trait Group
 
     public function getAuthorsInfo($type)
     {
-        /**
-         * @var AuthorshipRepository $authorshipRepository
-         */
         $authorshipRepository = $this->getService(AuthorshipRepository::class);
         $info = $authorshipRepository->getAuthorsInfo($this->id, $type);
         $sort = [];
