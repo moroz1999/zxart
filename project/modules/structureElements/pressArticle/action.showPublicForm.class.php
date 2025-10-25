@@ -11,7 +11,7 @@ class showPublicFormPressArticle extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         $pressArticleRepository = $this->getService(PressArticleRepository::class);
-        $structureElement->originalContent = $pressArticleRepository->getOriginalContent($structureElement->id);
+        $structureElement->originalContent = $pressArticleRepository->getOriginalContent($structureElement->getId());
         if ($structureElement->originalContent === ''){
             $structureElement->originalContent = $structureElement->content;
         }

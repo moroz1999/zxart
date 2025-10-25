@@ -14,7 +14,7 @@ class approveClaimAuthor extends structureElementAction
         if (is_numeric($userId = $controller->getParameter('userId'))) {
             if ($userElement = $structureManager->getElementById($userId, null, true)) {
                 $userElement->prepareActualData();
-                $userElement->changeConnectedAuthor($structureElement->id);
+                $userElement->changeConnectedAuthor($structureElement->getId());
                 $userElement->persistElementData();
                 $claimApproved = true;
             }
@@ -36,7 +36,7 @@ class approveClaimAuthor extends structureElementAction
                         'author' => $structureElement->title,
                     ]
                 );
-                $newDispatchment->setReferenceId($structureElement->id);
+                $newDispatchment->setReferenceId($structureElement->getId());
                 $newDispatchment->setType('authorClaimResult');
                 if ($emailDispatcher->startDispatchment($newDispatchment)) {
                     $claimResultSent = true;

@@ -66,7 +66,7 @@ class zxProdCategoryElement extends structureElement implements
     {
         $result = [];
         foreach ($this->getCategories() as $category) {
-            $result[] = $category->id;
+            $result[] = $category->getId();
             $result = array_merge($result, $category->gatherSubCategoriesTreeIds());
         }
         return $result;
@@ -78,9 +78,9 @@ class zxProdCategoryElement extends structureElement implements
          * @var structureManager $structureManager
          */
         $structureManager = $this->getService('structureManager');
-        if ($parentElement = $structureManager->getElementsFirstParent($this->id, false, 'structure')) {
+        if ($parentElement = $structureManager->getElementsFirstParent($this->getId(), false, 'structure')) {
             if ($parentElement->structureType === 'zxProdCategory') {
-                return $parentElement->id;
+                return $parentElement->getId();
             }
         }
 
@@ -94,7 +94,7 @@ class zxProdCategoryElement extends structureElement implements
          * @var structureManager $structureManager
          */
         $structureManager = $this->getService('structureManager');
-        if ($parentElement = $structureManager->getElementsFirstParent($this->id, false, 'structure')) {
+        if ($parentElement = $structureManager->getElementsFirstParent($this->getId(), false, 'structure')) {
             if ($parentElement->structureType === 'zxProdCategory') {
                 return $parentElement;
             }
@@ -113,7 +113,7 @@ class zxProdCategoryElement extends structureElement implements
 
     public function getSubCategoriesTreeIds(array &$ids = []): void
     {
-        $ids[] = $this->id;
+        $ids[] = $this->getId();
         if ($subcategories = $this->getCategories()) {
             foreach ($subcategories as $category) {
                 $category->getSubCategoriesTreeIds($ids);
@@ -138,7 +138,7 @@ class zxProdCategoryElement extends structureElement implements
 
             $page = $this->getCurrentPage();
             $ttl = $page === 1 ? 60 * 60 * 24 : 60 * 60 * 2;
-            $key = $this->id . $page . $languagesManager->getCurrentLanguageId();
+            $key = $this->getId() . $page . $languagesManager->getCurrentLanguageId();
             if ($data = $this->getCacheKey($key)) {
                 return $data;
             }

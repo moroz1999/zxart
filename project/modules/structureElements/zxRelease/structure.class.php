@@ -94,7 +94,7 @@ class zxReleaseElement extends ZxArtItem implements
         $moduleStructure['version'] = 'text';
         $moduleStructure['downloads'] = 'text';
         $moduleStructure['plays'] = 'text';
-        $moduleStructure['year'] = 'number';
+        $moduleStructure['year'] = 'naturalNumber';
         $moduleStructure['publishers'] = [
             'ConnectedElements',
             [
@@ -261,7 +261,7 @@ class zxReleaseElement extends ZxArtItem implements
              * @var ZxParsingManager $zxParsingManager
              */
             $zxParsingManager = $this->getService(ZxParsingManager::class);
-            return $zxParsingManager->getStructureRecordsById($this->id);
+            return $zxParsingManager->getStructureRecordsById($this->getId());
         }
         return false;
     }
@@ -274,14 +274,14 @@ class zxReleaseElement extends ZxArtItem implements
     public function getFileUrl(bool $play = false): string
     {
         $controller = $this->getService('controller');
-        return $controller->baseURL . 'release/id:' . $this->id . '/' . $this->getFileName();
+        return $controller->baseURL . 'release/id:' . $this->getId() . '/' . $this->getFileName();
     }
 
     public function getPlayUrl($serveZip = true): ?string
     {
         $controller = $this->getService('controller');
         if ($serveZip) {
-            return $controller->baseURL . 'release/play:1/id:' . $this->id . '/' . $this->getFileName();
+            return $controller->baseURL . 'release/play:1/id:' . $this->getId() . '/' . $this->getFileName();
         }
 
         $playableFiles = $this->getPlayableFiles();
@@ -291,7 +291,7 @@ class zxReleaseElement extends ZxArtItem implements
         }
 
         $fileName = $item['fileName'];
-        return "{$controller->baseURL}zxfile/id:{$this->id}/fileId:{$item['id']}/play:1/{$fileName}";
+        return "{$controller->baseURL}zxfile/id:{$this->getId()}/fileId:{$item['id']}/play:1/{$fileName}";
     }
 
     public function getPlayableFiles(): array
@@ -422,7 +422,7 @@ class zxReleaseElement extends ZxArtItem implements
                     return htmlspecialchars($content);
                 case 'pc_image':
                     if ($fileId = $this->getFileId()) {
-                        return "<img src='" . $controller->baseURL . "zxfile/id:" . $this->id . "/fileId:" . $fileId . "/" . $extractedFile->getItemName() . "' />";
+                        return "<img src='" . $controller->baseURL . "zxfile/id:" . $this->getId() . "/fileId:" . $fileId . "/" . $extractedFile->getItemName() . "' />";
                     }
                     break;
                 case 'zx_basic':
@@ -431,22 +431,22 @@ class zxReleaseElement extends ZxArtItem implements
                     return htmlspecialchars($basic->getAsText());
                 case 'zx_image_standard':
                     if ($fileId = $this->getFileId()) {
-                        return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:standard/' />";
+                        return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->getId() . "/fileId:" . $fileId . "/type:standard/' />";
                     }
                     break;
                 case 'zx_image_monochrome':
                     if ($fileId = $this->getFileId()) {
-                        return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:monochrome/' />";
+                        return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->getId() . "/fileId:" . $fileId . "/type:monochrome/' />";
                     }
                     break;
                 case 'zx_image_tricolor':
                     if ($fileId = $this->getFileId()) {
-                        return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:tricolor/' />";
+                        return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->getId() . "/fileId:" . $fileId . "/type:tricolor/' />";
                     }
                     break;
                 case 'zx_image_gigascreen':
                     if ($fileId = $this->getFileId()) {
-                        return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->id . "/fileId:" . $fileId . "/type:gigascreen/' />";
+                        return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->getId() . "/fileId:" . $fileId . "/type:gigascreen/' />";
                     }
                     break;
                 default:
@@ -535,7 +535,7 @@ class zxReleaseElement extends ZxArtItem implements
     public function isDownloadable(): bool
     {
         $user = $this->getService('user');
-        $privileges = $this->getService('privilegesManager')->getElementPrivileges($this->id);
+        $privileges = $this->getService('privilegesManager')->getElementPrivileges($this->getId());
 
         return !in_array($this->getLegalStatus(), [legalStatus::forbidden->name, legalStatus::forbiddenzxart->name, legalStatus::insales->name], true) ||
             $this->releaseType === 'demoversion' ||
@@ -561,7 +561,7 @@ class zxReleaseElement extends ZxArtItem implements
             $db = $this->getService('db');
             $query = $db->table('import_origin')
                 ->select('importId', 'importOrigin')
-                ->where('elementId', '=', $this->id)
+                ->where('elementId', '=', $this->getId())
                 ->whereIn('importOrigin', ['vt', 'pouet']);
             if ($rows = $query->get()) {
                 foreach ($rows as $row) {
@@ -836,7 +836,7 @@ class zxReleaseElement extends ZxArtItem implements
         $zxParsingManager = $this->getService(ZxParsingManager::class);
 
         $filePath = $this->getFilePath();
-        $id = $this->getId();
+        $id = $this->getPersistedId();
 
         if (empty($filePath) || !is_file($filePath)) {
             $zxParsingManager->deleteFileStructure($id);
@@ -894,17 +894,17 @@ class zxReleaseElement extends ZxArtItem implements
     public function incrementPlays(): void
     {
         $db = $this->getService('db');
-        $db->table('module_zxrelease')->where('id', '=', $this->id)->limit(1)->increment('plays');
+        $db->table('module_zxrelease')->where('id', '=', $this->getId())->limit(1)->increment('plays');
         $structureManager = $this->getService('structureManager');
-        $structureManager->clearElementCache($this->id);
+        $structureManager->clearElementCache($this->getId());
     }
 
     public function incrementDownloads(): void
     {
         $db = $this->getService('db');
-        $db->table('module_zxrelease')->where('id', '=', $this->id)->limit(1)->increment('downloads');
+        $db->table('module_zxrelease')->where('id', '=', $this->getId())->limit(1)->increment('downloads');
         $structureManager = $this->getService('structureManager');
-        $structureManager->clearElementCache($this->id);
+        $structureManager->clearElementCache($this->getId());
     }
 
     public function getEmulatorType(): ?string
@@ -920,7 +920,7 @@ class zxReleaseElement extends ZxArtItem implements
             if ($fileId === null) {
                 return $url;
             }
-            $url .= "action:viewFile/id:{$this->id}/fileId:{$fileId}/";
+            $url .= "action:viewFile/id:{$this->getId()}/fileId:{$fileId}/";
         }
         return $url;
     }

@@ -32,23 +32,23 @@ class publicReceiveZxPicture extends structureElementAction
             }
             $structureElement->dateAdded = $structureElement->dateCreated;
             if (!is_null($structureElement->getDataChunk("image")->originalName)) {
-                $structureElement->image = $structureElement->id;
+                $structureElement->image = $structureElement->getId();
                 $structureElement->originalName = $structureElement->getDataChunk("image")->originalName;
             }
             if (!is_null($structureElement->getDataChunk("inspired")->originalName)) {
-                $structureElement->inspired = $structureElement->id . '_inspired';
+                $structureElement->inspired = $structureElement->getId() . '_inspired';
                 $structureElement->inspiredName = $structureElement->getDataChunk("inspired")->originalName;
             }
             if (!is_null($structureElement->getDataChunk("inspired2")->originalName)) {
-                $structureElement->inspired2 = $structureElement->id . '_inspired2';
+                $structureElement->inspired2 = $structureElement->getId() . '_inspired2';
                 $structureElement->inspired2Name = $structureElement->getDataChunk("inspired2")->originalName;
             }
             if (!is_null($structureElement->getDataChunk("exeFile")->originalName)) {
-                $structureElement->exeFile = $structureElement->id . '_exe';
+                $structureElement->exeFile = $structureElement->getId() . '_exe';
                 $structureElement->exeFileName = $structureElement->getDataChunk("exeFile")->originalName;
             }
             if (!is_null($structureElement->getDataChunk("sequence")->originalName)) {
-                $structureElement->sequence = $structureElement->id . '_sequence';
+                $structureElement->sequence = $structureElement->getId() . '_sequence';
                 $structureElement->sequenceName = $structureElement->getDataChunk("sequence")->originalName;
             }
             $structureElement->structureName = $structureElement->title;

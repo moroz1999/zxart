@@ -14,7 +14,6 @@ final class LabelTransformer
             countryName: $label->countryName,
             countryId: $label->countryId,
             locationName: $label->locationName,
-            groups: $label->groups,
             isAlias: $label->isAlias,
             memberNames: $label->memberNames,
             parentGroupIds: null,
@@ -39,7 +38,6 @@ final class LabelTransformer
             groupImportIds: $label->groups,
             groupsIds: null,
             groupRoles: $label->groupRoles,
-            isAlias: $label->isAlias,
             authorId: $label->authorId ? (int)$label->authorId : null,
         );
     }

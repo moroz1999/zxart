@@ -16,7 +16,7 @@ class publicAddParty extends structureElementAction
                 $structureElement->structureName = $structureElement->title;
             }
 			if (!is_null($structureElement->getDataChunk("image")->originalName)) {
-				$structureElement->image = $structureElement->id;
+				$structureElement->image = $structureElement->getId();
 				$structureElement->originalName = $structureElement->getDataChunk("image")->originalName;
 			}
 
@@ -24,10 +24,10 @@ class publicAddParty extends structureElementAction
 
             $user = $this->getService('user');
             $privilegesManager = $this->getService('privilegesManager');
-            $privilegesManager->setPrivilege($user->id, $structureElement->id, 'party', 'showPublicForm', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->id, 'party', 'publicReceive', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->id, 'party', 'publicDelete', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->id, 'party', 'deleteFile', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'party', 'showPublicForm', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'party', 'publicReceive', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'party', 'publicDelete', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'party', 'deleteFile', 'allow');
             $user->refreshPrivileges();
 
             $structureElement->recalculate();

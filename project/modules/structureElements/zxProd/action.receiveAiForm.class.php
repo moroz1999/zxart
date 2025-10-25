@@ -23,13 +23,13 @@ class receiveAiFormZxProd extends structureElementAction
          */
         $queueService = $this->getService('QueueService');
         if ($structureElement->aiRestartSeo) {
-            $queueService->updateStatus($structureElement->getId(), QueueType::AI_SEO, QueueStatus::STATUS_TODO);
+            $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_SEO, QueueStatus::STATUS_TODO);
         }
         if ($structureElement->aiRestartIntro) {
-            $queueService->updateStatus($structureElement->getId(), QueueType::AI_INTRO, QueueStatus::STATUS_TODO);
+            $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_INTRO, QueueStatus::STATUS_TODO);
         }
         if ($structureElement->aiRestartCategories) {
-            $queueService->updateStatus($structureElement->getId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_TODO);
+            $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_TODO);
         }
 
         $controller->redirect($structureElement->getUrl());

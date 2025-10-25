@@ -48,7 +48,7 @@ class cityElement extends structureElement
     public function getMapMarkerData(): array
     {
         $data = [];
-        $data['id'] = $this->id;
+        $data['id'] = $this->getId();
         $data['title'] = $this->getTitle();
         $data['amount'] = $this->getAmountInLocation();
         $data['latitude'] = $this->latitude;

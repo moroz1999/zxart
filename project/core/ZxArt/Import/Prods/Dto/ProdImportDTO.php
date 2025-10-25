@@ -27,9 +27,9 @@ final readonly class ProdImportDTO
         public ?array       $labels = null,
         /** @var array<string,string[]>|null map importAuthorId => roles[] */
         public ?array       $authorRoles = null,
-        /** @var string[]|null importGroupId[] */
+        /** @var string[]|null */
         public ?array       $groups = null,
-        /** @var string[]|null importPublisherId[] */
+        /** @var string[]|null */
         public ?array       $publishers = null,
         /** @var array<string,string[]>|null */
         public ?array       $undetermined = null,

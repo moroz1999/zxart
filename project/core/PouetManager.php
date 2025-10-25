@@ -447,7 +447,7 @@ class PouetManager extends errorLogger
                             $label['website'] = $group['web'];
                         }
                         $prodInfo['labels'][] = $label;
-                        $prodInfo['groupsIds'][] = $label['id'];
+                        $prodInfo['groups'][] = $label['id'];
                     }
                     if (!empty($prodData['releaseDate'])) {
                         $prodInfo['year'] = date('Y', strtotime($prodData['releaseDate']));
@@ -557,7 +557,7 @@ class PouetManager extends errorLogger
                     $prodInfo['releases'][] = $releaseInfo;
 
                     if ($prodElement = $this->prodsService->importProdOld($prodInfo, $this->origin)) {
-                        $this->queueService->updateStatus($prodElement->getId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
+                        $this->queueService->updateStatus($prodElement->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
 
                         $this->updateReport($id, 'success');
                         $this->markProgress('prod ' . $id . ' imported ' . $this->counter . ' ' . $prodInfo['title'] . ' ' . $prodElement->id . ' ' . $prodElement->getUrl());

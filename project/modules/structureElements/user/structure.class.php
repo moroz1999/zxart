@@ -4,6 +4,8 @@
  * @property bool $volunteer
  * @property bool $supporter
  * @property bool $vip
+ * @property string $firstName
+ * @property string $lastName
  */
 class userElement extends structureElement
 {
@@ -51,7 +53,7 @@ class userElement extends structureElement
     public function getAdditionalData()
     {
         $collection = persistableCollection::getInstance('module_user_additional_data');
-        return $collection->load(['userId' => $this->id], [], 'fieldId');
+        return $collection->load(['userId' => $this->getId()], [], 'fieldId');
     }
 
     /**
@@ -79,7 +81,7 @@ class userElement extends structureElement
         foreach ($fields as $field) {
             if (!isset($existingData[$field->id])) {
                 $newRecord = $collection->getEmptyObject();
-                $newRecord->userId = $this->id;
+                $newRecord->userId = $this->getId();
                 $newRecord->fieldId = $field->id;
                 $newRecord->value = $field->value;
                 $newRecord->persist();
@@ -192,7 +194,7 @@ class userElement extends structureElement
                 }
             } elseif ($mailExists && !$subscribeOrNot) {
                 if ($mailsElementId = $structureManager->getElementIdByMarker('newsMailsAddresses')) {
-                    if ($structureManager->getElementById($mailsElementId, $this->id, true)) {
+                    if ($structureManager->getElementById($mailsElementId, $this->getId(), true)) {
                         foreach ($result as $row) {
                             if ($address = $structureManager->getElementById($row['id'], $mailsElementId, true)) {
                                 $address->deleteElementData();
@@ -246,39 +248,39 @@ class userElement extends structureElement
         if ($this->authorId != $newAuthorId) {
             $privilegesManager = $this->getService('privilegesManager');
             if ($this->authorId) {
-                $privilegesManager->deletePrivilege($this->id, $this->authorId, 'author', 'showPublicForm', 'allow');
-                $privilegesManager->deletePrivilege($this->id, $this->authorId, 'author', 'publicReceive', 'allow');
-                $privilegesManager->deletePrivilege($this->id, $this->authorId, 'author', 'delete', 'allow');
-                $privilegesManager->deletePrivilege($this->id, $this->authorId, 'author', 'deleteFile', 'allow');
-                $privilegesManager->deletePrivilege($this->id, $this->authorId, 'zxPicture', 'showPublicForm', 'allow');
-                $privilegesManager->deletePrivilege($this->id, $this->authorId, 'zxPicture', 'publicReceive', 'allow');
-                $privilegesManager->deletePrivilege($this->id, $this->authorId, 'zxPicture', 'delete', 'allow');
-                $privilegesManager->deletePrivilege($this->id, $this->authorId, 'zxPicture', 'deleteFile', 'allow');
-                $privilegesManager->deletePrivilege($this->id, $this->authorId, 'zxPicture', 'submitTags', 'allow');
-                $privilegesManager->deletePrivilege($this->id, $this->authorId, 'zxMusic', 'showPublicForm', 'allow');
-                $privilegesManager->deletePrivilege($this->id, $this->authorId, 'zxMusic', 'publicReceive', 'allow');
-                $privilegesManager->deletePrivilege($this->id, $this->authorId, 'zxMusic', 'delete', 'allow');
-                $privilegesManager->deletePrivilege($this->id, $this->authorId, 'zxMusic', 'deleteFile', 'allow');
-                $privilegesManager->deletePrivilege($this->id, $this->authorId, 'zxMusic', 'submitTags', 'allow');
-                $privilegesManager->deletePrivilege($this->id, $this->authorId, 'comment', 'delete', 'allow');
+                $privilegesManager->deletePrivilege($this->getId(), $this->authorId, 'author', 'showPublicForm', 'allow');
+                $privilegesManager->deletePrivilege($this->getId(), $this->authorId, 'author', 'publicReceive', 'allow');
+                $privilegesManager->deletePrivilege($this->getId(), $this->authorId, 'author', 'delete', 'allow');
+                $privilegesManager->deletePrivilege($this->getId(), $this->authorId, 'author', 'deleteFile', 'allow');
+                $privilegesManager->deletePrivilege($this->getId(), $this->authorId, 'zxPicture', 'showPublicForm', 'allow');
+                $privilegesManager->deletePrivilege($this->getId(), $this->authorId, 'zxPicture', 'publicReceive', 'allow');
+                $privilegesManager->deletePrivilege($this->getId(), $this->authorId, 'zxPicture', 'delete', 'allow');
+                $privilegesManager->deletePrivilege($this->getId(), $this->authorId, 'zxPicture', 'deleteFile', 'allow');
+                $privilegesManager->deletePrivilege($this->getId(), $this->authorId, 'zxPicture', 'submitTags', 'allow');
+                $privilegesManager->deletePrivilege($this->getId(), $this->authorId, 'zxMusic', 'showPublicForm', 'allow');
+                $privilegesManager->deletePrivilege($this->getId(), $this->authorId, 'zxMusic', 'publicReceive', 'allow');
+                $privilegesManager->deletePrivilege($this->getId(), $this->authorId, 'zxMusic', 'delete', 'allow');
+                $privilegesManager->deletePrivilege($this->getId(), $this->authorId, 'zxMusic', 'deleteFile', 'allow');
+                $privilegesManager->deletePrivilege($this->getId(), $this->authorId, 'zxMusic', 'submitTags', 'allow');
+                $privilegesManager->deletePrivilege($this->getId(), $this->authorId, 'comment', 'delete', 'allow');
             }
 
             if ($newAuthorId) {
-                $privilegesManager->setPrivilege($this->id, $newAuthorId, 'author', 'showPublicForm', 'allow');
-                $privilegesManager->setPrivilege($this->id, $newAuthorId, 'author', 'publicReceive', 'allow');
-                $privilegesManager->setPrivilege($this->id, $newAuthorId, 'author', 'publicDelete', 'allow');
-                $privilegesManager->setPrivilege($this->id, $newAuthorId, 'author', 'deleteFile', 'allow');
-                $privilegesManager->setPrivilege($this->id, $newAuthorId, 'zxPicture', 'showPublicForm', 'allow');
-                $privilegesManager->setPrivilege($this->id, $newAuthorId, 'zxPicture', 'publicReceive', 'allow');
-                $privilegesManager->setPrivilege($this->id, $newAuthorId, 'zxPicture', 'publicDelete', 'allow');
-                $privilegesManager->setPrivilege($this->id, $newAuthorId, 'zxPicture', 'deleteFile', 'allow');
-                $privilegesManager->setPrivilege($this->id, $newAuthorId, 'zxPicture', 'submitTags', 'allow');
-                $privilegesManager->setPrivilege($this->id, $newAuthorId, 'zxMusic', 'showPublicForm', 'allow');
-                $privilegesManager->setPrivilege($this->id, $newAuthorId, 'zxMusic', 'publicReceive', 'allow');
-                $privilegesManager->setPrivilege($this->id, $newAuthorId, 'zxMusic', 'publicDelete', 'allow');
-                $privilegesManager->setPrivilege($this->id, $newAuthorId, 'zxMusic', 'deleteFile', 'allow');
-                $privilegesManager->setPrivilege($this->id, $newAuthorId, 'zxMusic', 'submitTags', 'allow');
-                $privilegesManager->setPrivilege($this->id, $newAuthorId, 'comment', 'publicDelete', 'allow');
+                $privilegesManager->setPrivilege($this->getId(), $newAuthorId, 'author', 'showPublicForm', 'allow');
+                $privilegesManager->setPrivilege($this->getId(), $newAuthorId, 'author', 'publicReceive', 'allow');
+                $privilegesManager->setPrivilege($this->getId(), $newAuthorId, 'author', 'publicDelete', 'allow');
+                $privilegesManager->setPrivilege($this->getId(), $newAuthorId, 'author', 'deleteFile', 'allow');
+                $privilegesManager->setPrivilege($this->getId(), $newAuthorId, 'zxPicture', 'showPublicForm', 'allow');
+                $privilegesManager->setPrivilege($this->getId(), $newAuthorId, 'zxPicture', 'publicReceive', 'allow');
+                $privilegesManager->setPrivilege($this->getId(), $newAuthorId, 'zxPicture', 'publicDelete', 'allow');
+                $privilegesManager->setPrivilege($this->getId(), $newAuthorId, 'zxPicture', 'deleteFile', 'allow');
+                $privilegesManager->setPrivilege($this->getId(), $newAuthorId, 'zxPicture', 'submitTags', 'allow');
+                $privilegesManager->setPrivilege($this->getId(), $newAuthorId, 'zxMusic', 'showPublicForm', 'allow');
+                $privilegesManager->setPrivilege($this->getId(), $newAuthorId, 'zxMusic', 'publicReceive', 'allow');
+                $privilegesManager->setPrivilege($this->getId(), $newAuthorId, 'zxMusic', 'publicDelete', 'allow');
+                $privilegesManager->setPrivilege($this->getId(), $newAuthorId, 'zxMusic', 'deleteFile', 'allow');
+                $privilegesManager->setPrivilege($this->getId(), $newAuthorId, 'zxMusic', 'submitTags', 'allow');
+                $privilegesManager->setPrivilege($this->getId(), $newAuthorId, 'comment', 'publicDelete', 'allow');
             }
         }
         $this->authorId = $newAuthorId;
@@ -301,15 +303,15 @@ class userElement extends structureElement
     {
         $this->removeExtras();
         $db = $this->getService('db');
-        $db->table('module_user')->where('id', '=', $this->id)->update(['banned' => 1]);
+        $db->table('module_user')->where('id', '=', $this->getId())->update(['banned' => 1]);
     }
 
     public function removeExtras(): void
     {
-        $this->getService('SocialDataManager')->removeSocialUser($this->id);
+        $this->getService('SocialDataManager')->removeSocialUser($this->getId());
         $structureManager = $this->getService('structureManager');
         $db = $this->getService('db');
-        if ($records = $db->table('module_comment')->select('id')->where('userId', '=', $this->id)->get()) {
+        if ($records = $db->table('module_comment')->select('id')->where('userId', '=', $this->getId())->get()) {
             $commentIds = array_column($records, 'id');
             foreach ($commentIds as $commentId) {
                 if ($commentElement = $structureManager->getElementById($commentId)) {
@@ -318,7 +320,7 @@ class userElement extends structureElement
             }
         }
         try {
-            $db->table('votes_history')->where('userId', '=', $this->id)->delete();
+            $db->table('votes_history')->where('userId', '=', $this->getId())->delete();
         } catch (Exception $e) {
         }
     }
@@ -340,9 +342,9 @@ class userElement extends structureElement
     public function getElementData(): array
     {
         return [
-            'userId' => $this->id,
+            'userId' => $this->getId(),
             'firstName' => $this->firstName,
-            'lastName' => $this->firstName,
+            'lastName' => $this->lastName,
         ];
     }
 

@@ -13,12 +13,12 @@ class batchUploadFormZxProdsUploadForm extends structureElementAction
     {
         if ($structureElement->final) {
             $structureElement->setViewName('uploadForm');
-            if ($parentElement = $structureManager->getElementsFirstParent($structureElement->id)) {
+            if ($parentElement = $structureManager->getElementsFirstParent($structureElement->getId())) {
                 if ($parentElement->structureType === 'author' || $parentElement->structureType === 'group'
                     || $parentElement->structureType === 'authorAlias' || $parentElement->structureType === 'groupAlias') {
                     $structureElement->publishers = [$parentElement];
-                } elseif ($parentElement->structureType == 'party') {
-                    $structureElement->party = $parentElement->id;
+                } elseif ($parentElement->structureType === 'party') {
+                    $structureElement->party = $parentElement->getId();
                 }
             }
         }

@@ -20,12 +20,12 @@ class moveScreenshotsZxRelease extends structureElementAction
         }
         $prodId = $prod->id;
         foreach ($structureElement->getFilesList('screenshotsSelector') as $screenShot) {
-            $linksManager->unLinkElements($structureElement->id, $screenShot->id, 'screenshotsSelector');
+            $linksManager->unLinkElements($structureElement->getId(), $screenShot->id, 'screenshotsSelector');
             $linksManager->linkElements($prodId, $screenShot->id, 'connectedFile');
             $structureManager->clearElementCache($screenShot->id);
         }
         $structureManager->clearElementCache($prodId);
-        $structureManager->clearElementCache($structureElement->id);
+        $structureManager->clearElementCache($structureElement->getId());
 
         $prod = $structureElement->getProd();
         if ($prod === null) {

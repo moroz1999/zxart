@@ -90,7 +90,7 @@ class authorAliasElement extends structureElement implements
         foreach ($types as $type) {
             if (!isset($this->worksList[$type])) {
                 $structureManager = $this->getService('structureManager');
-                $this->worksList[$type] = $structureManager->getElementsChildren($this->id, null, $type);
+                $this->worksList[$type] = $structureManager->getElementsChildren($this->getId(), null, $type);
             }
             $result = array_merge($result, $this->worksList[$type]);
         }
@@ -123,9 +123,9 @@ class authorAliasElement extends structureElement implements
     {
         if (!$this->authorId) {
             $structureManager = $this->getService('structureManager');
-            if ($parentElement = $structureManager->getElementsFirstParent($this->id)) {
+            if ($parentElement = $structureManager->getElementsFirstParent($this->getId())) {
                 if ($parentElement->structureType == 'author') {
-                    $this->authorId = $parentElement->id;
+                    $this->authorId = $parentElement->getId();
                 }
             }
         }
@@ -150,7 +150,7 @@ class authorAliasElement extends structureElement implements
         if ($this->prods === null) {
             $this->prods = [];
             $authorshipRepository = $this->getService(AuthorshipRepository::class);
-            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->id, 'prod')) {
+            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->getId(), 'prod')) {
                 foreach ($authorShip as $item) {
                     $this->prods[] = $item['prodElement'];
                 }
@@ -166,7 +166,7 @@ class authorAliasElement extends structureElement implements
             $this->releases = [];
 
             $authorshipRepository = $this->getService(AuthorshipRepository::class);
-            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->id, 'release')) {
+            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->getId(), 'release')) {
                 foreach ($authorShip as $item) {
                     $this->releases[] = $item['releaseElement'];
                 }

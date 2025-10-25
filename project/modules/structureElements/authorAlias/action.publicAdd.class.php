@@ -26,13 +26,13 @@ class publicAddAuthorAlias extends structureElementAction
 
             $privilegesManager->setPrivilege(
                 $user->id,
-                $structureElement->id,
+                $structureElement->getId(),
                 'authorAlias',
                 'showPublicForm',
                 'allow'
             );
-            $privilegesManager->setPrivilege($user->id, $structureElement->id, 'authorAlias', 'publicReceive', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->id, 'authorAlias', 'publicDelete', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'authorAlias', 'publicReceive', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'authorAlias', 'publicDelete', 'allow');
             $user->refreshPrivileges();
 
             $controller->redirect($structureElement->URL);

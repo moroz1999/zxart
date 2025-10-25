@@ -14,7 +14,7 @@ class showFormZxItemsList extends structureElementAction
             $renderer->assign('contentSubTemplate', 'zxItemsList.form.tpl');
         }
 
-        if ($firstParent = $structureManager->getElementsFirstParent($structureElement->id)) {
+        if ($firstParent = $structureManager->getElementsFirstParent($structureElement->getId())) {
             $structureElement->year = $firstParent->structureName;
         }
     }

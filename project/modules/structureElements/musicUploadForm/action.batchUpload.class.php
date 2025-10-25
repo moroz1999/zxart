@@ -16,14 +16,14 @@ class batchUploadMusicUploadForm extends structureElementAction
             $linksManager = $this->getService('linksManager');
             $user = $this->getService('user');
 
-            $currentElement = $structureManager->getElementsFirstParent($structureElement->id);
+            $currentElement = $structureManager->getElementsFirstParent($structureElement->getId());
             if ($musicCatalogueId = $structureManager->getElementIdByMarker('musicCatalogue')) {
                 $pathsManager = $this->getService('PathsManager');
                 $cachePath = $pathsManager->getPath('uploadsCache');
                 $pathsManager->ensureDirectory($cachePath);
 
                 foreach ($musicsInfo as $musicInfo) {
-                    $zxMusicElement = $structureManager->createElement('zxMusic', 'show', $structureElement->id);
+                    $zxMusicElement = $structureManager->createElement('zxMusic', 'show', $structureElement->getId());
                     $temporaryFile = $cachePath . basename($musicInfo['tmp_name']);
                     $originalFileName = $musicInfo['name'];
 
@@ -39,7 +39,7 @@ class batchUploadMusicUploadForm extends structureElementAction
                     $zxMusicElement->description = $structureElement->description;
                     $zxMusicElement->tagsText = $structureElement->tagsText;
                     $zxMusicElement->year = $structureElement->year;
-                    $zxMusicElement->file = $zxMusicElement->id;
+                    $zxMusicElement->file = $zxMusicElement->getId();
                     $zxMusicElement->fileName = $originalFileName;
                     $zxMusicElement->game = $structureElement->game;
                     $zxMusicElement->party = $structureElement->party;
@@ -72,32 +72,32 @@ class batchUploadMusicUploadForm extends structureElementAction
 
                     $zxMusicElement->persistElementData();
                     $zxMusicElement->logCreation();
-                    $linksManager->unLinkElements($currentElement->id, $zxMusicElement->id);
-                    $linksManager->linkElements($musicCatalogueId, $zxMusicElement->id);
+                    $linksManager->unLinkElements($currentElement->getId(), $zxMusicElement->getId());
+                    $linksManager->linkElements($musicCatalogueId, $zxMusicElement->getId());
 
                     $privilegesManager->setPrivilege(
                         $user->id,
-                        $zxMusicElement->id,
+                        $zxMusicElement->getId(),
                         'zxMusic',
                         'showPublicForm',
                         'allow'
                     );
                     $privilegesManager->setPrivilege(
                         $user->id,
-                        $zxMusicElement->id,
+                        $zxMusicElement->getId(),
                         'zxMusic',
                         'publicReceive',
                         'allow'
                     );
                     $privilegesManager->setPrivilege(
                         $user->id,
-                        $zxMusicElement->id,
+                        $zxMusicElement->getId(),
                         'zxMusic',
                         'publicDelete',
                         'allow'
                     );
-                    $privilegesManager->setPrivilege($user->id, $zxMusicElement->id, 'zxMusic', 'deleteFile', 'allow');
-                    $privilegesManager->setPrivilege($user->id, $zxMusicElement->id, 'zxMusic', 'submitTags', 'allow');
+                    $privilegesManager->setPrivilege($user->id, $zxMusicElement->getId(), 'zxMusic', 'deleteFile', 'allow');
+                    $privilegesManager->setPrivilege($user->id, $zxMusicElement->getId(), 'zxMusic', 'submitTags', 'allow');
                     $user->refreshPrivileges();
                 }
             }

@@ -23,9 +23,9 @@ readonly final class ReleaseImportDTO
         public ?array   $hardwareRequired = null,
         /** @var Label[]|null */
         public ?array   $labels = null,
-        /** @var array<string,string[]>|null map importAuthorId => roles[] */
+        /** @var array<string,string[]>|null */
         public ?array   $authors = null,
-        /** @var string[]|null importPublisherId[] */
+        /** @var string[]|null */
         public ?array   $publishers = null,
         /** @var array<string,string[]>|null */
         public ?array   $undetermined = null,

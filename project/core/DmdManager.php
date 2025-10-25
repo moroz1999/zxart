@@ -91,7 +91,7 @@ class DmdManager
                 $info = pathinfo($json['image']);
                 $fileName = $info['filename'] . '.' . $info['extension'];
 
-                $zxPictureElement->image = $zxPictureElement->getId();
+                $zxPictureElement->image = $zxPictureElement->getPersistedId();
                 $zxPictureElement->originalName = $fileName;
                 $zxPictureElement->author = [$authorElement->getId()];
                 $zxPictureElement->type = 'attributes';

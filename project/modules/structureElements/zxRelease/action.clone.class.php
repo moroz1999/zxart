@@ -18,16 +18,16 @@ class cloneZxRelease extends structureElementAction
     {
         $parentElement = $structureElement->getFirstParentElement();
         if ($parentElement === null) {
-            throw new Exception('Parent element is null for cloning ' . $structureElement->id . ' ' . $structureElement->getTitle());
+            throw new Exception('Parent element is null for cloning ' . $structureElement->getId() . ' ' . $structureElement->getTitle());
         }
-        $clonedElements = $structureManager->copyElements([$structureElement->id], $parentElement->id);
+        $clonedElements = $structureManager->copyElements([$structureElement->getId()], $parentElement->getId());
         if ($clonedElements === []) {
-            throw new Exception('Release cloning failed for ' . $structureElement->id . ' ' . $structureElement->getTitle());
+            throw new Exception('Release cloning failed for ' . $structureElement->getId() . ' ' . $structureElement->getTitle());
         }
         $clonedElementId = reset($clonedElements);
         $clonedElement = $structureManager->getElementById($clonedElementId);
         if ($clonedElement === null) {
-            throw new Exception('Release cloning failed for ' . $structureElement->id . ' ' . $structureElement->getTitle());
+            throw new Exception('Release cloning failed for ' . $structureElement->getId() . ' ' . $structureElement->getTitle());
         }
         /**
          * @var zxReleaseElement $clonedElement

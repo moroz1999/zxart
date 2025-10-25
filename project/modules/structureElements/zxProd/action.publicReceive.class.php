@@ -35,10 +35,10 @@ class publicReceiveZxProd extends structureElementAction
              * @var QueueService $queueService
              */
             $queueService = $this->getService('QueueService');
-            $queueService->updateStatus($structureElement->getId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
+            $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
             if (array_diff($oldCategoriesIds, $structureElement->categories) || array_diff($structureElement->categories, $oldCategoriesIds)) {
-                $queueService->updateStatus($structureElement->getId(), QueueType::AI_SEO, QueueStatus::STATUS_TODO);
-                $queueService->updateStatus($structureElement->getId(), QueueType::AI_INTRO, QueueStatus::STATUS_TODO);
+                $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_SEO, QueueStatus::STATUS_TODO);
+                $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_INTRO, QueueStatus::STATUS_TODO);
             }
 
             $structureElement->executeAction('receiveFiles');

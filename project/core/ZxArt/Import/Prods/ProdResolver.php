@@ -53,12 +53,12 @@ readonly final class ProdResolver
     {
         $score = 0;
         $prodLabelHasYear = $prodLabel->year !== null && $prodLabel->year > 0;
-        $prodElementHasYear = $prodElement->year !== null && $prodElement->year > 0;
+        $prodElementHasYear = $prodElement->year > 0;
         if (!$matchProdsWithoutYear && !$prodElementHasYear) {
             return 0;
         }
-        $prodElementTitle = mb_strtolower(trim(html_entity_decode($prodElement->title ?? '')));
-        $prodElementAltTitle = mb_strtolower(trim(html_entity_decode($prodElement->altTitle ?? '')));
+        $prodElementTitle = mb_strtolower(trim(html_entity_decode($prodElement->title)));
+        $prodElementAltTitle = mb_strtolower(trim(html_entity_decode($prodElement->altTitle)));
         $prodLabelTitle = mb_strtolower(trim($prodLabel->title ?? ''));
         $prodLabelTheTitle = 'the ' . $prodLabelTitle;
         if ($prodLabelHasYear && $prodElementHasYear && $prodLabel->year !== $prodElement->year) {

@@ -52,7 +52,7 @@ class zxProdsUploadFormElement extends ZxArtItemUploadFormElement
         $moduleStructure['publishers'] = 'numbersArray';
         $moduleStructure['groups'] = 'numbersArray';
         $moduleStructure['categories'] = 'numbersArray';
-        $moduleStructure['year'] = 'text';
+        $moduleStructure['year'] = 'naturalNumber';
         $moduleStructure['youtubeId'] = 'text';
         $moduleStructure['description'] = 'pre';
 
@@ -86,7 +86,7 @@ class zxProdsUploadFormElement extends ZxArtItemUploadFormElement
             $this->connectedCategoriesIds = [];
             if ($element = $this->getFirstParentElement()) {
                 if ($element->structureType == 'zxProdCategory') {
-                    $this->connectedCategoriesIds = [$element->id];
+                    $this->connectedCategoriesIds = [$element->getId()];
                 }
             }
         }

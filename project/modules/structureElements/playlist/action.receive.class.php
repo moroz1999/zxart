@@ -21,25 +21,25 @@ class receivePlaylist extends structureElementAction
                 $linksManager = $this->getService('linksManager');
                 $privilegesManager = $this->getService('privilegesManager');
 
-                if ($firstParentElement = $structureManager->getElementsFirstParent($structureElement->id)) {
-                    $linksManager->unLinkElements($firstParentElement->id, $structureElement->id, 'structure');
+                if ($firstParentElement = $structureManager->getElementsFirstParent($structureElement->getId())) {
+                    $linksManager->unLinkElements($firstParentElement->getId(), $structureElement->getId(), 'structure');
                 }
 
-                $linksManager->linkElements($user->id, $structureElement->id, 'structure');
+                $linksManager->linkElements($user->id, $structureElement->getId(), 'structure');
 
-                $privilegesManager->setPrivilege($user->id, $structureElement->id, 'playlist', 'delete', 'allow');
-                $privilegesManager->setPrivilege($user->id, $structureElement->id, 'playlist', 'receive', 'allow');
+                $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'playlist', 'delete', 'allow');
+                $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'playlist', 'receive', 'allow');
                 if ($registeredUsersGroupId = $structureManager->getElementIdByMarker('userGroup-authorized')) {
                     $privilegesManager->setPrivilege(
                         $registeredUsersGroupId,
-                        $structureElement->id,
+                        $structureElement->getId(),
                         'playlist',
                         'delete',
                         0
                     );
                     $privilegesManager->setPrivilege(
                         $registeredUsersGroupId,
-                        $structureElement->id,
+                        $structureElement->getId(),
                         'playlist',
                         'receive',
                         0

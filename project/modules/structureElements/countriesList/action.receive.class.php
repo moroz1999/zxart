@@ -15,14 +15,14 @@ class receiveCountriesList extends structureElementAction
             $structureElement->persistElementData();
 
             $countriesElement = $structureManager->getElementByMarker('countries');
-            $countriesList = $structureManager->getElementsChildren($countriesElement->id);
+            $countriesList = $structureManager->getElementsChildren($countriesElement->getId());
 
             $linksManager = $this->getService('linksManager');
-            $compiledLinks = $linksManager->getElementsLinksIndex($structureElement->id, 'countries', 'parent');
+            $compiledLinks = $linksManager->getElementsLinksIndex($structureElement->getId(), 'countries', 'parent');
 
             foreach ($countriesList as $country) {
                 if (!isset($compiledLinks[$country->id])) {
-                    $linksManager->linkElements($structureElement->id, $country->id, 'countries');
+                    $linksManager->linkElements($structureElement->getId(), $country->id, 'countries');
                 } else {
                     unset($compiledLinks[$country->id]);
                 }

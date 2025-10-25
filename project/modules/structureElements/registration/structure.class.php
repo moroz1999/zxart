@@ -91,7 +91,7 @@ class registrationElement extends menuDependantStructureElement
         $result = [];
         $structureManager = $this->getService('structureManager');
         if ($fieldsElement = $structureManager->getElementByMarker('registrationFields')) {
-            $result = $structureManager->getElementsChildren($fieldsElement->id);
+            $result = $structureManager->getElementsChildren($fieldsElement->getId());
         }
         return $result;
     }
@@ -124,12 +124,12 @@ class registrationElement extends menuDependantStructureElement
 
     public function getConnectedFieldsIds()
     {
-        return $this->getService('linksManager')->getConnectedIdList($this->id, self::FIELD_LINK_TYPE, 'parent');
+        return $this->getService('linksManager')->getConnectedIdList($this->getId(), self::FIELD_LINK_TYPE, 'parent');
     }
 
     public function getConnectedUserGroupsIds()
     {
-        return $this->getService('linksManager')->getConnectedIdList($this->id, self::USER_GROUP_LINK_TYPE, 'parent');
+        return $this->getService('linksManager')->getConnectedIdList($this->getId(), self::USER_GROUP_LINK_TYPE, 'parent');
     }
 
     public function setDynamicFieldError($fieldId): void
@@ -220,9 +220,9 @@ class registrationElement extends menuDependantStructureElement
         $connectedFields = $this->getConnectedFieldsIds();
         foreach ($structureManager->getElementsByType('registrationInput') as $regestrationElement) {
             $item = [];
-            $item['id'] = $regestrationElement->id;
+            $item['id'] = $regestrationElement->getId();
             $item['title'] = $regestrationElement->getTitle();
-            $item['select'] = in_array($regestrationElement->id, $connectedFields);
+            $item['select'] = in_array($regestrationElement->getId(), $connectedFields);
             $regestrationElements[] = $item;
         }
         return $regestrationElements;

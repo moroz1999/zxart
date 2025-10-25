@@ -9,7 +9,7 @@ class banUser extends structureElementAction
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
-        $parentElement = $structureManager->getElementsFirstParent($structureElement->id);
+        $parentElement = $structureManager->getElementsFirstParent($structureElement->getId());
         $redirectURL = $parentElement->URL;
 
         if ($controller->getParameter('view')) {

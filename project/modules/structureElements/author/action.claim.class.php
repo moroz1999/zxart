@@ -10,7 +10,7 @@ class claimAuthor extends structureElementAction
         $user = $this->getService('user');
         $renderer = $this->getService('renderer');
 
-        if (!$user->authorId && $user->authorId != $structureElement->id) {
+        if (!$user->authorId && $user->authorId != $structureElement->getId()) {
             $settings = $this->getService('settingsManager')->getSettingsList();
 
             $emailDispatcher = new EmailDispatcher();
@@ -27,13 +27,13 @@ class claimAuthor extends structureElementAction
                     'userId' => $user->id,
                     'userName' => $user->userName,
                     'userEmail' => $user->email,
-                    'authorId' => $structureElement->id,
+                    'authorId' => $structureElement->getId(),
                     'author' => $structureElement->title,
                     'approvalUrl' => $structureElement->getFormActionURL(
-                        ) . 'id:' . $structureElement->id . '/action:approveClaim/userId:' . $user->id . '/',
+                        ) . 'id:' . $structureElement->getId() . '/action:approveClaim/userId:' . $user->id . '/',
                 ]
             );
-            $newDispatchment->setReferenceId($structureElement->id);
+            $newDispatchment->setReferenceId($structureElement->getId());
             $newDispatchment->setType('authorClaim');
             $claimRequestResult = false;
             if ($emailDispatcher->startDispatchment($newDispatchment)) {

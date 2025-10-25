@@ -22,10 +22,10 @@ class joinAuthor extends structureElementAction
             $authorsManager = $this->getService(AuthorsService::class);
 
             if ($structureElement->joinAsAlias) {
-                $authorsManager->joinAuthorAsAlias($structureElement->id, $structureElement->joinAsAlias);
+                $authorsManager->joinAuthorAsAlias($structureElement->getId(), $structureElement->joinAsAlias);
             }
             if ($structureElement->joinAndDelete) {
-                $authorsManager->joinDeleteAuthor($structureElement->id, $structureElement->joinAndDelete);
+                $authorsManager->joinDeleteAuthor($structureElement->getId(), $structureElement->joinAndDelete);
             }
             $structureElement->recalculate();
 

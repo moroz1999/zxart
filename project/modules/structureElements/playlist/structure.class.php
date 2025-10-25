@@ -32,7 +32,7 @@ class playlistElement extends structureElement
     public function getElementData(): array
     {
         return [
-            'id' => $this->id,
+            'id' => $this->getId(),
             'title' => $this->title,
             'url' => $this->URL,
         ];
@@ -55,7 +55,7 @@ class playlistElement extends structureElement
              * @var linksManager $linksManager
              */
             $linksManager = $this->getService('linksManager');
-            $elementsIds = $linksManager->getConnectedIdList($this->id, 'playlist', 'parent');
+            $elementsIds = $linksManager->getConnectedIdList($this->getId(), 'playlist', 'parent');
             $this->connectedElements = $structureManager->getElementsByIdList($elementsIds);
         }
         $targetList = [];

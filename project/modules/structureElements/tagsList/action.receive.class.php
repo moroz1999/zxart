@@ -16,17 +16,17 @@ class receiveTagsList extends structureElementAction
             $structureElement->persistElementData();
 
             if ($tagsElement = $structureManager->getElementByMarker('tags')) {
-                if ($tagsList = $structureManager->getElementsChildren($tagsElement->id)) {
+                if ($tagsList = $structureManager->getElementsChildren($tagsElement->getId())) {
                     $linksManager = $this->getService('linksManager');
-                    $linksIndex = $linksManager->getElementsLinksIndex($structureElement->id, 'tagsList', 'parent');
+                    $linksIndex = $linksManager->getElementsLinksIndex($structureElement->getId(), 'tagsList', 'parent');
                     foreach ($tagsList as $tag) {
                         if (!isset($linksIndex[$tag->id])) {
-                            $linksManager->linkElements($structureElement->id, $tag->id, 'tagsList');
+                            $linksManager->linkElements($structureElement->getId(), $tag->id, 'tagsList');
                         }
                         unset($linksIndex[$tag->id]);
                     }
                     foreach ($linksIndex as $link) {
-                        $linksManager->unLinkElements($structureElement->id, $link->childStructureId, 'tagsList');
+                        $linksManager->unLinkElements($structureElement->getId(), $link->childStructureId, 'tagsList');
                     }
                 }
             }

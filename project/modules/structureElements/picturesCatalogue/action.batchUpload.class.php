@@ -12,7 +12,7 @@ class batchUploadPicturesCatalogue extends structureElementAction
         if ($imagesInfo = $structureElement->image) {
             $cachePath = $this->getService('PathsManager')->getPath('uploadsCache');
             foreach ($imagesInfo as $imageInfo) {
-                $pictureElement = $structureManager->createElement('zxPicture', 'showForm', $structureElement->id);
+                $pictureElement = $structureManager->createElement('zxPicture', 'showForm', $structureElement->getId());
                 $temporaryFile = $cachePath . basename($imageInfo['tmp_name']);
                 $originalFileName = $imageInfo['name'];
 
@@ -25,7 +25,7 @@ class batchUploadPicturesCatalogue extends structureElementAction
                 $pictureElement->description = $structureElement->description;
                 $pictureElement->tagsText = $structureElement->tagsText;
                 $pictureElement->year = $structureElement->year;
-                $pictureElement->image = $pictureElement->id;
+                $pictureElement->image = $pictureElement->getId();
                 $pictureElement->originalName = $originalFileName;
                 $pictureElement->type = $structureElement->type;
                 $pictureElement->border = $structureElement->border;

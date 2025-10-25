@@ -17,7 +17,7 @@ class publicAddGroup extends structureElementAction
             $structureElement->structureName = $structureElement->title;
 
             if (!is_null($structureElement->getDataChunk("image")->originalName)) {
-                $structureElement->image = $structureElement->getId();
+                $structureElement->image = $structureElement->getPersistedId();
                 $structureElement->originalName = $structureElement->getDataChunk("image")->originalName;
             }
 
@@ -29,11 +29,11 @@ class publicAddGroup extends structureElementAction
 
             $privilegesManager = $this->getService('privilegesManager');
             $user = $this->getService('user');
-            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'group', 'showPublicForm', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'group', 'publicReceive', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'group', 'publicDelete', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'group', 'deleteFile', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'group', 'deleteAuthor', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'showPublicForm', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'publicReceive', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'publicDelete', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'deleteFile', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'deleteAuthor', 'allow');
             $user->refreshPrivileges();
 
             $controller->redirect($structureElement->URL);

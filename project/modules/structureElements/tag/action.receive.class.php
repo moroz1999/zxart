@@ -18,7 +18,7 @@ class receiveTag extends structureElementAction
 
             if ($structureElement->joinTag != "") {
                 $tagsManager = $this->getService('tagsManager');
-                $tagsManager->joinTags($structureElement->id, $structureElement->joinTag);
+                $tagsManager->joinTags($structureElement->getId(), $structureElement->joinTag);
             }
 
             $structureElement->persistElementData();

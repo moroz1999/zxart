@@ -41,23 +41,23 @@ class uploadScreenshotZxProd extends structureElementAction
                 }
 
                 $fileElement->title = $structureElement->title;
-                $fileElement->file = $fileElement->getId();
+                $fileElement->file = $fileElement->getPersistedId();
 
                 switch ($format) {
                     case 'standard':
-                        $fileElement->fileName = $fileElement->getId() . '.scr';
+                        $fileElement->fileName = $fileElement->getPersistedId() . '.scr';
                         break;
                     case 'gigascreen':
-                        $fileElement->fileName = $fileElement->getId() . '.img';
+                        $fileElement->fileName = $fileElement->getPersistedId() . '.img';
                         break;
                     case 's80':
-                        $fileElement->fileName = $fileElement->getId() . '.s80';
+                        $fileElement->fileName = $fileElement->getPersistedId() . '.s80';
                         break;
                     case 's81':
-                        $fileElement->fileName = $fileElement->getId() . '.s81';
+                        $fileElement->fileName = $fileElement->getPersistedId() . '.s81';
                         break;
                     default:
-                        $fileElement->fileName = $fileElement->getId();
+                        $fileElement->fileName = $fileElement->getPersistedId();
                         break;
                 }
 

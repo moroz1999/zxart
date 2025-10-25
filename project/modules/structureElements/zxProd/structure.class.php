@@ -101,7 +101,7 @@ class zxProdElement extends ZxArtItem implements
         $moduleStructure['party'] = 'text';
         $moduleStructure['partyplace'] = 'text';
         $moduleStructure['compo'] = 'text';
-        $moduleStructure['year'] = 'number';
+        $moduleStructure['year'] = 'naturalNumber';
         $moduleStructure['youtubeId'] = 'text';
         $moduleStructure['description'] = 'pre';
         $moduleStructure['votes'] = 'floatNumber';
@@ -248,7 +248,7 @@ class zxProdElement extends ZxArtItem implements
              * @var structureManager $structureManager
              */
             $structureManager = $this->getService('structureManager');
-            $this->releasesList = $structureManager->getElementsChildren($this->id);
+            $this->releasesList = $structureManager->getElementsChildren($this->getId());
             usort($this->releasesList, function ($a, $b) {
                 $aYear = !$a->getYear() ? 3000 : $a->getYear();
                 $bYear = !$b->getYear() ? 3000 : $b->getYear();
@@ -272,7 +272,7 @@ class zxProdElement extends ZxArtItem implements
          * @var linksManager $linksManager
          */
         $linksManager = $this->getService('linksManager');
-        return $linksManager->getConnectedIdList($this->id, 'structure', 'parent');
+        return $linksManager->getConnectedIdList($this->getId(), 'structure', 'parent');
     }
 
     public function getUploadedFilesPath($propertyName = 'default')
@@ -324,7 +324,7 @@ class zxProdElement extends ZxArtItem implements
             /**
              * @var QueryFiltersManager $queryFiltersManager
              */
-            $releaseIdsQuery = $db->table($this->dataResourceName)->where('id', $this->id);
+            $releaseIdsQuery = $db->table($this->dataResourceName)->where('id', $this->getId());
 
             $queryFiltersManager = $this->getService('QueryFiltersManager');
             $releaseIdsQuery = $queryFiltersManager->convertTypeData($releaseIdsQuery, 'zxRelease', 'zxProd', [])->select('id');
@@ -447,7 +447,7 @@ class zxProdElement extends ZxArtItem implements
         if ($elements = $structureManager->getElementsByType('zxItemsList')) {
             foreach ($elements as $element) {
                 if ($element->items = 'zxProd') {
-                    $structureManager->clearElementCache($element->id);
+                    $structureManager->clearElementCache($element->getId());
                 }
             }
         }
@@ -460,7 +460,7 @@ class zxProdElement extends ZxArtItem implements
          * @var QueueService $queueService
          */
         $queueService = $this->getService('QueueService');
-        $queueService->checkElementInQueue($this->getId(), [QueueType::AI_SEO, QueueType::AI_INTRO]);
+        $queueService->checkElementInQueue($this->getPersistedId(), [QueueType::AI_SEO, QueueType::AI_INTRO]);
     }
 
     public function getBestPictures($limit = false, $excludeId = null)
@@ -473,7 +473,7 @@ class zxProdElement extends ZxArtItem implements
 
             $sort = ['votes' => 'desc'];
             $parameters = [
-                'zxProdId' => [$this->id],
+                'zxProdId' => [$this->getId()],
                 'zxPictureNotId' => $excludeId,
                 'zxPictureMinRating' => $this->getService('ConfigManager')->get('zx.averageVote'),
             ];
@@ -505,11 +505,11 @@ class zxProdElement extends ZxArtItem implements
     {
         if ($this->connectedCategoriesIds === null) {
             $this->connectedCategoriesIds = $this->getService('linksManager')
-                ->getConnectedIdList($this->id, 'zxProdCategory', 'child');
+                ->getConnectedIdList($this->getId(), 'zxProdCategory', 'child');
             if (!$this->connectedCategoriesIds) {
                 if ($element = $this->getFirstParentElement()) {
                     if ($element->structureType === 'zxProdCategory') {
-                        $this->connectedCategoriesIds = [$element->id];
+                        $this->connectedCategoriesIds = [$element->getId()];
                     }
                 }
             }
@@ -596,7 +596,7 @@ class zxProdElement extends ZxArtItem implements
 
             $query = $db->table('import_origin')
                 ->select('importId', 'importOrigin')
-                ->where('elementId', '=', $this->id)
+                ->where('elementId', '=', $this->getId())
                 ->whereIn('importOrigin', $types);
             if ($rows = $query->get()) {
                 foreach ($rows as $row) {
@@ -725,11 +725,6 @@ class zxProdElement extends ZxArtItem implements
         return false;
     }
 
-    /**
-     * @return (mixed|string)[][]
-     *
-     * @psalm-return array{properties?: array{youtube?: mixed, year?: mixed, title?: mixed}, authors?: array<string>, publishers?: array<int, string>, groups?: array<int, string>, releases?: array<int, string>, screenshots?: array<int, string>, links?: array<string, string>}
-     */
     public function getSplitData(): array
     {
         $data = [];
@@ -741,7 +736,7 @@ class zxProdElement extends ZxArtItem implements
         }
         foreach ($this->getAuthorsInfo('prod') as $authorInfo) {
             if ($authorElement = $authorInfo['authorElement']) {
-                $data['authors'][$authorInfo['id']] = $authorElement->id . ' <a target="_blank" href="' . $authorElement->getUrl() . '">' . $authorElement->getSearchTitle() . '</a>';
+                $data['authors'][$authorInfo['id']] = $authorElement->getId() . ' <a target="_blank" href="' . $authorElement->getUrl() . '">' . $authorElement->getSearchTitle() . '</a>';
             }
         }
         foreach ($this->publishers as $publisher) {
@@ -751,10 +746,10 @@ class zxProdElement extends ZxArtItem implements
             $data['groups'][$group->id] = $group->id . ' <a target="_blank" href="' . $group->getUrl() . '">' . $group->getSearchTitle() . '</a>';
         }
         foreach ($this->getReleasesList() as $releaseElement) {
-            $data['releases'][$releaseElement->id] = $releaseElement->id . ' <a target="_blank" href="' . $releaseElement->getUrl() . '">' . $releaseElement->getSearchTitle() . '</a>';
+            $data['releases'][$releaseElement->getId()] = $releaseElement->getId() . ' <a target="_blank" href="' . $releaseElement->getUrl() . '">' . $releaseElement->getSearchTitle() . '</a>';
         }
         foreach ($this->getFilesList('connectedFile') as $fileElement) {
-            $data['screenshots'][$fileElement->id] = $fileElement->id . ' <img style="height: 5rem" src="' . $fileElement->getImageUrl('prodImage') . '" />';
+            $data['screenshots'][$fileElement->getId()] = $fileElement->getId() . ' <img style="height: 5rem" src="' . $fileElement->getImageUrl('prodImage') . '" />';
         }
 
         foreach ($this->getLinksInfo() as $linkInfo) {
@@ -837,7 +832,7 @@ class zxProdElement extends ZxArtItem implements
         /**
          * @var QueryFiltersManager $queryFiltersManager
          */
-        $query = $db->table($this->dataResourceName)->where('id', $this->id);
+        $query = $db->table($this->dataResourceName)->where('id', $this->getId());
 
         $queryFiltersManager = $this->getService('QueryFiltersManager');
         $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
@@ -875,17 +870,12 @@ class zxProdElement extends ZxArtItem implements
         return $this->hardwareInfo;
     }
 
-    /**
-     * @return (int|mixed|string)[][]
-     *
-     * @psalm-return list{0?: array{id: int, title: string, url: mixed},...}
-     */
     public function getPublishersInfo(): array
     {
         $publishersInfo = [];
         foreach ($this->publishers as $publisher) {
             $publishersInfo[] = [
-                'id' => $publisher->id,
+                'id' => $publisher->getId(),
                 'title' => html_entity_decode($publisher->title, ENT_QUOTES),
                 'url' => $publisher->getUrl(),
             ];
@@ -893,17 +883,12 @@ class zxProdElement extends ZxArtItem implements
         return $publishersInfo;
     }
 
-    /**
-     * @return (int|mixed|string)[][]
-     *
-     * @psalm-return list{0?: array{id: int, title: string, url: mixed},...}
-     */
     public function getGroupsInfo(): array
     {
         $groupsInfo = [];
         foreach ($this->groups as $group) {
             $groupsInfo[] = [
-                'id' => $group->id,
+                'id' => $group->getId(),
                 'title' => html_entity_decode($group->title, ENT_QUOTES),
                 'url' => $group->getUrl(),
             ];
@@ -921,13 +906,13 @@ class zxProdElement extends ZxArtItem implements
                 /**
                  * @var QueryFiltersManager $queryFiltersManager
                  */
-                $query = $db->table($this->dataResourceName)->where('id', $this->id);
+                $query = $db->table($this->dataResourceName)->where('id', $this->getId());
 
                 $queryFiltersManager = $this->getService('QueryFiltersManager');
                 $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
                 $languageCodes = $db->table('zxitem_language')
                     ->whereIn('elementId', $query)
-                    ->orWhere('elementId', $this->id)
+                    ->orWhere('elementId', $this->getId())
                     ->distinct()
                     ->pluck('value');
                 /**
@@ -1176,7 +1161,7 @@ class zxProdElement extends ZxArtItem implements
             $languagesManager = $this->getService(LanguagesManager::class);
             $this->metaData = $db->table('module_zxprod_meta')
                 ->select(['metaTitle', 'h1', 'metaDescription', 'generatedDescription'])
-                ->where('id', '=', $this->id)
+                ->where('id', '=', $this->getId())
                 ->where('languageId', '=', $languagesManager->getCurrentLanguageId())
                 ->first();
         }
@@ -1211,7 +1196,7 @@ class zxProdElement extends ZxArtItem implements
                 continue;
             }
             // remove "misc" if there are another categories
-            if ($category->id === CategoryIds::MISC->value && count($this->categories) > 1) {
+            if ($category->getId() === CategoryIds::MISC->value && count($this->categories) > 1) {
                 continue;
             }
 

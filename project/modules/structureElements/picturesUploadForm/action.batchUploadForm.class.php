@@ -13,13 +13,13 @@ class batchUploadFormPicturesUploadForm extends structureElementAction
     {
         if ($structureElement->final) {
             $structureElement->setViewName('uploadForm');
-            if ($parentElement = $structureManager->getElementsFirstParent($structureElement->id)) {
+            if ($parentElement = $structureManager->getElementsFirstParent($structureElement->getId())) {
                 if ($parentElement->structureType === 'author' || $parentElement->structureType === 'authorAlias') {
-                    $structureElement->author = [$parentElement->id];
+                    $structureElement->author = [$parentElement->getId()];
                 } elseif ($parentElement->structureType === 'party') {
-                    $structureElement->party = $parentElement->id;
+                    $structureElement->party = $parentElement->getId();
                 } elseif ($parentElement->structureType === 'zxProd' || $parentElement->structureType === 'zxRelease') {
-                    $structureElement->game = $parentElement->id;
+                    $structureElement->game = $parentElement->getId();
                 }
             }
         }

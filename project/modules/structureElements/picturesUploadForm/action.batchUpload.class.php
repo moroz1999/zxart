@@ -20,7 +20,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
             $linksManager = $this->getService('linksManager');
             $user = $this->getService('user');
 
-            $currentElement = $structureManager->getElementsFirstParent($structureElement->id);
+            $currentElement = $structureManager->getElementsFirstParent($structureElement->getId());
 
             $cachePath = $this->getService('PathsManager')->getPath('uploadsCache');
 
@@ -31,7 +31,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
                 if ($pictureElement = $structureManager->createElement(
                     'zxPicture',
                     'show',
-                    $structureElement->id
+                    $structureElement->getId()
                 )) {
                     $temporaryFile = $cachePath . basename($imageInfo['tmp_name']);
                     $originalFileName = $imageInfo['name'];
@@ -51,7 +51,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
                     $pictureElement->description = $structureElement->description;
                     $pictureElement->tagsText = $structureElement->tagsText;
                     $pictureElement->year = $structureElement->year;
-                    $pictureElement->image = $pictureElement->id;
+                    $pictureElement->image = $pictureElement->getId();
                     $pictureElement->originalName = $originalFileName;
                     $pictureElement->type = $structureElement->type;
                     $pictureElement->border = $structureElement->border;
@@ -90,39 +90,39 @@ class batchUploadPicturesUploadForm extends structureElementAction
                     $pictureElement->persistElementData();
                     $pictureElement->logCreation();
 
-                    $linksManager->unLinkElements($currentElement->id, $pictureElement->id);
+                    $linksManager->unLinkElements($currentElement->getId(), $pictureElement->getId());
 
                     $privilegesManager->setPrivilege(
                         $user->id,
-                        $pictureElement->id,
+                        $pictureElement->getId(),
                         'zxPicture',
                         'showPublicForm',
                         'allow'
                     );
                     $privilegesManager->setPrivilege(
                         $user->id,
-                        $pictureElement->id,
+                        $pictureElement->getId(),
                         'zxPicture',
                         'publicReceive',
                         'allow'
                     );
                     $privilegesManager->setPrivilege(
                         $user->id,
-                        $pictureElement->id,
+                        $pictureElement->getId(),
                         'zxPicture',
                         'publicDelete',
                         'allow'
                     );
                     $privilegesManager->setPrivilege(
                         $user->id,
-                        $pictureElement->id,
+                        $pictureElement->getId(),
                         'zxPicture',
                         'deleteFile',
                         'allow'
                     );
                     $privilegesManager->setPrivilege(
                         $user->id,
-                        $pictureElement->id,
+                        $pictureElement->getId(),
                         'zxPicture',
                         'submitTags',
                         'allow'

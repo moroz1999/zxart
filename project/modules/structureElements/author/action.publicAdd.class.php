@@ -22,7 +22,7 @@ class publicAddAuthor extends structureElementAction
             $structureElement->structureName = $structureElement->title;
 
             if (!is_null($structureElement->getDataChunk("image")->originalName)) {
-                $structureElement->image = $structureElement->id;
+                $structureElement->image = $structureElement->getId();
                 $structureElement->originalName = $structureElement->getDataChunk("image")->originalName;
             }
 
@@ -35,10 +35,10 @@ class publicAddAuthor extends structureElementAction
 
             $privilegesManager = $this->getService('privilegesManager');
             $user = $this->getService('user');
-            $privilegesManager->setPrivilege($user->id, $structureElement->id, 'author', 'showPublicForm', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->id, 'author', 'publicReceive', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->id, 'author', 'publicDelete', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->id, 'author', 'deleteFile', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'author', 'showPublicForm', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'author', 'publicReceive', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'author', 'publicDelete', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'author', 'deleteFile', 'allow');
             $user->refreshPrivileges();
 
             $controller->redirect($structureElement->URL);

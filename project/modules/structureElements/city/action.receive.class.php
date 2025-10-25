@@ -23,7 +23,7 @@ class receiveCity extends structureElementAction
     protected function joinCities(structureElement $structureElement): bool
     {
         $structureManager = $this->getService('structureManager');
-        if ($structureElement->joinCity == $structureElement->id) {
+        if ($structureElement->joinCity == $structureElement->getId()) {
             return false;
         }
         if ($joinedCityId = $structureElement->joinCity) {
@@ -36,10 +36,10 @@ class receiveCity extends structureElementAction
                  */
                 $db = $this->getService('db');
                 $db->table('module_author')->where('city', '=', $joinedCityId)->update(
-                    ['city' => $structureElement->id]
+                    ['city' => $structureElement->getId()]
                 );
                 $db->table('module_group')->where('city', '=', $joinedCityId)->update(
-                    ['city' => $structureElement->id]
+                    ['city' => $structureElement->getId()]
                 );
                 $joinedCity->deleteElementData();
             }

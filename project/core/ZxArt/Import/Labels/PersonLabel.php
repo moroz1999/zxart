@@ -20,7 +20,6 @@ final class PersonLabel
         public ?array  $groupImportIds = null,
         public ?array  $groupsIds = null,
         public ?array  $groupRoles = null,
-        public ?bool   $isAlias = null,
         public ?int    $authorId = null,
     )
     {

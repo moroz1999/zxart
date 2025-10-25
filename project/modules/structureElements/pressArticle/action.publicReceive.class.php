@@ -21,12 +21,12 @@ class publicReceivePressArticle extends structureElementAction
             }
             $structureElement->persistElementData();
             $pressArticleRepository = $this->getService(PressArticleRepository::class);
-            $pressArticleRepository->saveOriginalContent($structureElement->id, $structureElement->originalContent);
+            $pressArticleRepository->saveOriginalContent($structureElement->getId(), $structureElement->originalContent);
 
             if ($parentElement = $structureElement->getFirstParentElement()) {
                 $linksManager = $this->getService('linksManager');
-                $linksManager->unLinkElements($parentElement->id, $structureElement->id);
-                $linksManager->linkElements($parentElement->id, $structureElement->id, 'prodArticle');
+                $linksManager->unLinkElements($parentElement->getId(), $structureElement->getId());
+                $linksManager->linkElements($parentElement->getId(), $structureElement->getId(), 'prodArticle');
             }
 
             $controller->redirect($structureElement->URL);

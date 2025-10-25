@@ -22,7 +22,7 @@ class splitZxProd extends structureElementAction
             $prodsService = $this->getService(ProdsService::class);
 
             if ($structureElement->splitData) {
-                if ($newElement = $prodsService->splitZxProd($structureElement->id, $structureElement->splitData)) {
+                if ($newElement = $prodsService->splitZxProd($structureElement->getId(), $structureElement->splitData)) {
                     $controller->redirect($newElement->getUrl());
                 }
             }

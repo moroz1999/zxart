@@ -18,13 +18,13 @@ class receiveCountry extends structureElementAction
             $countriesListElements = $structureManager->getElementsByType('countriesList');
 
             $linksManager = $this->getService('linksManager');
-            $compiledLinks = $linksManager->getElementsLinksIndex($structureElement->id, 'countries', 'child');
+            $compiledLinks = $linksManager->getElementsLinksIndex($structureElement->getId(), 'countries', 'child');
 
             foreach ($countriesListElements as $countriesListElement) {
-                if (!isset($compiledLinks[$countriesListElement->id])) {
-                    $linksManager->linkElements($countriesListElement->id, $structureElement->id, 'countries');
+                if (!isset($compiledLinks[$countriesListElement->getId()])) {
+                    $linksManager->linkElements($countriesListElement->getId(), $structureElement->getId(), 'countries');
                 } else {
-                    unset($compiledLinks[$countriesListElement->id]);
+                    unset($compiledLinks[$countriesListElement->getId()]);
                 }
             }
             foreach ($compiledLinks as $link) {
@@ -36,7 +36,7 @@ class receiveCountry extends structureElementAction
                  * @var CountriesManager $countriesManager
                  */
                 $countriesManager = $this->getService('CountriesManager');
-                $countriesManager->joinCountries($structureElement->id, $structureElement->joinCountry);
+                $countriesManager->joinCountries($structureElement->getId(), $structureElement->joinCountry);
             }
             $controller->redirect($structureElement->URL);
         }

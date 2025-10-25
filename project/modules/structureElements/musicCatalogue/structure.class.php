@@ -31,7 +31,7 @@ class musicCatalogueElement extends structureElement
         $moduleStructure['game'] = 'text';
         $moduleStructure['author'] = 'numbersArray';
         $moduleStructure['type'] = 'text';
-        $moduleStructure['year'] = 'text';
+        $moduleStructure['year'] = 'naturalNumber';
 
         $moduleStructure['music'] = 'files';
 
@@ -79,11 +79,11 @@ class musicCatalogueElement extends structureElement
                         }
                     }
 
-                    $this->musicPageList = $structureManager->getElementsByIdList($picturesIdFilter, $this->id, true);
+                    $this->musicPageList = $structureManager->getElementsByIdList($picturesIdFilter, $this->getId(), true);
 
                     $sort = [];
                     foreach ($this->musicPageList as $element) {
-                        $sort[] = $element->id;
+                        $sort[] = $element->getId();
                     }
                     array_multisort($sort, SORT_DESC, $this->musicPageList);
                 }
@@ -138,7 +138,7 @@ class musicCatalogueElement extends structureElement
             $authorsFolder = $structureManager->getElementByMarker('authors');
             $this->authorsList = $structureManager->getElementsChildren($authorsFolder->id);
             $this->authorsIDList = $this->getService('linksManager')
-                ->getConnectedIdList($this->id, 'authorPicture', 'child');
+                ->getConnectedIdList($this->getId(), 'authorPicture', 'child');
 
             foreach ($this->authorsList as $author) {
                 $structureManager->getElementsChildren($author->id);
@@ -156,7 +156,7 @@ class musicCatalogueElement extends structureElement
     {
         if (is_null($this->authorsIDList)) {
             $this->authorsIDList = $this->getService('linksManager')
-                ->getConnectedIdList($this->id, 'authorPicture', 'child');
+                ->getConnectedIdList($this->getId(), 'authorPicture', 'child');
         }
         return $this->authorsIDList;
     }

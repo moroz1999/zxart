@@ -29,11 +29,11 @@ class uploadScreenshotZxRelease extends structureElementAction
                 }
 
                 $fileElement->title = $structureElement->title;
-                $fileElement->file = $fileElement->getId();
+                $fileElement->file = $fileElement->getPersistedId();
                 if (strlen($data) === 6912){
-                    $fileElement->fileName = $fileElement->getId() . '.scr';
+                    $fileElement->fileName = $fileElement->getPersistedId() . '.scr';
                 } else {
-                    $fileElement->fileName = $fileElement->getId() . '.img';
+                    $fileElement->fileName = $fileElement->getPersistedId() . '.img';
                 }
 
                 $fileElement->persistElementData();

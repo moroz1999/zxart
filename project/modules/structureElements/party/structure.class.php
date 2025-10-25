@@ -82,7 +82,7 @@ class partyElement extends structureElement implements
     {
         if (is_null($this->yearElement)) {
             $structureManager = $this->getService('structureManager');
-            $this->yearElement = $structureManager->getElementsFirstParent($this->id);
+            $this->yearElement = $structureManager->getElementsFirstParent($this->getId());
         }
         return $this->yearElement->title;
     }
@@ -92,12 +92,12 @@ class partyElement extends structureElement implements
      */
     public function recalculate()
     {
-        if ($pictureIds = $this->getService('linksManager')->getConnectedIdList($this->id, 'partyPicture', 'parent')) {
+        if ($pictureIds = $this->getService('linksManager')->getConnectedIdList($this->getId(), 'partyPicture', 'parent')) {
             $this->picturesQuantity = count($pictureIds);
         } else {
             $this->picturesQuantity = 0;
         }
-        if ($tuneIds = $this->getService('linksManager')->getConnectedIdList($this->id, 'partyMusic', 'parent')) {
+        if ($tuneIds = $this->getService('linksManager')->getConnectedIdList($this->getId(), 'partyMusic', 'parent')) {
             $this->tunesQuantity = count($tuneIds);
         } else {
             $this->tunesQuantity = 0;
@@ -164,7 +164,7 @@ class partyElement extends structureElement implements
     protected function getCompos(array $linkTypes): array
     {
         $compos = [];
-        $idList = $this->getService('linksManager')->getConnectedIdList($this->id, $linkTypes, 'parent');
+        $idList = $this->getService('linksManager')->getConnectedIdList($this->getId(), $linkTypes, 'parent');
         $entries = [];
         foreach ($idList as $id) {
             if ($entry = $this->getService('structureManager')->getElementById($id)) {
@@ -194,7 +194,7 @@ class partyElement extends structureElement implements
         $controller = controller::getInstance();
         $url = $controller->baseURL . 'zipItems/';
         $url .= 'language:' . $this->getService('LanguagesManager')->getCurrentLanguageCode() . '/';
-        $url .= 'filter:partyId=' . $this->id . '/';
+        $url .= 'filter:partyId=' . $this->getId() . '/';
         $url .= 'structure:parties/';
 
         return $url;

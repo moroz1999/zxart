@@ -22,7 +22,7 @@ class joinAuthorAlias extends structureElementAction
             $authorsManager = $this->getService(AuthorsService::class);
 
             if ($structureElement->joinAndDelete) {
-                $authorsManager->joinDeleteAuthor($structureElement->id, $structureElement->joinAndDelete);
+                $authorsManager->joinDeleteAuthor($structureElement->getId(), $structureElement->joinAndDelete);
             }
             $controller->redirect($structureElement->getUrl());
         }

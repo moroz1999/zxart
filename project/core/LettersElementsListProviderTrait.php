@@ -47,20 +47,17 @@ trait LettersElementsListProviderTrait
         return false;
     }
 
-    /**
-     * @return false|int
-     */
-    protected function getLetterId($title): int|false
+    protected function getLetterId($title): int|null
     {
-        $letterId = false;
+        $letterId = null;
         if (($firstLetter = substr(TranslitHelper::convert(mb_strtolower(mb_substr(trim($title), 0, 1))), 0, 1)) !== false) {
             if ($letters = $this->getLetterElements()) {
                 foreach ($letters as $letter) {
                     if (!$letterId && $letter->title == '#') {
-                        $letterId = $letter->id;
+                        $letterId = $letter->getId();
                     }
                     if ($letter->structureName == $firstLetter) {
-                        $letterId = $letter->id;
+                        $letterId = $letter->getId();
                         break;
                     }
                 }

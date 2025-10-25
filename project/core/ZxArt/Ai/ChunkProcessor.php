@@ -7,7 +7,7 @@ use ZxArt\Ai\Service\PromptSender;
 
 readonly class ChunkProcessor
 {
-    private const MAX_TOKENS = 8000;
+    private const int MAX_TOKENS = 8000;
 
     public function __construct(
         private PromptSender $promptSender,

@@ -33,7 +33,7 @@ class partiesCatalogueElement extends structureElement
         if ($this->yearsSelectorInfo === null) {
             $this->yearsSelectorInfo = [];
             $structureManager = $this->getService('structureManager');
-            if ($firstParent = $structureManager->getElementsFirstParent($this->id)) {
+            if ($firstParent = $structureManager->getElementsFirstParent($this->getId())) {
                 $years = $structureManager->getElementsChildren($firstParent->id, 'container', 'partiesCatalogue');
 
                 foreach ($years as $year) {

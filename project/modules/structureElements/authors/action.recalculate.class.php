@@ -7,7 +7,7 @@ class recalculateAuthors extends structureElementAction
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
-        if ($authors = $structureManager->getElementsByType('author', $structureElement->id)) {
+        if ($authors = $structureManager->getElementsByType('author', $structureElement->getId())) {
             foreach ($authors as $author) {
                 $author->executeAction('recalculate');
             }

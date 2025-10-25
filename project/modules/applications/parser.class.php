@@ -168,7 +168,7 @@ class parserApplication extends controllerApplication
                 }
                 $releases[] = [
                     'title' => html_entity_decode($element->getTitle(), ENT_QUOTES),
-                    'id' => $element->getId(),
+                    'id' => $element->getPersistedId(),
                     'url' => $element->getUrl(),
                     'year' => $element->getYear(),
                     'authors' => $releaseBy,

@@ -9,7 +9,7 @@ use structureManager;
 
 class PicturesManager extends ElementsManager
 {
-    const TABLE = 'module_zxpicture';
+    const string TABLE = 'module_zxpicture';
     protected $columnRelations = [];
 
     public function __construct(

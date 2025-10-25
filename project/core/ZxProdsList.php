@@ -101,7 +101,7 @@ trait ZxProdsList
                 $this->getSubCategoriesTreeIds($categoriesIds);
                 $categoriesIds = array_unique($categoriesIds);
             } else {
-                $categoriesIds[] = $this->getId();
+                $categoriesIds[] = $this->getPersistedId();
             }
             $controller = $this->getService('controller');
 

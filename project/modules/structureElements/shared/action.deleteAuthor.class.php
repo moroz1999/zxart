@@ -13,9 +13,9 @@ class deleteAuthorShared extends structureElementAction
     {
         if ($authorId = $controller->getParameter('authorId')) {
             $authorshipRepository = $this->getService(AuthorshipRepository::class);
-            $authorshipRepository->deleteAuthorship($structureElement->id, $authorId, 'prod');
-            $authorshipRepository->deleteAuthorship($structureElement->id, $authorId, 'release');
-            $authorshipRepository->deleteAuthorship($structureElement->id, $authorId, 'group');
+            $authorshipRepository->deleteAuthorship($structureElement->getId(), $authorId, 'prod');
+            $authorshipRepository->deleteAuthorship($structureElement->getId(), $authorId, 'release');
+            $authorshipRepository->deleteAuthorship($structureElement->getId(), $authorId, 'group');
         }
         $structureElement->executeAction('showPublicForm');
     }

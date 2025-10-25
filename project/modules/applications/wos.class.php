@@ -1,6 +1,6 @@
 <?php
 
-use ZxArt\Import\Services\WosManager;
+use ZxArt\Import\Services\WosImport;
 
 class wosApplication extends controllerApplication
 {
@@ -45,9 +45,9 @@ class wosApplication extends controllerApplication
             );
 
             /**
-             * @var WosManager $wosManager
+             * @var WosImport $wosManager
              */
-            $wosManager = $this->getService(WosManager::class);
+            $wosManager = $this->getService(WosImport::class);
             $wosManager->importAll();
         }
     }

@@ -46,7 +46,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
 
     public function getFilePath(): string
     {
-        return $this->getUploadedFilesPath() . $this->getId();
+        return $this->getUploadedFilesPath() . $this->getPersistedId();
     }
 
     /**

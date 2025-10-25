@@ -30,7 +30,7 @@ class userPlaylistsElement extends structureElement
             $linksManager = $this->getService('linksManager');
             if ($idList = $linksManager->getConnectedIdList($user->id, 'structure', 'parent')) {
                 $structureManager = $this->getService('structureManager');
-                $this->userPlaylists = $structureManager->getElementsByIdList($idList, $this->id, true);
+                $this->userPlaylists = $structureManager->getElementsByIdList($idList, $this->getId(), true);
             }
             $this->childrenList = $this->userPlaylists;
         }

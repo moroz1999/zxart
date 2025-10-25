@@ -564,19 +564,11 @@ final class ArticleParsedDataUpdater
 
     private function transformGroupToLabel(array $parsedGroup, ?array $memberNames = null): GroupLabel
     {
-        $groups = [];
-        //todo: fix
-//        $groupsData = $parsedGroup['parentTeamIds'] ?? [];
-//        foreach ($groupsData as $groupDatum) {
-//            $groups[] = $this->transformGroupToLabel($groupDatum);
-//        }
-
         return new GroupLabel(
             id: $parsedGroup['id'],
             name: $parsedGroup['name'],
             cityName: $parsedGroup['city'] ?? null,
             countryName: $parsedGroup['country'] ?? null,
-            groups: $groups,
             memberNames: $memberNames,
             parentGroupIds: $parsedGroup['parentTeamIds'] ?? null,
             type: $parsedGroup['type'] ?? null

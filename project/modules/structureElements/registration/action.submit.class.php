@@ -98,12 +98,12 @@ class submitRegistration extends structureElementAction
                 $mainData['structureName'] = $mainData['userName'];
 
                 $usersElementId = $structureManager->getElementIdByMarker("users");
-                if ($usersElement = $structureManager->getElementById($usersElementId, $structureElement->id, true)) {
+                if ($usersElement = $structureManager->getElementById($usersElementId, $structureElement->getId(), true)) {
                     /**
                      * @var userElement $userElement
                      */
                     if ($newUser) {
-                        $userElement = $structureManager->createElement('user', 'show', $usersElement->id);
+                        $userElement = $structureManager->createElement('user', 'show', $usersElement->getId());
                     } else {
                         $userElement = $structureManager->getElementById($user->id);
                     }
@@ -119,13 +119,13 @@ class submitRegistration extends structureElementAction
                                 $linksManager = $this->getService('linksManager');
                                 $connectedUserGroupsIds = $structureElement->getConnectedUserGroupsIds();
                                 foreach ($connectedUserGroupsIds as &$connectedUserGroupId) {
-                                    $linksManager->linkElements($connectedUserGroupId, $userElement->id, 'userRelation');
+                                    $linksManager->linkElements($connectedUserGroupId, $userElement->getId(), 'userRelation');
                                 }
                                 $socialId = $user->getStorageAttribute('socialId');
                                 $socialType = $user->getStorageAttribute('socialType');
                                 if ($socialId && $socialType) {
                                     $this->getService('SocialDataManager')
-                                        ->addSocialUser($socialType, $socialId, $userElement->id);
+                                        ->addSocialUser($socialType, $socialId, $userElement->getId());
                                 }
                             }
                             foreach ($mainData as $fieldName => $fieldValue) {

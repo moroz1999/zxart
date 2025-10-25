@@ -326,7 +326,7 @@ class Crontab extends controllerApplication
                     $end_time = microtime(true);
                     $execution_time = $end_time - $start_time;
                     $status = QueueStatus::STATUS_SUCCESS;
-                    $this->logMessage('Recalculated ' . $element->getId() . ' ' . $element->structureType . ' ' . $element->getTitle(), round($execution_time));
+                    $this->logMessage('Recalculated ' . $element->getPersistedId() . ' ' . $element->structureType . ' ' . $element->getTitle(), round($execution_time));
                 }
             } else {
                 $this->logMessage('Unable to read ' . $elementId, 0);

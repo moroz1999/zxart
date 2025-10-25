@@ -37,6 +37,10 @@
     <UndefinedClass>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+    </UndefinedThisPropertyFetch>
   </file>
   <file src="project/core/AliasesHolder.php">
     <MissingReturnType>
@@ -79,7 +83,6 @@
       <code><![CDATA[$queryResult[$exportType][]]]></code>
       <code><![CDATA[$queryResult[$typeName]]]></code>
       <code><![CDATA[$queryResult[$typeName]]]></code>
-      <code><![CDATA[$queryResult[$typeName]]]></code>
       <code><![CDATA[$queryResult[$typeName][]]]></code>
       <code><![CDATA[$record]]></code>
       <code><![CDATA[$records]]></code>
@@ -104,6 +107,9 @@
       <code><![CDATA[$filterQueries]]></code>
       <code><![CDATA[$filterQueries]]></code>
     </PossiblyNullArgument>
+    <PossiblyNullIterator>
+      <code><![CDATA[$queryResult[$exportType]]]></code>
+    </PossiblyNullIterator>
     <PossiblyNullReference>
       <code><![CDATA[get]]></code>
       <code><![CDATA[getElementById]]></code>
@@ -273,6 +279,10 @@
     </UndefinedMagicPropertyFetch>
     <UndefinedThisPropertyFetch>
       <code><![CDATA[$this->artCityId]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
       <code><![CDATA[$this->wikiLink]]></code>
       <code><![CDATA[$this->zxTunesId]]></code>
     </UndefinedThisPropertyFetch>
@@ -289,6 +299,7 @@
       <code><![CDATA[$roles]]></code>
       <code><![CDATA[$rolesInfo['new'] ?? []]]></code>
       <code><![CDATA[$startDates['new'] ?? 0]]></code>
+      <code><![CDATA[$this->id]]></code>
       <code><![CDATA[$type]]></code>
       <code><![CDATA[$type]]></code>
       <code><![CDATA[$type]]></code>
@@ -330,6 +341,11 @@
       <code><![CDATA[$startDate]]></code>
       <code><![CDATA[$startDates]]></code>
     </MixedAssignment>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+    </UndefinedThisPropertyFetch>
   </file>
   <file src="project/core/AuthorshipProviderTrait.php">
     <MissingParamType>
@@ -349,6 +365,8 @@
       <code><![CDATA[$item['authorElement']->getTitle()]]></code>
       <code><![CDATA[$item['roles']]]></code>
       <code><![CDATA[$roles]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
       <code><![CDATA[$type]]></code>
       <code><![CDATA[$type]]></code>
     </MixedArgument>
@@ -378,6 +396,16 @@
       <code><![CDATA[getAuthorRoles]]></code>
       <code><![CDATA[getAuthorRoles]]></code>
     </PossiblyUnusedMethod>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+    </UndefinedThisPropertyFetch>
   </file>
   <file src="project/core/BannerGenerator.class.php">
     <ClassMustBeFinal>
@@ -653,6 +681,7 @@
       <code><![CDATA[importCountry]]></code>
     </MissingReturnType>
     <MixedArgument>
+      <code><![CDATA[$countriesElement->id]]></code>
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$record['id']]]></code>
@@ -698,6 +727,10 @@
       <code><![CDATA[$record]]></code>
     </UndefinedMagicMethod>
     <UndefinedMagicPropertyFetch>
+      <code><![CDATA[$countriesElement->id]]></code>
+      <code><![CDATA[$element->id]]></code>
+      <code><![CDATA[$element->id]]></code>
+      <code><![CDATA[$element->id]]></code>
       <code><![CDATA[$link->childStructureId]]></code>
       <code><![CDATA[$link->type]]></code>
     </UndefinedMagicPropertyFetch>
@@ -712,6 +745,9 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="project/core/DmdManager.php">
+    <AssignmentToVoid>
+      <code><![CDATA[$authorElement]]></code>
+    </AssignmentToVoid>
     <ClassMustBeFinal>
       <code><![CDATA[DmdManager]]></code>
     </ClassMustBeFinal>
@@ -719,7 +755,7 @@
       <code><![CDATA[importAuthorOld]]></code>
     </DeprecatedMethod>
     <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$zxPictureElement->getId()]]></code>
+      <code><![CDATA[$zxPictureElement->getPersistedId()]]></code>
     </InvalidPropertyAssignmentValue>
     <MissingConstructor>
       <code><![CDATA[$authorsManager]]></code>
@@ -743,22 +779,18 @@
       <code><![CDATA[$json['place']]]></code>
     </MixedArrayAccess>
     <MixedAssignment>
-      <code><![CDATA[$authorElement]]></code>
       <code><![CDATA[$json]]></code>
     </MixedAssignment>
-    <MixedMethodCall>
-      <code><![CDATA[getId]]></code>
-      <code><![CDATA[getId]]></code>
-    </MixedMethodCall>
     <MixedOperand>
       <code><![CDATA[$json['author']]]></code>
       <code><![CDATA[$json['name']]]></code>
       <code><![CDATA[$json['place']]]></code>
       <code><![CDATA[$this->pathsManager->getPath('uploads')]]></code>
     </MixedOperand>
-    <NullArgument>
-      <code><![CDATA[null]]></code>
-    </NullArgument>
+    <NullReference>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+    </NullReference>
     <PossiblyFalseArgument>
       <code><![CDATA[file_get_contents($file->getRealPath())]]></code>
     </PossiblyFalseArgument>
@@ -771,10 +803,16 @@
       <code><![CDATA[setProdsDownloader]]></code>
       <code><![CDATA[setStructureManager]]></code>
     </PossiblyUnusedMethod>
+    <TooManyArguments>
+      <code><![CDATA[importAuthorOld]]></code>
+    </TooManyArguments>
     <UndefinedMagicPropertyAssignment>
       <code><![CDATA[$zxPictureElement->author]]></code>
       <code><![CDATA[$zxPictureElement->dateAdded]]></code>
     </UndefinedMagicPropertyAssignment>
+    <UnusedVariable>
+      <code><![CDATA[$authorElement]]></code>
+    </UnusedVariable>
   </file>
   <file src="project/core/ElementsManager.php">
     <MissingParamType>
@@ -792,6 +830,9 @@
     <MixedArrayAccess>
       <code><![CDATA[$this->columnRelations[$property]]]></code>
     </MixedArrayAccess>
+    <MixedArrayOffset>
+      <code><![CDATA[$this->elementsIndex[$element->id]]]></code>
+    </MixedArrayOffset>
     <MixedAssignment>
       <code><![CDATA[$criteria]]></code>
       <code><![CDATA[$order]]></code>
@@ -805,6 +846,9 @@
     <UndefinedConstant>
       <code><![CDATA[static::TABLE]]></code>
     </UndefinedConstant>
+    <UndefinedMagicPropertyFetch>
+      <code><![CDATA[$element->id]]></code>
+    </UndefinedMagicPropertyFetch>
   </file>
   <file src="project/core/EncodingDetector.php">
     <ArgumentTypeCoercion>
@@ -868,6 +912,7 @@
     <MixedArgument>
       <code><![CDATA[$aliasElement->getLinksInfo()]]></code>
       <code><![CDATA[$this->getGroupProds()]]></code>
+      <code><![CDATA[$this->id]]></code>
       <code><![CDATA[$this->linksInfo]]></code>
       <code><![CDATA[$type]]></code>
     </MixedArgument>
@@ -926,6 +971,10 @@
       <code><![CDATA[$row]]></code>
     </UndefinedMagicMethod>
     <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
       <code><![CDATA[$this->publishedReleases]]></code>
       <code><![CDATA[$this->wikiLink]]></code>
     </UndefinedThisPropertyFetch>
@@ -1146,6 +1195,22 @@
       <code><![CDATA[getLinksInfo]]></code>
       <code><![CDATA[getLinksInfo]]></code>
     </UndefinedMethod>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+    </UndefinedThisPropertyFetch>
   </file>
   <file src="project/core/LanguageCodesProviderTrait.php">
     <ArgumentTypeCoercion>
@@ -1216,6 +1281,8 @@
       <code><![CDATA[$languagesManager]]></code>
       <code><![CDATA[$languagesManager]]></code>
       <code><![CDATA[$letter]]></code>
+      <code><![CDATA[$letterId]]></code>
+      <code><![CDATA[$letterId]]></code>
       <code><![CDATA[$lettersMenu]]></code>
       <code><![CDATA[$lettersMenu]]></code>
       <code><![CDATA[$structureManager]]></code>
@@ -1228,11 +1295,11 @@
       <code><![CDATA[getElementByMarker]]></code>
       <code><![CDATA[getElementsChildren]]></code>
       <code><![CDATA[getElementsChildren]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getRootElementMarker]]></code>
     </MixedMethodCall>
     <MixedPropertyFetch>
-      <code><![CDATA[$letter->id]]></code>
-      <code><![CDATA[$letter->id]]></code>
       <code><![CDATA[$letter->structureName]]></code>
       <code><![CDATA[$letter->title]]></code>
       <code><![CDATA[$lettersMenu->id]]></code>
@@ -1270,6 +1337,10 @@
       <code><![CDATA[empty($this->languagesManager)]]></code>
       <code><![CDATA[empty($this->structureManager)]]></code>
     </RiskyTruthyFalsyComparison>
+    <UndefinedMagicPropertyFetch>
+      <code><![CDATA[$lettersMenu->id]]></code>
+      <code><![CDATA[$lettersMenu->id]]></code>
+    </UndefinedMagicPropertyFetch>
     <UndefinedMethod>
       <code><![CDATA[getService]]></code>
       <code><![CDATA[getService]]></code>
@@ -1426,6 +1497,17 @@
       <code><![CDATA[getElementsListCache]]></code>
     </UndefinedMethod>
     <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
       <code><![CDATA[$this->locationPropertyName]]></code>
       <code><![CDATA[$this->locationPropertyName]]></code>
       <code><![CDATA[$this->locationPropertyName]]></code>
@@ -1510,6 +1592,9 @@
       <code><![CDATA[getTunes]]></code>
       <code><![CDATA[getTunes]]></code>
     </PossiblyUnusedMethod>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->id]]></code>
+    </UndefinedThisPropertyFetch>
   </file>
   <file src="project/core/MusicSettingsProvider.php">
     <PossiblyUnusedMethod>
@@ -1731,7 +1816,7 @@
       <code><![CDATA[$prodInfo['authors'][$label['id']][]]]></code>
       <code><![CDATA[$prodInfo['compo']]]></code>
       <code><![CDATA[$prodInfo['directCategories'][]]]></code>
-      <code><![CDATA[$prodInfo['groupsIds'][]]]></code>
+      <code><![CDATA[$prodInfo['groups'][]]]></code>
       <code><![CDATA[$prodInfo['images'][]]]></code>
       <code><![CDATA[$prodInfo['importIds']['dzoo']]]></code>
       <code><![CDATA[$prodInfo['importIds']['zxd']]]></code>
@@ -1936,6 +2021,9 @@
       <code><![CDATA[getGroupsList]]></code>
       <code><![CDATA[getGroupsList]]></code>
     </PossiblyUnusedMethod>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->id]]></code>
+    </UndefinedThisPropertyFetch>
   </file>
   <file src="project/core/PublisherProdsProvider.php">
     <ArgumentTypeCoercion>
@@ -1994,6 +2082,12 @@
       <code><![CDATA[getPublisherProdsInfo]]></code>
       <code><![CDATA[getPublisherProdsInfo]]></code>
     </PossiblyUnusedMethod>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+    </UndefinedThisPropertyFetch>
   </file>
   <file src="project/core/QueryDebugger.php">
     <MixedOperand>
@@ -2059,9 +2153,6 @@
     <ClassMustBeFinal>
       <code><![CDATA[ReleasesResolver]]></code>
     </ClassMustBeFinal>
-    <MixedReturnStatement>
-      <code><![CDATA[$this->prodsService->getReleasesByIdList($query, $sort, $start, $amount)]]></code>
-    </MixedReturnStatement>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -2620,6 +2711,10 @@
       <code><![CDATA[$result = stripos($tagsText, $text)]]></code>
     </RiskyTruthyFalsyComparison>
     <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
       <code><![CDATA[$this->sectionType]]></code>
       <code><![CDATA[$this->tagsText]]></code>
       <code><![CDATA[$this->tagsText]]></code>
@@ -2778,7 +2873,6 @@
       <code><![CDATA[$releaseInfo]]></code>
       <code><![CDATA[$releaseInfo]]></code>
       <code><![CDATA[$roles]]></code>
-      <code><![CDATA[$roles]]></code>
       <code><![CDATA[$settings]]></code>
       <code><![CDATA[$settings]]></code>
       <code><![CDATA[$settings]]></code>
@@ -2826,7 +2920,7 @@
       <code><![CDATA[$contentNode->textContent]]></code>
       <code><![CDATA[$contentNode->textContent]]></code>
       <code><![CDATA[$endTime - $previousTime]]></code>
-      <code><![CDATA[$info['groupsIds']]]></code>
+      <code><![CDATA[$info['groups']]]></code>
       <code><![CDATA[$info['labels']]]></code>
       <code><![CDATA[$info['labels']]]></code>
       <code><![CDATA[$info['labels']]]></code>
@@ -2840,6 +2934,10 @@
       <code><![CDATA[$prodTitle]]></code>
       <code><![CDATA[$prodsIndex[$prodId]]]></code>
       <code><![CDATA[$releaseInfo['fileUrl']]]></code>
+      <code><![CDATA[$roles]]></code>
+      <code><![CDATA[$roles]]></code>
+      <code><![CDATA[$roles]]></code>
+      <code><![CDATA[$roles]]></code>
       <code><![CDATA[$td3->textContent]]></code>
       <code><![CDATA[$text]]></code>
       <code><![CDATA[$text]]></code>
@@ -2959,7 +3057,6 @@
       <code><![CDATA[$currentCategory]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$info['publishers'][]]]></code>
-      <code><![CDATA[$info['undetermined'][$id]]]></code>
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$key]]></code>
       <code><![CDATA[$key]]></code>
@@ -3088,11 +3185,9 @@
       <code><![CDATA[$td4->nodeValue]]></code>
       <code><![CDATA[$td5->nodeValue]]></code>
     </MixedPropertyFetch>
-    <MixedStringOffsetAssignment>
-      <code><![CDATA[$info['undetermined'][$id]]]></code>
-    </MixedStringOffsetAssignment>
     <PossiblyInvalidArgument>
       <code><![CDATA[$divNode]]></code>
+      <code><![CDATA[$info['groups']]]></code>
       <code><![CDATA[$node]]></code>
       <code><![CDATA[$node]]></code>
       <code><![CDATA[$node]]></code>
@@ -3571,24 +3666,22 @@
     <InvalidReturnStatement>
       <code><![CDATA[$element]]></code>
     </InvalidReturnStatement>
+    <LessSpecificReturnStatement>
+      <code><![CDATA[$this->getElementByImportId($authorId, $origin, 'author')]]></code>
+      <code><![CDATA[$this->getElementByImportId($importId, $origin, 'authorAlias')]]></code>
+    </LessSpecificReturnStatement>
     <MissingOverrideAttribute>
       <code><![CDATA[protected function getLettersListMarker(string $type): string]]></code>
     </MissingOverrideAttribute>
     <MissingParamType>
-      <code><![CDATA[$authorAliasInfo]]></code>
-      <code><![CDATA[$dto]]></code>
-      <code><![CDATA[$origin]]></code>
       <code><![CDATA[$origin]]></code>
       <code><![CDATA[$origin]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[importAuthorAlias]]></code>
-      <code><![CDATA[importAuthorAliasOld]]></code>
-      <code><![CDATA[importAuthorOld]]></code>
     </MissingReturnType>
     <MixedArgument>
       <code><![CDATA[$aliasElement->title]]></code>
-      <code><![CDATA[$dto]]></code>
       <code><![CDATA[$joinedAuthor->articles]]></code>
       <code><![CDATA[$joinedAuthor->title]]></code>
       <code><![CDATA[$link->type]]></code>
@@ -3597,11 +3690,8 @@
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$mainAuthor->articles]]></code>
       <code><![CDATA[$zxProd->id]]></code>
+      <code><![CDATA[$zxRelease->id]]></code>
       <code><![CDATA[TranslitHelper::convert($firstLetter)]]></code>
-      <code><![CDATA[is_array($groupInfo) ? ($groupInfo['city'] ?? null) : null]]></code>
-      <code><![CDATA[is_array($groupInfo) ? ($groupInfo['country'] ?? null) : null]]></code>
-      <code><![CDATA[is_array($groupInfo) ? ($groupInfo['id'] ?? $groupId) : $groupInfo]]></code>
-      <code><![CDATA[is_array($groupInfo) ? ($groupInfo['title'] ?? '') : null]]></code>
     </MixedArgument>
     <MixedArrayAccess>
       <code><![CDATA[$record['elementId']]]></code>
@@ -3617,8 +3707,6 @@
       <code><![CDATA[$aliasElements]]></code>
       <code><![CDATA[$countryId]]></code>
       <code><![CDATA[$existingElements[]]]></code>
-      <code><![CDATA[$groupImportId]]></code>
-      <code><![CDATA[$groupInfo]]></code>
       <code><![CDATA[$joinedValue]]></code>
       <code><![CDATA[$languageId]]></code>
       <code><![CDATA[$record]]></code>
@@ -3627,12 +3715,11 @@
       <code><![CDATA[$zxProd]]></code>
     </MixedAssignment>
     <MixedPropertyFetch>
-      <code><![CDATA[$dto->realName]]></code>
-      <code><![CDATA[$dto->title]]></code>
       <code><![CDATA[$zxProd->id]]></code>
       <code><![CDATA[$zxProd->id]]></code>
     </MixedPropertyFetch>
     <MixedReturnStatement>
+      <code><![CDATA[$this->importedAuthorAliases[$origin][$importId]]]></code>
       <code><![CDATA[$this->importedAuthors[$origin][$authorId]]]></code>
     </MixedReturnStatement>
     <MoreSpecificImplementedParamType>
@@ -3649,12 +3736,14 @@
       <code><![CDATA[$element]]></code>
       <code><![CDATA[$element]]></code>
     </PossiblyInvalidArgument>
+    <PossiblyNullArrayOffset>
+      <code><![CDATA[$this->importedAuthorAliases[$origin]]]></code>
+    </PossiblyNullArrayOffset>
     <PossiblyUndefinedMethod>
       <code><![CDATA[getCountryId]]></code>
     </PossiblyUndefinedMethod>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
-      <code><![CDATA[importAuthorAliasOld]]></code>
       <code><![CDATA[setForceUpdateRealName]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
@@ -3666,18 +3755,9 @@
       <code><![CDATA[bool]]></code>
     </PossiblyUnusedReturnValue>
     <RedundantCast>
-      <code><![CDATA[(string)$authorAlias->authorId]]></code>
       <code><![CDATA[(string)$authorAlias->id]]></code>
       <code><![CDATA[(string)$dto->id]]></code>
-      <code><![CDATA[(string)$label->id]]></code>
-      <code><![CDATA[(string)($authorAlias->title ?? '')]]></code>
     </RedundantCast>
-    <RedundantCondition>
-      <code><![CDATA[$authorAlias->id !== null]]></code>
-      <code><![CDATA[$dto->id !== null]]></code>
-      <code><![CDATA[$origin && $authorAlias->id !== null]]></code>
-      <code><![CDATA[$origin && $dto->id !== null]]></code>
-    </RedundantCondition>
     <RedundantConditionGivenDocblockType>
       <code><![CDATA[$element]]></code>
     </RedundantConditionGivenDocblockType>
@@ -3691,12 +3771,6 @@
       <code><![CDATA[empty($label->realName)]]></code>
       <code><![CDATA[empty($mainAuthor->zxTunesId)]]></code>
     </RiskyTruthyFalsyComparison>
-    <TooManyArguments>
-      <code><![CDATA[createAuthor]]></code>
-    </TooManyArguments>
-    <TypeDoesNotContainNull>
-      <code><![CDATA[$authorId === null]]></code>
-    </TypeDoesNotContainNull>
     <UndefinedMagicMethod>
       <code><![CDATA[$record]]></code>
       <code><![CDATA[$record]]></code>
@@ -3719,6 +3793,7 @@
       <code><![CDATA[$joinedAuthor->city]]></code>
       <code><![CDATA[$joinedAuthor->country]]></code>
       <code><![CDATA[$joinedAuthor->email]]></code>
+      <code><![CDATA[$joinedAuthor->id]]></code>
       <code><![CDATA[$joinedAuthor->site]]></code>
       <code><![CDATA[$joinedAuthor->title]]></code>
       <code><![CDATA[$joinedAuthor->wikiLink]]></code>
@@ -3733,6 +3808,7 @@
       <code><![CDATA[$mainAuthor->email]]></code>
       <code><![CDATA[$mainAuthor->site]]></code>
       <code><![CDATA[$mainAuthor->wikiLink]]></code>
+      <code><![CDATA[$zxRelease->id]]></code>
     </UndefinedMagicPropertyFetch>
     <UndefinedMethod>
       <code><![CDATA[getAliasElements]]></code>
@@ -3873,6 +3949,8 @@
       <code><![CDATA[$record['id']]]></code>
       <code><![CDATA[$record['id']]]></code>
       <code><![CDATA[$record['id']]]></code>
+      <code><![CDATA[$releaseElement->id]]></code>
+      <code><![CDATA[$releaseElement->id]]></code>
       <code><![CDATA[$releaseElement->title]]></code>
       <code><![CDATA[$releaseElement->title]]></code>
       <code><![CDATA[$result[$key]]]></code>
@@ -4008,6 +4086,7 @@
       <code><![CDATA[$record]]></code>
     </UndefinedMagicMethod>
     <UndefinedMagicPropertyFetch>
+      <code><![CDATA[$releaseElement->id]]></code>
       <code><![CDATA[$releaseElement->title]]></code>
     </UndefinedMagicPropertyFetch>
     <UndefinedMethod>
@@ -4287,12 +4366,6 @@
     <ClassMustBeFinal>
       <code><![CDATA[GroupsService]]></code>
     </ClassMustBeFinal>
-    <InvalidNullableReturnType>
-      <code><![CDATA[bool|groupElement]]></code>
-    </InvalidNullableReturnType>
-    <InvalidReturnStatement>
-      <code><![CDATA[$element]]></code>
-    </InvalidReturnStatement>
     <LessSpecificReturnStatement>
       <code><![CDATA[$element]]></code>
       <code><![CDATA[$element]]></code>
@@ -4305,20 +4378,17 @@
       <code><![CDATA[$targetId]]></code>
     </MissingParamType>
     <MixedArgument>
-      <code><![CDATA[$dto->cityName ?? null]]></code>
-      <code><![CDATA[$dto->countryName ?? null]]></code>
-      <code><![CDATA[$dto->groupsData ?? null]]></code>
-      <code><![CDATA[$dto->title]]></code>
-      <code><![CDATA[$dto->title ?? '']]></code>
-      <code><![CDATA[$dto->title ?? '']]></code>
       <code><![CDATA[$groupAliasElement->title]]></code>
       <code><![CDATA[$joinedElement->title]]></code>
       <code><![CDATA[$joinedId]]></code>
       <code><![CDATA[$joinedId]]></code>
+      <code><![CDATA[$letterElement->id]]></code>
+      <code><![CDATA[$letterElement->id]]></code>
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$record['elementId']]]></code>
       <code><![CDATA[$record['elementId']]]></code>
+      <code><![CDATA[$targetElement->id]]></code>
       <code><![CDATA[$targetId]]></code>
     </MixedArgument>
     <MixedArrayAccess>
@@ -4379,13 +4449,8 @@
     <NullArgument>
       <code><![CDATA[null]]></code>
     </NullArgument>
-    <NullableReturnStatement>
-      <code><![CDATA[$groupElement]]></code>
-    </NullableReturnStatement>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$element]]></code>
-    </PossiblyInvalidArgument>
     <PossiblyNullArgument>
+      <code><![CDATA[$element]]></code>
       <code><![CDATA[$origin]]></code>
       <code><![CDATA[$origin]]></code>
       <code><![CDATA[$origin]]></code>
@@ -4419,8 +4484,6 @@
       <code><![CDATA[$letterId = $this->getLetterId($title)]]></code>
       <code><![CDATA[$letterId = $this->getLetterId($title)]]></code>
       <code><![CDATA[$targetGroupElement]]></code>
-      <code><![CDATA[empty($dto->type)]]></code>
-      <code><![CDATA[empty($dto->type)]]></code>
     </RiskyTruthyFalsyComparison>
     <UndefinedMagicMethod>
       <code><![CDATA[$record]]></code>
@@ -4435,25 +4498,56 @@
       <code><![CDATA[$targetElement->title]]></code>
     </UndefinedMagicPropertyAssignment>
     <UndefinedMagicPropertyFetch>
+      <code><![CDATA[$authorElement->id]]></code>
       <code><![CDATA[$element->groupId]]></code>
+      <code><![CDATA[$element->id]]></code>
+      <code><![CDATA[$element->id]]></code>
+      <code><![CDATA[$element->id]]></code>
+      <code><![CDATA[$element->id]]></code>
       <code><![CDATA[$element->title]]></code>
       <code><![CDATA[$groupAliasElement->city]]></code>
       <code><![CDATA[$groupAliasElement->country]]></code>
+      <code><![CDATA[$groupAliasElement->id]]></code>
       <code><![CDATA[$groupAliasElement->title]]></code>
+      <code><![CDATA[$groupElement->id]]></code>
+      <code><![CDATA[$groupElement->id]]></code>
+      <code><![CDATA[$groupElement->id]]></code>
+      <code><![CDATA[$groupElement->id]]></code>
+      <code><![CDATA[$groupElement->id]]></code>
+      <code><![CDATA[$groupElement->id]]></code>
+      <code><![CDATA[$groupElement->id]]></code>
+      <code><![CDATA[$groupElement->id]]></code>
       <code><![CDATA[$joinedElement->city]]></code>
       <code><![CDATA[$joinedElement->country]]></code>
       <code><![CDATA[$joinedElement->endDate]]></code>
+      <code><![CDATA[$joinedElement->id]]></code>
       <code><![CDATA[$joinedElement->slogan]]></code>
       <code><![CDATA[$joinedElement->startDate]]></code>
       <code><![CDATA[$joinedElement->title]]></code>
       <code><![CDATA[$joinedElement->type]]></code>
       <code><![CDATA[$joinedElement->website]]></code>
       <code><![CDATA[$joinedElement->wikiLink]]></code>
+      <code><![CDATA[$letterElement->id]]></code>
+      <code><![CDATA[$letterElement->id]]></code>
       <code><![CDATA[$link->childStructureId]]></code>
       <code><![CDATA[$link->type]]></code>
+      <code><![CDATA[$locationElement->id]]></code>
+      <code><![CDATA[$locationElement->id]]></code>
+      <code><![CDATA[$locationElement->id]]></code>
+      <code><![CDATA[$locationElement->id]]></code>
+      <code><![CDATA[$locationElement->id]]></code>
+      <code><![CDATA[$locationElement->id]]></code>
+      <code><![CDATA[$locationElement->id]]></code>
+      <code><![CDATA[$locationElement->id]]></code>
+      <code><![CDATA[$locationElement->id]]></code>
+      <code><![CDATA[$targetElement->id]]></code>
+      <code><![CDATA[$targetElement->id]]></code>
       <code><![CDATA[$targetGroupElement->city]]></code>
       <code><![CDATA[$targetGroupElement->country]]></code>
       <code><![CDATA[$targetGroupElement->endDate]]></code>
+      <code><![CDATA[$targetGroupElement->id]]></code>
+      <code><![CDATA[$targetGroupElement->id]]></code>
+      <code><![CDATA[$targetGroupElement->id]]></code>
       <code><![CDATA[$targetGroupElement->slogan]]></code>
       <code><![CDATA[$targetGroupElement->startDate]]></code>
       <code><![CDATA[$targetGroupElement->type]]></code>
@@ -4464,10 +4558,6 @@
       <code><![CDATA[getAliasElements]]></code>
       <code><![CDATA[getGroupElement]]></code>
     </UndefinedMethod>
-    <UndefinedPropertyFetch>
-      <code><![CDATA[$dto->groupsData]]></code>
-      <code><![CDATA[$dto->title]]></code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="project/core/ZxArt/Hardware/Repositories/StorageRepository.php">
     <PossiblyUnusedMethod>
@@ -4523,21 +4613,18 @@
   <file src="project/core/ZxArt/Import/Labels/GroupLabel.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$this->id]]></code>
-      <code><![CDATA[$this->id]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="project/core/ZxArt/Import/Labels/Label.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[toArray]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$memberNames]]></code>
-    </PossiblyUnusedProperty>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$this->id]]></code>
-      <code><![CDATA[$this->id]]></code>
-    </RiskyTruthyFalsyComparison>
+    <InvalidArgument>
+      <code><![CDATA[$groups]]></code>
+    </InvalidArgument>
+    <MixedArgument>
+      <code><![CDATA[$groups]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$groups]]></code>
+    </MixedAssignment>
   </file>
   <file src="project/core/ZxArt/Import/Labels/LabelResolver.php">
     <DocblockTypeContradiction>
@@ -4547,6 +4634,9 @@
       <code><![CDATA[$label]]></code>
       <code><![CDATA[$label]]></code>
     </InvalidArgument>
+    <InvalidPropertyFetch>
+      <code><![CDATA[$groupLabel->name]]></code>
+    </InvalidPropertyFetch>
     <InvalidReturnStatement>
       <code><![CDATA[$this->resolveEntity(
             $label,
@@ -4567,7 +4657,7 @@
 
 
                 $authorCountry = $author->getCountryTitle();
-                $labelCountry = $label->country;
+                $labelCountry = $label->countryName;
                 //don't match authors from different countries
                 if ($authorCountry !== null && $labelCountry !== null && !$author->matchesCountry($labelCountry)) {
                     return 0;
@@ -4575,13 +4665,13 @@
 
 
                 $authorCity = $author->getCityTitle();
-                $labelCity = $label->city;
+                $labelCity = $label->cityName;
                 //don't match authors from different cities
                 if ($authorCity !== null && $labelCity !== null && !$author->matchesCity($labelCity)) {
                     return 0;
                 }
 
-                $labelGroups = $label->groups ?? [];
+                $labelGroups = $label->groupImportIds ?? [];
 
                 // if both have groups, then exclude non-matching
                 if (count($authorGroups) > 0 && count($labelGroups) > 0) {
@@ -4611,7 +4701,7 @@
                     $score += 20;
                 }
 
-                if ($author->matchesCity($label->city ?? '')) {
+                if ($author->matchesCity($label->cityName ?? '')) {
                     $score += 5;
                 }
                 if ($author->matchesCountry($labelCountry ?? '')) {
@@ -4632,7 +4722,7 @@
 
             function (groupElement|groupAliasElement $groupElement, ?string $elementName, GroupLabel $label) {
                 $elementCountryTitle = $groupElement->getCountryTitle();
-                $labelCountry = $label->country ?? null;
+                $labelCountry = $label->countryName ?? null;
 
                 $labelMembers = $label->memberNames ?? [];
                 $authorsInfo = $groupElement->getAuthorsInfo('group');
@@ -4655,7 +4745,7 @@
                     $score += 3;
                 }
 
-                if ($groupElement->matchesCity($label->city ?? '')) {
+                if ($groupElement->matchesCity($label->cityName ?? '')) {
                     $score += 5;
                 }
                 if ($groupElement->matchesCountry($labelCountry ?? '')) {
@@ -4685,6 +4775,7 @@
       <code><![CDATA[static fn($alias) => $alias->getAuthorElement()]]></code>
       <code><![CDATA[static fn($alias) => $alias->getGroupElement()]]></code>
       <code><![CDATA[static fn($authorGroup) => $authorGroup->getTitle()]]></code>
+      <code><![CDATA[static fn($groupLabel) => $groupLabel->name]]></code>
     </MissingClosureReturnType>
     <MixedArgument>
       <code><![CDATA[$aliasIds]]></code>
@@ -4721,6 +4812,9 @@
       <code><![CDATA[$label]]></code>
       <code><![CDATA[$label]]></code>
     </PossiblyInvalidArgument>
+    <PossiblyNullPropertyFetch>
+      <code><![CDATA[$groupLabel->name]]></code>
+    </PossiblyNullPropertyFetch>
     <PossiblyNullReference>
       <code><![CDATA[getTitle]]></code>
     </PossiblyNullReference>
@@ -4748,12 +4842,19 @@
       <code><![CDATA[matchesCountry]]></code>
     </UndefinedMagicMethod>
   </file>
-  <file src="project/core/ZxArt/Import/Labels/PersonLabel.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[toArray]]></code>
-    </PossiblyUnusedMethod>
+  <file src="project/core/ZxArt/Import/Labels/LabelTransformer.php">
+    <InvalidArgument>
+      <code><![CDATA[$label->groups]]></code>
+    </InvalidArgument>
+    <MixedArgument>
+      <code><![CDATA[$label->type?->value ?? null]]></code>
+    </MixedArgument>
     <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$label->authorId]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="project/core/ZxArt/Import/Labels/PersonLabel.php">
+    <RiskyTruthyFalsyComparison>
       <code><![CDATA[$this->id]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
@@ -4809,7 +4910,7 @@
   </file>
   <file src="project/core/ZxArt/Import/Press/DataUpdater/ArticleParsedDataUpdater.php">
     <InvalidArgument>
-      <code><![CDATA[$label]]></code>
+      <code><![CDATA[$groups]]></code>
     </InvalidArgument>
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->groupsMap]]></code>
@@ -4821,6 +4922,7 @@
       <code><![CDATA[$parsedHardware]]></code>
     </MissingParamType>
     <MixedArgument>
+      <code><![CDATA[$authorElement->id]]></code>
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$item['softwareRoles'] ?? ['unknown']]]></code>
       <code><![CDATA[$memberNames]]></code>
@@ -4891,6 +4993,9 @@
     <RedundantConditionGivenDocblockType>
       <code><![CDATA[$prod !== null]]></code>
     </RedundantConditionGivenDocblockType>
+    <UndefinedMagicPropertyFetch>
+      <code><![CDATA[$authorElement->id]]></code>
+    </UndefinedMagicPropertyFetch>
     <UndefinedMethod>
       <code><![CDATA[$articleProds]]></code>
     </UndefinedMethod>
@@ -4924,23 +5029,6 @@
     <UnusedProperty>
       <code><![CDATA[$languagesManager]]></code>
     </UnusedProperty>
-  </file>
-  <file src="project/core/ZxArt/Import/Prods/Dto/LabelGatheredInfoDTO.php">
-    <MixedArgument>
-      <code><![CDATA[$groups]]></code>
-    </MixedArgument>
-    <MixedAssignment>
-      <code><![CDATA[$groups]]></code>
-    </MixedAssignment>
-    <PossiblyNullArgument>
-      <code><![CDATA[isset($a['id']) ? (string)$a['id'] : null]]></code>
-    </PossiblyNullArgument>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$groupId]]></code>
-      <code><![CDATA[$isAlias]]></code>
-      <code><![CDATA[$isGroup]]></code>
-      <code><![CDATA[$isPerson]]></code>
-    </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Import/Prods/Dto/PartyRefDTO.php">
     <RiskyTruthyFalsyComparison>
@@ -5004,10 +5092,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$entity]]></code>
     </ArgumentTypeCoercion>
-    <DocblockTypeContradiction>
-      <code><![CDATA['']]></code>
-      <code><![CDATA['']]></code>
-    </DocblockTypeContradiction>
     <LessSpecificReturnStatement>
       <code><![CDATA[$candidates[0]['element'] ?? null]]></code>
     </LessSpecificReturnStatement>
@@ -5027,11 +5111,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[$prodElement->altTitle]]></code>
-      <code><![CDATA[$prodElement->title]]></code>
-      <code><![CDATA[$prodElement->year !== null]]></code>
-    </RedundantConditionGivenDocblockType>
   </file>
   <file src="project/core/ZxArt/Import/Resolver.php">
     <PossiblyUnusedMethod>
@@ -5047,6 +5126,8 @@
     </DocblockTypeContradiction>
     <InvalidArgument>
       <code><![CDATA[$infoIndex[$labelId]['isPerson']]]></code>
+      <code><![CDATA[$this->counter]]></code>
+      <code><![CDATA[$this->counter]]></code>
       <code><![CDATA[static function ($join) {
                             $join->on('authors.entry_id', '=', 'roles.entry_id')
                                 ->on('authors.label_id', '=', 'roles.label_id');
@@ -5058,10 +5139,6 @@
                                 ->on('authors.label_id', '=', 'roles.label_id');
                         }]]></code>
     </InvalidCast>
-    <InvalidScalarArgument>
-      <code><![CDATA[$this->counter]]></code>
-      <code><![CDATA[$this->counter]]></code>
-    </InvalidScalarArgument>
     <MissingClosureParamType>
       <code><![CDATA[$join]]></code>
     </MissingClosureParamType>
@@ -5234,8 +5311,8 @@
       <code><![CDATA[$infoIndex[$labelId]]]></code>
       <code><![CDATA[$prodInfo['authors'][$labelInfo['id']]]]></code>
       <code><![CDATA[$prodInfo['authors'][$labelInfo['id']]]]></code>
-      <code><![CDATA[$this->categories[$entry['genretype_id']]]]></code>
-      <code><![CDATA[$this->categories[$entry['genretype_id']]]]></code>
+      <code><![CDATA[$this->allowedCategoryIdsMap[$entry['genretype_id']]]]></code>
+      <code><![CDATA[$this->allowedCategoryIdsMap[$entry['genretype_id']]]]></code>
       <code><![CDATA[$this->featureGroups[$control['tag_id']]]]></code>
       <code><![CDATA[$this->featureGroups[$control['tag_id']]]]></code>
       <code><![CDATA[$this->languages[$download['language_id']]]]></code>
@@ -5659,9 +5736,6 @@
     <ClassMustBeFinal>
       <code><![CDATA[PartiesService]]></code>
     </ClassMustBeFinal>
-    <MissingPropertyType>
-      <code><![CDATA[$columnRelations]]></code>
-    </MissingPropertyType>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -5793,16 +5867,12 @@
     <ClassMustBeFinal>
       <code><![CDATA[ProdsService]]></code>
     </ClassMustBeFinal>
-    <InvalidArgument>
-      <code><![CDATA[$labelDTO]]></code>
-      <code><![CDATA[$labelDTO]]></code>
-    </InvalidArgument>
     <InvalidNullableReturnType>
       <code><![CDATA[bool|structureElement]]></code>
     </InvalidNullableReturnType>
     <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$element->getId()]]></code>
-      <code><![CDATA[$element->getId()]]></code>
+      <code><![CDATA[$element->getPersistedId()]]></code>
+      <code><![CDATA[$element->getPersistedId()]]></code>
     </InvalidPropertyAssignmentValue>
     <LessSpecificReturnStatement>
       <code><![CDATA[$element]]></code>
@@ -5811,27 +5881,19 @@
       <code><![CDATA[$foundReleaseId ? $this->structureManager->getElementById($foundReleaseId) : null]]></code>
     </LessSpecificReturnStatement>
     <MissingParamType>
-      <code><![CDATA[$authorId]]></code>
       <code><![CDATA[$publisherId]]></code>
-      <code><![CDATA[$roles]]></code>
       <code><![CDATA[$sourceElement]]></code>
       <code><![CDATA[$targetElement]]></code>
       <code><![CDATA[$title]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[getReleasesByIdList]]></code>
       <code><![CDATA[sanitizeTitle]]></code>
     </MissingReturnType>
     <MixedArgument>
-      <code><![CDATA[$authorId]]></code>
       <code><![CDATA[$data['authors']]]></code>
       <code><![CDATA[$existingFile->fileName]]></code>
       <code><![CDATA[$firstParent->id]]></code>
       <code><![CDATA[$imageUrl]]></code>
-      <code><![CDATA[$labelDTO]]></code>
-      <code><![CDATA[$labelDTO]]></code>
-      <code><![CDATA[$labelDTO]]></code>
-      <code><![CDATA[$labelDTO]]></code>
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$link->type]]></code>
@@ -5844,8 +5906,6 @@
       <code><![CDATA[$record['authorId']]]></code>
       <code><![CDATA[$record['roles']]]></code>
       <code><![CDATA[$record['type']]]></code>
-      <code><![CDATA[$roles]]></code>
-      <code><![CDATA[$sanitizedTitle]]></code>
       <code><![CDATA[$sanitizedTitle]]></code>
       <code><![CDATA[$sourceElementId]]></code>
       <code><![CDATA[$string]]></code>
@@ -5870,6 +5930,7 @@
     <MixedArrayOffset>
       <code><![CDATA[$index[$record['elementId']]]]></code>
       <code><![CDATA[$index[$record['elementId']][$record['md5']]]]></code>
+      <code><![CDATA[$this->elementsIndex[$zxRelease->id]]]></code>
     </MixedArrayOffset>
     <MixedAssignment>
       <code><![CDATA[$authorsInfo]]></code>
@@ -5878,6 +5939,7 @@
       <code><![CDATA[$criteria]]></code>
       <code><![CDATA[$destinationFolder]]></code>
       <code><![CDATA[$destinationFolder]]></code>
+      <code><![CDATA[$dtoTitle]]></code>
       <code><![CDATA[$existingAuthorIds[]]]></code>
       <code><![CDATA[$existingFile]]></code>
       <code><![CDATA[$firstParent]]></code>
@@ -5886,7 +5948,6 @@
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$imageUrl]]></code>
-      <code><![CDATA[$labelDTO]]></code>
       <code><![CDATA[$order]]></code>
       <code><![CDATA[$orderDirection]]></code>
       <code><![CDATA[$path]]></code>
@@ -5897,8 +5958,6 @@
       <code><![CDATA[$record]]></code>
       <code><![CDATA[$record]]></code>
       <code><![CDATA[$record]]></code>
-      <code><![CDATA[$result]]></code>
-      <code><![CDATA[$sanitizedTitle]]></code>
       <code><![CDATA[$sanitizedTitle]]></code>
       <code><![CDATA[$sourceElementId]]></code>
       <code><![CDATA[$string]]></code>
@@ -5913,6 +5972,8 @@
     </MixedAssignment>
     <MixedMethodCall>
       <code><![CDATA[getFilePath]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
     </MixedMethodCall>
     <MixedOperand>
       <code><![CDATA[$destinationFolder]]></code>
@@ -5922,12 +5983,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$existingFile->fileName]]></code>
       <code><![CDATA[$firstParent->id]]></code>
-      <code><![CDATA[$labelDTO->isAlias]]></code>
-      <code><![CDATA[$labelDTO->isGroup]]></code>
-      <code><![CDATA[$labelDTO->isPerson]]></code>
-      <code><![CDATA[$labelDTO->isPerson]]></code>
-      <code><![CDATA[$sourceElement->id]]></code>
-      <code><![CDATA[$targetElement->id]]></code>
     </MixedPropertyFetch>
     <MoreSpecificReturnType>
       <code><![CDATA[?zxProdElement]]></code>
@@ -5943,9 +5998,6 @@
       <code><![CDATA[$element]]></code>
       <code><![CDATA[$newProdElement]]></code>
     </NullableReturnStatement>
-    <PossiblyNullArgument>
-      <code><![CDATA[$idList]]></code>
-    </PossiblyNullArgument>
     <PossiblyNullOperand>
       <code><![CDATA[$info['extension']]]></code>
     </PossiblyNullOperand>
@@ -5957,7 +6009,6 @@
       <code><![CDATA[setForceUpdatePublishers]]></code>
       <code><![CDATA[setForceUpdateReleaseAuthors]]></code>
       <code><![CDATA[setForceUpdateReleaseFiles]]></code>
-      <code><![CDATA[setForceUpdateReleasePublishers]]></code>
       <code><![CDATA[setForceUpdateTitles]]></code>
       <code><![CDATA[setForceUpdateYear]]></code>
       <code><![CDATA[setPathsManager]]></code>
@@ -5977,7 +6028,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[!$category]]></code>
       <code><![CDATA[!$dto->fileUrl]]></code>
-      <code><![CDATA[!$result]]></code>
       <code><![CDATA[!$this->getElementIdByImportId($id, $importOrigin, 'prod')]]></code>
       <code><![CDATA[$authorId = $this->getElementIdByImportId($importAuthorId, $origin, 'author')]]></code>
       <code><![CDATA[$authorId = $this->getElementIdByImportId($importAuthorId, $origin, 'author')]]></code>
@@ -6010,13 +6060,10 @@
       <code><![CDATA[empty($dto->fileName)]]></code>
       <code><![CDATA[empty($dto->filePath)]]></code>
       <code><![CDATA[empty($dto->fileUrl)]]></code>
-      <code><![CDATA[empty($dto->fileUrl)]]></code>
       <code><![CDATA[empty($dto->groups)]]></code>
       <code><![CDATA[empty($dto->hardwareRequired)]]></code>
       <code><![CDATA[empty($dto->images)]]></code>
-      <code><![CDATA[empty($dto->images)]]></code>
       <code><![CDATA[empty($dto->importIds)]]></code>
-      <code><![CDATA[empty($dto->inlayImages)]]></code>
       <code><![CDATA[empty($dto->inlayImages)]]></code>
       <code><![CDATA[empty($dto->labels)]]></code>
       <code><![CDATA[empty($dto->labels)]]></code>
@@ -6075,6 +6122,7 @@
       <code><![CDATA[$joinedZxProd->denyComments]]></code>
       <code><![CDATA[$joinedZxProd->denyVoting]]></code>
       <code><![CDATA[$joinedZxProd->description]]></code>
+      <code><![CDATA[$joinedZxProd->id]]></code>
       <code><![CDATA[$joinedZxProd->language]]></code>
       <code><![CDATA[$joinedZxProd->legalStatus]]></code>
       <code><![CDATA[$joinedZxProd->party]]></code>
@@ -6090,6 +6138,14 @@
       <code><![CDATA[$mainZxProd->denyComments]]></code>
       <code><![CDATA[$mainZxProd->denyVoting]]></code>
       <code><![CDATA[$mainZxProd->description]]></code>
+      <code><![CDATA[$mainZxProd->id]]></code>
+      <code><![CDATA[$mainZxProd->id]]></code>
+      <code><![CDATA[$mainZxProd->id]]></code>
+      <code><![CDATA[$mainZxProd->id]]></code>
+      <code><![CDATA[$mainZxProd->id]]></code>
+      <code><![CDATA[$mainZxProd->id]]></code>
+      <code><![CDATA[$mainZxProd->id]]></code>
+      <code><![CDATA[$mainZxProd->id]]></code>
       <code><![CDATA[$mainZxProd->language]]></code>
       <code><![CDATA[$mainZxProd->legalStatus]]></code>
       <code><![CDATA[$mainZxProd->party]]></code>
@@ -6098,6 +6154,7 @@
       <code><![CDATA[$mainZxProd->year]]></code>
       <code><![CDATA[$mainZxProd->youtubeId]]></code>
       <code><![CDATA[$newProdElement->title]]></code>
+      <code><![CDATA[$zxRelease->id]]></code>
     </UndefinedMagicPropertyFetch>
     <UndefinedMethod>
       <code><![CDATA[getConnectedCategoriesIds]]></code>
@@ -6434,6 +6491,7 @@
       <code><![CDATA[$elementVotes]]></code>
       <code><![CDATA[$elementVotes]]></code>
       <code><![CDATA[$this->getTagsList()]]></code>
+      <code><![CDATA[$this->id]]></code>
       <code><![CDATA[$this->partyplace]]></code>
       <code><![CDATA[$this->title]]></code>
       <code><![CDATA[$vote['date']]]></code>
@@ -6498,6 +6556,7 @@
       <code><![CDATA[$party]]></code>
       <code><![CDATA[$releaseElement]]></code>
       <code><![CDATA[$searchTitle]]></code>
+      <code><![CDATA[$title]]></code>
       <code><![CDATA[$user]]></code>
       <code><![CDATA[$user]]></code>
       <code><![CDATA[$vote]]></code>
@@ -6557,6 +6616,7 @@
       <code><![CDATA[$this->getUserVote()]]></code>
       <code><![CDATA[$this->partyplace]]></code>
       <code><![CDATA[$this->votes]]></code>
+      <code><![CDATA[$title]]></code>
     </MixedOperand>
     <MixedPropertyFetch>
       <code><![CDATA[$author->id]]></code>
@@ -6646,6 +6706,22 @@
       <code><![CDATA[$this->game]]></code>
       <code><![CDATA[$this->game]]></code>
       <code><![CDATA[$this->game]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
       <code><![CDATA[$this->originalAuthor]]></code>
       <code><![CDATA[$this->party]]></code>
       <code><![CDATA[$this->party]]></code>
@@ -6906,6 +6982,7 @@
       <code><![CDATA[$groupValues]]></code>
       <code><![CDATA[$hwItems]]></code>
       <code><![CDATA[$hwItems]]></code>
+      <code><![CDATA[$id]]></code>
       <code><![CDATA[$letter]]></code>
       <code><![CDATA[$letter]]></code>
       <code><![CDATA[$parameter]]></code>
@@ -6960,6 +7037,8 @@
       <code><![CDATA[$hwItems]]></code>
       <code><![CDATA[$hwItems]]></code>
       <code><![CDATA[$id]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$id]]></code>
       <code><![CDATA[$language]]></code>
       <code><![CDATA[$languageId]]></code>
       <code><![CDATA[$languages]]></code>
@@ -6984,6 +7063,7 @@
       <code><![CDATA[$query]]></code>
       <code><![CDATA[$result]]></code>
       <code><![CDATA[$result]]></code>
+      <code><![CDATA[$result[]]]></code>
       <code><![CDATA[$status]]></code>
       <code><![CDATA[$statuses]]></code>
       <code><![CDATA[$tagElement]]></code>
@@ -7080,6 +7160,9 @@
       <code><![CDATA[ZXPRODS_TABLE]]></code>
       <code><![CDATA[parent::getUrl($action)]]></code>
     </MixedOperand>
+    <MixedReturnTypeCoercion>
+      <code><![CDATA[int[]]]></code>
+    </MixedReturnTypeCoercion>
     <PossiblyInvalidClone>
       <code><![CDATA[clone($this->apiQuery->getExportFilteredQuery())]]></code>
       <code><![CDATA[clone($this->getBaseQuery())]]></code>
@@ -7198,8 +7281,18 @@
       <code><![CDATA['db']]></code>
     </UndefinedClass>
     <UndefinedMagicPropertyFetch>
+      <code><![CDATA[$category->id]]></code>
+      <code><![CDATA[$category->id]]></code>
       <code><![CDATA[$category->title]]></code>
+      <code><![CDATA[$parentElement->id]]></code>
     </UndefinedMagicPropertyFetch>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+    </UndefinedThisPropertyFetch>
     <UnusedForeachValue>
       <code><![CDATA[$selectorValue]]></code>
     </UnusedForeachValue>
@@ -7879,6 +7972,10 @@
       <code><![CDATA['db']]></code>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
+    <UndefinedMagicPropertyFetch>
+      <code><![CDATA[$tagElement->id]]></code>
+      <code><![CDATA[$tagElement->id]]></code>
+    </UndefinedMagicPropertyFetch>
   </file>
   <file src="project/core/user.class.php">
     <ClassMustBeFinal>
@@ -8793,7 +8890,9 @@
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
+      <code><![CDATA[$prod->id]]></code>
       <code><![CDATA[$prod->title]]></code>
+      <code><![CDATA[$prod2->id]]></code>
       <code><![CDATA[$prodId]]></code>
       <code><![CDATA[$propertyName]]></code>
       <code><![CDATA[$propertyName]]></code>
@@ -8953,10 +9052,14 @@
       <code><![CDATA[$prod2->title]]></code>
     </UndefinedMagicPropertyAssignment>
     <UndefinedMagicPropertyFetch>
+      <code><![CDATA[$prod->id]]></code>
+      <code><![CDATA[$prod->id]]></code>
       <code><![CDATA[$prod->title]]></code>
       <code><![CDATA[$prod->title]]></code>
       <code><![CDATA[$prod->title]]></code>
+      <code><![CDATA[$prod2->id]]></code>
       <code><![CDATA[$prod2->title]]></code>
+      <code><![CDATA[$release->id]]></code>
     </UndefinedMagicPropertyFetch>
     <UndefinedMethod>
       <code><![CDATA[checkAndPersistCategories]]></code>
@@ -14374,6 +14477,8 @@
       <code><![CDATA[assign]]></code>
       <code><![CDATA[changeConnectedAuthor]]></code>
       <code><![CDATA[getElementById]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getParameter]]></code>
       <code><![CDATA[getSettingsList]]></code>
       <code><![CDATA[getTranslationByName]]></code>
@@ -14390,8 +14495,6 @@
       <code><![CDATA[setViewName]]></code>
     </MixedMethodCall>
     <MixedPropertyFetch>
-      <code><![CDATA[$structureElement->id]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->title]]></code>
       <code><![CDATA[$userElement->email]]></code>
       <code><![CDATA[$userElement->userName]]></code>
@@ -14453,6 +14556,10 @@
     <MixedMethodCall>
       <code><![CDATA[assign]]></code>
       <code><![CDATA[getFormActionURL]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getSettingsList]]></code>
       <code><![CDATA[registerReceiver]]></code>
       <code><![CDATA[setData]]></code>
@@ -14466,12 +14573,11 @@
     <MixedOperand>
       <code><![CDATA[$structureElement->getFormActionURL(
                         )]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
+      <code><![CDATA[$structureElement->getId()]]></code>
       <code><![CDATA[$structureElement->title]]></code>
       <code><![CDATA[$user->id]]></code>
     </MixedOperand>
     <MixedPropertyFetch>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->title]]></code>
     </MixedPropertyFetch>
     <PossiblyNullPropertyFetch>
@@ -15159,14 +15265,14 @@
       <code><![CDATA[$loggable]]></code>
     </MissingPropertyType>
     <MixedArgument>
-      <code><![CDATA[$structureElement->id]]></code>
+      <code><![CDATA[$structureElement->getId()]]></code>
     </MixedArgument>
     <MixedMethodCall>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[redirect]]></code>
     </MixedMethodCall>
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
     </MixedPropertyFetch>
     <PropertyNotSetInConstructor>
       <code><![CDATA[convertToAuthorAuthorAlias]]></code>
@@ -15507,10 +15613,10 @@
       <code><![CDATA[getElementById]]></code>
       <code><![CDATA[getElementsChildren]]></code>
       <code><![CDATA[getElementsFirstParent]]></code>
+      <code><![CDATA[getId]]></code>
     </MixedMethodCall>
     <MixedPropertyFetch>
       <code><![CDATA[$authorElement?->structureType]]></code>
-      <code><![CDATA[$parentElement->id]]></code>
       <code><![CDATA[$parentElement->structureType]]></code>
     </MixedPropertyFetch>
     <MixedReturnStatement>
@@ -15559,10 +15665,8 @@
     <MixedMethodCall>
       <code><![CDATA[executeAction]]></code>
       <code><![CDATA[getElementsByType]]></code>
+      <code><![CDATA[getId]]></code>
     </MixedMethodCall>
-    <MixedPropertyFetch>
-      <code><![CDATA[$structureElement->id]]></code>
-    </MixedPropertyFetch>
     <PropertyNotSetInConstructor>
       <code><![CDATA[recalculateAuthors]]></code>
       <code><![CDATA[recalculateAuthors]]></code>
@@ -15646,6 +15750,8 @@
       <code><![CDATA[getElementsChildren]]></code>
       <code><![CDATA[getElementsFirstParent]]></code>
       <code><![CDATA[getElementsLinksIndex]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[linkElements]]></code>
       <code><![CDATA[persistElementData]]></code>
       <code><![CDATA[prepareActualData]]></code>
@@ -15659,10 +15765,8 @@
     <MixedPropertyFetch>
       <code><![CDATA[$firstParent->id]]></code>
       <code><![CDATA[$letter->id]]></code>
-      <code><![CDATA[$lettersElement->id]]></code>
       <code><![CDATA[$link->childStructureId]]></code>
       <code><![CDATA[$structureElement->URL]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->structureName]]></code>
       <code><![CDATA[$structureElement->title]]></code>
     </MixedPropertyFetch>
@@ -16398,6 +16502,9 @@
       <code><![CDATA[getElementByMarker]]></code>
       <code><![CDATA[getElementsChildren]]></code>
       <code><![CDATA[getElementsLinksIndex]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[linkElements]]></code>
       <code><![CDATA[persistElementData]]></code>
       <code><![CDATA[prepareActualData]]></code>
@@ -16407,10 +16514,8 @@
       <code><![CDATA[$structureElement]]></code>
     </MixedPropertyAssignment>
     <MixedPropertyFetch>
-      <code><![CDATA[$countriesElement->id]]></code>
       <code><![CDATA[$country->id]]></code>
       <code><![CDATA[$structureElement->URL]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->title]]></code>
     </MixedPropertyFetch>
     <PossiblyNullReference>
@@ -16546,7 +16651,7 @@
       <code><![CDATA[$validators]]></code>
     </MissingParamType>
     <MixedArrayAccess>
-      <code><![CDATA[$compiledLinks[$countriesListElement->id]]]></code>
+      <code><![CDATA[$compiledLinks[$countriesListElement->getId()]]]></code>
     </MixedArrayAccess>
     <MixedAssignment>
       <code><![CDATA[$compiledLinks]]></code>
@@ -17263,6 +17368,7 @@
       <code><![CDATA[getElementsChildren]]></code>
       <code><![CDATA[getElementsFirstParent]]></code>
       <code><![CDATA[getFirstPageElement]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getUrl]]></code>
       <code><![CDATA[setViewName]]></code>
     </MixedMethodCall>
@@ -17278,7 +17384,6 @@
     </MixedPropertyAssignment>
     <MixedPropertyFetch>
       <code><![CDATA[$child->hidden]]></code>
-      <code><![CDATA[$firstPageElement->id]]></code>
       <code><![CDATA[$letter->structureType]]></code>
       <code><![CDATA[$letter->title]]></code>
     </MixedPropertyFetch>
@@ -17836,9 +17941,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
-    <PossiblyInvalidMethodCall>
-      <code><![CDATA[getUrl]]></code>
-    </PossiblyInvalidMethodCall>
     <PropertyNotSetInConstructor>
       <code><![CDATA[convertToGroupGroupAlias]]></code>
       <code><![CDATA[convertToGroupGroupAlias]]></code>
@@ -18263,6 +18365,8 @@
       <code><![CDATA[getElementsChildren]]></code>
       <code><![CDATA[getElementsFirstParent]]></code>
       <code><![CDATA[getElementsLinksIndex]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[linkElements]]></code>
       <code><![CDATA[persistElementData]]></code>
       <code><![CDATA[prepareActualData]]></code>
@@ -18276,10 +18380,8 @@
     <MixedPropertyFetch>
       <code><![CDATA[$firstParent->id]]></code>
       <code><![CDATA[$letter->id]]></code>
-      <code><![CDATA[$lettersElement->id]]></code>
       <code><![CDATA[$link->childStructureId]]></code>
       <code><![CDATA[$structureElement->URL]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->structureName]]></code>
       <code><![CDATA[$structureElement->title]]></code>
     </MixedPropertyFetch>
@@ -18818,6 +18920,7 @@
       <code><![CDATA[getElementsChain]]></code>
       <code><![CDATA[getElementsChildren]]></code>
       <code><![CDATA[getElementsChildren]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getLatestVotes]]></code>
       <code><![CDATA[getLoadedElementsByType]]></code>
       <code><![CDATA[getRequestedPath]]></code>
@@ -18838,7 +18941,6 @@
       <code><![CDATA[$element]]></code>
     </MixedPropertyAssignment>
     <MixedPropertyFetch>
-      <code><![CDATA[$currentElement->id]]></code>
       <code><![CDATA[$currentMainMenu->columns]]></code>
       <code><![CDATA[$currentMainMenu->columns]]></code>
       <code><![CDATA[$currentMainMenu->id]]></code>
@@ -19711,6 +19813,8 @@
     <MixedMethodCall>
       <code><![CDATA[createElement]]></code>
       <code><![CDATA[ensureDirectory]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getPath]]></code>
       <code><![CDATA[getPath]]></code>
       <code><![CDATA[logCreation]]></code>
@@ -19758,7 +19862,6 @@
       <code><![CDATA[$structureElement->formatGroup]]></code>
       <code><![CDATA[$structureElement->frequency]]></code>
       <code><![CDATA[$structureElement->game]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->intFrequency]]></code>
       <code><![CDATA[$structureElement->music]]></code>
       <code><![CDATA[$structureElement->party]]></code>
@@ -19766,7 +19869,6 @@
       <code><![CDATA[$structureElement->year]]></code>
       <code><![CDATA[$zxMusicElement->dateCreated]]></code>
       <code><![CDATA[$zxMusicElement->file]]></code>
-      <code><![CDATA[$zxMusicElement->id]]></code>
       <code><![CDATA[$zxMusicElement->title]]></code>
     </MixedPropertyFetch>
     <PossiblyNullPropertyFetch>
@@ -19967,6 +20069,7 @@
       <code><![CDATA[getElementsChildren]]></code>
       <code><![CDATA[getElementsChildren]]></code>
       <code><![CDATA[getElementsChildren]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[limit]]></code>
       <code><![CDATA[offset]]></code>
       <code><![CDATA[orderBy]]></code>
@@ -19981,7 +20084,6 @@
       <code><![CDATA[$child->title]]></code>
       <code><![CDATA[$child->title]]></code>
       <code><![CDATA[$child->title]]></code>
-      <code><![CDATA[$element->id]]></code>
       <code><![CDATA[$gamesFolder->id]]></code>
       <code><![CDATA[$partiesFolder->id]]></code>
       <code><![CDATA[$year->childrenList]]></code>
@@ -20072,6 +20174,17 @@
       <code><![CDATA[ensureDirectory]]></code>
       <code><![CDATA[getElementIdByMarker]]></code>
       <code><![CDATA[getElementsFirstParent]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getPath]]></code>
       <code><![CDATA[getPath]]></code>
       <code><![CDATA[linkElements]]></code>
@@ -20123,7 +20236,6 @@
       <code><![CDATA[$zxMusicElement]]></code>
     </MixedPropertyAssignment>
     <MixedPropertyFetch>
-      <code><![CDATA[$currentElement->id]]></code>
       <code><![CDATA[$structureElement->URL]]></code>
       <code><![CDATA[$structureElement->author]]></code>
       <code><![CDATA[$structureElement->channelsType]]></code>
@@ -20135,7 +20247,6 @@
       <code><![CDATA[$structureElement->formatGroup]]></code>
       <code><![CDATA[$structureElement->frequency]]></code>
       <code><![CDATA[$structureElement->game]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->intFrequency]]></code>
       <code><![CDATA[$structureElement->music]]></code>
       <code><![CDATA[$structureElement->musicTitle]]></code>
@@ -20145,7 +20256,6 @@
       <code><![CDATA[$structureElement->year]]></code>
       <code><![CDATA[$zxMusicElement->dateCreated]]></code>
       <code><![CDATA[$zxMusicElement->file]]></code>
-      <code><![CDATA[$zxMusicElement->id]]></code>
       <code><![CDATA[$zxMusicElement->title]]></code>
     </MixedPropertyFetch>
     <PossiblyNullPropertyFetch>
@@ -20438,6 +20548,8 @@
       <code><![CDATA[getElementsChildren]]></code>
       <code><![CDATA[getElementsFirstParent]]></code>
       <code><![CDATA[getElementsLinksIndex]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[linkElements]]></code>
       <code><![CDATA[persistElementData]]></code>
       <code><![CDATA[prepareActualData]]></code>
@@ -20452,11 +20564,9 @@
       <code><![CDATA[$firstParent->id]]></code>
       <code><![CDATA[$link->childStructureId]]></code>
       <code><![CDATA[$structureElement->URL]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->structureName]]></code>
       <code><![CDATA[$structureElement->title]]></code>
       <code><![CDATA[$year->id]]></code>
-      <code><![CDATA[$yearsElement->id]]></code>
     </MixedPropertyFetch>
     <PossiblyNullReference>
       <code><![CDATA[getElementsLinksIndex]]></code>
@@ -20839,6 +20949,11 @@
     <MixedMethodCall>
       <code><![CDATA[getDataChunk]]></code>
       <code><![CDATA[getDataChunk]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[persistElementData]]></code>
       <code><![CDATA[prepareActualData]]></code>
       <code><![CDATA[recalculate]]></code>
@@ -20859,8 +20974,6 @@
       <code><![CDATA[$structureElement->URL]]></code>
       <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
       <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->structureName]]></code>
       <code><![CDATA[$structureElement->title]]></code>
     </MixedPropertyFetch>
@@ -20891,7 +21004,7 @@
       <code><![CDATA[publicReceiveParty]]></code>
     </ClassMustBeFinal>
     <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$structureElement->id]]></code>
+      <code><![CDATA[$structureElement->getId()]]></code>
     </InvalidPropertyAssignmentValue>
     <MissingOverrideAttribute>
       <code><![CDATA[public function execute(&$structureManager, &$controller, &$structureElement)]]></code>
@@ -21029,6 +21142,7 @@
       <code><![CDATA[assign]]></code>
       <code><![CDATA[assign]]></code>
       <code><![CDATA[getElementsFirstParent]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[setTemplate]]></code>
     </MixedMethodCall>
     <MixedPropertyAssignment>
@@ -21037,7 +21151,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$firstParent->structureName]]></code>
       <code><![CDATA[$structureElement->final]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
     </MixedPropertyFetch>
     <PossiblyNullReference>
       <code><![CDATA[assign]]></code>
@@ -21354,6 +21467,8 @@
     <MixedMethodCall>
       <code><![CDATA[checkGameTag]]></code>
       <code><![CDATA[createElement]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getPath]]></code>
       <code><![CDATA[getPath]]></code>
       <code><![CDATA[logCreation]]></code>
@@ -21391,7 +21506,6 @@
     </MixedPropertyAssignment>
     <MixedPropertyFetch>
       <code><![CDATA[$pictureElement->dateCreated]]></code>
-      <code><![CDATA[$pictureElement->id]]></code>
       <code><![CDATA[$pictureElement->image]]></code>
       <code><![CDATA[$pictureElement->title]]></code>
       <code><![CDATA[$structureElement->URL]]></code>
@@ -21400,7 +21514,6 @@
       <code><![CDATA[$structureElement->compo]]></code>
       <code><![CDATA[$structureElement->description]]></code>
       <code><![CDATA[$structureElement->game]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->image]]></code>
       <code><![CDATA[$structureElement->party]]></code>
       <code><![CDATA[$structureElement->tagsText]]></code>
@@ -21562,6 +21675,7 @@
       <code><![CDATA[count]]></code>
       <code><![CDATA[get]]></code>
       <code><![CDATA[getElementsByIdList]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[limit]]></code>
       <code><![CDATA[offset]]></code>
       <code><![CDATA[orderBy]]></code>
@@ -21569,9 +21683,6 @@
       <code><![CDATA[table]]></code>
       <code><![CDATA[table]]></code>
     </MixedMethodCall>
-    <MixedPropertyFetch>
-      <code><![CDATA[$element->id]]></code>
-    </MixedPropertyFetch>
     <MixedReturnStatement>
       <code><![CDATA[$this->picturesPageList]]></code>
       <code><![CDATA[$this->picturesPageList]]></code>
@@ -21655,11 +21766,11 @@
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
     <PossiblyNullPropertyFetch>
-      <code><![CDATA[$currentElement->id]]></code>
       <code><![CDATA[$this->getService('user')->id]]></code>
       <code><![CDATA[$user->id]]></code>
     </PossiblyNullPropertyFetch>
     <PossiblyNullReference>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getPath]]></code>
       <code><![CDATA[getPath]]></code>
       <code><![CDATA[refreshPrivileges]]></code>
@@ -21844,6 +21955,14 @@
       <code><![CDATA[getElementData]]></code>
       <code><![CDATA[getElementIdByMarker]]></code>
       <code><![CDATA[getElementsFirstParent]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[linkElements]]></code>
       <code><![CDATA[persistElementData]]></code>
       <code><![CDATA[prepareActualData]]></code>
@@ -21860,9 +21979,7 @@
       <code><![CDATA[$structureElement]]></code>
     </MixedPropertyAssignment>
     <MixedPropertyFetch>
-      <code><![CDATA[$firstParentElement->id]]></code>
       <code><![CDATA[$structureElement->URL]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->structureName]]></code>
       <code><![CDATA[$structureElement->title]]></code>
     </MixedPropertyFetch>
@@ -22043,12 +22160,11 @@
       <code><![CDATA[$parentElement]]></code>
     </MixedAssignment>
     <MixedMethodCall>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[linkElements]]></code>
       <code><![CDATA[unLinkElements]]></code>
     </MixedMethodCall>
-    <MixedPropertyFetch>
-      <code><![CDATA[$parentElement->id]]></code>
-    </MixedPropertyFetch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
@@ -22090,11 +22206,11 @@
       <code><![CDATA[restoreOriginalContent]]></code>
     </MissingReturnType>
     <MixedArgument>
-      <code><![CDATA[$structureElement->id]]></code>
+      <code><![CDATA[$structureElement->getId()]]></code>
     </MixedArgument>
-    <MixedPropertyFetch>
-      <code><![CDATA[$structureElement->id]]></code>
-    </MixedPropertyFetch>
+    <MixedMethodCall>
+      <code><![CDATA[getId]]></code>
+    </MixedMethodCall>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
@@ -22171,7 +22287,7 @@
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
     <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[$pressArticleRepository->getOriginalContent($structureElement->id)]]></code>
+      <code><![CDATA[$pressArticleRepository->getOriginalContent($structureElement->getId())]]></code>
     </PossiblyNullPropertyAssignmentValue>
     <PossiblyNullReference>
       <code><![CDATA[getOriginalContent]]></code>
@@ -22341,6 +22457,10 @@
       <code><![CDATA[executeAction]]></code>
       <code><![CDATA[getConnectedFieldsIds]]></code>
       <code><![CDATA[getConnectedUserGroupsIds]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[linkElements]]></code>
       <code><![CDATA[linkElements]]></code>
       <code><![CDATA[persistDisplayMenusLinks]]></code>
@@ -22355,10 +22475,6 @@
     </MixedPropertyAssignment>
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->URL]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->registrationFieldsIds]]></code>
       <code><![CDATA[$structureElement->registrationFieldsIds]]></code>
       <code><![CDATA[$structureElement->registrationGroupsIds]]></code>
@@ -22430,6 +22546,7 @@
       <code><![CDATA[getConnectedFields]]></code>
       <code><![CDATA[getEmptyDispatchment]]></code>
       <code><![CDATA[getFormData]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getSettingsList]]></code>
       <code><![CDATA[getTranslationByName]]></code>
       <code><![CDATA[getTranslationByName]]></code>
@@ -22458,7 +22575,6 @@
       <code><![CDATA[$field->id]]></code>
       <code><![CDATA[$field->title]]></code>
       <code><![CDATA[$structureElement->email]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->title]]></code>
       <code><![CDATA[$structureElement->type]]></code>
     </MixedPropertyFetch>
@@ -22643,6 +22759,10 @@
       <code><![CDATA[getElementById]]></code>
       <code><![CDATA[getElementById]]></code>
       <code><![CDATA[getElementIdByMarker]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getStorageAttribute]]></code>
       <code><![CDATA[getStorageAttribute]]></code>
       <code><![CDATA[getTranslationByName]]></code>
@@ -22689,11 +22809,7 @@
       <code><![CDATA[$coreFields['userName']->value]]></code>
       <code><![CDATA[$structureElement->dynamicFieldsData]]></code>
       <code><![CDATA[$structureElement->errorMessage]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->type]]></code>
-      <code><![CDATA[$userElement->id]]></code>
-      <code><![CDATA[$userElement->id]]></code>
-      <code><![CDATA[$usersElement->id]]></code>
     </MixedPropertyFetch>
     <PossiblyNullPropertyFetch>
       <code><![CDATA[$user->id]]></code>
@@ -22957,6 +23073,9 @@
       <code><![CDATA[getElementsByType]]></code>
       <code><![CDATA[getElementsChildren]]></code>
       <code><![CDATA[getElementsChildren]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getName]]></code>
       <code><![CDATA[getName]]></code>
       <code><![CDATA[getSocialActionUrl]]></code>
@@ -22976,8 +23095,6 @@
       <code><![CDATA[$element->iconOriginalName]]></code>
       <code><![CDATA[$element->title]]></code>
       <code><![CDATA[$field->autocomplete]]></code>
-      <code><![CDATA[$fieldsElement->id]]></code>
-      <code><![CDATA[$regestrationElement->id]]></code>
       <code><![CDATA[$userGroup->id]]></code>
     </MixedPropertyFetch>
     <PossiblyNullPropertyFetch>
@@ -23056,12 +23173,12 @@
     </MixedAssignment>
     <MixedMethodCall>
       <code><![CDATA[getElementData]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getParameter]]></code>
       <code><![CDATA[getPlaylistIds]]></code>
       <code><![CDATA[linkElements]]></code>
     </MixedMethodCall>
     <MixedPropertyFetch>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->structureType]]></code>
     </MixedPropertyFetch>
     <PossiblyNullReference>
@@ -23092,18 +23209,20 @@
       <code><![CDATA[$loggable]]></code>
     </MissingPropertyType>
     <MixedArgument>
-      <code><![CDATA[$structureElement->id]]></code>
+      <code><![CDATA[$structureElement->getId()]]></code>
+      <code><![CDATA[$structureElement->getId()]]></code>
+      <code><![CDATA[$structureElement->getId()]]></code>
     </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$authorId]]></code>
     </MixedAssignment>
     <MixedMethodCall>
       <code><![CDATA[executeAction]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getParameter]]></code>
     </MixedMethodCall>
-    <MixedPropertyFetch>
-      <code><![CDATA[$structureElement->id]]></code>
-    </MixedPropertyFetch>
     <PossiblyNullReference>
       <code><![CDATA[deleteAuthorship]]></code>
     </PossiblyNullReference>
@@ -23292,11 +23411,11 @@
     <MixedMethodCall>
       <code><![CDATA[deleteElementData]]></code>
       <code><![CDATA[getElementsFirstParent]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[redirect]]></code>
     </MixedMethodCall>
     <MixedPropertyFetch>
       <code><![CDATA[$parentElement->URL]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
     </MixedPropertyFetch>
     <PropertyNotSetInConstructor>
       <code><![CDATA[publicDeleteShared]]></code>
@@ -23363,12 +23482,12 @@
     </MixedAssignment>
     <MixedMethodCall>
       <code><![CDATA[getElementData]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getParameter]]></code>
       <code><![CDATA[getPlaylistIds]]></code>
       <code><![CDATA[unLinkElements]]></code>
     </MixedMethodCall>
     <MixedPropertyFetch>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->structureType]]></code>
     </MixedPropertyFetch>
     <PossiblyNullReference>
@@ -23468,7 +23587,7 @@
       <code><![CDATA[$structureManager]]></code>
     </MissingParamType>
     <MixedArgument>
-      <code><![CDATA[$structureElement->id]]></code>
+      <code><![CDATA[$structureElement->getId()]]></code>
       <code><![CDATA[$structureElement->structureType]]></code>
     </MixedArgument>
     <MixedAssignment>
@@ -23481,7 +23600,6 @@
       <code><![CDATA[logEvent]]></code>
     </MixedMethodCall>
     <NoInterfaceProperties>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->structureType]]></code>
       <code><![CDATA[$structureElement->structureType]]></code>
     </NoInterfaceProperties>
@@ -23494,10 +23612,13 @@
       <code><![CDATA[voteShared]]></code>
     </PropertyNotSetInConstructor>
     <RedundantConditionGivenDocblockType>
-      <code><![CDATA[$votesManager->vote($structureElement->id, $structureElement->structureType, $value)]]></code>
+      <code><![CDATA[$votesManager->vote($structureElement->getId(), $structureElement->structureType, $value)]]></code>
     </RedundantConditionGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getElementData]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
     </UndefinedInterfaceMethod>
     <UnusedClass>
       <code><![CDATA[voteShared]]></code>
@@ -23763,6 +23884,7 @@
       <code><![CDATA[$loggable]]></code>
     </MissingPropertyType>
     <MixedMethodCall>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[joinTags]]></code>
       <code><![CDATA[persistElementData]]></code>
       <code><![CDATA[prepareActualData]]></code>
@@ -23775,7 +23897,6 @@
     </MixedPropertyAssignment>
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->URL]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->joinTag]]></code>
       <code><![CDATA[$structureElement->structureName]]></code>
       <code><![CDATA[$structureElement->title]]></code>
@@ -23915,7 +24036,7 @@
     </MissingReturnType>
     <MixedArgument>
       <code><![CDATA[$element->title]]></code>
-      <code><![CDATA[$linksManager->getConnectedIdList($this->id, 'tagLink', 'parent')]]></code>
+      <code><![CDATA[$linksManager->getConnectedIdList($this->getId(), 'tagLink', 'parent')]]></code>
     </MixedArgument>
     <MixedArrayAssignment>
       <code><![CDATA[$moduleStructure['amount']]]></code>
@@ -24111,6 +24232,7 @@
       <code><![CDATA[first]]></code>
       <code><![CDATA[getElementById]]></code>
       <code><![CDATA[getElementsChildren]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getLanguagesList]]></code>
       <code><![CDATA[getTranslations]]></code>
       <code><![CDATA[limit]]></code>
@@ -24128,7 +24250,6 @@
       <code><![CDATA[$child->title]]></code>
       <code><![CDATA[$element->amount]]></code>
       <code><![CDATA[$element->verified]]></code>
-      <code><![CDATA[$tagElement->id]]></code>
     </MixedPropertyFetch>
     <PossiblyNullReference>
       <code><![CDATA[getElementById]]></code>
@@ -24188,6 +24309,10 @@
       <code><![CDATA[getElementByMarker]]></code>
       <code><![CDATA[getElementsChildren]]></code>
       <code><![CDATA[getElementsLinksIndex]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[linkElements]]></code>
       <code><![CDATA[persistElementData]]></code>
       <code><![CDATA[prepareActualData]]></code>
@@ -24201,11 +24326,9 @@
     <MixedPropertyFetch>
       <code><![CDATA[$link->childStructureId]]></code>
       <code><![CDATA[$structureElement->URL]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->structureName]]></code>
       <code><![CDATA[$structureElement->title]]></code>
       <code><![CDATA[$tag->id]]></code>
-      <code><![CDATA[$tagsElement->id]]></code>
     </MixedPropertyFetch>
     <PossiblyNullReference>
       <code><![CDATA[getElementsLinksIndex]]></code>
@@ -24304,7 +24427,7 @@
       <code><![CDATA[$this->tagsList === null]]></code>
     </DocblockTypeContradiction>
     <InvalidArgument>
-      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->getId()]]></code>
     </InvalidArgument>
     <MissingOverrideAttribute>
       <code><![CDATA[protected function setModuleStructure(&$moduleStructure)]]></code>
@@ -24355,7 +24478,7 @@
       <code><![CDATA[tagsListElement]]></code>
     </PropertyNotSetInConstructor>
     <PropertyTypeCoercion>
-      <code><![CDATA[$structureManager->getElementsByIdList($idList, $this->id, true)]]></code>
+      <code><![CDATA[$structureManager->getElementsByIdList($idList, $this->getId(), true)]]></code>
       <code><![CDATA[$this->tagsList]]></code>
     </PropertyTypeCoercion>
     <UndefinedMagicPropertyFetch>
@@ -24388,6 +24511,7 @@
     <MixedMethodCall>
       <code><![CDATA[ban]]></code>
       <code><![CDATA[getElementsFirstParent]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getParameter]]></code>
       <code><![CDATA[getParameter]]></code>
       <code><![CDATA[redirect]]></code>
@@ -24398,7 +24522,6 @@
     </MixedOperand>
     <MixedPropertyFetch>
       <code><![CDATA[$parentElement->URL]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
     </MixedPropertyFetch>
     <PropertyNotSetInConstructor>
       <code><![CDATA[banUser]]></code>
@@ -24439,6 +24562,9 @@
     </MixedArrayAssignment>
     <MixedArrayOffset>
       <code><![CDATA[$compiledUserLinks[$groupId]]]></code>
+      <code><![CDATA[$compiledUserLinks[$userGroup->id]]]></code>
+      <code><![CDATA[$compiledUserLinks[$userGroup->id]]]></code>
+      <code><![CDATA[$userGroupIdList[$userGroup->id]]]></code>
     </MixedArrayOffset>
     <MixedAssignment>
       <code><![CDATA[$collection]]></code>
@@ -24467,11 +24593,8 @@
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
     <PossiblyNullArgument>
-      <code><![CDATA[$userGroupsFolder->id]]></code>
+      <code><![CDATA[$userGroupsFolder?->getId()]]></code>
     </PossiblyNullArgument>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$userGroupsFolder->id]]></code>
-    </PossiblyNullPropertyFetch>
     <PropertyNotSetInConstructor>
       <code><![CDATA[receiveUser]]></code>
       <code><![CDATA[receiveUser]]></code>
@@ -24485,6 +24608,9 @@
       <code><![CDATA[$structureElement->subscribe]]></code>
       <code><![CDATA[$structureElement->userGroups]]></code>
       <code><![CDATA[$structureElement->userName]]></code>
+      <code><![CDATA[$userGroup->id]]></code>
+      <code><![CDATA[$userGroup->id]]></code>
+      <code><![CDATA[$userGroup->id]]></code>
       <code><![CDATA[$userGroup->linkExists]]></code>
       <code><![CDATA[$userGroup->linkExists]]></code>
     </UndefinedMagicPropertyFetch>
@@ -24689,10 +24815,6 @@
       <code><![CDATA[where]]></code>
       <code><![CDATA[where]]></code>
     </MixedMethodCall>
-    <MixedOperand>
-      <code><![CDATA[$this->firstName]]></code>
-      <code><![CDATA[$this->lastName]]></code>
-    </MixedOperand>
     <MixedPropertyAssignment>
       <code><![CDATA[$element]]></code>
       <code><![CDATA[$existingData[$field->id]]]></code>
@@ -24776,6 +24898,9 @@
       <code><![CDATA['db']]></code>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
+    <UndefinedMagicPropertyFetch>
+      <code><![CDATA[$newAddress->id]]></code>
+    </UndefinedMagicPropertyFetch>
     <UndefinedThisPropertyAssignment>
       <code><![CDATA[$this->authorId]]></code>
       <code><![CDATA[$this->password]]></code>
@@ -24788,9 +24913,6 @@
       <code><![CDATA[$this->authorId]]></code>
       <code><![CDATA[$this->email]]></code>
       <code><![CDATA[$this->email]]></code>
-      <code><![CDATA[$this->firstName]]></code>
-      <code><![CDATA[$this->firstName]]></code>
-      <code><![CDATA[$this->lastName]]></code>
       <code><![CDATA[$this->newAuthorId]]></code>
       <code><![CDATA[$this->userName]]></code>
     </UndefinedThisPropertyFetch>
@@ -25403,6 +25525,7 @@
       <code><![CDATA[assign]]></code>
       <code><![CDATA[assign]]></code>
       <code><![CDATA[getElementsFirstParent]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[setTemplate]]></code>
     </MixedMethodCall>
     <MixedPropertyAssignment>
@@ -25411,7 +25534,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$firstParent->structureName]]></code>
       <code><![CDATA[$structureElement->final]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
     </MixedPropertyFetch>
     <PossiblyNullReference>
       <code><![CDATA[assign]]></code>
@@ -25551,7 +25673,7 @@
       <code><![CDATA[prepareActualData]]></code>
     </DeprecatedMethod>
     <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$structureElement->id]]></code>
+      <code><![CDATA[$structureElement->getId()]]></code>
     </InvalidPropertyAssignmentValue>
     <MissingOverrideAttribute>
       <code><![CDATA[public function execute(&$structureManager, &$controller, &$structureElement)]]></code>
@@ -25858,6 +25980,7 @@
       <code><![CDATA[getCurrentLanguage]]></code>
       <code><![CDATA[getElementById]]></code>
       <code><![CDATA[getElementsByType]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getPath]]></code>
       <code><![CDATA[getPath]]></code>
       <code><![CDATA[getTranslationByName]]></code>
@@ -25877,7 +26000,6 @@
       <code><![CDATA[$element]]></code>
     </MixedPropertyAssignment>
     <MixedPropertyFetch>
-      <code><![CDATA[$element->id]]></code>
       <code><![CDATA[$languagesManager->getCurrentLanguage()->iso6391]]></code>
       <code><![CDATA[$partyElement->title]]></code>
       <code><![CDATA[$this->getReleaseElement()->title]]></code>
@@ -26000,7 +26122,7 @@
       <code><![CDATA[prepareActualData]]></code>
     </DeprecatedMethod>
     <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$structureElement->id]]></code>
+      <code><![CDATA[$structureElement->getId()]]></code>
     </InvalidPropertyAssignmentValue>
     <MissingOverrideAttribute>
       <code><![CDATA[public function execute(&$structureManager, &$controller, &$structureElement)]]></code>
@@ -26257,6 +26379,7 @@
       <code><![CDATA[$moduleStructure['year']]]></code>
     </MixedArrayAssignment>
     <MixedAssignment>
+      <code><![CDATA[$authorsIdList[]]]></code>
       <code><![CDATA[$collection]]></code>
       <code><![CDATA[$data["link"]]]></code>
       <code><![CDATA[$data["userVote"]]]></code>
@@ -26281,6 +26404,9 @@
       <code><![CDATA[get]]></code>
       <code><![CDATA[getCurrentLanguage]]></code>
       <code><![CDATA[getElementsByType]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getMaterialsList]]></code>
       <code><![CDATA[getPath]]></code>
       <code><![CDATA[getTranslationByName]]></code>
@@ -26296,12 +26422,9 @@
       <code><![CDATA[$element]]></code>
     </MixedPropertyAssignment>
     <MixedPropertyFetch>
-      <code><![CDATA[$element->id]]></code>
-      <code><![CDATA[$element->id]]></code>
       <code><![CDATA[$element->structureType]]></code>
       <code><![CDATA[$languagesManager->getCurrentLanguage()->iso6391]]></code>
       <code><![CDATA[$partyElement->title]]></code>
-      <code><![CDATA[$tagElement->id]]></code>
       <code><![CDATA[$this->getReleaseElement()->title]]></code>
     </MixedPropertyFetch>
     <NonInvariantDocblockPropertyType>
@@ -26358,6 +26481,10 @@
       <code><![CDATA[!$palette]]></code>
       <code><![CDATA[$zxImageConverter->generateCacheFile()]]></code>
     </RiskyTruthyFalsyComparison>
+    <UndefinedMagicPropertyFetch>
+      <code><![CDATA[$author->id]]></code>
+      <code><![CDATA[$author->id]]></code>
+    </UndefinedMagicPropertyFetch>
     <UndefinedThisPropertyAssignment>
       <code><![CDATA[$this->views]]></code>
     </UndefinedThisPropertyAssignment>
@@ -26666,9 +26793,6 @@
     <MissingPropertyType>
       <code><![CDATA[$loggable]]></code>
     </MissingPropertyType>
-    <MixedArgument>
-      <code><![CDATA[$structureElement->getFilesParentElementId()]]></code>
-    </MixedArgument>
     <MixedArrayOffset>
       <code><![CDATA[$formats[$format]]]></code>
     </MixedArrayOffset>
@@ -26944,8 +27068,16 @@
     </MixedArrayAssignment>
     <MixedArrayOffset>
       <code><![CDATA[$data['authors'][$authorInfo['id']]]]></code>
+      <code><![CDATA[$data['groups'][$group->id]]]></code>
+      <code><![CDATA[$data['publishers'][$publisher->id]]]></code>
       <code><![CDATA[$result[$number]]]></code>
       <code><![CDATA[$result[$number]]]></code>
+      <code><![CDATA[$usedCategories[$category->id]]]></code>
+      <code><![CDATA[$usedCategories[$category->id]]]></code>
+      <code><![CDATA[$usedCategories[$category->id]]]></code>
+      <code><![CDATA[$usedCategories[$category->id]]]></code>
+      <code><![CDATA[$usedCategories[$parentCategory->id]]]></code>
+      <code><![CDATA[$usedCategories[$parentCategory->id]]]></code>
     </MixedArrayOffset>
     <MixedAssignment>
       <code><![CDATA[$aYear]]></code>
@@ -27018,6 +27150,9 @@
       <code><![CDATA[getConnectedIdList]]></code>
       <code><![CDATA[getCurrentLanguage]]></code>
       <code><![CDATA[getElementsByType]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[getImageUrl]]></code>
       <code><![CDATA[getPath]]></code>
       <code><![CDATA[getPath]]></code>
@@ -27066,9 +27201,9 @@
     </MixedMethodCall>
     <MixedOperand>
       <code><![CDATA[$a->id]]></code>
+      <code><![CDATA[$authorElement->getId()]]></code>
       <code><![CDATA[$authorElement->getSearchTitle()]]></code>
       <code><![CDATA[$authorElement->getUrl()]]></code>
-      <code><![CDATA[$authorElement->id]]></code>
       <code><![CDATA[$bYear]]></code>
       <code><![CDATA[$category->title]]></code>
       <code><![CDATA[$computer]]></code>
@@ -27078,6 +27213,7 @@
       <code><![CDATA[$controller->baseURL]]></code>
       <code><![CDATA[$dos]]></code>
       <code><![CDATA[$group->getUrl()]]></code>
+      <code><![CDATA[$group->id]]></code>
       <code><![CDATA[$imageId]]></code>
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$item]]></code>
@@ -27090,6 +27226,7 @@
       <code><![CDATA[$linkInfo['type']]]></code>
       <code><![CDATA[$linkInfo['url']]]></code>
       <code><![CDATA[$publisher->getUrl()]]></code>
+      <code><![CDATA[$publisher->id]]></code>
       <code><![CDATA[$releaseElement->getUrl()]]></code>
       <code><![CDATA[$row['importId']]]></code>
       <code><![CDATA[$row['importId']]]></code>
@@ -27113,7 +27250,6 @@
       <code><![CDATA[$a->id]]></code>
       <code><![CDATA[$a->releaseType]]></code>
       <code><![CDATA[$a->version]]></code>
-      <code><![CDATA[$authorElement->id]]></code>
       <code><![CDATA[$b->id]]></code>
       <code><![CDATA[$b->releaseType]]></code>
       <code><![CDATA[$b->releaseType]]></code>
@@ -27122,8 +27258,6 @@
       <code><![CDATA[$category->id]]></code>
       <code><![CDATA[$category->title]]></code>
       <code><![CDATA[$category->title]]></code>
-      <code><![CDATA[$element->id]]></code>
-      <code><![CDATA[$element->id]]></code>
       <code><![CDATA[$element->structureType]]></code>
       <code><![CDATA[$languagesManager->getCurrentLanguage()->iso6391]]></code>
       <code><![CDATA[$party->id]]></code>
@@ -27134,7 +27268,7 @@
       <code><![CDATA[$linkInfo]]></code>
       <code><![CDATA[$linkInfo['url'] ?? null]]></code>
       <code><![CDATA[$linkInfo['url'] ?? null]]></code>
-      <code><![CDATA[$linksManager->getConnectedIdList($this->id, 'structure', 'parent')]]></code>
+      <code><![CDATA[$linksManager->getConnectedIdList($this->getId(), 'structure', 'parent')]]></code>
       <code><![CDATA[$this->linksInfo]]></code>
       <code><![CDATA[$this->linksInfo]]></code>
       <code><![CDATA[$url]]></code>
@@ -27224,7 +27358,7 @@
       <code><![CDATA[zxProdElement]]></code>
     </PropertyNotSetInConstructor>
     <PropertyTypeCoercion>
-      <code><![CDATA[$structureManager->getElementsChildren($this->id)]]></code>
+      <code><![CDATA[$structureManager->getElementsChildren($this->getId())]]></code>
       <code><![CDATA[$this->releasesList]]></code>
     </PropertyTypeCoercion>
     <RedundantCondition>
@@ -27269,7 +27403,14 @@
       <code><![CDATA[$row]]></code>
     </UndefinedMagicMethod>
     <UndefinedMagicPropertyFetch>
+      <code><![CDATA[$category->id]]></code>
+      <code><![CDATA[$category->id]]></code>
       <code><![CDATA[$category->title]]></code>
+      <code><![CDATA[$group->id]]></code>
+      <code><![CDATA[$image->id]]></code>
+      <code><![CDATA[$parentCategory->id]]></code>
+      <code><![CDATA[$parentCategory->id]]></code>
+      <code><![CDATA[$publisher->id]]></code>
     </UndefinedMagicPropertyFetch>
     <UnevaluatedCode>
       <code><![CDATA[$compilationCategoryIds = [];]]></code>
@@ -27365,6 +27506,8 @@
       <code><![CDATA[getElementsChildren]]></code>
       <code><![CDATA[getElementsFirstParent]]></code>
       <code><![CDATA[getElementsLinksIndex]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getId]]></code>
       <code><![CDATA[linkElements]]></code>
       <code><![CDATA[persistElementData]]></code>
       <code><![CDATA[prepareActualData]]></code>
@@ -27380,10 +27523,8 @@
       <code><![CDATA[$letter->id]]></code>
       <code><![CDATA[$link->childStructureId]]></code>
       <code><![CDATA[$structureElement->URL]]></code>
-      <code><![CDATA[$structureElement->id]]></code>
       <code><![CDATA[$structureElement->structureName]]></code>
       <code><![CDATA[$structureElement->title]]></code>
-      <code><![CDATA[$zxProdCategoriesElement->id]]></code>
     </MixedPropertyFetch>
     <PossiblyNullReference>
       <code><![CDATA[getElementsLinksIndex]]></code>
@@ -28076,8 +28217,10 @@
     <MixedAssignment>
       <code><![CDATA[$element]]></code>
     </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getId]]></code>
+    </MixedMethodCall>
     <MixedPropertyFetch>
-      <code><![CDATA[$element->id]]></code>
       <code><![CDATA[$element->structureType]]></code>
     </MixedPropertyFetch>
     <PossiblyUnusedMethod>
@@ -28103,20 +28246,20 @@
     </MissingPropertyType>
     <MixedArgument>
       <code><![CDATA[$clonedElementId]]></code>
-      <code><![CDATA[$parentElement->id]]></code>
+      <code><![CDATA[$parentElement->getId()]]></code>
     </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$clonedElementId]]></code>
       <code><![CDATA[$parentElement]]></code>
     </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getId]]></code>
+    </MixedMethodCall>
     <MixedOperand>
       <code><![CDATA[$structureElement->getTitle()]]></code>
       <code><![CDATA[$structureElement->getTitle()]]></code>
       <code><![CDATA[$structureElement->getTitle()]]></code>
     </MixedOperand>
-    <MixedPropertyFetch>
-      <code><![CDATA[$parentElement->id]]></code>
-    </MixedPropertyFetch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
@@ -28153,6 +28296,9 @@
       <code><![CDATA[moveScreenshotsZxRelease]]></code>
       <code><![CDATA[moveScreenshotsZxRelease]]></code>
     </PropertyNotSetInConstructor>
+    <UndefinedMagicPropertyFetch>
+      <code><![CDATA[$screenShot->id]]></code>
+    </UndefinedMagicPropertyFetch>
     <UnusedClass>
       <code><![CDATA[moveScreenshotsZxRelease]]></code>
     </UnusedClass>
@@ -28166,9 +28312,6 @@
     <ClassMustBeFinal>
       <code><![CDATA[publicAddZxRelease]]></code>
     </ClassMustBeFinal>
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$structureElement->getId()]]></code>
-    </InvalidPropertyAssignmentValue>
     <MissingOverrideAttribute>
       <code><![CDATA[public function execute(&$structureManager, &$controller, &$structureElement)]]></code>
     </MissingOverrideAttribute>
@@ -28227,9 +28370,6 @@
     <ClassMustBeFinal>
       <code><![CDATA[publicReceiveZxRelease]]></code>
     </ClassMustBeFinal>
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$structureElement->getId()]]></code>
-    </InvalidPropertyAssignmentValue>
     <MissingOverrideAttribute>
       <code><![CDATA[public function execute(&$structureManager, &$controller, &$structureElement)]]></code>
     </MissingOverrideAttribute>
@@ -28327,9 +28467,6 @@
     <MissingPropertyType>
       <code><![CDATA[$loggable]]></code>
     </MissingPropertyType>
-    <MixedArgument>
-      <code><![CDATA[$structureElement->getFilesParentElementId()]]></code>
-    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$folder]]></code>
     </MixedAssignment>
@@ -28759,6 +28896,10 @@
       <code><![CDATA[$row]]></code>
     </UndefinedMagicMethod>
     <UndefinedMagicPropertyFetch>
+      <code><![CDATA[$publisher->id]]></code>
+      <code><![CDATA[$publisher->id]]></code>
+      <code><![CDATA[$publisher->id]]></code>
+      <code><![CDATA[$publisher->id]]></code>
       <code><![CDATA[$publisher->title]]></code>
     </UndefinedMagicPropertyFetch>
     <UndefinedThisPropertyFetch>
@@ -29215,6 +29356,12 @@
       <code><![CDATA[$key]]></code>
       <code><![CDATA[$key]]></code>
       <code><![CDATA[$key]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
     </MixedOperand>
     <MoreSpecificReturnType>
       <code><![CDATA[Cache]]></code>
@@ -29225,6 +29372,76 @@
     <PropertyTypeCoercion>
       <code><![CDATA[$this->getService('Cache')]]></code>
     </PropertyTypeCoercion>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+    </UndefinedThisPropertyFetch>
   </file>
   <file src="trickster-cms/cms/core/CrawlerFilter.trait.php">
     <MissingReturnType>
@@ -29902,6 +30119,7 @@
     </MissingReturnType>
     <MixedArgument>
       <code><![CDATA[$linksManager->getElementsLinks($this->id, 'structure', 'parent', false)]]></code>
+      <code><![CDATA[$this->id]]></code>
     </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$commentsAmount]]></code>
@@ -29930,6 +30148,18 @@
       <code><![CDATA[$this->commentsAmount]]></code>
       <code><![CDATA[$this->commentsAmount]]></code>
       <code><![CDATA[$this->commentsAmount]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->id]]></code>
     </UndefinedThisPropertyFetch>
   </file>
   <file src="trickster-cms/homepage/core/ConfigurableLayoutsProvider.trait.php">
@@ -29988,13 +30218,9 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[appendFileToList]]></code>
-      <code><![CDATA[getFilesParentElementId]]></code>
       <code><![CDATA[getPropertyName]]></code>
       <code><![CDATA[initialize]]></code>
     </MissingReturnType>
-    <MixedArgument>
-      <code><![CDATA[$this->getFilesParentElementId()]]></code>
-    </MixedArgument>
     <MixedArrayAssignment>
       <code><![CDATA[$this->moduleFields[$name]]]></code>
     </MixedArrayAssignment>
@@ -30031,6 +30257,7 @@
       <code><![CDATA[$controller->baseURL]]></code>
       <code><![CDATA[$controller->baseURL]]></code>
       <code><![CDATA[$controller->baseURL]]></code>
+      <code><![CDATA[$imageElement->id]]></code>
       <code><![CDATA[$imageElement->originalName]]></code>
       <code><![CDATA[$imageId]]></code>
       <code><![CDATA[$imageId]]></code>
@@ -30066,9 +30293,13 @@
       <code><![CDATA[$imageElement->alt]]></code>
       <code><![CDATA[$imageElement->description]]></code>
       <code><![CDATA[$imageElement->externalLink]]></code>
+      <code><![CDATA[$imageElement->id]]></code>
       <code><![CDATA[$imageElement->link]]></code>
       <code><![CDATA[$imageElement->originalName]]></code>
     </UndefinedMagicPropertyFetch>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->id]]></code>
+    </UndefinedThisPropertyFetch>
   </file>
   <file src="trickster-cms/homepage/core/LdJsonProvider.php">
     <MissingReturnType>

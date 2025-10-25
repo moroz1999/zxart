@@ -9,7 +9,7 @@ class removeFromPlaylistShared extends structureElementAction
     {
         if ($playlistId = $controller->getParameter('playlistId')) {
             $linksManager = $this->getService('linksManager');
-            $linksManager->unLinkElements(intval($playlistId), $structureElement->id, 'playlist');
+            $linksManager->unLinkElements(intval($playlistId), $structureElement->getId(), 'playlist');
         }
 
         $renderer = $this->getService('renderer');

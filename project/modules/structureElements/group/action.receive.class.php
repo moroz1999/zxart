@@ -21,7 +21,7 @@ class receiveGroup extends structureElementAction
             $structureElement->structureName = $structureElement->title;
 
             if (!is_null($structureElement->getDataChunk("image")->originalName)) {
-                $structureElement->image = $structureElement->id;
+                $structureElement->image = $structureElement->getId();
                 $structureElement->originalName = $structureElement->getDataChunk("image")->originalName;
             }
 
@@ -31,7 +31,7 @@ class receiveGroup extends structureElementAction
 
             $authorshipRepository = $this->getService(AuthorshipRepository::class);
             $authorshipRepository->saveAuthorship(
-                $structureElement->id,
+                $structureElement->getId(),
                 $structureElement->getValue('addAuthor'),
                 'group',
                 $structureElement->getValue('addAuthorRole'),

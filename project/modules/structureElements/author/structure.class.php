@@ -182,7 +182,7 @@ class authorElement extends structureElement implements
                  * @var structureManager $structureManager
                  */
                 $structureManager = $this->getService('structureManager');
-                $this->worksList[$type] = $structureManager->getElementsChildren($this->id, null, $type);
+                $this->worksList[$type] = $structureManager->getElementsChildren($this->getId(), null, $type);
                 if ($aliasElements = $this->getAliasElements()) {
                     /**
                      * @var authorAliasElement $aliasElement
@@ -283,7 +283,7 @@ class authorElement extends structureElement implements
          * @var linksManager $linksManager
          */
         $linksManager = $this->getService('linksManager');
-        return $linksManager->getConnectedIdList($this->id, $type, 'parent');
+        return $linksManager->getConnectedIdList($this->getId(), $type, 'parent');
     }
 
     /**
@@ -310,7 +310,7 @@ class authorElement extends structureElement implements
         $url = $controller->baseURL . 'zipItems/';
         $url .= 'export:' . $type . '/';
         $url .= 'language:' . $languagesManager->getCurrentLanguageCode() . '/';
-        $url .= 'filter:authorId=' . $this->id . '/';
+        $url .= 'filter:authorId=' . $this->getId() . '/';
         $url .= 'structure:authors/';
 
         return $url;
@@ -324,7 +324,7 @@ class authorElement extends structureElement implements
              */
             $db = $this->getService('db');
             $this->userId = $db->table('module_user')
-                ->where('authorId', '=', $this->id)
+                ->where('authorId', '=', $this->getId())
                 ->limit(1)
                 ->value('id');
         }
@@ -337,7 +337,7 @@ class authorElement extends structureElement implements
             $this->prods = [];
 
             $authorshipRepository = $this->getService(AuthorshipRepository::class);
-            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->id, 'prod')) {
+            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->getId(), 'prod')) {
                 foreach ($authorShip as $item) {
                     $this->prods[] = $item['prodElement'];
                 }
@@ -370,7 +370,7 @@ class authorElement extends structureElement implements
              */
 
             $authorshipRepository = $this->getService(AuthorshipRepository::class);
-            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->id, 'release')) {
+            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->getId(), 'release')) {
                 foreach ($authorShip as $item) {
                     $this->releases[] = $item['releaseElement'];
                 }

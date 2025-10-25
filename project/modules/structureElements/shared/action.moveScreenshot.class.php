@@ -22,7 +22,7 @@ class moveScreenshotShared extends structureElementAction
         }
 
         $linksManager = $this->getService('linksManager');
-        $links = $linksManager->getElementsLinks($structureElement->id, $linkType, 'parent');
+        $links = $linksManager->getElementsLinks($structureElement->getId(), $linkType, 'parent');
 
         $currentLink = null;
         foreach ($links as $link) {
@@ -61,7 +61,7 @@ class moveScreenshotShared extends structureElementAction
         $currentLink->persist();
         $swapLink->persist();
 
-        $structureManager->clearElementCache($structureElement->id);
+        $structureManager->clearElementCache($structureElement->getId());
 
         $controller->redirect($structureElement->URL);
     }

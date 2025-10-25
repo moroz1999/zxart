@@ -21,7 +21,7 @@ class receiveRegistration extends structureElementAction
             if ($fieldsIds = $structureElement->getConnectedFieldsIds()) {
                 foreach ($fieldsIds as &$fieldId) {
                     if (!in_array($fieldId, $structureElement->registrationFieldsIds)) {
-                        $linksManager->unLinkElements($structureElement->id, $fieldId, registrationElement::FIELD_LINK_TYPE);
+                        $linksManager->unLinkElements($structureElement->getId(), $fieldId, registrationElement::FIELD_LINK_TYPE);
                     }
                 }
             }
@@ -29,12 +29,12 @@ class receiveRegistration extends structureElementAction
                 if (!$selectedCategoryId) {
                     continue;
                 }
-                $linksManager->linkElements($structureElement->id, $selectedCategoryId, registrationElement::FIELD_LINK_TYPE);
+                $linksManager->linkElements($structureElement->getId(), $selectedCategoryId, registrationElement::FIELD_LINK_TYPE);
             }
             if ($groupsIds = $structureElement->getConnectedUserGroupsIds()) {
                 foreach ($groupsIds as &$groupId) {
                     if (!in_array($groupId, $structureElement->registrationGroupsIds)) {
-                        $linksManager->unLinkElements($structureElement->id, $groupId, registrationElement::USER_GROUP_LINK_TYPE);
+                        $linksManager->unLinkElements($structureElement->getId(), $groupId, registrationElement::USER_GROUP_LINK_TYPE);
                     }
                 }
             }
@@ -42,7 +42,7 @@ class receiveRegistration extends structureElementAction
                 if (!$selectedGroupId) {
                     continue;
                 }
-                $linksManager->linkElements($structureElement->id, $selectedGroupId, registrationElement::USER_GROUP_LINK_TYPE);
+                $linksManager->linkElements($structureElement->getId(), $selectedGroupId, registrationElement::USER_GROUP_LINK_TYPE);
             }
             $structureElement->persistDisplayMenusLinks();
             $controller->redirect($structureElement->URL);

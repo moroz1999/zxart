@@ -1038,7 +1038,7 @@ class VtrdosManager extends errorLogger
     protected function parseAuthorsString(
         string $string,
         array &$info,
-        $roles = [],
+        array $roles = [],
         string $groupField = 'groups'
     ): void
     {
@@ -1054,9 +1054,9 @@ class VtrdosManager extends errorLogger
                         $matches[1] = trim($matches[1]);
                         if (strlen($matches[1]) == 2) {
                             if ($matches[1] > 50) {
-                                $info['year'] = '19' . $matches[1];
+                                $info['year'] = (int)('19' . $matches[1]);
                             } else {
-                                $info['year'] = '20' . $matches[1];
+                                $info['year'] = (int)('20' . $matches[1]);
                             }
                         }
                     }
@@ -1103,8 +1103,8 @@ class VtrdosManager extends errorLogger
             }
             if (count($info['labels']) > 1) {
                 $last = last($info['labels']);
-                if (!empty($info['groupsIds'])) {
-                    if (!in_array($last['id'], $info['groupsIds'])) {
+                if (!empty($info['groups'])) {
+                    if (!in_array($last['id'], $info['groups'])) {
                         $info['publishers'][] = $last['id'];
                     }
                 }

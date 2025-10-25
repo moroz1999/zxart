@@ -17,7 +17,7 @@ trait AuthorshipPersister
         $endDates = $this->getValue('addAuthorEndDate');
         if ($addAuthorId = $this->getValue('addAuthor')) {
             $authorshipRepository->saveAuthorship(
-                $this->getId(),
+                $this->getPersistedId(),
                 $addAuthorId,
                 $type,
                 $rolesInfo['new'] ?? [],
@@ -50,7 +50,7 @@ trait AuthorshipPersister
             $startDate = !empty($item['startDate']) ? strtotime($item['startDate']) : 0;
             $endDate = !empty($item['endDate']) ? strtotime($item['endDate']) : 0;
             $authorshipRepository->saveAuthorship(
-                $this->getId(),
+                $this->getPersistedId(),
                 $authorId,
                 $type,
                 $roles,
@@ -60,7 +60,7 @@ trait AuthorshipPersister
         }
         foreach ($existingRecords as $record) {
             if (!isset($info[$record['authorId']])) {
-                $authorshipRepository->deleteAuthorship($this->id, $record['authorId'], $type);
+                $authorshipRepository->deleteAuthorship($this->getId(), $record['authorId'], $type);
             }
         }
     }

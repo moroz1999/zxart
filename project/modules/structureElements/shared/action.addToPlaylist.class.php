@@ -9,7 +9,7 @@ class addToPlaylistShared extends structureElementAction
     {
         if ($playlistId = $controller->getParameter('playlistId')) {
             $linksManager = $this->getService('linksManager');
-            $linksManager->linkElements(intval($playlistId), $structureElement->id, 'playlist');
+            $linksManager->linkElements(intval($playlistId), $structureElement->getId(), 'playlist');
         }
 
         $renderer = $this->getService('renderer');

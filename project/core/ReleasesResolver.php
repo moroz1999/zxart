@@ -12,7 +12,7 @@ class ReleasesResolver
     {
     }
 
-    public function getElementsByQuery(?Builder $query, ?array $sort = [], ?int $start = null, ?int $amount = null): array
+    public function getElementsByQuery(?Builder $query, ?array $sort = [], ?int $start = null, ?int $amount = null): ?array
     {
         return $this->prodsService->getReleasesByIdList($query, $sort, $start, $amount);
     }

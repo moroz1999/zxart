@@ -61,7 +61,7 @@ class tagsListElement extends structureElement
                  * @var structureManager $structureManager
                  */
                 $structureManager = $this->getService('structureManager');
-                $this->tagsList = $structureManager->getElementsByIdList($idList, $this->id, true);
+                $this->tagsList = $structureManager->getElementsByIdList($idList, $this->getId(), true);
             }
 
             $sort = [];

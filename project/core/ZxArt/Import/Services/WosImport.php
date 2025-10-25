@@ -15,13 +15,14 @@ use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Prods\LegalStatus;
 use ZxArt\Prods\Services\ProdsService;
 
-class WosManager extends errorLogger
+class WosImport extends errorLogger
 {
     protected int|null $maxTime = null;
     protected int $counter = 0;
     protected int $maxCounter = 0;
     protected int $minCounter = 0;
     protected ?int $debugEntry = 43280;
+    private const bool IMPORT_SERIES = false;
     private const int FILETYPE_LOADING = 1;
     private const int FILETYPE_RUNNING = 2;
     private const int FILETYPE_OPENING = 3;
@@ -243,6 +244,7 @@ class WosManager extends errorLogger
         $this->prodsService->setUpdateExistingProds(true);
         $this->prodsService->setForceUpdateExternalLink(false);
         $this->prodsService->setForceUpdateReleaseType(true);
+        $this->prodsService->setForceUpdateReleasePublishers(true);
 //        $this->prodsService->setForceUpdateAuthors(true);
 //        $this->prodsService->setForceUpdateTitles(true);
 //        $this->prodsService->setForceUpdateCategories(true);
@@ -437,6 +439,10 @@ class WosManager extends errorLogger
 
     public function importSeries(): void
     {
+        if (self::IMPORT_SERIES === false) {
+            return;
+        }
+
         if ($tags = $this->zxdb->table('tags')
             ->where('tagtype_id', 'like', 'S')
             ->select('*')->get()) {

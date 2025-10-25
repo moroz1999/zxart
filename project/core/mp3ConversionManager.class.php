@@ -4,7 +4,7 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
 {
     use DependencyInjectionContextTrait;
 
-    const CONVERSION_SERVER_ADDRESS = 'http://music.zxart.ee/index.php';
+    const string CONVERSION_SERVER_ADDRESS = 'http://music.zxart.ee/index.php';
 
     protected $collection;
 

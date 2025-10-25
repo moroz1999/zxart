@@ -34,7 +34,7 @@ class picturesUploadFormElement extends ZxArtItemUploadFormElement
         $moduleStructure['author'] = 'numbersArray';
         $moduleStructure['originalAuthor'] = 'numbersArray';
         $moduleStructure['type'] = 'text';
-        $moduleStructure['year'] = 'text';
+        $moduleStructure['year'] = 'naturalNumber';
 
         $moduleStructure['image'] = 'files';
 

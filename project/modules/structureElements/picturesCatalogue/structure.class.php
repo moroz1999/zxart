@@ -34,7 +34,7 @@ class picturesCatalogueElement extends structureElement
         $moduleStructure['game'] = 'text';
         $moduleStructure['author'] = 'numbersArray';
         $moduleStructure['type'] = 'text';
-        $moduleStructure['year'] = 'text';
+        $moduleStructure['year'] = 'naturalNumber';
 
         $moduleStructure['image'] = 'files';
 
@@ -77,13 +77,13 @@ class picturesCatalogueElement extends structureElement
 
                     $this->picturesPageList = $structureManager->getElementsByIdList(
                         $picturesIdFilter,
-                        $this->id,
+                        $this->getId(),
                         true
                     );
 
                     $sort = [];
                     foreach ($this->picturesPageList as $element) {
-                        $sort[] = $element->id;
+                        $sort[] = $element->getId();
                     }
                     array_multisort($sort, SORT_DESC, $this->picturesPageList);
                 }

@@ -23,13 +23,13 @@ class voteShared extends structureElementAction
                      * @var votesManager $votesManager
                      */
                     $votesManager = $this->getService('votesManager');
-                    if ($votesManager->vote($structureElement->id, $structureElement->structureType, $value)) {
+                    if ($votesManager->vote($structureElement->getId(), $structureElement->structureType, $value)) {
                         $structureElement->recalculateVotes();
                         $structureElement->setUserVote($value);
                         if ($structureElement->structureType !== 'comment') {
-                            $this->getService('eventsLog')->logEvent($structureElement->id, 'vote');
+                            $this->getService('eventsLog')->logEvent($structureElement->getId(), 'vote');
                         }
-                        $structureManager->clearElementCache($structureElement->id);
+                        $structureManager->clearElementCache($structureElement->getId());
                     }
                 }
             }

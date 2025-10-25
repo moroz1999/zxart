@@ -33,7 +33,7 @@ class countryElement extends structureElement
     {
         if ($this->citiesList === null) {
             $structureManager = $this->getService('structureManager');
-            $this->citiesList = $structureManager->getElementsChildren($this->id, 'content');
+            $this->citiesList = $structureManager->getElementsChildren($this->getId(), 'content');
             $sort = [];
             foreach ($this->citiesList as $key => $cityElement) {
                 if ($cityElement->getAmountInLocation()) {

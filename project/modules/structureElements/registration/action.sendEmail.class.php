@@ -44,7 +44,7 @@ class sendEmailRegistration extends structureElementAction
             $newDispatchment->setSubject($subject);
             $newDispatchment->setData($data);
             $newDispatchment->setDataLifeTime(60);
-            $newDispatchment->setReferenceId($structureElement->id);
+            $newDispatchment->setReferenceId($structureElement->getId());
             $newDispatchment->setType('userData');
             $newDispatchment->registerReceiver($structureElement->email, null);
 

@@ -17,7 +17,7 @@ class receiveUser extends structureElementAction
             $structureElement->prepareActualData();
 
             $userGroupsFolder = $structureManager->getElementByMarker('userGroups');
-            $userGroups = $structureManager->getElementsChildren($userGroupsFolder->id);
+            $userGroups = $structureManager->getElementsChildren($userGroupsFolder?->getId());
             $structureElement->userGroupsList = [];
             foreach ($userGroups as $group) {
                 $userGroup = clone($group);
@@ -38,7 +38,7 @@ class receiveUser extends structureElementAction
             }
 
             $linksCollection = persistableCollection::getInstance('structure_links');
-            $searchFields = ['childStructureId' => $structureElement->id, 'type' => 'userRelation'];
+            $searchFields = ['childStructureId' => $structureElement->getId(), 'type' => 'userRelation'];
             $userLinks = $linksCollection->load($searchFields);
 
             $compiledUserLinks = [];
@@ -53,7 +53,7 @@ class receiveUser extends structureElementAction
                 } elseif (!isset($compiledUserLinks[$userGroup->id]) && $userGroup->linkExists == true) {
                     //todo: use linksManager method instead.
                     $linksObject = $collection->getEmptyObject();
-                    $linksObject->childStructureId = $structureElement->id;
+                    $linksObject->childStructureId = $structureElement->getId();
                     $linksObject->parentStructureId = $userGroup->id;
                     $linksObject->type = 'userRelation';
                     $linksObject->persist();

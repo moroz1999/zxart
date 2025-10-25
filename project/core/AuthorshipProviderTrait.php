@@ -40,13 +40,13 @@ trait AuthorshipProviderTrait
          * @var AuthorshipRepository $authorshipRepository
          */
         $authorshipRepository = $this->getService(AuthorshipRepository::class);
-        return $authorshipRepository->getAuthorshipInfo($this->id, $type);
+        return $authorshipRepository->getAuthorshipInfo($this->getId(), $type);
     }
 
     public function getAuthorshipRecords($type)
     {
         $authorshipRepository = $this->getService(AuthorshipRepository::class);
-        return $authorshipRepository->getAuthorshipRecords($this->id, $type);
+        return $authorshipRepository->getAuthorshipRecords($this->getId(), $type);
     }
 
     /**

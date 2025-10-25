@@ -83,18 +83,18 @@ class batchUploadZxProdsUploadForm extends structureElementAction
 
                     $zxProdElement->executeAction('receiveFiles');
 
-                    $queueService->updateStatus($structureElement->getId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
+                    $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
 
 
                     $zxProdElement->persistElementData();
                     $zxProdElement->logCreation();
 
-                    $linksManager->unLinkElements($structureElement->id, $zxProdElement->getId(), 'structure');
+                    $linksManager->unLinkElements($structureElement->getId(), $zxProdElement->getPersistedId(), 'structure');
 
                     foreach ($this->getPrivileges() as $privilege) {
                         $privilegesManager->setPrivilege(
                             $user->id,
-                            $zxProdElement->getId(),
+                            $zxProdElement->getPersistedId(),
                             $privilege[0],
                             $privilege[1],
                             $privilege[2]
@@ -107,7 +107,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                         if ($zxReleaseElement = $structureManager->createElement(
                             'zxRelease',
                             'show',
-                            $zxProdElement->getId()
+                            $zxProdElement->getPersistedId()
                         )) {
                             if ($zxProdElement->title) {
                                 $zxReleaseElement->title = $zxProdElement->title;
@@ -116,7 +116,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                             }
 
                             $zxReleaseElement->structureName = $zxReleaseElement->title;
-                            $zxReleaseElement->file = $zxReleaseElement->getId();
+                            $zxReleaseElement->file = $zxReleaseElement->getPersistedId();
                             $zxReleaseElement->dateAdded = $zxReleaseElement->dateCreated;
                             $zxReleaseElement->userId = $this->getService('user')->id;
 

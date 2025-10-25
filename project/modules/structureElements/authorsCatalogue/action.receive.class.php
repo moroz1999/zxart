@@ -14,9 +14,9 @@ class receiveAuthorsCatalogue extends structureElementAction
                 $structureElement->structureName = $structureElement->title;
             }
             $structureElement->persistElementData();
-            if ($firstParent = $structureManager->getElementsFirstParent($structureElement->id)) {
+            if ($firstParent = $structureManager->getElementsFirstParent($structureElement->getId())) {
                 if ($lettersElement = $structureManager->getElementByMarker('authors')) {
-                    if ($lettersList = $structureManager->getElementsChildren($lettersElement->id)) {
+                    if ($lettersList = $structureManager->getElementsChildren($lettersElement->getId())) {
                         $linksManager = $this->getService('linksManager');
                         $linksIndex = $linksManager->getElementsLinksIndex(
                             $firstParent->id,

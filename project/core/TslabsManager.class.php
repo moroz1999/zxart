@@ -193,7 +193,7 @@ class TslabsManager extends errorLogger
                                 'isAlias' => null,
                             ];
                             $prodInfo['labels'][] = $label;
-                            $prodInfo['groupsIds'][] = $label['id'];
+                            $prodInfo['groups'][] = $label['id'];
                         }
                     }
                     if ($nodes = $xPath->query(".//dl[@class='dl-horizontal']/dt | .//dl[@class='dl-horizontal']/dd", $releaseNode)) {

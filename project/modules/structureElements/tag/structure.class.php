@@ -39,8 +39,8 @@ class tagElement extends structureElement implements JsonDataProvider
     {
         $db = $this->getService('db');
         $linksManager = $this->getService('linksManager');
-        $amount = count($linksManager->getConnectedIdList($this->id, 'tagLink', 'parent'));
-        $db->table('module_tag')->where('id', '=', $this->id)->update(['amount'=>$amount]);
+        $amount = count($linksManager->getConnectedIdList($this->getId(), 'tagLink', 'parent'));
+        $db->table('module_tag')->where('id', '=', $this->getId())->update(['amount'=>$amount]);
     }
 
     public function getFontSize($maxAmount = 10)
@@ -66,7 +66,7 @@ class tagElement extends structureElement implements JsonDataProvider
         if ($tagsLists = $structureManager->getElementsByType('tagsList')) {
             $linksManager = $this->getService('linksManager');
             foreach ($tagsLists as $tagsList) {
-                $linksManager->linkElements($tagsList->id, $this->id, 'tagsList');
+                $linksManager->linkElements($tagsList->id, $this->getId(), 'tagsList');
             }
         }
     }
@@ -137,7 +137,7 @@ class tagElement extends structureElement implements JsonDataProvider
         $elements = [];
         $linksManager = $this->getService('linksManager');
         $structureManager = $this->getService('structureManager');
-        if ($idList = $linksManager->getConnectedIdList($this->id, 'tagLink', 'parent')) {
+        if ($idList = $linksManager->getConnectedIdList($this->getId(), 'tagLink', 'parent')) {
             foreach ($idList as $id) {
                 if (($connectedElement = $structureManager->getElementById(
                         $id

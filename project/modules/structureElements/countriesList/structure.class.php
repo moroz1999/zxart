@@ -24,7 +24,7 @@ class countriesListElement extends metadataProvider
     {
         if ($this->countriesList === null) {
             $structureManager = $this->getService('structureManager');
-            $this->countriesList = $structureManager->getElementsChildren($this->id, 'content', 'countries');
+            $this->countriesList = $structureManager->getElementsChildren($this->getId(), 'content', 'countries');
             $sort = [];
             foreach ($this->countriesList as $key => $countryElement) {
                 if ($countryElement->getAmountInLocation()) {

@@ -115,7 +115,7 @@ class fixApplication extends controllerApplication
             $prod = $this->structureManager->getElementById($id);
             echo $counter . ' ' . round(100 * $counter / $count) . '% ';
             if ($prod) {
-                echo $prod->getId() . ' ' . $prod->getTitle() . '<br>';
+                echo $prod->getPersistedId() . ' ' . $prod->getTitle() . '<br>';
                 $this->deleteInvalidImages($prod, 'connectedFile');
                 $this->deleteInvalidImages($prod, 'inlayFilesSelector');
                 $this->deleteInvalidImages($prod, 'mapFilesSelector');
@@ -145,7 +145,7 @@ class fixApplication extends controllerApplication
         foreach ($prodImages as $prodImage) {
             $filePath = $prodImage->getFilePath();
             if (!is_file($filePath) || filesize($filePath) === 0) {
-                echo 'deleted missing image element ' . $prodImage->getId() . ' ' . $propertyName . '<br>';
+                echo 'deleted missing image element ' . $prodImage->getPersistedId() . ' ' . $propertyName . '<br>';
                 $prodImage->deleteElementData();
                 continue;
             }
@@ -153,7 +153,7 @@ class fixApplication extends controllerApplication
             $md5 = md5(file_get_contents($filePath));
             $existing = isset($md5s[$md5]);
             if ($existing) {
-                echo 'deleted duplicated image element ' . $prodImage->getId() . ' ' . $propertyName . '<br>';
+                echo 'deleted duplicated image element ' . $prodImage->getPersistedId() . ' ' . $propertyName . '<br>';
                 $prodImage->deleteElementData();
                 continue;
             }
@@ -414,11 +414,11 @@ class fixApplication extends controllerApplication
                         }
 
                         if ($delete) {
-                            echo 'delete ' . $release->getId() . ' ' . $release->getTitle() . '<br>';
+                            echo 'delete ' . $release->getPersistedId() . ' ' . $release->getTitle() . '<br>';
                             $release->deleteElementData();
                         }
                     } else {
-                        echo 'file missing <a href="/route/id:' . $release->getId() . '">' . $release->getTitle() . '</a> ' . $filePath . '<br>';
+                        echo 'file missing <a href="/route/id:' . $release->getPersistedId() . '">' . $release->getTitle() . '</a> ' . $filePath . '<br>';
                     }
                 }
             }

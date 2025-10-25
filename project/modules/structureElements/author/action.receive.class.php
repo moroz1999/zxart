@@ -24,7 +24,7 @@ class receiveAuthor extends structureElementAction
             $structureElement->structureName = $structureElement->title;
 
             if (!is_null($structureElement->getDataChunk("image")->originalName)) {
-                $structureElement->image = $structureElement->id;
+                $structureElement->image = $structureElement->getId();
                 $structureElement->originalName = $structureElement->getDataChunk("image")->originalName;
             }
             if ($structureElement->joinAsAlias) {
@@ -32,7 +32,7 @@ class receiveAuthor extends structureElementAction
                  * @var AuthorsService $authorsManager
                  */
                 $authorsManager = $this->getService(AuthorsService::class);
-                $authorsManager->joinAuthorAsAlias($structureElement->id, $structureElement->joinAsAlias);
+                $authorsManager->joinAuthorAsAlias($structureElement->getId(), $structureElement->joinAsAlias);
             }
 
             $structureElement->persistElementData();

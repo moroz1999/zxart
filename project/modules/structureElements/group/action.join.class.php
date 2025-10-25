@@ -22,10 +22,10 @@ class joinGroup extends structureElementAction
             $groupsService = $this->getService(GroupsService::class);
 
             if ($structureElement->joinAsAlias) {
-                $groupsService->joinGroupAsAlias($structureElement->id, $structureElement->joinAsAlias);
+                $groupsService->joinGroupAsAlias($structureElement->getId(), $structureElement->joinAsAlias);
             }
             if ($structureElement->joinAndDelete) {
-                $groupsService->joinDeleteGroup($structureElement->id, $structureElement->joinAndDelete);
+                $groupsService->joinDeleteGroup($structureElement->getId(), $structureElement->joinAndDelete);
             }
 
             $controller->redirect($structureElement->getUrl());

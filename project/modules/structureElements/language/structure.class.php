@@ -76,7 +76,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
     {
         if ($this->firstPageElement === null) {
             $structureManager = $this->getService('structureManager');
-            if ($mainMenuElements = $structureManager->getElementsChildren($this->id, 'container')) {
+            if ($mainMenuElements = $structureManager->getElementsChildren($this->getId(), 'container')) {
                 $this->firstPageElement = reset($mainMenuElements);
             } else {
                 $this->firstPageElement = null;
@@ -343,8 +343,8 @@ class languageElement extends structureElement implements MetadataProviderInterf
         $linksManager = $this->getService('linksManager');
         $structureManager = $this->getService('structureManager');
 
-        $enabledElementsIdList = $linksManager->getConnectedIdList($this->id, $type, 'parent');
-        $languageEnabledElementsIdList = $linksManager->getConnectedIdList($this->id, $linkType, 'parent');
+        $enabledElementsIdList = $linksManager->getConnectedIdList($this->getId(), $type, 'parent');
+        $languageEnabledElementsIdList = $linksManager->getConnectedIdList($this->getId(), $linkType, 'parent');
         $currentMenuEnabledElementsIdList = $linksManager->getConnectedIdList($menuId, $linkType, 'parent');
 
         // todo: this now only supports the direct children of current menu. We should somehow allow any level to be used
@@ -371,7 +371,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
             array_merge($languageEnabledElementsIdList, $currentMenuEnabledElementsIdList),
             $enabledElementsIdList
         )) {
-            $result = $structureManager->getElementsByIdList($resultIdList, $this->id, true);
+            $result = $structureManager->getElementsByIdList($resultIdList, $this->getId(), true);
         }
         return $result;
     }
@@ -394,8 +394,8 @@ class languageElement extends structureElement implements MetadataProviderInterf
             $linksManager = $this->getService('linksManager');
             $contentType = $controller->getParameter('view') ? $controller->getParameter('view') : 'structure';
 
-            $idList = $linksManager->getConnectedIdList($this->id, $contentType, 'parent');
-            $childrenList = $structureManager->getElementsByIdList($idList, $this->id, true);
+            $idList = $linksManager->getConnectedIdList($this->getId(), $contentType, 'parent');
+            $childrenList = $structureManager->getElementsByIdList($idList, $this->getId(), true);
             if ($contentType != 'structure') {
                 $urlString = 'view:' . $contentType . '/';
                 foreach ($childrenList as $element) {
@@ -478,7 +478,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
             }
 
             $privilegesManager = $this->getService('privilegesManager');
-            $privileges = $privilegesManager->getElementPrivileges($this->id);
+            $privileges = $privilegesManager->getElementPrivileges($this->getId());
 
             foreach ($allowedTypes as $type) {
                 if (isset($privileges[$type]) && isset($privileges[$type][$childCreationAction]) && $privileges[$type][$childCreationAction] === true) {
@@ -499,7 +499,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
 
         foreach ($galleries as $gallery) {
             foreach ($gallery->getDisplayMenusInfo() as $info) {
-                if ($info['id'] == $currentElement->id && $info['linkExists']) {
+                if ($info['id'] == $currentElement->getId() && $info['linkExists']) {
                     $betterGallery = $gallery;
                 }
             }
@@ -601,7 +601,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
         $this->sectionsList = [];
 
         $structureManager = $this->getService('structureManager');
-        if ($menus = $structureManager->getElementsChildren($this->id, 'container')) {
+        if ($menus = $structureManager->getElementsChildren($this->getId(), 'container')) {
             foreach ($menus as $menu) {
                 if ($menu->marker === 'graphics' || $menu->marker === 'music' || $menu->marker === 'software') {
                     $this->sectionsList[] = $menu;

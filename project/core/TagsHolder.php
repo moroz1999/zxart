@@ -15,7 +15,7 @@ trait TagsHolder
         $tagsStrings = explode(',', $this->tagsText);
         $tagsManager = $this->getService('tagsManager');
         foreach ($tagsStrings as $tagName) {
-            if ($tagElement = $tagsManager->addTag($tagName, $this->getId())) {
+            if ($tagElement = $tagsManager->addTag($tagName, $this->getPersistedId())) {
                 if (isset($tagsIndex[$tagElement->title])) {
                     unset($tagsIndex[$tagElement->title]);
                 }
@@ -39,7 +39,7 @@ trait TagsHolder
     {
         $tagsManager = $this->getService('tagsManager');
         foreach ($tagsStrings as $tagName) {
-            $tagsManager->addTag($tagName, $this->getId());
+            $tagsManager->addTag($tagName, $this->getPersistedId());
         }
         $this->tagsList = null;
         $this->tagsAmount = count($this->getTagsList());

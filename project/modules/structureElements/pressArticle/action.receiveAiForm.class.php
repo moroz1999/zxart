@@ -26,19 +26,19 @@ class receiveAiFormPressArticle extends structureElementAction
             $queueService = $this->getService('QueueService');
             if ($structureElement->aiRestartFix) {
                 $this->restoreOriginalContent($structureElement);
-                $structureManager->clearElementCache($structureElement->id);
-                $queueService->updateStatus($structureElement->getId(), QueueType::AI_PRESS_FIX, QueueStatus::STATUS_TODO);
+                $structureManager->clearElementCache($structureElement->getId());
+                $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_PRESS_FIX, QueueStatus::STATUS_TODO);
             }
 
             if ($structureElement->aiRestartTranslate) {
-                $queueService->updateStatus($structureElement->getId(), QueueType::AI_PRESS_TRANSLATE, QueueStatus::STATUS_TODO);
+                $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_PRESS_TRANSLATE, QueueStatus::STATUS_TODO);
             }
 
             if ($structureElement->aiRestartParse) {
-                $queueService->updateStatus($structureElement->getId(), QueueType::AI_PRESS_PARSE, QueueStatus::STATUS_TODO);
+                $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_PRESS_PARSE, QueueStatus::STATUS_TODO);
             }
             if ($structureElement->aiRestartSeo) {
-                $queueService->updateStatus($structureElement->getId(), QueueType::AI_PRESS_SEO, QueueStatus::STATUS_TODO);
+                $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_PRESS_SEO, QueueStatus::STATUS_TODO);
             }
 
             $controller->redirect($structureElement->getUrl());
@@ -50,7 +50,7 @@ class receiveAiFormPressArticle extends structureElementAction
     public function restoreOriginalContent($structureElement)
     {
         $pressArticleRepository = $this->getService(PressArticleRepository::class);
-        $pressArticleRepository->restoreContent($structureElement->id);
+        $pressArticleRepository->restoreContent($structureElement->getId());
     }
 
     public function setExpectedFields(&$expectedFields): void

@@ -233,7 +233,7 @@ class GroupsService extends ElementsManager
         if (($groupAlias->groupId !== null) && !$element->groupId) {
             if ($groupElement = $this->getElementByImportId($groupAlias->groupId, $origin, 'group')) {
                 $changed = true;
-                $element->groupId = $groupElement->getId();
+                $element->groupId = $groupElement->getPersistedId();
             }
         }
         if ($changed) {
@@ -262,13 +262,13 @@ class GroupsService extends ElementsManager
                 }
                 foreach ($authorElement->getAuthorshipRecords('prod') as $record) {
                     if ($zxProd = $this->structureManager->getElementById($record['elementId'])) {
-                        $this->linksManager->linkElements($groupElement->id, $zxProd->getId(), 'zxProdGroups');
+                        $this->linksManager->linkElements($groupElement->id, $zxProd->getPersistedId(), 'zxProdGroups');
                         $this->structureManager->clearElementCache($groupElement->id);
                     }
                 }
                 foreach ($authorElement->getAuthorshipRecords('release') as $record) {
                     if ($zxProd = $this->structureManager->getElementById($record['elementId'])) {
-                        $this->linksManager->linkElements($groupElement->id, $zxProd->getId(), 'zxReleasePublishers');
+                        $this->linksManager->linkElements($groupElement->id, $zxProd->getPersistedId(), 'zxReleasePublishers');
                         $this->structureManager->clearElementCache($groupElement->id);
                     }
                 }

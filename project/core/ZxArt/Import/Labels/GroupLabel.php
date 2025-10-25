@@ -5,9 +5,6 @@ namespace ZxArt\Import\Labels;
 
 final class GroupLabel
 {
-    /**
-     * @param GroupLabel[]|null $groups
-     */
     public function __construct(
         public ?string $id = null,
         public ?string $name = null,
@@ -15,7 +12,6 @@ final class GroupLabel
         public ?string $countryName = null,
         public ?int    $countryId = null,
         public ?string $locationName = null,
-        public ?array  $groups = null,
         public ?bool   $isAlias = null,
         public ?array  $memberNames = null,
         public ?array  $parentGroupIds = null,

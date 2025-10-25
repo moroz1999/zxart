@@ -28,7 +28,7 @@ class tagsElement extends structureElement
         if (is_null($this->tagsList)) {
             $this->tagsList = [];
             $structureManager = $this->getService('structureManager');
-            if ($tagsList = $structureManager->getElementsChildren($this->id)) {
+            if ($tagsList = $structureManager->getElementsChildren($this->getId())) {
                 $sortParameter = [];
                 foreach ($tagsList as $child) {
                     $sortParameter[] = mb_strtolower($child->title);
@@ -75,7 +75,7 @@ class tagsElement extends structureElement
     public function searchDuplicates($tagElement)
     {
         $db = $this->getService('db');
-        $tagId = $tagElement->id;
+        $tagId = $tagElement->getId();
         foreach ($tagElement->getTranslations() as $languageId => &$translation) {
             if ($id = $db->table('module_tag')->select('id')
                 ->where('id', '!=', $tagId)

@@ -20,7 +20,7 @@ class zxMusicElement extends ZxArtItem implements
 {
     use MusicSettingsProvider;
 
-    const MP3_STORAGE_PATH = 'https://music.zxart.ee/music/';
+    const string MP3_STORAGE_PATH = 'https://music.zxart.ee/music/';
     public $dataResourceName = 'module_zxmusic';
     public $allowedTypes = [];
     public $defaultActionName = 'show';
@@ -45,7 +45,7 @@ class zxMusicElement extends ZxArtItem implements
         $moduleStructure['game'] = 'text';
         $moduleStructure['author'] = 'numbersArray';
         $moduleStructure['type'] = 'text';
-        $moduleStructure['year'] = 'text';
+        $moduleStructure['year'] = 'naturalNumber';
         $moduleStructure['votes'] = 'floatNumber';
         $moduleStructure['file'] = 'file';
         $moduleStructure['fileName'] = 'fileName';
@@ -98,7 +98,7 @@ class zxMusicElement extends ZxArtItem implements
      */
     public function getElementData()
     {
-        $data["id"] = $this->id;
+        $data["id"] = $this->getId();
         $data["author"] = $this->getAuthorNamesString();
         $data["title"] = $this->title;
         $data["link"] = $this->URL;
@@ -183,7 +183,7 @@ class zxMusicElement extends ZxArtItem implements
         if ($elements = $structureManager->getElementsByType('zxItemsList')) {
             foreach ($elements as $element) {
                 if ($element->items = 'music') {
-                    $structureManager->clearElementCache($element->id);
+                    $structureManager->clearElementCache($element->getId());
                 }
             }
         }
@@ -193,7 +193,7 @@ class zxMusicElement extends ZxArtItem implements
     {
         if ($this->fileName && (!$this->mp3Name || ($this->getChannelsType() != $this->conversionChannelsType || $this->getChipType() != $this->conversionChipType || $this->getFrequency() != $this->conversionFrequency || $this->getIntFrequency() != $this->conversionIntFrequency) && $this->hasChipChannelsType())) {
             $linksManager = $this->getService('linksManager');
-            if ($parentIds = $linksManager->getConnectedIdList($this->id, 'ayTrack', 'child')) {
+            if ($parentIds = $linksManager->getConnectedIdList($this->getId(), 'ayTrack', 'child')) {
                 $parentId = reset($parentIds);
                 $structureManager = $this->getService('structureManager');
                 if ($mainTrackElement = $structureManager->getElementById($parentId)) {
@@ -211,7 +211,7 @@ class zxMusicElement extends ZxArtItem implements
     public function reconvertMp3(): void
     {
         $mp3ConversionManager = $this->getService('mp3ConversionManager');
-        $mp3ConversionManager->addToConversionQueue($this->id);
+        $mp3ConversionManager->addToConversionQueue($this->getId());
     }
 
     /**
@@ -244,7 +244,7 @@ class zxMusicElement extends ZxArtItem implements
 
     public function generateConvertedBaseName($extraText = ''): string|null
     {
-        $name = $this->id . ' ' . implode(",", $this->getAuthorNames()) . ' ' . $this->title;
+        $name = $this->getId() . ' ' . implode(",", $this->getAuthorNames()) . ' ' . $this->title;
         if ($extraText) {
             $name .= ' ' . $extraText;
         }
@@ -315,12 +315,12 @@ class zxMusicElement extends ZxArtItem implements
     public function logPlay(): void
     {
         $this->plays++;
-        $this->getService('eventsLog')->logEvent($this->id, 'play');
+        $this->getService('eventsLog')->logEvent($this->getId(), 'play');
         $collection = persistableCollection::getInstance($this->dataResourceName);
-        $collection->updateData(['plays' => $this->plays], ['id' => $this->id]);
+        $collection->updateData(['plays' => $this->plays], ['id' => $this->getId()]);
 
         $structureManager = $this->getService('structureManager');
-        $structureManager->clearElementCache($this->id);
+        $structureManager->clearElementCache($this->getId());
     }
 
     public function getIso8601Duration(): string

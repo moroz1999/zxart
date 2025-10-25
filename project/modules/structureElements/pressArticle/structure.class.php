@@ -137,7 +137,7 @@ class pressArticleElement extends structureElement implements SearchContentHolde
     public function getParent(): ?zxProdElement
     {
         $structureManager = $this->getService('structureManager');
-        if ($parent = $structureManager->getElementsFirstParent($this->id)) {
+        if ($parent = $structureManager->getElementsFirstParent($this->getId())) {
             return $parent;
         }
         return null;

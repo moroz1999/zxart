@@ -30,8 +30,8 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     use ZxPictureTypesProvider;
     use CrawlerFilterTrait;
 
-    const TAG_LOADINGSCREEN = "Loading Screen";
-    const TAG_GAMEGRAPHICS = "Game graphics";
+    const string TAG_LOADINGSCREEN = "Loading Screen";
+    const string TAG_GAMEGRAPHICS = "Game graphics";
 
     public $dataResourceName = 'module_zxpicture';
     public $allowedTypes = [];
@@ -64,7 +64,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         $moduleStructure['author'] = 'numbersArray';
         $moduleStructure['originalAuthor'] = 'numbersArray';
         $moduleStructure['type'] = 'text';
-        $moduleStructure['year'] = 'text';
+        $moduleStructure['year'] = 'naturalNumber';
         $moduleStructure['votes'] = 'floatNumber';
         $moduleStructure['image'] = 'image';
         $moduleStructure['originalName'] = 'fileName';
@@ -105,7 +105,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     public function getElementData()
     {
         // generic
-        $data["id"] = $this->id;
+        $data["id"] = $this->getId();
         $data["title"] = $this->title;
         $data["link"] = $this->URL;
         $data["votes"] = $this->votes;
@@ -339,12 +339,12 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     {
         if (!$this->isCrawlerDetected()) {
             $this->views++;
-            $this->getService('eventsLog')->logEvent($this->id, 'view');
+            $this->getService('eventsLog')->logEvent($this->getId(), 'view');
             $collection = persistableCollection::getInstance($this->dataResourceName);
-            $collection->updateData(['views' => $this->views], ['id' => $this->id]);
+            $collection->updateData(['views' => $this->views], ['id' => $this->getId()]);
 
             $structureManager = $this->getService('structureManager');
-            $structureManager->clearElementCache($this->id);
+            $structureManager->clearElementCache($this->getId());
         }
     }
 
@@ -356,7 +356,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         $gameTags = [13843, 46245, 13983, 47883, 46237];
         if ($tags = $this->getTagsList()) {
             foreach ($tags as $tagElement) {
-                if (in_array($tagElement->id, $gameTags)) {
+                if (in_array($tagElement->getId(), $gameTags)) {
                     return;
                 }
             }
@@ -366,16 +366,16 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
                 $number = 0;
                 foreach ($gameMaterials as $element) {
                     if ($element->structureType === 'zxPicture') {
-                        if ($element->id == $this->id) {
+                        if ($element->getId() == $this->getId()) {
                             break;
                         }
                         $number++;
                     }
                 }
                 if ($number == 0) {
-                    $this->getService('tagsManager')->addTag(self::TAG_LOADINGSCREEN, $this->id);
+                    $this->getService('tagsManager')->addTag(self::TAG_LOADINGSCREEN, $this->getId());
                 } else {
-                    $this->getService('tagsManager')->addTag(self::TAG_GAMEGRAPHICS, $this->id);
+                    $this->getService('tagsManager')->addTag(self::TAG_GAMEGRAPHICS, $this->getId());
                 }
             }
         }
@@ -396,7 +396,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
             $sort = ['votes' => 'desc'];
             $parameters = [
                 'authorId' => $authorsIdList,
-                'zxPictureNotId' => $this->id,
+                'zxPictureNotId' => $this->getId(),
                 'zxPictureMinRating' => $this->getService('ConfigManager')->get('zx.averageVote'),
             ];
 
@@ -478,7 +478,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         if ($elements = $structureManager->getElementsByType('zxItemsList')) {
             foreach ($elements as $element) {
                 if ($element->items = 'graphics') {
-                    $structureManager->clearElementCache($element->id);
+                    $structureManager->clearElementCache($element->getId());
                 }
             }
         }

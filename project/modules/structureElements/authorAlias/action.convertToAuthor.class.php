@@ -16,7 +16,7 @@ class convertToAuthorAuthorAlias extends structureElementAction
              * @var AuthorsService $authorsManager
              */
             $authorsManager = $this->getService(AuthorsService::class);
-            if ($author = $authorsManager->convertAliasToAuthor($structureElement->id)) {
+            if ($author = $authorsManager->convertAliasToAuthor($structureElement->getId())) {
                 $controller->redirect($author->getUrl());
             }
         }

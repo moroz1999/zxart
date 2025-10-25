@@ -30,7 +30,7 @@ class musicUploadFormElement extends ZxArtItemUploadFormElement
         $moduleStructure['game'] = 'text';
         $moduleStructure['author'] = 'numbersArray';
         $moduleStructure['type'] = 'text';
-        $moduleStructure['year'] = 'text';
+        $moduleStructure['year'] = 'naturalNumber';
 
         $moduleStructure['music'] = 'files';
 

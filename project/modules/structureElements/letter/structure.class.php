@@ -45,7 +45,7 @@ class letterElement extends structureElement implements ColumnsTypeProvider
             if (($this->authorsList = $cache->load()) === null) {
                 $this->authorsList = [];
                 $linksManager = $this->getService('linksManager');
-                $idList = $linksManager->getConnectedIdList($this->id, 'structure', 'parent');
+                $idList = $linksManager->getConnectedIdList($this->getId(), 'structure', 'parent');
                 /**
                  * @var ApiQueriesManager $queriesManager
                  */
@@ -92,7 +92,7 @@ class letterElement extends structureElement implements ColumnsTypeProvider
     {
         if (is_null($this->gamesList)) {
             $structureManager = $this->getService('structureManager');
-            $this->gamesList = $structureManager->getElementsChildren($this->id);
+            $this->gamesList = $structureManager->getElementsChildren($this->getId());
 
             $sort = [];
             foreach ($this->gamesList as $game) {
@@ -107,7 +107,7 @@ class letterElement extends structureElement implements ColumnsTypeProvider
     {
         if (is_null($this->groupsList)) {
             $structureManager = $this->getService('structureManager');
-            $this->groupsList = $structureManager->getElementsChildren($this->id);
+            $this->groupsList = $structureManager->getElementsChildren($this->getId());
 
             $sort = [];
             foreach ($this->groupsList as $group) {
@@ -122,7 +122,7 @@ class letterElement extends structureElement implements ColumnsTypeProvider
     {
         if (is_null($this->contentList)) {
             $structureManager = $this->getService('structureManager');
-            if ($contentList = $structureManager->getElementsChildren($this->id)) {
+            if ($contentList = $structureManager->getElementsChildren($this->getId())) {
                 $sortParameter = [];
                 foreach ($contentList as $child) {
                     $sortParameter[] = mb_strtolower($child->title);
@@ -142,7 +142,7 @@ class letterElement extends structureElement implements ColumnsTypeProvider
             $linksManager = $this->getService('linksManager');
             foreach ($authorsCatalogues as $authorsCatalogue) {
                 if ($firstParent = $structureManager->getElementsFirstParent($authorsCatalogue->id)) {
-                    $linksManager->linkElements($firstParent->id, $this->id, 'authorsCatalogue');
+                    $linksManager->linkElements($firstParent->id, $this->getId(), 'authorsCatalogue');
                 }
             }
         }
@@ -155,7 +155,7 @@ class letterElement extends structureElement implements ColumnsTypeProvider
     {
         parent::persistElementData();
         $structureManager = $this->getService('structureManager');
-        if ($firstParent = $structureManager->getElementsFirstParent($this->id)) {
+        if ($firstParent = $structureManager->getElementsFirstParent($this->getId())) {
             if ($firstParent->marker == 'authors') {
                 $this->updateCataloguesLinks();
             }

@@ -10,8 +10,8 @@ use ZxArt\Parties\Repositories\PartiesRepository;
 
 class PartiesService extends ElementsManager
 {
-    public const TABLE = 'module_party';
-    protected $columnRelations = [];
+    public const string TABLE = 'module_party';
+    protected array $columnRelations = [];
 
     public function __construct(
         private readonly PartiesRepository $partiesRepository,

@@ -100,7 +100,7 @@ class groupAliasElement extends structureElement implements
              * @var linksManager $linksManager
              */
             $linksManager = $this->getService('linksManager');
-            if ($prodIds = $linksManager->getConnectedIdList($this->id, 'zxProdGroups', 'parent')) {
+            if ($prodIds = $linksManager->getConnectedIdList($this->getId(), 'zxProdGroups', 'parent')) {
                 $structureManager = $this->getService('structureManager');
                 foreach ($prodIds as $prodId) {
                     if ($prodElement = $structureManager->getElementById($prodId)) {

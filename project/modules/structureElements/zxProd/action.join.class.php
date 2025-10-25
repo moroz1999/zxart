@@ -22,7 +22,7 @@ class joinZxProd extends structureElementAction
             $prodsService = $this->getService(ProdsService::class);
 
             if ($structureElement->joinAndDelete) {
-                $prodsService->joinDeleteZxProd($structureElement->id, $structureElement->joinAndDelete, $structureElement->releasesOnly);
+                $prodsService->joinDeleteZxProd($structureElement->getId(), $structureElement->joinAndDelete, $structureElement->releasesOnly);
             }
 
             $controller->redirect($structureElement->getUrl());

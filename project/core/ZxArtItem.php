@@ -387,7 +387,7 @@ abstract class ZxArtItem extends structureElement implements
         $this->commentsAmount = $this->getCommentsAmount();
         $this->getService('db')
             ->table($this->dataResourceName)
-            ->where('id', '=', $this->getId())
+            ->where('id', '=', $this->getPersistedId())
             ->update(['commentsAmount' => $this->commentsAmount]);
     }
 
@@ -418,7 +418,7 @@ abstract class ZxArtItem extends structureElement implements
 
         $this->getService('db')
             ->table($this->dataResourceName)
-            ->where('id', '=', $this->getId())
+            ->where('id', '=', $this->getPersistedId())
             ->update(['votes' => $this->votes, 'votesAmount' => $this->votesAmount]);
 
         foreach ($this->getAuthorsList() as $authorElement) {
@@ -433,7 +433,7 @@ abstract class ZxArtItem extends structureElement implements
      */
     public function getChartDataIds($type = null)
     {
-        return [$this->id];
+        return [$this->getId()];
     }
 
     public function logCreation($userId = null): void

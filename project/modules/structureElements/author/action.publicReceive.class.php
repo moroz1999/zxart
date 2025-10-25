@@ -22,7 +22,7 @@ class publicReceiveAuthor extends structureElementAction
             $structureElement->structureName = $structureElement->title;
 
             if (!is_null($structureElement->getDataChunk("image")->originalName)) {
-                $structureElement->image = $structureElement->id;
+                $structureElement->image = $structureElement->getId();
                 $structureElement->originalName = $structureElement->getDataChunk("image")->originalName;
             }
 

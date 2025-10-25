@@ -15,7 +15,7 @@ class batchUploadMusicCatalogue extends structureElementAction
             $pathsManager->ensureDirectory($cachePath);
 
             foreach ($musicsInfo as $musicInfo) {
-                $zxMusicElement = $structureManager->createElement('zxMusic', 'showForm', $structureElement->id);
+                $zxMusicElement = $structureManager->createElement('zxMusic', 'showForm', $structureElement->getId());
                 $temporaryFile = $cachePath . basename($musicInfo['tmp_name']);
                 $originalFileName = $musicInfo['name'];
 
@@ -27,7 +27,7 @@ class batchUploadMusicCatalogue extends structureElementAction
                 $zxMusicElement->description = $structureElement->description;
                 $zxMusicElement->tagsText = $structureElement->tagsText;
                 $zxMusicElement->year = $structureElement->year;
-                $zxMusicElement->file = $zxMusicElement->id;
+                $zxMusicElement->file = $zxMusicElement->getId();
                 $zxMusicElement->fileName = $originalFileName;
                 $zxMusicElement->game = $structureElement->game;
                 $zxMusicElement->party = $structureElement->party;

@@ -19,7 +19,7 @@ class showLanguage extends structureElementAction
             $renderer->assign('playlistsElement', $playlistsElement);
         }
 
-        if (($structureElement->requested || $structureElement->id == $currentLanguageId) && ($controller->getApplication(
+        if (($structureElement->requested || $structureElement->getId() == $currentLanguageId) && ($controller->getApplication(
                 ) instanceof publicApplication)) {
             $user = $this->getService('user');
 
@@ -45,7 +45,7 @@ class showLanguage extends structureElementAction
             $currentLayout = 'layout.default.tpl';
             $renderer->assign('currentLayout', $currentLayout);
             $renderer->assign('currentMode', $this->getService('PicturesModesManager')->getModeInfo());
-            if ($searchElements = $structureManager->getElementsByType('detailedSearch', $structureElement->id)) {
+            if ($searchElements = $structureManager->getElementsByType('detailedSearch', $structureElement->getId())) {
                 foreach ($searchElements as $searchElement) {
                     if ($searchElement->items == 'music') {
                         $renderer->assign('musicDetailedSearchElement', $searchElement);
@@ -57,7 +57,7 @@ class showLanguage extends structureElementAction
 
 
             $settingsManager = $this->getService('settingsManager');
-            $settings = $settingsManager->getSettingsList($structureElement->id);
+            $settings = $settingsManager->getSettingsList($structureElement->getId());
             $renderer->assign('settings', $settings);
 
             //todo: remove global variable and implement same functionality for each required structure element (product, order ...)

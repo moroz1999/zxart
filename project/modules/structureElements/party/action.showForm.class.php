@@ -14,7 +14,7 @@ class showFormParty extends structureElementAction
             $renderer->assign('contentSubTemplate', 'party.form.tpl');
         }
 
-        if ($firstParent = $structureManager->getElementsFirstParent($structureElement->id)) {
+        if ($firstParent = $structureManager->getElementsFirstParent($structureElement->getId())) {
             $structureElement->year = $firstParent->structureName;
         }
     }

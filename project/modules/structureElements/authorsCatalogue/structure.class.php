@@ -38,7 +38,7 @@ class authorsCatalogueElement extends structureElement
                 return false;
             }
             if ($this->replacementElements === null) {
-                if ($firstParent = $structureManager->getElementsFirstParent($this->id)) {
+                if ($firstParent = $structureManager->getElementsFirstParent($this->getId())) {
                     $this->replacementElements = $structureManager->getElementsChildren(
                         $firstParent->id,
                         'container',
@@ -65,7 +65,7 @@ class authorsCatalogueElement extends structureElement
     public function deleteElementData()
     {
         $structureManager = $this->getService('structureManager');
-        if ($firstParent = $structureManager->getElementsFirstParent($this->id)) {
+        if ($firstParent = $structureManager->getElementsFirstParent($this->getId())) {
             $linksManager = $this->getService('linksManager');
             $linksList = $linksManager->getElementsLinks(
                 $firstParent->id,

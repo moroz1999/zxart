@@ -36,11 +36,11 @@ class publicReceiveZxMusic extends structureElementAction
             $cachePath = $this->getService('PathsManager')->getPath('uploadsCache');
 
             if (!is_null($structureElement->getDataChunk("file")->originalName)) {
-                $structureElement->file = $structureElement->id;
+                $structureElement->file = $structureElement->getId();
                 $structureElement->fileName = $structureElement->getDataChunk("file")->originalName;
             }
             if (!is_null($structureElement->getDataChunk("trackerFile")->originalName)) {
-                $structureElement->trackerFile = $structureElement->id . '_tracker';
+                $structureElement->trackerFile = $structureElement->getId() . '_tracker';
                 $structureElement->trackerFileName = $structureElement->getDataChunk("trackerFile")->originalName;
             }
 

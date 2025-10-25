@@ -36,7 +36,7 @@ trait AuthorTrait
         $linksManager = $this->getService('linksManager');
         $letterId = $this->getLetterId($this->title);
 
-        if ($links = $linksManager->getElementsLinks($this->id)) {
+        if ($links = $linksManager->getElementsLinks($this->getId())) {
             $link = reset($links);
             if ($link->parentStructureId != $letterId) {
                 $linksManager->unLinkElements($link->parentStructureId, $this->id);

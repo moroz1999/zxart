@@ -333,7 +333,7 @@ spa:''
     public function queryCategoriesAndTagsForProd(zxProdElement $prodElement, $queryCategories): array
     {
         if (count($prodElement->compilationItems) > 0) {
-            throw new QuerySkipException('Skip compilation. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
+            throw new QuerySkipException('Skip compilation. ' . $prodElement->getTitle() . ' ' . $prodElement->getPersistedId());
         }
 
         $prodData = $this->getTagsProdData($prodElement);
@@ -346,7 +346,7 @@ spa:''
         }
         $imageUrls = array_slice($imageUrls, 0, self::IMAGES_LIMIT_FOR_CATEGORIES);
         if (count($imageUrls) === 0) {
-            throw new QuerySkipException('No images for prod. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
+            throw new QuerySkipException('No images for prod. ' . $prodElement->getTitle() . ' ' . $prodElement->getPersistedId());
         }
 
         if ($queryCategories) {
@@ -366,7 +366,7 @@ spa:''
             true,
         );
         if (!$response) {
-            throw new QueryFailException('AI Response is null. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
+            throw new QueryFailException('AI Response is null. ' . $prodElement->getTitle() . ' ' . $prodElement->getPersistedId());
         }
         $response = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
 
@@ -378,7 +378,7 @@ spa:''
             $isValid = $this->validateTagsResponse($response);
         }
         if (!$isValid) {
-            throw new QueryFailException('AI Response is invalid. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
+            throw new QueryFailException('AI Response is invalid. ' . $prodElement->getTitle() . ' ' . $prodElement->getPersistedId());
         }
         return $response;
     }
@@ -404,7 +404,7 @@ spa:''
             if ($mainCategory === null) {
                 continue;
             }
-            $mainCategoryId = $mainCategory->getId();
+            $mainCategoryId = $mainCategory->getPersistedId();
             if (!in_array($mainCategoryId, $mainCategoryIds)) {
                 $this->gatherCategoryStructure($mainCategory, $result);
             }
@@ -415,7 +415,7 @@ spa:''
 
     private function gatherCategoryStructure(zxProdCategoryElement $category, &$result)
     {
-        $id = $category->getId();
+        $id = $category->getPersistedId();
         $result[$id] = [
             'name' => html_entity_decode($category->getTitle()),
         ];
@@ -452,7 +452,7 @@ spa:''
     {
         $prodData = $prodElement->getElementData('aiCategories');
         if (!$prodData) {
-            throw new QueryFailException('Prod data is null. ' . $prodElement->getTitle() . ' ' . $prodElement->getId());
+            throw new QueryFailException('Prod data is null. ' . $prodElement->getTitle() . ' ' . $prodElement->getPersistedId());
         }
         $manual = '';
         if (!empty($prodData['manualString']) && strlen($prodData['manualString']) > self::MIN_DESCRIPTION_LIMIT) {

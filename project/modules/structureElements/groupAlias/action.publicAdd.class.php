@@ -24,21 +24,21 @@ class publicAddGroupAlias extends structureElementAction
 
             $privilegesManager->setPrivilege(
                 $user->id,
-                $structureElement->getId(),
+                $structureElement->getPersistedId(),
                 'groupAlias',
                 'showPublicForm',
                 'allow'
             );
             $privilegesManager->setPrivilege(
                 $user->id,
-                $structureElement->getId(),
+                $structureElement->getPersistedId(),
                 'groupAlias',
                 'publicReceive',
                 'allow'
             );
             $privilegesManager->setPrivilege(
                 $user->id,
-                $structureElement->getId(),
+                $structureElement->getPersistedId(),
                 'groupAlias',
                 'publicDelete',
                 'allow'

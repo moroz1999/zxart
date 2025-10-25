@@ -19,7 +19,7 @@ class publicReceiveZxRelease extends structureElementAction
             }
 
             if (!is_null($structureElement->getDataChunk("file")->originalName)) {
-                $structureElement->file = $structureElement->getId();
+                $structureElement->file = (string)$structureElement->getPersistedId();
                 $structureElement->fileName = $structureElement->getDataChunk("file")->originalName;
 
                 $structureElement->parsed = 0;

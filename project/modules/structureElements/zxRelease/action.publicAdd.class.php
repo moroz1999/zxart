@@ -15,7 +15,7 @@ class publicAddZxRelease extends structureElementAction
     {
         if ($this->validated) {
             if (!is_null($structureElement->getDataChunk("file")->originalName)) {
-                $structureElement->file = $structureElement->getId();
+                $structureElement->file = (string)$structureElement->getPersistedId();
                 $structureElement->fileName = $structureElement->getDataChunk("file")->originalName;
             }
             if (!$structureElement->title) {
@@ -35,11 +35,11 @@ class publicAddZxRelease extends structureElementAction
 
             $privilegesManager = $this->getService('privilegesManager');
             $user = $this->getService('user');
-            $privilegesManager->setPrivilege($user->id, $structureElement->id, 'zxRelease', 'showPublicForm', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->id, 'zxRelease', 'publicReceive', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->id, 'zxRelease', 'publicDelete', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->id, 'zxRelease', 'deleteFile', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->id, 'zxRelease', 'clone', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'showPublicForm', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'publicReceive', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'publicDelete', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'deleteFile', 'allow');
+            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'clone', 'allow');
             $user->refreshPrivileges();
 
             $structureElement->updateFileStructure();

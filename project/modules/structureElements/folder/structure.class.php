@@ -108,7 +108,7 @@ class folderElement extends menuDependantStructureElement implements
 
     public function getParent()
     {
-        return $this->getService('structureManager')->getElementsFirstParent($this->id);
+        return $this->getService('structureManager')->getElementsFirstParent($this->getId());
     }
 
     public function getSubMenuList($linkType = [])
@@ -116,7 +116,7 @@ class folderElement extends menuDependantStructureElement implements
         $subMenus = [];
 
         $structureManager = $this->getService('structureManager');
-        $childrenList = $structureManager->getElementsChildren($this->id, 'container', $linkType, null, true);
+        $childrenList = $structureManager->getElementsChildren($this->getId(), 'container', $linkType, null, true);
 
         foreach ($childrenList as $child) {
             if (!$child->hidden) {
@@ -166,7 +166,7 @@ class folderElement extends menuDependantStructureElement implements
             $this->lettersSelectorInfo = [];
 
             if ($structureManager = $this->getService('structureManager')) {
-                foreach ($structureManager->getElementsChildren($this->id) as $letter) {
+                foreach ($structureManager->getElementsChildren($this->getId()) as $letter) {
                     if ($letter->structureType == 'letter') {
                         $letter->setViewName('games');
                         $letter->template = 'letter.games.tpl';
@@ -190,7 +190,7 @@ class folderElement extends menuDependantStructureElement implements
             $languagesManager->getCurrentLanguageId()
         )){
             $firstPageElement = $currentLanguage->getFirstPageElement();
-            return $firstPageElement->id !== $this->id;
+            return $firstPageElement->getId() !== $this->getId();
         }
 
         return true;
