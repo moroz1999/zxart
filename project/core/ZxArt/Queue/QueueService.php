@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace ZxArt\Queue;
 
-class QueueService
+readonly class QueueService
 {
     public function __construct(
-        private readonly QueueRepository $queueRepository,
+        private QueueRepository $queueRepository,
     )
     {
 

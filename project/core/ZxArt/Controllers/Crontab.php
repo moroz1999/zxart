@@ -67,7 +67,7 @@ class Crontab extends controllerApplication
         ignore_user_abort(1);
         set_time_limit(60 * 10);
         $this->createRenderer();
-        $this->queueService = $this->getService('QueueService');
+        $this->queueService = $this->getService(QueueService::class);
         $this->db = $this->getService('db');
         $this->prodQueryService = $this->getService(ProdQueryService::class);
         $this->textBeautifier = $this->getService(TextBeautifier::class);

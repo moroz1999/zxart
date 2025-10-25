@@ -20,10 +20,7 @@ class receiveAiFormPressArticle extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated) {
-            /**
-             * @var QueueService $queueService
-             */
-            $queueService = $this->getService('QueueService');
+            $queueService = $this->getService(QueueService::class);
             if ($structureElement->aiRestartFix) {
                 $this->restoreOriginalContent($structureElement);
                 $structureManager->clearElementCache($structureElement->getId());

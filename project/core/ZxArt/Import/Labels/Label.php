@@ -29,9 +29,10 @@ final readonly class Label
         public ?string    $authorId = null,
         public ?string    $groupId = null,
         public ?array     $groupRoles = null,
-    )
-    {
-    }
+
+        public ?string    $abbreviation = null,
+        public ?string    $website = null,
+    ) {}
 
     public static function fromArray(array $a): self
     {
@@ -55,6 +56,8 @@ final readonly class Label
             authorId: isset($a['authorId']) ? (string)$a['authorId'] : null,
             groupId: isset($a['groupId']) ? (string)$a['groupId'] : null,
             groupRoles: isset($a['groupRoles']) && is_array($a['groupRoles']) ? $a['groupRoles'] : null,
+            abbreviation: isset($a['abbreviation']) ? (string)$a['abbreviation'] : null,
+            website: isset($a['website']) ? (string)$a['website'] : null,
         );
     }
 }

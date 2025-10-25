@@ -1,8 +1,15 @@
 <?php
+declare(strict_types=1);
 
-class pouetApplication extends controllerApplication
+namespace ZxArt\Controllers;
+
+use Cache;
+use ZxArt\Import\Services\ZxdbImport;
+use controllerApplication;
+
+class Zxdb extends controllerApplication
 {
-    protected $applicationName = 'pouet';
+    protected $applicationName = 'wos';
     public $rendererName = 'smarty';
     public $requestParameters = [];
 
@@ -11,7 +18,7 @@ class pouetApplication extends controllerApplication
      */
     public function initialize()
     {
-        ini_set("max_execution_time", 60 * 15);
+        ini_set("max_execution_time", 60 * 30);
         ignore_user_abort(true);
         $this->startSession('crontab');
         $this->createRenderer();
@@ -43,10 +50,10 @@ class pouetApplication extends controllerApplication
             );
 
             /**
-             * @var PouetManager $pouetManager
+             * @var ZxdbImport $zxdbImport
              */
-            $pouetManager = $this->getService('PouetManager');
-            $pouetManager->importAll();
+            $zxdbImport = $this->getService(ZxdbImport::class);
+            $zxdbImport->importAll();
         }
     }
 

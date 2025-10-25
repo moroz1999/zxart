@@ -31,10 +31,7 @@ class publicReceiveZxProd extends structureElementAction
             $structureElement->checkAndPersistCategories();
             $structureElement->persistAuthorship('prod');
 
-            /**
-             * @var QueueService $queueService
-             */
-            $queueService = $this->getService('QueueService');
+            $queueService = $this->getService(QueueService::class);
             $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
             if (array_diff($oldCategoriesIds, $structureElement->categories) || array_diff($structureElement->categories, $oldCategoriesIds)) {
                 $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_SEO, QueueStatus::STATUS_TODO);

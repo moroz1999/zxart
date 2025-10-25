@@ -9,6 +9,7 @@ use ZxArt\Press\Helpers\PressMentions;
  * @property string $abbreviation
  * @property string $image
  * @property string $originalName
+ * @property string $website
  * @property int $country
  * @property int $city
  * @property int $picturesQuantity

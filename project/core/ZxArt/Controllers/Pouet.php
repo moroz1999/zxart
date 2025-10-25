@@ -1,10 +1,15 @@
 <?php
+declare(strict_types=1);
 
-use ZxArt\Import\Services\WosImport;
+namespace ZxArt\Controllers;
 
-class wosApplication extends controllerApplication
+use Cache;
+use ZxArt\Import\Services\PouetImport;
+use controllerApplication;
+
+class Pouet extends controllerApplication
 {
-    protected $applicationName = 'wos';
+    protected $applicationName = 'pouet';
     public $rendererName = 'smarty';
     public $requestParameters = [];
 
@@ -13,7 +18,7 @@ class wosApplication extends controllerApplication
      */
     public function initialize()
     {
-        ini_set("max_execution_time", 60 * 30);
+        ini_set("max_execution_time", 60 * 15);
         ignore_user_abort(true);
         $this->startSession('crontab');
         $this->createRenderer();
@@ -45,11 +50,16 @@ class wosApplication extends controllerApplication
             );
 
             /**
-             * @var WosImport $wosManager
+             * @var PouetImport $pouetImport
              */
-            $wosManager = $this->getService(WosImport::class);
-            $wosManager->importAll();
+            $pouetImport = $this->getService(PouetImport::class);
+            $pouetImport->importAll();
         }
+    }
+
+    public function getUrlName()
+    {
+        return '';
     }
 }
 

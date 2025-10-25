@@ -1,13 +1,13 @@
 <?php
+declare(strict_types=1);
 
 namespace ZxArt\Queue;
-class QueueRepository
-{
-    protected $db;
+use Illuminate\Database\Connection;
 
-    public function __construct($db)
+readonly class QueueRepository
+{
+    public function __construct(private Connection $db)
     {
-        $this->db = $db;
     }
 
     public function getNextElementId(QueueType $type): ?int

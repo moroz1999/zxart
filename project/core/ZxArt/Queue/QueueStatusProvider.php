@@ -8,10 +8,7 @@ trait QueueStatusProvider
 {
     public function getQueueStatus(QueueType $queueType)
     {
-        /**
-         * @var QueueService $queueService
-         */
-        $queueService = $this->getService('QueueService');
+        $queueService = $this->getService(QueueService::class);
         $status = $queueService->getStatus($this->id, $queueType);
         return $status === null ? '' : $status->toString();
     }

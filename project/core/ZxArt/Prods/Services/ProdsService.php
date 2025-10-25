@@ -343,6 +343,10 @@ class ProdsService extends ElementsManager
                             $changed = true;
                         }
                     }
+                    if ($dto->party->website !== null) {
+                        $partyElement->website = $dto->party->website;
+                        $partyElement->persistElementData();
+                    }
                 }
             }
         }

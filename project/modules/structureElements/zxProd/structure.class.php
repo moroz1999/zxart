@@ -456,10 +456,7 @@ class zxProdElement extends ZxArtItem implements
         }
 
         // for all prods created from import, mass-upload, ensure SEO and intro creation
-        /**
-         * @var QueueService $queueService
-         */
-        $queueService = $this->getService('QueueService');
+        $queueService = $this->getService(QueueService::class);
         $queueService->checkElementInQueue($this->getPersistedId(), [QueueType::AI_SEO, QueueType::AI_INTRO]);
     }
 

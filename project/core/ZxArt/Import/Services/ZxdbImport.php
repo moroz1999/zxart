@@ -15,7 +15,7 @@ use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Prods\LegalStatus;
 use ZxArt\Prods\Services\ProdsService;
 
-class WosImport extends errorLogger
+class ZxdbImport extends errorLogger
 {
     protected int|null $maxTime = null;
     protected int $counter = 0;

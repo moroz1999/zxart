@@ -18,10 +18,7 @@ class receiveAiFormZxProd extends structureElementAction
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
-        /**
-         * @var QueueService $queueService
-         */
-        $queueService = $this->getService('QueueService');
+        $queueService = $this->getService(QueueService::class);
         if ($structureElement->aiRestartSeo) {
             $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_SEO, QueueStatus::STATUS_TODO);
         }

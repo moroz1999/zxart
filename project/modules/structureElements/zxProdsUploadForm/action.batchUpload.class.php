@@ -22,10 +22,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
             $privilegesManager = $this->getService('privilegesManager');
             $linksManager = $this->getService('linksManager');
             $user = $this->getService('user');
-            /**
-             * @var QueueService $queueService
-             */
-            $queueService = $this->getService('QueueService');
+            $queueService = $this->getService(QueueService::class);
             $cachePath = $this->getService('PathsManager')->getPath('uploadsCache');
             if (!$structureElement->categories) {
                 $structureElement->categories = [CategoryIds::MISC->value];
