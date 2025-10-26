@@ -261,7 +261,7 @@
     {if $filesList = $element->getFilesList('rzx')}
         <h2>{translations name='zxprod.rzx'}</h2>
         {$url = false}
-{*        {include file=$theme->template('zxItem.files.tpl') filesList = $filesList newWindow=true}*}
+        {include file=$theme->template('zxItem.files.tpl') filesList = $filesList newWindow=true}
     {/if}
     <script>
         /*<![CDATA[*/

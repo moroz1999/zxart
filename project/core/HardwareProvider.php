@@ -42,6 +42,7 @@ trait HardwareProvider
                 "sprinter",
                 "alf",
                 "didaktik80",
+                "tk9x",
             ],
             "storage" => [
                 'tape',
@@ -63,8 +64,10 @@ trait HardwareProvider
                 'microdrive',
                 'i2cartridge',
                 'dandanator',
+                'timex_cartridge'
             ],
             "dos" => [
+                'trdos4x',
                 'trdos',
                 'isdos',
                 'tasis',
@@ -75,6 +78,8 @@ trait HardwareProvider
                 'nedoos',
                 'opd',
                 'disciple',
+                'tos',
+                'bsdos',
             ],
             "sound" => [
                 'ay',
@@ -109,11 +114,13 @@ trait HardwareProvider
                 'aymouse',
                 'amigamouse',
                 'atarimouse',
+                'amxmouse',
                 'sammouse',
                 'gunstick',
                 'magnumlight',
                 'novina',
                 'lightpen',
+                'defender',
             ],
             "expansion" => [
                 'zxpand',
@@ -124,6 +131,9 @@ trait HardwareProvider
                 'radastan',
                 'dma',
                 'chroma81',
+                'trinity',
+                'hires',
+                'hgfx',
             ],
         ];
     }

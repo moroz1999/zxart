@@ -31,9 +31,6 @@
       <code><![CDATA[table]]></code>
       <code><![CDATA[where]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <UndefinedClass>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
@@ -112,12 +109,6 @@
     </PossiblyNullIterator>
     <PossiblyNullReference>
       <code><![CDATA[get]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementsByQuery]]></code>
-      <code><![CDATA[getElementsByQuery]]></code>
-      <code><![CDATA[getElementsByQuery]]></code>
-      <code><![CDATA[getReleasesByIdList]]></code>
     </PossiblyNullReference>
     <UnusedClass>
       <code><![CDATA[ApiQueryResultResolver]]></code>
@@ -143,9 +134,6 @@
     <MixedMethodCall>
       <code><![CDATA[getElementById]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementById]]></code>
-    </PossiblyNullReference>
     <PossiblyUndefinedMethod>
       <code><![CDATA[getAuthorElement]]></code>
     </PossiblyUndefinedMethod>
@@ -386,9 +374,6 @@
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[getUrl]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[getAuthorshipRecords]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getAuthorRoles]]></code>
       <code><![CDATA[getAuthorRoles]]></code>
@@ -658,9 +643,6 @@
       <code><![CDATA[$endDate]]></code>
       <code><![CDATA[$startDate]]></code>
     </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[countEvents]]></code>
-    </PossiblyNullReference>
   </file>
   <file src="project/core/CountriesManager.php">
     <ArgumentTypeCoercion>
@@ -1173,10 +1155,6 @@
       <code><![CDATA[where]]></code>
       <code><![CDATA[where]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getImportIdsIndex]]></code>
       <code><![CDATA[getImportIdsIndex]]></code>
@@ -1308,15 +1286,6 @@
     <PossiblyInvalidIterator>
       <code><![CDATA[$letters]]></code>
     </PossiblyInvalidIterator>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getCurrentLanguageId]]></code>
-      <code><![CDATA[getElementByMarker]]></code>
-      <code><![CDATA[getElementByMarker]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getRootElementMarker]]></code>
-    </PossiblyNullReference>
     <RedundantCondition>
       <code><![CDATA[!empty($this->configManager)]]></code>
       <code><![CDATA[!empty($this->languagesManager)]]></code>
@@ -1582,10 +1551,6 @@
       <code><![CDATA[$item->structureType]]></code>
       <code><![CDATA[$item->structureType]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getElementById]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getPictures]]></code>
       <code><![CDATA[getPictures]]></code>
@@ -1641,9 +1606,6 @@
     <MixedMethodCall>
       <code><![CDATA[getElementById]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementById]]></code>
-    </PossiblyNullReference>
   </file>
   <file src="project/core/PicturesModesManager.class.php">
     <ClassMustBeFinal>
@@ -1784,10 +1746,6 @@
       <code><![CDATA[$type]]></code>
       <code><![CDATA[$type]]></code>
     </MixedOperand>
-    <PossiblyNullReference>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getElementById]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getGroupsIds]]></code>
       <code><![CDATA[getGroupsIds]]></code>
@@ -1846,9 +1804,6 @@
       <code><![CDATA[getPublisherProds]]></code>
       <code><![CDATA[getTitle]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementById]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getPublisherProdsInfo]]></code>
       <code><![CDATA[getPublisherProdsInfo]]></code>
@@ -2461,16 +2416,6 @@
       <code><![CDATA[$tagElement->title]]></code>
       <code><![CDATA[$tagElement->title]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[addTag]]></code>
-      <code><![CDATA[addTag]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementSuggestedTags]]></code>
-      <code><![CDATA[getSectionIdByType]]></code>
-      <code><![CDATA[getTagsIdList]]></code>
-      <code><![CDATA[logEvent]]></code>
-      <code><![CDATA[removeTag]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getSuggestedTags]]></code>
       <code><![CDATA[getSuggestedTags]]></code>
@@ -3596,7 +3541,6 @@
       <code><![CDATA['ConfigManager']]></code>
       <code><![CDATA['LanguagesManager']]></code>
       <code><![CDATA['PathsManager']]></code>
-      <code><![CDATA['QueueService']]></code>
       <code><![CDATA['db']]></code>
       <code><![CDATA['mp3ConversionManager']]></code>
       <code><![CDATA['renderer']]></code>
@@ -3751,10 +3695,8 @@
     </PossiblyNullArgument>
     <PossiblyNullReference>
       <code><![CDATA[beautify]]></code>
-      <code><![CDATA[checkUser]]></code>
       <code><![CDATA[detectLanguage]]></code>
       <code><![CDATA[detectLanguage]]></code>
-      <code><![CDATA[get]]></code>
       <code><![CDATA[getAITextContent]]></code>
       <code><![CDATA[getAITextContent]]></code>
       <code><![CDATA[getAITextContent]]></code>
@@ -3765,17 +3707,11 @@
       <code><![CDATA[getOriginalTextContent]]></code>
       <code><![CDATA[getParsedData]]></code>
       <code><![CDATA[getParsedData]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getPath]]></code>
       <code><![CDATA[pushHandler]]></code>
       <code><![CDATA[queryCategoriesAndTagsForProd]]></code>
       <code><![CDATA[queryIntroForProd]]></code>
       <code><![CDATA[querySeoForProd]]></code>
       <code><![CDATA[setCurrentLanguageCode]]></code>
-      <code><![CDATA[setCurrentLanguageCode]]></code>
-      <code><![CDATA[setPrivilegeChecking]]></code>
-      <code><![CDATA[setRequestedPath]]></code>
-      <code><![CDATA[switchUser]]></code>
       <code><![CDATA[translate]]></code>
       <code><![CDATA[updatePressArticleData]]></code>
       <code><![CDATA[updatePressArticleData]]></code>
@@ -3814,7 +3750,6 @@
                 ]
             )]]></code>
       <code><![CDATA[$this->getService('LanguagesManager')]]></code>
-      <code><![CDATA[$this->getService('QueueService')]]></code>
       <code><![CDATA[$this->getService('db')]]></code>
     </PropertyTypeCoercion>
     <RiskyTruthyFalsyComparison>
@@ -3827,7 +3762,6 @@
       <code><![CDATA[getOriginalTextContent]]></code>
     </TooManyArguments>
     <UndefinedClass>
-      <code><![CDATA['QueueService']]></code>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
     <UndefinedDocblockClass>
@@ -3904,12 +3838,6 @@
       <code><![CDATA[get]]></code>
       <code><![CDATA[switchUser]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[checkUser]]></code>
-      <code><![CDATA[endOutputBuffering]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[switchUser]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[Pouet]]></code>
       <code><![CDATA[Pouet]]></code>
@@ -3954,12 +3882,6 @@
       <code><![CDATA[get]]></code>
       <code><![CDATA[switchUser]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[checkUser]]></code>
-      <code><![CDATA[endOutputBuffering]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[switchUser]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[Zxdb]]></code>
       <code><![CDATA[Zxdb]]></code>
@@ -4998,171 +4920,38 @@
       <code><![CDATA[$string]]></code>
       <code><![CDATA[$string]]></code>
     </InvalidScalarArgument>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function logError($message, $level = null): void]]></code>
-    </MissingOverrideAttribute>
     <MissingParamType>
-      <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$level]]></code>
       <code><![CDATA[$message]]></code>
     </MissingParamType>
     <MissingPropertyType>
-      <code><![CDATA[$compos]]></code>
-      <code><![CDATA[$counter]]></code>
       <code><![CDATA[$debugEntry]]></code>
-      <code><![CDATA[$ignore]]></code>
-      <code><![CDATA[$maxCounter]]></code>
-      <code><![CDATA[$maxId]]></code>
-      <code><![CDATA[$maxTime]]></code>
-      <code><![CDATA[$origin]]></code>
-      <code><![CDATA[$platforms]]></code>
-      <code><![CDATA[$roles]]></code>
-      <code><![CDATA[$timeLimit]]></code>
-      <code><![CDATA[$urls]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[download]]></code>
-      <code><![CDATA[importAll]]></code>
       <code><![CDATA[loadMaxImportedId]]></code>
       <code><![CDATA[loadMaxPossibleId]]></code>
     </MissingReturnType>
     <MixedArgument>
-      <code><![CDATA[$credit['role']]]></code>
       <code><![CDATA[$endTime - $previousTime]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
-      <code><![CDATA[$link['link']]]></code>
-      <code><![CDATA[$link['link']]]></code>
-      <code><![CDATA[$link['link']]]></code>
-      <code><![CDATA[$link['link']]]></code>
-      <code><![CDATA[$link['link']]]></code>
-      <code><![CDATA[$link['link']]]></code>
       <code><![CDATA[$message]]></code>
-      <code><![CDATA[$prodData['releaseDate']]]></code>
-      <code><![CDATA[$this->origin]]></code>
-      <code><![CDATA[$url]]></code>
     </MixedArgument>
     <MixedArrayAccess>
-      <code><![CDATA[$credit['role']]]></code>
-      <code><![CDATA[$credit['user']]]></code>
-      <code><![CDATA[$credit['user']]]></code>
-      <code><![CDATA[$credit['user']['id']]]></code>
-      <code><![CDATA[$credit['user']['nickname']]]></code>
-      <code><![CDATA[$group['acronym']]]></code>
-      <code><![CDATA[$group['id']]]></code>
-      <code><![CDATA[$group['name']]]></code>
-      <code><![CDATA[$group['web']]]></code>
-      <code><![CDATA[$link['link']]]></code>
-      <code><![CDATA[$link['link']]]></code>
-      <code><![CDATA[$link['link']]]></code>
-      <code><![CDATA[$link['link']]]></code>
-      <code><![CDATA[$link['link']]]></code>
-      <code><![CDATA[$link['link']]]></code>
-      <code><![CDATA[$link['type']]]></code>
-      <code><![CDATA[$placing['compo_name']]]></code>
-      <code><![CDATA[$placing['compo_name']]]></code>
-      <code><![CDATA[$placing['compo_name']]]></code>
-      <code><![CDATA[$placing['compo_name']]]></code>
-      <code><![CDATA[$placing['party']]]></code>
-      <code><![CDATA[$placing['party']]]></code>
-      <code><![CDATA[$placing['party']['name']]]></code>
-      <code><![CDATA[$placing['party']['web']]]></code>
-      <code><![CDATA[$placing['ranking']]]></code>
-      <code><![CDATA[$placing['year']]]></code>
-      <code><![CDATA[$platform['name']]]></code>
-      <code><![CDATA[$platform['name']]]></code>
-      <code><![CDATA[$platform['name']]]></code>
-      <code><![CDATA[$prodData['credits']]]></code>
-      <code><![CDATA[$prodData['demozoo']]]></code>
-      <code><![CDATA[$prodData['demozoo']]]></code>
-      <code><![CDATA[$prodData['download']]]></code>
-      <code><![CDATA[$prodData['downloadLinks']]]></code>
-      <code><![CDATA[$prodData['groups']]]></code>
       <code><![CDATA[$prodData['id']]]></code>
-      <code><![CDATA[$prodData['id']]]></code>
-      <code><![CDATA[$prodData['id']]]></code>
-      <code><![CDATA[$prodData['name']]]></code>
-      <code><![CDATA[$prodData['name']]]></code>
-      <code><![CDATA[$prodData['placings']]]></code>
-      <code><![CDATA[$prodData['platforms']]]></code>
-      <code><![CDATA[$prodData['platforms']]]></code>
-      <code><![CDATA[$prodData['releaseDate']]]></code>
-      <code><![CDATA[$prodData['screenshot']]]></code>
-      <code><![CDATA[$prodData['types']]]></code>
-      <code><![CDATA[$this->compos[$placing['compo_name']]]]></code>
-      <code><![CDATA[$this->platforms[$platform['name']]]]></code>
-      <code><![CDATA[$this->roles[$rolePart]]]></code>
     </MixedArrayAccess>
-    <MixedArrayOffset>
-      <code><![CDATA[$prodInfo['authors'][$label['id']]]]></code>
-      <code><![CDATA[$prodInfo['authors'][$label['id']]]]></code>
-      <code><![CDATA[$prodInfo['authors'][$label['id']]]]></code>
-      <code><![CDATA[$this->categories[$type]]]></code>
-      <code><![CDATA[$this->compos[$placing['compo_name']]]]></code>
-      <code><![CDATA[$this->compos[$placing['compo_name']]]]></code>
-      <code><![CDATA[$this->platforms[$platform['name']]]]></code>
-      <code><![CDATA[$this->platforms[$platform['name']]]]></code>
-      <code><![CDATA[$this->platforms[$platform['name']]]]></code>
-    </MixedArrayOffset>
     <MixedAssignment>
-      <code><![CDATA[$credit]]></code>
       <code><![CDATA[$existingRecord]]></code>
-      <code><![CDATA[$group]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
       <code><![CDATA[$json]]></code>
       <code><![CDATA[$json]]></code>
-      <code><![CDATA[$label['abbreviation']]]></code>
-      <code><![CDATA[$label['id']]]></code>
-      <code><![CDATA[$label['title']]]></code>
-      <code><![CDATA[$label['website']]]></code>
-      <code><![CDATA[$link]]></code>
-      <code><![CDATA[$placing]]></code>
-      <code><![CDATA[$platform]]></code>
-      <code><![CDATA[$platform]]></code>
       <code><![CDATA[$prodData]]></code>
       <code><![CDATA[$prodData]]></code>
-      <code><![CDATA[$prodData]]></code>
-      <code><![CDATA[$prodInfo['authors'][$label['id']][]]]></code>
-      <code><![CDATA[$prodInfo['compo']]]></code>
-      <code><![CDATA[$prodInfo['directCategories'][]]]></code>
-      <code><![CDATA[$prodInfo['groups'][]]]></code>
-      <code><![CDATA[$prodInfo['images'][]]]></code>
-      <code><![CDATA[$prodInfo['importIds']['dzoo']]]></code>
-      <code><![CDATA[$prodInfo['importIds']['zxd']]]></code>
       <code><![CDATA[$record]]></code>
-      <code><![CDATA[$releaseInfo['fileUrl']]]></code>
-      <code><![CDATA[$releaseInfo['hardwareRequired'][]]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$url]]></code>
     </MixedAssignment>
     <MixedOperand>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$placing['compo_name']]]></code>
-      <code><![CDATA[$placing['compo_name']]]></code>
       <code><![CDATA[$previousTime]]></code>
-      <code><![CDATA[$prodData['id']]]></code>
-      <code><![CDATA[$prodData['name']]]></code>
       <code><![CDATA[$prodElement->getUrl()]]></code>
-      <code><![CDATA[$prodInfo['title']]]></code>
-      <code><![CDATA[$this->counter]]></code>
-      <code><![CDATA[$this->counter]]></code>
-      <code><![CDATA[$this->loadMaxImportedId()]]></code>
-      <code><![CDATA[$this->maxCounter]]></code>
-      <code><![CDATA[$this->timeLimit]]></code>
-      <code><![CDATA[$type]]></code>
     </MixedOperand>
     <PossiblyFalseArgument>
       <code><![CDATA[$ch]]></code>
@@ -5176,7 +4965,6 @@
       <code><![CDATA[$ch]]></code>
       <code><![CDATA[$verbose]]></code>
       <code><![CDATA[$verbose]]></code>
-      <code><![CDATA[strtotime($prodData['releaseDate'])]]></code>
     </PossiblyFalseArgument>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -5194,16 +4982,10 @@
       <code><![CDATA[!$string]]></code>
       <code><![CDATA[!$string]]></code>
       <code><![CDATA[!$string]]></code>
-      <code><![CDATA[!$this->maxCounter]]></code>
       <code><![CDATA[$existingRecord]]></code>
       <code><![CDATA[$string]]></code>
       <code><![CDATA[$string]]></code>
     </RiskyTruthyFalsyComparison>
-    <UnusedProperty>
-      <code><![CDATA[$authorsManager]]></code>
-      <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsService]]></code>
-    </UnusedProperty>
     <UnusedVariable>
       <code><![CDATA[$verboseLog]]></code>
     </UnusedVariable>
@@ -6273,16 +6055,13 @@
     <ClassMustBeFinal>
       <code><![CDATA[QueueRepository]]></code>
     </ClassMustBeFinal>
+    <InvalidArgument>
+      <code><![CDATA[QueueStatus::STATUS_TODO->value]]></code>
+    </InvalidArgument>
     <MissingClosureReturnType>
       <code><![CDATA[fn($type) => $type->value]]></code>
       <code><![CDATA[fn($type) => $type->value]]></code>
     </MissingClosureReturnType>
-    <MissingParamType>
-      <code><![CDATA[$db]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$db]]></code>
-    </MissingPropertyType>
     <MixedArgument>
       <code><![CDATA[$value]]></code>
     </MixedArgument>
@@ -6293,60 +6072,22 @@
       <code><![CDATA[$result]]></code>
       <code><![CDATA[$type]]></code>
     </MixedAssignment>
-    <MixedMethodCall>
-      <code><![CDATA[delete]]></code>
-      <code><![CDATA[first]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[insert]]></code>
-      <code><![CDATA[insert]]></code>
-      <code><![CDATA[orderBy]]></code>
-      <code><![CDATA[select]]></code>
-      <code><![CDATA[select]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[value]]></code>
-      <code><![CDATA[where]]></code>
-      <code><![CDATA[where]]></code>
-      <code><![CDATA[where]]></code>
-      <code><![CDATA[where]]></code>
-      <code><![CDATA[where]]></code>
-      <code><![CDATA[where]]></code>
-      <code><![CDATA[where]]></code>
-      <code><![CDATA[where]]></code>
-      <code><![CDATA[where]]></code>
-      <code><![CDATA[whereIn]]></code>
-      <code><![CDATA[whereIn]]></code>
-    </MixedMethodCall>
     <MixedPropertyFetch>
       <code><![CDATA[$type->value]]></code>
       <code><![CDATA[$type->value]]></code>
       <code><![CDATA[$type->value]]></code>
     </MixedPropertyFetch>
     <MixedReturnStatement>
-      <code><![CDATA[$result ? $result['elementId'] : null]]></code>
-      <code><![CDATA[$result ? $result['elementId'] : null]]></code>
-      <code><![CDATA[$this->db->table('queue')
-            ->where('elementId', '=', $elementId)
-            ->insert($data)]]></code>
-      <code><![CDATA[$this->db->table('queue')
-            ->where('elementId', '=', $elementId)
-            ->whereIn('type', $stringTypes)
-            ->delete()]]></code>
-      <code><![CDATA[$this->db->table('queue')
-            ->where('elementId', '=', $elementId)
-            ->whereIn('type', $stringTypes)
-            ->get()]]></code>
+      <code><![CDATA[$result !== null ? $result['elementId'] : null]]></code>
+      <code><![CDATA[$result !== null ? $result['elementId'] : null]]></code>
     </MixedReturnStatement>
     <PossiblyUnusedReturnValue>
-      <code><![CDATA[array]]></code>
       <code><![CDATA[bool]]></code>
+      <code><![CDATA[int]]></code>
     </PossiblyUnusedReturnValue>
+    <UndefinedMagicMethod>
+      <code><![CDATA[$result]]></code>
+    </UndefinedMagicMethod>
   </file>
   <file src="project/core/ZxArt/Queue/QueueService.php">
     <ClassMustBeFinal>
@@ -6379,10 +6120,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="project/core/ZxArt/Queue/QueueStatusProvider.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA['QueueService']]></code>
-      <code><![CDATA['QueueService']]></code>
-    </ArgumentTypeCoercion>
     <MissingReturnType>
       <code><![CDATA[getQueueStatus]]></code>
     </MissingReturnType>
@@ -6390,9 +6127,6 @@
       <code><![CDATA[getQueueStatus]]></code>
       <code><![CDATA[getQueueStatus]]></code>
     </PossiblyUnusedMethod>
-    <UndefinedClass>
-      <code><![CDATA['QueueService']]></code>
-    </UndefinedClass>
   </file>
   <file src="project/core/ZxArt/Releases/Services/ArchiveFileResolverService.php">
     <MixedArgument>
@@ -6735,31 +6469,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[preg_replace('#[\?\/\<\>\\\:\*\|\"]*#ui', '', html_entity_decode($this->title, ENT_QUOTES))]]></code>
     </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementFilteredVotes]]></code>
-      <code><![CDATA[getElementUserVote]]></code>
-      <code><![CDATA[getElementVotesList]]></code>
-      <code><![CDATA[getElementsLinks]]></code>
-      <code><![CDATA[getElementsLinks]]></code>
-      <code><![CDATA[getElementsLinks]]></code>
-      <code><![CDATA[getElementsLinks]]></code>
-      <code><![CDATA[getOverallAverageVote]]></code>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[logEvent]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getJsonInfo]]></code>
       <code><![CDATA[getOriginalAuthorsList]]></code>
@@ -7262,28 +6971,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[$values]]></code>
     </PossiblyNullArgument>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$controller->pathURL]]></code>
-      <code><![CDATA[$controller->pathURL]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getCurrentLanguageId]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getParameter]]></code>
-      <code><![CDATA[getParameter]]></code>
-      <code><![CDATA[getParameter]]></code>
-      <code><![CDATA[getParameter]]></code>
-      <code><![CDATA[getParameter]]></code>
-      <code><![CDATA[getParameter]]></code>
-      <code><![CDATA[getParameter]]></code>
-      <code><![CDATA[getParametersString]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <PossiblyUndefinedVariable>
       <code><![CDATA[$parentElement]]></code>
       <code><![CDATA[$sort]]></code>
@@ -7792,17 +7479,6 @@
       <code><![CDATA[$ch]]></code>
       <code><![CDATA[$ch]]></code>
     </PossiblyFalseArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[copyElements]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementByMarker]]></code>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[addToConversionQueue]]></code>
     </PossiblyUnusedMethod>
@@ -8024,26 +7700,6 @@
     <PossiblyFalsePropertyAssignmentValue>
       <code><![CDATA[false]]></code>
     </PossiblyFalsePropertyAssignmentValue>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$structureManager->rootElementId]]></code>
-      <code><![CDATA[$this->getService('user')->id]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[createElement]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementIdByMarker]]></code>
-      <code><![CDATA[getElementsLinks]]></code>
-      <code><![CDATA[getLanguagesIdList]]></code>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[moveElement]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[unLinkElements]]></code>
-      <code><![CDATA[unLinkElements]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[addTag]]></code>
       <code><![CDATA[getElementSuggestedTags]]></code>
@@ -8565,21 +8221,6 @@
       <code><![CDATA[$element->id]]></code>
       <code><![CDATA[$user->userName]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$user->IP]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getLoadedElementsByType]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getElementAverageVote]]></code>
       <code><![CDATA[getElementFilteredVotes]]></code>
@@ -8768,17 +8409,6 @@
       <code><![CDATA[$curl]]></code>
       <code><![CDATA[$curl]]></code>
     </PossiblyFalseArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[checkUser]]></code>
-      <code><![CDATA[endOutputBuffering]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getElementsByType]]></code>
-      <code><![CDATA[getElementsByType]]></code>
-      <code><![CDATA[setCurrentLanguageCode]]></code>
-      <code><![CDATA[switchUser]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$structureManager]]></code>
       <code><![CDATA[coorApplication]]></code>
@@ -8831,12 +8461,6 @@
       <code><![CDATA[get]]></code>
       <code><![CDATA[switchUser]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[checkUser]]></code>
-      <code><![CDATA[endOutputBuffering]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[switchUser]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[dmdApplication]]></code>
       <code><![CDATA[dmdApplication]]></code>
@@ -8895,10 +8519,6 @@
     <MixedOperand>
       <code><![CDATA[$this->getService('PathsManager')->getPath('uploads')]]></code>
     </MixedOperand>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getPath]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[fileApplication]]></code>
       <code><![CDATA[fileApplication]]></code>
@@ -9095,12 +8715,6 @@
     </PossiblyNullPropertyFetch>
     <PossiblyNullReference>
       <code><![CDATA[checkAndPersistCategories]]></code>
-      <code><![CDATA[checkUser]]></code>
-      <code><![CDATA[endOutputBuffering]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getQuery]]></code>
-      <code><![CDATA[joinDeleteZxProd]]></code>
-      <code><![CDATA[switchUser]]></code>
     </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$db]]></code>
@@ -9167,7 +8781,6 @@
       <code><![CDATA[$count]]></code>
       <code><![CDATA[$key]]></code>
       <code><![CDATA[$key]]></code>
-      <code><![CDATA[$linksManager]]></code>
       <code><![CDATA[$linksManager]]></code>
       <code><![CDATA[$linksManager]]></code>
     </UnusedVariable>
@@ -9238,10 +8851,6 @@
       <code><![CDATA[$author->structureType]]></code>
       <code><![CDATA[$controller->rootURL]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getPath]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$db]]></code>
       <code><![CDATA[$structureManager]]></code>
@@ -9372,18 +8981,6 @@
       <code><![CDATA[$zxPictureElement->type]]></code>
       <code><![CDATA[$zxPictureElement->year]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getCurrentLanguageCode]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[setRequestedPath]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[printApplication]]></code>
       <code><![CDATA[printApplication]]></code>
@@ -9464,15 +9061,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$controller->rootURL]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$currentUser->id]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getCurrentLanguageCode]]></code>
-      <code><![CDATA[setRequestedPath]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[randomTuneApplication]]></code>
       <code><![CDATA[randomTuneApplication]]></code>
@@ -9503,9 +9091,6 @@
     <MissingPropertyType>
       <code><![CDATA[$requestParameters]]></code>
     </MissingPropertyType>
-    <PossiblyNullReference>
-      <code><![CDATA[enable]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedProperty>
       <code><![CDATA[$requestParameters]]></code>
     </PossiblyUnusedProperty>
@@ -9569,12 +9154,6 @@
       <code><![CDATA[$element->id]]></code>
       <code><![CDATA[$element->structureType]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[clearElementCache]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getPath]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[releaseApplication]]></code>
       <code><![CDATA[releaseApplication]]></code>
@@ -9644,14 +9223,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$controller->rootURL]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[endOutputBuffering]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[setCurrentLanguageCode]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[routeApplication]]></code>
       <code><![CDATA[routeApplication]]></code>
@@ -9700,12 +9271,6 @@
       <code><![CDATA[get]]></code>
       <code><![CDATA[switchUser]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[checkUser]]></code>
-      <code><![CDATA[endOutputBuffering]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[switchUser]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[rzxArchiveApplication]]></code>
       <code><![CDATA[rzxArchiveApplication]]></code>
@@ -9757,12 +9322,6 @@
       <code><![CDATA[get]]></code>
       <code><![CDATA[switchUser]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[checkUser]]></code>
-      <code><![CDATA[endOutputBuffering]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[switchUser]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[s4eApplication]]></code>
       <code><![CDATA[s4eApplication]]></code>
@@ -9818,11 +9377,6 @@
       <code><![CDATA[$element->file]]></code>
       <code><![CDATA[$element->fileName]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getPath]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[screenshotApplication]]></code>
       <code><![CDATA[screenshotApplication]]></code>
@@ -9896,12 +9450,6 @@
       <code><![CDATA[get]]></code>
       <code><![CDATA[switchUser]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[checkUser]]></code>
-      <code><![CDATA[endOutputBuffering]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[switchUser]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[speccyMapsApplication]]></code>
       <code><![CDATA[speccyMapsApplication]]></code>
@@ -9972,26 +9520,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[$file]]></code>
     </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[aggregateEvents]]></code>
-      <code><![CDATA[aggregateEvents]]></code>
-      <code><![CDATA[aggregateEvents]]></code>
-      <code><![CDATA[aggregateEvents]]></code>
-      <code><![CDATA[aggregateEvents]]></code>
-      <code><![CDATA[aggregateEvents]]></code>
-      <code><![CDATA[aggregateEvents]]></code>
-      <code><![CDATA[aggregateEvents]]></code>
-      <code><![CDATA[deleteEvents]]></code>
-      <code><![CDATA[deleteEvents]]></code>
-      <code><![CDATA[deleteEvents]]></code>
-      <code><![CDATA[deleteEvents]]></code>
-      <code><![CDATA[deleteEvents]]></code>
-      <code><![CDATA[deleteEvents]]></code>
-      <code><![CDATA[deleteEvents]]></code>
-      <code><![CDATA[deleteEvents]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getPath]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[statsApplication]]></code>
       <code><![CDATA[statsApplication]]></code>
@@ -10052,14 +9580,6 @@
       <code><![CDATA[$imageElement->rotation]]></code>
       <code><![CDATA[$imageElement->type]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getCurrentLanguageCode]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[setRequestedPath]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[sxgApplication]]></code>
       <code><![CDATA[sxgApplication]]></code>
@@ -10102,9 +9622,6 @@
     <MixedMethodCall>
       <code><![CDATA[keys]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[keys]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$structureManager]]></code>
       <code><![CDATA[testApplication]]></code>
@@ -10150,12 +9667,6 @@
       <code><![CDATA[get]]></code>
       <code><![CDATA[switchUser]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[checkUser]]></code>
-      <code><![CDATA[endOutputBuffering]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[switchUser]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[tslabsApplication]]></code>
       <code><![CDATA[tslabsApplication]]></code>
@@ -10197,12 +9708,6 @@
       <code><![CDATA[get]]></code>
       <code><![CDATA[switchUser]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[checkUser]]></code>
-      <code><![CDATA[endOutputBuffering]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[switchUser]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[vtrdosApplication]]></code>
       <code><![CDATA[vtrdosApplication]]></code>
@@ -10335,13 +9840,6 @@
     <PossiblyNullOperand>
       <code><![CDATA[$fileName]]></code>
     </PossiblyNullOperand>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getCurrentLanguageCode]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[setCurrentLanguageCode]]></code>
-      <code><![CDATA[setRequestedPath]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$configManager]]></code>
       <code><![CDATA[zipItemsApplication]]></code>
@@ -10411,10 +9909,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$controller->rootURL]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getElementById]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$fileId]]></code>
       <code><![CDATA[zxFileScreenApplication]]></code>
@@ -10463,12 +9957,6 @@
       <code><![CDATA[get]]></code>
       <code><![CDATA[switchUser]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[checkUser]]></code>
-      <code><![CDATA[endOutputBuffering]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[switchUser]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[zxPressApplication]]></code>
       <code><![CDATA[zxPressApplication]]></code>
@@ -10525,11 +10013,6 @@
     <PossiblyNullOperand>
       <code><![CDATA[$file->getItemName()]]></code>
     </PossiblyNullOperand>
-    <PossiblyNullReference>
-      <code><![CDATA[clearElementCache]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getElementById]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[zxfileApplication]]></code>
       <code><![CDATA[zxfileApplication]]></code>
@@ -10678,13 +10161,6 @@
       <code><![CDATA[$zxPictureElement->type]]></code>
       <code><![CDATA[$zxPictureElement->year]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getCurrentLanguageCode]]></code>
-      <code><![CDATA[getQuery]]></code>
-      <code><![CDATA[setCurrentLanguageCode]]></code>
-      <code><![CDATA[setRequestedPath]]></code>
-    </PossiblyNullReference>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_METHOD']]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -10754,14 +10230,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$controller->rootURL]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getCurrentLanguageCode]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[setRequestedPath]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[zxscreenApplication]]></code>
       <code><![CDATA[zxscreenApplication]]></code>
@@ -10851,13 +10319,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$controller->rootURL]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getCurrentLanguageCode]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getQuery]]></code>
-      <code><![CDATA[setCurrentLanguageCode]]></code>
-      <code><![CDATA[setRequestedPath]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$configManager]]></code>
       <code><![CDATA[zxtuneApplication]]></code>
@@ -11962,9 +11423,6 @@
       <code><![CDATA[select]]></code>
       <code><![CDATA[table]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <UndefinedClass>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
@@ -12012,10 +11470,6 @@
       <code><![CDATA[whereIn]]></code>
       <code><![CDATA[whereIn]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <UndefinedClass>
       <code><![CDATA['db']]></code>
       <code><![CDATA['db']]></code>
@@ -12046,9 +11500,6 @@
       <code><![CDATA[select]]></code>
       <code><![CDATA[table]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <UndefinedClass>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
@@ -12081,9 +11532,6 @@
       <code><![CDATA[select]]></code>
       <code><![CDATA[table]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <UndefinedClass>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
@@ -12115,9 +11563,6 @@
       <code><![CDATA[select]]></code>
       <code><![CDATA[table]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <UndefinedClass>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
@@ -12149,9 +11594,6 @@
       <code><![CDATA[select]]></code>
       <code><![CDATA[table]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <UndefinedClass>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
@@ -12184,9 +11626,6 @@
       <code><![CDATA[select]]></code>
       <code><![CDATA[table]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <UndefinedClass>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
@@ -12223,9 +11662,6 @@
       <code><![CDATA[select]]></code>
       <code><![CDATA[table]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <UndefinedClass>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
@@ -12255,9 +11691,6 @@
       <code><![CDATA[select]]></code>
       <code><![CDATA[table]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <UndefinedClass>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
@@ -12295,9 +11728,6 @@
       <code><![CDATA[select]]></code>
       <code><![CDATA[table]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <UndefinedClass>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
@@ -12336,9 +11766,6 @@
       <code><![CDATA[select]]></code>
       <code><![CDATA[table]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <UndefinedClass>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
@@ -12374,9 +11801,6 @@
       <code><![CDATA[select]]></code>
       <code><![CDATA[table]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <UndefinedClass>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
@@ -12409,9 +11833,6 @@
       <code><![CDATA[select]]></code>
       <code><![CDATA[table]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <UndefinedClass>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
@@ -12466,11 +11887,6 @@
       <code><![CDATA[whereIn]]></code>
       <code><![CDATA[whereIn]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <UndefinedClass>
       <code><![CDATA['db']]></code>
       <code><![CDATA['db']]></code>
@@ -12495,9 +11911,6 @@
       <code><![CDATA[select]]></code>
       <code><![CDATA[table]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <UndefinedClass>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
@@ -13023,9 +12436,6 @@
     <MixedMethodCall>
       <code><![CDATA[getCurrentLanguageId]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[getCurrentLanguageId]]></code>
-    </PossiblyNullReference>
     <UnusedClass>
       <code><![CDATA[pressArticleSearchQueryFilter]]></code>
     </UnusedClass>
@@ -13277,9 +12687,6 @@
     <MixedOperand>
       <code><![CDATA[$this->getTable()]]></code>
     </MixedOperand>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$currentUser->id]]></code>
-    </PossiblyNullPropertyFetch>
     <UnusedClass>
       <code><![CDATA[zxMusicNotVotedByQueryFilter]]></code>
     </UnusedClass>
@@ -13352,9 +12759,6 @@
     <MixedOperand>
       <code><![CDATA[$this->getTable()]]></code>
     </MixedOperand>
-    <PossiblyNullReference>
-      <code><![CDATA[getConnectedElementIdsByNames]]></code>
-    </PossiblyNullReference>
     <UnusedClass>
       <code><![CDATA[zxMusicTagsIncludeQueryFilter]]></code>
     </UnusedClass>
@@ -13622,9 +13026,6 @@
       <code><![CDATA[where]]></code>
       <code><![CDATA[whereIn]]></code>
     </MixedMethodCall>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$currentUser->id]]></code>
-    </PossiblyNullPropertyFetch>
     <UnusedClass>
       <code><![CDATA[zxPictureNotVotedByQueryFilter]]></code>
     </UnusedClass>
@@ -13865,9 +13266,6 @@
     <MixedOperand>
       <code><![CDATA[$this->getTable()]]></code>
     </MixedOperand>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementById]]></code>
-    </PossiblyNullReference>
     <UnusedClass>
       <code><![CDATA[zxProdCategoryQueryFilter]]></code>
     </UnusedClass>
@@ -13965,9 +13363,6 @@
     <MixedOperand>
       <code><![CDATA[$this->getTable()]]></code>
     </MixedOperand>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <UndefinedClass>
       <code><![CDATA['db']]></code>
     </UndefinedClass>
@@ -14420,12 +13815,6 @@
       <code><![CDATA[$fileName]]></code>
       <code><![CDATA[$fileName]]></code>
     </MixedOperand>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getPath]]></code>
-    </PossiblyNullReference>
     <PropertyTypeCoercion>
       <code><![CDATA[$this->getService('requestHeadersManager')]]></code>
     </PropertyTypeCoercion>
@@ -14490,13 +13879,6 @@
       <code><![CDATA[$userElement->email]]></code>
       <code><![CDATA[$userElement->userName]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[getSettingsList]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[approveClaimAuthor]]></code>
       <code><![CDATA[approveClaimAuthor]]></code>
@@ -14571,24 +13953,11 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->title]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$user->authorId]]></code>
-      <code><![CDATA[$user->email]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->userName]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[getSettingsList]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[claimAuthor]]></code>
       <code><![CDATA[claimAuthor]]></code>
       <code><![CDATA[claimAuthor]]></code>
     </PropertyNotSetInConstructor>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[!$user->authorId]]></code>
-    </RiskyTruthyFalsyComparison>
     <UndefinedClass>
       <code><![CDATA['settingsManager']]></code>
     </UndefinedClass>
@@ -14677,15 +14046,7 @@
     <PossiblyNullPropertyFetch>
       <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
       <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-      <code><![CDATA[$user->id]]></code>
     </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[refreshPrivileges]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$validators]]></code>
     </PossiblyUnusedParam>
@@ -14860,10 +14221,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormAuthor]]></code>
       <code><![CDATA[showFormAuthor]]></code>
@@ -14896,10 +14253,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFullListAuthor]]></code>
       <code><![CDATA[showFullListAuthor]]></code>
@@ -15194,12 +14547,6 @@
       <code><![CDATA[$votes]]></code>
       <code><![CDATA[$votes]]></code>
     </PossiblyInvalidPropertyAssignmentValue>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getAuthorshipInfo]]></code>
-      <code><![CDATA[getAuthorshipInfo]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <PossiblyUndefinedMethod>
       <code><![CDATA[getAuthorshipInfo]]></code>
       <code><![CDATA[getProds]]></code>
@@ -15328,15 +14675,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$user->id]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[refreshPrivileges]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[publicAddAuthorAlias]]></code>
       <code><![CDATA[publicAddAuthorAlias]]></code>
@@ -15456,10 +14794,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormAuthorAlias]]></code>
       <code><![CDATA[showFormAuthorAlias]]></code>
@@ -15614,14 +14948,6 @@
       <code><![CDATA[$this->authorElement]]></code>
       <code><![CDATA[$this->authorElement]]></code>
     </MixedReturnStatement>
-    <PossiblyNullReference>
-      <code><![CDATA[getAuthorshipInfo]]></code>
-      <code><![CDATA[getAuthorshipInfo]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getElementsFirstParent]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getSearchTitle]]></code>
     </PossiblyUnusedMethod>
@@ -15761,11 +15087,6 @@
       <code><![CDATA[$structureElement->structureName]]></code>
       <code><![CDATA[$structureElement->title]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementsLinksIndex]]></code>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[unLinkElements]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$validators]]></code>
     </PossiblyUnusedParam>
@@ -15805,9 +15126,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$firstParent->requested]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showAuthorsCatalogue]]></code>
       <code><![CDATA[showAuthorsCatalogue]]></code>
@@ -15840,10 +15158,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormAuthorsCatalogue]]></code>
       <code><![CDATA[showFormAuthorsCatalogue]]></code>
@@ -15925,15 +15239,6 @@
       <code><![CDATA[$letter->title]]></code>
       <code><![CDATA[$link->childStructureId]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getElementsFirstParent]]></code>
-      <code><![CDATA[getElementsFirstParent]]></code>
-      <code><![CDATA[getElementsLinks]]></code>
-      <code><![CDATA[getRootElementMarker]]></code>
-      <code><![CDATA[unLinkElements]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$roles]]></code>
     </PossiblyUnusedParam>
@@ -16016,9 +15321,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->type]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showAuthorsList]]></code>
       <code><![CDATA[showAuthorsList]]></code>
@@ -16051,10 +15353,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormAuthorsList]]></code>
       <code><![CDATA[showFormAuthorsList]]></code>
@@ -16167,12 +15465,6 @@
       <code><![CDATA[$letters]]></code>
       <code><![CDATA[$letters]]></code>
     </PossiblyInvalidIterator>
-    <PossiblyNullReference>
-      <code><![CDATA[getParameter]]></code>
-      <code><![CDATA[getQuery]]></code>
-      <code><![CDATA[getQuery]]></code>
-      <code><![CDATA[getQuery]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getActiveAuthors]]></code>
       <code><![CDATA[getLatestAuthors]]></code>
@@ -16272,9 +15564,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->title]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementById]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$validators]]></code>
     </PossiblyUnusedParam>
@@ -16342,10 +15631,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormCity]]></code>
       <code><![CDATA[showFormCity]]></code>
@@ -16509,10 +15794,6 @@
       <code><![CDATA[$structureElement->URL]]></code>
       <code><![CDATA[$structureElement->title]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementsLinksIndex]]></code>
-      <code><![CDATA[linkElements]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$validators]]></code>
     </PossiblyUnusedParam>
@@ -16608,9 +15889,6 @@
       <code><![CDATA[getMapMarkerData]]></code>
       <code><![CDATA[getTitle]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementsChildren]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getAmountInLocation]]></code>
       <code><![CDATA[getMapData]]></code>
@@ -16656,10 +15934,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementsLinksIndex]]></code>
-      <code><![CDATA[linkElements]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$validators]]></code>
     </PossiblyUnusedParam>
@@ -16721,10 +15995,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormCountry]]></code>
       <code><![CDATA[showFormCountry]]></code>
@@ -16798,9 +16068,6 @@
       <code><![CDATA[getMapMarkerData]]></code>
       <code><![CDATA[getTitle]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementsChildren]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getMapData]]></code>
       <code><![CDATA[getMapMarkerData]]></code>
@@ -16909,10 +16176,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormDetailedSearch]]></code>
       <code><![CDATA[showFormDetailedSearch]]></code>
@@ -17119,12 +16382,6 @@
       <code><![CDATA[$value]]></code>
       <code><![CDATA[($this->getCurrentPageNumber() - 1) * $this->getElementsOnPage()]]></code>
     </MixedOperand>
-    <PossiblyNullReference>
-      <code><![CDATA[getCurrentLanguageCode]]></code>
-      <code><![CDATA[getCurrentLanguageCode]]></code>
-      <code><![CDATA[getQuery]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getApiUrl]]></code>
       <code><![CDATA[getEndElementNumber]]></code>
@@ -17221,15 +16478,6 @@
       <code><![CDATA[$controller->baseURL]]></code>
       <code><![CDATA[$this->getUploadedFilesPath()]]></code>
     </MixedOperand>
-    <PossiblyNullArgument>
-      <code><![CDATA[$baseUrl]]></code>
-      <code><![CDATA[$baseUrl]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$controller->baseURL]]></code>
-      <code><![CDATA[$controller->baseURL]]></code>
-      <code><![CDATA[$this->getService('controller')->baseURL]]></code>
-    </PossiblyNullPropertyFetch>
     <PossiblyUnusedMethod>
       <code><![CDATA[getFileName]]></code>
       <code><![CDATA[getScreenshotUrl]]></code>
@@ -17387,12 +16635,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[$types]]></code>
     </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[getCurrentLanguageId]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getElementsFirstParent]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getLettersSelectorInfo]]></code>
       <code><![CDATA[getParent]]></code>
@@ -17497,16 +16739,7 @@
     <PossiblyNullPropertyFetch>
       <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
       <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-      <code><![CDATA[$user->id]]></code>
     </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[refreshPrivileges]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$validators]]></code>
     </PossiblyUnusedParam>
@@ -17601,9 +16834,6 @@
       <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
       <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
     </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[saveAuthorship]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$validators]]></code>
     </PossiblyUnusedParam>
@@ -17678,10 +16908,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormGroup]]></code>
       <code><![CDATA[showFormGroup]]></code>
@@ -17884,11 +17110,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$type]]></code>
     </MoreSpecificImplementedParamType>
-    <PossiblyNullReference>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getCurrentLanguageCode]]></code>
-      <code><![CDATA[getElementById]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getChartDataEventTypes]]></code>
       <code><![CDATA[getChartDataIds]]></code>
@@ -17992,15 +17213,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$user->id]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[refreshPrivileges]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[publicAddGroupAlias]]></code>
       <code><![CDATA[publicAddGroupAlias]]></code>
@@ -18131,10 +17343,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormGroupAlias]]></code>
       <code><![CDATA[showFormGroupAlias]]></code>
@@ -18263,10 +17471,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$groupElement->structureType]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementById]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getSearchTitle]]></code>
     </PossiblyUnusedMethod>
@@ -18376,11 +17580,6 @@
       <code><![CDATA[$structureElement->structureName]]></code>
       <code><![CDATA[$structureElement->title]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementsLinksIndex]]></code>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[unLinkElements]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$validators]]></code>
     </PossiblyUnusedParam>
@@ -18420,9 +17619,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$firstParent->requested]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showGroupsCatalogue]]></code>
       <code><![CDATA[showGroupsCatalogue]]></code>
@@ -18455,10 +17651,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormGroupsCatalogue]]></code>
       <code><![CDATA[showFormGroupsCatalogue]]></code>
@@ -18539,15 +17731,6 @@
       <code><![CDATA[$letter->title]]></code>
       <code><![CDATA[$link->childStructureId]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getElementsFirstParent]]></code>
-      <code><![CDATA[getElementsFirstParent]]></code>
-      <code><![CDATA[getElementsLinks]]></code>
-      <code><![CDATA[getRootElementMarker]]></code>
-      <code><![CDATA[unLinkElements]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$roles]]></code>
     </PossiblyUnusedParam>
@@ -18616,28 +17799,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[getCurrentLanguageId]]></code>
-      <code><![CDATA[getModeInfo]]></code>
-      <code><![CDATA[getSelectedCurrencyItem]]></code>
-      <code><![CDATA[getSettingsList]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showLanguage]]></code>
       <code><![CDATA[showLanguage]]></code>
@@ -18962,25 +18123,6 @@
     <PossiblyInvalidMethodCall>
       <code><![CDATA[getImageUrl]]></code>
     </PossiblyInvalidMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getCurrentElement]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementPrivileges]]></code>
-      <code><![CDATA[getElementsByIdList]]></code>
-      <code><![CDATA[getElementsByIdList]]></code>
-      <code><![CDATA[getElementsChain]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getLatestVotes]]></code>
-      <code><![CDATA[getLoadedElementsByType]]></code>
-      <code><![CDATA[getRequestedPath]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[clearCommentsCache]]></code>
       <code><![CDATA[getElementFromFooter]]></code>
@@ -19084,9 +18226,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->requested]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showLetter]]></code>
       <code><![CDATA[showLetter]]></code>
@@ -19119,10 +18258,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormLetter]]></code>
       <code><![CDATA[showFormLetter]]></code>
@@ -19155,10 +18290,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->requested]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFullListLetter]]></code>
       <code><![CDATA[showFullListLetter]]></code>
@@ -19275,16 +18406,6 @@
     <MixedReturnStatement>
       <code><![CDATA[$this->contentList]]></code>
     </MixedReturnStatement>
-    <PossiblyNullReference>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getElementsByType]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getElementsFirstParent]]></code>
-      <code><![CDATA[getElementsFirstParent]]></code>
-      <code><![CDATA[linkElements]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getGamesList]]></code>
       <code><![CDATA[getGroupsList]]></code>
@@ -19362,13 +18483,6 @@
       <code><![CDATA[$structureElement->remember]]></code>
       <code><![CDATA[$structureElement->userName]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[checkUser]]></code>
-      <code><![CDATA[forgetUser]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[rememberUser]]></code>
-      <code><![CDATA[switchUser]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[loginLogin]]></code>
       <code><![CDATA[loginLogin]]></code>
@@ -19416,10 +18530,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[$_SERVER['HTTP_REFERER']]]></code>
     </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[getCurrentLanguageId]]></code>
-      <code><![CDATA[logout]]></code>
-    </PossiblyNullReference>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['HTTP_REFERER']]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -19523,10 +18633,6 @@
       <code><![CDATA[$structureElement->password]]></code>
       <code><![CDATA[$structureElement->userName]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[checkUser]]></code>
-      <code><![CDATA[switchUser]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[receiveFormLogin]]></code>
       <code><![CDATA[receiveFormLogin]]></code>
@@ -19571,18 +18677,6 @@
       <code><![CDATA[$structureElement]]></code>
       <code><![CDATA[$structureElement]]></code>
     </MixedPropertyAssignment>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$user->userName]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[deleteStorageAttribute]]></code>
-      <code><![CDATA[deleteStorageAttribute]]></code>
-      <code><![CDATA[deleteStorageAttribute]]></code>
-      <code><![CDATA[getStorageAttribute]]></code>
-      <code><![CDATA[getStorageAttribute]]></code>
-      <code><![CDATA[getStorageAttribute]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showLogin]]></code>
       <code><![CDATA[showLogin]]></code>
@@ -19619,11 +18713,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormLogin]]></code>
       <code><![CDATA[showFormLogin]]></code>
@@ -19739,19 +18828,6 @@
       <code><![CDATA[$userDataForm->id]]></code>
       <code><![CDATA[$userDataFormContainerElement->URL]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$user->userName]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getCurrentLanguageId]]></code>
-      <code><![CDATA[getCurrentLanguageId]]></code>
-      <code><![CDATA[getCurrentLanguageId]]></code>
-      <code><![CDATA[getElementsByType]]></code>
-      <code><![CDATA[getElementsByType]]></code>
-      <code><![CDATA[getElementsByType]]></code>
-      <code><![CDATA[getElementsFirstParent]]></code>
-      <code><![CDATA[getSocialPlugins]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[loginElement]]></code>
       <code><![CDATA[loginElement]]></code>
@@ -19862,14 +18938,6 @@
       <code><![CDATA[$zxMusicElement->file]]></code>
       <code><![CDATA[$zxMusicElement->title]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$this->getService('user')->id]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[ensureDirectory]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getPath]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[batchUploadMusicCatalogue]]></code>
       <code><![CDATA[batchUploadMusicCatalogue]]></code>
@@ -19902,10 +18970,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[batchUploadFormMusicCatalogue]]></code>
       <code><![CDATA[batchUploadFormMusicCatalogue]]></code>
@@ -19940,10 +19004,6 @@
       <code><![CDATA[$structureElement->final]]></code>
       <code><![CDATA[$structureElement->requested]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFullListMusicCatalogue]]></code>
       <code><![CDATA[showFullListMusicCatalogue]]></code>
@@ -20089,22 +19149,6 @@
     <ParamNameMismatch>
       <code><![CDATA[$useBlackList]]></code>
     </ParamNameMismatch>
-    <PossiblyNullReference>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getElementByMarker]]></code>
-      <code><![CDATA[getElementByMarker]]></code>
-      <code><![CDATA[getElementByMarker]]></code>
-      <code><![CDATA[getElementsByIdList]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[musicCatalogueElement]]></code>
       <code><![CDATA[musicCatalogueElement]]></code>
@@ -20249,23 +19293,6 @@
       <code><![CDATA[$zxMusicElement->file]]></code>
       <code><![CDATA[$zxMusicElement->title]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$this->getService('user')->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[ensureDirectory]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[refreshPrivileges]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[unLinkElements]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[batchUploadMusicUploadForm]]></code>
       <code><![CDATA[batchUploadMusicUploadForm]]></code>
@@ -20559,11 +19586,6 @@
       <code><![CDATA[$structureElement->title]]></code>
       <code><![CDATA[$year->id]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementsLinksIndex]]></code>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[unLinkElements]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$validators]]></code>
     </PossiblyUnusedParam>
@@ -20598,9 +19620,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showPartiesCatalogue]]></code>
       <code><![CDATA[showPartiesCatalogue]]></code>
@@ -20633,10 +19652,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormPartiesCatalogue]]></code>
       <code><![CDATA[showFormPartiesCatalogue]]></code>
@@ -20696,10 +19711,6 @@
       <code><![CDATA[$year->structureType]]></code>
       <code><![CDATA[$year->title]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getElementsFirstParent]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getReplacementElements]]></code>
     </PossiblyUnusedMethod>
@@ -20806,10 +19817,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormPartiesList]]></code>
       <code><![CDATA[showFormPartiesList]]></code>
@@ -20893,10 +19900,6 @@
       <code><![CDATA[on]]></code>
       <code><![CDATA[where]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementById]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[partiesListElement]]></code>
       <code><![CDATA[partiesListElement]]></code>
@@ -20968,16 +19971,6 @@
       <code><![CDATA[$structureElement->structureName]]></code>
       <code><![CDATA[$structureElement->title]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$user->id]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[refreshPrivileges]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$validators]]></code>
     </PossiblyUnusedParam>
@@ -21143,10 +20136,6 @@
       <code><![CDATA[$firstParent->structureName]]></code>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormParty]]></code>
       <code><![CDATA[showFormParty]]></code>
@@ -21381,20 +20370,6 @@
       <code><![CDATA[$item->title]]></code>
       <code><![CDATA[$this->yearElement->title]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getCurrentLanguageCode]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementsFirstParent]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getImageUrl]]></code>
       <code><![CDATA[getProdsComposJson]]></code>
@@ -21511,13 +20486,6 @@
       <code><![CDATA[$structureElement->type]]></code>
       <code><![CDATA[$structureElement->year]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$this->getService('user')->id]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getPath]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[batchUploadPicturesCatalogue]]></code>
       <code><![CDATA[batchUploadPicturesCatalogue]]></code>
@@ -21550,10 +20518,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[batchUploadFormPicturesCatalogue]]></code>
       <code><![CDATA[batchUploadFormPicturesCatalogue]]></code>
@@ -21587,10 +20551,6 @@
       <code><![CDATA[$structureElement->final]]></code>
       <code><![CDATA[$structureElement->requested]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFullListPicturesCatalogue]]></code>
       <code><![CDATA[showFullListPicturesCatalogue]]></code>
@@ -21681,11 +20641,6 @@
     <ParamNameMismatch>
       <code><![CDATA[$useBlackList]]></code>
     </ParamNameMismatch>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementsByIdList]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[picturesCatalogueElement]]></code>
       <code><![CDATA[picturesCatalogueElement]]></code>
@@ -21756,21 +20711,8 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$this->getService('user')->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-    </PossiblyNullPropertyFetch>
     <PossiblyNullReference>
       <code><![CDATA[getId]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[refreshPrivileges]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[unLinkElements]]></code>
     </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[batchUploadPicturesUploadForm]]></code>
@@ -21974,14 +20916,6 @@
       <code><![CDATA[$structureElement->structureName]]></code>
       <code><![CDATA[$structureElement->title]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[unLinkElements]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$validators]]></code>
     </PossiblyUnusedParam>
@@ -22045,10 +20979,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormPlaylist]]></code>
       <code><![CDATA[showFormPlaylist]]></code>
@@ -22159,11 +21089,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
-    <PossiblyNullReference>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[saveOriginalContent]]></code>
-      <code><![CDATA[unLinkElements]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$validators]]></code>
     </PossiblyUnusedParam>
@@ -22177,9 +21102,6 @@
     </UnusedClass>
   </file>
   <file src="project/modules/structureElements/pressArticle/action.receiveAiForm.class.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA['QueueService']]></code>
-    </ArgumentTypeCoercion>
     <ClassMustBeFinal>
       <code><![CDATA[receiveAiFormPressArticle]]></code>
     </ClassMustBeFinal>
@@ -22205,17 +21127,11 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
-    <PossiblyNullReference>
-      <code><![CDATA[restoreContent]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[receiveAiFormPressArticle]]></code>
       <code><![CDATA[receiveAiFormPressArticle]]></code>
       <code><![CDATA[receiveAiFormPressArticle]]></code>
     </PropertyNotSetInConstructor>
-    <UndefinedClass>
-      <code><![CDATA['QueueService']]></code>
-    </UndefinedClass>
     <UnusedClass>
       <code><![CDATA[receiveAiFormPressArticle]]></code>
     </UnusedClass>
@@ -22280,9 +21196,6 @@
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$pressArticleRepository->getOriginalContent($structureElement->getId())]]></code>
     </PossiblyNullPropertyAssignmentValue>
-    <PossiblyNullReference>
-      <code><![CDATA[getOriginalContent]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showPublicFormPressArticle]]></code>
       <code><![CDATA[showPublicFormPressArticle]]></code>
@@ -22387,7 +21300,6 @@
       <code><![CDATA[$searchContent]]></code>
     </NullableReturnStatement>
     <PossiblyNullReference>
-      <code><![CDATA[getElementsFirstParent]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[getTitle]]></code>
     </PossiblyNullReference>
@@ -22472,12 +21384,6 @@
       <code><![CDATA[$structureElement->registrationGroupsIds]]></code>
       <code><![CDATA[$structureElement->title]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[unLinkElements]]></code>
-      <code><![CDATA[unLinkElements]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[receiveRegistration]]></code>
       <code><![CDATA[receiveRegistration]]></code>
@@ -22569,14 +21475,6 @@
       <code><![CDATA[$structureElement->title]]></code>
       <code><![CDATA[$structureElement->type]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getEmptyDispatchment]]></code>
-      <code><![CDATA[getSettingsList]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[startDispatchment]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[sendEmailRegistration]]></code>
       <code><![CDATA[sendEmailRegistration]]></code>
@@ -22639,34 +21537,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
-    <PossiblyNullArgument>
-      <code><![CDATA[$user->id]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$user->address]]></code>
-      <code><![CDATA[$user->city]]></code>
-      <code><![CDATA[$user->company]]></code>
-      <code><![CDATA[$user->country]]></code>
-      <code><![CDATA[$user->email]]></code>
-      <code><![CDATA[$user->firstName]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->lastName]]></code>
-      <code><![CDATA[$user->phone]]></code>
-      <code><![CDATA[$user->postIndex]]></code>
-      <code><![CDATA[$user->subscribe]]></code>
-      <code><![CDATA[$user->userName]]></code>
-      <code><![CDATA[$user->website]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[deleteStorageAttribute]]></code>
-      <code><![CDATA[deleteStorageAttribute]]></code>
-      <code><![CDATA[deleteStorageAttribute]]></code>
-      <code><![CDATA[getStorageAttribute]]></code>
-      <code><![CDATA[getStorageAttribute]]></code>
-      <code><![CDATA[getStorageAttribute]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showRegistration]]></code>
       <code><![CDATA[showRegistration]]></code>
@@ -22802,26 +21672,6 @@
       <code><![CDATA[$structureElement->errorMessage]]></code>
       <code><![CDATA[$structureElement->type]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->userName]]></code>
-      <code><![CDATA[$user->userName]]></code>
-      <code><![CDATA[$user->userName]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[addSocialUser]]></code>
-      <code><![CDATA[checkEmail]]></code>
-      <code><![CDATA[checkExistance]]></code>
-      <code><![CDATA[getStorageAttribute]]></code>
-      <code><![CDATA[getStorageAttribute]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[linkElements]]></code>
-    </PossiblyNullReference>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$mainData[$fieldName]]]></code>
       <code><![CDATA[$mainData['userName']]]></code>
@@ -22901,14 +21751,6 @@
       <code><![CDATA[$structureElement]]></code>
       <code><![CDATA[$structureElement]]></code>
     </MixedPropertyAssignment>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[switchUser]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[verifyEmailRegistration]]></code>
       <code><![CDATA[verifyEmailRegistration]]></code>
@@ -23088,23 +21930,6 @@
       <code><![CDATA[$field->autocomplete]]></code>
       <code><![CDATA[$userGroup->id]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$user->userName]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getCmsUserSocialNetworks]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementByMarker]]></code>
-      <code><![CDATA[getElementIdByMarker]]></code>
-      <code><![CDATA[getElementsByType]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getSocialPlugins]]></code>
-      <code><![CDATA[getStorageAttribute]]></code>
-      <code><![CDATA[readUserId]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getDynamicFieldError]]></code>
       <code><![CDATA[getDynamicFieldErrors]]></code>
@@ -23172,9 +21997,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->structureType]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[linkElements]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[addToPlaylistShared]]></code>
       <code><![CDATA[addToPlaylistShared]]></code>
@@ -23214,9 +22036,6 @@
       <code><![CDATA[getId]]></code>
       <code><![CDATA[getParameter]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[deleteAuthorship]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[deleteAuthorShared]]></code>
       <code><![CDATA[deleteAuthorShared]]></code>
@@ -23368,9 +22187,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementsLinks]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[moveScreenshotShared]]></code>
       <code><![CDATA[moveScreenshotShared]]></code>
@@ -23481,9 +22297,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->structureType]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[unLinkElements]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[removeFromPlaylistShared]]></code>
       <code><![CDATA[removeFromPlaylistShared]]></code>
@@ -23594,9 +22407,6 @@
       <code><![CDATA[$structureElement->structureType]]></code>
       <code><![CDATA[$structureElement->structureType]]></code>
     </NoInterfaceProperties>
-    <PossiblyNullReference>
-      <code><![CDATA[logEvent]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[voteShared]]></code>
       <code><![CDATA[voteShared]]></code>
@@ -23705,10 +22515,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormStats]]></code>
       <code><![CDATA[showFormStats]]></code>
@@ -23785,7 +22591,6 @@
       <code><![CDATA[$collection]]></code>
       <code><![CDATA[$collection]]></code>
       <code><![CDATA[$count]]></code>
-      <code><![CDATA[$counts]]></code>
       <code><![CDATA[$record]]></code>
       <code><![CDATA[$records]]></code>
       <code><![CDATA[$result]]></code>
@@ -23794,11 +22599,9 @@
       <code><![CDATA[$row]]></code>
       <code><![CDATA[$row]]></code>
       <code><![CDATA[$rows]]></code>
-      <code><![CDATA[$user]]></code>
       <code><![CDATA[$userElement]]></code>
       <code><![CDATA[$userElement]]></code>
       <code><![CDATA[$userElement]]></code>
-      <code><![CDATA[$userId]]></code>
       <code><![CDATA[$yearsData['data'][]]]></code>
       <code><![CDATA[$yearsData['data'][]]]></code>
       <code><![CDATA[$yearsData['labels'][]]]></code>
@@ -23807,7 +22610,6 @@
     <MixedMethodCall>
       <code><![CDATA[conditionalLoad]]></code>
       <code><![CDATA[conditionalLoad]]></code>
-      <code><![CDATA[countEvents]]></code>
       <code><![CDATA[get]]></code>
       <code><![CDATA[get]]></code>
       <code><![CDATA[getElementById]]></code>
@@ -23822,11 +22624,6 @@
       <code><![CDATA[$table]]></code>
       <code><![CDATA[$table]]></code>
     </MixedOperand>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getAllYearsData]]></code>
       <code><![CDATA[getCommentsHistoryData]]></code>
@@ -23892,9 +22689,6 @@
       <code><![CDATA[$structureElement->structureName]]></code>
       <code><![CDATA[$structureElement->title]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[joinTags]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$validators]]></code>
     </PossiblyUnusedParam>
@@ -23929,9 +22723,6 @@
       <code><![CDATA[getArtItemsType]]></code>
       <code><![CDATA[setViewName]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[getArtItemsType]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showTag]]></code>
       <code><![CDATA[showTag]]></code>
@@ -23964,10 +22755,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormTag]]></code>
       <code><![CDATA[showFormTag]]></code>
@@ -24087,16 +22874,6 @@
       <code><![CDATA[$element->title]]></code>
       <code><![CDATA[$tagsList->id]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getArtItemsType]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementsByType]]></code>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[detectUntranslated]]></code>
       <code><![CDATA[getFontSize]]></code>
@@ -24142,10 +22919,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFullListTags]]></code>
       <code><![CDATA[showFullListTags]]></code>
@@ -24242,12 +23015,6 @@
       <code><![CDATA[$element->amount]]></code>
       <code><![CDATA[$element->verified]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getLanguagesList]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[tagsElement]]></code>
       <code><![CDATA[tagsElement]]></code>
@@ -24321,11 +23088,6 @@
       <code><![CDATA[$structureElement->title]]></code>
       <code><![CDATA[$tag->id]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementsLinksIndex]]></code>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[unLinkElements]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$validators]]></code>
     </PossiblyUnusedParam>
@@ -24385,10 +23147,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormTagsList]]></code>
       <code><![CDATA[showFormTagsList]]></code>
@@ -24456,11 +23214,6 @@
       <code><![CDATA[get]]></code>
       <code><![CDATA[getArtItemsType]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getArtItemsType]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$tagsList]]></code>
       <code><![CDATA[tagsListElement]]></code>
@@ -24820,47 +23573,6 @@
       <code><![CDATA[$field->value]]></code>
       <code><![CDATA[$record->value]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[deletePrivilege]]></code>
-      <code><![CDATA[deletePrivilege]]></code>
-      <code><![CDATA[deletePrivilege]]></code>
-      <code><![CDATA[deletePrivilege]]></code>
-      <code><![CDATA[deletePrivilege]]></code>
-      <code><![CDATA[deletePrivilege]]></code>
-      <code><![CDATA[deletePrivilege]]></code>
-      <code><![CDATA[deletePrivilege]]></code>
-      <code><![CDATA[deletePrivilege]]></code>
-      <code><![CDATA[deletePrivilege]]></code>
-      <code><![CDATA[deletePrivilege]]></code>
-      <code><![CDATA[deletePrivilege]]></code>
-      <code><![CDATA[deletePrivilege]]></code>
-      <code><![CDATA[deletePrivilege]]></code>
-      <code><![CDATA[deletePrivilege]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[removeSocialUser]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setStorageAttribute]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[ban]]></code>
       <code><![CDATA[changeConnectedAuthor]]></code>
@@ -25002,10 +23714,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormUserPlaylists]]></code>
       <code><![CDATA[showFormUserPlaylists]]></code>
@@ -25060,13 +23768,6 @@
       <code><![CDATA[getElementData]]></code>
       <code><![CDATA[getElementsByIdList]]></code>
     </MixedMethodCall>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$user->id]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getElementsByIdList]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$multiLanguageFields]]></code>
     </PossiblyUnusedParam>
@@ -25173,10 +23874,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormVotesList]]></code>
       <code><![CDATA[showFormVotesList]]></code>
@@ -25279,9 +23976,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showYear]]></code>
       <code><![CDATA[showYear]]></code>
@@ -25314,10 +24008,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormYear]]></code>
       <code><![CDATA[showFormYear]]></code>
@@ -25402,15 +24092,6 @@
       <code><![CDATA[$year->structureType]]></code>
       <code><![CDATA[$year->title]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getElementsByType]]></code>
-      <code><![CDATA[getElementsChildren]]></code>
-      <code><![CDATA[getElementsFirstParent]]></code>
-      <code><![CDATA[getElementsFirstParent]]></code>
-      <code><![CDATA[getQuery]]></code>
-      <code><![CDATA[linkElements]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getPartiesList]]></code>
     </PossiblyUnusedMethod>
@@ -25526,10 +24207,6 @@
       <code><![CDATA[$firstParent->structureName]]></code>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormZxItemsList]]></code>
       <code><![CDATA[showFormZxItemsList]]></code>
@@ -25602,9 +24279,6 @@
     <MixedOperand>
       <code><![CDATA[$catalogueElement->getFirstParentElement()->getUrl()]]></code>
     </MixedOperand>
-    <PossiblyNullReference>
-      <code><![CDATA[getCurrentLanguageId]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[zxItemsListElement]]></code>
       <code><![CDATA[zxItemsListElement]]></code>
@@ -25710,12 +24384,7 @@
       <code><![CDATA[$structureElement->getDataChunk("file")->originalName]]></code>
       <code><![CDATA[$structureElement->getDataChunk("trackerFile")->originalName]]></code>
       <code><![CDATA[$structureElement->getDataChunk("trackerFile")->originalName]]></code>
-      <code><![CDATA[$this->getService('user')->id]]></code>
     </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getPath]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$validators]]></code>
     </PossiblyUnusedParam>
@@ -25804,10 +24473,6 @@
       <code><![CDATA[$structureElement->requested]]></code>
       <code><![CDATA[$structureElement->tagsText]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormZxMusic]]></code>
       <code><![CDATA[showFormZxMusic]]></code>
@@ -25998,20 +24663,6 @@
     <PossiblyInvalidOperand>
       <code><![CDATA[$textContent]]></code>
     </PossiblyInvalidOperand>
-    <PossiblyNullReference>
-      <code><![CDATA[addToConversionQueue]]></code>
-      <code><![CDATA[clearElementCache]]></code>
-      <code><![CDATA[clearElementCache]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getCurrentLanguage]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementsByType]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[logEvent]]></code>
-    </PossiblyNullReference>
     <PossiblyUndefinedVariable>
       <code><![CDATA[$data]]></code>
     </PossiblyUndefinedVariable>
@@ -26159,11 +24810,7 @@
       <code><![CDATA[$structureElement->getDataChunk("inspired2")->originalName]]></code>
       <code><![CDATA[$structureElement->getDataChunk("sequence")->originalName]]></code>
       <code><![CDATA[$structureElement->getDataChunk("sequence")->originalName]]></code>
-      <code><![CDATA[$this->getService('user')->id]]></code>
     </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getPath]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$validators]]></code>
     </PossiblyUnusedParam>
@@ -26430,19 +25077,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[$info['extension']]]></code>
     </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[addTag]]></code>
-      <code><![CDATA[addTag]]></code>
-      <code><![CDATA[clearElementCache]]></code>
-      <code><![CDATA[clearElementCache]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getCurrentLanguage]]></code>
-      <code><![CDATA[getElementsByType]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[logEvent]]></code>
-    </PossiblyNullReference>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$info['extension']]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -26512,9 +25146,6 @@
     </UnusedClass>
   </file>
   <file src="project/modules/structureElements/zxProd/action.publicReceive.class.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA['QueueService']]></code>
-    </ArgumentTypeCoercion>
     <ClassMustBeFinal>
       <code><![CDATA[publicReceiveZxProd]]></code>
     </ClassMustBeFinal>
@@ -26551,17 +25182,11 @@
       <code><![CDATA[publicReceiveZxProd]]></code>
       <code><![CDATA[publicReceiveZxProd]]></code>
     </PropertyNotSetInConstructor>
-    <UndefinedClass>
-      <code><![CDATA['QueueService']]></code>
-    </UndefinedClass>
     <UnusedClass>
       <code><![CDATA[publicReceiveZxProd]]></code>
     </UnusedClass>
   </file>
   <file src="project/modules/structureElements/zxProd/action.receiveAiForm.class.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA['QueueService']]></code>
-    </ArgumentTypeCoercion>
     <ClassMustBeFinal>
       <code><![CDATA[receiveAiFormZxProd]]></code>
     </ClassMustBeFinal>
@@ -26582,9 +25207,6 @@
       <code><![CDATA[receiveAiFormZxProd]]></code>
       <code><![CDATA[receiveAiFormZxProd]]></code>
     </PropertyNotSetInConstructor>
-    <UndefinedClass>
-      <code><![CDATA['QueueService']]></code>
-    </UndefinedClass>
     <UnusedClass>
       <code><![CDATA[receiveAiFormZxProd]]></code>
     </UnusedClass>
@@ -26685,10 +25307,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFullListZxProd]]></code>
       <code><![CDATA[showFullListZxProd]]></code>
@@ -26837,7 +25455,6 @@
       <code><![CDATA['QueryFiltersManager']]></code>
       <code><![CDATA['QueryFiltersManager']]></code>
       <code><![CDATA['QueryFiltersManager']]></code>
-      <code><![CDATA['QueueService']]></code>
       <code><![CDATA['controller']]></code>
       <code><![CDATA['controller']]></code>
       <code><![CDATA['db']]></code>
@@ -27279,45 +25896,6 @@
       <code><![CDATA[$fileElement->getImageUrl('prodImage')]]></code>
       <code><![CDATA[$title]]></code>
     </PossiblyNullOperand>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$controller->baseURL]]></code>
-      <code><![CDATA[$controller->baseURL]]></code>
-      <code><![CDATA[$controller->baseURL]]></code>
-      <code><![CDATA[$controller->baseURL]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[clearElementCache]]></code>
-      <code><![CDATA[clearElementCache]]></code>
-      <code><![CDATA[convertTypeData]]></code>
-      <code><![CDATA[convertTypeData]]></code>
-      <code><![CDATA[convertTypeData]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getConnectedIdList]]></code>
-      <code><![CDATA[getCurrentLanguage]]></code>
-      <code><![CDATA[getCurrentLanguageId]]></code>
-      <code><![CDATA[getCurrentLanguageId]]></code>
-      <code><![CDATA[getElementsByType]]></code>
-      <code><![CDATA[getElementsByType]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <PossiblyUndefinedVariable>
       <code><![CDATA[$category]]></code>
     </PossiblyUndefinedVariable>
@@ -27362,7 +25940,6 @@
       <code><![CDATA[select]]></code>
     </TooManyArguments>
     <UndefinedClass>
-      <code><![CDATA['QueueService']]></code>
       <code><![CDATA['db']]></code>
       <code><![CDATA['db']]></code>
       <code><![CDATA['db']]></code>
@@ -27517,11 +26094,6 @@
       <code><![CDATA[$structureElement->structureName]]></code>
       <code><![CDATA[$structureElement->title]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementsLinksIndex]]></code>
-      <code><![CDATA[linkElements]]></code>
-      <code><![CDATA[unLinkElements]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedParam>
       <code><![CDATA[$validators]]></code>
     </PossiblyUnusedParam>
@@ -27581,10 +26153,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showFormZxProdCategoriesCatalogue]]></code>
       <code><![CDATA[showFormZxProdCategoriesCatalogue]]></code>
@@ -27646,9 +26214,6 @@
       <code><![CDATA[$this->categories]]></code>
       <code><![CDATA[$this->categories]]></code>
     </MixedReturnStatement>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementsChildren]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[getProdsListBaseQuery]]></code>
     </PossiblyUnusedMethod>
@@ -27801,11 +26366,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$structureElement->final]]></code>
     </MixedPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-      <code><![CDATA[assign]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[showSeoFormZxProdCategory]]></code>
       <code><![CDATA[showSeoFormZxProdCategory]]></code>
@@ -27911,9 +26471,6 @@
     <MoreSpecificReturnType>
       <code><![CDATA[?zxProdCategoryElement]]></code>
     </MoreSpecificReturnType>
-    <PossiblyNullReference>
-      <code><![CDATA[getTranslationByName]]></code>
-    </PossiblyNullReference>
     <PossiblyUndefinedVariable>
       <code><![CDATA[$key]]></code>
       <code><![CDATA[$ttl]]></code>
@@ -27999,7 +26556,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA['PathsManager']]></code>
       <code><![CDATA['PathsManager']]></code>
-      <code><![CDATA['QueueService']]></code>
       <code><![CDATA['linksManager']]></code>
       <code><![CDATA['privilegesManager']]></code>
       <code><![CDATA['user']]></code>
@@ -28054,25 +26610,12 @@
     </MoreSpecificImplementedParamType>
     <PossiblyNullPropertyFetch>
       <code><![CDATA[$firstProd->URL]]></code>
-      <code><![CDATA[$this->getService('user')->id]]></code>
-      <code><![CDATA[$this->getService('user')->id]]></code>
-      <code><![CDATA[$user->id]]></code>
     </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[refreshPrivileges]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[unLinkElements]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[batchUploadZxProdsUploadForm]]></code>
       <code><![CDATA[batchUploadZxProdsUploadForm]]></code>
       <code><![CDATA[batchUploadZxProdsUploadForm]]></code>
     </PropertyNotSetInConstructor>
-    <UndefinedClass>
-      <code><![CDATA['QueueService']]></code>
-    </UndefinedClass>
     <UndefinedMagicPropertyAssignment>
       <code><![CDATA[$zxProdElement->addAuthor]]></code>
       <code><![CDATA[$zxProdElement->addAuthorRole]]></code>
@@ -28254,9 +26797,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
-    <PossiblyNullReference>
-      <code><![CDATA[copyAuthorship]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[cloneZxRelease]]></code>
       <code><![CDATA[cloneZxRelease]]></code>
@@ -28279,9 +26819,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
-    <PossiblyNullReference>
-      <code><![CDATA[unLinkElements]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[moveScreenshotsZxRelease]]></code>
       <code><![CDATA[moveScreenshotsZxRelease]]></code>
@@ -28333,17 +26870,7 @@
     <PossiblyNullPropertyFetch>
       <code><![CDATA[$structureElement->getDataChunk("file")->originalName]]></code>
       <code><![CDATA[$structureElement->getDataChunk("file")->originalName]]></code>
-      <code><![CDATA[$this->getService('user')->id]]></code>
-      <code><![CDATA[$user->id]]></code>
     </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[refreshPrivileges]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-      <code><![CDATA[setPrivilege]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[publicAddZxRelease]]></code>
       <code><![CDATA[publicAddZxRelease]]></code>
@@ -28504,9 +27031,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
     </MoreSpecificImplementedParamType>
-    <PossiblyNullReference>
-      <code><![CDATA[fileNotFound]]></code>
-    </PossiblyNullReference>
     <PropertyNotSetInConstructor>
       <code><![CDATA[viewFileZxRelease]]></code>
       <code><![CDATA[viewFileZxRelease]]></code>
@@ -28801,29 +27325,6 @@
     <PossiblyNullOperand>
       <code><![CDATA[$extractedFile->getItemName()]]></code>
     </PossiblyNullOperand>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$controller->baseURL]]></code>
-      <code><![CDATA[$controller->baseURL]]></code>
-      <code><![CDATA[$controller->baseURL]]></code>
-      <code><![CDATA[$controller->baseURL]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code><![CDATA[clearElementCache]]></code>
-      <code><![CDATA[clearElementCache]]></code>
-      <code><![CDATA[filterArchiveFiles]]></code>
-      <code><![CDATA[getElementPrivileges]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getRunnableTypesForEmulator]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[getTranslationByName]]></code>
-      <code><![CDATA[isAuthorized]]></code>
-      <code><![CDATA[resolveEmulator]]></code>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[getArchiveFilesForHardware]]></code>
@@ -28981,45 +27482,6 @@
     </MixedMethodCall>
     <UnusedClass>
       <code><![CDATA[PicturesModesManagerServiceContainer]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/services/QueueRepositoryServiceContainer.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[QueueRepositoryServiceContainer]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function makeInjections($instance)]]></code>
-      <code><![CDATA[public function makeInstance()]]></code>
-    </MissingOverrideAttribute>
-    <MissingParamType>
-      <code><![CDATA[$instance]]></code>
-    </MissingParamType>
-    <MixedAssignment>
-      <code><![CDATA[$db]]></code>
-    </MixedAssignment>
-    <UnusedClass>
-      <code><![CDATA[QueueRepositoryServiceContainer]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/services/QueueServiceServiceContainer.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[QueueServiceServiceContainer]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function makeInjections($instance)]]></code>
-      <code><![CDATA[public function makeInstance()]]></code>
-    </MissingOverrideAttribute>
-    <MissingParamType>
-      <code><![CDATA[$instance]]></code>
-    </MissingParamType>
-    <MixedArgument>
-      <code><![CDATA[$queueRepository]]></code>
-    </MixedArgument>
-    <MixedAssignment>
-      <code><![CDATA[$queueRepository]]></code>
-    </MixedAssignment>
-    <UnusedClass>
-      <code><![CDATA[QueueServiceServiceContainer]]></code>
     </UnusedClass>
   </file>
   <file src="project/services/RzxArchiveManagerServiceContainer.php">
@@ -29326,9 +27788,6 @@
     <MoreSpecificReturnType>
       <code><![CDATA[Cache]]></code>
     </MoreSpecificReturnType>
-    <PossiblyNullArgument>
-      <code><![CDATA[$this->getService('structureManager')]]></code>
-    </PossiblyNullArgument>
     <PropertyTypeCoercion>
       <code><![CDATA[$this->getService('Cache')]]></code>
     </PropertyTypeCoercion>
@@ -29695,8 +28154,6 @@
       <code><![CDATA[$registry]]></code>
       <code><![CDATA[$registry]]></code>
       <code><![CDATA[$registry]]></code>
-      <code><![CDATA[$registry]]></code>
-      <code><![CDATA[$registry]]></code>
     </MissingConstructor>
   </file>
   <file src="trickster-cms/cms/core/DesignTheme.php">
@@ -29810,10 +28267,6 @@
       <code><![CDATA[select]]></code>
       <code><![CDATA[select]]></code>
     </PossiblyInvalidMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[table]]></code>
-      <code><![CDATA[table]]></code>
-    </PossiblyNullReference>
     <RedundantConditionGivenDocblockType>
       <code><![CDATA[is_array($sourceQuery)]]></code>
       <code><![CDATA[is_array($sourceQuery)]]></code>
@@ -30089,9 +28542,6 @@
       <code><![CDATA[getConfig]]></code>
       <code><![CDATA[getElementsLinks]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[getElementsLinks]]></code>
-    </PossiblyNullReference>
     <RedundantCondition>
       <code><![CDATA[!$approvalRequired]]></code>
       <code><![CDATA[!$approvalRequired]]></code>
@@ -30155,11 +28605,6 @@
       <code><![CDATA[getConfig]]></code>
       <code><![CDATA[getConfig]]></code>
     </MixedMethodCall>
-    <PossiblyNullReference>
-      <code><![CDATA[getConfig]]></code>
-      <code><![CDATA[getConfig]]></code>
-      <code><![CDATA[getConfig]]></code>
-    </PossiblyNullReference>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[!$result]]></code>
     </RiskyTruthyFalsyComparison>

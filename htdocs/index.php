@@ -1,14 +1,23 @@
 <?php
+declare(strict_types=1);
 
 use ZxArt\IpBan\RequestGuard;
 
-define('PUBLIC_PATH', dirname(__FILE__) . '/');
-define('ROOT_PATH', dirname(__FILE__) . '/../');
+$ip = $_SERVER['REMOTE_ADDR'] ?? null;
+if ($ip !== '85.253.29.254') {
+//exit;
+}
+define('PUBLIC_PATH', __DIR__ . '/');
+define('ROOT_PATH', __DIR__ . '/../');
 //include_once(ROOT_PATH . 'vendor/artweb-ou/trickster-cms/cms/core/controller.class.php');
 include_once(ROOT_PATH . 'trickster-cms/cms/core/controller.class.php');
 $controller = controller::getInstance(ROOT_PATH . 'project/config/');
 
 $app = $controller->getApplication();
+if (!$app) {
+    echo 'Application not found';
+    exit;
+}
 $guard = $app->getService(RequestGuard::class);
 if (!$guard->isAllowed($_SERVER)) {
     http_response_code(403);
