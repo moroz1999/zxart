@@ -1399,21 +1399,21 @@
         },
         {
             "name": "moroz1999/zx-image",
-            "version": "5.8.0",
+            "version": "5.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/moroz1999/zx-image.git",
-                "reference": "210f5b2cbc7b0e168278ed02c07b7f71f4ba77fe"
+                "reference": "48b3f60e16b25aa63d9f1fb872f54f77349a6dd5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/moroz1999/zx-image/zipball/210f5b2cbc7b0e168278ed02c07b7f71f4ba77fe",
-                "reference": "210f5b2cbc7b0e168278ed02c07b7f71f4ba77fe",
+                "url": "https://api.github.com/repos/moroz1999/zx-image/zipball/48b3f60e16b25aa63d9f1fb872f54f77349a6dd5",
+                "reference": "48b3f60e16b25aa63d9f1fb872f54f77349a6dd5",
                 "shasum": ""
             },
             "require": {
                 "moroz1999/gif-creator": "*",
-                "php": ">=7.4"
+                "php": ">=8.4"
             },
             "require-dev": {
                 "vimeo/psalm": "*"
@@ -1438,9 +1438,9 @@
             ],
             "support": {
                 "issues": "https://github.com/moroz1999/zx-image/issues",
-                "source": "https://github.com/moroz1999/zx-image/tree/5.8.0"
+                "source": "https://github.com/moroz1999/zx-image/tree/5.8.1"
             },
-            "time": "2025-04-11T22:38:14+00:00"
+            "time": "2025-10-26T12:45:05+00:00"
         },
         {
             "name": "nesbot/carbon",

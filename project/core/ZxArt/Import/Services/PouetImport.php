@@ -3,8 +3,11 @@
 namespace ZxArt\Import\Services;
 
 use errorLogger;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Connection;
 use Override;
+use RuntimeException;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Import\Labels\Label;
 use ZxArt\Prods\Services\ProdsService;
@@ -84,9 +87,13 @@ class PouetImport extends errorLogger
     protected int $counter = 0;
 
     protected ?int $maxTime = null;
-    protected $debugEntry;
+    protected ?int $debugEntry = null;
 
     private readonly Connection $db;
+    private readonly ProdsService $prodsService;
+    private readonly QueueService $queueService;
+    private readonly Client $http;
+
     protected array $categories;
 
     /** @var array<string,string> */
@@ -336,9 +343,6 @@ class PouetImport extends errorLogger
     ];
 
     protected array $urls = [];
-    private readonly ProdsService $prodsService;
-    private readonly QueueService $queueService;
-
     protected string $origin = 'pouet';
 
     public function __construct(
@@ -351,6 +355,18 @@ class PouetImport extends errorLogger
         $this->db = $db;
         $this->prodsService = $prodsService;
         $this->queueService = $queueService;
+
+        $this->http = new Client([
+            'timeout' => 20,
+            'connect_timeout' => 10,
+            'verify' => false, // keep it exactly as requested
+            'headers' => [
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0',
+                'Accept' => 'application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept-Language' => 'en-US,en;q=0.5',
+                'Cache-Control' => 'max-age=0',
+            ],
+        ]);
 
         $authorsManager->setForceUpdateCountry(false);
         $authorsManager->setForceUpdateCity(false);
@@ -394,249 +410,285 @@ class PouetImport extends errorLogger
             'wild' => CategoryIds::DEMOS->value,
             'bbstro' => 364978,
         ];
+
+        $this->roles = $this->normalizeKeysToLower($this->roles);
+        $this->compos = $this->normalizeKeysToLower($this->compos);
     }
 
     public function importAll(): void
     {
         $this->maxTime = time() + $this->timeLimit;
 
-        if (!empty($this->debugEntry)) {
-            $id = (int)$this->debugEntry;
+        if ($this->debugEntry !== null) {
+            $id = $this->debugEntry;
             $this->maxCounter = 1;
         } else {
-            $id = ((int)$this->loadMaxImportedId()) + 1;
-            $this->maxId = (int)$this->loadMaxPossibleId();
+            $id = ($this->loadMaxImportedId()) + 1;
+            $this->maxId = $this->loadMaxPossibleId() ?? 0;
         }
         while (
             (!$this->maxCounter || ($this->counter < $this->maxCounter)) &&
             (time() <= $this->maxTime) &&
-            ($id <= $this->maxId || $this->debugEntry)
+            ($id <= $this->maxId || $this->debugEntry !== null)
         ) {
-            $this->maxCounter--;
-            if ($prodData = $this->download($id)) {
-                $platformSupported = false;
-                foreach ($prodData['platforms'] as $platform) {
-                    if (isset($this->platforms[$platform['name']])) {
-                        $platformSupported = true;
-                    }
-                }
-                if ($platformSupported) {
-                    $this->counter++;
+            // honor ignore list if populated
+            if (in_array($id, $this->ignore, true)) {
+                $this->updateReport($id, 'ignored');
+                $this->markProgress('prod ' . $id . ' ignored');
+                $id++;
+                continue;
+            }
 
-                    $labels = [];
-                    $groupsIds = [];
-                    $prodDataGroups = $prodData['groups'] ?? [];
-                    foreach ($prodDataGroups as $group) {
-                        $labels[] = new Label(
-                            id: isset($group['id']) ? (string)$group['id'] : null,
-                            name: $group['name'] ?? null,
-                            isAlias: false,
-                            isPerson: false,
-                            isGroup: true,
-                            abbreviation: $group['acronym'] ?? null,
-                            website: $group['web'] ?? null,
-                        );
-                        if (isset($group['id'])) {
-                            $groupsIds[] = (string)$group['id'];
-                        }
-                    }
+            try {
+                $this->processId($id);
+            } catch (\Throwable $e) {
+                $this->markProgress('ERROR at prod ' . $id . ': ' . $e->getMessage());
+                throw $e;
+            }
+
+            $id++;
+        }
+    }
+
+    protected function processId(int $id): void
+    {
+        $this->maxCounter--;
+
+        $prodData = $this->download($id);
+        if (!$prodData) {
+            return;
+        }
+
+        $platformSupported = false;
+        foreach ($prodData['platforms'] as $platform) {
+            if (isset($this->platforms[$platform['name']])) {
+                $platformSupported = true;
+                break;
+            }
+        }
+
+        if (!$platformSupported) {
+            $this->updateReport($id, 'skipped');
+            $this->markProgress('prod ' . $id . ' skipped');
+            return;
+        }
+
+        $this->counter++;
+
+        $labels = [];
+        $groupsIds = [];
+        $prodDataGroups = $prodData['groups'] ?? [];
+        foreach ($prodDataGroups as $group) {
+            $labels[] = new Label(
+                id: isset($group['id']) ? (string)$group['id'] : null,
+                name: $group['name'] ?? null,
+                isAlias: false,
+                isPerson: false,
+                isGroup: true,
+                abbreviation: $group['acronym'] ?? null,
+                website: $group['web'] ?? null,
+            );
+            if (isset($group['id'])) {
+                $groupsIds[] = (string)$group['id'];
+            }
+        }
 
 
-                    $authorRoles = [];
-                    $prodDataCredits = $prodData['credits'] ?? [];
-                    foreach ($prodDataCredits as $credit) {
-                        $authorId = '';
-                        $authorName = '';
-                        if (!empty($credit['user'])) {
-                            $authorId = (string)$credit['user']['id'];
-                            $authorName = $credit['user']['nickname'];
-                        }
-                        $labels[] = new Label(
-                            id: $authorId !== '' ? $authorId : null,
-                            name: $authorName !== '' ? $authorName : null,
-                            isAlias: false,
-                            isPerson: true,
-                            isGroup: false,
-                        );
+        $authorRoles = [];
+        $prodDataCredits = $prodData['credits'] ?? [];
+        foreach ($prodDataCredits as $credit) {
+            $authorId = '';
+            $authorName = '';
+            if (!empty($credit['user'])) {
+                $authorId = (string)$credit['user']['id'];
+                $authorName = $credit['user']['nickname'];
+            }
+            $labels[] = new Label(
+                id: $authorId !== '' ? $authorId : null,
+                name: $authorName !== '' ? $authorName : null,
+                isAlias: false,
+                isPerson: true,
+                isGroup: false,
+            );
 
-                        if (!isset($credit['role'])) {
-                            $authorRoles[$authorId] = [];
+            if (!isset($credit['role'])) {
+                $authorRoles[$authorId] = [];
+            } else {
+                $roles = explode(',', strtolower($credit['role']));
+                $authorRoles[$authorId] = [];
+                foreach ($roles as $role) {
+                    $roleParts = explode('&', strtolower($role));
+                    foreach ($roleParts as $rolePart) {
+                        $rolePart = trim($rolePart);
+                        if (isset($this->roles[$rolePart])) {
+                            $authorRoles[$authorId][] = $this->roles[$rolePart];
                         } else {
-                            $roles = explode(',', strtolower($credit['role']));
-                            $authorRoles[$authorId] = [];
-                            foreach ($roles as $role) {
-                                $roleParts = explode('&', strtolower($role));
-                                foreach ($roleParts as $rolePart) {
-                                    $rolePart = trim($rolePart);
-                                    if (isset($this->roles[$rolePart])) {
-                                        $authorRoles[$authorId][] = $this->roles[$rolePart];
-                                    } else {
-                                        $this->logError('Pouet: missing role ' . $rolePart . ' ' . $id);
-                                        exit;
-                                    }
-                                }
-                            }
+                            $message = 'Pouet: missing role ' . $rolePart . ' ' . $id;
+                            $this->logError($message);
+                            throw new RuntimeException($message);
                         }
                     }
-
-                    $directCategories = [];
-                    $prodDataTypes = $prodData['types'] ?? [];
-                    foreach ($prodDataTypes as $type) {
-                        if (!empty($this->categories[$type])) {
-                            $directCategories[] = (int)$this->categories[$type];
-                        } elseif (!isset($this->categories[$type])) {
-                            $this->logError('Pouet: missing category ' . $type . ' ' . $prodData['name'] . ' ' . $prodData['id']);
-                            exit;
-                        }
-                    }
-
-                    $partyDto = null;
-                    $compo = '';
-                    $prodDataPlacings = $prodData['placings'] ?? [];
-                    foreach ($prodDataPlacings as $placing) {
-                        if (isset($placing['party'])) {
-                            $partyDto = new PartyRefDTO(
-                                title: $placing['party']['name'],
-                                year: $placing['year'] ?? null,
-                                place: $placing['ranking'] ?? null,
-                            );
-                        } else {
-                            $this->logError('Pouet: no party for placing ' . $id . ' ' . ($placing['compo_name'] ?? ''));
-                            exit;
-                        }
-                        if (isset($placing['compo_name'])) {
-                            $compoName = $placing['compo_name'];
-                            if (isset($this->compos[$compoName])) {
-                                $compo = $this->compos[$compoName];
-                            } else {
-                                $this->logError('Pouet: unknown compo ' . $id . ' ' . $compoName);
-                                exit;
-                            }
-                        }
-                        break;
-                    }
-
-
-                    $youtubeId = null;
-                    $prodDataDownloadLinks = $prodData['downloadLinks'] ?? [];
-                    foreach ($prodDataDownloadLinks as $link) {
-                        if ($link['type'] === 'youtube' && isset($link['link'])) {
-                            $ll = $link['link'];
-                            if (stripos($ll, 'https://youtu.be/') === 0) {
-                                $youtubeId = substr($ll, strlen('https://youtu.be/'));
-                            }
-                            if (stripos($ll, 'https://www.youtube.com/watch?v=') === 0) {
-                                $youtubeId = substr($ll, strlen('https://www.youtube.com/watch?v='));
-                            }
-                            if (stripos($ll, 'http://www.youtube.com/watch?v=') === 0) {
-                                $youtubeId = substr($ll, strlen('http://www.youtube.com/watch?v='));
-                            }
-                        }
-                    }
-
-
-                    $prodImages = [];
-                    if (isset($prodData['screenshot'])) {
-                        $prodImages[] = $prodData['screenshot'];
-                    }
-
-                    $releaseFileUrl = null;
-                    if (isset($prodData['download'])) {
-                        $url = $prodData['download'];
-                        if (stripos($url, 'files.scene.org') !== false) {
-                            $url = str_ireplace('/view/', '/get/', $url);
-                        }
-                        $releaseFileUrl = $url;
-                    }
-
-                    $hardwareRequired = [];
-                    foreach ($prodData['platforms'] as $platform) {
-                        $name = $platform['name'];
-                        if (isset($this->platforms[$name])) {
-                            $hardwareRequired[] = $this->platforms[$name];
-                        }
-                    }
-
-                    $releaseDto = new ReleaseImportDTO(
-                        id: $prodData['id'],
-                        title: $prodData['name'],
-                        year: null,
-                        language: [],
-                        version: '',
-                        releaseType: 'original',
-                        filePath: null,
-                        fileUrl: $releaseFileUrl,
-                        fileName: null,
-                        description: null,
-                        hardwareRequired: $hardwareRequired ?: null,
-                        labels: null,
-                        authors: null,
-                        publishers: null,
-                        undetermined: null,
-                        images: null,
-                        inlayImages: null,
-                        infoFiles: null,
-                        adFiles: null,
-                        md5: null,
-                    );
-
-                    $year = null;
-                    if (isset($prodData['releaseDate'])) {
-                        $ts = strtotime($prodData['releaseDate']);
-                        if ($ts !== false) {
-                            $year = (int)date('Y', $ts);
-                        }
-                    }
-
-                    $importIds = [];
-                    if (isset($prodData['demozoo'])) {
-                        $importIds['dzoo'] = $prodData['demozoo'];
-                        $importIds['zxd'] = $prodData['demozoo'];
-                    }
-
-                    $prodDto = new ProdImportDTO(
-                        id: $prodData['id'],
-                        title: $prodData['name'],
-                        altTitle: null,
-                        description: null,
-                        language: [],
-                        legalStatus: '',
-                        youtubeId: $youtubeId,
-                        externalLink: null,
-                        compo: $compo !== '' ? $compo : null,
-                        year: $year,
-                        ids: null,
-                        importIds: $importIds ?: null,
-                        labels: $labels ?: null,
-                        authorRoles: $authorRoles ?: null,
-                        groups: $groupsIds ?: null,
-                        publishers: [],
-                        undetermined: null,
-                        party: $partyDto,
-                        directCategories: $directCategories ?: null,
-                        categories: null,
-                        images: $prodImages ?: null,
-                        maps: null,
-                        inlayImages: null,
-                        rzx: null,
-                        compilationItems: null,
-                        seriesProds: null,
-                        articles: null,
-                        releases: [$releaseDto],
-                    );
-
-                    if ($prodElement = $this->prodsService->importProd($prodDto, $this->origin)) {
-                        $this->queueService->updateStatus($prodElement->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
-
-                        $this->updateReport($id, 'success');
-                        $this->markProgress('prod ' . $id . ' imported ' . $this->counter . ' ' . ($prodDto->title ?? '') . ' ' . $prodElement->id . ' ' . $prodElement->getUrl());
-                    }
-                } else {
-                    $this->updateReport($id, 'skipped');
-                    $this->markProgress('prod ' . $id . ' skipped');
                 }
             }
-            $id++;
+        }
+
+        $directCategories = [];
+        $prodDataTypes = $prodData['types'] ?? [];
+        foreach ($prodDataTypes as $type) {
+            $typeKey = $type;
+            if (!empty($this->categories[$typeKey])) {
+                $directCategories[] = (int)$this->categories[$typeKey];
+            } elseif (!isset($this->categories[$typeKey])) {
+                $message = 'Pouet: missing category ' . $typeKey . ' ' . $prodData['name'] . ' ' . $prodData['id'];
+                $this->logError($message);
+                throw new RuntimeException($message);
+            }
+        }
+
+        $partyDto = null;
+        $compo = '';
+        $prodDataPlacings = $prodData['placings'] ?? [];
+        foreach ($prodDataPlacings as $placing) {
+            if (isset($placing['party'])) {
+                $partyDto = new PartyRefDTO(
+                    title: $placing['party']['name'],
+                    year: $placing['year'] ?? null,
+                    place: $placing['ranking'] ?? null,
+                );
+            } else {
+                $message = 'Pouet: no party for placing ' . $id . ' ' . ($placing['compo_name'] ?? '');
+                $this->logError($message);
+                throw new RuntimeException($message);
+            }
+            if (isset($placing['compo_name'])) {
+                $compoName = strtolower($placing['compo_name']);
+                if (isset($this->compos[$compoName])) {
+                    $compo = $this->compos[$compoName];
+                } else {
+                    $message = 'Pouet: unknown compo ' . $id . ' ' . $placing['compo_name'];
+                    $this->logError($message);
+                    throw new RuntimeException($message);
+                }
+            }
+            break;
+        }
+
+
+        $youtubeId = null;
+        $prodDataDownloadLinks = $prodData['downloadLinks'] ?? [];
+        foreach ($prodDataDownloadLinks as $link) {
+            if ($link['type'] === 'youtube' && isset($link['link'])) {
+                $ll = $link['link'];
+                if (stripos($ll, 'https://youtu.be/') === 0) {
+                    $youtubeId = substr($ll, strlen('https://youtu.be/'));
+                }
+                if (stripos($ll, 'https://www.youtube.com/watch?v=') === 0) {
+                    $youtubeId = substr($ll, strlen('https://www.youtube.com/watch?v='));
+                }
+                if (stripos($ll, 'http://www.youtube.com/watch?v=') === 0) {
+                    $youtubeId = substr($ll, strlen('http://www.youtube.com/watch?v='));
+                }
+            }
+        }
+
+
+        $prodImages = [];
+        if (isset($prodData['screenshot'])) {
+            $prodImages[] = $prodData['screenshot'];
+        }
+
+        $releaseFileUrl = null;
+        if (isset($prodData['download'])) {
+            $url = $prodData['download'];
+            if (stripos($url, 'files.scene.org') !== false) {
+                $url = str_ireplace('/view/', '/get/', $url);
+            }
+            $releaseFileUrl = $url;
+        }
+
+        $hardwareRequired = [];
+        foreach ($prodData['platforms'] as $platform) {
+            $name = $platform['name'];
+            if (isset($this->platforms[$name])) {
+                $hardwareRequired[] = $this->platforms[$name];
+            }
+        }
+        // оставляем пустые значения как ты и хотел
+        $hardwareRequired = $hardwareRequired ?: null;
+
+        $releaseDto = new ReleaseImportDTO(
+            id: $prodData['id'],
+            title: $prodData['name'],
+            year: null,
+            language: [],
+            version: '',
+            releaseType: 'original',
+            filePath: null,
+            fileUrl: $releaseFileUrl,
+            fileName: null,
+            description: null,
+            hardwareRequired: $hardwareRequired,
+            labels: null,
+            authors: null,
+            publishers: null,
+            undetermined: null,
+            images: null,
+            inlayImages: null,
+            infoFiles: null,
+            adFiles: null,
+            md5: null,
+        );
+
+        $year = null;
+        if (isset($prodData['releaseDate'])) {
+            $ts = strtotime($prodData['releaseDate']);
+            if ($ts !== false) {
+                $year = (int)date('Y', $ts);
+            }
+        }
+
+        $importIds = [];
+        if (isset($prodData['demozoo'])) {
+            $importIds['dzoo'] = $prodData['demozoo'];
+            $importIds['zxd'] = $prodData['demozoo'];
+        }
+
+        $prodDto = new ProdImportDTO(
+            id: $prodData['id'],
+            title: $prodData['name'],
+            altTitle: null,
+            description: null,
+            language: [],
+            legalStatus: '',
+            youtubeId: $youtubeId,
+            externalLink: null,
+            compo: $compo !== '' ? $compo : null,
+            year: $year,
+            ids: null,
+            importIds: $importIds ?: null,
+            labels: $labels ?: null,
+            authorRoles: $authorRoles ?: null,
+            groups: $groupsIds ?: null,
+            publishers: [],
+            undetermined: null,
+            party: $partyDto,
+            directCategories: $directCategories ?: null,
+            categories: null,
+            images: $prodImages ?: null,
+            maps: null,
+            inlayImages: null,
+            rzx: null,
+            compilationItems: null,
+            seriesProds: null,
+            articles: null,
+            releases: [$releaseDto],
+        );
+
+        if ($prodElement = $this->prodsService->importProd($prodDto, $this->origin)) {
+            $this->queueService->updateStatus($prodElement->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
+
+            $this->updateReport($id, 'success');
+            $this->markProgress('prod ' . $id . ' imported ' . $this->counter . ' ' . ($prodDto->title ?? '') . ' ' . $prodElement->id . ' ' . $prodElement->getUrl());
         }
     }
 
@@ -661,8 +713,10 @@ class PouetImport extends errorLogger
             $string = $this->attemptDownload($link);
         }
         if ($string) {
-            if ($json = json_decode($string, true)) {
+            $json = json_decode($string, true);
+            if (is_array($json)) {
                 if (!empty($json['success']) && !empty($json['prod'])) {
+                    /** @var PouetProd $prod */
                     $prodData = $json['prod'];
                 } else {
                     $this->markProgress('prod ' . $id . ' not exists');
@@ -673,43 +727,26 @@ class PouetImport extends errorLogger
             $this->markProgress('prod ' . $id . ' not downloaded');
             $this->updateReport($id, 'notdownloaded');
         }
-        /**
-         * @var PouetProd $prodData
-         */
+
+        /** @var PouetProd|null $prod */
         return $prodData;
     }
 
     protected function attemptDownload(string $link): bool|string
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $link);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0',
-            'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Language: en-US,en;q=0.5',
-            'Cache-Control: max-age=0',
-        ]);
-        curl_setopt($ch, CURLOPT_VERBOSE, true);
-        $verbose = fopen('php://temp', 'w+');
-        curl_setopt($ch, CURLOPT_STDERR, $verbose);
-
-        $string = curl_exec($ch);
-        curl_close($ch);
-
-        if (!$string) {
-            rewind($verbose);
-            $verboseLog = stream_get_contents($verbose);
+        try {
+            $response = $this->http->get($link);
+            $body = (string)$response->getBody();
+            return $body !== '' ? $body : false;
+        } catch (GuzzleException) {
+            return false;
         }
-        return $string;
     }
 
     #[Override]
     protected function logError($message, $level = null): void
     {
-        $this->markProgress($message);
+        $this->markProgress((string)$message);
         parent::logError($message, $level);
     }
 
@@ -721,7 +758,8 @@ class PouetImport extends errorLogger
             $previousTime = microtime(true);
         }
         $endTime = microtime(true);
-        echo $text . ' ' . sprintf('%.2f', $endTime - $previousTime) . '<br/>';
+        echo '<div style="font-family:monospace;">' . htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') .
+            ' <span style="color:#888;">' . sprintf('%.2f', $endTime - $previousTime) . "s</span></div>\n";
         flush();
         $previousTime = $endTime;
     }
@@ -740,19 +778,19 @@ class PouetImport extends errorLogger
         }
     }
 
-    protected function loadMaxImportedId()
+    protected function loadMaxImportedId(): int
     {
         if ($record = $this->db->table('import_pouet')
             ->whereIn('status', ['notexists', 'success', 'skipped'])
             ->orderBy('id', 'desc')
             ->limit(1)
             ->value('id')) {
-            return $record;
+            return (int)$record;
         }
         return 0;
     }
 
-    protected function loadMaxPossibleId()
+    protected function loadMaxPossibleId(): ?int
     {
         $link = 'https://api.pouet.net/v1/front-page/latest-added/';
         $string = $this->attemptDownload($link);
@@ -769,13 +807,25 @@ class PouetImport extends errorLogger
             $string = $this->attemptDownload($link);
         }
         if ($string) {
-            if ($json = json_decode($string, true)) {
-                if (!empty($json['success']) && !empty($json['prods']) && !empty($json['prods'][0])) {
-                    $prodData = $json['prods'][0];
-                    return $prodData['id'];
-                }
+            $json = json_decode($string, true);
+            if (is_array($json) && !empty($json['success']) && !empty($json['prods']) && !empty($json['prods'][0])) {
+                $prodData = $json['prods'][0];
+                return isset($prodData['id']) ? (int)$prodData['id'] : null;
             }
         }
         return null;
+    }
+
+    /**
+     * @param array<string,string> $map
+     * @return array<string,string>
+     */
+    private function normalizeKeysToLower(array $map): array
+    {
+        $normalized = [];
+        foreach ($map as $k => $v) {
+            $normalized[strtolower($k)] = $v;
+        }
+        return $normalized;
     }
 }
