@@ -13,7 +13,7 @@ class batchUploadFormZxProdsUploadForm extends structureElementAction
     {
         if ($structureElement->final) {
             $structureElement->setViewName('uploadForm');
-            if ($parentElement = $structureManager->getElementsFirstParent($structureElement->getId())) {
+            if ($parentElement = $structureManager->getElementsFirstParent($structureElement->id)) {
                 if ($parentElement->structureType === 'author' || $parentElement->structureType === 'group'
                     || $parentElement->structureType === 'authorAlias' || $parentElement->structureType === 'groupAlias') {
                     $structureElement->publishers = [$parentElement];

@@ -86,7 +86,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                     $zxProdElement->persistElementData();
                     $zxProdElement->logCreation();
 
-                    $linksManager->unLinkElements($structureElement->getId(), $zxProdElement->getPersistedId(), 'structure');
+                    $linksManager->unLinkElements($structureElement->id, $zxProdElement->getPersistedId(), 'structure');
 
                     foreach ($this->getPrivileges() as $privilege) {
                         $privilegesManager->setPrivilege(

@@ -16,14 +16,14 @@ class batchUploadMusicUploadForm extends structureElementAction
             $linksManager = $this->getService('linksManager');
             $user = $this->getService('user');
 
-            $currentElement = $structureManager->getElementsFirstParent($structureElement->getId());
+            $currentElement = $structureManager->getElementsFirstParent($structureElement->id);
             if ($musicCatalogueId = $structureManager->getElementIdByMarker('musicCatalogue')) {
                 $pathsManager = $this->getService('PathsManager');
                 $cachePath = $pathsManager->getPath('uploadsCache');
                 $pathsManager->ensureDirectory($cachePath);
 
                 foreach ($musicsInfo as $musicInfo) {
-                    $zxMusicElement = $structureManager->createElement('zxMusic', 'show', $structureElement->getId());
+                    $zxMusicElement = $structureManager->createElement('zxMusic', 'show', $structureElement->id);
                     $temporaryFile = $cachePath . basename($musicInfo['tmp_name']);
                     $originalFileName = $musicInfo['name'];
 

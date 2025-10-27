@@ -20,7 +20,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
             $linksManager = $this->getService('linksManager');
             $user = $this->getService('user');
 
-            $currentElement = $structureManager->getElementsFirstParent($structureElement->getId());
+            $currentElement = $structureManager->getElementsFirstParent($structureElement->id);
 
             $cachePath = $this->getService('PathsManager')->getPath('uploadsCache');
 
@@ -31,7 +31,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
                 if ($pictureElement = $structureManager->createElement(
                     'zxPicture',
                     'show',
-                    $structureElement->getId()
+                    $structureElement->id
                 )) {
                     $temporaryFile = $cachePath . basename($imageInfo['tmp_name']);
                     $originalFileName = $imageInfo['name'];
