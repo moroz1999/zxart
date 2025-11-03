@@ -61,13 +61,12 @@ readonly final class ProdResolver
         $prodElementAltTitle = mb_strtolower(trim(html_entity_decode($prodElement->altTitle)));
         $prodLabelTitle = mb_strtolower(trim($prodLabel->title ?? ''));
         $prodLabelTheTitle = 'the ' . $prodLabelTitle;
+
         if ($prodLabelHasYear && $prodElementHasYear && $prodLabel->year !== $prodElement->year) {
             return 0;
         }
-        if (str_contains($prodLabelTitle, 'crack')) {
-            return 0;
-        }
-        if (str_contains($prodLabelTitle, 'intro')) {
+
+        if (str_contains($prodLabelTitle, 'crack') || str_contains($prodLabelTitle, 'intro')) {
             return 0;
         }
 

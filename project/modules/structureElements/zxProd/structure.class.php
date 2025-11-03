@@ -18,6 +18,7 @@ use ZxArt\ZxProdCategories\CompilationCategoryIds;
  * @property int $year
  * @property string $youtubeId
  * @property string $description
+ * @property string $instructions
  * @property string $legalStatus
  * @property string $compo
  * @property string $tagsText
@@ -104,6 +105,7 @@ class zxProdElement extends ZxArtItem implements
         $moduleStructure['year'] = 'naturalNumber';
         $moduleStructure['youtubeId'] = 'text';
         $moduleStructure['description'] = 'pre';
+        $moduleStructure['instructions'] = 'html';
         $moduleStructure['votes'] = 'floatNumber';
 
         $moduleStructure['categories'] = 'numbersArray';
@@ -588,7 +590,7 @@ class zxProdElement extends ZxArtItem implements
             if ($this->is3aDenied()) {
                 $types = ['zxdb', 'vt', 'dzoo', 'pouet', 'zxd', 'maps'];
             } else {
-                $types = ['3a', 'zxdb', 'vt', 'dzoo', 'pouet', 'zxd', 'maps'];
+                $types = ['3a', 'zxdb', 'vt', 'dzoo', 'pouet', 'zxd', 'maps', 'worldofsam'];
             }
 
             $query = $db->table('import_origin')
@@ -659,6 +661,14 @@ class zxProdElement extends ZxArtItem implements
                             'image' => 'icon_maps.png',
                             'name' => $translationsManager->getTranslationByName('links.link_maps'),
                             'url' => 'https://maps.speccy.cz/map.php?id=' . $row['importId'] . '&sort=0&part=0&ath=0',
+                            'id' => $row['importId'],
+                        ];
+                    }elseif ($row['importOrigin'] === 'worldofsam') {
+                        $this->linksInfo[] = [
+                            'type' => 'worldofsam',
+                            'image' => 'icon_worldofsam.png',
+                            'name' => $translationsManager->getTranslationByName('links.link_worldofsam'),
+                            'url' => 'https://www.worldofsam.org/products/' . $row['importId'],
                             'id' => $row['importId'],
                         ];
                     }

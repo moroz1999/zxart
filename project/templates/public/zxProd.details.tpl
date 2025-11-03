@@ -274,6 +274,12 @@
             {$description}
         </div>
     {/if}
+    {if $element->instructions !== ''}
+        <h2>{translations name='zxprod.instructions'}</h2>
+        <div class="zxprod_details_instructions">
+            {$element->instructions}
+        </div>
+    {/if}
 
     {if $element->compilationItems || $element->compilations || $element->seriesProds}
         <script>

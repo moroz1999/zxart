@@ -311,8 +311,8 @@ class ProdsService extends ElementsManager
             $element->altTitle = $dto->altTitle;
             $changed = true;
         }
-        if (!empty($dto->legalStatus) && (empty($element->legalStatus) || $justCreated) && $element->legalStatus != $dto->legalStatus) {
-            $element->legalStatus = $dto->legalStatus;
+        if (!empty($dto->legalStatus) && (empty($element->legalStatus) || $justCreated) && $element->legalStatus !== $dto->legalStatus->name) {
+            $element->legalStatus = $dto->legalStatus->name;
             $changed = true;
         }
         if (!empty($dto->year) && (($element->year != $dto->year) && (!$element->year || $this->forceUpdateYear || $justCreated))) {
@@ -325,6 +325,10 @@ class ProdsService extends ElementsManager
         }
         if (!empty($dto->description) && !$element->description) {
             $element->description = $dto->description;
+            $changed = true;
+        }
+        if ($dto->instructions !== null && $element->instructions === '') {
+            $element->instructions = $dto->instructions;
             $changed = true;
         }
         if (!empty($dto->party) && (!$element->party || (!empty($dto->party->place) && !$element->partyplace))) {
@@ -706,7 +710,6 @@ class ProdsService extends ElementsManager
     private function importRelease(ReleaseImportDTO $dto, string $prodId, string $origin): bool|zxReleaseElement
     {
         $releaseId = $dto->id;
-        $sanitizedTitle = $this->sanitizeTitle($dto->title);
 
         $element = $this->getElementByImportId($releaseId, $origin, 'release');
         if (!$element) {
@@ -721,28 +724,7 @@ class ProdsService extends ElementsManager
         }
         if (!$element) {
             $element = $this->createRelease(
-                new ReleaseImportDTO(
-                    id: $dto->id,
-                    title: $sanitizedTitle,
-                    year: $dto->year,
-                    language: $dto->language,
-                    version: $dto->version,
-                    releaseType: $dto->releaseType,
-                    filePath: $dto->filePath,
-                    fileUrl: $dto->fileUrl,
-                    fileName: $dto->fileName,
-                    description: $dto->description,
-                    hardwareRequired: $dto->hardwareRequired,
-                    labels: $dto->labels,
-                    authors: $dto->authors,
-                    publishers: $dto->publishers,
-                    undetermined: $dto->undetermined,
-                    images: $dto->images,
-                    inlayImages: $dto->inlayImages,
-                    infoFiles: $dto->infoFiles,
-                    adFiles: $dto->adFiles,
-                    md5: $dto->md5,
-                ),
+                $dto,
                 $prodId,
                 $origin
             );
@@ -772,10 +754,10 @@ class ProdsService extends ElementsManager
     private function updateRelease(zxReleaseElement $element, ReleaseImportDTO $dto, string $origin, bool $justCreated = false): void
     {
         $changed = false;
-
-        if (($this->forceUpdateTitles || !$element->title) && !empty($dto->title)) {
-            $element->title = $dto->title;
-            $element->structureName = $dto->title;
+        $sanitizedTitle = $this->sanitizeTitle($dto->title ?? '');
+        if (($this->forceUpdateTitles || !$element->title) && $sanitizedTitle !== '') {
+            $element->title = $sanitizedTitle;
+            $element->structureName = $sanitizedTitle;
             $changed = true;
         }
         if ((!$element->year || $this->forceUpdateYear) && !empty($dto->year)) {
@@ -948,7 +930,7 @@ class ProdsService extends ElementsManager
         return $result;
     }
 
-    protected function sanitizeTitle($title)
+    protected function sanitizeTitle(string $title)
     {
         $articles = ['The', 'La', 'El', 'A'];
         foreach ($articles as $article) {

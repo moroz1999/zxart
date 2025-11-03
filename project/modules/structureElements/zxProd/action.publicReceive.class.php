@@ -58,6 +58,7 @@ class publicReceiveZxProd extends structureElementAction
             'publishers',
             'groups',
             'description',
+            'instructions',
             'tagsText',
             'denyVoting',
             'denyComments',

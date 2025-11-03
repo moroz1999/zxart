@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ZxArt\Import\Prods\Dto;
 
 use ZxArt\Import\Labels\Label;
+use ZxArt\Prods\LegalStatus;
 
 final readonly class ProdImportDTO
 {
@@ -12,9 +13,10 @@ final readonly class ProdImportDTO
         public ?string      $title = null,
         public ?string      $altTitle = null,
         public ?string      $description = null,
+        public ?string      $instructions = null,
         /** @var string[]|null */
         public ?array       $language = null,
-        public ?string      $legalStatus = null,
+        public ?LegalStatus $legalStatus = null,
         public ?string      $youtubeId = null,
         public ?string      $externalLink = null,
         public ?string      $compo = null,

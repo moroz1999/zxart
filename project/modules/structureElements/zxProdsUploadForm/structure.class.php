@@ -19,6 +19,7 @@
  * @property string $externalLink
  * @property string $year
  * @property string $description
+ * @property string $instructions
  * @property int $denyVoting
  * @property int $denyComments
  */
@@ -55,12 +56,12 @@ class zxProdsUploadFormElement extends ZxArtItemUploadFormElement
         $moduleStructure['year'] = 'naturalNumber';
         $moduleStructure['youtubeId'] = 'text';
         $moduleStructure['description'] = 'pre';
+        $moduleStructure['instructions'] = 'html';
 
         $moduleStructure['categories'] = 'array';
         $moduleStructure['publishers'] = 'array';
         $moduleStructure['groups'] = 'array';
         $moduleStructure['tagsText'] = 'text';
-        $moduleStructure['description'] = 'pre';
         $moduleStructure['denyVoting'] = 'checkbox';
         $moduleStructure['denyComments'] = 'checkbox';
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace ZxArt\Import\Services;
 
@@ -659,7 +660,7 @@ class PouetImport extends errorLogger
             altTitle: null,
             description: null,
             language: [],
-            legalStatus: '',
+            legalStatus: null,
             youtubeId: $youtubeId,
             externalLink: null,
             compo: $compo !== '' ? $compo : null,

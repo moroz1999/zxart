@@ -57,6 +57,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                     $zxProdElement->publishers = array_map(static fn($id) => $structureManager->getElementById($id), $structureElement->publishers);
                     $zxProdElement->year = $structureElement->year;
                     $zxProdElement->description = $structureElement->description;
+                    $zxProdElement->instructions = $structureElement->instructions;
                     $zxProdElement->denyVoting = $structureElement->denyVoting;
                     $zxProdElement->denyComments = $structureElement->denyComments;
                     $zxProdElement->legalStatus = $structureElement->legalStatus;
@@ -149,6 +150,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
             'compo',
             'year',
             'description',
+            'instructions',
             'categories',
             'publishers',
             'groups',

@@ -172,6 +172,15 @@
 				{include file=$theme->template('component.form_help.tpl') structureType='zxProd' name="description"}
 			</td>
 		</tr>
+		<tr {if $formErrors.instructions} class="form_error"{/if}>
+			<td class="form_label">
+				{translations name='zxprod.instructions'}:
+			</td>
+			<td class="form_field">
+				<textarea class='textarea_component' name="{$formNames.instructions}">{$formData.instructions}</textarea>
+				{include file=$theme->template('component.form_help.tpl') structureType='zxProd' name="instructions"}
+			</td>
+		</tr>
 		<tr {if $formErrors.tagsText} class="form_error"{/if}>
 			<td class="form_label">
 				{translations name='field.tagstext'}:

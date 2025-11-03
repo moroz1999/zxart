@@ -21,7 +21,8 @@
     "php-di/php-di": "^7.0",
     "ext-libxml": "*",
     "ext-redis": "*",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "ezyang/htmlpurifier": "^4.19"
   },
   "config": {
     "allow-plugins": {
