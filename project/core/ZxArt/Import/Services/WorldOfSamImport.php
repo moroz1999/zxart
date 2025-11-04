@@ -24,8 +24,8 @@ use ZxArt\ZxProdCategories\CategoryIds;
 
 /**
  * todo:
- * 1. matcher for prods - exclude multiplatform mixing
  * 3. check for series handling
+ * 4. Rick Dangerous - LINKS IN INSTRUCTIONS
  */
 
 /**
@@ -66,7 +66,7 @@ final class WorldOfSamImport extends errorLogger
     /**
      * Flag to optionally restrict importing to a single product for debugging.
      */
-    protected ?string $debugSlug = 'quatris';
+    protected ?string $debugSlug = 'rick-dangerous';
 
     /**
      * HTTP client used to fetch pages. Configured with a reasonable timeout
@@ -127,8 +127,8 @@ final class WorldOfSamImport extends errorLogger
         $authorsService->setForceUpdateCity(false);
         $this->prodsService->setForceUpdateCategories(false);
         $this->prodsService->setForceUpdateYoutube(true);
-        $this->prodsService->setForceUpdateGroups(false);
-        $this->prodsService->setForceUpdateAuthors(false);
+        $this->prodsService->setForceUpdateGroups(true);
+        $this->prodsService->setForceUpdateAuthors(true);
         $this->prodsService->setAddImages(true);
         $this->prodsService->setForceUpdateImages(true);
         $this->prodsService->setUpdateExistingProds(true);

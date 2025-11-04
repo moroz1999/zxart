@@ -13,12 +13,12 @@ use zxProdElement;
 readonly final class ProdResolver
 {
     public function __construct(
-        private ProdsRepository  $prodsRepository,
-        private structureManager $structureManager,
-        private Resolver         $resolver,
+        private ProdsRepository              $prodsRepository,
+        private structureManager             $structureManager,
+        private Resolver                     $resolver,
+        private HardwareCompatibilityService $hardwareCompatibilityService,
     )
     {
-
     }
 
     public function resolve(ProdImportDTO $prodLabel, $matchProdsWithoutYear = false): ?zxProdElement
@@ -57,6 +57,12 @@ readonly final class ProdResolver
         if (!$matchProdsWithoutYear && !$prodElementHasYear) {
             return 0;
         }
+
+        // Hardware compatibility via releases: early exit if incompatible
+        if (!$this->hardwareCompatibilityService->areProdAndDtoCompatible($prodLabel, $prodElement)) {
+            return 0;
+        }
+
         $prodElementTitle = mb_strtolower(trim(html_entity_decode($prodElement->title)));
         $prodElementAltTitle = mb_strtolower(trim(html_entity_decode($prodElement->altTitle)));
         $prodLabelTitle = mb_strtolower(trim($prodLabel->title ?? ''));

@@ -42,24 +42,24 @@ class ProdsService extends ElementsManager
     protected const string TABLE = ProdsRepository::TABLE;
 
     protected int $defaultCategoryId = CategoryIds::MISC->value;
-    protected bool $forceUpdateYear = false;
-    protected bool $forceUpdateYoutube = false;
-    protected bool $forceUpdateExternalLink = false;
-    protected bool $forceUpdateCategories = false;
-    protected bool $forceUpdateImages = false;
-    protected bool $forceUpdateTitles = false;
-    protected bool $matchProdsWithoutYear = false;
-    protected bool $forceUpdateAuthors = false;
-    protected bool $forceUpdateGroups = false;
-    protected bool $forceUpdatePublishers = false;
-    protected bool $updateExistingProds = false;
-    protected bool $updateExistingReleases = false;
-    protected bool $forceUpdateReleaseAuthors = false;
-    protected bool $forceUpdateReleasePublishers = false;
-    protected bool $forceUpdateReleaseType = false;
-    protected bool $forceUpdateReleaseFiles = false;
-    protected bool $addImages = false;
-    protected bool $resizeImages = false;
+    private bool $forceUpdateYear = false;
+    private bool $forceUpdateYoutube = false;
+    private bool $forceUpdateExternalLink = false;
+    private bool $forceUpdateCategories = false;
+    private bool $forceUpdateImages = false;
+    private bool $forceUpdateTitles = false;
+    private bool $matchProdsWithoutYear = false;
+    private bool $forceUpdateAuthors = false;
+    private bool $forceUpdateGroups = false;
+    private bool $forceUpdatePublishers = false;
+    private bool $updateExistingProds = false;
+    private bool $updateExistingReleases = false;
+    private bool $forceUpdateReleaseAuthors = false;
+    private bool $forceUpdateReleasePublishers = false;
+    private bool $forceUpdateReleaseType = false;
+    private bool $forceUpdateReleaseFiles = false;
+    private bool $addImages = false;
+    private bool $resizeImages = false;
 
     protected array $columnRelations = [];
     protected array $releaseColumnRelations = [];
@@ -311,7 +311,7 @@ class ProdsService extends ElementsManager
             $element->altTitle = $dto->altTitle;
             $changed = true;
         }
-        if (!empty($dto->legalStatus) && (empty($element->legalStatus) || $justCreated) && $element->legalStatus !== $dto->legalStatus->name) {
+        if (!empty($dto->legalStatus) && (empty($element->legalStatus) || $element->legalStatus === 'unknown' || $justCreated) && $element->legalStatus !== $dto->legalStatus->name) {
             $element->legalStatus = $dto->legalStatus->name;
             $changed = true;
         }
@@ -327,7 +327,7 @@ class ProdsService extends ElementsManager
             $element->description = $dto->description;
             $changed = true;
         }
-        if ($dto->instructions !== null && $element->instructions === '') {
+        if ($dto->instructions !== null && ($element->instructions === '' || $element->instructions === null)) {
             $element->instructions = $dto->instructions;
             $changed = true;
         }
@@ -552,7 +552,7 @@ class ProdsService extends ElementsManager
         $this->structureManager->setNewElementLinkType($element->getConnectedFileType($propertyName));
         $uploadsPath = $this->pathsManager->getPath('uploads');
 
-        $originalFileName = basename($fileUrl);
+        $originalFileName = urldecode(basename($fileUrl));
         $fileExists = false;
         foreach ($existingFiles as $existingFile) {
             if ($originalFileName === urldecode($existingFile->fileName)) {

@@ -110,7 +110,7 @@ class AuthorsService extends ElementsManager
 
     public function createAuthor(PersonLabel $dto, $origin): ?authorElement
     {
-        $title = trim((string)($dto->title ?? ''));
+        $title = trim($dto->name ?? '');
         $realName = trim($dto->realName ?? '');
 
         if ($title === '' && $realName !== '') {
@@ -290,7 +290,7 @@ class AuthorsService extends ElementsManager
 
     protected function createAuthorAlias(PersonLabel $authorAlias, string $origin): ?authorAliasElement
     {
-        $title = trim((string)($authorAlias->title ?? ''));
+        $title = trim($authorAlias->name ?? '');
         if ($title === '') {
             return null;
         }
