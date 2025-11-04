@@ -1,10 +1,13 @@
 <?php
 
+use Illuminate\Database\Connection;
+
 trait AuthorTrait
 {
     protected $years = [];
     protected $worksList;
     protected $linksInfo;
+
     public function getYearsWorks($type = 'authorPicture')
     {
         if (!isset($this->years[$type])) {
@@ -30,9 +33,6 @@ trait AuthorTrait
 
     public function checkParentLetter(): void
     {
-        /**
-         * @var linksManager $linksManager
-         */
         $linksManager = $this->getService('linksManager');
         $letterId = $this->getLetterId($this->title);
 
@@ -41,9 +41,6 @@ trait AuthorTrait
             if ($link->parentStructureId != $letterId) {
                 $linksManager->unLinkElements($link->parentStructureId, $this->id);
                 $linksManager->linkElements($letterId, $this->id);
-                /**
-                 * @var structureManager $structureManager
-                 */
                 $structureManager = $this->getService('structureManager');
                 $structureManager->regenerateStructureInfo($this);
             }
@@ -57,7 +54,7 @@ trait AuthorTrait
      */
     protected function getLettersListMarker(string $type)
     {
-        if ($type == 'admin') {
+        if ($type === 'admin') {
             return 'authors';
         } else {
             return 'authorsmenu';
@@ -68,19 +65,16 @@ trait AuthorTrait
     {
         if ($this->linksInfo === null) {
             $this->linksInfo = [];
-            /**
-             * @var translationsManager $translationsManager
-             */
             $translationsManager = $this->getService('translationsManager');
 
             if ($this->is3aDenied()) {
-                $types = ['zxdb', 'pouet', 's4e'];
+                $types = ['zxdb', 'pouet', 's4e', 'worldofsam'];
             } else {
-                $types = ['3a', 'zxdb', 'pouet', 's4e'];
+                $types = ['3a', 'zxdb', 'pouet', 's4e', 'worldofsam'];
             }
 
             /**
-             * @var \Illuminate\Database\Connection $db
+             * @var Connection $db
              */
             $db = $this->getService('db');
             $query = $db->table('import_origin')
@@ -89,7 +83,7 @@ trait AuthorTrait
                 ->whereIn('importOrigin', $types);
             if ($rows = $query->get()) {
                 foreach ($rows as $row) {
-                    if ($row['importOrigin'] == 'zxdb') {
+                    if ($row['importOrigin'] === 'zxdb') {
                         $this->linksInfo[] = [
                             'type' => 'sc',
                             'image' => 'icon_sc.png',
@@ -97,7 +91,7 @@ trait AuthorTrait
                             'url' => 'https://spectrumcomputing.co.uk/index.php?cat=999&label_id=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] == '3a') {
+                    } elseif ($row['importOrigin'] === '3a') {
                         $this->linksInfo[] = [
                             'type' => '3a',
                             'image' => 'icon_3a.png',
@@ -105,7 +99,7 @@ trait AuthorTrait
                             'url' => 'https://zxaaa.net/view_demos.php?a=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] == 'vt') {
+                    } elseif ($row['importOrigin'] === 'vt') {
                         $this->linksInfo[] = [
                             'type' => 'vt',
                             'image' => 'icon_vt.png',
@@ -113,7 +107,7 @@ trait AuthorTrait
                             'url' => 'https://vtrd.in/release.php?r=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] == 'pouet') {
+                    } elseif ($row['importOrigin'] === 'pouet') {
                         $this->linksInfo[] = [
                             'type' => 'pouet',
                             'image' => 'icon_pouet.png',
@@ -121,12 +115,20 @@ trait AuthorTrait
                             'url' => 'https://www.pouet.net/user.php?who=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    }elseif ($row['importOrigin'] == 's4e') {
+                    } elseif ($row['importOrigin'] === 's4e') {
                         $this->linksInfo[] = [
                             'type' => 's4e',
                             'image' => 'icon_s4e.png',
                             'name' => $translationsManager->getTranslationByName('links.link_s4e'),
-                            'url' => 'https://spectrum4ever.org/fulltape.php?go=releases&id=' . $row['importId'].'&by=cracker',
+                            'url' => 'https://spectrum4ever.org/fulltape.php?go=releases&id=' . $row['importId'] . '&by=cracker',
+                            'id' => $row['importId'],
+                        ];
+                    } elseif ($row['importOrigin'] === 'worldofsam') {
+                        $this->linksInfo[] = [
+                            'type' => 'worldofsam',
+                            'image' => 'icon_worldofsam.png',
+                            'name' => $translationsManager->getTranslationByName('links.link_worldofsam'),
+                            'url' => 'https://www.worldofsam.org/people/' . $row['importId'],
                             'id' => $row['importId'],
                         ];
                     }
@@ -162,7 +164,7 @@ trait AuthorTrait
                 ];
             }
         }
-        if ($this->structureType == 'author') {
+        if ($this->structureType === 'author') {
             if ($aliasElements = $this->getAliasElements()) {
                 /**
                  * @var authorAliasElement $aliasElement

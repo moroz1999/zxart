@@ -37,7 +37,7 @@ trait Group
              */
             $translationsManager = $this->getService('translationsManager');
 
-            $types = ['3a', 'zxdb', 's4e'];
+            $types = ['3a', 'zxdb', 's4e', 'worldofsam'];
 
 
             /**
@@ -72,6 +72,14 @@ trait Group
                             'image' => 'icon_s4e.png',
                             'name' => $translationsManager->getTranslationByName('links.link_s4e'),
                             'url' => 'https://spectrum4ever.org/fulltape.php?go=studio&id=' . $row['importId'],
+                            'id' => $row['importId'],
+                        ];
+                    } elseif ($row['importOrigin'] === 'worldofsam') {
+                        $this->linksInfo[] = [
+                            'type' => 'worldofsam',
+                            'image' => 'icon_worldofsam.png',
+                            'name' => $translationsManager->getTranslationByName('links.link_worldofsam'),
+                            'url' => 'https://www.worldofsam.org/people/' . $row['importId'],
                             'id' => $row['importId'],
                         ];
                     }

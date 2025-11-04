@@ -19,7 +19,7 @@ class Sam extends controllerApplication
      */
     public function initialize()
     {
-        ini_set("max_execution_time", 60 * 30);
+        ini_set("max_execution_time", 60 * 60 * 8);
         ignore_user_abort(true);
         $this->startSession('crontab');
         $this->createRenderer();

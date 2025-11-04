@@ -626,16 +626,16 @@ class ProdsService extends ElementsManager
 
     }
 
-    private function importElementFiles(zxReleaseElement|zxProdElement $element, array $images, string $propertyName = 'connectedFile'): void
+    private function importElementFiles(zxReleaseElement|zxProdElement $element, array $fileUrls, string $propertyName = 'connectedFile'): void
     {
-        if ($images === []) {
+        if ($fileUrls === []) {
             return;
         }
         $existingFiles = $element->getFilesList($propertyName);
         if (!$existingFiles || $this->addImages) {
-            foreach ($images as $imageUrl) {
+            foreach ($fileUrls as $fileUrl) {
                 try {
-                    $this->importElementFile($element, $imageUrl, $existingFiles, '', $propertyName);
+                    $this->importElementFile($element, $fileUrl, $existingFiles, '', $propertyName);
                 } catch (ReleaseDownloadException $e) {
                     $this->logError($e->getMessage());
                 }

@@ -95,16 +95,18 @@
 	</td>
 </tr>
 {$files1List = $element->getImagesList()}
-{if $files1List}
+{$filesList = $element->getFilesList('infoFilesSelector')}
+{if $filesList || $files1List}
 	<tr class="zxrelease-images">
 		<td class='zxrelease_table_images' colspan="16">
-			{include file=$theme->template('zxItem.images.tpl') filesList = $files1List preset='prodImage'}
-			{if $filesList = $element->getFilesList('infoFilesSelector')}
+			{if $files1List}
+			    {include file=$theme->template('zxItem.images.tpl') filesList = $files1List preset='prodImage'}
+			{/if}
+			{if $filesList}
 				<div class="zxrelease_table_manuals">
 					{include file=$theme->template('zxItem.files.tpl') filesList = $filesList newWindow=true}
 				</div>
 			{/if}
-
 		</td>
 	</tr>
 {/if}

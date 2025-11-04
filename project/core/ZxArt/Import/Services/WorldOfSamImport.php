@@ -45,7 +45,7 @@ final class WorldOfSamImport extends errorLogger
      * Maximum number of products to import per run. Set to a high value so we
      * effectively import everything in one go when possible.
      */
-    protected int $maxCounter = 10;
+    protected int $maxCounter = 0;
 
     /**
      * Tracks how many products have been processed in the current run.
@@ -60,7 +60,7 @@ final class WorldOfSamImport extends errorLogger
     /**
      * Flag to optionally restrict importing to a single product for debugging.
      */
-    protected ?string $debugSlug = 'b-dos-17n';
+    protected ?string $debugSlug = null;
 
     /**
      * HTTP client used to fetch pages. Configured with a reasonable timeout
@@ -308,30 +308,27 @@ final class WorldOfSamImport extends errorLogger
             }
         }
 
-        // Download files
-        $downloadLinks = [];
-        $dlEls = $doc->querySelectorAll('div.field-node--field-download a');
-        foreach ($dlEls as $dl) {
-            /** @var DOMElement $dl */
-            $fileUrl = $dl->getAttribute('href');
+        $infoFiles = [];
+        $releaseDownloadLinks = [];
+
+        $downloadAnchors = $doc->querySelectorAll('div.field-node--field-download a, div.field-node--field-download-public a');
+
+        foreach ($downloadAnchors as $anchor) {
+            /** @var DOMElement $anchor */
+            $fileUrl = $anchor->getAttribute('href');
             if (!str_starts_with($fileUrl, 'http')) {
                 $fileUrl = 'https://www.worldofsam.org' . $fileUrl;
             }
-            $fileName = trim($dl->textContent);
-            $downloadLinks[] = [
-                'url' => $fileUrl,
-                'name' => $fileName,
-            ];
-        }
-        $dlEls = $doc->querySelectorAll('div.field-node--field-download-public a');
-        foreach ($dlEls as $dl) {
-            /** @var DOMElement $dl */
-            $fileUrl = $dl->getAttribute('href');
-            if (!str_starts_with($fileUrl, 'http')) {
-                $fileUrl = 'https://www.worldofsam.org' . $fileUrl;
+            $fileName = trim($anchor->textContent);
+
+            // Decide by filename extension only
+            $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION) ?: '');
+            if ($extension === 'pdf' || $extension === 'txt') {
+                $infoFiles[] = $fileUrl;
+                continue;
             }
-            $fileName = trim($dl->textContent);
-            $downloadLinks[] = [
+
+            $releaseDownloadLinks[] = [
                 'url' => $fileUrl,
                 'name' => $fileName,
             ];
@@ -503,7 +500,7 @@ final class WorldOfSamImport extends errorLogger
         // Build releases
         $releases = [];
         $releaseIndex = 0;
-        foreach ($downloadLinks as $dl) {
+        foreach ($releaseDownloadLinks as $dl) {
             $releaseId = $slug;
             if ($releaseIndex > 0) {
                 $releaseId .= '-' . $releaseIndex;
@@ -513,7 +510,7 @@ final class WorldOfSamImport extends errorLogger
             if ($categoryId !== $this->categories['Demo'] && str_contains($title, 'demo')) {
                 $releaseType = 'demo';
             }
-            $releaseIndex++;
+
             $releases[] = new ReleaseImportDTO(
                 id: $releaseId,
                 title: $title,
@@ -531,10 +528,12 @@ final class WorldOfSamImport extends errorLogger
                 undetermined: null,
                 images: null,
                 inlayImages: null,
-                infoFiles: null,
+                infoFiles: $releaseIndex === 0 && $infoFiles !== [] ? $infoFiles : null,
                 adFiles: null,
                 md5: null,
             );
+
+            $releaseIndex++;
         }
 
         if ($releases === [] && $seriesProdIds === []) {
@@ -547,6 +546,7 @@ final class WorldOfSamImport extends errorLogger
                 title: $title,
                 releaseType: 'unknown',
                 hardwareRequired: $hardwareRequired,
+                infoFiles: $infoFiles !== [] ? $infoFiles : null,
             );
         }
 

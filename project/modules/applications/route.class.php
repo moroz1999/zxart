@@ -39,7 +39,7 @@ class routeApplication extends controllerApplication
         $languagesManager = $this->getService('LanguagesManager');
         $languagesManager->setCurrentLanguageCode($language);
 
-        if ($importId = (int)$controller->getParameter('importId')) {
+        if ($importId = $controller->getParameter('importId')) {
             if ($importOrigin = $controller->getParameter('importOrigin')) {
                 if ($type = $controller->getParameter('type')) {
                     $db = $this->getService('db');

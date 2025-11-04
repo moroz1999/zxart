@@ -1088,8 +1088,7 @@ class zxProdElement extends ZxArtItem implements
                 if (is_file($filePath)) {
                     $info = getimagesize($filePath);
                     $width = $info[0];
-                    // 576 -> sam coupe hires
-                    if ($width > 500 && ($width !== 576)) {
+                    if ($width > 500) {
                         $imageProcess = new \ImageProcess\ImageProcess($pathsManager->getPath('imagesCache'));
                         $imageProcess->setDefaultCachePermissions($configManager->get('paths.defaultCachePermissions'));
                         $imageProcess->registerImage('canvas', $filePath);

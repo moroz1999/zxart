@@ -165,6 +165,7 @@ class PouetImport extends errorLogger
         'gfx' => 'graphics',
         'additional graphics' => 'graphics',
         '3d' => '3dmodels',
+        'some modelling' => '3dmodels',
         '3d graphics' => '3dmodels',
         '2d' => 'graphics',
         'design support' => 'design',
@@ -553,8 +554,8 @@ class PouetImport extends errorLogger
             if (isset($placing['party'])) {
                 $partyDto = new PartyRefDTO(
                     title: $placing['party']['name'],
-                    year: $placing['year'] ?? null,
-                    place: $placing['ranking'] ?? null,
+                    year: $placing['year'] ? (int)$placing['year'] : null,
+                    place: $placing['ranking'] ? (int)$placing['ranking'] : null,
                 );
             } else {
                 $message = 'Pouet: no party for placing ' . $id . ' ' . ($placing['compo_name'] ?? '');
