@@ -1,0 +1,2 @@
+ALTER TABLE `engine_module_zxprod` ADD `htmlDescription` TINYINT NOT NULL DEFAULT '0' AFTER `instructions`;
+ALTER TABLE `engine_module_zxprod` CHANGE `htmlDescription` `htmlDescription` TINYINT(4) NOT NULL DEFAULT '1';

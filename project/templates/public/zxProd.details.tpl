@@ -270,9 +270,7 @@
         /*]]>*/
     </script>
     {if $description = $element->getDescription()}
-        <div class="zxprod_details_description">
-            {$description}
-        </div>
+        <div class="zxprod_details_description {if !$element->htmlDescription}zxprod_details_description_plain{/if}">{$description}</div>
     {/if}
     {if $element->instructions !== ''}
         <h2>{translations name='zxprod.instructions'}</h2>

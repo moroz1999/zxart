@@ -327,6 +327,10 @@ class ProdsService extends ElementsManager
             $element->description = $dto->description;
             $changed = true;
         }
+        if ($dto->htmlDescription !== null) {
+            $element->htmlDescription = $dto->htmlDescription;
+            $changed = true;
+        }
         if ($dto->instructions !== null && ($element->instructions === '' || $element->instructions === null)) {
             $element->instructions = $dto->instructions;
             $changed = true;
@@ -449,12 +453,10 @@ class ProdsService extends ElementsManager
             }
         }
 
-        if (!empty($dto->seriesProds)) {
-            if (!$element->seriesProds) {
-                foreach ($dto->seriesProds as $importItemId) {
-                    if ($prodId = $this->getElementIdByImportId($importItemId, $origin, 'prod')) {
-                        $this->linksManager->linkElements($element->getId(), $prodId, 'series');
-                    }
+        if (!empty($dto->seriesProdIds) && !$element->seriesProds) {
+            foreach ($dto->seriesProdIds as $importItemId) {
+                if ($prodId = $this->getElementIdByImportId($importItemId, $origin, 'prod')) {
+                    $this->linksManager->linkElements($element->getId(), $prodId, 'series');
                 }
             }
         }

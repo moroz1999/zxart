@@ -10,7 +10,7 @@ trait ImportedItemTrait
         return $db->table('import_origin')->where('elementId', '=', $this->id)->delete();
     }
 
-    public function getImportOriginId($origin)
+    public function getImportOriginId($origin): ?string
     {
         $db = $this->getService('db');
         return $db->table('import_origin')

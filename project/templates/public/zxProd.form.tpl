@@ -215,6 +215,16 @@
                 {include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="groups"}
             </td>
         </tr>
+        <tr>
+            <td class="form_label">
+                {translations name='zxprod.htmlDescription'}:
+            </td>
+            <td class="form_field">
+                <input class='checkbox_placeholder' type="checkbox" value="1"
+                       name="{$formNames.htmlDescription}"{if $element->htmlDescription} checked="checked"{/if}/>
+                {include file=$theme->template('component.form_help.tpl') structureType='zxProd' name="htmlDescription"}
+            </td>
+        </tr>
         <tr {if $formErrors.description} class="form_error"{/if}>
             <td class="form_label">
                 {translations name='zxprod.description'}:

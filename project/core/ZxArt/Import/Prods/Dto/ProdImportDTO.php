@@ -13,6 +13,10 @@ final readonly class ProdImportDTO
         public ?string      $title = null,
         public ?string      $altTitle = null,
         public ?string      $description = null,
+        /**
+         * @var bool|null - text description is html or plain
+         */
+        public ?bool        $htmlDescription = null,
         public ?string      $instructions = null,
         /** @var string[]|null */
         public ?array       $language = null,
@@ -21,9 +25,7 @@ final readonly class ProdImportDTO
         public ?string      $externalLink = null,
         public ?string      $compo = null,
         public ?int         $year = null,
-        /** @var array<string,string>|null альтернативные id, пришедшие снаружи: [origin => id] */
         public ?array       $ids = null,
-        /** @var array<string,string>|null список импортId для сохранения линков: [origin => id] */
         public ?array       $importIds = null,
         /** @var Label[]|null */
         public ?array       $labels = null,
@@ -53,11 +55,12 @@ final readonly class ProdImportDTO
         /** @var string[]|null import ids of prod or release */
         public ?array       $compilationItems = null,
         /** @var string[]|null import ids of prod */
-        public ?array       $seriesProds = null,
+        public ?array       $seriesProdIds = null,
         /** @var ArticleDTO[]|null */
         public ?array       $articles = null,
         /** @var ReleaseImportDTO[]|null */
         public ?array       $releases = null,
+        public ?string      $origin = null,
     )
     {
     }
@@ -110,7 +113,7 @@ final readonly class ProdImportDTO
             inlayImages: isset($a['inlayImages']) ? array_values((array)$a['inlayImages']) : null,
             rzx: $rzx,
             compilationItems: isset($a['compilationItems']) ? array_values((array)$a['compilationItems']) : null,
-            seriesProds: isset($a['seriesProds']) ? array_values((array)$a['seriesProds']) : null,
+            seriesProdIds: isset($a['seriesProds']) ? array_values((array)$a['seriesProds']) : null,
             articles: $articles,
             releases: $releases,
         );

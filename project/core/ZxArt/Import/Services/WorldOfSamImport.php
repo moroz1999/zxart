@@ -24,7 +24,6 @@ use ZxArt\ZxProdCategories\CategoryIds;
 
 /**
  * todo:
- * 3. check for series handling
  * 4. Rick Dangerous - LINKS IN INSTRUCTIONS
  */
 
@@ -66,7 +65,7 @@ final class WorldOfSamImport extends errorLogger
     /**
      * Flag to optionally restrict importing to a single product for debugging.
      */
-    protected ?string $debugSlug = 'rick-dangerous';
+    protected ?string $debugSlug = 'b-dos';
 
     /**
      * HTTP client used to fetch pages. Configured with a reasonable timeout
@@ -259,27 +258,31 @@ final class WorldOfSamImport extends errorLogger
      * @param string $slug Unique identifier derived from the URL path
      * @param string $url Absolute URL to the product page
      */
-    private function processProduct(string $slug, string $url): void
+    private function processProduct(string $slug, string $url): string|null
     {
         // Respect time limit
         if (time() > ($this->maxTime ?? 0)) {
-            return;
+            return null;
         }
         $doc = $this->fetchDocument($url);
         if ($doc === null) {
             $this->markProgress('Product ' . $slug . ' could not be downloaded');
-            return;
+            return null;
         }
 
         // Detect and import subproducts before processing parent
         $subproductLinks = $doc->querySelectorAll('div.field--name-field-subproducts a[href^="/products/"]');
+        $seriesProdIds = [];
         foreach ($subproductLinks as $sublink) {
             /** @var DOMElement $sublink */
             $href = $sublink->getAttribute('href');
             if (preg_match('#^/products/([\w\-]+)$#', $href, $m)) {
                 $subSlug = $m[1];
                 $subUrl = 'https://www.worldofsam.org' . $href;
-                $this->processProduct($subSlug, $subUrl);
+                $id = $this->processProduct($subSlug, $subUrl);
+                if ($id !== null) {
+                    $seriesProdIds[] = $id;
+                }
             }
         }
 
@@ -298,7 +301,7 @@ final class WorldOfSamImport extends errorLogger
             } else {
                 // Unknown category – skip import
                 $this->markProgress('Product ' . $slug . ' skipped due to unsupported category ' . $categoryText);
-                return;
+                return null;
             }
         }
 
@@ -355,7 +358,7 @@ final class WorldOfSamImport extends errorLogger
 
         // Description
         $descEl = $doc->querySelector('div.field-node--body div.field__item');
-        $description = $descEl ? trim($descEl->textContent ?? '') : null;
+        $description = $descEl ? trim($descEl->innerHTML ?? '') : null;
 
         // Instructions
         $instructionsEl = $doc->querySelector('div.field-node--field-instructions div.field__item');
@@ -521,12 +524,22 @@ final class WorldOfSamImport extends errorLogger
             );
         }
 
+        if ($releases === [] && $seriesProdIds === []) {
+            $releases[] = new ReleaseImportDTO(
+                id: $slug . '-unknown',
+                title: $title,
+                releaseType: 'unknown',
+                hardwareRequired: $hardwareRequired,
+            );
+        }
+
         // Build product DTO
         $prodDto = new ProdImportDTO(
             id: $slug,
             title: $title,
             altTitle: null,
             description: $description,
+            htmlDescription: true,
             instructions: $instructions ?: null,
             language: null,
             legalStatus: $legalStatus,
@@ -549,9 +562,10 @@ final class WorldOfSamImport extends errorLogger
             inlayImages: $inlayImages ?: null,
             rzx: null,
             compilationItems: null,
-            seriesProds: null,
+            seriesProdIds: $seriesProdIds ?: null,
             articles: null,
             releases: $releases ?: null,
+            origin: $this->origin
         );
 
         // Persist via prodsService
@@ -560,6 +574,8 @@ final class WorldOfSamImport extends errorLogger
             $this->queueService->updateStatus($prod->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
             $this->markProgress('Product ' . $slug . ' imported');
         }
+
+        return $prodDto->id;
     }
 
     /**

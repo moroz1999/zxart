@@ -49,26 +49,36 @@ readonly final class ProdResolver
         return $candidates[0]['element'] ?? null;
     }
 
-    private function calculateScoreForElement(zxProdElement $prodElement, ProdImportDTO $prodLabel, bool $matchProdsWithoutYear): int
+    private function calculateScoreForElement(zxProdElement $prodElement, ProdImportDTO $dto, bool $matchProdsWithoutYear): int
     {
         $score = 0;
-        $prodLabelHasYear = $prodLabel->year !== null && $prodLabel->year > 0;
+
+        $dtoOrigin = $dto->origin ?? null;
+        if ($dtoOrigin !== null) {
+            $prodElementOriginId = $prodElement->getImportOriginId($dtoOrigin);
+            // if prod element has origin, it's not a match'
+            if ($prodElementOriginId !== null) {
+                return 0;
+            }
+        }
+
+        $prodLabelHasYear = $dto->year !== null && $dto->year > 0;
         $prodElementHasYear = $prodElement->year > 0;
         if (!$matchProdsWithoutYear && !$prodElementHasYear) {
             return 0;
         }
 
         // Hardware compatibility via releases: early exit if incompatible
-        if (!$this->hardwareCompatibilityService->areProdAndDtoCompatible($prodLabel, $prodElement)) {
+        if (!$this->hardwareCompatibilityService->areProdAndDtoCompatible($dto, $prodElement)) {
             return 0;
         }
 
         $prodElementTitle = mb_strtolower(trim(html_entity_decode($prodElement->title)));
         $prodElementAltTitle = mb_strtolower(trim(html_entity_decode($prodElement->altTitle)));
-        $prodLabelTitle = mb_strtolower(trim($prodLabel->title ?? ''));
+        $prodLabelTitle = mb_strtolower(trim($dto->title ?? ''));
         $prodLabelTheTitle = 'the ' . $prodLabelTitle;
 
-        if ($prodLabelHasYear && $prodElementHasYear && $prodLabel->year !== $prodElement->year) {
+        if ($prodLabelHasYear && $prodElementHasYear && $dto->year !== $prodElement->year) {
             return 0;
         }
 
@@ -110,7 +120,7 @@ readonly final class ProdResolver
         }
 
         // both years are not empty and match
-        if ($this->resolver->intMatches($prodElement->year, $prodLabel->year)) {
+        if ($this->resolver->intMatches($prodElement->year, $dto->year)) {
             $score += 10;
         }
         // neither one has year.

@@ -680,7 +680,7 @@ class PouetImport extends errorLogger
             inlayImages: null,
             rzx: null,
             compilationItems: null,
-            seriesProds: null,
+            seriesProdIds: null,
             articles: null,
             releases: [$releaseDto],
         );

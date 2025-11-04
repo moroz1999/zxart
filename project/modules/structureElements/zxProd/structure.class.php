@@ -18,6 +18,7 @@ use ZxArt\ZxProdCategories\CompilationCategoryIds;
  * @property int $year
  * @property string $youtubeId
  * @property string $description
+ * @property bool $htmlDescription
  * @property string $instructions
  * @property string $legalStatus
  * @property string $compo
@@ -104,7 +105,8 @@ class zxProdElement extends ZxArtItem implements
         $moduleStructure['compo'] = 'text';
         $moduleStructure['year'] = 'naturalNumber';
         $moduleStructure['youtubeId'] = 'text';
-        $moduleStructure['description'] = 'pre';
+        $moduleStructure['description'] = 'html';
+        $moduleStructure['htmlDescription'] = 'checkbox';
         $moduleStructure['instructions'] = 'html';
         $moduleStructure['votes'] = 'floatNumber';
 
@@ -663,7 +665,7 @@ class zxProdElement extends ZxArtItem implements
                             'url' => 'https://maps.speccy.cz/map.php?id=' . $row['importId'] . '&sort=0&part=0&ath=0',
                             'id' => $row['importId'],
                         ];
-                    }elseif ($row['importOrigin'] === 'worldofsam') {
+                    } elseif ($row['importOrigin'] === 'worldofsam') {
                         $this->linksInfo[] = [
                             'type' => 'worldofsam',
                             'image' => 'icon_worldofsam.png',
