@@ -22,186 +22,185 @@
                href="{$element->URL}id:{$element->id}/action:publicDelete/">{translations name='zxprod.delete'}</a>
         {/if}
     </div>
-
     <div class='zxprod_details_info'>
         <table class='zxprod_details_info_table info_table'>
-        <tr>
-            <td class='info_table_label'>
-                {translations name='zxprod.title'}:
-            </td>
-            <td class='info_table_value'>
-                {$element->title}
-            </td>
-        </tr>
-        {if $element->altTitle}
-        <tr>
-            <td class='info_table_label'>
-                {translations name='zxprod.altTitle'}:
-            </td>
-            <td class='info_table_value'>
-                {$element->altTitle}
-            </td>
-        </tr>
-        {/if}
-        {if $element->externalLink}
             <tr>
                 <td class='info_table_label'>
-                    {translations name='zxprod.externallink'}:
+                    {translations name='zxprod.title'}:
                 </td>
                 <td class='info_table_value'>
-                    {if $element->getLegalStatus() === 'insales'}
-                        <a class="button release-sales-button" href="{$element->externalLink}"
-                           target="_blank">{translations name='zxprod.purchase'}</a>
-                    {elseif $element->getLegalStatus() === 'donationware'}
-                        <a class="button release-sales-button" href="{$element->externalLink}"
-                           target="_blank">{translations name='zxprod.donate'}</a>
-                    {else}
-                        <a class="button" href="{$element->externalLink}"
-                           target="_blank">{translations name='zxprod.open_externallink'}</a>
+                    {$element->title}
+                </td>
+            </tr>
+            {if $element->altTitle}
+                <tr>
+                    <td class='info_table_label'>
+                        {translations name='zxprod.altTitle'}:
+                    </td>
+                    <td class='info_table_value'>
+                        {$element->altTitle}
+                    </td>
+                </tr>
+            {/if}
+            {if $element->externalLink}
+                <tr>
+                    <td class='info_table_label'>
+                        {translations name='zxprod.externallink'}:
+                    </td>
+                    <td class='info_table_value'>
+                        {if $element->getLegalStatus() === 'insales'}
+                            <a class="button release-sales-button" href="{$element->externalLink}"
+                               target="_blank">{translations name='zxprod.purchase'}</a>
+                        {elseif $element->getLegalStatus() === 'donationware'}
+                            <a class="button release-sales-button" href="{$element->externalLink}"
+                               target="_blank">{translations name='zxprod.donate'}</a>
+                        {else}
+                            <a class="button" href="{$element->externalLink}"
+                               target="_blank">{translations name='zxprod.open_externallink'}</a>
+                        {/if}
+                    </td>
+                </tr>
+            {/if}
+            {if $categoriesPaths = $element->getCategoriesPaths()}
+                <tr>
+                    <td class='info_table_label'>
+                        {translations name='zxprod.categories'}:
+                    </td>
+                    <td class='info_table_value'>
+                        {foreach $categoriesPaths as $categories}
+                            <div>
+                                {foreach $categories as $categoryElement}
+                                    <a
+                                    href="{$categoryElement->URL}">{$categoryElement->title}</a>{if !$categoryElement@last} / {/if}
+                                {/foreach}
+                            </div>
+                        {/foreach}
+                    </td>
+                </tr>
+            {/if}
+            {if $element->language}
+                <tr>
+                    <td class='info_table_label'>
+                        {translations name='zxprod.language'}:
+                    </td>
+                    <td class='info_table_value'>
+                        {include file=$theme->template("component.languagelinks.tpl") element=$element}
+                    </td>
+                </tr>
+            {/if}
+            <tr>
+                <td class='info_table_label'>
+                    {translations name='zxProd.legalstatus'}:
+                </td>
+                <td class='info_table_value'>
+                    {translations name="legalstatus.{$element->getLegalStatus()}"}
+                </td>
+            </tr>
+            {if $element->groups}
+                <tr>
+                    <td class='info_table_label'>
+                        {translations name='zxprod.groups'}:
+                    </td>
+                    <td class='info_table_value'>
+                        {foreach $element->groups as $group}
+                            <a href="{$group->getUrl()}">{$group->title}</a>{if !$group@last}, {/if}
+                        {/foreach}
+                    </td>
+                </tr>
+            {/if}
+            {if $element->publishers}
+                <tr>
+                    <td class='info_table_label'>
+                        {translations name='zxprod.publishers'}:
+                    </td>
+                    <td class='info_table_value'>
+                        {foreach $element->publishers as $publisher}
+                            <a href="{$publisher->getUrl()}">{$publisher->title}</a>{if !$publisher@last}, {/if}
+                        {/foreach}
+                    </td>
+                </tr>
+            {/if}
+            {if $authors=$element->getAuthorsInfo('prod')}
+                <tr>
+                    <td class='info_table_label'>
+                        {translations name='zxprod.authors'}:
+                    </td>
+                    <td class='info_table_value'>
+                        {foreach $authors as $info}
+                            <a
+                            href="{$info.authorElement->getUrl()}">{$info.authorElement->title}</a>{if $info.roles && $info.roles[0] !== 'unknown'} ({foreach $info.roles as $role}{translations name="zxprod.role_$role"}{if !$role@last}, {/if}{/foreach}){/if}{if !$info@last}, {/if}
+                        {/foreach}
+                    </td>
+                </tr>
+            {/if}
+            {if $element->getPartyElement()}
+                <tr>
+                    <td class='info_table_label'>
+                        {translations name='zxprod.party'}:
+                    </td>
+                    <td class='info_table_value'>
+                        {assign 'compoTitle' "compo_"|cat:$element->compo}
+                        <a href='{$element->getPartyElement()->URL}'>{$element->getPartyElement()->title}</a>
+                        {if !empty($element->compo)}({if !empty($element->partyplace)}{$element->partyplace}, {/if}{translations name="party.$compoTitle"}){/if}
+                    </td>
+                </tr>
+            {/if}
+            {if $element->year != '0'}
+                <tr>
+                    <td class='info_table_label'>
+                        {translations name='zxprod.year'}:
+                    </td>
+                    <td class='info_table_value'>
+                        <a href="{$element->getCatalogueUrl(['years' => $element->year])}">{$element->year}</a>
+                    </td>
+                </tr>
+            {/if}
+            {if $element->getTagsList()}
+                <tr>
+                    <td class='info_table_label'>
+                        {translations name='zxprod.tags'}:
+                    </td>
+                    <td class='info_table_value'>
+                        {foreach from=$element->getTagsList() item=tag name=tags}
+                            <a href='{$tag->URL}'>{$tag->title}</a>{if !$smarty.foreach.tags.last}, {/if}
+                        {/foreach}
+                    </td>
+                </tr>
+            {/if}
+            {include file=$theme->template('component.links.tpl')}
+            <tr>
+                <td class='info_table_label'>
+                    {translations name='zxprod.votes'}:
+                </td>
+                <td class='info_table_value'>
+                    {include file=$theme->template("component.votecontrols.tpl") element=$element}
+                    {include file=$theme->template("component.playlist.tpl") element=$element}
+                    {if !$element->isVotingDenied() && $element->getVotePercent()}
+                        <div>{$element->votes}</div>
                     {/if}
                 </td>
             </tr>
-        {/if}
-        {if $categoriesPaths = $element->getCategoriesPaths()}
-            <tr>
-                <td class='info_table_label'>
-                    {translations name='zxprod.categories'}:
-                </td>
-                <td class='info_table_value'>
-                    {foreach $categoriesPaths as $categories}
-                        <div>
-                            {foreach $categories as $categoryElement}
-                                <a
-                                href="{$categoryElement->URL}">{$categoryElement->title}</a>{if !$categoryElement@last} / {/if}
-                            {/foreach}
-                        </div>
-                    {/foreach}
-                </td>
-            </tr>
-        {/if}
-        {if $element->language}
-            <tr>
-                <td class='info_table_label'>
-                    {translations name='zxprod.language'}:
-                </td>
-                <td class='info_table_value'>
-                    {include file=$theme->template("component.languagelinks.tpl") element=$element}
-                </td>
-            </tr>
-        {/if}
-        <tr>
-            <td class='info_table_label'>
-                {translations name='zxProd.legalstatus'}:
-            </td>
-            <td class='info_table_value'>
-                {translations name="legalstatus.{$element->getLegalStatus()}"}
-            </td>
-        </tr>
-        {if $element->groups}
-            <tr>
-                <td class='info_table_label'>
-                    {translations name='zxprod.groups'}:
-                </td>
-                <td class='info_table_value'>
-                    {foreach $element->groups as $group}
-                        <a href="{$group->getUrl()}">{$group->title}</a>{if !$group@last}, {/if}
-                    {/foreach}
-                </td>
-            </tr>
-        {/if}
-        {if $element->publishers}
-            <tr>
-                <td class='info_table_label'>
-                    {translations name='zxprod.publishers'}:
-                </td>
-                <td class='info_table_value'>
-                    {foreach $element->publishers as $publisher}
-                        <a href="{$publisher->getUrl()}">{$publisher->title}</a>{if !$publisher@last}, {/if}
-                    {/foreach}
-                </td>
-            </tr>
-        {/if}
-        {if $authors=$element->getAuthorsInfo('prod')}
-            <tr>
-                <td class='info_table_label'>
-                    {translations name='zxprod.authors'}:
-                </td>
-                <td class='info_table_value'>
-                    {foreach $authors as $info}
-                        <a
-                        href="{$info.authorElement->getUrl()}">{$info.authorElement->title}</a>{if $info.roles && $info.roles[0] !== 'unknown'} ({foreach $info.roles as $role}{translations name="zxprod.role_$role"}{if !$role@last}, {/if}{/foreach}){/if}{if !$info@last}, {/if}
-                    {/foreach}
-                </td>
-            </tr>
-        {/if}
-        {if $element->getPartyElement()}
-            <tr>
-                <td class='info_table_label'>
-                    {translations name='zxprod.party'}:
-                </td>
-                <td class='info_table_value'>
-                    {assign 'compoTitle' "compo_"|cat:$element->compo}
-                    <a href='{$element->getPartyElement()->URL}'>{$element->getPartyElement()->title}</a>
-                    {if !empty($element->compo)}({if !empty($element->partyplace)}{$element->partyplace}, {/if}{translations name="party.$compoTitle"}){/if}
-                </td>
-            </tr>
-        {/if}
-        {if $element->year != '0'}
-            <tr>
-                <td class='info_table_label'>
-                    {translations name='zxprod.year'}:
-                </td>
-                <td class='info_table_value'>
-                    <a href="{$element->getCatalogueUrl(['years' => $element->year])}">{$element->year}</a>
-                </td>
-            </tr>
-        {/if}
-        {if $element->getTagsList()}
-            <tr>
-                <td class='info_table_label'>
-                    {translations name='zxprod.tags'}:
-                </td>
-                <td class='info_table_value'>
-                    {foreach from=$element->getTagsList() item=tag name=tags}
-                        <a href='{$tag->URL}'>{$tag->title}</a>{if !$smarty.foreach.tags.last}, {/if}
-                    {/foreach}
-                </td>
-            </tr>
-        {/if}
-        {include file=$theme->template('component.links.tpl')}
-        <tr>
-            <td class='info_table_label'>
-                {translations name='zxprod.votes'}:
-            </td>
-            <td class='info_table_value'>
-                {include file=$theme->template("component.votecontrols.tpl") element=$element}
-                {include file=$theme->template("component.playlist.tpl") element=$element}
-                {if !$element->isVotingDenied() && $element->getVotePercent()}
-                    <div>{$element->votes}</div>
-                {/if}
-            </td>
-        </tr>
-        {assign var="userElement" value=$element->getUser()}
-        {if $userElement}
-            <tr>
-                <td class='info_table_label'>
-                    {translations name='zxprod.addedby'}:
-                </td>
-                <td class='info_table_value'>
-                    {$userElement->userName}, {$element->dateCreated}
-                </td>
-            </tr>
-        {else}
-            <tr>
-                <td class='info_table_label'>
-                    {translations name='zxprod.added'}:
-                </td>
-                <td class='info_table_value'>
-                    {$element->dateCreated}
-                </td>
-            </tr>
-        {/if}
-    </table>
+            {assign var="userElement" value=$element->getUser()}
+            {if $userElement}
+                <tr>
+                    <td class='info_table_label'>
+                        {translations name='zxprod.addedby'}:
+                    </td>
+                    <td class='info_table_value'>
+                        {$userElement->userName}, {$element->dateCreated}
+                    </td>
+                </tr>
+            {else}
+                <tr>
+                    <td class='info_table_label'>
+                        {translations name='zxprod.added'}:
+                    </td>
+                    <td class='info_table_value'>
+                        {$element->dateCreated}
+                    </td>
+                </tr>
+            {/if}
+        </table>
         {if !empty($element->youtubeId)}
             <div class="zxprod_details_video">
                 <div class="zxprod_details_video_inner">
@@ -252,9 +251,9 @@
         {/if}
 
         {if $filesList = $element->getFilesList('mapFilesSelector')}
-                {$url = $element->getSpeccyMapsUrl()}
-                <h2>{translations name='zxprod.maps'}</h2>
-                {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodMapImage' displayTitle=true url=$url linkType='mapFilesSelector'}
+            {$url = $element->getSpeccyMapsUrl()}
+            <h2>{translations name='zxprod.maps'}</h2>
+            {include file=$theme->template('zxItem.images.tpl') filesList = $filesList preset='prodMapImage' displayTitle=true url=$url linkType='mapFilesSelector'}
         {/if}
     </div>
     {include file=$theme->template('component.mentions.tpl')}
@@ -270,18 +269,21 @@
         /*]]>*/
     </script>
     {if $description = $element->getDescription()}
-        <div class="zxprod_details_description {if !$element->htmlDescription}zxprod_details_description_plain{/if}">{$description}</div>
+        <details class="zxprod_details_description">
+            <summary class="zxprod_details_heading">{translations name='zxprod.description'}</summary>
+            <div class="{if !$element->htmlDescription}zxprod_details_description_plain{/if}">{$description}</div>
+        </details>
     {/if}
     {if $element->instructions !== ''}
-        <h2>{translations name='zxprod.instructions'}</h2>
-        <div class="zxprod_details_instructions">
+        <details class="zxprod_details_instructions">
+            <summary class="zxprod_details_heading">{translations name='zxprod.instructions'}</summary>
             {$element->instructions}
-        </div>
+        </details>
     {/if}
 
     {if $element->compilationItems || $element->compilations || $element->seriesProds}
         <script>
-            window.elementsData = window.elementsData ? window.elementsData : { };
+            window.elementsData = window.elementsData ? window.elementsData : {};
             window.elementsData[{$element->id}] = {$element->getCompilationJsonData()};
         </script>
     {/if}
@@ -325,7 +327,7 @@
     {if $element->series}
         {foreach $element->series as $seriesElement}
             <script>
-                window.elementsData = window.elementsData ? window.elementsData : { };
+                window.elementsData = window.elementsData ? window.elementsData : {};
                 window.elementsData[{$seriesElement->id}] = {$seriesElement->getCompilationJsonData()};
             </script>
             <h2>{translations name='zxprod.series'}: <a href="{$seriesElement->getUrl()}">{$seriesElement->title}</a>

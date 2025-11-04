@@ -98,14 +98,17 @@ final class WorldOfSamImport extends errorLogger
      */
     private string $origin = 'worldofsam';
     private array $copyrightMap;
+    private WorldOfSamLinksRewriter $worldOfSamLinksRewriter;
 
     public function __construct(
-        ProdsService   $prodsService,
-        AuthorsService $authorsService,
-        QueueService   $queueService,
-        array          $config = []
+        ProdsService            $prodsService,
+        AuthorsService          $authorsService,
+        QueueService            $queueService,
+        WorldOfSamLinksRewriter $worldOfSamLinksRewriter,
+        array                   $config = []
     )
     {
+        $this->worldOfSamLinksRewriter = $worldOfSamLinksRewriter;
         $this->prodsService = $prodsService;
         $this->queueService = $queueService;
 
@@ -359,10 +362,16 @@ final class WorldOfSamImport extends errorLogger
         // Description
         $descEl = $doc->querySelector('div.field-node--body div.field__item');
         $description = $descEl ? trim($descEl->innerHTML ?? '') : null;
+        if ($description !== null) {
+            $description = $this->worldOfSamLinksRewriter->rewriteLinks($description);
+        }
 
         // Instructions
         $instructionsEl = $doc->querySelector('div.field-node--field-instructions div.field__item');
         $instructions = $instructionsEl ? trim($instructionsEl->innerHTML ?? '') : null;
+        if ($instructions !== null) {
+            $instructions = $this->worldOfSamLinksRewriter->rewriteLinks($instructions);
+        }
 
         // YouTube link
         $youtubeId = null;
