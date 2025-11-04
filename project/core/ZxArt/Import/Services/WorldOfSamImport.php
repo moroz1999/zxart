@@ -23,11 +23,6 @@ use ZxArt\Queue\QueueType;
 use ZxArt\ZxProdCategories\CategoryIds;
 
 /**
- * todo:
- * 4. Rick Dangerous - LINKS IN INSTRUCTIONS
- */
-
-/**
  * Class responsible for importing products from WorldOfSAM.
  *
  * The World of SAM site lists products by letter with optional pagination. Each product page
@@ -50,7 +45,7 @@ final class WorldOfSamImport extends errorLogger
      * Maximum number of products to import per run. Set to a high value so we
      * effectively import everything in one go when possible.
      */
-    protected int $maxCounter = 1;
+    protected int $maxCounter = 7;
 
     /**
      * Tracks how many products have been processed in the current run.
@@ -65,7 +60,7 @@ final class WorldOfSamImport extends errorLogger
     /**
      * Flag to optionally restrict importing to a single product for debugging.
      */
-    protected ?string $debugSlug = 'b-dos';
+    protected ?string $debugSlug = null;
 
     /**
      * HTTP client used to fetch pages. Configured with a reasonable timeout
@@ -117,7 +112,7 @@ final class WorldOfSamImport extends errorLogger
             'connect_timeout' => 10,
             'verify' => false,
             'headers' => [
-                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0',
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0',
                 'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 'Accept-Language' => 'en-US,en;q=0.5',
                 'Cache-Control' => 'max-age=0',
@@ -274,12 +269,12 @@ final class WorldOfSamImport extends errorLogger
         }
 
         // Detect and import subproducts before processing parent
-        $subproductLinks = $doc->querySelectorAll('div.field--name-field-subproducts a[href^="/products/"]');
+        $subproductLinks = $doc->querySelectorAll('div.field--name-field-subproducts a[href*="/products/"]');
         $seriesProdIds = [];
         foreach ($subproductLinks as $sublink) {
             /** @var DOMElement $sublink */
             $href = $sublink->getAttribute('href');
-            if (preg_match('#^/products/([\w\-]+)$#', $href, $m)) {
+            if (preg_match('#^/(?:index\.php/)?products/([\w\-]+)$#', $href, $m)) {
                 $subSlug = $m[1];
                 $subUrl = 'https://www.worldofsam.org' . $href;
                 $id = $this->processProduct($subSlug, $subUrl);
@@ -402,20 +397,19 @@ final class WorldOfSamImport extends errorLogger
             'author' => 'div.field-node-field-author',
             'artist' => 'div.field-node-field-artist',
             'musician' => 'div.field-node-field-musician',
-            // Additional roles may exist; extend mapping here if needed
         ];
         foreach ($roleFields as $roleName => $selector) {
             $roleKey = $this->roleMap[$roleName] ?? null;
             if ($roleKey === null) {
                 continue;
             }
-            $people = $doc->querySelectorAll($selector . ' a[href^="/people/"]');
+            $people = $doc->querySelectorAll($selector . ' a[href*="/people/"]');
             foreach ($people as $person) {
                 /** @var DOMElement $person */
                 $href = $person->getAttribute('href');
                 $name = trim($person->textContent);
                 $importId = null;
-                if (preg_match('#/people/([\w\-]+)$#', $href, $m)) {
+                if (preg_match('#/(?:index\.php/)?people/([\w\-]+)$#', $href, $m)) {
                     $importId = $m[1];
                 }
                 // Create label
@@ -440,7 +434,7 @@ final class WorldOfSamImport extends errorLogger
             $href = $pub->getAttribute('href');
             $name = trim($pub->textContent);
             $pubId = null;
-            if (preg_match('#/people/([\w\-]+)$#', $href, $m)) {
+            if (preg_match('#/(?:index\.php/)?people/([\w\-]+)$#', $href, $m)) {
                 $pubId = $m[1];
             }
             $publishers[] = $pubId ?: $name;

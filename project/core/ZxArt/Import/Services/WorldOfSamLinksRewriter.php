@@ -35,20 +35,26 @@ final class WorldOfSamLinksRewriter
 
             foreach ($anchors as $a) {
                 $href = trim($a->getAttribute('href'));
+
+                // Keep absolute HTTP(S) and protocol-relative links as-is.
+                if ($href !== '' && preg_match('~^(?:[a-z][a-z0-9+\-.]*://|//)~i', $href) === 1) {
+                    continue;
+                }
+
                 $path = (parse_url($href, PHP_URL_PATH) ?? $href);
 
                 if ($path !== '' && $path[0] !== '/') {
                     $path = '/' . $path;
                 }
 
-                // /products/{slug}
-                if (preg_match('~^/products/([^/?#]+)$~', $path, $m) === 1) {
+                // /products/{slug} or /index.php/products/{slug}
+                if (preg_match('~^/(?:index\.php/)?products/([^/?#]+)$~', $path, $m) === 1) {
                     $a->setAttribute('href', '/route/type:prod/importOrigin:worldofsam/importId:' . $m[1]);
                     continue;
                 }
 
-                // /people/{slug}
-                if (preg_match('~^/people/([^/?#]+)$~', $path, $m) === 1) {
+                // /people/{slug} or /index.php/people/{slug}
+                if (preg_match('~^/(?:index\.php/)?people/([^/?#]+)$~', $path, $m) === 1) {
                     $a->setAttribute('href', '/route/importOrigin:worldofsam/importId:' . $m[1]);
                     continue;
                 }
