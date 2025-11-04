@@ -84,6 +84,10 @@ abstract class ZxParsingItem
 
     public function getItemName(): ?string
     {
+        if ($this->itemName === null && $this->path !== null) {
+            $info = pathinfo($this->path);
+            $this->itemName = $info['basename'];
+        }
         return $this->itemName;
     }
 

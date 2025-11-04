@@ -60,13 +60,16 @@ class ProdsDownloader extends errorLogger
     protected function getFilePath($url): string|false
     {
         if ($url) {
-            $md5 = md5($url);
+            $path = parse_url($url, PHP_URL_PATH);
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+
+            $fileName = md5($url) . '.' . $extension;
             $cachePath = $this->pathsManager->getPath('uploadsCache');
 
             if (!is_dir($cachePath)) {
                 mkdir($cachePath, $this->configManager->get('paths.defaultCachePermissions'), true);
             }
-            return $cachePath . $md5;
+            return $cachePath . $fileName;
         }
         return false;
     }

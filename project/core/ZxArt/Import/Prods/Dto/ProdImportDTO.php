@@ -19,7 +19,7 @@ final readonly class ProdImportDTO
         public ?bool        $htmlDescription = null,
         public ?string      $instructions = null,
         /** @var string[]|null */
-        public ?array       $language = null,
+        public ?array       $languages = null,
         public ?LegalStatus $legalStatus = null,
         public ?string      $youtubeId = null,
         public ?string      $externalLink = null,
@@ -92,7 +92,7 @@ final readonly class ProdImportDTO
             title: (string)($a['title'] ?? ''),
             altTitle: $a['altTitle'] ?? null,
             description: $a['description'] ?? null,
-            language: isset($a['language']) ? (array)$a['language'] : null,
+            languages: isset($a['language']) ? (array)$a['language'] : null,
             legalStatus: $a['legalStatus'] ?? null,
             youtubeId: $a['youtubeId'] ?? null,
             externalLink: $a['externalLink'] ?? null,

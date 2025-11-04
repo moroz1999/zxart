@@ -8,21 +8,21 @@ use ZxArt\Import\Labels\Label;
 readonly final class ReleaseImportDTO
 {
     public function __construct(
-        public string   $id,
-        public string   $title,
-        public ?int     $year = null,
+        public string  $id,
+        public string  $title,
+        public ?int    $year = null,
         /** @var string[]|null */
-        public ?array   $language = null,
-        public ?string  $version = null,
-        public ?string  $releaseType = null,
-        public ?string  $filePath = null,
-        public ?string  $fileUrl = null,
-        public ?string  $fileName = null,
-        public ?string  $description = null,
+        public ?array  $languages = null,
+        public ?string $version = null,
+        public ?string $releaseType = null,
+        public ?string $filePath = null,
+        public ?string $fileUrl = null,
+        public ?string $fileName = null,
+        public ?string $description = null,
         /** @var string[]|null */
-        public ?array   $hardwareRequired = null,
+        public ?array  $hardwareRequired = null,
         /** @var Label[]|null */
-        public ?array   $labels = null,
+        public ?array  $labels = null,
         /** @var array<string,string[]>|null */
         public ?array   $authors = null,
         /** @var string[]|null */
@@ -50,7 +50,7 @@ readonly final class ReleaseImportDTO
             id: (string)$a['id'],
             title: (string)($a['title'] ?? ''),
             year: isset($a['year']) && $a['year'] !== '' ? (int)$a['year'] : null,
-            language: isset($a['language']) ? (array)$a['language'] : null,
+            languages: isset($a['language']) ? (array)$a['language'] : null,
             version: $a['version'] ?? null,
             releaseType: $a['releaseType'] ?? null,
             filePath: $a['filePath'] ?? null,

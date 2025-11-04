@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "artweb-ou/trickster-cms",
-            "version": "4.8.5",
+            "version": "4.8.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/artweb-ou/trickster-cms.git",
-                "reference": "e4183b38149e18039c518adcbb4bd62e675025a3"
+                "reference": "d83bd4121338f5523e305479269400c48d8ee3b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artweb-ou/trickster-cms/zipball/e4183b38149e18039c518adcbb4bd62e675025a3",
-                "reference": "e4183b38149e18039c518adcbb4bd62e675025a3",
+                "url": "https://api.github.com/repos/artweb-ou/trickster-cms/zipball/d83bd4121338f5523e305479269400c48d8ee3b8",
+                "reference": "d83bd4121338f5523e305479269400c48d8ee3b8",
                 "shasum": ""
             },
             "require": {
@@ -51,9 +51,9 @@
             "description": "Trickster CMS packages",
             "support": {
                 "issues": "https://github.com/artweb-ou/trickster-cms/issues",
-                "source": "https://github.com/artweb-ou/trickster-cms/tree/4.8.5"
+                "source": "https://github.com/artweb-ou/trickster-cms/tree/4.8.6"
             },
-            "time": "2025-10-25T20:43:13+00:00"
+            "time": "2025-11-03T20:16:58+00:00"
         },
         {
             "name": "ckeditor/ckeditor",
@@ -5455,16 +5455,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v7.3.4",
+            "version": "v7.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "2b9c5fafbac0399a20a2e82429e2bd735dcfb7db"
+                "reference": "cdb80fa5869653c83cfe1a9084a673b6daf57ea7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/2b9c5fafbac0399a20a2e82429e2bd735dcfb7db",
-                "reference": "2b9c5fafbac0399a20a2e82429e2bd735dcfb7db",
+                "url": "https://api.github.com/repos/symfony/console/zipball/cdb80fa5869653c83cfe1a9084a673b6daf57ea7",
+                "reference": "cdb80fa5869653c83cfe1a9084a673b6daf57ea7",
                 "shasum": ""
             },
             "require": {
@@ -5529,7 +5529,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v7.3.4"
+                "source": "https://github.com/symfony/console/tree/v7.3.5"
             },
             "funding": [
                 {
@@ -5549,7 +5549,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-09-22T15:31:00+00:00"
+            "time": "2025-10-14T15:46:26+00:00"
         },
         {
             "name": "symfony/filesystem",
@@ -6244,16 +6244,16 @@
         },
         {
             "name": "webmozart/assert",
-            "version": "1.12.0",
+            "version": "1.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozarts/assert.git",
-                "reference": "541057574806f942c94662b817a50f63f7345360"
+                "reference": "9be6926d8b485f55b9229203f962b51ed377ba68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/541057574806f942c94662b817a50f63f7345360",
-                "reference": "541057574806f942c94662b817a50f63f7345360",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/9be6926d8b485f55b9229203f962b51ed377ba68",
+                "reference": "9be6926d8b485f55b9229203f962b51ed377ba68",
                 "shasum": ""
             },
             "require": {
@@ -6296,9 +6296,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webmozarts/assert/issues",
-                "source": "https://github.com/webmozarts/assert/tree/1.12.0"
+                "source": "https://github.com/webmozarts/assert/tree/1.12.1"
             },
-            "time": "2025-10-20T12:43:39+00:00"
+            "time": "2025-10-29T15:56:20+00:00"
         }
     ],
     "aliases": [],

@@ -45,7 +45,7 @@ final class WorldOfSamImport extends errorLogger
      * Maximum number of products to import per run. Set to a high value so we
      * effectively import everything in one go when possible.
      */
-    protected int $maxCounter = 7;
+    protected int $maxCounter = 10;
 
     /**
      * Tracks how many products have been processed in the current run.
@@ -60,7 +60,7 @@ final class WorldOfSamImport extends errorLogger
     /**
      * Flag to optionally restrict importing to a single product for debugging.
      */
-    protected ?string $debugSlug = null;
+    protected ?string $debugSlug = 'b-dos-17n';
 
     /**
      * HTTP client used to fetch pages. Configured with a reasonable timeout
@@ -86,6 +86,8 @@ final class WorldOfSamImport extends errorLogger
      * @var array<string,string|null>
      */
     private array $roleMap;
+
+    private array $ignoreSlugs = ['ascd'];
 
     /**
      * Identifier used when storing import provenance. This will be passed into
@@ -126,7 +128,7 @@ final class WorldOfSamImport extends errorLogger
         $this->prodsService->setForceUpdateYoutube(true);
         $this->prodsService->setForceUpdateGroups(true);
         $this->prodsService->setForceUpdateAuthors(true);
-        $this->prodsService->setAddImages(true);
+        $this->prodsService->setAddImages(false);
         $this->prodsService->setForceUpdateImages(true);
         $this->prodsService->setUpdateExistingProds(true);
 
@@ -175,6 +177,9 @@ final class WorldOfSamImport extends errorLogger
 
         $productUrls = $this->collectProductUrls();
         foreach ($productUrls as $slug => $url) {
+            if (in_array($slug, $this->ignoreSlugs, true)) {
+                continue;
+            }
             if ($this->debugSlug !== null && $slug !== $this->debugSlug) {
                 continue;
             }
@@ -503,14 +508,19 @@ final class WorldOfSamImport extends errorLogger
             if ($releaseIndex > 0) {
                 $releaseId .= '-' . $releaseIndex;
             }
+
+            $releaseType = 'original';
+            if ($categoryId !== $this->categories['Demo'] && str_contains($title, 'demo')) {
+                $releaseType = 'demo';
+            }
             $releaseIndex++;
             $releases[] = new ReleaseImportDTO(
                 id: $releaseId,
                 title: $title,
                 year: $year,
-                language: null,
+                languages: null,
                 version: null,
-                releaseType: 'original',
+                releaseType: $releaseType,
                 filePath: null,
                 fileUrl: $dl['url'],
                 fileName: $dl['name'],
@@ -528,6 +538,10 @@ final class WorldOfSamImport extends errorLogger
         }
 
         if ($releases === [] && $seriesProdIds === []) {
+            if (str_contains('MIA', $description)) {
+                $legalStatus = 'mia';
+            }
+
             $releases[] = new ReleaseImportDTO(
                 id: $slug . '-unknown',
                 title: $title,
@@ -544,7 +558,7 @@ final class WorldOfSamImport extends errorLogger
             description: $description,
             htmlDescription: true,
             instructions: $instructions ?: null,
-            language: null,
+            languages: ["en"],
             legalStatus: $legalStatus,
             youtubeId: $youtubeId,
             externalLink: null,
@@ -573,6 +587,7 @@ final class WorldOfSamImport extends errorLogger
 
         // Persist via prodsService
         if ($prod = $this->prodsService->importProd($prodDto, $this->origin)) {
+            $prod->executeAction('resize');
             // Skip AI categories tagging in queue
             $this->queueService->updateStatus($prod->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
             $this->markProgress('Product ' . $slug . ' imported');

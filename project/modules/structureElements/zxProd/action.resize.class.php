@@ -15,5 +15,6 @@ class resizeZxProd extends structureElementAction
     {
         $structureElement->resizeImages();
         $structureElement->setViewName('details');
+//        $controller->redirect($structureElement->URL);
     }
 }

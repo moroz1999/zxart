@@ -9,6 +9,10 @@
             <a class="button"
                href="{$element->URL}id:{$element->id}/action:showAiForm/">{translations name='pressarticle.showAiForm'}</a>
         {/if}
+        {if isset($currentElementPrivileges.resize) && $currentElementPrivileges.resize==1}
+            <a class="button"
+               href="{$element->URL}id:{$element->id}/action:resize/">{translations name='zxprod.resize'}</a>
+        {/if}
         {if !empty($currentElementPrivileges.join)}
             <a class="button"
                href="{$element->URL}id:{$element->id}/action:showJoinForm/">{translations name='zxprod.join'}</a>

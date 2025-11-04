@@ -366,8 +366,8 @@ class ProdsService extends ElementsManager
             $element->externalLink = $dto->externalLink;
             $changed = true;
         }
-        if (!empty($dto->language) && $element->language != $dto->language) {
-            $element->language = $dto->language;
+        if (!empty($dto->languages) && $element->language != $dto->languages) {
+            $element->language = $dto->languages;
             $changed = true;
         }
 
@@ -774,8 +774,8 @@ class ProdsService extends ElementsManager
             $element->releaseType = $dto->releaseType;
             $changed = true;
         }
-        if (!$element->language && !empty($dto->language)) {
-            $element->language = $dto->language;
+        if (!$element->language && !empty($dto->languages)) {
+            $element->language = $dto->languages;
             $changed = true;
         }
         if (!$element->version && !empty($dto->version)) {

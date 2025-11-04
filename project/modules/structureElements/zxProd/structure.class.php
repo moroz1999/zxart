@@ -1088,13 +1088,17 @@ class zxProdElement extends ZxArtItem implements
                 if (is_file($filePath)) {
                     $info = getimagesize($filePath);
                     $width = $info[0];
-                    if ($width > 500) {
+                    // 576 -> sam coupe hires
+                    if ($width > 500 && ($width !== 576)) {
                         $imageProcess = new \ImageProcess\ImageProcess($pathsManager->getPath('imagesCache'));
                         $imageProcess->setDefaultCachePermissions($configManager->get('paths.defaultCachePermissions'));
                         $imageProcess->registerImage('canvas', $filePath);
                         $imageProcess->registerFilter(
                             'aspectedResize',
-                            'width=' . $width / 2 . ', interpolation=' . IMG_NEAREST_NEIGHBOUR,
+                            [
+                                'width' => (int)($width / 2),
+                                'interpolation' => IMG_NEAREST_NEIGHBOUR
+                            ],
                         );
                         $imageProcess->registerExport('canvas', null, $filePath);
                         $imageProcess->executeProcess();
