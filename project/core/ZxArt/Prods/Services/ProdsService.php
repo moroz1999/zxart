@@ -269,9 +269,9 @@ class ProdsService extends ElementsManager
 
             if ($label->isAlias && $label->isPerson) {
                 $this->authorsService->importAuthorAlias($personLabel, $origin);
-            } elseif ($label->isGroup) {
+            } elseif ($label->isGroup && $label->isAlias === false) {
                 $this->groupsService->importGroup($groupLabel, $origin);
-            } elseif ($label->isPerson) {
+            } elseif ($label->isPerson && $label->isAlias === false) {
                 $this->authorsService->importAuthor($personLabel, $origin);
             } else {
                 //we don't know anything about this label. lets search for any group with that name
@@ -291,7 +291,7 @@ class ProdsService extends ElementsManager
                 }
 
                 //just create author by default.
-                $this->authorsService->importAuthor($personLabel, $origin);
+                $this->authorsService->importLabel($personLabel, $origin);
             }
         }
     }

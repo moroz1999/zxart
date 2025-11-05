@@ -484,7 +484,7 @@ class PouetImport extends errorLogger
             $labels[] = new Label(
                 id: isset($group['id']) ? (string)$group['id'] : null,
                 name: $group['name'] ?? null,
-                isAlias: false,
+                isAlias: null,
                 isPerson: false,
                 isGroup: true,
                 abbreviation: $group['acronym'] ?? null,
@@ -508,7 +508,7 @@ class PouetImport extends errorLogger
             $labels[] = new Label(
                 id: $authorId !== '' ? $authorId : null,
                 name: $authorName !== '' ? $authorName : null,
-                isAlias: false,
+                isAlias: null,
                 isPerson: true,
                 isGroup: false,
             );

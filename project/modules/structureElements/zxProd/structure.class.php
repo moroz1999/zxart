@@ -1087,8 +1087,8 @@ class zxProdElement extends ZxArtItem implements
                 $filePath = $this->getUploadedFilesPath() . $image->id;
                 if (is_file($filePath)) {
                     $info = getimagesize($filePath);
-                    $width = $info[0];
-                    if ($width > 500) {
+                    $width = $info[0] ?? null;
+                    if ($width !== null && $width > 500) {
                         $imageProcess = new \ImageProcess\ImageProcess($pathsManager->getPath('imagesCache'));
                         $imageProcess->setDefaultCachePermissions($configManager->get('paths.defaultCachePermissions'));
                         $imageProcess->registerImage('canvas', $filePath);

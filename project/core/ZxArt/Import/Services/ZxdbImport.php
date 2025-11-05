@@ -866,7 +866,7 @@ class ZxdbImport extends errorLogger
     /**
      * @param false $isPerson
      */
-    protected function gatherLabelsInfo(?array &$infoIndex, $labelId, bool $isGroup = false, bool $isPerson = false, $isAlias = false): array
+    protected function gatherLabelsInfo(?array &$infoIndex, $labelId, bool $isGroup = false, bool $isPerson = false, $isAlias = null): array
     {
         if (!isset($infoIndex[$labelId])) {
             $infoIndex[$labelId] = [];
@@ -882,6 +882,7 @@ class ZxdbImport extends errorLogger
 
                 if ($label['labeltype_id'] === '+') {
                     $infoIndex[$labelId]['isPerson'] = true;
+                    $infoIndex[$labelId]['isAlias'] = false;
                 } elseif ($label['labeltype_id'] === '-') {
                     $infoIndex[$labelId]['isPerson'] = true;
                     $infoIndex[$labelId]['isAlias'] = true;

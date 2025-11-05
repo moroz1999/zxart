@@ -87,7 +87,7 @@ final class WorldOfSamImport extends errorLogger
      */
     private array $roleMap;
 
-    private array $ignoreSlugs = ['ascd'];
+    private array $ignoreSlugs = ['ascd', 'sam-coupe-diskimage-manager', 'z88dk', 'games-werent'];
 
     /**
      * Identifier used when storing import provenance. This will be passed into
@@ -128,23 +128,17 @@ final class WorldOfSamImport extends errorLogger
         $this->prodsService->setForceUpdateYoutube(true);
         $this->prodsService->setForceUpdateGroups(true);
         $this->prodsService->setForceUpdateAuthors(true);
-        $this->prodsService->setAddImages(false);
+        $this->prodsService->setAddImages(true);
         $this->prodsService->setForceUpdateImages(true);
         $this->prodsService->setUpdateExistingProds(true);
 
         // Category mapping: only import Game, Demo, Utility and Disk Magazine
         $this->categories = [
-            'Game' => CategoryIds::GAMES->value,
-            'Demo' => CategoryIds::DEMOS->value,
-            'Utility' => CategoryIds::SYSTEM_SOFTWARE->value,
-            'Disk Magazine' => CategoryIds::PRESS_MAGAZINES->value,
+            'game' => CategoryIds::GAMES->value,
+            'demo' => CategoryIds::DEMOS->value,
+            'utility' => CategoryIds::SYSTEM_SOFTWARE->value,
+            'disk magazine' => CategoryIds::PRESS_MAGAZINES->value,
         ];
-        // Normalize to lowercase keys for comparison
-        $normalized = [];
-        foreach ($this->categories as $k => $v) {
-            $normalized[strtolower($k)] = $v;
-        }
-        $this->categories = $normalized;
 
         // Role mapping for authors/artists/musicians. Publisher handled separately.
         $this->roleMap = [
@@ -418,7 +412,7 @@ final class WorldOfSamImport extends errorLogger
                 $label = new Label(
                     id: $importId !== '' ? $importId : null,
                     name: $name !== '' ? $name : null,
-                    isAlias: false,
+                    isAlias: null,
                     isPerson: true,
                     isGroup: false,
                 );
@@ -444,7 +438,7 @@ final class WorldOfSamImport extends errorLogger
             $label = new Label(
                 id: $pubId !== '' ? $pubId : null,
                 name: $name !== '' ? $name : null,
-                isAlias: false,
+                isAlias: null,
                 isPerson: false,
                 isGroup: true,
             );
@@ -507,7 +501,7 @@ final class WorldOfSamImport extends errorLogger
             }
 
             $releaseType = 'original';
-            if ($categoryId !== $this->categories['Demo'] && str_contains($title, 'demo')) {
+            if ($categoryId !== $this->categories['demo'] && str_contains($title, 'demo')) {
                 $releaseType = 'demo';
             }
 

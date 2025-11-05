@@ -108,6 +108,32 @@ class AuthorsService extends ElementsManager
         return $element;
     }
 
+    public function importLabel(PersonLabel $label, string $origin): authorElement|authorAliasElement|null
+    {
+        $authorId = $label->id;
+        if ($authorId === null) {
+            return null;
+        }
+
+        $element = $this->resolveAuthorByLabel($label, $origin);
+
+        if ($element === null) {
+            $element = $this->resolveAuthorAliasByLabel($label, $origin);
+        }
+        if ($element === null) {
+            $resolved = $this->labelResolver->resolve($label);
+            if ($resolved && $resolved->structureType === 'author') {
+                $this->updateAuthor($resolved, $label, $origin);;
+                return $resolved;
+            }
+            if ($resolved && $resolved->structureType === 'authorAlias') {
+                $this->updateAuthorAlias($resolved, $label, $origin);;
+                return $resolved;
+            }
+        }
+        return $this->importAuthor($label, $origin);
+    }
+
     public function createAuthor(PersonLabel $dto, $origin): ?authorElement
     {
         $title = trim($dto->name ?? '');
@@ -552,8 +578,11 @@ class AuthorsService extends ElementsManager
         if (isset($this->importedAuthors[$origin][$authorId])) {
             return $this->importedAuthors[$origin][$authorId];
         }
-
-        return $this->getElementByImportId($authorId, $origin, 'author');
+        $author = $this->getElementByImportId($authorId, $origin, 'author');
+        if ($author?->structureType === 'author') {
+            return $author;
+        }
+        return null;
     }
 
     /**
