@@ -25,7 +25,7 @@ class ProdQueryService
     }
 
 
-    private function getSeoPromt($isRunnable): string
+    private function getSeoPromt(bool $isRunnable): string
     {
         $promt = "
 Отправляю тебе через API данные. Сделай всё правильно с первой попытки, так как я не смогу проверить и указать на ошибки. Как следует подумай и внимательно перепроверь результат.
@@ -172,7 +172,7 @@ spa:{}
         if ($prodDataJson === null) {
             return null;
         }
-        $promt = $this->getSeoPromt($prodData['isRunnableOnline']);
+        $promt = $this->getSeoPromt($prodData['isRunnableOnline'] ?? false);
         $promt .= $prodDataJson;
 
         $this->logAi($promt, $prodElement->id . '_seo');

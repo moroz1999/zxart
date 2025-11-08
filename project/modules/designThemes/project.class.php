@@ -55,6 +55,7 @@ class projectDesignTheme extends DesignTheme
             'component.emulator.js',
             'component.zx81Emulator.js',
             'component.tsconfEmulator.js',
+            'component.samcoupeEmulator.js',
             'component.artWebZXGallery.js',
             'component.stagesAnimation.js',
             'component.flickerImage.js',

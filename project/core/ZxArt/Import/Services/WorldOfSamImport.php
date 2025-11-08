@@ -87,7 +87,7 @@ final class WorldOfSamImport extends errorLogger
      */
     private array $roleMap;
 
-    private array $ignoreSlugs = ['ascd', 'sam-coupe-diskimage-manager', 'z88dk', 'games-werent'];
+    private array $ignoreSlugs = ['ascd', 'sam-coupe-diskimage-manager', 'z88dk', 'games-werent', 'scadm', 'x128', 'simcoupe'];
 
     /**
      * Identifier used when storing import provenance. This will be passed into
@@ -235,7 +235,7 @@ final class WorldOfSamImport extends errorLogger
                     }
                 }
                 // If no new products found on this page, stop iterating pages for this letter
-                if ($countThisPage === 0 || $countThisPage === $previousCount) {
+                if ($countThisPage === 0) {
                     break;
                 }
                 $previousCount = $countThisPage;

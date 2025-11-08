@@ -41,6 +41,9 @@ class routeApplication extends controllerApplication
 
         if ($importId = $controller->getParameter('importId')) {
             if ($importOrigin = $controller->getParameter('importOrigin')) {
+                if ($importOrigin === 'zxdb'){
+                    $importId = (int)$importId;
+                }
                 if ($type = $controller->getParameter('type')) {
                     $db = $this->getService('db');
                     if ($elementId = $db->table('import_origin')

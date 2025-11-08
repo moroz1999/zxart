@@ -55,7 +55,7 @@ class fixApplication extends controllerApplication
              */
             $languagesManager = $this->getService('LanguagesManager');
             $languagesManager->setCurrentLanguageCode('eng');
-            $this->fixPressCategories();
+            $this->fixProdInvalidImages();
 //            $this->addCategoryToQueue(92183, QueueType::AI_SEO, QueueStatus::STATUS_TODO, 5000);
 //            $this->addCategoryToQueue(92534, QueueType::AI_INTRO, QueueStatus::STATUS_TODO, 5000);
 //            $this->addCategoryToQueue(204819, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
@@ -98,7 +98,7 @@ class fixApplication extends controllerApplication
         $count = count($ids);
         $counter = 0;
         foreach ($ids as $id) {
-            if ($counter < 35845) {
+            if ($counter < 33466) {
                 $counter++;
                 continue;
             }
