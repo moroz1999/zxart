@@ -21,20 +21,20 @@ readonly final class ProdResolver
     {
     }
 
-    public function resolve(ProdImportDTO $prodLabel, $matchProdsWithoutYear = false): ?zxProdElement
+    public function resolve(ProdImportDTO $dto, $matchProdsWithoutYear = false): ?zxProdElement
     {
-        if ($prodLabel->title === null) {
+        if ($dto->title === null) {
             return null;
         }
 
-        $entityIds = $this->prodsRepository->findProdsByTitles($prodLabel->title);
+        $entityIds = $this->prodsRepository->findProdsByTitles($dto->title);
 
         $entities = $entityIds ? array_map(fn(int $id) => $this->structureManager->getElementById($id), $entityIds) : [];
         $entities = array_filter($entities);
         $candidates = [];
 
         foreach ($entities as $entity) {
-            $score = $this->calculateScoreForElement($entity, $prodLabel, $matchProdsWithoutYear);
+            $score = $this->calculateScoreForElement($entity, $dto, $matchProdsWithoutYear);
             if ($score <= 0) {
                 continue;
             }
