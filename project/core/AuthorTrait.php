@@ -82,6 +82,10 @@ trait AuthorTrait
                 ->where('elementId', '=', $this->id)
                 ->whereIn('importOrigin', $types);
             if ($rows = $query->get()) {
+                /**
+                 * Psalm type hint for database rows structure
+                 * @var iterable<array{importId:string, importOrigin:string}> $rows
+                 */
                 foreach ($rows as $row) {
                     if ($row['importOrigin'] === 'zxdb') {
                         $this->linksInfo[] = [

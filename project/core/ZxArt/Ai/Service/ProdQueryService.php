@@ -194,7 +194,7 @@ spa:{}
         return $response;
     }
 
-    private function getIntroPromt($hasTextDescriptions): string
+    private function getIntroPromt(bool $hasTextDescriptions): string
     {
         $prompt = "
 Отправляю тебе через API данные. Сделай всё правильно с первой попытки, так как я не смогу проверить и указать на ошибки.         
@@ -301,16 +301,17 @@ spa:''
     }
 
 
-    private function logAi($message, $type)
+    private function logAi(string $message, string $type): void
     {
-        if (!is_dir(ROOT_PATH . '/temporary/ai')) {
-            mkdir(ROOT_PATH . '/temporary/ai');
-        };
-        file_put_contents(ROOT_PATH . '/temporary/ai/' . $type, $message, FILE_APPEND);
+        $directory = ROOT_PATH . '/temporary/ai';
+        if (!is_dir($directory) && !mkdir($directory, 0777, true) && !is_dir($directory)) {
+            return;
+        }
+        file_put_contents($directory . '/' . $type, $message, FILE_APPEND);
     }
 
 
-    private function truncateUtf8($string, int $length)
+    private function truncateUtf8(string $string, int $length): string
     {
         if (strlen($string) <= $length) {
             return $string;
@@ -330,7 +331,7 @@ spa:''
      * @throws QueryFailException
      * @throws QuerySkipException
      */
-    public function queryCategoriesAndTagsForProd(zxProdElement $prodElement, $queryCategories): array
+    public function queryCategoriesAndTagsForProd(zxProdElement $prodElement, bool $queryCategories): array
     {
         if (count($prodElement->compilationItems) > 0) {
             throw new QuerySkipException('Skip compilation. ' . $prodElement->getTitle() . ' ' . $prodElement->getPersistedId());
@@ -383,7 +384,7 @@ spa:''
         return $response;
     }
 
-    private function mapToCustomString(array $data)
+    private function mapToCustomString(array $data): string
     {
         $result = '';
         foreach ($data as $key => $value) {
@@ -413,7 +414,7 @@ spa:''
         return $result;
     }
 
-    private function gatherCategoryStructure(zxProdCategoryElement $category, &$result)
+    private function gatherCategoryStructure(zxProdCategoryElement $category, array &$result): void
     {
         $id = $category->getPersistedId();
         $result[$id] = [
@@ -429,7 +430,7 @@ spa:''
         }
     }
 
-    private function jsonToIndentedString(array $data, $level = 0)
+    private function jsonToIndentedString(array $data, int $level = 0): string
     {
         $result = '';
         $indent = str_repeat("\t", $level); // Уровень табуляции
@@ -470,11 +471,11 @@ spa:''
         return $data;
     }
 
-    private function cleanString($input)
+    private function cleanString(string $input): string
     {
         $input = preg_replace('/\s+/', ' ', $input);
         $output = preg_replace('/([^a-zA-Z0-9\s])\1+/', '$1', $input);
-        return trim($output);
+        return trim((string)$output);
     }
 
     private function getCategoriesAndTagsPromt(): string

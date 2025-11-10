@@ -648,7 +648,7 @@ class ProdsService extends ElementsManager
         $this->authorshipRepository->addAuthorship($prodId, $authorId, 'release', $roles);
     }
 
-    private function linkReleaseWithPublisher($publisherId, int $prodId): void
+    private function linkReleaseWithPublisher(int $publisherId, int $prodId): void
     {
         $this->linksManager->linkElements($publisherId, $prodId, 'zxReleasePublishers');
     }
@@ -756,7 +756,7 @@ class ProdsService extends ElementsManager
     private function updateRelease(zxReleaseElement $element, ReleaseImportDTO $dto, string $origin, bool $justCreated = false): void
     {
         $changed = false;
-        $sanitizedTitle = $this->sanitizeTitle($dto->title ?? '');
+        $sanitizedTitle = $this->sanitizeTitle($dto->title);
         if (($this->forceUpdateTitles || !$element->title) && $sanitizedTitle !== '') {
             $element->title = $sanitizedTitle;
             $element->structureName = $sanitizedTitle;
@@ -932,7 +932,7 @@ class ProdsService extends ElementsManager
         return $result;
     }
 
-    protected function sanitizeTitle(string $title)
+    protected function sanitizeTitle(string $title): string
     {
         $articles = ['The', 'La', 'El', 'A'];
         foreach ($articles as $article) {
@@ -1134,7 +1134,7 @@ class ProdsService extends ElementsManager
         return $newProdElement;
     }
 
-    public function copyAuthorship($sourceElement, $targetElement): void
+    public function copyAuthorship(structureElement $sourceElement, structureElement $targetElement): void
     {
         $sourceElementId = $sourceElement->getId();
         $targetElementId = $targetElement->getId();

@@ -52,7 +52,7 @@ pageTitle:{eng:'', spa:'', rus:''}
         return json_decode($response, true, 512, JSON_THROW_ON_ERROR);
     }
 
-    private function truncateUtf8($string, int $length)
+    private function truncateUtf8(string $string, int $length): string
     {
         if (strlen($string) <= $length) {
             return $string;

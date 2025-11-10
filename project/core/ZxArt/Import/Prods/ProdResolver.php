@@ -21,7 +21,7 @@ readonly final class ProdResolver
     {
     }
 
-    public function resolve(ProdImportDTO $dto, $matchProdsWithoutYear = false): ?zxProdElement
+    public function resolve(ProdImportDTO $dto, bool $matchProdsWithoutYear = false): ?zxProdElement
     {
         if ($dto->title === null) {
             return null;

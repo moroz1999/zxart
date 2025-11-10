@@ -19,4 +19,5 @@ TEST:
 - One scenario per test, clear naming based on behavior and expected result.
 - No error suppression; fail loud.
 - Require manual review/approval for any production code changes triggered by tests.
-- Run tests using "vendor\bin\phpunit -c phpunit.xml.dist"
+- Run tests using "composer test"
+- Run psalm using "composer psalm"
