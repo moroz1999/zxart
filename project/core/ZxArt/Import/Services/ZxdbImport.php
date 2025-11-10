@@ -21,7 +21,7 @@ class ZxdbImport extends errorLogger
     protected int $counter = 0;
     protected int $maxCounter = 0;
     protected int $minCounter = 0;
-    protected ?int $debugEntry = 43280;
+    protected ?int $debugEntry = null;
     private const bool IMPORT_SERIES = false;
     private const int FILETYPE_LOADING = 1;
     private const int FILETYPE_RUNNING = 2;
@@ -544,7 +544,7 @@ class ZxdbImport extends errorLogger
                 }
 
                 if (!empty($entry['availabletype_id']) && isset($this->legalStatuses[$entry['availabletype_id']])) {
-                    $prodInfo['legalStatus'] = $this->legalStatuses[$entry['availabletype_id']]->name;
+                    $prodInfo['legalStatus'] = $this->legalStatuses[$entry['availabletype_id']];
                 }
 
                 if ($record = $this->zxdb->table('aliases')
@@ -637,8 +637,8 @@ class ZxdbImport extends errorLogger
                     }
                 }
 
-                if ($prodInfo['externalLink'] && $prodInfo['legalStatus'] === LegalStatus::forbidden->name) {
-                    $prodInfo['legalStatus'] = LegalStatus::insales->name;
+                if ($prodInfo['externalLink'] && $prodInfo['legalStatus'] === LegalStatus::forbidden) {
+                    $prodInfo['legalStatus'] = LegalStatus::insales;
                 }
 
                 $this->getReleasesInfo($entry);

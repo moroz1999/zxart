@@ -297,6 +297,9 @@ class zxProdElement extends ZxArtItem implements
             return $result[$number];
         }
         foreach ($this->compilationItems as $prod) {
+            if ($prod === $this) {
+                continue;
+            }
             if ($image = $prod->getImage($number)) {
                 return $image;
             }
