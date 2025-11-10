@@ -7,6 +7,7 @@ use ZxArt\Prods\LegalStatus;
 use ZxArt\Releases\Services\ArchiveFileResolverService;
 use ZxArt\Releases\Services\EmulatorResolverService;
 use ZxFiles\BasicFile;
+use ZxArt\Hardware\HardwareGroup;
 
 /**
  * @property string $title
@@ -640,8 +641,8 @@ class zxReleaseElement extends ZxArtItem implements
             "name" => $this->title,
             "url" => $this->URL,
         ];
-        $computersList = array_intersect($this->hardwareRequired, $this->getHardwareList()['computers']);
-        $dosList = array_intersect($this->hardwareRequired, $this->getHardwareList()['dos']);
+        $computersList = array_intersect($this->hardwareRequired, $this->getHardwareList()[HardwareGroup::COMPUTERS->value]);
+        $dosList = array_intersect($this->hardwareRequired, $this->getHardwareList()[HardwareGroup::DOS->value]);
         $translationsManager = $this->getService('translationsManager');
 
         $computersStrings = [];
@@ -957,12 +958,12 @@ class zxReleaseElement extends ZxArtItem implements
     public function getIconByHwType(string $hardwareType): string
     {
         return match ($hardwareType) {
-            'computers' => '🖥️',
-            'storage' => '💾',
-            'dos' => '🗂️',
-            'sound' => '🔊',
-            'controls' => '🎮',
-            'expansion' => '🛠️',
+            HardwareGroup::COMPUTERS->value => '🖥️',
+            HardwareGroup::STORAGE->value => '💾',
+            HardwareGroup::DOS->value => '🗂️',
+            HardwareGroup::SOUND->value => '🔊',
+            HardwareGroup::CONTROLS->value => '🎮',
+            HardwareGroup::EXPANSION->value => '🛠️',
             default => null,
         };
     }

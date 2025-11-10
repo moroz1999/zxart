@@ -9,6 +9,7 @@ use ZxArt\Queue\QueueStatusProvider;
 use ZxArt\Queue\QueueType;
 use ZxArt\ZxProdCategories\CategoryIds;
 use ZxArt\ZxProdCategories\CompilationCategoryIds;
+use ZxArt\Hardware\HardwareGroup;
 
 /**
  * Class zxProdElement
@@ -784,8 +785,8 @@ class zxProdElement extends ZxArtItem implements
         $releases = $this->getReleasesList();
         $release = $releases[0] ?? null;
         if ($release !== null) {
-            $computersList = array_intersect($release->hardwareRequired, $release->getHardwareList()['computers']);
-            $dosList = array_intersect($release->hardwareRequired, $release->getHardwareList()['dos']);
+            $computersList = array_intersect($release->hardwareRequired, $release->getHardwareList()[HardwareGroup::COMPUTERS->value]);
+            $dosList = array_intersect($release->hardwareRequired, $release->getHardwareList()[HardwareGroup::DOS->value]);
             $translationsManager = $this->getService('translationsManager');
 
             $computersStrings = [];
