@@ -5,6 +5,7 @@ return [
             'zxItemsList',
             'partiesList',
             'authorsList',
+            'groupsList',
             'authorsCatalogue',
             'partiesCatalogue',
             'groupsCatalogue',
