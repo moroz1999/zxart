@@ -9,18 +9,18 @@ final class LabelTransformer
     {
         return new GroupLabel(
             id: $label->id,
+            isAlias: $label->isAlias,
             name: $label->name,
             cityName: $label->cityName,
             countryName: $label->countryName,
             countryId: $label->countryId,
             locationName: $label->locationName,
-            isAlias: $label->isAlias,
             memberNames: $label->memberNames,
-            parentGroupIds: null,
+            parentGroupIds: $label->groupIds,
             type: $label->type?->value ?? null,
             abbreviation: $label->abbreviation,
             website: $label->website,
-            groupId: $label->groupId,
+            aliasParentGroupId: $label->groupId,
         );
     }
 
@@ -28,6 +28,7 @@ final class LabelTransformer
     {
         return new PersonLabel(
             id: $label->id,
+            isAlias: $label->isAlias,
             name: $label->name,
             realName: $label->realName,
             cityName: $label->cityName,
@@ -35,8 +36,8 @@ final class LabelTransformer
             countryId: $label->countryId,
             cityId: $label->cityId,
             locationName: $label->locationName,
-            groupImportIds: $label->groups,
-            groupsIds: null,
+            groupIds: $label->groupIds,
+            groupLabels: $label->groupLabels,
             groupRoles: $label->groupRoles,
             authorId: $label->authorId ? (int)$label->authorId : null,
         );

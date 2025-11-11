@@ -88,7 +88,7 @@ class AuthorsService extends ElementsManager
             return null;
         }
 
-        $element = $this->resolveAuthorByLabel($label, $origin);
+        $element = $this->getAuthorByLabel($label, $origin);
 
         if ($element === null) {
             if ($resolved = $this->labelResolver->resolve($label)) {
@@ -115,10 +115,10 @@ class AuthorsService extends ElementsManager
             return null;
         }
 
-        $element = $this->resolveAuthorByLabel($label, $origin);
+        $element = $this->getAuthorByLabel($label, $origin);
 
         if ($element === null) {
-            $element = $this->resolveAuthorAliasByLabel($label, $origin);
+            $element = $this->getAuthorAliasByLabel($label, $origin);
         }
         if ($element === null) {
             $resolved = $this->labelResolver->resolve($label);
@@ -268,9 +268,9 @@ class AuthorsService extends ElementsManager
             $element->persistElementData();
         }
 
-        if ($this->forceUpdateGroups && is_array($label->groupImportIds) && $label->groupImportIds !== []) {
+        if ($this->forceUpdateGroups && is_array($label->groupIds) && $label->groupIds !== []) {
             $roles = $label->groupRoles ?? [];
-            foreach ($label->groupImportIds as $groupImportId) {
+            foreach ($label->groupIds as $groupImportId) {
                 if ($groupImportId === null || $groupImportId === '') {
                     continue;
                 }
@@ -284,7 +284,7 @@ class AuthorsService extends ElementsManager
     public function importAuthorAlias(PersonLabel $personLabel, string $origin, bool $createNew = true)
     {
         $importId = $personLabel->id;
-        $element = $this->resolveAuthorAliasByLabel($personLabel, $origin);
+        $element = $this->getAuthorAliasByLabel($personLabel, $origin);
         if (!$element) {
             if ($element = $this->labelResolver->resolve($personLabel)) {
                 if ($origin) {
@@ -572,7 +572,7 @@ class AuthorsService extends ElementsManager
         return $newAuthorElement;
     }
 
-    public function resolveAuthorByLabel(PersonLabel $label, string $origin): authorElement|null
+    public function getAuthorByLabel(PersonLabel $label, string $origin): authorElement|null
     {
         $authorId = $label->id;
         if (isset($this->importedAuthors[$origin][$authorId])) {
@@ -653,7 +653,7 @@ class AuthorsService extends ElementsManager
         return $authorElement;
     }
 
-    public function resolveAuthorAliasByLabel(PersonLabel $personLabel, string $origin): authorAliasElement|null
+    public function getAuthorAliasByLabel(PersonLabel $personLabel, string $origin): authorAliasElement|null
     {
         $importId = (string)$personLabel->id;
         if (isset($this->importedAuthorAliases[$origin][$importId])) {

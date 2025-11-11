@@ -474,8 +474,8 @@ final class ArticleParsedDataUpdater
             if (!$this->authorSufficiencyChecker::isDataSufficient(
                 $label->realName ?? '',
                 $label->name ?? '',
-                $label->groupImportIds ?? [],
-                $label->groupsIds ?? [],
+                $label->groupLabels ?? [],
+                $label->groupIds ?? [],
             )) {
                 continue;
             }
@@ -556,8 +556,8 @@ final class ArticleParsedDataUpdater
             realName: $parsedAuthor['realName'] ?? null,
             cityName: $parsedAuthor['city'] ?? null,
             countryName: $parsedAuthor['country'] ?? null,
-            groupImportIds: $groups,
-            groupsIds: $parsedAuthor['teamIds'] ?? null,
+            groupIds: $parsedAuthor['teamIds'] ?? null,
+            groupLabels: $groups,
             groupRoles: $groupRoles,
         );
     }

@@ -251,8 +251,8 @@ class ZxdbImport extends errorLogger
 //        $this->prodsService->setForceUpdatePublishers(true);
 //        $this->prodsService->setForceUpdateGroups(true);
         $this->prodsService->setUpdateExistingReleases(true);
-        $this->prodsService->setForceUpdateImages(true);
-        $this->prodsService->setAddImages(true);
+        $this->prodsService->setForceUpdateImages(false);
+        $this->prodsService->setAddImages(false);
 
         $this->authorsService->setForceUpdateCountry(false);
         $this->authorsService->setForceUpdateCity(false);
@@ -866,7 +866,7 @@ class ZxdbImport extends errorLogger
     /**
      * @param false $isPerson
      */
-    protected function gatherLabelsInfo(?array &$infoIndex, $labelId, bool $isGroup = false, bool $isPerson = false, $isAlias = null): array
+    protected function gatherLabelsInfo(?array &$infoIndex, $labelId, ?bool $isGroup = null, ?bool $isPerson = null, ?bool $isAlias = null): array
     {
         if (!isset($infoIndex[$labelId])) {
             $infoIndex[$labelId] = [];
@@ -902,17 +902,12 @@ class ZxdbImport extends errorLogger
                 }
 
                 if (($label['from_id'] !== null) && ($label['from_id'] !== $label['owner_id'])) {
-                    $fromInfo = $this->gatherLabelsInfo(
-                        $infoIndex,
-                        $label['from_id'],
-                        $infoIndex[$labelId]['isGroup'],
-                        $infoIndex[$labelId]['isPerson']
-                    );
+                    $fromInfo = $this->gatherLabelsInfo($infoIndex, $label['from_id']);
                     if ($fromInfo) {
-                        if ($fromInfo['isPerson']) {
+                        if ($fromInfo['isPerson'] && $infoIndex[$labelId]['isGroup'] === null) {
                             $infoIndex[$labelId]['isPerson'] = true;
                             $infoIndex[$labelId]['authorId'] = $fromInfo['id'];
-                        } elseif ($fromInfo['isGroup']) {
+                        } elseif ($fromInfo['isGroup'] && $infoIndex[$labelId]['isPerson'] === null) {
                             $infoIndex[$labelId]['isGroup'] = true;
                             $infoIndex[$labelId]['groupId'] = $fromInfo['id'];
                         }
@@ -928,7 +923,7 @@ class ZxdbImport extends errorLogger
                     ->get()) {
                     foreach ($rows as $row) {
                         if ($teamInfo = $this->gatherLabelsInfo($infoIndex, $row['team_id'], true)) {
-                            $infoIndex[$labelId]['groupsData'][] = $teamInfo['id'];
+                            $infoIndex[$labelId]['groups'][] = $teamInfo['id'];
                         }
                     }
                     $infoIndex[$labelId]['isPerson'] = true;

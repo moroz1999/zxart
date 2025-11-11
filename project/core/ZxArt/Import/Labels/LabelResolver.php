@@ -7,6 +7,7 @@ use authorAliasElement;
 use authorElement;
 use groupAliasElement;
 use groupElement;
+use RuntimeException;
 use structureManager;
 use ZxArt\Authors\Repositories\AuthorAliasesRepository;
 use ZxArt\Authors\Repositories\AuthorsRepository;
@@ -126,7 +127,7 @@ final readonly class LabelResolver
                     return 0;
                 }
 
-                $labelGroups = $label->groupImportIds ?? [];
+                $labelGroups = $label->groupLabels ?? [];
 
                 // if both have groups, then exclude non-matching
                 if (count($authorGroups) > 0 && count($labelGroups) > 0) {
@@ -173,8 +174,9 @@ final readonly class LabelResolver
 
     private function resolveUnknown(Label $label): authorElement|authorAliasElement|groupElement|groupAliasElement|null
     {
+        throw new RuntimeException('not implemented');
         //todo: provide transforming of Label to PersonLabel and GroupLabel
-        return $this->resolveAuthor($label) ?? $this->resolveGroup($label);
+//        return $this->resolveAuthor($label) ?? $this->resolveGroup($label);
     }
 
     private function resolveEntity(
@@ -185,10 +187,10 @@ final readonly class LabelResolver
         callable                     $calculateScoreForElement,
     ): authorElement|authorAliasElement|groupElement|groupAliasElement|null
     {
-        $entityIds = $findEntityIdsByName($label->name);
+        $entityIds = $label->isAlias !== true ? $findEntityIdsByName($label->name) : [];
         $entities = $entityIds ? array_map(fn(int $id) => $this->structureManager->getElementById($id), $entityIds) : [];
 
-        $aliasIds = $findAliasIdsByName($label->name);
+        $aliasIds = $label->isAlias !== false ? $findAliasIdsByName($label->name) : [];
         $aliases = $aliasIds ? array_map(fn(int $id) => $this->structureManager->getElementById($id), $aliasIds) : [];
 
         $candidates = [];

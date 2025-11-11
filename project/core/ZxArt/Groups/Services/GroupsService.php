@@ -50,7 +50,7 @@ class GroupsService extends ElementsManager
 
     public function importGroup(GroupLabel $label, ?string $origin = null): groupAliasElement|groupElement|null
     {
-        $element = $this->resolveGroupByLabel($label, $origin);
+        $element = $this->getGroupByLabel($label, $origin);
         if (($element !== null) && $origin !== null) {
             $this->saveImportId($element->id, $label->id, $origin, 'group');
         }
@@ -230,8 +230,8 @@ class GroupsService extends ElementsManager
             }
         }
 
-        if (($groupAlias->groupId !== null) && !$element->groupId) {
-            if ($groupElement = $this->getElementByImportId($groupAlias->groupId, $origin, 'group')) {
+        if (($groupAlias->aliasParentGroupId !== null) && !$element->groupId) {
+            if ($groupElement = $this->getElementByImportId($groupAlias->aliasParentGroupId, $origin, 'group')) {
                 $changed = true;
                 $element->groupId = $groupElement->getPersistedId();
             }
@@ -337,7 +337,7 @@ class GroupsService extends ElementsManager
         return $groupElement;
     }
 
-    public function resolveGroupByLabel(GroupLabel $label, ?string $origin): groupElement|groupAliasElement|null
+    public function getGroupByLabel(GroupLabel $label, ?string $origin): groupElement|groupAliasElement|null
     {
         /** @var groupElement|null $element */
         $element = $this->getElementByImportId($label->id, $origin, 'group');
