@@ -955,7 +955,7 @@ class zxReleaseElement extends ZxArtItem implements
         return $map;
     }
 
-    public function getIconByHwType(string $hardwareType): string
+    public function getIconByHwType(string $hardwareType): ?string
     {
         return match ($hardwareType) {
             HardwareGroup::COMPUTERS->value => '🖥️',

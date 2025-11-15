@@ -43,7 +43,7 @@ class ProdsDownloader extends errorLogger
     public function moveFileContents(string $path, string $url): bool
     {
         $filePath = $this->getFilePath($url);
-        if ($this->getFileContents($url)) {
+        if ($this->getFileContents($url) !== null) {
             return rename($filePath, $path);
         }
         return false;
@@ -67,7 +67,7 @@ class ProdsDownloader extends errorLogger
             $fileName = md5($url) . '.' . $extension;
             $cachePath = $this->pathsManager->getPath('uploadsCache');
 
-            if (!is_dir($cachePath)) {
+            if ($cachePath && !is_dir($cachePath)) {
                 if (!mkdir($cachePath, $this->configManager->get('paths.defaultCachePermissions'), true) && !is_dir($cachePath)) {
                     $this->logError('Failed to create cache directory: ' . $cachePath);
                     return false;

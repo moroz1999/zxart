@@ -37,6 +37,6 @@
   },
   "scripts": {
     "test": "vendor\\bin\\phpunit -c phpunit.xml.dist",
-    "psalm": "vendor\\bin\\psalm --use-baseline=psalm-baseline.xml"
+    "psalm": "vendor\\bin\\psalm --use-baseline=psalm-baseline.xml --no-cache"
   }
 }
