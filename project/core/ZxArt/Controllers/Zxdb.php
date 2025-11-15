@@ -18,6 +18,8 @@ class Zxdb extends controllerApplication
      */
     public function initialize()
     {
+        //requires more memory for parsing CD isos
+        ini_set("memory_limit", "2048M");
         ini_set("max_execution_time", 60 * 30);
         ignore_user_abort(true);
         $this->startSession('crontab');

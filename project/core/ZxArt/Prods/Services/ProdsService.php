@@ -28,6 +28,7 @@ use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Import\Prods\Dto\ReleaseImportDTO;
 use ZxArt\Import\Prods\ProdResolver;
 use ZxArt\Parties\Services\PartiesService;
+use ZxArt\Prods\LegalStatus;
 use ZxArt\Prods\Repositories\ProdsRepository;
 use ZxArt\ZxProdCategories\CategoryIds;
 use zxProdElement;
@@ -311,7 +312,11 @@ class ProdsService extends ElementsManager
             $element->altTitle = $dto->altTitle;
             $changed = true;
         }
-        if (!empty($dto->legalStatus) && (empty($element->legalStatus) || $element->legalStatus === 'unknown' || $justCreated) && $element->legalStatus !== $dto->legalStatus->name) {
+        if (
+            ($dto->legalStatus !== null) &&
+            (empty($element->legalStatus) || $element->legalStatus === 'unknown' || $justCreated) &&
+            $element->legalStatus !== $dto->legalStatus->name
+        ) {
             $element->legalStatus = $dto->legalStatus->name;
             $changed = true;
         }
