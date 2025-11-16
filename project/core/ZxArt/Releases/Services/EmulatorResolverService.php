@@ -21,11 +21,15 @@ final class EmulatorResolverService
         ],
         'samcoupe' => [
             'hardware' => ['samcoupe'],
-            'extensions' => ['dsk', 'mgt', 'sad', 'cpm', 'tap', 'tzx'],
+            'extensions' => ['tzx', 'tap', 'blk', 'mfi', 'dfi', 'mfm', 'td0', 'imd', '86f', 'd77', 'd88', 'ldd', 'cqm', 'cqi', 'dsk', 'mgt', 'sad', 'cpm'],
         ],
         'usp' => [
             'hardware' => [],
             'extensions' => ['trd', 'tap', 'z80', 'sna', 'tzx', 'scl'],
+        ],
+        'zxnext' => [
+            'hardware' => ['zxnext'],
+            'extensions' => ['zip', 'nex'],
         ],
     ];
 
@@ -40,9 +44,9 @@ final class EmulatorResolverService
         if ($this->matchHardware($hardwareRequired, 'tsconf')) {
             return 'tsconf';
         }
-//        if ($this->matchHardware($hardwareRequired, 'samcoupe')) {
-//            return 'samcoupe';
-//        }
+        if ($this->matchHardwareAndFormat($hardwareRequired, $releaseFormats, 'samcoupe')) {
+            return 'samcoupe';
+        }
         if ($this->matchFormat($releaseFormats, 'usp')) {
             return 'usp';
         }

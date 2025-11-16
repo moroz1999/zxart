@@ -1261,4 +1261,15 @@ class zxProdElement extends ZxArtItem implements
         }
         return $url;
     }
+
+    public function getEmulatorType(): ?string
+    {
+        foreach ($this->getReleasesList() as $release) {
+            $emulatorType = $release->getEmulatorType();
+            if ($emulatorType !== null) {
+                return $emulatorType;
+            }
+        }
+        return null;
+    }
 }

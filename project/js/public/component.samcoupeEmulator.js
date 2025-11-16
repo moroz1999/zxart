@@ -21,6 +21,9 @@ window.samcoupeEmulatorComponent = new function () {
     const init = function () {
         if ((componentElement = document.querySelector('.emulator'))) {
             if ((canvasElement = componentElement.querySelector('.emulator_canvas'))) {
+                canvasElement.addEventListener("click", async () => {
+                    await canvasElement.requestPointerLock();
+                });
             }
             if ((fullscreenButton = componentElement.querySelector('.emulator_fullscreen'))) {
                 fullscreenButton.addEventListener('click', fullscreenClick);
@@ -33,30 +36,30 @@ window.samcoupeEmulatorComponent = new function () {
         const urlObj = new URL(url);
         const filename = urlObj.pathname.split('/').pop();
 
-        console.log('=== SAM COUPÉ EMULATOR START ===');
-        console.log('Filename:', filename);
-        console.log('URL:', url);
-
-        // Попробуйте самую минимальную конфигурацию
         const loader = new MAMELoader(
-            MAMELoader.driver('samcoupe'),
-            MAMELoader.emulatorJS('/libs/mame/mame.js'),
-            MAMELoader.emulatorWASM('/libs/mame/mame.wasm'),
+            MAMELoader.driver("samcoupe"),
+            MAMELoader.nativeResolution(576, 550),
+            MAMELoader.emulatorJS('/libs/mamenextsam/mame.js'),
+            MAMELoader.emulatorWASM('/libs/mamenextsam/mame.wasm'),
+
             MAMELoader.mountFile('samcoupe.zip',
-                MAMELoader.fetchFile('Bios', '/libs/mame/roms/samcoupe.zip')),
-            MAMELoader.mountFile(filename, MAMELoader.fetchFile(filename, url)),
-            MAMELoader.peripheral('flop1', filename)
+                MAMELoader.fetchFile('Bios', '/libs/mamenextsam/roms/samcoupe.zip')
+            ),
+
+            MAMELoader.mountFile(filename,
+                MAMELoader.fetchFile("Disk", url)
+            ),
+            MAMELoader.peripheral("flop1", filename),
+            MAMELoader.extraArgs([
+                "-mouseport", "mouse",
+                "-uimodekey", "DEL",
+                "-ab", "........................boot\\n",
+            ]),
         );
 
-        console.log('Loader created:', loader);
 
         emulator = new Emulator(canvasElement, null, loader);
-
-        console.log('Emulator created:', emulator);
-
         emulator.start({waitAfterDownloading: false});
-
-        console.log('Emulator start called');
 
         if (typeof ym !== "undefined") {
             ym(94686067, 'reachGoal', 'emulatorstart')
@@ -72,7 +75,7 @@ window.samcoupeEmulatorComponent = new function () {
             url = newUrl;
             componentElement.style.display = 'block';
             const script = document.createElement('script');
-            script.src = "/libs/mame/loader.js";
+            script.src = "/libs/mamenextsam/loader.js";
             script.onload = emulatorReadyHandler;
             document.body.appendChild(script);
         }
