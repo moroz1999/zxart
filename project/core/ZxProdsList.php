@@ -4,13 +4,13 @@ use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use ZxArt\Prods\LegalStatus;
 use ZxArt\Prods\Repositories\ProdsRepository;
+use ZxArt\Releases\Services\ReleaseFormatsProvider;
 
 const ZXPRODS_TABLE = ProdsRepository::TABLE;
 
 trait ZxProdsList
 {
     use HardwareProvider;
-    use ReleaseFormatsProvider;
     use QueryDebugger;
 
     /**
@@ -520,7 +520,9 @@ trait ZxProdsList
                     ->whereIn('elementId', $query)
                     ->distinct()
                     ->pluck('value');
-                foreach ($this->getGroupedReleaseFormats() as $groupName => $groupValues) {
+
+                $releaseFormatsProvider = $this->getService(ReleaseFormatsProvider::class);;
+                foreach ($releaseFormatsProvider->getGroupedReleaseFormats() as $groupName => $groupValues) {
                     if ($intersected = array_intersect($groupValues, $hwItems)) {
                         $group = [
                             'title' => $translationsManager->getTranslationByName("formats.group_{$groupName}"),

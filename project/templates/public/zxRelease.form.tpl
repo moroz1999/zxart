@@ -97,7 +97,8 @@
 			</td>
 			<td class="form_field">
 				<select class="select_multiple" name="{$formNames.releaseFormat}[]" multiple="multiple" >
-					{foreach $element->getReleaseFormats() as $format}
+					{$releaseFormatsProvider = $element->getService(ZxArt\Releases\Services\ReleaseFormatsProvider::class)}
+					{foreach $releaseFormatsProvider->getReleaseFormats() as $format}
 						<option value='{$format}' {if in_array($format, $formData.releaseFormat)}selected='selected'{/if}>{translations name="zxRelease.filetype_{$format}"}</option>
 					{/foreach}
 				</select>

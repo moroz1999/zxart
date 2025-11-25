@@ -1723,36 +1723,6 @@
       <code><![CDATA[recalculate]]></code>
     </MissingReturnType>
   </file>
-  <file src="project/core/ReleaseFileTypesGatherer.php">
-    <InvalidArgument>
-      <code><![CDATA[$result]]></code>
-      <code><![CDATA[$result]]></code>
-      <code><![CDATA[$result]]></code>
-    </InvalidArgument>
-    <PossiblyNullArrayOffset>
-      <code><![CDATA[$result]]></code>
-    </PossiblyNullArrayOffset>
-  </file>
-  <file src="project/core/ReleaseFormatsProvider.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getCatalogueUrlByFiletype]]></code>
-      <code><![CDATA[getCatalogueUrlByFiletype]]></code>
-      <code><![CDATA[getCatalogueUrlByFiletype]]></code>
-      <code><![CDATA[getCatalogueUrlByFiletype]]></code>
-      <code><![CDATA[getCatalogueUrlByFiletype]]></code>
-      <code><![CDATA[getFormatEmoji]]></code>
-      <code><![CDATA[getFormatEmoji]]></code>
-      <code><![CDATA[getFormatEmoji]]></code>
-      <code><![CDATA[getFormatEmoji]]></code>
-      <code><![CDATA[getFormatEmoji]]></code>
-    </PossiblyUnusedMethod>
-    <UndefinedMethod>
-      <code><![CDATA[getCatalogueUrl]]></code>
-      <code><![CDATA[getCatalogueUrl]]></code>
-      <code><![CDATA[getCatalogueUrl]]></code>
-      <code><![CDATA[getCatalogueUrl]]></code>
-    </UndefinedMethod>
-  </file>
   <file src="project/core/ReleasesProvider.php">
     <MixedAssignment>
       <code><![CDATA[$data[]]]></code>
@@ -6066,6 +6036,16 @@
       <code><![CDATA[(string)pathinfo($file['fileName'] ?? '', PATHINFO_EXTENSION)]]></code>
     </RedundantCastGivenDocblockType>
   </file>
+  <file src="project/core/ZxArt/Releases/Services/ReleaseFileTypesGatherer.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="project/core/ZxArt/Releases/Services/ReleaseFormatsProvider.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getFormatEmoji]]></code>
+    </PossiblyUnusedMethod>
+  </file>
   <file src="project/core/ZxArt/Search/ExtraSearchFiltersInterface.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[assignExtraFilters]]></code>
@@ -8963,9 +8943,6 @@
     <MissingPropertyType>
       <code><![CDATA[$requestParameters]]></code>
     </MissingPropertyType>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$requestParameters]]></code>
-    </PossiblyUnusedProperty>
     <PropertyNotSetInConstructor>
       <code><![CDATA[redisApplication]]></code>
       <code><![CDATA[redisApplication]]></code>
@@ -8973,6 +8950,9 @@
       <code><![CDATA[redisApplication]]></code>
       <code><![CDATA[redisApplication]]></code>
     </PropertyNotSetInConstructor>
+    <UnusedClass>
+      <code><![CDATA[redisApplication]]></code>
+    </UnusedClass>
   </file>
   <file src="project/modules/applications/release.class.php">
     <ArgumentTypeCoercion>
@@ -25921,6 +25901,7 @@
       <code><![CDATA[getCompilationJsonData]]></code>
       <code><![CDATA[getDeletionLinkTypes]]></code>
       <code><![CDATA[getDescription]]></code>
+      <code><![CDATA[getEmulatorType]]></code>
       <code><![CDATA[getFileUploadSuccessUrl]]></code>
       <code><![CDATA[getGeneratedDescription]]></code>
       <code><![CDATA[getGroupsInfo]]></code>
@@ -27328,10 +27309,10 @@
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[getArchiveFilesForHardware]]></code>
       <code><![CDATA[getBestPictures]]></code>
+      <code><![CDATA[getCatalogueUrlByFiletype]]></code>
       <code><![CDATA[getCompilationJsonData]]></code>
       <code><![CDATA[getCurrentReleaseContentFormatted]]></code>
       <code><![CDATA[getDeletionLinkTypes]]></code>
-      <code><![CDATA[getEmulatorType]]></code>
       <code><![CDATA[getFileUploadSuccessUrl]]></code>
       <code><![CDATA[getHardwareMap]]></code>
       <code><![CDATA[getIconByHwType]]></code>

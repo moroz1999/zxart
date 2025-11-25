@@ -3,11 +3,12 @@
 use Illuminate\Database\Connection;
 use ZxArt\FileParsing\ZxParsingItem;
 use ZxArt\FileParsing\ZxParsingManager;
+use ZxArt\Hardware\HardwareGroup;
 use ZxArt\Prods\LegalStatus;
 use ZxArt\Releases\Services\ArchiveFileResolverService;
 use ZxArt\Releases\Services\EmulatorResolverService;
+use ZxArt\Releases\Services\ReleaseFileTypesGatherer;
 use ZxFiles\BasicFile;
-use ZxArt\Hardware\HardwareGroup;
 
 /**
  * @property string $title
@@ -47,8 +48,6 @@ class zxReleaseElement extends ZxArtItem implements
     use PublisherGroupProviderTrait;
     use MaterialsProviderTrait;
     use FilesElementTrait;
-    use ReleaseFormatsProvider;
-    use ReleaseFileTypesGatherer;
     use GalleryInfoProviderTrait;
     use JsonDataProviderElement;
     use ZxSoft;
@@ -825,6 +824,7 @@ class zxReleaseElement extends ZxArtItem implements
     public function updateFileStructure(): void
     {
         $zxParsingManager = $this->getService(ZxParsingManager::class);
+        $releaseFileTypesGatherer = $this->getService(ReleaseFileTypesGatherer::class);
 
         $filePath = $this->getFilePath();
         $id = $this->getPersistedId();
@@ -850,7 +850,7 @@ class zxReleaseElement extends ZxArtItem implements
         }
         $structure = $zxParsingManager->getFileStructure($id);
         if ($structure) {
-            $files = $this->gatherReleaseFiles($structure);
+            $files = $releaseFileTypesGatherer->gatherReleaseFiles($structure);
             if (!empty($files)) {
                 $this->releaseFormat = array_values(array_unique($files));
             }
@@ -932,6 +932,11 @@ class zxReleaseElement extends ZxArtItem implements
         return $prodElement->getCatalogueUrl($parameters);
     }
 
+    public function getCatalogueUrlByFiletype(string $format): string
+    {
+        return $this->getCatalogueUrl(['formats' => $format]);
+    }
+
     public function getHardwareMap(): array
     {
         $tempMap = [];
@@ -967,4 +972,5 @@ class zxReleaseElement extends ZxArtItem implements
             default => null,
         };
     }
+
 }

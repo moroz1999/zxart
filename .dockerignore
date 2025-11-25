@@ -1,0 +1,13 @@
+# Keep build context small for the PHP app image
+**
+!docker/php/**
+
+# Explicitly ignore common large directories at repo root
+vendor/
+node_modules/
+temporary/
+db/
+.git/
+.idea/
+.vscode/
+*.log

@@ -104,10 +104,11 @@
                             {translations name='zxrelease.releaseFormat'}:
                         </td>
                         <td class='info_table_value'>
+                            {$releaseFormatsProvider = $element->getService(ZxArt\Releases\Services\ReleaseFormatsProvider::class)}
                             {foreach from=$element->releaseFormat item=format name=rf}
                                 {if not $smarty.foreach.rf.first}, {/if}
                                 <a href="{$element->getCatalogueUrlByFiletype($format)}" class="zxrelease-format-link">
-                                    {$element->getFormatEmoji($format)} {translations name="zxRelease.filetype_{$format}"}
+                                    {$releaseFormatsProvider->getFormatEmoji($format)} {translations name="zxRelease.filetype_{$format}"}
                                 </a>
                             {/foreach}
                         </td>

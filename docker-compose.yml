@@ -1,0 +1,76 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: zxart-app
+    ports:
+      - "8080:80"
+    volumes:
+      # Mount the whole project for local development
+      - ./:/var/www/html
+      # Optional: override config with local secrets (kept in repo per user note)
+      # - ./project/config:/var/www/html/project/config:ro
+    environment:
+      # Adjust to match your project/config/ settings if needed
+      - APP_ENV=local
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=zxart
+      - DB_USER=zxart
+      - DB_PASSWORD=zxart
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: mariadb:11
+    container_name: zxart-db
+    environment:
+      - MARIADB_ROOT_PASSWORD=root
+      - MARIADB_DATABASE=zxart
+      - MARIADB_USER=zxart
+      - MARIADB_PASSWORD=zxart
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      # Optional: initialize schema/data with SQL files from repo's ./db directory
+      - ./db:/docker-entrypoint-initdb.d:ro
+
+  redis:
+    image: redis:7-alpine
+    container_name: zxart-redis
+    ports:
+      - "6379:6379"
+
+  composer:
+    image: composer:2
+    container_name: zxart-composer
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    entrypoint: ["composer"]
+    command: ["--version"]
+
+  ng-zxart:
+    build:
+      context: ./ng-zxart
+      dockerfile: Dockerfile
+    container_name: zxart-ng
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./ng-zxart:/usr/src/app
+    environment:
+      - NODE_ENV=development
+    # Uncomment if your frontend needs backend URL
+    #   and adjust to your app's configuration method
+    # - API_BASE_URL=http://localhost:8080
+    depends_on:
+      - app
+
+volumes:
+  db_data:

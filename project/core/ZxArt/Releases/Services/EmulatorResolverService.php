@@ -47,6 +47,9 @@ final class EmulatorResolverService
         if ($this->matchHardwareAndFormat($hardwareRequired, $releaseFormats, 'samcoupe')) {
             return 'samcoupe';
         }
+//        if ($this->matchHardwareAndFormat($hardwareRequired, $releaseFormats, 'zxnext')) {
+//            return 'zxnext';
+//        }
         if ($this->matchFormat($releaseFormats, 'usp')) {
             return 'usp';
         }

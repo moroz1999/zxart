@@ -4,8 +4,6 @@ class redisApplication extends controllerApplication
 {
     protected $applicationName = 'redis';
     public $requestParameters = [];
-    use ReleaseFormatsProvider;
-    use ReleaseFileTypesGatherer;
 
     /**
      * @return void

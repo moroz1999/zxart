@@ -14,8 +14,6 @@ use PathsManager;
 use pressArticleElement;
 use privilegesManager;
 use ProdsDownloader;
-use ReleaseFileTypesGatherer;
-use ReleaseFormatsProvider;
 use structureElement;
 use structureManager;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
@@ -28,8 +26,8 @@ use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Import\Prods\Dto\ReleaseImportDTO;
 use ZxArt\Import\Prods\ProdResolver;
 use ZxArt\Parties\Services\PartiesService;
-use ZxArt\Prods\LegalStatus;
 use ZxArt\Prods\Repositories\ProdsRepository;
+use ZxArt\Releases\Services\ReleaseFileTypesGatherer;
 use ZxArt\ZxProdCategories\CategoryIds;
 use zxProdElement;
 use zxReleaseElement;
@@ -37,8 +35,6 @@ use zxReleaseElement;
 class ProdsService extends ElementsManager
 {
     use ImportIdOperatorTrait;
-    use ReleaseFormatsProvider;
-    use ReleaseFileTypesGatherer;
 
     protected const string TABLE = ProdsRepository::TABLE;
 
@@ -106,20 +102,21 @@ class ProdsService extends ElementsManager
     }
 
     public function __construct(
-        protected structureManager     $structureManager,
-        protected PartiesService       $partiesService,
-        protected GroupsService        $groupsService,
-        protected ZxParsingManager     $zxParsingManager,
-        protected AuthorsService       $authorsService,
-        protected linksManager         $linksManager,
-        protected ProdsDownloader      $prodsDownloader,
-        protected privilegesManager    $privilegesManager,
-        protected PathsManager         $pathsManager,
-        protected AuthorshipRepository $authorshipRepository,
-        protected Connection           $db,
-        protected LanguagesManager     $languagesManager,
-        protected ProdResolver         $prodResolver,
-        private LabelTransformer       $labelTransformer,
+        protected structureManager       $structureManager,
+        protected PartiesService         $partiesService,
+        protected GroupsService          $groupsService,
+        protected ZxParsingManager       $zxParsingManager,
+        protected AuthorsService         $authorsService,
+        protected linksManager           $linksManager,
+        protected ProdsDownloader        $prodsDownloader,
+        protected privilegesManager      $privilegesManager,
+        protected PathsManager           $pathsManager,
+        protected AuthorshipRepository   $authorshipRepository,
+        protected Connection             $db,
+        protected LanguagesManager       $languagesManager,
+        protected ProdResolver           $prodResolver,
+        private LabelTransformer         $labelTransformer,
+        private ReleaseFileTypesGatherer $releaseFileTypesGatherer,
     )
     {
         $this->columnRelations = [
@@ -691,7 +688,7 @@ class ProdsService extends ElementsManager
             }
             if ($path) {
                 if ($structure = $this->zxParsingManager->parseFileStructure($path)) {
-                    $releaseFiles = $this->gatherReleaseFiles($structure);
+                    $releaseFiles = $this->releaseFileTypesGatherer->gatherReleaseFiles($structure);
                     $index = [];
                     if ($records = $this->db->table('files_registry')
                         ->whereIn('md5', array_keys($releaseFiles))
