@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use ZxArt\Import\Services\VtrdosManager;
+use ZxArt\Import\Services\VtrdosImport;
 
 class vtrdosApplication extends controllerApplication
 {
@@ -45,7 +45,7 @@ class vtrdosApplication extends controllerApplication
                 ['rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin')]
             );
 
-            $vtrdosManager = $this->getService(VtrdosManager::class);
+            $vtrdosManager = $this->getService(VtrdosImport::class);
             $vtrdosManager->importAll();
         }
     }

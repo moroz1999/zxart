@@ -3,20 +3,17 @@ declare(strict_types=1);
 
 namespace ZxArt\Import\Services;
 
-use CountriesManager;
 use DOMDocument;
 use DOMNode;
 use DOMElement;
 use DOMXPath;
 use DOMNameSpaceNode;
 use errorLogger;
-use ZxArt\Authors\Services\AuthorsService;
-use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Prods\Services\ProdsService;
 use ZxArt\ZxProdCategories\CategoryIds;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
 
-class VtrdosManager extends errorLogger
+class VtrdosImport extends errorLogger
 {
     protected int $counter = 0;
     protected int $maxCounter = 5000;
