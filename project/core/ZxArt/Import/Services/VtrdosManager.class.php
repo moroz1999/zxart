@@ -513,7 +513,7 @@ class VtrdosManager extends errorLogger
                             $pressTitle = trim($bNode->textContent);
                         }
                     }
-                    if ($pressTitle && ($td2 = $tdNodes->item(1))) {
+                    if ($pressTitle !== '' && ($td2 = $tdNodes->item(1))) {
                         if ($aNodes = $td2->getElementsByTagName('a')) {
                             $seriesProdsIds = [];
                             if ($aNodes->length > 20) {
@@ -532,7 +532,7 @@ class VtrdosManager extends errorLogger
                                 }
 
 
-                                if ($url && $prodTitle) {
+                                if ($url !== false && $prodTitle !== false) {
                                     $releaseInfo = [];
 
                                     if (!isset($prodsIndex[$prodId])) {
@@ -557,7 +557,7 @@ class VtrdosManager extends errorLogger
                                 }
 
                             }
-                            if ($seriesProdsIds && (count($seriesProdsIds) > 1)) {
+                            if (count($seriesProdsIds) > 1) {
                                 $seriesProdId = md5($pressTitle);
 
                                 $prodsIndex[$seriesProdId] = [
@@ -611,15 +611,16 @@ class VtrdosManager extends errorLogger
                         if (isset($this->categories[$name])) {
                             $currentCategory = [$this->categories[$name]];
                         }
-                        if (isset($this->categories[$name . ':'])) {
-                            $currentCategory = [$this->categories[$name . ':']];
+                        $nameVar = $name . ':';
+                        if (isset($this->categories[$nameVar])) {
+                            $currentCategory = [$this->categories[$nameVar]];
                         }
                     }
-                    if (is_string($detailsUrl) && $prodTitle && ($currentCategory === null)) {
+                    if (is_string($detailsUrl) && $prodTitle !== false && $currentCategory === null) {
                         $this->markProgress('Category parsing failed: ' . $prodTitle . ' ' . $detailsUrl);
                         continue;
                     }
-                    if (is_string($detailsUrl) && $prodTitle && $currentCategory) {
+                    if (is_string($detailsUrl) && $prodTitle !== false && !empty($currentCategory)) {
                         $releaseInfo = [];
 
                         $prodInfo = [
@@ -716,31 +717,31 @@ class VtrdosManager extends errorLogger
                 }
 
                 foreach ($divNode->childNodes as $childNode) {
-                    if ($childNode->nodeType == XML_ELEMENT_NODE) {
-                        if (strtolower($childNode->tagName) == 'p') {
+                    if ($childNode->nodeType === XML_ELEMENT_NODE) {
+                        if (strtolower($childNode->tagName) === 'p') {
                             $aNodes = $xPath->query(".//b/font/a", $childNode);
                             if ($aNodes->length > 0) {
                                 $aNode = $aNodes->item(0);
-                                $name = trim($aNode->textContent);
+                                $name = trim($aNode?->textContent);
                                 if (isset($this->categories[$name])) {
                                     $currentCategory = [$this->categories[$name]];
                                 }
                             }
                         }
-                        if ($currentCategory) {
+                        if (!empty($currentCategory)) {
                             $liNodes = $xPath->query(".//li[@class='padding']", $childNode);
                             if ($liNodes->length > 0) {
                                 foreach ($liNodes as $liNode) {
                                     $aNode = false;
                                     $textNode = false;
                                     foreach ($liNode->childNodes as $contentNode) {
-                                        if ($contentNode->nodeType == XML_ELEMENT_NODE) {
-                                            if (strtolower($contentNode->tagName) == 'a' && !str_contains($contentNode->getAttribute('class'), 'details')) {
+                                        if ($contentNode->nodeType === XML_ELEMENT_NODE) {
+                                            if (strtolower($contentNode->tagName) === 'a' && !str_contains($contentNode->getAttribute('class'), 'details')) {
                                                 $aNode = $contentNode;
                                             }
                                         }
-                                        if ($aNode) {
-                                            if (substr(trim($contentNode->textContent), 0, 2) == 'by') {
+                                        if ($aNode !== false) {
+                                            if (substr(trim($contentNode->textContent), 0, 2) === 'by') {
                                                 $textNode = $contentNode;
                                             }
                                         }
@@ -753,7 +754,7 @@ class VtrdosManager extends errorLogger
                                         }
                                     }
                                 }
-                                $currentCategory = false;
+                                $currentCategory = [];
                             }
                         }
                     }
@@ -783,12 +784,12 @@ class VtrdosManager extends errorLogger
                 }
 
                 foreach ($divNode->childNodes as $childNode) {
-                    if ($childNode->nodeType == XML_ELEMENT_NODE) {
-                        if (strtolower($childNode->tagName) == 'p') {
+                    if ($childNode->nodeType === XML_ELEMENT_NODE) {
+                        if (strtolower($childNode->tagName) === 'p') {
                             $aNodes = $xPath->query(".//b/font", $childNode);
                             if ($aNodes->length > 0) {
                                 $aNode = $aNodes->item(0);
-                                $name = trim($aNode->textContent);
+                                $name = trim($aNode?->textContent);
                                 if (isset($this->categories[$name])) {
                                     $currentCategory = [$this->categories[$name]];
                                 }
@@ -799,20 +800,20 @@ class VtrdosManager extends errorLogger
                                 }
                             }
                         }
-                        if ($currentCategory) {
+                        if (!empty($currentCategory)) {
                             $liNodes = $xPath->query(".//li", $childNode);
                             if ($liNodes->length > 0) {
                                 foreach ($liNodes as $liNode) {
                                     $aNode = false;
                                     $textNode = false;
                                     foreach ($liNode->childNodes as $contentNode) {
-                                        if ($contentNode->nodeType == XML_ELEMENT_NODE) {
-                                            if (strtolower($contentNode->tagName) == 'a' && !str_contains($contentNode->getAttribute('class'), 'details')) {
+                                        if ($contentNode->nodeType === XML_ELEMENT_NODE) {
+                                            if (strtolower($contentNode->tagName) === 'a' && !str_contains($contentNode->getAttribute('class'), 'details')) {
                                                 $aNode = $contentNode;
                                             }
                                         }
-                                        if ($aNode) {
-                                            if (substr(trim($contentNode->textContent), 0, 2) == 'by') {
+                                        if ($aNode !== false) {
+                                            if (substr(trim($contentNode->textContent), 0, 2) === 'by') {
                                                 $textNode = $contentNode;
                                             }
                                         }
@@ -857,13 +858,13 @@ class VtrdosManager extends errorLogger
                 $aNode = false;
                 $textNode = false;
                 foreach ($liNode->childNodes as $contentNode) {
-                    if ($contentNode->nodeType == XML_ELEMENT_NODE) {
-                        if (strtolower($contentNode->tagName) == 'a' && !str_contains($contentNode->getAttribute('class'), 'details')) {
+                    if ($contentNode->nodeType === XML_ELEMENT_NODE) {
+                        if (strtolower($contentNode->tagName) === 'a' && !str_contains($contentNode->getAttribute('class'), 'details')) {
                             $aNode = $contentNode;
                         }
                     }
-                    if ($aNode) {
-                        if (substr(trim($contentNode->textContent), 0, 2) == 'by') {
+                    if ($aNode !== false) {
+                        if (substr(trim($contentNode->textContent), 0, 2) === 'by') {
                             $textNode = $contentNode;
                         }
                     }
@@ -896,9 +897,9 @@ class VtrdosManager extends errorLogger
         $this->parseANode($aNode, $releaseInfo);
         $fileName = basename($releaseInfo['fileUrl']);
         $releaseInfo['id'] = md5($fileName);
-        if ($releaseInfo['fileUrl'] && $releaseInfo['title']) {
+        if (isset($releaseInfo['fileUrl'], $releaseInfo['title']) && is_string($releaseInfo['fileUrl']) && $releaseInfo['fileUrl'] !== '' && is_string($releaseInfo['title']) && $releaseInfo['title'] !== '') {
             $prodTitle = $releaseInfo['title'];
-            if (strtolower(substr($prodTitle, -4)) == 'demo') {
+            if (strtolower(substr($prodTitle, -4)) === 'demo') {
                 $prodTitle = trim(mb_substr($prodTitle, 0, -4));
             }
 
@@ -954,7 +955,7 @@ class VtrdosManager extends errorLogger
     ): void
     {
         $text = trim($node->textContent);
-        if (strtolower(substr($text, 0, 3)) == 'by ') {
+        if (strtolower(substr($text, 0, 3)) === 'by ') {
             $text = substr($text, 3);
         }
         if (str_contains($text, ' - ')) {
@@ -1041,7 +1042,7 @@ class VtrdosManager extends errorLogger
             $releaseInfo['language'] = ['ua'];
         }
         if (preg_match('#(v[0-9]\.[0-9])#i', $text, $matches, PREG_OFFSET_CAPTURE)) {
-            $offset = $matches[0][1];
+            $offset = (int)$matches[0][1];
             $versionString = substr($text, $offset + 1);
             $text = trim(substr($text, 0, $offset));
             $releaseInfo['version'] = $versionString;
@@ -1052,13 +1053,13 @@ class VtrdosManager extends errorLogger
     private function processTitle(string $text): string
     {
         //remove (..)
-        $text = preg_replace('#([(].*[)])*#', '', $text);
+        $text = (string)preg_replace('#([(].*[)])*#', '', $text);
         //remove double spaces
         $text = trim(
-            preg_replace('!\s+!', ' ', $text),
+            (string)preg_replace('!\s+!', ' ', $text),
             " \t\n\r\0\x0B" . chr(0xC2) . chr(0xA0)
         );
-        if (strtolower(substr($text, -4)) == 'demo') {
+        if (strtolower(substr($text, -4)) === 'demo') {
             $text = trim(mb_substr($text, 0, -4));
         }
         return $text;
@@ -1087,15 +1088,15 @@ class VtrdosManager extends errorLogger
                 if (preg_match("#'([0-9]+)#", $part, $matches)) {
                     if (isset($matches[1])) {
                         $matches[1] = trim($matches[1]);
-                        if (strlen($matches[1]) == 2) {
-                            if ($matches[1] > 50) {
+                        if (strlen($matches[1]) === 2) {
+                            if ((int)$matches[1] > 50) {
                                 $info['year'] = (int)('19' . $matches[1]);
                             } else {
                                 $info['year'] = (int)('20' . $matches[1]);
                             }
                         }
                     }
-                    if (strlen($matches[1]) == 4) {
+                    if (strlen($matches[1]) === 4) {
                         $info['year'] = (int)$matches[1];
                     }
                     $name = trim(preg_replace("#('[0-9]+)#", '', $part));
@@ -1105,7 +1106,7 @@ class VtrdosManager extends errorLogger
                 if (stripos($name, '/') !== false) {
                     $parts = explode('/', $name);
                     $name = trim($parts[0]);
-                    if ($groupName = trim($parts[1])) {
+                    if (($groupName = trim($parts[1])) !== '') {
                         $groupLabel = [
                             'id' => $groupName,
                             'title' => $groupName,
@@ -1126,7 +1127,7 @@ class VtrdosManager extends errorLogger
                 }
                 $found = false;
                 foreach ($info['labels'] as $labelInfo) {
-                    if ($labelInfo['title'] == $name) {
+                    if ($labelInfo['title'] === $name) {
                         $found = true;
                         break;
                     }
