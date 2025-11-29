@@ -1,4 +1,7 @@
 <?php
+declare(strict_types=1);
+
+use ZxArt\Import\Services\VtrdosManager;
 
 class vtrdosApplication extends controllerApplication
 {
@@ -11,7 +14,6 @@ class vtrdosApplication extends controllerApplication
      */
     public function initialize()
     {
-        exit;
         ini_set("max_execution_time", 60 * 15);
         ignore_user_abort(true);
         $this->startSession('crontab');
@@ -43,10 +45,7 @@ class vtrdosApplication extends controllerApplication
                 ['rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin')]
             );
 
-            /**
-             * @var VtrdosManager $vtrdosManager
-             */
-            $vtrdosManager = $this->getService('VtrdosManager');
+            $vtrdosManager = $this->getService(VtrdosManager::class);
             $vtrdosManager->importAll();
         }
     }

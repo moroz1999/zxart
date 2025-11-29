@@ -1,37 +1,32 @@
 <?php
+declare(strict_types=1);
 
+namespace ZxArt\Import\Services;
+
+use CountriesManager;
+use DOMDocument;
+use DOMNode;
+use DOMElement;
+use DOMXPath;
+use DOMNameSpaceNode;
+use errorLogger;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Prods\Services\ProdsService;
 use ZxArt\ZxProdCategories\CategoryIds;
+use ZxArt\Import\Prods\Dto\ProdImportDTO;
 
-/**
- * todo: re-implement import operations
- */
 class VtrdosManager extends errorLogger
 {
-    protected $counter = 0;
-    protected $maxCounter = 5000;
-    /**
-     * @var ProdsService
-     */
-    protected $prodsService;
-    /**
-     * @var AuthorsService
-     */
-    protected $authorsManager;
-    /**
-     * @var GroupsService
-     */
-    protected $groupsService;
-    /**
-     * @var CountriesManager
-     */
-    protected $countriesManager;
-    protected $urlsSettings = [];
-    protected $origin = 'vt';
-    protected $rootUrl = 'https://vtrd.in/';
-    protected $alphabet = [
+    protected int $counter = 0;
+    protected int $maxCounter = 5000;
+
+    /** @var array<string, array<int, array<string, mixed>>> */
+    protected array $urlsSettings = [];
+    protected string $origin = 'vt';
+    protected string $rootUrl = 'https://vtrd.in/';
+    /** @var string[] */
+    protected array $alphabet = [
         '123',
         'a',
         'b',
@@ -60,7 +55,8 @@ class VtrdosManager extends errorLogger
         'y',
         'z',
     ];
-    protected $hwIndex = [
+    /** @var array<string,string> */
+    protected array $hwIndex = [
         '(DMA UltraSound Card)' => 'dmausc',
         '(km)' => 'kempstonmouse',
         '(kemp8bit)' => 'kempston8b',
@@ -111,7 +107,8 @@ class VtrdosManager extends errorLogger
         'GMX' => 'gmx',
     ];
 
-    protected $categoryHardware = [
+    /** @var array<string,string> */
+    protected array $categoryHardware = [
         'Инфа и утилиты для TurboSound FM:' => 'tsfm',
         'Инфа, игры, утилиты для DMA Ultrasound Card:' => 'dmausc',
         'Софт для Profi компьютера:' => 'profi',
@@ -120,7 +117,8 @@ class VtrdosManager extends errorLogger
         'Информационные сборники Евгения Илясова (под iS-DOS):' => 'isdos',
         'Анекдоты, юмор (под iS-DOS):' => 'isdos',
     ];
-    protected $categories = [
+    /** @var array<string,int> */
+    protected array $categories = [
         'Работа с AY, FM и beep - звуком на PC' => 0,
         'Компрессоры' => 0,
         'Архиваторы:' => 244886,
@@ -190,8 +188,12 @@ class VtrdosManager extends errorLogger
         'Demo Party' => 315126,
     ];
 
-    public function __construct()
+    public function __construct(
+        private readonly ProdsService     $prodsService,
+    )
     {
+        $this->prodsService->setUpdateExistingReleases(true);
+
 //        $this->urlsSettings['https://vtrd.in/press.php?l=1'] = [
 //            [
 //                'type' => 'press',
@@ -202,11 +204,11 @@ class VtrdosManager extends errorLogger
 //                'type' => 'press',
 //            ],
 //        ];
-//        $this->urlsSettings['https://vtrd.in/updates.php'] = [
-//            [
-//                'type' => 'updates',
-//            ],
-//        ];
+        $this->urlsSettings['https://vtrd.in/updates.php'] = [
+            [
+                'type' => 'updates',
+            ],
+        ];
 //        $this->urlsSettings['https://vtrd.in/games.php?t=translat'] = [
 //            [
 //                'type' => 'table',
@@ -326,39 +328,6 @@ class VtrdosManager extends errorLogger
         }
     }
 
-    /**
-     * @param AuthorsService $authorsManager
-     */
-    public function setAuthorsManager($authorsManager): void
-    {
-        $this->authorsManager = $authorsManager;
-    }
-
-    /**
-     * @param GroupsService $groupsService
-     */
-    public function setGroupsService($groupsService): void
-    {
-        $this->groupsService = $groupsService;
-    }
-
-    /**
-     * @param CountriesManager $countriesManager
-     */
-    public function setCountriesManager($countriesManager): void
-    {
-        $this->countriesManager = $countriesManager;
-    }
-
-    /**
-     * @param mixed $prodsService
-     */
-    public function setProdsService(ProdsService $prodsService): void
-    {
-        $this->prodsService = $prodsService;
-        $this->prodsService->setUpdateExistingReleases(true);
-    }
-
     public function importAll(): void
     {
         foreach ($this->urlsSettings as $url => $settings) {
@@ -366,14 +335,17 @@ class VtrdosManager extends errorLogger
         }
     }
 
-    public function importUrlProds($pageUrl, $allSettings): void
+    /**
+     * @param array<int, array<string, mixed>> $allSettings
+     */
+    public function importUrlProds(string $pageUrl, array $allSettings): void
     {
         if ($html = $this->loadHtml($pageUrl)) {
             $xPath = new DOMXPath($html);
             $tableNodes = $xPath->query("//table");
             foreach ($tableNodes as $tableNode) {
                 $settings = array_shift($allSettings);
-                if (!empty($settings['type'])) {
+                if (is_array($settings) && isset($settings['type']) && $settings['type'] !== '') {
                     if ($settings['type'] === 'list') {
                         $this->parseList($tableNode, $xPath, $settings);
                     } elseif ($settings['type'] === 'system') {
@@ -397,7 +369,10 @@ class VtrdosManager extends errorLogger
      * @param DOMXPath $xPath
      * @param $settings
      */
-    protected function parseTable(DOMNode|DOMNameSpaceNode $node, $xPath, $settings): void
+    /**
+     * @param array<string, mixed> $settings
+     */
+    protected function parseTable(DOMNode|DOMNameSpaceNode $node, DOMXPath $xPath, array $settings): void
     {
         $prodsIndex = [];
         $releaseNodes = $xPath->query(".//tr", $node);
@@ -405,31 +380,52 @@ class VtrdosManager extends errorLogger
             foreach ($releaseNodes as $releaseNode) {
                 $tdNodes = $releaseNode->getElementsByTagName('td');
                 if ($td1 = $tdNodes->item(0)) {
-                    $url = false;
-                    $prodTitle = false;
-                    $detailsUrl = false;
-                    $aNode = false;
-                    if ($aNodes = $td1->getElementsByTagName('a')) {
-                        foreach ($aNodes as $aNodeItem) {
-                            if (!str_contains($aNodeItem->getAttribute('class'), 'details')) {
-                                $url = $aNodeItem->getAttribute('href');
-                                $prodTitle = $this->processTitle($aNodeItem->textContent);
-                                $aNode = $aNodeItem;
-                            } else {
-                                $detailsUrl = $this->rootUrl . $aNodeItem->getAttribute('href');
-                            }
+                    // Initialize clear variables
+                    $url = null;
+                    $prodTitle = null;
+                    $detailsUrl = null;
+                    $aNode = null;
+
+                    // Extract links from the first column
+                    $aNodes = $td1->getElementsByTagName('a');
+                    foreach ($aNodes as $aNodeItem) {
+                        if (!$aNodeItem instanceof DOMElement) {
+                            continue;
                         }
-                    }
-                    if ($td5 = $tdNodes->item(4)) {
-                        if ($aNodes = $td5->getElementsByTagName('a')) {
-                            foreach ($aNodes as $aNodeItem) {
-                                $detailsUrl = $this->rootUrl . $aNodeItem->getAttribute('href');
-                                break;
+                        $classAttr = (string)$aNodeItem->getAttribute('class');
+                        $href = (string)$aNodeItem->getAttribute('href');
+                        if (!str_contains($classAttr, 'details')) {
+                            // Main link with title
+                            if ($href !== '') {
+                                $url = $href;
+                            }
+                            $prodTitle = $this->processTitle((string)$aNodeItem->textContent);
+                            $aNode = $aNodeItem;
+                        } else {
+                            // Details link
+                            if ($href !== '') {
+                                $detailsUrl = $this->rootUrl . $href;
                             }
                         }
                     }
 
-                    if ($url && $prodTitle) {
+                    // Fallback: if details link not found in the first column, try column 5
+                    if ($detailsUrl === null) {
+                        if ($td5 = $tdNodes->item(4)) {
+                            $aNodes5 = $td5->getElementsByTagName('a');
+                            foreach ($aNodes5 as $aNodeItem) {
+                                if ($aNodeItem instanceof DOMElement) {
+                                    $href = (string)$aNodeItem->getAttribute('href');
+                                    if ($href !== '') {
+                                        $detailsUrl = $this->rootUrl . $href;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if ($url !== null && $prodTitle !== null) {
                         $releaseInfo = [];
 
                         $prodInfo = [
@@ -437,6 +433,7 @@ class VtrdosManager extends errorLogger
                             'year' => '',
                             'title' => $prodTitle,
                             'labels' => [],
+                            'publishers' => [],
                             'releases' => [],
                         ];
 
@@ -444,7 +441,7 @@ class VtrdosManager extends errorLogger
                         $releaseInfo['fileUrl'] = $this->rootUrl . $url;
                         $releaseInfo['id'] = md5(basename($url));
                         $releaseInfo['labels'] = [];
-//                        $this->requestReleaseDetails($detailsUrl, $releaseInfo);
+                        $this->requestReleaseDetails($detailsUrl, $releaseInfo);
 
                         if ($td2 = $tdNodes->item(1)) {
                             $this->parseAuthorsString((string)$td2->nodeValue, $prodInfo);
@@ -475,8 +472,10 @@ class VtrdosManager extends errorLogger
                                 $prodInfo['directCategories'] = $settings['prod']['directCategories'];
                             }
                         }
-                        $this->parseANode($aNode, $releaseInfo);
-                        $prodId = md5($prodTitle . $prodInfo['year']);
+                        if ($aNode instanceof DOMElement) {
+                            $this->parseANode($aNode, $releaseInfo);
+                        }
+                        $prodId = md5($prodTitle . (string)$prodInfo['year']);
                         $prodInfo['id'] = $prodId;
                         if (!isset($prodsIndex[$prodId])) {
                             $prodsIndex[$prodId] = $prodInfo;
@@ -496,7 +495,10 @@ class VtrdosManager extends errorLogger
      * @param DOMXPath $xPath
      * @param $settings
      */
-    protected function parsePress(DOMNode|DOMNameSpaceNode $node, $xPath, $settings): void
+    /**
+     * @param array<string, mixed> $settings
+     */
+    protected function parsePress(DOMNode|DOMNameSpaceNode $node, DOMXPath $xPath, array $settings): void
     {
         $prodsIndex = [];
         $rowNodes = $xPath->query(".//tr", $node);
@@ -580,7 +582,10 @@ class VtrdosManager extends errorLogger
      * @param DOMXPath $xPath
      * @param $settings
      */
-    protected function parseUpdates(DOMNode|DOMNameSpaceNode $node, $xPath, $settings): void
+    /**
+     * @param array<string, mixed> $settings
+     */
+    protected function parseUpdates(DOMNode|DOMNameSpaceNode $node, DOMXPath $xPath, array $settings): void
     {
         $prodsIndex = [];
         $releaseNodes = $xPath->query(".//tr", $node);
@@ -610,11 +615,11 @@ class VtrdosManager extends errorLogger
                             $currentCategory = [$this->categories[$name . ':']];
                         }
                     }
-                    if ($detailsUrl && $prodTitle && ($currentCategory === null)) {
+                    if (is_string($detailsUrl) && $prodTitle && ($currentCategory === null)) {
                         $this->markProgress('Category parsing failed: ' . $prodTitle . ' ' . $detailsUrl);
                         continue;
                     }
-                    if ($detailsUrl && $prodTitle && $currentCategory) {
+                    if (is_string($detailsUrl) && $prodTitle && $currentCategory) {
                         $releaseInfo = [];
 
                         $prodInfo = [
@@ -658,8 +663,10 @@ class VtrdosManager extends errorLogger
                                 $prodInfo['directCategories'] = $settings['prod']['directCategories'];
                             }
                         }
-                        $this->parseANode($aNode, $releaseInfo);
-                        $prodId = md5($prodTitle . $prodInfo['year']);
+                        if ($aNode instanceof DOMElement) {
+                            $this->parseANode($aNode, $releaseInfo);
+                        }
+                        $prodId = md5($prodTitle . (string)$prodInfo['year']);
                         $prodInfo['id'] = $prodId;
                         if (!isset($prodsIndex[$prodId])) {
                             $prodsIndex[$prodId] = $prodInfo;
@@ -694,7 +701,10 @@ class VtrdosManager extends errorLogger
      * @param DOMXPath $xPath
      * @param $settings
      */
-    protected function parseSystem(DOMNode|DOMNameSpaceNode $node, $xPath, $settings): void
+    /**
+     * @param array<string, mixed> $settings
+     */
+    protected function parseSystem(DOMNode|DOMNameSpaceNode $node, DOMXPath $xPath, array $settings): void
     {
         $prodsIndex = [];
         $divNodes = $xPath->query(".//tr/td[@colspan='3']/div[@align='center']", $node);
@@ -735,7 +745,7 @@ class VtrdosManager extends errorLogger
                                             }
                                         }
 
-                                        if ($aNode && $textNode) {
+                                        if ($aNode instanceof DOMElement && $textNode instanceof DOMNode) {
                                             $this->parseListItemRelease($aNode, $textNode, $currentCategory, $settings, $prodsIndex);
 
                                             $aNode = false;
@@ -758,7 +768,10 @@ class VtrdosManager extends errorLogger
      * @param DOMXPath $xPath
      * @param $settings
      */
-    protected function parseSbor(DOMNode|DOMNameSpaceNode $node, $xPath, $settings): void
+    /**
+     * @param array<string, mixed> $settings
+     */
+    protected function parseSbor(DOMNode|DOMNameSpaceNode $node, DOMXPath $xPath, array $settings): void
     {
         $prodsIndex = [];
         $divNodes = $xPath->query(".//tr/td[@colspan='3']/div[@align='center']", $node);
@@ -804,7 +817,7 @@ class VtrdosManager extends errorLogger
                                             }
                                         }
 
-                                        if ($aNode && $textNode) {
+                                        if ($aNode instanceof DOMElement && $textNode instanceof DOMNode) {
                                             $this->parseListItemRelease($aNode, $textNode, $currentCategory, $settings, $prodsIndex);
 
                                             $aNode = false;
@@ -827,7 +840,10 @@ class VtrdosManager extends errorLogger
      * @param DOMXPath $xPath
      * @param $settings
      */
-    protected function parseList(DOMNode|DOMNameSpaceNode $node, $xPath, $settings): void
+    /**
+     * @param array<string, mixed> $settings
+     */
+    protected function parseList(DOMNode|DOMNameSpaceNode $node, DOMXPath $xPath, array $settings): void
     {
         $prodsIndex = [];
         $currentCategory = [];
@@ -852,7 +868,7 @@ class VtrdosManager extends errorLogger
                         }
                     }
 
-                    if ($aNode && $textNode) {
+                    if ($aNode instanceof DOMElement && $textNode instanceof DOMNode) {
                         $this->parseListItemRelease($aNode, $textNode, $currentCategory, $settings, $prodsIndex);
 
                         $aNode = false;
@@ -865,7 +881,11 @@ class VtrdosManager extends errorLogger
         $this->importProdsIndex($prodsIndex);
     }
 
-    private function parseListItemRelease($aNode, $textNode, $currentCategory, $settings, array &$prodsIndex): void
+    /**
+     * @param array<string, mixed> $settings
+     * @param array<string, array> $prodsIndex
+     */
+    private function parseListItemRelease(DOMElement $aNode, DOMNode $textNode, array $currentCategory, array $settings, array &$prodsIndex): void
     {
         $releaseInfo = [
             'id' => null,
@@ -927,10 +947,10 @@ class VtrdosManager extends errorLogger
     }
 
     protected function parseTextNode(
-        $node,
-        array &$prodInfo,
-        &$releaseInfo,
-        $roles = []
+        DOMNode $node,
+        array   &$prodInfo,
+        array   &$releaseInfo,
+        array   $roles = []
     ): void
     {
         $text = trim($node->textContent);
@@ -947,8 +967,14 @@ class VtrdosManager extends errorLogger
 
     }
 
-    protected function parseDescription(string $text, &$info, &$releaseInfo): void
+    protected function parseDescription(string $text, array &$info, array &$releaseInfo): void
     {
+        if (!isset($releaseInfo['hardwareRequired']) || !is_array($releaseInfo['hardwareRequired'])) {
+            $releaseInfo['hardwareRequired'] = [];
+        }
+        if (!isset($info['labels']) || !is_array($info['labels'])) {
+            $info['labels'] = [];
+        }
         foreach ($this->hwIndex as $key => $value) {
             if (stripos($text, $key) !== false) {
                 if (str_contains($key, '(')) {
@@ -967,13 +993,16 @@ class VtrdosManager extends errorLogger
     }
 
     protected function parseANode(
-        $node,
-        array &$releaseInfo
+        DOMElement $node,
+        array      &$releaseInfo
     ): void
     {
         $releaseInfo['fileUrl'] = $this->rootUrl . $node->getAttribute('href');
         $text = $node->textContent;
 
+        if (!isset($releaseInfo['hardwareRequired']) || !is_array($releaseInfo['hardwareRequired'])) {
+            $releaseInfo['hardwareRequired'] = [];
+        }
         foreach ($this->hwIndex as $key => $value) {
             if (stripos($text, $key) !== false) {
                 if (str_contains($key, '(')) {
@@ -1014,7 +1043,7 @@ class VtrdosManager extends errorLogger
         if (preg_match('#(v[0-9]\.[0-9])#i', $text, $matches, PREG_OFFSET_CAPTURE)) {
             $offset = $matches[0][1];
             $versionString = substr($text, $offset + 1);
-            $text = trim(substr_replace($text, '', $offset));
+            $text = trim(substr($text, 0, $offset));
             $releaseInfo['version'] = $versionString;
         }
         $releaseInfo['title'] = $this->processTitle($text);
@@ -1037,8 +1066,8 @@ class VtrdosManager extends errorLogger
 
     protected function parseAuthorsString(
         string $string,
-        array &$info,
-        array $roles = [],
+        array  &$info,
+        array  $roles = [],
         string $groupField = 'groups'
     ): void
     {
@@ -1047,6 +1076,12 @@ class VtrdosManager extends errorLogger
             $info['releaseType'] = 'original';
         }
         if ($string !== 'n/a' && $string !== 'author') {
+            if (!isset($info['labels']) || !is_array($info['labels'])) {
+                $info['labels'] = [];
+            }
+            if (!isset($info[$groupField]) || !is_array($info[$groupField])) {
+                $info[$groupField] = [];
+            }
             $parts = explode(',', $string);
             foreach ($parts as $part) {
                 if (preg_match("#'([0-9]+)#", $part, $matches)) {
@@ -1061,7 +1096,7 @@ class VtrdosManager extends errorLogger
                         }
                     }
                     if (strlen($matches[1]) == 4) {
-                        $info['year'] = $matches[1];
+                        $info['year'] = (int)$matches[1];
                     }
                     $name = trim(preg_replace("#('[0-9]+)#", '', $part));
                 } else {
@@ -1080,7 +1115,13 @@ class VtrdosManager extends errorLogger
                             'isAlias' => null,
                         ];
                         $info['labels'][] = $groupLabel;
-                        $info[$groupField][] = $groupLabel['id'];
+                        // ensure target field is array
+                        if (!isset($info[$groupField]) || !is_array($info[$groupField])) {
+                            $info[$groupField] = [];
+                        }
+                        $tmpGroupArr = $info[$groupField];
+                        $tmpGroupArr[] = $groupLabel['id'];
+                        $info[$groupField] = $tmpGroupArr;
                     }
                 }
                 $found = false;
@@ -1103,8 +1144,11 @@ class VtrdosManager extends errorLogger
             }
             if (count($info['labels']) > 1) {
                 $last = last($info['labels']);
-                if (!empty($info['groups'])) {
-                    if (!in_array($last['id'], $info['groups'])) {
+                if (!empty($info['groups']) && is_array($info['groups'])) {
+                    if (!in_array($last['id'], $info['groups'], true)) {
+                        if (!isset($info['publishers']) || !is_array($info['publishers'])) {
+                            $info['publishers'] = [];
+                        }
                         $info['publishers'][] = $last['id'];
                     }
                 }
@@ -1112,17 +1156,20 @@ class VtrdosManager extends errorLogger
 
             $ids = array_column($info['labels'], 'id');
             foreach ($ids as $id) {
+                if (!isset($info['undetermined']) || !is_array($info['undetermined'])) {
+                    $info['undetermined'] = [];
+                }
                 $info['undetermined'][$id] = $roles;
             }
         }
     }
 
     protected function loadHtml(
-        $url
+        string $url
     ): DOMDocument|false
     {
         if ($contents = file_get_contents($url)) {
-            $dom = new DOMDocument;
+            $dom = new DOMDocument();
             $dom->encoding = 'UTF-8';
             $dom->recover = true;
             $dom->substituteEntities = true;
@@ -1154,10 +1201,6 @@ class VtrdosManager extends errorLogger
         $previousTime = $endTime;
     }
 
-    /**
-     * @param array $prodsIndex
-     * @return void
-     */
     protected function importProdsIndex(array $prodsIndex): void
     {
         foreach ($prodsIndex as $key => $prodInfo) {
@@ -1165,7 +1208,8 @@ class VtrdosManager extends errorLogger
             if ($this->counter > $this->maxCounter) {
                 exit;
             }
-            if ($this->prodsService->importProdOld($prodInfo, $this->origin)) {
+            $dto = ProdImportDTO::fromArray($prodInfo);
+            if ($this->prodsService->importProd($dto, $this->origin)) {
                 $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodInfo['title']);
             } else {
                 $this->markProgress('prod failed ' . $prodInfo['title']);
