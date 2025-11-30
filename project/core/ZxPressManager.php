@@ -1,5 +1,6 @@
 <?php
 
+use ZxArt\Import\Services\ImportIdOperator;
 use ZxArt\Prods\Services\ProdsService;
 
 /**
@@ -15,7 +16,8 @@ class ZxPressManager extends errorLogger
     private $prodsIndex = [];
 
     public function __construct(
-        protected ProdsService $prodsService,
+        protected ProdsService   $prodsService,
+        private ImportIdOperator $importIdOperator,
     )
     {
         $this->prodsService->setMatchProdsWithoutYear(true);
@@ -85,7 +87,7 @@ class ZxPressManager extends errorLogger
                         }
                     }
                     if (!empty($this->prodsIndex[$prodId]) && $subDivNode->getAttribute('style') === 'font: 13pt/14pt Times; text-align: left') {
-                        $prodElement = $this->prodsService->getElementByImportId($prodId, $this->origin, 'prod');
+                        $prodElement = $this->importIdOperator->getElementByImportId($prodId, $this->origin, 'prod');
                         if ($prodElement && $prodElement->articles) {
                             continue;
                         }

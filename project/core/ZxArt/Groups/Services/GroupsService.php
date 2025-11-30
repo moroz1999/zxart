@@ -9,7 +9,6 @@ use ElementsManager;
 use groupAliasElement;
 use groupElement;
 use Illuminate\Database\Connection;
-use ImportIdOperatorTrait;
 use LanguagesManager;
 use LettersElementsListProviderTrait;
 use linksManager;
@@ -18,6 +17,7 @@ use structureManager;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Import\Labels\GroupLabel;
 use ZxArt\Import\Labels\LabelResolver;
+use ZxArt\Import\Services\ImportIdOperator;
 use ZxArt\LinkTypes;
 
 class GroupsService extends ElementsManager
@@ -25,20 +25,21 @@ class GroupsService extends ElementsManager
     protected const string TABLE = 'module_group';
 
     use LettersElementsListProviderTrait;
-    use ImportIdOperatorTrait;
 
     protected array $columnRelations = [];
 
     public function __construct(
-        protected LabelResolver        $labelResolver,
-        protected linksManager         $linksManager,
-        protected structureManager     $structureManager,
-        protected CountriesManager     $countriesManager,
-        protected ConfigManager        $configManager,
-        protected privilegesManager    $privilegesManager,
-        protected AuthorshipRepository $authorshipRepository,
-        protected languagesManager     $languagesManager,
-        protected Connection           $db,
+        protected LabelResolver           $labelResolver,
+        protected linksManager            $linksManager,
+        protected structureManager        $structureManager,
+        protected CountriesManager        $countriesManager,
+        protected ConfigManager           $configManager,
+        protected privilegesManager       $privilegesManager,
+        protected AuthorshipRepository    $authorshipRepository,
+        protected languagesManager        $languagesManager,
+        protected Connection              $db,
+        private readonly ImportIdOperator $importIdOperator,
+
     )
     {
         $this->columnRelations = [
@@ -52,7 +53,7 @@ class GroupsService extends ElementsManager
     {
         $element = $this->getGroupByLabel($label, $origin);
         if (($element !== null) && $origin !== null) {
-            $this->saveImportId($element->id, $label->id, $origin, 'group');
+            $this->importIdOperator->saveImportId($element->id, $label->id, $origin, 'group');
         }
 
         if ($element === null) {
@@ -77,7 +78,7 @@ class GroupsService extends ElementsManager
         if ($element = $this->manufactureGroupElement($dto->name ?? '')) {
             $this->updateGroup($element, $dto, $origin);
             if ($dto->id !== null) {
-                $this->saveImportId($element->id, (string)$dto->id, $origin, 'group');
+                $this->importIdOperator->saveImportId($element->id, (string)$dto->id, $origin, 'group');
             }
         }
         return $element ?? null;
@@ -167,7 +168,7 @@ class GroupsService extends ElementsManager
         }
 
         if ($dto->countryId !== 0 && $dto->countryId !== null) {
-            $locationElement = $this->getElementByImportId((string)$dto->countryId, $origin, 'country');
+            $locationElement = $this->importIdOperator->getElementByImportId((string)$dto->countryId, $origin, 'country');
             if ($locationElement && $element->country !== $locationElement->id) {
                 $changed = true;
                 $element->country = $locationElement->id;
@@ -177,7 +178,7 @@ class GroupsService extends ElementsManager
         if (is_array($dto->parentGroupIds)) {
             $parentGroups = $element->parentGroups;
             foreach ($dto->parentGroupIds as $groupId) {
-                $groupElement = $this->getElementByImportId((string)$groupId, $origin, 'group');
+                $groupElement = $this->importIdOperator->getElementByImportId((string)$groupId, $origin, 'group');
                 if ($groupElement !== null && !in_array($groupElement, $parentGroups, true)) {
                     $parentGroups[] = $groupElement;
                 }
@@ -198,7 +199,7 @@ class GroupsService extends ElementsManager
         if ($element = $this->manufactureAliasElement($dto->name ?? '')) {
             $this->updateGroupAlias($element, $dto, $origin);
             if ($dto->id !== null) {
-                $this->saveImportId($element->id, (string)$dto->id, $origin, 'group');
+                $this->importIdOperator->saveImportId($element->id, (string)$dto->id, $origin, 'group');
             }
         }
         return $element ?? null;
@@ -231,7 +232,7 @@ class GroupsService extends ElementsManager
         }
 
         if (($groupAlias->aliasParentGroupId !== null) && !$element->groupId) {
-            if ($groupElement = $this->getElementByImportId($groupAlias->aliasParentGroupId, $origin, 'group')) {
+            if ($groupElement = $this->importIdOperator->getElementByImportId($groupAlias->aliasParentGroupId, $origin, 'group')) {
                 $changed = true;
                 $element->groupId = $groupElement->getPersistedId();
             }
@@ -340,7 +341,7 @@ class GroupsService extends ElementsManager
     public function getGroupByLabel(GroupLabel $label, ?string $origin): groupElement|groupAliasElement|null
     {
         /** @var groupElement|null $element */
-        $element = $this->getElementByImportId($label->id, $origin, 'group');
+        $element = $this->importIdOperator->getElementByImportId($label->id, $origin, 'group');
         if ($element === null) {
             $element = $this->labelResolver->resolveGroup($label);
         }

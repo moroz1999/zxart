@@ -1,15 +1,18 @@
 <?php
 
 use Illuminate\Database\Connection;
+use ZxArt\Import\Services\ImportIdOperator;
 
 class CountriesManager extends errorLogger
 {
-    use ImportIdOperatorTrait;
     public function __construct(
-        protected linksManager $linksManager,
+        protected linksManager     $linksManager,
         protected structureManager $structureManager,
-        protected Connection $db,
-    ){}
+        protected Connection       $db,
+        private ImportIdOperator   $importIdOperator,
+    )
+    {
+    }
 
     /**
      * @psalm-param array{id: mixed, title: mixed} $countryInfo
@@ -19,9 +22,9 @@ class CountriesManager extends errorLogger
         /**
          * @var countryElement $element
          */
-        if (!($element = $this->getElementByImportId($countryInfo['id'], $origin, 'country'))) {
+        if (!($element = $this->importIdOperator->getElementByImportId($countryInfo['id'], $origin, 'country'))) {
             if ($element = $this->getLocationByName($countryInfo['title'])) {
-                $this->saveImportId($element->id, $countryInfo['id'], $origin, 'country');
+                $this->importIdOperator->saveImportId($element->id, $countryInfo['id'], $origin, 'country');
                 $this->updateCountry($element, $countryInfo);
             } else {
                 return $this->createCountry($countryInfo, $origin);
@@ -77,7 +80,7 @@ class CountriesManager extends errorLogger
                  * @var countryElement $element
                  */
                 $this->updateCountry($element, $countryInfo);
-                $this->saveImportId($element->id, $countryInfo['id'], $origin, 'country');
+                $this->importIdOperator->saveImportId($element->id, $countryInfo['id'], $origin, 'country');
             }
         }
         return $element;

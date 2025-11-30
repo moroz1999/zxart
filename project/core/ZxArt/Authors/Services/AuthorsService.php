@@ -12,7 +12,6 @@ use ElementsManager;
 use fluxbb\cache\Exception;
 use groupElement;
 use Illuminate\Database\Connection;
-use ImportIdOperatorTrait;
 use LanguagesManager;
 use letterElement;
 use LettersElementsListProviderTrait;
@@ -24,11 +23,11 @@ use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Import\Labels\LabelResolver;
 use ZxArt\Import\Labels\PersonLabel;
+use ZxArt\Import\Services\ImportIdOperator;
 use ZxArt\LinkTypes;
 
 class AuthorsService extends ElementsManager
 {
-    use ImportIdOperatorTrait;
     use LettersElementsListProviderTrait;
 
     protected const string TABLE = 'module_author';
@@ -41,16 +40,17 @@ class AuthorsService extends ElementsManager
     protected array $importedAuthorAliases = [];
 
     public function __construct(
-        protected linksManager         $linksManager,
-        protected LanguagesManager     $languagesManager,
-        protected ConfigManager        $configManager,
-        protected CountriesManager     $countriesManager,
-        protected privilegesManager    $privilegesManager,
-        protected Connection           $db,
-        protected structureManager     $structureManager,
-        protected GroupsService        $groupsService,
-        protected AuthorshipRepository $authorshipRepository,
-        private readonly LabelResolver $labelResolver,
+        protected readonly linksManager         $linksManager,
+        protected LanguagesManager              $languagesManager,
+        protected readonly ConfigManager        $configManager,
+        protected readonly CountriesManager     $countriesManager,
+        protected readonly privilegesManager    $privilegesManager,
+        protected Connection                    $db,
+        protected structureManager              $structureManager,
+        protected readonly GroupsService        $groupsService,
+        protected readonly AuthorshipRepository $authorshipRepository,
+        private readonly LabelResolver          $labelResolver,
+        private readonly ImportIdOperator       $importIdOperator,
     )
     {
         $this->columnRelations = [
@@ -94,7 +94,7 @@ class AuthorsService extends ElementsManager
             if ($resolved = $this->labelResolver->resolve($label)) {
                 $element = $resolved;
                 if ($origin) {
-                    $this->saveImportId($element->getId(), $authorId, $origin, 'author');
+                    $this->importIdOperator->saveImportId($element->getId(), $authorId, $origin, 'author');
                 }
                 $this->updateAuthor($element, $label, $origin);
             } elseif ($createNew) {
@@ -182,7 +182,7 @@ class AuthorsService extends ElementsManager
         $this->updateAuthor($element, $dto, $origin);
 
         if ($origin && $dto->id !== null) {
-            $this->saveImportId($element->getId(), (string)$dto->id, $origin, 'author');
+            $this->importIdOperator->saveImportId($element->getId(), (string)$dto->id, $origin, 'author');
         }
         return $element;
     }
@@ -249,14 +249,14 @@ class AuthorsService extends ElementsManager
         }
 
         if ($this->forceUpdateCountry && $label->countryId !== null) {
-            $countryElement = $this->getElementByImportId((string)$label->countryId, $origin, 'country');
+            $countryElement = $this->importIdOperator->getElementByImportId((string)$label->countryId, $origin, 'country');
             if ($countryElement && $element->country !== $countryElement->getId()) {
                 $element->country = $countryElement->getId();
                 $changed = true;
             }
         }
         if ($this->forceUpdateCity && $label->cityId !== null) {
-            $cityElement = $this->getElementByImportId((string)$label->cityId, $origin, 'city');
+            $cityElement = $this->importIdOperator->getElementByImportId((string)$label->cityId, $origin, 'city');
             if ($cityElement && $element->city !== $cityElement->getId()) {
                 $element->city = $cityElement->getId();
                 $changed = true;
@@ -274,7 +274,7 @@ class AuthorsService extends ElementsManager
                 if ($groupImportId === null || $groupImportId === '') {
                     continue;
                 }
-                if ($groupElement = $this->getElementByImportId($groupImportId, $origin, 'group')) {
+                if ($groupElement = $this->importIdOperator->getElementByImportId($groupImportId, $origin, 'group')) {
                     $this->authorshipRepository->addAuthorship($groupElement->getId(), $element->getPersistedId(), 'group', $roles);
                 }
             }
@@ -288,7 +288,7 @@ class AuthorsService extends ElementsManager
         if (!$element) {
             if ($element = $this->labelResolver->resolve($personLabel)) {
                 if ($origin) {
-                    $this->saveImportId($element->getId(), $importId, $origin, 'author');
+                    $this->importIdOperator->saveImportId($element->getId(), $importId, $origin, 'author');
                 }
                 if ($element->structureType === 'authorAlias') {
                     $this->updateAuthorAlias($element, $personLabel, $origin);
@@ -330,7 +330,7 @@ class AuthorsService extends ElementsManager
         $this->updateAuthorAlias($element, $authorAlias, $origin);
 
         if ($origin && $authorAlias->id !== null) {
-            $this->saveImportId($element->getId(), (string)$authorAlias->id, $origin, 'author');
+            $this->importIdOperator->saveImportId($element->getId(), (string)$authorAlias->id, $origin, 'author');
         }
 
         return $element;
@@ -382,7 +382,7 @@ class AuthorsService extends ElementsManager
         }
 
         if ($label->authorId !== null && !$element->authorId) {
-            if ($authorElement = $this->getElementByImportId((string)$label->authorId, $origin, 'authorAlias')) {
+            if ($authorElement = $this->importIdOperator->getElementByImportId((string)$label->authorId, $origin, 'authorAlias')) {
                 if ($authorElement->getId() !== $element->authorId) {
                     $element->authorId = $authorElement->getId();
                     $changed = true;
@@ -578,7 +578,7 @@ class AuthorsService extends ElementsManager
         if (isset($this->importedAuthors[$origin][$authorId])) {
             return $this->importedAuthors[$origin][$authorId];
         }
-        $author = $this->getElementByImportId($authorId, $origin, 'author');
+        $author = $this->importIdOperator->getElementByImportId($authorId, $origin, 'author');
         if ($author?->structureType === 'author') {
             return $author;
         }
@@ -660,6 +660,6 @@ class AuthorsService extends ElementsManager
             return $this->importedAuthorAliases[$origin][$importId];
         }
 
-        return $this->getElementByImportId($importId, $origin, 'authorAlias');
+        return $this->importIdOperator->getElementByImportId($importId, $origin, 'authorAlias');
     }
 }
