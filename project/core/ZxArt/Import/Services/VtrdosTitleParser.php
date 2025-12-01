@@ -9,7 +9,7 @@ final class VtrdosTitleParser
      * @param array<string,string> $hardwareIndex
      */
     public function __construct(
-        private readonly array $hardwareIndex,
+        private readonly VtrdosHardwareProvider $vtrdosHardwareProvider,
     )
     {
     }
@@ -17,21 +17,17 @@ final class VtrdosTitleParser
     public function parse(string $rawTitle): VtrdosTitleParseResult
     {
         $workTitle = $rawTitle;
-        $hardwareRequired = [];
         $languages = null;
         $releaseType = null;
         $version = null;
+        $hardwareRequired = $this->vtrdosHardwareProvider->match($workTitle);
+        $workTitle = $this->vtrdosHardwareProvider->removeMatches($workTitle);
 
-        // Hardware markers
-        foreach ($this->hardwareIndex as $marker => $hardwareCode) {
-            if (stripos($workTitle, $marker) !== false) {
-                if (str_contains($marker, '(')) {
-                    $workTitle = str_ireplace($marker, '', $workTitle);
-                }
-                $hardwareRequired[] = $hardwareCode;
-            }
+        // Release type markers
+        if (stripos($workTitle, '(bugfix)') !== false) {
+            $workTitle = str_ireplace('(bugfix)', '', $workTitle);
+            $releaseType = 'adaptation';
         }
-
         // Release type markers
         if (stripos($workTitle, '(dsk)') !== false) {
             $workTitle = str_ireplace('(dsk)', '', $workTitle);
