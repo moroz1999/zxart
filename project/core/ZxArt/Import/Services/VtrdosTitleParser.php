@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace ZxArt\Import\Services;
 
+use ZxArt\Releases\ReleaseTypes;
+
 final class VtrdosTitleParser
 {
     private const LANGUAGE_MAP = [
@@ -41,10 +43,10 @@ final class VtrdosTitleParser
      * @var array<string, array{type:string,priority:int}>
      */
     private const RELEASE_TYPE_MAP = [
-        'mod' => ['type' => 'mod', 'priority' => 100],
-        'bugfix' => ['type' => 'adaptation', 'priority' => 50],
-        'pentfix' => ['type' => 'adaptation', 'priority' => 50],
-        'dsk' => ['type' => 'adaptation', 'priority' => 10],
+        'mod' => ['type' => ReleaseTypes::mod->value, 'priority' => 100],
+        'bugfix' => ['type' => ReleaseTypes::adaptation->value, 'priority' => 50],
+        'pentfix' => ['type' => ReleaseTypes::adaptation->value, 'priority' => 50],
+        'dsk' => ['type' => ReleaseTypes::adaptation->value, 'priority' => 10],
     ];
 
     public function __construct(
@@ -120,7 +122,7 @@ final class VtrdosTitleParser
 
         if (!empty($languageCodes)) {
             $languages = $languageCodes;
-            $releaseType = 'translation';
+            $releaseType = ReleaseTypes::localization->value;
         }
 
         if ($currentReleaseType !== null) {
