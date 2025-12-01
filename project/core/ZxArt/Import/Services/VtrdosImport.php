@@ -186,7 +186,9 @@ class VtrdosImport extends errorLogger
     ];
 
     public function __construct(
-        private readonly ProdsService $prodsService,
+        private readonly ProdsService       $prodsService,
+        private readonly VtrdosAuthorParser $vtrdosAuthorParser,
+        private readonly VtrdosTitleParser  $vtrdosTitleParser,
     )
     {
         $this->prodsService->setUpdateExistingReleases(true);
@@ -364,9 +366,6 @@ class VtrdosImport extends errorLogger
     /**
      * @param DOMNameSpaceNode|DOMNode $node
      * @param DOMXPath $xPath
-     * @param $settings
-     */
-    /**
      * @param array<string, mixed> $settings
      */
     protected function parseTable(DOMNode|DOMNameSpaceNode $node, DOMXPath $xPath, array $settings): void
@@ -378,13 +377,14 @@ class VtrdosImport extends errorLogger
             foreach ($releaseNodes as $releaseNode) {
                 $tdNodes = $releaseNode->getElementsByTagName('td');
                 if ($td1 = $tdNodes->item(0)) {
-                    // Initialize clear variables
                     $url = null;
                     $prodTitle = null;
                     $detailsUrl = null;
-                    $aNode = null;
 
-                    // Extract links from the first column
+                    $anchorLanguages = null;
+                    $anchorHardware = [];
+                    $anchorReleaseType = null;
+
                     $aNodes = $td1->getElementsByTagName('a');
                     foreach ($aNodes as $aNodeItem) {
                         if (!$aNodeItem instanceof DOMElement) {
@@ -393,18 +393,20 @@ class VtrdosImport extends errorLogger
                         $classAttr = $aNodeItem->getAttribute('class');
                         $href = $aNodeItem->getAttribute('href');
                         if (!str_contains($classAttr, 'details')) {
-                            // Main link with title
                             if ($href !== '') {
                                 $url = $href;
                             }
-                            $prodTitle = $this->processTitle((string)$aNodeItem->textContent);
-                            $aNode = $aNodeItem;
+
+                            $titleParseResult = $this->vtrdosTitleParser->parse((string)$aNodeItem->textContent);
+                            $prodTitle = $titleParseResult->title;
+                            $anchorLanguages = $titleParseResult->languages;
+                            $anchorHardware = $titleParseResult->hardwareRequired;
+                            $anchorReleaseType = $titleParseResult->releaseType;
                         } else if ($href !== '') {
                             $detailsUrl = $this->rootUrl . $href;
                         }
                     }
 
-                    // Fallback: if details link not found in the first column, try column 5
                     if ($detailsUrl === null && $td5 = $tdNodes->item(4)) {
                         $aNodes5 = $td5->getElementsByTagName('a');
                         foreach ($aNodes5 as $aNodeItem) {
@@ -418,34 +420,48 @@ class VtrdosImport extends errorLogger
                         }
                     }
 
+                    $parsedReleaseType = null;
                     if ($url !== null && $prodTitle !== null) {
-                        // gather from columns
                         $prodYear = null;
+                        $releaseYear = null;
                         $labelObjects = [];
                         $groupIds = [];
                         $publisherIds = [];
                         $undetermined = [];
-                        $parsedReleaseType = null;
                         if ($td2 = $tdNodes->item(1)) {
-                            $this->extractAuthorsFromPlainString((string)$td2->nodeValue, [], $prodYear, $labelObjects, $groupIds, $publisherIds, $undetermined, $parsedReleaseType);
+                            $this->vtrdosAuthorParser->parseInfo(
+                                trim((string)$td2->nodeValue),
+                                [],
+                                $prodYear,
+                                $releaseYear,
+                                $labelObjects,
+                                $groupIds,
+                                $publisherIds,
+                                $undetermined,
+                            );
                         }
                         $roles = [];
                         if (isset($settings['release']['authorRoles'])) {
                             $roles = (array)$settings['release']['authorRoles'];
                         }
                         $roles[] = 'release';
-                        // release-level authors (publishers)
+
                         $releasePublishers = [];
                         $releaseUndetermined = [];
                         if ($td3 = $tdNodes->item(2)) {
                             $tmpLabels = [];
-                            $tmpGroups = [];
                             $tmpPublishers = [];
                             $tmpUndet = [];
-                            $this->extractAuthorsFromPlainString((string)$td3->nodeValue, $roles, $prodYear, $tmpLabels, $tmpGroups, $tmpPublishers, $tmpUndet, $releaseType);
+                            $this->vtrdosAuthorParser->parseVersion(
+                                trim((string)$td3->nodeValue),
+                                $roles,
+                                $releaseYear,
+                                $tmpLabels,
+                                $tmpUndet,
+                                $parsedReleaseType,
+                            );
                             $releasePublishers = $tmpPublishers;
                             $releaseUndetermined = $tmpUndet;
-                            // also merge in product labels if new
                             foreach ($tmpLabels as $l) {
                                 $ids = array_map(static fn(Label $x) => ($x->id ?? ''), $labelObjects);
                                 if (!in_array($l->id ?? '', $ids, true)) {
@@ -454,54 +470,32 @@ class VtrdosImport extends errorLogger
                             }
                         }
 
-                        // settings overrides
                         $languages = !empty($settings['release']['language']) ? (array)$settings['release']['language'] : null;
-                        $releaseType = !empty($settings['release']['releaseType']) ? (string)$settings['release']['releaseType'] : null;
-                        $hardwareRequired = !empty($settings['release']['hardwareRequired']) ? (array)$settings['release']['hardwareRequired'] : [];
 
-                        // anchor info
-                        if ($aNode instanceof DOMElement) {
-                            $anchorTitle = $aNode->textContent ?? '';
-                            // hardware and tags from anchor text
-                            foreach ($this->hwIndex as $k => $v) {
-                                if (stripos($anchorTitle, $k) !== false) {
-                                    if (str_contains($k, '(')) {
-                                        $anchorTitle = str_ireplace($k, '', $anchorTitle);
-                                    }
-                                    $hardwareRequired[] = $v;
+                        $releaseType = !empty($settings['release']['releaseType'])
+                            ? (string)$settings['release']['releaseType']
+                            : $parsedReleaseType;
+
+                        if ($languages === null && $anchorLanguages !== null) {
+                            $languages = $anchorLanguages;
+                        }
+
+                        if ($releaseType === null && $anchorReleaseType !== null) {
+                            $releaseType = $anchorReleaseType;
+                        }
+
+                        $hardwareRequired = !empty($settings['release']['hardwareRequired'])
+                            ? (array)$settings['release']['hardwareRequired']
+                            : [];
+
+                        if (!empty($anchorHardware)) {
+                            foreach ($anchorHardware as $hw) {
+                                if (!in_array($hw, $hardwareRequired, true)) {
+                                    $hardwareRequired[] = $hw;
                                 }
-                            }
-                            if (stripos($anchorTitle, '(dsk)') !== false) {
-                                $anchorTitle = str_ireplace('(dsk)', '', $anchorTitle);
-                                $releaseType = $releaseType ?? 'adaptation';
-                            }
-                            if (stripos($anchorTitle, '(mod)') !== false) {
-                                $anchorTitle = str_ireplace('(mod)', '', $anchorTitle);
-                                $releaseType = $releaseType ?? 'mod';
-                            }
-                            if (stripos($anchorTitle, '(rus)') !== false) {
-                                $anchorTitle = str_ireplace('(rus)', '', $anchorTitle);
-                                $languages = $languages ?? ['ru'];
-                            }
-                            if (stripos($anchorTitle, '(ita)') !== false) {
-                                $anchorTitle = str_ireplace('(ita)', '', $anchorTitle);
-                                $languages = $languages ?? ['it'];
-                            }
-                            if (stripos($anchorTitle, '(pol)') !== false) {
-                                $anchorTitle = str_ireplace('(pol)', '', $anchorTitle);
-                                $languages = $languages ?? ['pl'];
-                            }
-                            if (stripos($anchorTitle, '(eng)') !== false) {
-                                $anchorTitle = str_ireplace('(eng)', '', $anchorTitle);
-                                $languages = $languages ?? ['en'];
-                            }
-                            if (stripos($anchorTitle, '(ukr)') !== false) {
-                                $anchorTitle = str_ireplace('(ukr)', '', $anchorTitle);
-                                $languages = $languages ?? ['ua'];
                             }
                         }
 
-                        // Details page for fileUrl and description
                         $fileUrl = $this->rootUrl . $url;
                         $description = null;
                         if (is_string($detailsUrl)) {
@@ -527,7 +521,7 @@ class VtrdosImport extends errorLogger
                         $releaseDto = new ReleaseImportDTO(
                             id: $releaseId,
                             title: $prodTitle,
-                            year: $prodYear,
+                            year: $releaseYear,
                             languages: $languages,
                             releaseType: $releaseType,
                             fileUrl: $fileUrl,
@@ -556,41 +550,7 @@ class VtrdosImport extends errorLogger
                             $prodsIndex[$prodId] = $prodDto;
                         } else {
                             $existing = $prodsIndex[$prodId];
-                            $newReleases = $existing->releases ?? [];
-                            $newReleases[] = $releaseDto;
-                            $prodsIndex[$prodId] = new ProdImportDTO(
-                                id: $existing->id,
-                                title: $existing->title,
-                                altTitle: $existing->altTitle,
-                                description: $existing->description,
-                                htmlDescription: $existing->htmlDescription,
-                                instructions: $existing->instructions,
-                                languages: $existing->languages,
-                                legalStatus: $existing->legalStatus,
-                                youtubeId: $existing->youtubeId,
-                                externalLink: $existing->externalLink,
-                                compo: $existing->compo,
-                                year: $existing->year,
-                                ids: $existing->ids,
-                                importIds: $existing->importIds,
-                                labels: $existing->labels,
-                                authorRoles: $existing->authorRoles,
-                                groups: $existing->groups,
-                                publishers: $existing->publishers,
-                                undetermined: $existing->undetermined,
-                                party: $existing->party,
-                                directCategories: $existing->directCategories,
-                                categories: $existing->categories,
-                                images: $existing->images,
-                                maps: $existing->maps,
-                                inlayImages: $existing->inlayImages,
-                                rzx: $existing->rzx,
-                                compilationItems: $existing->compilationItems,
-                                seriesProdIds: $existing->seriesProdIds,
-                                articles: $existing->articles,
-                                releases: $newReleases,
-                                origin: $existing->origin,
-                            );
+                            $prodsIndex[$prodId] = $existing->withAddedRelease($releaseDto);
                         }
                     }
                 }
@@ -627,7 +587,11 @@ class VtrdosImport extends errorLogger
                                 continue;
                             }
                             $issueNo = trim((string)$aNode->textContent);
-                            $prodTitle = $this->processTitle($pressTitle . ' #' . $issueNo);
+
+                            $titleWithIssue = $pressTitle . ' #' . $issueNo;
+                            $titleParseResult = $this->vtrdosTitleParser->parse($titleWithIssue);
+                            $prodTitle = $titleParseResult->title;
+
                             $prodId = md5($pressTitle . ' #' . $issueNo);
 
                             $fileUrl = $this->rootUrl . $href;
@@ -651,41 +615,7 @@ class VtrdosImport extends errorLogger
                                 $prodsIndex[$prodId] = $prodDto;
                             } else {
                                 $existing = $prodsIndex[$prodId];
-                                $newReleases = $existing->releases ?? [];
-                                $newReleases[] = $releaseDto;
-                                $prodsIndex[$prodId] = new ProdImportDTO(
-                                    id: $existing->id,
-                                    title: $existing->title,
-                                    altTitle: $existing->altTitle,
-                                    description: $existing->description,
-                                    htmlDescription: $existing->htmlDescription,
-                                    instructions: $existing->instructions,
-                                    languages: $existing->languages,
-                                    legalStatus: $existing->legalStatus,
-                                    youtubeId: $existing->youtubeId,
-                                    externalLink: $existing->externalLink,
-                                    compo: $existing->compo,
-                                    year: $existing->year,
-                                    ids: $existing->ids,
-                                    importIds: $existing->importIds,
-                                    labels: $existing->labels,
-                                    authorRoles: $existing->authorRoles,
-                                    groups: $existing->groups,
-                                    publishers: $existing->publishers,
-                                    undetermined: $existing->undetermined,
-                                    party: $existing->party,
-                                    directCategories: $existing->directCategories,
-                                    categories: $existing->categories,
-                                    images: $existing->images,
-                                    maps: $existing->maps,
-                                    inlayImages: $existing->inlayImages,
-                                    rzx: $existing->rzx,
-                                    compilationItems: $existing->compilationItems,
-                                    seriesProdIds: $existing->seriesProdIds,
-                                    articles: $existing->articles,
-                                    releases: $newReleases,
-                                    origin: $existing->origin,
-                                );
+                                $prodsIndex[$prodId] = $existing->withAddedRelease($releaseDto);
                             }
                             $seriesProdsIds[] = $prodId;
                         }
@@ -709,9 +639,6 @@ class VtrdosImport extends errorLogger
     /**
      * @param DOMNameSpaceNode|DOMNode $node
      * @param DOMXPath $xPath
-     * @param $settings
-     */
-    /**
      * @param array<string, mixed> $settings
      */
     protected function parseUpdates(DOMNode|DOMNameSpaceNode $node, DOMXPath $xPath, array $settings): void
@@ -729,12 +656,24 @@ class VtrdosImport extends errorLogger
                     $detailsUrl = false;
                     $prodTitle = false;
                     $currentCategory = null;
+                    $parsedReleaseType = null;
+                    $releaseYear = null;
+
+                    $titleLanguages = null;
+                    $titleHardware = [];
+                    $titleReleaseType = null;
 
                     if ($aNodes = $td2->getElementsByTagName('a')) {
                         foreach ($aNodes as $aNode) {
                             if (!str_contains($aNode->getAttribute('class'), 'details')) {
                                 $detailsUrl = $this->rootUrl . $aNode->getAttribute('href');
-                                $prodTitle = $this->processTitle($aNode->textContent);
+
+                                $titleParseResult = $this->vtrdosTitleParser->parse($aNode->textContent);
+                                $prodTitle = $titleParseResult->title;
+                                $titleLanguages = $titleParseResult->languages;
+                                $titleHardware = $titleParseResult->hardwareRequired;
+                                $titleReleaseType = $titleParseResult->releaseType;
+
                                 break;
                             }
                         }
@@ -760,7 +699,16 @@ class VtrdosImport extends errorLogger
                         $publisherIds = [];
                         $undetermined = [];
                         if ($td4 = $tdNodes->item(3)) {
-                            $this->extractAuthorsFromPlainString((string)$td4->nodeValue, [], $prodYear, $labelObjects, $groupIds, $publisherIds, $undetermined, $releaseType);
+                            $this->vtrdosAuthorParser->parseInfo(
+                                trim((string)$td4->nodeValue),
+                                [],
+                                $prodYear,
+                                $releaseYear,
+                                $labelObjects,
+                                $groupIds,
+                                $publisherIds,
+                                $undetermined,
+                            );
                         }
                         $roles = [];
                         if (isset($settings['release']['authorRoles'])) {
@@ -772,10 +720,16 @@ class VtrdosImport extends errorLogger
                         $releaseUndetermined = [];
                         if ($td5 = $tdNodes->item(4)) {
                             $tmpLabels = [];
-                            $tmpGroups = [];
                             $tmpPublishers = [];
                             $tmpUndet = [];
-                            $this->extractAuthorsFromPlainString((string)$td5->nodeValue, $roles, $prodYear, $tmpLabels, $tmpGroups, $tmpPublishers, $tmpUndet, $releaseType);
+                            $this->vtrdosAuthorParser->parseVersion(
+                                trim((string)$td5->nodeValue),
+                                $roles,
+                                $releaseYear,
+                                $tmpLabels,
+                                $tmpUndet,
+                                $parsedReleaseType,
+                            );
                             $releasePublishers = $tmpPublishers;
                             $releaseUndetermined = $tmpUndet;
                             foreach ($tmpLabels as $l) {
@@ -786,19 +740,37 @@ class VtrdosImport extends errorLogger
                             }
                         }
 
-                        // Details
-                        [$fileUrl, $description, $hw] = $this->getReleaseDetails($detailsUrl);
-                        $hardwareRequired = $hw;
+                        [$fileUrl, $description, $hwFromDetails] = $this->getReleaseDetails($detailsUrl);
+                        $hardwareRequired = $hwFromDetails;
 
-                        // apply overrides
                         $languages = !empty($settings['release']['language']) ? (array)$settings['release']['language'] : null;
-                        $releaseType = !empty($settings['release']['releaseType']) ? (string)$settings['release']['releaseType'] : null;
-                        if (!empty($settings['release']['hardwareRequired'])) {
-                            foreach ((array)$settings['release']['hardwareRequired'] as $hw) {
-                                if (!in_array($hw, $hardwareRequired, true)) {
-                                    $hardwareRequired[] = $hw;
+                        if ($languages === null && $titleLanguages !== null) {
+                            $languages = $titleLanguages;
+                        }
+
+                        if (!empty($titleHardware)) {
+                            foreach ($titleHardware as $hwItem) {
+                                if (!in_array($hwItem, $hardwareRequired, true)) {
+                                    $hardwareRequired[] = $hwItem;
                                 }
                             }
+                        }
+
+                        if (!empty($settings['release']['hardwareRequired'])) {
+                            foreach ((array)$settings['release']['hardwareRequired'] as $hwItem) {
+                                if (!in_array($hwItem, $hardwareRequired, true)) {
+                                    $hardwareRequired[] = $hwItem;
+                                }
+                            }
+                        }
+
+                        $releaseType = null;
+                        if (!empty($settings['release']['releaseType'])) {
+                            $releaseType = (string)$settings['release']['releaseType'];
+                        } elseif ($parsedReleaseType !== null) {
+                            $releaseType = $parsedReleaseType;
+                        } else {
+                            $releaseType = $titleReleaseType;
                         }
 
                         $releaseId = md5(basename($detailsUrl));
@@ -838,41 +810,7 @@ class VtrdosImport extends errorLogger
                             $prodsIndex[$prodId] = $prodDto;
                         } else {
                             $existing = $prodsIndex[$prodId];
-                            $newReleases = $existing->releases ?? [];
-                            $newReleases[] = $releaseDto;
-                            $prodsIndex[$prodId] = new ProdImportDTO(
-                                id: $existing->id,
-                                title: $existing->title,
-                                altTitle: $existing->altTitle,
-                                description: $existing->description,
-                                htmlDescription: $existing->htmlDescription,
-                                instructions: $existing->instructions,
-                                languages: $existing->languages,
-                                legalStatus: $existing->legalStatus,
-                                youtubeId: $existing->youtubeId,
-                                externalLink: $existing->externalLink,
-                                compo: $existing->compo,
-                                year: $existing->year,
-                                ids: $existing->ids,
-                                importIds: $existing->importIds,
-                                labels: $existing->labels,
-                                authorRoles: $existing->authorRoles,
-                                groups: $existing->groups,
-                                publishers: $existing->publishers,
-                                undetermined: $existing->undetermined,
-                                party: $existing->party,
-                                directCategories: $existing->directCategories,
-                                categories: $existing->categories,
-                                images: $existing->images,
-                                maps: $existing->maps,
-                                inlayImages: $existing->inlayImages,
-                                rzx: $existing->rzx,
-                                compilationItems: $existing->compilationItems,
-                                seriesProdIds: $existing->seriesProdIds,
-                                articles: $existing->articles,
-                                releases: $newReleases,
-                                origin: $existing->origin,
-                            );
+                            $prodsIndex[$prodId] = $existing->withAddedRelease($releaseDto);
                         }
                     }
                 }
@@ -899,7 +837,6 @@ class VtrdosImport extends errorLogger
             $divNodes = $xPath->query("//div[@class='details']");
             if ($divNode = $divNodes->item(0)) {
                 $raw = (string)$html->saveHTML($divNode);
-                // parse hardware markers
                 foreach ($this->hwIndex as $key => $value) {
                     if (stripos($raw, $key) !== false) {
                         $hardwareRequired[] = $value;
@@ -917,9 +854,6 @@ class VtrdosImport extends errorLogger
     /**
      * @param DOMNameSpaceNode|DOMNode $node
      * @param DOMXPath $xPath
-     * @param $settings
-     */
-    /**
      * @param array<string, mixed> $settings
      */
     protected function parseSystem(DOMNode|DOMNameSpaceNode $node, DOMXPath $xPath, array $settings): void
@@ -977,9 +911,6 @@ class VtrdosImport extends errorLogger
     /**
      * @param DOMNameSpaceNode|DOMNode $node
      * @param DOMXPath $xPath
-     * @param $settings
-     */
-    /**
      * @param array<string, mixed> $settings
      */
     protected function parseSbor(DOMNode|DOMNameSpaceNode $node, DOMXPath $xPath, array $settings): void
@@ -1042,9 +973,6 @@ class VtrdosImport extends errorLogger
     /**
      * @param DOMNameSpaceNode|DOMNode $node
      * @param DOMXPath $xPath
-     * @param $settings
-     */
-    /**
      * @param array<string, mixed> $settings
      */
     protected function parseList(DOMNode|DOMNameSpaceNode $node, DOMXPath $xPath, array $settings): void
@@ -1080,73 +1008,26 @@ class VtrdosImport extends errorLogger
     }
 
     /**
-     * Build DTOs directly for list-like entries, avoiding intermediate array shapes.
-     *
      * @param array<int> $currentCategory
      * @param array<string,mixed> $settings
      * @param array<string, ProdImportDTO> $prodsIndex
      */
     private function parseListItemRelease(DOMElement $aNode, DOMNode $textNode, array $currentCategory, array $settings, array &$prodsIndex): void
     {
-        // Gather release data from anchor
         $fileUrl = $this->rootUrl . $aNode->getAttribute('href');
         $rawTitle = $aNode->textContent;
 
-        $languages = null; // string[]|null
-        $hardwareRequired = [];
-        $releaseType = null;
-        $version = null;
+        $titleParseResult = $this->vtrdosTitleParser->parse($rawTitle);
 
-        $workTitle = $rawTitle;
-        foreach ($this->hwIndex as $key => $value) {
-            if (stripos($workTitle, $key) !== false) {
-                if (str_contains($key, '(')) {
-                    $workTitle = str_ireplace($key, '', $workTitle);
-                }
-                $hardwareRequired[] = $value;
-            }
-        }
-        if (stripos($workTitle, '(dsk)') !== false) {
-            $workTitle = str_ireplace('(dsk)', '', $workTitle);
-            $releaseType = 'adaptation';
-        }
-        if (stripos($workTitle, '(mod)') !== false) {
-            $workTitle = str_ireplace('(mod)', '', $workTitle);
-            $releaseType = 'mod';
-        }
-        if (stripos($workTitle, '(rus)') !== false) {
-            $workTitle = str_ireplace('(rus)', '', $workTitle);
-            $languages = ['ru'];
-        }
-        if (stripos($workTitle, '(ita)') !== false) {
-            $workTitle = str_ireplace('(ita)', '', $workTitle);
-            $languages = ['it'];
-        }
-        if (stripos($workTitle, '(pol)') !== false) {
-            $workTitle = str_ireplace('(pol)', '', $workTitle);
-            $languages = ['pl'];
-        }
-        if (stripos($workTitle, '(eng)') !== false) {
-            $workTitle = str_ireplace('(eng)', '', $workTitle);
-            $languages = ['en'];
-        }
-        if (stripos($workTitle, '(ukr)') !== false) {
-            $workTitle = str_ireplace('(ukr)', '', $workTitle);
-            $languages = ['ua'];
-        }
-        if (preg_match('#(v[0-9]\.[0-9])#i', $workTitle, $matches, PREG_OFFSET_CAPTURE)) {
-            $offset = (int)$matches[0][1];
-            $version = substr($workTitle, $offset + 1);
-            $workTitle = trim(substr($workTitle, 0, $offset));
-        }
-        $releaseTitle = $this->processTitle($workTitle);
+        $languages = $titleParseResult->languages;
+        $hardwareRequired = $titleParseResult->hardwareRequired;
+        $releaseTypeFromTitle = $titleParseResult->releaseType;
+        $version = $titleParseResult->version;
+        $releaseTitle = $titleParseResult->title;
+        $releaseYear = null;
 
-        // Apply overrides from settings
         if (!empty($settings['release']['language'])) {
             $languages = (array)$settings['release']['language'];
-        }
-        if (!empty($settings['release']['releaseType'])) {
-            $releaseType = (string)$settings['release']['releaseType'];
         }
         if (!empty($settings['release']['hardwareRequired'])) {
             $hardwareRequired = (array)$settings['release']['hardwareRequired'];
@@ -1158,38 +1039,53 @@ class VtrdosImport extends errorLogger
 
         $releaseId = md5(basename($fileUrl));
 
-        // Authors/groups/year extraction from text node
         $roles = [];
         if (!empty($settings['release']['authorRoles'])) {
             $roles = (array)$settings['release']['authorRoles'];
         }
 
-        $prodYear = null; // int|null
+        $prodYear = null;
         $labelObjects = [];
         $groupIds = [];
         $publisherIds = [];
         $undetermined = [];
         $parsedReleaseType = null;
-        $this->extractAuthorsFromTextNode($textNode, $roles, $prodYear, $labelObjects, $groupIds, $publisherIds, $undetermined, $parsedReleaseType);
+        $this->vtrdosAuthorParser->parseInfo(
+            trim($textNode->textContent ?? ''),
+            $roles,
+            $prodYear,
+            $releaseYear,
+            $labelObjects,
+            $groupIds,
+            $publisherIds,
+            $undetermined,
+            $parsedReleaseType
+        );
 
-        // Product identity
+        $releaseType = null;
+        if (!empty($settings['release']['releaseType'])) {
+            $releaseType = (string)$settings['release']['releaseType'];
+        } elseif ($parsedReleaseType !== null) {
+            $releaseType = $parsedReleaseType;
+        } else {
+            $releaseType = $releaseTypeFromTitle;
+        }
+
         $prodTitle = $releaseTitle;
         if (strtolower(substr($prodTitle, -4)) === 'demo') {
             $prodTitle = trim(mb_substr($prodTitle, 0, -4));
         }
         $prodId = md5($prodTitle . $prodYear);
 
-        // Categories
         $directCategories = $currentCategory;
         if (!empty($settings['prod']['directCategories'])) {
             $directCategories = (array)$settings['prod']['directCategories'];
         }
 
-        // Build Release DTO
         $releaseDto = new ReleaseImportDTO(
             id: $releaseId,
             title: $releaseTitle,
-            year: $prodYear,
+            year: $releaseYear,
             languages: $languages,
             version: $version,
             releaseType: $releaseType,
@@ -1200,7 +1096,6 @@ class VtrdosImport extends errorLogger
             undetermined: empty($undetermined) ? null : $undetermined,
         );
 
-        // Upsert product DTO and append release
         if (!isset($prodsIndex[$prodId])) {
             $prodDto = new ProdImportDTO(
                 id: $prodId,
@@ -1216,238 +1111,8 @@ class VtrdosImport extends errorLogger
             $prodsIndex[$prodId] = $prodDto;
         } else {
             $existing = $prodsIndex[$prodId];
-            $newReleases = $existing->releases ?? [];
-            $newReleases[] = $releaseDto;
-            $prodsIndex[$prodId] = new ProdImportDTO(
-                id: $existing->id,
-                title: $existing->title,
-                altTitle: $existing->altTitle,
-                description: $existing->description,
-                htmlDescription: $existing->htmlDescription,
-                instructions: $existing->instructions,
-                languages: $existing->languages,
-                legalStatus: $existing->legalStatus,
-                youtubeId: $existing->youtubeId,
-                externalLink: $existing->externalLink,
-                compo: $existing->compo,
-                year: $existing->year,
-                ids: $existing->ids,
-                importIds: $existing->importIds,
-                labels: $existing->labels,
-                authorRoles: $existing->authorRoles,
-                groups: $existing->groups,
-                publishers: $existing->publishers,
-                undetermined: $existing->undetermined,
-                party: $existing->party,
-                directCategories: $existing->directCategories,
-                categories: $existing->categories,
-                images: $existing->images,
-                maps: $existing->maps,
-                inlayImages: $existing->inlayImages,
-                rzx: $existing->rzx,
-                compilationItems: $existing->compilationItems,
-                seriesProdIds: $existing->seriesProdIds,
-                articles: $existing->articles,
-                releases: $newReleases,
-                origin: $existing->origin,
-            );
+            $prodsIndex[$prodId] = $existing->withAddedRelease($releaseDto);
         }
-    }
-
-    /**
-     * Extract authors/groups/year from a text node into typed variables and value objects.
-     *
-     * @param string[] $roles
-     * @param Label[] $labelsOut
-     * @param string[] $groupsOut
-     * @param string[] $publishersOut
-     * @param array<string,string[]> $undeterminedOut
-     */
-    private function extractAuthorsFromTextNode(
-        DOMNode $node,
-        array   $roles,
-        ?int    &$prodYearOut,
-        array   &$labelsOut,
-        array   &$groupsOut,
-        array   &$publishersOut,
-        array   &$undeterminedOut,
-        ?string &$releaseTypeOut = null
-    ): void
-    {
-        $prodYearOut = null;
-        $labelsOut = [];
-        $groupsOut = [];
-        $publishersOut = [];
-        $undeterminedOut = [];
-
-        $text = trim($node->textContent);
-        if (stripos($text, 'by ') === 0) {
-            $text = substr($text, 3);
-        }
-        $authorsPart = $text;
-        if (str_contains($text, ' - ')) {
-            [$authorsPart] = explode(' - ', $text, 2);
-        }
-
-        if ($authorsPart === 'author') {
-            $releaseTypeOut = 'original';
-            return;
-        }
-
-        $authorsPart = trim(preg_replace('!\s+!', ' ', $authorsPart), " \t\n\r\0\x0B" . chr(0xC2) . chr(0xA0));
-        if ($authorsPart === '' || $authorsPart === 'n/a') {
-            return;
-        }
-
-        $parts = explode(',', $authorsPart);
-        foreach ($parts as $part) {
-            $name = trim($part);
-            if (preg_match("#'([0-9]+)#", $name, $matches)) {
-                $digits = trim($matches[1] ?? '');
-                if ($digits !== '') {
-                    if (strlen($digits) === 2) {
-                        $yy = (int)$digits;
-                        $prodYearOut = $yy > 50 ? (int)('19' . $digits) : (int)('20' . $digits);
-                    } elseif (strlen($digits) === 4) {
-                        $prodYearOut = (int)$digits;
-                    }
-                }
-                $name = trim(preg_replace("#('[0-9]+)#", '', $name));
-            }
-
-            if (stripos($name, '/') !== false) {
-                [$authorName, $groupName] = array_map('trim', explode('/', $name, 2));
-                $name = $authorName;
-                if ($groupName !== '') {
-                    $groupsOut[] = $groupName;
-                }
-            }
-
-            // Deduplicate by id
-            $existingIds = array_map(static fn(Label $l) => ($l->id ?? ''), $labelsOut);
-            if (!in_array($name, $existingIds, true)) {
-                $labelsOut[] = new Label(id: $name, name: $name);
-            }
-        }
-
-        // Heuristic: last label as publisher if not in groups
-        if (count($labelsOut) > 1) {
-            $last = $labelsOut[count($labelsOut) - 1];
-            if (!in_array($last->id ?? '', $groupsOut, true)) {
-                $publishersOut[] = $last->id ?? '';
-            }
-        }
-
-        foreach ($labelsOut as $label) {
-            if ($label->id === null) {
-                continue;
-            }
-            $undeterminedOut[$label->id] = $roles;
-        }
-    }
-
-    /**
-     * Same as extractAuthorsFromTextNode but accepts a plain string instead of DOMNode.
-     *
-     * @param string[] $roles
-     * @param Label[] $labelsOut
-     * @param string[] $groupsOut
-     * @param string[] $publishersOut
-     * @param array<string,string[]> $undeterminedOut
-     */
-    private function extractAuthorsFromPlainString(
-        string  $text,
-        array   $roles,
-        ?int    &$prodYearOut,
-        array   &$labelsOut,
-        array   &$groupsOut,
-        array   &$publishersOut,
-        array   &$undeterminedOut,
-        ?string &$releaseTypeOut = null,
-    ): void
-    {
-        $prodYearOut = null;
-        $labelsOut = [];
-        $groupsOut = [];
-        $publishersOut = [];
-        $undeterminedOut = [];
-
-        $text = trim($text);
-        if (strtolower(substr($text, 0, 3)) === 'by ') {
-            $text = substr($text, 3);
-        }
-        $authorsPart = $text;
-        if (str_contains($text, ' - ')) {
-            [$authorsPart] = explode(' - ', $text, 2);
-        }
-        $authorsPart = trim(preg_replace('!\s+!', ' ', $authorsPart), " \t\n\r\0\x0B" . chr(0xC2) . chr(0xA0));
-
-        if ($authorsPart === 'author') {
-            $releaseTypeOut = 'original';
-            return;
-        }
-
-        if ($authorsPart === '' || $authorsPart === 'n/a') {
-            return;
-        }
-        $parts = explode(',', $authorsPart);
-        foreach ($parts as $part) {
-            $name = trim($part);
-            if (preg_match("#'([0-9]+)#", $name, $matches)) {
-                $digits = trim($matches[1] ?? '');
-                if ($digits !== '') {
-                    if (strlen($digits) === 2) {
-                        $yy = (int)$digits;
-                        $prodYearOut = $yy > 50 ? (int)('19' . $digits) : (int)('20' . $digits);
-                    } elseif (strlen($digits) === 4) {
-                        $prodYearOut = (int)$digits;
-                    }
-                }
-                $name = trim(preg_replace("#('\d+)#", '', $name));
-            }
-
-            if (strpos($name, '/') !== false) {
-                [$authorName, $groupName] = array_map('trim', explode('/', $name, 2));
-                $name = $authorName;
-                if ($groupName !== '') {
-                    $groupsOut[] = $groupName;
-                }
-            }
-
-            $existingIds = array_map(static fn(Label $l) => ($l->id ?? ''), $labelsOut);
-            if (!in_array($name, $existingIds, true)) {
-                $labelsOut[] = new Label(id: $name, name: $name);
-            }
-        }
-
-        if (count($labelsOut) > 1) {
-            $last = $labelsOut[count($labelsOut) - 1];
-            if (!in_array($last->id ?? '', $groupsOut, true)) {
-                $publishersOut[] = $last->id ?? '';
-            }
-        }
-
-        foreach ($labelsOut as $label) {
-            if ($label->id === null) {
-                continue;
-            }
-            $undeterminedOut[$label->id] = $roles;
-        }
-    }
-
-    private function processTitle(string $text): string
-    {
-        //remove (..)
-        $text = preg_replace('#([(].*[)])*#', '', $text);
-        //remove double spaces
-        $text = trim(
-            preg_replace('!\s+!', ' ', $text),
-            " \t\n\r\0\x0B" . chr(0xC2) . chr(0xA0)
-        );
-        if (strtolower(substr($text, -4)) === 'demo') {
-            $text = trim(mb_substr($text, 0, -4));
-        }
-        return $text;
     }
 
     protected function loadHtml(
@@ -1488,9 +1153,6 @@ class VtrdosImport extends errorLogger
     }
 
     /**
-     * @param array<string, ProdImportDTO|array<string,mixed>> $prodsIndex
-     */
-    /**
      * @param array<string, ProdImportDTO> $prodsIndex
      */
     protected function importProdsIndex(array $prodsIndex): void
@@ -1500,7 +1162,7 @@ class VtrdosImport extends errorLogger
             if ($this->counter > $this->maxCounter) {
                 exit;
             }
-            $dto = $prodInfo; // already DTO
+            $dto = $prodInfo;
             $title = $dto->title ?? '';
             if ($this->prodsService->importProd($dto, $this->origin)) {
                 $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $title);

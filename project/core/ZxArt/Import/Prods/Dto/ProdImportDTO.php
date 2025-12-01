@@ -65,6 +65,9 @@ final readonly class ProdImportDTO
     {
     }
 
+    /**
+     * @deprecated
+     */
     public static function fromArray(array $a): self
     {
         $labels = isset($a['labels'])
@@ -118,4 +121,46 @@ final readonly class ProdImportDTO
             releases: $releases,
         );
     }
+
+    public function withAddedRelease(ReleaseImportDTO $release): self
+    {
+        $updatedReleases = $this->releases !== null
+            ? [...$this->releases, $release]
+            : [$release];
+
+        return new self(
+            id: $this->id,
+            title: $this->title,
+            altTitle: $this->altTitle,
+            description: $this->description,
+            htmlDescription: $this->htmlDescription,
+            instructions: $this->instructions,
+            languages: $this->languages,
+            legalStatus: $this->legalStatus,
+            youtubeId: $this->youtubeId,
+            externalLink: $this->externalLink,
+            compo: $this->compo,
+            year: $this->year,
+            ids: $this->ids,
+            importIds: $this->importIds,
+            labels: $this->labels,
+            authorRoles: $this->authorRoles,
+            groups: $this->groups,
+            publishers: $this->publishers,
+            undetermined: $this->undetermined,
+            party: $this->party,
+            directCategories: $this->directCategories,
+            categories: $this->categories,
+            images: $this->images,
+            maps: $this->maps,
+            inlayImages: $this->inlayImages,
+            rzx: $this->rzx,
+            compilationItems: $this->compilationItems,
+            seriesProdIds: $this->seriesProdIds,
+            articles: $this->articles,
+            releases: $updatedReleases,
+            origin: $this->origin,
+        );
+    }
+
 }
