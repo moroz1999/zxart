@@ -18,7 +18,7 @@ use ZxArt\Import\Labels\Label;
 class VtrdosImport extends errorLogger
 {
     protected int $counter = 0;
-    protected int $maxCounter = 10;
+    protected int $maxCounter = 3;
 
     /** @var array<string, array<int, array<string, mixed>>> */
     protected array $urlsSettings = [];
@@ -721,7 +721,7 @@ class VtrdosImport extends errorLogger
         $releaseNodes = $xPath->query(".//tr", $node);
         if ($releaseNodes->length > 0) {
             foreach ($releaseNodes as $releaseNode) {
-                if (count($prodsIndex) > 10) {
+                if (count($prodsIndex) > $this->maxCounter) {
                     break;
                 }
                 $tdNodes = $releaseNode->getElementsByTagName('td');
@@ -1281,7 +1281,7 @@ class VtrdosImport extends errorLogger
         $undeterminedOut = [];
 
         $text = trim($node->textContent);
-        if (strtolower(substr($text, 0, 3)) === 'by ') {
+        if (stripos($text, 'by ') === 0) {
             $text = substr($text, 3);
         }
         $authorsPart = $text;
@@ -1403,7 +1403,7 @@ class VtrdosImport extends errorLogger
                         $prodYearOut = (int)$digits;
                     }
                 }
-                $name = trim(preg_replace("#('[0-9]+)#", '', $name));
+                $name = trim(preg_replace("#('\d+)#", '', $name));
             }
 
             if (strpos($name, '/') !== false) {
