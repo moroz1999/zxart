@@ -23,6 +23,7 @@ final class VtrdosHardwareProvider
         '(256k)' => 'scorpion',
         '(ts)' => 'ts',
         '48k' => 'zx48',
+        '(pentfix)' => 'pentagon128',
         'Pentagon 512k' => 'pentagon512',
         'Pentagon 1024k' => 'pentagon1024',
         'Pentagon 1024SL' => 'pentagon1024',
@@ -67,10 +68,16 @@ final class VtrdosHardwareProvider
                 $matches[] = $value;
             }
         }
+
+        if (stripos($raw, '(48/128k)') !== false) {
+            // add missing 48 as temporary workaround
+            $matches[] = 'zx48';
+        }
+
         return $matches;
     }
 
-    public function removeMatches(string $raw): array
+    public function removeMatches(string $raw): string
     {
         foreach ($this->hwIndex as $marker => $hardwareCode) {
             if ((stripos($raw, $marker) !== false) && str_contains($marker, '(')) {

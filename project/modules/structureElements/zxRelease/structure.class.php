@@ -5,6 +5,7 @@ use ZxArt\FileParsing\ZxParsingItem;
 use ZxArt\FileParsing\ZxParsingManager;
 use ZxArt\Hardware\HardwareGroup;
 use ZxArt\Prods\LegalStatus;
+use ZxArt\Releases\ReleaseTypes;
 use ZxArt\Releases\Services\ArchiveFileResolverService;
 use ZxArt\Releases\Services\EmulatorResolverService;
 use ZxArt\Releases\Services\ReleaseFileTypesGatherer;
@@ -375,20 +376,7 @@ class zxReleaseElement extends ZxArtItem implements
 
     public function getReleaseTypes(): array
     {
-        return [
-            'unknown',
-            'original',
-            'rerelease',
-            'adaptation',
-            'localization',
-            'mod',
-            'crack',
-            'mia',
-            'corrupted',
-            'compilation',
-            'incomplete',
-            'demoversion',
-        ];
+        return ReleaseTypes::getAllValues();
     }
 
     public function getCurrentReleaseContentFormatted()
@@ -499,7 +487,7 @@ class zxReleaseElement extends ZxArtItem implements
         if ($this->year > 0) {
             return $this->year;
         }
-        if ($this->releaseType === 'original') {
+        if ($this->releaseType === ReleaseTypes::original->value) {
             $zxProd = $this->getProd();
             if ($zxProd !== null && $zxProd->year > 0) {
                 return $zxProd->year;
@@ -529,7 +517,7 @@ class zxReleaseElement extends ZxArtItem implements
         $privileges = $this->getService('privilegesManager')->getElementPrivileges($this->getId());
 
         return !in_array($this->getLegalStatus(), [legalStatus::forbidden->name, legalStatus::forbiddenzxart->name, legalStatus::insales->name], true) ||
-            $this->releaseType === 'demoversion' ||
+            $this->releaseType === ReleaseTypes::demoversion->value ||
             !empty($privileges['zxRelease']['downloadDenied']) ||
             (
                 ($this->getLegalStatus() !== LegalStatus::insales->name) &&
@@ -816,7 +804,7 @@ class zxReleaseElement extends ZxArtItem implements
         $this->optimizeAliases('publishers');
 
         if (!$this->releaseType) {
-            $this->releaseType = 'unknown';
+            $this->releaseType = ReleaseTypes::unknown->value;
         }
         parent::persistElementData();
     }

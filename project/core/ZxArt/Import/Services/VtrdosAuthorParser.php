@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace ZxArt\Import\Services;
 
+use ZxArt\Import\Labels\Label;
+
 final class VtrdosAuthorParser
 {
     /**
@@ -106,7 +108,7 @@ final class VtrdosAuthorParser
      *      - remaining entries are treated as undetermined
      *
      * @param string[] $roles
-     * @param Label[]                $labelsOut
+     * @param Label[] $labelsOut
      * @param string[] $groupsOut
      * @param string[] $publishersOut
      * @param array<string,string[]> $undeterminedOut
@@ -116,7 +118,7 @@ final class VtrdosAuthorParser
         array   $roles,
         ?int    &$prodYearOut,
         ?int    &$releaseYearOut,
-        array &$labelsOut,
+        array   &$labelsOut,
         array   &$groupsOut,
         array   &$publishersOut,
         array   &$undeterminedOut,
@@ -193,14 +195,14 @@ final class VtrdosAuthorParser
      *      - Any year here is treated as release year (first one wins)
      *
      * @param string[] $roles
-     * @param Label[]                $labelsOut
+     * @param Label[] $labelsOut
      * @param array<string,string[]> $undeterminedOut
      */
     public function parseVersion(
         string  $text,
         array   $roles,
         ?int    &$releaseYearOut,
-        array &$labelsOut,
+        array   &$labelsOut,
         array   &$undeterminedOut,
         ?string &$releaseTypeOut = null
     ): void

@@ -18,7 +18,7 @@ use ZxArt\Import\Labels\Label;
 class VtrdosImport extends errorLogger
 {
     protected int $counter = 0;
-    protected int $maxCounter = 3;
+    protected int $maxCounter = 10;
 
     /** @var array<string, array<int, array<string, mixed>>> */
     protected array $urlsSettings = [];
@@ -728,7 +728,7 @@ class VtrdosImport extends errorLogger
                         $releaseDto = new ReleaseImportDTO(
                             id: $releaseId,
                             title: $prodTitle,
-                            year: $prodYear,
+                            year: $releaseYear,
                             languages: $languages,
                             releaseType: $releaseType,
                             fileUrl: $fileUrl,
