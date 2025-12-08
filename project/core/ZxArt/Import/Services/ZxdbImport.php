@@ -457,6 +457,7 @@ class ZxdbImport extends errorLogger
                     'id' => 'tag' . $tag['id'],
                     'categories' => [],
                     'seriesProds' => [],
+                    'origin' => $this->origin,
                 ];
 
                 if (in_array($prodInfo['id'], $this->ignoreIds, true)) {
@@ -541,6 +542,7 @@ class ZxdbImport extends errorLogger
                     'compilationItems' => [],
                     'rzx' => [],
                     'maps' => [],
+                    'origin' => $this->origin,
                 ];
 
                 if ($entry['language_id'] && isset($this->languages[$entry['language_id']])) {

@@ -1,7 +1,7 @@
 <?php
 
-use ZxArt\ZxScreen\Helper;
-use ZxArt\ZxScreen\ParametersDto;
+use ZxArt\ZxScreen\ZxPictureUrlHelper;
+use ZxArt\ZxScreen\ZxPictureParametersDto;
 
 /**
  * Class fileElement
@@ -93,15 +93,15 @@ class fileElement extends structureElement implements StructureElementUploadedFi
             return $this->buildFallbackUrl($baseUrl, $full, $preset);
         }
 
-        $params = new ParametersDto(
-            baseURL: $baseUrl,
+        $params = new ZxPictureParametersDto(
             type: $type,
             zoom: $zoom,
-            id: $this->file,
-            fileName: 'image.png'
+            id: (int)$this->file,
+            mode: 'mix',
+            palette: 'srgb'
         );
 
-        return Helper::getUrl($params);
+        return ZxPictureUrlHelper::getUrl($baseUrl, $params);
     }
 
     private function resolveFileType(string $extension): ?string
@@ -135,9 +135,9 @@ class fileElement extends structureElement implements StructureElementUploadedFi
     {
         if ($encoded) {
             return $this->fileName;
-        } else {
-            return urldecode($this->fileName);
         }
+
+        return urldecode($this->fileName);
     }
 
     /**

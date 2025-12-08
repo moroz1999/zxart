@@ -840,7 +840,8 @@ class zxReleaseElement extends ZxArtItem implements
         if ($structure) {
             $files = $releaseFileTypesGatherer->gatherReleaseFiles($structure);
             if (!empty($files)) {
-                $this->releaseFormat = array_values(array_unique($files));
+                $types = array_map(static fn(ZxParsingItem $item) => $item->getItemExtension(), $files);
+                $this->releaseFormat = array_values(array_unique($types));
             }
         }
 

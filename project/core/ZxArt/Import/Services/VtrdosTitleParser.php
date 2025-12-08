@@ -7,7 +7,7 @@ use ZxArt\Releases\ReleaseTypes;
 
 final class VtrdosTitleParser
 {
-    private const LANGUAGE_MAP = [
+    private const array LANGUAGE_MAP = [
         'rus' => 'ru',
         'ru' => 'ru',
 
@@ -42,7 +42,7 @@ final class VtrdosTitleParser
     /**
      * @var array<string, array{type:string,priority:int}>
      */
-    private const RELEASE_TYPE_MAP = [
+    private const array RELEASE_TYPE_MAP = [
         'mod' => ['type' => ReleaseTypes::mod->value, 'priority' => 100],
         'bugfix' => ['type' => ReleaseTypes::adaptation->value, 'priority' => 50],
         'pentfix' => ['type' => ReleaseTypes::adaptation->value, 'priority' => 50],
@@ -70,7 +70,7 @@ final class VtrdosTitleParser
 
         $workTitle = preg_replace_callback(
             '/\(([^)]*)\)/u',
-            function (array $matches) use (&$languageCodes, &$currentReleaseType, &$currentReleaseTypePriority): string {
+            function (array $matches) use (&$languageCodes, &$currentReleaseTypePriority, &$currentReleaseType): string {
                 $inside = $matches[1];
 
                 $tokens = preg_split('~[/,]~', $inside);

@@ -123,11 +123,13 @@ class AuthorsService extends ElementsManager
         if ($element === null) {
             $resolved = $this->labelResolver->resolve($label);
             if ($resolved && $resolved->structureType === 'author') {
-                $this->updateAuthor($resolved, $label, $origin);;
+                $this->updateAuthor($resolved, $label, $origin);
+                $this->importIdOperator->saveImportId($resolved->getId(), $authorId, $origin, 'author');
                 return $resolved;
             }
             if ($resolved && $resolved->structureType === 'authorAlias') {
-                $this->updateAuthorAlias($resolved, $label, $origin);;
+                $this->updateAuthorAlias($resolved, $label, $origin);
+                $this->importIdOperator->saveImportId($resolved->getId(), $authorId, $origin, 'author');
                 return $resolved;
             }
         }

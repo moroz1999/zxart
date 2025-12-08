@@ -113,7 +113,7 @@ final class VtrdosAuthorParser
      * @param string[] $publishersOut
      * @param array<string,string[]> $undeterminedOut
      */
-    public function parseInfo(
+    public function parseInfoCell(
         string  $text,
         array   $roles,
         ?int    &$prodYearOut,
@@ -198,7 +198,7 @@ final class VtrdosAuthorParser
      * @param Label[] $labelsOut
      * @param array<string,string[]> $undeterminedOut
      */
-    public function parseVersion(
+    public function parseVersionCell(
         string  $text,
         array   $roles,
         ?int    &$releaseYearOut,

@@ -9,6 +9,7 @@ use DOMElement;
 use DOMXPath;
 use DOMNameSpaceNode;
 use errorLogger;
+use GuzzleHttp\Client;
 use ZxArt\Prods\Services\ProdsService;
 use ZxArt\ZxProdCategories\CategoryIds;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
@@ -18,7 +19,7 @@ use ZxArt\Import\Labels\Label;
 class VtrdosImport extends errorLogger
 {
     protected int $counter = 0;
-    protected int $maxCounter = 10;
+    protected int $maxCounter = 200;
 
     /** @var array<string, array<int, array<string, mixed>>> */
     protected array $urlsSettings = [];
@@ -132,7 +133,9 @@ class VtrdosImport extends errorLogger
         'Game // Translated' => 92177,
         'GS' => 92177,
         'Demo Party' => 315126,
+        'Electronic Media' => CategoryIds::PRESS->value,
     ];
+    private Client $http;
 
     public function __construct(
         private readonly ProdsService           $prodsService,
@@ -142,6 +145,17 @@ class VtrdosImport extends errorLogger
     )
     {
         $this->prodsService->setUpdateExistingReleases(true);
+        $this->http = new Client([
+            'timeout' => 20,
+            'connect_timeout' => 10,
+            'verify' => false,
+            'headers' => [
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0',
+                'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept-Language' => 'en-US,en;q=0.5',
+                'Cache-Control' => 'max-age=0',
+            ],
+        ]);
 
 //        $this->urlsSettings['https://vtrd.in/press.php?l=1'] = [
 //            [
@@ -334,6 +348,7 @@ class VtrdosImport extends errorLogger
                     $anchorLanguages = null;
                     $anchorHardware = [];
                     $anchorReleaseType = null;
+                    $releaseVersion = null;
 
                     $aNodes = $td1->getElementsByTagName('a');
                     foreach ($aNodes as $aNodeItem) {
@@ -352,6 +367,7 @@ class VtrdosImport extends errorLogger
                             $anchorLanguages = $titleParseResult->languages;
                             $anchorHardware = $titleParseResult->hardwareRequired;
                             $anchorReleaseType = $titleParseResult->releaseType;
+                            $releaseVersion = $titleParseResult->version;
                         } else if ($href !== '') {
                             $detailsUrl = $this->rootUrl . $href;
                         }
@@ -379,7 +395,7 @@ class VtrdosImport extends errorLogger
                         $publisherIds = [];
                         $undetermined = [];
                         if ($td2 = $tdNodes->item(1)) {
-                            $this->vtrdosAuthorParser->parseInfo(
+                            $this->vtrdosAuthorParser->parseInfoCell(
                                 trim((string)$td2->nodeValue),
                                 [],
                                 $prodYear,
@@ -402,7 +418,7 @@ class VtrdosImport extends errorLogger
                             $tmpLabels = [];
                             $tmpPublishers = [];
                             $tmpUndet = [];
-                            $this->vtrdosAuthorParser->parseVersion(
+                            $this->vtrdosAuthorParser->parseVersionCell(
                                 trim((string)$td3->nodeValue),
                                 $roles,
                                 $releaseYear,
@@ -465,14 +481,14 @@ class VtrdosImport extends errorLogger
                             }
                         }
 
-                        $fileName = basename($fileUrl);
-                        $releaseId = md5($fileName);
+                        $releaseId = md5(basename($fileUrl));
 
                         $releaseDto = new ReleaseImportDTO(
                             id: $releaseId,
                             title: $prodTitle,
                             year: $releaseYear,
                             languages: $languages,
+                            version: $releaseVersion,
                             releaseType: $releaseType,
                             fileUrl: $fileUrl,
                             description: $description,
@@ -496,6 +512,7 @@ class VtrdosImport extends errorLogger
                                 undetermined: empty($undetermined) ? null : $undetermined,
                                 directCategories: $directCategories !== null ? array_map('intval', $directCategories) : null,
                                 releases: [$releaseDto],
+                                origin: $this->origin,
                             );
                             $prodsIndex[$prodId] = $prodDto;
                         } else {
@@ -561,6 +578,7 @@ class VtrdosImport extends errorLogger
                                     title: $prodTitle,
                                     directCategories: array_map('intval', $directCategories),
                                     releases: [$releaseDto],
+                                    origin: $this->origin,
                                 );
                                 $prodsIndex[$prodId] = $prodDto;
                             } else {
@@ -576,6 +594,7 @@ class VtrdosImport extends errorLogger
                                 title: $pressTitle,
                                 directCategories: array_map('intval', $directCategories),
                                 seriesProdIds: array_values($seriesProdsIds),
+                                origin: $this->origin,
                             );
                         }
                     }
@@ -612,6 +631,7 @@ class VtrdosImport extends errorLogger
                     $titleLanguages = null;
                     $titleHardware = [];
                     $titleReleaseType = null;
+                    $titleVersion = null;
 
                     if ($aNodes = $td2->getElementsByTagName('a')) {
                         foreach ($aNodes as $aNode) {
@@ -623,6 +643,7 @@ class VtrdosImport extends errorLogger
                                 $titleLanguages = $titleParseResult->languages;
                                 $titleHardware = $titleParseResult->hardwareRequired;
                                 $titleReleaseType = $titleParseResult->releaseType;
+                                $titleVersion = $titleParseResult->version;
 
                                 break;
                             }
@@ -649,7 +670,7 @@ class VtrdosImport extends errorLogger
                         $publisherIds = [];
                         $undetermined = [];
                         if ($td4 = $tdNodes->item(3)) {
-                            $this->vtrdosAuthorParser->parseInfo(
+                            $this->vtrdosAuthorParser->parseInfoCell(
                                 trim((string)$td4->nodeValue),
                                 [],
                                 $prodYear,
@@ -672,7 +693,7 @@ class VtrdosImport extends errorLogger
                             $tmpLabels = [];
                             $tmpPublishers = [];
                             $tmpUndet = [];
-                            $this->vtrdosAuthorParser->parseVersion(
+                            $this->vtrdosAuthorParser->parseVersionCell(
                                 trim((string)$td5->nodeValue),
                                 $roles,
                                 $releaseYear,
@@ -723,13 +744,14 @@ class VtrdosImport extends errorLogger
                             $releaseType = $titleReleaseType;
                         }
 
-                        $releaseId = md5(basename($detailsUrl));
+                        $releaseId = md5(basename($fileUrl));
 
                         $releaseDto = new ReleaseImportDTO(
                             id: $releaseId,
                             title: $prodTitle,
                             year: $releaseYear,
                             languages: $languages,
+                            version: $titleVersion,
                             releaseType: $releaseType,
                             fileUrl: $fileUrl,
                             description: $description,
@@ -756,6 +778,7 @@ class VtrdosImport extends errorLogger
                                 undetermined: empty($undetermined) ? null : $undetermined,
                                 directCategories: empty($directCategories) ? null : array_map('intval', $directCategories),
                                 releases: [$releaseDto],
+                                origin: $this->origin,
                             );
                             $prodsIndex[$prodId] = $prodDto;
                         } else {
@@ -1000,7 +1023,7 @@ class VtrdosImport extends errorLogger
         $publisherIds = [];
         $undetermined = [];
         $parsedReleaseType = null;
-        $this->vtrdosAuthorParser->parseInfo(
+        $this->vtrdosAuthorParser->parseInfoCell(
             trim($textNode->textContent ?? ''),
             $roles,
             $prodYear,
@@ -1057,6 +1080,7 @@ class VtrdosImport extends errorLogger
                 undetermined: empty($undetermined) ? null : $undetermined,
                 directCategories: empty($directCategories) ? null : array_map('intval', $directCategories),
                 releases: [$releaseDto],
+                origin: $this->origin,
             );
             $prodsIndex[$prodId] = $prodDto;
         } else {
@@ -1069,22 +1093,34 @@ class VtrdosImport extends errorLogger
         string $url
     ): DOMDocument|false
     {
-        if ($contents = file_get_contents($url)) {
-            $dom = new DOMDocument();
-            $dom->encoding = 'UTF-8';
-            $dom->recover = true;
-            $dom->substituteEntities = true;
-            $dom->strictErrorChecking = false;
-            $dom->formatOutput = false;
-            @$dom->loadHTML('<?xml version="1.0" encoding="UTF-8"?>' . $contents);
-            $dom->normalizeDocument();
+        try {
+            $response = $this->http->request('GET', $url, [
+                'http_errors' => false
+            ]);
 
-            $this->markProgress('html loaded ' . $url);
-
-            return $dom;
+            $contents = $response->getBody()->getContents();
+            if (!$contents) {
+                return false;
+            }
+        } catch (\Throwable $exception) {
+            return false;
         }
-        return false;
+
+        $dom = new DOMDocument();
+        $dom->encoding = 'UTF-8';
+        $dom->recover = true;
+        $dom->substituteEntities = true;
+        $dom->strictErrorChecking = false;
+        $dom->formatOutput = false;
+
+        @$dom->loadHTML('<?xml version="1.0" encoding="UTF-8"?>' . $contents);
+        $dom->normalizeDocument();
+
+        $this->markProgress('html loaded ' . $url);
+
+        return $dom;
     }
+
 
     protected function markProgress(
         string $text

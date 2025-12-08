@@ -214,7 +214,7 @@ class partyElement extends structureElement implements
                 $text .= '[b]' . $translationsManager->getTranslationByName('label.compo_' . $compo) . "[/b]\n\n";
                 $length = count($items);
                 foreach ($items as $key => $item) {
-                    $text .= '[url=' . $item->getUrl() . '][img]' . $item->getImageUrl(1) . 'image.png[/img][/url] ';
+                    $text .= '[url=' . $item->getUrl() . '][img]' . $item->getImageUrl(1).'[/img][/url] ';
                     if (($key == $length - 1) || (($key + 1) % 3 == 0)) {
                         $text .= "\n";
                     }
@@ -242,7 +242,7 @@ class partyElement extends structureElement implements
                     $text .= $item->title . "\n";
                     $text .= $item->getAuthorNamesString() . "\n";
                     $text .= $item->getUrl() . "\n";
-                    $text .= $item->getImageUrl(1) . 'image.png' . "\n";
+                    $text .= $item->getImageUrl(1) . "\n";
                     $text .= "\n";
                 }
             }
@@ -267,9 +267,7 @@ class partyElement extends structureElement implements
                 $text .= '<h4>' . $translationsManager->getTranslationByName('label.compo_' . $compo) . '</h4>' . "\n";
                 foreach ($items as $item) {
                     $text .= '<h5>' . $item->title . ' by ' . $item->getAuthorNamesString() . '</h5>' . "\n";
-                    $text .= '<a target="_blank" href="' . $item->URL . '"><img src="' . $item->getImageUrl(
-                            2
-                        ) . '"  alt="" /></a>' . "\n";
+                    $text .= '<a target="_blank" href="' . $item->URL . '"><img src="' . $item->getImageUrl(2) . '"  alt="" /></a>' . "\n";
                     $text .= "\n";
                     $text .= "\n";
                     $text .= "\n";

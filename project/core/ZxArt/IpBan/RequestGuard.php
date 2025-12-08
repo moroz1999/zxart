@@ -33,16 +33,36 @@ final readonly class RequestGuard
             return false;
         }
 
-        if (array_key_exists('mdrv', $_GET)){
+        if (array_key_exists('mdrv', $_GET)) {
             $this->ipBanService->ban($ip, 'abuse', $userAgent, $path);
             return false;
         }
 
         if (str_starts_with($ip, '34.174.')) {
-            $this->ipBanService->ban($ip, 'abuse', $userAgent, $path);
+            return false;
+        }
+
+        if ($this->isIpInRange($ip, '47.79.192.0/19')){
             return false;
         }
 
         return true;
     }
+
+    protected function isIpInRange(string $ip, string $cidr): bool
+    {
+        // convert IP to long
+        $ipAsLong = ip2long($ip);
+
+        list($range, $prefixLength) = explode('/', $cidr);
+
+        $rangeAsLong = ip2long($range);
+
+        // create mask
+        $mask = -1 << (32 - (int)$prefixLength);
+        $mask &= 0xFFFFFFFF;
+
+        return ($ipAsLong & $mask) === ($rangeAsLong & $mask);
+    }
+
 }

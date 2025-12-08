@@ -684,6 +684,7 @@ class PouetImport extends errorLogger
             seriesProdIds: null,
             articles: null,
             releases: [$releaseDto],
+            origin: $this->origin,
         );
 
         if ($prodElement = $this->prodsService->importProd($prodDto, $this->origin)) {

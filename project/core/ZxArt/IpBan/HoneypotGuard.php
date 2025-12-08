@@ -15,7 +15,6 @@ final class HoneypotGuard
 
     public function __construct(IpBanService $banService, array $trapPaths = [
         '/project/images/public/disk.png', //botnet
-        '/zxscreen/size:1/palette:pulsar/mode:mix/type:standard/id:193402/filename:EMS-CC_loading_screen.scr', //botnet
         '/about/contact-us/', //honeypot
         '/wp-login.php',
         '/phpmyadmin/',

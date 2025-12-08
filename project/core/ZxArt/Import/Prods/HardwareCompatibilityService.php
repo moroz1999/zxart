@@ -17,12 +17,15 @@ final class HardwareCompatibilityService
         $dtoHasHardware = $this->hasHardware($dtoReleases);
         $prodHasHardware = $this->hasHardware($prodReleases);
 
+        // set to true for vtrdos import, where most hardware is undefined clearly
         if (!$dtoHasHardware && $prodHasHardware) {
-            return false;
+            return true;
         }
+
         if (!$dtoHasHardware && !$prodHasHardware) {
             return false;
         }
+
         if ($dtoHasHardware && !$prodHasHardware) {
             return false;
         }

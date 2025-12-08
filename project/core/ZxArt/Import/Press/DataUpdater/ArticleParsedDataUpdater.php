@@ -611,6 +611,7 @@ final class ArticleParsedDataUpdater
             authorRoles: $authorRoles,
             groups: $groupIds,
             publishers: $publisherIds,
+            origin: self::ORIGIN,
         );
     }
 }

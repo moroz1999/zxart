@@ -18,8 +18,8 @@ final class UAGuard
 
     public function __construct(
         IpBanService $banService,
-        array $blocked = [],
-        bool $blockEmpty = false
+        array        $blocked = [],
+        bool         $blockEmpty = false
     )
     {
         $this->banService = $banService;
@@ -80,9 +80,9 @@ final class UAGuard
             'IbouBot',
             'AliyunSecBot',
             'Brightbot',
-	    'Applebot',
-	    'LinkupBot',
-	    'PetalBot',
+            'Applebot',
+            'LinkupBot',
+            'PetalBot',
         ];
     }
 }

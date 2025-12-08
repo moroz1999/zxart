@@ -157,7 +157,8 @@ class S4eManager extends errorLogger
                             'compilationItems' => $compilationItems,
                             'labels' => [$studio],
                             'directCategories' => [92177],
-                            'publishers' => [$studio['id']]
+                            'publishers' => [$studio['id']],
+                            'origin' => $this->origin,
                         ];
                         if (!empty($this->compilations[$prodId])) {
                             echo 'Compilation exists: ' . $prodTitle . ' ' . $prodId . ' ' . $studio['studioPageUrl'];

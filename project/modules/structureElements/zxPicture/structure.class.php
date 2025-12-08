@@ -1,8 +1,9 @@
 <?php
 
 use ZxArt\LinkTypes;
-use ZxArt\ZxScreen\Helper;
-use ZxArt\ZxScreen\ParametersDto;
+use ZxArt\ZxScreen\ZxPictureFlickeringHelper;
+use ZxArt\ZxScreen\ZxPictureUrlHelper;
+use ZxArt\ZxScreen\ZxPictureParametersDto;
 
 /**
  * Class zxPictureElement
@@ -114,18 +115,13 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         return $data;
     }
 
-    public function getImageUrl(int $zoom = 1, $download = false, $border = null): string
+    public function getImageUrl(int $zoom = 1, $border = null): string
     {
-        /**
-         * @var PicturesModesManager $picturesModesManager
-         */
         $picturesModesManager = $this->getService('PicturesModesManager');
-        $params = new ParametersDto(
-            controller::getInstance()->baseURL,
+        $params = new ZxPictureParametersDto(
             type: $this->type === 'standard' && $picturesModesManager->getHidden() ? 'hidden' : $this->type,
             zoom: $zoom,
-            id: $this->image,
-            download: $download,
+            id: (int)$this->image,
             border: ($border === null || $border) && $picturesModesManager->getBorder() ? $this->border : null,
             rotation: $this->rotation > 0 ? (int)$this->rotation : null,
             mode: $picturesModesManager->getMode(),
@@ -133,7 +129,24 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
             hidden: $this->type === 'standard' && $picturesModesManager->getHidden()
         );
 
-        return Helper::getUrl($params);
+        return ZxPictureUrlHelper::getUrl(controller::getInstance()->baseURL, $params);
+    }
+
+    public function getDownloadUrl(int $zoom = 1, $border = null): string
+    {
+        $picturesModesManager = $this->getService('PicturesModesManager');
+        $params = new ZxPictureParametersDto(
+            type: $this->type === 'standard' && $picturesModesManager->getHidden() ? 'hidden' : $this->type,
+            zoom: $zoom,
+            id: (int)$this->image,
+            border: ($border === null || $border) && $picturesModesManager->getBorder() ? $this->border : null,
+            rotation: $this->rotation > 0 ? (int)$this->rotation : null,
+            mode: $picturesModesManager->getMode(),
+            palette: $this->getPalette(),
+            hidden: $this->type === 'standard' && $picturesModesManager->getHidden()
+        );
+
+        return ZxPictureUrlHelper::getUrl(controller::getInstance()->baseURL, $params);
     }
 
     public function getPalette()
@@ -318,21 +331,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
 
     public function isFlickering(): bool
     {
-        return in_array(
-            $this->type,
-            [
-                'gigascreen',
-                'tricolor',
-                'mg1',
-                'mg2',
-                'mg4',
-                'mg8',
-                'lowresgs',
-                'stellar',
-                'chr$',
-                'bsp',
-            ]
-        );
+        return ZxPictureFlickeringHelper::isFlickering($this->type);
     }
 
     public function logView(): void
@@ -384,9 +383,6 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     public function getBestAuthorsPictures($limit = false)
     {
         if ($this->bestAuthorsPictures === null) {
-            /**
-             * @var ApiQueriesManager $queriesManager
-             */
             $queriesManager = $this->getService('ApiQueriesManager');
             $authorsIdList = [];
             foreach ($this->getAuthorsList() as $author) {

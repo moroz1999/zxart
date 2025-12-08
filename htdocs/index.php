@@ -3,10 +3,6 @@ declare(strict_types=1);
 
 use ZxArt\IpBan\RequestGuard;
 
-$ip = $_SERVER['REMOTE_ADDR'] ?? null;
-if ($ip !== '85.253.29.254') {
-//exit;
-}
 define('PUBLIC_PATH', __DIR__ . '/');
 define('ROOT_PATH', __DIR__ . '/../');
 //include_once(ROOT_PATH . 'vendor/artweb-ou/trickster-cms/cms/core/controller.class.php');

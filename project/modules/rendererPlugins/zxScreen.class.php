@@ -49,29 +49,31 @@ class zxScreenRendererPlugin extends rendererPlugin
      */
     public function assign($attributeName, $value)
     {
-        if ($attributeName == 'type') {
+        if ($attributeName === 'type') {
             $this->renderingEngine->setType($value);
             if ($value === 'hidden') {
                 $this->renderingEngine->setCacheEnabled(false);
             }
-        } elseif ($attributeName == 'path') {
+        } elseif ($attributeName === 'path') {
             $this->renderingEngine->setPath($value);
-        } elseif ($attributeName == 'mode') {
+        } elseif ($attributeName === 'mode') {
             $this->renderingEngine->setGigascreenMode($value);
-        } elseif ($attributeName == 'palette') {
+        } elseif ($attributeName === 'palette') {
             $this->renderingEngine->setPalette($value);
-        } elseif ($attributeName == 'border') {
+        } elseif ($attributeName === 'border') {
             $this->renderingEngine->setBorder($value);
-        } elseif ($attributeName == 'zoom') {
+        } elseif ($attributeName === 'zoom') {
             $this->renderingEngine->setZoom($value);
-        } elseif ($attributeName == 'rotation') {
+        } elseif ($attributeName === 'rotation') {
             $this->renderingEngine->setRotation($value);
-        } elseif ($attributeName == 'fileContents') {
+        } elseif ($attributeName === 'fileContents') {
             $this->renderingEngine->setSourceFileContents($value);
-        } elseif ($attributeName == 'cacheEnabled') {
+        } elseif ($attributeName === 'cacheEnabled') {
             $this->renderingEngine->setCacheEnabled($value);
-        } elseif ($attributeName == 'fileName') {
+        } elseif ($attributeName === 'fileName') {
             $this->fileName = $value;
+        } elseif ($attributeName === 'cacheFileName') {
+            $this->renderingEngine->setCacheFileName($value);
         }
     }
 
@@ -82,9 +84,9 @@ class zxScreenRendererPlugin extends rendererPlugin
     {
         $fileName = $this->fileName ? $this->fileName : 'image';
         if ($mime = $this->renderingEngine->getResultMime()) {
-            if ($mime == 'image/png') {
+            if ($mime === 'image/png') {
                 return $fileName . '.png';
-            } elseif ($mime == 'image/gif') {
+            } elseif ($mime === 'image/gif') {
                 return $fileName . '.gif';
             }
         }

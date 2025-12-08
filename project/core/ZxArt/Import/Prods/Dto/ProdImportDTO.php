@@ -119,6 +119,7 @@ final readonly class ProdImportDTO
             seriesProdIds: isset($a['seriesProds']) ? array_values((array)$a['seriesProds']) : null,
             articles: $articles,
             releases: $releases,
+            origin: isset($a['origin']) ? (array)$a['origin'] : null,
         );
     }
 

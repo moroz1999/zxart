@@ -275,16 +275,19 @@ class ProdsService extends ElementsManager
                 //we don't know anything about this label. lets search for any group with that name
                 $element = $this->groupsService->getGroupByLabel($groupLabel, $origin);
                 if ($element !== null) {
+                    $this->importIdOperator->saveImportId($element->getId(), $label->id, $origin, 'group');
                     continue;
                 }
                 //search for author alias with that name
                 $element = $this->authorsService->getAuthorAliasByLabel($personLabel, $origin);
                 if ($element !== null) {
+                    $this->importIdOperator->saveImportId($element->getId(), $label->id, $origin, 'author');
                     continue;
                 }
                 //search for author with that name
                 $element = $this->authorsService->getAuthorByLabel($personLabel, $origin);
                 if ($element !== null) {
+                    $this->importIdOperator->saveImportId($element->getId(), $label->id, $origin, 'author');
                     continue;
                 }
 
