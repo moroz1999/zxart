@@ -59,7 +59,6 @@ class Zximages extends controllerApplication
 
     private function buildRequestParametersDto(string $parametersString): ZxPictureParametersDto
     {
-
         $id = null;
         $type = null;
         $mode = 'mix';

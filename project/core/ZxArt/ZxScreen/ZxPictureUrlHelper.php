@@ -10,7 +10,8 @@ class ZxPictureUrlHelper
 
     public static function getUrl(string $baseURL, ZxPictureParametersDto $params): string
     {
-        return $baseURL . 'zximages/' . self::getFileName($params);
+        $controllerName = $params->controller ?? 'zximages';
+        return $baseURL . $controllerName . '/' . self::getFileName($params);
     }
 
     public static function getFileName(ZxPictureParametersDto $params): string

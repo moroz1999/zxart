@@ -112,6 +112,9 @@ class zxScreenRendererPlugin extends rendererPlugin
      */
     protected function getContentLength()
     {
+        if ($this->binary) {
+            return strlen($this->binary);
+        }
         $imageFilePath = $this->renderingEngine->getCacheFileName();
         if (file_exists($imageFilePath)) {
             return filesize($imageFilePath);

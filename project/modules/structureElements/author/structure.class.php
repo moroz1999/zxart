@@ -403,7 +403,9 @@ class authorElement extends structureElement implements
     {
         if ($this->title) {
             return $this->title;
-        } elseif ($this->realName) {
+        }
+
+        if ($this->realName) {
             return $this->realName;
         }
         return '';

@@ -14,7 +14,8 @@ readonly class ZxPictureParametersDto
         public ?int    $rotation = null,
         public ?string $mode = null,
         public ?string $palette = null,
-        public ?bool   $hidden = null
+        public ?bool   $hidden = null,
+        public ?string $controller = null
     )
     {
     }

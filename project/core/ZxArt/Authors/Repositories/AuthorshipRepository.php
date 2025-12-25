@@ -21,14 +21,17 @@ final class AuthorshipRepository
     public function getAuthorsInfo(int|string $elementId, string $type): array
     {
         $info = [];
+        $sort = [];
         if ($records = $this->getElementAuthorsRecords($elementId, $type)
         ) {
             foreach ($records as $record) {
                 if ($authorElement = $this->structureManager->getElementById($record['authorId'])) {
                     $record['authorElement'] = $authorElement;
+                    $sort[] = $authorElement->getTitle();
                     $info[] = $record;
                 }
             }
+            array_multisort($sort, SORT_ASC, $info);
         }
         return $info;
     }

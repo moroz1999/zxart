@@ -57,6 +57,7 @@ class publicReceiveZxProd extends structureElementAction
             'youtubeId',
             'publishers',
             'groups',
+            'htmlDescription',
             'description',
             'instructions',
             'tagsText',

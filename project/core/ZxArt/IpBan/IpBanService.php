@@ -35,7 +35,7 @@ final readonly class IpBanService
         }
 
         $banned = $this->repository->isBanned($ip);
-        $this->cache->set($key, $banned, $banned ? 0 : $this->ttl);
+        $this->cache->set($key, $banned, $banned ? 60 * 60 * 24 : $this->ttl);
 
         return $banned;
     }

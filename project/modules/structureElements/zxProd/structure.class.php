@@ -310,7 +310,6 @@ class zxProdElement extends ZxArtItem implements
     }
 
     //used in API
-
     /**
      * @psalm-return list{0?: mixed,...}
      */
@@ -320,6 +319,20 @@ class zxProdElement extends ZxArtItem implements
         foreach ($this->getFilesList('connectedFile') as $fileElement) {
             $url = $fileElement->getImageUrl($preset);
             $urls[] = str_replace('http://zxart.loc', 'https://zxart.ee', $url);
+        }
+        return $urls;
+    }
+
+    //used in AI services
+    public function getImagesDownloadUrls(): array
+    {
+        $preset = 'prodImage';
+        $urls = [];
+        foreach ($this->getFilesList('connectedFile') as $fileElement) {
+            $url = $fileElement->getImageUrl($preset);
+            $url = str_replace('http://zxart.loc', 'https://zxart.ee', $url);
+            $url = str_replace('zximages', 'zximagesdownload', $url);
+            $urls[] = $url;
         }
         return $urls;
     }

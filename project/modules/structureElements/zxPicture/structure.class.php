@@ -126,24 +126,25 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
             rotation: $this->rotation > 0 ? (int)$this->rotation : null,
             mode: $picturesModesManager->getMode(),
             palette: $this->getPalette(),
-            hidden: $this->type === 'standard' && $picturesModesManager->getHidden()
+            hidden: $this->type === 'standard' && $picturesModesManager->getHidden(),
         );
 
         return ZxPictureUrlHelper::getUrl(controller::getInstance()->baseURL, $params);
     }
 
-    public function getDownloadUrl(int $zoom = 1, $border = null): string
+    public function getDownloadUrl(int $zoom = 1): string
     {
         $picturesModesManager = $this->getService('PicturesModesManager');
         $params = new ZxPictureParametersDto(
             type: $this->type === 'standard' && $picturesModesManager->getHidden() ? 'hidden' : $this->type,
             zoom: $zoom,
             id: (int)$this->image,
-            border: ($border === null || $border) && $picturesModesManager->getBorder() ? $this->border : null,
+            border: $picturesModesManager->getBorder() ? $this->border : null,
             rotation: $this->rotation > 0 ? (int)$this->rotation : null,
             mode: $picturesModesManager->getMode(),
             palette: $this->getPalette(),
-            hidden: $this->type === 'standard' && $picturesModesManager->getHidden()
+            hidden: $this->type === 'standard' && $picturesModesManager->getHidden(),
+            controller: 'zximagesdownload',
         );
 
         return ZxPictureUrlHelper::getUrl(controller::getInstance()->baseURL, $params);

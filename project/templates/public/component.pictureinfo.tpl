@@ -123,10 +123,10 @@
 
 		</td>
 		<td class='info_table_value'>
-			<a rel="nofollow" class='picture_details_download' href="{$element->getImageUrl(1, true)}"><img loading="lazy" src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'}" />{translations name='zxpicture.download_pc'}</a>
-			<a rel="nofollow" class='picture_details_download' href="{$element->getImageUrl(2, true)}">2X</a>
-			<a rel="nofollow" class='picture_details_download' href="{$element->getImageUrl(3, true)}">3X</a>
-			<a rel="nofollow" class='picture_details_download' href="{$element->getImageUrl(4, true)}">4X</a>
+			<a rel="nofollow" class='picture_details_download' href="{$element->getDownloadUrl(1)}"><img loading="lazy" src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'}" />{translations name='zxpicture.download_pc'}</a>
+			<a rel="nofollow" class='picture_details_download' href="{$element->getDownloadUrl(2)}">2X</a>
+			<a rel="nofollow" class='picture_details_download' href="{$element->getDownloadUrl(3)}">3X</a>
+			<a rel="nofollow" class='picture_details_download' href="{$element->getDownloadUrl(4)}">4X</a>
 		</td>
 	</tr>
 	<tr>
