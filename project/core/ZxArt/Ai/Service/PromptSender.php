@@ -13,6 +13,8 @@ class PromptSender
     public const string MODEL_O3_MINI = 'o3-mini';
     public const string MODEL_4O = 'gpt-4o';
     public const string MODEL_4O_MINI = 'gpt-4o-mini';
+    public const string MODEL_4_1 = 'gpt-4.1';
+    public const string MODEL_5_MINI = 'gpt-5-mini';
 
     public function __construct(
         private string $apiKey,
@@ -75,7 +77,11 @@ class PromptSender
             if ($temperature !== null && $model !== self::MODEL_O3_MINI) {
                 $config['temperature'] = $temperature;
             }
-            if ($model !== self::MODEL_O3_MINI) {
+            if (
+                $model !== self::MODEL_O3_MINI &&
+                $model !== self::MODEL_4_1 &&
+                $model !== self::MODEL_5_MINI
+            ) {
                 $config['top_p'] = 0.95;
             }
             if ($useJson) {
