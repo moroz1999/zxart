@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
 
 class EncodingDetector
 {
-    private static $letters = [
+    private static array $letters = [
         'о', 'е', 'а', 'и', 'н', 'т', 'с', 'р', 'в', 'л', 'к', 'м', 'д', 'п', 'у', 'я', 'ы', 'ь', 'г', 'з',
         'б', 'ч', 'й', 'х', 'ж', 'ш', 'ю', 'ц', 'щ', 'э', 'ф', 'ъ', 'ё',
     ];
@@ -13,6 +14,7 @@ class EncodingDetector
         'KOI8-R',
         'ISO-8859-1',
         'Windows-1252',
+        'UTF-8',
     ];
 
     public static function decodeText(string $content): string|null

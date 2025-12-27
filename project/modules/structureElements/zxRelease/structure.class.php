@@ -38,7 +38,8 @@ class zxReleaseElement extends ZxArtItem implements
     CommentsHolderInterface,
     JsonDataProvider,
     ZxSoftInterface,
-    Recalculable
+    Recalculable,
+    BreadcrumbsInfoProvider
 {
     use AuthorshipProviderTrait;
     use AuthorshipPersister;
@@ -714,6 +715,13 @@ class zxReleaseElement extends ZxArtItem implements
     {
         $translationsManager = $this->getService('translationsManager');
         $title = $this->title;
+
+        $fileInfo = $this->getCurrentReleaseFileInfo();
+        if ($fileInfo !== null) {
+            $title .= ' (' . $fileInfo['fileName'] . ')';
+            return $title;
+        }
+
         $title .= ' - ZX Spectrum release';
 
         if ($info = $this->getReleaseBy()) {
@@ -962,4 +970,29 @@ class zxReleaseElement extends ZxArtItem implements
         };
     }
 
+
+    public function getBreadcrumbsTitle(): string
+    {
+        $title = $this->getTitle();
+        $fileInfo = $this->getCurrentReleaseFileInfo();
+        if ($fileInfo !== null) {
+            $title .= ' (' . $fileInfo['fileName'] . ')';
+        }
+        return $title;
+    }
+
+    public function getBreadcrumbsUrl(): string
+    {
+        $url = $this->getUrl();
+        $fileInfo = $this->getCurrentReleaseFileInfo();
+        if ($fileInfo !== null) {
+            $url .= 'action:viewFile/id:' . $this->id . '/fileId:' . $fileInfo['id'] . '/';
+        }
+        return $url;
+    }
+
+    public function isBreadCrumb(): bool
+    {
+        return true;
+    }
 }
