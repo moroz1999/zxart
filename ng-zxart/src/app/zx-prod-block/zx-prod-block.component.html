@@ -145,9 +145,8 @@
                 <div class="zx-prod-row-label">{{ "zx-prod.categories" | translate }}</div>
                 <div class="zx-prod-row-value">
                     <ng-container *ngFor="let category of model.categoriesInfo; last as last">
-            <span
-                    class="zx-prod-category"
-                    (click)="categoryClicked($event, category.id)"
+            <span class="zx-prod-category"
+                  (click)="categoryClicked($event, category.id)"
             >{{ category.title }}</span><span *ngIf="!last">, </span></ng-container>
                 </div>
             </div>

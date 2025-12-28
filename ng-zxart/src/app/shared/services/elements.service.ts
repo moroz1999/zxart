@@ -8,7 +8,7 @@ import {ElementResponseData} from '../models/element-response-data';
 import {environment} from '../../../environments/environment';
 
 export interface PostParameters {
-    [key: string]: Primitive;
+    [key: string]: string | number | boolean;
 }
 
 declare var elementsData: { [key: number]: any };

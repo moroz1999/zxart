@@ -1,7 +1,7 @@
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
-import {CategoriesSelectorDto, CategorySelectorDto} from '../../../categories-selector-dto';
+import {CategoriesSelectorDto, CategorySelectorDto} from '../../models/categories-selector-dto';
 
 @Component({
     selector: 'app-categories-tree-selector',

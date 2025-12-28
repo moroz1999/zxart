@@ -2,7 +2,7 @@ import {ZxProdDto} from '../../shared/models/zx-prod-dto';
 import {StructureElementDto} from '../../shared/models/structure-element-dto';
 import {SelectorDto} from './selector-dto';
 import {TagDto} from '../../shared/models/tag-dto';
-import {CategoriesSelectorDto} from '../../categories-selector-dto';
+import {CategoriesSelectorDto} from './categories-selector-dto';
 import {SelectorValues} from './selector-values';
 
 export interface ZxProdCategoryDto extends StructureElementDto {
