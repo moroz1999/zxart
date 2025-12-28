@@ -92,8 +92,7 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
         ReactiveFormsModule,
     ],
     providers: [],
-    bootstrap: [],
-    entryComponents: [AppComponent, ZxProdsCategoryComponent, ZxProdsListComponent],
+    bootstrap: [AppComponent, ZxProdsCategoryComponent, ZxProdsListComponent],
 })
 export class AppModule {
     constructor(private injector: Injector) {
