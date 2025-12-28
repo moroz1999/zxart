@@ -76,9 +76,6 @@ class projectDesignTheme extends DesignTheme
             'component.ZxMap.js',
             'component.ZxReleaseDetails.js',
             'component.PurchaseButton.js',
-            'ng-zxart/main.js',
-            'ng-zxart/polyfills.js',
-            'ng-zxart/runtime.js',
         ];
     }
 }

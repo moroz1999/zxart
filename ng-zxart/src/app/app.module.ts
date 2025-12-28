@@ -42,7 +42,7 @@ import {ParsedReleasesComponent} from './parser/parsed-releases/parsed-releases.
 import {ParsedReleaseComponent} from './parser/parsed-release/parsed-release.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
-    return new TranslateHttpLoader(httpClient, `${environment.assetsUrl}i18n/`);
+    return new TranslateHttpLoader();
 }
 
 @NgModule({

@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "../project/js/public/ng-zxart",
+            "outputPath": "./../htdocs/js/ng-zxart",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -35,21 +35,7 @@
               ]
             },
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "src/assets/",
-                "output": "/assets/"
-              },
-              {
-                "glob": "**/*",
-                "input": "src/assets/",
-                "output": "/../../../../htdocs/assets/"
-              },
-              {
-                "glob": "**/styles.css",
-                "input": "../htdocs/project/js/public/ng-zxart",
-                "output": "/../../../css/public"
-              }
+
             ],
             "scripts": []
           },
