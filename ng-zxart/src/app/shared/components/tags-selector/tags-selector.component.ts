@@ -2,12 +2,36 @@ import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} f
 import {TagsSearchService} from '../../services/tags-search.service';
 import {Tag} from '../../models/tag';
 import {Subject} from 'rxjs';
-import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {
+    MatAutocomplete,
+    MatAutocompleteSelectedEvent,
+    MatAutocompleteTrigger,
+    MatOption,
+} from '@angular/material/autocomplete';
+import {MatChip, MatChipSet} from '@angular/material/chips';
+import {MatIcon} from '@angular/material/icon';
+import {AsyncPipe, NgForOf} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
     selector: 'app-tags-selector',
     templateUrl: './tags-selector.component.html',
     styleUrls: ['./tags-selector.component.scss'],
+    standalone: true,
+    imports: [
+        MatAutocomplete,
+        MatOption,
+        MatChip,
+        MatChipSet,
+        MatIcon,
+        MatAutocompleteTrigger,
+        NgForOf,
+        NgForOf,
+        FormsModule,
+        AsyncPipe,
+        TranslatePipe,
+    ],
 })
 export class TagsSelectorComponent implements OnInit {
     tagText = '';

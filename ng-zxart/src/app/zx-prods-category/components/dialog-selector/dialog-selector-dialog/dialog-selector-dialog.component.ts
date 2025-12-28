@@ -1,6 +1,17 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {
+    MAT_DIALOG_DATA,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    MatDialogTitle,
+} from '@angular/material/dialog';
 import {SelectorDto} from '../../../models/selector-dto';
+import {MatButton} from '@angular/material/button';
+import {TranslatePipe} from '@ngx-translate/core';
+import {MatCheckbox} from '@angular/material/checkbox';
+import {NgForOf, NgIf} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
 interface DialogData {
     selectValuesLabel: string;
@@ -11,6 +22,21 @@ interface DialogData {
     selector: 'app-dialog-selector-dialog',
     templateUrl: './dialog-selector-dialog.component.html',
     styleUrls: ['./dialog-selector-dialog.component.scss'],
+    imports: [
+        MatButton,
+        TranslatePipe,
+        MatCheckbox,
+        MatDialogClose,
+        MatDialogClose,
+        MatDialogActions,
+        MatDialogTitle,
+        MatDialogContent,
+        NgForOf,
+        FormsModule,
+        NgForOf,
+        NgIf,
+    ],
+    standalone: true,
 })
 export class DialogSelectorDialogComponent implements OnInit {
     selectedValues: { [key: string]: boolean; } = {};

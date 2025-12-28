@@ -1,12 +1,36 @@
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {MatTreeNestedDataSource} from '@angular/material/tree';
+import {
+    MatNestedTreeNode,
+    MatTree,
+    MatTreeNestedDataSource,
+    MatTreeNode,
+    MatTreeNodeDef,
+    MatTreeNodeOutlet,
+    MatTreeNodeToggle,
+} from '@angular/material/tree';
 import {CategoriesSelectorDto, CategorySelectorDto} from '../../models/categories-selector-dto';
+import {MatIcon} from '@angular/material/icon';
+import {NgClass} from '@angular/common';
+import {MatIconButton} from '@angular/material/button';
 
 @Component({
     selector: 'app-categories-tree-selector',
     templateUrl: './categories-tree-selector.component.html',
     styleUrls: ['./categories-tree-selector.component.scss'],
+    standalone: true,
+    imports: [
+        MatTree,
+        MatTreeNode,
+        MatNestedTreeNode,
+        MatIcon,
+        MatTreeNodeDef,
+        MatTreeNodeOutlet,
+        MatTreeNodeToggle,
+        MatTreeNodeDef,
+        NgClass,
+        MatIconButton,
+    ],
 })
 export class CategoriesTreeSelectorComponent implements OnInit, OnChanges {
 

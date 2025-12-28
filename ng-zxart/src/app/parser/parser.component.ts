@@ -1,12 +1,27 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
 import {ParserService} from '../shared/services/parser.service';
 import {ParserData} from './models/parser-data';
-import {FormControl} from '@angular/forms';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {TranslatePipe} from '@ngx-translate/core';
+import {NgForOf, NgIf} from '@angular/common';
+import {MatButton} from '@angular/material/button';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {ParsedFileComponent} from './parsed-file/parsed-file.component';
 
 @Component({
     selector: 'app-parser',
     templateUrl: './parser.component.html',
     styleUrls: ['./parser.component.scss'],
+    standalone: true,
+    imports: [
+        TranslatePipe,
+        ReactiveFormsModule,
+        NgForOf,
+        NgIf,
+        MatButton,
+        MatProgressSpinner,
+        ParsedFileComponent,
+    ],
 })
 export class ParserComponent {
     private file?: File;

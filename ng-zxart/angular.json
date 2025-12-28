@@ -23,7 +23,6 @@
             "outputPath": "./../htdocs/js/ng-zxart",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
             "styles": [

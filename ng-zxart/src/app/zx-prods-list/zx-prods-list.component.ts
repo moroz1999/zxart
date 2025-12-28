@@ -3,6 +3,9 @@ import {ZxProdsList} from './models/zx-prods-list';
 import {ElementsService} from '../shared/services/elements.service';
 import {ZxProdsListDto} from './models/zx-prods-list-dto';
 import {ZxProd} from '../shared/models/zx-prod';
+import {TranslatePipe} from '@ngx-translate/core';
+import {ZxProdBlockComponent} from '../zx-prod-block/zx-prod-block.component';
+import {NgForOf, NgIf} from '@angular/common';
 
 export interface YearProds {
     readonly year: number,
@@ -13,6 +16,8 @@ export interface YearProds {
     selector: 'app-zx-prods-list',
     templateUrl: './zx-prods-list.component.html',
     styleUrls: ['./zx-prods-list.component.scss'],
+    imports: [TranslatePipe, ZxProdBlockComponent, NgIf, NgForOf, NgForOf, NgIf, NgIf, NgForOf],
+    standalone: true,
 })
 export class ZxProdsListComponent implements OnInit {
     public model?: ZxProdsList;

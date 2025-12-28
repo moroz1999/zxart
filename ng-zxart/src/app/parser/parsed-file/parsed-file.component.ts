@@ -2,8 +2,12 @@ import {Component, HostBinding, Input} from '@angular/core';
 import {ParserData} from '../models/parser-data';
 import {MatDialog} from '@angular/material/dialog';
 import {ParsedReleasesComponent} from '../parsed-releases/parsed-releases.component';
-import {SvgIconRegistryService} from 'angular-svg-icon';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {environment} from '../../../environments/environment';
+import {NgForOf, NgIf, NgStyle} from '@angular/common';
+import {MatButton} from '@angular/material/button';
+import {TranslatePipe} from '@ngx-translate/core';
+import {ParsedReleaseComponent} from '../parsed-release/parsed-release.component';
 
 const zxFiles = [
     'dsk',
@@ -26,6 +30,18 @@ const zxFiles = [
     selector: 'app-parsed-file',
     templateUrl: './parsed-file.component.html',
     styleUrls: ['./parsed-file.component.scss'],
+    standalone: true,
+    imports: [
+        SvgIconComponent,
+        NgIf,
+        NgForOf,
+        NgStyle,
+        MatButton,
+        MatButton,
+        TranslatePipe,
+        TranslatePipe,
+        ParsedReleaseComponent,
+    ],
 })
 export class ParsedFileComponent {
     @Input() public data!: ParserData;

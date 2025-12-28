@@ -1,7 +1,6 @@
 <script src="/js/ng-zxart/runtime.js" type="module"></script>
-<script src="/js/ng-zxart/polyfills.js" type="module"></script>
 <script src="/js/ng-zxart/main.js" type="module"></script>
-<link rel="stylesheet" href="/js/ng-zxart/tyles.css">
+<link rel="stylesheet" href="/js/ng-zxart/styles.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">

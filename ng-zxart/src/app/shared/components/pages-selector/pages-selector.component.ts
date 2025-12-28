@@ -1,10 +1,25 @@
 import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {PageItemInterface} from './page-item-interface';
+import {SvgIconComponent} from 'angular-svg-icon';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
     selector: 'app-pages-selector',
     templateUrl: './pages-selector.component.html',
     styleUrls: ['./pages-selector.component.scss'],
+    standalone: true,
+    imports: [
+        SvgIconComponent,
+        SvgIconComponent,
+        NgIf,
+        NgClass,
+        NgClass,
+        NgForOf,
+        NgClass,
+        TranslatePipe,
+        TranslatePipe,
+    ],
 })
 export class PagesSelectorComponent implements OnChanges {
     @Input() currentPage = 0;

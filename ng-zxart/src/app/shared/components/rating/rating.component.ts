@@ -1,11 +1,29 @@
 import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
-import {SvgIconRegistryService} from 'angular-svg-icon';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {environment} from '../../../../environments/environment';
+import {NgClass, NgIf, NgStyle} from '@angular/common';
 
 @Component({
     selector: 'app-rating',
     templateUrl: './rating.component.html',
     styleUrls: ['./rating.component.scss'],
+    standalone: true,
+    imports: [
+        SvgIconComponent,
+        SvgIconComponent,
+        SvgIconComponent,
+        SvgIconComponent,
+        SvgIconComponent,
+        SvgIconComponent,
+        SvgIconComponent,
+        SvgIconComponent,
+        SvgIconComponent,
+        SvgIconComponent,
+        SvgIconComponent,
+        NgIf,
+        NgStyle,
+        NgClass,
+    ],
 })
 export class RatingComponent implements OnChanges {
     @Input() overallRating?: number;

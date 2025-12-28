@@ -2,11 +2,18 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angula
 import {MatDialog} from '@angular/material/dialog';
 import {DialogSelectorDialogComponent} from './dialog-selector-dialog/dialog-selector-dialog.component';
 import {SelectorDto} from '../../models/selector-dto';
+import {MatButton} from '@angular/material/button';
+import {NgIf} from '@angular/common';
 
 @Component({
     selector: 'app-dialog-selector',
     templateUrl: './dialog-selector.component.html',
     styleUrls: ['./dialog-selector.component.scss'],
+    standalone: true,
+    imports: [
+        MatButton,
+        NgIf,
+    ],
 })
 export class DialogSelectorComponent implements OnInit, OnChanges {
     @Input() selectorData!: SelectorDto;

@@ -4,6 +4,22 @@ import {ZxProdCategory} from './models/zx-prod-category';
 import {Tag} from '../shared/models/tag';
 import {ZxProdCategoryDto} from './models/zx-prod-category-dto';
 import {environment} from '../../environments/environment';
+import {TranslatePipe} from '@ngx-translate/core';
+import {PagesSelectorComponent} from '../shared/components/pages-selector/pages-selector.component';
+import {
+    CategoriesTreeSelectorComponent,
+} from './components/categories-tree-selector/categories-tree-selector.component';
+import {SortingSelectorComponent} from './components/sorting-selector/sorting-selector.component';
+import {DialogSelectorComponent} from './components/dialog-selector/dialog-selector.component';
+import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
+import {MatIcon} from '@angular/material/icon';
+import {LetterSelectorComponent} from './components/letter-selector/letter-selector.component';
+import {MatSpinner} from '@angular/material/progress-spinner';
+import {ZxProdBlockComponent} from '../zx-prod-block/zx-prod-block.component';
+import {ZxProdRowComponent} from '../zx-prod-row/zx-prod-row.component';
+import {FormsModule} from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {TagsSelectorComponent} from '../shared/components/tags-selector/tags-selector.component';
 
 const defaultStatuses: string[] = ['allowed', 'forbidden', 'forbiddenzxart', 'allowedzxart', 'insales', 'donationware', 'recovered', 'unknown'];
 
@@ -13,9 +29,27 @@ export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
     selector: 'app-zx-prods-category',
     templateUrl: './zx-prods-category.component.html',
     styleUrls: ['./zx-prods-category.component.scss'],
+    imports: [
+        TranslatePipe,
+        PagesSelectorComponent,
+        CategoriesTreeSelectorComponent,
+        SortingSelectorComponent,
+        DialogSelectorComponent,
+        MatButtonToggleGroup,
+        MatButtonToggle,
+        MatIcon,
+        LetterSelectorComponent,
+        MatSpinner,
+        ZxProdBlockComponent,
+        ZxProdRowComponent,
+        FormsModule,
+        CommonModule,
+        TagsSelectorComponent,
+    ],
+    standalone: true,
 })
 export class ZxProdsCategoryComponent implements OnInit {
-    public model?: ZxProdCategory;
+    public model!: ZxProdCategory;
     public pagesAmount = 0;
     public currentPage = 1;
     public elementsOnPage = 100;

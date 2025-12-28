@@ -14,8 +14,12 @@ import {SlideInOut} from '../shared/animations/slide-in-out';
 import {ZxProdsListLayout} from '../zx-prods-category/zx-prods-category.component';
 import {ZxProdComponent} from '../shared/components/zx-prod-component';
 import {VoteService} from '../shared/services/vote.service';
-import {SvgIconRegistryService} from 'angular-svg-icon';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {environment} from '../../environments/environment';
+import {TranslatePipe} from '@ngx-translate/core';
+import {RatingComponent} from '../shared/components/rating/rating.component';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
+import {MatAnchor} from '@angular/material/button';
 
 declare function ym(a: number, b: string, c: string, params: any, callback: CallableFunction): any;
 
@@ -27,6 +31,22 @@ declare function ym(a: number, b: string, c: string, params: any, callback: Call
         trigger('fadeInOut', FadeInOut),
         trigger('slideInOut', SlideInOut),
     ],
+    imports: [
+        TranslatePipe,
+        RatingComponent,
+        SvgIconComponent,
+        NgIf,
+        NgIf,
+        NgIf,
+        NgForOf,
+        NgIf,
+        NgIf,
+        NgClass,
+        NgClass,
+        NgClass,
+        MatAnchor,
+    ],
+    standalone: true,
 })
 export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnChanges {
     @Input() imagesLayout: ZxProdsListLayout = 'loading';
@@ -55,7 +75,8 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
         this.element.nativeElement.addEventListener('pointerenter', this.enterHandler.bind(this));
         this.element.nativeElement.addEventListener('pointerleave', this.leaveHandler.bind(this));
         this.element.nativeElement.addEventListener('pointermove', (event: Event) => event.preventDefault());
-        this.element.nativeElement.addEventListener('contextmenu', (event: Event) => {});
+        this.element.nativeElement.addEventListener('contextmenu', (event: Event) => {
+        });
         this.iconReg.loadSvg(`${environment.svgUrl}cart.svg`, 'cart')?.subscribe();
     }
 
