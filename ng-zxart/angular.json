@@ -72,18 +72,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ng-zxart:build"
+            "buildTarget": "ng-zxart:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ng-zxart:build:production"
+              "buildTarget": "ng-zxart:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ng-zxart:build"
+            "buildTarget": "ng-zxart:build"
           }
         }
       }
