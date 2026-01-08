@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.13.1@1e3b7f0a8ab32b23197b91107adc0a7ed8a05b51">
+<files psalm-version="6.14.3@d0b040a91f280f071c1abcb1b77ce3822058725a">
   <file src="project/core/AliasElementsProvider.php">
     <ArgumentTypeCoercion>
       <code><![CDATA['db']]></code>
@@ -606,6 +606,10 @@
     <InvalidNullableReturnType>
       <code><![CDATA[bool|countryElement]]></code>
     </InvalidNullableReturnType>
+    <InvalidScalarArgument>
+      <code><![CDATA[$element->id]]></code>
+      <code><![CDATA[$element->id]]></code>
+    </InvalidScalarArgument>
     <MissingParamType>
       <code><![CDATA[$locationName]]></code>
       <code><![CDATA[$origin]]></code>
@@ -615,8 +619,13 @@
       <code><![CDATA[importCountry]]></code>
     </MissingReturnType>
     <MixedArgument>
+      <code><![CDATA[$countryInfo['id']]]></code>
+      <code><![CDATA[$countryInfo['id']]]></code>
+      <code><![CDATA[$countryInfo['id']]]></code>
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$link->type]]></code>
+      <code><![CDATA[$origin]]></code>
+      <code><![CDATA[$origin]]></code>
       <code><![CDATA[$record['id']]]></code>
       <code><![CDATA[$record['id']]]></code>
     </MixedArgument>
@@ -788,12 +797,8 @@
     <InvalidFalsableReturnType>
       <code><![CDATA[string|null]]></code>
     </InvalidFalsableReturnType>
-    <MissingPropertyType>
-      <code><![CDATA[$letters]]></code>
-    </MissingPropertyType>
     <MixedArgument>
       <code><![CDATA[$encoding]]></code>
-      <code><![CDATA[self::$letters]]></code>
     </MixedArgument>
     <MixedArgumentTypeCoercion>
       <code><![CDATA[self::$encodings]]></code>
@@ -932,118 +937,6 @@
       <code><![CDATA[$chunkSize < 1]]></code>
       <code><![CDATA[$visualSplit >= $chunkSize]]></code>
     </TypeDoesNotContainType>
-  </file>
-  <file src="project/core/ImportIdOperatorTrait.php">
-    <MissingParamType>
-      <code><![CDATA[$elementId]]></code>
-      <code><![CDATA[$importId]]></code>
-      <code><![CDATA[$importId]]></code>
-      <code><![CDATA[$importId]]></code>
-      <code><![CDATA[$importId]]></code>
-      <code><![CDATA[$newElementId]]></code>
-      <code><![CDATA[$oldElementId]]></code>
-      <code><![CDATA[$origin]]></code>
-      <code><![CDATA[$origin]]></code>
-      <code><![CDATA[$origin]]></code>
-      <code><![CDATA[$origin]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$type]]></code>
-    </MissingParamType>
-    <MixedArgument>
-      <code><![CDATA[$importId]]></code>
-      <code><![CDATA[$importId]]></code>
-      <code><![CDATA[$origin]]></code>
-      <code><![CDATA[$origin]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$type]]></code>
-    </MixedArgument>
-    <MixedArrayAccess>
-      <code><![CDATA[$row['elementId']]]></code>
-      <code><![CDATA[$this->cacheId[$origin][$type]]]></code>
-      <code><![CDATA[$this->cacheId[$origin][$type][$importId]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type][$importId]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type][$importId]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type][$importId]]]></code>
-    </MixedArrayAccess>
-    <MixedArrayAssignment>
-      <code><![CDATA[$this->cacheId[$origin][$type]]]></code>
-      <code><![CDATA[$this->cacheId[$origin][$type]]]></code>
-      <code><![CDATA[$this->cacheId[$origin][$type]]]></code>
-      <code><![CDATA[$this->cacheId[$origin][$type][$importId]]]></code>
-      <code><![CDATA[$this->cacheId[$origin][$type][$importId]]]></code>
-      <code><![CDATA[$this->cacheId[$origin][$type][$importId]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type][$importId]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type][$importId]]]></code>
-    </MixedArrayAssignment>
-    <MixedArrayOffset>
-      <code><![CDATA[$this->cacheId[$origin]]]></code>
-      <code><![CDATA[$this->cacheId[$origin]]]></code>
-      <code><![CDATA[$this->cacheId[$origin]]]></code>
-      <code><![CDATA[$this->cacheId[$origin]]]></code>
-      <code><![CDATA[$this->cacheId[$origin]]]></code>
-      <code><![CDATA[$this->cacheId[$origin][$type]]]></code>
-      <code><![CDATA[$this->cacheId[$origin][$type]]]></code>
-      <code><![CDATA[$this->cacheId[$origin][$type]]]></code>
-      <code><![CDATA[$this->cacheId[$origin][$type]]]></code>
-      <code><![CDATA[$this->cacheId[$origin][$type]]]></code>
-      <code><![CDATA[$this->cacheId[$origin][$type][$importId]]]></code>
-      <code><![CDATA[$this->cacheId[$origin][$type][$importId]]]></code>
-      <code><![CDATA[$this->cacheId[$origin][$type][$importId]]]></code>
-      <code><![CDATA[$this->cacheId[$origin][$type][$importId]]]></code>
-      <code><![CDATA[$this->cacheId[$origin][$type][$importId]]]></code>
-      <code><![CDATA[$this->cache[$origin]]]></code>
-      <code><![CDATA[$this->cache[$origin]]]></code>
-      <code><![CDATA[$this->cache[$origin]]]></code>
-      <code><![CDATA[$this->cache[$origin]]]></code>
-      <code><![CDATA[$this->cache[$origin]]]></code>
-      <code><![CDATA[$this->cache[$origin]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type][$importId]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type][$importId]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type][$importId]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type][$importId]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type][$importId]]]></code>
-      <code><![CDATA[$this->cache[$origin][$type][$importId]]]></code>
-    </MixedArrayOffset>
-    <MixedArrayTypeCoercion>
-      <code><![CDATA[$this->cacheId[$origin][$type]]]></code>
-    </MixedArrayTypeCoercion>
-    <MixedAssignment>
-      <code><![CDATA[$existing]]></code>
-      <code><![CDATA[$row]]></code>
-    </MixedAssignment>
-    <PossiblyNullArrayOffset>
-      <code><![CDATA[$this->cacheId[$origin]]]></code>
-      <code><![CDATA[$this->cacheId[$origin]]]></code>
-    </PossiblyNullArrayOffset>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[setDb]]></code>
-      <code><![CDATA[setStructureManager]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[bool]]></code>
-      <code><![CDATA[int]]></code>
-    </PossiblyUnusedReturnValue>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$existing]]></code>
-      <code><![CDATA[$id = $this->getElementIdByImportId($importId, $origin, $type)]]></code>
-      <code><![CDATA[$row = $query->first()]]></code>
-    </RiskyTruthyFalsyComparison>
-    <UndefinedMagicMethod>
-      <code><![CDATA[$row]]></code>
-    </UndefinedMagicMethod>
   </file>
   <file src="project/core/ImportedItemTrait.php">
     <ArgumentTypeCoercion>
@@ -1541,6 +1434,9 @@
       <code><![CDATA[$hidden]]></code>
     </MixedAssignment>
     <PossiblyUnusedMethod>
+      <code><![CDATA[getBorder]]></code>
+      <code><![CDATA[getHidden]]></code>
+      <code><![CDATA[getMode]]></code>
       <code><![CDATA[setUser]]></code>
     </PossiblyUnusedMethod>
   </file>
@@ -2434,421 +2330,6 @@
       <code><![CDATA[$vote]]></code>
     </MixedOperand>
   </file>
-  <file src="project/core/VtrdosManager.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[VtrdosManager]]></code>
-    </ClassMustBeFinal>
-    <MissingParamType>
-      <code><![CDATA[$aNode]]></code>
-      <code><![CDATA[$allSettings]]></code>
-      <code><![CDATA[$currentCategory]]></code>
-      <code><![CDATA[$info]]></code>
-      <code><![CDATA[$node]]></code>
-      <code><![CDATA[$node]]></code>
-      <code><![CDATA[$pageUrl]]></code>
-      <code><![CDATA[$releaseInfo]]></code>
-      <code><![CDATA[$releaseInfo]]></code>
-      <code><![CDATA[$roles]]></code>
-      <code><![CDATA[$settings]]></code>
-      <code><![CDATA[$settings]]></code>
-      <code><![CDATA[$settings]]></code>
-      <code><![CDATA[$settings]]></code>
-      <code><![CDATA[$settings]]></code>
-      <code><![CDATA[$settings]]></code>
-      <code><![CDATA[$settings]]></code>
-      <code><![CDATA[$textNode]]></code>
-      <code><![CDATA[$url]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$alphabet]]></code>
-      <code><![CDATA[$categories]]></code>
-      <code><![CDATA[$categoryHardware]]></code>
-      <code><![CDATA[$counter]]></code>
-      <code><![CDATA[$hwIndex]]></code>
-      <code><![CDATA[$maxCounter]]></code>
-      <code><![CDATA[$origin]]></code>
-      <code><![CDATA[$rootUrl]]></code>
-      <code><![CDATA[$urlsSettings]]></code>
-    </MissingPropertyType>
-    <MixedArgument>
-      <code><![CDATA[$aNode->getAttribute('class')]]></code>
-      <code><![CDATA[$aNode->getAttribute('class')]]></code>
-      <code><![CDATA[$aNode->textContent]]></code>
-      <code><![CDATA[$aNode->textContent]]></code>
-      <code><![CDATA[$aNode->textContent]]></code>
-      <code><![CDATA[$aNodeItem->getAttribute('class')]]></code>
-      <code><![CDATA[$aNodeItem->textContent]]></code>
-      <code><![CDATA[$allSettings]]></code>
-      <code><![CDATA[$bNode->textContent]]></code>
-      <code><![CDATA[$childNode]]></code>
-      <code><![CDATA[$childNode]]></code>
-      <code><![CDATA[$childNode]]></code>
-      <code><![CDATA[$childNode]]></code>
-      <code><![CDATA[$childNode->tagName]]></code>
-      <code><![CDATA[$childNode->tagName]]></code>
-      <code><![CDATA[$contentNode->getAttribute('class')]]></code>
-      <code><![CDATA[$contentNode->getAttribute('class')]]></code>
-      <code><![CDATA[$contentNode->getAttribute('class')]]></code>
-      <code><![CDATA[$contentNode->tagName]]></code>
-      <code><![CDATA[$contentNode->tagName]]></code>
-      <code><![CDATA[$contentNode->tagName]]></code>
-      <code><![CDATA[$contentNode->textContent]]></code>
-      <code><![CDATA[$contentNode->textContent]]></code>
-      <code><![CDATA[$contentNode->textContent]]></code>
-      <code><![CDATA[$endTime - $previousTime]]></code>
-      <code><![CDATA[$info['groups']]]></code>
-      <code><![CDATA[$info['labels']]]></code>
-      <code><![CDATA[$info['labels']]]></code>
-      <code><![CDATA[$info['labels']]]></code>
-      <code><![CDATA[$key]]></code>
-      <code><![CDATA[$key]]></code>
-      <code><![CDATA[$key]]></code>
-      <code><![CDATA[$key]]></code>
-      <code><![CDATA[$node->textContent]]></code>
-      <code><![CDATA[$prodInfo]]></code>
-      <code><![CDATA[$prodTitle]]></code>
-      <code><![CDATA[$prodTitle]]></code>
-      <code><![CDATA[$prodsIndex[$prodId]]]></code>
-      <code><![CDATA[$releaseInfo['fileUrl']]]></code>
-      <code><![CDATA[$roles]]></code>
-      <code><![CDATA[$roles]]></code>
-      <code><![CDATA[$roles]]></code>
-      <code><![CDATA[$roles]]></code>
-      <code><![CDATA[$td3->textContent]]></code>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[$this->origin]]></code>
-      <code><![CDATA[$url]]></code>
-      <code><![CDATA[$url]]></code>
-      <code><![CDATA[$url]]></code>
-    </MixedArgument>
-    <MixedArrayAccess>
-      <code><![CDATA[$labelInfo['title']]]></code>
-      <code><![CDATA[$last['id']]]></code>
-      <code><![CDATA[$last['id']]]></code>
-      <code><![CDATA[$releaseInfo['hardwareRequired']]]></code>
-      <code><![CDATA[$settings['prod']]]></code>
-      <code><![CDATA[$settings['prod']]]></code>
-      <code><![CDATA[$settings['prod']]]></code>
-      <code><![CDATA[$settings['prod']]]></code>
-      <code><![CDATA[$settings['prod']]]></code>
-      <code><![CDATA[$settings['prod']]]></code>
-      <code><![CDATA[$settings['prod']['directCategories']]]></code>
-      <code><![CDATA[$settings['prod']['directCategories']]]></code>
-      <code><![CDATA[$settings['prod']['directCategories']]]></code>
-      <code><![CDATA[$settings['prod']['directCategories']]]></code>
-      <code><![CDATA[$settings['prod']['directCategories']]]></code>
-      <code><![CDATA[$settings['prod']['directCategories']]]></code>
-      <code><![CDATA[$settings['release']]]></code>
-      <code><![CDATA[$settings['release']]]></code>
-      <code><![CDATA[$settings['release']]]></code>
-      <code><![CDATA[$settings['release']]]></code>
-      <code><![CDATA[$settings['release']]]></code>
-      <code><![CDATA[$settings['release']]]></code>
-      <code><![CDATA[$settings['release']]]></code>
-      <code><![CDATA[$settings['release']]]></code>
-      <code><![CDATA[$settings['release']]]></code>
-      <code><![CDATA[$settings['release']]]></code>
-      <code><![CDATA[$settings['release']]]></code>
-      <code><![CDATA[$settings['release']]]></code>
-      <code><![CDATA[$settings['release']]]></code>
-      <code><![CDATA[$settings['release']]]></code>
-      <code><![CDATA[$settings['release']['authorRoles']]]></code>
-      <code><![CDATA[$settings['release']['authorRoles']]]></code>
-      <code><![CDATA[$settings['release']['authorRoles']]]></code>
-      <code><![CDATA[$settings['release']['hardwareRequired']]]></code>
-      <code><![CDATA[$settings['release']['hardwareRequired']]]></code>
-      <code><![CDATA[$settings['release']['hardwareRequired']]]></code>
-      <code><![CDATA[$settings['release']['language']]]></code>
-      <code><![CDATA[$settings['release']['language']]]></code>
-      <code><![CDATA[$settings['release']['language']]]></code>
-      <code><![CDATA[$settings['release']['releaseType']]]></code>
-      <code><![CDATA[$settings['release']['releaseType']]]></code>
-      <code><![CDATA[$settings['release']['releaseType']]]></code>
-      <code><![CDATA[$settings['type']]]></code>
-      <code><![CDATA[$settings['type']]]></code>
-      <code><![CDATA[$settings['type']]]></code>
-      <code><![CDATA[$settings['type']]]></code>
-      <code><![CDATA[$settings['type']]]></code>
-      <code><![CDATA[$settings['type']]]></code>
-      <code><![CDATA[$this->categories[$name . ':']]]></code>
-      <code><![CDATA[$this->categories[$name]]]></code>
-      <code><![CDATA[$this->categories[$name]]]></code>
-      <code><![CDATA[$this->categories[$name]]]></code>
-      <code><![CDATA[$this->categoryHardware[$name]]]></code>
-    </MixedArrayAccess>
-    <MixedArrayAssignment>
-      <code><![CDATA[$info[$groupField][]]]></code>
-      <code><![CDATA[$info['description']]]></code>
-      <code><![CDATA[$info['labels'][]]]></code>
-      <code><![CDATA[$info['undetermined'][$id]]]></code>
-      <code><![CDATA[$prodsIndex[$prodId]['releases'][]]]></code>
-      <code><![CDATA[$prodsIndex[$prodId]['releases'][]]]></code>
-      <code><![CDATA[$prodsIndex[$prodId]['releases'][]]]></code>
-      <code><![CDATA[$releaseInfo['hardwareRequired']]]></code>
-      <code><![CDATA[$releaseInfo['hardwareRequired'][]]]></code>
-      <code><![CDATA[$roles[]]]></code>
-      <code><![CDATA[$roles[]]]></code>
-      <code><![CDATA[$settings['release']]]></code>
-      <code><![CDATA[$settings['release']]]></code>
-      <code><![CDATA[$settings['release']['hardwareRequired']]]></code>
-      <code><![CDATA[$settings['release']['hardwareRequired']]]></code>
-      <code><![CDATA[$this->urlsSettings['https://vtrd.in/games.php?t=' . $item]]]></code>
-    </MixedArrayAssignment>
-    <MixedArrayOffset>
-      <code><![CDATA[$info['undetermined'][$id]]]></code>
-    </MixedArrayOffset>
-    <MixedAssignment>
-      <code><![CDATA[$aNode]]></code>
-      <code><![CDATA[$aNode]]></code>
-      <code><![CDATA[$aNode]]></code>
-      <code><![CDATA[$aNode]]></code>
-      <code><![CDATA[$aNode]]></code>
-      <code><![CDATA[$aNode]]></code>
-      <code><![CDATA[$aNodeItem]]></code>
-      <code><![CDATA[$aNodeItem]]></code>
-      <code><![CDATA[$aNodes]]></code>
-      <code><![CDATA[$aNodes]]></code>
-      <code><![CDATA[$aNodes]]></code>
-      <code><![CDATA[$aNodes]]></code>
-      <code><![CDATA[$bNode]]></code>
-      <code><![CDATA[$bNodes]]></code>
-      <code><![CDATA[$childNode]]></code>
-      <code><![CDATA[$childNode]]></code>
-      <code><![CDATA[$contentNode]]></code>
-      <code><![CDATA[$contentNode]]></code>
-      <code><![CDATA[$contentNode]]></code>
-      <code><![CDATA[$currentCategory]]></code>
-      <code><![CDATA[$currentCategory]]></code>
-      <code><![CDATA[$currentCategory]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$info['publishers'][]]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$key]]></code>
-      <code><![CDATA[$key]]></code>
-      <code><![CDATA[$labelInfo]]></code>
-      <code><![CDATA[$last]]></code>
-      <code><![CDATA[$prodInfo]]></code>
-      <code><![CDATA[$prodInfo['directCategories']]]></code>
-      <code><![CDATA[$prodInfo['directCategories']]]></code>
-      <code><![CDATA[$prodInfo['directCategories']]]></code>
-      <code><![CDATA[$prodTitle]]></code>
-      <code><![CDATA[$prodsIndex[$prodId]['releases'][]]]></code>
-      <code><![CDATA[$releaseInfo['hardwareRequired']]]></code>
-      <code><![CDATA[$releaseInfo['hardwareRequired']]]></code>
-      <code><![CDATA[$releaseInfo['hardwareRequired']]]></code>
-      <code><![CDATA[$releaseInfo['hardwareRequired'][]]]></code>
-      <code><![CDATA[$releaseInfo['hardwareRequired'][]]]></code>
-      <code><![CDATA[$releaseInfo['language']]]></code>
-      <code><![CDATA[$releaseInfo['language']]]></code>
-      <code><![CDATA[$releaseInfo['language']]]></code>
-      <code><![CDATA[$releaseInfo['releaseType']]]></code>
-      <code><![CDATA[$releaseInfo['releaseType']]]></code>
-      <code><![CDATA[$releaseInfo['releaseType']]]></code>
-      <code><![CDATA[$roles]]></code>
-      <code><![CDATA[$roles]]></code>
-      <code><![CDATA[$roles]]></code>
-      <code><![CDATA[$settings]]></code>
-      <code><![CDATA[$settings]]></code>
-      <code><![CDATA[$td1]]></code>
-      <code><![CDATA[$td1]]></code>
-      <code><![CDATA[$td2]]></code>
-      <code><![CDATA[$td2]]></code>
-      <code><![CDATA[$td2]]></code>
-      <code><![CDATA[$td3]]></code>
-      <code><![CDATA[$td3]]></code>
-      <code><![CDATA[$td4]]></code>
-      <code><![CDATA[$td5]]></code>
-      <code><![CDATA[$td5]]></code>
-      <code><![CDATA[$tdNodes]]></code>
-      <code><![CDATA[$tdNodes]]></code>
-      <code><![CDATA[$tdNodes]]></code>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[$textNode]]></code>
-      <code><![CDATA[$textNode]]></code>
-      <code><![CDATA[$textNode]]></code>
-      <code><![CDATA[$this->prodsService]]></code>
-      <code><![CDATA[$url]]></code>
-      <code><![CDATA[$url]]></code>
-      <code><![CDATA[$url]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-    </MixedAssignment>
-    <MixedMethodCall>
-      <code><![CDATA[getAttribute]]></code>
-      <code><![CDATA[getAttribute]]></code>
-      <code><![CDATA[getAttribute]]></code>
-      <code><![CDATA[getAttribute]]></code>
-      <code><![CDATA[getAttribute]]></code>
-      <code><![CDATA[getAttribute]]></code>
-      <code><![CDATA[getAttribute]]></code>
-      <code><![CDATA[getAttribute]]></code>
-      <code><![CDATA[getAttribute]]></code>
-      <code><![CDATA[getAttribute]]></code>
-      <code><![CDATA[getAttribute]]></code>
-      <code><![CDATA[getAttribute]]></code>
-      <code><![CDATA[getElementsByTagName]]></code>
-      <code><![CDATA[getElementsByTagName]]></code>
-      <code><![CDATA[getElementsByTagName]]></code>
-      <code><![CDATA[getElementsByTagName]]></code>
-      <code><![CDATA[getElementsByTagName]]></code>
-      <code><![CDATA[item]]></code>
-      <code><![CDATA[item]]></code>
-      <code><![CDATA[item]]></code>
-      <code><![CDATA[item]]></code>
-      <code><![CDATA[item]]></code>
-      <code><![CDATA[item]]></code>
-      <code><![CDATA[item]]></code>
-      <code><![CDATA[item]]></code>
-      <code><![CDATA[item]]></code>
-      <code><![CDATA[item]]></code>
-      <code><![CDATA[setUpdateExistingReleases]]></code>
-    </MixedMethodCall>
-    <MixedOperand>
-      <code><![CDATA[$aNode->textContent]]></code>
-      <code><![CDATA[$aNode->textContent]]></code>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$previousTime]]></code>
-      <code><![CDATA[$prodInfo['title']]]></code>
-      <code><![CDATA[$prodInfo['title']]]></code>
-      <code><![CDATA[$prodInfo['year']]]></code>
-      <code><![CDATA[$prodInfo['year']]]></code>
-      <code><![CDATA[$prodTitle]]></code>
-      <code><![CDATA[$this->counter]]></code>
-      <code><![CDATA[$this->counter]]></code>
-      <code><![CDATA[$this->rootUrl]]></code>
-      <code><![CDATA[$this->rootUrl]]></code>
-      <code><![CDATA[$this->rootUrl]]></code>
-      <code><![CDATA[$this->rootUrl]]></code>
-      <code><![CDATA[$this->rootUrl]]></code>
-      <code><![CDATA[$this->rootUrl]]></code>
-      <code><![CDATA[$url]]></code>
-    </MixedOperand>
-    <MixedPropertyFetch>
-      <code><![CDATA[$aNode->textContent]]></code>
-      <code><![CDATA[$aNode->textContent]]></code>
-      <code><![CDATA[$aNodeItem->textContent]]></code>
-      <code><![CDATA[$aNodes->length]]></code>
-      <code><![CDATA[$bNode->textContent]]></code>
-      <code><![CDATA[$childNode->nodeType]]></code>
-      <code><![CDATA[$childNode->nodeType]]></code>
-      <code><![CDATA[$childNode->tagName]]></code>
-      <code><![CDATA[$childNode->tagName]]></code>
-      <code><![CDATA[$contentNode->nodeType]]></code>
-      <code><![CDATA[$contentNode->nodeType]]></code>
-      <code><![CDATA[$contentNode->nodeType]]></code>
-      <code><![CDATA[$contentNode->tagName]]></code>
-      <code><![CDATA[$contentNode->tagName]]></code>
-      <code><![CDATA[$contentNode->tagName]]></code>
-      <code><![CDATA[$contentNode->textContent]]></code>
-      <code><![CDATA[$contentNode->textContent]]></code>
-      <code><![CDATA[$contentNode->textContent]]></code>
-      <code><![CDATA[$node->textContent]]></code>
-      <code><![CDATA[$node->textContent]]></code>
-      <code><![CDATA[$td2->nodeValue]]></code>
-      <code><![CDATA[$td3->nodeValue]]></code>
-      <code><![CDATA[$td3->textContent]]></code>
-      <code><![CDATA[$td4->nodeValue]]></code>
-      <code><![CDATA[$td5->nodeValue]]></code>
-    </MixedPropertyFetch>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$divNode]]></code>
-      <code><![CDATA[$info['groups']]]></code>
-      <code><![CDATA[$node]]></code>
-      <code><![CDATA[$node]]></code>
-      <code><![CDATA[$node]]></code>
-      <code><![CDATA[$node]]></code>
-      <code><![CDATA[$node]]></code>
-      <code><![CDATA[$node]]></code>
-      <code><![CDATA[substr_replace($text, '', $offset)]]></code>
-    </PossiblyInvalidArgument>
-    <PossiblyInvalidIterator>
-      <code><![CDATA[$info['labels']]]></code>
-    </PossiblyInvalidIterator>
-    <PossiblyNullArgument>
-      <code><![CDATA[$aNode->textContent]]></code>
-      <code><![CDATA[$aNode->textContent]]></code>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[preg_replace("#('[0-9]+)#", '', $part)]]></code>
-      <code><![CDATA[preg_replace('!\s+!', ' ', $string)]]></code>
-      <code><![CDATA[preg_replace('!\s+!', ' ', $text)]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$aNode->textContent]]></code>
-      <code><![CDATA[$aNode->textContent]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyUndefinedVariable>
-      <code><![CDATA[$aNode]]></code>
-    </PossiblyUndefinedVariable>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$settings]]></code>
-    </PossiblyUnusedParam>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$authorsManager]]></code>
-      <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsService]]></code>
-    </PossiblyUnusedProperty>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[$authorsManager]]></code>
-      <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsService]]></code>
-      <code><![CDATA[$prodsService]]></code>
-    </PropertyNotSetInConstructor>
-    <RedundantCondition>
-      <code><![CDATA[$currentCategory]]></code>
-    </RedundantCondition>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$aNode]]></code>
-      <code><![CDATA[$aNode]]></code>
-      <code><![CDATA[$aNode]]></code>
-      <code><![CDATA[$aNode]]></code>
-      <code><![CDATA[$aNode]]></code>
-      <code><![CDATA[$aNode]]></code>
-      <code><![CDATA[$contents = file_get_contents($url)]]></code>
-      <code><![CDATA[$currentCategory]]></code>
-      <code><![CDATA[$detailsUrl]]></code>
-      <code><![CDATA[$detailsUrl]]></code>
-      <code><![CDATA[$prodTitle]]></code>
-      <code><![CDATA[$prodTitle]]></code>
-      <code><![CDATA[$prodTitle]]></code>
-      <code><![CDATA[$prodTitle]]></code>
-      <code><![CDATA[$textNode]]></code>
-      <code><![CDATA[$textNode]]></code>
-      <code><![CDATA[$textNode]]></code>
-      <code><![CDATA[$url]]></code>
-      <code><![CDATA[$url]]></code>
-    </RiskyTruthyFalsyComparison>
-    <UndefinedMethod>
-      <code><![CDATA[getAttribute]]></code>
-      <code><![CDATA[getElementsByTagName]]></code>
-      <code><![CDATA[getElementsByTagName]]></code>
-      <code><![CDATA[getElementsByTagName]]></code>
-    </UndefinedMethod>
-    <UndefinedPropertyFetch>
-      <code><![CDATA[$aNode->textContent]]></code>
-      <code><![CDATA[$aNode->textContent]]></code>
-      <code><![CDATA[$divNode->childNodes]]></code>
-      <code><![CDATA[$divNode->childNodes]]></code>
-      <code><![CDATA[$liNode->childNodes]]></code>
-      <code><![CDATA[$liNode->childNodes]]></code>
-      <code><![CDATA[$liNode->childNodes]]></code>
-    </UndefinedPropertyFetch>
-    <UnusedVariable>
-      <code><![CDATA[$detailsUrl]]></code>
-      <code><![CDATA[$detailsUrl]]></code>
-      <code><![CDATA[$detailsUrl]]></code>
-    </UnusedVariable>
-  </file>
   <file src="project/core/ZxArt/Ai/ChunkProcessor.php">
     <ClassMustBeFinal>
       <code><![CDATA[ChunkProcessor]]></code>
@@ -2958,6 +2439,7 @@
       <code><![CDATA[$prodData]]></code>
     </PossiblyNullArgument>
     <PossiblyNullArrayAccess>
+      <code><![CDATA[$prodData['authors']]]></code>
       <code><![CDATA[$prodData['isRunnableOnline']]]></code>
     </PossiblyNullArrayAccess>
     <PossiblyUnusedMethod>
@@ -2977,6 +2459,9 @@
       <code><![CDATA[empty($prodData['manual'])]]></code>
       <code><![CDATA[empty($prodData['releaseFileDescription'])]]></code>
     </RiskyTruthyFalsyComparison>
+    <UnusedParam>
+      <code><![CDATA[$hasTextDescriptions]]></code>
+    </UnusedParam>
   </file>
   <file src="project/core/ZxArt/Ai/Service/PromptSender.php">
     <ClassMustBeFinal>
@@ -3107,6 +2592,7 @@
       <code><![CDATA[$record]]></code>
       <code><![CDATA[$record['roles']]]></code>
       <code><![CDATA[$record['roles']]]></code>
+      <code><![CDATA[$sort[]]]></code>
     </MixedAssignment>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -3191,7 +2677,7 @@
     </InvalidReturnStatement>
     <LessSpecificReturnStatement>
       <code><![CDATA[$author]]></code>
-      <code><![CDATA[$this->getElementByImportId($importId, $origin, 'authorAlias')]]></code>
+      <code><![CDATA[$this->importIdOperator->getElementByImportId($importId, $origin, 'authorAlias')]]></code>
     </LessSpecificReturnStatement>
     <MissingOverrideAttribute>
       <code><![CDATA[protected function getLettersListMarker(string $type): string]]></code>
@@ -3212,6 +2698,10 @@
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$mainAuthor->articles]]></code>
+      <code><![CDATA[$origin]]></code>
+      <code><![CDATA[$origin]]></code>
+      <code><![CDATA[$origin]]></code>
+      <code><![CDATA[$origin]]></code>
       <code><![CDATA[$zxProd->id]]></code>
       <code><![CDATA[TranslitHelper::convert($firstLetter)]]></code>
     </MixedArgument>
@@ -3261,8 +2751,13 @@
       <code><![CDATA[$resolved]]></code>
       <code><![CDATA[$zxRelease->id]]></code>
     </PossiblyInvalidArgument>
+    <PossiblyNullArgument>
+      <code><![CDATA[$authorId]]></code>
+      <code><![CDATA[$importId]]></code>
+    </PossiblyNullArgument>
     <PossiblyNullArrayOffset>
       <code><![CDATA[$this->importedAuthorAliases[$origin]]]></code>
+      <code><![CDATA[$this->importedAuthors[$origin]]]></code>
     </PossiblyNullArrayOffset>
     <PossiblyUndefinedMethod>
       <code><![CDATA[getCountryId]]></code>
@@ -3497,6 +2992,10 @@
       <code><![CDATA[$this->aiTextContent->getAITextContent($pressArticleElement)]]></code>
       <code><![CDATA[$updatedContent]]></code>
     </PossiblyNullArgument>
+    <PossiblyNullArrayOffset>
+      <code><![CDATA[$allLanguageCodes]]></code>
+      <code><![CDATA[$allLanguageCodes]]></code>
+    </PossiblyNullArrayOffset>
     <PossiblyNullReference>
       <code><![CDATA[beautify]]></code>
       <code><![CDATA[detectLanguage]]></code>
@@ -3737,6 +3236,106 @@
     </PropertyNotSetInConstructor>
     <UnusedClass>
       <code><![CDATA[Zxdb]]></code>
+    </UnusedClass>
+  </file>
+  <file src="project/core/ZxArt/Controllers/Zximages.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA['PathsManager']]></code>
+    </ArgumentTypeCoercion>
+    <ClassMustBeFinal>
+      <code><![CDATA[Zximages]]></code>
+    </ClassMustBeFinal>
+    <InvalidReturnType>
+      <code><![CDATA[initialize]]></code>
+    </InvalidReturnType>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function execute($controller)]]></code>
+      <code><![CDATA[public function initialize()]]></code>
+    </MissingOverrideAttribute>
+    <MixedArgument>
+      <code><![CDATA[$paramsString]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$paramsString]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getPath]]></code>
+      <code><![CDATA[getPath]]></code>
+    </MixedMethodCall>
+    <MixedOperand>
+      <code><![CDATA[$pathsManager->getPath('releases')]]></code>
+      <code><![CDATA[$pathsManager->getPath('uploads')]]></code>
+    </MixedOperand>
+    <PossiblyNullArgument>
+      <code><![CDATA[$paramsString]]></code>
+    </PossiblyNullArgument>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[Zximages]]></code>
+      <code><![CDATA[Zximages]]></code>
+      <code><![CDATA[Zximages]]></code>
+      <code><![CDATA[Zximages]]></code>
+    </PropertyNotSetInConstructor>
+    <UnusedClass>
+      <code><![CDATA[Zximages]]></code>
+    </UnusedClass>
+  </file>
+  <file src="project/core/ZxArt/Controllers/Zximagesdownload.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA['ConfigManager']]></code>
+      <code><![CDATA['LanguagesManager']]></code>
+      <code><![CDATA['PathsManager']]></code>
+      <code><![CDATA['structureManager']]></code>
+    </ArgumentTypeCoercion>
+    <ClassMustBeFinal>
+      <code><![CDATA[Zximagesdownload]]></code>
+    </ClassMustBeFinal>
+    <InvalidReturnType>
+      <code><![CDATA[initialize]]></code>
+    </InvalidReturnType>
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function execute($controller)]]></code>
+      <code><![CDATA[public function initialize()]]></code>
+    </MissingOverrideAttribute>
+    <MissingParamType>
+      <code><![CDATA[$controller]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$border]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$mode]]></code>
+      <code><![CDATA[$palette]]></code>
+      <code><![CDATA[$rotation]]></code>
+      <code><![CDATA[$type]]></code>
+      <code><![CDATA[$zoom]]></code>
+    </MissingPropertyType>
+    <MixedAssignment>
+      <code><![CDATA[$fileName]]></code>
+      <code><![CDATA[$paramsString]]></code>
+      <code><![CDATA[$zxPictureElement]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[get]]></code>
+      <code><![CDATA[getCurrentLanguageCode]]></code>
+      <code><![CDATA[getElementById]]></code>
+      <code><![CDATA[getFileName]]></code>
+      <code><![CDATA[getPath]]></code>
+      <code><![CDATA[getPath]]></code>
+      <code><![CDATA[getRequestedPath]]></code>
+      <code><![CDATA[setRequestedPath]]></code>
+    </MixedMethodCall>
+    <MixedOperand>
+      <code><![CDATA[$fileName]]></code>
+      <code><![CDATA[$pathsManager->getPath('releases')]]></code>
+      <code><![CDATA[$pathsManager->getPath('uploads')]]></code>
+    </MixedOperand>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[Zximagesdownload]]></code>
+      <code><![CDATA[Zximagesdownload]]></code>
+      <code><![CDATA[Zximagesdownload]]></code>
+      <code><![CDATA[Zximagesdownload]]></code>
+    </PropertyNotSetInConstructor>
+    <UnusedClass>
+      <code><![CDATA[Zximagesdownload]]></code>
     </UnusedClass>
   </file>
   <file src="project/core/ZxArt/FileParsing/ZxParsingItem.php">
@@ -4008,6 +3607,11 @@
     <ClassMustBeFinal>
       <code><![CDATA[GroupsService]]></code>
     </ClassMustBeFinal>
+    <InvalidScalarArgument>
+      <code><![CDATA[$element->id]]></code>
+      <code><![CDATA[$element->id]]></code>
+      <code><![CDATA[$element->id]]></code>
+    </InvalidScalarArgument>
     <LessSpecificReturnStatement>
       <code><![CDATA[$element]]></code>
       <code><![CDATA[$element]]></code>
@@ -4097,6 +3701,9 @@
     </PossiblyInvalidPropertyAssignmentValue>
     <PossiblyNullArgument>
       <code><![CDATA[$element]]></code>
+      <code><![CDATA[$label->id]]></code>
+      <code><![CDATA[$label->id]]></code>
+      <code><![CDATA[$origin]]></code>
       <code><![CDATA[$origin]]></code>
       <code><![CDATA[$origin]]></code>
       <code><![CDATA[$origin]]></code>
@@ -4655,6 +4262,9 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="project/core/ZxArt/Import/Prods/Dto/ProdImportDTO.php">
+    <InvalidArgument>
+      <code><![CDATA[isset($a['origin']) ? (array)$a['origin'] : null]]></code>
+    </InvalidArgument>
     <MixedArgument>
       <code><![CDATA[$a['altTitle'] ?? null]]></code>
       <code><![CDATA[$a['compo'] ?? null]]></code>
@@ -4751,6 +4361,37 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
+  <file src="project/core/ZxArt/Import/Services/ImportIdOperator.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ImportIdOperator]]></code>
+    </ClassMustBeFinal>
+    <MixedArrayAccess>
+      <code><![CDATA[$row['elementId']]]></code>
+    </MixedArrayAccess>
+    <MixedAssignment>
+      <code><![CDATA[$existing]]></code>
+      <code><![CDATA[$row]]></code>
+    </MixedAssignment>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->cacheId[$cacheKey]]]></code>
+      <code><![CDATA[$this->cacheId[$cacheKey]]]></code>
+      <code><![CDATA[$this->cache[$cacheKey]]]></code>
+      <code><![CDATA[$this->cache[$cacheKey]]]></code>
+    </MixedReturnStatement>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[bool]]></code>
+      <code><![CDATA[int]]></code>
+    </PossiblyUnusedReturnValue>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$existing]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UndefinedMagicMethod>
+      <code><![CDATA[$row]]></code>
+    </UndefinedMagicMethod>
+  </file>
   <file src="project/core/ZxArt/Import/Services/PouetImport.php">
     <ClassMustBeFinal>
       <code><![CDATA[PouetImport]]></code>
@@ -4814,6 +4455,305 @@
       <code><![CDATA[$string]]></code>
       <code><![CDATA[$string]]></code>
     </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="project/core/ZxArt/Import/Services/VtrdosAuthorParser.php">
+    <MixedArgument>
+      <code><![CDATA[$entry['name']]]></code>
+      <code><![CDATA[$name]]></code>
+    </MixedArgument>
+    <MixedArrayAccess>
+      <code><![CDATA[$entry['name']]]></code>
+      <code><![CDATA[$entry['name']]]></code>
+      <code><![CDATA[$entry['name']]]></code>
+      <code><![CDATA[$entry['year']]]></code>
+      <code><![CDATA[$group['name']]]></code>
+      <code><![CDATA[$group['year']]]></code>
+      <code><![CDATA[$group['year']]]></code>
+      <code><![CDATA[$publisher['name']]]></code>
+      <code><![CDATA[$publisher['name']]]></code>
+      <code><![CDATA[$publisher['year']]]></code>
+      <code><![CDATA[$publisher['year']]]></code>
+      <code><![CDATA[$publisher['year']]]></code>
+      <code><![CDATA[$publisher['year']]]></code>
+      <code><![CDATA[$publisher['year']]]></code>
+      <code><![CDATA[$publisher['year']]]></code>
+      <code><![CDATA[$publisher['year']]]></code>
+    </MixedArrayAccess>
+    <MixedArrayOffset>
+      <code><![CDATA[$undeterminedOut[$name]]]></code>
+    </MixedArrayOffset>
+    <MixedAssignment>
+      <code><![CDATA[$entry]]></code>
+      <code><![CDATA[$entry]]></code>
+      <code><![CDATA[$entry]]></code>
+      <code><![CDATA[$group]]></code>
+      <code><![CDATA[$groupsOut[]]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$prodYearOut]]></code>
+      <code><![CDATA[$prodYearOut]]></code>
+      <code><![CDATA[$prodYearOut]]></code>
+      <code><![CDATA[$publisher]]></code>
+      <code><![CDATA[$publisher]]></code>
+      <code><![CDATA[$publishersOut[]]]></code>
+      <code><![CDATA[$publishersOut[]]]></code>
+      <code><![CDATA[$releaseYearOut]]></code>
+      <code><![CDATA[$releaseYearOut]]></code>
+      <code><![CDATA[$releaseYearOut]]></code>
+    </MixedAssignment>
+    <PossiblyNullArgument>
+      <code><![CDATA[preg_replace("#('[0-9]+)#", '', $name)]]></code>
+      <code><![CDATA[preg_replace('!\s+!', ' ', $authorsPart)]]></code>
+    </PossiblyNullArgument>
+    <ReferenceConstraintViolation>
+      <code><![CDATA[$groupsOut]]></code>
+      <code><![CDATA[$publishersOut]]></code>
+      <code><![CDATA[$undeterminedOut]]></code>
+      <code><![CDATA[return;]]></code>
+    </ReferenceConstraintViolation>
+  </file>
+  <file src="project/core/ZxArt/Import/Services/VtrdosHardwareProvider.php">
+    <UnusedForeachValue>
+      <code><![CDATA[$hardwareCode]]></code>
+    </UnusedForeachValue>
+  </file>
+  <file src="project/core/ZxArt/Import/Services/VtrdosImport.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[VtrdosImport]]></code>
+    </ClassMustBeFinal>
+    <InvalidOperand>
+      <code><![CDATA[$prodYear]]></code>
+      <code><![CDATA[$prodYear]]></code>
+      <code><![CDATA[$prodYear]]></code>
+    </InvalidOperand>
+    <MixedArgument>
+      <code><![CDATA[$aNode->getAttribute('class')]]></code>
+      <code><![CDATA[$aNode->getAttribute('class')]]></code>
+      <code><![CDATA[$aNode->textContent]]></code>
+      <code><![CDATA[$aNode?->textContent]]></code>
+      <code><![CDATA[$aNode?->textContent]]></code>
+      <code><![CDATA[$bNode->textContent]]></code>
+      <code><![CDATA[$childNode]]></code>
+      <code><![CDATA[$childNode]]></code>
+      <code><![CDATA[$childNode]]></code>
+      <code><![CDATA[$childNode]]></code>
+      <code><![CDATA[$childNode->tagName]]></code>
+      <code><![CDATA[$childNode->tagName]]></code>
+      <code><![CDATA[$contentNode->getAttribute('class')]]></code>
+      <code><![CDATA[$contentNode->getAttribute('class')]]></code>
+      <code><![CDATA[$contentNode->getAttribute('class')]]></code>
+      <code><![CDATA[$contentNode->tagName]]></code>
+      <code><![CDATA[$contentNode->tagName]]></code>
+      <code><![CDATA[$contentNode->tagName]]></code>
+      <code><![CDATA[$contentNode->textContent]]></code>
+      <code><![CDATA[$contentNode->textContent]]></code>
+      <code><![CDATA[$contentNode->textContent]]></code>
+      <code><![CDATA[$currentCategory]]></code>
+      <code><![CDATA[$currentCategory]]></code>
+      <code><![CDATA[$currentCategory]]></code>
+      <code><![CDATA[$endTime - $previousTime]]></code>
+      <code><![CDATA[$td3->textContent]]></code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$languages]]></code>
+      <code><![CDATA[$languages]]></code>
+      <code><![CDATA[$languages]]></code>
+      <code><![CDATA[$roles]]></code>
+      <code><![CDATA[$roles]]></code>
+      <code><![CDATA[$roles]]></code>
+      <code><![CDATA[empty($hardwareRequired) ? null : array_values(array_unique($hardwareRequired))]]></code>
+      <code><![CDATA[empty($hardwareRequired) ? null : array_values(array_unique($hardwareRequired))]]></code>
+      <code><![CDATA[empty($hardwareRequired) ? null : array_values(array_unique($hardwareRequired))]]></code>
+    </MixedArgumentTypeCoercion>
+    <MixedArrayAccess>
+      <code><![CDATA[$settings['release']['hardwareRequired']]]></code>
+      <code><![CDATA[$settings['release']['language']]]></code>
+      <code><![CDATA[$settings['release']['language']]]></code>
+      <code><![CDATA[$settings['release']['releaseType']]]></code>
+    </MixedArrayAccess>
+    <MixedArrayAssignment>
+      <code><![CDATA[$settings['release']['hardwareRequired']]]></code>
+      <code><![CDATA[$settings['release']['hardwareRequired']]]></code>
+    </MixedArrayAssignment>
+    <MixedAssignment>
+      <code><![CDATA[$aNode]]></code>
+      <code><![CDATA[$aNode]]></code>
+      <code><![CDATA[$aNode]]></code>
+      <code><![CDATA[$aNode]]></code>
+      <code><![CDATA[$aNode]]></code>
+      <code><![CDATA[$aNodeItem]]></code>
+      <code><![CDATA[$aNodeItem]]></code>
+      <code><![CDATA[$aNodes]]></code>
+      <code><![CDATA[$aNodes]]></code>
+      <code><![CDATA[$aNodes]]></code>
+      <code><![CDATA[$aNodes5]]></code>
+      <code><![CDATA[$bNode]]></code>
+      <code><![CDATA[$bNodes]]></code>
+      <code><![CDATA[$childNode]]></code>
+      <code><![CDATA[$childNode]]></code>
+      <code><![CDATA[$contentNode]]></code>
+      <code><![CDATA[$contentNode]]></code>
+      <code><![CDATA[$contentNode]]></code>
+      <code><![CDATA[$currentCategory]]></code>
+      <code><![CDATA[$currentCategory]]></code>
+      <code><![CDATA[$currentCategory]]></code>
+      <code><![CDATA[$hardwareRequired[]]]></code>
+      <code><![CDATA[$hwItem]]></code>
+      <code><![CDATA[$td1]]></code>
+      <code><![CDATA[$td1]]></code>
+      <code><![CDATA[$td2]]></code>
+      <code><![CDATA[$td2]]></code>
+      <code><![CDATA[$td2]]></code>
+      <code><![CDATA[$td3]]></code>
+      <code><![CDATA[$td3]]></code>
+      <code><![CDATA[$td4]]></code>
+      <code><![CDATA[$td5]]></code>
+      <code><![CDATA[$td5]]></code>
+      <code><![CDATA[$tdNodes]]></code>
+      <code><![CDATA[$tdNodes]]></code>
+      <code><![CDATA[$tdNodes]]></code>
+      <code><![CDATA[$textNode]]></code>
+      <code><![CDATA[$textNode]]></code>
+      <code><![CDATA[$textNode]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getAttribute]]></code>
+      <code><![CDATA[getAttribute]]></code>
+      <code><![CDATA[getAttribute]]></code>
+      <code><![CDATA[getAttribute]]></code>
+      <code><![CDATA[getAttribute]]></code>
+      <code><![CDATA[getAttribute]]></code>
+      <code><![CDATA[getAttribute]]></code>
+      <code><![CDATA[getElementsByTagName]]></code>
+      <code><![CDATA[getElementsByTagName]]></code>
+      <code><![CDATA[getElementsByTagName]]></code>
+      <code><![CDATA[getElementsByTagName]]></code>
+      <code><![CDATA[getElementsByTagName]]></code>
+      <code><![CDATA[item]]></code>
+      <code><![CDATA[item]]></code>
+      <code><![CDATA[item]]></code>
+      <code><![CDATA[item]]></code>
+      <code><![CDATA[item]]></code>
+      <code><![CDATA[item]]></code>
+      <code><![CDATA[item]]></code>
+      <code><![CDATA[item]]></code>
+      <code><![CDATA[item]]></code>
+      <code><![CDATA[item]]></code>
+    </MixedMethodCall>
+    <MixedOperand>
+      <code><![CDATA[$aNode->getAttribute('href')]]></code>
+      <code><![CDATA[$previousTime]]></code>
+    </MixedOperand>
+    <MixedPropertyFetch>
+      <code><![CDATA[$aNode->textContent]]></code>
+      <code><![CDATA[$aNode->textContent]]></code>
+      <code><![CDATA[$aNodes->length]]></code>
+      <code><![CDATA[$bNode->textContent]]></code>
+      <code><![CDATA[$childNode->nodeType]]></code>
+      <code><![CDATA[$childNode->nodeType]]></code>
+      <code><![CDATA[$childNode->tagName]]></code>
+      <code><![CDATA[$childNode->tagName]]></code>
+      <code><![CDATA[$contentNode->nodeType]]></code>
+      <code><![CDATA[$contentNode->nodeType]]></code>
+      <code><![CDATA[$contentNode->nodeType]]></code>
+      <code><![CDATA[$contentNode->tagName]]></code>
+      <code><![CDATA[$contentNode->tagName]]></code>
+      <code><![CDATA[$contentNode->tagName]]></code>
+      <code><![CDATA[$contentNode->textContent]]></code>
+      <code><![CDATA[$contentNode->textContent]]></code>
+      <code><![CDATA[$contentNode->textContent]]></code>
+      <code><![CDATA[$td2->nodeValue]]></code>
+      <code><![CDATA[$td3->nodeValue]]></code>
+      <code><![CDATA[$td3->textContent]]></code>
+      <code><![CDATA[$td4->nodeValue]]></code>
+      <code><![CDATA[$td5->nodeValue]]></code>
+    </MixedPropertyFetch>
+    <MixedReturnTypeCoercion>
+      <code><![CDATA[[$fileUrl, $description, array_values(array_unique($hardwareRequired))]]]></code>
+      <code><![CDATA[array{0:?string,1:?string,2:string[]}]]></code>
+    </MixedReturnTypeCoercion>
+    <NoValue>
+      <code><![CDATA[$releasePublishers]]></code>
+      <code><![CDATA[$releasePublishers]]></code>
+    </NoValue>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$divNode]]></code>
+      <code><![CDATA[$node]]></code>
+      <code><![CDATA[$node]]></code>
+      <code><![CDATA[$node]]></code>
+      <code><![CDATA[$node]]></code>
+      <code><![CDATA[$node]]></code>
+      <code><![CDATA[$node]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyNullArgument>
+      <code><![CDATA[$aNode?->textContent]]></code>
+      <code><![CDATA[$aNode?->textContent]]></code>
+      <code><![CDATA[$fileUrl]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullOperand>
+      <code><![CDATA[$prodYear]]></code>
+      <code><![CDATA[$prodYear]]></code>
+      <code><![CDATA[$prodYear]]></code>
+    </PossiblyNullOperand>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <RedundantCast>
+      <code><![CDATA[(string)$aNodeItem->textContent]]></code>
+    </RedundantCast>
+    <RedundantCondition>
+      <code><![CDATA[!empty($currentCategory)]]></code>
+      <code><![CDATA[$textNode->textContent]]></code>
+      <code><![CDATA[empty($releasePublishers)]]></code>
+      <code><![CDATA[empty($releasePublishers)]]></code>
+      <code><![CDATA[empty($releasePublishers)]]></code>
+      <code><![CDATA[empty($releasePublishers)]]></code>
+    </RedundantCondition>
+    <RedundantFunctionCall>
+      <code><![CDATA[array_values]]></code>
+    </RedundantFunctionCall>
+    <TypeDoesNotContainType>
+      <code><![CDATA['']]></code>
+      <code><![CDATA[array_values(array_unique($releasePublishers))]]></code>
+      <code><![CDATA[array_values(array_unique($releasePublishers))]]></code>
+    </TypeDoesNotContainType>
+    <UndefinedMethod>
+      <code><![CDATA[getAttribute]]></code>
+      <code><![CDATA[getElementsByTagName]]></code>
+      <code><![CDATA[getElementsByTagName]]></code>
+      <code><![CDATA[getElementsByTagName]]></code>
+    </UndefinedMethod>
+    <UndefinedPropertyFetch>
+      <code><![CDATA[$aNode?->textContent]]></code>
+      <code><![CDATA[$aNode?->textContent]]></code>
+      <code><![CDATA[$divNode->childNodes]]></code>
+      <code><![CDATA[$divNode->childNodes]]></code>
+      <code><![CDATA[$liNode->childNodes]]></code>
+      <code><![CDATA[$liNode->childNodes]]></code>
+      <code><![CDATA[$liNode->childNodes]]></code>
+    </UndefinedPropertyFetch>
+    <UnusedVariable>
+      <code><![CDATA[$releaseType]]></code>
+      <code><![CDATA[$releaseType]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="project/core/ZxArt/Import/Services/VtrdosTitleParser.php">
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[array_values(array_unique($hardwareRequired))]]></code>
+    </MixedArgumentTypeCoercion>
+    <PossiblyNullArgument>
+      <code><![CDATA[$text]]></code>
+      <code><![CDATA[$workTitle]]></code>
+      <code><![CDATA[$workTitle]]></code>
+      <code><![CDATA[$workTitle]]></code>
+      <code><![CDATA[preg_replace('!\s+!', ' ', $text)]]></code>
+    </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <RedundantCast>
+      <code><![CDATA[(int)$matches[0][1]]]></code>
+    </RedundantCast>
   </file>
   <file src="project/core/ZxArt/Import/Services/WorldOfSamImport.php">
     <InvalidLiteralArgument>
@@ -4894,6 +4834,10 @@
     <ClassMustBeFinal>
       <code><![CDATA[ZxdbImport]]></code>
     </ClassMustBeFinal>
+    <DeprecatedMethod>
+      <code><![CDATA[ProdImportDTO::fromArray($prodInfo)]]></code>
+      <code><![CDATA[ProdImportDTO::fromArray($prodInfo)]]></code>
+    </DeprecatedMethod>
     <DocblockTypeContradiction>
       <code><![CDATA[[]]]></code>
     </DocblockTypeContradiction>
@@ -5433,6 +5377,10 @@
       <code><![CDATA[$ip]]></code>
       <code><![CDATA[$userAgent]]></code>
     </MixedAssignment>
+    <PossiblyFalseOperand>
+      <code><![CDATA[$ipAsLong]]></code>
+      <code><![CDATA[$rangeAsLong]]></code>
+    </PossiblyFalseOperand>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[parse_url($requestInfo['REQUEST_URI'], PHP_URL_PATH)]]></code>
     </RiskyTruthyFalsyComparison>
@@ -5641,6 +5589,9 @@
     <ClassMustBeFinal>
       <code><![CDATA[ProdsService]]></code>
     </ClassMustBeFinal>
+    <DeprecatedMethod>
+      <code><![CDATA[ProdImportDTO::fromArray($prodInfo)]]></code>
+    </DeprecatedMethod>
     <DocblockTypeContradiction>
       <code><![CDATA[$element->instructions === null]]></code>
       <code><![CDATA[$element->instructions === null]]></code>
@@ -5652,6 +5603,9 @@
       <code><![CDATA[$element->getPersistedId()]]></code>
       <code><![CDATA[$element->getPersistedId()]]></code>
     </InvalidPropertyAssignmentValue>
+    <InvalidScalarArgument>
+      <code><![CDATA[$mainZxProd->id]]></code>
+    </InvalidScalarArgument>
     <LessSpecificReturnStatement>
       <code><![CDATA[$element]]></code>
       <code><![CDATA[$element]]></code>
@@ -5663,6 +5617,8 @@
       <code><![CDATA[$existingFile->fileName]]></code>
       <code><![CDATA[$fileUrl]]></code>
       <code><![CDATA[$firstParent->id]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$id]]></code>
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$link->type]]></code>
@@ -5678,6 +5634,9 @@
     </MixedArgument>
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$foundReleaseId]]></code>
+      <code><![CDATA[$idOrigin]]></code>
+      <code><![CDATA[$importOrigin]]></code>
+      <code><![CDATA[$importOrigin]]></code>
     </MixedArgumentTypeCoercion>
     <MixedArrayAccess>
       <code><![CDATA[$record['authorId']]]></code>
@@ -5752,6 +5711,11 @@
       <code><![CDATA[$element]]></code>
       <code><![CDATA[$newProdElement]]></code>
     </NullableReturnStatement>
+    <PossiblyNullArgument>
+      <code><![CDATA[$label->id]]></code>
+      <code><![CDATA[$label->id]]></code>
+      <code><![CDATA[$label->id]]></code>
+    </PossiblyNullArgument>
     <PossiblyNullOperand>
       <code><![CDATA[$info['extension']]]></code>
     </PossiblyNullOperand>
@@ -5784,27 +5748,26 @@
       <code><![CDATA[!$dto->fileUrl]]></code>
       <code><![CDATA[!$path]]></code>
       <code><![CDATA[!$path]]></code>
-      <code><![CDATA[!$this->getElementIdByImportId($id, $importOrigin, 'prod')]]></code>
-      <code><![CDATA[$authorId = $this->getElementIdByImportId($importAuthorId, $origin, 'author')]]></code>
-      <code><![CDATA[$authorId = $this->getElementIdByImportId($importAuthorId, $origin, 'author')]]></code>
-      <code><![CDATA[$categoryId = $this->getElementIdByImportId($importCategoryId, $origin, 'category')]]></code>
+      <code><![CDATA[!$this->importIdOperator->getElementIdByImportId($id, $importOrigin, 'prod')]]></code>
+      <code><![CDATA[$authorId = $this->importIdOperator->getElementIdByImportId($importAuthorId, $origin, 'author')]]></code>
+      <code><![CDATA[$authorId = $this->importIdOperator->getElementIdByImportId($importAuthorId, $origin, 'author')]]></code>
+      <code><![CDATA[$categoryId = $this->importIdOperator->getElementIdByImportId($importCategoryId, $origin, 'category')]]></code>
       <code><![CDATA[$foundReleaseId]]></code>
-      <code><![CDATA[$groupId = $this->getElementIdByImportId($importGroupId, $origin, 'group')]]></code>
+      <code><![CDATA[$groupId = $this->importIdOperator->getElementIdByImportId($importGroupId, $origin, 'group')]]></code>
       <code><![CDATA[$mimeType = mime_content_type($filePath)]]></code>
       <code><![CDATA[$partyTitle]]></code>
       <code><![CDATA[$partyYear]]></code>
-      <code><![CDATA[$prodId = $this->getElementIdByImportId($importItemId, $origin, 'prod')]]></code>
-      <code><![CDATA[$prodId = $this->getElementIdByImportId($importItemId, $origin, 'prod')]]></code>
+      <code><![CDATA[$prodId = $this->importIdOperator->getElementIdByImportId($importItemId, $origin, 'prod')]]></code>
+      <code><![CDATA[$prodId = $this->importIdOperator->getElementIdByImportId($importItemId, $origin, 'prod')]]></code>
       <code><![CDATA[$publisherId]]></code>
-      <code><![CDATA[$publisherId = $this->getElementIdByImportId($importPublisherId, $origin, 'author')]]></code>
-      <code><![CDATA[$publisherId = $this->getElementIdByImportId($importPublisherId, $origin, 'group')]]></code>
-      <code><![CDATA[$releaseId = $this->getElementIdByImportId($importItemId, $origin, 'release')]]></code>
-      <code><![CDATA[$this->getElementIdByImportId($importPublisherId, $origin, 'group')]]></code>
-      <code><![CDATA[$this->getElementIdByImportId($undeterminedId, $origin, 'author')]]></code>
-      <code><![CDATA[$this->getElementIdByImportId($undeterminedId, $origin, 'group')]]></code>
+      <code><![CDATA[$publisherId = $this->importIdOperator->getElementIdByImportId($importPublisherId, $origin, 'author')]]></code>
+      <code><![CDATA[$publisherId = $this->importIdOperator->getElementIdByImportId($importPublisherId, $origin, 'group')]]></code>
+      <code><![CDATA[$releaseId = $this->importIdOperator->getElementIdByImportId($importItemId, $origin, 'release')]]></code>
+      <code><![CDATA[$this->importIdOperator->getElementIdByImportId($importPublisherId, $origin, 'group')]]></code>
+      <code><![CDATA[$this->importIdOperator->getElementIdByImportId($undeterminedId, $origin, 'author')]]></code>
+      <code><![CDATA[$this->importIdOperator->getElementIdByImportId($undeterminedId, $origin, 'group')]]></code>
       <code><![CDATA[empty($dto->altTitle)]]></code>
       <code><![CDATA[empty($dto->articles)]]></code>
-      <code><![CDATA[empty($dto->authors)]]></code>
       <code><![CDATA[empty($dto->categories)]]></code>
       <code><![CDATA[empty($dto->compilationItems)]]></code>
       <code><![CDATA[empty($dto->compo)]]></code>
@@ -5829,7 +5792,6 @@
       <code><![CDATA[empty($dto->md5)]]></code>
       <code><![CDATA[empty($dto->party->place)]]></code>
       <code><![CDATA[empty($dto->party->place)]]></code>
-      <code><![CDATA[empty($dto->publishers)]]></code>
       <code><![CDATA[empty($dto->publishers)]]></code>
       <code><![CDATA[empty($dto->releaseType)]]></code>
       <code><![CDATA[empty($dto->rzx)]]></code>
@@ -5907,7 +5869,6 @@
     </UndefinedMethod>
     <UnusedForeachValue>
       <code><![CDATA[$md5Index]]></code>
-      <code><![CDATA[$roles]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
@@ -5918,10 +5879,6 @@
     <UnusedReturnValue>
       <code><![CDATA[bool|zxReleaseElement]]></code>
     </UnusedReturnValue>
-    <UnusedVariable>
-      <code><![CDATA[$releaseAuthors]]></code>
-      <code><![CDATA[$releasePublishers]]></code>
-    </UnusedVariable>
   </file>
   <file src="project/core/ZxArt/Queue/QueueRepository.php">
     <ClassMustBeFinal>
@@ -6036,6 +5993,11 @@
       <code><![CDATA[(string)pathinfo($file['fileName'] ?? '', PATHINFO_EXTENSION)]]></code>
     </RedundantCastGivenDocblockType>
   </file>
+  <file src="project/core/ZxArt/Releases/Services/EmulatorResolverService.php">
+    <PossiblyNullArrayOffset>
+      <code><![CDATA[self::EMULATORS]]></code>
+    </PossiblyNullArrayOffset>
+  </file>
   <file src="project/core/ZxArt/Releases/Services/ReleaseFileTypesGatherer.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -6088,10 +6050,26 @@
       <code><![CDATA[CompilationCategoryIds]]></code>
     </UnusedClass>
   </file>
-  <file src="project/core/ZxArt/ZxScreen/Helper.php">
+  <file src="project/core/ZxArt/ZxScreen/ZxPictureCacheManager.php">
     <ClassMustBeFinal>
-      <code><![CDATA[Helper]]></code>
+      <code><![CDATA[ZxPictureCacheManager]]></code>
     </ClassMustBeFinal>
+  </file>
+  <file src="project/core/ZxArt/ZxScreen/ZxPictureParametersDto.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ZxPictureParametersDto]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="project/core/ZxArt/ZxScreen/ZxPictureUrlHelper.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ZxPictureUrlHelper]]></code>
+    </ClassMustBeFinal>
+    <InvalidOperand>
+      <code><![CDATA[$params->id]]></code>
+    </InvalidOperand>
+    <PossiblyNullArgument>
+      <code><![CDATA[$type]]></code>
+    </PossiblyNullArgument>
     <PossiblyNullOperand>
       <code><![CDATA[$params->id]]></code>
     </PossiblyNullOperand>
@@ -6103,14 +6081,6 @@
       <code><![CDATA[$params->type]]></code>
       <code><![CDATA[$params->zoom]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="project/core/ZxArt/ZxScreen/ParametersDto.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ParametersDto]]></code>
-    </ClassMustBeFinal>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$full]]></code>
-    </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArtItem.php">
     <ArgumentTypeCoercion>
@@ -9534,7 +9504,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA['Cache']]></code>
       <code><![CDATA['ConfigManager']]></code>
-      <code><![CDATA['VtrdosManager']]></code>
       <code><![CDATA['renderer']]></code>
       <code><![CDATA['structureManager']]></code>
       <code><![CDATA['user']]></code>
@@ -9542,6 +9511,9 @@
     <ClassMustBeFinal>
       <code><![CDATA[vtrdosApplication]]></code>
     </ClassMustBeFinal>
+    <InvalidReturnType>
+      <code><![CDATA[never]]></code>
+    </InvalidReturnType>
     <MissingOverrideAttribute>
       <code><![CDATA[public function execute($controller)]]></code>
       <code><![CDATA[public function initialize()]]></code>
@@ -9567,12 +9539,6 @@
       <code><![CDATA[vtrdosApplication]]></code>
       <code><![CDATA[vtrdosApplication]]></code>
     </PropertyNotSetInConstructor>
-    <UnevaluatedCode>
-      <code><![CDATA[$this->createRenderer();]]></code>
-      <code><![CDATA[$this->startSession('crontab');]]></code>
-      <code><![CDATA[ignore_user_abort(true);]]></code>
-      <code><![CDATA[ini_set("max_execution_time", 60 * 15);]]></code>
-    </UnevaluatedCode>
     <UnusedClass>
       <code><![CDATA[vtrdosApplication]]></code>
     </UnusedClass>
@@ -10025,72 +9991,6 @@
     </PropertyNotSetInConstructor>
     <UnusedClass>
       <code><![CDATA[zxnetApplication]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/applications/zxscreen.class.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA['ConfigManager']]></code>
-      <code><![CDATA['LanguagesManager']]></code>
-      <code><![CDATA['PathsManager']]></code>
-      <code><![CDATA['PathsManager']]></code>
-      <code><![CDATA['structureManager']]></code>
-    </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[zxscreenApplication]]></code>
-    </ClassMustBeFinal>
-    <ImplementedReturnTypeMismatch>
-      <code><![CDATA[void]]></code>
-    </ImplementedReturnTypeMismatch>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function execute($controller)]]></code>
-      <code><![CDATA[public function initialize()]]></code>
-    </MissingOverrideAttribute>
-    <MissingParamType>
-      <code><![CDATA[$controller]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$border]]></code>
-      <code><![CDATA[$download]]></code>
-      <code><![CDATA[$height]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$mode]]></code>
-      <code><![CDATA[$originalName]]></code>
-      <code><![CDATA[$palette]]></code>
-      <code><![CDATA[$rotation]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$width]]></code>
-      <code><![CDATA[$zoom]]></code>
-    </MissingPropertyType>
-    <MixedAssignment>
-      <code><![CDATA[$border]]></code>
-      <code><![CDATA[$fileName]]></code>
-      <code><![CDATA[$zxPictureElement]]></code>
-    </MixedAssignment>
-    <MixedMethodCall>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[getCurrentLanguageCode]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getFileName]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[getPath]]></code>
-      <code><![CDATA[setRequestedPath]]></code>
-    </MixedMethodCall>
-    <MixedOperand>
-      <code><![CDATA[$fileName]]></code>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('releases')]]></code>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('uploads')]]></code>
-    </MixedOperand>
-    <MixedPropertyFetch>
-      <code><![CDATA[$controller->rootURL]]></code>
-    </MixedPropertyFetch>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[zxscreenApplication]]></code>
-      <code><![CDATA[zxscreenApplication]]></code>
-      <code><![CDATA[zxscreenApplication]]></code>
-      <code><![CDATA[zxscreenApplication]]></code>
-    </PropertyNotSetInConstructor>
-    <UnusedClass>
-      <code><![CDATA[zxscreenApplication]]></code>
     </UnusedClass>
   </file>
   <file src="project/modules/applications/zxtune.class.php">
@@ -13629,6 +13529,7 @@
       <code><![CDATA[$imageFilePath]]></code>
       <code><![CDATA[$imageFilePath]]></code>
       <code><![CDATA[$imageFilePath]]></code>
+      <code><![CDATA[$this->binary]]></code>
       <code><![CDATA[$this->getService('ConfigManager')->get('paths.defaultCachePermissions')]]></code>
       <code><![CDATA[$this->getService('PathsManager')->getPath('zxCache')]]></code>
       <code><![CDATA[$this->getService('PathsManager')->getPath('zxCache')]]></code>
@@ -13656,6 +13557,7 @@
       <code><![CDATA[setBorder]]></code>
       <code><![CDATA[setCacheEnabled]]></code>
       <code><![CDATA[setCacheEnabled]]></code>
+      <code><![CDATA[setCacheFileName]]></code>
       <code><![CDATA[setGigascreenMode]]></code>
       <code><![CDATA[setPalette]]></code>
       <code><![CDATA[setPath]]></code>
@@ -16863,7 +16765,6 @@
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[getChartDataIds]]></code>
-      <code><![CDATA[getGroupProds]]></code>
       <code><![CDATA[getSubGroupIds]]></code>
       <code><![CDATA[getSubGroups]]></code>
     </MissingReturnType>
@@ -16929,6 +16830,7 @@
     </MixedAssignment>
     <MixedMethodCall>
       <code><![CDATA[getConnectedIdList]]></code>
+      <code><![CDATA[getConnectedIdList]]></code>
       <code><![CDATA[getCurrentLanguageCode]]></code>
       <code><![CDATA[getElementById]]></code>
       <code><![CDATA[getParent]]></code>
@@ -16955,6 +16857,8 @@
     <MixedReturnStatement>
       <code><![CDATA[$searchTitle]]></code>
       <code><![CDATA[$searchTitle]]></code>
+      <code><![CDATA[$this->groupProds]]></code>
+      <code><![CDATA[$this->groupProds]]></code>
     </MixedReturnStatement>
     <MixedReturnTypeCoercion>
       <code><![CDATA[$allArticles]]></code>
@@ -17313,6 +17217,7 @@
       <code><![CDATA[$this->groupElement]]></code>
     </MixedAssignment>
     <MixedMethodCall>
+      <code><![CDATA[getConnectedIdList]]></code>
       <code><![CDATA[getElementById]]></code>
       <code><![CDATA[getElementById]]></code>
       <code><![CDATA[getTitle]]></code>
@@ -20345,11 +20250,9 @@
       <code><![CDATA[$item->getAuthorNamesString()]]></code>
       <code><![CDATA[$item->getAuthorNamesString()]]></code>
       <code><![CDATA[$item->getAuthorNamesString()]]></code>
-      <code><![CDATA[$item->getImageUrl(
-                            2
-                        )]]></code>
       <code><![CDATA[$item->getImageUrl(1)]]></code>
       <code><![CDATA[$item->getImageUrl(1)]]></code>
+      <code><![CDATA[$item->getImageUrl(2)]]></code>
       <code><![CDATA[$item->getMp3FilePath()]]></code>
       <code><![CDATA[$item->getUrl()]]></code>
       <code><![CDATA[$item->getUrl()]]></code>
@@ -24926,9 +24829,6 @@
       <code><![CDATA[string]]></code>
       <code><![CDATA[string]]></code>
     </InvalidReturnType>
-    <InvalidScalarArgument>
-      <code><![CDATA[($border === null || $border) && $picturesModesManager->getBorder() ? $this->border : null]]></code>
-    </InvalidScalarArgument>
     <MissingOverrideAttribute>
       <code><![CDATA[protected function fileExists($extensionType)]]></code>
       <code><![CDATA[protected function setModuleStructure(&$moduleStructure)]]></code>
@@ -24943,7 +24843,7 @@
     </MissingOverrideAttribute>
     <MissingParamType>
       <code><![CDATA[$border]]></code>
-      <code><![CDATA[$download]]></code>
+      <code><![CDATA[$border]]></code>
       <code><![CDATA[$extensionType]]></code>
       <code><![CDATA[$extensionType]]></code>
       <code><![CDATA[$limit]]></code>
@@ -24969,7 +24869,6 @@
       <code><![CDATA[getPalette]]></code>
     </MissingReturnType>
     <MixedArgument>
-      <code><![CDATA[$download]]></code>
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$partyElement->title]]></code>
       <code><![CDATA[$picturesModesManager->getMode()]]></code>
@@ -24981,6 +24880,7 @@
       <code><![CDATA[$this->getReleaseElement()->title]]></code>
       <code><![CDATA[$this->metaTitle]]></code>
       <code><![CDATA[$this->release ?? '']]></code>
+      <code><![CDATA[controller::getInstance()->baseURL]]></code>
       <code><![CDATA[controller::getInstance()->baseURL]]></code>
     </MixedArgument>
     <MixedArgumentTypeCoercion>
@@ -25041,6 +24941,7 @@
       <code><![CDATA[$gameMaterials]]></code>
       <code><![CDATA[$palette]]></code>
       <code><![CDATA[$partyElement]]></code>
+      <code><![CDATA[$query]]></code>
       <code><![CDATA[$result]]></code>
       <code><![CDATA[$tagElement]]></code>
       <code><![CDATA[$tags]]></code>
@@ -25052,16 +24953,27 @@
       <code><![CDATA[clearElementCache]]></code>
       <code><![CDATA[clearElementCache]]></code>
       <code><![CDATA[get]]></code>
+      <code><![CDATA[getBorder]]></code>
       <code><![CDATA[getCurrentLanguage]]></code>
       <code><![CDATA[getElementsByType]]></code>
+      <code><![CDATA[getHidden]]></code>
+      <code><![CDATA[getHidden]]></code>
       <code><![CDATA[getId]]></code>
       <code><![CDATA[getId]]></code>
       <code><![CDATA[getId]]></code>
       <code><![CDATA[getMaterialsList]]></code>
+      <code><![CDATA[getMode]]></code>
       <code><![CDATA[getPath]]></code>
+      <code><![CDATA[getQuery]]></code>
+      <code><![CDATA[getQueryResult]]></code>
       <code><![CDATA[getTranslationByName]]></code>
       <code><![CDATA[getTranslationByName]]></code>
       <code><![CDATA[logEvent]]></code>
+      <code><![CDATA[setExportType]]></code>
+      <code><![CDATA[setFiltrationParameters]]></code>
+      <code><![CDATA[setLimit]]></code>
+      <code><![CDATA[setOrder]]></code>
+      <code><![CDATA[setStart]]></code>
       <code><![CDATA[updateData]]></code>
     </MixedMethodCall>
     <MixedOperand>
@@ -25096,7 +25008,9 @@
       <code><![CDATA[$data]]></code>
     </PossiblyUndefinedVariable>
     <PossiblyUnusedMethod>
+      <code><![CDATA[deleteCachedImage]]></code>
       <code><![CDATA[getBestAuthorsPictures]]></code>
+      <code><![CDATA[getDownloadUrl]]></code>
       <code><![CDATA[getImageContents]]></code>
       <code><![CDATA[isFlickering]]></code>
       <code><![CDATA[logView]]></code>
@@ -25886,6 +25800,7 @@
       <code><![CDATA[zxReleaseElement[]]]></code>
     </MoreSpecificReturnType>
     <PossiblyNullArgument>
+      <code><![CDATA[$url]]></code>
       <code><![CDATA[$url]]></code>
     </PossiblyNullArgument>
     <PossiblyNullOperand>
@@ -27076,6 +26991,8 @@
     <MissingOverrideAttribute>
       <code><![CDATA[protected function fileExists($extensionType)]]></code>
       <code><![CDATA[protected function setModuleStructure(&$moduleStructure)]]></code>
+      <code><![CDATA[public function getBreadcrumbsTitle(): string]]></code>
+      <code><![CDATA[public function getBreadcrumbsUrl(): string]]></code>
       <code><![CDATA[public function getCanonicalUrl()]]></code>
       <code><![CDATA[public function getChartDataEventTypes($type = null)]]></code>
       <code><![CDATA[public function getFileExtension($extensionType)]]></code>
@@ -27086,6 +27003,7 @@
       <code><![CDATA[public function getSearchTitle(): string]]></code>
       <code><![CDATA[public function getSupportedLanguageCodes()]]></code>
       <code><![CDATA[public function getUploadedFilesPath($propertyName = 'connectedFile')]]></code>
+      <code><![CDATA[public function isBreadCrumb(): bool]]></code>
       <code><![CDATA[public function persistElementData()]]></code>
       <code><![CDATA[public function recalculate()]]></code>
     </MissingOverrideAttribute>
@@ -27247,6 +27165,8 @@
       <code><![CDATA[$structure]]></code>
       <code><![CDATA[$structure]]></code>
       <code><![CDATA[$structure]]></code>
+      <code><![CDATA[$title]]></code>
+      <code><![CDATA[$url]]></code>
       <code><![CDATA[$url]]></code>
     </MixedAssignment>
     <MixedMethodCall>
@@ -27281,6 +27201,9 @@
       <code><![CDATA[$controller->baseURL]]></code>
       <code><![CDATA[$controller->baseURL]]></code>
       <code><![CDATA[$dos]]></code>
+      <code><![CDATA[$fileInfo['fileName']]]></code>
+      <code><![CDATA[$fileInfo['fileName']]]></code>
+      <code><![CDATA[$fileInfo['id']]]></code>
       <code><![CDATA[$item]]></code>
       <code><![CDATA[$item->getTitle()]]></code>
       <code><![CDATA[$languagesManager->getCurrentLanguageId()]]></code>
@@ -27291,7 +27214,9 @@
       <code><![CDATA[$this->dataResourceName]]></code>
       <code><![CDATA[$this->dataResourceName]]></code>
       <code><![CDATA[$this->getUploadedFilesPath()]]></code>
+      <code><![CDATA[$title]]></code>
       <code><![CDATA[$translationsManager->getTranslationByName('zxRelease.type_' . $this->releaseType)]]></code>
+      <code><![CDATA[$url]]></code>
       <code><![CDATA[$url]]></code>
     </MixedOperand>
     <MixedPropertyFetch>
@@ -27299,6 +27224,12 @@
       <code><![CDATA[$parent->structureType]]></code>
       <code><![CDATA[$publisher->title]]></code>
     </MixedPropertyFetch>
+    <MixedReturnStatement>
+      <code><![CDATA[$title]]></code>
+      <code><![CDATA[$title]]></code>
+      <code><![CDATA[$url]]></code>
+      <code><![CDATA[$url]]></code>
+    </MixedReturnStatement>
     <PossiblyFalseArgument>
       <code><![CDATA[mb_convert_encoding($content, 'UTF-8', $fileRecord['encoding'])]]></code>
     </PossiblyFalseArgument>
@@ -27357,6 +27288,9 @@
       <code><![CDATA['db']]></code>
     </UndefinedClass>
     <UndefinedDocblockClass>
+      <code><![CDATA[$fileInfo]]></code>
+      <code><![CDATA[$fileInfo]]></code>
+      <code><![CDATA[$fileInfo]]></code>
       <code><![CDATA[EngineFileRegistryRow|null]]></code>
     </UndefinedDocblockClass>
     <UndefinedMagicMethod>
@@ -27571,32 +27505,6 @@
     </MixedAssignment>
     <UnusedClass>
       <code><![CDATA[TslabsManagerServiceContainer]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/services/VtrdosManagerServiceContainer.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[VtrdosManagerServiceContainer]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function makeInjections($instance)]]></code>
-      <code><![CDATA[public function makeInstance()]]></code>
-    </MissingOverrideAttribute>
-    <MixedArgument>
-      <code><![CDATA[$authorsManager]]></code>
-      <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsService]]></code>
-      <code><![CDATA[$this->registry->getService('CountriesManager')]]></code>
-      <code><![CDATA[$this->registry->getService(AuthorsService::class)]]></code>
-      <code><![CDATA[$this->registry->getService(GroupsService::class)]]></code>
-    </MixedArgument>
-    <MixedAssignment>
-      <code><![CDATA[$authorsManager]]></code>
-      <code><![CDATA[$countriesManager]]></code>
-      <code><![CDATA[$groupsService]]></code>
-      <code><![CDATA[$prodsService]]></code>
-    </MixedAssignment>
-    <UnusedClass>
-      <code><![CDATA[VtrdosManagerServiceContainer]]></code>
     </UnusedClass>
   </file>
   <file src="project/services/ZxaaaManagerServiceContainer.php">
@@ -28041,7 +27949,6 @@
   </file>
   <file src="trickster-cms/cms/core/DependencyInjectionServicesRegistry.class.php">
     <MissingConstructor>
-      <code><![CDATA[$registry]]></code>
       <code><![CDATA[$registry]]></code>
       <code><![CDATA[$registry]]></code>
       <code><![CDATA[$registry]]></code>

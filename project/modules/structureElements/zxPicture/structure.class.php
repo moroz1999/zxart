@@ -1,6 +1,7 @@
 <?php
 
 use ZxArt\LinkTypes;
+use ZxArt\ZxScreen\ZxPictureCacheManager;
 use ZxArt\ZxScreen\ZxPictureFlickeringHelper;
 use ZxArt\ZxScreen\ZxPictureParametersDto;
 use ZxArt\ZxScreen\ZxPictureUrlHelper;
@@ -133,7 +134,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
 
     public function deleteCachedImage(): void
     {
-        
+        ZxPictureCacheManager::deleteCache((int)$this->id);
     }
 
     private function getZxPictureParameters(int $zoom = 1, $border = null, ?string $controller = null): ZxPictureParametersDto
@@ -152,21 +153,22 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         );
     }
 
-    public function getPalette()
+    public function getPalette(): string
     {
-        $palette = false;
-        if (!$this->palette) {
-            foreach ($this->getRealAuthorsList() as $author) {
-                $palette = $author->getPalette();
-                break;
+        if ($this->palette !== '') {
+            return $this->palette;
+        }
+
+        foreach ($this->getRealAuthorsList() as $author) {
+            /** @psalm-suppress UndefinedMethod */
+            $authorPalette = $author->getPalette();
+            if ($authorPalette !== null && $authorPalette !== '') {
+                return $authorPalette;
             }
-        } else {
-            $palette = $this->palette;
+            break;
         }
-        if (!$palette) {
-            $palette = 'srgb';
-        }
-        return $palette;
+
+        return 'srgb';
     }
 
     /**

@@ -70,6 +70,9 @@ class publicReceiveZxPicture extends structureElementAction
 
             $structureElement->persistElementData();
             $structureElement->updateMd5($this->getService('PathsManager')->getPath('uploads') . $structureElement->image, $structureElement->originalName);
+
+            $structureElement->deleteCachedImage();
+
             $controller->redirect($structureElement->URL);
         } else {
             $structureElement->setViewName('form');
