@@ -2,8 +2,8 @@
 
 use ZxArt\LinkTypes;
 use ZxArt\ZxScreen\ZxPictureFlickeringHelper;
-use ZxArt\ZxScreen\ZxPictureUrlHelper;
 use ZxArt\ZxScreen\ZxPictureParametersDto;
+use ZxArt\ZxScreen\ZxPictureUrlHelper;
 
 /**
  * Class zxPictureElement
@@ -117,8 +117,29 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
 
     public function getImageUrl(int $zoom = 1, $border = null): string
     {
+        return ZxPictureUrlHelper::getUrl(
+            controller::getInstance()->baseURL,
+            $this->getZxPictureParameters($zoom, $border)
+        );
+    }
+
+    public function getDownloadUrl(int $zoom = 1): string
+    {
+        return ZxPictureUrlHelper::getUrl(
+            controller::getInstance()->baseURL,
+            $this->getZxPictureParameters($zoom, true, 'zximagesdownload')
+        );
+    }
+
+    public function deleteCachedImage(): void
+    {
+        
+    }
+
+    private function getZxPictureParameters(int $zoom = 1, $border = null, ?string $controller = null): ZxPictureParametersDto
+    {
         $picturesModesManager = $this->getService('PicturesModesManager');
-        $params = new ZxPictureParametersDto(
+        return new ZxPictureParametersDto(
             type: $this->type === 'standard' && $picturesModesManager->getHidden() ? 'hidden' : $this->type,
             zoom: $zoom,
             id: (int)$this->image,
@@ -127,27 +148,8 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
             mode: $picturesModesManager->getMode(),
             palette: $this->getPalette(),
             hidden: $this->type === 'standard' && $picturesModesManager->getHidden(),
+            controller: $controller,
         );
-
-        return ZxPictureUrlHelper::getUrl(controller::getInstance()->baseURL, $params);
-    }
-
-    public function getDownloadUrl(int $zoom = 1): string
-    {
-        $picturesModesManager = $this->getService('PicturesModesManager');
-        $params = new ZxPictureParametersDto(
-            type: $this->type === 'standard' && $picturesModesManager->getHidden() ? 'hidden' : $this->type,
-            zoom: $zoom,
-            id: (int)$this->image,
-            border: $picturesModesManager->getBorder() ? $this->border : null,
-            rotation: $this->rotation > 0 ? (int)$this->rotation : null,
-            mode: $picturesModesManager->getMode(),
-            palette: $this->getPalette(),
-            hidden: $this->type === 'standard' && $picturesModesManager->getHidden(),
-            controller: 'zximagesdownload',
-        );
-
-        return ZxPictureUrlHelper::getUrl(controller::getInstance()->baseURL, $params);
     }
 
     public function getPalette()

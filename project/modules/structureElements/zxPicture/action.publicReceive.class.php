@@ -18,36 +18,34 @@ class publicReceiveZxPicture extends structureElementAction
         if ($this->validated) {
             $structureElement->prepareActualData();
 
-            if (trim($structureElement->title) == '') {
+            if (trim($structureElement->title) === '') {
                 if ($game = $structureElement->getReleaseElement()) {
                     $structureElement->title = $game->title;
-                } else {
-                    if (!is_null($structureElement->getDataChunk("image")->originalName)) {
-                        $info = pathinfo($structureElement->getDataChunk("image")->originalName);
-                        $structureElement->title = $info['filename'];
-                        $structureElement->title = ucfirst($structureElement->title);
-                        $structureElement->title = str_replace('_', ' ', ucfirst($structureElement->title));
-                    }
+                } elseif ($structureElement->getDataChunk("image")->originalName !== null) {
+                    $info = pathinfo($structureElement->getDataChunk("image")->originalName);
+                    $structureElement->title = $info['filename'];
+                    $structureElement->title = ucfirst($structureElement->title);
+                    $structureElement->title = str_replace('_', ' ', ucfirst($structureElement->title));
                 }
             }
             $structureElement->dateAdded = $structureElement->dateCreated;
-            if (!is_null($structureElement->getDataChunk("image")->originalName)) {
+            if ($structureElement->getDataChunk("image")->originalName !== null) {
                 $structureElement->image = $structureElement->getId();
                 $structureElement->originalName = $structureElement->getDataChunk("image")->originalName;
             }
-            if (!is_null($structureElement->getDataChunk("inspired")->originalName)) {
+            if ($structureElement->getDataChunk("inspired")->originalName !== null) {
                 $structureElement->inspired = $structureElement->getId() . '_inspired';
                 $structureElement->inspiredName = $structureElement->getDataChunk("inspired")->originalName;
             }
-            if (!is_null($structureElement->getDataChunk("inspired2")->originalName)) {
+            if ($structureElement->getDataChunk("inspired2")->originalName !== null) {
                 $structureElement->inspired2 = $structureElement->getId() . '_inspired2';
                 $structureElement->inspired2Name = $structureElement->getDataChunk("inspired2")->originalName;
             }
-            if (!is_null($structureElement->getDataChunk("exeFile")->originalName)) {
+            if ($structureElement->getDataChunk("exeFile")->originalName !== null) {
                 $structureElement->exeFile = $structureElement->getId() . '_exe';
                 $structureElement->exeFileName = $structureElement->getDataChunk("exeFile")->originalName;
             }
-            if (!is_null($structureElement->getDataChunk("sequence")->originalName)) {
+            if ($structureElement->getDataChunk("sequence")->originalName !== null) {
                 $structureElement->sequence = $structureElement->getId() . '_sequence';
                 $structureElement->sequenceName = $structureElement->getDataChunk("sequence")->originalName;
             }

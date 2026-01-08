@@ -96,9 +96,6 @@ class groupAliasElement extends structureElement implements
     {
         if ($this->groupProds === null) {
             $this->groupProds = [];
-            /**
-             * @var linksManager $linksManager
-             */
             $linksManager = $this->getService('linksManager');
             if ($prodIds = $linksManager->getConnectedIdList($this->getId(), 'zxProdGroups', 'parent')) {
                 $structureManager = $this->getService('structureManager');

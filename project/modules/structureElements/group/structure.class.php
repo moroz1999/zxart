@@ -235,13 +235,10 @@ class groupElement extends structureElement implements
         }
     }
 
-    public function getGroupProds()
+    public function getGroupProds(): array
     {
         if ($this->groupProds === null) {
             $this->groupProds = [];
-            /**
-             * @var linksManager $linksManager
-             */
             $linksManager = $this->getService('linksManager');
             if ($prodIds = $linksManager->getConnectedIdList($this->getId(), 'zxProdGroups', 'parent')) {
                 $structureManager = $this->getService('structureManager');
@@ -262,7 +259,7 @@ class groupElement extends structureElement implements
             }
             $sort = [];
             foreach ($this->groupProds as $prod) {
-                $sort[] = trim($prod->getTitle());
+                $sort[] = mb_strtolower(trim($prod->getTitle()));
             }
             array_multisort($sort, SORT_ASC, $this->groupProds);
         }
