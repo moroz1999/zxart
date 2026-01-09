@@ -8,7 +8,6 @@
     'adminSessionLifeTime' => 86400,
     'defaultSessionLifeTime' => 1440,
     'publicTheme' => 'project',
-    'rssTheme' => 'projectRss',
     'googleAnalyticsDomain' => '',
     'googleAnalyticsId' => '',
     'pageAmountProducts' => 10,

@@ -22,7 +22,8 @@
     "ext-libxml": "*",
     "ext-redis": "*",
     "ext-pdo": "*",
-    "ezyang/htmlpurifier": "^4.19"
+    "ezyang/htmlpurifier": "^4.19",
+    "ext-xmlwriter": "*"
   },
   "config": {
     "allow-plugins": {
