@@ -13,9 +13,11 @@ class ZxPictureRssTransformer implements RssTransformerInterface
     public function transform(structureElement $element): RssDto
     {
         /** @var zxPictureElement $element */
+        $elementTitle = html_entity_decode((string)$element->title, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $authors = [];
         foreach ($element->getAuthorsList() as $author) {
-            $authors[] = sprintf('<a href="%s">%s</a>', $author->getUrl(), $author->title);
+            $authorTitle = html_entity_decode((string)$author->title, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $authors[] = sprintf('<a href="%s">%s</a>', $author->getUrl(), htmlspecialchars($authorTitle));
         }
         $authorsHtml = implode(', ', $authors);
 
@@ -25,9 +27,9 @@ class ZxPictureRssTransformer implements RssTransformerInterface
             '<div><strong>Authors:</strong> %s</div>',
             $element->getUrl(),
             $element->getImageUrl(1, 0),
-            htmlspecialchars((string)$element->title),
+            htmlspecialchars($elementTitle),
             $element->getUrl(),
-            htmlspecialchars((string)$element->title),
+            htmlspecialchars($elementTitle),
             $authorsHtml
         );
 
@@ -35,7 +37,7 @@ class ZxPictureRssTransformer implements RssTransformerInterface
         $rssDate = date(DATE_RFC822, $timeStamp);
 
         return new RssDto(
-            title: (string)$element->title,
+            title: $elementTitle,
             link: (string)$element->URL,
             description: $description,
             content: '',

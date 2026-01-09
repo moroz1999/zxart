@@ -16,9 +16,16 @@ class CommentRssTransformer implements RssTransformerInterface
         $parentElement = $element->getInitialTarget();
         $user = $element->getUserElement();
         $userName = $user ? (string)$user->userName : '';
+        $userName = html_entity_decode($userName, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
-        $title = sprintf('%s (%s)', $parentElement ? (string)$parentElement->title : '', $userName);
+        $parentTitle = $parentElement ? (string)$parentElement->title : '';
+        $parentTitle = html_entity_decode($parentTitle, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        $title = sprintf('%s (%s)', $parentTitle, $userName);
         $link = $parentElement ? $parentElement->getUrl() : '';
+
+        $content = (string)$element->content;
+        $content = html_entity_decode($content, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
         $description = sprintf(
             '<div style="border-left: 4px solid #ccc; padding-left: 10px; margin-bottom: 10px;">' .
@@ -27,9 +34,9 @@ class CommentRssTransformer implements RssTransformerInterface
             '</div>' .
             '<div style="font-size: 0.9em;"><strong>In response to:</strong> <a href="%s">%s</a></div>',
             htmlspecialchars($userName),
-            nl2br(htmlspecialchars((string)$element->content)),
+            nl2br(htmlspecialchars($content)),
             $link,
-            htmlspecialchars($parentElement ? (string)$parentElement->title : '')
+            htmlspecialchars($parentTitle)
         );
 
         $timeStamp = strtotime($element->dateCreated);

@@ -13,6 +13,7 @@ class ZxProdRssTransformer implements RssTransformerInterface
     public function transform(structureElement $element): RssDto
     {
         /** @var zxProdElement $element */
+        $elementTitle = html_entity_decode((string)$element->title, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $description = '';
         $imageUrl = (string)$element->getImageUrl(0);
         if ($imageUrl !== '') {
@@ -20,13 +21,13 @@ class ZxProdRssTransformer implements RssTransformerInterface
                 '<div style="margin-bottom: 10px"><a href="%s"><img style="border:none; max-width: 100%%; height: auto;" src="%s" alt="%s"/></a></div>',
                 $element->getUrl(),
                 $imageUrl,
-                htmlspecialchars((string)$element->title)
+                htmlspecialchars($elementTitle)
             );
         }
         $description .= sprintf(
             '<div style="margin-bottom: 5px"><strong>Title:</strong> <a href="%s">%s</a></div>',
             $element->getUrl(),
-            htmlspecialchars((string)$element->title)
+            htmlspecialchars($elementTitle)
         );
         $textContent = $element->getTextContent();
         if ($textContent !== '') {
@@ -37,7 +38,7 @@ class ZxProdRssTransformer implements RssTransformerInterface
         $rssDate = date(DATE_RFC822, $timeStamp);
 
         return new RssDto(
-            title: (string)$element->title,
+            title: $elementTitle,
             link: (string)$element->URL,
             description: $description,
             content: '',

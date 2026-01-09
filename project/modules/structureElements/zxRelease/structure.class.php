@@ -726,9 +726,9 @@ class zxReleaseElement extends ZxArtItem implements
 
         if ($info = $this->getReleaseBy()) {
             $title .= ' by ';
-            foreach ($info as $item) {
-                $title .= $item->getTitle();
-            }
+            $title .= implode(', ', array_map(static function ($item) {
+                return $item->getTitle();
+            }, $info));
         }
         if ($this->releaseType) {
             $title .= ', ' . $translationsManager->getTranslationByName('zxRelease.type_' . $this->releaseType);
@@ -994,5 +994,136 @@ class zxReleaseElement extends ZxArtItem implements
     public function isBreadCrumb(): bool
     {
         return true;
+    }
+
+    public function getMetaDescription(): string
+    {
+        $parts = [];
+        $description = $this->cleanText($this->description);
+        if ($description !== '') {
+            $parts[] = $description;
+        }
+        $parts[] = $this->buildFactsString();
+
+        return $this->limitText(implode(' ', $parts), 160);
+    }
+
+    public function getTextContent(): string
+    {
+        $parts = [];
+        $description = $this->cleanText($this->description);
+        if ($description !== '') {
+            $parts[] = $description;
+        }
+        $parts[] = $this->buildFactsString(true);
+
+        return $this->limitText(implode(' ', $parts), 300);
+    }
+
+    private function cleanText(string $text): string
+    {
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $text = strip_tags($text);
+        $text = preg_replace('/\s+/', ' ', $text);
+        return trim($text);
+    }
+
+    private function limitText(string $text, int $limit): string
+    {
+        if (mb_strlen($text) <= $limit) {
+            return $text;
+        }
+
+        $text = mb_substr($text, 0, $limit);
+        $lastSpace = mb_strrpos($text, ' ');
+        if ($lastSpace !== false && $lastSpace > $limit * 0.8) {
+            $text = mb_substr($text, 0, $lastSpace);
+        }
+
+        return rtrim($text, ' ,.-') . '...';
+    }
+
+    private function buildFactsString(bool $extended = false): string
+    {
+        $parts = [];
+        $prod = $this->getProd();
+
+        // Title
+        $title = $this->title;
+        if ($title === '' && $prod) {
+            $title = $prod->title;
+        }
+
+        // Prod info
+        $prodInfo = '';
+        if ($prod) {
+            $prodInfo = $prod->title;
+            if ($prod->year) {
+                $prodInfo .= ' (' . $prod->year . ')';
+            }
+        }
+
+        if ($title !== '') {
+            if ($prodInfo !== '' && $title !== $prod->title) {
+                $parts[] = $title . ' — ' . $prodInfo;
+            } else {
+                $parts[] = $prodInfo ?: $title;
+            }
+        } elseif ($prodInfo !== '') {
+            $parts[] = $prodInfo;
+        }
+
+        // Release facts
+        $releaseFacts = [];
+        if ($this->releaseType) {
+            $releaseFacts[] = $this->releaseType;
+        }
+        if ($this->releaseFormat) {
+            $releaseFacts[] = implode(', ', $this->releaseFormat);
+        }
+        if ($releaseFacts) {
+            $parts[] = implode(', ', $releaseFacts);
+        }
+
+        if ($this->version) {
+            $parts[] = 'v' . $this->version;
+        }
+
+        // Authors
+        $authors = $this->getAuthorsInfo('release');
+        if ($authors) {
+            $authorNames = [];
+            foreach (array_slice($authors, 0, 3) as $author) {
+                if (isset($author['authorElement'])) {
+                    $authorNames[] = $author['authorElement']->getTitle();
+                }
+            }
+            if ($authorNames) {
+                $parts[] = 'By ' . implode(', ', $authorNames);
+            }
+        }
+
+        if ($this->year) {
+            $parts[] = (string)$this->year;
+        }
+
+        $result = implode('. ', $parts);
+        if ($result !== '') {
+            $result .= '.';
+        }
+
+        if ($extended) {
+            $extra = [];
+            if ($this->isDownloadable() && $this->fileName) {
+                $extra[] = 'Download: ' . $this->fileName;
+            } elseif ($prod && $prod->externalLink) {
+                $extra[] = 'Link available';
+            }
+            if ($extra) {
+                $result .= ' ' . implode('. ', $extra) . '.';
+            }
+        }
+
+        return preg_replace('/\.+/', '.', $result);
     }
 }
