@@ -21,6 +21,7 @@ class RssRenderer
         $xml->startElement('channel');
 
         $xml->writeElement('title', $title);
+
         $xml->writeElement('link', $link);
         $xml->writeElement('description', $description);
         $xml->writeElement('language', 'en'); // Или можно вынести в параметры
@@ -28,7 +29,11 @@ class RssRenderer
 
         foreach ($items as $item) {
             $xml->startElement('item');
-            $xml->writeElement('title', $item->title);
+            
+            $xml->startElement('title');
+            $xml->writeCdata($item->title);
+            $xml->endElement();
+
             $xml->writeElement('link', $item->link);
             
             $xml->startElement('description');

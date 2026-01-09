@@ -1,28 +1,29 @@
 <?php
 declare(strict_types=1);
 
-namespace ZxArt\Rss;
+namespace ZxArt\Rss\Transformers;
 
-use newsElement;
 use structureElement;
+use ZxArt\Rss\RssDto;
+use ZxArt\Rss\RssTransformerInterface;
+use zxProdElement;
 
-class NewsRssTransformer implements RssTransformerInterface
+class ZxProdRssTransformer implements RssTransformerInterface
 {
     public function transform(structureElement $element): RssDto
     {
-        /** @var newsElement $element */
+        /** @var zxProdElement $element */
         $description = '';
-        if ($element->image) {
+        $imageUrl = (string)$element->getImageUrl(0);
+        if ($imageUrl !== '') {
             $description .= sprintf(
-                '<a href="%s"><img style="border:none" src="%simage/type:rssImage/id:%s/filename:%s" alt="%s"/></a>',
+                '<a href="%s"><img style="border:none" src="%s" alt="%s"/></a>',
                 $element->getUrl(),
-                $element->getService('controller')->baseURL,
-                $element->image,
-                $element->originalName,
-                htmlspecialchars($element->title)
+                $imageUrl,
+                htmlspecialchars((string)$element->title)
             );
         }
-        $description .= $element->introduction;
+        $description .= $element->getTextContent();
 
         $timeStamp = strtotime($element->dateCreated);
         $rssDate = date(DATE_RFC822, $timeStamp);
@@ -33,7 +34,7 @@ class NewsRssTransformer implements RssTransformerInterface
             description: $description,
             content: '',
             date: $rssDate,
-            guid: (string)$element->id,
+            guid: md5($element->guid . $rssDate),
         );
     }
 }

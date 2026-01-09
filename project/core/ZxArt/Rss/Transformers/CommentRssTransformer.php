@@ -1,21 +1,23 @@
 <?php
 declare(strict_types=1);
 
-namespace ZxArt\Rss;
+namespace ZxArt\Rss\Transformers;
 
 use commentElement;
 use structureElement;
+use ZxArt\Rss\RssDto;
+use ZxArt\Rss\RssTransformerInterface;
 
 class CommentRssTransformer implements RssTransformerInterface
 {
     public function transform(structureElement $element): RssDto
     {
         /** @var commentElement $element */
-        $parentElement = $element->getParentElement();
-        $user = $element->getUser();
-        $userName = $user ? $user->userName : 'Anonymous';
+        $parentElement = $element->getInitialTarget();
+        $user = $element->getUserElement();
+        $userName = $user ? (string)$user->userName : '';
 
-        $title = sprintf('%s (%s)', $parentElement ? $parentElement->title : '', $userName);
+        $title = sprintf('%s (%s)', $parentElement ? (string)$parentElement->title : '', $userName);
         $link = $parentElement ? $parentElement->getUrl() : '';
 
         $description = sprintf(
@@ -29,11 +31,11 @@ class CommentRssTransformer implements RssTransformerInterface
 
         return new RssDto(
             title: $title,
-            link: (string)$link,
+            link: $link,
             description: $description,
             content: '',
             date: $rssDate,
-            guid: md5((string)$element->guid . $rssDate),
+            guid: md5($element->guid . $rssDate),
         );
     }
 }

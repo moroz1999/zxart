@@ -4,5 +4,7 @@
         'zxPicture',
         'zxMusic',
         'news',
+        'zxProd',
+        'zxRelease',
     ],
 ];
