@@ -17,13 +17,21 @@ class ZxProdRssTransformer implements RssTransformerInterface
         $imageUrl = (string)$element->getImageUrl(0);
         if ($imageUrl !== '') {
             $description .= sprintf(
-                '<a href="%s"><img style="border:none" src="%s" alt="%s"/></a>',
+                '<div style="margin-bottom: 10px"><a href="%s"><img style="border:none; max-width: 100%%; height: auto;" src="%s" alt="%s"/></a></div>',
                 $element->getUrl(),
                 $imageUrl,
                 htmlspecialchars((string)$element->title)
             );
         }
-        $description .= $element->getTextContent();
+        $description .= sprintf(
+            '<div style="margin-bottom: 5px"><strong>Title:</strong> <a href="%s">%s</a></div>',
+            $element->getUrl(),
+            htmlspecialchars((string)$element->title)
+        );
+        $textContent = $element->getTextContent();
+        if ($textContent !== '') {
+            $description .= sprintf('<div style="margin-top: 10px;">%s</div>', $textContent);
+        }
 
         $timeStamp = strtotime($element->dateCreated);
         $rssDate = date(DATE_RFC822, $timeStamp);

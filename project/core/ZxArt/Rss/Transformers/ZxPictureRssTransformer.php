@@ -20,7 +20,9 @@ class ZxPictureRssTransformer implements RssTransformerInterface
         $authorsHtml = implode(', ', $authors);
 
         $description = sprintf(
-            '<a href="%s"><img style="border:none" src="%s" alt="%s"/></a><div><a href="%s">%s</a> by %s</div>',
+            '<div style="margin-bottom: 10px"><a href="%s"><img style="border:none; max-width: 100%%; height: auto;" src="%s" alt="%s"/></a></div>' .
+            '<div><strong>Title:</strong> <a href="%s">%s</a></div>' .
+            '<div><strong>Authors:</strong> %s</div>',
             $element->getUrl(),
             $element->getImageUrl(1, 0),
             htmlspecialchars((string)$element->title),

@@ -20,7 +20,8 @@ class ZxMusicRssTransformer implements RssTransformerInterface
         $authorsHtml = implode(', ', $authors);
 
         $description = sprintf(
-            '<div><a href="%s">%s</a> by %s</div>',
+            '<div style="margin-bottom: 5px"><strong>Title:</strong> <a href="%s">%s</a></div>' .
+            '<div style="margin-bottom: 10px"><strong>Authors:</strong> %s</div>',
             $element->getUrl(),
             htmlspecialchars((string)$element->title),
             $authorsHtml
@@ -29,7 +30,7 @@ class ZxMusicRssTransformer implements RssTransformerInterface
         if ($mp3Path = (string)$element->getMp3FilePath()) {
             if ($mp3Path !== '') {
                 $description .= sprintf(
-                    '<audio controls><source src="%s" type="audio/mpeg"></audio>',
+                    '<div style="margin-top: 10px"><audio controls style="width: 100%%"><source src="%s" type="audio/mpeg"></audio></div>',
                     $mp3Path
                 );
             }

@@ -21,9 +21,15 @@ class CommentRssTransformer implements RssTransformerInterface
         $link = $parentElement ? $parentElement->getUrl() : '';
 
         $description = sprintf(
-            '<table><tr><td><div style="font-weight: bold">%s:</div><div>%s</div></td></tr></table>',
+            '<div style="border-left: 4px solid #ccc; padding-left: 10px; margin-bottom: 10px;">' .
+            '<div style="font-weight: bold; margin-bottom: 5px;">%s:</div>' .
+            '<div>%s</div>' .
+            '</div>' .
+            '<div style="font-size: 0.9em;"><strong>In response to:</strong> <a href="%s">%s</a></div>',
             htmlspecialchars($userName),
-            $element->content
+            nl2br(htmlspecialchars((string)$element->content)),
+            $link,
+            htmlspecialchars($parentElement ? (string)$parentElement->title : '')
         );
 
         $timeStamp = strtotime($element->dateCreated);
