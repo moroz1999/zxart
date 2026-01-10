@@ -1,4 +1,12 @@
 <?php
+
+
+namespace ZxArt\FileParsing;
+
+use EncodingDetector;
+use errorLogger;
+use Illuminate\Database\Connection;
+
 /**
  * @psalm-type EngineFileRegistryRow = array{
  *     id: int,
@@ -12,14 +20,6 @@
  *     internalType: 'plain_text'|'source_code'|'pc_image'|'zx_basic'|'zx_image_standard'|'zx_image_monochrome'|'zx_image_tricolor'|'zx_image_gigascreen'|'binary'
  * }
  */
-
-namespace ZxArt\FileParsing;
-
-use EncodingDetector;
-use EngineFileRegistryRow;
-use errorLogger;
-use Illuminate\Database\Connection;
-
 final class ZxParsingManager extends errorLogger
 {
     const string table = 'files_registry';

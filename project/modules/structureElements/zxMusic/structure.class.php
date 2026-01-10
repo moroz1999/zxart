@@ -187,6 +187,9 @@ class zxMusicElement extends ZxArtItem implements
                 }
             }
         }
+
+        $queueService = $this->getService(QueueService::class);
+        $queueService->checkElementInQueue($this->getPersistedId(), [QueueType::SOCIAL_POST]);
     }
 
     public function checkIfReconversionNeeded(): bool

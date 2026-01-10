@@ -2,7 +2,8 @@
 
 PHP:
 - Use strict mode.
-- ALWAYS use full variable names. 
+- ALWAYS use full variable names.
+- ALWAYS import namespaces.
 
 TEST:
 

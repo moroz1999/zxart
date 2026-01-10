@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Connection;
+use ZxArt\Hardware\HardwareGroup;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\LegalStatus;
 use ZxArt\Prods\Repositories\ProdsRepository;
@@ -9,7 +10,6 @@ use ZxArt\Queue\QueueStatusProvider;
 use ZxArt\Queue\QueueType;
 use ZxArt\ZxProdCategories\CategoryIds;
 use ZxArt\ZxProdCategories\CompilationCategoryIds;
-use ZxArt\Hardware\HardwareGroup;
 
 /**
  * Class zxProdElement
@@ -478,7 +478,7 @@ class zxProdElement extends ZxArtItem implements
 
         // for all prods created from import, mass-upload, ensure SEO and intro creation
         $queueService = $this->getService(QueueService::class);
-        $queueService->checkElementInQueue($this->getPersistedId(), [QueueType::AI_SEO, QueueType::AI_INTRO]);
+        $queueService->checkElementInQueue($this->getPersistedId(), [QueueType::AI_SEO, QueueType::AI_INTRO, QueueType::SOCIAL_POST]);
     }
 
     public function getBestPictures($limit = false, $excludeId = null)

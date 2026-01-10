@@ -5,6 +5,8 @@ use ZxArt\FileParsing\ZxParsingItem;
 use ZxArt\FileParsing\ZxParsingManager;
 use ZxArt\Hardware\HardwareGroup;
 use ZxArt\Prods\LegalStatus;
+use ZxArt\Queue\QueueService;
+use ZxArt\Queue\QueueType;
 use ZxArt\Releases\ReleaseTypes;
 use ZxArt\Releases\Services\ArchiveFileResolverService;
 use ZxArt\Releases\Services\EmulatorResolverService;
@@ -259,8 +261,7 @@ class zxReleaseElement extends ZxArtItem implements
     public function getReleaseFlatStructure()
     {
         if ($this->getFilePath()) {
-            $zxParsingManager = $this->getService(ZxParsingManager::class);
-            return $zxParsingManager->getStructureRecordsById($this->getId());
+            return $this->getService(ZxParsingManager::class)->getStructureRecordsById($this->getId());
         }
         return false;
     }
@@ -330,6 +331,7 @@ class zxReleaseElement extends ZxArtItem implements
     /**
      * @return string
      */
+    #[Override]
     public function getFileName(
         $extensionType = 'original',
         $escapeSpaces = true,
@@ -460,16 +462,6 @@ class zxReleaseElement extends ZxArtItem implements
         return $this->currentReleaseFileInfo;
     }
 
-    public function getReleaseFile(int $fileId): ?ZxParsingItem
-    {
-        $zxParsingManager = $this->getService(ZxParsingManager::class);
-        if ($file = $zxParsingManager->extractFile($this->getFilePath(), $fileId)) {
-            return $file;
-        }
-
-        return null;
-    }
-
     public function getSupportedLanguageCodes()
     {
         if ($this->language) {
@@ -482,7 +474,7 @@ class zxReleaseElement extends ZxArtItem implements
         return [];
     }
 
-    #[\Override]
+    #[Override]
     public function getYear(): int|null
     {
         if ($this->year > 0) {
@@ -569,6 +561,7 @@ class zxReleaseElement extends ZxArtItem implements
         return $this->linksInfo;
     }
 
+    #[Override]
     public function getSearchTitle(): string
     {
         $searchTitle = $this->title;
@@ -596,14 +589,14 @@ class zxReleaseElement extends ZxArtItem implements
         return $searchTitle;
     }
 
-    public function getImageUrl($number)
+    public function getImageUrl(int $number)
     {
         if ($image = $this->getImage($number)) {
             return $image->getImageUrl('prodImage');
         } elseif ($zxProd = $this->getProd()) {
             return $zxProd->getImageUrl($number);
         } else {
-            if ($number == 0) {
+            if ($number === 0) {
                 $controller = $this->getService('controller');
                 return $controller->baseURL . 'images/zxprod_default.png';
             }
@@ -711,6 +704,7 @@ class zxReleaseElement extends ZxArtItem implements
     /**
      * @return string
      */
+    #[Override]
     public function getMetaTitle()
     {
         $translationsManager = $this->getService('translationsManager');
@@ -815,6 +809,9 @@ class zxReleaseElement extends ZxArtItem implements
             $this->releaseType = ReleaseTypes::unknown->value;
         }
         parent::persistElementData();
+
+        $queueService = $this->getService(QueueService::class);
+        $queueService->checkElementInQueue($this->getPersistedId(), [QueueType::SOCIAL_POST]);
     }
 
     public function updateFileStructure(): void
@@ -857,9 +854,6 @@ class zxReleaseElement extends ZxArtItem implements
         $this->persistElementData();
     }
 
-    /**
-     * @return false|string
-     */
     public function getCompilationJsonData(): string|false
     {
         $data = [
@@ -871,10 +865,7 @@ class zxReleaseElement extends ZxArtItem implements
         return json_encode($data);
     }
 
-    /**
-     * @return void
-     */
-    public function recalculate()
+    public function recalculate(): void
     {
         $this->persistElementData();
     }
@@ -900,6 +891,7 @@ class zxReleaseElement extends ZxArtItem implements
         return $this->resolveEmulatorType();
     }
 
+    #[Override]
     public function getCanonicalUrl()
     {
         $url = parent::getCanonicalUrl();
@@ -996,6 +988,7 @@ class zxReleaseElement extends ZxArtItem implements
         return true;
     }
 
+    #[Override]
     public function getMetaDescription(): string
     {
         $parts = [];
@@ -1008,6 +1001,7 @@ class zxReleaseElement extends ZxArtItem implements
         return $this->limitText(implode(' ', $parts), 160);
     }
 
+    #[Override]
     public function getTextContent(): string
     {
         $parts = [];
