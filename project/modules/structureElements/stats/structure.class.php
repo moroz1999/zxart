@@ -148,7 +148,7 @@ class statsElement extends structureElement
         $actionsLogRepository = $this->getService(ActionsLogRepository::class);
         if ($records = $actionsLogRepository->getTopUsersByAction($moduleType, $actionType, $limit)) {
             foreach ($records as $record) {
-                if ($userElement = $this->getUser($record['userId'])) {
+                if ($userElement = $this->getUserElement($record['userId'])) {
                     $data[] = [
                         'user' => $userElement,
                         'count' => $record['amount']
@@ -175,7 +175,7 @@ class statsElement extends structureElement
 
         if ($counts = $eventsLog->countEvents([$type], null, null, null, null, 'count', 'desc', $limit, 'userId')) {
             foreach ($counts as $userId => $count) {
-                if ($userElement = $this->getUser($userId)) {
+                if ($userElement = $this->getUserElement($userId)) {
                     $data[] = ['user' => $userElement, 'count' => $count];
                 }
             }
@@ -204,7 +204,7 @@ class statsElement extends structureElement
             ->get()
         ) {
             foreach ($rows as $row) {
-                if ($userElement = $this->getUser($row['userId'])) {
+                if ($userElement = $this->getUserElement($row['userId'])) {
                     $data[] = ['user' => $userElement, 'count' => $row['count(id)']];
                 }
             }
@@ -212,7 +212,7 @@ class statsElement extends structureElement
         return $data;
     }
 
-    public function getUser($userId)
+    public function getUserElement($userId)
     {
         return $this->getService('structureManager')->getElementById($userId, null, true);
     }

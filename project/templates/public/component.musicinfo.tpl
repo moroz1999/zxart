@@ -276,7 +276,7 @@
 			</td>
 		</tr>
 	{/if}
-	{assign var="userElement" value=$element->getUser()}
+	{assign var="userElement" value=$element->getUserElement()}
 	{if $userElement}
 	<tr>
 		<td class='info_table_label'>

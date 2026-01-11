@@ -1,6 +1,8 @@
 <?php
 
 use ZxArt\LinkTypes;
+use ZxArt\Queue\QueueService;
+use ZxArt\Queue\QueueType;
 
 /**
  * Class zxMusicElement
@@ -187,9 +189,10 @@ class zxMusicElement extends ZxArtItem implements
                 }
             }
         }
-
-        $queueService = $this->getService(QueueService::class);
-        $queueService->checkElementInQueue($this->getPersistedId(), [QueueType::SOCIAL_POST]);
+        if ($this->newlyCreated) {
+            $queueService = $this->getService(QueueService::class);
+            $queueService->checkElementInQueue($this->getPersistedId(), [QueueType::SOCIAL_POST]);
+        }
     }
 
     public function checkIfReconversionNeeded(): bool

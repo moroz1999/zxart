@@ -14,12 +14,13 @@ import {DialogSelectorComponent} from './components/dialog-selector/dialog-selec
 import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
 import {MatIcon} from '@angular/material/icon';
 import {LetterSelectorComponent} from './components/letter-selector/letter-selector.component';
-import {MatSpinner} from '@angular/material/progress-spinner';
+import {MatProgressSpinner, MatSpinner} from '@angular/material/progress-spinner';
 import {ZxProdBlockComponent} from '../zx-prod-block/zx-prod-block.component';
 import {ZxProdRowComponent} from '../zx-prod-row/zx-prod-row.component';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {TagsSelectorComponent} from '../shared/components/tags-selector/tags-selector.component';
+import {MatButton} from '@angular/material/button';
 
 const defaultStatuses: string[] = ['allowed', 'forbidden', 'forbiddenzxart', 'allowedzxart', 'insales', 'donationware', 'recovered', 'unknown'];
 
@@ -45,6 +46,8 @@ export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
         FormsModule,
         CommonModule,
         TagsSelectorComponent,
+        MatButton,
+        MatProgressSpinner,
     ],
     standalone: true,
 })

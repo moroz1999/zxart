@@ -12,9 +12,9 @@ class PostService
     private Client $client;
 
     public function __construct(
-        private string $token,
-        private string $botName,
-        private string $channelId,
+        private readonly string $token,
+//        private string $botName,
+        private readonly string $channelId,
     ) {
         $this->client = new Client([
             'base_uri' => 'https://api.telegram.org/bot' . $this->token . '/',

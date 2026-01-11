@@ -339,7 +339,7 @@ abstract class ZxArtItem extends structureElement implements
         return $this->authorIds;
     }
 
-    public function getUser()
+    public function getUserElement()
     {
         $user = false;
         if ($this->userId) {

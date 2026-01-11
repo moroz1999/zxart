@@ -40,7 +40,7 @@
 {/if}
 {include file=$theme->template('component.links.tpl')}
 <b>{translations name='zxprod.votes'}:</b>{if !$element->isVotingDenied() && $element->getVotePercent()}{$element->votes}{/if}<br>
-{assign var="userElement" value=$element->getUser()}
+{assign var="userElement" value=$element->getUserElement()}
 {if $userElement}
     <b>
         {translations name='zxprod.addedby'}:

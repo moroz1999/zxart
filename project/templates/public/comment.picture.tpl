@@ -3,7 +3,7 @@
 	<div class="comment_image">
 		<img loading="lazy" id='image_{$pictureElement->id}' class='zxgallery_item {if $currentMode.mode != 'mix' && $pictureElement->isFlickering()} flicker_image{/if}' src='{$pictureElement->getImageUrl()}' alt='{$pictureElement->title}'/>
 	</div>
-	{assign "user" $element->getUser()}
+	{assign "user" $element->getUserElement()}
 	{if $user}
 		<div class='comment_info'>
 			{if $user->userName === 'anonymous'}

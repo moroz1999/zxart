@@ -57,8 +57,7 @@ class Crontab extends controllerApplication
     private ?Logger $logger;
     private ?ArticleParsedDataUpdater $pressDataUpdater;
     private ?AiTextContent $aiTextContent;
-
-
+    
     /**
      * @return void
      */

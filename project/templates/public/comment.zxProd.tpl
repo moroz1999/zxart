@@ -3,7 +3,7 @@
 	<div class="comment_image">
 		<img loading="lazy" src='{$prodElement->getImageUrl()}' alt='{$prodElement->title}'/>
 	</div>
-	{assign "user" $element->getUser()}
+	{assign "user" $element->getUserElement()}
 	{if $user}
 		<div class='comment_info'>
 			{if $user->userName === 'anonymous'}

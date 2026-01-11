@@ -1,4 +1,4 @@
-{if $user = $element->getUser()}
+{if $user = $element->getUserElement()}
 {if $user->userName === 'anonymous'}
    {$element->author}
 {elseif $url=$user->getUrl()}

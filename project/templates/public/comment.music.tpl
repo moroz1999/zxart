@@ -1,6 +1,6 @@
 {capture assign="moduleContent"}
 	{assign "musicElement" $element->getInitialTarget()}
-	{assign "user" $element->getUser()}
+	{assign "user" $element->getUserElement()}
 	{if $user}
 		<div class='comment_info'>
 			{if $user->userName === 'anonymous'}

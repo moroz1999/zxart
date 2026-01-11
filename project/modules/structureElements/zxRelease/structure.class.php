@@ -21,7 +21,7 @@ use ZxFiles\BasicFile;
  * @property int $plays
  * @property int $year
  * @property string $releaseType
- * @property string $description
+ * @property string|null $description
  * @property string $version
  * @property array $hardwareRequired
  * @property array $language
@@ -810,8 +810,10 @@ class zxReleaseElement extends ZxArtItem implements
         }
         parent::persistElementData();
 
-        $queueService = $this->getService(QueueService::class);
-        $queueService->checkElementInQueue($this->getPersistedId(), [QueueType::SOCIAL_POST]);
+        if ($this->newlyCreated) {
+            $queueService = $this->getService(QueueService::class);
+            $queueService->checkElementInQueue($this->getPersistedId(), [QueueType::SOCIAL_POST]);
+        }
     }
 
     public function updateFileStructure(): void
@@ -992,7 +994,7 @@ class zxReleaseElement extends ZxArtItem implements
     public function getMetaDescription(): string
     {
         $parts = [];
-        $description = $this->cleanText($this->description);
+        $description = $this->cleanText($this->description ?? '');
         if ($description !== '') {
             $parts[] = $description;
         }
@@ -1005,7 +1007,7 @@ class zxReleaseElement extends ZxArtItem implements
     public function getTextContent(): string
     {
         $parts = [];
-        $description = $this->cleanText($this->description);
+        $description = $this->cleanText($this->description ?? '');
         if ($description !== '') {
             $parts[] = $description;
         }

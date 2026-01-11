@@ -1,6 +1,8 @@
 <?php
 
 use ZxArt\LinkTypes;
+use ZxArt\Queue\QueueService;
+use ZxArt\Queue\QueueType;
 use ZxArt\ZxScreen\ZxPictureCacheManager;
 use ZxArt\ZxScreen\ZxPictureFlickeringHelper;
 use ZxArt\ZxScreen\ZxPictureParametersDto;
@@ -160,7 +162,6 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         }
 
         foreach ($this->getRealAuthorsList() as $author) {
-            /** @psalm-suppress UndefinedMethod */
             $authorPalette = $author->getPalette();
             if ($authorPalette !== null && $authorPalette !== '') {
                 return $authorPalette;
@@ -472,6 +473,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     /**
      * @return void
      */
+    #[Override]
     public function persistElementData()
     {
         parent::persistElementData();
@@ -483,9 +485,10 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
                 }
             }
         }
-
-        $queueService = $this->getService(QueueService::class);
-        $queueService->checkElementInQueue($this->getPersistedId(), [QueueType::SOCIAL_POST]);
+        if ($this->newlyCreated) {
+            $queueService = $this->getService(QueueService::class);
+            $queueService->checkElementInQueue($this->getPersistedId(), [QueueType::SOCIAL_POST]);
+        }
     }
 
     /**

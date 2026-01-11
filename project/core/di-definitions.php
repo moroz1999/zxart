@@ -1,5 +1,7 @@
 <?php
 
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use ZxArt\Ai\ChunkProcessor;
@@ -10,6 +12,8 @@ use ZxArt\Ai\Service\PromptSender;
 use ZxArt\Ai\Service\TextBeautifier;
 use ZxArt\Ai\Service\Translator;
 use ZxArt\Logs\Log;
+use ZxArt\Social\SocialPostsService;
+use ZxArt\Telegram\PostService;
 use function DI\autowire;
 use function DI\factory;
 
@@ -17,6 +21,8 @@ return [
     // Core services
     Logger::class => autowire(Logger::class)->constructor('log'),
     'openai_key' => factory(fn(ConfigManager $cm) => $cm->getConfig('main')->get('ai_key')),
+    'telegram_token' => factory(fn(ConfigManager $cm) => $cm->getConfig('telegram')->get('token')),
+    'telegram_channel_id' => factory(fn(ConfigManager $cm) => $cm->getConfig('telegram')->get('channel_id')),
 
     // Factory functions
     'create_log' => factory(function (ContainerInterface $c, PathsManager $pm) {
@@ -25,6 +31,20 @@ return [
             logPath: $pm->getPath($logPath)
         );
     }),
+
+    'social_posts_logger' => factory(static function (PathsManager $pathsManager) {
+        $logger = new Logger('social_posts');
+
+        $todayDate = date('Y-m-d');
+        $logFilePath = $pathsManager->getPath('logs') . 'social_posts' . $todayDate . '.log';
+        $streamHandler = new StreamHandler($logFilePath, Logger::DEBUG);
+        $formatter = new LineFormatter(null, null, true, true);
+        $streamHandler->setFormatter($formatter);
+        $logger->pushHandler($streamHandler);
+
+        return $logger;
+    }
+    ),
 
     'create_prompt_sender' => factory(static function (ContainerInterface $c) {
         return static fn(string $logPath) => new PromptSender(
@@ -51,4 +71,8 @@ return [
     TextBeautifier::class => autowire()->constructor(DI\get('beautifier_chunk_processor')),
     Translator::class => autowire()->constructor(DI\get('translator_chunk_processor')),
     PressArticleSeo::class => autowire()->constructor(DI\get('press_article_seo_prompt_sender')),
+    SocialPostsService::class => autowire()->constructorParameter('logger', DI\get('social_posts_logger')),
+    PostService::class => autowire()
+        ->constructorParameter('token', DI\get('telegram_token'))
+        ->constructorParameter('channelId', DI\get('telegram_channel_id')),
 ];

@@ -310,6 +310,7 @@ class zxProdElement extends ZxArtItem implements
     }
 
     //used in API
+
     /**
      * @psalm-return list{0?: mixed,...}
      */
@@ -478,7 +479,10 @@ class zxProdElement extends ZxArtItem implements
 
         // for all prods created from import, mass-upload, ensure SEO and intro creation
         $queueService = $this->getService(QueueService::class);
-        $queueService->checkElementInQueue($this->getPersistedId(), [QueueType::AI_SEO, QueueType::AI_INTRO, QueueType::SOCIAL_POST]);
+        $queueService->checkElementInQueue($this->getPersistedId(), [QueueType::AI_SEO, QueueType::AI_INTRO]);
+        if ($this->newlyCreated) {
+            $queueService->checkElementInQueue($this->getPersistedId(), [QueueType::SOCIAL_POST]);
+        }
     }
 
     public function getBestPictures($limit = false, $excludeId = null)
