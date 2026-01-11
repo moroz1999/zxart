@@ -96,6 +96,7 @@ class zxProdElement extends ZxArtItem implements
     /**
      * @return void
      */
+    #[Override]
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -209,6 +210,7 @@ class zxProdElement extends ZxArtItem implements
     /**
      * @return int
      */
+    #[Override]
     public function getPartyId()
     {
         return $this->party;
@@ -219,6 +221,7 @@ class zxProdElement extends ZxArtItem implements
      *
      * @psalm-return ''
      */
+    #[Override]
     public function getFileExtension($extensionType)
     {
         $extension = '';
@@ -228,6 +231,7 @@ class zxProdElement extends ZxArtItem implements
     /**
      * @return false
      */
+    #[Override]
     protected function fileExists($extensionType)
     {
         return false;
@@ -238,6 +242,7 @@ class zxProdElement extends ZxArtItem implements
      *
      * @psalm-return list{'view'}
      */
+    #[Override]
     public function getChartDataEventTypes($type = null)
     {
         return ['view'];
@@ -450,6 +455,7 @@ class zxProdElement extends ZxArtItem implements
     /**
      * @return void
      */
+    #[Override]
     public function persistElementData()
     {
         $this->checkCompilationCategories();
@@ -713,6 +719,7 @@ class zxProdElement extends ZxArtItem implements
         return $this->linksInfo;
     }
 
+    #[Override]
     public function getSearchTitle(): string
     {
         $searchTitle = $this->title;
@@ -791,6 +798,7 @@ class zxProdElement extends ZxArtItem implements
         return $data;
     }
 
+    #[Override]
     public function getLdJsonScriptData()
     {
         $data = [
@@ -1128,6 +1136,7 @@ class zxProdElement extends ZxArtItem implements
         }
     }
 
+    #[Override]
     public function getMetaTitle()
     {
         $metaData = $this->getMetaData();
@@ -1201,12 +1210,14 @@ class zxProdElement extends ZxArtItem implements
         return $this->metaData;
     }
 
-    public function getMetaDescription()
+    #[Override]
+    public function getMetaDescription(): string
     {
         $metaData = $this->getMetaData();
         return $metaData ? $metaData['metaDescription'] : '';
     }
 
+    #[Override]
     public function getH1()
     {
         $metaData = $this->getMetaData();
