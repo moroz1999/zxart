@@ -66,6 +66,7 @@ readonly class SocialPostsService
                         'title' => $postDto->title,
                         'link' => $postDto->link,
                         'image' => $postDto->image,
+                        'audio' => $postDto->audio,
                         'description' => $postDto->description,
                     ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
                     if ($encoded !== false) {

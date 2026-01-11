@@ -589,17 +589,19 @@ class zxReleaseElement extends ZxArtItem implements
         return $searchTitle;
     }
 
-    public function getImageUrl(int $number)
+    public function getImageUrl(int $number, $preset = 'prodImage')
     {
         if ($image = $this->getImage($number)) {
-            return $image->getImageUrl('prodImage');
-        } elseif ($zxProd = $this->getProd()) {
-            return $zxProd->getImageUrl($number);
-        } else {
-            if ($number === 0) {
-                $controller = $this->getService('controller');
-                return $controller->baseURL . 'images/zxprod_default.png';
-            }
+            return $image->getImageUrl($preset);
+        }
+
+        if ($zxProd = $this->getProd()) {
+            return $zxProd->getImageUrl($number, $preset);
+        }
+
+        if ($number === 0) {
+            $controller = $this->getService('controller');
+            return $controller->baseURL . 'images/zxprod_default.png';
         }
         return false;
     }

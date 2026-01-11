@@ -377,10 +377,10 @@ class zxProdElement extends ZxArtItem implements
         return $urls;
     }
 
-    public function getImageUrl($number = 0)
+    public function getImageUrl($number = 0, $preset = 'prodImage')
     {
         if ($image = $this->getImage($number)) {
-            return $image->getImageUrl('prodImage');
+            return $image->getImageUrl($preset);
         }
 
         if ($number === 0) {

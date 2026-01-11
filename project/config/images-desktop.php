@@ -171,6 +171,22 @@
         ],
         'path' => 'releases',
     ],
+    'telegramFull' => [
+        'filters' => [
+            [
+                'AspectedResize',
+                ['width' => 768],
+            ],
+        ],
+        'format' => [
+            null,
+            'png',
+            '',
+            100,
+            true,
+        ],
+        'path' => 'releases',
+    ],
     'prodImageSmallImage' => [
         'filters' => [
             [

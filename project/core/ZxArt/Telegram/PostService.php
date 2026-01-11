@@ -29,7 +29,17 @@ class PostService
     {
         $text = $this->formatText($postDto);
 
-        if ($postDto->image !== null && $postDto->image !== '') {
+        if ($postDto->audio !== null && $postDto->audio !== '') {
+            $this->client->post('sendAudio', [
+                'json' => [
+                    'chat_id' => $this->channelId,
+                    'audio' => $postDto->audio,
+                    'caption' => $text,
+                    'parse_mode' => 'HTML',
+                    'title' => $postDto->title,
+                ],
+            ]);
+        } elseif ($postDto->image !== null && $postDto->image !== '') {
             $this->client->post('sendPhoto', [
                 'json' => [
                     'chat_id' => $this->channelId,
@@ -53,17 +63,12 @@ class PostService
     private function formatText(PostDto $postDto): string
     {
         $parts = [];
-        $parts[] = "<b>" . $this->escapeHtml($postDto->title) . "</b>";
+        $parts[] = "<b>" . $postDto->title . "</b>";
         if ($postDto->description !== null && $postDto->description !== '') {
-            $parts[] = $this->escapeHtml($postDto->description);
+            $parts[] = $postDto->description;
         }
         $parts[] = $postDto->link;
 
         return implode("\n\n", $parts);
-    }
-
-    private function escapeHtml(string $text): string
-    {
-        return htmlspecialchars($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 }

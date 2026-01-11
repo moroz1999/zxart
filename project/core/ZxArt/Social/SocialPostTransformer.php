@@ -15,21 +15,19 @@ readonly class SocialPostTransformer
 {
     public function transform(structureElement $element): ?PostDto
     {
-        if ($element instanceof zxReleaseElement) {
-            return new PostDto(
-                title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
-                link: (string)$element->getCanonicalUrl(),
-                image: (string)$element->getImageUrl(0),
-                description: html_entity_decode($element->getTextContent(), ENT_QUOTES),
-            );
-        }
         if ($element instanceof zxMusicElement) {
-            $description = $element->getTextContent();
+            $textContent = $element->getTextContent();
+            $description = is_array($textContent) ? implode(' ', $textContent) : $textContent;
+            $audioUrl = null;
+            if ($element->isPlayable()) {
+                $audioUrl = $element->getMp3FilePath();
+            }
             return new PostDto(
                 title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
                 link: (string)$element->getCanonicalUrl(),
                 image: null,
                 description: html_entity_decode($description, ENT_QUOTES),
+                audio: $audioUrl,
             );
         }
         if ($element instanceof zxPictureElement) {
@@ -45,8 +43,16 @@ readonly class SocialPostTransformer
             return new PostDto(
                 title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
                 link: (string)$element->getCanonicalUrl(),
-                image: (string)$element->getImageUrl(0),
+                image: (string)$element->getImageUrl(0, 'telegramFull'),
                 description: html_entity_decode($description, ENT_QUOTES),
+            );
+        }
+        if ($element instanceof zxReleaseElement) {
+            return new PostDto(
+                title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
+                link: (string)$element->getCanonicalUrl(),
+                image: (string)$element->getImageUrl(0, 'telegramFull'),
+                description: html_entity_decode($element->getTextContent(), ENT_QUOTES),
             );
         }
 

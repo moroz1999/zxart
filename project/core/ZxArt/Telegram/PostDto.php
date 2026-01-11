@@ -11,6 +11,7 @@ final readonly class PostDto
         public string $link,
         public ?string $image = null,
         public ?string $description = null,
+        public ?string $audio = null,
     ) {
     }
 }

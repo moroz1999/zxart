@@ -133,9 +133,7 @@ class zxMusicElement extends ZxArtItem implements
     }
 
     /**
-     * @return string|string[]
-     *
-     * @psalm-return array<string>|string
+     * @return string
      */
     public function getTextContent()
     {

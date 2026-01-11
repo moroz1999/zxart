@@ -1,7 +1,7 @@
 <?php
 
-use ZxArt\ZxScreen\ZxPictureUrlHelper;
 use ZxArt\ZxScreen\ZxPictureParametersDto;
+use ZxArt\ZxScreen\ZxPictureUrlHelper;
 
 /**
  * Class fileElement
@@ -52,7 +52,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
     /**
      * @return string
      */
-    public function getImageId($mobile = false)
+    public function getImageId()
     {
         if ($this->image) {
             return $this->image;
@@ -63,7 +63,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
     /**
      * @return string
      */
-    public function getImageName($mobile = false)
+    public function getImageName()
     {
         if ($this->imageFileName) {
             return $this->imageFileName;
@@ -76,10 +76,10 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         return $this->generateImageUrl($full, $zoom, 'original');
     }
 
-    public function getImageUrl(string $preset = 'original', $mobile = false): ?string
+    public function getImageUrl(string $preset = 'original'): ?string
     {
         $full = stripos($preset, 'full') !== false;
-        $zoom = $full ? 2 : 1;
+        $zoom = $full ? 3 : 1;
         return $this->generateImageUrl($full, $zoom, $preset);
     }
 
