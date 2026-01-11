@@ -8,7 +8,7 @@ PHP:
 - Don't add empty autowire into di. Autowiring is turned on by default.
 
 Psalm:
-- Never use @psalm-suppress. Instead, add clear and minimal type annotations.
+- NEVER use @psalm-suppress. Instead, add clear and minimal type annotations.
 - Annotate magic variables and methods in original legacy classes.
 
 TEST:

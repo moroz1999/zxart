@@ -25,9 +25,6 @@ readonly class SocialPostTransformer
         }
         if ($element instanceof zxMusicElement) {
             $description = $element->getTextContent();
-            if (is_array($description)) {
-                $description = implode(' ', $description);
-            }
             return new PostDto(
                 title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
                 link: (string)$element->getCanonicalUrl(),
@@ -44,11 +41,7 @@ readonly class SocialPostTransformer
             );
         }
         if ($element instanceof zxProdElement) {
-            /** @var string|string[] $description */
             $description = $element->getMetaDescription();
-            if (is_array($description)) {
-                $description = implode(' ', $description);
-            }
             return new PostDto(
                 title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
                 link: (string)$element->getCanonicalUrl(),

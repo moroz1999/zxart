@@ -16,11 +16,11 @@ use ZxArt\Telegram\PostService;
 readonly class SocialPostsService
 {
     public function __construct(
-        private PostService            $postService,
-        private QueueService           $queueService,
-        private structureManager       $structureManager,
-        private SocialPostTransformer  $socialPostTransformer,
-        private LoggerInterface        $logger,
+        private PostService           $postService,
+        private QueueService          $queueService,
+        private structureManager      $structureManager,
+        private SocialPostTransformer $socialPostTransformer,
+        private LoggerInterface       $logger,
     )
     {
     }
@@ -48,18 +48,32 @@ readonly class SocialPostsService
             }
 
             $startTime = microtime(true);
+            $postDto = null;
             try {
                 $postDto = $this->socialPostTransformer->transform($element);
                 if ($postDto) {
                     $this->postService->sendPost($postDto);
                     $this->queueService->updateStatus($elementId, QueueType::SOCIAL_POST, QueueStatus::STATUS_SUCCESS);
-                    $this->logger->info("Social post sent successfully for element $elementId: $element->title");
+                    $this->logger->info("Social post sent successfully for element $element->structureType $elementId: $element->title");
                 } else {
                     $this->queueService->updateStatus($elementId, QueueType::SOCIAL_POST, QueueStatus::STATUS_SKIP);
-                    $this->logger->info("Social post skipped for element $elementId: $element->title");
+                    $this->logger->info("Social post skipped for element $element->structureType $elementId: $element->title");
                 }
             } catch (Exception $exception) {
-                $this->logger->error("Failed to send social post for element $elementId: " . $exception->getMessage());
+                $postData = 'null';
+                if ($postDto) {
+                    $encoded = json_encode([
+                        'title' => $postDto->title,
+                        'link' => $postDto->link,
+                        'image' => $postDto->image,
+                        'description' => $postDto->description,
+                    ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                    if ($encoded !== false) {
+                        $postData = $encoded;
+                    }
+                }
+
+                $this->logger->error("Failed to send social post for element $element->structureType $elementId. Error: " . $exception->getMessage() . ". Data sent: " . $postData);
                 $this->queueService->updateStatus($elementId, QueueType::SOCIAL_POST, QueueStatus::STATUS_FAIL);
             }
             $endTime = microtime(true);
