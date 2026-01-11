@@ -39,6 +39,7 @@
   "scripts": {
     "test": "vendor\\bin\\phpunit -c phpunit.xml.dist",
     "psalm": "vendor\\bin\\psalm --use-baseline=psalm-baseline.xml --no-cache",
-    "psalm-baseline": "vendor\\bin\\psalm --set-baseline=psalm-baseline.xml --no-cache"
+    "psalm-baseline": "vendor\\bin\\psalm --set-baseline=psalm-baseline.xml --no-cache",
+    "build": "cd .\\ng-zxart && npm run build"
   }
 }
