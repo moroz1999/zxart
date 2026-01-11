@@ -4,8 +4,8 @@ import {DoBootstrap, Injector, NgModule, Type} from '@angular/core';
 import {ZxProdsCategoryComponent} from './zx-prods-category/zx-prods-category.component';
 import {createCustomElement} from '@angular/elements';
 import {AngularSvgIconModule} from 'angular-svg-icon';
-import {provideTranslateService, TranslatePipe} from '@ngx-translate/core';
-import {HttpClientModule, provideHttpClient} from '@angular/common/http';
+import {provideTranslateService, TranslateLoader, TranslatePipe} from '@ngx-translate/core';
+import {HttpClient, HttpClientModule, provideHttpClient} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
@@ -21,8 +21,12 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ZxProdsListComponent} from './zx-prods-list/zx-prods-list.component';
 import {AppComponent} from './app.component';
 import {ParserComponent} from './parser/parser.component';
-import {provideTranslateHttpLoader} from '@ngx-translate/http-loader';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {environment} from '../environments/environment';
+
+export function HttpLoaderFactory(http: HttpClient) {
+    return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
+}
 
 @NgModule({
     declarations: [
@@ -51,12 +55,12 @@ import {environment} from '../environments/environment';
     providers: [
         provideHttpClient(),
         provideTranslateService({
-            loader: provideTranslateHttpLoader({
-                prefix: `${environment.assetsUrl}i18n/`,
-                suffix: '.json',
-            }),
-            fallbackLang: 'en',
-            lang: 'en',
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient],
+            },
+            defaultLanguage: 'en',
         }),
     ],
     bootstrap: [],
