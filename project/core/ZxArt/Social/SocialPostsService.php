@@ -77,6 +77,7 @@ readonly class SocialPostsService
                 $this->logger->error("Failed to send social post for element $element->structureType $elementId. Error: " . $exception->getMessage() . ". Data sent: " . $postData);
                 $this->queueService->updateStatus($elementId, QueueType::SOCIAL_POST, QueueStatus::STATUS_FAIL);
             }
+            sleep(1);
             $endTime = microtime(true);
             $totalExecution += ($endTime - $startTime);
         }

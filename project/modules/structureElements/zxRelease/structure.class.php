@@ -1073,7 +1073,7 @@ class zxReleaseElement extends ZxArtItem implements
 
         // Release facts
         $releaseFacts = [];
-        if ($this->releaseType) {
+        if ($this->releaseType && $this->releaseType !== ReleaseTypes::unknown->value) {
             $releaseFacts[] = $this->releaseType;
         }
         if ($this->releaseFormat) {
@@ -1108,18 +1108,6 @@ class zxReleaseElement extends ZxArtItem implements
         $result = implode('. ', $parts);
         if ($result !== '') {
             $result .= '.';
-        }
-
-        if ($extended) {
-            $extra = [];
-            if ($this->isDownloadable() && $this->fileName) {
-                $extra[] = 'Download: ' . $this->fileName;
-            } elseif ($prod && $prod->externalLink) {
-                $extra[] = 'Link available';
-            }
-            if ($extra) {
-                $result .= ' ' . implode('. ', $extra) . '.';
-            }
         }
 
         return preg_replace('/\.+/', '.', $result);
