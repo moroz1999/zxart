@@ -30,7 +30,6 @@ export function HttpLoaderFactory(http: HttpClient) {
 
 @NgModule({
     declarations: [
-        AppComponent,
     ],
     imports: [
         CommonModule,
