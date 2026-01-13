@@ -1,30 +1,30 @@
-@import "shared/vars";
+@use "shared/vars" as vars;
 
 .form {
   display: flex;
-  gap: $padding-lg;
+  gap: vars.$padding-lg;
 
   align-items: center;
 }
 
 .description {
-  font-size: $font-sm;
-  margin-bottom: $padding-md;
+  font-size: vars.$font-sm;
+  margin-bottom: vars.$padding-md;
 }
 
 .error {
-  color: $error-color;
+  color: vars.$error-color;
 }
 
 .parser-top {
-  margin-bottom: $padding-xl;
+  margin-bottom: vars.$padding-xl;
 }
 
 .results-controls {
   display: block;
-  margin-bottom: $padding-xl;
+  margin-bottom: vars.$padding-xl;
 
   input {
-    margin-right: $padding-sm;
+    margin-right: vars.$padding-sm;
   }
 }

@@ -1,8 +1,8 @@
-@import "shared/vars";
+@use "shared/vars";
 
 .zx-prods-gallery {
   display: grid;
-  gap: $padding-lg;
+  gap: vars.$padding-lg;
   justify-content: space-between;
 
   grid-template-columns: 1fr;
@@ -28,5 +28,5 @@
 }
 
 .zx-prods-year {
-  margin-bottom: $padding-xl;
+  margin-bottom: vars.$padding-xl;
 }

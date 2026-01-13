@@ -1,15 +1,15 @@
-@import 'shared/vars';
-@import 'shared/breakpoints';
+@use 'shared/vars' as vars;
+@use 'shared/breakpoints' as breakpoints;
 
 :host {
   display: flex;
   bottom: 0;
   right: 0;
 
-  @include media-breakpoint-down(xs) {
+  @include breakpoints.media-breakpoint-down(xs) {
     position: fixed;
   }
-  @include media-breakpoint-up(sm) {
+  @include breakpoints.media-breakpoint-up(sm) {
     position: sticky;
     justify-content: flex-end;
   }
@@ -19,9 +19,9 @@
   margin: 0;
   padding: 0;
   display: flex;
-  background: $gray8;
-  border-top-right-radius: $radius-md;
-  border-top-left-radius: $radius-md;
+  background: vars.$gray8;
+  border-top-right-radius: vars.$radius-md;
+  border-top-left-radius: vars.$radius-md;
   box-shadow: 0px -2px 5px 2px rgba(0, 0, 0, 0.27);
 }
 
@@ -29,8 +29,8 @@
   text-align: center;
   user-select: none;
   list-style-type: none;
-  padding: $padding-md;
-  border-radius: $radius-md;
+  padding: vars.$padding-md;
+  border-radius: vars.$radius-md;
 
   a {
     color: inherit;
@@ -42,7 +42,7 @@
   cursor: pointer;
 
   &:hover {
-    background-color: $gray7;
+    background-color: vars.$gray7;
   }
 }
 
@@ -51,12 +51,12 @@
   transition: background-color 300ms ease-in-out;
 
   &:hover {
-    background-color: $gray7;
+    background-color: vars.$gray7;
   }
 }
 
 .pages-page-selected {
-  background-color: $gray6;
+  background-color: vars.$gray6;
 }
 
 .pages-button-inactive {
@@ -67,27 +67,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: $radius-md;
+  border-radius: vars.$radius-md;
   transition: background-color 300ms ease-in-out;
 }
 
 .pages-button-previous {
-  margin-right: $padding-lg;
+  margin-right: vars.$padding-lg;
 
   .pages-button-text {
-    margin-left: $padding-sm;
+    margin-left: vars.$padding-sm;
   }
 }
 
 .pages-button-next {
-  margin-left: $padding-lg;
+  margin-left: vars.$padding-lg;
 
   .pages-button-text {
-    margin-right: $padding-sm;
+    margin-right: vars.$padding-sm;
   }
 }
 
-@include media-breakpoint-down(md) {
+@include breakpoints.media-breakpoint-down(md) {
   .pages-item {
   }
   .pages-button-previous,

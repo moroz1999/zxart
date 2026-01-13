@@ -1,4 +1,4 @@
-@import '../../../shared/vars';
+@use 'shared/vars' as vars;
 
 :host {
   display: block;
@@ -10,7 +10,7 @@
 }
 
 .letter {
-  padding: 0 $padding-md;
+  padding: 0 vars.$padding-md;
   min-width: 1rem;
 }
 

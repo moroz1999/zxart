@@ -1,29 +1,29 @@
-@import "../shared/vars";
-@import "../shared/mixins";
-@import "../shared/breakpoints";
+@use "../shared/vars" as vars;
+@use "../shared/mixins" as mixins;
+@use "../shared/breakpoints" as breakpoints;
 
 $amount: 5;
 .zx-prods-list-presets {
   display: flex;
-  gap: $padding-md;
-  margin-bottom: $padding-xl;
+  gap: vars.$padding-md;
+  margin-bottom: vars.$padding-xl;
   flex-wrap: wrap;
 }
 
 .zx-prods-list-content {
-  @include media-breakpoint-up(sm) {
+  @include breakpoints.media-breakpoint-up(sm) {
     display: flex;
     align-items: flex-start;
-    gap: $padding-xl;
+    gap: vars.$padding-xl;
   }
 }
 
 .zx-prods-list-left {
   display: flex;
-  gap: $padding-md;
+  gap: vars.$padding-md;
   overflow: auto;
-  transition: opacity $animation-md ease-out;
-  @include media-breakpoint-up(sm) {
+  transition: opacity vars.$animation-md ease-out;
+  @include breakpoints.media-breakpoint-up(sm) {
     position: sticky;
     top: 0;
     width: 15%;
@@ -33,7 +33,7 @@ $amount: 5;
     padding-bottom: 50px;
     box-sizing: border-box;
   }
-  @include media-breakpoint-down(sm) {
+  @include breakpoints.media-breakpoint-down(sm) {
     flex-wrap: wrap;
     app-categories-tree-selector {
       flex-basis: 100%;
@@ -42,7 +42,7 @@ $amount: 5;
 }
 
 .zx-prods-list-right {
-  @include media-breakpoint-up(sm) {
+  @include breakpoints.media-breakpoint-up(sm) {
     width: calc(85% - 3rem);
     flex-grow: 1;
   }
@@ -60,9 +60,9 @@ $amount: 5;
 }
 
 .zx-prods-gallery {
-  transition: opacity $animation-md ease-out;
+  transition: opacity vars.$animation-md ease-out;
   display: grid;
-  gap: $padding-lg;
+  gap: vars.$padding-lg;
   justify-content: space-between;
 }
 
@@ -84,13 +84,13 @@ $amount: 5;
 
 :host.inlays {
   .zx-prods-gallery {
-    @include media-breakpoint-down(md) {
+    @include breakpoints.media-breakpoint-down(md) {
       grid-template-columns: 1fr;
     }
-    @include media-breakpoint-up(xl) {
+    @include breakpoints.media-breakpoint-up(xl) {
       grid-template-columns: 1fr 1fr;
     }
-    @include media-breakpoint-up(xxl) {
+    @include breakpoints.media-breakpoint-up(xxl) {
       grid-template-columns: 1fr 1fr 1fr;
     }
   }
@@ -98,16 +98,16 @@ $amount: 5;
 }
 
 .include-subcategories-prods-selector {
-  font-size: $font-sm;
+  font-size: vars.$font-sm;
 }
 
 .selectors {
-  background: $gray9;
-  padding-top: $padding-md;
-  padding-bottom: $padding-md;
-  box-shadow: $shadow-md;
-  transition: opacity $animation-md ease-in-out;
-  @include media-breakpoint-up(sm) {
+  background: vars.$gray9;
+  padding-top: vars.$padding-md;
+  padding-bottom: vars.$padding-md;
+  box-shadow: vars.$shadow-md;
+  transition: opacity vars.$animation-md ease-in-out;
+  @include breakpoints.media-breakpoint-up(sm) {
     position: sticky;
     top: 0;
     z-index: 100;
@@ -121,7 +121,7 @@ $amount: 5;
 
 .selectors-top {
   display: flex;
-  gap: $padding-md;
+  gap: vars.$padding-md;
 
   @media (max-width: 1640px) {
     flex-wrap: wrap;
@@ -131,28 +131,28 @@ $amount: 5;
 .releases-selector {
   display: flex;
   align-items: center;
-  gap: $padding-sm;
+  gap: vars.$padding-sm;
   flex-wrap: nowrap;
 }
 
 .layout-selector {
   display: flex;
   align-items: center;
-  gap: $padding-md;
-  @include media-breakpoint-up(sm) {
+  gap: vars.$padding-md;
+  @include breakpoints.media-breakpoint-up(sm) {
     justify-content: flex-end;
     flex-grow: 1;
   }
 }
 
 app-letter-selector {
-  margin: $padding-md 0 0;
+  margin: vars.$padding-md 0 0;
 }
 
 app-pages-selector {
   z-index: 10;
-  @include media-breakpoint-up(sm) {
-    margin-top: $padding-xl;
+  @include breakpoints.media-breakpoint-up(sm) {
+    margin-top: vars.$padding-xl;
   }
 }
 
@@ -163,29 +163,29 @@ app-pages-selector {
   border-collapse: collapse;
 
   thead td {
-    padding: $padding-sm $padding-md;
-    font-size: $font-sm;
-    color: $text-light-color;
+    padding: vars.$padding-sm vars.$padding-md;
+    font-size: vars.$font-sm;
+    color: vars.$text-light-color;
     vertical-align: bottom;
 
     &.zx-prods-table-sortable {
-      @include pseudo-link;
+      @include mixins.pseudo-link;
     }
 
   }
 
   ::ng-deep app-zx-prod-row td {
-    padding: $padding-sm $padding-md;
+    padding: vars.$padding-sm vars.$padding-md;
   }
 
   ::ng-deep app-zx-prod-row:nth-of-type(2n-1) td {
-    background-color: $gray8;
+    background-color: vars.$gray8;
   }
 }
 
 mat-spinner {
   display: block;
-  margin: $padding-xl auto;
+  margin: vars.$padding-xl auto;
 }
 
 .selectors-top {

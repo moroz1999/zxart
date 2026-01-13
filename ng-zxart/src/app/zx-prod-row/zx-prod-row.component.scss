@@ -1,5 +1,5 @@
-@import "shared/vars";
-@import "shared/mixins";
+@use "shared/vars" as vars;
+@use "shared/mixins" as mixins;
 
 :host {
   display: table-row;
@@ -16,9 +16,9 @@
 }
 
 .zx-prod-category-link {
-  @include pseudo-link;
+  @include mixins.pseudo-link;
 }
 
 .zx-prod-year-link {
-  @include pseudo-link;
+  @include mixins.pseudo-link;
 }

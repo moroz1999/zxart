@@ -1,16 +1,16 @@
-@import "shared/vars";
+@use "shared/vars" as vars;
 
 :host {
   overflow-y: auto;
   max-height: 80vh;
   display: block;
-  background-color: $gray8;
-  padding: $padding-md;
+  background-color: vars.$gray8;
+  padding: vars.$padding-md;
 }
 
 .releases {
   display: grid;
-  grid-gap: $padding-md;
+  grid-gap: vars.$padding-md;
   grid-template-columns: 1fr;
 }
 

@@ -1,4 +1,4 @@
-@import "../../../shared/vars";
+@use "shared/vars" as vars;
 
 .categories-tree-invisible {
   display: none;
@@ -17,11 +17,11 @@ a {
 
 .mat-tree {
   background: transparent;
-  color: $white;
+  color: vars.$white;
 }
 
 .mat-tree-node, .mat-nested-tree-node {
-  color: $white;
+  color: vars.$white;
 }
 
 .mat-tree-node-selected {

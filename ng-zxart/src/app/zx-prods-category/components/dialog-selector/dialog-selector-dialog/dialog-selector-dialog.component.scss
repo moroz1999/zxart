@@ -1,4 +1,4 @@
-@import "../../../../shared/vars";
+@use "shared/vars" as vars;
 
 .dialog-title {
   color: currentColor;
@@ -10,8 +10,8 @@
 }
 
 .value-group {
-  margin-right: $padding-lg;
-  margin-bottom: $padding-lg;
+  margin-right: vars.$padding-lg;
+  margin-bottom: vars.$padding-lg;
 
   &:last-of-type {
     margin-right: 0;
@@ -19,18 +19,18 @@
 }
 
 .value-group-title {
-  color: $gray5;
+  color: vars.$gray5;
   font-weight: 500;
-  margin-bottom: $padding-md;
+  margin-bottom: vars.$padding-md;
 }
 
 .value-columns {
-  column-gap: $padding-lg;
+  column-gap: vars.$padding-lg;
   column-fill: balance;
   //column
 }
 
 .value {
-  padding-bottom: $padding-sm;
+  padding-bottom: vars.$padding-sm;
   break-inside: avoid;
 }

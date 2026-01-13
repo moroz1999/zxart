@@ -1,5 +1,5 @@
-@import "shared/vars";
-@import "shared/svg-icons";
+@use "shared/vars" as vars;
+@use "shared/svg-icons";
 
 :host {
   display: grid;
@@ -8,10 +8,10 @@
     "name type md5 releases"
     "files files files files";
   grid-template-columns: 1fr 50px 220px 1fr;
-  gap: $padding-md $padding-xl;
+  gap: vars.$padding-md vars.$padding-xl;
 
   &.zx-file {
-    background: $gray8;
+    background: vars.$gray8;
     border-radius: 5px;
   }
 }
@@ -31,8 +31,8 @@ svg-icon {
 
 .md5 {
   grid-area: md5;
-  color: $gray5;
-  font-size: $font-sm;
+  color: vars.$gray5;
+  font-size: vars.$font-sm;
 }
 
 .releases {
@@ -48,5 +48,5 @@ svg-icon {
 }
 
 .attention {
-  color: $red;
+  color: vars.$red;
 }

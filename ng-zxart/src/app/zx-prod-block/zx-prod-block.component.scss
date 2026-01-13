@@ -1,6 +1,6 @@
-@import "shared/vars";
-@import "shared/mixins";
-@import "shared/breakpoints";
+@use "shared/vars";
+@use "shared/mixins";
+@use "shared/breakpoints";
 
 
 $fixedWidth: 256px;
@@ -10,16 +10,16 @@ $fixedHeight: 192px;
 }
 
 .zx-prod-internal {
-  background: $gray8;
-  border-radius: $radius-xl;
-  box-shadow: $shadow-md;
+  background: vars.$gray8;
+  border-radius: vars.$radius-xl;
+  box-shadow: vars.$shadow-md;
 }
 
 .zx-prod-images {
   display: block;
   position: relative;
-  border-top-right-radius: $radius-xl;
-  border-top-left-radius: $radius-xl;
+  border-top-right-radius: vars.$radius-xl;
+  border-top-left-radius: vars.$radius-xl;
   overflow: hidden;
   image-rendering: pixelated;
   @media (min-width: 1000px) {
@@ -89,12 +89,12 @@ $fixedHeight: 192px;
     display: block;
     content: "";
     position: absolute;
-    bottom: $padding-sm;
-    left: $padding-xs;
-    right: $padding-xs;
-    background: $white;
+    bottom: vars.$padding-sm;
+    left: vars.$padding-xs;
+    right: vars.$padding-xs;
+    background: vars.$white;
     opacity: 0.7;
-    border-radius: $radius-md;
+    border-radius: vars.$radius-md;
     height: 0.4rem;
     transition: opacity 0.2s ease-in-out;
   }
@@ -126,13 +126,13 @@ $fixedHeight: 192px;
 .zx-prod-hardware-item {
   position: relative;
   display: block;
-  font-size: $font-xs;
-  padding: $padding-xxs $padding-xs;
+  font-size: vars.$font-xs;
+  padding: vars.$padding-xxs vars.$padding-xs;
   border-radius: 7px;
-  background: $gray8;
-  color: $text-white-color;
-  margin-bottom: $padding-xs;
-  border: $gray7 1px solid;
+  background: vars.$gray8;
+  color: vars.$text-white-color;
+  margin-bottom: vars.$padding-xs;
+  border: vars.$gray7 1px solid;
   transition: opacity 250ms ease-in-out;
   opacity: 1;
 }
@@ -146,24 +146,24 @@ $fixedHeight: 192px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: $font-xl;
-  color: $gray6;
+  font-size: vars.$font-xl;
+  color: vars.$gray6;
   text-transform: uppercase;
 }
 
 .zx-prod-bottom {
-  padding: $padding-md;
+  padding: vars.$padding-md;
 }
 
 .zx-prod-bottom-top {
   display: flex;
-  margin-bottom: $padding-sm;
+  margin-bottom: vars.$padding-sm;
 }
 
 .zx-prod-title {
   display: block;
   color: currentColor;
-  font-size: $font-lg;
+  font-size: vars.$font-lg;
   text-decoration: none;
   flex-grow: 1;
   overflow: hidden;
@@ -193,7 +193,7 @@ $fixedHeight: 192px;
   }
 
   svg {
-    fill: $yellow;
+    fill: vars.$yellow;
   }
 }
 
@@ -202,8 +202,8 @@ $fixedHeight: 192px;
   flex-wrap: nowrap;
   align-items: flex-start;
   justify-content: space-between;
-  margin-top: $padding-md;
-  gap: $padding-md;
+  margin-top: vars.$padding-md;
+  gap: vars.$padding-md;
 
   &:empty {
     display: none;
@@ -211,7 +211,7 @@ $fixedHeight: 192px;
 }
 
 .zx-prod-year {
-  @include pseudo-link;
+  @include mixins.pseudo-link;
 }
 
 .zx-prod-additional {
@@ -223,23 +223,23 @@ $fixedHeight: 192px;
 .zx-prod-languages,
 .zx-prod-parties {
   display: block;
-  padding-bottom: $padding-sm;
+  padding-bottom: vars.$padding-sm;
 }
 
 .zx-prod-language {
-  @include pseudo-link;
+  @include mixins.pseudo-link;
 }
 
 .zx-prod-category {
-  @include pseudo-link;
+  @include mixins.pseudo-link;
 }
 
 .zx-prod-row {
   display: flex;
   flex-wrap: nowrap;
-  font-size: $font-sm;
-  border-bottom: 1px solid $gray7;
-  padding: $padding-sm 0;
+  font-size: vars.$font-sm;
+  border-bottom: 1px solid vars.$gray7;
+  padding: vars.$padding-sm 0;
   justify-content: space-between;
   width: 100%;
 
@@ -250,7 +250,7 @@ $fixedHeight: 192px;
 
 .zx-prod-row-label {
   margin-right: 1rem;
-  color: $gray5;
+  color: vars.$gray5;
 }
 
 .zx-prod-row-value {
@@ -262,7 +262,7 @@ $fixedHeight: 192px;
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
-  margin-top: $padding-lg;
+  margin-top: vars.$padding-lg;
 }
 
 .zx-prod-button {
