@@ -1,5 +1,6 @@
 <?php
 
+use App\Paths\PathsManager;
 use ZxArt\Authors\Constants;
 
 class batchUploadPicturesUploadForm extends structureElementAction
@@ -22,7 +23,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
 
             $currentElement = $structureManager->getElementsFirstParent($structureElement->id);
 
-            $cachePath = $this->getService('PathsManager')->getPath('uploadsCache');
+            $cachePath = $this->getService(PathsManager::class)->getPath('uploadsCache');
 
             foreach ($imagesInfo as $imageInfo) {
                 /**
@@ -75,7 +76,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
 
                     copy(
                         $temporaryFile,
-                        $this->getService('PathsManager')->getPath('uploads') . $pictureElement->image
+                        $this->getService(PathsManager::class)->getPath('uploads') . $pictureElement->image
                     );
                     unlink($temporaryFile);
 
@@ -156,4 +157,5 @@ class batchUploadPicturesUploadForm extends structureElementAction
         ];
     }
 }
+
 

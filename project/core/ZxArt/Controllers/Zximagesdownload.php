@@ -34,7 +34,7 @@ class Zximagesdownload extends controllerApplication
             return;
         }
 
-        $pathsManager = $this->getService('PathsManager');
+        $pathsManager = $this->pathsManager;
         $filePath = $pathsManager->getPath('uploads') . $this->id;
 
         if (!is_file($filePath)) {

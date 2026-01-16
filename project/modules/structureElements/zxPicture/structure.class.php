@@ -1,5 +1,6 @@
 <?php
 
+use App\Paths\PathsManager;
 use ZxArt\LinkTypes;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueType;
@@ -197,7 +198,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     public function getOriginalPath(): string|false
     {
         if ($this->image) {
-            return $this->getService('PathsManager')->getPath('uploads') . $this->image;
+            return $this->getService(PathsManager::class)->getPath('uploads') . $this->image;
         }
         return false;
     }

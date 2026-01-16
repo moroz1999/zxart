@@ -1,5 +1,6 @@
 <?php
 
+use App\Paths\PathsManager;
 use Illuminate\Database\Connection;
 use ZxArt\Hardware\HardwareGroup;
 use ZxArt\LinkTypes;
@@ -287,7 +288,7 @@ class zxProdElement extends ZxArtItem implements
 
     public function getUploadedFilesPath($propertyName = 'default')
     {
-        return $this->getService('PathsManager')->getPath('releases');
+        return $this->getService(PathsManager::class)->getPath('releases');
     }
 
     public function getImage($number = 0)
@@ -1109,7 +1110,7 @@ class zxProdElement extends ZxArtItem implements
 
     public function resizeImages(): void
     {
-        $pathsManager = $this->getService('PathsManager');
+        $pathsManager = $this->getService(PathsManager::class);
         $configManager = $this->getService('ConfigManager');
         if ($images = $this->getFilesList('connectedFile')) {
             foreach ($images as $image) {

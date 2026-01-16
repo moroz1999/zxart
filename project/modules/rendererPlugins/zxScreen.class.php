@@ -1,5 +1,6 @@
 <?php
 
+use App\Paths\PathsManager;
 use ZxImage\Converter;
 
 /**
@@ -23,14 +24,14 @@ class zxScreenRendererPlugin extends rendererPlugin
         $this->httpResponse = httpResponse::getInstance();
 
         $this->renderingEngine = new Converter();
-        if (!is_dir($this->getService('PathsManager')->getPath('zxCache'))) {
+        if (!is_dir($this->getService(PathsManager::class)->getPath('zxCache'))) {
             mkdir(
-                $this->getService('PathsManager')->getPath('zxCache'),
+                $this->getService(PathsManager::class)->getPath('zxCache'),
                 $this->getService('ConfigManager')->get('paths.defaultCachePermissions'),
                 true
             );
         }
-        $this->renderingEngine->setCachePath($this->getService('PathsManager')->getPath('zxCache'));
+        $this->renderingEngine->setCachePath($this->getService(PathsManager::class)->getPath('zxCache'));
         $this->renderingEngine->setCacheEnabled(true);
         $this->maxAge = 365 * 60 * 60 * 24;
         $this->setCacheControl('public');
@@ -161,4 +162,5 @@ class zxScreenRendererPlugin extends rendererPlugin
         return $this->renderingEngine->getCacheFileName();
     }
 }
+
 

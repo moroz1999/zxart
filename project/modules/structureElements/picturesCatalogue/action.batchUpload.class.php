@@ -1,5 +1,7 @@
 <?php
 
+use App\Paths\PathsManager;
+
 class batchUploadPicturesCatalogue extends structureElementAction
 {
     protected $loggable = true;
@@ -10,7 +12,7 @@ class batchUploadPicturesCatalogue extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($imagesInfo = $structureElement->image) {
-            $cachePath = $this->getService('PathsManager')->getPath('uploadsCache');
+            $cachePath = $this->getService(PathsManager::class)->getPath('uploadsCache');
             foreach ($imagesInfo as $imageInfo) {
                 $pictureElement = $structureManager->createElement('zxPicture', 'showForm', $structureElement->getId());
                 $temporaryFile = $cachePath . basename($imageInfo['tmp_name']);
@@ -38,7 +40,7 @@ class batchUploadPicturesCatalogue extends structureElementAction
 
                 $pictureElement->persistElementData();
 
-                copy($temporaryFile, $this->getService('PathsManager')->getPath('uploads') . $pictureElement->image);
+                copy($temporaryFile, $this->getService(PathsManager::class)->getPath('uploads') . $pictureElement->image);
                 unlink($temporaryFile);
 
                 $pictureElement->renewPartyLink();
@@ -71,4 +73,5 @@ class batchUploadPicturesCatalogue extends structureElementAction
         ];
     }
 }
+
 

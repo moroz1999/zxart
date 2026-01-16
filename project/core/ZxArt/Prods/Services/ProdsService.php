@@ -2,6 +2,7 @@
 
 namespace ZxArt\Prods\Services;
 
+use App\Paths\PathsManager;
 use ElementsManager;
 use fileElement;
 use Illuminate;
@@ -9,7 +10,6 @@ use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use LanguagesManager;
 use linksManager;
-use PathsManager;
 use pressArticleElement;
 use privilegesManager;
 use ProdsDownloader;

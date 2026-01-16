@@ -42,7 +42,7 @@ class screenshotApplication extends controllerApplication
         $this->processRequestParameters();
 
         if ($element = $structureManager->getElementById($this->id)) {
-            $filePath = $this->getService('PathsManager')->getPath('releases') . $element->file;
+            $filePath = $this->pathsManager->getPath('releases') . $element->file;
             if (strpos($this->id, '/') === false && strpos($this->id, '\\') === false && is_file($filePath)) {
                 $this->renderer->setContentDisposition('inline');
                 $this->renderer->setContentType(mime_content_type($filePath));
@@ -66,4 +66,5 @@ class screenshotApplication extends controllerApplication
         }
     }
 }
+
 

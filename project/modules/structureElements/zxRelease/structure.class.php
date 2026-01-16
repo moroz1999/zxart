@@ -1,5 +1,6 @@
 <?php
 
+use App\Paths\PathsManager;
 use Illuminate\Database\Connection;
 use ZxArt\FileParsing\ZxParsingItem;
 use ZxArt\FileParsing\ZxParsingManager;
@@ -163,7 +164,7 @@ class zxReleaseElement extends ZxArtItem implements
 
     public function getUploadedFilesPath($propertyName = 'connectedFile')
     {
-        return $this->getService('PathsManager')->getPath('releases');
+        return $this->getService(PathsManager::class)->getPath('releases');
     }
 
     /**

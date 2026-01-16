@@ -5,8 +5,8 @@ namespace ZxArt\Controllers;
 
 use controllerApplication;
 use RuntimeException;
-use ZxArt\ZxScreen\ZxPictureUrlHelper;
 use ZxArt\ZxScreen\ZxPictureParametersDto;
+use ZxArt\ZxScreen\ZxPictureUrlHelper;
 
 class Zximages extends controllerApplication
 {
@@ -26,7 +26,7 @@ class Zximages extends controllerApplication
         $paramsString = $controller->getRequestedPath()[1] ?? null;
         $params = $this->buildRequestParametersDto($paramsString);
 
-        $pathsManager = $this->getService('PathsManager');
+        $pathsManager = $this->pathsManager;
         $filePath = $pathsManager->getPath('uploads') . $params->id;
 
         if (!is_file($filePath)) {

@@ -42,7 +42,7 @@ class releaseApplication extends controllerApplication
         $this->processRequestParameters();
         $play = (bool)$controller->getParameter('play');
         if ($element = $structureManager->getElementById($this->id)) {
-            $filePath = $this->getService('PathsManager')->getPath('releases') . $element->file;
+            $filePath = $this->pathsManager->getPath('releases') . $element->file;
             if (strpos($this->id, '/') === false && strpos($this->id, '\\') === false && is_file($filePath)) {
                 if ($element->structureType == 'zxRelease' && !$this->isCrawlerDetected()) {
                     if ($play) {
@@ -84,4 +84,5 @@ class releaseApplication extends controllerApplication
         }
     }
 }
+
 

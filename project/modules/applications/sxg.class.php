@@ -38,8 +38,8 @@ class sxgApplication extends controllerApplication
                 $zxImageConverter->setZoom(1);
                 $zxImageConverter->setType($imageElement->type);
                 $zxImageConverter->setCacheEnabled(true);
-                $zxImageConverter->setCachePath($this->getService('PathsManager')->getPath('zxCache'));
-                $zxImageConverter->setPath($this->getService('PathsManager')->getPath('uploads') . $id);
+                $zxImageConverter->setCachePath($this->pathsManager->getPath('zxCache'));
+                $zxImageConverter->setPath($this->pathsManager->getPath('uploads') . $id);
                 if ($zxImageConverter->getBinary()) {
                     $filePath = $zxImageConverter->getCacheFileName();
 
@@ -74,3 +74,4 @@ class sxgApplication extends controllerApplication
         }
     }
 }
+

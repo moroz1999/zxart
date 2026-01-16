@@ -1,7 +1,9 @@
 <?php
-// parser app for search by file
+
 use ZxArt\FileParsing\ZxParsingItem;
 use ZxArt\FileParsing\ZxParsingManager;
+
+// parser app for search by file
 
 class parserApplication extends controllerApplication
 {
@@ -34,7 +36,7 @@ class parserApplication extends controllerApplication
             $file = $_FILES['file'];
             if (is_file($file['tmp_name']) && $file['size'] <= 1024 * 1024 * 50) {
                 $this->fileName = $file['name'];
-                $this->filePath = $cachePath = $this->getService('PathsManager')->getPath('uploadsCache') . uniqid($this->fileName);
+                $this->filePath = $cachePath = $this->pathsManager->getPath('uploadsCache') . uniqid($this->fileName);
                 if (move_uploaded_file($file['tmp_name'], $this->filePath)) {
                     return true;
                 }
@@ -181,4 +183,5 @@ class parserApplication extends controllerApplication
         return '';
     }
 }
+
 

@@ -1,8 +1,9 @@
 <?php
 
+use App\Paths\PathsManager;
 use ZxArt\Queue\QueueService;
-use ZxArt\Queue\QueueType;
 use ZxArt\Queue\QueueStatus;
+use ZxArt\Queue\QueueType;
 use ZxArt\ZxProdCategories\CategoryIds;
 
 class batchUploadZxProdsUploadForm extends structureElementAction
@@ -23,7 +24,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
             $linksManager = $this->getService('linksManager');
             $user = $this->getService('user');
             $queueService = $this->getService(QueueService::class);
-            $cachePath = $this->getService('PathsManager')->getPath('uploadsCache');
+            $cachePath = $this->getService(PathsManager::class)->getPath('uploadsCache');
             if (!$structureElement->categories) {
                 $structureElement->categories = [CategoryIds::MISC->value];
             }
@@ -124,7 +125,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                                 $zxReleaseElement->fileName = $fileInfo['name'];
                                 copy(
                                     $temporaryFile,
-                                    $this->getService('PathsManager')->getPath('releases') . $zxReleaseElement->file
+                                    $this->getService(PathsManager::class)->getPath('releases') . $zxReleaseElement->file
                                 );
                                 unlink($temporaryFile);
                             }
@@ -191,4 +192,5 @@ class batchUploadZxProdsUploadForm extends structureElementAction
         ];
     }
 }
+
 

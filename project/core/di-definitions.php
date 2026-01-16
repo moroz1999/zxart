@@ -1,5 +1,6 @@
 <?php
 
+use App\Paths\PathsManager;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;

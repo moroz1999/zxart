@@ -1,5 +1,6 @@
 <?php
 
+use App\Paths\PathsManager;
 use ZxArt\Authors\Constants;
 
 class batchUploadMusicUploadForm extends structureElementAction
@@ -18,7 +19,7 @@ class batchUploadMusicUploadForm extends structureElementAction
 
             $currentElement = $structureManager->getElementsFirstParent($structureElement->id);
             if ($musicCatalogueId = $structureManager->getElementIdByMarker('musicCatalogue')) {
-                $pathsManager = $this->getService('PathsManager');
+                $pathsManager = $this->getService(PathsManager::class);
                 $cachePath = $pathsManager->getPath('uploadsCache');
                 $pathsManager->ensureDirectory($cachePath);
 
@@ -61,7 +62,7 @@ class batchUploadMusicUploadForm extends structureElementAction
                     }
                     $zxMusicElement->persistElementData();
 
-                    copy($temporaryFile, $this->getService('PathsManager')->getPath('uploads') . $zxMusicElement->file);
+                    copy($temporaryFile, $this->getService(PathsManager::class)->getPath('uploads') . $zxMusicElement->file);
                     unlink($temporaryFile);
 
                     $zxMusicElement->renewPartyLink();
@@ -131,4 +132,5 @@ class batchUploadMusicUploadForm extends structureElementAction
         ];
     }
 }
+
 

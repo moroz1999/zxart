@@ -2970,7 +2970,7 @@
       <code><![CDATA[$releaseElement->title]]></code>
       <code><![CDATA[$releaseElement->title]]></code>
       <code><![CDATA[$result[$key]]]></code>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('uploads')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('uploads')]]></code>
     </MixedOperand>
     <MixedPropertyFetch>
       <code><![CDATA[$controller->rootURL]]></code>
@@ -3069,7 +3069,7 @@
     </UndefinedClass>
     <UndefinedDocblockClass>
       <code><![CDATA[if ($element = $this->structureManager->getElementById($record['id'])) {
-                    $result = $element->updateMd5($this->getService('PathsManager')->getPath('uploads') . $element->$fileColumn, $element->$fileNameColumn);
+                    $result = $element->updateMd5($this->getService(PathsManager::class)->getPath('uploads') . $element->$fileColumn, $element->$fileNameColumn);
                     if (!$result) {
                         $skipIds[] = $record['id'];
                         $this->logMessage($counter . ' parse art item ' . $record['id'] . ' ' . $element->getId() . ' ' . $element->getTitle() . ' - file not found', 0);
@@ -8339,7 +8339,7 @@
       <code><![CDATA[setAccessControlAllowOrigin]]></code>
     </MixedMethodCall>
     <MixedOperand>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('uploads')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('uploads')]]></code>
     </MixedOperand>
     <PropertyNotSetInConstructor>
       <code><![CDATA[fileApplication]]></code>
@@ -8666,7 +8666,7 @@
     </MixedMethodCall>
     <MixedOperand>
       <code><![CDATA[$item['notFound']]]></code>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('uploadsCache')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('uploadsCache')]]></code>
     </MixedOperand>
     <MixedPropertyFetch>
       <code><![CDATA[$author->structureType]]></code>
@@ -8757,7 +8757,7 @@
     <MixedArgument>
       <code><![CDATA[$pathsManager->getPath('imagesCache')]]></code>
       <code><![CDATA[$pathsManager->getPath('imagesCache')]]></code>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('zxCache')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('zxCache')]]></code>
       <code><![CDATA[$zxPictureElement->rotation]]></code>
       <code><![CDATA[$zxPictureElement->type]]></code>
     </MixedArgument>
@@ -8789,7 +8789,7 @@
       <code><![CDATA[$author->title]]></code>
       <code><![CDATA[$city]]></code>
       <code><![CDATA[$country]]></code>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('uploads')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('uploads')]]></code>
       <code><![CDATA[$zxPictureElement->getFileName('image', true, false)]]></code>
       <code><![CDATA[$zxPictureElement->title]]></code>
       <code><![CDATA[$zxPictureElement->year]]></code>
@@ -8966,7 +8966,7 @@
       <code><![CDATA[incrementPlays]]></code>
     </MixedMethodCall>
     <MixedOperand>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('releases')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('releases')]]></code>
       <code><![CDATA[$this->id]]></code>
     </MixedOperand>
     <MixedPropertyFetch>
@@ -9192,7 +9192,7 @@
       <code><![CDATA[getPath]]></code>
     </MixedMethodCall>
     <MixedOperand>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('releases')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('releases')]]></code>
       <code><![CDATA[$this->id]]></code>
     </MixedOperand>
     <MixedPropertyFetch>
@@ -9381,7 +9381,7 @@
       <code><![CDATA[$image->getSxgData()]]></code>
       <code><![CDATA[$imageElement->rotation]]></code>
       <code><![CDATA[$imageElement->type]]></code>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('zxCache')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('zxCache')]]></code>
     </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$imageElement]]></code>
@@ -9396,7 +9396,7 @@
       <code><![CDATA[setRequestedPath]]></code>
     </MixedMethodCall>
     <MixedOperand>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('uploads')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('uploads')]]></code>
     </MixedOperand>
     <MixedPropertyFetch>
       <code><![CDATA[$controller->rootURL]]></code>
@@ -13531,9 +13531,9 @@
       <code><![CDATA[$imageFilePath]]></code>
       <code><![CDATA[$this->binary]]></code>
       <code><![CDATA[$this->getService('ConfigManager')->get('paths.defaultCachePermissions')]]></code>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('zxCache')]]></code>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('zxCache')]]></code>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('zxCache')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('zxCache')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('zxCache')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('zxCache')]]></code>
     </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$fileName]]></code>
@@ -18816,7 +18816,7 @@
     </MixedMethodCall>
     <MixedOperand>
       <code><![CDATA[$cachePath]]></code>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('uploads')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('uploads')]]></code>
     </MixedOperand>
     <MixedPropertyAssignment>
       <code><![CDATA[$zxMusicElement]]></code>
@@ -19160,7 +19160,7 @@
     </MixedMethodCall>
     <MixedOperand>
       <code><![CDATA[$cachePath]]></code>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('uploads')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('uploads')]]></code>
     </MixedOperand>
     <MixedPropertyAssignment>
       <code><![CDATA[$zxMusicElement]]></code>
@@ -20369,7 +20369,7 @@
     </MixedMethodCall>
     <MixedOperand>
       <code><![CDATA[$cachePath]]></code>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('uploads')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('uploads')]]></code>
     </MixedOperand>
     <MixedPropertyAssignment>
       <code><![CDATA[$pictureElement]]></code>
@@ -20625,7 +20625,7 @@
     </MixedMethodCall>
     <MixedOperand>
       <code><![CDATA[$cachePath]]></code>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('uploads')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('uploads')]]></code>
     </MixedOperand>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>
@@ -24278,7 +24278,7 @@
       <code><![CDATA[getPath]]></code>
     </MixedMethodCall>
     <MixedOperand>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('uploads')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('uploads')]]></code>
     </MixedOperand>
     <MixedPropertyFetch>
       <code><![CDATA[$game->title]]></code>
@@ -24563,8 +24563,8 @@
     </MixedMethodCall>
     <MixedOperand>
       <code><![CDATA[$extraText]]></code>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('uploads')]]></code>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('uploads')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('uploads')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('uploads')]]></code>
       <code><![CDATA[$this->plays]]></code>
       <code><![CDATA[$this->zxTunesId]]></code>
     </MixedOperand>
@@ -24702,7 +24702,7 @@
       <code><![CDATA[getPath]]></code>
     </MixedMethodCall>
     <MixedOperand>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('uploads')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('uploads')]]></code>
     </MixedOperand>
     <MixedPropertyFetch>
       <code><![CDATA[$game->title]]></code>
@@ -24977,7 +24977,7 @@
       <code><![CDATA[updateData]]></code>
     </MixedMethodCall>
     <MixedOperand>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('uploads')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('uploads')]]></code>
       <code><![CDATA[$this->views]]></code>
     </MixedOperand>
     <MixedPropertyAssignment>
@@ -26511,7 +26511,7 @@
     </MixedMethodCall>
     <MixedOperand>
       <code><![CDATA[$cachePath]]></code>
-      <code><![CDATA[$this->getService('PathsManager')->getPath('releases')]]></code>
+      <code><![CDATA[$this->getService(PathsManager::class)->getPath('releases')]]></code>
     </MixedOperand>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$structureElement]]></code>

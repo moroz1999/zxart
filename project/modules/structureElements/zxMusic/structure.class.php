@@ -1,5 +1,6 @@
 <?php
 
+use App\Paths\PathsManager;
 use ZxArt\LinkTypes;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueType;
@@ -225,7 +226,7 @@ class zxMusicElement extends ZxArtItem implements
     {
         $result = false;
         if ($this->fileName) {
-            $result = $this->getService('PathsManager')->getPath('uploads') . $this->file;
+            $result = $this->getService(PathsManager::class)->getPath('uploads') . $this->file;
         }
         return $result;
     }
@@ -426,7 +427,7 @@ class zxMusicElement extends ZxArtItem implements
     public function getOriginalPath(): string|false
     {
         if ($this->file) {
-            return $this->getService('PathsManager')->getPath('uploads') . $this->file;
+            return $this->getService(PathsManager::class)->getPath('uploads') . $this->file;
         }
         return false;
     }

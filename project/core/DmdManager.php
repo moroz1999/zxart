@@ -1,5 +1,6 @@
 <?php
 
+use App\Paths\PathsManager;
 use ZxArt\Authors\Services\AuthorsService;
 
 /**

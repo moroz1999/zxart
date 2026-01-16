@@ -8,7 +8,6 @@ define('ROOT_PATH', __DIR__ . '/../');
 //include_once(ROOT_PATH . 'vendor/artweb-ou/trickster-cms/cms/core/controller.class.php');
 include_once(ROOT_PATH . 'trickster-cms/cms/core/controller.class.php');
 $controller = controller::getInstance(ROOT_PATH . 'project/config/');
-
 $app = $controller->getApplication();
 if (!$app) {
     echo 'Application not found';

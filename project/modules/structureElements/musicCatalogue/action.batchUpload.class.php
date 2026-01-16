@@ -1,5 +1,7 @@
 <?php
 
+use App\Paths\PathsManager;
+
 class batchUploadMusicCatalogue extends structureElementAction
 {
     protected $loggable = true;
@@ -10,7 +12,7 @@ class batchUploadMusicCatalogue extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($musicsInfo = $structureElement->music) {
-            $pathsManager = $this->getService('PathsManager');
+            $pathsManager = $this->getService(PathsManager::class);
             $cachePath = $pathsManager->getPath('uploadsCache');
             $pathsManager->ensureDirectory($cachePath);
 
@@ -43,7 +45,7 @@ class batchUploadMusicCatalogue extends structureElementAction
 
                 $zxMusicElement->persistElementData();
 
-                copy($temporaryFile, $this->getService('PathsManager')->getPath('uploads') . $zxMusicElement->file);
+                copy($temporaryFile, $this->getService(PathsManager::class)->getPath('uploads') . $zxMusicElement->file);
                 unlink($temporaryFile);
 
                 $zxMusicElement->renewPartyLink();
@@ -78,4 +80,5 @@ class batchUploadMusicCatalogue extends structureElementAction
         ];
     }
 }
+
 

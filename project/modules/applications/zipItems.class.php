@@ -87,7 +87,7 @@ class zipItemsApplication extends controllerApplication
 
         $zipArchive = new \ZipArchive();
         $zipName = 'zxart_files_' . time() . '.zip';
-        $cachePath = $this->getService('PathsManager')->getPath('uploadsCache');
+        $cachePath = $this->pathsManager->getPath('uploadsCache');
         $zipPath = $cachePath . $zipName;
         if ($zipArchive->open($zipPath, ZipArchive::CREATE)) {
             foreach ($exportTypes as $exportType) {

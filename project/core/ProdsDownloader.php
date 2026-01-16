@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+use App\Paths\PathsManager;
+
 class ProdsDownloader extends errorLogger
 {
     private float $lastRequestEndedAt = 0.0;

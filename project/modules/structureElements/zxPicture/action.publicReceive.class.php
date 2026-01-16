@@ -1,5 +1,6 @@
 <?php
 
+use App\Paths\PathsManager;
 use ZxArt\Authors\Constants;
 
 class publicReceiveZxPicture extends structureElementAction
@@ -69,7 +70,7 @@ class publicReceiveZxPicture extends structureElementAction
             $structureElement->checkGameTag();
 
             $structureElement->persistElementData();
-            $structureElement->updateMd5($this->getService('PathsManager')->getPath('uploads') . $structureElement->image, $structureElement->originalName);
+            $structureElement->updateMd5($this->getService(PathsManager::class)->getPath('uploads') . $structureElement->image, $structureElement->originalName);
 
             $structureElement->deleteCachedImage();
 
@@ -110,4 +111,5 @@ class publicReceiveZxPicture extends structureElementAction
     {
     }
 }
+
 

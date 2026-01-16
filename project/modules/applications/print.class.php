@@ -39,8 +39,8 @@ class printApplication extends controllerApplication
                 $zxImageConverter->setZoom(1);
                 $zxImageConverter->setType($zxPictureElement->type);
                 $zxImageConverter->setCacheEnabled(true);
-                $zxImageConverter->setCachePath($this->getService('PathsManager')->getPath('zxCache'));
-                $zxImageConverter->setPath($this->getService('PathsManager')->getPath('uploads') . $id);
+                $zxImageConverter->setCachePath($this->pathsManager->getPath('zxCache'));
+                $zxImageConverter->setPath($this->pathsManager->getPath('uploads') . $id);
                 if ($zxImageConverter->getBinary()) {
                     $filePath = $zxImageConverter->getCacheFileName();
 
@@ -95,7 +95,7 @@ class printApplication extends controllerApplication
                     $fileName = $zxPictureElement->getFileName('image', true, false) . '_300dpi.png';
                     if (is_file($filePath)) {
                         $configManager = $this->getService('ConfigManager');
-                        $pathsManager = $this->getService('PathsManager');
+                        $pathsManager = $this->pathsManager;
 
                         $imageProcess = new \ImageProcess\ImageProcess($pathsManager->getPath('imagesCache'));
                         $imageProcess->setDefaultCachePermissions($configManager->get('paths.defaultCachePermissions'));
@@ -163,3 +163,4 @@ class printApplication extends controllerApplication
         }
     }
 }
+

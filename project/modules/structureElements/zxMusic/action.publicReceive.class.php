@@ -1,5 +1,6 @@
 <?php
 
+use App\Paths\PathsManager;
 use ZxArt\Authors\Constants;
 
 class publicReceiveZxMusic extends structureElementAction
@@ -33,7 +34,7 @@ class publicReceiveZxMusic extends structureElementAction
                 }
             }
             $structureElement->dateAdded = $structureElement->dateCreated;
-            $cachePath = $this->getService('PathsManager')->getPath('uploadsCache');
+            $cachePath = $this->getService(PathsManager::class)->getPath('uploadsCache');
 
             if (!is_null($structureElement->getDataChunk("file")->originalName)) {
                 $structureElement->file = $structureElement->getId();
@@ -62,7 +63,7 @@ class publicReceiveZxMusic extends structureElementAction
             $structureElement->updateYear();
 
             $structureElement->persistElementData();
-            $structureElement->updateMd5($this->getService('PathsManager')->getPath('uploads') . $structureElement->file, $structureElement->fileName);
+            $structureElement->updateMd5($this->getService(PathsManager::class)->getPath('uploads') . $structureElement->file, $structureElement->fileName);
 
             $controller->redirect($structureElement->URL);
         } else {
@@ -101,4 +102,5 @@ class publicReceiveZxMusic extends structureElementAction
     {
     }
 }
+
 

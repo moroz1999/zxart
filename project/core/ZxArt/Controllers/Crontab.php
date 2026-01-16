@@ -12,7 +12,6 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use mp3ConversionManager;
-use PathsManager;
 use pressArticleElement;
 use Recalculable;
 use rendererPlugin;
@@ -24,12 +23,14 @@ use ZxArt\Ai\Service\PressArticleSeo;
 use ZxArt\Ai\Service\ProdQueryService;
 use ZxArt\Ai\Service\TextBeautifier;
 use ZxArt\Ai\Service\Translator;
+use ZxArt\Cache\Services\CacheCleanupService;
 use ZxArt\Import\Press\DataUpdater\ArticleParsedDataUpdater;
 use ZxArt\Import\Press\DataUpdater\ArticleSeoDataUpdater;
 use ZxArt\Press\Helpers\AiTextContent;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
+use ZxArt\Stats\Services\EventsAggregationService;
 use ZxArt\Strings\LanguageDetector;
 use ZxArt\ZxProdCategories\Ids;
 use zxProdElement;
@@ -57,6 +58,8 @@ class Crontab extends controllerApplication
     private ?Logger $logger;
     private ?ArticleParsedDataUpdater $pressDataUpdater;
     private ?AiTextContent $aiTextContent;
+    private EventsAggregationService $eventsAggregationService;
+    private CacheCleanupService $cacheCleanupService;
     
     /**
      * @return void
@@ -81,6 +84,8 @@ class Crontab extends controllerApplication
         $this->pressParser = $this->getService(PressArticleParser::class);
         $this->pressDataUpdater = $this->getService(ArticleParsedDataUpdater::class);
         $this->aiTextContent = $this->getService(AiTextContent::class);
+        $this->eventsAggregationService = $this->getService(EventsAggregationService::class);
+        $this->cacheCleanupService = $this->getService(CacheCleanupService::class);
         $this->logger = new Logger('error_log');
     }
 
@@ -89,7 +94,7 @@ class Crontab extends controllerApplication
      */
     public function execute($controller)
     {
-        $pathsManager = $this->getService(PathsManager::class);
+        $pathsManager = $this->pathsManager;
         $todayDate = date('Y-m-d');
         $this->logFilePath = $pathsManager->getPath('logs') . 'cron' . $todayDate . '.log';
         $streamHandler = new StreamHandler($this->logFilePath, Logger::DEBUG);
@@ -131,6 +136,16 @@ class Crontab extends controllerApplication
 
             $this->structureManager->setRequestedPath([$currentLanguageCode]);
             $this->structureManager->setPrivilegeChecking(false);
+            
+            $this->eventsAggregationService->aggregate();
+            $this->cacheCleanupService->cleanup();
+
+            $minutes = (int)date('i');
+            if ($minutes >= 43 && $minutes <= 46) {
+                $this->eventsAggregationService->aggregate();
+                $this->cacheCleanupService->cleanup();
+            }
+
             $this->convertMp3();
             $this->recalculate();
             $this->parseReleases();
@@ -148,6 +163,7 @@ class Crontab extends controllerApplication
             $this->queryAiPressTranslation();
             $this->queryAiPressParser();
             $this->queryAiPressSeo();
+
         }
     }
 
@@ -561,7 +577,7 @@ class Crontab extends controllerApplication
                  * @var ZxArtItem $element
                  */
                 if ($element = $this->structureManager->getElementById($record['id'])) {
-                    $result = $element->updateMd5($this->getService('PathsManager')->getPath('uploads') . $element->$fileColumn, $element->$fileNameColumn);
+                    $result = $element->updateMd5($this->pathsManager->getPath('uploads') . $element->$fileColumn, $element->$fileNameColumn);
                     if (!$result) {
                         $skipIds[] = $record['id'];
                         $this->logMessage($counter . ' parse art item ' . $record['id'] . ' ' . $element->getId() . ' ' . $element->getTitle() . ' - file not found', 0);
