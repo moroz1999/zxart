@@ -1,5 +1,7 @@
 <?php
 
+use App\Logging\EventsLog;
+
 class statsElement extends structureElement
 {
     use ChartDataProviderTrait;
@@ -169,9 +171,9 @@ class statsElement extends structureElement
     {
         $data = [];
         /**
-         * @var eventsLog $eventsLog
+         * @var EventsLog $eventsLog
          */
-        $eventsLog = $this->getService('eventsLog');
+        $eventsLog = $this->getService(EventsLog::class);
 
         if ($counts = $eventsLog->countEvents([$type], null, null, null, null, 'count', 'desc', $limit, 'userId')) {
             foreach ($counts as $userId => $count) {

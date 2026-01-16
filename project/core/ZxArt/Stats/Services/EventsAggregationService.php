@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace ZxArt\Stats\Services;
 
-use eventsLog;
+use App\Logging\EventsLog;
 
 class EventsAggregationService
 {
     public function __construct(
-        private eventsLog $eventsLog
+        private EventsLog $eventsLog
     ) {
     }
 

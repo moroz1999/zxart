@@ -1,5 +1,6 @@
 <?php
 
+use App\Logging\EventsLog;
 use App\Paths\PathsManager;
 use ZxArt\LinkTypes;
 use ZxArt\Queue\QueueService;
@@ -320,7 +321,7 @@ class zxMusicElement extends ZxArtItem implements
     public function logPlay(): void
     {
         $this->plays++;
-        $this->getService('eventsLog')->logEvent($this->getId(), 'play');
+        $this->getService(EventsLog::class)->logEvent($this->getId(), 'play');
         $collection = persistableCollection::getInstance($this->dataResourceName);
         $collection->updateData(['plays' => $this->plays], ['id' => $this->getId()]);
 

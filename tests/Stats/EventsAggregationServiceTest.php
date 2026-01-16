@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Tests\Stats;
 
-use eventsLog;
+use App\Logging\EventsLog;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Stats\Services\EventsAggregationService;
 
@@ -12,7 +12,7 @@ class EventsAggregationServiceTest extends TestCase
 {
     public function testAggregateCallsEventsLogCorrect()
     {
-        $eventsLogMock = $this->createMock(eventsLog::class);
+        $eventsLogMock = $this->createMock(EventsLog::class);
 
         $eventsToAggregate = [
             ['view', 'elementId'],

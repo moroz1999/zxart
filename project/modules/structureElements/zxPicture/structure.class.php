@@ -1,6 +1,6 @@
 <?php
 
-use App\Paths\PathsManager;
+use App\Logging\EventsLog;
 use ZxArt\LinkTypes;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueType;
@@ -345,7 +345,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     {
         if (!$this->isCrawlerDetected()) {
             $this->views++;
-            $this->getService('eventsLog')->logEvent($this->getId(), 'view');
+            $this->getService(EventsLog::class)->logEvent($this->getId(), 'view');
             $collection = persistableCollection::getInstance($this->dataResourceName);
             $collection->updateData(['views' => $this->views], ['id' => $this->getId()]);
 

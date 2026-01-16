@@ -27,7 +27,7 @@ class voteShared extends structureElementAction
                         $structureElement->recalculateVotes();
                         $structureElement->setUserVote($value);
                         if ($structureElement->structureType !== 'comment') {
-                            $this->getService('eventsLog')->logEvent($structureElement->getId(), 'vote');
+                            $this->getService(EventsLog::class)->logEvent($structureElement->getId(), 'vote');
                         }
                         $structureManager->clearElementCache($structureElement->getId());
                     }

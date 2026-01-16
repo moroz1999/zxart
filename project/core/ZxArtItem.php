@@ -438,7 +438,7 @@ abstract class ZxArtItem extends structureElement implements
 
     public function logCreation($userId = null): void
     {
-        $this->getService('eventsLog')->logEvent($this->id, 'add' . ucfirst($this->structureType), $userId);
+        $this->getService(EventsLog::class)->logEvent($this->id, 'add' . ucfirst($this->structureType), $userId);
     }
 
     public function getPartyId()

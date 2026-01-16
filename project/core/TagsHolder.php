@@ -26,7 +26,7 @@ trait TagsHolder
         $this->tagsAmount = $updatedTagsStrings;
 
         for ($i = 0; $i < $updatedTagsStrings - $amountBeforeUpdate; $i++) {
-            $this->getService('eventsLog')->logEvent($this->id, 'tagAdded');
+            $this->getService(EventsLog::class)->logEvent($this->id, 'tagAdded');
         }
 
 

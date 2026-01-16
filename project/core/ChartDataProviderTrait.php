@@ -1,5 +1,7 @@
 <?php
 
+use App\Logging\EventsLog;
+
 trait ChartDataProviderTrait
 {
     protected $chartData = [];
@@ -8,7 +10,7 @@ trait ChartDataProviderTrait
     {
         if (!isset($this->chartData[$type])) {
             $this->chartData[$type] = false;
-            $eventsLog = $this->getService('eventsLog');
+            $eventsLog = $this->getService(EventsLog::class);
 
             if ($dates = $eventsLog->countEvents(
                 $this->getChartDataEventTypes($type),
