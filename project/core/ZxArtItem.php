@@ -1,5 +1,6 @@
 <?php
 
+use App\Logging\EventsLog;
 use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\Press\Helpers\PressMentions;
 

@@ -1,5 +1,7 @@
 <?php
 
+use App\Logging\EventsLog;
+
 class voteShared extends structureElementAction
 {
     /**

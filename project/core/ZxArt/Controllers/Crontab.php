@@ -136,9 +136,6 @@ class Crontab extends controllerApplication
 
             $this->structureManager->setRequestedPath([$currentLanguageCode]);
             $this->structureManager->setPrivilegeChecking(false);
-            
-            $this->eventsAggregationService->aggregate();
-            $this->cacheCleanupService->cleanup();
 
             $minutes = (int)date('i');
             if ($minutes >= 43 && $minutes <= 46) {
