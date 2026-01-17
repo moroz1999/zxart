@@ -26,7 +26,7 @@ class ZxPictureUrlHelper
         if ($params->border !== null) {
             $parameters[] = 'border' . self::KEY_VALUE_SEPARATOR . $params->border;
         }
-        $type = $params->type;
+        $type = $params->type ?? '';
         if (ZxPictureFlickeringHelper::isFlickering($type) && $params->mode) {
             $parameters[] = 'mode' . self::KEY_VALUE_SEPARATOR . $params->mode;
         }

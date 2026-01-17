@@ -4,22 +4,22 @@ declare(strict_types=1);
 namespace ZxArt\Import\Services;
 
 use DOMDocument;
-use DOMNode;
 use DOMElement;
-use DOMXPath;
 use DOMNameSpaceNode;
+use DOMNode;
+use DOMXPath;
 use errorLogger;
 use GuzzleHttp\Client;
-use ZxArt\Prods\Services\ProdsService;
-use ZxArt\ZxProdCategories\CategoryIds;
+use ZxArt\Import\Labels\Label;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Import\Prods\Dto\ReleaseImportDTO;
-use ZxArt\Import\Labels\Label;
+use ZxArt\Prods\Services\ProdsService;
+use ZxArt\ZxProdCategories\CategoryIds;
 
 class VtrdosImport extends errorLogger
 {
     protected int $counter = 0;
-    protected int $maxCounter = 200;
+    protected int $maxCounter = 270;
 
     /** @var array<string, array<int, array<string, mixed>>> */
     protected array $urlsSettings = [];
@@ -54,6 +54,12 @@ class VtrdosImport extends errorLogger
         'x',
         'y',
         'z',
+    ];
+
+    private array $releasesIgnoreList = [
+        'adce4c7dd9f41e5e022581623541f5a7',
+        '53b59ba4707cf835a7bf4184adb68cd1',
+        '43eef0fb79e9587688fddd563b45cd40',
     ];
 
     /** @var array<string,string> */
@@ -482,6 +488,9 @@ class VtrdosImport extends errorLogger
                         }
 
                         $releaseId = md5(basename($fileUrl));
+                        if (in_array($releaseId, $this->releasesIgnoreList, true)) {
+                            continue;
+                        }
 
                         $releaseDto = new ReleaseImportDTO(
                             id: $releaseId,
@@ -563,6 +572,10 @@ class VtrdosImport extends errorLogger
 
                             $fileUrl = $this->rootUrl . $href;
                             $releaseId = md5(basename($href));
+                            if (in_array($releaseId, $this->releasesIgnoreList, true)) {
+                                continue;
+                            }
+
                             $releaseDto = new ReleaseImportDTO(
                                 id: $releaseId,
                                 title: $prodTitle,
@@ -745,6 +758,9 @@ class VtrdosImport extends errorLogger
                         }
 
                         $releaseId = md5(basename($fileUrl));
+                        if (in_array($releaseId, $this->releasesIgnoreList, true)) {
+                            continue;
+                        }
 
                         $releaseDto = new ReleaseImportDTO(
                             id: $releaseId,
@@ -1011,6 +1027,9 @@ class VtrdosImport extends errorLogger
         }
 
         $releaseId = md5(basename($fileUrl));
+        if (in_array($releaseId, $this->releasesIgnoreList, true)) {
+            return;
+        }
 
         $roles = [];
         if (!empty($settings['release']['authorRoles'])) {
