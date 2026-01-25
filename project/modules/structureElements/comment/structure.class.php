@@ -24,6 +24,8 @@ class commentElement extends structureElement implements MetadataProviderInterfa
     use SearchTypesProviderTrait;
     use JsonDataProviderElement;
 
+    public const int EDIT_LIMIT = 7200;
+
     public $dataResourceName = 'module_comment';
     protected $allowedTypes = ['comment'];
     public $defaultActionName = 'show';
@@ -209,5 +211,10 @@ class commentElement extends structureElement implements MetadataProviderInterfa
             return $privileges[$this->structureType];
         }
         return [];
+    }
+
+    public function isEditable(): bool
+    {
+        return (time() - $this->getCreatedTimestamp()) < self::EDIT_LIMIT;
     }
 }

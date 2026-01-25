@@ -15,6 +15,10 @@ class publicReceiveComment extends structureElementAction
 		if ($this->validated) {
 			if ($structureElement->hasActualStructureInfo()) {
 				// editing
+				if (!$structureElement->isEditable()) {
+					$controller->redirect($structureElement->getInitialTarget()->getUrl());
+					return;
+				}
 				$structureElement->persistElementData();
 				$controller->redirect($structureElement->getInitialTarget()->getUrl());
 				return;

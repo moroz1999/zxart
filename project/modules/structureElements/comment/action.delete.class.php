@@ -12,6 +12,10 @@ class deleteComment extends structureElementAction
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
+        if (!$structureElement->isEditable()) {
+            $controller->redirect($structureElement->getInitialTarget()->getUrl());
+            return;
+        }
         if ($targetElement = $structureElement->getInitialTarget()) {
             $structureElement->deleteElementData();
             $targetElement->recalculateComments();

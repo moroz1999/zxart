@@ -20,6 +20,7 @@ In future we will get rid of this unsupported CMS by incorporating its functiona
 ### Modules and Structure (Structure Elements)
 CMS content and functionality are organized as a hierarchy of "Structure Elements".
 - Each element has a type (e.g., `comment`, `zxProd`).
+- Each `structureElement` contains `dateCreated` and `dateModified` properties. In most contexts, these properties contain formatted date strings. To get the original UTC timestamps (as integers), use the `$element->getCreatedTimestamp()` and `$element->getModifiedTimestamp()` methods.
 - Element code is located in `{package}/modules/structureElements/{type}/`.
 - Main class: `structure.class.php`.
 - Definitions of available actions: `structure.actions.php`.
@@ -60,3 +61,7 @@ This is the standard way to trigger actions from the frontend.
 ## Legacy Conventions
 - Action classes for a module must follow the `{actionName}{ModuleName}` naming convention (e.g., `receiveComment`).
 - Action files must be named `action.{actionName}.class.php` (e.g., `action.receive.class.php`).
+
+## Documentation Standards
+- All documentation and comments must be in English.
+- Documentation updates must be placed in the appropriate .md file (e.g., PHP rules in php.md, general rules in rules.md, architecture details in architecture.md).
