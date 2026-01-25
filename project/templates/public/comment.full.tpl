@@ -27,7 +27,20 @@
 	<div class='comment_content'>
 		{$element->getDecoratedContent()}
 	</div>
-	{if isset($privileges.comment.publicReceive) && $privileges.comment.publicReceive}
+	<div class="comment_controls">
+		{assign "elementPrivileges" $element->getPrivileges()}
+		{if isset($elementPrivileges.publicForm) && $elementPrivileges.publicForm}
+			<a class="comment_edit_button" href="{$element->getUrl()}id:{$element->id}/action:publicForm/">{translations name='comment.edit'}</a>
+		{/if}
+		{if isset($elementPrivileges.delete) && $elementPrivileges.delete}
+			<form action="{$element->getUrl()}" method="post" class="comment_delete_form">
+				<button class="comment_delete_button" onclick="return confirm('{translations name='comment.confirm_delete'}')">{translations name='comment.delete'}</button>
+				<input type="hidden" value="{$element->id}" name="id" />
+				<input type="hidden" value="delete" name="action" />
+			</form>
+		{/if}
+	</div>
+	{if isset($elementPrivileges.publicReceive) && $elementPrivileges.publicReceive}
 		{if $element->areCommentsAllowed()}
 			{if $commentForm = $element->getCommentForm()}
 				<a class="comment_response_button">{translations name='comment.respond'}</a>

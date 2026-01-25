@@ -14,3 +14,50 @@ In future we will get rid of this unsupported CMS by incorporating its functiona
 - /project/templates/ - legacy smarty templates.
 - /trickster-cms/ - copy of CMS. In dev environment project is linked to this folder. In prod environment it is served from composer.
 - ./tests/ - phpunit tests. all new functionality should be covered by tests.
+
+## System Concepts
+
+### Modules and Structure (Structure Elements)
+CMS content and functionality are organized as a hierarchy of "Structure Elements".
+- Each element has a type (e.g., `comment`, `zxProd`).
+- Element code is located in `{package}/modules/structureElements/{type}/`.
+- Main class: `structure.class.php`.
+- Definitions of available actions: `structure.actions.php`.
+- **Note on IDs:** For new elements that are not yet saved to the database, the `id` property is not `null`. It is a synthetic string in the format `id/{parentId}/action/{actionName}/`. To check if an element is already persisted in the database, use `$element->hasActualStructureInfo()`.
+
+### Action System
+Actions on elements are implemented as separate classes in the module folder:
+- File name format: `action.{actionName}.class.php`.
+- Class name format: `{actionName}{ModuleName}`. For example, for the `comment` module and the `receive` action, the class name will be `receiveComment`.
+- The class inherits from `structureElementAction`.
+- The `execute()` method contains the main logic.
+- The `setExpectedFields()` and `setValidators()` methods are responsible for processing and validating incoming data.
+- Public actions are available via URLs like `index.php?id={elementId}&action={actionName}`.
+
+### Privileges
+Privileges are managed through `privilegesManager`.
+- Privileges can be linked to a user, an element, a module, and a specific action.
+- Privileges are automatically checked before executing an action.
+- In Smarty templates, global privileges are available in the `$privileges.{module}.{action}` array.
+- For specific elements (like comments), privileges should be fetched via `$element->getPrivileges()`. Note that this returns the privileges array filtered for the element's structure type (e.g., `$privileges.actionName` instead of `$privileges.moduleName.actionName`).
+- Example of programmatic privilege granting: `$privilegesManager->setPrivilege($userId, $elementId, 'module', 'action', 1)`. After programmatic changes, it may be necessary to call `$privilegesManager->resetPrivileges()` to clear internal caches.
+
+### View System (Templates)
+- Smarty template engine is used. This is considered a **legacy view system**.
+- Project templates are located in `project/templates/public/`.
+- Template selection often depends on the element's `viewName` or is hardcoded in the controller/action.
+- The `$element` variable is available in most views. It is an instance of the entity (Structure Element) to which the view refers.
+- Components can be included via `{include file=$theme->template("name.tpl")}`.
+- **Rules for Legacy Templates:**
+    - Do NOT use the `style` attribute. Use full semantic class names instead. Styling should be handled in CSS files.
+
+### URL-based Action Handling
+If you navigate to a URL like `$element->getUrl() . 'id:' . $element->id . '/action:actionName/'`, the CMS engine automatically resolves this:
+1. It identifies the element by ID.
+2. It checks if the user has privileges for the specified `actionName` on that element.
+3. If authorized, it executes the corresponding action class.
+This is the standard way to trigger actions from the frontend.
+
+## Legacy Conventions
+- Action classes for a module must follow the `{actionName}{ModuleName}` naming convention (e.g., `receiveComment`).
+- Action files must be named `action.{actionName}.class.php` (e.g., `action.receive.class.php`).
