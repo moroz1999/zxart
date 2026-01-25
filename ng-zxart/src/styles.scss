@@ -1,5 +1,7 @@
 @use '@angular/material' as mat;
 
+@use 'app/shared/theme';
+
 @include mat.core();
 
 $zxart-primary: mat.m2-define-palette(mat.$m2-gray-palette, 800, 900, 300);

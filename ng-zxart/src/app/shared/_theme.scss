@@ -1,0 +1,47 @@
+:root {
+  /* Base palette */
+  --white: #fff;
+  --gray1: #edebeb;
+  --gray2: #dadada;
+  --gray3: #c7c7c7;
+  --gray4: #a1a1a1;
+  --gray5: #8a8a8a;
+  --gray6: #555555;
+  --gray7: #333333;
+  --gray8: #252525;
+  --gray9: #151515;
+  --red: #cc0000;
+  --black: #000000;
+  --green: #74ba01;
+  --orange: rgba(255, 104, 38, 1);
+  --yellow-light: hsl(44, 45%, 80%);
+  --yellow: hsl(44, 100%, 60%);
+
+  /* Semantic colors */
+  --text-color: var(--gray8);
+  --text-white-color: var(--white);
+  --text-light-color: var(--gray4);
+  --error-color: var(--red);
+  --link-color: var(--gray7);
+  --link-hover-color: var(--black);
+  --button-primary-bg: var(--gray8);
+  --button-primary-text: var(--white);
+
+  /* Shadows */
+  --shadow-deep-rgb: 0, 0, 0, 0.27;
+  --shadow-thin-rgb: 0, 0, 0, 0.1;
+  --shadow-deep: 0 3px 10px 3px rgba(var(--shadow-deep-rgb));
+  --shadow-thin: 0 1px 3px 1px rgba(var(--shadow-thin-rgb));
+
+  /* Spacing */
+  --space-4: 0.25rem;
+  --space-8: 0.5rem;
+  --space-12: 0.75rem;
+  --space-16: 1rem;
+  --space-20: 1.25rem;
+  --space-24: 1.5rem;
+  --space-32: 2rem;
+  --space-40: 2.5rem;
+  --space-48: 3rem;
+  --space-64: 4rem;
+}
