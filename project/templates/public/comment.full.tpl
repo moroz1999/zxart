@@ -28,7 +28,7 @@
 	<div class='comment_content'>
 		{$element->getDecoratedContent()}
 	</div>
-	{if isset($elementPrivileges.publicReceive) && $elementPrivileges.publicReceive}
+	{if isset($privileges.comment.publicReceive) && $privileges.comment.publicReceive}
 		{if $element->areCommentsAllowed()}
 			{if $commentForm = $element->getCommentForm()}
 				<a class="comment_response_button">{translations name='comment.respond'}</a>
