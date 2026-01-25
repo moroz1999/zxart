@@ -1,7 +1,6 @@
-@use "vars" as vars;
 
 @mixin pseudo-link {
-  color: vars.$yellow-light;
+  color: var(--pseudo-link-color);
   text-decoration: none;
   cursor: pointer;
   &:hover,

@@ -10,10 +10,10 @@
 }
 
 .letter {
-  padding: 0 vars.$padding-md;
-  min-width: 1rem;
+  padding: 0 var(--padding-lg);
+  min-width: var(--font-md);
 }
 
 .transparent {
-  color: #fff;
+  color: var(--text-white-color);
 }

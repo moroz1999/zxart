@@ -21,15 +21,15 @@
   align-items: center;
 
   .skip {
-    color: vars.$gray6;
+    color: var(--date-color);
     cursor: pointer;
-    margin-right: vars.$padding-sm;
+    margin-right: var(--margin-md);
     width: calc(var(--star-size) * 0.6);
-    transition: opacity vars.$animation-sm ease-in-out;
+    transition: opacity var(--animation-sm) ease-in-out;
   }
 
   .skip-vote-hovered {
-    color: vars.$yellow;
+    color: var(--icon-yellow);
   }
 }
 
@@ -39,7 +39,7 @@
   flex-wrap: nowrap;
 
   .star {
-    color: vars.$gray6;
+    color: var(--date-color);
     cursor: pointer;
   }
 }
@@ -49,7 +49,7 @@
   height: var(--star-size);
   box-sizing: border-box;
   flex-shrink: 0;
-  padding-right: vars.$padding-xxs;
+  padding-right: var(--padding-xs);
 }
 
 .interactive {
@@ -64,14 +64,14 @@
   transition: width 100ms ease-out;
 
   .star {
-    color: vars.$yellow;
+    color: var(--icon-yellow);
   }
 }
 
 .user-vote {
-  color: vars.$yellow;
-  font-size: vars.$font-sm;
-  margin-left: vars.$padding-sm;
+  color: var(--icon-yellow);
+  font-size: var(--font-sm);
+  margin-left: var(--margin-md);
   display: flex;
   align-items: center;
   line-height: 1;

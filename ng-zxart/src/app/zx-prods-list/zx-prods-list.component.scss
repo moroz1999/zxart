@@ -2,7 +2,7 @@
 
 .zx-prods-gallery {
   display: grid;
-  gap: vars.$padding-lg;
+  gap: var(--gap-xl);
   justify-content: space-between;
 
   grid-template-columns: 1fr;
@@ -28,5 +28,5 @@
 }
 
 .zx-prods-year {
-  margin-bottom: vars.$padding-xl;
+  margin-bottom: var(--margin-xxl);
 }

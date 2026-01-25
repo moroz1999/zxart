@@ -5,8 +5,8 @@
 $amount: 5;
 .zx-prods-list-presets {
   display: flex;
-  gap: vars.$padding-md;
-  margin-bottom: vars.$padding-xl;
+  gap: var(--gap-lg);
+  margin-bottom: var(--margin-xxl);
   flex-wrap: wrap;
 }
 
@@ -14,15 +14,15 @@ $amount: 5;
   @include breakpoints.media-breakpoint-up(sm) {
     display: flex;
     align-items: flex-start;
-    gap: vars.$padding-xl;
+    gap: var(--gap-xxl);
   }
 }
 
 .zx-prods-list-left {
   display: flex;
-  gap: vars.$padding-md;
+  gap: var(--gap-lg);
   overflow: auto;
-  transition: opacity vars.$animation-md ease-out;
+  transition: opacity var(--animation-md) ease-out;
   @include breakpoints.media-breakpoint-up(sm) {
     position: sticky;
     top: 0;
@@ -60,9 +60,9 @@ $amount: 5;
 }
 
 .zx-prods-gallery {
-  transition: opacity vars.$animation-md ease-out;
+  transition: opacity var(--animation-md) ease-out;
   display: grid;
-  gap: vars.$padding-lg;
+  gap: var(--gap-xl);
   justify-content: space-between;
 }
 
@@ -98,15 +98,15 @@ $amount: 5;
 }
 
 .include-subcategories-prods-selector {
-  font-size: vars.$font-sm;
+  font-size: var(--font-sm);
 }
 
 .selectors {
-  background: vars.$gray9;
-  padding-top: vars.$padding-md;
-  padding-bottom: vars.$padding-md;
-  box-shadow: vars.$shadow-md;
-  transition: opacity vars.$animation-md ease-in-out;
+  background: var(--background-deep);
+  padding-top: var(--padding-lg);
+  padding-bottom: var(--padding-lg);
+  box-shadow: var(--shadow-deep);
+  transition: opacity var(--animation-md) ease-in-out;
   @include breakpoints.media-breakpoint-up(sm) {
     position: sticky;
     top: 0;
@@ -121,7 +121,7 @@ $amount: 5;
 
 .selectors-top {
   display: flex;
-  gap: vars.$padding-md;
+  gap: var(--gap-lg);
 
   @media (max-width: 1640px) {
     flex-wrap: wrap;
@@ -131,14 +131,14 @@ $amount: 5;
 .releases-selector {
   display: flex;
   align-items: center;
-  gap: vars.$padding-sm;
+  gap: var(--gap-md);
   flex-wrap: nowrap;
 }
 
 .layout-selector {
   display: flex;
   align-items: center;
-  gap: vars.$padding-md;
+  gap: var(--gap-lg);
   @include breakpoints.media-breakpoint-up(sm) {
     justify-content: flex-end;
     flex-grow: 1;
@@ -146,13 +146,13 @@ $amount: 5;
 }
 
 app-letter-selector {
-  margin: vars.$padding-md 0 0;
+  margin: var(--margin-lg) 0 0;
 }
 
 app-pages-selector {
   z-index: 10;
   @include breakpoints.media-breakpoint-up(sm) {
-    margin-top: vars.$padding-xl;
+    margin-top: var(--margin-xxl);
   }
 }
 
@@ -163,9 +163,9 @@ app-pages-selector {
   border-collapse: collapse;
 
   thead td {
-    padding: vars.$padding-sm vars.$padding-md;
-    font-size: vars.$font-sm;
-    color: vars.$text-light-color;
+    padding: var(--padding-md) var(--padding-lg);
+    font-size: var(--font-sm);
+    color: var(--text-light-color);
     vertical-align: bottom;
 
     &.zx-prods-table-sortable {
@@ -175,17 +175,17 @@ app-pages-selector {
   }
 
   ::ng-deep app-zx-prod-row td {
-    padding: vars.$padding-sm vars.$padding-md;
+    padding: var(--padding-md) var(--padding-lg);
   }
 
   ::ng-deep app-zx-prod-row:nth-of-type(2n-1) td {
-    background-color: vars.$gray8;
+    background-color: var(--background-dark);
   }
 }
 
 mat-spinner {
   display: block;
-  margin: vars.$padding-xl auto;
+  margin: var(--margin-xxl) auto;
 }
 
 .selectors-top {

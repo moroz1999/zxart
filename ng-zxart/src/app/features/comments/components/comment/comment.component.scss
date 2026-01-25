@@ -1,31 +1,33 @@
+@use 'shared/vars' as vars;
+
 .comment {
-  border: 1px solid #ddd;
-  padding: 10px;
-  margin-bottom: 5px;
-  background-color: #f9f9f9;
+  border: 1px solid var(--border-color-light);
+  padding: var(--padding-md);
+  margin-bottom: var(--margin-xs);
+  background-color: var(--background-light);
 }
 
 .comment-header {
-  margin-bottom: 5px;
-  font-size: 0.9em;
+  margin-bottom: var(--margin-xs);
+  font-size: var(--font-sm);
 }
 
 .comment-author {
   font-weight: bold;
-  margin-right: 10px;
+  margin-right: var(--margin-md);
 }
 
 .comment-badge {
-  background-color: #eee;
-  padding: 2px 5px;
-  border-radius: 3px;
-  margin-right: 10px;
+  background-color: var(--badge-bg);
+  padding: var(--padding-xs) var(--padding-sm);
+  border-radius: var(--border-radius-sm);
+  margin-right: var(--margin-md);
 }
 
 .comment-date {
-  color: #666;
+  color: var(--date-color);
 }
 
 .comment-content {
-  margin-bottom: 5px;
+  margin-bottom: var(--margin-xs);
 }

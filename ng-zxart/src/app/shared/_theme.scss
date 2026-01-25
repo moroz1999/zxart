@@ -13,7 +13,8 @@
   --red: #cc0000;
   --black: #000000;
   --green: #74ba01;
-  --orange: rgba(255, 104, 38, 1);
+  --orange-rgb: 255, 104, 38;
+  --orange: rgba(var(--orange-rgb), 1);
   --yellow-light: hsl(44, 45%, 80%);
   --yellow: hsl(44, 100%, 60%);
 
@@ -27,11 +28,25 @@
   --button-primary-bg: var(--gray8);
   --button-primary-text: var(--white);
 
+  --background-dark: var(--gray8);
+  --background-deep: var(--gray9);
+  --background-light: var(--gray1);
+
+  --border-color-light: var(--gray3);
+  --border-color-medium: var(--gray2);
+  --border-color-dark: var(--gray7);
+
+  --badge-bg: var(--gray2);
+  --date-color: var(--gray6);
+
+  --pseudo-link-color: var(--yellow-light);
+  --icon-yellow: var(--yellow);
+
   /* Shadows */
-  --shadow-deep-rgb: 0, 0, 0, 0.27;
-  --shadow-thin-rgb: 0, 0, 0, 0.1;
-  --shadow-deep: 0 3px 10px 3px rgba(var(--shadow-deep-rgb));
-  --shadow-thin: 0 1px 3px 1px rgba(var(--shadow-thin-rgb));
+  --shadow-deep-rgb: 0, 0, 0;
+  --shadow-thin-rgb: 0, 0, 0;
+  --shadow-deep: 0 3px 10px 3px rgba(var(--shadow-deep-rgb), 0.27);
+  --shadow-thin: 0 1px 3px 1px rgba(var(--shadow-thin-rgb), 0.1);
 
   /* Spacing */
   --space-4: 0.25rem;
@@ -44,4 +59,54 @@
   --space-40: 2.5rem;
   --space-48: 3rem;
   --space-64: 4rem;
+
+  --gap-xs: var(--space-4);
+  --gap-sm: var(--space-8);
+  --gap-md: var(--space-12);
+  --gap-lg: var(--space-16);
+  --gap-xl: var(--space-32);
+  --gap-xxl: var(--space-48);
+
+  --padding-xs: var(--space-4);
+  --padding-sm: var(--space-8);
+  --padding-md: var(--space-12);
+  --padding-lg: var(--space-16);
+  --padding-xl: var(--space-32);
+
+  --margin-xs: var(--space-4);
+  --margin-sm: var(--space-8);
+  --margin-md: var(--space-12);
+  --margin-lg: var(--space-16);
+  --margin-xl: var(--space-32);
+  --margin-xxl: var(--space-48);
+
+  /* Font sizes */
+  --font-md: 1rem;
+  --font-xs: 0.7rem;
+  --font-sm: 0.85rem;
+  --font-lg: 1.25rem;
+  --font-xl: 1.5rem;
+
+  /* Border radius */
+  --radius-md: 0.214rem;
+  --radius-lg: 0.428rem;
+  --radius-xl: 0.857rem;
+  --radius-sm: 0.107rem;
+  --radius-xs: 0.053rem;
+
+  --border-radius-sm: var(--radius-sm);
+  --border-radius-md: var(--radius-md);
+  --border-radius-lg: var(--radius-lg);
+  --border-radius-xl: var(--radius-xl);
+
+  /* Controls */
+  --controls-padding: var(--space-12);
+  --controls-height: 2.4rem;
+  --controls-transition-time: 0.25s;
+  --controls-border-radius: var(--radius-md);
+
+  /* Animation */
+  --animation-md: 300ms;
+  --animation-sm: 200ms;
+  --animation-xs: 100ms;
 }

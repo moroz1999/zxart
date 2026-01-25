@@ -1,6 +1,6 @@
 ## Project Domain
-
 Project is an archive of ZX Spectrum related art objects. Graphics, music, software and related entities - authors, authors groups and so on.
+Read detailed files only WHEN you get specific domain questions.
 
 ## Entities
 

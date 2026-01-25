@@ -17,11 +17,11 @@ a {
 
 .mat-tree {
   background: transparent;
-  color: vars.$white;
+  color: var(--text-white-color);
 }
 
 .mat-tree-node, .mat-nested-tree-node {
-  color: vars.$white;
+  color: var(--text-white-color);
 }
 
 .mat-tree-node-selected {

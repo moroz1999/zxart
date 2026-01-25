@@ -1,4 +1,6 @@
 ## PHP:
+- Stick to Domain Driven Design and Onion Architecture for all NEWLY written code.
+- Use rules of SOLID principles.
 - Use strict mode.
 - ALWAYS use full variable names.
 - ALWAYS use imports (`use`) for classes and namespaces. Fully qualified names in the code are prohibited.

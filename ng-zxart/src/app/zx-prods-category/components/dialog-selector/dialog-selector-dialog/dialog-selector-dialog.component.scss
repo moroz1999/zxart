@@ -10,8 +10,8 @@
 }
 
 .value-group {
-  margin-right: vars.$padding-lg;
-  margin-bottom: vars.$padding-lg;
+  margin-right: var(--margin-xl);
+  margin-bottom: var(--margin-xl);
 
   &:last-of-type {
     margin-right: 0;
@@ -19,18 +19,18 @@
 }
 
 .value-group-title {
-  color: vars.$gray5;
+  color: var(--text-light-color);
   font-weight: 500;
-  margin-bottom: vars.$padding-md;
+  margin-bottom: var(--margin-lg);
 }
 
 .value-columns {
-  column-gap: vars.$padding-lg;
+  column-gap: var(--gap-xl);
   column-fill: balance;
   //column
 }
 
 .value {
-  padding-bottom: vars.$padding-sm;
+  padding-bottom: var(--padding-md);
   break-inside: avoid;
 }

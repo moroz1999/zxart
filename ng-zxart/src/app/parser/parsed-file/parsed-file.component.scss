@@ -8,11 +8,11 @@
     "name type md5 releases"
     "files files files files";
   grid-template-columns: 1fr 50px 220px 1fr;
-  gap: vars.$padding-md vars.$padding-xl;
+  gap: var(--gap-lg) var(--gap-xxl);
 
   &.zx-file {
-    background: vars.$gray8;
-    border-radius: 5px;
+    background: var(--background-dark);
+    border-radius: var(--border-radius-md);
   }
 }
 
@@ -31,8 +31,8 @@ svg-icon {
 
 .md5 {
   grid-area: md5;
-  color: vars.$gray5;
-  font-size: vars.$font-sm;
+  color: var(--text-light-color);
+  font-size: var(--font-sm);
 }
 
 .releases {
@@ -48,5 +48,5 @@ svg-icon {
 }
 
 .attention {
-  color: vars.$red;
+  color: var(--red);
 }
