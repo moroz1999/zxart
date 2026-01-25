@@ -2,7 +2,7 @@
 /*  HEADER BLOCK
 /********************************************************/
 .header_block {
-  padding: 0.5rem 1rem;
+  padding: var(--header-padding);
   position: relative;
   background-color: @secondary_color;
   z-index: 5;
@@ -11,22 +11,22 @@
 }
 
 .header_column {
-  margin: 0 1rem;
+  margin: var(--header-column-margin);
 }
 
 .logo_block {
   position: relative;
-  margin-top: 1.2em;
+  margin-top: var(--logo-margin-top);
   color: inherit;
   text-decoration: none;
   display: block;
 }
 
 .settings_block {
-  font-size: 0.8em;
+  font-size: var(--font-sm);
 
   .button {
-    padding: 0.05em 0.1em;
+    padding: var(--settings-button-padding);
     line-height: 1.1em;
     min-height: 20px;
   }

@@ -5,12 +5,12 @@
   @media (min-width: @screen_breakpoint_xl) {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: var(--gap-lg);
   }
 
   .stats_section {
     @media (min-width: @screen_breakpoint_xl) {
-      width: e('calc(50% - 1rem)');
+      width: e('calc(50% - var(--gap-lg))');
     }
   }
 }
@@ -19,24 +19,24 @@
   @media (min-width: @screen_breakpoint_md) {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: var(--gap-lg);
   }
 
   .stats_section {
     @media (min-width: @screen_breakpoint_md) {
-      width: e('calc(33% - 1rem)')
+      width: e('calc(33% - var(--gap-lg))')
     }
     @media (min-width: @screen_breakpoint_xl) {
-      width: e('calc(25% - 1rem)');
+      width: e('calc(25% - var(--gap-lg))');
     }
   }
 }
 
 .stats_section {
-  margin-bottom: 3em;
+  margin-bottom: var(--margin-xl);
 }
 
 .chart_component {
-  background: #fff;
-  height: 15em;
+  background: var(--white);
+  height: 210px;
 }

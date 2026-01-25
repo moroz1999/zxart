@@ -2,14 +2,14 @@
 /*  PAGER BLOCK
 /********************************************************/
 .pager_block {
-	margin-bottom: 1rem;
+	margin-bottom: var(--margin-lg);
 }
 
 .pager_previous {
 	display: inline-block;
 	vertical-align: middle;
-	color: #cfb580;
-	padding: 0.5em;
+	color: var(--link-alt-color);
+	padding: var(--padding-sm);
 }
 
 .pager_previous.pager_hidden {
@@ -17,20 +17,20 @@
 }
 
 .pager_page {
-	min-width: 0.8em;
+	min-width: 11px;
 	text-align: center;
 	display: inline-block;
 	vertical-align: middle;
 	text-decoration: underline;
-	color: #cfb580;
-	padding: 0.54em;
+	color: var(--link-alt-color);
+	padding: 7.5px;
 }
 
 .pager_page.pager_active {
-	background-color: @secondary_color;
+	background-color: var(--secondary-bg);
 }
 
 .pager_next {
-	color: #cfb580;
-	padding: 0.5em;
+	color: var(--link-alt-color);
+	padding: var(--padding-sm);
 }

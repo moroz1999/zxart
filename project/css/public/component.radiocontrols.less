@@ -2,9 +2,9 @@
     .radio_icon {
         display: inline-block;
         vertical-align: middle;
-        width: 3em;
-        height: 3em;
-        margin-right: 0.5em;
+        width: var(--radio-icon-size);
+        height: var(--radio-icon-size);
+        margin-right: var(--radio-icon-margin-right);
         background: url(getImageUrl("radio.svg")) no-repeat center;
         background-size: contain;
     }
@@ -12,12 +12,12 @@
     .button {
         display: inline-block;
         vertical-align: middle;
-        font-size: 0.8em;
-        margin-right: 0.5em;
-        line-height: 1.6rem;
+        font-size: var(--radio-button-font-size);
+        margin-right: var(--radio-button-margin-right);
+        line-height: var(--radio-button-line-height);
     }
 
     .columnmodule_content {
-        line-height: 3em;
+        line-height: var(--radio-columnmodule-content-line-height);
     }
 }

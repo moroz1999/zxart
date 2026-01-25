@@ -6,40 +6,40 @@
 }
 
 .form_table td {
-  padding: 0.4em;
+  padding: var(--padding-xs);
 }
 
 .form_table h3 {
-  margin-top: 3rem;
+  margin-top: var(--margin-xl);
 }
 
 .form_table .form_label {
   width: auto;
-  font-size: 0.9em;
-  color: #a0a0a0;
-  padding-top: 0.7rem;
+  font-size: var(--font-sm);
+  color: var(--form-label-color);
+  padding-top: var(--padding-sm);
   @media (max-width: @screen_breakpoint_md_max) {
-    padding-top: 2rem;
+    padding-top: var(--padding-xl);
   }
 }
 
 .form_star {
-  font-size: 0.9em;
-  color: #a09ecf;
+  font-size: var(--font-sm);
+  color: var(--form-star-color);
 }
 
 .form_field {
   width: auto;
-  padding-bottom: 1em;
+  padding-bottom: var(--padding-lg);
 }
 
 .form_table tr.form_error td {
-  color: #f00;
+  color: var(--error-color);
 }
 
 .form_table .form_controls {
   text-align: right;
-  padding-top: 0.5em;
+  padding-top: var(--padding-sm);
 }
 
 .form_deletefile {

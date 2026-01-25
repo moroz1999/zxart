@@ -2,8 +2,8 @@
 /*  SHARED WITH CKEDITOR
 /********************************************************/
 @ppx: 14.5rem;
-@primary_color: #151515;
-@secondary_color: #202020;
+@primary_color: var(--main-background);
+@secondary_color: var(--header-bg);
 @header_background_color: @primary_color;
 @mobileheader_height: 4em;
 
@@ -16,7 +16,7 @@ html, input, textarea, select {
 }
 
 html {
-  color: #ffffff;
+  color: var(--text-white-color);
 }
 
 td {
@@ -31,26 +31,26 @@ th {
 h1, h2, h3, h4, h5 {
   margin: 1.5em 0 1em 0;
   padding: 0 0 0 0;
-  color: #ffffff;
+  color: var(--text-white-color);
 }
 
 h1 {
-  font-size: 1.4em;
+  font-size: var(--font-xl);
   font-weight: normal;
 }
 
 h2 {
-  font-size: 1.3em;
+  font-size: var(--font-lg);
   font-weight: normal;
 }
 
 h3 {
-  font-size: 1.1em;
+  font-size: var(--font-md);
   font-weight: normal;
 }
 
 a {
-  color: #83a9e7;
+  color: var(--link-alt-color);
   text-decoration: none;
 }
 

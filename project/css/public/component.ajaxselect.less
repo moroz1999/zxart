@@ -5,14 +5,14 @@
   display: inline-block;
 
   .ajaxselect_item:last-of-type {
-    margin-bottom: 1em;
+    margin-bottom: var(--space-12);
   }
 
   .icon_search {
-    color: #000000;
+    color: var(--black);
     position: absolute;
     top: 0;
-    right: @10pt;
+    right: 13px;
   }
 }
 
@@ -22,18 +22,18 @@
 }
 
 .ajaxselect_item {
-  border-bottom: 1px solid #dadada;
-  font-size: 11px;
+  border-bottom: 1px solid var(--gray2);
+  font-size: var(--font-xs);
   font-weight: bold;
-  line-height: 24px;
-  margin: 0 8px;
+  line-height: var(--space-24);
+  margin: var(--ajaxselect-item-margin);
   white-space: nowrap;
   overflow: hidden;
 }
 
 .ajaxselect_item:after {
   content: "";
-  border-bottom: 1px solid #ffffff;
+  border-bottom: 1px solid var(--white);
   display: block;
 }
 
@@ -52,9 +52,9 @@
 }
 
 .ajaxsearch_results_item .icon {
-  margin-top: 5px;
+  margin-top: var(--ajaxselect-results-icon-margin-top);
   flex-shrink: 0;
-  margin-right: .5em;
+  margin-right: var(--ajaxselect-results-icon-margin-right);
   width: 16px;
   height: 16px;
   display: inline-block;

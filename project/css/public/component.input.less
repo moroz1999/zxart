@@ -5,25 +5,25 @@
   position: relative;
   display: inline-block;
   vertical-align: top;
-  background-color: #fff;
-  border-radius: 0.35em;
+  background-color: var(--input-bg);
+  border-radius: var(--controls-border-radius);
   border-style: none;
-  color: #000;
-  line-height: 1.9em;
-  min-height: 1.9rem;
+  color: var(--input-text);
+  line-height: var(--controls-height);
+  min-height: var(--controls-height);
   margin: 0;
-  padding: 0 0.35em 0;
-  font-size: 1rem;
-  width: 14em;
+  padding: var(--input-padding);
+  font-size: var(--font-md);
+  width: var(--input-width-md);
   box-sizing: border-box;
 
   ::placeholder {
-    color: #999999;
+    color: var(--input-placeholder);
   }
 }
 
 input.form_error {
-  color: #f00;
+  color: var(--input-error-text);
   font-weight: bold;
 }
 
@@ -35,14 +35,12 @@ input.form_error {
   position: relative;
   display: inline-block;
   vertical-align: top;
-  background-color: #fff;
+  background-color: var(--input-bg);
   border-style: none;
-  border-radius: 0.35em;
-  -moz-border-radius: 0.35em;
-  -webkit-border-radius: 0.35em;
+  border-radius: var(--controls-border-radius);
   z-index: 5;
-  padding: 3px 0.35em 0;
-  font-size: 0.9em;
-  color: #000;
-  width: 30em;
+  padding: var(--textarea-padding);
+  font-size: var(--font-sm);
+  color: var(--input-text);
+  width: var(--textarea-width-lg);
 }

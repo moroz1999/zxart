@@ -27,16 +27,99 @@
   --button-primary-bg: var(--gray8);
   --button-primary-text: var(--white);
 
+  --button-secondary-bg: #424242;
+  --button-secondary-hover-bg: #606060;
+  --button-secondary-text: var(--white);
+  --button-danger-bg: #e51919;
+  --button-danger-border: #860f0f;
+  --button-danger-text: var(--white);
+
   --background-dark: var(--gray8);
   --background-deep: var(--gray9);
   --background-light: var(--gray1);
 
-  --border-color-light: var(--gray3);
-  --border-color-medium: var(--gray2);
-  --border-color-dark: var(--gray7);
-
   --badge-bg: var(--gray2);
   --date-color: var(--gray6);
+
+  /* Layout & Application */
+  --main-background: var(--gray9);
+  --content-background: var(--gray9);
+  --content-padding: var(--space-16);
+  --content-padding-mobile: var(--space-4);
+  --center-block-padding-bottom: var(--space-32);
+  --breadcrumbs-margin-bottom: var(--space-16);
+  --zxbn-margin-bottom: var(--space-16);
+  --current-location-margin-bottom: var(--space-16);
+  --firstpage-top-block-margin-bottom: var(--space-48);
+  --firstpage-top-block-padding-top: var(--space-64);
+  --lastcomments-margin-bottom: var(--space-16);
+  --lastcomments-header-font-size: var(--font-md);
+  --lastnews-margin-bottom: var(--space-48);
+  --lastnews-padding-top: var(--space-12);
+  --lastnews-header-font-size: var(--font-md);
+  --news-short-date-color: var(--link-alt-color);
+  --news-short-date-font-size: var(--font-sm);
+  --news-short-block-margin-bottom: var(--space-16);
+  --latestupdates-controls-margin: var(--space-4) var(--space-4) var(--space-16);
+  --zxitemslist-controls-margin-top: var(--space-16);
+  --parties-table-thead-padding: 0 var(--space-4) var(--space-4);
+  --parties-table-tbody-padding: var(--space-4) var(--space-16) var(--space-4);
+  --share-block-top: var(--space-20);
+  --right-column-padding-top: var(--space-40);
+  --center-column-ads-margin-top: var(--space-32);
+  --lastvotes-margin-bottom: var(--space-16);
+  --picture-details-share-margin: var(--space-8) 0;
+  --share-item-margin-right: var(--space-16);
+  --radio-icon-size: 42px;
+  --radio-icon-margin-right: var(--space-8);
+  --radio-button-font-size: var(--font-sm);
+  --radio-button-margin-right: var(--space-8);
+  --radio-button-line-height: 22px;
+  --radio-columnmodule-content-line-height: 42px;
+  --ajaxselect-item-margin: 0 var(--space-8);
+  --ajaxselect-results-icon-margin-top: var(--space-4);
+  --ajaxselect-results-icon-margin-right: var(--space-8);
+  --authorship-form-margin-bottom: var(--space-16);
+  --authorship-form-title-max-width: 210px;
+  --authorship-form-title-margin-right: var(--space-16);
+  --authorship-form-roles-width: 280px;
+  --authorship-form-roles-height: 140px;
+  --authorship-form-remove-margin-right: var(--space-16);
+  --authorship-form-input-margin-right: var(--space-16);
+  --authorship-form-input-max-width: 210px;
+
+  /* Headers & Typography */
+  --header-bg: #202020;
+  --header-padding: var(--space-8) var(--space-16);
+  --header-column-margin: 0 var(--space-16);
+  --logo-margin-top: var(--space-16);
+  --settings-button-padding: var(--space-4) var(--space-8);
+
+  /* Links */
+  --link-alt-color: #cfb580;
+
+  /* Buttons */
+  --button-bg: #424242;
+  --button-hover-bg: #606060;
+  --button-text: var(--white);
+  --button-padding: var(--space-4) var(--space-8);
+  --button-danger-bg: #e51919;
+  --button-danger-border: #860f0f;
+
+  /* Forms & Inputs */
+  --input-bg: var(--white);
+  --input-text: var(--black);
+  --input-placeholder: #999999;
+  --input-error-text: var(--red);
+  --input-width-md: 140px;
+  --input-padding: 0 var(--space-4);
+  --textarea-width-lg: 300px;
+  --textarea-padding: var(--space-4) var(--space-4) 0;
+  --form-label-color: var(--gray4);
+  --form-star-color: #a09ecf;
+  --dropdown-padding-right: 20px;
+  --dropdown-option-hover-bg: var(--background-light);
+  --dropdown-option-padding: 0 var(--space-4) 0;
 
   --pseudo-link-color: var(--yellow-light);
   --icon-yellow: var(--yellow);

@@ -2,25 +2,25 @@
 /*  COMPONENT
 /********************************************************/
 .button {
-  background-color: #424242;
+  background-color: var(--button-bg);
   border: none;
-  border-radius: 0.3rem;
-  min-height: 36px;
+  border-radius: var(--controls-border-radius);
+  min-height: var(--controls-height);
   line-height: 28px;
-  padding: 0.2rem 0.5rem;
-  color: #ffffff;
+  padding: var(--button-padding);
+  color: var(--button-text);
   text-decoration: none;
-  transition: background-color 0.15s ease-in-out, border 0.15s ease-in-out;
+  transition: background-color var(--controls-transition-time) ease-in-out, border var(--controls-transition-time) ease-in-out;
 
   &:hover,
   &:focus {
     text-decoration: none;
-    background-color: #606060;
+    background-color: var(--button-hover-bg);
   }
 }
 
 .delete_button {
-  border: #860f0f;
-  background: #e51919;
-  color: #ffffff;
+  border: var(--button-danger-border);
+  background: var(--button-danger-bg);
+  color: var(--button-danger-text);
 }
