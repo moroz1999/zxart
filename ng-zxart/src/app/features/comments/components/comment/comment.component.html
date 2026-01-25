@@ -1,0 +1,13 @@
+<div class="comment">
+  <div class="comment-header">
+    <a *ngIf="comment.author.url; else noUrl" [href]="comment.author.url" class="comment-author">
+      {{ comment.author.name }}
+    </a>
+    <ng-template #noUrl>
+      <span class="comment-author">{{ comment.author.name }}</span>
+    </ng-template>
+    <span *ngIf="comment.author.badge" class="comment-badge">{{ comment.author.badge }}</span>
+    <span class="comment-date">{{ comment.date }}</span>
+  </div>
+  <div class="comment-content" [innerHTML]="comment.content"></div>
+</div>

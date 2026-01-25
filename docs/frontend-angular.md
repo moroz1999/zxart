@@ -1,35 +1,46 @@
-### Интеграция Angular в Legacy (Smarty)
+### Angular Integration into Legacy (Smarty)
 
-Интеграция Angular компонентов в существующие легаси-шаблоны Smarty реализована через Custom Elements (Web Components).
+The integration of Angular components into existing legacy Smarty templates is implemented using Custom Elements (Web Components).
 
-#### Основные принципы
-1. **Custom Elements**: Angular компоненты регистрируются в `AppModule` как кастомные элементы с префиксом `app-`. Это позволяет использовать их как обычные HTML-теги в `.tpl` файлах.
-2. **Передача данных**:
-    - **Attributes**: ID элемента и простые настройки передаются через атрибуты тега (например, `element-id="{$element->id}"`). Атрибуты в Angular компоненте принимаются через `@Input()`.
-    - **Prefetched Data**: Для исключения лишних HTTP-запросов данные могут передаваться через глобальный объект `window.elementsData`. В шаблоне Smarty это выглядит так:
-      ```html
-      <script>
-          window.elementsData = window.elementsData ? window.elementsData : { };
-          window.elementsData[{$element->id}] = {$element->getJsonInfo('presetName')};
-      </script>
-      <app-component element-id="{$element->id}"></app-component>
-      ```
-      В Angular сервисе `ElementsService.getPrefetchedModel` эти данные считываются и преобразуются в модели.
+#### Core Principles
+1. **Custom Elements**: Angular components are registered in `AppModule` as custom elements with an `app-` prefix. This allows them to be used like standard HTML tags within `.tpl` files.
+2. **Data Passing**:
+    - **Attributes**: Element IDs and simple settings are passed via tag attributes (e.g., `element-id="{$element->id}"`). These attributes are received in Angular components using the `@Input()` decorator.
 
-#### Роутинг и навигация
-На данный момент за роутинг отвечает легаси-часть системы. При переходе по ссылкам происходит полная перезагрузка страницы браузером. Angular компоненты инициализируются "на лету" при загрузке страницы, если соответствующий тег присутствует в отрендеренном HTML.
+#### Routing and Navigation
+Currently, the legacy part of the system is responsible for routing. Clicking on links results in a full browser page reload. Angular components are initialized "on the fly" during page load if the corresponding tag is present in the rendered HTML.
 
-#### Сборка и проверка
-После внесения любых изменений в Angular-часть проекта (`ng-zxart`), необходимо:
-1. Выполнить сборку проекта: `npm run build` (находясь в директории `ng-zxart`).
-2. Убедиться, что сборка прошла без ошибок.
-3. Проверить результат в браузере.
+#### Build and Verification
+After making any changes to the Angular part of the project (`ng-zxart`), you must:
+1. Perform a project build: `npm run build` (inside the `ng-zxart` directory).
+2. Ensure the build completes without errors.
+3. Verify the result in a browser.
 
-#### Пример интеграции комментариев
-Для интеграции нового списка комментариев используется тег `<app-comments-list>` в соответствующих детальных шаблонах (например, `zxProd.details.tpl`):
+#### Example of Comments Integration
+To integrate the new comments list, the `<app-comments-list>` tag is used in the relevant detailed templates (e.g., `zxProd.details.tpl`):
 
 ```html
 <app-comments-list element-id="{$element->id}"></app-comments-list>
 ```
 
-Компонент самостоятельно запрашивает данные с бэкенда по предоставленному `element-id` через `CommentsService`. Старый механизм комментариев через `{include file=$theme->template('component.comments.tpl')}` в публичных шаблонах больше не используется.
+The component independently requests data from the backend using the provided `element-id` via `CommentsService`. The old comments mechanism using `{include file=$theme->template('component.comments.tpl')}` in public templates is no longer used.
+
+### Architecture and Code Structure
+
+#### Feature Sliced Design (FSD)
+All new functionality in Angular must follow Feature Sliced Design principles.
+- Code is divided into layers, such as `features`, `entities`, and `shared`.
+- Each feature must be located in its own directory within `src/app/features/`.
+- Example of the `comments` feature structure:
+  ```
+  features/comments/
+    components/      # Feature components
+    services/        # Feature-specific services
+    models/          # DTOs and interfaces
+  ```
+
+#### Naming and Storage Rules
+1. **Standalone Components**: All new components must be standalone. Explicitly specify all required imports (modules, other components, pipes) in the `imports` array of the `@Component` decorator.
+2. **DTOs**: All interfaces and DTOs must be stored in the `models/` folder within the corresponding module/feature. Do not mix type definitions with service or component code.
+3. **File Separation**: For each component, the template (HTML), styles (SCSS), and logic (TS) must reside in separate files. Using inline templates and styles within the `@Component` decorator is prohibited.
+4. **Services**: Shared services are stored in `app/shared/services/`, while feature-specific services are stored in `features/{feature-name}/services/`.

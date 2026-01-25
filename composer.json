@@ -23,7 +23,8 @@
     "ext-redis": "*",
     "ext-pdo": "*",
     "ezyang/htmlpurifier": "^4.19",
-    "ext-xmlwriter": "*"
+    "ext-xmlwriter": "*",
+    "symfony/object-mapper": "^8.0"
   },
   "config": {
     "allow-plugins": {

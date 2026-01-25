@@ -9,63 +9,87 @@ use structureManager;
 
 class CommentsService
 {
-    private structureManager $structureManager;
-
-    public function setStructureManager(structureManager $structureManager): void
-    {
-        $this->structureManager = $structureManager;
+    public function __construct(
+        private readonly structureManager $structureManager,
+    ) {
     }
 
     /**
-     * @return CommentRestDto[]
+     * @return CommentDto[]
      */
     public function getCommentsTree(int $elementId): array
+    {
+        $comments = $this->getCommentsList($elementId);
+        if (empty($comments)) {
+            return [];
+        }
+
+        $commentsByParent = [];
+        foreach ($comments as $comment) {
+            $parentId = $comment->parentId ? (int)$comment->parentId : 0;
+            $commentsByParent[$parentId][] = $comment;
+        }
+
+        return $this->buildTree($commentsByParent, 0);
+    }
+
+    /**
+     * @param array<int, structureElement[]> $commentsByParent
+     * @return CommentDto[]
+     */
+    private function buildTree(array $commentsByParent, int $parentId): array
+    {
+        $tree = [];
+        if (isset($commentsByParent[$parentId])) {
+            foreach ($commentsByParent[$parentId] as $comment) {
+                $children = $this->buildTree($commentsByParent, (int)$comment->id);
+                $tree[] = $this->transformToDto($comment, $children);
+            }
+        }
+        return $tree;
+    }
+
+    /**
+     * @return structureElement[]
+     */
+    public function getCommentsList(int $elementId): array
     {
         $element = $this->structureManager->getElementById($elementId);
         if (!$element || !($element instanceof CommentsHolderInterface)) {
             return [];
         }
 
-        $comments = $element->getCommentsList();
-        if (empty($comments)) {
-            return [];
-        }
+        $commentsList = [];
+        $approvalRequired = false;
 
-        /** @var CommentRestDto[] $dtos */
-        $dtos = [];
-        /** @var structureElement $comment */
-        foreach ($comments as $comment) {
-            $dtos[$comment->id] = $this->transformToDto($comment);
-        }
-
-        $tree = [];
-        foreach ($dtos as $dto) {
-            if ($dto->parentId && isset($dtos[$dto->parentId])) {
-                $dtos[$dto->parentId]->children[] = $dto;
-            } else {
-                $tree[] = $dto;
+        $comments = $this->structureManager->getElementsChildren($element->getId(), 'content', 'commentTarget');
+        foreach ($comments as $commentElement) {
+            if (!$approvalRequired || $commentElement->approved) {
+                $commentsList[] = $commentElement;
             }
         }
 
-        return $tree;
+        return $commentsList;
     }
 
-    public function transformToDto(structureElement $comment): CommentRestDto
+    /**
+     * @param CommentDto[] $children
+     */
+    public function transformToDto(structureElement $comment, array $children = []): CommentDto
     {
-        $dto = new CommentRestDto();
-        $dto->id = (int)$comment->id;
-        $dto->author = $comment->author;
-        $dto->authorUrl = method_exists($comment, 'getAuthorUrl') ? $comment->getAuthorUrl() : null;
-        $dto->authorBadge = property_exists($comment, 'authorBadge') ? $comment->authorBadge : null;
-        $dto->date = $comment->dateCreated;
-        $dto->content = $comment->content;
-        $dto->votes = (int)$comment->votes;
-        $dto->votingDenied = (bool)$comment->votingDenied;
-        $dto->parentId = $comment->parentId ? (int)$comment->parentId : null;
-        
-        // В будущем здесь можно добавить проверку на возможность комментирования
-        $dto->commentsAllowed = true; 
+        $author = new CommentAuthorDto(
+            name: (string)$comment->author,
+            url: method_exists($comment, 'getAuthorUrl') ? $comment->getAuthorUrl() : null,
+            badge: property_exists($comment, 'authorBadge') ? (string)$comment->authorBadge : null,
+        );
 
-        return $dto;
+        return new CommentDto(
+            id: (int)$comment->id,
+            author: $author,
+            date: (string)$comment->dateCreated,
+            content: (string)$comment->content,
+            parentId: $comment->parentId ? (int)$comment->parentId : null,
+            children: $children
+        );
     }
 }

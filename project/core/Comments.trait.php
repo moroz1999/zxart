@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Comments\CommentsService;
+
 /**
  * @this structureElement
  */
@@ -18,18 +20,11 @@ trait CommentsTrait
     {
         if ($this->commentsList === null) {
             $this->commentsList = [];
-            $approvalRequired = false;
 
-            /**
-             * @var structureManager $structureManager
-             */
-            $structureManager = $this->getService('structureManager');
-            $commentsList = $structureManager->getElementsChildren($this->getId(), 'content', "commentTarget");
-            foreach ($commentsList as $commentElement) {
-                if (!$approvalRequired || $commentElement->approved) {
-                    $this->commentsList[] = $commentElement;
-                }
-            }
+            $commentsService = $this->getService(CommentsService::class, [
+                'structureManager' => $this->getService('structureManager'),
+            ]);
+            $this->commentsList = $commentsService->getCommentsList((int)$this->id);
         }
         return $this->commentsList;
     }
@@ -48,9 +43,6 @@ trait CommentsTrait
 
     public function getCommentForm()
     {
-        /**
-         * @var structureManager $structureManager
-         */
         $structureManager = $this->getService('structureManager');
 
         if ($commentForm = $structureManager->createElement(

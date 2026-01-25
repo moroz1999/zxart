@@ -3,13 +3,10 @@ declare(strict_types=1);
 
 namespace ZxArt\Comments;
 
-use Symfony\Component\ObjectMapper\Attribute\Map;
-use Symfony\Component\ObjectMapper\Transform\MapCollection;
-
-readonly class CommentRestDto
+readonly class CommentDto
 {
     /**
-     * @param CommentRestDto[] $children
+     * @param CommentDto[] $children
      */
     public function __construct(
         public int $id,
@@ -17,7 +14,6 @@ readonly class CommentRestDto
         public string $date,
         public string $content,
         public ?int $parentId = null,
-        #[Map(transform: MapCollection::class)]
         public array $children = [],
     ) {
     }

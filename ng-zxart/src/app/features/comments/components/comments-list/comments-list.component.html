@@ -1,0 +1,9 @@
+<div class="comments-list">
+  <h3 *ngIf="isRoot && comments.length > 0">Комментарии</h3>
+  <div *ngFor="let comment of comments" class="comment-item" [class.root-comment]="isRoot">
+    <app-comment [comment]="comment"></app-comment>
+    <div class="comment-children" *ngIf="comment.children && comment.children.length > 0">
+      <app-comments-list [comments]="comment.children" [isRoot]="false"></app-comments-list>
+    </div>
+  </div>
+</div>

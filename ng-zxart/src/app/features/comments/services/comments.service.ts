@@ -2,20 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-
-export interface CommentDto {
-  id: number;
-  author: string;
-  authorUrl?: string;
-  authorBadge?: string;
-  date: string;
-  content: string;
-  votes: number;
-  votingDenied: boolean;
-  commentsAllowed: boolean;
-  parentId?: number;
-  children: CommentDto[];
-}
+import {CommentDto} from '../models/comment.dto';
 
 interface ApiResponse<T> {
   responseStatus: string;

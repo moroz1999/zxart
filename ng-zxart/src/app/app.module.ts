@@ -23,8 +23,7 @@ import {AppComponent} from './app.component';
 import {ParserComponent} from './parser/parser.component';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {environment} from '../environments/environment';
-import {CommentsListModule} from './comments/comments-list.module';
-import {CommentsListComponent} from './comments/comments-list.component';
+import {CommentsListComponent} from './features/comments/components/comments-list/comments-list.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -52,7 +51,6 @@ export function HttpLoaderFactory(http: HttpClient) {
         MatProgressSpinnerModule,
         ReactiveFormsModule,
         TranslatePipe,
-        CommentsListModule,
     ],
     providers: [
         provideHttpClient(),

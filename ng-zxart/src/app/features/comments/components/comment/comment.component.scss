@@ -1,0 +1,31 @@
+.comment {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 5px;
+  background-color: #f9f9f9;
+}
+
+.comment-header {
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
+.comment-author {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.comment-badge {
+  background-color: #eee;
+  padding: 2px 5px;
+  border-radius: 3px;
+  margin-right: 10px;
+}
+
+.comment-date {
+  color: #666;
+}
+
+.comment-content {
+  margin-bottom: 5px;
+}
