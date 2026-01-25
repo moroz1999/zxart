@@ -23,7 +23,7 @@ CMS content and functionality are organized as a hierarchy of "Structure Element
 - Element code is located in `{package}/modules/structureElements/{type}/`.
 - Main class: `structure.class.php`.
 - Definitions of available actions: `structure.actions.php`.
-- **Note on IDs:** For new elements that are not yet saved to the database, the `id` property is not `null`. It is a synthetic string in the format `id/{parentId}/action/{actionName}/`. To check if an element is already persisted in the database, use `$element->hasActualStructureInfo()`.
+- For new elements that are not yet saved to the database, the `id` property is not `null`. It is a synthetic string in the format `id/{parentId}/action/{actionName}/`. To check if an element is already persisted in the database, use `$element->hasActualStructureInfo()`.
 
 ### Action System
 Actions on elements are implemented as separate classes in the module folder:
@@ -40,7 +40,7 @@ Privileges are managed through `privilegesManager`.
 - Privileges are automatically checked before executing an action.
 - In Smarty templates, global privileges are available in the `$privileges.{module}.{action}` array.
 - For specific elements (like comments), privileges should be fetched via `$element->getPrivileges()`. Note that this returns the privileges array filtered for the element's structure type (e.g., `$privileges.actionName` instead of `$privileges.moduleName.actionName`).
-- Example of programmatic privilege granting: `$privilegesManager->setPrivilege($userId, $elementId, 'module', 'action', 1)`. After programmatic changes, it may be necessary to call `$privilegesManager->resetPrivileges()` to clear internal caches.
+- Example of programmatic privilege granting: `$privilegesManager->setPrivilege($userId, $elementId, 'module', 'action', 1)`. After programmatic changes, it is necessary to call `$user->refreshPrivileges()` (where `$user` is an instance of the `user` class) to clear session-cached privileges and internal `privilegesManager` caches. Using `$privilegesManager->resetPrivileges()` only clears the manager's cache but not the user session cache.
 
 ### View System (Templates)
 - Smarty template engine is used. This is considered a **legacy view system**.
@@ -48,8 +48,7 @@ Privileges are managed through `privilegesManager`.
 - Template selection often depends on the element's `viewName` or is hardcoded in the controller/action.
 - The `$element` variable is available in most views. It is an instance of the entity (Structure Element) to which the view refers.
 - Components can be included via `{include file=$theme->template("name.tpl")}`.
-- **Rules for Legacy Templates:**
-    - Do NOT use the `style` attribute. Use full semantic class names instead. Styling should be handled in CSS files.
+- Do NOT use the `style` attribute. Use full semantic class names instead. Styling should be handled in CSS files.
 
 ### URL-based Action Handling
 If you navigate to a URL like `$element->getUrl() . 'id:' . $element->id . '/action:actionName/'`, the CMS engine automatically resolves this:
