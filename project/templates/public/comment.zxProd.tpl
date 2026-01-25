@@ -1,4 +1,5 @@
 {capture assign="moduleContent"}
+	{include file=$theme->template("comment.controls.tpl") element=$element}
 	{assign "prodElement" $element->getInitialTarget()}
 	<div class="comment_image">
 		<img loading="lazy" src='{$prodElement->getImageUrl()}' alt='{$prodElement->title}'/>

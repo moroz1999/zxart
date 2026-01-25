@@ -1,0 +1,15 @@
+.comment {
+    position: relative;
+}
+
+.comment_controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 5px;
+}
+
+.comment_delete_form {
+    display: inline;
+}

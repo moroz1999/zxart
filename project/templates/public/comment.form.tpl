@@ -1,6 +1,26 @@
 {assign var='formData' value=$element->getFormData()}
 {assign var='formErrors' value=$element->getFormErrors()}
 {assign var='formNames' value=$element->getFormNames()}
+{if $target = $element->getInitialTarget()}
+	<h3>{translations name='comment.form_title'} {$target->getTitle()}</h3>
+{/if}
+{if $element->hasActualStructureInfo()}
+	{assign "user" $element->getUserElement()}
+	<div class='comment_info'>
+		{if $user}
+			{if $user->userName === 'anonymous'}
+				<span class='comment_author'>{$element->author}</span>
+			{elseif $url=$user->getUrl()}
+				{include file=$theme->template("component.username.tpl") userUrl=$url userClass='comment_author' userName=$user->userName userType=$user->getBadgeTypesString()}
+			{else}
+				<span class='comment_author'>{$user->userName}</span>
+			{/if}
+		{else}
+			<span class='comment_author'>{$element->getAuthorName()}</span>
+		{/if}
+		<span class='comment_date'>{$element->dateCreated}</span>
+	</div>
+{/if}
 <form action="{$element->URL}" method="post" class="comment_form" enctype="multipart/form-data">
 	{if !$registeredOnly && $currentUser->userName === 'anonymous'}
 		<div class='comment_form_author{if $formErrors.author} form_error{/if}'>

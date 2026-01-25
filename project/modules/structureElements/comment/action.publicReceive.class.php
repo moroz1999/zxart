@@ -70,7 +70,6 @@ class publicReceiveComment extends structureElementAction
 	{
 		$expectedFields = [
 			'author',
-			'userId',
 			'email',
 			'content',
 			'ipAddress',

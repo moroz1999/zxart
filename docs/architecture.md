@@ -9,9 +9,9 @@ In future we will get rid of this unsupported CMS by incorporating its functiona
 - /project/ - project is "zxart" itself, this folder contains all domain-related source code and extends structure of CMS package.
 - /project/core/ - legacy services, models, helpers. This should be refactored.
 - /project/core/ZxArt/ - modern services with namespaces and intended structure. All new code goes here except when dealing with legacy modules.
-- /project/css/ and /project/js/ - legacy frontend assets. they are built on the fly.
+- /project/css/public/ and /project/js/public/ - legacy public frontend assets. they are built on the fly. CSS files must follow naming conventions: `module.{name}.css` or `component.{name}.css`.
 - /project/services/ - legacy DI container services. should not be added, only refactored to PHP-DI.
-- /project/templates/ - legacy smarty templates.
+- /project/templates/ - legacy smarty templates. Follow [Design System](design-system.md) for subcomponents.
 - /trickster-cms/ - copy of CMS. In dev environment project is linked to this folder. In prod environment it is served from composer.
 - ./tests/ - phpunit tests. all new functionality should be covered by tests.
 
@@ -32,7 +32,8 @@ Actions on elements are implemented as separate classes in the module folder:
 - Class name format: `{actionName}{ModuleName}`. For example, for the `comment` module and the `receive` action, the class name will be `receiveComment`.
 - The class inherits from `structureElementAction`.
 - The `execute()` method contains the main logic.
-- The `setExpectedFields()` and `setValidators()` methods are responsible for processing and validating incoming data.
+- The `setExpectedFields()` method defines which fields should be mapped from the request to the element. **Caution:** if a field is listed in `expectedFields` but is missing from the request (and not present in the form), it may overwrite existing data with null/empty values.
+- The `setValidators()` method is responsible for validating incoming data.
 - Public actions are available via URLs like `index.php?id={elementId}&action={actionName}`.
 
 ### Privileges

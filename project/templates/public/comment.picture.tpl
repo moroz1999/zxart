@@ -1,4 +1,5 @@
 {capture assign="moduleContent"}
+	{include file=$theme->template("comment.controls.tpl") element=$element}
 	{assign "pictureElement" $element->getInitialTarget()}
 	<div class="comment_image">
 		<img loading="lazy" id='image_{$pictureElement->id}' class='zxgallery_item {if $currentMode.mode != 'mix' && $pictureElement->isFlickering()} flicker_image{/if}' src='{$pictureElement->getImageUrl()}' alt='{$pictureElement->title}'/>

@@ -1,4 +1,5 @@
 {capture assign="moduleContent"}
+	{include file=$theme->template("comment.controls.tpl") element=$element}
 	{assign "musicElement" $element->getInitialTarget()}
 	{assign "user" $element->getUserElement()}
 	{if $user}
