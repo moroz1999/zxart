@@ -1,6 +1,7 @@
 ## Legacy templates
 - Subcomponents should be stored in `project/templates/public/` with a descriptive name (e.g., `component.name.tpl` or `module.name.tpl`).
 - When a component is used in multiple places, use `{include file=$theme->template("component.name.tpl")}`.
+- Templates in `project/templates/simple/` are specifically for old clients without JavaScript support. All functionality there must be implemented via Smarty and server-side logic. **Angular components must NOT be used in `simple` templates.**
 
 ## Legacy CSS
 Public legacy CSS files are located in `project/css/public/`. They are detected automatically by legacy bundler on refresh and built into bundle. No imports are required.

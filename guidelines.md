@@ -7,6 +7,7 @@ Start here:
 - Rules for PHP and backend: /docs/php.md
 - Rules for PHP tests: /docs/php-tests.md
 - Rules for legacy frontend: /docs/legacy-frontend.md
+- Angular integration: /docs/frontend-angular.md
 - Rules for PSALM: /docs/psalm.md
 - Design system principles: /docs/design-system.md
 

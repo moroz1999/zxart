@@ -35,7 +35,7 @@
 	{/if}
 	{include file=$theme->template('component.mentions.tpl')}
 	{if $element->denyPlaying}<p>{translations name="zxitem.playingdenied"}</p>{/if}
-	{include file=$theme->template('component.comments.tpl')}
+	<app-comments-list element-id="{$element->id}"></app-comments-list>
 	{if $element->denyComments}<p>{translations name="zxitem.commentsdenied"}</p>{/if}
 
 	{include file=$theme->template('component.voteslist.tpl')}
