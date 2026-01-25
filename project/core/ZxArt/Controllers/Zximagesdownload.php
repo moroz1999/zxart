@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Controllers;
 
+use controller;
 use controllerApplication;
 
 class Zximagesdownload extends controllerApplication
@@ -10,26 +11,25 @@ class Zximagesdownload extends controllerApplication
     private const string KEY_VALUE_SEPARATOR = '=';
     private const string PARAMETER_SEPARATOR = ';';
 
-    protected $id;
-    protected $type;
-    protected $mode;
-    protected $palette;
-    protected $border;
-    protected $zoom;
-    protected $rotation;
+    protected ?int $id = null;
+    protected ?string $type = null;
+    protected ?string $mode = 'mix';
+    protected ?string $palette = null;
+    protected ?int $border = null;
+    protected ?int $zoom = 1;
+    protected ?int $rotation = 1;
 
     public $rendererName = 'zxScreen';
 
     public function initialize()
     {
         $this->createRenderer();
+        return true;
     }
 
     public function execute($controller)
     {
-        $this->processRequestParameters($controller);
-
-        if ($this->id === null) {
+        if (!$this->processRequestParameters($controller)) {
             $this->renderer->fileNotFound();
             return;
         }
@@ -80,7 +80,7 @@ class Zximagesdownload extends controllerApplication
         $this->renderer->display();
     }
 
-    private function processRequestParameters($controller): void
+    private function processRequestParameters(controller $controller): bool
     {
         $paramsString = $controller->getRequestedPath()[1] ?? '';
         if (!is_string($paramsString)) {
@@ -98,17 +98,17 @@ class Zximagesdownload extends controllerApplication
         if ($paramsString !== '') {
             $rawPairs = explode(self::PARAMETER_SEPARATOR, $paramsString);
 
-        foreach ($rawPairs as $rawPair) {
-            if ($rawPair === '') {
-                continue;
-            }
+            foreach ($rawPairs as $rawPair) {
+                if ($rawPair === '') {
+                    continue;
+                }
 
-            $keyValue = explode(self::KEY_VALUE_SEPARATOR, $rawPair, 2);
-            if (count($keyValue) !== 2) {
-                continue;
-            }
+                $keyValue = explode(self::KEY_VALUE_SEPARATOR, $rawPair, 2);
+                if (count($keyValue) !== 2) {
+                    continue;
+                }
 
-            [$key, $value] = $keyValue;
+                [$key, $value] = $keyValue;
 
                 switch ($key) {
                     case 'id':
@@ -132,7 +132,7 @@ class Zximagesdownload extends controllerApplication
                     case 'rotation':
                         $rotation = (is_numeric($value) && (int)$value > 0) ? (int)$value : 1;
                         break;
-        }
+                }
             }
         }
 
@@ -143,5 +143,7 @@ class Zximagesdownload extends controllerApplication
         $this->border = $border;
         $this->zoom = $zoom;
         $this->rotation = $rotation;
+
+        return $this->id !== null && $this->type !== null;
     }
 }

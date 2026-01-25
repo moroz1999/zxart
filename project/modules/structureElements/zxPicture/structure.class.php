@@ -1,6 +1,7 @@
 <?php
 
 use App\Logging\EventsLog;
+use App\Paths\PathsManager;
 use ZxArt\LinkTypes;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueType;

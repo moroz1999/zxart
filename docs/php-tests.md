@@ -1,18 +1,4 @@
-- Use DDD, SOLID, KISS, YAGNI.
-
-PHP:
-- Use strict mode.
-- ALWAYS use full variable names.
-- ALWAYS import namespaces.
-- Project has 2 DI containers: use PHP-DI, don't use legacy custom. Use project/core/di-definitions.php for definitions.
-- Don't add empty autowire into di. Autowiring is turned on by default.
-- NEVER add unnesessary type casting.
-
-Psalm:
-- NEVER use @psalm-suppress. Instead, add clear and minimal type annotations.
-- Annotate magic variables and methods in original legacy classes.
-
-TEST:
+TESTS for PHP:
 - Bootstrap must be minimal: only autoload + environment setup.
 - No class shadowing: never use `class_exists` to conditionally define doubles.
 - Test doubles live in `tests/Doubles/` with proper namespaces.
