@@ -13,8 +13,7 @@
   --red: #cc0000;
   --black: #000000;
   --green: #74ba01;
-  --orange-rgb: 255, 104, 38;
-  --orange: rgba(var(--orange-rgb), 1);
+  --orange: #ff6826;
   --yellow-light: hsl(44, 45%, 80%);
   --yellow: hsl(44, 100%, 60%);
 
@@ -43,22 +42,20 @@
   --icon-yellow: var(--yellow);
 
   /* Shadows */
-  --shadow-deep-rgb: 0, 0, 0;
-  --shadow-thin-rgb: 0, 0, 0;
-  --shadow-deep: 0 3px 10px 3px rgba(var(--shadow-deep-rgb), 0.27);
-  --shadow-thin: 0 1px 3px 1px rgba(var(--shadow-thin-rgb), 0.1);
+  --shadow-deep: 0 3px 10px 3px rgba(0, 0, 0, 0.27);
+  --shadow-thin: 0 1px 3px 1px rgba(0, 0, 0, 0.1);
 
   /* Spacing */
-  --space-4: 0.25rem;
-  --space-8: 0.5rem;
-  --space-12: 0.75rem;
-  --space-16: 1rem;
-  --space-20: 1.25rem;
-  --space-24: 1.5rem;
-  --space-32: 2rem;
-  --space-40: 2.5rem;
-  --space-48: 3rem;
-  --space-64: 4rem;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-64: 64px;
 
   --gap-xs: var(--space-4);
   --gap-sm: var(--space-8);
@@ -81,18 +78,18 @@
   --margin-xxl: var(--space-48);
 
   /* Font sizes */
-  --font-md: 1rem;
-  --font-xs: 0.7rem;
-  --font-sm: 0.85rem;
-  --font-lg: 1.25rem;
-  --font-xl: 1.5rem;
+  --font-md: 14px;
+  --font-xs: 10px;
+  --font-sm: 12px;
+  --font-lg: 18px;
+  --font-xl: 21px;
 
   /* Border radius */
-  --radius-md: 0.214rem;
-  --radius-lg: 0.428rem;
-  --radius-xl: 0.857rem;
-  --radius-sm: 0.107rem;
-  --radius-xs: 0.053rem;
+  --radius-md: 3px;
+  --radius-lg: 6px;
+  --radius-xl: 12px;
+  --radius-sm: 2px;
+  --radius-xs: 1px;
 
   --border-radius-sm: var(--radius-sm);
   --border-radius-md: var(--radius-md);
@@ -101,7 +98,7 @@
 
   /* Controls */
   --controls-padding: var(--space-12);
-  --controls-height: 2.4rem;
+  --controls-height: 34px;
   --controls-transition-time: 0.25s;
   --controls-border-radius: var(--radius-md);
 

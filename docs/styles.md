@@ -9,8 +9,9 @@
     - Base variables (colors, sizes, radius) must NOT be used in components directly (e.g., NO `--gray-4`, YES `--input-color`).
     - If a component-level variable is missing, add it to `_theme.scss`.
     - NO `em` or `rem` in components and theme. Use font-size variables from `_theme.scss` only.
+    - Font sizes must be rounded to whole pixels.
+    - Spacing (`--space-*`) must be multiples of 4px.
     - If a specific color/size is missing in theme, use the closest existing one.
-    - For `rgba`, use `-rgb` versions: `rgba(var(--shadow-deep-rgb), 0.5)`.
     - All theme management is centralized in `_theme.scss`.
 
 ## Legacy LESS
