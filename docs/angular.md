@@ -11,10 +11,12 @@ The integration of Angular components into existing legacy Smarty templates is i
 Currently, the legacy part of the system is responsible for routing. Clicking on links results in a full browser page reload. Angular components are initialized "on the fly" during page load if the corresponding tag is present in the rendered HTML.
 
 #### Build and Verification
-After making any changes to the Angular part of the project (`ng-zxart`), you must:
+After making any changes to the Angular part of the project (`ng-zxart`), including styles (SCSS) and theme files, you must:
 1. Perform a project build: `npm run build` (inside the `ng-zxart` directory).
 2. Ensure the build completes without errors.
 3. Verify the result in a browser.
+
+**Note: Any change to SCSS files requires a mandatory Angular build to reflect changes in the application.**
 
 #### Example of Comments Integration
 To integrate the new comments list, the `<app-comments-list>` tag is used in the relevant detailed templates (e.g., `zxProd.details.tpl`):

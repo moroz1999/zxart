@@ -2,6 +2,8 @@
 
 ## New code should be written in SCSS.
 
+**CRITICAL: After any changes to SCSS or theme files, you MUST rebuild the Angular project using `composer run build` in the root directory.**
+
 - **Comments**: All comments in CSS/SCSS files must be written in English only.
 - **Styles and Variables**:
     - NO hardcoded hex/rgb or raw spacing.

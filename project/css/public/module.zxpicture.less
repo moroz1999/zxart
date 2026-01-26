@@ -137,19 +137,19 @@
     display: grid;
     grid-column-gap: @default_grid_spacing;
     grid-row-gap: @default_grid_spacing * 2;
-    grid-template-columns: e('calc(50% - 0.5rem) calc(50% - 0.5rem)');
+    grid-template-columns: 1fr 1fr;
   }
 }
 
 @media (min-width: 1440px) {
   .zxpictures_list {
-    grid-template-columns: e('calc(33.3% - 0.66rem) calc(33.3% - 0.66rem) calc(33.3% - 0.66rem)');
+    grid-template-columns: 1fr 1fr 1fr;
   }
 }
 
 @media (min-width: 1840px) {
   .zxpictures_list {
-    grid-template-columns: e('calc(25% - 0.75rem) calc(25% - 0.75rem) calc(25% - 1em) calc(25% - 0.75rem)');
+    grid-template-columns: 1fr 1fr 1fr 1fr;
   }
 }
 

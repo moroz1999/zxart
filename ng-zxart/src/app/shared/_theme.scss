@@ -1,5 +1,6 @@
-@import 'theme/_base.theme.scss';
-@import 'theme/_colors.theme.scss';
-@import 'theme/_layout.theme.scss';
-@import 'theme/_button.theme.scss';
-@import 'theme/_form.theme.scss';
+@forward './theme/_base.theme.scss';
+@forward './theme/_colors.theme.scss';
+@forward './theme/_legacy.theme.scss';
+@forward './theme/_layout.theme.scss';
+@forward './theme/_button.theme.scss';
+@forward './theme/_form.theme.scss';

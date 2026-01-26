@@ -4,8 +4,3 @@
 - Documentation updates must be placed in the appropriate .md file (e.g., PHP rules in php.md, general rules in rules.md).
 - Do NOT use magic numbers. Use class constants for single values or Enums for sets of related values.
 - ALWAYS add newly created files to GIT immediately after creation.
-- CSS/SCSS architecture:
-    - Base variables (space, font-size, colors, radius, etc.) are for component variables ONLY.
-    - Component variables must be defined in separate files (one per component).
-    - Components (legacy and Angular) must use ONLY component variables, NO base variables directly.
-    - See `styles.md` for detailed implementation rules.

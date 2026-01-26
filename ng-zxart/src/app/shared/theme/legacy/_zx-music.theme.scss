@@ -1,0 +1,18 @@
+:root {
+  /* ZX Music */
+  --zxmusic-details-padding: var(--space-16);
+  --zxmusic-details-margin: var(--space-16) 0;
+  --zxmusic-details-info-playlist-margin-left: var(--space-8);
+  --zxmusic-controls-label-margin-left: var(--space-16);
+  --zxmusic-details-description-margin: var(--space-16) 0 var(--space-48);
+  --zxmusic-details-download-img-margin-right: 5px;
+  --zxmusic-controls-full-padding: var(--space-16);
+  --zxmusic-controls-full-fixed-left: var(--space-32);
+  --zxmusic-controls-full-radius: var(--radius-lg);
+  --zxmusic-progress-bg: var(--gray8);
+  --zxmusic-progress-body-bg: var(--gray6);
+  --zxmusic-progress-radius: var(--radius-sm);
+  --zxmusic-progress-padding: var(--space-4);
+  --zxmusic-controls-buttons-margin-right: var(--space-4);
+  --zxmusic-controls-link-margin-left: var(--space-16);
+}
