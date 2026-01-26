@@ -12,7 +12,7 @@
 }
 
 .playlist_controls_popup {
-	background: #181818;
+	background: var(--playlist-controls-popup-bg);
 	display: none;
 	width: 20em;
 	position: absolute;
@@ -58,14 +58,14 @@
 
 .playlist_controls_item {
 	display: block;
-	padding: 0.3em 0.5em;
-	font-size: 0.8em;
+	padding: var(--playlist-controls-item-padding);
+	font-size: var(--playlist-controls-item-font-size);
 	min-height: 1em;
 	cursor: default;
 }
 
 .playlist_controls_item:hover {
-	background: #404040;
+	background: var(--playlist-controls-item-hover-bg);
 	.playlist_controls_item_description {
 		display: block;
 	}

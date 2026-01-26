@@ -1,0 +1,25 @@
+:root {
+  /* Buttons */
+  --button-primary-bg: var(--gray8);
+  --button-primary-text: var(--white);
+  --button-secondary-bg: #424242;
+  --button-secondary-hover-bg: #606060;
+  --button-secondary-text: var(--white);
+  --button-danger-bg: #e51919;
+  --button-danger-border: #860f0f;
+  --button-danger-text: var(--white);
+
+  --button-bg: #424242;
+  --button-hover-bg: #606060;
+  --button-text: var(--white);
+  --button-padding: var(--space-4) var(--space-8);
+  --button-border-radius: var(--radius-md);
+  --button-height: 34px;
+  --button-transition-time: 0.25s;
+
+  /* Tabs */
+  --tab-button-margin-right: var(--space-16);
+  --tab-button-font-size: var(--font-lg);
+  --tab-button-active-bg: var(--gray6);
+  --tab-button-active-text: var(--white);
+}

@@ -32,7 +32,7 @@ svg-icon {
 .md5 {
   grid-area: md5;
   color: var(--text-light-color);
-  font-size: var(--font-sm);
+  font-size: var(--parser-md5-font-size);
 }
 
 .releases {
@@ -48,5 +48,5 @@ svg-icon {
 }
 
 .attention {
-  color: var(--red);
+  color: var(--parser-attention-color);
 }

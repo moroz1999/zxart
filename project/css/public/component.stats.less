@@ -5,12 +5,12 @@
   @media (min-width: @screen_breakpoint_xl) {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--gap-lg);
+    gap: var(--stats-section-gap);
   }
 
   .stats_section {
     @media (min-width: @screen_breakpoint_xl) {
-      width: e('calc(50% - var(--gap-lg))');
+      width: e('calc(50% - var(--stats-section-gap))');
     }
   }
 }
@@ -19,24 +19,24 @@
   @media (min-width: @screen_breakpoint_md) {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--gap-lg);
+    gap: var(--stats-section-gap);
   }
 
   .stats_section {
     @media (min-width: @screen_breakpoint_md) {
-      width: e('calc(33% - var(--gap-lg))')
+      width: e('calc(33% - var(--stats-section-gap))')
     }
     @media (min-width: @screen_breakpoint_xl) {
-      width: e('calc(25% - var(--gap-lg))');
+      width: e('calc(25% - var(--stats-section-gap))');
     }
   }
 }
 
 .stats_section {
-  margin-bottom: var(--margin-xl);
+  margin-bottom: var(--stats-section-margin-bottom);
 }
 
 .chart_component {
-  background: var(--white);
+  background: var(--stats-chart-bg);
   height: 210px;
 }

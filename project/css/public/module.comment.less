@@ -12,7 +12,7 @@
 /*  COMMENT
 /********************************************************/
 .comment {
-    margin: 1.5em 0;
+    margin: var(--comment-margin);
 }
 
 .vote_negative_transparent {
@@ -23,17 +23,17 @@
             opacity: 1;
         }
 
-        transition: opacity 50ms ease-in;
+        transition: opacity var(--controls-transition-time) ease-in;
     }
 }
 
 .comment_content_link {
     text-decoration: none;
     display: block;
-    color: #606060;
+    color: var(--comment-content-link-color);
     font-weight: bold;
-    font-size: 0.8em;
-    margin-bottom: .5em;
+    font-size: var(--comment-content-link-font-size);
+    margin-bottom: var(--comment-content-link-margin-bottom);
 }
 
 .comment_content_link:hover {
@@ -43,11 +43,11 @@
 .comment_image {
     @media (min-width: @screen_breakpoint_md) {
         float: left;
-        margin: 0.5em 1.5em 0.5em 0;
+        margin: var(--comment-image-margin);
     }
     @media (max-width: @screen_breakpoint_sm_max) {
         width: 100%;
-        margin: 0.5em 0 0.5em 0;
+        margin: var(--space-8) 0;
         img {
             display: block;
             width: 100%;
@@ -57,7 +57,7 @@
 }
 
 .comments_comments {
-    margin-left: 2em;
+    margin-left: var(--comment-nested-margin-left);
 }
 
 /********************************************************
@@ -65,13 +65,13 @@
 /********************************************************/
 .comment.comment_short {
     margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 0.9em;
+    margin-bottom: var(--comment-short-margin-bottom);
+    font-size: var(--comment-short-font-size);
 }
 
 .comment_short .comment_author {
     font-weight: normal;
-    color: #ffffff;
+    color: var(--comment-short-author-color);
     margin-right: 0;
 }
 

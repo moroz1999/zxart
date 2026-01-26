@@ -4,8 +4,8 @@
 .center_block .header_search {
   position: absolute;
   white-space: nowrap;
-  right: 1em;
-  top: 1em;
+  right: var(--search-header-right);
+  top: var(--search-header-top);
   z-index: 1;
 }
 
@@ -16,13 +16,13 @@
 }
 
 .header_search_controls {
-  margin-left: 0.5em;
+  margin-left: var(--search-header-controls-margin-left);
   display: inline-block;
 }
 
 .search_button {
   .button;
-  color: #e3d7b6;
+  color: var(--search-button-color);
 }
 
 .header_search .input_component {
@@ -31,5 +31,5 @@
 
 
 .search_emphasized {
-	color: #ffc933;
+	color: var(--search-emphasized-color);
 }

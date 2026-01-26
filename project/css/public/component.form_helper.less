@@ -5,7 +5,7 @@
 	display: inline-block;
 	vertical-align: top;
 	position: relative;
-	margin: 0 var(--margin-xs);
+	margin: var(--form-helper-margin);
 	width: auto;
 	height: 100%;
 }
@@ -15,19 +15,19 @@
 	width: 18px;
 	height: 18px;
 	cursor: pointer;
-	background-color: var(--gray4);
-	border: 1px solid var(--black);
+	background-color: var(--form-helper-mark-bg);
+	border: 1px solid var(--form-helper-mark-border-color);
 	border-radius: 50%;
 	line-height: 18px;
 }
 
 .form_helper_mark:after {
 	content: "?";
-	color: var(--white);
+	color: var(--form-helper-mark-text-color);
 	text-align: center;
 	width: 100%;
 	height: 100%;
-	font-size: var(--font-xs);
+	font-size: var(--form-helper-mark-font-size);
 	font-weight: bold;
 	display: block;
 }
@@ -38,13 +38,13 @@
 	position: absolute;
 	left: 28px;
 	top: 0;
-	margin: 0 var(--margin-sm);
-	padding: var(--padding-sm) var(--padding-lg);
-	border: 1px solid var(--white);
-	background-color: var(--background-light);
+	margin: var(--form-helper-tip-margin);
+	padding: var(--form-helper-tip-padding);
+	border: 1px solid var(--form-helper-tip-border-color);
+	background-color: var(--form-helper-tip-bg);
 	box-shadow: var(--shadow-thin);
 	z-index: 100;
 	min-width: 280px;
-	font-size: var(--font-sm);
-	color: var(--black);
+	font-size: var(--form-helper-tip-font-size);
+	color: var(--form-helper-tip-text-color);
 }

@@ -1,0 +1,345 @@
+:root {
+  /* Layout & Application */
+  --main-background: var(--gray9);
+  --content-background: var(--gray9);
+  --content-padding: var(--space-16);
+  --content-padding-mobile: var(--space-4);
+  --center-block-padding-bottom: var(--space-32);
+  --breadcrumbs-margin-bottom: var(--space-16);
+  --zxbn-margin-bottom: var(--space-16);
+  --current-location-margin-bottom: var(--space-16);
+  --firstpage-top-block-margin-bottom: var(--space-48);
+  --firstpage-top-block-padding-top: var(--space-64);
+  --lastcomments-margin-bottom: var(--space-16);
+  --lastcomments-header-font-size: var(--font-md);
+  --lastnews-margin-bottom: var(--space-48);
+  --lastnews-padding-top: var(--space-12);
+  --lastnews-header-font-size: var(--font-md);
+  --news-short-date-color: var(--link-alt-color);
+  --news-short-date-font-size: var(--font-sm);
+  --news-short-block-margin-bottom: var(--space-16);
+  --latestupdates-controls-margin: var(--space-4) var(--space-4) var(--space-16);
+  --zxitemslist-controls-margin-top: var(--space-16);
+  --parties-table-thead-padding: 0 var(--space-4) var(--space-4);
+  --parties-table-tbody-padding: var(--space-4) var(--space-16) var(--space-4);
+  --share-block-top: var(--space-20);
+  --right-column-padding-top: var(--space-40);
+  --center-column-ads-margin-top: var(--space-32);
+  --lastvotes-margin-bottom: var(--space-16);
+  --picture-details-share-margin: var(--space-8) 0;
+  --share-item-margin-right: var(--space-16);
+  --all-comments-icon-margin-right: var(--space-4);
+  --parties-table-font-size: var(--font-sm);
+  --gallery-item-border-color: var(--black);
+  --fullscreen-title-font-size: var(--font-xl);
+  --votes-table-font-size: var(--font-sm);
+  --votes-header-font-size: var(--font-md);
+  --banner-cover-bg: var(--yellow);
+
+  /* Debug */
+  --debug-padding: var(--space-8) var(--space-16);
+  --debug-font-size: var(--font-xs);
+  --debug-bg: var(--white);
+  --debug-border-color: var(--gray4);
+  --debug-color: var(--gray5);
+
+  /* Editing Controls */
+  --editing-controls-margin: var(--space-32) 0 var(--space-16);
+  --editing-controls-button-margin: 0 var(--space-16) var(--space-8) 0;
+
+  /* Emulator */
+  --emulator-margin: var(--space-16) 0 var(--space-32);
+  --emulator-canvas-margin-bottom: var(--space-16);
+  --emulator-type-margin-left: var(--space-16);
+
+  --radio-icon-size: 42px;
+  --radio-icon-margin-right: var(--space-8);
+  --radio-button-font-size: var(--font-sm);
+  --radio-button-margin-right: var(--space-8);
+  --radio-button-line-height: 22px;
+  --radio-columnmodule-content-line-height: 42px;
+  --authorship-form-margin-bottom: var(--space-16);
+  --authorship-form-title-max-width: 210px;
+  --authorship-form-title-margin-right: var(--space-16);
+  --authorship-form-roles-width: 280px;
+  --authorship-form-roles-height: 140px;
+  --authorship-form-remove-margin-right: var(--space-16);
+  --authorship-form-remove-font-size: var(--font-sm);
+  --authorship-form-input-margin-right: var(--space-16);
+  --authorship-form-input-max-width: 210px;
+
+  /* Header */
+  --header-bg: #202020;
+  --header-padding: var(--space-8) var(--space-16);
+  --header-column-margin: 0 var(--space-16);
+  --logo-margin-top: var(--space-16);
+  --settings-font-size: var(--font-sm);
+  --settings-button-padding: var(--space-4) var(--space-8);
+
+  /* Languages */
+  --language-item-font-size: var(--font-sm);
+  --language-item-padding: var(--padding-sm);
+  --language-item-margin: var(--margin-xs);
+  --language-item-hover-bg: var(--background-light);
+
+  /* Main Menu */
+  --mainmenu-margin: 0 var(--margin-lg);
+  --mainmenu-item-padding: var(--padding-sm);
+  --mainmenu-item-margin: 0 var(--margin-xs);
+  --mainmenu-item-font-size: var(--font-sm);
+  --mainmenu-item-hover-bg: var(--background-light);
+  --mainmenu-popup-bg: var(--background-light);
+  --mainmenu-popup-font-size: var(--font-sm);
+
+  /* Stats */
+  --stats-section-gap: var(--gap-lg);
+  --stats-section-margin-bottom: var(--margin-xl);
+  --stats-chart-bg: var(--white);
+
+  /* Parser */
+  --parser-md5-font-size: var(--font-sm);
+  --parser-attention-color: var(--red);
+  --parser-font-size: var(--font-sm);
+
+  /* Rating */
+  --rating-user-vote-font-size: var(--font-sm);
+
+  /* Vote Component */
+  --vote-user-vote-color: var(--gray5);
+  --vote-user-vote-delimiter-color: var(--gray6);
+  --vote-active-color: var(--red);
+  --vote-plus-minus-hover-bg: var(--gray7);
+  --vote-plus-minus-hover-border: 1px solid var(--gray6);
+  --vote-plus-minus-hover-radius: var(--radius-sm);
+
+  /* ZX Item */
+  --zxitem-images-gap: var(--space-16);
+  --zxitem-image-max-width: 320px;
+  --zxitem-image-controls-gap: 5px;
+  --zxitem-image-controls-top: var(--space-16);
+  --zxitem-image-controls-right: var(--space-16);
+  --zxitem-image-button-size: 32px;
+  --zxitem-image-button-bg: var(--gray8);
+  --zxitem-image-button-border: 1px solid var(--gray7);
+  --zxitem-image-button-border-radius: 7px;
+  --zxitem-image-button-hover-bg: var(--gray6);
+  --zxitem-file-block-margin-bottom: var(--space-8);
+
+  /* ZX Map */
+  --zxmap-height: 560px;
+  --zxmap-margin-bottom: var(--space-16);
+  --zxmap-cluster-bg: rgba(var(--gray6-rgb), 0.7);
+  --zxmap-cluster-inner-bg: var(--gray6);
+  --zxmap-cluster-inner-font-size: var(--font-sm);
+  --zxmap-marker-color: var(--blue);
+  --zxmap-marker-icon-color: var(--white);
+  --zxmap-marker-text-color: var(--white);
+  --zxmap-location-padding-bottom: var(--space-8);
+
+  /* Comment Module */
+  --comment-margin: var(--space-24) 0;
+  --comment-content-link-color: var(--gray6);
+  --comment-content-link-font-size: var(--font-xs);
+  --comment-content-link-margin-bottom: var(--space-8);
+  --comment-image-margin: var(--space-8) var(--space-24) var(--space-8) 0;
+  --comment-nested-margin-left: var(--space-32);
+  --comment-short-margin-bottom: var(--space-16);
+  --comment-short-font-size: var(--font-sm);
+  --comment-short-author-color: var(--white);
+
+  /* LinkList Module */
+  --linklist-bg: var(--secondary-bg);
+  --linklist-padding: var(--space-16);
+  --linklist-item-color: var(--white);
+  --linklist-item-margin-bottom: var(--space-12);
+  --linklist-image-wrap-margin-right: var(--space-32);
+
+  /* Login Module */
+  --login-header-padding-bottom: var(--space-20);
+  --login-header-font-size: var(--font-sm);
+  --login-header-button-color: var(--yellow-light);
+  --login-remember-margin-bottom: var(--space-8);
+
+  /* Press Article */
+  --pressarticle-list-item-margin-bottom: var(--space-24);
+  --pressarticle-list-right-font-size: var(--font-sm);
+  --pressarticle-list-right-gap: var(--space-16);
+  --pressarticle-list-description-margin-top: var(--space-8);
+  --pressarticle-list-description-font-size: var(--font-sm);
+  --pressarticle-list-description-max-width: 800px;
+  --pressarticle-list-description-color: var(--gray5);
+  --pressarticle-layout-gap: 20px;
+  --pressarticle-mentions-gap: var(--space-48);
+  --pressarticle-mentions-margin-bottom: var(--space-32);
+  --pressarticle-mentions-header-margin-bottom: var(--space-8);
+
+  /* Search Module */
+  --search-header-right: var(--space-16);
+  --search-header-top: var(--space-16);
+  --search-header-controls-margin-left: var(--space-8);
+  --search-button-color: var(--yellow-light);
+  --search-emphasized-color: var(--yellow);
+
+  /* User Playlists */
+  --userplaylists-item-hover-bg: var(--gray7);
+
+  /* ZX Music */
+  --zxmusic-details-padding: var(--space-16);
+  --zxmusic-details-margin: var(--space-16) 0;
+  --zxmusic-controls-label-margin-left: var(--space-16);
+  --zxmusic-details-description-margin: var(--space-16) 0 var(--space-48);
+  --zxmusic-details-download-img-margin-right: 5px;
+  --zxmusic-controls-full-padding: var(--space-16);
+  --zxmusic-controls-full-radius: var(--radius-lg);
+  --zxmusic-progress-bg: var(--gray8);
+  --zxmusic-progress-body-bg: var(--gray6);
+  --zxmusic-progress-radius: var(--radius-sm);
+  --zxmusic-progress-padding: var(--space-4);
+
+  /* ZX Picture */
+  --zxpicture-short-bg: var(--gray8);
+  --zxpicture-short-radius: var(--radius-lg);
+  --zxpicture-short-shadow: 0 3px 10px 3px rgba(var(--black-rgb), 0.27);
+  --zxpicture-short-gap: var(--space-16);
+  --zxpicture-short-padding: var(--space-16);
+  --zxpicture-short-image-border: 1px solid var(--black);
+  --zxpicture-short-bottom-gap: 10px;
+  --zxpicture-short-year-color: var(--yellow-light);
+  --zxpicture-details-main-margin: var(--space-32);
+  --zxpicture-details-download-margin-right: var(--space-16);
+  --zxpicture-details-download-img-margin-right: 5px;
+  --zxpicture-details-votes-margin-bottom: var(--space-48);
+
+  /* ZX Prod */
+  --zxprod-details-video-margin-bottom: var(--space-16);
+  --zxprod-details-info-gap: var(--space-16);
+  --zxprod-details-info-margin-bottom: var(--space-40);
+  --zxprod-details-gallery-margin-bottom: var(--space-40);
+  --zxprod-details-releases-margin-bottom: var(--space-40);
+  --zxprod-details-description-font-size-mobile: var(--font-sm);
+  --zxprod-import-link-margin-bottom: var(--space-8);
+  --zxprod-details-heading-color: var(--white);
+  --zxprod-details-heading-font-size: var(--font-lg);
+
+  /* ZX Release */
+  --zxrelease-layout-gap: 20px;
+  --zxrelease-table-header-font-size: var(--font-xs);
+  --zxrelease-table-header-color: var(--gray5);
+  --zxrelease-table-header-padding: var(--space-8) var(--space-16);
+  --zxrelease-table-cell-padding: var(--space-4) var(--space-8);
+  --zxrelease-table-border-top: 2rem;
+  --zxrelease-table-download-gap: var(--space-8);
+  --zxrelease-short-gap: var(--space-16);
+  --zxrelease-short-transition: 0.5s;
+
+  /* Shared */
+  --html-content-image-margin: var(--space-16);
+
+  /* Layout */
+  --content-padding: var(--space-32);
+  --content-padding-mobile: var(--space-16);
+  --center-block-padding-bottom: var(--space-48);
+  --breadcrumbs-margin-bottom: var(--space-16);
+  --center-banner-margin-right: 230px;
+  --zxbn-margin-bottom: var(--space-24);
+  --current-location-margin-bottom: var(--space-16);
+  --current-location-delimiter-font-size: 1.2em;
+  --firstpage-top-block-margin-bottom: var(--space-32);
+  --firstpage-top-block-padding-top: var(--space-16);
+  --lastcomments-margin-bottom: var(--space-32);
+  --lastcomments-header-font-size: var(--font-lg);
+  --all-comments-icon-margin-right: var(--space-8);
+  --lastnews-margin-bottom: var(--space-32);
+  --lastnews-padding-top: var(--space-16);
+  --lastnews-header-font-size: var(--font-lg);
+  --news-short-date-color: var(--gray5);
+  --news-short-date-font-size: var(--font-sm);
+  --news-short-block-margin-bottom: var(--space-16);
+  --latestupdates-controls-margin: var(--space-8) 0;
+  --zxitemslist-controls-margin-top: var(--space-16);
+  --parties-table-thead-padding: var(--space-8);
+  --parties-table-tbody-padding: var(--space-8);
+  --parties-table-font-size: var(--font-xs);
+  --fullscreen-title-font-size: var(--font-xl);
+  --share-block-right: 251px;
+  --share-block-top: var(--space-32);
+  --right-column-padding-top: var(--space-16);
+  --center-column-ads-margin-top: var(--space-16);
+  --lastvotes-margin-bottom: var(--space-32);
+  --votes-table-font-size: var(--font-sm);
+  --votes-header-font-size: var(--font-lg);
+  --picture-details-share-margin: var(--space-16) 0;
+  --share-item-margin-right: var(--space-16);
+  --artweb-right: var(--space-32);
+  --footer-min-height: var(--space-48);
+
+  /* Party Module */
+  --party-compos-margin: var(--space-32) 0;
+  --party-compos-item-margin-bottom: var(--space-32);
+  --party-details-logo-max-width: 320px;
+  --party-details-logo-margin-left: var(--space-16);
+  --party-details-logo-margin-bottom: var(--space-16);
+
+  /* ZX Prod Block */
+  --zx-prod-hardware-font-size: var(--font-xs);
+  --zx-prod-status-font-size: var(--font-xl);
+  --zx-prod-title-font-size: var(--font-lg);
+  --zx-prod-row-font-size: var(--font-sm);
+
+  /* Letter Selector */
+  --letter-selector-min-width: var(--font-md);
+
+  /* Mentions */
+  --mentions-margin: var(--space-32) 0;
+  --mentions-articles-gap: var(--space-16);
+  --mentions-article-description-margin-top: var(--space-8);
+  --mentions-article-description-font-size: var(--font-sm);
+  --mentions-article-description-max-width: 800px;
+  --mentions-article-description-color: var(--gray5);
+
+  /* Playlist Controls */
+  --playlist-controls-popup-bg: var(--gray8);
+  --playlist-controls-item-hover-bg: var(--gray7);
+  --playlist-controls-item-padding: var(--space-4) var(--space-8);
+  --playlist-controls-item-font-size: var(--font-xs);
+
+  /* Table Component */
+  --table-header-font-size: var(--font-xs);
+  --table-header-font-size-mobile: var(--font-xxs);
+  --table-header-color: var(--gray5);
+  --table-header-padding: var(--space-4) var(--space-8) var(--space-4);
+  --table-cell-padding: var(--space-4) var(--space-8) var(--space-4);
+  --table-cell-font-size-mobile: var(--font-sm);
+  --table-row-alternate-bg: var(--header-bg);
+
+  /* Tip Popup */
+  --tip-popup-padding: var(--space-4);
+  --tip-popup-color: var(--white);
+  --tip-popup-bg: var(--main-background);
+  --tip-popup-border-radius: var(--radius-sm);
+  --tip-popup-shadow: 0 1px 3px var(--gray4);
+  --tip-popup-text-shadow: 0 -1px 1px var(--black);
+  --tip-popup-border-bottom: 1px solid var(--black);
+
+  /* User Component */
+  --user-name-gap: var(--space-4);
+  --user-icon-size: 10px;
+  --user-icon-size-sm: 11px;
+  --user-icon-color-supporter: var(--white);
+  --user-icon-color-vip: var(--yellow);
+  --user-icon-color-volunteer: var(--white);
+  --user-badges-gap: var(--space-16);
+  --user-badge-width: 100px;
+  --user-badge-image-size: 80px;
+  --user-badge-image-margin-bottom: var(--space-4);
+
+  /* ZX Prods Category */
+  --zx-prods-category-font-size: var(--font-sm);
+  --zx-prods-table-header-font-size: var(--font-sm);
+
+  /* Controls */
+  --controls-padding: var(--space-12);
+  --controls-height: 34px;
+  --controls-transition-time: 0.25s;
+  --controls-border-radius: var(--radius-md);
+}

@@ -3,7 +3,7 @@
 /********************************************************/
 @ppx: 14.5rem;
 @primary_color: var(--main-background);
-@secondary_color: var(--header-bg);
+@secondary_color: var(--secondary-bg);
 @header_background_color: @primary_color;
 @mobileheader_height: 4em;
 
@@ -29,28 +29,28 @@ th {
 }
 
 h1, h2, h3, h4, h5 {
-  margin: 1.5em 0 1em 0;
-  padding: 0 0 0 0;
+  margin: var(--space-24) 0 var(--space-16) 0;
+  padding: 0;
   color: var(--text-white-color);
 }
 
 h1 {
-  font-size: var(--font-xl);
+  font-size: var(--h1-font-size);
   font-weight: normal;
 }
 
 h2 {
-  font-size: var(--font-lg);
+  font-size: var(--h2-font-size);
   font-weight: normal;
 }
 
 h3 {
-  font-size: var(--font-md);
+  font-size: var(--h3-font-size);
   font-weight: normal;
 }
 
 a {
-  color: var(--link-alt-color);
+  color: var(--link-color);
   text-decoration: none;
 }
 
@@ -86,7 +86,7 @@ pre {
 .html_content figure[align="left"],
 .html_content figure[style*="float: left"],
 .html_content figure[style*="float:left"] {
-  margin: 1em 1em 1em 0;
+  margin: var(--html-content-image-margin) var(--html-content-image-margin) var(--html-content-image-margin) 0;
 }
 
 .html_content img[align="right"],
@@ -94,6 +94,6 @@ pre {
 .html_content img[style*="float:right"],
 .html_content figure[align="right"],
 .html_content figure[style*="float: right"],
-.html_content figure[style*="float:right"] {
-  margin: 1em 0 1em 1em;
+.html_content figure[style*="float:left"] {
+  margin: var(--html-content-image-margin) 0 var(--html-content-image-margin) var(--html-content-image-margin);
 }

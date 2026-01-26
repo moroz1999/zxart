@@ -98,7 +98,7 @@ $amount: 5;
 }
 
 .include-subcategories-prods-selector {
-  font-size: var(--font-sm);
+  font-size: var(--zx-prods-category-font-size);
 }
 
 .selectors {
@@ -164,7 +164,7 @@ app-pages-selector {
 
   thead td {
     padding: var(--padding-md) var(--padding-lg);
-    font-size: var(--font-sm);
+    font-size: var(--zx-prods-table-header-font-size);
     color: var(--text-light-color);
     vertical-align: bottom;
 

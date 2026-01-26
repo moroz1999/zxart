@@ -26,11 +26,11 @@
 
 .party_compos {
 	clear: both;
-	margin: 2em 0;
+	margin: var(--party-compos-margin);
 }
 
 .party_compos_item {
-	margin-bottom: 2em;
+	margin-bottom: var(--party-compos-item-margin-bottom);
 }
 
 .party_details_logo_image {
@@ -40,15 +40,15 @@
 .party_details_logo {
 	max-width: 30%;
 	float: right;
-	margin-left: 1em;
-	margin-bottom: 1em;
+	margin-left: var(--party-details-logo-margin-left);
+	margin-bottom: var(--party-details-logo-margin-bottom);
 }
 
 @media (max-width: @screen_breakpoint_sm_max) {
 	.party_details_logo {
 		float: none;
 		width: 100%;
-		max-width: 320px;
-		margin: 0 auto 1em;
+		max-width: var(--party-details-logo-max-width);
+		margin: 0 auto var(--party-details-logo-margin-bottom);
 	}
 }

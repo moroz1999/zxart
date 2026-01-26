@@ -1,0 +1,83 @@
+:root {
+  /* Base palette */
+  --white: #fff;
+  --gray1: #edebeb;
+  --gray2: #dadada;
+  --gray3: #c7c7c7;
+  --gray4: #a1a1a1;
+  --gray5: #8a8a8a;
+  --gray6: #555555;
+  --gray7: #333333;
+  --gray8: #252525;
+  --gray9: #151515;
+  --red: #cc0000;
+  --black: #000000;
+  --green: #74ba01;
+  --orange: #ff6826;
+  --blue: #83a9e7;
+  --yellow-light: hsl(44, 45%, 80%);
+  --yellow: hsl(44, 100%, 60%);
+
+  --gray6-rgb: 85, 85, 85;
+  --black-rgb: 0, 0, 0;
+
+  /* Spacing */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-64: 64px;
+
+  /* Font sizes */
+  --font-md: 14px;
+  --font-xs: 10px;
+  --font-sm: 12px;
+  --font-lg: 18px;
+  --font-xl: 21px;
+
+  /* Border radius */
+  --radius-md: 3px;
+  --radius-lg: 6px;
+  --radius-xl: 12px;
+  --radius-sm: 2px;
+  --radius-xs: 1px;
+
+  /* Animation */
+  --animation-md: 300ms;
+  --animation-sm: 200ms;
+  --animation-xs: 100ms;
+
+  /* Shadows */
+  --shadow-deep: 0 3px 10px 3px rgba(0, 0, 0, 0.27);
+  --shadow-thin: 0 1px 3px 1px rgba(0, 0, 0, 0.1);
+
+  --gap-xs: var(--space-4);
+  --gap-sm: var(--space-8);
+  --gap-md: var(--space-12);
+  --gap-lg: var(--space-16);
+  --gap-xl: var(--space-32);
+  --gap-xxl: var(--space-48);
+
+  --padding-xs: var(--space-4);
+  --padding-sm: var(--space-8);
+  --padding-md: var(--space-12);
+  --padding-lg: var(--space-16);
+  --padding-xl: var(--space-32);
+
+  --margin-xs: var(--space-4);
+  --margin-sm: var(--space-8);
+  --margin-md: var(--space-12);
+  --margin-lg: var(--space-16);
+  --margin-xl: var(--space-32);
+  --margin-xxl: var(--space-48);
+
+  --border-radius-sm: var(--radius-sm);
+  --border-radius-md: var(--radius-md);
+  --border-radius-lg: var(--radius-lg);
+  --border-radius-xl: var(--radius-xl);
+}

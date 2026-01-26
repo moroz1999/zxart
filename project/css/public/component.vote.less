@@ -22,11 +22,11 @@
 	display: inline-block;
 	font-size: 0.85em;
 	vertical-align: top;
-	color: #a0a0a0;
+	color: var(--vote-user-vote-color);
 }
 
 .vote_controls_uservote_delimiter {
-	color: #666;
+	color: var(--vote-user-vote-delimiter-color);
 }
 
 .vote_controls_value {
@@ -63,7 +63,7 @@
 }
 
 .vote_controls_skip.active {
-	color: #e51919;
+	color: var(--vote-active-color);
 }
 
 .vote_controls .vote_controls_stars:hover .vote_controls_value {
@@ -76,7 +76,7 @@
 
 .vote_negative {
 	.vote_current {
-		color: #e51919;
+		color: var(--vote-active-color);
 	}
 }
 
@@ -95,9 +95,9 @@
 .vote_minus {
 	cursor: pointer;
 	&:hover {
-		background-color: #505050;
-		border: 1px solid #606060;
-		border-radius: 0.3em;
+		background-color: var(--vote-plus-minus-hover-bg);
+		border: var(--vote-plus-minus-hover-border);
+		border-radius: var(--vote-plus-minus-hover-radius);
 
 	}
 }

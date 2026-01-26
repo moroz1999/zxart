@@ -126,7 +126,7 @@ $fixedHeight: 192px;
 .zx-prod-hardware-item {
   position: relative;
   display: block;
-  font-size: var(--font-xs);
+  font-size: var(--zx-prod-hardware-font-size);
   padding: var(--padding-xs) var(--padding-sm);
   border-radius: var(--border-radius-md);
   background: var(--background-dark);
@@ -146,7 +146,7 @@ $fixedHeight: 192px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: var(--font-xl);
+  font-size: var(--zx-prod-status-font-size);
   color: var(--date-color);
   text-transform: uppercase;
 }
@@ -163,7 +163,7 @@ $fixedHeight: 192px;
 .zx-prod-title {
   display: block;
   color: currentColor;
-  font-size: var(--font-lg);
+  font-size: var(--zx-prod-title-font-size);
   text-decoration: none;
   flex-grow: 1;
   overflow: hidden;
@@ -237,7 +237,7 @@ $fixedHeight: 192px;
 .zx-prod-row {
   display: flex;
   flex-wrap: nowrap;
-  font-size: var(--font-sm);
+  font-size: var(--zx-prod-row-font-size);
   border-bottom: 1px solid var(--border-color-dark);
   padding: var(--padding-md) 0;
   justify-content: space-between;

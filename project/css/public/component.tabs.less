@@ -3,11 +3,11 @@
 /********************************************************/
 .tab_button {
 	.button;
-	margin-right: 1em;
-	font-size: 1.3em;
+	margin-right: var(--tab-button-margin-right);
+	font-size: var(--tab-button-font-size);
 	&.tab_button_active {
 		font-weight: normal;
-		background: none repeat scroll 0 0 #707070;
-		color: #fff;
+		background: var(--tab-button-active-bg);
+		color: var(--tab-button-active-text);
 	}
 }

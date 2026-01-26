@@ -46,7 +46,7 @@ body {
 }
 
 .center_banner {
-  margin-right: 230px;
+  margin-right: var(--center-banner-margin-right);
   text-align: center;
 }
 
@@ -80,7 +80,7 @@ body {
 }
 
 .current_location_delimiter {
-  font-size: 1.2em;
+  font-size: var(--current-location-delimiter-font-size);
 }
 
 /********************************************************
@@ -108,7 +108,7 @@ body {
 
 .lastcomments_allcomments img {
   display: inline-block;
-  margin-right: var(--space-4);
+  margin-right: var(--all-comments-icon-margin-right);
   vertical-align: middle;
 }
 
@@ -138,7 +138,7 @@ body {
 
 .firstpage_latestupdates_controls {
   margin: var(--latestupdates-controls-margin);
-  font-size: 0.9em;
+  font-size: var(--font-sm);
   text-align: right;
 }
 
@@ -169,7 +169,7 @@ body {
 .parties_list_table thead td {
   border-collapse: collapse;
   padding: var(--parties-table-thead-padding);
-  font-size: var(--font-sm);
+  font-size: var(--parties-table-font-size);
   text-align: center;
 }
 
@@ -184,14 +184,14 @@ body {
 /*  ZX GALLERY
 /********************************************************/
 .zxgallery_item {
-  border: 1px solid var(--black);
+  border: 1px solid var(--gallery-item-border-color);
 }
 
 /********************************************************
 /*  FULLSCREEN BLOCK
 /********************************************************/
 .fullscreen_title {
-  font-size: var(--font-xl);
+  font-size: var(--fullscreen-title-font-size);
 }
 
 /********************************************************
@@ -200,7 +200,7 @@ body {
 .share_block {
   position: absolute;
   white-space: nowrap;
-  right: 251px;
+  right: var(--share-block-right);
   top: var(--share-block-top);
 }
 
@@ -231,12 +231,12 @@ body {
   }
 
   .votes_list_table td {
-    font-size: var(--font-sm);
+    font-size: var(--votes-table-font-size);
   }
 }
 
 .lastvotes h3 {
-  font-size: var(--font-md);
+  font-size: var(--votes-header-font-size);
   font-weight: bold;
 }
 

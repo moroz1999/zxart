@@ -1,0 +1,30 @@
+:root {
+  /* Semantic colors */
+  --text-color: var(--gray8);
+  --text-white-color: var(--white);
+  --text-light-color: var(--gray4);
+  --error-color: var(--red);
+  --link-hover-color: var(--black);
+
+  --background-dark: var(--gray8);
+  --background-deep: var(--gray9);
+  --background-light: var(--gray1);
+
+  --badge-bg: var(--gray2);
+  --date-color: var(--gray6);
+
+  /* Links */
+  --link-color: #83a9e7;
+  --link-alt-color: #cfb580;
+
+  /* Typography */
+  --h1-font-size: var(--font-xl);
+  --h2-font-size: var(--font-lg);
+  --h3-font-size: var(--font-md);
+
+  --pseudo-link-color: var(--yellow-light);
+  --icon-yellow: var(--yellow);
+
+  /* Comment */
+  --comment-header-font-size: var(--font-sm);
+}

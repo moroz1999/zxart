@@ -1,6 +1,6 @@
 .zxmap {
-    height: 35rem;
-    margin-bottom: 1rem;
+    height: var(--zxmap-height);
+    margin-bottom: var(--zxmap-margin-bottom);
 
     .leaflet-div-icon {
         background: none;
@@ -10,7 +10,7 @@
 
 
 .map_icon_cluster {
-    background-color: rgba(80, 80, 80, 0.7);
+    background-color: var(--zxmap-cluster-bg);
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 100%;
@@ -22,10 +22,10 @@
 }
 
 .map_icon_cluster_inner {
-    background-color: #505050;
+    background-color: var(--zxmap-cluster-inner-bg);
     width: 2rem;
     height: 2rem;
-    font-size: @12pt;
+    font-size: var(--zxmap-cluster-inner-font-size);
     border-radius: 100%;
     display: flex;
     align-items: center;
@@ -33,17 +33,17 @@
 }
 
 .map_icon {
-    .svg-bg(map_marker, #83a9e7, #ffffff);
+    .svg-bg(map_marker, var(--zxmap-marker-color), var(--zxmap-marker-icon-color));
     background-size: contain;
     background-position: center;
 }
 
 .map_icon_amount {
     text-align: center;
-    color: #ffffff;
+    color: var(--zxmap-marker-text-color);
     top: 6px;
     position: relative;
-    font-size: @13pt;
+    font-size: var(--font-md);
 }
 
 .zxmap_locations {
@@ -53,7 +53,7 @@
 
 .zxmap_location {
     display: block;
-    padding-bottom: 0.5rem;
+    padding-bottom: var(--zxmap-location-padding-bottom);
     page-break-inside: avoid;
     break-inside: avoid;
 }

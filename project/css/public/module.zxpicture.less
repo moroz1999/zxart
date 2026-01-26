@@ -159,12 +159,12 @@
 .zxpicture_short {
   box-sizing: border-box;
   width: e('calc(321px + 2rem)');
-  background: #252525;
-  border-radius: .8571428571rem;
-  box-shadow: 0 3px 10px 3px rgba(0, 0, 0, .27);
+  background: var(--zxpicture-short-bg);
+  border-radius: var(--zxpicture-short-radius);
+  box-shadow: var(--zxpicture-short-shadow);
   display: flex;
-  gap: 1rem;
-  padding: 1rem;
+  gap: var(--zxpicture-short-gap);
+  padding: var(--zxpicture-short-padding);
   flex-direction: column;
 }
 
@@ -182,7 +182,7 @@
 .zxpicture_short_image {
   display: block;
   margin: 0 auto;
-  border: 1px solid #000000;
+  border: var(--zxpicture-short-image-border);
   width: 100%;
   image-rendering: -moz-crisp-edges;
   image-rendering: pixelated;
@@ -200,7 +200,7 @@
   flex-grow: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: var(--zxpicture-short-bottom-gap);
 }
 
 .zxpicture_short_title {
@@ -209,7 +209,7 @@
 }
 
 .zxpicture_short_title_link {
-  color: @white;
+  color: var(--white);
 }
 
 .zxpicture_short_party {
@@ -227,7 +227,7 @@
   line-height: 1;
   justify-self: right;
   align-self: end;
-  color: #e3d7b5;
+  color: var(--zxpicture-short-year-color);
 }
 
 .zxpicture_short_controls {
@@ -252,10 +252,10 @@
 .picture_details_main {
   display: block;
   max-width: 100%;
-  margin: 2rem;
+  margin: var(--zxpicture-details-main-margin);
 
   @media (max-width: @screen_breakpoint_sm) {
-    margin: 2rem 0;
+    margin: var(--zxpicture-details-main-margin) 0;
   }
 }
 
@@ -292,7 +292,7 @@
 
 .picture_details_sequence {
   vertical-align: middle;
-  margin: 2rem;
+  margin: var(--zxpicture-details-main-margin);
   max-width: 100%;
 
   canvas {
@@ -300,13 +300,13 @@
   }
 
   @media (max-width: @screen_breakpoint_sm) {
-    margin: 2rem 0;
+    margin: var(--zxpicture-details-main-margin) 0;
   }
 }
 
 .picture_details_sequence_image {
   display: block;
-  border: 1px solid #000000;
+  border: var(--zxpicture-short-image-border);
   max-width: 100%;
 }
 
@@ -318,21 +318,21 @@
 
 .picture_details_inspired {
   vertical-align: middle;
-  margin: 2rem;
+  margin: var(--zxpicture-details-main-margin);
   max-width: 100%;
   @media (max-width: @screen_breakpoint_sm) {
-    margin: 2rem 0;
+    margin: var(--zxpicture-details-main-margin) 0;
   }
 }
 
 .picture_details_inspired_image {
   display: block;
-  border: 1px solid #000000;
+  border: var(--zxpicture-short-image-border);
   max-width: 100%;
 }
 
 .picture_details_info .playlist_controls {
-  margin-left: 0.5em;
+  margin-left: var(--space-8);
 }
 
 .picture_details_download {
@@ -340,17 +340,17 @@
   vertical-align: middle;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-right: 1rem;
+  margin-right: var(--zxpicture-details-download-margin-right);
 }
 
 .picture_details_download img {
   display: inline-block;
   vertical-align: middle;
-  margin-right: 5px;
+  margin-right: var(--zxpicture-details-download-img-margin-right);
 }
 
 .picture_details_votes {
-  margin-bottom: 3em;
+  margin-bottom: var(--zxpicture-details-votes-margin-bottom);
 }
 
 .picturesuploadform_topnotice {

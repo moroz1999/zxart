@@ -4,7 +4,7 @@
 .zxprod_details_video {
 	width: 30%;
 	max-width: 640px;
-	margin-bottom: 1rem;
+	margin-bottom: var(--zxprod-details-video-margin-bottom);
 	position: relative;
 
 	.zxprod_details_video_inner {
@@ -28,16 +28,16 @@
 	.zxprod_details_video {
 		width: 100%;
 		max-width: 320px;
-		margin: 0 auto 1em;
+		margin: 0 auto var(--zxprod-details-video-margin-bottom);
 	}
 }
 
 .zxprod_details_info {
 	display: flex;
-	gap: 1rem;
+	gap: var(--zxprod-details-info-gap);
 	justify-content: space-between;
 	align-items: start;
-	margin-bottom: 40px;
+	margin-bottom: var(--zxprod-details-info-margin-bottom);
 }
 
 @media (max-width: @screen_breakpoint_sm_max) {
@@ -47,11 +47,11 @@
 }
 
 .zxprod_gallery {
-	margin-bottom: 40px;
+	margin-bottom: var(--zxprod-details-gallery-margin-bottom);
 }
 
 .zxprod_details_releases {
-	margin-bottom: 40px;
+	margin-bottom: var(--zxprod-details-releases-margin-bottom);
 }
 
 .zxprod_details_description {
@@ -71,7 +71,7 @@
 		overflow: auto;
 
 		&.zxprod_details_description_plain {
-			font-size: 0.8rem;
+			font-size: var(--zxprod-details-description-font-size-mobile);
 		}
 	}
 }
@@ -79,7 +79,7 @@
 .import_link {
 	display: block;
 	vertical-align: middle;
-	margin-bottom: .5em;
+	margin-bottom: var(--zxprod-import-link-margin-bottom);
 
 	&:last-of-type {
 		margin-bottom: 0;
@@ -87,15 +87,15 @@
 }
 
 .import_link_image {
-	margin-right: 0.5em;
+	margin-right: var(--space-8);
 }
 
 
 .zxprod_details_heading {
 	margin: 1.5em 0 1em 0;
 	padding: 0 0 0 0;
-	color: #ffffff;
-	font-size: 1.3em;
+	color: var(--zxprod-details-heading-color);
+	font-size: var(--zxprod-details-heading-font-size);
 	font-weight: normal;
 	cursor: pointer;
 }

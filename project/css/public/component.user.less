@@ -1,23 +1,23 @@
 .user-name {
   display: inline-flex;
   flex-wrap: nowrap;
-  gap: 4px;
+  gap: var(--user-name-gap);
   align-items: center;
 
   &.supporter .user-icon {
-    .svg-bg(star, #ffffff, #ffffff);
+    .svg-bg(star, var(--user-icon-color-supporter), var(--user-icon-color-supporter));
   }
 
   &.vip .user-icon {
-    .svg-bg(star, #ffc933, #ffc933);
-    width: 11px;
-    height: 11px;
+    .svg-bg(star, var(--user-icon-color-vip), var(--user-icon-color-vip));
+    width: var(--user-icon-size-sm);
+    height: var(--user-icon-size-sm);
   }
 
   &.volunteer .user-icon {
-    .svg-bg(volunteer, #ffffff, #ffffff);
-    width: 11px;
-    height: 11px;
+    .svg-bg(volunteer, var(--user-icon-color-volunteer), var(--user-icon-color-volunteer));
+    width: var(--user-icon-size-sm);
+    height: var(--user-icon-size-sm);
   }
 }
 
@@ -26,31 +26,31 @@
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
-  width: 10px;
-  height: 10px;
+  width: var(--user-icon-size);
+  height: var(--user-icon-size);
 }
 
 .user-badges {
   display: flex;
-  gap: 1rem;
+  gap: var(--user-badges-gap);
   justify-content: flex-end;
 }
 
 .user-badge {
   display: block;
-  width: 100px;
+  width: var(--user-badge-width);
   text-align: center;
 
   &.supporter .user-badge-image {
-    .svg-bg(star, #ffffff, #ffffff);
+    .svg-bg(star, var(--user-icon-color-supporter), var(--user-icon-color-supporter));
   }
 
   &.vip .user-badge-image {
-    .svg-bg(star, #ffc933, #ffc933);
+    .svg-bg(star, var(--user-icon-color-vip), var(--user-icon-color-vip));
   }
 
   &.volunteer .user-badge-image {
-    .svg-bg(volunteer, #ffffff, #ffffff);
+    .svg-bg(volunteer, var(--user-icon-color-volunteer), var(--user-icon-color-volunteer));
   }
 }
 
@@ -59,9 +59,9 @@
   background-size: contain;
   background-repeat: no-repeat;
   display: block;
-  width: 5rem;
-  height: 5rem;
-  margin: 0 auto 4px;
+  width: var(--user-badge-image-size);
+  height: var(--user-badge-image-size);
+  margin: 0 auto var(--user-badge-image-margin-bottom);
 }
 
 .user-badge-title {

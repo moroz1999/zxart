@@ -5,11 +5,11 @@
   display: inline-block;
 
   .ajaxselect_item:last-of-type {
-    margin-bottom: var(--space-12);
+    margin-bottom: var(--ajaxselect-item-margin-bottom-last);
   }
 
   .icon_search {
-    color: var(--black);
+    color: var(--ajaxselect-search-icon-color);
     position: absolute;
     top: 0;
     right: 13px;
@@ -22,10 +22,10 @@
 }
 
 .ajaxselect_item {
-  border-bottom: 1px solid var(--gray2);
-  font-size: var(--font-xs);
+  border-bottom: 1px solid var(--ajaxselect-item-border-color);
+  font-size: var(--ajaxselect-item-font-size);
   font-weight: bold;
-  line-height: var(--space-24);
+  line-height: var(--ajaxselect-item-line-height);
   margin: var(--ajaxselect-item-margin);
   white-space: nowrap;
   overflow: hidden;
@@ -33,7 +33,7 @@
 
 .ajaxselect_item:after {
   content: "";
-  border-bottom: 1px solid var(--white);
+  border-bottom: 1px solid var(--ajaxselect-item-after-border-color);
   display: block;
 }
 

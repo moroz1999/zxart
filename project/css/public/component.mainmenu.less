@@ -3,16 +3,15 @@
 /********************************************************/
 .menu_block {
   position: relative;
-  margin-left: var(--margin-lg);
-  margin-right: var(--margin-lg);
+  margin: var(--mainmenu-margin);
 }
 
 .submenu_item {
   display: inline-block;
   outline: none;
-  padding: var(--padding-sm);
-  margin: 0 var(--margin-xs);
-  font-size: var(--font-sm);
+  padding: var(--mainmenu-item-padding);
+  margin: var(--mainmenu-item-margin);
+  font-size: var(--mainmenu-item-font-size);
   line-height: inherit;
   min-width: 0;
   text-align: left;
@@ -21,16 +20,16 @@
 .submenu_item:hover,
 .submenu_item.submenu_item_selected {
   text-decoration: none;
-  background-color: var(--secondary-bg);
+  background-color: var(--mainmenu-item-hover-bg);
 }
 
 .submenu_item_link {
-  color: var(--link-alt-color);
+  color: var(--link-color);
 }
 
 .submenuitem_popup_block {
-  background: var(--secondary-bg);
-  font-size: var(--font-sm);
+  background: var(--mainmenu-popup-bg);
+  font-size: var(--mainmenu-popup-font-size);
 }
 
 .submenuitem_popup_content {

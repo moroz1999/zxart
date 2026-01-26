@@ -1,12 +1,12 @@
 .zxitem_images {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--zxitem-images-gap);
 }
 
 .zxitem_image_block {
   position: relative;
-  max-width: 320px;
+  max-width: var(--zxitem-image-max-width);
 
   &:hover .zxitem_image_controls {
     opacity: 1;
@@ -15,12 +15,12 @@
 
 .zxitem_image_controls {
   display: flex;
-  gap: 5px;
+  gap: var(--zxitem-image-controls-gap);
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: var(--zxitem-image-controls-top);
+  right: var(--zxitem-image-controls-right);
   opacity: 0;
-  transition: opacity 0.25s ease-in-out;
+  transition: opacity var(--controls-transition-time) ease-in-out;
 }
 
 .zxitem_image {
@@ -34,17 +34,17 @@
 .zxitem_image_button {
   display: block;
   background-position: center;
-  background-size: 1.5rem 1.5rem;
+  background-size: 24px 24px;
   background-repeat: no-repeat;
-  width: 2rem;
-  height: 2rem;
-  background-color: #252525;
-  border: 1px solid #333;
-  border-radius: 7px;
-  transition: background-color 0.25s ease-in;
+  width: var(--zxitem-image-button-size);
+  height: var(--zxitem-image-button-size);
+  background-color: var(--zxitem-image-button-bg);
+  border: var(--zxitem-image-button-border);
+  border-radius: var(--zxitem-image-button-border-radius);
+  transition: background-color var(--controls-transition-time) ease-in;
 
   &:hover {
-    background-color: #555;
+    background-color: var(--zxitem-image-button-hover-bg);
   }
 }
 
@@ -63,5 +63,5 @@
 
 .zxitem_file_block {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--zxitem-file-block-margin-bottom);
 }
