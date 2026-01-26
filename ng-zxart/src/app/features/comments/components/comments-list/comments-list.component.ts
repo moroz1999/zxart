@@ -3,11 +3,12 @@ import {Component, Input, OnInit} from '@angular/core';
 import {CommentDto} from '../../models/comment.dto';
 import {CommentsService} from '../../services/comments.service';
 import {CommentComponent} from '../comment/comment.component';
+import {CommentFormComponent} from '../comment-form/comment-form.component';
 
 @Component({
   selector: 'app-comments-list',
   standalone: true,
-  imports: [CommonModule, CommentComponent],
+  imports: [CommonModule, CommentComponent, CommentFormComponent],
   templateUrl: './comments-list.component.html',
   styleUrls: ['./comments-list.component.scss']
 })
@@ -16,13 +17,26 @@ export class CommentsListComponent implements OnInit {
   @Input() comments: CommentDto[] = [];
   @Input() isRoot: boolean = true;
 
+  showForm = false;
+
   constructor(private commentsService: CommentsService) {}
 
   ngOnInit(): void {
     if (this.isRoot && this.elementId) {
+      this.loadComments();
+    }
+  }
+
+  loadComments(): void {
+    if (this.elementId) {
       this.commentsService.getComments(this.elementId).subscribe(data => {
         this.comments = data;
       });
     }
+  }
+
+  onCommentSaved(comment: CommentDto): void {
+    this.showForm = false;
+    this.loadComments();
   }
 }

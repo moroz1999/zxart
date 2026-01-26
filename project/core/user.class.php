@@ -61,25 +61,6 @@ class user
     protected $userResourceName = "module_user";
     protected $privilegeResourceName = "module_privilege";
     protected $relationsResourceName = "privilege_relations";
-    /** @var user */
-    protected static $instance;
-
-    /**
-     * @return user
-     * @deprecated
-     */
-    public static function getInstance()
-    {
-        if (is_null(self::$instance)) {
-            self::$instance = new user();
-        }
-        return self::$instance;
-    }
-
-    public function __construct()
-    {
-        self::$instance = $this;
-    }
 
     public function initialize(): void
     {
@@ -356,9 +337,7 @@ class user
         $this->groupsIdList = null;
 
         $this->writeStorage();
-        self::$instance = null;
         $this->__destruct();
-        $this->__construct();
         $this->initialize();
 
         //todo: remove workaround and update privileges manager

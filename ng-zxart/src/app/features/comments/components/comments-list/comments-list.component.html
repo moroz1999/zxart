@@ -1,9 +1,16 @@
 <div class="comments-list">
-  <h3 *ngIf="isRoot && comments.length > 0">Комментарии</h3>
+  <div *ngIf="isRoot" class="comments-header">
+    <h3 *ngIf="comments.length > 0">Комментарии</h3>
+    <button (click)="showForm = !showForm" class="button">
+      {{ showForm ? 'Cancel' : 'Add Comment' }}
+    </button>
+    <app-comment-form *ngIf="showForm && elementId" [targetId]="elementId" (commentSaved)="onCommentSaved($event)" (cancelled)="showForm = false"></app-comment-form>
+  </div>
+  
   <div *ngFor="let comment of comments" class="comment-item" [class.root-comment]="isRoot">
-    <app-comment [comment]="comment"></app-comment>
+    <app-comment [comment]="comment" (commentChanged)="loadComments()"></app-comment>
     <div class="comment-children" *ngIf="comment.children && comment.children.length > 0">
-      <app-comments-list [comments]="comment.children" [isRoot]="false"></app-comments-list>
+      <app-comments-list [comments]="comment.children" [isRoot]="false" [elementId]="elementId"></app-comments-list>
     </div>
   </div>
 </div>

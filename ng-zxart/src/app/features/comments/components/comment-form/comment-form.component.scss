@@ -1,0 +1,36 @@
+.comment-form {
+  margin: 10px 0;
+  padding: 10px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+
+  .form-group {
+    margin-bottom: 10px;
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-control {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .error-msg {
+    color: red;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+  }
+}

@@ -64,3 +64,8 @@ $restDtos = array_map(fn($dto) => $this->objectMapper->map($dto, MyRestDto::clas
 ```
 - Do NOT use `dataResponseConverters` for new code. All new REST endpoints must follow the DTO mapping scheme described above.
 - Related entities (like comments) should be fetched via dedicated services rather than using direct entity methods (e.g., use `CommentsService->getCommentsList($elementId)` instead of `$entity->getCommentsList()`).
+
+## AJAX Operations
+- For AJAX operations in controllers, use the `action` parameter to distinguish between different types of requests (e.g., `add`, `update`, `delete`).
+- Use the `json` renderer for AJAX responses.
+- Ensure proper privilege checks are performed before executing any data modification operations.

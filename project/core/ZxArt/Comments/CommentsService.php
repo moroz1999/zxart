@@ -3,14 +3,21 @@ declare(strict_types=1);
 
 namespace ZxArt\Comments;
 
+use App\Logging\EventsLog;
+use commentElement;
 use CommentsHolderInterface;
+use controller;
+use LanguagesManager;
 use structureElement;
 use structureManager;
+use user;
 
 class CommentsService
 {
     public function __construct(
         private readonly structureManager $structureManager,
+        private readonly user $user,
+        private readonly LanguagesManager $languagesManager,
     ) {
     }
 
@@ -70,6 +77,71 @@ class CommentsService
         }
 
         return $commentsList;
+    }
+
+    public function addComment(int $targetId, string $content, string $author = null): ?CommentDto
+    {
+        $targetElement = $this->structureManager->getElementById($targetId);
+        if (!$targetElement || !($targetElement instanceof CommentsHolderInterface)) {
+            return null;
+        }
+
+        /** @var commentElement $commentElement */
+        $commentElement = $this->structureManager->createElement('comment', 'show', $targetId);
+        if ($commentElement) {
+            $commentElement->content = $content;
+            $commentElement->author = $author ?: ($this->user->userName ?: 'anonymous');
+            $commentElement->userId = $this->user->id;
+            $commentElement->dateTime = time();
+            $commentElement->targetType = $targetElement->structureType;
+            $commentElement->approved = 1;
+            $commentElement->persistElementData();
+
+            $linksManager = controller::getInstance()->getService('linksManager');
+            $linksManager->linkElements($targetId, $commentElement->id, "commentTarget");
+
+            if ($commentsElementId = $this->structureManager->getElementIdByMarker('comments')) {
+                $this->structureManager->moveElement($targetId, $commentsElementId, $commentElement->id);
+            }
+
+            if ($currentLanguageElement = $this->structureManager->getElementById($this->languagesManager->getCurrentLanguageId())) {
+                if (method_exists($currentLanguageElement, 'clearCommentsCache')) {
+                    $currentLanguageElement->clearCommentsCache();
+                }
+            }
+
+            $commentElement->getService(EventsLog::class)->logEvent($commentElement->id, 'comment');
+
+            return $this->transformToDto($commentElement);
+        }
+        return null;
+    }
+
+    public function updateComment(int $commentId, string $content): ?CommentDto
+    {
+        /** @var commentElement $commentElement */
+        $commentElement = $this->structureManager->getElementById($commentId);
+        if ($commentElement && $commentElement->structureType === 'comment') {
+            if ($commentElement->isEditable()) {
+                $commentElement->content = $content;
+                $commentElement->persistElementData();
+                return $this->transformToDto($commentElement);
+            }
+        }
+        return null;
+    }
+
+    public function deleteComment(int $commentId): bool
+    {
+        /** @var commentElement $commentElement */
+        $commentElement = $this->structureManager->getElementById($commentId);
+        if ($commentElement && $commentElement->structureType === 'comment') {
+            $privilegesManager = controller::getInstance()->getService('privilegesManager');
+            if ($privilegesManager->getPrivilege($this->user->id, $commentId, 'comment', 'delete')) {
+                return $commentElement->deleteElementData();
+            }
+        }
+        return false;
     }
 
     /**

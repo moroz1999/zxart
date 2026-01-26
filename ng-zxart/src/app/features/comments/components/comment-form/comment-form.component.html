@@ -1,0 +1,27 @@
+<form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="comment-form">
+  <div class="form-group" *ngIf="!commentToEdit">
+    <label for="author">Author (optional):</label>
+    <input id="author" type="text" formControlName="author" class="form-control">
+  </div>
+  
+  <div class="form-group">
+    <label for="content">Comment:</label>
+    <textarea id="content" formControlName="content" class="form-control" rows="4"></textarea>
+    <div *ngIf="commentForm.get('content')?.invalid && commentForm.get('content')?.touched" class="error-msg">
+      Content is required (min 2 characters).
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-msg">
+    {{ errorMessage }}
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" [disabled]="commentForm.invalid || isSubmitting" class="button button_green">
+      {{ commentToEdit ? 'Save Changes' : 'Post Comment' }}
+    </button>
+    <button type="button" (click)="onCancel()" class="button" [disabled]="isSubmitting">
+      Cancel
+    </button>
+  </div>
+</form>

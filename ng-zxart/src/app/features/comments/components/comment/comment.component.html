@@ -8,6 +8,15 @@
     </ng-template>
     <span *ngIf="comment.author.badge" class="comment-badge">{{ comment.author.badge }}</span>
     <span class="comment-date">{{ comment.date }}</span>
+    
+    <div class="comment-actions">
+      <button (click)="onReply()" class="button-link">Reply</button>
+      <button (click)="onEdit()" class="button-link">Edit</button>
+      <button (click)="onDelete()" class="button-link">Delete</button>
+    </div>
   </div>
   <div class="comment-content" [innerHTML]="comment.content"></div>
+  
+  <app-comment-form *ngIf="showReplyForm" [targetId]="comment.id" (commentSaved)="onCommentSaved($event)" (cancelled)="showReplyForm = false"></app-comment-form>
+  <app-comment-form *ngIf="showEditForm" [targetId]="comment.parentId || 0" [commentToEdit]="comment" (commentSaved)="onCommentSaved($event)" (cancelled)="showEditForm = false"></app-comment-form>
 </div>

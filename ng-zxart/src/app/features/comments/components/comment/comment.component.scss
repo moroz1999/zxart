@@ -25,6 +25,25 @@
 
 .comment-date {
   color: var(--date-color);
+  margin-right: var(--margin-md);
+}
+
+.comment-actions {
+  display: inline-block;
+
+  .button-link {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    padding: 0;
+    margin-right: 10px;
+    font-size: 0.9em;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 .comment-content {
