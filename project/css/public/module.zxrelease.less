@@ -81,12 +81,12 @@
 	}
 
 	.zxrelease_filestructure_table {
-		font-size: var(--font-sm);
+		font-size: var(--zxrelease-table-font-size-mobile);
 	}
 }
 
 .zxrelease_table_hardware {
-	font-size: var(--font-sm);
+	font-size: var(--zxrelease-table-font-size-mobile);
 }
 
 .zxrelease_table_download {
@@ -104,7 +104,7 @@
 }
 
 .zxrelease_table_description {
-	margin-top: var(--space-8);
+	margin-top: var(--zxrelease-table-description-margin-top);
 }
 
 .zxrelease {
@@ -128,12 +128,12 @@
 	background-color: var(--secondary-bg);
 
 	td {
-		padding: 0 var(--space-8) var(--space-8);
+		padding: var(--zxrelease-images-padding);
 	}
 }
 
 .zxrelease_table_manuals {
-	margin-top: var(--space-32);
+	margin-top: var(--zxrelease-table-manuals-margin-top);
 }
 
 /********************************************************
@@ -153,7 +153,7 @@
 /*  ZXRELEASE SHORT
 /********************************************************/
 .zxrelease_short {
-	.grid_item(8, var(--zxrelease-short-gap), var(--space-8), 4, 3, 2)
+	.grid_item(8, var(--zxrelease-short-gap), var(--zxrelease-short-padding), 4, 3, 2)
 }
 
 .zxrelease_short_images {
@@ -212,5 +212,5 @@
 }
 
 .zxrelease-format-link i {
-	margin-right: var(--space-4);
+	margin-right: var(--zxrelease-format-link-icon-margin-right);
 }

@@ -2,39 +2,48 @@
   /* Layout & Application */
   --main-background: var(--gray9);
   --content-background: var(--gray9);
-  --content-padding: var(--space-16);
-  --content-padding-mobile: var(--space-4);
-  --center-block-padding-bottom: var(--space-32);
+  --content-padding: var(--space-32);
+  --content-padding-mobile: var(--space-16);
+  --center-block-padding-bottom: var(--space-48);
   --breadcrumbs-margin-bottom: var(--space-16);
-  --zxbn-margin-bottom: var(--space-16);
+  --center-banner-margin-right: 230px;
+  --zxbn-margin-bottom: var(--space-24);
   --current-location-margin-bottom: var(--space-16);
-  --firstpage-top-block-margin-bottom: var(--space-48);
-  --firstpage-top-block-padding-top: var(--space-64);
-  --lastcomments-margin-bottom: var(--space-16);
-  --lastcomments-header-font-size: var(--font-md);
-  --lastnews-margin-bottom: var(--space-48);
-  --lastnews-padding-top: var(--space-12);
-  --lastnews-header-font-size: var(--font-md);
-  --news-short-date-color: var(--link-alt-color);
+  --current-location-delimiter-font-size: 1.2em;
+  --firstpage-top-block-margin-bottom: var(--space-32);
+  --firstpage-top-block-padding-top: var(--space-16);
+  --lastcomments-margin-bottom: var(--space-32);
+  --lastcomments-header-font-size: var(--font-lg);
+  --all-comments-icon-margin-right: var(--space-8);
+  --lastnews-margin-bottom: var(--space-32);
+  --lastnews-padding-top: var(--space-16);
+  --lastnews-header-font-size: var(--font-lg);
+  --news-short-date-color: var(--gray5);
   --news-short-date-font-size: var(--font-sm);
   --news-short-block-margin-bottom: var(--space-16);
-  --latestupdates-controls-margin: var(--space-4) var(--space-4) var(--space-16);
+  --latestupdates-controls-margin: var(--space-8) 0;
+  --latestupdates-controls-font-size: var(--font-sm);
   --zxitemslist-controls-margin-top: var(--space-16);
-  --parties-table-thead-padding: 0 var(--space-4) var(--space-4);
-  --parties-table-tbody-padding: var(--space-4) var(--space-16) var(--space-4);
-  --share-block-top: var(--space-20);
-  --right-column-padding-top: var(--space-40);
-  --center-column-ads-margin-top: var(--space-32);
-  --lastvotes-margin-bottom: var(--space-16);
-  --picture-details-share-margin: var(--space-8) 0;
-  --share-item-margin-right: var(--space-16);
-  --all-comments-icon-margin-right: var(--space-4);
-  --parties-table-font-size: var(--font-sm);
-  --gallery-item-border-color: var(--black);
+  --parties-table-thead-padding: var(--space-8);
+  --parties-table-tbody-padding: var(--space-8);
+  --parties-table-font-size: var(--font-xs);
   --fullscreen-title-font-size: var(--font-xl);
+  --share-block-right: 251px;
+  --share-block-top: var(--space-32);
+  --right-column-padding-top: var(--space-16);
+  --center-column-ads-margin-top: var(--space-16);
+  --lastvotes-margin-bottom: var(--space-32);
   --votes-table-font-size: var(--font-sm);
-  --votes-header-font-size: var(--font-md);
+  --votes-header-font-size: var(--font-lg);
+  --picture-details-share-margin: var(--space-16) 0;
+  --share-item-margin-right: var(--space-16);
+  --artweb-right: var(--space-32);
+  --footer-min-height: var(--space-48);
+  --heading-margin-top: var(--space-24);
+  --heading-margin-bottom: var(--space-16);
+  --gallery-item-border-color: var(--black);
   --banner-cover-bg: var(--yellow);
+  --html-content-image-margin: var(--space-16);
 
   /* Debug */
   --debug-padding: var(--space-8) var(--space-16);
@@ -52,6 +61,7 @@
   --emulator-canvas-margin-bottom: var(--space-16);
   --emulator-type-margin-left: var(--space-16);
 
+  /* Radio & Authorship */
   --radio-icon-size: 42px;
   --radio-icon-margin-right: var(--space-8);
   --radio-button-font-size: var(--font-sm);
@@ -134,6 +144,7 @@
   --zxmap-marker-color: var(--blue);
   --zxmap-marker-icon-color: var(--white);
   --zxmap-marker-text-color: var(--white);
+  --zxmap-marker-amount-font-size: var(--font-md);
   --zxmap-location-padding-bottom: var(--space-8);
 
   /* Comment Module */
@@ -142,6 +153,7 @@
   --comment-content-link-font-size: var(--font-xs);
   --comment-content-link-margin-bottom: var(--space-8);
   --comment-image-margin: var(--space-8) var(--space-24) var(--space-8) 0;
+  --comment-image-margin-mobile: var(--space-8) 0;
   --comment-nested-margin-left: var(--space-32);
   --comment-short-margin-bottom: var(--space-16);
   --comment-short-font-size: var(--font-sm);
@@ -172,6 +184,9 @@
   --pressarticle-mentions-gap: var(--space-48);
   --pressarticle-mentions-margin-bottom: var(--space-32);
   --pressarticle-mentions-header-margin-bottom: var(--space-8);
+  --pressarticle-search-title-margin-top: var(--space-32);
+  --pressarticle-search-items-gap: var(--space-32);
+  --pressarticle-search-item-margin: var(--space-16);
 
   /* Search Module */
   --search-header-right: var(--space-16);
@@ -186,15 +201,19 @@
   /* ZX Music */
   --zxmusic-details-padding: var(--space-16);
   --zxmusic-details-margin: var(--space-16) 0;
+  --zxmusic-details-info-playlist-margin-left: var(--space-8);
   --zxmusic-controls-label-margin-left: var(--space-16);
   --zxmusic-details-description-margin: var(--space-16) 0 var(--space-48);
   --zxmusic-details-download-img-margin-right: 5px;
   --zxmusic-controls-full-padding: var(--space-16);
+  --zxmusic-controls-full-fixed-left: var(--space-32);
   --zxmusic-controls-full-radius: var(--radius-lg);
   --zxmusic-progress-bg: var(--gray8);
   --zxmusic-progress-body-bg: var(--gray6);
   --zxmusic-progress-radius: var(--radius-sm);
   --zxmusic-progress-padding: var(--space-4);
+  --zxmusic-controls-buttons-margin-right: var(--space-4);
+  --zxmusic-controls-link-margin-left: var(--space-16);
 
   /* ZX Picture */
   --zxpicture-short-bg: var(--gray8);
@@ -205,10 +224,12 @@
   --zxpicture-short-image-border: 1px solid var(--black);
   --zxpicture-short-bottom-gap: 10px;
   --zxpicture-short-year-color: var(--yellow-light);
+  --zxpicture-short-title-link-color: var(--white);
   --zxpicture-details-main-margin: var(--space-32);
   --zxpicture-details-download-margin-right: var(--space-16);
   --zxpicture-details-download-img-margin-right: 5px;
   --zxpicture-details-votes-margin-bottom: var(--space-48);
+  --zxpicture-details-info-playlist-margin-left: var(--space-8);
 
   /* ZX Prod */
   --zxprod-details-video-margin-bottom: var(--space-16);
@@ -218,6 +239,7 @@
   --zxprod-details-releases-margin-bottom: var(--space-40);
   --zxprod-details-description-font-size-mobile: var(--font-sm);
   --zxprod-import-link-margin-bottom: var(--space-8);
+  --zxprod-import-link-image-margin-right: var(--space-8);
   --zxprod-details-heading-color: var(--white);
   --zxprod-details-heading-font-size: var(--font-lg);
 
@@ -229,49 +251,14 @@
   --zxrelease-table-cell-padding: var(--space-4) var(--space-8);
   --zxrelease-table-border-top: 2rem;
   --zxrelease-table-download-gap: var(--space-8);
+  --zxrelease-table-font-size-mobile: var(--font-sm);
+  --zxrelease-table-description-margin-top: var(--space-8);
+  --zxrelease-images-padding: 0 var(--space-8) var(--space-8);
+  --zxrelease-table-manuals-margin-top: var(--space-32);
   --zxrelease-short-gap: var(--space-16);
+  --zxrelease-short-padding: var(--space-8);
   --zxrelease-short-transition: 0.5s;
-
-  /* Shared */
-  --html-content-image-margin: var(--space-16);
-
-  /* Layout */
-  --content-padding: var(--space-32);
-  --content-padding-mobile: var(--space-16);
-  --center-block-padding-bottom: var(--space-48);
-  --breadcrumbs-margin-bottom: var(--space-16);
-  --center-banner-margin-right: 230px;
-  --zxbn-margin-bottom: var(--space-24);
-  --current-location-margin-bottom: var(--space-16);
-  --current-location-delimiter-font-size: 1.2em;
-  --firstpage-top-block-margin-bottom: var(--space-32);
-  --firstpage-top-block-padding-top: var(--space-16);
-  --lastcomments-margin-bottom: var(--space-32);
-  --lastcomments-header-font-size: var(--font-lg);
-  --all-comments-icon-margin-right: var(--space-8);
-  --lastnews-margin-bottom: var(--space-32);
-  --lastnews-padding-top: var(--space-16);
-  --lastnews-header-font-size: var(--font-lg);
-  --news-short-date-color: var(--gray5);
-  --news-short-date-font-size: var(--font-sm);
-  --news-short-block-margin-bottom: var(--space-16);
-  --latestupdates-controls-margin: var(--space-8) 0;
-  --zxitemslist-controls-margin-top: var(--space-16);
-  --parties-table-thead-padding: var(--space-8);
-  --parties-table-tbody-padding: var(--space-8);
-  --parties-table-font-size: var(--font-xs);
-  --fullscreen-title-font-size: var(--font-xl);
-  --share-block-right: 251px;
-  --share-block-top: var(--space-32);
-  --right-column-padding-top: var(--space-16);
-  --center-column-ads-margin-top: var(--space-16);
-  --lastvotes-margin-bottom: var(--space-32);
-  --votes-table-font-size: var(--font-sm);
-  --votes-header-font-size: var(--font-lg);
-  --picture-details-share-margin: var(--space-16) 0;
-  --share-item-margin-right: var(--space-16);
-  --artweb-right: var(--space-32);
-  --footer-min-height: var(--space-48);
+  --zxrelease-format-link-icon-margin-right: var(--space-4);
 
   /* Party Module */
   --party-compos-margin: var(--space-32) 0;
