@@ -1,5 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {Component, Input, OnInit} from '@angular/core';
+import {TranslateModule} from '@ngx-translate/core';
 import {CommentDto} from '../../models/comment.dto';
 import {CommentsService} from '../../services/comments.service';
 import {CommentComponent} from '../comment/comment.component';
@@ -8,7 +9,7 @@ import {CommentFormComponent} from '../comment-form/comment-form.component';
 @Component({
   selector: 'app-comments-list',
   standalone: true,
-  imports: [CommonModule, CommentComponent, CommentFormComponent],
+  imports: [CommonModule, TranslateModule, CommentComponent, CommentFormComponent],
   templateUrl: './comments-list.component.html',
   styleUrls: ['./comments-list.component.scss']
 })

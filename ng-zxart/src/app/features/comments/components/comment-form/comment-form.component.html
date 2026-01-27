@@ -1,9 +1,9 @@
 <form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="comment-form">
   <div class="form-group">
-    <label for="content">Comment:</label>
+    <label for="content">{{ 'comments.label' | translate }}</label>
     <textarea id="content" formControlName="content" class="form-control" rows="4"></textarea>
     <div *ngIf="commentForm.get('content')?.invalid && commentForm.get('content')?.touched" class="error-msg">
-      Content is required (min 2 characters).
+      {{ 'comments.error-content' | translate }}
     </div>
   </div>
 
@@ -13,9 +13,9 @@
 
   <div class="form-actions">
     <button pButton type="submit" [disabled]="commentForm.invalid || isSubmitting"
-            [label]="commentToEdit ? 'Save Changes' : 'Post Comment'"
+            [label]="(commentToEdit ? 'comments.save' : 'comments.post') | translate"
             class="p-button-success"></button>
-    <button pButton type="button" (click)="onCancel()" label="Cancel"
+    <button pButton type="button" (click)="onCancel()" [label]="'comments.cancel' | translate"
             [disabled]="isSubmitting" class="p-button-secondary"></button>
   </div>
 </form>

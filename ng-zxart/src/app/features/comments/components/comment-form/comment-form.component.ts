@@ -1,6 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {TranslateModule} from '@ngx-translate/core';
 import {ButtonModule} from 'primeng/button';
 import {CommentsService} from '../../services/comments.service';
 import {CommentDto} from '../../models/comment.dto';
@@ -8,7 +9,7 @@ import {CommentDto} from '../../models/comment.dto';
 @Component({
   selector: 'app-comment-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ButtonModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, ButtonModule],
   templateUrl: './comment-form.component.html',
   styleUrls: ['./comment-form.component.scss']
 })

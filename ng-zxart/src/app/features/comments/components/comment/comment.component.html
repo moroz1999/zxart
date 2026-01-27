@@ -4,9 +4,9 @@
     <span class="comment-date">{{ comment.date }}</span>
     
     <div class="comment-actions">
-      <button pButton type="button" (click)="onReply()" label="Reply" class="p-button-link"></button>
-      <button *ngIf="comment.canEdit" pButton type="button" (click)="onEdit()" label="Edit" class="p-button-link"></button>
-      <button *ngIf="comment.canDelete" pButton type="button" (click)="onDelete()" label="Delete" class="p-button-link"></button>
+      <button pButton type="button" (click)="onReply()" [label]="'comments.reply' | translate" class="p-button-link"></button>
+      <button *ngIf="comment.canEdit" pButton type="button" (click)="onEdit()" [label]="'comments.edit' | translate" class="p-button-link"></button>
+      <button *ngIf="comment.canDelete" pButton type="button" (click)="onDelete()" [label]="'comments.delete' | translate" class="p-button-link"></button>
     </div>
   </div>
   

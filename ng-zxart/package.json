@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build -c production"
+    "build": "ng build -c production && xcopy /E /I /Y src\\assets ..\\htdocs\\assets"
   },
   "private": true,
   "dependencies": {

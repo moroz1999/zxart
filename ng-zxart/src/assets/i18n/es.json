@@ -147,5 +147,18 @@
       "video": "Vídeo",
       "translation": "Traducción"
     }
+  },
+  "comments": {
+    "title": "Comentarios",
+    "add": "Agregar comentario",
+    "reply": "Responder",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "post": "Publicar comentario",
+    "save": "Guardar cambios",
+    "label": "Comentario:",
+    "confirm-delete": "¿Estás seguro de que quieres eliminar este comentario?",
+    "error-content": "El contenido es obligatorio (mínimo 2 caracteres)."
   }
 }
