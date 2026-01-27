@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Controllers;
 
+use App\Users\CurrentUser;
 use controller;
 use controllerApplication;
 use Symfony\Component\ObjectMapper\ObjectMapper;
@@ -17,6 +18,7 @@ class Comments extends controllerApplication
 
     public function initialize(): void
     {
+        $this->startSession('public');
         $this->createRenderer();
         $this->objectMapper = new ObjectMapper();
 
@@ -34,7 +36,7 @@ class Comments extends controllerApplication
 
         $this->commentsService = $this->getService(CommentsService::class, [
             'structureManager' => $structureManager,
-            'user' => $this->getService(user::class),
+            'CurrentUser' => $this->getService(CurrentUser::class),
             'languagesManager' => $languagesManager,
             'privilegesManager' => $this->getService('privilegesManager'),
         ]);

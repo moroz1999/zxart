@@ -82,7 +82,7 @@ class CommentsService
 
     public function addComment(int $targetId, string $content, ?string $author = null): ?CommentDto
     {
-        if ($this->user->userName === 'anonymous' || !$this->user->id) {
+        if (!$this->user->isAuthorized()) {
             return null;
         }
 
