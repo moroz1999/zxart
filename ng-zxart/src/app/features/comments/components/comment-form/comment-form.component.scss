@@ -23,6 +23,11 @@
   .form-actions {
     display: flex;
     gap: var(--comment-form-actions-gap);
+
+    ::ng-deep .p-button {
+      font-size: var(--font-sm);
+      height: var(--button-height);
+    }
   }
 
   .error-msg {

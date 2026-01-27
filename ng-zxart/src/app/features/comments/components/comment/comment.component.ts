@@ -1,5 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ButtonModule} from 'primeng/button';
 import {CommentDto} from '../../models/comment.dto';
 import {CommentsService} from '../../services/comments.service';
 import {CommentFormComponent} from '../comment-form/comment-form.component';
@@ -8,7 +9,7 @@ import {CommentAuthorComponent} from '../comment-author/comment-author.component
 @Component({
   selector: 'app-comment',
   standalone: true,
-    imports: [CommonModule, CommentFormComponent, CommentAuthorComponent],
+    imports: [CommonModule, ButtonModule, CommentFormComponent, CommentAuthorComponent],
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss']
 })

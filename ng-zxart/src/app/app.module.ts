@@ -18,6 +18,8 @@ import {MatCardModule} from '@angular/material/card';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {providePrimeNG} from 'primeng/config';
+import Aura from '@primeng/themes/aura';
 import {ZxProdsListComponent} from './zx-prods-list/zx-prods-list.component';
 import {AppComponent} from './app.component';
 import {ParserComponent} from './parser/parser.component';
@@ -54,6 +56,14 @@ export function HttpLoaderFactory(http: HttpClient) {
     ],
     providers: [
         provideHttpClient(),
+        providePrimeNG({
+            theme: {
+                preset: Aura,
+                options: {
+                    darkModeSelector: false
+                }
+            }
+        }),
         provideTranslateService({
             loader: {
                 provide: TranslateLoader,

@@ -2,15 +2,16 @@
 
 ## New styles code should be written in SCSS.
 
-**CRITICAL: After any changes to SCSS or theme files, you MUST rebuild the Angular project using `composer run build` in the root directory.**
+**CRITICAL: After any changes to SCSS or theme files, you MUST rebuild the Angular project using `composer run build` from the project root directory.**
 
 - **Comments**: All comments in CSS/SCSS files must be written in English only.
 - **Styles and Variables**:
     - NO hardcoded hex/rgb or raw spacing.
     - NO SCSS variables (deprecated). Use CSS `var()`.
-    - Все цвета и размеры должны быть оформлены как CSS-переменные.
-    - Добавлять или изменять переменные в `_base.theme.scss` можно ТОЛЬКО после прямого разрешения пользователя.
-    - Переиспользование переменных из `_legacy.theme.scss` (или любых других файлов с префиксом `_legacy`) запрещено.
+    - All colors and sizes must be formatted as CSS variables.
+    - Adding or modifying variables in `_base.theme.scss` is allowed ONLY after direct user permission.
+    - Reuse of variables from `_legacy.theme.scss` (or any other files with the `_legacy` prefix) is prohibited.
+    - Legacy components and their variables must not be touched. CSS variables serve as a link between legacy and Angular.
 - **Architecture**:
     - **Base variables** (`--space-*`, `--font-*`, base colors, `--radius-*`, etc.) define the design system's foundation. They are stored in `src/app/shared/theme/_base.theme.scss`.
     - **Component variables** (e.g., `--button-bg`, `--input-color`) must be defined in separate files (one per component, e.g., `_button.theme.scss`). These variables can use base variables.

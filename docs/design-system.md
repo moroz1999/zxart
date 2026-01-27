@@ -9,8 +9,10 @@ The project follows a component-based approach for the design system.
     - `--shadow-thin`: For subtle elevations (e.g., cards, small buttons).
     - `--shadow-deep`: For prominent elements (e.g., modals, popups).
 5. **No Hardcoded Palette in Components**: In component styles, it is forbidden to use base palette variables like `--gray8` directly. Instead, use semantic variables like `--text-color`, `--button-bg`, etc. If a needed semantic variable is missing, define it in the theme.
+7. **Semantic Usage**: All components must be used semantically and for their intended purpose.
+8. **Material UI Replacement**: Material UI is considered legacy. It must be replaced with PrimeNG analogues and eventually removed from the project.
 
 ### Reusable Subcomponents
-To maintain consistency and reduce code duplication, repeating UI patterns must be extracted into standalone Smarty templates (subcomponents).
-- Never copy-paste logic for elements like controls, info blocks, or specific data displays across multiple components.
+1. **Legacy Components**: Legacy components and their variables must not be modified.
+2. **Subcomponents**: To maintain consistency and reduce code duplication, repeating UI patterns must be extracted into standalone templates or components.
 

@@ -12,11 +12,10 @@
   </div>
 
   <div class="form-actions">
-    <button type="submit" [disabled]="commentForm.invalid || isSubmitting" class="button button_green">
-      {{ commentToEdit ? 'Save Changes' : 'Post Comment' }}
-    </button>
-    <button type="button" (click)="onCancel()" class="button" [disabled]="isSubmitting">
-      Cancel
-    </button>
+    <button pButton type="submit" [disabled]="commentForm.invalid || isSubmitting"
+            [label]="commentToEdit ? 'Save Changes' : 'Post Comment'"
+            class="p-button-success"></button>
+    <button pButton type="button" (click)="onCancel()" label="Cancel"
+            [disabled]="isSubmitting" class="p-button-secondary"></button>
   </div>
 </form>

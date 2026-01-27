@@ -2,15 +2,15 @@
   /* Buttons */
   --button-primary-bg: var(--gray8);
   --button-primary-text: var(--white);
-  --button-secondary-bg: #424242;
-  --button-secondary-hover-bg: #606060;
+  --button-secondary-bg: var(--gray6);
+  --button-secondary-hover-bg: var(--gray5);
   --button-secondary-text: var(--white);
-  --button-danger-bg: #e51919;
-  --button-danger-border: #860f0f;
+  --button-success-bg: var(--green);
+  --button-success-text: var(--white);
+  --button-danger-bg: var(--red);
   --button-danger-text: var(--white);
-
-  --button-bg: #424242;
-  --button-hover-bg: #606060;
+  --button-bg: var(--gray7);
+  --button-hover-bg: var(--gray6);
   --button-text: var(--white);
   --button-padding: var(--space-4) var(--space-8);
   --button-border-radius: var(--radius-md);

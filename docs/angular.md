@@ -30,7 +30,14 @@ The component independently requests data from the backend using the provided `e
 ### Architecture and Code Structure
 
 #### Feature Sliced Design (FSD)
-All new functionality in Angular must follow Feature Sliced Design principles.
+All new functionality in Angular must follow Feature Sliced Design principles and the [Design System](design-system.md).
+
+**CRITICAL**:
+- All new components must use **PrimeNG**.
+- **Material UI** is legacy and must be replaced by PrimeNG.
+- Custom CSS is forbidden without direct instruction. Use PrimeNG components.
+- Components must be used semantically.
+
 - Code is divided into layers, such as `features`, `entities`, and `shared`.
 - Each feature must be located in its own directory within `src/app/features/`.
 - Example of the `comments` feature structure:
