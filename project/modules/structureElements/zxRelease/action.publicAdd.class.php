@@ -26,7 +26,7 @@ class publicAddZxRelease extends structureElementAction
                 $structureElement->structureName = $structureElement->title;
             }
             $structureElement->dateAdded = time();
-            $structureElement->userId = $this->getService('user')->id;
+            $structureElement->userId = $this->getService(user::class)->id;
             $structureElement->persistElementData();
 
             $structureElement->persistAuthorship('release');
@@ -34,7 +34,7 @@ class publicAddZxRelease extends structureElementAction
             $structureElement->executeAction('receiveFiles');
 
             $privilegesManager = $this->getService('privilegesManager');
-            $user = $this->getService('user');
+            $user = $this->getService(user::class);
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'showPublicForm', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'publicReceive', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'publicDelete', 'allow');

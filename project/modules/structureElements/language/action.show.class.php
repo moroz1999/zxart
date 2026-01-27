@@ -21,7 +21,7 @@ class showLanguage extends structureElementAction
 
         if (($structureElement->requested || $structureElement->getId() == $currentLanguageId) && ($controller->getApplication(
                 ) instanceof publicApplication)) {
-            $user = $this->getService('user');
+            $user = $this->getService(user::class);
 
             $renderer = $this->getService('renderer');
             $renderer->assign('currentLanguage', $structureElement);

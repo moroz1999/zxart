@@ -33,7 +33,7 @@ class rzxArchiveApplication extends controllerApplication
             ob_end_flush();
         }
 
-        $user = $this->getService('user');
+        $user = $this->getService(user::class);
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
 

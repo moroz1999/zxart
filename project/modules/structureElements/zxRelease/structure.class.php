@@ -507,7 +507,7 @@ class zxReleaseElement extends ZxArtItem implements
 
     public function isDownloadable(): bool
     {
-        $user = $this->getService('user');
+        $user = $this->getService(user::class);
         $privileges = $this->getService('privilegesManager')->getElementPrivileges($this->getId());
 
         return !in_array($this->getLegalStatus(), [legalStatus::forbidden->name, legalStatus::forbiddenzxart->name, legalStatus::insales->name], true) ||

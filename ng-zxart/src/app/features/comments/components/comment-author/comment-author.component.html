@@ -1,0 +1,12 @@
+<span class="comment-author-container">
+  <a *ngIf="author.url; else noUrl" [href]="author.url" class="comment-author">
+    {{ author.name }}
+  </a>
+  <ng-template #noUrl>
+    <span class="comment-author">{{ author.name }}</span>
+  </ng-template>
+  
+  <span *ngFor="let badge of author.badges" class="comment-badge" [class]="'badge-' + badge">
+    {{ badge }}
+  </span>
+</span>

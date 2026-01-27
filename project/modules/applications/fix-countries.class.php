@@ -22,7 +22,7 @@
 //        $renderer = $this->getService('renderer');
 //        $renderer->endOutputBuffering();
 //
-//        $user = $this->getService('user');
+//        $user = $this->getService(user::class);
 //        if ($userId = $user->checkUser('crontab', null, true)) {
 //            $user->switchUser($userId);
 //

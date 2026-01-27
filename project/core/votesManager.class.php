@@ -127,7 +127,7 @@ class votesManager implements DependencyInjectionContextInterface
         $records = false;
         if ($idList) {
             $collection = persistableCollection::getInstance('votes_history');
-            $user = $this->getService('user');
+            $user = $this->getService(user::class);
 
             $columns = ['elementId', 'value'];
 
@@ -148,7 +148,7 @@ class votesManager implements DependencyInjectionContextInterface
     public function vote(int $elementId, string $type, int $value): bool
     {
         $collection = persistableCollection::getInstance('votes_history');
-        $user = $this->getService('user');
+        $user = $this->getService(user::class);
         $result = $collection->load(['userId' => $user->id, 'elementId' => $elementId]);
         $historyObject = false;
         if (count($result) > 0) {

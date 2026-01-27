@@ -10,7 +10,7 @@ class submitRegistration extends structureElementAction
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
-        $user = $this->getService('user');
+        $user = $this->getService(user::class);
         $translationsManager = $this->getService('translationsManager');
 
         if ($structureElement->type == 'userdata' && $user->userName == 'anonymous') {

@@ -13,6 +13,9 @@ readonly class CommentDto
         public CommentAuthorDto $author,
         public string $date,
         public string $content,
+        public bool $canEdit,
+        public bool $canDelete,
+        public ?CommentTargetDto $target = null,
         public ?int $parentId = null,
         public array $children = [],
     ) {

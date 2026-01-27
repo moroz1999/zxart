@@ -26,16 +26,14 @@ export class CommentFormComponent {
     private commentsService: CommentsService
   ) {
     this.commentForm = this.fb.group({
-      content: ['', [Validators.required, Validators.minLength(2)]],
-      author: ['']
+      content: ['', [Validators.required, Validators.minLength(2)]]
     });
   }
 
   ngOnInit(): void {
     if (this.commentToEdit) {
       this.commentForm.patchValue({
-        content: this.commentToEdit.content,
-        author: this.commentToEdit.author.name
+        content: this.commentToEdit.content
       });
     }
   }
@@ -48,7 +46,7 @@ export class CommentFormComponent {
     this.isSubmitting = true;
     this.errorMessage = undefined;
 
-    const {content, author} = this.commentForm.value;
+    const {content} = this.commentForm.value;
 
     if (this.commentToEdit) {
       this.commentsService.updateComment(this.commentToEdit.id, content).subscribe({
@@ -62,7 +60,7 @@ export class CommentFormComponent {
         }
       });
     } else {
-      this.commentsService.addComment(this.targetId, content, author).subscribe({
+      this.commentsService.addComment(this.targetId, content).subscribe({
         next: (comment) => {
           this.commentSaved.emit(comment);
           this.commentForm.reset();

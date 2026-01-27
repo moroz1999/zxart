@@ -36,7 +36,7 @@ class batchUploadPicturesCatalogue extends structureElementAction
                 $pictureElement->party = $structureElement->party;
                 $pictureElement->author = $structureElement->author;
                 $pictureElement->dateAdded = $pictureElement->dateCreated;
-                $pictureElement->userId = $this->getService('user')->id;
+                $pictureElement->userId = $this->getService(user::class)->id;
 
                 $pictureElement->persistElementData();
 

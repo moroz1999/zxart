@@ -28,11 +28,10 @@ export class CommentsService {
     );
   }
 
-  addComment(targetId: number, content: string, author?: string): Observable<CommentDto> {
+  addComment(targetId: number, content: string): Observable<CommentDto> {
     const body = new HttpParams()
       .set('id', targetId.toString())
       .set('content', content)
-      .set('author', author || '')
       .set('action', 'add');
 
     return this.http.post<ApiResponse<CommentDto>>('/comments/', body, {

@@ -28,7 +28,7 @@ class publicAddGroup extends structureElementAction
             $structureElement->recalculate();
 
             $privilegesManager = $this->getService('privilegesManager');
-            $user = $this->getService('user');
+            $user = $this->getService(user::class);
             $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'showPublicForm', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'publicReceive', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'publicDelete', 'allow');

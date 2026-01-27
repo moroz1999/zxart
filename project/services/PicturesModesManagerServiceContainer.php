@@ -16,7 +16,7 @@ class PicturesModesManagerServiceContainer extends DependencyInjectionServiceCon
         if ($user = $this->getOption('user')) {
             $picturesModesManager->setUser($user);
         } else {
-            $picturesModesManager->setUser($this->registry->getService('user'));
+            $picturesModesManager->setUser($this->registry->getService(user::class));
         }
         return $picturesModesManager;
     }

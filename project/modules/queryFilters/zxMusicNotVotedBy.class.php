@@ -10,7 +10,7 @@ class zxMusicNotVotedByQueryFilter extends QueryFilter
     public function getFilteredIdList($argument, $query)
     {
         if (!is_numeric($argument)) {
-            $currentUser = $this->getService('user');
+            $currentUser = $this->getService(user::class);
             $argument = [$currentUser->id];
         }
         $query->whereNotIn(

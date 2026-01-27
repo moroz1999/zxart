@@ -238,7 +238,7 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
                 $tagElement->prepareActualData();
                 $tagElement->structureName = $tagName;
                 $tagElement->title = $tagName;
-                $tagElement->userId = $this->getService('user')->id;
+                $tagElement->userId = $this->getService(user::class)->id;
                 $tagElement->persistElementData();
                 $structureManager->moveElement($structureManager->rootElementId, $tagsElementId, $tagElement->id);
             }

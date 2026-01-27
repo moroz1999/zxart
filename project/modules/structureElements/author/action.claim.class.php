@@ -7,7 +7,7 @@ class claimAuthor extends structureElementAction
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
-        $user = $this->getService('user');
+        $user = $this->getService(user::class);
         $renderer = $this->getService('renderer');
 
         if (!$user->authorId && $user->authorId != $structureElement->getId()) {

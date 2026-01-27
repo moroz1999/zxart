@@ -163,7 +163,7 @@ class userElement extends structureElement
                             if ($newAddress->importExternalData($newData)) {
                                 $newAddress->persistElementData();
 
-                                $user = $this->getService('user');
+                                $user = $this->getService(user::class);
                                 $subscribed = true;
                                 $user->setStorageAttribute('subscribed', $subscribed);
 

@@ -26,40 +26,17 @@ class user
     public $volunteer;
     protected $groupsIdList;
     protected $userDataObject;
-    /** @var \Illuminate\Database\Connection */
-    protected $db;
-    /**
-     * @var privilegesManager
-     */
-    protected $privilegesManager;
 
-    /**
-     * @param privilegesManager $privilegesManager
-     */
-    public function setPrivilegesManager($privilegesManager): void
+    public function __construct(
+        private \Illuminate\Database\Connection $db,
+        private privilegesManager               $privilegesManager,
+        private ServerSessionManager            $serverSessionManager
+    )
     {
-        $this->privilegesManager = $privilegesManager;
+        $this->initialize();
     }
 
-    /**
-     * @param ServerSessionManager $serverSessionManager
-     */
-    public function setServerSessionManager($serverSessionManager): void
-    {
-        $this->serverSessionManager = $serverSessionManager;
-    }
-
-    public function setDb($db): void
-    {
-        $this->db = $db;
-    }
-
-    /**
-     * @var ServerSessionManager
-     */
-    protected $serverSessionManager;
     protected $userResourceName = "module_user";
-    protected $privilegeResourceName = "module_privilege";
     protected $relationsResourceName = "privilege_relations";
 
     public function initialize(): void

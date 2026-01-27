@@ -25,7 +25,7 @@ class userPlaylistsElement extends structureElement
     {
         if ($this->userPlaylists == null) {
             $this->userPlaylists = [];
-            $user = $this->getService('user');
+            $user = $this->getService(user::class);
 
             $linksManager = $this->getService('linksManager');
             if ($idList = $linksManager->getConnectedIdList($user->id, 'structure', 'parent')) {

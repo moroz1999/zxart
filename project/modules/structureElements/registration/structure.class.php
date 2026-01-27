@@ -51,7 +51,7 @@ class registrationElement extends menuDependantStructureElement
     {
         $result = [];
         $existingConnections = [];
-        $user = $this->getService('user');
+        $user = $this->getService(user::class);
         $registrationMode = $this->type == 'registration';
         $currentUserId = $user->userName !== 'anonymous' ? (int)$user->readUserId() : 0;
 
@@ -160,7 +160,7 @@ class registrationElement extends menuDependantStructureElement
         } elseif ($this->type == 'registration') {
             $field = $this->getConnectedFieldById($fieldId);
             if ($field) {
-                $user = $this->getService('user');
+                $user = $this->getService(user::class);
                 $socialData = (array)$user->getStorageAttribute('socialData');
                 if ($field->autocomplete && isset($socialData[$field->autocomplete])) {
                     $value = $socialData[$field->autocomplete];

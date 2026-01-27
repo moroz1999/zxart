@@ -22,7 +22,7 @@ class publicAddParty extends structureElementAction
 
             $structureElement->persistElementData();
 
-            $user = $this->getService('user');
+            $user = $this->getService(user::class);
             $privilegesManager = $this->getService('privilegesManager');
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'party', 'showPublicForm', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'party', 'publicReceive', 'allow');

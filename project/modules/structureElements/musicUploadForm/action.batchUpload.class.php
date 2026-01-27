@@ -15,7 +15,7 @@ class batchUploadMusicUploadForm extends structureElementAction
         if ($musicsInfo = $structureElement->music) {
             $privilegesManager = $this->getService('privilegesManager');
             $linksManager = $this->getService('linksManager');
-            $user = $this->getService('user');
+            $user = $this->getService(user::class);
 
             $currentElement = $structureManager->getElementsFirstParent($structureElement->id);
             if ($musicCatalogueId = $structureManager->getElementIdByMarker('musicCatalogue')) {
@@ -47,7 +47,7 @@ class batchUploadMusicUploadForm extends structureElementAction
                     $zxMusicElement->partyplace = $structureElement->partyplace;
                     $zxMusicElement->compo = $structureElement->compo;
                     $zxMusicElement->dateAdded = $zxMusicElement->dateCreated;
-                    $zxMusicElement->userId = $this->getService('user')->id;
+                    $zxMusicElement->userId = $this->getService(user::class)->id;
                     $zxMusicElement->chipType = $structureElement->chipType;
                     $zxMusicElement->frequency = $structureElement->frequency;
                     $zxMusicElement->intFrequency = $structureElement->intFrequency;

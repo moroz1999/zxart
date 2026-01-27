@@ -26,7 +26,7 @@ class publicReceiveComment extends structureElementAction
 
 			if ($targetElement = $structureManager->getElementsFirstParent($structureElement->id)) {
 				if ($targetElement instanceof CommentsHolderInterface) {
-					$user = $this->getService('user');
+					$user = $this->getService(user::class);
 					$structureElement->userId = $user->id;
 					if (!$structureElement->dateTime) {
 						$structureElement->dateTime = time();

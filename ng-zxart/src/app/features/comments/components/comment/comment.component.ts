@@ -3,11 +3,12 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommentDto} from '../../models/comment.dto';
 import {CommentsService} from '../../services/comments.service';
 import {CommentFormComponent} from '../comment-form/comment-form.component';
+import {CommentAuthorComponent} from '../comment-author/comment-author.component';
 
 @Component({
   selector: 'app-comment',
   standalone: true,
-  imports: [CommonModule, CommentFormComponent],
+  imports: [CommonModule, CommentFormComponent, CommentAuthorComponent],
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss']
 })

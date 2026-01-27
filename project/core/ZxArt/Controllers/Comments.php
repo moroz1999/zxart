@@ -34,8 +34,9 @@ class Comments extends controllerApplication
 
         $this->commentsService = $this->getService(CommentsService::class, [
             'structureManager' => $structureManager,
-            'user' => $this->getService('user'),
+            'user' => $this->getService(user::class),
             'languagesManager' => $languagesManager,
+            'privilegesManager' => $this->getService('privilegesManager'),
         ]);
     }
 
@@ -76,7 +77,7 @@ class Comments extends controllerApplication
     {
         $targetId = (int)$this->getParameter('id');
         $content = $this->getParameter('content');
-        $author = $this->getParameter('author');
+        $author = $this->getParameter('author') ?: null;
 
         if ($targetId && $content) {
             $commentDto = $this->commentsService->addComment($targetId, $content, $author);

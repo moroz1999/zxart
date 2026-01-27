@@ -11,7 +11,7 @@ class showRegistration extends structureElementAction
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
-        $user = $this->getService('user');
+        $user = $this->getService(user::class);
         $registeredHere = $user->userName != 'anonymous' && $structureElement->type == 'registration';
 
         $serverSessionManager = $this->getService(ServerSessionManager::class);

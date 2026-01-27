@@ -29,7 +29,7 @@ class showComments extends structureElementAction
     protected function getFilters($formData)
     {
         $filter = [];
-        $user = $this->getService('user');
+        $user = $this->getService(user::class);
 
         if (isset($formData["periodStart"])) {
             $filter["periodStart"] = $formData["periodStart"];

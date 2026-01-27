@@ -8,7 +8,7 @@ readonly class CommentAuthorDto
     public function __construct(
         public string $name,
         public ?string $url = null,
-        public ?string $badge = null,
+        public array $badges = [],
     ) {
     }
 }

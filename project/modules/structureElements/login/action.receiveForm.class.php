@@ -10,7 +10,7 @@ class receiveFormLogin extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated === true) {
-            $user = $this->getService('user');
+            $user = $this->getService(user::class);
             $structureElement->setViewName('result');
 
             if ($userId = $user->checkUser($structureElement->userName, $structureElement->password)) {

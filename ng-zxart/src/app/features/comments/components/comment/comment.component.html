@@ -1,20 +1,19 @@
 <div class="comment">
   <div class="comment-header">
-    <a *ngIf="comment.author.url; else noUrl" [href]="comment.author.url" class="comment-author">
-      {{ comment.author.name }}
-    </a>
-    <ng-template #noUrl>
-      <span class="comment-author">{{ comment.author.name }}</span>
-    </ng-template>
-    <span *ngIf="comment.author.badge" class="comment-badge">{{ comment.author.badge }}</span>
+    <app-comment-author [author]="comment.author"></app-comment-author>
     <span class="comment-date">{{ comment.date }}</span>
     
     <div class="comment-actions">
       <button (click)="onReply()" class="button-link">Reply</button>
-      <button (click)="onEdit()" class="button-link">Edit</button>
-      <button (click)="onDelete()" class="button-link">Delete</button>
+      <button *ngIf="comment.canEdit" (click)="onEdit()" class="button-link">Edit</button>
+      <button *ngIf="comment.canDelete" (click)="onDelete()" class="button-link">Delete</button>
     </div>
   </div>
+  
+  <div *ngIf="comment.target" class="comment-target">
+    Re: <a [href]="comment.target.url">{{ comment.target.title }}</a>
+  </div>
+
   <div class="comment-content" [innerHTML]="comment.content"></div>
   
   <app-comment-form *ngIf="showReplyForm" [targetId]="comment.id" (commentSaved)="onCommentSaved($event)" (cancelled)="showReplyForm = false"></app-comment-form>

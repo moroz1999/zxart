@@ -1,7 +1,12 @@
 export interface CommentAuthorDto {
   name: string;
   url?: string;
-  badge?: string;
+  badges: string[];
+}
+
+export interface CommentTargetDto {
+  title: string;
+  url: string;
 }
 
 export interface CommentDto {
@@ -9,6 +14,9 @@ export interface CommentDto {
   author: CommentAuthorDto;
   date: string;
   content: string;
+  canEdit: boolean;
+  canDelete: boolean;
+  target?: CommentTargetDto;
   parentId?: number;
   children: CommentDto[];
 }

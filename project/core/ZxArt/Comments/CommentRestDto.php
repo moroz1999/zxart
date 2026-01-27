@@ -16,6 +16,9 @@ readonly class CommentRestDto
         public CommentAuthorDto $author,
         public string $date,
         public string $content,
+        public bool $canEdit,
+        public bool $canDelete,
+        public ?CommentTargetDto $target = null,
         public ?int $parentId = null,
         #[Map(transform: MapCollection::class)]
         public array $children = [],

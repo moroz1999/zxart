@@ -80,7 +80,7 @@ class randomTuneApplication extends controllerApplication
                 'zxMusicMinRating' => $averageVote + 0.2,
             ];
         } elseif ($type == 'discover') {
-            $currentUser = $this->getService('user');
+            $currentUser = $this->getService(user::class);
 
             $parameters = [
                 'zxMusicNotVotedBy' => [$currentUser->id],

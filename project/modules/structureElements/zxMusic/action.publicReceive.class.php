@@ -48,7 +48,7 @@ class publicReceiveZxMusic extends structureElementAction
             $structureElement->structureName = $structureElement->title;
 
             if (!$structureElement->userId) {
-                $structureElement->userId = $this->getService('user')->id;
+                $structureElement->userId = $this->getService(user::class)->id;
             }
 
             //if no author is selected, select automatically Unknown author

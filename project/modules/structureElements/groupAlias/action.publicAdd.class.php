@@ -15,7 +15,7 @@ class publicAddGroupAlias extends structureElementAction
     {
         if ($this->validated) {
             $privilegesManager = $this->getService('privilegesManager');
-            $user = $this->getService('user');
+            $user = $this->getService(user::class);
 
             $structureElement->structureName = $structureElement->title;
 

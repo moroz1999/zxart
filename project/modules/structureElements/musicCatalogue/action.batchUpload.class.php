@@ -36,7 +36,7 @@ class batchUploadMusicCatalogue extends structureElementAction
                 $zxMusicElement->compo = $structureElement->compo;
                 $zxMusicElement->author = $structureElement->author;
                 $zxMusicElement->dateAdded = $zxMusicElement->dateCreated;
-                $zxMusicElement->userId = $this->getService('user')->id;
+                $zxMusicElement->userId = $this->getService(user::class)->id;
                 $zxMusicElement->chipType = $structureElement->chipType;
                 $zxMusicElement->channelsType = $structureElement->channelsType;
                 $zxMusicElement->frequency = $structureElement->frequency;

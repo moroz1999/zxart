@@ -8,7 +8,7 @@ class receivePlaylist extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated) {
-            $user = $this->getService('user');
+            $user = $this->getService(user::class);
 
             $structureElement->prepareActualData();
 

@@ -98,7 +98,7 @@ class commentElement extends structureElement implements MetadataProviderInterfa
     {
         $votesValue = 0;
         $votesManager = $this->getService('votesManager');
-        $user = $this->getService('user');
+        $user = $this->getService(user::class);
         if ($votesList = $votesManager->getElementVotesList($this->id)) {
             foreach ($votesList as $vote) {
                 if ($vote['userId'] !== $user->id) {
