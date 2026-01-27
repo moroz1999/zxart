@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class publicReceiveComment extends structureElementAction
 {
 	protected $loggable = true;
@@ -26,7 +28,7 @@ class publicReceiveComment extends structureElementAction
 
 			if ($targetElement = $structureManager->getElementsFirstParent($structureElement->id)) {
 				if ($targetElement instanceof CommentsHolderInterface) {
-					$user = $this->getService(user::class);
+					$user = $this->getService(CurrentUser::class);
 					$structureElement->userId = $user->id;
 					if (!$structureElement->dateTime) {
 						$structureElement->dateTime = time();

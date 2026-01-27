@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class userPlaylistsElement extends structureElement
 {
     public $dataResourceName = 'module_generic';
@@ -25,7 +27,7 @@ class userPlaylistsElement extends structureElement
     {
         if ($this->userPlaylists == null) {
             $this->userPlaylists = [];
-            $user = $this->getService(user::class);
+            $user = $this->getService(CurrentUser::class);
 
             $linksManager = $this->getService('linksManager');
             if ($idList = $linksManager->getConnectedIdList($user->id, 'structure', 'parent')) {

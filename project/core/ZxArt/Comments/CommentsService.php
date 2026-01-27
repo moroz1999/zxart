@@ -4,20 +4,20 @@ declare(strict_types=1);
 namespace ZxArt\Comments;
 
 use App\Logging\EventsLog;
+use App\Users\CurrentUser;
 use commentElement;
 use CommentsHolderInterface;
 use LanguagesManager;
 use privilegesManager;
 use structureElement;
 use structureManager;
-use user;
 
 class CommentsService
 {
     public function __construct(
-        private readonly structureManager $structureManager,
-        private readonly user $user,
-        private readonly LanguagesManager $languagesManager,
+        private readonly structureManager  $structureManager,
+        private readonly CurrentUser       $user,
+        private readonly LanguagesManager  $languagesManager,
         private readonly privilegesManager $privilegesManager,
     ) {
     }

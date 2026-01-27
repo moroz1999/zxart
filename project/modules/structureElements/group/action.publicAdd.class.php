@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class publicAddGroup extends structureElementAction
 {
     protected $loggable = true;
@@ -28,7 +30,7 @@ class publicAddGroup extends structureElementAction
             $structureElement->recalculate();
 
             $privilegesManager = $this->getService('privilegesManager');
-            $user = $this->getService(user::class);
+            $user = $this->getService(CurrentUser::class);
             $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'showPublicForm', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'publicReceive', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'publicDelete', 'allow');

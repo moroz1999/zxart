@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class coorApplication extends controllerApplication
 {
     protected $applicationName = 'coor';
@@ -35,7 +37,7 @@ class coorApplication extends controllerApplication
         /**
          * @var LanguagesManager $languagesManager
          */
-        $user = $this->getService(user::class);
+        $user = $this->getService(CurrentUser::class);
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
             $languagesManager = $this->getService('LanguagesManager');

@@ -1,6 +1,7 @@
 <?php
 
 use App\Paths\PathsManager;
+use App\Users\CurrentUser;
 use ZxArt\Authors\Constants;
 
 class batchUploadPicturesUploadForm extends structureElementAction
@@ -19,7 +20,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
         if ($imagesInfo = $structureElement->image) {
             $privilegesManager = $this->getService('privilegesManager');
             $linksManager = $this->getService('linksManager');
-            $user = $this->getService(user::class);
+            $user = $this->getService(CurrentUser::class);
 
             $currentElement = $structureManager->getElementsFirstParent($structureElement->id);
 
@@ -70,7 +71,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
                     }
                     $pictureElement->originalAuthor = $structureElement->originalAuthor;
                     $pictureElement->dateAdded = $pictureElement->dateCreated;
-                    $pictureElement->userId = $this->getService(user::class)->id;
+                    $pictureElement->userId = $this->getService(CurrentUser::class)->id;
 
                     $pictureElement->persistElementData();
 

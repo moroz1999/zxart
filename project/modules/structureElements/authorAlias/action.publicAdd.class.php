@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class publicAddAuthorAlias extends structureElementAction
 {
     protected $loggable = true;
@@ -15,7 +17,7 @@ class publicAddAuthorAlias extends structureElementAction
     {
         if ($this->validated) {
             $privilegesManager = $this->getService('privilegesManager');
-            $user = $this->getService(user::class);
+            $user = $this->getService(CurrentUser::class);
 
             $structureElement->prepareActualData();
 

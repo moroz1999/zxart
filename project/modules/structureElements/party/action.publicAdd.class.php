@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class publicAddParty extends structureElementAction
 {
     protected $loggable = true;
@@ -22,7 +24,7 @@ class publicAddParty extends structureElementAction
 
             $structureElement->persistElementData();
 
-            $user = $this->getService(user::class);
+            $user = $this->getService(CurrentUser::class);
             $privilegesManager = $this->getService('privilegesManager');
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'party', 'showPublicForm', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'party', 'publicReceive', 'allow');

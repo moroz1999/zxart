@@ -1,6 +1,7 @@
 <?php
 
 use App\Paths\PathsManager;
+use App\Users\CurrentUser;
 use Illuminate\Database\Connection;
 use ZxArt\FileParsing\ZxParsingItem;
 use ZxArt\FileParsing\ZxParsingManager;
@@ -507,7 +508,7 @@ class zxReleaseElement extends ZxArtItem implements
 
     public function isDownloadable(): bool
     {
-        $user = $this->getService(user::class);
+        $user = $this->getService(CurrentUser::class);
         $privileges = $this->getService('privilegesManager')->getElementPrivileges($this->getId());
 
         return !in_array($this->getLegalStatus(), [legalStatus::forbidden->name, legalStatus::forbiddenzxart->name, legalStatus::insales->name], true) ||

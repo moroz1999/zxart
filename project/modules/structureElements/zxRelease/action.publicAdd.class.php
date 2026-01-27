@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class publicAddZxRelease extends structureElementAction
 {
     protected $loggable = true;
@@ -26,7 +28,7 @@ class publicAddZxRelease extends structureElementAction
                 $structureElement->structureName = $structureElement->title;
             }
             $structureElement->dateAdded = time();
-            $structureElement->userId = $this->getService(user::class)->id;
+            $structureElement->userId = $this->getService(CurrentUser::class)->id;
             $structureElement->persistElementData();
 
             $structureElement->persistAuthorship('release');
@@ -34,7 +36,7 @@ class publicAddZxRelease extends structureElementAction
             $structureElement->executeAction('receiveFiles');
 
             $privilegesManager = $this->getService('privilegesManager');
-            $user = $this->getService(user::class);
+            $user = $this->getService(CurrentUser::class);
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'showPublicForm', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'publicReceive', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'publicDelete', 'allow');

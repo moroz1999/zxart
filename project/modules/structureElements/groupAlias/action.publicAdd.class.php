@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class publicAddGroupAlias extends structureElementAction
 {
     protected $loggable = true;
@@ -15,7 +17,7 @@ class publicAddGroupAlias extends structureElementAction
     {
         if ($this->validated) {
             $privilegesManager = $this->getService('privilegesManager');
-            $user = $this->getService(user::class);
+            $user = $this->getService(CurrentUser::class);
 
             $structureElement->structureName = $structureElement->title;
 

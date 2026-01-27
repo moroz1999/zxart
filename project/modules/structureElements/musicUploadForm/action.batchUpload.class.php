@@ -1,6 +1,7 @@
 <?php
 
 use App\Paths\PathsManager;
+use App\Users\CurrentUser;
 use ZxArt\Authors\Constants;
 
 class batchUploadMusicUploadForm extends structureElementAction
@@ -15,7 +16,7 @@ class batchUploadMusicUploadForm extends structureElementAction
         if ($musicsInfo = $structureElement->music) {
             $privilegesManager = $this->getService('privilegesManager');
             $linksManager = $this->getService('linksManager');
-            $user = $this->getService(user::class);
+            $user = $this->getService(CurrentUser::class);
 
             $currentElement = $structureManager->getElementsFirstParent($structureElement->id);
             if ($musicCatalogueId = $structureManager->getElementIdByMarker('musicCatalogue')) {
@@ -47,7 +48,7 @@ class batchUploadMusicUploadForm extends structureElementAction
                     $zxMusicElement->partyplace = $structureElement->partyplace;
                     $zxMusicElement->compo = $structureElement->compo;
                     $zxMusicElement->dateAdded = $zxMusicElement->dateCreated;
-                    $zxMusicElement->userId = $this->getService(user::class)->id;
+                    $zxMusicElement->userId = $this->getService(CurrentUser::class)->id;
                     $zxMusicElement->chipType = $structureElement->chipType;
                     $zxMusicElement->frequency = $structureElement->frequency;
                     $zxMusicElement->intFrequency = $structureElement->intFrequency;
