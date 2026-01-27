@@ -1,0 +1,32 @@
+:root {
+  --comment-margin-bottom: var(--margin-md);
+  
+  --comment-header-margin-bottom: var(--margin-xs);
+  --comment-header-font-size: var(--font-sm);
+  
+  --comment-author-font-weight: bold;
+  --comment-author-margin-right: var(--margin-md);
+  
+  --comment-date-color: var(--gray6);
+  --comment-date-margin-right: var(--margin-md);
+  
+  --comment-actions-link-color: var(--blue);
+  --comment-actions-font-size: var(--font-xs);
+  
+  --comment-content-margin-bottom: var(--margin-xs);
+  
+  --comment-form-margin: var(--space-12) 0;
+  --comment-form-border-radius: 0;
+
+  --comment-form-group-margin-bottom: var(--space-12);
+  --comment-form-label-margin-bottom: var(--space-4);
+  --comment-form-label-font-weight: bold;
+
+  --comment-form-control-padding: var(--space-8);
+  --comment-form-control-border-color: var(--gray3);
+  --comment-form-control-border-radius: var(--radius-md);
+
+  --comment-form-actions-gap: var(--space-12);
+  --comment-form-error-color: var(--error-color);
+  --comment-form-error-font-size: var(--font-xs);
+}

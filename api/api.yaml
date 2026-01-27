@@ -1,0 +1,17 @@
+openapi: 3.0.0
+info:
+  title: ZxArt API
+  version: 1.0.0
+paths:
+  /comments/:
+    $ref: 'comments.yaml#/paths/~1comments~1'
+  /comments/id:{id}/:
+    $ref: 'comments.yaml#/paths/~1comments~1id:{id}~1'
+components:
+  schemas:
+    CommentDto:
+      $ref: 'comments.yaml#/components/schemas/CommentDto'
+    CommentAuthorDto:
+      $ref: 'comments.yaml#/components/schemas/CommentAuthorDto'
+    CommentTargetDto:
+      $ref: 'comments.yaml#/components/schemas/CommentTargetDto'

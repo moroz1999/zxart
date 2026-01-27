@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace ZxArt\Controllers;
 
-use App\Users\CurrentUser;
 use controller;
 use controllerApplication;
 use Symfony\Component\ObjectMapper\ObjectMapper;
@@ -34,12 +33,7 @@ class Comments extends controllerApplication
         $languagesManager = $this->getService('LanguagesManager');
         $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
 
-        $this->commentsService = $this->getService(CommentsService::class, [
-            'structureManager' => $structureManager,
-            'CurrentUser' => $this->getService(CurrentUser::class),
-            'languagesManager' => $languagesManager,
-            'privilegesManager' => $this->getService('privilegesManager'),
-        ]);
+        $this->commentsService = $this->getService(CommentsService::class);
     }
 
     public function execute($controller): void

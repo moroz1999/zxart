@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace ZxArt\Comments;
 
-use App\Logging\EventsLog;
 use App\Users\CurrentUser;
 use commentElement;
 use CommentsHolderInterface;
 use LanguagesManager;
+use linksManager;
 use privilegesManager;
 use structureElement;
 use structureManager;
@@ -19,6 +19,7 @@ class CommentsService
         private readonly CurrentUser       $user,
         private readonly LanguagesManager  $languagesManager,
         private readonly privilegesManager $privilegesManager,
+        private readonly linksManager      $linksManager,
     ) {
     }
 
@@ -34,7 +35,15 @@ class CommentsService
 
         $commentsByParent = [];
         foreach ($comments as $comment) {
-            $parentId = $comment->parentId ? (int)$comment->parentId : 0;
+            $parentId = 0;
+            $connectedIds = $this->linksManager->getConnectedIdList($comment->id, 'commentTarget', 'child');
+            foreach ($connectedIds as $connectedId) {
+                $parentElement = $this->structureManager->getElementById($connectedId);
+                if ($parentElement && $parentElement->structureType === 'comment') {
+                    $parentId = (int)$parentElement->id;
+                    break;
+                }
+            }
             $commentsByParent[$parentId][] = $comment;
         }
 
@@ -70,9 +79,11 @@ class CommentsService
         $commentsList = [];
         $approvalRequired = false;
 
-        $comments = $this->structureManager->getElementsChildren($element->getId(), 'content', 'commentTarget');
-        foreach ($comments as $commentElement) {
-            if (!$approvalRequired || $commentElement->approved) {
+        $allCommentsIds = $this->linksManager->getConnectedIdList($element->getId(), 'commentTarget', 'parent');
+
+        foreach ($allCommentsIds as $commentId) {
+            $commentElement = $this->structureManager->getElementById($commentId);
+            if ($commentElement && $commentElement->structureType === 'comment' && (!$approvalRequired || $commentElement->approved)) {
                 $commentsList[] = $commentElement;
             }
         }
@@ -87,7 +98,7 @@ class CommentsService
         }
 
         $targetElement = $this->structureManager->getElementById($targetId);
-        if (!$targetElement || !($targetElement instanceof CommentsHolderInterface)) {
+        if (!$targetElement || (!($targetElement instanceof CommentsHolderInterface) && $targetElement->structureType !== 'comment')) {
             return null;
         }
 
@@ -99,23 +110,30 @@ class CommentsService
         $commentElement = $this->structureManager->createElement('comment', 'show', $targetId);
         if ($commentElement) {
             $commentElement->content = $content;
-            $commentElement->author = $this->user->userName;
             $commentElement->userId = $this->user->id;
             $commentElement->dateTime = time();
             $commentElement->targetType = $targetElement->structureType;
-            $commentElement->approved = 1;
             $commentElement->persistElementData();
 
-            $linksManager = $commentElement->getService('linksManager');
-            $linksManager->linkElements($targetId, $commentElement->id, "commentTarget");
+            $this->linksManager->linkElements($targetElement->id, $commentElement->id, "commentTarget");
 
-            if ($commentsElementId = $this->structureManager->getElementIdByMarker('comments')) {
-                $this->structureManager->moveElement($targetId, $commentsElementId, $commentElement->id);
+            if ($targetElement->structureType === 'comment') {
+                /** @var commentElement $targetElement */
+                $initialTarget = $targetElement->getInitialTarget();
+                if ($initialTarget && $initialTarget->id != $targetElement->id) {
+                    $this->linksManager->linkElements($initialTarget->id, $commentElement->id, "commentTarget");
+                }
+            }
+
+            if ($this->user->id) {
+                $this->privilegesManager->setPrivilege($this->user->id, $commentElement->id, 'comment', 'delete', 1);
+                $this->privilegesManager->setPrivilege($this->user->id, $commentElement->id, 'comment', 'publicReceive', 1);
+                $this->privilegesManager->setPrivilege($this->user->id, $commentElement->id, 'comment', 'publicForm', 1);
+
+                $this->user->refreshPrivileges();
             }
 
             $this->clearCommentsCache();
-
-            $commentElement->getService(EventsLog::class)->logEvent($commentElement->id, 'comment');
 
             return $this->transformToDto($commentElement);
         }
@@ -142,13 +160,21 @@ class CommentsService
         $commentElement = $this->structureManager->getElementById($commentId);
         if ($commentElement && $commentElement->structureType === 'comment') {
             if ($this->privilegesManager->checkPrivilegesForAction($commentId, 'delete', 'comment')) {
-                if ($commentElement->deleteElementData()) {
-                    $this->clearCommentsCache();
-                    return true;
-                }
+                // Perform recursive deletion
+                $this->deleteRecursively($commentElement);
+                $this->clearCommentsCache();
+                return true;
             }
         }
         return false;
+    }
+
+    private function deleteRecursively(commentElement $element): void
+    {
+        foreach ($element->getReplies() as $reply) {
+            $this->deleteRecursively($reply);
+        }
+        $element->deleteElementData();
     }
 
     public function clearCommentsCache(): void
@@ -166,25 +192,33 @@ class CommentsService
     public function transformToDto(structureElement $comment, array $children = []): CommentDto
     {
         $authorUser = null;
-        if (property_exists($comment, 'userId') && $comment->userId) {
-            $authorUser = $this->structureManager->getElementById((int)$comment->userId);
+        if (method_exists($comment, 'getUserElement')) {
+            $authorUser = $comment->getUserElement();
         }
 
         $badges = [];
         $url = null;
-        if ($authorUser && method_exists($authorUser, 'getBadgetTypes')) {
-            $badges = $authorUser->getBadgetTypes();
+        $authorName = (string)$comment->author;
+
+        if ($authorUser) {
+            if (method_exists($authorUser, 'getBadgetTypes')) {
+                $badges = $authorUser->getBadgetTypes();
+            } elseif (method_exists($authorUser, 'getBadgeTypes')) {
+                $badges = $authorUser->getBadgeTypes();
+            }
             $url = $authorUser->getUrl();
+            $authorName = $authorUser->getTitle();
         }
 
         $authorDto = new CommentAuthorDto(
-            name: (string)$comment->author,
+            name: $authorName,
             url: $url,
             badges: $badges,
         );
 
-        $canDelete = (bool)$this->privilegesManager->checkPrivilegesForAction($comment->id, 'delete', 'comment');
         $canEdit = method_exists($comment, 'isEditable') && $comment->isEditable() && $comment->userId == $this->user->id;
+        $canDelete = $canEdit || ($this->privilegesManager->checkPrivilegesForAction($comment->id, 'delete', 'comment')
+            && (!$comment instanceof \commentElement || $comment->isEditable()));
 
         $targetDto = null;
         if (method_exists($comment, 'getInitialTarget')) {
@@ -200,11 +234,11 @@ class CommentsService
             id: (int)$comment->id,
             author: $authorDto,
             date: (string)$comment->dateCreated,
-            content: (string)$comment->content,
+            content: (string)$comment->getDecoratedContent(),
             canEdit: $canEdit,
             canDelete: $canDelete,
             target: $targetDto,
-            parentId: $comment->parentId ? (int)$comment->parentId : null,
+            parentId: (method_exists($comment, 'getParentElement') && ($parent = $comment->getParentElement()) && $parent->structureType === 'comment') ? (int)$parent->id : null,
             children: $children
         );
     }

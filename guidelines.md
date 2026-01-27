@@ -1,4 +1,4 @@
-For every task read this:
+Before every task you MUST read these:
 - Rules for all changes: /docs/rules.md
 - About project domain: /docs/domain.md
 

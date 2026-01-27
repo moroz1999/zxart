@@ -8,7 +8,7 @@ import {CommentAuthorComponent} from '../comment-author/comment-author.component
 @Component({
   selector: 'app-comment',
   standalone: true,
-  imports: [CommonModule, CommentFormComponent, CommentAuthorComponent],
+    imports: [CommonModule, CommentFormComponent, CommentAuthorComponent],
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss']
 })

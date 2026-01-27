@@ -53,9 +53,6 @@ class publicReceiveComment extends structureElementAction
 
 					$targetElement->recalculateComments();
 
-					if ($commentsElementId = $structureManager->getElementIdByMarker('comments')) {
-						$structureManager->moveElement($targetElement->id, $commentsElementId, $structureElement->id);
-					}
 					$languagesManager = $this->getService('LanguagesManager');
 					$structureManager = $this->getService('structureManager');
 					if ($currentLanguageElement = $structureManager->getElementById($languagesManager->getCurrentLanguageId())) {

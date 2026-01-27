@@ -10,12 +10,12 @@
     </div>
   </div>
   
-  <div *ngIf="comment.target" class="comment-target">
-    Re: <a [href]="comment.target.url">{{ comment.target.title }}</a>
-  </div>
-
-  <div class="comment-content" [innerHTML]="comment.content"></div>
+  <div *ngIf="!showEditForm" class="comment-content" [innerHTML]="comment.content"></div>
   
-  <app-comment-form *ngIf="showReplyForm" [targetId]="comment.id" (commentSaved)="onCommentSaved($event)" (cancelled)="showReplyForm = false"></app-comment-form>
   <app-comment-form *ngIf="showEditForm" [targetId]="comment.parentId || 0" [commentToEdit]="comment" (commentSaved)="onCommentSaved($event)" (cancelled)="showEditForm = false"></app-comment-form>
+  <app-comment-form *ngIf="showReplyForm" [targetId]="comment.id" (commentSaved)="onCommentSaved($event)" (cancelled)="showReplyForm = false"></app-comment-form>
+
+  <div class="comment-children" *ngIf="comment.children && comment.children.length > 0">
+    <app-comment *ngFor="let child of comment.children" [comment]="child" (commentChanged)="onCommentSaved(child)"></app-comment>
+  </div>
 </div>

@@ -1,6 +1,6 @@
 # Styles
 
-## New code should be written in SCSS.
+## New styles code should be written in SCSS.
 
 **CRITICAL: After any changes to SCSS or theme files, you MUST rebuild the Angular project using `composer run build` in the root directory.**
 
@@ -8,12 +8,16 @@
 - **Styles and Variables**:
     - NO hardcoded hex/rgb or raw spacing.
     - NO SCSS variables (deprecated). Use CSS `var()`.
+    - Все цвета и размеры должны быть оформлены как CSS-переменные.
+    - Добавлять или изменять переменные в `_base.theme.scss` можно ТОЛЬКО после прямого разрешения пользователя.
+    - Переиспользование переменных из `_legacy.theme.scss` (или любых других файлов с префиксом `_legacy`) запрещено.
 - **Architecture**:
     - **Base variables** (`--space-*`, `--font-*`, base colors, `--radius-*`, etc.) define the design system's foundation. They are stored in `src/app/shared/theme/_base.theme.scss`.
     - **Component variables** (e.g., `--button-bg`, `--input-color`) must be defined in separate files (one per component, e.g., `_button.theme.scss`). These variables can use base variables.
     - **Usage**: Components (Angular or Legacy) MUST use component variables ONLY. Direct use of base variables in components is FORBIDDEN.
     - **Enforcement**: This is a mandatory rule. Always check if you are using base variables directly and replace them with component variables.
     - If a component-level variable is missing, create it in a component-specific theme file.
+    - If a property or variable is no longer needed or used only in one place and has a "default" value (transparent, 0, etc.) to hide it, REMOVE it entirely along with its declaration. Do not use default/transparent values to "disable" unused styles.
     - NO `em` or `rem` in components and theme. Use font-size variables only.
     - Font sizes must be rounded to whole pixels.
     - Spacing (`--space-*`) must be multiples of 4px.

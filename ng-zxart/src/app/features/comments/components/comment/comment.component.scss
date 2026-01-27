@@ -1,19 +1,17 @@
 @use 'shared/vars' as vars;
 
 .comment {
-  border: 1px solid var(--border-color-light);
-  padding: var(--padding-md);
-  margin-bottom: var(--margin-xs);
+  margin-bottom: var(--comment-margin-bottom);
 }
 
 .comment-header {
-  margin-bottom: var(--margin-xs);
+  margin-bottom: var(--comment-header-margin-bottom);
   font-size: var(--comment-header-font-size);
 }
 
 .comment-author {
-  font-weight: bold;
-  margin-right: var(--margin-md);
+  font-weight: var(--comment-author-font-weight);
+  margin-right: var(--comment-author-margin-right);
 }
 
 .comment-badge {
@@ -24,8 +22,8 @@
 }
 
 .comment-date {
-  color: var(--date-color);
-  margin-right: var(--margin-md);
+  color: var(--comment-date-color);
+  margin-right: var(--comment-date-margin-right);
 }
 
 .comment-actions {
@@ -34,11 +32,11 @@
   .button-link {
     background: none;
     border: none;
-    color: #007bff;
+    color: var(--comment-actions-link-color);
     cursor: pointer;
     padding: 0;
-    margin-right: 10px;
-    font-size: 0.9em;
+    margin-right: var(--margin-md);
+    font-size: var(--comment-actions-font-size);
 
     &:hover {
       text-decoration: underline;
@@ -47,5 +45,10 @@
 }
 
 .comment-content {
-  margin-bottom: var(--margin-xs);
+  margin-bottom: var(--comment-content-margin-bottom);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.comment-children {
 }
