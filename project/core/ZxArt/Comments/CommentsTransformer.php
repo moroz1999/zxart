@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace ZxArt\Comments;
 
-use App\Users\CurrentUser;
 use commentElement;
 use privilegesManager;
 use structureElement;
@@ -15,7 +14,6 @@ use userElement;
 readonly class CommentsTransformer
 {
     public function __construct(
-        private CurrentUser       $user,
         private privilegesManager $privilegesManager,
     ) {
     }
@@ -47,12 +45,13 @@ readonly class CommentsTransformer
             badges: $badges,
         );
 
+        $hasEditPrivilege = $this->privilegesManager->checkPrivilegesForAction((int)$comment->id, 'publicReceive', 'comment');
         $isEditable = $comment->isEditable();
-        $isAuthor = $comment->userId === (int)$this->user->id;
-        $canEdit = $isEditable === true && $isAuthor === true;
+
+        $canEdit = $isEditable && $hasEditPrivilege;
 
         $hasDeletePrivilege = $this->privilegesManager->checkPrivilegesForAction((int)$comment->id, 'delete', 'comment');
-        $canDelete = $canEdit === true || ($hasDeletePrivilege === true && $isEditable === true);
+        $canDelete = $isEditable && $hasDeletePrivilege;
 
         $targetDto = null;
         $target = $comment->getInitialTarget();

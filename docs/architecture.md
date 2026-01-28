@@ -25,7 +25,9 @@ CMS content and functionality are organized as a hierarchy of "Structure Element
 - Main class: `structure.class.php`.
 - Definitions of available actions: `structure.actions.php`.
 - For new elements that are not yet saved to the database, the `id` property is not `null`. It is a synthetic string in the format `id/{parentId}/action/{actionName}/`. To check if an element is already persisted in the database, use `$element->hasActualStructureInfo()`.
-- Elements are linked to each other via links. The default link type is `structure`. When creating a new element using `structureManager::createElement()`, you can (and should, if it's not a standard parent-child relationship) specify a custom link type via the `$linkType` parameter. For example, comments are linked to their targets using the `commentTarget` link type.
+- Elements are linked to each other via links. The default link type is `structure`. 
+- Hardcoding link types is strictly prohibited. Use the `ZxArt\LinkTypes` enum instead.
+- When creating a new element using `structureManager::createElement()`, you can (and should, if it's not a standard parent-child relationship) specify a custom link type via the `$linkType` parameter. For example, comments are created using `LinkTypes::COMMENT_TARGET->value`.
 
 ### Action System
 Actions on elements are implemented as separate classes in the module folder:

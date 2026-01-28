@@ -8,12 +8,12 @@ use Cache;
 use commentElement;
 use CommentsHolderInterface;
 use LanguagesManager;
-use linksManager;
 use privilegesManager;
 use structureManager;
 use ZxArt\Comments\Exception\CommentAccessDeniedException;
 use ZxArt\Comments\Exception\CommentNotFoundException;
 use ZxArt\Comments\Exception\CommentOperationException;
+use ZxArt\LinkTypes;
 
 /**
  * Service for managing comments.
@@ -26,7 +26,6 @@ readonly class CommentsService
         private CurrentUser         $user,
         private LanguagesManager    $languagesManager,
         private privilegesManager   $privilegesManager,
-        private linksManager        $linksManager,
         private Cache               $cache,
         private CommentsTransformer $transformer,
     )
@@ -53,6 +52,7 @@ readonly class CommentsService
     /**
      * Recursively builds the comment tree.
      *
+     * @param int $parentId Parent element ID
      * @param int[] $visited Visited IDs to prevent infinite recursion
      * @return CommentDto[]
      */
@@ -87,13 +87,11 @@ readonly class CommentsService
             return [];
         }
 
-        $linkType = 'commentTarget';
-
         $commentsList = [];
         $approvalRequired = false;
 
         /** @var commentElement[] $comments */
-        $comments = $parentElement->getChildrenList(null, $linkType, 'comment');
+        $comments = $parentElement->getChildrenList(null, LinkTypes::COMMENT_TARGET->value, 'comment');
 
         foreach ($comments as $commentElement) {
             if ($approvalRequired === false || $commentElement->approved === 1) {
@@ -138,7 +136,7 @@ readonly class CommentsService
          * Create the comment element.
          * @var commentElement|null $commentElement
          */
-        $commentElement = $this->structureManager->createElement('comment', 'show', $targetId, false, 'commentTarget');
+        $commentElement = $this->structureManager->createElement('comment', 'show', $targetId, false, LinkTypes::COMMENT_TARGET->value);
         if (!($commentElement instanceof commentElement)) {
             throw new CommentOperationException("Failed to create comment element");
         }
@@ -179,7 +177,7 @@ readonly class CommentsService
 
         $isEditable = $commentElement->isEditable();
         $isAuthor = (int)$commentElement->userId === (int)$this->user->id;
-        $hasPrivilege = $this->privilegesManager->checkPrivilegesForAction($commentId, 'publicReceive', 'comment');
+        $hasPrivilege = $this->privilegesManager->checkPrivilegesForAction($commentId, 'publicForm', 'comment');
 
         if ($isEditable === true && ($isAuthor === true || $hasPrivilege === true)) {
             $commentElement->content = $content;
