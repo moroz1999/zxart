@@ -1,0 +1,26 @@
+:root {
+  /* ZxButton Component variables */
+  --zx-button-xs-height: 24px;
+  --zx-button-xs-font-size: var(--font-xs);
+  --zx-button-xs-padding: 0 var(--space-8);
+  --zx-button-xs-min-width: 40px;
+
+  --zx-button-sm-height: 30px;
+  --zx-button-sm-font-size: var(--font-sm);
+  --zx-button-sm-padding: 0 var(--space-12);
+  --zx-button-sm-min-width: 64px;
+
+  --zx-button-md-height: 36px;
+  --zx-button-md-font-size: var(--font-md);
+  --zx-button-md-padding: 0 var(--space-16);
+  --zx-button-md-min-width: 88px;
+
+  --zx-button-primary-bg: var(--blue);
+  --zx-button-primary-text: var(--white);
+
+  --zx-button-secondary-bg: var(--gray6);
+  --zx-button-secondary-text: var(--white);
+
+  --zx-button-danger-bg: var(--red);
+  --zx-button-danger-text: var(--white);
+}

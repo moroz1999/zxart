@@ -1,0 +1,43 @@
+:host {
+  display: inline-block;
+}
+
+.mat-mdc-flat-button {
+  &.zx-button {
+    &--primary {
+      --mdc-flat-button-container-color: var(--zx-button-primary-bg);
+      --mdc-flat-button-label-text-color: var(--zx-button-primary-text);
+    }
+
+    &--secondary {
+      --mdc-flat-button-container-color: var(--zx-button-secondary-bg);
+      --mdc-flat-button-label-text-color: var(--zx-button-secondary-text);
+    }
+
+    &--danger {
+      --mdc-flat-button-container-color: var(--zx-button-danger-bg);
+      --mdc-flat-button-label-text-color: var(--zx-button-danger-text);
+    }
+
+    &--xs {
+      --mdc-flat-button-container-height: var(--zx-button-xs-height);
+      font-size: var(--zx-button-xs-font-size);
+      padding: var(--zx-button-xs-padding);
+      min-width: var(--zx-button-xs-min-width);
+    }
+
+    &--sm {
+      --mdc-flat-button-container-height: var(--zx-button-sm-height);
+      font-size: var(--zx-button-sm-font-size);
+      padding: var(--zx-button-sm-padding);
+      min-width: var(--zx-button-sm-min-width);
+    }
+
+    &--md {
+      --mdc-flat-button-container-height: var(--zx-button-md-height);
+      font-size: var(--zx-button-md-font-size);
+      padding: var(--zx-button-md-padding);
+      min-width: var(--zx-button-md-min-width);
+    }
+  }
+}

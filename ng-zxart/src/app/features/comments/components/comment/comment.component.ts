@@ -8,6 +8,7 @@ import {CommentDto} from '../../models/comment.dto';
 import {CommentsService} from '../../services/comments.service';
 import {CommentFormComponent} from '../comment-form/comment-form.component';
 import {CommentAuthorComponent} from '../comment-author/comment-author.component';
+import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 
 @Component({
   selector: 'app-comment',
@@ -19,7 +20,8 @@ import {CommentAuthorComponent} from '../comment-author/comment-author.component
     MatCardModule,
     MatIconModule,
     CommentFormComponent,
-    CommentAuthorComponent
+    CommentAuthorComponent,
+    ZxButtonComponent
   ],
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss']

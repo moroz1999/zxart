@@ -12,9 +12,9 @@
   </mat-card-content>
 
   <mat-card-actions align="end">
-    <button mat-button type="button" (click)="onReply()">{{ 'comments.reply' | translate }}</button>
-    <button *ngIf="comment.canEdit" mat-button type="button" (click)="onEdit()">{{ 'comments.edit' | translate }}</button>
-    <button *ngIf="comment.canDelete" mat-button color="warn" type="button" (click)="onDelete()">{{ 'comments.delete' | translate }}</button>
+    <zx-button size="xs" color="secondary" (click)="onReply()" style="margin-right: var(--space-4);">{{ 'comments.reply' | translate }}</zx-button>
+    <zx-button *ngIf="comment.canEdit" size="xs" color="secondary" (click)="onEdit()" style="margin-right: var(--space-4);">{{ 'comments.edit' | translate }}</zx-button>
+    <zx-button *ngIf="comment.canDelete" size="xs" color="danger" (click)="onDelete()">{{ 'comments.delete' | translate }}</zx-button>
   </mat-card-actions>
 </mat-card>
 

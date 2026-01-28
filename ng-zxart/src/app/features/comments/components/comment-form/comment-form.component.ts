@@ -7,6 +7,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {CommentDto} from '../../models/comment.dto';
 import {CommentsService} from '../../services/comments.service';
+import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 
 @Component({
   selector: 'app-comment-form',
@@ -17,7 +18,8 @@ import {CommentsService} from '../../services/comments.service';
     TranslateModule,
     MatButtonModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    ZxButtonComponent
   ],
   templateUrl: './comment-form.component.html',
   styleUrls: ['./comment-form.component.scss']
