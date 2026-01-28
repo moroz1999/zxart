@@ -97,6 +97,9 @@ components:
         content:
           type: string
           description: Decorated HTML content
+        originalContent:
+          type: string
+          description: Original raw content
         canEdit:
           type: boolean
         canDelete:

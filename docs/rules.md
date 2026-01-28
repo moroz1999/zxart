@@ -8,3 +8,4 @@
 - Documentation additions in `docs` must be concise, clear, and only about the core points.
 - Do NOT use magic numbers. Use class constants for single values or Enums for sets of related values.
 - ALWAYS add newly created files to GIT immediately after creation.
+- When the IDE is in 'Ask' (readonly) mode, it is STRICTLY FORBIDDEN to do anything except answering the user's question. No file modifications or tool calls that change state are allowed.

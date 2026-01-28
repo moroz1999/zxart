@@ -14,7 +14,7 @@
 - DTOs must be 100% immutable. Use `readonly class` and constructor property promotion.
 - Do NOT write PHPDoc `/** @var ... */` for `getService` calls if the class name is explicitly provided as the first argument (e.g. `getService(MyService::class)`). Modern IDEs and Psalm can infer the type from the class string.
 - After API changes send the query to verify the results.
-- After changing the API, you must update the existing OpenAPI YAML file or add a new one in `api/api.yaml`.
+- After changing the API, you MUST update the existing OpenAPI YAML file or add a new one in `api/api.yaml`.
 
 ## Controllers and StructureManager
 When initializing `structureManager` in a controller application, always provide `rootUrl` and `rootMarker` parameters to ensure correct URL generation and multilinguality support.
