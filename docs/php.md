@@ -12,6 +12,7 @@
 - Do NOT use `$element->getService()` from outside or inside of `structureElement`. Use PHP-DI to inject dependencies into services or other classes instead.
 - The project is available at http://zxart.loc/
 - DTOs must be 100% immutable. Use `readonly class` and constructor property promotion.
+- Services and other stateless classes should be marked as `readonly class` if all their properties are immutable (e.g., dependencies injected via constructor). When a class is `readonly`, individual `readonly` modifiers on properties are redundant and should be omitted.
 - Do NOT write PHPDoc `/** @var ... */` for `getService` calls if the class name is explicitly provided as the first argument (e.g. `getService(MyService::class)`). Modern IDEs and Psalm can infer the type from the class string.
 - After API changes send the query to verify the results.
 - After changing the API, you MUST update the existing OpenAPI YAML file or add a new one in `api/api.yaml`.
@@ -69,7 +70,28 @@ $restDtos = array_map(fn($dto) => $this->objectMapper->map($dto, MyRestDto::clas
 - Do NOT use `dataResponseConverters` for new code. All new REST endpoints must follow the DTO mapping scheme described above.
 - Related entities (like comments) should be fetched via dedicated services rather than using direct entity methods (e.g., use `CommentsService->getCommentsList($elementId)` instead of `$entity->getCommentsList()`).
 
+## CMS Core Mechanics
+- **Recursive Deletion**: Method `structureElement::deleteElementData()` automatically deletes all child elements linked via `structure` links (or other links returned by `getDeletionLinkTypes()`). This ensures data integrity without manual recursion in services.
+
 ## AJAX Operations
 - For AJAX operations in controllers, use the `action` parameter to distinguish between different types of requests (e.g., `add`, `update`, `delete`).
 - Use the `json` renderer for AJAX responses.
 - Ensure proper privilege checks are performed before executing any data modification operations.
+
+## Structure Elements and Actions
+- Keep structure elements (`structureElement`) lean by moving business logic into services.
+- Use strict typing instead of `method_exists`. If multiple types share common behavior, introduce a shared interface.
+- Check object types rather than method existence.
+- Actions (`structureElementAction`) are equivalent to DDD use-cases. They are bound to specific entities and provide automatic privilege checks.
+- The service container is available in actions via `$this->getService()`. New use-cases should be added as new actions when required.
+
+## Coding Style
+- Avoid "comment ladders" (multiple sequential comments describing every line of code).
+- Avoid inline method calls in conditions if they represent a state. Assign the result to a descriptive variable instead:
+  ```php
+  $isEditable = $element->isEditable();
+  if ($isEditable) { ... }
+  ```
+  instead of `if ($element->isEditable()) { ... }`.
+- ALWAYS use strict comparisons (`===`, `!==`). Avoid "falsy" and "truthy" checks (e.g., use `if ($var === true)` instead of `if ($var)`).
+- When receiving data from legacy CMS methods or properties that lack explicit return type hints (e.g. from `structureElement` properties or old CMS methods), explicitly cast them to the expected type (e.g., `(int)$element->id`, `(array)$manager->getData()`). If a method already has a native PHP type hint (e.g. `isEditable(): bool`), explicit casting is prohibited as redundant. Document these expectations via PHPDoc only if native type hints are missing.

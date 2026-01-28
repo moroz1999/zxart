@@ -1,12 +1,14 @@
 <span class="comment-author-container">
   <a *ngIf="author.url; else noUrl" [href]="author.url" class="comment-author">
-    {{ author.name }}
+    <strong>{{ author.name }}</strong>
   </a>
   <ng-template #noUrl>
-    <span class="comment-author">{{ author.name }}</span>
+    <span class="comment-author"><strong>{{ author.name }}</strong></span>
   </ng-template>
 
-  <span *ngFor="let badge of author.badges" class="comment-badge" [class]="'badge-' + badge">
-    {{ badge }}
-  </span>
+  <mat-chip-set *ngIf="author.badges && author.badges.length > 0" style="display: inline-block; margin-left: 8px;">
+    <mat-chip *ngFor="let badge of author.badges">
+      {{ badge }}
+    </mat-chip>
+  </mat-chip-set>
 </span>

@@ -1,21 +1,27 @@
-<div class="comment">
-  <div class="comment-header">
-    <app-comment-author [author]="comment.author"></app-comment-author>
-    <span class="comment-date">{{ comment.date }}</span>
+<mat-card class="comment-card" style="margin-bottom: var(--margin-lg);">
+  <mat-card-header>
+    <mat-card-title>
+      <app-comment-author [author]="comment.author"></app-comment-author>
+    </mat-card-title>
+    <mat-card-subtitle>{{ comment.date }}</mat-card-subtitle>
+  </mat-card-header>
 
-    <div class="comment-actions">
-      <button mat-button type="button" (click)="onReply()">{{ 'comments.reply' | translate }}</button>
-      <button *ngIf="comment.canEdit" mat-button type="button" (click)="onEdit()">{{ 'comments.edit' | translate }}</button>
-      <button *ngIf="comment.canDelete" mat-button type="button" (click)="onDelete()">{{ 'comments.delete' | translate }}</button>
-    </div>
-  </div>
+  <mat-card-content>
+    <div *ngIf="!showEditForm" class="comment-content" [innerHTML]="comment.content"></div>
+    <app-comment-form *ngIf="showEditForm" [targetId]="comment.parentId || 0" [commentToEdit]="comment" (commentSaved)="onCommentSaved($event)" (cancelled)="showEditForm = false"></app-comment-form>
+  </mat-card-content>
 
-  <div *ngIf="!showEditForm" class="comment-content" [innerHTML]="comment.content"></div>
+  <mat-card-actions align="end">
+    <button mat-button type="button" (click)="onReply()">{{ 'comments.reply' | translate }}</button>
+    <button *ngIf="comment.canEdit" mat-button type="button" (click)="onEdit()">{{ 'comments.edit' | translate }}</button>
+    <button *ngIf="comment.canDelete" mat-button color="warn" type="button" (click)="onDelete()">{{ 'comments.delete' | translate }}</button>
+  </mat-card-actions>
+</mat-card>
 
-  <app-comment-form *ngIf="showEditForm" [targetId]="comment.parentId || 0" [commentToEdit]="comment" (commentSaved)="onCommentSaved($event)" (cancelled)="showEditForm = false"></app-comment-form>
-  <app-comment-form *ngIf="showReplyForm" [targetId]="comment.id" (commentSaved)="onCommentSaved($event)" (cancelled)="showReplyForm = false"></app-comment-form>
+<div *ngIf="showReplyForm" style="margin-left: var(--margin-xl); margin-bottom: var(--margin-lg);">
+  <app-comment-form [targetId]="comment.id" (commentSaved)="onCommentSaved($event)" (cancelled)="showReplyForm = false"></app-comment-form>
+</div>
 
-  <div class="comment-children" *ngIf="comment.children && comment.children.length > 0">
-    <app-comment *ngFor="let child of comment.children" [comment]="child" (commentChanged)="onCommentSaved(child)"></app-comment>
-  </div>
+<div class="comment-children" *ngIf="comment.children && comment.children.length > 0" style="margin-left: var(--margin-xl);">
+  <app-comment *ngFor="let child of comment.children" [comment]="child" (commentChanged)="onCommentSaved(child)"></app-comment>
 </div>

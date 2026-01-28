@@ -6,7 +6,7 @@
 - **Editing and Deletion**:
     - Only the author of the comment has permission to edit or delete it.
     - Editing and deletion are allowed only within a limited time window (default is 2 hours, defined by `EDIT_LIMIT` in `commentElement`).
-    - When a comment is deleted, all its replies are deleted recursively.
+    - When a comment is deleted, all its replies are deleted automatically. This is handled by the CMS core (`deleteElementData`), which recursively traverses `structure` links.
 - **Author Information**:
     - The `author` field in `commentElement` is deprecated. 
     - Real author information is stored via a link of type `author` to a `user` element.

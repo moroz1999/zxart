@@ -3,13 +3,22 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {MatButtonModule} from '@angular/material/button';
-import {CommentsService} from '../../services/comments.service';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 import {CommentDto} from '../../models/comment.dto';
+import {CommentsService} from '../../services/comments.service';
 
 @Component({
   selector: 'app-comment-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule
+  ],
   templateUrl: './comment-form.component.html',
   styleUrls: ['./comment-form.component.scss']
 })

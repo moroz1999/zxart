@@ -1,13 +1,13 @@
 <form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="comment-form">
-  <div class="form-group">
-    <label for="content">{{ 'comments.label' | translate }}</label>
-    <textarea id="content" formControlName="content" class="form-control" rows="4"></textarea>
-    <div *ngIf="commentForm.get('content')?.invalid && commentForm.get('content')?.touched" class="error-msg">
+  <mat-form-field appearance="outline" style="width: 100%;">
+    <mat-label>{{ 'comments.label' | translate }}</mat-label>
+    <textarea matInput formControlName="content" rows="4"></textarea>
+    <mat-error *ngIf="commentForm.get('content')?.hasError('required')">
       {{ 'comments.error-content' | translate }}
-    </div>
-  </div>
+    </mat-error>
+  </mat-form-field>
 
-  <div *ngIf="errorMessage" class="error-msg">
+  <div *ngIf="errorMessage" style="color: red; margin-bottom: 16px;">
     {{ errorMessage }}
   </div>
 
@@ -15,7 +15,7 @@
     <button mat-flat-button color="primary" type="submit" [disabled]="commentForm.invalid || isSubmitting">
       {{ (commentToEdit ? 'comments.save' : 'comments.post') | translate }}
     </button>
-    <button mat-stroked-button type="button" (click)="onCancel()" [disabled]="isSubmitting">
+    <button mat-stroked-button type="button" (click)="onCancel()" [disabled]="isSubmitting" style="margin-left: 8px;">
       {{ 'comments.cancel' | translate }}
     </button>
   </div>

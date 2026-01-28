@@ -2,6 +2,8 @@ import {CommonModule} from '@angular/common';
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {MatIconModule} from '@angular/material/icon';
 import {CommentDto} from '../../models/comment.dto';
 import {CommentsService} from '../../services/comments.service';
 import {CommentFormComponent} from '../comment-form/comment-form.component';
@@ -10,7 +12,15 @@ import {CommentAuthorComponent} from '../comment-author/comment-author.component
 @Component({
   selector: 'app-comment',
   standalone: true,
-    imports: [CommonModule, TranslateModule, MatButtonModule, CommentFormComponent, CommentAuthorComponent],
+  imports: [
+    CommonModule,
+    TranslateModule,
+    MatButtonModule,
+    MatCardModule,
+    MatIconModule,
+    CommentFormComponent,
+    CommentAuthorComponent
+  ],
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss']
 })
