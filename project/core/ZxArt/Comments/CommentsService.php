@@ -10,85 +10,93 @@ use CommentsHolderInterface;
 use LanguagesManager;
 use linksManager;
 use privilegesManager;
-use structureElement;
 use structureManager;
-use userElement;
+use ZxArt\Comments\Exception\CommentAccessDeniedException;
+use ZxArt\Comments\Exception\CommentNotFoundException;
+use ZxArt\Comments\Exception\CommentOperationException;
 
+/**
+ * Service for managing comments.
+ * Provides operations for creating, updating, deleting, and retrieving a comment tree.
+ */
 readonly class CommentsService
 {
     public function __construct(
-        private structureManager  $structureManager,
-        private CurrentUser       $user,
-        private LanguagesManager  $languagesManager,
-        private privilegesManager $privilegesManager,
-        private linksManager      $linksManager,
-        private Cache             $cache,
-    ) {
+        private structureManager    $structureManager,
+        private CurrentUser         $user,
+        private LanguagesManager    $languagesManager,
+        private privilegesManager   $privilegesManager,
+        private linksManager        $linksManager,
+        private Cache               $cache,
+        private CommentsTransformer $transformer,
+    )
+    {
     }
 
     /**
+     * Returns a comment tree for the specified element.
+     *
+     * @param int $elementId Target element ID
      * @return CommentDto[]
+     * @throws CommentNotFoundException If the target element is not found
      */
     public function getCommentsTree(int $elementId): array
     {
-        $comments = $this->getCommentsList($elementId);
-        if ($comments === []) {
-            return [];
+        $element = $this->structureManager->getElementById($elementId);
+        if ($element === null) {
+            throw new CommentNotFoundException("Target element not found: {$elementId}");
         }
 
-        $commentsByParent = [];
-        foreach ($comments as $comment) {
-            $parentId = 0;
-            /** @var int[] $connectedIds */
-            $connectedIds = (array)$this->linksManager->getConnectedIdList((int)$comment->id, 'commentTarget', 'child');
-            foreach ($connectedIds as $connectedId) {
-                $parentElement = $this->structureManager->getElementById($connectedId);
-                if ($parentElement instanceof commentElement && $parentElement->structureType === 'comment') {
-                    $parentId = (int)$parentElement->id;
-                    break;
-                }
-            }
-            $commentsByParent[$parentId][] = $comment;
-        }
-
-        return $this->buildTree($commentsByParent, 0);
+        return $this->buildTree($elementId);
     }
 
     /**
-     * @param array<int, commentElement[]> $commentsByParent
+     * Recursively builds the comment tree.
+     *
+     * @param int[] $visited Visited IDs to prevent infinite recursion
      * @return CommentDto[]
      */
-    private function buildTree(array $commentsByParent, int $parentId): array
+    private function buildTree(int $parentId, array $visited = []): array
     {
-        $tree = [];
-        if (isset($commentsByParent[$parentId])) {
-            foreach ($commentsByParent[$parentId] as $comment) {
-                $children = $this->buildTree($commentsByParent, (int)$comment->id);
-                $tree[] = $this->transformToDto($comment, $children);
-            }
+        if (in_array($parentId, $visited, true)) {
+            return [];
         }
+        $visited[] = $parentId;
+
+        $tree = [];
+        $comments = $this->getCommentsList($parentId);
+
+        foreach ($comments as $comment) {
+            $children = $this->buildTree((int)$comment->id, $visited);
+            $tree[] = $this->transformer->transformToDto($comment, $children);
+        }
+
         return $tree;
     }
 
     /**
+     * Returns a flat list of comments for an element.
+     *
+     * @param int $parentId Parent element ID (target or another comment)
      * @return commentElement[]
      */
-    public function getCommentsList(int $elementId): array
+    public function getCommentsList(int $parentId): array
     {
-        $element = $this->structureManager->getElementById($elementId);
-        if ($element === null || !($element instanceof CommentsHolderInterface)) {
+        $parentElement = $this->structureManager->getElementById($parentId);
+        if ($parentElement === null) {
             return [];
         }
+
+        $linkType = 'commentTarget';
 
         $commentsList = [];
         $approvalRequired = false;
 
-        /** @var int[] $allCommentsIds */
-        $allCommentsIds = (array)$this->linksManager->getConnectedIdList($element->getId(), 'commentTarget', 'parent');
+        /** @var commentElement[] $comments */
+        $comments = $parentElement->getChildrenList(null, $linkType, 'comment');
 
-        foreach ($allCommentsIds as $commentId) {
-            $commentElement = $this->structureManager->getElementById($commentId);
-            if ($commentElement instanceof commentElement && ($approvalRequired === false || (int)$commentElement->approved === 1)) {
+        foreach ($comments as $commentElement) {
+            if ($approvalRequired === false || $commentElement->approved === 1) {
                 $commentsList[] = $commentElement;
             }
         }
@@ -96,155 +104,127 @@ readonly class CommentsService
         return $commentsList;
     }
 
-    public function addComment(int $targetId, string $content, ?string $author = null): ?CommentDto
+    /**
+     * Adds a new comment.
+     *
+     * @param int $targetId Target ID (element or another comment)
+     * @param string $content Comment text
+     * @param string|null $author Author name (optional)
+     * @throws CommentAccessDeniedException If user is not authorized or comments are disabled
+     * @throws CommentNotFoundException If target is not found
+     * @throws CommentOperationException If failed to create comment element
+     */
+    public function addComment(int $targetId, string $content, ?string $author = null): CommentDto
     {
         if ($this->user->isAuthorized() === false) {
-            return null;
+            throw new CommentAccessDeniedException("User must be authorized to add comments");
         }
 
         $targetElement = $this->structureManager->getElementById($targetId);
-        if ($targetElement === null || (!($targetElement instanceof CommentsHolderInterface) && $targetElement->structureType !== 'comment')) {
-            return null;
+        if ($targetElement === null) {
+            throw new CommentNotFoundException("Target element not found: {$targetId}");
+        }
+
+        if (!($targetElement instanceof CommentsHolderInterface) && $targetElement->structureType !== 'comment') {
+            throw new CommentOperationException("Target element does not support comments");
         }
 
         $areCommentsAllowed = $targetElement->areCommentsAllowed();
         if ($areCommentsAllowed === false) {
-            return null;
+            throw new CommentAccessDeniedException("Comments are not allowed for this element");
         }
 
-        /** @var commentElement|null $commentElement */
-        $commentElement = $this->structureManager->createElement('comment', 'show', $targetId);
-        if ($commentElement instanceof commentElement) {
+        /**
+         * Create the comment element.
+         * @var commentElement|null $commentElement
+         */
+        $commentElement = $this->structureManager->createElement('comment', 'show', $targetId, false, 'commentTarget');
+        if (!($commentElement instanceof commentElement)) {
+            throw new CommentOperationException("Failed to create comment element");
+        }
+
+        $commentElement->content = $content;
+        $commentElement->userId = (int)$this->user->id;
+        $commentElement->dateTime = time();
+        $commentElement->targetType = (string)$targetElement->structureType;
+        $commentElement->persistElementData();
+
+        if ((int)$this->user->id !== 0) {
+            $this->privilegesManager->setPrivilege((int)$this->user->id, (int)$commentElement->id, 'comment', 'delete', 1);
+            $this->privilegesManager->setPrivilege((int)$this->user->id, (int)$commentElement->id, 'comment', 'publicReceive', 1);
+            $this->privilegesManager->setPrivilege((int)$this->user->id, (int)$commentElement->id, 'comment', 'publicForm', 1);
+
+            $this->user->refreshPrivileges();
+        }
+
+        $this->clearCommentsCache();
+
+        return $this->transformer->transformToDto($commentElement);
+    }
+
+    /**
+     * Updates an existing comment.
+     *
+     * @param int $commentId Comment ID
+     * @param string $content New text
+     * @throws CommentNotFoundException If comment is not found
+     * @throws CommentAccessDeniedException If no permission to edit
+     */
+    public function updateComment(int $commentId, string $content): CommentDto
+    {
+        $commentElement = $this->structureManager->getElementById($commentId);
+        if (!($commentElement instanceof commentElement)) {
+            throw new CommentNotFoundException("Comment not found: {$commentId}");
+        }
+
+        $isEditable = $commentElement->isEditable();
+        $isAuthor = (int)$commentElement->userId === (int)$this->user->id;
+        $hasPrivilege = $this->privilegesManager->checkPrivilegesForAction($commentId, 'publicReceive', 'comment');
+
+        if ($isEditable === true && ($isAuthor === true || $hasPrivilege === true)) {
             $commentElement->content = $content;
-            $commentElement->userId = (int)$this->user->id;
-            $commentElement->dateTime = time();
-            $commentElement->targetType = (string)$targetElement->structureType;
             $commentElement->persistElementData();
-
-            $this->linksManager->linkElements((int)$targetElement->id, (int)$commentElement->id, "commentTarget");
-
-            if ($targetElement->structureType === 'comment') {
-                /** @var commentElement $targetElement */
-                $initialTarget = $targetElement->getInitialTarget();
-                if ($initialTarget instanceof structureElement && (int)$initialTarget->id !== (int)$targetElement->id) {
-                    $this->linksManager->linkElements((int)$initialTarget->id, (int)$commentElement->id, "commentTarget");
-                }
-            }
-
-            if ((int)$this->user->id !== 0) {
-                $this->privilegesManager->setPrivilege((int)$this->user->id, (int)$commentElement->id, 'comment', 'delete', 1);
-                $this->privilegesManager->setPrivilege((int)$this->user->id, (int)$commentElement->id, 'comment', 'publicReceive', 1);
-                $this->privilegesManager->setPrivilege((int)$this->user->id, (int)$commentElement->id, 'comment', 'publicForm', 1);
-
-                $this->user->refreshPrivileges();
-            }
 
             $this->clearCommentsCache();
 
-            return $this->transformToDto($commentElement);
+            return $this->transformer->transformToDto($commentElement);
         }
-        return null;
+
+        throw new CommentAccessDeniedException("No permission to update comment: {$commentId}");
     }
 
-    public function updateComment(int $commentId, string $content): ?CommentDto
-    {
-        $commentElement = $this->structureManager->getElementById($commentId);
-        if ($commentElement instanceof commentElement) {
-            $isEditable = $commentElement->isEditable();
-            $isAuthor = (int)$commentElement->userId === (int)$this->user->id;
-            $hasPrivilege = $this->privilegesManager->checkPrivilegesForAction($commentId, 'publicReceive', 'comment');
-
-            if ($isEditable === true && ($isAuthor === true || $hasPrivilege === true)) {
-                $commentElement->content = $content;
-                $commentElement->persistElementData();
-
-                $this->clearCommentsCache();
-
-                return $this->transformToDto($commentElement);
-            }
-        }
-        return null;
-    }
-
+    /**
+     * Deletes a comment.
+     *
+     * @throws CommentNotFoundException If comment is not found
+     * @throws CommentAccessDeniedException If no permission to delete
+     */
     public function deleteComment(int $commentId): bool
     {
         $commentElement = $this->structureManager->getElementById($commentId);
-        if ($commentElement instanceof commentElement) {
-            $isEditable = $commentElement->isEditable();
-            $isAuthor = (int)$commentElement->userId === (int)$this->user->id;
-            $hasPrivilege = $this->privilegesManager->checkPrivilegesForAction($commentId, 'delete', 'comment');
-
-            if ($isEditable === true && ($isAuthor === true || $hasPrivilege === true)) {
-                $commentElement->deleteElementData();
-                $this->clearCommentsCache();
-                return true;
-            }
+        if (!($commentElement instanceof commentElement)) {
+            throw new CommentNotFoundException("Comment not found: {$commentId}");
         }
-        return false;
+
+        $isEditable = $commentElement->isEditable();
+        $isAuthor = (int)$commentElement->userId === (int)$this->user->id;
+        $hasPrivilege = $this->privilegesManager->checkPrivilegesForAction($commentId, 'delete', 'comment');
+
+        if ($isEditable === true && ($isAuthor === true || $hasPrivilege === true)) {
+            $commentElement->deleteElementData();
+            $this->clearCommentsCache();
+            return true;
+        }
+
+        throw new CommentAccessDeniedException("No permission to delete comment: {$commentId}");
     }
 
+    /**
+     * Clears the comments cache.
+     */
     public function clearCommentsCache(): void
     {
         $currentLanguageId = $this->languagesManager->getCurrentLanguageId();
         $this->cache->delete($currentLanguageId . ':lc');
-    }
-
-    /**
-     * @param CommentDto[] $children
-     */
-    public function transformToDto(commentElement $comment, array $children = []): CommentDto
-    {
-        $authorUser = $comment->getUserElement();
-
-        $badges = [];
-        $url = null;
-        $authorName = (string)$comment->getAuthorName();
-
-        if ($authorUser instanceof userElement) {
-            $badges = (array)$authorUser->getBadgetTypes();
-            $url = (string)$authorUser->getUrl();
-            $authorName = (string)$authorUser->getTitle();
-        }
-
-        $authorDto = new CommentAuthorDto(
-            name: $authorName,
-            url: $url,
-            badges: $badges,
-        );
-
-        $isEditable = $comment->isEditable();
-        $isAuthor = $comment->userId === (int)$this->user->id;
-        $canEdit = $isEditable === true && $isAuthor === true;
-
-        $hasDeletePrivilege = $this->privilegesManager->checkPrivilegesForAction((int)$comment->id, 'delete', 'comment');
-        $canDelete = $canEdit === true || ($hasDeletePrivilege === true && $isEditable === true);
-
-        $targetDto = null;
-        $target = $comment->getInitialTarget();
-        if ($target instanceof structureElement) {
-            $targetDto = new CommentTargetDto(
-                title: (string)$target->getTitle(),
-                url: $target->getUrl()
-            );
-        }
-
-        $parentId = null;
-        $parent = $comment->getParentElement();
-        if ($parent instanceof commentElement && $parent->structureType === 'comment') {
-            $parentId = (int)$parent->id;
-        }
-
-        return new CommentDto(
-            id: (int)$comment->id,
-            author: $authorDto,
-            date: $comment->dateCreated,
-            content: $comment->getDecoratedContent(),
-            originalContent: strip_tags((string)$comment->getValue('content')),
-            canEdit: $canEdit,
-            canDelete: $canDelete,
-            target: $targetDto,
-            parentId: $parentId,
-            children: $children
-        );
     }
 }

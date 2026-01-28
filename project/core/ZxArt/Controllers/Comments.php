@@ -6,8 +6,10 @@ namespace ZxArt\Controllers;
 use controller;
 use controllerApplication;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use Throwable;
 use ZxArt\Comments\CommentRestDto;
 use ZxArt\Comments\CommentsService;
+use ZxArt\Comments\Exception\CommentsException;
 
 class Comments extends controllerApplication
 {
@@ -57,15 +59,24 @@ class Comments extends controllerApplication
     protected function handleGet(): void
     {
         $elementId = (int)$this->getParameter('id');
-        if ($elementId) {
+        if (!$elementId) {
+            $this->renderer->assign('responseStatus', 'error');
+            $this->renderer->assign('errorMessage', 'No ID provided');
+            return;
+        }
+
+        try {
             $internalTree = $this->commentsService->getCommentsTree($elementId);
             $restTree = array_map(fn($dto) => $this->objectMapper->map($dto, CommentRestDto::class), $internalTree);
 
             $this->renderer->assign('responseStatus', 'success');
             $this->renderer->assign('responseData', $restTree);
-        } else {
+        } catch (CommentsException $e) {
             $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'No ID provided');
+            $this->renderer->assign('errorMessage', $e->getMessage());
+        } catch (Throwable) {
+            $this->renderer->assign('responseStatus', 'error');
+            $this->renderer->assign('errorMessage', 'Internal server error');
         }
     }
 
@@ -75,19 +86,23 @@ class Comments extends controllerApplication
         $content = $this->getParameter('content');
         $author = $this->getParameter('author') ?: null;
 
-        if ($targetId && $content) {
-            $commentDto = $this->commentsService->addComment($targetId, $content, $author);
-            if ($commentDto) {
-                $restDto = $this->objectMapper->map($commentDto, CommentRestDto::class);
-                $this->renderer->assign('responseStatus', 'success');
-                $this->renderer->assign('responseData', $restDto);
-            } else {
-                $this->renderer->assign('responseStatus', 'error');
-                $this->renderer->assign('errorMessage', 'Failed to add comment');
-            }
-        } else {
+        if (!$targetId || !$content) {
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', 'Missing parameters');
+            return;
+        }
+
+        try {
+            $commentDto = $this->commentsService->addComment($targetId, $content, $author);
+            $restDto = $this->objectMapper->map($commentDto, CommentRestDto::class);
+            $this->renderer->assign('responseStatus', 'success');
+            $this->renderer->assign('responseData', $restDto);
+        } catch (CommentsException $e) {
+            $this->renderer->assign('responseStatus', 'error');
+            $this->renderer->assign('errorMessage', $e->getMessage());
+        } catch (Throwable $e) {
+            $this->renderer->assign('responseStatus', 'error');
+            $this->renderer->assign('errorMessage', 'Failed to add comment');
         }
     }
 
@@ -96,35 +111,44 @@ class Comments extends controllerApplication
         $commentId = (int)$this->getParameter('id');
         $content = $this->getParameter('content');
 
-        if ($commentId && $content) {
-            $commentDto = $this->commentsService->updateComment($commentId, $content);
-            if ($commentDto) {
-                $restDto = $this->objectMapper->map($commentDto, CommentRestDto::class);
-                $this->renderer->assign('responseStatus', 'success');
-                $this->renderer->assign('responseData', $restDto);
-            } else {
-                $this->renderer->assign('responseStatus', 'error');
-                $this->renderer->assign('errorMessage', 'Failed to update comment');
-            }
-        } else {
+        if (!$commentId || !$content) {
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', 'Missing parameters');
+            return;
+        }
+
+        try {
+            $commentDto = $this->commentsService->updateComment($commentId, $content);
+            $restDto = $this->objectMapper->map($commentDto, CommentRestDto::class);
+            $this->renderer->assign('responseStatus', 'success');
+            $this->renderer->assign('responseData', $restDto);
+        } catch (CommentsException $e) {
+            $this->renderer->assign('responseStatus', 'error');
+            $this->renderer->assign('errorMessage', $e->getMessage());
+        } catch (Throwable) {
+            $this->renderer->assign('responseStatus', 'error');
+            $this->renderer->assign('errorMessage', 'Failed to update comment');
         }
     }
 
     protected function handleDelete(): void
     {
         $commentId = (int)$this->getParameter('id');
-        if ($commentId) {
-            if ($this->commentsService->deleteComment($commentId)) {
-                $this->renderer->assign('responseStatus', 'success');
-            } else {
-                $this->renderer->assign('responseStatus', 'error');
-                $this->renderer->assign('errorMessage', 'Failed to delete comment');
-            }
-        } else {
+        if (!$commentId) {
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', 'Missing ID');
+            return;
+        }
+
+        try {
+            $this->commentsService->deleteComment($commentId);
+            $this->renderer->assign('responseStatus', 'success');
+        } catch (CommentsException $e) {
+            $this->renderer->assign('responseStatus', 'error');
+            $this->renderer->assign('errorMessage', $e->getMessage());
+        } catch (Throwable) {
+            $this->renderer->assign('responseStatus', 'error');
+            $this->renderer->assign('errorMessage', 'Failed to delete comment');
         }
     }
 }
