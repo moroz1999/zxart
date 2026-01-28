@@ -40,33 +40,6 @@ $zxart-tree-theme: mat.m2-define-dark-theme((
 // Apply specific typography for tree and other components if needed
 @include mat.tree-typography($zxart-tree-theme);
 
-// Button overrides to match design system variables
-.mat-mdc-button, .mat-mdc-outlined-button, .mat-mdc-flat-button, .mat-mdc-raised-button {
-  --mdc-filled-button-container-color: var(--button-bg);
-  --mdc-filled-button-label-text-color: var(--button-text);
-  --mdc-text-button-label-text-color: var(--button-text);
-  --mdc-outlined-button-label-text-color: var(--button-text);
-  --mdc-outlined-button-outline-color: var(--button-secondary-bg);
-}
-
-.mat-primary {
-  --mdc-filled-button-container-color: var(--button-primary-bg) !important;
-  --mdc-filled-button-label-text-color: var(--button-primary-text) !important;
-  --mdc-text-button-label-text-color: var(--button-primary-bg) !important;
-}
-
-.mat-accent {
-  --mdc-filled-button-container-color: var(--button-secondary-bg) !important;
-  --mdc-filled-button-label-text-color: var(--button-secondary-text) !important;
-  --mdc-text-button-label-text-color: var(--button-secondary-bg) !important;
-}
-
-.mat-warn {
-  --mdc-filled-button-container-color: var(--button-danger-bg) !important;
-  --mdc-filled-button-label-text-color: var(--button-danger-text) !important;
-  --mdc-text-button-label-text-color: var(--button-danger-bg) !important;
-}
-
 .mdc-button .mdc-button__label {
   overflow: hidden;
   white-space: nowrap;

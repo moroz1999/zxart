@@ -14,7 +14,7 @@
     - Legacy components and their variables must not be touched. CSS variables serve as a link between legacy and Angular.
 - **Architecture**:
     - **Base variables** (`--space-*`, `--font-*`, base colors, `--radius-*`, etc.) define the design system's foundation. They are stored in `src/app/shared/theme/_base.theme.scss`.
-    - **Component variables** (e.g., `--button-bg`, `--input-color`) must be defined in separate files (one per component, e.g., `_button.theme.scss`). These variables can use base variables.
+    - **Component variables** (e.g., `--zx-button-bg`, `--input-color`) must be defined in separate files (one per component, e.g., `_zx-button.theme.scss`). These variables can use base variables.
     - **Usage**: Components (Angular or Legacy) MUST use component variables ONLY. Direct use of base variables in components is FORBIDDEN.
     - **Enforcement**: This is a mandatory rule. Always check if you are using base variables directly and replace them with component variables.
     - If a component-level variable is missing, create it in a component-specific theme file.
