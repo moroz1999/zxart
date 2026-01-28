@@ -159,6 +159,13 @@ class CommentsService
         /** @var commentElement $commentElement */
         $commentElement = $this->structureManager->getElementById($commentId);
         if ($commentElement && $commentElement->structureType === 'comment') {
+            if ($commentElement->isEditable() && $commentElement->userId == $this->user->id) {
+                // Perform recursive deletion
+                $this->deleteRecursively($commentElement);
+                $this->clearCommentsCache();
+                return true;
+            }
+
             if ($this->privilegesManager->checkPrivilegesForAction($commentId, 'delete', 'comment')) {
                 // Perform recursive deletion
                 $this->deleteRecursively($commentElement);
@@ -198,7 +205,11 @@ class CommentsService
 
         $badges = [];
         $url = null;
-        $authorName = (string)$comment->author;
+        $authorName = '';
+        if (method_exists($comment, 'getAuthorName')) {
+            /** @var commentElement $comment */
+            $authorName = $comment->getAuthorName();
+        }
 
         if ($authorUser) {
             if (method_exists($authorUser, 'getBadgetTypes')) {
@@ -235,6 +246,7 @@ class CommentsService
             author: $authorDto,
             date: (string)$comment->dateCreated,
             content: (string)$comment->getDecoratedContent(),
+            originalContent: strip_tags((string)$comment->getValue('content')),
             canEdit: $canEdit,
             canDelete: $canDelete,
             target: $targetDto,

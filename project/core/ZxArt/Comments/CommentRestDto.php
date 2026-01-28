@@ -13,11 +13,14 @@ readonly class CommentRestDto
      */
     public function __construct(
         public int $id,
+        #[Map]
         public CommentAuthorDto $author,
         public string $date,
         public string $content,
+        public string $originalContent,
         public bool $canEdit,
         public bool $canDelete,
+        #[Map]
         public ?CommentTargetDto $target = null,
         public ?int $parentId = null,
         #[Map(transform: MapCollection::class)]

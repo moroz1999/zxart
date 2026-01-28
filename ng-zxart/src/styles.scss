@@ -1,7 +1,6 @@
 @use '@angular/material' as mat;
 
 @use 'app/shared/theme';
-@import "primeicons/primeicons.css";
 
 @include mat.core();
 
@@ -46,21 +45,4 @@ $zxart-tree-theme: mat.m2-define-light-theme((
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-
-/* PrimeNG Button overrides using base variables */
-.p-button {
-  &.p-button-success {
-    background: var(--button-success-bg);
-    border-color: var(--button-success-bg);
-    color: var(--button-success-text);
-  }
-  &.p-button-secondary {
-    background: var(--button-secondary-bg);
-    border-color: var(--button-secondary-bg);
-    color: var(--button-secondary-text);
-  }
-  &.p-button-link {
-    color: var(--comment-actions-link-color);
-  }
 }

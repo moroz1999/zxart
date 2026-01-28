@@ -12,10 +12,11 @@
   </div>
 
   <div class="form-actions">
-    <button pButton type="submit" [disabled]="commentForm.invalid || isSubmitting"
-            [label]="(commentToEdit ? 'comments.save' : 'comments.post') | translate"
-            class="p-button-success"></button>
-    <button pButton type="button" (click)="onCancel()" [label]="'comments.cancel' | translate"
-            [disabled]="isSubmitting" class="p-button-secondary"></button>
+    <button mat-flat-button color="primary" type="submit" [disabled]="commentForm.invalid || isSubmitting">
+      {{ (commentToEdit ? 'comments.save' : 'comments.post') | translate }}
+    </button>
+    <button mat-stroked-button type="button" (click)="onCancel()" [disabled]="isSubmitting">
+      {{ 'comments.cancel' | translate }}
+    </button>
   </div>
 </form>

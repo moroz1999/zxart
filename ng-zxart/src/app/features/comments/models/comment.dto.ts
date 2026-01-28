@@ -14,6 +14,7 @@ export interface CommentDto {
   author: CommentAuthorDto;
   date: string;
   content: string;
+  originalContent: string;
   canEdit: boolean;
   canDelete: boolean;
   target?: CommentTargetDto;

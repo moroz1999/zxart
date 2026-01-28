@@ -1,11 +1,7 @@
-@use 'shared/vars' as vars;
+.comment-item {
+  margin-bottom: 1rem;
 
-.comment-children {
-  margin-left: var(--margin-lg);
-  border-left: 1px solid var(--border-color-medium);
-  padding-left: var(--padding-md);
-}
-
-.root-comment {
-  margin-bottom: var(--margin-lg);
+  &:last-child {
+    margin-bottom: 0;
+  }
 }

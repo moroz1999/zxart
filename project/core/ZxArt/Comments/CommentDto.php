@@ -13,6 +13,7 @@ readonly class CommentDto
         public CommentAuthorDto $author,
         public string $date,
         public string $content,
+        public string $originalContent,
         public bool $canEdit,
         public bool $canDelete,
         public ?CommentTargetDto $target = null,

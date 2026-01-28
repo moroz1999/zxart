@@ -6,7 +6,7 @@
     </button>
     <app-comment-form *ngIf="showForm && elementId" [targetId]="elementId" (commentSaved)="onCommentSaved($event)" (cancelled)="showForm = false"></app-comment-form>
   </div>
-  
+
   <div *ngFor="let comment of comments" class="comment-item" [class.root-comment]="isRoot">
     <app-comment [comment]="comment" (commentChanged)="loadComments()"></app-comment>
   </div>

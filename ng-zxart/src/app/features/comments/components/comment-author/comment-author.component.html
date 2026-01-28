@@ -5,7 +5,7 @@
   <ng-template #noUrl>
     <span class="comment-author">{{ author.name }}</span>
   </ng-template>
-  
+
   <span *ngFor="let badge of author.badges" class="comment-badge" [class]="'badge-' + badge">
     {{ badge }}
   </span>

@@ -13,6 +13,7 @@
     - If a user is anonymous, the deprecated `author` field might still contain a name.
 - **Content**:
     - URLs in comment content are automatically converted into clickable HTML links.
+    - To get the original content without HTML decorations (e.g., for editing), use `$comment->getValue('content')` on the `commentElement`. This method retrieves the raw storage value from the underlying `dataChunk`.
 
 ## Technical Structure
 - **Linking**:

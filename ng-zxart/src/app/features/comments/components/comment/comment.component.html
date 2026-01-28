@@ -2,16 +2,16 @@
   <div class="comment-header">
     <app-comment-author [author]="comment.author"></app-comment-author>
     <span class="comment-date">{{ comment.date }}</span>
-    
+
     <div class="comment-actions">
-      <button pButton type="button" (click)="onReply()" [label]="'comments.reply' | translate" class="p-button-link"></button>
-      <button *ngIf="comment.canEdit" pButton type="button" (click)="onEdit()" [label]="'comments.edit' | translate" class="p-button-link"></button>
-      <button *ngIf="comment.canDelete" pButton type="button" (click)="onDelete()" [label]="'comments.delete' | translate" class="p-button-link"></button>
+      <button mat-button type="button" (click)="onReply()">{{ 'comments.reply' | translate }}</button>
+      <button *ngIf="comment.canEdit" mat-button type="button" (click)="onEdit()">{{ 'comments.edit' | translate }}</button>
+      <button *ngIf="comment.canDelete" mat-button type="button" (click)="onDelete()">{{ 'comments.delete' | translate }}</button>
     </div>
   </div>
-  
+
   <div *ngIf="!showEditForm" class="comment-content" [innerHTML]="comment.content"></div>
-  
+
   <app-comment-form *ngIf="showEditForm" [targetId]="comment.parentId || 0" [commentToEdit]="comment" (commentSaved)="onCommentSaved($event)" (cancelled)="showEditForm = false"></app-comment-form>
   <app-comment-form *ngIf="showReplyForm" [targetId]="comment.id" (commentSaved)="onCommentSaved($event)" (cancelled)="showReplyForm = false"></app-comment-form>
 

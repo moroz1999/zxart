@@ -1,19 +1,19 @@
 import {CommonModule} from '@angular/common';
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
-import {ButtonModule} from 'primeng/button';
+import {MatButtonModule} from '@angular/material/button';
 import {CommentsService} from '../../services/comments.service';
 import {CommentDto} from '../../models/comment.dto';
 
 @Component({
   selector: 'app-comment-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule, ButtonModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, MatButtonModule],
   templateUrl: './comment-form.component.html',
   styleUrls: ['./comment-form.component.scss']
 })
-export class CommentFormComponent {
+export class CommentFormComponent implements OnInit {
   @Input() targetId!: number;
   @Input() commentToEdit?: CommentDto;
   @Output() commentSaved = new EventEmitter<CommentDto>();
@@ -35,7 +35,7 @@ export class CommentFormComponent {
   ngOnInit(): void {
     if (this.commentToEdit) {
       this.commentForm.patchValue({
-        content: this.commentToEdit.content
+        content: this.commentToEdit.originalContent
       });
     }
   }

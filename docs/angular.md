@@ -3,8 +3,9 @@
 The integration of Angular components into existing legacy Smarty templates is implemented using Custom Elements (Web Components).
 
 #### Core Principles
-1. **Custom Elements**: Angular components are registered in `AppModule` as custom elements with an `app-` prefix. This allows them to be used like standard HTML tags within `.tpl` files.
-2. **Data Passing**:
+1. **Standalone Components**: All Angular components MUST be standalone. `AppModule` is used only for bootstrapping and registering custom elements.
+2. **Custom Elements**: Angular components are registered in `AppModule` as custom elements with an `app-` prefix. This allows them to be used like standard HTML tags within `.tpl` files.
+3. **Data Passing**:
     - **Attributes**: Element IDs and simple settings are passed via tag attributes (e.g., `element-id="{$element->id}"`). These attributes are received in Angular components using the `@Input()` decorator.
 
 #### Routing and Navigation
@@ -33,10 +34,17 @@ The component independently requests data from the backend using the provided `e
 All new functionality in Angular must follow Feature Sliced Design principles and the [Design System](design-system.md).
 
 **CRITICAL**:
-- All new components must use **PrimeNG**.
-- **Material UI** is legacy and must be replaced by PrimeNG.
-- Custom CSS is forbidden without direct instruction. Use PrimeNG components.
+- All new components must use **Material UI**.
+- **ONLY standalone components** are allowed.
+- **PrimeNG** is legacy and must be replaced by Material.
+- Custom CSS is forbidden without direct instruction. Use Material components and our theme.
 - Components must be used semantically.
+
+### Deprecated Practices
+1. **PrimeNG**: The use of PrimeNG is deprecated. All new components MUST use Material UI. Existing PrimeNG components should be replaced during refactoring.
+2. **Sass @import**: The `@import` rule in SCSS is deprecated in favor of `@use` and `@forward`.
+3. **Legacy CSS**: Custom styles that duplicate Material functionality or legacy theme styles should be avoided.
+4. **Direct CSS Overrides**: Avoid deep CSS overrides of Material components unless absolutely necessary; use Material themes and variables instead.
 
 - Code is divided into layers, such as `features`, `entities`, and `shared`.
 - Each feature must be located in its own directory within `src/app/features/`.
@@ -49,7 +57,7 @@ All new functionality in Angular must follow Feature Sliced Design principles an
   ```
 
 - **Naming and Storage Rules**:
-    1. **Standalone Components**: All new components must be standalone. Explicitly specify all required imports (modules, other components, pipes) in the `imports` array of the `@Component` decorator.
+    1. **Standalone Components**: All components MUST be standalone. Explicitly specify all required imports (modules, other components, pipes) in the `imports` array of the `@Component` decorator. Modules (except `AppModule` for registration) are prohibited.
     2. **DTOs**: All interfaces and DTOs must be stored in the `models/` folder within the corresponding module/feature. Do not mix type definitions with service or component code.
     3. **File Separation**: For each component, the template (HTML), styles (SCSS), and logic (TS) must reside in separate files. Using inline templates and styles within the `@Component` decorator is prohibited.
     4. **Services**: Shared services are stored in `app/shared/services/`, while feature-specific services are stored in `features/{feature-name}/services/`.
