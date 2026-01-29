@@ -1,14 +1,13 @@
 :root {
   /* Layout & Application */
-  --main-background: var(--gray9);
-  --secondary-bg: var(--gray8);
-  --content-background: var(--gray9);
+  --main-background: var(--secondary9);
+  --secondary-bg: var(--secondary8);
+  --content-background: var(--secondary9);
   --content-padding: var(--space-16);
   --content-padding-mobile: var(--space-16);
   --center-block-padding-bottom: var(--space-48);
   --breadcrumbs-margin-bottom: var(--space-16);
   --center-banner-margin-right: 230px;
-  --zxbn-margin-bottom: var(--space-24);
   --current-location-margin-bottom: var(--space-16);
   --current-location-delimiter-font-size: 1.2em;
   --firstpage-top-block-margin-bottom: var(--space-32);
@@ -19,7 +18,7 @@
   --lastnews-margin-bottom: var(--space-32);
   --lastnews-padding-top: var(--space-16);
   --lastnews-header-font-size: var(--font-lg);
-  --news-short-date-color: var(--gray5);
+  --news-short-date-color: var(--secondary5);
   --news-short-date-font-size: var(--font-sm);
   --news-short-block-margin-bottom: var(--space-16);
   --latestupdates-controls-margin: var(--space-8) 0;

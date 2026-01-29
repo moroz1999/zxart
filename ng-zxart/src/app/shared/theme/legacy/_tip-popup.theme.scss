@@ -1,10 +1,10 @@
 :root {
   /* Tip Popup */
   --tip-popup-padding: var(--space-4);
-  --tip-popup-color: var(--white);
+  --tip-popup-color: var(--text-color);
   --tip-popup-bg: var(--main-background);
   --tip-popup-border-radius: var(--radius-sm);
-  --tip-popup-shadow: 0 1px 3px var(--gray4);
+  --tip-popup-shadow: 0 1px 3px var(--secondary4);
   --tip-popup-text-shadow: 0 -1px 1px var(--secondary9);
   --tip-popup-border-bottom: 1px solid var(--secondary9);
 }
