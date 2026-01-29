@@ -1,50 +1,9 @@
 :root {
   /* Base palette */
   /* DO NOT use this file variables directly in components. Define semantic or component-specific variables instead. */
-  --white: #fff;
 
-  --gray1: #edebeb;
-  --gray2: #dadada;
-  --gray3: #c7c7c7;
-  --gray4: #a1a1a1;
-  --gray5: #8a8a8a;
-  --gray6: #555555;
-  --gray7: #333333;
-  --gray8: #252525;
-  --gray9: #151515;
-
-  --blue1: #f0f4fb;
-  --blue2: #dce6f6;
-  --blue3: #c5d5f0;
-  --blue4: #a8c1e9;
-  --blue5: #83a9e7;
-  --blue6: #5e8ddb;
-  --blue7: #3f71c7;
-  --blue8: #2d518f;
-  --blue9: #1b3157;
-
-  --red1: #ffe5e5;
-  --red2: #ffcccc;
-  --red3: #ff9999;
-  --red4: #ff6666;
-  --red5: #ff3333;
-  --red6: #cc0000;
-  --red7: #990000;
-  --red8: #660000;
-  --red9: #330000;
-
-  --yellow1: hsl(44, 45%, 90%);
-  --yellow2: hsl(44, 45%, 80%);
-  --yellow3: hsl(44, 70%, 75%);
-  --yellow4: hsl(44, 90%, 70%);
-  --yellow5: hsl(44, 100%, 65%);
-  --yellow6: hsl(44, 100%, 60%);
-  --yellow7: hsl(44, 100%, 50%);
-  --yellow8: hsl(44, 100%, 40%);
-  --yellow9: hsl(44, 100%, 30%);
-
-  --gray6-rgb: 85, 85, 85;
-  --secondary6-rgb: var(--gray6-rgb);
+  --neutral-600-rgb: 85, 85, 85;
+  --secondary-600-rgb: var(--neutral-600-rgb);
 
   /* Spacing */
   --space-4: 4px;
@@ -106,3 +65,4 @@
   --border-radius-lg: var(--radius-lg);
   --border-radius-xl: var(--radius-xl);
 }
+

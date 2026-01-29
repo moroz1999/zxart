@@ -18,18 +18,18 @@
   --zx-button-md-padding: 0 var(--zx-button-md-h-padding);
   --zx-button-md-min-width: 88px;
 
-  --zx-button-primary-bg: var(--primary6);
-  --zx-button-primary-text: var(--secondary9);
+  --zx-button-primary-bg: var(--primary-600);
+  --zx-button-primary-text: var(--secondary-900);
 
-  --zx-button-secondary-bg: var(--secondary6);
-  --zx-button-secondary-hover-bg: var(--secondary5);
-  --zx-button-secondary-text: var(--secondary9);
+  --zx-button-secondary-bg: var(--secondary-600);
+  --zx-button-secondary-hover-bg: var(--secondary-500);
+  --zx-button-secondary-text: var(--secondary-900);
 
-  --zx-button-primary-hover-bg: var(--primary5);
-  --zx-button-danger-hover-bg: var(--danger5);
+  --zx-button-primary-hover-bg: var(--primary-500);
+  --zx-button-danger-hover-bg: var(--danger-500);
 
-  --zx-button-danger-bg: var(--danger6);
-  --zx-button-danger-text: var(--secondary9);
+  --zx-button-danger-bg: var(--danger-600);
+  --zx-button-danger-text: var(--secondary-900);
   --zx-button-danger-border: none;
 
   --zx-button-border-radius: var(--radius-md);
@@ -38,6 +38,7 @@
   /* Tabs */
   --zx-tab-button-margin-right: var(--space-16);
   --zx-tab-button-font-size: var(--font-lg);
-  --zx-tab-button-active-bg: var(--secondary6);
-  --zx-tab-button-active-text: var(--secondary9);
+  --zx-tab-button-active-bg: var(--secondary-600);
+  --zx-tab-button-active-text: var(--secondary-900);
 }
+

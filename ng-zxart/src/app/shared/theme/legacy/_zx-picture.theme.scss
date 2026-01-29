@@ -1,13 +1,13 @@
 :root {
   /* ZX Picture */
-  --zxpicture-short-bg: var(--secondary8);
+  --zxpicture-short-bg: var(--secondary-800);
   --zxpicture-short-radius: var(--radius-lg);
   --zxpicture-short-shadow: var(--shadow-deep);
   --zxpicture-short-gap: var(--space-16);
   --zxpicture-short-padding: var(--space-16);
-  --zxpicture-short-image-border: 1px solid var(--secondary9);
+  --zxpicture-short-image-border: 1px solid var(--secondary-900);
   --zxpicture-short-bottom-gap: 10px;
-  --zxpicture-short-year-color: var(--warning2);
+  --zxpicture-short-year-color: var(--warning-200);
   --zxpicture-short-title-link-color: var(--text-color);
   --zxpicture-details-main-margin: var(--space-32);
   --zxpicture-details-download-margin-right: var(--space-16);
@@ -15,3 +15,4 @@
   --zxpicture-details-votes-margin-bottom: var(--space-48);
   --zxpicture-details-info-playlist-margin-left: var(--space-8);
 }
+

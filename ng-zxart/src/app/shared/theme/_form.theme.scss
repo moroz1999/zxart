@@ -1,9 +1,9 @@
 :root {
   /* Forms & Inputs */
   --input-bg: var(--white);
-  --input-text: var(--secondary9);
-  --input-placeholder: var(--secondary5);
-  --input-error-text: var(--danger6);
+  --input-text: var(--secondary-900);
+  --input-placeholder: var(--secondary-500);
+  --input-error-text: var(--danger-600);
   --input-width-md: 140px;
   --input-padding: 0 var(--space-4);
   --input-border-radius: var(--radius-md);
@@ -15,7 +15,7 @@
   --textarea-font-size: var(--font-sm);
   --textarea-border-radius: var(--radius-md);
 
-  --form-label-color: var(--secondary4);
+  --form-label-color: var(--secondary-400);
   --form-label-font-size: var(--font-sm);
   --form-star-color: #a09ecf;
   --form-star-font-size: var(--font-sm);
@@ -27,26 +27,26 @@
   --form-controls-padding-top: var(--padding-sm);
   /* Form Helper */
   --form-helper-margin: 0 var(--margin-xs);
-  --form-helper-mark-bg: var(--secondary4);
-  --form-helper-mark-border-color: var(--secondary9);
+  --form-helper-mark-bg: var(--secondary-400);
+  --form-helper-mark-border-color: var(--secondary-900);
   --form-helper-mark-text-color: var(--white);
   --form-helper-mark-font-size: var(--font-xs);
   --form-helper-tip-margin: 0 var(--margin-sm);
   --form-helper-tip-padding: var(--padding-sm) var(--padding-lg);
   --form-helper-tip-border-color: var(--white);
   --form-helper-tip-font-size: var(--font-sm);
-  --form-helper-tip-text-color: var(--secondary9);
+  --form-helper-tip-text-color: var(--secondary-900);
   --dropdown-padding-right: 20px;
   --dropdown-option-padding: 0 var(--space-4) 0;
 
   /* AjaxSelect */
   --ajaxselect-item-margin: 0 var(--space-8);
   --ajaxselect-item-margin-bottom-last: var(--space-12);
-  --ajaxselect-item-border-color: var(--secondary2);
+  --ajaxselect-item-border-color: var(--secondary-200);
   --ajaxselect-item-after-border-color: var(--white);
   --ajaxselect-item-font-size: var(--font-xs);
   --ajaxselect-item-line-height: var(--space-24);
   --ajaxselect-results-icon-margin-top: var(--space-4);
   --ajaxselect-results-icon-margin-right: var(--space-8);
-  --ajaxselect-search-icon-color: var(--secondary9);
+  --ajaxselect-search-icon-color: var(--secondary-900);
 }

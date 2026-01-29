@@ -1,28 +1,28 @@
 :root {
   /* Semantic colors */
-  --text-color: var(--secondary2);
-  --text-light-color: var(--secondary4);
-  --error-color: var(--danger6);
+  --text-color: var(--secondary-200);
+  --text-light-color: var(--secondary-400);
+  --error-color: var(--danger-600);
 
-  --background-dark: var(--secondary8);
-  --background-deep: var(--secondary9);
+  --background-dark: var(--secondary-800);
+  --background-deep: var(--secondary-900);
   --background-transparent: transparent;
 
-  --badge-bg: var(--secondary2);
-  --date-color: var(--secondary6);
+  --date-color: var(--secondary-600);
 
   /* Links */
-  --link-color: var(--primary5);
-  --link-alt-color: var(--warning6);
+  --link-color: var(--primary-500);
+  --link-alt-color: var(--warning-600);
 
   /* Typography */
   --h1-font-size: var(--font-xl);
   --h2-font-size: var(--font-lg);
   --h3-font-size: var(--font-md);
 
-  --pseudo-link-color: var(--warning2);
-  --icon-yellow: var(--warning6);
+  --pseudo-link-color: var(--warning-200);
+  --icon-yellow: var(--warning-600);
 
   /* Comment */
   --comment-header-font-size: var(--font-sm);
 }
+

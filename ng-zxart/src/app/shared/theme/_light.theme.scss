@@ -1,45 +1,103 @@
 .bright-mode {
+  --white: #fff;
+
+  --neutral-50: #f7f7f7;
+  --neutral-100: #ebebeb;
+  --neutral-200: #d9d9d9;
+  --neutral-300: #bfbfbf;
+  --neutral-400: #a6a6a6;
+  --neutral-500: #8a8a8a;
+  --neutral-600: #737373;
+  --neutral-700: #595959;
+  --neutral-800: #404040;
+  --neutral-900: #262626;
+  --neutral-950: #131313;
+
+  --blue-50: #f0f8ff;
+  --blue-100: #d6ebff;
+  --blue-200: #b3daff;
+  --blue-300: #80c2ff;
+  --blue-400: #4da9ff;
+  --blue-500: #1a90ff;
+  --blue-600: #0077ee;
+  --blue-700: #005cb3;
+  --blue-800: #004280;
+  --blue-900: #001d38;
+  --blue-950: #000f1f;
+
+  --red-50: #fff0f0;
+  --red-100: #ffdddd;
+  --red-200: #ffb3b3;
+  --red-300: #ff8080;
+  --red-400: #ff3333;
+  --red-500: #ff0000;
+  --red-600: #bb0000;
+  --red-700: #7a0000;
+  --red-800: #3d0000;
+  --red-900: #1a0000;
+  --red-950: #160101;
+
+  --yellow-50: #fffbe0;
+  --yellow-100: #fff4d6;
+  --yellow-200: #ffebb3;
+  --yellow-300: #ffdd80;
+  --yellow-400: #ffc933;
+  --yellow-500: #ffbd04;
+  --yellow-600: #d49c00;
+  --yellow-700: #a57900;
+  --yellow-800: #765700;
+  --yellow-900: #473400;
+  --yellow-950: #241b00;
+
   /* Secondary ramp (grayish) - Inverted */
-  --secondary1: var(--gray9);
-  --secondary2: var(--gray8);
-  --secondary3: var(--gray7);
-  --secondary4: var(--gray6);
-  --secondary5: var(--gray5);
-  --secondary6: var(--gray4);
-  --secondary7: var(--gray3);
-  --secondary8: var(--gray2);
-  --secondary9: var(--gray1);
+  --secondary-50: var(--neutral-950);
+  --secondary-100: var(--neutral-900);
+  --secondary-200: var(--neutral-800);
+  --secondary-300: var(--neutral-700);
+  --secondary-400: var(--neutral-600);
+  --secondary-500: var(--neutral-500);
+  --secondary-600: var(--neutral-400);
+  --secondary-700: var(--neutral-300);
+  --secondary-800: var(--neutral-200);
+  --secondary-900: var(--neutral-100);
+  --secondary-950: var(--neutral-50);
 
   /* Primary ramp (blueish) - Inverted */
-  --primary1: var(--blue9);
-  --primary2: var(--blue8);
-  --primary3: var(--blue7);
-  --primary4: var(--blue6);
-  --primary5: var(--blue5);
-  --primary6: var(--blue4);
-  --primary7: var(--blue3);
-  --primary8: var(--blue2);
-  --primary9: var(--blue1);
+  --primary-50: var(--blue-950);
+  --primary-100: var(--blue-900);
+  --primary-200: var(--blue-800);
+  --primary-300: var(--blue-700);
+  --primary-400: var(--blue-600);
+  --primary-500: var(--blue-500);
+  --primary-600: var(--blue-400);
+  --primary-700: var(--blue-300);
+  --primary-800: var(--blue-200);
+  --primary-900: var(--blue-100);
+  --primary-950: var(--blue-50);
 
   /* Danger ramp (redish) - Inverted */
-  --danger1: var(--red9);
-  --danger2: var(--red8);
-  --danger3: var(--red7);
-  --danger4: var(--red6);
-  --danger5: var(--red5);
-  --danger6: var(--red4);
-  --danger7: var(--red3);
-  --danger8: var(--red2);
-  --danger9: var(--red1);
+  --danger-50: var(--red-950);
+  --danger-100: var(--red-900);
+  --danger-200: var(--red-800);
+  --danger-300: var(--red-700);
+  --danger-400: var(--red-600);
+  --danger-500: var(--red-500);
+  --danger-600: var(--red-400);
+  --danger-700: var(--red-300);
+  --danger-800: var(--red-200);
+  --danger-900: var(--red-100);
+  --danger-950: var(--red-50);
 
   /* Warning ramp (yellowish) - Inverted */
-  --warning1: var(--yellow9);
-  --warning2: var(--yellow8);
-  --warning3: var(--yellow7);
-  --warning4: var(--yellow6);
-  --warning5: var(--yellow5);
-  --warning6: var(--yellow4);
-  --warning7: var(--yellow3);
-  --warning8: var(--yellow2);
-  --warning9: var(--yellow1);
+  --warning-50: var(--yellow-950);
+  --warning-100: var(--yellow-900);
+  --warning-200: var(--yellow-800);
+  --warning-300: var(--yellow-700);
+  --warning-400: var(--yellow-600);
+  --warning-500: var(--yellow-500);
+  --warning-600: var(--yellow-400);
+  --warning-700: var(--yellow-300);
+  --warning-800: var(--yellow-200);
+  --warning-900: var(--yellow-100);
+  --warning-950: var(--yellow-50);
 }

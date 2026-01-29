@@ -1,45 +1,104 @@
 :root {
+  --white: #fff;
+
+  --neutral-50: #f7f7f7;
+  --neutral-100: #eaeaea;
+  --neutral-200: #d0d0d0;
+  --neutral-300: #b6b6b6;
+  --neutral-400: #a4a4a4;
+  --neutral-500: #929292;
+  --neutral-600: #858585;
+  --neutral-700: #686868;
+  --neutral-800: #454545;
+  --neutral-900: #252525;
+  --neutral-950: #141414;
+
+  --blue-50: #ebf5ff;
+  --blue-100: #d1e9ff;
+  --blue-200: #54acff;
+  --blue-300: #2998ff;
+  --blue-400: #0587ff;
+  --blue-500: #0074e0;
+  --blue-600: #0062bd;
+  --blue-700: #004f99;
+  --blue-800: #003d75;
+  --blue-900: #002445;
+  --blue-950: #00182e;
+
+  --red-50: #fff2f2;
+  --red-100: #ffd8d8;
+  --red-200: #ffacac;
+  --red-300: #ff8888;
+  --red-400: #ff6464;
+  --red-500: #ff4040;
+  --red-600: #d10d0d;
+  --red-700: #ad0000;
+  --red-800: #8b0000;
+  --red-900: #4d0000;
+  --red-950: #2e0000;
+
+  --yellow-50: #fffbf2;
+  --yellow-100: #fff5d8;
+  --yellow-200: #ffe9ac;
+  --yellow-300: #ffd664;
+  --yellow-400: #ffc31d;
+  --yellow-500: #ffcc40;
+  --yellow-600: #ffd664;
+  --yellow-700: #ffdf88;
+  --yellow-800: #ffeaac;
+  --yellow-900: #fff5d8;
+  --yellow-950: #fffbf2;
+
+
   /* Secondary ramp (grayish) */
-  --secondary1: var(--gray1);
-  --secondary2: var(--gray2);
-  --secondary3: var(--gray3);
-  --secondary4: var(--gray4);
-  --secondary5: var(--gray5);
-  --secondary6: var(--gray6);
-  --secondary7: var(--gray7);
-  --secondary8: var(--gray8);
-  --secondary9: var(--gray9);
+  --secondary-50: var(--neutral-50);
+  --secondary-100: var(--neutral-100);
+  --secondary-200: var(--neutral-200);
+  --secondary-300: var(--neutral-300);
+  --secondary-400: var(--neutral-400);
+  --secondary-500: var(--neutral-500);
+  --secondary-600: var(--neutral-600);
+  --secondary-700: var(--neutral-700);
+  --secondary-800: var(--neutral-800);
+  --secondary-900: var(--neutral-900);
+  --secondary-950: var(--neutral-950);
 
   /* Primary ramp (blueish) */
-  --primary1: var(--blue1);
-  --primary2: var(--blue2);
-  --primary3: var(--blue3);
-  --primary4: var(--blue4);
-  --primary5: var(--blue5);
-  --primary6: var(--blue6);
-  --primary7: var(--blue7);
-  --primary8: var(--blue8);
-  --primary9: var(--blue9);
+  --primary-50: var(--blue-50);
+  --primary-100: var(--blue-100);
+  --primary-200: var(--blue-200);
+  --primary-300: var(--blue-300);
+  --primary-400: var(--blue-400);
+  --primary-500: var(--blue-500);
+  --primary-600: var(--blue-600);
+  --primary-700: var(--blue-700);
+  --primary-800: var(--blue-800);
+  --primary-900: var(--blue-900);
+  --primary-950: var(--blue-950);
 
   /* Danger ramp (redish) */
-  --danger1: var(--red1);
-  --danger2: var(--red2);
-  --danger3: var(--red3);
-  --danger4: var(--red4);
-  --danger5: var(--red5);
-  --danger6: var(--red6);
-  --danger7: var(--red7);
-  --danger8: var(--red8);
-  --danger9: var(--red9);
+  --danger-50: var(--red-50);
+  --danger-100: var(--red-100);
+  --danger-200: var(--red-200);
+  --danger-300: var(--red-300);
+  --danger-400: var(--red-400);
+  --danger-500: var(--red-500);
+  --danger-600: var(--red-600);
+  --danger-700: var(--red-700);
+  --danger-800: var(--red-800);
+  --danger-900: var(--red-900);
+  --danger-950: var(--red-950);
 
   /* Warning ramp (yellowish) */
-  --warning1: var(--yellow1);
-  --warning2: var(--yellow2);
-  --warning3: var(--yellow3);
-  --warning4: var(--yellow4);
-  --warning5: var(--yellow5);
-  --warning6: var(--yellow6);
-  --warning7: var(--yellow7);
-  --warning8: var(--yellow8);
-  --warning9: var(--yellow9);
+  --warning-50: var(--yellow-50);
+  --warning-100: var(--yellow-100);
+  --warning-200: var(--yellow-200);
+  --warning-300: var(--yellow-300);
+  --warning-400: var(--yellow-400);
+  --warning-500: var(--yellow-500);
+  --warning-600: var(--yellow-600);
+  --warning-700: var(--yellow-700);
+  --warning-800: var(--yellow-800);
+  --warning-900: var(--yellow-900);
+  --warning-950: var(--yellow-950);
 }
