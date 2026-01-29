@@ -1,0 +1,14 @@
+.zx-panel {
+  background-color: var(--zx-panel-bg);
+  box-sizing: border-box;
+  display: block;
+
+  &--radius-sm { border-radius: var(--zx-panel-radius-sm); }
+  &--radius-md { border-radius: var(--zx-panel-radius-md); }
+  &--radius-lg { border-radius: var(--zx-panel-radius-lg); }
+  &--radius-xl { border-radius: var(--zx-panel-radius-xl); }
+
+  &--padding-s { padding: var(--zx-panel-padding-sm); }
+  &--padding-md { padding: var(--zx-panel-padding-md); }
+  &--padding-lg { padding: var(--zx-panel-padding-lg); }
+}

@@ -12,11 +12,13 @@
   </div>
 
   <div class="form-actions">
-    <zx-button size="sm" color="primary" type="submit" [disabled]="commentForm.invalid || isSubmitting">
-      {{ (commentToEdit ? 'comments.save' : 'comments.post') | translate }}
-    </zx-button>
-    <zx-button size="sm" color="secondary" type="button" (click)="onCancel()" [disabled]="isSubmitting" style="margin-left: var(--space-8);">
-      {{ 'comments.cancel' | translate }}
-    </zx-button>
+    <zx-stack direction="row" spacing="md">
+      <zx-button size="sm" color="primary" type="submit" [disabled]="commentForm.invalid || isSubmitting">
+        {{ (commentToEdit ? 'comments.save' : 'comments.post') | translate }}
+      </zx-button>
+      <zx-button size="sm" color="secondary" type="button" (click)="onCancel()" [disabled]="isSubmitting">
+        {{ 'comments.cancel' | translate }}
+      </zx-button>
+    </zx-stack>
   </div>
 </form>

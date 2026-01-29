@@ -2,13 +2,14 @@ import {CommonModule} from '@angular/common';
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {CommentDto} from '../../models/comment.dto';
 import {CommentsService} from '../../services/comments.service';
+import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {CommentFormComponent} from '../comment-form/comment-form.component';
 import {CommentAuthorComponent} from '../comment-author/comment-author.component';
-import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {ZxStackComponent} from "../../../../shared/ui/zx-stack/zx-stack.component";
 
 @Component({
   selector: 'app-comment',
@@ -17,11 +18,12 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
     CommonModule,
     TranslateModule,
     MatButtonModule,
-    MatCardModule,
     MatIconModule,
     CommentFormComponent,
     CommentAuthorComponent,
-    ZxButtonComponent
+    ZxButtonComponent,
+    ZxPanelComponent,
+    ZxStackComponent
   ],
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss']

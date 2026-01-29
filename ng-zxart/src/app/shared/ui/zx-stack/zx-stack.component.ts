@@ -1,0 +1,18 @@
+import {Component, Input} from '@angular/core';
+import {CommonModule} from '@angular/common';
+
+@Component({
+  selector: 'zx-stack',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './zx-stack.component.html',
+  styleUrl: './zx-stack.component.scss'
+})
+export class ZxStackComponent {
+  @Input() spacing: 'md' | 'lg' | 'xl' = 'md';
+  @Input() direction: 'column' | 'row' = 'column';
+
+  get classList(): string {
+    return `zx-stack zx-stack--${this.direction} zx-stack--spacing-${this.spacing}`;
+  }
+}

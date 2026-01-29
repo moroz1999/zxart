@@ -8,6 +8,7 @@ import {CommentsService} from '../../services/comments.service';
 import {CommentComponent} from '../comment/comment.component';
 import {CommentFormComponent} from '../comment-form/comment-form.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 
 @Component({
   selector: 'app-comments-list',
@@ -19,7 +20,8 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
     MatDividerModule,
     CommentComponent,
     CommentFormComponent,
-    ZxButtonComponent
+    ZxButtonComponent,
+    ZxStackComponent
   ],
   templateUrl: './comments-list.component.html',
   styleUrls: ['./comments-list.component.scss']

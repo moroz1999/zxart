@@ -1,0 +1,15 @@
+.comment-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-8);
+}
+
+.comment-date {
+  color: var(--date-color);
+  font-size: var(--font-xs);
+}
+
+.comment-content {
+  line-height: 1.4;
+}

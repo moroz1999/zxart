@@ -8,6 +8,7 @@ import {MatInputModule} from '@angular/material/input';
 import {CommentDto} from '../../models/comment.dto';
 import {CommentsService} from '../../services/comments.service';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 
 @Component({
   selector: 'app-comment-form',
@@ -19,7 +20,8 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    ZxButtonComponent
+    ZxButtonComponent,
+    ZxStackComponent
   ],
   templateUrl: './comment-form.component.html',
   styleUrls: ['./comment-form.component.scss']

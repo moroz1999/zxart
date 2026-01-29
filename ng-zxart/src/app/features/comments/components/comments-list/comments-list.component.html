@@ -1,15 +1,17 @@
 <div class="comments-list">
   <div *ngIf="isRoot" class="comments-header" style="margin-bottom: var(--margin-lg);">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--margin-lg);">
-      <h3 *ngIf="comments.length > 0" style="margin: 0;">{{ 'comments.title' | translate }}</h3>
-      <zx-button size="sm" color="primary" (click)="showForm = !showForm">
-        {{ (showForm ? 'comments.cancel' : 'comments.add') | translate }}
-      </zx-button>
-    </div>
-    <app-comment-form *ngIf="showForm && elementId" [targetId]="elementId" (commentSaved)="onCommentSaved($event)" (cancelled)="showForm = false"></app-comment-form>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 *ngIf="comments.length > 0" style="margin: 0;">{{ 'comments.title' | translate }}</h3>
+        <zx-button size="sm" color="primary" (click)="showForm = !showForm">
+          {{ (showForm ? 'comments.cancel' : 'comments.add') | translate }}
+        </zx-button>
+      </div>
+      <app-comment-form *ngIf="showForm && elementId" [targetId]="elementId" (commentSaved)="onCommentSaved($event)" (cancelled)="showForm = false"></app-comment-form>
   </div>
 
-  <div *ngFor="let comment of comments" class="comment-item">
-    <app-comment [comment]="comment" (commentChanged)="loadComments()"></app-comment>
-  </div>
+  <zx-stack spacing="md">
+    <div *ngFor="let comment of comments" class="comment-item">
+      <app-comment [comment]="comment" (commentChanged)="loadComments()"></app-comment>
+    </div>
+  </zx-stack>
 </div>

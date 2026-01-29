@@ -26,4 +26,6 @@ The project follows a component-based approach for the design system.
 
 #### Available Components:
 - `zx-button`: Versatile button component with multiple sizes (xs, sm, md) and colors (primary, secondary, danger).
+- `zx-panel`: Universal layout container with configurable border radius (sm, md, lg, xl) and padding (md, lg).
+- `zx-stack`: Flexbox-based layout container with configurable spacing (md, lg, xl) and direction (column, row).
 
