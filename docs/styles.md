@@ -13,9 +13,12 @@
     - Reuse of variables from `_legacy.theme.scss` (or any other files with the `_legacy` prefix) is prohibited.
     - Legacy components and their variables must not be touched. CSS variables serve as a link between legacy and Angular.
 - **Architecture**:
-    - **Base variables** (`--space-*`, `--font-*`, base colors, `--radius-*`, etc.) define the design system's foundation. They are stored in `src/app/shared/theme/_base.theme.scss`.
-    - **Component variables** (e.g., `--zx-button-bg`, `--input-color`) must be defined in separate files (one per component, e.g., `_zx-button.theme.scss`). These variables can use base variables.
-    - **Usage**: Components (Angular or Legacy) MUST use component variables ONLY. Direct use of base variables in components is FORBIDDEN.
+    - **Base variables** (`--space-*`, `--font-*`, `--radius-*`, etc.) define the design system's common foundation. They are stored in `src/app/shared/theme/_base.theme.scss`.
+    - **Theme colors** define the color palette for different modes.
+        - `_dark.theme.scss`: Default dark theme colors and semantic mappings.
+        - `_light.theme.scss`: Light theme colors (activated by `.bright-mode` class) and inverted semantic mappings.
+    - **Component variables** (e.g., `--zx-button-bg`, `--input-color`) must be defined in separate files (one per component, e.g., `_zx-button.theme.scss`). These variables should use semantic variables (`--primary-*`, `--secondary-*`, etc.) or base variables.
+    - **Usage**: Components (Angular or Legacy) MUST use component variables ONLY. Direct use of base palette or base variables in components is FORBIDDEN.
     - **Enforcement**: This is a mandatory rule. Always check if you are using base variables directly and replace them with component variables.
     - If a component-level variable is missing, create it in a component-specific theme file.
     - If a property or variable is no longer needed or used only in one place and has a "default" value (transparent, 0, etc.) to hide it, REMOVE it entirely along with its declaration. Do not use default/transparent values to "disable" unused styles.
