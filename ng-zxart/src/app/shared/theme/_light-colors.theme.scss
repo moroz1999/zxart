@@ -1,0 +1,45 @@
+.bright-mode {
+  /* Secondary ramp (grayish) - Inverted */
+  --secondary1: var(--gray9);
+  --secondary2: var(--gray8);
+  --secondary3: var(--gray7);
+  --secondary4: var(--gray6);
+  --secondary5: var(--gray5);
+  --secondary6: var(--gray4);
+  --secondary7: var(--gray3);
+  --secondary8: var(--gray2);
+  --secondary9: var(--gray1);
+
+  /* Primary ramp (blueish) - Inverted */
+  --primary1: var(--blue9);
+  --primary2: var(--blue8);
+  --primary3: var(--blue7);
+  --primary4: var(--blue6);
+  --primary5: var(--blue5);
+  --primary6: var(--blue4);
+  --primary7: var(--blue3);
+  --primary8: var(--blue2);
+  --primary9: var(--blue1);
+
+  /* Danger ramp (redish) - Inverted */
+  --danger1: var(--red9);
+  --danger2: var(--red8);
+  --danger3: var(--red7);
+  --danger4: var(--red6);
+  --danger5: var(--red5);
+  --danger6: var(--red4);
+  --danger7: var(--red3);
+  --danger8: var(--red2);
+  --danger9: var(--red1);
+
+  /* Warning ramp (yellowish) - Inverted */
+  --warning1: var(--yellow9);
+  --warning2: var(--yellow8);
+  --warning3: var(--yellow7);
+  --warning4: var(--yellow6);
+  --warning5: var(--yellow5);
+  --warning6: var(--yellow4);
+  --warning7: var(--yellow3);
+  --warning8: var(--yellow2);
+  --warning9: var(--yellow1);
+}

@@ -1,17 +1,17 @@
 :root {
   /* Semantic colors */
-  --text-color: var(--gray8);
+  --text-color: var(--secondary2);
   --text-white-color: var(--white);
-  --text-light-color: var(--gray4);
-  --error-color: var(--red);
-  --link-hover-color: var(--black);
+  --text-light-color: var(--secondary4);
+  --error-color: var(--danger6);
+  --link-hover-color: var(--secondary1);
 
-  --background-dark: var(--gray8);
-  --background-deep: var(--gray9);
+  --background-dark: var(--secondary8);
+  --background-deep: var(--secondary9);
   --background-transparent: transparent;
 
-  --badge-bg: var(--gray2);
-  --date-color: var(--gray6);
+  --badge-bg: var(--secondary2);
+  --date-color: var(--secondary6);
 
   /* Links */
   --link-color: #83a9e7;
@@ -22,8 +22,8 @@
   --h2-font-size: var(--font-lg);
   --h3-font-size: var(--font-md);
 
-  --pseudo-link-color: var(--yellow-light);
-  --icon-yellow: var(--yellow);
+  --pseudo-link-color: var(--warning2);
+  --icon-yellow: var(--warning6);
 
   /* Comment */
   --comment-header-font-size: var(--font-sm);
