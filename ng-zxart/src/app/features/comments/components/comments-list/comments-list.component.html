@@ -1,5 +1,6 @@
 <div class="comments-list">
-  <div *ngIf="isRoot" class="comments-header" style="margin-bottom: var(--margin-lg);">
+  <zx-stack spacing="lg">
+    <zx-stack *ngIf="isRoot" spacing="lg" class="comments-header">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <h3 *ngIf="comments.length > 0" style="margin: 0;">{{ 'comments.title' | translate }}</h3>
         <zx-button size="sm" color="primary" (click)="showForm = !showForm">
@@ -7,11 +8,12 @@
         </zx-button>
       </div>
       <app-comment-form *ngIf="showForm && elementId" [targetId]="elementId" (commentSaved)="onCommentSaved($event)" (cancelled)="showForm = false"></app-comment-form>
-  </div>
+    </zx-stack>
 
-  <zx-stack spacing="md">
-    <div *ngFor="let comment of comments" class="comment-item">
-      <app-comment [comment]="comment" (commentChanged)="loadComments()"></app-comment>
-    </div>
+    <zx-stack spacing="lg">
+      <div *ngFor="let comment of comments" class="comment-item">
+        <app-comment [comment]="comment" (commentChanged)="loadComments()"></app-comment>
+      </div>
+    </zx-stack>
   </zx-stack>
 </div>

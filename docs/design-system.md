@@ -18,6 +18,7 @@ The project follows a component-based approach for the design system.
 8. **Material UI**: The project uses Angular Material as the primary UI library. All new components must use Material components. PrimeNG is considered legacy and must be replaced during refactoring.
 9. **Button Design**: Buttons must use Angular Material directives (`mat-button`, `mat-flat-button`, etc.). They are globally styled to match the design system using CSS variables defined in `_zx-button.theme.scss`. Use the `color` attribute to switch between primary, accent, and warn states.
 10. **UI Components Usage**: Only components from the `shared/ui` directory (design system) should be used for building user interfaces to ensure consistency across the application. Direct usage of Material components in features is discouraged if a design system equivalent exists.
+11. **Layout Rules**: All layout (spacing, alignment, positioning) must be implemented exclusively using design system components (like `zx-stack`, `zx-panel`) or approved utility directives. Manual `style` attributes for margins, paddings, and other layout properties are strictly forbidden.
 
 ### Reusable Subcomponents
 1. **Legacy Components**: Legacy components and their variables must not be modified.
