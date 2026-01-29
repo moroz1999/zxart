@@ -1,10 +1,10 @@
 :root {
   /* Vote Component */
   --vote-user-vote-color: var(--secondary-500);
-  --vote-user-vote-delimiter-color: var(--secondary-600);
-  --vote-active-color: var(--danger-600);
-  --vote-plus-minus-hover-bg: var(--secondary-700);
-  --vote-plus-minus-hover-border: 1px solid var(--secondary-600);
+  --vote-user-vote-delimiter-color: var(--secondary-400);
+  --vote-active-color: var(--danger-400);
+  --vote-plus-minus-hover-bg: var(--secondary-300);
+  --vote-plus-minus-hover-border: 1px solid var(--secondary-400);
   --vote-plus-minus-hover-radius: var(--radius-sm);
 }
 

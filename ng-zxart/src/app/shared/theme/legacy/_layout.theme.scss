@@ -1,8 +1,8 @@
 :root {
   /* Layout & Application */
-  --main-background: var(--secondary-900);
-  --secondary-bg: var(--secondary-800);
-  --content-background: var(--secondary-900);
+  --main-background: var(--secondary-100);
+  --secondary-bg: var(--secondary-200);
+  --content-background: var(--secondary-100);
   --content-padding: var(--space-16);
   --content-padding-mobile: var(--space-16);
   --center-block-padding-bottom: var(--space-48);
@@ -41,8 +41,8 @@
   --footer-min-height: var(--space-48);
   --heading-margin-top: var(--space-24);
   --heading-margin-bottom: var(--space-16);
-  --gallery-item-border-color: var(--secondary-900);
-  --banner-cover-bg: var(--warning-600);
+  --gallery-item-border-color: var(--secondary-100);
+  --banner-cover-bg: var(--warning-400);
   --html-content-image-margin: var(--space-16);
 }
 
