@@ -7,7 +7,9 @@
           {{ (showForm ? 'comments.cancel' : 'comments.add') | translate }}
         </zx-button>
       </div>
-      <app-comment-form *ngIf="showForm && elementId" [targetId]="elementId" (commentSaved)="onCommentSaved($event)" (cancelled)="showForm = false"></app-comment-form>
+      <zx-panel *ngIf="showForm && elementId" radius="lg" padding="lg">
+        <app-comment-form [targetId]="elementId" (commentSaved)="onCommentSaved($event)" (cancelled)="showForm = false"></app-comment-form>
+      </zx-panel>
     </zx-stack>
 
     <zx-stack spacing="lg">

@@ -26,13 +26,18 @@
       </zx-button>
     </zx-stack>
   </zx-panel>
-  <app-comment-form
+  <zx-panel
     *ngIf="showReplyForm"
-    [targetId]="comment.id"
-    (commentSaved)="onCommentSaved($event)"
-    (cancelled)="showReplyForm = false"
+    radius="lg"
+    padding="lg"
     [style.margin-left]="'var(--margin-xl)'"
-  ></app-comment-form>
+  >
+    <app-comment-form
+      [targetId]="comment.id"
+      (commentSaved)="onCommentSaved($event)"
+      (cancelled)="showReplyForm = false"
+    ></app-comment-form>
+  </zx-panel>
   <app-comment
     *ngFor="let child of comment.children"
     [comment]="child"
