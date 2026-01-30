@@ -1,0 +1,20 @@
+:root {
+  /* Border widths */
+  --border-width-thin: 1px;
+  --border-width-thick: 2px;
+
+  /* Border colors RGB */
+  --border-secondary-rgb: 103, 106, 123;
+  --border-primary-rgb: 0, 119, 238; /* Based on --blue-light-600 */
+  --border-focused-rgb: 0, 0, 0;
+
+  /* Border tokens */
+  --border-secondary: rgb(var(--border-secondary-rgb));
+  --border-primary: rgb(var(--border-primary-rgb));
+  --border-focused: rgb(var(--border-focused-rgb));
+}
+
+.dark-mode {
+  --border-focused-rgb: 255, 255, 255;
+  --border-primary-rgb: 0, 87, 255; /* Based on --blue-dark-400 */
+}

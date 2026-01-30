@@ -12,10 +12,12 @@
 
 .dark-mode {
   --zx-panel-bg: var(--secondary-100);
-  --zx-panel-shadow: var(--shadow-deep);
+  --zx-panel-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.27);
+  --zx-panel-border: var(--border-width-thin) solid var(--border-secondary);
 }
 
 .light-mode {
   --zx-panel-bg: var(--white);
-  --zx-panel-shadow: var(--shadow-thin);
+  --zx-panel-shadow: 0px 4px 14px 0px rgba(38, 43, 67, 0.16);
+  --zx-panel-border: var(--border-width-thin) solid var(--border-secondary);
 }

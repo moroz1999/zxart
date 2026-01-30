@@ -9,17 +9,23 @@ The project follows a component-based approach for the design system.
     - **Indices**: Indices range from 50 to 950. In the dark theme, 50 is the darkest and 950 is the lightest. In the light theme, the mapping is inverted to maintain visual logic.
     - **Fixed Palette**: Adding new colors or shades to the global palette is strictly prohibited. Use existing variables.
 3. **Spacing System**: All distances (margins, paddings, gaps) must be multiples of 4 and set using variables: `--space-4`, `--space-8`, `--space-12`, `--space-16`, etc.
-4. **Shadows**: There are two standard shadow variants:
+4. **Shadows**: Standard shadow variants:
     - `--shadow-thin`: For subtle elevations (e.g., cards, small buttons).
-    - `--shadow-deep`: For prominent elements (e.g., modals, popups).
-5. **No Hardcoded Palette in Components**: In component styles, it is forbidden to use base palette variables like `--blue-dark-500` directly. Instead, use semantic variables like `--text-color`, `--zx-button-bg`, `--primary-500`, etc. If a needed semantic variable is missing, define it in the theme.
-6. **Themes**: The project supports Dark (class `.dark-mode`) and Light (class `.light-mode`) themes. Always use semantic variables to ensure correct theme switching.
-7. **Semantic Usage**: All components must be used semantically and for their intended purpose.
-8. **Material UI**: The project uses Angular Material as the primary UI library. All new components must use Material components. PrimeNG is considered legacy and must be replaced during refactoring.
-9. **Button Design**: Buttons must use Angular Material directives (`mat-button`, `mat-flat-button`, etc.). They are globally styled to match the design system using CSS variables defined in `_zx-button.theme.scss`. Use the `color` attribute to switch between primary, accent, and warn states.
-10. **UI Components Usage**: Only components from the `shared/ui` directory (design system) should be used for building user interfaces to ensure consistency across the application. Direct usage of Material components in features is discouraged if a design system equivalent exists.
-11. **Layout Rules**: All layout (spacing, alignment, positioning) must be implemented exclusively using design system components (like `zx-stack`, `zx-panel`) or approved utility directives. Manual `style` attributes for margins, paddings, and other layout properties are strictly forbidden. If elements are part of a common layout, general layout rules (flex, grid) or `zx-stack` are preferred over individual margins.
-12. **Typography System**: Strictly limited to a set of directives and CSS variables.
+    - `--zx-panel-shadow`: Specific shadow for `zx-panel` (varies by theme).
+5. **Borders**: Standard border tokens for inputs and containers:
+    - `--border-width-thin`: 1px (тонкий)
+    - `--border-width-thick`: 2px (толстый)
+    - `--border-secondary`: Default gray border (used in `flat` panels).
+    - `--border-primary`: Blue primary border.
+    - `--border-focused`: High-contrast border for focused states.
+6. **No Hardcoded Palette in Components**: In component styles, it is forbidden to use base palette variables like `--blue-dark-500` directly. Instead, use semantic variables like `--text-color`, `--zx-button-bg`, `--primary-500`, etc. If a needed semantic variable is missing, define it in the theme.
+7. **Themes**: The project supports Dark (class `.dark-mode`) and Light (class `.light-mode`) themes. Always use semantic variables to ensure correct theme switching.
+8. **Semantic Usage**: All components must be used semantically and for their intended purpose.
+9. **Material UI**: The project uses Angular Material as the primary UI library. All new components must use Material components. PrimeNG is considered legacy and must be replaced during refactoring.
+10. **Button Design**: Buttons must use Angular Material directives (`mat-button`, `mat-flat-button`, etc.). They are globally styled to match the design system using CSS variables defined in `_zx-button.theme.scss`. Use the `color` attribute to switch between primary, accent, and warn states.
+11. **UI Components Usage**: Only components from the `shared/ui` directory (design system) should be used for building user interfaces to ensure consistency across the application. Direct usage of Material components in features is discouraged if a design system equivalent exists.
+12. **Layout Rules**: All layout (spacing, alignment, positioning) must be implemented exclusively using design system components (like `zx-stack`, `zx-panel`) or approved utility directives. Manual `style` attributes for margins, paddings, and other layout properties are strictly forbidden. If elements are part of a common layout, general layout rules (flex, grid) or `zx-stack` are preferred over individual margins.
+13. **Typography System**: Strictly limited to a set of directives and CSS variables.
     - **Allowed styles**: `heading-1`, `heading-2`, `heading-3`, `body`, `body-strong`, `caption`, `link`, `link-alt`.
     - **Angular directives**: `zxHeading1`, `zxHeading2`, `zxHeading3`, `zxBody`, `zxBodyStrong`, `zxCaption`, `zxLink`, `zxLinkAlt`.
     - **Prohibition**: Direct use of `--font-*` variables in components is prohibited. Use typography directives or variables from `_typography.theme.scss`. Custom variants or Display-styles are forbidden.
@@ -31,7 +37,7 @@ The project follows a component-based approach for the design system.
 
 #### Available Components:
 - `zx-button`: Versatile button component with multiple sizes (xs, sm, md) and colors (primary, secondary, danger).
-- `zx-panel`: Universal layout container with configurable border radius (sm, md, lg, xl) and padding (md, lg).
+- `zx-panel`: Universal layout container with configurable variant (elevated, flat), border radius (sm, md, lg, xl) and padding (md, lg).
 - `zx-stack`: Flexbox-based layout container with configurable spacing (md, lg, xl) and direction (column, row).
 - `zx-user`: Component for displaying user name with status icons (badges). Uses "icon name" layout.
 

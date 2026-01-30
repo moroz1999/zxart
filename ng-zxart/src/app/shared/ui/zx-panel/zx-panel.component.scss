@@ -1,8 +1,15 @@
 .zx-panel {
   background-color: var(--zx-panel-bg);
-  box-shadow: var(--zx-panel-shadow);
   box-sizing: border-box;
   display: block;
+
+  &--elevated {
+    box-shadow: var(--zx-panel-shadow);
+  }
+
+  &--flat {
+    border: var(--zx-panel-border);
+  }
 
   &--radius-sm { border-radius: var(--zx-panel-radius-sm); }
   &--radius-md { border-radius: var(--zx-panel-radius-md); }

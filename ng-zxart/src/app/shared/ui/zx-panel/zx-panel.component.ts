@@ -11,8 +11,9 @@ import {CommonModule} from '@angular/common';
 export class ZxPanelComponent {
   @Input() radius: 'sm' | 'md' | 'lg' | 'xl' = 'md';
   @Input() padding: 'sm'  | 'md' | 'lg' = 'md';
+  @Input() variant: 'elevated' | 'flat' = 'elevated';
 
   get classList(): string {
-    return `zx-panel zx-panel--radius-${this.radius} zx-panel--padding-${this.padding}`;
+    return `zx-panel zx-panel--radius-${this.radius} zx-panel--padding-${this.padding} zx-panel--${this.variant}`;
   }
 }
