@@ -1,0 +1,32 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--zx-user-gap);
+}
+
+.zx-user {
+  &__badge {
+    width: var(--zx-user-badge-size);
+    height: var(--zx-user-badge-size);
+    font-size: var(--zx-user-badge-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &--supporter {
+      color: var(--zx-user-badge-supporter-color);
+    }
+
+    &--vip {
+      color: var(--zx-user-badge-vip-color);
+    }
+
+    &--volunteer {
+      color: var(--zx-user-badge-volunteer-color);
+    }
+  }
+
+  &__name {
+    // Add any specific name styles here if needed
+  }
+}

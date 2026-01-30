@@ -18,7 +18,7 @@ The project follows a component-based approach for the design system.
 8. **Material UI**: The project uses Angular Material as the primary UI library. All new components must use Material components. PrimeNG is considered legacy and must be replaced during refactoring.
 9. **Button Design**: Buttons must use Angular Material directives (`mat-button`, `mat-flat-button`, etc.). They are globally styled to match the design system using CSS variables defined in `_zx-button.theme.scss`. Use the `color` attribute to switch between primary, accent, and warn states.
 10. **UI Components Usage**: Only components from the `shared/ui` directory (design system) should be used for building user interfaces to ensure consistency across the application. Direct usage of Material components in features is discouraged if a design system equivalent exists.
-11. **Layout Rules**: All layout (spacing, alignment, positioning) must be implemented exclusively using design system components (like `zx-stack`, `zx-panel`) or approved utility directives. Manual `style` attributes for margins, paddings, and other layout properties are strictly forbidden.
+11. **Layout Rules**: All layout (spacing, alignment, positioning) must be implemented exclusively using design system components (like `zx-stack`, `zx-panel`) or approved utility directives. Manual `style` attributes for margins, paddings, and other layout properties are strictly forbidden. If elements are part of a common layout, general layout rules (flex, grid) or `zx-stack` are preferred over individual margins.
 12. **Typography System**: Strictly limited to a set of directives and CSS variables.
     - **Allowed styles**: `heading-1`, `heading-2`, `heading-3`, `body`, `body-strong`, `caption`, `link`, `link-alt`.
     - **Angular directives**: `zxHeading1`, `zxHeading2`, `zxHeading3`, `zxBody`, `zxBodyStrong`, `zxCaption`, `zxLink`, `zxLinkAlt`.
@@ -33,4 +33,5 @@ The project follows a component-based approach for the design system.
 - `zx-button`: Versatile button component with multiple sizes (xs, sm, md) and colors (primary, secondary, danger).
 - `zx-panel`: Universal layout container with configurable border radius (sm, md, lg, xl) and padding (md, lg).
 - `zx-stack`: Flexbox-based layout container with configurable spacing (md, lg, xl) and direction (column, row).
+- `zx-user`: Component for displaying user name with status icons (badges). Uses "icon name" layout.
 

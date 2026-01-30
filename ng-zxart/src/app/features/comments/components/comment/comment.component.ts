@@ -8,7 +8,7 @@ import {CommentsService} from '../../services/comments.service';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {CommentFormComponent} from '../comment-form/comment-form.component';
-import {CommentAuthorComponent} from '../comment-author/comment-author.component';
+import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
 import {ZxStackComponent} from "../../../../shared/ui/zx-stack/zx-stack.component";
 import {ZxBodyDirective, ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
 
@@ -21,7 +21,7 @@ import {ZxBodyDirective, ZxCaptionDirective} from '../../../../shared/directives
     MatButtonModule,
     MatIconModule,
     CommentFormComponent,
-    CommentAuthorComponent,
+    ZxUserComponent,
     ZxButtonComponent,
     ZxPanelComponent,
     ZxStackComponent,

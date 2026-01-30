@@ -23,9 +23,10 @@
     - **Theme colors** define the color palette for different modes.
         - `_dark.theme.scss`: Dark theme colors (activated by `.dark-mode` class).
         - `_light.theme.scss`: Light theme colors (activated by `.light-mode` class) and inverted semantic mappings.
-    - **Component variables** (e.g., `--zx-button-bg`, `--input-color`) must be defined in separate files (one per component, e.g., `_zx-button.theme.scss`). These variables should use semantic variables (`--primary-*`, `--secondary-*`, etc.) or base variables.
-    - **Usage**: Components (Angular or Legacy) MUST use component variables ONLY. Direct use of base palette or base variables in components is FORBIDDEN.
-    - **Enforcement**: This is a mandatory rule. Always check if you are using base variables directly and replace them with component variables.
+    - **Component variables** (e.g., `--zx-button-bg`, `--zx-user-badge-color`) must be defined in separate files (one per component, e.g., `_zx-button.theme.scss`). These variables should use semantic variables (`--primary-*`, `--secondary-*`, etc.) or base variables.
+    - **Usage**: Components (Angular or Legacy) MUST use component variables ONLY. Direct use of base palette or base variables in components is FORBIDDEN. Component-specific CSS variables MUST NOT be used outside of the component they belong to.
+    - **Layout**: If elements are part of a common layout, general layout rules (flexbox, grid, or layout components like `zx-stack`) are strictly preferred over individual margins. Use `zx-stack` to manage spacing between related elements.
+    - **Enforcement**: This is a mandatory rule. Always check if you are using base variables directly and replace them with component variables. Also, ensure you are not leaking or using variables from other components.
     - If a component-level variable is missing, create it in a component-specific theme file.
     - If a property or variable is no longer needed or used only in one place and has a "default" value (transparent, 0, etc.) to hide it, REMOVE it entirely along with its declaration. Do not use default/transparent values to "disable" unused styles.
     - NO `em` or `rem` in components and theme. Use font-size variables only.

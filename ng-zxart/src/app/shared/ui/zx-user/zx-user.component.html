@@ -1,0 +1,14 @@
+<mat-icon
+  *ngFor="let badge of user.badges"
+  class="zx-user__badge"
+  [ngClass]="getBadgeClass(badge)"
+>
+  {{ getIconName(badge) }}
+</mat-icon>
+
+<a *ngIf="user.url; else noUrl" [href]="user.url" zxLink zxCaption class="zx-user__name">
+  {{ user.name }}
+</a>
+<ng-template #noUrl>
+  <span zxCaption class="zx-user__name">{{ user.name }}</span>
+</ng-template>

@@ -9,6 +9,10 @@
     flex-direction: row;
   }
 
+  &.zx-stack--spacing-sm {
+    gap: var(--zx-stack-spacing-sm);
+  }
+
   &.zx-stack--spacing-md {
     gap: var(--zx-stack-spacing-md);
   }
