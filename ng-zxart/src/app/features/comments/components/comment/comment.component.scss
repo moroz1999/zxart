@@ -1,7 +1,23 @@
+@use "../../../../shared/theme/typography.theme" as typography;
+
 .comment-date {
   color: var(--date-color);
 }
 
 .comment-content {
   line-height: 1.4;
+
+  ::ng-deep {
+    a {
+      @include typography.link;
+      text-decoration: underline;
+    }
+
+    p {
+      margin: 0 0 var(--space-8) 0;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
 }

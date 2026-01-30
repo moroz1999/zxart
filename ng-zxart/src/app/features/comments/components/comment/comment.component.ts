@@ -1,5 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -40,8 +41,17 @@ export class CommentComponent {
 
   constructor(
     private commentsService: CommentsService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private sanitizer: DomSanitizer
   ) {}
+
+  get safeContent(): SafeHtml {
+    if (this.comment.content && (this.comment.content.includes('<a') || this.comment.content.includes('<br'))) {
+       // [DEBUG_LOG] HTML detected in comment:
+       // console.log(this.comment.content);
+    }
+    return this.sanitizer.bypassSecurityTrustHtml(this.comment.content);
+  }
 
   onReply(): void {
     this.showReplyForm = !this.showReplyForm;

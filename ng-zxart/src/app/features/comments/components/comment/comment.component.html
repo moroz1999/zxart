@@ -7,7 +7,9 @@
       </zx-stack>
 
       <div class="comment-body">
-        <div *ngIf="!showEditForm" class="comment-content" zxBody [innerHTML]="comment.content"></div>
+        <div *ngIf="!showEditForm" class="comment-content" zxBody>
+          <span [innerHTML]="safeContent"></span>
+        </div>
         <app-comment-form
           *ngIf="showEditForm"
           [targetId]="comment.parentId || 0"
