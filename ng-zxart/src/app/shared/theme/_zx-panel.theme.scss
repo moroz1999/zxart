@@ -1,7 +1,5 @@
 :root {
   /* ZxPanel Component variables */
-  --zx-panel-bg: var(--secondary-200);
-
   --zx-panel-radius-sm: var(--radius-sm);
   --zx-panel-radius-md: var(--radius-md);
   --zx-panel-radius-lg: var(--radius-lg);
@@ -10,4 +8,14 @@
   --zx-panel-padding-sm: var(--padding-sm);
   --zx-panel-padding-md: var(--padding-md);
   --zx-panel-padding-lg: var(--padding-lg);
+}
+
+.dark-mode {
+  --zx-panel-bg: var(--secondary-100);
+  --zx-panel-shadow: var(--shadow-deep);
+}
+
+.light-mode {
+  --zx-panel-bg: var(--white);
+  --zx-panel-shadow: var(--shadow-thin);
 }

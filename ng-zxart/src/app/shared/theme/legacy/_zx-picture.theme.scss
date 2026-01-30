@@ -1,11 +1,9 @@
 :root {
   /* ZX Picture */
-  --zxpicture-short-bg: var(--secondary-200);
   --zxpicture-short-radius: var(--radius-lg);
   --zxpicture-short-shadow: var(--shadow-deep);
   --zxpicture-short-gap: var(--space-16);
   --zxpicture-short-padding: var(--space-16);
-  --zxpicture-short-image-border: 1px solid var(--secondary-100);
   --zxpicture-short-bottom-gap: 10px;
   --zxpicture-short-year-color: var(--warning-800);
   --zxpicture-short-title-link-color: var(--text-color);
@@ -15,4 +13,15 @@
   --zxpicture-details-votes-margin-bottom: var(--space-48);
   --zxpicture-details-info-playlist-margin-left: var(--space-8);
 }
+
+.dark-mode {
+  --zxpicture-short-bg: var(--secondary-200);
+  --zxpicture-short-image-border: 1px solid var(--secondary-100);
+}
+
+.light-mode {
+  --zxpicture-short-bg: var(--white);
+  --zxpicture-short-image-border: 1px solid var(--secondary-200);
+}
+
 

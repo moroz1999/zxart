@@ -9,11 +9,20 @@
   --zxmusic-controls-full-padding: var(--space-16);
   --zxmusic-controls-full-fixed-left: var(--space-32);
   --zxmusic-controls-full-radius: var(--radius-lg);
-  --zxmusic-progress-bg: var(--secondary-200);
-  --zxmusic-progress-body-bg: var(--secondary-400);
   --zxmusic-progress-radius: var(--radius-sm);
   --zxmusic-progress-padding: var(--space-4);
   --zxmusic-controls-buttons-margin-right: var(--space-4);
   --zxmusic-controls-link-margin-left: var(--space-16);
 }
+
+.dark-mode {
+  --zxmusic-progress-bg: var(--secondary-200);
+  --zxmusic-progress-body-bg: var(--secondary-400);
+}
+
+.light-mode {
+  --zxmusic-progress-bg: var(--secondary-100);
+  --zxmusic-progress-body-bg: var(--secondary-200);
+}
+
 

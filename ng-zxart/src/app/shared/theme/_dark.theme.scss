@@ -1,4 +1,4 @@
-:root {
+@mixin dark-theme-variables {
   --white: #fff;
 
   --neutral-dark-50: #f7f7f7;
@@ -101,5 +101,9 @@
   --warning-800: var(--yellow-dark-200);
   --warning-900: var(--yellow-dark-100);
   --warning-950: var(--yellow-dark-50);
-
 }
+
+.dark-mode {
+  @include dark-theme-variables;
+}
+

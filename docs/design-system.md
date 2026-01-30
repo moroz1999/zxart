@@ -13,7 +13,7 @@ The project follows a component-based approach for the design system.
     - `--shadow-thin`: For subtle elevations (e.g., cards, small buttons).
     - `--shadow-deep`: For prominent elements (e.g., modals, popups).
 5. **No Hardcoded Palette in Components**: In component styles, it is forbidden to use base palette variables like `--blue-dark-500` directly. Instead, use semantic variables like `--text-color`, `--zx-button-bg`, `--primary-500`, etc. If a needed semantic variable is missing, define it in the theme.
-6. **Themes**: The project supports Dark (default) and Light (class `.bright-mode` on the root element) themes. Always use semantic variables to ensure correct theme switching.
+6. **Themes**: The project supports Dark (class `.dark-mode`) and Light (class `.light-mode`) themes. Always use semantic variables to ensure correct theme switching.
 7. **Semantic Usage**: All components must be used semantically and for their intended purpose.
 8. **Material UI**: The project uses Angular Material as the primary UI library. All new components must use Material components. PrimeNG is considered legacy and must be replaced during refactoring.
 9. **Button Design**: Buttons must use Angular Material directives (`mat-button`, `mat-flat-button`, etc.). They are globally styled to match the design system using CSS variables defined in `_zx-button.theme.scss`. Use the `color` attribute to switch between primary, accent, and warn states.

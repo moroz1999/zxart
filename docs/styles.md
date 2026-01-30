@@ -15,8 +15,8 @@
 - **Architecture**:
     - **Base variables** (`--space-*`, `--font-*`, `--radius-*`, etc.) define the design system's common foundation. They are stored in `src/app/shared/theme/_base.theme.scss`.
     - **Theme colors** define the color palette for different modes.
-        - `_dark.theme.scss`: Default dark theme colors and semantic mappings.
-        - `_light.theme.scss`: Light theme colors (activated by `.bright-mode` class) and inverted semantic mappings.
+        - `_dark.theme.scss`: Dark theme colors (activated by `.dark-mode` class).
+        - `_light.theme.scss`: Light theme colors (activated by `.light-mode` class) and inverted semantic mappings.
     - **Component variables** (e.g., `--zx-button-bg`, `--input-color`) must be defined in separate files (one per component, e.g., `_zx-button.theme.scss`). These variables should use semantic variables (`--primary-*`, `--secondary-*`, etc.) or base variables.
     - **Usage**: Components (Angular or Legacy) MUST use component variables ONLY. Direct use of base palette or base variables in components is FORBIDDEN.
     - **Enforcement**: This is a mandatory rule. Always check if you are using base variables directly and replace them with component variables.

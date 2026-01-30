@@ -6,13 +6,16 @@ import {CommonModule} from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './zx-stack.component.html',
-  styleUrl: './zx-stack.component.scss'
+  styleUrl: './zx-stack.component.scss',
+  host: {
+    '[class]': 'classList'
+  }
 })
 export class ZxStackComponent {
   @Input() spacing: 'md' | 'lg' | 'xl' = 'md';
   @Input() direction: 'column' | 'row' = 'column';
 
   get classList(): string {
-    return `zx-stack zx-stack--${this.direction} zx-stack--spacing-${this.spacing}`;
+    return `zx-stack--${this.direction} zx-stack--spacing-${this.spacing}`;
   }
 }

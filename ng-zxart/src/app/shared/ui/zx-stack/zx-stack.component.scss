@@ -1,23 +1,23 @@
-.zx-stack {
+:host {
   display: flex;
 
-  &--column {
+  &.zx-stack--column {
     flex-direction: column;
   }
 
-  &--row {
+  &.zx-stack--row {
     flex-direction: row;
   }
 
-  &--spacing-md {
+  &.zx-stack--spacing-md {
     gap: var(--zx-stack-spacing-md);
   }
 
-  &--spacing-lg {
+  &.zx-stack--spacing-lg {
     gap: var(--zx-stack-spacing-lg);
   }
 
-  &--spacing-xl {
+  &.zx-stack--spacing-xl {
     gap: var(--zx-stack-spacing-xl);
   }
 }

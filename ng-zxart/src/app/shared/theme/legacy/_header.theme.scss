@@ -6,3 +6,12 @@
   --settings-font-size: var(--font-sm);
   --settings-button-padding: var(--space-4) var(--space-8);
 }
+
+.dark-mode {
+  --header-bg: var(--secondary-200);
+}
+
+.light-mode {
+  --header-bg: var(--white);
+}
+

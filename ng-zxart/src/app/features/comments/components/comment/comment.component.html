@@ -1,41 +1,42 @@
-<zx-panel class="comment-panel" radius="lg" padding="lg">
-  <div class="comment-header">
-    <app-comment-author [author]="comment.author"></app-comment-author>
-    <span class="comment-date">{{ comment.date }}</span>
-  </div>
+<zx-stack spacing="lg">
+  <zx-panel class="comment-panel" radius="lg" padding="lg">
+    <div class="comment-header">
+      <app-comment-author [author]="comment.author"></app-comment-author>
+      <span class="comment-date">{{ comment.date }}</span>
+    </div>
 
-  <div class="comment-body">
-    <div *ngIf="!showEditForm" class="comment-content" [innerHTML]="comment.content"></div>
-    <app-comment-form
-      *ngIf="showEditForm"
-      [targetId]="comment.parentId || 0"
-      [commentToEdit]="comment"
-      (commentSaved)="onCommentSaved($event)"
-      (cancelled)="showEditForm = false"
-    ></app-comment-form>
-  </div>
+    <div class="comment-body">
+      <div *ngIf="!showEditForm" class="comment-content" [innerHTML]="comment.content"></div>
+      <app-comment-form
+        *ngIf="showEditForm"
+        [targetId]="comment.parentId || 0"
+        [commentToEdit]="comment"
+        (commentSaved)="onCommentSaved($event)"
+        (cancelled)="showEditForm = false"
+      ></app-comment-form>
+    </div>
 
-  <zx-stack direction="row" spacing="md">
-    <zx-button size="xs" color="secondary" (click)="onReply()">{{ 'comments.reply' | translate }}</zx-button>
-    <zx-button *ngIf="comment.canEdit" size="xs" color="secondary"
-               (click)="onEdit()">{{ 'comments.edit' | translate }}
-    </zx-button>
-    <zx-button *ngIf="comment.canDelete" size="xs" color="danger"
-               (click)="onDelete()">{{ 'comments.delete' | translate }}
-    </zx-button>
-  </zx-stack>
-</zx-panel>
-
-<zx-stack spacing="lg" [style.margin-left]="'var(--margin-xl)'">
+    <zx-stack direction="row" spacing="md">
+      <zx-button size="xs" color="secondary" (click)="onReply()">{{ 'comments.reply' | translate }}</zx-button>
+      <zx-button *ngIf="comment.canEdit" size="xs" color="secondary"
+                 (click)="onEdit()">{{ 'comments.edit' | translate }}
+      </zx-button>
+      <zx-button *ngIf="comment.canDelete" size="xs" color="danger"
+                 (click)="onDelete()">{{ 'comments.delete' | translate }}
+      </zx-button>
+    </zx-stack>
+  </zx-panel>
   <app-comment-form
     *ngIf="showReplyForm"
     [targetId]="comment.id"
     (commentSaved)="onCommentSaved($event)"
     (cancelled)="showReplyForm = false"
+    [style.margin-left]="'var(--margin-xl)'"
   ></app-comment-form>
   <app-comment
     *ngFor="let child of comment.children"
     [comment]="child"
     (commentChanged)="onCommentSaved(child)"
+    [style.margin-left]="'var(--margin-xl)'"
   ></app-comment>
 </zx-stack>

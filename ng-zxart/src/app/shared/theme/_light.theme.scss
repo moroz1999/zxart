@@ -1,4 +1,4 @@
-.bright-mode {
+@mixin light-theme-variables {
   --white: #fff;
 
   --neutral-light-50: #f7f7f7;
@@ -101,3 +101,8 @@
   --warning-900: var(--yellow-light-900);
   --warning-950: var(--yellow-light-950);
 }
+
+.light-mode {
+  @include light-theme-variables;
+}
+
