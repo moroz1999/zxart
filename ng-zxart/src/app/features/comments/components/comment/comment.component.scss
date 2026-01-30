@@ -1,7 +1,7 @@
 @use "../../../../shared/theme/typography.theme" as typography;
 
 .comment-date {
-  color: var(--date-color);
+  color: var(--zx-comment-date-color);
 }
 
 .comment-content {
@@ -10,7 +10,6 @@
   ::ng-deep {
     a {
       @include typography.link;
-      text-decoration: underline;
     }
 
     p {
