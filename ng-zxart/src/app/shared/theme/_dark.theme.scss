@@ -1,4 +1,7 @@
-@mixin dark-theme-variables {
+@mixin dark-base-ramps {
+  /* This file is for BASE RAMPS ONLY.
+     NEVER add component-specific colors here.
+     Use component theme files (e.g., _zx-button.theme.scss) instead. */
   --white: #fff;
 
   --neutral-dark-50: #f7f7f7;
@@ -104,6 +107,6 @@
 }
 
 .dark-mode {
-  @include dark-theme-variables;
+  @include dark-base-ramps;
 }
 

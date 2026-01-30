@@ -11,9 +11,15 @@
     - All colors and sizes must be formatted as CSS variables.
     - Adding or modifying variables in `_base.theme.scss` is allowed ONLY after direct user permission.
     - Reuse of variables from `_legacy.theme.scss` (or any other files with the `_legacy` prefix) is prohibited.
+    - Link color variables (`--link-color`, `--link-alt-color`) are considered legacy and must not be used in new components. Use `--primary-*`, `--zx-link-*` or `zxLinkAlt` directive instead.
     - Legacy components and their variables must not be touched. CSS variables serve as a link between legacy and Angular.
 - **Architecture**:
     - **Base variables** (`--space-*`, `--font-*`, `--radius-*`, etc.) define the design system's common foundation. They are stored in `src/app/shared/theme/_base.theme.scss`.
+    - **Typography**: Strictly limited to a set of directives and CSS variables.
+        - Allowed styles: `heading-1`, `heading-2`, `heading-3`, `body`, `body-strong`, `caption`, `link`, `link-alt`.
+        - Use Angular directives: `zxHeading1`, `zxHeading2`, `zxHeading3`, `zxBody`, `zxBodyStrong`, `zxCaption`, `zxLink`, `zxLinkAlt`.
+        - Direct use of `--font-*` variables in components is prohibited. Use typography directives or variables from `_typography.theme.scss`.
+        - Custom variants or Display-styles are forbidden.
     - **Theme colors** define the color palette for different modes.
         - `_dark.theme.scss`: Dark theme colors (activated by `.dark-mode` class).
         - `_light.theme.scss`: Light theme colors (activated by `.light-mode` class) and inverted semantic mappings.

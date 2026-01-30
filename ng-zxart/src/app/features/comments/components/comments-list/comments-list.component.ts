@@ -10,6 +10,7 @@ import {CommentFormComponent} from '../comment-form/comment-form.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
+import {ZxHeading3Directive} from '../../../../shared/directives/typography/typography.directives';
 
 @Component({
   selector: 'app-comments-list',
@@ -23,7 +24,8 @@ import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.componen
     CommentFormComponent,
     ZxButtonComponent,
     ZxStackComponent,
-    ZxPanelComponent
+    ZxPanelComponent,
+    ZxHeading3Directive
   ],
   templateUrl: './comments-list.component.html',
   styleUrls: ['./comments-list.component.scss']

@@ -1,4 +1,4 @@
-@mixin light-theme-variables {
+@mixin light-base-ramps {
   --white: #fff;
 
   --neutral-light-50: #f7f7f7;
@@ -103,6 +103,6 @@
 }
 
 .light-mode {
-  @include light-theme-variables;
+  @include light-base-ramps;
 }
 

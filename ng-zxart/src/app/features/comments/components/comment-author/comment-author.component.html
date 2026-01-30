@@ -1,9 +1,9 @@
 <span class="comment-author-container">
-  <a *ngIf="author.url; else noUrl" [href]="author.url" class="comment-author">
-    <strong>{{ author.name }}</strong>
+  <a *ngIf="author.url; else noUrl" [href]="author.url" class="comment-author" zxLink zxBodyStrong>
+    {{ author.name }}
   </a>
   <ng-template #noUrl>
-    <span class="comment-author"><strong>{{ author.name }}</strong></span>
+    <span class="comment-author" zxCaption>{{ author.name }}</span>
   </ng-template>
 
   <mat-chip-set *ngIf="author.badges && author.badges.length > 0" style="display: inline-block; margin-left: 8px;">
