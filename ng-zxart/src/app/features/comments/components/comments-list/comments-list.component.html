@@ -1,4 +1,4 @@
-<div class="comments-list" appInViewport (inViewport)="onInViewport()">
+<div class="comments-list">
   <zx-stack spacing="lg">
     <zx-stack *ngIf="isRoot" spacing="lg" class="comments-header">
       <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -12,20 +12,22 @@
       </zx-panel>
     </zx-stack>
 
-    <ng-container *ngIf="commentsStream$ | async as comments; else skeleton">
-      <zx-stack spacing="lg">
-        <div *ngFor="let comment of comments" class="comment-item">
-          <app-comment [comment]="comment" (commentChanged)="onCommentSaved(comment)"></app-comment>
+    <app-viewport-loader [enabled]="isRoot" [loader]="getCommentsLoader" [reload$]="reloadSubject">
+      <ng-template #skeleton>
+        <div class="comments-skeleton">
+          <div class="skeleton-item" style="height: 100px; margin-bottom: 16px; border-radius: 8px;"></div>
+          <div class="skeleton-item" style="height: 100px; margin-bottom: 16px; border-radius: 8px;"></div>
+          <div class="skeleton-item" style="height: 100px; margin-bottom: 16px; border-radius: 8px;"></div>
         </div>
-      </zx-stack>
-    </ng-container>
-  </zx-stack>
+      </ng-template>
 
-  <ng-template #skeleton>
-    <div class="comments-skeleton">
-      <div class="skeleton-item" style="height: 100px; margin-bottom: 16px; border-radius: 8px;"></div>
-      <div class="skeleton-item" style="height: 100px; margin-bottom: 16px; border-radius: 8px;"></div>
-      <div class="skeleton-item" style="height: 100px; margin-bottom: 16px; border-radius: 8px;"></div>
-    </div>
-  </ng-template>
+      <ng-template #content let-comments>
+        <zx-stack spacing="lg">
+          <div *ngFor="let comment of comments" class="comment-item">
+            <app-comment [comment]="comment" (commentChanged)="onCommentSaved(comment)"></app-comment>
+          </div>
+        </zx-stack>
+      </ng-template>
+    </app-viewport-loader>
+  </zx-stack>
 </div>
