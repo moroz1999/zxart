@@ -11,6 +11,9 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxHeading3Directive} from '../../../../shared/directives/typography/typography.directives';
+import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
+import {merge, Observable, of, Subject} from 'rxjs';
+import {shareReplay, startWith, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-comments-list',
@@ -25,7 +28,8 @@ import {ZxHeading3Directive} from '../../../../shared/directives/typography/typo
     ZxButtonComponent,
     ZxStackComponent,
     ZxPanelComponent,
-    ZxHeading3Directive
+    ZxHeading3Directive,
+    InViewportDirective
   ],
   templateUrl: './comments-list.component.html',
   styleUrls: ['./comments-list.component.scss']
@@ -37,24 +41,43 @@ export class CommentsListComponent implements OnInit {
 
   showForm = false;
 
+  private becameVisibleSubject = new Subject<void>();
+  private reloadSubject = new Subject<void>();
+  private hasBecomeVisible = false;
+
+  commentsStream$: Observable<CommentDto[] | null> = of(null);
+
   constructor(private commentsService: CommentsService) {}
 
   ngOnInit(): void {
-    if (this.isRoot && this.elementId) {
-      this.loadComments();
+    if (this.isRoot) {
+      this.commentsStream$ = merge(this.becameVisibleSubject, this.reloadSubject).pipe(
+        switchMap(() => {
+          if (this.elementId) {
+            return this.commentsService.getComments(this.elementId);
+          }
+          return of([]);
+        }),
+        startWith(null),
+        shareReplay({bufferSize: 1, refCount: true})
+      );
+    } else {
+      this.commentsStream$ = of(this.comments);
     }
   }
 
-  loadComments(): void {
-    if (this.elementId) {
-      this.commentsService.getComments(this.elementId).subscribe(data => {
-        this.comments = data;
-      });
+  onInViewport(): void {
+    if (!this.isRoot || !this.elementId || this.hasBecomeVisible) {
+      return;
     }
+    this.hasBecomeVisible = true;
+    this.becameVisibleSubject.next();
   }
 
   onCommentSaved(comment: CommentDto): void {
     this.showForm = false;
-    this.loadComments();
+    if (this.isRoot && this.hasBecomeVisible) {
+      this.reloadSubject.next();
+    }
   }
 }

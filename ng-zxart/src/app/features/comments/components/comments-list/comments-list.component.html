@@ -1,8 +1,8 @@
-<div class="comments-list">
+<div class="comments-list" appInViewport (inViewport)="onInViewport()">
   <zx-stack spacing="lg">
     <zx-stack *ngIf="isRoot" spacing="lg" class="comments-header">
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h3 *ngIf="comments.length > 0" zxHeading3 style="margin: 0;">{{ 'comments.title' | translate }}</h3>
+        <h3 zxHeading3 style="margin: 0;">{{ 'comments.title' | translate }}</h3>
         <zx-button size="sm" color="primary" (click)="showForm = !showForm">
           {{ (showForm ? 'comments.cancel' : 'comments.add') | translate }}
         </zx-button>
@@ -12,10 +12,20 @@
       </zx-panel>
     </zx-stack>
 
-    <zx-stack spacing="lg">
-      <div *ngFor="let comment of comments" class="comment-item">
-        <app-comment [comment]="comment" (commentChanged)="loadComments()"></app-comment>
-      </div>
-    </zx-stack>
+    <ng-container *ngIf="commentsStream$ | async as comments; else skeleton">
+      <zx-stack spacing="lg">
+        <div *ngFor="let comment of comments" class="comment-item">
+          <app-comment [comment]="comment" (commentChanged)="onCommentSaved(comment)"></app-comment>
+        </div>
+      </zx-stack>
+    </ng-container>
   </zx-stack>
+
+  <ng-template #skeleton>
+    <div class="comments-skeleton">
+      <div class="skeleton-item" style="height: 100px; margin-bottom: 16px; border-radius: 8px;"></div>
+      <div class="skeleton-item" style="height: 100px; margin-bottom: 16px; border-radius: 8px;"></div>
+      <div class="skeleton-item" style="height: 100px; margin-bottom: 16px; border-radius: 8px;"></div>
+    </div>
+  </ng-template>
 </div>
