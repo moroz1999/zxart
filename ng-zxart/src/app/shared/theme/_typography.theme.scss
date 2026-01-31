@@ -35,6 +35,10 @@
   --zx-input-line-height: var(--zx-body-line-height);
 }
 
+.dark-mode {
+  --zx-link-color: var(--primary-700);
+}
+
 @mixin heading-1 {
   font-size: var(--zx-heading-1-size);
   font-weight: var(--zx-heading-1-weight);
@@ -91,11 +95,34 @@
   color: var(--zx-link-alt-color);
 }
 
-.zx-heading-1 { @include heading-1; }
-.zx-heading-2 { @include heading-2; }
-.zx-heading-3 { @include heading-3; }
-.zx-body { @include body; }
-.zx-body-strong { @include body-strong; }
-.zx-caption { @include caption; }
-.zx-link { @include link; }
-.zx-link-alt { @include link-alt; }
+.zx-heading-1 {
+  @include heading-1;
+}
+
+.zx-heading-2 {
+  @include heading-2;
+}
+
+.zx-heading-3 {
+  @include heading-3;
+}
+
+.zx-body {
+  @include body;
+}
+
+.zx-body-strong {
+  @include body-strong;
+}
+
+.zx-caption {
+  @include caption;
+}
+
+.zx-link {
+  @include link;
+}
+
+.zx-link-alt {
+  @include link-alt;
+}

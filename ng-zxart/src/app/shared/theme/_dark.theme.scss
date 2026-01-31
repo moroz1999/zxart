@@ -16,17 +16,18 @@
   --neutral-dark-900: #252525;
   --neutral-dark-950: #141414;
 
-  --blue-dark-50: #ebf5ff;
-  --blue-dark-100: #d1e9ff;
-  --blue-dark-200: #54acff;
-  --blue-dark-300: #2998ff;
-  --blue-dark-400: #0587ff;
-  --blue-dark-500: #0074e0;
-  --blue-dark-600: #0062bd;
-  --blue-dark-700: #004f99;
-  --blue-dark-800: #003d75;
-  --blue-dark-900: #002445;
-  --blue-dark-950: #00182e;
+  /* Blue ramp brightness reduced by 10% for dimmer appearance in dark theme */
+  --blue-dark-50: #e6f0fa;
+  --blue-dark-100: #cce1f4;
+  --blue-dark-200: #99c3ea;
+  --blue-dark-300: #66a4df;
+  --blue-dark-400: #3386d5;
+  --blue-dark-500: #0068ca;
+  --blue-dark-600: #0053a2;
+  --blue-dark-700: #003e79;
+  --blue-dark-800: #002a51;
+  --blue-dark-900: #001528;
+  --blue-dark-950: #00050a;
 
   --red-dark-50: #fff2f2;
   --red-dark-100: #ffd8d8;
