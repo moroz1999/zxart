@@ -44,6 +44,9 @@
 }
 
 .dark-mode {
+  --zx-button-secondary-bg: var(--secondary-200);
+  --zx-button-secondary-hover-bg: var(--secondary-300);
+
   --zx-button-primary-disabled-bg: var(--primary-400);
   --zx-button-primary-disabled-text: var(--primary-900);
   --zx-button-secondary-disabled-bg: var(--secondary-500);
