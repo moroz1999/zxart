@@ -61,6 +61,10 @@
   --ajaxselect-search-icon-color: var(--secondary-100);
 }
 
+.dark-mode {
+  --input-text: var(--secondary-100);
+}
+
 input,
 textarea {
   border: var(--border-width-thin) solid var(--input-border-color);
