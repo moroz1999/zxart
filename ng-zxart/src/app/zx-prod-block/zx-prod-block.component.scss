@@ -10,9 +10,7 @@ $fixedHeight: 192px;
 }
 
 .zx-prod-internal {
-  background: var(--background-dark);
-  border-radius: var(--border-radius-xl);
-  box-shadow: var(--shadow-deep);
+  // Styles moved to zx-panel wrapper
 }
 
 .zx-prod-images {
