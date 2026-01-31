@@ -2,7 +2,7 @@
   <zx-stack spacing="lg">
     <zx-stack *ngIf="isRoot" spacing="lg" class="comments-header">
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h3 zxHeading3 style="margin: 0;">{{ 'comments.title' | translate }}</h3>
+        <h2 zxHeading2 style="margin: 0;">{{ 'comments.title' | translate }}</h2>
         <zx-button size="sm" color="primary" (click)="showForm = !showForm">
           {{ (showForm ? 'comments.cancel' : 'comments.add') | translate }}
         </zx-button>

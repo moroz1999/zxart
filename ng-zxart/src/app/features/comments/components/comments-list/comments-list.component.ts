@@ -10,7 +10,6 @@ import {CommentFormComponent} from '../comment-form/comment-form.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
-import {ZxHeading3Directive} from '../../../../shared/directives/typography/typography.directives';
 import {ViewportLoaderComponent} from '../../../../shared/components/viewport-loader/viewport-loader.component';
 import {Observable, of, Subject} from 'rxjs';
 
@@ -27,7 +26,6 @@ import {Observable, of, Subject} from 'rxjs';
     ZxButtonComponent,
     ZxStackComponent,
     ZxPanelComponent,
-    ZxHeading3Directive,
     ViewportLoaderComponent
   ],
   templateUrl: './comments-list.component.html',
