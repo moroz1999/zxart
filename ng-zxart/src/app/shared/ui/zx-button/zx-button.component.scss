@@ -9,12 +9,26 @@
                 border var(--zx-button-transition-time) ease-in-out,
                 box-shadow var(--zx-button-transition-time) ease-in-out;
 
+    &:disabled,
+    &.mat-mdc-button-disabled {
+      cursor: not-allowed;
+      opacity: var(--zx-button-disabled-opacity);
+    }
+
     &--primary {
       --mdc-filled-button-container-color: var(--zx-button-primary-bg);
       --mdc-filled-button-label-text-color: var(--zx-button-primary-text);
 
       &:hover:not(:disabled) {
         --mdc-filled-button-container-color: var(--zx-button-primary-hover-bg);
+      }
+
+      &:disabled,
+      &.mat-mdc-button-disabled {
+        --mdc-filled-button-container-color: var(--zx-button-primary-disabled-bg);
+        --mdc-filled-button-disabled-container-color: var(--zx-button-primary-disabled-bg);
+        --mdc-filled-button-label-text-color: var(--zx-button-primary-disabled-text);
+        --mdc-filled-button-disabled-label-text-color: var(--zx-button-primary-disabled-text);
       }
     }
 
@@ -25,6 +39,14 @@
       &:hover:not(:disabled) {
         --mdc-filled-button-container-color: var(--zx-button-secondary-hover-bg);
       }
+
+      &:disabled,
+      &.mat-mdc-button-disabled {
+        --mdc-filled-button-container-color: var(--zx-button-secondary-disabled-bg);
+        --mdc-filled-button-disabled-container-color: var(--zx-button-secondary-disabled-bg);
+        --mdc-filled-button-label-text-color: var(--zx-button-secondary-disabled-text);
+        --mdc-filled-button-disabled-label-text-color: var(--zx-button-secondary-disabled-text);
+      }
     }
 
     &--danger {
@@ -33,6 +55,14 @@
 
       &:hover:not(:disabled) {
         --mdc-filled-button-container-color: var(--zx-button-danger-hover-bg);
+      }
+
+      &:disabled,
+      &.mat-mdc-button-disabled {
+        --mdc-filled-button-container-color: var(--zx-button-danger-disabled-bg);
+        --mdc-filled-button-disabled-container-color: var(--zx-button-danger-disabled-bg);
+        --mdc-filled-button-label-text-color: var(--zx-button-danger-disabled-text);
+        --mdc-filled-button-disabled-label-text-color: var(--zx-button-danger-disabled-text);
       }
     }
 

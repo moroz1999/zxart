@@ -1,19 +1,29 @@
 :root {
   /* Forms & Inputs */
   --input-bg: var(--white);
-  --input-text: var(--secondary-100);
+  --input-text: var(--secondary-800);
   --input-placeholder: var(--secondary-500);
   --input-error-text: var(--danger-400);
   --input-width-md: 140px;
   --input-padding: 0 var(--space-4);
   --input-border-radius: var(--radius-md);
-  --input-font-size: var(--font-md);
+  --input-font-size: var(--zx-body-size);
+  --input-font-weight: var(--zx-body-weight);
+  --input-line-height: var(--zx-body-line-height);
   --input-height: 34px;
+  --input-border-color: var(--border-form);
+  --input-border-focus-color: var(--border-focused);
+  --input-border-error-color: var(--error-color);
 
   --textarea-width-lg: 300px;
   --textarea-padding: var(--space-4) var(--space-4) 0;
-  --textarea-font-size: var(--font-sm);
+  --textarea-font-size: var(--zx-body-size);
+  --textarea-font-weight: var(--zx-body-weight);
+  --textarea-line-height: var(--zx-body-line-height);
   --textarea-border-radius: var(--radius-md);
+  --textarea-border-color: var(--border-form);
+  --textarea-border-focus-color: var(--border-focused);
+  --textarea-border-error-color: var(--error-color);
 
   --form-label-color: var(--secondary-600);
   --form-label-font-size: var(--font-sm);
@@ -49,4 +59,71 @@
   --ajaxselect-results-icon-margin-top: var(--space-4);
   --ajaxselect-results-icon-margin-right: var(--space-8);
   --ajaxselect-search-icon-color: var(--secondary-100);
+}
+
+input,
+textarea {
+  border: var(--border-width-thin) solid var(--input-border-color);
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border-radius: var(--input-border-radius);
+  padding: var(--input-padding);
+  font-size: var(--input-font-size);
+  font-weight: var(--input-font-weight);
+  line-height: var(--input-line-height);
+  outline: none;
+
+  &::placeholder {
+    color: var(--input-placeholder);
+  }
+
+  &:focus {
+    border-color: var(--input-border-focus-color);
+  }
+
+  &.ng-invalid.ng-touched {
+    border-color: var(--input-border-error-color);
+  }
+}
+
+textarea {
+  border-color: var(--textarea-border-color);
+  padding: var(--textarea-padding);
+  border-radius: var(--textarea-border-radius);
+  font-size: var(--textarea-font-size);
+  font-weight: var(--textarea-font-weight);
+  line-height: var(--textarea-line-height);
+
+  &:focus {
+    border-color: var(--textarea-border-focus-color);
+  }
+
+  &.ng-invalid.ng-touched {
+    border-color: var(--textarea-border-error-color);
+  }
+}
+
+/* Helper tokens for MDC components */
+.mat-mdc-form-field {
+  font-size: var(--zx-body-size);
+  font-weight: var(--zx-body-weight);
+  line-height: var(--zx-body-line-height);
+  --mdc-outlined-text-field-label-text-color: var(--form-label-color);
+  --mdc-outlined-text-field-hover-label-text-color: var(--form-label-color);
+  --mdc-outlined-text-field-focus-label-text-color: var(--input-border-focus-color);
+  --mdc-outlined-text-field-outline-color: var(--input-border-color);
+  --mdc-outlined-text-field-hover-outline-color: var(--input-border-color);
+  --mdc-outlined-text-field-focus-outline-color: var(--input-border-focus-color);
+  --mdc-outlined-text-field-input-text-color: var(--input-text);
+  --mdc-outlined-text-field-input-text-placeholder-color: var(--input-placeholder);
+  --mdc-outlined-text-field-caret-color: var(--input-border-focus-color);
+  --mdc-outlined-text-field-error-outline-color: var(--input-border-error-color);
+  --mdc-outlined-text-field-error-hover-outline-color: var(--input-border-error-color);
+  --mdc-outlined-text-field-error-label-text-color: var(--input-border-error-color);
+  --mdc-outlined-text-field-error-focus-outline-color: var(--input-border-error-color);
+  --mdc-outlined-text-field-error-focus-label-text-color: var(--input-border-error-color);
+  --mdc-outlined-text-field-error-caret-color: var(--input-border-error-color);
+  --mdc-outlined-text-field-input-text-size: var(--zx-body-size);
+  --mdc-outlined-text-field-input-text-line-height: var(--zx-body-line-height);
+  --mdc-outlined-text-field-input-text-weight: var(--zx-body-weight);
 }

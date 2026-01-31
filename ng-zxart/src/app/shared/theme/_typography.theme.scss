@@ -29,6 +29,10 @@
   --zx-link-alt-color: var(--warning-400);
   --zx-link-decoration: none;
   --zx-link-hover-decoration: underline;
+
+  --zx-input-size: var(--zx-body-size);
+  --zx-input-weight: var(--zx-body-weight);
+  --zx-input-line-height: var(--zx-body-line-height);
 }
 
 @mixin heading-1 {
