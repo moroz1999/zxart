@@ -9,8 +9,9 @@
   align-items: center;
   justify-content: center;
   min-height: var(--zx-button-md-height);
-  line-height: 28px;
+  line-height: var(--zx-button-md-height);
   padding: var(--zx-button-md-padding);
+  font-size: var(--zx-button-md-font-size);
   color: var(--zx-button-secondary-text);
   text-decoration: none;
   text-align: center;
@@ -20,6 +21,30 @@
   &:focus {
     text-decoration: none;
     background-color: var(--zx-button-secondary-hover-bg);
+  }
+}
+
+.button_sm {
+  min-height: var(--zx-button-sm-height);
+  line-height: var(--zx-button-sm-height);
+  padding: var(--zx-button-sm-padding);
+  font-size: var(--zx-button-sm-font-size);
+}
+
+.button_xs {
+  min-height: var(--zx-button-xs-height);
+  line-height: var(--zx-button-xs-height);
+  padding: var(--zx-button-xs-padding);
+  font-size: var(--zx-button-xs-font-size);
+}
+
+.button_primary {
+  background-color: var(--zx-button-primary-bg);
+  color: var(--zx-button-primary-text);
+
+  &:hover,
+  &:focus {
+    background-color: var(--zx-button-primary-hover-bg);
   }
 }
 

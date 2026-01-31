@@ -13,7 +13,10 @@ Legacy CSS files must follow these naming patterns:
 These files are automatically detected and bundled by the CMS legacy asset manager.
 
 ### Buttons
-- `.button`: Base class for all buttons.
+- `.button`: Base class for all buttons (medium size, secondary color by default).
+- `.button_sm`: Small button size modifier.
+- `.button_xs`: Extra-small button size modifier.
+- `.button_primary`: Primary (blue) button color modifier.
 - `.delete_button`: Red button used for deletion actions. Often used together with `.button`.
 - `.button_green`: Green button, usually for "Save" or "Submit" actions.
 - `.form_button`: Specific styling for buttons inside forms.

@@ -13,23 +13,23 @@
     {/capture}
     {capture assign="moduleContent"}
         <div class="radio_icon"></div>
-        <input type="button" class="button radio_controls" data-radiotype="discover"
+        <input type="button" class="button button_sm" data-radiotype="discover"
                value="{translations name="radiocontrols.discover"}"/>
-        <input type="button" class="button radio_controls" data-radiotype="randomgood"
+        <input type="button" class="button button_sm" data-radiotype="randomgood"
                value="{translations name="radiocontrols.randomgood"}"/>
-        <input type="button" class="button radio_controls" data-radiotype="games"
+        <input type="button" class="button button_sm" data-radiotype="games"
                value="{translations name="radiocontrols.games"}"/>
-        <input type="button" class="button radio_controls" data-radiotype="demoscene"
+        <input type="button" class="button button_sm" data-radiotype="demoscene"
                value="{translations name="radiocontrols.demoscene"}"/>
-        <input type="button" class="button radio_controls" data-radiotype="lastyear"
+        <input type="button" class="button button_sm" data-radiotype="lastyear"
                value="{translations name="radiocontrols.lastyear"}"/>
-        <input type="button" class="button radio_controls" data-radiotype="ay"
+        <input type="button" class="button button_sm" data-radiotype="ay"
                value="{translations name="radiocontrols.ay"}"/>
-        <input type="button" class="button radio_controls" data-radiotype="beeper"
+        <input type="button" class="button button_sm" data-radiotype="beeper"
                value="{translations name="radiocontrols.beeper"}"/>
-        <input type="button" class="button radio_controls" data-radiotype="exotic"
+        <input type="button" class="button button_sm" data-radiotype="exotic"
                value="{translations name="radiocontrols.exotic"}"/>
-        <input type="button" class="button radio_controls" data-radiotype="underground"
+        <input type="button" class="button button_sm" data-radiotype="underground"
                value="{translations name="radiocontrols.underground"}"/>
     {/capture}
     {assign moduleClass "radio_controls"}
