@@ -41,6 +41,7 @@ readonly class CommentsService
      */
     public function getCommentsTree(int $elementId): array
     {
+        sleep(3);
         $element = $this->structureManager->getElementById($elementId);
         if ($element === null) {
             throw new CommentNotFoundException("Target element not found: {$elementId}");

@@ -2,7 +2,7 @@
   .skeleton-item {
     position: relative;
     overflow: hidden;
-    background-color: #f0f0f0;
+    background-color: var(--skeleton-bg);
 
     &::after {
       content: "";
@@ -15,8 +15,8 @@
       background-image: linear-gradient(
         90deg,
         rgba(255, 255, 255, 0) 0,
-        rgba(255, 255, 255, 0.2) 20%,
-        rgba(255, 255, 255, 0.5) 60%,
+        rgba(255, 255, 255, 0.13) 20%,
+        rgba(255, 255, 255, 0.33) 60%,
         rgba(255, 255, 255, 0)
       );
       animation: shimmer 2s infinite;
