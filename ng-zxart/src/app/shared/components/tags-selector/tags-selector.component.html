@@ -8,15 +8,13 @@
         <mat-icon matChipRemove>cancel</mat-icon>
     </mat-chip>
 </mat-chip-set>
-<input
-        type="text"
-        class="input_component"
+<zx-input
+        #zxInput
         [placeholder]="'prods-list.filters.tags.select' | translate"
         (keyup)="change()"
         [(ngModel)]="tagText"
         [matAutocomplete]="auto"
-        #input
-/>
+></zx-input>
 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
     <mat-option *ngFor="let tag of foundTags | async" [value]="tag">
         {{ tag.title }}

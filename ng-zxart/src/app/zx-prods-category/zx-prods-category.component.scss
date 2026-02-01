@@ -105,6 +105,7 @@ $amount: 5;
   background: var(--background-deep);
   padding-top: var(--padding-lg);
   padding-bottom: var(--padding-lg);
+  margin-bottom: var(--margin-lg);
   box-shadow: var(--shadow-deep);
   transition: opacity var(--animation-md) ease-in-out;
   @include breakpoints.media-breakpoint-up(sm) {
@@ -142,6 +143,17 @@ $amount: 5;
   @include breakpoints.media-breakpoint-up(sm) {
     justify-content: flex-end;
     flex-grow: 1;
+  }
+
+  mat-button-toggle-group {
+    --mat-standard-button-toggle-height: 28px;
+    --mat-standard-button-toggle-label-text-size: var(--font-xs);
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
   }
 }
 

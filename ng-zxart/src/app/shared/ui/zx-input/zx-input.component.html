@@ -1,0 +1,11 @@
+<input
+  #inputElement
+  [type]="type"
+  [value]="value"
+  [placeholder]="placeholder"
+  [disabled]="disabled"
+  [matAutocomplete]="matAutocomplete!"
+  (input)="onInput($event)"
+  (blur)="onBlur()"
+  (keyup)="onKeyup($event)"
+/>

@@ -1,14 +1,12 @@
 import {CommonModule} from '@angular/common';
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {TranslateModule} from '@ngx-translate/core';
-import {MatButtonModule} from '@angular/material/button';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {CommentDto} from '../../models/comment.dto';
 import {CommentsService} from '../../services/comments.service';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ZxTextareaComponent} from '../../../../shared/ui/zx-textarea/zx-textarea.component';
 import {ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
 
 @Component({
@@ -18,11 +16,9 @@ import {ZxCaptionDirective} from '../../../../shared/directives/typography/typog
     CommonModule,
     ReactiveFormsModule,
     TranslateModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
     ZxButtonComponent,
     ZxStackComponent,
+    ZxTextareaComponent,
     ZxCaptionDirective
   ],
   templateUrl: './comment-form.component.html',
@@ -40,11 +36,24 @@ export class CommentFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private commentsService: CommentsService
+    private commentsService: CommentsService,
+    private translate: TranslateService
   ) {
     this.commentForm = this.fb.group({
       content: ['', [Validators.required, Validators.minLength(2)]]
     });
+  }
+
+  get contentLabel(): string {
+    return this.translate.instant('comments.label');
+  }
+
+  get contentErrorMessage(): string {
+    const control = this.commentForm.get('content');
+    if (control?.hasError('required') && control.touched) {
+      return this.translate.instant('comments.error-content');
+    }
+    return '';
   }
 
   ngOnInit(): void {

@@ -3,14 +3,19 @@
 /********************************************************/
 .dropdown_block {
   background-color: var(--input-bg);
-  border-radius: var(--controls-border-radius);
+  border: var(--border-width-thin) solid var(--input-border-color);
+  border-radius: var(--form-border-radius);
   width: var(--input-width-md);
   height: var(--controls-height);
   line-height: var(--controls-height);
   color: var(--input-text);
   padding-right: var(--dropdown-padding-right);
   box-sizing: border-box;
-  border-style: none;
+
+  &:focus {
+    border-color: var(--input-border-focus-color);
+    outline: none;
+  }
 }
 
 .dropdown_block,

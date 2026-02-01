@@ -1,11 +1,10 @@
 <form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="comment-form">
-  <mat-form-field appearance="outline" style="width: 100%;">
-    <mat-label>{{ 'comments.label' | translate }}</mat-label>
-    <textarea matInput formControlName="content" rows="4"></textarea>
-    <mat-error *ngIf="commentForm.get('content')?.hasError('required')">
-      {{ 'comments.error-content' | translate }}
-    </mat-error>
-  </mat-form-field>
+  <zx-textarea
+    formControlName="content"
+    [label]="contentLabel"
+    [rows]="4"
+    [errorMessage]="contentErrorMessage"
+  ></zx-textarea>
 
   <div *ngIf="errorMessage" zxCaption style="color: red; margin-bottom: 16px;">
     {{ errorMessage }}

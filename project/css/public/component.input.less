@@ -6,8 +6,8 @@
   display: inline-block;
   vertical-align: top;
   background-color: var(--input-bg);
-  border-radius: var(--input-border-radius);
-  border-style: none;
+  border-radius: var(--form-border-radius);
+  border: var(--border-width-thin) solid var(--input-border-color);
   color: var(--input-text);
   line-height: var(--input-height);
   min-height: var(--input-height);
@@ -16,6 +16,11 @@
   font-size: var(--input-font-size);
   width: var(--input-width-md);
   box-sizing: border-box;
+
+  &:focus {
+    border-color: var(--input-border-focus-color);
+    outline: none;
+  }
 
   ::placeholder {
     color: var(--input-placeholder);
@@ -36,11 +41,16 @@ input.form_error {
   display: inline-block;
   vertical-align: top;
   background-color: var(--input-bg);
-  border-style: none;
-  border-radius: var(--textarea-border-radius);
+  border: var(--border-width-thin) solid var(--textarea-border-color);
+  border-radius: var(--form-border-radius);
   z-index: 5;
   padding: var(--textarea-padding);
   font-size: var(--textarea-font-size);
   color: var(--input-text);
   width: var(--textarea-width-lg);
+
+  &:focus {
+    border-color: var(--textarea-border-focus-color);
+    outline: none;
+  }
 }
