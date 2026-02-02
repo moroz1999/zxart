@@ -131,7 +131,7 @@ $amount: 5;
 }
 
 .releases-selector {
-  flex-wrap: nowrap;
+  align-content: center;
 }
 
 .layout-selector {
@@ -192,10 +192,4 @@ app-pages-selector {
 mat-spinner {
   display: block;
   margin: var(--margin-xxl) auto;
-}
-
-.selectors-top {
-  app-dialog-selector {
-    max-width: 15%;
-  }
 }

@@ -2,8 +2,8 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angula
 import {MatDialog} from '@angular/material/dialog';
 import {DialogSelectorDialogComponent} from './dialog-selector-dialog/dialog-selector-dialog.component';
 import {SelectorDto} from '../../models/selector-dto';
-import {MatButton} from '@angular/material/button';
 import {NgIf} from '@angular/common';
+import {ZxButtonComponent} from "../../../shared/ui/zx-button/zx-button.component";
 
 @Component({
     selector: 'app-dialog-selector',
@@ -11,7 +11,7 @@ import {NgIf} from '@angular/common';
     styleUrls: ['./dialog-selector.component.scss'],
     standalone: true,
     imports: [
-        MatButton,
+        ZxButtonComponent,
         NgIf,
     ],
 })

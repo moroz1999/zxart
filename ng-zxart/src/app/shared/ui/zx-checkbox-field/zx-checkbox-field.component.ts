@@ -1,11 +1,9 @@
 import {Component, forwardRef, Input} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {ZxCheckboxComponent} from '../zx-checkbox/zx-checkbox.component';
 
 @Component({
   selector: 'zx-checkbox-field',
   standalone: true,
-  imports: [ZxCheckboxComponent],
   templateUrl: './zx-checkbox-field.component.html',
   styleUrl: './zx-checkbox-field.component.scss',
   providers: [

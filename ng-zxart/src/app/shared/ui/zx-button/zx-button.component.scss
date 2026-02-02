@@ -2,6 +2,10 @@
   display: inline-block;
 }
 
+button {
+  max-width: 100%;
+}
+
 .mat-mdc-unelevated-button {
   &.zx-button {
     --mdc-filled-button-container-shape: var(--zx-button-border-radius);

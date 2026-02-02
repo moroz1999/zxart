@@ -1,6 +1,5 @@
-<button
-        mat-raised-button
-        [color]="selectedValues.length? null: 'primary'"
+<zx-button
+        [color]="selectedValues.length > 0 ? 'primary' : 'secondary'"
         (click)="clickHandler()"
 >
     <ng-container *ngIf="selectedValues.length; else other">
@@ -9,4 +8,4 @@
     <ng-template #other>
         {{ selectValuesLabel }}
     </ng-template>
-</button>
+</zx-button>
