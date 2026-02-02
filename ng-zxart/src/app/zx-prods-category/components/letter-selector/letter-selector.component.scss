@@ -7,16 +7,7 @@
 .letters {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
-
-  button {
-    --mdc-text-button-container-height: 28px;
-    --mdc-filled-button-container-height: 28px;
-    --mdc-text-button-label-text-size: var(--font-xs);
-    --mdc-filled-button-label-text-size: var(--font-xs);
-    --mat-text-button-horizontal-padding: var(--space-4);
-    --mat-filled-button-horizontal-padding: var(--space-4);
-  }
+  gap: var(--space-4);
 }
 
 .letter {

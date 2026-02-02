@@ -51,6 +51,7 @@ export class DialogSelectorComponent implements OnInit, OnChanges {
     clickHandler() {
         let dialogRef = this.dialog.open(DialogSelectorDialogComponent, {
             width: this.width,
+            panelClass: 'zx-dialog',
             data: {
                 selectorData: this.selectorData,
                 selectValuesLabel: this.selectValuesLabel,

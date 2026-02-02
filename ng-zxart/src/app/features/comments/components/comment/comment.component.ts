@@ -46,10 +46,6 @@ export class CommentComponent {
   ) {}
 
   get safeContent(): SafeHtml {
-    if (this.comment.content && (this.comment.content.includes('<a') || this.comment.content.includes('<br'))) {
-       // [DEBUG_LOG] HTML detected in comment:
-       // console.log(this.comment.content);
-    }
     return this.sanitizer.bypassSecurityTrustHtml(this.comment.content);
   }
 

@@ -1,0 +1,40 @@
+:root {
+  --textarea-width-lg: 300px;
+  --textarea-padding: var(--space-4) var(--space-4) 0;
+  --textarea-font-size: var(--zx-body-size);
+  --textarea-font-weight: var(--zx-body-weight);
+  --textarea-line-height: var(--zx-body-line-height);
+  --textarea-border-radius: var(--form-border-radius);
+  --textarea-border-color: var(--border-form);
+  --textarea-border-focus-color: var(--border-focused);
+  --textarea-border-error-color: var(--error-color);
+}
+
+.dark-mode {
+  --textarea-border-color: var(--secondary-300);
+  --textarea-border-focus-color: var(--white);
+}
+
+textarea {
+  border: var(--border-width-thin) solid var(--textarea-border-color);
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  padding: var(--textarea-padding);
+  border-radius: var(--textarea-border-radius);
+  font-size: var(--textarea-font-size);
+  font-weight: var(--textarea-font-weight);
+  line-height: var(--textarea-line-height);
+  outline: none;
+
+  &::placeholder {
+    color: var(--input-placeholder);
+  }
+
+  &:focus {
+    border-color: var(--textarea-border-focus-color);
+  }
+
+  &.ng-invalid.ng-touched {
+    border-color: var(--textarea-border-error-color);
+  }
+}

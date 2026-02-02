@@ -9,15 +9,16 @@
 
 .checkbox {
 	position: relative;
-	height: 18px;
-	width: 18px;
-	background-color: var(--input-bg);
-	border: none;
+	height: var(--checkbox-size);
+	width: var(--checkbox-size);
+	background-color: var(--checkbox-bg);
+	border: var(--border-width-thin) solid var(--checkbox-border-color);
 	border-radius: var(--border-radius-sm);
 }
 
 .checkbox:hover,
 .checkbox:focus {
+	border-color: var(--checkbox-border-focus-color);
 }
 
 .checkbox.checked:after {
@@ -30,5 +31,5 @@
 	line-height: 110%;
 	text-align: center;
 	font-weight: bold;
-	color: var(--zx-button-secondary-bg);
+	color: var(--checkbox-check-color);
 }

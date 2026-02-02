@@ -14,8 +14,13 @@ export class ZxButtonComponent {
   @Input() color: 'primary' | 'secondary' | 'danger' = 'primary';
   @Input() disabled = false;
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
+  @Input() square = false;
 
   get classList(): string {
-    return `zx-button zx-button--${this.size} zx-button--${this.color}`;
+    const classes = [`zx-button`, `zx-button--${this.size}`, `zx-button--${this.color}`];
+    if (this.square) {
+      classes.push('zx-button--square');
+    }
+    return classes.join(' ');
   }
 }

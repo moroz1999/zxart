@@ -150,6 +150,7 @@
   },
   "comments": {
     "title": "Comentarios",
+    "empty": "No hay comentarios todavía.",
     "add": "Agregar comentario",
     "reply": "Responder",
     "edit": "Editar",

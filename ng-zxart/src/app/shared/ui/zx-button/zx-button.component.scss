@@ -86,5 +86,11 @@
       --mat-filled-button-horizontal-padding: var(--zx-button-md-h-padding);
       min-width: var(--zx-button-md-min-width);
     }
+
+    &--square {
+      --mat-filled-button-horizontal-padding: 0;
+      min-width: auto;
+      aspect-ratio: 1;
+    }
   }
 }

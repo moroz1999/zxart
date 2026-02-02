@@ -36,7 +36,7 @@ The project follows a component-based approach for the design system.
 3. **Shared UI Components**: All design system components are located in `ng-zxart/src/app/shared/ui/`.
 
 #### Available Components:
-- `zx-button`: Versatile button component with multiple sizes (xs, sm, md) and colors (primary, secondary, danger).
+- `zx-button`: Versatile button component with multiple sizes (xs, sm, md), colors (primary, secondary, danger), and square mode (removes horizontal padding, makes width equal to height).
 - `zx-panel`: Universal layout container with configurable variant (elevated, flat), border radius (sm, md, lg, xl) and padding (md, lg).
 - `zx-stack`: Flexbox-based layout container with configurable spacing (md, lg, xl) and direction (column, row).
 - `zx-user`: Component for displaying user name with status icons (badges). Uses "icon name" layout.

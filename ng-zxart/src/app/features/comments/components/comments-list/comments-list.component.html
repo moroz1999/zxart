@@ -3,7 +3,7 @@
     <zx-stack *ngIf="isRoot" spacing="lg" class="comments-header">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <h2 zxHeading2 style="margin: 0;">{{ 'comments.title' | translate }}</h2>
-        <zx-button size="sm" color="primary" (click)="showForm = !showForm">
+        <zx-button size="md" color="primary" (click)="showForm = !showForm">
           {{ (showForm ? 'comments.cancel' : 'comments.add') | translate }}
         </zx-button>
       </div>
@@ -22,11 +22,15 @@
       </ng-template>
 
       <ng-template #content let-comments>
-        <zx-stack spacing="lg">
-          <div *ngFor="let comment of comments" class="comment-item">
-            <app-comment [comment]="comment" (commentChanged)="onCommentSaved(comment)"></app-comment>
-          </div>
-        </zx-stack>
+        @if (comments.length === 0) {
+          <p zxBody>{{ 'comments.empty' | translate }}</p>
+        } @else {
+          <zx-stack spacing="lg">
+            <div *ngFor="let comment of comments" class="comment-item">
+              <app-comment [comment]="comment" (commentChanged)="onCommentSaved(comment)"></app-comment>
+            </div>
+          </zx-stack>
+        }
       </ng-template>
     </app-viewport-loader>
   </zx-stack>

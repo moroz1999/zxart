@@ -150,6 +150,7 @@
   },
   "comments": {
     "title": "Comments",
+    "empty": "No comments yet.",
     "add": "Add Comment",
     "reply": "Reply",
     "edit": "Edit",

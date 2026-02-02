@@ -1,0 +1,11 @@
+.zx-dialog {
+  .mat-mdc-dialog-container {
+    --mdc-dialog-container-color: var(--secondary-100);
+  }
+}
+
+.dark-mode .zx-dialog {
+  .mat-mdc-dialog-container {
+    --mdc-dialog-container-color: var(--secondary-100);
+  }
+}

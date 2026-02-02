@@ -1,0 +1,47 @@
+:host {
+  display: inline-block;
+  position: relative;
+}
+
+.zx-checkbox__native {
+  position: absolute;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  &:focus + .zx-checkbox,
+  &:hover + .zx-checkbox {
+    border-color: var(--checkbox-border-focus-color);
+  }
+}
+
+.zx-checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  background-color: var(--checkbox-bg);
+  border: var(--border-width-thin) solid var(--checkbox-border-color);
+  border-radius: var(--border-radius-sm);
+  transition: border-color var(--animation-xs);
+  pointer-events: none;
+
+  &--disabled {
+    opacity: 0.5;
+  }
+}
+
+.zx-checkbox__check {
+  color: var(--checkbox-check-color);
+  font-weight: bold;
+  font-size: var(--font-sm);
+  line-height: 1;
+}

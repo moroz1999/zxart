@@ -7,7 +7,7 @@ import {environment} from '../../environments/environment';
 import {TranslatePipe} from '@ngx-translate/core';
 import {PagesSelectorComponent} from '../shared/components/pages-selector/pages-selector.component';
 import {
-    CategoriesTreeSelectorComponent,
+  CategoriesTreeSelectorComponent,
 } from './components/categories-tree-selector/categories-tree-selector.component';
 import {SortingSelectorComponent} from './components/sorting-selector/sorting-selector.component';
 import {DialogSelectorComponent} from './components/dialog-selector/dialog-selector.component';
@@ -21,6 +21,7 @@ import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {TagsSelectorComponent} from '../shared/components/tags-selector/tags-selector.component';
 import {MatButton} from '@angular/material/button';
+import {ZxCheckboxComponent} from '../shared/ui/zx-checkbox/zx-checkbox.component';
 
 const defaultStatuses: string[] = ['allowed', 'forbidden', 'forbiddenzxart', 'allowedzxart', 'insales', 'donationware', 'recovered', 'unknown'];
 
@@ -48,6 +49,7 @@ export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
         TagsSelectorComponent,
         MatButton,
         MatProgressSpinner,
+        ZxCheckboxComponent,
     ],
     standalone: true,
 })
@@ -217,12 +219,8 @@ export class ZxProdsCategoryComponent implements OnInit {
     private fetchModel(): void {
         this.loading = true;
         const parameters = this.gatherParameters();
-        console.log('parameters', parameters);
         this.elementsService.getModel<ZxProdCategoryDto, ZxProdCategory>(this.elementId, ZxProdCategory, parameters, 'zxProdsList').subscribe(
             model => {
-
-                console.log(model);
-
                 this.model = model;
                 this.pagesAmount = Math.ceil(this.model.prodsAmount / this.elementsOnPage);
                 this.currentPage = this.model.selectorValues.page;
@@ -252,7 +250,6 @@ export class ZxProdsCategoryComponent implements OnInit {
 
                 this.urlBase = urlBase;
                 if (environment.production) {
-                    console.log('reqUrl', reqUrl, this.currentPage);
                     if (window.location.href !== reqUrl) {
                         window.history.pushState({parameters, elementId: this.elementId}, '', reqUrl);
                     }
