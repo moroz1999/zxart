@@ -24,6 +24,7 @@
         - `_dark.theme.scss`: Dark theme colors (activated by `.dark-mode` class).
         - `_light.theme.scss`: Light theme colors (activated by `.light-mode` class) and inverted semantic mappings.
     - **Component variables** (e.g., `--zx-button-bg`, `--zx-user-badge-color`) must be defined in separate files (one per component, e.g., `_zx-button.theme.scss`). These variables should use semantic variables (`--primary-*`, `--secondary-*`, etc.) or base variables.
+    - **Theme files contain ONLY variables** (`:root` and `.dark-mode` blocks). CSS rules (selectors with properties) must be placed in component SCSS files, not in theme files. Theme files exist solely to define reusable CSS custom properties that can be shared between Angular components and legacy code.
     - **Usage**: Components (Angular or Legacy) MUST use component variables ONLY. Direct use of base palette or base variables in components is FORBIDDEN. Component-specific CSS variables MUST NOT be used outside of the component they belong to.
     - **Layout**: If elements are part of a common layout, general layout rules (flexbox, grid, or layout components like `zx-stack`) are strictly preferred over individual margins. Use `zx-stack` to manage spacing between related elements.
     - **Enforcement**: This is a mandatory rule. Always check if you are using base variables directly and replace them with component variables. Also, ensure you are not leaking or using variables from other components.

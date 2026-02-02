@@ -9,7 +9,7 @@ import {
 import {SelectorDto} from '../../../models/selector-dto';
 import {TranslatePipe} from '@ngx-translate/core';
 import {NgForOf, NgIf} from '@angular/common';
-import {ZxCheckboxComponent} from '../../../../shared/ui/zx-checkbox/zx-checkbox.component';
+import {ZxCheckboxFieldComponent} from '../../../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {FormsModule} from '@angular/forms';
 
@@ -25,7 +25,7 @@ interface DialogData {
     imports: [
         ZxButtonComponent,
         TranslatePipe,
-        ZxCheckboxComponent,
+        ZxCheckboxFieldComponent,
         MatDialogActions,
         MatDialogTitle,
         MatDialogContent,

@@ -44,4 +44,10 @@
   font-weight: bold;
   font-size: var(--font-sm);
   line-height: 1;
+  opacity: 0;
+  transition: opacity var(--animation-xs);
+
+  &--visible {
+    opacity: 1;
+  }
 }

@@ -3,10 +3,9 @@
     <div class="value-group" *ngFor="let group of data.selectorData">
         <div class="value-group-title" *ngIf="group.title">{{ group.title }}</div>
         <div class="value-columns" [style.column-count]="getColumns(group.values.length)">
-            <label class="value" *ngFor="let value of group.values">
-                <zx-checkbox [(ngModel)]="selectedValues[value.value]"></zx-checkbox>
+            <zx-checkbox-field class="value" *ngFor="let value of group.values" [(ngModel)]="selectedValues[value.value]">
                 {{ value.title }}
-            </label>
+            </zx-checkbox-field>
         </div>
     </div>
 </div>

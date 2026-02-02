@@ -113,10 +113,12 @@
                     [selectedValuesLabel]="'prods-list.filters.release-types.selected' | translate"
                     [selectValuesLabel]="'prods-list.filters.release-types.select' | translate"
             ></app-dialog-selector>
-            <label class="include-subcategories-prods-selector">
-                <zx-checkbox [(ngModel)]="includeSubcategoriesProds"
-                       (ngModelChange)="includeSubcategoriesProdsSelected()"></zx-checkbox> {{ 'prods-list.include-subcategories-prods' | translate }}
-            </label>
+            <zx-checkbox-field
+                class="include-subcategories-prods-selector"
+                [(ngModel)]="includeSubcategoriesProds"
+                (ngModelChange)="includeSubcategoriesProdsSelected()">
+                {{ 'prods-list.include-subcategories-prods' | translate }}
+            </zx-checkbox-field>
         </div>
         <div class="zx-prods-list-right">
             <div
@@ -142,10 +144,12 @@
                             [tagsSelector]="model.tagsSelector"
                             (tagsSelected)="tagsSelected($event)"
                     ></app-tags-selector>
-                    <label class="releases-selector">
-                        <zx-checkbox [(ngModel)]="releases"
-                               (ngModelChange)="releasesSelected()"></zx-checkbox> {{ 'prods-list.releases' | translate }}
-                    </label>
+                    <zx-checkbox-field
+                        class="releases-selector"
+                        [(ngModel)]="releases"
+                        (ngModelChange)="releasesSelected()">
+                        {{ 'prods-list.releases' | translate }}
+                    </zx-checkbox-field>
                     <app-sorting-selector
                             [sortingSelector]="model.sortingSelector"
                             (sortingSelected)="sortingSelected($event)"

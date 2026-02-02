@@ -1,0 +1,22 @@
+<span
+  class="zx-checkbox-field"
+  [class.zx-checkbox-field--disabled]="disabled"
+  (click)="toggle()"
+  (keydown.space)="toggle(); $event.preventDefault()"
+  tabindex="0"
+  role="checkbox"
+  [attr.aria-checked]="checked"
+  [attr.aria-disabled]="disabled"
+>
+  <zx-checkbox
+    [checked]="checked"
+    [disabled]="disabled"
+  ></zx-checkbox>
+  <span class="zx-checkbox-field__label">
+    @if (label) {
+      {{ label }}
+    } @else {
+      <ng-content></ng-content>
+    }
+  </span>
+</span>

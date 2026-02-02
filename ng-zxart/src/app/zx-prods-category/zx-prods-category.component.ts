@@ -21,7 +21,7 @@ import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {TagsSelectorComponent} from '../shared/components/tags-selector/tags-selector.component';
 import {MatButton} from '@angular/material/button';
-import {ZxCheckboxComponent} from '../shared/ui/zx-checkbox/zx-checkbox.component';
+import {ZxCheckboxFieldComponent} from '../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 
 const defaultStatuses: string[] = ['allowed', 'forbidden', 'forbiddenzxart', 'allowedzxart', 'insales', 'donationware', 'recovered', 'unknown'];
 
@@ -49,7 +49,7 @@ export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
         TagsSelectorComponent,
         MatButton,
         MatProgressSpinner,
-        ZxCheckboxComponent,
+        ZxCheckboxFieldComponent,
     ],
     standalone: true,
 })

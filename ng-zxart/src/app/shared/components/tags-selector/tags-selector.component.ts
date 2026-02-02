@@ -5,7 +5,7 @@ import {Subject} from 'rxjs';
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatOption,} from '@angular/material/autocomplete';
 import {MatChip, MatChipSet} from '@angular/material/chips';
 import {MatIcon} from '@angular/material/icon';
-import {AsyncPipe, NgForOf} from '@angular/common';
+import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslatePipe} from '@ngx-translate/core';
 import {ZxInputComponent} from '../../ui/zx-input/zx-input.component';
@@ -15,18 +15,19 @@ import {ZxInputComponent} from '../../ui/zx-input/zx-input.component';
     templateUrl: './tags-selector.component.html',
     styleUrls: ['./tags-selector.component.scss'],
     standalone: true,
-    imports: [
-        MatAutocomplete,
-        MatOption,
-        MatChip,
-        MatChipSet,
-        MatIcon,
-        NgForOf,
-        FormsModule,
-        AsyncPipe,
-        TranslatePipe,
-        ZxInputComponent,
-    ],
+  imports: [
+    MatAutocomplete,
+    MatOption,
+    MatChip,
+    MatChipSet,
+    MatIcon,
+    NgForOf,
+    FormsModule,
+    AsyncPipe,
+    TranslatePipe,
+    ZxInputComponent,
+    NgIf,
+  ],
 })
 export class TagsSelectorComponent implements OnInit {
     tagText = '';

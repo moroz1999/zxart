@@ -11,7 +11,5 @@
   [class.zx-checkbox--disabled]="disabled"
   aria-hidden="true"
 >
-  @if (checked) {
-    <span class="zx-checkbox__check">✓</span>
-  }
+  <span class="zx-checkbox__check" [class.zx-checkbox__check--visible]="checked">✓</span>
 </span>

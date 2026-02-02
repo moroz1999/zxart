@@ -1,25 +1,26 @@
-import {Component, EventEmitter, forwardRef, Input, Output} from '@angular/core';
+import {Component, forwardRef, Input} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {ZxCheckboxComponent} from '../zx-checkbox/zx-checkbox.component';
 
 @Component({
-  selector: 'zx-checkbox',
+  selector: 'zx-checkbox-field',
   standalone: true,
-  templateUrl: './zx-checkbox.component.html',
-  styleUrl: './zx-checkbox.component.scss',
+  imports: [ZxCheckboxComponent],
+  templateUrl: './zx-checkbox-field.component.html',
+  styleUrl: './zx-checkbox-field.component.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ZxCheckboxComponent),
+      useExisting: forwardRef(() => ZxCheckboxFieldComponent),
       multi: true
     }
   ]
 })
-export class ZxCheckboxComponent implements ControlValueAccessor {
-  @Input() checked = false;
-  @Input() disabled = false;
-  @Output() checkedChange = new EventEmitter<boolean>();
+export class ZxCheckboxFieldComponent implements ControlValueAccessor {
+  @Input() label = '';
 
-  touched = false;
+  checked = false;
+  disabled = false;
 
   private onChange: (value: boolean) => void = () => {};
   private onTouched: () => void = () => {};
@@ -46,14 +47,6 @@ export class ZxCheckboxComponent implements ControlValueAccessor {
     }
     this.checked = !this.checked;
     this.onChange(this.checked);
-    this.checkedChange.emit(this.checked);
-    this.markAsTouched();
-  }
-
-  private markAsTouched(): void {
-    if (!this.touched) {
-      this.touched = true;
-      this.onTouched();
-    }
+    this.onTouched();
   }
 }

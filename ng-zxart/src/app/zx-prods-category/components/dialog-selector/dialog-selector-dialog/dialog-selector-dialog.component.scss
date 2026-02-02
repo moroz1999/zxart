@@ -31,10 +31,7 @@
 }
 
 .value {
-  display: flex;
-  align-items: center;
-  gap: var(--space-8);
-  padding-bottom: var(--padding-md);
+  display: block;
+  margin-bottom: var(--space-4);
   break-inside: avoid;
-  cursor: pointer;
 }

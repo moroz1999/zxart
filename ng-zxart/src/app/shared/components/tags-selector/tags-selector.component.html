@@ -1,4 +1,4 @@
-<mat-chip-set #chipList aria-label="Fruit selection">
+<mat-chip-set *ngIf="tagsSelector.length > 0" #chipList>
     <mat-chip
             *ngFor="let tag of tagsSelector"
             [removable]="true"

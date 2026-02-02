@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {SelectorDto} from '../../models/selector-dto';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslateService} from '@ngx-translate/core';
 import {FormsModule} from '@angular/forms';
-import {NgForOf, NgIf} from '@angular/common';
+import {ZxSelectComponent, ZxSelectOption} from '../../../shared/ui/zx-select/zx-select.component';
 
 @Component({
     selector: 'app-sorting-selector',
@@ -10,31 +10,35 @@ import {NgForOf, NgIf} from '@angular/common';
     styleUrls: ['./sorting-selector.component.scss'],
     standalone: true,
     imports: [
-        TranslatePipe,
         FormsModule,
-        NgForOf,
-        NgIf,
+        ZxSelectComponent,
     ],
 })
 export class SortingSelectorComponent implements OnChanges {
     @Input() sortingSelector!: SelectorDto;
     @Output() sortingSelected = new EventEmitter<string>();
-    sorting: string = '';
+    sorting = '';
+    options: ZxSelectOption[] = [];
 
-    constructor() {
+    constructor(private translateService: TranslateService) {
     }
 
     ngOnChanges(): void {
+        this.options = [];
         for (const group of this.sortingSelector) {
-            for (const sorting of group.values) {
-                if (sorting.selected) {
-                    this.sorting = sorting.value;
+            for (const sortingValue of group.values) {
+                if (sortingValue.selected) {
+                    this.sorting = sortingValue.value;
                 }
+                this.options.push({
+                    value: sortingValue.value,
+                    label: this.translateService.instant('prods-list.sorting.' + sortingValue.title),
+                });
             }
         }
     }
 
-    dataChanged() {
+    dataChanged(): void {
         this.sortingSelected.emit(this.sorting);
     }
 }
