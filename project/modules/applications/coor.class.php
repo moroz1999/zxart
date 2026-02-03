@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Database\Capsule\Manager;
+use App\Users\CurrentUser;
 
 class coorApplication extends controllerApplication
 {
@@ -37,7 +37,7 @@ class coorApplication extends controllerApplication
         /**
          * @var LanguagesManager $languagesManager
          */
-        $user = $this->getService('user');
+        $user = $this->getService(CurrentUser::class);
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
             $languagesManager = $this->getService('LanguagesManager');

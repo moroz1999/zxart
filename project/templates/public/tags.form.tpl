@@ -5,7 +5,7 @@
 <form action="{$element->URL}" method="post" class="picturetags_form" enctype="multipart/form-data">
 	<div class="tag_suggestions">
 		{foreach $element->getSuggestedTags() as $tag}
-			<span class="button tag_suggestion_button">+ <span class="tag_suggestion_text">{$tag->title}</span>{if $tag->description} <span>({$tag->description})</span></span>{/if}</span>
+			<span class="button button_sm tag_suggestion_button">+ <span class="tag_suggestion_text">{$tag->title}</span>{if $tag->description} <span>({$tag->description})</span></span>{/if}</span>
 		{/foreach}
 	</div>
 	<table class='form_table'>

@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Users\CurrentUser;
 use ZxArt\Import\Services\VtrdosImport;
 
 class vtrdosApplication extends controllerApplication
@@ -36,7 +37,7 @@ class vtrdosApplication extends controllerApplication
             ob_end_flush();
         }
 
-        $user = $this->getService('user');
+        $user = $this->getService(CurrentUser::class);
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
 

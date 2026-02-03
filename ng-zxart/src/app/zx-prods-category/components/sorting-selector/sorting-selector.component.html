@@ -1,13 +1,7 @@
-<select
-        class="input_component"
+@if (options.length) {
+    <zx-select
+        [options]="options"
         [(ngModel)]="sorting"
         (ngModelChange)="dataChanged()"
-        *ngIf="sortingSelector[0]"
->
-    <option
-            *ngFor="let option of sortingSelector[0].values"
-            [ngValue]="option.value"
-            [selected]="option.selected"
-    >{{ "prods-list.sorting." + option.title | translate }}
-    </option>
-</select>
+    ></zx-select>
+}

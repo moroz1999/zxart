@@ -1,6 +1,7 @@
 <?php
 
 use App\Paths\PathsManager;
+use App\Users\CurrentUser;
 
 class batchUploadPicturesCatalogue extends structureElementAction
 {
@@ -36,7 +37,7 @@ class batchUploadPicturesCatalogue extends structureElementAction
                 $pictureElement->party = $structureElement->party;
                 $pictureElement->author = $structureElement->author;
                 $pictureElement->dateAdded = $pictureElement->dateCreated;
-                $pictureElement->userId = $this->getService('user')->id;
+                $pictureElement->userId = $this->getService(CurrentUser::class)->id;
 
                 $pictureElement->persistElementData();
 

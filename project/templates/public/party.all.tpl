@@ -33,7 +33,7 @@
 					window.elementsData = window.elementsData ? window.elementsData : { };
 					window.elementsData['{$element->id}{$compoType}'] = {$compo};
 				</script>
-				<app-zx-prods-list element-id="{$element->id}{$compoType}" property="prods"></app-zx-prods-list>
+				<zx-prods-list element-id="{$element->id}{$compoType}" property="prods"></zx-prods-list>
 			</div>
 		{/foreach}
 	</div>

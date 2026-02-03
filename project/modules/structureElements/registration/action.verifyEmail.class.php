@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class verifyEmailRegistration extends structureElementAction
 {
     /**
@@ -26,7 +28,7 @@ class verifyEmailRegistration extends structureElementAction
                 $db->table('module_user')
                     ->where('id', '=', $userId)
                     ->update(['verified' => 1]);
-                $user = $this->getService('user');
+                $user = $this->getService(CurrentUser::class);
                 $user->switchUser($userId, false);
                 $result = true;
                 $structureElement->resultMessage = $translationsManager->getTranslationByName('userdata.emailverified');

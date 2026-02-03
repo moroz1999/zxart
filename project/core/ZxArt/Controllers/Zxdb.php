@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use Cache;
-use ZxArt\Import\Services\ZxdbImport;
 use controllerApplication;
+use ZxArt\Import\Services\ZxdbImport;
 
 class Zxdb extends controllerApplication
 {
@@ -42,7 +42,7 @@ class Zxdb extends controllerApplication
             ob_end_flush();
         }
 
-        $user = $this->getService('user');
+        $user = $this->getService(user::class);
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
 

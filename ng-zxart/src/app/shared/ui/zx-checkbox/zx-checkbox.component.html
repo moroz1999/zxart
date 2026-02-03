@@ -1,0 +1,15 @@
+<input
+  type="checkbox"
+  class="zx-checkbox__native"
+  [checked]="checked"
+  [disabled]="disabled"
+  (change)="toggle()"
+/>
+<span
+  class="zx-checkbox"
+  [class.zx-checkbox--checked]="checked"
+  [class.zx-checkbox--disabled]="disabled"
+  aria-hidden="true"
+>
+  <span class="zx-checkbox__check" [class.zx-checkbox__check--visible]="checked">✓</span>
+</span>

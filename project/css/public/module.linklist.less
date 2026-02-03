@@ -1,9 +1,9 @@
 .linklist_list {
-	background: none repeat scroll 0 0 @secondary_color;
+	background: var(--linklist-bg);
 	display: inline-block;
 	min-height: 16em;
 	width: 23%;
-	padding: 1em;
+	padding: var(--linklist-padding);
 }
 
 @media (max-width: @screen_breakpoint_sm_max) {
@@ -13,11 +13,11 @@
 }
 
 .linklist_list_item {
-	color: #fff;
-	margin-bottom: 0.75em;
+	color: var(--linklist-item-color);
+	margin-bottom: var(--linklist-item-margin-bottom);
 }
 
 .linklist_list_image_wrap {
-	margin-right: 2em;
+	margin-right: var(--linklist-image-wrap-margin-right);
 	width: 25%;
 }

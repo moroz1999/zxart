@@ -2,29 +2,29 @@
 
 .form {
   display: flex;
-  gap: vars.$padding-lg;
+  gap: var(--gap-xl);
 
   align-items: center;
 }
 
 .description {
-  font-size: vars.$font-sm;
-  margin-bottom: vars.$padding-md;
+  font-size: var(--parser-font-size);
+  margin-bottom: var(--margin-lg);
 }
 
 .error {
-  color: vars.$error-color;
+  color: var(--error-color);
 }
 
 .parser-top {
-  margin-bottom: vars.$padding-xl;
+  margin-bottom: var(--margin-xxl);
 }
 
 .results-controls {
   display: block;
-  margin-bottom: vars.$padding-xl;
+  margin-bottom: var(--margin-xxl);
 
   input {
-    margin-right: vars.$padding-sm;
+    margin-right: var(--margin-md);
   }
 }

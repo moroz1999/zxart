@@ -1,0 +1,37 @@
+<div class="comments-list">
+  <zx-stack spacing="lg">
+    <zx-stack *ngIf="isRoot" spacing="lg" class="comments-header">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 zxHeading2 style="margin: 0;">{{ 'comments.title' | translate }}</h2>
+        <zx-button size="md" color="primary" (click)="showForm = !showForm">
+          {{ (showForm ? 'comments.cancel' : 'comments.add') | translate }}
+        </zx-button>
+      </div>
+      <zx-panel *ngIf="showForm && elementId" radius="lg" padding="lg">
+        <app-comment-form [targetId]="elementId" (commentSaved)="onCommentSaved($event)" (cancelled)="showForm = false"></app-comment-form>
+      </zx-panel>
+    </zx-stack>
+
+    <app-viewport-loader [enabled]="isRoot" [loader]="getCommentsLoader" [reload$]="reloadSubject">
+      <ng-template #skeleton>
+        <div class="comments-skeleton">
+          <div class="skeleton-item" style="height: 100px; margin-bottom: 16px; border-radius: 8px;"></div>
+          <div class="skeleton-item" style="height: 100px; margin-bottom: 16px; border-radius: 8px;"></div>
+          <div class="skeleton-item" style="height: 100px; margin-bottom: 16px; border-radius: 8px;"></div>
+        </div>
+      </ng-template>
+
+      <ng-template #content let-comments>
+        @if (comments.length === 0) {
+          <p zxBody>{{ 'comments.empty' | translate }}</p>
+        } @else {
+          <zx-stack spacing="lg">
+            <div *ngFor="let comment of comments" class="comment-item">
+              <app-comment [comment]="comment" (commentChanged)="onCommentSaved(comment)"></app-comment>
+            </div>
+          </zx-stack>
+        }
+      </ng-template>
+    </app-viewport-loader>
+  </zx-stack>
+</div>

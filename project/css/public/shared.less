@@ -2,8 +2,8 @@
 /*  SHARED WITH CKEDITOR
 /********************************************************/
 @ppx: 14.5rem;
-@primary_color: #151515;
-@secondary_color: #202020;
+@primary_color: var(--main-background);
+@secondary_color: var(--secondary-bg);
 @header_background_color: @primary_color;
 @mobileheader_height: 4em;
 
@@ -16,7 +16,7 @@ html, input, textarea, select {
 }
 
 html {
-  color: #ffffff;
+  color: var(--text-color);
 }
 
 td {
@@ -29,28 +29,28 @@ th {
 }
 
 h1, h2, h3, h4, h5 {
-  margin: 1.5em 0 1em 0;
-  padding: 0 0 0 0;
-  color: #ffffff;
+  margin: var(--heading-margin-top) 0 var(--heading-margin-bottom) 0;
+  padding: 0;
+  color: var(--text-color);
 }
 
 h1 {
-  font-size: 1.4em;
+  font-size: var(--h1-font-size);
   font-weight: normal;
 }
 
 h2 {
-  font-size: 1.3em;
+  font-size: var(--h2-font-size);
   font-weight: normal;
 }
 
 h3 {
-  font-size: 1.1em;
+  font-size: var(--h3-font-size);
   font-weight: normal;
 }
 
 a {
-  color: #83a9e7;
+  color: var(--link-color);
   text-decoration: none;
 }
 
@@ -86,7 +86,7 @@ pre {
 .html_content figure[align="left"],
 .html_content figure[style*="float: left"],
 .html_content figure[style*="float:left"] {
-  margin: 1em 1em 1em 0;
+  margin: var(--html-content-image-margin) var(--html-content-image-margin) var(--html-content-image-margin) 0;
 }
 
 .html_content img[align="right"],
@@ -94,6 +94,6 @@ pre {
 .html_content img[style*="float:right"],
 .html_content figure[align="right"],
 .html_content figure[style*="float: right"],
-.html_content figure[style*="float:right"] {
-  margin: 1em 0 1em 1em;
+.html_content figure[style*="float:left"] {
+  margin: var(--html-content-image-margin) 0 var(--html-content-image-margin) var(--html-content-image-margin);
 }

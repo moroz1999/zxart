@@ -13,7 +13,7 @@ export interface YearProds {
 }
 
 @Component({
-    selector: 'app-zx-prods-list',
+    selector: 'zx-prods-list',
     templateUrl: './zx-prods-list.component.html',
     styleUrls: ['./zx-prods-list.component.scss'],
     imports: [TranslatePipe, ZxProdBlockComponent, NgIf, NgForOf, NgForOf, NgIf, NgIf, NgForOf],

@@ -23,6 +23,7 @@ import {AppComponent} from './app.component';
 import {ParserComponent} from './parser/parser.component';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {environment} from '../environments/environment';
+import {CommentsListComponent} from './features/comments/components/comments-list/comments-list.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -74,6 +75,7 @@ export class AppModule implements DoBootstrap  {
             'app-zx-prods-category': ZxProdsCategoryComponent,
             'app-zx-prods-list': ZxProdsListComponent,
             'app-parser': ParserComponent,
+            'app-comments-list': CommentsListComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});

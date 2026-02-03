@@ -5,6 +5,6 @@
 			window.elementsData = window.elementsData ? window.elementsData : { };
 			window.elementsData[{$element->id}] = {$element->getJsonInfo('zxProdsList')};
 		</script>
-		<app-zx-prods-list element-id="{$element->id}"></app-zx-prods-list>
+		<zx-prods-list element-id="{$element->id}"></zx-prods-list>
 	</div>
 {/if}

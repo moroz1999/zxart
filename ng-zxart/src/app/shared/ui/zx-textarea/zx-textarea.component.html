@@ -1,0 +1,13 @@
+<mat-form-field appearance="outline" class="zx-textarea">
+  <mat-label *ngIf="label">{{ label }}</mat-label>
+  <textarea
+    matInput
+    [value]="value"
+    [placeholder]="placeholder"
+    [rows]="rows"
+    [disabled]="disabled"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+  ></textarea>
+  <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
+</mat-form-field>

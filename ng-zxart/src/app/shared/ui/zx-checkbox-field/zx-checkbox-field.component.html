@@ -1,0 +1,26 @@
+<label class="zx-checkbox-field__container">
+  <span class="zx-checkbox-field__control">
+    <input
+      type="checkbox"
+      class="zx-checkbox-field__native"
+      [checked]="checked"
+      [disabled]="disabled"
+      (change)="toggle()"
+    />
+    <span
+      class="zx-checkbox-field__box"
+      [class.zx-checkbox-field__box--checked]="checked"
+      [class.zx-checkbox-field__box--disabled]="disabled"
+      aria-hidden="true"
+    >
+      <span class="zx-checkbox-field__check" [class.zx-checkbox-field__check--visible]="checked">✓</span>
+    </span>
+  </span>
+  <span class="zx-checkbox-field__label">
+    @if (label) {
+      {{ label }}
+    } @else {
+      <ng-content></ng-content>
+    }
+  </span>
+</label>

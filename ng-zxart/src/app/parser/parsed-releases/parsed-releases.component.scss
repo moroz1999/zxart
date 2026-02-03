@@ -4,13 +4,13 @@
   overflow-y: auto;
   max-height: 80vh;
   display: block;
-  background-color: vars.$gray8;
-  padding: vars.$padding-md;
+  background-color: var(--background-dark);
+  padding: var(--padding-lg);
 }
 
 .releases {
   display: grid;
-  grid-gap: vars.$padding-md;
+  grid-gap: var(--gap-lg);
   grid-template-columns: 1fr;
 }
 

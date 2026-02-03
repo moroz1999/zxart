@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class claimAuthor extends structureElementAction
 {
     /**
@@ -7,7 +9,7 @@ class claimAuthor extends structureElementAction
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
-        $user = $this->getService('user');
+        $user = $this->getService(CurrentUser::class);
         $renderer = $this->getService('renderer');
 
         if (!$user->authorId && $user->authorId != $structureElement->getId()) {

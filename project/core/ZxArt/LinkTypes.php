@@ -17,4 +17,6 @@ enum LinkTypes: string
     case PRESS_PICTURES = 'pressPictures';
     case SERIES = 'series';
     case COMPILATION = 'compilation';
+    case STRUCTURE = 'structure';
+    case COMMENT_TARGET = 'commentTarget';
 }

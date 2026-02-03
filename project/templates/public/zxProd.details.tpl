@@ -293,22 +293,22 @@
     {/if}
     {if $element->compilationItems}
         <h2>{translations name='zxprod.compilationItems'}</h2>
-        <app-zx-prods-list element-id="{$element->id}" property="prods"></app-zx-prods-list>
+        <zx-prods-list element-id="{$element->id}" property="prods"></zx-prods-list>
     {/if}
 
     {if $element->seriesProds}
         <h2>{translations name='zxprod.seriesProds'}</h2>
-        <app-zx-prods-list element-id="{$element->id}" property="seriesProds"></app-zx-prods-list>
+        <zx-prods-list element-id="{$element->id}" property="seriesProds"></zx-prods-list>
     {/if}
 
     {if $element->compilations}
         <h2>{translations name='zxprod.compilations'}</h2>
-        <app-zx-prods-list element-id="{$element->id}" property="compilations"></app-zx-prods-list>
+        <zx-prods-list element-id="{$element->id}" property="compilations"></zx-prods-list>
     {/if}
     {if isset($currentElementPrivileges.submitTags) && $currentElementPrivileges.submitTags == true}
         {include file=$theme->template("tags.form.tpl") element=$element}
     {/if}
-    {include file=$theme->template('component.comments.tpl')}
+    <zx-comments-list element-id="{$element->id}"></zx-comments-list>
     {if $element->denyComments}<p>{translations name="zxitem.commentsdenied"}</p>{/if}
 
     {include file=$theme->template('component.voteslist.tpl')}
@@ -336,7 +336,7 @@
             </script>
             <h2>{translations name='zxprod.series'}: <a href="{$seriesElement->getUrl()}">{$seriesElement->title}</a>
             </h2>
-            <app-zx-prods-list element-id="{$seriesElement->id}" property="seriesProds"></app-zx-prods-list>
+            <zx-prods-list element-id="{$seriesElement->id}" property="seriesProds"></zx-prods-list>
         {/foreach}
     {/if}
 

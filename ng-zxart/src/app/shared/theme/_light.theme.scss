@@ -1,0 +1,108 @@
+@mixin light-base-ramps {
+  --white: #fff;
+
+  --neutral-light-50: #f7f7f7;
+  --neutral-light-100: #ebebeb;
+  --neutral-light-200: #d9d9d9;
+  --neutral-light-300: #bfbfbf;
+  --neutral-light-400: #a6a6a6;
+  --neutral-light-500: #8a8a8a;
+  --neutral-light-600: #737373;
+  --neutral-light-700: #595959;
+  --neutral-light-800: #404040;
+  --neutral-light-900: #262626;
+  --neutral-light-950: #131313;
+
+  --blue-light-50: #f0f8ff;
+  --blue-light-100: #d6ebff;
+  --blue-light-200: #b3daff;
+  --blue-light-300: #80c2ff;
+  --blue-light-400: #4da9ff;
+  --blue-light-500: #1a90ff;
+  --blue-light-600: #0077ee;
+  --blue-light-700: #005cb3;
+  --blue-light-800: #004280;
+  --blue-light-900: #001d38;
+  --blue-light-950: #000f1f;
+
+  --red-light-50: #fff0f0;
+  --red-light-100: #ffdddd;
+  --red-light-200: #ffb3b3;
+  --red-light-300: #ff8080;
+  --red-light-400: #ff3333;
+  --red-light-500: #ff0000;
+  --red-light-600: #bb0000;
+  --red-light-700: #7a0000;
+  --red-light-800: #3d0000;
+  --red-light-900: #1a0000;
+  --red-light-950: #160101;
+
+  --yellow-light-50: #fffbe0;
+  --yellow-light-100: #fff4d6;
+  --yellow-light-200: #ffebb3;
+  --yellow-light-300: #ffdd80;
+  --yellow-light-400: #ffc933;
+  --yellow-light-500: #ffbd04;
+  --yellow-light-600: #d49c00;
+  --yellow-light-700: #a57900;
+  --yellow-light-800: #765700;
+  --yellow-light-900: #473400;
+  --yellow-light-950: #241b00;
+
+  /* Secondary ramp (grayish) */
+  --secondary-50: var(--neutral-light-50);
+  --secondary-100: var(--neutral-light-100);
+  --secondary-200: var(--neutral-light-200);
+  --secondary-300: var(--neutral-light-300);
+  --secondary-400: var(--neutral-light-400);
+  --secondary-500: var(--neutral-light-500);
+  --secondary-600: var(--neutral-light-600);
+  --secondary-700: var(--neutral-light-700);
+  --secondary-800: var(--neutral-light-800);
+  --secondary-900: var(--neutral-light-900);
+  --secondary-950: var(--neutral-light-950);
+
+  /* Primary ramp (blueish) */
+  --primary-50: var(--blue-light-50);
+  --primary-100: var(--blue-light-100);
+  --primary-200: var(--blue-light-200);
+  --primary-300: var(--blue-light-300);
+  --primary-400: var(--blue-light-400);
+  --primary-500: var(--blue-light-500);
+  --primary-600: var(--blue-light-600);
+  --primary-700: var(--blue-light-700);
+  --primary-800: var(--blue-light-800);
+  --primary-900: var(--blue-light-900);
+  --primary-950: var(--blue-light-950);
+
+  /* Danger ramp (redish) */
+  --danger-50: var(--red-light-50);
+  --danger-100: var(--red-light-100);
+  --danger-200: var(--red-light-200);
+  --danger-300: var(--red-light-300);
+  --danger-400: var(--red-light-400);
+  --danger-500: var(--red-light-500);
+  --danger-600: var(--red-light-600);
+  --danger-700: var(--red-light-700);
+  --danger-800: var(--red-light-800);
+  --danger-900: var(--red-light-900);
+  --danger-950: var(--red-light-950);
+
+  /* Warning ramp (yellowish) */
+  --warning-50: var(--yellow-light-50);
+  --warning-100: var(--yellow-light-100);
+  --warning-200: var(--yellow-light-200);
+  --warning-300: var(--yellow-light-300);
+  --warning-400: var(--yellow-light-400);
+  --warning-500: var(--yellow-light-500);
+  --warning-600: var(--yellow-light-600);
+  --warning-700: var(--yellow-light-700);
+  --warning-800: var(--yellow-light-800);
+  --warning-900: var(--yellow-light-900);
+  --warning-950: var(--yellow-light-950);
+}
+
+.light-mode {
+  @include light-base-ramps;
+}
+

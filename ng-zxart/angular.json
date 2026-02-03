@@ -34,7 +34,7 @@
               ]
             },
             "assets": [
-
+              "src/assets"
             ],
             "scripts": []
           },

@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class zxPressApplication extends controllerApplication
 {
     protected $applicationName = 'zxPress';
@@ -33,7 +35,7 @@ class zxPressApplication extends controllerApplication
             ob_end_flush();
         }
 
-        $user = $this->getService('user');
+        $user = $this->getService(CurrentUser::class);
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
 

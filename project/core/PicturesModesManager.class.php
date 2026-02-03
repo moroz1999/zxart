@@ -1,15 +1,17 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class PicturesModesManager
 {
     /**
-     * @var user
+     * @var CurrentUser
      */
     protected $user;
     protected $mode;
 
     /**
-     * @param user $user
+     * @param CurrentUser $user
      */
     public function setUser($user): void
     {

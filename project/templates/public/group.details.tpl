@@ -47,7 +47,7 @@
 	{include file=$theme->template('publisher.zxProds.tpl')}
 	{include file=$theme->template('group.publishedReleases.tpl')}
 
-    {include $theme->template('component.comments.tpl')}
+    <zx-comments-list element-id="{$element->id}"></zx-comments-list>
 {/capture}
 
 {assign moduleClass "group_details"}

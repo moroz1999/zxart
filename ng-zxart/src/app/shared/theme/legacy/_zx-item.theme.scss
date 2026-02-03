@@ -1,0 +1,24 @@
+:root {
+  /* ZX Item */
+  --zxitem-images-gap: var(--space-16);
+  --zxitem-image-max-width: 320px;
+  --zxitem-image-controls-gap: 5px;
+  --zxitem-image-controls-top: var(--space-16);
+  --zxitem-image-controls-right: var(--space-16);
+  --zxitem-image-button-size: 32px;
+  --zxitem-file-block-margin-bottom: var(--space-8);
+}
+
+.dark-mode {
+  --zxitem-image-button-bg: var(--secondary-200);
+  --zxitem-image-button-border: 1px solid var(--secondary-300);
+  --zxitem-image-button-hover-bg: var(--secondary-400);
+}
+
+.light-mode {
+  --zxitem-image-button-bg: var(--secondary-100);
+  --zxitem-image-button-border: 1px solid var(--secondary-200);
+  --zxitem-image-button-hover-bg: var(--secondary-200);
+}
+
+

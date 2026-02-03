@@ -1,13 +1,14 @@
 <?php
 
 use App\Logging\EventsLog;
+use App\Users\CurrentUser;
 
 /**
  * Class commentElement
  *
- * @property string author
- * @property string email
- * @property string website
+ * @property string $author @deprecated use getUserElement() instead
+ * @property string $email @deprecated use getUserElement() instead
+ * @property string website @deprecated use getUserElement() instead
  * @property string content
  * @property string ipAddress
  * @property string targetType
@@ -86,6 +87,13 @@ class commentElement extends structureElement implements MetadataProviderInterfa
     public function getParentElement()
     {
         $structureManager = $this->getService('structureManager');
+        // First check if there is a parent comment (nested comments)
+        if ($parentComment = $structureManager->getElementsFirstParent($this->id, 'structure')) {
+            if ($parentComment->structureType === 'comment') {
+                return $parentComment;
+            }
+        }
+        // Fallback to commentTarget link (usually for the top-level entity)
         return $structureManager->getElementsFirstParent($this->id, 'commentTarget');
     }
 
@@ -98,7 +106,7 @@ class commentElement extends structureElement implements MetadataProviderInterfa
     {
         $votesValue = 0;
         $votesManager = $this->getService('votesManager');
-        $user = $this->getService('user');
+        $user = $this->getService(CurrentUser::class);
         if ($votesList = $votesManager->getElementVotesList($this->id)) {
             foreach ($votesList as $vote) {
                 if ($vote['userId'] !== $user->id) {

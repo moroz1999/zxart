@@ -1,0 +1,113 @@
+@mixin dark-base-ramps {
+  /* This file is for BASE RAMPS ONLY.
+     NEVER add component-specific colors here.
+     Use component theme files (e.g., _zx-button.theme.scss) instead. */
+  --white: #fff;
+
+  --neutral-dark-50: #f7f7f7;
+  --neutral-dark-100: #eaeaea;
+  --neutral-dark-200: #d0d0d0;
+  --neutral-dark-300: #b6b6b6;
+  --neutral-dark-400: #a4a4a4;
+  --neutral-dark-500: #929292;
+  --neutral-dark-600: #858585;
+  --neutral-dark-700: #686868;
+  --neutral-dark-800: #454545;
+  --neutral-dark-900: #252525;
+  --neutral-dark-950: #141414;
+
+  /* Blue ramp brightness reduced by 10% for dimmer appearance in dark theme */
+  --blue-dark-50: #e6f0fa;
+  --blue-dark-100: #cce1f4;
+  --blue-dark-200: #99c3ea;
+  --blue-dark-300: #66a4df;
+  --blue-dark-400: #3386d5;
+  --blue-dark-500: #0068ca;
+  --blue-dark-600: #0053a2;
+  --blue-dark-700: #003e79;
+  --blue-dark-800: #002a51;
+  --blue-dark-900: #001528;
+  --blue-dark-950: #00050a;
+
+  --red-dark-50: #fff2f2;
+  --red-dark-100: #ffd8d8;
+  --red-dark-200: #ffacac;
+  --red-dark-300: #ff8888;
+  --red-dark-400: #ff6464;
+  --red-dark-500: #ff4040;
+  --red-dark-600: #d10d0d;
+  --red-dark-700: #ad0000;
+  --red-dark-800: #8b0000;
+  --red-dark-900: #4d0000;
+  --red-dark-950: #2e0000;
+
+  --yellow-dark-50: #fffbf2;
+  --yellow-dark-100: #fff5d8;
+  --yellow-dark-200: #ffe9ac;
+  --yellow-dark-300: #ffd664;
+  --yellow-dark-400: #ffc31d;
+  --yellow-dark-500: #ffcc40;
+  --yellow-dark-600: #ffbd04;
+  --yellow-dark-700: #daa000;
+  --yellow-dark-800: #8b6600;
+  --yellow-dark-900: #4d3800;
+  --yellow-dark-950: #2e2200;
+
+
+  /* Secondary ramp (grayish) */
+  --secondary-50: var(--neutral-dark-950);
+  --secondary-100: var(--neutral-dark-900);
+  --secondary-200: var(--neutral-dark-800);
+  --secondary-300: var(--neutral-dark-700);
+  --secondary-400: var(--neutral-dark-600);
+  --secondary-500: var(--neutral-dark-500);
+  --secondary-600: var(--neutral-dark-400);
+  --secondary-700: var(--neutral-dark-300);
+  --secondary-800: var(--neutral-dark-200);
+  --secondary-900: var(--neutral-dark-100);
+  --secondary-950: var(--neutral-dark-50);
+
+  /* Primary ramp (blueish) */
+  --primary-50: var(--blue-dark-950);
+  --primary-100: var(--blue-dark-900);
+  --primary-200: var(--blue-dark-800);
+  --primary-300: var(--blue-dark-700);
+  --primary-400: var(--blue-dark-600);
+  --primary-500: var(--blue-dark-500);
+  --primary-600: var(--blue-dark-400);
+  --primary-700: var(--blue-dark-300);
+  --primary-800: var(--blue-dark-200);
+  --primary-900: var(--blue-dark-100);
+  --primary-950: var(--blue-dark-50);
+
+  /* Danger ramp (redish) - Inverted */
+  --danger-50: var(--red-dark-950);
+  --danger-100: var(--red-dark-900);
+  --danger-200: var(--red-dark-800);
+  --danger-300: var(--red-dark-700);
+  --danger-400: var(--red-dark-600);
+  --danger-500: var(--red-dark-500);
+  --danger-600: var(--red-dark-400);
+  --danger-700: var(--red-dark-300);
+  --danger-800: var(--red-dark-200);
+  --danger-900: var(--red-dark-100);
+  --danger-950: var(--red-dark-50);
+
+  /* Warning ramp (yellowish) - Inverted */
+  --warning-50: var(--yellow-dark-950);
+  --warning-100: var(--yellow-dark-900);
+  --warning-200: var(--yellow-dark-800);
+  --warning-300: var(--yellow-dark-700);
+  --warning-400: var(--yellow-dark-600);
+  --warning-500: var(--yellow-dark-500);
+  --warning-600: var(--yellow-dark-400);
+  --warning-700: var(--yellow-dark-300);
+  --warning-800: var(--yellow-dark-200);
+  --warning-900: var(--yellow-dark-100);
+  --warning-950: var(--yellow-dark-50);
+}
+
+.dark-mode {
+  @include dark-base-ramps;
+}
+

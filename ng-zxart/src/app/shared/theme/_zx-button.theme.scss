@@ -1,0 +1,63 @@
+:root {
+  /* ZxButton Component variables */
+  --zx-button-xs-height: 24px;
+  --zx-button-xs-font-size: var(--font-xs);
+  --zx-button-xs-h-padding: var(--space-8);
+  --zx-button-xs-padding: 0 var(--zx-button-xs-h-padding);
+
+  --zx-button-sm-height: 30px;
+  --zx-button-sm-font-size: var(--font-sm);
+  --zx-button-sm-h-padding: var(--space-12);
+  --zx-button-sm-padding: 0 var(--zx-button-sm-h-padding);
+
+  --zx-button-md-height: 36px;
+  --zx-button-md-font-size: var(--font-md);
+  --zx-button-md-h-padding: var(--space-16);
+  --zx-button-md-padding: 0 var(--zx-button-md-h-padding);
+
+  --zx-button-primary-bg: var(--primary-500);
+  --zx-button-primary-text: var(--white);
+  --zx-button-primary-disabled-bg: var(--primary-300);
+  --zx-button-primary-disabled-text: var(--primary-700);
+
+  --zx-button-secondary-bg: var(--secondary-400);
+  --zx-button-secondary-hover-bg: var(--secondary-500);
+  --zx-button-secondary-text: var(--white);
+  --zx-button-secondary-disabled-bg: var(--secondary-300);
+  --zx-button-secondary-disabled-text: var(--secondary-700);
+
+  --zx-button-primary-hover-bg: var(--primary-600);
+  --zx-button-danger-hover-bg: var(--danger-500);
+
+  --zx-button-danger-bg: var(--danger-400);
+  --zx-button-danger-text: var(--white);
+  --zx-button-danger-disabled-bg: var(--danger-300);
+  --zx-button-danger-disabled-text: var(--danger-800);
+  --zx-button-danger-border: none;
+
+  --zx-button-transparent-bg: transparent;
+  --zx-button-transparent-hover-bg: var(--secondary-700);
+  --zx-button-transparent-text: var(--text-color);
+  --zx-button-transparent-disabled-bg: transparent;
+  --zx-button-transparent-disabled-text: var(--secondary-500);
+
+  --zx-button-border-radius: var(--radius-lg);
+  --zx-button-transition-time: 0.25s;
+  --zx-button-disabled-opacity: 0.8;
+}
+
+.dark-mode {
+  --zx-button-secondary-bg: var(--secondary-200);
+  --zx-button-secondary-hover-bg: var(--secondary-300);
+
+  --zx-button-primary-disabled-bg: var(--primary-400);
+  --zx-button-primary-disabled-text: var(--primary-900);
+  --zx-button-secondary-disabled-bg: var(--secondary-500);
+  --zx-button-secondary-disabled-text: var(--secondary-900);
+  --zx-button-danger-disabled-bg: var(--danger-400);
+  --zx-button-danger-disabled-text: var(--danger-900);
+
+  --zx-button-transparent-hover-bg: var(--secondary-300);
+  --zx-button-transparent-disabled-text: var(--secondary-400);
+}
+

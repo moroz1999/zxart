@@ -1,0 +1,15 @@
+:root {
+  /* Checkbox */
+  --checkbox-size: 18px;
+  --checkbox-bg: var(--input-bg);
+  --checkbox-border-color: var(--input-border-color);
+  --checkbox-border-focus-color: var(--input-border-focus-color);
+  --checkbox-check-color: var(--secondary-700);
+  --checkbox-checked-bg: var(--input-bg);
+}
+
+.dark-mode {
+  --checkbox-border-color: var(--secondary-300);
+  --checkbox-border-focus-color: var(--white);
+  --checkbox-check-color: var(--secondary-900);
+}

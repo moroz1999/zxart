@@ -1,0 +1,27 @@
+:host {
+  display: flex;
+
+  &.zx-stack--column {
+    flex-direction: column;
+  }
+
+  &.zx-stack--row {
+    flex-direction: row;
+  }
+
+  &.zx-stack--spacing-sm {
+    gap: var(--zx-stack-spacing-sm);
+  }
+
+  &.zx-stack--spacing-md {
+    gap: var(--zx-stack-spacing-md);
+  }
+
+  &.zx-stack--spacing-lg {
+    gap: var(--zx-stack-spacing-lg);
+  }
+
+  &.zx-stack--spacing-xl {
+    gap: var(--zx-stack-spacing-xl);
+  }
+}

@@ -1,6 +1,6 @@
 ## Project Domain
-
 Project is an archive of ZX Spectrum related art objects. Graphics, music, software and related entities - authors, authors groups and so on.
+Read detailed files only WHEN you get specific domain questions.
 
 ## Entities
 
@@ -22,7 +22,7 @@ Category of zxProds.
 
 ### comment
 User comment. Can be left to one of zx art items.
-specs/comment.md - specs for comments
+Detailed logic and structure: [domain/comments.md](domain/comments.md)
 
 ### author
 Author of zx art item. Can have real name and/or nickname. Localized

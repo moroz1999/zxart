@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {SelectorDto} from '../../models/selector-dto';
 import {TranslatePipe} from '@ngx-translate/core';
 import {NgForOf, NgIf} from '@angular/common';
-import {MatButton} from '@angular/material/button';
+import {ZxButtonComponent} from '../../../shared/ui/zx-button/zx-button.component';
 
 @Component({
     selector: 'app-letter-selector',
@@ -13,8 +13,7 @@ import {MatButton} from '@angular/material/button';
         TranslatePipe,
         NgIf,
         NgForOf,
-        MatButton,
-        MatButton,
+        ZxButtonComponent,
     ],
 })
 export class LetterSelectorComponent implements OnChanges {

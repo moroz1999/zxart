@@ -4,18 +4,14 @@
 .tip_popup {
 	z-index: 120;
 	position: absolute;
-	padding: 5px;
-	color: #fff;
-	background-color: @primary_color;
+	padding: var(--tip-popup-padding);
+	color: var(--tip-popup-color);
+	background-color: var(--tip-popup-bg);
 	font-weight: bold;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	box-shadow: 0 1px 3px #999;
-	-moz-box-shadow: 0 1px 3px #999;
-	-webkit-box-shadow: 0 1px 3px #999;
-	text-shadow: 0 -1px 1px #222;
-	border-bottom: 1px solid #222;
+	border-radius: var(--tip-popup-border-radius);
+	box-shadow: var(--tip-popup-shadow);
+	text-shadow: var(--tip-popup-text-shadow);
+	border-bottom: var(--tip-popup-border-bottom);
 }
 
 .tip_popup_content {

@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class receiveFormLogin extends structureElementAction
 {
     protected $loggable = true;
@@ -10,7 +12,7 @@ class receiveFormLogin extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated === true) {
-            $user = $this->getService('user');
+            $user = $this->getService(CurrentUser::class);
             $structureElement->setViewName('result');
 
             if ($userId = $user->checkUser($structureElement->userName, $structureElement->password)) {

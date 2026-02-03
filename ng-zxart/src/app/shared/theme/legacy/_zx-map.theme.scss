@@ -1,0 +1,14 @@
+:root {
+  /* ZX Map */
+  --zxmap-height: 560px;
+  --zxmap-margin-bottom: var(--space-16);
+  --zxmap-cluster-bg: rgba(var(--secondary-400-rgb), 0.7);
+  --zxmap-cluster-inner-bg: var(--secondary-400);
+  --zxmap-cluster-inner-font-size: var(--font-sm);
+  --zxmap-marker-color: var(--primary-500);
+  --zxmap-marker-icon-color: var(--text-color);
+  --zxmap-marker-text-color: var(--text-color);
+  --zxmap-marker-amount-font-size: var(--font-md);
+  --zxmap-location-padding-bottom: var(--space-8);
+}
+

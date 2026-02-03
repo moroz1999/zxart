@@ -147,5 +147,19 @@
       "video": "Video",
       "translation": "Translation"
     }
+  },
+  "comments": {
+    "title": "Comments",
+    "empty": "No comments yet.",
+    "add": "Add Comment",
+    "reply": "Reply",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "post": "Post Comment",
+    "save": "Save Changes",
+    "label": "Comment:",
+    "confirm-delete": "Are you sure you want to delete this comment?",
+    "error-content": "Content is required (min 2 characters)."
   }
 }

@@ -1,0 +1,16 @@
+:root {
+  /* Header */
+  --header-padding: var(--space-8) var(--space-16);
+  --header-column-margin: 0 var(--space-16);
+  --logo-margin-top: var(--space-16);
+  --settings-font-size: var(--font-sm);
+}
+
+.dark-mode {
+  --header-bg: var(--secondary-100);
+}
+
+.light-mode {
+  --header-bg: var(--white);
+}
+

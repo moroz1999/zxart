@@ -1,0 +1,73 @@
+:root {
+  /* Layout & Application */
+  --content-padding: var(--space-16);
+  --content-padding-mobile: var(--space-16);
+  --center-block-padding-bottom: var(--space-48);
+  --breadcrumbs-margin-bottom: var(--space-16);
+  --center-banner-margin-right: 230px;
+  --current-location-margin-bottom: var(--space-16);
+  --current-location-delimiter-font-size: 1.2em;
+  --firstpage-top-block-margin-bottom: var(--space-32);
+  --firstpage-top-block-padding-top: var(--space-16);
+  --lastcomments-margin-bottom: var(--space-32);
+  --lastcomments-header-font-size: var(--font-lg);
+  --all-comments-icon-margin-right: var(--space-8);
+  --lastnews-margin-bottom: var(--space-32);
+  --lastnews-padding-top: var(--space-16);
+  --lastnews-header-font-size: var(--font-lg);
+  --news-short-date-color: var(--secondary-500);
+  --news-short-date-font-size: var(--font-sm);
+  --news-short-block-margin-bottom: var(--space-16);
+  --latestupdates-controls-margin: var(--space-8) 0;
+  --latestupdates-controls-font-size: var(--font-sm);
+  --zxitemslist-controls-margin-top: var(--space-16);
+  --parties-table-thead-padding: var(--space-8);
+  --parties-table-tbody-padding: var(--space-8);
+  --parties-table-font-size: var(--font-xs);
+  --fullscreen-title-font-size: var(--font-xl);
+  --share-block-right: 251px;
+  --share-block-top: var(--space-32);
+  --right-column-padding-top: var(--space-48);
+  --center-column-ads-margin-top: var(--space-16);
+  --lastvotes-margin-bottom: var(--space-32);
+  --votes-table-font-size: var(--font-md);
+  --votes-header-font-size: var(--font-lg);
+  --picture-details-share-margin: var(--space-16) 0;
+  --share-item-margin-right: var(--space-16);
+  --artweb-right: var(--space-32);
+  --footer-min-height: var(--space-48);
+  --heading-margin-top: var(--space-24);
+  --heading-margin-bottom: var(--space-16);
+  --banner-cover-bg: var(--warning-400);
+  --html-content-image-margin: var(--space-16);
+
+  /* Legacy Links */
+  --link-color: var(--zx-link-color);
+  --link-alt-color: var(--zx-link-alt-color);
+
+  /* New system bridges */
+  --zx-heading-1-size: var(--font-xxl);
+  --zx-heading-2-size: var(--font-xl);
+  --zx-heading-3-size: var(--font-lg);
+  --zx-body-size: var(--font-md);
+  --zx-caption-size: var(--font-xs);
+  --h1-font-size: var(--zx-heading-1-size);
+  --h2-font-size: var(--zx-heading-2-size);
+  --h3-font-size: var(--zx-heading-3-size);
+}
+
+.dark-mode {
+  --main-background: var(--secondary-50);
+  --secondary-bg: var(--secondary-100);
+  --content-background: var(--secondary-50);
+  --gallery-item-border-color: var(--secondary-50);
+}
+
+.light-mode {
+  --main-background: var(--secondary-50);
+  --secondary-bg: var(--secondary-100);
+  --content-background: var(--white);
+  --gallery-item-border-color: var(--secondary-100);
+}
+
+

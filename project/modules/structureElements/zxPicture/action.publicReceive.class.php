@@ -1,6 +1,7 @@
 <?php
 
 use App\Paths\PathsManager;
+use App\Users\CurrentUser;
 use ZxArt\Authors\Constants;
 
 class publicReceiveZxPicture extends structureElementAction
@@ -53,7 +54,7 @@ class publicReceiveZxPicture extends structureElementAction
             $structureElement->structureName = $structureElement->title;
 
             if (!$structureElement->userId) {
-                $structureElement->userId = $this->getService('user')->id;
+                $structureElement->userId = $this->getService(CurrentUser::class)->id;
             }
 
             //if no author is selected, select automatically Unknown author

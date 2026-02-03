@@ -2,16 +2,16 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angula
 import {MatDialog} from '@angular/material/dialog';
 import {DialogSelectorDialogComponent} from './dialog-selector-dialog/dialog-selector-dialog.component';
 import {SelectorDto} from '../../models/selector-dto';
-import {MatButton} from '@angular/material/button';
 import {NgIf} from '@angular/common';
+import {ZxButtonComponent} from "../../../shared/ui/zx-button/zx-button.component";
 
 @Component({
-    selector: 'app-dialog-selector',
+    selector: 'zx-dialog-selector',
     templateUrl: './dialog-selector.component.html',
     styleUrls: ['./dialog-selector.component.scss'],
     standalone: true,
     imports: [
-        MatButton,
+        ZxButtonComponent,
         NgIf,
     ],
 })
@@ -51,6 +51,7 @@ export class DialogSelectorComponent implements OnInit, OnChanges {
     clickHandler() {
         let dialogRef = this.dialog.open(DialogSelectorDialogComponent, {
             width: this.width,
+            panelClass: 'zx-dialog',
             data: {
                 selectorData: this.selectorData,
                 selectValuesLabel: this.selectValuesLabel,

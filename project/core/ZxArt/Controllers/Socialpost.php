@@ -12,6 +12,7 @@ use ZxArt\Social\SocialPostsService;
 class Socialpost extends controllerApplication
 {
     private ?Logger $logger = null;
+    protected SocialPostsService $socialPostsService;
     public $rendererName = 'smarty';
 
     #[Override]
@@ -19,6 +20,7 @@ class Socialpost extends controllerApplication
     {
         $this->createRenderer();
         $this->logger = $this->getService('social_posts_logger');
+        $this->socialPostsService = $this->getService(SocialPostsService::class);
     }
 
     #[Override]
@@ -30,10 +32,8 @@ class Socialpost extends controllerApplication
             'rootMarker' => $configManager->get('main.rootMarkerPublic'),
         ], true);
 
-        $socialPostsService = $this->getService(SocialPostsService::class);
-
         try {
-            $socialPostsService->processQueue();
+            $this->socialPostsService->processQueue();
             $this->logger?->info('Social posts processing completed');
         } catch (\Exception $exception) {
             $this->logger?->error('Social posts processing failed: ' . $exception->getMessage());

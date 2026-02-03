@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class publicAddAuthor extends structureElementAction
 {
     protected $loggable = true;
@@ -34,7 +36,7 @@ class publicAddAuthor extends structureElementAction
             $structureElement->recalculate();
 
             $privilegesManager = $this->getService('privilegesManager');
-            $user = $this->getService('user');
+            $user = $this->getService(CurrentUser::class);
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'author', 'showPublicForm', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'author', 'publicReceive', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'author', 'publicDelete', 'allow');

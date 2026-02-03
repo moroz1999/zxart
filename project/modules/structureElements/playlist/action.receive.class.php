@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class receivePlaylist extends structureElementAction
 {
     /**
@@ -8,7 +10,7 @@ class receivePlaylist extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated) {
-            $user = $this->getService('user');
+            $user = $this->getService(CurrentUser::class);
 
             $structureElement->prepareActualData();
 

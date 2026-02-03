@@ -1,0 +1,23 @@
+<form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="comment-form">
+  <zx-textarea
+    formControlName="content"
+    [label]="contentLabel"
+    [rows]="4"
+    [errorMessage]="contentErrorMessage"
+  ></zx-textarea>
+
+  <div *ngIf="errorMessage" zxCaption style="color: red; margin-bottom: 16px;">
+    {{ errorMessage }}
+  </div>
+
+  <div class="form-actions">
+    <zx-stack direction="row" spacing="md">
+      <zx-button size="sm" color="primary" type="submit" [disabled]="commentForm.invalid || isSubmitting">
+        {{ (commentToEdit ? 'comments.save' : 'comments.post') | translate }}
+      </zx-button>
+      <zx-button size="sm" color="secondary" type="button" (click)="onCancel()" [disabled]="isSubmitting">
+        {{ 'comments.cancel' | translate }}
+      </zx-button>
+    </zx-stack>
+  </div>
+</form>

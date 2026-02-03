@@ -2,25 +2,70 @@
 /*  COMPONENT
 /********************************************************/
 .button {
-  background-color: #424242;
+  background-color: var(--zx-button-secondary-bg);
   border: none;
-  border-radius: 0.3rem;
-  min-height: 36px;
-  line-height: 28px;
-  padding: 0.2rem 0.5rem;
-  color: #ffffff;
+  border-radius: var(--zx-button-border-radius);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--zx-button-md-height);
+  line-height: var(--zx-button-md-height);
+  padding: var(--zx-button-md-padding);
+  font-size: var(--zx-button-md-font-size);
+  color: var(--zx-button-secondary-text);
   text-decoration: none;
-  transition: background-color 0.15s ease-in-out, border 0.15s ease-in-out;
+  text-align: center;
+  transition: background-color var(--zx-button-transition-time) ease-in-out, border var(--zx-button-transition-time) ease-in-out;
 
   &:hover,
   &:focus {
     text-decoration: none;
-    background-color: #606060;
+    background-color: var(--zx-button-secondary-hover-bg);
+  }
+}
+
+.button_sm {
+  min-height: var(--zx-button-sm-height);
+  line-height: var(--zx-button-sm-height);
+  padding: var(--zx-button-sm-padding);
+  font-size: var(--zx-button-sm-font-size);
+}
+
+.button_xs {
+  min-height: var(--zx-button-xs-height);
+  line-height: var(--zx-button-xs-height);
+  padding: var(--zx-button-xs-padding);
+  font-size: var(--zx-button-xs-font-size);
+}
+
+.button_primary {
+  background-color: var(--zx-button-primary-bg);
+  color: var(--zx-button-primary-text);
+
+  &:hover,
+  &:focus {
+    background-color: var(--zx-button-primary-hover-bg);
   }
 }
 
 .delete_button {
-  border: #860f0f;
-  background: #e51919;
-  color: #ffffff;
+  border: var(--zx-button-danger-border);
+  background: var(--zx-button-danger-bg);
+  color: var(--zx-button-danger-text);
+}
+
+.button_transparent {
+  background-color: var(--zx-button-transparent-bg);
+  color: var(--zx-button-transparent-text);
+
+  &:hover,
+  &:focus {
+    background-color: var(--zx-button-transparent-hover-bg);
+  }
+}
+
+.button_square {
+  min-width: auto;
+  aspect-ratio: 1;
+  padding: 0;
 }

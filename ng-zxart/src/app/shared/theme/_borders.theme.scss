@@ -1,0 +1,16 @@
+:root {
+  /* Border widths */
+  --border-width-thin: 1px;
+  --border-width-thick: 2px;
+
+  /* Border tokens */
+  --border-secondary: var(--secondary-600);
+  --border-primary: var(--primary-600);
+  --border-focused: var(--secondary-950);
+  --border-form: var(--secondary-200);
+}
+
+.dark-mode {
+  --border-focused: var(--white);
+  --border-primary: var(--primary-400);
+}

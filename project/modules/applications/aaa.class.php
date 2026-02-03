@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class aaaApplication extends controllerApplication
 {
     protected $applicationName = 'aaa';
@@ -32,7 +34,7 @@ class aaaApplication extends controllerApplication
             ob_end_flush();
         }
 
-        $user = $this->getService('user');
+        $user = $this->getService(CurrentUser::class);
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
 

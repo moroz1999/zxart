@@ -21,7 +21,7 @@
             window.elementsData = window.elementsData ? window.elementsData : { };
             window.elementsData[{$element->id}] = {$prodsData};
         </script>
-        <app-zx-prods-list element-id="{$element->id}" property="prods"></app-zx-prods-list>
+        <zx-prods-list element-id="{$element->id}" property="prods"></zx-prods-list>
     {/if}
 {/capture}
 {assign moduleClass "playlist_details"}

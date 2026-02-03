@@ -1,6 +1,7 @@
 <?php
 
 use App\Paths\PathsManager;
+use App\Users\CurrentUser;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
@@ -22,7 +23,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
         if ($filesInfo = $structureElement->file) {
             $privilegesManager = $this->getService('privilegesManager');
             $linksManager = $this->getService('linksManager');
-            $user = $this->getService('user');
+            $user = $this->getService(CurrentUser::class);
             $queueService = $this->getService(QueueService::class);
             $cachePath = $this->getService(PathsManager::class)->getPath('uploadsCache');
             if (!$structureElement->categories) {
@@ -71,7 +72,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                     $zxProdElement->mapFilesSelector = $structureElement->mapFilesSelector;
 
                     $zxProdElement->dateAdded = $zxProdElement->dateCreated;
-                    $zxProdElement->userId = $this->getService('user')->id;
+                    $zxProdElement->userId = $this->getService(CurrentUser::class)->id;
 
                     $zxProdElement->checkLinks('categories', 'zxProdCategory');
 
@@ -117,7 +118,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                             $zxReleaseElement->structureName = $zxReleaseElement->title;
                             $zxReleaseElement->file = $zxReleaseElement->getPersistedId();
                             $zxReleaseElement->dateAdded = $zxReleaseElement->dateCreated;
-                            $zxReleaseElement->userId = $this->getService('user')->id;
+                            $zxReleaseElement->userId = $this->getService(CurrentUser::class)->id;
 
                             $zxReleaseElement->persistElementData();
 

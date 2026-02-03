@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class tagsManager extends errorLogger implements DependencyInjectionContextInterface
 {
     use DependencyInjectionContextTrait;
@@ -238,7 +240,7 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
                 $tagElement->prepareActualData();
                 $tagElement->structureName = $tagName;
                 $tagElement->title = $tagName;
-                $tagElement->userId = $this->getService('user')->id;
+                $tagElement->userId = $this->getService(CurrentUser::class)->id;
                 $tagElement->persistElementData();
                 $structureManager->moveElement($structureManager->rootElementId, $tagsElementId, $tagElement->id);
             }

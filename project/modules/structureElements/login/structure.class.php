@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class loginElement extends menuDependantStructureElement
 {
     public $dataResourceName = 'module_login';
@@ -133,7 +135,7 @@ class loginElement extends menuDependantStructureElement
 
     public function displayForm(): bool
     {
-        $user = $this->getService('user');
+        $user = $this->getService(CurrentUser::class);
         if ($user->userName == 'anonymous') {
             return true;
         }

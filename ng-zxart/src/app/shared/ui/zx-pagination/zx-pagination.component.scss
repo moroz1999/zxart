@@ -1,0 +1,17 @@
+:host {
+  display: flex;
+  justify-content: flex-end;
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+}
+
+.zx-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  padding: var(--space-8);
+  background: var(--background-dark);
+  border-top-left-radius: var(--radius-lg);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+}

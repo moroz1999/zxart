@@ -3,7 +3,6 @@
 /********************************************************/
 .music_list_table {
     width: 100%;
-    table-layout: fixed;
 }
 
 .music_list_table td {
@@ -106,9 +105,9 @@
 /*  ZX MUSIC DETAILS
 /********************************************************/
 .music_details_controls {
-    margin: 1em 0;
-    padding: 1em;
-    background-color: @secondary_color;
+    margin: var(--zxmusic-details-margin);
+    padding: var(--zxmusic-details-padding);
+    background-color: var(--secondary-bg);
     vertical-align: middle;
     display: inline-block;
 }
@@ -125,19 +124,19 @@
 
 .music_controls_label {
     vertical-align: middle;
-    margin-left: 1em;
+    margin-left: var(--zxmusic-controls-label-margin-left);
 }
 
 .music_details_description {
-    margin: 1em 0 3em;
+    margin: var(--zxmusic-details-description-margin);
 }
 
 .music_details_share {
-    margin: 1em 0 3em;
+    margin: var(--zxmusic-details-description-margin);
 }
 
 .music_details_info .playlist_controls {
-    margin-left: 0.5em;
+    margin-left: var(--zxmusic-details-info-playlist-margin-left);
 }
 
 .music_details_download {
@@ -149,7 +148,7 @@
     img {
         display: inline-block;
         vertical-align: middle;
-        margin-right: 5px;
+        margin-right: var(--zxmusic-details-download-img-margin-right);
     }
 
 }
@@ -232,9 +231,9 @@
     display: none;
     position: fixed;
     bottom: 0;
-    left: 2em;
-    border-top-left-radius: 0.8em;
-    border-top-right-radius: 0.8em;
+    left: var(--zxmusic-controls-full-fixed-left);
+    border-top-left-radius: var(--zxmusic-controls-full-radius);
+    border-top-right-radius: var(--zxmusic-controls-full-radius);
     z-index: 10;
 }
 
@@ -242,30 +241,29 @@
     white-space: nowrap;
     width: 100%;
     height: 100%;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
-    border-radius: 0.8em;
+    border-radius: var(--zxmusic-controls-full-radius);
 }
 
 .music_controls_full {
-    padding: 1em;
-    background-color: @secondary_color;
+    padding: var(--zxmusic-controls-full-padding);
+    background-color: var(--secondary-bg);
     line-height: 100%;
 }
 
 .music_controls_buttons {
     display: inline-block;
-    margin-right: 0.3em;
+    margin-right: var(--zxmusic-controls-buttons-margin-right);
     vertical-align: middle;
 }
 
 .music_controls_buttons .music_controls_button {
-    margin-right: 0.3em;
+    margin-right: var(--zxmusic-controls-buttons-margin-right);
 }
 
 .music_controls_progress {
     position: relative;
-    padding: 0.3em;
+    padding: var(--zxmusic-progress-padding);
     display: inline-block;
     box-sizing: border-box;
     height: 2em;
@@ -274,8 +272,8 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    background-color: #222222;
-    border-radius: 0.2em;
+    background-color: var(--zxmusic-progress-bg);
+    border-radius: var(--zxmusic-progress-radius);
     vertical-align: middle;
 }
 
@@ -285,7 +283,7 @@
     left: 0;
     bottom: 0;
     width: 0;
-    background: #606060;
+    background: var(--zxmusic-progress-body-bg);
     z-index: 1;
 }
 
@@ -301,7 +299,7 @@
     display: inline-block;
     width: 1em;
     height: 1em;
-    margin-left: 1em;
+    margin-left: var(--zxmusic-controls-link-margin-left);
     vertical-align: middle;
     background: url(getImageUrl('link.svg')) center;
     background-size: contain;

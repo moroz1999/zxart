@@ -6,22 +6,22 @@
 }
 
 .language_item {
-	font-size: 0.9em;
+	font-size: var(--language-item-font-size);
 	position: relative;
 	display: inline-block;
 	outline: none;
-	padding: 0.7em;
-	margin: 0.1em;
+	padding: var(--language-item-padding);
+	margin: var(--language-item-margin);
 }
 
 .language_item:hover {
-	background-color: @secondary_color;
+	background-color: var(--language-item-hover-bg);
 }
 
 .language-link {
 	white-space: nowrap;
 	display: inline-flex;
-	gap: 0.5rem;
+	gap: var(--gap-sm);
 }
 
 .language-link-icon {

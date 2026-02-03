@@ -1,0 +1,69 @@
+:root {
+  /* Base palette */
+  /* DO NOT use this file variables directly in components. Define semantic or component-specific variables instead. */
+
+  --neutral-600-rgb: 85, 85, 85;
+  --secondary-400-rgb: var(--neutral-600-rgb);
+
+  /* Spacing */
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-64: 64px;
+
+  /* Font sizes */
+  --font-xs: 12px;
+  --font-sm: 13px;
+  --font-md: 14px;
+  --font-lg: 18px;
+  --font-xl-sm: 20px;
+  --font-xl: 21px;
+  --font-xxl: 23px;
+
+  /* Border radius */
+  --radius-md: 3px;
+  --radius-lg: 6px;
+  --radius-xl: 12px;
+  --radius-sm: 2px;
+  --radius-xs: 1px;
+
+  /* Animation */
+  --animation-md: 300ms;
+  --animation-sm: 200ms;
+  --animation-xs: 100ms;
+
+  /* Shadows */
+  --shadow-thin: 0 1px 3px 1px rgba(0, 0, 0, 0.1);
+
+  --gap-sm: var(--space-8);
+  --gap-md: var(--space-12);
+  --gap-lg: var(--space-16);
+  --gap-xl: var(--space-32);
+  --gap-xxl: var(--space-48);
+
+  --padding-xs: var(--space-4);
+  --padding-sm: var(--space-8);
+  --padding-md: var(--space-12);
+  --padding-lg: var(--space-16);
+  --padding-xl: var(--space-32);
+
+  --margin-xs: var(--space-4);
+  --margin-sm: var(--space-8);
+  --margin-md: var(--space-12);
+  --margin-lg: var(--space-16);
+  --margin-xl: var(--space-32);
+  --margin-xxl: var(--space-48);
+
+  --border-radius-sm: var(--radius-sm);
+  --border-radius-md: var(--radius-md);
+  --border-radius-lg: var(--radius-lg);
+  --border-radius-xl: var(--radius-xl);
+}
+

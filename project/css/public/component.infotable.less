@@ -5,7 +5,6 @@
 	border-collapse: collapse;
 	border-style: none;
 	max-width: 100%;
-	table-layout: fixed;
 }
 
 @media (max-width: @screen_breakpoint_sm_max) {
@@ -16,14 +15,14 @@
 }
 
 .info_table .info_table_label {
-	padding: 0.3em 1em 0.5em 1em;
+	padding: var(--padding-xs) var(--padding-lg) var(--padding-sm) var(--padding-lg);
 	border-collapse: collapse;
 	font-weight: bold;
 	text-align: right;
 }
 
 .info_table .info_table_value {
-	padding: 0.3em 1em 0.5em 0;
+	padding: var(--padding-xs) var(--padding-lg) var(--padding-sm) 0;
 	border-collapse: collapse;
 
 }

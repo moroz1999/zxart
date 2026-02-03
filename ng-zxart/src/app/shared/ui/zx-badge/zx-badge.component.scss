@@ -1,0 +1,26 @@
+:host {
+  display: inline-block;
+  font-size: var(--zx-badge-font-size);
+  padding: var(--zx-badge-padding);
+  border-radius: var(--zx-badge-border-radius);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: opacity 200ms ease-in-out;
+
+  &.zx-badge--primary {
+    background-color: var(--zx-badge-primary-bg);
+    color: var(--zx-badge-primary-text);
+    border: var(--border-width-thin) solid var(--zx-badge-primary-border);
+  }
+
+  &.zx-badge--secondary {
+    background-color: var(--zx-badge-secondary-bg);
+    color: var(--zx-badge-secondary-text);
+    border: var(--border-width-thin) solid var(--zx-badge-secondary-border);
+  }
+
+  &:hover {
+    opacity: 0.8;
+  }
+}

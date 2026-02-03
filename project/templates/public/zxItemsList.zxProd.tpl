@@ -9,7 +9,7 @@
             window.elementsData = window.elementsData ? window.elementsData : { };
             window.elementsData[{$element->id}] = {$element->getJsonInfo('zxProdsList')};
         </script>
-        <app-zx-prods-list element-id="{$element->id}" property="prods"></app-zx-prods-list>
+        <zx-prods-list element-id="{$element->id}" property="prods"></zx-prods-list>
         {if $url = $element->getCatalogueUrl()}
             <div class="zxitemslist_controls">
                 <a class="zxitemslist_link button" href="{$url}">{$element->buttonTitle}</a>

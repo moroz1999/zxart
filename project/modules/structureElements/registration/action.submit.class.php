@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class submitRegistration extends structureElementAction
 {
     use AjaxFormTrait;
@@ -10,7 +12,7 @@ class submitRegistration extends structureElementAction
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
-        $user = $this->getService('user');
+        $user = $this->getService(CurrentUser::class);
         $translationsManager = $this->getService('translationsManager');
 
         if ($structureElement->type == 'userdata' && $user->userName == 'anonymous') {

@@ -17,13 +17,19 @@ a {
 
 .mat-tree {
   background: transparent;
-  color: vars.$white;
+  color: var(--text-color);
 }
 
 .mat-tree-node, .mat-nested-tree-node {
-  color: vars.$white;
+  color: var(--text-color);
 }
 
 .mat-tree-node-selected {
   font-weight: bold;
+}
+
+button[mat-icon-button] {
+  --mdc-icon-button-state-layer-size: 24px;
+  --mdc-icon-button-icon-size: 18px;
+  padding: 0;
 }

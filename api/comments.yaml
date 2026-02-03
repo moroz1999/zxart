@@ -1,0 +1,149 @@
+openapi: 3.0.0
+info:
+  title: ZxArt Comments API
+  version: 1.0.0
+  description: API for managing comments for various entities in the ZxArt project.
+
+paths:
+  /comments/id:{id}/:
+    get:
+      summary: Get comments tree for an entity
+      description: Returns a hierarchical tree of comments associated with the specified element ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the entity (e.g., picture, music, etc.) to get comments for.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A JSON object with responseStatus and responseData.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseTree'
+
+  /comments/:
+    post:
+      summary: Comment actions (Add, Update, Delete)
+      description: Performs actions on comments based on the 'action' parameter. Uses application/x-www-form-urlencoded.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID of the target entity (for 'add') or comment ID (for 'update'/'delete').
+                action:
+                  type: string
+                  enum: [add, update, delete]
+                  description: The action to perform.
+                content:
+                  type: string
+                  description: Comment text (required for 'add' and 'update').
+                author:
+                  type: string
+                  description: Optional custom author name (for 'add').
+              required:
+                - id
+                - action
+      responses:
+        '200':
+          description: Action result.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ApiResponseComment'
+                  - $ref: '#/components/schemas/ApiResponseSuccess'
+
+components:
+  schemas:
+    CommentAuthorDto:
+      type: object
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+          nullable: true
+        badges:
+          type: array
+          items:
+            type: string
+
+    CommentTargetDto:
+      type: object
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+
+    CommentDto:
+      type: object
+      properties:
+        id:
+          type: integer
+        author:
+          $ref: '#/components/schemas/CommentAuthorDto'
+        date:
+          type: string
+          description: Creation date (formatted)
+        content:
+          type: string
+          description: Decorated HTML content
+        originalContent:
+          type: string
+          description: Original raw content
+        canEdit:
+          type: boolean
+        canDelete:
+          type: boolean
+        target:
+          $ref: '#/components/schemas/CommentTargetDto'
+          nullable: true
+        parentId:
+          type: integer
+          nullable: true
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommentDto'
+
+    ApiResponseTree:
+      type: object
+      properties:
+        responseStatus:
+          type: string
+          enum: [success, error]
+        responseData:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommentDto'
+        errorMessage:
+          type: string
+
+    ApiResponseComment:
+      type: object
+      properties:
+        responseStatus:
+          type: string
+          enum: [success, error]
+        responseData:
+          $ref: '#/components/schemas/CommentDto'
+        errorMessage:
+          type: string
+
+    ApiResponseSuccess:
+      type: object
+      properties:
+        responseStatus:
+          type: string
+          enum: [success, error]
+        errorMessage:
+          type: string

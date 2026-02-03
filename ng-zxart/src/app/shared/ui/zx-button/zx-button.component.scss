@@ -1,0 +1,117 @@
+:host {
+  display: inline-block;
+}
+
+button {
+  max-width: 100%;
+}
+
+.mat-mdc-unelevated-button {
+  &.zx-button {
+    --mdc-filled-button-container-shape: var(--zx-button-border-radius);
+    transition: background-color var(--zx-button-transition-time) ease-in-out,
+                border var(--zx-button-transition-time) ease-in-out,
+                box-shadow var(--zx-button-transition-time) ease-in-out;
+
+    &:disabled,
+    &.mat-mdc-button-disabled {
+      cursor: not-allowed;
+      opacity: var(--zx-button-disabled-opacity);
+    }
+
+    &--primary {
+      --mdc-filled-button-container-color: var(--zx-button-primary-bg);
+      --mdc-filled-button-label-text-color: var(--zx-button-primary-text);
+
+      &:hover:not(:disabled) {
+        --mdc-filled-button-container-color: var(--zx-button-primary-hover-bg);
+      }
+
+      &:disabled,
+      &.mat-mdc-button-disabled {
+        --mdc-filled-button-container-color: var(--zx-button-primary-disabled-bg);
+        --mdc-filled-button-disabled-container-color: var(--zx-button-primary-disabled-bg);
+        --mdc-filled-button-label-text-color: var(--zx-button-primary-disabled-text);
+        --mdc-filled-button-disabled-label-text-color: var(--zx-button-primary-disabled-text);
+      }
+    }
+
+    &--secondary {
+      --mdc-filled-button-container-color: var(--zx-button-secondary-bg);
+      --mdc-filled-button-label-text-color: var(--zx-button-secondary-text);
+
+      &:hover:not(:disabled) {
+        --mdc-filled-button-container-color: var(--zx-button-secondary-hover-bg);
+      }
+
+      &:disabled,
+      &.mat-mdc-button-disabled {
+        --mdc-filled-button-container-color: var(--zx-button-secondary-disabled-bg);
+        --mdc-filled-button-disabled-container-color: var(--zx-button-secondary-disabled-bg);
+        --mdc-filled-button-label-text-color: var(--zx-button-secondary-disabled-text);
+        --mdc-filled-button-disabled-label-text-color: var(--zx-button-secondary-disabled-text);
+      }
+    }
+
+    &--danger {
+      --mdc-filled-button-container-color: var(--zx-button-danger-bg);
+      --mdc-filled-button-label-text-color: var(--zx-button-danger-text);
+
+      &:hover:not(:disabled) {
+        --mdc-filled-button-container-color: var(--zx-button-danger-hover-bg);
+      }
+
+      &:disabled,
+      &.mat-mdc-button-disabled {
+        --mdc-filled-button-container-color: var(--zx-button-danger-disabled-bg);
+        --mdc-filled-button-disabled-container-color: var(--zx-button-danger-disabled-bg);
+        --mdc-filled-button-label-text-color: var(--zx-button-danger-disabled-text);
+        --mdc-filled-button-disabled-label-text-color: var(--zx-button-danger-disabled-text);
+      }
+    }
+
+    &--transparent {
+      --mdc-filled-button-container-color: var(--zx-button-transparent-bg);
+      --mdc-filled-button-label-text-color: var(--zx-button-transparent-text);
+
+      &:hover:not(:disabled) {
+        --mdc-filled-button-container-color: var(--zx-button-transparent-hover-bg);
+      }
+
+      &:disabled,
+      &.mat-mdc-button-disabled {
+        --mdc-filled-button-container-color: var(--zx-button-transparent-disabled-bg);
+        --mdc-filled-button-disabled-container-color: var(--zx-button-transparent-disabled-bg);
+        --mdc-filled-button-label-text-color: var(--zx-button-transparent-disabled-text);
+        --mdc-filled-button-disabled-label-text-color: var(--zx-button-transparent-disabled-text);
+      }
+    }
+
+    &--xs {
+      --mdc-filled-button-container-height: var(--zx-button-xs-height);
+      --mdc-filled-button-label-text-size: var(--zx-button-xs-font-size);
+      --mat-filled-button-horizontal-padding: var(--zx-button-xs-h-padding);
+      min-width: var(--zx-button-xs-min-width);
+    }
+
+    &--sm {
+      --mdc-filled-button-container-height: var(--zx-button-sm-height);
+      --mdc-filled-button-label-text-size: var(--zx-button-sm-font-size);
+      --mat-filled-button-horizontal-padding: var(--zx-button-sm-h-padding);
+      min-width: var(--zx-button-sm-min-width);
+    }
+
+    &--md {
+      --mdc-filled-button-container-height: var(--zx-button-md-height);
+      --mdc-filled-button-label-text-size: var(--zx-button-md-font-size);
+      --mat-filled-button-horizontal-padding: var(--zx-button-md-h-padding);
+      min-width: var(--zx-button-md-min-width);
+    }
+
+    &--square {
+      --mat-filled-button-horizontal-padding: 0;
+      min-width: auto;
+      aspect-ratio: 1;
+    }
+  }
+}

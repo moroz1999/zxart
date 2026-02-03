@@ -11,7 +11,7 @@ class publicDeleteShared extends structureElementAction
     //            $privilegesManager->setPrivilege($userId, $structureElement->getId(), $structureElement->structureType, 'show', 'deny');
     //            $privilegesManager->resetPrivileges();
     //
-    //            $user = $this->getService('user');
+    //            $user = $this->getService(user::class);
     //            $user->refreshPrivileges();
     //
     //            if ($parentElement = $structureManager->getElementsFirstParent($structureElement->getId())) {

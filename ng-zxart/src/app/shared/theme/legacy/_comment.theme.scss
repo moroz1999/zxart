@@ -1,0 +1,15 @@
+:root {
+  /* Comment Module */
+  --comment-margin: var(--space-24) 0;
+  --comment-content-link-color: var(--secondary-400);
+  --comment-content-link-font-size: var(--font-xs);
+  --comment-content-link-margin-bottom: var(--space-8);
+  --comment-image-margin: var(--space-8) var(--space-24) var(--space-8) 0;
+  --comment-image-margin-mobile: var(--space-8) 0;
+  --comment-nested-margin-left: var(--space-32);
+  --comments-list-margin: var(--space-24) 0;
+  --comment-short-margin-bottom: var(--space-16);
+  --comment-short-font-size: var(--font-md);
+  --comment-short-author-color: var(--text-color);
+}
+

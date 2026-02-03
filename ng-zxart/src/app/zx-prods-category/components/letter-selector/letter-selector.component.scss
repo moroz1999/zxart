@@ -7,13 +7,13 @@
 .letters {
   display: flex;
   flex-wrap: wrap;
+  gap: var(--space-4);
 }
 
 .letter {
-  padding: 0 vars.$padding-md;
-  min-width: 1rem;
+  min-width: auto;
 }
 
 .transparent {
-  color: #fff;
+  color: var(--text-color);
 }

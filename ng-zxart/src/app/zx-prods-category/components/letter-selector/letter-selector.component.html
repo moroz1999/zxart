@@ -1,36 +1,15 @@
 <div class="letters" *ngIf="lettersSelector[0]">
-    <button
-            mat-button
-            class="transparent"
-            *ngIf="this.selectedLetter !== ''"
+    <zx-button
+            size="md"
+            [square]="true"
+            [color]="selectedLetter === '' ? 'primary' : 'transparent'"
             (click)="selectLetter('')"
-    >{{ "prods-list.filters.letters.all" | translate }}
-    </button>
-    <button
-            mat-raised-button
-            color="primary"
-            *ngIf="this.selectedLetter === ''"
-            (click)="selectLetter('')"
-    >{{ "prods-list.filters.letters.all" | translate }}
-    </button>
-    <ng-container
+    >{{ "prods-list.filters.letters.all" | translate }}</zx-button>
+    <zx-button
             *ngFor="let letter of lettersSelector[0].values"
-    >
-        <button
-                *ngIf="letter.selected"
-                mat-raised-button
-                class="letter"
-                color="primary"
-                (click)="selectLetter(letter.value)"
-        >{{ letter.title }}
-        </button>
-        <button
-                *ngIf="!letter.selected"
-                mat-button
-                class="letter transparent"
-                (click)="selectLetter(letter.value)"
-        >{{ letter.title }}
-        </button>
-    </ng-container>
-
+            size="md"
+            [square]="true"
+            [color]="letter.selected ? 'primary' : 'transparent'"
+            (click)="selectLetter(letter.value)"
+    >{{ letter.title }}</zx-button>
 </div>

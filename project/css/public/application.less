@@ -20,7 +20,7 @@ body {
   position: relative;
   background-color: @primary_color;
   line-height: 1.65;
-  letter-spacing: 0.011rem;
+  letter-spacing: 0.15px;
 }
 
 .main_block {
@@ -31,22 +31,22 @@ body {
 .center_block {
   position: relative;
   margin: 0 auto;
-  padding: 1em 1em 2em 1em;
+  padding: var(--content-padding) var(--content-padding) var(--center-block-padding-bottom) var(--content-padding);
   z-index: 3;
 }
 
 @media (max-width: @screen_breakpoint_sm_max) {
   .center_block {
-    padding: 1em 0.3em 2em 0.3em;
+    padding: var(--content-padding) var(--content-padding-mobile) var(--center-block-padding-bottom) var(--content-padding-mobile);
   }
 }
 
 .breadcrumbs_block {
-  margin-bottom: 1rem;
+  margin-bottom: var(--breadcrumbs-margin-bottom);
 }
 
 .center_banner {
-  margin-right: 230px;
+  margin-right: var(--center-banner-margin-right);
   text-align: center;
 }
 
@@ -54,50 +54,33 @@ body {
   display: inline-block;
 }
 
-.zxbn img {
-  max-width: 100%;
-  height: auto !important;
-  margin: 0 auto;
-  display: block;
-}
-
-.zxbn iframe {
-  max-width: 100%;
-  margin: 0 auto;
-  display: block;
-}
-
-.zxbn {
-  margin-bottom: 1em;
-}
-
 /********************************************************
 /*  CURRENT LOCATION BLOCK
 /********************************************************/
 .current_location_block {
   vertical-align: middle;
-  margin-bottom: 1em;
+  margin-bottom: var(--current-location-margin-bottom);
 }
 
 .current_location_delimiter {
-  font-size: 1.2em;
+  font-size: var(--current-location-delimiter-font-size);
 }
 
 /********************************************************
 /*  FIRSTPAGE
 /********************************************************/
 .firstpage_top_block {
-  margin-bottom: 50px;
-  padding-top: 60px;
+  margin-bottom: var(--firstpage-top-block-margin-bottom);
+  padding-top: var(--firstpage-top-block-padding-top);
   padding-right: 0;
 }
 
 .lastcomments {
-  margin-bottom: 1em;
+  margin-bottom: var(--lastcomments-margin-bottom);
 }
 
 .lastcomments h3 {
-  font-size: 1.07em;
+  font-size: var(--lastcomments-header-font-size);
   font-weight: bold;
 }
 
@@ -108,28 +91,28 @@ body {
 
 .lastcomments_allcomments img {
   display: inline-block;
-  margin-right: 5px;
+  margin-right: var(--all-comments-icon-margin-right);
   vertical-align: middle;
 }
 
 .lastnews {
-  margin-bottom: 50px;
-  padding-top: 14px;
+  margin-bottom: var(--lastnews-margin-bottom);
+  padding-top: var(--lastnews-padding-top);
 }
 
 .lastnews h3 {
-  font-size: 1.07em;
+  font-size: var(--lastnews-header-font-size);
   font-weight: bold;
 }
 
 .news_short_block .news_short_date {
-  color: #cfb580;
-  font-size: 0.85em;
+  color: var(--news-short-date-color);
+  font-size: var(--news-short-date-font-size);
 }
 
 .news_short_block {
   font-size: 0.9em;
-  margin-bottom: 15px;
+  margin-bottom: var(--news-short-block-margin-bottom);
 }
 
 .facebook {
@@ -137,25 +120,25 @@ body {
 }
 
 .firstpage_latestupdates_controls {
-  margin: 5px 5px 20px;
-  font-size: 0.9em;
+  margin: var(--latestupdates-controls-margin);
+  font-size: var(--latestupdates-controls-font-size);
   text-align: right;
 }
 
 .firstpage_latestupdates_controls a {
-  color: #cfb580;
+  color: var(--link-alt-color);
 }
 
 /********************************************************
 /*  zxitemslist
 /********************************************************/
 .zxitemslist_controls {
-  margin: 1rem 0 0 0;
+  margin: var(--zxitemslist-controls-margin-top) 0 0 0;
   text-align: right;
 }
 
 .zxitemslist_link {
-  color: #cfb580;
+  color: var(--link-alt-color);
 }
 
 /********************************************************
@@ -168,15 +151,15 @@ body {
 
 .parties_list_table thead td {
   border-collapse: collapse;
-  padding: 0 5px 5px;
-  font-size: 0.85em;
+  padding: var(--parties-table-thead-padding);
+  font-size: var(--parties-table-font-size);
   text-align: center;
 }
 
 .parties_list_table tbody td {
   vertical-align: middle;
   border-collapse: collapse;
-  padding: 3px 15px 5px;
+  padding: var(--parties-table-tbody-padding);
 }
 
 
@@ -184,14 +167,14 @@ body {
 /*  ZX GALLERY
 /********************************************************/
 .zxgallery_item {
-  border: 1px solid #000;
+  border: 1px solid var(--gallery-item-border-color);
 }
 
 /********************************************************
 /*  FULLSCREEN BLOCK
 /********************************************************/
 .fullscreen_title {
-  font-size: 1.6em;
+  font-size: var(--fullscreen-title-font-size);
 }
 
 /********************************************************
@@ -200,8 +183,8 @@ body {
 .share_block {
   position: absolute;
   white-space: nowrap;
-  right: 251px;
-  top: 18px;
+  right: var(--share-block-right);
+  top: var(--share-block-top);
 }
 
 /********************************************************
@@ -212,31 +195,31 @@ body {
   }
 
   .right_column {
-    padding-top: 3em;
+    padding-top: var(--right-column-padding-top);
   }
 }
 
 .center-column-ads {
-  margin-top: 3rem;
+  margin-top: var(--center-column-ads-margin-top);
 }
 
 /********************************************************
 /*  LAST VOTES
 /********************************************************/
 .lastvotes {
-  margin-bottom: 1em;
+  margin-bottom: var(--lastvotes-margin-bottom);
 
   .votes_list_table {
     width: 100%;
   }
 
   .votes_list_table td {
-    font-size: 0.9em;
+    font-size: var(--votes-table-font-size);
   }
 }
 
 .lastvotes h3 {
-  font-size: 1.07em;
+  font-size: var(--votes-header-font-size);
   font-weight: bold;
 }
 
@@ -244,18 +227,18 @@ body {
 /*  SHARE
 /********************************************************/
 .picture_details_share {
-  margin: 10px 0;
+  margin: var(--picture-details-share-margin);
   vertical-align: middle;
 }
 
 .share_item {
   display: inline-block;
   vertical-align: middle;
-  margin-right: 1em;
+  margin-right: var(--share-item-margin-right);
 }
 
 .artweb {
-  right: 2em;
+  right: var(--artweb-right);
 }
 
 .columned {
@@ -283,5 +266,5 @@ body {
 }
 
 .footer_block {
-  min-height: 3rem;
+  min-height: var(--footer-min-height);
 }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Users\CurrentUser;
+
 class tslabsApplication extends controllerApplication
 {
     protected $applicationName = 'tslabs';
@@ -33,7 +35,7 @@ class tslabsApplication extends controllerApplication
             ob_end_flush();
         }
 
-        $user = $this->getService('user');
+        $user = $this->getService(CurrentUser::class);
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
 

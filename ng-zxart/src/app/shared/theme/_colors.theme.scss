@@ -1,0 +1,22 @@
+:root {
+  /* Semantic colors */
+  --text-color: var(--secondary-800);
+  --text-light-color: var(--secondary-600);
+  --error-color: var(--danger-400);
+
+  --background-dark: var(--secondary-200);
+  --background-deep: var(--secondary-100);
+  --background-transparent: transparent;
+
+  --date-color: var(--secondary-400);
+
+  --pseudo-link-color: var(--warning-800);
+  --icon-yellow: var(--warning-400);
+}
+
+.dark-mode {
+  --text-color: var(--secondary-900);
+  --background-dark: var(--secondary-100);
+  --background-deep: var(--secondary-50);
+}
+
