@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(composer run:*)"
+      "Bash(composer run:*)",
+      "Bash(grep:*)",
+      "Bash(dir:*)"
     ]
   }
 }

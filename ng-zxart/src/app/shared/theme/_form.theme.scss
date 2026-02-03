@@ -31,6 +31,7 @@
   --dropdown-option-padding: 0 var(--space-4) 0;
   --dropdown-bg: var(--input-bg);
   --dropdown-option-hover-bg: var(--secondary-100);
+  --dropdown-arrow-color: var(--secondary-400);
 
   /* AjaxSelect */
   --ajaxselect-item-margin: 0 var(--space-8);
@@ -49,4 +50,5 @@
   --form-helper-tip-bg: var(--secondary-100);
   --form-helper-tip-text-color: var(--secondary-900);
   --form-helper-tip-border-color: var(--secondary-300);
+  --dropdown-arrow-color: var(--secondary-700);
 }
