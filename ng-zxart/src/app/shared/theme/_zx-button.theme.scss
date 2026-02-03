@@ -35,6 +35,12 @@
   --zx-button-danger-disabled-text: var(--danger-800);
   --zx-button-danger-border: none;
 
+  --zx-button-transparent-bg: transparent;
+  --zx-button-transparent-hover-bg: var(--secondary-700);
+  --zx-button-transparent-text: var(--text-color);
+  --zx-button-transparent-disabled-bg: transparent;
+  --zx-button-transparent-disabled-text: var(--secondary-500);
+
   --zx-button-border-radius: var(--radius-lg);
   --zx-button-transition-time: 0.25s;
   --zx-button-disabled-opacity: 0.8;
@@ -50,5 +56,8 @@
   --zx-button-secondary-disabled-text: var(--secondary-900);
   --zx-button-danger-disabled-bg: var(--danger-400);
   --zx-button-danger-disabled-text: var(--danger-900);
+
+  --zx-button-transparent-hover-bg: var(--secondary-300);
+  --zx-button-transparent-disabled-text: var(--secondary-400);
 }
 

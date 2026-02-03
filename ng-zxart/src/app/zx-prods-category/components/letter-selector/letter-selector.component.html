@@ -2,14 +2,14 @@
     <zx-button
             size="md"
             [square]="true"
-            [color]="selectedLetter === '' ? 'primary' : 'secondary'"
+            [color]="selectedLetter === '' ? 'primary' : 'transparent'"
             (click)="selectLetter('')"
     >{{ "prods-list.filters.letters.all" | translate }}</zx-button>
     <zx-button
             *ngFor="let letter of lettersSelector[0].values"
             size="md"
             [square]="true"
-            [color]="letter.selected ? 'primary' : 'secondary'"
+            [color]="letter.selected ? 'primary' : 'transparent'"
             (click)="selectLetter(letter.value)"
     >{{ letter.title }}</zx-button>
 </div>

@@ -80,39 +80,39 @@
                     [selectorData]="model.categoriesSelector"
                     (categoryChanged)="categoryChanged($event)"
             ></app-categories-tree-selector>
-            <app-dialog-selector
+            <zx-dialog-selector
                     [selectorData]="model.countriesSelector"
                     (newValues)="countriesChanged($event)"
                     [width]="'60rem'"
                     [selectedValuesLabel]="'prods-list.filters.countries.selected' | translate"
                     [selectValuesLabel]="'prods-list.filters.countries.select' | translate"
-            ></app-dialog-selector>
-            <app-dialog-selector
+            ></zx-dialog-selector>
+            <zx-dialog-selector
                     [selectorData]="model.languagesSelector"
                     (newValues)="languagesChanged($event)"
                     [width]="'50rem'"
                     [selectedValuesLabel]="'prods-list.filters.languages.selected' | translate"
                     [selectValuesLabel]="'prods-list.filters.languages.select' | translate"
-            ></app-dialog-selector>
-            <app-dialog-selector
+            ></zx-dialog-selector>
+            <zx-dialog-selector
                     [selectorData]="model.legalStatusesSelector"
                     (newValues)="legalStatusesChanged($event)"
                     [selectedValuesLabel]="'prods-list.filters.legal-statuses.selected' | translate"
                     [selectValuesLabel]="'prods-list.filters.legal-statuses.select' | translate"
-            ></app-dialog-selector>
-            <app-dialog-selector
+            ></zx-dialog-selector>
+            <zx-dialog-selector
                     [selectorData]="model.formatsSelector"
                     (newValues)="formatsChanged($event)"
                     [width]="'60rem'"
                     [selectedValuesLabel]="'prods-list.filters.formats.selected' | translate"
                     [selectValuesLabel]="'prods-list.filters.formats.select' | translate"
-            ></app-dialog-selector>
-            <app-dialog-selector
+            ></zx-dialog-selector>
+            <zx-dialog-selector
                     [selectorData]="model.releaseTypesSelector"
                     (newValues)="releaseTypesChanged($event)"
                     [selectedValuesLabel]="'prods-list.filters.release-types.selected' | translate"
                     [selectValuesLabel]="'prods-list.filters.release-types.select' | translate"
-            ></app-dialog-selector>
+            ></zx-dialog-selector>
             <zx-checkbox-field
                 class="include-subcategories-prods-selector"
                 [(ngModel)]="includeSubcategoriesProds"
@@ -126,20 +126,20 @@
                     [ngClass]="{'disabled': loading}"
             >
                 <div class="selectors-top">
-                    <app-dialog-selector
+                    <zx-dialog-selector
                             [selectorData]="model.yearsSelector"
                             (newValues)="yearsChanged($event)"
                             [width]="'40rem'"
                             [selectedValuesLabel]="'prods-list.filters.year.selected' | translate"
                             [selectValuesLabel]="'prods-list.filters.year.select' | translate"
-                    ></app-dialog-selector>
-                    <app-dialog-selector
+                    ></zx-dialog-selector>
+                    <zx-dialog-selector
                             [selectorData]="model.hardwareSelector"
                             (newValues)="hardwareChanged($event)"
                             [width]="'60rem'"
                             [selectedValuesLabel]="'prods-list.filters.hardware.selected' | translate"
                             [selectValuesLabel]="'prods-list.filters.hardware.select' | translate"
-                    ></app-dialog-selector>
+                    ></zx-dialog-selector>
                     <app-tags-selector
                             [tagsSelector]="model.tagsSelector"
                             (tagsSelected)="tagsSelected($event)"
@@ -217,12 +217,12 @@
                             (languageChanged)="languagesChanged($event)"
                     ></app-zx-prod-row>
                 </table>
-                <app-pages-selector
+                <zx-pagination
                         [pagesAmount]="pagesAmount"
                         [currentPage]="currentPage"
-                        (clickCallback)="setCurrentPage($event)"
+                        (pageChange)="setCurrentPage($event)"
                         [urlBase]="urlBase"
-                ></app-pages-selector>
+                ></zx-pagination>
             </div>
         </div>
     </div>

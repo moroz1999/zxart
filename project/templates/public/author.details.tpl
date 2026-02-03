@@ -52,7 +52,7 @@
 	{include file=$theme->template('publisher.zxProds.tpl')}
 	{include file=$theme->template('author.zxReleases.tpl')}
 
-	<app-comments-list element-id="{$element->id}"></app-comments-list>
+	<zx-comments-list element-id="{$element->id}"></zx-comments-list>
 
 {/capture}
 

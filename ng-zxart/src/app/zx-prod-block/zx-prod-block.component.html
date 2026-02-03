@@ -64,11 +64,11 @@
                 class="zx-prod-hardware"
                 [ngClass]="{'zx-prod-hardware-opaque':displayScreenshots}"
         >
-      <span
+      <zx-badge
               *ngFor="let item of model.hardwareInfo"
               (click)="hardwareClicked($event, item.id)"
-              class="zx-prod-hardware-item"
-      >{{ item.title }}</span>
+              variant="secondary"
+      >{{ item.title }}</zx-badge>
     </span>
         <span class="zx-prod-status"
               *ngIf="(model.legalStatus === 'mia' || model.legalStatus === 'unreleased') && !model.loadingImageUrl"

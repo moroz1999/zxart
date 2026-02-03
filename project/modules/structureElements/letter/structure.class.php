@@ -173,6 +173,7 @@ class letterElement extends structureElement implements ColumnsTypeProvider
                             $this->lettersSelectorInfo[] = [
                                 'url' => $letter->getUrl(),
                                 'title' => $letter->title,
+                                'selected' => $letter->getId() === $this->getId(),
                             ];
                         }
                     }

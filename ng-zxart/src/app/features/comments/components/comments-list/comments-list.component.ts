@@ -14,7 +14,7 @@ import {ViewportLoaderComponent} from '../../../../shared/components/viewport-lo
 import {Observable, of, Subject} from 'rxjs';
 
 @Component({
-  selector: 'app-comments-list',
+  selector: 'zx-comments-list',
   standalone: true,
   imports: [
     CommonModule,

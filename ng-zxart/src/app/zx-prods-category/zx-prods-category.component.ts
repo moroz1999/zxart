@@ -5,7 +5,7 @@ import {Tag} from '../shared/models/tag';
 import {ZxProdCategoryDto} from './models/zx-prod-category-dto';
 import {environment} from '../../environments/environment';
 import {TranslatePipe} from '@ngx-translate/core';
-import {PagesSelectorComponent} from '../shared/components/pages-selector/pages-selector.component';
+import {ZxPaginationComponent} from '../shared/ui/zx-pagination/zx-pagination.component';
 import {
   CategoriesTreeSelectorComponent,
 } from './components/categories-tree-selector/categories-tree-selector.component';
@@ -33,7 +33,7 @@ export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
     styleUrls: ['./zx-prods-category.component.scss'],
     imports: [
         TranslatePipe,
-        PagesSelectorComponent,
+        ZxPaginationComponent,
         CategoriesTreeSelectorComponent,
         SortingSelectorComponent,
         DialogSelectorComponent,

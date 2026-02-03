@@ -64,7 +64,7 @@
 		{include file=$theme->template("tags.form.tpl") element=$element}
 	{/if}
 	{include file=$theme->template('component.mentions.tpl')}
-	<app-comments-list element-id="{$element->id}"></app-comments-list>
+	<zx-comments-list element-id="{$element->id}"></zx-comments-list>
 	{if $element->denyComments}<p>{translations name="zxitem.commentsdenied"}</p>{/if}
 
 	{include file=$theme->template('component.voteslist.tpl')}

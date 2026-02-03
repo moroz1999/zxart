@@ -1,33 +1,27 @@
 import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
-import {PageItemInterface} from './page-item-interface';
-import {SvgIconComponent} from 'angular-svg-icon';
-import {NgClass, NgForOf, NgIf} from '@angular/common';
-import {TranslatePipe} from '@ngx-translate/core';
+import {PageItemInterface} from './page-item.interface';
+import {NgForOf, NgIf} from '@angular/common';
+import {ZxButtonComponent} from '../zx-button/zx-button.component';
 
 @Component({
-    selector: 'app-pages-selector',
-    templateUrl: './pages-selector.component.html',
-    styleUrls: ['./pages-selector.component.scss'],
+    selector: 'zx-pagination',
+    templateUrl: './zx-pagination.component.html',
+    styleUrls: ['./zx-pagination.component.scss'],
     standalone: true,
     imports: [
-        SvgIconComponent,
-        SvgIconComponent,
         NgIf,
-        NgClass,
-        NgClass,
         NgForOf,
-        NgClass,
-        TranslatePipe,
-        TranslatePipe,
+        ZxButtonComponent,
     ],
 })
-export class PagesSelectorComponent implements OnChanges {
+export class ZxPaginationComponent implements OnChanges {
     @Input() currentPage = 0;
     @Input() pagesAmount = 0;
     @Input() visibleAmount = 1;
     @Input() urlBase = '';
-    @Output() clickCallback: EventEmitter<any> = new EventEmitter();
-    pageItems: Array<PageItemInterface> = [];
+    @Output() pageChange = new EventEmitter<number>();
+
+    pageItems: PageItemInterface[] = [];
 
     ngOnChanges(): void {
         if (this.currentPage > this.pagesAmount) {
@@ -53,52 +47,27 @@ export class PagesSelectorComponent implements OnChanges {
         if (end > this.pagesAmount) {
             end = this.pagesAmount;
         }
+
         this.pageItems = [];
         const pageType = 'page' as const;
         const dotsType = 'dots' as const;
 
-
         if (start > 1) {
-            const page = {
-                number: 1,
-                type: pageType,
-                text: '1',
-            };
-            this.pageItems.push(page);
+            this.pageItems.push({number: 1, type: pageType, text: '1'});
         }
         if (start > 2) {
-            const page = {
-                number: 0,
-                type: dotsType,
-                text: '...',
-            };
-            this.pageItems.push(page);
+            this.pageItems.push({number: 0, type: dotsType, text: '...'});
         }
 
         for (let i = start; i <= end; i++) {
-            const page = {
-                number: i,
-                type: pageType,
-                text: i.toString(),
-            };
-            this.pageItems.push(page);
+            this.pageItems.push({number: i, type: pageType, text: i.toString()});
         }
 
         if (end < this.pagesAmount - 1) {
-            const page = {
-                number: 0,
-                type: dotsType,
-                text: '...',
-            };
-            this.pageItems.push(page);
+            this.pageItems.push({number: 0, type: dotsType, text: '...'});
         }
         if (end < this.pagesAmount) {
-            const page = {
-                number: this.pagesAmount,
-                type: pageType,
-                text: this.pagesAmount.toString(),
-            };
-            this.pageItems.push(page);
+            this.pageItems.push({number: this.pagesAmount, type: pageType, text: this.pagesAmount.toString()});
         }
     }
 
@@ -106,7 +75,7 @@ export class PagesSelectorComponent implements OnChanges {
         event.stopPropagation();
         event.preventDefault();
         if (newPageNumber > 0 && newPageNumber <= this.pagesAmount) {
-            this.clickCallback.emit(newPageNumber);
+            this.pageChange.emit(newPageNumber);
         }
     }
 

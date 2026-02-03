@@ -19,7 +19,7 @@ interface DialogData {
 }
 
 @Component({
-    selector: 'app-dialog-selector-dialog',
+    selector: 'zx-dialog-selector-dialog',
     templateUrl: './dialog-selector-dialog.component.html',
     styleUrls: ['./dialog-selector-dialog.component.scss'],
     imports: [

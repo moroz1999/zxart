@@ -21,6 +21,7 @@ import {RatingComponent} from '../shared/components/rating/rating.component';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {MatAnchor} from '@angular/material/button';
 import {ZxPanelComponent} from '../shared/ui/zx-panel/zx-panel.component';
+import {ZxBadgeComponent} from '../shared/ui/zx-badge/zx-badge.component';
 
 declare function ym(a: number, b: string, c: string, params: any, callback: CallableFunction): any;
 
@@ -47,6 +48,7 @@ declare function ym(a: number, b: string, c: string, params: any, callback: Call
         NgClass,
         MatAnchor,
         ZxPanelComponent,
+        ZxBadgeComponent,
     ],
     standalone: true,
 })

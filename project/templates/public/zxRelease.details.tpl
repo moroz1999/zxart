@@ -271,7 +271,7 @@
     {/if}
     {if $element->compilations}
         <h2>{translations name='zxprod.compilations'}</h2>
-        <app-zx-prods-list element-id="{$element->id}" property="compilations"></app-zx-prods-list>
+        <zx-prods-list element-id="{$element->id}" property="compilations"></zx-prods-list>
     {/if}
 
     {include file=$theme->template('component.comments.tpl')}

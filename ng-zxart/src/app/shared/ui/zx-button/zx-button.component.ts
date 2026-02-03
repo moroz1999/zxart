@@ -11,7 +11,7 @@ import {MatButtonModule} from '@angular/material/button';
 })
 export class ZxButtonComponent {
   @Input() size: 'xs' | 'sm' | 'md' = 'md';
-  @Input() color: 'primary' | 'secondary' | 'danger' = 'primary';
+  @Input() color: 'primary' | 'secondary' | 'danger' | 'transparent' = 'primary';
   @Input() disabled = false;
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
   @Input() square = false;

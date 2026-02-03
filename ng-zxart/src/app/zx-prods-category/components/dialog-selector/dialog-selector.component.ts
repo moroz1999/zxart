@@ -6,7 +6,7 @@ import {NgIf} from '@angular/common';
 import {ZxButtonComponent} from "../../../shared/ui/zx-button/zx-button.component";
 
 @Component({
-    selector: 'app-dialog-selector',
+    selector: 'zx-dialog-selector',
     templateUrl: './dialog-selector.component.html',
     styleUrls: ['./dialog-selector.component.scss'],
     standalone: true,

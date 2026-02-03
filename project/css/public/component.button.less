@@ -53,3 +53,19 @@
   background: var(--zx-button-danger-bg);
   color: var(--zx-button-danger-text);
 }
+
+.button_transparent {
+  background-color: var(--zx-button-transparent-bg);
+  color: var(--zx-button-transparent-text);
+
+  &:hover,
+  &:focus {
+    background-color: var(--zx-button-transparent-hover-bg);
+  }
+}
+
+.button_square {
+  min-width: auto;
+  aspect-ratio: 1;
+  padding: 0;
+}

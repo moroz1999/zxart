@@ -1,0 +1,26 @@
+<div *ngIf="pagesAmount > 1" class="zx-pagination">
+    <zx-button
+        size="md"
+        [square]="true"
+        color="transparent"
+        [disabled]="!previousPageActive()"
+        (click)="pageClicked($event, currentPage - 1)"
+    >&lt;</zx-button>
+
+    <zx-button
+        *ngFor="let page of pageItems"
+        size="md"
+        [square]="true"
+        [color]="page.number === currentPage ? 'primary' : 'transparent'"
+        [disabled]="page.type === 'dots'"
+        (click)="pageClicked($event, page.number)"
+    >{{ page.text }}</zx-button>
+
+    <zx-button
+        size="md"
+        [square]="true"
+        color="transparent"
+        [disabled]="!nextPageActive()"
+        (click)="pageClicked($event, currentPage + 1)"
+    >&gt;</zx-button>
+</div>

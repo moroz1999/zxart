@@ -155,7 +155,7 @@ app-letter-selector {
   margin: var(--margin-lg) 0 0;
 }
 
-app-pages-selector {
+zx-pagination {
   z-index: 10;
   @include breakpoints.media-breakpoint-up(sm) {
     margin-top: var(--margin-xxl);

@@ -2,35 +2,14 @@
 /*  PAGER BLOCK
 /********************************************************/
 .pager_block {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-4);
 	margin-bottom: var(--margin-lg);
 }
 
-.pager_previous {
-	display: inline-block;
-	vertical-align: middle;
-	color: var(--link-alt-color);
-	padding: var(--padding-sm);
-}
-
-.pager_previous.pager_hidden {
-	display: none;
-}
-
-.pager_page {
-	min-width: 11px;
-	text-align: center;
-	display: inline-block;
-	vertical-align: middle;
-	text-decoration: underline;
-	color: var(--link-alt-color);
-	padding: 7.5px;
-}
-
-.pager_page.pager_active {
-	background-color: var(--secondary-bg);
-}
-
-.pager_next {
-	color: var(--link-alt-color);
-	padding: var(--padding-sm);
+.pager_disabled {
+	opacity: var(--zx-button-disabled-opacity);
+	pointer-events: none;
+	cursor: not-allowed;
 }

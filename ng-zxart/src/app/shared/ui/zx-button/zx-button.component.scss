@@ -70,6 +70,23 @@ button {
       }
     }
 
+    &--transparent {
+      --mdc-filled-button-container-color: var(--zx-button-transparent-bg);
+      --mdc-filled-button-label-text-color: var(--zx-button-transparent-text);
+
+      &:hover:not(:disabled) {
+        --mdc-filled-button-container-color: var(--zx-button-transparent-hover-bg);
+      }
+
+      &:disabled,
+      &.mat-mdc-button-disabled {
+        --mdc-filled-button-container-color: var(--zx-button-transparent-disabled-bg);
+        --mdc-filled-button-disabled-container-color: var(--zx-button-transparent-disabled-bg);
+        --mdc-filled-button-label-text-color: var(--zx-button-transparent-disabled-text);
+        --mdc-filled-button-disabled-label-text-color: var(--zx-button-transparent-disabled-text);
+      }
+    }
+
     &--xs {
       --mdc-filled-button-container-height: var(--zx-button-xs-height);
       --mdc-filled-button-label-text-size: var(--zx-button-xs-font-size);
