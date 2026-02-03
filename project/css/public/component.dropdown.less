@@ -24,17 +24,34 @@
 }
 
 .dropdown_title {
-  line-height: var(--controls-height);
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  padding-left: var(--space-8);
+}
+
+.dropdown_list {
+  position: absolute;
+  z-index: 1000;
+  background-color: var(--dropdown-bg);
+  border: var(--border-width-thin) solid var(--input-border-color);
+  border-radius: var(--form-border-radius);
+  box-shadow: var(--shadow-md);
 }
 
 .dropdown_list_content {
   color: var(--input-text);
+  display: block;
+  overflow-y: auto;
 }
 
 .dropdown_option {
+  display: block;
   color: var(--input-text);
   text-decoration: none;
   padding: var(--dropdown-option-padding);
+  line-height: var(--controls-height);
+  cursor: pointer;
 }
 
 .dropdown_option,

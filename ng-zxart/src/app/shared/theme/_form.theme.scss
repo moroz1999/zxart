@@ -21,13 +21,16 @@
   --form-helper-mark-font-size: var(--font-xs);
   --form-helper-tip-margin: 0 var(--margin-sm);
   --form-helper-tip-padding: var(--padding-sm) var(--padding-lg);
-  --form-helper-tip-border-color: var(--white);
+  --form-helper-tip-border-color: var(--secondary-300);
+  --form-helper-tip-bg: var(--white);
   --form-helper-tip-font-size: var(--font-sm);
   --form-helper-tip-text-color: var(--secondary-100);
 
   /* Dropdown */
   --dropdown-padding-right: 20px;
   --dropdown-option-padding: 0 var(--space-4) 0;
+  --dropdown-bg: var(--input-bg);
+  --dropdown-option-hover-bg: var(--secondary-100);
 
   /* AjaxSelect */
   --ajaxselect-item-margin: 0 var(--space-8);
@@ -43,4 +46,7 @@
 
 .dark-mode {
   --form-label-color: var(--secondary-700);
+  --form-helper-tip-bg: var(--secondary-100);
+  --form-helper-tip-text-color: var(--secondary-900);
+  --form-helper-tip-border-color: var(--secondary-300);
 }
