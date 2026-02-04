@@ -97,21 +97,10 @@
                             (sortingSelected)="sortingSelected($event)"
                     ></app-sorting-selector>
                     <div class="layout-selector">
-                        <!--            {{ 'prods-list.layout.select' | translate }}-->
-                        <mat-button-toggle-group [(ngModel)]="layout">
-                            <mat-button-toggle value="loading">
-                                <mat-icon>photo</mat-icon>
-                            </mat-button-toggle>
-                            <mat-button-toggle value="screenshots">
-                                <mat-icon>videogame_asset</mat-icon>
-                            </mat-button-toggle>
-                            <mat-button-toggle value="inlays">
-                                <mat-icon>photo_camera</mat-icon>
-                            </mat-button-toggle>
-                            <mat-button-toggle value="table">
-                                <mat-icon>list</mat-icon>
-                            </mat-button-toggle>
-                        </mat-button-toggle-group>
+                        <zx-toggle
+                            [options]="layoutOptions"
+                            [(value)]="layout"
+                        ></zx-toggle>
                     </div>
                 </div>
                 <app-letter-selector

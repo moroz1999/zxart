@@ -1,0 +1,63 @@
+::ng-deep .zx-toggle {
+  &.mat-button-toggle-group {
+    border: none;
+    border-radius: var(--zx-button-border-radius);
+    overflow: hidden;
+  }
+
+  .mat-button-toggle {
+    background: var(--zx-button-secondary-bg);
+    color: var(--zx-button-secondary-text);
+    border: none;
+
+    &:hover {
+      background: var(--zx-button-secondary-hover-bg);
+    }
+
+    &.mat-button-toggle-checked {
+      background: var(--zx-button-primary-bg);
+      color: var(--zx-button-primary-text);
+
+      &:hover {
+        background: var(--zx-button-primary-hover-bg);
+      }
+    }
+
+    .mat-button-toggle-button {
+      height: 100%;
+    }
+
+    .mat-button-toggle-label-content {
+      line-height: 1;
+      padding: 0 var(--space-12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  // Size variants
+  &.zx-toggle--md {
+    .mat-button-toggle {
+      height: var(--zx-button-md-height);
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  &.zx-toggle--sm {
+    .mat-button-toggle {
+      height: var(--zx-button-sm-height);
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}

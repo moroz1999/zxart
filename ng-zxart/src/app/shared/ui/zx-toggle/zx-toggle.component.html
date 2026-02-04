@@ -1,0 +1,10 @@
+<mat-button-toggle-group
+  [value]="value"
+  (change)="onValueChange($event.value)"
+  [class]="'zx-toggle zx-toggle--' + size"
+>
+  <mat-button-toggle *ngFor="let option of options" [value]="option.value">
+    <mat-icon *ngIf="option.icon">{{ option.icon }}</mat-icon>
+    <span *ngIf="option.label">{{ option.label }}</span>
+  </mat-button-toggle>
+</mat-button-toggle-group>

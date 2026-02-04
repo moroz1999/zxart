@@ -11,8 +11,6 @@ import {
 } from './components/categories-tree-selector/categories-tree-selector.component';
 import {SortingSelectorComponent} from './components/sorting-selector/sorting-selector.component';
 import {DialogSelectorComponent} from './components/dialog-selector/dialog-selector.component';
-import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
-import {MatIcon} from '@angular/material/icon';
 import {LetterSelectorComponent} from './components/letter-selector/letter-selector.component';
 import {MatProgressSpinner, MatSpinner} from '@angular/material/progress-spinner';
 import {ZxProdBlockComponent} from '../zx-prod-block/zx-prod-block.component';
@@ -22,6 +20,7 @@ import {CommonModule} from '@angular/common';
 import {TagsSelectorComponent} from '../shared/components/tags-selector/tags-selector.component';
 import {ZxCheckboxFieldComponent} from '../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 import {ZxButtonComponent} from '../shared/ui/zx-button/zx-button.component';
+import {ZxToggleComponent, ZxToggleOption} from '../shared/ui/zx-toggle/zx-toggle.component';
 
 const defaultStatuses: string[] = ['allowed', 'forbidden', 'forbiddenzxart', 'allowedzxart', 'insales', 'donationware', 'recovered', 'unknown'];
 
@@ -37,9 +36,6 @@ export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
         CategoriesTreeSelectorComponent,
         SortingSelectorComponent,
         DialogSelectorComponent,
-        MatButtonToggleGroup,
-        MatButtonToggle,
-        MatIcon,
         LetterSelectorComponent,
         MatSpinner,
         ZxProdBlockComponent,
@@ -49,6 +45,7 @@ export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
         TagsSelectorComponent,
         MatProgressSpinner,
         ZxButtonComponent,
+        ZxToggleComponent,
         ZxCheckboxFieldComponent,
     ],
     standalone: true,
@@ -75,6 +72,13 @@ export class ZxProdsCategoryComponent implements OnInit {
     public layout: ZxProdsListLayout = 'loading';
     public loading = false;
     public urlBase = '';
+
+    public layoutOptions: ZxToggleOption[] = [
+        {value: 'loading', icon: 'photo'},
+        {value: 'screenshots', icon: 'videogame_asset'},
+        {value: 'inlays', icon: 'photo_camera'},
+        {value: 'table', icon: 'list'},
+    ];
 
     @ViewChild('contentElement') contentElement?: ElementRef<HTMLElement>;
 

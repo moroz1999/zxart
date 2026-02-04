@@ -134,17 +134,6 @@ $amount: 5;
   display: flex;
   align-items: center;
   margin-left: auto;
-
-  mat-button-toggle-group {
-    --mat-standard-button-toggle-height: var(--zx-button-md-height);
-    --mat-standard-button-toggle-label-text-size: var(--zx-button-md-font-size);
-
-    mat-icon {
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
-    }
-  }
 }
 
 app-letter-selector {
