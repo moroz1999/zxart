@@ -1,0 +1,39 @@
+:host {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+}
+
+.settings-trigger__button {
+  border-radius: var(--space-2, 8px) 0 0 var(--space-2, 8px);
+  min-width: auto;
+  padding: var(--space-3, 12px);
+
+  ::ng-deep .mdc-button__label {
+    display: flex;
+    align-items: center;
+  }
+
+  mat-icon {
+    margin: 0;
+  }
+}
+
+.settings-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1001;
+}
+
+.settings-panel-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}

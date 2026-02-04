@@ -1,0 +1,17 @@
+<button
+  mat-fab
+  extended
+  color="primary"
+  class="settings-trigger__button"
+  (click)="toggle()">
+  <mat-icon>settings</mat-icon>
+</button>
+
+<div
+  class="settings-overlay"
+  [@fadeOverlay]="isOpen ? 'open' : 'closed'"
+  (click)="onOverlayClick($event)">
+  <div class="settings-panel-container" [@slidePanel]="isOpen ? 'open' : 'closed'">
+    <app-settings-panel (closed)="close()"></app-settings-panel>
+  </div>
+</div>

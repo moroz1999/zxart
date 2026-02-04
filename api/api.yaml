@@ -7,6 +7,8 @@ paths:
     $ref: 'comments.yaml#/paths/~1comments~1'
   /comments/id:{id}/:
     $ref: 'comments.yaml#/paths/~1comments~1id:{id}~1'
+  /userpreferences/:
+    $ref: 'user-preferences.yaml#/paths/~1userpreferences~1'
 components:
   schemas:
     CommentDto:
@@ -15,3 +17,5 @@ components:
       $ref: 'comments.yaml#/components/schemas/CommentAuthorDto'
     CommentTargetDto:
       $ref: 'comments.yaml#/components/schemas/CommentTargetDto'
+    PreferenceDto:
+      $ref: 'user-preferences.yaml#/components/schemas/PreferenceDto'

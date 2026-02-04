@@ -161,5 +161,11 @@
     "label": "Comentario:",
     "confirm-delete": "¿Estás seguro de que quieres eliminar este comentario?",
     "error-content": "El contenido es obligatorio (mínimo 2 caracteres)."
+  },
+  "settings": {
+    "title": "Configuración",
+    "theme": "Tema",
+    "theme.light": "Claro",
+    "theme.dark": "Oscuro"
   }
 }

@@ -20,8 +20,8 @@ import {ZxProdRowComponent} from '../zx-prod-row/zx-prod-row.component';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {TagsSelectorComponent} from '../shared/components/tags-selector/tags-selector.component';
-import {MatButton} from '@angular/material/button';
 import {ZxCheckboxFieldComponent} from '../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
+import {ZxButtonComponent} from '../shared/ui/zx-button/zx-button.component';
 
 const defaultStatuses: string[] = ['allowed', 'forbidden', 'forbiddenzxart', 'allowedzxart', 'insales', 'donationware', 'recovered', 'unknown'];
 
@@ -47,8 +47,8 @@ export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
         FormsModule,
         CommonModule,
         TagsSelectorComponent,
-        MatButton,
         MatProgressSpinner,
+        ZxButtonComponent,
         ZxCheckboxFieldComponent,
     ],
     standalone: true,

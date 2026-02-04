@@ -161,5 +161,11 @@
     "label": "Comment:",
     "confirm-delete": "Are you sure you want to delete this comment?",
     "error-content": "Content is required (min 2 characters)."
+  },
+  "settings": {
+    "title": "Settings",
+    "theme": "Theme",
+    "theme.light": "Light",
+    "theme.dark": "Dark"
   }
 }

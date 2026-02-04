@@ -5,7 +5,9 @@
       "Bash(grep:*)",
       "Bash(dir:*)",
       "Bash(npm run build:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(composer test:*)",
+      "Bash(composer psalm:*)"
     ]
   }
 }

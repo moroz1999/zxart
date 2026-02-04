@@ -78,6 +78,43 @@ $restDtos = array_map(fn($dto) => $this->objectMapper->map($dto, MyRestDto::clas
 - Use the `json` renderer for AJAX responses.
 - Ensure proper privilege checks are performed before executing any data modification operations.
 
+## Database Table Names
+- `Illuminate\Database\Connection` automatically adds `engine_` prefix to table names.
+- In repositories, use table names WITHOUT the `engine_` prefix.
+- Example: for table `engine_preferences`, use `private const TABLE = 'preferences';`
+
+## Database Query Results
+- `Illuminate\Database\Query\Builder` returns **arrays**, not objects.
+- Use array access syntax: `$row['column_name']`, NOT `$row->column_name`.
+- Example:
+```php
+$rows = $this->db->table(self::TABLE)->get();
+foreach ($rows as $row) {
+    $id = (int)$row['id'];
+    $name = $row['name'];
+}
+```
+
+## Error Logging in Controllers
+- Use `ErrorLog::getInstance()->logMessage()` for logging errors in controllers.
+- Logs are written to `{logs_path}/{date}.log`.
+- First parameter is the location identifier (e.g., `'MyController::methodName'`).
+- Second parameter is the error message (include stack trace for debugging).
+- Example:
+```php
+use ErrorLog;
+
+try {
+    // ... code
+} catch (Throwable $e) {
+    ErrorLog::getInstance()->logMessage(
+        'MyController::myMethod',
+        $e->getMessage() . "\n" . $e->getTraceAsString()
+    );
+    // handle error response
+}
+```
+
 ## Structure Elements and Actions
 - Keep structure elements (`structureElement`) lean by moving business logic into services.
 - Use strict typing instead of `method_exists`. If multiple types share common behavior, introduce a shared interface.

@@ -1,0 +1,77 @@
+openapi: 3.0.0
+info:
+  title: ZxArt User Preferences API
+  version: 1.0.0
+  description: API for managing user preferences (theme, etc.)
+
+paths:
+  /userpreferences/:
+    get:
+      summary: Get all user preferences
+      description: Returns all preferences for the current user, merged with defaults. For anonymous users, returns only defaults.
+      responses:
+        '200':
+          description: List of preferences
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponsePreferences'
+
+    put:
+      summary: Update a preference
+      description: Updates a single preference for the current user. For anonymous users, the change is not persisted server-side.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  description: Preference code (e.g., "theme")
+                  enum: [theme]
+                value:
+                  type: string
+                  description: Preference value (depends on code)
+              required:
+                - code
+                - value
+      responses:
+        '200':
+          description: Updated list of preferences
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponsePreferences'
+
+components:
+  schemas:
+    PreferenceDto:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Preference code
+          example: "theme"
+        value:
+          type: string
+          description: Preference value
+          example: "light"
+      required:
+        - code
+        - value
+
+    ApiResponsePreferences:
+      type: object
+      properties:
+        responseStatus:
+          type: string
+          enum: [success, error]
+        responseData:
+          type: array
+          items:
+            $ref: '#/components/schemas/PreferenceDto'
+        errorMessage:
+          type: string
+          description: Error message (only present when responseStatus is "error")
