@@ -17,7 +17,7 @@ class PreferencesRepositoryTest extends TestCase
     {
         $builder = $this->createMock(Builder::class);
         $builder->method('where')->willReturnSelf();
-        $builder->method('first')->willReturn((object)[
+        $builder->method('first')->willReturn([
             'id' => 1,
             'code' => 'theme',
             'type' => 'string',
@@ -54,7 +54,7 @@ class PreferencesRepositoryTest extends TestCase
     {
         $builder = $this->createMock(Builder::class);
         $builder->method('get')->willReturn(collect([
-            (object)['id' => 1, 'code' => 'theme', 'type' => 'string'],
+            ['id' => 1, 'code' => 'theme', 'type' => 'string'],
         ]));
 
         $db = $this->createMock(Connection::class);

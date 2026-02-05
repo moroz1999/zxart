@@ -23,31 +23,14 @@ composer psalm       # Static analysis
 
 ## Writing Tests for Repository Classes
 
-Repositories use Laravel's Query Builder which returns `stdClass` objects by default.
-
-### The stdClass Problem
-
-```php
-// ❌ WRONG: Laravel returns stdClass, not arrays
-foreach ($rows as $row) {
-    $code = $row['code']; // Error: Cannot use stdClass as array
-}
-
-// ✅ CORRECT: Cast to array first
-foreach ($rows as $row) {
-    $rowArray = (array)$row;
-    $code = $rowArray['code'];
-}
-```
-
 ### Mocking Query Builder
 
-When mocking `Connection::table()`, return the expected data structure:
+When mocking `Connection::table()`, return arrays (CMS uses `FETCH_ASSOC`):
 
 ```php
 $builder = $this->createMock(Builder::class);
 $builder->method('get')->willReturn(collect([
-    (object)['id' => 1, 'name' => 'test'], // stdClass, like real Laravel
+    ['id' => 1, 'name' => 'test'],
 ]));
 
 $db = $this->createMock(Connection::class);
@@ -168,7 +151,7 @@ public function testDtoLacksHardwareProdHasHardwareReturnsTrue(): void
 | Scenario | Approach |
 |----------|----------|
 | New services with DI | Unit tests with mocks |
-| Repository classes | Mock Query Builder, cast `stdClass` to array |
+| Repository classes | Mock Query Builder (returns arrays due to `FETCH_ASSOC`) |
 | Legacy `*Element` classes | Integration tests or extract logic |
 | Business logic | Document rules in test comments |
 | Magic method classes | Don't mock magic methods; use alternatives |

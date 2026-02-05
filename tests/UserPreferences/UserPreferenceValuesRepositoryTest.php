@@ -17,7 +17,7 @@ class UserPreferenceValuesRepositoryTest extends TestCase
         $builder = $this->createMock(Builder::class);
         $builder->method('where')->willReturnSelf();
         $builder->method('get')->willReturn(collect([
-            (object)['user_id' => 5, 'preference_id' => 1, 'value' => 'dark'],
+            ['user_id' => 5, 'preference_id' => 1, 'value' => 'dark'],
         ]));
 
         $db = $this->createMock(Connection::class);

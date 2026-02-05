@@ -27,7 +27,7 @@ final readonly class PreferencesRepository
             return null;
         }
 
-        return $this->hydrate((array)$row);
+        return $this->hydrate($row);
     }
 
     /**
