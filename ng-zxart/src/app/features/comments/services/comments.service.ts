@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {CommentDto} from '../models/comment.dto';
+import {CommentDto, CommentsListDto} from '../models/comment.dto';
 
 interface ApiResponse<T> {
   responseStatus: string;
@@ -23,6 +23,18 @@ export class CommentsService {
           return response.responseData;
         }
         return [];
+      }),
+      catchError(err => throwError(() => err))
+    );
+  }
+
+  getAllComments(page: number = 1): Observable<CommentsListDto> {
+    return this.http.get<ApiResponse<CommentsListDto>>(`/comments/?action=list&page=${page}`).pipe(
+      map(response => {
+        if (response.responseStatus === 'success' && response.responseData) {
+          return response.responseData;
+        }
+        return {comments: [], currentPage: 1, pagesAmount: 0, totalCount: 0};
       }),
       catchError(err => throwError(() => err))
     );

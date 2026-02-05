@@ -8,6 +8,7 @@ use controllerApplication;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
 use ZxArt\Comments\CommentRestDto;
+use ZxArt\Comments\CommentsListRestDto;
 use ZxArt\Comments\CommentsService;
 use ZxArt\Comments\Exception\CommentsException;
 
@@ -43,6 +44,8 @@ class Comments extends controllerApplication
         $action = $this->getParameter('action');
         if (!$action) {
             $this->handleGet();
+        } elseif ($action === 'list') {
+            $this->handleList();
         } elseif ($action === 'add') {
             $this->handleAdd();
         } elseif ($action === 'update') {
@@ -54,6 +57,22 @@ class Comments extends controllerApplication
             $this->renderer->assign('errorMessage', 'Unknown action');
         }
         $this->renderer->display();
+    }
+
+    protected function handleList(): void
+    {
+        $page = (int)$this->getParameter('page') ?: 1;
+
+        try {
+            $listDto = $this->commentsService->getAllCommentsPaginated($page);
+            $restDto = $this->objectMapper->map($listDto, CommentsListRestDto::class);
+
+            $this->renderer->assign('responseStatus', 'success');
+            $this->renderer->assign('responseData', $restDto);
+        } catch (Throwable) {
+            $this->renderer->assign('responseStatus', 'error');
+            $this->renderer->assign('errorMessage', 'Internal server error');
+        }
     }
 
     protected function handleGet(): void

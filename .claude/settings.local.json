@@ -7,7 +7,9 @@
       "Bash(npm run build:*)",
       "Bash(find:*)",
       "Bash(composer test:*)",
-      "Bash(composer psalm:*)"
+      "Bash(composer psalm:*)",
+      "Bash(vendor\\\\bin\\\\psalm:*)",
+      "Bash(php vendor/bin/psalm:*)"
     ]
   }
 }

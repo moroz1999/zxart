@@ -2,7 +2,7 @@
 {capture assign="moduleContent"}
     <div class="editing_controls">
         {if isset($privileges.zxProdsUploadForm.batchUploadForm) && $privileges.zxProdsUploadForm.batchUploadForm == true}
-            <a class="button"
+            <a class="button button_primary"
                href="{$element->URL}type:zxProdsUploadForm/action:batchUploadForm/">{translations name='zxProdCategory.upload'}</a>
         {/if}
     </div>

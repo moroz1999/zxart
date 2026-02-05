@@ -1,0 +1,154 @@
+.zx-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.skeleton-bone {
+  position: relative;
+  overflow: hidden;
+  background: var(--skeleton-bg);
+  border-radius: var(--radius-sm);
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.08) 20%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(255, 255, 255, 0.08) 80%,
+      transparent 100%
+    );
+  }
+}
+
+.animated .skeleton-bone::after {
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+// Comment skeleton - matches comment-item structure
+.skeleton-comment {
+  display: flex;
+  gap: var(--space-16);
+  padding: var(--space-16);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  opacity: 0;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.skeleton-comment-image {
+  flex-shrink: 0;
+  width: 160px;
+  height: 120px;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-comment-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.skeleton-comment-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.skeleton-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.skeleton-name {
+  width: 100px;
+  height: 16px;
+}
+
+.skeleton-date {
+  width: 80px;
+  height: 14px;
+}
+
+.skeleton-title {
+  width: 60%;
+  height: 18px;
+}
+
+.skeleton-text {
+  width: 100%;
+  height: 14px;
+}
+
+.skeleton-text-short {
+  width: 45%;
+}
+
+// Card skeleton
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  padding: var(--space-16);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  opacity: 0;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.skeleton-card-image {
+  width: 100%;
+  height: 180px;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+// Row skeleton
+.skeleton-row {
+  opacity: 0;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.skeleton-row-content {
+  height: 48px;
+  border-radius: var(--radius-md);
+}
+
+// Text skeleton
+.skeleton-text-line {
+  height: 16px;
+  opacity: 0;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

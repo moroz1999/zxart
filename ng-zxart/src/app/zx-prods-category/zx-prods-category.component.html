@@ -1,16 +1,16 @@
 <div *ngIf="model">
     <h1>{{ model.h1 }}</h1>
     <div class="zx-prods-list-presets" #contentElement>
-        <zx-button color="secondary" (click)="updatesPresetClicked()">{{ 'prods-list.presets.updates' | translate }}</zx-button>
-        <zx-button color="secondary" *ngIf="yearPresetActive()" (click)="yearPresetClicked()">{{ 'prods-list.presets.year' | translate }}</zx-button>
-        <zx-button color="secondary" *ngIf="recentPresetActive()" (click)="recentPresetClicked()">{{ 'prods-list.presets.recent' | translate }}</zx-button>
-        <zx-button color="secondary" (click)="topPresetClicked()">{{ 'prods-list.presets.top' | translate }}</zx-button>
-        <zx-button color="secondary" *ngIf="hwPresetActive(['zxnext'])" (click)="hwPresetClicked(['zxnext'])">{{ 'prods-list.presets.next' | translate }}</zx-button>
-        <zx-button color="secondary" *ngIf="hwPresetActive(['tsconf', 'baseconf', 'zxevolution'])" (click)="hwPresetClicked(['tsconf', 'baseconf', 'zxevolution'])">{{ 'prods-list.presets.evolution' | translate }}</zx-button>
-        <zx-button color="secondary" *ngIf="hwPresetActive(['zx8116', 'zx811', 'zx812', 'zx8132', 'zx8164', 'lambda8300', 'zx80'])" (click)="hwPresetClicked(['zx8116', 'zx811', 'zx812', 'zx8132', 'zx8164', 'lambda8300', 'zx80'])">{{ 'prods-list.presets.zx81' | translate }}</zx-button>
-        <zx-button color="secondary" *ngIf="hwPresetActive(['samcoupe'])" (click)="hwPresetClicked(['samcoupe'])">{{ 'prods-list.presets.samcoupe' | translate }}</zx-button>
-        <zx-button color="secondary" *ngIf="hwPresetActive(['elementzxmb'])" (click)="hwPresetClicked(['elementzxmb'])">{{ 'prods-list.presets.elementzxmb' | translate }}</zx-button>
-        <zx-button color="secondary" *ngIf="hwPresetActive(['gs'])" (click)="hwPresetClicked(['gs'])">{{ 'prods-list.presets.gs' | translate }}</zx-button>
+        <zx-button color="outlined" (click)="updatesPresetClicked()">{{ 'prods-list.presets.updates' | translate }}</zx-button>
+        <zx-button color="outlined" *ngIf="yearPresetActive()" (click)="yearPresetClicked()">{{ 'prods-list.presets.year' | translate }}</zx-button>
+        <zx-button color="outlined" *ngIf="recentPresetActive()" (click)="recentPresetClicked()">{{ 'prods-list.presets.recent' | translate }}</zx-button>
+        <zx-button color="outlined" (click)="topPresetClicked()">{{ 'prods-list.presets.top' | translate }}</zx-button>
+        <zx-button color="outlined" *ngIf="hwPresetActive(['zxnext'])" (click)="hwPresetClicked(['zxnext'])">{{ 'prods-list.presets.next' | translate }}</zx-button>
+        <zx-button color="outlined" *ngIf="hwPresetActive(['tsconf', 'baseconf', 'zxevolution'])" (click)="hwPresetClicked(['tsconf', 'baseconf', 'zxevolution'])">{{ 'prods-list.presets.evolution' | translate }}</zx-button>
+        <zx-button color="outlined" *ngIf="hwPresetActive(['zx8116', 'zx811', 'zx812', 'zx8132', 'zx8164', 'lambda8300', 'zx80'])" (click)="hwPresetClicked(['zx8116', 'zx811', 'zx812', 'zx8132', 'zx8164', 'lambda8300', 'zx80'])">{{ 'prods-list.presets.zx81' | translate }}</zx-button>
+        <zx-button color="outlined" *ngIf="hwPresetActive(['samcoupe'])" (click)="hwPresetClicked(['samcoupe'])">{{ 'prods-list.presets.samcoupe' | translate }}</zx-button>
+        <zx-button color="outlined" *ngIf="hwPresetActive(['elementzxmb'])" (click)="hwPresetClicked(['elementzxmb'])">{{ 'prods-list.presets.elementzxmb' | translate }}</zx-button>
+        <zx-button color="outlined" *ngIf="hwPresetActive(['gs'])" (click)="hwPresetClicked(['gs'])">{{ 'prods-list.presets.gs' | translate }}</zx-button>
     </div>
     <div class="zx-prods-list-content"
     >

@@ -8,6 +8,19 @@ use XMLWriter;
 class RssRenderer
 {
     /**
+     * Removes characters that are invalid in XML 1.0.
+     * Valid: #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
+     */
+    private function sanitizeForXml(string $text): string
+    {
+        return preg_replace(
+            '/[^\x{0009}\x{000A}\x{000D}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u',
+            '',
+            $text
+        ) ?? $text;
+    }
+
+    /**
      * @param RssDto[] $items
      */
     public function render(string $title, string $link, string $description, array $items): string
@@ -29,20 +42,20 @@ class RssRenderer
 
         foreach ($items as $item) {
             $xml->startElement('item');
-            
+
             $xml->startElement('title');
-            $xml->writeCdata($item->title);
+            $xml->writeCdata($this->sanitizeForXml($item->title));
             $xml->endElement();
 
             $xml->writeElement('link', $item->link);
-            
+
             $xml->startElement('description');
-            $xml->writeCdata($item->description);
+            $xml->writeCdata($this->sanitizeForXml($item->description));
             $xml->endElement();
 
             if ($item->content) {
                 $xml->startElement('content');
-                $xml->writeCdata($item->content);
+                $xml->writeCdata($this->sanitizeForXml($item->content));
                 $xml->endElement();
             }
 

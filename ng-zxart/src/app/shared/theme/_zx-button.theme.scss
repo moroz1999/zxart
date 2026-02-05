@@ -20,8 +20,8 @@
   --zx-button-primary-disabled-bg: var(--primary-300);
   --zx-button-primary-disabled-text: var(--primary-700);
 
-  --zx-button-secondary-bg: var(--secondary-400);
-  --zx-button-secondary-hover-bg: var(--secondary-500);
+  --zx-button-secondary-bg: var(--secondary-500);
+  --zx-button-secondary-hover-bg: var(--secondary-600);
   --zx-button-secondary-text: var(--white);
   --zx-button-secondary-disabled-bg: var(--secondary-300);
   --zx-button-secondary-disabled-text: var(--secondary-700);
@@ -36,10 +36,18 @@
   --zx-button-danger-border: none;
 
   --zx-button-transparent-bg: transparent;
-  --zx-button-transparent-hover-bg: var(--secondary-700);
+  --zx-button-transparent-hover-bg: var(--secondary-200);
   --zx-button-transparent-text: var(--text-color);
   --zx-button-transparent-disabled-bg: transparent;
   --zx-button-transparent-disabled-text: var(--secondary-500);
+
+  --zx-button-outlined-bg: transparent;
+  --zx-button-outlined-hover-bg: var(--secondary-200);
+  --zx-button-outlined-text: var(--text-color);
+  --zx-button-outlined-border: var(--secondary-500);
+  --zx-button-outlined-disabled-bg: transparent;
+  --zx-button-outlined-disabled-text: var(--secondary-600);
+  --zx-button-outlined-disabled-border: var(--secondary-700);
 
   --zx-button-border-radius: var(--radius-lg);
   --zx-button-transition-time: 0.25s;
@@ -52,12 +60,18 @@
 
   --zx-button-primary-disabled-bg: var(--primary-400);
   --zx-button-primary-disabled-text: var(--primary-900);
+
   --zx-button-secondary-disabled-bg: var(--secondary-500);
   --zx-button-secondary-disabled-text: var(--secondary-900);
+
   --zx-button-danger-disabled-bg: var(--danger-400);
   --zx-button-danger-disabled-text: var(--danger-900);
 
-  --zx-button-transparent-hover-bg: var(--secondary-300);
   --zx-button-transparent-disabled-text: var(--secondary-400);
+
+  --zx-button-outlined-hover-bg: var(--secondary-200);
+  --zx-button-outlined-border: var(--secondary-400);
+  --zx-button-outlined-disabled-text: var(--secondary-500);
+  --zx-button-outlined-disabled-border: var(--secondary-300);
 }
 

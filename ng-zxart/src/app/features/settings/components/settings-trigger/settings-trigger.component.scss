@@ -7,9 +7,9 @@
 }
 
 .settings-trigger__button {
-  border-radius: var(--space-2, 8px) 0 0 var(--space-2, 8px);
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
   min-width: auto;
-  padding: var(--space-3, 12px);
+  padding: var(--space-12);
 
   ::ng-deep .mdc-button__label {
     display: flex;
@@ -19,21 +19,4 @@
   mat-icon {
     margin: 0;
   }
-}
-
-.settings-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1001;
-}
-
-.settings-panel-container {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
 }

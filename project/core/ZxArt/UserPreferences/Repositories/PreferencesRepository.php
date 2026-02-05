@@ -39,7 +39,7 @@ final readonly class PreferencesRepository
 
         $preferences = [];
         foreach ($rows as $row) {
-            $preferenceCode = PreferenceCode::tryFrom($row['code']);
+            $preferenceCode = PreferenceCode::tryFrom($row['code'] ?? '');
             if ($preferenceCode !== null) {
                 $preferences[] = $this->hydrate($row);
             }

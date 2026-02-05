@@ -56,10 +56,7 @@ readonly class CommentsTransformer
         $targetDto = null;
         $target = $comment->getInitialTarget();
         if ($target instanceof structureElement) {
-            $targetDto = new CommentTargetDto(
-                title: (string)$target->getTitle(),
-                url: $target->getUrl()
-            );
+            $targetDto = $this->buildTargetDto($target);
         }
 
         $parentId = null;
@@ -80,5 +77,46 @@ readonly class CommentsTransformer
             parentId: $parentId,
             children: $children
         );
+    }
+
+    private function buildTargetDto(structureElement $target): CommentTargetDto
+    {
+        $type = (string)$target->structureType;
+        $imageUrl = null;
+        $authorName = null;
+
+        if ($type === 'zxPicture') {
+            /** @var \zxPictureElement $target */
+            $imageUrl = $target->getImageUrl(1);
+            $authorName = $this->getTargetAuthorName($target);
+        } elseif ($type === 'zxProd') {
+            /** @var \zxProdElement $target */
+            $imageUrl = $target->getImageUrl(0, 'prodImage');
+            $authorName = $this->getTargetAuthorName($target);
+        } elseif ($type === 'zxRelease') {
+            /** @var \zxReleaseElement $target */
+            $imageUrl = $target->getImageUrl(0, 'prodImage');
+            $authorName = $this->getTargetAuthorName($target);
+        } elseif ($type === 'zxMusic') {
+            /** @var \zxMusicElement $target */
+            $authorName = $this->getTargetAuthorName($target);
+        }
+
+        return new CommentTargetDto(
+            title: (string)$target->getTitle(),
+            url: $target->getUrl(),
+            type: $type,
+            imageUrl: $imageUrl,
+            authorName: $authorName,
+        );
+    }
+
+    private function getTargetAuthorName(structureElement $target): ?string
+    {
+        if (method_exists($target, 'getAuthorNamesString')) {
+            $names = $target->getAuthorNamesString();
+            return $names !== '' ? $names : null;
+        }
+        return null;
     }
 }

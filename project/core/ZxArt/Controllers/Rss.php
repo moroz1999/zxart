@@ -74,7 +74,7 @@ class Rss extends controllerApplication
 
         $renderer = new RssRenderer();
         $rssXml = $renderer->render(
-            'Zx-Art RSS',
+            'ZX-Art RSS',
             (string)$controller->baseURL,
             'Latest updates from ZxArt',
             $rssDtos

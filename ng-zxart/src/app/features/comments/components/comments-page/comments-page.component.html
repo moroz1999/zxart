@@ -1,0 +1,71 @@
+<div class="comments-page">
+  <zx-stack spacing="lg">
+    @if (title) {
+      <h2 zxHeading2>{{ title }}</h2>
+    }
+
+    @if (initialLoading()) {
+      <zx-skeleton variant="comment" [count]="5"></zx-skeleton>
+    } @else {
+      @if (data(); as listData) {
+        <zx-pagination
+          [currentPage]="listData.currentPage"
+          [pagesAmount]="listData.pagesAmount"
+          [urlBase]="urlBase"
+          [loading]="paginationLoading()"
+          (pageChange)="onPageChange($event)"
+        ></zx-pagination>
+
+        <div class="comments-content" [class.loading]="paginationLoading()">
+          <zx-stack spacing="md">
+            @for (comment of listData.comments; track comment.id) {
+              <zx-panel class="comment-item" [class.has-target]="comment.target && hasImage(comment)" radius="lg" padding="lg">
+                <div class="comment-layout">
+                  @if (comment.target && hasImage(comment)) {
+                    <div class="comment-target">
+                      <a [href]="comment.target.url" class="comment-target-image">
+                        <img [src]="comment.target.imageUrl" [alt]="comment.target.title" loading="lazy"/>
+                      </a>
+                      <div class="comment-target-info">
+                        <a [href]="comment.target.url" zxLink class="comment-target-title">{{ comment.target.title }}</a>
+                        @if (comment.target.authorName) {
+                          <span zxCaption class="comment-target-author">{{ comment.target.authorName }}</span>
+                        }
+                      </div>
+                    </div>
+                  }
+
+                  <div class="comment-body">
+                    @if (comment.target && !hasImage(comment)) {
+                      <div class="comment-target-inline">
+                        <a [href]="comment.target.url" zxLink>{{ comment.target.title }}</a>
+                        @if (comment.target.authorName) {
+                          <span zxCaption> — {{ comment.target.authorName }}</span>
+                        }
+                      </div>
+                    }
+
+                    <zx-stack direction="row" spacing="sm" class="comment-header">
+                      <zx-user [user]="comment.author"></zx-user>
+                      <span zxCaption class="comment-date">{{ comment.date }}</span>
+                    </zx-stack>
+
+                    <div class="comment-content" zxBody [innerHTML]="sanitizeHtml(comment.content)"></div>
+                  </div>
+                </div>
+              </zx-panel>
+            }
+          </zx-stack>
+        </div>
+
+        <zx-pagination
+          [currentPage]="listData.currentPage"
+          [pagesAmount]="listData.pagesAmount"
+          [urlBase]="urlBase"
+          [loading]="paginationLoading()"
+          (pageChange)="onPageChange($event)"
+        ></zx-pagination>
+      }
+    }
+  </zx-stack>
+</div>

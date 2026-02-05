@@ -19,6 +19,7 @@ export class ZxPaginationComponent implements OnChanges {
     @Input() pagesAmount = 0;
     @Input() visibleAmount = 1;
     @Input() urlBase = '';
+    @Input() loading = false;
     @Output() pageChange = new EventEmitter<number>();
 
     pageItems: PageItemInterface[] = [];

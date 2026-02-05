@@ -27,10 +27,11 @@ final readonly class UserPreferenceValuesRepository
 
         $values = [];
         foreach ($rows as $row) {
+            $rowArray = (array)$row;
             $values[] = new UserPreferenceValue(
-                userId: (int)$row['user_id'],
-                preferenceId: (int)$row['preference_id'],
-                value: $row['value'],
+                userId: $rowArray['user_id'],
+                preferenceId: $rowArray['preference_id'],
+                value: $rowArray['value'],
             );
         }
 

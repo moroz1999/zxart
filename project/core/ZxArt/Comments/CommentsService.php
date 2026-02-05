@@ -7,6 +7,7 @@ use App\Users\CurrentUser;
 use Cache;
 use commentElement;
 use CommentsHolderInterface;
+use Illuminate\Database\Connection;
 use LanguagesManager;
 use privilegesManager;
 use structureManager;
@@ -21,6 +22,8 @@ use ZxArt\LinkTypes;
  */
 readonly class CommentsService
 {
+    private const int COMMENTS_PER_PAGE = 50;
+
     public function __construct(
         private structureManager    $structureManager,
         private CurrentUser         $user,
@@ -28,8 +31,58 @@ readonly class CommentsService
         private privilegesManager   $privilegesManager,
         private Cache               $cache,
         private CommentsTransformer $transformer,
+        private Connection          $db,
     )
     {
+    }
+
+    /**
+     * Returns a paginated list of all comments sorted by date descending.
+     *
+     * @param int $page Page number (1-based)
+     * @return CommentsListDto
+     */
+    public function getAllCommentsPaginated(int $page = 1): CommentsListDto
+    {
+        $count = $this->db->table('structure_elements')
+            ->where('structureType', '=', 'comment')
+            ->count('id');
+
+        $pagesAmount = (int)ceil($count / self::COMMENTS_PER_PAGE);
+
+        if ($page < 1) {
+            $page = 1;
+        }
+        if ($page > $pagesAmount && $pagesAmount > 0) {
+            $page = $pagesAmount;
+        }
+
+        $offset = ($page - 1) * self::COMMENTS_PER_PAGE;
+
+        $rows = $this->db->table('structure_elements')
+            ->where('structureType', '=', 'comment')
+            ->orderBy('dateCreated', 'desc')
+            ->offset($offset)
+            ->limit(self::COMMENTS_PER_PAGE)
+            ->select('id')
+            ->get();
+
+        $comments = [];
+        foreach ($rows as $row) {
+            $rowArray = (array)$row;
+            $id = (int)$rowArray['id'];
+            $comment = $this->structureManager->getElementById($id);
+            if ($comment instanceof commentElement) {
+                $comments[] = $this->transformer->transformToDto($comment);
+            }
+        }
+
+        return new CommentsListDto(
+            comments: $comments,
+            currentPage: $page,
+            pagesAmount: $pagesAmount,
+            totalCount: $count,
+        );
     }
 
     /**

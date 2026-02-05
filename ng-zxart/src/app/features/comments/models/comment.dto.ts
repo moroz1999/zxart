@@ -7,6 +7,9 @@ export interface CommentAuthorDto {
 export interface CommentTargetDto {
   title: string;
   url: string;
+  type: string;
+  imageUrl?: string;
+  authorName?: string;
 }
 
 export interface CommentDto {
@@ -20,4 +23,11 @@ export interface CommentDto {
   target?: CommentTargetDto;
   parentId?: number;
   children: CommentDto[];
+}
+
+export interface CommentsListDto {
+  comments: CommentDto[];
+  currentPage: number;
+  pagesAmount: number;
+  totalCount: number;
 }

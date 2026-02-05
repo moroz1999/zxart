@@ -59,12 +59,13 @@ final class HardwareCompatibilityServiceTest extends TestCase
         $this->assertFalse($this->service->areProdAndDtoCompatible($dto, $prod));
     }
 
-    public function testDtoLacksHardwareProdHasHardwareReturnsFalse(): void
+    public function testDtoLacksHardwareProdHasHardwareReturnsTrue(): void
     {
+        // When DTO has no hardware info but prod does, return true (vtrdos import compatibility)
         $dto = $this->makeDtoWithReleases([[/* empty */], []]); // empty hardware in all releases
         $prod = $this->makeProdWithReleases([["zx48"]]);
 
-        $this->assertFalse($this->service->areProdAndDtoCompatible($dto, $prod));
+        $this->assertTrue($this->service->areProdAndDtoCompatible($dto, $prod));
     }
 
     public function testDtoHasHardwareProdLacksHardwareReturnsFalse(): void

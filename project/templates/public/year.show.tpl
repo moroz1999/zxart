@@ -6,7 +6,7 @@
 {capture assign="moduleContent"}
 		<div class="year_editing_controls editing_controls">
 			{if isset($privileges.party.showPublicForm) && $privileges.party.showPublicForm == true}
-				<a class="button" href="{$element->URL}type:party/action:showPublicForm/">{translations name='year.add_party'}</a>
+				<a class="button button_primary" href="{$element->URL}type:party/action:showPublicForm/">{translations name='year.add_party'}</a>
 			{/if}
 		</div>
 	{include file=$theme->template("component.partiestable.tpl") partiesList=$currentElement->getPartiesList()}

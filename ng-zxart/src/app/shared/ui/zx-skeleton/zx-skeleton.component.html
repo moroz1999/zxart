@@ -1,0 +1,46 @@
+<div class="zx-skeleton" [class.animated]="animated">
+  @switch (variant) {
+    @case ('comment') {
+      @for (i of items; track i) {
+        <div class="skeleton-comment" [style.animation-delay.ms]="i * 100">
+          <div class="skeleton-comment-image skeleton-bone"></div>
+          <div class="skeleton-comment-body">
+            <div class="skeleton-comment-header">
+              <div class="skeleton-avatar skeleton-bone"></div>
+              <div class="skeleton-name skeleton-bone"></div>
+              <div class="skeleton-date skeleton-bone"></div>
+            </div>
+            <div class="skeleton-title skeleton-bone"></div>
+            <div class="skeleton-text skeleton-bone"></div>
+            <div class="skeleton-text skeleton-text-short skeleton-bone"></div>
+          </div>
+        </div>
+      }
+    }
+    @case ('card') {
+      @for (i of items; track i) {
+        <div class="skeleton-card" [style.animation-delay.ms]="i * 100">
+          <div class="skeleton-card-image skeleton-bone"></div>
+          <div class="skeleton-card-body">
+            <div class="skeleton-title skeleton-bone"></div>
+            <div class="skeleton-text skeleton-bone"></div>
+          </div>
+        </div>
+      }
+    }
+    @case ('row') {
+      @for (i of items; track i) {
+        <div class="skeleton-row" [style.animation-delay.ms]="i * 50">
+          <div class="skeleton-row-content skeleton-bone"></div>
+        </div>
+      }
+    }
+    @case ('text') {
+      @for (i of items; track i) {
+        <div class="skeleton-text-line skeleton-bone"
+             [style.animation-delay.ms]="i * 50"
+             [style.width.%]="80 + (i % 3) * 10"></div>
+      }
+    }
+  }
+</div>

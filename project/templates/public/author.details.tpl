@@ -19,16 +19,16 @@
 			<a class="button" href="{$element->URL}id:{$element->id}/action:showPublicForm/">{translations name='author.edit'}</a>
 		{/if}
 		{if isset($privileges.authorAlias.showPublicForm) && $privileges.authorAlias.showPublicForm == true}
-			<a class="button" href="{$element->URL}type:authorAlias/action:showPublicForm/">{translations name='author.add_authoralias'}</a>
+			<a class="button button_primary" href="{$element->URL}type:authorAlias/action:showPublicForm/">{translations name='author.add_authoralias'}</a>
 		{/if}
 		{if isset($privileges.picturesUploadForm.batchUploadForm) && $privileges.picturesUploadForm.batchUploadForm == true}
-			<a class="button" href="{$element->URL}type:picturesUploadForm/action:batchUploadForm/">{translations name='author.upload'}</a>
+			<a class="button button_primary" href="{$element->URL}type:picturesUploadForm/action:batchUploadForm/">{translations name='author.upload'}</a>
 		{/if}
 		{if isset($privileges.musicUploadForm.batchUploadForm) && $privileges.musicUploadForm.batchUploadForm == true}
-			<a class="button" href="{$element->URL}type:musicUploadForm/action:batchUploadForm/">{translations name='author.upload_music'}</a>
+			<a class="button button_primary" href="{$element->URL}type:musicUploadForm/action:batchUploadForm/">{translations name='author.upload_music'}</a>
 		{/if}
 		{if isset($privileges.zxProdsUploadForm.batchUploadForm) && $privileges.zxProdsUploadForm.batchUploadForm == true}
-			<a class="button" href="{$element->URL}type:zxProdsUploadForm/action:batchUploadForm/">{translations name='author.upload_prods'}</a>
+			<a class="button button_primary" href="{$element->URL}type:zxProdsUploadForm/action:batchUploadForm/">{translations name='author.upload_prods'}</a>
 		{/if}
 		{if !empty($currentElementPrivileges.join)}
 			<a class="button" href="{$element->URL}id:{$element->id}/action:showJoinForm/">{translations name='author.join'}</a>

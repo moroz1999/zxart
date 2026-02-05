@@ -13,23 +13,23 @@
     {/capture}
     {capture assign="moduleContent"}
         <div class="radio_icon"></div>
-        <input type="button" class="button button_sm" data-radiotype="discover"
+        <input type="button" class="button button_sm button_outlined" data-radiotype="discover"
                value="{translations name="radiocontrols.discover"}"/>
-        <input type="button" class="button button_sm" data-radiotype="randomgood"
+        <input type="button" class="button button_sm button_outlined" data-radiotype="randomgood"
                value="{translations name="radiocontrols.randomgood"}"/>
-        <input type="button" class="button button_sm" data-radiotype="games"
+        <input type="button" class="button button_sm button_outlined" data-radiotype="games"
                value="{translations name="radiocontrols.games"}"/>
-        <input type="button" class="button button_sm" data-radiotype="demoscene"
+        <input type="button" class="button button_sm button_outlined" data-radiotype="demoscene"
                value="{translations name="radiocontrols.demoscene"}"/>
-        <input type="button" class="button button_sm" data-radiotype="lastyear"
+        <input type="button" class="button button_sm button_outlined" data-radiotype="lastyear"
                value="{translations name="radiocontrols.lastyear"}"/>
-        <input type="button" class="button button_sm" data-radiotype="ay"
+        <input type="button" class="button button_sm button_outlined" data-radiotype="ay"
                value="{translations name="radiocontrols.ay"}"/>
-        <input type="button" class="button button_sm" data-radiotype="beeper"
+        <input type="button" class="button button_sm button_outlined" data-radiotype="beeper"
                value="{translations name="radiocontrols.beeper"}"/>
-        <input type="button" class="button button_sm" data-radiotype="exotic"
+        <input type="button" class="button button_sm button_outlined" data-radiotype="exotic"
                value="{translations name="radiocontrols.exotic"}"/>
-        <input type="button" class="button button_sm" data-radiotype="underground"
+        <input type="button" class="button button_sm button_outlined" data-radiotype="underground"
                value="{translations name="radiocontrols.underground"}"/>
     {/capture}
     {assign moduleClass "radio_controls"}
@@ -57,8 +57,8 @@
     {/if}
     {/if}
 
-    <div class="lastcomments">
-        <div class="columnmodule_title">{translations name='label.comments'}</div>
+    {capture assign="moduleTitle"}{translations name='label.comments'}{/capture}
+    {capture assign="moduleContent"}
         {foreach from=$currentLanguage->getLatestComments() item=comment}
             {include file=$theme->template("comment.column.tpl") element=$comment}
         {/foreach}
@@ -68,9 +68,14 @@
                      alt="{translations name='label.allcomments'}"/>{translations name='label.allcomments'}
             </a>
         {/if}
-    </div>
-    <div class="lastvotes">
-        <div class="columnmodule_title">{translations name='label.votes'}</div>
+    {/capture}
+    {assign moduleClass "lastcomments"}
+    {assign moduleTitleClass ""}
+    {assign moduleContentClass ""}
+    {include file=$theme->template("component.columnmodule.tpl")}
+
+    {capture assign="moduleTitle"}{translations name='label.votes'}{/capture}
+    {capture assign="moduleContent"}
         <table class="votes_list_table table_component">
             <tbody>
             {foreach from=$currentLanguage->getLatestVotes(20) item=voteInfo name=votes}
@@ -82,5 +87,9 @@
             {/foreach}
             </tbody>
         </table>
-    </div>
+    {/capture}
+    {assign moduleClass "lastvotes"}
+    {assign moduleTitleClass ""}
+    {assign moduleContentClass ""}
+    {include file=$theme->template("component.columnmodule.tpl")}
 </aside>

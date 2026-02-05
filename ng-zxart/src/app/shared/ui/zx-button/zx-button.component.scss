@@ -87,6 +87,26 @@ button {
       }
     }
 
+    &--outlined {
+      --mdc-filled-button-container-color: var(--zx-button-outlined-bg);
+      --mdc-filled-button-label-text-color: var(--zx-button-outlined-text);
+      border: var(--border-width-thin) solid var(--zx-button-outlined-border);
+
+      &:hover:not(:disabled),
+      &:focus:not(:disabled) {
+        --mdc-filled-button-container-color: var(--zx-button-outlined-hover-bg);
+      }
+
+      &:disabled,
+      &.mat-mdc-button-disabled {
+        --mdc-filled-button-container-color: var(--zx-button-outlined-disabled-bg);
+        --mdc-filled-button-disabled-container-color: var(--zx-button-outlined-disabled-bg);
+        --mdc-filled-button-label-text-color: var(--zx-button-outlined-disabled-text);
+        --mdc-filled-button-disabled-label-text-color: var(--zx-button-outlined-disabled-text);
+        border-color: var(--zx-button-outlined-disabled-border);
+      }
+    }
+
     &--xs {
       --mdc-filled-button-container-height: var(--zx-button-xs-height);
       --mdc-filled-button-label-text-size: var(--zx-button-xs-font-size);

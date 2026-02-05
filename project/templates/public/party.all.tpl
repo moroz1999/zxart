@@ -7,13 +7,13 @@
 	{include file=$theme->template("component.partyinfo.tpl")}
 		<div class="party_editing_controls editing_controls">
 			{if isset($privileges.picturesUploadForm.batchUploadForm) && $privileges.picturesUploadForm.batchUploadForm == true}
-				<a class="button" href="{$element->URL}type:picturesUploadForm/action:batchUploadForm/">{translations name='party.upload'}</a>
+				<a class="button button_primary" href="{$element->URL}type:picturesUploadForm/action:batchUploadForm/">{translations name='party.upload'}</a>
 			{/if}
 			{if isset($privileges.musicUploadForm.batchUploadForm) && $privileges.musicUploadForm.batchUploadForm == true}
-				<a class="button" href="{$element->URL}type:musicUploadForm/action:batchUploadForm/">{translations name='party.upload_music'}</a>
+				<a class="button button_primary" href="{$element->URL}type:musicUploadForm/action:batchUploadForm/">{translations name='party.upload_music'}</a>
 			{/if}
 			{if isset($privileges.zxProdsUploadForm.batchUploadForm) && $privileges.zxProdsUploadForm.batchUploadForm == true}
-				<a class="button" href="{$element->URL}type:zxProdsUploadForm/action:batchUploadForm/">{translations name='party.upload_prods'}</a>
+				<a class="button button_primary" href="{$element->URL}type:zxProdsUploadForm/action:batchUploadForm/">{translations name='party.upload_prods'}</a>
 			{/if}
 			{if isset($currentElementPrivileges.publicReceive) && $currentElementPrivileges.publicReceive}
 				<a class="button" href="{$element->URL}id:{$element->id}/action:showPublicForm/">{translations name='party.edit'}</a>

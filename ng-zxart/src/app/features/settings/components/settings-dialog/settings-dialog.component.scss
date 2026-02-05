@@ -1,0 +1,16 @@
+.settings-dialog {
+  min-width: 300px;
+  position: relative;
+
+  &__close {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+  }
+}
+
+.settings-section {
+  &__title {
+    margin: 0 0 var(--space-12) 0;
+  }
+}

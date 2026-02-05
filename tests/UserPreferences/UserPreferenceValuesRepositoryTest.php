@@ -50,22 +50,23 @@ class UserPreferenceValuesRepositoryTest extends TestCase
 
     public function testUpsertInsertsNewValue(): void
     {
-        $upsertCalled = false;
-        $upsertArgs = [];
+        $updateOrInsertCalled = false;
+        $updateOrInsertArgs = [];
 
         $db = $this->createMock(Connection::class);
         $db->method('table')
-            ->willReturnCallback(function ($table) use (&$upsertCalled, &$upsertArgs) {
-                $builder = new class($upsertCalled, $upsertArgs) {
+            ->willReturnCallback(function ($table) use (&$updateOrInsertCalled, &$updateOrInsertArgs) {
+                $builder = new class($updateOrInsertCalled, $updateOrInsertArgs) {
                     public function __construct(
-                        private bool &$upsertCalled,
-                        private array &$upsertArgs
+                        private bool &$updateOrInsertCalled,
+                        private array &$updateOrInsertArgs
                     ) {}
 
-                    public function upsert(array $values, array $uniqueBy, array $update): void
+                    public function updateOrInsert(array $attributes, array $values): bool
                     {
-                        $this->upsertCalled = true;
-                        $this->upsertArgs = [$values, $uniqueBy, $update];
+                        $this->updateOrInsertCalled = true;
+                        $this->updateOrInsertArgs = [$attributes, $values];
+                        return true;
                     }
                 };
                 return $builder;
@@ -74,10 +75,10 @@ class UserPreferenceValuesRepositoryTest extends TestCase
         $repository = new UserPreferenceValuesRepository($db);
         $repository->upsert(5, 1, 'dark');
 
-        $this->assertTrue($upsertCalled);
+        $this->assertTrue($updateOrInsertCalled);
         $this->assertSame(
-            [[['user_id' => 5, 'preference_id' => 1, 'value' => 'dark']], ['user_id', 'preference_id'], ['value']],
-            $upsertArgs
+            [['user_id' => 5, 'preference_id' => 1], ['value' => 'dark']],
+            $updateOrInsertArgs
         );
     }
 }

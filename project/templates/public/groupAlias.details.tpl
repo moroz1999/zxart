@@ -10,7 +10,7 @@
 			<a class="button" href="{$element->URL}id:{$element->id}/action:showPublicForm/">{translations name='groupalias.edit'}</a>
 		{/if}
 		{if isset($privileges.zxProdsUploadForm.batchUploadForm) && $privileges.zxProdsUploadForm.batchUploadForm == true}
-			<a class="button" href="{$element->URL}type:zxProdsUploadForm/action:batchUploadForm/">{translations name='groupalias.upload_prods'}</a>
+			<a class="button button_primary" href="{$element->URL}type:zxProdsUploadForm/action:batchUploadForm/">{translations name='groupalias.upload_prods'}</a>
 		{/if}
 		{if !empty($currentElementPrivileges.join)}
 			<a class="button" href="{$element->URL}id:{$element->id}/action:showJoinForm/">{translations name='groupalias.join'}</a>

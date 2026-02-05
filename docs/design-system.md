@@ -25,7 +25,11 @@ The project follows a component-based approach for the design system.
 10. **Button Design**: Buttons must use Angular Material directives (`mat-button`, `mat-flat-button`, etc.). They are globally styled to match the design system using CSS variables defined in `_zx-button.theme.scss`. Use the `color` attribute to switch between primary, accent, and warn states.
 11. **UI Components Usage**: Only components from the `shared/ui` directory (design system) should be used for building user interfaces to ensure consistency across the application. Direct usage of Material components in features is discouraged if a design system equivalent exists.
 12. **Layout Rules**: All layout (spacing, alignment, positioning) must be implemented exclusively using design system components (like `zx-stack`, `zx-panel`) or approved utility directives. Manual `style` attributes for margins, paddings, and other layout properties are strictly forbidden. If elements are part of a common layout, general layout rules (flex, grid) or `zx-stack` are preferred over individual margins.
-13. **Typography System**: Strictly limited to a set of directives and CSS variables.
+13. **Loading States**: Every list or data-driven component MUST implement proper loading states:
+    - **Initial load**: Display `zx-skeleton` component with appropriate variant (`comment`, `card`, `row`, `text`). Never show empty containers or spinners for initial page loads.
+    - **Pagination/reload**: Lock interactive controls (pagination, filters) with visual feedback (opacity reduction, spinner overlay). Content should blur slightly to indicate loading without disappearing completely.
+    - **Error states**: Display user-friendly error messages with retry options.
+14. **Typography System**: Strictly limited to a set of directives and CSS variables.
     - **Allowed styles**: `heading-1`, `heading-2`, `heading-3`, `body`, `body-strong`, `caption`, `link`, `link-alt`.
     - **Angular directives**: `zxHeading1`, `zxHeading2`, `zxHeading3`, `zxBody`, `zxBodyStrong`, `zxCaption`, `zxLink`, `zxLinkAlt`.
     - **Prohibition**: Direct use of `--font-*` variables in components is prohibited. Use typography directives or variables from `_typography.theme.scss`. Custom variants or Display-styles are forbidden.
@@ -36,8 +40,23 @@ The project follows a component-based approach for the design system.
 3. **Shared UI Components**: All design system components are located in `ng-zxart/src/app/shared/ui/`.
 
 #### Available Components:
-- `zx-button`: Versatile button component with multiple sizes (xs, sm, md), colors (primary, secondary, danger), and square mode (removes horizontal padding, makes width equal to height).
+- `zx-button`: Versatile button component with multiple sizes (xs, sm, md), colors, and square mode (removes horizontal padding, makes width equal to height).
+  - **Colors and usage**:
+    - `primary` - Main call-to-action. Use for the primary action on a page (Submit, Save, Confirm).
+    - `secondary` - Secondary call-to-action. Use for important but not primary actions.
+    - `outlined` - Transparent background with gray border. Use for secondary actions like filters, Cancel buttons, or actions that shouldn't draw too much attention.
+    - `transparent` - No background or border. Use when many buttons appear in a row (pagination, letter navigation).
+    - `danger` - Destructive actions only (Delete, Remove, Revoke).
 - `zx-panel`: Universal layout container with configurable variant (elevated, flat), border radius (sm, md, lg, xl) and padding (md, lg).
 - `zx-stack`: Flexbox-based layout container with configurable spacing (md, lg, xl) and direction (column, row).
 - `zx-user`: Component for displaying user name with status icons (badges). Uses "icon name" layout.
+- `zx-skeleton`: Loading placeholder component for lists and content. Variants:
+  - `comment` - For comment lists (image + header + text lines)
+  - `card` - For card grids (image + title + text)
+  - `row` - For simple list rows
+  - `text` - For text blocks
+  - Props: `variant`, `count` (number of skeleton items), `animated` (shimmer effect, default true)
+- `zx-pagination`: Page navigation component with loading state support.
+  - Props: `currentPage`, `pagesAmount`, `urlBase`, `loading` (shows spinner overlay and disables controls), `visibleAmount`
+  - Event: `pageChange` - emits new page number on click
 
