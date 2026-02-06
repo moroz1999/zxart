@@ -2,13 +2,17 @@
   display: block;
 }
 
+.latest-comments__title {
+  margin-bottom: var(--space-12);
+}
+
 .latest-comment {
   line-height: 1.4;
 }
 
 .latest-comment__link {
   text-decoration: none;
-  color: inherit;
+  color: var(--zx-caption-color);
   display: block;
 
   &:hover {
@@ -22,5 +26,6 @@
 
 .latest-comments__all {
   display: inline-block;
-  margin-top: var(--space-8);
+  margin-top: var(--space-12);
+  text-decoration: none;
 }

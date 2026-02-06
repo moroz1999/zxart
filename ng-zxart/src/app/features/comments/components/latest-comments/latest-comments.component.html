@@ -4,16 +4,17 @@
   </zx-panel>
 } @else {
   <zx-panel>
+    <div zxHeading3 class="latest-comments__title">{{ 'comments.title' | translate }}</div>
     <zx-stack spacing="sm">
       @for (comment of comments(); track comment.id) {
         <div class="latest-comment">
           @if (comment.target) {
-            <a [href]="comment.target.url" class="latest-comment__link" zxBody>
+            <a [href]="comment.target.url" class="latest-comment__link" zxCaption>
               <zx-user [user]="comment.author" class="latest-comment__author"></zx-user>:
               <span class="latest-comment__content" [innerHTML]="sanitizeHtml(comment.content)"></span>
             </a>
           } @else {
-            <span zxBody>
+            <span zxCaption>
               <zx-user [user]="comment.author" class="latest-comment__author"></zx-user>:
               <span class="latest-comment__content" [innerHTML]="sanitizeHtml(comment.content)"></span>
             </span>
@@ -23,8 +24,8 @@
     </zx-stack>
 
     @if (allCommentsUrl) {
-      <a [href]="allCommentsUrl" zxLinkAlt class="latest-comments__all">
-        {{ 'comments.all-comments' | translate }}
+      <a [href]="allCommentsUrl" class="latest-comments__all">
+        <zx-button color="secondary" size="sm">{{ 'comments.all-comments' | translate }}</zx-button>
       </a>
     }
   </zx-panel>

@@ -1,3 +1,16 @@
+.svg-mask(@svgFile, @color) {
+  @svgContent: encodeSvgContent(@svgFile, white, white, false);
+  -webkit-mask-image: url("@{svgContent}");
+  mask-image: url("@{svgContent}");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  background-color: @color;
+}
+
 .user-name {
   display: inline-flex;
   flex-wrap: nowrap;
@@ -42,15 +55,15 @@
   text-align: center;
 
   &.supporter .user-badge-image {
-    .svg-bg(star, var(--user-icon-color-supporter), var(--user-icon-color-supporter));
+    .svg-mask(star, var(--user-icon-color-supporter));
   }
 
   &.vip .user-badge-image {
-    .svg-bg(star, var(--user-icon-color-vip), var(--user-icon-color-vip));
+    .svg-mask(star, var(--user-icon-color-vip));
   }
 
   &.volunteer .user-badge-image {
-    .svg-bg(volunteer, var(--user-icon-color-volunteer), var(--user-icon-color-volunteer));
+    .svg-mask(volunteer, var(--user-icon-color-volunteer));
   }
 }
 

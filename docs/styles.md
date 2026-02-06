@@ -4,6 +4,7 @@
 
 **CRITICAL: After any changes to SCSS or theme files, you MUST rebuild the Angular project using `composer run build` from the project root directory.**
 
+- **No vendor prefixes**: Do not use `-webkit-`, `-moz-`, `-ms-` or any other vendor prefixes. Use only standard unprefixed properties.
 - **Comments**: All comments in CSS/SCSS files must be written in English only.
 - **Styles and Variables**:
     - NO hardcoded hex/rgb or raw spacing.

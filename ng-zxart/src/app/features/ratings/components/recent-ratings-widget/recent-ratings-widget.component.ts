@@ -6,7 +6,7 @@ import {RecentRatingDto} from '../../models/recent-rating.dto';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
 import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
 import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
-import {ZxLinkDirective} from '../../../../shared/directives/typography/typography.directives';
+import {ZxHeading3Directive, ZxLinkDirective} from '../../../../shared/directives/typography/typography.directives';
 
 @Component({
   selector: 'zx-recent-ratings',
@@ -17,6 +17,7 @@ import {ZxLinkDirective} from '../../../../shared/directives/typography/typograp
     ZxTableComponent,
     ZxSkeletonComponent,
     ZxUserComponent,
+    ZxHeading3Directive,
     ZxLinkDirective
   ],
   templateUrl: './recent-ratings-widget.component.html',
