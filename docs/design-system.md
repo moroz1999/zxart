@@ -24,7 +24,8 @@ The project follows a component-based approach for the design system.
 9. **Material UI**: The project uses Angular Material as the primary UI library. All new components must use Material components. PrimeNG is considered legacy and must be replaced during refactoring.
 10. **Button Design**: Buttons must use Angular Material directives (`mat-button`, `mat-flat-button`, etc.). They are globally styled to match the design system using CSS variables defined in `_zx-button.theme.scss`. Use the `color` attribute to switch between primary, accent, and warn states.
 11. **UI Components Usage**: Only components from the `shared/ui` directory (design system) should be used for building user interfaces to ensure consistency across the application. Direct usage of Material components in features is discouraged if a design system equivalent exists.
-12. **Layout Rules**: All layout (spacing, alignment, positioning) must be implemented exclusively using design system components (like `zx-stack`, `zx-panel`) or approved utility directives. Manual `style` attributes for margins, paddings, and other layout properties are strictly forbidden. If elements are part of a common layout, general layout rules (flex, grid) or `zx-stack` are preferred over individual margins.
+12. **Layout Rules**: All layout (spacing, alignment, positioning) must be implemented exclusively using design system components (like `zx-stack`, `zx-panel`) or approved utility directives. Manual `style` attributes for margins, paddings, and other layout properties are strictly forbidden. If elements are part of a common layout, general layout rules (flex, grid) or `zx-stack` are preferred over individual margins. **Negative margins are PROHIBITED** — never use `calc(-1 * ...)` or any negative margin to break out of a parent's padding. Use `padding="none"` on the parent and apply padding to child elements individually.
+    - **No wrapper elements**: If a component only wraps `<ng-content>`, use `:host` for all styling instead of adding a wrapper `<div>`. Apply classes via `@HostBinding('class')`. Wrapper elements are only justified when additional structural markup is needed beyond plain content projection.
 13. **Loading States**: Every list or data-driven component MUST implement proper loading states:
     - **Initial load**: Display `zx-skeleton` component with appropriate variant (`comment`, `card`, `row`, `text`). Never show empty containers or spinners for initial page loads.
     - **Pagination/reload**: Lock interactive controls (pagination, filters) with visual feedback (opacity reduction, spinner overlay). Content should blur slightly to indicate loading without disappearing completely.
@@ -47,7 +48,7 @@ The project follows a component-based approach for the design system.
     - `outlined` - Transparent background with gray border. Use for secondary actions like filters, Cancel buttons, or actions that shouldn't draw too much attention.
     - `transparent` - No background or border. Use when many buttons appear in a row (pagination, letter navigation).
     - `danger` - Destructive actions only (Delete, Remove, Revoke).
-- `zx-panel`: Universal layout container with configurable variant (elevated, flat), border radius (sm, md, lg, xl) and padding (md, lg).
+- `zx-panel`: Universal layout container with configurable variant (elevated, flat), border radius (sm, md, lg, xl) and padding (none, sm, md, lg). Use `padding="none"` when child content needs to go edge-to-edge (e.g., tables).
 - `zx-stack`: Flexbox-based layout container with configurable spacing (md, lg, xl) and direction (column, row).
 - `zx-user`: Component for displaying user name with status icons (badges). Uses "icon name" layout.
 - `zx-skeleton`: Loading placeholder component for lists and content. Variants:
@@ -56,6 +57,7 @@ The project follows a component-based approach for the design system.
   - `row` - For simple list rows
   - `text` - For text blocks
   - Props: `variant`, `count` (number of skeleton items), `animated` (shimmer effect, default true)
+- `zx-table`: Table wrapper inside a flat panel. Props: `title` (optional heading above the table). Uses `padding="none"` on the panel so that table rows go edge-to-edge; the title gets its own internal padding.
 - `zx-pagination`: Page navigation component with loading state support.
   - Props: `currentPage`, `pagesAmount`, `urlBase`, `loading` (shows spinner overlay and disables controls), `visibleAmount`
   - Event: `pageChange` - emits new page number on click

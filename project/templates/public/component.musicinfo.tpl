@@ -209,7 +209,7 @@
 			{translations name='zxmusic.originalfile'}:
 		</td>
 		<td class='info_table_value'>
-			<a rel="nofollow" class='music_details_download' href="{$controller->baseURL}file/id:{$element->file}/filename:{$element->getFileName('original')}"><img loading="lazy"  class="music_details_original" src="{$theme->getImageUrl("music.png")}" alt="{translations name='zxmusic.originalfile'} {$element->getFileName('original', false)}" />{$element->getFileName('original', false, false)}</a>
+			<a rel="nofollow" class='music_details_download' href="{$controller->baseURL}file/id:{$element->file}/filename:{$element->getFileName('original')}"><img loading="lazy"  class="music_details_original" src="{$theme->getImageUrl("music.svg")}" alt="{translations name='zxmusic.originalfile'} {$element->getFileName('original', false)}" />{$element->getFileName('original', false, false)}</a>
 		</td>
 	</tr>
 	{/if}
@@ -219,7 +219,7 @@
 			{translations name='zxmusic.trackerfile'}:
 		</td>
 		<td class='info_table_value'>
-			<a rel="nofollow" class='music_details_download' href="{$controller->baseURL}file/id:{$element->trackerFile}/filename:{$element->getFileName('tracker')}"><img loading="lazy" class="music_details_tracker" src="{$theme->getImageUrl("tracker.png")}" alt="{translations name='zxmusic.trackerfile'} {$element->getFileName('tracker', false)}" />{$element->getFileName('tracker', false, false)}</a>
+			<a rel="nofollow" class='music_details_download' href="{$controller->baseURL}file/id:{$element->trackerFile}/filename:{$element->getFileName('tracker')}"><img loading="lazy" class="music_details_tracker" src="{$theme->getImageUrl("tracker.svg")}" alt="{translations name='zxmusic.trackerfile'} {$element->getFileName('tracker', false)}" />{$element->getFileName('tracker', false, false)}</a>
 		</td>
 	</tr>
 	{/if}
@@ -229,7 +229,7 @@
 				{translations name='zxmusic.mp3file'}:
 			</td>
 			<td class='info_table_value'>
-				<a rel="nofollow" class='music_details_download' href="{$element->getMp3FilePath()}"><img loading="lazy" class="music_details_mp3" src="{$theme->getImageUrl("mp3.png")}" alt="{translations name='zxmusic.mp3file'} {$element->getFileName('mp3', false)}" /> {$element->getMp3FilePath()}</a>
+				<a rel="nofollow" class='music_details_download' href="{$element->getMp3FilePath()}"><img loading="lazy" class="music_details_mp3" src="{$theme->getImageUrl("mp3.svg")}" alt="{translations name='zxmusic.mp3file'} {$element->getFileName('mp3', false)}" /> {$element->getMp3FilePath()}</a>
 			</td>
 		</tr>
 	{/if}

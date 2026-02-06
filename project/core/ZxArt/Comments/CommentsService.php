@@ -271,6 +271,35 @@ readonly class CommentsService
     }
 
     /**
+     * Returns the latest comments sorted by date descending.
+     *
+     * @param int $limit Maximum number of comments to return
+     * @return CommentDto[]
+     */
+    public function getLatestComments(int $limit = 10): array
+    {
+        $rows = $this->db->table('structure_elements')
+            ->where('structureType', '=', 'comment')
+            ->where('dateCreated', '<=', time())
+            ->orderBy('dateCreated', 'desc')
+            ->limit($limit)
+            ->select('id')
+            ->get();
+
+        $comments = [];
+        foreach ($rows as $row) {
+            $rowArray = (array)$row;
+            $id = (int)$rowArray['id'];
+            $comment = $this->structureManager->getElementById($id);
+            if ($comment instanceof commentElement) {
+                $comments[] = $this->transformer->transformToDto($comment);
+            }
+        }
+
+        return $comments;
+    }
+
+    /**
      * Clears the comments cache.
      */
     public function clearCommentsCache(): void

@@ -52,6 +52,8 @@ class Comments extends controllerApplication
             $this->handleUpdate();
         } elseif ($action === 'delete') {
             $this->handleDelete();
+        } elseif ($action === 'latest') {
+            $this->handleLatest();
         } else {
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', 'Unknown action');
@@ -168,6 +170,25 @@ class Comments extends controllerApplication
         } catch (Throwable) {
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', 'Failed to delete comment');
+        }
+    }
+
+    protected function handleLatest(): void
+    {
+        $limit = (int)$this->getParameter('limit') ?: 10;
+
+        try {
+            $comments = $this->commentsService->getLatestComments($limit);
+            $restComments = array_map(
+                fn($dto) => $this->objectMapper->map($dto, CommentRestDto::class),
+                $comments
+            );
+
+            $this->renderer->assign('responseStatus', 'success');
+            $this->renderer->assign('responseData', $restComments);
+        } catch (Throwable) {
+            $this->renderer->assign('responseStatus', 'error');
+            $this->renderer->assign('errorMessage', 'Internal server error');
         }
     }
 }

@@ -536,41 +536,6 @@ class languageElement extends structureElement implements MetadataProviderInterf
         return $result;
     }
 
-    public function clearCommentsCache(): void
-    {
-        $this->deleteCache('lc');
-    }
-
-    public function getLatestComments($limit = 10)
-    {
-        $cache = $this->getElementsListCache('lc', 180);
-        if (($comments = $cache->load()) === null) {
-            $comments = [];
-
-            $structureManager = $this->getService('structureManager');
-            $collection = persistableCollection::getInstance('structure_elements');
-            $now = time();
-
-            $columns = ['id'];
-
-            $conditions = [];
-            $conditions[] = ['column' => 'dateCreated', 'action' => '<=', 'argument' => $now];
-            $conditions[] = ['column' => 'structureType', 'action' => '=', 'argument' => 'comment'];
-
-            $orderFields = ['dateCreated' => 0];
-
-            $result = $collection->conditionalLoad($columns, $conditions, $orderFields, $limit);
-            foreach ($result as $row) {
-                if ($comment = $structureManager->getElementById($row['id'])) {
-                    $comments[] = $comment;
-                }
-            }
-            $cache->save($comments);
-        }
-        return $comments;
-    }
-
-
     public function getLatestVotes($limit = 10)
     {
         if ($this->votesHistory === null) {

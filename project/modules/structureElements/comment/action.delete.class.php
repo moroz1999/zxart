@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Comments\CommentsService;
+
 class deleteComment extends structureElementAction
 {
     protected $loggable = true;
@@ -20,10 +22,7 @@ class deleteComment extends structureElementAction
             $structureElement->deleteElementData();
             $targetElement->recalculateComments();
 
-            $languagesManager = $this->getService('LanguagesManager');
-            if ($currentLanguageElement = $structureManager->getElementById($languagesManager->getCurrentLanguageId())) {
-                $currentLanguageElement->clearCommentsCache();
-            }
+            $this->getService(CommentsService::class)->clearCommentsCache();
 
             $controller->redirect($targetElement->getUrl());
         } else {

@@ -26,6 +26,11 @@ import {environment} from '../environments/environment';
 import {CommentsListComponent} from './features/comments/components/comments-list/comments-list.component';
 import {CommentsPageComponent} from './features/comments/components/comments-page/comments-page.component';
 import {SettingsTriggerComponent} from './features/settings/components/settings-trigger/settings-trigger.component';
+import {LatestCommentsComponent} from './features/comments/components/latest-comments/latest-comments.component';
+import {
+  RecentRatingsWidgetComponent
+} from './features/ratings/components/recent-ratings-widget/recent-ratings-widget.component';
+import {RatingsListComponent} from './features/ratings/components/ratings-list/ratings-list.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -80,6 +85,9 @@ export class AppModule implements DoBootstrap  {
             'zx-comments-list': CommentsListComponent,
             'zx-comments-page': CommentsPageComponent,
             'app-settings-trigger': SettingsTriggerComponent,
+            'zx-latest-comments': LatestCommentsComponent,
+            'zx-recent-ratings': RecentRatingsWidgetComponent,
+            'zx-ratings-list': RatingsListComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});

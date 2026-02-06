@@ -274,11 +274,11 @@
         <zx-prods-list element-id="{$element->id}" property="compilations"></zx-prods-list>
     {/if}
 
-    {include file=$theme->template('component.comments.tpl')}
+    <zx-comments-list element-id="{$element->id}"></zx-comments-list>
     {if $element->denyComments}<p>{translations name="zxitem.commentsdenied"}</p>{/if}
 
-    {*{include file=$theme->template('component.voteslist.tpl')}*}
-    {*{if $element->denyVoting}<p>{translations name="zxitem.votingdenied"}</p>{/if}*}
+    <zx-ratings-list element-id="{$element->id}"></zx-ratings-list>
+    {if $element->denyVoting}<p>{translations name="zxitem.votingdenied"}</p>{/if}
 
     {if $element->getTunes()}
         <h2>{translations name="zxrelease.music"}</h2>

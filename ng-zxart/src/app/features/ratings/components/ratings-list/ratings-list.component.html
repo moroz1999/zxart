@@ -1,0 +1,36 @@
+<div class="ratings-list">
+  <h2 zxHeading2>{{ 'ratings.votes-title' | translate }}</h2>
+
+  <app-viewport-loader [enabled]="!!elementId" [loader]="getRatingsLoader">
+    <ng-template #skeleton>
+      <div class="ratings-skeleton">
+        <div class="skeleton-item" style="height: 32px; margin-bottom: 8px; border-radius: 4px;"></div>
+        <div class="skeleton-item" style="height: 32px; margin-bottom: 8px; border-radius: 4px;"></div>
+        <div class="skeleton-item" style="height: 32px; margin-bottom: 8px; border-radius: 4px;"></div>
+      </div>
+    </ng-template>
+
+    <ng-template #content let-ratings>
+      @if (ratings.length === 0) {
+        <p zxBody>{{ 'ratings.empty' | translate }}</p>
+      } @else {
+        <table zxTable>
+          <thead>
+            <tr>
+              <th>{{ 'ratings.table-user' | translate }}</th>
+              <th>{{ 'ratings.table-vote' | translate }}</th>
+              <th>{{ 'ratings.table-date' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of ratings">
+              <td><zx-user [user]="item.user"></zx-user></td>
+              <td><span zxCaption>{{ item.rating }}</span></td>
+              <td><span zxCaption>{{ item.date }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      }
+    </ng-template>
+  </app-viewport-loader>
+</div>

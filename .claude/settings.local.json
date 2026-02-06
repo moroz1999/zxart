@@ -9,7 +9,20 @@
       "Bash(composer test:*)",
       "Bash(composer psalm:*)",
       "Bash(vendor\\\\bin\\\\psalm:*)",
-      "Bash(php vendor/bin/psalm:*)"
+      "Bash(php vendor/bin/psalm:*)",
+      "Bash(ls -la \"E:\\\\projects\\\\zxart\\\\project\\\\modules\\\\structureElements\"\" 2>/dev/null | grep -E \"vote)",
+      "Bash(mark:*)",
+      "Bash(rating \")",
+      "Bash(findstr:*)",
+      "Bash(php:*)",
+      "Bash(php vendor\\\\bin\\\\psalm:*)",
+      "Bash(cmd /c \"dir /b E:\\\\projects\\\\zxart\\\\ng-zxart\\\\src\\\\app\\\\shared\\\\theme\\\\_index*\")",
+      "Bash(cmd /c \"if exist E:\\\\projects\\\\zxart\\\\ng-zxart\\\\src\\\\app\\\\shared\\\\theme\\\\_index.scss echo EXISTS else echo MISSING\")",
+      "Bash(cmd /c \"dir /b E:\\\\projects\\\\zxart\\\\ng-zxart\\\\src\\\\app\\\\shared\\\\theme\"\")",
+      "Bash(cmd /c dir /b \"E:\\\\projects\\\\zxart\\\\ng-zxart\\\\src\\\\app\\\\shared\\\\theme\")",
+      "Bash(cmd /c \"dir /a /b E:\\\\projects\\\\zxart\\\\ng-zxart\\\\src\\\\app\\\\shared\\\\theme\")",
+      "Bash(npx tsc:*)",
+      "Bash(identify:*)"
     ]
   }
 }

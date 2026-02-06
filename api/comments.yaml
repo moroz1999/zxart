@@ -24,6 +24,32 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponseTree'
 
+  /comments/?action=latest:
+    get:
+      summary: Get latest comments
+      description: Returns the most recent comments across all entities, sorted by date descending.
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [latest]
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of comments to return (default 10).
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: A JSON object with responseStatus and responseData.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseTree'
+
   /comments/:
     post:
       summary: Comment actions (Add, Update, Delete)

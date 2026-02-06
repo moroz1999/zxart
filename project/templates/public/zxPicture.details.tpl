@@ -67,7 +67,7 @@
 	<zx-comments-list element-id="{$element->id}"></zx-comments-list>
 	{if $element->denyComments}<p>{translations name="zxitem.commentsdenied"}</p>{/if}
 
-	{include file=$theme->template('component.voteslist.tpl')}
+	<zx-ratings-list element-id="{$element->id}"></zx-ratings-list>
 	{if $element->denyVoting}<p>{translations name="zxitem.votingdenied"}</p>{/if}
 	{stripdomspaces}
 		{if $element->getReleaseElement()}

@@ -1,22 +1,23 @@
-.zx-panel {
+:host {
   background-color: var(--zx-panel-bg);
   box-sizing: border-box;
   display: block;
 
-  &--elevated {
+  &.zx-panel--elevated {
     box-shadow: var(--zx-panel-shadow);
   }
 
-  &--flat {
+  &.zx-panel--flat {
     border: var(--zx-panel-border);
   }
 
-  &--radius-sm { border-radius: var(--zx-panel-radius-sm); }
-  &--radius-md { border-radius: var(--zx-panel-radius-md); }
-  &--radius-lg { border-radius: var(--zx-panel-radius-lg); }
-  &--radius-xl { border-radius: var(--zx-panel-radius-xl); }
+  &.zx-panel--radius-sm { border-radius: var(--zx-panel-radius-sm); }
+  &.zx-panel--radius-md { border-radius: var(--zx-panel-radius-md); }
+  &.zx-panel--radius-lg { border-radius: var(--zx-panel-radius-lg); }
+  &.zx-panel--radius-xl { border-radius: var(--zx-panel-radius-xl); }
 
-  &--padding-s { padding: var(--zx-panel-padding-sm); }
-  &--padding-md { padding: var(--zx-panel-padding-md); }
-  &--padding-lg { padding: var(--zx-panel-padding-lg); }
+  &.zx-panel--padding-none { padding: 0; }
+  &.zx-panel--padding-sm { padding: var(--zx-panel-padding-sm); }
+  &.zx-panel--padding-md { padding: var(--zx-panel-padding-md); }
+  &.zx-panel--padding-lg { padding: var(--zx-panel-padding-lg); }
 }

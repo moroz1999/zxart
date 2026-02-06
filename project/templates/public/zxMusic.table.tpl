@@ -60,9 +60,9 @@
 		{/if}
 	</td>
 	<td class='music_list_download'>
-		{if $element->getFileName('original')}<a rel="nofollow" href="{$controller->baseURL}file/id:{$element->file}/filename:{$element->getFileName('original')}"><img loading="lazy" class="music_list_original" src="{$theme->getImageUrl("music.png")}" alt="{translations name='label.download'} {$element->getFileName('original', false)}" /> </a>{/if}
-		{if $element->getFileName('tracker')}<a rel="nofollow" href="{$controller->baseURL}file/id:{$element->trackerFile}/filename:{$element->getFileName('tracker')}"><img loading="lazy" class="music_list_tracker" src="{$theme->getImageUrl("tracker.png")}" alt="{translations name='label.download'} {$element->getFileName('tracker', false)}" /> </a>{/if}
-		{if $element->getMp3FilePath()}<a rel="nofollow" href="{$element->getMp3FilePath()}"><img loading="lazy" class="music_list_mp3" src="{$theme->getImageUrl("mp3.png")}" alt="{translations name='label.download'} {$element->getFileName('mp3', false)}" /> </a>{/if}
+		{if $element->getFileName('original')}<a rel="nofollow" href="{$controller->baseURL}file/id:{$element->file}/filename:{$element->getFileName('original')}"><img loading="lazy" class="music_list_original" src="{$theme->getImageUrl("music.svg")}" alt="{translations name='label.download'} {$element->getFileName('original', false)}" /> </a>{/if}
+		{if $element->getFileName('tracker')}<a rel="nofollow" href="{$controller->baseURL}file/id:{$element->trackerFile}/filename:{$element->getFileName('tracker')}"><img loading="lazy" class="music_list_tracker" src="{$theme->getImageUrl("tracker.svg")}" alt="{translations name='label.download'} {$element->getFileName('tracker', false)}" /> </a>{/if}
+		{if $element->getMp3FilePath()}<a rel="nofollow" href="{$element->getMp3FilePath()}"><img loading="lazy" class="music_list_mp3" src="{$theme->getImageUrl("mp3.svg")}" alt="{translations name='label.download'} {$element->getFileName('mp3', false)}" /> </a>{/if}
 	</td>
 </tr>
 <script>

@@ -75,26 +75,6 @@ body {
   padding-right: 0;
 }
 
-.lastcomments {
-  margin-bottom: var(--lastcomments-margin-bottom);
-}
-
-.lastcomments h3 {
-  font-size: var(--lastcomments-header-font-size);
-  font-weight: bold;
-}
-
-.lastcomments_allcomments {
-  display: block;
-  vertical-align: middle;
-}
-
-.lastcomments_allcomments img {
-  display: inline-block;
-  margin-right: var(--all-comments-icon-margin-right);
-  vertical-align: middle;
-}
-
 .lastnews {
   margin-bottom: var(--lastnews-margin-bottom);
   padding-top: var(--lastnews-padding-top);
@@ -196,31 +176,14 @@ body {
 
   .right_column {
     padding-top: var(--right-column-padding-top);
+    display: flex;
+    flex-direction: column;
+    gap: var(--right-column-gap);
   }
 }
 
 .center-column-ads {
   margin-top: var(--center-column-ads-margin-top);
-}
-
-/********************************************************
-/*  LAST VOTES
-/********************************************************/
-.lastvotes {
-  margin-bottom: var(--lastvotes-margin-bottom);
-
-  .votes_list_table {
-    width: 100%;
-  }
-
-  .votes_list_table td {
-    font-size: var(--votes-table-font-size);
-  }
-}
-
-.lastvotes h3 {
-  font-size: var(--votes-header-font-size);
-  font-weight: bold;
 }
 
 /********************************************************

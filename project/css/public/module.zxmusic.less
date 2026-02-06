@@ -182,7 +182,9 @@
     display: inline-block;
     height: 2rem;
     width: 2rem;
-    background-size: cover;
+    -webkit-mask-size: cover;
+    mask-size: cover;
+    background-color: var(--text-color);
     cursor: pointer;
 }
 
@@ -205,23 +207,28 @@
 }
 
 .music_controls_button.pause {
-    background-image: url(getImageUrl("pause.png"));
+    -webkit-mask-image: url(getImageUrl("pause.svg"));
+    mask-image: url(getImageUrl("pause.svg"));
 }
 
 .music_controls_button.play {
-    background-image: url(getImageUrl("play.png"));
+    -webkit-mask-image: url(getImageUrl("play.svg"));
+    mask-image: url(getImageUrl("play.svg"));
 }
 
 .music_controls_button.next {
-    background-image: url(getImageUrl("next.png"));
+    -webkit-mask-image: url(getImageUrl("next.svg"));
+    mask-image: url(getImageUrl("next.svg"));
 }
 
 .music_controls_button.previous {
-    background-image: url(getImageUrl("previous.png"));
+    -webkit-mask-image: url(getImageUrl("previous.svg"));
+    mask-image: url(getImageUrl("previous.svg"));
 }
 
 .music_controls_button.stop {
-    background-image: url(getImageUrl("stop.png"));
+    -webkit-mask-image: url(getImageUrl("stop.svg"));
+    mask-image: url(getImageUrl("stop.svg"));
 }
 
 /********************************************************
@@ -301,8 +308,11 @@
     height: 1em;
     margin-left: var(--zxmusic-controls-link-margin-left);
     vertical-align: middle;
-    background: url(getImageUrl('link.svg')) center;
-    background-size: contain;
+    -webkit-mask: url(getImageUrl('link.svg')) center no-repeat;
+    mask: url(getImageUrl('link.svg')) center no-repeat;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    background-color: var(--text-color);
 }
 
 .music_controls_ratings {

@@ -160,7 +160,16 @@
     "save": "Guardar cambios",
     "label": "Comentario:",
     "confirm-delete": "¿Estás seguro de que quieres eliminar este comentario?",
-    "error-content": "El contenido es obligatorio (mínimo 2 caracteres)."
+    "error-content": "El contenido es obligatorio (mínimo 2 caracteres).",
+    "all-comments": "Todos los comentarios"
+  },
+  "ratings": {
+    "title": "Últimas valoraciones",
+    "votes-title": "Historial de votos",
+    "empty": "Aún no hay valoraciones.",
+    "table-user": "Usuario",
+    "table-vote": "Voto",
+    "table-date": "Fecha"
   },
   "settings": {
     "title": "Configuración",

@@ -57,39 +57,9 @@
     {/if}
     {/if}
 
-    {capture assign="moduleTitle"}{translations name='label.comments'}{/capture}
-    {capture assign="moduleContent"}
-        {foreach from=$currentLanguage->getLatestComments() item=comment}
-            {include file=$theme->template("comment.column.tpl") element=$comment}
-        {/foreach}
-        {if isset($commentsElement) && $commentsElement}
-            <a class="lastcomments_allcomments" href="{$commentsElement->getParentUrl()}">
-                <img loading="lazy" src="{$theme->getImageUrl("icon_comment.png")}"
-                     alt="{translations name='label.allcomments'}"/>{translations name='label.allcomments'}
-            </a>
-        {/if}
-    {/capture}
-    {assign moduleClass "lastcomments"}
-    {assign moduleTitleClass ""}
-    {assign moduleContentClass ""}
-    {include file=$theme->template("component.columnmodule.tpl")}
+    {if isset($commentsElement) && $commentsElement}
+        <zx-latest-comments all-comments-url="{$commentsElement->getParentUrl()}"></zx-latest-comments>
+    {/if}
 
-    {capture assign="moduleTitle"}{translations name='label.votes'}{/capture}
-    {capture assign="moduleContent"}
-        <table class="votes_list_table table_component">
-            <tbody>
-            {foreach from=$currentLanguage->getLatestVotes(20) item=voteInfo name=votes}
-                <tr class="">
-                    <td>{include file=$theme->template("component.username.tpl") userName=$voteInfo.userName userUrl=$voteInfo.userUrl userType=$voteInfo.userType}</td>
-                    <td>{$voteInfo.value}</td>
-                    <td><a href="{$voteInfo.imageUrl}">{$voteInfo.imageTitle}</a></td>
-                </tr>
-            {/foreach}
-            </tbody>
-        </table>
-    {/capture}
-    {assign moduleClass "lastvotes"}
-    {assign moduleTitleClass ""}
-    {assign moduleContentClass ""}
-    {include file=$theme->template("component.columnmodule.tpl")}
+    <zx-recent-ratings></zx-recent-ratings>
 </aside>

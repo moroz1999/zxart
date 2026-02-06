@@ -1,0 +1,17 @@
+@if (loading()) {
+  <zx-skeleton variant="text" [count]="5"></zx-skeleton>
+} @else {
+  <zx-table [title]="'ratings.title' | translate">
+    <table class="recent-ratings-table">
+      <tbody>
+        @for (item of items(); track $index) {
+          <tr>
+            <td><zx-user [user]="item.user"></zx-user></td>
+            <td class="rating-value">{{ item.rating }}</td>
+            <td><a [href]="item.targetUrl" zxLink>{{ item.targetTitle }}</a></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </zx-table>
+}

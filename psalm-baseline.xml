@@ -17840,7 +17840,6 @@
       <code><![CDATA[getFooterElementsList]]></code>
       <code><![CDATA[getHeaderElementsIndex]]></code>
       <code><![CDATA[getHeaderElementsList]]></code>
-      <code><![CDATA[getLatestComments]]></code>
       <code><![CDATA[getLatestVotes]]></code>
       <code><![CDATA[getLeftColumnElementsList]]></code>
       <code><![CDATA[getLoadedImages]]></code>
@@ -18043,7 +18042,6 @@
       <code><![CDATA[getImageUrl]]></code>
     </PossiblyInvalidMethodCall>
     <PossiblyUnusedMethod>
-      <code><![CDATA[clearCommentsCache]]></code>
       <code><![CDATA[getElementFromFooter]]></code>
       <code><![CDATA[getElementFromLeftColumn]]></code>
       <code><![CDATA[getElementFromMobileHeader]]></code>
@@ -18054,7 +18052,6 @@
       <code><![CDATA[getFooterElementsIndex]]></code>
       <code><![CDATA[getFooterElementsList]]></code>
       <code><![CDATA[getHeaderElementsIndex]]></code>
-      <code><![CDATA[getLatestComments]]></code>
       <code><![CDATA[getLatestVotes]]></code>
       <code><![CDATA[getLoadedImages]]></code>
       <code><![CDATA[getLogoImageUrl]]></code>

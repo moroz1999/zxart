@@ -16,6 +16,18 @@ interface ApiResponse<T> {
 export class CommentsService {
   constructor(private http: HttpClient) {}
 
+  getLatestComments(limit: number = 10): Observable<CommentDto[]> {
+    return this.http.get<ApiResponse<CommentDto[]>>(`/comments/?action=latest&limit=${limit}`).pipe(
+      map(response => {
+        if (response.responseStatus === 'success' && response.responseData) {
+          return response.responseData;
+        }
+        return [];
+      }),
+      catchError(err => throwError(() => err))
+    );
+  }
+
   getComments(elementId: number): Observable<CommentDto[]> {
     return this.http.get<ApiResponse<CommentDto[]>>(`/comments/id:${elementId}/`).pipe(
       map(response => {

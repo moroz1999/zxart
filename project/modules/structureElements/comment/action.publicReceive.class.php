@@ -1,6 +1,7 @@
 <?php
 
 use App\Users\CurrentUser;
+use ZxArt\Comments\CommentsService;
 
 class publicReceiveComment extends structureElementAction
 {
@@ -53,11 +54,7 @@ class publicReceiveComment extends structureElementAction
 
 					$targetElement->recalculateComments();
 
-					$languagesManager = $this->getService('LanguagesManager');
-					$structureManager = $this->getService('structureManager');
-					if ($currentLanguageElement = $structureManager->getElementById($languagesManager->getCurrentLanguageId())) {
-						$currentLanguageElement->clearCommentsCache();
-					}
+					$this->getService(CommentsService::class)->clearCommentsCache();
 
 					$controller->redirect($structureElement->getInitialTarget()->getUrl());
 				}

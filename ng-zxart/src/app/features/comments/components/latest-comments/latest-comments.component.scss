@@ -1,0 +1,26 @@
+:host {
+  display: block;
+}
+
+.latest-comment {
+  line-height: 1.4;
+}
+
+.latest-comment__link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.latest-comment__content {
+  overflow-wrap: anywhere;
+}
+
+.latest-comments__all {
+  display: inline-block;
+  margin-top: var(--space-8);
+}

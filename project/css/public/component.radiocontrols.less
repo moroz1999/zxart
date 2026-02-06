@@ -5,8 +5,11 @@
         width: var(--radio-icon-size);
         height: var(--radio-icon-size);
         margin-right: var(--radio-icon-margin-right);
-        background: url(getImageUrl("radio.svg")) no-repeat center;
-        background-size: contain;
+        -webkit-mask: url(getImageUrl("radio.svg")) no-repeat center;
+        mask: url(getImageUrl("radio.svg")) no-repeat center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        background-color: var(--text-color);
     }
 
     .button {

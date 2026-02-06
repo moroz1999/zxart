@@ -23,6 +23,15 @@
 .light-mode {
   --zxmusic-progress-bg: var(--secondary-100);
   --zxmusic-progress-body-bg: var(--secondary-200);
+
+  .music_list_original,
+  .music_list_tracker,
+  .music_list_mp3,
+  .music_details_original,
+  .music_details_tracker,
+  .music_details_mp3 {
+    filter: brightness(0);
+  }
 }
 
 

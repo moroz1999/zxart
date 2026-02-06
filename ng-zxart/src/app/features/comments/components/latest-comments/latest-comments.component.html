@@ -1,0 +1,31 @@
+@if (loading()) {
+  <zx-panel>
+    <zx-skeleton variant="text" [count]="5"></zx-skeleton>
+  </zx-panel>
+} @else {
+  <zx-panel>
+    <zx-stack spacing="sm">
+      @for (comment of comments(); track comment.id) {
+        <div class="latest-comment">
+          @if (comment.target) {
+            <a [href]="comment.target.url" class="latest-comment__link" zxBody>
+              <zx-user [user]="comment.author" class="latest-comment__author"></zx-user>:
+              <span class="latest-comment__content" [innerHTML]="sanitizeHtml(comment.content)"></span>
+            </a>
+          } @else {
+            <span zxBody>
+              <zx-user [user]="comment.author" class="latest-comment__author"></zx-user>:
+              <span class="latest-comment__content" [innerHTML]="sanitizeHtml(comment.content)"></span>
+            </span>
+          }
+        </div>
+      }
+    </zx-stack>
+
+    @if (allCommentsUrl) {
+      <a [href]="allCommentsUrl" zxLinkAlt class="latest-comments__all">
+        {{ 'comments.all-comments' | translate }}
+      </a>
+    }
+  </zx-panel>
+}
