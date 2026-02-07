@@ -19,6 +19,11 @@ use function DI\autowire;
 use function DI\factory;
 
 return [
+    // CMS services — delegate to legacy registry instead of autowiring
+    structureManager::class => factory(static function () {
+        return controller::getInstance()->getRegistry()->getService('structureManager');
+    }),
+
     // Core services
     Logger::class => autowire(Logger::class)->constructor('log'),
     'openai_key' => factory(fn(ConfigManager $cm) => $cm->getConfig('main')->get('ai_key')),

@@ -23,7 +23,6 @@ readonly class CommentsTransformer
      *
      * @param commentElement $comment Comment object
      * @param CommentDto[] $children List of child comments (already transformed)
-     * @return CommentDto
      */
     public function transformToDto(commentElement $comment, array $children = []): CommentDto
     {
