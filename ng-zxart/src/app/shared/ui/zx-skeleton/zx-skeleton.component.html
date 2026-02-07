@@ -35,6 +35,33 @@
         </div>
       }
     }
+    @case ('prod-grid') {
+      <div class="skeleton-prod-grid">
+        @for (i of items; track i) {
+          <div class="skeleton-prod-card" [style.animation-delay.ms]="i * 80">
+            <div class="skeleton-prod-image skeleton-bone"></div>
+            <div class="skeleton-prod-body">
+              <div class="skeleton-title skeleton-bone"></div>
+              <div class="skeleton-text skeleton-bone"></div>
+              <div class="skeleton-text skeleton-text-short skeleton-bone"></div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+    @case ('picture-grid') {
+      <div class="skeleton-picture-grid">
+        @for (i of items; track i) {
+          <div class="skeleton-picture-card" [style.animation-delay.ms]="i * 80">
+            <div class="skeleton-picture-image skeleton-bone"></div>
+            <div class="skeleton-picture-body">
+              <div class="skeleton-title skeleton-bone"></div>
+              <div class="skeleton-text skeleton-bone"></div>
+            </div>
+          </div>
+        }
+      </div>
+    }
     @case ('text') {
       @for (i of items; track i) {
         <div class="skeleton-text-line skeleton-bone"

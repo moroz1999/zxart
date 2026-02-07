@@ -1,0 +1,38 @@
+<zx-panel radius="xl" padding="none" variant="elevated">
+  <a [href]="picture.url" class="picture-image" [class.flickering]="picture.isFlickering">
+    <img
+      [src]="picture.imageUrl"
+      [alt]="picture.title"
+      loading="lazy"
+    />
+    <zx-badge *ngIf="picture.isRealtime" variant="secondary" class="realtime-badge">
+      {{ picture.compo || ('firstpage.realtime' | translate) }}
+    </zx-badge>
+  </a>
+  <div class="picture-info">
+    <a [href]="picture.url" class="picture-title">{{ picture.title }}</a>
+    <div class="picture-authors" *ngIf="picture.authors.length">
+      <ng-container *ngFor="let author of picture.authors; last as last">
+        <a [href]="author.url">{{ author.name }}</a><span *ngIf="!last">, </span>
+      </ng-container>
+    </div>
+    <div class="1/.picture-meta">
+      <div class="picture-party" *ngIf="picture.party">
+        <span *ngIf="medalClass" [class]="medalClass" class="medal">{{ picture.party.place }}</span>
+        <a [href]="picture.party.url" zxCaption>{{ picture.party.title }}</a>
+      </div>
+      <span class="picture-year" *ngIf="picture.year" zxCaption>{{ picture.year }}</span>
+    </div>
+    <div class="picture-bottom">
+      <app-rating
+        *ngIf="!picture.denyVoting"
+        [overallRating]="picture.votes"
+        [userRating]="picture.userVote ?? undefined"
+        (voted)="vote($event)"
+      ></app-rating>
+      <span class="picture-votes-count" *ngIf="picture.votesAmount > 0" zxCaption>
+        ({{ picture.votesAmount }})
+      </span>
+    </div>
+  </div>
+</zx-panel>

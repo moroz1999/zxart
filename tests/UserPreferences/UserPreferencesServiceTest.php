@@ -54,7 +54,7 @@ class UserPreferencesServiceTest extends TestCase
 
         $preferences = $service->getAllPreferences();
 
-        $this->assertCount(1, $preferences);
+        $this->assertCount(20, $preferences);
         $this->assertInstanceOf(PreferenceDto::class, $preferences[0]);
         $this->assertSame('theme', $preferences[0]->code);
         $this->assertSame('light', $preferences[0]->value);
@@ -84,9 +84,10 @@ class UserPreferencesServiceTest extends TestCase
 
         $preferences = $service->getAllPreferences();
 
-        $this->assertCount(1, $preferences);
-        $this->assertSame('theme', $preferences[0]->code);
-        $this->assertSame('dark', $preferences[0]->value);
+        $this->assertCount(20, $preferences);
+        $themePreference = $this->findPreferenceByCode($preferences, 'theme');
+        $this->assertNotNull($themePreference);
+        $this->assertSame('dark', $themePreference->value);
     }
 
     public function testGetAllPreferencesUsesDefaultWhenUserHasNoValue(): void
@@ -111,9 +112,10 @@ class UserPreferencesServiceTest extends TestCase
 
         $preferences = $service->getAllPreferences();
 
-        $this->assertCount(1, $preferences);
-        $this->assertSame('theme', $preferences[0]->code);
-        $this->assertSame('light', $preferences[0]->value);
+        $this->assertCount(20, $preferences);
+        $themePreference = $this->findPreferenceByCode($preferences, 'theme');
+        $this->assertNotNull($themePreference);
+        $this->assertSame('light', $themePreference->value);
     }
 
     public function testSetPreferenceThrowsExceptionForInvalidCode(): void
@@ -182,8 +184,10 @@ class UserPreferencesServiceTest extends TestCase
 
         $preferences = $service->setPreference('theme', 'dark');
 
-        $this->assertCount(1, $preferences);
-        $this->assertSame('dark', $preferences[0]->value);
+        $this->assertCount(20, $preferences);
+        $themePreference = $this->findPreferenceByCode($preferences, 'theme');
+        $this->assertNotNull($themePreference);
+        $this->assertSame('dark', $themePreference->value);
     }
 
     public function testSetPreferenceDoesNotSaveForAnonymousUser(): void
@@ -205,7 +209,113 @@ class UserPreferencesServiceTest extends TestCase
 
         $preferences = $service->setPreference('theme', 'dark');
 
-        $this->assertCount(1, $preferences);
-        $this->assertSame('light', $preferences[0]->value);
+        $this->assertCount(20, $preferences);
+        $themePreference = $this->findPreferenceByCode($preferences, 'theme');
+        $this->assertNotNull($themePreference);
+        $this->assertSame('light', $themePreference->value);
+    }
+
+    public function testValidateHomepageOrderAcceptsValidModuleIds(): void
+    {
+        $validator = new PreferenceValidator();
+        $result = $validator->validateValue(PreferenceCode::HOMEPAGE_ORDER, 'newProds,newPictures,newTunes');
+        $this->assertSame('newProds,newPictures,newTunes', $result);
+    }
+
+    public function testValidateHomepageOrderAcceptsEmptyString(): void
+    {
+        $validator = new PreferenceValidator();
+        $result = $validator->validateValue(PreferenceCode::HOMEPAGE_ORDER, '');
+        $this->assertSame('', $result);
+    }
+
+    public function testValidateHomepageOrderRejectsInvalidModuleId(): void
+    {
+        $validator = new PreferenceValidator();
+        $this->expectException(InvalidPreferenceValueException::class);
+        $validator->validateValue(PreferenceCode::HOMEPAGE_ORDER, 'newProds,invalidModule');
+    }
+
+    public function testValidateHomepageDisabledAcceptsValidModuleIds(): void
+    {
+        $validator = new PreferenceValidator();
+        $result = $validator->validateValue(PreferenceCode::HOMEPAGE_DISABLED, 'supportProds,unvotedTunes');
+        $this->assertSame('supportProds,unvotedTunes', $result);
+    }
+
+    public function testValidateLimitAcceptsValidInteger(): void
+    {
+        $validator = new PreferenceValidator();
+        $result = $validator->validateValue(PreferenceCode::HOMEPAGE_NEW_PRODS_LIMIT, '15');
+        $this->assertSame('15', $result);
+    }
+
+    public function testValidateLimitRejectsZero(): void
+    {
+        $validator = new PreferenceValidator();
+        $this->expectException(InvalidPreferenceValueException::class);
+        $validator->validateValue(PreferenceCode::HOMEPAGE_NEW_PRODS_LIMIT, '0');
+    }
+
+    public function testValidateLimitRejectsAboveMax(): void
+    {
+        $validator = new PreferenceValidator();
+        $this->expectException(InvalidPreferenceValueException::class);
+        $validator->validateValue(PreferenceCode::HOMEPAGE_NEW_PRODS_LIMIT, '51');
+    }
+
+    public function testValidateLimitRejectsNonNumeric(): void
+    {
+        $validator = new PreferenceValidator();
+        $this->expectException(InvalidPreferenceValueException::class);
+        $validator->validateValue(PreferenceCode::HOMEPAGE_NEW_PRODS_LIMIT, 'abc');
+    }
+
+    public function testValidateMinRatingAcceptsValidFloat(): void
+    {
+        $validator = new PreferenceValidator();
+        $result = $validator->validateValue(PreferenceCode::HOMEPAGE_NEW_PRODS_MIN_RATING, '3.5');
+        $this->assertSame('3.5', $result);
+    }
+
+    public function testValidateMinRatingAcceptsZero(): void
+    {
+        $validator = new PreferenceValidator();
+        $result = $validator->validateValue(PreferenceCode::HOMEPAGE_NEW_PRODS_MIN_RATING, '0');
+        $this->assertSame('0', $result);
+    }
+
+    public function testValidateMinRatingAcceptsFive(): void
+    {
+        $validator = new PreferenceValidator();
+        $result = $validator->validateValue(PreferenceCode::HOMEPAGE_NEW_PRODS_MIN_RATING, '5');
+        $this->assertSame('5', $result);
+    }
+
+    public function testValidateMinRatingRejectsAboveFive(): void
+    {
+        $validator = new PreferenceValidator();
+        $this->expectException(InvalidPreferenceValueException::class);
+        $validator->validateValue(PreferenceCode::HOMEPAGE_NEW_PRODS_MIN_RATING, '5.1');
+    }
+
+    public function testValidateMinRatingRejectsNegative(): void
+    {
+        $validator = new PreferenceValidator();
+        $this->expectException(InvalidPreferenceValueException::class);
+        $validator->validateValue(PreferenceCode::HOMEPAGE_NEW_PRODS_MIN_RATING, '-1');
+    }
+
+    /**
+     * @param PreferenceDto[] $preferences
+     */
+    private function findPreferenceByCode(array $preferences, string $code): ?PreferenceDto
+    {
+        foreach ($preferences as $preference) {
+            if ($preference->code === $code) {
+                return $preference;
+            }
+        }
+        return null;
     }
 }

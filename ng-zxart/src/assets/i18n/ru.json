@@ -176,5 +176,39 @@
     "theme": "Тема",
     "theme.light": "Светлая",
     "theme.dark": "Тёмная"
+  },
+  "firstpage": {
+    "configure": "Настроить",
+    "viewAll": "Все",
+    "loading": "Загрузка...",
+    "error": "Не удалось загрузить данные.",
+    "empty": "Нечего показать.",
+    "realtime": "Реалтайм",
+    "modules": {
+      "newProds": "Новые программы",
+      "newPictures": "Новые картинки",
+      "newTunes": "Новая музыка",
+      "bestNewDemos": "Лучшие новые демо",
+      "bestNewGames": "Лучшие новые игры",
+      "recentParties": "Последние пати",
+      "bestPicturesOfMonth": "Лучшие картинки месяца",
+      "latestAddedProds": "Последние добавленные программы",
+      "latestAddedReleases": "Последние добавленные релизы",
+      "supportProds": "Поддержать покупкой",
+      "unvotedPictures": "Неоцененные картинки",
+      "randomGoodPictures": "Случайные хорошие картинки",
+      "unvotedTunes": "Неоцененная музыка",
+      "randomGoodTunes": "Случайная хорошая музыка"
+    },
+    "settings": {
+      "limit": "Кол-во",
+      "minRating": "Мин. рейтинг"
+    },
+    "configDialog": {
+      "title": "Настройка главной страницы",
+      "reset": "Сбросить",
+      "cancel": "Отмена",
+      "save": "Сохранить"
+    }
   }
 }

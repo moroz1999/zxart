@@ -1,0 +1,17 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-md);
+
+  &.zx-button-controls--start {
+    justify-content: flex-start;
+  }
+
+  &.zx-button-controls--end {
+    justify-content: flex-end;
+  }
+
+  &.zx-button-controls--distribute {
+    justify-content: space-between;
+  }
+}

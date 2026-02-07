@@ -1,7 +1,4 @@
-<zx-panel variant="elevated" padding="none">
-  @if (title) {
-    <div zxHeading3 class="zx-table-title">{{ title }}</div>
-  }
+<zx-panel variant="elevated" padding="none" [title]="title">
   <div class="zx-table-content">
     <ng-content></ng-content>
   </div>

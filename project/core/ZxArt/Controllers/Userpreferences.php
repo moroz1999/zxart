@@ -86,15 +86,35 @@ class Userpreferences extends controllerApplication
 
         $code = $params['code'] ?? null;
         $value = $params['value'] ?? null;
-
-        if ($code === null || $value === null) {
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Missing parameters: code and value required');
-            return;
-        }
+        $batch = $params['batch'] ?? null;
 
         try {
-            $internalDtos = $this->userPreferencesService->setPreference($code, $value);
+            if ($batch !== null) {
+                $items = json_decode($batch, true);
+                if (!is_array($items)) {
+                    $this->renderer->assign('responseStatus', 'error');
+                    $this->renderer->assign('errorMessage', 'Invalid batch format: expected JSON array');
+                    return;
+                }
+                $values = [];
+                foreach ($items as $item) {
+                    if (!isset($item['code'], $item['value'])) {
+                        $this->renderer->assign('responseStatus', 'error');
+                        $this->renderer->assign('errorMessage', 'Each batch item must have code and value');
+                        return;
+                    }
+                    $values[(string)$item['code']] = (string)$item['value'];
+                }
+                $internalDtos = $this->userPreferencesService->setPreferences($values);
+            } else {
+                if ($code === null || $value === null) {
+                    $this->renderer->assign('responseStatus', 'error');
+                    $this->renderer->assign('errorMessage', 'Missing parameters: code and value required');
+                    return;
+                }
+                $internalDtos = $this->userPreferencesService->setPreference($code, $value);
+            }
+
             $restDtos = array_map(
                 fn($dto) => $this->objectMapper->map($dto, PreferenceRestDto::class),
                 $internalDtos

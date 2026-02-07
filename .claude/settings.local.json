@@ -22,7 +22,17 @@
       "Bash(cmd /c dir /b \"E:\\\\projects\\\\zxart\\\\ng-zxart\\\\src\\\\app\\\\shared\\\\theme\")",
       "Bash(cmd /c \"dir /a /b E:\\\\projects\\\\zxart\\\\ng-zxart\\\\src\\\\app\\\\shared\\\\theme\")",
       "Bash(npx tsc:*)",
-      "Bash(identify:*)"
+      "Bash(identify:*)",
+      "Bash(ls:*)",
+      "Bash(vendor/bin/psalm:*)",
+      "Bash(for d in new-prods new-pictures new-tunes best-new-demos best-new-games recent-parties best-pictures-of-month latest-added-prods latest-added-releases support-prods unvoted-pictures random-good-pictures unvoted-tunes random-good-tunes)",
+      "Bash(do mkdir -p \"E:\\\\projects\\\\zxart\\\\ng-zxart\\\\src\\\\app\\\\features\\\\firstpage\\\\modules$d\")",
+      "Bash(done)",
+      "Bash(npx ng build:*)",
+      "Bash(curl:*)"
     ]
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true
   }
 }

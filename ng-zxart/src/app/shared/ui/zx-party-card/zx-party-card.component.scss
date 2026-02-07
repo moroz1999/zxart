@@ -1,0 +1,35 @@
+:host {
+  display: block;
+}
+
+.party-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+  padding: var(--space-8) var(--space-12);
+  color: currentColor;
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: var(--background-hover);
+    text-decoration: none;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.party-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.party-year {
+  color: var(--text-light-color);
+  flex-shrink: 0;
+}

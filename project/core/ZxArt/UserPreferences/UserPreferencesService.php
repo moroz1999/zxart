@@ -95,6 +95,35 @@ final readonly class UserPreferencesService
     }
 
     /**
+     * @param array<string, string> $values code => value pairs
+     * @return PreferenceDto[]
+     */
+    public function setPreferences(array $values): array
+    {
+        foreach ($values as $code => $value) {
+            $preferenceCode = $this->validator->validateCode($code);
+            $this->validator->validateValue($preferenceCode, $value);
+        }
+
+        if (!$this->user->isAuthorized()) {
+            return $this->getAllPreferences();
+        }
+
+        $userId = (int)$this->user->id;
+
+        foreach ($values as $code => $value) {
+            $preferenceCode = $this->validator->validateCode($code);
+            $validatedValue = $this->validator->validateValue($preferenceCode, $value);
+            $preference = $this->preferencesRepository->findByCode($preferenceCode);
+            if ($preference !== null) {
+                $this->valuesRepository->upsert($userId, $preference->id, $validatedValue);
+            }
+        }
+
+        return $this->getAllPreferences();
+    }
+
+    /**
      * @param array<string, string> $defaults
      * @return PreferenceDto[]
      */

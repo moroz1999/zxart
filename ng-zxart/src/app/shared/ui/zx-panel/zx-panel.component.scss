@@ -1,3 +1,7 @@
+.zx-panel__title {
+  padding: var(--space-16) var(--space-16) var(--space-12);
+}
+
 :host {
   background-color: var(--zx-panel-bg);
   box-sizing: border-box;

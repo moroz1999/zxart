@@ -20,6 +20,10 @@ import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocom
 export class ZxInputComponent implements ControlValueAccessor {
   @Input() placeholder = '';
   @Input() type: 'text' | 'email' | 'password' | 'number' = 'text';
+  @Input() size: 'sm' | 'md' = 'md';
+  @Input() min?: number;
+  @Input() max?: number;
+  @Input() step?: number;
   @Input() matAutocomplete?: MatAutocomplete;
   @Output() keyup = new EventEmitter<KeyboardEvent>();
 

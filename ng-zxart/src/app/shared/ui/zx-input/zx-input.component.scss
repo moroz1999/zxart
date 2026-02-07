@@ -27,4 +27,12 @@ input {
   &.ng-invalid.ng-touched {
     border-color: var(--input-border-error-color);
   }
+
+  &.zx-input--sm {
+    width: 64px;
+    height: 28px;
+    padding: var(--space-4);
+    font-size: var(--zx-caption-font-size);
+    text-align: center;
+  }
 }

@@ -1,11 +1,10 @@
 import {AfterContentInit, Component, ElementRef, Input} from '@angular/core';
 import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
-import {ZxHeading3Directive} from "../../directives/typography/typography.directives";
 
 @Component({
   selector: 'zx-table',
   standalone: true,
-  imports: [ZxPanelComponent, ZxHeading3Directive],
+  imports: [ZxPanelComponent],
   templateUrl: './zx-table.component.html',
   styleUrls: ['./zx-table.component.scss']
 })

@@ -1,0 +1,60 @@
+:host {
+  display: block;
+}
+
+.release-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  padding: var(--space-8) var(--space-12);
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: var(--background-hover);
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.release-title {
+  color: currentColor;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.release-authors {
+  flex: 1;
+  color: var(--text-light-color);
+  font-size: var(--zx-caption-font-size);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.release-year {
+  color: var(--text-light-color);
+  flex-shrink: 0;
+}
+
+.release-votes {
+  color: var(--text-light-color);
+  flex-shrink: 0;
+}

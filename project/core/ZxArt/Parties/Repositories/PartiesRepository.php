@@ -51,4 +51,26 @@ final class PartiesRepository
 
         return null;
     }
+
+    /**
+     * @return int[]
+     */
+    public function getRecentIds(int $limit): array
+    {
+        return $this->db->table(self::TABLE . ' AS parties')
+            ->select('parties.id')
+            ->leftJoin('structure_elements AS partystruct', 'partystruct.id', '=', 'parties.id')
+            ->leftJoin(
+                'structure_links AS links',
+                static function ($join) {
+                    $join->on('links.childStructureId', '=', 'parties.id')
+                        ->where('links.type', '=', 'structure');
+                }
+            )
+            ->leftJoin('structure_elements AS el2', 'el2.id', '=', 'links.parentStructureId')
+            ->orderBy('el2.structureName', 'desc')
+            ->orderBy('partystruct.dateCreated', 'desc')
+            ->limit($limit)
+            ->pluck('parties.id');
+    }
 }

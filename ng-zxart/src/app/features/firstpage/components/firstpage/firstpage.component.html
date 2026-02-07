@@ -1,0 +1,14 @@
+<zx-stack spacing="xl">
+  <div class="firstpage-header">
+    <zx-button color="secondary" (click)="openConfig()">
+      <mat-icon>settings</mat-icon>
+      {{ 'firstpage.configure' | translate }}
+    </zx-button>
+  </div>
+
+  <ng-container *ngFor="let entry of modules">
+    <ng-container
+      *ngComponentOutlet="entry.component; injector: entry.injector"
+    ></ng-container>
+  </ng-container>
+</zx-stack>

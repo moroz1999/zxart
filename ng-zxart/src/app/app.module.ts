@@ -31,6 +31,7 @@ import {
   RecentRatingsWidgetComponent
 } from './features/ratings/components/recent-ratings-widget/recent-ratings-widget.component';
 import {RatingsListComponent} from './features/ratings/components/ratings-list/ratings-list.component';
+import {FirstpageComponent} from './features/firstpage/components/firstpage/firstpage.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -88,6 +89,7 @@ export class AppModule implements DoBootstrap  {
             'zx-latest-comments': LatestCommentsComponent,
             'zx-recent-ratings': RecentRatingsWidgetComponent,
             'zx-ratings-list': RatingsListComponent,
+            'app-firstpage': FirstpageComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});

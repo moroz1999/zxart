@@ -49,6 +49,27 @@ export class UserPreferencesService {
     );
   }
 
+  setPreferences(items: {code: string; value: string}[]): Observable<PreferenceDto[]> {
+    for (const item of items) {
+      this.savePreferenceToStorage(item.code, item.value);
+    }
+
+    const body = new HttpParams()
+      .set('batch', JSON.stringify(items));
+
+    return this.http.put<ApiResponse<PreferenceDto[]>>('/userpreferences/', body, {
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).pipe(
+      map(response => {
+        if (response.responseStatus === 'success' && response.responseData) {
+          return response.responseData;
+        }
+        throw new Error(response.errorMessage || 'Failed to save preferences');
+      }),
+      tap(prefs => this.saveToStorage(prefs))
+    );
+  }
+
   syncFromServer(): Observable<PreferenceDto[]> {
     return this.http.get<ApiResponse<PreferenceDto[]>>('/userpreferences/').pipe(
       map(response => {

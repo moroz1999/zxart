@@ -14,10 +14,18 @@
 - DTOs must be 100% immutable. Use `readonly class` and constructor property promotion.
 - Services and other stateless classes should be marked as `readonly class` if all their properties are immutable (e.g., dependencies injected via constructor). When a class is `readonly`, individual `readonly` modifiers on properties are redundant and should be omitted.
 - Do NOT write PHPDoc `/** @var ... */` for `getService` calls if the class name is explicitly provided as the first argument (e.g. `getService(MyService::class)`). Modern IDEs and Psalm can infer the type from the class string.
-- After API changes send the query to verify the results.
+- After API changes, verify by sending a request to `http://zxart.loc/` (e.g. `curl http://zxart.loc/firstpage/?action=newPictures&limit=5`). Use this for any API endpoints that don't require authorization.
 - After changing the API, you MUST update the existing OpenAPI YAML file or add a new one in `api/api.yaml`.
 
 ## Controllers and StructureManager
+
+### getElementById() loading modes
+`structureManager::getElementById($id, $parentId = null, bool $directlyToParent = false)`
+
+- **`directlyToParent = false`** (default) — resolves the element through its URL path in the site hierarchy. For **public content** (pictures, tunes, prods, releases, parties) always use the default: `getElementById($id)`.
+- **`directlyToParent = true`** — loads the element directly by ID, bypassing path resolution. **Required ONLY for user elements** and elements not rooted under the current language's URL tree: `getElementById($userId, null, true)`. Without `true`, user elements silently return `null`.
+
+### Controller initialization
 When initializing `structureManager` in a controller application, always provide `rootUrl` and `rootMarker` parameters to ensure correct URL generation and multilinguality support.
 Example:
 ```php
@@ -83,9 +91,27 @@ $restDtos = array_map(fn($dto) => $this->objectMapper->map($dto, MyRestDto::clas
 - In repositories, use table names WITHOUT the `engine_` prefix.
 - Example: for table `engine_preferences`, use `private const TABLE = 'preferences';`
 
+## No Raw SQL in Repositories
+- NEVER use `$this->db->raw()` or string-concatenated SQL in repositories.
+- Raw SQL bypasses Illuminate's table prefix handling and is a security risk (SQL injection).
+- Always use the Query Builder methods (`->table()`, `->whereIn()`, `->orderBy()`, etc.).
+- If a query requires a subquery with `LIMIT` (e.g., "top N by votes"), split into two queries:
+  1. First query: get the IDs with the query builder.
+  2. Second query: use `->whereIn('id', $ids)` to filter.
+- Example:
+```php
+// BAD — raw SQL, bypasses prefix, injection risk:
+$this->db->table($this->db->raw('(SELECT id FROM ' . self::TABLE . ' ORDER BY votes DESC LIMIT ' . $topN . ') AS top'))
+
+// GOOD — two safe queries:
+$topIds = $this->getSelectSql()->orderBy('votes', 'desc')->limit($topN)->pluck('id')->all();
+$this->getSelectSql()->whereIn('id', $topIds)->inRandomOrder()->limit($limit)->pluck('id')->all();
+```
+
 ## Database Query Results
 - `Illuminate\Database\Query\Builder` returns **arrays**, not objects.
 - Use array access syntax: `$row['column_name']`, NOT `$row->column_name`.
+- `Builder::pluck()` returns a **plain array**, NOT a Collection. Do NOT chain `->all()` after `pluck()`.
 - Example:
 ```php
 $rows = $this->db->table(self::TABLE)->get();

@@ -1,0 +1,60 @@
+<h2 mat-dialog-title zxHeading2>{{ 'firstpage.configDialog.title' | translate }}</h2>
+
+<mat-dialog-content>
+  <div
+    cdkDropList
+    (cdkDropListDropped)="onDrop($event)"
+    class="modules-list"
+  >
+    <div
+      *ngFor="let mod of modules"
+      cdkDrag
+      class="module-row"
+    >
+      <mat-icon cdkDragHandle class="drag-handle">drag_indicator</mat-icon>
+      <mat-checkbox
+        [(ngModel)]="mod.enabled"
+        class="module-checkbox"
+      >
+        {{ 'firstpage.modules.' + mod.type | translate }}
+      </mat-checkbox>
+      <div class="module-settings" *ngIf="mod.enabled">
+        <label class="setting-label">
+          {{ 'firstpage.settings.limit' | translate }}
+          <zx-input
+            type="number"
+            size="sm"
+            [min]="1"
+            [max]="50"
+            [(ngModel)]="mod.settings.limit"
+          ></zx-input>
+        </label>
+        <label class="setting-label" *ngIf="hasMinRating(mod.type)">
+          {{ 'firstpage.settings.minRating' | translate }}
+          <zx-input
+            type="number"
+            size="sm"
+            [min]="0"
+            [max]="5"
+            [step]="0.5"
+            [(ngModel)]="mod.settings.minRating"
+          ></zx-input>
+        </label>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <zx-button-controls align="end">
+    <zx-button color="outlined" (click)="reset()">
+      {{ 'firstpage.configDialog.reset' | translate }}
+    </zx-button>
+    <zx-button color="outlined" (click)="close()">
+      {{ 'firstpage.configDialog.cancel' | translate }}
+    </zx-button>
+    <zx-button color="primary" (click)="save()">
+      {{ 'firstpage.configDialog.save' | translate }}
+    </zx-button>
+  </zx-button-controls>
+</mat-dialog-actions>

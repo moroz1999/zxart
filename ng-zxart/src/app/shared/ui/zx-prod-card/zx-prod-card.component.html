@@ -1,0 +1,28 @@
+<zx-panel radius="xl" padding="none" variant="elevated">
+  <a *ngIf="prod.imageUrl" [href]="prod.url" class="prod-image">
+    <img [src]="prod.imageUrl" [alt]="prod.title" loading="lazy" />
+  </a>
+  <div class="prod-info">
+    <a [href]="prod.url" class="prod-title">{{ prod.title }}</a>
+    <div class="prod-authors" *ngIf="prod.authors.length">
+      <ng-container *ngFor="let author of prod.authors; last as last">
+        <a [href]="author.url">{{ author.name }}</a><span *ngIf="!last">, </span>
+      </ng-container>
+    </div>
+    <div class="prod-meta">
+      <div class="prod-party" *ngIf="prod.party">
+        <a [href]="prod.party.url">{{ prod.party.title }}</a>
+        <span *ngIf="prod.party.place">&nbsp;({{ prod.party.place }})</span>
+      </div>
+    </div>
+    <div class="prod-bottom">
+      <app-rating
+        *ngIf="!prod.denyVoting"
+        [overallRating]="prod.votes"
+        [userRating]="prod.userVote ?? undefined"
+        (voted)="vote($event)"
+      ></app-rating>
+      <span class="prod-year" *ngIf="prod.year">{{ prod.year }}</span>
+    </div>
+  </div>
+</zx-panel>

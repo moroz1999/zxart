@@ -1,0 +1,39 @@
+<td class="tune-index" *ngIf="index !== undefined">{{ index + 1 }}</td>
+<td class="tune-main">
+  <div class="tune-title-line">
+    <a [href]="tune.url" class="tune-title">{{ tune.title }}</a>
+    <zx-badge *ngIf="tune.isRealtime" variant="secondary" class="tune-realtime">
+      {{ tune.compo || ('firstpage.realtime' | translate) }}
+    </zx-badge>
+  </div>
+  <div class="tune-authors" *ngIf="tune.authors.length">
+    <ng-container *ngFor="let author of tune.authors; last as last">
+      <a [href]="author.url">{{ author.name }}</a><span *ngIf="!last">, </span>
+    </ng-container>
+  </div>
+</td>
+<td class="tune-format">{{ tune.format }}</td>
+<td class="tune-year" *ngIf="tune.year">{{ tune.year }}</td>
+<td class="tune-party" *ngIf="tune.party">
+  <span *ngIf="medalClass" [class]="medalClass" class="medal">{{ tune.party.place }}</span>
+  <a [href]="tune.party.url">{{ tune.party.title }}</a>
+</td>
+<td class="tune-stats">
+  <span *ngIf="tune.plays > 0" class="tune-stat">
+    {{ tune.plays }}
+  </span>
+  <span *ngIf="tune.commentsAmount > 0" class="tune-stat">
+    {{ tune.commentsAmount }}
+  </span>
+</td>
+<td class="tune-rating">
+  <app-rating
+    *ngIf="!tune.denyVoting"
+    [overallRating]="tune.votes"
+    [userRating]="tune.userVote ?? undefined"
+    (voted)="vote($event)"
+  ></app-rating>
+  <span *ngIf="tune.votesAmount > 0" class="tune-votes-count">
+    ({{ tune.votesAmount }})
+  </span>
+</td>

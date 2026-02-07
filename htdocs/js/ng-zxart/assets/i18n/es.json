@@ -176,5 +176,39 @@
     "theme": "Tema",
     "theme.light": "Claro",
     "theme.dark": "Oscuro"
+  },
+  "firstpage": {
+    "configure": "Configurar",
+    "viewAll": "Ver todo",
+    "loading": "Cargando...",
+    "error": "No se pudieron cargar los datos.",
+    "empty": "Nada que mostrar.",
+    "realtime": "Tiempo real",
+    "modules": {
+      "newProds": "Nuevas producciones",
+      "newPictures": "Nuevas imágenes",
+      "newTunes": "Nueva música",
+      "bestNewDemos": "Mejores demos nuevas",
+      "bestNewGames": "Mejores juegos nuevos",
+      "recentParties": "Parties recientes",
+      "bestPicturesOfMonth": "Mejores imágenes del mes",
+      "latestAddedProds": "Últimas producciones añadidas",
+      "latestAddedReleases": "Últimos lanzamientos añadidos",
+      "supportProds": "Apoyar con compra",
+      "unvotedPictures": "Imágenes sin votar",
+      "randomGoodPictures": "Buenas imágenes aleatorias",
+      "unvotedTunes": "Música sin votar",
+      "randomGoodTunes": "Buena música aleatoria"
+    },
+    "settings": {
+      "limit": "Cantidad",
+      "minRating": "Puntuación mín."
+    },
+    "configDialog": {
+      "title": "Configuración de la página principal",
+      "reset": "Restablecer",
+      "cancel": "Cancelar",
+      "save": "Guardar"
+    }
   }
 }

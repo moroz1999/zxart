@@ -1,0 +1,26 @@
+<zx-panel *ngIf="usePanel" radius="lg" padding="none" variant="elevated" [title]="titleKey | translate">
+  <ng-container *ngTemplateOutlet="body"></ng-container>
+</zx-panel>
+
+<ng-container *ngIf="!usePanel">
+  <h3 zxHeading3 class="module-title">{{ titleKey | translate }}</h3>
+  <ng-container *ngTemplateOutlet="body"></ng-container>
+</ng-container>
+
+<ng-template #body>
+  <zx-skeleton
+    *ngIf="loading"
+    [variant]="skeletonVariant"
+    [count]="skeletonCount"
+  ></zx-skeleton>
+
+  <div *ngIf="error" class="module-error" zxCaption>
+    {{ 'firstpage.error' | translate }}
+  </div>
+
+  <div *ngIf="!loading && !error && empty" class="module-empty" zxCaption>
+    {{ 'firstpage.empty' | translate }}
+  </div>
+
+  <ng-content *ngIf="!loading && !error && !empty"></ng-content>
+</ng-template>

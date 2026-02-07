@@ -1,8 +1,7 @@
 @if (loading()) {
   <zx-skeleton variant="text" [count]="5"></zx-skeleton>
 } @else {
-  <zx-table>
-    <div zxHeading3 class="recent-ratings__title">{{ 'ratings.title' | translate }}</div>
+  <zx-table [title]="'ratings.title' | translate">
     <table class="recent-ratings-table">
       <tbody>
         @for (item of items(); track $index) {
