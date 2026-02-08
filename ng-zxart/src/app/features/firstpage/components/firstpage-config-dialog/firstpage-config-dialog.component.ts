@@ -8,7 +8,13 @@ import {MatIconModule} from '@angular/material/icon';
 import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
 import {TranslateModule} from '@ngx-translate/core';
 import {FirstpageConfigService} from '../../services/firstpage-config.service';
-import {MODULE_MIN_RATING_PREF_CODES, ModuleConfig, ModuleType,} from '../../models/firstpage-config';
+import {
+  ALL_MODULE_TYPES,
+  DEFAULT_MODULE_SETTINGS,
+  MODULE_MIN_RATING_PREF_CODES,
+  ModuleConfig,
+  ModuleType,
+} from '../../models/firstpage-config';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
@@ -62,7 +68,12 @@ export class FirstpageConfigDialogComponent implements OnInit {
 
   reset(): void {
     this.configService.resetToDefaults();
-    this.ngOnInit();
+    this.modules = ALL_MODULE_TYPES.map((type, index) => ({
+      type,
+      enabled: true,
+      order: index,
+      settings: {...DEFAULT_MODULE_SETTINGS[type]},
+    }));
   }
 
   close(): void {
