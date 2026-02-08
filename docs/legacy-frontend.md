@@ -5,6 +5,7 @@
 
 ## Legacy CSS
 Public legacy CSS files are located in `project/css/public/`. They are detected automatically by legacy bundler on refresh and built into bundle. No imports are required.
+Legacy CSS uses CSS variables from "_legacy.theme.scss" which are based on new theme CSS variables to support light/dark mode.
 
 ### CSS Naming Conventions
 Legacy CSS files must follow these naming patterns:

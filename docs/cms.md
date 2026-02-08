@@ -14,6 +14,7 @@ In future we will get rid of this unsupported CMS by incorporating its functiona
 - /project/templates/ - legacy smarty templates. Follow [Design System](design-system.md) for subcomponents.
 - /trickster-cms/ - copy of CMS. In dev environment project is linked to this folder. In prod environment it is served from composer.
 - ./tests/ - phpunit tests. all new functionality should be covered by tests.
+- Never access anything inside `temporary`. It contains cache files (e.g., template cache, bundle cache).
 
 ## System Concepts
 
@@ -66,6 +67,4 @@ This is the standard way to trigger actions from the frontend.
 - Action classes for a module must follow the `{actionName}{ModuleName}` naming convention (e.g., `receiveComment`).
 - Action files must be named `action.{actionName}.class.php` (e.g., `action.receive.class.php`).
 
-## Documentation Standards
-- All documentation and comments must be in English.
-- Documentation updates must be placed in the appropriate .md file (e.g., PHP rules in php.md, general rules in rules.md, architecture details in architecture.md).
+- [Controllers and StructureManager](cms/controllers.md) - getElementById modes, controller initialization, AJAX operations, error logging
