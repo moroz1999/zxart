@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Database\Capsule\Manager;
-
 class testApplication extends controllerApplication
 {
     protected $applicationName = 'test';
@@ -19,7 +17,6 @@ class testApplication extends controllerApplication
     {
         ini_set("display_errors", 1);
 
-//        $this->startSession('public');
         $this->createRenderer();
     }
 

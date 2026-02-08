@@ -8,7 +8,9 @@ class printApplication extends controllerApplication
     public function initialize()
     {
         $this->createRenderer();
-        return !$this->isCrawlerDetected();
+        if ($this->isCrawlerDetected()){
+            throw new \http\Exception\RuntimeException('');
+        }
     }
 
     /**

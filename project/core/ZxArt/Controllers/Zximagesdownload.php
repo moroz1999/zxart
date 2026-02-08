@@ -24,7 +24,6 @@ class Zximagesdownload extends controllerApplication
     public function initialize()
     {
         $this->createRenderer();
-        return true;
     }
 
     public function execute($controller)

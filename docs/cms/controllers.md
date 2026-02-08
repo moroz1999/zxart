@@ -13,13 +13,23 @@ Example:
 $structureManager = $this->getService(
     'structureManager',
     [
-        'rootUrl' => $controller->baseURL,
+        'rootUrl' => $controller->rootURL,
         'rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerPublic'),
     ],
     true
 );
 $languagesManager = $this->getService('LanguagesManager');
 $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
+```
+
+## Controller URL name
+Add `getUrlName()` in controller applications to avoid controller name prefix in entity URLs. Without it, all entities will get the controller name at the beginning of their URL.
+Example:
+```php
+public function getUrlName()
+{
+    return '';
+}
 ```
 
 ## Controller services

@@ -44,7 +44,7 @@ class Firstpage extends controllerApplication
             $structureManager = $this->getService(
                 'structureManager',
                 [
-                    'rootUrl' => controller::getInstance()->baseURL,
+                    'rootUrl' => controller::getInstance()->rootURL,
                     'rootMarker' => $configManager->get('main.rootMarkerPublic'),
                 ],
                 true
@@ -270,5 +270,10 @@ class Firstpage extends controllerApplication
     {
         $this->renderer->assign('responseStatus', 'error');
         $this->renderer->assign('errorMessage', $message);
+    }
+
+    public function getUrlName()
+    {
+        return '';
     }
 }

@@ -17,9 +17,7 @@ class Rss extends controllerApplication
 
     public function initialize(): void
     {
-        // Не используем стандартный рендерер через createRenderer
         $this->createRenderer();
-
     }
 
     public function execute($controller): void
@@ -83,5 +81,10 @@ class Rss extends controllerApplication
         header('Content-Type: application/rss+xml; charset=utf-8');
         header('Content-Disposition: inline');
         echo $rssXml;
+    }
+
+    public function getUrlName()
+    {
+        return '';
     }
 }

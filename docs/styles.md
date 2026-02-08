@@ -39,5 +39,17 @@
     - If a specific color/size is missing in theme, use the closest existing one.
     - All theme management is centralized in component-specific theme files, which are imported into the main theme.
 
+## Material Component Theming
+
+Angular Material is globally configured with a **dark theme** (`m2-define-dark-theme` in `styles.scss`). This means all Material MDC component tokens (text colors, backgrounds, etc.) default to light-on-dark values (e.g., white text).
+
+When using Material components, you **must override** the relevant `--mdc-*` and `--mat-*` CSS custom properties to use our semantic variables. Otherwise, text will appear white in light mode.
+
+Example overrides for common Material tokens:
+- Dialog: `--mdc-dialog-container-color`, `--mdc-dialog-subhead-color`, `--mdc-dialog-supporting-text-color`
+- Checkbox labels: `--mat-checkbox-label-text-color`
+
+These overrides are placed in component-specific theme files (e.g., `_zx-dialog.theme.scss`) scoped to the component's `panelClass` or host selector.
+
 ## Legacy LESS
 - Replace all hardcoded legacy property values with CSS variables. Add missing variables according to same rules as for SCSS. 

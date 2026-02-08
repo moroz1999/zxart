@@ -25,7 +25,9 @@ class zipItemsApplication extends controllerApplication
 
         $this->startSession($this->mode);
         $this->createRenderer();
-        return !$this->isCrawlerDetected();
+        if ($this->isCrawlerDetected()){
+            throw new \http\Exception\RuntimeException('');
+        }
     }
 
     /**

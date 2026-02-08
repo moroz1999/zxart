@@ -16,7 +16,9 @@ class zxfileApplication extends controllerApplication
     {
         $this->startSession('public');
         $this->createRenderer();
-        return !$this->isCrawlerDetected();
+        if ($this->isCrawlerDetected()){
+            throw new \http\Exception\RuntimeException('');
+        }
     }
 
     /**

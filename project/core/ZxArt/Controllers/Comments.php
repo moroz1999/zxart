@@ -28,7 +28,7 @@ class Comments extends controllerApplication
         $structureManager = $this->getService(
             'structureManager',
             [
-                'rootUrl' => controller::getInstance()->baseURL,
+                'rootUrl' => controller::getInstance()->rootURL,
                 'rootMarker' => $configManager->get('main.rootMarkerPublic'),
             ],
             true
@@ -190,5 +190,10 @@ class Comments extends controllerApplication
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', 'Internal server error');
         }
+    }
+
+    public function getUrlName()
+    {
+        return '';
     }
 }
