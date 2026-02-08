@@ -62,6 +62,18 @@
         }
       </div>
     }
+    @case ('tune-table') {
+      @for (i of items; track i) {
+        <div class="skeleton-tune-row" [style.animation-delay.ms]="i * 50">
+          <div class="skeleton-tune-main skeleton-bone"></div>
+          <div class="skeleton-tune-sm skeleton-bone"></div>
+          <div class="skeleton-tune-sm skeleton-bone"></div>
+          <div class="skeleton-tune-md skeleton-bone"></div>
+          <div class="skeleton-tune-sm skeleton-bone"></div>
+          <div class="skeleton-tune-md skeleton-bone"></div>
+        </div>
+      }
+    }
     @case ('text') {
       @for (i of items; track i) {
         <div class="skeleton-text-line skeleton-bone"

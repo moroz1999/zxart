@@ -12,25 +12,11 @@ import {ModuleSettings} from '../../models/firstpage-config';
 import {MODULE_SETTINGS} from '../../models/module-settings.token';
 
 @Component({
-  selector: 'app-fp-support-prods',
+  selector: 'zx-fp-support-prods',
   standalone: true,
   imports: [CommonModule, FirstpageModuleWrapperComponent, ZxProdBlockComponent],
-  template: `
-    <app-firstpage-module-wrapper
-      titleKey="firstpage.modules.supportProds"
-      [usePanel]="false"
-      [loading]="loading"
-      [error]="error"
-      [empty]="items.length === 0"
-      skeletonVariant="prod-grid"
-      [skeletonCount]="settings.limit"
-    >
-      <div class="prods-grid">
-        <app-zx-prod-block *ngFor="let prod of items" [model]="prod"></app-zx-prod-block>
-      </div>
-    </app-firstpage-module-wrapper>
-  `,
-  styles: [`.prods-grid { display: grid; grid-template-columns: repeat(auto-fill, 256px); justify-content: space-evenly; gap: var(--space-16); }`]
+  templateUrl: './support-prods.component.html',
+  styleUrls: ['./support-prods.component.scss']
 })
 export class SupportProdsComponent extends FirstpageModuleBase<ZxProd> {
   constructor(

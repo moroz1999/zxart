@@ -35,7 +35,7 @@ $amount: 5;
   }
   @include breakpoints.media-breakpoint-down(sm) {
     flex-wrap: wrap;
-    app-categories-tree-selector {
+    zx-categories-tree-selector {
       flex-basis: 100%;
     }
   }
@@ -136,7 +136,7 @@ $amount: 5;
   margin-left: auto;
 }
 
-app-letter-selector {
+zx-letter-selector {
   margin: var(--margin-lg) 0 0;
 }
 
@@ -165,11 +165,11 @@ zx-pagination {
 
   }
 
-  ::ng-deep app-zx-prod-row td {
+  ::ng-deep zx-prod-row td {
     padding: var(--padding-md) var(--padding-lg);
   }
 
-  ::ng-deep app-zx-prod-row:nth-of-type(2n-1) td {
+  ::ng-deep zx-prod-row:nth-of-type(2n-1) td {
     background-color: var(--background-dark);
   }
 }

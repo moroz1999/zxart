@@ -1,4 +1,4 @@
-<zx-panel radius="xl" padding="sm" variant="elevated">
+<zx-panel radius="xl" padding="none" variant="elevated">
 <div class="zx-prod-internal">
     <a
             href="{{ model.url }}"
@@ -101,12 +101,12 @@
                     [href]="author.url">{{ author.title }}</a><span *ngIf="!last">, </span></ng-container>
         </div>
         <div class="zx-prod-bottom-row">
-            <app-rating
+            <zx-rating
                     *ngIf="!model.denyVoting && model.structureType === 'zxProd'"
                     [overallRating]="model.votes"
                     [userRating]="model.userVote"
                     (voted)="vote($event)"
-            ></app-rating>
+            ></zx-rating>
             <div
                     class="zx-prod-release-type"
                     *ngIf="model.releaseType && model.structureType === 'zxRelease'"

@@ -3,7 +3,7 @@ import {ReleaseData} from '../models/release-data';
 import {NgForOf, NgIf} from '@angular/common';
 
 @Component({
-    selector: 'app-parsed-release',
+    selector: 'zx-parsed-release',
     templateUrl: './parsed-release.component.html',
     styleUrls: ['./parsed-release.component.scss'],
     standalone: true,

@@ -70,6 +70,7 @@ class Firstpage extends controllerApplication
 
     public function execute($controller): void
     {
+        sleep(2);
         $action = $this->getParameter('action');
 
         try {

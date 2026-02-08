@@ -3,7 +3,7 @@ import {ZxProdComponent} from '../shared/components/zx-prod-component';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
 
 @Component({
-    selector: 'app-zx-prod-row',
+    selector: 'zx-prod-row',
     templateUrl: './zx-prod-row.component.html',
     styleUrls: ['./zx-prod-row.component.scss'],
     standalone: true,

@@ -11,7 +11,7 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 import {ZxHeading3Directive} from '../../../../shared/directives/typography/typography.directives';
 
 @Component({
-  selector: 'app-settings-dialog',
+  selector: 'zx-settings-dialog',
   standalone: true,
   imports: [
     CommonModule,

@@ -18,9 +18,7 @@
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(255, 255, 255, 0.08) 20%,
-      rgba(255, 255, 255, 0.15) 50%,
-      rgba(255, 255, 255, 0.08) 80%,
+      var(--skeleton-shimmer) 50%,
       transparent 100%
     );
   }
@@ -187,6 +185,35 @@
 .skeleton-row-content {
   height: 48px;
   border-radius: var(--radius-md);
+}
+
+// Tune table skeleton - matches tune row columns
+.skeleton-tune-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-24);
+  opacity: 0;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.skeleton-tune-main {
+  flex: 1;
+  height: 40px;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-tune-sm {
+  width: 48px;
+  height: 18px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.skeleton-tune-md {
+  width: 96px;
+  height: 18px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
 }
 
 // Text skeleton

@@ -13,10 +13,12 @@
   </div>
 </td>
 <td class="tune-format">{{ tune.format }}</td>
-<td class="tune-year" *ngIf="tune.year">{{ tune.year }}</td>
-<td class="tune-party" *ngIf="tune.party">
-  <span *ngIf="medalClass" [class]="medalClass" class="medal">{{ tune.party.place }}</span>
-  <a [href]="tune.party.url">{{ tune.party.title }}</a>
+<td class="tune-year">{{ tune.year }}</td>
+<td class="tune-party">
+  <ng-container *ngIf="tune.party">
+    <span *ngIf="medalClass" [class]="medalClass" class="medal">{{ tune.party.place }}</span>
+    <a [href]="tune.party.url">{{ tune.party.title }}</a>
+  </ng-container>
 </td>
 <td class="tune-stats">
   <span *ngIf="tune.plays > 0" class="tune-stat">
@@ -27,12 +29,12 @@
   </span>
 </td>
 <td class="tune-rating">
-  <app-rating
+  <zx-rating
     *ngIf="!tune.denyVoting"
     [overallRating]="tune.votes"
     [userRating]="tune.userVote ?? undefined"
     (voted)="vote($event)"
-  ></app-rating>
+  ></zx-rating>
   <span *ngIf="tune.votesAmount > 0" class="tune-votes-count">
     ({{ tune.votesAmount }})
   </span>

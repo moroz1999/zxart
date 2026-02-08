@@ -5,7 +5,7 @@ import {NgForOf, NgIf} from '@angular/common';
 import {ZxButtonComponent} from '../../../shared/ui/zx-button/zx-button.component';
 
 @Component({
-    selector: 'app-letter-selector',
+    selector: 'zx-letter-selector',
     templateUrl: './letter-selector.component.html',
     styleUrls: ['./letter-selector.component.scss'],
     standalone: true,

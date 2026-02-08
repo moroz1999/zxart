@@ -1,8 +1,8 @@
 :root {
-  /* Skeleton Component variables */
-  /* Skeleton background should be dimmer than panel background but brighter than site background.
-     Using --secondary-100 as the closest available value from the ramp that is slightly brighter than site background (--secondary-50).
-     Dark mode: --secondary-50 = #141414 (site bg), --secondary-100 = #252525 (skeleton bg, also panel bg)
-     Light mode: --secondary-50 = #f7f7f7 (site bg), --secondary-100 = #ebebeb (skeleton bg, also panel bg) */
   --skeleton-bg: var(--secondary-100);
+  --skeleton-shimmer: rgba(255, 255, 255, 0.6);
+}
+
+.dark-mode {
+  --skeleton-shimmer: rgba(255, 255, 255, 0.08);
 }

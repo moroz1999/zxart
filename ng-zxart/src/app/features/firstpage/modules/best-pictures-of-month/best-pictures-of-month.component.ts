@@ -12,25 +12,11 @@ import {ModuleSettings} from '../../models/firstpage-config';
 import {MODULE_SETTINGS} from '../../models/module-settings.token';
 
 @Component({
-  selector: 'app-fp-best-pictures-of-month',
+  selector: 'zx-fp-best-pictures-of-month',
   standalone: true,
   imports: [CommonModule, FirstpageModuleWrapperComponent, ZxPictureCardComponent],
-  template: `
-    <app-firstpage-module-wrapper
-      titleKey="firstpage.modules.bestPicturesOfMonth"
-      [usePanel]="false"
-      [loading]="loading"
-      [error]="error"
-      [empty]="items.length === 0"
-      skeletonVariant="picture-grid"
-      [skeletonCount]="settings.limit"
-    >
-      <div class="pictures-grid">
-        <zx-picture-card *ngFor="let pic of items" [picture]="pic"></zx-picture-card>
-      </div>
-    </app-firstpage-module-wrapper>
-  `,
-  styles: [`.pictures-grid { display: grid; grid-template-columns: repeat(auto-fill, 320px); justify-content: space-evenly; gap: var(--space-16); }`]
+  templateUrl: './best-pictures-of-month.component.html',
+  styleUrls: ['./best-pictures-of-month.component.scss']
 })
 export class BestPicturesOfMonthComponent extends FirstpageModuleBase<ZxPictureDto> {
   constructor(

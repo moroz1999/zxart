@@ -1,1 +1,1 @@
-<app-parser></app-parser>
+<zx-parser></zx-parser>

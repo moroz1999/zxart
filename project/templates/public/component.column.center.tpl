@@ -1,6 +1,6 @@
 <div class="center_column" role="main">
     {if $firstPageElement->final}
-        <app-firstpage></app-firstpage>
+        <zx-firstpage></zx-firstpage>
     {else}
         {include file=$theme->template("component.breadcrumbs.tpl")}
         {include file=$theme->template("component.letters.tpl")}

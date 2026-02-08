@@ -13,6 +13,6 @@
     <label class="results-controls">
         <input type="checkbox" class="" [formControl]="notFoundOnly">{{ 'parser.not-found-only'  | translate }}
     </label>
-    <app-parsed-file [notFoundOnly]="notFoundOnly.value" class="result-item" *ngFor="let file of data"
-                     [data]="file"></app-parsed-file>
+    <zx-parsed-file [notFoundOnly]="notFoundOnly.value" class="result-item" *ngFor="let file of data"
+                     [data]="file"></zx-parsed-file>
 </div>

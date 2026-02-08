@@ -12,25 +12,11 @@ import {ModuleSettings} from '../../models/firstpage-config';
 import {MODULE_SETTINGS} from '../../models/module-settings.token';
 
 @Component({
-  selector: 'app-fp-random-good-pictures',
+  selector: 'zx-fp-random-good-pictures',
   standalone: true,
   imports: [CommonModule, FirstpageModuleWrapperComponent, ZxPictureCardComponent],
-  template: `
-    <app-firstpage-module-wrapper
-      titleKey="firstpage.modules.randomGoodPictures"
-      [usePanel]="false"
-      [loading]="loading"
-      [error]="error"
-      [empty]="items.length === 0"
-      skeletonVariant="picture-grid"
-      [skeletonCount]="settings.limit"
-    >
-      <div class="pictures-grid">
-        <zx-picture-card *ngFor="let pic of items" [picture]="pic"></zx-picture-card>
-      </div>
-    </app-firstpage-module-wrapper>
-  `,
-  styles: [`.pictures-grid { display: grid; grid-template-columns: repeat(auto-fill, 320px); justify-content: space-evenly; gap: var(--space-16); }`]
+  templateUrl: './random-good-pictures.component.html',
+  styleUrls: ['./random-good-pictures.component.scss']
 })
 export class RandomGoodPicturesComponent extends FirstpageModuleBase<ZxPictureDto> {
   constructor(

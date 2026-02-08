@@ -27,7 +27,7 @@ const zxFiles = [
 ];
 
 @Component({
-    selector: 'app-parsed-file',
+    selector: 'zx-parsed-file',
     templateUrl: './parsed-file.component.html',
     styleUrls: ['./parsed-file.component.scss'],
     standalone: true,

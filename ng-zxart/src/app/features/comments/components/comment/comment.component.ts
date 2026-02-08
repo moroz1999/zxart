@@ -14,7 +14,7 @@ import {ZxStackComponent} from "../../../../shared/ui/zx-stack/zx-stack.componen
 import {ZxBodyDirective, ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
 
 @Component({
-  selector: 'app-comment',
+  selector: 'zx-comment',
   standalone: true,
   imports: [
     CommonModule,

@@ -11,7 +11,7 @@ import {TranslatePipe} from '@ngx-translate/core';
 import {ZxInputComponent} from '../../ui/zx-input/zx-input.component';
 
 @Component({
-    selector: 'app-tags-selector',
+    selector: 'zx-tags-selector',
     templateUrl: './tags-selector.component.html',
     styleUrls: ['./tags-selector.component.scss'],
     standalone: true,

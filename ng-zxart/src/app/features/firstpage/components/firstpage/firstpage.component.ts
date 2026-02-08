@@ -20,7 +20,7 @@ interface ModuleEntry {
 }
 
 @Component({
-  selector: 'app-firstpage',
+  selector: 'zx-firstpage',
   standalone: true,
   imports: [
     CommonModule,

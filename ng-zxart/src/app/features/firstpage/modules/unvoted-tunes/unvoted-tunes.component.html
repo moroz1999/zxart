@@ -1,0 +1,10 @@
+<zx-table [title]="title">
+  <zx-skeleton *ngIf="loading" variant="tune-table" [count]="settings.limit"></zx-skeleton>
+  <div *ngIf="error" class="module-error" zxCaption>{{ 'firstpage.error' | translate }}</div>
+  <div *ngIf="!loading && !error && items.length === 0" class="module-empty" zxCaption>{{ 'firstpage.empty' | translate }}</div>
+  <table *ngIf="!loading && !error && items.length > 0" class="tunes-table">
+    <tbody>
+      <zx-tune-row *ngFor="let tune of items; index as i" [tune]="tune" [index]="i"></zx-tune-row>
+    </tbody>
+  </table>
+</zx-table>

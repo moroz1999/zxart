@@ -12,21 +12,11 @@ import {ModuleSettings} from '../../models/firstpage-config';
 import {MODULE_SETTINGS} from '../../models/module-settings.token';
 
 @Component({
-  selector: 'app-fp-recent-parties',
+  selector: 'zx-fp-recent-parties',
   standalone: true,
   imports: [CommonModule, FirstpageModuleWrapperComponent, ZxPartyCardComponent],
-  template: `
-    <app-firstpage-module-wrapper
-      titleKey="firstpage.modules.recentParties"
-      [loading]="loading"
-      [error]="error"
-      [empty]="items.length === 0"
-      skeletonVariant="row"
-      [skeletonCount]="settings.limit"
-    >
-      <zx-party-card *ngFor="let party of items" [party]="party"></zx-party-card>
-    </app-firstpage-module-wrapper>
-  `
+  templateUrl: './recent-parties.component.html',
+  styleUrls: ['./recent-parties.component.scss']
 })
 export class RecentPartiesComponent extends FirstpageModuleBase<PartyDto> {
   constructor(

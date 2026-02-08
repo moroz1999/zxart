@@ -8,11 +8,11 @@
         </zx-button>
       </div>
       <zx-panel *ngIf="showForm && elementId" radius="lg" padding="lg">
-        <app-comment-form [targetId]="elementId" (commentSaved)="onCommentSaved($event)" (cancelled)="showForm = false"></app-comment-form>
+        <zx-comment-form [targetId]="elementId" (commentSaved)="onCommentSaved($event)" (cancelled)="showForm = false"></zx-comment-form>
       </zx-panel>
     </zx-stack>
 
-    <app-viewport-loader [enabled]="isRoot" [loader]="getCommentsLoader" [reload$]="reloadSubject">
+    <zx-viewport-loader [enabled]="isRoot" [loader]="getCommentsLoader" [reload$]="reloadSubject">
       <ng-template #skeleton>
         <div class="comments-skeleton">
           <div class="skeleton-item" style="height: 100px; margin-bottom: 16px; border-radius: 8px;"></div>
@@ -27,11 +27,11 @@
         } @else {
           <zx-stack spacing="lg">
             <div *ngFor="let comment of comments" class="comment-item">
-              <app-comment [comment]="comment" (commentChanged)="onCommentSaved(comment)"></app-comment>
+              <zx-comment [comment]="comment" (commentChanged)="onCommentSaved(comment)"></zx-comment>
             </div>
           </zx-stack>
         }
       </ng-template>
-    </app-viewport-loader>
+    </zx-viewport-loader>
   </zx-stack>
 </div>

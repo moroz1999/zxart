@@ -13,22 +13,11 @@ import {ModuleSettings} from '../../models/firstpage-config';
 import {MODULE_SETTINGS} from '../../models/module-settings.token';
 
 @Component({
-  selector: 'app-fp-unvoted-tunes',
+  selector: 'zx-fp-unvoted-tunes',
   standalone: true,
   imports: [CommonModule, TranslateModule, ZxTableComponent, ZxTuneRowComponent, ZxSkeletonComponent, ZxCaptionDirective],
-  template: `
-    <zx-table [title]="title">
-      <zx-skeleton *ngIf="loading" variant="row" [count]="settings.limit"></zx-skeleton>
-      <div *ngIf="error" class="module-error" zxCaption>{{ 'firstpage.error' | translate }}</div>
-      <div *ngIf="!loading && !error && items.length === 0" class="module-empty" zxCaption>{{ 'firstpage.empty' | translate }}</div>
-      <table *ngIf="!loading && !error && items.length > 0" class="tunes-table">
-        <tbody>
-          <zx-tune-row *ngFor="let tune of items; index as i" [tune]="tune" [index]="i"></zx-tune-row>
-        </tbody>
-      </table>
-    </zx-table>
-  `,
-  styles: [`.tunes-table { width: 100%; border-collapse: collapse; }`]
+  templateUrl: './unvoted-tunes.component.html',
+  styleUrls: ['./unvoted-tunes.component.scss']
 })
 export class UnvotedTunesComponent extends FirstpageModuleBase<ZxTuneDto> {
   title = '';

@@ -1,0 +1,10 @@
+<zx-firstpage-module-wrapper
+  titleKey="firstpage.modules.latestAddedReleases"
+  [loading]="loading"
+  [error]="error"
+  [empty]="items.length === 0"
+  skeletonVariant="row"
+  [skeletonCount]="settings.limit"
+>
+  <zx-release-item *ngFor="let release of items" [release]="release"></zx-release-item>
+</zx-firstpage-module-wrapper>

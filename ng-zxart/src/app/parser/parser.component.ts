@@ -9,7 +9,7 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {ParsedFileComponent} from './parsed-file/parsed-file.component';
 
 @Component({
-    selector: 'app-parser',
+    selector: 'zx-parser',
     templateUrl: './parser.component.html',
     styleUrls: ['./parser.component.scss'],
     standalone: true,

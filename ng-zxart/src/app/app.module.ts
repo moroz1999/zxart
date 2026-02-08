@@ -80,16 +80,16 @@ export class AppModule implements DoBootstrap  {
     public ngDoBootstrap(): void {
         const elements = {
             'app-root': AppComponent,
-            'app-zx-prods-category': ZxProdsCategoryComponent,
-            'app-zx-prods-list': ZxProdsListComponent,
-            'app-parser': ParserComponent,
+            'zx-prods-category': ZxProdsCategoryComponent,
+            'zx-prods-list': ZxProdsListComponent,
+            'zx-parser': ParserComponent,
             'zx-comments-list': CommentsListComponent,
             'zx-comments-page': CommentsPageComponent,
-            'app-settings-trigger': SettingsTriggerComponent,
+            'zx-settings-trigger': SettingsTriggerComponent,
             'zx-latest-comments': LatestCommentsComponent,
             'zx-recent-ratings': RecentRatingsWidgetComponent,
             'zx-ratings-list': RatingsListComponent,
-            'app-firstpage': FirstpageComponent,
+            'zx-firstpage': FirstpageComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});

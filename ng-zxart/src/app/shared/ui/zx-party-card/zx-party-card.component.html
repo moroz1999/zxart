@@ -1,4 +1,9 @@
-<a [href]="party.url" class="party-link">
-  <span class="party-title">{{ party.title }}</span>
-  <span class="party-year" *ngIf="party.year" zxCaption>{{ party.year }}</span>
-</a>
+<zx-panel radius="xl" padding="none" variant="elevated">
+  <a [href]="party.url" class="party-image">
+    <img [src]="party.imageUrl" [alt]="party.title" loading="lazy" />
+  </a>
+  <div class="party-info">
+    <a [href]="party.url" class="party-title">{{ party.title }}</a>
+    <span class="party-year" *ngIf="party.year" zxCaption>{{ party.year }}</span>
+  </div>
+</zx-panel>

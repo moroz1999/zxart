@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace ZxArt\Releases\Repositories;
 
 use Illuminate\Database\Connection;
-use Illuminate\Database\Query\Builder;
 
 readonly final class ReleasesRepository
 {
@@ -21,14 +20,11 @@ readonly final class ReleasesRepository
      */
     public function getLatestAddedIds(int $limit): array
     {
-        return $this->getSelectSql()
-            ->orderBy('dateAdded', 'desc')
+        return $this->db->table(self::TABLE . ' AS releases')
+            ->select('releases.id')
+            ->leftJoin('structure_elements AS se', 'se.id', '=', 'releases.id')
+            ->orderBy('se.dateCreated', 'desc')
             ->limit($limit)
-            ->pluck('id');
-    }
-
-    private function getSelectSql(): Builder
-    {
-        return $this->db->table(self::TABLE);
+            ->pluck('releases.id');
     }
 }

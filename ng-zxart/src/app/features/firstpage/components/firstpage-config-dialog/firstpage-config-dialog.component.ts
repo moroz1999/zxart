@@ -15,7 +15,7 @@ import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.componen
 import {ZxHeading2Directive} from '../../../../shared/directives/typography/typography.directives';
 
 @Component({
-  selector: 'app-firstpage-config-dialog',
+  selector: 'zx-firstpage-config-dialog',
   standalone: true,
   imports: [
     CommonModule,

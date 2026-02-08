@@ -7,7 +7,7 @@ import {SettingsDialogComponent} from '../settings-dialog/settings-dialog.compon
 import {ThemeService} from '../../services/theme.service';
 
 @Component({
-  selector: 'app-settings-trigger',
+  selector: 'zx-settings-trigger',
   standalone: true,
   imports: [
     CommonModule,

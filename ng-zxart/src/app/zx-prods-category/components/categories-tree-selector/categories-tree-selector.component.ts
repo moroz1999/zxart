@@ -15,7 +15,7 @@ import {NgClass} from '@angular/common';
 import {MatIconButton} from '@angular/material/button';
 
 @Component({
-    selector: 'app-categories-tree-selector',
+    selector: 'zx-categories-tree-selector',
     templateUrl: './categories-tree-selector.component.html',
     styleUrls: ['./categories-tree-selector.component.scss'],
     standalone: true,

@@ -18,10 +18,10 @@
                 class="zx-prods-list-left"
                 [ngClass]="{'disabled': loading}"
         >
-            <app-categories-tree-selector
+            <zx-categories-tree-selector
                     [selectorData]="model.categoriesSelector"
                     (categoryChanged)="categoryChanged($event)"
-            ></app-categories-tree-selector>
+            ></zx-categories-tree-selector>
             <zx-dialog-selector
                     [selectorData]="model.countriesSelector"
                     (newValues)="countriesChanged($event)"
@@ -82,20 +82,20 @@
                             [selectedValuesLabel]="'prods-list.filters.hardware.selected' | translate"
                             [selectValuesLabel]="'prods-list.filters.hardware.select' | translate"
                     ></zx-dialog-selector>
-                    <app-tags-selector
+                    <zx-tags-selector
                             [tagsSelector]="model.tagsSelector"
                             (tagsSelected)="tagsSelected($event)"
-                    ></app-tags-selector>
+                    ></zx-tags-selector>
                     <zx-checkbox-field
                         class="releases-selector"
                         [(ngModel)]="releases"
                         (ngModelChange)="releasesSelected()">
                         {{ 'prods-list.releases' | translate }}
                     </zx-checkbox-field>
-                    <app-sorting-selector
+                    <zx-sorting-selector
                             [sortingSelector]="model.sortingSelector"
                             (sortingSelected)="sortingSelected($event)"
-                    ></app-sorting-selector>
+                    ></zx-sorting-selector>
                     <div class="layout-selector">
                         <zx-toggle
                             [options]="layoutOptions"
@@ -103,16 +103,16 @@
                         ></zx-toggle>
                     </div>
                 </div>
-                <app-letter-selector
+                <zx-letter-selector
                         [lettersSelector]="model.lettersSelector"
                         (letterSelected)="letterSelected($event)"
-                ></app-letter-selector>
+                ></zx-letter-selector>
             </div>
             <div class="zx-prods-list-center">
                 <mat-spinner class="zx-prods-list-spinner" *ngIf="loading" diameter="100"
                              strokeWidth="10"></mat-spinner>
                 <div *ngIf="model.prods && layout!=='table'" class="zx-prods-gallery" [ngClass]="{'disabled': loading}">
-                    <app-zx-prod-block
+                    <zx-prod-block
                             *ngFor="let zxProd of model.prods"
                             [model]="zxProd"
                             [imagesLayout]="layout"
@@ -120,7 +120,7 @@
                             (yearChanged)="yearsChanged($event)"
                             (hardwareChanged)="hardwareChanged($event)"
                             (languageChanged)="languagesChanged($event)"
-                    ></app-zx-prod-block>
+                    ></zx-prod-block>
                 </div>
                 <table *ngIf="layout==='table'" class="zx-prods-table" [ngClass]="{'disabled': loading}">
                     <thead>
@@ -139,14 +139,14 @@
                         </td>
                     </tr>
                     </thead>
-                    <app-zx-prod-row
+                    <zx-prod-row
                             *ngFor="let zxProd of model.prods"
                             [model]="zxProd"
                             (categoryChanged)="categoryChanged($event)"
                             (yearChanged)="yearsChanged($event)"
                             (hardwareChanged)="hardwareChanged($event)"
                             (languageChanged)="languagesChanged($event)"
-                    ></app-zx-prod-row>
+                    ></zx-prod-row>
                 </table>
                 <zx-pagination
                         [pagesAmount]="pagesAmount"

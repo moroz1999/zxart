@@ -1,20 +1,20 @@
 <div *ngIf="model">
     <div *ngIf="layout === 'list' && items" class="zx-prods-gallery">
-        <app-zx-prod-block
+        <zx-prod-block
                 *ngFor="let zxProd of items"
                 [model]="zxProd"
                 [imagesLayout]="'loading'"
-        ></app-zx-prod-block>
+        ></zx-prod-block>
     </div>
     <ng-container *ngIf="layout === 'years' && years">
         <div *ngFor="let year of years" class="zx-prods-year">
             <h2>{{ year.year !== 0 ? year.year : ('prods-list.unknown-year' | translate) }}</h2>
             <div class="zx-prods-gallery">
-                <app-zx-prod-block
+                <zx-prod-block
                         *ngFor="let zxProd of year.items"
                         [model]="zxProd"
                         [imagesLayout]="'loading'"
-                ></app-zx-prod-block>
+                ></zx-prod-block>
             </div>
         </div>
     </ng-container>

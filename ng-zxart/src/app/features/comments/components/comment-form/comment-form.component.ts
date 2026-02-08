@@ -10,7 +10,7 @@ import {ZxTextareaComponent} from '../../../../shared/ui/zx-textarea/zx-textarea
 import {ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
 
 @Component({
-  selector: 'app-comment-form',
+  selector: 'zx-comment-form',
   standalone: true,
   imports: [
     CommonModule,

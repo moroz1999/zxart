@@ -12,21 +12,10 @@ import {ModuleSettings} from '../../models/firstpage-config';
 import {MODULE_SETTINGS} from '../../models/module-settings.token';
 
 @Component({
-  selector: 'app-fp-latest-added-releases',
+  selector: 'zx-fp-latest-added-releases',
   standalone: true,
   imports: [CommonModule, FirstpageModuleWrapperComponent, ZxReleaseItemComponent],
-  template: `
-    <app-firstpage-module-wrapper
-      titleKey="firstpage.modules.latestAddedReleases"
-      [loading]="loading"
-      [error]="error"
-      [empty]="items.length === 0"
-      skeletonVariant="row"
-      [skeletonCount]="settings.limit"
-    >
-      <zx-release-item *ngFor="let release of items" [release]="release"></zx-release-item>
-    </app-firstpage-module-wrapper>
-  `
+  templateUrl: './latest-added-releases.component.html',
 })
 export class LatestAddedReleasesComponent extends FirstpageModuleBase<ZxReleaseDto> {
   constructor(

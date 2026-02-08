@@ -4,7 +4,7 @@ The integration of Angular components into existing legacy Smarty templates is i
 
 #### Core Principles
 1. **Standalone Components**: All Angular components MUST be standalone. `AppModule` is used only for bootstrapping and registering custom elements.
-2. **Custom Elements**: Angular components are registered in `AppModule` as custom elements with an `app-` prefix. This allows them to be used like standard HTML tags within `.tpl` files.
+2. **Custom Elements**: Angular components are registered in `AppModule` as custom elements with a `zx-` prefix. This allows them to be used like standard HTML tags within `.tpl` files.
 3. **Data Passing**:
     - **Attributes**: Element IDs and simple settings are passed via tag attributes (e.g., `element-id="{$element->id}"`). These attributes are received in Angular components using the `@Input()` decorator.
 
@@ -57,7 +57,8 @@ All new functionality in Angular must follow Feature Sliced Design principles an
   ```
 
 - **Naming and Storage Rules**:
-    1. **Standalone Components**: All components MUST be standalone. Explicitly specify all required imports (modules, other components, pipes) in the `imports` array of the `@Component` decorator. Modules (except `AppModule` for registration) are prohibited.
+    1. **Component Prefix**: All component selectors MUST use the `zx-` prefix (e.g., `zx-picture-card`, `zx-fp-new-tunes`). The `app-` prefix is forbidden.
+    2. **Standalone Components**: All components MUST be standalone. Explicitly specify all required imports (modules, other components, pipes) in the `imports` array of the `@Component` decorator. Modules (except `AppModule` for registration) are prohibited.
     2. **DTOs**: All interfaces and DTOs must be stored in the `models/` folder within the corresponding module/feature. Do not mix type definitions with service or component code.
     3. **File Separation**: For each component, the template (HTML), styles (SCSS), and logic (TS) must reside in separate files. Using inline templates and styles within the `@Component` decorator is prohibited.
     4. **Services**: Shared services are stored in `app/shared/services/`, while feature-specific services are stored in `features/{feature-name}/services/`.

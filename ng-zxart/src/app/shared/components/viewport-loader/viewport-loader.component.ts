@@ -6,7 +6,7 @@ import {shareReplay, startWith, switchMap} from 'rxjs/operators';
 import {InViewportDirective} from '../../directives/in-viewport.directive';
 
 @Component({
-  selector: 'app-viewport-loader',
+  selector: 'zx-viewport-loader',
   standalone: true,
   imports: [CommonModule, InViewportDirective],
   animations: [

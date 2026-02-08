@@ -13,10 +13,10 @@
     <a [href]="picture.url" class="picture-title">{{ picture.title }}</a>
     <div class="picture-authors" *ngIf="picture.authors.length">
       <ng-container *ngFor="let author of picture.authors; last as last">
-        <a [href]="author.url">{{ author.name }}</a><span *ngIf="!last">, </span>
+        <a [href]="author.url">{{ author.name }}</a><span *ngIfpicture-meta="!last">, </span>
       </ng-container>
     </div>
-    <div class="picture-meta">
+    <div class="picture-meta" *ngIf="picture.party || picture.year">
       <div class="picture-party" *ngIf="picture.party">
         <span *ngIf="medalClass" [class]="medalClass" class="medal">{{ picture.party.place }}</span>
         <a [href]="picture.party.url" zxCaption>{{ picture.party.title }}</a>
@@ -24,12 +24,12 @@
       <span class="picture-year" *ngIf="picture.year" zxCaption>{{ picture.year }}</span>
     </div>
     <div class="picture-bottom">
-      <app-rating
+      <zx-rating
         *ngIf="!picture.denyVoting"
         [overallRating]="picture.votes"
         [userRating]="picture.userVote ?? undefined"
         (voted)="vote($event)"
-      ></app-rating>
+      ></zx-rating>
       <span class="picture-votes-count" *ngIf="picture.votesAmount > 0" zxCaption>
         ({{ picture.votesAmount }})
       </span>

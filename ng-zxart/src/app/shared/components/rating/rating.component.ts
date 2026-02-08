@@ -4,7 +4,7 @@ import {environment} from '../../../../environments/environment';
 import {NgClass, NgIf, NgStyle} from '@angular/common';
 
 @Component({
-    selector: 'app-rating',
+    selector: 'zx-rating',
     templateUrl: './rating.component.html',
     styleUrls: ['./rating.component.scss'],
     standalone: true,

@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
-export type SkeletonVariant = 'card' | 'comment' | 'row' | 'text' | 'prod-grid' | 'picture-grid';
+export type SkeletonVariant = 'card' | 'comment' | 'row' | 'text' | 'prod-grid' | 'picture-grid' | 'tune-table';
 
 @Component({
   selector: 'zx-skeleton',

@@ -6,7 +6,7 @@ import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton
 import {ZxCaptionDirective, ZxHeading3Directive} from '../../../../shared/directives/typography/typography.directives';
 
 @Component({
-  selector: 'app-firstpage-module-wrapper',
+  selector: 'zx-firstpage-module-wrapper',
   standalone: true,
   imports: [
     CommonModule,
@@ -26,6 +26,6 @@ export class FirstpageModuleWrapperComponent {
   @Input() error = false;
   @Input() empty = false;
   @Input() usePanel = true;
-  @Input() skeletonVariant: 'card' | 'row' | 'prod-grid' | 'picture-grid' = 'card';
+  @Input() skeletonVariant: 'card' | 'row' | 'prod-grid' | 'picture-grid' | 'tune-table' = 'card';
   @Input() skeletonCount = 4;
 }

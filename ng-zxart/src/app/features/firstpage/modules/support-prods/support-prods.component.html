@@ -1,0 +1,13 @@
+<zx-firstpage-module-wrapper
+  titleKey="firstpage.modules.supportProds"
+  [usePanel]="false"
+  [loading]="loading"
+  [error]="error"
+  [empty]="items.length === 0"
+  skeletonVariant="prod-grid"
+  [skeletonCount]="settings.limit"
+>
+  <div class="prods-grid">
+    <zx-prod-block *ngFor="let prod of items" [model]="prod"></zx-prod-block>
+  </div>
+</zx-firstpage-module-wrapper>

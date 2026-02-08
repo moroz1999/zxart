@@ -1,7 +1,7 @@
 <div class="ratings-list">
   <h2 zxHeading2>{{ 'ratings.votes-title' | translate }}</h2>
 
-  <app-viewport-loader [enabled]="!!elementId" [loader]="getRatingsLoader">
+  <zx-viewport-loader [enabled]="!!elementId" [loader]="getRatingsLoader">
     <ng-template #skeleton>
       <div class="ratings-skeleton">
         <div class="skeleton-item" style="height: 32px; margin-bottom: 8px; border-radius: 4px;"></div>
@@ -32,5 +32,5 @@
         </table>
       }
     </ng-template>
-  </app-viewport-loader>
+  </zx-viewport-loader>
 </div>

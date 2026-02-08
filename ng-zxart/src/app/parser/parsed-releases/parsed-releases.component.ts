@@ -9,7 +9,7 @@ interface DialogData {
 }
 
 @Component({
-    selector: 'app-parsed-releases',
+    selector: 'zx-parsed-releases',
     templateUrl: './parsed-releases.component.html',
     styleUrls: ['./parsed-releases.component.scss'],
     standalone: true,

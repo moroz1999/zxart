@@ -27,7 +27,7 @@ const defaultStatuses: string[] = ['allowed', 'forbidden', 'forbiddenzxart', 'al
 export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
 
 @Component({
-    selector: 'app-zx-prods-category',
+    selector: 'zx-prods-category',
     templateUrl: './zx-prods-category.component.html',
     styleUrls: ['./zx-prods-category.component.scss'],
     imports: [

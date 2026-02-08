@@ -5,7 +5,7 @@ import {FormsModule} from '@angular/forms';
 import {ZxSelectComponent, ZxSelectOption} from '../../../shared/ui/zx-select/zx-select.component';
 
 @Component({
-    selector: 'app-sorting-selector',
+    selector: 'zx-sorting-selector',
     templateUrl: './sorting-selector.component.html',
     styleUrls: ['./sorting-selector.component.scss'],
     standalone: true,

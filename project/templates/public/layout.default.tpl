@@ -1,5 +1,5 @@
 <app-root language="{$currentLanguage->iso6393}"></app-root>
-<app-settings-trigger></app-settings-trigger>
+<zx-settings-trigger></zx-settings-trigger>
 {$leftColumnElements = $currentLanguage->getLeftColumnElementsList()}
 {$rightColumnElements = $currentLanguage->getRightColumnElementsList()}
 <div class="columns_table grid_md">

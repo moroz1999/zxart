@@ -16,6 +16,7 @@ readonly class PartiesTransformer
             title: (string)$element->getTitle(),
             url: $element->getUrl(),
             year: $element->getYear(),
+            imageUrl: $element->getImageUrl('partyShort'),
         );
     }
 }

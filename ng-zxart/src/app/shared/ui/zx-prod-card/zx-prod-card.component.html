@@ -16,12 +16,12 @@
       </div>
     </div>
     <div class="prod-bottom">
-      <app-rating
+      <zx-rating
         *ngIf="!prod.denyVoting"
         [overallRating]="prod.votes"
         [userRating]="prod.userVote ?? undefined"
         (voted)="vote($event)"
-      ></app-rating>
+      ></zx-rating>
       <span class="prod-year" *ngIf="prod.year">{{ prod.year }}</span>
     </div>
   </div>
