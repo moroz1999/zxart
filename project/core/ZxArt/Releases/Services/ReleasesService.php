@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Releases\Services;
 
 use structureManager;
+use ZxArt\Prods\Dto\ProdDto;
 use ZxArt\Releases\Dto\ReleaseDto;
 use ZxArt\Releases\ReleasesTransformer;
 use ZxArt\Releases\Repositories\ReleasesRepository;
@@ -26,6 +27,22 @@ readonly class ReleasesService
     {
         $ids = $this->releasesRepository->getLatestAddedIds($limit);
         return $this->loadAndTransform($ids);
+    }
+
+    /**
+     * @return ProdDto[]
+     */
+    public function getLatestAddedAsProds(int $limit): array
+    {
+        $ids = $this->releasesRepository->getLatestAddedIds($limit);
+        $result = [];
+        foreach ($ids as $id) {
+            $element = $this->structureManager->getElementById($id);
+            if ($element instanceof zxReleaseElement) {
+                $result[] = $this->releasesTransformer->toProdDto($element);
+            }
+        }
+        return $result;
     }
 
     /**

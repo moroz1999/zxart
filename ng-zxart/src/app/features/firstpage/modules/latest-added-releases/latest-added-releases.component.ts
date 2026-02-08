@@ -2,22 +2,23 @@ import {Component, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs';
 import {FirstpageModuleBase} from '../firstpage-module.base';
-import {ZxReleaseDto} from '../../../../shared/models/zx-release-dto';
+import {ZxProd} from '../../../../shared/models/zx-prod';
 import {FirstpageDataService} from '../../services/firstpage-data.service';
 import {
   FirstpageModuleWrapperComponent
 } from '../../components/firstpage-module-wrapper/firstpage-module-wrapper.component';
-import {ZxReleaseItemComponent} from '../../../../shared/ui/zx-release-item/zx-release-item.component';
+import {ZxProdBlockComponent} from '../../../../shared/ui/zx-prod-block/zx-prod-block.component';
 import {ModuleSettings} from '../../models/firstpage-config';
 import {MODULE_SETTINGS} from '../../models/module-settings.token';
 
 @Component({
   selector: 'zx-fp-latest-added-releases',
   standalone: true,
-  imports: [CommonModule, FirstpageModuleWrapperComponent, ZxReleaseItemComponent],
+  imports: [CommonModule, FirstpageModuleWrapperComponent, ZxProdBlockComponent],
   templateUrl: './latest-added-releases.component.html',
+  styleUrls: ['./latest-added-releases.component.scss'],
 })
-export class LatestAddedReleasesComponent extends FirstpageModuleBase<ZxReleaseDto> {
+export class LatestAddedReleasesComponent extends FirstpageModuleBase<ZxProd> {
   constructor(
     private dataService: FirstpageDataService,
     @Inject(MODULE_SETTINGS) settings: ModuleSettings,
@@ -25,7 +26,7 @@ export class LatestAddedReleasesComponent extends FirstpageModuleBase<ZxReleaseD
     super(settings);
   }
 
-  protected loadData(): Observable<ZxReleaseDto[]> {
+  protected loadData(): Observable<ZxProd[]> {
     return this.dataService.getLatestAddedReleases(this.settings.limit);
   }
 }

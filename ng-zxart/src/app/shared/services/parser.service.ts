@@ -4,7 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {JsonResponse} from '../models/json-response';
-import {ParserData} from '../../parser/models/parser-data';
+import {ParserData} from '../../features/parser/models/parser-data';
 
 @Injectable({
     providedIn: 'root',

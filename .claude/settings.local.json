@@ -29,7 +29,18 @@
       "Bash(do mkdir -p \"E:\\\\projects\\\\zxart\\\\ng-zxart\\\\src\\\\app\\\\features\\\\firstpage\\\\modules$d\")",
       "Bash(done)",
       "Bash(npx ng build:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(xargs grep:*)",
+      "Bash(git -C E:/projects/zxart status)",
+      "Bash(git -C E:/projects/zxart diff --stat)",
+      "Bash(git -C E:/projects/zxart log --oneline -5)",
+      "Bash(git -C E:/projects/zxart add CLAUDE.md docs/angular.md htdocs/js/ng-zxart/ ng-zxart/src/ project/core/ZxArt/ project/css/public/component.forms.less project/templates/public/component.column.center.tpl project/templates/public/layout.default.tpl project/templates/public/parser.show.tpl project/templates/public/zxProdCategoriesCatalogue.details.tpl project/templates/public/zxProdCategory.details.tpl ng-zxart/src/app/app.module.ts)",
+      "Bash(git -C E:/projects/zxart commit -m \"$\\(cat <<''EOF''\nRename app- prefix to zx- on all Angular components, extract inline templates, fix releases/skeleton/parties\n\n- Rename all Angular component selectors from app- to zx- prefix \\(15 components + firstpage modules\\)\n- Update all HTML, SCSS, AppModule, Smarty template references accordingly\n- Extract inline templates/styles to separate files for all 14 firstpage modules\n- Fix ReleasesRepository: JOIN structure_elements for dateCreated ordering\n- Fix skeleton shimmer visibility on light theme with theme-aware CSS variable\n- Add party logos to party cards via PartyDto imageUrl field\n- Add tune-table skeleton variant matching table column layout\n- Use body typography in zx-tune-row instead of caption\n- Hide picture-meta when no party/year content\n- Document zx- prefix and separate-files rules in docs/angular.md\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C E:/projects/zxart log:*)",
+      "Bash(git -C E:/projects/zxart status -- \"ng-zxart/src/app/entities/\")",
+      "Bash(git -C E:/projects/zxart diff HEAD -- \"ng-zxart/angular.json\")",
+      "Bash(git -C E:/projects/zxart show HEAD:ng-zxart/angular.json)",
+      "Bash(git -C E:/projects/zxart show HEAD:ng-zxart/src/app/zx-prod-row/zx-prod-row.component.scss)"
     ]
   },
   "enabledPlugins": {

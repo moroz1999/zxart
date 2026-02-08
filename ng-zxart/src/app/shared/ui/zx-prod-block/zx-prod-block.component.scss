@@ -1,0 +1,257 @@
+@use "shared/vars";
+@use "shared/mixins";
+@use "shared/breakpoints";
+
+
+$fixedWidth: 256px;
+$fixedHeight: 192px;
+:host {
+  display: block;
+}
+
+.zx-prod-internal {
+  // Styles moved to zx-panel wrapper
+}
+
+.zx-prod-images {
+  display: block;
+  position: relative;
+  border-top-right-radius: var(--border-radius-xl);
+  border-top-left-radius: var(--border-radius-xl);
+  overflow: hidden;
+  image-rendering: pixelated;
+  @media (min-width: 1000px) {
+    height: $fixedHeight;
+  }
+  @media (max-width: 999px) {
+    padding-top: 75%;
+  }
+}
+
+:host.inlays {
+  .zx-prod-images {
+    height: auto;
+    padding-top: 100%;
+  }
+}
+
+.zx-prod-loading {
+  display: block;
+  top: 0;
+  left: 0;
+  position: absolute;
+  height: 100%;
+}
+
+.zx-prod-screenshots {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  display: block;
+  overflow: hidden;
+}
+
+.zx-prod-screenshot {
+  display: block;
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.zx-prod-screenshot-selected {
+  opacity: 1;
+}
+
+.zx-prod-screenshots-selector {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background: linear-gradient(0deg, rgba(var(--shadow-deep-rgb), 0.27) 0%, rgba(var(--shadow-thin-rgb), 0) 35%);
+}
+
+.zx-prod-screenshots-button {
+  width: 15%;
+  height: 100%;
+  display: block;
+  position: relative;
+
+  &::after {
+    display: block;
+    content: "";
+    position: absolute;
+    bottom: var(--padding-md);
+    left: var(--padding-sm);
+    right: var(--padding-sm);
+    background: var(--text-color);
+    opacity: 0.7;
+    border-radius: var(--border-radius-md);
+    height: 0.4rem;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  &:hover::after {
+    opacity: 1;
+  }
+}
+
+.zx-prod-hardware {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-4);
+}
+
+.zx-prod-hardware-opaque {
+  zx-badge {
+    opacity: 0.2;
+  }
+
+  zx-badge:hover {
+    opacity: 1;
+  }
+}
+
+.zx-prod-status {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--zx-prod-status-font-size);
+  color: var(--date-color);
+  text-transform: uppercase;
+}
+
+.zx-prod-bottom {
+  padding: var(--padding-lg);
+}
+
+.zx-prod-bottom-top {
+  display: flex;
+  margin-bottom: var(--margin-md);
+}
+
+.zx-prod-title {
+  display: block;
+  color: currentColor;
+  font-size: var(--zx-prod-title-font-size);
+  text-decoration: none;
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.zx-prod-cart {
+  flex-grow: 0;
+  display: flex;
+  padding-top: 2px;
+  margin-left: 10px;
+
+  svg-icon {
+    width: 25px;
+    height: 25px;
+    display: block;
+    transition: opacity 200ms ease-in-out;
+
+    &:focus,
+    &:hover {
+      opacity: 0.6;
+    }
+  }
+
+  svg {
+    fill: var(--icon-yellow);
+  }
+}
+
+.zx-prod-bottom-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-top: var(--margin-lg);
+  gap: var(--gap-lg);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.zx-prod-year {
+  @include mixins.pseudo-link;
+}
+
+.zx-prod-additional {
+  width: 100%;
+}
+
+.zx-prod-publisher,
+.zx-prod-categories,
+.zx-prod-languages,
+.zx-prod-parties {
+  display: block;
+  padding-bottom: var(--padding-md);
+}
+
+.zx-prod-language {
+  @include mixins.pseudo-link;
+}
+
+.zx-prod-category {
+  @include mixins.pseudo-link;
+}
+
+.zx-prod-row {
+  display: flex;
+  flex-wrap: nowrap;
+  font-size: var(--zx-prod-row-font-size);
+  border-bottom: 1px solid var(--border-color-dark);
+  padding: var(--padding-md) 0;
+  justify-content: space-between;
+  width: 100%;
+
+  &:last-of-type {
+    border-bottom: 0;
+  }
+}
+
+.zx-prod-row-label {
+  margin-right: var(--margin-lg);
+  color: var(--text-light-color);
+}
+
+.zx-prod-row-value {
+  text-align: right;
+  flex-grow: 1;
+}
+
+.zx-prod-buttons {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  margin-top: var(--margin-xl);
+}
+
+.zx-prod-button {
+  &:hover {
+    text-decoration: inherit;
+  }
+}

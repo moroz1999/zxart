@@ -12,7 +12,7 @@ import {CommonModule} from '@angular/common';
   }
 })
 export class ZxStackComponent {
-  @Input() spacing: 'sm' | 'md' | 'lg' | 'xl' = 'md';
+  @Input() spacing: 'sm' | 'md' | 'lg' | 'xl' | 'xxl' = 'md';
   @Input() direction: 'column' | 'row' = 'column';
 
   get classList(): string {

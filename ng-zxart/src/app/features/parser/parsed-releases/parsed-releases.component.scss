@@ -1,0 +1,19 @@
+@use "shared/vars" as vars;
+
+:host {
+  overflow-y: auto;
+  max-height: 80vh;
+  display: block;
+  background-color: var(--background-dark);
+  padding: var(--padding-lg);
+}
+
+.releases {
+  display: grid;
+  grid-gap: var(--gap-lg);
+  grid-template-columns: 1fr;
+}
+
+zx-parsed-release {
+  display: block;
+}

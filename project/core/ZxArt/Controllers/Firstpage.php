@@ -18,8 +18,6 @@ use ZxArt\Pictures\Services\PicturesService;
 use ZxArt\Prods\Dto\ProdDto;
 use ZxArt\Prods\Rest\ProdRestDto;
 use ZxArt\Prods\Services\FirstpageProdsService;
-use ZxArt\Releases\Dto\ReleaseDto;
-use ZxArt\Releases\Rest\ReleaseRestDto;
 use ZxArt\Releases\Services\ReleasesService;
 use ZxArt\Tunes\Dto\TuneDto;
 use ZxArt\Tunes\Rest\TuneRestDto;
@@ -70,7 +68,6 @@ class Firstpage extends controllerApplication
 
     public function execute($controller): void
     {
-        sleep(2);
         $action = $this->getParameter('action');
 
         try {
@@ -168,12 +165,8 @@ class Firstpage extends controllerApplication
     protected function handleLatestAddedReleases(): void
     {
         $limit = $this->getIntParam('limit', 10);
-        $dtos = $this->releasesService->getLatestAdded($limit);
-        $restDtos = array_map(
-            fn(ReleaseDto $dto) => $this->objectMapper->map($dto, ReleaseRestDto::class),
-            $dtos
-        );
-        $this->assignSuccess($restDtos);
+        $dtos = $this->releasesService->getLatestAddedAsProds($limit);
+        $this->assignSuccess($this->mapProds($dtos));
     }
 
     protected function handleSupportProds(): void

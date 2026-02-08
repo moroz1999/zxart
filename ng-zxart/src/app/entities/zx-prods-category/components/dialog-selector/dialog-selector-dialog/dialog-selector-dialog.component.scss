@@ -1,0 +1,37 @@
+@use "shared/vars" as vars;
+
+.dialog-title {
+  color: currentColor;
+}
+
+.value-groups {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.value-group {
+  margin-right: var(--margin-xl);
+  margin-bottom: var(--margin-xl);
+
+  &:last-of-type {
+    margin-right: 0;
+  }
+}
+
+.value-group-title {
+  color: var(--text-light-color);
+  font-weight: 500;
+  margin-bottom: var(--margin-lg);
+}
+
+.value-columns {
+  column-gap: var(--gap-xl);
+  column-fill: balance;
+  //column
+}
+
+.value {
+  display: block;
+  margin-bottom: var(--space-8);
+  break-inside: avoid;
+}

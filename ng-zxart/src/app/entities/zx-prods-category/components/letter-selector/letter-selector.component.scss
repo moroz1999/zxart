@@ -1,0 +1,19 @@
+@use 'shared/vars' as vars;
+
+:host {
+  display: block;
+}
+
+.letters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.letter {
+  min-width: auto;
+}
+
+.transparent {
+  color: var(--text-color);
+}

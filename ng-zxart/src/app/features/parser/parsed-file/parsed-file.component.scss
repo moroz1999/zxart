@@ -1,0 +1,52 @@
+@use "shared/vars" as vars;
+@use "shared/svg-icons";
+
+:host {
+  display: grid;
+  align-items: center;
+  grid-template-areas:
+    "name type md5 releases"
+    "files files files files";
+  grid-template-columns: 1fr 50px 220px 1fr;
+  gap: var(--gap-lg) var(--gap-xxl);
+
+  &.zx-file {
+    background: var(--background-dark);
+    border-radius: var(--border-radius-md);
+  }
+}
+
+svg-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.name {
+  grid-area: name;
+}
+
+.type {
+  grid-area: type;
+}
+
+.md5 {
+  grid-area: md5;
+  color: var(--text-light-color);
+  font-size: var(--parser-md5-font-size);
+}
+
+.releases {
+  grid-area: releases;
+}
+
+zx-parsed-release {
+  display: inline;
+}
+
+.files {
+  grid-area: files;
+}
+
+.attention {
+  color: var(--parser-attention-color);
+}

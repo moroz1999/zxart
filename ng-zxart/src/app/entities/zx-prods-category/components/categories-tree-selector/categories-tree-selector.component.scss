@@ -1,0 +1,35 @@
+@use "shared/vars" as vars;
+
+.categories-tree-invisible {
+  display: none;
+}
+
+.categories-tree ul,
+.categories-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+
+a {
+  color: inherit;
+}
+
+.mat-tree {
+  background: transparent;
+  color: var(--text-color);
+}
+
+.mat-tree-node, .mat-nested-tree-node {
+  color: var(--text-color);
+}
+
+.mat-tree-node-selected {
+  font-weight: bold;
+}
+
+button[mat-icon-button] {
+  --mdc-icon-button-state-layer-size: 24px;
+  --mdc-icon-button-icon-size: 18px;
+  padding: 0;
+}

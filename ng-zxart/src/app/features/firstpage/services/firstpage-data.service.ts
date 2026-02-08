@@ -5,7 +5,6 @@ import {catchError, map} from 'rxjs/operators';
 import {ZxPictureDto} from '../../../shared/models/zx-picture-dto';
 import {ZxTuneDto} from '../../../shared/models/zx-tune-dto';
 import {FirstpageProdDto} from '../../../shared/models/firstpage-prod-dto';
-import {ZxReleaseDto} from '../../../shared/models/zx-release-dto';
 import {PartyDto} from '../../../shared/models/party-dto';
 import {ZxProd} from '../../../shared/models/zx-prod';
 import {ZxProdDto} from '../../../shared/models/zx-prod-dto';
@@ -62,8 +61,10 @@ export class FirstpageDataService {
     );
   }
 
-  getLatestAddedReleases(limit: number): Observable<ZxReleaseDto[]> {
-    return this.get<ZxReleaseDto[]>('latestAddedReleases', {limit});
+  getLatestAddedReleases(limit: number): Observable<ZxProd[]> {
+    return this.get<FirstpageProdDto[]>('latestAddedReleases', {limit}).pipe(
+      map(dtos => dtos.map(dto => this.toZxProd(dto, 'zxRelease')))
+    );
   }
 
   getSupportProds(limit: number): Observable<ZxProd[]> {
@@ -88,12 +89,12 @@ export class FirstpageDataService {
     return this.get<ZxTuneDto[]>('randomGoodTunes', {limit});
   }
 
-  private toZxProd(dto: FirstpageProdDto): ZxProd {
+  private toZxProd(dto: FirstpageProdDto, structureType: 'zxProd' | 'zxRelease' = 'zxProd'): ZxProd {
     const prodDto: ZxProdDto = {
       id: dto.id,
       url: dto.url,
       title: dto.title,
-      structureType: 'zxProd',
+      structureType,
       dateCreated: 0,
       year: dto.year ?? undefined,
       votes: dto.votes,

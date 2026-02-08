@@ -28,14 +28,16 @@
     {{ tune.commentsAmount }}
   </span>
 </td>
-<td class="tune-rating">
-  <zx-rating
-    *ngIf="!tune.denyVoting"
-    [overallRating]="tune.votes"
-    [userRating]="tune.userVote ?? undefined"
-    (voted)="vote($event)"
-  ></zx-rating>
-  <span *ngIf="tune.votesAmount > 0" class="tune-votes-count">
-    ({{ tune.votesAmount }})
-  </span>
+<td>
+  <div class="tune-rating">
+    <zx-rating
+      *ngIf="!tune.denyVoting"
+      [overallRating]="tune.votes"
+      [userRating]="tune.userVote ?? undefined"
+      (voted)="vote($event)"
+    ></zx-rating>
+    <span *ngIf="tune.votesAmount > 0" class="tune-votes-count">
+      ({{ tune.votesAmount }})
+    </span>
+  </div>
 </td>

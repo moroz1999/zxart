@@ -1,0 +1,32 @@
+@use "shared/vars";
+
+.zx-prods-gallery {
+  display: grid;
+  gap: var(--gap-xl);
+  justify-content: space-between;
+
+  grid-template-columns: 1fr;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 256px 256px;
+  }
+  @media (min-width: 810px) {
+    grid-template-columns: 256px 256px 256px;
+  }
+  @media (min-width: 977px) {
+    grid-template-columns: 256px 256px;
+  }
+  @media (min-width: 1070px) {
+    grid-template-columns: 256px 256px 256px;
+  }
+  @media (min-width: 1420px) {
+    grid-template-columns: 256px 256px 256px 256px;
+  }
+  @media (min-width: 1850px) {
+    grid-template-columns: 256px 256px 256px 256px 256px;
+  }
+}
+
+.zx-prods-year {
+  margin-bottom: var(--margin-xxl);
+}
