@@ -224,6 +224,7 @@
       "next": "Next",
       "play": "Play",
       "pause": "Pause",
+      "stop": "Stop",
       "mode": "Playback mode",
       "open": "Open track page",
       "expand": "Expand",
@@ -231,6 +232,11 @@
       "close": "Close player"
     },
     "filters": {
+      "minRating": "Minimum rating",
+      "source": "Source",
+      "source.any": "Any",
+      "source.games": "Games",
+      "source.demoscene": "Demoscene",
       "yearFrom": "Year from",
       "yearTo": "Year to",
       "anyYear": "Any year",

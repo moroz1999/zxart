@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace ZxArt\Tests\Radio;
 
-use App\Users\CurrentUser;
-use ConfigManager;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Radio\Services\RadioCriteriaFactory;
 
@@ -13,18 +11,7 @@ class RadioCriteriaFactoryTest extends TestCase
 {
     public function testFromArrayNormalizesLists(): void
     {
-        $factory = new RadioCriteriaFactory(
-            $this->createMock(ConfigManager::class),
-            new class extends CurrentUser {
-                public function __construct()
-                {
-                }
-
-                public function __destruct()
-                {
-                }
-            },
-        );
+        $factory = new RadioCriteriaFactory();
 
         $criteria = $factory->fromArray(
             [

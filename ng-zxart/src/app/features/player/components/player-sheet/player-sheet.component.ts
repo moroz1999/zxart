@@ -11,16 +11,20 @@ import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.componen
 import {ZxBodyDirective, ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxSelectComponent, ZxSelectOption} from '../../../../shared/ui/zx-select/zx-select.component';
+import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
 import {RatingComponent} from '../../../../shared/components/rating/rating.component';
 import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
 import {VoteService} from '../../../../shared/services/vote.service';
 import {RadioApiService} from '../../services/radio-api.service';
 import {RadioFilterOptionsDto} from '../../models/radio-filter-options';
+import {RadioPreset} from '../../models/radio-preset';
+import {RadioPresetCriteriaService} from '../../services/radio-preset-criteria.service';
 
 const AUTO_APPLY_DEBOUNCE_MS = 150;
 
 type PlaybackMode = 'once' | 'repeat-one' | 'repeat-all' | 'shuffle-all';
 type PartyValue = 'any' | 'yes' | 'no';
+type SourceCategory = 'any' | 'games' | 'demoscene';
 
 @Component({
   selector: 'zx-player-sheet',
@@ -35,6 +39,7 @@ type PartyValue = 'any' | 'yes' | 'no';
     ZxCaptionDirective,
     ZxButtonComponent,
     ZxSelectComponent,
+    ZxInputComponent,
     RatingComponent,
     ZxSkeletonComponent,
   ],
@@ -45,6 +50,7 @@ export class PlayerSheetComponent implements OnDestroy {
   state$ = this.playerService.state$;
   form: FormGroup;
   expanded = false;
+  activePreset: RadioPreset | null = null;
   options: RadioFilterOptionsDto | null = null;
   optionsLoading = false;
   optionsError = false;
@@ -53,6 +59,18 @@ export class PlayerSheetComponent implements OnDestroy {
   formatGroupOptions: ZxSelectOption[] = [];
   formatOptions: ZxSelectOption[] = [];
   partyOptions: ZxSelectOption[] = [];
+  sourceOptions: ZxSelectOption[] = [];
+  presets: {key: RadioPreset; label: string}[] = [
+    {key: 'discover', label: 'player.preset.discover'},
+    {key: 'randomgood', label: 'player.preset.randomgood'},
+    {key: 'games', label: 'player.preset.games'},
+    {key: 'demoscene', label: 'player.preset.demoscene'},
+    {key: 'lastyear', label: 'player.preset.lastyear'},
+    {key: 'ay', label: 'player.preset.ay'},
+    {key: 'beeper', label: 'player.preset.beeper'},
+    {key: 'exotic', label: 'player.preset.exotic'},
+    {key: 'underground', label: 'player.preset.underground'},
+  ];
 
   private subscriptions = new Subscription();
   private suppressAutoApply = false;
@@ -62,9 +80,12 @@ export class PlayerSheetComponent implements OnDestroy {
     private voteService: VoteService,
     private radioApiService: RadioApiService,
     private translateService: TranslateService,
+    private presetCriteriaService: RadioPresetCriteriaService,
     private fb: FormBuilder,
   ) {
     this.form = this.fb.group({
+      minRating: [''],
+      source: ['any'],
       yearFrom: [''],
       yearTo: [''],
       countries: [[]],
@@ -74,6 +95,28 @@ export class PlayerSheetComponent implements OnDestroy {
     });
 
     this.setFormFromCriteria(this.playerService.getCriteria());
+    this.buildSourceOptions();
+
+    this.subscriptions.add(
+      this.playerService.criteria$.subscribe(criteria => {
+        this.setFormFromCriteria(criteria);
+      })
+    );
+
+    this.subscriptions.add(
+      this.playerService.preset$.subscribe(preset => {
+        this.activePreset = preset;
+      })
+    );
+
+    this.subscriptions.add(
+      this.translateService.onLangChange.subscribe(() => {
+        this.buildSourceOptions();
+        if (this.options) {
+          this.buildOptions(this.options);
+        }
+      })
+    );
 
     this.subscriptions.add(
       this.form.valueChanges
@@ -101,6 +144,10 @@ export class PlayerSheetComponent implements OnDestroy {
 
   next(): void {
     this.playerService.next();
+  }
+
+  stop(): void {
+    this.playerService.stop();
   }
 
   close(): void {
@@ -187,6 +234,12 @@ export class PlayerSheetComponent implements OnDestroy {
     this.playerService.setPlaybackMode(nextMode);
   }
 
+  applyPreset(preset: RadioPreset): void {
+    const criteria = this.presetCriteriaService.buildCriteria(preset);
+    this.setFormFromCriteria(criteria);
+    this.playerService.startRadio(criteria, preset);
+  }
+
   openCurrentTuneUrl(): void {
     const tune = this.playerService.currentTune;
     if (!tune?.url) {
@@ -250,6 +303,14 @@ export class PlayerSheetComponent implements OnDestroy {
     }));
   }
 
+  private buildSourceOptions(): void {
+    this.sourceOptions = [
+      {value: 'any', label: this.translateService.instant('player.filters.source.any')},
+      {value: 'games', label: this.translateService.instant('player.filters.source.games')},
+      {value: 'demoscene', label: this.translateService.instant('player.filters.source.demoscene')},
+    ];
+  }
+
   private buildYearOptions(min: number | null, max: number | null): ZxSelectOption[] {
     if (!min || !max) {
       return [];
@@ -267,6 +328,8 @@ export class PlayerSheetComponent implements OnDestroy {
 
     this.form.patchValue(
       {
+        minRating: this.formatRatingValue(criteria.minRating),
+        source: this.toSourceCategory(criteria),
         yearFrom,
         yearTo,
         countries: criteria.countriesInclude.map(value => String(value)),
@@ -285,16 +348,22 @@ export class PlayerSheetComponent implements OnDestroy {
   }
 
   private buildCriteriaFromForm(): RadioCriteria {
+    const minRating = this.toOptionalFloat(this.form.get('minRating')?.value);
+    const source = this.form.get('source')?.value as SourceCategory;
     const yearFrom = this.toOptionalInt(this.form.get('yearFrom')?.value);
     const yearTo = this.toOptionalInt(this.form.get('yearTo')?.value);
     const yearsInclude = this.buildYearRange(yearFrom, yearTo);
+    const sourceCriteria = this.toSourceCriteria(source);
 
     return {
       ...EMPTY_RADIO_CRITERIA,
+      minRating,
       yearsInclude,
       countriesInclude: this.toNumberList(this.form.get('countries')?.value),
       formatGroupsInclude: this.toStringList(this.form.get('formatGroups')?.value),
       formatsInclude: this.toStringList(this.form.get('formats')?.value),
+      minPartyPlace: sourceCriteria.minPartyPlace,
+      requireGame: sourceCriteria.requireGame,
       hasParty: this.toPartyCriteria(this.form.get('party')?.value as PartyValue),
     };
   }
@@ -361,6 +430,14 @@ export class PlayerSheetComponent implements OnDestroy {
     return Number.isFinite(parsed) ? parsed : null;
   }
 
+  private toOptionalFloat(value: string | null | undefined): number | null {
+    if (!value) {
+      return null;
+    }
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
   private toPartyValue(value: boolean | null): PartyValue {
     if (value === true) {
       return 'yes';
@@ -379,5 +456,32 @@ export class PlayerSheetComponent implements OnDestroy {
       return false;
     }
     return null;
+  }
+
+  private toSourceCategory(criteria: RadioCriteria): SourceCategory {
+    if (criteria.requireGame === true) {
+      return 'games';
+    }
+    if (criteria.minPartyPlace !== null) {
+      return 'demoscene';
+    }
+    return 'any';
+  }
+
+  private toSourceCriteria(value: SourceCategory): {requireGame: boolean | null; minPartyPlace: number | null} {
+    if (value === 'games') {
+      return {requireGame: true, minPartyPlace: null};
+    }
+    if (value === 'demoscene') {
+      return {requireGame: null, minPartyPlace: 1000};
+    }
+    return {requireGame: null, minPartyPlace: null};
+  }
+
+  private formatRatingValue(value: number | null): string {
+    if (value === null) {
+      return '';
+    }
+    return value.toFixed(1);
   }
 }

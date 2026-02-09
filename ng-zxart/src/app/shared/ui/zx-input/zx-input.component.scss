@@ -36,3 +36,11 @@ input {
     text-align: center;
   }
 }
+
+input[type="range"] {
+  height: var(--input-range-height);
+  padding: 0;
+  border: none;
+  background: transparent;
+  accent-color: var(--input-range-accent);
+}

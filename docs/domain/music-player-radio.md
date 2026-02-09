@@ -11,7 +11,9 @@ Radio presets are identified by a `radiotype` key and display labels stored in t
 - Analytics event: `ym(94686067, 'reachGoal', 'musicplay')`.
 
 ### Radio Presets (Legacy Parity)
-Preset labels are stored in the database. Current labels by `radiotype`:
+Preset labels are stored in the database. Presets are frontend-only and are applied by populating filter criteria in the UI.
+Only criteria are sent to the backend.
+Current labels by `radiotype`:
 - `discover`: "Непроголосованные"
 - `randomgood`: "Лучшие"
 - `games`: "Из игр"
@@ -40,7 +42,7 @@ Notes:
 - `not voted by` applies only to authenticated users; anonymous users use their runtime id.
 
 ### Endpoints
-- New radio endpoint: `POST /radio/next-tune` (criteria-driven).
+- New radio endpoint: `POST /radio/next-tune` (criteria-driven only).
 - New play reporting endpoint: `POST /tunes/play`.
 - Legacy `/randomTune/type:{type}` should be removed after the new player replaces the old one.
 

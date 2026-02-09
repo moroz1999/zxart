@@ -56,7 +56,7 @@ readonly class RadioOptionsService
     {
         $countries = [];
         foreach ($this->tunesRepository->getAuthorCountryIds() as $countryId) {
-            $element = $this->structureManager->getElementById($countryId);
+            $element = $this->structureManager->getElementById($countryId, null, true);
             if ($element instanceof countryElement) {
                 $countries[] = [
                     'id' => $countryId,

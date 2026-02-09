@@ -8,7 +8,7 @@ paths:
   /radio/?action=next-tune:
     post:
       summary: Get next tune for radio mode
-      description: Returns a tune matching the provided criteria or preset.
+      description: Returns a tune matching the provided criteria.
       parameters:
         - name: action
           in: query
@@ -53,19 +53,6 @@ components:
     RadioNextTuneRequest:
       type: object
       properties:
-        preset:
-          type: string
-          description: Preset id (legacy).
-          enum:
-            - discover
-            - randomgood
-            - games
-            - demoscene
-            - lastyear
-            - ay
-            - beeper
-            - exotic
-            - underground
         criteria:
           $ref: '#/components/schemas/RadioCriteria'
 

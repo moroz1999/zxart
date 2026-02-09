@@ -22,8 +22,7 @@ import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {MatAnchor} from '@angular/material/button';
 import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
 import {ZxBadgeComponent} from '../zx-badge/zx-badge.component';
-
-declare function ym(a: number, b: string, c: string, params: any, callback: CallableFunction): any;
+import {AnalyticsService} from '../../services/analytics.service';
 
 @Component({
   selector: 'zx-prod-block',
@@ -65,6 +64,7 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
     private element: ElementRef,
     private voting: VoteService,
     private iconReg: SvgIconRegistryService,
+    private analyticsService: AnalyticsService,
   ) {
     super();
   }
@@ -152,8 +152,6 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
 
   cartClicked(event: MouseEvent) {
     event.preventDefault();
-    if (typeof ym !== 'undefined') {
-      ym(94686067, 'reachGoal', 'open-cart-link', {}, () => window.open(this.model.externalLink));
-    }
+    this.analyticsService.reachGoal('open-cart-link', {}, () => window.open(this.model.externalLink));
   }
 }

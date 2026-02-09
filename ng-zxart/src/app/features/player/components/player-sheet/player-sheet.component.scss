@@ -43,6 +43,7 @@
   cursor: pointer;
   overflow: hidden;
   box-shadow: none;
+  --mdc-filled-button-container-color: transparent;
 }
 
 :host ::ng-deep .player-progress:disabled {
@@ -72,6 +73,17 @@
   gap: var(--zx-player-advanced-gap);
 }
 
+.player-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--zx-player-presets-gap);
+}
+
+.player-preset-active {
+  --mdc-filled-button-container-color: var(--zx-player-preset-active-bg);
+  border-color: var(--zx-player-preset-active-border);
+}
+
 .player-advanced-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(var(--zx-player-advanced-min-width), 1fr));
@@ -84,15 +96,25 @@
   gap: var(--zx-player-field-gap);
 }
 
+.player-field--range {
+  grid-column: span 2;
+}
+
+.player-field-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--zx-player-label-row-gap);
+}
+
+.player-field-value {
+  color: var(--text-light-color);
+}
+
 .player-field-label {
   color: var(--text-light-color);
 }
 
 .player-error {
   color: var(--zx-player-error-color);
-}
-
-.player-advanced-actions {
-  display: flex;
-  justify-content: flex-end;
 }

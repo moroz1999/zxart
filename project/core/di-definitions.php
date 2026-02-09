@@ -13,7 +13,11 @@ use ZxArt\Ai\Service\PromptSender;
 use ZxArt\Ai\Service\TextBeautifier;
 use ZxArt\Ai\Service\Translator;
 use ZxArt\Comments\CommentsService;
+use ZxArt\Controllers\Ratings;
+use ZxArt\Controllers\Rss;
+use ZxArt\Controllers\Socialpost;
 use ZxArt\Logs\Log;
+use ZxArt\Ratings\RatingsService;
 use ZxArt\Social\SocialPostsService;
 use ZxArt\Telegram\PostService;
 use function DI\autowire;
@@ -39,6 +43,16 @@ return [
 
     CommentsService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
+    RatingsService::class => autowire()
+        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
+
+    // Controllers with publicStructureManager
+    Rss::class => autowire()
+        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
+    Ratings::class => autowire()
+        ->constructorParameter('ratingsService', DI\get(RatingsService::class)),
+    Socialpost::class => autowire()
+        ->constructorParameter('logger', DI\get('social_posts_logger')),
 
     // Core services
     Logger::class => autowire(Logger::class)->constructor('log'),
@@ -93,7 +107,9 @@ return [
     TextBeautifier::class => autowire()->constructor(DI\get('beautifier_chunk_processor')),
     Translator::class => autowire()->constructor(DI\get('translator_chunk_processor')),
     PressArticleSeo::class => autowire()->constructor(DI\get('press_article_seo_prompt_sender')),
-    SocialPostsService::class => autowire()->constructorParameter('logger', DI\get('social_posts_logger')),
+    SocialPostsService::class => autowire()
+        ->constructorParameter('structureManager', DI\get('publicStructureManager'))
+        ->constructorParameter('logger', DI\get('social_posts_logger')),
     PostService::class => autowire()
         ->constructorParameter('token', DI\get('telegram_token'))
         ->constructorParameter('channelId', DI\get('telegram_channel_id')),

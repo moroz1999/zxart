@@ -104,6 +104,11 @@ Relevant filters:
 - [x] Implement auto-apply filters with year min/max selects and multiselects (country/format/sound group).
 - [x] Restyle radio block as Angular panel with compact sm buttons.
 - [x] Fix JSON charset handling for Russian i18n.
+- [x] Add stop button, always-visible close, and preset selection inside the player.
+- [x] Keep presets frontend-only and sync preset selection to the radio filters form.
+- [x] Add minimum rating slider and source category filter to the radio form.
+- [x] Add analytics service for Metrika goals (no hardcoded IDs in components).
+- [x] Fix radio options payload for countries, format groups, and formats; add tests.
 
 ## Pending Decisions / Questions
 - None pending after latest clarifications.

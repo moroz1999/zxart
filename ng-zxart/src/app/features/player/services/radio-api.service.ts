@@ -3,7 +3,6 @@ import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {ZxTuneDto} from '../../../shared/models/zx-tune-dto';
 import {RadioCriteria} from '../models/radio-criteria';
-import {RadioPreset} from '../models/radio-preset';
 import {RadioFilterOptionsDto} from '../models/radio-filter-options';
 
 interface ApiResponse<T> {
@@ -20,13 +19,10 @@ export class RadioApiService {
 
   constructor(private http: HttpClient) {}
 
-  getNextTune(criteria: RadioCriteria | null, preset: RadioPreset | null): Observable<ZxTuneDto> {
-    const payload: {criteria?: RadioCriteria; preset?: RadioPreset} = {};
+  getNextTune(criteria: RadioCriteria | null): Observable<ZxTuneDto> {
+    const payload: {criteria?: RadioCriteria} = {};
     if (criteria) {
       payload.criteria = criteria;
-    }
-    if (preset) {
-      payload.preset = preset;
     }
 
     return this.http.post<ApiResponse<ZxTuneDto>>('/radio/?action=next-tune', payload).pipe(

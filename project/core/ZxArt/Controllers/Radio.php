@@ -8,7 +8,6 @@ use controller;
 use controllerApplication;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
-use ZxArt\Radio\Domain\RadioPreset;
 use ZxArt\Radio\Exception\RadioTuneNotFoundException;
 use ZxArt\Radio\Services\RadioCriteriaFactory;
 use ZxArt\Radio\Services\RadioOptionsService;
@@ -92,15 +91,9 @@ class Radio extends controllerApplication
         try {
             $payload = $this->getRequestPayload();
             $criteriaData = $payload['criteria'] ?? null;
-            $presetValue = $payload['preset'] ?? null;
-
-            if (is_array($criteriaData)) {
-                $criteria = $this->criteriaFactory->fromArray($criteriaData);
-            } elseif (is_string($presetValue) && ($preset = RadioPreset::tryFrom($presetValue))) {
-                $criteria = $this->criteriaFactory->fromPreset($preset);
-            } else {
-                $criteria = $this->criteriaFactory->fromArray([]);
-            }
+            $criteria = is_array($criteriaData)
+                ? $this->criteriaFactory->fromArray($criteriaData)
+                : $this->criteriaFactory->fromArray([]);
 
             $tuneDto = $this->radioService->getNextTune($criteria);
             $restDto = $this->objectMapper->map($tuneDto, TuneRestDto::class);

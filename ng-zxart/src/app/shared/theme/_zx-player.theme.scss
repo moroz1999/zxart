@@ -1,6 +1,6 @@
 ﻿:root {
   --zx-player-max-width: 960px;
-  --zx-player-offset: var(--space-16);
+  --zx-player-offset: 0;
   --zx-player-z-index: 20;
   --zx-player-gap: var(--space-8);
   --zx-player-controls-gap: var(--space-8);
@@ -10,16 +10,23 @@
   --zx-player-progress-radius: var(--radius-lg);
   --zx-player-progress-border-width: var(--border-width-thin);
   --zx-player-progress-bg: var(--secondary-200);
-  --zx-player-progress-fill: var(--primary-500);
+  --zx-player-progress-fill: var(--secondary-400);
   --zx-player-progress-border: var(--secondary-400);
   --zx-player-progress-text: var(--text-color);
   --zx-player-advanced-gap: var(--space-12);
   --zx-player-advanced-min-width: 160px;
   --zx-player-field-gap: var(--space-4);
+  --zx-player-label-row-gap: var(--space-4);
+  --zx-player-presets-gap: var(--space-8);
+  --zx-player-preset-active-bg: var(--secondary-200);
+  --zx-player-preset-active-border: var(--secondary-500);
   --zx-player-error-color: var(--error-color);
 }
 
 .dark-mode {
   --zx-player-progress-bg: var(--secondary-100);
+  --zx-player-progress-fill: var(--secondary-300);
   --zx-player-progress-border: var(--secondary-300);
+  --zx-player-preset-active-bg: var(--secondary-100);
+  --zx-player-preset-active-border: var(--secondary-300);
 }

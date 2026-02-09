@@ -14,28 +14,20 @@ use ZxArt\Ratings\Rest\RecentRatingsListRestDto;
 class Ratings extends controllerApplication
 {
     public $rendererName = 'json';
-    protected ObjectMapper $objectMapper;
-    protected RatingsService $ratingsService;
+
+    public function __construct(
+        controller $controller,
+        string $applicationName,
+        private readonly ObjectMapper $objectMapper,
+        private readonly RatingsService $ratingsService,
+    ) {
+        parent::__construct($controller, $applicationName);
+    }
 
     public function initialize(): void
     {
         $this->startSession('public');
         $this->createRenderer();
-        $this->objectMapper = new ObjectMapper();
-
-        $configManager = $this->getService('ConfigManager');
-        $structureManager = $this->getService(
-            'structureManager',
-            [
-                'rootUrl' => controller::getInstance()->rootURL,
-                'rootMarker' => $configManager->get('main.rootMarkerPublic'),
-            ],
-            true
-        );
-        $languagesManager = $this->getService('LanguagesManager');
-        $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
-
-        $this->ratingsService = $this->getService(RatingsService::class);
     }
 
     public function execute($controller): void

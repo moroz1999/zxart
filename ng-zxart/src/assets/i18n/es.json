@@ -224,6 +224,7 @@
       "next": "Siguiente",
       "play": "Reproducir",
       "pause": "Pausa",
+      "stop": "Detener",
       "mode": "Modo de reproducción",
       "open": "Abrir página de la pista",
       "expand": "Expandir",
@@ -231,6 +232,11 @@
       "close": "Cerrar reproductor"
     },
     "filters": {
+      "minRating": "Puntuación mínima",
+      "source": "Categoría",
+      "source.any": "Cualquiera",
+      "source.games": "Juegos",
+      "source.demoscene": "Escena",
       "yearFrom": "Año desde",
       "yearTo": "Año hasta",
       "anyYear": "Cualquier año",

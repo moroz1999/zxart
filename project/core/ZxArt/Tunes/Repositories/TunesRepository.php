@@ -237,7 +237,7 @@ readonly final class TunesRepository
     public function getAvailableFormatGroups(): array
     {
         $rows = $this->db->table(self::TABLE)
-            ->select(self::TABLE . '.formatGroup')
+            ->select(self::TABLE . '.formatGroup as formatGroup')
             ->where(self::TABLE . '.formatGroup', '!=', '')
             ->distinct()
             ->orderBy(self::TABLE . '.formatGroup')
@@ -261,7 +261,7 @@ readonly final class TunesRepository
     public function getAvailableFormats(): array
     {
         $rows = $this->db->table(self::TABLE)
-            ->select(self::TABLE . '.type')
+            ->select(self::TABLE . '.type as type')
             ->where(self::TABLE . '.type', '!=', '')
             ->distinct()
             ->orderBy(self::TABLE . '.type')
@@ -301,7 +301,7 @@ readonly final class TunesRepository
             ->where(self::AUTHOR_TABLE . '.country', '!=', 0)
             ->distinct()
             ->orderBy(self::AUTHOR_TABLE . '.country')
-            ->get([self::AUTHOR_TABLE . '.country']);
+            ->get([self::AUTHOR_TABLE . '.country as country']);
 
         $items = [];
         /** @var object $row */

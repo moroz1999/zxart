@@ -19,7 +19,7 @@ import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocom
 })
 export class ZxInputComponent implements ControlValueAccessor {
   @Input() placeholder = '';
-  @Input() type: 'text' | 'email' | 'password' | 'number' = 'text';
+  @Input() type: 'text' | 'email' | 'password' | 'number' | 'range' = 'text';
   @Input() size: 'sm' | 'md' = 'md';
   @Input() min?: number;
   @Input() max?: number;

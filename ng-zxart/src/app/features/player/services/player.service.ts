@@ -8,6 +8,7 @@ import {EMPTY_RADIO_CRITERIA, RadioCriteria} from '../models/radio-criteria';
 import {RadioPreset} from '../models/radio-preset';
 import {TunePlayService} from './tune-play.service';
 import {RadioCriteriaStorageService} from './radio-criteria-storage.service';
+import {AnalyticsService} from '../../../shared/services/analytics.service';
 
 type BroadcastMessage = {
   type: 'exclusive';
@@ -45,19 +46,25 @@ export class PlayerService {
   private loggedTuneId: number | null = null;
   private currentCriteria: RadioCriteria = EMPTY_RADIO_CRITERIA;
   private currentPreset: RadioPreset | null = null;
+  private readonly criteriaSubject = new BehaviorSubject<RadioCriteria>(EMPTY_RADIO_CRITERIA);
+  private readonly presetSubject = new BehaviorSubject<RadioPreset | null>(null);
   private broadcastChannel: BroadcastChannel | null = null;
 
   state$: Observable<PlayerState> = this.stateSubject.asObservable();
+  criteria$: Observable<RadioCriteria> = this.criteriaSubject.asObservable();
+  preset$: Observable<RadioPreset | null> = this.presetSubject.asObservable();
 
   constructor(
     private radioApiService: RadioApiService,
     private tunePlayService: TunePlayService,
     private criteriaStorageService: RadioCriteriaStorageService,
+    private analyticsService: AnalyticsService,
   ) {
     this.attachAudioEvents();
     this.initBroadcast();
     this.criteriaStorageService.loadCriteria().subscribe(criteria => {
       this.currentCriteria = criteria;
+      this.criteriaSubject.next(criteria);
     });
   }
 
@@ -77,6 +84,8 @@ export class PlayerService {
       return;
     }
     this.stopPlayback();
+    this.currentPreset = null;
+    this.presetSubject.next(null);
     const safeIndex = Math.max(0, Math.min(index, playlist.length - 1));
     this.updateState({
       visible: true,
@@ -92,9 +101,7 @@ export class PlayerService {
   }
 
   startRadio(criteria: RadioCriteria, preset: RadioPreset | null): void {
-    this.currentCriteria = criteria;
-    this.currentPreset = preset;
-    this.criteriaStorageService.saveCriteria(criteria).subscribe();
+    this.updateCriteria(criteria, preset);
     this.updateState({
       visible: true,
       mode: 'radio',
@@ -124,6 +131,13 @@ export class PlayerService {
 
   pause(): void {
     this.audio.pause();
+  }
+
+  stop(): void {
+    this.audio.pause();
+    this.audio.currentTime = 0;
+    this.stopPlayTimer();
+    this.updateState({currentTime: 0, isPlaying: false});
   }
 
   next(): void {
@@ -208,7 +222,7 @@ export class PlayerService {
   }
 
   private fetchAndPlayRadioTune(): void {
-    this.radioApiService.getNextTune(this.currentCriteria, this.currentPreset).subscribe({
+    this.radioApiService.getNextTune(this.currentCriteria).subscribe({
       next: tune => {
         this.stopPlayback();
         this.updateState({
@@ -409,10 +423,7 @@ export class PlayerService {
     this.loggedPlay = true;
     this.tunePlayService.logPlay(tuneId, this.state.mode === 'radio' ? 'radio' : 'page').subscribe();
 
-    const ym = (window as {ym?: (...args: unknown[]) => void}).ym;
-    if (ym) {
-      ym(94686067, 'reachGoal', 'musicplay');
-    }
+    this.analyticsService.reachGoal('musicplay');
   }
 
   private updateMediaSession(): void {
@@ -494,6 +505,14 @@ export class PlayerService {
 
   private updateState(partial: Partial<PlayerState>): void {
     this.stateSubject.next({...this.stateSubject.value, ...partial});
+  }
+
+  private updateCriteria(criteria: RadioCriteria, preset: RadioPreset | null): void {
+    this.currentCriteria = criteria;
+    this.currentPreset = preset;
+    this.criteriaStorageService.saveCriteria(criteria).subscribe();
+    this.criteriaSubject.next(criteria);
+    this.presetSubject.next(preset);
   }
 
   private createTabId(): string {
