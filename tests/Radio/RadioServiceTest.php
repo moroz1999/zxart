@@ -87,6 +87,7 @@ class RadioServiceTest extends TestCase
             maxPlays: null,
             minPartyPlace: null,
             requireGame: null,
+            hasParty: null,
             notVotedByUserId: null,
         );
     }

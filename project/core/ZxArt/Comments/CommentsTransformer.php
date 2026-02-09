@@ -7,6 +7,7 @@ use commentElement;
 use privilegesManager;
 use structureElement;
 use userElement;
+use ZxArt\Comments\Exception\CommentOperationException;
 
 /**
  * Service for transforming comment entities into DTOs.
@@ -36,6 +37,10 @@ readonly class CommentsTransformer
             $badges = $authorUser->getBadgetTypes();
             $url = (string)$authorUser->getUrl();
             $authorName = html_entity_decode((string)$authorUser->getTitle(), ENT_QUOTES);
+        }
+
+        if ($authorName === '') {
+            throw new CommentOperationException("Comment {$comment->id} has no author");
         }
 
         $authorDto = new CommentAuthorDto(

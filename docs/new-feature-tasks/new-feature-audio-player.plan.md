@@ -1,7 +1,7 @@
 ﻿# Online Music Player + Radio - Work Plan
 
 ## Status
-- Last updated: 2026-02-09
+- Last updated: 2026-02-10
 - Owner: Codex
 
 ## Plan
@@ -10,6 +10,14 @@
 3) Implement backend endpoints + services/repositories with TDD.
 4) Implement Angular features and integrate with legacy tune list data until all lists are migrated.
 5) Update API docs and remove legacy scripts/CSS after Angular replacement.
+
+## Plan (Audio Player v2 - Tester TZ)
+1) Rework player UI to compact single-panel layout with round zx-buttons and progress block.
+2) Replace remaining controls with shared UI components (zx-button, zx-select) and add round prop.
+3) Load advanced filter options from server on expand; cache in Redis; update API docs.
+4) Auto-apply filters, use multiselects and min/max year selects, keep the form compact.
+5) Restyle radio block as Angular-only panel with compact sm buttons.
+6) Fix i18n delivery issues for radio labels (JSON charset).
 
 ## Progress
 - [x] Read `docs/domain.md` and `docs/domain/tune.md`.
@@ -85,6 +93,17 @@ Relevant filters:
 - Build a new radio endpoint; remove the old endpoint later.
 - Remove legacy scripts and CSS for the old player/radio once Angular replacement is ready.
 - Keep analytics `ym(94686067, 'reachGoal', 'musicplay')`.
+- Tester TZ v2: compact player with round controls, progress block seek, mode/link/rating buttons, single panel, zx-button/select everywhere, server-driven filter options with Redis cache, auto-apply filters, compact radio block with sm buttons.
+
+## Progress (Audio Player v2)
+- [x] Remove zx-tune-row hover background effect.
+- [x] Remove overlay so player no longer blocks the screen.
+- [x] Rebuild player UI as a compact single panel with round zx-buttons and progress block.
+- [x] Add round prop to zx-button and apply zx-button to all player/radio buttons.
+- [x] Fetch filter options on expand via new controller/service/repository methods (Redis cache 1h).
+- [x] Implement auto-apply filters with year min/max selects and multiselects (country/format/sound group).
+- [x] Restyle radio block as Angular panel with compact sm buttons.
+- [x] Fix JSON charset handling for Russian i18n.
 
 ## Pending Decisions / Questions
 - None pending after latest clarifications.

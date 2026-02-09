@@ -42,7 +42,15 @@
       "Bash(git -C E:/projects/zxart show HEAD:ng-zxart/angular.json)",
       "Bash(git -C E:/projects/zxart show HEAD:ng-zxart/src/app/zx-prod-row/zx-prod-row.component.scss)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "mcp__jetbrains-ide__find_files_by_name_keyword",
+      "mcp__jetbrains-ide__get_file_text_by_path",
+      "mcp__jetbrains-ide__search_in_files_by_text",
+      "mcp__jetbrains-ide__search_in_files_by_regex",
+      "mcp__jetbrains-ide__get_file_problems",
+      "Bash(python -m json.tool:*)",
+      "mcp__jetbrains-ide__list_directory_tree",
+      "Bash(vendor\\\\bin\\\\phpunit:*)"
     ]
   },
   "enabledPlugins": {

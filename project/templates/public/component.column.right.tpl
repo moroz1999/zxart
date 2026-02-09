@@ -8,16 +8,7 @@
     {assign moduleTitleClass ""}
     {assign moduleContentClass ""}
     {include file=$theme->template("component.columnmodule.tpl")}
-    {capture assign="moduleTitle"}
-        {translations name="radiocontrols.title"}
-    {/capture}
-    {capture assign="moduleContent"}
-        <zx-radio-remote></zx-radio-remote>
-    {/capture}
-    {assign moduleClass ""}
-    {assign moduleTitleClass ""}
-    {assign moduleContentClass ""}
-    {include file=$theme->template("component.columnmodule.tpl")}
+    <zx-radio-remote></zx-radio-remote>
 
     {if $currentUser->hasAds()}
         <script async

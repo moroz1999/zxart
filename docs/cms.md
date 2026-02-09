@@ -12,7 +12,7 @@ In future we will get rid of this unsupported CMS by incorporating its functiona
 - /project/css/public/ and /project/js/public/ - legacy public frontend assets. they are built on the fly. CSS files must follow naming conventions: `module.{name}.css` or `component.{name}.css`.
 - /project/services/ - legacy DI container services. should not be added, only refactored to PHP-DI.
 - /project/templates/ - legacy smarty templates. Follow [Design System](design-system.md) for subcomponents.
-- /trickster-cms/ - copy of CMS. In dev environment project is linked to this folder. In prod environment it is served from composer.
+- /trickster-cms/ - CMS source code. Can be edited directly. In prod environment it is served from composer.
 - ./tests/ - phpunit tests. all new functionality should be covered by tests.
 - Never access anything inside `temporary`. It contains cache files (e.g., template cache, bundle cache).
 

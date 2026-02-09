@@ -14,6 +14,8 @@ type BroadcastMessage = {
   senderId: string;
 };
 
+type PlaybackMode = 'once' | 'repeat-one' | 'repeat-all' | 'shuffle-all';
+
 const INITIAL_STATE: PlayerState = {
   visible: false,
   mode: null,
@@ -161,6 +163,27 @@ export class PlayerService {
     this.resetShuffle();
   }
 
+  setPlaybackMode(mode: PlaybackMode): void {
+    switch (mode) {
+      case 'repeat-one':
+        this.setShuffleEnabled(false);
+        this.setRepeatMode('one');
+        break;
+      case 'repeat-all':
+        this.setShuffleEnabled(false);
+        this.setRepeatMode('all');
+        break;
+      case 'shuffle-all':
+        this.setRepeatMode('all');
+        this.setShuffleEnabled(true);
+        break;
+      default:
+        this.setShuffleEnabled(false);
+        this.setRepeatMode('off');
+        break;
+    }
+  }
+
   closePlayer(): void {
     this.stopPlayback();
     this.updateState({...INITIAL_STATE});
@@ -172,6 +195,16 @@ export class PlayerService {
 
   getPreset(): RadioPreset | null {
     return this.currentPreset;
+  }
+
+  updateCurrentTune(update: Partial<ZxTuneDto>): void {
+    const tune = this.currentTune;
+    if (!tune) {
+      return;
+    }
+    const playlist = [...this.state.playlist];
+    playlist[this.state.currentIndex] = {...tune, ...update};
+    this.updateState({playlist});
   }
 
   private fetchAndPlayRadioTune(): void {

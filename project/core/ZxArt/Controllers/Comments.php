@@ -15,28 +15,20 @@ use ZxArt\Comments\Exception\CommentsException;
 class Comments extends controllerApplication
 {
     public $rendererName = 'json';
-    protected ObjectMapper $objectMapper;
-    protected CommentsService $commentsService;
+
+    public function __construct(
+        controller $controller,
+        string $applicationName,
+        private readonly ObjectMapper $objectMapper,
+        private readonly CommentsService $commentsService,
+    ) {
+        parent::__construct($controller, $applicationName);
+    }
 
     public function initialize(): void
     {
         $this->startSession('public');
         $this->createRenderer();
-        $this->objectMapper = new ObjectMapper();
-
-        $configManager = $this->getService('ConfigManager');
-        $structureManager = $this->getService(
-            'structureManager',
-            [
-                'rootUrl' => controller::getInstance()->rootURL,
-                'rootMarker' => $configManager->get('main.rootMarkerPublic'),
-            ],
-            true
-        );
-        $languagesManager = $this->getService('LanguagesManager');
-        $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
-
-        $this->commentsService = $this->getService(CommentsService::class);
     }
 
     public function execute($controller): void
@@ -105,7 +97,6 @@ class Comments extends controllerApplication
     {
         $targetId = (int)$this->getParameter('id');
         $content = $this->getParameter('content');
-        $author = $this->getParameter('author') ?: null;
 
         if (!$targetId || !$content) {
             $this->renderer->assign('responseStatus', 'error');
@@ -114,7 +105,7 @@ class Comments extends controllerApplication
         }
 
         try {
-            $commentDto = $this->commentsService->addComment($targetId, $content, $author);
+            $commentDto = $this->commentsService->addComment($targetId, $content);
             $restDto = $this->objectMapper->map($commentDto, CommentRestDto::class);
             $this->renderer->assign('responseStatus', 'success');
             $this->renderer->assign('responseData', $restDto);

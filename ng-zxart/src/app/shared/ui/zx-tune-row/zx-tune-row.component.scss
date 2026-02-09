@@ -1,13 +1,8 @@
 :host {
   display: table-row;
-  transition: background-color 0.15s ease;
 
   &:nth-child(even) {
     background: var(--table-row-alternate-bg);
-  }
-
-  &:hover {
-    background: var(--background-hover);
   }
 }
 

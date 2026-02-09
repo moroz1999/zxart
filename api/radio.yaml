@@ -29,6 +29,24 @@ paths:
             application/json:
               schema:
                 $ref: 'tunes.yaml#/components/schemas/ApiResponseTune'
+  /radio/?action=options:
+    get:
+      summary: Get radio filter options
+      description: Returns available values for advanced radio filters.
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [options]
+      responses:
+        '200':
+          description: A JSON object with responseStatus and responseData.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseRadioOptions'
 
 components:
   schemas:
@@ -100,5 +118,53 @@ components:
           type: integer
         requireGame:
           type: boolean
+        hasParty:
+          type: boolean
         notVotedByUserId:
           type: integer
+    ApiResponseRadioOptions:
+      type: object
+      properties:
+        responseStatus:
+          type: string
+          enum: [success, error]
+        responseData:
+          $ref: '#/components/schemas/RadioFilterOptions'
+        errorMessage:
+          type: string
+    RadioFilterOptions:
+      type: object
+      properties:
+        yearRange:
+          type: object
+          properties:
+            min:
+              type: integer
+              nullable: true
+            max:
+              type: integer
+              nullable: true
+        countries:
+          type: array
+          items:
+            $ref: '#/components/schemas/RadioCountryOption'
+        formatGroups:
+          type: array
+          items:
+            type: string
+        formats:
+          type: array
+          items:
+            type: string
+        partyOptions:
+          type: array
+          items:
+            type: string
+            enum: [any, yes, no]
+    RadioCountryOption:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string

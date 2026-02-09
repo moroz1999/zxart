@@ -31,6 +31,7 @@ readonly class RadioCriteriaDto
         public ?int $maxPlays,
         public ?int $minPartyPlace,
         public ?bool $requireGame,
+        public ?bool $hasParty,
         public ?int $notVotedByUserId,
     ) {
     }

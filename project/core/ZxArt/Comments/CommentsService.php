@@ -160,15 +160,18 @@ readonly class CommentsService
      *
      * @param int $targetId Target ID (element or another comment)
      * @param string $content Comment text
-     * @param string|null $author Author name (optional)
      * @throws CommentAccessDeniedException If user is not authorized or comments are disabled
      * @throws CommentNotFoundException If target is not found
      * @throws CommentOperationException If failed to create comment element
      */
-    public function addComment(int $targetId, string $content, ?string $author = null): CommentDto
+    public function addComment(int $targetId, string $content): CommentDto
     {
         if ($this->user->isAuthorized() === false) {
             throw new CommentAccessDeniedException("User must be authorized to add comments");
+        }
+
+        if (trim($content) === '') {
+            throw new CommentOperationException("Comment content cannot be empty");
         }
 
         $targetElement = $this->structureManager->getElementById($targetId);

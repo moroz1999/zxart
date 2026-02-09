@@ -11,6 +11,7 @@ use Throwable;
 use ZxArt\Radio\Domain\RadioPreset;
 use ZxArt\Radio\Exception\RadioTuneNotFoundException;
 use ZxArt\Radio\Services\RadioCriteriaFactory;
+use ZxArt\Radio\Services\RadioOptionsService;
 use ZxArt\Radio\Services\RadioService;
 use ZxArt\Tunes\Rest\TuneRestDto;
 
@@ -19,6 +20,7 @@ class Radio extends controllerApplication
     public $rendererName = 'json';
     protected ObjectMapper $objectMapper;
     protected RadioService $radioService;
+    protected RadioOptionsService $optionsService;
     protected RadioCriteriaFactory $criteriaFactory;
 
     public function initialize(): void
@@ -40,12 +42,21 @@ class Radio extends controllerApplication
         $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
 
         $this->radioService = $this->getService(RadioService::class);
+        $this->optionsService = $this->getService(RadioOptionsService::class);
         $this->criteriaFactory = $this->getService(RadioCriteriaFactory::class);
     }
 
     public function execute($controller): void
     {
         $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+        $action = $this->getParameter('action');
+
+        if ($method === 'GET' && $action === 'options') {
+            $this->handleOptions();
+            $this->renderer->display();
+            return;
+        }
+
         if ($method !== 'POST') {
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', 'Method not allowed');
@@ -53,7 +64,6 @@ class Radio extends controllerApplication
             return;
         }
 
-        $action = $this->getParameter('action');
         if ($action && $action !== 'next-tune') {
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', 'Unknown action');
@@ -63,6 +73,18 @@ class Radio extends controllerApplication
 
         $this->handleNextTune();
         $this->renderer->display();
+    }
+
+    private function handleOptions(): void
+    {
+        try {
+            $options = $this->optionsService->getOptions();
+            $this->renderer->assign('responseStatus', 'success');
+            $this->renderer->assign('responseData', $options);
+        } catch (Throwable) {
+            $this->renderer->assign('responseStatus', 'error');
+            $this->renderer->assign('errorMessage', 'Internal server error');
+        }
     }
 
     private function handleNextTune(): void

@@ -23,19 +23,26 @@ export interface ZxSelectOption {
 })
 export class ZxSelectComponent implements ControlValueAccessor {
   @Input() options: ZxSelectOption[] = [];
+  @Input() placeholder = '';
+  @Input() multiple = false;
+  @Input() listSize = 1;
 
-  value = '';
+  value: string | string[] = '';
   disabled = false;
   touched = false;
 
-  private onChange: (value: string) => void = () => {};
+  private onChange: (value: string | string[]) => void = () => {};
   private onTouched: () => void = () => {};
 
-  writeValue(value: string): void {
-    this.value = value ?? '';
+  writeValue(value: string | string[]): void {
+    if (this.multiple) {
+      this.value = Array.isArray(value) ? value : (value ? [value] : []);
+      return;
+    }
+    this.value = Array.isArray(value) ? (value[0] ?? '') : (value ?? '');
   }
 
-  registerOnChange(fn: (value: string) => void): void {
+  registerOnChange(fn: (value: string | string[]) => void): void {
     this.onChange = fn;
   }
 
@@ -49,8 +56,14 @@ export class ZxSelectComponent implements ControlValueAccessor {
 
   onSelectionChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
+    if (this.multiple) {
+      const values = Array.from(target.selectedOptions).map(option => option.value);
+      this.value = values;
+      this.onChange(values);
+      return;
+    }
     this.value = target.value;
-    this.onChange(this.value);
+    this.onChange(target.value);
   }
 
   onBlur(): void {
@@ -58,5 +71,12 @@ export class ZxSelectComponent implements ControlValueAccessor {
       this.touched = true;
       this.onTouched();
     }
+  }
+
+  isSelected(value: string): boolean {
+    if (this.multiple) {
+      return Array.isArray(this.value) && this.value.includes(value);
+    }
+    return this.value === value;
   }
 }

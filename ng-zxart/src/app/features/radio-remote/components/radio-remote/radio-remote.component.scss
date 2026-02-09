@@ -1,1 +1,13 @@
+﻿:host {
+  display: block;
+}
 
+.radio-remote-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--zx-radio-remote-gap);
+}
+
+:host ::ng-deep .zx-panel__title {
+  margin-bottom: var(--zx-radio-remote-title-spacing);
+}

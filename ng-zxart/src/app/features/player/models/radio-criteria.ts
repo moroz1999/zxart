@@ -13,6 +13,7 @@ export interface RadioCriteria {
   maxPlays: number | null;
   minPartyPlace: number | null;
   requireGame: boolean | null;
+  hasParty: boolean | null;
   notVotedByUserId: number | null;
 }
 
@@ -31,5 +32,6 @@ export const EMPTY_RADIO_CRITERIA: RadioCriteria = {
   maxPlays: null,
   minPartyPlace: null,
   requireGame: null,
+  hasParty: null,
   notVotedByUserId: null,
 };

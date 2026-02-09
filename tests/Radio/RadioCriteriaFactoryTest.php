@@ -37,6 +37,7 @@ class RadioCriteriaFactoryTest extends TestCase
                 'maxPlays' => '10',
                 'minPartyPlace' => '1000',
                 'requireGame' => 'true',
+                'hasParty' => 'true',
                 'notVotedByUserId' => '42',
             ]
         );
@@ -50,6 +51,7 @@ class RadioCriteriaFactoryTest extends TestCase
         $this->assertSame(10, $criteria->maxPlays);
         $this->assertSame(1000, $criteria->minPartyPlace);
         $this->assertTrue($criteria->requireGame);
+        $this->assertTrue($criteria->hasParty);
         $this->assertSame(42, $criteria->notVotedByUserId);
     }
 }

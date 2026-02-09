@@ -1,26 +1,26 @@
-import {Component, OnDestroy} from '@angular/core';
+﻿import {Component, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
-import {TranslateModule} from '@ngx-translate/core';
-import {MatButtonModule} from '@angular/material/button';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {MatIconModule} from '@angular/material/icon';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import {MatSliderModule} from '@angular/material/slider';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatSelectModule} from '@angular/material/select';
-import {Subscription} from 'rxjs';
+import {debounceTime, Subscription} from 'rxjs';
 import {PlayerService} from '../../services/player.service';
+import {EMPTY_RADIO_CRITERIA, RadioCriteria} from '../../models/radio-criteria';
 import {PlayerState} from '../../models/player-state';
-import {RadioCriteria} from '../../models/radio-criteria';
-import {RadioPreset} from '../../models/radio-preset';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
-import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
-import {ZxBodyDirective} from '../../../../shared/directives/typography/typography.directives';
-import {RadioPresetCriteriaService} from '../../services/radio-preset-criteria.service';
+import {ZxBodyDirective, ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
+import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {ZxSelectComponent, ZxSelectOption} from '../../../../shared/ui/zx-select/zx-select.component';
+import {RatingComponent} from '../../../../shared/components/rating/rating.component';
+import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {VoteService} from '../../../../shared/services/vote.service';
+import {RadioApiService} from '../../services/radio-api.service';
+import {RadioFilterOptionsDto} from '../../models/radio-filter-options';
 
-type PresetValue = RadioPreset | 'custom';
+const AUTO_APPLY_DEBOUNCE_MS = 150;
+
+type PlaybackMode = 'once' | 'repeat-one' | 'repeat-all' | 'shuffle-all';
+type PartyValue = 'any' | 'yes' | 'no';
 
 @Component({
   selector: 'zx-player-sheet',
@@ -29,17 +29,14 @@ type PresetValue = RadioPreset | 'custom';
     CommonModule,
     ReactiveFormsModule,
     TranslateModule,
-    MatButtonModule,
     MatIconModule,
-    MatButtonToggleModule,
-    MatSliderModule,
-    MatExpansionModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
     ZxPanelComponent,
-    ZxStackComponent,
     ZxBodyDirective,
+    ZxCaptionDirective,
+    ZxButtonComponent,
+    ZxSelectComponent,
+    RatingComponent,
+    ZxSkeletonComponent,
   ],
   templateUrl: './player-sheet.component.html',
   styleUrls: ['./player-sheet.component.scss'],
@@ -47,63 +44,47 @@ type PresetValue = RadioPreset | 'custom';
 export class PlayerSheetComponent implements OnDestroy {
   state$ = this.playerService.state$;
   form: FormGroup;
-  private subscriptions = new Subscription();
+  expanded = false;
+  options: RadioFilterOptionsDto | null = null;
+  optionsLoading = false;
+  optionsError = false;
+  yearOptions: ZxSelectOption[] = [];
+  countryOptions: ZxSelectOption[] = [];
+  formatGroupOptions: ZxSelectOption[] = [];
+  formatOptions: ZxSelectOption[] = [];
+  partyOptions: ZxSelectOption[] = [];
 
-  presets: {value: PresetValue; label: string}[] = [
-    {value: 'custom', label: 'player.preset.custom'},
-    {value: 'discover', label: 'player.preset.discover'},
-    {value: 'randomgood', label: 'player.preset.randomgood'},
-    {value: 'games', label: 'player.preset.games'},
-    {value: 'demoscene', label: 'player.preset.demoscene'},
-    {value: 'lastyear', label: 'player.preset.lastyear'},
-    {value: 'ay', label: 'player.preset.ay'},
-    {value: 'beeper', label: 'player.preset.beeper'},
-    {value: 'exotic', label: 'player.preset.exotic'},
-    {value: 'underground', label: 'player.preset.underground'},
-  ];
+  private subscriptions = new Subscription();
+  private suppressAutoApply = false;
 
   constructor(
     private playerService: PlayerService,
-    private presetCriteriaService: RadioPresetCriteriaService,
+    private voteService: VoteService,
+    private radioApiService: RadioApiService,
+    private translateService: TranslateService,
     private fb: FormBuilder,
   ) {
     this.form = this.fb.group({
-      preset: ['custom'],
-      minRating: [''],
-      maxRating: [''],
-      yearsInclude: [''],
-      yearsExclude: [''],
-      countriesInclude: [''],
-      countriesExclude: [''],
-      formatGroupsInclude: [''],
-      formatGroupsExclude: [''],
-      formatsInclude: [''],
-      formatsExclude: [''],
+      yearFrom: [''],
+      yearTo: [''],
+      countries: [[]],
+      formatGroups: [[]],
+      formats: [[]],
+      party: ['any'],
     });
 
-    this.setFormFromCriteria(this.playerService.getCriteria(), this.playerService.getPreset());
-    const fieldsToWatch = [
-      'minRating',
-      'maxRating',
-      'yearsInclude',
-      'yearsExclude',
-      'countriesInclude',
-      'countriesExclude',
-      'formatGroupsInclude',
-      'formatGroupsExclude',
-      'formatsInclude',
-      'formatsExclude',
-    ];
+    this.setFormFromCriteria(this.playerService.getCriteria());
 
-    for (const field of fieldsToWatch) {
-      this.subscriptions.add(
-        this.form.get(field)?.valueChanges.subscribe(() => {
-          if (this.form.get('preset')?.value !== 'custom') {
-            this.form.get('preset')?.setValue('custom', {emitEvent: false});
+    this.subscriptions.add(
+      this.form.valueChanges
+        .pipe(debounceTime(AUTO_APPLY_DEBOUNCE_MS))
+        .subscribe(() => {
+          if (this.suppressAutoApply) {
+            return;
           }
-        }) ?? new Subscription()
-      );
-    }
+          this.applyCriteriaFromForm();
+        })
+    );
   }
 
   ngOnDestroy(): void {
@@ -126,44 +107,22 @@ export class PlayerSheetComponent implements OnDestroy {
     this.playerService.closePlayer();
   }
 
-  seek(event: Event, duration: number): void {
-    const value = Number((event.target as HTMLInputElement).value);
-    if (!Number.isFinite(value) || duration <= 0) {
+  toggleExpanded(): void {
+    this.expanded = !this.expanded;
+    if (this.expanded) {
+      this.loadOptions();
+    }
+  }
+
+  seekByClick(event: MouseEvent, duration: number): void {
+    const target = event.currentTarget as HTMLElement;
+    if (!target || duration <= 0) {
       return;
     }
-    this.playerService.seekToPercent(value / duration);
-  }
-
-  setRepeatMode(mode: string): void {
-    if (mode === 'off' || mode === 'one' || mode === 'all') {
-      this.playerService.setRepeatMode(mode);
-    }
-  }
-
-  toggleShuffle(enabled: boolean): void {
-    this.playerService.setShuffleEnabled(enabled);
-  }
-
-  applyCriteria(): void {
-    const criteria = this.buildCriteriaFromForm();
-    this.playerService.startRadio(criteria, null);
-  }
-
-  applyPreset(): void {
-    const preset = this.form.get('preset')?.value as PresetValue;
-    if (!preset || preset === 'custom') {
-      return;
-    }
-    const criteria = this.buildCriteriaFromPreset(preset);
-    this.setFormFromCriteria(criteria, preset);
-    this.playerService.startRadio(criteria, preset);
-  }
-
-  getTitle(authors: string[], title: string): string {
-    if (!authors.length) {
-      return title;
-    }
-    return `${authors.join(', ')} - ${title}`;
+    const rect = target.getBoundingClientRect();
+    const offsetX = event.clientX - rect.left;
+    const percent = Math.max(0, Math.min(1, offsetX / rect.width));
+    this.playerService.seekToPercent(percent);
   }
 
   getCurrentTitle(state: PlayerState): string {
@@ -180,85 +139,245 @@ export class PlayerSheetComponent implements OnDestroy {
     );
   }
 
-  private buildCriteriaFromForm(): RadioCriteria {
-    return {
-      minRating: this.toOptionalNumber(this.form.get('minRating')?.value),
-      maxRating: this.toOptionalNumber(this.form.get('maxRating')?.value),
-      yearsInclude: this.toNumberList(this.form.get('yearsInclude')?.value),
-      yearsExclude: this.toNumberList(this.form.get('yearsExclude')?.value),
-      countriesInclude: this.toNumberList(this.form.get('countriesInclude')?.value),
-      countriesExclude: this.toNumberList(this.form.get('countriesExclude')?.value),
-      formatGroupsInclude: this.toStringList(this.form.get('formatGroupsInclude')?.value),
-      formatGroupsExclude: this.toStringList(this.form.get('formatGroupsExclude')?.value),
-      formatsInclude: this.toStringList(this.form.get('formatsInclude')?.value),
-      formatsExclude: this.toStringList(this.form.get('formatsExclude')?.value),
-      bestVotesLimit: null,
-      maxPlays: null,
-      minPartyPlace: null,
-      requireGame: null,
-      notVotedByUserId: null,
-    };
+  getProgressPercent(state: PlayerState): string {
+    if (!state.duration) {
+      return '0%';
+    }
+    const percent = Math.max(0, Math.min(1, state.currentTime / state.duration)) * 100;
+    return `${percent.toFixed(2)}%`;
   }
 
-  private buildCriteriaFromPreset(preset: RadioPreset): RadioCriteria {
-    return this.presetCriteriaService.buildCriteria(preset);
+  getPlaybackMode(state: PlayerState): PlaybackMode {
+    if (state.shuffleEnabled) {
+      return 'shuffle-all';
+    }
+    if (state.repeatMode === 'one') {
+      return 'repeat-one';
+    }
+    if (state.repeatMode === 'all') {
+      return 'repeat-all';
+    }
+    return 'once';
   }
 
-  private setFormFromCriteria(criteria: RadioCriteria, preset: RadioPreset | null): void {
-    this.form.patchValue(
-      {
-        preset: preset ?? 'custom',
-        minRating: this.toInputValue(criteria.minRating),
-        maxRating: this.toInputValue(criteria.maxRating),
-        yearsInclude: this.joinList(criteria.yearsInclude),
-        yearsExclude: this.joinList(criteria.yearsExclude),
-        countriesInclude: this.joinList(criteria.countriesInclude),
-        countriesExclude: this.joinList(criteria.countriesExclude),
-        formatGroupsInclude: this.joinList(criteria.formatGroupsInclude),
-        formatGroupsExclude: this.joinList(criteria.formatGroupsExclude),
-        formatsInclude: this.joinList(criteria.formatsInclude),
-        formatsExclude: this.joinList(criteria.formatsExclude),
-      },
-      {emitEvent: false},
+  getPlaybackModeIcon(state: PlayerState): string {
+    const mode = this.getPlaybackMode(state);
+    switch (mode) {
+      case 'repeat-one':
+        return 'repeat_one';
+      case 'repeat-all':
+        return 'repeat';
+      case 'shuffle-all':
+        return 'shuffle';
+      default:
+        return 'play_circle';
+    }
+  }
+
+  cyclePlaybackMode(state: PlayerState): void {
+    const mode = this.getPlaybackMode(state);
+    const nextMode: PlaybackMode = mode === 'once'
+      ? 'repeat-one'
+      : mode === 'repeat-one'
+        ? 'repeat-all'
+        : mode === 'repeat-all'
+          ? 'shuffle-all'
+          : 'once';
+
+    this.playerService.setPlaybackMode(nextMode);
+  }
+
+  openCurrentTuneUrl(): void {
+    const tune = this.playerService.currentTune;
+    if (!tune?.url) {
+      return;
+    }
+    window.open(tune.url, '_blank');
+  }
+
+  vote(value: number): void {
+    const tune = this.playerService.currentTune;
+    if (!tune) {
+      return;
+    }
+    this.voteService.send<'zxMusic'>(tune.id, value, 'zxMusic').subscribe(votes => {
+      this.playerService.updateCurrentTune({
+        votes,
+        userVote: value,
+      });
+    });
+  }
+
+  private loadOptions(): void {
+    if (this.optionsLoading || this.options) {
+      return;
+    }
+
+    this.optionsLoading = true;
+    this.optionsError = false;
+    this.subscriptions.add(
+      this.radioApiService.getFilterOptions().subscribe({
+        next: options => {
+          this.options = options;
+          this.optionsLoading = false;
+          this.buildOptions(options);
+        },
+        error: () => {
+          this.optionsLoading = false;
+          this.optionsError = true;
+        },
+      })
     );
   }
 
-  private toNumberList(value: string | null | undefined): number[] {
+  private buildOptions(options: RadioFilterOptionsDto): void {
+    this.yearOptions = this.buildYearOptions(options.yearRange.min, options.yearRange.max);
+    this.countryOptions = options.countries.map(country => ({
+      value: String(country.id),
+      label: country.title,
+    }));
+    this.formatGroupOptions = options.formatGroups.map(group => ({
+      value: group,
+      label: group,
+    }));
+    this.formatOptions = options.formats.map(format => ({
+      value: format,
+      label: format,
+    }));
+    this.partyOptions = options.partyOptions.map(option => ({
+      value: option,
+      label: this.translateService.instant(`player.filters.party.${option}`),
+    }));
+  }
+
+  private buildYearOptions(min: number | null, max: number | null): ZxSelectOption[] {
+    if (!min || !max) {
+      return [];
+    }
+    const items: ZxSelectOption[] = [];
+    for (let year = max; year >= min; year -= 1) {
+      items.push({value: String(year), label: String(year)});
+    }
+    return items;
+  }
+
+  private setFormFromCriteria(criteria: RadioCriteria): void {
+    this.suppressAutoApply = true;
+    const {yearFrom, yearTo} = this.getYearRangeFromCriteria(criteria.yearsInclude);
+
+    this.form.patchValue(
+      {
+        yearFrom,
+        yearTo,
+        countries: criteria.countriesInclude.map(value => String(value)),
+        formatGroups: criteria.formatGroupsInclude,
+        formats: criteria.formatsInclude,
+        party: this.toPartyValue(criteria.hasParty),
+      },
+      {emitEvent: false},
+    );
+    this.suppressAutoApply = false;
+  }
+
+  private applyCriteriaFromForm(): void {
+    const criteria = this.buildCriteriaFromForm();
+    this.playerService.startRadio(criteria, null);
+  }
+
+  private buildCriteriaFromForm(): RadioCriteria {
+    const yearFrom = this.toOptionalInt(this.form.get('yearFrom')?.value);
+    const yearTo = this.toOptionalInt(this.form.get('yearTo')?.value);
+    const yearsInclude = this.buildYearRange(yearFrom, yearTo);
+
+    return {
+      ...EMPTY_RADIO_CRITERIA,
+      yearsInclude,
+      countriesInclude: this.toNumberList(this.form.get('countries')?.value),
+      formatGroupsInclude: this.toStringList(this.form.get('formatGroups')?.value),
+      formatsInclude: this.toStringList(this.form.get('formats')?.value),
+      hasParty: this.toPartyCriteria(this.form.get('party')?.value as PartyValue),
+    };
+  }
+
+  private getTitle(authors: string[], title: string): string {
+    if (!authors.length) {
+      return title;
+    }
+    return `${authors.join(', ')} - ${title}`;
+  }
+
+  private getYearRangeFromCriteria(years: number[]): {yearFrom: string; yearTo: string} {
+    if (!years.length) {
+      return {yearFrom: '', yearTo: ''};
+    }
+    const min = Math.min(...years);
+    const max = Math.max(...years);
+    return {yearFrom: String(min), yearTo: String(max)};
+  }
+
+  private buildYearRange(yearFrom: number | null, yearTo: number | null): number[] {
+    if (!yearFrom && !yearTo) {
+      return [];
+    }
+    const minYear = yearFrom ?? yearTo;
+    const maxYear = yearTo ?? yearFrom;
+    if (!minYear || !maxYear) {
+      return [];
+    }
+    const start = Math.min(minYear, maxYear);
+    const end = Math.max(minYear, maxYear);
+    const years: number[] = [];
+    for (let year = start; year <= end; year += 1) {
+      years.push(year);
+    }
+    return years;
+  }
+
+  private toNumberList(value: string[] | string | null | undefined): number[] {
     if (!value) {
       return [];
     }
-    return value
-      .split(',')
-      .map(item => Number(item.trim()))
+    const items = Array.isArray(value) ? value : [value];
+    return items
+      .map(item => Number(item))
       .filter(item => Number.isFinite(item));
   }
 
-  private toStringList(value: string | null | undefined): string[] {
+  private toStringList(value: string[] | string | null | undefined): string[] {
     if (!value) {
       return [];
     }
-    return value
-      .split(',')
+    const items = Array.isArray(value) ? value : [value];
+    return items
       .map(item => item.trim())
       .filter(item => item.length > 0);
   }
 
-  private toOptionalNumber(value: string | null | undefined): number | null {
-    if (value === null || value === undefined || value === '') {
+  private toOptionalInt(value: string | null | undefined): number | null {
+    if (!value) {
       return null;
     }
     const parsed = Number(value);
     return Number.isFinite(parsed) ? parsed : null;
   }
 
-  private toInputValue(value: number | null): string {
-    return value === null ? '' : String(value);
+  private toPartyValue(value: boolean | null): PartyValue {
+    if (value === true) {
+      return 'yes';
+    }
+    if (value === false) {
+      return 'no';
+    }
+    return 'any';
   }
 
-  private joinList(items: Array<number | string>): string {
-    if (!items.length) {
-      return '';
+  private toPartyCriteria(value: PartyValue): boolean | null {
+    if (value === 'yes') {
+      return true;
     }
-    return items.join(', ');
+    if (value === 'no') {
+      return false;
+    }
+    return null;
   }
 }

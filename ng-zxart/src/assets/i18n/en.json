@@ -219,6 +219,30 @@
     "advanced": "Advanced",
     "shuffle": "Shuffle",
     "applyCriteria": "Apply criteria",
+    "controls": {
+      "previous": "Previous",
+      "next": "Next",
+      "play": "Play",
+      "pause": "Pause",
+      "mode": "Playback mode",
+      "open": "Open track page",
+      "expand": "Expand",
+      "collapse": "Collapse",
+      "close": "Close player"
+    },
+    "filters": {
+      "yearFrom": "Year from",
+      "yearTo": "Year to",
+      "anyYear": "Any year",
+      "countries": "Countries",
+      "formats": "Formats",
+      "soundGroups": "Sound groups",
+      "party": "Party participation",
+      "party.any": "Any",
+      "party.yes": "Yes",
+      "party.no": "No",
+      "loadError": "Failed to load filter options."
+    },
     "list": {
       "hint": "Comma-separated"
     },

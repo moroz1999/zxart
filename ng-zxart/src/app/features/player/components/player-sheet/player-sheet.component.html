@@ -1,114 +1,162 @@
-<ng-container *ngIf="state$ | async as state">
-  <zx-panel padding="sm" radius="md" variant="elevated">
-    <zx-stack direction="column" spacing="sm">
-      <zx-stack direction="row" spacing="sm">
-        <button mat-icon-button type="button" (click)="previous()" [disabled]="state.mode === 'radio'">
+﻿<ng-container *ngIf="state$ | async as state">
+  <zx-panel padding="sm" radius="lg" variant="elevated" class="player-panel">
+    <div class="player-bar">
+      <div class="player-controls">
+        <zx-button
+          size="sm"
+          color="transparent"
+          [round]="true"
+          [disabled]="state.mode === 'radio'"
+          [ariaLabel]="'player.controls.previous' | translate"
+          (click)="previous()"
+        >
           <mat-icon>skip_previous</mat-icon>
-        </button>
-        <button mat-icon-button type="button" (click)="togglePlay()">
+        </zx-button>
+        <zx-button
+          size="sm"
+          color="secondary"
+          [round]="true"
+          [ariaLabel]="state.isPlaying ? ('player.controls.pause' | translate) : ('player.controls.play' | translate)"
+          (click)="togglePlay()"
+        >
           <mat-icon>{{ state.isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
-        </button>
-        <button mat-icon-button type="button" (click)="next()">
+        </zx-button>
+        <zx-button
+          size="sm"
+          color="transparent"
+          [round]="true"
+          [ariaLabel]="'player.controls.next' | translate"
+          (click)="next()"
+        >
           <mat-icon>skip_next</mat-icon>
-        </button>
-        <span zxBody>{{ getCurrentTitle(state) }}</span>
-        <button mat-icon-button type="button" (click)="close()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </zx-stack>
+        </zx-button>
+      </div>
 
-      <mat-slider min="0" [max]="state.duration || 0">
-        <input matSliderThumb [value]="state.currentTime || 0" (input)="seek($event, state.duration || 0)" />
-      </mat-slider>
+      <zx-button
+        size="sm"
+        color="transparent"
+        extraClass="player-progress"
+        [disabled]="state.currentIndex < 0"
+        [ariaLabel]="getCurrentTitle(state)"
+        [style.--zx-player-progress]="getProgressPercent(state)"
+        (click)="seekByClick($event, state.duration)"
+      >
+        <span zxBody class="player-progress-text">{{ getCurrentTitle(state) }}</span>
+      </zx-button>
 
-      <zx-stack direction="row" spacing="sm">
-        <mat-button-toggle-group [value]="state.repeatMode" (change)="setRepeatMode($event.value)">
-          <mat-button-toggle value="off">{{ 'player.repeat.off' | translate }}</mat-button-toggle>
-          <mat-button-toggle value="one">{{ 'player.repeat.one' | translate }}</mat-button-toggle>
-          <mat-button-toggle value="all">{{ 'player.repeat.all' | translate }}</mat-button-toggle>
-        </mat-button-toggle-group>
-        <mat-button-toggle [checked]="state.shuffleEnabled" (change)="toggleShuffle($event.source.checked)">
-          {{ 'player.shuffle' | translate }}
-        </mat-button-toggle>
-      </zx-stack>
+      <zx-button
+        size="sm"
+        color="transparent"
+        [round]="true"
+        [ariaLabel]="'player.controls.mode' | translate"
+        (click)="cyclePlaybackMode(state)"
+      >
+        <mat-icon>{{ getPlaybackModeIcon(state) }}</mat-icon>
+      </zx-button>
 
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <span zxBody>{{ 'player.advanced' | translate }}</span>
-        </mat-expansion-panel-header>
+      <zx-button
+        size="sm"
+        color="transparent"
+        [round]="true"
+        [disabled]="!state.playlist[state.currentIndex].url"
+        [ariaLabel]="'player.controls.open' | translate"
+        (click)="openCurrentTuneUrl()"
+      >
+        <mat-icon>open_in_new</mat-icon>
+      </zx-button>
 
-        <form [formGroup]="form">
-          <zx-stack direction="column" spacing="sm">
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'player.preset.label' | translate }}</mat-label>
-            <mat-select formControlName="preset" (selectionChange)="applyPreset()">
-              <mat-option *ngFor="let preset of presets" [value]="preset.value">
-                {{ preset.label | translate }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+      <zx-rating
+        *ngIf="state.playlist[state.currentIndex] as tune"
+        class="player-rating"
+        [overallRating]="tune.votes"
+        [userRating]="tune.userVote ?? undefined"
+        (voted)="vote($event)"
+      ></zx-rating>
 
-          <zx-stack direction="row" spacing="sm">
-            <mat-form-field appearance="outline">
-              <mat-label>{{ 'player.rating.min' | translate }}</mat-label>
-              <input matInput type="number" formControlName="minRating" />
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>{{ 'player.rating.max' | translate }}</mat-label>
-              <input matInput type="number" formControlName="maxRating" />
-            </mat-form-field>
-          </zx-stack>
+      <zx-button
+        size="sm"
+        color="transparent"
+        [round]="true"
+        [ariaLabel]="expanded ? ('player.controls.collapse' | translate) : ('player.controls.expand' | translate)"
+        (click)="toggleExpanded()"
+      >
+        <mat-icon>{{ expanded ? 'expand_more' : 'expand_less' }}</mat-icon>
+      </zx-button>
+    </div>
 
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'player.years.include' | translate }}</mat-label>
-            <input matInput formControlName="yearsInclude" />
-            <mat-hint>{{ 'player.list.hint' | translate }}</mat-hint>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'player.years.exclude' | translate }}</mat-label>
-            <input matInput formControlName="yearsExclude" />
-            <mat-hint>{{ 'player.list.hint' | translate }}</mat-hint>
-          </mat-form-field>
+    <div class="player-advanced" *ngIf="expanded">
+      <form [formGroup]="form" class="player-advanced-form">
+        <zx-skeleton *ngIf="optionsLoading" variant="text" [count]="3"></zx-skeleton>
 
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'player.countries.include' | translate }}</mat-label>
-            <input matInput formControlName="countriesInclude" />
-            <mat-hint>{{ 'player.list.hint' | translate }}</mat-hint>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'player.countries.exclude' | translate }}</mat-label>
-            <input matInput formControlName="countriesExclude" />
-            <mat-hint>{{ 'player.list.hint' | translate }}</mat-hint>
-          </mat-form-field>
+        <div class="player-error" *ngIf="optionsError">
+          <span zxBody>{{ 'player.filters.loadError' | translate }}</span>
+        </div>
 
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'player.formatGroups.include' | translate }}</mat-label>
-            <input matInput formControlName="formatGroupsInclude" />
-            <mat-hint>{{ 'player.list.hint' | translate }}</mat-hint>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'player.formatGroups.exclude' | translate }}</mat-label>
-            <input matInput formControlName="formatGroupsExclude" />
-            <mat-hint>{{ 'player.list.hint' | translate }}</mat-hint>
-          </mat-form-field>
+        <div class="player-advanced-grid" *ngIf="options && !optionsLoading">
+          <div class="player-field">
+            <span zxCaption class="player-field-label">{{ 'player.filters.yearFrom' | translate }}</span>
+            <zx-select
+              [options]="yearOptions"
+              [placeholder]="'player.filters.anyYear' | translate"
+              formControlName="yearFrom"
+            ></zx-select>
+          </div>
+          <div class="player-field">
+            <span zxCaption class="player-field-label">{{ 'player.filters.yearTo' | translate }}</span>
+            <zx-select
+              [options]="yearOptions"
+              [placeholder]="'player.filters.anyYear' | translate"
+              formControlName="yearTo"
+            ></zx-select>
+          </div>
+          <div class="player-field">
+            <span zxCaption class="player-field-label">{{ 'player.filters.countries' | translate }}</span>
+            <zx-select
+              [options]="countryOptions"
+              [multiple]="true"
+              [listSize]="3"
+              formControlName="countries"
+            ></zx-select>
+          </div>
+          <div class="player-field">
+            <span zxCaption class="player-field-label">{{ 'player.filters.soundGroups' | translate }}</span>
+            <zx-select
+              [options]="formatGroupOptions"
+              [multiple]="true"
+              [listSize]="3"
+              formControlName="formatGroups"
+            ></zx-select>
+          </div>
+          <div class="player-field">
+            <span zxCaption class="player-field-label">{{ 'player.filters.formats' | translate }}</span>
+            <zx-select
+              [options]="formatOptions"
+              [multiple]="true"
+              [listSize]="3"
+              formControlName="formats"
+            ></zx-select>
+          </div>
+          <div class="player-field">
+            <span zxCaption class="player-field-label">{{ 'player.filters.party' | translate }}</span>
+            <zx-select
+              [options]="partyOptions"
+              formControlName="party"
+            ></zx-select>
+          </div>
+        </div>
 
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'player.formats.include' | translate }}</mat-label>
-            <input matInput formControlName="formatsInclude" />
-            <mat-hint>{{ 'player.list.hint' | translate }}</mat-hint>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'player.formats.exclude' | translate }}</mat-label>
-            <input matInput formControlName="formatsExclude" />
-            <mat-hint>{{ 'player.list.hint' | translate }}</mat-hint>
-          </mat-form-field>
-
-          <button mat-flat-button color="primary" type="button" (click)="applyCriteria()">
-            {{ 'player.applyCriteria' | translate }}
-          </button>
-        </zx-stack>
+        <div class="player-advanced-actions">
+          <zx-button
+            size="sm"
+            color="outlined"
+            [round]="true"
+            [ariaLabel]="'player.controls.close' | translate"
+            (click)="close()"
+          >
+            <mat-icon>close</mat-icon>
+          </zx-button>
+        </div>
       </form>
-      </mat-expansion-panel>
-    </zx-stack>
+    </div>
   </zx-panel>
 </ng-container>

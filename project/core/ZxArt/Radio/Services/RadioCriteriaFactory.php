@@ -86,6 +86,7 @@ readonly class RadioCriteriaFactory
             maxPlays: $this->normalizeOptionalInt($data['maxPlays'] ?? null),
             minPartyPlace: $this->normalizeOptionalInt($data['minPartyPlace'] ?? null),
             requireGame: $this->normalizeOptionalBool($data['requireGame'] ?? null),
+            hasParty: $this->normalizeOptionalBool($data['hasParty'] ?? null),
             notVotedByUserId: $this->normalizeOptionalInt($data['notVotedByUserId'] ?? null),
         );
     }
@@ -111,6 +112,7 @@ readonly class RadioCriteriaFactory
         ?int $maxPlays = null,
         ?int $minPartyPlace = null,
         ?bool $requireGame = null,
+        ?bool $hasParty = null,
         ?int $notVotedByUserId = null,
     ): RadioCriteriaDto {
         return new RadioCriteriaDto(
@@ -128,6 +130,7 @@ readonly class RadioCriteriaFactory
             maxPlays: $maxPlays,
             minPartyPlace: $minPartyPlace,
             requireGame: $requireGame,
+            hasParty: $hasParty,
             notVotedByUserId: $notVotedByUserId,
         );
     }

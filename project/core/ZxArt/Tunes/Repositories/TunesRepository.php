@@ -164,6 +164,12 @@ readonly final class TunesRepository
         if ($criteria->requireGame === true) {
             $query->where(self::TABLE . '.game', '!=', 0);
         }
+        if ($criteria->hasParty === true) {
+            $query->where(self::TABLE . '.partyplace', '>', 0);
+        }
+        if ($criteria->hasParty === false) {
+            $query->where(self::TABLE . '.partyplace', '=', 0);
+        }
         if ($criteria->maxPlays !== null) {
             $query->where(self::TABLE . '.plays', '<', $criteria->maxPlays);
         }
@@ -204,5 +210,108 @@ readonly final class TunesRepository
         }
 
         return $query;
+    }
+
+    /**
+     * @return array{min: int|null, max: int|null}
+     */
+    public function getYearRange(): array
+    {
+        $min = $this->db->table(self::TABLE)
+            ->where(self::TABLE . '.year', '>', 0)
+            ->min(self::TABLE . '.year');
+
+        $max = $this->db->table(self::TABLE)
+            ->where(self::TABLE . '.year', '>', 0)
+            ->max(self::TABLE . '.year');
+
+        return [
+            'min' => $min === null ? null : (int)$min,
+            'max' => $max === null ? null : (int)$max,
+        ];
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAvailableFormatGroups(): array
+    {
+        $rows = $this->db->table(self::TABLE)
+            ->select(self::TABLE . '.formatGroup')
+            ->where(self::TABLE . '.formatGroup', '!=', '')
+            ->distinct()
+            ->orderBy(self::TABLE . '.formatGroup')
+            ->get();
+
+        $items = [];
+        /** @var object $row */
+        foreach ($rows as $row) {
+            $value = (string)($row->formatGroup ?? '');
+            if ($value !== '') {
+                $items[] = $value;
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAvailableFormats(): array
+    {
+        $rows = $this->db->table(self::TABLE)
+            ->select(self::TABLE . '.type')
+            ->where(self::TABLE . '.type', '!=', '')
+            ->distinct()
+            ->orderBy(self::TABLE . '.type')
+            ->get();
+
+        $items = [];
+        /** @var object $row */
+        foreach ($rows as $row) {
+            $value = (string)($row->type ?? '');
+            if ($value !== '') {
+                $items[] = $value;
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getAuthorCountryIds(): array
+    {
+        $rows = $this->db->table(self::TABLE)
+            ->join(
+                self::AUTHORSHIP_TABLE,
+                self::AUTHORSHIP_TABLE . '.elementId',
+                '=',
+                self::TABLE . '.id'
+            )
+            ->join(
+                self::AUTHOR_TABLE,
+                self::AUTHOR_TABLE . '.id',
+                '=',
+                self::AUTHORSHIP_TABLE . '.authorId'
+            )
+            ->where(self::AUTHORSHIP_TABLE . '.type', '=', self::AUTHORSHIP_TYPE)
+            ->where(self::AUTHOR_TABLE . '.country', '!=', 0)
+            ->distinct()
+            ->orderBy(self::AUTHOR_TABLE . '.country')
+            ->get([self::AUTHOR_TABLE . '.country']);
+
+        $items = [];
+        /** @var object $row */
+        foreach ($rows as $row) {
+            $value = (int)($row->country ?? 0);
+            if ($value !== 0) {
+                $items[] = $value;
+            }
+        }
+
+        return $items;
     }
 }

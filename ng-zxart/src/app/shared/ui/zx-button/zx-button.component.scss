@@ -145,5 +145,12 @@ button {
       min-width: auto;
       aspect-ratio: 1;
     }
+
+    &--round {
+      --mdc-filled-button-container-shape: var(--zx-button-round-radius);
+      --mat-filled-button-horizontal-padding: 0;
+      min-width: var(--mdc-filled-button-container-height);
+      aspect-ratio: 1;
+    }
   }
 }

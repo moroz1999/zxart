@@ -1,11 +1,11 @@
 import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {MatButtonModule} from '@angular/material/button';
 import {PlayerService} from '../../../player/services/player.service';
 import {RadioPresetCriteriaService} from '../../../player/services/radio-preset-criteria.service';
 import {RadioPreset} from '../../../player/models/radio-preset';
-import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
+import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 
 @Component({
   selector: 'zx-radio-remote',
@@ -13,8 +13,8 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
   imports: [
     CommonModule,
     TranslateModule,
-    MatButtonModule,
-    ZxStackComponent,
+    ZxPanelComponent,
+    ZxButtonComponent,
   ],
   templateUrl: './radio-remote.component.html',
   styleUrl: './radio-remote.component.scss',

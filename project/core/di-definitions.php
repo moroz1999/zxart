@@ -12,6 +12,7 @@ use ZxArt\Ai\Service\ProdQueryService;
 use ZxArt\Ai\Service\PromptSender;
 use ZxArt\Ai\Service\TextBeautifier;
 use ZxArt\Ai\Service\Translator;
+use ZxArt\Comments\CommentsService;
 use ZxArt\Logs\Log;
 use ZxArt\Social\SocialPostsService;
 use ZxArt\Telegram\PostService;
@@ -23,6 +24,21 @@ return [
     structureManager::class => factory(static function () {
         return controller::getInstance()->getRegistry()->getService('structureManager');
     }),
+
+    'publicStructureManager' => factory(static function () {
+        $controller = controller::getInstance();
+        $configManager = $controller->getConfigManager();
+        $sm = $controller->getRegistry()->getService('structureManager', [
+            'rootUrl' => $controller->baseURL,
+            'rootMarker' => $configManager->get('main.rootMarkerPublic'),
+        ], true);
+        $languagesManager = $controller->getRegistry()->getService('LanguagesManager');
+        $sm->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
+        return $sm;
+    }),
+
+    CommentsService::class => autowire()
+        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
 
     // Core services
     Logger::class => autowire(Logger::class)->constructor('log'),

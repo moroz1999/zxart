@@ -1,11 +1,12 @@
-<zx-stack direction="column" spacing="sm">
-  <button
-    *ngFor="let preset of presets"
-    mat-stroked-button
-    color="primary"
-    type="button"
-    (click)="startPreset(preset.key)"
-  >
-    {{ preset.label | translate }}
-  </button>
-</zx-stack>
+﻿<zx-panel [title]="'radio.title' | translate" padding="sm" radius="md" variant="elevated">
+  <div class="radio-remote-buttons">
+    <zx-button
+      *ngFor="let preset of presets"
+      size="sm"
+      color="outlined"
+      (click)="startPreset(preset.key)"
+    >
+      {{ preset.label | translate }}
+    </zx-button>
+  </div>
+</zx-panel>

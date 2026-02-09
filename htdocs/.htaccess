@@ -56,6 +56,7 @@
 	AddOutputFilterByType DEFLATE application/x-font-woff
 </ifmodule>
 AddType application/wasm wasm
+AddCharset UTF-8 .json
 
 SetEnvIf Origin "^(.*localhost:4200)$" ORIGIN_SUB_DOMAIN=$0
 <IfModule mod_headers.c>
