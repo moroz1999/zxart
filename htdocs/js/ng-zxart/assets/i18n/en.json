@@ -210,5 +210,55 @@
       "cancel": "Cancel",
       "save": "Save"
     }
+  },
+  "radio": {
+    "title": "Radio"
+  },
+  "player": {
+    "play": "Play",
+    "advanced": "Advanced",
+    "shuffle": "Shuffle",
+    "applyCriteria": "Apply criteria",
+    "list": {
+      "hint": "Comma-separated"
+    },
+    "preset": {
+      "label": "Preset",
+      "custom": "Custom",
+      "discover": "Unvoted",
+      "randomgood": "Best",
+      "games": "From games",
+      "demoscene": "Scene",
+      "lastyear": "From last year",
+      "ay": "AY",
+      "beeper": "Beeper",
+      "exotic": "Exotic",
+      "underground": "Underground"
+    },
+    "repeat": {
+      "off": "Repeat off",
+      "one": "Repeat one",
+      "all": "Repeat all"
+    },
+    "rating": {
+      "min": "Min rating",
+      "max": "Max rating"
+    },
+    "years": {
+      "include": "Years include",
+      "exclude": "Years exclude"
+    },
+    "countries": {
+      "include": "Countries include",
+      "exclude": "Countries exclude"
+    },
+    "formatGroups": {
+      "include": "Format groups include",
+      "exclude": "Format groups exclude"
+    },
+    "formats": {
+      "include": "Formats include",
+      "exclude": "Formats exclude"
+    }
   }
 }

@@ -254,7 +254,7 @@
 		</div>
 {*		{include file=$theme->template("component.picturestable.tpl") picturesList=$element->getResultsList() element=$element pager=$element->getPager() number=$element->getStartElementNumber()}*}
 	{elseif $element->getResultsType() == 'zxMusic'}
-		{include file=$theme->template("component.musictable.tpl") musicList=$element->getResultsList() element=$element pager=$element->getPager() number=$element->getStartElementNumber()}
+		{include file=$theme->template("component.musictable.tpl") musicList=$element->getResultsList() element=$element pager=$element->getPager() number=$element->getStartElementNumber() musicListId="detailedsearch_music_{$element->id}"}
 	{elseif $element->getResultsType() == 'author'}
 		{include file=$theme->template("component.authorstable.tpl") authorsList=$element->getResultsList() element=$element pager=$element->getPager() number=$element->getStartElementNumber()}
 	{/if}

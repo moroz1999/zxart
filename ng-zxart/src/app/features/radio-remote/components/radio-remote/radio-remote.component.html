@@ -1,0 +1,11 @@
+<zx-stack direction="column" spacing="sm">
+  <button
+    *ngFor="let preset of presets"
+    mat-stroked-button
+    color="primary"
+    type="button"
+    (click)="startPreset(preset.key)"
+  >
+    {{ preset.label | translate }}
+  </button>
+</zx-stack>

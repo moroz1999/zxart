@@ -7,6 +7,10 @@ paths:
     $ref: 'comments.yaml#/paths/~1comments~1'
   /comments/id:{id}/:
     $ref: 'comments.yaml#/paths/~1comments~1id:{id}~1'
+  /radio/?action=next-tune:
+    $ref: 'radio.yaml#/paths/~1radio~1?action=next-tune'
+  /tunes/?action=play:
+    $ref: 'tunes.yaml#/paths/~1tunes~1?action=play'
   /userpreferences/:
     $ref: 'user-preferences.yaml#/paths/~1userpreferences~1'
 components:
@@ -19,3 +23,13 @@ components:
       $ref: 'comments.yaml#/components/schemas/CommentTargetDto'
     PreferenceDto:
       $ref: 'user-preferences.yaml#/components/schemas/PreferenceDto'
+    AuthorDto:
+      $ref: 'tunes.yaml#/components/schemas/AuthorDto'
+    PartyInfoDto:
+      $ref: 'tunes.yaml#/components/schemas/PartyInfoDto'
+    TuneDto:
+      $ref: 'tunes.yaml#/components/schemas/TuneDto'
+    ApiResponseTune:
+      $ref: 'tunes.yaml#/components/schemas/ApiResponseTune'
+    ApiResponseSuccess:
+      $ref: 'tunes.yaml#/components/schemas/ApiResponseSuccess'

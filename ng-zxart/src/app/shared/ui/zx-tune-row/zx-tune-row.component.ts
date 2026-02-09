@@ -1,6 +1,8 @@
-import {ChangeDetectorRef, Component, Input} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 import {ZxTuneDto} from '../../models/zx-tune-dto';
 import {RatingComponent} from '../../components/rating/rating.component';
 import {VoteService} from '../../services/vote.service';
@@ -12,6 +14,8 @@ import {ZxBadgeComponent} from '../zx-badge/zx-badge.component';
   imports: [
     CommonModule,
     TranslateModule,
+    MatButtonModule,
+    MatIconModule,
     RatingComponent,
     ZxBadgeComponent,
   ],
@@ -21,6 +25,7 @@ import {ZxBadgeComponent} from '../zx-badge/zx-badge.component';
 export class ZxTuneRowComponent {
   @Input() tune!: ZxTuneDto;
   @Input() index?: number;
+  @Output() playRequested = new EventEmitter<ZxTuneDto>();
 
   constructor(
     private voteService: VoteService,
@@ -42,5 +47,12 @@ export class ZxTuneRowComponent {
       this.tune = {...this.tune, votes: value, userVote: rating};
       this.cdr.detectChanges();
     });
+  }
+
+  requestPlay(): void {
+    if (!this.tune.isPlayable || !this.tune.mp3Url) {
+      return;
+    }
+    this.playRequested.emit(this.tune);
   }
 }

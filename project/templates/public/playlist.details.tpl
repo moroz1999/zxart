@@ -13,7 +13,7 @@
     {/if}
     {if $element->getMusicList()}
         <div class='playlist_details_music'>
-            {include file=$theme->template("component.musictable.tpl") musicList=$element->getMusicList() element=$element showplaylists=false showYear=false}
+            {include file=$theme->template("component.musictable.tpl") musicList=$element->getMusicList() element=$element showplaylists=false showYear=false musicListId="playlist_music_{$element->id}"}
         </div>
     {/if}
     {if $prodsData = $element->getZxProdsListData()}

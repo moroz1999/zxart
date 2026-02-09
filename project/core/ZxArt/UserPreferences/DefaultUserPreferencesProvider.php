@@ -35,6 +35,7 @@ final class DefaultUserPreferencesProvider
             PreferenceCode::HOMEPAGE_NEW_PRODS_MIN_RATING->value => '0',
             PreferenceCode::HOMEPAGE_BEST_DEMOS_MIN_RATING->value => '3',
             PreferenceCode::HOMEPAGE_BEST_GAMES_MIN_RATING->value => '3',
+            PreferenceCode::RADIO_CRITERIA->value => '{}',
         ];
     }
 

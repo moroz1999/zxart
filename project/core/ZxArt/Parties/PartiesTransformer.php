@@ -13,7 +13,7 @@ readonly class PartiesTransformer
     {
         return new PartyDto(
             id: (int)$element->id,
-            title: (string)$element->getTitle(),
+            title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
             url: $element->getUrl(),
             year: $element->getYear(),
             imageUrl: $element->getImageUrl('partyShort'),

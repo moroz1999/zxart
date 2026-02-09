@@ -3,8 +3,8 @@
 		{if $showPartyPlace}{$element->partyplace}{else}{$number}{/if}
 	</td>
 	<td class='music_list_player'>
-		{if $element->isPlayable()}
-			<div class="music_controls_short elementid_{$element->id}"></div>
+		{if $isPlayable}
+			<zx-legacy-play playlist-id="{$musicListId}" index="{$playIndex}" tune-id="{$element->id}"></zx-legacy-play>
 		{/if}
 	</td>
 	<td class='music_list_title'>
@@ -66,8 +66,9 @@
 	</td>
 </tr>
 <script>
-	{if $element->isPlayable()}
-		if (!window.musicList) window.musicList = [];
-		window.musicList.push({$element->getJsonInfo()});
+	{if $isPlayable}
+		window.zxMusicLists = window.zxMusicLists || {};
+		window.zxMusicLists['{$musicListId|escape:'javascript'}'] = window.zxMusicLists['{$musicListId|escape:'javascript'}'] || [];
+		window.zxMusicLists['{$musicListId|escape:'javascript'}'].push({$element->getJsonInfo()});
 	{/if}
 </script>

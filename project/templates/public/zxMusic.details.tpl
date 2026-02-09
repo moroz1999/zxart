@@ -7,11 +7,14 @@
 
 	{if $element->isPlayable()}
 		<div class="music_details_controls">
-			<div class="music_controls_short elementid_{$element->id}"></div><span class="music_controls_label">{translations name="zxmusic.play"}</span>
+			{assign var="musicListId" value="zxmusic_details_"|cat:$element->id}
+			<zx-legacy-play playlist-id="{$musicListId}" index="0" tune-id="{$element->id}"></zx-legacy-play>
+			<span class="music_controls_label">{translations name="zxmusic.play"}</span>
 		</div>
 		<script>
-			if (!window.musicList) window.musicList = [];
-			window.musicList.push({$element->getJsonInfo()});
+			window.zxMusicLists = window.zxMusicLists || {};
+			window.zxMusicLists['{$musicListId|escape:'javascript'}'] = window.zxMusicLists['{$musicListId|escape:'javascript'}'] || [];
+			window.zxMusicLists['{$musicListId|escape:'javascript'}'].push({$element->getJsonInfo()});
 		</script>
 	{/if}
 	{if $element->embedCode}

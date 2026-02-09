@@ -210,5 +210,55 @@
       "cancel": "Cancelar",
       "save": "Guardar"
     }
+  },
+  "radio": {
+    "title": "Radio"
+  },
+  "player": {
+    "play": "Reproducir",
+    "advanced": "Avanzado",
+    "shuffle": "Aleatorio",
+    "applyCriteria": "Aplicar criterios",
+    "list": {
+      "hint": "Separado por comas"
+    },
+    "preset": {
+      "label": "Preajuste",
+      "custom": "Personalizado",
+      "discover": "Sin votar",
+      "randomgood": "Mejores",
+      "games": "De juegos",
+      "demoscene": "Escena",
+      "lastyear": "Del a?o pasado",
+      "ay": "AY",
+      "beeper": "Beeper",
+      "exotic": "Ex?tico",
+      "underground": "Underground"
+    },
+    "repeat": {
+      "off": "Repetir apagado",
+      "one": "Repetir pista",
+      "all": "Repetir lista"
+    },
+    "rating": {
+      "min": "Valoraci?n m?nima",
+      "max": "Valoraci?n m?xima"
+    },
+    "years": {
+      "include": "A?os incluidos",
+      "exclude": "A?os excluidos"
+    },
+    "countries": {
+      "include": "Pa?ses incluidos",
+      "exclude": "Pa?ses excluidos"
+    },
+    "formatGroups": {
+      "include": "Grupos de formato incluidos",
+      "exclude": "Grupos de formato excluidos"
+    },
+    "formats": {
+      "include": "Formatos incluidos",
+      "exclude": "Formatos excluidos"
+    }
   }
 }

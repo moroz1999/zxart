@@ -17,6 +17,7 @@ import {MatTreeModule} from '@angular/material/tree';
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ZxProdsListComponent} from './entities/zx-prods-list/zx-prods-list.component';
 import {AppComponent} from './app.component';
@@ -32,6 +33,9 @@ import {
 } from './features/ratings/components/recent-ratings-widget/recent-ratings-widget.component';
 import {RatingsListComponent} from './features/ratings/components/ratings-list/ratings-list.component';
 import {FirstpageComponent} from './features/firstpage/components/firstpage/firstpage.component';
+import {PlayerHostComponent} from './features/player/components/player-host/player-host.component';
+import {LegacyPlayButtonComponent} from './features/player/components/legacy-play-button/legacy-play-button.component';
+import {RadioRemoteComponent} from './features/radio-remote/components/radio-remote/radio-remote.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -57,6 +61,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         MatCardModule,
         MatButtonToggleModule,
         MatProgressSpinnerModule,
+        MatBottomSheetModule,
         ReactiveFormsModule,
         TranslatePipe,
     ],
@@ -90,6 +95,9 @@ export class AppModule implements DoBootstrap  {
             'zx-recent-ratings': RecentRatingsWidgetComponent,
             'zx-ratings-list': RatingsListComponent,
             'zx-firstpage': FirstpageComponent,
+            'zx-player': PlayerHostComponent,
+            'zx-legacy-play': LegacyPlayButtonComponent,
+            'zx-radio-remote': RadioRemoteComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});

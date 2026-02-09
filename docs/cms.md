@@ -54,6 +54,7 @@ Privileges are managed through `privilegesManager`.
 - Template selection often depends on the element's `viewName` or is hardcoded in the controller/action.
 - The `$element` variable is available in most views. It is an instance of the entity (Structure Element) to which the view refers.
 - Components can be included via `{include file=$theme->template("name.tpl")}`.
+- Translation strings are stored in the database (the `translations` service resolves them at runtime).
 - Do NOT use the `style` attribute. Use full semantic class names instead. Styling should be handled in CSS files.
 
 ### URL-based Action Handling

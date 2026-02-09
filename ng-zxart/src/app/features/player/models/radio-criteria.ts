@@ -1,0 +1,35 @@
+export interface RadioCriteria {
+  minRating: number | null;
+  maxRating: number | null;
+  yearsInclude: number[];
+  yearsExclude: number[];
+  countriesInclude: number[];
+  countriesExclude: number[];
+  formatGroupsInclude: string[];
+  formatGroupsExclude: string[];
+  formatsInclude: string[];
+  formatsExclude: string[];
+  bestVotesLimit: number | null;
+  maxPlays: number | null;
+  minPartyPlace: number | null;
+  requireGame: boolean | null;
+  notVotedByUserId: number | null;
+}
+
+export const EMPTY_RADIO_CRITERIA: RadioCriteria = {
+  minRating: null,
+  maxRating: null,
+  yearsInclude: [],
+  yearsExclude: [],
+  countriesInclude: [],
+  countriesExclude: [],
+  formatGroupsInclude: [],
+  formatGroupsExclude: [],
+  formatsInclude: [],
+  formatsExclude: [],
+  bestVotesLimit: null,
+  maxPlays: null,
+  minPartyPlace: null,
+  requireGame: null,
+  notVotedByUserId: null,
+};

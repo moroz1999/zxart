@@ -54,7 +54,7 @@ class UserPreferencesServiceTest extends TestCase
 
         $preferences = $service->getAllPreferences();
 
-        $this->assertCount(20, $preferences);
+        $this->assertCount(21, $preferences);
         $this->assertInstanceOf(PreferenceDto::class, $preferences[0]);
         $this->assertSame('theme', $preferences[0]->code);
         $this->assertSame('light', $preferences[0]->value);
@@ -84,7 +84,7 @@ class UserPreferencesServiceTest extends TestCase
 
         $preferences = $service->getAllPreferences();
 
-        $this->assertCount(20, $preferences);
+        $this->assertCount(21, $preferences);
         $themePreference = $this->findPreferenceByCode($preferences, 'theme');
         $this->assertNotNull($themePreference);
         $this->assertSame('dark', $themePreference->value);
@@ -112,7 +112,7 @@ class UserPreferencesServiceTest extends TestCase
 
         $preferences = $service->getAllPreferences();
 
-        $this->assertCount(20, $preferences);
+        $this->assertCount(21, $preferences);
         $themePreference = $this->findPreferenceByCode($preferences, 'theme');
         $this->assertNotNull($themePreference);
         $this->assertSame('light', $themePreference->value);
@@ -184,7 +184,7 @@ class UserPreferencesServiceTest extends TestCase
 
         $preferences = $service->setPreference('theme', 'dark');
 
-        $this->assertCount(20, $preferences);
+        $this->assertCount(21, $preferences);
         $themePreference = $this->findPreferenceByCode($preferences, 'theme');
         $this->assertNotNull($themePreference);
         $this->assertSame('dark', $themePreference->value);
@@ -209,7 +209,7 @@ class UserPreferencesServiceTest extends TestCase
 
         $preferences = $service->setPreference('theme', 'dark');
 
-        $this->assertCount(20, $preferences);
+        $this->assertCount(21, $preferences);
         $themePreference = $this->findPreferenceByCode($preferences, 'theme');
         $this->assertNotNull($themePreference);
         $this->assertSame('light', $themePreference->value);

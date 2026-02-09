@@ -32,4 +32,7 @@ enum PreferenceCode: string
     case HOMEPAGE_NEW_PRODS_MIN_RATING = 'homepage_new_prods_min_rating';
     case HOMEPAGE_BEST_DEMOS_MIN_RATING = 'homepage_best_demos_min_rating';
     case HOMEPAGE_BEST_GAMES_MIN_RATING = 'homepage_best_games_min_rating';
+
+    // Radio
+    case RADIO_CRITERIA = 'radio_criteria';
 }

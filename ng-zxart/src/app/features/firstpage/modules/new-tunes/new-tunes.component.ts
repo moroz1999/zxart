@@ -11,6 +11,7 @@ import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton
 import {ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ModuleSettings} from '../../models/firstpage-config';
 import {MODULE_SETTINGS} from '../../models/module-settings.token';
+import {PlayerService} from '../../../player/services/player.service';
 
 @Component({
   selector: 'zx-fp-new-tunes',
@@ -25,6 +26,7 @@ export class NewTunesComponent extends FirstpageModuleBase<ZxTuneDto> {
   constructor(
     private dataService: FirstpageDataService,
     private translate: TranslateService,
+    private playerService: PlayerService,
     @Inject(MODULE_SETTINGS) settings: ModuleSettings,
   ) {
     super(settings);
@@ -33,5 +35,18 @@ export class NewTunesComponent extends FirstpageModuleBase<ZxTuneDto> {
 
   protected loadData(): Observable<ZxTuneDto[]> {
     return this.dataService.getNewTunes(this.settings.limit);
+  }
+
+  playTune(index: number): void {
+    const selected = this.items[index];
+    if (!selected) {
+      return;
+    }
+    const playable = this.items.filter(item => item.isPlayable && item.mp3Url);
+    const startIndex = playable.findIndex(item => item.id === selected.id);
+    if (startIndex === -1) {
+      return;
+    }
+    this.playerService.startPlaylist('firstpage-new-tunes', playable, startIndex);
   }
 }

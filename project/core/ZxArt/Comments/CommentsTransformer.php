@@ -30,12 +30,12 @@ readonly class CommentsTransformer
 
         $badges = [];
         $url = null;
-        $authorName = (string)$comment->getAuthorName();
+        $authorName = html_entity_decode((string)$comment->getAuthorName(), ENT_QUOTES);
 
         if ($authorUser instanceof userElement) {
             $badges = $authorUser->getBadgetTypes();
             $url = (string)$authorUser->getUrl();
-            $authorName = (string)$authorUser->getTitle();
+            $authorName = html_entity_decode((string)$authorUser->getTitle(), ENT_QUOTES);
         }
 
         $authorDto = new CommentAuthorDto(
@@ -102,11 +102,11 @@ readonly class CommentsTransformer
         }
 
         return new CommentTargetDto(
-            title: (string)$target->getTitle(),
+            title: html_entity_decode((string)$target->getTitle(), ENT_QUOTES),
             url: $target->getUrl(),
             type: $type,
             imageUrl: $imageUrl,
-            authorName: $authorName,
+            authorName: $authorName !== null ? html_entity_decode($authorName, ENT_QUOTES) : null,
         );
     }
 

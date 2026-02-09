@@ -19,7 +19,7 @@ readonly class ProdsTransformer
         $authors = [];
         foreach ($element->getAuthorsList() as $author) {
             $authors[] = new AuthorDto(
-                name: (string)$author->getTitle(),
+                name: html_entity_decode((string)$author->getTitle(), ENT_QUOTES),
                 url: $author->getUrl(),
             );
         }
@@ -28,7 +28,7 @@ readonly class ProdsTransformer
         $partyElement = $element->getPartyElement();
         if ($partyElement) {
             $party = new PartyInfoDto(
-                title: (string)$partyElement->getTitle(),
+                title: html_entity_decode((string)$partyElement->getTitle(), ENT_QUOTES),
                 url: $partyElement->getUrl(),
                 place: (int)$element->partyplace ?: null,
             );
@@ -43,7 +43,7 @@ readonly class ProdsTransformer
 
         return new ProdDto(
             id: (int)$element->id,
-            title: (string)$element->getTitle(),
+            title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
             url: $element->getUrl(),
             year: $element->year ? (string)$element->year : null,
             imageUrl: $element->getImageUrl(0, 'prodImage') ?: null,

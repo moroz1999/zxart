@@ -1,0 +1,104 @@
+openapi: 3.0.0
+info:
+  title: ZxArt Radio API
+  version: 1.0.0
+  description: API for radio playback.
+
+paths:
+  /radio/?action=next-tune:
+    post:
+      summary: Get next tune for radio mode
+      description: Returns a tune matching the provided criteria or preset.
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [next-tune]
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RadioNextTuneRequest'
+      responses:
+        '200':
+          description: A JSON object with responseStatus and responseData.
+          content:
+            application/json:
+              schema:
+                $ref: 'tunes.yaml#/components/schemas/ApiResponseTune'
+
+components:
+  schemas:
+    RadioNextTuneRequest:
+      type: object
+      properties:
+        preset:
+          type: string
+          description: Preset id (legacy).
+          enum:
+            - discover
+            - randomgood
+            - games
+            - demoscene
+            - lastyear
+            - ay
+            - beeper
+            - exotic
+            - underground
+        criteria:
+          $ref: '#/components/schemas/RadioCriteria'
+
+    RadioCriteria:
+      type: object
+      properties:
+        minRating:
+          type: number
+          format: float
+        maxRating:
+          type: number
+          format: float
+        yearsInclude:
+          type: array
+          items:
+            type: integer
+        yearsExclude:
+          type: array
+          items:
+            type: integer
+        countriesInclude:
+          type: array
+          items:
+            type: integer
+        countriesExclude:
+          type: array
+          items:
+            type: integer
+        formatGroupsInclude:
+          type: array
+          items:
+            type: string
+        formatGroupsExclude:
+          type: array
+          items:
+            type: string
+        formatsInclude:
+          type: array
+          items:
+            type: string
+        formatsExclude:
+          type: array
+          items:
+            type: string
+        bestVotesLimit:
+          type: integer
+        maxPlays:
+          type: integer
+        minPartyPlace:
+          type: integer
+        requireGame:
+          type: boolean
+        notVotedByUserId:
+          type: integer

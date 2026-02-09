@@ -44,6 +44,7 @@ final class PreferenceValidator
             PreferenceCode::HOMEPAGE_NEW_PRODS_MIN_RATING,
             PreferenceCode::HOMEPAGE_BEST_DEMOS_MIN_RATING,
             PreferenceCode::HOMEPAGE_BEST_GAMES_MIN_RATING => $this->validateMinRating($code, $value),
+            PreferenceCode::RADIO_CRITERIA => $value,
         };
     }
 

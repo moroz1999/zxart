@@ -66,12 +66,12 @@ readonly class RatingsService
 
             $items[] = new RecentRatingDto(
                 user: new CommentAuthorDto(
-                    name: (string)$userElement->getTitle(),
+                    name: html_entity_decode((string)$userElement->getTitle(), ENT_QUOTES),
                     url: (string)$userElement->getUrl(),
                     badges: $userElement->getBadgetTypes(),
                 ),
                 rating: $rating,
-                targetTitle: (string)$targetElement->getTitle(),
+                targetTitle: html_entity_decode((string)$targetElement->getTitle(), ENT_QUOTES),
                 targetUrl: (string)$targetElement->getUrl(),
             );
         }
@@ -106,7 +106,7 @@ readonly class RatingsService
 
             $items[] = new ElementRatingDto(
                 user: new CommentAuthorDto(
-                    name: (string)$userElement->getTitle(),
+                    name: html_entity_decode((string)$userElement->getTitle(), ENT_QUOTES),
                     url: (string)$userElement->getUrl(),
                     badges: $userElement->getBadgetTypes(),
                 ),

@@ -14,6 +14,7 @@ Detailed logic and structure: [domain/picture.md](domain/picture.md)
 ZX Spectrum tune entity. Chiptune in various tracker and chip formats.
 Contains technical parameters: chipType, channels, frequency, format. Can be played in browser.
 Detailed logic and structure: [domain/tune.md](domain/tune.md)
+Music player and radio behavior: [domain/music-player-radio.md](domain/music-player-radio.md)
 
 ### prod
 Software production entity. Abstract product that can have multiple releases.

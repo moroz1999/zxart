@@ -51,7 +51,7 @@
 			{assign "compoTitle" "compo_"|cat:$compoType}
 			<div class='party_compos_item'>
 				<h2>{translations name='label.compo'}: {translations name="musiccompo.$compoTitle"}</h2>
-				{include file=$theme->template("component.musictable.tpl") musicList=$compo element=$element}
+				{include file=$theme->template("component.musictable.tpl") musicList=$compo element=$element musicListId="party_music_{$element->id}_{$compoType}"}
 			</div>
 		{/foreach}
 	</div>

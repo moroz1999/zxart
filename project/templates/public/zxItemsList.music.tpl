@@ -5,7 +5,7 @@
 		{/capture}
 	{/if}
 	{capture assign="moduleContent"}
-		{include file=$theme->template("component.musictable.tpl") musicList=$element->getItemsList() element=$element}
+		{include file=$theme->template("component.musictable.tpl") musicList=$element->getItemsList() element=$element musicListId="zxitemslist_music_{$element->id}"}
 		{if $musicDetailedSearchElement && $element->searchFormParametersString}
 			<div class="zxitemslist_controls">
 				<a class="zxitemslist_link button" href="{$musicDetailedSearchElement->URL}{$element->searchFormParametersString}">{translations name='zxitemslist.seemoremusic'}</a>

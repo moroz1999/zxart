@@ -7,10 +7,15 @@ namespace ZxArt\Tunes\Repositories;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use ZxArt\Helpers\AlphanumericColumnSearch;
+use ZxArt\Radio\Dto\RadioCriteriaDto;
 
 readonly final class TunesRepository
 {
     public const TABLE = 'module_zxmusic';
+    private const string AUTHORSHIP_TABLE = 'authorship';
+    private const string AUTHOR_TABLE = 'module_author';
+    private const string VOTES_HISTORY_TABLE = 'votes_history';
+    private const string AUTHORSHIP_TYPE = 'authorMusic';
 
     public function __construct(
         private Connection               $db,
@@ -91,9 +96,113 @@ readonly final class TunesRepository
             ->pluck('id');
     }
 
+    public function findRandomIdByCriteria(RadioCriteriaDto $criteria): ?int
+    {
+        if ($criteria->bestVotesLimit !== null) {
+            $topIds = $this->applyCriteria($this->getSelectSql(), $criteria)
+                ->orderBy('votes', 'desc')
+                ->limit($criteria->bestVotesLimit)
+                ->pluck('id');
+
+            if ($topIds === []) {
+                return null;
+            }
+
+            $randomIds = $this->applyCriteria($this->getSelectSql(), $criteria)
+                ->whereIn('id', $topIds)
+                ->inRandomOrder()
+                ->limit(1)
+                ->pluck('id');
+        } else {
+            $randomIds = $this->applyCriteria($this->getSelectSql(), $criteria)
+                ->inRandomOrder()
+                ->limit(1)
+                ->pluck('id');
+        }
+
+        return $randomIds[0] ?? null;
+    }
+
     private function getSelectSql(): Builder
     {
         return $this->db->table(self::TABLE);
     }
 
+    private function applyCriteria(Builder $query, RadioCriteriaDto $criteria): Builder
+    {
+        $query->select(self::TABLE . '.id');
+        $query->where(self::TABLE . '.mp3Name', '!=', '');
+
+        if ($criteria->minRating !== null) {
+            $query->where(self::TABLE . '.votes', '>=', $criteria->minRating);
+        }
+        if ($criteria->maxRating !== null) {
+            $query->where(self::TABLE . '.votes', '<=', $criteria->maxRating);
+        }
+        if ($criteria->yearsInclude !== []) {
+            $query->whereIn(self::TABLE . '.year', $criteria->yearsInclude);
+        }
+        if ($criteria->yearsExclude !== []) {
+            $query->whereNotIn(self::TABLE . '.year', $criteria->yearsExclude);
+        }
+        if ($criteria->formatGroupsInclude !== []) {
+            $query->whereIn(self::TABLE . '.formatGroup', $criteria->formatGroupsInclude);
+        }
+        if ($criteria->formatGroupsExclude !== []) {
+            $query->whereNotIn(self::TABLE . '.formatGroup', $criteria->formatGroupsExclude);
+        }
+        if ($criteria->formatsInclude !== []) {
+            $query->whereIn(self::TABLE . '.type', $criteria->formatsInclude);
+        }
+        if ($criteria->formatsExclude !== []) {
+            $query->whereNotIn(self::TABLE . '.type', $criteria->formatsExclude);
+        }
+        if ($criteria->minPartyPlace !== null) {
+            $query->where(self::TABLE . '.partyplace', '<=', $criteria->minPartyPlace);
+            $query->where(self::TABLE . '.partyplace', '!=', 0);
+        }
+        if ($criteria->requireGame === true) {
+            $query->where(self::TABLE . '.game', '!=', 0);
+        }
+        if ($criteria->maxPlays !== null) {
+            $query->where(self::TABLE . '.plays', '<', $criteria->maxPlays);
+        }
+        if ($criteria->notVotedByUserId !== null) {
+            $query->whereNotIn(
+                self::TABLE . '.id',
+                function (Builder $subQuery) use ($criteria) {
+                    $subQuery->select(self::VOTES_HISTORY_TABLE . '.elementId')
+                        ->from(self::VOTES_HISTORY_TABLE)
+                        ->where(self::VOTES_HISTORY_TABLE . '.type', '=', 'zxMusic')
+                        ->where(self::VOTES_HISTORY_TABLE . '.userId', '=', $criteria->notVotedByUserId);
+                }
+            );
+        }
+        if ($criteria->countriesInclude !== [] || $criteria->countriesExclude !== []) {
+            $query
+                ->join(
+                    self::AUTHORSHIP_TABLE,
+                    self::AUTHORSHIP_TABLE . '.elementId',
+                    '=',
+                    self::TABLE . '.id'
+                )
+                ->join(
+                    self::AUTHOR_TABLE,
+                    self::AUTHOR_TABLE . '.id',
+                    '=',
+                    self::AUTHORSHIP_TABLE . '.authorId'
+                )
+                ->where(self::AUTHORSHIP_TABLE . '.type', '=', self::AUTHORSHIP_TYPE)
+                ->distinct();
+
+            if ($criteria->countriesInclude !== []) {
+                $query->whereIn(self::AUTHOR_TABLE . '.country', $criteria->countriesInclude);
+            }
+            if ($criteria->countriesExclude !== []) {
+                $query->whereNotIn(self::AUTHOR_TABLE . '.country', $criteria->countriesExclude);
+            }
+        }
+
+        return $query;
+    }
 }

@@ -1,12 +1,14 @@
 {if !isset($showPartyPlace)}{assign var="showPartyPlace" value=false}{/if}
 {if !isset($showAuthors)}{assign var="showAuthors" value=true}{/if}
 {if !isset($showYear)}{assign var="showYear" value=true}{/if}
+{if !isset($musicListId)}{assign var="musicListId" value="music_list"}{/if}
 {if isset($pager)}
 	<div class='music_list_top_controls'>
 		{include file=$theme->template("pager.tpl") pager=$pager}
 	</div>
 {/if}
 {if !isset($number)}{$number=1}{/if}
+{assign var="playIndex" value=0}
 
 <div class='music_list_block'>
 	<table class='music_list_table table_component'>
@@ -57,11 +59,13 @@
 		</thead>
 		<tbody>
 			{foreach from=$musicList item=music name=musicList}
+				{assign var="isPlayable" value=$music->isPlayable()}
 				{if $smarty.foreach.musicList.iteration is odd}
-					{include file=$theme->template("zxMusic.table.tpl") element=$music odd=1 number=$number}
+					{include file=$theme->template("zxMusic.table.tpl") element=$music odd=1 number=$number musicListId=$musicListId playIndex=$playIndex isPlayable=$isPlayable}
 				{else}
-					{include file=$theme->template("zxMusic.table.tpl") element=$music odd=0 number=$number}
+					{include file=$theme->template("zxMusic.table.tpl") element=$music odd=0 number=$number musicListId=$musicListId playIndex=$playIndex isPlayable=$isPlayable}
 				{/if}
+				{if $isPlayable}{assign var="playIndex" value=$playIndex+1}{/if}
 				{$number=$number+1}
 			{/foreach}
 		</tbody>

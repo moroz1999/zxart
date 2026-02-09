@@ -1,0 +1,140 @@
+openapi: 3.0.0
+info:
+  title: ZxArt Tunes API
+  version: 1.0.0
+  description: API for tune playback events.
+
+paths:
+  /tunes/?action=play:
+    post:
+      summary: Report tune play
+      description: Reports a play event for a tune. Accepts JSON or form data.
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [play]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TunePlayRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TunePlayRequest'
+      responses:
+        '200':
+          description: Action result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseSuccess'
+
+components:
+  schemas:
+    TunePlayRequest:
+      type: object
+      properties:
+        tuneId:
+          type: integer
+          description: Tune ID to log (preferred).
+        id:
+          type: integer
+          description: Tune ID (legacy alias).
+        context:
+          type: string
+          description: Playback context (radio/page), optional.
+        timestamp:
+          type: string
+          description: Optional client timestamp.
+      required:
+        - tuneId
+
+    ApiResponseSuccess:
+      type: object
+      properties:
+        responseStatus:
+          type: string
+          enum: [success, error]
+        errorMessage:
+          type: string
+
+    AuthorDto:
+      type: object
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+          nullable: true
+
+    PartyInfoDto:
+      type: object
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+        place:
+          type: integer
+          nullable: true
+
+    TuneDto:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorDto'
+        format:
+          type: string
+        year:
+          type: string
+          nullable: true
+        votes:
+          type: number
+          format: float
+        votesAmount:
+          type: integer
+        userVote:
+          type: integer
+          nullable: true
+        denyVoting:
+          type: boolean
+        commentsAmount:
+          type: integer
+        plays:
+          type: integer
+        party:
+          $ref: '#/components/schemas/PartyInfoDto'
+          nullable: true
+        isPlayable:
+          type: boolean
+        isRealtime:
+          type: boolean
+        compo:
+          type: string
+          nullable: true
+        mp3Url:
+          type: string
+          nullable: true
+
+    ApiResponseTune:
+      type: object
+      properties:
+        responseStatus:
+          type: string
+          enum: [success, error]
+        responseData:
+          $ref: '#/components/schemas/TuneDto'
+        errorMessage:
+          type: string

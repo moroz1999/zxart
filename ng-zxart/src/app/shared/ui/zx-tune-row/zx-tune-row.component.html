@@ -1,4 +1,15 @@
 <td class="tune-index" *ngIf="index !== undefined">{{ index + 1 }}</td>
+<td class="tune-play">
+  <button
+    mat-icon-button
+    type="button"
+    [disabled]="!tune.isPlayable || !tune.mp3Url"
+    (click)="requestPlay()"
+    [attr.aria-label]="'player.play' | translate"
+  >
+    <mat-icon>play_arrow</mat-icon>
+  </button>
+</td>
 <td class="tune-main">
   <div class="tune-title-line">
     <a [href]="tune.url" class="tune-title">{{ tune.title }}</a>

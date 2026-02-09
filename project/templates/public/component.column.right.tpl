@@ -12,27 +12,9 @@
         {translations name="radiocontrols.title"}
     {/capture}
     {capture assign="moduleContent"}
-        <div class="radio_icon"></div>
-        <input type="button" class="button button_sm button_outlined" data-radiotype="discover"
-               value="{translations name="radiocontrols.discover"}"/>
-        <input type="button" class="button button_sm button_outlined" data-radiotype="randomgood"
-               value="{translations name="radiocontrols.randomgood"}"/>
-        <input type="button" class="button button_sm button_outlined" data-radiotype="games"
-               value="{translations name="radiocontrols.games"}"/>
-        <input type="button" class="button button_sm button_outlined" data-radiotype="demoscene"
-               value="{translations name="radiocontrols.demoscene"}"/>
-        <input type="button" class="button button_sm button_outlined" data-radiotype="lastyear"
-               value="{translations name="radiocontrols.lastyear"}"/>
-        <input type="button" class="button button_sm button_outlined" data-radiotype="ay"
-               value="{translations name="radiocontrols.ay"}"/>
-        <input type="button" class="button button_sm button_outlined" data-radiotype="beeper"
-               value="{translations name="radiocontrols.beeper"}"/>
-        <input type="button" class="button button_sm button_outlined" data-radiotype="exotic"
-               value="{translations name="radiocontrols.exotic"}"/>
-        <input type="button" class="button button_sm button_outlined" data-radiotype="underground"
-               value="{translations name="radiocontrols.underground"}"/>
+        <zx-radio-remote></zx-radio-remote>
     {/capture}
-    {assign moduleClass "radio_controls"}
+    {assign moduleClass ""}
     {assign moduleTitleClass ""}
     {assign moduleContentClass ""}
     {include file=$theme->template("component.columnmodule.tpl")}
