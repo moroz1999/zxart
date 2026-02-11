@@ -1,6 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {FirstpageModuleBase} from '../firstpage-module.base';
 import {ZxTuneDto} from '../../../../shared/models/zx-tune-dto';
@@ -13,6 +14,8 @@ import {ModuleSettings} from '../../models/firstpage-config';
 import {MODULE_SETTINGS} from '../../models/module-settings.token';
 import {PlayerService} from '../../../player/services/player.service';
 
+const PLAYLIST_ID = 'firstpage-unvoted-tunes';
+
 @Component({
   selector: 'zx-fp-unvoted-tunes',
   standalone: true,
@@ -22,6 +25,13 @@ import {PlayerService} from '../../../player/services/player.service';
 })
 export class UnvotedTunesComponent extends FirstpageModuleBase<ZxTuneDto> {
   title = '';
+
+  readonly playingTuneId$ = this.playerService.state$.pipe(
+    map(state => state.isPlaying && state.playlistId === PLAYLIST_ID
+      ? (state.playlist[state.currentIndex]?.id ?? null)
+      : null
+    )
+  );
 
   constructor(
     private dataService: FirstpageDataService,
@@ -47,6 +57,10 @@ export class UnvotedTunesComponent extends FirstpageModuleBase<ZxTuneDto> {
     if (startIndex === -1) {
       return;
     }
-    this.playerService.startPlaylist('firstpage-unvoted-tunes', playable, startIndex);
+    this.playerService.startPlaylist(PLAYLIST_ID, playable, startIndex);
+  }
+
+  pauseTune(): void {
+    this.playerService.pause();
   }
 }

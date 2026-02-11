@@ -15,8 +15,10 @@ export class ZxPanelComponent {
   @Input() variant: 'elevated' | 'flat' = 'elevated';
   @Input() title = '';
   @Input() titleLevel: 'h2' | 'h3' = 'h3';
+  @Input() contentBleed = false;
 
   @HostBinding('class') get hostClass(): string {
-    return `zx-panel--radius-${this.radius} zx-panel--padding-${this.padding} zx-panel--${this.variant}`;
+    const classes = `zx-panel--radius-${this.radius} zx-panel--padding-${this.padding} zx-panel--${this.variant}`;
+    return this.contentBleed ? `${classes} zx-panel--content-bleed` : classes;
   }
 }

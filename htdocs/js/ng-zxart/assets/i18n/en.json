@@ -217,6 +217,7 @@
   },
   "player": {
     "play": "Play",
+    "pause": "Pause",
     "advanced": "Advanced",
     "shuffle": "Shuffle",
     "applyCriteria": "Apply criteria",

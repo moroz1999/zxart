@@ -3,11 +3,11 @@
   <button
     mat-icon-button
     type="button"
-    [disabled]="!tune.isPlayable || !tune.mp3Url"
+    [disabled]="!isPlaying && (!tune.isPlayable || !tune.mp3Url)"
     (click)="requestPlay()"
-    [attr.aria-label]="'player.play' | translate"
+    [attr.aria-label]="(isPlaying ? 'player.pause' : 'player.play') | translate"
   >
-    <mat-icon>play_arrow</mat-icon>
+    <mat-icon>{{ isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
   </button>
 </td>
 <td class="tune-main">

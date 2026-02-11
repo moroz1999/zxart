@@ -25,7 +25,9 @@ import {ZxBadgeComponent} from '../zx-badge/zx-badge.component';
 export class ZxTuneRowComponent {
   @Input() tune!: ZxTuneDto;
   @Input() index?: number;
+  @Input() isPlaying = false;
   @Output() playRequested = new EventEmitter<ZxTuneDto>();
+  @Output() pauseRequested = new EventEmitter<void>();
 
   constructor(
     private voteService: VoteService,
@@ -50,6 +52,10 @@ export class ZxTuneRowComponent {
   }
 
   requestPlay(): void {
+    if (this.isPlaying) {
+      this.pauseRequested.emit();
+      return;
+    }
     if (!this.tune.isPlayable || !this.tune.mp3Url) {
       return;
     }

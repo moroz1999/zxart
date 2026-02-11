@@ -15,7 +15,13 @@ Versatile button component with multiple sizes (xs, sm, md), colors, and square 
 - `danger` - Destructive actions only (Delete, Remove, Revoke).
 
 ### zx-panel
-Universal layout container with configurable variant (elevated, flat), border radius (sm, md, lg, xl) and padding (none, sm, md, lg). Optional `title` prop renders a standard heading inside the panel. Use `padding="none"` when child content needs to go edge-to-edge (e.g., tables).
+Universal layout container with configurable variant (elevated, flat), border radius (sm, md, lg, xl) and padding (none, sm, md, lg). Optional `title` prop renders a standard heading inside the panel.
+
+Props: `variant`, `radius`, `padding`, `title`, `titleLevel` (`h2` | `h3`), `contentBleed` (boolean, default `false`).
+
+**Content bleed**: Use `[contentBleed]="true"` when child content (e.g., tables) needs to go edge-to-edge while the title retains consistent padding. The panel keeps its `padding` level for the title area, but the body area loses all padding. Do NOT use `padding="none"` as a workaround for tables — use `contentBleed` instead.
+
+**padding="none"**: Reserved for cases where the entire panel genuinely needs zero padding (e.g., image cards where everything is edge-to-edge and there is no title).
 
 **Variant rule**: Use `elevated` for standalone panels (top-level cards, sections). Use `flat` for panels nested inside another panel (inner grouping, embedded content).
 
@@ -35,7 +41,7 @@ Loading placeholder component for lists and content. Variants:
 Props: `variant`, `count` (number of skeleton items), `animated` (shimmer effect, default true)
 
 ### zx-table
-Table wrapper inside a flat panel. Props: `title` (optional heading above the table). Uses `padding="none"` on the panel so that table rows go edge-to-edge; the title gets its own internal padding.
+Table wrapper inside an elevated panel with `contentBleed`. Props: `title` (optional heading above the table), `titleLevel`. The panel uses `contentBleed` so table rows go edge-to-edge while the title retains standard panel padding.
 
 ### zx-button-controls
 Wrapper for groups of action buttons (dialogs, forms, toolbars). All button groups in the project MUST use this component instead of manual flex/gap layout.

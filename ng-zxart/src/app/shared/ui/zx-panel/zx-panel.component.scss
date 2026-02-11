@@ -1,7 +1,3 @@
-.zx-panel__title {
-  margin-bottom: var(--space-12);
-}
-
 :host {
   background-color: var(--zx-panel-bg);
   box-sizing: border-box;
@@ -20,8 +16,29 @@
   &.zx-panel--radius-lg { border-radius: var(--zx-panel-radius-lg); }
   &.zx-panel--radius-xl { border-radius: var(--zx-panel-radius-xl); }
 
-  &.zx-panel--padding-none { padding: 0; }
-  &.zx-panel--padding-sm { padding: var(--zx-panel-padding-sm); }
-  &.zx-panel--padding-md { padding: var(--zx-panel-padding-md); }
-  &.zx-panel--padding-lg { padding: var(--zx-panel-padding-lg); }
+  &.zx-panel--padding-none { --_panel-padding: 0; }
+  &.zx-panel--padding-sm { --_panel-padding: var(--zx-panel-padding-sm); }
+  &.zx-panel--padding-md { --_panel-padding: var(--zx-panel-padding-md); }
+  &.zx-panel--padding-lg { --_panel-padding: var(--zx-panel-padding-lg); }
+
+  &.zx-panel--content-bleed {
+    overflow: hidden;
+  }
+}
+
+.zx-panel__title {
+  padding: var(--_panel-padding) var(--_panel-padding) 0;
+  margin-bottom: var(--zx-panel-title-gap);
+}
+
+.zx-panel__body {
+  padding: 0 var(--_panel-padding) var(--_panel-padding);
+}
+
+.zx-panel__body:first-child {
+  padding-top: var(--_panel-padding);
+}
+
+:host(.zx-panel--content-bleed) .zx-panel__body {
+  padding: 0;
 }
