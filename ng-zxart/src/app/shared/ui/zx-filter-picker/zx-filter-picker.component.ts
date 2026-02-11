@@ -1,14 +1,20 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatIconModule} from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
-import {MatMenuModule} from '@angular/material/menu';
+import {FormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
-import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {ZxBodyDirective, ZxCaptionDirective} from '../../directives/typography/typography.directives';
+import {ZxButtonComponent} from '../zx-button/zx-button.component';
+import {ZxCheckboxFieldComponent} from '../zx-checkbox-field/zx-checkbox-field.component';
+import {ZxInputComponent} from '../zx-input/zx-input.component';
 
 export interface ZxFilterPickerItem {
   id: string;
@@ -20,21 +26,18 @@ export interface ZxFilterPickerItem {
   standalone: true,
   imports: [
     CommonModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatMenuModule,
+    FormsModule,
     TranslateModule,
     ZxButtonComponent,
     ZxBodyDirective,
     ZxCaptionDirective,
+    ZxCheckboxFieldComponent,
+    ZxInputComponent,
   ],
   templateUrl: './zx-filter-picker.component.html',
   styleUrl: './zx-filter-picker.component.scss',
 })
-export class ZxFilterPickerComponent {
+export class ZxFilterPickerComponent implements AfterViewChecked {
   @Input() label = '';
   @Input() items: ZxFilterPickerItem[] = [];
   @Input() selectedIds: string[] = [];
@@ -43,8 +46,33 @@ export class ZxFilterPickerComponent {
   @Input() multi = true;
   @Output() selectedIdsChange = new EventEmitter<string[]>();
 
+  @ViewChild('popoverEl') popoverEl?: ElementRef<HTMLElement>;
+  @ViewChild(ZxInputComponent) searchInput?: ZxInputComponent;
+
   searchTerm = '';
-  menuOpen = false;
+  popoverOpen = false;
+  dropUp = false;
+  private needsFocus = false;
+
+  constructor(private elementRef: ElementRef<HTMLElement>) {}
+
+  ngAfterViewChecked(): void {
+    if (this.popoverOpen && this.popoverEl) {
+      this.updateDropDirection();
+    }
+    if (this.needsFocus && this.searchInput?.nativeElement) {
+      this.searchInput.nativeElement.focus();
+      this.needsFocus = false;
+    }
+  }
+
+  private updateDropDirection(): void {
+    const hostRect = this.elementRef.nativeElement.getBoundingClientRect();
+    const popoverHeight = this.popoverEl!.nativeElement.offsetHeight;
+    const spaceBelow = window.innerHeight - hostRect.bottom;
+    const spaceAbove = hostRect.top;
+    this.dropUp = spaceBelow < popoverHeight && spaceAbove > spaceBelow;
+  }
 
   get hasSelection(): boolean {
     return this.selectedIds.length > 0;
@@ -88,9 +116,16 @@ export class ZxFilterPickerComponent {
     return this.items.filter(item => item.label.toLocaleLowerCase().includes(term));
   }
 
-  onSearchChange(event: Event): void {
-    const target = event.target as HTMLInputElement | null;
-    this.searchTerm = target?.value ?? '';
+  togglePopover(event: Event): void {
+    event.stopPropagation();
+    this.popoverOpen = !this.popoverOpen;
+    if (this.popoverOpen && this.searchEnabled) {
+      this.needsFocus = true;
+    }
+  }
+
+  closePopover(): void {
+    this.popoverOpen = false;
   }
 
   toggleSelection(itemId: string, checked: boolean): void {
@@ -119,12 +154,24 @@ export class ZxFilterPickerComponent {
     return this.selectedIds.includes(itemId);
   }
 
-  onMenuOpened(): void {
-    this.menuOpen = true;
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    if (!this.popoverOpen) {
+      return;
+    }
+    const target = event.target as Node | null;
+    if (target && this.elementRef.nativeElement.contains(target)) {
+      return;
+    }
+    this.closePopover();
   }
 
-  onMenuClosed(): void {
-    this.menuOpen = false;
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscape(event: KeyboardEvent): void {
+    if (this.popoverOpen) {
+      event.stopPropagation();
+      this.closePopover();
+    }
   }
 
   trackById(_: number, item: ZxFilterPickerItem): string {

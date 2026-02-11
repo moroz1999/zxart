@@ -2,16 +2,14 @@
 <div
   class="zx-filter-picker__control"
   [class.zx-filter-picker__control--active]="hasSelection"
-  [class.zx-filter-picker__control--open]="menuOpen"
+  [class.zx-filter-picker__control--open]="popoverOpen"
 >
   <button
     type="button"
-    mat-button
     class="zx-filter-picker__trigger"
-    [matMenuTriggerFor]="menu"
+    [attr.aria-expanded]="popoverOpen"
     [attr.aria-label]="label || summaryText"
-    (menuOpened)="onMenuOpened()"
-    (menuClosed)="onMenuClosed()"
+    (click)="togglePopover($event)"
   >
     <span
       zxBody
@@ -20,45 +18,41 @@
     >
       {{ summaryText }}
     </span>
-    <mat-icon class="zx-filter-picker__chevron">expand_more</mat-icon>
+    <span class="zx-filter-picker__chevron" aria-hidden="true"></span>
   </button>
   <button
     *ngIf="hasSelection"
     type="button"
-    mat-icon-button
     class="zx-filter-picker__clear"
     [attr.aria-label]="'player.filters.clear' | translate"
     (click)="clearSelection($event)"
   >
-    <mat-icon>close</mat-icon>
+    <span aria-hidden="true">x</span>
   </button>
 </div>
 
-<mat-menu #menu="matMenu" class="zx-filter-picker__menu">
+<div
+  #popoverEl
+  class="zx-filter-picker__popover"
+  [class.zx-filter-picker__popover--drop-up]="dropUp"
+  *ngIf="popoverOpen"
+  (click)="$event.stopPropagation()"
+>
   <div class="zx-filter-picker__menu-content">
-    <mat-form-field
+    <zx-input
       *ngIf="searchEnabled"
-      appearance="outline"
-      class="zx-filter-picker__search"
-    >
-      <mat-icon matPrefix>search</mat-icon>
-      <input
-        matInput
-        [placeholder]="'player.filters.search' | translate"
-        [value]="searchTerm"
-        (input)="onSearchChange($event)"
-      />
-    </mat-form-field>
+      [placeholder]="'player.filters.search' | translate"
+      [(ngModel)]="searchTerm"
+    ></zx-input>
 
-    <div class="zx-filter-picker__list">
-      <mat-checkbox
+    <div class="zx-filter-picker__list" role="listbox">
+      <zx-checkbox-field
         *ngFor="let item of filteredItems; trackBy: trackById"
-        [checked]="isSelected(item.id)"
-        (change)="toggleSelection(item.id, $event.checked)"
         class="zx-filter-picker__item"
-      >
-        <span zxBody class="zx-filter-picker__item-label">{{ item.label }}</span>
-      </mat-checkbox>
+        [label]="item.label"
+        [ngModel]="isSelected(item.id)"
+        (ngModelChange)="toggleSelection(item.id, $event)"
+      ></zx-checkbox-field>
     </div>
 
     <zx-button
@@ -71,4 +65,4 @@
       {{ 'player.filters.clearAll' | translate }}
     </zx-button>
   </div>
-</mat-menu>
+</div>

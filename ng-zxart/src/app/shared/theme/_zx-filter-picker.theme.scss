@@ -14,8 +14,11 @@
   --zx-filter-picker-placeholder: var(--input-placeholder);
   --zx-filter-picker-label: var(--form-label-color);
   --zx-filter-picker-icon: var(--text-light-color);
-  --zx-filter-picker-icon-size: var(--space-16);
+  --zx-filter-picker-icon-size: var(--space-12);
+  --zx-filter-picker-icon-stroke: var(--border-width-thin);
   --zx-filter-picker-transition: var(--animation-sm);
+  --zx-filter-picker-popover-offset: var(--space-4);
+  --zx-filter-picker-popover-z: 8;
 
   --zx-filter-picker-panel-bg: var(--input-bg);
   --zx-filter-picker-panel-border: var(--border-width-thin) solid var(--border-form);
@@ -30,10 +33,10 @@
   --zx-filter-picker-item-hover-bg: var(--background-dark);
 
   --zx-filter-picker-clear-color: var(--text-light-color);
-  --zx-filter-picker-checkbox-border: var(--input-border-color);
-  --zx-filter-picker-checkbox-border-hover: var(--input-border-focus-color);
-  --zx-filter-picker-checkbox-selected: var(--primary-500);
-  --zx-filter-picker-checkbox-check: var(--white);
+  --zx-filter-picker-clear-size: var(--space-20);
+  --zx-filter-picker-clear-font-size: var(--font-sm);
+
+
 }
 
 .dark-mode {
