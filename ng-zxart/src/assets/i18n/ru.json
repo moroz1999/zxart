@@ -212,6 +212,14 @@
       "save": "Сохранить"
     }
   },
+  "tune": {
+    "compo": {
+      "realtime": "Реалтайм музыка",
+      "realtimeay": "Реалтайм AY",
+      "realtimebeeper": "Реалтайм Beeper",
+      "tune-realtime": "Реалтайм музыка"
+    }
+  },
   "radio": {
     "title": "Радио"
   },
@@ -252,6 +260,18 @@
       "party.yes": "Да",
       "party.no": "Нет",
       "loadError": "Не удалось загрузить фильтры."
+    },
+    "formatGroup": {
+      "beeper": "Beeper",
+      "ay": "Стандартный трехканальный AY/YM",
+      "saa": "SAM Coupé SAA 1099",
+      "ts": "Turbo Sound (2xAY 6 каналов)",
+      "aydigitalay": "AY+Digital AY",
+      "digitalay": "Цифровой AY",
+      "aybeeper": "AY+Beeper",
+      "tsfm": "Turbo Sound (2xAY 6 каналов) + FM",
+      "digitalbeeper": "Цифровой Beeper",
+      "fm": "FM (3 канала YM2203)"
     },
     "list": {
       "hint": "через запятую"

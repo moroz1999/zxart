@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {ZxTuneDto} from '../../models/zx-tune-dto';
@@ -32,6 +32,7 @@ export class ZxTuneRowComponent {
   constructor(
     private voteService: VoteService,
     private cdr: ChangeDetectorRef,
+    private translateService: TranslateService,
   ) {}
 
   get medalClass(): string | null {
@@ -49,6 +50,15 @@ export class ZxTuneRowComponent {
       this.tune = {...this.tune, votes: value, userVote: rating};
       this.cdr.detectChanges();
     });
+  }
+
+  getRealtimeBadgeLabel(): string {
+    if (!this.tune.compo) {
+      return this.translateService.instant('firstpage.realtime');
+    }
+    const key = `tune.compo.${this.tune.compo}`;
+    const translated = this.translateService.instant(key);
+    return translated === key ? this.tune.compo : translated;
   }
 
   requestPlay(): void {

@@ -316,7 +316,7 @@ export class PlayerSheetComponent implements OnDestroy {
     this.buildCategoryOptions(options);
     this.formatGroupOptions = options.formatGroups.map(group => ({
       value: group,
-      label: group,
+      label: this.getFormatGroupLabel(group),
     }));
     this.formatOptions = options.formats.map(format => ({
       value: format,
@@ -346,6 +346,12 @@ export class PlayerSheetComponent implements OnDestroy {
         label: category.title,
       })),
     ];
+  }
+
+  private getFormatGroupLabel(group: string): string {
+    const key = `player.formatGroup.${group}`;
+    const translated = this.translateService.instant(key);
+    return translated === key ? group : translated;
   }
 
   private buildYearOptions(min: number | null, max: number | null): ZxSelectOption[] {

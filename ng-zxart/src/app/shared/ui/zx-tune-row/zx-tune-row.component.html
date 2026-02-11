@@ -14,7 +14,7 @@
   <div class="tune-title-line">
     <a [href]="tune.url" class="tune-title">{{ tune.title }}</a>
     <zx-badge *ngIf="tune.isRealtime" variant="secondary" class="tune-realtime">
-      {{ tune.compo || ('firstpage.realtime' | translate) }}
+      {{ getRealtimeBadgeLabel() }}
     </zx-badge>
   </div>
   <div class="tune-authors" *ngIf="tune.authors.length">

@@ -212,6 +212,14 @@
       "save": "Guardar"
     }
   },
+  "tune": {
+    "compo": {
+      "realtime": "En tiempo real música",
+      "realtimeay": "Tiempo real AY",
+      "realtimebeeper": "Tiempo real Beeper",
+      "tune-realtime": "En tiempo real música"
+    }
+  },
   "radio": {
     "title": "Radio"
   },
@@ -251,6 +259,18 @@
       "party.yes": "Sí",
       "party.no": "No",
       "loadError": "No se pudieron cargar los filtros."
+    },
+    "formatGroup": {
+      "beeper": "Zumbador",
+      "ay": "Estándar 3 canal AY/YM",
+      "saa": "SAM Coupe-SAA 1099",
+      "ts": "Turbo Sound (2xAY 6 canales)",
+      "aydigitalay": "AY+Digital AY",
+      "digitalay": "Digital AY",
+      "aybeeper": "AY+Beeper",
+      "tsfm": "Turbo Sound (2xAY 6 canales) + FM",
+      "digitalbeeper": "Digital Beeper",
+      "fm": "FM (3 canales YM2203)"
     },
     "list": {
       "hint": "Separado por comas"
