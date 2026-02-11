@@ -10,6 +10,7 @@ import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
 })
 export class ZxTableComponent implements AfterContentInit {
   @Input() title = '';
+  @Input() titleLevel: 'h2' | 'h3' = 'h3';
 
   constructor(private el: ElementRef<HTMLElement>) {}
 

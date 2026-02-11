@@ -24,6 +24,7 @@ readonly class RadioCriteriaFactory
             formatGroupsExclude: $this->normalizeStringList($data['formatGroupsExclude'] ?? []),
             formatsInclude: $this->normalizeStringList($data['formatsInclude'] ?? []),
             formatsExclude: $this->normalizeStringList($data['formatsExclude'] ?? []),
+            prodCategoriesInclude: $this->normalizeIntList($data['prodCategoriesInclude'] ?? []),
             bestVotesLimit: $this->normalizeOptionalInt($data['bestVotesLimit'] ?? null),
             maxPlays: $this->normalizeOptionalInt($data['maxPlays'] ?? null),
             minPartyPlace: $this->normalizeOptionalInt($data['minPartyPlace'] ?? null),

@@ -7,12 +7,13 @@ namespace ZxArt\Tunes\Repositories;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use ZxArt\Helpers\AlphanumericColumnSearch;
+use ZxArt\LinkTypes;
 use ZxArt\Radio\Dto\RadioCriteriaDto;
 
 readonly final class TunesRepository
 {
     public const TABLE = 'module_zxmusic';
-    private const string AUTHORSHIP_TABLE = 'authorship';
+    private const string STRUCTURE_LINKS_TABLE = 'structure_links';
     private const string AUTHOR_TABLE = 'module_author';
     private const string VOTES_HISTORY_TABLE = 'votes_history';
     private const string AUTHORSHIP_TYPE = 'authorMusic';
@@ -187,18 +188,18 @@ readonly final class TunesRepository
         if ($criteria->countriesInclude !== [] || $criteria->countriesExclude !== []) {
             $query
                 ->join(
-                    self::AUTHORSHIP_TABLE,
-                    self::AUTHORSHIP_TABLE . '.elementId',
-                    '=',
-                    self::TABLE . '.id'
+                    self::STRUCTURE_LINKS_TABLE . ' as author_links',
+                    function ($join) {
+                        $join->on('author_links.childStructureId', '=', self::TABLE . '.id')
+                            ->where('author_links.type', '=', self::AUTHORSHIP_TYPE);
+                    }
                 )
                 ->join(
                     self::AUTHOR_TABLE,
                     self::AUTHOR_TABLE . '.id',
                     '=',
-                    self::AUTHORSHIP_TABLE . '.authorId'
+                    'author_links.parentStructureId'
                 )
-                ->where(self::AUTHORSHIP_TABLE . '.type', '=', self::AUTHORSHIP_TYPE)
                 ->distinct();
 
             if ($criteria->countriesInclude !== []) {
@@ -207,6 +208,25 @@ readonly final class TunesRepository
             if ($criteria->countriesExclude !== []) {
                 $query->whereNotIn(self::AUTHOR_TABLE . '.country', $criteria->countriesExclude);
             }
+        }
+        if ($criteria->prodCategoriesInclude !== []) {
+            $query
+                ->join(
+                    self::STRUCTURE_LINKS_TABLE . ' as prod_links',
+                    'prod_links.childStructureId',
+                    '=',
+                    self::TABLE . '.id'
+                )
+                ->join(
+                    self::STRUCTURE_LINKS_TABLE . ' as category_links',
+                    'category_links.childStructureId',
+                    '=',
+                    'prod_links.parentStructureId'
+                )
+                ->where('prod_links.type', '=', LinkTypes::GAME_LINK->value)
+                ->where('category_links.type', '=', LinkTypes::ZX_PROD_CATEGORY->value)
+                ->whereIn('category_links.parentStructureId', $criteria->prodCategoriesInclude)
+                ->distinct();
         }
 
         return $query;
@@ -244,9 +264,8 @@ readonly final class TunesRepository
             ->get();
 
         $items = [];
-        /** @var object $row */
         foreach ($rows as $row) {
-            $value = (string)($row->formatGroup ?? '');
+            $value = (string)($row['formatGroup'] ?? '');
             if ($value !== '') {
                 $items[] = $value;
             }
@@ -268,9 +287,8 @@ readonly final class TunesRepository
             ->get();
 
         $items = [];
-        /** @var object $row */
         foreach ($rows as $row) {
-            $value = (string)($row->type ?? '');
+            $value = (string)($row['type'] ?? '');
             if ($value !== '') {
                 $items[] = $value;
             }
@@ -286,27 +304,26 @@ readonly final class TunesRepository
     {
         $rows = $this->db->table(self::TABLE)
             ->join(
-                self::AUTHORSHIP_TABLE,
-                self::AUTHORSHIP_TABLE . '.elementId',
-                '=',
-                self::TABLE . '.id'
+                self::STRUCTURE_LINKS_TABLE,
+                function ($join) {
+                    $join->on(self::STRUCTURE_LINKS_TABLE . '.childStructureId', '=', self::TABLE . '.id')
+                        ->where(self::STRUCTURE_LINKS_TABLE . '.type', '=', self::AUTHORSHIP_TYPE);
+                }
             )
             ->join(
                 self::AUTHOR_TABLE,
                 self::AUTHOR_TABLE . '.id',
                 '=',
-                self::AUTHORSHIP_TABLE . '.authorId'
+                self::STRUCTURE_LINKS_TABLE . '.parentStructureId'
             )
-            ->where(self::AUTHORSHIP_TABLE . '.type', '=', self::AUTHORSHIP_TYPE)
             ->where(self::AUTHOR_TABLE . '.country', '!=', 0)
             ->distinct()
             ->orderBy(self::AUTHOR_TABLE . '.country')
             ->get([self::AUTHOR_TABLE . '.country as country']);
 
         $items = [];
-        /** @var object $row */
         foreach ($rows as $row) {
-            $value = (int)($row->country ?? 0);
+            $value = (int)($row['country'] ?? 0);
             if ($value !== 0) {
                 $items[] = $value;
             }

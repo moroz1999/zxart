@@ -1,5 +1,6 @@
 import {AuthorDto} from './author-dto';
 import {PartyInfoDto} from './party-info-dto';
+import {ReleaseInfoDto} from './release-info-dto';
 
 export interface ZxTuneDto {
   readonly id: number;
@@ -15,6 +16,7 @@ export interface ZxTuneDto {
   readonly commentsAmount: number;
   readonly plays: number;
   readonly party: PartyInfoDto | null;
+  readonly release: ReleaseInfoDto | null;
   readonly isPlayable: boolean;
   readonly isRealtime: boolean;
   readonly compo: string | null;

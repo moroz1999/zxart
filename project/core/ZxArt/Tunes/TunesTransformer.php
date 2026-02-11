@@ -6,6 +6,7 @@ namespace ZxArt\Tunes;
 
 use ZxArt\Shared\Dto\AuthorDto;
 use ZxArt\Shared\Dto\PartyInfoDto;
+use ZxArt\Shared\Dto\ReleaseInfoDto;
 use ZxArt\Tunes\Dto\TuneDto;
 use zxMusicElement;
 
@@ -31,6 +32,15 @@ readonly class TunesTransformer
             );
         }
 
+        $release = null;
+        $releaseElement = $element->getReleaseElement();
+        if ($releaseElement) {
+            $release = new ReleaseInfoDto(
+                title: html_entity_decode((string)$releaseElement->getTitle(), ENT_QUOTES),
+                url: $releaseElement->getUrl(),
+            );
+        }
+
         $userVote = $element->getUserVote();
         $mp3Path = $element->getMp3FilePath();
 
@@ -48,6 +58,7 @@ readonly class TunesTransformer
             commentsAmount: (int)$element->commentsAmount,
             plays: (int)$element->plays,
             party: $party,
+            release: $release,
             isPlayable: $element->isPlayable(),
             isRealtime: $element->isRealtime(),
             compo: $element->compo ? html_entity_decode((string)$element->compo, ENT_QUOTES) : null,

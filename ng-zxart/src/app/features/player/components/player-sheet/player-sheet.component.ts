@@ -1,5 +1,6 @@
 ﻿import {Component, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {animate, style, transition, trigger} from '@angular/animations';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {MatIconModule} from '@angular/material/icon';
@@ -12,6 +13,7 @@ import {ZxBodyDirective, ZxCaptionDirective} from '../../../../shared/directives
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxSelectComponent, ZxSelectOption} from '../../../../shared/ui/zx-select/zx-select.component';
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
+import {ZxInputRangeComponent} from '../../../../shared/ui/zx-input-range/zx-input-range.component';
 import {RatingComponent} from '../../../../shared/components/rating/rating.component';
 import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
 import {VoteService} from '../../../../shared/services/vote.service';
@@ -24,7 +26,6 @@ const AUTO_APPLY_DEBOUNCE_MS = 150;
 
 type PlaybackMode = 'once' | 'repeat-one' | 'repeat-all' | 'shuffle-all';
 type PartyValue = 'any' | 'yes' | 'no';
-type SourceCategory = 'any' | 'games' | 'demoscene';
 
 @Component({
   selector: 'zx-player-sheet',
@@ -40,11 +41,33 @@ type SourceCategory = 'any' | 'games' | 'demoscene';
     ZxButtonComponent,
     ZxSelectComponent,
     ZxInputComponent,
+    ZxInputRangeComponent,
     RatingComponent,
     ZxSkeletonComponent,
   ],
   templateUrl: './player-sheet.component.html',
   styleUrls: ['./player-sheet.component.scss'],
+  animations: [
+    trigger('slideUp', [
+      transition(':enter', [
+        style({transform: 'translateY(100%)'}),
+        animate('300ms cubic-bezier(0.34, 1.4, 0.64, 1)', style({transform: 'translateY(0)'})),
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({transform: 'translateY(100%)'})),
+      ]),
+    ]),
+    trigger('expandPanel', [
+      transition(':enter', [
+        style({opacity: 0, maxHeight: '0', overflow: 'hidden'}),
+        animate('250ms cubic-bezier(0.34, 1.2, 0.64, 1)', style({opacity: 1, maxHeight: '500px'})),
+      ]),
+      transition(':leave', [
+        style({overflow: 'hidden'}),
+        animate('200ms ease-in', style({opacity: 0, maxHeight: '0'})),
+      ]),
+    ]),
+  ],
 })
 export class PlayerSheetComponent implements OnDestroy {
   state$ = this.playerService.state$;
@@ -59,7 +82,7 @@ export class PlayerSheetComponent implements OnDestroy {
   formatGroupOptions: ZxSelectOption[] = [];
   formatOptions: ZxSelectOption[] = [];
   partyOptions: ZxSelectOption[] = [];
-  sourceOptions: ZxSelectOption[] = [];
+  categoryOptions: ZxSelectOption[] = [];
   presets: {key: RadioPreset; label: string}[] = [
     {key: 'discover', label: 'player.preset.discover'},
     {key: 'randomgood', label: 'player.preset.randomgood'},
@@ -85,7 +108,8 @@ export class PlayerSheetComponent implements OnDestroy {
   ) {
     this.form = this.fb.group({
       minRating: [''],
-      source: ['any'],
+      category: [''],
+      minPartyPlace: [0],
       yearFrom: [''],
       yearTo: [''],
       countries: [[]],
@@ -95,7 +119,7 @@ export class PlayerSheetComponent implements OnDestroy {
     });
 
     this.setFormFromCriteria(this.playerService.getCriteria());
-    this.buildSourceOptions();
+    this.buildCategoryOptions(null);
 
     this.subscriptions.add(
       this.playerService.criteria$.subscribe(criteria => {
@@ -111,7 +135,7 @@ export class PlayerSheetComponent implements OnDestroy {
 
     this.subscriptions.add(
       this.translateService.onLangChange.subscribe(() => {
-        this.buildSourceOptions();
+        this.buildCategoryOptions(this.options);
         if (this.options) {
           this.buildOptions(this.options);
         }
@@ -162,11 +186,11 @@ export class PlayerSheetComponent implements OnDestroy {
   }
 
   seekByClick(event: MouseEvent, duration: number): void {
-    const target = event.currentTarget as HTMLElement;
-    if (!target || duration <= 0) {
+    const el = event.currentTarget as HTMLElement | null;
+    if (!el || duration <= 0) {
       return;
     }
-    const rect = target.getBoundingClientRect();
+    const rect = el.getBoundingClientRect();
     const offsetX = event.clientX - rect.left;
     const percent = Math.max(0, Math.min(1, offsetX / rect.width));
     this.playerService.seekToPercent(percent);
@@ -289,6 +313,7 @@ export class PlayerSheetComponent implements OnDestroy {
       value: String(country.id),
       label: country.title,
     }));
+    this.buildCategoryOptions(options);
     this.formatGroupOptions = options.formatGroups.map(group => ({
       value: group,
       label: group,
@@ -303,11 +328,23 @@ export class PlayerSheetComponent implements OnDestroy {
     }));
   }
 
-  private buildSourceOptions(): void {
-    this.sourceOptions = [
-      {value: 'any', label: this.translateService.instant('player.filters.source.any')},
-      {value: 'games', label: this.translateService.instant('player.filters.source.games')},
-      {value: 'demoscene', label: this.translateService.instant('player.filters.source.demoscene')},
+  private buildCategoryOptions(options: RadioFilterOptionsDto | null): void {
+    const base = {
+      value: '',
+      label: this.translateService.instant('player.filters.category.any'),
+    };
+
+    if (!options) {
+      this.categoryOptions = [base];
+      return;
+    }
+
+    this.categoryOptions = [
+      base,
+      ...options.categories.map(category => ({
+        value: String(category.id),
+        label: category.title,
+      })),
     ];
   }
 
@@ -329,7 +366,8 @@ export class PlayerSheetComponent implements OnDestroy {
     this.form.patchValue(
       {
         minRating: this.formatRatingValue(criteria.minRating),
-        source: this.toSourceCategory(criteria),
+        category: this.getCategorySelection(criteria),
+        minPartyPlace: criteria.minPartyPlace ?? 0,
         yearFrom,
         yearTo,
         countries: criteria.countriesInclude.map(value => String(value)),
@@ -349,21 +387,21 @@ export class PlayerSheetComponent implements OnDestroy {
 
   private buildCriteriaFromForm(): RadioCriteria {
     const minRating = this.toOptionalFloat(this.form.get('minRating')?.value);
-    const source = this.form.get('source')?.value as SourceCategory;
+    const categoryId = this.toOptionalInt(this.form.get('category')?.value);
+    const minPartyPlace = this.toOptionalInt(this.form.get('minPartyPlace')?.value);
     const yearFrom = this.toOptionalInt(this.form.get('yearFrom')?.value);
     const yearTo = this.toOptionalInt(this.form.get('yearTo')?.value);
     const yearsInclude = this.buildYearRange(yearFrom, yearTo);
-    const sourceCriteria = this.toSourceCriteria(source);
 
     return {
       ...EMPTY_RADIO_CRITERIA,
       minRating,
       yearsInclude,
+      prodCategoriesInclude: categoryId === null ? [] : [categoryId],
       countriesInclude: this.toNumberList(this.form.get('countries')?.value),
       formatGroupsInclude: this.toStringList(this.form.get('formatGroups')?.value),
       formatsInclude: this.toStringList(this.form.get('formats')?.value),
-      minPartyPlace: sourceCriteria.minPartyPlace,
-      requireGame: sourceCriteria.requireGame,
+      minPartyPlace: minPartyPlace && minPartyPlace > 0 ? minPartyPlace : null,
       hasParty: this.toPartyCriteria(this.form.get('party')?.value as PartyValue),
     };
   }
@@ -458,24 +496,12 @@ export class PlayerSheetComponent implements OnDestroy {
     return null;
   }
 
-  private toSourceCategory(criteria: RadioCriteria): SourceCategory {
-    if (criteria.requireGame === true) {
-      return 'games';
+  private getCategorySelection(criteria: RadioCriteria): string {
+    const firstCategory = criteria.prodCategoriesInclude[0];
+    if (!firstCategory) {
+      return '';
     }
-    if (criteria.minPartyPlace !== null) {
-      return 'demoscene';
-    }
-    return 'any';
-  }
-
-  private toSourceCriteria(value: SourceCategory): {requireGame: boolean | null; minPartyPlace: number | null} {
-    if (value === 'games') {
-      return {requireGame: true, minPartyPlace: null};
-    }
-    if (value === 'demoscene') {
-      return {requireGame: null, minPartyPlace: 1000};
-    }
-    return {requireGame: null, minPartyPlace: null};
+    return String(firstCategory);
   }
 
   private formatRatingValue(value: number | null): string {

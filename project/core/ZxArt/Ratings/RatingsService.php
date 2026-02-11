@@ -37,7 +37,7 @@ readonly class RatingsService
 
         $votes = $this->db->table('votes_history')
             ->select('*')
-            ->orderBy('id', 'desc')
+            ->orderBy('date', 'desc')
             ->limit($limit)
             ->get();
 

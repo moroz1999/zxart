@@ -14,7 +14,7 @@
     padding: var(--table-cell-padding);
   }
 
-  tbody tr:nth-child(even) {
+  tbody > :nth-child(odd) {
     background: var(--table-row-alternate-bg);
   }
 

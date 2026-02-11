@@ -33,7 +33,7 @@ class CommentsServiceTest extends TestCase
 
         $this->service = new CommentsService(
             structureManager: $this->structureManager,
-            user: $this->user,
+            currentUserService: $this->user,
             languagesManager: $this->createMock(LanguagesManager::class),
             privilegesManager: $this->createMock(privilegesManager::class),
             cache: $this->createMock(Cache::class),

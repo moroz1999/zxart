@@ -1,5 +1,5 @@
 ﻿<ng-container *ngIf="state$ | async as state">
-  <zx-panel padding="sm" radius="lg" variant="elevated" class="player-panel">
+  <zx-panel @slideUp padding="sm" radius="lg" variant="elevated" class="player-panel">
     <div class="player-bar">
       <div class="player-controls">
         <zx-button
@@ -42,17 +42,14 @@
         </zx-button>
       </div>
 
-      <zx-button
-        size="sm"
-        color="transparent"
-        extraClass="player-progress"
-        [disabled]="state.currentIndex < 0"
-        [ariaLabel]="getCurrentTitle(state)"
+      <div
+        class="player-progress"
+        [class.player-progress--disabled]="state.currentIndex < 0"
         [style.--zx-player-progress]="getProgressPercent(state)"
         (click)="seekByClick($event, state.duration)"
       >
         <span zxBody class="player-progress-text">{{ getCurrentTitle(state) }}</span>
-      </zx-button>
+      </div>
 
       <zx-button
         size="sm"
@@ -104,7 +101,7 @@
       </zx-button>
     </div>
 
-    <div class="player-advanced" *ngIf="expanded">
+    <div class="player-advanced" *ngIf="expanded" @expandPanel>
       <form [formGroup]="form" class="player-advanced-form">
         <zx-skeleton *ngIf="optionsLoading" variant="text" [count]="3"></zx-skeleton>
 
@@ -130,20 +127,28 @@
               <span zxCaption class="player-field-label">{{ 'player.filters.minRating' | translate }}</span>
               <span zxCaption class="player-field-value">{{ form.get('minRating')?.value || '0.0' }}</span>
             </div>
-            <zx-input
-              type="range"
+            <zx-input-range
               [min]="0"
               [max]="5"
               [step]="0.1"
               formControlName="minRating"
-            ></zx-input>
+            ></zx-input-range>
           </div>
           <div class="player-field">
-            <span zxCaption class="player-field-label">{{ 'player.filters.source' | translate }}</span>
+            <span zxCaption class="player-field-label">{{ 'player.filters.category' | translate }}</span>
             <zx-select
-              [options]="sourceOptions"
-              formControlName="source"
+              [options]="categoryOptions"
+              formControlName="category"
             ></zx-select>
+          </div>
+          <div class="player-field">
+            <span zxCaption class="player-field-label">{{ 'player.filters.minPartyPlace' | translate }}</span>
+            <zx-input
+              type="number"
+              [min]="0"
+              [step]="1"
+              formControlName="minPartyPlace"
+            ></zx-input>
           </div>
           <div class="player-field">
             <span zxCaption class="player-field-label">{{ 'player.filters.yearFrom' | translate }}</span>

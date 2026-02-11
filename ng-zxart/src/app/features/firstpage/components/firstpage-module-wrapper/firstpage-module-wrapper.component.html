@@ -1,9 +1,9 @@
-<zx-panel *ngIf="usePanel" radius="lg" padding="none" variant="elevated" [title]="titleKey | translate">
+<zx-panel *ngIf="usePanel" radius="lg" padding="none" variant="elevated" [title]="titleKey | translate" titleLevel="h2">
   <ng-container *ngTemplateOutlet="body"></ng-container>
 </zx-panel>
 
 <ng-container *ngIf="!usePanel">
-  <h3 zxHeading3 class="module-title">{{ titleKey | translate }}</h3>
+  <h2 zxHeading2 class="module-title">{{ titleKey | translate }}</h2>
   <ng-container *ngTemplateOutlet="body"></ng-container>
 </ng-container>
 

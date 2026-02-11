@@ -1,4 +1,4 @@
-<zx-table [title]="title">
+<zx-table [title]="title" titleLevel="h2">
   <zx-skeleton *ngIf="loading" variant="tune-table" [count]="settings.limit"></zx-skeleton>
   <div *ngIf="error" class="module-error" zxCaption>{{ 'firstpage.error' | translate }}</div>
   <div *ngIf="!loading && !error && items.length === 0" class="module-empty" zxCaption>{{ 'firstpage.empty' | translate }}</div>

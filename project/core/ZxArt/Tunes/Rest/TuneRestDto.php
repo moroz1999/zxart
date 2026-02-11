@@ -7,6 +7,7 @@ namespace ZxArt\Tunes\Rest;
 use Symfony\Component\ObjectMapper\Attribute\Map;
 use ZxArt\Shared\Dto\AuthorDto;
 use ZxArt\Shared\Dto\PartyInfoDto;
+use ZxArt\Shared\Dto\ReleaseInfoDto;
 
 readonly class TuneRestDto
 {
@@ -28,6 +29,8 @@ readonly class TuneRestDto
         public int $plays,
         #[Map]
         public ?PartyInfoDto $party,
+        #[Map]
+        public ?ReleaseInfoDto $release,
         public bool $isPlayable,
         public bool $isRealtime,
         public ?string $compo,

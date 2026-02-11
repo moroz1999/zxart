@@ -6,7 +6,7 @@ import {RatingsService} from '../../services/ratings.service';
 import {RatingDto} from '../../models/rating.dto';
 import {ViewportLoaderComponent} from '../../../../shared/components/viewport-loader/viewport-loader.component';
 import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
-import {ZxTableDirective} from '../../../../shared/directives/table/table.directive';
+import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
 import {
   ZxBodyDirective,
   ZxCaptionDirective,
@@ -21,7 +21,7 @@ import {
     TranslateModule,
     ViewportLoaderComponent,
     ZxUserComponent,
-    ZxTableDirective,
+    ZxTableComponent,
     ZxBodyDirective,
     ZxCaptionDirective,
     ZxHeading2Directive

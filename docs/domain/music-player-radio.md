@@ -27,8 +27,8 @@ Current labels by `radiotype`:
 ### Radio Criteria Mapping
 Use legacy parity criteria for presets:
 - `randomgood`: min rating = averageVote + 0.2
-- `games`: has game + min rating = averageVote + 0.2
-- `demoscene`: party place <= 1000 and != 0 + min rating = averageVote + 0.2
+- `games`: prod category = Games (including subcategories) + min rating = averageVote + 0.2
+- `demoscene`: prod category = Demoscene (including subcategories) + min rating = averageVote + 0.2
 - `ay`: formatGroup in [ay, aycovox, aydigitalay, ts] + min rating = averageVote + 0.2
 - `beeper`: formatGroup in [beeper, aybeeper] + min rating = averageVote + 0.2
 - `exotic`: formatGroup in [digitalbeeper, tsfm, fm, digitalay, saa] + min rating = averageVote + 0.2
@@ -40,10 +40,13 @@ Use legacy parity criteria for presets:
 Notes:
 - `averageVote` is loaded from config (current value is 3.8).
 - `not voted by` applies only to authenticated users; anonymous users use their runtime id.
+- `prodCategoriesInclude` uses zxProd categories (Press/Games/Demoscene) and expands to the full subcategory tree before filtering tunes by linked prods.
+- `minPartyPlace` is optional; values <= 0 disable the party place filter.
 
 ### Endpoints
 - New radio endpoint: `POST /radio/next-tune` (criteria-driven only).
 - New play reporting endpoint: `POST /tunes/play`.
+- Radio filter options return category titles from zxProdCategory entities.
 - Legacy `/randomTune/type:{type}` should be removed after the new player replaces the old one.
 
 ### Criteria Persistence

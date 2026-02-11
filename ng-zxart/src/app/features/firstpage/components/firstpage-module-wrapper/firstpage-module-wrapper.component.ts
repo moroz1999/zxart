@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
-import {ZxCaptionDirective, ZxHeading3Directive} from '../../../../shared/directives/typography/typography.directives';
+import {ZxCaptionDirective, ZxHeading2Directive} from '../../../../shared/directives/typography/typography.directives';
 
 @Component({
   selector: 'zx-firstpage-module-wrapper',
@@ -13,7 +13,7 @@ import {ZxCaptionDirective, ZxHeading3Directive} from '../../../../shared/direct
     TranslateModule,
     ZxPanelComponent,
     ZxSkeletonComponent,
-    ZxHeading3Directive,
+    ZxHeading2Directive,
     ZxCaptionDirective,
   ],
   templateUrl: './firstpage-module-wrapper.component.html',

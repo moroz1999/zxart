@@ -14,22 +14,24 @@
       @if (ratings.length === 0) {
         <p zxBody>{{ 'ratings.empty' | translate }}</p>
       } @else {
-        <table zxTable>
-          <thead>
-            <tr>
-              <th>{{ 'ratings.table-user' | translate }}</th>
-              <th>{{ 'ratings.table-vote' | translate }}</th>
-              <th>{{ 'ratings.table-date' | translate }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of ratings">
-              <td><zx-user [user]="item.user"></zx-user></td>
-              <td><span zxCaption>{{ item.rating }}</span></td>
-              <td><span zxCaption>{{ item.date }}</span></td>
-            </tr>
-          </tbody>
-        </table>
+        <zx-table>
+          <table>
+            <thead>
+              <tr>
+                <th>{{ 'ratings.table-user' | translate }}</th>
+                <th>{{ 'ratings.table-vote' | translate }}</th>
+                <th>{{ 'ratings.table-date' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of ratings">
+                <td><zx-user [user]="item.user"></zx-user></td>
+                <td><span zxCaption>{{ item.rating }}</span></td>
+                <td><span zxCaption>{{ item.date }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </zx-table>
       }
     </ng-template>
   </zx-viewport-loader>

@@ -5,6 +5,11 @@ import {CurrentUserService} from '../../../shared/services/current-user.service'
 
 const AVERAGE_VOTE = 3.8;
 const MIN_RATING_OFFSET = 0.2;
+const CATEGORY_IDS = {
+  press: 244858,
+  games: 92177,
+  demoscene: 92159,
+} as const;
 
 @Injectable({
   providedIn: 'root'
@@ -17,14 +22,15 @@ export class RadioPresetCriteriaService {
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth() + 1;
+    const userId = this.currentUserService.userId ?? 0;
 
     switch (preset) {
       case 'randomgood':
         return {...EMPTY_RADIO_CRITERIA, minRating};
       case 'games':
-        return {...EMPTY_RADIO_CRITERIA, minRating, requireGame: true};
+        return {...EMPTY_RADIO_CRITERIA, minRating, prodCategoriesInclude: [CATEGORY_IDS.games]};
       case 'demoscene':
-        return {...EMPTY_RADIO_CRITERIA, minRating, minPartyPlace: 1000};
+        return {...EMPTY_RADIO_CRITERIA, minRating, prodCategoriesInclude: [CATEGORY_IDS.demoscene]};
       case 'ay':
         return {...EMPTY_RADIO_CRITERIA, minRating, formatGroupsInclude: ['ay', 'aycovox', 'aydigitalay', 'ts']};
       case 'beeper':
@@ -39,7 +45,7 @@ export class RadioPresetCriteriaService {
         return {
           ...EMPTY_RADIO_CRITERIA,
           bestVotesLimit: 100,
-          notVotedByUserId: this.currentUserService.userId,
+          notVotedByUserId: userId,
         };
       case 'underground':
         return {...EMPTY_RADIO_CRITERIA, bestVotesLimit: 500, maxPlays: 10};

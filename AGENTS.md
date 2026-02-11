@@ -15,6 +15,7 @@ This file contains the most CRITICAL rules that ALL agents must follow. For deta
 - Documentation additions in `docs` must be concise, clear, and only about the core points.
 - ALWAYS add newly created files to GIT immediately after creation.
 - When the IDE is in 'Ask' (readonly) mode, it is STRICTLY FORBIDDEN to do anything except answering the user's question. No file modifications or tool calls that change state are allowed.
+- ALWAYS use MCP tools (JetBrains IDE) when available for code search, file reading, and navigation instead of Grep/Glob/Read/Bash.
 
 ## DOCUMENTATION TREE
 

@@ -56,6 +56,7 @@ class MyController extends controllerApplication
 
 ## Error Logging in Controllers
 - Use `ErrorLog::getInstance()->logMessage()` for logging errors in controllers.
+- Log all exceptions thrown by services used in controllers.
 - Logs are written to `{logs_path}/{date}.log`.
 - First parameter is the location identifier (e.g., `'MyController::methodName'`).
 - Second parameter is the error message (include stack trace for debugging).

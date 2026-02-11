@@ -178,6 +178,7 @@
     "theme.dark": "Dark"
   },
   "firstpage": {
+    "title": "Games, Demoscene, Graphics & Music of ZX Spectrum",
     "configure": "Configure",
     "viewAll": "View all",
     "loading": "Loading...",
@@ -233,10 +234,12 @@
     },
     "filters": {
       "minRating": "Minimum rating",
-      "source": "Source",
-      "source.any": "Any",
-      "source.games": "Games",
-      "source.demoscene": "Demoscene",
+      "category": "Category",
+      "category.any": "Any",
+      "category.press": "Press",
+      "category.games": "Games",
+      "category.demoscene": "Demoscene",
+      "minPartyPlace": "Min party place",
       "yearFrom": "Year from",
       "yearTo": "Year to",
       "anyYear": "Any year",

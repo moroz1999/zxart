@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Pictures\Services;
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 use structureManager;
 use ZxArt\Pictures\Dto\PictureDto;
 use ZxArt\Pictures\PicturesTransformer;
@@ -17,7 +17,7 @@ readonly class PicturesService
         private structureManager $structureManager,
         private PicturesRepository $picturesRepository,
         private PicturesTransformer $picturesTransformer,
-        private CurrentUser $currentUser,
+        private CurrentUserService $currentUserService,
     ) {
     }
 
@@ -44,11 +44,13 @@ readonly class PicturesService
      */
     public function getUnvotedByCurrentUser(int $limit, int $topN = 500): array
     {
-        if (!$this->currentUser->isAuthorized()) {
+        $user = $this->currentUserService->getCurrentUser();
+        $isAuthorized = $user->isAuthorized();
+        if ($isAuthorized === false) {
             return [];
         }
         $ids = $this->picturesRepository->getUnvotedByUserIds(
-            (int)$this->currentUser->id,
+            (int)$user->id,
             $limit,
             $topN,
         );

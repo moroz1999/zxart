@@ -94,6 +94,12 @@ Relevant filters:
 - Remove legacy scripts and CSS for the old player/radio once Angular replacement is ready.
 - Keep analytics `ym(94686067, 'reachGoal', 'musicplay')`.
 - Tester TZ v2: compact player with round controls, progress block seek, mode/link/rating buttons, single panel, zx-button/select everywhere, server-driven filter options with Redis cache, auto-apply filters, compact radio block with sm buttons.
+- Categories filter: use backend category ids for Press/Games/Demoscene; expand selected category to full subtree before filtering.
+- Add min party place input (default 0).
+- Fix progress seek on click and make rating slider track visible.
+- Unvoted preset should work with anonymous id fallback.
+- Place user vote value closer to stars.
+- Category names must come from the server (zxProdCategory entities), not frontend translations.
 
 ## Progress (Audio Player v2)
 - [x] Remove zx-tune-row hover background effect.
@@ -109,6 +115,12 @@ Relevant filters:
 - [x] Add minimum rating slider and source category filter to the radio form.
 - [x] Add analytics service for Metrika goals (no hardcoded IDs in components).
 - [x] Fix radio options payload for countries, format groups, and formats; add tests.
+- [x] Add prod category filter for Press/Games/Demoscene with subtree expansion.
+- [x] Add min party place input (default 0) and wire to criteria.
+- [x] Fix progress seek click handling and rating slider track visibility.
+- [x] Fix unvoted preset user id fallback.
+- [x] Move user vote value closer to stars.
+- [x] Load radio category names from server options using zxProdCategory entities.
 
 ## Pending Decisions / Questions
 - None pending after latest clarifications.

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\UserPreferences;
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 use ZxArt\UserPreferences\Domain\PreferenceCode;
 use ZxArt\UserPreferences\Domain\ThemeValue;
 use ZxArt\UserPreferences\Repositories\PreferencesRepository;
@@ -13,7 +13,7 @@ use ZxArt\UserPreferences\Repositories\UserPreferenceValuesRepository;
 final readonly class CurrentThemeProvider
 {
     public function __construct(
-        private CurrentUser $user,
+        private CurrentUserService $currentUserService,
         private PreferencesRepository $preferencesRepository,
         private UserPreferenceValuesRepository $valuesRepository,
         private DefaultUserPreferencesProvider $defaultsProvider,
@@ -22,7 +22,9 @@ final readonly class CurrentThemeProvider
 
     public function getTheme(): ThemeValue
     {
-        if (!$this->user->isAuthorized()) {
+        $user = $this->currentUserService->getCurrentUser();
+        $isAuthorized = $user->isAuthorized();
+        if ($isAuthorized === false) {
             return $this->getDefaultTheme();
         }
 
@@ -31,7 +33,7 @@ final readonly class CurrentThemeProvider
             return $this->getDefaultTheme();
         }
 
-        $userId = (int)$this->user->id;
+        $userId = (int)$user->id;
         $userValues = $this->valuesRepository->findByUserId($userId);
 
         foreach ($userValues as $value) {

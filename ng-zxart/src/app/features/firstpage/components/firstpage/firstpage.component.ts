@@ -12,6 +12,7 @@ import {MODULE_SETTINGS} from '../../models/module-settings.token';
 import {FirstpageConfigDialogComponent} from '../firstpage-config-dialog/firstpage-config-dialog.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {ZxHeading1Directive} from '../../../../shared/directives/typography/typography.directives';
 
 interface ModuleEntry {
   config: ModuleConfig;
@@ -29,6 +30,7 @@ interface ModuleEntry {
     TranslateModule,
     ZxStackComponent,
     ZxButtonComponent,
+    ZxHeading1Directive,
   ],
   templateUrl: './firstpage.component.html',
   styleUrls: ['./firstpage.component.scss']

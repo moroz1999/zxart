@@ -15,6 +15,7 @@ enum LinkTypes: string
     case PRESS_PARTIES = 'pressParties';
     case PRESS_TUNES = 'pressTunes';
     case PRESS_PICTURES = 'pressPictures';
+    case GAME_LINK = 'gameLink';
     case SERIES = 'series';
     case COMPILATION = 'compilation';
     case STRUCTURE = 'structure';

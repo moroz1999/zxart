@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {map, Observable} from 'rxjs';
+import {map, Observable, shareReplay} from 'rxjs';
 import {ZxTuneDto} from '../../../shared/models/zx-tune-dto';
 import {RadioCriteria} from '../models/radio-criteria';
 import {RadioFilterOptionsDto} from '../models/radio-filter-options';
@@ -46,6 +46,7 @@ export class RadioApiService {
             }
             throw new Error(response.errorMessage || 'Failed to load radio options');
           }),
+          shareReplay(1),
         );
     }
 

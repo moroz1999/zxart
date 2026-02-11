@@ -109,6 +109,7 @@ export class LegacyPlayButtonComponent {
       commentsAmount: 0,
       plays: 0,
       party: null,
+      release: null,
       isPlayable: Boolean(mp3Url),
       isRealtime: false,
       compo: null,

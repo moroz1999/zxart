@@ -10,6 +10,8 @@ use PHPUnit\Framework\TestCase;
 use structureManager;
 use ZxArt\Radio\Services\RadioOptionsService;
 use ZxArt\Tunes\Repositories\TunesRepository;
+use ZxArt\ZxProdCategories\CategoryIds;
+use zxProdCategoryElement;
 
 class RadioOptionsServiceTest extends TestCase
 {
@@ -23,11 +25,27 @@ class RadioOptionsServiceTest extends TestCase
         $country = $this->createMock(countryElement::class);
         $country->method('getTitle')->willReturn('Latvia');
 
+        $pressCategory = $this->createMock(zxProdCategoryElement::class);
+        $pressCategory->method('getTitle')->willReturn('Press');
+        $gamesCategory = $this->createMock(zxProdCategoryElement::class);
+        $gamesCategory->method('getTitle')->willReturn('Games');
+        $demosCategory = $this->createMock(zxProdCategoryElement::class);
+        $demosCategory->method('getTitle')->willReturn('Demoscene');
+
         $structureManager = $this->createMock(structureManager::class);
         $structureManager->method('getElementById')
-            ->willReturnCallback(function (int $id) use ($country) {
+            ->willReturnCallback(function (int $id) use ($country, $pressCategory, $gamesCategory, $demosCategory) {
                 if ($id === 1) {
                     return $country;
+                }
+                if ($id === CategoryIds::PRESS->value) {
+                    return $pressCategory;
+                }
+                if ($id === CategoryIds::GAMES->value) {
+                    return $gamesCategory;
+                }
+                if ($id === CategoryIds::DEMOS->value) {
+                    return $demosCategory;
                 }
                 return null;
             });
@@ -47,6 +65,11 @@ class RadioOptionsServiceTest extends TestCase
                         && $value['formatGroups'] === ['ay']
                         && $value['formats'] === ['pt3']
                         && $value['countries'] === [['id' => 1, 'title' => 'Latvia']]
+                        && $value['categories'] === [
+                            ['id' => CategoryIds::PRESS->value, 'title' => 'Press'],
+                            ['id' => CategoryIds::GAMES->value, 'title' => 'Games'],
+                            ['id' => CategoryIds::DEMOS->value, 'title' => 'Demoscene'],
+                        ]
                         && $value['partyOptions'] === ['any', 'yes', 'no'];
                 }),
                 3600
@@ -59,6 +82,14 @@ class RadioOptionsServiceTest extends TestCase
         $this->assertSame(['ay'], $options['formatGroups']);
         $this->assertSame(['pt3'], $options['formats']);
         $this->assertSame([['id' => 1, 'title' => 'Latvia']], $options['countries']);
+        $this->assertSame(
+            [
+                ['id' => CategoryIds::PRESS->value, 'title' => 'Press'],
+                ['id' => CategoryIds::GAMES->value, 'title' => 'Games'],
+                ['id' => CategoryIds::DEMOS->value, 'title' => 'Demoscene'],
+            ],
+            $options['categories']
+        );
         $this->assertSame(['any', 'yes', 'no'], $options['partyOptions']);
     }
 }

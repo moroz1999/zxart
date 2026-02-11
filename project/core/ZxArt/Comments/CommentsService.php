@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Comments;
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 use Cache;
 use commentElement;
 use CommentsHolderInterface;
@@ -26,7 +26,7 @@ readonly class CommentsService
 
     public function __construct(
         private structureManager    $structureManager,
-        private CurrentUser         $user,
+        private CurrentUserService  $currentUserService,
         private LanguagesManager    $languagesManager,
         private privilegesManager   $privilegesManager,
         private Cache               $cache,
@@ -40,7 +40,7 @@ readonly class CommentsService
      * Returns a paginated list of all comments sorted by date descending.
      *
      * @param int $page Page number (1-based)
-     * @return CommentsListDto
+     * @throws CommentOperationException
      */
     public function getAllCommentsPaginated(int $page = 1): CommentsListDto
     {
@@ -108,6 +108,8 @@ readonly class CommentsService
      * @param int $parentId Parent element ID
      * @param int[] $visited Visited IDs to prevent infinite recursion
      * @return CommentDto[]
+     * @throws CommentOperationException
+     * @throws CommentOperationException
      */
     private function buildTree(int $parentId, array $visited = []): array
     {
@@ -166,7 +168,8 @@ readonly class CommentsService
      */
     public function addComment(int $targetId, string $content): CommentDto
     {
-        if ($this->user->isAuthorized() === false) {
+        $user = $this->currentUserService->getCurrentUser();
+        if ($user->isAuthorized() === false) {
             throw new CommentAccessDeniedException("User must be authorized to add comments");
         }
 
@@ -198,17 +201,17 @@ readonly class CommentsService
         }
 
         $commentElement->content = $content;
-        $commentElement->userId = (int)$this->user->id;
+        $commentElement->userId = (int)$user->id;
         $commentElement->dateTime = time();
         $commentElement->targetType = (string)$targetElement->structureType;
         $commentElement->persistElementData();
 
-        if ((int)$this->user->id !== 0) {
-            $this->privilegesManager->setPrivilege((int)$this->user->id, (int)$commentElement->id, 'comment', 'delete', 1);
-            $this->privilegesManager->setPrivilege((int)$this->user->id, (int)$commentElement->id, 'comment', 'publicReceive', 1);
-            $this->privilegesManager->setPrivilege((int)$this->user->id, (int)$commentElement->id, 'comment', 'publicForm', 1);
+        if ((int)$user->id !== 0) {
+            $this->privilegesManager->setPrivilege((int)$user->id, (int)$commentElement->id, 'comment', 'delete', 1);
+            $this->privilegesManager->setPrivilege((int)$user->id, (int)$commentElement->id, 'comment', 'publicReceive', 1);
+            $this->privilegesManager->setPrivilege((int)$user->id, (int)$commentElement->id, 'comment', 'publicForm', 1);
 
-            $this->user->refreshPrivileges();
+            $user->refreshPrivileges();
         }
 
         $this->clearCommentsCache();
@@ -223,6 +226,7 @@ readonly class CommentsService
      * @param string $content New text
      * @throws CommentNotFoundException If comment is not found
      * @throws CommentAccessDeniedException If no permission to edit
+     * @throws CommentOperationException
      */
     public function updateComment(int $commentId, string $content): CommentDto
     {
@@ -230,9 +234,10 @@ readonly class CommentsService
         if (!($commentElement instanceof commentElement)) {
             throw new CommentNotFoundException("Comment not found: {$commentId}");
         }
+        $user = $this->currentUserService->getCurrentUser();
 
         $isEditable = $commentElement->isEditable();
-        $isAuthor = (int)$commentElement->userId === (int)$this->user->id;
+        $isAuthor = (int)$commentElement->userId === (int)$user->id;
         $hasPrivilege = $this->privilegesManager->checkPrivilegesForAction($commentId, 'publicForm', 'comment');
 
         if ($isEditable === true && ($isAuthor === true || $hasPrivilege === true)) {
@@ -259,9 +264,10 @@ readonly class CommentsService
         if (!($commentElement instanceof commentElement)) {
             throw new CommentNotFoundException("Comment not found: {$commentId}");
         }
+        $user = $this->currentUserService->getCurrentUser();
 
         $isEditable = $commentElement->isEditable();
-        $isAuthor = (int)$commentElement->userId === (int)$this->user->id;
+        $isAuthor = (int)$commentElement->userId === (int)$user->id;
         $hasPrivilege = $this->privilegesManager->checkPrivilegesForAction($commentId, 'delete', 'comment');
 
         if ($isEditable === true && ($isAuthor === true || $hasPrivilege === true)) {
@@ -278,6 +284,8 @@ readonly class CommentsService
      *
      * @param int $limit Maximum number of comments to return
      * @return CommentDto[]
+     * @throws CommentOperationException
+     * @throws CommentOperationException
      */
     public function getLatestComments(int $limit = 10): array
     {

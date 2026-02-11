@@ -67,6 +67,7 @@ class TunesRepositoryRadioTest extends TestCase
             formatGroupsExclude: [],
             formatsInclude: [],
             formatsExclude: [],
+            prodCategoriesInclude: [],
             bestVotesLimit: $bestVotesLimit,
             maxPlays: null,
             minPartyPlace: null,

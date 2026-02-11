@@ -1,9 +1,5 @@
 :host {
   display: table-row;
-
-  &:nth-child(even) {
-    background: var(--table-row-alternate-bg);
-  }
 }
 
 td {
@@ -81,6 +77,21 @@ td {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.tune-release {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  a {
+    color: inherit;
+    text-decoration: none;
 
     &:hover {
       text-decoration: underline;

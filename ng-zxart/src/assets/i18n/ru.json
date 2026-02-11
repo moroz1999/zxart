@@ -178,6 +178,7 @@
     "theme.dark": "Тёмная"
   },
   "firstpage": {
+    "title": "Игры, демосцена, графика и музыка ZX Spectrum",
     "configure": "Настроить",
     "viewAll": "Все",
     "loading": "Загрузка...",
@@ -233,10 +234,12 @@
     },
     "filters": {
       "minRating": "Мин. рейтинг",
-      "source": "Категория",
-      "source.any": "Любая",
-      "source.games": "Игры",
-      "source.demoscene": "Сцена",
+      "category": "Категория",
+      "category.any": "Любая",
+      "category.press": "Пресса",
+      "category.games": "Игры",
+      "category.demoscene": "Сцена",
+      "minPartyPlace": "Мин. место на пати",
       "yearFrom": "Год от",
       "yearTo": "Год до",
       "anyYear": "Любой год",

@@ -50,7 +50,12 @@
       "mcp__jetbrains-ide__get_file_problems",
       "Bash(python -m json.tool:*)",
       "mcp__jetbrains-ide__list_directory_tree",
-      "Bash(vendor\\\\bin\\\\phpunit:*)"
+      "Bash(vendor\\\\bin\\\\phpunit:*)",
+      "Bash(mysql:*)",
+      "mcp__jetbrains-ide__get_all_open_file_paths",
+      "mcp__jetbrains-ide__get_symbol_info",
+      "mcp__jetbrains-ide__replace_text_in_file",
+      "mcp__jetbrains-ide__create_new_file"
     ]
   },
   "enabledPlugins": {

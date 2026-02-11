@@ -5,6 +5,7 @@ namespace ZxArt\Controllers;
 
 use controller;
 use controllerApplication;
+use ErrorLog;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
 use ZxArt\Comments\CommentRestDto;
@@ -63,7 +64,11 @@ class Comments extends controllerApplication
 
             $this->renderer->assign('responseStatus', 'success');
             $this->renderer->assign('responseData', $restDto);
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            ErrorLog::getInstance()->logMessage(
+                'Comments::handleList',
+                $e->getMessage() . "\n" . $e->getTraceAsString()
+            );
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', 'Internal server error');
         }
@@ -85,9 +90,17 @@ class Comments extends controllerApplication
             $this->renderer->assign('responseStatus', 'success');
             $this->renderer->assign('responseData', $restTree);
         } catch (CommentsException $e) {
+            ErrorLog::getInstance()->logMessage(
+                'Comments::handleGet',
+                $e->getMessage() . "\n" . $e->getTraceAsString()
+            );
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', $e->getMessage());
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            ErrorLog::getInstance()->logMessage(
+                'Comments::handleGet',
+                $e->getMessage() . "\n" . $e->getTraceAsString()
+            );
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', 'Internal server error');
         }
@@ -110,9 +123,17 @@ class Comments extends controllerApplication
             $this->renderer->assign('responseStatus', 'success');
             $this->renderer->assign('responseData', $restDto);
         } catch (CommentsException $e) {
+            ErrorLog::getInstance()->logMessage(
+                'Comments::handleAdd',
+                $e->getMessage() . "\n" . $e->getTraceAsString()
+            );
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', $e->getMessage());
         } catch (Throwable $e) {
+            ErrorLog::getInstance()->logMessage(
+                'Comments::handleAdd',
+                $e->getMessage() . "\n" . $e->getTraceAsString()
+            );
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', 'Failed to add comment');
         }
@@ -135,9 +156,17 @@ class Comments extends controllerApplication
             $this->renderer->assign('responseStatus', 'success');
             $this->renderer->assign('responseData', $restDto);
         } catch (CommentsException $e) {
+            ErrorLog::getInstance()->logMessage(
+                'Comments::handleUpdate',
+                $e->getMessage() . "\n" . $e->getTraceAsString()
+            );
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', $e->getMessage());
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            ErrorLog::getInstance()->logMessage(
+                'Comments::handleUpdate',
+                $e->getMessage() . "\n" . $e->getTraceAsString()
+            );
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', 'Failed to update comment');
         }
@@ -156,9 +185,17 @@ class Comments extends controllerApplication
             $this->commentsService->deleteComment($commentId);
             $this->renderer->assign('responseStatus', 'success');
         } catch (CommentsException $e) {
+            ErrorLog::getInstance()->logMessage(
+                'Comments::handleDelete',
+                $e->getMessage() . "\n" . $e->getTraceAsString()
+            );
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', $e->getMessage());
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            ErrorLog::getInstance()->logMessage(
+                'Comments::handleDelete',
+                $e->getMessage() . "\n" . $e->getTraceAsString()
+            );
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', 'Failed to delete comment');
         }
@@ -177,7 +214,11 @@ class Comments extends controllerApplication
 
             $this->renderer->assign('responseStatus', 'success');
             $this->renderer->assign('responseData', $restComments);
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            ErrorLog::getInstance()->logMessage(
+                'Comments::handleLatest',
+                $e->getMessage() . "\n" . $e->getTraceAsString()
+            );
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', 'Internal server error');
         }

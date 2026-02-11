@@ -20,6 +20,7 @@ class RadioCriteriaFactoryTest extends TestCase
                 'countriesInclude' => ['1', 2, 'bad'],
                 'formatGroupsInclude' => ['ay', ' ', 'ts'],
                 'formatsExclude' => ['pt3', '', 'asc'],
+                'prodCategoriesInclude' => ['10', 20, 'bad'],
                 'bestVotesLimit' => '100',
                 'maxPlays' => '10',
                 'minPartyPlace' => '1000',
@@ -34,6 +35,7 @@ class RadioCriteriaFactoryTest extends TestCase
         $this->assertSame([1, 2], $criteria->countriesInclude);
         $this->assertSame(['ay', 'ts'], $criteria->formatGroupsInclude);
         $this->assertSame(['pt3', 'asc'], $criteria->formatsExclude);
+        $this->assertSame([10, 20], $criteria->prodCategoriesInclude);
         $this->assertSame(100, $criteria->bestVotesLimit);
         $this->assertSame(10, $criteria->maxPlays);
         $this->assertSame(1000, $criteria->minPartyPlace);

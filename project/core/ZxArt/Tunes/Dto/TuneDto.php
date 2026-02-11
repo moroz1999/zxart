@@ -6,6 +6,7 @@ namespace ZxArt\Tunes\Dto;
 
 use ZxArt\Shared\Dto\AuthorDto;
 use ZxArt\Shared\Dto\PartyInfoDto;
+use ZxArt\Shared\Dto\ReleaseInfoDto;
 
 readonly class TuneDto
 {
@@ -26,6 +27,7 @@ readonly class TuneDto
         public int $commentsAmount,
         public int $plays,
         public ?PartyInfoDto $party,
+        public ?ReleaseInfoDto $release,
         public bool $isPlayable,
         public bool $isRealtime,
         public ?string $compo,

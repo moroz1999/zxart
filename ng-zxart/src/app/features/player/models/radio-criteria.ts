@@ -9,6 +9,7 @@ export interface RadioCriteria {
   formatGroupsExclude: string[];
   formatsInclude: string[];
   formatsExclude: string[];
+  prodCategoriesInclude: number[];
   bestVotesLimit: number | null;
   maxPlays: number | null;
   minPartyPlace: number | null;
@@ -28,6 +29,7 @@ export const EMPTY_RADIO_CRITERIA: RadioCriteria = {
   formatGroupsExclude: [],
   formatsInclude: [],
   formatsExclude: [],
+  prodCategoriesInclude: [],
   bestVotesLimit: null,
   maxPlays: null,
   minPartyPlace: null,

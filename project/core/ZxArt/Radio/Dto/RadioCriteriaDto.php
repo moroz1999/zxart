@@ -15,6 +15,7 @@ readonly class RadioCriteriaDto
      * @param string[] $formatGroupsExclude
      * @param string[] $formatsInclude
      * @param string[] $formatsExclude
+     * @param int[] $prodCategoriesInclude
      */
     public function __construct(
         public ?float $minRating,
@@ -27,6 +28,7 @@ readonly class RadioCriteriaDto
         public array $formatGroupsExclude,
         public array $formatsInclude,
         public array $formatsExclude,
+        public array $prodCategoriesInclude,
         public ?int $bestVotesLimit,
         public ?int $maxPlays,
         public ?int $minPartyPlace,

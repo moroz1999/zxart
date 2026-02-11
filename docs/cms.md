@@ -57,6 +57,10 @@ Privileges are managed through `privilegesManager`.
 - Translation strings are stored in the database (the `translations` service resolves them at runtime).
 - Do NOT use the `style` attribute. Use full semantic class names instead. Styling should be handled in CSS files.
 
+### Current User
+- Do NOT inject `CurrentUser` via PHP-DI. It reads session storage during construction and must be created only after the controller starts the session.
+- Use `CurrentUserService` as the injectable dependency instead.
+
 ### URL-based Action Handling
 If you navigate to a URL like `$element->getUrl() . 'id:' . $element->id . '/action:actionName/'`, the CMS engine automatically resolves this:
 1. It identifies the element by ID.

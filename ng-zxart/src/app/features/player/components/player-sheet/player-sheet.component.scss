@@ -24,7 +24,7 @@
   gap: var(--zx-player-controls-gap);
 }
 
-:host ::ng-deep .player-progress {
+.player-progress {
   --zx-player-progress: 0%;
   display: flex;
   align-items: center;
@@ -34,25 +34,22 @@
   padding: 0 var(--zx-player-progress-padding);
   border: var(--zx-player-progress-border-width) solid var(--zx-player-progress-border);
   border-radius: var(--zx-player-progress-radius);
-  background: linear-gradient(
+  background-color: var(--zx-player-progress-bg);
+  background-image: linear-gradient(
     90deg,
     var(--zx-player-progress-fill) var(--zx-player-progress),
-    var(--zx-player-progress-bg) 0
+    transparent 0
   );
   color: var(--zx-player-progress-text);
   cursor: pointer;
   overflow: hidden;
-  box-shadow: none;
-  --mdc-filled-button-container-color: transparent;
+  box-sizing: border-box;
 }
 
-:host ::ng-deep .player-progress:disabled {
+.player-progress--disabled {
   cursor: default;
   opacity: 0.7;
-}
-
-:host ::ng-deep .player-progress .mdc-button__label {
-  width: 100%;
+  pointer-events: none;
 }
 
 .player-progress-text {
@@ -77,6 +74,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--zx-player-presets-gap);
+  margin-bottom: var(--zx-player-presets-margin-bottom);
 }
 
 .player-preset-active {

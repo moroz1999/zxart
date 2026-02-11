@@ -1,4 +1,9 @@
-﻿export interface RadioFilterCountryOption {
+export interface RadioFilterCountryOption {
+  id: number;
+  title: string;
+}
+
+export interface RadioFilterCategoryOption {
   id: number;
   title: string;
 }
@@ -9,6 +14,7 @@ export interface RadioFilterOptionsDto {
     max: number | null;
   };
   countries: RadioFilterCountryOption[];
+  categories: RadioFilterCategoryOption[];
   formatGroups: string[];
   formats: string[];
   partyOptions: Array<'any' | 'yes' | 'no'>;

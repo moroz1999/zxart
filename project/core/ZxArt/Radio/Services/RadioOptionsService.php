@@ -8,6 +8,8 @@ use Cache;
 use countryElement;
 use structureManager;
 use ZxArt\Tunes\Repositories\TunesRepository;
+use ZxArt\ZxProdCategories\CategoryIds;
+use zxProdCategoryElement;
 
 readonly class RadioOptionsService
 {
@@ -32,6 +34,7 @@ readonly class RadioOptionsService
         }
 
         $yearRange = $this->tunesRepository->getYearRange();
+        $categories = $this->loadCategories();
         $countries = $this->loadCountries();
         $formatGroups = $this->tunesRepository->getAvailableFormatGroups();
         $formats = $this->tunesRepository->getAvailableFormats();
@@ -39,6 +42,7 @@ readonly class RadioOptionsService
         $result = [
             'yearRange' => $yearRange,
             'countries' => $countries,
+            'categories' => $categories,
             'formatGroups' => $formatGroups,
             'formats' => $formats,
             'partyOptions' => ['any', 'yes', 'no'],
@@ -71,5 +75,30 @@ readonly class RadioOptionsService
         );
 
         return $countries;
+    }
+
+    /**
+     * @return array<int, array{id: int, title: string}>
+     */
+    private function loadCategories(): array
+    {
+        $categories = [];
+        $categoryIds = [
+            CategoryIds::PRESS->value,
+            CategoryIds::GAMES->value,
+            CategoryIds::DEMOS->value,
+        ];
+
+        foreach ($categoryIds as $categoryId) {
+            $element = $this->structureManager->getElementById($categoryId);
+            if ($element instanceof zxProdCategoryElement) {
+                $categories[] = [
+                    'id' => $categoryId,
+                    'title' => html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
+                ];
+            }
+        }
+
+        return $categories;
     }
 }

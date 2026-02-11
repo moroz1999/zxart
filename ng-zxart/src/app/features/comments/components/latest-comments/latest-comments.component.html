@@ -3,8 +3,7 @@
     <zx-skeleton variant="text" [count]="5"></zx-skeleton>
   </zx-panel>
 } @else {
-  <zx-panel>
-    <div zxHeading3 class="latest-comments__title">{{ 'comments.title' | translate }}</div>
+  <zx-panel [title]="'comments.title' | translate">
     <zx-stack spacing="sm">
       @for (comment of comments(); track comment.id) {
         <div class="latest-comment">

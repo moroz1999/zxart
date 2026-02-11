@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\UserPreferences;
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 use ZxArt\UserPreferences\Dto\PreferenceDto;
 use ZxArt\UserPreferences\Repositories\PreferencesRepository;
 use ZxArt\UserPreferences\Repositories\UserPreferenceValuesRepository;
@@ -12,7 +12,7 @@ use ZxArt\UserPreferences\Repositories\UserPreferenceValuesRepository;
 final readonly class UserPreferencesService
 {
     public function __construct(
-        private CurrentUser $user,
+        private CurrentUserService $currentUserService,
         private PreferencesRepository $preferencesRepository,
         private UserPreferenceValuesRepository $valuesRepository,
         private DefaultUserPreferencesProvider $defaultsProvider,
@@ -27,11 +27,13 @@ final readonly class UserPreferencesService
     {
         $defaults = $this->defaultsProvider->getDefaults();
 
-        if (!$this->user->isAuthorized()) {
+        $user = $this->currentUserService->getCurrentUser();
+        $isAuthorized = $user->isAuthorized();
+        if ($isAuthorized === false) {
             return $this->buildDtosFromDefaults($defaults);
         }
 
-        $userId = (int)$this->user->id;
+        $userId = (int)$user->id;
         $userValues = $this->valuesRepository->findByUserId($userId);
 
         $valuesByPreferenceId = [];
@@ -79,7 +81,9 @@ final readonly class UserPreferencesService
         $preferenceCode = $this->validator->validateCode($code);
         $validatedValue = $this->validator->validateValue($preferenceCode, $value);
 
-        if (!$this->user->isAuthorized()) {
+        $user = $this->currentUserService->getCurrentUser();
+        $isAuthorized = $user->isAuthorized();
+        if ($isAuthorized === false) {
             return $this->getAllPreferences();
         }
 
@@ -88,7 +92,7 @@ final readonly class UserPreferencesService
             return $this->getAllPreferences();
         }
 
-        $userId = (int)$this->user->id;
+        $userId = (int)$user->id;
         $this->valuesRepository->upsert($userId, $preference->id, $validatedValue);
 
         return $this->getAllPreferences();
@@ -105,11 +109,13 @@ final readonly class UserPreferencesService
             $this->validator->validateValue($preferenceCode, $value);
         }
 
-        if (!$this->user->isAuthorized()) {
+        $user = $this->currentUserService->getCurrentUser();
+        $isAuthorized = $user->isAuthorized();
+        if ($isAuthorized === false) {
             return $this->getAllPreferences();
         }
 
-        $userId = (int)$this->user->id;
+        $userId = (int)$user->id;
 
         foreach ($values as $code => $value) {
             $preferenceCode = $this->validator->validateCode($code);

@@ -97,6 +97,10 @@ components:
           type: array
           items:
             type: string
+        prodCategoriesInclude:
+          type: array
+          items:
+            type: integer
         bestVotesLimit:
           type: integer
         maxPlays:
@@ -135,6 +139,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RadioCountryOption'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/RadioCategoryOption'
         formatGroups:
           type: array
           items:
@@ -149,6 +157,13 @@ components:
             type: string
             enum: [any, yes, no]
     RadioCountryOption:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+    RadioCategoryOption:
       type: object
       properties:
         id:

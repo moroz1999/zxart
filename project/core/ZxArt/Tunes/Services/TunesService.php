@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Tunes\Services;
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 use structureManager;
 use ZxArt\Tunes\Dto\TuneDto;
 use ZxArt\Tunes\Repositories\TunesRepository;
@@ -17,7 +17,7 @@ readonly class TunesService
         private structureManager $structureManager,
         private TunesRepository $tunesRepository,
         private TunesTransformer $tunesTransformer,
-        private CurrentUser $currentUser,
+        private CurrentUserService $currentUserService,
     ) {
     }
 
@@ -35,11 +35,13 @@ readonly class TunesService
      */
     public function getUnvotedByCurrentUser(int $limit, int $topN = 500): array
     {
-        if (!$this->currentUser->isAuthorized()) {
+        $user = $this->currentUserService->getCurrentUser();
+        $isAuthorized = $user->isAuthorized();
+        if ($isAuthorized === false) {
             return [];
         }
         $ids = $this->tunesRepository->getUnvotedByUserIds(
-            (int)$this->currentUser->id,
+            (int)$user->id,
             $limit,
             $topN,
         );

@@ -30,6 +30,9 @@
     <span *ngIf="medalClass" [class]="medalClass" class="medal">{{ tune.party.place }}</span>
     <a [href]="tune.party.url">{{ tune.party.title }}</a>
   </ng-container>
+  <div *ngIf="tune.release" class="tune-release">
+    <a [href]="tune.release.url">{{ tune.release.title }}</a>
+  </div>
 </td>
 <td class="tune-stats">
   <span *ngIf="tune.plays > 0" class="tune-stat">

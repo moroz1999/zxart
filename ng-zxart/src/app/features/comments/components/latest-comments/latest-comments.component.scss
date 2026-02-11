@@ -2,12 +2,12 @@
   display: block;
 }
 
-.latest-comments__title {
-  margin-bottom: var(--space-12);
-}
-
 .latest-comment {
   line-height: 1.4;
+}
+
+.latest-comment__author {
+  vertical-align: middle;
 }
 
 .latest-comment__link {
