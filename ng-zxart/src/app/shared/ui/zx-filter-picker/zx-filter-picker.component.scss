@@ -1,0 +1,123 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-filter-picker-gap);
+  width: 100%;
+}
+
+.zx-filter-picker__label {
+  color: var(--zx-filter-picker-label);
+}
+
+.zx-filter-picker__control {
+  display: flex;
+  align-items: center;
+  gap: var(--zx-filter-picker-control-gap);
+  min-height: var(--zx-filter-picker-height);
+  background-color: var(--zx-filter-picker-bg);
+  border: var(--zx-filter-picker-border-width) solid var(--zx-filter-picker-border);
+  border-radius: var(--zx-filter-picker-radius);
+  transition: border-color var(--zx-filter-picker-transition);
+}
+
+.zx-filter-picker__control--active {
+  border-color: var(--zx-filter-picker-border-active);
+}
+
+.zx-filter-picker__control:focus-within {
+  border-color: var(--zx-filter-picker-border-active);
+}
+
+.zx-filter-picker__trigger {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--zx-filter-picker-trigger-gap);
+  padding: var(--zx-filter-picker-trigger-padding);
+  text-align: left;
+  line-height: var(--zx-filter-picker-height);
+  --mdc-text-button-container-color: transparent;
+  --mdc-text-button-label-text-color: var(--zx-filter-picker-text);
+}
+
+.zx-filter-picker__summary {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--zx-filter-picker-text);
+}
+
+.zx-filter-picker__summary--placeholder {
+  color: var(--zx-filter-picker-placeholder);
+}
+
+.zx-filter-picker__chevron {
+  color: var(--zx-filter-picker-icon);
+  font-size: var(--zx-filter-picker-icon-size);
+  transition: transform var(--zx-filter-picker-transition);
+}
+
+.zx-filter-picker__control--open .zx-filter-picker__chevron {
+  transform: rotate(180deg);
+}
+
+.zx-filter-picker__clear {
+  margin-right: var(--zx-filter-picker-clear-margin);
+  color: var(--zx-filter-picker-clear-color);
+  --mdc-icon-button-icon-color: var(--zx-filter-picker-clear-color);
+}
+
+.zx-filter-picker__menu-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-filter-picker-panel-gap);
+  padding: var(--zx-filter-picker-panel-padding);
+}
+
+.zx-filter-picker__search {
+  width: 100%;
+}
+
+.zx-filter-picker__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-filter-picker-item-gap);
+  max-height: var(--zx-filter-picker-list-max-height);
+  overflow: auto;
+}
+
+.zx-filter-picker__item {
+  padding: var(--zx-filter-picker-item-padding);
+  border-radius: var(--zx-filter-picker-item-radius);
+}
+
+.zx-filter-picker__item:hover {
+  background-color: var(--zx-filter-picker-item-hover-bg);
+}
+
+.zx-filter-picker__item-label {
+  color: var(--zx-filter-picker-text);
+}
+
+.zx-filter-picker__clear-all {
+  align-self: flex-start;
+}
+
+:host ::ng-deep .zx-filter-picker__menu.mat-mdc-menu-panel {
+  background-color: var(--zx-filter-picker-panel-bg);
+  border: var(--zx-filter-picker-panel-border);
+  border-radius: var(--zx-filter-picker-radius);
+  box-shadow: var(--zx-filter-picker-panel-shadow);
+  padding: 0;
+  color: var(--zx-filter-picker-text);
+}
+
+:host ::ng-deep .zx-filter-picker__menu {
+  --mat-checkbox-label-text-color: var(--zx-filter-picker-text);
+  --mdc-checkbox-selected-checkmark-color: var(--zx-filter-picker-checkbox-check);
+  --mdc-checkbox-selected-icon-color: var(--zx-filter-picker-checkbox-selected);
+  --mdc-checkbox-unselected-icon-color: var(--zx-filter-picker-checkbox-border);
+  --mdc-checkbox-unselected-hover-icon-color: var(--zx-filter-picker-checkbox-border-hover);
+  --mdc-checkbox-selected-hover-icon-color: var(--zx-filter-picker-checkbox-selected);
+}

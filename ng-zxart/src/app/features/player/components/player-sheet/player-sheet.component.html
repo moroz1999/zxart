@@ -167,22 +167,26 @@
             ></zx-select>
           </div>
           <div class="player-field">
-            <span zxCaption class="player-field-label">{{ 'player.filters.countries' | translate }}</span>
-            <zx-select
-              [options]="countryOptions"
-              [multiple]="true"
-              [listSize]="3"
-              formControlName="countries"
-            ></zx-select>
+            <zx-filter-picker
+              [label]="'player.filters.countries' | translate"
+              [items]="countryItems"
+              [selectedIds]="selectedCountries"
+              [placeholder]="'player.filters.any' | translate"
+              [searchEnabled]="true"
+              [multi]="true"
+              (selectedIdsChange)="onCountriesChange($event)"
+            ></zx-filter-picker>
           </div>
           <div class="player-field">
-            <span zxCaption class="player-field-label">{{ 'player.filters.soundGroups' | translate }}</span>
-            <zx-select
-              [options]="formatGroupOptions"
-              [multiple]="true"
-              [listSize]="3"
-              formControlName="formatGroups"
-            ></zx-select>
+            <zx-filter-picker
+              [label]="'player.filters.soundGroups' | translate"
+              [items]="formatGroupItems"
+              [selectedIds]="selectedFormatGroups"
+              [placeholder]="'player.filters.any' | translate"
+              [searchEnabled]="true"
+              [multi]="true"
+              (selectedIdsChange)="onFormatGroupsChange($event)"
+            ></zx-filter-picker>
           </div>
           <div class="player-field">
             <span zxCaption class="player-field-label">{{ 'player.filters.formats' | translate }}</span>

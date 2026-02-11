@@ -16,6 +16,10 @@ import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.componen
 import {ZxInputRangeComponent} from '../../../../shared/ui/zx-input-range/zx-input-range.component';
 import {RatingComponent} from '../../../../shared/components/rating/rating.component';
 import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {
+  ZxFilterPickerComponent,
+  ZxFilterPickerItem
+} from '../../../../shared/ui/zx-filter-picker/zx-filter-picker.component';
 import {VoteService} from '../../../../shared/services/vote.service';
 import {RadioApiService} from '../../services/radio-api.service';
 import {RadioFilterOptionsDto} from '../../models/radio-filter-options';
@@ -44,6 +48,7 @@ type PartyValue = 'any' | 'yes' | 'no';
     ZxInputRangeComponent,
     RatingComponent,
     ZxSkeletonComponent,
+    ZxFilterPickerComponent,
   ],
   templateUrl: './player-sheet.component.html',
   styleUrls: ['./player-sheet.component.scss'],
@@ -78,8 +83,8 @@ export class PlayerSheetComponent implements OnDestroy {
   optionsLoading = false;
   optionsError = false;
   yearOptions: ZxSelectOption[] = [];
-  countryOptions: ZxSelectOption[] = [];
-  formatGroupOptions: ZxSelectOption[] = [];
+  countryItems: ZxFilterPickerItem[] = [];
+  formatGroupItems: ZxFilterPickerItem[] = [];
   formatOptions: ZxSelectOption[] = [];
   partyOptions: ZxSelectOption[] = [];
   categoryOptions: ZxSelectOption[] = [];
@@ -309,13 +314,13 @@ export class PlayerSheetComponent implements OnDestroy {
 
   private buildOptions(options: RadioFilterOptionsDto): void {
     this.yearOptions = this.buildYearOptions(options.yearRange.min, options.yearRange.max);
-    this.countryOptions = options.countries.map(country => ({
-      value: String(country.id),
+    this.countryItems = options.countries.map(country => ({
+      id: String(country.id),
       label: country.title,
     }));
     this.buildCategoryOptions(options);
-    this.formatGroupOptions = options.formatGroups.map(group => ({
-      value: group,
+    this.formatGroupItems = options.formatGroups.map(group => ({
+      id: group,
       label: this.getFormatGroupLabel(group),
     }));
     this.formatOptions = options.formats.map(format => ({
@@ -410,6 +415,22 @@ export class PlayerSheetComponent implements OnDestroy {
       minPartyPlace: minPartyPlace && minPartyPlace > 0 ? minPartyPlace : null,
       hasParty: this.toPartyCriteria(this.form.get('party')?.value as PartyValue),
     };
+  }
+
+  onCountriesChange(ids: string[]): void {
+    this.form.get('countries')?.setValue(ids);
+  }
+
+  onFormatGroupsChange(ids: string[]): void {
+    this.form.get('formatGroups')?.setValue(ids);
+  }
+
+  get selectedCountries(): string[] {
+    return this.form.get('countries')?.value ?? [];
+  }
+
+  get selectedFormatGroups(): string[] {
+    return this.form.get('formatGroups')?.value ?? [];
   }
 
   private getTitle(authors: string[], title: string): string {

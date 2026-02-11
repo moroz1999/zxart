@@ -1,0 +1,41 @@
+:root {
+  --zx-filter-picker-gap: var(--space-4);
+  --zx-filter-picker-control-gap: var(--space-4);
+  --zx-filter-picker-trigger-gap: var(--space-8);
+  --zx-filter-picker-trigger-padding: 0 var(--space-8);
+  --zx-filter-picker-clear-margin: var(--space-4);
+  --zx-filter-picker-radius: var(--form-border-radius);
+  --zx-filter-picker-height: var(--input-height);
+  --zx-filter-picker-border-width: var(--border-width-thin);
+  --zx-filter-picker-border: var(--input-border-color);
+  --zx-filter-picker-border-active: var(--input-border-focus-color);
+  --zx-filter-picker-bg: var(--input-bg);
+  --zx-filter-picker-text: var(--input-text);
+  --zx-filter-picker-placeholder: var(--input-placeholder);
+  --zx-filter-picker-label: var(--form-label-color);
+  --zx-filter-picker-icon: var(--text-light-color);
+  --zx-filter-picker-icon-size: var(--space-16);
+  --zx-filter-picker-transition: var(--animation-sm);
+
+  --zx-filter-picker-panel-bg: var(--input-bg);
+  --zx-filter-picker-panel-border: var(--border-width-thin) solid var(--border-form);
+  --zx-filter-picker-panel-shadow: var(--shadow-thin);
+  --zx-filter-picker-panel-padding: var(--space-12);
+  --zx-filter-picker-panel-gap: var(--space-12);
+
+  --zx-filter-picker-list-max-height: calc(var(--space-16) * 10);
+  --zx-filter-picker-item-gap: var(--space-4);
+  --zx-filter-picker-item-padding: var(--space-4) var(--space-8);
+  --zx-filter-picker-item-radius: var(--radius-md);
+  --zx-filter-picker-item-hover-bg: var(--background-dark);
+
+  --zx-filter-picker-clear-color: var(--text-light-color);
+  --zx-filter-picker-checkbox-border: var(--input-border-color);
+  --zx-filter-picker-checkbox-border-hover: var(--input-border-focus-color);
+  --zx-filter-picker-checkbox-selected: var(--primary-500);
+  --zx-filter-picker-checkbox-check: var(--white);
+}
+
+.dark-mode {
+  --zx-filter-picker-item-hover-bg: var(--background-deep);
+}

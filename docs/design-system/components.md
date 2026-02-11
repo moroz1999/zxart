@@ -58,3 +58,10 @@ Page navigation component with loading state support.
 Props: `currentPage`, `pagesAmount`, `urlBase`, `loading` (shows spinner overlay and disables controls), `visibleAmount`
 
 Event: `pageChange` - emits new page number on click
+
+### zx-filter-picker
+Compact summary control with a popover list of checkboxes and search.
+
+Props: `label`, `items` (`{id, label}`), `selectedIds`, `placeholder`, `searchEnabled`, `multi`
+
+Event: `selectedIdsChange` - emits updated selection

@@ -1,0 +1,74 @@
+<span *ngIf="label" zxCaption class="zx-filter-picker__label">{{ label }}</span>
+<div
+  class="zx-filter-picker__control"
+  [class.zx-filter-picker__control--active]="hasSelection"
+  [class.zx-filter-picker__control--open]="menuOpen"
+>
+  <button
+    type="button"
+    mat-button
+    class="zx-filter-picker__trigger"
+    [matMenuTriggerFor]="menu"
+    [attr.aria-label]="label || summaryText"
+    (menuOpened)="onMenuOpened()"
+    (menuClosed)="onMenuClosed()"
+  >
+    <span
+      zxBody
+      class="zx-filter-picker__summary"
+      [class.zx-filter-picker__summary--placeholder]="summaryIsPlaceholder"
+    >
+      {{ summaryText }}
+    </span>
+    <mat-icon class="zx-filter-picker__chevron">expand_more</mat-icon>
+  </button>
+  <button
+    *ngIf="hasSelection"
+    type="button"
+    mat-icon-button
+    class="zx-filter-picker__clear"
+    [attr.aria-label]="'player.filters.clear' | translate"
+    (click)="clearSelection($event)"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-menu #menu="matMenu" class="zx-filter-picker__menu">
+  <div class="zx-filter-picker__menu-content">
+    <mat-form-field
+      *ngIf="searchEnabled"
+      appearance="outline"
+      class="zx-filter-picker__search"
+    >
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        matInput
+        [placeholder]="'player.filters.search' | translate"
+        [value]="searchTerm"
+        (input)="onSearchChange($event)"
+      />
+    </mat-form-field>
+
+    <div class="zx-filter-picker__list">
+      <mat-checkbox
+        *ngFor="let item of filteredItems; trackBy: trackById"
+        [checked]="isSelected(item.id)"
+        (change)="toggleSelection(item.id, $event.checked)"
+        class="zx-filter-picker__item"
+      >
+        <span zxBody class="zx-filter-picker__item-label">{{ item.label }}</span>
+      </mat-checkbox>
+    </div>
+
+    <zx-button
+      size="sm"
+      color="outlined"
+      [disabled]="!hasSelection"
+      class="zx-filter-picker__clear-all"
+      (click)="clearSelection($event)"
+    >
+      {{ 'player.filters.clearAll' | translate }}
+    </zx-button>
+  </div>
+</mat-menu>

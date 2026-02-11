@@ -4,6 +4,10 @@
 The online music player provides playback for tune lists and a radio mode driven by criteria.
 Radio presets are identified by a `radiotype` key and display labels stored in the database.
 
+### Radio Filters UI
+- Countries and sound format groups use the `zx-filter-picker` summary control with a popover list.
+- Selection updates criteria immediately; the UI change does not alter the criteria logic.
+
 ### Play Threshold and Analytics
 - Play is logged after 75% of track duration is reached by real playback time.
 - Only time while actively playing counts; pauses accumulate, and seeking does not grant time.
