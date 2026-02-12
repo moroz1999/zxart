@@ -1,3 +1,35 @@
 :host {
   display: block;
 }
+
+:host ::ng-deep .zx-table-content table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead th {
+    font-size: var(--table-header-font-size);
+    color: var(--table-header-color);
+    padding: var(--table-header-padding);
+    text-align: left;
+    font-weight: 600;
+  }
+
+  tbody td {
+    padding: var(--table-cell-padding);
+  }
+
+  tbody > :nth-child(odd) th,
+  tbody > :nth-child(odd) td {
+    background: var(--table-row-alternate-bg);
+  }
+
+  @media (max-width: 600px) {
+    thead th {
+      font-size: var(--table-header-font-size-mobile);
+    }
+
+    tbody td {
+      font-size: var(--table-cell-font-size-mobile);
+    }
+  }
+}

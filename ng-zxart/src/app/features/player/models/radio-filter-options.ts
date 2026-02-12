@@ -13,6 +13,10 @@ export interface RadioFilterOptionsDto {
     min: number | null;
     max: number | null;
   };
+  ratingRange: {
+    min: number | null;
+    max: number | null;
+  };
   countries: RadioFilterCountryOption[];
   categories: RadioFilterCategoryOption[];
   formatGroups: string[];

@@ -35,6 +35,8 @@ readonly class TuneRestDto
         public bool $isRealtime,
         public ?string $compo,
         public ?string $mp3Url,
+        public ?string $originalFileUrl,
+        public ?string $trackerFileUrl,
     ) {
     }
 }

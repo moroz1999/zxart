@@ -114,6 +114,8 @@ export class LegacyPlayButtonComponent {
       isRealtime: false,
       compo: null,
       mp3Url,
+      originalFileUrl: null,
+      trackerFileUrl: null,
     };
   }
 }

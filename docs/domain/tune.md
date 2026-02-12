@@ -51,6 +51,9 @@ Musical work for ZX Spectrum - chiptunes in various tracker and chip formats. Re
 - **trackerFile** - tracker file (source)
 - **trackerFileName** - tracker file name
 - **mp3Name** - MP3 file name (for listening)
+- **mp3Url** - link to MP3 file for listening (if available)
+- **originalFileUrl** - link to original track file for download (if available)
+- **trackerFileUrl** - link to tracker/source file for download (if available)
 - **embedCode** - player embed code
 
 ### Relations with Other Entities

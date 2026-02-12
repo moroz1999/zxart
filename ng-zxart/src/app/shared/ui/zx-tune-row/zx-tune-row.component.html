@@ -55,3 +55,11 @@
     </span>
   </div>
 </td>
+<td class="tune-download">
+  <a *ngIf="tune.originalFileUrl" [href]="tune.originalFileUrl" rel="nofollow" class="download-link" [attr.aria-label]="'tune.download.original' | translate">
+    <mat-icon class="download-icon download-original">download</mat-icon>
+  </a>
+  <a *ngIf="tune.mp3Url" [href]="tune.mp3Url" rel="nofollow" class="download-link" [attr.aria-label]="'tune.download.mp3' | translate">
+    <mat-icon class="download-icon download-mp3">music_note</mat-icon>
+  </a>
+</td>

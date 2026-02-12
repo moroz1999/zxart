@@ -17,7 +17,7 @@ After making any changes to the Angular part of the project (`ng-zxart`), includ
 2. Ensure the build completes without errors.
 3. Verify the result in a browser.
 
-**Note: Any change to SCSS files requires a mandatory Angular build to reflect changes in the application.**
+**Note: Any change to angular files requires a mandatory Angular build to reflect changes in the application.**
 
 #### Example of Comments Integration
 To integrate the new comments list, the `<app-comments-list>` tag is used in the relevant detailed templates (e.g., `zxProd.details.tpl`):

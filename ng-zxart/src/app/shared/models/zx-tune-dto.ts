@@ -21,4 +21,6 @@ export interface ZxTuneDto {
   readonly isRealtime: boolean;
   readonly compo: string | null;
   readonly mp3Url: string | null;
+  readonly originalFileUrl: string | null;
+  readonly trackerFileUrl: string | null;
 }

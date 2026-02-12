@@ -34,6 +34,7 @@ readonly class RadioOptionsService
         }
 
         $yearRange = $this->tunesRepository->getYearRange();
+        $ratingRange = $this->tunesRepository->getRatingRange();
         $categories = $this->loadCategories();
         $countries = $this->loadCountries();
         $formatGroups = $this->tunesRepository->getAvailableFormatGroups();
@@ -41,6 +42,7 @@ readonly class RadioOptionsService
 
         $result = [
             'yearRange' => $yearRange,
+            'ratingRange' => $ratingRange,
             'countries' => $countries,
             'categories' => $categories,
             'formatGroups' => $formatGroups,

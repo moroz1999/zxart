@@ -1,4 +1,4 @@
-import {AfterContentInit, Component, ElementRef, Input} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
 
 @Component({
@@ -8,16 +8,7 @@ import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
   templateUrl: './zx-table.component.html',
   styleUrls: ['./zx-table.component.scss']
 })
-export class ZxTableComponent implements AfterContentInit {
+export class ZxTableComponent {
   @Input() title = '';
   @Input() titleLevel: 'h2' | 'h3' = 'h3';
-
-  constructor(private el: ElementRef<HTMLElement>) {}
-
-  ngAfterContentInit(): void {
-    const table = this.el.nativeElement.querySelector('table');
-    if (table) {
-      table.classList.add('zx-table');
-    }
-  }
 }

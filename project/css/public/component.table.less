@@ -1,26 +1,27 @@
 .table_component thead th {
-    text-align: left;
-    font-size: var(--table-header-font-size);
-    font-weight: bold;
-    background: none;
-    color: var(--table-header-color);
-    border: none;
-    padding: var(--table-header-padding);
-    @media (max-width: @screen_breakpoint_xs_max) {
-        font-size: var(--table-header-font-size-mobile);
-    }}
-
-.table_component tbody td {
-    border: none;
-    padding: var(--table-cell-padding);
-    vertical-align: middle;
-    border-collapse: collapse;
-    @media (max-width: @screen_breakpoint_xs_max) {
-        font-size: var(--table-cell-font-size-mobile);
-    }
+  text-align: left;
+  font-size: var(--table-header-font-size);
+  font-weight: bold;
+  background: none;
+  color: var(--table-header-color);
+  border: none;
+  padding: var(--table-header-padding);
+  @media (max-width: @screen_breakpoint_xs_max) {
+    font-size: var(--table-header-font-size-mobile);
+  }
 }
 
-.table_component tbody tr:nth-of-type(2n-1) th,
-.table_component tbody tr:nth-of-type(2n-1) td {
-    background-color: var(--table-row-alternate-bg);
+.table_component tbody td {
+  border: none;
+  padding: var(--table-cell-padding);
+  vertical-align: middle;
+  border-collapse: collapse;
+  @media (max-width: @screen_breakpoint_xs_max) {
+    font-size: var(--table-cell-font-size-mobile);
+  }
+}
+
+.table_component tbody > :nth-child(odd) th,
+.table_component tbody > :nth-child(odd) td {
+  background-color: var(--table-row-alternate-bg);
 }

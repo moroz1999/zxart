@@ -135,3 +135,26 @@ td {
   gap: var(--space-4);
   white-space: nowrap;
 }
+
+.tune-download {
+  text-align: right;
+
+  .download-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-light-color);
+    text-decoration: none;
+    margin-left: var(--space-4);
+
+    &:hover {
+      color: var(--primary-500);
+    }
+  }
+
+  .download-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}

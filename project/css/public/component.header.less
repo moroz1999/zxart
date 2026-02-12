@@ -2,12 +2,20 @@
 /*  HEADER BLOCK
 /********************************************************/
 .header_block {
-  padding: var(--header-padding);
   position: relative;
   background-color: var(--header-bg);
   z-index: 5;
+  width: 100%;
+}
+
+.header_inner {
+  padding: var(--header-padding);
   display: flex;
   justify-content: space-between;
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .header_column {

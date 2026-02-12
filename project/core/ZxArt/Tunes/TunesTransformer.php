@@ -43,6 +43,20 @@ readonly class TunesTransformer
 
         $userVote = $element->getUserVote();
         $mp3Path = $element->getMp3FilePath();
+        
+        $originalFileUrl = null;
+        $originalFileName = $element->getFileName('original');
+        if ($originalFileName && !empty($element->file)) {
+            $baseUrl = $element->getService('controller')->baseURL;
+            $originalFileUrl = $baseUrl . 'file/id:' . $element->file . '/filename:' . $originalFileName;
+        }
+        
+        $trackerFileUrl = null;
+        $trackerFileName = $element->getFileName('tracker');
+        if ($trackerFileName && !empty($element->trackerFile)) {
+            $baseUrl = $element->getService('controller')->baseURL;
+            $trackerFileUrl = $baseUrl . 'file/id:' . $element->trackerFile . '/filename:' . $trackerFileName;
+        }
 
         return new TuneDto(
             id: (int)$element->id,
@@ -63,6 +77,8 @@ readonly class TunesTransformer
             isRealtime: $element->isRealtime(),
             compo: $element->compo ? html_entity_decode((string)$element->compo, ENT_QUOTES) : null,
             mp3Url: $mp3Path !== false ? $mp3Path : null,
+            originalFileUrl: $originalFileUrl,
+            trackerFileUrl: $trackerFileUrl,
         );
     }
 }

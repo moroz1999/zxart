@@ -243,3 +243,26 @@
 	</table>
 	{include file=$theme->template('component.controls.tpl') action="publicReceive"}
 </form>
+
+<script>
+(function() {
+	const partySelect = document.querySelector('.zxitem_form_party_select');
+	const partyPlaceInput = document.querySelector('input[name="{$formNames.partyplace}"]');
+	
+	if (partySelect && partyPlaceInput) {
+		function updatePartyPlaceState() {
+			const hasParty = partySelect.value && partySelect.value !== '';
+			partyPlaceInput.disabled = !hasParty;
+			if (!hasParty) {
+				partyPlaceInput.value = '';
+			}
+		}
+		
+		// Initial state
+		updatePartyPlaceState();
+		
+		// Listen for changes
+		partySelect.addEventListener('change', updatePartyPlaceState);
+	}
+})();
+</script>

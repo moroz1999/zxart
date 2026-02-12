@@ -1,6 +1,6 @@
 :root {
   /* Layout & Application */
-  --content-padding: var(--space-64);
+  --content-padding: var(--space-16);
   --content-padding-mobile: var(--space-16);
   --center-block-padding-bottom: var(--space-48);
   --breadcrumbs-margin-bottom: var(--space-16);
@@ -17,6 +17,7 @@
   --news-short-block-margin-bottom: var(--space-16);
   --latestupdates-controls-margin: var(--space-8) 0;
   --latestupdates-controls-font-size: var(--font-sm);
+  --layout-max-width: 1900px;
   --zxitemslist-controls-margin-top: var(--space-16);
   --parties-table-thead-padding: var(--space-8);
   --parties-table-tbody-padding: var(--space-8);
@@ -44,6 +45,11 @@
   --h1-font-size: var(--zx-heading-1-size);
   --h2-font-size: var(--zx-heading-2-size);
   --h3-font-size: var(--zx-heading-3-size);
+
+  /* Background colors */
+  --main-background: var(--secondary-50);
+  --secondary-bg: var(--secondary-100);
+  --content-background: var(--white);
 }
 
 .dark-mode {

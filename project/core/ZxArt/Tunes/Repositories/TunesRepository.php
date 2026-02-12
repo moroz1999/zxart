@@ -252,6 +252,25 @@ readonly final class TunesRepository
     }
 
     /**
+     * @return array{min: float|null, max: float|null}
+     */
+    public function getRatingRange(): array
+    {
+        $min = $this->db->table(self::TABLE)
+            ->where(self::TABLE . '.votesAmount', '>', 0)
+            ->min(self::TABLE . '.votes');
+
+        $max = $this->db->table(self::TABLE)
+            ->where(self::TABLE . '.votesAmount', '>', 0)
+            ->max(self::TABLE . '.votes');
+
+        return [
+            'min' => $min === null ? null : (float)$min,
+            'max' => $max === null ? null : (float)$max,
+        ];
+    }
+
+    /**
      * @return string[]
      */
     public function getAvailableFormatGroups(): array
