@@ -38,7 +38,8 @@ export class RadioRemoteComponent {
   ) {}
 
   startPreset(preset: RadioPreset): void {
-    const criteria = this.presetCriteriaService.buildCriteria(preset);
-    this.playerService.startRadio(criteria, preset);
+    this.presetCriteriaService.buildCriteria(preset).subscribe((criteria) => {
+      this.playerService.startRadio(criteria, preset);
+    });
   }
 }

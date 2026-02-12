@@ -1,6 +1,6 @@
 import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
-import {map, Observable, of} from 'rxjs';
+import {map, Observable, of, switchMap} from 'rxjs';
 import {EMPTY_RADIO_CRITERIA, RadioCriteria} from '../models/radio-criteria';
 import {UserPreferencesService} from '../../settings/services/user-preferences.service';
 import {CurrentUserService} from '../../../shared/services/current-user.service';
@@ -26,29 +26,33 @@ export class RadioCriteriaStorageService {
     if (!this.isBrowser) {
       return of(EMPTY_RADIO_CRITERIA);
     }
-
-    if (this.currentUserService.isAuthenticated) {
-      return this.userPreferencesService.syncFromServer().pipe(
-        map(() => this.parseCriteria(this.userPreferencesService.getPreference(PREF_CODE))),
-      );
-    }
-
-    return of(this.readFromStorage());
+    return this.currentUserService.loadUser().pipe(
+      switchMap((user) => {
+        if (user && user.userName !== 'anonymous') {
+          return this.userPreferencesService.syncFromServer().pipe(
+            map(() => this.parseCriteria(this.userPreferencesService.getPreference(PREF_CODE))),
+          );
+        }
+        return of(this.readFromStorage());
+      }),
+    );
   }
 
   saveCriteria(criteria: RadioCriteria): Observable<void> {
     if (!this.isBrowser) {
       return of(undefined);
     }
-
-    if (this.currentUserService.isAuthenticated) {
-      return this.userPreferencesService.setPreference(PREF_CODE, JSON.stringify(criteria)).pipe(
-        map(() => undefined),
-      );
-    }
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(criteria));
-    return of(undefined);
+    return this.currentUserService.loadUser().pipe(
+      switchMap((user) => {
+        if (user && user.userName !== 'anonymous') {
+          return this.userPreferencesService.setPreference(PREF_CODE, JSON.stringify(criteria)).pipe(
+            map(() => undefined),
+          );
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(criteria));
+        return of(undefined);
+      }),
+    );
   }
 
   private readFromStorage(): RadioCriteria {

@@ -264,9 +264,12 @@ export class PlayerSheetComponent implements OnDestroy {
   }
 
   applyPreset(preset: RadioPreset): void {
-    const criteria = this.presetCriteriaService.buildCriteria(preset);
-    this.setFormFromCriteria(criteria);
-    this.playerService.startRadio(criteria, preset);
+    this.subscriptions.add(
+      this.presetCriteriaService.buildCriteria(preset).subscribe((criteria) => {
+        this.setFormFromCriteria(criteria);
+        this.playerService.startRadio(criteria, preset);
+      })
+    );
   }
 
   openCurrentTuneUrl(): void {
