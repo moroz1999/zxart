@@ -1,9 +1,45 @@
-<button
-  mat-flat-button
-  [disabled]="disabled"
-  [type]="type"
-  [class]="classList"
-  [attr.aria-label]="ariaLabel || null"
->
-  <ng-content></ng-content>
-</button>
+@if (isLink) {
+  <a
+    [href]="href"
+    [attr.target]="target"
+    [attr.rel]="safeRel"
+    [class]="classList"
+    [attr.aria-label]="ariaLabel || null"
+    [attr.aria-disabled]="disabled ? 'true' : null"
+    [attr.tabindex]="disabled ? -1 : null"
+    (pointerdown)="onPointerDown($event)"
+    (click)="onLinkClick($event)"
+  >
+    <span
+      class="zx-button__ripple"
+      [class.zx-button__ripple--active]="rippleActive"
+      [style.left.px]="rippleX"
+      [style.top.px]="rippleY"
+      [style.width.px]="rippleSize"
+      [style.height.px]="rippleSize"
+    ></span>
+    <span class="zx-button__content">
+      <ng-content></ng-content>
+    </span>
+  </a>
+} @else {
+  <button
+    [disabled]="disabled"
+    [type]="type"
+    [class]="classList"
+    [attr.aria-label]="ariaLabel || null"
+    (pointerdown)="onPointerDown($event)"
+  >
+    <span
+      class="zx-button__ripple"
+      [class.zx-button__ripple--active]="rippleActive"
+      [style.left.px]="rippleX"
+      [style.top.px]="rippleY"
+      [style.width.px]="rippleSize"
+      [style.height.px]="rippleSize"
+    ></span>
+    <span class="zx-button__content">
+      <ng-content></ng-content>
+    </span>
+  </button>
+}

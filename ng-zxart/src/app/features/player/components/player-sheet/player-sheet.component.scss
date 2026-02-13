@@ -48,7 +48,7 @@
   display: block;
 }
 
-:host ::ng-deep .player-bar .zx-button--round .mdc-button__label {
+:host ::ng-deep .player-bar .zx-button--round .zx-button__content {
   justify-content: center;
   align-items: center;
   line-height: 1;
@@ -66,13 +66,19 @@
   border-radius: var(--zx-player-progress-radius);
   background-color: var(--zx-player-progress-bg);
   background-image: linear-gradient(
-    90deg,
-    var(--zx-player-progress-fill) var(--zx-player-progress),
-    transparent 0
+      90deg,
+      var(--zx-player-progress-fill) var(--zx-player-progress),
+      transparent 0
   );
   color: var(--zx-player-progress-text);
   cursor: pointer;
   box-sizing: border-box;
+}
+
+.player-progress-text {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .player-progress--disabled {
@@ -107,7 +113,7 @@
 }
 
 .player-preset-active {
-  --mdc-filled-button-container-color: var(--zx-player-preset-active-bg);
+  background-color: var(--zx-player-preset-active-bg);
   border-color: var(--zx-player-preset-active-border);
 }
 

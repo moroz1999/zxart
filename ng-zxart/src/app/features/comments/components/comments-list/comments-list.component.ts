@@ -1,7 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {Component, Input} from '@angular/core';
 import {TranslateModule} from '@ngx-translate/core';
-import {MatButtonModule} from '@angular/material/button';
 import {MatDividerModule} from '@angular/material/divider';
 import {CommentDto} from '../../models/comment.dto';
 import {CommentsService} from '../../services/comments.service';
@@ -19,7 +18,6 @@ import {Observable, of, Subject} from 'rxjs';
   imports: [
     CommonModule,
     TranslateModule,
-    MatButtonModule,
     MatDividerModule,
     CommentComponent,
     CommentFormComponent,

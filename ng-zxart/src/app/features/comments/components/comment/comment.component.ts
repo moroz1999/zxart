@@ -2,7 +2,6 @@ import {CommonModule} from '@angular/common';
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {CommentDto} from '../../models/comment.dto';
 import {CommentsService} from '../../services/comments.service';
@@ -19,7 +18,6 @@ import {ZxBodyDirective, ZxCaptionDirective} from '../../../../shared/directives
   imports: [
     CommonModule,
     TranslateModule,
-    MatButtonModule,
     MatIconModule,
     CommentFormComponent,
     ZxUserComponent,

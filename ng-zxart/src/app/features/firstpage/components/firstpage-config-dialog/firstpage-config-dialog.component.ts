@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatIconModule} from '@angular/material/icon';
 import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
@@ -27,7 +26,6 @@ import {ZxHeading2Directive} from '../../../../shared/directives/typography/typo
     CommonModule,
     FormsModule,
     MatDialogModule,
-    MatButtonModule,
     MatCheckboxModule,
     MatIconModule,
     DragDropModule,

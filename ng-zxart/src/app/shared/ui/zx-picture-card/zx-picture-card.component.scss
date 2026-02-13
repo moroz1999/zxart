@@ -100,24 +100,24 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.4em;
-  height: 1.4em;
+  width: var(--zx-medal-size);
+  height: var(--zx-medal-size);
   border-radius: 50%;
   font-size: var(--zx-caption-font-size);
   font-weight: 700;
-  color: var(--background-deep);
+  color: var(--zx-medal-text-color);
 }
 
 .medal-gold {
-  background: var(--warning-400);
+  background: var(--zx-medal-gold-bg);
 }
 
 .medal-silver {
-  background: var(--secondary-500);
+  background: var(--zx-medal-silver-bg);
 }
 
 .medal-bronze {
-  background: var(--warning-700);
+  background: var(--zx-medal-bronze-bg);
 }
 
 .picture-year {

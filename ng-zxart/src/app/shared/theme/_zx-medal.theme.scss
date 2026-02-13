@@ -1,0 +1,11 @@
+:root {
+  --zx-medal-size: 20px;
+  --zx-medal-text-color: var(--background-deep);
+  --zx-medal-gold-bg: var(--warning-400);
+  --zx-medal-silver-bg: var(--secondary-500);
+  --zx-medal-bronze-bg: var(--warning-700);
+}
+
+.light-mode {
+  --zx-medal-text-color: var(--white);
+}
