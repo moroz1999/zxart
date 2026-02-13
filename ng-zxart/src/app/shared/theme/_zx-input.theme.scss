@@ -13,9 +13,6 @@
   --input-border-color: var(--border-form);
   --input-border-focus-color: var(--border-focused);
   --input-border-error-color: var(--error-color);
-  --input-range-accent: var(--primary-500);
-  --input-range-track: var(--secondary-200);
-  --input-range-height: var(--space-4);
 }
 
 .dark-mode {
@@ -24,8 +21,6 @@
   --input-placeholder: var(--secondary-500);
   --input-border-color: var(--secondary-300);
   --input-border-focus-color: var(--white);
-  --input-range-accent: var(--primary-400);
-  --input-range-track: var(--secondary-300);
 }
 
 /* Helper tokens for MDC components */

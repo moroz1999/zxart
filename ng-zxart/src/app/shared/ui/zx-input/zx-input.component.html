@@ -1,4 +1,5 @@
 <input
+  *ngIf="matAutocomplete; else plainInput"
   #inputElement
   [type]="type"
   [value]="value"
@@ -8,8 +9,25 @@
   [attr.max]="max"
   [attr.step]="step"
   [class.zx-input--sm]="size === 'sm'"
-  [matAutocomplete]="matAutocomplete!"
+  [matAutocomplete]="matAutocomplete"
   (input)="onInput($event)"
   (blur)="onBlur()"
   (keyup)="onKeyup($event)"
 />
+
+<ng-template #plainInput>
+  <input
+    #inputElement
+    [type]="type"
+    [value]="value"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    [attr.min]="min"
+    [attr.max]="max"
+    [attr.step]="step"
+    [class.zx-input--sm]="size === 'sm'"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+    (keyup)="onKeyup($event)"
+  />
+</ng-template>

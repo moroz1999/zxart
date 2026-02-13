@@ -5,6 +5,7 @@
 :host(.zx-checkbox-field--full) {
   display: block;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .zx-checkbox-field__container {

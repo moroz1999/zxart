@@ -1,10 +1,22 @@
-<input
-  type="range"
-  [value]="value"
-  [disabled]="disabled"
-  [attr.min]="min"
-  [attr.max]="max"
-  [attr.step]="step"
-  (input)="onInput($event)"
-  (blur)="onBlur()"
-/>
+<div class="zx-input-range" [class.zx-input-range--disabled]="disabled">
+  <div class="zx-input-range__values">
+    <span class="zx-input-range__value">{{ numericValue }}</span>
+  </div>
+
+  <div class="zx-input-range__slider">
+    <div class="zx-input-range__track"></div>
+    <div class="zx-input-range__track-active" [style.width.%]="valuePercent"></div>
+    <div class="zx-input-range__thumb" [style.left.%]="valuePercent"></div>
+    <input
+      class="zx-input-range__native"
+      type="range"
+      [value]="value"
+      [disabled]="disabled"
+      [attr.min]="min"
+      [attr.max]="max"
+      [attr.step]="step"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+    />
+  </div>
+</div>

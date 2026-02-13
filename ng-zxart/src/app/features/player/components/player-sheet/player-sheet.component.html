@@ -132,7 +132,6 @@
           <div class="player-field player-field--range" *ngIf="hasRatingRange">
             <div class="player-field-label-row">
               <span zxCaption class="player-field-label">{{ 'player.filters.minRating' | translate }}</span>
-              <span zxCaption class="player-field-value">{{ getRatingDisplayValue() }}</span>
             </div>
             <zx-input-range
               [min]="ratingMin"

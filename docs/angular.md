@@ -42,9 +42,10 @@ All new functionality in Angular must follow Feature Sliced Design principles an
 
 ### Deprecated Practices
 1. **PrimeNG**: The use of PrimeNG is deprecated. All new components MUST use Material UI. Existing PrimeNG components should be replaced during refactoring.
-2. **Sass @import**: The `@import` rule in SCSS is deprecated in favor of `@use` and `@forward`.
-3. **Legacy CSS**: Custom styles that duplicate Material functionality or legacy theme styles should be avoided.
-4. **Direct CSS Overrides**: Avoid deep CSS overrides of Material components unless absolutely necessary; use Material themes and variables instead.
+2. **Direct Material UI in Design System Primitives**: `shared/ui` form primitives (for example range controls) must be implemented with native/custom markup and our theme variables. Material wrappers in these primitives are transitional and must be removed during refactoring.
+3. **Sass @import**: The `@import` rule in SCSS is deprecated in favor of `@use` and `@forward`.
+4. **Legacy CSS**: Custom styles that duplicate Material functionality or legacy theme styles should be avoided.
+5. **Direct CSS Overrides**: Avoid deep CSS overrides of Material components unless absolutely necessary; use Material themes and variables instead.
 
 - Code is divided into layers, such as `features`, `entities`, and `shared`.
 - Each feature must be located in its own directory within `src/app/features/`.

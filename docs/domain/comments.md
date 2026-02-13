@@ -11,6 +11,7 @@
     - The `author` field in `commentElement` is deprecated. 
     - Real author information is stored via a link of type `author` to a `user` element.
     - If a user is anonymous, the deprecated `author` field might still contain a name.
+    - API responses may contain `author = null` when both linked user and legacy author name are missing; clients must handle this case and skip author rendering.
 - **Content**:
     - URLs in comment content are automatically converted into clickable HTML links.
     - To get the original content without HTML decorations (e.g., for editing), use `$comment->getValue('content')` on the `commentElement`. This method retrieves the raw storage value from the underlying `dataChunk`.

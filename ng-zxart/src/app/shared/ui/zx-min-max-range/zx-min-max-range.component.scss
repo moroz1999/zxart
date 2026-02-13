@@ -4,28 +4,64 @@
 
 .zx-min-max-range {
   display: grid;
-  gap: var(--zx-min-max-range-gap);
+  gap: var(--zx-range-gap);
 }
 
 .zx-min-max-range__values {
-  display: flex;
-  justify-content: space-between;
+  display: var(--zx-range-values-display);
+  justify-content: var(--zx-min-max-range-values-justify);
   align-items: center;
-  gap: var(--zx-min-max-range-item-gap);
+  gap: var(--zx-range-values-gap);
 }
 
 .zx-min-max-range__value {
-  color: var(--zx-min-max-range-label-color);
+  color: var(--zx-range-value-color);
 }
 
 .zx-min-max-range__slider {
-  --mdc-slider-handle-color: var(--zx-min-max-range-handle-color);
-  --mdc-slider-focus-handle-color: var(--zx-min-max-range-handle-color);
-  --mdc-slider-hover-handle-color: var(--zx-min-max-range-handle-color);
-  --mdc-slider-active-track-color: var(--zx-min-max-range-track-active);
-  --mdc-slider-inactive-track-color: var(--zx-min-max-range-track-inactive);
-  --mdc-slider-with-tick-marks-inactive-container-color: var(--zx-min-max-range-track-inactive);
-  --mdc-slider-with-tick-marks-active-container-color: var(--zx-min-max-range-track-active);
-  --mdc-slider-with-tick-marks-active-container-opacity: 1;
-  --mdc-slider-with-tick-marks-inactive-container-opacity: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: var(--zx-range-hit-area-height);
+}
+
+.zx-min-max-range__track,
+.zx-min-max-range__track-active {
+  position: absolute;
+  height: var(--zx-range-track-height);
+  border-radius: var(--zx-range-track-height);
+}
+
+.zx-min-max-range__track {
+  left: 0;
+  right: 0;
+  background: var(--zx-range-track-color);
+}
+
+.zx-min-max-range__track-active {
+  background: var(--zx-range-track-active-color);
+}
+
+.zx-min-max-range__thumb {
+  position: absolute;
+  top: 50%;
+  width: var(--zx-range-thumb-size);
+  height: var(--zx-range-thumb-size);
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+  background: var(--zx-range-thumb-color);
+  border: var(--border-width-thin) solid var(--zx-range-thumb-border-color);
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+.zx-min-max-range__slider--disabled {
+  opacity: var(--zx-range-disabled-opacity);
+}
+
+.zx-min-max-range__slider--disabled .zx-min-max-range__thumb {
+  cursor: default;
 }

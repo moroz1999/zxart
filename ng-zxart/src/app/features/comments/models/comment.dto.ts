@@ -14,7 +14,7 @@ export interface CommentTargetDto {
 
 export interface CommentDto {
   id: number;
-  author: CommentAuthorDto;
+  author: CommentAuthorDto | null;
   date: string;
   content: string;
   originalContent: string;

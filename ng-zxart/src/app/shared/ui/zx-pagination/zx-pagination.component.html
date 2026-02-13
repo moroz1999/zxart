@@ -1,4 +1,8 @@
 <div *ngIf="pagesAmount > 1" class="zx-pagination" [class.loading]="loading">
+    <div class="pagination-spinner" *ngIf="loading">
+        <zx-spinner size="sm"></zx-spinner>
+    </div>
+
     <div class="pagination-controls">
         <zx-button
             size="md"
@@ -24,9 +28,5 @@
             [disabled]="!nextPageActive() || loading"
             (click)="pageClicked($event, currentPage + 1)"
         >&gt;</zx-button>
-    </div>
-
-    <div class="pagination-spinner" *ngIf="loading">
-        <zx-spinner size="sm"></zx-spinner>
     </div>
 </div>

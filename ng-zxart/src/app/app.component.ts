@@ -9,7 +9,7 @@ import {CurrentUserService} from './shared/services/current-user.service';
     styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-    @Input() language: 'eng' | 'rus' | 'spa' = 'eng';
+    @Input() language?: 'eng' | 'rus' | 'spa';
     private languages = {
         eng: 'en',
         rus: 'ru',
@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        if (this.languages[this.language]) {
+        if (this.language && this.languages[this.language]) {
             const language = this.languages[this.language];
             this.translate.addLangs([language]);
             this.translate.setDefaultLang(language);

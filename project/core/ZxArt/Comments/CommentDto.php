@@ -10,7 +10,7 @@ readonly class CommentDto
      */
     public function __construct(
         public int $id,
-        public CommentAuthorDto $author,
+        public ?CommentAuthorDto $author,
         public string $date,
         public string $content,
         public string $originalContent,

@@ -3,14 +3,45 @@
     <span zxCaption class="zx-min-max-range__value">{{ value.min }}</span>
     <span zxCaption class="zx-min-max-range__value">{{ value.max }}</span>
   </div>
-  <mat-slider
+  <div
+    #slider
     class="zx-min-max-range__slider"
-    [min]="min"
-    [max]="max"
-    [step]="step"
-    [disabled]="disabled"
+    [class.zx-min-max-range__slider--disabled]="disabled"
+    (pointerdown)="onTrackPointerDown($event)"
   >
-    <input matSliderStartThumb [value]="value.min" (input)="onStartInput($event)" />
-    <input matSliderEndThumb [value]="value.max" (input)="onEndInput($event)" />
-  </mat-slider>
+    <div class="zx-min-max-range__track"></div>
+    <div
+      class="zx-min-max-range__track-active"
+      [style.left.%]="minPercent"
+      [style.right.%]="100 - maxPercent"
+    ></div>
+    <button
+      type="button"
+      class="zx-min-max-range__thumb"
+      [style.left.%]="minPercent"
+      [disabled]="disabled"
+      role="slider"
+      [attr.aria-valuemin]="min"
+      [attr.aria-valuemax]="value.max"
+      [attr.aria-valuenow]="value.min"
+      aria-label="Minimum value"
+      (pointerdown)="onThumbPointerDown($event, 'min')"
+      (keydown)="onThumbKeyDown($event, 'min')"
+      (blur)="onBlur()"
+    ></button>
+    <button
+      type="button"
+      class="zx-min-max-range__thumb"
+      [style.left.%]="maxPercent"
+      [disabled]="disabled"
+      role="slider"
+      [attr.aria-valuemin]="value.min"
+      [attr.aria-valuemax]="max"
+      [attr.aria-valuenow]="value.max"
+      aria-label="Maximum value"
+      (pointerdown)="onThumbPointerDown($event, 'max')"
+      (keydown)="onThumbKeyDown($event, 'max')"
+      (blur)="onBlur()"
+    ></button>
+  </div>
 </div>

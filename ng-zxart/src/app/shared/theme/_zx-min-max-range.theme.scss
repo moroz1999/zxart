@@ -1,15 +1,7 @@
 :root {
-  --zx-min-max-range-gap: var(--space-8);
-  --zx-min-max-range-item-gap: var(--space-4);
-  --zx-min-max-range-label-color: var(--text-light-color);
-  --zx-min-max-range-handle-color: var(--primary-500);
-  --zx-min-max-range-track-active: var(--primary-400);
-  --zx-min-max-range-track-inactive: var(--secondary-200);
+  --zx-min-max-range-values-justify: space-between;
 }
 
 .dark-mode {
-  --zx-min-max-range-label-color: var(--text-light-color);
-  --zx-min-max-range-handle-color: var(--primary-400);
-  --zx-min-max-range-track-active: var(--primary-300);
-  --zx-min-max-range-track-inactive: var(--secondary-300);
+  --zx-min-max-range-values-justify: space-between;
 }

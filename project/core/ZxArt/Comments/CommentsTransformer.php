@@ -7,7 +7,6 @@ use commentElement;
 use privilegesManager;
 use structureElement;
 use userElement;
-use ZxArt\Comments\Exception\CommentOperationException;
 
 /**
  * Service for transforming comment entities into DTOs.
@@ -39,15 +38,13 @@ readonly class CommentsTransformer
             $authorName = html_entity_decode((string)$authorUser->getTitle(), ENT_QUOTES);
         }
 
-        if ($authorName === '') {
-            throw new CommentOperationException("Comment {$comment->id} has no author");
-        }
-
-        $authorDto = new CommentAuthorDto(
-            name: $authorName,
-            url: $url,
-            badges: $badges,
-        );
+        $authorDto = $authorName !== ''
+            ? new CommentAuthorDto(
+                name: $authorName,
+                url: $url,
+                badges: $badges,
+            )
+            : null;
 
         $hasEditPrivilege = $this->privilegesManager->checkPrivilegesForAction((int)$comment->id, 'publicReceive', 'comment');
         $isEditable = $comment->isEditable();
@@ -72,7 +69,7 @@ readonly class CommentsTransformer
         return new CommentDto(
             id: (int)$comment->id,
             author: $authorDto,
-            date: $comment->dateCreated,
+            date: (string)$comment->dateCreated,
             content: $comment->getDecoratedContent(),
             originalContent: strip_tags((string)$comment->getValue('content')),
             canEdit: $canEdit,

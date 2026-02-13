@@ -523,17 +523,6 @@ export class PlayerSheetComponent implements OnDestroy {
     };
   }
 
-  getRatingDisplayValue(): string {
-    const value = this.form.get('minRating')?.value;
-    if (value === '' || value === null || value === undefined) {
-      if (this.ratingRange?.min !== null && this.ratingRange?.min !== undefined) {
-        return this.ratingRange.min.toFixed(1);
-      }
-      return '0.0';
-    }
-    return String(value);
-  }
-
   private getTitle(authors: string[], title: string): string {
     if (!authors.length) {
       return title;

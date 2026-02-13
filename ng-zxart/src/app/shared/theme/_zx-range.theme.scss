@@ -1,0 +1,24 @@
+:root {
+  --zx-range-gap: var(--space-8);
+  --zx-range-values-gap: var(--space-8);
+  --zx-range-values-display: flex;
+  --zx-range-value-color: var(--text-light-color);
+  --zx-range-value-font-size: var(--zx-caption-size);
+  --zx-range-value-line-height: var(--zx-caption-line-height);
+  --zx-range-track-height: var(--space-4);
+  --zx-range-track-color: var(--secondary-200);
+  --zx-range-track-active-color: var(--primary-400);
+  --zx-range-thumb-size: var(--space-24);
+  --zx-range-thumb-color: var(--primary-500);
+  --zx-range-thumb-border-color: var(--background-color);
+  --zx-range-hit-area-height: var(--space-24);
+  --zx-range-disabled-opacity: 0.5;
+}
+
+.dark-mode {
+  --zx-range-value-color: var(--text-light-color);
+  --zx-range-track-color: var(--secondary-300);
+  --zx-range-track-active-color: var(--primary-300);
+  --zx-range-thumb-color: var(--primary-400);
+  --zx-range-thumb-border-color: var(--secondary-100);
+}

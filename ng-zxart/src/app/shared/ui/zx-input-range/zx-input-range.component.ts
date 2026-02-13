@@ -50,4 +50,27 @@ export class ZxInputRangeComponent implements ControlValueAccessor {
   onBlur(): void {
     this.onTouched();
   }
+
+  get numericValue(): number {
+    if (this.value === '' || this.value === null || this.value === undefined) {
+      return this.min;
+    }
+    const parsed = Number(this.value);
+    if (!Number.isFinite(parsed)) {
+      return this.min;
+    }
+    return this.clamp(parsed);
+  }
+
+  get valuePercent(): number {
+    const range = this.max - this.min;
+    if (range <= 0) {
+      return 0;
+    }
+    return ((this.numericValue - this.min) / range) * 100;
+  }
+
+  private clamp(value: number): number {
+    return Math.min(this.max, Math.max(this.min, value));
+  }
 }

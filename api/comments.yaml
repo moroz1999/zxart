@@ -117,6 +117,7 @@ components:
           type: integer
         author:
           $ref: '#/components/schemas/CommentAuthorDto'
+          nullable: true
         date:
           type: string
           description: Creation date (formatted)

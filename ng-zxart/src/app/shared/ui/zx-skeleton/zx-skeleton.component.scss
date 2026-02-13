@@ -117,8 +117,8 @@
 .skeleton-prod-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, 256px);
-  justify-content: space-evenly;
-  gap: var(--space-16);
+  justify-content: space-between;
+  gap: var(--space-32) var(--space-16);
 }
 
 .skeleton-prod-card {
@@ -148,8 +148,8 @@
 .skeleton-picture-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, 320px);
-  justify-content: space-evenly;
-  gap: var(--space-16);
+  justify-content: space-between;
+  gap: var(--space-32) var(--space-16);
 }
 
 .skeleton-picture-card {
