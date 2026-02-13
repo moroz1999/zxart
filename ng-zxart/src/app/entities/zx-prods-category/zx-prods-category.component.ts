@@ -12,7 +12,7 @@ import {
 import {SortingSelectorComponent} from './components/sorting-selector/sorting-selector.component';
 import {DialogSelectorComponent} from './components/dialog-selector/dialog-selector.component';
 import {LetterSelectorComponent} from './components/letter-selector/letter-selector.component';
-import {MatProgressSpinner, MatSpinner} from '@angular/material/progress-spinner';
+import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {ZxProdBlockComponent} from '../../shared/ui/zx-prod-block/zx-prod-block.component';
 import {ZxProdRowComponent} from '../zx-prod-row/zx-prod-row.component';
 import {FormsModule} from '@angular/forms';
@@ -37,13 +37,12 @@ export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
         SortingSelectorComponent,
         DialogSelectorComponent,
         LetterSelectorComponent,
-        MatSpinner,
         ZxProdBlockComponent,
         ZxProdRowComponent,
         FormsModule,
         CommonModule,
         TagsSelectorComponent,
-        MatProgressSpinner,
+        ZxSpinnerComponent,
         ZxButtonComponent,
         ZxToggleComponent,
         ZxCheckboxFieldComponent,

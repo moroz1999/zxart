@@ -5,8 +5,8 @@ import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {TranslatePipe} from '@ngx-translate/core';
 import {NgForOf, NgIf} from '@angular/common';
 import {MatButton} from '@angular/material/button';
-import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {ParsedFileComponent} from './parsed-file/parsed-file.component';
+import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 
 @Component({
     selector: 'zx-parser',
@@ -19,7 +19,7 @@ import {ParsedFileComponent} from './parsed-file/parsed-file.component';
         NgForOf,
         NgIf,
         MatButton,
-        MatProgressSpinner,
+        ZxSpinnerComponent,
         ParsedFileComponent,
     ],
 })

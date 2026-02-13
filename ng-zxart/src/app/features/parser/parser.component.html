@@ -6,7 +6,7 @@
                 [disabled]="!!error">{{ 'parser.upload' | translate }}
         </button>
     </div>
-    <mat-spinner *ngIf="loading" diameter="100" strokeWidth="10"></mat-spinner>
+    <zx-spinner *ngIf="loading" size="xl"></zx-spinner>
     <div *ngIf=error class="error">{{ error }}</div>
 </div>
 <div class="results" *ngIf="data">

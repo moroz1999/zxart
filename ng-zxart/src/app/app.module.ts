@@ -16,7 +16,6 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatTreeModule} from '@angular/material/tree';
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ZxProdsListComponent} from './entities/zx-prods-list/zx-prods-list.component';
@@ -61,7 +60,6 @@ export function HttpLoaderFactory(http: HttpClient) {
         MatTreeModule,
         MatCardModule,
         MatButtonToggleModule,
-        MatProgressSpinnerModule,
         MatBottomSheetModule,
         ReactiveFormsModule,
         TranslatePipe,

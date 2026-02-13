@@ -50,6 +50,7 @@
         *ngFor="let item of filteredItems; trackBy: trackById"
         class="zx-filter-picker__item"
         [label]="item.label"
+        [fullWidth]="true"
         [ngModel]="isSelected(item.id)"
         (ngModelChange)="toggleSelection(item.id, $event)"
       ></zx-checkbox-field>

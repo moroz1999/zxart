@@ -109,8 +109,7 @@
                 ></zx-letter-selector>
             </div>
             <div class="zx-prods-list-center">
-                <mat-spinner class="zx-prods-list-spinner" *ngIf="loading" diameter="100"
-                             strokeWidth="10"></mat-spinner>
+                <zx-spinner class="zx-prods-list-spinner" *ngIf="loading" size="xl"></zx-spinner>
                 <div *ngIf="model.prods && layout!=='table'" class="zx-prods-gallery" [ngClass]="{'disabled': loading}">
                     <zx-prod-block
                             *ngFor="let zxProd of model.prods"

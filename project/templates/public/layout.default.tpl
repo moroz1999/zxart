@@ -3,7 +3,7 @@
 <zx-player></zx-player>
 {$leftColumnElements = $currentLanguage->getLeftColumnElementsList()}
 {$rightColumnElements = $currentLanguage->getRightColumnElementsList()}
-<div class="columns_table grid_md">
+<div class="columns_table">
 	{if $currentLanguage->getLeftColumnElementsList()}
 		{include file=$theme->template('component.column.left.tpl')}
 	{/if}

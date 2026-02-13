@@ -26,11 +26,7 @@
         >&gt;</zx-button>
     </div>
 
-    <div class="pagination-loader" *ngIf="loading">
-        <div class="spinner">
-            <div class="spinner-ring"></div>
-            <div class="spinner-ring"></div>
-            <div class="spinner-ring"></div>
-        </div>
+    <div class="pagination-spinner" *ngIf="loading">
+        <zx-spinner size="sm"></zx-spinner>
     </div>
 </div>

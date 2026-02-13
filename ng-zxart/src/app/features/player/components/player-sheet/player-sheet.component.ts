@@ -29,7 +29,7 @@ import {RadioPresetCriteriaService} from '../../services/radio-preset-criteria.s
 import {ZxCheckboxFieldComponent} from '../../../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 import {CurrentUserService} from '../../../../shared/services/current-user.service';
 
-const AUTO_APPLY_DEBOUNCE_MS = 150;
+const AUTO_APPLY_DEBOUNCE_MS = 500;
 
 type PlaybackMode = 'once' | 'repeat-one' | 'repeat-all' | 'shuffle-all';
 type PartyValue = 'any' | 'yes' | 'no';
@@ -90,7 +90,7 @@ export class PlayerSheetComponent implements OnDestroy {
   yearRangeBounds: {min: number; max: number} | null = null;
   countryItems: ZxFilterPickerItem[] = [];
   formatGroupItems: ZxFilterPickerItem[] = [];
-  formatOptions: ZxSelectOption[] = [];
+  formatItems: ZxFilterPickerItem[] = [];
   partyOptions: ZxSelectOption[] = [];
   categoryOptions: ZxSelectOption[] = [];
   ratingRange: {min: number | null; max: number | null} | null = null;
@@ -356,8 +356,8 @@ export class PlayerSheetComponent implements OnDestroy {
       id: group,
       label: this.getFormatGroupLabel(group),
     }));
-    this.formatOptions = options.formats.map(format => ({
-      value: format,
+    this.formatItems = options.formats.map(format => ({
+      id: format,
       label: format,
     }));
     this.partyOptions = options.partyOptions.map(option => ({
@@ -472,12 +472,20 @@ export class PlayerSheetComponent implements OnDestroy {
     this.form.get('formatGroups')?.setValue(ids);
   }
 
+  onFormatsChange(ids: string[]): void {
+    this.form.get('formats')?.setValue(ids);
+  }
+
   get selectedCountries(): string[] {
     return this.form.get('countries')?.value ?? [];
   }
 
   get selectedFormatGroups(): string[] {
     return this.form.get('formatGroups')?.value ?? [];
+  }
+
+  get selectedFormats(): string[] {
+    return this.form.get('formats')?.value ?? [];
   }
 
   get hasRatingRange(): boolean {
@@ -654,5 +662,10 @@ export class PlayerSheetComponent implements OnDestroy {
       return '';
     }
     return value.toFixed(1);
+  }
+
+  resetFilters(): void {
+    this.setFormFromCriteria(EMPTY_RADIO_CRITERIA);
+    this.playerService.startRadio(EMPTY_RADIO_CRITERIA, null);
   }
 }

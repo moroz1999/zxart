@@ -54,9 +54,9 @@ $amount: 5;
 
 .zx-prods-list-spinner {
   position: fixed;
-  top: calc(50% - 50px);
-  left: 0;
-  right: 0;
+  top: calc(50% - (var(--zx-spinner-size-xl) / 2));
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .zx-prods-gallery {
@@ -174,7 +174,3 @@ zx-pagination {
   }
 }
 
-mat-spinner {
-  display: block;
-  margin: var(--margin-xxl) auto;
-}

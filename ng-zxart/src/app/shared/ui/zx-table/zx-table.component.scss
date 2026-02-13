@@ -2,6 +2,10 @@
   display: block;
 }
 
+:host ::ng-deep .zx-table-panel {
+  overflow-x: auto;
+}
+
 :host ::ng-deep .zx-table-content table {
   width: 100%;
   border-collapse: collapse;

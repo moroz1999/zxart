@@ -7,6 +7,9 @@
   flex-wrap: nowrap;
   --star-size: 16px;
   @include breakpoints.media-breakpoint-down(md) {
+    --star-size: 24px;
+  }
+  @include breakpoints.media-breakpoint-down(sm) {
     --star-size: 32px;
   }
 }

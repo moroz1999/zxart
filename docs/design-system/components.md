@@ -40,6 +40,11 @@ Loading placeholder component for lists and content. Variants:
 
 Props: `variant`, `count` (number of skeleton items), `animated` (shimmer effect, default true)
 
+### zx-spinner
+Compact loading spinner with size variants.
+
+Props: `size` - `xs`, `sm`, `md`, `lg`, `xl` (default `md`)
+
 ### zx-table
 Table wrapper inside an elevated panel with `contentBleed`. Props: `title` (optional heading above the table), `titleLevel`. The panel uses `contentBleed` so table rows go edge-to-edge while the title retains standard panel padding.
 

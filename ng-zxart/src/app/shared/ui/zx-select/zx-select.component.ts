@@ -1,4 +1,4 @@
-import {Component, forwardRef, Input} from '@angular/core';
+import {Component, forwardRef, HostBinding, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
@@ -26,6 +26,11 @@ export class ZxSelectComponent implements ControlValueAccessor {
   @Input() placeholder = '';
   @Input() multiple = false;
   @Input() listSize = 1;
+
+  @HostBinding('class.zx-select--multiple')
+  get multipleClass(): boolean {
+    return this.multiple;
+  }
 
   value: string | string[] = '';
   disabled = false;

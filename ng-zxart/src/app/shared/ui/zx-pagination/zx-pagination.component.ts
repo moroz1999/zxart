@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {PageItemInterface} from './page-item.interface';
 import {NgForOf, NgIf} from '@angular/common';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
+import {ZxSpinnerComponent} from '../zx-spinner/zx-spinner.component';
 
 @Component({
     selector: 'zx-pagination',
@@ -12,6 +13,7 @@ import {ZxButtonComponent} from '../zx-button/zx-button.component';
         NgIf,
         NgForOf,
         ZxButtonComponent,
+        ZxSpinnerComponent,
     ],
 })
 export class ZxPaginationComponent implements OnChanges {

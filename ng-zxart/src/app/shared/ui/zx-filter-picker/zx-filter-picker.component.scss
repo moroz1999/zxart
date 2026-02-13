@@ -119,6 +119,8 @@
 }
 
 .zx-filter-picker__item {
+  display: block;
+  width: 100%;
   padding: var(--zx-filter-picker-item-padding);
   border-radius: var(--zx-filter-picker-item-radius);
 }

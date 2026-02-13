@@ -1,104 +1,111 @@
 ﻿<ng-container *ngIf="state$ | async as state">
   <zx-panel @slideUp padding="sm" radius="lg" variant="elevated" class="player-panel">
     <div class="player-bar">
-      <div class="player-controls">
+      <div class="player-bar__group player-bar__group--controls">
+        <div class="player-controls">
+          <zx-button
+            size="sm"
+            color="transparent"
+            [round]="true"
+            [disabled]="state.mode === 'radio'"
+            [ariaLabel]="'player.controls.previous' | translate"
+            (click)="previous()"
+          >
+            <mat-icon>skip_previous</mat-icon>
+          </zx-button>
+          <zx-button
+            size="sm"
+            color="secondary"
+            [round]="true"
+            [ariaLabel]="state.isPlaying ? ('player.controls.pause' | translate) : ('player.controls.play' | translate)"
+            (click)="togglePlay()"
+          >
+            <mat-icon>{{ state.isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
+          </zx-button>
+          <zx-button
+            size="sm"
+            color="transparent"
+            [round]="true"
+            [disabled]="state.currentIndex < 0"
+            [ariaLabel]="'player.controls.stop' | translate"
+            (click)="stop()"
+          >
+            <mat-icon>stop</mat-icon>
+          </zx-button>
+          <zx-button
+            size="sm"
+            color="transparent"
+            [round]="true"
+            [ariaLabel]="'player.controls.next' | translate"
+            (click)="next()"
+          >
+            <mat-icon>skip_next</mat-icon>
+          </zx-button>
+        </div>
+
         <zx-button
           size="sm"
           color="transparent"
           [round]="true"
-          [disabled]="state.mode === 'radio'"
-          [ariaLabel]="'player.controls.previous' | translate"
-          (click)="previous()"
+          [ariaLabel]="'player.controls.mode' | translate"
+          (click)="cyclePlaybackMode(state)"
         >
-          <mat-icon>skip_previous</mat-icon>
+          <mat-icon>{{ getPlaybackModeIcon(state) }}</mat-icon>
         </zx-button>
-        <zx-button
-          size="sm"
-          color="secondary"
-          [round]="true"
-          [ariaLabel]="state.isPlaying ? ('player.controls.pause' | translate) : ('player.controls.play' | translate)"
-          (click)="togglePlay()"
-        >
-          <mat-icon>{{ state.isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
-        </zx-button>
+
         <zx-button
           size="sm"
           color="transparent"
           [round]="true"
-          [disabled]="state.currentIndex < 0"
-          [ariaLabel]="'player.controls.stop' | translate"
-          (click)="stop()"
+          [disabled]="state.currentIndex < 0 || !state.playlist[state.currentIndex].url"
+          [ariaLabel]="'player.controls.open' | translate"
+          (click)="openCurrentTuneUrl()"
         >
-          <mat-icon>stop</mat-icon>
-        </zx-button>
-        <zx-button
-          size="sm"
-          color="transparent"
-          [round]="true"
-          [ariaLabel]="'player.controls.next' | translate"
-          (click)="next()"
-        >
-          <mat-icon>skip_next</mat-icon>
+          <mat-icon>open_in_new</mat-icon>
         </zx-button>
       </div>
 
-      <div
-        class="player-progress"
-        [class.player-progress--disabled]="state.currentIndex < 0"
-        [style.--zx-player-progress]="getProgressPercent(state)"
-        (click)="seekByClick($event, state.duration)"
-      >
-        <span zxBody class="player-progress-text">{{ getCurrentTitle(state) }}</span>
+      <div class="player-bar__group player-bar__group--progress">
+        <div
+          class="player-progress"
+          [class.player-progress--disabled]="state.currentIndex < 0"
+          [style.--zx-player-progress]="getProgressPercent(state)"
+          (click)="seekByClick($event, state.duration)"
+        >
+          <span zxBody class="player-progress-text">{{ getCurrentTitle(state) }}</span>
+        </div>
       </div>
 
-      <zx-button
-        size="sm"
-        color="transparent"
-        [round]="true"
-        [ariaLabel]="'player.controls.mode' | translate"
-        (click)="cyclePlaybackMode(state)"
-      >
-        <mat-icon>{{ getPlaybackModeIcon(state) }}</mat-icon>
-      </zx-button>
+      <div class="player-bar__group player-bar__group--meta">
+        <zx-rating
+          *ngIf="state.playlist[state.currentIndex] as tune"
+          class="player-rating"
+          [overallRating]="tune.votes"
+          [userRating]="tune.userVote ?? undefined"
+          (voted)="vote($event)"
+        ></zx-rating>
 
-      <zx-button
-        size="sm"
-        color="transparent"
-        [round]="true"
-        [disabled]="state.currentIndex < 0 || !state.playlist[state.currentIndex].url"
-        [ariaLabel]="'player.controls.open' | translate"
-        (click)="openCurrentTuneUrl()"
-      >
-        <mat-icon>open_in_new</mat-icon>
-      </zx-button>
+        <zx-button
+          size="sm"
+          color="transparent"
+          [round]="true"
+          [ariaLabel]="expanded ? ('player.controls.collapse' | translate) : ('player.controls.expand' | translate)"
+          (click)="toggleExpanded()"
+        >
+          <mat-icon>{{ expanded ? 'expand_more' : 'expand_less' }}</mat-icon>
+        </zx-button>
 
-      <zx-rating
-        *ngIf="state.playlist[state.currentIndex] as tune"
-        class="player-rating"
-        [overallRating]="tune.votes"
-        [userRating]="tune.userVote ?? undefined"
-        (voted)="vote($event)"
-      ></zx-rating>
-
-      <zx-button
-        size="sm"
-        color="transparent"
-        [round]="true"
-        [ariaLabel]="expanded ? ('player.controls.collapse' | translate) : ('player.controls.expand' | translate)"
-        (click)="toggleExpanded()"
-      >
-        <mat-icon>{{ expanded ? 'expand_more' : 'expand_less' }}</mat-icon>
-      </zx-button>
-
-      <zx-button
-        size="sm"
-        color="transparent"
-        [round]="true"
-        [ariaLabel]="'player.controls.close' | translate"
-        (click)="close()"
-      >
-        <mat-icon>close</mat-icon>
-      </zx-button>
+        <zx-button
+          size="sm"
+          color="transparent"
+          [round]="true"
+          [ariaLabel]="'player.controls.close' | translate"
+          (click)="close()"
+          class="player-close"
+        >
+          <mat-icon>close</mat-icon>
+        </zx-button>
+      </div>
     </div>
 
     <div class="player-advanced" *ngIf="expanded" @expandPanel>
@@ -185,13 +192,15 @@
             ></zx-filter-picker>
           </div>
           <div class="player-field">
-            <span zxCaption class="player-field-label">{{ 'player.filters.formats' | translate }}</span>
-            <zx-select
-              [options]="formatOptions"
-              [multiple]="true"
-              [listSize]="3"
-              formControlName="formats"
-            ></zx-select>
+            <zx-filter-picker
+              [label]="'player.filters.formats' | translate"
+              [items]="formatItems"
+              [selectedIds]="selectedFormats"
+              [placeholder]="'player.filters.any' | translate"
+              [searchEnabled]="true"
+              [multi]="true"
+              (selectedIdsChange)="onFormatsChange($event)"
+            ></zx-filter-picker>
           </div>
           <div class="player-field">
             <span zxCaption class="player-field-label">{{ 'player.filters.party' | translate }}</span>
@@ -206,6 +215,16 @@
               formControlName="unvotedOnly"
             ></zx-checkbox-field>
           </div>
+        </div>
+
+        <div class="player-presets-actions" *ngIf="options && !optionsLoading">
+          <zx-button
+            size="sm"
+            color="outlined"
+            (click)="resetFilters()"
+          >
+            {{ 'player.filters.clearAll' | translate }}
+          </zx-button>
         </div>
       </form>
     </div>

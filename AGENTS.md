@@ -17,6 +17,7 @@ This file contains the most CRITICAL rules that ALL agents must follow. For deta
 - ALWAYS add newly created files to GIT immediately after creation.
 - When the IDE is in 'Ask' (readonly) mode, it is STRICTLY FORBIDDEN to do anything except answering the user's question. No file modifications or tool calls that change state are allowed.
 - ALWAYS use MCP tools (JetBrains IDE) when available for code search, file reading, navigation, and locating files, methods, and classes instead of Grep/Glob/Read/Bash.
+- Do not scan the whole project by file extension. Use targeted paths or direct file reads instead.
 
 ## DOCUMENTATION TREE
 

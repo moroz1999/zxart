@@ -1,0 +1,17 @@
+:root {
+  --zx-spinner-size-xs: var(--space-16);
+  --zx-spinner-size-sm: var(--space-24);
+  --zx-spinner-size-md: var(--space-32);
+  --zx-spinner-size-lg: var(--space-48);
+  --zx-spinner-size-xl: var(--space-64);
+  --zx-spinner-ring-width: var(--border-width-thin);
+  --zx-spinner-ring-step: var(--space-4);
+  --zx-spinner-ring-color-1: var(--primary-500);
+  --zx-spinner-ring-color-2: var(--primary-400);
+  --zx-spinner-ring-color-3: var(--primary-300);
+  --zx-spinner-speed: 1.2s;
+  --zx-spinner-easing: cubic-bezier(0.5, 0, 0.5, 1);
+  --zx-spinner-delay-1: -0.45s;
+  --zx-spinner-delay-2: -0.3s;
+  --zx-spinner-delay-3: -0.15s;
+}

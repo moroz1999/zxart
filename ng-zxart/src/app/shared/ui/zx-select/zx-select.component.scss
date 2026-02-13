@@ -1,5 +1,6 @@
 :host {
   display: inline-block;
+  position: relative;
 }
 
 select {
@@ -10,8 +11,11 @@ select {
   height: var(--input-height);
   line-height: calc(var(--input-height) - 2px);
   padding: var(--input-padding);
+  padding-right: var(--zx-select-padding-right);
   font-size: var(--input-font-size);
   cursor: pointer;
+  min-width: 100%;
+  appearance: none;
 
   &:focus {
     border-color: var(--input-border-focus-color);
@@ -22,4 +26,21 @@ select {
     opacity: 0.5;
     cursor: not-allowed;
   }
+}
+
+:host::after {
+  content: '';
+  position: absolute;
+  right: var(--zx-select-chevron-offset);
+  top: 50%;
+  width: var(--zx-select-chevron-size);
+  height: var(--zx-select-chevron-size);
+  border-right: var(--zx-select-chevron-stroke) solid var(--zx-select-chevron-color);
+  border-bottom: var(--zx-select-chevron-stroke) solid var(--zx-select-chevron-color);
+  transform: translateY(-60%) rotate(45deg);
+  pointer-events: none;
+}
+
+:host(.zx-select--multiple)::after {
+  display: none;
 }

@@ -1,4 +1,8 @@
 <aside class="right_column">
+    {if $currentLanguage->getElementFromHeader('search')}
+        {include file=$theme->template("search.header.tpl") element=$currentLanguage->getElementFromHeader('search')}
+    {/if}
+
     {capture assign="moduleTitle"}{/capture}
     {capture assign="moduleContent"}
         <a target="_blank" class="button"

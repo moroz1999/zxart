@@ -1,4 +1,4 @@
-import {Component, forwardRef, Input} from '@angular/core';
+import {Component, forwardRef, HostBinding, Input} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 @Component({
@@ -16,6 +16,12 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 })
 export class ZxCheckboxFieldComponent implements ControlValueAccessor {
   @Input() label = '';
+  @Input() fullWidth = false;
+
+  @HostBinding('class.zx-checkbox-field--full')
+  get fullWidthClass(): boolean {
+    return this.fullWidth;
+  }
 
   checked = false;
   disabled = false;
