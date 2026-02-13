@@ -213,6 +213,7 @@
     }
   },
   "tune": {
+    "unknownYear": "Неизвестный год",
     "compo": {
       "realtime": "Реалтайм музыка",
       "realtimeay": "Реалтайм AY",
@@ -263,6 +264,7 @@
       "party.any": "Неважно",
       "party.yes": "Да",
       "party.no": "Нет",
+      "unvotedOnly": "Только непроголосованные",
       "loadError": "Не удалось загрузить фильтры."
     },
     "formatGroup": {

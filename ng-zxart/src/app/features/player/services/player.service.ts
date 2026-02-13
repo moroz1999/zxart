@@ -44,6 +44,7 @@ export class PlayerService {
   private accumulatedSeconds = 0;
   private loggedPlay = false;
   private loggedTuneId: number | null = null;
+  private originalTitle: string | null = null;
   private currentCriteria: RadioCriteria = EMPTY_RADIO_CRITERIA;
   private currentPreset: RadioPreset | null = null;
   private readonly criteriaSubject = new BehaviorSubject<RadioCriteria>(EMPTY_RADIO_CRITERIA);
@@ -138,6 +139,7 @@ export class PlayerService {
     this.audio.currentTime = 0;
     this.stopPlayTimer();
     this.updateState({currentTime: 0, isPlaying: false});
+    this.resetDocumentTitle();
   }
 
   next(): void {
@@ -201,6 +203,7 @@ export class PlayerService {
   closePlayer(): void {
     this.stopPlayback();
     this.updateState({...INITIAL_STATE});
+    this.resetDocumentTitle();
   }
 
   getCriteria(): RadioCriteria {
@@ -238,6 +241,7 @@ export class PlayerService {
       error: () => {
         this.stopPlayback();
         this.updateState({isPlaying: false});
+        this.resetDocumentTitle();
       },
     });
   }
@@ -247,6 +251,7 @@ export class PlayerService {
     if (!tune || !tune.mp3Url) {
       return;
     }
+    this.setDocumentTitleForTune(tune);
     if (this.loggedTuneId !== tune.id) {
       this.resetPlayTimer();
       this.loggedTuneId = tune.id;
@@ -268,6 +273,7 @@ export class PlayerService {
     if (nextIndex === null) {
       this.stopPlayback();
       this.updateState({isPlaying: false});
+      this.resetDocumentTitle();
       return;
     }
     this.setCurrentIndex(nextIndex);
@@ -360,6 +366,9 @@ export class PlayerService {
       this.updateState({isPlaying: true});
       this.startPlayTimer();
       this.broadcastExclusive();
+      if (this.currentTune) {
+        this.setDocumentTitleForTune(this.currentTune);
+      }
       this.updateMediaSession();
     });
 
@@ -505,6 +514,27 @@ export class PlayerService {
 
   private updateState(partial: Partial<PlayerState>): void {
     this.stateSubject.next({...this.stateSubject.value, ...partial});
+  }
+
+  private setDocumentTitleForTune(tune: ZxTuneDto): void {
+    if (typeof document === 'undefined') {
+      return;
+    }
+    if (this.originalTitle === null) {
+      this.originalTitle = document.title;
+    }
+    const artist = tune.authors.map(author => author.name).join(', ');
+    document.title = artist ? `${artist} - ${tune.title}` : tune.title;
+  }
+
+  private resetDocumentTitle(): void {
+    if (typeof document === 'undefined') {
+      return;
+    }
+    if (this.originalTitle === null) {
+      return;
+    }
+    document.title = this.originalTitle;
   }
 
   private updateCriteria(criteria: RadioCriteria, preset: RadioPreset | null): void {

@@ -36,6 +36,7 @@ class authorDataResponseConverter extends StructuredDataResponseConverter
             'prodsAmount' => 'getProdsAmount',
             'publishedProds' => 'getPublisherProdsInfo',
             'releases' => 'getReleasesInfo',
+            'tunesByYear' => 'getTunesByYearData',
         ];
     }
 
@@ -79,6 +80,11 @@ class authorDataResponseConverter extends StructuredDataResponseConverter
                 'prods',
                 'publishedProds',
                 'releases',
+            ],
+            'musicList' => [
+                'id',
+                'url',
+                'tunesByYear',
             ],
         ];
     }

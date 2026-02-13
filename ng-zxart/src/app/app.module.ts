@@ -36,6 +36,7 @@ import {FirstpageComponent} from './features/firstpage/components/firstpage/firs
 import {PlayerHostComponent} from './features/player/components/player-host/player-host.component';
 import {LegacyPlayButtonComponent} from './features/player/components/legacy-play-button/legacy-play-button.component';
 import {RadioRemoteComponent} from './features/radio-remote/components/radio-remote/radio-remote.component';
+import {AuthorTunesComponent} from './features/author-tunes/components/author-tunes/author-tunes.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -98,6 +99,7 @@ export class AppModule implements DoBootstrap  {
             'zx-player': PlayerHostComponent,
             'zx-legacy-play': LegacyPlayButtonComponent,
             'zx-radio-remote': RadioRemoteComponent,
+            'zx-author-tunes': AuthorTunesComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});

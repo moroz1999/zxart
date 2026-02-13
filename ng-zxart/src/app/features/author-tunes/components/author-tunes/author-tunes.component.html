@@ -1,0 +1,27 @@
+<zx-stack spacing="lg">
+  <zx-table *ngIf="loading" titleLevel="h2">
+    <zx-skeleton variant="tune-table" [count]="6"></zx-skeleton>
+  </zx-table>
+
+  <div *ngIf="error" zxCaption>{{ 'firstpage.error' | translate }}</div>
+  <div *ngIf="!loading && !error && yearGroups.length === 0" zxCaption>{{ 'firstpage.empty' | translate }}</div>
+
+  <ng-container *ngIf="!loading && !error && yearGroups.length > 0">
+    <ng-container *ngIf="{ id: playingTuneId$ | async } as playing">
+      <zx-table *ngFor="let group of yearGroups" [title]="group.title" titleLevel="h2">
+        <table *ngIf="group.tunes.length" class="tunes-table">
+          <tbody>
+            <zx-tune-row
+              *ngFor="let tune of group.tunes; index as i"
+              [tune]="tune"
+              [index]="group.startIndex + i"
+              [isPlaying]="tune.id === playing.id"
+              (playRequested)="playTune(group.startIndex + i)"
+              (pauseRequested)="pauseTune()"
+            ></zx-tune-row>
+          </tbody>
+        </table>
+      </zx-table>
+    </ng-container>
+  </ng-container>
+</zx-stack>

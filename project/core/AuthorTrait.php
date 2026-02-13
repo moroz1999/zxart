@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Database\Connection;
+use Symfony\Component\ObjectMapper\ObjectMapper;
+use ZxArt\Tunes\Rest\TuneRestDto;
+use ZxArt\Tunes\TunesTransformer;
 
 trait AuthorTrait
 {
@@ -29,6 +32,37 @@ trait AuthorTrait
         }
 
         return $this->years[$type];
+    }
+
+    /**
+     * @return array<int, array{year: int, tunes: array}>
+     */
+    public function getTunesByYearData(): array
+    {
+        $yearsWorks = $this->getYearsWorks('authorMusic');
+        if (!$yearsWorks) {
+            return [];
+        }
+
+        $transformer = $this->getService(TunesTransformer::class);
+        $mapper = new ObjectMapper();
+        $result = [];
+
+        foreach ($yearsWorks as $year => $tunes) {
+            $items = [];
+            foreach ($tunes as $tune) {
+                if ($tune instanceof zxMusicElement) {
+                    $dto = $transformer->toDto($tune);
+                    $items[] = $mapper->map($dto, TuneRestDto::class);
+                }
+            }
+            $result[] = [
+                'year' => (int)$year,
+                'tunes' => $items,
+            ];
+        }
+
+        return $result;
     }
 
     public function checkParentLetter(): void

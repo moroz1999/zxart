@@ -213,6 +213,7 @@
     }
   },
   "tune": {
+    "unknownYear": "Unknown year",
     "compo": {
       "realtime": "Realtime music",
       "realtimeay": "Realtime AY",
@@ -263,6 +264,7 @@
       "party.any": "Any",
       "party.yes": "Yes",
       "party.no": "No",
+      "unvotedOnly": "Unvoted only",
       "loadError": "Failed to load filter options."
     },
     "formatGroup": {

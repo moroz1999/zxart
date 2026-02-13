@@ -1,0 +1,16 @@
+<div class="zx-min-max-range">
+  <div class="zx-min-max-range__values">
+    <span zxCaption class="zx-min-max-range__value">{{ value.min }}</span>
+    <span zxCaption class="zx-min-max-range__value">{{ value.max }}</span>
+  </div>
+  <mat-slider
+    class="zx-min-max-range__slider"
+    [min]="min"
+    [max]="max"
+    [step]="step"
+    [disabled]="disabled"
+  >
+    <input matSliderStartThumb [value]="value.min" (input)="onStartInput($event)" />
+    <input matSliderEndThumb [value]="value.max" (input)="onEndInput($event)" />
+  </mat-slider>
+</div>

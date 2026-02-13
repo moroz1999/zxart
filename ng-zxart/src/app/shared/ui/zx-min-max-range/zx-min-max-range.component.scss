@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+.zx-min-max-range {
+  display: grid;
+  gap: var(--zx-min-max-range-gap);
+}
+
+.zx-min-max-range__values {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--zx-min-max-range-item-gap);
+}
+
+.zx-min-max-range__value {
+  color: var(--zx-min-max-range-label-color);
+}
+
+.zx-min-max-range__slider {
+  --mdc-slider-handle-color: var(--zx-min-max-range-handle-color);
+  --mdc-slider-focus-handle-color: var(--zx-min-max-range-handle-color);
+  --mdc-slider-hover-handle-color: var(--zx-min-max-range-handle-color);
+  --mdc-slider-active-track-color: var(--zx-min-max-range-track-active);
+  --mdc-slider-inactive-track-color: var(--zx-min-max-range-track-inactive);
+  --mdc-slider-with-tick-marks-inactive-container-color: var(--zx-min-max-range-track-inactive);
+  --mdc-slider-with-tick-marks-active-container-color: var(--zx-min-max-range-track-active);
+  --mdc-slider-with-tick-marks-active-container-opacity: 1;
+  --mdc-slider-with-tick-marks-inactive-container-opacity: 1;
+}

@@ -33,6 +33,7 @@ class authorAliasDataResponseConverter extends StructuredDataResponseConverter
             'prodsAmount' => 'getProdsAmount',
             'publishedProds' => 'getPublisherProdsInfo',
             'releases' => 'getReleasesInfo',
+            'tunesByYear' => 'getTunesByYearData',
         ];
     }
 
@@ -73,6 +74,11 @@ class authorAliasDataResponseConverter extends StructuredDataResponseConverter
                 'prods',
                 'publishedProds',
                 'releases',
+            ],
+            'musicList' => [
+                'id',
+                'url',
+                'tunesByYear',
             ],
         ];
     }

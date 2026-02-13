@@ -213,6 +213,7 @@
     }
   },
   "tune": {
+    "unknownYear": "Año desconocido",
     "compo": {
       "realtime": "En tiempo real música",
       "realtimeay": "Tiempo real AY",
@@ -262,6 +263,7 @@
       "party.any": "Cualquiera",
       "party.yes": "Sí",
       "party.no": "No",
+      "unvotedOnly": "Solo no votadas",
       "loadError": "No se pudieron cargar los filtros."
     },
     "formatGroup": {

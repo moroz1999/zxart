@@ -105,6 +105,13 @@
   gap: var(--zx-player-label-row-gap);
 }
 
+.player-field-value-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--zx-player-label-row-gap);
+}
+
 .player-field-value {
   color: var(--text-light-color);
 }

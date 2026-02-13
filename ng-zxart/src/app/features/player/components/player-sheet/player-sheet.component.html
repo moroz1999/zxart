@@ -122,14 +122,14 @@
         </div>
 
         <div class="player-advanced-grid" *ngIf="options && !optionsLoading">
-          <div class="player-field player-field--range">
+          <div class="player-field player-field--range" *ngIf="hasRatingRange">
             <div class="player-field-label-row">
               <span zxCaption class="player-field-label">{{ 'player.filters.minRating' | translate }}</span>
-              <span zxCaption class="player-field-value">{{ form.get('minRating')?.value || '0.0' }}</span>
+              <span zxCaption class="player-field-value">{{ getRatingDisplayValue() }}</span>
             </div>
             <zx-input-range
-              [min]="0"
-              [max]="5"
+              [min]="ratingMin"
+              [max]="ratingMax"
               [step]="0.1"
               formControlName="minRating"
             ></zx-input-range>
@@ -150,21 +150,17 @@
               formControlName="minPartyPlace"
             ></zx-input>
           </div>
-          <div class="player-field">
-            <span zxCaption class="player-field-label">{{ 'player.filters.yearFrom' | translate }}</span>
-            <zx-select
-              [options]="yearOptions"
-              [placeholder]="'player.filters.anyYear' | translate"
-              formControlName="yearFrom"
-            ></zx-select>
-          </div>
-          <div class="player-field">
-            <span zxCaption class="player-field-label">{{ 'player.filters.yearTo' | translate }}</span>
-            <zx-select
-              [options]="yearOptions"
-              [placeholder]="'player.filters.anyYear' | translate"
-              formControlName="yearTo"
-            ></zx-select>
+          <div class="player-field player-field--range" *ngIf="hasYearRange">
+            <div class="player-field-label-row">
+              <span zxCaption class="player-field-label">{{ 'player.filters.yearFrom' | translate }}</span>
+              <span zxCaption class="player-field-label">{{ 'player.filters.yearTo' | translate }}</span>
+            </div>
+            <zx-min-max-range
+              [min]="yearMin"
+              [max]="yearMax"
+              [step]="1"
+              formControlName="yearRange"
+            ></zx-min-max-range>
           </div>
           <div class="player-field">
             <zx-filter-picker
@@ -203,6 +199,12 @@
               [options]="partyOptions"
               formControlName="party"
             ></zx-select>
+          </div>
+          <div class="player-field">
+            <zx-checkbox-field
+              [label]="'player.filters.unvotedOnly' | translate"
+              formControlName="unvotedOnly"
+            ></zx-checkbox-field>
           </div>
         </div>
       </form>

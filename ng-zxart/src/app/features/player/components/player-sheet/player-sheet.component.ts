@@ -14,6 +14,7 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
 import {ZxSelectComponent, ZxSelectOption} from '../../../../shared/ui/zx-select/zx-select.component';
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
 import {ZxInputRangeComponent} from '../../../../shared/ui/zx-input-range/zx-input-range.component';
+import {ZxMinMaxRangeComponent} from '../../../../shared/ui/zx-min-max-range/zx-min-max-range.component';
 import {RatingComponent} from '../../../../shared/components/rating/rating.component';
 import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
 import {
@@ -25,6 +26,8 @@ import {RadioApiService} from '../../services/radio-api.service';
 import {RadioFilterOptionsDto} from '../../models/radio-filter-options';
 import {RadioPreset} from '../../models/radio-preset';
 import {RadioPresetCriteriaService} from '../../services/radio-preset-criteria.service';
+import {ZxCheckboxFieldComponent} from '../../../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
+import {CurrentUserService} from '../../../../shared/services/current-user.service';
 
 const AUTO_APPLY_DEBOUNCE_MS = 150;
 
@@ -46,9 +49,11 @@ type PartyValue = 'any' | 'yes' | 'no';
     ZxSelectComponent,
     ZxInputComponent,
     ZxInputRangeComponent,
+    ZxMinMaxRangeComponent,
     RatingComponent,
     ZxSkeletonComponent,
     ZxFilterPickerComponent,
+    ZxCheckboxFieldComponent,
   ],
   templateUrl: './player-sheet.component.html',
   styleUrls: ['./player-sheet.component.scss'],
@@ -82,12 +87,13 @@ export class PlayerSheetComponent implements OnDestroy {
   options: RadioFilterOptionsDto | null = null;
   optionsLoading = false;
   optionsError = false;
-  yearOptions: ZxSelectOption[] = [];
+  yearRangeBounds: {min: number; max: number} | null = null;
   countryItems: ZxFilterPickerItem[] = [];
   formatGroupItems: ZxFilterPickerItem[] = [];
   formatOptions: ZxSelectOption[] = [];
   partyOptions: ZxSelectOption[] = [];
   categoryOptions: ZxSelectOption[] = [];
+  ratingRange: {min: number | null; max: number | null} | null = null;
   presets: {key: RadioPreset; label: string}[] = [
     {key: 'discover', label: 'player.preset.discover'},
     {key: 'randomgood', label: 'player.preset.randomgood'},
@@ -102,6 +108,7 @@ export class PlayerSheetComponent implements OnDestroy {
 
   private subscriptions = new Subscription();
   private suppressAutoApply = false;
+  private currentCriteria: RadioCriteria = EMPTY_RADIO_CRITERIA;
 
   constructor(
     private playerService: PlayerService,
@@ -109,18 +116,19 @@ export class PlayerSheetComponent implements OnDestroy {
     private radioApiService: RadioApiService,
     private translateService: TranslateService,
     private presetCriteriaService: RadioPresetCriteriaService,
+    private currentUserService: CurrentUserService,
     private fb: FormBuilder,
   ) {
     this.form = this.fb.group({
       minRating: [''],
       category: [''],
       minPartyPlace: [0],
-      yearFrom: [''],
-      yearTo: [''],
+      yearRange: this.fb.control({min: 0, max: 0}),
       countries: [[]],
       formatGroups: [[]],
       formats: [[]],
       party: ['any'],
+      unvotedOnly: [false],
     });
 
     this.setFormFromCriteria(this.playerService.getCriteria());
@@ -128,6 +136,7 @@ export class PlayerSheetComponent implements OnDestroy {
 
     this.subscriptions.add(
       this.playerService.criteria$.subscribe(criteria => {
+        this.currentCriteria = criteria;
         this.setFormFromCriteria(criteria);
       })
     );
@@ -156,6 +165,26 @@ export class PlayerSheetComponent implements OnDestroy {
           }
           this.applyCriteriaFromForm();
         })
+    );
+
+    this.subscriptions.add(
+      this.form.get('party')?.valueChanges.subscribe(value => {
+        this.updatePartyPlaceState(value as PartyValue);
+      }) ?? new Subscription()
+    );
+
+    this.subscriptions.add(
+      this.currentUserService.loadUser().subscribe(user => {
+        const control = this.form.get('unvotedOnly');
+        if (!control) {
+          return;
+        }
+        if (!user || user.userName === 'anonymous') {
+          control.disable({emitEvent: false});
+        } else {
+          control.enable({emitEvent: false});
+        }
+      })
     );
   }
 
@@ -316,7 +345,8 @@ export class PlayerSheetComponent implements OnDestroy {
   }
 
   private buildOptions(options: RadioFilterOptionsDto): void {
-    this.yearOptions = this.buildYearOptions(options.yearRange.min, options.yearRange.max);
+    this.yearRangeBounds = this.buildYearRangeBounds(options.yearRange.min, options.yearRange.max);
+    this.ratingRange = options.ratingRange;
     this.countryItems = options.countries.map(country => ({
       id: String(country.id),
       label: country.title,
@@ -334,6 +364,7 @@ export class PlayerSheetComponent implements OnDestroy {
       value: option,
       label: this.translateService.instant(`player.filters.party.${option}`),
     }));
+    this.setFormFromCriteria(this.currentCriteria);
   }
 
   private buildCategoryOptions(options: RadioFilterOptionsDto | null): void {
@@ -362,35 +393,41 @@ export class PlayerSheetComponent implements OnDestroy {
     return translated === key ? group : translated;
   }
 
-  private buildYearOptions(min: number | null, max: number | null): ZxSelectOption[] {
+  private buildYearRangeBounds(min: number | null, max: number | null): {min: number; max: number} | null {
     if (!min || !max) {
-      return [];
+      return null;
     }
-    const items: ZxSelectOption[] = [];
-    for (let year = max; year >= min; year -= 1) {
-      items.push({value: String(year), label: String(year)});
+    return {min, max};
+  }
+
+  private normalizeYearRange(range: {min: number | null; max: number | null}): {min: number; max: number} {
+    if (!this.yearRangeBounds) {
+      return {min: range.min ?? 0, max: range.max ?? 0};
     }
-    return items;
+    const min = range.min ?? this.yearRangeBounds.min;
+    const max = range.max ?? this.yearRangeBounds.max;
+    return {min, max};
   }
 
   private setFormFromCriteria(criteria: RadioCriteria): void {
     this.suppressAutoApply = true;
-    const {yearFrom, yearTo} = this.getYearRangeFromCriteria(criteria.yearsInclude);
+    const yearRange = this.getYearRangeFromCriteria(criteria.yearsInclude);
 
     this.form.patchValue(
       {
         minRating: this.formatRatingValue(criteria.minRating),
         category: this.getCategorySelection(criteria),
         minPartyPlace: criteria.minPartyPlace ?? 0,
-        yearFrom,
-        yearTo,
+        yearRange: this.normalizeYearRange(yearRange),
         countries: criteria.countriesInclude.map(value => String(value)),
         formatGroups: criteria.formatGroupsInclude,
         formats: criteria.formatsInclude,
         party: this.toPartyValue(criteria.hasParty),
+        unvotedOnly: criteria.notVotedByUserId !== null,
       },
       {emitEvent: false},
     );
+    this.updatePartyPlaceState(this.form.get('party')?.value as PartyValue);
     this.suppressAutoApply = false;
   }
 
@@ -403,9 +440,15 @@ export class PlayerSheetComponent implements OnDestroy {
     const minRating = this.toOptionalFloat(this.form.get('minRating')?.value);
     const categoryId = this.toOptionalInt(this.form.get('category')?.value);
     const minPartyPlace = this.toOptionalInt(this.form.get('minPartyPlace')?.value);
-    const yearFrom = this.toOptionalInt(this.form.get('yearFrom')?.value);
-    const yearTo = this.toOptionalInt(this.form.get('yearTo')?.value);
-    const yearsInclude = this.buildYearRange(yearFrom, yearTo);
+    const yearRange = this.form.get('yearRange')?.value as {min?: number; max?: number} | null;
+    const yearFrom = this.toOptionalInt(yearRange?.min);
+    const yearTo = this.toOptionalInt(yearRange?.max);
+    const yearsInclude = this.isFullYearRange(yearFrom, yearTo)
+      ? []
+      : this.buildYearRange(yearFrom, yearTo);
+    const unvotedOnly = Boolean(this.form.get('unvotedOnly')?.value);
+    const userId = unvotedOnly ? this.currentUserService.userId : null;
+    const notVotedByUserId = userId ?? (unvotedOnly ? this.currentCriteria.notVotedByUserId : null);
 
     return {
       ...EMPTY_RADIO_CRITERIA,
@@ -417,6 +460,7 @@ export class PlayerSheetComponent implements OnDestroy {
       formatsInclude: this.toStringList(this.form.get('formats')?.value),
       minPartyPlace: minPartyPlace && minPartyPlace > 0 ? minPartyPlace : null,
       hasParty: this.toPartyCriteria(this.form.get('party')?.value as PartyValue),
+      notVotedByUserId,
     };
   }
 
@@ -436,6 +480,52 @@ export class PlayerSheetComponent implements OnDestroy {
     return this.form.get('formatGroups')?.value ?? [];
   }
 
+  get hasRatingRange(): boolean {
+    return this.ratingRange?.min !== null && this.ratingRange?.max !== null;
+  }
+
+  get ratingMin(): number {
+    return this.ratingRange?.min ?? 0;
+  }
+
+  get ratingMax(): number {
+    return this.ratingRange?.max ?? 5;
+  }
+
+  get hasYearRange(): boolean {
+    return this.yearRangeBounds !== null;
+  }
+
+  get yearMin(): number {
+    return this.yearRangeBounds?.min ?? 0;
+  }
+
+  get yearMax(): number {
+    return this.yearRangeBounds?.max ?? 0;
+  }
+
+  get yearRangeValue(): {min: number; max: number} {
+    const value = this.form.get('yearRange')?.value as {min?: number; max?: number} | null;
+    if (!value) {
+      return {min: this.yearMin, max: this.yearMax};
+    }
+    return {
+      min: value.min ?? this.yearMin,
+      max: value.max ?? this.yearMax,
+    };
+  }
+
+  getRatingDisplayValue(): string {
+    const value = this.form.get('minRating')?.value;
+    if (value === '' || value === null || value === undefined) {
+      if (this.ratingRange?.min !== null && this.ratingRange?.min !== undefined) {
+        return this.ratingRange.min.toFixed(1);
+      }
+      return '0.0';
+    }
+    return String(value);
+  }
+
   private getTitle(authors: string[], title: string): string {
     if (!authors.length) {
       return title;
@@ -443,13 +533,26 @@ export class PlayerSheetComponent implements OnDestroy {
     return `${authors.join(', ')} - ${title}`;
   }
 
-  private getYearRangeFromCriteria(years: number[]): {yearFrom: string; yearTo: string} {
+  private updatePartyPlaceState(value: PartyValue | null): void {
+    const minPartyPlace = this.form.get('minPartyPlace');
+    if (!minPartyPlace) {
+      return;
+    }
+    if (value === 'no') {
+      minPartyPlace.disable({emitEvent: false});
+      minPartyPlace.setValue(0, {emitEvent: false});
+      return;
+    }
+    minPartyPlace.enable({emitEvent: false});
+  }
+
+  private getYearRangeFromCriteria(years: number[]): {min: number | null; max: number | null} {
     if (!years.length) {
-      return {yearFrom: '', yearTo: ''};
+      return {min: null, max: null};
     }
     const min = Math.min(...years);
     const max = Math.max(...years);
-    return {yearFrom: String(min), yearTo: String(max)};
+    return {min, max};
   }
 
   private buildYearRange(yearFrom: number | null, yearTo: number | null): number[] {
@@ -468,6 +571,18 @@ export class PlayerSheetComponent implements OnDestroy {
       years.push(year);
     }
     return years;
+  }
+
+  private isFullYearRange(yearFrom: number | null, yearTo: number | null): boolean {
+    if (!this.yearRangeBounds) {
+      return false;
+    }
+    if (yearFrom === null || yearTo === null) {
+      return false;
+    }
+    const min = Math.min(yearFrom, yearTo);
+    const max = Math.max(yearFrom, yearTo);
+    return min === this.yearRangeBounds.min && max === this.yearRangeBounds.max;
   }
 
   private toNumberList(value: string[] | string | null | undefined): number[] {
@@ -490,8 +605,8 @@ export class PlayerSheetComponent implements OnDestroy {
       .filter(item => item.length > 0);
   }
 
-  private toOptionalInt(value: string | null | undefined): number | null {
-    if (!value) {
+  private toOptionalInt(value: string | number | null | undefined): number | null {
+    if (value === null || value === undefined || value === '') {
       return null;
     }
     const parsed = Number(value);
