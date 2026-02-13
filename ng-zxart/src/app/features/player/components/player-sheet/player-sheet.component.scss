@@ -40,6 +40,20 @@
   gap: var(--zx-player-controls-gap);
 }
 
+:host ::ng-deep .player-bar .zx-button--round .mat-icon {
+  font-size: var(--zx-player-round-icon-size);
+  width: var(--zx-player-round-icon-size);
+  height: var(--zx-player-round-icon-size);
+  line-height: 1;
+  display: block;
+}
+
+:host ::ng-deep .player-bar .zx-button--round .mdc-button__label {
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+}
+
 .player-progress {
   --zx-player-progress: 0%;
   display: flex;
