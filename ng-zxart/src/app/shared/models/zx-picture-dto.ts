@@ -6,6 +6,7 @@ export interface ZxPictureDto {
   readonly title: string;
   readonly url: string;
   readonly imageUrl: string;
+  readonly imageLargeUrl?: string | null;
   readonly year: string | null;
   readonly authors: AuthorDto[];
   readonly party: PartyInfoDto | null;

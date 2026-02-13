@@ -7,6 +7,7 @@ import {ZxBadgeComponent} from '../zx-badge/zx-badge.component';
 import {RatingComponent} from '../../components/rating/rating.component';
 import {VoteService} from '../../services/vote.service';
 import {ZxCaptionDirective} from '../../directives/typography/typography.directives';
+import {LightboxModule} from 'ng-gallery/lightbox';
 
 @Component({
   selector: 'zx-picture-card',
@@ -18,12 +19,17 @@ import {ZxCaptionDirective} from '../../directives/typography/typography.directi
     ZxBadgeComponent,
     RatingComponent,
     ZxCaptionDirective,
+    LightboxModule,
   ],
   templateUrl: './zx-picture-card.component.html',
   styleUrls: ['./zx-picture-card.component.scss']
 })
 export class ZxPictureCardComponent {
   @Input() picture!: ZxPictureDto;
+  @Input() galleryIndex: number | null = null;
+  @Input() galleryId: string | null = null;
+
+  readonly defaultGalleryId = 'zx-picture-lightbox-default';
 
   constructor(private voteService: VoteService) {}
 

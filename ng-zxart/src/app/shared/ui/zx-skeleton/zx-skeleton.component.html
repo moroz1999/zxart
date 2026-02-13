@@ -1,4 +1,4 @@
-<div class="zx-skeleton" [class.animated]="animated">
+<div class="zx-skeleton" [class.animated]="animated" [class.variant-tune-table]="variant === 'tune-table'">
   @switch (variant) {
     @case ('comment') {
       @for (i of items; track i) {

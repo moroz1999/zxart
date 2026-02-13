@@ -1,19 +1,23 @@
 <zx-panel radius="xl" padding="none" variant="elevated">
-  <a [href]="picture.url" class="picture-image" [class.flickering]="picture.isFlickering">
+  <div
+    class="picture-image"
+  >
     <img
       [src]="picture.imageUrl"
       [alt]="picture.title"
       loading="lazy"
+      [lightbox]="galleryIndex ?? 0"
+      [gallery]="galleryId || defaultGalleryId"
     />
     <zx-badge *ngIf="picture.isRealtime" variant="secondary" class="realtime-badge">
       {{ picture.compo || ('firstpage.realtime' | translate) }}
     </zx-badge>
-  </a>
+  </div>
   <div class="picture-info">
     <a [href]="picture.url" class="picture-title">{{ picture.title }}</a>
     <div class="picture-authors" *ngIf="picture.authors.length">
       <ng-container *ngFor="let author of picture.authors; last as last">
-        <a [href]="author.url">{{ author.name }}</a><span *ngIfpicture-meta="!last">, </span>
+        <a [href]="author.url">{{ author.name }}</a><span *ngIf="!last">, </span>
       </ng-container>
     </div>
     <div class="picture-meta" *ngIf="picture.party || picture.year">

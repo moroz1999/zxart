@@ -4,6 +4,10 @@
   gap: var(--space-16);
 }
 
+.zx-skeleton.variant-tune-table {
+  gap: 0;
+}
+
 .skeleton-bone {
   position: relative;
   overflow: hidden;
@@ -192,26 +196,28 @@
   display: flex;
   align-items: center;
   gap: var(--space-24);
+  min-height: 56px;
+  box-sizing: border-box;
   opacity: 0;
   animation: fadeIn 0.3s ease-out forwards;
 }
 
 .skeleton-tune-main {
   flex: 1;
-  height: 18px;
+  height: var(--space-16);
   border-radius: var(--radius-sm);
 }
 
 .skeleton-tune-sm {
   width: 48px;
-  height: 18px;
+  height: var(--space-16);
   border-radius: var(--radius-sm);
   flex-shrink: 0;
 }
 
 .skeleton-tune-md {
   width: 96px;
-  height: 18px;
+  height: var(--space-16);
   border-radius: var(--radius-sm);
   flex-shrink: 0;
 }

@@ -1,0 +1,20 @@
+<div class="zx-picture-gallery-overlay" *ngIf="active">
+  <button
+    *ngIf="canZoom"
+    type="button"
+    class="zx-picture-gallery-zoom-toggle"
+    (click)="toggleZoom($event)"
+  >
+    <mat-icon>{{ galleryService.zoomEnabled() ? 'zoom_out' : 'zoom_in' }}</mat-icon>
+  </button>
+
+  <div class="zx-picture-gallery-zoom-area" *ngIf="canZoom && galleryService.zoomEnabled()">
+    <lib-ngx-image-zoom
+      [thumbImage]="thumb || src"
+      [fullImage]="src"
+      [zoomMode]="'hover'"
+      [magnification]="3"
+      [enableScrollZoom]="true"
+    ></lib-ngx-image-zoom>
+  </div>
+</div>

@@ -39,3 +39,8 @@ $zxart-tree-theme: mat.m2-define-dark-theme((
 
 // Apply specific typography for tree and other components if needed
 @include mat.tree-typography($zxart-tree-theme);
+
+.cdk-overlay-pane.g-overlay lightbox .g-image-item,
+.cdk-overlay-pane.g-overlay lightbox gallery-image img {
+  image-rendering: pixelated !important;
+}

@@ -12,6 +12,9 @@ import {FirstpageConfigDialogComponent} from '../firstpage-config-dialog/firstpa
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxHeading1Directive} from '../../../../shared/directives/typography/typography.directives';
+import {
+  PictureGalleryHostComponent
+} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 
 interface ModuleEntry {
   config: ModuleConfig;
@@ -29,6 +32,7 @@ interface ModuleEntry {
     ZxStackComponent,
     ZxButtonComponent,
     ZxHeading1Directive,
+    PictureGalleryHostComponent,
   ],
   templateUrl: './firstpage.component.html',
   styleUrls: ['./firstpage.component.scss']

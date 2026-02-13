@@ -5,7 +5,7 @@
 :host {
   display: flex;
   flex-wrap: nowrap;
-  --star-size: 16px;
+  --star-size: 18px;
   @include breakpoints.media-breakpoint-down(md) {
     --star-size: 24px;
   }

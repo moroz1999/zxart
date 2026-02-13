@@ -18,10 +18,6 @@
     height: 100%;
     object-fit: contain;
   }
-
-  &.flickering img {
-    animation: flicker 0.5s infinite alternate;
-  }
 }
 
 .realtime-badge {
@@ -135,11 +131,3 @@
   color: var(--text-light-color);
 }
 
-@keyframes flicker {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0.6;
-  }
-}

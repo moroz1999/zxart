@@ -8,6 +8,11 @@
   [skeletonCount]="settings.limit"
 >
   <div class="pictures-grid">
-    <zx-picture-card *ngFor="let pic of items" [picture]="pic"></zx-picture-card>
+    <zx-picture-card
+      *ngFor="let pic of items; let i = index"
+      [picture]="pic"
+      [galleryIndex]="i"
+      galleryId="zx-picture-lightbox-unvoted-pictures"
+    ></zx-picture-card>
   </div>
 </zx-firstpage-module-wrapper>
