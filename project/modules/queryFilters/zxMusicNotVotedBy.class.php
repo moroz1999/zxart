@@ -1,6 +1,7 @@
 <?php
 
 use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class zxMusicNotVotedByQueryFilter extends QueryFilter
 {
@@ -12,7 +13,8 @@ class zxMusicNotVotedByQueryFilter extends QueryFilter
     public function getFilteredIdList($argument, $query)
     {
         if (!is_numeric($argument)) {
-            $currentUser = $this->getService(CurrentUser::class);
+            $currentUserService = $this->getService(CurrentUserService::class);
+            $currentUser = $currentUserService->getCurrentUser();
             $argument = [$currentUser->id];
         }
         $query->whereNotIn(
@@ -28,3 +30,6 @@ class zxMusicNotVotedByQueryFilter extends QueryFilter
         return $query;
     }
 }
+
+
+

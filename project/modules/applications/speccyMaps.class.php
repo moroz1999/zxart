@@ -1,6 +1,7 @@
 <?php
 
 use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class speccyMapsApplication extends controllerApplication
 {
@@ -35,7 +36,8 @@ class speccyMapsApplication extends controllerApplication
             ob_end_flush();
         }
 
-        $user = $this->getService(CurrentUser::class);
+        $currentUserService = $this->getService(CurrentUserService::class);
+        $user = $currentUserService->getCurrentUser();
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
 
@@ -57,4 +59,7 @@ class speccyMapsApplication extends controllerApplication
         return '';
     }
 }
+
+
+
 

@@ -1,6 +1,6 @@
 <?php
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class publicAddGroupAlias extends structureElementAction
 {
@@ -17,7 +17,8 @@ class publicAddGroupAlias extends structureElementAction
     {
         if ($this->validated) {
             $privilegesManager = $this->getService('privilegesManager');
-            $user = $this->getService(CurrentUser::class);
+            $currentUserService = $this->getService(CurrentUserService::class);
+            $user = $currentUserService->getCurrentUser();
 
             $structureElement->structureName = $structureElement->title;
 
@@ -67,5 +68,8 @@ class publicAddGroupAlias extends structureElementAction
         ];
     }
 }
+
+
+
 
 

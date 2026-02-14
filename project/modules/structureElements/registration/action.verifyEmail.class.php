@@ -1,6 +1,6 @@
 <?php
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class verifyEmailRegistration extends structureElementAction
 {
@@ -28,7 +28,8 @@ class verifyEmailRegistration extends structureElementAction
                 $db->table('module_user')
                     ->where('id', '=', $userId)
                     ->update(['verified' => 1]);
-                $user = $this->getService(CurrentUser::class);
+                $currentUserService = $this->getService(CurrentUserService::class);
+                $user = $currentUserService->getCurrentUser();
                 $user->switchUser($userId, false);
                 $result = true;
                 $structureElement->resultMessage = $translationsManager->getTranslationByName('userdata.emailverified');
@@ -42,4 +43,7 @@ class verifyEmailRegistration extends structureElementAction
         $structureElement->setViewName('verify');
     }
 }
+
+
+
 

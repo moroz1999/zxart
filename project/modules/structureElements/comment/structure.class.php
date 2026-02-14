@@ -2,6 +2,7 @@
 
 use App\Logging\EventsLog;
 use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 /**
  * Class commentElement
@@ -106,7 +107,8 @@ class commentElement extends structureElement implements MetadataProviderInterfa
     {
         $votesValue = 0;
         $votesManager = $this->getService('votesManager');
-        $user = $this->getService(CurrentUser::class);
+        $currentUserService = $this->getService(CurrentUserService::class);
+        $user = $currentUserService->getCurrentUser();
         if ($votesList = $votesManager->getElementVotesList($this->id)) {
             foreach ($votesList as $vote) {
                 if ($vote['userId'] !== $user->id) {
@@ -226,3 +228,6 @@ class commentElement extends structureElement implements MetadataProviderInterfa
         return (time() - $this->getCreatedTimestamp()) < self::EDIT_LIMIT;
     }
 }
+
+
+

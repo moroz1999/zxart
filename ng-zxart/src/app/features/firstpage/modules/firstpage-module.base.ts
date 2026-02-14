@@ -1,9 +1,8 @@
 import {Directive, ElementRef, Inject, inject, OnDestroy, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
-import {TranslateService} from '@ngx-translate/core';
 import {ModuleSettings, ModuleType} from '../models/firstpage-config';
 import {MODULE_SETTINGS} from '../models/module-settings.token';
-import {CatalogueCategory, MODULE_LINK_CONFIG} from '../models/firstpage-view-all-links';
+import {CatalogueCategory, MODULE_LINK_CONFIG, ModuleLinkConfig} from '../models/firstpage-view-all-links';
 import {FirstpageViewAllLinksService} from '../services/firstpage-view-all-links.service';
 
 @Directive()
@@ -12,14 +11,13 @@ export abstract class FirstpageModuleBase<T> implements OnInit, OnDestroy {
   loading = true;
   error = false;
   viewAllUrl?: string;
-  viewAllLabel?: string;
+  viewAllLabelKey?: string;
 
   protected abstract readonly moduleType: ModuleType;
 
   private el = inject(ElementRef);
   private observer?: IntersectionObserver;
   private viewAllLinksService = inject(FirstpageViewAllLinksService);
-  private translate = inject(TranslateService);
 
   protected constructor(
     @Inject(MODULE_SETTINGS) protected settings: ModuleSettings
@@ -42,12 +40,12 @@ export abstract class FirstpageModuleBase<T> implements OnInit, OnDestroy {
   }
 
   private resolveViewAllLink(): void {
-    const config = MODULE_LINK_CONFIG[this.moduleType];
+    const config: ModuleLinkConfig | null = MODULE_LINK_CONFIG[this.moduleType];
     if (!config) {
       return;
     }
 
-    this.viewAllLabel = this.translate.instant(config.titleKey);
+    this.viewAllLabelKey = config.titleKey;
 
     this.viewAllLinksService.getBaseUrls().subscribe(baseUrls => {
       const baseUrl = this.getBaseUrlForCategory(baseUrls, config.category);

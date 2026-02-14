@@ -1,6 +1,6 @@
 <?php
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 use ZxArt\Comments\CommentsService;
 
 class publicReceiveComment extends structureElementAction
@@ -29,7 +29,8 @@ class publicReceiveComment extends structureElementAction
 
 			if ($targetElement = $structureManager->getElementsFirstParent($structureElement->id)) {
 				if ($targetElement instanceof CommentsHolderInterface) {
-					$user = $this->getService(CurrentUser::class);
+					$currentUserService = $this->getService(CurrentUserService::class);
+					$user = $currentUserService->getCurrentUser();
 					$structureElement->userId = $user->id;
 					if (!$structureElement->dateTime) {
 						$structureElement->dateTime = time();
@@ -78,3 +79,6 @@ class publicReceiveComment extends structureElementAction
 		$validators['content'][] = 'notEmpty';
 	}
 }
+
+
+

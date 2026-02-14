@@ -1,6 +1,6 @@
 <?php
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class publicAddAuthorAlias extends structureElementAction
 {
@@ -17,7 +17,8 @@ class publicAddAuthorAlias extends structureElementAction
     {
         if ($this->validated) {
             $privilegesManager = $this->getService('privilegesManager');
-            $user = $this->getService(CurrentUser::class);
+            $currentUserService = $this->getService(CurrentUserService::class);
+            $user = $currentUserService->getCurrentUser();
 
             $structureElement->prepareActualData();
 
@@ -55,5 +56,8 @@ class publicAddAuthorAlias extends structureElementAction
         ];
     }
 }
+
+
+
 
 

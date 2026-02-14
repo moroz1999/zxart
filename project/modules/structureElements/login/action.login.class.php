@@ -1,6 +1,6 @@
 <?php
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class loginLogin extends structureElementAction
 {
@@ -12,7 +12,8 @@ class loginLogin extends structureElementAction
         $validated = false;
         $userName = $structureElement->userName;
         if ($this->validated === true && $userName != "crontab") {
-            $user = $this->getService(CurrentUser::class);
+            $currentUserService = $this->getService(CurrentUserService::class);
+            $user = $currentUserService->getCurrentUser();
             $password = $structureElement->getFormValue('password');
             if ($userId = $user->checkUser($userName, $password)) {
                 $validated = true;
@@ -20,7 +21,8 @@ class loginLogin extends structureElementAction
                 $user->switchUser($userId);
                 if ($controller->getApplicationName() != "admin") {
                     if ($structureElement->remember == '1') {
-                        $this->getService(CurrentUser::class)->rememberUser($userName, $userId);
+                        $currentUserService = $this->getService(CurrentUserService::class);
+                        $currentUserService->getCurrentUser()->rememberUser($userName, $userId);
                     } else {
                         $user->forgetUser(); // remove 'remember' cookie from possible previous login
                     }
@@ -60,3 +62,6 @@ class loginLogin extends structureElementAction
         ];
     }
 }
+
+
+

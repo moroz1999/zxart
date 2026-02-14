@@ -24,7 +24,7 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
 export class FirstpageModuleWrapperComponent {
   @Input() titleKey!: string;
   @Input() viewAllUrl?: string;
-  @Input() viewAllLabel?: string;
+  @Input() viewAllLabelKey?: string;
   @Input() loading = false;
   @Input() error = false;
   @Input() empty = false;

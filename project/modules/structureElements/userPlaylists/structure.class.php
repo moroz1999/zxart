@@ -1,6 +1,7 @@
 <?php
 
 use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class userPlaylistsElement extends structureElement
 {
@@ -27,7 +28,8 @@ class userPlaylistsElement extends structureElement
     {
         if ($this->userPlaylists == null) {
             $this->userPlaylists = [];
-            $user = $this->getService(CurrentUser::class);
+            $currentUserService = $this->getService(CurrentUserService::class);
+            $user = $currentUserService->getCurrentUser();
 
             $linksManager = $this->getService('linksManager');
             if ($idList = $linksManager->getConnectedIdList($user->id, 'structure', 'parent')) {
@@ -53,5 +55,8 @@ class userPlaylistsElement extends structureElement
         return json_encode($result);
     }
 }
+
+
+
 
 

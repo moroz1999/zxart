@@ -1,6 +1,7 @@
 <?php
 
 use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class votesManager implements DependencyInjectionContextInterface
 {
@@ -129,7 +130,8 @@ class votesManager implements DependencyInjectionContextInterface
         $records = false;
         if ($idList) {
             $collection = persistableCollection::getInstance('votes_history');
-            $user = $this->getService(CurrentUser::class);
+            $currentUserService = $this->getService(CurrentUserService::class);
+            $user = $currentUserService->getCurrentUser();
 
             $columns = ['elementId', 'value'];
 
@@ -150,7 +152,8 @@ class votesManager implements DependencyInjectionContextInterface
     public function vote(int $elementId, string $type, int $value): bool
     {
         $collection = persistableCollection::getInstance('votes_history');
-        $user = $this->getService(CurrentUser::class);
+        $currentUserService = $this->getService(CurrentUserService::class);
+        $user = $currentUserService->getCurrentUser();
         $result = $collection->load(['userId' => $user->id, 'elementId' => $elementId]);
         $historyObject = false;
         if (count($result) > 0) {
@@ -216,3 +219,6 @@ class votesManager implements DependencyInjectionContextInterface
         return $votes;
     }
 }
+
+
+

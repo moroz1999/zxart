@@ -1,6 +1,6 @@
 <?php
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class receiveFormLogin extends structureElementAction
 {
@@ -12,7 +12,8 @@ class receiveFormLogin extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated === true) {
-            $user = $this->getService(CurrentUser::class);
+            $currentUserService = $this->getService(CurrentUserService::class);
+            $user = $currentUserService->getCurrentUser();
             $structureElement->setViewName('result');
 
             if ($userId = $user->checkUser($structureElement->userName, $structureElement->password)) {
@@ -38,3 +39,6 @@ class receiveFormLogin extends structureElementAction
         $expectedFields = ['userName', 'password'];
     }
 }
+
+
+

@@ -1,6 +1,6 @@
 <?php
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class publicAddAuthor extends structureElementAction
 {
@@ -36,7 +36,8 @@ class publicAddAuthor extends structureElementAction
             $structureElement->recalculate();
 
             $privilegesManager = $this->getService('privilegesManager');
-            $user = $this->getService(CurrentUser::class);
+            $currentUserService = $this->getService(CurrentUserService::class);
+            $user = $currentUserService->getCurrentUser();
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'author', 'showPublicForm', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'author', 'publicReceive', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'author', 'publicDelete', 'allow');
@@ -76,5 +77,8 @@ class publicAddAuthor extends structureElementAction
     {
     }
 }
+
+
+
 
 

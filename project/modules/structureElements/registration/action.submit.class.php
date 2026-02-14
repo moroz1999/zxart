@@ -1,6 +1,6 @@
 <?php
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class submitRegistration extends structureElementAction
 {
@@ -12,7 +12,8 @@ class submitRegistration extends structureElementAction
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
-        $user = $this->getService(CurrentUser::class);
+        $currentUserService = $this->getService(CurrentUserService::class);
+        $user = $currentUserService->getCurrentUser();
         $translationsManager = $this->getService('translationsManager');
 
         if ($structureElement->type == 'userdata' && $user->userName == 'anonymous') {
@@ -167,3 +168,6 @@ class submitRegistration extends structureElementAction
         ];
     }
 }
+
+
+

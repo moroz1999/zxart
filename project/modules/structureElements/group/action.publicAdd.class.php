@@ -1,6 +1,6 @@
 <?php
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class publicAddGroup extends structureElementAction
 {
@@ -30,7 +30,8 @@ class publicAddGroup extends structureElementAction
             $structureElement->recalculate();
 
             $privilegesManager = $this->getService('privilegesManager');
-            $user = $this->getService(CurrentUser::class);
+            $currentUserService = $this->getService(CurrentUserService::class);
+            $user = $currentUserService->getCurrentUser();
             $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'showPublicForm', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'publicReceive', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'publicDelete', 'allow');
@@ -71,5 +72,8 @@ class publicAddGroup extends structureElementAction
     {
     }
 }
+
+
+
 
 

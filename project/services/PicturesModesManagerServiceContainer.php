@@ -1,6 +1,6 @@
 <?php
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class PicturesModesManagerServiceContainer extends DependencyInjectionServiceContainer
 {
@@ -18,8 +18,12 @@ class PicturesModesManagerServiceContainer extends DependencyInjectionServiceCon
         if ($user = $this->getOption('user')) {
             $picturesModesManager->setUser($user);
         } else {
-            $picturesModesManager->setUser($this->registry->getService(CurrentUser::class));
+            $currentUserService = $this->registry->getService(CurrentUserService::class);
+            $picturesModesManager->setUser($currentUserService->getCurrentUser());
         }
         return $picturesModesManager;
     }
 }
+
+
+

@@ -9,7 +9,6 @@ class logoutLogin extends structureElementAction
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
-//        $user = $this->getService(CurrentUser::class);
         $currentUserService = $this->getService(CurrentUserService::class);
         $user = $currentUserService->getCurrentUser();
         $user->logout();

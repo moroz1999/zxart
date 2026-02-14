@@ -1,6 +1,6 @@
 <?php
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class coorApplication extends controllerApplication
 {
@@ -37,7 +37,8 @@ class coorApplication extends controllerApplication
         /**
          * @var LanguagesManager $languagesManager
          */
-        $user = $this->getService(CurrentUser::class);
+        $currentUserService = $this->getService(CurrentUserService::class);
+        $user = $currentUserService->getCurrentUser();
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
             $languagesManager = $this->getService('LanguagesManager');
@@ -148,3 +149,6 @@ class coorApplication extends controllerApplication
         return $coordinates;
     }
 }
+
+
+

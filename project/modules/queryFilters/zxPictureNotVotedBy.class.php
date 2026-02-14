@@ -1,6 +1,6 @@
 <?php
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class zxPictureNotVotedByQueryFilter extends QueryFilter
 {
@@ -12,7 +12,8 @@ class zxPictureNotVotedByQueryFilter extends QueryFilter
     public function getFilteredIdList($argument, $query)
     {
         if (!is_numeric($argument)) {
-            $currentUser = $this->getService(CurrentUser::class);
+            $currentUserService = $this->getService(CurrentUserService::class);
+            $currentUser = $currentUserService->getCurrentUser();
             $argument = $currentUser->id;
         }
         $query->whereNotIn(
@@ -35,3 +36,6 @@ class zxPictureNotVotedByQueryFilter extends QueryFilter
         return $query;
     }
 }
+
+
+

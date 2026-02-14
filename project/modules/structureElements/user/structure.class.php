@@ -1,6 +1,7 @@
 <?php
 
 use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 /**
  * @property bool $volunteer
@@ -165,7 +166,8 @@ class userElement extends structureElement
                             if ($newAddress->importExternalData($newData)) {
                                 $newAddress->persistElementData();
 
-                                $user = $this->getService(CurrentUser::class);
+                                $currentUserService = $this->getService(CurrentUserService::class);
+                                $user = $currentUserService->getCurrentUser();
                                 $subscribed = true;
                                 $user->setStorageAttribute('subscribed', $subscribed);
 
@@ -369,3 +371,6 @@ class userElement extends structureElement
         return implode(' ', $this->getBadgetTypes());
     }
 }
+
+
+

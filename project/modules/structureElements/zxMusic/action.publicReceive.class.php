@@ -1,7 +1,7 @@
 <?php
 
 use App\Paths\PathsManager;
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 use ZxArt\Authors\Constants;
 
 class publicReceiveZxMusic extends structureElementAction
@@ -49,7 +49,8 @@ class publicReceiveZxMusic extends structureElementAction
             $structureElement->structureName = $structureElement->title;
 
             if (!$structureElement->userId) {
-                $structureElement->userId = $this->getService(CurrentUser::class)->id;
+                $currentUserService = $this->getService(CurrentUserService::class);
+                $structureElement->userId = $currentUserService->getCurrentUser()->id;
             }
 
             //if no author is selected, select automatically Unknown author
@@ -103,5 +104,8 @@ class publicReceiveZxMusic extends structureElementAction
     {
     }
 }
+
+
+
 
 

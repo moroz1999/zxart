@@ -1,6 +1,6 @@
 <?php
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class publicAddZxRelease extends structureElementAction
 {
@@ -28,7 +28,8 @@ class publicAddZxRelease extends structureElementAction
                 $structureElement->structureName = $structureElement->title;
             }
             $structureElement->dateAdded = time();
-            $structureElement->userId = $this->getService(CurrentUser::class)->id;
+            $currentUserService = $this->getService(CurrentUserService::class);
+            $structureElement->userId = $currentUserService->getCurrentUser()->id;
             $structureElement->persistElementData();
 
             $structureElement->persistAuthorship('release');
@@ -36,7 +37,8 @@ class publicAddZxRelease extends structureElementAction
             $structureElement->executeAction('receiveFiles');
 
             $privilegesManager = $this->getService('privilegesManager');
-            $user = $this->getService(CurrentUser::class);
+            $currentUserService = $this->getService(CurrentUserService::class);
+            $user = $currentUserService->getCurrentUser();
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'showPublicForm', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'publicReceive', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'publicDelete', 'allow');
@@ -76,5 +78,8 @@ class publicAddZxRelease extends structureElementAction
         $validators['zxProd'][] = 'notEmpty';
     }
 }
+
+
+
 
 

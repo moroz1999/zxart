@@ -1,4 +1,5 @@
-<zx-panel *ngIf="usePanel" radius="lg" [contentBleed]="true" variant="elevated" [title]="titleKey | translate" titleLevel="h2">
+<zx-panel *ngIf="usePanel" radius="lg" [contentBleed]="true" variant="elevated" [title]="titleKey | translate"
+          titleLevel="h2">
   <ng-container *ngTemplateOutlet="body"></ng-container>
 </zx-panel>
 
@@ -6,13 +7,13 @@
   <div class="module-title">
     <h2 zxHeading2 class="module-title__text">{{ titleKey | translate }}</h2>
     <zx-button
-      *ngIf="viewAllUrl"
+      *ngIf="viewAllUrl && viewAllLabelKey"
       size="xs"
       color="secondary"
       [href]="viewAllUrl"
       [extraClass]="'module-title__action'"
     >
-      {{ viewAllLabel }}
+      {{ viewAllLabelKey | translate }}
     </zx-button>
   </div>
   <ng-container *ngTemplateOutlet="body"></ng-container>

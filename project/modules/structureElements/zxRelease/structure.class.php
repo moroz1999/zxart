@@ -14,6 +14,7 @@ use ZxArt\Releases\Services\ArchiveFileResolverService;
 use ZxArt\Releases\Services\EmulatorResolverService;
 use ZxArt\Releases\Services\ReleaseFileTypesGatherer;
 use ZxFiles\BasicFile;
+use App\Users\CurrentUserService;
 
 /**
  * @property string $title
@@ -508,7 +509,8 @@ class zxReleaseElement extends ZxArtItem implements
 
     public function isDownloadable(): bool
     {
-        $user = $this->getService(CurrentUser::class);
+        $currentUserService = $this->getService(CurrentUserService::class);
+        $user = $currentUserService->getCurrentUser();
         $privileges = $this->getService('privilegesManager')->getElementPrivileges($this->getId());
 
         return !in_array($this->getLegalStatus(), [legalStatus::forbidden->name, legalStatus::forbiddenzxart->name, legalStatus::insales->name], true) ||
@@ -1115,3 +1117,6 @@ class zxReleaseElement extends ZxArtItem implements
         return preg_replace('/\.+/', '.', $result);
     }
 }
+
+
+

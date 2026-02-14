@@ -1,6 +1,6 @@
 <?php
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class showComments extends structureElementAction
 {
@@ -31,7 +31,8 @@ class showComments extends structureElementAction
     protected function getFilters($formData)
     {
         $filter = [];
-        $user = $this->getService(CurrentUser::class);
+        $currentUserService = $this->getService(CurrentUserService::class);
+        $user = $currentUserService->getCurrentUser();
 
         if (isset($formData["periodStart"])) {
             $filter["periodStart"] = $formData["periodStart"];
@@ -81,3 +82,6 @@ class showComments extends structureElementAction
         ];
     }
 }
+
+
+

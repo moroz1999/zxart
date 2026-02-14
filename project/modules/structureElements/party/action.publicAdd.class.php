@@ -1,6 +1,6 @@
 <?php
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class publicAddParty extends structureElementAction
 {
@@ -24,7 +24,8 @@ class publicAddParty extends structureElementAction
 
             $structureElement->persistElementData();
 
-            $user = $this->getService(CurrentUser::class);
+            $currentUserService = $this->getService(CurrentUserService::class);
+            $user = $currentUserService->getCurrentUser();
             $privilegesManager = $this->getService('privilegesManager');
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'party', 'showPublicForm', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'party', 'publicReceive', 'allow');
@@ -56,4 +57,7 @@ class publicAddParty extends structureElementAction
     {
     }
 }
+
+
+
 

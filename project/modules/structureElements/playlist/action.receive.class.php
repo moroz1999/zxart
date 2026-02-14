@@ -1,6 +1,6 @@
 <?php
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class receivePlaylist extends structureElementAction
 {
@@ -10,7 +10,8 @@ class receivePlaylist extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated) {
-            $user = $this->getService(CurrentUser::class);
+            $currentUserService = $this->getService(CurrentUserService::class);
+            $user = $currentUserService->getCurrentUser();
 
             $structureElement->prepareActualData();
 
@@ -70,5 +71,8 @@ class receivePlaylist extends structureElementAction
     {
     }
 }
+
+
+
 
 

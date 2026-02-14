@@ -1,4 +1,6 @@
 <?php
+use App\Users\CurrentUserService;
+
 declare(strict_types=1);
 
 use App\Users\CurrentUser;
@@ -37,7 +39,8 @@ class vtrdosApplication extends controllerApplication
             ob_end_flush();
         }
 
-        $user = $this->getService(CurrentUser::class);
+        $currentUserService = $this->getService(CurrentUserService::class);
+        $user = $currentUserService->getCurrentUser();
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
 
@@ -51,4 +54,7 @@ class vtrdosApplication extends controllerApplication
         }
     }
 }
+
+
+
 

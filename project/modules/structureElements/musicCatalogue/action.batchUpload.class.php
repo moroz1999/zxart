@@ -1,7 +1,7 @@
 <?php
 
 use App\Paths\PathsManager;
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 
 class batchUploadMusicCatalogue extends structureElementAction
 {
@@ -37,7 +37,8 @@ class batchUploadMusicCatalogue extends structureElementAction
                 $zxMusicElement->compo = $structureElement->compo;
                 $zxMusicElement->author = $structureElement->author;
                 $zxMusicElement->dateAdded = $zxMusicElement->dateCreated;
-                $zxMusicElement->userId = $this->getService(CurrentUser::class)->id;
+                $currentUserService = $this->getService(CurrentUserService::class);
+                $zxMusicElement->userId = $currentUserService->getCurrentUser()->id;
                 $zxMusicElement->chipType = $structureElement->chipType;
                 $zxMusicElement->channelsType = $structureElement->channelsType;
                 $zxMusicElement->frequency = $structureElement->frequency;
@@ -81,5 +82,8 @@ class batchUploadMusicCatalogue extends structureElementAction
         ];
     }
 }
+
+
+
 
 
