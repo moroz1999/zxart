@@ -4,7 +4,7 @@
   </zx-panel>
 } @else {
   <zx-panel [title]="'comments.title' | translate">
-    <zx-stack spacing="sm">
+    <zx-stack spacing="md">
       @for (comment of comments(); track comment.id) {
         <div class="latest-comment">
           @if (comment.target) {

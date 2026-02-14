@@ -140,7 +140,18 @@
   gap: var(--zx-player-label-row-gap);
 }
 
+.player-field--bottom {
+  justify-content: flex-end;
+}
+
 .player-field-label {
+  color: var(--text-light-color);
+}
+
+:host ::ng-deep .player-checkbox-caption .zx-checkbox-field__label {
+  font-size: var(--zx-caption-size);
+  font-weight: var(--zx-caption-weight);
+  line-height: var(--zx-caption-line-height);
   color: var(--text-light-color);
 }
 

@@ -2,31 +2,33 @@
 /*  LOGIN HEADER BLOCK
 /********************************************************/
 .login_header.login_component {
-	position: relative;
 	width: 15em;
-	padding-bottom: var(--login-header-padding-bottom);
 	display: block;
 	font-size: var(--login-header-font-size);
 }
 
-.login_header .login_form_button {
-	position: absolute;
-	bottom: 0;
-	right: 0;
-	color: var(--login-header-button-color);
-	width: auto;
+.login_header .login_form {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-4);
 }
 
-.login_header .login_form_register {
-	position: absolute;
-	bottom: 0;
-	left: 0;
+.login_header .login_form_button {
+	cursor: pointer;
+}
+
+.login_header .login_form_bottom {
+	margin-top: 0;
+}
+
+.login_header .login_form_actions {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: var(--space-8);
+	margin-top: var(--space-4);
 }
 
 .login_header .login_remember {
-	margin-bottom: var(--login-remember-margin-bottom);
-}
-
-.login_form_bottom {
-	margin-top: 0;
+	margin-bottom: 0;
 }

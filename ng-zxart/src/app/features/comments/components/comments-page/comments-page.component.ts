@@ -1,5 +1,5 @@
-import {Component, Input, OnInit, signal} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {Component, Inject, Input, OnInit, PLATFORM_ID, signal} from '@angular/core';
+import {CommonModule, isPlatformBrowser} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {CommentsService} from '../../services/comments.service';
 import {CommentDto, CommentsListDto} from '../../models/comment.dto';
@@ -44,13 +44,19 @@ export class CommentsPageComponent implements OnInit {
   paginationLoading = signal(false);
   currentPage = signal(1);
 
+  private readonly isBrowser: boolean;
+
   constructor(
     private commentsService: CommentsService,
-    private sanitizer: DomSanitizer
-  ) {}
+    private sanitizer: DomSanitizer,
+    @Inject(PLATFORM_ID) platformId: object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   ngOnInit(): void {
-    this.loadComments(1, true);
+    const page = this.parsePageFromUrl();
+    this.loadComments(page, true);
   }
 
   loadComments(page: number, isInitial = false): void {
@@ -76,6 +82,7 @@ export class CommentsPageComponent implements OnInit {
 
   onPageChange(page: number): void {
     this.loadComments(page, false);
+    this.updateUrl(page);
     window.scrollTo({top: 0, behavior: 'smooth'});
   }
 
@@ -89,5 +96,29 @@ export class CommentsPageComponent implements OnInit {
 
   getTargetTypeClass(comment: CommentDto): string {
     return comment.target?.type || '';
+  }
+
+  private parsePageFromUrl(): number {
+    if (!this.isBrowser) {
+      return 1;
+    }
+    const path = window.location.pathname;
+    const match = path.match(/\/page:(\d+)/);
+    if (match) {
+      const page = parseInt(match[1], 10);
+      return page > 0 ? page : 1;
+    }
+    return 1;
+  }
+
+  private updateUrl(page: number): void {
+    if (!this.isBrowser) {
+      return;
+    }
+    const currentPath = window.location.pathname;
+    const cleanPath = currentPath.replace(/\/page:\d+\/?/, '');
+    const basePath = cleanPath.endsWith('/') ? cleanPath : cleanPath + '/';
+    const newPath = page > 1 ? basePath + 'page:' + page + '/' : basePath;
+    window.history.pushState(null, '', newPath);
   }
 }

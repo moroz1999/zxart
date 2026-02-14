@@ -7,7 +7,8 @@
 - **No vendor prefixes**: Do not use `-webkit-`, `-moz-`, `-ms-` or any other vendor prefixes. Use only standard unprefixed properties.
 - **Comments**: All comments in CSS/SCSS files must be written in English only.
 - **Styles and Variables**:
-    - NO hardcoded hex/rgb or raw spacing.
+    - NO hardcoded hex/rgb or raw spacing — not in components, not in theme files, nowhere. All color values must reference CSS variables.
+    - Raw color values (hex, rgb, hsl) are ONLY allowed as variable definitions in base ramp files (`_dark.theme.scss`, `_light.theme.scss`). Adding new colors or modifying existing ones in these files requires explicit user approval.
     - NO SCSS variables (deprecated). Use CSS `var()`.
     - All colors and sizes must be formatted as CSS variables.
     - Adding or modifying variables in `_base.theme.scss` is allowed ONLY after direct user permission.

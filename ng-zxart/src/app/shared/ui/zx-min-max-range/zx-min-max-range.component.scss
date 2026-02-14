@@ -1,5 +1,6 @@
 :host {
   display: block;
+  padding: 0 calc(var(--zx-range-thumb-size) / 2);
 }
 
 .zx-min-max-range {

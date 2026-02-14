@@ -4,29 +4,50 @@
     </div>
 
     <div class="pagination-controls">
-        <zx-button
-            size="md"
-            [square]="true"
-            color="transparent"
-            [disabled]="!previousPageActive() || loading"
+        <a
+            [href]="previousPageActive() ? makeHref(currentPage - 1) : null"
             (click)="pageClicked($event, currentPage - 1)"
-        >&lt;</zx-button>
+        >
+            <zx-button
+                size="md"
+                [square]="true"
+                color="transparent"
+                [disabled]="!previousPageActive() || loading"
+            >&lt;</zx-button>
+        </a>
 
-        <zx-button
-            *ngFor="let page of pageItems"
-            size="md"
-            [square]="true"
-            [color]="page.number === currentPage ? 'primary' : 'transparent'"
-            [disabled]="page.type === 'dots' || loading"
-            (click)="pageClicked($event, page.number)"
-        >{{ page.text }}</zx-button>
+        <ng-container *ngFor="let page of pageItems">
+            <a
+                *ngIf="page.type === 'page'"
+                [href]="makeHref(page.number)"
+                (click)="pageClicked($event, page.number)"
+            >
+                <zx-button
+                    size="md"
+                    [square]="true"
+                    [color]="page.number === currentPage ? 'primary' : 'transparent'"
+                    [disabled]="loading"
+                >{{ page.text }}</zx-button>
+            </a>
+            <zx-button
+                *ngIf="page.type === 'dots'"
+                size="md"
+                [square]="true"
+                color="transparent"
+                [disabled]="true"
+            >{{ page.text }}</zx-button>
+        </ng-container>
 
-        <zx-button
-            size="md"
-            [square]="true"
-            color="transparent"
-            [disabled]="!nextPageActive() || loading"
+        <a
+            [href]="nextPageActive() ? makeHref(currentPage + 1) : null"
             (click)="pageClicked($event, currentPage + 1)"
-        >&gt;</zx-button>
+        >
+            <zx-button
+                size="md"
+                [square]="true"
+                color="transparent"
+                [disabled]="!nextPageActive() || loading"
+            >&gt;</zx-button>
+        </a>
     </div>
 </div>

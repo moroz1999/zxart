@@ -6,4 +6,13 @@
   --zx-user-badge-supporter-color: var(--white);
   --zx-user-badge-vip-color: var(--warning-400);
   --zx-user-badge-volunteer-color: var(--white);
+  --zx-user-badge-outline: none;
+}
+
+.light-mode {
+  --zx-user-badge-outline:
+    drop-shadow(0.5px 0 0 var(--black))
+    drop-shadow(-0.5px 0 0 var(--black))
+    drop-shadow(0 0.5px 0 var(--black))
+    drop-shadow(0 -0.5px 0 var(--black));
 }

@@ -44,3 +44,8 @@ $zxart-tree-theme: mat.m2-define-dark-theme((
 .cdk-overlay-pane.g-overlay lightbox gallery-image img {
   image-rendering: pixelated !important;
 }
+
+.g-backdrop {
+  background: var(--black) !important;
+  opacity: var(--zx-lightbox-backdrop-opacity) !important;
+}

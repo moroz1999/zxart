@@ -15,6 +15,7 @@
 
     &--supporter {
       color: var(--zx-user-badge-supporter-color);
+      filter: var(--zx-user-badge-outline);
     }
 
     &--vip {
@@ -23,6 +24,7 @@
 
     &--volunteer {
       color: var(--zx-user-badge-volunteer-color);
+      filter: var(--zx-user-badge-outline);
     }
   }
 

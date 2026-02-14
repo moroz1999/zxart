@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, of} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import {BehaviorSubject, EMPTY, Observable, of} from 'rxjs';
+import {catchError, tap} from 'rxjs/operators';
 import {UserPreferencesService} from './user-preferences.service';
 import {Theme} from '../models/preference.dto';
 
-const DEFAULT_THEME: Theme = 'light';
+const DEFAULT_THEME: Theme = 'dark';
 
 @Injectable({
   providedIn: 'root'
@@ -34,17 +34,24 @@ export class ThemeService {
     const storedValue = this.userPreferencesService.getPreference('theme');
     const theme = this.validateTheme(storedValue);
     this.applyTheme(theme);
+
+    this.userPreferencesService.initialize().pipe(
+      tap(() => {
+        const serverValue = this.userPreferencesService.getPreference('theme');
+        const serverTheme = this.validateTheme(serverValue);
+        if (serverTheme !== this.currentTheme) {
+          this.applyTheme(serverTheme);
+        }
+      }),
+      catchError(() => EMPTY)
+    ).subscribe();
   }
 
   setTheme(theme: Theme): void {
-    const previousTheme = this.currentTheme;
     this.applyTheme(theme);
 
     this.userPreferencesService.setPreference('theme', theme).pipe(
-      catchError(() => {
-        this.applyTheme(previousTheme);
-        return of([]);
-      })
+      catchError(() => of([]))
     ).subscribe();
   }
 

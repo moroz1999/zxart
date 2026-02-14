@@ -1,23 +1,65 @@
 import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import {Observable, of, switchMap} from 'rxjs';
+import {map, shareReplay, tap} from 'rxjs/operators';
 import {ApiResponse, PreferenceDto} from '../models/preference.dto';
+import {CurrentUserService} from '../../../shared/services/current-user.service';
 
 const STORAGE_KEY = 'zxart_preferences';
+
+interface StoredPreferences {
+  userId: number | null;
+  preferences: PreferenceDto[];
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserPreferencesService {
   private readonly isBrowser: boolean;
+  private initialized$: Observable<PreferenceDto[]> | null = null;
 
   constructor(
     private http: HttpClient,
+    private currentUserService: CurrentUserService,
     @Inject(PLATFORM_ID) platformId: object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
+  }
+
+  initialize(): Observable<PreferenceDto[]> {
+    if (!this.isBrowser) {
+      return of([]);
+    }
+
+    if (this.initialized$) {
+      return this.initialized$;
+    }
+
+    this.initialized$ = this.currentUserService.loadUser().pipe(
+      switchMap(() => {
+        const currentUserId = this.currentUserService.userId;
+        const stored = this.loadStoredData();
+
+        if (stored && stored.userId !== currentUserId) {
+          this.clearStorage();
+        }
+
+        if (!this.currentUserService.isAuthenticated) {
+          return of(this.loadFromStorage());
+        }
+
+        if (stored && stored.userId === currentUserId && stored.preferences.length > 0) {
+          return of(stored.preferences);
+        }
+
+        return this.fetchFromServer();
+      }),
+      shareReplay(1)
+    );
+
+    return this.initialized$;
   }
 
   getPreferences(): PreferenceDto[] {
@@ -31,6 +73,10 @@ export class UserPreferencesService {
 
   setPreference(code: string, value: string): Observable<PreferenceDto[]> {
     this.savePreferenceToStorage(code, value);
+
+    if (!this.currentUserService.isAuthenticated) {
+      return of(this.loadFromStorage());
+    }
 
     const body = new HttpParams()
       .set('code', code)
@@ -54,6 +100,10 @@ export class UserPreferencesService {
       this.savePreferenceToStorage(item.code, item.value);
     }
 
+    if (!this.currentUserService.isAuthenticated) {
+      return of(this.loadFromStorage());
+    }
+
     const body = new HttpParams()
       .set('batch', JSON.stringify(items));
 
@@ -71,6 +121,10 @@ export class UserPreferencesService {
   }
 
   syncFromServer(): Observable<PreferenceDto[]> {
+    return this.initialize();
+  }
+
+  private fetchFromServer(): Observable<PreferenceDto[]> {
     return this.http.get<ApiResponse<PreferenceDto[]>>('/userpreferences/').pipe(
       map(response => {
         if (response.responseStatus === 'success' && response.responseData) {
@@ -93,25 +147,48 @@ export class UserPreferencesService {
     this.saveToStorage(prefs);
   }
 
-  private loadFromStorage(): PreferenceDto[] {
+  private loadStoredData(): StoredPreferences | null {
     if (!this.isBrowser) {
-      return [];
+      return null;
     }
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) {
-      return [];
+      return null;
     }
     try {
-      return JSON.parse(stored);
+      const data = JSON.parse(stored);
+      if (data && Array.isArray(data.preferences)) {
+        return data as StoredPreferences;
+      }
+      if (Array.isArray(data)) {
+        return {userId: null, preferences: data};
+      }
+      return null;
     } catch {
-      return [];
+      return null;
     }
+  }
+
+  private loadFromStorage(): PreferenceDto[] {
+    const stored = this.loadStoredData();
+    return stored ? stored.preferences : [];
   }
 
   private saveToStorage(prefs: PreferenceDto[]): void {
     if (!this.isBrowser) {
       return;
     }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+    const data: StoredPreferences = {
+      userId: this.currentUserService.userId,
+      preferences: prefs
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  private clearStorage(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+    localStorage.removeItem(STORAGE_KEY);
   }
 }

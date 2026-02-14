@@ -27,18 +27,18 @@
 						{translations name='login.remember'}
 					</label>
 				</div>
-				<input class="login_form_button button" type="submit" value="{translations name='login.submit'}"/>
-				{if $element->getPasswordReminderForm()}
-					<div class='login_form_bottom'>
+				<input class="login_form_button button button_primary" type="submit" value="{translations name='login.submit'}"/>
+				<div class="login_form_actions">
+					{if $element->getRegistrationForm()}
+						<a href="{$element->getRegistrationFormUrl()}" class='login_form_register'>{translations name='login.register'}</a>
+					{/if}
+					{if $element->getPasswordReminderForm()}
 						<a href="{$element->getPasswordReminderFormUrl()}" class='login_forgottenpassword'>{translations name='login.passwordreminder'}</a>
-					</div>
-				{/if}
+					{/if}
+				</div>
 				<input type="hidden" value="{$element->id}" name="id"/>
 				<input type="hidden" value="login" name="action"/>
 			</form>
 		</div>
-		{if $element->getRegistrationForm()}
-			<a href="{$element->getRegistrationFormUrl()}" class='login_form_register'>{translations name='login.register'}</a>
-		{/if}
 	{/if}
 </div>
