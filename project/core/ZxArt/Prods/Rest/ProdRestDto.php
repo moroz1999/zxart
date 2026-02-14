@@ -13,6 +13,7 @@ readonly class ProdRestDto
     /**
      * @param AuthorDto[] $authors
      * @param string[] $categories
+     * @param array<array{id: string, title: string}> $hardwareInfo
      */
     public function __construct(
         public int $id,
@@ -26,6 +27,7 @@ readonly class ProdRestDto
         public bool $denyVoting,
         public array $authors,
         public array $categories,
+        public array $hardwareInfo,
         #[Map]
         public ?PartyInfoDto $party,
         public ?string $legalStatus,

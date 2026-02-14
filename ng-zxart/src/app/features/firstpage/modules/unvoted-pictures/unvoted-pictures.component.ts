@@ -22,6 +22,8 @@ const GALLERY_ID = 'zx-picture-lightbox-unvoted-pictures';
   styleUrls: ['./unvoted-pictures.component.scss']
 })
 export class UnvotedPicturesComponent extends FirstpageModuleBase<ZxPictureDto> {
+  readonly moduleType = 'unvotedPictures' as const;
+
   constructor(
     private dataService: FirstpageDataService,
     private pictureGalleryService: PictureGalleryService,

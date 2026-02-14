@@ -19,6 +19,8 @@ import {MODULE_SETTINGS} from '../../models/module-settings.token';
   styleUrls: ['./recent-parties.component.scss']
 })
 export class RecentPartiesComponent extends FirstpageModuleBase<PartyDto> {
+  readonly moduleType = 'recentParties' as const;
+
   constructor(
     private dataService: FirstpageDataService,
     @Inject(MODULE_SETTINGS) settings: ModuleSettings,

@@ -15,7 +15,7 @@ final class DefaultUserPreferencesProvider
     public function getDefaults(): array
     {
         return [
-            PreferenceCode::THEME->value => ThemeValue::LIGHT->value,
+            PreferenceCode::THEME->value => ThemeValue::DARK->value,
             PreferenceCode::HOMEPAGE_ORDER->value => 'newProds,newPictures,newTunes,bestNewDemos,bestNewGames,recentParties,bestPicturesOfMonth,latestAddedProds,latestAddedReleases,supportProds,unvotedPictures,randomGoodPictures,unvotedTunes,randomGoodTunes',
             PreferenceCode::HOMEPAGE_DISABLED->value => '',
             PreferenceCode::HOMEPAGE_NEW_PRODS_LIMIT->value => '10',

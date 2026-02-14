@@ -19,6 +19,8 @@ import {MODULE_SETTINGS} from '../../models/module-settings.token';
   styleUrls: ['./best-new-games.component.scss']
 })
 export class BestNewGamesComponent extends FirstpageModuleBase<ZxProd> {
+  readonly moduleType = 'bestNewGames' as const;
+
   constructor(
     private dataService: FirstpageDataService,
     @Inject(MODULE_SETTINGS) settings: ModuleSettings,

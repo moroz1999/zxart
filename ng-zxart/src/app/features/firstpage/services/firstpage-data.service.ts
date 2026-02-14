@@ -97,6 +97,7 @@ export class FirstpageDataService {
       structureType,
       dateCreated: 0,
       year: dto.year ?? undefined,
+      hardwareInfo: dto.hardwareInfo ?? undefined,
       votes: dto.votes,
       userVote: dto.userVote ?? 0,
       denyVoting: dto.denyVoting,

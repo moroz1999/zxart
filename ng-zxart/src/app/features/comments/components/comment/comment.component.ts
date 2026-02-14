@@ -4,13 +4,18 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {MatIconModule} from '@angular/material/icon';
 import {CommentDto} from '../../models/comment.dto';
+import {CommentChangeEvent} from '../../models/comment-change-event';
 import {CommentsService} from '../../services/comments.service';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {CommentFormComponent} from '../comment-form/comment-form.component';
 import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
 import {ZxStackComponent} from "../../../../shared/ui/zx-stack/zx-stack.component";
-import {ZxBodyDirective, ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
+import {
+  ZxBodyDirective,
+  ZxCaptionDirective,
+  ZxLinkDirective
+} from '../../../../shared/directives/typography/typography.directives';
 
 @Component({
   selector: 'zx-comment',
@@ -25,14 +30,15 @@ import {ZxBodyDirective, ZxCaptionDirective} from '../../../../shared/directives
     ZxPanelComponent,
     ZxStackComponent,
     ZxBodyDirective,
-    ZxCaptionDirective
+    ZxCaptionDirective,
+    ZxLinkDirective
   ],
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss']
 })
 export class CommentComponent {
   @Input() comment!: CommentDto;
-  @Output() commentChanged = new EventEmitter<void>();
+  @Output() commentChanged = new EventEmitter<CommentChangeEvent>();
 
   showReplyForm = false;
   showEditForm = false;
@@ -42,6 +48,10 @@ export class CommentComponent {
     private translate: TranslateService,
     private sanitizer: DomSanitizer
   ) {}
+
+  get hasImage(): boolean {
+    return !!this.comment.target?.imageUrl;
+  }
 
   get safeContent(): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(this.comment.content);
@@ -61,7 +71,7 @@ export class CommentComponent {
     this.translate.get('comments.confirm-delete').subscribe((msg: string) => {
       if (confirm(msg)) {
         this.commentsService.deleteComment(this.comment.id).subscribe(() => {
-          this.commentChanged.emit();
+          this.commentChanged.emit({type: 'delete', comment: this.comment});
         });
       }
     });
@@ -70,6 +80,32 @@ export class CommentComponent {
   onCommentSaved(comment: CommentDto): void {
     this.showReplyForm = false;
     this.showEditForm = false;
-    this.commentChanged.emit();
+
+    if (comment.id === this.comment.id) {
+      this.comment.content = comment.content;
+      this.comment.originalContent = comment.originalContent;
+      this.comment.date = comment.date;
+      this.comment.canEdit = comment.canEdit;
+      this.comment.canDelete = comment.canDelete;
+      this.commentChanged.emit({type: 'edit', comment});
+      return;
+    }
+
+    if (comment.parentId === this.comment.id) {
+      const children = Array.isArray(this.comment.children) ? this.comment.children : [];
+      this.comment.children = [...children, comment];
+      this.commentChanged.emit({type: 'reply', comment});
+      return;
+    }
+
+    this.commentChanged.emit({type: 'edit', comment});
+  }
+
+  onChildChanged(event: CommentChangeEvent): void {
+    if (event.type === 'delete') {
+      const children = Array.isArray(this.comment.children) ? this.comment.children : [];
+      this.comment.children = children.filter(child => child.id !== event.comment.id);
+    }
+    this.commentChanged.emit(event);
   }
 }

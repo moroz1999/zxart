@@ -199,7 +199,19 @@
       "unvotedPictures": "Imágenes sin votar",
       "randomGoodPictures": "Buenas imágenes aleatorias",
       "unvotedTunes": "Música sin votar",
-      "randomGoodTunes": "Buena música aleatoria"
+      "randomGoodTunes": "Buena música aleatoria",
+      "viewAllButton": {
+        "newProds": "Nuevo software para ZX Spectrum",
+        "bestNewDemos": "Nuevas demostraciones de ZX Spectrum",
+        "bestNewGames": "Nuevos juegos ZX Spectrum",
+        "latestAddedProds": "Software ZX Spectrum agregado recientemente",
+        "latestAddedReleases": "Software ZX Spectrum agregado recientemente",
+        "supportProds": "Explorar todos los juegos para compra/donación",
+        "newPictures": "Imágenes añadidas últimamente",
+        "randomGoodPictures": "Bonitas imágenes al azar",
+        "newTunes": "Últimos temas añadidos",
+        "randomGoodTunes": "Some good tunes"
+      }
     },
     "settings": {
       "limit": "Cantidad",

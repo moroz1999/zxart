@@ -2,30 +2,29 @@ import {Component, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {FirstpageModuleBase} from '../firstpage-module.base';
 import {ZxTuneDto} from '../../../../shared/models/zx-tune-dto';
 import {FirstpageDataService} from '../../services/firstpage-data.service';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
 import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.component';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
-import {ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ModuleSettings} from '../../models/firstpage-config';
 import {MODULE_SETTINGS} from '../../models/module-settings.token';
 import {PlayerService} from '../../../player/services/player.service';
+import {
+  FirstpageModuleWrapperComponent
+} from '../../components/firstpage-module-wrapper/firstpage-module-wrapper.component';
 
 const PLAYLIST_ID = 'firstpage-new-tunes';
 
 @Component({
   selector: 'zx-fp-new-tunes',
   standalone: true,
-  imports: [CommonModule, TranslateModule, ZxTableComponent, ZxTuneRowComponent, ZxSkeletonComponent, ZxCaptionDirective],
+  imports: [CommonModule, ZxTableComponent, ZxTuneRowComponent, FirstpageModuleWrapperComponent],
   templateUrl: './new-tunes.component.html',
   styleUrls: ['./new-tunes.component.scss']
 })
 export class NewTunesComponent extends FirstpageModuleBase<ZxTuneDto> {
-  title = '';
-
+  readonly moduleType = 'newTunes' as const;
   readonly playingTuneId$ = this.playerService.state$.pipe(
     map(state => state.isPlaying && state.playlistId === PLAYLIST_ID
       ? (state.playlist[state.currentIndex]?.id ?? null)
@@ -35,12 +34,10 @@ export class NewTunesComponent extends FirstpageModuleBase<ZxTuneDto> {
 
   constructor(
     private dataService: FirstpageDataService,
-    private translate: TranslateService,
     private playerService: PlayerService,
     @Inject(MODULE_SETTINGS) settings: ModuleSettings,
   ) {
     super(settings);
-    this.translate.get('firstpage.modules.newTunes').subscribe(t => this.title = t);
   }
 
   protected loadData(): Observable<ZxTuneDto[]> {

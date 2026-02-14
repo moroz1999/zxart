@@ -2,7 +2,7 @@
   /* ZX Badge */
   --zx-badge-font-size: var(--font-xs);
   --zx-badge-padding: var(--space-2) var(--space-4);
-  --zx-badge-border-radius: var(--radius-md);
+  --zx-badge-border-radius: var(--radius-xl);
 
   /* Primary variant */
   --zx-badge-primary-bg: var(--primary-500);
@@ -10,7 +10,7 @@
   --zx-badge-primary-border: var(--primary-600);
 
   /* Secondary variant */
-  --zx-badge-secondary-bg: var(--secondary-200);
+  --zx-badge-secondary-bg: var(--secondary-100);
   --zx-badge-secondary-text: var(--secondary-900);
   --zx-badge-secondary-border: var(--secondary-400);
 }

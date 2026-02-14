@@ -3,7 +3,18 @@
 </zx-panel>
 
 <ng-container *ngIf="!usePanel">
-  <h2 zxHeading2 class="module-title">{{ titleKey | translate }}</h2>
+  <div class="module-title">
+    <h2 zxHeading2 class="module-title__text">{{ titleKey | translate }}</h2>
+    <zx-button
+      *ngIf="viewAllUrl"
+      size="xs"
+      color="secondary"
+      [href]="viewAllUrl"
+      [extraClass]="'module-title__action'"
+    >
+      {{ viewAllLabel }}
+    </zx-button>
+  </div>
   <ng-container *ngTemplateOutlet="body"></ng-container>
 </ng-container>
 

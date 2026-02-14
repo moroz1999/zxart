@@ -1,5 +1,6 @@
 import {AuthorDto} from './author-dto';
 import {PartyInfoDto} from './party-info-dto';
+import {ZxProdConnectedItems} from './zx-prod-dto';
 
 export type LegalStatus =
   'unknown' | 'allowed' | 'allowedzxart' | 'forbidden' | 'forbiddenzxart' |
@@ -11,6 +12,7 @@ export interface FirstpageProdDto {
   readonly url: string;
   readonly year: string | null;
   readonly imageUrl: string | null;
+  readonly hardwareInfo?: ZxProdConnectedItems;
   readonly votes: number;
   readonly votesAmount: number;
   readonly userVote: number | null;

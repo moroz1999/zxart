@@ -32,7 +32,7 @@ export class CommentsService {
     return this.http.get<ApiResponse<CommentDto[]>>(`/comments/id:${elementId}/`).pipe(
       map(response => {
         if (response.responseStatus === 'success' && response.responseData) {
-          return response.responseData;
+          return this.normalizeComments(response.responseData);
         }
         return [];
       }),
@@ -103,5 +103,43 @@ export class CommentsService {
         throw new Error(response.errorMessage || 'Failed to delete comment');
       })
     );
+  }
+
+  private normalizeComments(comments: CommentDto[]): CommentDto[] {
+    if (!comments.length) {
+      return [];
+    }
+
+    const hasChildren = comments.some(comment => Array.isArray(comment.children) && comment.children.length > 0);
+    const hasParent = comments.some(comment => comment.parentId);
+
+    if (hasChildren || !hasParent) {
+      return comments.map(comment => ({
+        ...comment,
+        children: Array.isArray(comment.children) ? comment.children : [],
+      }));
+    }
+
+    const items = comments.map(comment => ({
+      ...comment,
+      children: Array.isArray(comment.children) ? comment.children : [],
+    }));
+
+    const index = new Map<number, CommentDto>();
+    for (const item of items) {
+      index.set(item.id, item);
+    }
+
+    const roots: CommentDto[] = [];
+    for (const item of items) {
+      const parentId = item.parentId;
+      if (parentId && index.has(parentId)) {
+        index.get(parentId)!.children.push(item);
+      } else {
+        roots.push(item);
+      }
+    }
+
+    return roots;
   }
 }

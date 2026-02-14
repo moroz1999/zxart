@@ -53,6 +53,7 @@ readonly class ProdsTransformer
             denyVoting: $element->isVotingDenied(),
             authors: $authors,
             categories: $categories,
+            hardwareInfo: $element->getHardwareInfo(),
             party: $party,
             legalStatus: $element->legalStatus ? (string)$element->legalStatus : null,
         );

@@ -19,6 +19,8 @@ import {MODULE_SETTINGS} from '../../models/module-settings.token';
   styleUrls: ['./support-prods.component.scss']
 })
 export class SupportProdsComponent extends FirstpageModuleBase<ZxProd> {
+  readonly moduleType = 'supportProds' as const;
+
   constructor(
     private dataService: FirstpageDataService,
     @Inject(MODULE_SETTINGS) settings: ModuleSettings,

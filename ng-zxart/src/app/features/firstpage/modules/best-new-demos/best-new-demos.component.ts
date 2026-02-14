@@ -19,6 +19,8 @@ import {MODULE_SETTINGS} from '../../models/module-settings.token';
   styleUrls: ['./best-new-demos.component.scss']
 })
 export class BestNewDemosComponent extends FirstpageModuleBase<ZxProd> {
+  readonly moduleType = 'bestNewDemos' as const;
+
   constructor(
     private dataService: FirstpageDataService,
     @Inject(MODULE_SETTINGS) settings: ModuleSettings,

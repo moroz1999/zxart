@@ -11,6 +11,8 @@ paths:
     $ref: 'radio.yaml#/paths/~1radio~1?action=next-tune'
   /tunes/?action=play:
     $ref: 'tunes.yaml#/paths/~1tunes~1?action=play'
+  /firstpage/?action=catalogueBaseUrls:
+    $ref: 'firstpage.yaml#/paths/~1firstpage~1?action=catalogueBaseUrls'
   /userpreferences/:
     $ref: 'user-preferences.yaml#/paths/~1userpreferences~1'
 components:

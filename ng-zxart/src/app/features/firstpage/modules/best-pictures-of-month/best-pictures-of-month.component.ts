@@ -22,6 +22,8 @@ const GALLERY_ID = 'zx-picture-lightbox-best-pictures-of-month';
   styleUrls: ['./best-pictures-of-month.component.scss']
 })
 export class BestPicturesOfMonthComponent extends FirstpageModuleBase<ZxPictureDto> {
+  readonly moduleType = 'bestPicturesOfMonth' as const;
+
   constructor(
     private dataService: FirstpageDataService,
     private pictureGalleryService: PictureGalleryService,

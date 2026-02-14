@@ -2,19 +2,13 @@ import {Component, Inject, Input, OnInit, PLATFORM_ID, signal} from '@angular/co
 import {CommonModule, isPlatformBrowser} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {CommentsService} from '../../services/comments.service';
-import {CommentDto, CommentsListDto} from '../../models/comment.dto';
+import {CommentsListDto} from '../../models/comment.dto';
+import {CommentChangeEvent} from '../../models/comment-change-event';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
-import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
-import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
 import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
-import {
-  ZxBodyDirective,
-  ZxCaptionDirective,
-  ZxHeading2Directive,
-  ZxLinkDirective
-} from '../../../../shared/directives/typography/typography.directives';
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import {ZxHeading2Directive} from '../../../../shared/directives/typography/typography.directives';
+import {CommentComponent} from '../comment/comment.component';
 
 @Component({
   selector: 'zx-comments-page',
@@ -24,13 +18,9 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
     TranslateModule,
     ZxPaginationComponent,
     ZxStackComponent,
-    ZxPanelComponent,
-    ZxUserComponent,
     ZxSkeletonComponent,
-    ZxBodyDirective,
-    ZxCaptionDirective,
     ZxHeading2Directive,
-    ZxLinkDirective
+    CommentComponent
   ],
   templateUrl: './comments-page.component.html',
   styleUrls: ['./comments-page.component.scss']
@@ -48,7 +38,6 @@ export class CommentsPageComponent implements OnInit {
 
   constructor(
     private commentsService: CommentsService,
-    private sanitizer: DomSanitizer,
     @Inject(PLATFORM_ID) platformId: object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -86,16 +75,10 @@ export class CommentsPageComponent implements OnInit {
     window.scrollTo({top: 0, behavior: 'smooth'});
   }
 
-  sanitizeHtml(content: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(content);
-  }
-
-  hasImage(comment: CommentDto): boolean {
-    return !!comment.target?.imageUrl;
-  }
-
-  getTargetTypeClass(comment: CommentDto): string {
-    return comment.target?.type || '';
+  onCommentChanged(event: CommentChangeEvent): void {
+    if (event.type === 'delete' || event.type === 'reply') {
+      this.loadComments(this.currentPage(), false);
+    }
   }
 
   private parsePageFromUrl(): number {

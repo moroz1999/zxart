@@ -1,0 +1,51 @@
+﻿openapi: 3.0.0
+info:
+  title: ZxArt Firstpage API
+  version: 1.0.0
+  description: API for homepage modules and metadata.
+
+paths:
+  /firstpage/?action=catalogueBaseUrls:
+    get:
+      summary: Get catalogue base URLs for homepage modules
+      description: Returns base URLs for prod catalogue, graphics search, and music search in the current language. Cached server-side (Redis, 24h).
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [catalogueBaseUrls]
+      responses:
+        '200':
+          description: A JSON object with responseStatus and responseData.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseCatalogueBaseUrls'
+
+components:
+  schemas:
+    CatalogueBaseUrlsResponse:
+      type: object
+      properties:
+        prodCatalogueBaseUrl:
+          type: string
+          nullable: true
+        graphicsBaseUrl:
+          type: string
+          nullable: true
+        musicBaseUrl:
+          type: string
+          nullable: true
+
+    ApiResponseCatalogueBaseUrls:
+      type: object
+      properties:
+        responseStatus:
+          type: string
+          enum: [success, error]
+        responseData:
+          $ref: '#/components/schemas/CatalogueBaseUrlsResponse'
+        errorMessage:
+          type: string

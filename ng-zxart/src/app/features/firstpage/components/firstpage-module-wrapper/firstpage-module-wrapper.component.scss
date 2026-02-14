@@ -1,5 +1,17 @@
 .module-title {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-8);
   margin-bottom: var(--space-12);
+}
+
+.module-title__text {
+  margin: 0;
+}
+
+.module-title__action {
+  flex-shrink: 0;
 }
 
 .module-error,

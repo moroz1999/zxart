@@ -199,7 +199,19 @@
       "unvotedPictures": "Unvoted Pictures",
       "randomGoodPictures": "Random Good Pictures",
       "unvotedTunes": "Unvoted Tunes",
-      "randomGoodTunes": "Random Good Tunes"
+      "randomGoodTunes": "Random Good Tunes",
+      "viewAllButton": {
+        "newProds": "New software for ZX Spectrum",
+        "bestNewDemos": "New ZX Spectrum demos",
+        "bestNewGames": "New ZX Spectrum games",
+        "latestAddedProds": "Latest software updates",
+        "latestAddedReleases": "Latest software updates",
+        "supportProds": "Browse all games for purchase/donation",
+        "newPictures": "Lately added pictures",
+        "randomGoodPictures": "Nice random pictures",
+        "newTunes": "Lately added tunes",
+        "randomGoodTunes": "Some good tunes"
+      }
     },
     "settings": {
       "limit": "Count",

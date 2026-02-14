@@ -22,6 +22,8 @@ const GALLERY_ID = 'zx-picture-lightbox-random-good-pictures';
   styleUrls: ['./random-good-pictures.component.scss']
 })
 export class RandomGoodPicturesComponent extends FirstpageModuleBase<ZxPictureDto> {
+  readonly moduleType = 'randomGoodPictures' as const;
+
   constructor(
     private dataService: FirstpageDataService,
     private pictureGalleryService: PictureGalleryService,

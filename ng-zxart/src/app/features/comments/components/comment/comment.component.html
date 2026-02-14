@@ -1,34 +1,61 @@
 <zx-stack spacing="lg">
-  <zx-panel class="comment-panel" radius="lg" padding="lg">
-    <zx-stack spacing="md">
-      <zx-stack class="comment-header" direction="row" spacing="sm">
-        <zx-user *ngIf="comment.author" [user]="comment.author"></zx-user>
-        <span class="comment-date" zxCaption>{{ comment.date }}</span>
-      </zx-stack>
-
-      <div class="comment-body">
-        <div *ngIf="!showEditForm" class="comment-content" zxBody>
-          <span [innerHTML]="safeContent"></span>
+  <zx-panel class="comment-panel" [class.has-target]="comment.target && hasImage" radius="lg" padding="lg">
+    <div class="comment-layout">
+      @if (comment.target && hasImage) {
+        <div class="comment-target">
+          <a [href]="comment.target.url" class="comment-target-image">
+            <img [src]="comment.target.imageUrl" [alt]="comment.target.title" loading="lazy"/>
+          </a>
+          <div class="comment-target-info">
+            <a [href]="comment.target.url" zxLink class="comment-target-title">{{ comment.target.title }}</a>
+            @if (comment.target.authorName) {
+              <span zxCaption class="comment-target-author">{{ comment.target.authorName }}</span>
+            }
+          </div>
         </div>
-        <zx-comment-form
-          *ngIf="showEditForm"
-          [targetId]="comment.parentId || 0"
-          [commentToEdit]="comment"
-          (commentSaved)="onCommentSaved($event)"
-          (cancelled)="showEditForm = false"
-        ></zx-comment-form>
-      </div>
+      }
 
-      <zx-stack *ngIf="!showEditForm" direction="row" spacing="md">
-        <zx-button size="xs" color="secondary" (click)="onReply()">{{ 'comments.reply' | translate }}</zx-button>
-        <zx-button *ngIf="comment.canEdit" size="xs" color="secondary"
-                   (click)="onEdit()">{{ 'comments.edit' | translate }}
-        </zx-button>
-        <zx-button *ngIf="comment.canDelete" size="xs" color="danger"
-                   (click)="onDelete()">{{ 'comments.delete' | translate }}
-        </zx-button>
-      </zx-stack>
-    </zx-stack>
+      <div class="comment-main">
+        @if (comment.target && !hasImage) {
+          <div class="comment-target-inline">
+            <a [href]="comment.target.url" zxLink>{{ comment.target.title }}</a>
+            @if (comment.target.authorName) {
+              <span zxCaption> — {{ comment.target.authorName }}</span>
+            }
+          </div>
+        }
+
+        <zx-stack spacing="md">
+          <zx-stack class="comment-header" direction="row" spacing="sm">
+            <zx-user *ngIf="comment.author" [user]="comment.author"></zx-user>
+            <span class="comment-date" zxCaption>{{ comment.date }}</span>
+          </zx-stack>
+
+          <div class="comment-body">
+            <div *ngIf="!showEditForm" class="comment-content" zxBody>
+              <span [innerHTML]="safeContent"></span>
+            </div>
+            <zx-comment-form
+              *ngIf="showEditForm"
+              [targetId]="comment.parentId || 0"
+              [commentToEdit]="comment"
+              (commentSaved)="onCommentSaved($event)"
+              (cancelled)="showEditForm = false"
+            ></zx-comment-form>
+          </div>
+
+          <zx-stack *ngIf="!showEditForm" direction="row" spacing="md">
+            <zx-button size="xs" color="secondary" (click)="onReply()">{{ 'comments.reply' | translate }}</zx-button>
+            <zx-button *ngIf="comment.canEdit" size="xs" color="secondary"
+                       (click)="onEdit()">{{ 'comments.edit' | translate }}
+            </zx-button>
+            <zx-button *ngIf="comment.canDelete" size="xs" color="danger"
+                       (click)="onDelete()">{{ 'comments.delete' | translate }}
+            </zx-button>
+          </zx-stack>
+        </zx-stack>
+      </div>
+    </div>
   </zx-panel>
   <zx-panel
     *ngIf="showReplyForm"
@@ -45,7 +72,7 @@
   <zx-comment
     *ngFor="let child of comment.children"
     [comment]="child"
-    (commentChanged)="onCommentSaved(child)"
+    (commentChanged)="onChildChanged($event)"
     [style.margin-left]="'var(--margin-xl)'"
   ></zx-comment>
 </zx-stack>

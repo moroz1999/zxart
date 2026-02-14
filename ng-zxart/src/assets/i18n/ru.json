@@ -199,7 +199,19 @@
       "unvotedPictures": "Неоцененные картинки",
       "randomGoodPictures": "Случайные хорошие картинки",
       "unvotedTunes": "Неоцененная музыка",
-      "randomGoodTunes": "Случайная хорошая музыка"
+      "randomGoodTunes": "Случайная хорошая музыка",
+      "viewAllButton": {
+        "newProds": "Все свежие программы для ZX Spectrum",
+        "bestNewDemos": "Новые демо для ZX Spectrum",
+        "bestNewGames": "Новые игры ZX Spectrum",
+        "latestAddedProds": "Все обновления программ ZX Spectrum",
+        "latestAddedReleases": "Все обновления программ ZX Spectrum",
+        "supportProds": "Игры на продажу или за донаты",
+        "newPictures": "Новые добавленные картинки",
+        "randomGoodPictures": "Несколько хороших картинок",
+        "newTunes": "Недавно добавленные мелодии",
+        "randomGoodTunes": "Несколько хороших мелодий"
+      }
     },
     "settings": {
       "limit": "Кол-во",

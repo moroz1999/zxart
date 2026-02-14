@@ -22,6 +22,8 @@ const GALLERY_ID = 'zx-picture-lightbox-new-pictures';
   styleUrls: ['./new-pictures.component.scss']
 })
 export class NewPicturesComponent extends FirstpageModuleBase<ZxPictureDto> {
+  readonly moduleType = 'newPictures' as const;
+
   constructor(
     private dataService: FirstpageDataService,
     private pictureGalleryService: PictureGalleryService,

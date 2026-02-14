@@ -3,6 +3,7 @@ import {Component, Input} from '@angular/core';
 import {TranslateModule} from '@ngx-translate/core';
 import {MatDividerModule} from '@angular/material/divider';
 import {CommentDto} from '../../models/comment.dto';
+import {CommentChangeEvent} from '../../models/comment-change-event';
 import {CommentsService} from '../../services/comments.service';
 import {CommentComponent} from '../comment/comment.component';
 import {CommentFormComponent} from '../comment-form/comment-form.component';
@@ -50,6 +51,15 @@ export class CommentsListComponent {
   onCommentSaved(comment: CommentDto): void {
     this.showForm = false;
     if (this.isRoot) {
+      this.reloadSubject.next();
+    }
+  }
+
+  onCommentChanged(event: CommentChangeEvent): void {
+    if (!this.isRoot) {
+      return;
+    }
+    if (event.type === 'delete' && (!event.comment.parentId || event.comment.parentId === 0)) {
       this.reloadSubject.next();
     }
   }

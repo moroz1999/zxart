@@ -34,6 +34,7 @@
   if ($isEditable) { ... }
   ```
   instead of `if ($element->isEditable()) { ... }`.
+- Do NOT add a BOM header to any file.
 - ALWAYS use strict comparisons (`===`, `!==`). Avoid "falsy" and "truthy" checks (e.g., use `if ($var === true)` instead of `if ($var)`).
 - When receiving data from legacy CMS methods or properties that lack explicit return type hints (e.g. from `structureElement` properties or old CMS methods), explicitly cast them to the expected type (e.g., `(int)$element->id`, `(array)$manager->getData()`). If a method already has a native PHP type hint (e.g. `isEditable(): bool`), explicit casting is prohibited as redundant. Document these expectations via PHPDoc only if native type hints are missing.
 - Do NOT use magic numbers. Use class constants for single values or Enums for sets of related values.

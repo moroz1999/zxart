@@ -14,10 +14,19 @@ window.votesLogics = new function() {
 				var elementId = elements[i].id.split('_')[2];
 				if (picturesInfo[elementId] != undefined) {
 					new VoteControls(elements[i], picturesInfo[elementId]);
-				} else if (window.musicLogics.getMusicInfo(elementId)) {
-					new VoteControls(elements[i], window.musicLogics.getMusicInfo(elementId));
-				} else if (window.prodsLogics.getProdInfo(elementId)) {
-					new VoteControls(elements[i], window.prodsLogics.getProdInfo(elementId));
+				} else {
+					var musicInfo = null;
+					if (window.musicLogics && typeof window.musicLogics.getMusicInfo === 'function') {
+						musicInfo = window.musicLogics.getMusicInfo(elementId);
+					}
+					if (musicInfo) {
+						new VoteControls(elements[i], musicInfo);
+					} else if (window.prodsLogics && typeof window.prodsLogics.getProdInfo === 'function') {
+						var prodInfo = window.prodsLogics.getProdInfo(elementId);
+						if (prodInfo) {
+							new VoteControls(elements[i], prodInfo);
+						}
+					}
 				}
 			}
 		}
