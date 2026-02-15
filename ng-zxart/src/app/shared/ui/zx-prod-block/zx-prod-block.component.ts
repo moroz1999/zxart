@@ -19,10 +19,11 @@ import {environment} from '../../../../environments/environment';
 import {TranslatePipe} from '@ngx-translate/core';
 import {RatingComponent} from '../../components/rating/rating.component';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
-import {MatAnchor} from '@angular/material/button';
 import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
 import {ZxBadgeComponent} from '../zx-badge/zx-badge.component';
 import {AnalyticsService} from '../../services/analytics.service';
+import {ZxButtonComponent} from '../zx-button/zx-button.component';
+import {ZxPlaylistButtonComponent} from '../zx-playlist-button/zx-playlist-button.component';
 
 @Component({
   selector: 'zx-prod-block',
@@ -39,9 +40,10 @@ import {AnalyticsService} from '../../services/analytics.service';
     NgIf,
     NgForOf,
     NgClass,
-    MatAnchor,
     ZxPanelComponent,
     ZxBadgeComponent,
+    ZxButtonComponent,
+    ZxPlaylistButtonComponent,
   ],
   standalone: true,
 })

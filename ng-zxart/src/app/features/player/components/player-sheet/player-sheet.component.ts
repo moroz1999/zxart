@@ -28,6 +28,7 @@ import {RadioPreset} from '../../models/radio-preset';
 import {RadioPresetCriteriaService} from '../../services/radio-preset-criteria.service';
 import {ZxCheckboxFieldComponent} from '../../../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 import {CurrentUserService} from '../../../../shared/services/current-user.service';
+import {ZxPlaylistButtonComponent} from '../../../../shared/ui/zx-playlist-button/zx-playlist-button.component';
 
 const AUTO_APPLY_DEBOUNCE_MS = 500;
 
@@ -54,6 +55,7 @@ type PartyValue = 'any' | 'yes' | 'no';
     ZxSkeletonComponent,
     ZxFilterPickerComponent,
     ZxCheckboxFieldComponent,
+    ZxPlaylistButtonComponent,
   ],
   templateUrl: './player-sheet.component.html',
   styleUrls: ['./player-sheet.component.scss'],

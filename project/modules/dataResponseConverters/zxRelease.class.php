@@ -102,6 +102,7 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
                 'instructions',
                 'importIds',
                 'releaseStructure',
+                'prodId',
             ],
             'list' => [
                 'id',

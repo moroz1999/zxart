@@ -29,10 +29,15 @@ input {
   }
 
   &.zx-input--sm {
+    height: var(--input-sm-height);
+    padding: var(--input-padding);
+    font-size: var(--input-sm-font-size);
+    font-weight: var(--input-sm-font-weight);
+    line-height: var(--input-sm-line-height);
+  }
+
+  &[type='number'].zx-input--sm {
     width: 64px;
-    height: 28px;
-    padding: var(--space-4);
-    font-size: var(--zx-caption-font-size);
     text-align: center;
   }
 }

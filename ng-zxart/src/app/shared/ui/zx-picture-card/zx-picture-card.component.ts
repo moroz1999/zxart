@@ -8,6 +8,7 @@ import {RatingComponent} from '../../components/rating/rating.component';
 import {VoteService} from '../../services/vote.service';
 import {ZxCaptionDirective} from '../../directives/typography/typography.directives';
 import {LightboxModule} from 'ng-gallery/lightbox';
+import {ZxPlaylistButtonComponent} from '../zx-playlist-button/zx-playlist-button.component';
 
 @Component({
   selector: 'zx-picture-card',
@@ -20,6 +21,7 @@ import {LightboxModule} from 'ng-gallery/lightbox';
     RatingComponent,
     ZxCaptionDirective,
     LightboxModule,
+    ZxPlaylistButtonComponent,
   ],
   templateUrl: './zx-picture-card.component.html',
   styleUrls: ['./zx-picture-card.component.scss']

@@ -1,0 +1,48 @@
+<button
+  type="button"
+  class="playlist-trigger"
+  [attr.aria-label]="'playlist.button_label' | translate"
+  [title]="isAuthenticated ? ('playlist.button_label' | translate) : ('playlist.login_required' | translate)"
+  (click)="togglePopover($event)"
+>
+  <mat-icon class="playlist-icon">favorite_border</mat-icon>
+</button>
+
+<div
+  #popoverEl
+  class="playlist-popover"
+  [class.playlist-popover--drop-up]="dropUp"
+  *ngIf="popoverOpen"
+  (click)="$event.stopPropagation()"
+>
+  <div class="playlist-popover-content">
+    <div class="playlist-list" role="listbox">
+      <div
+        *ngFor="let item of playlists; trackBy: trackById"
+        class="playlist-item"
+        [class.playlist-item--active]="isInPlaylist(item.id)"
+        (click)="togglePlaylist(item.id)"
+        role="option"
+        [attr.aria-selected]="isInPlaylist(item.id)"
+      >
+        <span class="playlist-item-title">{{ item.title }}</span>
+        <mat-icon *ngIf="isInPlaylist(item.id)" class="playlist-item-check">check</mat-icon>
+        <span *ngIf="!isInPlaylist(item.id)" class="playlist-item-hint" zxCaption>{{ 'playlist.add_hint' | translate }}</span>
+      </div>
+    </div>
+
+    <div class="playlist-create">
+      <zx-input
+        size="sm"
+        [placeholder]="'playlist.new_placeholder' | translate"
+        [(ngModel)]="newPlaylistTitle"
+        (keydown.enter)="createPlaylist()"
+      ></zx-input>
+      <zx-button
+        size="sm"
+        color="outlined"
+        (click)="createPlaylist()"
+      >{{ 'playlist.add_submit' | translate }}</zx-button>
+    </div>
+  </div>
+</div>

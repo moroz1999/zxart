@@ -6,13 +6,27 @@
   --input-width-md: 140px;
   --input-padding: 0 var(--space-4);
   --input-border-radius: var(--form-border-radius);
-  --input-font-size: var(--zx-body-size);
-  --input-font-weight: var(--zx-body-weight);
-  --input-line-height: var(--zx-body-line-height);
-  --input-height: var(--zx-button-md-height);
   --input-border-color: var(--border-form);
   --input-border-focus-color: var(--border-focused);
   --input-border-error-color: var(--error-color);
+
+  /* Size: md (default) — matches button md */
+  --input-md-height: var(--zx-button-md-height);
+  --input-md-font-size: var(--zx-font-size-md);
+  --input-md-font-weight: var(--zx-body-weight);
+  --input-md-line-height: var(--zx-body-line-height);
+
+  /* Size: sm — matches button sm */
+  --input-sm-height: var(--zx-button-sm-height);
+  --input-sm-font-size: var(--zx-font-size-sm);
+  --input-sm-font-weight: var(--zx-body-weight);
+  --input-sm-line-height: var(--zx-caption-line-height);
+
+  /* Active size (defaults to md, switched by component class) */
+  --input-height: var(--input-md-height);
+  --input-font-size: var(--input-md-font-size);
+  --input-font-weight: var(--input-md-font-weight);
+  --input-line-height: var(--input-md-line-height);
 }
 
 .dark-mode {

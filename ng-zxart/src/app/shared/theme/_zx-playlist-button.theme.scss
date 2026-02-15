@@ -1,0 +1,32 @@
+:root {
+  --zx-playlist-button-icon-color: var(--text-light-color);
+  --zx-playlist-button-icon-size: 20px;
+  --zx-playlist-button-icon-hover: var(--primary-500);
+
+  --zx-playlist-popover-bg: var(--input-bg);
+  --zx-playlist-popover-border: var(--border-width-thin) solid var(--border-form);
+  --zx-playlist-popover-shadow: var(--shadow-thin);
+  --zx-playlist-popover-radius: var(--radius-md);
+  --zx-playlist-popover-padding: var(--space-12);
+  --zx-playlist-popover-z: 8;
+  --zx-playlist-popover-offset: var(--space-4);
+
+  --zx-playlist-item-padding: var(--space-4) var(--space-8);
+  --zx-playlist-item-radius: var(--radius-md);
+  --zx-playlist-item-hover-bg: var(--background-dark);
+  --zx-playlist-item-gap: var(--space-4);
+
+  --zx-playlist-check-color: var(--success-color);
+  --zx-playlist-hint-color: var(--text-light-color);
+  --zx-playlist-item-text-color: var(--text-color);
+  --zx-playlist-item-font-size: var(--zx-font-size-sm);
+  --zx-playlist-item-line-height: 1.4;
+
+  --zx-playlist-list-max-height: calc(var(--space-16) * 10);
+  --zx-playlist-create-gap: var(--space-8);
+  --zx-playlist-transition: var(--animation-xs);
+}
+
+.dark-mode {
+  --zx-playlist-item-hover-bg: var(--background-deep);
+}

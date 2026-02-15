@@ -201,16 +201,16 @@
       "unvotedTunes": "Música sin votar",
       "randomGoodTunes": "Buena música aleatoria",
       "viewAllButton": {
-        "newProds": "Nuevo software para ZX Spectrum",
-        "bestNewDemos": "Nuevas demostraciones de ZX Spectrum",
-        "bestNewGames": "Nuevos juegos ZX Spectrum",
-        "latestAddedProds": "Software ZX Spectrum agregado recientemente",
-        "latestAddedReleases": "Software ZX Spectrum agregado recientemente",
-        "supportProds": "Explorar todos los juegos para compra/donación",
-        "newPictures": "Imágenes añadidas últimamente",
-        "randomGoodPictures": "Bonitas imágenes al azar",
-        "newTunes": "Últimos temas añadidos",
-        "randomGoodTunes": "Some good tunes"
+        "newProds": "Ver programas nuevos",
+        "bestNewDemos": "Ver demos nuevos",
+        "bestNewGames": "Jugar a juegos nuevos",
+        "latestAddedProds": "Ver actualizaciones",
+        "latestAddedReleases": "Ver lanzamientos recientes",
+        "supportProds": "Apoyar a los autores",
+        "newPictures": "Ver imágenes nuevas",
+        "randomGoodPictures": "Ver selección de imágenes",
+        "newTunes": "Escuchar melodías nuevas",
+        "randomGoodTunes": "Escuchar selección de melodías"
       }
     },
     "settings": {
@@ -331,5 +331,13 @@
       "include": "Formatos incluidos",
       "exclude": "Formatos excluidos"
     }
+  },
+  "playlist": {
+    "button_label": "Listas de reproducci\u00f3n",
+    "login_required": "Inicia sesi\u00f3n para gestionar listas",
+    "add_hint": "A\u00f1adir a la lista",
+    "remove_hint": "Eliminar de la lista",
+    "new_placeholder": "Nombre de nueva lista",
+    "add_submit": "A\u00f1adir"
   }
 }

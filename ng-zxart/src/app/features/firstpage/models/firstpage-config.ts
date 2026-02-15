@@ -34,7 +34,7 @@ export interface FirstpageConfig {
 }
 
 export const DEFAULT_MODULE_SETTINGS: Record<ModuleType, ModuleSettings> = {
-  newProds: {limit: 10, minRating: 0},
+  newProds: {limit: 10, minRating: 3.9},
   newPictures: {limit: 12},
   newTunes: {limit: 10},
   bestNewDemos: {limit: 10, minRating: 3},

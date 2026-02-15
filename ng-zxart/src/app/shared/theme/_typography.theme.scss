@@ -1,26 +1,36 @@
 :root {
+  /* Font size tiers — bridge between base --font-* and semantic typography.
+     Use these in component theme variables when you need a specific size
+     without implying a semantic role (e.g. small text that is not a caption). */
+  --zx-font-size-xs: var(--font-xs);
+  --zx-font-size-sm: var(--font-sm);
+  --zx-font-size-md: var(--font-md);
+  --zx-font-size-lg: var(--font-lg);
+  --zx-font-size-xl: var(--font-xl);
+  --zx-font-size-xxl: var(--font-xxl);
+
   /* Typography Variables */
-  --zx-heading-1-size: var(--font-xxl);
+  --zx-heading-1-size: var(--zx-font-size-xxl);
   --zx-heading-1-weight: 700;
   --zx-heading-1-line-height: 1.2;
 
-  --zx-heading-2-size: var(--font-xl);
+  --zx-heading-2-size: var(--zx-font-size-xl);
   --zx-heading-2-weight: 700;
   --zx-heading-2-line-height: 1.25;
 
-  --zx-heading-3-size: var(--font-lg);
+  --zx-heading-3-size: var(--zx-font-size-lg);
   --zx-heading-3-weight: 700;
   --zx-heading-3-line-height: 1.3;
 
-  --zx-body-size: var(--font-md);
+  --zx-body-size: var(--zx-font-size-md);
   --zx-body-weight: 400;
   --zx-body-line-height: 1.5;
 
-  --zx-body-strong-size: var(--font-md);
+  --zx-body-strong-size: var(--zx-font-size-md);
   --zx-body-strong-weight: 700;
   --zx-body-strong-line-height: 1.5;
 
-  --zx-caption-size: var(--font-sm);
+  --zx-caption-size: var(--zx-font-size-sm);
   --zx-caption-weight: 400;
   --zx-caption-line-height: 1.4;
   --zx-caption-color: var(--text-light-color);

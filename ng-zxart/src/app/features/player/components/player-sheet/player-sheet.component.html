@@ -84,6 +84,10 @@
           [userRating]="tune.userVote ?? undefined"
           (voted)="vote($event)"
         ></zx-rating>
+        <zx-playlist-button
+          *ngIf="state.playlist[state.currentIndex] as tune"
+          [elementId]="tune.id"
+        ></zx-playlist-button>
 
         <zx-button
           size="sm"

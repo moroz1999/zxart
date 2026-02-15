@@ -7,6 +7,7 @@ import {ZxTuneDto} from '../../models/zx-tune-dto';
 import {RatingComponent} from '../../components/rating/rating.component';
 import {VoteService} from '../../services/vote.service';
 import {ZxBadgeComponent} from '../zx-badge/zx-badge.component';
+import {ZxPlaylistButtonComponent} from '../zx-playlist-button/zx-playlist-button.component';
 
 @Component({
   selector: 'zx-tune-row',
@@ -18,6 +19,7 @@ import {ZxBadgeComponent} from '../zx-badge/zx-badge.component';
     MatIconModule,
     RatingComponent,
     ZxBadgeComponent,
+    ZxPlaylistButtonComponent,
   ],
   templateUrl: './zx-tune-row.component.html',
   styleUrls: ['./zx-tune-row.component.scss']

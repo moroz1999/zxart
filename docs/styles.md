@@ -1,56 +1,222 @@
-# Styles
+# Styles Guide (STRICT)
 
-## New styles code should be written in SCSS.
+This document defines MANDATORY styling rules.
+Any deviation is considered a BLOCKER.
 
-**CRITICAL: After any changes to SCSS or theme files, you MUST rebuild the Angular project using `composer run build` from the project root directory.**
+======================================================================
 
-- **No vendor prefixes**: Do not use `-webkit-`, `-moz-`, `-ms-` or any other vendor prefixes. Use only standard unprefixed properties.
-- **Comments**: All comments in CSS/SCSS files must be written in English only.
-- **Styles and Variables**:
-    - NO hardcoded hex/rgb or raw spacing — not in components, not in theme files, nowhere. All color values must reference CSS variables.
-    - Raw color values (hex, rgb, hsl) are ONLY allowed as variable definitions in base ramp files (`_dark.theme.scss`, `_light.theme.scss`). Adding new colors or modifying existing ones in these files requires explicit user approval.
-    - NO SCSS variables (deprecated). Use CSS `var()`.
-    - All colors and sizes must be formatted as CSS variables.
-    - Adding or modifying variables in `_base.theme.scss` is allowed ONLY after direct user permission.
-    - Reuse of variables from `_legacy.theme.scss` (or any other files with the `_legacy` prefix) is prohibited.
-    - Link color variables (`--link-color`, `--link-alt-color`) are considered legacy and must not be used in new components. Use `--primary-*`, `--zx-link-*` or `zxLinkAlt` directive instead.
-    - Legacy components and their variables must not be touched. CSS variables serve as a link between legacy and Angular.
-- **Architecture**:
-    - **Base variables** (`--space-*`, `--font-*`, `--radius-*`, etc.) define the design system's common foundation. They are stored in `src/app/shared/theme/_base.theme.scss`.
-    - **Typography**: Strictly limited to a set of directives and CSS variables.
-        - Allowed styles: `heading-1`, `heading-2`, `heading-3`, `body`, `body-strong`, `caption`, `link`, `link-alt`.
-        - Use Angular directives: `zxHeading1`, `zxHeading2`, `zxHeading3`, `zxBody`, `zxBodyStrong`, `zxCaption`, `zxLink`, `zxLinkAlt`.
-        - Direct use of `--font-*` variables in components is prohibited. Use typography directives or variables from `_typography.theme.scss`.
-        - Custom variants or Display-styles are forbidden.
-    - **Theme colors** define the color palette for different modes.
-        - `_dark.theme.scss`: Dark theme colors (activated by `.dark-mode` class).
-        - `_light.theme.scss`: Light theme colors (activated by `.light-mode` class) and inverted semantic mappings.
-    - **Component variables** (e.g., `--zx-button-bg`, `--zx-user-badge-color`) must be defined in separate files (one per component, e.g., `_zx-button.theme.scss`). These variables should use semantic variables (`--primary-*`, `--secondary-*`, etc.) or base variables.
-    - **Theme files contain ONLY variables** (`:root` and `.dark-mode` blocks). CSS rules (selectors with properties) must be placed in component SCSS files, not in theme files. Theme files exist solely to define reusable CSS custom properties that can be shared between Angular components and legacy code.
-    - **Usage**: Components (Angular or Legacy) MUST use component variables ONLY. Direct use of base palette or base variables in components is FORBIDDEN. Component-specific CSS variables MUST NOT be used outside of the component they belong to.
-    - **Layout**: If elements are part of a common layout, general layout rules (flexbox, grid, or layout components like `zx-stack`) are strictly preferred over individual margins. Use `zx-stack` to manage spacing between related elements.
-    - **Negative margins are PROHIBITED**. Never use `calc(-1 * ...)` or any negative margin trick to break out of a parent's padding. For edge-to-edge content (e.g., tables) inside a `zx-panel`, use `[contentBleed]="true"` — this removes body padding while keeping the title consistently padded. Use `padding="none"` only when the entire panel genuinely needs zero padding (e.g., image cards with no title).
-    - **No wrapper elements**: Do not add a wrapper `<div>` in a component template just to hold classes. Use `:host` with `@HostBinding('class')` instead. Wrappers are only justified when additional structural markup is needed beyond `<ng-content>`.
-    - **Enforcement**: This is a mandatory rule. Always check if you are using base variables directly and replace them with component variables. Also, ensure you are not leaking or using variables from other components.
-    - If a component-level variable is missing, create it in a component-specific theme file.
-    - If a property or variable is no longer needed or used only in one place and has a "default" value (transparent, 0, etc.) to hide it, REMOVE it entirely along with its declaration. Do not use default/transparent values to "disable" unused styles.
-    - NO `em` or `rem` in components and theme. Use font-size variables only.
-    - Font sizes must be rounded to whole pixels.
-    - Spacing (`--space-*`) must be multiples of 4px.
-    - If a specific color/size is missing in theme, use the closest existing one.
-    - All theme management is centralized in component-specific theme files, which are imported into the main theme.
+GENERAL
 
-## Material Component Theming
+- New styles MUST be written in SCSS.
+- After ANY changes to SCSS or theme files, the Angular project MUST be rebuilt using:
+  composer run build
+- No vendor prefixes (-webkit-, -moz-, -ms-, etc.).
+- All comments in CSS/SCSS MUST be written in English only.
 
-Angular Material is globally configured with a **dark theme** (`m2-define-dark-theme` in `styles.scss`). This means all Material MDC component tokens (text colors, backgrounds, etc.) default to light-on-dark values (e.g., white text).
+======================================================================
 
-When using Material components, you **must override** the relevant `--mdc-*` and `--mat-*` CSS custom properties to use our semantic variables. Otherwise, text will appear white in light mode.
+VARIABLE SYSTEM (MANDATORY)
 
-Example overrides for common Material tokens:
-- Dialog: `--mdc-dialog-container-color`, `--mdc-dialog-subhead-color`, `--mdc-dialog-supporting-text-color`
-- Checkbox labels: `--mat-checkbox-label-text-color`
+VARIABLE HIERARCHY (TOP → BOTTOM)
 
-These overrides are placed in component-specific theme files (e.g., `_zx-dialog.theme.scss`) scoped to the component's `panelClass` or host selector.
+1. Component variables
+   --zx-<component>-*
+2. Semantic theme variables
+   --primary-*, --secondary-*, --surface-*, etc.
+3. Base system variables
+   --space-*, --radius-*, --font-*, animation variables
 
-## Legacy LESS
-- Replace all hardcoded legacy property values with CSS variables. Add missing variables according to same rules as for SCSS. 
+RULES
+
+- Components MUST use ONLY component-level variables.
+- Semantic and base variables MAY be used ONLY inside component theme files.
+- Direct usage of semantic or base variables inside component SCSS is FORBIDDEN.
+- Component-specific variables MUST NOT be used outside of their owning component.
+
+======================================================================
+
+COLORS AND SIZES
+
+- NO hardcoded hex, rgb, hsl or raw spacing values anywhere.
+- Raw color values are allowed ONLY as variable definitions in:
+  _dark.theme.scss
+  _light.theme.scss
+- Adding or modifying colors in these files requires explicit user approval.
+- SCSS variables are FORBIDDEN. Use CSS var() only.
+- Reuse of variables from _legacy.theme.scss or any _legacy* file is PROHIBITED.
+- Legacy link variables (--link-color, --link-alt-color) MUST NOT be used in new code.
+- If a needed value is missing, use the closest existing one.
+
+======================================================================
+
+BASE THEME FILES
+
+- _base.theme.scss contains base system variables only.
+- Adding or modifying variables in _base.theme.scss is allowed ONLY with direct user permission.
+- Theme files MUST contain ONLY CSS variable declarations.
+- CSS rules (selectors + properties) are FORBIDDEN in theme files.
+
+======================================================================
+
+COMPONENT VARIABLES
+
+- Each component MUST have its own theme file:
+  _zx-<component>.theme.scss
+- Component variables MUST:
+  - Have exactly one responsibility
+  - Use semantic or base variables internally
+  - Follow naming:
+    --zx-<component>-<semantic-purpose>
+- Invalid names include:
+  --zx-button-color-1
+  --zx-card-custom
+- Every component variable MUST be documented with an English comment.
+
+======================================================================
+
+TYPOGRAPHY (STRICT)
+
+ALLOWED SEMANTIC STYLES
+
+- heading-1
+- heading-2
+- heading-3
+- body
+- body-strong
+- caption
+- link
+- link-alt
+
+USAGE RULES
+
+- Typography MUST be applied ONLY via directives:
+  zxHeading1, zxHeading2, zxHeading3
+  zxBody, zxBodyStrong, zxCaption
+  zxLink, zxLinkAlt
+- Direct usage of --font-* variables in components is FORBIDDEN.
+- Custom typography variants or display styles are FORBIDDEN.
+- Typography directives MUST be applied to the host element only.
+- Combining typography directives with manual font overrides is FORBIDDEN.
+
+FORBIDDEN EXAMPLES
+
+- zxBody with custom font-size
+- zxCaption with custom line-height
+
+If a required directive is missing, ASK the user.
+
+======================================================================
+
+FONT SIZES AND SPACING
+
+- Font-size tiers are defined in _typography.theme.scss:
+  --zx-font-size-xs
+  --zx-font-size-sm
+  --zx-font-size-md
+  --zx-font-size-lg
+  --zx-font-size-xl
+  --zx-font-size-xxl
+- Font sizes MUST:
+  - Use these variables only
+  - Be rounded to whole pixels
+- NO em or rem anywhere.
+- Spacing variables (--space-*) MUST be multiples of 4px.
+
+Components that need a specific size without semantic meaning MUST define a component-level variable, for example:
+--zx-playlist-item-font-size: var(--zx-font-size-sm)
+
+======================================================================
+
+LAYOUT RULES
+
+- For related elements, layout systems are MANDATORY:
+  Flexbox, Grid, zx-stack
+- Individual margins between related elements are FORBIDDEN.
+- Negative margins are PROHIBITED.
+- calc(-1 * ...) tricks are FORBIDDEN.
+- For edge-to-edge content inside zx-panel, use:
+  [contentBleed]="true"
+- Use padding="none" ONLY when the entire panel genuinely needs zero padding.
+
+======================================================================
+
+TEMPLATES AND STRUCTURE
+
+- Wrapper div elements used only for styling are FORBIDDEN.
+- Use :host with @HostBinding('class').
+- Wrappers are allowed ONLY when additional structural markup is required beyond ng-content.
+
+======================================================================
+
+CROSS-COMPONENT ISOLATION
+
+- A component MUST NEVER override another component’s CSS variables.
+- Parent components MUST NOT style child components via selectors.
+- Customization MUST be exposed ONLY via:
+  - Component inputs (size, variant, etc.)
+  - Component-level CSS variables
+- If a required size or variant is missing, it MUST be added to the child component properly.
+
+======================================================================
+
+SCSS RESTRICTIONS
+
+- @extend is FORBIDDEN.
+- Nesting deeper than 3 levels is FORBIDDEN.
+- Parent selector abuse is FORBIDDEN.
+- Mixins are allowed ONLY for structural patterns, never for styling values.
+
+======================================================================
+
+TRANSITIONS
+
+- State changes MUST use short, subtle transitions.
+- Allowed durations:
+  --animation-xs (100ms)
+  --animation-sm (200ms)
+- Allowed properties:
+  background-color, color, opacity, border-color
+- Transitions on layout-triggering properties are FORBIDDEN.
+
+======================================================================
+
+LEGACY CODE
+
+Legacy is defined as:
+- Any file with _legacy prefix
+- Any LESS-based styles
+- Any variables outside the current theme system
+
+Legacy code is READ-ONLY unless explicitly stated otherwise.
+
+All legacy hardcoded values MUST be replaced with CSS variables following the same rules as SCSS.
+
+======================================================================
+
+CLEANUP RULES
+
+- If a property or variable:
+  - Is unused
+  - Is used only once
+  - Exists only to disable something with 0, transparent, etc.
+
+  → It MUST be REMOVED entirely.
+
+Temporary styles, TODO-styles, or “we’ll refactor later” solutions are PROHIBITED.
+
+======================================================================
+
+DECISION RULES
+
+- If multiple valid solutions exist, the SIMPLEST one MUST be chosen.
+- Overengineering is a violation.
+- Visual correctness does NOT override architectural rules.
+- “It works” is NOT a justification.
+
+======================================================================
+
+ENFORCEMENT
+
+- Any violation of this guide is a BLOCKER.
+- These rules are mandatory.
+- No exceptions without explicit user approval.

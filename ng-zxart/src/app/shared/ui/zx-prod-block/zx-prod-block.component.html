@@ -1,191 +1,181 @@
 <zx-panel radius="xl" padding="none" variant="elevated">
-<div class="zx-prod-internal">
+  <div class="zx-prod-internal">
     <a
-            href="{{ model.url }}"
-            class="zx-prod-images"
+      href="{{ model.url }}"
+      class="zx-prod-images"
     >
-        <img
-                *ngIf="model.loadingImageUrl && ((imagesLayout === 'loading' && !displayScreenshots) || model.imagesUrls.length === 0)"
-                class="zx-prod-loading"
-                src="{{ model.loadingImageUrl }}"
-                alt="{{ model.title }}"
-                loading="lazy"
-                @fadeInOut
-        />
-        <span
-                *ngIf="model.imagesUrls.length && (displayScreenshots && imagesLayout === 'loading' || imagesLayout === 'screenshots')"
-                class="zx-prod-screenshots"
-                @fadeInOut
-        >
+      <img
+        *ngIf="model.loadingImageUrl && ((imagesLayout === 'loading' && !displayScreenshots) || model.imagesUrls.length === 0)"
+        class="zx-prod-loading"
+        src="{{ model.loadingImageUrl }}"
+        alt="{{ model.title }}"
+        loading="lazy"
+        @fadeInOut
+      />
+      <span
+        *ngIf="model.imagesUrls.length && (displayScreenshots && imagesLayout === 'loading' || imagesLayout === 'screenshots')"
+        class="zx-prod-screenshots"
+        @fadeInOut
+      >
       <ng-container *ngFor="let imageUrl of model.imagesUrls">
       <img
-              @fadeInOut
-              class="zx-prod-screenshot"
-              [ngClass]="{'zx-prod-screenshot-selected': imageUrl === activeScreenshotUrl}"
-              src="{{ imageUrl }}"
-              alt="{{ model.title }}"
-              loading="lazy"
+        @fadeInOut
+        class="zx-prod-screenshot"
+        [ngClass]="{'zx-prod-screenshot-selected': imageUrl === activeScreenshotUrl}"
+        src="{{ imageUrl }}"
+        alt="{{ model.title }}"
+        loading="lazy"
       />
       </ng-container>
       <span class="zx-prod-screenshots-selector" *ngIf="model.imagesUrls.length > 1">
         <span
-                *ngFor="let imageUrl of model.imagesUrls"
-                class="zx-prod-screenshots-button"
-                (pointerenter)="setActiveScreenshotUrl(imageUrl)"
+          *ngFor="let imageUrl of model.imagesUrls"
+          class="zx-prod-screenshots-button"
+          (pointerenter)="setActiveScreenshotUrl(imageUrl)"
         ></span>
       </span>
     </span>
-        <span
-                *ngIf="model.inlaysUrls.length && (imagesLayout === 'inlays' || (model.imagesUrls.length === 0 && !model.loadingImageUrl))"
-                class="zx-prod-screenshots zx-prod-inlays"
-                @fadeInOut
-        >
+      <span
+        *ngIf="model.inlaysUrls.length && (imagesLayout === 'inlays' || (model.imagesUrls.length === 0 && !model.loadingImageUrl))"
+        class="zx-prod-screenshots zx-prod-inlays"
+        @fadeInOut
+      >
       <ng-container *ngFor="let imageUrl of model.inlaysUrls">
       <img
-              @fadeInOut
-              class="zx-prod-screenshot"
-              [ngClass]="{'zx-prod-screenshot-selected': (imageUrl === activeScreenshotUrl) || model.imagesUrls.length === 0}"
-              src="{{ imageUrl }}"
-              alt="{{ model.title }}"
-              loading="lazy"
+        @fadeInOut
+        class="zx-prod-screenshot"
+        [ngClass]="{'zx-prod-screenshot-selected': (imageUrl === activeScreenshotUrl) || model.imagesUrls.length === 0}"
+        src="{{ imageUrl }}"
+        alt="{{ model.title }}"
+        loading="lazy"
       />
       </ng-container>
       <span class="zx-prod-screenshots-selector" *ngIf="model.inlaysUrls.length > 1">
         <span
-                *ngFor="let imageUrl of model.inlaysUrls"
-                class="zx-prod-screenshots-button"
-                (pointerenter)="setActiveScreenshotUrl(imageUrl)"
+          *ngFor="let imageUrl of model.inlaysUrls"
+          class="zx-prod-screenshots-button"
+          (pointerenter)="setActiveScreenshotUrl(imageUrl)"
         ></span>
       </span>
     </span>
 
-        <span
-                *ngIf="model.hardwareInfo.length > 0"
-                class="zx-prod-hardware"
-                [ngClass]="{'zx-prod-hardware-opaque':displayScreenshots}"
-        >
+      <span
+        *ngIf="model.hardwareInfo.length > 0"
+        class="zx-prod-hardware"
+        [ngClass]="{'zx-prod-hardware-opaque':displayScreenshots}"
+      >
       <zx-badge
-              *ngFor="let item of model.hardwareInfo"
-              (click)="hardwareClicked($event, item.id)"
-              variant="secondary"
+        *ngFor="let item of model.hardwareInfo"
+        (click)="hardwareClicked($event, item.id)"
+        variant="secondary"
       >{{ item.title }}</zx-badge>
     </span>
-        <span class="zx-prod-status"
-              *ngIf="(model.legalStatus === 'mia' || model.legalStatus === 'unreleased') && !model.loadingImageUrl"
-        >{{ 'zx-prod.legal-status.' + model.legalStatus | translate }}</span>
+      <span class="zx-prod-status"
+            *ngIf="(model.legalStatus === 'mia' || model.legalStatus === 'unreleased') && !model.loadingImageUrl"
+      >{{ 'zx-prod.legal-status.' + model.legalStatus | translate }}</span>
     </a>
     <div class="zx-prod-bottom">
-        <div class="zx-prod-bottom-top">
-            <a class="zx-prod-title" href="{{ model.url }}">{{ model.title }}</a>
-            <a
-                    class="zx-prod-cart"
-                    href="{{model.externalLink}}"
-                    *ngIf="(model.legalStatus==='insales' || model.legalStatus === 'donationware') && model.externalLink"
-                    target="_blank"
-                    (click)="cartClicked($event)"
-            >
-                <svg-icon name="cart"></svg-icon>
-            </a>
-        </div>
-        <div *ngIf="model.groupsInfo.length">
-            <ng-container *ngFor="let group of model.groupsInfo; last as last"><a
-                    [href]="group.url">{{ group.title }}</a><span
-                    *ngIf="!last">, </span></ng-container>
-        </div>
-        <div *ngIf="!model.groupsInfo.length && model.publishersInfo.length">
-            <ng-container *ngFor="let publisher of model.publishersInfo; last as last"><a
-                    [href]="publisher.url">{{ publisher.title }}</a><span *ngIf="!last">, </span></ng-container>
-        </div>
-        <div *ngIf="!model.groupsInfo.length && !model.publishersInfo.length && model.authorsInfoShort.length">
-            <ng-container *ngFor="let author of model.authorsInfoShort; last as last"><a
-                    [href]="author.url">{{ author.title }}</a><span *ngIf="!last">, </span></ng-container>
-        </div>
-        <div class="zx-prod-bottom-row">
-            <zx-rating
-                    *ngIf="!model.denyVoting && model.structureType === 'zxProd'"
-                    [overallRating]="model.votes"
-                    [userRating]="model.userVote"
-                    (voted)="vote($event)"
-            ></zx-rating>
-            <div
-                    class="zx-prod-release-type"
-                    *ngIf="model.releaseType && model.structureType === 'zxRelease'"
-            >{{ 'zx-prod.release-type.' + model.releaseType | translate }}
-            </div>
-            <div
-                    class="zx-prod-year"
-                    *ngIf="model.year"
-                    (click)="yearClicked($event, model.year)"
-            >{{ model.year }}
-            </div>
-        </div>
-        <div class="zx-prod-additional"
-             *ngIf="displayAdditions"
-             @slideInOut
-             (@slideInOut.start)=captureStartEvent($event)
-             (@slideInOut.done)=captureDoneEvent($event)
+      <div class="zx-prod-bottom-top">
+        <a class="zx-prod-title" href="{{ model.url }}">{{ model.title }}</a>
+        <a
+          class="zx-prod-cart"
+          href="{{model.externalLink}}"
+          *ngIf="(model.legalStatus==='insales' || model.legalStatus === 'donationware') && model.externalLink"
+          target="_blank"
+          (click)="cartClicked($event)"
         >
-            <div class="zx-prod-row zx-prod-publisher" *ngIf="model.publishersInfo.length">
-                <div class="zx-prod-row-label">{{ "zx-prod.publishers" | translate }}</div>
-                <div class="zx-prod-row-value">
-                    <ng-container *ngFor="let publisher of model.publishersInfo; last as last"><a
-                            [href]="publisher.url">{{ publisher.title }}</a><span *ngIf="!last">, </span></ng-container>
-                </div>
-            </div>
-            <div class="zx-prod-row zx-prod-author" *ngIf="model.authorsInfoShort.length">
-                <div class="zx-prod-row-label">{{ "zx-prod.authors" | translate }}</div>
-                <!-- @formatter:off -->
+          <svg-icon name="cart"></svg-icon>
+        </a>
+      </div>
+      <div *ngIf="model.groupsInfo.length">
+        <ng-container *ngFor="let group of model.groupsInfo; last as last"><a
+          [href]="group.url">{{ group.title }}</a><span
+          *ngIf="!last">, </span></ng-container>
+      </div>
+      <div *ngIf="!model.groupsInfo.length && model.publishersInfo.length">
+        <ng-container *ngFor="let publisher of model.publishersInfo; last as last"><a
+          [href]="publisher.url">{{ publisher.title }}</a><span *ngIf="!last">, </span></ng-container>
+      </div>
+      <div *ngIf="!model.groupsInfo.length && !model.publishersInfo.length && model.authorsInfoShort.length">
+        <ng-container *ngFor="let author of model.authorsInfoShort; last as last"><a
+          [href]="author.url">{{ author.title }}</a><span *ngIf="!last">, </span></ng-container>
+      </div>
+      <div class="zx-prod-bottom-row">
+        <zx-rating
+          *ngIf="!model.denyVoting && model.structureType === 'zxProd'"
+          [overallRating]="model.votes"
+          [userRating]="model.userVote"
+          (voted)="vote($event)"
+        ></zx-rating>
+        <zx-playlist-button [elementId]="model.id"></zx-playlist-button>
+        <div
+          class="zx-prod-release-type"
+          *ngIf="model.releaseType && model.structureType === 'zxRelease'"
+        >{{ 'zx-prod.release-type.' + model.releaseType | translate }}
+        </div>
+        <div
+          class="zx-prod-year"
+          *ngIf="model.year"
+          (click)="yearClicked($event, model.year)"
+        >{{ model.year }}
+        </div>
+      </div>
+      <div class="zx-prod-additional"
+           *ngIf="displayAdditions"
+           @slideInOut
+           (@slideInOut.start)=captureStartEvent($event)
+           (@slideInOut.done)=captureDoneEvent($event)
+      >
+        <div class="zx-prod-row zx-prod-publisher" *ngIf="model.publishersInfo.length">
+          <div class="zx-prod-row-label">{{ "zx-prod.publishers" | translate }}</div>
+          <div class="zx-prod-row-value">
+            <ng-container *ngFor="let publisher of model.publishersInfo; last as last"><a
+              [href]="publisher.url">{{ publisher.title }}</a><span *ngIf="!last">, </span></ng-container>
+          </div>
+        </div>
+        <div class="zx-prod-row zx-prod-author" *ngIf="model.authorsInfoShort.length">
+          <div class="zx-prod-row-label">{{ "zx-prod.authors" | translate }}</div>
+          <!-- @formatter:off -->
                 <div class="zx-prod-row-value">
                     <ng-container *ngFor="let author of model.authorsInfoShort; last as last"><a
                             [href]="author.url">{{ author.title }}</a><ng-container *ngIf="author.roles && author.roles.length">&nbsp;(<ng-container *ngFor="let role of author.roles; last as last2">{{ "author.role." + role | translate }}<ng-container *ngIf="!last2">, </ng-container></ng-container>)</ng-container><ng-container *ngIf="!last">, </ng-container>
                     </ng-container>
                 </div>
                 <!-- @formatter:on -->
-            </div>
-            <div class="zx-prod-row zx-prod-categories" *ngIf="model.categoriesInfo.length">
-                <div class="zx-prod-row-label">{{ "zx-prod.categories" | translate }}</div>
-                <div class="zx-prod-row-value">
-                    <ng-container *ngFor="let category of model.categoriesInfo; last as last">
+        </div>
+        <div class="zx-prod-row zx-prod-categories" *ngIf="model.categoriesInfo.length">
+          <div class="zx-prod-row-label">{{ "zx-prod.categories" | translate }}</div>
+          <div class="zx-prod-row-value">
+            <ng-container *ngFor="let category of model.categoriesInfo; last as last">
             <span class="zx-prod-category"
                   (click)="categoryClicked($event, category.id)"
             >{{ category.title }}</span><span *ngIf="!last">, </span></ng-container>
-                </div>
-            </div>
-            <div class="zx-prod-row zx-prod-languages" *ngIf="model.languagesInfo.length">
-                <div class="zx-prod-row-label">{{ "zx-prod.languages" | translate }}</div>
-                <div class="zx-prod-row-value">
-                    <ng-container *ngFor="let language of model.languagesInfo; last as last">
-            <span
-                    class="zx-prod-language"
-                    (click)="languageClicked($event, language.id)"
-            >{{ language.title }}</span><span *ngIf="!last">, </span>
-                    </ng-container>
-                </div>
-            </div>
-            <div class="zx-prod-row zx-prod-parties" *ngIf="model.partyInfo">
-                <div class="zx-prod-row-label">{{ "zx-prod.parties" | translate }}</div>
-                <div class="zx-prod-row-value">
-                    <span *ngIf="model.partyPlace > 0">{{ model.partyPlace }}{{ "zx-prod.at" | translate }}</span>
-                    <a [href]="model.partyInfo.url">{{ model.partyInfo.title }}</a>
-                </div>
-            </div>
-            <div class="zx-prod-buttons">
-                <!--        <button-->
-                <!--          color="primary"-->
-                <!--          mat-raised-button-->
-                <!--        >{{"zx-prod.play" | translate}}</button>-->
-                <!--        <button-->
-                <!--          color="primary"-->
-                <!--          *ngIf="model.youtubeId"-->
-                <!--          mat-raised-button-->
-                <!--        >{{"zx-prod.video" | translate}}</button>-->
-                <a
-                        [href]="model.url"
-                        mat-raised-button
-                        class="zx-prod-button"
-                >{{ "zx-prod.open" | translate }}</a>
-            </div>
+          </div>
         </div>
+        <div class="zx-prod-row zx-prod-languages" *ngIf="model.languagesInfo.length">
+          <div class="zx-prod-row-label">{{ "zx-prod.languages" | translate }}</div>
+          <div class="zx-prod-row-value">
+            <ng-container *ngFor="let language of model.languagesInfo; last as last">
+            <span
+              class="zx-prod-language"
+              (click)="languageClicked($event, language.id)"
+            >{{ language.title }}</span><span *ngIf="!last">, </span>
+            </ng-container>
+          </div>
+        </div>
+        <div class="zx-prod-row zx-prod-parties" *ngIf="model.partyInfo">
+          <div class="zx-prod-row-label">{{ "zx-prod.parties" | translate }}</div>
+          <div class="zx-prod-row-value">
+            <span *ngIf="model.partyPlace > 0">{{ model.partyPlace }}{{ "zx-prod.at" | translate }}</span>
+            <a [href]="model.partyInfo.url">{{ model.partyInfo.title }}</a>
+          </div>
+        </div>
+        <div class="zx-prod-buttons">
+          <zx-button
+            [href]="model.url"
+          >{{ "zx-prod.open" | translate }}</zx-button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 </zx-panel>

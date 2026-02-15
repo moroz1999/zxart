@@ -1,3 +1,18 @@
+<ng-template #content>
+  <span
+    class="zx-button__ripple"
+    [class.zx-button__ripple--active]="rippleActive"
+    [style.left.px]="rippleX"
+    [style.top.px]="rippleY"
+    [style.width.px]="rippleSize"
+    [style.height.px]="rippleSize"
+  ></span>
+
+  <span class="zx-button__content">
+    <ng-content></ng-content>
+  </span>
+</ng-template>
+
 @if (isLink) {
   <a
     [href]="href"
@@ -10,17 +25,7 @@
     (pointerdown)="onPointerDown($event)"
     (click)="onLinkClick($event)"
   >
-    <span
-      class="zx-button__ripple"
-      [class.zx-button__ripple--active]="rippleActive"
-      [style.left.px]="rippleX"
-      [style.top.px]="rippleY"
-      [style.width.px]="rippleSize"
-      [style.height.px]="rippleSize"
-    ></span>
-    <span class="zx-button__content">
-      <ng-content></ng-content>
-    </span>
+    <ng-container [ngTemplateOutlet]="content"></ng-container>
   </a>
 } @else {
   <button
@@ -30,16 +35,6 @@
     [attr.aria-label]="ariaLabel || null"
     (pointerdown)="onPointerDown($event)"
   >
-    <span
-      class="zx-button__ripple"
-      [class.zx-button__ripple--active]="rippleActive"
-      [style.left.px]="rippleX"
-      [style.top.px]="rippleY"
-      [style.width.px]="rippleSize"
-      [style.height.px]="rippleSize"
-    ></span>
-    <span class="zx-button__content">
-      <ng-content></ng-content>
-    </span>
+    <ng-container [ngTemplateOutlet]="content"></ng-container>
   </button>
 }

@@ -37,6 +37,7 @@
       <span class="picture-votes-count" *ngIf="picture.votesAmount > 0" zxCaption>
         ({{ picture.votesAmount }})
       </span>
+      <zx-playlist-button [elementId]="picture.id"></zx-playlist-button>
     </div>
   </div>
 </zx-panel>

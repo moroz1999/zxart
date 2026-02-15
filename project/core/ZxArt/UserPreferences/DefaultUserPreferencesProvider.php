@@ -32,9 +32,9 @@ final class DefaultUserPreferencesProvider
             PreferenceCode::HOMEPAGE_RANDOM_PICTURES_LIMIT->value => '12',
             PreferenceCode::HOMEPAGE_UNVOTED_TUNES_LIMIT->value => '10',
             PreferenceCode::HOMEPAGE_RANDOM_TUNES_LIMIT->value => '10',
-            PreferenceCode::HOMEPAGE_NEW_PRODS_MIN_RATING->value => '0',
-            PreferenceCode::HOMEPAGE_BEST_DEMOS_MIN_RATING->value => '3',
-            PreferenceCode::HOMEPAGE_BEST_GAMES_MIN_RATING->value => '3',
+            PreferenceCode::HOMEPAGE_NEW_PRODS_MIN_RATING->value => '3.9',
+            PreferenceCode::HOMEPAGE_BEST_DEMOS_MIN_RATING->value => '4',
+            PreferenceCode::HOMEPAGE_BEST_GAMES_MIN_RATING->value => '4',
             PreferenceCode::RADIO_CRITERIA->value => '{}',
         ];
     }

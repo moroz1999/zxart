@@ -1,7 +1,7 @@
 <?php
 
 use App\Paths\PathsManager;
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 use Illuminate\Database\Connection;
 use ZxArt\FileParsing\ZxParsingItem;
 use ZxArt\FileParsing\ZxParsingManager;
@@ -14,7 +14,6 @@ use ZxArt\Releases\Services\ArchiveFileResolverService;
 use ZxArt\Releases\Services\EmulatorResolverService;
 use ZxArt\Releases\Services\ReleaseFileTypesGatherer;
 use ZxFiles\BasicFile;
-use App\Users\CurrentUserService;
 
 /**
  * @property string $title
@@ -1117,6 +1116,3 @@ class zxReleaseElement extends ZxArtItem implements
         return preg_replace('/\.+/', '.', $result);
     }
 }
-
-
-

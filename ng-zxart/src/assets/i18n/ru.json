@@ -201,16 +201,16 @@
       "unvotedTunes": "Неоцененная музыка",
       "randomGoodTunes": "Случайная хорошая музыка",
       "viewAllButton": {
-        "newProds": "Все свежие программы для ZX Spectrum",
-        "bestNewDemos": "Новые демо для ZX Spectrum",
-        "bestNewGames": "Новые игры ZX Spectrum",
-        "latestAddedProds": "Все обновления программ ZX Spectrum",
-        "latestAddedReleases": "Все обновления программ ZX Spectrum",
-        "supportProds": "Игры на продажу или за донаты",
-        "newPictures": "Новые добавленные картинки",
-        "randomGoodPictures": "Несколько хороших картинок",
-        "newTunes": "Недавно добавленные мелодии",
-        "randomGoodTunes": "Несколько хороших мелодий"
+        "newProds": "Смотреть новые программы",
+        "bestNewDemos": "Смотреть новые демо",
+        "bestNewGames": "Играть в новые игры",
+        "latestAddedProds": "Смотреть обновления",
+        "latestAddedReleases": "Смотреть свежие релизы",
+        "supportProds": "Поддержать авторов",
+        "newPictures": "Смотреть новые картинки",
+        "randomGoodPictures": "Смотреть подборку картинок",
+        "newTunes": "Слушать новые мелодии",
+        "randomGoodTunes": "Слушать подборку мелодий"
       }
     },
     "settings": {
@@ -332,5 +332,13 @@
       "include": "Форматы включить",
       "exclude": "Форматы исключить"
     }
+  },
+  "playlist": {
+    "button_label": "Плейлисты",
+    "login_required": "Войдите, чтобы управлять плейлистами",
+    "add_hint": "Добавить в список",
+    "remove_hint": "Убрать из списка",
+    "new_placeholder": "Название нового плейлиста",
+    "add_submit": "Добавить"
   }
 }
