@@ -19,7 +19,7 @@ export const MODULE_LINK_CONFIG: Record<ModuleType, ModuleLinkConfig | null> = {
   bestNewDemos: {category: 'zxProd', searchParams: 'demoscene/years:this/', titleKey: 'firstpage.modules.viewAllButton.bestNewDemos'},
   bestNewGames: {category: 'zxProd', searchParams: 'games/years:this/', titleKey: 'firstpage.modules.viewAllButton.bestNewGames'},
   latestAddedProds: {category: 'zxProd', searchParams: 'software-categories/sorting:date,desc/', titleKey: 'firstpage.modules.viewAllButton.latestAddedProds'},
-  latestAddedReleases: {category: 'zxRelease', searchParams: 'software-categories/sorting:date,desc/', titleKey: 'firstpage.modules.viewAllButton.latestAddedReleases'},
+  latestAddedReleases: {category: 'zxRelease', searchParams: 'software-categories/sorting:date,desc/releases:1/', titleKey: 'firstpage.modules.viewAllButton.latestAddedReleases'},
   supportProds: {category: 'zxProd', searchParams: 'games/statuses:insales,donationware/', titleKey: 'firstpage.modules.viewAllButton.supportProds'},
   newPictures: {category: 'graphics', searchParams: 'sortParameter:date/sortOrder:desc/page:1/', titleKey: 'firstpage.modules.viewAllButton.newPictures'},
   randomGoodPictures: {category: 'graphics', searchParams: 'rating:4/sortParameter:votes/sortOrder:rand/page:1/', titleKey: 'firstpage.modules.viewAllButton.randomGoodPictures'},

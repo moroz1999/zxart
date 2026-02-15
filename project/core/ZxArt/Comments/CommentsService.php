@@ -146,7 +146,7 @@ readonly class CommentsService
         $approvalRequired = false;
 
         /** @var commentElement[] $comments */
-        $comments = $parentElement->getChildrenList(null, LinkTypes::COMMENT_TARGET->value, 'comment');
+        $comments = $this->structureManager->getElementsChildren($parentId, null, LinkTypes::COMMENT_TARGET->value, 'comment');
 
         foreach ($comments as $commentElement) {
             if ($approvalRequired === false || $commentElement->approved === 1) {

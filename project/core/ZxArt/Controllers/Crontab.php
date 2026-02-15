@@ -33,6 +33,7 @@ use ZxArt\Queue\QueueType;
 use ZxArt\Stats\Services\EventsAggregationService;
 use ZxArt\Strings\LanguageDetector;
 use ZxArt\ZxProdCategories\Ids;
+use ZxArtItem;
 use zxProdElement;
 use zxReleaseElement;
 
@@ -123,7 +124,7 @@ class Crontab extends controllerApplication
             ob_end_flush();
         }
 
-        $user = $this->getService(user::class);
+        $user = $this->getService(\App\Users\CurrentUser::class);
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
             $this->structureManager = $this->getService(

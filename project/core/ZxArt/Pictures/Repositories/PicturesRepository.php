@@ -61,17 +61,7 @@ readonly final class PicturesRepository
      */
     public function getUnvotedByUserIds(int $userId, int $limit, int $topN): array
     {
-        $topIds = $this->getSelectSql()
-            ->orderBy('votes', 'desc')
-            ->limit($topN)
-            ->pluck('id');
-
-        if ($topIds === []) {
-            return [];
-        }
-
         return $this->getSelectSql()
-            ->whereIn('id', $topIds)
             ->whereNotIn('id', function ($subQuery) use ($userId) {
                 $subQuery->select('votes_history.elementId')
                     ->from('votes_history')

@@ -66,6 +66,7 @@ readonly class ReleasesTransformer
             denyVoting: $element->isVotingDenied(),
             authors: $authors,
             categories: [],
+            hardwareInfo: $element->getHardwareInfo(),
             party: $party,
             legalStatus: $element->getLegalStatus(),
         );
