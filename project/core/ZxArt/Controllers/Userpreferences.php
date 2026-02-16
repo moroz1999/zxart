@@ -9,6 +9,7 @@ use controllerApplication;
 use ErrorLog;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
+use ZxArt\UserPreferences\DefaultUserPreferencesProvider;
 use ZxArt\UserPreferences\Domain\Exception\UserPreferencesException;
 use ZxArt\UserPreferences\Rest\PreferenceRestDto;
 use ZxArt\UserPreferences\UserPreferencesService;
@@ -63,6 +64,13 @@ class Userpreferences extends controllerApplication
 
     protected function handleGet(): void
     {
+        $action = $_GET['action'] ?? null;
+
+        if ($action === 'defaults') {
+            $this->handleGetDefaults();
+            return;
+        }
+
         try {
             $internalDtos = $this->userPreferencesService->getAllPreferences();
             $restDtos = array_map(
@@ -74,6 +82,27 @@ class Userpreferences extends controllerApplication
             $this->renderer->assign('responseData', $restDtos);
         } catch (Throwable $e) {
             ErrorLog::getInstance()->logMessage('Userpreferences::handleGet', $e->getMessage() . "\n" . $e->getTraceAsString());
+            $this->renderer->assign('responseStatus', 'error');
+            $this->renderer->assign('errorMessage', 'Internal server error');
+        }
+    }
+
+    protected function handleGetDefaults(): void
+    {
+        try {
+            /** @var DefaultUserPreferencesProvider $defaultsProvider */
+            $defaultsProvider = $this->getService(DefaultUserPreferencesProvider::class);
+            $defaults = $defaultsProvider->getDefaults();
+
+            $restDtos = [];
+            foreach ($defaults as $code => $value) {
+                $restDtos[] = ['code' => $code, 'value' => $value];
+            }
+
+            $this->renderer->assign('responseStatus', 'success');
+            $this->renderer->assign('responseData', $restDtos);
+        } catch (Throwable $e) {
+            ErrorLog::getInstance()->logMessage('Userpreferences::handleGetDefaults', $e->getMessage() . "\n" . $e->getTraceAsString());
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', 'Internal server error');
         }

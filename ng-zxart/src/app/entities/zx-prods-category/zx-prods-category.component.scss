@@ -102,7 +102,7 @@ $amount: 5;
   padding-top: var(--padding-lg);
   padding-bottom: var(--padding-lg);
   margin-bottom: var(--margin-lg);
-  box-shadow: var(--shadow-deep);
+  box-shadow: var(--zx-prods-category-selectors-shadow);
   transition: opacity var(--animation-md) ease-in-out;
   @include breakpoints.media-breakpoint-up(sm) {
     position: sticky;

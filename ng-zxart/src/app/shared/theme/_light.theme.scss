@@ -105,5 +105,9 @@
 
 .light-mode {
   @include light-base-ramps;
+
+  --shadow-sm: 0 1px 3px 1px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0px 4px 14px 0px rgba(38, 43, 67, 0.08);
+  --shadow-lg: 0 3px 10px 3px rgba(0, 0, 0, 0.12);
 }
 

@@ -38,6 +38,7 @@ import {
 })
 export class CommentComponent {
   @Input() comment!: CommentDto;
+  @Input() showTarget = true;
   @Output() commentChanged = new EventEmitter<CommentChangeEvent>();
 
   showReplyForm = false;

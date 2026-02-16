@@ -110,5 +110,9 @@
 
 .dark-mode {
   @include dark-base-ramps;
+
+  --shadow-sm: 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 3px 10px 3px rgba(0, 0, 0, 0.27);
+  --shadow-lg: 0 5px 16px 4px rgba(0, 0, 0, 0.35);
 }
 

@@ -19,7 +19,6 @@ class projectDesignTheme extends DesignTheme
         $this->imagesFolder = 'images/';
         $this->imagesPath = PUBLIC_PATH . $this->imagesFolder;
         $this->javascriptFiles = [
-            'logics.vote.js',
             'logics.zxPictures.js',
             'logics.detailedSearch.js',
             'logics.chart.js',
@@ -43,7 +42,6 @@ class projectDesignTheme extends DesignTheme
             'mixin.autoAdjustedPopup.js',
             'component.pictureTagsForm.js',
             'component.pictureDetails.js',
-            'component.vote.js',
             'component.detailedSearch.js',
             'component.chart.js',
             'component.emulator.js',

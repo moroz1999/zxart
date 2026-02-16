@@ -1,0 +1,7 @@
+@if (!denyVoting) {
+  <zx-rating
+    [overallRating]="overallRating"
+    [userRating]="currentUserVote"
+    (voted)="vote($event)"
+  ></zx-rating>
+}

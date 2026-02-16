@@ -1,6 +1,5 @@
 :host {
   display: inline-flex;
-  position: relative;
 }
 
 .playlist-trigger {
@@ -26,21 +25,12 @@
 }
 
 .playlist-popover {
-  position: absolute;
-  top: calc(100% + var(--zx-playlist-popover-offset));
-  right: 0;
   min-width: 300px;
   width: max-content;
-  z-index: var(--zx-playlist-popover-z);
   background-color: var(--zx-playlist-popover-bg);
   border: var(--zx-playlist-popover-border);
   border-radius: var(--zx-playlist-popover-radius);
   box-shadow: var(--zx-playlist-popover-shadow);
-}
-
-.playlist-popover--drop-up {
-  top: auto;
-  bottom: calc(100% + var(--zx-playlist-popover-offset));
 }
 
 .playlist-popover-content {

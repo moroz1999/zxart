@@ -26,7 +26,7 @@
 	</td>
 	{/if}
 	<td class='music_list_votecontrols'>
-		{include file=$theme->template("component.votecontrols.tpl") element=$element}
+		<zx-vote element-id="{$element->id}" type="zxMusic" votes="{$element->votes}" user-vote="{$element->getUserVote()}" deny-voting="{if $element->isVotingDenied()}true{else}false{/if}"></zx-vote>
 		{include file=$theme->template("component.playlist.tpl") element=$element}
 	</td>
 	<td class='music_list_votesamount'>

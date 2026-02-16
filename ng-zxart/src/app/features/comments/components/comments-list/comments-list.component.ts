@@ -35,6 +35,10 @@ export class CommentsListComponent {
   @Input() comments: CommentDto[] = [];
   @Input() isRoot: boolean = true;
 
+  get showTarget(): boolean {
+    return !this.elementId;
+  }
+
   showForm = false;
 
   reloadSubject = new Subject<void>();

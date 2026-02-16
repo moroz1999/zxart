@@ -16,11 +16,10 @@ class Socialpost extends controllerApplication
 
     public function __construct(
         controller $controller,
-        string $applicationName,
         private readonly SocialPostsService $socialPostsService,
         private readonly Logger $logger,
     ) {
-        parent::__construct($controller, $applicationName);
+        parent::__construct($controller);
     }
 
     #[Override]

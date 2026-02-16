@@ -19,7 +19,7 @@
 		{if $picture->year != 0}{$picture->year}{/if}
 	</td>
 	<td class='pictures_list_votecontrols'>
-		{include file=$theme->template("component.votecontrols.tpl") element=$picture}
+		<zx-vote element-id="{$picture->id}" type="zxPicture" votes="{$picture->votes}" user-vote="{$picture->getUserVote()}" deny-voting="{if $picture->isVotingDenied()}true{else}false{/if}"></zx-vote>
 		{include file=$theme->template("component.playlist.tpl") element=$element}
 	</td>
 	<td class='pictures_list_votesamount'>

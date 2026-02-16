@@ -57,7 +57,8 @@
       "mcp__jetbrains-ide__replace_text_in_file",
       "mcp__jetbrains-ide__create_new_file",
       "mcp__jetbrains-ide__execute_terminal_command",
-      "mcp__jetbrains-ide__find_files_by_glob"
+      "mcp__jetbrains-ide__find_files_by_glob",
+      "Bash(git rm:*)"
     ]
   },
   "enabledPlugins": {

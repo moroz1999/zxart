@@ -33,23 +33,6 @@ export interface FirstpageConfig {
   modules: ModuleConfig[];
 }
 
-export const DEFAULT_MODULE_SETTINGS: Record<ModuleType, ModuleSettings> = {
-  newProds: {limit: 10, minRating: 3.9},
-  newPictures: {limit: 12},
-  newTunes: {limit: 10},
-  bestNewDemos: {limit: 10, minRating: 3},
-  bestNewGames: {limit: 10, minRating: 3},
-  recentParties: {limit: 5},
-  bestPicturesOfMonth: {limit: 12},
-  latestAddedProds: {limit: 10},
-  latestAddedReleases: {limit: 10},
-  supportProds: {limit: 10},
-  unvotedPictures: {limit: 12},
-  randomGoodPictures: {limit: 12},
-  unvotedTunes: {limit: 10},
-  randomGoodTunes: {limit: 10},
-};
-
 export const MODULE_LIMIT_PREF_CODES: Record<ModuleType, string> = {
   newProds: 'homepage_new_prods_limit',
   newPictures: 'homepage_new_pictures_limit',

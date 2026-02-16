@@ -17,11 +17,10 @@ class Ratings extends controllerApplication
 
     public function __construct(
         controller $controller,
-        string $applicationName,
         private readonly ObjectMapper $objectMapper,
         private readonly RatingsService $ratingsService,
     ) {
-        parent::__construct($controller, $applicationName);
+        parent::__construct($controller);
     }
 
     public function initialize(): void

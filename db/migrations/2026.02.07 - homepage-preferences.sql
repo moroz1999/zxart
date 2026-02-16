@@ -22,3 +22,6 @@ INSERT INTO engine_preferences (code, type) VALUES ('homepage_random_tunes_limit
 INSERT INTO engine_preferences (code, type) VALUES ('homepage_new_prods_min_rating', 'string');
 INSERT INTO engine_preferences (code, type) VALUES ('homepage_best_demos_min_rating', 'string');
 INSERT INTO engine_preferences (code, type) VALUES ('homepage_best_games_min_rating', 'string');
+
+
+ALTER TABLE `engine_structure_elements` ADD UNIQUE `id dateCreated` (`id`, `dateCreated`);

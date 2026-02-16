@@ -1,8 +1,9 @@
-import {AfterViewChecked, Component, ElementRef, HostListener, Input, ViewChild,} from '@angular/core';
+import {Component, HostListener, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {MatIconModule} from '@angular/material/icon';
+import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
 import {PlaylistService} from '../../services/playlist.service';
 import {CurrentUserService} from '../../services/current-user.service';
 import {PlaylistDto} from '../../models/playlist.model';
@@ -18,6 +19,8 @@ import {ZxCaptionDirective} from '../../directives/typography/typography.directi
     FormsModule,
     TranslateModule,
     MatIconModule,
+    CdkConnectedOverlay,
+    CdkOverlayOrigin,
     ZxButtonComponent,
     ZxInputComponent,
     ZxCaptionDirective,
@@ -25,28 +28,23 @@ import {ZxCaptionDirective} from '../../directives/typography/typography.directi
   templateUrl: './zx-playlist-button.component.html',
   styleUrls: ['./zx-playlist-button.component.scss'],
 })
-export class ZxPlaylistButtonComponent implements AfterViewChecked {
+export class ZxPlaylistButtonComponent {
   @Input() elementId!: number;
 
-  @ViewChild('popoverEl') popoverEl?: ElementRef<HTMLElement>;
-
   popoverOpen = false;
-  dropUp = false;
   loading = false;
   activePlaylistIds: number[] = [];
   newPlaylistTitle = '';
 
+  readonly positions: ConnectedPosition[] = [
+    {originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 4},
+    {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -4},
+  ];
+
   constructor(
-    private elementRef: ElementRef<HTMLElement>,
     private playlistService: PlaylistService,
     private currentUserService: CurrentUserService,
   ) {}
-
-  ngAfterViewChecked(): void {
-    if (this.popoverOpen && this.popoverEl) {
-      this.updateDropDirection();
-    }
-  }
 
   get isAuthenticated(): boolean {
     return this.currentUserService.isAuthenticated;
@@ -69,6 +67,10 @@ export class ZxPlaylistButtonComponent implements AfterViewChecked {
 
   closePopover(): void {
     this.popoverOpen = false;
+  }
+
+  onBackdropClick(): void {
+    this.closePopover();
   }
 
   isInPlaylist(playlistId: number): boolean {
@@ -97,22 +99,9 @@ export class ZxPlaylistButtonComponent implements AfterViewChecked {
     });
   }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event): void {
-    if (!this.popoverOpen) {
-      return;
-    }
-    const target = event.target as Node | null;
-    if (target && this.elementRef.nativeElement.contains(target)) {
-      return;
-    }
-    this.closePopover();
-  }
-
-  @HostListener('document:keydown.escape', ['$event'])
-  onEscape(event: KeyboardEvent): void {
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
     if (this.popoverOpen) {
-      event.stopPropagation();
       this.closePopover();
     }
   }
@@ -123,14 +112,6 @@ export class ZxPlaylistButtonComponent implements AfterViewChecked {
       this.activePlaylistIds = ids;
       this.loading = false;
     });
-  }
-
-  private updateDropDirection(): void {
-    const hostRect = this.elementRef.nativeElement.getBoundingClientRect();
-    const popoverHeight = this.popoverEl!.nativeElement.offsetHeight;
-    const spaceBelow = window.innerHeight - hostRect.bottom;
-    const spaceAbove = hostRect.top;
-    this.dropUp = spaceBelow < popoverHeight && spaceAbove > spaceBelow;
   }
 
   trackById(_: number, item: PlaylistDto): number {

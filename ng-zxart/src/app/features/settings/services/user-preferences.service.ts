@@ -19,6 +19,7 @@ interface StoredPreferences {
 export class UserPreferencesService {
   private readonly isBrowser: boolean;
   private initialized$: Observable<PreferenceDto[]> | null = null;
+  private defaults$: Observable<PreferenceDto[]> | null = null;
 
   constructor(
     private http: HttpClient,
@@ -117,6 +118,30 @@ export class UserPreferencesService {
         throw new Error(response.errorMessage || 'Failed to save preferences');
       }),
       tap(prefs => this.saveToStorage(prefs))
+    );
+  }
+
+  getDefaults(): Observable<PreferenceDto[]> {
+    if (this.defaults$) {
+      return this.defaults$;
+    }
+    this.defaults$ = this.http.get<ApiResponse<PreferenceDto[]>>('/userpreferences/', {
+      params: {action: 'defaults'}
+    }).pipe(
+      map(response => {
+        if (response.responseStatus === 'success' && response.responseData) {
+          return response.responseData;
+        }
+        return [];
+      }),
+      shareReplay(1)
+    );
+    return this.defaults$;
+  }
+
+  getDefaultValue(code: string): Observable<string | undefined> {
+    return this.getDefaults().pipe(
+      map(defaults => defaults.find(d => d.code === code)?.value)
     );
   }
 

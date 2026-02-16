@@ -7,7 +7,7 @@
 	</a>
     <span class="zxprod_short_title">
         <div class="zxprod_short_title_controls">
-            {include file=$theme->template("component.votecontrols.tpl") element=$element}
+            <zx-vote element-id="{$element->id}" type="zxProd" votes="{$element->votes}" user-vote="{$element->getUserVote()}" deny-voting="{if $element->isVotingDenied()}true{else}false{/if}"></zx-vote>
             {include file=$theme->template("component.playlist.tpl") element=$element}
         </div>
         <a href="{$element->getUrl()}">{$element->getTitle()}</a>

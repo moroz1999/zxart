@@ -34,18 +34,18 @@ The component independently requests data from the backend using the provided `e
 All new functionality in Angular must follow Feature Sliced Design principles and the [Design System](design-system.md).
 
 **CRITICAL**:
-- All new components must use **Material UI**.
+- **No new Material imports.** Material UI is being phased out (see [design-system.md](design-system.md) for the full plan).
 - **ONLY standalone components** are allowed.
-- **PrimeNG** is legacy and must be replaced by Material.
-- Custom CSS is forbidden without direct instruction. Use Material components and our theme.
+- **Angular CDK** (`@angular/cdk`) is the approved foundation for overlays, drag-and-drop, and accessibility.
+- Use design system components and theme variables. Custom CSS is forbidden without direct instruction.
 - Components must be used semantically.
 
 ### Deprecated Practices
-1. **PrimeNG**: The use of PrimeNG is deprecated. All new components MUST use Material UI. Existing PrimeNG components should be replaced during refactoring.
-2. **Direct Material UI in Design System Primitives**: `shared/ui` form primitives (for example range controls) must be implemented with native/custom markup and our theme variables. Material wrappers in these primitives are transitional and must be removed during refactoring.
+1. **Material UI**: No new Material imports anywhere. Existing Material usage will be replaced in phases (see design-system.md, section 9).
+2. **Direct Material UI in Design System Primitives**: `shared/ui` form primitives must be implemented with native/custom markup and our theme variables. Material wrappers are transitional and must be removed.
 3. **Sass @import**: The `@import` rule in SCSS is deprecated in favor of `@use` and `@forward`.
 4. **Legacy CSS**: Custom styles that duplicate Material functionality or legacy theme styles should be avoided.
-5. **Direct CSS Overrides**: Avoid deep CSS overrides of Material components unless absolutely necessary; use Material themes and variables instead.
+5. **CSS-based popover positioning**: Do not use `position: absolute` inside `position: relative` hosts for overlay patterns. Use CDK `CdkConnectedOverlay` instead.
 
 - Code is divided into layers, such as `features`, `entities`, and `shared`.
 - Each feature must be located in its own directory within `src/app/features/`.

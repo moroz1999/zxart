@@ -20,11 +20,10 @@ class Rss extends controllerApplication
 
     public function __construct(
         controller $controller,
-        string $applicationName,
         private readonly structureManager $structureManager,
         private readonly LanguagesManager $languagesManager,
     ) {
-        parent::__construct($controller, $applicationName);
+        parent::__construct($controller);
     }
 
     public function initialize(): void

@@ -27,7 +27,7 @@
         } @else {
           <zx-stack spacing="lg">
             <div *ngFor="let comment of comments" class="comment-item">
-              <zx-comment [comment]="comment" (commentChanged)="onCommentChanged($event)"></zx-comment>
+              <zx-comment [comment]="comment" [showTarget]="showTarget" (commentChanged)="onCommentChanged($event)"></zx-comment>
             </div>
           </zx-stack>
         }

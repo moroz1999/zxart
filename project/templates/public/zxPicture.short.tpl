@@ -14,7 +14,7 @@
 			</div>
         {/if}
 		<div class="zxpicture_short_controls">
-			{include file=$theme->template("component.votecontrols.tpl") element=$element}
+			<zx-vote element-id="{$element->id}" type="zxPicture" votes="{$element->votes}" user-vote="{$element->getUserVote()}" deny-voting="{if $element->isVotingDenied()}true{else}false{/if}"></zx-vote>
 			{include file=$theme->template("component.playlist.tpl") element=$element}
 		</div>
 		{if $element->year}

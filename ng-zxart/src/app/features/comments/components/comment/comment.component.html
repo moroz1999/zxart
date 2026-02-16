@@ -1,7 +1,7 @@
 <zx-stack spacing="lg">
-  <zx-panel class="comment-panel" [class.has-target]="comment.target && hasImage" radius="lg" padding="lg">
+  <zx-panel class="comment-panel" [class.has-target]="showTarget && comment.target && hasImage" radius="lg" padding="lg">
     <div class="comment-layout">
-      @if (comment.target && hasImage) {
+      @if (showTarget && comment.target && hasImage) {
         <div class="comment-target">
           <a [href]="comment.target.url" class="comment-target-image">
             <img [src]="comment.target.imageUrl" [alt]="comment.target.title" loading="lazy"/>
@@ -16,7 +16,7 @@
       }
 
       <div class="comment-main">
-        @if (comment.target && !hasImage) {
+        @if (showTarget && comment.target && !hasImage) {
           <div class="comment-target-inline">
             <a [href]="comment.target.url" zxLink>{{ comment.target.title }}</a>
             @if (comment.target.authorName) {

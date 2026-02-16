@@ -17,10 +17,9 @@ class Currentuser extends controllerApplication
 
     public function __construct(
         controller $controller,
-        string $applicationName,
         private readonly CurrentUserService $currentUserService,
     ) {
-        parent::__construct($controller, $applicationName);
+        parent::__construct($controller);
     }
 
     public function initialize(): void

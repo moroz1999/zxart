@@ -14,7 +14,7 @@
   padding: var(--space-8);
   background: var(--background-dark);
   border-top-left-radius: var(--radius-lg);
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--zx-pagination-shadow);
   transition: all 0.3s ease;
 
   &.loading {
