@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 use App\Paths\PathsManager;
 use Monolog\Formatter\LineFormatter;
@@ -12,8 +13,8 @@ use ZxArt\Ai\Service\ProdQueryService;
 use ZxArt\Ai\Service\PromptSender;
 use ZxArt\Ai\Service\TextBeautifier;
 use ZxArt\Ai\Service\Translator;
+use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Comments\CommentsService;
-use ZxArt\Controllers\Ratings;
 use ZxArt\Controllers\Rss;
 use ZxArt\Controllers\Socialpost;
 use ZxArt\Logs\Log;
@@ -24,24 +25,9 @@ use function DI\autowire;
 use function DI\factory;
 
 return [
-    // CMS services — delegate to legacy registry instead of autowiring
-    structureManager::class => factory(static function () {
-        return controller::getInstance()->getRegistry()->getService('structureManager');
-    }),
-
-    'publicStructureManager' => factory(static function () {
-        $controller = controller::getInstance();
-        $configManager = $controller->getConfigManager();
-        $sm = $controller->getRegistry()->getService('structureManager', [
-            'rootUrl' => $controller->baseURL,
-            'rootMarker' => $configManager->get('main.rootMarkerPublic'),
-        ], true);
-        $languagesManager = $controller->getRegistry()->getService('LanguagesManager');
-        $sm->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
-        return $sm;
-    }),
-
     CommentsService::class => autowire()
+        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
+    AuthorshipRepository::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     RatingsService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
@@ -49,8 +35,6 @@ return [
     // Controllers with publicStructureManager
     Rss::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
-    Ratings::class => autowire()
-        ->constructorParameter('ratingsService', DI\get(RatingsService::class)),
     Socialpost::class => autowire()
         ->constructorParameter('logger', DI\get('social_posts_logger')),
 
