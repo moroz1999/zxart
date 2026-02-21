@@ -7,13 +7,13 @@ use App\Users\CurrentUserService;
 use Cache;
 use commentElement;
 use CommentsHolderInterface;
-use Illuminate\Database\Connection;
 use LanguagesManager;
 use privilegesManager;
 use structureManager;
 use ZxArt\Comments\Exception\CommentAccessDeniedException;
 use ZxArt\Comments\Exception\CommentNotFoundException;
 use ZxArt\Comments\Exception\CommentOperationException;
+use ZxArt\Comments\Repositories\CommentsRepository;
 use ZxArt\LinkTypes;
 
 /**
@@ -29,9 +29,9 @@ readonly class CommentsService
         private CurrentUserService  $currentUserService,
         private LanguagesManager    $languagesManager,
         private privilegesManager   $privilegesManager,
-        private Cache               $cache,
-        private CommentsTransformer $transformer,
-        private Connection          $db,
+        private Cache                $cache,
+        private CommentsTransformer  $transformer,
+        private CommentsRepository   $commentsRepository,
     )
     {
     }
@@ -44,9 +44,7 @@ readonly class CommentsService
      */
     public function getAllCommentsPaginated(int $page = 1): CommentsListDto
     {
-        $count = $this->db->table('structure_elements')
-            ->where('structureType', '=', 'comment')
-            ->count('id');
+        $count = $this->commentsRepository->countAll();
 
         $pagesAmount = (int)ceil($count / self::COMMENTS_PER_PAGE);
 
@@ -59,18 +57,10 @@ readonly class CommentsService
 
         $offset = ($page - 1) * self::COMMENTS_PER_PAGE;
 
-        $rows = $this->db->table('structure_elements')
-            ->where('structureType', '=', 'comment')
-            ->orderBy('dateCreated', 'desc')
-            ->offset($offset)
-            ->limit(self::COMMENTS_PER_PAGE)
-            ->select('id')
-            ->get();
+        $ids = $this->commentsRepository->getIdsPaginated($offset, self::COMMENTS_PER_PAGE);
 
         $comments = [];
-        foreach ($rows as $row) {
-            $rowArray = (array)$row;
-            $id = (int)$rowArray['id'];
+        foreach ($ids as $id) {
             $comment = $this->structureManager->getElementById($id);
             if ($comment instanceof commentElement) {
                 $comments[] = $this->transformer->transformToDto($comment);
@@ -289,18 +279,10 @@ readonly class CommentsService
      */
     public function getLatestComments(int $limit = 10): array
     {
-        $rows = $this->db->table('structure_elements')
-            ->where('structureType', '=', 'comment')
-            ->where('dateCreated', '<=', time())
-            ->orderBy('dateCreated', 'desc')
-            ->limit($limit)
-            ->select('id')
-            ->get();
+        $ids = $this->commentsRepository->getLatestIds($limit);
 
         $comments = [];
-        foreach ($rows as $row) {
-            $rowArray = (array)$row;
-            $id = (int)$rowArray['id'];
+        foreach ($ids as $id) {
             $comment = $this->structureManager->getElementById($id);
             if ($comment instanceof commentElement) {
                 $comments[] = $this->transformer->transformToDto($comment);

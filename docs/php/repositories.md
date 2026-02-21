@@ -1,5 +1,13 @@
 # Repositories and Database
 
+## Repository Pattern
+- All database queries (`Connection`, Query Builder) MUST live in repository classes, NEVER in services.
+- Services orchestrate business logic; repositories handle data access.
+- Repository location: `project/core/ZxArt/{Domain}/Repositories/`.
+- Repositories are `readonly final class` with `Connection` injected via constructor.
+- Repository methods return primitive types (IDs, counts, arrays), not domain objects or DTOs.
+- Services use repository results (e.g. IDs) and load domain objects via `structureManager`.
+
 ## Database Table Names
 - `Illuminate\Database\Connection` automatically adds `engine_` prefix to table names.
 - In repositories, use table names WITHOUT the `engine_` prefix.

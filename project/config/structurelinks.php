@@ -28,5 +28,6 @@
         'mapFilesSelector',
         'rzx',
         'prodArticle',
+        'commentTarget',
     ],
 ];

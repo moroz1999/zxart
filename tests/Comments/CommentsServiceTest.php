@@ -6,7 +6,6 @@ namespace ZxArt\Tests\Comments;
 
 use App\Users\CurrentUser;
 use Cache;
-use Illuminate\Database\Connection;
 use LanguagesManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -16,6 +15,7 @@ use ZxArt\Comments\CommentsService;
 use ZxArt\Comments\CommentsTransformer;
 use ZxArt\Comments\Exception\CommentAccessDeniedException;
 use ZxArt\Comments\Exception\CommentOperationException;
+use ZxArt\Comments\Repositories\CommentsRepository;
 
 class CommentsServiceTest extends TestCase
 {
@@ -38,7 +38,7 @@ class CommentsServiceTest extends TestCase
             privilegesManager: $this->createMock(privilegesManager::class),
             cache: $this->createMock(Cache::class),
             transformer: $this->createMock(CommentsTransformer::class),
-            db: $this->createMock(Connection::class),
+            commentsRepository: $this->createMock(CommentsRepository::class),
         );
     }
 
