@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 use App\Logging\EventsLog;
+use SectionLogics;
+use tagsManager;
 
 trait TagsHolder
 {
@@ -15,7 +17,7 @@ trait TagsHolder
         $amountBeforeUpdate = (int)$this->tagsAmount;
 
         $tagsStrings = explode(',', $this->tagsText);
-        $tagsManager = $this->getService('tagsManager');
+        $tagsManager = $this->getService(tagsManager::class);
         foreach ($tagsStrings as $tagName) {
             if ($tagElement = $tagsManager->addTag($tagName, $this->getPersistedId())) {
                 if (isset($tagsIndex[$tagElement->title])) {
@@ -39,7 +41,7 @@ trait TagsHolder
 
     public function addTags(array $tagsStrings): void
     {
-        $tagsManager = $this->getService('tagsManager');
+        $tagsManager = $this->getService(tagsManager::class);
         foreach ($tagsStrings as $tagName) {
             $tagsManager->addTag($tagName, $this->getPersistedId());
         }
@@ -60,9 +62,9 @@ trait TagsHolder
     {
         if ($this->tagsList === null) {
             $this->tagsList = [];
-            $sectionLogics = $this->getService('SectionLogics');;
+            $sectionLogics = $this->getService(SectionLogics::class);
             $sectionId = $sectionLogics->getSectionIdByType($this->sectionType);
-            $tagsManager = $this->getService('tagsManager');
+            $tagsManager = $this->getService(tagsManager::class);
             $structureManager = $this->getService('structureManager');
             if ($idList = $tagsManager->getTagsIdList($this->id)) {
                 foreach ($idList as $id) {
@@ -101,7 +103,7 @@ trait TagsHolder
 
     public function getSuggestedTags()
     {
-        $tagsManager = $this->getService('tagsManager');
+        $tagsManager = $this->getService(tagsManager::class);
         return $tagsIdList = $tagsManager->getElementSuggestedTags($this->id, 25);
     }
 

@@ -2,6 +2,8 @@
 
 use App\Logging\EventsLog;
 use App\Paths\PathsManager;
+use PicturesModesManager;
+use tagsManager;
 use ZxArt\LinkTypes;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueType;
@@ -143,7 +145,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
 
     private function getZxPictureParameters(int $zoom = 1, $border = null, ?string $controller = null): ZxPictureParametersDto
     {
-        $picturesModesManager = $this->getService('PicturesModesManager');
+        $picturesModesManager = $this->getService(PicturesModesManager::class);
         return new ZxPictureParametersDto(
             type: $this->type === 'standard' && $picturesModesManager->getHidden() ? 'hidden' : $this->type,
             zoom: $zoom,
@@ -380,9 +382,9 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
                     }
                 }
                 if ($number == 0) {
-                    $this->getService('tagsManager')->addTag(self::TAG_LOADINGSCREEN, $this->getId());
+                    $this->getService(tagsManager::class)->addTag(self::TAG_LOADINGSCREEN, $this->getId());
                 } else {
-                    $this->getService('tagsManager')->addTag(self::TAG_GAMEGRAPHICS, $this->getId());
+                    $this->getService(tagsManager::class)->addTag(self::TAG_GAMEGRAPHICS, $this->getId());
                 }
             }
         }

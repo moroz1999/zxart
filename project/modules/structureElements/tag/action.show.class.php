@@ -1,5 +1,7 @@
 <?php
 
+use SectionLogics;
+
 class showTag extends structureElementAction
 {
     /**
@@ -7,7 +9,7 @@ class showTag extends structureElementAction
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
-        $sectionsLogics = $this->getService('SectionLogics');;
+        $sectionsLogics = $this->getService(SectionLogics::class);
         if (($type = $sectionsLogics->getArtItemsType())) {
             $structureElement->setViewName($type);
         }

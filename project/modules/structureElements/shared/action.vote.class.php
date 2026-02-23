@@ -1,6 +1,7 @@
 <?php
 
 use App\Logging\EventsLog;
+use votesManager;
 
 class voteShared extends structureElementAction
 {
@@ -21,10 +22,7 @@ class voteShared extends structureElementAction
                 }
 
                 if ($validated) {
-                    /**
-                     * @var votesManager $votesManager
-                     */
-                    $votesManager = $this->getService('votesManager');
+                    $votesManager = $this->getService(votesManager::class);
                     if ($votesManager->vote($structureElement->getId(), $structureElement->structureType, $value)) {
                         $structureElement->recalculateVotes();
                         $structureElement->setUserVote($value);

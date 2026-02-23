@@ -1,7 +1,7 @@
 <?php
 
-use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
+use TslabsManager;
 
 class tslabsApplication extends controllerApplication
 {
@@ -46,10 +46,7 @@ class tslabsApplication extends controllerApplication
                 ['rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin')]
             );
 
-            /**
-             * @var TslabsManager $tslabsManager
-             */
-            $tslabsManager = $this->getService('TslabsManager');
+            $tslabsManager = $this->getService(TslabsManager::class);
             $tslabsManager->importAll();
         }
     }

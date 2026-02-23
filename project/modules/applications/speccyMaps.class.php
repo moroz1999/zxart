@@ -1,7 +1,7 @@
 <?php
 
-use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
+use SpeccyMapsManager;
 
 class speccyMapsApplication extends controllerApplication
 {
@@ -46,10 +46,7 @@ class speccyMapsApplication extends controllerApplication
                 ['rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin')]
             );
 
-            /**
-             * @var SpeccyMapsManager $speccyMaps
-             */
-            $speccyMaps = $this->getService('SpeccyMapsManager');
+            $speccyMaps = $this->getService(SpeccyMapsManager::class);
             $speccyMaps->importAll();
         }
     }

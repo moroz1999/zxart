@@ -3,6 +3,7 @@
 use App\Logging\EventsLog;
 use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
+use votesManager;
 
 /**
  * Class commentElement
@@ -106,7 +107,7 @@ class commentElement extends structureElement implements MetadataProviderInterfa
     public function recalculateVotes()
     {
         $votesValue = 0;
-        $votesManager = $this->getService('votesManager');
+        $votesManager = $this->getService(votesManager::class);
         $currentUserService = $this->getService(CurrentUserService::class);
         $user = $currentUserService->getCurrentUser();
         if ($votesList = $votesManager->getElementVotesList($this->id)) {
@@ -141,7 +142,7 @@ class commentElement extends structureElement implements MetadataProviderInterfa
     public function getUserVote()
     {
         if ($this->userVote === null) {
-            $votesManager = $this->getService('votesManager');
+            $votesManager = $this->getService(votesManager::class);
             $this->setUserVote($votesManager->getElementUserVote($this->id, $this->structureType));
         }
         return $this->userVote;

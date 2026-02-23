@@ -1,5 +1,7 @@
 <?php
 
+use SectionLogics;
+
 /**
  * Class letterElement
  *
@@ -35,10 +37,7 @@ class letterElement extends structureElement implements ColumnsTypeProvider
     public function getAuthorsList()
     {
         if ($this->authorsList === null) {
-            /**
-             * @var SectionLogics $sectionLogics
-             */
-            $sectionLogics = $this->getService('SectionLogics');
+            $sectionLogics = $this->getService(SectionLogics::class);
             $itemTypes = $sectionLogics->getAuthorLinkTypes();
             $key = implode('-', $itemTypes);
             $cache = $this->getElementsListCache($key, 60 * 60 * 24 * 7);

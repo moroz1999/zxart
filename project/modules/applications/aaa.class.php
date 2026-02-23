@@ -1,6 +1,7 @@
 <?php
 
 use App\Users\CurrentUserService;
+use ZxaaaManager;
 
 class aaaApplication extends controllerApplication
 {
@@ -44,10 +45,7 @@ class aaaApplication extends controllerApplication
                 ['rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin')]
             );
 
-            /**
-             * @var ZxaaaManager $zxaaaManager
-             */
-            $zxaaaManager = $this->getService('ZxaaaManager');
+            $zxaaaManager = $this->getService(ZxaaaManager::class);
             $zxaaaManager->importAll();
         }
     }

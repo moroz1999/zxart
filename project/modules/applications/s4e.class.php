@@ -1,6 +1,7 @@
 <?php
 
 use App\Users\CurrentUserService;
+use S4eManager;
 
 class s4eApplication extends controllerApplication
 {
@@ -45,10 +46,7 @@ class s4eApplication extends controllerApplication
                 ['rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin')]
             );
 
-            /**
-             * @var s4eManager $s4eManager
-             */
-            $s4eManager = $this->getService('S4eManager');
+            $s4eManager = $this->getService(S4eManager::class);
             $s4eManager->importAll();
         }
     }

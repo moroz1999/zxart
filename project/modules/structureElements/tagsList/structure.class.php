@@ -1,5 +1,7 @@
 <?php
 
+use SectionLogics;
+
 class tagsListElement extends structureElement
 {
     public $dataResourceName = 'module_tagslist';
@@ -33,7 +35,7 @@ class tagsListElement extends structureElement
              * @var ApiQueriesManager $apiQueriesManager
              */
             $apiQueriesManager = $this->getService('ApiQueriesManager');
-            $sectionsLogics = $this->getService('SectionLogics');;
+            $sectionsLogics = $this->getService(SectionLogics::class);
             if (($type = $sectionsLogics->getArtItemsType()) === 'graphics') {
                 $parameters = [
                     'zxPictureAll' => true,

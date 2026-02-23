@@ -1,5 +1,7 @@
 <?php
 
+use votesManager;
+
 /**
  * Class languageElement
  *
@@ -540,7 +542,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
     {
         if ($this->votesHistory === null) {
             if (!$this->votesHistory = $this->getCacheKey('votes')) {
-                $this->votesHistory = $this->getService('votesManager')->getLatestVotes($limit);
+                $this->votesHistory = $this->getService(votesManager::class)->getLatestVotes($limit);
                 $this->setCacheKey('v', $this->votesHistory, 300);
             }
         }

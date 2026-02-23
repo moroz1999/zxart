@@ -2,6 +2,7 @@
 
 use App\Logging\EventsLog;
 use App\Paths\PathsManager;
+use mp3ConversionManager;
 use ZxArt\LinkTypes;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueType;
@@ -216,7 +217,7 @@ class zxMusicElement extends ZxArtItem implements
 
     public function reconvertMp3(): void
     {
-        $mp3ConversionManager = $this->getService('mp3ConversionManager');
+        $mp3ConversionManager = $this->getService(mp3ConversionManager::class);
         $mp3ConversionManager->addToConversionQueue($this->getId());
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Users\CurrentUserService;
+use RzxArchiveManager;
 
 class rzxArchiveApplication extends controllerApplication
 {
@@ -45,10 +46,7 @@ class rzxArchiveApplication extends controllerApplication
                 ['rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin')]
             );
 
-            /**
-             * @var RzxManager $rzxManager
-             */
-            $rzxManager = $this->getService('RzxArchiveManager');
+            $rzxManager = $this->getService(RzxArchiveManager::class);
             $rzxManager->importAll();
         }
     }

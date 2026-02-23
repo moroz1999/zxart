@@ -1,5 +1,7 @@
 <?php
 
+use CountriesManager;
+
 class receiveCountry extends structureElementAction
 {
     /**
@@ -32,10 +34,7 @@ class receiveCountry extends structureElementAction
             }
 
             if ($structureElement->joinCountry) {
-                /**
-                 * @var CountriesManager $countriesManager
-                 */
-                $countriesManager = $this->getService('CountriesManager');
+                $countriesManager = $this->getService(CountriesManager::class);
                 $countriesManager->joinCountries($structureElement->getId(), $structureElement->joinCountry);
             }
             $controller->redirect($structureElement->URL);

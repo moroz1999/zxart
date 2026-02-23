@@ -1,5 +1,7 @@
 <?php
 
+use tagsManager;
+
 class zxMusicTagsIncludeQueryFilter extends QueryFilter
 {
     public function getRequiredType()
@@ -9,7 +11,7 @@ class zxMusicTagsIncludeQueryFilter extends QueryFilter
 
     public function getFilteredIdList($argument, $query)
     {
-        $tagsManager = $this->getService('tagsManager');
+        $tagsManager = $this->getService(tagsManager::class);
         if ($idList = $tagsManager->getConnectedElementIdsByNames($argument)) {
             $query->whereIn($this->getTable() . '.id', $idList);
         }

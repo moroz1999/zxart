@@ -1,5 +1,7 @@
 <?php
 
+use tagsManager;
+
 class receiveTag extends structureElementAction
 {
     protected $loggable = true;
@@ -17,7 +19,7 @@ class receiveTag extends structureElementAction
             }
 
             if ($structureElement->joinTag != "") {
-                $tagsManager = $this->getService('tagsManager');
+                $tagsManager = $this->getService(tagsManager::class);
                 $tagsManager->joinTags($structureElement->getId(), $structureElement->joinTag);
             }
 

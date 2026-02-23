@@ -541,10 +541,7 @@ class Crontab extends controllerApplication
 
     private function convertMp3(): void
     {
-        /**
-         * @var mp3ConversionManager $mp3ConversionManager
-         */
-        $mp3ConversionManager = $this->getService('mp3ConversionManager');
+        $mp3ConversionManager = $this->getService(mp3ConversionManager::class);
         $mp3ConversionManager->convertQueueItems();
     }
 

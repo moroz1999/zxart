@@ -1,6 +1,7 @@
 <?php
 
 use App\Logging\EventsLog;
+use votesManager;
 use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\Press\Helpers\PressMentions;
 
@@ -132,7 +133,7 @@ abstract class ZxArtItem extends structureElement implements
     public function getUserVote()
     {
         if (is_null($this->userVote)) {
-            $votesManager = $this->getService('votesManager');
+            $votesManager = $this->getService(votesManager::class);
             $this->setUserVote($votesManager->getElementUserVote($this->id, $this->votesType));
         }
         return $this->userVote;
@@ -239,7 +240,7 @@ abstract class ZxArtItem extends structureElement implements
         static $votesHistory;
         if ($votesHistory === null && !$this->isVotingDenied()) {
             $votesHistory = [];
-            $votesManager = $this->getService('votesManager');
+            $votesManager = $this->getService(votesManager::class);
             if ($votesList = $votesManager->getElementVotesList($this->id)) {
                 $structureManager = $this->getService('structureManager');
 
@@ -403,7 +404,7 @@ abstract class ZxArtItem extends structureElement implements
         } else {
             $vote = 0;
 
-            $votesManager = $this->getService('votesManager');
+            $votesManager = $this->getService(votesManager::class);
             $overallAverageVote = $votesManager->getOverallAverageVote();
             $elementVotes = $votesManager->getElementFilteredVotes($this->id);
             $votesAmount = count($elementVotes);

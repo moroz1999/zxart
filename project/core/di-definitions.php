@@ -2,10 +2,24 @@
 declare(strict_types=1);
 
 use App\Paths\PathsManager;
+use App\Users\CurrentUserService;
+use CountriesManager;
+use Illuminate\Database\Connection;
+use LanguagesManager;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use mp3ConversionManager;
+use PicturesModesManager;
 use Psr\Container\ContainerInterface;
+use RzxArchiveManager;
+use S4eManager;
+use SectionLogics;
+use SpeccyMapsManager;
+use tagsManager;
+use TslabsManager;
+use votesManager;
+use ZxaaaManager;
 use ZxArt\Ai\ChunkProcessor;
 use ZxArt\Ai\Service\PressArticleParser;
 use ZxArt\Ai\Service\PressArticleSeo;
@@ -14,10 +28,13 @@ use ZxArt\Ai\Service\PromptSender;
 use ZxArt\Ai\Service\TextBeautifier;
 use ZxArt\Ai\Service\Translator;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Comments\CommentsService;
 use ZxArt\Controllers\Rss;
 use ZxArt\Controllers\Socialpost;
+use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Logs\Log;
+use ZxArt\Prods\Services\ProdsService;
 use ZxArt\Ratings\RatingsService;
 use ZxArt\Social\SocialPostsService;
 use ZxArt\Telegram\PostService;
@@ -97,4 +114,38 @@ return [
     PostService::class => autowire()
         ->constructorParameter('token', DI\get('telegram_token'))
         ->constructorParameter('channelId', DI\get('telegram_channel_id')),
+
+    // Legacy services migrated from project/services/
+    CountriesManager::class => autowire(),
+    mp3ConversionManager::class => autowire(),
+    votesManager::class => autowire(),
+    tagsManager::class => autowire(),
+    PicturesModesManager::class => factory(static function (CurrentUserService $currentUserService) {
+        $instance = new PicturesModesManager();
+        $instance->setUser($currentUserService->getCurrentUser());
+        return $instance;
+    }),
+    RzxArchiveManager::class => autowire()
+        ->method('setProdsService', DI\get(ProdsService::class)),
+    SpeccyMapsManager::class => autowire()
+        ->method('setProdsService', DI\get(ProdsService::class))
+        ->method('setDb', DI\get(Connection::class)),
+    SectionLogics::class => autowire()
+        ->method('setStructureManager', DI\get('publicStructureManager'))
+        ->method('setLanguagesManager', DI\get(LanguagesManager::class)),
+    S4eManager::class => autowire()
+        ->method('setProdsService', DI\get(ProdsService::class))
+        ->method('setAuthorsManager', DI\get(AuthorsService::class))
+        ->method('setGroupsService', DI\get(GroupsService::class))
+        ->method('setCountriesManager', DI\get(CountriesManager::class)),
+    TslabsManager::class => autowire()
+        ->method('setProdsService', DI\get(ProdsService::class))
+        ->method('setAuthorsManager', DI\get(AuthorsService::class))
+        ->method('setGroupsService', DI\get(GroupsService::class))
+        ->method('setCountriesManager', DI\get(CountriesManager::class)),
+    ZxaaaManager::class => autowire()
+        ->method('setProdsService', DI\get(ProdsService::class))
+        ->method('setAuthorsManager', DI\get(AuthorsService::class))
+        ->method('setGroupsService', DI\get(GroupsService::class))
+        ->method('setCountriesManager', DI\get(CountriesManager::class)),
 ];

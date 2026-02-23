@@ -1,6 +1,7 @@
 <?php
 
 use App\Users\CurrentUserService;
+use PicturesModesManager;
 
 class showLanguage extends structureElementAction
 {
@@ -47,7 +48,7 @@ class showLanguage extends structureElementAction
 
             $currentLayout = 'layout.default.tpl';
             $renderer->assign('currentLayout', $currentLayout);
-            $renderer->assign('currentMode', $this->getService('PicturesModesManager')->getModeInfo());
+            $renderer->assign('currentMode', $this->getService(PicturesModesManager::class)->getModeInfo());
             if ($searchElements = $structureManager->getElementsByType('detailedSearch', $structureElement->getId())) {
                 foreach ($searchElements as $searchElement) {
                     if ($searchElement->items == 'music') {

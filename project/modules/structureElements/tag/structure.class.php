@@ -1,5 +1,7 @@
 <?php
 
+use SectionLogics;
+
 class tagElement extends structureElement implements JsonDataProvider
 {
     use JsonDataProviderElement;
@@ -109,7 +111,7 @@ class tagElement extends structureElement implements JsonDataProvider
 
     public function getItems()
     {
-        $sectionsLogics = $this->getService('SectionLogics');;
+        $sectionsLogics = $this->getService(SectionLogics::class);
         if (($type = $sectionsLogics->getArtItemsType()) === 'graphics') {
             $this->pictures = $this->loadElementsByType('zxPicture');
             return $this->pictures;
