@@ -1,6 +1,7 @@
 <?php
 
 use App\Users\CurrentUserService;
+use CurrencySelector;
 use PicturesModesManager;
 
 class showLanguage extends structureElementAction
@@ -67,7 +68,7 @@ class showLanguage extends structureElementAction
             //todo: remove global variable and implement same functionality for each required structure element (product, order ...)
             $selectedCurrencyItem = false;
             if (class_exists("CurrencySelector")) {
-                $currencySelector = $this->getService('CurrencySelector');
+                $currencySelector = $this->getService(CurrencySelector::class);
                 $selectedCurrencyItem = $currencySelector->getSelectedCurrencyItem();
             }
             $renderer->assign('selectedCurrencyItem', $selectedCurrencyItem);

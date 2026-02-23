@@ -2,6 +2,7 @@
 
 use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
+use SocialDataManager;
 
 class loginElement extends menuDependantStructureElement
 {
@@ -116,7 +117,7 @@ class loginElement extends menuDependantStructureElement
     {
         $result = [];
         $controller = controller::getInstance();
-        $socialDataManager = $this->getService('SocialDataManager');
+        $socialDataManager = $this->getService(SocialDataManager::class);
         $socialPlugins = $socialDataManager->getSocialPlugins();
         foreach ($socialPlugins as $element) {
             $iconUrl = '';

@@ -1,6 +1,8 @@
 <?php
 
 use App\Users\CurrentUserService;
+use SocialDataManager;
+use SpamChecker;
 
 class submitRegistration extends structureElementAction
 {
@@ -69,7 +71,7 @@ class submitRegistration extends structureElementAction
             }
         }
         if ($this->validated && $this->validateAjaxRequest()) {
-            $spamChecker = $this->getService('SpamChecker');
+            $spamChecker = $this->getService(SpamChecker::class);
             if ($emailToCheck && !$spamChecker->checkEmail($emailToCheck)) {
                 $structureElement->errorMessage = $translationsManager->getTranslationByName('userdata.bad_email');
             } else {
@@ -127,7 +129,7 @@ class submitRegistration extends structureElementAction
                                 $socialId = $user->getStorageAttribute('socialId');
                                 $socialType = $user->getStorageAttribute('socialType');
                                 if ($socialId && $socialType) {
-                                    $this->getService('SocialDataManager')
+                                    $this->getService(SocialDataManager::class)
                                         ->addSocialUser($socialType, $socialId, $userElement->getId());
                                 }
                             }

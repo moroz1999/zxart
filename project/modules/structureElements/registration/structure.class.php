@@ -2,6 +2,7 @@
 
 use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
+use SocialDataManager;
 
 class registrationElement extends menuDependantStructureElement
 {
@@ -60,11 +61,11 @@ class registrationElement extends menuDependantStructureElement
         $currentUserId = $user->userName !== 'anonymous' ? (int)$user->readUserId() : 0;
 
         if ($currentUserId > 0) {
-            $socialDataManager = $this->getService('SocialDataManager');
+            $socialDataManager = $this->getService(SocialDataManager::class);
             $existingConnections = $socialDataManager->getCmsUserSocialNetworks($currentUserId);
         }
         $controller = controller::getInstance();
-        $socialDataManager = $this->getService('SocialDataManager');
+        $socialDataManager = $this->getService(SocialDataManager::class);
         $socialPlugins = $socialDataManager->getSocialPlugins();
         foreach ($socialPlugins as $element) {
             $iconUrl = '';
