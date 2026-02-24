@@ -112,13 +112,13 @@ class Crontab extends controllerApplication
         /**
          * @var Cache $cache
          */
-        $cache = $this->getService('Cache');
+        $cache = $this->getService(Cache::class);
         $cache->enable(false, false, true);
 
         /**
          * @var rendererPlugin $renderer
          */
-        $renderer = $this->getService('renderer');
+        $renderer = $this->getService(renderer::class);
         $renderer->endOutputBuffering();
         while (ob_get_level()) {
             ob_end_flush();
@@ -131,7 +131,7 @@ class Crontab extends controllerApplication
                 'structureManager',
                 [
                     'rootUrl' => $controller->rootURL,
-                    'rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerPublic'),
+                    'rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerPublic'),
                 ]
             );
 
@@ -150,7 +150,7 @@ class Crontab extends controllerApplication
             $this->parseArtItems('module_zxpicture', 'image', 'originalName');
             $this->parseArtItems('module_zxmusic', 'file', 'fileName');
 
-            $this->languagesManager = $this->getService('LanguagesManager');
+            $this->languagesManager = $this->getService(LanguagesManager::class);
             $this->languagesManager->setCurrentLanguageCode('eng');
 
             $this->queryAiSeo();

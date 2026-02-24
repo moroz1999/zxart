@@ -93,12 +93,12 @@ class partyElement extends structureElement implements
      */
     public function recalculate()
     {
-        if ($pictureIds = $this->getService('linksManager')->getConnectedIdList($this->getId(), 'partyPicture', 'parent')) {
+        if ($pictureIds = $this->getService(linksManager::class)->getConnectedIdList($this->getId(), 'partyPicture', 'parent')) {
             $this->picturesQuantity = count($pictureIds);
         } else {
             $this->picturesQuantity = 0;
         }
-        if ($tuneIds = $this->getService('linksManager')->getConnectedIdList($this->getId(), 'partyMusic', 'parent')) {
+        if ($tuneIds = $this->getService(linksManager::class)->getConnectedIdList($this->getId(), 'partyMusic', 'parent')) {
             $this->tunesQuantity = count($tuneIds);
         } else {
             $this->tunesQuantity = 0;
@@ -165,7 +165,7 @@ class partyElement extends structureElement implements
     protected function getCompos(array $linkTypes): array
     {
         $compos = [];
-        $idList = $this->getService('linksManager')->getConnectedIdList($this->getId(), $linkTypes, 'parent');
+        $idList = $this->getService(linksManager::class)->getConnectedIdList($this->getId(), $linkTypes, 'parent');
         $entries = [];
         foreach ($idList as $id) {
             if ($entry = $this->getService('structureManager')->getElementById($id)) {
@@ -194,7 +194,7 @@ class partyElement extends structureElement implements
     {
         $controller = controller::getInstance();
         $url = $controller->baseURL . 'zipItems/';
-        $url .= 'language:' . $this->getService('LanguagesManager')->getCurrentLanguageCode() . '/';
+        $url .= 'language:' . $this->getService(LanguagesManager::class)->getCurrentLanguageCode() . '/';
         $url .= 'filter:partyId=' . $this->getId() . '/';
         $url .= 'structure:parties/';
 
@@ -204,7 +204,7 @@ class partyElement extends structureElement implements
     public function getText($textType): string
     {
         $text = '';
-        $translationsManager = $this->getService('translationsManager');
+        $translationsManager = $this->getService(translationsManager::class);
 
         if ($textType == 'bb') {
             foreach ($this->getPicturesCompos() as $compo => $items) {

@@ -20,14 +20,14 @@ class zxScreenRendererPlugin extends rendererPlugin
      */
     public function init()
     {
-        $this->requestHeadersManager = $this->getService('requestHeadersManager');
+        $this->requestHeadersManager = $this->getService(requestHeadersManager::class);
         $this->httpResponse = httpResponse::getInstance();
 
         $this->renderingEngine = new Converter();
         if (!is_dir($this->getService(PathsManager::class)->getPath('zxCache'))) {
             mkdir(
                 $this->getService(PathsManager::class)->getPath('zxCache'),
-                $this->getService('ConfigManager')->get('paths.defaultCachePermissions'),
+                $this->getService(ConfigManager::class)->get('paths.defaultCachePermissions'),
                 true
             );
         }

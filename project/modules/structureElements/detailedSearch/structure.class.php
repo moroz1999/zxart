@@ -427,7 +427,7 @@ class detailedSearchElement extends structureElement implements LocationProvider
             $elementsOnPage = $this->getElementsOnPage();
             $exportType = $this->getExportType();
 
-            $api = $this->getService('ApiQueriesManager');
+            $api = $this->getService(ApiQueriesManager::class);
             if ($query = $api->getQuery()) {
                 $query->setFiltrationParameters($queryParameters);
                 $query->setExportType($exportType);
@@ -446,7 +446,7 @@ class detailedSearchElement extends structureElement implements LocationProvider
         $url = $controller->baseURL . 'api/';
         $url .= 'types:' . $this->getExportType() . '/';
         $url .= 'export:' . $this->getExportType() . '/';
-        $url .= 'language:' . $this->getService('LanguagesManager')->getCurrentLanguageCode() . '/';
+        $url .= 'language:' . $this->getService(LanguagesManager::class)->getCurrentLanguageCode() . '/';
         $url .= 'start:' . ($this->getStartElementNumber() - 1) . '/';
         $url .= 'limit:' . $this->getElementsOnPage() . '/';
         if ($sortParameters = $this->getSortParameters()) {
@@ -467,7 +467,7 @@ class detailedSearchElement extends structureElement implements LocationProvider
         $controller = controller::getInstance();
         $url = $controller->baseURL . 'zipItems/';
         $url .= 'export:' . $this->getExportType() . '/';
-        $url .= 'language:' . $this->getService('LanguagesManager')->getCurrentLanguageCode() . '/';
+        $url .= 'language:' . $this->getService(LanguagesManager::class)->getCurrentLanguageCode() . '/';
         $url .= 'structure:authors/';
         if ($queryString = $this->generateQueryString()) {
             $url .= $queryString;

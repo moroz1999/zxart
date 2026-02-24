@@ -6,7 +6,6 @@ namespace ZxArt\Import\Press\DataUpdater;
 
 use LanguagesManager;
 use pressArticleElement;
-use ZxArt\Import\Press\PressUpdateException;
 
 final class ArticleSeoDataUpdater
 {

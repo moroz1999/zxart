@@ -137,7 +137,7 @@ class musicCatalogueElement extends structureElement
             $structureManager = $this->getService('structureManager');
             $authorsFolder = $structureManager->getElementByMarker('authors');
             $this->authorsList = $structureManager->getElementsChildren($authorsFolder->id);
-            $this->authorsIDList = $this->getService('linksManager')
+            $this->authorsIDList = $this->getService(linksManager::class)
                 ->getConnectedIdList($this->getId(), 'authorPicture', 'child');
 
             foreach ($this->authorsList as $author) {
@@ -155,7 +155,7 @@ class musicCatalogueElement extends structureElement
     public function getAuthorsIDList()
     {
         if (is_null($this->authorsIDList)) {
-            $this->authorsIDList = $this->getService('linksManager')
+            $this->authorsIDList = $this->getService(linksManager::class)
                 ->getConnectedIdList($this->getId(), 'authorPicture', 'child');
         }
         return $this->authorsIDList;

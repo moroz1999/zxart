@@ -24,7 +24,7 @@ class publicReceivePressArticle extends structureElementAction
             $pressArticleRepository->saveOriginalContent($structureElement->getId(), $structureElement->originalContent);
 
             if ($parentElement = $structureElement->getFirstParentElement()) {
-                $linksManager = $this->getService('linksManager');
+                $linksManager = $this->getService(linksManager::class);
                 $linksManager->unLinkElements($parentElement->getId(), $structureElement->getId());
                 $linksManager->linkElements($parentElement->getId(), $structureElement->getId(), 'prodArticle');
             }

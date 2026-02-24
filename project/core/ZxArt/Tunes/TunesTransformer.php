@@ -47,14 +47,14 @@ readonly class TunesTransformer
         $originalFileUrl = null;
         $originalFileName = $element->getFileName('original');
         if ($originalFileName && !empty($element->file)) {
-            $baseUrl = $element->getService('controller')->baseURL;
+            $baseUrl = $element->getService(controller::class)->baseURL;
             $originalFileUrl = $baseUrl . 'file/id:' . $element->file . '/filename:' . $originalFileName;
         }
         
         $trackerFileUrl = null;
         $trackerFileName = $element->getFileName('tracker');
         if ($trackerFileName && !empty($element->trackerFile)) {
-            $baseUrl = $element->getService('controller')->baseURL;
+            $baseUrl = $element->getService(controller::class)->baseURL;
             $trackerFileUrl = $baseUrl . 'file/id:' . $element->trackerFile . '/filename:' . $trackerFileName;
         }
 

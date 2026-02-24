@@ -36,7 +36,7 @@ class publicAddZxRelease extends structureElementAction
 
             $structureElement->executeAction('receiveFiles');
 
-            $privilegesManager = $this->getService('privilegesManager');
+            $privilegesManager = $this->getService(privilegesManager::class);
             $currentUserService = $this->getService(CurrentUserService::class);
             $user = $currentUserService->getCurrentUser();
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'showPublicForm', 'allow');

@@ -66,7 +66,7 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
 
     public function convertQueueItems(): void
     {
-        $linksManager = $this->getService('linksManager');
+        $linksManager = $this->getService(linksManager::class);
         $structureManager = $this->getService('structureManager');
 
         $timeLimit = 5 * 60;
@@ -200,7 +200,7 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
         if ($info = json_decode($data)) {
             $infoList = $info->data;
             $result = true;
-            $linksManager = $this->getService('linksManager');
+            $linksManager = $this->getService(linksManager::class);
             $structureManager = $this->getService('structureManager');
 
             $trackElements = [$element];

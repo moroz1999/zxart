@@ -7,7 +7,7 @@ class pressArticleSearchQueryFilter extends searchQueryFilter implements ExtraSe
 {
     public function assignExtraFilters(Builder $query): Builder
     {
-        $languagesManager = $this->getService('LanguagesManager');
+        $languagesManager = $this->getService(LanguagesManager::class);
         $query->where('languageId', '=', $languagesManager->getCurrentLanguageId());
         return $query;
     }

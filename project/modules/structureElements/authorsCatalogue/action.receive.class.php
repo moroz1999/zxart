@@ -17,7 +17,7 @@ class receiveAuthorsCatalogue extends structureElementAction
             if ($firstParent = $structureManager->getElementsFirstParent($structureElement->getId())) {
                 if ($lettersElement = $structureManager->getElementByMarker('authors')) {
                     if ($lettersList = $structureManager->getElementsChildren($lettersElement->getId())) {
-                        $linksManager = $this->getService('linksManager');
+                        $linksManager = $this->getService(linksManager::class);
                         $linksIndex = $linksManager->getElementsLinksIndex(
                             $firstParent->id,
                             'authorsCatalogue',

@@ -2,8 +2,6 @@
 declare(strict_types=1);
 
 use App\Logging\EventsLog;
-use SectionLogics;
-use tagsManager;
 
 trait TagsHolder
 {

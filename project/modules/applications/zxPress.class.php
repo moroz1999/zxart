@@ -27,9 +27,9 @@ class zxPressApplication extends controllerApplication
         /**
          * @var Cache $cache
          */
-        $cache = $this->getService('Cache');
+        $cache = $this->getService(Cache::class);
         $cache->enable(false, false, true);
-        $renderer = $this->getService('renderer');
+        $renderer = $this->getService(renderer::class);
         $renderer->endOutputBuffering();
         while (ob_get_level()) {
             ob_end_flush();
@@ -42,13 +42,13 @@ class zxPressApplication extends controllerApplication
 
             $this->getService(
                 'structureManager',
-                ['rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin')]
+                ['rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerAdmin')]
             );
 
             /**
              * @var zxPressManager $zxPressManager
              */
-            $zxPressManager = $this->getService('ZxPressManager');
+            $zxPressManager = $this->getService(ZxPressManager::class);
 //            $zxPressManager->importAll();
 //            $zxPressManager->parseIssuesPage('https://zxpress.ru/issue.php?id=143');
         }

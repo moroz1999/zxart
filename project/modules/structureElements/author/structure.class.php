@@ -204,7 +204,7 @@ class authorElement extends structureElement implements
      */
     public function recalculate()
     {
-        $average = $this->getService('ConfigManager')->get('zx.averageVote');
+        $average = $this->getService(ConfigManager::class)->get('zx.averageVote');
         $votes = 0;
         if ($pictures = $this->getWorksList(['authorPicture'])) {
             foreach ($pictures as $picture) {
@@ -282,7 +282,7 @@ class authorElement extends structureElement implements
         /**
          * @var linksManager $linksManager
          */
-        $linksManager = $this->getService('linksManager');
+        $linksManager = $this->getService(linksManager::class);
         return $linksManager->getConnectedIdList($this->getId(), $type, 'parent');
     }
 
@@ -305,7 +305,7 @@ class authorElement extends structureElement implements
         /**
          * @var LanguagesManager $languagesManager
          */
-        $languagesManager = $this->getService('LanguagesManager');
+        $languagesManager = $this->getService(LanguagesManager::class);
         $controller = controller::getInstance();
         $url = $controller->baseURL . 'zipItems/';
         $url .= 'export:' . $type . '/';

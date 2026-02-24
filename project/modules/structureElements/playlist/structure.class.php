@@ -54,7 +54,7 @@ class playlistElement extends structureElement
             /**
              * @var linksManager $linksManager
              */
-            $linksManager = $this->getService('linksManager');
+            $linksManager = $this->getService(linksManager::class);
             $elementsIds = $linksManager->getConnectedIdList($this->getId(), 'playlist', 'parent');
             $this->connectedElements = $structureManager->getElementsByIdList($elementsIds);
         }

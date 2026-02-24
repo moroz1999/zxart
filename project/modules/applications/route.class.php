@@ -21,14 +21,14 @@ class routeApplication extends controllerApplication
      */
     public function execute($controller)
     {
-        $renderer = $this->getService('renderer');
+        $renderer = $this->getService(renderer::class);
         $renderer->endOutputBuffering();
 
         $structureManager = $this->getService(
             'structureManager',
             [
                 'rootUrl' => $controller->rootURL,
-                'rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerPublic'),
+                'rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerPublic'),
             ],
             true
         );
@@ -36,7 +36,7 @@ class routeApplication extends controllerApplication
             $language = 'eng';
         }
 
-        $languagesManager = $this->getService('LanguagesManager');
+        $languagesManager = $this->getService(LanguagesManager::class);
         $languagesManager->setCurrentLanguageCode($language);
 
         if ($importId = $controller->getParameter('importId')) {

@@ -1,7 +1,5 @@
 <?php
 
-use tagsManager;
-
 class zxPictureTagsExcludeQueryFilter extends QueryFilter
 {
     public function getRequiredType()

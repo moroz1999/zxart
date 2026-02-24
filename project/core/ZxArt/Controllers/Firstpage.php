@@ -41,7 +41,7 @@ class Firstpage extends controllerApplication
         $this->objectMapper = new ObjectMapper();
 
         try {
-            $configManager = $this->getService('ConfigManager');
+            $configManager = $this->getService(ConfigManager::class);
             $structureManager = $this->getService(
                 'structureManager',
                 [
@@ -50,7 +50,7 @@ class Firstpage extends controllerApplication
                 ],
                 true
             );
-            $languagesManager = $this->getService('LanguagesManager');
+            $languagesManager = $this->getService(LanguagesManager::class);
             $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
 
             $this->prodsService = $this->getService(FirstpageProdsService::class);

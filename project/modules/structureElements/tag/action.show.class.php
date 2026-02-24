@@ -1,7 +1,5 @@
 <?php
 
-use SectionLogics;
-
 class showTag extends structureElementAction
 {
     /**

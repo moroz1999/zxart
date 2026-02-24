@@ -103,13 +103,13 @@ trait ZxProdsList
             } else {
                 $categoriesIds[] = $this->getPersistedId();
             }
-            $controller = $this->getService('controller');
+            $controller = $this->getService(controller::class);
 
             $filters = ['zxProdCategoryStrict' => $categoriesIds];
             /**
              * @var ApiQueriesManager $apiQueriesManager
              */
-            $apiQueriesManager = $this->getService('ApiQueriesManager');
+            $apiQueriesManager = $this->getService(ApiQueriesManager::class);
             $apiQuery = $apiQueriesManager->getQuery()->setExportType($this->type)->setFiltrationParameters($filters);
             $this->baseQuery = $apiQuery->getExportFilteredQuery();
             if ($letter = $controller->getParameter('letter')) {
@@ -163,7 +163,7 @@ trait ZxProdsList
 
     public function getCurrentPage(): int
     {
-        $controller = $this->getService('controller');
+        $controller = $this->getService(controller::class);
 
         $currentPage = (int)$controller->getParameter('page');
         if (!$currentPage) {
@@ -231,7 +231,7 @@ trait ZxProdsList
         if (!isset($this->yearsSelectorInfo)) {
             if ($yearsSelector = $this->getYearsSelector()) {
                 $this->yearsSelectorInfo = [];
-                $controller = $this->getService('controller');
+                $controller = $this->getService(controller::class);
 
                 if ($years = $yearsSelector[0]['values']) {
                     foreach ($years as $letter) {
@@ -344,7 +344,7 @@ trait ZxProdsList
                 /**
                  * @var translationsManager $translationsManager
                  */
-                $translationsManager = $this->getService('translationsManager');
+                $translationsManager = $this->getService(translationsManager::class);
 
                 $values = $this->getSelectorValue('statuses');
                 $statuses = $query
@@ -380,12 +380,12 @@ trait ZxProdsList
                 /**
                  * @var translationsManager $translationsManager
                  */
-                $translationsManager = $this->getService('translationsManager');
+                $translationsManager = $this->getService(translationsManager::class);
 
                 /**
                  * @var QueryFiltersManager $queryFiltersManager
                  */
-                $queryFiltersManager = $this->getService('QueryFiltersManager');
+                $queryFiltersManager = $this->getService(QueryFiltersManager::class);
                 $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
                 $hwItems = $db->table('module_zxrelease')
                     ->whereIn('id', $query)
@@ -420,12 +420,12 @@ trait ZxProdsList
                 /**
                  * @var translationsManager $translationsManager
                  */
-                $translationsManager = $this->getService('translationsManager');
+                $translationsManager = $this->getService(translationsManager::class);
 
                 /**
                  * @var QueryFiltersManager $queryFiltersManager
                  */
-                $queryFiltersManager = $this->getService('QueryFiltersManager');
+                $queryFiltersManager = $this->getService(QueryFiltersManager::class);
                 $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
                 $hwItems = $db->table('module_zxrelease_hw_required')
                     ->whereIn('elementId', $query)
@@ -462,7 +462,7 @@ trait ZxProdsList
                 $values = $this->getSelectorValue('countries');
                 $db = $this->getService('db');
 
-                $languageId = $this->getService('LanguagesManager')->getCurrentLanguageId();
+                $languageId = $this->getService(LanguagesManager::class)->getCurrentLanguageId();
                 $countriesQuery = $db->table('module_country')
                     ->whereIn('id', function ($countriesQuery) use ($query) {
                         $countriesQuery->from('module_group')->select('country')->whereIn('id', function ($producersQuery) use ($query) {
@@ -509,12 +509,12 @@ trait ZxProdsList
                 /**
                  * @var translationsManager $translationsManager
                  */
-                $translationsManager = $this->getService('translationsManager');
+                $translationsManager = $this->getService(translationsManager::class);
 
                 /**
                  * @var QueryFiltersManager $queryFiltersManager
                  */
-                $queryFiltersManager = $this->getService('QueryFiltersManager');
+                $queryFiltersManager = $this->getService(QueryFiltersManager::class);
                 $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
                 $hwItems = $db->table('module_zxrelease_format')
                     ->whereIn('elementId', $query)
@@ -554,12 +554,12 @@ trait ZxProdsList
                 /**
                  * @var translationsManager $translationsManager
                  */
-                $translationsManager = $this->getService('translationsManager');
+                $translationsManager = $this->getService(translationsManager::class);
 
                 /**
                  * @var QueryFiltersManager $queryFiltersManager
                  */
-                $queryFiltersManager = $this->getService('QueryFiltersManager');
+                $queryFiltersManager = $this->getService(QueryFiltersManager::class);
                 $prodQuery = clone($query);
                 $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
                 $languages = $db->table('zxitem_language')
@@ -657,7 +657,7 @@ trait ZxProdsList
         if (!isset($this->lettersSelectorInfo)) {
             if ($lettersSelector = $this->getLettersSelector()) {
                 $this->lettersSelectorInfo = [];
-                $controller = $this->getService('controller');
+                $controller = $this->getService(controller::class);
 
                 if ($letters = $lettersSelector[0]['values']) {
                     foreach ($letters as $letter) {
@@ -786,20 +786,20 @@ trait ZxProdsList
 
     private function getReleasesValue(): bool
     {
-        $controller = $this->getService('controller');
+        $controller = $this->getService(controller::class);
         return $controller->getParameter('releases') === '1';
     }
 
     private function getIncludeSubcategoriesProdsValue(): bool
     {
-        $controller = $this->getService('controller');
+        $controller = $this->getService(controller::class);
         return $controller->getParameter('includeSubcategoriesProds') !== '0';
     }
 
     public function getUrl($action = null)
     {
         if ($this->final) {
-            $controller = $this->getService('controller');
+            $controller = $this->getService(controller::class);
             return parent::getUrl($action) . $controller->getParametersString();
         }
         return parent::getUrl($action);
@@ -807,7 +807,7 @@ trait ZxProdsList
 
     public function getSelectorValues(): array
     {
-        $controller = $this->getService('controller');
+        $controller = $this->getService(controller::class);
         return [
             'page' => (int)($controller->getParameter('page') ?? 1),
             'letter' => $controller->getParameter('letter') ?? '',

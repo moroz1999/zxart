@@ -17,7 +17,7 @@ class receiveRegistration extends structureElementAction
             }
             $structureElement->persistElementData();
 
-            $linksManager = $this->getService('linksManager');
+            $linksManager = $this->getService(linksManager::class);
             if ($fieldsIds = $structureElement->getConnectedFieldsIds()) {
                 foreach ($fieldsIds as &$fieldId) {
                     if (!in_array($fieldId, $structureElement->registrationFieldsIds)) {

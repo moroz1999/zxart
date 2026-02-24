@@ -52,7 +52,7 @@ trait Location
                 /**
                  * @var ApiQueriesManager $queriesManager
                  */
-                $queriesManager = $this->getService('ApiQueriesManager');
+                $queriesManager = $this->getService(ApiQueriesManager::class);
 
                 $parameters = [
                     'author' . ucfirst($this->locationPropertyName) => [$this->id],
@@ -82,7 +82,7 @@ trait Location
                 /**
                  * @var ApiQueriesManager $queriesManager
                  */
-                $queriesManager = $this->getService('ApiQueriesManager');
+                $queriesManager = $this->getService(ApiQueriesManager::class);
 
                 $parameters = [
                     'group' . ucfirst($this->locationPropertyName) => [$this->id],
@@ -112,7 +112,7 @@ trait Location
                 /**
                  * @var ApiQueriesManager $queriesManager
                  */
-                $queriesManager = $this->getService('ApiQueriesManager');
+                $queriesManager = $this->getService(ApiQueriesManager::class);
 
                 $parameters = [
                     'party' . ucfirst($this->locationPropertyName) => [$this->id],

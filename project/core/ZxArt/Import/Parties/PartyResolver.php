@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ZxArt\Import\Parties;
 
-use ZxArt\Parties\Services\PartiesService;
 use partyElement;
+use ZxArt\Parties\Services\PartiesService;
 
 readonly final class PartyResolver
 {

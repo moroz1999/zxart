@@ -1,7 +1,5 @@
 <?php
 
-use SectionLogics;
-
 /**
  * Class letterElement
  *
@@ -43,12 +41,12 @@ class letterElement extends structureElement implements ColumnsTypeProvider
             $cache = $this->getElementsListCache($key, 60 * 60 * 24 * 7);
             if (($this->authorsList = $cache->load()) === null) {
                 $this->authorsList = [];
-                $linksManager = $this->getService('linksManager');
+                $linksManager = $this->getService(linksManager::class);
                 $idList = $linksManager->getConnectedIdList($this->getId(), 'structure', 'parent');
                 /**
                  * @var ApiQueriesManager $queriesManager
                  */
-                $queriesManager = $this->getService('ApiQueriesManager');
+                $queriesManager = $this->getService(ApiQueriesManager::class);
 
 
                 $parameters = [
@@ -138,7 +136,7 @@ class letterElement extends structureElement implements ColumnsTypeProvider
     {
         $structureManager = $this->getService('structureManager');
         if ($authorsCatalogues = $structureManager->getElementsByType('authorsCatalogue')) {
-            $linksManager = $this->getService('linksManager');
+            $linksManager = $this->getService(linksManager::class);
             foreach ($authorsCatalogues as $authorsCatalogue) {
                 if ($firstParent = $structureManager->getElementsFirstParent($authorsCatalogue->id)) {
                     $linksManager->linkElements($firstParent->id, $this->getId(), 'authorsCatalogue');

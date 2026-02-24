@@ -1,7 +1,5 @@
 <?php
 
-use SectionLogics;
-
 class tagsListElement extends structureElement
 {
     public $dataResourceName = 'module_tagslist';
@@ -34,7 +32,7 @@ class tagsListElement extends structureElement
             /**
              * @var ApiQueriesManager $apiQueriesManager
              */
-            $apiQueriesManager = $this->getService('ApiQueriesManager');
+            $apiQueriesManager = $this->getService(ApiQueriesManager::class);
             $sectionsLogics = $this->getService(SectionLogics::class);
             if (($type = $sectionsLogics->getArtItemsType()) === 'graphics') {
                 $parameters = [
@@ -74,8 +72,8 @@ class tagsListElement extends structureElement
                     $maxAmount = $tag->amount;
                 }
             }
-            if ($maxAmount > $this->getService('ConfigManager')->get('zx.maxTagsAmount')) {
-                $maxAmount = $this->getService('ConfigManager')->get('zx.maxTagsAmount');
+            if ($maxAmount > $this->getService(ConfigManager::class)->get('zx.maxTagsAmount')) {
+                $maxAmount = $this->getService(ConfigManager::class)->get('zx.maxTagsAmount');
             }
             $this->maxAmount = $maxAmount;
             array_multisort($sort, SORT_ASC, $this->tagsList);

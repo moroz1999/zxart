@@ -12,7 +12,7 @@ class showFullListMusicCatalogue extends structureElementAction
                 $structureElement->getChildrenList();
 
                 $structureElement->setTemplate('shared.content.tpl');
-                $renderer = $this->getService('renderer');
+                $renderer = $this->getService(renderer::class);
                 $renderer->assign('tabsTemplate', 'musicCatalogue.tabs.tpl');
                 $renderer->assign('contentSubTemplate', 'musicCatalogue.list.tpl');
             }

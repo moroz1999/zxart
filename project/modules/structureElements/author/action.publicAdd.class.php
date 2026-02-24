@@ -35,7 +35,7 @@ class publicAddAuthor extends structureElementAction
             $structureElement->recalculateMusicData();
             $structureElement->recalculate();
 
-            $privilegesManager = $this->getService('privilegesManager');
+            $privilegesManager = $this->getService(privilegesManager::class);
             $currentUserService = $this->getService(CurrentUserService::class);
             $user = $currentUserService->getCurrentUser();
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'author', 'showPublicForm', 'allow');

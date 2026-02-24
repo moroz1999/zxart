@@ -60,12 +60,12 @@ class Zximagesdownload extends controllerApplication
             'structureManager',
             [
                 'rootUrl' => $controller->rootURL,
-                'rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerPublic'),
+                'rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerPublic'),
             ],
             true
         );
 
-        $languagesManager = $this->getService('LanguagesManager');
+        $languagesManager = $this->getService(LanguagesManager::class);
         $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
 
         if ($zxPictureElement = $structureManager->getElementById($this->id)) {

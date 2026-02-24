@@ -58,7 +58,17 @@
       "mcp__jetbrains-ide__create_new_file",
       "mcp__jetbrains-ide__execute_terminal_command",
       "mcp__jetbrains-ide__find_files_by_glob",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(git config:*)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\(''mcpServers'', {}\\), indent=2\\)\\)\")",
+      "Bash(claude mcp:*)",
+      "mcp__jetbrains__find_files_by_name_keyword",
+      "mcp__jetbrains__execute_terminal_command",
+      "Bash(cd:*)",
+      "mcp__jetbrains__get_file_text_by_path",
+      "mcp__jetbrains__search_in_files_by_regex",
+      "mcp__jetbrains__search_in_files_by_text",
+      "mcp__jetbrains__replace_text_in_file"
     ]
   },
   "enabledPlugins": {

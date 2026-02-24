@@ -13,7 +13,7 @@ class fileApplication extends controllerApplication
      */
     public function initialize()
     {
-        $configManager = $this->getService('ConfigManager');
+        $configManager = $this->getService(ConfigManager::class);
         $this->startSession('public', $configManager->get('main.publicSessionLifeTime'));
         $this->createRenderer();
     }

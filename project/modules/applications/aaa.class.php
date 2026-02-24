@@ -1,7 +1,6 @@
 <?php
 
 use App\Users\CurrentUserService;
-use ZxaaaManager;
 
 class aaaApplication extends controllerApplication
 {
@@ -27,9 +26,9 @@ class aaaApplication extends controllerApplication
         /**
          * @var Cache $cache
          */
-        $cache = $this->getService('Cache');
+        $cache = $this->getService(Cache::class);
         $cache->enable(false, false, true);
-        $renderer = $this->getService('renderer');
+        $renderer = $this->getService(renderer::class);
         $renderer->endOutputBuffering();
         while (ob_get_level()) {
             ob_end_flush();
@@ -42,7 +41,7 @@ class aaaApplication extends controllerApplication
 
             $this->getService(
                 'structureManager',
-                ['rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin')]
+                ['rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerAdmin')]
             );
 
             $zxaaaManager = $this->getService(ZxaaaManager::class);

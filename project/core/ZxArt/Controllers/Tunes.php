@@ -20,7 +20,7 @@ class Tunes extends controllerApplication
         $this->startSession('public');
         $this->createRenderer();
 
-        $configManager = $this->getService('ConfigManager');
+        $configManager = $this->getService(ConfigManager::class);
         $structureManager = $this->getService(
             'structureManager',
             [
@@ -29,7 +29,7 @@ class Tunes extends controllerApplication
             ],
             true
         );
-        $languagesManager = $this->getService('LanguagesManager');
+        $languagesManager = $this->getService(LanguagesManager::class);
         $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
 
         $this->tunePlayService = $this->getService(TunePlayService::class);

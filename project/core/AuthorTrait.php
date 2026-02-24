@@ -67,7 +67,7 @@ trait AuthorTrait
 
     public function checkParentLetter(): void
     {
-        $linksManager = $this->getService('linksManager');
+        $linksManager = $this->getService(linksManager::class);
         $letterId = $this->getLetterId($this->title);
 
         if ($links = $linksManager->getElementsLinks($this->getId())) {
@@ -99,7 +99,7 @@ trait AuthorTrait
     {
         if ($this->linksInfo === null) {
             $this->linksInfo = [];
-            $translationsManager = $this->getService('translationsManager');
+            $translationsManager = $this->getService(translationsManager::class);
 
             if ($this->is3aDenied()) {
                 $types = ['zxdb', 'pouet', 's4e', 'worldofsam'];

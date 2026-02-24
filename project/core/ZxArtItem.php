@@ -1,7 +1,6 @@
 <?php
 
 use App\Logging\EventsLog;
-use votesManager;
 use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\Press\Helpers\PressMentions;
 
@@ -141,7 +140,7 @@ abstract class ZxArtItem extends structureElement implements
 
     public function renewPartyLink(): void
     {
-        $linksManager = $this->getService('linksManager');
+        $linksManager = $this->getService(linksManager::class);
 
         $linkExists = false;
         if ($elementLinks = $linksManager->getElementsLinks($this->id, $this->partyLinkType, 'child')) {
@@ -180,7 +179,7 @@ abstract class ZxArtItem extends structureElement implements
     {
         $linkType = $this->authorLinkType;
 
-        $linksManager = $this->getService('linksManager');
+        $linksManager = $this->getService(linksManager::class);
 
         $compiledLinks = [];
         $elementLinks = $linksManager->getElementsLinks($this->id, $linkType, 'child');
@@ -202,7 +201,7 @@ abstract class ZxArtItem extends structureElement implements
 
     public function makeAuthorLink($authorId): void
     {
-        $linksManager = $this->getService('linksManager');
+        $linksManager = $this->getService(linksManager::class);
         $linksManager->linkElements($authorId, $this->id, $this->authorLinkType);
     }
 
@@ -264,7 +263,7 @@ abstract class ZxArtItem extends structureElement implements
 
     public function updateProdLink(): void
     {
-        $linksManager = $this->getService('linksManager');
+        $linksManager = $this->getService(linksManager::class);
 
         $linkExists = false;
         if ($elementLinks = $linksManager->getElementsLinks($this->id, 'gameLink', 'child')) {
@@ -332,7 +331,7 @@ abstract class ZxArtItem extends structureElement implements
     public function getAuthorIds()
     {
         if ($this->authorIds === null) {
-            $this->authorIds = $this->getService('linksManager')->getConnectedIdList(
+            $this->authorIds = $this->getService(linksManager::class)->getConnectedIdList(
                 $this->id,
                 $this->authorLinkType,
                 'child'
@@ -354,7 +353,7 @@ abstract class ZxArtItem extends structureElement implements
 
     public function getPlaylistIds()
     {
-        $linksManager = $this->getService('linksManager');
+        $linksManager = $this->getService(linksManager::class);
         return $linksManager->getConnectedIdList($this->id, 'playlist', 'child');
     }
 
@@ -511,7 +510,7 @@ abstract class ZxArtItem extends structureElement implements
                 $structureManager = $this->getService('structureManager');
                 $this->originalAuthors = [];
 
-                $originalAuthorIds = $this->getService('linksManager')->getConnectedIdList(
+                $originalAuthorIds = $this->getService(linksManager::class)->getConnectedIdList(
                     $this->id,
                     "originalAuthor",
                     'child'
@@ -533,7 +532,7 @@ abstract class ZxArtItem extends structureElement implements
     {
         $linkType = "originalAuthor";
 
-        $linksManager = $this->getService('linksManager');
+        $linksManager = $this->getService(linksManager::class);
 
         $compiledLinks = [];
         $elementLinks = $linksManager->getElementsLinks($this->id, $linkType, 'child');

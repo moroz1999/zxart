@@ -1,7 +1,5 @@
 <?php
 
-use tagsManager;
-
 class zxMusicTagsIncludeQueryFilter extends QueryFilter
 {
     public function getRequiredType()

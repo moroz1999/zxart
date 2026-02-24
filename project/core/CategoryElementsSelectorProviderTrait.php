@@ -17,7 +17,7 @@ trait CategoryElementsSelectorProviderTrait
             /**
              * @var LanguagesManager $languagesManager
              */
-            $languagesManager = $this->getService('LanguagesManager');
+            $languagesManager = $this->getService(LanguagesManager::class);
             if ($connectedIds = $this->getConnectedCategoriesIds()) {
                 $index = array_flip($connectedIds);
             } else {

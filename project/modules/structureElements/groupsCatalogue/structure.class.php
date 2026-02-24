@@ -32,7 +32,7 @@ class groupsCatalogueElement extends structureElement
     {
         if (!in_array('content', (array)$roles)) {
             $structureManager = $this->getService('structureManager');
-            if ($structureManager->getRootElementMarker() === $this->getService('ConfigManager')->get(
+            if ($structureManager->getRootElementMarker() === $this->getService(ConfigManager::class)->get(
                     'main.rootMarkerAdmin'
                 )) {
                 return false;
@@ -66,7 +66,7 @@ class groupsCatalogueElement extends structureElement
     {
         $structureManager = $this->getService('structureManager');
         if ($firstParent = $structureManager->getElementsFirstParent($this->getId())) {
-            $linksManager = $this->getService('linksManager');
+            $linksManager = $this->getService(linksManager::class);
             $linksList = $linksManager->getElementsLinks(
                 $firstParent->id,
                 'groupsCatalogue',

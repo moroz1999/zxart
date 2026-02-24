@@ -107,7 +107,7 @@ class tagsElement extends structureElement
 
     public function getPublicLanguages()
     {
-        return $this->getService('LanguagesManager')->getLanguagesList('public_root');
+        return $this->getService(LanguagesManager::class)->getLanguagesList('public_root');
     }
 }
 

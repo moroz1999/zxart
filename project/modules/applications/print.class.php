@@ -23,12 +23,12 @@ class printApplication extends controllerApplication
                 'structureManager',
                 [
                     'rootUrl' => $controller->rootURL,
-                    'rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerPublic'),
+                    'rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerPublic'),
                 ],
                 true
             );
 
-            $languagesManager = $this->getService('LanguagesManager');
+            $languagesManager = $this->getService(LanguagesManager::class);
             $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
             /**
              * @var zxPictureElement $zxPictureElement
@@ -96,7 +96,7 @@ class printApplication extends controllerApplication
 
                     $fileName = $zxPictureElement->getFileName('image', true, false) . '_300dpi.png';
                     if (is_file($filePath)) {
-                        $configManager = $this->getService('ConfigManager');
+                        $configManager = $this->getService(ConfigManager::class);
                         $pathsManager = $this->pathsManager;
 
                         $imageProcess = new \ImageProcess\ImageProcess($pathsManager->getPath('imagesCache'));

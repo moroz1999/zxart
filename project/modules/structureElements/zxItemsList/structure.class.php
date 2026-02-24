@@ -67,7 +67,7 @@ class zxItemsListElement extends structureElement implements JsonDataProvider
                 /**
                  * @var ApiQueriesManager $apiQueriesManager
                  */
-                $apiQueriesManager = $this->getService('ApiQueriesManager');
+                $apiQueriesManager = $this->getService(ApiQueriesManager::class);
                 if (($apiQuery = $apiQueriesManager->getQueryFromString($this->apiString)) && $result = $apiQuery->getQueryResult()) {
                     $this->itemsList = $result[$structureType];
                 }
@@ -83,7 +83,7 @@ class zxItemsListElement extends structureElement implements JsonDataProvider
     {
         if ($this->searchFormParametersString) {
             if ($this->items === 'zxProd' || $this->items === 'zxRelease') {
-                $languagesManager = $this->getService('LanguagesManager');
+                $languagesManager = $this->getService(LanguagesManager::class);
                 $currentLanguageId = $languagesManager->getCurrentLanguageId();
 
                 /**

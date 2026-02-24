@@ -119,7 +119,7 @@ class groupElement extends structureElement implements
 
     public function getChartDataIds($type = null)
     {
-        return $this->getService('linksManager')->getConnectedIdList($this->getId(), $type, 'parent');
+        return $this->getService(linksManager::class)->getConnectedIdList($this->getId(), $type, 'parent');
     }
 
     /**
@@ -141,7 +141,7 @@ class groupElement extends structureElement implements
         $controller = controller::getInstance();
         $url = $controller->baseURL . 'zipItems/';
         $url .= 'export:' . $type . '/';
-        $url .= 'language:' . $this->getService('LanguagesManager')->getCurrentLanguageCode() . '/';
+        $url .= 'language:' . $this->getService(LanguagesManager::class)->getCurrentLanguageCode() . '/';
         $url .= 'filter:groupId=' . $this->getId() . '/';
         $url .= 'structure:groups/';
 
@@ -153,7 +153,7 @@ class groupElement extends structureElement implements
         /**
          * @var linksManager $linksManager
          */
-        $linksManager = $this->getService('linksManager');
+        $linksManager = $this->getService(linksManager::class);
         $letterId = $this->getLetterId($this->title);
 
         if ($links = $linksManager->getElementsLinks($this->getId())) {
@@ -211,7 +211,7 @@ class groupElement extends structureElement implements
             /**
              * @var linksManager $linksManager
              */
-            $linksManager = $this->getService('linksManager');
+            $linksManager = $this->getService(linksManager::class);
             $this->subGroupIds = $linksManager->getConnectedIdList($this->getId(), LinkTypes::GROUP_SUBGROUP->value, "parent");
         }
         return $this->subGroupIds;
@@ -222,7 +222,7 @@ class groupElement extends structureElement implements
         /**
          * @var linksManager $linksManager
          */
-        $linksManager = $this->getService('linksManager');
+        $linksManager = $this->getService(linksManager::class);
         if ($subGroupIds = $this->getSubGroupIds()) {
             foreach ($subGroupIds as $subGroupId) {
                 if (!in_array($subGroupId, $this->subGroupsSelector)) {
@@ -239,7 +239,7 @@ class groupElement extends structureElement implements
     {
         if ($this->groupProds === null) {
             $this->groupProds = [];
-            $linksManager = $this->getService('linksManager');
+            $linksManager = $this->getService(linksManager::class);
             if ($prodIds = $linksManager->getConnectedIdList($this->getId(), 'zxProdGroups', 'parent')) {
                 $structureManager = $this->getService('structureManager');
                 foreach ($prodIds as $prodId) {

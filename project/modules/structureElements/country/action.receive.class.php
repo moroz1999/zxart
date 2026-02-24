@@ -1,7 +1,5 @@
 <?php
 
-use CountriesManager;
-
 class receiveCountry extends structureElementAction
 {
     /**
@@ -19,7 +17,7 @@ class receiveCountry extends structureElementAction
 
             $countriesListElements = $structureManager->getElementsByType('countriesList');
 
-            $linksManager = $this->getService('linksManager');
+            $linksManager = $this->getService(linksManager::class);
             $compiledLinks = $linksManager->getElementsLinksIndex($structureElement->getId(), 'countries', 'child');
 
             foreach ($countriesListElements as $countriesListElement) {

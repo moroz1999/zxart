@@ -24,10 +24,10 @@ class yearElement extends structureElement implements ColumnsTypeProvider
     public function getPartiesList()
     {
         if (is_null($this->partiesList)) {
-            $linksManager = $this->getService('linksManager');
+            $linksManager = $this->getService(linksManager::class);
             $idList = $linksManager->getConnectedIdList($this->getId(), 'structure', 'parent');
 
-            $queriesManager = $this->getService('ApiQueriesManager');
+            $queriesManager = $this->getService(ApiQueriesManager::class);
 
             $parameters = [
                 'partyId' => $idList,
@@ -57,7 +57,7 @@ class yearElement extends structureElement implements ColumnsTypeProvider
     {
         $structureManager = $this->getService('structureManager');
         if ($partiesCatalogues = $structureManager->getElementsByType('partiesCatalogue')) {
-            $linksManager = $this->getService('linksManager');
+            $linksManager = $this->getService(linksManager::class);
             foreach ($partiesCatalogues as $partiesCatalogue) {
                 if ($firstParent = $structureManager->getElementsFirstParent($partiesCatalogue->id)) {
                     $linksManager->linkElements($firstParent->id, $this->getId(), 'partiesCatalogue');

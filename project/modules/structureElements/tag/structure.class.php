@@ -1,7 +1,5 @@
 <?php
 
-use SectionLogics;
-
 class tagElement extends structureElement implements JsonDataProvider
 {
     use JsonDataProviderElement;
@@ -40,7 +38,7 @@ class tagElement extends structureElement implements JsonDataProvider
     public function updateAmount(): void
     {
         $db = $this->getService('db');
-        $linksManager = $this->getService('linksManager');
+        $linksManager = $this->getService(linksManager::class);
         $amount = count($linksManager->getConnectedIdList($this->getId(), 'tagLink', 'parent'));
         $db->table('module_tag')->where('id', '=', $this->getId())->update(['amount'=>$amount]);
     }
@@ -54,7 +52,7 @@ class tagElement extends structureElement implements JsonDataProvider
         $min = 1;
         $max = 4;
 
-        if ($this->amount > $this->getService('ConfigManager')->get('zx.maxTagsAmount')) {
+        if ($this->amount > $this->getService(ConfigManager::class)->get('zx.maxTagsAmount')) {
             return $min + ($max - $min) * (99) / $maxAmount;
         }
 
@@ -66,7 +64,7 @@ class tagElement extends structureElement implements JsonDataProvider
         // connect all tagslists configured to show all tags
         $structureManager = $this->getService('structureManager');
         if ($tagsLists = $structureManager->getElementsByType('tagsList')) {
-            $linksManager = $this->getService('linksManager');
+            $linksManager = $this->getService(linksManager::class);
             foreach ($tagsLists as $tagsList) {
                 $linksManager->linkElements($tagsList->id, $this->getId(), 'tagsList');
             }
@@ -137,7 +135,7 @@ class tagElement extends structureElement implements JsonDataProvider
     protected function loadElementsByType(string $type): array
     {
         $elements = [];
-        $linksManager = $this->getService('linksManager');
+        $linksManager = $this->getService(linksManager::class);
         $structureManager = $this->getService('structureManager');
         if ($idList = $linksManager->getConnectedIdList($this->getId(), 'tagLink', 'parent')) {
             foreach ($idList as $id) {

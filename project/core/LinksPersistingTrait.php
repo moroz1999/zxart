@@ -10,7 +10,7 @@ trait LinksPersistingTrait
         /**
          * @var linksManager $linksManager
          */
-        $linksManager = $this->getService('linksManager');
+        $linksManager = $this->getService(linksManager::class);
         $linksIndex = $linksManager->getElementsLinksIndex($this->getPersistedId(), $linkType, 'child');
         foreach ($this->$property as $id) {
             if (!isset($linksIndex[$id])) {

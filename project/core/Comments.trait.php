@@ -32,7 +32,7 @@ trait CommentsTrait
         if ($this->commentsAmount !== null) {
             $commentsAmount = $this->commentsAmount;
         } else {
-            $linksManager = $this->getService('linksManager');
+            $linksManager = $this->getService(linksManager::class);
             $commentsAmount = count($linksManager->getElementsLinks($this->id, 'structure', 'parent', false));
         }
 

@@ -27,12 +27,12 @@ class coorApplication extends controllerApplication
     {
         ini_set("memory_limit", "2048M");
         ini_set("max_execution_time", 60);
-        $renderer = $this->getService('renderer');
+        $renderer = $this->getService(renderer::class);
         $renderer->endOutputBuffering();
         if (!($language = $controller->getParameter('lang'))) {
             $language = 'eng';
         }
-        $configManager = $this->getService('ConfigManager');
+        $configManager = $this->getService(ConfigManager::class);
         $this->key = $configManager->get('main.ga_key');
         /**
          * @var LanguagesManager $languagesManager
@@ -41,7 +41,7 @@ class coorApplication extends controllerApplication
         $user = $currentUserService->getCurrentUser();
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
-            $languagesManager = $this->getService('LanguagesManager');
+            $languagesManager = $this->getService(LanguagesManager::class);
             $languagesManager->setCurrentLanguageCode($language, $configManager->get('main.rootMarkerAdmin'));
             $this->structureManager = $this->getService(
                 'structureManager',

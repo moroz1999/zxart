@@ -28,9 +28,9 @@ class dmdApplication extends controllerApplication
         /**
          * @var Cache $cache
          */
-        $cache = $this->getService('Cache');
+        $cache = $this->getService(Cache::class);
         $cache->enable(false, false, true);
-        $renderer = $this->getService('renderer');
+        $renderer = $this->getService(renderer::class);
         $renderer->endOutputBuffering();
         while (ob_get_level()) {
             ob_end_flush();
@@ -43,13 +43,13 @@ class dmdApplication extends controllerApplication
 
             $this->getService(
                 'structureManager',
-                ['rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin')]
+                ['rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerAdmin')]
             );
 
             /**
              * @var DmdManager $dmdManager
              */
-            $dmdManager = $this->getService('DmdManager');
+            $dmdManager = $this->getService(DmdManager::class);
             $dmdManager->importAll();
         }
     }

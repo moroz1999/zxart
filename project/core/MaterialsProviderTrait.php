@@ -39,7 +39,7 @@ trait MaterialsProviderTrait
     public function getMaterialsList()
     {
         if ($this->materialsList === null) {
-            if ($ids = $this->getService('linksManager')->getConnectedIdList($this->id, 'gameLink', 'parent')) {
+            if ($ids = $this->getService(linksManager::class)->getConnectedIdList($this->id, 'gameLink', 'parent')) {
                 $structureManager = $this->getService('structureManager');
                 foreach ($ids as $id) {
                     if ($element = $structureManager->getElementById($id)) {

@@ -3,23 +3,11 @@ declare(strict_types=1);
 
 use App\Paths\PathsManager;
 use App\Users\CurrentUserService;
-use CountriesManager;
 use Illuminate\Database\Connection;
-use LanguagesManager;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use mp3ConversionManager;
-use PicturesModesManager;
 use Psr\Container\ContainerInterface;
-use RzxArchiveManager;
-use S4eManager;
-use SectionLogics;
-use SpeccyMapsManager;
-use tagsManager;
-use TslabsManager;
-use votesManager;
-use ZxaaaManager;
 use ZxArt\Ai\ChunkProcessor;
 use ZxArt\Ai\Service\PressArticleParser;
 use ZxArt\Ai\Service\PressArticleSeo;
@@ -116,10 +104,6 @@ return [
         ->constructorParameter('channelId', DI\get('telegram_channel_id')),
 
     // Legacy services migrated from project/services/
-    CountriesManager::class => autowire(),
-    mp3ConversionManager::class => autowire(),
-    votesManager::class => autowire(),
-    tagsManager::class => autowire(),
     PicturesModesManager::class => factory(static function (CurrentUserService $currentUserService) {
         $instance = new PicturesModesManager();
         $instance->setUser($currentUserService->getCurrentUser());

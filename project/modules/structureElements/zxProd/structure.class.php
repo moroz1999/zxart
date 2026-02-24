@@ -282,7 +282,7 @@ class zxProdElement extends ZxArtItem implements
         /**
          * @var linksManager $linksManager
          */
-        $linksManager = $this->getService('linksManager');
+        $linksManager = $this->getService(linksManager::class);
         return $linksManager->getConnectedIdList($this->getId(), 'structure', 'parent');
     }
 
@@ -354,7 +354,7 @@ class zxProdElement extends ZxArtItem implements
              */
             $releaseIdsQuery = $db->table($this->dataResourceName)->where('id', $this->getId());
 
-            $queryFiltersManager = $this->getService('QueryFiltersManager');
+            $queryFiltersManager = $this->getService(QueryFiltersManager::class);
             $releaseIdsQuery = $queryFiltersManager->convertTypeData($releaseIdsQuery, 'zxRelease', 'zxProd', [])->select('id');
             $urls = [];
 
@@ -367,7 +367,7 @@ class zxProdElement extends ZxArtItem implements
                 ->whereIn('type', ['inlayFilesSelector', 'adFilesSelector'])
                 ->pluck('childStructureId')
             ) {
-                $controller = $this->getService('controller');
+                $controller = $this->getService(controller::class);
                 foreach ($imageIds as $imageId) {
                     $urls[] = $controller->baseURL . 'image/type:prodListInlay/id:' . $imageId;
                 }
@@ -385,7 +385,7 @@ class zxProdElement extends ZxArtItem implements
         }
 
         if ($number === 0) {
-            $controller = $this->getService('controller');
+            $controller = $this->getService(controller::class);
             if ($this->legalStatus === LegalStatus::unreleased->name) {
                 return $controller->baseURL . 'images/zxprod_unreleased.png';
             }
@@ -498,13 +498,13 @@ class zxProdElement extends ZxArtItem implements
             /**
              * @var ApiQueriesManager $queriesManager
              */
-            $queriesManager = $this->getService('ApiQueriesManager');
+            $queriesManager = $this->getService(ApiQueriesManager::class);
 
             $sort = ['votes' => 'desc'];
             $parameters = [
                 'zxProdId' => [$this->getId()],
                 'zxPictureNotId' => $excludeId,
-                'zxPictureMinRating' => $this->getService('ConfigManager')->get('zx.averageVote'),
+                'zxPictureMinRating' => $this->getService(ConfigManager::class)->get('zx.averageVote'),
             ];
 
             $query = $queriesManager->getQuery();
@@ -533,7 +533,7 @@ class zxProdElement extends ZxArtItem implements
     public function getConnectedCategoriesIds()
     {
         if ($this->connectedCategoriesIds === null) {
-            $this->connectedCategoriesIds = $this->getService('linksManager')
+            $this->connectedCategoriesIds = $this->getService(linksManager::class)
                 ->getConnectedIdList($this->getId(), 'zxProdCategory', 'child');
             if (!$this->connectedCategoriesIds) {
                 if ($element = $this->getFirstParentElement()) {
@@ -611,7 +611,7 @@ class zxProdElement extends ZxArtItem implements
     {
         if ($this->linksInfo === null) {
             $this->linksInfo = [];
-            $translationsManager = $this->getService('translationsManager');
+            $translationsManager = $this->getService(translationsManager::class);
             /**
              * @var Connection $db
              */
@@ -727,7 +727,7 @@ class zxProdElement extends ZxArtItem implements
         /**
          * @var translationsManager $translationsManager
          */
-        $translationsManager = $this->getService('translationsManager');
+        $translationsManager = $this->getService(translationsManager::class);
         if ($this->seriesProds) {
             $searchTitle = $translationsManager->getTranslationByName('zxprod.seriesprod') . ': ' . $searchTitle;
         }
@@ -813,7 +813,7 @@ class zxProdElement extends ZxArtItem implements
         if ($release !== null) {
             $computersList = array_intersect($release->hardwareRequired, $release->getHardwareList()[HardwareGroup::COMPUTERS->value]);
             $dosList = array_intersect($release->hardwareRequired, $release->getHardwareList()[HardwareGroup::DOS->value]);
-            $translationsManager = $this->getService('translationsManager');
+            $translationsManager = $this->getService(translationsManager::class);
 
             $computersStrings = [];
             foreach ($computersList as $computer) {
@@ -873,7 +873,7 @@ class zxProdElement extends ZxArtItem implements
          */
         $query = $db->table($this->dataResourceName)->where('id', $this->getId());
 
-        $queryFiltersManager = $this->getService('QueryFiltersManager');
+        $queryFiltersManager = $this->getService(QueryFiltersManager::class);
         $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
         $hwItems = $db->table('module_zxrelease_hw_required')
             ->whereIn('elementId', $query)
@@ -889,14 +889,14 @@ class zxProdElement extends ZxArtItem implements
             /**
              * @var languagesManager $languagesManager
              */
-            $languagesManager = $this->getService('languagesManager');
+            $languagesManager = $this->getService(LanguagesManager::class);
             $key = 'hw' . $languagesManager->getCurrentLanguageId();
             if (($this->hardwareInfo = $this->getCacheKey($key)) === null) {
                 $this->hardwareInfo = [];
                 /**
                  * @var translationsManager $translationsManager
                  */
-                $translationsManager = $this->getService('translationsManager');
+                $translationsManager = $this->getService(translationsManager::class);
                 foreach ($this->getHardware() as $item) {
                     $this->hardwareInfo[] = [
                         'id' => $item,
@@ -947,7 +947,7 @@ class zxProdElement extends ZxArtItem implements
                  */
                 $query = $db->table($this->dataResourceName)->where('id', $this->getId());
 
-                $queryFiltersManager = $this->getService('QueryFiltersManager');
+                $queryFiltersManager = $this->getService(QueryFiltersManager::class);
                 $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
                 $languageCodes = $db->table('zxitem_language')
                     ->whereIn('elementId', $query)
@@ -957,7 +957,7 @@ class zxProdElement extends ZxArtItem implements
                 /**
                  * @var translationsManager $translationsManager
                  */
-                $translationsManager = $this->getService('translationsManager');
+                $translationsManager = $this->getService(translationsManager::class);
 
                 foreach ($languageCodes as $languageCode) {
                     $this->languagesInfo[] = [
@@ -1111,7 +1111,7 @@ class zxProdElement extends ZxArtItem implements
     public function resizeImages(): void
     {
         $pathsManager = $this->getService(PathsManager::class);
-        $configManager = $this->getService('ConfigManager');
+        $configManager = $this->getService(ConfigManager::class);
         if ($images = $this->getFilesList('connectedFile')) {
             foreach ($images as $image) {
                 $filePath = $this->getUploadedFilesPath() . $image->id;
@@ -1149,7 +1149,7 @@ class zxProdElement extends ZxArtItem implements
         /**
          * @var translationsManager $translationsManager
          */
-//        $translationsManager = $this->getService('translationsManager');
+//        $translationsManager = $this->getService(translationsManager::class);
         if ($categories = $this->getConnectedCategories()) {
             $category = last($categories);
         }
@@ -1170,7 +1170,7 @@ class zxProdElement extends ZxArtItem implements
      */
     public function getOpenGraphData()
     {
-        $languagesManager = $this->getService('LanguagesManager');
+        $languagesManager = $this->getService(LanguagesManager::class);
         $data = [
             'title' => $this->getMetaTitle(),
             'url' => $this->getUrl(),

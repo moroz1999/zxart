@@ -19,7 +19,7 @@ class logoutLogin extends structureElementAction
     {
         if (stripos($_SERVER['HTTP_REFERER'], $controller->domainURL) === 0) {
             $destination = $_SERVER['HTTP_REFERER'];
-        } elseif ($firstPageElement = $structureManager->getElementByMarker('firstpage', $this->getService('LanguagesManager')
+        } elseif ($firstPageElement = $structureManager->getElementByMarker('firstpage', $this->getService(LanguagesManager::class)
             ->getCurrentLanguageId())
         ) {
             $destination = $firstPageElement->URL;

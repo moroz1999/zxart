@@ -22,11 +22,11 @@ class zxnetApplication extends controllerApplication
             'structureManager',
             [
                 'rootUrl' => $controller->rootURL,
-                'rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerPublic'),
+                'rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerPublic'),
             ],
             true
         );
-        $languagesManager = $this->getService('LanguagesManager');
+        $languagesManager = $this->getService(LanguagesManager::class);
         if ($controller->getParameter('l')) {
             $languagesManager->setCurrentLanguageCode($controller->getParameter('l'));
         }
@@ -138,7 +138,7 @@ class zxnetApplication extends controllerApplication
         $result = [];
 
         if ($resultTypes) {
-            $apiQueriesManager = $this->getService('ApiQueriesManager');
+            $apiQueriesManager = $this->getService(ApiQueriesManager::class);
             if ($apiQuery = $apiQueriesManager->getQuery()) {
                 $apiQuery->setOptimized(true);
                 $apiQuery->setFiltrationParameters($queryParameters);

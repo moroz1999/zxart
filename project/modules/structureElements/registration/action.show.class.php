@@ -20,7 +20,7 @@ class showRegistration extends structureElementAction
         $serverSessionManager = $this->getService(ServerSessionManager::class);
         if ($registeredHere && ($controller->getParameter('success') || ($serverSessionManager->get('showSuccessMessage' . $structureElement->getId())))) {
             $serverSessionManager->delete('showSuccessMessage' . $structureElement->getId());
-            $translationsManager = $this->getService('translationsManager');
+            $translationsManager = $this->getService(translationsManager::class);
             if ($structureElement->type == 'registration') {
                 $structureElement->resultMessage = $translationsManager->getTranslationByName('userdata.registrationsuccess');
             } else {

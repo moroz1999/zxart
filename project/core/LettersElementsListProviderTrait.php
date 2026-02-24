@@ -13,7 +13,7 @@ trait LettersElementsListProviderTrait
         if (!empty($this->languagesManager)) {
             $languagesManager = $this->languagesManager;
         } else {
-            $languagesManager = $this->getService('LanguagesManager');
+            $languagesManager = $this->getService(LanguagesManager::class);
         }
 
         /**
@@ -31,7 +31,7 @@ trait LettersElementsListProviderTrait
         if (!empty($this->configManager)) {
             $configManager = $this->configManager;
         } else {
-            $configManager = $this->getService('ConfigManager');
+            $configManager = $this->getService(ConfigManager::class);
         }
 
         if ($structureManager->getRootElementMarker() == $configManager->get('main.rootMarkerAdmin')) {

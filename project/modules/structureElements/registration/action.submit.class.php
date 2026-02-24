@@ -1,8 +1,6 @@
 <?php
 
 use App\Users\CurrentUserService;
-use SocialDataManager;
-use SpamChecker;
 
 class submitRegistration extends structureElementAction
 {
@@ -16,7 +14,7 @@ class submitRegistration extends structureElementAction
     {
         $currentUserService = $this->getService(CurrentUserService::class);
         $user = $currentUserService->getCurrentUser();
-        $translationsManager = $this->getService('translationsManager');
+        $translationsManager = $this->getService(translationsManager::class);
 
         if ($structureElement->type == 'userdata' && $user->userName == 'anonymous') {
             exit();
@@ -121,7 +119,7 @@ class submitRegistration extends structureElementAction
                             }
 
                             if ($newUser) {
-                                $linksManager = $this->getService('linksManager');
+                                $linksManager = $this->getService(linksManager::class);
                                 $connectedUserGroupsIds = $structureElement->getConnectedUserGroupsIds();
                                 foreach ($connectedUserGroupsIds as &$connectedUserGroupId) {
                                     $linksManager->linkElements($connectedUserGroupId, $userElement->getId(), 'userRelation');

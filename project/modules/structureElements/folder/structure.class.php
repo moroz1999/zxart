@@ -146,7 +146,7 @@ class folderElement extends menuDependantStructureElement implements
             /**
              * @var ConfigManager $configManager
              */
-            $configManager = $this->getService('ConfigManager');
+            $configManager = $this->getService(ConfigManager::class);
             $this->allowedTypes = $configManager->getMerged('folder-allowedTypes.content');
         }
         return parent::getAllowedTypes($currentAction);
@@ -184,7 +184,7 @@ class folderElement extends menuDependantStructureElement implements
     public function isBreadCrumb(): bool
     {
         $structureManager = $this->getService('structureManager');
-        $languagesManager = $this->getService('languagesManager');
+        $languagesManager = $this->getService(LanguagesManager::class);
 
         if ($currentLanguage = $structureManager->getElementById(
             $languagesManager->getCurrentLanguageId()

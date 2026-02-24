@@ -19,8 +19,8 @@ class approveClaimAuthor extends structureElementAction
                 $claimApproved = true;
             }
         }
-        $settings = $this->getService('settingsManager')->getSettingsList();
-        $translationsManager = $this->getService('translationsManager');
+        $settings = $this->getService(settingsManager::class)->getSettingsList();
+        $translationsManager = $this->getService(translationsManager::class);
 
         if ($claimApproved) {
             if ($userElement) {
@@ -43,7 +43,7 @@ class approveClaimAuthor extends structureElementAction
                 }
             }
         }
-        $renderer = $this->getService('renderer');
+        $renderer = $this->getService(renderer::class);
         $renderer->assign('claimResultSent', $claimResultSent);
         $renderer->assign('claimApproved', $claimApproved);
         $structureElement->setViewName('claimApproved');

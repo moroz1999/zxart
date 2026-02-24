@@ -2,8 +2,6 @@
 
 use App\Logging\EventsLog;
 use App\Paths\PathsManager;
-use PicturesModesManager;
-use tagsManager;
 use ZxArt\LinkTypes;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueType;
@@ -286,7 +284,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
      */
     public function getMetaTitle()
     {
-        $translationsManager = $this->getService('translationsManager');
+        $translationsManager = $this->getService(translationsManager::class);
 
         $authorNames = $this->getAuthorNames();
 
@@ -304,7 +302,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
      */
     public function getTextContent()
     {
-        $translationsManager = $this->getService('translationsManager');
+        $translationsManager = $this->getService(translationsManager::class);
 
         $textContent = $translationsManager->getTranslationByName("descriptions.picture") ?? '';
         $textContent = str_ireplace('%t', $this->title, $textContent);
@@ -393,7 +391,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     public function getBestAuthorsPictures($limit = false)
     {
         if ($this->bestAuthorsPictures === null) {
-            $queriesManager = $this->getService('ApiQueriesManager');
+            $queriesManager = $this->getService(ApiQueriesManager::class);
             $authorsIdList = [];
             foreach ($this->getAuthorsList() as $author) {
                 $authorsIdList[] = $author->id;
@@ -403,7 +401,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
             $parameters = [
                 'authorId' => $authorsIdList,
                 'zxPictureNotId' => $this->getId(),
-                'zxPictureMinRating' => $this->getService('ConfigManager')->get('zx.averageVote'),
+                'zxPictureMinRating' => $this->getService(ConfigManager::class)->get('zx.averageVote'),
             ];
 
             $query = $queriesManager->getQuery();
@@ -502,7 +500,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
      */
     public function getOpenGraphData()
     {
-        $languagesManager = $this->getService('LanguagesManager');
+        $languagesManager = $this->getService(LanguagesManager::class);
         $data = [
             'title' => $this->getMetaTitle(),
             'url' => $this->getUrl(),

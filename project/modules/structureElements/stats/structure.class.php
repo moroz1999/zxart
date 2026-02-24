@@ -70,7 +70,7 @@ class statsElement extends structureElement
         $conditions[] = [
             'column' => 'votes',
             'action' => '>',
-            'argument' => $this->getService('ConfigManager')->get('zx.averageVote'),
+            'argument' => $this->getService(ConfigManager::class)->get('zx.averageVote'),
         ];
 
         $orderFields = [

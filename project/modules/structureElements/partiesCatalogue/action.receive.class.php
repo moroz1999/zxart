@@ -17,7 +17,7 @@ class receivePartiesCatalogue extends structureElementAction
             if ($firstParent = $structureManager->getElementsFirstParent($structureElement->getId())) {
                 if ($yearsElement = $structureManager->getElementByMarker('parties')) {
                     if ($yearsInfo = $structureManager->getElementsChildren($yearsElement->getId())) {
-                        $linksManager = $this->getService('linksManager');
+                        $linksManager = $this->getService(linksManager::class);
                         $linksIndex = $linksManager->getElementsLinksIndex(
                             $firstParent->id,
                             'partiesCatalogue',

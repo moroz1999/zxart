@@ -13,7 +13,7 @@ class showPartiesCatalogue extends structureElementAction
     {
         $structureElement->setViewName('show');
         if (($firstParent = $structureElement->getFirstParentElement()) && $firstParent->requested) {
-            $renderer = $this->getService('renderer');
+            $renderer = $this->getService(renderer::class);
             $renderer->assign('yearsInfo', $structureElement->getYearsSelectorInfo());
         }
     }

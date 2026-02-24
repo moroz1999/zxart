@@ -1,6 +1,5 @@
 <?php
 
-use ZxArt\Helpers\HtmlTagsStripper;
 use ZxArt\LinkTypes;
 use ZxArt\Queue\QueueStatusProvider;
 

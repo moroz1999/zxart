@@ -12,7 +12,7 @@ class showYear extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($structureElement->requested) {
-            $renderer = $this->getService('renderer');
+            $renderer = $this->getService(renderer::class);
             $renderer->assign('yearsInfo', $structureElement->getYearsSelectorInfo());
             if ($structureElement->final) {
                 $structureElement->setViewName('show');

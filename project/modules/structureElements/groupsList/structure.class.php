@@ -1,7 +1,5 @@
 <?php
 
-use ZxArt\LinkTypes;
-
 class groupsListElement extends structureElement
 {
     public $dataResourceName = 'module_groupslist';
@@ -25,7 +23,7 @@ class groupsListElement extends structureElement
         if (is_null($groups)) {
             $groups = [];
 
-            $apiQueriesManager = $this->getService('ApiQueriesManager');
+            $apiQueriesManager = $this->getService(ApiQueriesManager::class);
 
             $parameters = [];
 

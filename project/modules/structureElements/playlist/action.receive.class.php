@@ -22,8 +22,8 @@ class receivePlaylist extends structureElementAction
 
             $structureElement->persistElementData();
 
-            $linksManager = $this->getService('linksManager');
-            $privilegesManager = $this->getService('privilegesManager');
+            $linksManager = $this->getService(linksManager::class);
+            $privilegesManager = $this->getService(privilegesManager::class);
 
             if ($firstParentElement = $structureManager->getElementsFirstParent($structureElement->getId())) {
                 $linksManager->unLinkElements($firstParentElement->getId(), $structureElement->getId(), 'structure');
@@ -50,7 +50,7 @@ class receivePlaylist extends structureElementAction
                 );
             }
 
-            $renderer = $this->getService('renderer');
+            $renderer = $this->getService(renderer::class);
             if ($renderer instanceof rendererPluginAppendInterface) {
                 $renderer->appendResponseData('playlist', $structureElement->getElementData());
             }

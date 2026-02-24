@@ -79,7 +79,7 @@ class ApiQueryResultResolver implements DependencyInjectionContextInterface
         /**
          * @var QueryFiltersManager $queryFiltersManager
          */
-        $queryFiltersManager = $this->getService('QueryFiltersManager');
+        $queryFiltersManager = $this->getService(QueryFiltersManager::class);
         foreach ($resultTypes as $typeName) {
             if ($typeName === 'author' && $typeName != $exportType) {
                 $query = $queryFiltersManager->convertTypeData(

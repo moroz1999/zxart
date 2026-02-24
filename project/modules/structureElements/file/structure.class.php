@@ -85,7 +85,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
 
     private function generateImageUrl(bool $full, int $zoom, string $preset): ?string
     {
-        $baseUrl = $this->getService('controller')->baseURL;
+        $baseUrl = $this->getService(controller::class)->baseURL;
         $extension = strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION));
         $type = $this->resolveFileType($extension);
 
@@ -156,13 +156,13 @@ class fileElement extends structureElement implements StructureElementUploadedFi
 
     public function getDownloadUrl(string $mode = 'download', string $appName = 'file'): string
     {
-        $controller = $this->getService('controller');
+        $controller = $this->getService(controller::class);
         return $controller->baseURL . $appName . '/id:' . $this->file . '/mode:' . $mode . '/filename:' . $this->fileName;
     }
 
     public function getScreenshotUrl(): string
     {
-        $controller = $this->getService('controller');
+        $controller = $this->getService(controller::class);
         return $controller->baseURL . 'screenshot' . '/id:' . $this->file . '/' . $this->fileName;
     }
 

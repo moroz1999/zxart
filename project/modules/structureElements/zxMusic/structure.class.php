@@ -2,7 +2,6 @@
 
 use App\Logging\EventsLog;
 use App\Paths\PathsManager;
-use mp3ConversionManager;
 use ZxArt\LinkTypes;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueType;
@@ -122,7 +121,7 @@ class zxMusicElement extends ZxArtItem implements
      */
     public function getMetaTitle()
     {
-        $translationsManager = $this->getService('translationsManager');
+        $translationsManager = $this->getService(translationsManager::class);
 
         $authorNames = $this->getAuthorNames();
 
@@ -140,7 +139,7 @@ class zxMusicElement extends ZxArtItem implements
      */
     public function getTextContent()
     {
-        $translationsManager = $this->getService('translationsManager');
+        $translationsManager = $this->getService(translationsManager::class);
 
         $textContent = $translationsManager->getTranslationByName("descriptions.music");
         $textContent = str_ireplace('%t', $this->title, $textContent);
@@ -199,7 +198,7 @@ class zxMusicElement extends ZxArtItem implements
     public function checkIfReconversionNeeded(): bool
     {
         if ($this->fileName && (!$this->mp3Name || ($this->getChannelsType() != $this->conversionChannelsType || $this->getChipType() != $this->conversionChipType || $this->getFrequency() != $this->conversionFrequency || $this->getIntFrequency() != $this->conversionIntFrequency) && $this->hasChipChannelsType())) {
-            $linksManager = $this->getService('linksManager');
+            $linksManager = $this->getService(linksManager::class);
             if ($parentIds = $linksManager->getConnectedIdList($this->getId(), 'ayTrack', 'child')) {
                 $parentId = reset($parentIds);
                 $structureManager = $this->getService('structureManager');
@@ -482,7 +481,7 @@ class zxMusicElement extends ZxArtItem implements
      */
     public function getOpenGraphData()
     {
-        $languagesManager = $this->getService('LanguagesManager');
+        $languagesManager = $this->getService(LanguagesManager::class);
         $data = [
             'title' => $this->getMetaTitle(),
             'url' => $this->getUrl(),

@@ -9,7 +9,7 @@ class batchUploadFormMusicCatalogue extends structureElementAction
     {
         if ($structureElement->final) {
             $structureElement->setTemplate('shared.content.tpl');
-            $renderer = $this->getService('renderer');
+            $renderer = $this->getService(renderer::class);
             $renderer->assign('tabsTemplate', 'musicCatalogue.tabs.tpl');
             $renderer->assign('contentSubTemplate', 'musicCatalogue.form.tpl');
         }

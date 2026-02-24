@@ -29,7 +29,7 @@ class publicAddGroup extends structureElementAction
             $structureElement->persistAuthorship('group');
             $structureElement->recalculate();
 
-            $privilegesManager = $this->getService('privilegesManager');
+            $privilegesManager = $this->getService(privilegesManager::class);
             $currentUserService = $this->getService(CurrentUserService::class);
             $user = $currentUserService->getCurrentUser();
             $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'showPublicForm', 'allow');

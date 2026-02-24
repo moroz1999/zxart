@@ -42,7 +42,7 @@ class publicReceiveComment extends structureElementAction
 					$structureElement->logCreation();
 
 					if ($user->id) {
-						$privilegesManager = $this->getService('privilegesManager');
+						$privilegesManager = $this->getService(privilegesManager::class);
 						$privilegesManager->setPrivilege($user->id, $structureElement->id, 'comment', 'delete', 1);
 						$privilegesManager->setPrivilege($user->id, $structureElement->id, 'comment', 'publicReceive', 1);
 						$privilegesManager->setPrivilege($user->id, $structureElement->id, 'comment', 'publicForm', 1);
@@ -50,7 +50,7 @@ class publicReceiveComment extends structureElementAction
 						$user->refreshPrivileges();
 					}
 
-					$this->getService('linksManager')
+					$this->getService(linksManager::class)
 						->linkElements($targetElement->id, $structureElement->id, "commentTarget");
 
 					$targetElement->recalculateComments();

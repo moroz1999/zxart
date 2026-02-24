@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ZxArt\Logs;
 
 use DateTime;
-use DateTimeInterface;
 use LogLevel;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;

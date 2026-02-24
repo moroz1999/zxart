@@ -21,7 +21,7 @@ class zipItemsApplication extends controllerApplication
     public function initialize()
     {
         set_time_limit(30);
-        $this->configManager = $this->getService('ConfigManager');
+        $this->configManager = $this->getService(ConfigManager::class);
 
         $this->startSession($this->mode);
         $this->createRenderer();
@@ -45,13 +45,13 @@ class zipItemsApplication extends controllerApplication
             ],
             true
         );
-        $languagesManager = $this->getService('LanguagesManager');
+        $languagesManager = $this->getService(LanguagesManager::class);
         $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
 
         $requestParameters = $controller->getParameters();
 
         if ($controller->getParameter('language')) {
-            $languagesManager = $this->getService('LanguagesManager');
+            $languagesManager = $this->getService(LanguagesManager::class);
             $languagesManager->setCurrentLanguageCode($controller->getParameter('language'));
         }
         $queryParameters = [];
@@ -99,7 +99,7 @@ class zipItemsApplication extends controllerApplication
                     /**
                      * @var ApiQueriesManager $apiQueriesManager
                      */
-                    $apiQueriesManager = $this->getService('ApiQueriesManager');
+                    $apiQueriesManager = $this->getService(ApiQueriesManager::class);
                     if ($apiQuery = $apiQueriesManager->getQuery()) {
                         $apiQuery->setFiltrationParameters($queryParameters);
                         $apiQuery->setExportType($exportType); // objects to output
@@ -109,7 +109,7 @@ class zipItemsApplication extends controllerApplication
                             if (!is_dir($cachePath)) {
                                 mkdir(
                                     $cachePath,
-                                    $this->getService('ConfigManager')
+                                    $this->getService(ConfigManager::class)
                                         ->get('paths.defaultCachePermissions'),
                                     true
                                 );

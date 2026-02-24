@@ -1,7 +1,6 @@
 <?php
 
 use App\Users\CurrentUserService;
-use SpeccyMapsManager;
 
 class speccyMapsApplication extends controllerApplication
 {
@@ -28,9 +27,9 @@ class speccyMapsApplication extends controllerApplication
         /**
          * @var Cache $cache
          */
-        $cache = $this->getService('Cache');
+        $cache = $this->getService(Cache::class);
         $cache->enable(false, false, true);
-        $renderer = $this->getService('renderer');
+        $renderer = $this->getService(renderer::class);
         $renderer->endOutputBuffering();
         while (ob_get_level()) {
             ob_end_flush();
@@ -43,7 +42,7 @@ class speccyMapsApplication extends controllerApplication
 
             $this->getService(
                 'structureManager',
-                ['rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin')]
+                ['rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerAdmin')]
             );
 
             $speccyMaps = $this->getService(SpeccyMapsManager::class);

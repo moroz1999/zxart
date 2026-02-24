@@ -17,7 +17,7 @@ class receiveTagsList extends structureElementAction
 
             if ($tagsElement = $structureManager->getElementByMarker('tags')) {
                 if ($tagsList = $structureManager->getElementsChildren($tagsElement->getId())) {
-                    $linksManager = $this->getService('linksManager');
+                    $linksManager = $this->getService(linksManager::class);
                     $linksIndex = $linksManager->getElementsLinksIndex($structureElement->getId(), 'tagsList', 'parent');
                     foreach ($tagsList as $tag) {
                         if (!isset($linksIndex[$tag->id])) {

@@ -275,13 +275,13 @@ class zxReleaseElement extends ZxArtItem implements
 
     public function getFileUrl(bool $play = false): string
     {
-        $controller = $this->getService('controller');
+        $controller = $this->getService(controller::class);
         return $controller->baseURL . 'release/id:' . $this->getId() . '/' . $this->getFileName();
     }
 
     public function getPlayUrl($serveZip = true): ?string
     {
-        $controller = $this->getService('controller');
+        $controller = $this->getService(controller::class);
         if ($serveZip) {
             return $controller->baseURL . 'release/play:1/id:' . $this->getId() . '/' . $this->getFileName();
         }
@@ -510,7 +510,7 @@ class zxReleaseElement extends ZxArtItem implements
     {
         $currentUserService = $this->getService(CurrentUserService::class);
         $user = $currentUserService->getCurrentUser();
-        $privileges = $this->getService('privilegesManager')->getElementPrivileges($this->getId());
+        $privileges = $this->getService(privilegesManager::class)->getElementPrivileges($this->getId());
 
         return !in_array($this->getLegalStatus(), [legalStatus::forbidden->name, legalStatus::forbiddenzxart->name, legalStatus::insales->name], true) ||
             $this->releaseType === ReleaseTypes::demoversion->value ||
@@ -529,7 +529,7 @@ class zxReleaseElement extends ZxArtItem implements
             $prod = $this->getProd();
             $prodStatus = $prod?->getLegalStatus() ?? LegalStatus::unknown->name;
             $this->linksInfo = [];
-            $translationsManager = $this->getService('translationsManager');
+            $translationsManager = $this->getService(translationsManager::class);
             /**
              * @var Connection $db
              */
@@ -603,7 +603,7 @@ class zxReleaseElement extends ZxArtItem implements
         }
 
         if ($number === 0) {
-            $controller = $this->getService('controller');
+            $controller = $this->getService(controller::class);
             return $controller->baseURL . 'images/zxprod_default.png';
         }
         return false;
@@ -629,7 +629,7 @@ class zxReleaseElement extends ZxArtItem implements
         ];
         $computersList = array_intersect($this->hardwareRequired, $this->getHardwareList()[HardwareGroup::COMPUTERS->value]);
         $dosList = array_intersect($this->hardwareRequired, $this->getHardwareList()[HardwareGroup::DOS->value]);
-        $translationsManager = $this->getService('translationsManager');
+        $translationsManager = $this->getService(translationsManager::class);
 
         $computersStrings = [];
         foreach ($computersList as $computer) {
@@ -712,7 +712,7 @@ class zxReleaseElement extends ZxArtItem implements
     #[Override]
     public function getMetaTitle()
     {
-        $translationsManager = $this->getService('translationsManager');
+        $translationsManager = $this->getService(translationsManager::class);
         $title = $this->title;
 
         $fileInfo = $this->getCurrentReleaseFileInfo();
@@ -778,14 +778,14 @@ class zxReleaseElement extends ZxArtItem implements
             /**
              * @var languagesManager $languagesManager
              */
-            $languagesManager = $this->getService('languagesManager');
+            $languagesManager = $this->getService(LanguagesManager::class);
             $key = 'hw' . $languagesManager->getCurrentLanguageId();
             if (($this->hardwareInfo = $this->getCacheKey($key)) === null) {
                 $this->hardwareInfo = [];
                 /**
                  * @var translationsManager $translationsManager
                  */
-                $translationsManager = $this->getService('translationsManager');
+                $translationsManager = $this->getService(translationsManager::class);
                 foreach ($this->hardwareRequired as $item) {
                     $this->hardwareInfo[] = [
                         'id' => $item,

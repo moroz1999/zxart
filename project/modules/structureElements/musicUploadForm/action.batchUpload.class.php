@@ -14,8 +14,8 @@ class batchUploadMusicUploadForm extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($musicsInfo = $structureElement->music) {
-            $privilegesManager = $this->getService('privilegesManager');
-            $linksManager = $this->getService('linksManager');
+            $privilegesManager = $this->getService(privilegesManager::class);
+            $linksManager = $this->getService(linksManager::class);
             $currentUserService = $this->getService(CurrentUserService::class);
             $user = $currentUserService->getCurrentUser();
 

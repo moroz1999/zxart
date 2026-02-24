@@ -1,6 +1,5 @@
 <?php
 
-use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
 
 class zxMusicNotVotedByQueryFilter extends QueryFilter

@@ -1,6 +1,5 @@
 <?php
 
-use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
 
 class tagsManager extends errorLogger implements DependencyInjectionContextInterface
@@ -29,7 +28,7 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
         if ($parentTagId != $joinedTagId) {
             if ($parentTagElement = $this->getTagElement($parentTagId)) {
                 if ($joinedTagElement = $this->getTagElement($joinedTagId)) {
-                    $linksManager = $this->getService('linksManager');
+                    $linksManager = $this->getService(linksManager::class);
                     if ($links = $linksManager->getElementsLinks($joinedTagId, 'tagLink', 'parent')) {
                         foreach ($links as $link) {
                             $elementId = $link->childStructureId;
@@ -37,7 +36,7 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
                             $linksManager->linkElements($parentTagId, $elementId, 'tagLink');
                         }
                     }
-                    $languagesManager = $this->getService('LanguagesManager');
+                    $languagesManager = $this->getService(LanguagesManager::class);
                     foreach ($languagesManager->getLanguagesIdList('public_root') as $languageId) {
                         $joinedTitle = $joinedTagElement->getLanguageValue("title", $languageId);
                         $parentSynonym = $parentTagElement->getLanguageValue("synonym", $languageId);
@@ -156,7 +155,7 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
 
     public function getTagsIdList($elementId)
     {
-        $linksManager = $this->getService('linksManager');
+        $linksManager = $this->getService(linksManager::class);
         $result = $linksManager->getConnectedIdList($elementId, 'tagLink', 'child');
         return $result;
     }
@@ -253,7 +252,7 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
     public function addTag($tagName, $elementId): ?tagElement
     {
         if ($tagElement = $this->getTagElementByName($tagName, true)) {
-            $this->getService('linksManager')->linkElements($tagElement->id, $elementId, 'tagLink', true);
+            $this->getService(linksManager::class)->linkElements($tagElement->id, $elementId, 'tagLink', true);
             $tagElement->updateAmount();
         }
         return $tagElement;
@@ -262,7 +261,7 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
     public function removeTag($tagName, $elementId): void
     {
         if ($tagElement = $this->getTagElementByName($tagName, false)) {
-            $this->getService('linksManager')->unLinkElements($tagElement->id, $elementId, 'tagLink');
+            $this->getService(linksManager::class)->unLinkElements($tagElement->id, $elementId, 'tagLink');
             $tagElement->updateAmount();
         }
     }

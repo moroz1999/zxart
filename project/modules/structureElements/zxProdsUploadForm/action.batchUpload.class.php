@@ -21,8 +21,8 @@ class batchUploadZxProdsUploadForm extends structureElementAction
     {
         $firstProd = null;
         if ($filesInfo = $structureElement->file) {
-            $privilegesManager = $this->getService('privilegesManager');
-            $linksManager = $this->getService('linksManager');
+            $privilegesManager = $this->getService(privilegesManager::class);
+            $linksManager = $this->getService(linksManager::class);
             $currentUserService = $this->getService(CurrentUserService::class);
             $user = $currentUserService->getCurrentUser();
             $queueService = $this->getService(QueueService::class);

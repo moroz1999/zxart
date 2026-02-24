@@ -17,7 +17,7 @@ class receiveCountriesList extends structureElementAction
             $countriesElement = $structureManager->getElementByMarker('countries');
             $countriesList = $structureManager->getElementsChildren($countriesElement->getId());
 
-            $linksManager = $this->getService('linksManager');
+            $linksManager = $this->getService(linksManager::class);
             $compiledLinks = $linksManager->getElementsLinksIndex($structureElement->getId(), 'countries', 'parent');
 
             foreach ($countriesList as $country) {

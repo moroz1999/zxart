@@ -27,7 +27,7 @@ class Userpreferences extends controllerApplication
             $this->createRenderer();
             $this->objectMapper = new ObjectMapper();
 
-            $configManager = $this->getService('ConfigManager');
+            $configManager = $this->getService(ConfigManager::class);
             $structureManager = $this->getService(
                 'structureManager',
                 [
@@ -36,7 +36,7 @@ class Userpreferences extends controllerApplication
                 ],
                 true
             );
-            $languagesManager = $this->getService('LanguagesManager');
+            $languagesManager = $this->getService(LanguagesManager::class);
             $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
 
             $this->userPreferencesService = $this->getService(UserPreferencesService::class);

@@ -1,6 +1,5 @@
 <?php
 
-use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
 
 class votesManager implements DependencyInjectionContextInterface
@@ -26,7 +25,7 @@ class votesManager implements DependencyInjectionContextInterface
     public function getOverallAverageVote()
     {
         if (is_null($this->overallAverageVote)) {
-            $this->overallAverageVote = $this->getService('ConfigManager')->get('zx.averageVote');
+            $this->overallAverageVote = $this->getService(ConfigManager::class)->get('zx.averageVote');
         }
         return $this->overallAverageVote;
     }

@@ -11,10 +11,10 @@ class claimAuthor extends structureElementAction
     {
         $currentUserService = $this->getService(CurrentUserService::class);
         $user = $currentUserService->getCurrentUser();
-        $renderer = $this->getService('renderer');
+        $renderer = $this->getService(renderer::class);
 
         if (!$user->authorId && $user->authorId != $structureElement->getId()) {
-            $settings = $this->getService('settingsManager')->getSettingsList();
+            $settings = $this->getService(settingsManager::class)->getSettingsList();
 
             $emailDispatcher = new EmailDispatcher();
             $newDispatchment = $emailDispatcher->getEmptyDispatchment();

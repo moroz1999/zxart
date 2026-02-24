@@ -40,7 +40,7 @@ class fixApplication extends controllerApplication
     {
         ini_set("memory_limit", "2048M");
         ini_set("max_execution_time", 1160);
-        $renderer = $this->getService('renderer');
+        $renderer = $this->getService(renderer::class);
         $renderer->endOutputBuffering();
 
         $currentUserService = $this->getService(CurrentUserService::class);
@@ -50,12 +50,12 @@ class fixApplication extends controllerApplication
 
             $this->structureManager = $this->getService(
                 'structureManager',
-                ['rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin')],
+                ['rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerAdmin')],
             );
             /**
              * @var LanguagesManager $languagesManager
              */
-            $languagesManager = $this->getService('LanguagesManager');
+            $languagesManager = $this->getService(LanguagesManager::class);
             $languagesManager->setCurrentLanguageCode('eng');
             $this->fixProdInvalidImages();
 //            $this->addCategoryToQueue(92183, QueueType::AI_SEO, QueueStatus::STATUS_TODO, 5000);
@@ -187,7 +187,7 @@ class fixApplication extends controllerApplication
 
     private function fixZx81(): void
     {
-        $apiQueriesManager = $this->getService('ApiQueriesManager');
+        $apiQueriesManager = $this->getService(ApiQueriesManager::class);
 //        $filters = ['zxReleaseHardware' => ["zx80",
 //            "zx8116",
 //            "zx811",
@@ -237,7 +237,7 @@ class fixApplication extends controllerApplication
         /**
          * @var ApiQueriesManager $apiQueriesManager
          */
-        $apiQueriesManager = $this->getService('ApiQueriesManager');
+        $apiQueriesManager = $this->getService(ApiQueriesManager::class);
         $apiQuery = $apiQueriesManager->getQuery()
             ->setExportType('zxProd')
             ->setFiltrationParameters($filters);

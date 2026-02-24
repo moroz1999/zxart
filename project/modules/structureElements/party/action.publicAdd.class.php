@@ -26,7 +26,7 @@ class publicAddParty extends structureElementAction
 
             $currentUserService = $this->getService(CurrentUserService::class);
             $user = $currentUserService->getCurrentUser();
-            $privilegesManager = $this->getService('privilegesManager');
+            $privilegesManager = $this->getService(privilegesManager::class);
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'party', 'showPublicForm', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'party', 'publicReceive', 'allow');
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'party', 'publicDelete', 'allow');

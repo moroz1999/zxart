@@ -9,7 +9,7 @@ class batchUploadFormPicturesCatalogue extends structureElementAction
     {
         if ($structureElement->final) {
             $structureElement->setTemplate('shared.content.tpl');
-            $renderer = $this->getService('renderer');
+            $renderer = $this->getService(renderer::class);
             $renderer->assign('tabsTemplate', 'picturesCatalogue.tabs.tpl');
             $renderer->assign('contentSubTemplate', 'picturesCatalogue.form.tpl');
         }

@@ -134,7 +134,7 @@ class zxProdCategoryElement extends structureElement implements
             /**
              * @var languagesManager $languagesManager
              */
-            $languagesManager = $this->getService('languagesManager');
+            $languagesManager = $this->getService(LanguagesManager::class);
 
             $page = $this->getCurrentPage();
             $ttl = $page === 1 ? 60 * 60 * 24 : 60 * 60 * 2;
@@ -185,7 +185,7 @@ class zxProdCategoryElement extends structureElement implements
             $page = $this->getCurrentPage();
 
             if ($page > 1) {
-                $translationsManager = $this->getService('translationsManager');
+                $translationsManager = $this->getService(translationsManager::class);
                 $metaTitle .= " (" . $translationsManager->getTranslationByName('zxprodcategory.page') . " {$page})";
             }
         }

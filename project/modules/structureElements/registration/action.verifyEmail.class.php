@@ -9,12 +9,12 @@ class verifyEmailRegistration extends structureElementAction
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
-        $translationsManager = $this->getService('translationsManager');
+        $translationsManager = $this->getService(translationsManager::class);
         $controller = controller::getInstance();
         $email = trim($controller->getParameter('email'));
         $hash = $controller->getParameter('key');
 
-        $secret = $this->getService('ConfigManager')->get('emails.dispatchmentSecret');
+        $secret = $this->getService(ConfigManager::class)->get('emails.dispatchmentSecret');
         $control = hash_hmac('sha256', $email, $secret);
 
         $result = false;

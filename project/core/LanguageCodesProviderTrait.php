@@ -56,7 +56,7 @@ trait LanguageCodesProviderTrait
         /**
          * @var translationsManager $translationsManager
          */
-        $translationsManager = $this->getService('translationsManager');
+        $translationsManager = $this->getService(translationsManager::class);
         foreach ($this->getSupportedLanguageCodes() as $code) {
             $languages[$code] = $translationsManager->getTranslationByName('language.item_' . $code);
         }

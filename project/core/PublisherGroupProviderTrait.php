@@ -50,7 +50,7 @@ trait PublisherGroupProviderTrait
 
         if ($this->$property === null) {
             $linkType = $this->structureType . ucfirst($type);
-            $this->$property = $this->getService('linksManager')->getConnectedIdList(
+            $this->$property = $this->getService(linksManager::class)->getConnectedIdList(
                 $this->id,
                 $linkType,
                 'child'

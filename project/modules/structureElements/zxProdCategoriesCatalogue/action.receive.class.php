@@ -17,7 +17,7 @@ class receiveZxProdCategoriesCatalogue extends structureElementAction
             if ($firstParent = $structureManager->getElementsFirstParent($structureElement->getId())) {
                 if ($zxProdCategoriesElement = $structureManager->getElementByMarker('ZxProdCategories')) {
                     if ($categoriesList = $structureManager->getElementsChildren($zxProdCategoriesElement->getId())) {
-                        $linksManager = $this->getService('linksManager');
+                        $linksManager = $this->getService(linksManager::class);
                         $linksIndex = $linksManager->getElementsLinksIndex(
                             $firstParent->id,
                             'softCatalogue',

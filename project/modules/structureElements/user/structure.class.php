@@ -1,8 +1,6 @@
 <?php
 
-use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
-use SocialDataManager;
 
 /**
  * @property bool $volunteer
@@ -132,7 +130,7 @@ class userElement extends structureElement
              */
             $structureManager = $this->getService('structureManager');
 
-            $linksManager = $this->getService('linksManager');
+            $linksManager = $this->getService(linksManager::class);
 
             $collection = persistableCollection::getInstance('module_newsmailaddress');
 
@@ -251,7 +249,7 @@ class userElement extends structureElement
     public function changeConnectedAuthor($newAuthorId): void
     {
         if ($this->authorId != $newAuthorId) {
-            $privilegesManager = $this->getService('privilegesManager');
+            $privilegesManager = $this->getService(privilegesManager::class);
             if ($this->authorId) {
                 $privilegesManager->deletePrivilege($this->getId(), $this->authorId, 'author', 'showPublicForm', 'allow');
                 $privilegesManager->deletePrivilege($this->getId(), $this->authorId, 'author', 'publicReceive', 'allow');

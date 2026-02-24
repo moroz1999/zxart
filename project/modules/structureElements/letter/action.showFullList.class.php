@@ -9,7 +9,7 @@ class showFullListLetter extends structureElementAction
     {
         if ($structureElement->requested === true) {
             $structureElement->setTemplate('shared.content.tpl');
-            $renderer = $this->getService('renderer');
+            $renderer = $this->getService(renderer::class);
             $renderer->assign('tabsTemplate', false);
             $renderer->assign('contentSubTemplate', 'letter.list.tpl');
         }

@@ -35,7 +35,7 @@ trait Group
             /**
              * @var translationsManager $translationsManager
              */
-            $translationsManager = $this->getService('translationsManager');
+            $translationsManager = $this->getService(translationsManager::class);
 
             $types = ['3a', 'zxdb', 's4e', 'worldofsam'];
 

@@ -12,7 +12,7 @@ class viewFileZxRelease extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if (!$structureElement->getCurrentReleaseFileInfo()) {
-            $this->getService('renderer')->fileNotFound();
+            $this->getService(renderer::class)->fileNotFound();
         }
         $structureElement->setViewName('fileDetails');
     }

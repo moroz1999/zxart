@@ -27,14 +27,14 @@ class releaseApplication extends controllerApplication
         /**
          * @var Cache $cache
          */
-        $cache = $this->getService('Cache');
+        $cache = $this->getService(Cache::class);
         $cache->enable(true, true, true);
 
         $structureManager = $this->getService(
             'structureManager',
             [
                 'rootUrl' => $controller->rootURL,
-                'rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerPublic'),
+                'rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerPublic'),
             ],
             true
         );

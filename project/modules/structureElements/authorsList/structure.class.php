@@ -28,7 +28,7 @@ class authorsListElement extends structureElement
         if (is_null($authors)) {
             $authors = [];
 
-            $apiQueriesManager = $this->getService('ApiQueriesManager');
+            $apiQueriesManager = $this->getService(ApiQueriesManager::class);
 
             $parameters = [
                 'authorOfItemType' => $this->getAuthorTypes(),
@@ -68,7 +68,7 @@ class authorsListElement extends structureElement
         if (is_null($authors)) {
             $authors = [];
 
-            $apiQueriesManager = $this->getService('ApiQueriesManager');
+            $apiQueriesManager = $this->getService(ApiQueriesManager::class);
 
             $parameters = [
                 'authorOfItemType' => $this->getAuthorTypes(),
@@ -102,7 +102,7 @@ class authorsListElement extends structureElement
                 $years[] = $year - $i;
             }
 
-            $queriesManager = $this->getService('ApiQueriesManager');
+            $queriesManager = $this->getService(ApiQueriesManager::class);
 
             $parameters = [];
             if ($this->items == 'music') {
@@ -127,7 +127,7 @@ class authorsListElement extends structureElement
     {
         static $authors;
         if ($authors === null) {
-            $controllerApplication = $this->getService('controllerApplication');
+            $controllerApplication = controller::getInstance()->getApplication();
             if ($letterName = $controllerApplication->getParameter('letter')) {
                 if ($letters = $this->getLetterElements()) {
                     foreach ($letters as $letter) {

@@ -1,7 +1,6 @@
 <?php
 
 use App\Logging\EventsLog;
-use votesManager;
 
 class voteShared extends structureElementAction
 {
@@ -33,7 +32,7 @@ class voteShared extends structureElementAction
                     }
                 }
             }
-            $renderer = $this->getService('renderer');
+            $renderer = $this->getService(renderer::class);
             if ($renderer instanceof rendererPluginAppendInterface) {
                 $renderer->appendResponseData($structureElement->structureType, $structureElement->getElementData());
             }

@@ -1,8 +1,6 @@
 <?php
 
-use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
-use SocialDataManager;
 
 class registrationElement extends menuDependantStructureElement
 {
@@ -129,12 +127,12 @@ class registrationElement extends menuDependantStructureElement
 
     public function getConnectedFieldsIds()
     {
-        return $this->getService('linksManager')->getConnectedIdList($this->getId(), self::FIELD_LINK_TYPE, 'parent');
+        return $this->getService(linksManager::class)->getConnectedIdList($this->getId(), self::FIELD_LINK_TYPE, 'parent');
     }
 
     public function getConnectedUserGroupsIds()
     {
-        return $this->getService('linksManager')->getConnectedIdList($this->getId(), self::USER_GROUP_LINK_TYPE, 'parent');
+        return $this->getService(linksManager::class)->getConnectedIdList($this->getId(), self::USER_GROUP_LINK_TYPE, 'parent');
     }
 
     public function setDynamicFieldError($fieldId): void

@@ -1,7 +1,5 @@
 <?php
 
-use votesManager;
-
 /**
  * Class languageElement
  *
@@ -342,7 +340,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
         $result = [];
         $linkType = 'displayinmenu';
 
-        $linksManager = $this->getService('linksManager');
+        $linksManager = $this->getService(linksManager::class);
         $structureManager = $this->getService('structureManager');
 
         $enabledElementsIdList = $linksManager->getConnectedIdList($this->getId(), $type, 'parent');
@@ -393,7 +391,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
         } else {
             //todo: review this code and remove $urlString
             $structureManager = $this->getService('structureManager');
-            $linksManager = $this->getService('linksManager');
+            $linksManager = $this->getService(linksManager::class);
             $contentType = $controller->getParameter('view') ? $controller->getParameter('view') : 'structure';
 
             $idList = $linksManager->getConnectedIdList($this->getId(), $contentType, 'parent');
@@ -466,7 +464,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
             /**
              * @var ConfigManager $configManager
              */
-            $configManager = $this->getService('ConfigManager');
+            $configManager = $this->getService(ConfigManager::class);
             if ($contentType == 'headerContent') {
                 $allowedTypes = $configManager->getMerged('language-allowedTypes.header');
             } elseif ($contentType == 'bottomMenu') {
@@ -479,7 +477,7 @@ class languageElement extends structureElement implements MetadataProviderInterf
                 $allowedTypes = $configManager->getMerged('language-allowedTypes.content');
             }
 
-            $privilegesManager = $this->getService('privilegesManager');
+            $privilegesManager = $this->getService(privilegesManager::class);
             $privileges = $privilegesManager->getElementPrivileges($this->getId());
 
             foreach ($allowedTypes as $type) {
@@ -527,8 +525,8 @@ class languageElement extends structureElement implements MetadataProviderInterf
             /**
              * @var DesignThemesManager $designThemesManager
              */
-            $designThemesManager = $this->getService('DesignThemesManager');
-            $configManager = $this->getService('ConfigManager');
+            $designThemesManager = $this->getService(DesignThemesManager::class);
+            $configManager = $this->getService(ConfigManager::class);
 
             if ($theme = $designThemesManager->getTheme($configManager->get('main.publicTheme'))) {
                 $result = $theme->getImageUrl('logo.png', false, false);

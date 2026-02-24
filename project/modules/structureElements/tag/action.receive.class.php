@@ -1,7 +1,5 @@
 <?php
 
-use tagsManager;
-
 class receiveTag extends structureElementAction
 {
     protected $loggable = true;

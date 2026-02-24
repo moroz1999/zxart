@@ -9,7 +9,7 @@ class showAuthorsCatalogue extends structureElementAction
     {
         $structureElement->setViewName('show');
         if (($firstParent = $structureElement->getFirstParentElement()) && $firstParent->requested) {
-            $renderer = $this->getService('renderer');
+            $renderer = $this->getService(renderer::class);
             $renderer->assign('lettersInfo', $structureElement->getLettersSelectorInfo());
         }
     }

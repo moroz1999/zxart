@@ -13,7 +13,7 @@ class showAuthorsList extends structureElementAction
         }
         $structureElement->setViewName($type);
         if ($structureElement->type == 'letters') {
-            $renderer = $this->getService('renderer');
+            $renderer = $this->getService(renderer::class);
             $renderer->assign('lettersInfo', $structureElement->getLettersSelectorInfo());
         }
     }

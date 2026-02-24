@@ -21,7 +21,7 @@ class moveScreenshotShared extends structureElementAction
             return;
         }
 
-        $linksManager = $this->getService('linksManager');
+        $linksManager = $this->getService(linksManager::class);
         $links = $linksManager->getElementsLinks($structureElement->getId(), $linkType, 'parent');
 
         $currentLink = null;

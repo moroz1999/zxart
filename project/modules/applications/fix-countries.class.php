@@ -19,7 +19,7 @@
 //    {
 //        ini_set("memory_limit", "2048M");
 //        ini_set("max_execution_time", 60);
-//        $renderer = $this->getService('renderer');
+//        $renderer = $this->getService(renderer::class);
 //        $renderer->endOutputBuffering();
 //
 //        $user = $this->getService(user::class);
@@ -28,12 +28,12 @@
 //
 //            $this->structureManager = $this->getService(
 //                'structureManager',
-//                ['rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerAdmin')]
+//                ['rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerAdmin')]
 //            );
 //            /**
 //             * @var LanguagesManager $languagesManager
 //             */
-//            $languagesManager = $this->getService('LanguagesManager');
+//            $languagesManager = $this->getService(LanguagesManager::class);
 //            $languagesManager->setCurrentLanguageCode('eng');
 //            $this->fixCountries();
 //        }

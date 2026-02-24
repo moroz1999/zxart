@@ -35,7 +35,7 @@ class loginLogin extends structureElementAction
         }
 
         if (!$validated) {
-            $structureElement->errorMessage = $this->getService('translationsManager')
+            $structureElement->errorMessage = $this->getService(translationsManager::class)
                 ->getTranslationByName('login.wrong_credentials', 'public_translations');
             $applicationName = $controller->getApplicationName();
             if ($applicationName == 'admin') {

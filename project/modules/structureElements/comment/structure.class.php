@@ -1,9 +1,7 @@
 <?php
 
 use App\Logging\EventsLog;
-use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
-use votesManager;
 
 /**
  * Class commentElement
@@ -66,7 +64,7 @@ class commentElement extends structureElement implements MetadataProviderInterfa
     public function getTargetId()
     {
         $result = 0;
-        $connectedIds = $this->getService('linksManager')->getConnectedIdList($this->id, "commentTarget", "child");
+        $connectedIds = $this->getService(linksManager::class)->getConnectedIdList($this->id, "commentTarget", "child");
         if ($connectedIds) {
             $result = $connectedIds[0];
         }
@@ -216,7 +214,7 @@ class commentElement extends structureElement implements MetadataProviderInterfa
 
     public function getPrivileges()
     {
-        $privilegesManager = $this->getService('privilegesManager');
+        $privilegesManager = $this->getService(privilegesManager::class);
         $privileges = $privilegesManager->getElementPrivileges($this->id);
         if (isset($privileges[$this->structureType])) {
             return $privileges[$this->structureType];

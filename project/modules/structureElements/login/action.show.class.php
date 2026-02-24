@@ -12,7 +12,7 @@ class showLogin extends structureElementAction
         $structureElement->hidden = true;
         $currentUserService = $this->getService(CurrentUserService::class);
         $user = $currentUserService->getCurrentUser();
-        $renderer = $this->getService('renderer');
+        $renderer = $this->getService(renderer::class);
 
         if ($user->userName == 'anonymous') {
             $structureElement->setViewName('form');

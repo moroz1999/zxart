@@ -1,8 +1,6 @@
 <?php
 
 use App\Users\CurrentUserService;
-use CurrencySelector;
-use PicturesModesManager;
 
 class showLanguage extends structureElementAction
 {
@@ -14,9 +12,9 @@ class showLanguage extends structureElementAction
      */
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
-        $languagesManager = $this->getService('LanguagesManager');
+        $languagesManager = $this->getService(LanguagesManager::class);
         $currentLanguageId = $languagesManager->getCurrentLanguageId();
-        $renderer = $this->getService('renderer');
+        $renderer = $this->getService(renderer::class);
 
         if ($elements = ($structureManager->getElementsByType('userPlaylists', $currentLanguageId))) {
             $playlistsElement = reset($elements);
@@ -28,7 +26,7 @@ class showLanguage extends structureElementAction
             $currentUserService = $this->getService(CurrentUserService::class);
             $user = $currentUserService->getCurrentUser();
 
-            $renderer = $this->getService('renderer');
+            $renderer = $this->getService(renderer::class);
             $renderer->assign('currentLanguage', $structureElement);
             $currentMainMenu = $structureElement->getCurrentMainMenu();
             $renderer->assign('currentMainMenu', $currentMainMenu);
@@ -61,7 +59,7 @@ class showLanguage extends structureElementAction
             }
 
 
-            $settingsManager = $this->getService('settingsManager');
+            $settingsManager = $this->getService(settingsManager::class);
             $settings = $settingsManager->getSettingsList($structureElement->getId());
             $renderer->assign('settings', $settings);
 

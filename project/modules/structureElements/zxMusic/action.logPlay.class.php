@@ -9,7 +9,7 @@ class logPlayZxMusic extends structureElementAction
     {
         $structureElement->logPlay();
 
-        $renderer = $this->getService('renderer');
+        $renderer = $this->getService(renderer::class);
         if ($renderer instanceof rendererPluginAppendInterface) {
             $renderer->appendResponseData('zxMusic', $structureElement->getElementData());
         }

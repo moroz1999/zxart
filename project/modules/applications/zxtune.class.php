@@ -26,7 +26,7 @@ class zxtuneApplication extends controllerApplication
     public function initialize()
     {
         $this->mode = 'public';
-        $this->configManager = $this->getService('ConfigManager');
+        $this->configManager = $this->getService(ConfigManager::class);
 
         $this->createRenderer();
     }
@@ -44,7 +44,7 @@ class zxtuneApplication extends controllerApplication
             ],
             true
         );
-        $languagesManager = $this->getService('LanguagesManager');
+        $languagesManager = $this->getService(LanguagesManager::class);
         if ($controller->getParameter('language')) {
             $languagesManager->setCurrentLanguageCode($controller->getParameter('language'));
         }
@@ -159,7 +159,7 @@ class zxtuneApplication extends controllerApplication
 
         $status = 'fail';
         if ($resultTypes && $queryParameters) {
-            $apiQueriesManager = $this->getService('ApiQueriesManager');
+            $apiQueriesManager = $this->getService(ApiQueriesManager::class);
             $result = [];
             if ($apiQuery = $apiQueriesManager->getQuery()) {
                 $apiQuery->setFiltrationParameters($queryParameters);
