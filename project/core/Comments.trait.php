@@ -21,9 +21,7 @@ trait CommentsTrait
         if ($this->commentsList === null) {
             $this->commentsList = [];
 
-            $commentsService = $this->getService(CommentsService::class, [
-                'structureManager' => $this->getService('structureManager'),
-            ]);
+            $commentsService = $this->getService(CommentsService::class);
             $this->commentsList = $commentsService->getCommentsList((int)$this->id);
         }
         return $this->commentsList;
