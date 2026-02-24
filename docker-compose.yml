@@ -1,8 +1,7 @@
 services:
   app:
     build:
-      context: .
-      dockerfile: docker/php/Dockerfile
+      context: ./docker/php
     container_name: zxart-app
     ports:
       - "8080:80"
@@ -46,6 +45,18 @@ services:
     ports:
       - "6379:6379"
 
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: zxart-phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+    depends_on:
+      - db
+
   composer:
     image: composer:2
     container_name: zxart-composer
@@ -53,24 +64,6 @@ services:
     volumes:
       - ./:/var/www/html
     entrypoint: ["composer"]
-    command: ["--version"]
-
-  ng-zxart:
-    build:
-      context: ./ng-zxart
-      dockerfile: Dockerfile
-    container_name: zxart-ng
-    ports:
-      - "4200:4200"
-    volumes:
-      - ./ng-zxart:/usr/src/app
-    environment:
-      - NODE_ENV=development
-    # Uncomment if your frontend needs backend URL
-    #   and adjust to your app's configuration method
-    # - API_BASE_URL=http://localhost:8080
-    depends_on:
-      - app
 
 volumes:
   db_data:

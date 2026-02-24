@@ -1,4 +1,4 @@
-FROM php:8.5
+FROM php:8.5-apache
 
 # Set web root to htdocs
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/htdocs
@@ -6,6 +6,7 @@ ENV APACHE_DOCUMENT_ROOT=/var/www/html/htdocs
 # Install system dependencies and PHP extensions commonly used by modern PHP apps
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        curl \
         git \
         unzip \
         libicu-dev \
@@ -36,9 +37,6 @@ COPY php.ini /usr/local/etc/php/conf.d/zxart.ini
 
 WORKDIR /var/www/html
 
-# Expose port 80 (already exposed in base image, kept for clarity)
 EXPOSE 80
 
-# Healthcheck: simple ping via curl
-RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 HEALTHCHECK --interval=30s --timeout=5s --retries=5 CMD curl -fsS http://localhost/ || exit 1
