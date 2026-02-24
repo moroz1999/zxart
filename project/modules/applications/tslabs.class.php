@@ -40,11 +40,6 @@ class tslabsApplication extends controllerApplication
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
 
-            $this->getService(
-                'structureManager',
-                ['rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerAdmin')]
-            );
-
             $tslabsManager = $this->getService(TslabsManager::class);
             $tslabsManager->importAll();
         }

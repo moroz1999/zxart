@@ -5,16 +5,40 @@ In future we will get rid of this unsupported CMS by incorporating its functiona
 
 ## File structure:
 - /htdocs/ - mapped to public web root
-- /ng-zxart/ - Angular frontend. This convers only a pair of views from whole module yet. see angular.md for more info
-- /project/ - project is "zxart" itself, this folder contains all domain-related source code and extends structure of CMS package.
-- /project/core/ - legacy services, models, helpers. This should be refactored.
+- /ng-zxart/ - Angular frontend. This covers only a pair of views from the whole module yet. See angular.md for more info.
+- /project/ - "zxart" itself; all domain-related source code, extends the CMS packages.
+- /project/core/ - legacy services, models, helpers. Should be refactored.
 - /project/core/ZxArt/ - modern services with namespaces and intended structure. All new code goes here except when dealing with legacy modules.
-- /project/css/public/ and /project/js/public/ - legacy public frontend assets. they are built on the fly. CSS files must follow naming conventions: `module.{name}.css` or `component.{name}.css`.
-- /project/services/ - legacy DI container services. should not be added, only refactored to PHP-DI.
+- /project/core/di-definitions.php - PHP-DI definitions for the project package.
+- /project/css/public/ and /project/js/public/ - legacy public frontend assets, built on the fly. CSS files must follow naming conventions: `module.{name}.css` or `component.{name}.css`.
 - /project/templates/ - legacy smarty templates. Follow [Design System](design-system.md) for subcomponents.
 - /trickster-cms/ - CMS source code. Can be edited directly. In prod environment it is served from composer.
-- ./tests/ - phpunit tests. all new functionality should be covered by tests.
+- /trickster-cms/cms/core/di-definitions.php - core PHP-DI definitions shared by all packages (SM factories, DB, languages, etc.).
+- /trickster-cms/homepage/core/di-definitions.php - PHP-DI definitions for the homepage package.
+- ./tests/ - phpunit tests. All new functionality should be covered by tests.
 - Never access anything inside `temporary`. It contains cache files (e.g., template cache, bundle cache).
+
+## Terminology
+- **`controller`** — the bootstrap singleton (`controller.class.php`, `controller::getInstance()`). Initializes the request, builds the DI container, and dispatches to the application.
+- **`controllerApplication`** — the request handler class (e.g. `publicApplication`, `adminApplication`). One per request, resolved from the DI container. Contains `initialize()` and `execute()` methods.
+
+## PHP-DI Dependency Injection
+
+Services are wired via PHP-DI. There is **one container per request**, built from the merged `di-definitions.php` files of all three packages (cms → homepage → project, with project having highest priority).
+
+### DependencyInjectionContextTrait
+Most CMS objects (controllers, structure elements, actions) use this trait, which provides:
+- `getService(ClassName::class)` — checks `localServices` first, then falls through to the PHP-DI container.
+- `setService($key, $object)` — stores an object in `localServices`, overriding the container for this context.
+- `setLocalServices(array)` / `setContainer(Container)` — used internally to propagate DI context.
+- `instantiateContext(DependencyInjectionContextInterface $obj)` — copies the current `localServices` and container to a child object (e.g. when SM creates a structure element).
+
+**Always use class constants:** `$this->getService(MyService::class)`. String literals like `$this->getService('myService')` are legacy and must not be introduced.
+
+### di-definitions.php conventions
+- Entries with no special configuration do not need to be listed — PHP-DI autowires them by default.
+- Only add explicit entries when a class requires constructor/method parameter overrides.
+- Named string keys (e.g. `'publicStructureManager'`, `'db'`) are reserved for cases where a class cannot be a key (e.g. aliases or multiple instances of the same class).
 
 ## System Concepts
 
@@ -71,5 +95,7 @@ This is the standard way to trigger actions from the frontend.
 ## Legacy Conventions
 - Action classes for a module must follow the `{actionName}{ModuleName}` naming convention (e.g., `receiveComment`).
 - Action files must be named `action.{actionName}.class.php` (e.g., `action.receive.class.php`).
+- `getService('stringKey')` with a string literal is legacy. Always use `getService(ClassName::class)` instead.
 
-- [Controllers and StructureManager](cms/controllers.md) - getElementById modes, controller initialization, AJAX operations, error logging
+## See also
+- [Controllers and StructureManager](cms/controllers.md) — structureManager context (public/admin), getElementById modes, AJAX operations, error logging

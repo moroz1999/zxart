@@ -6,21 +6,38 @@
 - **`directlyToParent = false`** (default) — resolves the element through its URL path in the site hierarchy. For **public content** (pictures, tunes, prods, releases, parties) always use the default: `getElementById($id)`.
 - **`directlyToParent = true`** — loads the element directly by ID, bypassing path resolution. **Required ONLY for user elements** and elements not rooted under the current language's URL tree: `getElementById($userId, null, true)`. Without `true`, user elements silently return `null`.
 
-## Controller initialization
-When initializing `structureManager` in a controller application, always provide `rootUrl` and `rootMarker` parameters to ensure correct URL generation and multilinguality support.
-Example:
+## structureManager context
+
+The SM context (public vs admin) is determined automatically by PHP-DI before `execute()` is called:
+
+- **Public apps** — receive the public SM automatically (it is the default `structureManager::class` in the container).
+- **Admin apps** — declared in `di-definitions.php` with a method injection:
+  ```php
+  myAdminApplication::class => autowire()
+      ->method('setService', 'structureManager', DI\get('adminStructureManager')),
+  ```
+  This puts the admin SM into `localServices['structureManager']` before `execute()` runs.
+
+Inside `execute()` (and all methods of the application), obtain the SM via:
 ```php
-$structureManager = $this->getService(
-    'structureManager',
-    [
-        'rootUrl' => $controller->rootURL,
-        'rootMarker' => $this->getService('ConfigManager')->get('main.rootMarkerPublic'),
-    ],
-    true
-);
-$languagesManager = $this->getService('LanguagesManager');
-$structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
+$structureManager = $this->getService('structureManager');
 ```
+
+**Complex apps** that switch between admin/public based on a request parameter must set the SM manually:
+```php
+if ($this->mode === 'admin') {
+    $structureManager = $this->getService('adminStructureManager');
+    $this->setService('structureManager', $structureManager);
+} else {
+    $structureManager = $this->getService('publicStructureManager');
+    $this->setService('structureManager', $structureManager);
+}
+```
+
+**Named SM keys:**
+- `structureManager::class` / `'structureManager'` — public SM (default)
+- `'publicStructureManager'` — explicit independent public SM factory
+- `'adminStructureManager'` — admin SM factory (also overrides `structureManager::class` in the container as a side effect)
 
 ## Controller URL name
 Add `getUrlName()` in controller applications to avoid controller name prefix in entity URLs. Without it, all entities will get the controller name at the beginning of their URL.
@@ -33,18 +50,15 @@ public function getUrlName()
 ```
 
 ## Controller services
-- Use `getService` method in controllers to obtain services.
-- In `controllerApplication` based controllers, services should be obtained in the `initialize` method and stored as protected properties. This is considered legacy behavior to be followed until a major refactoring of the controller architecture.
+- Use `getService(MyService::class)` in controllers to obtain services — always use class constants, never string literals.
+- Services with no special configuration are resolved automatically by PHP-DI autowiring; explicit `di-definitions.php` entries are only needed for services that require constructor/method parameters.
 - Example:
 ```php
 class MyController extends controllerApplication
 {
-    protected MyService $myService;
-
-    public function initialize(): void
+    public function execute($controller): void
     {
-        $this->createRenderer();
-        $this->myService = $this->getService(MyService::class);
+        $myService = $this->getService(MyService::class);
     }
 }
 ```

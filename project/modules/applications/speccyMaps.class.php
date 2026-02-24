@@ -40,11 +40,6 @@ class speccyMapsApplication extends controllerApplication
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
 
-            $this->getService(
-                'structureManager',
-                ['rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerAdmin')]
-            );
-
             $speccyMaps = $this->getService(SpeccyMapsManager::class);
             $speccyMaps->importAll();
         }

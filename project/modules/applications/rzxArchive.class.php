@@ -40,11 +40,6 @@ class rzxArchiveApplication extends controllerApplication
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
 
-            $this->getService(
-                'structureManager',
-                ['rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerAdmin')]
-            );
-
             $rzxManager = $this->getService(RzxArchiveManager::class);
             $rzxManager->importAll();
         }

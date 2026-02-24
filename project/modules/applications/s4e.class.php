@@ -40,11 +40,6 @@ class s4eApplication extends controllerApplication
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
 
-            $this->getService(
-                'structureManager',
-                ['rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerAdmin')]
-            );
-
             $s4eManager = $this->getService(S4eManager::class);
             $s4eManager->importAll();
         }
