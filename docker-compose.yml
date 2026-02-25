@@ -4,7 +4,7 @@ services:
       context: ./docker/php
     container_name: zxart-app
     ports:
-      - "8080:80"
+      - "80:80"
     volumes:
       # Mount the whole project for local development
       - ./:/var/www/html
