@@ -4,12 +4,6 @@ import {Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {CommentDto, CommentsListDto} from '../models/comment.dto';
 
-interface ApiResponse<T> {
-  responseStatus: string;
-  responseData?: T;
-  errorMessage?: string;
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -17,37 +11,20 @@ export class CommentsService {
   constructor(private http: HttpClient) {}
 
   getLatestComments(limit: number = 10): Observable<CommentDto[]> {
-    return this.http.get<ApiResponse<CommentDto[]>>(`/comments/?action=latest&limit=${limit}`).pipe(
-      map(response => {
-        if (response.responseStatus === 'success' && response.responseData) {
-          return response.responseData;
-        }
-        return [];
-      }),
+    return this.http.get<CommentDto[]>(`/comments/?action=latest&limit=${limit}`).pipe(
       catchError(err => throwError(() => err))
     );
   }
 
   getComments(elementId: number): Observable<CommentDto[]> {
-    return this.http.get<ApiResponse<CommentDto[]>>(`/comments/id:${elementId}/`).pipe(
-      map(response => {
-        if (response.responseStatus === 'success' && response.responseData) {
-          return this.normalizeComments(response.responseData);
-        }
-        return [];
-      }),
+    return this.http.get<CommentDto[]>(`/comments/id:${elementId}/`).pipe(
+      map(comments => this.normalizeComments(comments)),
       catchError(err => throwError(() => err))
     );
   }
 
   getAllComments(page: number = 1): Observable<CommentsListDto> {
-    return this.http.get<ApiResponse<CommentsListDto>>(`/comments/?action=list&page=${page}`).pipe(
-      map(response => {
-        if (response.responseStatus === 'success' && response.responseData) {
-          return response.responseData;
-        }
-        return {comments: [], currentPage: 1, pagesAmount: 0, totalCount: 0};
-      }),
+    return this.http.get<CommentsListDto>(`/comments/?action=list&page=${page}`).pipe(
       catchError(err => throwError(() => err))
     );
   }
@@ -58,15 +35,10 @@ export class CommentsService {
       .set('content', content)
       .set('action', 'add');
 
-    return this.http.post<ApiResponse<CommentDto>>('/comments/', body, {
+    return this.http.post<CommentDto>('/comments/', body, {
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).pipe(
-      map(response => {
-        if (response.responseStatus === 'success' && response.responseData) {
-          return response.responseData;
-        }
-        throw new Error(response.errorMessage || 'Failed to add comment');
-      })
+      catchError(err => throwError(() => new Error(err.error?.errorMessage || 'Failed to add comment')))
     );
   }
 
@@ -76,15 +48,10 @@ export class CommentsService {
       .set('content', content)
       .set('action', 'update');
 
-    return this.http.post<ApiResponse<CommentDto>>('/comments/', body, {
+    return this.http.post<CommentDto>('/comments/', body, {
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).pipe(
-      map(response => {
-        if (response.responseStatus === 'success' && response.responseData) {
-          return response.responseData;
-        }
-        throw new Error(response.errorMessage || 'Failed to update comment');
-      })
+      catchError(err => throwError(() => new Error(err.error?.errorMessage || 'Failed to update comment')))
     );
   }
 
@@ -93,15 +60,11 @@ export class CommentsService {
       .set('id', commentId.toString())
       .set('action', 'delete');
 
-    return this.http.post<ApiResponse<void>>('/comments/', body, {
+    return this.http.post<null>('/comments/', body, {
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).pipe(
-      map(response => {
-        if (response.responseStatus === 'success') {
-          return;
-        }
-        throw new Error(response.errorMessage || 'Failed to delete comment');
-      })
+      map(() => void 0),
+      catchError(err => throwError(() => new Error(err.error?.errorMessage || 'Failed to delete comment')))
     );
   }
 

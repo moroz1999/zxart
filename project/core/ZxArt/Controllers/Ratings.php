@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Controllers;
 
+use CmsHttpResponse;
 use controller;
 use controllerApplication;
 use Symfony\Component\ObjectMapper\ObjectMapper;
@@ -37,8 +38,7 @@ class Ratings extends controllerApplication
         } elseif ($action === 'list') {
             $this->handleList();
         } else {
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Unknown action');
+            $this->assignError('Unknown action', 400);
         }
         $this->renderer->display();
     }
@@ -47,20 +47,15 @@ class Ratings extends controllerApplication
     {
         $elementId = (int)$this->getParameter('id');
         if (!$elementId) {
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'No ID provided');
+            $this->assignError('No ID provided', 400);
             return;
         }
 
         try {
             $listDto = $this->ratingsService->getElementRatings($elementId);
-            $restDto = $this->objectMapper->map($listDto, ElementRatingsListRestDto::class);
-
-            $this->renderer->assign('responseStatus', 'success');
-            $this->renderer->assign('responseData', $restDto);
+            $this->assignSuccess($this->objectMapper->map($listDto, ElementRatingsListRestDto::class));
         } catch (Throwable) {
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Internal server error');
+            $this->assignError('Internal server error');
         }
     }
 
@@ -70,15 +65,23 @@ class Ratings extends controllerApplication
 
         try {
             $listDto = $this->ratingsService->getRecentRatings($limit);
-            $restDto = $this->objectMapper->map($listDto, RecentRatingsListRestDto::class);
-
-            $this->renderer->assign('responseStatus', 'success');
-            $this->renderer->assign('responseData', $restDto);
+            $this->assignSuccess($this->objectMapper->map($listDto, RecentRatingsListRestDto::class));
         } catch (Throwable) {
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Internal server error');
+            $this->assignError('Internal server error');
         }
     }
+
+    private function assignSuccess(mixed $data): void
+    {
+        $this->renderer->assign('body', $data);
+    }
+
+    private function assignError(string $message, int $statusCode = 500): void
+    {
+        CmsHttpResponse::getInstance()->setStatusCode((string)$statusCode);
+        $this->renderer->assign('body', ['errorMessage' => $message]);
+    }
+
     public function getUrlName()
     {
         return '';

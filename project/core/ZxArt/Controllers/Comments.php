@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Controllers;
 
+use CmsHttpResponse;
 use controller;
 use controllerApplication;
 use ErrorLog;
@@ -47,8 +48,7 @@ class Comments extends controllerApplication
         } elseif ($action === 'latest') {
             $this->handleLatest();
         } else {
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Unknown action');
+            $this->assignError('Unknown action', 400);
         }
         $this->renderer->display();
     }
@@ -59,17 +59,13 @@ class Comments extends controllerApplication
 
         try {
             $listDto = $this->commentsService->getAllCommentsPaginated($page);
-            $restDto = $this->objectMapper->map($listDto, CommentsListRestDto::class);
-
-            $this->renderer->assign('responseStatus', 'success');
-            $this->renderer->assign('responseData', $restDto);
+            $this->assignSuccess($this->objectMapper->map($listDto, CommentsListRestDto::class));
         } catch (Throwable $e) {
             ErrorLog::getInstance()->logMessage(
                 'Comments::handleList',
                 $e->getMessage() . "\n" . $e->getTraceAsString()
             );
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Internal server error');
+            $this->assignError('Internal server error');
         }
     }
 
@@ -77,31 +73,26 @@ class Comments extends controllerApplication
     {
         $elementId = (int)$this->getParameter('id');
         if (!$elementId) {
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'No ID provided');
+            $this->assignError('No ID provided', 400);
             return;
         }
 
         try {
             $internalTree = $this->commentsService->getCommentsTree($elementId);
             $restTree = array_map(fn($dto) => $this->objectMapper->map($dto, CommentRestDto::class), $internalTree);
-
-            $this->renderer->assign('responseStatus', 'success');
-            $this->renderer->assign('responseData', $restTree);
+            $this->assignSuccess($restTree);
         } catch (CommentsException $e) {
             ErrorLog::getInstance()->logMessage(
                 'Comments::handleGet',
                 $e->getMessage() . "\n" . $e->getTraceAsString()
             );
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', $e->getMessage());
+            $this->assignError($e->getMessage(), 400);
         } catch (Throwable $e) {
             ErrorLog::getInstance()->logMessage(
                 'Comments::handleGet',
                 $e->getMessage() . "\n" . $e->getTraceAsString()
             );
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Internal server error');
+            $this->assignError('Internal server error');
         }
     }
 
@@ -111,30 +102,25 @@ class Comments extends controllerApplication
         $content = $this->getParameter('content');
 
         if (!$targetId || !$content) {
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Missing parameters');
+            $this->assignError('Missing parameters', 400);
             return;
         }
 
         try {
             $commentDto = $this->commentsService->addComment($targetId, $content);
-            $restDto = $this->objectMapper->map($commentDto, CommentRestDto::class);
-            $this->renderer->assign('responseStatus', 'success');
-            $this->renderer->assign('responseData', $restDto);
+            $this->assignSuccess($this->objectMapper->map($commentDto, CommentRestDto::class));
         } catch (CommentsException $e) {
             ErrorLog::getInstance()->logMessage(
                 'Comments::handleAdd',
                 $e->getMessage() . "\n" . $e->getTraceAsString()
             );
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', $e->getMessage());
+            $this->assignError($e->getMessage(), 400);
         } catch (Throwable $e) {
             ErrorLog::getInstance()->logMessage(
                 'Comments::handleAdd',
                 $e->getMessage() . "\n" . $e->getTraceAsString()
             );
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Failed to add comment');
+            $this->assignError('Failed to add comment');
         }
     }
 
@@ -144,30 +130,25 @@ class Comments extends controllerApplication
         $content = $this->getParameter('content');
 
         if (!$commentId || !$content) {
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Missing parameters');
+            $this->assignError('Missing parameters', 400);
             return;
         }
 
         try {
             $commentDto = $this->commentsService->updateComment($commentId, $content);
-            $restDto = $this->objectMapper->map($commentDto, CommentRestDto::class);
-            $this->renderer->assign('responseStatus', 'success');
-            $this->renderer->assign('responseData', $restDto);
+            $this->assignSuccess($this->objectMapper->map($commentDto, CommentRestDto::class));
         } catch (CommentsException $e) {
             ErrorLog::getInstance()->logMessage(
                 'Comments::handleUpdate',
                 $e->getMessage() . "\n" . $e->getTraceAsString()
             );
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', $e->getMessage());
+            $this->assignError($e->getMessage(), 400);
         } catch (Throwable $e) {
             ErrorLog::getInstance()->logMessage(
                 'Comments::handleUpdate',
                 $e->getMessage() . "\n" . $e->getTraceAsString()
             );
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Failed to update comment');
+            $this->assignError('Failed to update comment');
         }
     }
 
@@ -175,28 +156,25 @@ class Comments extends controllerApplication
     {
         $commentId = (int)$this->getParameter('id');
         if (!$commentId) {
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Missing ID');
+            $this->assignError('Missing ID', 400);
             return;
         }
 
         try {
             $this->commentsService->deleteComment($commentId);
-            $this->renderer->assign('responseStatus', 'success');
+            $this->assignSuccess(null);
         } catch (CommentsException $e) {
             ErrorLog::getInstance()->logMessage(
                 'Comments::handleDelete',
                 $e->getMessage() . "\n" . $e->getTraceAsString()
             );
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', $e->getMessage());
+            $this->assignError($e->getMessage(), 400);
         } catch (Throwable $e) {
             ErrorLog::getInstance()->logMessage(
                 'Comments::handleDelete',
                 $e->getMessage() . "\n" . $e->getTraceAsString()
             );
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Failed to delete comment');
+            $this->assignError('Failed to delete comment');
         }
     }
 
@@ -210,17 +188,25 @@ class Comments extends controllerApplication
                 fn($dto) => $this->objectMapper->map($dto, CommentRestDto::class),
                 $comments
             );
-
-            $this->renderer->assign('responseStatus', 'success');
-            $this->renderer->assign('responseData', $restComments);
+            $this->assignSuccess($restComments);
         } catch (Throwable $e) {
             ErrorLog::getInstance()->logMessage(
                 'Comments::handleLatest',
                 $e->getMessage() . "\n" . $e->getTraceAsString()
             );
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Internal server error');
+            $this->assignError('Internal server error');
         }
+    }
+
+    private function assignSuccess(mixed $data): void
+    {
+        $this->renderer->assign('body', $data);
+    }
+
+    private function assignError(string $message, int $statusCode = 500): void
+    {
+        CmsHttpResponse::getInstance()->setStatusCode((string)$statusCode);
+        $this->renderer->assign('body', ['errorMessage' => $message]);
     }
 
     public function getUrlName()

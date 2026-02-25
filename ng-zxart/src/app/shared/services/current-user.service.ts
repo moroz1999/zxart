@@ -1,17 +1,11 @@
 import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
 import {HttpClient} from '@angular/common/http';
-import {catchError, map, Observable, of, shareReplay} from 'rxjs';
+import {catchError, Observable, of, shareReplay} from 'rxjs';
 
 interface LegacyCurrentUser {
   userName?: string;
   id?: number | string;
-}
-
-interface ApiResponse<T> {
-  responseStatus: 'success' | 'error';
-  responseData?: T;
-  errorMessage?: string;
 }
 
 @Injectable({
@@ -38,8 +32,7 @@ export class CurrentUserService {
   }
 
   private fetchUser(): Observable<LegacyCurrentUser | null> {
-    return this.http.get<ApiResponse<LegacyCurrentUser>>('/currentuser/').pipe(
-      map((response) => (response.responseStatus === 'success' ? response.responseData ?? null : null)),
+    return this.http.get<LegacyCurrentUser>('/currentuser/').pipe(
       catchError(() => of(null)),
     );
   }

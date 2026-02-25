@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
   title: ZxArt Comments API
-  version: 1.0.0
-  description: API for managing comments for various entities in the ZxArt project.
+  version: 2.0.0
+  description: API for managing comments. All endpoints return data directly as the response body (HTTP 200), not wrapped in a responseData envelope.
 
 paths:
   /comments/id:{id}/:
@@ -18,11 +18,17 @@ paths:
             type: integer
       responses:
         '200':
-          description: A JSON object with responseStatus and responseData.
+          description: Array of root-level comments with nested children.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponseTree'
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentDto'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
 
   /comments/?action=latest:
     get:
@@ -44,11 +50,41 @@ paths:
             default: 10
       responses:
         '200':
-          description: A JSON object with responseStatus and responseData.
+          description: Array of recent comments.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponseTree'
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentDto'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /comments/?action=list:
+    get:
+      summary: Get paginated list of all comments
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [list]
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+      responses:
+        '200':
+          description: Paginated comments list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentsListDto'
+        '500':
+          $ref: '#/components/responses/InternalError'
 
   /comments/:
     post:
@@ -67,25 +103,25 @@ paths:
                 action:
                   type: string
                   enum: [add, update, delete]
-                  description: The action to perform.
                 content:
                   type: string
                   description: Comment text (required for 'add' and 'update').
-                author:
-                  type: string
-                  description: Optional custom author name (for 'add').
               required:
                 - id
                 - action
       responses:
         '200':
-          description: Action result.
+          description: Created or updated CommentDto (add/update), or null (delete).
           content:
             application/json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/ApiResponseComment'
-                  - $ref: '#/components/schemas/ApiResponseSuccess'
+                  - $ref: '#/components/schemas/CommentDto'
+                  - type: 'null'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
 
 components:
   schemas:
@@ -142,35 +178,36 @@ components:
           items:
             $ref: '#/components/schemas/CommentDto'
 
-    ApiResponseTree:
+    CommentsListDto:
       type: object
       properties:
-        responseStatus:
-          type: string
-          enum: [success, error]
-        responseData:
+        comments:
           type: array
           items:
             $ref: '#/components/schemas/CommentDto'
+        currentPage:
+          type: integer
+        pagesAmount:
+          type: integer
+        totalCount:
+          type: integer
+
+    ErrorResponse:
+      type: object
+      properties:
         errorMessage:
           type: string
 
-    ApiResponseComment:
-      type: object
-      properties:
-        responseStatus:
-          type: string
-          enum: [success, error]
-        responseData:
-          $ref: '#/components/schemas/CommentDto'
-        errorMessage:
-          type: string
-
-    ApiResponseSuccess:
-      type: object
-      properties:
-        responseStatus:
-          type: string
-          enum: [success, error]
-        errorMessage:
-          type: string
+  responses:
+    BadRequest:
+      description: Bad request (missing or invalid parameters, or domain error).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalError:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
