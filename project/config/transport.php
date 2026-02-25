@@ -1,8 +1,8 @@
 <?php return [
-	'mysqlUser' => 'root',
-	'mysqlPassword' => 'test',
+	'mysqlUser' => 'zxart',
+	'mysqlPassword' => 'zxart',
 	'mysqlDatabase' => 'zxart',
-	'mysqlHost' => '127.0.0.1',
+	'mysqlHost' => 'db',
 	'mysqlTablesPrefix' => 'engine_',
 	'module' => 'mysqliTransport',
 	'mysqlConnectionEncoding' => 'utf8mb4',

@@ -73,7 +73,8 @@
       "Bash(cd /e/projects/zxart && docker compose up --build 2>&1)",
       "Bash(cd /e/projects/zxart && docker compose up -d 2>&1)",
       "Bash(cd /e/projects/zxart && docker compose up -d --build phpmyadmin app 2>&1)",
-      "mcp__jetbrains__build_project"
+      "mcp__jetbrains__build_project",
+      "Bash(cd /e/projects/zxart && docker compose build app 2>&1)"
     ]
   },
   "enabledPlugins": {

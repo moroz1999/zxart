@@ -37,7 +37,7 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       # Optional: initialize schema/data with SQL files from repo's ./db directory
-      - ./db:/docker-entrypoint-initdb.d:ro
+      - ./db/live:/docker-entrypoint-initdb.d:ro
 
   redis:
     image: redis:7-alpine

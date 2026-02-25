@@ -51,7 +51,7 @@ class receivePlaylist extends structureElementAction
             }
 
             $renderer = $this->getService(renderer::class);
-            if ($renderer instanceof rendererPluginAppendInterface) {
+            if ($renderer instanceof RendererPluginAppendInterface) {
                 $renderer->appendResponseData('playlist', $structureElement->getElementData());
             }
             if ($controller->getApplicationName() != 'ajax') {

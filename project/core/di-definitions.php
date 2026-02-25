@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use App\Paths\PathsManager;
 use App\Users\CurrentUserService;
+use DI\Container;
 use Illuminate\Database\Connection;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
@@ -154,4 +155,10 @@ return [
         ->method('setAuthorsManager', DI\get(AuthorsService::class))
         ->method('setGroupsService', DI\get(GroupsService::class))
         ->method('setCountriesManager', DI\get(CountriesManager::class)),
+
+    // DependencyInjectionContextTrait users — need explicit setContainer
+    votesManager::class => autowire()->method('setContainer', DI\get(Container::class)),
+    tagsManager::class => autowire()->method('setContainer', DI\get(Container::class)),
+    mp3ConversionManager::class => autowire()->method('setContainer', DI\get(Container::class)),
+    ApiQueryResultResolver::class => autowire()->method('setContainer', DI\get(Container::class)),
 ];

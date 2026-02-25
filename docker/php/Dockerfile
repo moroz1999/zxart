@@ -23,8 +23,8 @@ RUN apt-get update \
         pdo \
         pdo_mysql \
         mysqli \
-    && pecl install redis \
-    && docker-php-ext-enable redis
+    && pecl install redis xdebug \
+    && docker-php-ext-enable redis xdebug
 
 # Enable Apache modules and set DocumentRoot
 RUN a2enmod rewrite headers expires \

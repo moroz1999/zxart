@@ -33,7 +33,7 @@ class voteShared extends structureElementAction
                 }
             }
             $renderer = $this->getService(renderer::class);
-            if ($renderer instanceof rendererPluginAppendInterface) {
+            if ($renderer instanceof RendererPluginAppendInterface) {
                 $renderer->appendResponseData($structureElement->structureType, $structureElement->getElementData());
             }
         }

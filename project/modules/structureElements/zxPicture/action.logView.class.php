@@ -9,7 +9,7 @@ class logViewZxPicture extends structureElementAction
     {
         $structureElement->logView();
         $renderer = $this->getService(renderer::class);
-        if ($renderer instanceof rendererPluginAppendInterface) {
+        if ($renderer instanceof RendererPluginAppendInterface) {
             $renderer->appendResponseData('zxPicture', $structureElement->getElementData());
         }
     }

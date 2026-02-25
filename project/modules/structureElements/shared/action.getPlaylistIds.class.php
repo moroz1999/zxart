@@ -8,7 +8,7 @@ class getPlaylistIdsShared extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         $renderer = $this->getService(renderer::class);
-        if ($renderer instanceof rendererPluginAppendInterface) {
+        if ($renderer instanceof RendererPluginAppendInterface) {
             $data = $structureElement->getElementData();
             $data['playlistIds'] = $structureElement->getPlaylistIds();
             $renderer->appendResponseData($structureElement->structureType, $data);
