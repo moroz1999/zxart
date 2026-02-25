@@ -48,7 +48,7 @@ class fixApplication extends controllerApplication
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
 
-            $this->structureManager = $this->getService('structureManager');
+            $this->structureManager = $this->getService('adminStructureManager');
             /**
              * @var LanguagesManager $languagesManager
              */

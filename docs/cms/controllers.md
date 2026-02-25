@@ -8,29 +8,14 @@
 
 ## structureManager context
 
-The SM context (public vs admin) is determined automatically by PHP-DI before `execute()` is called:
-
-- **Public apps** — receive the public SM automatically (it is the default `structureManager::class` in the container).
-- **Admin apps** — declared in `di-definitions.php` with a method injection:
-  ```php
-  myAdminApplication::class => autowire()
-      ->method('setService', 'structureManager', DI\get('adminStructureManager')),
-  ```
-  This puts the admin SM into `localServices['structureManager']` before `execute()` runs.
-
-Inside `execute()` (and all methods of the application), obtain the SM via:
-```php
-$structureManager = $this->getService('structureManager');
-```
-
-**Complex apps** that switch between admin/public based on a request parameter must set the SM manually:
+- **Public apps** — use the default SM: `$this->getService(structureManager::class)`.
+- **Admin apps** — call `$this->getService('adminStructureManager')` directly.
+- **Complex apps** that switch between admin/public based on a request parameter (e.g. `ajaxSearch`, `api`) — explicitly request the appropriate SM:
 ```php
 if ($this->mode === 'admin') {
     $structureManager = $this->getService('adminStructureManager');
-    $this->setService('structureManager', $structureManager);
 } else {
     $structureManager = $this->getService('publicStructureManager');
-    $this->setService('structureManager', $structureManager);
 }
 ```
 
@@ -38,6 +23,8 @@ if ($this->mode === 'admin') {
 - `structureManager::class` / `'structureManager'` — public SM (default)
 - `'publicStructureManager'` — explicit independent public SM factory
 - `'adminStructureManager'` — admin SM factory (also overrides `structureManager::class` in the container as a side effect)
+
+**Note:** `setService('structureManager', ...)` no longer exists. Do not use `->method('setService', ...)` in `di-definitions.php` for SM injection.
 
 ## Controller URL name
 Add `getUrlName()` in controller applications to avoid controller name prefix in entity URLs. Without it, all entities will get the controller name at the beginning of their URL.

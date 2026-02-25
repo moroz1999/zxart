@@ -16,16 +16,6 @@
 - Services and other stateless classes should be marked as `readonly class` if all their properties are immutable (e.g., dependencies injected via constructor). When a class is `readonly`, individual `readonly` modifiers on properties are redundant and should be omitted.
 - Do NOT write PHPDoc `/** @var ... */` for `getService` calls if the class name is explicitly provided as the first argument (e.g. `getService(MyService::class)`). Modern IDEs and Psalm can infer the type from the class string.
 
-## CMS Core Mechanics
-- **Recursive Deletion**: Method `structureElement::deleteElementData()` automatically deletes all child elements linked via `structure` links (or other links returned by `getDeletionLinkTypes()`). This ensures data integrity without manual recursion in services.
-
-## Structure Elements and Actions
-- Keep structure elements (`structureElement`) lean by moving business logic into services.
-- Use strict typing instead of `method_exists`. If multiple types share common behavior, introduce a shared interface.
-- Check object types rather than method existence.
-- Actions (`structureElementAction`) are equivalent to DDD use-cases. They are bound to specific entities and provide automatic privilege checks.
-- The service container is available in actions via `$this->getService()`. New use-cases should be added as new actions when required.
-
 ## Coding Style
 - Avoid "comment ladders" (multiple sequential comments describing every line of code).
 - Avoid inline method calls in conditions if they represent a state. Assign the result to a descriptive variable instead:

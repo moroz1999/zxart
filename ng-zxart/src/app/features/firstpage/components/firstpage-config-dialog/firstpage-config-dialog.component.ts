@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -6,6 +6,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatIconModule} from '@angular/material/icon';
 import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
 import {TranslateModule} from '@ngx-translate/core';
+import {Subscription} from 'rxjs';
 import {FirstpageConfigService} from '../../services/firstpage-config.service';
 import {UserPreferencesService} from '../../../settings/services/user-preferences.service';
 import {MODULE_MIN_RATING_PREF_CODES, ModuleConfig, ModuleType,} from '../../models/firstpage-config';
@@ -33,8 +34,9 @@ import {ZxHeading2Directive} from '../../../../shared/directives/typography/typo
   templateUrl: './firstpage-config-dialog.component.html',
   styleUrls: ['./firstpage-config-dialog.component.scss']
 })
-export class FirstpageConfigDialogComponent implements OnInit {
+export class FirstpageConfigDialogComponent implements OnInit, OnDestroy {
   modules: ModuleConfig[] = [];
+  private configSub?: Subscription;
 
   constructor(
     private configService: FirstpageConfigService,
@@ -43,8 +45,13 @@ export class FirstpageConfigDialogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const config = this.configService.getCurrentConfig();
-    this.modules = config.modules.map(m => ({...m, settings: {...m.settings}}));
+    this.configSub = this.configService.getCurrentConfig().subscribe(config => {
+      this.modules = config.modules.map(m => ({...m, settings: {...m.settings}}));
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.configSub?.unsubscribe();
   }
 
   hasMinRating(type: ModuleType): boolean {

@@ -42,27 +42,6 @@ return [
     Rss::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
 
-    // Admin applications - use admin structureManager
-    aaaApplication::class => autowire()
-        ->method('setService', 'structureManager', DI\get('adminStructureManager')),
-    coorApplication::class => autowire()
-        ->method('setService', 'structureManager', DI\get('adminStructureManager')),
-    dmdApplication::class => autowire()
-        ->method('setService', 'structureManager', DI\get('adminStructureManager')),
-    fixApplication::class => autowire()
-        ->method('setService', 'structureManager', DI\get('adminStructureManager')),
-    rzxArchiveApplication::class => autowire()
-        ->method('setService', 'structureManager', DI\get('adminStructureManager')),
-    s4eApplication::class => autowire()
-        ->method('setService', 'structureManager', DI\get('adminStructureManager')),
-    speccyMapsApplication::class => autowire()
-        ->method('setService', 'structureManager', DI\get('adminStructureManager')),
-    tslabsApplication::class => autowire()
-        ->method('setService', 'structureManager', DI\get('adminStructureManager')),
-    vtrdosApplication::class => autowire()
-        ->method('setService', 'structureManager', DI\get('adminStructureManager')),
-    zxPressApplication::class => autowire()
-        ->method('setService', 'structureManager', DI\get('adminStructureManager')),
     Socialpost::class => autowire()
         ->constructorParameter('logger', DI\get('social_posts_logger')),
 

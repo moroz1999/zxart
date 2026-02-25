@@ -43,7 +43,7 @@ class coorApplication extends controllerApplication
             $user->switchUser($userId);
             $languagesManager = $this->getService(LanguagesManager::class);
             $languagesManager->setCurrentLanguageCode($language, $configManager->get('main.rootMarkerAdmin'));
-            $this->structureManager = $this->getService('structureManager');
+            $this->structureManager = $this->getService('adminStructureManager');
 
             if ($countries = $this->structureManager->getElementsByType('country')) {
                 foreach ($countries as $counter => $country) {

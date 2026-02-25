@@ -48,7 +48,6 @@ export class FirstpageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.configService.reload();
     this.configSub = this.configService.getConfig().subscribe(config => {
       this.buildModules(config);
     });

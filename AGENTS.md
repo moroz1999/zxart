@@ -10,7 +10,7 @@ This file contains the most CRITICAL rules that ALL agents must follow. For deta
 - All documentation and code comments MUST be in English, even if the user communicates in Russian or another language.
 - After completing a task, re-read the task description and verify every point.
 - After finishing the task code, it is necessary to read the rules on this topic from the .md docs once again and double-check your changes.
-- Before starting a task, read only the parts of `domain.md` that are relevant to the task.
+- Before starting a task, you MUST read the relevant documents from the DOCUMENTATION TREE below.
 - Documentation updates must be placed in the appropriate .md file (e.g., PHP rules in php.md).
 - Any new knowledge about functionality must be added to separate sub-documents within `domain.md`.
 - Documentation additions in `docs` must be concise, clear, and only about the core points.
@@ -50,11 +50,8 @@ composer test
 # Static analysis
 composer psalm
 
-# Angular build (required after any SCSS changes)
-composer run build
-
-# Angular dev server
-cd ng-zxart && npm start
+# Angular build (required after any changes to ng-zxart/ — see docs/angular.md)
+docker compose run --rm node run build:docker
 ```
 
 ## PROJECT STRUCTURE

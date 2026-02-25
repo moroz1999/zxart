@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {merge, Observable, of, Subject} from 'rxjs';
+import {map, shareReplay, switchMap, take} from 'rxjs/operators';
 import {UserPreferencesService} from '../../settings/services/user-preferences.service';
 import {PreferenceDto} from '../../settings/models/preference.dto';
 import {
@@ -16,20 +17,30 @@ import {
   providedIn: 'root'
 })
 export class FirstpageConfigService {
-  private config$ = new BehaviorSubject<FirstpageConfig>(this.buildConfig());
+  private readonly reload$ = new Subject<void>();
+
+  /**
+   * Does NOT emit until preferences are fully loaded from the server.
+   * After that, emits immediately and on every reload() call.
+   */
+  private readonly config$: Observable<FirstpageConfig> = this.preferencesService.initialize().pipe(
+    switchMap(() => merge(of(void 0), this.reload$)),
+    map(() => this.buildConfig()),
+    shareReplay(1),
+  );
 
   constructor(private preferencesService: UserPreferencesService) {}
 
   getConfig(): Observable<FirstpageConfig> {
-    return this.config$.asObservable();
+    return this.config$;
   }
 
-  getCurrentConfig(): FirstpageConfig {
-    return this.config$.value;
+  getCurrentConfig(): Observable<FirstpageConfig> {
+    return this.config$.pipe(take(1));
   }
 
   reload(): void {
-    this.config$.next(this.buildConfig());
+    this.reload$.next();
   }
 
   saveConfig(modules: ModuleConfig[]): void {

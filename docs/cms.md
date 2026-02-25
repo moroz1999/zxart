@@ -40,6 +40,16 @@ Most CMS objects (controllers, structure elements, actions) use this trait, whic
 - Only add explicit entries when a class requires constructor/method parameter overrides.
 - Named string keys (e.g. `'publicStructureManager'`, `'db'`) are reserved for cases where a class cannot be a key (e.g. aliases or multiple instances of the same class).
 
+## CMS Core Mechanics
+- **Recursive Deletion**: Method `structureElement::deleteElementData()` automatically deletes all child elements linked via `structure` links (or other links returned by `getDeletionLinkTypes()`). This ensures data integrity without manual recursion in services.
+
+## Structure Elements and Actions
+- Keep structure elements (`structureElement`) lean by moving business logic into services.
+- Use strict typing instead of `method_exists`. If multiple types share common behavior, introduce a shared interface.
+- Check object types rather than method existence.
+- Actions (`structureElementAction`) are equivalent to DDD use-cases. They are bound to specific entities and provide automatic privilege checks.
+- The service container is available in actions via `$this->getService()`. New use-cases should be added as new actions when required.
+
 ## System Concepts
 
 ### Modules and Structure (Structure Elements)

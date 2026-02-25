@@ -46,3 +46,15 @@ adminApplication::class => autowire()
 - `ajaxSearch.class.php`, `api.class.php` — явно получают `'adminStructureManager'` или `'publicStructureManager'` в зависимости от режима
 
 **Удалена инициализация SM из `execute()` всех контроллеров** — вместо этого SM приходит через DI.
+
+### ✅ 7. Удалить setService-инжекцию SM из di-definitions
+`setService` метода больше нет. Все записи вида:
+```php
+myAdminApplication::class => autowire()
+    ->method('setService', 'structureManager', DI\get('adminStructureManager')),
+```
+удалены из всех трёх `di-definitions.php`.
+
+Admin-приложения теперь запрашивают SM напрямую: `$this->getService('adminStructureManager')`.
+
+**Затронутые контроллеры:** `adminApplication`, `adminAjaxApplication`, `exportApplication`, `VisitorRemoveApplication`, `newsletterApplication`, `emailsApplication`, `coorApplication`, `fixApplication`.
