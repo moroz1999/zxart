@@ -4,7 +4,10 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use Cache;
+use ConfigManager;
 use controllerApplication;
+use renderer;
+use user;
 use ZxArt\Import\Services\WorldOfSamImport;
 
 class Sam extends controllerApplication

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Controllers;
 
+use CmsHttpResponse;
 use ConfigManager;
 use controller;
 use controllerApplication;
@@ -91,7 +92,7 @@ class Firstpage extends controllerApplication
                 'unvotedTunes' => $this->handleUnvotedTunes(),
                 'randomGoodTunes' => $this->handleRandomGoodTunes(),
                 'catalogueBaseUrls' => $this->handleCatalogueBaseUrls(),
-                default => $this->assignError('Unknown action: ' . ($action ?? 'null')),
+                default => $this->assignError('Unknown action: ' . ($action ?? 'null'), 400),
             };
         } catch (Throwable $e) {
             ErrorLog::getInstance()->logMessage(
@@ -272,14 +273,13 @@ class Firstpage extends controllerApplication
 
     private function assignSuccess(mixed $data): void
     {
-        $this->renderer->assign('responseStatus', 'success');
-        $this->renderer->assign('responseData', $data);
+        $this->renderer->assign('body', $data);
     }
 
-    private function assignError(string $message): void
+    private function assignError(string $message, int $statusCode = 500): void
     {
-        $this->renderer->assign('responseStatus', 'error');
-        $this->renderer->assign('errorMessage', $message);
+        CmsHttpResponse::getInstance()->setStatusCode((string)$statusCode);
+        $this->renderer->assign('body', ['errorMessage' => $message]);
     }
 
     public function getUrlName()

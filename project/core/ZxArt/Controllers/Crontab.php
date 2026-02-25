@@ -3,6 +3,7 @@
 namespace ZxArt\Controllers;
 
 use Cache;
+use ConfigManager;
 use controllerApplication;
 use Exception;
 use Illuminate\Database\Connection;
@@ -14,6 +15,7 @@ use Monolog\Logger;
 use mp3ConversionManager;
 use pressArticleElement;
 use Recalculable;
+use renderer;
 use rendererPlugin;
 use structureManager;
 use ZxArt\Ai\QueryFailException;

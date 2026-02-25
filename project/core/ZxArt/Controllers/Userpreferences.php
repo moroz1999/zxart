@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace ZxArt\Controllers;
 
+use ConfigManager;
 use controller;
 use controllerApplication;
 use ErrorLog;
+use LanguagesManager;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
 use ZxArt\UserPreferences\DefaultUserPreferencesProvider;

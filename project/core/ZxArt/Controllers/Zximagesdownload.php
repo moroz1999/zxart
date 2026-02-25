@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace ZxArt\Controllers;
 
+use ConfigManager;
 use controller;
 use controllerApplication;
+use LanguagesManager;
 
 class Zximagesdownload extends controllerApplication
 {

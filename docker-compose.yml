@@ -65,5 +65,14 @@ services:
       - ./:/var/www/html
     entrypoint: ["composer"]
 
+  node:
+    image: node:20-alpine
+    working_dir: /var/www/html/ng-zxart
+    volumes:
+      - ./:/var/www/html
+      - node_modules_ng:/var/www/html/ng-zxart/node_modules
+    entrypoint: ["npm"]
+
 volumes:
   db_data:
+  node_modules_ng:

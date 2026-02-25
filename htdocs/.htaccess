@@ -54,6 +54,8 @@
 <ifmodule mod_deflate.c>
 	AddOutputFilterByType DEFLATE image/svg+xml
 	AddOutputFilterByType DEFLATE application/x-font-woff
+	AddOutputFilterByType DEFLATE text/javascript
+	AddOutputFilterByType DEFLATE text/css
 </ifmodule>
 AddType application/wasm wasm
 AddCharset UTF-8 .json

@@ -9,12 +9,6 @@ import {PartyDto} from '../../../shared/models/party-dto';
 import {ZxProd} from '../../../shared/models/zx-prod';
 import {ZxProdDto} from '../../../shared/models/zx-prod-dto';
 
-interface ApiResponse<T> {
-  responseStatus: string;
-  responseData?: T;
-  errorMessage?: string;
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -115,13 +109,7 @@ export class FirstpageDataService {
     for (const [key, value] of Object.entries(params)) {
       queryParams[key] = String(value);
     }
-    return this.http.get<ApiResponse<T>>('/firstpage/', {params: queryParams}).pipe(
-      map(response => {
-        if (response.responseStatus === 'success' && response.responseData) {
-          return response.responseData;
-        }
-        return [] as unknown as T;
-      }),
+    return this.http.get<T>('/firstpage/', {params: queryParams}).pipe(
       catchError(() => of([] as unknown as T))
     );
   }

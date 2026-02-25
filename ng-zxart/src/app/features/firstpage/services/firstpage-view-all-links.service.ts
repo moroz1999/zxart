@@ -2,14 +2,8 @@ import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
 import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
-import {catchError, map, shareReplay, tap} from 'rxjs/operators';
+import {catchError, shareReplay, tap} from 'rxjs/operators';
 import {CatalogueBaseUrlsResponse} from '../models/firstpage-view-all-links';
-
-interface ApiResponse<T> {
-  responseStatus: string;
-  responseData?: T;
-  errorMessage?: string;
-}
 
 interface CachedBaseUrls {
   data: CatalogueBaseUrlsResponse;
@@ -39,13 +33,7 @@ export class FirstpageViewAllLinksService {
       if (cached) {
         this.baseUrls$ = of(cached);
       } else {
-        this.baseUrls$ = this.http.get<ApiResponse<CatalogueBaseUrlsResponse>>('/firstpage/?action=catalogueBaseUrls').pipe(
-          map(response => {
-            if (response.responseStatus === 'success' && response.responseData) {
-              return response.responseData;
-            }
-            return {prodCatalogueBaseUrl: null, graphicsBaseUrl: null, musicBaseUrl: null};
-          }),
+        this.baseUrls$ = this.http.get<CatalogueBaseUrlsResponse>('/firstpage/?action=catalogueBaseUrls').pipe(
           tap(data => this.saveToStorage(data)),
           catchError(() => of({prodCatalogueBaseUrl: null, graphicsBaseUrl: null, musicBaseUrl: null})),
           shareReplay({bufferSize: 1, refCount: true})
