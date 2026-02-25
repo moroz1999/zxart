@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Controllers;
 
+use CmsHttpResponse;
 use ConfigManager;
 use controller;
 use controllerApplication;
@@ -57,8 +58,7 @@ class Userpreferences extends controllerApplication
         } elseif ($method === 'PUT' || $method === 'POST') {
             $this->handlePut();
         } else {
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Method not allowed');
+            $this->assignError('Method not allowed', 400);
         }
 
         $this->renderer->display();
@@ -79,13 +79,10 @@ class Userpreferences extends controllerApplication
                 fn($dto) => $this->objectMapper->map($dto, PreferenceRestDto::class),
                 $internalDtos
             );
-
-            $this->renderer->assign('responseStatus', 'success');
-            $this->renderer->assign('responseData', $restDtos);
+            $this->assignSuccess($restDtos);
         } catch (Throwable $e) {
             ErrorLog::getInstance()->logMessage('Userpreferences::handleGet', $e->getMessage() . "\n" . $e->getTraceAsString());
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Internal server error');
+            $this->assignError('Internal server error');
         }
     }
 
@@ -101,12 +98,10 @@ class Userpreferences extends controllerApplication
                 $restDtos[] = ['code' => $code, 'value' => $value];
             }
 
-            $this->renderer->assign('responseStatus', 'success');
-            $this->renderer->assign('responseData', $restDtos);
+            $this->assignSuccess($restDtos);
         } catch (Throwable $e) {
             ErrorLog::getInstance()->logMessage('Userpreferences::handleGetDefaults', $e->getMessage() . "\n" . $e->getTraceAsString());
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Internal server error');
+            $this->assignError('Internal server error');
         }
     }
 
@@ -123,15 +118,13 @@ class Userpreferences extends controllerApplication
             if ($batch !== null) {
                 $items = json_decode($batch, true);
                 if (!is_array($items)) {
-                    $this->renderer->assign('responseStatus', 'error');
-                    $this->renderer->assign('errorMessage', 'Invalid batch format: expected JSON array');
+                    $this->assignError('Invalid batch format: expected JSON array', 400);
                     return;
                 }
                 $values = [];
                 foreach ($items as $item) {
                     if (!isset($item['code'], $item['value'])) {
-                        $this->renderer->assign('responseStatus', 'error');
-                        $this->renderer->assign('errorMessage', 'Each batch item must have code and value');
+                        $this->assignError('Each batch item must have code and value', 400);
                         return;
                     }
                     $values[(string)$item['code']] = (string)$item['value'];
@@ -139,8 +132,7 @@ class Userpreferences extends controllerApplication
                 $internalDtos = $this->userPreferencesService->setPreferences($values);
             } else {
                 if ($code === null || $value === null) {
-                    $this->renderer->assign('responseStatus', 'error');
-                    $this->renderer->assign('errorMessage', 'Missing parameters: code and value required');
+                    $this->assignError('Missing parameters: code and value required', 400);
                     return;
                 }
                 $internalDtos = $this->userPreferencesService->setPreference($code, $value);
@@ -150,16 +142,23 @@ class Userpreferences extends controllerApplication
                 fn($dto) => $this->objectMapper->map($dto, PreferenceRestDto::class),
                 $internalDtos
             );
-
-            $this->renderer->assign('responseStatus', 'success');
-            $this->renderer->assign('responseData', $restDtos);
+            $this->assignSuccess($restDtos);
         } catch (UserPreferencesException $e) {
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', $e->getMessage());
+            $this->assignError($e->getMessage(), 400);
         } catch (Throwable $e) {
             ErrorLog::getInstance()->logMessage('Userpreferences::handlePut', $e->getMessage() . "\n" . $e->getTraceAsString());
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Internal server error');
+            $this->assignError('Internal server error');
         }
+    }
+
+    private function assignSuccess(mixed $data): void
+    {
+        $this->renderer->assign('body', $data);
+    }
+
+    private function assignError(string $message, int $statusCode = 500): void
+    {
+        CmsHttpResponse::getInstance()->setStatusCode((string)$statusCode);
+        $this->renderer->assign('body', ['errorMessage' => $message]);
     }
 }

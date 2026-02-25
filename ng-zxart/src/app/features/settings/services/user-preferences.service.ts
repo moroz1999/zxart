@@ -1,9 +1,9 @@
 import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable, of, switchMap} from 'rxjs';
-import {map, shareReplay, tap} from 'rxjs/operators';
-import {ApiResponse, PreferenceDto} from '../models/preference.dto';
+import {Observable, of, switchMap, throwError} from 'rxjs';
+import {catchError, map, shareReplay, tap} from 'rxjs/operators';
+import {PreferenceDto} from '../models/preference.dto';
 import {CurrentUserService} from '../../../shared/services/current-user.service';
 
 const STORAGE_KEY = 'zxart_preferences';
@@ -83,16 +83,11 @@ export class UserPreferencesService {
       .set('code', code)
       .set('value', value);
 
-    return this.http.put<ApiResponse<PreferenceDto[]>>('/userpreferences/', body, {
+    return this.http.put<PreferenceDto[]>('/userpreferences/', body, {
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).pipe(
-      map(response => {
-        if (response.responseStatus === 'success' && response.responseData) {
-          return response.responseData;
-        }
-        throw new Error(response.errorMessage || 'Failed to save preference');
-      }),
-      tap(prefs => this.saveToStorage(prefs))
+      tap(prefs => this.saveToStorage(prefs)),
+      catchError(err => throwError(() => new Error(err.error?.errorMessage || 'Failed to save preference')))
     );
   }
 
@@ -108,16 +103,11 @@ export class UserPreferencesService {
     const body = new HttpParams()
       .set('batch', JSON.stringify(items));
 
-    return this.http.put<ApiResponse<PreferenceDto[]>>('/userpreferences/', body, {
+    return this.http.put<PreferenceDto[]>('/userpreferences/', body, {
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).pipe(
-      map(response => {
-        if (response.responseStatus === 'success' && response.responseData) {
-          return response.responseData;
-        }
-        throw new Error(response.errorMessage || 'Failed to save preferences');
-      }),
-      tap(prefs => this.saveToStorage(prefs))
+      tap(prefs => this.saveToStorage(prefs)),
+      catchError(err => throwError(() => new Error(err.error?.errorMessage || 'Failed to save preferences')))
     );
   }
 
@@ -125,15 +115,10 @@ export class UserPreferencesService {
     if (this.defaults$) {
       return this.defaults$;
     }
-    this.defaults$ = this.http.get<ApiResponse<PreferenceDto[]>>('/userpreferences/', {
+    this.defaults$ = this.http.get<PreferenceDto[]>('/userpreferences/', {
       params: {action: 'defaults'}
     }).pipe(
-      map(response => {
-        if (response.responseStatus === 'success' && response.responseData) {
-          return response.responseData;
-        }
-        return [];
-      }),
+      catchError(() => of([])),
       shareReplay(1)
     );
     return this.defaults$;
@@ -150,13 +135,7 @@ export class UserPreferencesService {
   }
 
   private fetchFromServer(): Observable<PreferenceDto[]> {
-    return this.http.get<ApiResponse<PreferenceDto[]>>('/userpreferences/').pipe(
-      map(response => {
-        if (response.responseStatus === 'success' && response.responseData) {
-          return response.responseData;
-        }
-        return [];
-      }),
+    return this.http.get<PreferenceDto[]>('/userpreferences/').pipe(
       tap(prefs => this.saveToStorage(prefs))
     );
   }
