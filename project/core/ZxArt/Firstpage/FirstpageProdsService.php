@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ZxArt\Prods\Services;
+namespace ZxArt\Firstpage;
 
 use structureManager;
 use ZxArt\Prods\Dto\ProdDto;

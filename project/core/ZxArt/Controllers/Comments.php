@@ -6,6 +6,7 @@ namespace ZxArt\Controllers;
 use CmsHttpResponse;
 use controller;
 use controllerApplication;
+use DbLoggableApplication;
 use ErrorLog;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
@@ -16,13 +17,16 @@ use ZxArt\Comments\Exception\CommentsException;
 
 class Comments extends controllerApplication
 {
+    use DbLoggableApplication;
+
     public $rendererName = 'json';
 
     public function __construct(
-        controller $controller,
-        private readonly ObjectMapper $objectMapper,
+        controller                       $controller,
+        private readonly ObjectMapper    $objectMapper,
         private readonly CommentsService $commentsService,
-    ) {
+    )
+    {
         parent::__construct($controller);
     }
 
@@ -34,6 +38,8 @@ class Comments extends controllerApplication
 
     public function execute($controller): void
     {
+        $this->startDbLogging();
+
         $action = $this->getParameter('action');
         if (!$action) {
             $this->handleGet();
@@ -51,6 +57,8 @@ class Comments extends controllerApplication
             $this->assignError('Unknown action', 400);
         }
         $this->renderer->display();
+        
+        $this->saveDbLog();
     }
 
     protected function handleList(): void

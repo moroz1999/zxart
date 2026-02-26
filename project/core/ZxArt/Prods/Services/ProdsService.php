@@ -1076,6 +1076,9 @@ class ProdsService extends ElementsManager
          */
         if ($mainZxProd = $this->structureManager->getElementById($prodId)) {
             if ($firstParent = $mainZxProd->getFirstParentElement()) {
+                /**
+                 * @var zxProdElement $newProdElement
+                 */
                 if ($newProdElement = $this->structureManager->createElement('zxProd', 'show', $firstParent->id)) {
                     $newProdElement->persistElementData();
                     /*
@@ -1090,6 +1093,7 @@ class ProdsService extends ElementsManager
                     foreach ($data['properties'] as $property => $value) {
                         $newProdElement->$property = $mainZxProd->$property;
                     }
+                    $newProdElement->dateAdded = time();
                     $newProdElement->structureName = $newProdElement->title;
                     $newProdElement->persistElementData();
 

@@ -80,7 +80,7 @@ readonly class CommentsService
      *
      * @param int $elementId Target element ID
      * @return CommentDto[]
-     * @throws CommentNotFoundException If the target element is not found
+     * @throws CommentNotFoundException|CommentOperationException If the target element is not found
      */
     public function getCommentsTree(int $elementId): array
     {
@@ -274,7 +274,6 @@ readonly class CommentsService
      *
      * @param int $limit Maximum number of comments to return
      * @return CommentDto[]
-     * @throws CommentOperationException
      * @throws CommentOperationException
      */
     public function getLatestComments(int $limit = 10): array

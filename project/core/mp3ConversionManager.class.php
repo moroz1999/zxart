@@ -4,7 +4,7 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
 {
     use DependencyInjectionContextTrait;
 
-    const string CONVERSION_SERVER_ADDRESS = 'http://music.zxart.ee/index.php';
+    const string CONVERSION_SERVER_ADDRESS = 'https://music.zxart.ee/index.php';
 
     protected $collection;
 
@@ -29,9 +29,9 @@ class mp3ConversionManager extends errorLogger implements DependencyInjectionCon
         ];
         if ($records = $this->collection->conditionalLoad('elementId', $conditions)) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     protected function saveToQueue($elementId): void
