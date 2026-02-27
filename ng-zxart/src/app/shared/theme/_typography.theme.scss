@@ -26,9 +26,15 @@
   --zx-body-weight: 400;
   --zx-body-line-height: 1.5;
 
+  --zx-body-sm-size: var(--zx-font-size-sm);
+  --zx-body-sm-weight: 400;
+  --zx-body-sm-line-height: 1.4;
+
   --zx-body-strong-size: var(--zx-font-size-md);
   --zx-body-strong-weight: 700;
   --zx-body-strong-line-height: 1.5;
+
+  --zx-body-sm-muted-color: var(--text-light-color);
 
   --zx-caption-size: var(--zx-font-size-sm);
   --zx-caption-weight: 400;
@@ -79,6 +85,16 @@
   line-height: var(--zx-body-strong-line-height);
 }
 
+@mixin body-sm {
+  font-size: var(--zx-body-sm-size);
+  line-height: var(--zx-body-sm-line-height);
+}
+
+@mixin body-sm-muted {
+  @include body-sm;
+  color: var(--zx-body-sm-muted-color);
+}
+
 @mixin caption {
   font-size: var(--zx-caption-size);
   font-weight: var(--zx-caption-weight);
@@ -116,6 +132,14 @@
 
 .zx-body {
   @include body;
+}
+
+.zx-body-sm {
+  @include body-sm;
+}
+
+.zx-body-sm-muted {
+  @include body-sm-muted;
 }
 
 .zx-body-strong {

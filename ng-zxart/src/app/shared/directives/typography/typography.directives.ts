@@ -31,6 +31,21 @@ export class ZxHeading3Directive {
 export class ZxBodyDirective {
   @HostBinding('class.zx-body') className = true;
 }
+@Directive({
+  selector: '[zxBodySm]',
+  standalone: true
+})
+export class ZxBodySmDirective {
+  @HostBinding('class.zx-body-sm') className = true;
+}
+
+@Directive({
+  selector: '[zxBodySmMuted]',
+  standalone: true
+})
+export class ZxBodySmMutedDirective {
+  @HostBinding('class.zx-body-sm-muted') className = true;
+}
 
 @Directive({
   selector: '[zxBodyStrong]',

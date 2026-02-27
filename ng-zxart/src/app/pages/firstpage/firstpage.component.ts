@@ -4,17 +4,19 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatDialog} from '@angular/material/dialog';
 import {TranslateModule} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
-import {FirstpageConfigService} from '../../services/firstpage-config.service';
-import {FirstpageConfig, ModuleConfig} from '../../models/firstpage-config';
-import {MODULE_COMPONENTS} from '../../services/module-registry';
-import {MODULE_SETTINGS} from '../../models/module-settings.token';
-import {FirstpageConfigDialogComponent} from '../firstpage-config-dialog/firstpage-config-dialog.component';
-import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
-import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
-import {ZxHeading1Directive} from '../../../../shared/directives/typography/typography.directives';
+import {FirstpageConfigService} from '../../features/firstpage/services/firstpage-config.service';
+import {FirstpageConfig, ModuleConfig} from '../../features/firstpage/models/firstpage-config';
+import {MODULE_COMPONENTS} from '../../features/firstpage/services/module-registry';
+import {MODULE_SETTINGS} from '../../features/firstpage/models/module-settings.token';
+import {
+  FirstpageConfigDialogComponent
+} from '../../features/firstpage/components/firstpage-config-dialog/firstpage-config-dialog.component';
+import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
+import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
+import {ZxHeading1Directive} from '../../shared/directives/typography/typography.directives';
 import {
   PictureGalleryHostComponent
-} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
+} from '../../features/picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 
 interface ModuleEntry {
   config: ModuleConfig;

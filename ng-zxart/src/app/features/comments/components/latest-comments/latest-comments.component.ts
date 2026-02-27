@@ -7,7 +7,7 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
 import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
-import {ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
+import {ZxBodySmMutedDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 
@@ -21,7 +21,7 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
     ZxSkeletonComponent,
     ZxUserComponent,
     ZxPanelComponent,
-    ZxCaptionDirective,
+    ZxBodySmMutedDirective,
     ZxButtonComponent
   ],
   templateUrl: './latest-comments.component.html',

@@ -5,24 +5,11 @@ The project follows a component-based approach for the design system.
 ## Core Principles
 
 1. **CSS Variables Only**: All colors must be specified exclusively through CSS variables.
-2. **Color System**:
-    - **Base Ramps**: Colors are organized into ramps: `--blue-dark-*`, `--red-dark-*`, `--yellow-dark-*`, `--neutral-dark-*` (and their light equivalents).
-    - **Semantic Ramps**: Use semantic variables: `--primary-*`, `--secondary-*`, `--danger-*`, `--warning-*`.
-    - **Indices**: Indices range from 50 to 950. In the dark theme, 50 is the darkest and 950 is the lightest. In the light theme, the mapping is inverted to maintain visual logic.
-    - **Fixed Palette**: Adding new colors or shades to the global palette is strictly prohibited. Use existing variables.
+2. **Color System**: See [Colors](design-system/colors.md) for palette structure, semantic variables, and theming rules.
 3. **Spacing System**: All distances (margins, paddings, gaps) must be multiples of 4 and set using variables: `--space-4`, `--space-8`, `--space-12`, `--space-16`, etc.
-4. **Shadows**: Three base shadow tokens, theme-aware (overridden in `.dark-mode` and `.light-mode`):
-    - `--shadow-sm`: Subtle elevation (popovers, tooltips, small dropdowns).
-    - `--shadow-md`: Medium elevation (panels, cards, floating elements).
-    - `--shadow-lg`: Deep elevation (modals, drag previews, sticky bars).
-    - Components must define their own `--zx-<component>-shadow` variable referencing a base token. Hardcoded `box-shadow` values are forbidden.
-5. **Borders**: Standard border tokens for inputs and containers:
-    - `--border-width-thin`: 1px
-    - `--border-width-thick`: 2px
-    - `--border-secondary`: Default gray border (used in `flat` panels).
-    - `--border-primary`: Blue primary border.
-    - `--border-focused`: High-contrast border for focused states.
-6. **No Hardcoded Palette in Components**: In component styles, it is forbidden to use base palette variables like `--blue-dark-500` directly. Instead, use semantic variables like `--text-color`, `--zx-button-bg`, `--primary-500`, etc. If a needed semantic variable is missing, define it in the theme.
+4. **Shadows**: See [Shadows](design-system/shadows.md) for available tokens and rules.
+5. **Borders**: See [Borders](design-system/borders.md) for available tokens and rules.
+6. **No Hardcoded Palette in Components**: In component styles, it is forbidden to use base palette variables like `--blue-dark-500` directly. Use semantic variables like `--text-color`, `--zx-button-bg`, `--primary-500`, etc. If a needed semantic variable is missing, define it in the theme.
 7. **Themes**: The project supports Dark (class `.dark-mode`) and Light (class `.light-mode`) themes. Always use semantic variables to ensure correct theme switching.
 8. **Semantic Usage**: All components must be used semantically and for their intended purpose.
 9. **Material UI — Phaseout Plan**: Material UI is being phased out entirely. No new Material imports are allowed anywhere.
@@ -40,10 +27,7 @@ The project follows a component-based approach for the design system.
     - **Initial load**: Display `zx-skeleton` component with appropriate variant (`comment`, `card`, `row`, `text`). Never show empty containers or spinners for initial page loads.
     - **Pagination/reload**: Lock interactive controls (pagination, filters) with visual feedback (opacity reduction, spinner overlay). Content should blur slightly to indicate loading without disappearing completely.
     - **Error states**: Display user-friendly error messages with retry options.
-14. **Typography System**: Strictly limited to a set of directives and CSS variables.
-    - **Allowed styles**: `heading-1`, `heading-2`, `heading-3`, `body`, `body-strong`, `caption`, `link`, `link-alt`.
-    - **Angular directives**: `zxHeading1`, `zxHeading2`, `zxHeading3`, `zxBody`, `zxBodyStrong`, `zxCaption`, `zxLink`, `zxLinkAlt`.
-    - **Prohibition**: Direct use of `--font-*` variables in components is prohibited. Use typography directives or variables from `_typography.theme.scss`. Custom variants or Display-styles are forbidden.
+14. **Typography System**: See [Typography](design-system/typography.md) for all directives, usage rules, and how to choose between similar styles.
 15. **Overlays and Popovers**: Use CDK `CdkConnectedOverlay` for all popover/dropdown/tooltip overlays. CSS `position: absolute` within `position: relative` hosts is forbidden for overlay patterns — it stretches parent layout. CDK handles positioning, scroll-aware repositioning, and backdrop closing automatically.
 
 ## Reusable Subcomponents
@@ -54,5 +38,15 @@ The project follows a component-based approach for the design system.
 
 ## Components
 
-For detailed information about available components (zx-button, zx-panel, zx-stack, zx-user, zx-skeleton, zx-table, zx-button-controls, zx-pagination), see:
-- [Design System Components](design-system/components.md) - Complete list of all UI components with usage examples and props
+All design system components are in `ng-zxart/src/app/shared/ui/`.
+
+- [zx-panel](design-system/zx-panel.md) — universal layout container
+- [zx-stack](design-system/zx-stack.md) — flexbox layout container
+- [zx-table](design-system/zx-table.md) — table wrapper with edge-to-edge rows
+- [zx-button](design-system/zx-button.md) — button with colors and sizes
+- [zx-button-controls](design-system/zx-button-controls.md) — wrapper for button groups
+- [zx-pagination](design-system/zx-pagination.md) — page navigation
+- [zx-filter-picker](design-system/zx-filter-picker.md) — popover filter with checkboxes
+- [zx-user](design-system/zx-user.md) — user name with status badges
+- [zx-skeleton](design-system/zx-skeleton.md) — loading placeholder
+- [zx-spinner](design-system/zx-spinner.md) — compact loading spinner

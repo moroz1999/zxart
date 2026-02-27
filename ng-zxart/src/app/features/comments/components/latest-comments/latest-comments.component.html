@@ -8,14 +8,14 @@
       @for (comment of comments(); track comment.id) {
         <div class="latest-comment">
           @if (comment.target) {
-            <a [href]="comment.target.url" class="latest-comment__link" zxCaption>
+            <a [href]="comment.target.url" class="latest-comment__link" zxBodySmMuted>
               @if (comment.author) {
                 <zx-user [user]="comment.author" class="latest-comment__author"></zx-user>:
               }
               <span class="latest-comment__content" [innerHTML]="sanitizeHtml(comment.content)"></span>
             </a>
           } @else {
-            <span zxCaption>
+            <span zxBodySmMuted>
               @if (comment.author) {
                 <zx-user [user]="comment.author" class="latest-comment__author"></zx-user>:
               }

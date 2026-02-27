@@ -54,6 +54,7 @@
 <ifmodule mod_deflate.c>
 	AddOutputFilterByType DEFLATE image/svg+xml
 	AddOutputFilterByType DEFLATE application/x-font-woff
+	AddOutputFilterByType DEFLATE application/javascript
 	AddOutputFilterByType DEFLATE text/javascript
 	AddOutputFilterByType DEFLATE text/css
 </ifmodule>

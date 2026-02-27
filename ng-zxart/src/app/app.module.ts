@@ -31,7 +31,7 @@ import {
   RecentRatingsWidgetComponent
 } from './features/ratings/components/recent-ratings-widget/recent-ratings-widget.component';
 import {RatingsListComponent} from './features/ratings/components/ratings-list/ratings-list.component';
-import {FirstpageComponent} from './features/firstpage/components/firstpage/firstpage.component';
+import {FirstpageComponent} from './pages/firstpage/firstpage.component';
 import {PlayerHostComponent} from './features/player/components/player-host/player-host.component';
 import {LegacyPlayButtonComponent} from './features/player/components/legacy-play-button/legacy-play-button.component';
 import {RadioRemoteComponent} from './features/radio-remote/components/radio-remote/radio-remote.component';
