@@ -9,6 +9,7 @@ The project follows a component-based approach for the design system.
 3. **Spacing System**: All distances (margins, paddings, gaps) must be multiples of 4 and set using variables: `--space-4`, `--space-8`, `--space-12`, `--space-16`, etc.
 4. **Shadows**: See [Shadows](design-system/shadows.md) for available tokens and rules.
 5. **Borders**: See [Borders](design-system/borders.md) for available tokens and rules.
+5a. **Breakpoints**: See [Breakpoints](design-system/breakpoints.md) for SCSS breakpoints, Angular CDK constants, and mobile detection rules.
 6. **No Hardcoded Palette in Components**: In component styles, it is forbidden to use base palette variables like `--blue-dark-500` directly. Use semantic variables like `--text-color`, `--zx-button-bg`, `--primary-500`, etc. If a needed semantic variable is missing, define it in the theme.
 7. **Themes**: The project supports Dark (class `.dark-mode`) and Light (class `.light-mode`) themes. Always use semantic variables to ensure correct theme switching.
 8. **Semantic Usage**: All components must be used semantically and for their intended purpose.
@@ -50,3 +51,5 @@ All design system components are in `ng-zxart/src/app/shared/ui/`.
 - [zx-user](design-system/zx-user.md) — user name with status badges
 - [zx-skeleton](design-system/zx-skeleton.md) — loading placeholder
 - [zx-spinner](design-system/zx-spinner.md) — compact loading spinner
+- [zxTooltip](design-system/zx-tooltip.md) — floating tooltip directive that follows the cursor
+- [zx-rating](design-system/zx-rating.md) — interactive 5-star rating with hover preview

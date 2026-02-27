@@ -17,6 +17,7 @@ import {ZxHeading1Directive} from '../../shared/directives/typography/typography
 import {
   PictureGalleryHostComponent
 } from '../../features/picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
+import {TooltipDirective} from "../../shared/directives/tooltip/tooltip.directive";
 
 interface ModuleEntry {
   config: ModuleConfig;
@@ -35,6 +36,7 @@ interface ModuleEntry {
     ZxButtonComponent,
     ZxHeading1Directive,
     PictureGalleryHostComponent,
+    TooltipDirective,
   ],
   templateUrl: './firstpage.component.html',
   styleUrls: ['./firstpage.component.scss']

@@ -1,7 +1,9 @@
-import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, inject} from '@angular/core';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {environment} from '../../../../environments/environment';
 import {NgClass, NgIf, NgStyle} from '@angular/common';
+import {TranslateService} from '@ngx-translate/core';
+import {TooltipDirective} from '../../directives/tooltip/tooltip.directive';
 
 @Component({
     selector: 'zx-rating',
@@ -10,35 +12,35 @@ import {NgClass, NgIf, NgStyle} from '@angular/common';
     standalone: true,
     imports: [
         SvgIconComponent,
-        SvgIconComponent,
-        SvgIconComponent,
-        SvgIconComponent,
-        SvgIconComponent,
-        SvgIconComponent,
-        SvgIconComponent,
-        SvgIconComponent,
-        SvgIconComponent,
-        SvgIconComponent,
-        SvgIconComponent,
         NgIf,
         NgStyle,
         NgClass,
     ],
+    hostDirectives: [TooltipDirective],
 })
 export class RatingComponent implements OnChanges {
     @Input() overallRating?: number;
     @Input() userRating?: number;
+    @Input() votesAmount?: number;
     @Output() voted: EventEmitter<number> = new EventEmitter();
     public width: number = 0;
     public activeStar?: number = undefined;
 
-    constructor(private iconReg: SvgIconRegistryService) {
+    private tooltip = inject(TooltipDirective);
+
+    constructor(
+        private iconReg: SvgIconRegistryService,
+        private translate: TranslateService,
+    ) {
         this.iconReg.loadSvg(`${environment.svgUrl}star.svg`, 'star')?.subscribe();
         this.iconReg.loadSvg(`${environment.svgUrl}x.svg`, 'x')?.subscribe();
     }
 
     ngOnChanges(): void {
         this.starLeft();
+        this.translate.get('zx-vote.votes', {count: this.votesAmount ?? 0}).subscribe(text => {
+            this.tooltip.text = text;
+        });
     }
 
     starPointed(star: number) {

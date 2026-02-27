@@ -107,6 +107,7 @@ class zxMusicElement extends ZxArtItem implements
         $data["title"] = $this->title;
         $data["link"] = $this->URL;
         $data["votes"] = $this->votes;
+        $data["votesAmount"] = $this->votesAmount;
         $data["userVote"] = $this->getUserVote();
         $data["votePercent"] = $this->getVotePercent();
         $data["mp3FilePath"] = $this->getMp3FilePath();

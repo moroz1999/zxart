@@ -13,7 +13,7 @@ Currently, the legacy part of the system is responsible for routing. Clicking on
 
 #### Build and Verification
 After making any changes to the Angular part of the project (`ng-zxart`), including styles (SCSS) and theme files, you must:
-1. Perform a project build: `docker compose run --rm node run build:docker` from the project root.
+1. Perform a project build: `composer run build` from the project root.
 2. Ensure the build completes without errors.
 3. Verify the result in a browser.
 

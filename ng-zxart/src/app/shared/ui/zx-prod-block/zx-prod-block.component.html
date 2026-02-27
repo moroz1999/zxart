@@ -104,6 +104,7 @@
         <zx-rating
           *ngIf="!model.denyVoting && model.structureType === 'zxProd'"
           [overallRating]="model.votes"
+          [votesAmount]="model.votesAmount"
           [userRating]="model.userVote"
           (voted)="vote($event)"
         ></zx-rating>

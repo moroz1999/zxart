@@ -77,6 +77,9 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             "votes" => static function ($element) {
                 return (float)$element->votes;
             },
+            "votesAmount" => static function ($element) {
+                return (int)$element->votesAmount;
+            },
             "partyString" => function (zxProdElement $element) {
                 $partyString = '';
                 if ($element->party) {
@@ -259,6 +262,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 'authorsInfo',
                 'importIds',
                 'votes',
+                'votesAmount',
                 'userVote',
                 'rzx',
                 'externalLink',
@@ -289,6 +293,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 'listImagesUrls',
                 'hardwareInfo',
                 "votes",
+                "votesAmount",
                 "userVote",
                 "year",
                 "partyPlace",

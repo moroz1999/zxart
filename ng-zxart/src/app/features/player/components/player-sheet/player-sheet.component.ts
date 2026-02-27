@@ -316,9 +316,10 @@ export class PlayerSheetComponent implements OnDestroy {
     if (!tune) {
       return;
     }
-    this.voteService.send<'zxMusic'>(tune.id, value, 'zxMusic').subscribe(votes => {
+    this.voteService.send<'zxMusic'>(tune.id, value, 'zxMusic').subscribe(({votes, votesAmount}) => {
       this.playerService.updateCurrentTune({
         votes,
+        votesAmount,
         userVote: value,
       });
     });

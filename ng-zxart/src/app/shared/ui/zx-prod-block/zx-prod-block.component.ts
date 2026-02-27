@@ -145,8 +145,9 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
   }
 
   vote(rating: number) {
-    this.voting.send<'zxProd'>(this.model.id, rating, 'zxProd').subscribe(value => {
-      this.model.votes = value;
+    this.voting.send<'zxProd'>(this.model.id, rating, 'zxProd').subscribe(({votes, votesAmount}) => {
+      this.model.votes = votes;
+      this.model.votesAmount = votesAmount;
       this.model.userVote = rating;
       this.cdr.detectChanges();
     });

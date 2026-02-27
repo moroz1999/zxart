@@ -333,6 +333,9 @@
       "exclude": "Formats exclude"
     }
   },
+  "zx-vote": {
+    "votes": "{{count}} votes"
+  },
   "playlist": {
     "button_label": "Playlists",
     "login_required": "Log in to manage playlists",

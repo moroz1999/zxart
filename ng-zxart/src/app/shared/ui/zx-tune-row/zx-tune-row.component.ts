@@ -48,8 +48,8 @@ export class ZxTuneRowComponent {
   }
 
   vote(rating: number): void {
-    this.voteService.send<'zxMusic'>(this.tune.id, rating, 'zxMusic').subscribe(value => {
-      this.tune = {...this.tune, votes: value, userVote: rating};
+    this.voteService.send<'zxMusic'>(this.tune.id, rating, 'zxMusic').subscribe(({votes, votesAmount}) => {
+      this.tune = {...this.tune, votes, votesAmount, userVote: rating};
       this.cdr.detectChanges();
     });
   }

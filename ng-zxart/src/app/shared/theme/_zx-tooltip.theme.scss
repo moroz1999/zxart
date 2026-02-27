@@ -1,0 +1,35 @@
+:root {
+  /* ZX Tooltip */
+  --zx-tooltip-bg: var(--neutral-light-800);
+  --zx-tooltip-text: var(--white);
+  --zx-tooltip-padding: var(--space-4) var(--space-8);
+  --zx-tooltip-border-radius: var(--radius-md);
+  --zx-tooltip-font-size: var(--font-sm);
+  --zx-tooltip-shadow: var(--shadow-sm);
+}
+
+.dark-mode {
+  --zx-tooltip-bg: var(--neutral-dark-700);
+  --zx-tooltip-text: var(--white);
+}
+
+/*
+ * Rendered by TooltipOverlayComponent inside the CDK overlay container.
+ * Positioning and z-index stacking are handled by Angular CDK Overlay.
+ */
+.zx-tooltip {
+  background: var(--zx-tooltip-bg);
+  color: var(--zx-tooltip-text);
+  padding: var(--zx-tooltip-padding);
+  border-radius: var(--zx-tooltip-border-radius);
+  font-size: var(--zx-tooltip-font-size);
+  box-shadow: var(--zx-tooltip-shadow);
+  pointer-events: none;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--animation-sm) ease;
+
+  &.zx-tooltip--visible {
+    opacity: 1;
+  }
+}

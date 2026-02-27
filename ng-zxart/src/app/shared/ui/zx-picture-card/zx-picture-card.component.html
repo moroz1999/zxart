@@ -31,12 +31,10 @@
       <zx-rating
         *ngIf="!picture.denyVoting"
         [overallRating]="picture.votes"
+        [votesAmount]="picture.votesAmount"
         [userRating]="picture.userVote ?? undefined"
         (voted)="vote($event)"
       ></zx-rating>
-      <span class="picture-votes-count" *ngIf="picture.votesAmount > 0" zxCaption>
-        ({{ picture.votesAmount }})
-      </span>
       <zx-playlist-button [elementId]="picture.id"></zx-playlist-button>
     </div>
   </div>

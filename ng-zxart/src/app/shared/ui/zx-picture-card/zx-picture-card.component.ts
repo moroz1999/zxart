@@ -50,8 +50,8 @@ export class ZxPictureCardComponent {
   }
 
   vote(rating: number): void {
-    this.voteService.send<'zxPicture'>(this.picture.id, rating, 'zxPicture').subscribe(newVotes => {
-      this.picture = {...this.picture, votes: newVotes, userVote: rating};
+    this.voteService.send<'zxPicture'>(this.picture.id, rating, 'zxPicture').subscribe(({votes, votesAmount}) => {
+      this.picture = {...this.picture, votes, votesAmount, userVote: rating};
     });
   }
 }

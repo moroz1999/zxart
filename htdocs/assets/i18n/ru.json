@@ -333,6 +333,9 @@
       "exclude": "Форматы исключить"
     }
   },
+  "zx-vote": {
+    "votes": "{{count}} голосов"
+  },
   "playlist": {
     "button_label": "Плейлисты",
     "login_required": "Войдите, чтобы управлять плейлистами",

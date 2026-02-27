@@ -250,7 +250,7 @@
 			{translations name='zxmusic.votes'}:
 		</td>
 		<td class='info_table_value'>
-			<zx-vote element-id="{$element->id}" type="zxMusic" votes="{$element->votes}" user-vote="{$element->getUserVote()}" deny-voting="{if $element->isVotingDenied()}true{else}false{/if}"></zx-vote>
+			<zx-vote element-id="{$element->id}" type="zxMusic" votes="{$element->votes}" votes-amount="{$element->votesAmount}" user-vote="{$element->getUserVote()}" deny-voting="{if $element->isVotingDenied()}true{else}false{/if}"></zx-vote>
 			{include file=$theme->template("component.playlist.tpl") element=$element}
 			{if !$element->isVotingDenied() && $element->getVotePercent()}
 				<div>{$element->votes}</div>

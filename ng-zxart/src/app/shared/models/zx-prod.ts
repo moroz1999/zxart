@@ -1,11 +1,11 @@
 import {StructureElement} from './structure-element';
 import {
-    LegalStatus,
-    ZxProdAuthorship,
-    ZxProdConnectedElementDto,
-    ZxProdConnectedElements,
-    ZxProdConnectedItems,
-    ZxProdDto,
+  LegalStatus,
+  ZxProdAuthorship,
+  ZxProdConnectedElementDto,
+  ZxProdConnectedElements,
+  ZxProdConnectedItems,
+  ZxProdDto,
 } from './zx-prod-dto';
 
 export class ZxProd extends StructureElement {
@@ -27,6 +27,7 @@ export class ZxProd extends StructureElement {
     public releaseFormat?: string;
     public partyPlace: number = 0;
     public votes: number;
+    public votesAmount: number;
     public userVote: number;
     public denyVoting: boolean;
     public legalStatus: LegalStatus;
@@ -83,6 +84,7 @@ export class ZxProd extends StructureElement {
             this.inlaysUrls = this.inlaysUrls.map(image => image.replace('http://localhost', 'https://zxart.ee'));
         }
         this.votes = data.votes;
+        this.votesAmount = data.votesAmount;
         this.userVote = data.userVote;
         this.denyVoting = data.denyVoting ?? false;
         this.externalLink = data.externalLink ?? '';

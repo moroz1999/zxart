@@ -81,6 +81,7 @@
           *ngIf="state.playlist[state.currentIndex] as tune"
           class="player-rating"
           [overallRating]="tune.votes"
+          [votesAmount]="tune.votesAmount"
           [userRating]="tune.userVote ?? undefined"
           (voted)="vote($event)"
         ></zx-rating>

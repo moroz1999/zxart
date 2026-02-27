@@ -115,6 +115,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         $data["title"] = $this->title;
         $data["link"] = $this->URL;
         $data["votes"] = $this->votes;
+        $data["votesAmount"] = $this->votesAmount;
         $data["userVote"] = $this->getUserVote();
         $data["votePercent"] = $this->getVotePercent();
         return $data;

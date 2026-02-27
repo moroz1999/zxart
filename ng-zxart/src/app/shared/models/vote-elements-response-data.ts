@@ -1,5 +1,6 @@
 interface VoteElement {
     votes: number,
+    votesAmount: number,
     userVote: number
 }
 
