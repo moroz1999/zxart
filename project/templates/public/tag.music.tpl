@@ -4,7 +4,7 @@
 	{/capture}
 {/if}
 {capture assign="moduleContent"}
-	{include file=$theme->template("component.musictable.tpl") musicList=$element->getItems() element=$element showAuthors=true showYear=true musicListId="tag_music_{$element->id}"}
+	<zx-music-list element-id="{$element->id}"></zx-music-list>
 {/capture}
 {assign moduleClass ""}
 {assign moduleTitleClass ""}

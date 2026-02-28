@@ -38,3 +38,4 @@ For specific topics, see:
 - [Services and Dependency Injection](php/services.md) - DI container, service design, dependency injection patterns
 - [Repositories and Database](php/repositories.md) - Database table names, Query Builder, avoiding raw SQL
 - [REST API and DTOs](php/rest-api.md) - REST API pattern, ObjectMapper usage, API verification and documentation
+- [Error Handling](php/error-handling.md) - Never swallowing exceptions silently, logging utilities

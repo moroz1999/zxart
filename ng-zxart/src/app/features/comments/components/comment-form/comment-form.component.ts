@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {TranslateModule} from '@ngx-translate/core';
 import {CommentDto} from '../../models/comment.dto';
 import {CommentsService} from '../../services/comments.service';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
@@ -37,21 +37,16 @@ export class CommentFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private commentsService: CommentsService,
-    private translate: TranslateService
   ) {
     this.commentForm = this.fb.group({
       content: ['', [Validators.required, Validators.minLength(2)]]
     });
   }
 
-  get contentLabel(): string {
-    return this.translate.instant('comments.label');
-  }
-
   get contentErrorMessage(): string {
     const control = this.commentForm.get('content');
     if (control?.hasError('required') && control.touched) {
-      return this.translate.instant('comments.error-content');
+      return 'comments.error-content';
     }
     return '';
   }

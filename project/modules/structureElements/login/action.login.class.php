@@ -1,6 +1,8 @@
 <?php
 
 use App\Users\CurrentUserService;
+use ZxArt\UserPreferences\Domain\PreferenceCode;
+use ZxArt\UserPreferences\UserPreferencesService;
 
 class loginLogin extends structureElementAction
 {
@@ -27,7 +29,7 @@ class loginLogin extends structureElementAction
                         $user->forgetUser(); // remove 'remember' cookie from possible previous login
                     }
                 }
-                $redirectURL = $controller->fullURL;
+                $redirectURL = $this->resolveRedirectUrl($controller, $structureManager->getCurrentElement());
                 $controller->redirect($redirectURL);
             } else {
                 $structureElement->setFormError('password', true);
@@ -43,6 +45,35 @@ class loginLogin extends structureElementAction
             } else {
                 $structureElement->executeAction('show');
             }
+        }
+    }
+
+    private function resolveRedirectUrl($controller, ?structureElement $currentElement): string
+    {
+        $defaultUrl = $controller->fullURL;
+
+        if ($currentElement === null) {
+            return $defaultUrl;
+        }
+
+        try {
+            $preferredCode = $this->getService(UserPreferencesService::class)
+                ->getPreference(PreferenceCode::LANGUAGE->value);
+
+            if ($preferredCode === null) {
+                return $defaultUrl;
+            }
+
+            if ($preferredCode === $this->getService(LanguagesManager::class)->getCurrentLanguageCode()) {
+                return $defaultUrl;
+            }
+
+            return $this->getService(LanguageLinksService::class)
+                ->getLinkForLanguage($currentElement, $preferredCode)
+                ?? $defaultUrl;
+        } catch (Throwable $e) {
+            ErrorLog::getInstance()->logMessage('loginLogin::resolveRedirectUrl', $e->getMessage() . "\n" . $e->getTraceAsString());
+            return $defaultUrl;
         }
     }
 

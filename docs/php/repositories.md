@@ -26,14 +26,17 @@
 $this->db->table($this->db->raw('(SELECT id FROM ' . self::TABLE . ' ORDER BY votes DESC LIMIT ' . $topN . ') AS top'))
 
 // GOOD — two safe queries:
-$topIds = $this->getSelectSql()->orderBy('votes', 'desc')->limit($topN)->pluck('id')->all();
-$this->getSelectSql()->whereIn('id', $topIds)->inRandomOrder()->limit($limit)->pluck('id')->all();
+$topIds = $this->getSelectSql()->orderBy('votes', 'desc')->limit($topN)->pluck('id');
+$this->getSelectSql()->whereIn('id', $topIds)->inRandomOrder()->limit($limit)->pluck('id');
 ```
 
 ## Database Query Results
-- `Illuminate\Database\Query\Builder` returns **arrays**, not objects.
+
+The `Connection` is configured with `PDO::FETCH_ASSOC` (set in `trickster-cms/cms/core/di-definitions.php` via `$capsule->setFetchMode(PDO::FETCH_ASSOC)`). This means:
+
+- `get()` and `first()` return plain PHP **arrays**, not objects or Eloquent models.
 - Use array access syntax: `$row['column_name']`, NOT `$row->column_name`.
-- `Builder::pluck()` returns a **plain array**, NOT a Collection. Do NOT chain `->all()` after `pluck()`.
+- `pluck()` also returns a **plain PHP array**, NOT an Illuminate `Collection`. Do NOT chain `->all()` after `pluck()`.
 - Example:
 ```php
 $rows = $this->db->table(self::TABLE)->get();
@@ -41,4 +44,7 @@ foreach ($rows as $row) {
     $id = (int)$row['id'];
     $name = $row['name'];
 }
+
+// pluck returns plain array directly:
+$ids = $this->db->table(self::TABLE)->pluck('id'); // int[]
 ```

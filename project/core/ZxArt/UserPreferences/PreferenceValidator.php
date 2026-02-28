@@ -45,6 +45,7 @@ final class PreferenceValidator
             PreferenceCode::HOMEPAGE_BEST_DEMOS_MIN_RATING,
             PreferenceCode::HOMEPAGE_BEST_GAMES_MIN_RATING => $this->validateMinRating($code, $value),
             PreferenceCode::RADIO_CRITERIA => $value,
+            PreferenceCode::LANGUAGE => $this->validateLanguageCode($value),
         };
     }
 
@@ -90,5 +91,14 @@ final class PreferenceValidator
             throw InvalidPreferenceValueException::forPreference($code->value, $value);
         }
         return (string)$floatValue;
+    }
+
+    private function validateLanguageCode(string $value): string
+    {
+        // iso6393 codes: 2-4 lowercase letters, optionally followed by hyphen+letters (e.g. 'm-')
+        if (!preg_match('/^[a-z]{2,4}(-[a-z]+)?$/', $value)) {
+            throw InvalidPreferenceValueException::forPreference(PreferenceCode::LANGUAGE->value, $value);
+        }
+        return $value;
     }
 }

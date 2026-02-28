@@ -7,18 +7,11 @@ import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.componen
 import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.component';
 import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
 import {ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
-import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {PlayerService} from '../../../player/services/player.service';
-import {AuthorTunesService} from '../../services/author-tunes.service';
-
-interface YearGroup {
-  year: number;
-  tunes: ZxTuneDto[];
-  startIndex: number;
-}
+import {MusicListService} from '../../services/music-list.service';
 
 @Component({
-  selector: 'zx-author-tunes',
+  selector: 'zx-music-list',
   standalone: true,
   imports: [
     CommonModule,
@@ -27,18 +20,17 @@ interface YearGroup {
     ZxTuneRowComponent,
     ZxSkeletonComponent,
     ZxCaptionDirective,
-    ZxStackComponent,
   ],
-  templateUrl: './author-tunes.component.html',
-  styleUrls: ['./author-tunes.component.scss'],
+  templateUrl: './zx-music-list.component.html',
+  styleUrls: ['./zx-music-list.component.scss'],
 })
-export class AuthorTunesComponent implements OnInit {
+export class ZxMusicListComponent implements OnInit {
   @Input() elementId = 0;
+  @Input() compoType = '';
 
   loading = true;
   error = false;
-  yearGroups: YearGroup[] = [];
-  playlist: ZxTuneDto[] = [];
+  tunes: ZxTuneDto[] = [];
   private playlistId = '';
 
   readonly playingTuneId$ = this.playerService.state$.pipe(
@@ -49,22 +41,22 @@ export class AuthorTunesComponent implements OnInit {
   );
 
   constructor(
-    private authorTunesService: AuthorTunesService,
+    private musicListService: MusicListService,
     private playerService: PlayerService,
   ) {}
 
   ngOnInit(): void {
-    this.playlistId = `author-${this.elementId}`;
+    this.playlistId = `music-list-${this.elementId}${this.compoType ? '-' + this.compoType : ''}`;
     this.loadData();
   }
 
   playTune(index: number): void {
-    const selected = this.playlist[index];
+    const selected = this.tunes[index];
     if (!selected) {
       return;
     }
-    const playable = this.playlist.filter(item => item.isPlayable && item.mp3Url);
-    const startIndex = playable.findIndex(item => item.id === selected.id);
+    const playable = this.tunes.filter(t => t.isPlayable && t.mp3Url);
+    const startIndex = playable.findIndex(t => t.id === selected.id);
     if (startIndex === -1) {
       return;
     }
@@ -83,41 +75,15 @@ export class AuthorTunesComponent implements OnInit {
     }
     this.loading = true;
     this.error = false;
-    this.authorTunesService.getTunes(this.elementId).subscribe({
+    this.musicListService.getTunes(this.elementId, this.compoType || undefined).subscribe({
       next: tunes => {
         this.loading = false;
-        this.buildGroups(tunes);
+        this.tunes = tunes;
       },
       error: () => {
         this.loading = false;
         this.error = true;
       },
-    });
-  }
-
-  private buildGroups(tunes: ZxTuneDto[]): void {
-    // Sort year descending, title ascending — matches server-side krsort + title sort
-    const sorted = [...tunes].sort((a, b) => {
-      const yearA = a.year ? parseInt(a.year, 10) : 0;
-      const yearB = b.year ? parseInt(b.year, 10) : 0;
-      if (yearB !== yearA) return yearB - yearA;
-      return a.title.localeCompare(b.title);
-    });
-
-    this.playlist = sorted;
-
-    const yearMap = new Map<number, ZxTuneDto[]>();
-    for (const tune of sorted) {
-      const year = tune.year ? parseInt(tune.year, 10) : 0;
-      if (!yearMap.has(year)) yearMap.set(year, []);
-      yearMap.get(year)!.push(tune);
-    }
-
-    let index = 0;
-    this.yearGroups = [...yearMap.entries()].map(([year, group]) => {
-      const startIndex = index;
-      index += group.length;
-      return {year, tunes: group, startIndex};
     });
   }
 }

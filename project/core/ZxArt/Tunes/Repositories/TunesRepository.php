@@ -233,6 +233,35 @@ readonly final class TunesRepository
     }
 
     /**
+     * Returns IDs of tunes linked to the given author (including all its aliases)
+     * via structure_links with type 'authorMusic'.
+     * All entity IDs share a single sequence from structure_elements.
+     *
+     * @return int[]
+     */
+    public function findIdsByAuthorId(int $authorId): array
+    {
+        return $this->db->table(self::TABLE)
+            ->select(self::TABLE . '.id')
+            ->join(
+                self::STRUCTURE_LINKS_TABLE,
+                fn($join) => $join
+                    ->on(self::STRUCTURE_LINKS_TABLE . '.childStructureId', '=', self::TABLE . '.id')
+                    ->where(self::STRUCTURE_LINKS_TABLE . '.type', '=', self::AUTHORSHIP_TYPE)
+            )
+            ->where(function ($q) use ($authorId) {
+                $q->where(self::STRUCTURE_LINKS_TABLE . '.parentStructureId', '=', $authorId)
+                    ->orWhereIn(
+                        self::STRUCTURE_LINKS_TABLE . '.parentStructureId',
+                        fn($sub) => $sub->select('id')->from('module_authoralias')->where('authorId', '=', $authorId)
+                    );
+            })
+            ->distinct()
+            ->orderBy(self::TABLE . '.title')
+            ->pluck(self::TABLE . '.id');
+    }
+
+    /**
      * @return array{min: int|null, max: int|null}
      */
     public function getYearRange(): array

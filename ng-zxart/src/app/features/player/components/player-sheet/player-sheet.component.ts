@@ -134,7 +134,6 @@ export class PlayerSheetComponent implements OnDestroy {
     });
 
     this.setFormFromCriteria(this.playerService.getCriteria());
-    this.buildCategoryOptions(null);
 
     this.subscriptions.add(
       this.playerService.criteria$.subscribe(criteria => {
@@ -150,7 +149,7 @@ export class PlayerSheetComponent implements OnDestroy {
     );
 
     this.subscriptions.add(
-      this.translateService.onLangChange.subscribe(() => {
+      this.translateService.stream('player.filters.category.any').subscribe(() => {
         this.buildCategoryOptions(this.options);
         if (this.options) {
           this.buildOptions(this.options);

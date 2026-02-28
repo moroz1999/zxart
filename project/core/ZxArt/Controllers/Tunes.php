@@ -4,13 +4,19 @@ declare(strict_types=1);
 
 namespace ZxArt\Controllers;
 
+use CmsHttpResponse;
 use ConfigManager;
 use controller;
 use controllerApplication;
+use ErrorLog;
 use LanguagesManager;
+use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
+use ZxArt\Tunes\Dto\TuneDto;
 use ZxArt\Tunes\Exception\TuneNotFoundException;
+use ZxArt\Tunes\Rest\TuneRestDto;
 use ZxArt\Tunes\Services\TunePlayService;
+use ZxArt\Tunes\Services\TunesService;
 
 class Tunes extends controllerApplication
 {
@@ -40,23 +46,41 @@ class Tunes extends controllerApplication
     public function execute($controller): void
     {
         $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-        if ($method !== 'POST') {
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Method not allowed');
-            $this->renderer->display();
-            return;
+        $action = $this->getParameter('action') ?? '';
+
+        if ($method === 'GET' && $action === 'tunesByElement') {
+            $this->handleTunesByElement();
+        } elseif ($method === 'POST' && ($action === '' || $action === 'play')) {
+            $this->handlePlay();
+        } else {
+            CmsHttpResponse::getInstance()->setStatusCode('400');
+            $this->renderer->assign('body', ['errorMessage' => 'Unknown action']);
         }
 
-        $action = $this->getParameter('action');
-        if ($action && $action !== 'play') {
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Unknown action');
-            $this->renderer->display();
-            return;
-        }
-
-        $this->handlePlay();
         $this->renderer->display();
+    }
+
+    private function handleTunesByElement(): void
+    {
+        $elementId = (int)($this->getParameter('elementId') ?? 0);
+        if ($elementId <= 0) {
+            CmsHttpResponse::getInstance()->setStatusCode('400');
+            $this->renderer->assign('body', ['errorMessage' => 'elementId is required']);
+            return;
+        }
+
+        try {
+            $dtos = $this->getService(TunesService::class)->getByAuthor($elementId);
+            $mapper = new ObjectMapper();
+            $this->renderer->assign('body', array_map(
+                fn(TuneDto $dto) => $mapper->map($dto, TuneRestDto::class),
+                $dtos
+            ));
+        } catch (Throwable $e) {
+            ErrorLog::getInstance()->logMessage('Tunes::tunesByElement', $e->getMessage() . "\n" . $e->getTraceAsString());
+            CmsHttpResponse::getInstance()->setStatusCode('500');
+            $this->renderer->assign('body', ['errorMessage' => 'Internal server error']);
+        }
     }
 
     private function handlePlay(): void

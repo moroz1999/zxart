@@ -1,8 +1,9 @@
-import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, Output} from '@angular/core';
 import {SelectorDto} from '../../models/selector-dto';
 import {TranslateService} from '@ngx-translate/core';
 import {FormsModule} from '@angular/forms';
 import {ZxSelectComponent, ZxSelectOption} from '../../../../shared/ui/zx-select/zx-select.component';
+import {map, Subject, Subscription, switchMap} from 'rxjs';
 
 @Component({
     selector: 'zx-sorting-selector',
@@ -14,28 +15,50 @@ import {ZxSelectComponent, ZxSelectOption} from '../../../../shared/ui/zx-select
         ZxSelectComponent,
     ],
 })
-export class SortingSelectorComponent implements OnChanges {
+export class SortingSelectorComponent implements OnChanges, OnDestroy {
     @Input() sortingSelector!: SelectorDto;
     @Output() sortingSelected = new EventEmitter<string>();
     sorting = '';
     options: ZxSelectOption[] = [];
 
-    constructor(private translateService: TranslateService) {
+    private readonly inputChange$ = new Subject<SelectorDto>();
+    private readonly subscriptions = new Subscription();
+
+    constructor(private readonly translateService: TranslateService) {
+        this.subscriptions.add(
+            this.inputChange$.pipe(
+                switchMap(selector => {
+                    const keys = selector.flatMap(group =>
+                        group.values.map(v => 'prods-list.sorting.' + v.title)
+                    );
+                    return this.translateService.stream(keys).pipe(
+                        map(translations => ({selector, translations: translations as Record<string, string>}))
+                    );
+                })
+            ).subscribe(({selector, translations}) => {
+                this.sorting = '';
+                this.options = [];
+                for (const group of selector) {
+                    for (const sortingValue of group.values) {
+                        if (sortingValue.selected) {
+                            this.sorting = sortingValue.value;
+                        }
+                        this.options.push({
+                            value: sortingValue.value,
+                            label: translations['prods-list.sorting.' + sortingValue.title] ?? sortingValue.value,
+                        });
+                    }
+                }
+            })
+        );
     }
 
     ngOnChanges(): void {
-        this.options = [];
-        for (const group of this.sortingSelector) {
-            for (const sortingValue of group.values) {
-                if (sortingValue.selected) {
-                    this.sorting = sortingValue.value;
-                }
-                this.options.push({
-                    value: sortingValue.value,
-                    label: this.translateService.instant('prods-list.sorting.' + sortingValue.title),
-                });
-            }
-        }
+        this.inputChange$.next(this.sortingSelector);
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
     }
 
     dataChanged(): void {

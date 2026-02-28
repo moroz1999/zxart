@@ -8,7 +8,7 @@
 
   <ng-container *ngIf="!loading && !error && yearGroups.length > 0">
     <ng-container *ngIf="{ id: playingTuneId$ | async } as playing">
-      <zx-table *ngFor="let group of yearGroups" [title]="group.title" titleLevel="h2">
+      <zx-table *ngFor="let group of yearGroups" [title]="group.year > 0 ? group.year.toString() : ('tune.unknownYear' | translate)" titleLevel="h2">
         <table *ngIf="group.tunes.length" class="tunes-table">
           <tbody>
             <zx-tune-row

@@ -58,6 +58,15 @@ readonly class TunesService
     }
 
     /**
+     * @return TuneDto[]
+     */
+    public function getByAuthor(int $authorId): array
+    {
+        $ids = $this->tunesRepository->findIdsByAuthorId($authorId);
+        return $this->loadAndTransform($ids);
+    }
+
+    /**
      * @param int[] $ids
      * @return TuneDto[]
      */

@@ -35,4 +35,7 @@ enum PreferenceCode: string
 
     // Radio
     case RADIO_CRITERIA = 'radio_criteria';
+
+    // Interface language
+    case LANGUAGE = 'language';
 }

@@ -37,6 +37,7 @@ import {LegacyPlayButtonComponent} from './features/player/components/legacy-pla
 import {RadioRemoteComponent} from './features/radio-remote/components/radio-remote/radio-remote.component';
 import {AuthorTunesComponent} from './features/author-tunes/components/author-tunes/author-tunes.component';
 import {ZxVoteComponent} from './shared/ui/zx-vote/zx-vote.component';
+import {ZxMusicListComponent} from './features/music-list/components/zx-music-list/zx-music-list.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -99,6 +100,7 @@ export class AppModule implements DoBootstrap  {
             'zx-radio-remote': RadioRemoteComponent,
             'zx-author-tunes': AuthorTunesComponent,
             'zx-vote': ZxVoteComponent,
+            'zx-music-list': ZxMusicListComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});

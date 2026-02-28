@@ -37,6 +37,16 @@ final readonly class UserPreferenceValuesRepository
         return $values;
     }
 
+    public function findValueByUserIdAndPreferenceId(int $userId, int $preferenceId): ?string
+    {
+        $row = $this->db->table(self::TABLE)
+            ->where('user_id', $userId)
+            ->where('preference_id', $preferenceId)
+            ->first();
+
+        return $row['value'] ?? null;
+    }
+
     public function upsert(int $userId, int $preferenceId, string $value): void
     {
         $this->db->table(self::TABLE)->updateOrInsert(

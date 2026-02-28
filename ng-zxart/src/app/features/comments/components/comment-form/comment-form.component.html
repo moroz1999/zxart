@@ -1,9 +1,9 @@
 <form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="comment-form">
   <zx-textarea
     formControlName="content"
-    [label]="contentLabel"
+    [label]="'comments.label' | translate"
     [rows]="4"
-    [errorMessage]="contentErrorMessage"
+    [errorMessage]="contentErrorMessage | translate"
   ></zx-textarea>
 
   <div *ngIf="errorMessage" zxCaption style="color: red; margin-bottom: 16px;">

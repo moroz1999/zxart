@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\UserPreferences;
 
 use App\Users\CurrentUserService;
+use ZxArt\UserPreferences\Domain\PreferenceCode;
 use ZxArt\UserPreferences\Dto\PreferenceDto;
 use ZxArt\UserPreferences\Repositories\PreferencesRepository;
 use ZxArt\UserPreferences\Repositories\UserPreferenceValuesRepository;
@@ -18,6 +19,29 @@ final readonly class UserPreferencesService
         private DefaultUserPreferencesProvider $defaultsProvider,
         private PreferenceValidator $validator,
     ) {
+    }
+
+    public function getPreference(string $code): ?string
+    {
+        $preferenceCode = PreferenceCode::tryFrom($code);
+        if ($preferenceCode === null) {
+            return null;
+        }
+
+        $defaults = $this->defaultsProvider->getDefaults();
+
+        $user = $this->currentUserService->getCurrentUser();
+        if (!$user->isAuthorized()) {
+            return $defaults[$code] ?? null;
+        }
+
+        $preference = $this->preferencesRepository->findByCode($preferenceCode);
+        if ($preference === null) {
+            return $defaults[$code] ?? null;
+        }
+
+        $saved = $this->valuesRepository->findValueByUserIdAndPreferenceId((int)$user->id, $preference->id);
+        return $saved ?? $defaults[$code] ?? null;
     }
 
     /**

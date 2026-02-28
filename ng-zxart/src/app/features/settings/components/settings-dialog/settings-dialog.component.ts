@@ -1,9 +1,10 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {Subscription} from 'rxjs';
 import {ThemeService} from '../../services/theme.service';
 import {Theme} from '../../models/preference.dto';
 import {ZxToggleComponent, ZxToggleOption} from '../../../../shared/ui/zx-toggle/zx-toggle.component';
@@ -26,26 +27,33 @@ import {ZxHeading3Directive} from '../../../../shared/directives/typography/typo
   templateUrl: './settings-dialog.component.html',
   styleUrls: ['./settings-dialog.component.scss']
 })
-export class SettingsDialogComponent {
+export class SettingsDialogComponent implements OnDestroy {
   themeOptions: ZxToggleOption[] = [];
+
+  private readonly subscriptions = new Subscription();
 
   constructor(
     private dialogRef: MatDialogRef<SettingsDialogComponent>,
     private themeService: ThemeService,
     private translateService: TranslateService
   ) {
-    this.initThemeOptions();
+    this.subscriptions.add(
+      this.translateService.stream(['settings.theme.light', 'settings.theme.dark'])
+        .subscribe(translations => {
+          this.themeOptions = [
+            {value: 'light', label: translations['settings.theme.light']},
+            {value: 'dark', label: translations['settings.theme.dark']},
+          ];
+        })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   get currentTheme(): Theme {
     return this.themeService.currentTheme;
-  }
-
-  private initThemeOptions(): void {
-    this.themeOptions = [
-      {value: 'light', label: this.translateService.instant('settings.theme.light')},
-      {value: 'dark', label: this.translateService.instant('settings.theme.dark')}
-    ];
   }
 
   onThemeChange(theme: string): void {
