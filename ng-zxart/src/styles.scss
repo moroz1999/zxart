@@ -1,6 +1,7 @@
 @use '@angular/material' as mat;
 
 @use 'app/shared/theme';
+@use 'shared/breakpoints' as breakpoints;
 
 @include mat.core();
 
@@ -48,4 +49,16 @@ $zxart-tree-theme: mat.m2-define-dark-theme((
 .g-backdrop {
   background: var(--black) !important;
   opacity: var(--zx-lightbox-backdrop-opacity) !important;
+}
+
+// Shared layout: responsive picture grid (used via zxPicturesGrid directive)
+.pictures-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 320px);
+  justify-content: space-between;
+  gap: var(--space-32) var(--space-16);
+
+  @include breakpoints.media-breakpoint-down(sm) {
+    grid-template-columns: 100%;
+  }
 }

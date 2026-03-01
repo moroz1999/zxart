@@ -14,8 +14,7 @@
 			</div>
         {/if}
 		<div class="zxpicture_short_controls">
-			<zx-vote element-id="{$element->id}" type="zxPicture" votes="{$element->votes}" votes-amount="{$element->votesAmount}" user-vote="{$element->getUserVote()}" deny-voting="{if $element->isVotingDenied()}true{else}false{/if}"></zx-vote>
-			{include file=$theme->template("component.playlist.tpl") element=$element}
+			<zx-item-controls element-id="{$element->id}" type="zxPicture" votes="{$element->votes}" votes-amount="{$element->votesAmount}" user-vote="{$element->getUserVote()}" deny-voting="{if $element->isVotingDenied()}true{else}false{/if}"></zx-item-controls>
 		</div>
 		{if $element->year}
 		<div class="zxpicture_short_year">

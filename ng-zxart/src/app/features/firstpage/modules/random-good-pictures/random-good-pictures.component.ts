@@ -8,6 +8,7 @@ import {
   FirstpageModuleWrapperComponent
 } from '../../components/firstpage-module-wrapper/firstpage-module-wrapper.component';
 import {ZxPictureCardComponent} from '../../../../shared/ui/zx-picture-card/zx-picture-card.component';
+import {ZxPicturesGridDirective} from '../../../../shared/directives/pictures-grid.directive';
 import {ModuleSettings} from '../../models/firstpage-config';
 import {MODULE_SETTINGS} from '../../models/module-settings.token';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
@@ -17,7 +18,7 @@ const GALLERY_ID = 'zx-picture-lightbox-random-good-pictures';
 @Component({
   selector: 'zx-fp-random-good-pictures',
   standalone: true,
-  imports: [CommonModule, FirstpageModuleWrapperComponent, ZxPictureCardComponent],
+  imports: [CommonModule, FirstpageModuleWrapperComponent, ZxPictureCardComponent, ZxPicturesGridDirective],
   templateUrl: './random-good-pictures.component.html',
   styleUrls: ['./random-good-pictures.component.scss']
 })

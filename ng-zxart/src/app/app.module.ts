@@ -38,6 +38,7 @@ import {RadioRemoteComponent} from './features/radio-remote/components/radio-rem
 import {AuthorTunesComponent} from './features/author-tunes/components/author-tunes/author-tunes.component';
 import {ZxVoteComponent} from './shared/ui/zx-vote/zx-vote.component';
 import {ZxMusicListComponent} from './features/music-list/components/zx-music-list/zx-music-list.component';
+import {ZxItemControlsComponent} from './shared/ui/zx-item-controls/zx-item-controls.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -100,6 +101,7 @@ export class AppModule implements DoBootstrap  {
             'zx-radio-remote': RadioRemoteComponent,
             'zx-author-tunes': AuthorTunesComponent,
             'zx-vote': ZxVoteComponent,
+            'zx-item-controls': ZxItemControlsComponent,
             'zx-music-list': ZxMusicListComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {

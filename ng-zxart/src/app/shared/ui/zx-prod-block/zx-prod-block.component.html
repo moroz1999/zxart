@@ -101,14 +101,14 @@
           [href]="author.url">{{ author.title }}</a><span *ngIf="!last">, </span></ng-container>
       </div>
       <div class="zx-prod-bottom-row">
-        <zx-rating
-          *ngIf="!model.denyVoting && model.structureType === 'zxProd'"
-          [overallRating]="model.votes"
+        <zx-item-controls
+          [elementId]="model.id"
+          type="zxProd"
+          [votes]="model.votes"
           [votesAmount]="model.votesAmount"
-          [userRating]="model.userVote"
-          (voted)="vote($event)"
-        ></zx-rating>
-        <zx-playlist-button [elementId]="model.id"></zx-playlist-button>
+          [userVote]="model.userVote"
+          [denyVoting]="model.denyVoting || model.structureType !== 'zxProd'"
+        ></zx-item-controls>
         <div
           class="zx-prod-release-type"
           *ngIf="model.releaseType && model.structureType === 'zxRelease'"

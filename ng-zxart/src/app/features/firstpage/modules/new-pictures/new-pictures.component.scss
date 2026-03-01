@@ -1,12 +1,1 @@
-@use "shared/breakpoints" as breakpoints;
 
-.pictures-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 320px);
-  justify-content: space-between;
-  gap: var(--space-32) var(--space-16);
-
-  @include breakpoints.media-breakpoint-down(sm) {
-    grid-template-columns: 100%;
-  }
-}

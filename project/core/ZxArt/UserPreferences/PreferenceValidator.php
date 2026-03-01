@@ -44,6 +44,7 @@ final class PreferenceValidator
             PreferenceCode::HOMEPAGE_NEW_PRODS_MIN_RATING,
             PreferenceCode::HOMEPAGE_BEST_DEMOS_MIN_RATING,
             PreferenceCode::HOMEPAGE_BEST_GAMES_MIN_RATING => $this->validateMinRating($code, $value),
+            PreferenceCode::HOMEPAGE_NEW_PRODS_START_YEAR => $this->validateStartYearOffset($code, $value),
             PreferenceCode::RADIO_CRITERIA => $value,
             PreferenceCode::LANGUAGE => $this->validateLanguageCode($value),
         };
@@ -91,6 +92,15 @@ final class PreferenceValidator
             throw InvalidPreferenceValueException::forPreference($code->value, $value);
         }
         return (string)$floatValue;
+    }
+
+    private function validateStartYearOffset(PreferenceCode $code, string $value): string
+    {
+        $intValue = filter_var($value, FILTER_VALIDATE_INT);
+        if ($intValue === false || $intValue < 0 || $intValue > 10) {
+            throw InvalidPreferenceValueException::forPreference($code->value, $value);
+        }
+        return (string)$intValue;
     }
 
     private function validateLanguageCode(string $value): string

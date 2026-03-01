@@ -1,0 +1,9 @@
+@if (!denyVoting) {
+  <zx-rating
+    [overallRating]="currentVotes"
+    [votesAmount]="currentVotesAmount"
+    [userRating]="currentUserVote"
+    (voted)="vote($event)"
+  ></zx-rating>
+}
+<zx-playlist-button [elementId]="elementId"></zx-playlist-button>

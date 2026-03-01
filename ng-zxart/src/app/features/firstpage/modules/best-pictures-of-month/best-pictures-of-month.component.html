@@ -9,7 +9,7 @@
   skeletonVariant="picture-grid"
   [skeletonCount]="settings.limit"
 >
-  <div class="pictures-grid">
+  <div zxPicturesGrid>
     <zx-picture-card
       *ngFor="let pic of items; let i = index"
       [picture]="pic"

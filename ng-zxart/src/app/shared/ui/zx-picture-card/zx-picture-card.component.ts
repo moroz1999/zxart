@@ -4,11 +4,9 @@ import {TranslateModule} from '@ngx-translate/core';
 import {ZxPictureDto} from '../../models/zx-picture-dto';
 import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
 import {ZxBadgeComponent} from '../zx-badge/zx-badge.component';
-import {RatingComponent} from '../../components/rating/rating.component';
-import {VoteService} from '../../services/vote.service';
 import {ZxCaptionDirective} from '../../directives/typography/typography.directives';
 import {LightboxModule} from 'ng-gallery/lightbox';
-import {ZxPlaylistButtonComponent} from '../zx-playlist-button/zx-playlist-button.component';
+import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.component';
 
 @Component({
   selector: 'zx-picture-card',
@@ -18,10 +16,9 @@ import {ZxPlaylistButtonComponent} from '../zx-playlist-button/zx-playlist-butto
     TranslateModule,
     ZxPanelComponent,
     ZxBadgeComponent,
-    RatingComponent,
     ZxCaptionDirective,
     LightboxModule,
-    ZxPlaylistButtonComponent,
+    ZxItemControlsComponent,
   ],
   templateUrl: './zx-picture-card.component.html',
   styleUrls: ['./zx-picture-card.component.scss']
@@ -33,12 +30,6 @@ export class ZxPictureCardComponent {
 
   readonly defaultGalleryId = 'zx-picture-lightbox-default';
 
-  constructor(private voteService: VoteService) {}
-
-  get authorsText(): string {
-    return this.picture.authors.map(a => a.name).join(', ');
-  }
-
   get medalClass(): string | null {
     if (!this.picture.party?.place) return null;
     switch (this.picture.party.place) {
@@ -47,11 +38,5 @@ export class ZxPictureCardComponent {
       case 3: return 'medal-bronze';
       default: return null;
     }
-  }
-
-  vote(rating: number): void {
-    this.voteService.send<'zxPicture'>(this.picture.id, rating, 'zxPicture').subscribe(({votes, votesAmount}) => {
-      this.picture = {...this.picture, votes, votesAmount, userVote: rating};
-    });
   }
 }

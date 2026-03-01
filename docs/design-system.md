@@ -53,3 +53,5 @@ All design system components are in `ng-zxart/src/app/shared/ui/`.
 - [zx-spinner](design-system/zx-spinner.md) — compact loading spinner
 - [zxTooltip](design-system/zx-tooltip.md) — floating tooltip directive that follows the cursor
 - [zx-rating](design-system/zx-rating.md) — interactive 5-star rating with hover preview
+- [zx-item-controls](design-system/zx-item-controls.md) — unified vote + playlist (favourites) controls row
+- [zxPicturesGrid](design-system/zx-pictures-grid.md) — responsive picture grid layout directive

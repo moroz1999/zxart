@@ -1,29 +1,18 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  HostBinding,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-} from '@angular/core';
+import {Component, ElementRef, HostBinding, Input, OnChanges, OnInit, SimpleChanges,} from '@angular/core';
 import {FadeInOut} from '../../animations/fade-in-out';
 import {AnimationEvent, trigger} from '@angular/animations';
 import {SlideInOut} from '../../animations/slide-in-out';
 import {ZxProdsListLayout} from '../../../entities/zx-prods-category/zx-prods-category.component';
 import {ZxProdComponent} from '../../components/zx-prod-component';
-import {VoteService} from '../../services/vote.service';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {environment} from '../../../../environments/environment';
 import {TranslatePipe} from '@ngx-translate/core';
-import {RatingComponent} from '../../components/rating/rating.component';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
 import {ZxBadgeComponent} from '../zx-badge/zx-badge.component';
 import {AnalyticsService} from '../../services/analytics.service';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
-import {ZxPlaylistButtonComponent} from '../zx-playlist-button/zx-playlist-button.component';
+import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.component';
 
 @Component({
   selector: 'zx-prod-block',
@@ -35,7 +24,6 @@ import {ZxPlaylistButtonComponent} from '../zx-playlist-button/zx-playlist-butto
   ],
   imports: [
     TranslatePipe,
-    RatingComponent,
     SvgIconComponent,
     NgIf,
     NgForOf,
@@ -43,7 +31,7 @@ import {ZxPlaylistButtonComponent} from '../zx-playlist-button/zx-playlist-butto
     ZxPanelComponent,
     ZxBadgeComponent,
     ZxButtonComponent,
-    ZxPlaylistButtonComponent,
+    ZxItemControlsComponent,
   ],
   standalone: true,
 })
@@ -62,9 +50,7 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
   slideCloseInProgress = false;
 
   constructor(
-    private cdr: ChangeDetectorRef,
     private element: ElementRef,
-    private voting: VoteService,
     private iconReg: SvgIconRegistryService,
     private analyticsService: AnalyticsService,
   ) {
@@ -142,15 +128,6 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
       }
       this.slideCloseInProgress = false;
     }
-  }
-
-  vote(rating: number) {
-    this.voting.send<'zxProd'>(this.model.id, rating, 'zxProd').subscribe(({votes, votesAmount}) => {
-      this.model.votes = votes;
-      this.model.votesAmount = votesAmount;
-      this.model.userVote = rating;
-      this.cdr.detectChanges();
-    });
   }
 
   cartClicked(event: MouseEvent) {

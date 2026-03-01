@@ -1,3 +1,5 @@
+@use "shared/breakpoints" as breakpoints;
+
 .zx-skeleton {
   display: flex;
   flex-direction: column;
@@ -200,6 +202,16 @@
   box-sizing: border-box;
   opacity: 0;
   animation: fadeIn 0.3s ease-out forwards;
+
+  @include breakpoints.media-breakpoint-down(sm) {
+    gap: var(--space-8);
+
+    // Keep only the main title column and one small column; hide the rest
+    .skeleton-tune-sm ~ .skeleton-tune-sm,
+    .skeleton-tune-md {
+      display: none;
+    }
+  }
 }
 
 .skeleton-tune-main {

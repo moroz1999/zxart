@@ -78,7 +78,8 @@
       "Bash(cd /e/projects/zxart && docker compose run --rm node run build:docker 2>&1)",
       "Bash(docker compose:*)",
       "Bash(vendor/bin/phpunit.bat:*)",
-      "mcp__jetbrains__execute_run_configuration"
+      "mcp__jetbrains__execute_run_configuration",
+      "mcp__jetbrains__find_files_by_glob"
     ]
   },
   "enabledPlugins": {

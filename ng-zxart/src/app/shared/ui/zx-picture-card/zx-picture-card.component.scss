@@ -63,15 +63,6 @@
   }
 }
 
-.picture-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-8);
-  margin-bottom: var(--space-8);
-  min-height: 1.2em;
-}
-
 .picture-party {
   display: flex;
   align-items: center;
@@ -79,6 +70,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  margin-bottom: var(--space-8);
 
   a {
     color: var(--text-light-color);
@@ -117,13 +109,14 @@
 }
 
 .picture-year {
-  color: var(--text-light-color);
+  color: var(--pseudo-link-color);
   flex-shrink: 0;
 }
 
 .picture-bottom {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--space-8);
 }
 
