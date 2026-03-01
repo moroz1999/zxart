@@ -102,12 +102,13 @@
       </div>
       <div class="zx-prod-bottom-row">
         <zx-item-controls
+          *ngIf="model.structureType === 'zxProd'"
           [elementId]="model.id"
           type="zxProd"
           [votes]="model.votes"
           [votesAmount]="model.votesAmount"
           [userVote]="model.userVote"
-          [denyVoting]="model.denyVoting || model.structureType !== 'zxProd'"
+          [denyVoting]="model.denyVoting"
         ></zx-item-controls>
         <div
           class="zx-prod-release-type"

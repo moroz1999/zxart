@@ -226,11 +226,10 @@ readonly class CommentsService
         }
         $user = $this->currentUserService->getCurrentUser();
 
-        $isEditable = $commentElement->isEditable();
         $isAuthor = (int)$commentElement->userId === (int)$user->id;
         $hasPrivilege = $this->privilegesManager->checkPrivilegesForAction($commentId, 'publicForm', 'comment');
 
-        if ($isEditable === true && ($isAuthor === true || $hasPrivilege === true)) {
+        if ($hasPrivilege === true || ($isAuthor === true && $commentElement->isEditable() === true)) {
             $commentElement->content = $content;
             $commentElement->persistElementData();
 
@@ -256,11 +255,10 @@ readonly class CommentsService
         }
         $user = $this->currentUserService->getCurrentUser();
 
-        $isEditable = $commentElement->isEditable();
         $isAuthor = (int)$commentElement->userId === (int)$user->id;
         $hasPrivilege = $this->privilegesManager->checkPrivilegesForAction($commentId, 'delete', 'comment');
 
-        if ($isEditable === true && ($isAuthor === true || $hasPrivilege === true)) {
+        if ($hasPrivilege === true || ($isAuthor === true && $commentElement->isEditable() === true)) {
             $commentElement->deleteElementData();
             $this->clearCommentsCache();
             return true;
