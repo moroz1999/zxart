@@ -216,7 +216,7 @@
     "settings": {
       "limit": "Кол-во",
       "minRating": "Мин. рейтинг",
-      "startYear": "С года"
+      "startYear": "Не старше"
     },
     "configDialog": {
       "title": "Настройка главной страницы",
