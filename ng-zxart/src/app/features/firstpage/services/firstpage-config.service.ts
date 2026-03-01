@@ -8,6 +8,7 @@ import {
   FirstpageConfig,
   MODULE_LIMIT_PREF_CODES,
   MODULE_MIN_RATING_PREF_CODES,
+  MODULE_START_YEAR_PREF_CODES,
   ModuleConfig,
   ModuleSettings,
   ModuleType,
@@ -58,6 +59,11 @@ export class FirstpageConfigService {
       const ratingCode = MODULE_MIN_RATING_PREF_CODES[mod.type];
       if (ratingCode && mod.settings.minRating !== undefined) {
         items.push({code: ratingCode, value: String(mod.settings.minRating)});
+      }
+
+      const startYearCode = MODULE_START_YEAR_PREF_CODES[mod.type];
+      if (startYearCode && mod.settings.startYearOffset !== undefined) {
+        items.push({code: startYearCode, value: String(mod.settings.startYearOffset)});
       }
     }
 
@@ -130,7 +136,16 @@ export class FirstpageConfigService {
       }
     }
 
-    return {limit, ...(minRating !== undefined ? {minRating} : {})};
+    const startYearCode = MODULE_START_YEAR_PREF_CODES[type];
+    let startYearOffset: number | undefined;
+    if (startYearCode) {
+      const startYearStr = this.preferencesService.getPreference(startYearCode);
+      if (startYearStr) {
+        startYearOffset = parseInt(startYearStr, 10) || 0;
+      }
+    }
+
+    return {limit, ...(minRating !== undefined ? {minRating} : {}), ...(startYearOffset !== undefined ? {startYearOffset} : {})};
   }
 
   private buildModuleSettingsFromMap(type: ModuleType, prefMap: Map<string, string>): ModuleSettings {
@@ -147,6 +162,15 @@ export class FirstpageConfigService {
       }
     }
 
-    return {limit, ...(minRating !== undefined ? {minRating} : {})};
+    const startYearCode = MODULE_START_YEAR_PREF_CODES[type];
+    let startYearOffset: number | undefined;
+    if (startYearCode) {
+      const startYearStr = prefMap.get(startYearCode);
+      if (startYearStr) {
+        startYearOffset = parseInt(startYearStr, 10) || 0;
+      }
+    }
+
+    return {limit, ...(minRating !== undefined ? {minRating} : {}), ...(startYearOffset !== undefined ? {startYearOffset} : {})};
   }
 }

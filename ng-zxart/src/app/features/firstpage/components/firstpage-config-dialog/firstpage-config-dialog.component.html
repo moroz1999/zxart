@@ -40,6 +40,14 @@
             [(ngModel)]="mod.settings.minRating"
           ></zx-input>
         </label>
+        <label class="setting-label" *ngIf="hasStartYear(mod.type)">
+          {{ 'firstpage.settings.startYear' | translate }}
+          <zx-select
+            [options]="startYearOptions"
+            [ngModel]="getStartYearStr(mod)"
+            (ngModelChange)="setStartYearStr(mod, $event)"
+          ></zx-select>
+        </label>
       </div>
     </div>
   </div>

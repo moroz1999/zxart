@@ -215,7 +215,8 @@
     },
     "settings": {
       "limit": "Count",
-      "minRating": "Min rating"
+      "minRating": "Min rating",
+      "startYear": "No older than"
     },
     "configDialog": {
       "title": "Homepage Configuration",

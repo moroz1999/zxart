@@ -20,6 +20,7 @@ export const ALL_MODULE_TYPES: ModuleType[] = [
 export interface ModuleSettings {
   limit: number;
   minRating?: number;
+  startYearOffset?: number;
 }
 
 export interface ModuleConfig {
@@ -54,4 +55,8 @@ export const MODULE_MIN_RATING_PREF_CODES: Partial<Record<ModuleType, string>> =
   newProds: 'homepage_new_prods_min_rating',
   bestNewDemos: 'homepage_best_demos_min_rating',
   bestNewGames: 'homepage_best_games_min_rating',
+};
+
+export const MODULE_START_YEAR_PREF_CODES: Partial<Record<ModuleType, string>> = {
+  newProds: 'homepage_new_prods_start_year',
 };

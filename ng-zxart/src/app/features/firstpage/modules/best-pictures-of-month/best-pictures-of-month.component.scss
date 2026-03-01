@@ -7,6 +7,6 @@
   gap: var(--space-32) var(--space-16);
 
   @include breakpoints.media-breakpoint-down(sm) {
-    grid-template-columns: 1fr;
+    grid-template-columns: 100%;
   }
 }

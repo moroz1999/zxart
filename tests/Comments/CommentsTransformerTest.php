@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ZxArt\Tests\Comments;
 
+use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 use commentElement;
 use PHPUnit\Framework\TestCase;
 use privilegesManager;
@@ -19,8 +21,17 @@ class CommentsTransformerTest extends TestCase
         $this->privilegesManager = $this->createMock(privilegesManager::class);
         $this->privilegesManager->method('checkPrivilegesForAction')->willReturn(false);
 
+        $currentUser = $this->getMockBuilder(CurrentUser::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['__destruct', 'writeStorage'])
+            ->getMock();
+        $currentUser->id = 0;
+        $currentUserService = $this->createMock(CurrentUserService::class);
+        $currentUserService->method('getCurrentUser')->willReturn($currentUser);
+
         $this->transformer = new CommentsTransformer(
             $this->privilegesManager,
+            $currentUserService,
         );
     }
 

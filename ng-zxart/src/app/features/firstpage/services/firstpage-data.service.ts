@@ -15,8 +15,8 @@ import {ZxProdDto} from '../../../shared/models/zx-prod-dto';
 export class FirstpageDataService {
   constructor(private http: HttpClient) {}
 
-  getNewProds(limit: number, minRating: number): Observable<ZxProd[]> {
-    return this.get<FirstpageProdDto[]>('newProds', {limit, minRating}).pipe(
+  getNewProds(limit: number, minRating: number, startYearOffset: number): Observable<ZxProd[]> {
+    return this.get<FirstpageProdDto[]>('newProds', {limit, minRating, startYearOffset}).pipe(
       map(dtos => dtos.map(dto => this.toZxProd(dto)))
     );
   }

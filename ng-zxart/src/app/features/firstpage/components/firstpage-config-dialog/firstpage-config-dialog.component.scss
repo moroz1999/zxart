@@ -1,11 +1,18 @@
+@use "shared/breakpoints" as breakpoints;
+
 .modules-list {
   min-width: 400px;
   max-height: 60vh;
+
+  @include breakpoints.media-breakpoint-down(sm) {
+    min-width: 0;
+  }
 }
 
 .module-row {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--space-8);
   padding: var(--space-8) var(--space-4);
   border-bottom: 1px solid var(--border-color);
@@ -30,6 +37,12 @@
   display: flex;
   gap: var(--space-12);
   margin-left: auto;
+
+  @include breakpoints.media-breakpoint-down(sm) {
+    margin-left: 0;
+    width: 100%;
+    padding-left: calc(var(--space-8) + 24px); // align with checkbox (icon width + gap)
+  }
 }
 
 .setting-label {

@@ -4,8 +4,10 @@
 - **Authorization**: Only authorized users can post comments.
 - **Targets**: Comments can be attached to various entities (prods, releases, pictures, tunes, authors, etc.) or other comments (replies).
 - **Editing and Deletion**:
-    - Only the author of the comment has permission to edit or delete it.
-    - Editing and deletion are allowed only within a limited time window (default is 2 hours, defined by `EDIT_LIMIT` in `commentElement`).
+    - Only the author of the comment has permission to edit it, and only within the time window (`EDIT_LIMIT`, default 2 hours).
+    - Deletion rules differ by actor:
+        - **Author**: can delete only within `EDIT_LIMIT`.
+        - **Non-author with `delete` privilege** (moderator/admin): can always delete any comment, regardless of the time window.
     - When a comment is deleted, all its replies are deleted automatically. This is handled by the CMS core (`deleteElementData`), which recursively traverses `structure` links.
 - **Author Information**:
     - The `author` field in `commentElement` is deprecated. 
@@ -25,3 +27,6 @@
     - For time calculations, use `getCreatedTimestamp()` and `getModifiedTimestamp()` which return UTC Unix timestamps.
 - **Permissions**:
     - Upon creation, the author is automatically granted `delete`, `publicReceive` (save), and `publicForm` (edit form) privileges for that specific comment.
+    - Delete permission depends on who is deleting:
+        - **Own comment** (current user == comment author): deletion is allowed only within the time window (`EDIT_LIMIT`). After that, `canDelete = false`.
+        - **Someone else's comment** (current user != comment author): if the user has the `delete` privilege (e.g. a moderator/admin), deletion is always allowed regardless of the time window.

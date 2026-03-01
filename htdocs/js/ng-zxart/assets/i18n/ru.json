@@ -215,7 +215,8 @@
     },
     "settings": {
       "limit": "Кол-во",
-      "minRating": "Мин. рейтинг"
+      "minRating": "Мин. рейтинг",
+      "startYear": "С года"
     },
     "configDialog": {
       "title": "Настройка главной страницы",

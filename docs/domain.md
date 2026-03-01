@@ -57,3 +57,9 @@ Detailed logic and structure: [domain/authors-groups.md](domain/authors-groups.m
 ### group alias
 Group alias. Stores group name variation and abbreviations.
 Detailed logic and structure: [domain/authors-groups.md](domain/authors-groups.md)
+
+## Features
+
+### firstpage (main page)
+Configurable modular main page. Users can arrange, enable/disable, and configure content modules.
+Detailed logic and structure: [domain/firstpage.md](domain/firstpage.md)

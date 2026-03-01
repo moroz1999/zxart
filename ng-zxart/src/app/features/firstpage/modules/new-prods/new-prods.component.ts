@@ -29,6 +29,6 @@ export class NewProdsComponent extends FirstpageModuleBase<ZxProd> {
   }
 
   protected loadData(): Observable<ZxProd[]> {
-    return this.dataService.getNewProds(this.settings.limit, this.settings.minRating ?? 0);
+    return this.dataService.getNewProds(this.settings.limit, this.settings.minRating ?? 0, this.settings.startYearOffset ?? 0);
   }
 }

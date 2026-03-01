@@ -23,9 +23,9 @@ readonly class FirstpageProdsService
     /**
      * @return ProdDto[]
      */
-    public function getNewProds(int $limit, float $minRating, int $daysAgo = 30): array
+    public function getNewProds(int $limit, float $minRating, int $daysAgo = 30, ?int $startYear = null): array
     {
-        $ids = $this->prodsRepository->getNewProdIds($limit, $minRating, $daysAgo);
+        $ids = $this->prodsRepository->getNewProdIds($limit, $minRating, $daysAgo, $startYear);
         return $this->loadAndTransform($ids);
     }
 

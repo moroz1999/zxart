@@ -44,13 +44,19 @@ readonly final class ProdsRepository
     /**
      * @return int[]
      */
-    public function getNewProdIds(int $limit, float $minRating, int $daysAgo): array
+    public function getNewProdIds(int $limit, float $minRating, int $daysAgo, ?int $startYear = null): array
     {
         $since = time() - ($daysAgo * 86400);
 
-        return $this->getSelectSql()
+        $query = $this->getSelectSql()
             ->where('dateAdded', '>=', $since)
-            ->where('votes', '>=', $minRating)
+            ->where('votes', '>=', $minRating);
+
+        if ($startYear !== null) {
+            $query->where('year', '>=', $startYear);
+        }
+
+        return $query
             ->orderBy('dateAdded', 'desc')
             ->limit($limit)
             ->pluck('id');

@@ -9,10 +9,16 @@ import {TranslateModule} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
 import {FirstpageConfigService} from '../../services/firstpage-config.service';
 import {UserPreferencesService} from '../../../settings/services/user-preferences.service';
-import {MODULE_MIN_RATING_PREF_CODES, ModuleConfig, ModuleType,} from '../../models/firstpage-config';
+import {
+  MODULE_MIN_RATING_PREF_CODES,
+  MODULE_START_YEAR_PREF_CODES,
+  ModuleConfig,
+  ModuleType,
+} from '../../models/firstpage-config';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
+import {ZxSelectComponent, ZxSelectOption} from '../../../../shared/ui/zx-select/zx-select.component';
 import {ZxHeading2Directive} from '../../../../shared/directives/typography/typography.directives';
 
 @Component({
@@ -29,6 +35,7 @@ import {ZxHeading2Directive} from '../../../../shared/directives/typography/typo
     ZxButtonComponent,
     ZxButtonControlsComponent,
     ZxInputComponent,
+    ZxSelectComponent,
     ZxHeading2Directive,
   ],
   templateUrl: './firstpage-config-dialog.component.html',
@@ -36,13 +43,20 @@ import {ZxHeading2Directive} from '../../../../shared/directives/typography/typo
 })
 export class FirstpageConfigDialogComponent implements OnInit, OnDestroy {
   modules: ModuleConfig[] = [];
+  readonly startYearOptions: ZxSelectOption[];
   private configSub?: Subscription;
 
   constructor(
     private configService: FirstpageConfigService,
     private preferencesService: UserPreferencesService,
     private dialogRef: MatDialogRef<FirstpageConfigDialogComponent>,
-  ) {}
+  ) {
+    const currentYear = new Date().getFullYear();
+    this.startYearOptions = Array.from({length: 11}, (_, i) => ({
+      value: String(i),
+      label: String(currentYear - i),
+    }));
+  }
 
   ngOnInit(): void {
     this.configSub = this.configService.getCurrentConfig().subscribe(config => {
@@ -56,6 +70,18 @@ export class FirstpageConfigDialogComponent implements OnInit, OnDestroy {
 
   hasMinRating(type: ModuleType): boolean {
     return type in MODULE_MIN_RATING_PREF_CODES;
+  }
+
+  hasStartYear(type: ModuleType): boolean {
+    return type in MODULE_START_YEAR_PREF_CODES;
+  }
+
+  getStartYearStr(mod: ModuleConfig): string {
+    return String(mod.settings.startYearOffset ?? 0);
+  }
+
+  setStartYearStr(mod: ModuleConfig, value: string): void {
+    mod.settings.startYearOffset = parseInt(value, 10) || 0;
   }
 
   onDrop(event: CdkDragDrop<ModuleConfig[]>): void {

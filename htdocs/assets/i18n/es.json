@@ -215,7 +215,8 @@
     },
     "settings": {
       "limit": "Cantidad",
-      "minRating": "Puntuación mín."
+      "minRating": "Puntuación mín.",
+      "startYear": "Desde año"
     },
     "configDialog": {
       "title": "Configuración de la página principal",
