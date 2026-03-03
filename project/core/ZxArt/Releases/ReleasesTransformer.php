@@ -33,15 +33,6 @@ readonly class ReleasesTransformer
 
     public function toProdDto(zxReleaseElement $element): ProdDto
     {
-        $authorsInfoShort = [];
-        foreach ($element->getAuthorsList() as $author) {
-            $authorsInfoShort[] = [
-                'title' => html_entity_decode((string)$author->getTitle(), ENT_QUOTES),
-                'url' => $author->getUrl(),
-                'roles' => [],
-            ];
-        }
-
         $partyInfo = null;
         $partyPlace = 0;
         $partyElement = $element->getPartyElement();
@@ -53,9 +44,9 @@ readonly class ReleasesTransformer
             ];
         }
 
-        $imageUrls = $element->getImagesUrls('prodImage');
+        $imageUrls = $element->getImagesUrls('prodListImage');
         if (empty($imageUrls)) {
-            $fallback = $element->getImageUrl(0, 'prodImage');
+            $fallback = $element->getImageUrl(0, 'prodListImage');
             if ($fallback) {
                 $imageUrls = [(string)$fallback];
             }
@@ -69,18 +60,21 @@ readonly class ReleasesTransformer
             structureType: 'zxRelease',
             dateCreated: (int)$element->dateAdded,
             title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
-            year: $element->year ? (string)$element->year : null,
+            year: $element->year ? (int)$element->year : null,
             listImagesUrls: $imageUrls,
             votes: (float)$element->votes,
             votesAmount: (int)$element->votesAmount,
             userVote: $userVote !== null && $userVote !== false ? (int)$userVote : null,
             denyVoting: $element->isVotingDenied(),
             hardwareInfo: $element->getHardwareInfo(),
-            authorsInfoShort: $authorsInfoShort,
+            authorsInfoShort: $element->getShortAuthorship('prod'),
             categoriesInfo: [],
             partyInfo: $partyInfo,
             partyPlace: $partyPlace,
             legalStatus: $element->getLegalStatus(),
+            languagesInfo: [],
+            groupsInfo: [],
+            youtubeId: null,
         );
     }
 }

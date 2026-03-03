@@ -12,6 +12,8 @@ readonly class ProdDto
      * @param array<array{title: string, url: string, roles: string[]}> $authorsInfoShort
      * @param array<array{id: int, title: string, url: string}> $categoriesInfo
      * @param array{id: int, title: string, url: string}|null $partyInfo
+     * @param array<array{id: string, title: string, url: string|null}> $languagesInfo
+     * @param array<array{id: int, title: string, url: string}> $groupsInfo
      */
     public function __construct(
         public int $id,
@@ -19,7 +21,7 @@ readonly class ProdDto
         public string $structureType,
         public int $dateCreated,
         public string $title,
-        public ?string $year,
+        public ?int $year,
         public array $listImagesUrls,
         public float $votes,
         public int $votesAmount,
@@ -31,6 +33,9 @@ readonly class ProdDto
         public ?array $partyInfo,
         public int $partyPlace,
         public ?string $legalStatus,
+        public array $languagesInfo,
+        public array $groupsInfo,
+        public ?string $youtubeId,
     ) {
     }
 }
