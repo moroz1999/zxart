@@ -250,7 +250,7 @@
 			{translations name='zxmusic.votes'}:
 		</td>
 		<td class='info_table_value'>
-			<zx-item-controls element-id="{$element->id}" type="zxMusic" votes="{$element->votes}" votes-amount="{$element->votesAmount}" user-vote="{$element->getUserVote()}" deny-voting="{if $element->isVotingDenied()}true{else}false{/if}"></zx-item-controls>
+			<zx-item-legacy-controls element-id="{$element->id}" type="zxMusic" votes="{$element->votes}" votes-amount="{$element->votesAmount}" user-vote="{$element->getUserVote()}" deny-voting="{if $element->isVotingDenied()}true{else}false{/if}"></zx-item-legacy-controls>
 			{if !$element->isVotingDenied() && $element->getVotePercent()}
 				<div>{$element->votes}</div>
 			{/if}

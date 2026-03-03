@@ -26,7 +26,7 @@
 	</td>
 	{/if}
 	<td class='music_list_votecontrols'>
-		<zx-item-controls element-id="{$element->id}" type="zxMusic" votes="{$element->votes}" votes-amount="{$element->votesAmount}" user-vote="{$element->getUserVote()}" deny-voting="{if $element->isVotingDenied()}true{else}false{/if}"></zx-item-controls>
+		<zx-item-legacy-controls element-id="{$element->id}" type="zxMusic" votes="{$element->votes}" votes-amount="{$element->votesAmount}" user-vote="{$element->getUserVote()}" deny-voting="{if $element->isVotingDenied()}true{else}false{/if}"></zx-item-legacy-controls>
 	</td>
 	<td class='music_list_votesamount'>
 		{if $element->votesAmount > 0}{$element->votesAmount}{/if}

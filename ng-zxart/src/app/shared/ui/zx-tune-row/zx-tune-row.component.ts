@@ -1,23 +1,12 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  Output,
-  SimpleChanges
-} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {Subscription} from 'rxjs';
 import {ZxTuneDto} from '../../models/zx-tune-dto';
-import {RatingComponent} from '../../components/rating/rating.component';
-import {VoteService} from '../../services/vote.service';
 import {ZxBadgeComponent} from '../zx-badge/zx-badge.component';
-import {ZxPlaylistButtonComponent} from '../zx-playlist-button/zx-playlist-button.component';
+import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.component';
 
 @Component({
   selector: 'zx-tune-row',
@@ -27,9 +16,8 @@ import {ZxPlaylistButtonComponent} from '../zx-playlist-button/zx-playlist-butto
     TranslateModule,
     MatButtonModule,
     MatIconModule,
-    RatingComponent,
     ZxBadgeComponent,
-    ZxPlaylistButtonComponent,
+    ZxItemControlsComponent,
   ],
   templateUrl: './zx-tune-row.component.html',
   styleUrls: ['./zx-tune-row.component.scss']
@@ -46,8 +34,6 @@ export class ZxTuneRowComponent implements OnChanges, OnDestroy {
   private labelSub: Subscription | null = null;
 
   constructor(
-    private voteService: VoteService,
-    private cdr: ChangeDetectorRef,
     private translateService: TranslateService,
   ) {}
 
@@ -69,13 +55,6 @@ export class ZxTuneRowComponent implements OnChanges, OnDestroy {
       case 3: return 'medal-bronze';
       default: return null;
     }
-  }
-
-  vote(rating: number): void {
-    this.voteService.send<'zxMusic'>(this.tune.id, rating, 'zxMusic').subscribe(({votes, votesAmount}) => {
-      this.tune = {...this.tune, votes, votesAmount, userVote: rating};
-      this.cdr.detectChanges();
-    });
   }
 
   requestPlay(): void {

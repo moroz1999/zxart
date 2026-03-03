@@ -77,18 +77,15 @@
       </div>
 
       <div class="player-bar__group player-bar__group--meta">
-        <zx-rating
-          *ngIf="state.playlist[state.currentIndex] as tune"
-          class="player-rating"
-          [overallRating]="tune.votes"
-          [votesAmount]="tune.votesAmount"
-          [userRating]="tune.userVote ?? undefined"
-          (voted)="vote($event)"
-        ></zx-rating>
-        <zx-playlist-button
+        <zx-item-controls
           *ngIf="state.playlist[state.currentIndex] as tune"
           [elementId]="tune.id"
-        ></zx-playlist-button>
+          type="zxMusic"
+          [votes]="tune.votes"
+          [votesAmount]="tune.votesAmount"
+          [userRating]="tune.userVote"
+          [denyVoting]="tune.denyVoting"
+        ></zx-item-controls>
 
         <zx-button
           size="sm"

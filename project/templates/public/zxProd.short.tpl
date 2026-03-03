@@ -7,7 +7,7 @@
 	</a>
     <span class="zxprod_short_title">
         <div class="zxprod_short_title_controls">
-            <zx-item-controls element-id="{$element->id}" type="zxProd" votes="{$element->votes}" votes-amount="{$element->votesAmount}" user-vote="{$element->getUserVote()}" deny-voting="{if $element->isVotingDenied()}true{else}false{/if}"></zx-item-controls>
+            <zx-item-legacy-controls element-id="{$element->id}" type="zxProd" votes="{$element->votes}" votes-amount="{$element->votesAmount}" user-vote="{$element->getUserVote()}" deny-voting="{if $element->isVotingDenied()}true{else}false{/if}"></zx-item-legacy-controls>
         </div>
         <a href="{$element->getUrl()}">{$element->getTitle()}</a>
     </span>

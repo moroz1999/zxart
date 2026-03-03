@@ -1,9 +1,10 @@
 @if (!denyVoting) {
   <zx-rating
-    [overallRating]="currentVotes"
-    [votesAmount]="currentVotesAmount"
-    [userRating]="currentUserVote"
-    (voted)="vote($event)"
+    [elementId]="elementId"
+    [type]="type"
+    [overallRating]="votes"
+    [votesAmount]="votesAmount"
+    [userRating]="userRating ?? undefined"
   ></zx-rating>
 }
 <zx-playlist-button [elementId]="elementId"></zx-playlist-button>

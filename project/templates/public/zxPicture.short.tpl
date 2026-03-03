@@ -14,7 +14,7 @@
 			</div>
         {/if}
 		<div class="zxpicture_short_controls">
-			<zx-item-controls element-id="{$element->id}" type="zxPicture" votes="{$element->votes}" votes-amount="{$element->votesAmount}" user-vote="{$element->getUserVote()}" deny-voting="{if $element->isVotingDenied()}true{else}false{/if}"></zx-item-controls>
+			<zx-item-legacy-controls element-id="{$element->id}" type="zxPicture" votes="{$element->votes}" votes-amount="{$element->votesAmount}" user-vote="{$element->getUserVote()}" deny-voting="{if $element->isVotingDenied()}true{else}false{/if}"></zx-item-legacy-controls>
 		</div>
 		{if $element->year}
 		<div class="zxpicture_short_year">

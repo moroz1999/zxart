@@ -19,7 +19,7 @@
 		{if $picture->year != 0}{$picture->year}{/if}
 	</td>
 	<td class='pictures_list_votecontrols'>
-		<zx-item-controls element-id="{$picture->id}" type="zxPicture" votes="{$picture->votes}" votes-amount="{$picture->votesAmount}" user-vote="{$picture->getUserVote()}" deny-voting="{if $picture->isVotingDenied()}true{else}false{/if}"></zx-item-controls>
+		<zx-item-legacy-controls element-id="{$picture->id}" type="zxPicture" votes="{$picture->votes}" votes-amount="{$picture->votesAmount}" user-vote="{$picture->getUserVote()}" deny-voting="{if $picture->isVotingDenied()}true{else}false{/if}"></zx-item-legacy-controls>
 	</td>
 	<td class='pictures_list_votesamount'>
 		{if $picture->votesAmount > 0}{$picture->votesAmount}{/if}

@@ -43,16 +43,14 @@
   </span>
 </td>
 <td>
-  <div class="tune-rating">
-    <zx-rating
-      *ngIf="!tune.denyVoting"
-      [overallRating]="tune.votes"
-      [votesAmount]="tune.votesAmount"
-      [userRating]="tune.userVote ?? undefined"
-      (voted)="vote($event)"
-    ></zx-rating>
-    <zx-playlist-button [elementId]="tune.id"></zx-playlist-button>
-  </div>
+  <zx-item-controls
+    [elementId]="tune.id"
+    type="zxMusic"
+    [votes]="tune.votes"
+    [votesAmount]="tune.votesAmount"
+    [userRating]="tune.userVote"
+    [denyVoting]="tune.denyVoting"
+  ></zx-item-controls>
 </td>
 <td class="tune-download">
   <a *ngIf="tune.originalFileUrl" [href]="tune.originalFileUrl" rel="nofollow" class="download-link" [attr.aria-label]="'tune.download.original' | translate">

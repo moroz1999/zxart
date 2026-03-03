@@ -5,56 +5,60 @@ declare(strict_types=1);
 namespace ZxArt\Prods;
 
 use ZxArt\Prods\Dto\ProdDto;
-use ZxArt\Shared\Dto\AuthorDto;
-use ZxArt\Shared\Dto\PartyInfoDto;
 use zxProdElement;
 
 readonly class ProdsTransformer
 {
-    /**
-     * @return ProdDto
-     */
     public function toDto(zxProdElement $element): ProdDto
     {
-        $authors = [];
+        $authorsInfoShort = [];
         foreach ($element->getAuthorsList() as $author) {
-            $authors[] = new AuthorDto(
-                name: html_entity_decode((string)$author->getTitle(), ENT_QUOTES),
-                url: $author->getUrl(),
-            );
+            $authorsInfoShort[] = [
+                'title' => html_entity_decode((string)$author->getTitle(), ENT_QUOTES),
+                'url' => $author->getUrl(),
+                'roles' => [],
+            ];
         }
 
-        $party = null;
+        $partyInfo = null;
+        $partyPlace = 0;
         $partyElement = $element->getPartyElement();
         if ($partyElement) {
-            $party = new PartyInfoDto(
-                title: html_entity_decode((string)$partyElement->getTitle(), ENT_QUOTES),
-                url: $partyElement->getUrl(),
-                place: (int)$element->partyplace ?: null,
-            );
+            $partyInfo = [
+                'id' => (int)$partyElement->id,
+                'title' => html_entity_decode((string)$partyElement->getTitle(), ENT_QUOTES),
+                'url' => $partyElement->getUrl(),
+            ];
+            $partyPlace = (int)$element->partyplace;
         }
 
-        $categories = [];
-        foreach ($element->getCategoriesInfo() as $categoryInfo) {
-            $categories[] = $categoryInfo['title'];
+        $imageUrls = $element->getImagesUrls('prodImage');
+        if (empty($imageUrls)) {
+            $fallback = $element->getImageUrl(0, 'prodImage');
+            if ($fallback) {
+                $imageUrls = [(string)$fallback];
+            }
         }
 
         $userVote = $element->getUserVote();
 
         return new ProdDto(
             id: (int)$element->id,
-            title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
             url: $element->getUrl(),
+            structureType: 'zxProd',
+            dateCreated: (int)$element->dateAdded,
+            title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
             year: $element->year ? (string)$element->year : null,
-            imageUrl: $element->getImageUrl(0, 'prodImage') ?: null,
+            listImagesUrls: $imageUrls,
             votes: (float)$element->votes,
             votesAmount: (int)$element->votesAmount,
             userVote: $userVote !== null && $userVote !== false ? (int)$userVote : null,
             denyVoting: $element->isVotingDenied(),
-            authors: $authors,
-            categories: $categories,
             hardwareInfo: $element->getHardwareInfo(),
-            party: $party,
+            authorsInfoShort: $authorsInfoShort,
+            categoriesInfo: $element->getCategoriesInfo(),
+            partyInfo: $partyInfo,
+            partyPlace: $partyPlace,
             legalStatus: $element->legalStatus ? (string)$element->legalStatus : null,
         );
     }

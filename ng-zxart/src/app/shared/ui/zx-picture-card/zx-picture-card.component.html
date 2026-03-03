@@ -30,7 +30,7 @@
         type="zxPicture"
         [votes]="picture.votes"
         [votesAmount]="picture.votesAmount"
-        [userVote]="picture.userVote ?? 0"
+        [userRating]="picture.userVote"
         [denyVoting]="picture.denyVoting"
       ></zx-item-controls>
       <span class="picture-year" *ngIf="picture.year">{{ picture.year }}</span>

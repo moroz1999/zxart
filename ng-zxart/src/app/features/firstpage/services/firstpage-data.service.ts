@@ -4,10 +4,9 @@ import {Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {ZxPictureDto} from '../../../shared/models/zx-picture-dto';
 import {ZxTuneDto} from '../../../shared/models/zx-tune-dto';
-import {FirstpageProdDto} from '../../../shared/models/firstpage-prod-dto';
+import {ZxProdDto} from '../../../shared/models/zx-prod-dto';
 import {PartyDto} from '../../../shared/models/party-dto';
 import {ZxProd} from '../../../shared/models/zx-prod';
-import {ZxProdDto} from '../../../shared/models/zx-prod-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +15,8 @@ export class FirstpageDataService {
   constructor(private http: HttpClient) {}
 
   getNewProds(limit: number, minRating: number, startYearOffset: number): Observable<ZxProd[]> {
-    return this.get<FirstpageProdDto[]>('newProds', {limit, minRating, startYearOffset}).pipe(
-      map(dtos => dtos.map(dto => this.toZxProd(dto)))
+    return this.get<ZxProdDto[]>('newProds', {limit, minRating, startYearOffset}).pipe(
+      map(dtos => dtos.map(dto => new ZxProd(dto)))
     );
   }
 
@@ -30,14 +29,14 @@ export class FirstpageDataService {
   }
 
   getBestNewDemos(limit: number, minRating: number): Observable<ZxProd[]> {
-    return this.get<FirstpageProdDto[]>('bestNewDemos', {limit, minRating}).pipe(
-      map(dtos => dtos.map(dto => this.toZxProd(dto)))
+    return this.get<ZxProdDto[]>('bestNewDemos', {limit, minRating}).pipe(
+      map(dtos => dtos.map(dto => new ZxProd(dto)))
     );
   }
 
   getBestNewGames(limit: number, minRating: number): Observable<ZxProd[]> {
-    return this.get<FirstpageProdDto[]>('bestNewGames', {limit, minRating}).pipe(
-      map(dtos => dtos.map(dto => this.toZxProd(dto)))
+    return this.get<ZxProdDto[]>('bestNewGames', {limit, minRating}).pipe(
+      map(dtos => dtos.map(dto => new ZxProd(dto)))
     );
   }
 
@@ -50,20 +49,20 @@ export class FirstpageDataService {
   }
 
   getLatestAddedProds(limit: number): Observable<ZxProd[]> {
-    return this.get<FirstpageProdDto[]>('latestAddedProds', {limit}).pipe(
-      map(dtos => dtos.map(dto => this.toZxProd(dto)))
+    return this.get<ZxProdDto[]>('latestAddedProds', {limit}).pipe(
+      map(dtos => dtos.map(dto => new ZxProd(dto)))
     );
   }
 
   getLatestAddedReleases(limit: number): Observable<ZxProd[]> {
-    return this.get<FirstpageProdDto[]>('latestAddedReleases', {limit}).pipe(
-      map(dtos => dtos.map(dto => this.toZxProd(dto, 'zxRelease')))
+    return this.get<ZxProdDto[]>('latestAddedReleases', {limit}).pipe(
+      map(dtos => dtos.map(dto => new ZxProd(dto)))
     );
   }
 
   getSupportProds(limit: number): Observable<ZxProd[]> {
-    return this.get<FirstpageProdDto[]>('supportProds', {limit}).pipe(
-      map(dtos => dtos.map(dto => this.toZxProd(dto)))
+    return this.get<ZxProdDto[]>('supportProds', {limit}).pipe(
+      map(dtos => dtos.map(dto => new ZxProd(dto)))
     );
   }
 
@@ -81,28 +80,6 @@ export class FirstpageDataService {
 
   getRandomGoodTunes(limit: number): Observable<ZxTuneDto[]> {
     return this.get<ZxTuneDto[]>('randomGoodTunes', {limit});
-  }
-
-  private toZxProd(dto: FirstpageProdDto, structureType: 'zxProd' | 'zxRelease' = 'zxProd'): ZxProd {
-    const prodDto: ZxProdDto = {
-      id: dto.id,
-      url: dto.url,
-      title: dto.title,
-      structureType,
-      dateCreated: 0,
-      year: dto.year ?? undefined,
-      hardwareInfo: dto.hardwareInfo ?? undefined,
-      votes: dto.votes,
-      votesAmount: dto.votesAmount,
-      userVote: dto.userVote ?? 0,
-      denyVoting: dto.denyVoting,
-      legalStatus: dto.legalStatus ?? undefined,
-      listImagesUrls: dto.imageUrl ? [dto.imageUrl] : [],
-      authorsInfoShort: dto.authors.map(a => ({title: a.name, url: a.url, roles: []})),
-      partyInfo: dto.party ? {id: 0, title: dto.party.title, url: dto.party.url} : undefined,
-      partyPlace: dto.party?.place ?? 0,
-    };
-    return new ZxProd(prodDto);
   }
 
   private get<T>(action: string, params: Record<string, number>): Observable<T> {

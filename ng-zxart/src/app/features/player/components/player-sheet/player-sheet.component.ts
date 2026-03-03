@@ -15,20 +15,18 @@ import {ZxSelectComponent, ZxSelectOption} from '../../../../shared/ui/zx-select
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
 import {ZxInputRangeComponent} from '../../../../shared/ui/zx-input-range/zx-input-range.component';
 import {ZxMinMaxRangeComponent} from '../../../../shared/ui/zx-min-max-range/zx-min-max-range.component';
-import {RatingComponent} from '../../../../shared/components/rating/rating.component';
 import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
 import {
   ZxFilterPickerComponent,
   ZxFilterPickerItem
 } from '../../../../shared/ui/zx-filter-picker/zx-filter-picker.component';
-import {VoteService} from '../../../../shared/services/vote.service';
 import {RadioApiService} from '../../services/radio-api.service';
 import {RadioFilterOptionsDto} from '../../models/radio-filter-options';
 import {RadioPreset} from '../../models/radio-preset';
 import {RadioPresetCriteriaService} from '../../services/radio-preset-criteria.service';
 import {ZxCheckboxFieldComponent} from '../../../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 import {CurrentUserService} from '../../../../shared/services/current-user.service';
-import {ZxPlaylistButtonComponent} from '../../../../shared/ui/zx-playlist-button/zx-playlist-button.component';
+import {ZxItemControlsComponent} from '../../../../shared/ui/zx-item-controls/zx-item-controls.component';
 
 const AUTO_APPLY_DEBOUNCE_MS = 500;
 
@@ -51,11 +49,10 @@ type PartyValue = 'any' | 'yes' | 'no';
     ZxInputComponent,
     ZxInputRangeComponent,
     ZxMinMaxRangeComponent,
-    RatingComponent,
     ZxSkeletonComponent,
     ZxFilterPickerComponent,
     ZxCheckboxFieldComponent,
-    ZxPlaylistButtonComponent,
+    ZxItemControlsComponent,
   ],
   templateUrl: './player-sheet.component.html',
   styleUrls: ['./player-sheet.component.scss'],
@@ -114,7 +111,6 @@ export class PlayerSheetComponent implements OnDestroy {
 
   constructor(
     private playerService: PlayerService,
-    private voteService: VoteService,
     private radioApiService: RadioApiService,
     private translateService: TranslateService,
     private presetCriteriaService: RadioPresetCriteriaService,
@@ -308,20 +304,6 @@ export class PlayerSheetComponent implements OnDestroy {
       return;
     }
     window.open(tune.url, '_blank');
-  }
-
-  vote(value: number): void {
-    const tune = this.playerService.currentTune;
-    if (!tune) {
-      return;
-    }
-    this.voteService.send<'zxMusic'>(tune.id, value, 'zxMusic').subscribe(({votes, votesAmount}) => {
-      this.playerService.updateCurrentTune({
-        votes,
-        votesAmount,
-        userVote: value,
-      });
-    });
   }
 
   private loadOptions(): void {

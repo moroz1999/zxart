@@ -4,30 +4,32 @@ declare(strict_types=1);
 
 namespace ZxArt\Prods\Dto;
 
-use ZxArt\Shared\Dto\AuthorDto;
-use ZxArt\Shared\Dto\PartyInfoDto;
-
 readonly class ProdDto
 {
     /**
-     * @param AuthorDto[] $authors
-     * @param string[] $categories
+     * @param string[] $listImagesUrls
      * @param array<array{id: string, title: string}> $hardwareInfo
+     * @param array<array{title: string, url: string, roles: string[]}> $authorsInfoShort
+     * @param array<array{id: int, title: string, url: string}> $categoriesInfo
+     * @param array{id: int, title: string, url: string}|null $partyInfo
      */
     public function __construct(
         public int $id,
-        public string $title,
         public string $url,
+        public string $structureType,
+        public int $dateCreated,
+        public string $title,
         public ?string $year,
-        public ?string $imageUrl,
+        public array $listImagesUrls,
         public float $votes,
         public int $votesAmount,
         public ?int $userVote,
         public bool $denyVoting,
-        public array $authors,
-        public array $categories,
         public array $hardwareInfo,
-        public ?PartyInfoDto $party,
+        public array $authorsInfoShort,
+        public array $categoriesInfo,
+        public ?array $partyInfo,
+        public int $partyPlace,
         public ?string $legalStatus,
     ) {
     }
