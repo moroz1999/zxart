@@ -4,10 +4,8 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use Cache;
-use ConfigManager;
 use controllerApplication;
 use renderer;
-use user;
 use ZxArt\Import\Services\PouetImport;
 
 class Pouet extends controllerApplication
@@ -43,14 +41,11 @@ class Pouet extends controllerApplication
             ob_end_flush();
         }
 
-        $user = $this->getService(user::class);
+        $user = $this->getService(\App\Users\CurrentUser::class);
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
 
-            $this->getService(
-                'structureManager',
-                ['rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerAdmin')]
-            );
+            $this->getService('adminStructureManager');
 
             $pouetImport = $this->getService(PouetImport::class);
             $pouetImport->importAll();

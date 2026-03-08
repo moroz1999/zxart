@@ -35,9 +35,9 @@ class CountriesManager extends errorLogger
         return $element;
     }
 
-    public function getLocationByName($locationName): countryElement|cityElement|false
+    public function getLocationByName($locationName): countryElement|cityElement|null
     {
-        $locationElement = false;
+        $locationElement = null;
         $structureManager = $this->structureManager;
 
         if ($record = $this->db->table('module_country')
