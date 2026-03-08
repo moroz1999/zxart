@@ -74,16 +74,17 @@ readonly final class ProdsRepository
     }
 
     /**
+     * @param int[] $categoryIds
      * @return int[]
      */
-    public function getBestNewByCategoryIds(int $categoryId, int $limit, float $minRating, int $currentYear): array
+    public function getBestNewByCategoryIds(array $categoryIds, int $limit, float $minRating, int $currentYear): array
     {
         return $this->getSelectSql()
-            ->whereIn(self::TABLE . '.id', function ($subQuery) use ($categoryId) {
+            ->whereIn(self::TABLE . '.id', function ($subQuery) use ($categoryIds) {
                 $subQuery->from('structure_links')
                     ->select('structure_links.childStructureId')
                     ->where('structure_links.type', '=', LinkTypes::ZX_PROD_CATEGORY->value)
-                    ->where('structure_links.parentStructureId', '=', $categoryId);
+                    ->whereIn('structure_links.parentStructureId', $categoryIds);
             })
             ->where('votes', '>=', $minRating)
             ->where('year', '>=', $currentYear - 1)

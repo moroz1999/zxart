@@ -9,6 +9,7 @@ use ZxArt\Prods\Dto\ProdDto;
 use ZxArt\Prods\ProdsTransformer;
 use ZxArt\Prods\Repositories\ProdsRepository;
 use ZxArt\ZxProdCategories\CategoryIds;
+use zxProdCategoryElement;
 use zxProdElement;
 
 readonly class FirstpageProdsService
@@ -44,7 +45,7 @@ readonly class FirstpageProdsService
     public function getBestNewDemos(int $limit, float $minRating): array
     {
         $ids = $this->prodsRepository->getBestNewByCategoryIds(
-            CategoryIds::DEMOS->value,
+            $this->getCategoryTreeIds(CategoryIds::DEMOS->value),
             $limit,
             $minRating,
             (int)date('Y'),
@@ -58,12 +59,25 @@ readonly class FirstpageProdsService
     public function getBestNewGames(int $limit, float $minRating): array
     {
         $ids = $this->prodsRepository->getBestNewByCategoryIds(
-            CategoryIds::GAMES->value,
+            $this->getCategoryTreeIds(CategoryIds::GAMES->value),
             $limit,
             $minRating,
             (int)date('Y'),
         );
         return $this->loadAndTransform($ids);
+    }
+
+    /**
+     * @return int[]
+     */
+    private function getCategoryTreeIds(int $rootCategoryId): array
+    {
+        $categoryIds = [];
+        $categoryElement = $this->structureManager->getElementById($rootCategoryId);
+        if ($categoryElement instanceof zxProdCategoryElement) {
+            $categoryElement->getSubCategoriesTreeIds($categoryIds);
+        }
+        return $categoryIds !== [] ? $categoryIds : [$rootCategoryId];
     }
 
     /**
