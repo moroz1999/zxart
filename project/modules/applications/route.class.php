@@ -12,7 +12,7 @@ class routeApplication extends controllerApplication
     public function initialize()
     {
         set_time_limit(5);
-        $this->startSession('route');
+        $this->startSession('public');
         $this->createRenderer();
     }
 
@@ -25,12 +25,7 @@ class routeApplication extends controllerApplication
         $renderer->endOutputBuffering();
 
         $structureManager = $this->getService(
-            'structureManager',
-            [
-                'rootUrl' => $controller->rootURL,
-                'rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerPublic'),
-            ],
-            true
+            'publicStructureManager',
         );
         if (!($language = $controller->getParameter('lang'))) {
             $language = 'eng';

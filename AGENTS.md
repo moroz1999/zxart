@@ -1,6 +1,7 @@
 # AGENTS.md
 
-This file contains the most CRITICAL rules that ALL agents must follow. For detailed information, see the documentation tree below.
+This file contains the most CRITICAL rules that ALL agents must follow.
+You MUST read the MD files linked in this document which are relevant to the current task.
 
 ## CRITICAL RULES
 
