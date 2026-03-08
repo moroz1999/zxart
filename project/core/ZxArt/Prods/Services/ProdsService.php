@@ -655,9 +655,9 @@ class ProdsService extends ElementsManager
         $this->authorshipRepository->addAuthorship($prodId, $authorId, 'release', $roles);
     }
 
-    private function linkReleaseWithPublisher(int $publisherId, int $prodId): void
+    private function linkReleaseWithPublisher(int $publisherId, int $releaseId): void
     {
-        $this->linksManager->linkElements($publisherId, $prodId, 'zxReleasePublishers');
+        $this->linksManager->linkElements($publisherId, $releaseId, 'zxReleasePublishers');
     }
 
 
@@ -748,7 +748,6 @@ class ProdsService extends ElementsManager
              * @var zxReleaseElement $element
              */
             if ($element = $this->structureManager->createElement('zxRelease', 'show', $prodElement->getId())) {
-                $element->persistStructureLinks();
                 $this->importIdOperator->saveImportId($element->getPersistedId(), $dto->id, $origin, 'release');
                 $this->updateRelease($element, $dto, $origin, true);
             }

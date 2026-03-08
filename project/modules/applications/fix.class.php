@@ -54,7 +54,7 @@ class fixApplication extends controllerApplication
              */
             $languagesManager = $this->getService(LanguagesManager::class);
             $languagesManager->setCurrentLanguageCode('eng');
-            $this->fixProdInvalidImages();
+            $this->fixReleases();
 //            $this->addCategoryToQueue(92183, QueueType::AI_SEO, QueueStatus::STATUS_TODO, 5000);
 //            $this->addCategoryToQueue(92534, QueueType::AI_INTRO, QueueStatus::STATUS_TODO, 5000);
 //            $this->addCategoryToQueue(204819, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
@@ -367,7 +367,7 @@ class fixApplication extends controllerApplication
 
         $result = $this->db->table('structure_elements')
             ->where('structureType', '=', 'zxRelease')
-            ->where('dateCreated', '>', 1674768000)
+            ->where('dateCreated', '>', 1772882080)
             ->orderBy('id')
             ->get(['id']);
         $ids = array_column($result, 'id');
@@ -378,36 +378,41 @@ class fixApplication extends controllerApplication
             /** @var zxReleaseElement $release */
             $release = $this->structureManager->getElementById($id);
             if (!$release) {
-                echo 'release missing ' . $id . '<br>';
-            } else {
-                $filePath = $release->getFilePath();
-                $fileName = $release->getFileName();
-                if ($filePath && $fileName) {
-                    if (is_file($filePath)) {
-                        if ((filesize($filePath) <= 20)) {
-                            $delete = true;
-                        }
-                        if (pathinfo($fileName, PATHINFO_EXTENSION) === 'zip') {
-                            $zip = new \ZipArchive();
-                            if ($zip->open($filePath) === true) {
-                                $zip->close();
-                            } else {
-                                $delete = true;
-                            }
-                        }
-
-                        if ($delete) {
-                            echo 'delete ' . $release->getPersistedId() . ' ' . $release->getTitle() . '<br>';
-                            $release->deleteElementData();
-                        }
-                    } else {
-                        echo 'file missing <a href="/route/id:' . $release->getPersistedId() . '">' . $release->getTitle() . '</a> ' . $filePath . '<br>';
-                    }
+                echo 'release is missing ' . $id . '<br>';
+                $release = $this->structureManager->getElementById($id, null, true);
+                if ($release) {
+                    $release->deleteElementData();
                 }
             }
+//            } else {
+//                $filePath = $release->getFilePath();
+//                $fileName = $release->getFileName();
+//                if ($filePath && $fileName) {
+//                    if (is_file($filePath)) {
+//                        if ((filesize($filePath) <= 20)) {
+//                            $delete = true;
+//                        }
+//                        if (pathinfo($fileName, PATHINFO_EXTENSION) === 'zip') {
+//                            $zip = new \ZipArchive();
+//                            if ($zip->open($filePath) === true) {
+//                                $zip->close();
+//                            } else {
+//                                $delete = true;
+//                            }
+//                        }
+//
+//                        if ($delete) {
+//                            echo 'delete ' . $release->getPersistedId() . ' ' . $release->getTitle() . '<br>';
+//                            $release->deleteElementData();
+//                        }
+//                    } else {
+//                        echo 'file missing <a href="/route/id:' . $release->getPersistedId() . '">' . $release->getTitle() . '</a> ' . $filePath . '<br>';
+//                    }
+//                }
+//            }
             $counter++;
             flush();
-            if ($counter > 30000) {
+            if ($counter > 10000) {
                 exit;
             }
         }

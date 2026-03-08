@@ -36,6 +36,7 @@ readonly class ProdRestDto
         public array $languagesInfo,
         public array $groupsInfo,
         public ?string $youtubeId,
+        public ?string $releaseType = null,
     ) {
     }
 }

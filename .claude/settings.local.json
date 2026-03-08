@@ -79,7 +79,8 @@
       "Bash(docker compose:*)",
       "Bash(vendor/bin/phpunit.bat:*)",
       "mcp__jetbrains__execute_run_configuration",
-      "mcp__jetbrains__find_files_by_glob"
+      "mcp__jetbrains__find_files_by_glob",
+      "Bash(docker exec:*)"
     ]
   },
   "enabledPlugins": {

@@ -75,6 +75,7 @@ readonly class ReleasesTransformer
             languagesInfo: [],
             groupsInfo: [],
             youtubeId: null,
+            releaseType: $element->releaseType ?: null,
         );
     }
 }
