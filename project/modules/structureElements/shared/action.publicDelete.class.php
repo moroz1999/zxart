@@ -2,23 +2,6 @@
 
 class publicDeleteShared extends structureElementAction
 {
-    //    public function execute(&$structureManager, &$controller, &$structureElement)
-    //    {
-    //        $structureManager = $this->getService('structureManager');
-    //        if ($userId = $structureManager->getElementIdByMarker('userGroup-public')) {
-    //            $privilegesManager = $this->getService(privilegesManager::class);
-    //
-    //            $privilegesManager->setPrivilege($userId, $structureElement->getId(), $structureElement->structureType, 'show', 'deny');
-    //            $privilegesManager->resetPrivileges();
-    //
-    //            $user = $this->getService(\App\Users\CurrentUser::class);
-    //            $user->refreshPrivileges();
-    //
-    //            if ($parentElement = $structureManager->getElementsFirstParent($structureElement->getId())) {
-    //                $controller->redirect($parentElement->URL);
-    //            }
-    //        }
-    //    }
     protected $loggable = true;
 
     /**

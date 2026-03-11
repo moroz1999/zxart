@@ -17,7 +17,7 @@ class zxfileApplication extends controllerApplication
         $this->startSession('public');
         $this->createRenderer();
         if ($this->isCrawlerDetected()){
-            throw new \http\Exception\RuntimeException('');
+            throw new RuntimeException('');
         }
     }
 
@@ -27,12 +27,7 @@ class zxfileApplication extends controllerApplication
     public function execute($controller)
     {
         $structureManager = $this->getService(
-            'structureManager',
-            [
-                'rootUrl' => $controller->rootURL,
-                'rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerPublic'),
-            ],
-            true
+            'publicStructureManager',
         );
         $this->processRequestParameters();
         $play = (bool)$controller->getParameter('play');

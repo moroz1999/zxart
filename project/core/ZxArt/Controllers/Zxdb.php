@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Controllers;
 
+use App\Users\CurrentUserService;
 use Cache;
 use controllerApplication;
 use renderer;
@@ -43,9 +44,11 @@ class Zxdb extends controllerApplication
             ob_end_flush();
         }
 
-        $user = $this->getService(\App\Users\CurrentUser::class);
+        $user = $this->getService(CurrentUserService::class)->getCurrentUser();
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
+            $this->logError(print_r($_SESSION, true));
+            exit;
 
             $this->getService('adminStructureManager');
 

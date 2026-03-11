@@ -194,13 +194,13 @@ class ProdsService extends ElementsManager
 
     public function importProd(ProdImportDTO $dto, string $origin): ?zxProdElement
     {
-        $prodId = $dto->id;
-        $element = $this->importIdOperator->getElementByImportId($prodId, $origin, 'prod');
+        $prodImportId = $dto->id;
+        $element = $this->importIdOperator->getElementByImportId($prodImportId, $origin, 'prod');
 
         if (!$element && $dto->ids !== null) {
             foreach ($dto->ids as $idOrigin => $id) {
                 if ($element = $this->importIdOperator->getElementByImportId($id, $idOrigin, 'prod')) {
-                    $this->importIdOperator->saveImportId($element->getId(), $prodId, $origin, 'prod');
+                    $this->importIdOperator->saveImportId($element->getId(), $prodImportId, $origin, 'prod');
                     break;
                 }
             }
@@ -209,14 +209,14 @@ class ProdsService extends ElementsManager
         if (!$element) {
             if ($candidate = $this->getProdByReleaseMd5DTO($dto)) {
                 $element = $candidate;
-                $this->importIdOperator->saveImportId($element->getId(), $prodId, $origin, 'prod');
+                $this->importIdOperator->saveImportId($element->getId(), $prodImportId, $origin, 'prod');
             }
         }
 
         if (!$element) {
             if ($resolved = $this->prodResolver->resolve($dto, $this->matchProdsWithoutYear)) {
                 $element = $resolved;
-                $this->importIdOperator->saveImportId($element->getId(), $prodId, $origin, 'prod');
+                $this->importIdOperator->saveImportId($element->getId(), $prodImportId, $origin, 'prod');
             }
         }
 

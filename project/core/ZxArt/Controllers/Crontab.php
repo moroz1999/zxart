@@ -2,6 +2,7 @@
 
 namespace ZxArt\Controllers;
 
+use App\Users\CurrentUserService;
 use Cache;
 use ConfigManager;
 use controllerApplication;
@@ -126,7 +127,7 @@ class Crontab extends controllerApplication
             ob_end_flush();
         }
 
-        $user = $this->getService(\App\Users\CurrentUser::class);
+        $user = $this->getService(CurrentUserService::class)->getCurrentUser();
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
             $this->structureManager = $this->getService(
