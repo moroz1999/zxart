@@ -19,7 +19,7 @@ class ZxdbImport extends errorLogger
 {
     protected int|null $maxTime = null;
     protected int $counter = 0;
-    protected int $maxCounter = 3;
+    protected int $maxCounter = 0;
     protected int $minCounter = 0;
     protected ?int $debugEntry = null;
     private const bool IMPORT_SERIES = false;

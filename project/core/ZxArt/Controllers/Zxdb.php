@@ -47,9 +47,7 @@ class Zxdb extends controllerApplication
         $user = $this->getService(CurrentUserService::class)->getCurrentUser();
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
-            $this->logError(print_r($_SESSION, true));
-            exit;
-
+            
             $this->getService('adminStructureManager');
 
             $zxdbImport = $this->getService(ZxdbImport::class);
