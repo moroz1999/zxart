@@ -6,9 +6,7 @@
 {capture assign="moduleContent"}
     {if $element->getPicturesList()}
         <div class='playlist_details_pictures'>
-            <div id="gallery_{$element->id}">
-                {include file=$theme->template('component.pictureslist.tpl') pictures=$element->getPicturesList() pager=false}
-            </div>
+            <zx-pictures-list element-id="{$element->id}"></zx-pictures-list>
         </div>
     {/if}
     <div class='playlist_details_music'>

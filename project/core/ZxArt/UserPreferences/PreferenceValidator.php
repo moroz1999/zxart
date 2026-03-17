@@ -45,6 +45,9 @@ final class PreferenceValidator
             PreferenceCode::HOMEPAGE_BEST_DEMOS_MIN_RATING,
             PreferenceCode::HOMEPAGE_BEST_GAMES_MIN_RATING => $this->validateMinRating($code, $value),
             PreferenceCode::HOMEPAGE_NEW_PRODS_START_YEAR => $this->validateStartYearOffset($code, $value),
+            PreferenceCode::PICTURE_MODE => $this->validatePictureMode($value),
+            PreferenceCode::PICTURE_BORDER,
+            PreferenceCode::PICTURE_HIDDEN => $this->validateBinaryFlag($code, $value),
             PreferenceCode::RADIO_CRITERIA => $value,
             PreferenceCode::LANGUAGE => $this->validateLanguageCode($value),
         };
@@ -101,6 +104,23 @@ final class PreferenceValidator
             throw InvalidPreferenceValueException::forPreference($code->value, $value);
         }
         return (string)$intValue;
+    }
+
+    private function validatePictureMode(string $value): string
+    {
+        $allowed = ['mix', 'flicker', 'interlace1', 'interlace2'];
+        if (!in_array($value, $allowed, true)) {
+            throw InvalidPreferenceValueException::forPreference(PreferenceCode::PICTURE_MODE->value, $value);
+        }
+        return $value;
+    }
+
+    private function validateBinaryFlag(PreferenceCode $code, string $value): string
+    {
+        if ($value !== '0' && $value !== '1') {
+            throw InvalidPreferenceValueException::forPreference($code->value, $value);
+        }
+        return $value;
     }
 
     private function validateLanguageCode(string $value): string

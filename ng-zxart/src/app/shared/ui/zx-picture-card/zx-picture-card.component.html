@@ -3,7 +3,7 @@
     class="picture-image"
   >
     <img
-      [src]="picture.imageUrl"
+      [src]="imageUrl$ | async"
       [alt]="picture.title"
       loading="lazy"
       [lightbox]="galleryIndex ?? 0"

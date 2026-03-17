@@ -1,0 +1,32 @@
+<zx-button
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin"
+  color="transparent"
+  size="sm"
+  [ariaLabel]="'header.language-trigger.label' | translate"
+  [attr.aria-expanded]="popoverOpen"
+  (click)="togglePopover($event)"
+>
+  <svg-icon name="globe" class="lt-icon"></svg-icon>
+  <span class="lt-label">{{ activeLanguage?.title }}</span>
+</zx-button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="popoverOpen"
+  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  (backdropClick)="closePopover()"
+  (overlayKeydown)="onOverlayKeydown($event)"
+>
+  <div class="lt-popover" (click)="$event.stopPropagation()">
+    <zx-button
+      *ngFor="let lang of languages"
+      size="sm"
+      [color]="lang.active ? 'primary' : 'transparent'"
+      [href]="lang.url"
+    >{{ lang.title }}</zx-button>
+  </div>
+</ng-template>

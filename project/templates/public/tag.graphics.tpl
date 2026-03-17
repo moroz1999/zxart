@@ -4,9 +4,7 @@
 	{/capture}
 {/if}
 {capture assign="moduleContent"}
-	<div id="gallery_{$element->id}">
-		{include file=$theme->template('component.pictureslist.tpl') pictures=$element->getItems() pager=false}
-	</div>
+	<zx-pictures-list element-id="{$element->id}"></zx-pictures-list>
 {/capture}
 {assign moduleClass ""}
 {assign moduleTitleClass ""}

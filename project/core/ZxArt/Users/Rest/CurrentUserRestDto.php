@@ -9,6 +9,10 @@ readonly class CurrentUserRestDto
     public function __construct(
         public ?int $id,
         public string $userName,
+        public ?string $registrationUrl = null,
+        public ?string $passwordReminderUrl = null,
+        public ?string $profileUrl = null,
+        public ?string $playlistsUrl = null,
     ) {
     }
 }

@@ -1,0 +1,32 @@
+:root {
+  /* Trigger icon size */
+  --zx-login-trigger-icon-size: 20px;
+
+  /* Popover panel */
+  --zx-login-trigger-popover-bg: var(--input-bg);
+  --zx-login-trigger-popover-border: var(--border-width-thin) solid var(--border-form);
+  --zx-login-trigger-popover-radius: var(--radius-md);
+  --zx-login-trigger-popover-shadow: var(--shadow-sm);
+  --zx-login-trigger-popover-min-width: 220px;
+
+  /* Form labels */
+  --zx-login-trigger-label-color: var(--form-label-color);
+  --zx-login-trigger-label-font-size: var(--zx-font-size-sm);
+
+  /* Form inputs */
+  --zx-login-trigger-input-height: var(--input-md-height);
+  --zx-login-trigger-input-padding: var(--input-padding);
+  --zx-login-trigger-input-bg: var(--input-bg);
+  --zx-login-trigger-input-text: var(--input-text);
+  --zx-login-trigger-input-border: var(--border-width-thin) solid var(--input-border-color);
+  --zx-login-trigger-input-border-focus: var(--input-border-focus-color);
+  --zx-login-trigger-input-radius: var(--input-border-radius);
+  --zx-login-trigger-input-font-size: var(--input-md-font-size);
+
+  /* Error message */
+  --zx-login-trigger-error-color: var(--input-error-text);
+  --zx-login-trigger-error-font-size: var(--zx-font-size-sm);
+
+  /* Links */
+  --zx-login-trigger-link-font-size: var(--zx-font-size-sm);
+}

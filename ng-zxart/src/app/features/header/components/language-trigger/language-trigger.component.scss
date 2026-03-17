@@ -1,0 +1,21 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+}
+
+.lt-icon {
+  width: var(--zx-language-trigger-icon-size);
+  height: var(--zx-language-trigger-icon-size);
+  flex-shrink: 0;
+}
+
+.lt-popover {
+  background-color: var(--zx-language-trigger-popover-bg);
+  border: var(--zx-language-trigger-popover-border);
+  border-radius: var(--zx-language-trigger-popover-radius);
+  box-shadow: var(--zx-language-trigger-popover-shadow);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}

@@ -26,6 +26,8 @@ if ($this->mode === 'admin') {
 
 **Note:** `setService('structureManager', ...)` no longer exists. Do not use `->method('setService', ...)` in `di-definitions.php` for SM injection.
 
+**Forbidden:** `$this->getService('structureManager', ['rootUrl' => ..., 'rootMarker' => ...], true)` — this legacy 3-argument form manually re-initializes the SM and must not be used. The DI factory already configures the public SM with the correct `rootUrl` and `rootMarker`. Simply call `$this->getService(structureManager::class)` and the factory provides a properly initialized instance.
+
 ## Controller URL name
 Add `getUrlName()` in controller applications to avoid controller name prefix in entity URLs. Without it, all entities will get the controller name at the beginning of their URL.
 Example:
@@ -37,18 +39,22 @@ public function getUrlName()
 ```
 
 ## Controller services
-- Use `getService(MyService::class)` in controllers to obtain services — always use class constants, never string literals.
-- Services with no special configuration are resolved automatically by PHP-DI autowiring; explicit `di-definitions.php` entries are only needed for services that require constructor/method parameters.
+- Services MUST be declared as constructor parameters — use PHP-DI constructor injection, not `$this->getService()` inside methods.
+- `$this->getService()` is legacy. New controllers must not call it.
 - Example:
 ```php
 class MyController extends controllerApplication
 {
-    public function execute($controller): void
-    {
-        $myService = $this->getService(MyService::class);
+    public function __construct(
+        controller $controller,
+        private readonly MyService $myService,
+        private readonly structureManager $structureManager,
+    ) {
+        parent::__construct($controller);
     }
 }
 ```
+- PHP-DI autowires constructor parameters automatically; explicit `di-definitions.php` entries are only needed for parameters that require non-default bindings.
 
 ## AJAX Operations
 - For AJAX operations in controllers, use the `action` parameter to distinguish between different types of requests (e.g., `add`, `update`, `delete`).

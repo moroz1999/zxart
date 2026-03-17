@@ -1,5 +1,4 @@
-import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
-import {isPlatformBrowser} from '@angular/common';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {catchError, shareReplay, tap} from 'rxjs/operators';
@@ -18,14 +17,8 @@ const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 })
 export class FirstpageViewAllLinksService {
   private baseUrls$?: Observable<CatalogueBaseUrlsResponse>;
-  private readonly isBrowser: boolean;
 
-  constructor(
-    private http: HttpClient,
-    @Inject(PLATFORM_ID) platformId: object,
-  ) {
-    this.isBrowser = isPlatformBrowser(platformId);
-  }
+  constructor(private http: HttpClient) {}
 
   getBaseUrls(): Observable<CatalogueBaseUrlsResponse> {
     if (!this.baseUrls$) {
@@ -44,9 +37,6 @@ export class FirstpageViewAllLinksService {
   }
 
   private loadFromStorage(): CatalogueBaseUrlsResponse | null {
-    if (!this.isBrowser) {
-      return null;
-    }
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) {
@@ -64,9 +54,6 @@ export class FirstpageViewAllLinksService {
   }
 
   private saveToStorage(data: CatalogueBaseUrlsResponse): void {
-    if (!this.isBrowser) {
-      return;
-    }
     try {
       const cached: CachedBaseUrls = {data, timestamp: Date.now()};
       localStorage.setItem(STORAGE_KEY, JSON.stringify(cached));

@@ -4,7 +4,7 @@ import {animate, style, transition, trigger} from '@angular/animations';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {MatIconModule} from '@angular/material/icon';
-import {debounceTime, Subscription} from 'rxjs';
+import {debounceTime, Subscription, take} from 'rxjs';
 import {PlayerService} from '../../services/player.service';
 import {EMPTY_RADIO_CRITERIA, RadioCriteria} from '../../models/radio-criteria';
 import {PlayerState} from '../../models/player-state';
@@ -171,7 +171,7 @@ export class PlayerSheetComponent implements OnDestroy {
     );
 
     this.subscriptions.add(
-      this.currentUserService.loadUser().subscribe(user => {
+      this.currentUserService.user$.subscribe(user => {
         const control = this.form.get('unvotedOnly');
         if (!control) {
           return;
@@ -416,11 +416,13 @@ export class PlayerSheetComponent implements OnDestroy {
   }
 
   private applyCriteriaFromForm(): void {
-    const criteria = this.buildCriteriaFromForm();
-    this.playerService.startRadio(criteria, null);
+    this.currentUserService.userId$.pipe(take(1)).subscribe(userId => {
+      const criteria = this.buildCriteriaFromForm(userId);
+      this.playerService.startRadio(criteria, null);
+    });
   }
 
-  private buildCriteriaFromForm(): RadioCriteria {
+  private buildCriteriaFromForm(userId: number | null): RadioCriteria {
     const minRating = this.toOptionalFloat(this.form.get('minRating')?.value);
     const categoryId = this.toOptionalInt(this.form.get('category')?.value);
     const minPartyPlace = this.toOptionalInt(this.form.get('minPartyPlace')?.value);
@@ -431,8 +433,9 @@ export class PlayerSheetComponent implements OnDestroy {
       ? []
       : this.buildYearRange(yearFrom, yearTo);
     const unvotedOnly = Boolean(this.form.get('unvotedOnly')?.value);
-    const userId = unvotedOnly ? this.currentUserService.userId : null;
-    const notVotedByUserId = userId ?? (unvotedOnly ? this.currentCriteria.notVotedByUserId : null);
+    const notVotedByUserId = unvotedOnly
+      ? (userId ?? this.currentCriteria.notVotedByUserId)
+      : null;
 
     return {
       ...EMPTY_RADIO_CRITERIA,

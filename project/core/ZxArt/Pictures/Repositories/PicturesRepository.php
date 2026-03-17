@@ -94,6 +94,34 @@ readonly final class PicturesRepository
             ->pluck('id');
     }
 
+    /**
+     * Returns IDs of pictures linked to the given author (including all its aliases)
+     * via structure_links with type 'authorPicture'.
+     *
+     * @return int[]
+     */
+    public function findIdsByAuthorId(int $authorId): array
+    {
+        return $this->db->table(self::TABLE)
+            ->select(self::TABLE . '.id')
+            ->join(
+                'structure_links',
+                fn($join) => $join
+                    ->on('structure_links.childStructureId', '=', self::TABLE . '.id')
+                    ->where('structure_links.type', '=', 'authorPicture')
+            )
+            ->where(function ($q) use ($authorId) {
+                $q->where('structure_links.parentStructureId', '=', $authorId)
+                    ->orWhereIn(
+                        'structure_links.parentStructureId',
+                        fn($sub) => $sub->select('id')->from('module_authoralias')->where('authorId', '=', $authorId)
+                    );
+            })
+            ->distinct()
+            ->orderBy(self::TABLE . '.title')
+            ->pluck(self::TABLE . '.id');
+    }
+
     private function getSelectSql(): Builder
     {
         return $this->db->table(self::TABLE);

@@ -18,6 +18,11 @@ readonly class PictureRestDto
         public string $title,
         public string $url,
         public string $imageUrl,
+        public int $fileId,
+        public string $type,
+        public int $pictureBorder,
+        public string $palette,
+        public ?int $rotation,
         public ?string $year,
         public array $authors,
         #[Map]

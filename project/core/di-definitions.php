@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 use App\Paths\PathsManager;
-use App\Users\CurrentUserService;
 use DI\Container;
 use Illuminate\Database\Connection;
 use Monolog\Formatter\LineFormatter;
@@ -106,11 +105,7 @@ return [
         ->constructorParameter('channelId', DI\get('telegram_channel_id')),
 
     // Legacy services migrated from project/services/
-    PicturesModesManager::class => factory(static function (CurrentUserService $currentUserService) {
-        $instance = new PicturesModesManager();
-        $instance->setUser($currentUserService->getCurrentUser());
-        return $instance;
-    }),
+    PicturesModesManager::class => autowire(),
     RzxArchiveManager::class => autowire()
         ->method('setProdsService', DI\get(ProdsService::class)),
     SpeccyMapsManager::class => autowire()

@@ -67,6 +67,15 @@ readonly class PicturesService
     }
 
     /**
+     * @return PictureDto[]
+     */
+    public function getByAuthor(int $authorId): array
+    {
+        $ids = $this->picturesRepository->findIdsByAuthorId($authorId);
+        return $this->loadAndTransform($ids);
+    }
+
+    /**
      * @param int[] $ids
      * @return PictureDto[]
      */

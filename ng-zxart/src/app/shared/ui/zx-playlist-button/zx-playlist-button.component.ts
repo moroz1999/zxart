@@ -4,6 +4,8 @@ import {FormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {MatIconModule} from '@angular/material/icon';
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
+import {Observable} from 'rxjs';
+import {take} from 'rxjs/operators';
 import {PlaylistService} from '../../services/playlist.service';
 import {CurrentUserService} from '../../services/current-user.service';
 import {PlaylistDto} from '../../models/playlist.model';
@@ -36,6 +38,8 @@ export class ZxPlaylistButtonComponent {
   activePlaylistIds: number[] = [];
   newPlaylistTitle = '';
 
+  readonly isAuthenticated$: Observable<boolean> = this.currentUserService.isAuthenticated$;
+
   readonly positions: ConnectedPosition[] = [
     {originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 4},
     {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -4},
@@ -46,23 +50,21 @@ export class ZxPlaylistButtonComponent {
     private currentUserService: CurrentUserService,
   ) {}
 
-  get isAuthenticated(): boolean {
-    return this.currentUserService.isAuthenticated;
-  }
-
   get playlists(): PlaylistDto[] {
     return this.playlistService.getPlaylists();
   }
 
   togglePopover(event: Event): void {
     event.stopPropagation();
-    if (!this.isAuthenticated) {
-      return;
-    }
-    this.popoverOpen = !this.popoverOpen;
-    if (this.popoverOpen) {
-      this.loadPlaylistIds();
-    }
+    this.currentUserService.isAuthenticated$.pipe(take(1)).subscribe(isAuthenticated => {
+      if (!isAuthenticated) {
+        return;
+      }
+      this.popoverOpen = !this.popoverOpen;
+      if (this.popoverOpen) {
+        this.loadPlaylistIds();
+      }
+    });
   }
 
   closePopover(): void {

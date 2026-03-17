@@ -6,9 +6,7 @@
 	{/if}
 	{capture assign="moduleContent"}
 		{stripdomspaces}
-		{if $itemsList = $element->getItemsList()}
-			{include file=$theme->template('component.pictureslist.tpl') pictures=$itemsList}
-		{/if}
+		<zx-pictures-list element-id="{$element->id}"></zx-pictures-list>
 		{/stripdomspaces}
 		{if $picturesDetailedSearchElement && $element->searchFormParametersString}
 			<div class="zxitemslist_controls">

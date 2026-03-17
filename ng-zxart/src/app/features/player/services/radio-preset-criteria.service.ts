@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {map, Observable} from 'rxjs';
+import {map, Observable, take} from 'rxjs';
 import {EMPTY_RADIO_CRITERIA, RadioCriteria} from '../models/radio-criteria';
 import {RadioPreset} from '../models/radio-preset';
 import {CurrentUserService} from '../../../shared/services/current-user.service';
@@ -19,7 +19,7 @@ export class RadioPresetCriteriaService {
   constructor(private currentUserService: CurrentUserService) {}
 
   buildCriteria(preset: RadioPreset): Observable<RadioCriteria> {
-    return this.currentUserService.loadUser().pipe(
+    return this.currentUserService.user$.pipe(take(1),
       map((user) => {
         const minRating = AVERAGE_VOTE + MIN_RATING_OFFSET;
         const now = new Date();

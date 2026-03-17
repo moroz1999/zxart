@@ -1,0 +1,33 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+}
+
+.ps-trigger__icon {
+  width: var(--zx-picture-settings-icon-size);
+  height: var(--zx-picture-settings-icon-size);
+}
+
+.ps-popover {
+  min-width: var(--zx-picture-settings-popover-min-width);
+  background-color: var(--zx-picture-settings-popover-bg);
+  border: var(--zx-picture-settings-popover-border);
+  border-radius: var(--zx-picture-settings-popover-radius);
+  box-shadow: var(--zx-picture-settings-popover-shadow);
+  padding: var(--space-12);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.ps-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.ps-mode-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}

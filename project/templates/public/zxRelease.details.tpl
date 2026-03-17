@@ -220,8 +220,8 @@
             </table>
 
             {include $theme->template("component.emulator.tpl")}
-            {if $pictures=$element->getPictures()}
-                {include file=$theme->template('component.pictureslist.tpl') pictures=$pictures}
+            {if $element->getPictures()}
+                <zx-pictures-list element-id="{$element->id}"></zx-pictures-list>
             {/if}
 
             <div class="gallery_static galleryid_{$element->id}">

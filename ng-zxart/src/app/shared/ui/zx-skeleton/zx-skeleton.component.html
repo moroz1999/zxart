@@ -78,7 +78,8 @@
       @for (i of items; track i) {
         <div class="skeleton-text-line skeleton-bone"
              [style.animation-delay.ms]="i * 50"
-             [style.width.%]="80 + (i % 3) * 10"></div>
+             [style.width.%]="80 + (i % 3) * 10"
+             [style.height]="lineHeight"></div>
       }
     }
   }

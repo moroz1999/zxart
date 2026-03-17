@@ -337,6 +337,43 @@
   "zx-vote": {
     "votes": "{{count}} голосов"
   },
+  "picture": {
+    "morefromgame": "Другие картинки из игры",
+    "morefromauthor": "Другие картинки автора"
+  },
+  "header": {
+    "language-trigger": {
+      "label": "Выбрать язык"
+    },
+    "theme-trigger": {
+      "label": "Переключить тему"
+    }
+  },
+  "login": {
+    "trigger-label": "Войти",
+    "user-menu-label": "Меню пользователя",
+    "username": "Имя пользователя или email",
+    "password": "Пароль",
+    "remember": "Запомнить меня",
+    "submit": "Войти",
+    "logout": "Выйти",
+    "register": "Регистрация",
+    "forgot-password": "Забыли пароль?",
+    "error": "Неверное имя пользователя или пароль",
+    "playlists": "Мои плейлисты"
+  },
+  "picture-settings": {
+    "trigger-label": "Настройки изображений",
+    "gigascreen-mode": "Режим Gigascreen",
+    "border": "Бордюр",
+    "hidden": "Режим скрытых пикселей",
+    "mode": {
+      "mix": "Mix",
+      "flicker": "Flicker",
+      "interlace1": "Int1",
+      "interlace2": "Int2"
+    }
+  },
   "playlist": {
     "button_label": "Плейлисты",
     "login_required": "Войдите, чтобы управлять плейлистами",

@@ -1,59 +1,62 @@
-import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
-import {isPlatformBrowser} from '@angular/common';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {catchError, Observable, of, shareReplay} from 'rxjs';
+import {BehaviorSubject, catchError, defer, Observable, of} from 'rxjs';
+import {filter, map, tap} from 'rxjs/operators';
+import {CurrentUser} from '../models/current-user';
 
-interface LegacyCurrentUser {
-  userName?: string;
-  id?: number | string;
-}
+const ANONYMOUS_USER: CurrentUser = {
+  id: null,
+  userName: 'anonymous',
+  registrationUrl: null,
+  passwordReminderUrl: null,
+  profileUrl: null,
+  playlistsUrl: null,
+};
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CurrentUserService {
-  private readonly isBrowser: boolean;
-  private user: LegacyCurrentUser | null = null;
-  private readonly userRequest$: Observable<LegacyCurrentUser | null>;
+  private readonly apiUrl = '/currentuser/';
+  private readonly store = new BehaviorSubject<CurrentUser | null>(null);
+  private loading = false;
 
-  constructor(
-    @Inject(PLATFORM_ID) platformId: object,
-    private http: HttpClient,
-  ) {
-    this.isBrowser = isPlatformBrowser(platformId);
-    this.userRequest$ = this.isBrowser ? this.fetchUser().pipe(shareReplay(1)) : of(null);
-    this.userRequest$.subscribe((user) => {
-      this.user = user;
+  readonly user$: Observable<CurrentUser> = defer(() => {
+    if (this.store.getValue() === null && !this.loading) {
+      this.loadCurrentUser();
+    }
+    return this.store.pipe(filter((user): user is CurrentUser => user !== null));
+  });
+
+  readonly isAuthenticated$: Observable<boolean> = this.user$.pipe(
+    map(user => user.userName !== 'anonymous'),
+  );
+
+  readonly userId$: Observable<number | null> = this.user$.pipe(
+    map(user => user.id),
+  );
+
+  constructor(private http: HttpClient) {}
+
+  private loadCurrentUser(): void {
+    this.loading = true;
+    this.http.get<CurrentUser>(this.apiUrl).pipe(
+      catchError(() => of(ANONYMOUS_USER)),
+    ).subscribe(user => {
+      this.loading = false;
+      this.store.next(user);
     });
   }
 
-  loadUser(): Observable<LegacyCurrentUser | null> {
-    return this.userRequest$;
-  }
-
-  private fetchUser(): Observable<LegacyCurrentUser | null> {
-    return this.http.get<LegacyCurrentUser>('/currentuser/').pipe(
-      catchError(() => of(null)),
+  login(userName: string, password: string, remember: boolean): Observable<CurrentUser> {
+    return this.http.post<CurrentUser>(`${this.apiUrl}?action=login`, {userName, password, remember}).pipe(
+      tap(user => this.store.next(user)),
     );
   }
 
-  get isAuthenticated(): boolean {
-    if (!this.isBrowser) {
-      return false;
-    }
-    const user = this.user;
-    return !!user && user.userName !== 'anonymous';
-  }
-
-  get userId(): number | null {
-    if (!this.isBrowser) {
-      return null;
-    }
-    const user = this.user;
-    if (!user || user.id === undefined || user.id === null) {
-      return null;
-    }
-    const parsed = Number(user.id);
-    return Number.isFinite(parsed) ? parsed : null;
+  logout(): Observable<CurrentUser> {
+    return this.http.post<CurrentUser>(`${this.apiUrl}?action=logout`, {}).pipe(
+      tap(user => this.store.next(user)),
+    );
   }
 }

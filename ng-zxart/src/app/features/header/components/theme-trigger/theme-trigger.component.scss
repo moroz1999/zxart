@@ -1,0 +1,9 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+}
+
+.tt-icon {
+  width: var(--zx-theme-trigger-icon-size);
+  height: var(--zx-theme-trigger-icon-size);
+}

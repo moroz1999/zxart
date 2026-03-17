@@ -1,0 +1,55 @@
+<zx-button
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin"
+  color="transparent"
+  [square]="true"
+  [ariaLabel]="'picture-settings.trigger-label' | translate"
+  [attr.aria-expanded]="popoverOpen"
+  (click)="togglePopover($event)"
+>
+  <svg-icon name="image" class="ps-trigger__icon"></svg-icon>
+</zx-button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="popoverOpen"
+  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  (backdropClick)="closePopover()"
+>
+  <div class="ps-popover" (click)="$event.stopPropagation()">
+    <ng-container *ngIf="settings">
+
+      <div class="ps-section" *ngIf="!settings.hidden">
+        <span zxBodySmMuted>{{ 'picture-settings.gigascreen-mode' | translate }}</span>
+        <div class="ps-mode-buttons">
+          <zx-button
+            *ngFor="let m of modes"
+            size="xs"
+            [color]="isActiveMode(m.value) ? 'primary' : 'outlined'"
+            (click)="setMode(m.value)"
+          >{{ m.labelKey | translate }}</zx-button>
+        </div>
+      </div>
+
+      <div class="ps-section" *ngIf="!settings.hidden">
+        <span zxBodySmMuted>{{ 'picture-settings.border' | translate }}</span>
+        <div class="ps-mode-buttons">
+          <zx-button size="xs" [color]="settings.border ? 'primary' : 'outlined'" (click)="setBorder(true)">ON</zx-button>
+          <zx-button size="xs" [color]="!settings.border ? 'primary' : 'outlined'" (click)="setBorder(false)">OFF</zx-button>
+        </div>
+      </div>
+
+      <div class="ps-section">
+        <span zxBodySmMuted>{{ 'picture-settings.hidden' | translate }}</span>
+        <div class="ps-mode-buttons">
+          <zx-button size="xs" [color]="settings.hidden ? 'primary' : 'outlined'" (click)="setHidden(true)">ON</zx-button>
+          <zx-button size="xs" [color]="!settings.hidden ? 'primary' : 'outlined'" (click)="setHidden(false)">OFF</zx-button>
+        </div>
+      </div>
+
+    </ng-container>
+  </div>
+</ng-template>

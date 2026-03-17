@@ -1,7 +1,6 @@
-import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
-import {isPlatformBrowser} from '@angular/common';
+import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable, of, switchMap, throwError} from 'rxjs';
+import {Observable, of, switchMap, take, throwError} from 'rxjs';
 import {catchError, map, shareReplay, tap} from 'rxjs/operators';
 import {PreferenceDto} from '../models/preference.dto';
 import {CurrentUserService} from '../../../shared/services/current-user.service';
@@ -17,37 +16,29 @@ interface StoredPreferences {
   providedIn: 'root'
 })
 export class UserPreferencesService {
-  private readonly isBrowser: boolean;
   private initialized$: Observable<PreferenceDto[]> | null = null;
   private defaults$: Observable<PreferenceDto[]> | null = null;
 
   constructor(
     private http: HttpClient,
     private currentUserService: CurrentUserService,
-    @Inject(PLATFORM_ID) platformId: object
-  ) {
-    this.isBrowser = isPlatformBrowser(platformId);
-  }
+  ) {}
 
   initialize(): Observable<PreferenceDto[]> {
-    if (!this.isBrowser) {
-      return of([]);
-    }
-
     if (this.initialized$) {
       return this.initialized$;
     }
 
-    this.initialized$ = this.currentUserService.loadUser().pipe(
-      switchMap(() => {
-        const currentUserId = this.currentUserService.userId;
+    this.initialized$ = this.currentUserService.user$.pipe(take(1),
+      switchMap(user => {
+        const currentUserId = user.id;
         const stored = this.loadStoredData();
 
         if (stored && stored.userId !== currentUserId) {
           this.clearStorage();
         }
 
-        if (!this.currentUserService.isAuthenticated) {
+        if (user.userName === 'anonymous') {
           return of(this.loadFromStorage());
         }
 
@@ -55,7 +46,7 @@ export class UserPreferencesService {
           return of(stored.preferences);
         }
 
-        return this.fetchFromServer();
+        return this.fetchFromServer(currentUserId);
       }),
       shareReplay(1)
     );
@@ -75,19 +66,24 @@ export class UserPreferencesService {
   setPreference(code: string, value: string): Observable<PreferenceDto[]> {
     this.savePreferenceToStorage(code, value);
 
-    if (!this.currentUserService.isAuthenticated) {
-      return of(this.loadFromStorage());
-    }
+    return this.currentUserService.user$.pipe(
+      take(1),
+      switchMap(user => {
+        if (user.userName === 'anonymous') {
+          return of(this.loadFromStorage());
+        }
 
-    const body = new HttpParams()
-      .set('code', code)
-      .set('value', value);
+        const body = new HttpParams()
+          .set('code', code)
+          .set('value', value);
 
-    return this.http.put<PreferenceDto[]>('/userpreferences/', body, {
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).pipe(
-      tap(prefs => this.saveToStorage(prefs)),
-      catchError(err => throwError(() => new Error(err.error?.errorMessage || 'Failed to save preference')))
+        return this.http.put<PreferenceDto[]>('/userpreferences/', body, {
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).pipe(
+          tap(prefs => this.saveToStorage(user.id, prefs)),
+          catchError(err => throwError(() => new Error(err.error?.errorMessage || 'Failed to save preference')))
+        );
+      }),
     );
   }
 
@@ -96,18 +92,23 @@ export class UserPreferencesService {
       this.savePreferenceToStorage(item.code, item.value);
     }
 
-    if (!this.currentUserService.isAuthenticated) {
-      return of(this.loadFromStorage());
-    }
+    return this.currentUserService.user$.pipe(
+      take(1),
+      switchMap(user => {
+        if (user.userName === 'anonymous') {
+          return of(this.loadFromStorage());
+        }
 
-    const body = new HttpParams()
-      .set('batch', JSON.stringify(items));
+        const body = new HttpParams()
+          .set('batch', JSON.stringify(items));
 
-    return this.http.put<PreferenceDto[]>('/userpreferences/', body, {
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).pipe(
-      tap(prefs => this.saveToStorage(prefs)),
-      catchError(err => throwError(() => new Error(err.error?.errorMessage || 'Failed to save preferences')))
+        return this.http.put<PreferenceDto[]>('/userpreferences/', body, {
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).pipe(
+          tap(prefs => this.saveToStorage(user.id, prefs)),
+          catchError(err => throwError(() => new Error(err.error?.errorMessage || 'Failed to save preferences')))
+        );
+      }),
     );
   }
 
@@ -134,27 +135,25 @@ export class UserPreferencesService {
     return this.initialize();
   }
 
-  private fetchFromServer(): Observable<PreferenceDto[]> {
+  private fetchFromServer(userId: number | null): Observable<PreferenceDto[]> {
     return this.http.get<PreferenceDto[]>('/userpreferences/').pipe(
-      tap(prefs => this.saveToStorage(prefs))
+      tap(prefs => this.saveToStorage(userId, prefs))
     );
   }
 
   private savePreferenceToStorage(code: string, value: string): void {
-    const prefs = this.loadFromStorage();
+    const stored = this.loadStoredData();
+    const prefs = stored ? stored.preferences : [];
     const existing = prefs.find(p => p.code === code);
     if (existing) {
       existing.value = value;
     } else {
       prefs.push({code, value});
     }
-    this.saveToStorage(prefs);
+    this.saveToStorage(stored?.userId ?? null, prefs);
   }
 
   private loadStoredData(): StoredPreferences | null {
-    if (!this.isBrowser) {
-      return null;
-    }
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) {
       return null;
@@ -178,21 +177,12 @@ export class UserPreferencesService {
     return stored ? stored.preferences : [];
   }
 
-  private saveToStorage(prefs: PreferenceDto[]): void {
-    if (!this.isBrowser) {
-      return;
-    }
-    const data: StoredPreferences = {
-      userId: this.currentUserService.userId,
-      preferences: prefs
-    };
+  private saveToStorage(userId: number | null, prefs: PreferenceDto[]): void {
+    const data: StoredPreferences = {userId, preferences: prefs};
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
 
   private clearStorage(): void {
-    if (!this.isBrowser) {
-      return;
-    }
     localStorage.removeItem(STORAGE_KEY);
   }
 }

@@ -37,15 +37,17 @@
 			</div>
 		{/foreach}
 	</div>
-	<div class='party_compos gallery_pictures' id="gallery_{$element->id}">
+	{if $element->getPicturesCompos()}
+	<div class='party_compos'>
 		{foreach from=$element->getPicturesCompos() key=compoType item=compo}
 			{assign "compoTitle" "compo_"|cat:$compoType}
 			<div class='party_compos_item'>
 				<h2>{translations name='label.compo'}: {translations name="zxPicture.$compoTitle"}</h2>
-				{include file=$theme->template('component.pictureslist.tpl') pictures=$compo}
+				<zx-pictures-list element-id="{$element->id}" compo-type="{$compoType}"></zx-pictures-list>
 			</div>
 		{/foreach}
 	</div>
+	{/if}
 	<div class='party_compos'>
 		{foreach from=$element->getTunesCompos() key=compoType item=compo}
 			{assign "compoTitle" "compo_"|cat:$compoType}

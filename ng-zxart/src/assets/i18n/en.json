@@ -337,6 +337,43 @@
   "zx-vote": {
     "votes": "{{count}} votes"
   },
+  "picture": {
+    "morefromgame": "More from this game",
+    "morefromauthor": "More from this author"
+  },
+  "header": {
+    "language-trigger": {
+      "label": "Select language"
+    },
+    "theme-trigger": {
+      "label": "Toggle theme"
+    }
+  },
+  "login": {
+    "trigger-label": "Log in",
+    "user-menu-label": "User menu",
+    "username": "Username or email",
+    "password": "Password",
+    "remember": "Remember me",
+    "submit": "Log in",
+    "logout": "Log out",
+    "register": "Register",
+    "forgot-password": "Forgot password?",
+    "error": "Invalid username or password",
+    "playlists": "My playlists"
+  },
+  "picture-settings": {
+    "trigger-label": "Picture settings",
+    "gigascreen-mode": "Gigascreen mode",
+    "border": "Border",
+    "hidden": "Hide gigascreen",
+    "mode": {
+      "mix": "Mix",
+      "flicker": "Flicker",
+      "interlace1": "Int1",
+      "interlace2": "Int2"
+    }
+  },
   "playlist": {
     "button_label": "Playlists",
     "login_required": "Log in to manage playlists",

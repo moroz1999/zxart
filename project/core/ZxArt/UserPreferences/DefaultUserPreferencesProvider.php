@@ -36,6 +36,9 @@ final class DefaultUserPreferencesProvider
             PreferenceCode::HOMEPAGE_NEW_PRODS_MIN_RATING->value => '3.9',
             PreferenceCode::HOMEPAGE_BEST_DEMOS_MIN_RATING->value => '4',
             PreferenceCode::HOMEPAGE_BEST_GAMES_MIN_RATING->value => '4',
+            PreferenceCode::PICTURE_MODE->value => 'mix',
+            PreferenceCode::PICTURE_BORDER->value => '1',
+            PreferenceCode::PICTURE_HIDDEN->value => '0',
             PreferenceCode::RADIO_CRITERIA->value => '{}',
         ];
     }

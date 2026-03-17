@@ -1,0 +1,95 @@
+<zx-button
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin"
+  color="transparent"
+  [square]="true"
+  [ariaLabel]="(isLoggedIn ? 'login.user-menu-label' : 'login.trigger-label') | translate"
+  [attr.aria-expanded]="popoverOpen"
+  (click)="togglePopover($event)"
+>
+  <svg-icon name="person" class="lt-icon"></svg-icon>
+</zx-button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="popoverOpen"
+  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  (backdropClick)="closePopover()"
+  (overlayKeydown)="onOverlayKeydown($event)"
+>
+  <div class="lt-popover" (click)="$event.stopPropagation()">
+
+    <ng-container *ngIf="isLoggedIn; else loginForm">
+      <a *ngIf="user?.profileUrl; else plainName" [href]="user!.profileUrl" class="lt-user-name" zxBodySmMuted>{{ user?.userName }}</a>
+      <ng-template #plainName>
+        <div class="lt-user-name" zxBodySmMuted>{{ user?.userName }}</div>
+      </ng-template>
+      <a *ngIf="user?.playlistsUrl" [href]="user!.playlistsUrl" class="lt-link" zxLink>{{ 'login.playlists' | translate }}</a>
+      <zx-button size="sm" color="outlined" (click)="submitLogout()">
+        {{ 'login.logout' | translate }}
+      </zx-button>
+    </ng-container>
+
+    <ng-template #loginForm>
+      <form zxForm (ngSubmit)="submitLogin()">
+        <div class="lt-error" *ngIf="loginError" role="alert">
+          {{ loginError | translate }}
+        </div>
+
+        <div class="lt-field">
+          <label class="lt-label" for="lt-username">{{ 'login.username' | translate }}</label>
+          <input
+            id="lt-username"
+            class="lt-input"
+            type="text"
+            autocomplete="username"
+            [(ngModel)]="userName"
+            name="userName"
+          />
+        </div>
+
+        <div class="lt-field">
+          <label class="lt-label" for="lt-password">{{ 'login.password' | translate }}</label>
+          <input
+            id="lt-password"
+            class="lt-input"
+            type="password"
+            autocomplete="current-password"
+            [(ngModel)]="password"
+            name="password"
+          />
+        </div>
+
+        <div class="lt-remember">
+          <label class="lt-remember-label">
+            <input type="checkbox" [(ngModel)]="remember" name="remember" />
+            {{ 'login.remember' | translate }}
+          </label>
+        </div>
+
+        <zx-button type="submit" [disabled]="loading">
+          {{ 'login.submit' | translate }}
+        </zx-button>
+
+        <div class="lt-links" *ngIf="user?.registrationUrl || user?.passwordReminderUrl">
+          <a
+            *ngIf="user?.registrationUrl"
+            [href]="user!.registrationUrl"
+            class="lt-link"
+            zxLink
+          >{{ 'login.register' | translate }}</a>
+          <a
+            *ngIf="user?.passwordReminderUrl"
+            [href]="user!.passwordReminderUrl"
+            class="lt-link"
+            zxLink
+          >{{ 'login.forgot-password' | translate }}</a>
+        </div>
+      </form>
+    </ng-template>
+
+  </div>
+</ng-template>

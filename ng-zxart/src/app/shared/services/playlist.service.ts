@@ -1,5 +1,4 @@
-import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
-import {isPlatformBrowser} from '@angular/common';
+import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {map, Observable, of, tap} from 'rxjs';
 import {PlaylistDto} from '../models/playlist.model';
@@ -22,20 +21,12 @@ interface PlaylistResponseData {
   providedIn: 'root',
 })
 export class PlaylistService {
-  private readonly apiUrl: string;
-  private readonly isBrowser: boolean;
+  private readonly apiUrl = `//${location.hostname}/ajax/`;
   private playlists: PlaylistDto[] = [];
   private playlistsElementUrl = '';
 
-  constructor(
-    @Inject(PLATFORM_ID) platformId: object,
-    private http: HttpClient,
-  ) {
-    this.isBrowser = isPlatformBrowser(platformId);
-    this.apiUrl = this.isBrowser ? `//${location.hostname}/ajax/` : '';
-    if (this.isBrowser) {
-      this.importFromWindow();
-    }
+  constructor(private http: HttpClient) {
+    this.importFromWindow();
   }
 
   getPlaylists(): PlaylistDto[] {
@@ -43,9 +34,6 @@ export class PlaylistService {
   }
 
   fetchPlaylistIds(elementId: number): Observable<number[]> {
-    if (!this.isBrowser) {
-      return of([]);
-    }
     const params = {id: elementId, action: 'getPlaylistIds'};
     return this.http.get<JsonResponse<PlaylistResponseData>>(this.apiUrl, {params: params as any}).pipe(
       map(response => this.extractPlaylistIds(response.responseData, elementId)),

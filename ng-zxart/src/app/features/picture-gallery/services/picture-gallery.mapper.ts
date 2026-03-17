@@ -3,12 +3,11 @@ import {PictureGalleryItem} from '../models/picture-gallery-item';
 import {ZxPictureDto} from '../../../shared/models/zx-picture-dto';
 
 export function mapPictureToGalleryItem(picture: ZxPictureDto): PictureGalleryItem {
-  const largeUrl = picture.imageLargeUrl ?? picture.imageUrl;
   return {
     id: picture.id,
     title: picture.title,
     thumbUrl: picture.imageUrl,
-    largeUrl,
+    largeUrl: picture.imageUrl,
     detailsUrl: picture.url,
   };
 }

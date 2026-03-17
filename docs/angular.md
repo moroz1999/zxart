@@ -40,6 +40,100 @@ All new functionality in Angular must follow Feature Sliced Design principles an
 - Use design system components and theme variables. Custom CSS is forbidden without direct instruction.
 - Components must be used semantically.
 
+### RxJS and Reactive Data Flow
+
+RxJS is the primary data-flow mechanism in this project. All data fetching and state management MUST be built on Observables. Imperative patterns (calling `load()` / `fetch()` from components) are forbidden.
+
+#### Core Rules
+
+1. **Services own their state.** A service exposes a ready-to-use `readonly observable$`. Components subscribe — they never trigger loading manually.
+2. **`shareReplay` for remote data.** Any Observable backed by an HTTP call MUST use `shareReplay({bufferSize: 1, refCount: false})` so the request is made exactly once and late subscribers get the cached value.
+3. **`BehaviorSubject` for mutable state (preferred).** When a service holds state that can change (e.g. current user, selected item, toggle), use a `BehaviorSubject` as the single state store:
+   ```typescript
+   private readonly store = new BehaviorSubject<T | null>(null);
+   readonly data$ = this.store.asObservable();
+   ```
+   - `null` means "not yet loaded". HTTP is triggered lazily on first subscription via `defer`.
+   - A `loading` boolean flag prevents duplicate in-flight requests.
+   - Mutations (`save`, `login`, `logout`) use `tap(value => this.store.next(value))` in the returned Observable.
+   - Derived observables are built with `map` on top of `data$` — no synchronous getters.
+   - No internal persistent `subscribe()` to maintain a shadow value.
+   - Do **not** use `merge + Subject + shareReplay` for mutable state — it obscures ownership and makes synchronous reads impossible.
+4. **No nested subscribes.** Use `switchMap` / `concatMap` / `mergeMap` to compose asynchronous chains. `subscribe()` inside `subscribe()` is forbidden.
+5. **`tap` for side effects.** Side effects inside an Observable pipeline belong in `tap`, not in `subscribe` callbacks. `subscribe` is only for the final consumer (usually a component).
+6. **Always unsubscribe.** Components MUST collect subscriptions in a `Subscription` and call `unsubscribe()` in `ngOnDestroy`. Never leave a subscription open.
+7. **`catchError` at service level.** HTTP errors must be caught in the service, not in the component. Return a sensible fallback Observable (`of(fallback)`) so the component's stream never errors out permanently.
+8. **`AsyncPipe` preferred in templates.** Use `| async` instead of manual subscriptions when practical — it handles unsubscription automatically.
+
+#### Anti-patterns (FORBIDDEN)
+
+```typescript
+// ✗ public load() called from component — component must never trigger fetching
+load(): void { this.http.get(...).subscribe(...); }
+// ngOnInit: this.service.load(); ← forbidden
+
+// ✗ cold Observable without shareReplay — new request on every subscription
+readonly data$ = this.http.get<T>(this.url);
+
+// ✗ nested subscribe
+this.a$.subscribe(a => this.b$.subscribe(b => ...));
+```
+
+#### Correct Pattern — mutable state (BehaviorSubject store)
+
+```typescript
+// Service
+private readonly store = new BehaviorSubject<CurrentUser | null>(null);
+private loading = false;
+
+// defer() triggers lazy load on first subscription; filter skips null until loaded
+readonly user$: Observable<CurrentUser> = defer(() => {
+  if (this.store.getValue() === null && !this.loading) {
+    this.loadCurrentUser();
+  }
+  return this.store.pipe(filter((u): u is CurrentUser => u !== null));
+});
+
+// Derived observables — no synchronous getters
+readonly isAuthenticated$ = this.user$.pipe(map(u => u.userName !== 'anonymous'));
+readonly userId$ = this.user$.pipe(map(u => u.id));
+
+constructor(private http: HttpClient) {}
+
+// Private — triggered automatically by user$, never called from components
+private loadCurrentUser(): void {
+  this.loading = true;
+  this.http.get<CurrentUser>(this.url).pipe(
+    catchError(() => of(ANONYMOUS_USER)),
+  ).subscribe(user => {
+    this.loading = false;
+    this.store.next(user);
+  });
+}
+
+login(name: string, pass: string): Observable<CurrentUser> {
+  return this.http.post<CurrentUser>(this.url, {name, pass}).pipe(
+    tap(user => this.store.next(user)),
+  );
+}
+
+// Component — subscribes, never triggers loading
+ngOnInit(): void {
+  this.subscription.add(this.service.user$.subscribe(user => this.user = user));
+}
+ngOnDestroy(): void { this.subscription.unsubscribe(); }
+```
+
+#### Correct Pattern — read-only cached data (shareReplay)
+
+```typescript
+// Service — data never changes after initial load
+readonly items$: Observable<Item[]> = this.http.get<Item[]>(this.url).pipe(
+  catchError(() => of([])),
+  shareReplay({bufferSize: 1, refCount: false}),
+);
+```
+
 ### Deprecated Practices
 1. **Material UI**: No new Material imports anywhere. Existing Material usage will be replaced in phases (see design-system.md, section 9).
 2. **Direct Material UI in Design System Primitives**: `shared/ui` form primitives must be implemented with native/custom markup and our theme variables. Material wrappers are transitional and must be removed.

@@ -313,7 +313,9 @@
     <zx-ratings-list element-id="{$element->id}"></zx-ratings-list>
     {if $element->denyVoting}<p>{translations name="zxitem.votingdenied"}</p>{/if}
 
-    {include file=$theme->template('component.pictureslist.tpl') pictures=$element->getPictures() class="game_graphics"}
+    {if $element->getPictures()}
+        <zx-pictures-list element-id="{$element->id}"></zx-pictures-list>
+    {/if}
 
     {if $element->getTunes()}
         <h2>{translations name="zxprod.music"}</h2>

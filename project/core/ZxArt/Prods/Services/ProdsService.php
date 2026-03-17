@@ -451,6 +451,10 @@ class ProdsService extends ElementsManager
         if (!empty($dto->compilationItems)) {
             if (!$element->compilationItems) {
                 foreach ($dto->compilationItems as $importItemId) {
+                    if ($importItemId === null) {
+                        continue;
+                    }
+
                     if ($prodId = $this->importIdOperator->getElementIdByImportId($importItemId, $origin, 'prod')) {
                         $this->linksManager->linkElements($element->getId(), $prodId, 'compilation');
                     } elseif ($releaseId = $this->importIdOperator->getElementIdByImportId($importItemId, $origin, 'release')) {

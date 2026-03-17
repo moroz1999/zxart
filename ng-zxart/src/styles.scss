@@ -51,6 +51,13 @@ $zxart-tree-theme: mat.m2-define-dark-theme((
   opacity: var(--zx-lightbox-backdrop-opacity) !important;
 }
 
+// Shared layout: form column layout (applied via zxForm directive)
+.zx-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-form-gap);
+}
+
 // Shared layout: responsive picture grid (used via zxPicturesGrid directive)
 .pictures-grid {
   display: grid;

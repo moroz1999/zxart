@@ -69,25 +69,7 @@
 
 	<zx-ratings-list element-id="{$element->id}"></zx-ratings-list>
 	{if $element->denyVoting}<p>{translations name="zxitem.votingdenied"}</p>{/if}
-	{stripdomspaces}
-		{if $element->getReleaseElement()}
-			{assign bestPictures $element->getReleaseElement()->getBestPictures(3, $element->id)}
-			{if $bestPictures}
-			<div class="picture_details_more_game gallery_pictures">
-				<h2>{translations name="picture.morefromgame"}</h2>
-				{include file=$theme->template('component.pictureslist.tpl') pictures=$bestPictures}
-			</div>
-			{/if}
-		{else}
-			{assign bestPictures $element->getBestAuthorsPictures(3)}
-			{if $bestPictures}
-			<div class="picture_details_more_author gallery_pictures">
-				<h2>{translations name="picture.morefromauthor"}</h2>
-				{include file=$theme->template('component.pictureslist.tpl') pictures=$bestPictures}
-			</div>
-			{/if}
-		{/if}
-	{/stripdomspaces}
+	<zx-pictures-related picture-id="{$element->id}"></zx-pictures-related>
 {/capture}
 {assign moduleClass "picture_details_block"}
 {assign moduleTitleClass ""}

@@ -1,0 +1,14 @@
+<zx-picture-gallery-host></zx-picture-gallery-host>
+
+<zx-skeleton *ngIf="loading" variant="picture-grid" [count]="6"></zx-skeleton>
+
+<div *ngIf="error" zxCaption>{{ 'firstpage.error' | translate }}</div>
+
+<div *ngIf="!loading && !error && pictures.length > 0" zxPicturesGrid>
+  <zx-picture-card
+    *ngFor="let pic of pictures; let i = index"
+    [picture]="pic"
+    [galleryIndex]="i"
+    [galleryId]="galleryId"
+  ></zx-picture-card>
+</div>

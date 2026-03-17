@@ -1,0 +1,12 @@
+:root {
+  /* Trigger icon size */
+  --zx-language-trigger-icon-size: 20px;
+  /* Popover panel background */
+  --zx-language-trigger-popover-bg: var(--input-bg);
+  /* Popover panel border */
+  --zx-language-trigger-popover-border: var(--border-width-thin) solid var(--border-form);
+  /* Popover panel border radius */
+  --zx-language-trigger-popover-radius: var(--radius-md);
+  /* Popover panel shadow */
+  --zx-language-trigger-popover-shadow: var(--shadow-sm);
+}

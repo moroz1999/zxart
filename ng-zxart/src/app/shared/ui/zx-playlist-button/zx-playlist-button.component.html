@@ -4,7 +4,7 @@
   cdkOverlayOrigin
   #trigger="cdkOverlayOrigin"
   [attr.aria-label]="'playlist.button_label' | translate"
-  [title]="isAuthenticated ? ('playlist.button_label' | translate) : ('playlist.login_required' | translate)"
+  [title]="(isAuthenticated$ | async) ? ('playlist.button_label' | translate) : ('playlist.login_required' | translate)"
   (click)="togglePopover($event)"
 >
   <mat-icon class="playlist-icon">favorite_border</mat-icon>

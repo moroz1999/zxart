@@ -1,75 +1,28 @@
 <?php
 
-use App\Users\CurrentUser;
-
 class PicturesModesManager
 {
-    /**
-     * @var CurrentUser
-     */
-    protected $user;
-    protected $mode;
-
-    /**
-     * @param CurrentUser $user
-     */
-    public function setUser($user): void
+    public function getModeInfo(): array
     {
-        $this->user = $user;
+        return [
+            'mode' => 'mix',
+            'border' => '1',
+            'hidden' => '0',
+        ];
     }
 
-    public function getModeInfo()
+    public function getMode(): string
     {
-        if ($this->mode === null) {
-            $controller = controller::getInstance();
-            $this->mode = [];
-
-            if ($controller->getParameter('mode') !== false) {
-                $this->mode['mode'] = $controller->getParameter('mode');
-                $this->user->setStorageAttribute('mode', $this->mode['mode']);
-            } elseif ($gMode = $this->user->getStorageAttribute('mode')) {
-                $this->mode['mode'] = $gMode;
-            }
-            if ($controller->getParameter('border') !== false) {
-                $this->mode['border'] = $controller->getParameter('border');
-                $this->user->setStorageAttribute('border', $this->mode['border']);
-            } elseif (($border = $this->user->getStorageAttribute('border')) !== false) {
-                $this->mode['border'] = $border;
-            }
-            if ($controller->getParameter('hidden') !== false) {
-                $this->mode['hidden'] = $controller->getParameter('hidden');
-                $this->user->setStorageAttribute('hidden', $this->mode['hidden']);
-            } elseif ($hidden = $this->user->getStorageAttribute('hidden')) {
-                $this->mode['hidden'] = $hidden;
-            }
-            if (!isset($this->mode['mode'])) {
-                $this->mode['mode'] = 'mix';
-            }
-            if (!isset($this->mode['border'])) {
-                $this->mode['border'] = '1';
-            }
-            if (!isset($this->mode['hidden'])) {
-                $this->mode['hidden'] = '0';
-            }
-            if ($this->mode['hidden'] == '1') {
-                $this->mode['border'] = '1';
-            }
-        }
-        return $this->mode;
+        return 'mix';
     }
 
-    public function getMode()
+    public function getBorder(): string
     {
-        return $this->getModeInfo()['mode'];
+        return '1';
     }
 
-    public function getBorder()
+    public function getHidden(): string
     {
-        return $this->getModeInfo()['border'];
-    }
-
-    public function getHidden()
-    {
-        return $this->getModeInfo()['hidden'];
+        return '0';
     }
 }

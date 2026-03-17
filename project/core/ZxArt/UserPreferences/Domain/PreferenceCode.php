@@ -39,6 +39,11 @@ enum PreferenceCode: string
     // Radio
     case RADIO_CRITERIA = 'radio_criteria';
 
+    // Picture display settings
+    case PICTURE_MODE = 'picture_mode';
+    case PICTURE_BORDER = 'picture_border';
+    case PICTURE_HIDDEN = 'picture_hidden';
+
     // Interface language
     case LANGUAGE = 'language';
 }

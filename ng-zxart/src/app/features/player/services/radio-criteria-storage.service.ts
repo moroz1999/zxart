@@ -1,6 +1,5 @@
-import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
-import {isPlatformBrowser} from '@angular/common';
-import {map, Observable, of, switchMap} from 'rxjs';
+import {Injectable} from '@angular/core';
+import {map, Observable, of, switchMap, take} from 'rxjs';
 import {EMPTY_RADIO_CRITERIA, RadioCriteria} from '../models/radio-criteria';
 import {UserPreferencesService} from '../../settings/services/user-preferences.service';
 import {CurrentUserService} from '../../../shared/services/current-user.service';
@@ -12,21 +11,13 @@ const PREF_CODE = 'radio_criteria';
   providedIn: 'root'
 })
 export class RadioCriteriaStorageService {
-  private readonly isBrowser: boolean;
-
   constructor(
     private userPreferencesService: UserPreferencesService,
     private currentUserService: CurrentUserService,
-    @Inject(PLATFORM_ID) platformId: object,
-  ) {
-    this.isBrowser = isPlatformBrowser(platformId);
-  }
+  ) {}
 
   loadCriteria(): Observable<RadioCriteria> {
-    if (!this.isBrowser) {
-      return of(EMPTY_RADIO_CRITERIA);
-    }
-    return this.currentUserService.loadUser().pipe(
+    return this.currentUserService.user$.pipe(take(1),
       switchMap((user) => {
         if (user && user.userName !== 'anonymous') {
           return this.userPreferencesService.syncFromServer().pipe(
@@ -39,10 +30,7 @@ export class RadioCriteriaStorageService {
   }
 
   saveCriteria(criteria: RadioCriteria): Observable<void> {
-    if (!this.isBrowser) {
-      return of(undefined);
-    }
-    return this.currentUserService.loadUser().pipe(
+    return this.currentUserService.user$.pipe(take(1),
       switchMap((user) => {
         if (user && user.userName !== 'anonymous') {
           return this.userPreferencesService.setPreference(PREF_CODE, JSON.stringify(criteria)).pipe(

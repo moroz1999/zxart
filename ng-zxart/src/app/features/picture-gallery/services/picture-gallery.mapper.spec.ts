@@ -7,6 +7,11 @@ describe('pictureGalleryMapper', () => {
     title: 'Picture',
     url: '/pictures/42/',
     imageUrl: '/thumb.png',
+    fileId: 1,
+    type: 'standard',
+    pictureBorder: 1,
+    palette: 'srgb',
+    rotation: null,
     year: null,
     authors: [],
     party: null,
@@ -20,18 +25,10 @@ describe('pictureGalleryMapper', () => {
     commentsAmount: 0,
   };
 
-  it('uses large image url when provided', () => {
-    const item = mapPictureToGalleryItem({
-      ...basePicture,
-      imageLargeUrl: '/large.png',
-    });
-
-    expect(item.largeUrl).toBe('/large.png');
-  });
-
-  it('falls back to imageUrl when large url is missing', () => {
+  it('uses imageUrl for both thumb and large', () => {
     const item = mapPictureToGalleryItem(basePicture);
 
+    expect(item.thumbUrl).toBe('/thumb.png');
     expect(item.largeUrl).toBe('/thumb.png');
   });
 });

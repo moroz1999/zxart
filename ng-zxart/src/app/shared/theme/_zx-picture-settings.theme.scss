@@ -1,0 +1,11 @@
+:root {
+  /* Trigger icon size */
+  --zx-picture-settings-icon-size: 20px;
+
+  /* Popover panel */
+  --zx-picture-settings-popover-bg: var(--input-bg);
+  --zx-picture-settings-popover-border: var(--border-width-thin) solid var(--border-form);
+  --zx-picture-settings-popover-radius: var(--radius-md);
+  --zx-picture-settings-popover-shadow: var(--shadow-sm);
+  --zx-picture-settings-popover-min-width: 200px;
+}

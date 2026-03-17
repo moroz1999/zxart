@@ -1,7 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
-import {take} from 'rxjs';
-import {CurrentUserService} from './shared/services/current-user.service';
 
 @Component({
     selector: 'app-root',
@@ -18,9 +16,7 @@ export class AppComponent implements OnInit {
 
     constructor(
         public translate: TranslateService,
-        private currentUserService: CurrentUserService,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         if (this.language && this.languages[this.language]) {
@@ -28,7 +24,6 @@ export class AppComponent implements OnInit {
             this.translate.addLangs([language]);
             this.translate.setDefaultLang(language);
         }
-        this.currentUserService.loadUser().pipe(take(1)).subscribe();
     }
 
 

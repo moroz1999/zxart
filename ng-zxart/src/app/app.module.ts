@@ -39,6 +39,17 @@ import {AuthorTunesComponent} from './features/author-tunes/components/author-tu
 import {ZxVoteComponent} from './shared/ui/zx-vote/zx-vote.component';
 import {ZxMusicListComponent} from './features/music-list/components/zx-music-list/zx-music-list.component';
 import {ZxItemLegacyControlsComponent} from './shared/ui/zx-item-legacy-controls/zx-item-legacy-controls.component';
+import {
+  PictureSettingsTriggerComponent
+} from './features/picture-settings/components/picture-settings-trigger/picture-settings-trigger.component';
+import {AuthorPicturesComponent} from './features/author-pictures/components/author-pictures/author-pictures.component';
+import {ZxPicturesListComponent} from './features/picture-list/components/zx-pictures-list/zx-pictures-list.component';
+import {
+  ZxPicturesRelatedComponent
+} from './features/picture-list/components/zx-pictures-related/zx-pictures-related.component';
+import {LanguageTriggerComponent} from './features/header/components/language-trigger/language-trigger.component';
+import {ThemeTriggerComponent} from './features/header/components/theme-trigger/theme-trigger.component';
+import {LoginTriggerComponent} from './features/header/components/login-trigger/login-trigger.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -103,6 +114,13 @@ export class AppModule implements DoBootstrap  {
             'zx-vote': ZxVoteComponent,
             'zx-item-legacy-controls': ZxItemLegacyControlsComponent,
             'zx-music-list': ZxMusicListComponent,
+            'zx-picture-settings-trigger': PictureSettingsTriggerComponent,
+            'zx-author-pictures': AuthorPicturesComponent,
+            'zx-pictures-list': ZxPicturesListComponent,
+            'zx-pictures-related': ZxPicturesRelatedComponent,
+            'zx-language-trigger': LanguageTriggerComponent,
+            'zx-theme-trigger': ThemeTriggerComponent,
+            'zx-login-trigger': LoginTriggerComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});

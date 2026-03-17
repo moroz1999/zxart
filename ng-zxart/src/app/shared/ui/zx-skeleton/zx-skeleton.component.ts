@@ -14,6 +14,7 @@ export class ZxSkeletonComponent {
   @Input() variant: SkeletonVariant = 'card';
   @Input() count = 5;
   @Input() animated = true;
+  @Input() lineHeight = '16px';
 
   get items(): number[] {
     return Array.from({length: this.count}, (_, i) => i);

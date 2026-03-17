@@ -1,5 +1,5 @@
-import {Component, Inject, Input, OnInit, PLATFORM_ID, signal} from '@angular/core';
-import {CommonModule, isPlatformBrowser} from '@angular/common';
+import {Component, Input, OnInit, signal} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {CommentsService} from '../../services/comments.service';
 import {CommentsListDto} from '../../models/comment.dto';
@@ -34,14 +34,7 @@ export class CommentsPageComponent implements OnInit {
   paginationLoading = signal(false);
   currentPage = signal(1);
 
-  private readonly isBrowser: boolean;
-
-  constructor(
-    private commentsService: CommentsService,
-    @Inject(PLATFORM_ID) platformId: object
-  ) {
-    this.isBrowser = isPlatformBrowser(platformId);
-  }
+  constructor(private commentsService: CommentsService) {}
 
   ngOnInit(): void {
     const page = this.parsePageFromUrl();
@@ -82,9 +75,6 @@ export class CommentsPageComponent implements OnInit {
   }
 
   private parsePageFromUrl(): number {
-    if (!this.isBrowser) {
-      return 1;
-    }
     const path = window.location.pathname;
     const match = path.match(/\/page:(\d+)/);
     if (match) {
@@ -95,9 +85,6 @@ export class CommentsPageComponent implements OnInit {
   }
 
   private updateUrl(page: number): void {
-    if (!this.isBrowser) {
-      return;
-    }
     const currentPath = window.location.pathname;
     const cleanPath = currentPath.replace(/\/page:\d+\/?/, '');
     const basePath = cleanPath.endsWith('/') ? cleanPath : cleanPath + '/';
