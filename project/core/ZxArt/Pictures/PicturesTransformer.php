@@ -37,7 +37,7 @@ readonly class PicturesTransformer
         $userVote = $element->getUserVote();
         $baseUrl = (string)controller::getInstance()->baseURL;
         $pictureType = $element->type;
-        $pictureBorder = $element->border;
+        $pictureBorder = (int)$element->border;
         $palette = $element->getPalette();
         $rotation = $element->rotation > 0 ? $element->rotation : null;
 

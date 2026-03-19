@@ -1,0 +1,17 @@
+:root {
+  /* Item padding */
+  --zx-menu-block-item-padding: var(--space-8) var(--space-12);
+  /* Item border radius */
+  --zx-menu-block-item-radius: var(--radius-sm);
+  /* Item hover background */
+  --zx-menu-block-item-hover-bg: var(--secondary-200);
+  /* Item font size */
+  --zx-menu-block-item-font-size: var(--zx-font-size-md);
+  /* Popover panel — inherits from shared header popover theme */
+  --zx-menu-block-popover-bg: var(--zx-header-popover-bg);
+  --zx-menu-block-popover-border: var(--zx-header-popover-border);
+  --zx-menu-block-popover-radius: var(--zx-header-popover-radius);
+  --zx-menu-block-popover-shadow: var(--zx-header-popover-shadow);
+  /* Minimum width of the popover */
+  --zx-menu-block-popover-min-width: 180px;
+}

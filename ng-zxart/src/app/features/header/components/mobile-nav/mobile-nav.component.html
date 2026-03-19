@@ -1,0 +1,40 @@
+<zx-button
+  color="transparent"
+  [square]="true"
+  [ariaLabel]="'header.mobile-nav.open' | translate"
+  (click)="open()"
+>
+  <svg-icon name="menu" class="mn-icon"></svg-icon>
+</zx-button>
+
+@if (isOpen) {
+  <div class="mn-backdrop" [@backdrop] (click)="close()"></div>
+  <nav class="mn-drawer" [@drawer] (click)="$event.stopPropagation()">
+    <div class="mn-drawer-header">
+      <zx-button
+        color="transparent"
+        [square]="true"
+        [ariaLabel]="'header.mobile-nav.close' | translate"
+        (click)="close()"
+      >
+        <svg-icon name="mn-x" class="mn-icon"></svg-icon>
+      </zx-button>
+    </div>
+    <div class="mn-items">
+      @for (item of items; track item.id) {
+        <zx-popover-menu-item [href]="item.url" [active]="isActive(item)">
+          {{ item.title }}
+        </zx-popover-menu-item>
+        @if (item.children.length > 0 && isActive(item)) {
+          <div class="mn-submenu">
+            @for (child of item.children; track child.id) {
+              <zx-popover-menu-item [href]="child.url">
+                {{ child.title }}
+              </zx-popover-menu-item>
+            }
+          </div>
+        }
+      }
+    </div>
+  </nav>
+}

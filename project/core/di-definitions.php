@@ -22,10 +22,12 @@ use ZxArt\Controllers\Rss;
 use ZxArt\Controllers\Socialpost;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Logs\Log;
+use ZxArt\Menu\MenuService;
 use ZxArt\Prods\Services\ProdsService;
 use ZxArt\Ratings\RatingsService;
 use ZxArt\Social\SocialPostsService;
 use ZxArt\Telegram\PostService;
+use ZxArt\Users\AuthorPageUrlProvider;
 use function DI\autowire;
 use function DI\factory;
 
@@ -35,6 +37,11 @@ return [
     AuthorshipRepository::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     RatingsService::class => autowire()
+        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
+
+    AuthorPageUrlProvider::class => autowire()
+        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
+    MenuService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
 
     // Controllers with publicStructureManager

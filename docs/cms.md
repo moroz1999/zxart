@@ -26,7 +26,7 @@ In future we will get rid of this unsupported CMS by incorporating its functiona
 - /trickster-cms/cms/core/di-definitions.php - core PHP-DI definitions shared by all packages (SM factories, DB, languages, etc.).
 - /trickster-cms/homepage/core/di-definitions.php - PHP-DI definitions for the homepage package.
 - ./tests/ - phpunit tests. All new functionality should be covered by tests.
-- Never access anything inside `temporary`. It contains cache files (e.g., template cache, bundle cache).
+- `temporary/` contains cache and runtime files. Do not read cache files, but **`temporary/logs/`** is where application logs are stored (e.g., `temporary/logs/YYYY-MM-DD.log` for daily error logs, `temporary/logs/db_*.log` for DB logs).
 
 ## Terminology
 - **`controller`** — the bootstrap singleton (`controller.class.php`, `controller::getInstance()`). Initializes the request, builds the DI container, and dispatches to the application.

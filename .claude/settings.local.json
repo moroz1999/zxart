@@ -80,7 +80,16 @@
       "Bash(vendor/bin/phpunit.bat:*)",
       "mcp__jetbrains__execute_run_configuration",
       "mcp__jetbrains__find_files_by_glob",
-      "Bash(docker exec:*)"
+      "Bash(docker exec:*)",
+      "Bash(git log:*)",
+      "Bash(while read:*)",
+      "Bash(do git:*)",
+      "Bash(echo $hash)",
+      "Bash(break)",
+      "Bash(git ls-tree:*)",
+      "Bash(git -C E:/projects/zxart submodule status trickster-cms)",
+      "Bash(git -C E:/projects/zxart ls-files --error-unmatch trickster-cms/homepage/css/public/application.less)",
+      "Bash(git -C E:/projects/zxart submodule status)"
     ]
   },
   "enabledPlugins": {

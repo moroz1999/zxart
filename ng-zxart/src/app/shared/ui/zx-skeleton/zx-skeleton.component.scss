@@ -125,6 +125,10 @@
   grid-template-columns: repeat(auto-fill, 256px);
   justify-content: space-between;
   gap: var(--space-32) var(--space-16);
+
+  @include breakpoints.media-breakpoint-down(sm) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .skeleton-prod-card {
@@ -156,10 +160,13 @@
   grid-template-columns: repeat(auto-fill, 320px);
   justify-content: space-between;
   gap: var(--space-32) var(--space-16);
+
+  @include breakpoints.media-breakpoint-down(sm) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .skeleton-picture-card {
-  width: 320px;
   display: flex;
   flex-direction: column;
   background: var(--color-surface);

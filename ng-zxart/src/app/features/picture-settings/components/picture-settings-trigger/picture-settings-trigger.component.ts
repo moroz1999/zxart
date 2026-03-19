@@ -8,6 +8,7 @@ import {PictureSettingsService} from '../../services/picture-settings.service';
 import {PictureMode, PictureSettings} from '../../models/picture-settings';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxBodySmMutedDirective} from '../../../../shared/directives/typography/typography.directives';
+import {ZxHeaderPopoverComponent} from '../../../../shared/ui/zx-header-popover/zx-header-popover.component';
 import {environment} from '../../../../../environments/environment';
 
 @Component({
@@ -21,6 +22,7 @@ import {environment} from '../../../../../environments/environment';
     CdkOverlayOrigin,
     ZxButtonComponent,
     ZxBodySmMutedDirective,
+    ZxHeaderPopoverComponent,
   ],
   templateUrl: './picture-settings-trigger.component.html',
   styleUrls: ['./picture-settings-trigger.component.scss'],

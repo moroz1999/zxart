@@ -2,15 +2,18 @@
 /*  HEADER BLOCK
 /********************************************************/
 .header_block {
-  position: relative;
+  position: sticky;
   background-color: var(--header-bg);
   z-index: 5;
-  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 
 .header_inner {
   padding: var(--header-padding);
   display: flex;
+  align-items: center;
   justify-content: space-between;
   width: 100%;
   max-width: var(--layout-max-width);
@@ -20,16 +23,29 @@
 
 .header_column {
   margin: var(--header-column-margin);
+
+  @media (max-width: 991.98px) {
+    margin: 0;
+  }
 }
 
 .logo_block {
   position: relative;
-  margin-top: var(--logo-margin-top);
   color: inherit;
   text-decoration: none;
   display: block;
+
+  img {
+    height: 35px;
+  }
 }
 
 .settings_block {
   font-size: var(--settings-font-size);
+}
+
+.menu_block {
+  @media (max-width: 991.98px) {
+    display: none;
+  }
 }

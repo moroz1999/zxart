@@ -1,0 +1,24 @@
+:host {
+  display: flex;
+  align-items: stretch;
+}
+
+.mb-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: var(--space-8);
+}
+
+zx-button {
+  --zx-button-border-radius: var(--radius-lg);
+}
+
+.mb-popover {
+  min-width: var(--zx-menu-block-popover-min-width);
+
+  &--two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}

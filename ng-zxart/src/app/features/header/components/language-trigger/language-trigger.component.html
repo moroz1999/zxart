@@ -7,7 +7,7 @@
   [attr.aria-expanded]="popoverOpen"
   (click)="togglePopover($event)"
 >
-  <svg-icon name="globe" class="lt-icon"></svg-icon>
+  <span class="lt-flag">{{ activeLanguage?.flag }}</span>
   <span class="lt-label">{{ activeLanguage?.title }}</span>
 </zx-button>
 
@@ -21,12 +21,11 @@
   (backdropClick)="closePopover()"
   (overlayKeydown)="onOverlayKeydown($event)"
 >
-  <div class="lt-popover" (click)="$event.stopPropagation()">
-    <zx-button
+  <zx-header-popover (click)="$event.stopPropagation()">
+    <zx-popover-menu-item
       *ngFor="let lang of languages"
-      size="sm"
-      [color]="lang.active ? 'primary' : 'transparent'"
       [href]="lang.url"
-    >{{ lang.title }}</zx-button>
-  </div>
+      [active]="lang.active"
+    >{{ lang.flag }} {{ lang.title }}</zx-popover-menu-item>
+  </zx-header-popover>
 </ng-template>

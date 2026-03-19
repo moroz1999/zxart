@@ -1,0 +1,12 @@
+:root {
+  /* Font size for menu item links */
+  --zx-popover-menu-item-font-size: var(--font-md);
+  /* Padding for each menu item link */
+  --zx-popover-menu-item-padding: var(--space-8) var(--space-12);
+  /* Border radius of each item */
+  --zx-popover-menu-item-radius: var(--radius-sm);
+  /* Background on hover */
+  --zx-popover-menu-item-hover-bg: var(--secondary-200);
+  /* Background for active item */
+  --zx-popover-menu-item-active-bg: var(--secondary-200);
+}

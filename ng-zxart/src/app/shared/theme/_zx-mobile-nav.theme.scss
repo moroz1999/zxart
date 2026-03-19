@@ -1,0 +1,16 @@
+:root {
+  /* Icon size for hamburger and close buttons */
+  --zx-mobile-nav-icon-size: 20px;
+  /* Z-index base for the backdrop */
+  --zx-mobile-nav-z-index: 100;
+  /* Drawer panel width */
+  --zx-mobile-nav-drawer-width: 300px;
+  /* Drawer background color */
+  --zx-mobile-nav-drawer-bg: var(--zx-panel-bg);
+  /* Drawer drop shadow */
+  --zx-mobile-nav-drawer-shadow: var(--shadow-lg);
+  /* Left border accent for the submenu section */
+  --zx-mobile-nav-submenu-border: 2px solid var(--primary-500);
+  /* Backdrop overlay color */
+  --zx-mobile-nav-backdrop-bg: var(--overlay-bg);
+}

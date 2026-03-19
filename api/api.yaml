@@ -15,6 +15,8 @@ paths:
     $ref: 'firstpage.yaml#/paths/~1firstpage~1?action=catalogueBaseUrls'
   /userpreferences/:
     $ref: 'user-preferences.yaml#/paths/~1userpreferences~1'
+  /menu/:
+    $ref: 'menu.yaml#/paths/~1menu~1'
 components:
   schemas:
     CommentDto:

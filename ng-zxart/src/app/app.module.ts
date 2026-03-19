@@ -50,6 +50,8 @@ import {
 import {LanguageTriggerComponent} from './features/header/components/language-trigger/language-trigger.component';
 import {ThemeTriggerComponent} from './features/header/components/theme-trigger/theme-trigger.component';
 import {LoginTriggerComponent} from './features/header/components/login-trigger/login-trigger.component';
+import {MenuBlockComponent} from './features/menu/components/menu-block/menu-block.component';
+import {MobileNavComponent} from './features/header/components/mobile-nav/mobile-nav.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -121,6 +123,8 @@ export class AppModule implements DoBootstrap  {
             'zx-language-trigger': LanguageTriggerComponent,
             'zx-theme-trigger': ThemeTriggerComponent,
             'zx-login-trigger': LoginTriggerComponent,
+            'zx-menu-block': MenuBlockComponent,
+            'zx-mobile-nav': MobileNavComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});

@@ -20,14 +20,22 @@
   (backdropClick)="closePopover()"
   (overlayKeydown)="onOverlayKeydown($event)"
 >
-  <div class="lt-popover" (click)="$event.stopPropagation()">
+  <zx-header-popover class="lt-popover" (click)="$event.stopPropagation()">
+    <div class="lt-content">
 
     <ng-container *ngIf="isLoggedIn; else loginForm">
-      <a *ngIf="user?.profileUrl; else plainName" [href]="user!.profileUrl" class="lt-user-name" zxBodySmMuted>{{ user?.userName }}</a>
-      <ng-template #plainName>
-        <div class="lt-user-name" zxBodySmMuted>{{ user?.userName }}</div>
-      </ng-template>
-      <a *ngIf="user?.playlistsUrl" [href]="user!.playlistsUrl" class="lt-link" zxLink>{{ 'login.playlists' | translate }}</a>
+      <div class="lt-user-name" zxBodySmMuted>{{ user?.userName }}</div>
+      <div class="lt-menu-items">
+        <zx-popover-menu-item *ngIf="user?.profileUrl" [href]="user!.profileUrl!">
+          {{ 'login.account' | translate }}
+        </zx-popover-menu-item>
+        <zx-popover-menu-item *ngIf="user?.playlistsUrl" [href]="user!.playlistsUrl!">
+          {{ 'login.favourites' | translate }}
+        </zx-popover-menu-item>
+        <zx-popover-menu-item *ngIf="user?.authorPageUrl" [href]="user!.authorPageUrl!">
+          {{ 'login.my-page' | translate }}
+        </zx-popover-menu-item>
+      </div>
       <zx-button size="sm" color="outlined" (click)="submitLogout()">
         {{ 'login.logout' | translate }}
       </zx-button>
@@ -91,5 +99,6 @@
       </form>
     </ng-template>
 
-  </div>
+    </div>
+  </zx-header-popover>
 </ng-template>

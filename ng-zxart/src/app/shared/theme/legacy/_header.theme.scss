@@ -1,9 +1,17 @@
+@use 'shared/breakpoints' as bp;
+
 :root {
   /* Header */
   --header-padding: var(--space-8) var(--space-16);
-  --header-column-margin: 0 var(--space-32);
-  --logo-margin-top: var(--space-16);
+  --header-column-margin: 0 0 0 var(--space-32);
   --settings-font-size: var(--font-sm);
+}
+
+@include bp.media-breakpoint-down(md) {
+  :root {
+    /* Halved header padding on mobile */
+    --header-padding: var(--space-4) var(--space-8);
+  }
 }
 
 .dark-mode {

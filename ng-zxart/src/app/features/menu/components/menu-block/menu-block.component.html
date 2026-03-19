@@ -1,0 +1,40 @@
+<nav class="mb-nav" role="navigation">
+  <ng-container *ngFor="let item of items">
+    <ng-container *ngIf="item.children.length > 0">
+      <zx-button
+        cdkOverlayOrigin
+        #trigger="cdkOverlayOrigin"
+        [color]="isActive(item) ? 'outlined' : 'transparent'"
+        [attr.aria-expanded]="isPopoverOpen(item)"
+        (pointerenter)="openItem(item, trigger.elementRef.nativeElement)"
+        (pointerleave)="scheduleClose()"
+      >{{ item.title }}</zx-button>
+
+      <ng-template
+        cdkConnectedOverlay
+        [cdkConnectedOverlayOrigin]="trigger"
+        [cdkConnectedOverlayOpen]="isPopoverOpen(item)"
+        [cdkConnectedOverlayPositions]="positions"
+        [cdkConnectedOverlayMinWidth]="activeTriggerWidth"
+        [cdkConnectedOverlayHasBackdrop]="false"
+      >
+        <zx-header-popover
+          class="mb-popover"
+          [class.mb-popover--two-col]="item.children.length > 10"
+          (pointerenter)="cancelClose()"
+          (pointerleave)="scheduleClose()"
+        >
+          <zx-popover-menu-item *ngFor="let child of item.children" [href]="child.url">
+            {{ child.title }}
+          </zx-popover-menu-item>
+        </zx-header-popover>
+      </ng-template>
+    </ng-container>
+
+    <zx-button
+      *ngIf="item.children.length === 0"
+      [color]="isActive(item) ? 'outlined' : 'transparent'"
+      [href]="item.url"
+    >{{ item.title }}</zx-button>
+  </ng-container>
+</nav>

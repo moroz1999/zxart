@@ -1,0 +1,10 @@
+:root {
+  /* Shared background for all header popovers — uses panel color (theme-aware) */
+  --zx-header-popover-bg: var(--zx-panel-bg);
+  /* Shared border */
+  --zx-header-popover-border: none;
+  /* Shared border radius */
+  --zx-header-popover-radius: var(--radius-xl);
+  /* Shared shadow */
+  --zx-header-popover-shadow: var(--shadow-lg);
+}

@@ -10,15 +10,22 @@
 
 .lt-popover {
   min-width: var(--zx-login-trigger-popover-min-width);
-  background-color: var(--zx-login-trigger-popover-bg);
-  border: var(--zx-login-trigger-popover-border);
-  border-radius: var(--zx-login-trigger-popover-radius);
-  box-shadow: var(--zx-login-trigger-popover-shadow);
-  padding: var(--space-16);
+}
+
+.lt-content {
+  padding: 0 var(--space-16) var(--space-12);
 }
 
 .lt-user-name {
   margin-bottom: var(--space-8);
+}
+
+.lt-menu-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-4);
 }
 
 .lt-error {

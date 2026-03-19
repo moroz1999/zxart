@@ -75,12 +75,15 @@ class Languages extends controllerApplication
             }
         }
 
+        $flagMap = ['en' => '🇬🇧', 'ru' => '🇷🇺', 'es' => '🇪🇸'];
+
         $result = [];
         foreach ($languages as $language) {
             $url = $languageLinks[$language->iso6391] ?? '/' . $language->iso6393 . '/';
 
             $result[] = [
                 'title' => $language->title,
+                'flag' => $flagMap[$language->iso6391] ?? '',
                 'url' => $url,
                 'active' => $language->iso6393 === $activeLanguageCode,
             ];

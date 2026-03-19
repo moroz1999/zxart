@@ -2,11 +2,11 @@
   /* Trigger icon size */
   --zx-login-trigger-icon-size: 20px;
 
-  /* Popover panel */
-  --zx-login-trigger-popover-bg: var(--input-bg);
-  --zx-login-trigger-popover-border: var(--border-width-thin) solid var(--border-form);
-  --zx-login-trigger-popover-radius: var(--radius-md);
-  --zx-login-trigger-popover-shadow: var(--shadow-sm);
+  /* Popover panel — inherits from shared header popover theme */
+  --zx-login-trigger-popover-bg: var(--zx-header-popover-bg);
+  --zx-login-trigger-popover-border: var(--zx-header-popover-border);
+  --zx-login-trigger-popover-radius: var(--zx-header-popover-radius);
+  --zx-login-trigger-popover-shadow: var(--zx-header-popover-shadow);
   --zx-login-trigger-popover-min-width: 220px;
 
   /* Form labels */

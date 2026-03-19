@@ -10,6 +10,8 @@ import {CurrentUser} from '../../../../shared/models/current-user';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxFormDirective} from '../../../../shared/directives/form/zx-form.directive';
 import {ZxBodySmMutedDirective, ZxLinkDirective} from '../../../../shared/directives/typography/typography.directives';
+import {ZxPopoverMenuItemComponent} from '../../../../shared/ui/zx-popover-menu-item/zx-popover-menu-item.component';
+import {ZxHeaderPopoverComponent} from '../../../../shared/ui/zx-header-popover/zx-header-popover.component';
 import {environment} from '../../../../../environments/environment';
 
 @Component({
@@ -26,6 +28,8 @@ import {environment} from '../../../../../environments/environment';
     ZxFormDirective,
     ZxBodySmMutedDirective,
     ZxLinkDirective,
+    ZxPopoverMenuItemComponent,
+    ZxHeaderPopoverComponent,
   ],
   templateUrl: './login-trigger.component.html',
   styleUrls: ['./login-trigger.component.scss'],

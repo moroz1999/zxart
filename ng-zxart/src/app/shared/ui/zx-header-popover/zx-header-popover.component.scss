@@ -1,0 +1,10 @@
+:host {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--space-4) 0;
+  background-color: var(--zx-header-popover-bg);
+  border: var(--zx-header-popover-border);
+  border-radius: var(--zx-header-popover-radius);
+  box-shadow: var(--zx-header-popover-shadow);
+}

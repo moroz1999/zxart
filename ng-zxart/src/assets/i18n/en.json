@@ -179,7 +179,7 @@
   },
   "firstpage": {
     "title": "Games, Demoscene, Graphics & Music of ZX Spectrum",
-    "configure": "Configure",
+    "configure": "Configure homepage",
     "viewAll": "View all",
     "loading": "Loading...",
     "error": "Failed to load data.",
@@ -347,6 +347,10 @@
     },
     "theme-trigger": {
       "label": "Toggle theme"
+    },
+    "mobile-nav": {
+      "open": "Open navigation menu",
+      "close": "Close navigation menu"
     }
   },
   "login": {
@@ -360,7 +364,10 @@
     "register": "Register",
     "forgot-password": "Forgot password?",
     "error": "Invalid username or password",
-    "playlists": "My playlists"
+    "playlists": "My playlists",
+    "account": "Account",
+    "favourites": "My favourites",
+    "my-page": "My page"
   },
   "picture-settings": {
     "trigger-label": "Picture settings",

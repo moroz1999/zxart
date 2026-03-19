@@ -179,7 +179,7 @@
   },
   "firstpage": {
     "title": "Juegos, Demoscene, Graficos y Musica de ZX Spectrum",
-    "configure": "Configurar",
+    "configure": "Configurar página principal",
     "viewAll": "Ver todo",
     "loading": "Cargando...",
     "error": "No se pudieron cargar los datos.",
@@ -346,6 +346,10 @@
     },
     "theme-trigger": {
       "label": "Cambiar tema"
+    },
+    "mobile-nav": {
+      "open": "Abrir menú de navegación",
+      "close": "Cerrar menú de navegación"
     }
   },
   "login": {
@@ -359,7 +363,10 @@
     "register": "Registrarse",
     "forgot-password": "¿Olvidó su contraseña?",
     "error": "Usuario o contraseña incorrectos",
-    "playlists": "Mis listas"
+    "playlists": "Mis listas",
+    "account": "Cuenta",
+    "favourites": "Mis favoritos",
+    "my-page": "Mi página"
   },
   "picture-settings": {
     "trigger-label": "Configuración de imágenes",

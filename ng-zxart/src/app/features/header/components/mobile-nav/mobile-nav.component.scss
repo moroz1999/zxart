@@ -1,0 +1,54 @@
+@use 'shared/breakpoints' as bp;
+
+:host {
+  display: none;
+  align-items: center;
+
+  @include bp.media-breakpoint-down(lg) {
+    display: flex;
+  }
+}
+
+.mn-icon {
+  width: var(--zx-mobile-nav-icon-size);
+  height: var(--zx-mobile-nav-icon-size);
+}
+
+.mn-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: var(--zx-mobile-nav-backdrop-bg);
+  z-index: var(--zx-mobile-nav-z-index);
+}
+
+.mn-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--zx-mobile-nav-drawer-width);
+  max-width: 100vw;
+  background-color: var(--zx-mobile-nav-drawer-bg);
+  box-shadow: var(--zx-mobile-nav-drawer-shadow);
+  z-index: calc(var(--zx-mobile-nav-z-index) + 1);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.mn-drawer-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--space-8);
+}
+
+.mn-items {
+  padding: var(--space-8) 0;
+}
+
+.mn-submenu {
+  padding-left: var(--space-16);
+  border-left: var(--zx-mobile-nav-submenu-border);
+  margin-left: var(--space-12);
+  margin-bottom: var(--space-8);
+}

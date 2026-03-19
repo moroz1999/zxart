@@ -11,6 +11,7 @@ const ANONYMOUS_USER: CurrentUser = {
   passwordReminderUrl: null,
   profileUrl: null,
   playlistsUrl: null,
+  authorPageUrl: null,
 };
 
 @Injectable({

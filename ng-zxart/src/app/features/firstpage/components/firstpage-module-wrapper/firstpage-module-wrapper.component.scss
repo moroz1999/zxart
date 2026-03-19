@@ -1,9 +1,15 @@
+@use 'shared/breakpoints' as bp;
+
 .module-title {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: var(--space-8);
   margin-bottom: var(--space-12);
+
+  @include bp.media-breakpoint-down(md) {
+    justify-content: space-between;
+  }
 }
 
 .module-title__text {

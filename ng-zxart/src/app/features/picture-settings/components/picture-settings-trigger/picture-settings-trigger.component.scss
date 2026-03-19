@@ -10,14 +10,13 @@
 
 .ps-popover {
   min-width: var(--zx-picture-settings-popover-min-width);
-  background-color: var(--zx-picture-settings-popover-bg);
-  border: var(--zx-picture-settings-popover-border);
-  border-radius: var(--zx-picture-settings-popover-radius);
-  box-shadow: var(--zx-picture-settings-popover-shadow);
-  padding: var(--space-12);
+}
+
+.ps-content {
   display: flex;
   flex-direction: column;
   gap: var(--space-12);
+  padding: var(--space-8) var(--space-12);
 }
 
 .ps-section {

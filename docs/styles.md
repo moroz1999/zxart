@@ -127,6 +127,19 @@ Components that need a specific size without semantic meaning MUST define a comp
 
 ======================================================================
 
+RESPONSIVE / BREAKPOINTS
+
+- Hardcoded px values in media queries are FORBIDDEN.
+- Use SCSS breakpoint mixins from `shared/breakpoints`:
+  @use 'shared/breakpoints' as bp;
+  @include bp.media-breakpoint-down(md) { ... }   // ≤ 767.98px — all mobile
+  @include bp.media-breakpoint-down(sm) { ... }   // ≤ 575.98px — portrait phone only
+  @include bp.media-breakpoint-down(lg) { ... }   // ≤ 991.98px — tablet and below
+- Full reference: docs/design-system/breakpoints.md
+- In legacy theme SCSS files: wrap :root { } in @include bp.media-breakpoint-down(...) { }
+
+======================================================================
+
 LAYOUT RULES
 
 - For related elements, layout systems are MANDATORY:

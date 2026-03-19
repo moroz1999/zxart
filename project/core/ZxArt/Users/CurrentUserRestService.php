@@ -14,6 +14,7 @@ class CurrentUserRestService
         private readonly RegistrationUrlsProvider $registrationUrlsProvider,
         private readonly PasswordReminderUrlProvider $passwordReminderUrlProvider,
         private readonly PlaylistsUrlProvider $playlistsUrlProvider,
+        private readonly AuthorPageUrlProvider $authorPageUrlProvider,
     ) {}
 
     public function buildDto(): CurrentUserRestDto
@@ -23,11 +24,15 @@ class CurrentUserRestService
         $id = null;
         $profileUrl = null;
         $playlistsUrl = null;
+        $authorPageUrl = null;
 
         if ($userName !== 'anonymous' && $user->id) {
             $id = (int)$user->id;
             $profileUrl = $this->registrationUrlsProvider->getProfileUrl();
             $playlistsUrl = $this->playlistsUrlProvider->getPlaylistsUrl();
+            if ($user->authorId !== null && $user->authorId !== '') {
+                $authorPageUrl = $this->authorPageUrlProvider->getAuthorPageUrl((int)$user->authorId);
+            }
         }
 
         return new CurrentUserRestDto(
@@ -37,6 +42,7 @@ class CurrentUserRestService
             passwordReminderUrl: $this->passwordReminderUrlProvider->getPasswordReminderUrl(),
             profileUrl: $profileUrl,
             playlistsUrl: $playlistsUrl,
+            authorPageUrl: $authorPageUrl,
         );
     }
 

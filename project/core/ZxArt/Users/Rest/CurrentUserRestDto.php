@@ -13,6 +13,7 @@ readonly class CurrentUserRestDto
         public ?string $passwordReminderUrl = null,
         public ?string $profileUrl = null,
         public ?string $playlistsUrl = null,
+        public ?string $authorPageUrl = null,
     ) {
     }
 }

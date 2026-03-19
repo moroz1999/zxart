@@ -1,0 +1,52 @@
+openapi: 3.0.0
+info:
+  title: Menu API
+  version: 1.0.0
+paths:
+  /menu/:
+    get:
+      summary: Get navigation menu items
+      parameters:
+        - name: lang
+          in: query
+          required: false
+          schema:
+            type: string
+          description: ISO 639-3 language code (e.g. eng, rus). Defaults to current session language.
+      responses:
+        '200':
+          description: List of top-level menu items with optional children
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MenuRestItemDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    MenuRestItemDto:
+      type: object
+      required: [id, title, url, children]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/MenuRestItemDto'
+    ErrorResponse:
+      type: object
+      required: [errorMessage]
+      properties:
+        errorMessage:
+          type: string
