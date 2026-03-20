@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable, tap} from 'rxjs';
 import {FirstpageModuleBase} from '../firstpage-module.base';
@@ -20,7 +20,8 @@ const GALLERY_ID = 'zx-picture-lightbox-unvoted-pictures';
   standalone: true,
   imports: [CommonModule, FirstpageModuleWrapperComponent, ZxPictureCardComponent, ZxPicturesGridDirective],
   templateUrl: './unvoted-pictures.component.html',
-  styleUrls: ['./unvoted-pictures.component.scss']
+  styleUrls: ['./unvoted-pictures.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnvotedPicturesComponent extends FirstpageModuleBase<ZxPictureDto> {
   readonly moduleType = 'unvotedPictures' as const;

@@ -1,5 +1,5 @@
 import {CommonModule} from '@angular/common';
-import {Component, ContentChild, Input, OnInit, TemplateRef} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ContentChild, Input, OnInit, TemplateRef} from '@angular/core';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {merge, Observable, of, Subject} from 'rxjs';
 import {shareReplay, startWith, switchMap} from 'rxjs/operators';
@@ -20,6 +20,7 @@ import {InViewportDirective} from '../../directives/in-viewport.directive';
       ])
     ])
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div [appInViewport]="enabled" (inViewport)="onInViewport()">
       <ng-container *ngIf="dataStream$ | async as data; else skeletonWrapper">

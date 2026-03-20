@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
@@ -34,6 +34,7 @@ interface YearGroup {
   ],
   templateUrl: './author-pictures.component.html',
   styleUrls: ['./author-pictures.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthorPicturesComponent implements OnInit {
   @Input() elementId = 0;

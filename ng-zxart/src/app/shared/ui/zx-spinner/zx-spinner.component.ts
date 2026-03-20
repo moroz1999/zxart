@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 export type ZxSpinnerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
@@ -9,6 +9,7 @@ export type ZxSpinnerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   imports: [CommonModule],
   templateUrl: './zx-spinner.component.html',
   styleUrls: ['./zx-spinner.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxSpinnerComponent {
   @Input() size: ZxSpinnerSize = 'md';

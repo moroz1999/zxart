@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
@@ -19,7 +19,8 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
     ZxButtonComponent,
   ],
   templateUrl: './firstpage-module-wrapper.component.html',
-  styleUrls: ['./firstpage-module-wrapper.component.scss']
+  styleUrls: ['./firstpage-module-wrapper.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FirstpageModuleWrapperComponent {
   @Input() titleKey!: string;

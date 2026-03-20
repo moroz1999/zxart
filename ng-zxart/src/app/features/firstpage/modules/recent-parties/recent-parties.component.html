@@ -1,15 +1,17 @@
-<zx-firstpage-module-wrapper
-  titleKey="firstpage.modules.recentParties"
-  [viewAllUrl]="viewAllUrl"
-  [viewAllLabelKey]="viewAllLabelKey"
-  [usePanel]="false"
-  [loading]="loading"
-  [error]="error"
-  [empty]="items.length === 0"
-  skeletonVariant="prod-grid"
-  [skeletonCount]="settings.limit"
->
-  <div class="parties-grid">
-    <zx-party-card *ngFor="let party of items" [party]="party"></zx-party-card>
-  </div>
-</zx-firstpage-module-wrapper>
+<ng-container *ngIf="vm$ | async as vm">
+  <zx-firstpage-module-wrapper
+    titleKey="firstpage.modules.recentParties"
+    [viewAllUrl]="vm.viewAllUrl"
+    [viewAllLabelKey]="vm.viewAllLabelKey"
+    [usePanel]="false"
+    [loading]="vm.loading"
+    [error]="vm.error"
+    [empty]="vm.empty"
+    skeletonVariant="prod-grid"
+    [skeletonCount]="settings.limit"
+  >
+    <div class="parties-grid">
+      <zx-party-card *ngFor="let party of vm.items" [party]="party"></zx-party-card>
+    </div>
+  </zx-firstpage-module-wrapper>
+</ng-container>

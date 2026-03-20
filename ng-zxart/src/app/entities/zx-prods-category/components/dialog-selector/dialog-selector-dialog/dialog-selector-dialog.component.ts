@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -22,6 +22,7 @@ interface DialogData {
     selector: 'zx-dialog-selector-dialog',
     templateUrl: './dialog-selector-dialog.component.html',
     styleUrls: ['./dialog-selector-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ZxButtonComponent,
         TranslatePipe,

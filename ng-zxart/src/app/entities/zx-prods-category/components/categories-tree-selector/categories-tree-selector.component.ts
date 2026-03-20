@@ -1,5 +1,14 @@
 import {NestedTreeControl} from '@angular/cdk/tree';
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {
   MatNestedTreeNode,
   MatTree,
@@ -19,6 +28,7 @@ import {MatIconButton} from '@angular/material/button';
     templateUrl: './categories-tree-selector.component.html',
     styleUrls: ['./categories-tree-selector.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         MatTree,
         MatTreeNode,

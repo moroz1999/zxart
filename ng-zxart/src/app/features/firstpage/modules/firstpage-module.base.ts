@@ -1,27 +1,72 @@
 import {Directive, ElementRef, Inject, inject, OnDestroy, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {ModuleSettings, ModuleType} from '../models/firstpage-config';
 import {MODULE_SETTINGS} from '../models/module-settings.token';
 import {CatalogueCategory, MODULE_LINK_CONFIG, ModuleLinkConfig} from '../models/firstpage-view-all-links';
 import {FirstpageViewAllLinksService} from '../services/firstpage-view-all-links.service';
 
+export interface ModuleVm<T> {
+  items: T[];
+  loading: boolean;
+  error: boolean;
+  empty: boolean;
+  viewAllUrl: string | undefined;
+  viewAllLabelKey: string | undefined;
+}
+
+interface ModuleState<T> {
+  items: T[];
+  loading: boolean;
+  error: boolean;
+}
+
+interface LinkState {
+  url: string | undefined;
+  labelKey: string | undefined;
+}
+
 @Directive()
 export abstract class FirstpageModuleBase<T> implements OnInit, OnDestroy {
-  items: T[] = [];
-  loading = true;
-  error = false;
-  viewAllUrl?: string;
-  viewAllLabelKey?: string;
-
   protected abstract readonly moduleType: ModuleType;
+
+  private readonly stateStore = new BehaviorSubject<ModuleState<T>>({
+    items: [],
+    loading: true,
+    error: false,
+  });
+
+  private readonly linkStore = new BehaviorSubject<LinkState>({
+    url: undefined,
+    labelKey: undefined,
+  });
+
+  readonly vm$: Observable<ModuleVm<T>> = combineLatest([
+    this.stateStore,
+    this.linkStore,
+  ]).pipe(
+    map(([state, link]) => ({
+      items: state.items,
+      loading: state.loading,
+      error: state.error,
+      empty: !state.loading && !state.error && state.items.length === 0,
+      viewAllUrl: link.url,
+      viewAllLabelKey: link.labelKey,
+    }))
+  );
 
   private el = inject(ElementRef);
   private observer?: IntersectionObserver;
   private viewAllLinksService = inject(FirstpageViewAllLinksService);
+  private subscription = new Subscription();
 
   protected constructor(
     @Inject(MODULE_SETTINGS) protected settings: ModuleSettings
   ) {}
+
+  protected get currentItems(): T[] {
+    return this.stateStore.getValue().items;
+  }
 
   ngOnInit(): void {
     this.resolveViewAllLink();
@@ -39,23 +84,33 @@ export abstract class FirstpageModuleBase<T> implements OnInit, OnDestroy {
     this.observer.observe(this.el.nativeElement);
   }
 
+  ngOnDestroy(): void {
+    this.observer?.disconnect();
+    this.subscription.unsubscribe();
+  }
+
   private resolveViewAllLink(): void {
     const config: ModuleLinkConfig | null = MODULE_LINK_CONFIG[this.moduleType];
     if (!config) {
       return;
     }
 
-    this.viewAllLabelKey = config.titleKey;
+    this.linkStore.next({url: undefined, labelKey: config.titleKey});
 
-    this.viewAllLinksService.getBaseUrls().subscribe(baseUrls => {
-      const baseUrl = this.getBaseUrlForCategory(baseUrls, config.category);
-      if (baseUrl) {
-        this.viewAllUrl = baseUrl + config.searchParams;
-      }
-    });
+    this.subscription.add(
+      this.viewAllLinksService.getBaseUrls().subscribe(baseUrls => {
+        const baseUrl = this.getBaseUrlForCategory(baseUrls, config.category);
+        if (baseUrl) {
+          this.linkStore.next({url: baseUrl + config.searchParams, labelKey: config.titleKey});
+        }
+      })
+    );
   }
 
-  private getBaseUrlForCategory(baseUrls: {prodCatalogueBaseUrl: string | null; graphicsBaseUrl: string | null; musicBaseUrl: string | null}, category: CatalogueCategory): string | null {
+  private getBaseUrlForCategory(
+    baseUrls: {prodCatalogueBaseUrl: string | null; graphicsBaseUrl: string | null; musicBaseUrl: string | null},
+    category: CatalogueCategory
+  ): string | null {
     switch (category) {
       case 'zxProd':
       case 'zxRelease':
@@ -67,21 +122,13 @@ export abstract class FirstpageModuleBase<T> implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.observer?.disconnect();
-  }
-
   private fetchData(): void {
-    this.loadData().subscribe({
-      next: items => {
-        this.items = items;
-        this.loading = false;
-      },
-      error: () => {
-        this.error = true;
-        this.loading = false;
-      }
-    });
+    this.subscription.add(
+      this.loadData().subscribe({
+        next: items => this.stateStore.next({items, loading: false, error: false}),
+        error: () => this.stateStore.next({items: [], loading: false, error: true}),
+      })
+    );
   }
 
   protected abstract loadData(): Observable<T[]>;

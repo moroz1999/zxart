@@ -1,5 +1,6 @@
 import {
   AfterViewChecked,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -36,6 +37,7 @@ export interface ZxFilterPickerItem {
   ],
   templateUrl: './zx-filter-picker.component.html',
   styleUrl: './zx-filter-picker.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxFilterPickerComponent implements AfterViewChecked {
   @Input() label = '';

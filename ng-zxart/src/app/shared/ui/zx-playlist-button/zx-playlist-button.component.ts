@@ -1,4 +1,4 @@
-import {Component, HostListener, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
@@ -29,6 +29,7 @@ import {ZxCaptionDirective} from '../../directives/typography/typography.directi
   ],
   templateUrl: './zx-playlist-button.component.html',
   styleUrls: ['./zx-playlist-button.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxPlaylistButtonComponent {
   @Input() elementId!: number;

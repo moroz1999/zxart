@@ -1,4 +1,4 @@
-import {Component, forwardRef, HostBinding, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, forwardRef, HostBinding, Input} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 @Component({
@@ -12,7 +12,8 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
       useExisting: forwardRef(() => ZxCheckboxFieldComponent),
       multi: true
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxCheckboxFieldComponent implements ControlValueAccessor {
   @Input() label = '';

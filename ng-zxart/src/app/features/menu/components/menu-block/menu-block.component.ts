@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
 import {Subscription} from 'rxjs';
@@ -22,6 +22,7 @@ import {CurrentRouteService} from '../../../header/services/current-route.servic
   ],
   templateUrl: './menu-block.component.html',
   styleUrls: ['./menu-block.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MenuBlockComponent implements OnInit, OnDestroy {
   items: MenuItem[] = [];
@@ -39,6 +40,7 @@ export class MenuBlockComponent implements OnInit, OnDestroy {
   constructor(
     private menuService: MenuService,
     private routeService: CurrentRouteService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -72,6 +74,7 @@ export class MenuBlockComponent implements OnInit, OnDestroy {
     this.closeTimer = setTimeout(() => {
       this.activeItem = null;
       this.closeTimer = null;
+      this.cdr.markForCheck();
     }, 120);
   }
 

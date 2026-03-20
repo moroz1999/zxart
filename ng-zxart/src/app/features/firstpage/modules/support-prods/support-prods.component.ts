@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs';
 import {FirstpageModuleBase} from '../firstpage-module.base';
@@ -16,7 +16,8 @@ import {MODULE_SETTINGS} from '../../models/module-settings.token';
   standalone: true,
   imports: [CommonModule, FirstpageModuleWrapperComponent, ZxProdBlockComponent],
   templateUrl: './support-prods.component.html',
-  styleUrls: ['./support-prods.component.scss']
+  styleUrls: ['./support-prods.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SupportProdsComponent extends FirstpageModuleBase<ZxProd> {
   readonly moduleType = 'supportProds' as const;

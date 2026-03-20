@@ -1,4 +1,13 @@
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {MatButtonModule} from '@angular/material/button';
@@ -20,7 +29,8 @@ import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.comp
     ZxItemControlsComponent,
   ],
   templateUrl: './zx-tune-row.component.html',
-  styleUrls: ['./zx-tune-row.component.scss']
+  styleUrls: ['./zx-tune-row.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxTuneRowComponent implements OnChanges, OnDestroy {
   @Input() tune!: ZxTuneDto;

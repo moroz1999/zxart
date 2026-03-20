@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {map} from 'rxjs';
@@ -31,6 +31,7 @@ interface YearGroup {
   ],
   templateUrl: './author-tunes.component.html',
   styleUrls: ['./author-tunes.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthorTunesComponent implements OnInit {
   @Input() elementId = 0;

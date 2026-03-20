@@ -9,7 +9,7 @@
     </zx-button>
   </div>
 
-  <ng-container *ngFor="let entry of modules">
+  <ng-container *ngFor="let entry of modules$ | async">
     <ng-container
       *ngComponentOutlet="entry.component; injector: entry.injector"
     ></ng-container>

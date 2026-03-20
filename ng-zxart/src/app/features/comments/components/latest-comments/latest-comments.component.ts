@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {CommentsService} from '../../services/comments.service';
@@ -25,7 +25,8 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
     ZxButtonComponent
   ],
   templateUrl: './latest-comments.component.html',
-  styleUrls: ['./latest-comments.component.scss']
+  styleUrls: ['./latest-comments.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LatestCommentsComponent implements OnInit {
   @Input() allCommentsUrl = '';

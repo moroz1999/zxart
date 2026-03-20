@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {CommentsService} from '../../services/comments.service';
@@ -23,7 +23,8 @@ import {CommentComponent} from '../comment/comment.component';
     CommentComponent
   ],
   templateUrl: './comments-page.component.html',
-  styleUrls: ['./comments-page.component.scss']
+  styleUrls: ['./comments-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentsPageComponent implements OnInit {
   @Input() title = '';

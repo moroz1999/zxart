@@ -1,31 +1,33 @@
-<zx-button
-  cdkOverlayOrigin
-  #trigger="cdkOverlayOrigin"
-  color="transparent"
-  size="sm"
-  [ariaLabel]="'header.language-trigger.label' | translate"
-  [attr.aria-expanded]="popoverOpen"
-  (click)="togglePopover($event)"
->
-  <span class="lt-flag">{{ activeLanguage?.flag }}</span>
-  <span class="lt-label">{{ activeLanguage?.title }}</span>
-</zx-button>
+<ng-container *ngIf="vm$ | async as vm">
+  <zx-button
+    cdkOverlayOrigin
+    #trigger="cdkOverlayOrigin"
+    color="transparent"
+    size="sm"
+    [ariaLabel]="'header.language-trigger.label' | translate"
+    [attr.aria-expanded]="popoverOpen"
+    (click)="togglePopover($event)"
+  >
+    <span class="lt-flag">{{ vm.activeLanguage?.flag }}</span>
+    <span class="lt-label">{{ vm.activeLanguage?.title }}</span>
+  </zx-button>
 
-<ng-template
-  cdkConnectedOverlay
-  [cdkConnectedOverlayOrigin]="trigger"
-  [cdkConnectedOverlayOpen]="popoverOpen"
-  [cdkConnectedOverlayPositions]="positions"
-  [cdkConnectedOverlayHasBackdrop]="true"
-  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
-  (backdropClick)="closePopover()"
-  (overlayKeydown)="onOverlayKeydown($event)"
->
-  <zx-header-popover (click)="$event.stopPropagation()">
-    <zx-popover-menu-item
-      *ngFor="let lang of languages"
-      [href]="lang.url"
-      [active]="lang.active"
-    >{{ lang.flag }} {{ lang.title }}</zx-popover-menu-item>
-  </zx-header-popover>
-</ng-template>
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="trigger"
+    [cdkConnectedOverlayOpen]="popoverOpen"
+    [cdkConnectedOverlayPositions]="positions"
+    [cdkConnectedOverlayHasBackdrop]="true"
+    cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+    (backdropClick)="closePopover()"
+    (overlayKeydown)="onOverlayKeydown($event)"
+  >
+    <zx-header-popover (click)="$event.stopPropagation()">
+      <zx-popover-menu-item
+        *ngFor="let lang of vm.languages"
+        [href]="lang.url"
+        [active]="lang.active"
+      >{{ lang.flag }} {{ lang.title }}</zx-popover-menu-item>
+    </zx-header-popover>
+  </ng-template>
+</ng-container>

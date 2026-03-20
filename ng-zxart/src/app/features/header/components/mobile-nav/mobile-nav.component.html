@@ -21,18 +21,20 @@
       </zx-button>
     </div>
     <div class="mn-items">
-      @for (item of items; track item.id) {
-        <zx-popover-menu-item [href]="item.url" [active]="isActive(item)">
-          {{ item.title }}
-        </zx-popover-menu-item>
-        @if (item.children.length > 0 && isActive(item)) {
-          <div class="mn-submenu">
-            @for (child of item.children; track child.id) {
-              <zx-popover-menu-item [href]="child.url">
-                {{ child.title }}
-              </zx-popover-menu-item>
-            }
-          </div>
+      @if (items$ | async; as items) {
+        @for (item of items; track item.id) {
+          <zx-popover-menu-item [href]="item.url" [active]="isActive(item)">
+            {{ item.title }}
+          </zx-popover-menu-item>
+          @if (item.children.length > 0 && isActive(item)) {
+            <div class="mn-submenu">
+              @for (child of item.children; track child.id) {
+                <zx-popover-menu-item [href]="child.url">
+                  {{ child.title }}
+                </zx-popover-menu-item>
+              }
+            </div>
+          }
         }
       }
     </div>

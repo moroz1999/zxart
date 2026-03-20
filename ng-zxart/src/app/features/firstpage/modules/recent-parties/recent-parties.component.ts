@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs';
 import {FirstpageModuleBase} from '../firstpage-module.base';
@@ -16,7 +16,8 @@ import {MODULE_SETTINGS} from '../../models/module-settings.token';
   standalone: true,
   imports: [CommonModule, FirstpageModuleWrapperComponent, ZxPartyCardComponent],
   templateUrl: './recent-parties.component.html',
-  styleUrls: ['./recent-parties.component.scss']
+  styleUrls: ['./recent-parties.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecentPartiesComponent extends FirstpageModuleBase<PartyDto> {
   readonly moduleType = 'recentParties' as const;

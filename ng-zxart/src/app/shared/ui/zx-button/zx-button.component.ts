@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 @Component({
@@ -6,7 +6,8 @@ import {CommonModule} from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './zx-button.component.html',
-  styleUrl: './zx-button.component.scss'
+  styleUrl: './zx-button.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxButtonComponent implements OnDestroy {
   @Input() size: 'xs' | 'sm' | 'md' = 'md';
@@ -25,6 +26,8 @@ export class ZxButtonComponent implements OnDestroy {
   rippleSize = 0;
   rippleActive = false;
   private rippleTimer: ReturnType<typeof setTimeout> | null = null;
+
+  constructor(private cdr: ChangeDetectorRef) {}
 
   get isLink(): boolean {
     return !!this.href;
@@ -91,8 +94,10 @@ export class ZxButtonComponent implements OnDestroy {
 
     requestAnimationFrame(() => {
       this.rippleActive = true;
+      this.cdr.markForCheck();
       this.rippleTimer = setTimeout(() => {
         this.rippleActive = false;
+        this.cdr.markForCheck();
       }, 560);
     });
   }

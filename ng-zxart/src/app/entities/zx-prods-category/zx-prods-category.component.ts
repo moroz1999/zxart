@@ -1,4 +1,14 @@
-import {Component, ElementRef, HostBinding, Input, OnInit, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostBinding,
+  HostListener,
+  Input,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {ElementsService, PostParameters} from '../../shared/services/elements.service';
 import {ZxProdCategory} from './models/zx-prod-category';
 import {Tag} from '../../shared/models/tag';
@@ -48,6 +58,7 @@ export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
         ZxCheckboxFieldComponent,
     ],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxProdsCategoryComponent implements OnInit {
     public model!: ZxProdCategory;
@@ -89,10 +100,10 @@ export class ZxProdsCategoryComponent implements OnInit {
 
     constructor(
         private elementsService: ElementsService,
-    ) {
-        window.addEventListener('popstate', this.historyUpdateHandler.bind(this));
-    }
+        private cdr: ChangeDetectorRef,
+    ) {}
 
+    @HostListener('window:popstate', ['$event'])
     historyUpdateHandler(event: PopStateEvent): void {
         if (typeof event.state != 'undefined') {
             if (event.state.elementId === this.elementId) {
@@ -107,6 +118,7 @@ export class ZxProdsCategoryComponent implements OnInit {
                     },
                     () => {
                         this.loading = false;
+                        this.cdr.markForCheck();
                         this.contentElement?.nativeElement.scrollIntoView({
                             block: 'start',
                             inline: 'start',
@@ -156,6 +168,7 @@ export class ZxProdsCategoryComponent implements OnInit {
             },
             () => {
                 this.loading = false;
+                this.cdr.markForCheck();
                 this.contentElement?.nativeElement.scrollIntoView({
                     block: 'start',
                     inline: 'start',
@@ -263,6 +276,7 @@ export class ZxProdsCategoryComponent implements OnInit {
             },
             () => {
                 this.loading = false;
+                this.cdr.markForCheck();
                 this.contentElement?.nativeElement.scrollIntoView({
                     block: 'start',
                     inline: 'start',

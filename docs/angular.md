@@ -134,6 +134,85 @@ readonly items$: Observable<Item[]> = this.http.get<Item[]>(this.url).pipe(
 );
 ```
 
+### OnPush Change Detection
+
+**All components MUST use `changeDetection: ChangeDetectionStrategy.OnPush`.**
+
+OnPush only re-checks a component when:
+- an `@Input()` reference changes
+- an event originates inside the component
+- `async pipe` emits
+- `ChangeDetectorRef.markForCheck()` is called
+
+This means **imperative state mutations inside `.subscribe()` callbacks are invisible to OnPush** and MUST NOT be used. Always follow the BehaviorSubject pattern (see RxJS section above).
+
+#### ViewModel pattern for base-class components
+
+When a component inherits from a base `@Directive` class that manages async state (e.g., `FirstpageModuleBase`), the base class MUST expose a single `vm$: Observable<Vm>` combining all template-relevant state via `combineLatest` + `map`. Templates subscribe once with `*ngIf="vm$ | async as vm"` and access all fields from `vm`.
+
+```typescript
+// Base class
+export interface ModuleVm<T> {
+  items: T[];
+  loading: boolean;
+  error: boolean;
+  empty: boolean;
+  viewAllUrl: string | undefined;
+  viewAllLabelKey: string | undefined;
+}
+
+readonly vm$: Observable<ModuleVm<T>> = combineLatest([stateStore, linkStore]).pipe(
+  map(([state, link]) => ({ ...state, empty: !state.loading && !state.error && state.items.length === 0, ...link }))
+);
+```
+
+```html
+<!-- Template -->
+<ng-container *ngIf="vm$ | async as vm">
+  <zx-wrapper [loading]="vm.loading" [error]="vm.error" [empty]="vm.empty">
+    <item *ngFor="let item of vm.items"></item>
+  </zx-wrapper>
+</ng-container>
+```
+
+For synchronous access to items inside component methods (e.g., event handlers), use a protected getter that reads from the BehaviorSubject: `protected get currentItems(): T[] { return this.stateStore.getValue().items; }`.
+
+#### Native DOM events: @HostListener vs markForCheck()
+
+`addEventListener` on a native DOM element bypasses Zone.js — Angular does not see these events and OnPush components will not re-render.
+
+**Rule: never use `addEventListener` in a component when an Angular alternative exists.**
+
+| Situation | Solution |
+|-----------|----------|
+| Event on the component's own host element | `@HostListener('eventname', ['$event'])` on the method |
+| Event on `window` or `document` | `@HostListener('window:eventname')` / `@HostListener('document:eventname')` |
+| Event conditionally registered/removed (e.g. drag tracking) | keep native `addEventListener` + `this.cdr.markForCheck()` in the handler |
+| Event on a specific unrelated DOM element (not host) | keep native `addEventListener` + `this.cdr.markForCheck()` |
+| Event in a service (no host element) | native `addEventListener` is fine — services have no CD context |
+
+`@HostListener` routes events through Zone.js automatically — no `markForCheck()` needed. Angular also handles cleanup on component destroy.
+
+```typescript
+// ✓ host event — no addEventListener, no markForCheck needed
+@HostListener('pointerenter', ['$event'])
+onEnter(event: PointerEvent): void { this.active = true; }
+
+// ✓ window event
+@HostListener('window:popstate', ['$event'])
+onPopState(event: PopStateEvent): void { ... }
+
+// ✓ conditional drag listener — cannot use @HostListener, use markForCheck
+private readonly onDragMove = (e: PointerEvent): void => {
+  this.updateValue(e.clientX);
+  this.cdr.markForCheck();
+};
+```
+
+#### When to use ChangeDetectorRef.markForCheck()
+
+Only when Angular-external async callbacks (e.g., `IntersectionObserver`, `setTimeout`, native DOM events that cannot use `@HostListener`) mutate local state. Prefer `@HostListener` or Observable/async pipe first.
+
 ### Deprecated Practices
 1. **Material UI**: No new Material imports anywhere. Existing Material usage will be replaced in phases (see design-system.md, section 9).
 2. **Direct Material UI in Design System Primitives**: `shared/ui` form primitives must be implemented with native/custom markup and our theme variables. Material wrappers are transitional and must be removed.

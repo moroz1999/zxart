@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {DialogSelectorDialogComponent} from './dialog-selector-dialog/dialog-selector-dialog.component';
 import {SelectorDto} from '../../models/selector-dto';
@@ -10,6 +10,7 @@ import {ZxButtonComponent} from "../../../../shared/ui/zx-button/zx-button.compo
     templateUrl: './dialog-selector.component.html',
     styleUrls: ['./dialog-selector.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ZxButtonComponent,
         NgIf,

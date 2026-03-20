@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output} from '@angular/core';
 import {SelectorDto} from '../../models/selector-dto';
 import {TranslateService} from '@ngx-translate/core';
 import {FormsModule} from '@angular/forms';
@@ -10,6 +10,7 @@ import {map, Subject, Subscription, switchMap} from 'rxjs';
     templateUrl: './sorting-selector.component.html',
     styleUrls: ['./sorting-selector.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         FormsModule,
         ZxSelectComponent,

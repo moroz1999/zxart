@@ -1,4 +1,13 @@
-import {Component, ElementRef, HostBinding, Input, OnChanges, OnInit, SimpleChanges,} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostBinding,
+  HostListener,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import {FadeInOut} from '../../animations/fade-in-out';
 import {AnimationEvent, trigger} from '@angular/animations';
 import {SlideInOut} from '../../animations/slide-in-out';
@@ -34,16 +43,17 @@ import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.comp
     ZxItemControlsComponent,
   ],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnChanges {
+export class ZxProdBlockComponent extends ZxProdComponent implements OnChanges {
   @Input() imagesLayout: ZxProdsListLayout = 'loading';
 
   @HostBinding('class.inlays') get inlays(): boolean {
     return this.imagesLayout === 'inlays';
   }
 
-  displayScreenshots: boolean = false;
-  displayAdditions: boolean = false;
+  displayScreenshots = false;
+  displayAdditions = false;
   activeScreenshotUrl = '';
 
   slideOpenInProgress = false;
@@ -55,19 +65,11 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
     private analyticsService: AnalyticsService,
   ) {
     super();
-  }
-
-  ngOnInit(): void {
-    this.element.nativeElement.addEventListener('pointerenter', this.enterHandler.bind(this));
-    this.element.nativeElement.addEventListener('pointerleave', this.leaveHandler.bind(this));
-    this.element.nativeElement.addEventListener('pointermove', (event: Event) => event.preventDefault());
-    this.element.nativeElement.addEventListener('contextmenu', (event: Event) => {
-    });
     this.iconReg.loadSvg(`${environment.svgUrl}cart.svg`, 'cart')?.subscribe();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.imagesLayout) {
+    if (changes['imagesLayout']) {
       if (this.imagesLayout !== 'inlays' && this.model.imagesUrls.length > 0) {
         this.activeScreenshotUrl = this.model.imagesUrls[0];
       } else if (this.imagesLayout === 'inlays' && this.model.inlaysUrls.length > 0) {
@@ -78,6 +80,7 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
     }
   }
 
+  @HostListener('pointerenter', ['$event'])
   enterHandler(event: PointerEvent): void {
     event.preventDefault();
     this.displayAdditions = true;
@@ -92,12 +95,20 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
     }
   }
 
+  @HostListener('pointerleave', ['$event'])
   leaveHandler(event: PointerEvent): void {
     event.preventDefault();
-
     this.displayScreenshots = false;
     this.displayAdditions = false;
   }
+
+  @HostListener('pointermove', ['$event'])
+  onPointerMove(event: Event): void {
+    event.preventDefault();
+  }
+
+  @HostListener('contextmenu')
+  onContextMenu(): void {}
 
   setActiveScreenshotUrl(imageUrl: string): void {
     this.activeScreenshotUrl = imageUrl;
@@ -111,7 +122,7 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnInit, OnC
       this.slideCloseInProgress = true;
     }
     if (this.slideOpenInProgress && !this.slideCloseInProgress) {
-      let height = this.element.nativeElement.scrollHeight;
+      const height = this.element.nativeElement.scrollHeight;
       this.element.nativeElement.style.height = height + 'px';
       this.element.nativeElement.style.zIndex = 10;
     }

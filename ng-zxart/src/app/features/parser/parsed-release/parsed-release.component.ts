@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {ReleaseData} from '../models/release-data';
 import {NgForOf, NgIf} from '@angular/common';
 
@@ -7,6 +7,7 @@ import {NgForOf, NgIf} from '@angular/common';
     templateUrl: './parsed-release.component.html',
     styleUrls: ['./parsed-release.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgIf,
         NgForOf,

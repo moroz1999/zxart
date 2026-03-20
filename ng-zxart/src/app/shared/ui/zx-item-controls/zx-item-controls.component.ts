@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {RatingComponent} from '../../components/rating/rating.component';
 import {ZxPlaylistButtonComponent} from '../zx-playlist-button/zx-playlist-button.component';
 
@@ -11,6 +11,7 @@ import {ZxPlaylistButtonComponent} from '../zx-playlist-button/zx-playlist-butto
   imports: [RatingComponent, ZxPlaylistButtonComponent],
   templateUrl: './zx-item-controls.component.html',
   styleUrls: ['./zx-item-controls.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxItemControlsComponent {
   @Input() elementId!: number;

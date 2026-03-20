@@ -1,4 +1,4 @@
-import {Component, HostBinding, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {CommentAuthorDto} from '../../../features/comments/models/comment.dto';
 import {ZxCaptionDirective, ZxLinkDirective} from '../../directives/typography/typography.directives';
@@ -16,7 +16,8 @@ import {environment} from '../../../../environments/environment';
     ZxLinkDirective
   ],
   templateUrl: './zx-user.component.html',
-  styleUrls: ['./zx-user.component.scss']
+  styleUrls: ['./zx-user.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxUserComponent {
   @HostBinding('class.zx-user') className = true;

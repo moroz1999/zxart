@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {SelectorDto} from '../../models/selector-dto';
 import {TranslatePipe} from '@ngx-translate/core';
 import {NgForOf, NgIf} from '@angular/common';
@@ -9,6 +9,7 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
     templateUrl: './letter-selector.component.html',
     styleUrls: ['./letter-selector.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         TranslatePipe,
         NgIf,

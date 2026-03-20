@@ -1,4 +1,4 @@
-import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
@@ -26,6 +26,7 @@ import {environment} from '../../../../../environments/environment';
   ],
   templateUrl: './picture-settings-trigger.component.html',
   styleUrls: ['./picture-settings-trigger.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PictureSettingsTriggerComponent implements OnInit, OnDestroy {
   popoverOpen = false;

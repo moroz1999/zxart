@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, TemplateRef, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, ViewChild} from '@angular/core';
 import {PictureGalleryService} from '../../services/picture-gallery.service';
 import {
   PictureGalleryZoomOverlayComponent
@@ -9,7 +9,8 @@ import {
   standalone: true,
   imports: [PictureGalleryZoomOverlayComponent],
   templateUrl: './picture-gallery-host.component.html',
-  styleUrls: ['./picture-gallery-host.component.scss']
+  styleUrls: ['./picture-gallery-host.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PictureGalleryHostComponent implements AfterViewInit {
   @ViewChild('galleryImageTemplate', {static: true}) private galleryImageTemplate?: TemplateRef<unknown>;

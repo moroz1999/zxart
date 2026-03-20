@@ -1,5 +1,5 @@
 import {CommonModule} from '@angular/common';
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {MatIconModule} from '@angular/material/icon';
@@ -34,7 +34,8 @@ import {
     ZxLinkDirective
   ],
   templateUrl: './comment.component.html',
-  styleUrls: ['./comment.component.scss']
+  styleUrls: ['./comment.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentComponent {
   @Input() comment!: CommentDto;

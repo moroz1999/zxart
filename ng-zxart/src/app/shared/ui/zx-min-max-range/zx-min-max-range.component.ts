@@ -1,4 +1,14 @@
-import {Component, ElementRef, forwardRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  forwardRef,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {ZxCaptionDirective} from '../../directives/typography/typography.directives';
@@ -23,6 +33,7 @@ type ZxRangeThumb = 'min' | 'max';
       multi: true,
     },
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxMinMaxRangeComponent implements ControlValueAccessor, OnChanges {
   @Input() min = 0;
@@ -36,6 +47,8 @@ export class ZxMinMaxRangeComponent implements ControlValueAccessor, OnChanges {
 
   private onChange: (value: ZxMinMaxRangeValue) => void = () => {};
   private onTouched: () => void = () => {};
+
+  constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['min'] && !changes['max']) {
@@ -162,11 +175,13 @@ export class ZxMinMaxRangeComponent implements ControlValueAccessor, OnChanges {
     }
     const value = this.valueFromClientX(event.clientX);
     this.setThumbValue(this.activeThumb, value, true);
+    this.cdr.markForCheck();
   };
 
   private readonly handlePointerUp = (): void => {
     this.teardownDragListeners();
     this.onTouched();
+    this.cdr.markForCheck();
   };
 
   private valueFromClientX(clientX: number): number {

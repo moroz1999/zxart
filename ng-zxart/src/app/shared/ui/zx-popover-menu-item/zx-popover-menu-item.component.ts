@@ -1,4 +1,4 @@
-import {Component, HostBinding, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 
 @Component({
   selector: 'zx-popover-menu-item',
@@ -6,6 +6,7 @@ import {Component, HostBinding, Input} from '@angular/core';
   imports: [],
   templateUrl: './zx-popover-menu-item.component.html',
   styleUrls: ['./zx-popover-menu-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxPopoverMenuItemComponent {
   @Input() href = '';

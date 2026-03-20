@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 @Component({
@@ -7,6 +7,7 @@ import {CommonModule} from '@angular/common';
   imports: [CommonModule],
   templateUrl: './zx-stack.component.html',
   styleUrl: './zx-stack.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class]': 'classList'
   }

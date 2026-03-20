@@ -1,4 +1,4 @@
-import {Component, OnInit, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {RatingsService} from '../../services/ratings.service';
@@ -20,7 +20,8 @@ import {ZxLinkDirective} from '../../../../shared/directives/typography/typograp
     ZxLinkDirective
   ],
   templateUrl: './recent-ratings-widget.component.html',
-  styleUrls: ['./recent-ratings-widget.component.scss']
+  styleUrls: ['./recent-ratings-widget.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecentRatingsWidgetComponent implements OnInit {
   items = signal<RecentRatingDto[]>([]);

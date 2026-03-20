@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {ZxProdsList} from './models/zx-prods-list';
 import {ElementsService} from '../../shared/services/elements.service';
 import {ZxProdsListDto} from './models/zx-prods-list-dto';
@@ -18,6 +18,7 @@ export interface YearProds {
     styleUrls: ['./zx-prods-list.component.scss'],
     imports: [TranslatePipe, ZxProdBlockComponent, NgIf, NgForOf, NgForOf, NgIf, NgIf, NgForOf],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxProdsListComponent implements OnInit {
     public model?: ZxProdsList;

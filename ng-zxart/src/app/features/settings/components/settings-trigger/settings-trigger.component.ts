@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -16,7 +16,8 @@ import {ThemeService} from '../../services/theme.service';
     MatDialogModule
   ],
   templateUrl: './settings-trigger.component.html',
-  styleUrls: ['./settings-trigger.component.scss']
+  styleUrls: ['./settings-trigger.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsTriggerComponent implements OnInit {
   constructor(

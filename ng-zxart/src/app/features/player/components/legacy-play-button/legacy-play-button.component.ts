@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {TranslateModule} from '@ngx-translate/core';
@@ -27,6 +27,7 @@ type LegacyWindow = Window & {
   imports: [MatButtonModule, MatIconModule, TranslateModule],
   templateUrl: './legacy-play-button.component.html',
   styleUrls: ['./legacy-play-button.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LegacyPlayButtonComponent {
   private playlistIdValue = '';

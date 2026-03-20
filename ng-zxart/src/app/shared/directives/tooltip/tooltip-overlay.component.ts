@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 /**
  * Internal display component rendered inside the CDK overlay pane by TooltipDirective.
@@ -12,6 +12,7 @@ import {Component} from '@angular/core';
     'class': 'zx-tooltip',
     '[class.zx-tooltip--visible]': 'visible',
   },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TooltipOverlayComponent {
   text = '';

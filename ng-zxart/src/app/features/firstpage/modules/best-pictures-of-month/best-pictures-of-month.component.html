@@ -1,20 +1,22 @@
-<zx-firstpage-module-wrapper
-  titleKey="firstpage.modules.bestPicturesOfMonth"
-  [viewAllUrl]="viewAllUrl"
-  [viewAllLabelKey]="viewAllLabelKey"
-  [usePanel]="false"
-  [loading]="loading"
-  [error]="error"
-  [empty]="items.length === 0"
-  skeletonVariant="picture-grid"
-  [skeletonCount]="settings.limit"
->
-  <div zxPicturesGrid>
-    <zx-picture-card
-      *ngFor="let pic of items; let i = index"
-      [picture]="pic"
-      [galleryIndex]="i"
-      galleryId="zx-picture-lightbox-best-pictures-of-month"
-    ></zx-picture-card>
-  </div>
-</zx-firstpage-module-wrapper>
+<ng-container *ngIf="vm$ | async as vm">
+  <zx-firstpage-module-wrapper
+    titleKey="firstpage.modules.bestPicturesOfMonth"
+    [viewAllUrl]="vm.viewAllUrl"
+    [viewAllLabelKey]="vm.viewAllLabelKey"
+    [usePanel]="false"
+    [loading]="vm.loading"
+    [error]="vm.error"
+    [empty]="vm.empty"
+    skeletonVariant="picture-grid"
+    [skeletonCount]="settings.limit"
+  >
+    <div zxPicturesGrid>
+      <zx-picture-card
+        *ngFor="let pic of vm.items; let i = index"
+        [picture]="pic"
+        [galleryIndex]="i"
+        galleryId="zx-picture-lightbox-best-pictures-of-month"
+      ></zx-picture-card>
+    </div>
+  </zx-firstpage-module-wrapper>
+</ng-container>

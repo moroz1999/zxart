@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable, tap} from 'rxjs';
 import {FirstpageModuleBase} from '../firstpage-module.base';
@@ -20,7 +20,8 @@ const GALLERY_ID = 'zx-picture-lightbox-random-good-pictures';
   standalone: true,
   imports: [CommonModule, FirstpageModuleWrapperComponent, ZxPictureCardComponent, ZxPicturesGridDirective],
   templateUrl: './random-good-pictures.component.html',
-  styleUrls: ['./random-good-pictures.component.scss']
+  styleUrls: ['./random-good-pictures.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RandomGoodPicturesComponent extends FirstpageModuleBase<ZxPictureDto> {
   readonly moduleType = 'randomGoodPictures' as const;

@@ -1,4 +1,4 @@
-import {Component, forwardRef, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, forwardRef, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -16,7 +16,8 @@ import {MatInputModule} from '@angular/material/input';
       useExisting: forwardRef(() => ZxTextareaComponent),
       multi: true
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxTextareaComponent implements ControlValueAccessor {
   @Input() label = '';

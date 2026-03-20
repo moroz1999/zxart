@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs';
 import {FirstpageModuleBase} from '../firstpage-module.base';
@@ -17,6 +17,7 @@ import {MODULE_SETTINGS} from '../../models/module-settings.token';
   imports: [CommonModule, FirstpageModuleWrapperComponent, ZxProdBlockComponent],
   templateUrl: './latest-added-releases.component.html',
   styleUrls: ['./latest-added-releases.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LatestAddedReleasesComponent extends FirstpageModuleBase<ZxProd> {
   readonly moduleType = 'latestAddedReleases' as const;

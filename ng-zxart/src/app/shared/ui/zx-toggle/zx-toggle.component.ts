@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatIconModule} from '@angular/material/icon';
@@ -15,7 +15,8 @@ export interface ZxToggleOption {
   standalone: true,
   imports: [CommonModule, MatButtonToggleModule, MatIconModule, FormsModule],
   templateUrl: './zx-toggle.component.html',
-  styleUrl: './zx-toggle.component.scss'
+  styleUrl: './zx-toggle.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxToggleComponent {
   @Input() options: ZxToggleOption[] = [];

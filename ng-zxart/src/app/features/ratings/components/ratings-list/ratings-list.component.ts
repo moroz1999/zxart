@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
@@ -27,7 +27,8 @@ import {
     ZxHeading2Directive
   ],
   templateUrl: './ratings-list.component.html',
-  styleUrls: ['./ratings-list.component.scss']
+  styleUrls: ['./ratings-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RatingsListComponent {
   @Input() elementId?: number;

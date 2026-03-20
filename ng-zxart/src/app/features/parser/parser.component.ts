@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ParserService} from '../../shared/services/parser.service';
 import {ParserData} from './models/parser-data';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
@@ -13,6 +13,7 @@ import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.componen
     templateUrl: './parser.component.html',
     styleUrls: ['./parser.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         TranslatePipe,
         ReactiveFormsModule,
@@ -32,7 +33,6 @@ export class ParserComponent {
 
     constructor(
         private parser: ParserService,
-        private cdr: ChangeDetectorRef,
     ) {
         this.notFoundOnly = new FormControl();
     }

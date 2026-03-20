@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 export type SkeletonVariant = 'card' | 'comment' | 'row' | 'text' | 'prod-grid' | 'picture-grid' | 'tune-table';
@@ -8,7 +8,8 @@ export type SkeletonVariant = 'card' | 'comment' | 'row' | 'text' | 'prod-grid' 
   standalone: true,
   imports: [CommonModule],
   templateUrl: './zx-skeleton.component.html',
-  styleUrls: ['./zx-skeleton.component.scss']
+  styleUrls: ['./zx-skeleton.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxSkeletonComponent {
   @Input() variant: SkeletonVariant = 'card';

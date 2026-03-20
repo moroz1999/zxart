@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {map} from 'rxjs';
@@ -23,6 +23,7 @@ import {MusicListService} from '../../services/music-list.service';
   ],
   templateUrl: './zx-music-list.component.html',
   styleUrls: ['./zx-music-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxMusicListComponent implements OnInit {
   @Input() elementId = 0;

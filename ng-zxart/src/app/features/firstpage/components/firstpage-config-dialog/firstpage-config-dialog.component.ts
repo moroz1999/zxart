@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -39,7 +39,8 @@ import {ZxHeading2Directive} from '../../../../shared/directives/typography/typo
     ZxHeading2Directive,
   ],
   templateUrl: './firstpage-config-dialog.component.html',
-  styleUrls: ['./firstpage-config-dialog.component.scss']
+  styleUrls: ['./firstpage-config-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FirstpageConfigDialogComponent implements OnInit, OnDestroy {
   modules: ModuleConfig[] = [];

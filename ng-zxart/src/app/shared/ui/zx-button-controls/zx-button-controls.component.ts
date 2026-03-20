@@ -1,10 +1,11 @@
-import {Component, HostBinding, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 
 @Component({
   selector: 'zx-button-controls',
   standalone: true,
   template: '<ng-content></ng-content>',
-  styleUrl: './zx-button-controls.component.scss'
+  styleUrl: './zx-button-controls.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxButtonControlsComponent {
   @Input() align: 'start' | 'end' | 'distribute' = 'end';

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {AsyncPipe, CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable} from 'rxjs';
@@ -26,7 +26,8 @@ import {PictureUrlBuilderService} from '../../services/picture-url-builder.servi
     ZxItemControlsComponent,
   ],
   templateUrl: './zx-picture-card.component.html',
-  styleUrls: ['./zx-picture-card.component.scss']
+  styleUrls: ['./zx-picture-card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxPictureCardComponent implements OnInit {
   @Input() picture!: ZxPictureDto;

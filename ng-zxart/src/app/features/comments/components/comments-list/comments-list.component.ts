@@ -1,5 +1,5 @@
 import {CommonModule} from '@angular/common';
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {TranslateModule} from '@ngx-translate/core';
 import {MatDividerModule} from '@angular/material/divider';
 import {CommentDto} from '../../models/comment.dto';
@@ -28,7 +28,8 @@ import {Observable, of, Subject} from 'rxjs';
     ViewportLoaderComponent
   ],
   templateUrl: './comments-list.component.html',
-  styleUrls: ['./comments-list.component.scss']
+  styleUrls: ['./comments-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentsListComponent {
   @Input() elementId?: number;

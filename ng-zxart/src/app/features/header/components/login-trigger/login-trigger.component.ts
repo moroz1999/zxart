@@ -1,12 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
-import {Subscription} from 'rxjs';
 import {CurrentUserService} from '../../../../shared/services/current-user.service';
-import {CurrentUser} from '../../../../shared/models/current-user';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxFormDirective} from '../../../../shared/directives/form/zx-form.directive';
 import {ZxBodySmMutedDirective, ZxLinkDirective} from '../../../../shared/directives/typography/typography.directives';
@@ -33,9 +31,11 @@ import {environment} from '../../../../../environments/environment';
   ],
   templateUrl: './login-trigger.component.html',
   styleUrls: ['./login-trigger.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginTriggerComponent implements OnInit, OnDestroy {
-  user: CurrentUser | null = null;
+export class LoginTriggerComponent {
+  readonly user$ = this.currentUserService.user$;
+
   popoverOpen = false;
 
   userName = '';
@@ -49,28 +49,12 @@ export class LoginTriggerComponent implements OnInit, OnDestroy {
     {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -4},
   ];
 
-  private subscription = new Subscription();
-
   constructor(
     private currentUserService: CurrentUserService,
     private iconReg: SvgIconRegistryService,
-  ) {}
-
-  ngOnInit(): void {
+    private cdr: ChangeDetectorRef,
+  ) {
     this.iconReg.loadSvg(`${environment.svgUrl}person.svg`, 'person')?.subscribe();
-    this.subscription.add(
-      this.currentUserService.user$.subscribe(user => {
-        this.user = user;
-      }),
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
-  get isLoggedIn(): boolean {
-    return this.user !== null && this.user.userName !== 'anonymous';
   }
 
   togglePopover(event: Event): void {
@@ -98,6 +82,7 @@ export class LoginTriggerComponent implements OnInit, OnDestroy {
       error: () => {
         this.loading = false;
         this.loginError = 'login.error';
+        this.cdr.markForCheck();
       },
     });
   }

@@ -1,4 +1,4 @@
-import {Component, HostBinding, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 @Component({
@@ -6,7 +6,8 @@ import {CommonModule} from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './zx-badge.component.html',
-  styleUrl: './zx-badge.component.scss'
+  styleUrl: './zx-badge.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxBadgeComponent {
   @Input() variant: 'primary' | 'secondary' = 'primary';

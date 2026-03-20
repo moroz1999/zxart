@@ -1,4 +1,14 @@
-import {AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges
+} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatIconModule} from '@angular/material/icon';
 import {NgxImageZoomModule} from 'ngx-image-zoom';
@@ -9,7 +19,8 @@ import {PictureGalleryService} from '../../services/picture-gallery.service';
   standalone: true,
   imports: [CommonModule, MatIconModule, NgxImageZoomModule],
   templateUrl: './picture-gallery-zoom-overlay.component.html',
-  styleUrls: ['./picture-gallery-zoom-overlay.component.scss']
+  styleUrls: ['./picture-gallery-zoom-overlay.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PictureGalleryZoomOverlayComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() src = '';
@@ -25,10 +36,14 @@ export class PictureGalleryZoomOverlayComponent implements AfterViewInit, OnChan
   constructor(
     private host: ElementRef<HTMLElement>,
     public galleryService: PictureGalleryService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngAfterViewInit(): void {
-    this.resizeObserver = new ResizeObserver(() => this.updateCanZoom());
+    this.resizeObserver = new ResizeObserver(() => {
+      this.updateCanZoom();
+      this.cdr.markForCheck();
+    });
     this.resizeObserver.observe(this.host.nativeElement);
     this.preloadImage();
   }
@@ -64,6 +79,7 @@ export class PictureGalleryZoomOverlayComponent implements AfterViewInit, OnChan
       this.naturalWidth = image.naturalWidth;
       this.naturalHeight = image.naturalHeight;
       this.updateCanZoom();
+      this.cdr.markForCheck();
     };
     image.src = this.src;
   }

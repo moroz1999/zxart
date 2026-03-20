@@ -1,4 +1,4 @@
-import {Component, HostBinding, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 import {ParserData} from '../models/parser-data';
 import {MatDialog} from '@angular/material/dialog';
 import {ParsedReleasesComponent} from '../parsed-releases/parsed-releases.component';
@@ -31,6 +31,7 @@ const zxFiles = [
     templateUrl: './parsed-file.component.html',
     styleUrls: ['./parsed-file.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         SvgIconComponent,
         NgIf,

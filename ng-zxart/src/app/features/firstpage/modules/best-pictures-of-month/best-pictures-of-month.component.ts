@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable, tap} from 'rxjs';
 import {FirstpageModuleBase} from '../firstpage-module.base';
@@ -20,7 +20,8 @@ const GALLERY_ID = 'zx-picture-lightbox-best-pictures-of-month';
   standalone: true,
   imports: [CommonModule, FirstpageModuleWrapperComponent, ZxPictureCardComponent, ZxPicturesGridDirective],
   templateUrl: './best-pictures-of-month.component.html',
-  styleUrls: ['./best-pictures-of-month.component.scss']
+  styleUrls: ['./best-pictures-of-month.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BestPicturesOfMonthComponent extends FirstpageModuleBase<ZxPictureDto> {
   readonly moduleType = 'bestPicturesOfMonth' as const;

@@ -1,15 +1,17 @@
-<zx-firstpage-module-wrapper
-  titleKey="firstpage.modules.latestAddedReleases"
-  [viewAllUrl]="viewAllUrl"
-  [viewAllLabelKey]="viewAllLabelKey"
-  [loading]="loading"
-  [error]="error"
-  [empty]="items.length === 0"
-  [usePanel]="false"
-  skeletonVariant="prod-grid"
-  [skeletonCount]="settings.limit"
->
-  <div class="prods-grid">
-    <zx-prod-block *ngFor="let prod of items" [model]="prod"></zx-prod-block>
-  </div>
-</zx-firstpage-module-wrapper>
+<ng-container *ngIf="vm$ | async as vm">
+  <zx-firstpage-module-wrapper
+    titleKey="firstpage.modules.latestAddedReleases"
+    [viewAllUrl]="vm.viewAllUrl"
+    [viewAllLabelKey]="vm.viewAllLabelKey"
+    [usePanel]="false"
+    [loading]="vm.loading"
+    [error]="vm.error"
+    [empty]="vm.empty"
+    skeletonVariant="prod-grid"
+    [skeletonCount]="settings.limit"
+  >
+    <div class="prods-grid">
+      <zx-prod-block *ngFor="let prod of vm.items" [model]="prod"></zx-prod-block>
+    </div>
+  </zx-firstpage-module-wrapper>
+</ng-container>

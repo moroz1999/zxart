@@ -1,9 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {animate, style, transition, trigger} from '@angular/animations';
+import {Observable} from 'rxjs';
+import {shareReplay} from 'rxjs/operators';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
-import {Subscription} from 'rxjs';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxPopoverMenuItemComponent} from '../../../../shared/ui/zx-popover-menu-item/zx-popover-menu-item.component';
 import {MenuService} from '../../../menu/services/menu.service';
@@ -17,6 +18,7 @@ import {environment} from '../../../../../environments/environment';
   imports: [CommonModule, TranslateModule, SvgIconComponent, ZxButtonComponent, ZxPopoverMenuItemComponent],
   templateUrl: './mobile-nav.component.html',
   styleUrls: ['./mobile-nav.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('drawer', [
       transition(':enter', [
@@ -38,30 +40,20 @@ import {environment} from '../../../../../environments/environment';
     ]),
   ],
 })
-export class MobileNavComponent implements OnInit, OnDestroy {
-  items: MenuItem[] = [];
-  isOpen = false;
+export class MobileNavComponent {
+  readonly items$: Observable<MenuItem[]> = this.menuService.getMenuItems(this.routeService.languageCode).pipe(
+    shareReplay({bufferSize: 1, refCount: false}),
+  );
 
-  private subscription = new Subscription();
+  isOpen = false;
 
   constructor(
     private menuService: MenuService,
     private routeService: CurrentRouteService,
     private iconReg: SvgIconRegistryService,
-  ) {}
-
-  ngOnInit(): void {
+  ) {
     this.iconReg.loadSvg(`${environment.svgUrl}menu.svg`, 'menu')?.subscribe();
     this.iconReg.loadSvg(`${environment.svgUrl}x.svg`, 'mn-x')?.subscribe();
-    this.subscription.add(
-      this.menuService.getMenuItems(this.routeService.languageCode).subscribe(items => {
-        this.items = items;
-      }),
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 
   open(): void {

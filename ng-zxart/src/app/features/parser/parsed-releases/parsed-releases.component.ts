@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import {ReleaseData} from '../models/release-data';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {ParsedReleaseComponent} from '../parsed-release/parsed-release.component';
@@ -13,6 +13,7 @@ interface DialogData {
     templateUrl: './parsed-releases.component.html',
     styleUrls: ['./parsed-releases.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ParsedReleaseComponent,
         NgForOf,

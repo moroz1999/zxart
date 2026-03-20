@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.component';
 
 /**
@@ -24,6 +24,7 @@ import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.comp
   standalone: true,
   imports: [ZxItemControlsComponent],
   templateUrl: './zx-item-legacy-controls.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxItemLegacyControlsComponent {
   @Input() elementId: string = '0';

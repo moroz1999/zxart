@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {TagsSearchService} from '../../services/tags-search.service';
 import {Tag} from '../../models/tag';
 import {Subject} from 'rxjs';
@@ -15,6 +15,7 @@ import {ZxInputComponent} from '../../ui/zx-input/zx-input.component';
     templateUrl: './tags-selector.component.html',
     styleUrls: ['./tags-selector.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatAutocomplete,
     MatOption,
@@ -54,12 +55,12 @@ export class TagsSelectorComponent implements OnInit {
     }
 
     remove(tag: Tag) {
-        this.tagsSelector.splice(this.tagsSelector.indexOf(tag), 1);
+        this.tagsSelector = this.tagsSelector.filter(t => t !== tag);
         this.tagsSelected.emit(this.tagsSelector);
     }
 
     selected(event: MatAutocompleteSelectedEvent) {
-        this.tagsSelector.push(event.option.value);
+        this.tagsSelector = [...this.tagsSelector, event.option.value];
         this.tagsSelected.emit(this.tagsSelector);
         this.tagText = '';
         this.zxInput?.clear();

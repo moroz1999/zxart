@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
 
 @Component({
@@ -6,7 +6,8 @@ import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
   standalone: true,
   imports: [ZxPanelComponent],
   templateUrl: './zx-table.component.html',
-  styleUrls: ['./zx-table.component.scss']
+  styleUrls: ['./zx-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxTableComponent {
   @Input() title = '';

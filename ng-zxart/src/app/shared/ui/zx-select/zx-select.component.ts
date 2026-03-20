@@ -1,4 +1,4 @@
-import {Component, forwardRef, HostBinding, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, forwardRef, HostBinding, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
@@ -19,7 +19,8 @@ export interface ZxSelectOption {
       useExisting: forwardRef(() => ZxSelectComponent),
       multi: true
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxSelectComponent implements ControlValueAccessor {
   @Input() options: ZxSelectOption[] = [];

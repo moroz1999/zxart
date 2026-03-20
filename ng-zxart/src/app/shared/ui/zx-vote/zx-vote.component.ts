@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {RatingComponent} from '../../components/rating/rating.component';
 import {VoteService} from '../../services/vote.service';
 
@@ -18,6 +18,7 @@ import {VoteService} from '../../services/vote.service';
   imports: [RatingComponent],
   templateUrl: './zx-vote.component.html',
   styleUrls: ['./zx-vote.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxVoteComponent implements OnInit {
   @Input({alias: 'element-id'}) elementId!: number;

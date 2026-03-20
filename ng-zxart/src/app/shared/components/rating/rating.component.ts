@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, OnChanges, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnChanges, Output} from '@angular/core';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {environment} from '../../../../environments/environment';
 import {NgClass, NgIf, NgStyle} from '@angular/common';
@@ -18,6 +18,7 @@ import {VoteService} from '../../services/vote.service';
         NgClass,
     ],
     hostDirectives: [TooltipDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RatingComponent implements OnChanges {
     @Input() overallRating?: number;

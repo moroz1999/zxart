@@ -1,4 +1,4 @@
-﻿import {Component, OnDestroy} from '@angular/core';
+﻿import {ChangeDetectionStrategy, Component, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
@@ -56,6 +56,7 @@ type PartyValue = 'any' | 'yes' | 'no';
   ],
   templateUrl: './player-sheet.component.html',
   styleUrls: ['./player-sheet.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('slideUp', [
       transition(':enter', [

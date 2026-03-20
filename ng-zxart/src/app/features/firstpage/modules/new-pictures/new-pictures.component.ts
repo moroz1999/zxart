@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable, tap} from 'rxjs';
 import {FirstpageModuleBase} from '../firstpage-module.base';
@@ -20,7 +20,8 @@ const GALLERY_ID = 'zx-picture-lightbox-new-pictures';
   standalone: true,
   imports: [CommonModule, FirstpageModuleWrapperComponent, ZxPictureCardComponent, ZxPicturesGridDirective],
   templateUrl: './new-pictures.component.html',
-  styleUrls: ['./new-pictures.component.scss']
+  styleUrls: ['./new-pictures.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewPicturesComponent extends FirstpageModuleBase<ZxPictureDto> {
   readonly moduleType = 'newPictures' as const;

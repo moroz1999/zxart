@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs';
 import {FirstpageModuleBase} from '../firstpage-module.base';
@@ -16,7 +16,8 @@ import {MODULE_SETTINGS} from '../../models/module-settings.token';
   standalone: true,
   imports: [CommonModule, FirstpageModuleWrapperComponent, ZxProdBlockComponent],
   templateUrl: './best-new-games.component.html',
-  styleUrls: ['./best-new-games.component.scss']
+  styleUrls: ['./best-new-games.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BestNewGamesComponent extends FirstpageModuleBase<ZxProd> {
   readonly moduleType = 'bestNewGames' as const;

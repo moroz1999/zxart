@@ -1,11 +1,12 @@
 import {animate, style, transition, trigger} from '@angular/animations';
-import {Component, HostBinding} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding} from '@angular/core';
 
 @Component({
   selector: 'zx-header-popover',
   standalone: true,
   template: '<ng-content></ng-content>',
   styleUrls: ['./zx-header-popover.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('popover', [
       transition(':enter', [

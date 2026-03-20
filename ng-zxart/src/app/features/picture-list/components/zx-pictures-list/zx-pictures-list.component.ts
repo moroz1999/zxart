@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
@@ -25,6 +25,7 @@ import {PictureListService} from '../../services/picture-list.service';
   ],
   templateUrl: './zx-pictures-list.component.html',
   styleUrls: ['./zx-pictures-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxPicturesListComponent implements OnInit {
   @Input() elementId = 0;

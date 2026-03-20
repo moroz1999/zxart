@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {PlayerService} from '../../../player/services/player.service';
@@ -18,6 +18,7 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
   ],
   templateUrl: './radio-remote.component.html',
   styleUrl: './radio-remote.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RadioRemoteComponent {
   presets: {key: RadioPreset; label: string}[] = [

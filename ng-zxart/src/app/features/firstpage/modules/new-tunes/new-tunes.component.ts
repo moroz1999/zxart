@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -21,7 +21,8 @@ const PLAYLIST_ID = 'firstpage-new-tunes';
   standalone: true,
   imports: [CommonModule, ZxTableComponent, ZxTuneRowComponent, FirstpageModuleWrapperComponent],
   templateUrl: './new-tunes.component.html',
-  styleUrls: ['./new-tunes.component.scss']
+  styleUrls: ['./new-tunes.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewTunesComponent extends FirstpageModuleBase<ZxTuneDto> {
   readonly moduleType = 'newTunes' as const;
@@ -45,11 +46,11 @@ export class NewTunesComponent extends FirstpageModuleBase<ZxTuneDto> {
   }
 
   playTune(index: number): void {
-    const selected = this.items[index];
+    const selected = this.currentItems[index];
     if (!selected) {
       return;
     }
-    const playable = this.items.filter(item => item.isPlayable && item.mp3Url);
+    const playable = this.currentItems.filter(item => item.isPlayable && item.mp3Url);
     const startIndex = playable.findIndex(item => item.id === selected.id);
     if (startIndex === -1) {
       return;

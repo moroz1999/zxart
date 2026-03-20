@@ -1,4 +1,4 @@
-import {Component, HostBinding, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ZxHeading2Directive, ZxHeading3Directive} from '../../directives/typography/typography.directives';
 
@@ -7,7 +7,8 @@ import {ZxHeading2Directive, ZxHeading3Directive} from '../../directives/typogra
   standalone: true,
   imports: [CommonModule, ZxHeading2Directive, ZxHeading3Directive],
   templateUrl: './zx-panel.component.html',
-  styleUrl: './zx-panel.component.scss'
+  styleUrl: './zx-panel.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxPanelComponent {
   @Input() radius: 'sm' | 'md' | 'lg' | 'xl' = 'md';
