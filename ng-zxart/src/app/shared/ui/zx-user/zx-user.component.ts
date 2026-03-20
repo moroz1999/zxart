@@ -22,6 +22,13 @@ import {environment} from '../../../../environments/environment';
 export class ZxUserComponent {
   @HostBinding('class.zx-user') className = true;
   @Input({required: true}) user!: CommentAuthorDto;
+  @Input() linkDisabled = false;
+  @Input() namePrimary = false;
+
+  @HostBinding('style.--zx-user-name-color')
+  get nameColorVar(): string | null {
+    return this.namePrimary ? 'var(--text-color)' : null;
+  }
 
   constructor(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
     iconRegistry.addSvgIcon(

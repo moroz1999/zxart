@@ -2,18 +2,17 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
-import {Observable} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxHeaderPopoverComponent} from '../../../../shared/ui/zx-header-popover/zx-header-popover.component';
 import {ZxPopoverMenuItemComponent} from '../../../../shared/ui/zx-popover-menu-item/zx-popover-menu-item.component';
-import {LanguagesService} from '../../services/languages.service';
-import {CurrentRouteService} from '../../services/current-route.service';
+import {CurrentLanguageService} from '../../services/current-language.service';
 import {LanguageItem} from '../../models/language-item';
 
 interface LanguageVm {
   languages: LanguageItem[];
-  activeLanguage: LanguageItem | null;
+  activeLanguage: LanguageItem;
 }
 
 @Component({
@@ -33,11 +32,12 @@ interface LanguageVm {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LanguageTriggerComponent {
-  readonly vm$: Observable<LanguageVm> = this.languagesService.getLanguages(this.routeService.pathname).pipe(
-    map(languages => ({
-      languages,
-      activeLanguage: languages.find(l => l.active) ?? languages[0] ?? null,
-    })),
+  /** Only emits when the server has confirmed both the language list and the active language. */
+  readonly vm$: Observable<LanguageVm> = combineLatest([
+    this.languageService.languages$,
+    this.languageService.activeLanguage$,
+  ]).pipe(
+    map(([languages, activeLanguage]) => ({languages, activeLanguage})),
     shareReplay({bufferSize: 1, refCount: false}),
   );
 
@@ -48,10 +48,7 @@ export class LanguageTriggerComponent {
     {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -4},
   ];
 
-  constructor(
-    private languagesService: LanguagesService,
-    private routeService: CurrentRouteService,
-  ) {}
+  constructor(private languageService: CurrentLanguageService) {}
 
   togglePopover(event: Event): void {
     event.stopPropagation();

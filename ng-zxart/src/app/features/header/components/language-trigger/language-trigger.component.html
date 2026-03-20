@@ -8,8 +8,8 @@
     [attr.aria-expanded]="popoverOpen"
     (click)="togglePopover($event)"
   >
-    <span class="lt-flag">{{ vm.activeLanguage?.flag }}</span>
-    <span class="lt-label">{{ vm.activeLanguage?.title }}</span>
+    <span class="lt-flag">{{ vm.activeLanguage.flag }}</span>
+    <span class="lt-label">{{ vm.activeLanguage.title }}</span>
   </zx-button>
 
   <ng-template

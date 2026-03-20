@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
@@ -45,7 +45,10 @@ export class AuthorPicturesComponent implements OnInit {
   allPictures: ZxPictureDto[] = [];
   readonly galleryId = 'zx-author-pictures';
 
-  constructor(private authorPicturesService: AuthorPicturesService) {}
+  constructor(
+    private authorPicturesService: AuthorPicturesService,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
     this.loadData();
@@ -55,6 +58,7 @@ export class AuthorPicturesComponent implements OnInit {
     if (!this.elementId) {
       this.loading = false;
       this.error = true;
+      this.cdr.markForCheck();
       return;
     }
     this.loading = true;
@@ -63,10 +67,12 @@ export class AuthorPicturesComponent implements OnInit {
       next: pictures => {
         this.loading = false;
         this.buildGroups(pictures);
+        this.cdr.markForCheck();
       },
       error: () => {
         this.loading = false;
         this.error = true;
+        this.cdr.markForCheck();
       },
     });
   }

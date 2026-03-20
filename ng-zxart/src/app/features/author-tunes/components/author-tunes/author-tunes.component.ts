@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {map} from 'rxjs';
@@ -52,6 +52,7 @@ export class AuthorTunesComponent implements OnInit {
   constructor(
     private authorTunesService: AuthorTunesService,
     private playerService: PlayerService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -80,6 +81,7 @@ export class AuthorTunesComponent implements OnInit {
     if (!this.elementId) {
       this.loading = false;
       this.error = true;
+      this.cdr.markForCheck();
       return;
     }
     this.loading = true;
@@ -88,10 +90,12 @@ export class AuthorTunesComponent implements OnInit {
       next: tunes => {
         this.loading = false;
         this.buildGroups(tunes);
+        this.cdr.markForCheck();
       },
       error: () => {
         this.loading = false;
         this.error = true;
+        this.cdr.markForCheck();
       },
     });
   }

@@ -177,6 +177,7 @@ SCSS RESTRICTIONS
 - @extend is FORBIDDEN.
 - Nesting deeper than 3 levels is FORBIDDEN.
 - Parent selector abuse is FORBIDDEN.
+- BEM shorthand (`&__element`, `&--modifier`) is FORBIDDEN. Always write full class names (e.g. `.zx-foo__bar`, `.zx-foo__bar--active`).
 - Mixins are allowed ONLY for structural patterns, never for styling values.
 
 ======================================================================

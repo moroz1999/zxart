@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
@@ -36,7 +36,10 @@ export class ZxPicturesListComponent implements OnInit {
   pictures: ZxPictureDto[] = [];
   galleryId = '';
 
-  constructor(private pictureListService: PictureListService) {}
+  constructor(
+    private pictureListService: PictureListService,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
     this.galleryId = `zx-pictures-list-${this.elementId}${this.compoType ? '-' + this.compoType : ''}`;
@@ -47,6 +50,7 @@ export class ZxPicturesListComponent implements OnInit {
     if (!this.elementId) {
       this.loading = false;
       this.error = true;
+      this.cdr.markForCheck();
       return;
     }
     this.loading = true;
@@ -55,10 +59,12 @@ export class ZxPicturesListComponent implements OnInit {
       next: pictures => {
         this.loading = false;
         this.pictures = pictures;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.loading = false;
         this.error = true;
+        this.cdr.markForCheck();
       },
     });
   }

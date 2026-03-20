@@ -5,7 +5,7 @@
   [svgIcon]="isSvgIcon(badge) ? getIconName(badge) : ''"
 >{{ isSvgIcon(badge) ? '' : getIconName(badge) }}</mat-icon>
 
-<a *ngIf="user.url; else noUrl" [href]="user.url" zxLink zxCaption class="zx-user__name">
+<a *ngIf="user.url && !linkDisabled; else noUrl" [href]="user.url" zxLink zxCaption class="zx-user__name">
   {{ user.name }}
 </a>
 <ng-template #noUrl>

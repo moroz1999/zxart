@@ -3,12 +3,13 @@ import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {Observable} from 'rxjs';
-import {shareReplay} from 'rxjs/operators';
+import {shareReplay, switchMap} from 'rxjs/operators';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxPopoverMenuItemComponent} from '../../../../shared/ui/zx-popover-menu-item/zx-popover-menu-item.component';
 import {MenuService} from '../../../menu/services/menu.service';
 import {CurrentRouteService} from '../../services/current-route.service';
+import {CurrentLanguageService} from '../../services/current-language.service';
 import {MenuItem} from '../../../menu/models/menu-item';
 import {environment} from '../../../../../environments/environment';
 
@@ -41,7 +42,8 @@ import {environment} from '../../../../../environments/environment';
   ],
 })
 export class MobileNavComponent {
-  readonly items$: Observable<MenuItem[]> = this.menuService.getMenuItems(this.routeService.languageCode).pipe(
+  readonly items$: Observable<MenuItem[]> = this.languageService.languageCode$.pipe(
+    switchMap(code => this.menuService.getMenuItems(code)),
     shareReplay({bufferSize: 1, refCount: false}),
   );
 
@@ -49,6 +51,7 @@ export class MobileNavComponent {
 
   constructor(
     private menuService: MenuService,
+    private languageService: CurrentLanguageService,
     private routeService: CurrentRouteService,
     private iconReg: SvgIconRegistryService,
   ) {

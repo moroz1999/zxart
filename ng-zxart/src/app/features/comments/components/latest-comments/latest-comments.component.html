@@ -10,14 +10,14 @@
           @if (comment.target) {
             <a [href]="comment.target.url" class="latest-comment__link" zxBodySmMuted>
               @if (comment.author) {
-                <zx-user [user]="comment.author" class="latest-comment__author"></zx-user>:
+                <zx-user [user]="comment.author" [linkDisabled]="true" [namePrimary]="true" class="latest-comment__author"></zx-user>:
               }
               <span class="latest-comment__content" [innerHTML]="sanitizeHtml(comment.content)"></span>
             </a>
           } @else {
             <span zxBodySmMuted>
               @if (comment.author) {
-                <zx-user [user]="comment.author" class="latest-comment__author"></zx-user>:
+                <zx-user [user]="comment.author" [linkDisabled]="true" [namePrimary]="true" class="latest-comment__author"></zx-user>:
               }
               <span class="latest-comment__content" [innerHTML]="sanitizeHtml(comment.content)"></span>
             </span>

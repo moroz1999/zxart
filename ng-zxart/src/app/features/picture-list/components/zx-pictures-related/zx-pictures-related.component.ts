@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
@@ -30,7 +30,10 @@ export class ZxPicturesRelatedComponent implements OnInit {
   pictures: ZxPictureDto[] = [];
   galleryId = '';
 
-  constructor(private pictureListService: PictureListService) {}
+  constructor(
+    private pictureListService: PictureListService,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
     this.galleryId = `zx-pictures-related-${this.pictureId}`;
@@ -39,6 +42,7 @@ export class ZxPicturesRelatedComponent implements OnInit {
     this.pictureListService.getRelated(this.pictureId).subscribe(response => {
       this.type = response.type;
       this.pictures = response.items;
+      this.cdr.markForCheck();
     });
   }
 }

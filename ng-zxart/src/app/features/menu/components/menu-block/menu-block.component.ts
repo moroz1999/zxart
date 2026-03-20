@@ -1,13 +1,15 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
-import {Subscription} from 'rxjs';
+import {Observable} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
 import {MenuItem} from '../../models/menu-item';
 import {MenuService} from '../../services/menu.service';
 import {ZxPopoverMenuItemComponent} from '../../../../shared/ui/zx-popover-menu-item/zx-popover-menu-item.component';
 import {ZxHeaderPopoverComponent} from '../../../../shared/ui/zx-header-popover/zx-header-popover.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {CurrentRouteService} from '../../../header/services/current-route.service';
+import {CurrentLanguageService} from '../../../header/services/current-language.service';
 
 @Component({
   selector: 'zx-menu-block',
@@ -24,8 +26,11 @@ import {CurrentRouteService} from '../../../header/services/current-route.servic
   styleUrls: ['./menu-block.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MenuBlockComponent implements OnInit, OnDestroy {
-  items: MenuItem[] = [];
+export class MenuBlockComponent implements OnDestroy {
+  readonly items$: Observable<MenuItem[]> = this.languageService.languageCode$.pipe(
+    switchMap(code => this.menuService.getMenuItems(code)),
+  );
+
   activeItem: MenuItem | null = null;
   activeTriggerWidth = 0;
 
@@ -34,25 +39,16 @@ export class MenuBlockComponent implements OnInit, OnDestroy {
     {originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: 0},
   ];
 
-  private subscription = new Subscription();
   private closeTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private menuService: MenuService,
+    private languageService: CurrentLanguageService,
     private routeService: CurrentRouteService,
     private cdr: ChangeDetectorRef,
   ) {}
 
-  ngOnInit(): void {
-    this.subscription.add(
-      this.menuService.getMenuItems(this.routeService.languageCode).subscribe(items => {
-        this.items = items;
-      }),
-    );
-  }
-
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     if (this.closeTimer !== null) {
       clearTimeout(this.closeTimer);
     }
