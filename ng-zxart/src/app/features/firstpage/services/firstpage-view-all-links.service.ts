@@ -3,13 +3,14 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {catchError, shareReplay, tap} from 'rxjs/operators';
 import {CatalogueBaseUrlsResponse} from '../models/firstpage-view-all-links';
+import {LocalStorageService} from '../../../shared/services/local-storage.service';
 
 interface CachedBaseUrls {
   data: CatalogueBaseUrlsResponse;
   timestamp: number;
 }
 
-const STORAGE_KEY = 'firstpage_base_urls';
+const STORAGE_KEY = 'firstpage-base-urls';
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
 @Injectable({
@@ -18,7 +19,10 @@ const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 export class FirstpageViewAllLinksService {
   private baseUrls$?: Observable<CatalogueBaseUrlsResponse>;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private localStorage: LocalStorageService,
+  ) {}
 
   getBaseUrls(): Observable<CatalogueBaseUrlsResponse> {
     if (!this.baseUrls$) {
@@ -37,28 +41,18 @@ export class FirstpageViewAllLinksService {
   }
 
   private loadFromStorage(): CatalogueBaseUrlsResponse | null {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) {
-        return null;
-      }
-      const cached: CachedBaseUrls = JSON.parse(raw);
-      if (Date.now() - cached.timestamp < CACHE_TTL_MS) {
-        return cached.data;
-      }
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      // ignore
+    const cached = this.localStorage.get<CachedBaseUrls>(STORAGE_KEY);
+    if (!cached) {
+      return null;
     }
+    if (Date.now() - cached.timestamp < CACHE_TTL_MS) {
+      return cached.data;
+    }
+    this.localStorage.remove(STORAGE_KEY);
     return null;
   }
 
   private saveToStorage(data: CatalogueBaseUrlsResponse): void {
-    try {
-      const cached: CachedBaseUrls = {data, timestamp: Date.now()};
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cached));
-    } catch {
-      // ignore
-    }
+    this.localStorage.set(STORAGE_KEY, {data, timestamp: Date.now()} satisfies CachedBaseUrls);
   }
 }

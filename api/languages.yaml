@@ -1,0 +1,63 @@
+openapi: 3.0.3
+info:
+  title: Languages API
+  version: 1.0.0
+
+paths:
+  /languages/:
+    get:
+      summary: Get list of site languages with active state
+      parameters:
+        - name: path
+          in: query
+          required: false
+          description: Current page path (used to detect active language and build language switch URLs)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of languages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LanguageItem'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    LanguageItem:
+      type: object
+      required: [code, title, flag, url, active]
+      properties:
+        code:
+          type: string
+          description: ISO 639-3 language code, e.g. 'rus', 'eng'
+          example: rus
+        title:
+          type: string
+          description: Language display name
+          example: Русский
+        flag:
+          type: string
+          description: Flag emoji
+          example: 🇷🇺
+        url:
+          type: string
+          description: URL to switch to this language (may be absolute)
+          example: /rus/
+        active:
+          type: boolean
+          description: Whether this language is currently active
+    ErrorResponse:
+      type: object
+      required: [errorMessage]
+      properties:
+        errorMessage:
+          type: string

@@ -9,6 +9,7 @@ import {RadioPreset} from '../models/radio-preset';
 import {TunePlayService} from './tune-play.service';
 import {RadioCriteriaStorageService} from './radio-criteria-storage.service';
 import {AnalyticsService} from '../../../shared/services/analytics.service';
+import {LocalStorageService} from '../../../shared/services/local-storage.service';
 
 type BroadcastMessage = {
   type: 'exclusive';
@@ -60,6 +61,7 @@ export class PlayerService {
     private tunePlayService: TunePlayService,
     private criteriaStorageService: RadioCriteriaStorageService,
     private analyticsService: AnalyticsService,
+    private localStorage: LocalStorageService,
   ) {
     this.attachAudioEvents();
     this.initBroadcast();
@@ -483,7 +485,7 @@ export class PlayerService {
     } else {
       const win = window as Window;
       win.addEventListener('storage', (event: StorageEvent) => {
-        if (event.key !== 'zx_player_lock' || !event.newValue) {
+        if (event.key !== this.localStorage.getKey('player-lock') || !event.newValue) {
           return;
         }
         try {
@@ -501,7 +503,7 @@ export class PlayerService {
     if (this.broadcastChannel) {
       this.broadcastChannel.postMessage(message);
     } else {
-      localStorage.setItem('zx_player_lock', JSON.stringify(message));
+      this.localStorage.set('player-lock', message);
     }
   }
 

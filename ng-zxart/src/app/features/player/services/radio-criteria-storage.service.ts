@@ -3,8 +3,9 @@ import {map, Observable, of, switchMap, take} from 'rxjs';
 import {EMPTY_RADIO_CRITERIA, RadioCriteria} from '../models/radio-criteria';
 import {UserPreferencesService} from '../../settings/services/user-preferences.service';
 import {CurrentUserService} from '../../../shared/services/current-user.service';
+import {LocalStorageService} from '../../../shared/services/local-storage.service';
 
-const STORAGE_KEY = 'zx_radio_criteria';
+const STORAGE_KEY = 'radio-criteria';
 const PREF_CODE = 'radio_criteria';
 
 @Injectable({
@@ -14,6 +15,7 @@ export class RadioCriteriaStorageService {
   constructor(
     private userPreferencesService: UserPreferencesService,
     private currentUserService: CurrentUserService,
+    private localStorage: LocalStorageService,
   ) {}
 
   loadCriteria(): Observable<RadioCriteria> {
@@ -37,15 +39,18 @@ export class RadioCriteriaStorageService {
             map(() => undefined),
           );
         }
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(criteria));
+        this.localStorage.set(STORAGE_KEY, criteria);
         return of(undefined);
       }),
     );
   }
 
   private readFromStorage(): RadioCriteria {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return this.parseCriteria(raw);
+    const data = this.localStorage.get<Partial<RadioCriteria>>(STORAGE_KEY);
+    if (!data) {
+      return EMPTY_RADIO_CRITERIA;
+    }
+    return {...EMPTY_RADIO_CRITERIA, ...data};
   }
 
   private parseCriteria(raw: string | undefined | null): RadioCriteria {

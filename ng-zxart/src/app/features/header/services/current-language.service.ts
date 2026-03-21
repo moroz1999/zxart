@@ -23,9 +23,9 @@ export class CurrentLanguageService {
     filter((lang): lang is LanguageItem => lang !== undefined),
   );
 
-  /** Language code derived from the active language URL — e.g. /rus/ → 'rus'. No hardcoded default. */
+  /** Language code from the active language, e.g. 'rus'. No hardcoded default. */
   readonly languageCode$: Observable<string> = this.activeLanguage$.pipe(
-    map(lang => lang.url.split('/').filter(Boolean)[0]),
+    map(lang => lang.code),
     filter((code): code is string => !!code),
   );
 

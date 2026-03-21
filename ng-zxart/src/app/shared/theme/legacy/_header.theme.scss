@@ -5,6 +5,10 @@
   --header-padding: var(--space-8) var(--space-16);
   --header-column-margin: 0 0 0 var(--space-32);
   --settings-font-size: var(--font-sm);
+  /* Shadow applied when header is fixed on mobile */
+  --header-shadow: var(--shadow-lg);
+  /* Header height on mobile — used to offset main content below fixed header */
+  --header-height-mobile: 45px;
 }
 
 @include bp.media-breakpoint-down(md) {

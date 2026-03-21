@@ -4,8 +4,9 @@ import {Observable, of, switchMap, take, throwError} from 'rxjs';
 import {catchError, map, shareReplay, tap} from 'rxjs/operators';
 import {PreferenceDto} from '../models/preference.dto';
 import {CurrentUserService} from '../../../shared/services/current-user.service';
+import {LocalStorageService} from '../../../shared/services/local-storage.service';
 
-const STORAGE_KEY = 'zxart_preferences';
+const STORAGE_KEY = 'preferences';
 
 interface StoredPreferences {
   userId: number | null;
@@ -22,6 +23,7 @@ export class UserPreferencesService {
   constructor(
     private http: HttpClient,
     private currentUserService: CurrentUserService,
+    private localStorage: LocalStorageService,
   ) {}
 
   initialize(): Observable<PreferenceDto[]> {
@@ -154,22 +156,17 @@ export class UserPreferencesService {
   }
 
   private loadStoredData(): StoredPreferences | null {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (!stored) {
+    const data = this.localStorage.get<unknown>(STORAGE_KEY);
+    if (!data) {
       return null;
     }
-    try {
-      const data = JSON.parse(stored);
-      if (data && Array.isArray(data.preferences)) {
-        return data as StoredPreferences;
-      }
-      if (Array.isArray(data)) {
-        return {userId: null, preferences: data};
-      }
-      return null;
-    } catch {
-      return null;
+    if (typeof data === 'object' && Array.isArray((data as StoredPreferences).preferences)) {
+      return data as StoredPreferences;
     }
+    if (Array.isArray(data)) {
+      return {userId: null, preferences: data as PreferenceDto[]};
+    }
+    return null;
   }
 
   private loadFromStorage(): PreferenceDto[] {
@@ -178,11 +175,10 @@ export class UserPreferencesService {
   }
 
   private saveToStorage(userId: number | null, prefs: PreferenceDto[]): void {
-    const data: StoredPreferences = {userId, preferences: prefs};
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    this.localStorage.set(STORAGE_KEY, {userId, preferences: prefs} satisfies StoredPreferences);
   }
 
   private clearStorage(): void {
-    localStorage.removeItem(STORAGE_KEY);
+    this.localStorage.remove(STORAGE_KEY);
   }
 }

@@ -11,6 +11,7 @@ import {
   PictureGalleryHostComponent
 } from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {AuthorPicturesService} from '../../services/author-pictures.service';
+import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 
 interface YearGroup {
   year: number;
@@ -47,6 +48,7 @@ export class AuthorPicturesComponent implements OnInit {
 
   constructor(
     private authorPicturesService: AuthorPicturesService,
+    private pictureGalleryService: PictureGalleryService,
     private cdr: ChangeDetectorRef,
   ) {}
 
@@ -67,6 +69,7 @@ export class AuthorPicturesComponent implements OnInit {
       next: pictures => {
         this.loading = false;
         this.buildGroups(pictures);
+        this.pictureGalleryService.ensureGalleryLoaded(this.galleryId, this.allPictures);
         this.cdr.markForCheck();
       },
       error: () => {

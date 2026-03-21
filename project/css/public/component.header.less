@@ -8,6 +8,13 @@
   top: 0;
   left: 0;
   right: 0;
+  box-shadow: var(--header-shadow);
+}
+
+@media (max-width: @screen_breakpoint_sm_max) {
+  .header_block {
+    position: fixed;
+  }
 }
 
 .header_inner {

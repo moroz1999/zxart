@@ -82,6 +82,7 @@ class Languages extends controllerApplication
             $url = $languageLinks[$language->iso6391] ?? '/' . $language->iso6393 . '/';
 
             $result[] = [
+                'code' => $language->iso6393,
                 'title' => $language->title,
                 'flag' => $flagMap[$language->iso6391] ?? '',
                 'url' => $url,
