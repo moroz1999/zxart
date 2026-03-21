@@ -39,7 +39,7 @@ readonly class PicturesTransformer
         $pictureType = $element->type;
         $pictureBorder = (int)$element->border;
         $palette = $element->getPalette();
-        $rotation = $element->rotation > 0 ? $element->rotation : null;
+        $rotation = (int)$element->rotation > 0 ? (int)$element->rotation : null;
 
         $defaultParams = new ZxPictureParametersDto(
             type: $pictureType,

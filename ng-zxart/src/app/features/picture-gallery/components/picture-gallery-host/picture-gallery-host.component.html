@@ -1,7 +1,7 @@
 <ng-template #galleryImageTemplate let-image let-active="active">
   <zx-picture-gallery-zoom-overlay
-    [src]="image.src"
-    [thumb]="image.thumb || image.src"
+    [src]="image.imageUrl"
+    [thumb]="image.imageUrl"
     [active]="active"
   ></zx-picture-gallery-zoom-overlay>
 </ng-template>

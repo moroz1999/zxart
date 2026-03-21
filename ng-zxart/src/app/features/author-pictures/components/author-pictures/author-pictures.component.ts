@@ -50,7 +50,8 @@ export class AuthorPicturesComponent implements OnInit {
     private authorPicturesService: AuthorPicturesService,
     private pictureGalleryService: PictureGalleryService,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.loadData();

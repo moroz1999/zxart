@@ -25,7 +25,7 @@ use ZxArt\ZxScreen\ZxPictureUrlHelper;
  * @property string $originalName
  * @property string $palette
  * @property string $type
- * @property int $rotation
+ * @property string $rotation
  * @property int $border
  * @property pressArticleElement[] $mentions
  */
@@ -169,7 +169,6 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
             if ($authorPalette !== null && $authorPalette !== '') {
                 return $authorPalette;
             }
-            break;
         }
 
         return 'srgb';
@@ -369,8 +368,8 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
                 }
             }
         }
-        if ($game = $this->getReleaseElement()) {
-            if ($gameMaterials = $game->getMaterialsList()) {
+        if ($releaseElement = $this->getReleaseElement()) {
+            if ($gameMaterials = $releaseElement->getMaterialsList()) {
                 $number = 0;
                 foreach ($gameMaterials as $element) {
                     if ($element->structureType === 'zxPicture') {
