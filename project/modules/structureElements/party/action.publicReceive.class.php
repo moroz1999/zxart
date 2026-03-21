@@ -14,13 +14,12 @@ class publicReceiveParty extends structureElementAction
     public function execute(&$structureManager, &$controller, &$structureElement)
     {
         if ($this->validated) {
-            if ($structureElement->structureName == '') {
-                if ($structureElement->abbreviation) {
-                    $structureElement->structureName = $structureElement->abbreviation;
-                } elseif ($structureElement->title) {
-                    $structureElement->structureName = $structureElement->title;
-                }
+            if ($structureElement->abbreviation) {
+                $structureElement->structureName = $structureElement->abbreviation;
+            } elseif ($structureElement->title) {
+                $structureElement->structureName = $structureElement->title;
             }
+
             if (!is_null($structureElement->getDataChunk("image")->originalName)) {
                 $structureElement->image = $structureElement->getId();
                 $structureElement->originalName = $structureElement->getDataChunk("image")->originalName;
