@@ -2,9 +2,9 @@
     <div class="description">{{ 'parser.description' | translate }}</div>
     <div class="form">
         <input type="file" (change)="fileChanged($event)"/>
-        <button mat-raised-button color="primary" type="button" (click)="load()"
-                [disabled]="!!error">{{ 'parser.upload' | translate }}
-        </button>
+        <zx-button color="primary" type="button" (click)="load()" [disabled]="!!error">
+          {{ 'parser.upload' | translate }}
+        </zx-button>
     </div>
     <zx-spinner *ngIf="loading" size="xl"></zx-spinner>
     <div *ngIf=error class="error">{{ error }}</div>

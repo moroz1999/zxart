@@ -55,6 +55,7 @@ readonly final class TunesRepository
     public function getUnvotedByUserIds(int $userId, int $limit, int $topN): array
     {
         $topIds = $this->getSelectSql()
+            ->where('denyVoting', '=', 0)
             ->orderBy('votes', 'desc')
             ->limit($topN)
             ->pluck('id');

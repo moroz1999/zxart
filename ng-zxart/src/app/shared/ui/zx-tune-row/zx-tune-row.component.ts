@@ -5,17 +5,19 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   Output,
   SimpleChanges
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {Subscription} from 'rxjs';
 import {ZxTuneDto} from '../../models/zx-tune-dto';
 import {ZxBadgeComponent} from '../zx-badge/zx-badge.component';
 import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.component';
+import {ZxButtonComponent} from '../zx-button/zx-button.component';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'zx-tune-row',
@@ -23,8 +25,8 @@ import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.comp
   imports: [
     CommonModule,
     TranslateModule,
-    MatButtonModule,
-    MatIconModule,
+    SvgIconComponent,
+    ZxButtonComponent,
     ZxBadgeComponent,
     ZxItemControlsComponent,
   ],
@@ -32,7 +34,7 @@ import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.comp
   styleUrls: ['./zx-tune-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxTuneRowComponent implements OnChanges, OnDestroy {
+export class ZxTuneRowComponent implements OnInit, OnChanges, OnDestroy {
   @Input() tune!: ZxTuneDto;
   @Input() index?: number;
   @Input() isPlaying = false;
@@ -45,7 +47,15 @@ export class ZxTuneRowComponent implements OnChanges, OnDestroy {
 
   constructor(
     private translateService: TranslateService,
+    private iconReg: SvgIconRegistryService,
   ) {}
+
+  ngOnInit(): void {
+    this.iconReg.loadSvg(`${environment.svgUrl}play.svg`, 'play')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}pause.svg`, 'pause')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}download.svg`, 'download')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}music-note.svg`, 'music-note')?.subscribe();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['tune']) {

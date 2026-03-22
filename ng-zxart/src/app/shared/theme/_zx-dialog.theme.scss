@@ -1,8 +1,9 @@
 .zx-dialog {
-  .mat-mdc-dialog-container {
-    --mdc-dialog-container-color: var(--zx-panel-bg);
-    --mdc-dialog-subhead-color: var(--text-color);
-    --mdc-dialog-supporting-text-color: var(--text-color);
-    --mat-checkbox-label-text-color: var(--text-color);
+  .cdk-dialog-container {
+    background: var(--zx-panel-bg);
+    color: var(--text-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
   }
 }

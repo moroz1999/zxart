@@ -1,0 +1,50 @@
+:host {
+  display: block;
+  padding: var(--space-2) 0;
+}
+
+.tree-node__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.tree-node__toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  color: inherit;
+  flex-shrink: 0;
+
+  svg-icon svg {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.15s;
+  }
+
+  &.tree-node__toggle--collapsed svg-icon svg {
+    transform: rotate(-90deg);
+  }
+}
+
+.tree-node__spacer {
+  width: 18px;
+  flex-shrink: 0;
+}
+
+a {
+  color: inherit;
+}
+
+.tree-node__link--selected {
+  font-weight: bold;
+}
+
+.tree-node__children {
+  list-style: none;
+  margin: 0;
+  padding-left: var(--space-16);
+}

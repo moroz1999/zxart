@@ -1,11 +1,5 @@
-import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
+import {DIALOG_DATA, DialogRef} from '@angular/cdk/dialog';
 import {SelectorDto} from '../../../models/selector-dto';
 import {TranslatePipe} from '@ngx-translate/core';
 import {NgForOf, NgIf} from '@angular/common';
@@ -27,22 +21,19 @@ interface DialogData {
         ZxButtonComponent,
         TranslatePipe,
         ZxCheckboxFieldComponent,
-        MatDialogActions,
-        MatDialogTitle,
-        MatDialogContent,
         NgForOf,
         FormsModule,
         NgIf,
     ],
     standalone: true,
 })
-export class DialogSelectorDialogComponent implements OnInit {
+export class DialogSelectorDialogComponent {
     selectedValues: { [key: string]: boolean; } = {};
     amountInRow = 10;
 
     constructor(
-        @Inject(MAT_DIALOG_DATA) public data: DialogData,
-        private dialogRef: MatDialogRef<DialogSelectorDialogComponent>,
+        @Inject(DIALOG_DATA) public data: DialogData,
+        private dialogRef: DialogRef<{ [key: string]: boolean }, DialogSelectorDialogComponent>,
     ) {
         for (const group of data.selectorData) {
             for (const value of group.values) {
@@ -51,9 +42,6 @@ export class DialogSelectorDialogComponent implements OnInit {
                 }
             }
         }
-    }
-
-    ngOnInit(): void {
     }
 
     getColumns(length: number): number {

@@ -15,6 +15,11 @@ td {
   }
 }
 
+.tune-play svg-icon {
+  width: 20px;
+  height: 20px;
+}
+
 .tune-index {
   text-align: right;
   width: 2em;
@@ -139,13 +144,20 @@ td {
 .tune-download {
   text-align: right;
 
+  .tune-download-actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-4);
+    vertical-align: middle;
+  }
+
   .download-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     color: var(--text-light-color);
     text-decoration: none;
-    margin-left: var(--space-4);
 
     &:hover {
       color: var(--primary-500);
@@ -153,7 +165,6 @@ td {
   }
 
   .download-icon {
-    font-size: 20px;
     width: 20px;
     height: 20px;
   }

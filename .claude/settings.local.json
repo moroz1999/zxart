@@ -90,7 +90,11 @@
       "Bash(git -C E:/projects/zxart submodule status trickster-cms)",
       "Bash(git -C E:/projects/zxart ls-files --error-unmatch trickster-cms/homepage/css/public/application.less)",
       "Bash(git -C E:/projects/zxart submodule status)",
-      "Bash(find ng-zxart:*)"
+      "Bash(find ng-zxart:*)",
+      "Bash(for f:*)",
+      "Bash(do sed:*)",
+      "Bash(do echo:*)",
+      "Read(//e/projects/zxart/ng-zxart/src/assets/svg/**)"
     ]
   },
   "enabledPlugins": {

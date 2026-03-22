@@ -1,8 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import {MatIconModule} from '@angular/material/icon';
-import {FormsModule} from '@angular/forms';
+import {SvgIconComponent} from 'angular-svg-icon';
 
 export interface ZxToggleOption {
   value: string;
@@ -13,7 +11,7 @@ export interface ZxToggleOption {
 @Component({
   selector: 'zx-toggle',
   standalone: true,
-  imports: [CommonModule, MatButtonToggleModule, MatIconModule, FormsModule],
+  imports: [CommonModule, SvgIconComponent],
   templateUrl: './zx-toggle.component.html',
   styleUrl: './zx-toggle.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -8,15 +8,4 @@
 
 .settings-trigger__button {
   border-radius: var(--radius-lg) 0 0 var(--radius-lg);
-  min-width: auto;
-  padding: var(--space-12);
-
-  ::ng-deep .mdc-button__label {
-    display: flex;
-    align-items: center;
-  }
-
-  mat-icon {
-    margin: 0;
-  }
 }

@@ -5,7 +5,7 @@
     class="zx-picture-gallery-zoom-toggle"
     (click)="toggleZoom($event)"
   >
-    <mat-icon>{{ galleryService.zoomEnabled() ? 'zoom_out' : 'zoom_in' }}</mat-icon>
+    <svg-icon [name]="galleryService.zoomEnabled() ? 'zoom-out' : 'zoom-in'"></svg-icon>
   </button>
 
   <div class="zx-picture-gallery-zoom-area" *ngIf="canZoom && galleryService.zoomEnabled()">

@@ -6,17 +6,7 @@ import {createCustomElement} from '@angular/elements';
 import {AngularSvgIconModule} from 'angular-svg-icon';
 import {provideTranslateService, TranslateLoader, TranslatePipe} from '@ngx-translate/core';
 import {HttpClient, HttpClientModule, provideHttpClient} from '@angular/common/http';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatDialogModule} from '@angular/material/dialog';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatChipsModule} from '@angular/material/chips';
-import {MatIconModule} from '@angular/material/icon';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatTreeModule} from '@angular/material/tree';
-import {MatCardModule} from '@angular/material/card';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
+import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ZxProdsListComponent} from './entities/zx-prods-list/zx-prods-list.component';
 import {AppComponent} from './app.component';
@@ -67,17 +57,6 @@ export function HttpLoaderFactory(http: HttpClient) {
         AngularSvgIconModule.forRoot(),
         FormsModule,
         BrowserAnimationsModule,
-        MatDialogModule,
-        MatButtonModule,
-        MatCheckboxModule,
-        MatChipsModule,
-        MatIconModule,
-        MatAutocompleteModule,
-        MatTreeModule,
-        MatCardModule,
-        MatButtonToggleModule,
-        MatBottomSheetModule,
-        ReactiveFormsModule,
         TranslatePipe,
     ],
     providers: [

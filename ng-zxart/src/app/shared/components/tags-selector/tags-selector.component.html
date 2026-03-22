@@ -1,22 +1,33 @@
-<mat-chip-set *ngIf="tagsSelector.length > 0" #chipList>
-    <mat-chip
-            *ngFor="let tag of tagsSelector"
-            [removable]="true"
-            (removed)="remove(tag)"
-    >
+<div class="tags-chips" *ngIf="tagsSelector.length > 0">
+    <span *ngFor="let tag of tagsSelector" class="tags-chip">
         {{ tag.title }}
-        <mat-icon matChipRemove>cancel</mat-icon>
-    </mat-chip>
-</mat-chip-set>
+        <button type="button" class="tags-chip__remove" (click)="remove(tag)">
+            <svg-icon name="cancel"></svg-icon>
+        </button>
+    </span>
+</div>
+
 <zx-input
-        #zxInput
-        [placeholder]="'prods-list.filters.tags.select' | translate"
-        (keyup)="change()"
-        [(ngModel)]="tagText"
-        [matAutocomplete]="auto"
+    #zxInput
+    cdkOverlayOrigin
+    #tagInputOrigin="cdkOverlayOrigin"
+    [placeholder]="'prods-list.filters.tags.select' | translate"
+    (keyup)="change()"
+    [(ngModel)]="tagText"
 ></zx-input>
-<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-    <mat-option *ngFor="let tag of foundTags | async" [value]="tag">
-        {{ tag.title }}
-    </mat-option>
-</mat-autocomplete>
+
+<ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="tagInputOrigin"
+    [cdkConnectedOverlayOpen]="dropdownOpen"
+    [cdkConnectedOverlayPositions]="positions"
+    [cdkConnectedOverlayHasBackdrop]="true"
+    cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+    (backdropClick)="closeDropdown()"
+>
+    <div class="tags-dropdown">
+        <div *ngFor="let tag of foundTags" (click)="selectTag(tag)" class="tags-option">
+            {{ tag.title }}
+        </div>
+    </div>
+</ng-template>

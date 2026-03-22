@@ -10,9 +10,9 @@
     </div>
     <div class="md5">{{ data.md5 }}</div>
     <div class="releases">
-        <button mat-raised-button color="primary" type="button" (click)="showReleases()"
-                *ngIf="data.releases.length > 2">{{ 'parser.show-releases' | translate }} ({{ data.releases.length }})
-        </button>
+        <zx-button color="primary" type="button" (click)="showReleases()" *ngIf="data.releases.length > 2">
+          {{ 'parser.show-releases' | translate }} ({{ data.releases.length }})
+        </zx-button>
         <zx-parsed-release *ngIf="data.releases[0] && data.releases.length <= 2"
                             [release]="data.releases[0]"></zx-parsed-release>
         <ng-container *ngIf="data.releases.length === 2">

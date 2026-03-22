@@ -1,9 +1,8 @@
-import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {CommentAuthorDto} from '../../../features/comments/models/comment.dto';
 import {ZxCaptionDirective, ZxLinkDirective} from '../../directives/typography/typography.directives';
-import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
-import {DomSanitizer} from '@angular/platform-browser';
 import {environment} from '../../../../environments/environment';
 
 @Component({
@@ -11,15 +10,15 @@ import {environment} from '../../../../environments/environment';
   standalone: true,
   imports: [
     CommonModule,
-    MatIconModule,
+    SvgIconComponent,
     ZxCaptionDirective,
-    ZxLinkDirective
+    ZxLinkDirective,
   ],
   templateUrl: './zx-user.component.html',
   styleUrls: ['./zx-user.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxUserComponent {
+export class ZxUserComponent implements OnInit {
   @HostBinding('class.zx-user') className = true;
   @Input({required: true}) user!: CommentAuthorDto;
   @Input() linkDisabled = false;
@@ -30,11 +29,12 @@ export class ZxUserComponent {
     return this.namePrimary ? 'var(--text-color)' : null;
   }
 
-  constructor(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
-    iconRegistry.addSvgIcon(
-      'volunteer',
-      sanitizer.bypassSecurityTrustResourceUrl(`${environment.svgUrl}volunteer.svg`)
-    );
+  constructor(private iconReg: SvgIconRegistryService) {}
+
+  ngOnInit(): void {
+    this.iconReg.loadSvg(`${environment.svgUrl}star.svg`, 'star')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}person.svg`, 'person')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}volunteer.svg`, 'volunteer')?.subscribe();
   }
 
   getIconName(badge: string): string {
@@ -47,10 +47,6 @@ export class ZxUserComponent {
       default:
         return 'person';
     }
-  }
-
-  isSvgIcon(badge: string): boolean {
-    return badge.toLowerCase() === 'volunteer';
   }
 
   getBadgeClass(badge: string): string {

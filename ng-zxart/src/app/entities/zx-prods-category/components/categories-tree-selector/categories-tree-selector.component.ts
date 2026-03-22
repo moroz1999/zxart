@@ -1,4 +1,3 @@
-import {NestedTreeControl} from '@angular/cdk/tree';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,19 +8,11 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import {
-  MatNestedTreeNode,
-  MatTree,
-  MatTreeNestedDataSource,
-  MatTreeNode,
-  MatTreeNodeDef,
-  MatTreeNodeOutlet,
-  MatTreeNodeToggle,
-} from '@angular/material/tree';
+import {NgForOf} from '@angular/common';
+import {SvgIconRegistryService} from 'angular-svg-icon';
 import {CategoriesSelectorDto, CategorySelectorDto} from '../../models/categories-selector-dto';
-import {MatIcon} from '@angular/material/icon';
-import {NgClass} from '@angular/common';
-import {MatIconButton} from '@angular/material/button';
+import {CategoriesTreeNodeComponent} from './categories-tree-node.component';
+import {environment} from '../../../../../environments/environment';
 
 @Component({
     selector: 'zx-categories-tree-selector',
@@ -29,52 +20,45 @@ import {MatIconButton} from '@angular/material/button';
     styleUrls: ['./categories-tree-selector.component.scss'],
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        MatTree,
-        MatTreeNode,
-        MatNestedTreeNode,
-        MatIcon,
-        MatTreeNodeDef,
-        MatTreeNodeOutlet,
-        MatTreeNodeToggle,
-        MatTreeNodeDef,
-        NgClass,
-        MatIconButton,
-    ],
+    imports: [NgForOf, CategoriesTreeNodeComponent],
 })
 export class CategoriesTreeSelectorComponent implements OnInit, OnChanges {
-
     @Input() selectorData!: CategoriesSelectorDto;
-    treeControl = new NestedTreeControl<CategorySelectorDto>(node => node.children);
-    dataSource = new MatTreeNestedDataSource<CategorySelectorDto>();
     @Output() categoryChanged = new EventEmitter<number>();
 
+    expandedIds = new Set<number>();
+
+    constructor(private iconReg: SvgIconRegistryService) {}
+
     ngOnInit(): void {
+        this.iconReg.loadSvg(`${environment.svgUrl}expand-more.svg`, 'expand-more')?.subscribe();
     }
 
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes.selectorData) {
-            this.dataSource.data = this.selectorData;
-
-            const expander = (node: CategorySelectorDto) => {
-                node.selected ? this.treeControl.expand(node) : this.treeControl.collapse(node);
-                if (node.children) {
-                    for (const child of node.children) {
-                        expander(child);
-                    }
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['selectorData']) {
+            const ids = new Set<number>();
+            const collect = (node: CategorySelectorDto) => {
+                if (node.selected) {
+                    ids.add(node.id);
                 }
+                node.children?.forEach(collect);
             };
-            for (const selector of this.selectorData) {
-                expander(selector);
-            }
+            this.selectorData?.forEach(collect);
+            this.expandedIds = ids;
         }
     }
 
-    // isExpandable = (node: CategorySelectorDto) => node.selected;
-    hasChild = (_: number, node: CategorySelectorDto) => !!node.children && node.children.length > 0;
+    nodeClicked(id: number): void {
+        this.categoryChanged.emit(id);
+    }
 
-    nodeClicked(event: Event, nodeId: number): void {
-        event.preventDefault();
-        this.categoryChanged.emit(nodeId);
+    toggleExpanded(id: number): void {
+        const next = new Set(this.expandedIds);
+        if (next.has(id)) {
+            next.delete(id);
+        } else {
+            next.add(id);
+        }
+        this.expandedIds = next;
     }
 }

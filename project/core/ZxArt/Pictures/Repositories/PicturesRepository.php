@@ -62,6 +62,7 @@ readonly final class PicturesRepository
     public function getUnvotedByUserIds(int $userId, int $limit, int $topN): array
     {
         return $this->getSelectSql()
+            ->where('denyVoting', '=', 0)
             ->whereNotIn('id', function ($subQuery) use ($userId) {
                 $subQuery->select('votes_history.elementId')
                     ->from('votes_history')

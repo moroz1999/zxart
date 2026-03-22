@@ -4,5 +4,47 @@
 }
 
 .zx-textarea {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
   width: 100%;
+}
+
+.zx-textarea__label {
+  font-size: var(--input-font-size);
+  color: var(--text-light-color);
+}
+
+.zx-textarea__field {
+  width: 100%;
+  box-sizing: border-box;
+  border: var(--border-width-thin) solid var(--input-border-color);
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border-radius: var(--input-border-radius);
+  padding: var(--input-padding);
+  font-size: var(--input-font-size);
+  font-weight: var(--input-font-weight);
+  line-height: var(--input-line-height);
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+
+  &::placeholder {
+    color: var(--input-placeholder);
+  }
+
+  &:focus {
+    border-color: var(--input-border-focus-color);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.zx-textarea__error {
+  font-size: var(--zx-caption-size);
+  color: var(--input-border-error-color);
 }

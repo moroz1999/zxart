@@ -1,19 +1,17 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {Dialog} from '@angular/cdk/dialog';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {SettingsDialogComponent} from '../settings-dialog/settings-dialog.component';
 import {ThemeService} from '../../services/theme.service';
+import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {environment} from '../../../../../environments/environment';
 
 @Component({
   selector: 'zx-settings-trigger',
   standalone: true,
   imports: [
-    CommonModule,
-    MatIconModule,
-    MatButtonModule,
-    MatDialogModule
+    SvgIconComponent,
+    ZxButtonComponent,
   ],
   templateUrl: './settings-trigger.component.html',
   styleUrls: ['./settings-trigger.component.scss'],
@@ -21,11 +19,13 @@ import {ThemeService} from '../../services/theme.service';
 })
 export class SettingsTriggerComponent implements OnInit {
   constructor(
-    private dialog: MatDialog,
-    private themeService: ThemeService
+    private dialog: Dialog,
+    private themeService: ThemeService,
+    private iconReg: SvgIconRegistryService,
   ) {}
 
   ngOnInit(): void {
+    this.iconReg.loadSvg(`${environment.svgUrl}settings.svg`, 'settings')?.subscribe();
     this.themeService.initialize();
   }
 

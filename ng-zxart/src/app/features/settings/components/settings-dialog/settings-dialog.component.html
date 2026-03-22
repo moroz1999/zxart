@@ -1,9 +1,9 @@
 <div class="settings-dialog">
-  <button mat-icon-button (click)="close()" class="settings-dialog__close">
-    <mat-icon>close</mat-icon>
-  </button>
+  <zx-button [square]="true" color="transparent" (click)="close()" class="settings-dialog__close">
+    <svg-icon name="close"></svg-icon>
+  </zx-button>
 
-  <mat-dialog-content>
+  <div class="settings-dialog__content">
     <zx-stack spacing="lg">
       <div class="settings-section">
         <h3 zxHeading3 class="settings-section__title">{{ 'settings.theme' | translate }}</h3>
@@ -14,5 +14,5 @@
         ></zx-toggle>
       </div>
     </zx-stack>
-  </mat-dialog-content>
+  </div>
 </div>

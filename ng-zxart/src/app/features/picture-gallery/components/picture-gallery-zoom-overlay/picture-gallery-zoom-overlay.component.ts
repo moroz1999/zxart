@@ -7,22 +7,24 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   SimpleChanges
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MatIconModule} from '@angular/material/icon';
 import {NgxImageZoomModule} from 'ngx-image-zoom';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {PictureGalleryService} from '../../services/picture-gallery.service';
+import {environment} from '../../../../../environments/environment';
 
 @Component({
   selector: 'zx-picture-gallery-zoom-overlay',
   standalone: true,
-  imports: [CommonModule, MatIconModule, NgxImageZoomModule],
+  imports: [CommonModule, SvgIconComponent, NgxImageZoomModule],
   templateUrl: './picture-gallery-zoom-overlay.component.html',
   styleUrls: ['./picture-gallery-zoom-overlay.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PictureGalleryZoomOverlayComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class PictureGalleryZoomOverlayComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() src = '';
   @Input() thumb = '';
   @Input() active = false;
@@ -37,7 +39,13 @@ export class PictureGalleryZoomOverlayComponent implements AfterViewInit, OnChan
     private host: ElementRef<HTMLElement>,
     public galleryService: PictureGalleryService,
     private cdr: ChangeDetectorRef,
+    private iconReg: SvgIconRegistryService,
   ) {}
+
+  ngOnInit(): void {
+    this.iconReg.loadSvg(`${environment.svgUrl}zoom-in.svg`, 'zoom-in')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}zoom-out.svg`, 'zoom-out')?.subscribe();
+  }
 
   ngAfterViewInit(): void {
     this.resizeObserver = new ResizeObserver(() => {

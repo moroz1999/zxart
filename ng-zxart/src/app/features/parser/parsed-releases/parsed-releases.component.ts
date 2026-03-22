@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
+import {DIALOG_DATA} from '@angular/cdk/dialog';
 import {ReleaseData} from '../models/release-data';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {ParsedReleaseComponent} from '../parsed-release/parsed-release.component';
 import {NgForOf} from '@angular/common';
 
@@ -19,16 +19,12 @@ interface DialogData {
         NgForOf,
     ],
 })
-export class ParsedReleasesComponent implements OnInit {
+export class ParsedReleasesComponent {
     public releases: ReleaseData[] = [];
 
     constructor(
-        @Inject(MAT_DIALOG_DATA) public data: DialogData,
+        @Inject(DIALOG_DATA) public data: DialogData,
     ) {
         this.releases = data.releases;
     }
-
-    ngOnInit(): void {
-    }
-
 }

@@ -1,5 +1,5 @@
-<h1 class="dialog-title" mat-dialog-title [innerHtml]="data.selectValuesLabel | translate"></h1>
-<div mat-dialog-content class="value-groups">
+<h1 class="dialog-title" [innerHtml]="data.selectValuesLabel | translate"></h1>
+<div class="value-groups">
     <div class="value-group" *ngFor="let group of data.selectorData">
         <div class="value-group-title" *ngIf="group.title">{{ group.title }}</div>
         <div class="value-columns" [style.column-count]="getColumns(group.values.length)">
@@ -9,7 +9,7 @@
         </div>
     </div>
 </div>
-<div mat-dialog-actions>
+<div class="dialog-actions">
     <zx-button size="sm" color="outlined" (click)="reset()">
         {{ 'prods-list.filters.reset' | translate }}
     </zx-button>

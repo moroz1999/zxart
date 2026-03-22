@@ -1,13 +1,11 @@
 import {ChangeDetectionStrategy, Component, forwardRef, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule} from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 @Component({
   selector: 'zx-textarea',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule],
+  imports: [CommonModule],
   templateUrl: './zx-textarea.component.html',
   styleUrl: './zx-textarea.component.scss',
   providers: [

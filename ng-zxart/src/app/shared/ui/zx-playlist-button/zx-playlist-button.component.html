@@ -7,7 +7,7 @@
   [title]="(isAuthenticated$ | async) ? ('playlist.button_label' | translate) : ('playlist.login_required' | translate)"
   (click)="togglePopover($event)"
 >
-  <mat-icon class="playlist-icon">favorite_border</mat-icon>
+  <svg-icon name="favorite-border" class="playlist-icon"></svg-icon>
 </button>
 
 <ng-template
@@ -21,20 +21,22 @@
 >
   <div class="playlist-popover" (click)="$event.stopPropagation()">
     <div class="playlist-popover-content">
-      <div class="playlist-list" role="listbox">
-        <div
-          *ngFor="let item of playlists; trackBy: trackById"
-          class="playlist-item"
-          [class.playlist-item--active]="isInPlaylist(item.id)"
-          (click)="togglePlaylist(item.id)"
-          role="option"
-          [attr.aria-selected]="isInPlaylist(item.id)"
-        >
-          <span class="playlist-item-title">{{ item.title }}</span>
-          <mat-icon *ngIf="isInPlaylist(item.id)" class="playlist-item-check">check</mat-icon>
-          <span *ngIf="!isInPlaylist(item.id)" class="playlist-item-hint" zxCaption>{{ 'playlist.add_hint' | translate }}</span>
+      <ng-container *ngIf="activePlaylistIds$ | async as activeIds">
+        <div class="playlist-list" role="listbox">
+          <div
+            *ngFor="let item of playlists; trackBy: trackById"
+            class="playlist-item"
+            [class.playlist-item--active]="isInPlaylist(activeIds, item.id)"
+            (click)="togglePlaylist(item.id, activeIds)"
+            role="option"
+            [attr.aria-selected]="isInPlaylist(activeIds, item.id)"
+          >
+            <span class="playlist-item-title">{{ item.title }}</span>
+            <svg-icon *ngIf="isInPlaylist(activeIds, item.id)" name="check" class="playlist-item-check"></svg-icon>
+            <span *ngIf="!isInPlaylist(activeIds, item.id)" class="playlist-item-hint" zxCaption>{{ 'playlist.add_hint' | translate }}</span>
+          </div>
         </div>
-      </div>
+      </ng-container>
 
       <div class="playlist-create">
         <zx-input

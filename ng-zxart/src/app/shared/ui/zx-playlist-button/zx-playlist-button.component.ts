@@ -1,10 +1,10 @@
-import {ChangeDetectionStrategy, Component, HostListener, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
-import {MatIconModule} from '@angular/material/icon';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {take} from 'rxjs/operators';
 import {PlaylistService} from '../../services/playlist.service';
 import {CurrentUserService} from '../../services/current-user.service';
@@ -12,6 +12,7 @@ import {PlaylistDto} from '../../models/playlist.model';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {ZxInputComponent} from '../zx-input/zx-input.component';
 import {ZxCaptionDirective} from '../../directives/typography/typography.directives';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'zx-playlist-button',
@@ -20,7 +21,7 @@ import {ZxCaptionDirective} from '../../directives/typography/typography.directi
     CommonModule,
     FormsModule,
     TranslateModule,
-    MatIconModule,
+    SvgIconComponent,
     CdkConnectedOverlay,
     CdkOverlayOrigin,
     ZxButtonComponent,
@@ -31,25 +32,34 @@ import {ZxCaptionDirective} from '../../directives/typography/typography.directi
   styleUrls: ['./zx-playlist-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxPlaylistButtonComponent {
+export class ZxPlaylistButtonComponent implements OnInit {
   @Input() elementId!: number;
 
   popoverOpen = false;
-  loading = false;
-  activePlaylistIds: number[] = [];
   newPlaylistTitle = '';
+
+  private readonly activePlaylistIdsSubject = new BehaviorSubject<number[]>([]);
+  readonly activePlaylistIds$ = this.activePlaylistIdsSubject.asObservable();
 
   readonly isAuthenticated$: Observable<boolean> = this.currentUserService.isAuthenticated$;
 
   readonly positions: ConnectedPosition[] = [
     {originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 4},
     {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -4},
+    {originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 4},
+    {originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -4},
   ];
 
   constructor(
     private playlistService: PlaylistService,
     private currentUserService: CurrentUserService,
+    private iconReg: SvgIconRegistryService,
   ) {}
+
+  ngOnInit(): void {
+    this.iconReg.loadSvg(`${environment.svgUrl}favorite-border.svg`, 'favorite-border')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}check.svg`, 'check')?.subscribe();
+  }
 
   get playlists(): PlaylistDto[] {
     return this.playlistService.getPlaylists();
@@ -76,20 +86,15 @@ export class ZxPlaylistButtonComponent {
     this.closePopover();
   }
 
-  isInPlaylist(playlistId: number): boolean {
-    return this.activePlaylistIds.includes(playlistId);
+  isInPlaylist(activeIds: number[], playlistId: number): boolean {
+    return activeIds.includes(playlistId);
   }
 
-  togglePlaylist(playlistId: number): void {
-    if (this.isInPlaylist(playlistId)) {
-      this.playlistService.removeFromPlaylist(playlistId, this.elementId).subscribe(ids => {
-        this.activePlaylistIds = ids;
-      });
-    } else {
-      this.playlistService.addToPlaylist(playlistId, this.elementId).subscribe(ids => {
-        this.activePlaylistIds = ids;
-      });
-    }
+  togglePlaylist(playlistId: number, activeIds: number[]): void {
+    const obs = activeIds.includes(playlistId)
+      ? this.playlistService.removeFromPlaylist(playlistId, this.elementId)
+      : this.playlistService.addToPlaylist(playlistId, this.elementId);
+    obs.subscribe(ids => this.activePlaylistIdsSubject.next(ids));
   }
 
   createPlaylist(): void {
@@ -110,10 +115,8 @@ export class ZxPlaylistButtonComponent {
   }
 
   private loadPlaylistIds(): void {
-    this.loading = true;
     this.playlistService.fetchPlaylistIds(this.elementId).subscribe(ids => {
-      this.activePlaylistIds = ids;
-      this.loading = false;
+      this.activePlaylistIdsSubject.next(ids);
     });
   }
 

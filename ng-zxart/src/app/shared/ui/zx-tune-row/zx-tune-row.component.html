@@ -1,14 +1,15 @@
 <td class="tune-index" *ngIf="index !== undefined">{{ index + 1 }}</td>
 <td class="tune-play">
-  <button
-    mat-icon-button
+  <zx-button
+    [square]="true"
+    color="transparent"
     type="button"
     [disabled]="!isPlaying && (!tune.isPlayable || !tune.mp3Url)"
     (click)="requestPlay()"
-    [attr.aria-label]="(isPlaying ? 'player.pause' : 'player.play') | translate"
+    [ariaLabel]="(isPlaying ? 'player.pause' : 'player.play') | translate"
   >
-    <mat-icon>{{ isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
-  </button>
+    <svg-icon [name]="isPlaying ? 'pause' : 'play'"></svg-icon>
+  </zx-button>
 </td>
 <td class="tune-main">
   <div class="tune-title-line">
@@ -53,10 +54,12 @@
   ></zx-item-controls>
 </td>
 <td class="tune-download">
-  <a *ngIf="tune.originalFileUrl" [href]="tune.originalFileUrl" rel="nofollow" class="download-link" [attr.aria-label]="'tune.download.original' | translate">
-    <mat-icon class="download-icon download-original">download</mat-icon>
-  </a>
-  <a *ngIf="tune.mp3Url" [href]="tune.mp3Url" rel="nofollow" class="download-link" [attr.aria-label]="'tune.download.mp3' | translate">
-    <mat-icon class="download-icon download-mp3">music_note</mat-icon>
-  </a>
+  <span class="tune-download-actions">
+    <a *ngIf="tune.originalFileUrl" [href]="tune.originalFileUrl" rel="nofollow" class="download-link" [attr.aria-label]="'tune.download.original' | translate">
+      <svg-icon name="download" class="download-icon download-original"></svg-icon>
+    </a>
+    <a *ngIf="tune.mp3Url" [href]="tune.mp3Url" rel="nofollow" class="download-link" [attr.aria-label]="'tune.download.mp3' | translate">
+      <svg-icon name="music-note" class="download-icon download-mp3"></svg-icon>
+    </a>
+  </span>
 </td>

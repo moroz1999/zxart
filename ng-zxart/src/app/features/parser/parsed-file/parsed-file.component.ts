@@ -1,12 +1,12 @@
 import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 import {ParserData} from '../models/parser-data';
-import {MatDialog} from '@angular/material/dialog';
+import {Dialog} from '@angular/cdk/dialog';
 import {ParsedReleasesComponent} from '../parsed-releases/parsed-releases.component';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {environment} from '../../../../environments/environment';
 import {NgForOf, NgIf, NgStyle} from '@angular/common';
-import {MatButton} from '@angular/material/button';
 import {TranslatePipe} from '@ngx-translate/core';
+import {ZxButtonComponent} from '../../../shared/ui/zx-button/zx-button.component';
 import {ParsedReleaseComponent} from '../parsed-release/parsed-release.component';
 
 const zxFiles = [
@@ -37,9 +37,7 @@ const zxFiles = [
         NgIf,
         NgForOf,
         NgStyle,
-        MatButton,
-        MatButton,
-        TranslatePipe,
+        ZxButtonComponent,
         TranslatePipe,
         ParsedReleaseComponent,
     ],
@@ -55,7 +53,7 @@ export class ParsedFileComponent {
     }
 
     constructor(
-        public dialog: MatDialog,
+        public dialog: Dialog,
         private iconReg: SvgIconRegistryService,
     ) {
         this.iconReg.loadSvg(`${environment.svgUrl}disc.svg`, 'disc')?.subscribe();

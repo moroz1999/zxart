@@ -8,14 +8,12 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 
 @Component({
   selector: 'zx-input',
   standalone: true,
-  imports: [CommonModule, MatAutocompleteTrigger],
+  imports: [],
   templateUrl: './zx-input.component.html',
   styleUrl: './zx-input.component.scss',
   providers: [
@@ -34,7 +32,6 @@ export class ZxInputComponent implements ControlValueAccessor {
   @Input() min?: number;
   @Input() max?: number;
   @Input() step?: number;
-  @Input() matAutocomplete?: MatAutocomplete;
   @Output() keyup = new EventEmitter<KeyboardEvent>();
 
   @ViewChild('inputElement') inputElementRef?: ElementRef<HTMLInputElement>;

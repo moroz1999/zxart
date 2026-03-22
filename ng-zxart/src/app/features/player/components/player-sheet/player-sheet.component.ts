@@ -1,10 +1,11 @@
-﻿import {ChangeDetectionStrategy, Component, OnDestroy} from '@angular/core';
+﻿import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {MatIconModule} from '@angular/material/icon';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {debounceTime, Subscription, take} from 'rxjs';
+import {environment} from '../../../../../environments/environment';
 import {PlayerService} from '../../services/player.service';
 import {EMPTY_RADIO_CRITERIA, RadioCriteria} from '../../models/radio-criteria';
 import {PlayerState} from '../../models/player-state';
@@ -40,7 +41,7 @@ type PartyValue = 'any' | 'yes' | 'no';
     CommonModule,
     ReactiveFormsModule,
     TranslateModule,
-    MatIconModule,
+    SvgIconComponent,
     ZxPanelComponent,
     ZxBodyDirective,
     ZxCaptionDirective,
@@ -79,7 +80,7 @@ type PartyValue = 'any' | 'yes' | 'no';
     ]),
   ],
 })
-export class PlayerSheetComponent implements OnDestroy {
+export class PlayerSheetComponent implements OnInit, OnDestroy {
   state$ = this.playerService.state$;
   form: FormGroup;
   expanded = false;
@@ -117,6 +118,7 @@ export class PlayerSheetComponent implements OnDestroy {
     private presetCriteriaService: RadioPresetCriteriaService,
     private currentUserService: CurrentUserService,
     private fb: FormBuilder,
+    private iconReg: SvgIconRegistryService,
   ) {
     this.form = this.fb.group({
       minRating: [''],
@@ -184,6 +186,12 @@ export class PlayerSheetComponent implements OnDestroy {
         }
       })
     );
+  }
+
+  ngOnInit(): void {
+    const icons = ['skip-previous', 'skip-next', 'play', 'pause', 'stop', 'close',
+      'expand-more', 'expand-less', 'open-in-new', 'repeat', 'repeat-one', 'shuffle', 'play-circle'];
+    icons.forEach(name => this.iconReg.loadSvg(`${environment.svgUrl}${name}.svg`, name)?.subscribe());
   }
 
   ngOnDestroy(): void {
@@ -267,13 +275,13 @@ export class PlayerSheetComponent implements OnDestroy {
     const mode = this.getPlaybackMode(state);
     switch (mode) {
       case 'repeat-one':
-        return 'repeat_one';
+        return 'repeat-one';
       case 'repeat-all':
         return 'repeat';
       case 'shuffle-all':
         return 'shuffle';
       default:
-        return 'play_circle';
+        return 'play-circle';
     }
   }
 

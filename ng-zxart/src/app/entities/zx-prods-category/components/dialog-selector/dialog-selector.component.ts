@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
+import {Dialog} from '@angular/cdk/dialog';
 import {DialogSelectorDialogComponent} from './dialog-selector-dialog/dialog-selector-dialog.component';
 import {SelectorDto} from '../../models/selector-dto';
 import {NgIf} from '@angular/common';
@@ -26,7 +26,7 @@ export class DialogSelectorComponent implements OnInit, OnChanges {
     public value = 0;
 
     constructor(
-        public dialog: MatDialog,
+        public dialog: Dialog,
     ) {
     }
 
@@ -58,13 +58,14 @@ export class DialogSelectorComponent implements OnInit, OnChanges {
                 selectValuesLabel: this.selectValuesLabel,
             },
         });
-        dialogRef.afterClosed().subscribe((result: { [key: string]: boolean; }) => {
-            if (result !== undefined) {
+        dialogRef.closed.subscribe((result) => {
+            const typedResult = result as { [key: string]: boolean } | undefined;
+            if (typedResult !== undefined) {
                 let values = [] as Array<string>;
-                if (result) {
-                    for (let value in result) {
-                        if (result.hasOwnProperty(value)) {
-                            if (result[value]) {
+                if (typedResult) {
+                    for (let value in typedResult) {
+                        if (typedResult.hasOwnProperty(value)) {
+                            if (typedResult[value]) {
                                 values.push(value);
                             }
                         }

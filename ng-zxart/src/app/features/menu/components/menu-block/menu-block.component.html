@@ -5,6 +5,7 @@
         cdkOverlayOrigin
         #trigger="cdkOverlayOrigin"
         [color]="isActive(item) ? 'outlined' : 'transparent'"
+        [href]="item.url"
         [attr.aria-expanded]="isPopoverOpen(item)"
         (pointerenter)="openItem(item, trigger.elementRef.nativeElement)"
         (pointerleave)="scheduleClose()"

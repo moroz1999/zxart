@@ -20,7 +20,7 @@
 .header_inner {
   padding: var(--header-padding);
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: space-between;
   width: 100%;
   max-width: var(--layout-max-width);
@@ -29,6 +29,7 @@
 }
 
 .header_column {
+  display: flex;
   margin: var(--header-column-margin);
 
   @media (max-width: 991.98px) {

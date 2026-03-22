@@ -1,8 +1,8 @@
-<button
-  mat-fab
-  extended
+<zx-button
+  [square]="true"
   color="primary"
   class="settings-trigger__button"
-  (click)="openSettings()">
-  <mat-icon>settings</mat-icon>
-</button>
+  (click)="openSettings()"
+>
+  <svg-icon name="settings"></svg-icon>
+</zx-button>

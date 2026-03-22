@@ -1,5 +1,22 @@
 @use "shared/breakpoints" as breakpoints;
 
+.dialog-inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding: var(--space-24);
+}
+
+.dialog-content {
+  overflow-y: auto;
+  max-height: 60vh;
+}
+
+.dialog-actions {
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--border-color);
+}
+
 .modules-list {
   min-width: 400px;
   max-height: 60vh;
@@ -27,6 +44,8 @@
   color: var(--text-light-color);
   cursor: grab;
   flex-shrink: 0;
+  width: 24px;
+  height: 24px;
 }
 
 .module-checkbox {

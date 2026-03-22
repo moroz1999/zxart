@@ -1,13 +1,13 @@
-<mat-form-field appearance="outline" class="zx-textarea">
-  <mat-label *ngIf="label">{{ label }}</mat-label>
+<div class="zx-textarea">
+  <label *ngIf="label" class="zx-textarea__label">{{ label }}</label>
   <textarea
-    matInput
-    [value]="value"
+    class="zx-textarea__field"
     [placeholder]="placeholder"
     [rows]="rows"
     [disabled]="disabled"
+    [value]="value"
     (input)="onInput($event)"
     (blur)="onBlur()"
   ></textarea>
-  <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
-</mat-form-field>
+  <span *ngIf="errorMessage" class="zx-textarea__error">{{ errorMessage }}</span>
+</div>

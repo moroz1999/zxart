@@ -17,6 +17,8 @@
 - Do NOT write PHPDoc `/** @var ... */` for `getService` calls if the class name is explicitly provided as the first argument (e.g. `getService(MyService::class)`). Modern IDEs and Psalm can infer the type from the class string.
 
 ## Coding Style
+- Methods must follow SRP: each method does one thing. Extract private methods if a method handles multiple concerns or becomes hard to read at a glance.
+- If nesting exceeds 2–3 levels, refactor: extract methods, use early returns, or split the logic.
 - Avoid "comment ladders" (multiple sequential comments describing every line of code).
 - Avoid inline method calls in conditions if they represent a state. Assign the result to a descriptive variable instead:
   ```php

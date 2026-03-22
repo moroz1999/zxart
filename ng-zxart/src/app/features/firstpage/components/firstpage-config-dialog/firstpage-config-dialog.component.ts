@@ -1,9 +1,8 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatIconModule} from '@angular/material/icon';
+import {DialogRef} from '@angular/cdk/dialog';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
 import {TranslateModule} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
@@ -19,7 +18,9 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
 import {ZxSelectComponent, ZxSelectOption} from '../../../../shared/ui/zx-select/zx-select.component';
+import {ZxCheckboxFieldComponent} from '../../../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 import {ZxHeading2Directive} from '../../../../shared/directives/typography/typography.directives';
+import {environment} from '../../../../../environments/environment';
 
 @Component({
   selector: 'zx-firstpage-config-dialog',
@@ -27,15 +28,14 @@ import {ZxHeading2Directive} from '../../../../shared/directives/typography/typo
   imports: [
     CommonModule,
     FormsModule,
-    MatDialogModule,
-    MatCheckboxModule,
-    MatIconModule,
+    SvgIconComponent,
     DragDropModule,
     TranslateModule,
     ZxButtonComponent,
     ZxButtonControlsComponent,
     ZxInputComponent,
     ZxSelectComponent,
+    ZxCheckboxFieldComponent,
     ZxHeading2Directive,
   ],
   templateUrl: './firstpage-config-dialog.component.html',
@@ -50,7 +50,8 @@ export class FirstpageConfigDialogComponent implements OnInit, OnDestroy {
   constructor(
     private configService: FirstpageConfigService,
     private preferencesService: UserPreferencesService,
-    private dialogRef: MatDialogRef<FirstpageConfigDialogComponent>,
+    private dialogRef: DialogRef<boolean, FirstpageConfigDialogComponent>,
+    private iconReg: SvgIconRegistryService,
   ) {
     const currentYear = new Date().getFullYear();
     this.startYearOptions = Array.from({length: 11}, (_, i) => ({
@@ -60,6 +61,7 @@ export class FirstpageConfigDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.iconReg.loadSvg(`${environment.svgUrl}drag-indicator.svg`, 'drag-indicator')?.subscribe();
     this.configSub = this.configService.getCurrentConfig().subscribe(config => {
       this.modules = config.modules.map(m => ({...m, settings: {...m.settings}}));
     });

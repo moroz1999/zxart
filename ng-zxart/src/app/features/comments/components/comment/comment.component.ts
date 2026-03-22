@@ -2,7 +2,6 @@ import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {MatIconModule} from '@angular/material/icon';
 import {CommentDto} from '../../models/comment.dto';
 import {CommentChangeEvent} from '../../models/comment-change-event';
 import {CommentsService} from '../../services/comments.service';
@@ -23,7 +22,6 @@ import {
   imports: [
     CommonModule,
     TranslateModule,
-    MatIconModule,
     CommentFormComponent,
     ZxUserComponent,
     ZxButtonComponent,

@@ -31,6 +31,7 @@ import {TagsSelectorComponent} from '../../shared/components/tags-selector/tags-
 import {ZxCheckboxFieldComponent} from '../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxToggleComponent, ZxToggleOption} from '../../shared/ui/zx-toggle/zx-toggle.component';
+import {SvgIconRegistryService} from 'angular-svg-icon';
 
 const defaultStatuses: string[] = ['allowed', 'forbidden', 'forbiddenzxart', 'allowedzxart', 'insales', 'donationware', 'recovered', 'unknown'];
 
@@ -84,9 +85,9 @@ export class ZxProdsCategoryComponent implements OnInit {
     public urlBase = '';
 
     public layoutOptions: ZxToggleOption[] = [
-        {value: 'loading', icon: 'photo'},
-        {value: 'screenshots', icon: 'videogame_asset'},
-        {value: 'inlays', icon: 'photo_camera'},
+        {value: 'loading', icon: 'image'},
+        {value: 'screenshots', icon: 'videogame-asset'},
+        {value: 'inlays', icon: 'photo-camera'},
         {value: 'table', icon: 'list'},
     ];
 
@@ -101,6 +102,7 @@ export class ZxProdsCategoryComponent implements OnInit {
     constructor(
         private elementsService: ElementsService,
         private cdr: ChangeDetectorRef,
+        private iconReg: SvgIconRegistryService,
     ) {}
 
     @HostListener('window:popstate', ['$event'])
@@ -131,6 +133,9 @@ export class ZxProdsCategoryComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        for (const name of ['image', 'videogame-asset', 'photo-camera', 'list']) {
+            this.iconReg.loadSvg(`${environment.svgUrl}${name}.svg`, name)?.subscribe();
+        }
         this.fetchPrefetchedModel();
     }
 

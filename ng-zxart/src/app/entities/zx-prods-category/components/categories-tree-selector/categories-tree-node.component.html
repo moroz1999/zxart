@@ -1,0 +1,26 @@
+<li class="tree-node">
+    <div class="tree-node__row">
+        <button
+            *ngIf="hasChildren"
+            type="button"
+            class="tree-node__toggle"
+            [class.tree-node__toggle--collapsed]="!isExpanded"
+            (click)="onToggle()"
+        >
+            <svg-icon name="expand-more"></svg-icon>
+        </button>
+        <span *ngIf="!hasChildren" class="tree-node__spacer"></span>
+        <a [href]="node.url" [class.tree-node__link--selected]="node.selected" (click)="onNodeClick($event)">
+            {{ node.name }}
+        </a>
+    </div>
+    <ul *ngIf="hasChildren && isExpanded" class="tree-node__children">
+        <zx-categories-tree-node
+            *ngFor="let child of node.children"
+            [node]="child"
+            [expandedIds]="expandedIds"
+            (nodeClicked)="nodeClicked.emit($event)"
+            (toggleExpanded)="toggleExpanded.emit($event)"
+        ></zx-categories-tree-node>
+    </ul>
+</li>

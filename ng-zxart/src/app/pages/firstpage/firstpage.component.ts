@@ -1,7 +1,8 @@
-import {ChangeDetectionStrategy, Component, Injector} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Injector, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MatIconModule} from '@angular/material/icon';
-import {MatDialog} from '@angular/material/dialog';
+import {Dialog} from '@angular/cdk/dialog';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
+import {environment} from '../../../environments/environment';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -30,7 +31,7 @@ interface ModuleEntry {
   standalone: true,
   imports: [
     CommonModule,
-    MatIconModule,
+    SvgIconComponent,
     TranslateModule,
     ZxStackComponent,
     ZxButtonComponent,
@@ -42,16 +43,21 @@ interface ModuleEntry {
   styleUrls: ['./firstpage.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FirstpageComponent {
+export class FirstpageComponent implements OnInit {
   readonly modules$: Observable<ModuleEntry[]> = this.configService.getConfig().pipe(
     map(config => this.buildModules(config))
   );
 
   constructor(
     private configService: FirstpageConfigService,
-    private dialog: MatDialog,
+    private dialog: Dialog,
     private parentInjector: Injector,
+    private iconReg: SvgIconRegistryService,
   ) {}
+
+  ngOnInit(): void {
+    this.iconReg.loadSvg(`${environment.svgUrl}settings.svg`, 'settings')?.subscribe();
+  }
 
   openConfig(): void {
     this.dialog.open(FirstpageConfigDialogComponent, {

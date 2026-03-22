@@ -2,6 +2,18 @@
 
 .dialog-title {
   color: currentColor;
+  margin: 0 0 var(--space-16) 0;
+  padding: var(--space-24) var(--space-24) 0;
+}
+
+.value-groups {
+  padding: 0 var(--space-24);
+}
+
+.dialog-actions {
+  display: flex;
+  gap: var(--space-8);
+  padding: var(--space-16) var(--space-24) var(--space-24);
 }
 
 .value-groups {

@@ -1,9 +1,9 @@
-<mat-icon
+<svg-icon
   *ngFor="let badge of user.badges"
   class="zx-user__badge"
   [ngClass]="getBadgeClass(badge)"
-  [svgIcon]="isSvgIcon(badge) ? getIconName(badge) : ''"
->{{ isSvgIcon(badge) ? '' : getIconName(badge) }}</mat-icon>
+  [name]="getIconName(badge)"
+></svg-icon>
 
 <a *ngIf="user.url && !linkDisabled; else noUrl" [href]="user.url" zxLink zxCaption class="zx-user__name">
   {{ user.name }}

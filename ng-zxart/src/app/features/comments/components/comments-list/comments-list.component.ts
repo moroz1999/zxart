@@ -1,7 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {TranslateModule} from '@ngx-translate/core';
-import {MatDividerModule} from '@angular/material/divider';
 import {CommentDto} from '../../models/comment.dto';
 import {CommentChangeEvent} from '../../models/comment-change-event';
 import {CommentsService} from '../../services/comments.service';
@@ -19,7 +18,6 @@ import {Observable, of, Subject} from 'rxjs';
   imports: [
     CommonModule,
     TranslateModule,
-    MatDividerModule,
     CommentComponent,
     CommentFormComponent,
     ZxButtonComponent,

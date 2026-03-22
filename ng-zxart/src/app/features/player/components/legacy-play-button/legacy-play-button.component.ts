@@ -1,9 +1,10 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {TranslateModule} from '@ngx-translate/core';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {PlayerService} from '../../services/player.service';
 import {ZxTuneDto} from '../../../../shared/models/zx-tune-dto';
+import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {environment} from '../../../../../environments/environment';
 
 type LegacyTune = {
   id: number | string;
@@ -24,12 +25,12 @@ type LegacyWindow = Window & {
 @Component({
   selector: 'zx-legacy-play',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, TranslateModule],
+  imports: [SvgIconComponent, ZxButtonComponent, TranslateModule],
   templateUrl: './legacy-play-button.component.html',
   styleUrls: ['./legacy-play-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LegacyPlayButtonComponent {
+export class LegacyPlayButtonComponent implements OnInit {
   private playlistIdValue = '';
   private indexValue = 0;
   private tuneIdValue: number | null = null;
@@ -55,7 +56,14 @@ export class LegacyPlayButtonComponent {
     this.tuneIdValue = Number.isFinite(parsed) ? parsed : null;
   }
 
-  constructor(private playerService: PlayerService) {}
+  constructor(
+    private playerService: PlayerService,
+    private iconReg: SvgIconRegistryService,
+  ) {}
+
+  ngOnInit(): void {
+    this.iconReg.loadSvg(`${environment.svgUrl}play.svg`, 'play')?.subscribe();
+  }
 
   play(): void {
     const playlist = this.loadPlaylist();
