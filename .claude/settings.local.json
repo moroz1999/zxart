@@ -89,7 +89,8 @@
       "Bash(git ls-tree:*)",
       "Bash(git -C E:/projects/zxart submodule status trickster-cms)",
       "Bash(git -C E:/projects/zxart ls-files --error-unmatch trickster-cms/homepage/css/public/application.less)",
-      "Bash(git -C E:/projects/zxart submodule status)"
+      "Bash(git -C E:/projects/zxart submodule status)",
+      "Bash(find ng-zxart:*)"
     ]
   },
   "enabledPlugins": {

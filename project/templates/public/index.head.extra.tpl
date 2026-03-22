@@ -1,6 +1,5 @@
-<script src="/js/ng-zxart/runtime.js" type="module"></script>
-<script src="/js/ng-zxart/main.js" type="module"></script>
-<link rel="stylesheet" href="/js/ng-zxart/styles.css">
+{foreach $ngScriptUrls as $url}<script src="{$url}" type="module"></script>{/foreach}
+{foreach $ngStyleUrls as $url}<link rel="stylesheet" href="{$url}">{/foreach}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
