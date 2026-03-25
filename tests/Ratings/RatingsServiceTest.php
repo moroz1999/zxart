@@ -7,6 +7,7 @@ namespace ZxArt\Tests\Ratings;
 use Cache;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use LanguagesManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use structureManager;
@@ -21,18 +22,25 @@ use ZxArtItem;
 class RatingsServiceTest extends TestCase
 {
     private structureManager&MockObject $structureManager;
+    private LanguagesManager&MockObject $languagesManager;
     private Cache&MockObject $cache;
     private Connection&MockObject $db;
     private RatingsService $service;
 
+    private const int LANGUAGE_ID = 1;
+    private const string CACHE_KEY = 'recent_ratings_' . self::LANGUAGE_ID;
+
     protected function setUp(): void
     {
         $this->structureManager = $this->createMock(structureManager::class);
+        $this->languagesManager = $this->createMock(LanguagesManager::class);
+        $this->languagesManager->method('getCurrentLanguageId')->willReturn(self::LANGUAGE_ID);
         $this->cache = $this->createMock(Cache::class);
         $this->db = $this->createMock(Connection::class);
 
         $this->service = new RatingsService(
             $this->structureManager,
+            $this->languagesManager,
             $this->cache,
             $this->db,
         );
@@ -50,7 +58,7 @@ class RatingsServiceTest extends TestCase
         ]);
 
         $this->cache->method('get')
-            ->with('recent_ratings')
+            ->with(self::CACHE_KEY)
             ->willReturn($cachedDto);
 
         $this->db->expects($this->never())->method('table');
@@ -65,7 +73,7 @@ class RatingsServiceTest extends TestCase
     public function testLoadsFromDbAndStoresCacheOnMiss(): void
     {
         $this->cache->method('get')
-            ->with('recent_ratings')
+            ->with(self::CACHE_KEY)
             ->willReturn(null);
 
         $queryBuilder = $this->createMock(Builder::class);
@@ -97,7 +105,7 @@ class RatingsServiceTest extends TestCase
 
         $this->cache->expects($this->once())
             ->method('set')
-            ->with('recent_ratings', $this->isInstanceOf(RecentRatingsListDto::class), 300);
+            ->with(self::CACHE_KEY, $this->isInstanceOf(RecentRatingsListDto::class), 300);
 
         $result = $this->service->getRecentRatings();
 

@@ -1,4 +1,13 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output
+} from '@angular/core';
 import {SelectorDto} from '../../models/selector-dto';
 import {TranslateService} from '@ngx-translate/core';
 import {FormsModule} from '@angular/forms';
@@ -25,7 +34,10 @@ export class SortingSelectorComponent implements OnChanges, OnDestroy {
     private readonly inputChange$ = new Subject<SelectorDto>();
     private readonly subscriptions = new Subscription();
 
-    constructor(private readonly translateService: TranslateService) {
+    constructor(
+        private readonly translateService: TranslateService,
+        private readonly cdr: ChangeDetectorRef,
+    ) {
         this.subscriptions.add(
             this.inputChange$.pipe(
                 switchMap(selector => {
@@ -50,6 +62,7 @@ export class SortingSelectorComponent implements OnChanges, OnDestroy {
                         });
                     }
                 }
+                this.cdr.markForCheck();
             })
         );
     }

@@ -5,6 +5,7 @@ namespace ZxArt\Ratings;
 
 use Cache;
 use Illuminate\Database\Connection;
+use LanguagesManager;
 use structureManager;
 use userElement;
 use ZxArt\Comments\CommentAuthorDto;
@@ -22,6 +23,7 @@ readonly class RatingsService
 
     public function __construct(
         private structureManager $structureManager,
+        private LanguagesManager $languagesManager,
         private Cache $cache,
         private Connection $db,
     ) {
@@ -29,8 +31,10 @@ readonly class RatingsService
 
     public function getRecentRatings(int $limit = self::DEFAULT_LIMIT): RecentRatingsListDto
     {
+        $cacheKey = self::CACHE_KEY . '_' . $this->languagesManager->getCurrentLanguageId();
+
         /** @var RecentRatingsListDto|null $cached */
-        $cached = $this->cache->get(self::CACHE_KEY);
+        $cached = $this->cache->get($cacheKey);
         if ($cached instanceof RecentRatingsListDto) {
             return $cached;
         }
@@ -77,9 +81,16 @@ readonly class RatingsService
         }
 
         $result = new RecentRatingsListDto($items);
-        $this->cache->set(self::CACHE_KEY, $result, self::CACHE_TTL);
+        $this->cache->set($cacheKey, $result, self::CACHE_TTL);
 
         return $result;
+    }
+
+    public function invalidateRecentRatingsCache(): void
+    {
+        foreach ($this->languagesManager->getLanguagesIdList() as $languageId) {
+            $this->cache->delete(self::CACHE_KEY . '_' . $languageId);
+        }
     }
 
     public function getElementRatings(int $elementId): ElementRatingsListDto

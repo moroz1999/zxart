@@ -94,6 +94,9 @@ readonly class PictureListService
         if (method_exists($element, 'getPictures')) {
             return (array)($element->getPictures() ?? []);
         }
+        if (method_exists($element, 'getItemsList')) {
+            return (array)($element->getItemsList() ?? []);
+        }
         if (method_exists($element, 'getItems')) {
             return (array)($element->getItems() ?? []);
         }

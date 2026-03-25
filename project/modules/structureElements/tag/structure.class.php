@@ -107,21 +107,37 @@ class tagElement extends structureElement implements JsonDataProvider
         return $this->isUntranslated;
     }
 
+    public function getPictures(): array
+    {
+        if ($this->pictures === null) {
+            $this->pictures = $this->loadElementsByType('zxPicture');
+        }
+        return $this->pictures;
+    }
+
+    public function getTunes(): array
+    {
+        if ($this->tunes === null) {
+            $this->tunes = $this->loadElementsByType('zxMusic');
+        }
+        return $this->tunes;
+    }
+
     public function getItems()
     {
         $sectionsLogics = $this->getService(SectionLogics::class);
         if (($type = $sectionsLogics->getArtItemsType()) === 'graphics') {
-            $this->pictures = $this->loadElementsByType('zxPicture');
-            return $this->pictures;
+            return $this->getPictures();
         }
 
         if ($type === 'music') {
-            $this->tunes = $this->loadElementsByType('zxMusic');
-            return $this->tunes;
+            return $this->getTunes();
         }
 
         if ($type === 'software') {
-            $this->prods = $this->loadElementsByType('zxProd');
+            if ($this->prods === null) {
+                $this->prods = $this->loadElementsByType('zxProd');
+            }
             return $this->prods;
         }
         return false;

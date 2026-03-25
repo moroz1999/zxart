@@ -1,6 +1,7 @@
 <?php
 
 use App\Users\CurrentUserService;
+use ZxArt\Ratings\RatingsService;
 
 class votesManager implements DependencyInjectionContextInterface
 {
@@ -170,6 +171,7 @@ class votesManager implements DependencyInjectionContextInterface
         $historyObject->date = time();
         $historyObject->value = $value;
         $historyObject->persist();
+        $this->getService(RatingsService::class)->invalidateRecentRatingsCache();
         return true;
     }
 
