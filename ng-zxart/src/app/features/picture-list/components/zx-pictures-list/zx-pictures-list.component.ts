@@ -10,6 +10,7 @@ import {
   PictureGalleryHostComponent
 } from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureListService} from '../../services/picture-list.service';
+import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 
 @Component({
   selector: 'zx-pictures-list',
@@ -38,6 +39,7 @@ export class ZxPicturesListComponent implements OnInit {
 
   constructor(
     private pictureListService: PictureListService,
+    private pictureGalleryService: PictureGalleryService,
     private cdr: ChangeDetectorRef,
   ) {}
 
@@ -59,6 +61,7 @@ export class ZxPicturesListComponent implements OnInit {
       next: pictures => {
         this.loading = false;
         this.pictures = pictures;
+        this.pictureGalleryService.ensureGalleryLoaded(this.galleryId, pictures);
         this.cdr.markForCheck();
       },
       error: () => {
