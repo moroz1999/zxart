@@ -40,6 +40,16 @@ All new functionality in Angular must follow Feature Sliced Design principles an
 - Use design system components and theme variables. Custom CSS is forbidden without direct instruction.
 - Components must be used semantically.
 
+### Static Backend Section Links
+
+All static section URLs (comments, support, search, registration, password reminder, profile, playlists, home, catalogue base URLs) for the current language are fetched via a single `GET /backend-links/?lang={code}` call. Use `BackendLinksService.links$` (`features/header/services/backend-links.service.ts`) to access them. The service caches results in LocalStorage per language code and emits once via a BehaviorSubject — all consumers subscribe and wait for the single emission.
+
+### LocalStorage
+
+All localStorage access MUST go through `LocalStorageService` (`shared/services/local-storage.service.ts`). Direct use of `localStorage` (e.g. `localStorage.getItem/setItem/removeItem`) is **forbidden**.
+
+`LocalStorageService` automatically namespaces every key with `zx-${storageVersion}-`. This prefix is bumped on deploy (via `environment.prod.ts`) to invalidate stale cached data after breaking schema changes. Bypassing the service breaks this mechanism.
+
 ### RxJS and Reactive Data Flow
 
 RxJS is the primary data-flow mechanism in this project. All data fetching and state management MUST be built on Observables. Imperative patterns (calling `load()` / `fetch()` from components) are forbidden.
@@ -212,6 +222,12 @@ private readonly onDragMove = (e: PointerEvent): void => {
 #### When to use ChangeDetectorRef.markForCheck()
 
 Only when Angular-external async callbacks (e.g., `IntersectionObserver`, `setTimeout`, native DOM events that cannot use `@HostListener`) mutate local state. Prefer `@HostListener` or Observable/async pipe first.
+
+### No Props Drilling
+
+If an `@Input()` exists only to be forwarded to a child — remove it. The child injects the service directly.
+
+This applies to `BackendLinksService` URLs, `CurrentUserService` data, and any other shared state — do not pass them down the component tree as inputs.
 
 ### Deprecated Practices
 1. **Material UI**: No new Material imports anywhere. Existing Material usage will be replaced in phases (see design-system.md, section 9).

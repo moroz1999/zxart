@@ -1,5 +1,5 @@
 ﻿<zx-panel [title]="'radio.title' | translate" padding="sm" radius="md" variant="elevated">
-  <div class="radio-remote-buttons">
+  <zx-button-controls align="start" [wrap]="true">
     <zx-button
       *ngFor="let preset of presets"
       size="sm"
@@ -8,5 +8,5 @@
     >
       {{ preset.label | translate }}
     </zx-button>
-  </div>
+  </zx-button-controls>
 </zx-panel>

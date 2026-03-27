@@ -1,5 +1,21 @@
 # Controllers and StructureManager
 
+## URL Routing to ZxArt\Controllers
+
+Routing is **purely code-based** — no CMS structure elements or database entries are needed.
+
+`controller::detectApplication()` takes the first URL segment, applies `ucfirst()`, and checks `class_exists('\ZxArt\Controllers\{Name}')`. If the class exists, that controller handles the request.
+
+```
+GET /languages/?path=...   → toPascalCase('languages')    → ZxArt\Controllers\Languages    ✓
+GET /menu/?lang=eng        → toPascalCase('menu')         → ZxArt\Controllers\Menu         ✓
+GET /backend-links/?lang=  → toPascalCase('backend-links') → ZxArt\Controllers\BackendLinks ✓
+```
+
+Kebab-case URL segments are converted to PascalCase via `toPascalCase()` (= `str_replace('-', '', ucwords($name, '-'))`), so multi-word controller names work with kebab URLs naturally.
+
+`structureManager` is used **inside** controllers to navigate the content tree — it has no role in routing to the controller itself.
+
 ## getElementById() loading modes
 `structureManager::getElementById($id, $parentId = null, bool $directlyToParent = false)`
 

@@ -1,0 +1,8 @@
+:root {
+  /* Font size for the ratings table */
+  --zx-recent-ratings-font-size: var(--zx-font-size-sm);
+  /* Minimum width of the rating value cell */
+  --zx-recent-ratings-value-min-width: 20px;
+  /* Horizontal padding for the pagination row */
+  --zx-recent-ratings-pagination-padding: var(--padding-md);
+}

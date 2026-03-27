@@ -23,83 +23,85 @@
   >
     <zx-header-popover class="lt-popover" (click)="$event.stopPropagation()">
       <div class="lt-content">
+        <ng-container *ngIf="links$ | async as links">
 
-        <ng-container *ngIf="user.userName !== 'anonymous'; else loginForm">
-          <div class="lt-user-name" zxBodySmMuted>{{ user.userName }}</div>
-          <div class="lt-menu-items">
-            <zx-popover-menu-item *ngIf="user.profileUrl" [href]="user.profileUrl!">
-              {{ 'login.account' | translate }}
-            </zx-popover-menu-item>
-            <zx-popover-menu-item *ngIf="user.playlistsUrl" [href]="user.playlistsUrl!">
-              {{ 'login.favourites' | translate }}
-            </zx-popover-menu-item>
-            <zx-popover-menu-item *ngIf="user.authorPageUrl" [href]="user.authorPageUrl!">
-              {{ 'login.my-page' | translate }}
-            </zx-popover-menu-item>
-          </div>
-          <zx-button size="sm" color="outlined" (click)="submitLogout()">
-            {{ 'login.logout' | translate }}
-          </zx-button>
-        </ng-container>
-
-        <ng-template #loginForm>
-          <form zxForm (ngSubmit)="submitLogin()">
-            <div class="lt-error" *ngIf="loginError" role="alert">
-              {{ loginError | translate }}
+          <ng-container *ngIf="user.userName !== 'anonymous'; else loginForm">
+            <div class="lt-user-name" zxBodySmMuted>{{ user.userName }}</div>
+            <div class="lt-menu-items">
+              <zx-popover-menu-item *ngIf="links.profileUrl" [href]="links.profileUrl!">
+                {{ 'login.account' | translate }}
+              </zx-popover-menu-item>
+              <zx-popover-menu-item *ngIf="links.playlistsUrl" [href]="links.playlistsUrl!">
+                {{ 'login.favourites' | translate }}
+              </zx-popover-menu-item>
+              <zx-popover-menu-item *ngIf="user.authorPageUrl" [href]="user.authorPageUrl!">
+                {{ 'login.my-page' | translate }}
+              </zx-popover-menu-item>
             </div>
-
-            <div class="lt-field">
-              <label class="lt-label" for="lt-username">{{ 'login.username' | translate }}</label>
-              <input
-                id="lt-username"
-                class="lt-input"
-                type="text"
-                autocomplete="username"
-                [(ngModel)]="userName"
-                name="userName"
-              />
-            </div>
-
-            <div class="lt-field">
-              <label class="lt-label" for="lt-password">{{ 'login.password' | translate }}</label>
-              <input
-                id="lt-password"
-                class="lt-input"
-                type="password"
-                autocomplete="current-password"
-                [(ngModel)]="password"
-                name="password"
-              />
-            </div>
-
-            <div class="lt-remember">
-              <label class="lt-remember-label">
-                <input type="checkbox" [(ngModel)]="remember" name="remember" />
-                {{ 'login.remember' | translate }}
-              </label>
-            </div>
-
-            <zx-button type="submit" [disabled]="loading">
-              {{ 'login.submit' | translate }}
+            <zx-button size="sm" color="outlined" (click)="submitLogout()">
+              {{ 'login.logout' | translate }}
             </zx-button>
+          </ng-container>
 
-            <div class="lt-links" *ngIf="user.registrationUrl || user.passwordReminderUrl">
-              <a
-                *ngIf="user.registrationUrl"
-                [href]="user.registrationUrl"
-                class="lt-link"
-                zxLink
-              >{{ 'login.register' | translate }}</a>
-              <a
-                *ngIf="user.passwordReminderUrl"
-                [href]="user.passwordReminderUrl"
-                class="lt-link"
-                zxLink
-              >{{ 'login.forgot-password' | translate }}</a>
-            </div>
-          </form>
-        </ng-template>
+          <ng-template #loginForm>
+            <form zxForm (ngSubmit)="submitLogin()">
+              <div class="lt-error" *ngIf="loginError" role="alert">
+                {{ loginError | translate }}
+              </div>
 
+              <div class="lt-field">
+                <label class="lt-label" for="lt-username">{{ 'login.username' | translate }}</label>
+                <input
+                  id="lt-username"
+                  class="lt-input"
+                  type="text"
+                  autocomplete="username"
+                  [(ngModel)]="userName"
+                  name="userName"
+                />
+              </div>
+
+              <div class="lt-field">
+                <label class="lt-label" for="lt-password">{{ 'login.password' | translate }}</label>
+                <input
+                  id="lt-password"
+                  class="lt-input"
+                  type="password"
+                  autocomplete="current-password"
+                  [(ngModel)]="password"
+                  name="password"
+                />
+              </div>
+
+              <div class="lt-remember">
+                <label class="lt-remember-label">
+                  <input type="checkbox" [(ngModel)]="remember" name="remember" />
+                  {{ 'login.remember' | translate }}
+                </label>
+              </div>
+
+              <zx-button type="submit" [disabled]="loading">
+                {{ 'login.submit' | translate }}
+              </zx-button>
+
+              <div class="lt-links" *ngIf="links.registrationUrl || links.passwordReminderUrl">
+                <a
+                  *ngIf="links.registrationUrl"
+                  [href]="links.registrationUrl"
+                  class="lt-link"
+                  zxLink
+                >{{ 'login.register' | translate }}</a>
+                <a
+                  *ngIf="links.passwordReminderUrl"
+                  [href]="links.passwordReminderUrl"
+                  class="lt-link"
+                  zxLink
+                >{{ 'login.forgot-password' | translate }}</a>
+              </div>
+            </form>
+          </ng-template>
+
+        </ng-container>
       </div>
     </zx-header-popover>
   </ng-template>

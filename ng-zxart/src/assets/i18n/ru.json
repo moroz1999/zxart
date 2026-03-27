@@ -350,7 +350,28 @@
     },
     "mobile-nav": {
       "open": "Открыть меню навигации",
-      "close": "Закрыть меню навигации"
+      "close": "Закрыть меню навигации",
+      "ratings": "Последние голосования",
+      "comments": "Последние комменты",
+      "back": "Назад"
+    },
+    "search": {
+      "label": "Поиск",
+      "placeholder": "Поиск...",
+      "close": "Закрыть поиск",
+      "empty": "Ничего не найдено",
+      "search-all": "Искать всё",
+      "type": {
+        "author": "Авторы",
+        "authorAlias": "Псевдонимы авторов",
+        "party": "Пати",
+        "group": "Группы",
+        "groupAlias": "Псевдонимы групп",
+        "zxProd": "Продукции",
+        "zxPicture": "Картинки",
+        "zxMusic": "Музыка",
+        "pressArticle": "Пресса"
+      }
     }
   },
   "login": {
@@ -380,6 +401,9 @@
       "interlace1": "Int1",
       "interlace2": "Int2"
     }
+  },
+  "site": {
+    "download": "Скачать архив программ"
   },
   "playlist": {
     "button_label": "Плейлисты",

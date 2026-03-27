@@ -56,3 +56,4 @@ All design system components are in `ng-zxart/src/app/shared/ui/`.
 - [zx-rating](design-system/zx-rating.md) — interactive 5-star rating with hover preview
 - [zx-item-controls](design-system/zx-item-controls.md) — unified vote + playlist (favourites) controls row
 - [zxPicturesGrid](design-system/zx-pictures-grid.md) — responsive picture grid layout directive
+- [Dialogs](design-system/zx-dialog.md) — CDK dialog pattern, backdrop rules, panel classes

@@ -31,7 +31,8 @@ export class SettingsTriggerComponent implements OnInit {
 
   openSettings(): void {
     this.dialog.open(SettingsDialogComponent, {
-      panelClass: 'zx-dialog'
+      panelClass: 'zx-dialog',
+      backdropClass: 'zx-dialog-backdrop',
     });
   }
 }

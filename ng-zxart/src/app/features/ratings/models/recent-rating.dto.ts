@@ -9,4 +9,5 @@ export interface RecentRatingDto {
 
 export interface RecentRatingsListDto {
   items: RecentRatingDto[];
+  hasMore: boolean;
 }

@@ -17,6 +17,7 @@ use ZxArt\Ai\Service\TextBeautifier;
 use ZxArt\Ai\Service\Translator;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\BackendLinks\BackendLinksService;
 use ZxArt\Comments\CommentsService;
 use ZxArt\Controllers\Rss;
 use ZxArt\Controllers\Socialpost;
@@ -42,6 +43,8 @@ return [
     AuthorPageUrlProvider::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     MenuService::class => autowire()
+        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
+    BackendLinksService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
 
     // Controllers with publicStructureManager

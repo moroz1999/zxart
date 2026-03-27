@@ -1,8 +1,8 @@
-@if (loading()) {
+@if (loading() && !hasLoaded()) {
   <zx-panel>
     <zx-skeleton variant="text" [count]="10" lineHeight="52px"></zx-skeleton>
   </zx-panel>
-} @else {
+} @else if (hasLoaded()) {
   <zx-panel [title]="'comments.title' | translate">
     <zx-stack spacing="md">
       @for (comment of comments(); track comment.id) {
@@ -26,10 +26,8 @@
       }
     </zx-stack>
 
-    @if (allCommentsUrl) {
-      <a [href]="allCommentsUrl" class="latest-comments__all">
-        <zx-button color="secondary" size="sm">{{ 'comments.all-comments' | translate }}</zx-button>
-      </a>
+    @if (allCommentsUrl()) {
+      <zx-button color="secondary" size="sm" [href]="allCommentsUrl()">{{ 'comments.all-comments' | translate }}</zx-button>
     }
   </zx-panel>
 }

@@ -53,6 +53,7 @@ export class DialogSelectorComponent implements OnInit, OnChanges {
         let dialogRef = this.dialog.open(DialogSelectorDialogComponent, {
             width: this.width,
             panelClass: 'zx-dialog',
+            backdropClass: 'zx-dialog-backdrop',
             data: {
                 selectorData: this.selectorData,
                 selectValuesLabel: this.selectValuesLabel,

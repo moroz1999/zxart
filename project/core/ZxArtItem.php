@@ -160,7 +160,7 @@ abstract class ZxArtItem extends structureElement implements
 
     public function getSearchTitle(): string
     {
-        $searchTitle = $this->title;
+        $searchTitle = html_entity_decode($this->title, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         if ($this->year) {
             $searchTitle .= ' (' . $this->year . ')';
         }

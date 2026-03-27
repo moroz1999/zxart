@@ -1,17 +1,35 @@
-@if (loading()) {
+@if (loading() && !hasLoaded()) {
   <zx-skeleton variant="text" [count]="5"></zx-skeleton>
-} @else {
-  <zx-table [title]="'ratings.title' | translate">
-    <table class="recent-ratings-table">
-      <tbody>
-        @for (item of items(); track $index) {
-          <tr>
-            <td><zx-user [user]="item.user"></zx-user></td>
-            <td class="rating-value">{{ item.rating }}</td>
-            <td><a [href]="item.targetUrl" zxLink>{{ item.targetTitle }}</a></td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </zx-table>
+} @else if (hasLoaded()) {
+  <div [class.ratings-loading]="loading()">
+    <zx-table [title]="'ratings.title' | translate">
+      <table class="recent-ratings-table">
+        <tbody>
+          @for (item of items(); track $index) {
+            <tr>
+              <td><zx-user [user]="item.user"></zx-user></td>
+              <td class="rating-value">{{ item.rating }}</td>
+              <td><a [href]="item.targetUrl" zxLink>{{ item.targetTitle }}</a></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      <zx-button-controls align="start" class="ratings-pagination">
+        <zx-button color="outlined" size="sm" [disabled]="loading() || offset() === 0" (click)="prevPage()">
+          @if (loading() && hasLoaded()) {
+            <zx-spinner size="xs"></zx-spinner>
+          } @else {
+            {{ 'pages.previous' | translate }}
+          }
+        </zx-button>
+        <zx-button color="outlined" size="sm" [disabled]="loading() || !hasMore()" (click)="nextPage()">
+          @if (loading() && hasLoaded()) {
+            <zx-spinner size="xs"></zx-spinner>
+          } @else {
+            {{ 'pages.next' | translate }}
+          }
+        </zx-button>
+      </zx-button-controls>
+    </zx-table>
+  </div>
 }

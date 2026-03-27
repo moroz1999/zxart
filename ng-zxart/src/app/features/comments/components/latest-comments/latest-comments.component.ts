@@ -1,8 +1,11 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {map} from 'rxjs/operators';
 import {CommentsService} from '../../services/comments.service';
 import {CommentDto} from '../../models/comment.dto';
+import {BackendLinksService} from '../../../header/services/backend-links.service';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
 import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
@@ -22,33 +25,44 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
     ZxUserComponent,
     ZxPanelComponent,
     ZxBodySmMutedDirective,
-    ZxButtonComponent
+    ZxButtonComponent,
   ],
   templateUrl: './latest-comments.component.html',
   styleUrls: ['./latest-comments.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LatestCommentsComponent implements OnInit {
-  @Input() allCommentsUrl = '';
+  readonly allCommentsUrl = toSignal(
+    this.backendLinksService.links$.pipe(map(l => l.commentsUrl ?? '')),
+    {initialValue: ''},
+  );
 
   comments = signal<CommentDto[]>([]);
-  loading = signal(true);
+  loading = signal(false);
+  hasLoaded = signal(false);
 
   constructor(
     private commentsService: CommentsService,
-    private sanitizer: DomSanitizer
-  ) {
-  }
+    private backendLinksService: BackendLinksService,
+    private sanitizer: DomSanitizer,
+  ) {}
 
   ngOnInit(): void {
+    this.loadComments();
+  }
+
+  private loadComments(): void {
+    this.loading.set(true);
     this.commentsService.getLatestComments(10).subscribe({
       next: (comments) => {
         this.comments.set(comments);
         this.loading.set(false);
+        this.hasLoaded.set(true);
       },
       error: () => {
         this.loading.set(false);
-      }
+        this.hasLoaded.set(true);
+      },
     });
   }
 

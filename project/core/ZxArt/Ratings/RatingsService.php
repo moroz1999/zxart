@@ -29,20 +29,23 @@ readonly class RatingsService
     ) {
     }
 
-    public function getRecentRatings(int $limit = self::DEFAULT_LIMIT): RecentRatingsListDto
+    public function getRecentRatings(int $limit = self::DEFAULT_LIMIT, int $offset = 0): RecentRatingsListDto
     {
         $cacheKey = self::CACHE_KEY . '_' . $this->languagesManager->getCurrentLanguageId();
 
-        /** @var RecentRatingsListDto|null $cached */
-        $cached = $this->cache->get($cacheKey);
-        if ($cached instanceof RecentRatingsListDto) {
-            return $cached;
+        if ($offset === 0) {
+            /** @var RecentRatingsListDto|null $cached */
+            $cached = $this->cache->get($cacheKey);
+            if ($cached instanceof RecentRatingsListDto) {
+                return $cached;
+            }
         }
 
         $votes = $this->db->table('votes_history')
             ->select('*')
             ->orderBy('date', 'desc')
-            ->limit($limit)
+            ->limit($limit + 1)
+            ->offset($offset)
             ->get();
 
         $items = [];
@@ -80,8 +83,15 @@ readonly class RatingsService
             );
         }
 
-        $result = new RecentRatingsListDto($items);
-        $this->cache->set($cacheKey, $result, self::CACHE_TTL);
+        $hasMore = count($items) > $limit;
+        if ($hasMore) {
+            $items = array_slice($items, 0, $limit);
+        }
+
+        $result = new RecentRatingsListDto($items, $hasMore);
+        if ($offset === 0) {
+            $this->cache->set($cacheKey, $result, self::CACHE_TTL);
+        }
 
         return $result;
     }

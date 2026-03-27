@@ -1,0 +1,35 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.mn-icon {
+  width: var(--zx-mobile-nav-drawer-icon-size);
+  height: var(--zx-mobile-nav-drawer-icon-size);
+}
+
+.mn-drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-8);
+  flex-shrink: 0;
+}
+
+.mn-tools {
+  display: flex;
+  align-items: center;
+}
+
+.mn-items {
+  padding: var(--space-8) 0;
+}
+
+.mn-submenu {
+  padding-left: var(--space-16);
+  border-left: var(--zx-mobile-nav-drawer-submenu-border);
+  margin-left: var(--space-12);
+  margin-bottom: var(--space-8);
+}

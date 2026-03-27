@@ -62,9 +62,10 @@ class Ratings extends controllerApplication
     protected function handleList(): void
     {
         $limit = (int)$this->getParameter('limit') ?: 20;
+        $offset = max(0, (int)$this->getParameter('offset'));
 
         try {
-            $listDto = $this->ratingsService->getRecentRatings($limit);
+            $listDto = $this->ratingsService->getRecentRatings($limit, $offset);
             $this->assignSuccess($this->objectMapper->map($listDto, RecentRatingsListRestDto::class));
         } catch (Throwable) {
             $this->assignError('Internal server error');

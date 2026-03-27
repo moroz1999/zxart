@@ -3,10 +3,20 @@
 }
 
 .rating-value {
-  min-width: 1.2em;
+  min-width: var(--zx-recent-ratings-value-min-width);
   text-align: center;
 }
 
 .recent-ratings-table {
-  font-size: var(--font-sm);
+  font-size: var(--zx-recent-ratings-font-size);
+}
+
+.ratings-pagination {
+  margin-top: var(--space-8);
+  padding: 0 var(--zx-recent-ratings-pagination-padding) var(--zx-recent-ratings-pagination-padding);
+}
+
+.ratings-loading {
+  opacity: 0.5;
+  transition: opacity var(--animation-sm);
 }

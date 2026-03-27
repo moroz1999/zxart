@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {RecentRatingDto, RecentRatingsListDto} from '../models/recent-rating.dto';
+import {RecentRatingsListDto} from '../models/recent-rating.dto';
 import {RatingDto} from '../models/rating.dto';
 
 interface ElementRatingsListDto {
@@ -15,10 +15,9 @@ interface ElementRatingsListDto {
 export class RatingsService {
   constructor(private http: HttpClient) {}
 
-  getRecentRatings(limit = 20): Observable<RecentRatingDto[]> {
-    return this.http.get<RecentRatingsListDto>(`/ratings/?action=list&limit=${limit}`).pipe(
-      map(response => response.items),
-      catchError(() => of([]))
+  getRecentRatings(limit = 20, offset = 0): Observable<RecentRatingsListDto> {
+    return this.http.get<RecentRatingsListDto>(`/ratings/?action=list&limit=${limit}&offset=${offset}`).pipe(
+      catchError(() => of({items: [], hasMore: false})),
     );
   }
 

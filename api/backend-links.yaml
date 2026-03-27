@@ -1,0 +1,89 @@
+openapi: 3.0.0
+info:
+  title: Backend Links API
+  version: 1.0.0
+paths:
+  /backend-links/:
+    get:
+      summary: Get static section URLs for the specified language
+      parameters:
+        - name: lang
+          in: query
+          required: true
+          schema:
+            type: string
+          description: ISO 639-3 language code (e.g. eng, rus, esp)
+      responses:
+        '200':
+          description: Section URLs for the requested language
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BackendLinksDto'
+        '400':
+          description: Missing or unknown language code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    BackendLinksDto:
+      type: object
+      properties:
+        homeUrl:
+          type: string
+          nullable: true
+          description: Home page URL for the language, e.g. /eng/
+        commentsUrl:
+          type: string
+          nullable: true
+          description: URL of the comments listing section
+        supportUrl:
+          type: string
+          nullable: true
+          description: URL of the support/subscription section
+        searchUrl:
+          type: string
+          nullable: true
+          description: Base search URL including action:perform/id:N/ suffix
+        registrationUrl:
+          type: string
+          nullable: true
+          description: URL of the registration section
+        passwordReminderUrl:
+          type: string
+          nullable: true
+          description: URL of the password reminder section
+        profileUrl:
+          type: string
+          nullable: true
+          description: URL of the user profile section
+        playlistsUrl:
+          type: string
+          nullable: true
+          description: URL of the user playlists section
+        prodCatalogueBaseUrl:
+          type: string
+          nullable: true
+          description: Base URL for the productions catalogue (zxProd/zxRelease search)
+        graphicsBaseUrl:
+          type: string
+          nullable: true
+          description: Base URL for the graphics detailed search
+        musicBaseUrl:
+          type: string
+          nullable: true
+          description: Base URL for the music detailed search
+    ErrorResponse:
+      type: object
+      required: [errorMessage]
+      properties:
+        errorMessage:
+          type: string

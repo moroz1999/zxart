@@ -62,8 +62,8 @@ export class FirstpageComponent implements OnInit {
   openConfig(): void {
     this.dialog.open(FirstpageConfigDialogComponent, {
       width: '600px',
-      maxHeight: '80vh',
       panelClass: 'zx-dialog',
+      backdropClass: 'zx-dialog-backdrop',
     });
   }
 

@@ -17,6 +17,8 @@
   [cdkConnectedOverlayPositions]="positions"
   [cdkConnectedOverlayHasBackdrop]="true"
   cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  [cdkConnectedOverlayPush]="true"
+  [cdkConnectedOverlayViewportMargin]="8"
   (backdropClick)="closePopover()"
 >
   <zx-header-popover class="ps-popover" (click)="$event.stopPropagation()">
@@ -25,30 +27,30 @@
 
       <div class="ps-section" *ngIf="!settings.hidden">
         <span zxBodySmMuted>{{ 'picture-settings.gigascreen-mode' | translate }}</span>
-        <div class="ps-mode-buttons">
+        <zx-button-controls align="start">
           <zx-button
             *ngFor="let m of modes"
             size="xs"
             [color]="isActiveMode(m.value) ? 'primary' : 'outlined'"
             (click)="setMode(m.value)"
           >{{ m.labelKey | translate }}</zx-button>
-        </div>
+        </zx-button-controls>
       </div>
 
       <div class="ps-section" *ngIf="!settings.hidden">
         <span zxBodySmMuted>{{ 'picture-settings.border' | translate }}</span>
-        <div class="ps-mode-buttons">
+        <zx-button-controls align="start">
           <zx-button size="xs" [color]="settings.border ? 'primary' : 'outlined'" (click)="setBorder(true)">ON</zx-button>
           <zx-button size="xs" [color]="!settings.border ? 'primary' : 'outlined'" (click)="setBorder(false)">OFF</zx-button>
-        </div>
+        </zx-button-controls>
       </div>
 
       <div class="ps-section">
         <span zxBodySmMuted>{{ 'picture-settings.hidden' | translate }}</span>
-        <div class="ps-mode-buttons">
+        <zx-button-controls align="start">
           <zx-button size="xs" [color]="settings.hidden ? 'primary' : 'outlined'" (click)="setHidden(true)">ON</zx-button>
           <zx-button size="xs" [color]="!settings.hidden ? 'primary' : 'outlined'" (click)="setHidden(false)">OFF</zx-button>
-        </div>
+        </zx-button-controls>
       </div>
 
     </ng-container>

@@ -1,0 +1,18 @@
+<div class="zx-header-inner">
+  <zx-mobile-nav></zx-mobile-nav>
+  <a [href]="homeUrl() ?? '/'" class="zx-header-logo">
+    <img src="/images/logo.png" alt="Logo" class="zx-header-logo-img" />
+  </a>
+  <div class="zx-header-menu">
+    <zx-menu-block></zx-menu-block>
+  </div>
+  <div class="zx-header-column">
+    <zx-search-trigger></zx-search-trigger>
+    <zx-language-trigger></zx-language-trigger>
+    <div class="zx-header-column-desktop">
+      <zx-theme-trigger></zx-theme-trigger>
+      <zx-picture-settings-trigger></zx-picture-settings-trigger>
+    </div>
+    <zx-login-trigger></zx-login-trigger>
+  </div>
+</div>

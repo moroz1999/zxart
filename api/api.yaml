@@ -17,6 +17,8 @@ paths:
     $ref: 'user-preferences.yaml#/paths/~1userpreferences~1'
   /menu/:
     $ref: 'menu.yaml#/paths/~1menu~1'
+  /backend-links/:
+    $ref: 'backend-links.yaml#/paths/~1backend-links~1'
 components:
   schemas:
     CommentDto:

@@ -49,6 +49,8 @@ class Languages extends controllerApplication
         $path = trim($this->getParameter('path') ?? '', '/');
         $pathSegments = $path !== '' ? explode('/', $path) : [];
 
+        $structureManager = $this->getService('structureManager');
+
         // Detect active language from path (first segment), fall back to session detection
         $activeLanguageCode = null;
         if (!empty($pathSegments)) {
@@ -66,7 +68,6 @@ class Languages extends controllerApplication
 
         $languageLinks = [];
         if (!empty($pathSegments)) {
-            $structureManager = $this->getService('structureManager');
             $structureManager->setRequestedPath($pathSegments);
             $currentElement = $structureManager->getCurrentElement();
             if ($currentElement !== null) {
@@ -87,6 +88,7 @@ class Languages extends controllerApplication
                 'flag' => $flagMap[$language->iso6391] ?? '',
                 'url' => $url,
                 'active' => $language->iso6393 === $activeLanguageCode,
+                'homeUrl' => '/' . $language->iso6393 . '/',
             ];
         }
 

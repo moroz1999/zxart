@@ -11,9 +11,6 @@ class CurrentUserRestService
 {
     public function __construct(
         private readonly CurrentUserService $currentUserService,
-        private readonly RegistrationUrlsProvider $registrationUrlsProvider,
-        private readonly PasswordReminderUrlProvider $passwordReminderUrlProvider,
-        private readonly PlaylistsUrlProvider $playlistsUrlProvider,
         private readonly AuthorPageUrlProvider $authorPageUrlProvider,
     ) {}
 
@@ -22,14 +19,10 @@ class CurrentUserRestService
         $user = $this->currentUserService->getCurrentUser();
         $userName = $user->userName ?: 'anonymous';
         $id = null;
-        $profileUrl = null;
-        $playlistsUrl = null;
         $authorPageUrl = null;
 
         if ($userName !== 'anonymous' && $user->id) {
             $id = (int)$user->id;
-            $profileUrl = $this->registrationUrlsProvider->getProfileUrl();
-            $playlistsUrl = $this->playlistsUrlProvider->getPlaylistsUrl();
             if ($user->authorId !== null && $user->authorId !== '') {
                 $authorPageUrl = $this->authorPageUrlProvider->getAuthorPageUrl((int)$user->authorId);
             }
@@ -38,10 +31,7 @@ class CurrentUserRestService
         return new CurrentUserRestDto(
             id: $id,
             userName: $userName,
-            registrationUrl: $this->registrationUrlsProvider->getRegistrationUrl(),
-            passwordReminderUrl: $this->passwordReminderUrlProvider->getPasswordReminderUrl(),
-            profileUrl: $profileUrl,
-            playlistsUrl: $playlistsUrl,
+            hasAds: $user->hasAds(),
             authorPageUrl: $authorPageUrl,
         );
     }
@@ -51,8 +41,7 @@ class CurrentUserRestService
         return new CurrentUserRestDto(
             id: null,
             userName: 'anonymous',
-            registrationUrl: $this->registrationUrlsProvider->getRegistrationUrl(),
-            passwordReminderUrl: $this->passwordReminderUrlProvider->getPasswordReminderUrl(),
+            hasAds: true,
         );
     }
 }

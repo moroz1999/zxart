@@ -1,0 +1,52 @@
+<div class="sd-wrapper">
+  <div class="sd-input-row">
+    <input
+      #input
+      class="sd-input"
+      type="text"
+      autocomplete="off"
+      [attr.placeholder]="'header.search.placeholder' | translate"
+      [value]="query"
+      (input)="onQueryChange($any($event.target).value)"
+      (keydown)="onKeyDown($event)"
+    />
+    <zx-button color="transparent" [square]="true" [ariaLabel]="'header.search.close' | translate" (click)="close()">
+      ✕
+    </zx-button>
+  </div>
+
+  @if (loading) {
+    <zx-skeleton variant="text" [count]="5"></zx-skeleton>
+  } @else if (searched && groups.length === 0) {
+    <div class="sd-empty">{{ 'header.search.empty' | translate }}</div>
+  } @else if (groups.length > 0) {
+    <div class="sd-results">
+      @for (group of groups; track group.type; let gi = $index) {
+        <div class="sd-group">
+          <div class="sd-group-caption">{{ 'header.search.type.' + group.type | translate }}</div>
+          @for (item of group.items; track $index; let ii = $index) {
+            @if (item.url) {
+              <a [href]="item.url" class="sd-result-item" [class.sd-result-item--focused]="focusedIndex === getItemFlatIndex(gi, ii)">
+                <svg-icon [name]="group.icon" class="sd-result-icon"></svg-icon>
+                <span class="sd-result-title">{{ item.title }}</span>
+              </a>
+            } @else {
+              <span class="sd-result-item" [class.sd-result-item--focused]="focusedIndex === getItemFlatIndex(gi, ii)">
+                <svg-icon [name]="group.icon" class="sd-result-icon"></svg-icon>
+                <span class="sd-result-title">{{ item.title }}</span>
+              </span>
+            }
+          }
+        </div>
+      }
+    </div>
+  }
+
+  @if (searchAllUrl()) {
+    <zx-button-controls align="end" class="sd-search-all">
+      <zx-button color="outlined" size="sm" [href]="searchAllUrl()!">
+        {{ 'header.search.search-all' | translate }}
+      </zx-button>
+    </zx-button-controls>
+  }
+</div>

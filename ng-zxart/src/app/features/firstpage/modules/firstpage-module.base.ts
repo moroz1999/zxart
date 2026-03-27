@@ -4,7 +4,8 @@ import {map} from 'rxjs/operators';
 import {ModuleSettings, ModuleType} from '../models/firstpage-config';
 import {MODULE_SETTINGS} from '../models/module-settings.token';
 import {CatalogueCategory, MODULE_LINK_CONFIG, ModuleLinkConfig} from '../models/firstpage-view-all-links';
-import {FirstpageViewAllLinksService} from '../services/firstpage-view-all-links.service';
+import {BackendLinksService} from '../../header/services/backend-links.service';
+import {BackendLinks} from '../../header/models/backend-links';
 
 export interface ModuleVm<T> {
   items: T[];
@@ -57,7 +58,7 @@ export abstract class FirstpageModuleBase<T> implements OnInit, OnDestroy {
 
   private el = inject(ElementRef);
   private observer?: IntersectionObserver;
-  private viewAllLinksService = inject(FirstpageViewAllLinksService);
+  private backendLinksService = inject(BackendLinksService);
   private subscription = new Subscription();
 
   protected constructor(
@@ -98,8 +99,8 @@ export abstract class FirstpageModuleBase<T> implements OnInit, OnDestroy {
     this.linkStore.next({url: undefined, labelKey: config.titleKey});
 
     this.subscription.add(
-      this.viewAllLinksService.getBaseUrls().subscribe(baseUrls => {
-        const baseUrl = this.getBaseUrlForCategory(baseUrls, config.category);
+      this.backendLinksService.links$.subscribe(links => {
+        const baseUrl = this.getBaseUrlForCategory(links, config.category);
         if (baseUrl) {
           this.linkStore.next({url: baseUrl + config.searchParams, labelKey: config.titleKey});
         }
@@ -107,10 +108,7 @@ export abstract class FirstpageModuleBase<T> implements OnInit, OnDestroy {
     );
   }
 
-  private getBaseUrlForCategory(
-    baseUrls: {prodCatalogueBaseUrl: string | null; graphicsBaseUrl: string | null; musicBaseUrl: string | null},
-    category: CatalogueCategory
-  ): string | null {
+  private getBaseUrlForCategory(baseUrls: BackendLinks, category: CatalogueCategory): string | null {
     switch (category) {
       case 'zxProd':
       case 'zxRelease':

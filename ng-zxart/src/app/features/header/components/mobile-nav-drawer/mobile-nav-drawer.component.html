@@ -1,0 +1,49 @@
+<div class="mn-drawer-header">
+  <div class="mn-tools">
+    <zx-button
+      color="transparent"
+      [square]="true"
+      [ariaLabel]="'header.mobile-nav.ratings' | translate"
+      (click)="openRatings()"
+    >
+      <svg-icon name="mn-star" class="mn-icon"></svg-icon>
+    </zx-button>
+    <zx-button
+      color="transparent"
+      [square]="true"
+      [ariaLabel]="'header.mobile-nav.comments' | translate"
+      (click)="openComments()"
+    >
+      <svg-icon name="mn-chat" class="mn-icon"></svg-icon>
+    </zx-button>
+    <zx-theme-trigger></zx-theme-trigger>
+    <zx-picture-settings-trigger></zx-picture-settings-trigger>
+  </div>
+  <zx-button
+    color="transparent"
+    [square]="true"
+    [ariaLabel]="'header.mobile-nav.close' | translate"
+    (click)="close()"
+  >
+    <svg-icon name="mn-x" class="mn-icon"></svg-icon>
+  </zx-button>
+</div>
+
+<div class="mn-items">
+  @if (items$ | async; as items) {
+    @for (item of items; track item.id) {
+      <zx-popover-menu-item [href]="item.url" [active]="isActive(item)">
+        {{ item.title }}
+      </zx-popover-menu-item>
+      @if (item.children.length > 0 && isActive(item)) {
+        <div class="mn-submenu">
+          @for (child of item.children; track child.id) {
+            <zx-popover-menu-item [href]="child.url">
+              {{ child.title }}
+            </zx-popover-menu-item>
+          }
+        </div>
+      }
+    }
+  }
+</div>

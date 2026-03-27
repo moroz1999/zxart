@@ -1,0 +1,11 @@
+@use 'shared/breakpoints' as bp;
+
+:host {
+  display: flex;
+  align-items: center;
+}
+
+.st-icon {
+  width: var(--zx-search-trigger-icon-size);
+  height: var(--zx-search-trigger-icon-size);
+}

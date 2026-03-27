@@ -5,7 +5,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {CommentDto} from '../../models/comment.dto';
 import {CommentsService} from '../../services/comments.service';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
-import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxTextareaComponent} from '../../../../shared/ui/zx-textarea/zx-textarea.component';
 import {ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
 
@@ -17,7 +17,7 @@ import {ZxCaptionDirective} from '../../../../shared/directives/typography/typog
     ReactiveFormsModule,
     TranslateModule,
     ZxButtonComponent,
-    ZxStackComponent,
+    ZxButtonControlsComponent,
     ZxTextareaComponent,
     ZxCaptionDirective
   ],

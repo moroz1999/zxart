@@ -1,0 +1,27 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.pd-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-8) var(--space-8) var(--space-8) var(--space-16);
+  border-bottom: var(--zx-panel-dialog-header-border);
+  flex-shrink: 0;
+}
+
+.pd-title {
+  font-weight: 600;
+  font-size: var(--zx-panel-dialog-title-font-size);
+}
+
+.pd-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-12) var(--space-16);
+  box-sizing: border-box;
+}

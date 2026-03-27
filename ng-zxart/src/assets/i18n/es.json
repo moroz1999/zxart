@@ -349,7 +349,28 @@
     },
     "mobile-nav": {
       "open": "Abrir menú de navegación",
-      "close": "Cerrar menú de navegación"
+      "close": "Cerrar menú de navegación",
+      "ratings": "Últimas valoraciones",
+      "comments": "Últimos comentarios",
+      "back": "Atrás"
+    },
+    "search": {
+      "label": "Buscar",
+      "placeholder": "Buscar...",
+      "close": "Cerrar búsqueda",
+      "empty": "No se encontró nada",
+      "search-all": "Buscar todo",
+      "type": {
+        "author": "Autores",
+        "authorAlias": "Seudónimos de autores",
+        "party": "Parties",
+        "group": "Grupos",
+        "groupAlias": "Seudónimos de grupos",
+        "zxProd": "Producciones",
+        "zxPicture": "Imágenes",
+        "zxMusic": "Música",
+        "pressArticle": "Prensa"
+      }
     }
   },
   "login": {
@@ -379,6 +400,9 @@
       "interlace1": "Int1",
       "interlace2": "Int2"
     }
+  },
+  "site": {
+    "download": "Descargar archivo de software"
   },
   "playlist": {
     "button_label": "Listas de reproducci\u00f3n",

@@ -1,0 +1,61 @@
+@use 'shared/breakpoints' as bp;
+
+:host {
+  display: block;
+  position: sticky;
+  background-color: var(--zx-header-bg);
+  z-index: var(--zx-header-z-index);
+  top: 0;
+  left: 0;
+  right: 0;
+  box-shadow: var(--zx-header-shadow);
+
+  @include bp.media-breakpoint-down(md) {
+    position: fixed;
+  }
+}
+
+.zx-header-inner {
+  padding: var(--zx-header-padding);
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  width: 100%;
+  max-width: var(--zx-header-max-width);
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.zx-header-logo {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+.zx-header-logo-img {
+  height: var(--zx-header-logo-height);
+}
+
+.zx-header-menu {
+  @include bp.media-breakpoint-down(lg) {
+    display: none;
+  }
+}
+
+.zx-header-column {
+  display: flex;
+  margin: var(--zx-header-column-margin);
+
+  @include bp.media-breakpoint-down(lg) {
+    margin: 0;
+  }
+}
+
+.zx-header-column-desktop {
+  display: contents;
+
+  @include bp.media-breakpoint-down(lg) {
+    display: none;
+  }
+}

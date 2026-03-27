@@ -350,7 +350,28 @@
     },
     "mobile-nav": {
       "open": "Open navigation menu",
-      "close": "Close navigation menu"
+      "close": "Close navigation menu",
+      "ratings": "Latest ratings",
+      "comments": "Latest comments",
+      "back": "Back"
+    },
+    "search": {
+      "label": "Search",
+      "placeholder": "Search...",
+      "close": "Close search",
+      "empty": "Nothing found",
+      "search-all": "Search all",
+      "type": {
+        "author": "Authors",
+        "authorAlias": "Author Aliases",
+        "party": "Parties",
+        "group": "Groups",
+        "groupAlias": "Group Aliases",
+        "zxProd": "Productions",
+        "zxPicture": "Pictures",
+        "zxMusic": "Music",
+        "pressArticle": "Press"
+      }
     }
   },
   "login": {
@@ -380,6 +401,9 @@
       "interlace1": "Int1",
       "interlace2": "Int2"
     }
+  },
+  "site": {
+    "download": "Download software archive"
   },
   "playlist": {
     "button_label": "Playlists",

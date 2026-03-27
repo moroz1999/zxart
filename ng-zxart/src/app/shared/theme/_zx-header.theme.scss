@@ -1,0 +1,33 @@
+@use 'shared/breakpoints' as bp;
+
+:root {
+  /* Header inner padding */
+  --zx-header-padding: var(--space-8) var(--space-16);
+  /* Margin for the header controls column on desktop */
+  --zx-header-column-margin: 0 0 0 var(--space-32);
+  /* Drop shadow applied to the header bar */
+  --zx-header-shadow: var(--shadow-lg);
+  /* Maximum width of the header inner content */
+  --zx-header-max-width: 1900px;
+  /* Fixed height on mobile (used to offset body content below fixed header) */
+  --zx-header-mobile-height: 45px;
+  /* Logo image height */
+  --zx-header-logo-height: 35px;
+  /* Z-index for the sticky/fixed header */
+  --zx-header-z-index: 5;
+}
+
+@include bp.media-breakpoint-down(md) {
+  :root {
+    /* Reduced padding on small screens */
+    --zx-header-padding: var(--space-4) var(--space-8);
+  }
+}
+
+.dark-mode {
+  --zx-header-bg: var(--secondary-100);
+}
+
+.light-mode {
+  --zx-header-bg: var(--white);
+}

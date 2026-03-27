@@ -7,6 +7,7 @@ import {Subscription} from 'rxjs';
 import {PictureSettingsService} from '../../services/picture-settings.service';
 import {PictureMode, PictureSettings} from '../../models/picture-settings';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxBodySmMutedDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ZxHeaderPopoverComponent} from '../../../../shared/ui/zx-header-popover/zx-header-popover.component';
 import {environment} from '../../../../../environments/environment';
@@ -21,6 +22,7 @@ import {environment} from '../../../../../environments/environment';
     CdkConnectedOverlay,
     CdkOverlayOrigin,
     ZxButtonComponent,
+    ZxButtonControlsComponent,
     ZxBodySmMutedDirective,
     ZxHeaderPopoverComponent,
   ],

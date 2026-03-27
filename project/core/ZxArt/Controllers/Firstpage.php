@@ -12,7 +12,6 @@ use LanguagesManager;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
 use ZxArt\Firstpage\FirstpageProdsService;
-use ZxArt\Firstpage\FirstpageViewAllLinksService;
 use ZxArt\Parties\Dto\PartyDto;
 use ZxArt\Parties\Rest\PartyRestDto;
 use ZxArt\Parties\Services\PartiesService;
@@ -35,7 +34,6 @@ class Firstpage extends controllerApplication
     protected TunesService $tunesService;
     protected PartiesService $partiesService;
     protected ReleasesService $releasesService;
-    protected FirstpageViewAllLinksService $viewAllLinksService;
 
     public function initialize(): void
     {
@@ -61,7 +59,6 @@ class Firstpage extends controllerApplication
             $this->tunesService = $this->getService(TunesService::class);
             $this->partiesService = $this->getService(PartiesService::class);
             $this->releasesService = $this->getService(ReleasesService::class);
-            $this->viewAllLinksService = $this->getService(FirstpageViewAllLinksService::class);
         } catch (Throwable $e) {
             ErrorLog::getInstance()->logMessage(
                 'Firstpage::initialize',
@@ -91,7 +88,6 @@ class Firstpage extends controllerApplication
                 'randomGoodPictures' => $this->handleRandomGoodPictures(),
                 'unvotedTunes' => $this->handleUnvotedTunes(),
                 'randomGoodTunes' => $this->handleRandomGoodTunes(),
-                'catalogueBaseUrls' => $this->handleCatalogueBaseUrls(),
                 default => $this->assignError('Unknown action: ' . ($action ?? 'null'), 400),
             };
         } catch (Throwable $e) {
@@ -210,11 +206,6 @@ class Firstpage extends controllerApplication
         $limit = $this->getIntParam('limit', 10);
         $dtos = $this->tunesService->getRandomGood($limit);
         $this->assignSuccess($this->mapTunes($dtos));
-    }
-
-    protected function handleCatalogueBaseUrls(): void
-    {
-        $this->assignSuccess($this->viewAllLinksService->getCatalogueBaseUrls());
     }
 
     /**

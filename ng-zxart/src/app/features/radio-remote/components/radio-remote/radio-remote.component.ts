@@ -6,6 +6,7 @@ import {RadioPresetCriteriaService} from '../../../player/services/radio-preset-
 import {RadioPreset} from '../../../player/models/radio-preset';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 
 @Component({
   selector: 'zx-radio-remote',
@@ -15,6 +16,7 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
     TranslateModule,
     ZxPanelComponent,
     ZxButtonComponent,
+    ZxButtonControlsComponent,
   ],
   templateUrl: './radio-remote.component.html',
   styleUrl: './radio-remote.component.scss',

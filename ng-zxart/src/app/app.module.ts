@@ -15,33 +15,20 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {environment} from '../environments/environment';
 import {CommentsListComponent} from './features/comments/components/comments-list/comments-list.component';
 import {CommentsPageComponent} from './features/comments/components/comments-page/comments-page.component';
-import {SettingsTriggerComponent} from './features/settings/components/settings-trigger/settings-trigger.component';
-import {LatestCommentsComponent} from './features/comments/components/latest-comments/latest-comments.component';
-import {
-  RecentRatingsWidgetComponent
-} from './features/ratings/components/recent-ratings-widget/recent-ratings-widget.component';
 import {RatingsListComponent} from './features/ratings/components/ratings-list/ratings-list.component';
 import {FirstpageComponent} from './pages/firstpage/firstpage.component';
 import {PlayerHostComponent} from './features/player/components/player-host/player-host.component';
 import {LegacyPlayButtonComponent} from './features/player/components/legacy-play-button/legacy-play-button.component';
-import {RadioRemoteComponent} from './features/radio-remote/components/radio-remote/radio-remote.component';
 import {AuthorTunesComponent} from './features/author-tunes/components/author-tunes/author-tunes.component';
-import {ZxVoteComponent} from './shared/ui/zx-vote/zx-vote.component';
 import {ZxMusicListComponent} from './features/music-list/components/zx-music-list/zx-music-list.component';
 import {ZxItemLegacyControlsComponent} from './shared/ui/zx-item-legacy-controls/zx-item-legacy-controls.component';
-import {
-  PictureSettingsTriggerComponent
-} from './features/picture-settings/components/picture-settings-trigger/picture-settings-trigger.component';
 import {AuthorPicturesComponent} from './features/author-pictures/components/author-pictures/author-pictures.component';
 import {ZxPicturesListComponent} from './features/picture-list/components/zx-pictures-list/zx-pictures-list.component';
 import {
   ZxPicturesRelatedComponent
 } from './features/picture-list/components/zx-pictures-related/zx-pictures-related.component';
-import {LanguageTriggerComponent} from './features/header/components/language-trigger/language-trigger.component';
-import {ThemeTriggerComponent} from './features/header/components/theme-trigger/theme-trigger.component';
-import {LoginTriggerComponent} from './features/header/components/login-trigger/login-trigger.component';
-import {MenuBlockComponent} from './features/menu/components/menu-block/menu-block.component';
-import {MobileNavComponent} from './features/header/components/mobile-nav/mobile-nav.component';
+import {ZxHeaderComponent} from './features/header/components/zx-header/zx-header.component';
+import {ZxRightColumnComponent} from './features/header/components/zx-right-column/zx-right-column.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -83,27 +70,18 @@ export class AppModule implements DoBootstrap  {
             'zx-parser': ParserComponent,
             'zx-comments-list': CommentsListComponent,
             'zx-comments-page': CommentsPageComponent,
-            'zx-settings-trigger': SettingsTriggerComponent,
-            'zx-latest-comments': LatestCommentsComponent,
-            'zx-recent-ratings': RecentRatingsWidgetComponent,
             'zx-ratings-list': RatingsListComponent,
             'zx-firstpage': FirstpageComponent,
             'zx-player': PlayerHostComponent,
             'zx-legacy-play': LegacyPlayButtonComponent,
-            'zx-radio-remote': RadioRemoteComponent,
             'zx-author-tunes': AuthorTunesComponent,
-            'zx-vote': ZxVoteComponent,
             'zx-item-legacy-controls': ZxItemLegacyControlsComponent,
             'zx-music-list': ZxMusicListComponent,
-            'zx-picture-settings-trigger': PictureSettingsTriggerComponent,
             'zx-author-pictures': AuthorPicturesComponent,
             'zx-pictures-list': ZxPicturesListComponent,
             'zx-pictures-related': ZxPicturesRelatedComponent,
-            'zx-language-trigger': LanguageTriggerComponent,
-            'zx-theme-trigger': ThemeTriggerComponent,
-            'zx-login-trigger': LoginTriggerComponent,
-            'zx-menu-block': MenuBlockComponent,
-            'zx-mobile-nav': MobileNavComponent,
+            'zx-header': ZxHeaderComponent,
+            'zx-right-column': ZxRightColumnComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});

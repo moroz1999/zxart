@@ -1,0 +1,40 @@
+:root {
+  /* Search dialog input background */
+  --zx-search-dialog-input-bg: var(--input-bg);
+  /* Search dialog input text color */
+  --zx-search-dialog-input-color: var(--input-text);
+  /* Search dialog input placeholder color */
+  --zx-search-dialog-input-placeholder: var(--input-placeholder);
+  /* Search dialog input border */
+  --zx-search-dialog-input-border: 1px solid var(--input-border-color);
+  /* Search dialog input border radius */
+  --zx-search-dialog-input-radius: var(--input-border-radius);
+  /* Search dialog input height */
+  --zx-search-dialog-input-height: var(--input-height);
+  /* Search dialog input padding */
+  --zx-search-dialog-input-padding: var(--input-padding);
+  /* Search dialog input font size */
+  --zx-search-dialog-input-font-size: var(--input-font-size);
+  /* Search dialog input font weight */
+  --zx-search-dialog-input-font-weight: var(--input-font-weight);
+  /* Search dialog input line height */
+  --zx-search-dialog-input-line-height: var(--input-line-height);
+  /* Search dialog input focused border color */
+  --zx-search-dialog-input-border-focus-color: var(--input-border-focus-color);
+  /* Search dialog result item hover background */
+  --zx-search-dialog-item-hover-bg: var(--surface-hover);
+  /* Search dialog result item border radius */
+  --zx-search-dialog-item-radius: var(--radius-sm);
+  /* Search dialog empty text color */
+  --zx-search-dialog-empty-color: var(--text-muted);
+  /* Search dialog footer divider */
+  --zx-search-dialog-divider: 1px solid var(--border-color);
+  /* Group caption font size */
+  --zx-search-dialog-group-caption-font-size: var(--zx-font-size-xs);
+  /* Group caption text color */
+  --zx-search-dialog-group-caption-color: var(--text-muted);
+  /* Group caption letter spacing */
+  --zx-search-dialog-group-caption-letter-spacing: 1px;
+  /* Result item icon size */
+  --zx-search-dialog-result-icon-size: 16px;
+}
