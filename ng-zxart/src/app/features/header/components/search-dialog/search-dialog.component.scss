@@ -74,9 +74,12 @@
   color: inherit;
 }
 
-.sd-result-item:hover,
-.sd-result-item--focused {
+.sd-result-item:hover {
   background-color: var(--zx-search-dialog-item-hover-bg);
+}
+
+.sd-result-item--focused {
+  background-color: var(--zx-search-dialog-item-focused-bg);
 }
 
 .sd-result-icon {

@@ -21,20 +21,32 @@
   --zx-search-dialog-input-line-height: var(--input-line-height);
   /* Search dialog input focused border color */
   --zx-search-dialog-input-border-focus-color: var(--input-border-focus-color);
-  /* Search dialog result item hover background */
-  --zx-search-dialog-item-hover-bg: var(--surface-hover);
   /* Search dialog result item border radius */
   --zx-search-dialog-item-radius: var(--radius-sm);
   /* Search dialog empty text color */
-  --zx-search-dialog-empty-color: var(--text-muted);
+  --zx-search-dialog-empty-color: var(--text-light-color);
   /* Search dialog footer divider */
   --zx-search-dialog-divider: 1px solid var(--border-color);
   /* Group caption font size */
   --zx-search-dialog-group-caption-font-size: var(--zx-font-size-xs);
-  /* Group caption text color */
-  --zx-search-dialog-group-caption-color: var(--text-muted);
+  /* Group caption text color — muted, lighter than body text */
+  --zx-search-dialog-group-caption-color: var(--text-light-color);
   /* Group caption letter spacing */
   --zx-search-dialog-group-caption-letter-spacing: 1px;
   /* Result item icon size */
   --zx-search-dialog-result-icon-size: 16px;
+}
+
+.light-mode {
+  /* Result item hover background */
+  --zx-search-dialog-item-hover-bg: var(--secondary-100);
+  /* Result item focused background (keyboard navigation) */
+  --zx-search-dialog-item-focused-bg: var(--primary-100);
+}
+
+.dark-mode {
+  /* Result item hover background */
+  --zx-search-dialog-item-hover-bg: var(--secondary-200);
+  /* Result item focused background (keyboard navigation) */
+  --zx-search-dialog-item-focused-bg: var(--primary-300);
 }

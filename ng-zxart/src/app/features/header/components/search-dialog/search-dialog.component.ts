@@ -120,12 +120,19 @@ export class SearchDialogComponent implements OnInit, OnDestroy {
         this.focusedIndex = this.focusedIndex <= 0 ? total - 1 : this.focusedIndex - 1;
       }
       setTimeout(() => this.scrollFocusedIntoView());
-    } else if (event.key === 'Enter' && this.focusedIndex >= 0) {
+    } else if (event.key === 'Enter') {
       event.preventDefault();
-      const flat = this.groups.flatMap(g => g.items);
-      const item = flat[this.focusedIndex];
-      if (item?.url) {
-        window.location.href = item.url;
+      if (this.focusedIndex >= 0) {
+        const flat = this.groups.flatMap(g => g.items);
+        const item = flat[this.focusedIndex];
+        if (item?.url) {
+          window.location.href = item.url;
+        }
+      } else {
+        const url = this.searchAllUrl();
+        if (url) {
+          window.location.href = url;
+        }
       }
     }
   }

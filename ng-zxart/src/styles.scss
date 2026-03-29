@@ -58,7 +58,7 @@
 // Search dialog: desktop centered, mobile fullscreen
 .cdk-overlay-pane.zx-search-dialog {
   width: 560px;
-  max-height: 80vh;
+  height: 80vh;
 
   @include breakpoints.media-breakpoint-down(lg) {
     position: fixed !important;
