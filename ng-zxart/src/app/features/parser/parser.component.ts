@@ -1,12 +1,19 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy} from '@angular/core';
 import {ParserService} from '../../shared/services/parser.service';
 import {ParserData} from './models/parser-data';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {TranslatePipe} from '@ngx-translate/core';
-import {NgForOf, NgIf} from '@angular/common';
+import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
 import {ParsedFileComponent} from './parsed-file/parsed-file.component';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
+import {BehaviorSubject, Subscription} from 'rxjs';
+
+interface ParserVm {
+    loading: boolean;
+    data?: ParserData[];
+    error?: string;
+}
 
 @Component({
     selector: 'zx-parser',
@@ -19,49 +26,46 @@ import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.componen
         ReactiveFormsModule,
         NgForOf,
         NgIf,
+        AsyncPipe,
         ZxButtonComponent,
         ZxSpinnerComponent,
         ParsedFileComponent,
     ],
 })
-export class ParserComponent {
+export class ParserComponent implements OnDestroy {
     private file?: File;
-    public error?: string;
-    public data?: ParserData[];
-    public loading = false;
-    public notFoundOnly: FormControl;
+    private readonly subscription = new Subscription();
+    private readonly state = new BehaviorSubject<ParserVm>({loading: false});
 
-    constructor(
-        private parser: ParserService,
-    ) {
-        this.notFoundOnly = new FormControl();
-    }
+    readonly vm$ = this.state.asObservable();
+    readonly notFoundOnly = new FormControl();
 
-    public fileChanged(event: Event) {
-        this.loading = false;
-        this.data = undefined;
+    constructor(private readonly parser: ParserService) {}
+
+    fileChanged(event: Event): void {
         const target = event.target as HTMLInputElement;
-        this.file = (target.files as FileList)[0];
-        if (this.file.size > 1024 * 1024 * 50) {
-            this.error = 'File is too big';
-        } else {
-            this.error = undefined;
-        }
+        const file = (target.files as FileList)[0];
+        this.file = file;
+        this.state.next({
+            loading: false,
+            error: file.size > 1024 * 1024 * 50 ? 'File is too big' : undefined,
+        });
     }
 
-    public load() {
-        if (this.file) {
-            this.loading = true;
-            this.parser.parseData(this.file).subscribe(
-                response => {
-                    this.data = response;
-                    this.loading = false;
-                },
-                error => {
-                    this.error = error.message;
-                    this.loading = false;
-                },
-            );
+    load(): void {
+        if (!this.file) {
+            return;
         }
+        this.state.next({loading: true});
+        this.subscription.add(
+            this.parser.parseData(this.file).subscribe({
+                next: data => this.state.next({loading: false, data}),
+                error: (err: Error) => this.state.next({loading: false, error: err.message}),
+            }),
+        );
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 }

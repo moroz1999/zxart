@@ -15,16 +15,18 @@ final class HoneypotGuard
 
     public function __construct(IpBanService $banService, array $trapPaths = [
         '/project/images/public/disk.png', //botnet
-        '/about/contact-us/', //honeypot
-        '/wp-login.php',
-        '/phpmyadmin/',
-        '/phpmy/',
-        '/pma/',
+        '/about/contact-us', //honeypot
+        '/wp-login',
+        '/phpmyadmin',
+        '/phpmy',
+        '/Dockerfile',
+        '/pma',
         '/server-status',
         '/backup.zip',
         '/config.php',
+        '/wp-config',
         '/admin.php',
-        '/wp-admin/',
+        '/wp-admin',
     ])
     {
         $this->banService = $banService;
@@ -34,10 +36,7 @@ final class HoneypotGuard
     public function isTrapPath(string $path): bool
     {
         foreach ($this->trapPaths as $trap) {
-            if ($trap === $path) {
-                return true;
-            }
-            if (str_ends_with($trap, '/') && str_starts_with($path, rtrim($trap, '/'))) {
+            if (str_starts_with($path, $trap)) {
                 return true;
             }
         }
