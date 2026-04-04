@@ -22,7 +22,8 @@ readonly class MusicListService
      */
     public function getTunes(int $elementId, ?string $compoType = null): array
     {
-        $element = $this->structureManager->getElementById($elementId);
+        $element = $this->structureManager->getElementById($elementId)
+            ?? $this->structureManager->getElementById($elementId, null, true);
         if ($element === null) {
             return [];
         }
