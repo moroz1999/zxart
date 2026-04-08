@@ -30,34 +30,61 @@ class PostService
         $text = $this->formatText($postDto);
 
         if ($postDto->audio !== null && $postDto->audio !== '') {
-            $this->client->post('sendAudio', [
-                'json' => [
-                    'chat_id' => $this->channelId,
-                    'audio' => $postDto->audio,
-                    'caption' => $text,
-                    'parse_mode' => 'HTML',
-                    'title' => $postDto->title,
-                ],
-            ]);
+            $this->sendAudio($postDto, $text);
         } elseif ($postDto->image !== null && $postDto->image !== '') {
-            $this->client->post('sendPhoto', [
-                'json' => [
-                    'chat_id' => $this->channelId,
-                    'photo' => $postDto->image,
-                    'caption' => $text,
-                    'parse_mode' => 'HTML',
-                ],
-            ]);
+            $this->sendPhoto($postDto->image, $text);
         } else {
-            $this->client->post('sendMessage', [
-                'json' => [
-                    'chat_id' => $this->channelId,
-                    'text' => $text,
-                    'parse_mode' => 'HTML',
-                    'disable_web_page_preview' => false,
-                ],
-            ]);
+            $this->sendMessage($text);
         }
+    }
+
+    /**
+     * @throws GuzzleException
+     */
+    private function sendAudio(PostDto $postDto, string $text): void
+    {
+        $this->client->post('sendAudio', [
+            'json' => [
+                'chat_id' => $this->channelId,
+                'audio' => $postDto->audio,
+                'caption' => $text,
+                'parse_mode' => 'HTML',
+                'title' => $postDto->title,
+            ],
+        ]);
+    }
+
+    /**
+     * @throws GuzzleException
+     */
+    private function sendPhoto(string $imageUrl, string $text): void
+    {
+        $imageResponse = $this->client->get($imageUrl);
+        $filename = basename(parse_url($imageUrl, PHP_URL_PATH) ?? 'image.jpg');
+
+        $this->client->post('sendPhoto', [
+            'multipart' => [
+                ['name' => 'chat_id', 'contents' => $this->channelId],
+                ['name' => 'photo', 'contents' => $imageResponse->getBody(), 'filename' => $filename],
+                ['name' => 'caption', 'contents' => $text],
+                ['name' => 'parse_mode', 'contents' => 'HTML'],
+            ],
+        ]);
+    }
+
+    /**
+     * @throws GuzzleException
+     */
+    private function sendMessage(string $text): void
+    {
+        $this->client->post('sendMessage', [
+            'json' => [
+                'chat_id' => $this->channelId,
+                'text' => $text,
+                'parse_mode' => 'HTML',
+                'disable_web_page_preview' => false,
+            ],
+        ]);
     }
 
     private function formatText(PostDto $postDto): string

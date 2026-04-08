@@ -4,29 +4,31 @@ declare(strict_types=1);
 
 namespace ZxArt\Social;
 
-use Exception;
 use Psr\Log\LoggerInterface;
 use structureElement;
 use structureManager;
+use Throwable;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
 use ZxArt\Telegram\PostDto;
 use ZxArt\Telegram\PostService;
+use zxReleaseElement;
 
 readonly class SocialPostsService
 {
     private const int PROCESS_LIMIT_SECONDS = 300;
     private const int ITERATION_SLEEP_SECONDS = 1;
+    private const int LOOKAHEAD_LIMIT = 100;
 
     public function __construct(
         private PostService           $postService,
         private QueueService          $queueService,
         private structureManager      $structureManager,
         private SocialPostTransformer $socialPostTransformer,
+        private SocialPostFilter      $socialPostFilter,
         private LoggerInterface       $logger,
-    )
-    {
+    ) {
     }
 
     public function processQueue(): void
@@ -46,12 +48,32 @@ readonly class SocialPostsService
                 continue;
             }
 
+            if ($this->socialPostFilter->shouldSkip($element)) {
+                $this->markSkipped($elementId, $element);
+                continue;
+            }
+
+            if ($element instanceof zxReleaseElement && $this->releaseHasProdInQueue($element)) {
+                $this->markSkipped($elementId, $element);
+                continue;
+            }
+
             $startTime = microtime(true);
             $this->sendPostForElement($elementId, $element);
             sleep(self::ITERATION_SLEEP_SECONDS);
-            $endTime = microtime(true);
-            $totalExecution += ($endTime - $startTime);
+            $totalExecution += (microtime(true) - $startTime);
         }
+    }
+
+    private function releaseHasProdInQueue(zxReleaseElement $element): bool
+    {
+        $prod = $element->getProd();
+        if ($prod === null) {
+            return false;
+        }
+        $prodId = (int)$prod->id;
+        $upcomingIds = $this->queueService->getUpcomingElementIds(QueueType::SOCIAL_POST, self::LOOKAHEAD_LIMIT);
+        return in_array($prodId, $upcomingIds, true);
     }
 
     private function markInProgressAndGetElement(int $elementId): ?structureElement
@@ -59,13 +81,21 @@ readonly class SocialPostsService
         $this->queueService->updateStatus($elementId, QueueType::SOCIAL_POST, QueueStatus::STATUS_INPROGRESS);
 
         $element = $this->structureManager->getElementById($elementId);
-        if ($element === false || !($element instanceof structureElement)) {
+        if (!($element instanceof structureElement)) {
             $this->queueService->updateStatus($elementId, QueueType::SOCIAL_POST, QueueStatus::STATUS_FAIL);
             $this->logger->error("Social post element not found: $elementId");
             return null;
         }
 
         return $element;
+    }
+
+    private function markSkipped(int $elementId, structureElement $element): void
+    {
+        $this->queueService->updateStatus($elementId, QueueType::SOCIAL_POST, QueueStatus::STATUS_SKIP);
+        $type = $element->structureType;
+        $title = $element->title;
+        $this->logger->info("Social post skipped: $type $elementId: $title");
     }
 
     private function sendPostForElement(int $elementId, structureElement $element): void
@@ -75,17 +105,19 @@ readonly class SocialPostsService
         try {
             $postDto = $this->socialPostTransformer->transform($element);
             if ($postDto === null) {
-                $this->queueService->updateStatus($elementId, QueueType::SOCIAL_POST, QueueStatus::STATUS_SKIP);
-                $this->logger->info("Social post skipped for element $element->structureType $elementId: $element->title");
+                $this->markSkipped($elementId, $element);
                 return;
             }
 
             $this->postService->sendPost($postDto);
             $this->queueService->updateStatus($elementId, QueueType::SOCIAL_POST, QueueStatus::STATUS_SUCCESS);
-            $this->logger->info("Social post sent successfully for element $element->structureType $elementId: $element->title");
-        } catch (Exception $exception) {
+            $type = $element->structureType;
+            $title = $element->title;
+            $this->logger->info("Social post sent: $type $elementId: $title");
+        } catch (Throwable $exception) {
             $postData = $this->preparePostDataForLog($postDto);
-            $this->logger->error("Failed to send social post for element $element->structureType $elementId. Error: " . $exception->getMessage() . ". Data sent: " . $postData);
+            $type = $element->structureType;
+            $this->logger->error("Failed to send social post for $type $elementId. Error: {$exception->getMessage()}. Data: $postData");
             $this->queueService->updateStatus($elementId, QueueType::SOCIAL_POST, QueueStatus::STATUS_FAIL);
         }
     }
@@ -96,12 +128,12 @@ readonly class SocialPostsService
             return 'null';
         }
 
-        return json_encode([
+        return (string)json_encode([
             'title' => $postDto->title,
             'link' => $postDto->link,
             'image' => $postDto->image,
             'audio' => $postDto->audio,
             'description' => $postDto->description,
-        ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
     }
 }

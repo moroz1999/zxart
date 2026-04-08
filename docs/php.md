@@ -35,6 +35,9 @@
 - NEVER use @psalm-suppress. Instead, add clear and minimal type annotations.
 - Annotate magic variables and methods in original legacy classes.
 
+## Post-Task Checklist
+- After finishing work on any PHP files, request IDE diagnostics (errors, warnings, notices) for all modified files via the MCP IDE tool (`mcp__ide__getDiagnostics`) and fix all reported issues before considering the task done.
+
 ## Detailed Topics
 For specific topics, see:
 - [Services and Dependency Injection](php/services.md) - DI container, service design, dependency injection patterns

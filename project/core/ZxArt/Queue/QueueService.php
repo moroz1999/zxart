@@ -52,6 +52,14 @@ readonly class QueueService
         return $this->queueRepository->loadStatus($elementId, $type);
     }
 
+    /**
+     * @return int[]
+     */
+    public function getUpcomingElementIds(QueueType $type, int $limit): array
+    {
+        return $this->queueRepository->getUpcomingElementIds($type, $limit);
+    }
+
     public function removeElementFromQueue(int $elementId, array $types)
     {
         $this->queueRepository->deleteElementRecords($elementId, $types);

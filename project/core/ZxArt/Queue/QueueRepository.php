@@ -82,6 +82,22 @@ readonly class QueueRepository
             ->insert($data);
     }
 
+    /**
+     * @return int[]
+     */
+    public function getUpcomingElementIds(QueueType $type, int $limit): array
+    {
+        $results = $this->db->table('queue')
+            ->select('elementId')
+            ->where('status', QueueStatus::STATUS_TODO->value)
+            ->where('type', $type->value)
+            ->orderBy('elementId', 'desc')
+            ->limit($limit)
+            ->get();
+
+        return array_map(static fn($row) => (int)$row['elementId'], (array)$results);
+    }
+
     public function deleteElementRecords(int $elementId, array $types): int
     {
         $stringTypes = array_map(fn($type) => $type->value, $types);

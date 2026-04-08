@@ -97,7 +97,8 @@
       "Read(//e/projects/zxart/ng-zxart/src/assets/svg/**)",
       "Bash(ls /mnt/)",
       "Read(//e//**)",
-      "Bash(cmd.exe /c \"cd E:\\\\projects\\\\zxart && docker compose run --rm node run build:docker\")"
+      "Bash(cmd.exe /c \"cd E:\\\\projects\\\\zxart && docker compose run --rm node run build:docker\")",
+      "mcp__ide__getDiagnostics"
     ]
   },
   "enabledPlugins": {

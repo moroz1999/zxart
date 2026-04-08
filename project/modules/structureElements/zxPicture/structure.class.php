@@ -300,42 +300,38 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     /**
      * @return string
      */
-    public function getTextContent()
+    public function getTextContent(): string
     {
         $translationsManager = $this->getService(translationsManager::class);
+        $parts = [];
 
-        $textContent = $translationsManager->getTranslationByName("descriptions.picture") ?? '';
-        $textContent = str_ireplace('%t', $this->title, $textContent);
+        $translation = $translationsManager->getTranslationByName("descriptions.picture") ?? '';
+        if ($translation !== '') {
+            $parts[] = $translation;
+        }
+
+        $parts[] = '"' . $this->title . '"';
 
         if ($authorNames = $this->getAuthorNames()) {
-            $textContent = str_ireplace('%a', implode(", ", $authorNames), $textContent);
+            $parts[] = 'от ' . implode(', ', $authorNames);
         }
 
         if ($partyElement = $this->getPartyElement()) {
-            $textContent = str_ireplace('%p', $partyElement->title, $textContent);
-        } else {
-            $textContent = str_ireplace('%p', "", $textContent);
+            $parts[] = $partyElement->title;
         }
 
-        if ($this->getReleaseElement()) {
-            $textContent = str_ireplace('%g', $this->getReleaseElement()->title, $textContent);
-        } else {
-            $textContent = str_ireplace('%g', $this->release ?? '', $textContent);
+        $releaseElement = $this->getReleaseElement();
+        $group = $releaseElement ? $releaseElement->title : ($this->release ?? '');
+        if ($group !== '') {
+            $parts[] = $group;
         }
 
         if ($this->year) {
-            $textContent = str_ireplace('%y', $this->year, $textContent);
-        } else {
-            $textContent = str_ireplace('%y', "", $textContent);
+            $parts[] = $this->year;
         }
 
-        if ($tagsTexts = $this->getTagsTexts()) {
-            $textContent .= ". " . implode(", ", $tagsTexts);
-        }
-
-        return $textContent;
+        return implode(', ', $parts);
     }
-
 
     public function isFlickering(): bool
     {

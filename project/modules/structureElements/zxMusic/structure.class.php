@@ -138,40 +138,42 @@ class zxMusicElement extends ZxArtItem implements
     /**
      * @return string
      */
-    public function getTextContent()
+    public function getTextContent(): string
     {
         $translationsManager = $this->getService(translationsManager::class);
+        $parts = [];
 
-        $textContent = $translationsManager->getTranslationByName("descriptions.music");
-        $textContent = str_ireplace('%t', $this->title, $textContent);
+        $translation = $translationsManager->getTranslationByName("descriptions.music") ?? '';
+        if ($translation !== '') {
+            $parts[] = $translation;
+        }
+
+        $parts[] = '"' . $this->title . '"';
 
         if ($authorNames = $this->getAuthorNames()) {
-            $textContent = str_ireplace('%a', implode(", ", $authorNames), $textContent);
+            $parts[] = 'от ' . implode(', ', $authorNames);
         }
 
         if ($partyElement = $this->getPartyElement()) {
-            $textContent = str_ireplace('%p', $partyElement->title, $textContent);
-        } else {
-            $textContent = str_ireplace('%p', "", $textContent);
+            $parts[] = $partyElement->title;
         }
 
-        if ($this->getReleaseElement()) {
-            $textContent = str_ireplace('%g', $this->getReleaseElement()->title, $textContent);
-        } else {
-            $textContent = str_ireplace('%g ', '', $textContent);
+        $releaseElement = $this->getReleaseElement();
+        if ($releaseElement) {
+            $parts[] = $releaseElement->title;
         }
 
         if ($this->year) {
-            $textContent = str_ireplace('%y', $this->year, $textContent);
-        } else {
-            $textContent = str_ireplace('%y', "", $textContent);
+            $parts[] = $this->year;
         }
+
+        $text = implode(', ', $parts);
 
         if ($tagsTexts = $this->getTagsTexts()) {
-            $textContent .= ". " . implode(", ", $tagsTexts);
+            $text .= '. ' . implode(', ', $tagsTexts);
         }
 
-        return $textContent;
+        return $text;
     }
 
     /**
