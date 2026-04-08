@@ -30,18 +30,18 @@
 
 .zx-toggle--md .zx-toggle__item {
   height: var(--zx-button-md-height);
+}
 
-  svg-icon svg {
-    width: 20px;
-    height: 20px;
-  }
+.zx-toggle--md .zx-toggle__item svg-icon {
+  width: 20px;
+  height: 20px;
 }
 
 .zx-toggle--sm .zx-toggle__item {
   height: var(--zx-button-sm-height);
+}
 
-  svg-icon svg {
-    width: 16px;
-    height: 16px;
-  }
+.zx-toggle--sm .zx-toggle__item svg-icon {
+  width: 16px;
+  height: 16px;
 }

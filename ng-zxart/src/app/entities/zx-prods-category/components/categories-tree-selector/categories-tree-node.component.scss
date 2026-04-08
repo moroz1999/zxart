@@ -18,16 +18,16 @@
   align-items: center;
   color: inherit;
   flex-shrink: 0;
+}
 
-  svg-icon svg {
-    width: 18px;
-    height: 18px;
-    transition: transform 0.15s;
-  }
+.tree-node__toggle svg-icon {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.15s;
+}
 
-  &.tree-node__toggle--collapsed svg-icon svg {
-    transform: rotate(-90deg);
-  }
+.tree-node__toggle--collapsed svg-icon {
+  transform: rotate(-90deg);
 }
 
 .tree-node__spacer {

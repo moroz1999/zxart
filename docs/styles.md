@@ -229,6 +229,12 @@ DECISION RULES
 
 ======================================================================
 
+SVG ICONS
+
+See [svg-icons.md](svg-icons.md) for sizing rules and forbidden patterns.
+
+======================================================================
+
 ENFORCEMENT
 
 - Any violation of this guide is a BLOCKER.

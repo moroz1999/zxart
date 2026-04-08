@@ -11,7 +11,7 @@
             [ariaLabel]="'player.controls.previous' | translate"
             (click)="previous()"
           >
-            <svg-icon name="skip-previous"></svg-icon>
+            <svg-icon name="skip-previous" class="player-icon"></svg-icon>
           </zx-button>
           <zx-button
             size="sm"
@@ -20,7 +20,7 @@
             [ariaLabel]="state.isPlaying ? ('player.controls.pause' | translate) : ('player.controls.play' | translate)"
             (click)="togglePlay()"
           >
-            <svg-icon [name]="state.isPlaying ? 'pause' : 'play'"></svg-icon>
+            <svg-icon [name]="state.isPlaying ? 'pause' : 'play'" class="player-icon"></svg-icon>
           </zx-button>
           <zx-button
             size="sm"
@@ -30,7 +30,7 @@
             [ariaLabel]="'player.controls.stop' | translate"
             (click)="stop()"
           >
-            <svg-icon name="stop"></svg-icon>
+            <svg-icon name="stop" class="player-icon"></svg-icon>
           </zx-button>
           <zx-button
             size="sm"
@@ -39,7 +39,7 @@
             [ariaLabel]="'player.controls.next' | translate"
             (click)="next()"
           >
-            <svg-icon name="skip-next"></svg-icon>
+            <svg-icon name="skip-next" class="player-icon"></svg-icon>
           </zx-button>
         </div>
 
@@ -50,7 +50,7 @@
           [ariaLabel]="'player.controls.mode' | translate"
           (click)="cyclePlaybackMode(state)"
         >
-          <svg-icon [name]="getPlaybackModeIcon(state)"></svg-icon>
+          <svg-icon [name]="getPlaybackModeIcon(state)" class="player-icon"></svg-icon>
         </zx-button>
 
         <zx-button
@@ -61,7 +61,7 @@
           [ariaLabel]="'player.controls.open' | translate"
           (click)="openCurrentTuneUrl()"
         >
-          <svg-icon name="open-in-new"></svg-icon>
+          <svg-icon name="open-in-new" class="player-icon"></svg-icon>
         </zx-button>
       </div>
 
@@ -94,7 +94,7 @@
           [ariaLabel]="expanded ? ('player.controls.collapse' | translate) : ('player.controls.expand' | translate)"
           (click)="toggleExpanded()"
         >
-          <svg-icon [name]="expanded ? 'expand-more' : 'expand-less'"></svg-icon>
+          <svg-icon [name]="expanded ? 'expand-more' : 'expand-less'" class="player-icon"></svg-icon>
         </zx-button>
 
         <zx-button
@@ -105,7 +105,7 @@
           (click)="close()"
           class="player-close"
         >
-          <svg-icon name="close"></svg-icon>
+          <svg-icon name="close" class="player-icon"></svg-icon>
         </zx-button>
       </div>
     </div>

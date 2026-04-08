@@ -137,11 +137,6 @@
     height: var(--zx-button-xs-height);
     padding: var(--zx-button-xs-padding);
     font-size: var(--zx-button-xs-font-size);
-
-    svg-icon svg {
-      width: 14px;
-      height: 14px;
-    }
   }
 
   &--sm {
@@ -150,11 +145,6 @@
     height: var(--zx-button-sm-height);
     padding: var(--zx-button-sm-padding);
     font-size: var(--zx-button-sm-font-size);
-
-    svg-icon svg {
-      width: 16px;
-      height: 16px;
-    }
   }
 
   &--md {
@@ -163,23 +153,18 @@
     height: var(--zx-button-md-height);
     padding: var(--zx-button-md-padding);
     font-size: var(--zx-button-md-font-size);
-
-    svg-icon svg {
-      width: 18px;
-      height: 18px;
-    }
   }
 
   &--square {
-    min-width: auto;
-    aspect-ratio: 1;
+    width: var(--zx-button-current-height);
+    min-width: 0;
     padding: 0;
   }
 
   &--round {
     border-radius: var(--zx-button-round-radius);
-    min-width: var(--zx-button-current-height);
-    aspect-ratio: 1;
+    width: var(--zx-button-current-height);
+    min-width: 0;
     padding: 0;
   }
 }

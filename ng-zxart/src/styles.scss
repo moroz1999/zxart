@@ -1,6 +1,20 @@
 @use 'app/shared/theme';
 @use 'shared/breakpoints' as breakpoints;
 
+// angular-svg-icon: custom elements are display:inline by default, which ignores CSS width/height.
+// Setting display:inline-flex makes the host respect explicit dimensions,
+// and width/height:100% on the inner svg ensures it fills the container in all browsers including Safari.
+svg-icon {
+  display: inline-flex;
+  align-items: center;
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
 .cdk-overlay-pane.g-overlay lightbox .g-image-item,
 .cdk-overlay-pane.g-overlay lightbox gallery-image img {
   image-rendering: pixelated !important;

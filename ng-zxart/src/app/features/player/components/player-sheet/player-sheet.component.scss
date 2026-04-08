@@ -40,10 +40,9 @@
   gap: var(--zx-player-controls-gap);
 }
 
-:host ::ng-deep .player-bar .zx-button--round svg-icon svg {
+.player-icon {
   width: var(--zx-player-round-icon-size);
   height: var(--zx-player-round-icon-size);
-  display: block;
 }
 
 :host ::ng-deep .player-bar .zx-button--round .zx-button__content {
