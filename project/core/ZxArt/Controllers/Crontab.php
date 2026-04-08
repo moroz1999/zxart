@@ -144,7 +144,10 @@ class Crontab extends controllerApplication
             $minutes = (int)date('i');
             if ($minutes >= 43 && $minutes <= 46) {
                 $this->eventsAggregationService->aggregate();
+                $this->logMessage('Events aggregated', 0);
+
                 $this->cacheCleanupService->cleanup();
+                $this->logMessage('Cache cleaned', 0);
             }
 
             $this->convertMp3();

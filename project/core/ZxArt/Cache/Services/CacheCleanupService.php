@@ -11,7 +11,7 @@ class CacheCleanupService
 {
     public function __construct(
         private PathsManager $pathsManager,
-        private int $inodeThreshold = 200000
+        private int $inodeThreshold = 100000
     ) {
     }
 

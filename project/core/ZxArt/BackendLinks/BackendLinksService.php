@@ -21,14 +21,14 @@ readonly class BackendLinksService
         $this->cache->enable(true, true, true);
     }
 
-    public function getLinks(string $languageCode): ?BackendLinksRestDto
+    public function getLinks(string $languageCode, bool $isAuthenticated): ?BackendLinksRestDto
     {
         $language = $this->languagesManager->checkLanguageCode($languageCode, null);
         if ($language === false) {
             return null;
         }
 
-        $cacheKey = 'backend_links_' . $languageCode;
+        $cacheKey = 'backend_links_' . $languageCode . ($isAuthenticated ? '_auth' : '_anon');
         /** @var BackendLinksRestDto|null $cached */
         $cached = $this->cache->get($cacheKey);
         if ($cached !== null) {

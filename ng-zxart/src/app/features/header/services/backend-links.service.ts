@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, of, pairwise, startWith} from 'rxjs';
 import {catchError, distinctUntilChanged, filter, shareReplay, switchMap} from 'rxjs/operators';
 import {BackendLinks} from '../models/backend-links';
 import {CurrentLanguageService} from './current-language.service';
 import {LocalStorageService} from '../../../shared/services/local-storage.service';
+import {CurrentUserService} from '../../../shared/services/current-user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,7 @@ export class BackendLinksService {
   private readonly store = new BehaviorSubject<BackendLinks | null>(null);
   private loadingCode: string | null = null;
   private loadedCode: string | null = null;
+  private readonly cachedLanguageCodes = new Set<string>();
 
   readonly links$: Observable<BackendLinks> = this.currentLanguageService.languageCode$.pipe(
     distinctUntilChanged(),
@@ -38,7 +40,26 @@ export class BackendLinksService {
     private readonly http: HttpClient,
     private readonly currentLanguageService: CurrentLanguageService,
     private readonly localStorage: LocalStorageService,
-  ) {}
+    private readonly currentUserService: CurrentUserService,
+  ) {
+    this.currentUserService.isAuthenticated$.pipe(
+      startWith(null as boolean | null),
+      pairwise(),
+    ).subscribe(([prev, curr]) => {
+      if (prev !== null && prev !== curr) {
+        this.invalidateCache();
+      }
+    });
+  }
+
+  private invalidateCache(): void {
+    for (const code of this.cachedLanguageCodes) {
+      this.localStorage.remove(BackendLinksService.STORAGE_KEY_PREFIX + code);
+    }
+    this.cachedLanguageCodes.clear();
+    this.loadedCode = null;
+    this.store.next(null);
+  }
 
   private fetchLinks(code: string): void {
     this.loadingCode = code;
@@ -50,6 +71,7 @@ export class BackendLinksService {
       }
       if (links !== null && this.loadedCode !== code) {
         this.loadedCode = code;
+        this.cachedLanguageCodes.add(code);
         this.localStorage.set(BackendLinksService.STORAGE_KEY_PREFIX + code, links);
         this.store.next(links);
       }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Controllers;
 
+use App\Users\CurrentUserService;
 use CmsHttpResponse;
 use controller;
 use controllerApplication;
@@ -18,6 +19,7 @@ class BackendLinks extends controllerApplication
     public function __construct(
         controller $controller,
         private readonly BackendLinksService $backendLinksService,
+        private readonly CurrentUserService $currentUserService,
     ) {
         parent::__construct($controller);
     }
@@ -39,7 +41,8 @@ class BackendLinks extends controllerApplication
                 return;
             }
 
-            $dto = $this->backendLinksService->getLinks($lang);
+            $isAuthenticated = $this->currentUserService->getCurrentUser()->isAuthorized();
+            $dto = $this->backendLinksService->getLinks($lang, $isAuthenticated);
             if ($dto === null) {
                 CmsHttpResponse::getInstance()->setStatusCode('400');
                 $this->renderer->assign('body', ['errorMessage' => 'Unknown language code']);
