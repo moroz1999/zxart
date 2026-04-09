@@ -4,11 +4,7 @@
 	{/capture}
 {/if}
 {capture assign="moduleContent"}
-	<script>
-		window.elementsData = window.elementsData ? window.elementsData : { };
-		window.elementsData[{$element->id}] = {$element->getJsonInfo('zxProdsList')};
-	</script>
-	<zx-prods-list element-id="{$element->id}" property="prods"></zx-prods-list>
+	<zx-prods-browser element-id="{$element->id}"></zx-prods-browser>
 {/capture}
 {assign moduleClass ""}
 {assign moduleTitleClass ""}

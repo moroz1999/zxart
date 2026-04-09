@@ -1,0 +1,39 @@
+@use "shared/breakpoints" as breakpoints;
+
+:host {
+  display: block;
+}
+
+.selectors {
+  background: var(--background-deep);
+  padding-top: var(--padding-lg);
+  padding-bottom: var(--padding-lg);
+  margin-bottom: var(--margin-lg);
+  box-shadow: var(--zx-prods-category-selectors-shadow);
+
+  @include breakpoints.media-breakpoint-up(sm) {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+}
+
+.selectors-top {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-lg);
+  flex-wrap: wrap;
+}
+
+.tunes-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+zx-pagination {
+  z-index: 10;
+
+  @include breakpoints.media-breakpoint-up(sm) {
+    margin-top: var(--margin-xxl);
+  }
+}

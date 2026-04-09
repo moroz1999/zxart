@@ -4,7 +4,7 @@
 	{/capture}
 {/if}
 {capture assign="moduleContent"}
-	<zx-pictures-list element-id="{$element->id}"></zx-pictures-list>
+	<zx-picture-browser element-id="{$element->id}"></zx-picture-browser>
 {/capture}
 {assign moduleClass ""}
 {assign moduleTitleClass ""}

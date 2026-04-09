@@ -1,0 +1,58 @@
+<div class="selectors">
+  <div class="selectors-top">
+    <zx-sort-select
+      labelKey="prods-browser.sorting"
+      [options]="sortingOptions"
+      [value]="sorting"
+      (valueChange)="onSortingChange($event)"
+    ></zx-sort-select>
+    <div class="layout-selector">
+      <zx-toggle
+        [options]="layoutOptions"
+        [value]="layout"
+        (valueChange)="onLayoutChange($event)"
+        size="sm"
+      ></zx-toggle>
+    </div>
+  </div>
+</div>
+
+<zx-spinner *ngIf="loading" size="xl"></zx-spinner>
+
+<div *ngIf="error" zxCaption>{{ 'prods-browser.error' | translate }}</div>
+<div *ngIf="!loading && !error && prods.length === 0" zxCaption>{{ 'prods-browser.empty' | translate }}</div>
+
+<ng-container *ngIf="!loading && !error && prods.length > 0">
+  <div *ngIf="layout !== 'table'" zxProdsGrid>
+    <zx-prod-block
+      *ngFor="let prod of prods"
+      [model]="prod"
+      [imagesLayout]="layout"
+    ></zx-prod-block>
+  </div>
+
+  <table *ngIf="layout === 'table'" class="prods-table">
+    <thead>
+      <tr>
+        <td>{{ 'zx-prod.title' | translate }}</td>
+        <td>{{ 'zx-prod.categories' | translate }}</td>
+        <td>{{ 'zx-prod.developers' | translate }}</td>
+        <td>{{ 'zx-prod.year' | translate }}</td>
+        <td>{{ 'zx-prod.date-created' | translate }}</td>
+      </tr>
+    </thead>
+    <zx-prod-row
+      *ngFor="let prod of prods"
+      [model]="prod"
+    ></zx-prod-row>
+  </table>
+</ng-container>
+
+<zx-pagination
+  *ngIf="pagesAmount > 1"
+  [currentPage]="currentPage"
+  [pagesAmount]="pagesAmount"
+  [urlBase]="urlBase"
+  [loading]="loading"
+  (pageChange)="onPageChange($event)"
+></zx-pagination>

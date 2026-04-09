@@ -75,7 +75,7 @@ class playlistElement extends structureElement
         return $this->zxProdsList;
     }
 
-    public function getPicturesList()
+    public function getPicturesList(): array
     {
         if ($this->picturesList === null) {
             $this->picturesList = $this->getStructuredList('zxPicture');
@@ -83,7 +83,7 @@ class playlistElement extends structureElement
         return $this->picturesList;
     }
 
-    public function getMusicList()
+    public function getMusicList(): array
     {
         if ($this->musicList === null) {
             $this->musicList = $this->getStructuredList('zxMusic');

@@ -29,6 +29,11 @@ import {
 } from './features/picture-list/components/zx-pictures-related/zx-pictures-related.component';
 import {ZxHeaderComponent} from './features/header/components/zx-header/zx-header.component';
 import {ZxRightColumnComponent} from './features/header/components/zx-right-column/zx-right-column.component';
+import {
+  ZxPictureBrowserComponent
+} from './features/picture-browser/components/zx-picture-browser/zx-picture-browser.component';
+import {ZxMusicBrowserComponent} from './features/music-browser/components/zx-music-browser/zx-music-browser.component';
+import {ZxProdsBrowserComponent} from './features/prods-browser/components/zx-prods-browser/zx-prods-browser.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -82,6 +87,9 @@ export class AppModule implements DoBootstrap  {
             'zx-pictures-related': ZxPicturesRelatedComponent,
             'zx-header': ZxHeaderComponent,
             'zx-right-column': ZxRightColumnComponent,
+            'zx-picture-browser': ZxPictureBrowserComponent,
+            'zx-music-browser': ZxMusicBrowserComponent,
+            'zx-prods-browser': ZxProdsBrowserComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});

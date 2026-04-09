@@ -7,13 +7,18 @@ namespace ZxArt\PictureList;
 use structureManager;
 use ZxArt\Pictures\Dto\PictureDto;
 use ZxArt\Pictures\PicturesTransformer;
+use ZxArt\Pictures\Repositories\PicturesRepository;
+use ZxArt\Shared\SortingParams;
 use zxPictureElement;
 
 readonly class PictureListService
 {
+    public const array ALLOWED_SORT_COLUMNS = ['title', 'date', 'year', 'votes'];
+
     public function __construct(
         private structureManager $structureManager,
         private PicturesTransformer $picturesTransformer,
+        private PicturesRepository $picturesRepository,
     ) {
     }
 
@@ -81,6 +86,33 @@ readonly class PictureListService
             }
         }
         return $result;
+    }
+
+    /**
+     * Returns a paginated+sorted page of pictures linked to an element via a given link type.
+     *
+     * @return array{total: int, items: PictureDto[]}
+     */
+    public function getPagedByLinkedElement(
+        int $elementId,
+        string $linkType,
+        SortingParams $sorting,
+        int $start,
+        int $limit,
+    ): array {
+        $total = $this->picturesRepository->countByLinkedElement($elementId, $linkType);
+        $ids = $this->picturesRepository->findPagedByLinkedElement($elementId, $linkType, $sorting, $start, $limit);
+
+        $items = [];
+        foreach ($ids as $id) {
+            $element = $this->structureManager->getElementById($id)
+                ?? $this->structureManager->getElementById($id, null, true);
+            if ($element instanceof zxPictureElement) {
+                $items[] = $this->picturesTransformer->toDto($element);
+            }
+        }
+
+        return ['total' => $total, 'items' => $items];
     }
 
     private function resolvePictureElements(mixed $element, ?string $compoType): array

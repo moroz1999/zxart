@@ -1,0 +1,35 @@
+<zx-picture-gallery-host></zx-picture-gallery-host>
+
+<div class="selectors">
+  <div class="selectors-top">
+    <zx-sort-select
+      labelKey="picture-browser.sorting"
+      [options]="sortingOptions"
+      [value]="sorting"
+      (valueChange)="onSortingChange($event)"
+    ></zx-sort-select>
+  </div>
+</div>
+
+<zx-skeleton *ngIf="loading" variant="picture-grid" [count]="6"></zx-skeleton>
+
+<div *ngIf="error" zxCaption>{{ 'picture-browser.error' | translate }}</div>
+<div *ngIf="!loading && !error && pictures.length === 0" zxCaption>{{ 'picture-browser.empty' | translate }}</div>
+
+<div *ngIf="!loading && !error && pictures.length > 0" zxPicturesGrid>
+  <zx-picture-card
+    *ngFor="let pic of pictures; let i = index"
+    [picture]="pic"
+    [galleryIndex]="i"
+    [galleryId]="galleryId"
+  ></zx-picture-card>
+</div>
+
+<zx-pagination
+  *ngIf="pagesAmount > 1"
+  [currentPage]="currentPage"
+  [pagesAmount]="pagesAmount"
+  [urlBase]="urlBase"
+  [loading]="loading"
+  (pageChange)="onPageChange($event)"
+></zx-pagination>

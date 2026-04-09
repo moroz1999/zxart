@@ -1,0 +1,43 @@
+<div class="selectors">
+  <div class="selectors-top">
+    <zx-sort-select
+      labelKey="music-browser.sorting"
+      [options]="sortingOptions"
+      [value]="sorting"
+      (valueChange)="onSortingChange($event)"
+    ></zx-sort-select>
+  </div>
+</div>
+
+<zx-table *ngIf="loading">
+  <zx-skeleton variant="tune-table" [count]="10"></zx-skeleton>
+</zx-table>
+
+<div *ngIf="error" zxCaption>{{ 'music-browser.error' | translate }}</div>
+<div *ngIf="!loading && !error && tunes.length === 0" zxCaption>{{ 'music-browser.empty' | translate }}</div>
+
+<zx-table *ngIf="!loading && !error && tunes.length > 0">
+  <ng-container *ngIf="{ id: playingTuneId$ | async } as playing">
+    <table class="tunes-table">
+      <tbody>
+        <zx-tune-row
+          *ngFor="let tune of tunes; index as i"
+          [tune]="tune"
+          [index]="i"
+          [isPlaying]="tune.id === playing.id"
+          (playRequested)="playTune(i)"
+          (pauseRequested)="pauseTune()"
+        ></zx-tune-row>
+      </tbody>
+    </table>
+  </ng-container>
+</zx-table>
+
+<zx-pagination
+  *ngIf="pagesAmount > 1"
+  [currentPage]="currentPage"
+  [pagesAmount]="pagesAmount"
+  [urlBase]="urlBase"
+  [loading]="loading"
+  (pageChange)="onPageChange($event)"
+></zx-pagination>

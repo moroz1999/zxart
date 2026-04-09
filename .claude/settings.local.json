@@ -98,7 +98,11 @@
       "Bash(ls /mnt/)",
       "Read(//e//**)",
       "Bash(cmd.exe /c \"cd E:\\\\projects\\\\zxart && docker compose run --rm node run build:docker\")",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('sorting', {}\\), indent=2\\)\\)\")",
+      "Bash(node:*)",
+      "Skill(update-config)",
+      "mcp__jetbrains__get_file_problems"
     ]
   },
   "enabledPlugins": {

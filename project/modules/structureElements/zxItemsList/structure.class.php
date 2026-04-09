@@ -49,7 +49,7 @@ class zxItemsListElement extends structureElement implements JsonDataProvider
         return count($this->getItemsList());
     }
 
-    public function getItemsList()
+    public function getItemsList(): array|null
     {
         if (!isset($this->itemsList)) {
             $cache = $this->getElementsListCache('il', 60 * 60 * 7);

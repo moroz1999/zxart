@@ -371,7 +371,8 @@
         "zxMusic": "Música",
         "pressArticle": "Prensa"
       }
-    }
+    },
+    "remove-ads": "Quitar anuncios"
   },
   "login": {
     "trigger-label": "Iniciar sesión",
@@ -388,6 +389,22 @@
     "account": "Cuenta",
     "favourites": "Mis favoritos",
     "my-page": "Mi página"
+  },
+  "picture-browser": {
+    "error": "Error al cargar imágenes.",
+    "empty": "No se encontraron imágenes.",
+    "sorting": "Ordenar por:"
+  },
+  "music-browser": {
+    "error": "Error al cargar música.",
+    "empty": "No se encontraron pistas.",
+    "sorting": "Ordenar por:"
+  },
+  "prods-browser": {
+    "error": "Error al cargar producciones.",
+    "empty": "No se encontraron producciones.",
+    "sorting": "Ordenar por:",
+    "layout": "Diseño:"
   },
   "picture-settings": {
     "trigger-label": "Configuración de imágenes",

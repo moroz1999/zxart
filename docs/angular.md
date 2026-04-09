@@ -11,6 +11,18 @@ The integration of Angular components into existing legacy Smarty templates is i
 #### Routing and Navigation
 Currently, the legacy part of the system is responsible for routing. Clicking on links results in a full browser page reload. Angular components are initialized "on the fly" during page load if the corresponding tag is present in the rendered HTML.
 
+#### Pagination and URL
+
+Components with pagination **must** reflect the current page in the URL and restore it on load.
+
+**Rules:**
+- On init: parse the page number from `window.location.pathname` using the pattern `/page:(\d+)/`.
+- On page change: call `window.history.pushState(null, '', newPath)` — no full reload.
+- `urlBase` (path without the `page:N` segment) must be passed to `<zx-pagination [urlBase]="urlBase">` so page links have correct `href` attributes (required for right-click → open in new tab).
+- Page 1 must produce a clean URL (no `page:1` segment).
+
+**Reference implementation:** `CommentsPageComponent` (`features/comments/components/comments-page/`) and `BrowserBaseComponent` (`shared/browser-base.component.ts`).
+
 #### Build and Verification
 After making any changes to the Angular part of the project (`ng-zxart`), including styles (SCSS) and theme files, you must:
 1. Perform a project build: `composer run build` from the project root.

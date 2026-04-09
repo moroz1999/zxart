@@ -1,0 +1,69 @@
+@use "shared/breakpoints" as breakpoints;
+@use "shared/mixins" as mixins;
+
+:host {
+  display: block;
+}
+
+.selectors {
+  background: var(--background-deep);
+  padding-top: var(--padding-lg);
+  padding-bottom: var(--padding-lg);
+  margin-bottom: var(--margin-lg);
+  box-shadow: var(--zx-prods-category-selectors-shadow);
+
+  @include breakpoints.media-breakpoint-up(sm) {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+}
+
+.selectors-top {
+  display: flex;
+  width: 100%;
+  gap: var(--gap-lg);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.layout-selector {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.prods-table {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  border-collapse: collapse;
+
+  thead td {
+    padding: var(--padding-md) var(--padding-lg);
+    font-size: var(--zx-prods-table-header-font-size);
+    color: var(--text-light-color);
+    vertical-align: bottom;
+  }
+
+  ::ng-deep zx-prod-row td {
+    padding: var(--padding-md) var(--padding-lg);
+  }
+
+  ::ng-deep zx-prod-row:nth-of-type(2n-1) td {
+    background-color: var(--background-dark);
+  }
+}
+
+zx-pagination {
+  z-index: 10;
+
+  @include breakpoints.media-breakpoint-up(sm) {
+    margin-top: var(--margin-xxl);
+  }
+}

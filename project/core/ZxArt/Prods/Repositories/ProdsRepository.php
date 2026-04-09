@@ -8,6 +8,7 @@ use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use ZxArt\Helpers\AlphanumericColumnSearch;
 use ZxArt\LinkTypes;
+use ZxArt\Shared\SortingParams;
 
 readonly final class ProdsRepository
 {
@@ -103,6 +104,43 @@ readonly final class ProdsRepository
             ->inRandomOrder()
             ->limit($limit)
             ->pluck('id');
+    }
+
+    /**
+     * @return int[]
+     */
+    public function findPagedByLinkedElement(
+        int $elementId,
+        string $linkType,
+        SortingParams $sorting,
+        int $start,
+        int $limit,
+    ): array {
+        return $this->db->table(self::TABLE)
+            ->join(
+                'structure_links',
+                fn($join) => $join
+                    ->on('structure_links.childStructureId', '=', self::TABLE . '.id')
+                    ->where('structure_links.type', '=', $linkType)
+                    ->where('structure_links.parentStructureId', '=', $elementId)
+            )
+            ->orderBy(self::TABLE . '.' . $sorting->column, $sorting->direction)
+            ->offset($start)
+            ->limit($limit)
+            ->pluck(self::TABLE . '.id');
+    }
+
+    public function countByLinkedElement(int $elementId, string $linkType): int
+    {
+        return (int)$this->db->table(self::TABLE)
+            ->join(
+                'structure_links',
+                fn($join) => $join
+                    ->on('structure_links.childStructureId', '=', self::TABLE . '.id')
+                    ->where('structure_links.type', '=', $linkType)
+                    ->where('structure_links.parentStructureId', '=', $elementId)
+            )
+            ->count();
     }
 
     private function getSelectSql(): Builder

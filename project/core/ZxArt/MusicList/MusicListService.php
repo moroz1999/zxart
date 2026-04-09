@@ -5,15 +5,20 @@ declare(strict_types=1);
 namespace ZxArt\MusicList;
 
 use structureManager;
+use ZxArt\Shared\SortingParams;
 use ZxArt\Tunes\Dto\TuneDto;
+use ZxArt\Tunes\Repositories\TunesRepository;
 use ZxArt\Tunes\TunesTransformer;
 use zxMusicElement;
 
 readonly class MusicListService
 {
+    public const array ALLOWED_SORT_COLUMNS = ['title', 'date', 'year', 'votes'];
+
     public function __construct(
         private structureManager $structureManager,
         private TunesTransformer $tunesTransformer,
+        private TunesRepository $tunesRepository,
     ) {
     }
 
@@ -37,6 +42,33 @@ readonly class MusicListService
             }
         }
         return $result;
+    }
+
+    /**
+     * Returns a paginated+sorted page of tunes linked to an element via a given link type.
+     *
+     * @return array{total: int, items: TuneDto[]}
+     */
+    public function getPagedByLinkedElement(
+        int $elementId,
+        string $linkType,
+        SortingParams $sorting,
+        int $start,
+        int $limit,
+    ): array {
+        $total = $this->tunesRepository->countByLinkedElement($elementId, $linkType);
+        $ids = $this->tunesRepository->findPagedByLinkedElement($elementId, $linkType, $sorting, $start, $limit);
+
+        $items = [];
+        foreach ($ids as $id) {
+            $element = $this->structureManager->getElementById($id)
+                ?? $this->structureManager->getElementById($id, null, true);
+            if ($element instanceof zxMusicElement) {
+                $items[] = $this->tunesTransformer->toDto($element);
+            }
+        }
+
+        return ['total' => $total, 'items' => $items];
     }
 
     private function resolveMusicElements(mixed $element, ?string $compoType): array

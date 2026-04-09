@@ -6,7 +6,7 @@ trait MaterialsProviderTrait
     protected $tunes;
     protected $materialsList;
 
-    public function getPictures()
+    public function getPictures(): array
     {
         if ($this->pictures === null) {
             $this->pictures = [];
@@ -21,7 +21,7 @@ trait MaterialsProviderTrait
         return $this->pictures;
     }
 
-    public function getTunes()
+    public function getTunes(): array
     {
         if ($this->tunes === null) {
             $this->tunes = [];

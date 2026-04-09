@@ -8,6 +8,7 @@ import {
   PictureGalleryHostComponent
 } from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureListService} from '../../services/picture-list.service';
+import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 
 @Component({
   selector: 'zx-pictures-related',
@@ -32,6 +33,7 @@ export class ZxPicturesRelatedComponent implements OnInit {
 
   constructor(
     private pictureListService: PictureListService,
+    private pictureGalleryService: PictureGalleryService,
     private cdr: ChangeDetectorRef,
   ) {}
 
@@ -42,6 +44,7 @@ export class ZxPicturesRelatedComponent implements OnInit {
     this.pictureListService.getRelated(this.pictureId).subscribe(response => {
       this.type = response.type;
       this.pictures = response.items;
+      this.pictureGalleryService.ensureGalleryLoaded(this.galleryId, this.pictures);
       this.cdr.markForCheck();
     });
   }

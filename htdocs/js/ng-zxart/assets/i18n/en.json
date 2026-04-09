@@ -372,7 +372,8 @@
         "zxMusic": "Music",
         "pressArticle": "Press"
       }
-    }
+    },
+    "remove-ads": "Remove ads"
   },
   "login": {
     "trigger-label": "Log in",
@@ -389,6 +390,22 @@
     "account": "Account",
     "favourites": "My favourites",
     "my-page": "My page"
+  },
+  "picture-browser": {
+    "error": "Failed to load pictures.",
+    "empty": "No pictures found.",
+    "sorting": "Sort by:"
+  },
+  "music-browser": {
+    "error": "Failed to load music.",
+    "empty": "No tracks found.",
+    "sorting": "Sort by:"
+  },
+  "prods-browser": {
+    "error": "Failed to load productions.",
+    "empty": "No productions found.",
+    "sorting": "Sort by:",
+    "layout": "Layout:"
   },
   "picture-settings": {
     "trigger-label": "Picture settings",

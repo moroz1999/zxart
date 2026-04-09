@@ -9,6 +9,7 @@ use Illuminate\Database\Query\Builder;
 use ZxArt\Helpers\AlphanumericColumnSearch;
 use ZxArt\LinkTypes;
 use ZxArt\Radio\Dto\RadioCriteriaDto;
+use ZxArt\Shared\SortingParams;
 
 readonly final class TunesRepository
 {
@@ -123,6 +124,43 @@ readonly final class TunesRepository
         }
 
         return $randomIds[0] ?? null;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function findPagedByLinkedElement(
+        int $elementId,
+        string $linkType,
+        SortingParams $sorting,
+        int $start,
+        int $limit,
+    ): array {
+        return $this->db->table(self::TABLE)
+            ->join(
+                self::STRUCTURE_LINKS_TABLE,
+                fn($join) => $join
+                    ->on(self::STRUCTURE_LINKS_TABLE . '.childStructureId', '=', self::TABLE . '.id')
+                    ->where(self::STRUCTURE_LINKS_TABLE . '.type', '=', $linkType)
+                    ->where(self::STRUCTURE_LINKS_TABLE . '.parentStructureId', '=', $elementId)
+            )
+            ->orderBy(self::TABLE . '.' . $sorting->column, $sorting->direction)
+            ->offset($start)
+            ->limit($limit)
+            ->pluck(self::TABLE . '.id');
+    }
+
+    public function countByLinkedElement(int $elementId, string $linkType): int
+    {
+        return (int)$this->db->table(self::TABLE)
+            ->join(
+                self::STRUCTURE_LINKS_TABLE,
+                fn($join) => $join
+                    ->on(self::STRUCTURE_LINKS_TABLE . '.childStructureId', '=', self::TABLE . '.id')
+                    ->where(self::STRUCTURE_LINKS_TABLE . '.type', '=', $linkType)
+                    ->where(self::STRUCTURE_LINKS_TABLE . '.parentStructureId', '=', $elementId)
+            )
+            ->count();
     }
 
     private function getSelectSql(): Builder

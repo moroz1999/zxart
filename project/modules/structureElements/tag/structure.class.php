@@ -123,7 +123,7 @@ class tagElement extends structureElement implements JsonDataProvider
         return $this->tunes;
     }
 
-    public function getItems()
+    public function getItems(): array|null
     {
         $sectionsLogics = $this->getService(SectionLogics::class);
         if (($type = $sectionsLogics->getArtItemsType()) === 'graphics') {
@@ -140,7 +140,7 @@ class tagElement extends structureElement implements JsonDataProvider
             }
             return $this->prods;
         }
-        return false;
+        return null;
     }
 
     /**
@@ -175,7 +175,7 @@ class tagElement extends structureElement implements JsonDataProvider
     public function getProdsInfo(): array
     {
         $prodsInfo = [];
-        foreach ($this->getItems() as $prod) {
+        foreach ($this->getItems() ?? [] as $prod) {
             $prodsInfo[] = $prod->getElementData('list');
         }
         return $prodsInfo;

@@ -36,7 +36,7 @@
 - Annotate magic variables and methods in original legacy classes.
 
 ## Post-Task Checklist
-- After finishing work on any PHP files, request IDE diagnostics (errors, warnings, notices) for all modified files via the MCP IDE tool (`mcp__ide__getDiagnostics`) and fix all reported issues before considering the task done.
+- After finishing work on any PHP files, request IDE diagnostics (errors, warnings, notices) for all modified files via the MCP IDE tool and fix all reported issues in added code before considering the task done.
 
 ## Detailed Topics
 For specific topics, see:

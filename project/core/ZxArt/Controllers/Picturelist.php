@@ -5,16 +5,14 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
-use ConfigManager;
-use controller;
 use controllerApplication;
-use ErrorLog;
 use LanguagesManager;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
 use ZxArt\PictureList\PictureListService;
 use ZxArt\Pictures\Dto\PictureDto;
 use ZxArt\Pictures\Rest\PictureRestDto;
+use ZxArt\Shared\SortingParams;
 
 class Picturelist extends controllerApplication
 {
@@ -25,25 +23,9 @@ class Picturelist extends controllerApplication
         $this->startSession('public');
         $this->createRenderer();
 
-        try {
-            $configManager = $this->getService(ConfigManager::class);
-            $structureManager = $this->getService(
-                'structureManager',
-                [
-                    'rootUrl' => controller::getInstance()->rootURL,
-                    'rootMarker' => $configManager->get('main.rootMarkerPublic'),
-                ],
-                true
-            );
-            $languagesManager = $this->getService(LanguagesManager::class);
-            $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
-        } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Picturelist::initialize',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
-            throw $e;
-        }
+        $structureManager = $this->getService('publicStructureManager');
+        $languagesManager = $this->getService(LanguagesManager::class);
+        $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
     }
 
     public function execute($controller): void
@@ -52,6 +34,9 @@ class Picturelist extends controllerApplication
         $elementId = (int)($this->getParameter('elementId') ?? 0);
         $compoType = $this->getParameter('compoType') ?: null;
         $pictureId = (int)($this->getParameter('pictureId') ?? 0);
+        $limit = $this->getParameter('limit') !== null ? (int)$this->getParameter('limit') : null;
+        $start = (int)($this->getParameter('start') ?? 0);
+        $sortingRaw = $this->getParameter('sorting') ?: 'title,asc';
 
         try {
             if ($action === 'related') {
@@ -71,6 +56,18 @@ class Picturelist extends controllerApplication
                 }
             } elseif ($elementId <= 0) {
                 $this->assignError('elementId is required', 400);
+            } elseif ($limit !== null) {
+                $sorting = SortingParams::fromRequest($sortingRaw, PictureListService::ALLOWED_SORT_COLUMNS);
+                $service = $this->getService(PictureListService::class);
+                $result = $service->getPagedByLinkedElement($elementId, 'tagLink', $sorting, $start, $limit);
+                $mapper = new ObjectMapper();
+                $this->assignSuccess([
+                    'total' => $result['total'],
+                    'items' => array_map(
+                        fn(PictureDto $dto) => $mapper->map($dto, PictureRestDto::class),
+                        $result['items']
+                    ),
+                ]);
             } else {
                 $service = $this->getService(PictureListService::class);
                 $dtos = $service->getPictures($elementId, $compoType);
