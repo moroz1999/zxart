@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {Subject, Subscription} from 'rxjs';
-import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators';
 import {AuthorBrowserService} from '../../services/author-browser.service';
 import {AuthorListItem} from '../../models/author-list-item';
 import {AuthorFilterOption} from '../../models/author-filter-options';
@@ -47,6 +47,8 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
   @Input() letter = '';
   /** Comma-separated entity types to include: 'author', 'authorAlias' */
   @Input() types = '';
+  /** Content type of the authors list: 'music', 'graphics', or 'all' */
+  @Input() items = '';
 
   loading = true;
   error = false;
@@ -84,10 +86,42 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
         this.searchSubject.pipe(
           debounceTime(300),
           distinctUntilChanged(),
-        ).subscribe(() => {
-          this.currentPage = 1;
-          this.updateUrl();
-          this.loadPage();
+          tap(() => {
+            this.currentPage = 1;
+            this.updateUrl();
+            this.loading = true;
+            this.error = false;
+            this.cdr.markForCheck();
+          }),
+          switchMap(() => {
+            const pageLimit = Number(this.limit) || 50;
+            return this.authorBrowserService.getPaged(
+              this.elementId,
+              0,
+              pageLimit,
+              this.sorting,
+              this.search,
+              this.activeCountryId,
+              this.activeCityId,
+              this.letter,
+              this.types,
+              this.items,
+            );
+          }),
+        ).subscribe({
+          next: response => {
+            this.loading = false;
+            const pageLimit = Number(this.limit) || 50;
+            this.authors = response.items;
+            this.total = response.total;
+            this.pagesAmount = Math.ceil(this.total / pageLimit);
+            this.cdr.markForCheck();
+          },
+          error: () => {
+            this.loading = false;
+            this.error = true;
+            this.cdr.markForCheck();
+          },
         }),
       );
     }
@@ -163,6 +197,7 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
         this.mode === 'full' ? this.activeCityId : null,
         this.letter,
         this.types,
+        this.items,
       ).subscribe({
         next: response => {
           this.loading = false;
@@ -182,7 +217,7 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
 
   private loadFilterOptions(): void {
     this.subscriptions.add(
-      this.authorBrowserService.getFilterOptions(this.elementId, this.letter).subscribe(options => {
+      this.authorBrowserService.getFilterOptions(this.elementId, this.letter, this.items).subscribe(options => {
         const locale = this.translateService.currentLang ?? undefined;
         this.countryOptions = options.countries
           .map((c: AuthorFilterOption) => ({id: String(c.id), label: c.title}))

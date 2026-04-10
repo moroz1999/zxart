@@ -57,7 +57,7 @@
       <td class="col-groups">
         <ng-container *ngFor="let group of author.groups; let last = last">
           <a [href]="group.url">{{ group.title }}</a>
-          <ng-container *ngIf="!last">,</ng-container>
+          <ng-container *ngIf="!last">, </ng-container>
         </ng-container>
       </td>
       <td class="col-realname">

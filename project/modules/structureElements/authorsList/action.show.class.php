@@ -15,6 +15,8 @@ class showAuthorsList extends structureElementAction
         if ($structureElement->type == 'letters') {
             $renderer = $this->getService(renderer::class);
             $renderer->assign('lettersInfo', $structureElement->getLettersSelectorInfo());
+            $renderer->assign('currentLetter', $controller->getApplication()->getParameter('letter') ?? '');
+            $renderer->assign('authorsListItems', $structureElement->items);
         }
     }
 }

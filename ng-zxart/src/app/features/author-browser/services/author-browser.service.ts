@@ -21,6 +21,7 @@ export class AuthorBrowserService {
     cityId: number | null,
     letter: string = '',
     types: string = '',
+    items: string = '',
   ): Observable<PaginatedAuthorsResponse> {
     const params: Record<string, string> = {
       elementId: String(elementId),
@@ -43,16 +44,22 @@ export class AuthorBrowserService {
     if (types) {
       params['types'] = types;
     }
+    if (items) {
+      params['items'] = items;
+    }
 
     return this.http.get<PaginatedAuthorsResponse>('/authorlist/', {params}).pipe(
       catchError(() => of({total: 0, items: []})),
     );
   }
 
-  getFilterOptions(elementId: number, letter: string = ''): Observable<AuthorFilterOptions> {
+  getFilterOptions(elementId: number, letter: string = '', items: string = ''): Observable<AuthorFilterOptions> {
     const params: Record<string, string> = {action: 'filters', elementId: String(elementId)};
     if (letter) {
       params['letter'] = letter;
+    }
+    if (items) {
+      params['items'] = items;
     }
     return this.http.get<AuthorFilterOptions>('/authorlist/', {params}).pipe(
       catchError(() => of({countries: [], cities: []})),

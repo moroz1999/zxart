@@ -103,6 +103,33 @@ When work is created by group:
 2. Individual authors can be specified in **authors** field with roles
 3. This allows reflecting both collective and individual authorship
 
+### Authors Listing: authorsList vs authorsCatalogue (letter entities)
+
+Two different mechanisms for browsing authors exist. They must not be confused.
+
+#### authorsList (structureElement)
+
+A standalone listing module with built-in filtering. Does NOT contain letter child entities.
+
+- **`type`** property — view mode: `'letters'`, `'popular'`, etc. Determines which template is rendered.
+- **`items`** property — content scope: `'music'` (music authors), `'graphics'` (graphics authors), `'all'` (both).
+- Letter filtering uses a URL parameter: `letter:s/` → `getParameter('letter')`. The letter is NOT a child entity — it is just a query filter passed to the API.
+- The Angular component `<zx-author-browser>` receives `element-id`, `letter`, and `items` as HTML attributes.
+- API endpoint: `/authorlist/` — accepts `letter`, `elementId`, `types`, `search`, `countryId`, `cityId`, pagination params.
+
+URL example: `https://zxart.ee/rus/grafika/avtory/filter/letter:s/`
+
+#### authorsCatalogue + letter entities
+
+A catalogue where each letter is a real CMS structure element (child of the catalogue). Letters contain authors/aliases (or groups in other sections) as child entities.
+
+- The letter entity resolves as `currentElement` via the URL path (not a query parameter).
+- `letter/structure.class.php` → `getAuthorsList()` retrieves child authors from the structure tree.
+- The Smarty template `letter.authors.tpl` passes the letter title as attribute: `letter="{$element->title}"`.
+- Each letter has its own privileges, actions, and templates.
+
+These are completely separate systems. `authorsList` is a flat query-based listing; `authorsCatalogue` is a tree of letter → author entities.
+
 ### Constraints and Rules
 
 #### For Authors

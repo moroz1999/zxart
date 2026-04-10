@@ -8,7 +8,7 @@
 					<a class="button button_primary" href="{$element->URL}type:authorAlias/action:showPublicForm/">{translations name='letter.add_authoralias'}</a>
 				{/if}
 			</div>
-		<zx-author-browser element-id="{$element->id}" mode="full"></zx-author-browser>
+		<zx-author-browser element-id="{$element->id}" mode="full"{if $currentLetter} letter="{$currentLetter}"{/if}{if $authorsListItems} items="{$authorsListItems}"{/if}></zx-author-browser>
 	{/capture}
 	{assign moduleTitle ""}
 	{assign moduleClass ""}

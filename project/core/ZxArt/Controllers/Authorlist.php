@@ -68,10 +68,11 @@ class Authorlist extends LoggedControllerApplication
         $types = $typesRaw !== null
             ? array_intersect(explode(',', $typesRaw), ['author', 'authorAlias'])
             : ['author', 'authorAlias'];
+        $items = $this->getParameter('items') ?: null;
 
         $sorting = SortingParams::fromRequest($sortingRaw, ['title', 'graphicsRating', 'musicRating', 'id']);
         $service = $this->getService(AuthorListService::class);
-        $result = $service->getPaged($sorting, $start, $limit, $search, $countryId, $cityId, $letter, $types);
+        $result = $service->getPaged($sorting, $start, $limit, $search, $countryId, $cityId, $letter, $types, $items);
 
         $mapper = new ObjectMapper();
         $this->assignSuccess([
@@ -86,8 +87,9 @@ class Authorlist extends LoggedControllerApplication
     private function handleFilters(int $elementId): void
     {
         $letter = $this->getParameter('letter') ?: null;
+        $items = $this->getParameter('items') ?: null;
         $service = $this->getService(AuthorListService::class);
-        $options = $service->getFilterOptions($letter);
+        $options = $service->getFilterOptions($letter, $items);
 
         $mapper = new ObjectMapper();
         $this->assignSuccess(new AuthorFilterOptionsRestDto(

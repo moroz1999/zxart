@@ -51,8 +51,9 @@ final readonly class AuthorListRepository
         ?int $cityId,
         ?string $letter = null,
         array $types = ['author', 'authorAlias'],
+        ?string $items = null,
     ): array {
-        $queries = $this->buildTypedQueries($types, $search, $countryId, $cityId, $letter);
+        $queries = $this->buildTypedQueries($types, $search, $countryId, $cityId, $letter, $items);
         if ($queries === []) {
             return [];
         }
@@ -81,15 +82,16 @@ final readonly class AuthorListRepository
         ?int $cityId,
         ?string $letter = null,
         array $types = ['author', 'authorAlias'],
+        ?string $items = null,
     ): int {
         $total = 0;
 
         if (in_array('author', $types, true)) {
-            $total += $this->buildAuthorsQuery($search, $countryId, $cityId, $letter)->count(self::AUTHORS_TABLE . '.id');
+            $total += $this->buildAuthorsQuery($search, $countryId, $cityId, $letter, $items)->count(self::AUTHORS_TABLE . '.id');
         }
 
         if (in_array('authorAlias', $types, true)) {
-            $total += $this->buildAliasesQuery($search, $countryId, $cityId, $letter)->count(self::ALIASES_TABLE . '.id');
+            $total += $this->buildAliasesQuery($search, $countryId, $cityId, $letter, $items)->count(self::ALIASES_TABLE . '.id');
         }
 
         return $total;
@@ -105,15 +107,16 @@ final readonly class AuthorListRepository
         ?int $countryId,
         ?int $cityId,
         ?string $letter,
+        ?string $items = null,
     ): array {
         $queries = [];
 
         if (in_array('author', $types, true)) {
-            $queries[] = $this->buildAuthorsQuery($search, $countryId, $cityId, $letter);
+            $queries[] = $this->buildAuthorsQuery($search, $countryId, $cityId, $letter, $items);
         }
 
         if (in_array('authorAlias', $types, true)) {
-            $queries[] = $this->buildAliasesQuery($search, $countryId, $cityId, $letter);
+            $queries[] = $this->buildAliasesQuery($search, $countryId, $cityId, $letter, $items);
         }
 
         return $queries;
@@ -122,13 +125,14 @@ final readonly class AuthorListRepository
     /**
      * @return int[]
      */
-    public function findCountryIds(?string $letter = null): array
+    public function findCountryIds(?string $letter = null, ?string $items = null): array
     {
         $authorsQuery = $this->db->table(self::AUTHORS_TABLE)
             ->distinct()
             ->where(self::AUTHORS_TABLE . '.country', '>', 0)
             ->select(self::AUTHORS_TABLE . '.country');
         $this->applyLetterFilter($authorsQuery, self::AUTHORS_TABLE . '.title', $letter);
+        $this->applyItemsFilter($authorsQuery, self::AUTHORS_TABLE, $items);
 
         $aliasesQuery = $this->db->table(self::ALIASES_TABLE)
             ->distinct()
@@ -136,6 +140,7 @@ final readonly class AuthorListRepository
             ->where(self::AUTHORS_TABLE . '.country', '>', 0)
             ->select(self::AUTHORS_TABLE . '.country');
         $this->applyLetterFilter($aliasesQuery, self::ALIASES_TABLE . '.title', $letter);
+        $this->applyItemsFilter($aliasesQuery, self::AUTHORS_TABLE, $items);
 
         $authorsQuery->unionAll($aliasesQuery);
 
@@ -145,13 +150,14 @@ final readonly class AuthorListRepository
     /**
      * @return int[]
      */
-    public function findCityIds(?string $letter = null): array
+    public function findCityIds(?string $letter = null, ?string $items = null): array
     {
         $authorsQuery = $this->db->table(self::AUTHORS_TABLE)
             ->distinct()
             ->where(self::AUTHORS_TABLE . '.city', '>', 0)
             ->select(self::AUTHORS_TABLE . '.city');
         $this->applyLetterFilter($authorsQuery, self::AUTHORS_TABLE . '.title', $letter);
+        $this->applyItemsFilter($authorsQuery, self::AUTHORS_TABLE, $items);
 
         $aliasesQuery = $this->db->table(self::ALIASES_TABLE)
             ->distinct()
@@ -159,6 +165,7 @@ final readonly class AuthorListRepository
             ->where(self::AUTHORS_TABLE . '.city', '>', 0)
             ->select(self::AUTHORS_TABLE . '.city');
         $this->applyLetterFilter($aliasesQuery, self::ALIASES_TABLE . '.title', $letter);
+        $this->applyItemsFilter($aliasesQuery, self::AUTHORS_TABLE, $items);
 
         $authorsQuery->unionAll($aliasesQuery);
 
@@ -170,6 +177,7 @@ final readonly class AuthorListRepository
         ?int $countryId,
         ?int $cityId,
         ?string $letter = null,
+        ?string $items = null,
     ): Builder {
         $query = $this->db->table(self::AUTHORS_TABLE)
             ->distinct()
@@ -197,6 +205,7 @@ final readonly class AuthorListRepository
         }
 
         $this->applyLetterFilter($query, self::AUTHORS_TABLE . '.title', $letter);
+        $this->applyItemsFilter($query, self::AUTHORS_TABLE, $items);
 
         return $query;
     }
@@ -206,6 +215,7 @@ final readonly class AuthorListRepository
         ?int $countryId,
         ?int $cityId,
         ?string $letter = null,
+        ?string $items = null,
     ): Builder {
         $authAlias = 'auth';
 
@@ -238,8 +248,22 @@ final readonly class AuthorListRepository
         }
 
         $this->applyLetterFilter($query, self::ALIASES_TABLE . '.title', $letter);
+        $this->applyItemsFilter($query, $authAlias, $items);
 
         return $query;
+    }
+
+    private function applyItemsFilter(Builder $query, string $authorTableOrAlias, ?string $items): void
+    {
+        if ($items === null || $items === '' || $items === 'all') {
+            return;
+        }
+
+        if ($items === 'music') {
+            $query->where($authorTableOrAlias . '.tunesQuantity', '>', 0);
+        } elseif ($items === 'graphics') {
+            $query->where($authorTableOrAlias . '.picturesQuantity', '>', 0);
+        }
     }
 
     private function applyLetterFilter(Builder $query, string $titleColumn, ?string $letter): void
