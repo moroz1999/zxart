@@ -3,16 +3,16 @@ declare(strict_types=1);
 
 namespace Tests\Import\Labels;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
+use ZxArt\Authors\Repositories\AuthorAliasesRepository;
+use ZxArt\Authors\Repositories\AuthorsRepository;
+use ZxArt\Groups\Repositories\GroupAliasesRepository;
+use ZxArt\Groups\Repositories\GroupsRepository;
+use ZxArt\Import\Labels\GroupLabel;
 use ZxArt\Import\Labels\LabelResolver;
 use ZxArt\Import\Labels\PersonLabel;
-use ZxArt\Import\Labels\GroupLabel;
 use ZxArt\Import\Resolver;
-use ZxArt\Authors\Repositories\AuthorsRepository;
-use ZxArt\Authors\Repositories\AuthorAliasesRepository;
-use ZxArt\Groups\Repositories\GroupsRepository;
-use ZxArt\Groups\Repositories\GroupAliasesRepository;
 
 final class LabelResolverTest extends TestCase
 {

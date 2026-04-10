@@ -6,22 +6,22 @@ namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
 use controller;
-use controllerApplication;
-use ErrorLog;
+use Monolog\Logger;
 use Throwable;
 use ZxArt\Users\CurrentUserRestService;
 use ZxArt\Users\LoginService;
 
-class Currentuser extends controllerApplication
+class Currentuser extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 
     public function __construct(
         controller $controller,
+        Logger $logger,
         private readonly CurrentUserRestService $currentUserRestService,
         private readonly LoginService $loginService,
     ) {
-        parent::__construct($controller);
+        parent::__construct($controller, $logger);
     }
 
     public function initialize(): void
@@ -50,10 +50,7 @@ class Currentuser extends controllerApplication
         try {
             $this->renderer->assign('body', $this->currentUserRestService->buildDto());
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Currentuser::handleGet',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Currentuser::handleGet', $e);
             CmsHttpResponse::getInstance()->setStatusCode('500');
             $this->renderer->assign('body', ['errorMessage' => 'Internal server error']);
         }
@@ -90,10 +87,7 @@ class Currentuser extends controllerApplication
 
             $this->renderer->assign('body', $this->currentUserRestService->buildDto());
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Currentuser::handleLogin',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Currentuser::handleLogin', $e);
             CmsHttpResponse::getInstance()->setStatusCode('500');
             $this->renderer->assign('body', ['errorMessage' => 'Internal server error']);
         }
@@ -105,10 +99,7 @@ class Currentuser extends controllerApplication
             $this->loginService->logout();
             $this->renderer->assign('body', $this->currentUserRestService->buildAnonymousDto());
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Currentuser::handleLogout',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Currentuser::handleLogout', $e);
             CmsHttpResponse::getInstance()->setStatusCode('500');
             $this->renderer->assign('body', ['errorMessage' => 'Internal server error']);
         }

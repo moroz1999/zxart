@@ -6,13 +6,11 @@ namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
 use ConfigManager;
-use controllerApplication;
-use ErrorLog;
 use LanguageLinksService;
 use LanguagesManager;
 use Throwable;
 
-class Languages extends controllerApplication
+class Languages extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 
@@ -27,10 +25,7 @@ class Languages extends controllerApplication
         try {
             $this->renderer->assign('body', $this->buildLanguageList());
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Languages::execute',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Languages::execute', $e);
             CmsHttpResponse::getInstance()->setStatusCode('500');
             $this->renderer->assign('body', ['errorMessage' => 'Internal server error']);
         }

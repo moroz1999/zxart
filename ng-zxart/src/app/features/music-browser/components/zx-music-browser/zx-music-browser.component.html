@@ -9,14 +9,14 @@
   </div>
 </div>
 
-<zx-table *ngIf="loading">
+<zx-table *ngIf="loading" size="sm">
   <zx-skeleton variant="tune-table" [count]="10"></zx-skeleton>
 </zx-table>
 
 <div *ngIf="error" zxCaption>{{ 'music-browser.error' | translate }}</div>
 <div *ngIf="!loading && !error && tunes.length === 0" zxCaption>{{ 'music-browser.empty' | translate }}</div>
 
-<zx-table *ngIf="!loading && !error && tunes.length > 0">
+<zx-table *ngIf="!loading && !error && tunes.length > 0" size="sm">
   <ng-container *ngIf="{ id: playingTuneId$ | async } as playing">
     <table class="tunes-table">
       <tbody>

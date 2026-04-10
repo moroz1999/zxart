@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use controller;
-use controllerApplication;
 use LanguagesManager;
+use Monolog\Logger;
 use structureManager;
 use ZxArt\Rss\RssRenderer;
 use ZxArt\Rss\Transformers\CommentRssTransformer;
@@ -14,16 +14,17 @@ use ZxArt\Rss\Transformers\ZxPictureRssTransformer;
 use ZxArt\Rss\Transformers\ZxProdRssTransformer;
 use ZxArt\Rss\Transformers\ZxReleaseRssTransformer;
 
-class Rss extends controllerApplication
+class Rss extends LoggedControllerApplication
 {
     public $rendererName = 'smarty';
 
     public function __construct(
         controller $controller,
+        Logger $logger,
         private readonly structureManager $structureManager,
         private readonly LanguagesManager $languagesManager,
     ) {
-        parent::__construct($controller);
+        parent::__construct($controller, $logger);
     }
 
     public function initialize(): void

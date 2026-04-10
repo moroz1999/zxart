@@ -9,25 +9,28 @@
 try {
     $this->doSomething();
 } catch (\Throwable) {
-    // silent — hides bugs, makes debugging impossible
+    // silent -- hides bugs, makes debugging impossible
 }
 ```
 
 **Correct:**
 ```php
+use Monolog\Logger;
+
 try {
     $this->doSomething();
 } catch (\Throwable $e) {
-    ErrorLog::getInstance()->logMessage('ClassName::methodName', $e->getMessage() . "\n" . $e->getTraceAsString());
+    $this->logger->error('ClassName::methodName: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
 }
 ```
 
-This applies even when the operation is non-critical and the catch block falls back to a safe default — the fallback is fine, but the error must still be logged.
+This applies even when the operation is non-critical and the catch block falls back to a safe default -- the fallback is fine, but the error must still be logged.
 
 ## Logging utilities
 
-- **In `controllerApplication` subclasses and standalone code:** use `ErrorLog::getInstance()->logMessage($location, $message)`.
-- **In classes that extend `errorLogger`** (e.g. `LanguagesManager`, structure elements, actions): use the inherited `$this->logError($message)` — it automatically uses `getErrorLogLocation()` as the location.
+- **In `controllerApplication` subclasses:** inject `Monolog\Logger` via constructor DI and use it for error logging.
+- **`ErrorLog::getInstance()` is deprecated.** Keep it only in untouched legacy code that cannot yet be moved to DI.
+- **In classes that extend `errorLogger`** (e.g. `LanguagesManager`, structure elements, actions): use the inherited `$this->logError($message)` -- it automatically uses `getErrorLogLocation()` as the location.
 
 ## See also
-- [REST API error responses](rest-api.md) — how to return errors from controllers
+- [REST API error responses](rest-api.md) -- how to return errors from controllers

@@ -5,11 +5,10 @@ namespace ZxArt\Controllers;
 
 use App\Users\CurrentUserService;
 use Cache;
-use controllerApplication;
 use renderer;
 use ZxArt\Import\Services\PouetImport;
 
-class Pouet extends controllerApplication
+class Pouet extends LoggedControllerApplication
 {
     protected $applicationName = 'pouet';
     public $rendererName = 'smarty';
@@ -58,4 +57,3 @@ class Pouet extends controllerApplication
         return '';
     }
 }
-

@@ -34,6 +34,9 @@ import {
 } from './features/picture-browser/components/zx-picture-browser/zx-picture-browser.component';
 import {ZxMusicBrowserComponent} from './features/music-browser/components/zx-music-browser/zx-music-browser.component';
 import {ZxProdsBrowserComponent} from './features/prods-browser/components/zx-prods-browser/zx-prods-browser.component';
+import {
+  ZxAuthorBrowserComponent
+} from './features/author-browser/components/zx-author-browser/zx-author-browser.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -90,6 +93,7 @@ export class AppModule implements DoBootstrap  {
             'zx-picture-browser': ZxPictureBrowserComponent,
             'zx-music-browser': ZxMusicBrowserComponent,
             'zx-prods-browser': ZxProdsBrowserComponent,
+            'zx-author-browser': ZxAuthorBrowserComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});

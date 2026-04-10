@@ -34,9 +34,10 @@
 
   --zx-filter-picker-clear-color: var(--text-light-color);
   --zx-filter-picker-clear-size: var(--space-20);
-  --zx-filter-picker-clear-font-size: var(--font-sm);
-
-
+  /* Size of the close icon inside the clear button */
+  --zx-filter-picker-clear-icon-size: var(--space-12);
+  /* Opacity for the disabled state */
+  --zx-filter-picker-disabled-opacity: 0.4;
 }
 
 .dark-mode {

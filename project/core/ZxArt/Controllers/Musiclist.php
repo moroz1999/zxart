@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
-use controllerApplication;
-use ErrorLog;
 use LanguagesManager;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
@@ -15,7 +13,7 @@ use ZxArt\Shared\SortingParams;
 use ZxArt\Tunes\Dto\TuneDto;
 use ZxArt\Tunes\Rest\TuneRestDto;
 
-class Musiclist extends controllerApplication
+class Musiclist extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 
@@ -33,7 +31,7 @@ class Musiclist extends controllerApplication
     {
         $elementId = (int)($this->getParameter('elementId') ?? 0);
         $compoType = $this->getParameter('compoType') ?: null;
-        $limit = $this->getParameter('limit') !== null ? (int)$this->getParameter('limit') : null;
+        $limit = $this->getParameter('limit') !== false ? (int)$this->getParameter('limit') : null;
         $start = (int)($this->getParameter('start') ?? 0);
         $sortingRaw = $this->getParameter('sorting') ?: 'title,asc';
 
@@ -63,10 +61,7 @@ class Musiclist extends controllerApplication
                 $this->assignSuccess($restDtos);
             }
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Musiclist::execute',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Musiclist::execute', $e);
             $this->assignError('Internal server error');
         }
 

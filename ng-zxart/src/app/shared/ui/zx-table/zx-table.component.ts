@@ -1,5 +1,7 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
+
+export type ZxTableSize = 'xs' | 'sm' | 'md';
 
 @Component({
   selector: 'zx-table',
@@ -12,4 +14,9 @@ import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
 export class ZxTableComponent {
   @Input() title = '';
   @Input() titleLevel: 'h2' | 'h3' = 'h3';
+  @Input() size: ZxTableSize = 'sm';
+
+  @HostBinding('class') get sizeClass(): string {
+    return `zx-table-${this.size}`;
+  }
 }

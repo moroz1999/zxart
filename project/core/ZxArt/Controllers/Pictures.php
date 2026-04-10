@@ -7,8 +7,6 @@ namespace ZxArt\Controllers;
 use CmsHttpResponse;
 use ConfigManager;
 use controller;
-use controllerApplication;
-use ErrorLog;
 use LanguagesManager;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
@@ -16,7 +14,7 @@ use ZxArt\Pictures\Dto\PictureDto;
 use ZxArt\Pictures\Rest\PictureRestDto;
 use ZxArt\Pictures\Services\PicturesService;
 
-class Pictures extends controllerApplication
+class Pictures extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 
@@ -70,7 +68,7 @@ class Pictures extends controllerApplication
                 $dtos
             ));
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage('Pictures::picturesByElement', $e->getMessage() . "\n" . $e->getTraceAsString());
+            $this->logThrowable('Pictures::picturesByElement', $e);
             CmsHttpResponse::getInstance()->setStatusCode('500');
             $this->renderer->assign('body', ['errorMessage' => 'Internal server error']);
         }

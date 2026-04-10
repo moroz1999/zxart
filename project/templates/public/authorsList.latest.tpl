@@ -4,9 +4,7 @@
 	{/capture}
 {/if}
 {capture assign="moduleContent"}
-	{if $authorsList = $element->getLatestAuthors()}
-		{include file=$theme->template("component.authorstable.tpl") authorsList=$authorsList}
-	{/if}
+	<zx-author-browser element-id="{$element->id}" mode="simple" sorting="id,desc" limit="300"></zx-author-browser>
 {/capture}
 {assign moduleClass ""}
 {assign moduleTitleClass ""}

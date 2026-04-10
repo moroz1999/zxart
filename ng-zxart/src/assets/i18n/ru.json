@@ -419,6 +419,26 @@
       "interlace2": "Int2"
     }
   },
+  "author-browser": {
+    "error": "Не удалось загрузить авторов",
+    "empty": "Авторы не найдены",
+    "search": {
+      "placeholder": "Поиск по нику, имени или алиасу..."
+    },
+    "filters": {
+      "country": "Страна",
+      "city": "Город"
+    },
+    "columns": {
+      "nick": "Ник",
+      "groups": "Группа(ы)",
+      "realname": "Настоящее имя",
+      "country": "Страна",
+      "city": "Город",
+      "musicRating": "Рейтинг музыки",
+      "graphicsRating": "Рейтинг графики"
+    }
+  },
   "site": {
     "download": "Скачать архив программ"
   },

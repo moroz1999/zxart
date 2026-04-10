@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
-use controllerApplication;
 use LanguagesManager;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
@@ -14,7 +13,7 @@ use ZxArt\Pictures\Dto\PictureDto;
 use ZxArt\Pictures\Rest\PictureRestDto;
 use ZxArt\Shared\SortingParams;
 
-class Picturelist extends controllerApplication
+class Picturelist extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 
@@ -34,7 +33,7 @@ class Picturelist extends controllerApplication
         $elementId = (int)($this->getParameter('elementId') ?? 0);
         $compoType = $this->getParameter('compoType') ?: null;
         $pictureId = (int)($this->getParameter('pictureId') ?? 0);
-        $limit = $this->getParameter('limit') !== null ? (int)$this->getParameter('limit') : null;
+        $limit = $this->getParameter('limit') !== false ? (int)$this->getParameter('limit') : null;
         $start = (int)($this->getParameter('start') ?? 0);
         $sortingRaw = $this->getParameter('sorting') ?: 'title,asc';
 
@@ -79,10 +78,7 @@ class Picturelist extends controllerApplication
                 $this->assignSuccess($restDtos);
             }
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Picturelist::execute',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Picturelist::execute', $e);
             $this->assignError('Internal server error');
         }
 

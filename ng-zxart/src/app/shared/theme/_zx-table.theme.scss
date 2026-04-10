@@ -1,13 +1,45 @@
 :root {
-  --table-header-font-size: var(--font-xs);
-  --table-header-font-size-mobile: var(--font-xxs);
-  --table-header-color: var(--secondary-500);
-  --table-header-padding: var(--space-4) var(--space-8) var(--space-4);
-  --table-cell-padding: var(--space-4) var(--space-8) var(--space-4);
-  --table-cell-font-size-mobile: var(--font-sm);
-  --table-row-alternate-bg: var(--secondary-bg);
+  /* Header font size */
+  --zx-table-header-font-size: var(--zx-font-size-sm);
+  /* Header font size on mobile */
+  --zx-table-header-font-size-mobile: 10px;
+  /* Header text color */
+  --zx-table-header-color: var(--secondary-500);
+  /* Header cell padding */
+  --zx-table-header-padding: var(--space-4) var(--space-8);
+  /* Mobile cell font size */
+  --zx-table-cell-font-size-mobile: var(--zx-font-size-sm);
+
+  /* Size: xs — cell padding */
+  --zx-table-cell-padding-xs: var(--space-4) var(--space-8);
+  /* Size: xs — cell font size (13px) */
+  --zx-table-font-size-xs: var(--zx-font-size-sm);
+
+  /* Size: sm — cell padding */
+  --zx-table-cell-padding-sm: var(--space-4) var(--space-8);
+  /* Size: sm — cell font size (14px) */
+  --zx-table-font-size-sm: var(--zx-font-size-md);
+
+  /* Size: md — cell padding */
+  --zx-table-cell-padding-md: var(--space-8) var(--space-16);
+  /* Size: md — cell font size (16px) */
+  --zx-table-font-size-md: 16px;
 }
 
 .dark-mode {
-  --table-row-alternate-bg: var(--secondary-50);
+  /* Solid row background (darker) */
+  --zx-table-row-bg: var(--secondary-100);
+  /* Solid alternate row background (lighter) */
+  --zx-table-row-alternate-bg: var(--secondary-50);
+  /* Header row background */
+  --zx-table-header-bg: var(--secondary-50);
+}
+
+.light-mode {
+  /* Solid row background (white) */
+  --zx-table-row-bg: var(--secondary-50);
+  /* Solid alternate row background (light gray) */
+  --zx-table-row-alternate-bg: var(--white);
+  /* Header row background */
+  --zx-table-header-bg: var(--white);
 }

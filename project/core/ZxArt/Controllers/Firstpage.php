@@ -6,8 +6,6 @@ namespace ZxArt\Controllers;
 use CmsHttpResponse;
 use ConfigManager;
 use controller;
-use controllerApplication;
-use ErrorLog;
 use LanguagesManager;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
@@ -25,7 +23,7 @@ use ZxArt\Tunes\Dto\TuneDto;
 use ZxArt\Tunes\Rest\TuneRestDto;
 use ZxArt\Tunes\Services\TunesService;
 
-class Firstpage extends controllerApplication
+class Firstpage extends LoggedControllerApplication
 {
     public $rendererName = 'json';
     protected ObjectMapper $objectMapper;
@@ -60,10 +58,7 @@ class Firstpage extends controllerApplication
             $this->partiesService = $this->getService(PartiesService::class);
             $this->releasesService = $this->getService(ReleasesService::class);
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Firstpage::initialize',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Firstpage::initialize', $e);
             throw $e;
         }
     }
@@ -91,10 +86,7 @@ class Firstpage extends controllerApplication
                 default => $this->assignError('Unknown action: ' . ($action ?? 'null'), 400),
             };
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Firstpage::execute[' . ($action ?? 'null') . ']',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Firstpage::execute[' . ($action ?? 'null') . ']', $e);
             $this->assignError('Internal server error');
         }
 

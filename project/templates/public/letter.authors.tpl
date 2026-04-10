@@ -1,8 +1,3 @@
-{if $element->title}
-	{capture assign="moduleTitle"}
-		{$element->title}
-	{/capture}
-{/if}
 {capture assign="moduleContent"}
 		<div class="letter_editing_controls editing_controls">
 			{if isset($privileges.author.showPublicForm) && $privileges.author.showPublicForm == true}
@@ -12,8 +7,9 @@
 				<a class="button button_primary" href="{$element->URL}type:authorAlias/action:showPublicForm/">{translations name='letter.add_authoralias'}</a>
 			{/if}
 		</div>
-	{include file=$theme->template("component.authorstable.tpl") authorsList=$element->getAuthorsList()}
+	<zx-author-browser element-id="{$element->getRequestedParentElement()->id}" mode="full" letter="{$element->title}"></zx-author-browser>
 {/capture}
+{assign moduleTitle ""}
 {assign moduleClass ""}
 {assign moduleTitleClass ""}
 {assign moduleContentClass ""}

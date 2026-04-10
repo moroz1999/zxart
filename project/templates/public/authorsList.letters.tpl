@@ -8,9 +8,7 @@
 					<a class="button button_primary" href="{$element->URL}type:authorAlias/action:showPublicForm/">{translations name='letter.add_authoralias'}</a>
 				{/if}
 			</div>
-		{if $authorsList = $element->getLetterAuthors()}
-			{include file=$theme->template("component.authorstable.tpl") authorsList=$authorsList}
-		{/if}
+		<zx-author-browser element-id="{$element->id}" mode="full"></zx-author-browser>
 	{/capture}
 	{assign moduleTitle ""}
 	{assign moduleClass ""}

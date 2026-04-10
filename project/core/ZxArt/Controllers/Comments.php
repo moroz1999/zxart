@@ -5,9 +5,8 @@ namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
 use controller;
-use controllerApplication;
 use DbLoggableApplication;
-use ErrorLog;
+use Monolog\Logger;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
 use ZxArt\Comments\CommentRestDto;
@@ -15,7 +14,7 @@ use ZxArt\Comments\CommentsListRestDto;
 use ZxArt\Comments\CommentsService;
 use ZxArt\Comments\Exception\CommentsException;
 
-class Comments extends controllerApplication
+class Comments extends LoggedControllerApplication
 {
     use DbLoggableApplication;
 
@@ -23,11 +22,12 @@ class Comments extends controllerApplication
 
     public function __construct(
         controller                       $controller,
+        Logger                           $logger,
         private readonly ObjectMapper    $objectMapper,
         private readonly CommentsService $commentsService,
     )
     {
-        parent::__construct($controller);
+        parent::__construct($controller, $logger);
     }
 
     public function initialize(): void
@@ -69,10 +69,7 @@ class Comments extends controllerApplication
             $listDto = $this->commentsService->getAllCommentsPaginated($page);
             $this->assignSuccess($this->objectMapper->map($listDto, CommentsListRestDto::class));
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Comments::handleList',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Comments::handleList', $e);
             $this->assignError('Internal server error');
         }
     }
@@ -90,16 +87,10 @@ class Comments extends controllerApplication
             $restTree = array_map(fn($dto) => $this->objectMapper->map($dto, CommentRestDto::class), $internalTree);
             $this->assignSuccess($restTree);
         } catch (CommentsException $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Comments::handleGet',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Comments::handleGet', $e);
             $this->assignError($e->getMessage(), 400);
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Comments::handleGet',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Comments::handleGet', $e);
             $this->assignError('Internal server error');
         }
     }
@@ -118,16 +109,10 @@ class Comments extends controllerApplication
             $commentDto = $this->commentsService->addComment($targetId, $content);
             $this->assignSuccess($this->objectMapper->map($commentDto, CommentRestDto::class));
         } catch (CommentsException $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Comments::handleAdd',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Comments::handleAdd', $e);
             $this->assignError($e->getMessage(), 400);
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Comments::handleAdd',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Comments::handleAdd', $e);
             $this->assignError('Failed to add comment');
         }
     }
@@ -146,16 +131,10 @@ class Comments extends controllerApplication
             $commentDto = $this->commentsService->updateComment($commentId, $content);
             $this->assignSuccess($this->objectMapper->map($commentDto, CommentRestDto::class));
         } catch (CommentsException $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Comments::handleUpdate',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Comments::handleUpdate', $e);
             $this->assignError($e->getMessage(), 400);
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Comments::handleUpdate',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Comments::handleUpdate', $e);
             $this->assignError('Failed to update comment');
         }
     }
@@ -172,16 +151,10 @@ class Comments extends controllerApplication
             $this->commentsService->deleteComment($commentId);
             $this->assignSuccess(null);
         } catch (CommentsException $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Comments::handleDelete',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Comments::handleDelete', $e);
             $this->assignError($e->getMessage(), 400);
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Comments::handleDelete',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Comments::handleDelete', $e);
             $this->assignError('Failed to delete comment');
         }
     }
@@ -198,10 +171,7 @@ class Comments extends controllerApplication
             );
             $this->assignSuccess($restComments);
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Comments::handleLatest',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Comments::handleLatest', $e);
             $this->assignError('Internal server error');
         }
     }

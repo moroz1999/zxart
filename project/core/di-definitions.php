@@ -15,6 +15,7 @@ use ZxArt\Ai\Service\ProdQueryService;
 use ZxArt\Ai\Service\PromptSender;
 use ZxArt\Ai\Service\TextBeautifier;
 use ZxArt\Ai\Service\Translator;
+use ZxArt\AuthorList\AuthorListService;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\BackendLinks\BackendLinksService;
@@ -33,6 +34,8 @@ use function DI\autowire;
 use function DI\factory;
 
 return [
+    AuthorListService::class => autowire()
+        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     CommentsService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     AuthorshipRepository::class => autowire()
@@ -55,7 +58,18 @@ return [
         ->constructorParameter('logger', DI\get('social_posts_logger')),
 
     // Core services
-    Logger::class => autowire(Logger::class)->constructor('log'),
+    Logger::class => factory(static function (PathsManager $pathsManager) {
+        $logger = new Logger('log');
+
+        $todayDate = date('Y-m-d');
+        $logFilePath = $pathsManager->getPath('logs') . $todayDate . '.log';
+        $streamHandler = new StreamHandler($logFilePath, Logger::DEBUG);
+        $formatter = new LineFormatter(null, null, true, true);
+        $streamHandler->setFormatter($formatter);
+        $logger->pushHandler($streamHandler);
+
+        return $logger;
+    }),
     'openai_key' => factory(fn(ConfigManager $cm) => $cm->getConfig('main')->get('ai_key')),
     'telegram_token' => factory(fn(ConfigManager $cm) => $cm->getConfig('telegram')->get('token')),
     'telegram_channel_id' => factory(fn(ConfigManager $cm) => $cm->getConfig('telegram')->get('channel_id')),
@@ -63,7 +77,7 @@ return [
     // Factory functions
     'create_log' => factory(function (ContainerInterface $c, PathsManager $pm) {
         return fn(string $logPath) => new Log(
-            logger: $c->make(Logger::class),
+            logger: new Logger('log'),
             logPath: $pm->getPath($logPath)
         );
     }),

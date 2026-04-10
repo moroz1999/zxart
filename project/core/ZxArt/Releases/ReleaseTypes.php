@@ -25,6 +25,6 @@ enum ReleaseTypes: string
      */
     public static function getAllValues(): array
     {
-        return array_map(fn(self $case) => $case->value, self::cases());
+        return array_map(static fn(self $case) => $case->value, self::cases());
     }
 }

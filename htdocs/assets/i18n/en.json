@@ -419,6 +419,26 @@
       "interlace2": "Int2"
     }
   },
+  "author-browser": {
+    "error": "Failed to load authors",
+    "empty": "No authors found",
+    "search": {
+      "placeholder": "Search by nick, name or alias..."
+    },
+    "filters": {
+      "country": "Country",
+      "city": "City"
+    },
+    "columns": {
+      "nick": "Nickname",
+      "groups": "Group(s)",
+      "realname": "Real name",
+      "country": "Country",
+      "city": "City",
+      "musicRating": "Music rating",
+      "graphicsRating": "Graphics rating"
+    }
+  },
   "site": {
     "download": "Download software archive"
   },

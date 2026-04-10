@@ -3,12 +3,11 @@ declare(strict_types=1);
 
 namespace ZxArt\Controllers;
 
-use controllerApplication;
 use RuntimeException;
 use ZxArt\ZxScreen\ZxPictureParametersDto;
 use ZxArt\ZxScreen\ZxPictureUrlHelper;
 
-class Zximages extends controllerApplication
+class Zximages extends LoggedControllerApplication
 {
     private const string KEY_VALUE_SEPARATOR = '=';
     private const string PARAMETER_SEPARATOR = ';';

@@ -12,6 +12,7 @@ import {
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
+import {SvgIconComponent} from 'angular-svg-icon';
 import {ZxBodyDirective, ZxCaptionDirective} from '../../directives/typography/typography.directives';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {ZxCheckboxFieldComponent} from '../zx-checkbox-field/zx-checkbox-field.component';
@@ -34,6 +35,7 @@ export interface ZxFilterPickerItem {
     ZxCaptionDirective,
     ZxCheckboxFieldComponent,
     ZxInputComponent,
+    SvgIconComponent,
   ],
   templateUrl: './zx-filter-picker.component.html',
   styleUrl: './zx-filter-picker.component.scss',
@@ -46,6 +48,7 @@ export class ZxFilterPickerComponent implements AfterViewChecked {
   @Input() placeholder = '';
   @Input() searchEnabled = false;
   @Input() multi = true;
+  @Input() disabled = false;
   @Output() selectedIdsChange = new EventEmitter<string[]>();
 
   @ViewChild('popoverEl') popoverEl?: ElementRef<HTMLElement>;
@@ -120,6 +123,9 @@ export class ZxFilterPickerComponent implements AfterViewChecked {
 
   togglePopover(event: Event): void {
     event.stopPropagation();
+    if (this.disabled) {
+      return;
+    }
     this.popoverOpen = !this.popoverOpen;
     if (this.popoverOpen && this.searchEnabled) {
       this.needsFocus = true;

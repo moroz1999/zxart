@@ -1,0 +1,24 @@
+:root {
+  /* Gap between items in the filters bar */
+  --zx-author-browser-filters-gap: var(--gap-md);
+  /* Bottom margin below the filters panel */
+  --zx-author-browser-filters-margin: var(--margin-lg);
+  /* Max width of the search input in desktop layout */
+  --zx-author-browser-search-width: 300px;
+  /* Max width of each filter picker in desktop layout */
+  --zx-author-browser-filter-width: 150px;
+  /* Width of the row number column */
+  --zx-author-browser-col-num-width: 40px;
+  /* Min width of the nick column */
+  --zx-author-browser-col-nick-min-width: 120px;
+  /* Min width of the real name column */
+  --zx-author-browser-col-realname-min-width: 100px;
+  /* Min width of the country and city columns */
+  --zx-author-browser-col-location-min-width: 80px;
+  /* Width of the rating columns */
+  --zx-author-browser-col-rating-width: 60px;
+  /* Loading transition duration */
+  --zx-author-browser-loading-transition: var(--animation-sm);
+  /* Top margin above pagination */
+  --zx-author-browser-pagination-margin: var(--margin-xl);
+}

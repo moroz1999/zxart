@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use controller;
-use controllerApplication;
 use Monolog\Logger;
 use Override;
+use Throwable;
 use ZxArt\Social\SocialPostsService;
 
-class Socialpost extends controllerApplication
+class Socialpost extends LoggedControllerApplication
 {
     public $rendererName = 'smarty';
 
     public function __construct(
         controller $controller,
+        Logger $logger,
         private readonly SocialPostsService $socialPostsService,
-        private readonly Logger $logger,
     ) {
-        parent::__construct($controller);
+        parent::__construct($controller, $logger);
     }
 
     #[Override]
@@ -33,9 +33,8 @@ class Socialpost extends controllerApplication
     {
         try {
             $this->socialPostsService->processQueue();
-            $this->logger->info('Social posts processing completed');
-        } catch (\Exception $exception) {
-            $this->logger->error('Social posts processing failed: ' . $exception->getMessage());
+        } catch (Throwable $e) {
+            $this->logThrowable('Socialpost::execute', $e);
         }
     }
 }

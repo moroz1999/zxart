@@ -6,7 +6,6 @@ namespace ZxArt\Controllers;
 
 use ConfigManager;
 use controller;
-use controllerApplication;
 use LanguagesManager;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
@@ -16,7 +15,7 @@ use ZxArt\Radio\Services\RadioOptionsService;
 use ZxArt\Radio\Services\RadioService;
 use ZxArt\Tunes\Rest\TuneRestDto;
 
-class Radio extends controllerApplication
+class Radio extends LoggedControllerApplication
 {
     public $rendererName = 'json';
     protected ObjectMapper $objectMapper;
@@ -82,7 +81,8 @@ class Radio extends controllerApplication
             $options = $this->optionsService->getOptions();
             $this->renderer->assign('responseStatus', 'success');
             $this->renderer->assign('responseData', $options);
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            $this->logThrowable('Radio::handleOptions', $e);
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', 'Internal server error');
         }
@@ -103,9 +103,11 @@ class Radio extends controllerApplication
             $this->renderer->assign('responseStatus', 'success');
             $this->renderer->assign('responseData', $restDto);
         } catch (RadioTuneNotFoundException $exception) {
+            $this->logThrowable('Radio::handleNextTune', $exception);
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', $exception->getMessage());
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            $this->logThrowable('Radio::handleNextTune', $e);
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', 'Internal server error');
         }

@@ -418,6 +418,26 @@
       "interlace2": "Int2"
     }
   },
+  "author-browser": {
+    "error": "Error al cargar autores",
+    "empty": "No se encontraron autores",
+    "search": {
+      "placeholder": "Buscar por nick, nombre o alias..."
+    },
+    "filters": {
+      "country": "País",
+      "city": "Ciudad"
+    },
+    "columns": {
+      "nick": "Nick",
+      "groups": "Grupo(s)",
+      "realname": "Nombre real",
+      "country": "País",
+      "city": "Ciudad",
+      "musicRating": "Clasificación musical",
+      "graphicsRating": "Clasificación de gráficos"
+    }
+  },
   "site": {
     "download": "Descargar archivo de software"
   },

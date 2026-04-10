@@ -6,11 +6,11 @@ namespace Tests\Import\Prods;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use structureManager;
+use ZxArt\Helpers\AlphanumericColumnSearch;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Import\Prods\HardwareCompatibilityService;
 use ZxArt\Import\Prods\ProdResolver;
 use ZxArt\Import\Resolver;
-use ZxArt\Helpers\AlphanumericColumnSearch;
 use ZxArt\Prods\Repositories\ProdsRepository;
 use zxProdElement;
 

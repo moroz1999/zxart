@@ -5,23 +5,24 @@ namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
 use controller;
-use controllerApplication;
+use Monolog\Logger;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
 use ZxArt\Ratings\RatingsService;
 use ZxArt\Ratings\Rest\ElementRatingsListRestDto;
 use ZxArt\Ratings\Rest\RecentRatingsListRestDto;
 
-class Ratings extends controllerApplication
+class Ratings extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 
     public function __construct(
         controller $controller,
+        Logger $logger,
         private readonly ObjectMapper $objectMapper,
         private readonly RatingsService $ratingsService,
     ) {
-        parent::__construct($controller);
+        parent::__construct($controller, $logger);
     }
 
     public function initialize(): void
@@ -54,7 +55,8 @@ class Ratings extends controllerApplication
         try {
             $listDto = $this->ratingsService->getElementRatings($elementId);
             $this->assignSuccess($this->objectMapper->map($listDto, ElementRatingsListRestDto::class));
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            $this->logThrowable('Ratings::handleGet', $e);
             $this->assignError('Internal server error');
         }
     }
@@ -67,7 +69,8 @@ class Ratings extends controllerApplication
         try {
             $listDto = $this->ratingsService->getRecentRatings($limit, $offset);
             $this->assignSuccess($this->objectMapper->map($listDto, RecentRatingsListRestDto::class));
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            $this->logThrowable('Ratings::handleList', $e);
             $this->assignError('Internal server error');
         }
     }

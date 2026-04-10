@@ -3,6 +3,7 @@
   class="zx-filter-picker__control"
   [class.zx-filter-picker__control--active]="hasSelection"
   [class.zx-filter-picker__control--open]="popoverOpen"
+  [class.zx-filter-picker__control--disabled]="disabled"
 >
   <button
     type="button"
@@ -27,7 +28,7 @@
     [attr.aria-label]="'player.filters.clear' | translate"
     (click)="clearSelection($event)"
   >
-    <span aria-hidden="true">x</span>
+    <svg-icon name="close" class="zx-filter-picker__clear-icon"></svg-icon>
   </button>
 </div>
 

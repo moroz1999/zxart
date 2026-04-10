@@ -6,20 +6,20 @@ namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
 use controller;
-use controllerApplication;
-use ErrorLog;
+use Monolog\Logger;
 use Throwable;
 use ZxArt\Menu\MenuService;
 
-class Menu extends controllerApplication
+class Menu extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 
     public function __construct(
         controller $controller,
+        Logger $logger,
         private readonly MenuService $menuService,
     ) {
-        parent::__construct($controller);
+        parent::__construct($controller, $logger);
     }
 
     public function initialize(): void
@@ -38,10 +38,7 @@ class Menu extends controllerApplication
             $items = $this->menuService->getMenuItems($lang);
             $this->renderer->assign('body', $items);
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Menu::execute',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Menu::execute', $e);
             CmsHttpResponse::getInstance()->setStatusCode('500');
             $this->renderer->assign('body', ['errorMessage' => 'Internal server error']);
         }

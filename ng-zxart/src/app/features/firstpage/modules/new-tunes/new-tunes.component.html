@@ -10,7 +10,7 @@
     skeletonVariant="tune-table"
     [skeletonCount]="settings.limit"
   >
-    <zx-table *ngIf="vm.items.length > 0" titleLevel="h2">
+    <zx-table *ngIf="vm.items.length > 0" size="sm" titleLevel="h2">
       <ng-container *ngIf="{ id: playingTuneId$ | async } as playing">
         <table class="tunes-table">
           <tbody>

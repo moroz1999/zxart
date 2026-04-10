@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
-use controllerApplication;
 use LanguagesManager;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
@@ -14,7 +13,7 @@ use ZxArt\Prods\Dto\ProdDto;
 use ZxArt\Prods\Rest\ProdRestDto;
 use ZxArt\Shared\SortingParams;
 
-class Prodlist extends controllerApplication
+class Prodlist extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 
@@ -52,10 +51,7 @@ class Prodlist extends controllerApplication
                 ]);
             }
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage(
-                'Prodlist::execute',
-                $e->getMessage() . "\n" . $e->getTraceAsString()
-            );
+            $this->logThrowable('Prodlist::execute', $e);
             $this->assignError('Internal server error');
         }
 

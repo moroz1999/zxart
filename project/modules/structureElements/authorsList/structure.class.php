@@ -2,6 +2,12 @@
 
 use ZxArt\LinkTypes;
 
+/**
+ * Class authorsListElement
+ *
+ * @property string $type
+ * @property string $items
+ */
 class authorsListElement extends structureElement
 {
     use LettersElementsListProviderTrait;

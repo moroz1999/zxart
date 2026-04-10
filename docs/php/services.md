@@ -1,9 +1,10 @@
 # Services and Dependency Injection
 
 ## Dependency Injection
-- For ALL new code, services must be obtained through the DI container. Except the controllers.
+- For ALL new code, services must be obtained through the DI container.
 - All dependencies must be resolved automatically via PHP-DI through the constructor. Avoid using setters for dependency injection.
 - Avoid using `new` for services that have dependencies or should be managed by the container.
+- Project controllers are also resolved through the DI container. Inject `Monolog\Logger` and other reusable dependencies through the constructor instead of pulling them from singletons.
 
 ## DI Container Configuration
 - Project has 2 DI containers: use PHP-DI, don't use legacy custom. Use project/core/di-definitions.php for definitions.

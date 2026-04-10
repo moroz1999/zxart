@@ -5,10 +5,9 @@ namespace ZxArt\Controllers;
 
 use ConfigManager;
 use controller;
-use controllerApplication;
 use LanguagesManager;
 
-class Zximagesdownload extends controllerApplication
+class Zximagesdownload extends LoggedControllerApplication
 {
     private const string KEY_VALUE_SEPARATOR = '=';
     private const string PARAMETER_SEPARATOR = ';';

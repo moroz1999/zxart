@@ -18,6 +18,7 @@ You MUST read the MD files linked in this document which are relevant to the cur
 - ALWAYS add newly created files to GIT immediately after creation.
 - When the IDE is in 'Ask' (readonly) mode, it is STRICTLY FORBIDDEN to do anything except answering the user's question. No file modifications or tool calls that change state are allowed.
 - ALWAYS use MCP tools (JetBrains IDE) when available for code search, file reading, navigation, and locating files, methods, and classes instead of Grep/Glob/Read/Bash.
+- When checking file problems via IDE (`get_file_problems`), ALWAYS request ALL severity levels (`errorsOnly: false`). Never use `errorsOnly: true` or rely on the default — weak warnings (unused imports, unused parameters, etc.) must be caught too.
 - Do not scan the whole project by file extension. Use targeted paths or direct file reads instead.
 - Do not run naive recursive searches over the entire repository. Pick the specific directories from the documented project structure that match the task.
 - Do not use `em` for icon sizes when fixed pixel size is possible. Use `px` via component/theme CSS variables.

@@ -5,11 +5,10 @@ namespace ZxArt\Controllers;
 
 use App\Users\CurrentUserService;
 use Cache;
-use controllerApplication;
 use renderer;
 use ZxArt\Import\Services\ZxdbImport;
 
-class Zxdb extends controllerApplication
+class Zxdb extends LoggedControllerApplication
 {
     protected $applicationName = 'wos';
     public $rendererName = 'smarty';
@@ -60,4 +59,3 @@ class Zxdb extends controllerApplication
         return '';
     }
 }
-

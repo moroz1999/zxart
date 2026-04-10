@@ -7,8 +7,6 @@ namespace ZxArt\Controllers;
 use CmsHttpResponse;
 use ConfigManager;
 use controller;
-use controllerApplication;
-use ErrorLog;
 use LanguagesManager;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
@@ -18,7 +16,7 @@ use ZxArt\Tunes\Rest\TuneRestDto;
 use ZxArt\Tunes\Services\TunePlayService;
 use ZxArt\Tunes\Services\TunesService;
 
-class Tunes extends controllerApplication
+class Tunes extends LoggedControllerApplication
 {
     public $rendererName = 'json';
     protected TunePlayService $tunePlayService;
@@ -77,7 +75,7 @@ class Tunes extends controllerApplication
                 $dtos
             ));
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage('Tunes::tunesByElement', $e->getMessage() . "\n" . $e->getTraceAsString());
+            $this->logThrowable('Tunes::tunesByElement', $e);
             CmsHttpResponse::getInstance()->setStatusCode('500');
             $this->renderer->assign('body', ['errorMessage' => 'Internal server error']);
         }
@@ -99,9 +97,11 @@ class Tunes extends controllerApplication
             $this->tunePlayService->logPlay($tuneId);
             $this->renderer->assign('responseStatus', 'success');
         } catch (TuneNotFoundException $exception) {
+            $this->logThrowable('Tunes::handlePlay', $exception);
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', $exception->getMessage());
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            $this->logThrowable('Tunes::handlePlay', $e);
             $this->renderer->assign('responseStatus', 'error');
             $this->renderer->assign('errorMessage', 'Internal server error');
         }

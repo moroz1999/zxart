@@ -7,8 +7,6 @@ namespace ZxArt\Controllers;
 use CmsHttpResponse;
 use ConfigManager;
 use controller;
-use controllerApplication;
-use ErrorLog;
 use LanguagesManager;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
@@ -17,7 +15,7 @@ use ZxArt\UserPreferences\Domain\Exception\UserPreferencesException;
 use ZxArt\UserPreferences\Rest\PreferenceRestDto;
 use ZxArt\UserPreferences\UserPreferencesService;
 
-class Userpreferences extends controllerApplication
+class Userpreferences extends LoggedControllerApplication
 {
     public $rendererName = 'json';
     protected ObjectMapper $objectMapper;
@@ -44,7 +42,7 @@ class Userpreferences extends controllerApplication
 
             $this->userPreferencesService = $this->getService(UserPreferencesService::class);
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage('Userpreferences::initialize', $e->getMessage() . "\n" . $e->getTraceAsString());
+            $this->logThrowable('Userpreferences::initialize', $e);
             throw $e;
         }
     }
@@ -81,7 +79,7 @@ class Userpreferences extends controllerApplication
             );
             $this->assignSuccess($restDtos);
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage('Userpreferences::handleGet', $e->getMessage() . "\n" . $e->getTraceAsString());
+            $this->logThrowable('Userpreferences::handleGet', $e);
             $this->assignError('Internal server error');
         }
     }
@@ -100,7 +98,7 @@ class Userpreferences extends controllerApplication
 
             $this->assignSuccess($restDtos);
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage('Userpreferences::handleGetDefaults', $e->getMessage() . "\n" . $e->getTraceAsString());
+            $this->logThrowable('Userpreferences::handleGetDefaults', $e);
             $this->assignError('Internal server error');
         }
     }
@@ -144,9 +142,10 @@ class Userpreferences extends controllerApplication
             );
             $this->assignSuccess($restDtos);
         } catch (UserPreferencesException $e) {
+            $this->logThrowable('Userpreferences::handlePut', $e);
             $this->assignError($e->getMessage(), 400);
         } catch (Throwable $e) {
-            ErrorLog::getInstance()->logMessage('Userpreferences::handlePut', $e->getMessage() . "\n" . $e->getTraceAsString());
+            $this->logThrowable('Userpreferences::handlePut', $e);
             $this->assignError('Internal server error');
         }
     }

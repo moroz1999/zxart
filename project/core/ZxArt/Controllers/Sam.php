@@ -5,11 +5,10 @@ namespace ZxArt\Controllers;
 
 use App\Users\CurrentUserService;
 use Cache;
-use controllerApplication;
 use renderer;
 use ZxArt\Import\Services\WorldOfSamImport;
 
-class Sam extends controllerApplication
+class Sam extends LoggedControllerApplication
 {
     protected $applicationName = 'sam';
     public $rendererName = 'smarty';
@@ -58,4 +57,3 @@ class Sam extends controllerApplication
         return '';
     }
 }
-

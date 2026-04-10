@@ -3,8 +3,8 @@
 ## Running Tests
 
 ```bash
-composer test        # Run all PHPUnit tests
-composer psalm       # Static analysis
+composer run test        # Run all PHPUnit tests
+composer run psalm       # Static analysis
 ```
 
 ## Core Testing Principles
