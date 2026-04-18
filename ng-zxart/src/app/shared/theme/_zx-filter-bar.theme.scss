@@ -1,0 +1,10 @@
+:root {
+  /* Gap between filter items */
+  --zx-filter-bar-gap: var(--gap-md);
+  /* Bottom margin below the filter bar */
+  --zx-filter-bar-margin: var(--margin-lg);
+  /* Max width of the search input on desktop */
+  --zx-filter-bar-search-width: 300px;
+  /* Max width of each filter picker on desktop */
+  --zx-filter-bar-item-width: 150px;
+}

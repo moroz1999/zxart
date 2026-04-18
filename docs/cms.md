@@ -89,6 +89,11 @@ Actions on elements are implemented as separate classes in the module folder:
 - The `setExpectedFields()` method defines which fields should be mapped from the request to the element. **Caution:** if a field is listed in `expectedFields` but is missing from the request (and not present in the form), it may overwrite existing data with null/empty values.
 - The `setValidators()` method is responsible for validating incoming data.
 - Public actions are available via URLs like `index.php?id={elementId}&action={actionName}`.
+- **`requested` and `final` properties**: The `structureManager` sets these flags on each element during path resolution:
+  - `$element->requested === true` — the element lies on the requested URL path (i.e., the request URL starts with this element's path). Use this guard to skip view-related work (template assignments, `setViewName`) when the element is not part of the current request.
+  - `$element->final === true` — the element IS the target of the request (the URL exactly matches this element's path). Use this guard for expensive computations that are only needed when the element is the page being rendered (e.g., loading data for the view, assigning variables to the renderer).
+  - An action's `execute()` method is called for every element the structure manager loads along the path, not just the final target. Always check `requested`/`final` to avoid unnecessary work.
+  - The action is always bound to a specific element type, so there is no need to check `instanceof` — the element type is guaranteed by the CMS action system. Use `@param` PHPDoc to declare the concrete element type for IDE support.
 
 ### Privileges
 Privileges are managed through `privilegesManager`.

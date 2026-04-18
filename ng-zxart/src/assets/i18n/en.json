@@ -186,14 +186,14 @@
     "empty": "Nothing to show.",
     "realtime": "Realtime",
     "modules": {
-      "newProds": "New Productions",
+      "newProds": "New Programs",
       "newPictures": "New Pictures",
       "newTunes": "New Tunes",
       "bestNewDemos": "Best New Demos",
       "bestNewGames": "Best New Games",
       "recentParties": "Recent Parties",
       "bestPicturesOfMonth": "Best Pictures of the Month",
-      "latestAddedProds": "Latest Added Productions",
+      "latestAddedProds": "Latest Added Programs",
       "latestAddedReleases": "Latest Added Releases",
       "supportProds": "Support by Purchase",
       "unvotedPictures": "Unvoted Pictures",
@@ -367,7 +367,7 @@
         "party": "Parties",
         "group": "Groups",
         "groupAlias": "Group Aliases",
-        "zxProd": "Productions",
+        "zxProd": "Programs",
         "zxPicture": "Pictures",
         "zxMusic": "Music",
         "pressArticle": "Press"
@@ -402,8 +402,8 @@
     "sorting": "Sort by:"
   },
   "prods-browser": {
-    "error": "Failed to load productions.",
-    "empty": "No productions found.",
+    "error": "Failed to load programs.",
+    "empty": "No programs found.",
     "sorting": "Sort by:",
     "layout": "Layout:"
   },
@@ -437,6 +437,33 @@
       "city": "City",
       "musicRating": "Music rating",
       "graphicsRating": "Graphics rating"
+    }
+  },
+  "group-browser": {
+    "error": "Failed to load groups",
+    "empty": "No groups found",
+    "search": {
+      "placeholder": "Search by name or abbreviation..."
+    },
+    "filters": {
+      "country": "Country",
+      "city": "City"
+    },
+    "columns": {
+      "title": "Title",
+      "type": "Type",
+      "realname": "Main group",
+      "country": "Country",
+      "city": "City"
+    },
+    "types": {
+      "company": "Company",
+      "crack": "Crack group",
+      "studio": "Studio",
+      "scene": "Scene group",
+      "education": "Education",
+      "store": "Store",
+      "science": "Science"
     }
   },
   "site": {

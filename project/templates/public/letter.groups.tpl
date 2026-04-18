@@ -12,7 +12,7 @@
 				<a class="button button_primary" href="{$element->URL}type:groupAlias/action:showPublicForm/">{translations name='letter.add_groupalias'}</a>
 			{/if}
 		</div>
-	{include file=$theme->template("component.groupstable.tpl") groupsList=$element->getGroupsList()}
+	<zx-group-browser element-id="{$element->id}" mode="full" letter="{$element->title}"></zx-group-browser>
 {/capture}
 {assign moduleClass ""}
 {assign moduleTitleClass ""}

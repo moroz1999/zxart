@@ -1,0 +1,13 @@
+@use 'shared/breakpoints' as bp;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-filter-bar-gap);
+  margin-bottom: var(--zx-filter-bar-margin);
+
+  @include bp.media-breakpoint-up(md) {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+}

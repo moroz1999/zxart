@@ -4,28 +4,16 @@
   display: block;
 }
 
-.filters {
-  display: flex;
-  flex-direction: column;
-  gap: var(--zx-author-browser-filters-gap);
-  margin-bottom: var(--zx-author-browser-filters-margin);
-
-  @include bp.media-breakpoint-up(md) {
-    flex-direction: row;
-    align-items: flex-end;
-  }
-}
-
 .filter-search {
   @include bp.media-breakpoint-up(md) {
-    flex: 0 1 var(--zx-author-browser-search-width);
+    flex: 0 1 var(--zx-filter-bar-search-width);
     min-width: 0;
   }
 }
 
 .filter-picker {
   @include bp.media-breakpoint-up(md) {
-    flex: 0 1 var(--zx-author-browser-filter-width);
+    flex: 0 1 var(--zx-filter-bar-item-width);
     min-width: 0;
   }
 }

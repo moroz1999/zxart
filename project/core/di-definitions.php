@@ -22,6 +22,7 @@ use ZxArt\BackendLinks\BackendLinksService;
 use ZxArt\Comments\CommentsService;
 use ZxArt\Controllers\Rss;
 use ZxArt\Controllers\Socialpost;
+use ZxArt\GroupList\GroupListService;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Logs\Log;
 use ZxArt\Menu\MenuService;
@@ -35,6 +36,8 @@ use function DI\factory;
 
 return [
     AuthorListService::class => autowire()
+        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
+    GroupListService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     CommentsService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),

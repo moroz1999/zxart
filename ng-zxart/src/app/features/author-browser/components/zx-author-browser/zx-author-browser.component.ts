@@ -16,6 +16,7 @@ import {
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
 import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filter-bar.component';
 
 @Component({
   selector: 'zx-author-browser',
@@ -30,6 +31,7 @@ import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton
     ZxInputComponent,
     ZxTableComponent,
     ZxSkeletonComponent,
+    ZxFilterBarComponent,
   ],
   templateUrl: './zx-author-browser.component.html',
   styleUrls: ['./zx-author-browser.component.scss'],

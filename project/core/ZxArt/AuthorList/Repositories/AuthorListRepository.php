@@ -6,31 +6,14 @@ namespace ZxArt\AuthorList\Repositories;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use ZxArt\AuthorList\AuthorSortColumn;
+use ZxArt\Shared\LatinCyrillicMap;
+use ZxArt\Shared\SortDirection;
 
 final readonly class AuthorListRepository
 {
     private const string AUTHORS_TABLE = 'module_author';
     private const string ALIASES_TABLE = 'module_authoralias';
-    private const string DEFAULT_SORT_COLUMN = 'title';
-    private const string DEFAULT_SORT_DIRECTION = 'asc';
-    private const array ALLOWED_SORT_COLUMNS = [
-        'title',
-        'graphicsRating',
-        'musicRating',
-        'id',
-    ];
-    private const array ALLOWED_SORT_DIRECTIONS = [
-        'asc',
-        'desc',
-    ];
-
-    private const array LATIN_TO_CYRILLIC = [
-        'A' => 'А', 'B' => 'Б', 'C' => 'Ц', 'D' => 'Д', 'E' => 'Е',
-        'F' => 'Ф', 'G' => 'Г', 'H' => 'Х', 'I' => 'И', 'J' => 'Й',
-        'K' => 'К', 'L' => 'Л', 'M' => 'М', 'N' => 'Н', 'O' => 'О',
-        'P' => 'П', 'R' => 'Р', 'S' => 'С', 'T' => 'Т', 'U' => 'У',
-        'V' => 'В', 'W' => 'В', 'X' => 'Х', 'Y' => 'У', 'Z' => 'З',
-    ];
 
     public function __construct(
         private Connection $db,
@@ -44,8 +27,8 @@ final readonly class AuthorListRepository
     public function findPaged(
         int $start,
         int $limit,
-        string $sortColumn,
-        string $sortDirection,
+        AuthorSortColumn $sortColumn,
+        SortDirection $sortDirection,
         ?string $search,
         ?int $countryId,
         ?int $cityId,
@@ -58,16 +41,13 @@ final readonly class AuthorListRepository
             return [];
         }
 
-        $normalizedSortColumn = $this->normalizeSortColumn($sortColumn);
-        $normalizedSortDirection = $this->normalizeSortDirection($sortDirection);
-
         $combined = array_shift($queries);
         foreach ($queries as $q) {
             $combined->unionAll($q);
         }
 
         return $combined
-            ->orderBy($normalizedSortColumn, $normalizedSortDirection)
+            ->orderBy($sortColumn->value, $sortDirection->value)
             ->offset($start)
             ->limit($limit)
             ->pluck('id');
@@ -290,17 +270,7 @@ final readonly class AuthorListRepository
             return;
         }
 
-        $upper = mb_strtoupper($letter);
-        $letters = [$upper];
-
-        if (isset(self::LATIN_TO_CYRILLIC[$upper])) {
-            $letters[] = self::LATIN_TO_CYRILLIC[$upper];
-        } else {
-            $reverse = array_search($upper, self::LATIN_TO_CYRILLIC, true);
-            if ($reverse !== false) {
-                $letters[] = $reverse;
-            }
-        }
+        $letters = LatinCyrillicMap::getEquivalentLetters($letter);
 
         $query->where(function (Builder $q) use ($titleColumn, $letters) {
             foreach ($letters as $l) {
@@ -309,21 +279,4 @@ final readonly class AuthorListRepository
         });
     }
 
-    private function normalizeSortColumn(string $sortColumn): string
-    {
-        if (in_array($sortColumn, self::ALLOWED_SORT_COLUMNS, true)) {
-            return $sortColumn;
-        }
-
-        return self::DEFAULT_SORT_COLUMN;
-    }
-
-    private function normalizeSortDirection(string $sortDirection): string
-    {
-        if (in_array($sortDirection, self::ALLOWED_SORT_DIRECTIONS, true)) {
-            return $sortDirection;
-        }
-
-        return self::DEFAULT_SORT_DIRECTION;
-    }
 }

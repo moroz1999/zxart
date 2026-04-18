@@ -186,14 +186,14 @@
     "empty": "Nada que mostrar.",
     "realtime": "Tiempo real",
     "modules": {
-      "newProds": "Nuevas producciones",
+      "newProds": "Nuevos programas",
       "newPictures": "Nuevas imágenes",
       "newTunes": "Nueva música",
       "bestNewDemos": "Mejores demos nuevas",
       "bestNewGames": "Mejores juegos nuevos",
       "recentParties": "Parties recientes",
       "bestPicturesOfMonth": "Mejores imágenes del mes",
-      "latestAddedProds": "Últimas producciones añadidas",
+      "latestAddedProds": "Últimos programas añadidos",
       "latestAddedReleases": "Últimos lanzamientos añadidos",
       "supportProds": "Apoyar con compra",
       "unvotedPictures": "Imágenes sin votar",
@@ -366,7 +366,7 @@
         "party": "Parties",
         "group": "Grupos",
         "groupAlias": "Seudónimos de grupos",
-        "zxProd": "Producciones",
+        "zxProd": "Programas",
         "zxPicture": "Imágenes",
         "zxMusic": "Música",
         "pressArticle": "Prensa"
@@ -401,8 +401,8 @@
     "sorting": "Ordenar por:"
   },
   "prods-browser": {
-    "error": "Error al cargar producciones.",
-    "empty": "No se encontraron producciones.",
+    "error": "Error al cargar programas.",
+    "empty": "No se encontraron programas.",
     "sorting": "Ordenar por:",
     "layout": "Diseño:"
   },
@@ -436,6 +436,33 @@
       "city": "Ciudad",
       "musicRating": "Clasificación musical",
       "graphicsRating": "Clasificación de gráficos"
+    }
+  },
+  "group-browser": {
+    "error": "Error al cargar grupos",
+    "empty": "No se encontraron grupos",
+    "search": {
+      "placeholder": "Buscar por nombre o abreviatura..."
+    },
+    "filters": {
+      "country": "País",
+      "city": "Ciudad"
+    },
+    "columns": {
+      "title": "Título",
+      "type": "Tipo",
+      "realname": "Grupo principal",
+      "country": "País",
+      "city": "Ciudad"
+    },
+    "types": {
+      "company": "Empresa",
+      "crack": "Grupo crack",
+      "studio": "Estudio",
+      "scene": "Grupo de escena",
+      "education": "Educación",
+      "store": "Tienda",
+      "science": "Ciencia"
     }
   },
   "site": {

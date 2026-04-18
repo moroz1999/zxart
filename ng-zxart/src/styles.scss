@@ -99,6 +99,35 @@ svg-icon {
   }
 }
 
+// Generic dialogs (settings, selectors, config): max-height constrained on desktop, fullscreen on mobile
+.cdk-overlay-pane.zx-dialog {
+  max-height: 80vh;
+
+  @include breakpoints.media-breakpoint-down(lg) {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    transform: none !important;
+  }
+
+  .cdk-dialog-container {
+    background: var(--zx-panel-bg);
+    color: var(--text-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: auto;
+    max-height: inherit;
+
+    @include breakpoints.media-breakpoint-down(lg) {
+      border-radius: 0;
+      height: 100%;
+    }
+  }
+}
+
 // Panel dialogs (ratings, comments): always fullscreen on mobile, centered on desktop
 .cdk-overlay-pane.zx-panel-dialog {
   width: 480px;

@@ -142,7 +142,7 @@ readonly final class PicturesRepository
                     ->where('structure_links.type', '=', $linkType)
                     ->where('structure_links.parentStructureId', '=', $elementId)
             )
-            ->orderBy(self::TABLE . '.' . $sorting->column, $sorting->direction)
+            ->orderBy(self::TABLE . '.' . $sorting->column, $sorting->direction->value)
             ->offset($start)
             ->limit($limit)
             ->pluck(self::TABLE . '.id');

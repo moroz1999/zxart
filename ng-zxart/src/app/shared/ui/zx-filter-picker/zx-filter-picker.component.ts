@@ -6,13 +6,15 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  OnInit,
   Output,
   ViewChild
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
-import {SvgIconComponent} from 'angular-svg-icon';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
+import {environment} from '../../../../environments/environment';
 import {ZxBodyDirective, ZxCaptionDirective} from '../../directives/typography/typography.directives';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {ZxCheckboxFieldComponent} from '../zx-checkbox-field/zx-checkbox-field.component';
@@ -41,7 +43,7 @@ export interface ZxFilterPickerItem {
   styleUrl: './zx-filter-picker.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxFilterPickerComponent implements AfterViewChecked {
+export class ZxFilterPickerComponent implements OnInit, AfterViewChecked {
   @Input() label = '';
   @Input() items: ZxFilterPickerItem[] = [];
   @Input() selectedIds: string[] = [];
@@ -59,7 +61,14 @@ export class ZxFilterPickerComponent implements AfterViewChecked {
   dropUp = false;
   private needsFocus = false;
 
-  constructor(private elementRef: ElementRef<HTMLElement>) {}
+  constructor(
+    private elementRef: ElementRef<HTMLElement>,
+    private iconReg: SvgIconRegistryService,
+  ) {}
+
+  ngOnInit(): void {
+    this.iconReg.loadSvg(`${environment.svgUrl}close.svg`, 'close')?.subscribe();
+  }
 
   ngAfterViewChecked(): void {
     if (this.popoverOpen && this.popoverEl) {

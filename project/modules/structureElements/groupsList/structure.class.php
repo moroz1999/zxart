@@ -2,10 +2,13 @@
 
 class groupsListElement extends structureElement
 {
+    use LettersElementsListProviderTrait;
+
     public $dataResourceName = 'module_groupslist';
     public $allowedTypes = [];
     public $defaultActionName = 'show';
     public $role = 'content';
+    protected $lettersSelectorInfo;
 
     /**
      * @return void
@@ -37,5 +40,38 @@ class groupsListElement extends structureElement
             }
         }
         return $groups;
+    }
+
+    public function getLettersSelectorInfo()
+    {
+        if ($this->lettersSelectorInfo === null) {
+            $this->lettersSelectorInfo = [];
+            if ($letters = $this->getLetterElements()) {
+                foreach ($letters as $letter) {
+                    $this->lettersSelectorInfo[] = [
+                        'url' => $this->getUrl() . 'letter:' . $letter->structureName . '/',
+                        'title' => $letter->title,
+                    ];
+                }
+            }
+        }
+
+        return $this->lettersSelectorInfo;
+    }
+
+    /**
+     * @psalm-param 'admin'|'public' $type
+     *
+     * @return string
+     *
+     * @psalm-return 'groups'|'groupsmenu'
+     */
+    protected function getLettersListMarker(string $type)
+    {
+        if ($type == 'admin') {
+            return 'groups';
+        } else {
+            return 'groupsmenu';
+        }
     }
 }

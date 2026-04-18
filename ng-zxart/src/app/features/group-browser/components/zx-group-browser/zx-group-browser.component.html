@@ -1,0 +1,82 @@
+<zx-filter-bar *ngIf="mode === 'full'">
+  <zx-input
+    class="filter-search"
+    [placeholder]="'group-browser.search.placeholder' | translate"
+    [ngModel]="search"
+    (ngModelChange)="onSearchInput($event)"
+  ></zx-input>
+  <zx-filter-picker
+    class="filter-picker"
+    [label]="'group-browser.filters.country' | translate"
+    [items]="countryOptions"
+    [selectedIds]="selectedCountryIds"
+    [multi]="false"
+    [searchEnabled]="true"
+    [disabled]="countryOptions.length === 0"
+    (selectedIdsChange)="onCountryChange($event)"
+  ></zx-filter-picker>
+  <zx-filter-picker
+    class="filter-picker"
+    [label]="'group-browser.filters.city' | translate"
+    [items]="cityOptions"
+    [selectedIds]="selectedCityIds"
+    [multi]="false"
+    [searchEnabled]="true"
+    [disabled]="cityOptions.length === 0"
+    (selectedIdsChange)="onCityChange($event)"
+  ></zx-filter-picker>
+</zx-filter-bar>
+
+<zx-skeleton *ngIf="groups === null && !error" variant="row" [count]="30"></zx-skeleton>
+
+<div *ngIf="error" zxCaption>{{ 'group-browser.error' | translate }}</div>
+<div *ngIf="!loading && !error && groups !== null && groups.length === 0"
+     zxCaption>{{ 'group-browser.empty' | translate }}
+</div>
+
+<zx-table *ngIf="groups !== null && groups.length > 0" size="md" [class.loading]="loading">
+  <table>
+    <thead>
+    <tr>
+      <th class="col-num"></th>
+      <th class="col-title">{{ 'group-browser.columns.title' | translate }}</th>
+      <th class="col-type">{{ 'group-browser.columns.type' | translate }}</th>
+      <th class="col-realname">{{ 'group-browser.columns.realname' | translate }}</th>
+      <th class="col-country">{{ 'group-browser.columns.country' | translate }}</th>
+      <th class="col-city">{{ 'group-browser.columns.city' | translate }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let group of groups; let i = index">
+      <td class="col-num">{{ rowStartIndex + i + 1 }}</td>
+      <td class="col-title">
+        <a [href]="group.url">{{ group.title || 'n/a' }}</a>
+      </td>
+      <td class="col-type">
+        <span *ngIf="group.groupType && group.groupType !== 'unknown'">{{ 'group-browser.types.' + group.groupType | translate }}</span>
+      </td>
+      <td class="col-realname">
+        <a *ngIf="group.realGroupUrl; else plainRealName" [href]="group.realGroupUrl">{{ group.realGroupTitle }}</a>
+        <ng-template #plainRealName>{{ group.realGroupTitle }}</ng-template>
+      </td>
+      <td class="col-country">
+        <a *ngIf="group.countryUrl; else countryText" [href]="group.countryUrl">{{ group.countryTitle }}</a>
+        <ng-template #countryText>{{ group.countryTitle }}</ng-template>
+      </td>
+      <td class="col-city">
+        <a *ngIf="group.cityUrl; else cityText" [href]="group.cityUrl">{{ group.cityTitle }}</a>
+        <ng-template #cityText>{{ group.cityTitle }}</ng-template>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</zx-table>
+
+<zx-pagination
+  *ngIf="mode === 'full' && pagesAmount > 1"
+  [currentPage]="currentPage"
+  [pagesAmount]="pagesAmount"
+  [urlBase]="urlBase"
+  [loading]="loading"
+  (pageChange)="onPageChange($event)"
+></zx-pagination>

@@ -144,7 +144,7 @@ readonly final class TunesRepository
                     ->where(self::STRUCTURE_LINKS_TABLE . '.type', '=', $linkType)
                     ->where(self::STRUCTURE_LINKS_TABLE . '.parentStructureId', '=', $elementId)
             )
-            ->orderBy(self::TABLE . '.' . $sorting->column, $sorting->direction)
+            ->orderBy(self::TABLE . '.' . $sorting->column, $sorting->direction->value)
             ->offset($start)
             ->limit($limit)
             ->pluck(self::TABLE . '.id');

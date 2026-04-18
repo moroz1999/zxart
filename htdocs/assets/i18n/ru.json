@@ -367,7 +367,7 @@
         "party": "Пати",
         "group": "Группы",
         "groupAlias": "Псевдонимы групп",
-        "zxProd": "Продукции",
+        "zxProd": "Программы",
         "zxPicture": "Картинки",
         "zxMusic": "Музыка",
         "pressArticle": "Пресса"
@@ -437,6 +437,33 @@
       "city": "Город",
       "musicRating": "Рейтинг музыки",
       "graphicsRating": "Рейтинг графики"
+    }
+  },
+  "group-browser": {
+    "error": "Не удалось загрузить группы",
+    "empty": "Группы не найдены",
+    "search": {
+      "placeholder": "Поиск по названию или аббревиатуре..."
+    },
+    "filters": {
+      "country": "Страна",
+      "city": "Город"
+    },
+    "columns": {
+      "title": "Название",
+      "type": "Тип",
+      "realname": "Основная группа",
+      "country": "Страна",
+      "city": "Город"
+    },
+    "types": {
+      "company": "Компания",
+      "crack": "Крэк-группа",
+      "studio": "Студия",
+      "scene": "Демосцена",
+      "education": "Образование",
+      "store": "Магазин",
+      "science": "Наука"
     }
   },
   "site": {

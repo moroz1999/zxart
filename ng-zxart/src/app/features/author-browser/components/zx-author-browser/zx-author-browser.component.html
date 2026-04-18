@@ -1,4 +1,4 @@
-<div *ngIf="mode === 'full'" class="filters">
+<zx-filter-bar *ngIf="mode === 'full'">
   <zx-input
     class="filter-search"
     [placeholder]="'author-browser.search.placeholder' | translate"
@@ -25,7 +25,7 @@
     [disabled]="cityOptions.length === 0"
     (selectedIdsChange)="onCityChange($event)"
   ></zx-filter-picker>
-</div>
+</zx-filter-bar>
 
 <zx-skeleton *ngIf="authors === null && !error" variant="row" [count]="8"></zx-skeleton>
 

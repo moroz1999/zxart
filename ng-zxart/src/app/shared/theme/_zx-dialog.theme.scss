@@ -1,9 +1,2 @@
-.zx-dialog {
-  .cdk-dialog-container {
-    background: var(--zx-panel-bg);
-    color: var(--text-color);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-    overflow: hidden;
-  }
-}
+// Dialog theme variables are defined inline in styles.scss
+// (background, color, radius, shadow use shared semantic variables directly)

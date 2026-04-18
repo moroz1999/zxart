@@ -36,7 +36,8 @@ readonly class AuthorListService
         ?string $items = null,
     ): array {
         $total = $this->repository->count($search, $countryId, $cityId, $letter, $types, $items);
-        $ids = $this->repository->findPaged($start, $limit, $sorting->column, $sorting->direction, $search, $countryId, $cityId, $letter, $types, $items);
+        $sortColumn = AuthorSortColumn::fromString($sorting->column);
+        $ids = $this->repository->findPaged($start, $limit, $sortColumn, $sorting->direction, $search, $countryId, $cityId, $letter, $types, $items);
 
         $items = [];
         foreach ($ids as $id) {

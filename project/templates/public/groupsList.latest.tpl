@@ -4,9 +4,7 @@
 	{/capture}
 {/if}
 {capture assign="moduleContent"}
-	{if $groupsList = $element->getLatestGroups()}
-		{include file=$theme->template("component.groupstable.tpl") groupsList=$groupsList}
-	{/if}
+	<zx-group-browser element-id="{$element->id}" mode="simple" sorting="id,desc" limit="300"></zx-group-browser>
 {/capture}
 {assign moduleClass ""}
 {assign moduleTitleClass ""}

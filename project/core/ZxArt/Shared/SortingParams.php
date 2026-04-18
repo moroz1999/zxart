@@ -6,8 +6,6 @@ namespace ZxArt\Shared;
 
 readonly class SortingParams
 {
-    private const array DIRECTION_ALIASES = ['asc', 'desc'];
-
     /** Maps frontend sort keys to actual DB column names. */
     private const array COLUMN_ALIASES = [
         'date' => 'dateAdded',
@@ -15,7 +13,7 @@ readonly class SortingParams
 
     public function __construct(
         public string $column,
-        public string $direction,
+        public SortDirection $direction,
     ) {
     }
 
@@ -26,19 +24,17 @@ readonly class SortingParams
         string $sorting,
         array $allowedColumns,
         string $defaultColumn = 'title',
-        string $defaultDirection = 'asc',
+        SortDirection $defaultDirection = SortDirection::ASC,
     ): self {
         $parts = explode(',', $sorting, 2);
         $column = trim($parts[0]);
-        $direction = isset($parts[1]) ? strtolower(trim($parts[1])) : $defaultDirection;
+        $directionRaw = isset($parts[1]) ? strtolower(trim($parts[1])) : '';
 
         if (!in_array($column, $allowedColumns, true)) {
             $column = $defaultColumn;
         }
         $column = self::COLUMN_ALIASES[$column] ?? $column;
-        if (!in_array($direction, self::DIRECTION_ALIASES, true)) {
-            $direction = $defaultDirection;
-        }
+        $direction = SortDirection::tryFrom($directionRaw) ?? $defaultDirection;
 
         return new self($column, $direction);
     }

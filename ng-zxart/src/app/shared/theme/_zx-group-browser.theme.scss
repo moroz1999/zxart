@@ -1,0 +1,16 @@
+:root {
+  /* Width of the row number column */
+  --zx-group-browser-col-num-width: 40px;
+  /* Min width of the title column */
+  --zx-group-browser-col-title-min-width: 120px;
+  /* Min width of the type column */
+  --zx-group-browser-col-type-min-width: 80px;
+  /* Min width of the real name column */
+  --zx-group-browser-col-realname-min-width: 100px;
+  /* Min width of the country and city columns */
+  --zx-group-browser-col-location-min-width: 80px;
+  /* Loading transition duration */
+  --zx-group-browser-loading-transition: var(--animation-sm);
+  /* Top margin above pagination */
+  --zx-group-browser-pagination-margin: var(--margin-xl);
+}
