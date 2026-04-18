@@ -10,6 +10,7 @@ use structureManager;
 use ZxArt\AuthorList\Dto\AuthorListItemDto;
 use ZxArt\AuthorList\Dto\FilterOptionDto;
 use ZxArt\AuthorList\Repositories\AuthorListRepository;
+use ZxArt\Shared\EntityType;
 use ZxArt\Shared\SortingParams;
 
 readonly class AuthorListService
@@ -32,22 +33,22 @@ readonly class AuthorListService
         ?int $countryId,
         ?int $cityId,
         ?string $letter = null,
-        array $types = ['author', 'authorAlias'],
+        array $types = [EntityType::Author, EntityType::AuthorAlias],
         ?string $items = null,
     ): array {
         $total = $this->repository->count($search, $countryId, $cityId, $letter, $types, $items);
         $sortColumn = AuthorSortColumn::fromString($sorting->column);
         $ids = $this->repository->findPaged($start, $limit, $sortColumn, $sorting->direction, $search, $countryId, $cityId, $letter, $types, $items);
 
-        $items = [];
+        $dtos = [];
         foreach ($ids as $id) {
             $dto = $this->loadAndTransform($id);
             if ($dto !== null) {
-                $items[] = $dto;
+                $dtos[] = $dto;
             }
         }
 
-        return ['total' => $total, 'items' => $items];
+        return ['total' => $total, 'items' => $dtos];
     }
 
     /**
@@ -93,7 +94,7 @@ readonly class AuthorListService
                 $options[] = new FilterOptionDto(
                     id: (int)$locationElement->id,
                     title: html_entity_decode($locationElement->title, ENT_QUOTES),
-                    url: $locationElement->getUrl('author'),
+                    url: $locationElement->getUrl(EntityType::Author->value),
                 );
             }
         }

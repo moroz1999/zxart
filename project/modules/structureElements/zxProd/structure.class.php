@@ -9,6 +9,7 @@ use ZxArt\Prods\Repositories\ProdsRepository;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatusProvider;
 use ZxArt\Queue\QueueType;
+use ZxArt\Shared\EntityType;
 use ZxArt\ZxProdCategories\CategoryIds;
 use ZxArt\ZxProdCategories\CompilationCategoryIds;
 
@@ -751,7 +752,7 @@ class zxProdElement extends ZxArtItem implements
 
     public function is3aDenied(): bool
     {
-        if ($authors = $this->getAuthorsInfo('prod')) {
+        if ($authors = $this->getAuthorsInfo(EntityType::Prod->value)) {
             foreach ($authors as $author) {
                 if (method_exists($author['authorElement'], 'is3aDenied')) {
                     if ($author['authorElement']->is3aDenied()) {
@@ -772,7 +773,7 @@ class zxProdElement extends ZxArtItem implements
                 $data['properties'][$property] = $this->$property;
             }
         }
-        foreach ($this->getAuthorsInfo('prod') as $authorInfo) {
+        foreach ($this->getAuthorsInfo(EntityType::Prod->value) as $authorInfo) {
             if ($authorElement = $authorInfo['authorElement']) {
                 $data['authors'][$authorInfo['id']] = $authorElement->getId() . ' <a target="_blank" href="' . $authorElement->getUrl() . '">' . $authorElement->getSearchTitle() . '</a>';
             }

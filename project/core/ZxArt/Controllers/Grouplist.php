@@ -14,6 +14,7 @@ use ZxArt\GroupList\GroupListService;
 use ZxArt\GroupList\Rest\GroupFilterOptionRestDto;
 use ZxArt\GroupList\Rest\GroupFilterOptionsRestDto;
 use ZxArt\GroupList\Rest\GroupListItemRestDto;
+use ZxArt\Shared\EntityType;
 use ZxArt\Shared\SortingParams;
 
 class Grouplist extends LoggedControllerApplication
@@ -66,8 +67,14 @@ class Grouplist extends LoggedControllerApplication
         $letter = $this->getParameter('letter') ?: null;
         $typesRaw = $this->getParameter('types') ?: null;
         $types = $typesRaw !== null
-            ? array_intersect(explode(',', $typesRaw), ['group', 'groupAlias'])
-            : ['group', 'groupAlias'];
+            ? array_filter(
+                array_map(
+                    static fn(string $t) => EntityType::tryFrom($t),
+                    explode(',', $typesRaw),
+                ),
+                static fn(?EntityType $t) => $t !== null && in_array($t, [EntityType::Group, EntityType::GroupAlias], true),
+            )
+            : [EntityType::Group, EntityType::GroupAlias];
         $groupType = $this->getParameter('groupType') ?: null;
 
         $sorting = SortingParams::fromRequest($sortingRaw, ['title', 'id']);

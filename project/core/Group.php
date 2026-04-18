@@ -1,6 +1,7 @@
 <?php
 
 use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Shared\EntityType;
 
 trait Group
 {
@@ -19,7 +20,8 @@ trait Group
     public function getAuthorsInfo($type)
     {
         $authorshipRepository = $this->getService(AuthorshipRepository::class);
-        $info = $authorshipRepository->getAuthorsInfo($this->id, $type);
+        $entityType = $type instanceof EntityType ? $type : EntityType::from($type);
+        $info = $authorshipRepository->getAuthorsInfo($this->id, $entityType);
         $sort = [];
         foreach ($info as $item) {
             $sort[] = $item['authorElement']->getTitle();

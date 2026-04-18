@@ -1,6 +1,7 @@
 <?php
 
 use App\Users\CurrentUserService;
+use ZxArt\Shared\EntityType;
 
 class publicAddZxRelease extends structureElementAction
 {
@@ -32,7 +33,7 @@ class publicAddZxRelease extends structureElementAction
             $structureElement->userId = $currentUserService->getCurrentUser()->id;
             $structureElement->persistElementData();
 
-            $structureElement->persistAuthorship('release');
+            $structureElement->persistAuthorship(EntityType::Release->value);
 
             $structureElement->executeAction('receiveFiles');
 

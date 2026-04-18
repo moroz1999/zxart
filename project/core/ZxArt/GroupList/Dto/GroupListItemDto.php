@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace ZxArt\GroupList\Dto;
 
+use ZxArt\Shared\EntityType;
+
 readonly class GroupListItemDto
 {
     public function __construct(
         public int $id,
         public string $url,
-        public string $entityType,
+        public EntityType $entityType,
         public string $title,
         public string $groupType,
         public ?string $realGroupTitle,

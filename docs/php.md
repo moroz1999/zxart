@@ -32,6 +32,11 @@
 - Do NOT use magic numbers. Use class constants for single values or Enums for sets of related values.
 - Do NOT use `const array` for a closed set of allowed string/int values (e.g., allowed sort columns, directions, statuses). Use a backed `enum` instead — it provides type safety, exhaustiveness checks, and eliminates `in_array` validation boilerplate.
 
+## Entity Types
+- Use `EntityType` enum (`ZxArt\Shared\EntityType`) instead of hardcoded strings for entity type identifiers (e.g., `'author'`, `'prod'`, `'release'`, `'group'`).
+- Pass `EntityType` directly to repository and service methods that accept it (`ImportIdOperator`, `AuthorshipRepository`, list repositories).
+- For legacy CMS methods that accept string parameters (e.g., `$element->getAuthorsInfo()`, `$element->getShortAuthorship()`), use `EntityType::Prod->value` to extract the string value.
+
 ## Psalm
 - NEVER use @psalm-suppress. Instead, add clear and minimal type annotations.
 - Annotate magic variables and methods in original legacy classes.

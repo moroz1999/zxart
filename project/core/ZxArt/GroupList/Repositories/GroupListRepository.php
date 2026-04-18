@@ -7,6 +7,7 @@ namespace ZxArt\GroupList\Repositories;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use ZxArt\GroupList\GroupSortColumn;
+use ZxArt\Shared\EntityType;
 use ZxArt\Shared\LatinCyrillicMap;
 use ZxArt\Shared\SortDirection;
 
@@ -21,7 +22,7 @@ final readonly class GroupListRepository
     }
 
     /**
-     * @param string[] $types Entity types to include ('group', 'groupAlias')
+     * @param EntityType[] $types Entity types to include
      * @return int[]
      */
     public function findPaged(
@@ -33,7 +34,7 @@ final readonly class GroupListRepository
         ?int $countryId,
         ?int $cityId,
         ?string $letter = null,
-        array $types = ['group', 'groupAlias'],
+        array $types = [EntityType::Group, EntityType::GroupAlias],
         ?string $groupType = null,
     ): array {
         $queries = $this->buildTypedQueries($types, $search, $countryId, $cityId, $letter, $groupType);
@@ -54,23 +55,23 @@ final readonly class GroupListRepository
     }
 
     /**
-     * @param string[] $types Entity types to include ('group', 'groupAlias')
+     * @param EntityType[] $types Entity types to include
      */
     public function count(
         ?string $search,
         ?int $countryId,
         ?int $cityId,
         ?string $letter = null,
-        array $types = ['group', 'groupAlias'],
+        array $types = [EntityType::Group, EntityType::GroupAlias],
         ?string $groupType = null,
     ): int {
         $total = 0;
 
-        if (in_array('group', $types, true)) {
+        if (in_array(EntityType::Group, $types, true)) {
             $total += $this->buildGroupsQuery($search, $countryId, $cityId, $letter, $groupType)->count(self::GROUPS_TABLE . '.id');
         }
 
-        if (in_array('groupAlias', $types, true)) {
+        if (in_array(EntityType::GroupAlias, $types, true)) {
             $total += $this->buildAliasesQuery($search, $countryId, $cityId, $letter, $groupType)->count(self::ALIASES_TABLE . '.id');
         }
 
@@ -78,7 +79,7 @@ final readonly class GroupListRepository
     }
 
     /**
-     * @param string[] $types
+     * @param EntityType[] $types
      * @return Builder[]
      */
     private function buildTypedQueries(
@@ -91,11 +92,11 @@ final readonly class GroupListRepository
     ): array {
         $queries = [];
 
-        if (in_array('group', $types, true)) {
+        if (in_array(EntityType::Group, $types, true)) {
             $queries[] = $this->buildGroupsQuery($search, $countryId, $cityId, $letter, $groupType);
         }
 
-        if (in_array('groupAlias', $types, true)) {
+        if (in_array(EntityType::GroupAlias, $types, true)) {
             $queries[] = $this->buildAliasesQuery($search, $countryId, $cityId, $letter, $groupType);
         }
 

@@ -13,6 +13,7 @@ use ZxArt\Releases\ReleaseTypes;
 use ZxArt\Releases\Services\ArchiveFileResolverService;
 use ZxArt\Releases\Services\EmulatorResolverService;
 use ZxArt\Releases\Services\ReleaseFileTypesGatherer;
+use ZxArt\Shared\EntityType;
 use ZxFiles\BasicFile;
 
 /**
@@ -573,7 +574,7 @@ class zxReleaseElement extends ZxArtItem implements
         if ($this->year) {
             $strings[] .= $this->year;
         }
-        if ($authors = $this->getAuthorsInfo('release', ['release'])) {
+        if ($authors = $this->getAuthorsInfo(EntityType::Release->value, ['release'])) {
             foreach ($authors as $author) {
                 $strings[] = $author['authorElement']->title;
             }
@@ -698,7 +699,7 @@ class zxReleaseElement extends ZxArtItem implements
         foreach ($this->publishers as $publisher) {
             $list[] = $publisher;
         }
-        if ($authors = $this->getAuthorsInfo('release', ['release'])) {
+        if ($authors = $this->getAuthorsInfo(EntityType::Release->value, ['release'])) {
             foreach ($authors as $author) {
                 $list[] = $author['authorElement'];
             }
@@ -1091,7 +1092,7 @@ class zxReleaseElement extends ZxArtItem implements
         }
 
         // Authors
-        $authors = $this->getAuthorsInfo('release');
+        $authors = $this->getAuthorsInfo(EntityType::Release->value);
         if ($authors) {
             $authorNames = [];
             foreach (array_slice($authors, 0, 3) as $author) {

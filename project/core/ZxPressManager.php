@@ -2,6 +2,7 @@
 
 use ZxArt\Import\Services\ImportIdOperator;
 use ZxArt\Prods\Services\ProdsService;
+use ZxArt\Shared\EntityType;
 
 /**
  * todo: re-implement import operations
@@ -87,7 +88,7 @@ class ZxPressManager extends errorLogger
                         }
                     }
                     if (!empty($this->prodsIndex[$prodId]) && $subDivNode->getAttribute('style') === 'font: 13pt/14pt Times; text-align: left') {
-                        $prodElement = $this->importIdOperator->getElementByImportId($prodId, $this->origin, 'prod');
+                        $prodElement = $this->importIdOperator->getElementByImportId($prodId, $this->origin, EntityType::Prod);
                         if ($prodElement && $prodElement->articles) {
                             continue;
                         }

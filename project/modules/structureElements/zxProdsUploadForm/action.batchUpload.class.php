@@ -5,6 +5,7 @@ use App\Users\CurrentUserService;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
+use ZxArt\Shared\EntityType;
 use ZxArt\ZxProdCategories\CategoryIds;
 
 class batchUploadZxProdsUploadForm extends structureElementAction
@@ -81,7 +82,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                     $zxProdElement->renewPartyLink();
                     $zxProdElement->updateTagsInfo();
                     $zxProdElement->updateYear();
-                    $zxProdElement->persistAuthorship('prod');
+                    $zxProdElement->persistAuthorship(EntityType::Prod->value);
 
                     $zxProdElement->executeAction('receiveFiles');
 

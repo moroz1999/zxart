@@ -1,13 +1,15 @@
 <?php
 
 use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Shared\EntityType;
 
 trait AuthorshipPersister
 {
     public function persistAuthorship($type): void
     {
         $authorshipRepository = $this->getService(AuthorshipRepository::class);
-        $existingRecords = $authorshipRepository->getElementAuthorsRecords($this->id, $type);
+        $entityType = $type instanceof EntityType ? $type : EntityType::from($type);
+        $existingRecords = $authorshipRepository->getElementAuthorsRecords($this->id, $entityType);
 
         $rolesInfo = $this->getValue('addAuthorRole');
         $startDates = $this->getValue('addAuthorStartDate');
@@ -16,7 +18,7 @@ trait AuthorshipPersister
             $authorshipRepository->saveAuthorship(
                 $this->getPersistedId(),
                 $addAuthorId,
-                $type,
+                $entityType,
                 $rolesInfo['new'] ?? [],
                 $startDates['new'] ?? 0,
                 $endDates['new'] ?? 0
@@ -49,7 +51,7 @@ trait AuthorshipPersister
             $authorshipRepository->saveAuthorship(
                 $this->getPersistedId(),
                 $authorId,
-                $type,
+                $entityType,
                 $roles,
                 $startDate,
                 $endDate
@@ -57,7 +59,7 @@ trait AuthorshipPersister
         }
         foreach ($existingRecords as $record) {
             if (!isset($info[$record['authorId']])) {
-                $authorshipRepository->deleteAuthorship($this->getId(), $record['authorId'], $type);
+                $authorshipRepository->deleteAuthorship($this->getId(), $record['authorId'], $entityType);
             }
         }
     }

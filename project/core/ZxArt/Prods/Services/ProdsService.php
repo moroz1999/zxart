@@ -28,6 +28,7 @@ use ZxArt\Import\Services\ImportIdOperator;
 use ZxArt\Parties\Services\PartiesService;
 use ZxArt\Prods\Repositories\ProdsRepository;
 use ZxArt\Releases\Services\ReleaseFileTypesGatherer;
+use ZxArt\Shared\EntityType;
 use ZxArt\ZxProdCategories\CategoryIds;
 use zxProdElement;
 use zxReleaseElement;
@@ -195,12 +196,12 @@ class ProdsService extends ElementsManager
     public function importProd(ProdImportDTO $dto, string $origin): ?zxProdElement
     {
         $prodImportId = $dto->id;
-        $element = $this->importIdOperator->getElementByImportId($prodImportId, $origin, 'prod');
+        $element = $this->importIdOperator->getElementByImportId($prodImportId, $origin, EntityType::Prod);
 
         if (!$element && $dto->ids !== null) {
             foreach ($dto->ids as $idOrigin => $id) {
-                if ($element = $this->importIdOperator->getElementByImportId($id, $idOrigin, 'prod')) {
-                    $this->importIdOperator->saveImportId($element->getId(), $prodImportId, $origin, 'prod');
+                if ($element = $this->importIdOperator->getElementByImportId($id, $idOrigin, EntityType::Prod)) {
+                    $this->importIdOperator->saveImportId($element->getId(), $prodImportId, $origin, EntityType::Prod);
                     break;
                 }
             }
@@ -209,14 +210,14 @@ class ProdsService extends ElementsManager
         if (!$element) {
             if ($candidate = $this->getProdByReleaseMd5DTO($dto)) {
                 $element = $candidate;
-                $this->importIdOperator->saveImportId($element->getId(), $prodImportId, $origin, 'prod');
+                $this->importIdOperator->saveImportId($element->getId(), $prodImportId, $origin, EntityType::Prod);
             }
         }
 
         if (!$element) {
             if ($resolved = $this->prodResolver->resolve($dto, $this->matchProdsWithoutYear)) {
                 $element = $resolved;
-                $this->importIdOperator->saveImportId($element->getId(), $prodImportId, $origin, 'prod');
+                $this->importIdOperator->saveImportId($element->getId(), $prodImportId, $origin, EntityType::Prod);
             }
         }
 
@@ -248,7 +249,7 @@ class ProdsService extends ElementsManager
         $element = $this->structureManager->createElement('zxProd', 'show', $category, false, 'zxProdCategory');
         if ($element instanceof zxProdElement) {
             $element->dateAdded = time();
-            $this->importIdOperator->saveImportId($element->getPersistedId(), $dto->id, $origin, 'prod');
+            $this->importIdOperator->saveImportId($element->getPersistedId(), $dto->id, $origin, EntityType::Prod);
             $this->updateProd($element, $dto, $origin, true);
             return $element;
         }
@@ -275,19 +276,19 @@ class ProdsService extends ElementsManager
                 //we don't know anything about this label. lets search for any group with that name
                 $element = $this->groupsService->getGroupByLabel($groupLabel, $origin);
                 if ($element !== null) {
-                    $this->importIdOperator->saveImportId($element->getId(), $label->id, $origin, 'group');
+                    $this->importIdOperator->saveImportId($element->getId(), $label->id, $origin, EntityType::Group);
                     continue;
                 }
                 //search for author alias with that name
                 $element = $this->authorsService->getAuthorAliasByLabel($personLabel, $origin);
                 if ($element !== null) {
-                    $this->importIdOperator->saveImportId($element->getId(), $label->id, $origin, 'author');
+                    $this->importIdOperator->saveImportId($element->getId(), $label->id, $origin, EntityType::Author);
                     continue;
                 }
                 //search for author with that name
                 $element = $this->authorsService->getAuthorByLabel($personLabel, $origin);
                 if ($element !== null) {
-                    $this->importIdOperator->saveImportId($element->getId(), $label->id, $origin, 'author');
+                    $this->importIdOperator->saveImportId($element->getId(), $label->id, $origin, EntityType::Author);
                     continue;
                 }
 
@@ -394,11 +395,11 @@ class ProdsService extends ElementsManager
 
         if (!empty($dto->undetermined)) {
             foreach ($dto->undetermined as $undeterminedId => $roles) {
-                $existingElementId = $this->importIdOperator->getElementIdByImportId($undeterminedId, $origin, 'group');
+                $existingElementId = $this->importIdOperator->getElementIdByImportId($undeterminedId, $origin, EntityType::Group);
                 if ($existingElementId === null) {
-                    $authorId = $this->importIdOperator->getElementIdByImportId($undeterminedId, $origin, 'author');
+                    $authorId = $this->importIdOperator->getElementIdByImportId($undeterminedId, $origin, EntityType::Author);
                     if ($authorId !== null) {
-                        $this->authorshipRepository->addAuthorship($element->getId(), $authorId, 'prod', $roles);
+                        $this->authorshipRepository->addAuthorship($element->getId(), $authorId, EntityType::Prod, $roles);
                     }
                 } else {
                     $this->linksManager->linkElements($existingElementId, $element->getId(), 'zxProdGroups');
@@ -406,12 +407,12 @@ class ProdsService extends ElementsManager
             }
         }
 
-        $authorsInfo = $element->getAuthorsInfo('prod');
+        $authorsInfo = $element->getAuthorsInfo(EntityType::Prod->value);
         $authorRoles = $dto->authorRoles ?? [];
         if (($this->forceUpdateAuthors || $justCreated || !$authorsInfo) && ($authorRoles !== [])) {
             foreach ($authorRoles as $importAuthorId => $roles) {
-                if ($authorId = $this->importIdOperator->getElementIdByImportId($importAuthorId, $origin, 'author')) {
-                    $this->authorshipRepository->addAuthorship($element->getId(), $authorId, 'prod', $roles);
+                if ($authorId = $this->importIdOperator->getElementIdByImportId($importAuthorId, $origin, EntityType::Author)) {
+                    $this->authorshipRepository->addAuthorship($element->getId(), $authorId, EntityType::Prod, $roles);
                 }
             }
         }
@@ -419,7 +420,7 @@ class ProdsService extends ElementsManager
         if (!empty($dto->groups) && (!$element->groups || $this->forceUpdateGroups)) {
             $linksIndex = $this->linksManager->getElementsLinksIndex($element->getId(), 'zxProdGroups', 'child');
             foreach ($dto->groups as $importGroupId) {
-                if ($groupId = $this->importIdOperator->getElementIdByImportId($importGroupId, $origin, 'group')) {
+                if ($groupId = $this->importIdOperator->getElementIdByImportId($importGroupId, $origin, EntityType::Group)) {
                     if (!isset($linksIndex[$groupId])) {
                         $this->linksManager->linkElements($groupId, $element->getId(), 'zxProdGroups');
                     }
@@ -434,8 +435,8 @@ class ProdsService extends ElementsManager
         if (!empty($dto->publishers) && (!$element->publishers || $this->forceUpdatePublishers)) {
             $linksIndex = $this->linksManager->getElementsLinksIndex($element->getId(), 'zxProdPublishers', 'child');
             foreach ($dto->publishers as $importPublisherId) {
-                $publisherId = $this->importIdOperator->getElementIdByImportId($importPublisherId, $origin, 'group')
-                    ?: $this->importIdOperator->getElementIdByImportId($importPublisherId, $origin, 'author');
+                $publisherId = $this->importIdOperator->getElementIdByImportId($importPublisherId, $origin, EntityType::Group)
+                    ?: $this->importIdOperator->getElementIdByImportId($importPublisherId, $origin, EntityType::Author);
                 if ($publisherId) {
                     if (!isset($linksIndex[$publisherId])) {
                         $this->linksManager->linkElements($publisherId, $element->getId(), 'zxProdPublishers');
@@ -455,9 +456,9 @@ class ProdsService extends ElementsManager
                         continue;
                     }
 
-                    if ($prodId = $this->importIdOperator->getElementIdByImportId($importItemId, $origin, 'prod')) {
+                    if ($prodId = $this->importIdOperator->getElementIdByImportId($importItemId, $origin, EntityType::Prod)) {
                         $this->linksManager->linkElements($element->getId(), $prodId, 'compilation');
-                    } elseif ($releaseId = $this->importIdOperator->getElementIdByImportId($importItemId, $origin, 'release')) {
+                    } elseif ($releaseId = $this->importIdOperator->getElementIdByImportId($importItemId, $origin, EntityType::Release)) {
                         $this->linksManager->linkElements($element->getId(), $releaseId, 'compilation');
                     }
                 }
@@ -466,7 +467,7 @@ class ProdsService extends ElementsManager
 
         if (!empty($dto->seriesProdIds) && !$element->seriesProds) {
             foreach ($dto->seriesProdIds as $importItemId) {
-                if ($prodId = $this->importIdOperator->getElementIdByImportId($importItemId, $origin, 'prod')) {
+                if ($prodId = $this->importIdOperator->getElementIdByImportId($importItemId, $origin, EntityType::Prod)) {
                     $this->linksManager->linkElements($element->getId(), $prodId, 'series');
                 }
             }
@@ -499,7 +500,7 @@ class ProdsService extends ElementsManager
         if (!empty($dto->categories) && (!$element->getConnectedCategoriesIds() || $this->forceUpdateCategories || $justCreated)) {
             $linksIndex = $this->linksManager->getElementsLinksIndex($element->getId(), 'zxProdCategory', 'child');
             foreach ($dto->categories as $importCategoryId) {
-                if ($categoryId = $this->importIdOperator->getElementIdByImportId($importCategoryId, $origin, 'category')) {
+                if ($categoryId = $this->importIdOperator->getElementIdByImportId($importCategoryId, $origin, EntityType::Category)) {
                     if (!isset($linksIndex[$categoryId])) {
                         $this->linksManager->linkElements($categoryId, $element->getId(), 'zxProdCategory');
                     }
@@ -548,8 +549,8 @@ class ProdsService extends ElementsManager
 
         if (!empty($dto->importIds)) {
             foreach ($dto->importIds as $importOrigin => $id) {
-                if (!$this->importIdOperator->getElementIdByImportId($id, $importOrigin, 'prod')) {
-                    $this->importIdOperator->saveImportId($element->getPersistedId(), $id, $importOrigin, 'prod');
+                if (!$this->importIdOperator->getElementIdByImportId($id, $importOrigin, EntityType::Prod)) {
+                    $this->importIdOperator->saveImportId($element->getPersistedId(), $id, $importOrigin, EntityType::Prod);
                 }
             }
         }
@@ -656,7 +657,7 @@ class ProdsService extends ElementsManager
 
     private function linkReleaseWithAuthor(int $authorId, int $prodId, array $roles = []): void
     {
-        $this->authorshipRepository->addAuthorship($prodId, $authorId, 'release', $roles);
+        $this->authorshipRepository->addAuthorship($prodId, $authorId, EntityType::Release, $roles);
     }
 
     private function linkReleaseWithPublisher(int $publisherId, int $releaseId): void
@@ -724,12 +725,12 @@ class ProdsService extends ElementsManager
     {
         $releaseId = $dto->id;
 
-        $element = $this->importIdOperator->getElementByImportId($releaseId, $origin, 'release');
+        $element = $this->importIdOperator->getElementByImportId($releaseId, $origin, EntityType::Release);
         if (!$element) {
             try {
                 if ($candidate = $this->getReleaseByMd5($dto, $prodId)) {
                     $element = $candidate;
-                    $this->importIdOperator->saveImportId($element->getId(), $releaseId, $origin, 'release');
+                    $this->importIdOperator->saveImportId($element->getId(), $releaseId, $origin, EntityType::Release);
                 }
             } catch (ReleaseDownloadException $e) {
                 $this->logError($e->getMessage());
@@ -747,12 +748,12 @@ class ProdsService extends ElementsManager
     private function createRelease(ReleaseImportDTO $dto, string $prodId, string $origin): bool|zxReleaseElement
     {
         $element = false;
-        if ($prodElement = $this->importIdOperator->getElementByImportId($prodId, $origin, 'prod')) {
+        if ($prodElement = $this->importIdOperator->getElementByImportId($prodId, $origin, EntityType::Prod)) {
             /**
              * @var zxReleaseElement $element
              */
             if ($element = $this->structureManager->createElement('zxRelease', 'show', $prodElement->getId())) {
-                $this->importIdOperator->saveImportId($element->getPersistedId(), $dto->id, $origin, 'release');
+                $this->importIdOperator->saveImportId($element->getPersistedId(), $dto->id, $origin, EntityType::Release);
                 $this->updateRelease($element, $dto, $origin, true);
             }
         }
@@ -827,11 +828,11 @@ class ProdsService extends ElementsManager
 
         if (!empty($dto->undetermined)) {
             foreach ($dto->undetermined as $undeterminedId => $roles) {
-                if ($this->importIdOperator->getElementIdByImportId($undeterminedId, $origin, 'group')) {
+                if ($this->importIdOperator->getElementIdByImportId($undeterminedId, $origin, EntityType::Group)) {
                     if (!in_array($undeterminedId, $releasePublishers, true)) {
                         $releasePublishers[] = $undeterminedId;
                     }
-                } elseif ($this->importIdOperator->getElementIdByImportId($undeterminedId, $origin, 'author')) {
+                } elseif ($this->importIdOperator->getElementIdByImportId($undeterminedId, $origin, EntityType::Author)) {
                     if (!array_key_exists($undeterminedId, $releaseAuthors)) {
                         $releaseAuthors[$undeterminedId] = $roles;
                     }
@@ -840,9 +841,9 @@ class ProdsService extends ElementsManager
         }
 
         if ($this->forceUpdateReleaseAuthors || (($justCreated) && !empty($releaseAuthors))) {
-            if ($this->forceUpdateReleaseAuthors || !$element->getAuthorsInfo('release')) {
+            if ($this->forceUpdateReleaseAuthors || !$element->getAuthorsInfo(EntityType::Release->value)) {
                 foreach ($releaseAuthors as $importAuthorId => $roles) {
-                    if ($authorId = $this->importIdOperator->getElementIdByImportId($importAuthorId, $origin, 'author')) {
+                    if ($authorId = $this->importIdOperator->getElementIdByImportId($importAuthorId, $origin, EntityType::Author)) {
                         $this->linkReleaseWithAuthor($authorId, $element->getId(), $roles);
                     }
                 }
@@ -852,9 +853,9 @@ class ProdsService extends ElementsManager
         if ($this->forceUpdateReleasePublishers || (($justCreated) && !empty($releasePublishers))) {
             if ($this->forceUpdateReleasePublishers || !$element->getPublishersIds()) {
                 foreach ($releasePublishers as $importPublisherId) {
-                    if ($publisherId = $this->importIdOperator->getElementIdByImportId($importPublisherId, $origin, 'group')) {
+                    if ($publisherId = $this->importIdOperator->getElementIdByImportId($importPublisherId, $origin, EntityType::Group)) {
                         $this->linkReleaseWithPublisher($publisherId, $element->getId());
-                    } elseif ($publisherId = $this->importIdOperator->getElementIdByImportId($importPublisherId, $origin, 'author')) {
+                    } elseif ($publisherId = $this->importIdOperator->getElementIdByImportId($importPublisherId, $origin, EntityType::Author)) {
                         $this->linkReleaseWithPublisher($publisherId, $element->getId());
                     }
                 }
@@ -1137,7 +1138,7 @@ class ProdsService extends ElementsManager
                                     $newProdElement->getId(),
                                     $importId,
                                     $origin,
-                                    'prod'
+                                    EntityType::Prod
                                 );
                             }
                         }
@@ -1158,7 +1159,7 @@ class ProdsService extends ElementsManager
                 $this->authorshipRepository->saveAuthorship(
                     $targetElementId,
                     $record['authorId'],
-                    $record['type'],
+                    EntityType::from($record['type']),
                     $record['roles'],
                 );
             }

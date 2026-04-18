@@ -4,6 +4,7 @@ use ZxArt\Authors\Entities\Author;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\LinkTypes;
+use ZxArt\Shared\EntityType;
 
 /**
  * Class authorElement
@@ -337,7 +338,7 @@ class authorElement extends structureElement implements
             $this->prods = [];
 
             $authorshipRepository = $this->getService(AuthorshipRepository::class);
-            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->getId(), 'prod')) {
+            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->getId(), EntityType::Prod)) {
                 foreach ($authorShip as $item) {
                     $this->prods[] = $item['prodElement'];
                 }
@@ -370,7 +371,7 @@ class authorElement extends structureElement implements
              */
 
             $authorshipRepository = $this->getService(AuthorshipRepository::class);
-            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->getId(), 'release')) {
+            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->getId(), EntityType::Release)) {
                 foreach ($authorShip as $item) {
                     $this->releases[] = $item['releaseElement'];
                 }
@@ -420,14 +421,14 @@ class authorElement extends structureElement implements
             $cache = $this->getElementsListCache('g', 60 * 60 * 24);
             if (($this->groupsList = $cache->load()) === null) {
                 $this->groupsList = [];
-                if ($authorshipInfo = $this->getAuthorshipInfo('group')) {
+                if ($authorshipInfo = $this->getAuthorshipInfo(EntityType::Group->value)) {
                     foreach ($authorshipInfo as $item) {
                         $this->groupsList[] = $item['groupElement'];
                     }
                 }
                 if ($aliasElements = $this->getAliasElements()) {
                     foreach ($aliasElements as $aliasElement) {
-                        if ($authorshipInfo = $aliasElement->getAuthorshipInfo('group')) {
+                        if ($authorshipInfo = $aliasElement->getAuthorshipInfo(EntityType::Group->value)) {
                             foreach ($authorshipInfo as $item) {
                                 if (!in_array($item['groupElement'], $this->groupsList)) {
                                     $this->groupsList[] = $item['groupElement'];

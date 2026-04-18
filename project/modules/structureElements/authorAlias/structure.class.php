@@ -6,6 +6,7 @@ use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\LinkTypes;
 use ZxArt\Press\Helpers\PressMentions;
+use ZxArt\Shared\EntityType;
 
 /**
  * Class authorAliasElement
@@ -150,7 +151,7 @@ class authorAliasElement extends structureElement implements
         if ($this->prods === null) {
             $this->prods = [];
             $authorshipRepository = $this->getService(AuthorshipRepository::class);
-            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->getId(), 'prod')) {
+            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->getId(), EntityType::Prod)) {
                 foreach ($authorShip as $item) {
                     $this->prods[] = $item['prodElement'];
                 }
@@ -166,7 +167,7 @@ class authorAliasElement extends structureElement implements
             $this->releases = [];
 
             $authorshipRepository = $this->getService(AuthorshipRepository::class);
-            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->getId(), 'release')) {
+            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->getId(), EntityType::Release)) {
                 foreach ($authorShip as $item) {
                     $this->releases[] = $item['releaseElement'];
                 }
@@ -184,7 +185,7 @@ class authorAliasElement extends structureElement implements
     public function getGroupsList()
     {
         $groupsList = [];
-        if ($authorshipInfo = $this->getAuthorshipInfo('group')) {
+        if ($authorshipInfo = $this->getAuthorshipInfo(EntityType::Group->value)) {
             foreach ($authorshipInfo as $item) {
                 $groupsList[] = $item['groupElement'];
             }

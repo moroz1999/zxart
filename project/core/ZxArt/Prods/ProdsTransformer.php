@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Prods;
 
 use ZxArt\Prods\Dto\ProdDto;
+use ZxArt\Shared\EntityType;
 use zxProdElement;
 
 readonly class ProdsTransformer
@@ -46,7 +47,7 @@ readonly class ProdsTransformer
             userVote: $userVote !== null && $userVote !== false ? (int)$userVote : null,
             denyVoting: $element->isVotingDenied(),
             hardwareInfo: $element->getHardwareInfo(),
-            authorsInfoShort: $element->getShortAuthorship('prod'),
+            authorsInfoShort: $element->getShortAuthorship(EntityType::Prod->value),
             categoriesInfo: $element->getCategoriesInfo(),
             partyInfo: $partyInfo,
             partyPlace: $partyPlace,

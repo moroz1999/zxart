@@ -7,6 +7,7 @@ namespace ZxArt\AuthorList\Repositories;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use ZxArt\AuthorList\AuthorSortColumn;
+use ZxArt\Shared\EntityType;
 use ZxArt\Shared\LatinCyrillicMap;
 use ZxArt\Shared\SortDirection;
 
@@ -21,7 +22,7 @@ final readonly class AuthorListRepository
     }
 
     /**
-     * @param string[] $types Entity types to include ('author', 'authorAlias')
+     * @param EntityType[] $types Entity types to include
      * @return int[]
      */
     public function findPaged(
@@ -33,7 +34,7 @@ final readonly class AuthorListRepository
         ?int $countryId,
         ?int $cityId,
         ?string $letter = null,
-        array $types = ['author', 'authorAlias'],
+        array $types = [EntityType::Author, EntityType::AuthorAlias],
         ?string $items = null,
     ): array {
         $queries = $this->buildTypedQueries($types, $search, $countryId, $cityId, $letter, $items);
@@ -54,23 +55,23 @@ final readonly class AuthorListRepository
     }
 
     /**
-     * @param string[] $types Entity types to include ('author', 'authorAlias')
+     * @param EntityType[] $types Entity types to include
      */
     public function count(
         ?string $search,
         ?int $countryId,
         ?int $cityId,
         ?string $letter = null,
-        array $types = ['author', 'authorAlias'],
+        array $types = [EntityType::Author, EntityType::AuthorAlias],
         ?string $items = null,
     ): int {
         $total = 0;
 
-        if (in_array('author', $types, true)) {
+        if (in_array(EntityType::Author, $types, true)) {
             $total += $this->buildAuthorsQuery($search, $countryId, $cityId, $letter, $items)->count(self::AUTHORS_TABLE . '.id');
         }
 
-        if (in_array('authorAlias', $types, true)) {
+        if (in_array(EntityType::AuthorAlias, $types, true)) {
             $total += $this->buildAliasesQuery($search, $countryId, $cityId, $letter, $items)->count(self::ALIASES_TABLE . '.id');
         }
 
@@ -78,7 +79,7 @@ final readonly class AuthorListRepository
     }
 
     /**
-     * @param string[] $types
+     * @param EntityType[] $types
      * @return Builder[]
      */
     private function buildTypedQueries(
@@ -91,11 +92,11 @@ final readonly class AuthorListRepository
     ): array {
         $queries = [];
 
-        if (in_array('author', $types, true)) {
+        if (in_array(EntityType::Author, $types, true)) {
             $queries[] = $this->buildAuthorsQuery($search, $countryId, $cityId, $letter, $items);
         }
 
-        if (in_array('authorAlias', $types, true)) {
+        if (in_array(EntityType::AuthorAlias, $types, true)) {
             $queries[] = $this->buildAliasesQuery($search, $countryId, $cityId, $letter, $items);
         }
 

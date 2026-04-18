@@ -1,6 +1,7 @@
 <?php
 
 use App\Users\CurrentUserService;
+use ZxArt\Shared\EntityType;
 
 class publicAddGroupAlias extends structureElementAction
 {
@@ -23,7 +24,7 @@ class publicAddGroupAlias extends structureElementAction
             $structureElement->structureName = $structureElement->title;
 
             $structureElement->persistElementData();
-            $structureElement->persistAuthorship('group');
+            $structureElement->persistAuthorship(EntityType::Group->value);
 
             $privilegesManager->setPrivilege(
                 $user->id,

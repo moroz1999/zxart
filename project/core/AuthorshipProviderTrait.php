@@ -1,6 +1,7 @@
 <?php
 
 use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Shared\EntityType;
 
 trait AuthorshipProviderTrait
 {
@@ -8,7 +9,8 @@ trait AuthorshipProviderTrait
     {
         $result = [];
         $authorshipRepository = $this->getService(AuthorshipRepository::class);
-        if ($info = $authorshipRepository->getAuthorsInfo($this->id, $type)) {
+        $entityType = $type instanceof EntityType ? $type : EntityType::from($type);
+        if ($info = $authorshipRepository->getAuthorsInfo($this->id, $entityType)) {
             if (!$roles) {
                 $result = $info;
             } else {
@@ -25,19 +27,22 @@ trait AuthorshipProviderTrait
     public function getAuthorsRecords($type)
     {
         $authorshipRepository = $this->getService(AuthorshipRepository::class);
-        return $authorshipRepository->getElementAuthorsRecords($this->id, $type);
+        $entityType = $type instanceof EntityType ? $type : EntityType::from($type);
+        return $authorshipRepository->getElementAuthorsRecords($this->id, $entityType);
     }
 
     public function getAuthorshipInfo($type)
     {
         $authorshipRepository = $this->getService(AuthorshipRepository::class);
-        return $authorshipRepository->getAuthorshipInfo($this->getId(), $type);
+        $entityType = $type instanceof EntityType ? $type : EntityType::from($type);
+        return $authorshipRepository->getAuthorshipInfo($this->getId(), $entityType);
     }
 
     public function getAuthorshipRecords($type)
     {
         $authorshipRepository = $this->getService(AuthorshipRepository::class);
-        return $authorshipRepository->getAuthorshipRecords($this->getId(), $type);
+        $entityType = $type instanceof EntityType ? $type : EntityType::from($type);
+        return $authorshipRepository->getAuthorshipRecords($this->getId(), $entityType);
     }
 
     /**

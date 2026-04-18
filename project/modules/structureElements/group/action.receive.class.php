@@ -1,6 +1,7 @@
 <?php
 
 use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Shared\EntityType;
 
 class receiveGroup extends structureElementAction
 {
@@ -33,7 +34,7 @@ class receiveGroup extends structureElementAction
             $authorshipRepository->saveAuthorship(
                 $structureElement->getId(),
                 $structureElement->getValue('addAuthor'),
-                'group',
+                EntityType::Group,
                 $structureElement->getValue('addAuthorRole'),
                 $structureElement->getValue('addAuthorStartDate'),
                 $structureElement->getValue('addAuthorEndDate')

@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Shared\EntityType;
+
 class publicReceiveGroupAlias extends structureElementAction
 {
     protected $loggable = true;
@@ -16,7 +18,7 @@ class publicReceiveGroupAlias extends structureElementAction
         if ($this->validated) {
             $structureElement->structureName = $structureElement->title;
             $structureElement->persistElementData();
-            $structureElement->persistAuthorship('group');
+            $structureElement->persistAuthorship(EntityType::Group->value);
 
             $controller->redirect($structureElement->URL);
         }

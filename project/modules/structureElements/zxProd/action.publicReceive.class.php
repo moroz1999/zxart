@@ -3,6 +3,7 @@
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
+use ZxArt\Shared\EntityType;
 
 class publicReceiveZxProd extends structureElementAction
 {
@@ -29,7 +30,7 @@ class publicReceiveZxProd extends structureElementAction
 
             $structureElement->persistElementData();
             $structureElement->checkAndPersistCategories();
-            $structureElement->persistAuthorship('prod');
+            $structureElement->persistAuthorship(EntityType::Prod->value);
 
             $queueService = $this->getService(QueueService::class);
             $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);

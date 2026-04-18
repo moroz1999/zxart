@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Shared\EntityType;
+
 class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
 {
     protected $defaultPreset = 'api';
@@ -34,13 +36,13 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
             'groupsInfo' => 'getGroupsInfo',
             'playableFiles' => 'getArchiveFilesForHardware',
             'authorsInfo' => function (zxReleaseElement $element) {
-                return $element->getAuthorsRecords('release');
+                return $element->getAuthorsRecords(EntityType::Release->value);
             },
             'prodId' => function (zxReleaseElement $element): int {
                 return $element->getProd()?->id ?? 0;
             },
             'authorsInfoShort' => function (zxReleaseElement $element) {
-                return $element->getShortAuthorship('release');
+                return $element->getShortAuthorship(EntityType::Release->value);
             },
             'listImagesUrls' => function (zxReleaseElement $element) {
                 $preset = $element->getListImagePreset();

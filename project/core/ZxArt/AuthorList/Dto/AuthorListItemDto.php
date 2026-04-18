@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ZxArt\AuthorList\Dto;
 
+use ZxArt\Shared\EntityType;
+
 readonly class AuthorListItemDto
 {
     /**
@@ -12,7 +14,7 @@ readonly class AuthorListItemDto
     public function __construct(
         public int $id,
         public string $url,
-        public string $entityType,
+        public EntityType $entityType,
         public string $title,
         public string $realName,
         public ?string $realNameUrl,

@@ -1,6 +1,7 @@
 <?php
 
 use App\Users\CurrentUserService;
+use ZxArt\Shared\EntityType;
 
 class publicAddGroup extends structureElementAction
 {
@@ -26,7 +27,7 @@ class publicAddGroup extends structureElementAction
             $structureElement->persistElementData();
             $structureElement->checkParentLetter();
             $structureElement->persistSubGroupConnections();
-            $structureElement->persistAuthorship('group');
+            $structureElement->persistAuthorship(EntityType::Group->value);
             $structureElement->recalculate();
 
             $privilegesManager = $this->getService(privilegesManager::class);

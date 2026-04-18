@@ -24,6 +24,7 @@ use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Import\Tunes\TuneLabel;
 use ZxArt\Import\Tunes\TuneResolver;
 use ZxArt\Prods\Services\ProdsService;
+use ZxArt\Shared\EntityType;
 use zxProdElement;
 
 /**
@@ -252,7 +253,7 @@ final class ArticleParsedDataUpdater
         foreach ($authorRoles as $authorId => $roles) {
             $authorElement = $this->authorsMap[$authorId] ?? null;
             if ($authorElement !== null) {
-                $this->authorshipRepository->addAuthorship($pressElement->id, $authorElement->id, 'prod', $roles);
+                $this->authorshipRepository->addAuthorship($pressElement->id, $authorElement->id, EntityType::Prod, $roles);
             }
         }
     }

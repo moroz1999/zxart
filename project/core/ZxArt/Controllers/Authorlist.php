@@ -14,6 +14,7 @@ use ZxArt\AuthorList\Dto\FilterOptionDto;
 use ZxArt\AuthorList\Rest\AuthorFilterOptionRestDto;
 use ZxArt\AuthorList\Rest\AuthorFilterOptionsRestDto;
 use ZxArt\AuthorList\Rest\AuthorListItemRestDto;
+use ZxArt\Shared\EntityType;
 use ZxArt\Shared\SortingParams;
 
 class Authorlist extends LoggedControllerApplication
@@ -66,8 +67,14 @@ class Authorlist extends LoggedControllerApplication
         $letter = $this->getParameter('letter') ?: null;
         $typesRaw = $this->getParameter('types') ?: null;
         $types = $typesRaw !== null
-            ? array_intersect(explode(',', $typesRaw), ['author', 'authorAlias'])
-            : ['author', 'authorAlias'];
+            ? array_filter(
+                array_map(
+                    static fn(string $t) => EntityType::tryFrom($t),
+                    explode(',', $typesRaw),
+                ),
+                static fn(?EntityType $t) => $t !== null && in_array($t, [EntityType::Author, EntityType::AuthorAlias], true),
+            )
+            : [EntityType::Author, EntityType::AuthorAlias];
         $items = $this->getParameter('items') ?: null;
 
         $sorting = SortingParams::fromRequest($sortingRaw, ['title', 'graphicsRating', 'musicRating', 'id']);

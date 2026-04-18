@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Connection;
 use ZxArt\Import\Services\ImportIdOperator;
+use ZxArt\Shared\EntityType;
 
 class CountriesManager extends errorLogger
 {
@@ -22,9 +23,9 @@ class CountriesManager extends errorLogger
         /**
          * @var countryElement $element
          */
-        if (!($element = $this->importIdOperator->getElementByImportId($countryInfo['id'], $origin, 'country'))) {
+        if (!($element = $this->importIdOperator->getElementByImportId($countryInfo['id'], $origin, EntityType::Country))) {
             if ($element = $this->getLocationByName($countryInfo['title'])) {
-                $this->importIdOperator->saveImportId($element->id, $countryInfo['id'], $origin, 'country');
+                $this->importIdOperator->saveImportId($element->id, $countryInfo['id'], $origin, EntityType::Country);
                 $this->updateCountry($element, $countryInfo);
             } else {
                 return $this->createCountry($countryInfo, $origin);
@@ -80,7 +81,7 @@ class CountriesManager extends errorLogger
                  * @var countryElement $element
                  */
                 $this->updateCountry($element, $countryInfo);
-                $this->importIdOperator->saveImportId($element->id, $countryInfo['id'], $origin, 'country');
+                $this->importIdOperator->saveImportId($element->id, $countryInfo['id'], $origin, EntityType::Country);
             }
         }
         return $element;

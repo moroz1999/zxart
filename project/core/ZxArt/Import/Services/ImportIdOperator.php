@@ -6,6 +6,7 @@ namespace ZxArt\Import\Services;
 use Illuminate\Database\Connection;
 use structureElement;
 use structureManager;
+use ZxArt\Shared\EntityType;
 
 class ImportIdOperator
 {
@@ -19,9 +20,9 @@ class ImportIdOperator
     {
     }
 
-    public function getElementByImportId(string $importId, string $origin, ?string $type = null): ?structureElement
+    public function getElementByImportId(string $importId, string $origin, ?EntityType $type = null): ?structureElement
     {
-        $cacheKey = $origin . '|' . ($type ?? '') . '|' . $importId;
+        $cacheKey = $origin . '|' . ($type?->value ?? '') . '|' . $importId;
 
         if (!array_key_exists($cacheKey, $this->cache)) {
             $elementId = $this->getElementIdByImportId($importId, $origin, $type);
@@ -36,12 +37,12 @@ class ImportIdOperator
     }
 
     public function getElementIdByImportId(
-        string  $importId,
-        string  $origin,
-        ?string $type = null
+        string      $importId,
+        string      $origin,
+        ?EntityType $type = null
     ): ?int
     {
-        $cacheKey = $origin . '|' . ($type ?? '') . '|' . $importId;
+        $cacheKey = $origin . '|' . ($type?->value ?? '') . '|' . $importId;
 
         if (!array_key_exists($cacheKey, $this->cacheId)) {
             $query = $this->db->table('import_origin')
@@ -51,7 +52,7 @@ class ImportIdOperator
                 ->limit(1);
 
             if ($type !== null) {
-                $query->where('type', '=', $type);
+                $query->where('type', '=', $type->value);
             }
 
             $row = $query->first();
@@ -61,9 +62,9 @@ class ImportIdOperator
         return $this->cacheId[$cacheKey];
     }
 
-    public function saveImportId(int $elementId, string $importId, string $origin, ?string $type = null): bool
+    public function saveImportId(int $elementId, string $importId, string $origin, ?EntityType $type = null): bool
     {
-        $cacheKey = $origin . '|' . ($type ?? '') . '|' . $importId;
+        $cacheKey = $origin . '|' . ($type?->value ?? '') . '|' . $importId;
 
         unset($this->cache[$cacheKey]);
         $this->cacheId[$cacheKey] = $elementId;
@@ -71,14 +72,14 @@ class ImportIdOperator
         $existing = $this->db->table('import_origin')
             ->where('importId', $importId)
             ->where('importOrigin', $origin)
-            ->where('type', $type)
+            ->where('type', $type?->value)
             ->first();
 
         if ($existing) {
             $updated = $this->db->table('import_origin')
                 ->where('importId', $importId)
                 ->where('importOrigin', $origin)
-                ->where('type', $type)
+                ->where('type', $type?->value)
                 ->update([
                     'elementId' => $elementId,
                 ]);
@@ -89,13 +90,13 @@ class ImportIdOperator
             'importId' => $importId,
             'elementId' => $elementId,
             'importOrigin' => $origin,
-            'type' => $type,
+            'type' => $type?->value,
         ]);
     }
 
-    public function moveImportId(int $oldElementId, int $newElementId, string $importId, string $origin, ?string $type = null): int
+    public function moveImportId(int $oldElementId, int $newElementId, string $importId, string $origin, ?EntityType $type = null): int
     {
-        $cacheKey = $origin . '|' . ($type ?? '') . '|' . $importId;
+        $cacheKey = $origin . '|' . ($type?->value ?? '') . '|' . $importId;
 
         unset($this->cache[$cacheKey]);
         $this->cacheId[$cacheKey] = $newElementId;
@@ -105,7 +106,7 @@ class ImportIdOperator
             ->where('importId', '=', $importId)
             ->where('elementId', '=', $oldElementId)
             ->where('importOrigin', '=', $origin)
-            ->where('type', '=', $type)
+            ->where('type', '=', $type?->value)
             ->update(
                 [
                     'elementId' => $newElementId,

@@ -1,3 +1,4 @@
+<a href="/about/contact-us" class="about-us-link">About project</a>
 <app-root language="{$currentLanguage->iso6393}"></app-root>
 <zx-player></zx-player>
 {$leftColumnElements = $currentLanguage->getLeftColumnElementsList()}

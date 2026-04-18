@@ -19,6 +19,7 @@ use ZxArt\Import\Labels\GroupLabel;
 use ZxArt\Import\Labels\LabelResolver;
 use ZxArt\Import\Services\ImportIdOperator;
 use ZxArt\LinkTypes;
+use ZxArt\Shared\EntityType;
 
 class GroupsService extends ElementsManager
 {
@@ -53,7 +54,7 @@ class GroupsService extends ElementsManager
     {
         $element = $this->getGroupByLabel($label, $origin);
         if (($element !== null) && $origin !== null) {
-            $this->importIdOperator->saveImportId($element->id, $label->id, $origin, 'group');
+            $this->importIdOperator->saveImportId($element->id, $label->id, $origin, EntityType::Group);
         }
 
         if ($element === null) {
@@ -78,7 +79,7 @@ class GroupsService extends ElementsManager
         if ($element = $this->manufactureGroupElement($dto->name ?? '')) {
             $this->updateGroup($element, $dto, $origin);
             if ($dto->id !== null) {
-                $this->importIdOperator->saveImportId($element->id, (string)$dto->id, $origin, 'group');
+                $this->importIdOperator->saveImportId($element->id, (string)$dto->id, $origin, EntityType::Group);
             }
         }
         return $element ?? null;
@@ -168,7 +169,7 @@ class GroupsService extends ElementsManager
         }
 
         if ($dto->countryId !== 0 && $dto->countryId !== null) {
-            $locationElement = $this->importIdOperator->getElementByImportId((string)$dto->countryId, $origin, 'country');
+            $locationElement = $this->importIdOperator->getElementByImportId((string)$dto->countryId, $origin, EntityType::Country);
             if ($locationElement && $element->country !== $locationElement->id) {
                 $changed = true;
                 $element->country = $locationElement->id;
@@ -178,7 +179,7 @@ class GroupsService extends ElementsManager
         if (is_array($dto->parentGroupIds)) {
             $parentGroups = $element->parentGroups;
             foreach ($dto->parentGroupIds as $groupId) {
-                $groupElement = $this->importIdOperator->getElementByImportId((string)$groupId, $origin, 'group');
+                $groupElement = $this->importIdOperator->getElementByImportId((string)$groupId, $origin, EntityType::Group);
                 if ($groupElement !== null && !in_array($groupElement, $parentGroups, true)) {
                     $parentGroups[] = $groupElement;
                 }
@@ -199,7 +200,7 @@ class GroupsService extends ElementsManager
         if ($element = $this->manufactureAliasElement($dto->name ?? '')) {
             $this->updateGroupAlias($element, $dto, $origin);
             if ($dto->id !== null) {
-                $this->importIdOperator->saveImportId($element->id, (string)$dto->id, $origin, 'group');
+                $this->importIdOperator->saveImportId($element->id, (string)$dto->id, $origin, EntityType::Group);
             }
         }
         return $element ?? null;
@@ -232,7 +233,7 @@ class GroupsService extends ElementsManager
         }
 
         if (($groupAlias->aliasParentGroupId !== null) && !$element->groupId) {
-            if ($groupElement = $this->importIdOperator->getElementByImportId($groupAlias->aliasParentGroupId, $origin, 'group')) {
+            if ($groupElement = $this->importIdOperator->getElementByImportId($groupAlias->aliasParentGroupId, $origin, EntityType::Group)) {
                 $changed = true;
                 $element->groupId = $groupElement->getPersistedId();
             }
@@ -261,13 +262,13 @@ class GroupsService extends ElementsManager
                     $this->linksManager->linkElements($groupElement->id, $zxProd->id, 'zxProdPublishers');
                     $this->structureManager->clearElementCache($zxProd->id);
                 }
-                foreach ($authorElement->getAuthorshipRecords('prod') as $record) {
+                foreach ($authorElement->getAuthorshipRecords(EntityType::Prod->value) as $record) {
                     if ($zxProd = $this->structureManager->getElementById($record['elementId'])) {
                         $this->linksManager->linkElements($groupElement->id, $zxProd->getPersistedId(), 'zxProdGroups');
                         $this->structureManager->clearElementCache($groupElement->id);
                     }
                 }
-                foreach ($authorElement->getAuthorshipRecords('release') as $record) {
+                foreach ($authorElement->getAuthorshipRecords(EntityType::Release->value) as $record) {
                     if ($zxProd = $this->structureManager->getElementById($record['elementId'])) {
                         $this->linksManager->linkElements($groupElement->id, $zxProd->getPersistedId(), 'zxReleasePublishers');
                         $this->structureManager->clearElementCache($groupElement->id);
@@ -278,7 +279,7 @@ class GroupsService extends ElementsManager
                     ->get()) {
                     foreach ($records as $record) {
                         if (!$this->db->table('import_origin')
-                            ->where('type', '=', 'group')
+                            ->where('type', '=', EntityType::Group->value)
                             ->where('importOrigin', '=', $record['importOrigin'])
                             ->where('importId', '=', $record['importId'])
                             ->limit(1)
@@ -288,7 +289,7 @@ class GroupsService extends ElementsManager
                                 ->update(
                                     [
                                         'elementId' => $groupElement->id,
-                                        'type' => 'group',
+                                        'type' => EntityType::Group->value,
                                     ]
                                 );
                         } else {
@@ -341,7 +342,7 @@ class GroupsService extends ElementsManager
     public function getGroupByLabel(GroupLabel $label, ?string $origin): groupElement|groupAliasElement|null
     {
         /** @var groupElement|null $element */
-        $element = $this->importIdOperator->getElementByImportId($label->id, $origin, 'group');
+        $element = $this->importIdOperator->getElementByImportId($label->id, $origin, EntityType::Group);
         if ($element === null) {
             $element = $this->labelResolver->resolveGroup($label);
         }
@@ -449,7 +450,7 @@ class GroupsService extends ElementsManager
                 //disabled groupship moving to new group
                 //check if group already has groupship in same elements. we dont need duplicates
                 $existingAuthorIds = [];
-                if ($existingGroupShipRecords = $this->authorshipRepository->getAuthorsInfo($targetElement->id, 'group')) {
+                if ($existingGroupShipRecords = $this->authorshipRepository->getAuthorsInfo($targetElement->id, EntityType::Group)) {
                     foreach ($existingGroupShipRecords as $record) {
                         $existingAuthorIds[] = $record['authorId'];
                     }

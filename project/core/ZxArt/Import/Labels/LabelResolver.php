@@ -15,6 +15,7 @@ use ZxArt\Groups\Repositories\GroupAliasesRepository;
 use ZxArt\Groups\Repositories\GroupsRepository;
 use ZxArt\Import\Authors\AuthorSufficiencyChecker;
 use ZxArt\Import\Resolver;
+use ZxArt\Shared\EntityType;
 
 final readonly class LabelResolver
 {
@@ -56,7 +57,7 @@ final readonly class LabelResolver
                 $labelCountry = $label->countryName ?? null;
 
                 $labelMembers = $label->memberNames ?? [];
-                $authorsInfo = $groupElement->getAuthorsInfo('group');
+                $authorsInfo = $groupElement->getAuthorsInfo(EntityType::Group->value);
                 $existingAuthorNames = array_reduce($authorsInfo, static function (array $names, array $authorInfo) {
                     $authorElement = $authorInfo['authorElement'];
                     return array_merge($names, $authorElement->gatherAuthorNames());

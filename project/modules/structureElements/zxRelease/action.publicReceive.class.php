@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Shared\EntityType;
+
 class publicReceiveZxRelease extends structureElementAction
 {
     protected $loggable = true;
@@ -27,7 +29,7 @@ class publicReceiveZxRelease extends structureElementAction
 
             $structureElement->persistElementData();
 
-            $structureElement->persistAuthorship('release');
+            $structureElement->persistAuthorship(EntityType::Release->value);
 
             $structureElement->executeAction('receiveFiles');
             $structureElement->updateFileStructure();

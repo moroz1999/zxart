@@ -7,6 +7,7 @@ namespace ZxArt\Releases;
 use ZxArt\Prods\Dto\ProdDto;
 use ZxArt\Releases\Dto\ReleaseDto;
 use ZxArt\Shared\Dto\AuthorDto;
+use ZxArt\Shared\EntityType;
 use zxReleaseElement;
 
 readonly class ReleasesTransformer
@@ -67,7 +68,7 @@ readonly class ReleasesTransformer
             userVote: $userVote !== null && $userVote !== false ? (int)$userVote : null,
             denyVoting: $element->isVotingDenied(),
             hardwareInfo: $element->getHardwareInfo(),
-            authorsInfoShort: $element->getShortAuthorship('prod'),
+            authorsInfoShort: $element->getShortAuthorship(EntityType::Prod->value),
             categoriesInfo: [],
             partyInfo: $partyInfo,
             partyPlace: $partyPlace,

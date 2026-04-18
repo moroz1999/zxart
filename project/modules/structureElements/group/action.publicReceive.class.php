@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Shared\EntityType;
+
 class publicReceiveGroup extends structureElementAction
 {
     protected $loggable = true;
@@ -25,7 +27,7 @@ class publicReceiveGroup extends structureElementAction
             $structureElement->persistElementData();
             $structureElement->checkParentLetter();
             $structureElement->persistSubGroupConnections();
-            $structureElement->persistAuthorship('group');
+            $structureElement->persistAuthorship(EntityType::Group->value);
             $structureElement->recalculate();
 
             $controller->redirect($structureElement->URL);

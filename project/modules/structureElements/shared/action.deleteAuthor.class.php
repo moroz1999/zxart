@@ -1,6 +1,7 @@
 <?php
 
 use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Shared\EntityType;
 
 class deleteAuthorShared extends structureElementAction
 {
@@ -13,9 +14,9 @@ class deleteAuthorShared extends structureElementAction
     {
         if ($authorId = $controller->getParameter('authorId')) {
             $authorshipRepository = $this->getService(AuthorshipRepository::class);
-            $authorshipRepository->deleteAuthorship($structureElement->getId(), $authorId, 'prod');
-            $authorshipRepository->deleteAuthorship($structureElement->getId(), $authorId, 'release');
-            $authorshipRepository->deleteAuthorship($structureElement->getId(), $authorId, 'group');
+            $authorshipRepository->deleteAuthorship($structureElement->getId(), $authorId, EntityType::Prod);
+            $authorshipRepository->deleteAuthorship($structureElement->getId(), $authorId, EntityType::Release);
+            $authorshipRepository->deleteAuthorship($structureElement->getId(), $authorId, EntityType::Group);
         }
         $structureElement->executeAction('showPublicForm');
     }

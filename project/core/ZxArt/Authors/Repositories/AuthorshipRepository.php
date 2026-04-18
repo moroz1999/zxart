@@ -7,6 +7,7 @@ namespace ZxArt\Authors\Repositories;
 use Illuminate\Database\Connection;
 use JsonException;
 use structureManager;
+use ZxArt\Shared\EntityType;
 
 final class AuthorshipRepository
 {
@@ -18,7 +19,7 @@ final class AuthorshipRepository
 
     }
 
-    public function getAuthorsInfo(int|string $elementId, string $type): array
+    public function getAuthorsInfo(int|string $elementId, EntityType $type): array
     {
         $info = [];
         $sort = [];
@@ -36,14 +37,14 @@ final class AuthorshipRepository
         return $info;
     }
 
-    public function getElementAuthorsRecords(int|string $elementId, $type = null): array
+    public function getElementAuthorsRecords(int|string $elementId, ?EntityType $type = null): array
     {
         $query = $this->db
             ->table('authorship')
             ->select('id', 'authorId', 'startDate', 'endDate', 'roles', 'type')
             ->where('elementId', '=', $elementId);
-        if ($type) {
-            $query->where('type', '=', $type);
+        if ($type !== null) {
+            $query->where('type', '=', $type->value);
         }
 
         if ($records = $query->get()) {
@@ -68,12 +69,12 @@ final class AuthorshipRepository
         return $records;
     }
 
-    public function getAuthorshipInfo(int $authorId, string $type): array
+    public function getAuthorshipInfo(int $authorId, EntityType $type): array
     {
         if ($records = $this->getAuthorshipRecords($authorId, $type)) {
             foreach ($records as $key => &$record) {
                 if ($element = $this->structureManager->getElementById($record['elementId'])) {
-                    $record[$type . 'Element'] = $element;
+                    $record[$type->value . 'Element'] = $element;
                 } else {
                     unset($records[$key]);
                 }
@@ -82,14 +83,14 @@ final class AuthorshipRepository
         return $records;
     }
 
-    public function getAuthorshipRecords(int $authorId, $type = null): array
+    public function getAuthorshipRecords(int $authorId, ?EntityType $type = null): array
     {
         $query = $this->db
             ->table('authorship')
             ->select('elementId', 'startDate', 'endDate', 'roles')
             ->where('authorId', '=', $authorId);
-        if ($type) {
-            $query->where('type', '=', $type);
+        if ($type !== null) {
+            $query->where('type', '=', $type->value);
         }
         if ($records = $query->get()) {
             foreach ($records as &$record) {
@@ -113,14 +114,14 @@ final class AuthorshipRepository
     /**
      * @throws JsonException
      */
-    public function addAuthorship(int $elementId, int|string $authorId, string $type, array $roles = [], int|string|false $startDate = 0, int|string|false $endDate = 0): void
+    public function addAuthorship(int $elementId, int|string $authorId, EntityType $type, array $roles = [], int|string|false $startDate = 0, int|string|false $endDate = 0): void
     {
         if ($existingRecord = $this->db
             ->table('authorship')
             ->select('roles')
             ->where('elementId', '=', $elementId)
             ->where('authorId', '=', $authorId)
-            ->where('type', '=', $type)
+            ->where('type', '=', $type->value)
             ->first()
         ) {
             $existingRoles = json_decode($existingRecord['roles'], true, 512, JSON_THROW_ON_ERROR);
@@ -130,28 +131,28 @@ final class AuthorshipRepository
             }
             $allRoles = array_unique(array_merge($roles, $existingRoles));
             array_filter($allRoles, fn($role) => $role !== 'unknown');
-            $this->updateRoles($elementId, (int)$authorId, $type, $allRoles, (int)$startDate, (int)$endDate);
+            $this->updateRoles($elementId, (int)$authorId, $type->value, $allRoles, (int)$startDate, (int)$endDate);
         } else {
-            $this->insertRoles($elementId, (int)$authorId, $type, $roles, (int)$startDate, (int)$endDate);
+            $this->insertRoles($elementId, (int)$authorId, $type->value, $roles, (int)$startDate, (int)$endDate);
         }
     }
 
     /**
      * @throws JsonException
      */
-    public function saveAuthorship(int $elementId, int|string $authorId, string $type, array $roles = [], int|string|false $startDate = 0, int|string|false $endDate = 0): void
+    public function saveAuthorship(int $elementId, int|string $authorId, EntityType $type, array $roles = [], int|string|false $startDate = 0, int|string|false $endDate = 0): void
     {
         if ($this->db
             ->table('authorship')
             ->where('elementId', '=', $elementId)
             ->where('authorId', '=', $authorId)
-            ->where('type', '=', $type)
+            ->where('type', '=', $type->value)
             ->first()
         ) {
             $roles = array_filter($roles, fn($role) => $role !== 'unknown');
-            $this->updateRoles($elementId, (int)$authorId, $type, $roles, (int)$startDate, (int)$endDate);
+            $this->updateRoles($elementId, (int)$authorId, $type->value, $roles, (int)$startDate, (int)$endDate);
         } else {
-            $this->insertRoles($elementId, (int)$authorId, $type, $roles, (int)$startDate, (int)$endDate);
+            $this->insertRoles($elementId, (int)$authorId, $type->value, $roles, (int)$startDate, (int)$endDate);
         }
     }
 
@@ -175,13 +176,13 @@ final class AuthorshipRepository
             ->insert($data);
     }
 
-    public function deleteAuthorship(int $elementId, $authorId, string $type): bool
+    public function deleteAuthorship(int $elementId, $authorId, EntityType $type): bool
     {
         if ($this->db
             ->table('authorship')
             ->where('elementId', '=', $elementId)
             ->where('authorId', '=', $authorId)
-            ->where('type', '=', $type)
+            ->where('type', '=', $type->value)
             ->delete()
         ) {
             return true;

@@ -25,6 +25,7 @@ use ZxArt\Import\Labels\LabelResolver;
 use ZxArt\Import\Labels\PersonLabel;
 use ZxArt\Import\Services\ImportIdOperator;
 use ZxArt\LinkTypes;
+use ZxArt\Shared\EntityType;
 
 class AuthorsService extends ElementsManager
 {
@@ -94,7 +95,7 @@ class AuthorsService extends ElementsManager
             if ($resolved = $this->labelResolver->resolve($label)) {
                 $element = $resolved;
                 if ($origin) {
-                    $this->importIdOperator->saveImportId($element->getId(), $authorId, $origin, 'author');
+                    $this->importIdOperator->saveImportId($element->getId(), $authorId, $origin, EntityType::Author);
                 }
                 $this->updateAuthor($element, $label, $origin);
             } elseif ($createNew) {
@@ -124,12 +125,12 @@ class AuthorsService extends ElementsManager
             $resolved = $this->labelResolver->resolve($label);
             if ($resolved && $resolved->structureType === 'author') {
                 $this->updateAuthor($resolved, $label, $origin);
-                $this->importIdOperator->saveImportId($resolved->getId(), $authorId, $origin, 'author');
+                $this->importIdOperator->saveImportId($resolved->getId(), $authorId, $origin, EntityType::Author);
                 return $resolved;
             }
             if ($resolved && $resolved->structureType === 'authorAlias') {
                 $this->updateAuthorAlias($resolved, $label, $origin);
-                $this->importIdOperator->saveImportId($resolved->getId(), $authorId, $origin, 'author');
+                $this->importIdOperator->saveImportId($resolved->getId(), $authorId, $origin, EntityType::Author);
                 return $resolved;
             }
         }
@@ -184,7 +185,7 @@ class AuthorsService extends ElementsManager
         $this->updateAuthor($element, $dto, $origin);
 
         if ($origin && $dto->id !== null) {
-            $this->importIdOperator->saveImportId($element->getId(), (string)$dto->id, $origin, 'author');
+            $this->importIdOperator->saveImportId($element->getId(), (string)$dto->id, $origin, EntityType::Author);
         }
         return $element;
     }
@@ -251,14 +252,14 @@ class AuthorsService extends ElementsManager
         }
 
         if ($this->forceUpdateCountry && $label->countryId !== null) {
-            $countryElement = $this->importIdOperator->getElementByImportId((string)$label->countryId, $origin, 'country');
+            $countryElement = $this->importIdOperator->getElementByImportId((string)$label->countryId, $origin, EntityType::Country);
             if ($countryElement && $element->country !== $countryElement->getId()) {
                 $element->country = $countryElement->getId();
                 $changed = true;
             }
         }
         if ($this->forceUpdateCity && $label->cityId !== null) {
-            $cityElement = $this->importIdOperator->getElementByImportId((string)$label->cityId, $origin, 'city');
+            $cityElement = $this->importIdOperator->getElementByImportId((string)$label->cityId, $origin, EntityType::City);
             if ($cityElement && $element->city !== $cityElement->getId()) {
                 $element->city = $cityElement->getId();
                 $changed = true;
@@ -276,8 +277,8 @@ class AuthorsService extends ElementsManager
                 if ($groupImportId === null || $groupImportId === '') {
                     continue;
                 }
-                if ($groupElement = $this->importIdOperator->getElementByImportId($groupImportId, $origin, 'group')) {
-                    $this->authorshipRepository->addAuthorship($groupElement->getId(), $element->getPersistedId(), 'group', $roles);
+                if ($groupElement = $this->importIdOperator->getElementByImportId($groupImportId, $origin, EntityType::Group)) {
+                    $this->authorshipRepository->addAuthorship($groupElement->getId(), $element->getPersistedId(), EntityType::Group, $roles);
                 }
             }
         }
@@ -290,7 +291,7 @@ class AuthorsService extends ElementsManager
         if (!$element) {
             if ($element = $this->labelResolver->resolve($personLabel)) {
                 if ($origin) {
-                    $this->importIdOperator->saveImportId($element->getId(), $importId, $origin, 'author');
+                    $this->importIdOperator->saveImportId($element->getId(), $importId, $origin, EntityType::Author);
                 }
                 if ($element->structureType === 'authorAlias') {
                     $this->updateAuthorAlias($element, $personLabel, $origin);
@@ -332,7 +333,7 @@ class AuthorsService extends ElementsManager
         $this->updateAuthorAlias($element, $authorAlias, $origin);
 
         if ($origin && $authorAlias->id !== null) {
-            $this->importIdOperator->saveImportId($element->getId(), (string)$authorAlias->id, $origin, 'author');
+            $this->importIdOperator->saveImportId($element->getId(), (string)$authorAlias->id, $origin, EntityType::Author);
         }
 
         return $element;
@@ -384,7 +385,7 @@ class AuthorsService extends ElementsManager
         }
 
         if ($label->authorId !== null && !$element->authorId) {
-            if ($authorElement = $this->importIdOperator->getElementByImportId((string)$label->authorId, $origin, 'authorAlias')) {
+            if ($authorElement = $this->importIdOperator->getElementByImportId((string)$label->authorId, $origin, EntityType::AuthorAlias)) {
                 if ($authorElement->getId() !== $element->authorId) {
                     $element->authorId = $authorElement->getId();
                     $changed = true;
@@ -580,7 +581,7 @@ class AuthorsService extends ElementsManager
         if (isset($this->importedAuthors[$origin][$authorId])) {
             return $this->importedAuthors[$origin][$authorId];
         }
-        $author = $this->importIdOperator->getElementByImportId($authorId, $origin, 'author');
+        $author = $this->importIdOperator->getElementByImportId($authorId, $origin, EntityType::Author);
         if ($author?->structureType === 'author') {
             return $author;
         }
@@ -617,10 +618,10 @@ class AuthorsService extends ElementsManager
                     $this->structureManager->clearElementCache($zxProd->id);
                 }
                 foreach ($groupElement->getGroupProds() as $zxProd) {
-                    $this->authorshipRepository->saveAuthorship($zxProd->id, $authorElement->getId(), 'prod');
+                    $this->authorshipRepository->saveAuthorship($zxProd->id, $authorElement->getId(), EntityType::Prod);
                 }
                 foreach ($groupElement->publishedReleases as $zxRelease) {
-                    $this->authorshipRepository->saveAuthorship($zxRelease->id, $authorElement->getId(), 'release', ['release']);
+                    $this->authorshipRepository->saveAuthorship($zxRelease->id, $authorElement->getId(), EntityType::Release, ['release']);
                 }
 
                 if ($records = $this->db->table('import_origin')
@@ -628,7 +629,7 @@ class AuthorsService extends ElementsManager
                     ->get()) {
                     foreach ($records as $record) {
                         if (!$this->db->table('import_origin')
-                            ->where('type', '=', 'author')
+                            ->where('type', '=', EntityType::Author->value)
                             ->where('importOrigin', '=', $record['importOrigin'])
                             ->where('importId', '=', $record['importId'])
                             ->limit(1)
@@ -638,7 +639,7 @@ class AuthorsService extends ElementsManager
                                 ->update(
                                     [
                                         'elementId' => $authorElement->getId(),
-                                        'type' => 'author',
+                                        'type' => EntityType::Author->value,
                                     ]
                                 );
                         } else {
@@ -662,6 +663,6 @@ class AuthorsService extends ElementsManager
             return $this->importedAuthorAliases[$origin][$importId];
         }
 
-        return $this->importIdOperator->getElementByImportId($importId, $origin, 'authorAlias');
+        return $this->importIdOperator->getElementByImportId($importId, $origin, EntityType::AuthorAlias);
     }
 }

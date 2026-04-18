@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Shared\EntityType;
+
 class zxProdDataResponseConverter extends StructuredDataResponseConverter
 {
     protected $defaultPreset = 'api';
@@ -68,10 +70,10 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 return $element->getFilesUrlList('rzx', 'release');
             },
             'authorsInfo' => function (zxProdElement $element) {
-                return $element->getAuthorsRecords('prod');
+                return $element->getAuthorsRecords(EntityType::Prod->value);
             },
             'authorsInfoShort' => function (zxProdElement $element) {
-                return $element->getShortAuthorship('prod');
+                return $element->getShortAuthorship(EntityType::Prod->value);
             },
             'importIds' => 'getImportIdsIndex',
             "votes" => static function ($element) {
@@ -109,7 +111,7 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             },
             "authorsInfoString" => function (zxProdElement $element) {
                 $authors = [];
-                foreach ($element->getShortAuthorship('prod') as $author) {
+                foreach ($element->getShortAuthorship(EntityType::Prod->value) as $author) {
                     $roles = implode(', ', $author['roles']); // concatenate roles with a comma
                     if ($roles === 'unknown') {
                         $authors[] = $author['title'];

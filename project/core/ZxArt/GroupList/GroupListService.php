@@ -10,6 +10,7 @@ use structureManager;
 use ZxArt\GroupList\Dto\FilterOptionDto;
 use ZxArt\GroupList\Dto\GroupListItemDto;
 use ZxArt\GroupList\Repositories\GroupListRepository;
+use ZxArt\Shared\EntityType;
 use ZxArt\Shared\SortingParams;
 
 readonly class GroupListService
@@ -32,7 +33,7 @@ readonly class GroupListService
         ?int $countryId,
         ?int $cityId,
         ?string $letter = null,
-        array $types = ['group', 'groupAlias'],
+        array $types = [EntityType::Group, EntityType::GroupAlias],
         ?string $groupType = null,
     ): array {
         $total = $this->repository->count($search, $countryId, $cityId, $letter, $types, $groupType);
@@ -93,7 +94,7 @@ readonly class GroupListService
                 $options[] = new FilterOptionDto(
                     id: (int)$locationElement->id,
                     title: html_entity_decode($locationElement->title, ENT_QUOTES),
-                    url: $locationElement->getUrl('group'),
+                    url: $locationElement->getUrl(EntityType::Group->value),
                 );
             }
         }
