@@ -480,7 +480,6 @@ abstract class ZxArtItem extends structureElement implements
         return in_array($this->compo,
             [
                 'realtime',
-                'realtimec',
                 'realtimeay',
                 'realtimebeeper',
                 'realtime_coding',

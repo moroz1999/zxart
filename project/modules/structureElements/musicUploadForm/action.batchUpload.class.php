@@ -9,9 +9,9 @@ class batchUploadMusicUploadForm extends structureElementAction
     protected $loggable = true;
 
     /**
-     * @return void
+     * @param musicUploadFormElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($musicsInfo = $structureElement->music) {
             $privilegesManager = $this->getService(privilegesManager::class);

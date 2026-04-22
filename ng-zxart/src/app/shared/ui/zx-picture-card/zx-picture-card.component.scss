@@ -20,10 +20,14 @@
   }
 }
 
-.realtime-badge {
+.picture-badges {
   position: absolute;
   top: var(--space-4);
   right: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-4);
 }
 
 .picture-info {

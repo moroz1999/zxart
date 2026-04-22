@@ -2,7 +2,10 @@
 
 class showCommentsList extends structureElementAction
 {
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    /**
+     * @param commentsListElement $structureElement
+     */
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $type = 'popular';
         if ($structureElement->type) {

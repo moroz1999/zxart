@@ -3,9 +3,9 @@
 class showTag extends structureElementAction
 {
     /**
-     * @return void
+     * @param tagElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $sectionsLogics = $this->getService(SectionLogics::class);
         if (($type = $sectionsLogics->getArtItemsType())) {

@@ -7,14 +7,10 @@ class cloneZxRelease extends structureElementAction
     protected $loggable = true;
 
     /**
-     * @param structureManager $structureManager
-     * @param controller $controller
      * @param zxReleaseElement $structureElement
-     *
-     * @return void
      * @throws Exception
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $parentElement = $structureElement->getFirstParentElement();
         if ($parentElement === null) {

@@ -2,10 +2,7 @@
 
 class removeFromPlaylistShared extends structureElementAction
 {
-    /**
-     * @return void
-     */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($playlistId = $controller->getParameter('playlistId')) {
             $linksManager = $this->getService(linksManager::class);

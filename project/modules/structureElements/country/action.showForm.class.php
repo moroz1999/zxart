@@ -3,9 +3,9 @@
 class showFormCountry extends structureElementAction
 {
     /**
-     * @return void
+     * @param countryElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($structureElement->final) {
             if ($controller->getApplicationName() == 'admin') {

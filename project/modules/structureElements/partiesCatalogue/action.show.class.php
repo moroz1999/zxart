@@ -3,13 +3,9 @@
 class showPartiesCatalogue extends structureElementAction
 {
     /**
-     * @param structureManager $structureManager
-     * @param controller $controller
      * @param partiesCatalogueElement $structureElement
-     *
-     * @return void
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $structureElement->setViewName('show');
         if (($firstParent = $structureElement->getFirstParentElement()) && $firstParent->requested) {

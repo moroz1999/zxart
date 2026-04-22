@@ -3,9 +3,9 @@
 class showFullListTags extends structureElementAction
 {
     /**
-     * @return void
+     * @param tagsElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($structureElement->final) {
             $structureElement->setTemplate('shared.content.tpl');

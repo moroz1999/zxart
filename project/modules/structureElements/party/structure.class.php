@@ -85,7 +85,7 @@ class partyElement extends structureElement implements
             $structureManager = $this->getService('structureManager');
             $this->yearElement = $structureManager->getElementsFirstParent($this->getId());
         }
-        return $this->yearElement->title;
+        return $this->yearElement->title ?? '';
     }
 
     /**

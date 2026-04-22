@@ -3,9 +3,9 @@
 class recalculateAuthor extends structureElementAction
 {
     /**
-     * @return void
+     * @param authorElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $structureElement->recalculate();
     }

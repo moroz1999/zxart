@@ -3,12 +3,9 @@
 class showComment extends structureElementAction
 {
     /**
-     * @param $structureManager
-     * @param $controller
      * @param commentElement $structureElement
-     * @return void
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($structureElement->requested) {
             $structureElement->setViewName('short');

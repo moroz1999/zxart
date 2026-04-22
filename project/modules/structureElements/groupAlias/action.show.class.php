@@ -3,9 +3,9 @@
 class showGroupAlias extends structureElementAction
 {
     /**
-     * @return void
+     * @param groupAliasElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($structureElement->final) {
 //            if (!$worksList = $structureElement->getWorksList()) {

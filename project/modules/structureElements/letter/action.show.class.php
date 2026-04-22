@@ -3,9 +3,9 @@
 class showLetter extends structureElementAction
 {
     /**
-     * @return void
+     * @param letterElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($structureElement->requested) {
             $renderer = $this->getService(renderer::class);

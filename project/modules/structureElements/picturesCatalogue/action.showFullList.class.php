@@ -3,9 +3,9 @@
 class showFullListPicturesCatalogue extends structureElementAction
 {
     /**
-     * @return void
+     * @param picturesCatalogueElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($structureElement->requested === true) {
             if ($structureElement->final === true) {

@@ -5,9 +5,9 @@ use App\Users\CurrentUserService;
 class verifyEmailRegistration extends structureElementAction
 {
     /**
-     * @return void
+     * @param registrationElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $translationsManager = $this->getService(translationsManager::class);
         $controller = controller::getInstance();

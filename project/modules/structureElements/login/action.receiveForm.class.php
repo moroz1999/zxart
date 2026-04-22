@@ -7,9 +7,9 @@ class receiveFormLogin extends structureElementAction
     protected $loggable = true;
 
     /**
-     * @return void
+     * @param loginElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($this->validated === true) {
             $currentUserService = $this->getService(CurrentUserService::class);

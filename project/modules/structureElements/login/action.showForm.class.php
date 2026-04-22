@@ -3,9 +3,9 @@
 class showFormLogin extends structureElementAction
 {
     /**
-     * @return void
+     * @param loginElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $structureElement->setViewName('show');
         $renderer = $this->getService(renderer::class);

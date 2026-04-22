@@ -3,9 +3,9 @@
 class showCountriesList extends structureElementAction
 {
     /**
-     * @return void
+     * @param countriesListElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $structureElement->setViewName('content');
     }

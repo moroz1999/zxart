@@ -3,9 +3,9 @@
 class receiveUserPlaylists extends structureElementAction
 {
     /**
-     * @return void
+     * @param userPlaylistsElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($this->validated) {
             $structureElement->prepareActualData();

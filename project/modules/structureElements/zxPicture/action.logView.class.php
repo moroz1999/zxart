@@ -3,9 +3,9 @@
 class logViewZxPicture extends structureElementAction
 {
     /**
-     * @return void
+     * @param zxPictureElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $structureElement->logView();
         $renderer = $this->getService(renderer::class);

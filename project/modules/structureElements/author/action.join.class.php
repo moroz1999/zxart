@@ -7,13 +7,9 @@ class joinAuthor extends structureElementAction
     protected $loggable = true;
 
     /**
-     * @param structureManager $structureManager
-     * @param controller $controller
      * @param authorElement $structureElement
-     *
-     * @return void
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($this->validated) {
             $authorsManager = $this->getService(AuthorsService::class);

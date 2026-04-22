@@ -9,9 +9,14 @@
       [lightbox]="galleryIndex ?? 0"
       [gallery]="galleryId || defaultGalleryId"
     />
-    <zx-badge *ngIf="picture.isRealtime" variant="secondary" class="realtime-badge">
-      {{ picture.compo || ('firstpage.realtime' | translate) }}
-    </zx-badge>
+    <div class="picture-badges">
+      <zx-badge *ngIf="picture.isRealtime" variant="secondary">
+        {{ picture.compo ? (('picture-compo-short.' + picture.compo) | translate) : ('firstpage.realtime' | translate) }}
+      </zx-badge>
+      <zx-badge *ngIf="picture.type && picture.type !== 'standard'" variant="secondary">
+        {{ ('picture-format-short.' + picture.type) | translate }}
+      </zx-badge>
+    </div>
   </div>
   <div class="picture-info">
     <a [href]="picture.url" class="picture-title">{{ picture.title }}</a>

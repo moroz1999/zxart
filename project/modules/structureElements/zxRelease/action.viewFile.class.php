@@ -3,13 +3,9 @@
 class viewFileZxRelease extends structureElementAction
 {
     /**
-     * @param structureManager $structureManager
-     * @param controller $controller
      * @param zxReleaseElement $structureElement
-     *
-     * @return void
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if (!$structureElement->getCurrentReleaseFileInfo()) {
             $this->getService(renderer::class)->fileNotFound();

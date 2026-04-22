@@ -7,12 +7,9 @@ class showComments extends structureElementAction
     protected $actionsLogData;
 
     /**
-     * @param structureManager $structureManager
-     * @param controller $controller
      * @param commentsElement $structureElement
-     * @return mixed|void
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($structureElement->requested) {
             $filters = $this->getFilters($structureElement->getFormData());

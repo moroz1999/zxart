@@ -3,9 +3,9 @@
 class showParty extends structureElementAction
 {
     /**
-     * @return void
+     * @param partyElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($structureElement->final) {
             $view = $controller->getParameter('view');

@@ -7,9 +7,9 @@ use ZxArt\UserPreferences\UserPreferencesService;
 class loginLogin extends structureElementAction
 {
     /**
-     * @return void
+     * @param loginElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $validated = false;
         $userName = $structureElement->userName;

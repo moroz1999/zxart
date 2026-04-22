@@ -3,9 +3,9 @@
 class showZxItemsList extends structureElementAction
 {
     /**
-     * @return void
+     * @param zxItemsListElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $items = 'graphics';
         if ($structureElement->items) {

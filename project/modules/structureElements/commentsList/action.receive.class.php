@@ -2,7 +2,10 @@
 
 class receiveCommentsList extends structureElementAction
 {
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    /**
+     * @param commentsListElement $structureElement
+     */
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($this->validated) {
             if ($structureElement->structureName == '') {

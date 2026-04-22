@@ -3,9 +3,9 @@
 class receiveParser extends structureElementAction
 {
     /**
-     * @return void
+     * @param parserElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($this->validated) {
             $structureElement->structureName = $structureElement->title;

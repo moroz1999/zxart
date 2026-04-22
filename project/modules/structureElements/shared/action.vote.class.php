@@ -4,10 +4,7 @@ use App\Logging\EventsLog;
 
 class voteShared extends structureElementAction
 {
-    /**
-     * @return void
-     */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $structureElement->executeAction('show');
         if ($structureElement instanceof VotesHolderInterface) {

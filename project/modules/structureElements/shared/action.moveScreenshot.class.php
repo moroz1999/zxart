@@ -6,13 +6,9 @@ class moveScreenshotShared extends structureElementAction
     private string $privilegeName = 'publicReceive';
 
     /**
-     * @param structureManager $structureManager
-     * @param controller $controller
      * @param zxProdElement|zxReleaseElement $structureElement
-     *
-     * @return void
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $direction = $controller->getParameter('direction');
         $fileId = (int)$controller->getParameter('fileId');

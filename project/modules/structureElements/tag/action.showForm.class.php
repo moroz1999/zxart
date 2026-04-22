@@ -3,9 +3,9 @@
 class showFormTag extends structureElementAction
 {
     /**
-     * @return void
+     * @param tagElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($structureElement->final) {
             $structureElement->setTemplate('shared.content.tpl');

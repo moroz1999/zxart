@@ -5,9 +5,9 @@ class banUser extends structureElementAction
     protected $loggable = true;
 
     /**
-     * @return void
+     * @param userElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $parentElement = $structureManager->getElementsFirstParent($structureElement->getId());
         $redirectURL = $parentElement->URL;

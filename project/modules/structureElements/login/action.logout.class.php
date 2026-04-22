@@ -5,9 +5,9 @@ use App\Users\CurrentUserService;
 class logoutLogin extends structureElementAction
 {
     /**
-     * @return void
+     * @param loginElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $currentUserService = $this->getService(CurrentUserService::class);
         $user = $currentUserService->getCurrentUser();

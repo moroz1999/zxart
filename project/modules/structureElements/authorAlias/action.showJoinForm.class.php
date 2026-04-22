@@ -3,9 +3,9 @@
 class showJoinFormAuthorAlias extends structureElementAction
 {
     /**
-     * @return void
+     * @param authorAliasElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $structureElement->setViewName('joinForm');
     }

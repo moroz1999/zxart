@@ -5,9 +5,9 @@ use App\Users\CurrentUserService;
 class receivePlaylist extends structureElementAction
 {
     /**
-     * @return void
+     * @param playlistElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($this->validated) {
             $currentUserService = $this->getService(CurrentUserService::class);

@@ -6,9 +6,8 @@ class showPublicFormPressArticle extends structureElementAction
 {
     /**
      * @param pressArticleElement $structureElement
-     * @return void
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $pressArticleRepository = $this->getService(PressArticleRepository::class);
         $structureElement->originalContent = $pressArticleRepository->getOriginalContent($structureElement->getId());

@@ -3,9 +3,9 @@
 class showPartiesList extends structureElementAction
 {
     /**
-     * @return void
+     * @param partiesListElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $type = 'latest';
         if ($structureElement->type) {

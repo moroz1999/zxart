@@ -2,10 +2,7 @@
 
 class getPlaylistIdsShared extends structureElementAction
 {
-    /**
-     * @return void
-     */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $renderer = $this->getService(renderer::class);
         if ($renderer instanceof RendererPluginAppendInterface) {

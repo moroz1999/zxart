@@ -3,9 +3,9 @@
 class showAuthorsCatalogue extends structureElementAction
 {
     /**
-     * @return void
+     * @param authorsCatalogueElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $structureElement->setViewName('show');
         if (($firstParent = $structureElement->getFirstParentElement()) && $firstParent->requested) {

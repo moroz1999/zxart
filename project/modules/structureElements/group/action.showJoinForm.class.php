@@ -3,9 +3,9 @@
 class showJoinFormGroup extends structureElementAction
 {
     /**
-     * @return void
+     * @param groupElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $structureElement->setViewName('joinForm');
     }

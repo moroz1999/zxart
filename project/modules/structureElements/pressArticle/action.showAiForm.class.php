@@ -3,9 +3,9 @@
 class showAiFormPressArticle extends structureElementAction
 {
     /**
-     * @return void
+     * @param pressArticleElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $structureElement->setViewName('aiForm');
     }

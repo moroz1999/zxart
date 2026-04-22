@@ -3,9 +3,9 @@
 class showCity extends structureElementAction
 {
     /**
-     * @return void
+     * @param cityElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $structureElement->setViewName('content');
     }

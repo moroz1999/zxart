@@ -8,9 +8,9 @@ class batchUploadPicturesCatalogue extends structureElementAction
     protected $loggable = true;
 
     /**
-     * @return void
+     * @param picturesCatalogueElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($imagesInfo = $structureElement->image) {
             $cachePath = $this->getService(PathsManager::class)->getPath('uploadsCache');

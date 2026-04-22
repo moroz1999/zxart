@@ -212,7 +212,6 @@ class detailedSearchElement extends structureElement implements LocationProvider
                             'realtime',
                             'realtimeay',
                             'realtimebeeper',
-                            'realtimec',
                         ];
                     }
                     if (isset($parameters['tagsInclude'])) {

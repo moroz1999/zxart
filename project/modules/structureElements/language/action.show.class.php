@@ -5,12 +5,9 @@ use App\Users\CurrentUserService;
 class showLanguage extends structureElementAction
 {
     /**
-     * @param structureManager $structureManager
-     * @param controller $controller
      * @param languageElement $structureElement
-     * @return void
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $languagesManager = $this->getService(LanguagesManager::class);
         $currentLanguageId = $languagesManager->getCurrentLanguageId();

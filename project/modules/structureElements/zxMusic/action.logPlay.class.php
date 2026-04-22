@@ -3,9 +3,9 @@
 class logPlayZxMusic extends structureElementAction
 {
     /**
-     * @return void
+     * @param zxMusicElement $structureElement
      */
-    public function execute(&$structureManager, &$controller, &$structureElement)
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $structureElement->logPlay();
 
