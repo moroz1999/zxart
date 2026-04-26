@@ -1,0 +1,25 @@
+<header class="zx-article-preview__header">
+  <a class="zx-article-preview__link" [href]="url">
+    <h3 zxHeading3 class="zx-article-preview__title"
+        [innerHTML]="titleHtml ?? title"></h3>
+  </a>
+  <zx-button
+    *ngIf="readLinkLabel"
+    class="zx-article-preview__read"
+    size="xs"
+    color="outlined"
+    [href]="url"
+  >{{ readLinkLabel }}</zx-button>
+</header>
+
+<div *ngIf="typeLabel || year || authors.length > 0" class="zx-article-preview__meta" zxBodySmMuted>
+  <span *ngIf="typeLabel" class="zx-article-preview__type">{{ typeLabel }}</span>
+  <span *ngIf="year" class="zx-article-preview__year">{{ year }}</span>
+  <span *ngIf="authors.length > 0" class="zx-article-preview__authors">
+    <ng-container *ngFor="let author of authors; let last = last">
+      <a [href]="author.url">{{ author.title }}</a><ng-container *ngIf="!last">, </ng-container>
+    </ng-container>
+  </span>
+</div>
+
+<p *ngIf="snippetHtml" class="zx-article-preview__snippet" zxBody [innerHTML]="snippetHtml"></p>

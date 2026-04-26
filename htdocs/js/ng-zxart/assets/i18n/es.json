@@ -362,10 +362,8 @@
       "search-all": "Buscar todo",
       "type": {
         "author": "Autores",
-        "authorAlias": "Seudónimos de autores",
         "party": "Parties",
         "group": "Grupos",
-        "groupAlias": "Seudónimos de grupos",
         "zxProd": "Programas",
         "zxPicture": "Imágenes",
         "zxMusic": "Música",
@@ -520,5 +518,29 @@
     "bsc": "BSC",
     "bsp": "BSP",
     "bmc4": "BMC4"
+  },
+  "search": {
+    "empty": "No se encontró nada para tu consulta.",
+    "error": "No se pudieron cargar los resultados.",
+    "partial": "Se incluyen coincidencias parciales.",
+    "read": "Leer",
+    "heading": {
+      "first_page": "Resultados de búsqueda: «{{phrase}}»",
+      "with_page": "Resultados de búsqueda: «{{phrase}}», página {{page}}"
+    },
+    "filters": {
+      "types": "Tipos:",
+      "selectAll": "Seleccionar todo"
+    },
+    "types": {
+      "author": "Autores",
+      "party": "Demoparties",
+      "group": "Grupos",
+      "zxProd": "Programas",
+      "zxRelease": "Versiones",
+      "zxPicture": "Imágenes",
+      "zxMusic": "Música",
+      "pressArticle": "Prensa"
+    }
   }
 }

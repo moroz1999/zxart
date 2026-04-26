@@ -1,0 +1,37 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.zx-article-preview__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-8);
+}
+
+.zx-article-preview__link {
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+}
+
+.zx-article-preview__title {
+  margin: 0;
+}
+
+.zx-article-preview__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.zx-article-preview__snippet {
+  margin: 0;
+}
+
+::ng-deep .search_emphasized {
+  color: var(--search-emphasized-color);
+  font-weight: bold;
+}

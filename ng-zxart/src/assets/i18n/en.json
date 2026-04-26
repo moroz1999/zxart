@@ -363,10 +363,8 @@
       "search-all": "Search all",
       "type": {
         "author": "Authors",
-        "authorAlias": "Author Aliases",
         "party": "Parties",
         "group": "Groups",
-        "groupAlias": "Group Aliases",
         "zxProd": "Programs",
         "zxPicture": "Pictures",
         "zxMusic": "Music",
@@ -521,5 +519,29 @@
     "bsc": "BSC",
     "bsp": "BSP",
     "bmc4": "BMC4"
+  },
+  "search": {
+    "empty": "Nothing found for your query.",
+    "error": "Failed to load search results.",
+    "partial": "Partial matches included.",
+    "read": "Read",
+    "heading": {
+      "first_page": "Search results: \"{{phrase}}\"",
+      "with_page": "Search results: \"{{phrase}}\", page {{page}}"
+    },
+    "filters": {
+      "types": "Types:",
+      "selectAll": "Select all"
+    },
+    "types": {
+      "author": "Authors",
+      "party": "Parties",
+      "group": "Groups",
+      "zxProd": "Programs",
+      "zxRelease": "Releases",
+      "zxPicture": "Pictures",
+      "zxMusic": "Music",
+      "pressArticle": "Press articles"
+    }
   }
 }

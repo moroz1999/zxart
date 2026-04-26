@@ -363,10 +363,8 @@
       "search-all": "Искать всё",
       "type": {
         "author": "Авторы",
-        "authorAlias": "Псевдонимы авторов",
         "party": "Пати",
         "group": "Группы",
-        "groupAlias": "Псевдонимы групп",
         "zxProd": "Программы",
         "zxPicture": "Картинки",
         "zxMusic": "Музыка",
@@ -521,5 +519,29 @@
     "bsc": "BSC",
     "bsp": "BSP",
     "bmc4": "BMC4"
+  },
+  "search": {
+    "empty": "По вашему запросу ничего не найдено.",
+    "error": "Не удалось загрузить результаты поиска.",
+    "partial": "Включены частичные совпадения.",
+    "read": "Читать",
+    "heading": {
+      "first_page": "Результаты поиска: «{{phrase}}»",
+      "with_page": "Результаты поиска: «{{phrase}}», страница {{page}}"
+    },
+    "filters": {
+      "types": "Типы:",
+      "selectAll": "Выбрать все"
+    },
+    "types": {
+      "author": "Авторы",
+      "party": "Пати",
+      "group": "Группы",
+      "zxProd": "Программы",
+      "zxRelease": "Релизы",
+      "zxPicture": "Картинки",
+      "zxMusic": "Музыка",
+      "pressArticle": "Пресса"
+    }
   }
 }

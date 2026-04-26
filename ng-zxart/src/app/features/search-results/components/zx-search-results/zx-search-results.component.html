@@ -1,0 +1,166 @@
+<ng-container *ngIf="initialLoading; else loadedTpl">
+  <div class="zx-search-results__skeleton-filters">
+    <zx-skeleton variant="row" [count]="6"></zx-skeleton>
+  </div>
+  <div class="zx-search-results__skeleton-groups">
+    <div *ngFor="let group of skeletonGroups" class="zx-search-results__skeleton-group">
+      <div class="zx-search-results__skeleton-heading">
+        <zx-skeleton variant="text" [count]="1" lineHeight="24px"></zx-skeleton>
+      </div>
+      <div *ngIf="group.variant === 'picture-grid'" zxPicturesGrid>
+        <zx-picture-card-skeleton
+          *ngFor="let i of pictureSkeletonItems"
+          [animationDelayMs]="i * 80"
+        ></zx-picture-card-skeleton>
+      </div>
+      <zx-skeleton
+        *ngIf="group.variant === 'prod-grid'"
+        variant="prod-grid"
+        [count]="group.count"
+      ></zx-skeleton>
+      <zx-skeleton
+        *ngIf="group.variant === 'row'"
+        variant="row"
+        [count]="group.count"
+      ></zx-skeleton>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #loadedTpl>
+  <ng-container *ngIf="error; else dataTpl">
+    <p zxBody class="zx-search-results__error">{{ 'search.error' | translate }}</p>
+  </ng-container>
+
+  <ng-template #dataTpl>
+    <h1 zxHeading1 class="zx-search-results__heading">
+      {{ headingTranslationKey() | translate: { phrase: phrase, page: currentPage } }}
+    </h1>
+
+    <zx-filter-bar *ngIf="typeFilters.length > 1" class="zx-search-results__filters">
+      <span zxCaption class="zx-search-results__filters-label">{{ 'search.filters.types' | translate }}</span>
+      <div class="zx-search-results__filter-options">
+        <zx-checkbox-field
+          *ngFor="let opt of typeFilters; trackBy: trackByOptionValue"
+          [label]="opt.label"
+          [ngModel]="opt.selected"
+          (ngModelChange)="onTypeToggle(opt, $event)"
+        ></zx-checkbox-field>
+      </div>
+      <zx-button
+        size="sm"
+        color="outlined"
+        (click)="onSelectAllTypes()"
+      >{{ 'search.filters.selectAll' | translate }}</zx-button>
+    </zx-filter-bar>
+
+    <div class="zx-search-results__body" [class.zx-search-results__body--loading]="pageLoading">
+      <ng-container *ngIf="data && data.sets.length > 0; else emptyTpl">
+        <ng-container *ngFor="let set of data.sets; trackBy: trackBySetType">
+          <div class="zx-search-results__set">
+            <h2 zxHeading2 class="zx-search-results__set-heading">
+              {{ setLabelKey(set.type) | translate }}
+            </h2>
+            <p *ngIf="set.partial" zxCaption class="zx-search-results__set-partial">
+              {{ 'search.partial' | translate }}
+            </p>
+
+            <ng-container [ngSwitch]="true">
+              <zx-authors-table
+                *ngSwitchCase="isAuthorSet(set)"
+                [authors]="asAuthors(set.items)"
+                [showRowNumbers]="false"
+              ></zx-authors-table>
+
+              <zx-groups-table
+                *ngSwitchCase="isGroupSet(set)"
+                [groups]="asGroups(set.items)"
+                [showRowNumbers]="false"
+              ></zx-groups-table>
+
+              <div *ngSwitchCase="isPictureSet(set)" zxPicturesGrid>
+                <zx-picture-card
+                  *ngFor="let pic of asPictures(set.items); let i = index; trackBy: trackByItemId"
+                  [picture]="pic"
+                  [galleryIndex]="i"
+                  [galleryId]="pictureGalleryId(set)"
+                ></zx-picture-card>
+              </div>
+
+              <zx-table *ngSwitchCase="isMusicSet(set)" size="sm">
+                <ng-container *ngIf="{ id: playingTuneId$ | async } as playing">
+                  <table class="tunes-table">
+                    <tbody>
+                      <zx-tune-row
+                        *ngFor="let tune of asTunes(set.items); index as i; trackBy: trackByTuneId"
+                        [tune]="tune"
+                        [index]="i"
+                        [isPlaying]="tune.id === playing.id"
+                        (playRequested)="playTune(asTunes(set.items), tune)"
+                        (pauseRequested)="pauseTune()"
+                      ></zx-tune-row>
+                    </tbody>
+                  </table>
+                </ng-container>
+              </zx-table>
+
+              <div *ngSwitchCase="isProdSet(set)" class="zx-search-results__prods-grid">
+                <zx-prod-block
+                  *ngFor="let prod of prodsFor(set); trackBy: trackByProdId"
+                  [model]="prod"
+                ></zx-prod-block>
+              </div>
+
+              <div *ngSwitchCase="isPressArticleSet(set)" class="zx-search-results__articles-grid">
+                <zx-panel
+                  *ngFor="let item of asGeneric(set.items); trackBy: trackByItemId"
+                  variant="elevated"
+                  padding="md"
+                >
+                  <zx-article-preview
+                    [title]="item.title"
+                    [titleHtml]="item.titleHtml"
+                    [url]="item.url"
+                    [snippetHtml]="item.snippetHtml"
+                    [year]="item.year"
+                    [authors]="item.authors"
+                    [readLinkLabel]="'search.read' | translate"
+                  ></zx-article-preview>
+                </zx-panel>
+              </div>
+
+              <div *ngSwitchDefault class="zx-search-results__items">
+                <zx-article-preview
+                  *ngFor="let item of asGeneric(set.items); trackBy: trackByItemId"
+                  [title]="item.title"
+                  [titleHtml]="item.titleHtml"
+                  [url]="item.url"
+                  [snippetHtml]="item.snippetHtml"
+                  [year]="item.year"
+                  [authors]="item.authors"
+                ></zx-article-preview>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+      </ng-container>
+
+      <ng-template #emptyTpl>
+        <p zxBody class="zx-search-results__empty">{{ 'search.empty' | translate }}</p>
+      </ng-template>
+
+      <div *ngIf="pageLoading" class="zx-search-results__overlay" aria-live="polite">
+        <zx-spinner size="lg"></zx-spinner>
+      </div>
+    </div>
+
+    <zx-pagination
+      *ngIf="pagesAmount > 1"
+      [currentPage]="currentPage"
+      [pagesAmount]="pagesAmount"
+      [urlBase]="urlBase"
+      [loading]="pageLoading"
+      (pageChange)="onPageChange($event)"
+    ></zx-pagination>
+  </ng-template>
+</ng-template>

@@ -3,7 +3,9 @@ import {CommonModule} from '@angular/common';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
 import {ZxPictureCardComponent} from '../../../../shared/ui/zx-picture-card/zx-picture-card.component';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {
+  ZxPictureCardSkeletonComponent
+} from '../../../../shared/ui/zx-picture-card-skeleton/zx-picture-card-skeleton.component';
 import {ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ZxPicturesGridDirective} from '../../../../shared/directives/pictures-grid.directive';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
@@ -22,7 +24,7 @@ import {BrowserBaseComponent} from '../../../../shared/browser-base.component';
     CommonModule,
     TranslateModule,
     ZxPictureCardComponent,
-    ZxSkeletonComponent,
+    ZxPictureCardSkeletonComponent,
     ZxCaptionDirective,
     ZxPicturesGridDirective,
     ZxPaginationComponent,
@@ -38,6 +40,7 @@ export class ZxPictureBrowserComponent extends BrowserBaseComponent {
 
   pictures: ZxPictureDto[] = [];
   galleryId = '';
+  readonly skeletonItems = [0, 1, 2, 3, 4, 5];
 
   constructor(
     private pictureBrowserService: PictureBrowserService,

@@ -11,7 +11,12 @@
   </div>
 </div>
 
-<zx-skeleton *ngIf="loading" variant="picture-grid" [count]="6"></zx-skeleton>
+<div *ngIf="loading" zxPicturesGrid>
+  <zx-picture-card-skeleton
+    *ngFor="let i of skeletonItems"
+    [animationDelayMs]="i * 80"
+  ></zx-picture-card-skeleton>
+</div>
 
 <div *ngIf="error" zxCaption>{{ 'picture-browser.error' | translate }}</div>
 <div *ngIf="!loading && !error && pictures.length === 0" zxCaption>{{ 'picture-browser.empty' | translate }}</div>

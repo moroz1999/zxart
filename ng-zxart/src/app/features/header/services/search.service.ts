@@ -6,12 +6,17 @@ import {SearchResultDto, SearchResultGroup} from '../models/search-result.dto';
 
 const SEARCH_TYPES = 'author,authorAlias,party,group,groupAlias,zxProd,zxPicture,zxMusic,pressArticle';
 
+const ALIAS_TO_PUBLIC_TYPE: Record<string, string> = {
+  authorAlias: 'author',
+  groupAlias: 'group',
+};
+
+const PUBLIC_TYPE_ORDER = ['author', 'party', 'group', 'zxProd', 'zxPicture', 'zxMusic', 'pressArticle'];
+
 const TYPE_ICONS: Record<string, string> = {
   author: 'person',
-  authorAlias: 'person',
   party: 'list',
   group: 'person',
-  groupAlias: 'person',
   zxProd: 'videogame-asset',
   zxPicture: 'image',
   zxMusic: 'music-note',
@@ -34,15 +39,30 @@ export class SearchService {
   }
 
   private group(data: Record<string, SearchResultDto[]>): SearchResultGroup[] {
-    return SEARCH_TYPES.split(',')
-      .filter(t => Array.isArray(data[t]) && data[t].length > 0)
-      .map(t => ({
-        type: t,
-        icon: TYPE_ICONS[t] ?? 'list',
-        items: data[t].map(item => ({
-          ...item,
-          title: (item as any)['searchTitle'] ?? item.title,
-        })),
+    const buckets = new Map<string, SearchResultDto[]>();
+    for (const rawType of SEARCH_TYPES.split(',')) {
+      const items = data[rawType];
+      if (!Array.isArray(items) || items.length === 0) {
+        continue;
+      }
+      const publicType = ALIAS_TO_PUBLIC_TYPE[rawType] ?? rawType;
+      const normalized = items.map(item => ({
+        ...item,
+        title: (item as unknown as {searchTitle?: string}).searchTitle ?? item.title,
+      }));
+      const existing = buckets.get(publicType);
+      if (existing) {
+        existing.push(...normalized);
+      } else {
+        buckets.set(publicType, normalized);
+      }
+    }
+    return PUBLIC_TYPE_ORDER
+      .filter(type => buckets.has(type))
+      .map(type => ({
+        type,
+        icon: TYPE_ICONS[type] ?? 'list',
+        items: buckets.get(type)!,
       }));
   }
 }

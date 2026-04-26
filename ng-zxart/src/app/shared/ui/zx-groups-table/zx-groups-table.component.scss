@@ -1,0 +1,33 @@
+:host {
+  display: block;
+}
+
+zx-table {
+  transition: opacity var(--zx-group-browser-loading-transition) ease;
+}
+
+zx-table.loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.col-num {
+  width: var(--zx-group-browser-col-num-width);
+}
+
+.col-title {
+  min-width: var(--zx-group-browser-col-title-min-width);
+}
+
+.col-type {
+  min-width: var(--zx-group-browser-col-type-min-width);
+}
+
+.col-realname {
+  min-width: var(--zx-group-browser-col-realname-min-width);
+}
+
+.col-country,
+.col-city {
+  min-width: var(--zx-group-browser-col-location-min-width);
+}

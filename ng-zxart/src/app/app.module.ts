@@ -38,6 +38,9 @@ import {
   ZxAuthorBrowserComponent
 } from './features/author-browser/components/zx-author-browser/zx-author-browser.component';
 import {ZxGroupBrowserComponent} from './features/group-browser/components/zx-group-browser/zx-group-browser.component';
+import {
+  ZxSearchResultsComponent
+} from './features/search-results/components/zx-search-results/zx-search-results.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -96,6 +99,7 @@ export class AppModule implements DoBootstrap  {
             'zx-prods-browser': ZxProdsBrowserComponent,
             'zx-author-browser': ZxAuthorBrowserComponent,
             'zx-group-browser': ZxGroupBrowserComponent,
+            'zx-search-results': ZxSearchResultsComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});

@@ -1,0 +1,34 @@
+:host {
+  display: block;
+}
+
+zx-table {
+  transition: opacity var(--zx-author-browser-loading-transition) ease;
+}
+
+zx-table.loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.col-num {
+  width: var(--zx-author-browser-col-num-width);
+}
+
+.col-nick {
+  min-width: var(--zx-author-browser-col-nick-min-width);
+}
+
+.col-realname {
+  min-width: var(--zx-author-browser-col-realname-min-width);
+}
+
+.col-country,
+.col-city {
+  min-width: var(--zx-author-browser-col-location-min-width);
+}
+
+.col-rating {
+  width: var(--zx-author-browser-col-rating-width);
+  text-align: right;
+}

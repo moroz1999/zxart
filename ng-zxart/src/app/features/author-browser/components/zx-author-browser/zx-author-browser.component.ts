@@ -14,7 +14,7 @@ import {
   ZxFilterPickerItem
 } from '../../../../shared/ui/zx-filter-picker/zx-filter-picker.component';
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
-import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
+import {ZxAuthorsTableComponent} from '../../../../shared/ui/zx-authors-table/zx-authors-table.component';
 import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
 import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filter-bar.component';
 
@@ -29,7 +29,7 @@ import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filte
     ZxCaptionDirective,
     ZxFilterPickerComponent,
     ZxInputComponent,
-    ZxTableComponent,
+    ZxAuthorsTableComponent,
     ZxSkeletonComponent,
     ZxFilterBarComponent,
   ],
