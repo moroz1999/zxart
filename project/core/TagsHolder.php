@@ -81,28 +81,9 @@ trait TagsHolder
         return $this->tagsList;
     }
 
-    /**
-     * @return false|int
-     *
-     * @psalm-return false|int<0, max>
-     */
-    public function hasTag($text): int|false
-    {
-        $result = false;
-        if ($tagsTexts = $this->getTagsTexts()) {
-            foreach ($tagsTexts as $tagsText) {
-                if ($result = stripos($tagsText, $text)) {
-                    break;
-                }
-            }
-        }
-        return $result;
-    }
-
     public function getSuggestedTags()
     {
-        $tagsManager = $this->getService(tagsManager::class);
-        return $tagsIdList = $tagsManager->getElementSuggestedTags($this->id, 25);
+        return $this->getService(tagsManager::class)->getElementSuggestedTags($this->id, 25);
     }
 
     /**

@@ -12,7 +12,13 @@ Do not modify anything in `project/`.
 - [x] Verified the actual structure table and type column in the database.
 - [x] Collected distinct module types from the database.
 - [x] Compared database types with existing module folders in `trickster-cms`.
-- [ ] Start module removal after user approval.
+- [x] Start module removal after user approval.
+- [x] Removed config references to deleted modules from `cms/config` and `homepage/config`.
+- [x] Added SQL migration to drop dedicated tables of removed modules.
+- [x] Removed all remaining `newsMail*` and `newsMails*` code, templates, assets, and config references.
+- [x] Added SQL migration to drop newsmails-related tables.
+- [x] Removed all remaining `banner`, `bannerCategory`, and `banners` code, templates, assets, and config references.
+- [x] Added SQL migration to drop banner-related tables.
 
 ## Database Notes
 
@@ -46,61 +52,73 @@ zxProds, zxRelease
 
 ### CMS package
 
-- [ ] `logs`
-- [ ] `positions`
-- [ ] `privileges`
-- [ ] `shared`
-- [ ] `translationsExport`
+- Keep `logs` by user decision.
+- Keep `positions` by user decision.
+- Keep `privileges` by user decision.
+- Keep `shared` by user decision.
+- [x] `translationsExport`
 
 ### Homepage package
 
-- [ ] `currencies`
-- [ ] `currency`
-- [ ] `currencySelector`
-- [ ] `event`
-- [ ] `events`
-- [ ] `eventsList`
-- [ ] `facebookSocialPlugin`
-- [ ] `formCheckBox`
-- [ ] `formDateInput`
-- [ ] `formFileInput`
-- [ ] `formSelect`
-- [ ] `formSelectOption`
-- [ ] `gallery`
-- [ ] `galleryImage`
-- [ ] `genericIcon`
-- [ ] `googleSocialPlugin`
-- [ ] `latestNews`
-- [ ] `map`
-- [ ] `news`
-- [ ] `newsList`
-- [ ] `newsMailForm`
-- [ ] `newsMailsText`
-- [ ] `newsMailSubContentCategories`
-- [ ] `newsMailSubContentCategory`
-- [ ] `newsMailTextSubContent`
-- [ ] `personnel`
-- [ ] `personnelList`
-- [ ] `poll`
-- [ ] `pollAnswer`
-- [ ] `pollPlaceholder`
-- [ ] `pollQuestion`
-- [ ] `polls`
-- [ ] `production`
-- [ ] `selectedEvents`
-- [ ] `selectedGalleries`
-- [ ] `service`
-- [ ] `shared`
-- [ ] `shortcut`
-- [ ] `socialNetworks`
-- [ ] `socialPlugins`
-- [ ] `socialPost`
-- [ ] `socialPosts`
-- [ ] `subArticle`
-- [ ] `tabsWidget`
-- [ ] `widget`
+- [x] `currencies`
+- [x] `currency`
+- [x] `currencySelector`
+- [x] `event`
+- [x] `events`
+- [x] `eventsList`
+- [x] `facebookSocialPlugin`
+- [x] `formCheckBox`
+- [x] `formDateInput`
+- [x] `formFileInput`
+- [x] `formSelect`
+- [x] `formSelectOption`
+- [x] `gallery`
+- [x] `galleryImage`
+- [x] `genericIcon`
+- [x] `googleSocialPlugin`
+- [x] `latestNews`
+- [x] `map`
+- [x] `news`
+- [x] `newsList`
+- [x] `newsMailForm`
+- [x] `newsMailsText`
+- [x] `newsMailSubContentCategories`
+- [x] `newsMailSubContentCategory`
+- [x] `newsMailTextSubContent`
+- [x] `personnel`
+- [x] `personnelList`
+- [x] `poll`
+- [x] `pollAnswer`
+- [x] `pollPlaceholder`
+- [x] `pollQuestion`
+- [x] `polls`
+- [x] `production`
+- [x] `selectedEvents`
+- [x] `selectedGalleries`
+- [x] `service`
+- Keep `shared` by user decision.
+- [x] `shortcut`
+- [x] `socialNetworks`
+- [x] `socialPlugins`
+- [x] `socialPost`
+- [x] `socialPosts`
+- [x] `subArticle`
+- [x] `tabsWidget`
+- [x] `widget`
 
 ## Execution Rule
 
 After approval, remove modules one by one.
 For each module, remove the module code and the related `css` and `js` files, then mark the item as done in this file.
+
+## Remaining Config Mentions
+
+Only non-registration keys remain in `homepage/config`, such as Google event IDs and image preset names in `images-desktop.php`.
+
+## Database Cleanup
+
+Migration file: `db/migrations/2026.04.26 - remove unused homepage module tables.sql`
+
+Additional migration file: `db/migrations/2026.04.26 - remove newsmails module tables.sql`
+
+Additional migration file: `db/migrations/2026.04.26 - remove banner module tables.sql`
