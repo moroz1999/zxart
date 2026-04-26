@@ -1,0 +1,32 @@
+-- Drop tables for removed Trickster CMS homepage modules.
+-- Modules without dedicated tables are intentionally not listed here.
+
+DROP TABLE IF EXISTS
+    engine_module_currency,
+    engine_module_event,
+    engine_module_eventslist,
+    engine_module_form_select_option,
+    engine_module_gallery,
+    engine_module_gallery_image,
+    engine_module_generic_icon,
+    engine_module_latest_news,
+    engine_module_map,
+    engine_module_news,
+    engine_module_newslist,
+    engine_module_newsmailtext_subcontent,
+    engine_module_personnel,
+    engine_module_personnellist,
+    engine_module_poll,
+    engine_module_poll_answer,
+    engine_module_poll_placeholder,
+    engine_module_poll_question,
+    engine_module_production,
+    engine_module_selected_galleries,
+    engine_module_selectedevents,
+    engine_module_service,
+    engine_module_shortcut,
+    engine_module_social_plugin,
+    engine_module_social_post,
+    engine_module_tabswidget,
+    engine_module_widget,
+    engine_polls_votes;
