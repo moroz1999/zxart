@@ -5,13 +5,14 @@ import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {merge, Subject, Subscription} from 'rxjs';
 import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
 import {SearchResultsService} from '../../services/search-results.service';
-import {GenericSearchItemDto, SearchItemDto, SearchResultsDto, SearchResultSetDto} from '../../models/search-item.dto';
+import {PressArticleDto, SearchItemDto, SearchResultsDto, SearchResultSetDto} from '../../models/search-item.dto';
 import {AuthorListItem} from '../../../author-browser/models/author-list-item';
 import {GroupListItem} from '../../../group-browser/models/group-list-item';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
 import {ZxProdDto} from '../../../../shared/models/zx-prod-dto';
 import {ZxProd} from '../../../../shared/models/zx-prod';
 import {ZxTuneDto} from '../../../../shared/models/zx-tune-dto';
+import {PartyDto} from '../../../../shared/models/party-dto';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
 import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
 import {
@@ -36,6 +37,7 @@ import {ZxProdBlockComponent} from '../../../../shared/ui/zx-prod-block/zx-prod-
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
 import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.component';
+import {ZxPartyCardComponent} from '../../../../shared/ui/zx-party-card/zx-party-card.component';
 import {PlayerService} from '../../../player/services/player.service';
 
 const AUTHOR_SET_TYPE = 'author';
@@ -43,6 +45,7 @@ const GROUP_SET_TYPE = 'group';
 const PICTURE_SET_TYPE = 'zxPicture';
 const MUSIC_SET_TYPE = 'zxMusic';
 const PRESS_ARTICLE_SET_TYPE = 'pressArticle';
+const PARTY_SET_TYPE = 'party';
 const PROD_SET_TYPES = new Set(['zxProd', 'zxRelease']);
 
 interface TypeFilterOption {
@@ -86,6 +89,7 @@ const INITIAL_SKELETON_GROUPS: SkeletonGroup[] = [
     ZxPanelComponent,
     ZxTableComponent,
     ZxTuneRowComponent,
+    ZxPartyCardComponent,
     ZxBodyDirective,
     ZxCaptionDirective,
     ZxHeading1Directive,
@@ -121,7 +125,6 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
   );
 
   private prodsBySet: Record<string, ZxProd[]> = {};
-  private availableTypes: string[] = [];
 
   private readonly trigger = new Subject<{kind: 'initial' | 'page' | 'filter'}>();
   private readonly subscriptions = new Subscription();
@@ -171,6 +174,7 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
   trackByItemId = (_: number, item: SearchItemDto): number => item.id;
   trackByProdId = (_: number, prod: ZxProd): number => prod.id;
   trackByTuneId = (_: number, tune: ZxTuneDto): number => tune.id;
+  trackByPartyId = (_: number, party: PartyDto): number => party.id;
   trackByOptionValue = (_: number, opt: TypeFilterOption): string => opt.value;
 
   onPageChange(page: number): void {
@@ -225,6 +229,10 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     return set.type === PRESS_ARTICLE_SET_TYPE;
   }
 
+  isPartySet(set: SearchResultSetDto): boolean {
+    return set.type === PARTY_SET_TYPE;
+  }
+
   asAuthors(items: SearchItemDto[]): AuthorListItem[] {
     return items as AuthorListItem[];
   }
@@ -241,8 +249,12 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     return items as unknown as ZxTuneDto[];
   }
 
-  asGeneric(items: SearchItemDto[]): GenericSearchItemDto[] {
-    return items as GenericSearchItemDto[];
+  asPressArticles(items: SearchItemDto[]): PressArticleDto[] {
+    return items as PressArticleDto[];
+  }
+
+  asParties(items: SearchItemDto[]): PartyDto[] {
+    return items as PartyDto[];
   }
 
   prodsFor(set: SearchResultSetDto): ZxProd[] {
@@ -292,8 +304,7 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     this.data = response;
     this.prodsBySet = this.buildProdInstances(response);
     this.pagesAmount = response.pageSize > 0 ? Math.ceil(response.total / response.pageSize) : 0;
-    this.availableTypes = response.availableTypes;
-    this.syncTypeFilters(response.availableTypes);
+    this.syncTypeFilters(response.sets.map(s => s.type));
     this.initialLoading = false;
     this.pageLoading = false;
     this.cdr.markForCheck();
@@ -317,16 +328,21 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     return map;
   }
 
-  private syncTypeFilters(availableTypes: string[]): void {
-    if (this.typeFilters.length === availableTypes.length
-      && availableTypes.every((t, i) => this.typeFilters[i]?.value === t)) {
-      return;
-    }
+  private syncTypeFilters(discoveredTypes: string[]): void {
     const previousSelections = new Map(this.typeFilters.map(opt => [opt.value, opt.selected]));
     const hadPriorSelections = previousSelections.size > 0;
-
-    this.typeFilters = availableTypes.map(value => {
-      const selected = hadPriorSelections ? (previousSelections.get(value) ?? false) : true;
+    const merged = [...this.typeFilters.map(opt => opt.value)];
+    for (const type of discoveredTypes) {
+      if (!merged.includes(type)) {
+        merged.push(type);
+      }
+    }
+    if (merged.length === this.typeFilters.length
+      && merged.every((t, i) => this.typeFilters[i]?.value === t)) {
+      return;
+    }
+    this.typeFilters = merged.map(value => {
+      const selected = hadPriorSelections ? (previousSelections.get(value) ?? true) : true;
       return {value, label: value, selected};
     });
     this.translateLabels();
@@ -353,7 +369,7 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
       return [];
     }
     const selected = this.typeFilters.filter(opt => opt.selected).map(opt => opt.value);
-    if (this.availableTypes.length > 0 && selected.length === this.availableTypes.length) {
+    if (selected.length === this.typeFilters.length) {
       return [];
     }
     return selected;

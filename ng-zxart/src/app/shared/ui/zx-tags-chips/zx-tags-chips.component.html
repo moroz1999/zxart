@@ -1,0 +1,14 @@
+<div *ngFor="let tag of tags" class="zx-tags-chips__chip">
+  <span>{{ tag.title }}</span>
+
+  <button
+    *ngIf="removable"
+    type="button"
+    class="zx-tags-chips__remove"
+    [disabled]="disabled"
+    [attr.aria-label]="removeButtonAriaLabel || null"
+    (click)="onRemove(tag)"
+  >
+    <svg-icon class="zx-tags-chips__remove-icon" name="cancel"></svg-icon>
+  </button>
+</div>

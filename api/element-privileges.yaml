@@ -1,0 +1,32 @@
+openapi: 3.0.0
+paths:
+  /element-privileges/:
+    get:
+      summary: Get privilege flags for an element
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: privileges
+          required: true
+          schema:
+            type: string
+          description: Comma-separated privilege names
+      responses:
+        '200':
+          description: Privilege flags
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: boolean
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error

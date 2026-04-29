@@ -6,11 +6,13 @@ namespace ZxArt\Tests\Tunes;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Helpers\AlphanumericColumnSearch;
 use ZxArt\Radio\Dto\RadioCriteriaDto;
 use ZxArt\Tunes\Repositories\TunesRepository;
 
+#[AllowMockObjectsWithoutExpectations]
 class TunesRepositoryRadioTest extends TestCase
 {
     public function testFindRandomIdByCriteriaReturnsNullWhenTopIdsEmpty(): void

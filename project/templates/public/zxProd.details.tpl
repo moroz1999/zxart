@@ -304,9 +304,7 @@
         <h2>{translations name='zxprod.compilations'}</h2>
         <zx-prods-list element-id="{$element->id}" property="compilations"></zx-prods-list>
     {/if}
-    {if isset($currentElementPrivileges.submitTags) && $currentElementPrivileges.submitTags == true}
-        {include file=$theme->template("tags.form.tpl") element=$element}
-    {/if}
+    {include file=$theme->template("tags.form.tpl") element=$element}
     <zx-comments-list element-id="{$element->id}"></zx-comments-list>
     {if $element->denyComments}<p>{translations name="zxitem.commentsdenied"}</p>{/if}
 

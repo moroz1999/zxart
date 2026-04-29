@@ -1,10 +1,11 @@
 @if (!denyVoting) {
-  <zx-rating
-    [elementId]="elementId"
-    [type]="type"
-    [overallRating]="votes"
-    [votesAmount]="votesAmount"
-    [userRating]="userRating ?? undefined"
-  ></zx-rating>
+  @if (state$ | async; as state) {
+    <zx-rating
+      [overallRating]="state.overallRating"
+      [votesAmount]="state.votesAmount"
+      [userRating]="state.userRating"
+      (voted)="onVote($event)"
+    ></zx-rating>
+  }
 }
 <zx-playlist-button [elementId]="elementId"></zx-playlist-button>

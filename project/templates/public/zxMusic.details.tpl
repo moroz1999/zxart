@@ -33,9 +33,7 @@
 		{/if}
 	</div>
 
-	{if isset($currentElementPrivileges.submitTags) && $currentElementPrivileges.submitTags == true}
-		{include file=$theme->template("tags.form.tpl") element=$element}
-	{/if}
+	{include file=$theme->template("tags.form.tpl") element=$element}
 	{include file=$theme->template('component.mentions.tpl')}
 	{if $element->denyPlaying}<p>{translations name="zxitem.playingdenied"}</p>{/if}
 	<zx-comments-list element-id="{$element->id}"></zx-comments-list>

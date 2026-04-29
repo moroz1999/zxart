@@ -1,8 +1,10 @@
-@if (!denyVoting) {
-  <zx-rating
-    [overallRating]="overallRating"
-    [votesAmount]="currentVotesAmount"
-    [userRating]="currentUserVote"
-    (voted)="vote($event)"
-  ></zx-rating>
+@if (!isVotingDenied) {
+  @if (state$ | async; as state) {
+    <zx-rating
+      [overallRating]="state.overallRating"
+      [votesAmount]="state.votesAmount"
+      [userRating]="state.userRating"
+      (voted)="onVote($event)"
+    ></zx-rating>
+  }
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Import\Prods;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
@@ -10,6 +11,7 @@ use ZxArt\Import\Prods\Dto\ReleaseImportDTO;
 use ZxArt\Import\Prods\HardwareCompatibilityService;
 use zxProdElement;
 
+#[AllowMockObjectsWithoutExpectations]
 final class HardwareCompatibilityServiceTest extends TestCase
 {
     private HardwareCompatibilityService $service;

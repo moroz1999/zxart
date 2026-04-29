@@ -8,6 +8,7 @@ use Cache;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use LanguagesManager;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use structureManager;
@@ -19,6 +20,7 @@ use ZxArt\Ratings\Dto\RecentRatingsListDto;
 use ZxArt\Ratings\RatingsService;
 use ZxArtItem;
 
+#[AllowMockObjectsWithoutExpectations]
 class RatingsServiceTest extends TestCase
 {
     private structureManager&MockObject $structureManager;
@@ -84,6 +86,7 @@ class RatingsServiceTest extends TestCase
         $queryBuilder->method('select')->willReturnSelf();
         $queryBuilder->method('orderBy')->willReturnSelf();
         $queryBuilder->method('limit')->willReturnSelf();
+        $queryBuilder->method('offset')->willReturnSelf();
 
         $queryBuilder->method('get')->willReturn(collect([
             (object)['id' => 1, 'userId' => 10, 'elementId' => 20, 'value' => 5, 'date' => 1700000000],
@@ -127,6 +130,7 @@ class RatingsServiceTest extends TestCase
         $queryBuilder->method('select')->willReturnSelf();
         $queryBuilder->method('orderBy')->willReturnSelf();
         $queryBuilder->method('limit')->willReturnSelf();
+        $queryBuilder->method('offset')->willReturnSelf();
 
         $queryBuilder->method('get')->willReturn(collect([
             (object)['id' => 1, 'userId' => 10, 'elementId' => 20, 'value' => 5, 'date' => 1700000000],
@@ -166,6 +170,7 @@ class RatingsServiceTest extends TestCase
         $queryBuilder->method('select')->willReturnSelf();
         $queryBuilder->method('orderBy')->willReturnSelf();
         $queryBuilder->method('limit')->willReturnSelf();
+        $queryBuilder->method('offset')->willReturnSelf();
 
         $queryBuilder->method('get')->willReturn(collect([
             (object)['id' => 1, 'userId' => 10, 'elementId' => 20, 'value' => 0, 'date' => 1700000000],
@@ -202,7 +207,11 @@ class RatingsServiceTest extends TestCase
 
         $queryBuilder->expects($this->once())
             ->method('limit')
-            ->with(5)
+            ->with(6)
+            ->willReturnSelf();
+        $queryBuilder->expects($this->once())
+            ->method('offset')
+            ->with(0)
             ->willReturnSelf();
 
         $queryBuilder->method('get')->willReturn(collect([]));
@@ -221,6 +230,7 @@ class RatingsServiceTest extends TestCase
         $queryBuilder->method('select')->willReturnSelf();
         $queryBuilder->method('orderBy')->willReturnSelf();
         $queryBuilder->method('limit')->willReturnSelf();
+        $queryBuilder->method('offset')->willReturnSelf();
 
         $queryBuilder->method('get')->willReturn(collect([
             (object)['id' => 1, 'userId' => 10, 'elementId' => 999, 'value' => 5, 'date' => 1700000000],
@@ -242,6 +252,7 @@ class RatingsServiceTest extends TestCase
         $queryBuilder->method('select')->willReturnSelf();
         $queryBuilder->method('orderBy')->willReturnSelf();
         $queryBuilder->method('limit')->willReturnSelf();
+        $queryBuilder->method('offset')->willReturnSelf();
 
         $queryBuilder->method('get')->willReturn(collect([
             (object)['id' => 1, 'userId' => 999, 'elementId' => 20, 'value' => 4, 'date' => 1700000000],

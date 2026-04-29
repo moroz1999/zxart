@@ -1,13 +1,20 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {NgForOf, NgIf} from '@angular/common';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslatePipe} from '@ngx-translate/core';
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
-import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
+import {TagChipItem} from '../../models/tag-chip-item';
 import {TagsSearchService} from '../../services/tags-search.service';
 import {Tag} from '../../models/tag';
 import {ZxInputComponent} from '../../ui/zx-input/zx-input.component';
-import {environment} from '../../../../environments/environment';
+import {ZxTagsChipsComponent} from '../../ui/zx-tags-chips/zx-tags-chips.component';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, map, shareReplay, startWith, switchMap} from 'rxjs/operators';
+
+interface TagsSelectorVm {
+    readonly foundTags: Tag[];
+    readonly dropdownOpen: boolean;
+}
 
 @Component({
     selector: 'zx-tags-selector',
@@ -18,54 +25,57 @@ import {environment} from '../../../../environments/environment';
     imports: [
         NgForOf,
         NgIf,
+        AsyncPipe,
         FormsModule,
         TranslatePipe,
         CdkConnectedOverlay,
         CdkOverlayOrigin,
-        SvgIconComponent,
         ZxInputComponent,
+        ZxTagsChipsComponent,
     ],
 })
-export class TagsSelectorComponent implements OnInit {
+export class TagsSelectorComponent {
     tagText = '';
-    private timeout: number = 0;
     @Input() tagsSelector: Array<Tag> = [];
-    foundTags: Tag[] = [];
-    dropdownOpen = false;
     @Output() tagsSelected = new EventEmitter<Array<Tag>>();
     @ViewChild('zxInput') zxInput?: ZxInputComponent;
+    private readonly searchQuery$ = new BehaviorSubject<string>('');
+    private readonly dropdownDismissed$ = new BehaviorSubject<boolean>(false);
 
     readonly positions: ConnectedPosition[] = [
         {originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 4},
     ];
 
-    constructor(
-        private tagsSearch: TagsSearchService,
-        private iconReg: SvgIconRegistryService,
-    ) {}
+    readonly foundTags$: Observable<Tag[]> = this.searchQuery$.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap(query => query.length > 2
+            ? this.tagsSearch.search(query).pipe(catchError(() => of([] as Tag[])))
+            : of([] as Tag[])),
+        startWith([] as Tag[]),
+        shareReplay({bufferSize: 1, refCount: true}),
+    );
 
-    ngOnInit(): void {
-        this.iconReg.loadSvg(`${environment.svgUrl}cancel.svg`, 'cancel')?.subscribe();
+    readonly vm$: Observable<TagsSelectorVm> = combineLatest([
+        this.searchQuery$,
+        this.dropdownDismissed$,
+        this.foundTags$,
+    ]).pipe(
+        map(([query, dropdownDismissed, foundTags]) => ({
+            foundTags,
+            dropdownOpen: query.length > 2 && foundTags.length > 0 && dropdownDismissed === false,
+        })),
+    );
+
+    constructor(private tagsSearch: TagsSearchService) {}
+
+    change(value: string): void {
+        this.tagText = value;
+        this.dropdownDismissed$.next(false);
+        this.searchQuery$.next(value);
     }
 
-    change(): void {
-        if (this.timeout) {
-            clearTimeout(this.timeout);
-        }
-        if (this.tagText.length > 2) {
-            this.timeout = setTimeout(() => this.tagsSearch.search(this.tagText).subscribe(
-                (tags: Array<Tag>) => {
-                    this.foundTags = tags;
-                    this.dropdownOpen = tags.length > 0;
-                },
-            ), 300);
-        } else {
-            this.foundTags = [];
-            this.dropdownOpen = false;
-        }
-    }
-
-    remove(tag: Tag): void {
+    remove(tag: TagChipItem): void {
         this.tagsSelector = this.tagsSelector.filter(t => t !== tag);
         this.tagsSelected.emit(this.tagsSelector);
     }
@@ -74,12 +84,12 @@ export class TagsSelectorComponent implements OnInit {
         this.tagsSelector = [...this.tagsSelector, tag];
         this.tagsSelected.emit(this.tagsSelector);
         this.tagText = '';
-        this.dropdownOpen = false;
-        this.foundTags = [];
+        this.dropdownDismissed$.next(false);
+        this.searchQuery$.next('');
         this.zxInput?.clear();
     }
 
     closeDropdown(): void {
-        this.dropdownOpen = false;
+        this.dropdownDismissed$.next(true);
     }
 }

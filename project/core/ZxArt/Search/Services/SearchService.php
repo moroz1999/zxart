@@ -10,6 +10,8 @@ use ConfigManager;
 use DI\Container;
 use groupAliasElement;
 use groupElement;
+use partyElement;
+use pressArticleElement;
 use Search;
 use SearchResult;
 use SearchResultSet;
@@ -18,9 +20,10 @@ use ZxArt\AuthorList\AuthorListTransformer;
 use ZxArt\AuthorList\Dto\AuthorListItemDto;
 use ZxArt\GroupList\Dto\GroupListItemDto;
 use ZxArt\GroupList\GroupListTransformer;
+use ZxArt\Parties\PartiesTransformer;
 use ZxArt\Pictures\PicturesTransformer;
+use ZxArt\Press\Dto\PressArticleDto;
 use ZxArt\Prods\ProdsTransformer;
-use ZxArt\Search\Dto\SearchItemDto;
 use ZxArt\Search\Dto\SearchResultsDto;
 use ZxArt\Search\Dto\SearchResultSetDto;
 use ZxArt\Tunes\TunesTransformer;
@@ -31,7 +34,7 @@ use zxProdElement;
 readonly class SearchService
 {
     public const int DEFAULT_PAGE_SIZE = 50;
-    public const int SNIPPET_CUT_LENGTH = 120;
+    private const int SNIPPET_CUT_LENGTH = 120;
 
     /**
      * Public type → list of internal types it expands to.
@@ -50,16 +53,17 @@ readonly class SearchService
         private PicturesTransformer $picturesTransformer,
         private ProdsTransformer $prodsTransformer,
         private TunesTransformer $tunesTransformer,
+        private PartiesTransformer $partiesTransformer,
     ) {
     }
 
     /**
      * @param string[] $requestedTypes public types to include; empty means all configured types
      */
-    public function search(string $phrase, int $page, int $pageSize, array $requestedTypes): SearchResultsDto
+    public function search(string $phrase, int $page, array $requestedTypes): SearchResultsDto
     {
         $page = max(1, $page);
-        $pageSize = max(1, $pageSize);
+        $pageSize = self::DEFAULT_PAGE_SIZE;
         $availableTypes = $this->getAvailableTypes();
         $effectivePublicTypes = $this->filterPublicTypes($requestedTypes, $availableTypes);
 
@@ -70,9 +74,7 @@ readonly class SearchService
                 page: $page,
                 pageSize: $pageSize,
                 total: 0,
-                exactMatches: true,
                 sets: [],
-                availableTypes: $availableTypes,
             );
         }
 
@@ -83,8 +85,7 @@ readonly class SearchService
         $search->setInput($phrase);
         $search->setLimit($pageSize);
         $search->setOffset($offset);
-        $search->setPartialMatching(true);
-        $search->setContentMatching(true);
+        $search->setContentMatching();
         $search->setTypes($internalTypes);
         $result = $search->getResult();
 
@@ -93,16 +94,14 @@ readonly class SearchService
             page: $page,
             pageSize: $pageSize,
             total: (int)$result->count,
-            exactMatches: (bool)$result->exactMatches,
             sets: $this->buildSetDtos($result, $phrase),
-            availableTypes: $availableTypes,
         );
     }
 
     /**
      * @return string[]
      */
-    public function getAvailableTypes(): array
+    private function getAvailableTypes(): array
     {
         $types = $this->configManager->getMerged('searchtypes-public.search');
         if (!is_array($types)) {
@@ -181,7 +180,7 @@ readonly class SearchService
     {
         $aliasToParent = $this->buildAliasToParentMap();
         $bucketsOrder = [];
-        /** @var array<string, array{type: string, partial: bool, items: object[]}> $buckets */
+        /** @var array<string, array{type: string, items: object[]}> $buckets */
         $buckets = [];
 
         foreach ($result->sets as $set) {
@@ -192,12 +191,9 @@ readonly class SearchService
             if (!isset($buckets[$publicType])) {
                 $buckets[$publicType] = [
                     'type' => $publicType,
-                    'partial' => (bool)$set->partial,
                     'items' => [],
                 ];
                 $bucketsOrder[] = $publicType;
-            } else {
-                $buckets[$publicType]['partial'] = $buckets[$publicType]['partial'] || (bool)$set->partial;
             }
             foreach ($set->elements as $element) {
                 if (!$element instanceof structureElement) {
@@ -219,7 +215,6 @@ readonly class SearchService
             $items = $this->sortBucketItems($publicType, $bucket['items']);
             $dtos[] = new SearchResultSetDto(
                 type: $bucket['type'],
-                partial: $bucket['partial'],
                 totalCount: count($items),
                 items: $items,
             );
@@ -291,21 +286,24 @@ readonly class SearchService
             $element instanceof zxPictureElement => $this->picturesTransformer->toDto($element),
             $element instanceof zxProdElement => $this->prodsTransformer->toDto($element),
             $element instanceof zxMusicElement => $this->tunesTransformer->toDto($element),
-            default => $this->buildGenericItem($element, $phrase),
+            $element instanceof pressArticleElement => $this->buildPressArticleDto($element, $phrase),
+            $element instanceof partyElement => $this->partiesTransformer->toDto($element),
+            default => null,
         };
     }
 
-    private function buildGenericItem(structureElement $element, string $phrase): SearchItemDto
+    private function buildPressArticleDto(pressArticleElement $element, string $phrase): PressArticleDto
     {
         $title = html_entity_decode((string)$element->getTitle(), ENT_QUOTES, 'UTF-8');
-        return new SearchItemDto(
+        $rawYear = $element->year ?? null;
+        $year = ($rawYear === null || $rawYear === '' || $rawYear === false) ? null : (int)$rawYear;
+        return new PressArticleDto(
             id: (int)$element->id,
-            type: (string)$element->structureType,
             title: $title,
             titleHtml: $this->highlightTitle($title, $phrase),
             url: $element->getUrl(),
             snippetHtml: $this->buildSnippet($element, $phrase),
-            year: $this->readIntOrNull($element, 'year'),
+            year: $year,
             authors: $this->collectAuthors($element),
         );
     }
@@ -406,12 +404,4 @@ readonly class SearchService
         return $result;
     }
 
-    private function readIntOrNull(structureElement $element, string $field): ?int
-    {
-        $value = $element->$field ?? null;
-        if ($value === null || $value === '' || $value === false) {
-            return null;
-        }
-        return (int)$value;
-    }
 }

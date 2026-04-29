@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-namespace ZxArt\Search\Dto;
+namespace ZxArt\Press\Dto;
 
-readonly class SearchItemDto
+readonly class PressArticleDto
 {
     /**
      * @param array<array{title: string, url: string}> $authors
      */
     public function __construct(
         public int $id,
-        public string $type,
         public string $title,
         public string $titleHtml,
         public string $url,

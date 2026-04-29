@@ -1,0 +1,24 @@
+:root {
+  /* Dropdown background. */
+  --zx-tags-input-dropdown-bg: var(--zx-panel-bg);
+  /* Dropdown border. */
+  --zx-tags-input-dropdown-border: var(--border-width-thin) solid var(--input-border-color);
+  /* Dropdown border radius. */
+  --zx-tags-input-dropdown-radius: var(--radius-md);
+  /* Dropdown shadow. */
+  --zx-tags-input-dropdown-shadow: var(--shadow-md);
+  /* Dropdown inner padding. */
+  --zx-tags-input-dropdown-padding: var(--space-8);
+  /* Gap between dropdown sections. */
+  --zx-tags-input-dropdown-gap: var(--space-8);
+  /* Minimum dropdown width. */
+  --zx-tags-input-dropdown-min-width: var(--input-width-md);
+  /* Maximum dropdown width. */
+  --zx-tags-input-dropdown-max-width: 100%;
+  /* Maximum dropdown height. */
+  --zx-tags-input-dropdown-max-height: calc(var(--space-32) * 7);
+  /* Loading state padding inside dropdown. */
+  --zx-tags-input-loading-padding: var(--space-8);
+  /* Gap between dropdown options. */
+  --zx-tags-input-option-gap: var(--space-4);
+}

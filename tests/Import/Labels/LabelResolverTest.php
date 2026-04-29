@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Import\Labels;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Authors\Repositories\AuthorAliasesRepository;
@@ -14,6 +15,7 @@ use ZxArt\Import\Labels\LabelResolver;
 use ZxArt\Import\Labels\PersonLabel;
 use ZxArt\Import\Resolver;
 
+#[AllowMockObjectsWithoutExpectations]
 final class LabelResolverTest extends TestCase
 {
     private function createResolver(

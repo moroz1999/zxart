@@ -1,33 +1,34 @@
-<div class="tags-chips" *ngIf="tagsSelector.length > 0">
-    <span *ngFor="let tag of tagsSelector" class="tags-chip">
-        {{ tag.title }}
-        <button type="button" class="tags-chip__remove" (click)="remove(tag)">
-            <svg-icon name="cancel"></svg-icon>
-        </button>
-    </span>
-</div>
+<ng-container *ngIf="vm$ | async as vm">
+    <zx-tags-chips
+        *ngIf="tagsSelector.length > 0"
+        [tags]="tagsSelector"
+        [removable]="true"
+        [removeButtonAriaLabel]="'tags-quick-form.remove-tag' | translate"
+        (tagRemoved)="remove($event)"
+    ></zx-tags-chips>
 
-<zx-input
-    #zxInput
-    cdkOverlayOrigin
-    #tagInputOrigin="cdkOverlayOrigin"
-    [placeholder]="'prods-list.filters.tags.select' | translate"
-    (keyup)="change()"
-    [(ngModel)]="tagText"
-></zx-input>
+    <zx-input
+        #zxInput
+        cdkOverlayOrigin
+        #tagInputOrigin="cdkOverlayOrigin"
+        [placeholder]="'prods-list.filters.tags.select' | translate"
+        [(ngModel)]="tagText"
+        (ngModelChange)="change($event)"
+    ></zx-input>
 
-<ng-template
-    cdkConnectedOverlay
-    [cdkConnectedOverlayOrigin]="tagInputOrigin"
-    [cdkConnectedOverlayOpen]="dropdownOpen"
-    [cdkConnectedOverlayPositions]="positions"
-    [cdkConnectedOverlayHasBackdrop]="true"
-    cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
-    (backdropClick)="closeDropdown()"
->
-    <div class="tags-dropdown">
-        <div *ngFor="let tag of foundTags" (click)="selectTag(tag)" class="tags-option">
-            {{ tag.title }}
+    <ng-template
+        cdkConnectedOverlay
+        [cdkConnectedOverlayOrigin]="tagInputOrigin"
+        [cdkConnectedOverlayOpen]="vm.dropdownOpen"
+        [cdkConnectedOverlayPositions]="positions"
+        [cdkConnectedOverlayHasBackdrop]="true"
+        cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+        (backdropClick)="closeDropdown()"
+    >
+        <div class="tags-dropdown">
+            <div *ngFor="let tag of vm.foundTags" (click)="selectTag(tag)" class="tags-option">
+                {{ tag.title }}
+            </div>
         </div>
-    </div>
-</ng-template>
+    </ng-template>
+</ng-container>

@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace ZxArt\Tests\Comments;
 
 use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 use Cache;
 use LanguagesManager;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use privilegesManager;
@@ -17,9 +19,11 @@ use ZxArt\Comments\Exception\CommentAccessDeniedException;
 use ZxArt\Comments\Exception\CommentOperationException;
 use ZxArt\Comments\Repositories\CommentsRepository;
 
+#[AllowMockObjectsWithoutExpectations]
 class CommentsServiceTest extends TestCase
 {
     private structureManager&MockObject $structureManager;
+    private CurrentUserService&MockObject $currentUserService;
     private CurrentUser&MockObject $user;
     private CommentsService $service;
 
@@ -30,10 +34,12 @@ class CommentsServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['isAuthorized', 'refreshPrivileges', '__destruct', 'writeStorage'])
             ->getMock();
+        $this->currentUserService = $this->createMock(CurrentUserService::class);
+        $this->currentUserService->method('getCurrentUser')->willReturn($this->user);
 
         $this->service = new CommentsService(
             structureManager: $this->structureManager,
-            currentUserService: $this->user,
+            currentUserService: $this->currentUserService,
             languagesManager: $this->createMock(LanguagesManager::class),
             privilegesManager: $this->createMock(privilegesManager::class),
             cache: $this->createMock(Cache::class),

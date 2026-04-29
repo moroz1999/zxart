@@ -9,14 +9,21 @@ trait TagsHolder
 
     public function updateTagsInfo(): void
     {
+        $this->updateTagsFromList(explode(',', $this->tagsText));
+    }
+
+    /**
+     * @param string[] $tagNames
+     */
+    public function updateTagsFromList(array $tagNames): void
+    {
         $tagsIndex = $this->getTagsIndex();
 
         $updatedTagsStrings = 0;
         $amountBeforeUpdate = (int)$this->tagsAmount;
 
-        $tagsStrings = explode(',', $this->tagsText);
         $tagsManager = $this->getService(tagsManager::class);
-        foreach ($tagsStrings as $tagName) {
+        foreach ($tagNames as $tagName) {
             if ($tagElement = $tagsManager->addTag($tagName, $this->getPersistedId())) {
                 if (isset($tagsIndex[$tagElement->title])) {
                     unset($tagsIndex[$tagElement->title]);
@@ -35,6 +42,8 @@ trait TagsHolder
         foreach ($tagsIndex as $tagElement) {
             $tagsManager->removeTag($tagElement->title, $this->id);
         }
+
+        $this->resetTagsCache();
     }
 
     public function addTags(array $tagsStrings): void
@@ -43,8 +52,13 @@ trait TagsHolder
         foreach ($tagsStrings as $tagName) {
             $tagsManager->addTag($tagName, $this->getPersistedId());
         }
-        $this->tagsList = null;
+        $this->resetTagsCache();
         $this->tagsAmount = count($this->getTagsList());
+    }
+
+    public function resetTagsCache(): void
+    {
+        $this->tagsList = null;
     }
 
     public function getTagsIndex(): array

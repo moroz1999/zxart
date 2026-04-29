@@ -6,6 +6,7 @@ namespace ZxArt\Tests\Radio;
 
 use Cache;
 use countryElement;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use structureManager;
 use ZxArt\Radio\Services\RadioOptionsService;
@@ -13,6 +14,7 @@ use ZxArt\Tunes\Repositories\TunesRepository;
 use ZxArt\ZxProdCategories\CategoryIds;
 use zxProdCategoryElement;
 
+#[AllowMockObjectsWithoutExpectations]
 class RadioOptionsServiceTest extends TestCase
 {
     public function testGetOptionsBuildsPayloadFromRepository(): void

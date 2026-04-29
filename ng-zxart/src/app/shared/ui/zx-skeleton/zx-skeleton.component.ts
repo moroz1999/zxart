@@ -1,7 +1,17 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
-export type SkeletonVariant = 'card' | 'comment' | 'row' | 'text' | 'prod-grid' | 'picture-grid' | 'tune-table';
+export type SkeletonVariant =
+  | 'card'
+  | 'comment'
+  | 'row'
+  | 'text'
+  | 'prod-grid'
+  | 'picture-grid'
+  | 'tune-table'
+  | 'search-groups';
+
+const SEARCH_GROUP_ITEMS = 5;
 
 @Component({
   selector: 'zx-skeleton',
@@ -19,5 +29,9 @@ export class ZxSkeletonComponent {
 
   get items(): number[] {
     return Array.from({length: this.count}, (_, i) => i);
+  }
+
+  get searchGroupItems(): number[] {
+    return Array.from({length: SEARCH_GROUP_ITEMS}, (_, i) => i);
   }
 }

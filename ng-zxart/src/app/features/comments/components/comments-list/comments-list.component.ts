@@ -11,6 +11,7 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ViewportLoaderComponent} from '../../../../shared/components/viewport-loader/viewport-loader.component';
 import {Observable, of, Subject} from 'rxjs';
+import {ZxBodyDirective} from "../../../../shared/directives/typography/typography.directives";
 
 @Component({
   selector: 'zx-comments-list',
@@ -23,7 +24,8 @@ import {Observable, of, Subject} from 'rxjs';
     ZxButtonComponent,
     ZxStackComponent,
     ZxPanelComponent,
-    ViewportLoaderComponent
+    ViewportLoaderComponent,
+    ZxBodyDirective
   ],
   templateUrl: './comments-list.component.html',
   styleUrls: ['./comments-list.component.scss'],

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Import\Prods;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use structureManager;
@@ -14,6 +15,7 @@ use ZxArt\Import\Resolver;
 use ZxArt\Prods\Repositories\ProdsRepository;
 use zxProdElement;
 
+#[AllowMockObjectsWithoutExpectations]
 final class ProdResolverTest extends TestCase
 {
     /** @var ProdsRepository&MockObject */

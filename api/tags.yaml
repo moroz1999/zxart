@@ -1,0 +1,108 @@
+openapi: 3.0.0
+paths:
+  /tags/:
+    get:
+      summary: Get editable tags for an element
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Editable tags payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagsPayload'
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+    post:
+      summary: Save editable tags for an element
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - tags
+              properties:
+                tags:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/TagWriteItem'
+      responses:
+        '200':
+          description: Saved tags payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagsPayload'
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    TagItem:
+      type: object
+      required:
+        - id
+        - title
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+    TagWriteItem:
+      type: object
+      required:
+        - title
+      properties:
+        id:
+          type: integer
+          nullable: true
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+    TagsPayload:
+      type: object
+      required:
+        - elementId
+        - tags
+        - suggestedTags
+      properties:
+        elementId:
+          type: integer
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagItem'
+        suggestedTags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagItem'

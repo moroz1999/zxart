@@ -1,0 +1,40 @@
+<zx-stack spacing="md">
+  <zx-tags-input
+    [tags]="selectedTagsValue"
+    [searchResults]="visibleSearchResults"
+    [placeholder]="'tags-quick-form.search-placeholder' | translate"
+    [disabled]="disabled || saving"
+    [searchLoading]="searchLoading"
+    [removeButtonAriaLabel]="'tags-quick-form.remove-tag' | translate"
+    (queryChanged)="searchQueryChanged.emit($event)"
+    (tagSelected)="onTagSelected($event)"
+    (customTagAdded)="onCustomTagAdded($event)"
+    (tagRemoved)="onTagRemoved($event)"
+  ></zx-tags-input>
+
+  <zx-stack *ngIf="visibleSuggestedTags.length > 0" spacing="sm">
+    <span>{{ 'tags-quick-form.suggested' | translate }}</span>
+    <zx-button-controls [wrap]="true">
+      <zx-button
+        *ngFor="let suggestedTag of visibleSuggestedTags"
+        size="sm"
+        color="secondary"
+        (click)="onSuggestedTagClick(suggestedTag)"
+      >
+        + {{ suggestedTag.title }}<ng-container *ngIf="suggestedTag.description"> ({{ suggestedTag.description }})</ng-container>
+      </zx-button>
+    </zx-button-controls>
+  </zx-stack>
+
+  <p *ngIf="errorMessage !== ''">{{ errorMessage }}</p>
+
+  <zx-button-controls align="end">
+    <zx-button
+      color="primary"
+      [disabled]="disabled || saving"
+      (click)="onSaveClick()"
+    >
+      {{ 'tags-quick-form.save' | translate }}
+    </zx-button>
+  </zx-button-controls>
+</zx-stack>

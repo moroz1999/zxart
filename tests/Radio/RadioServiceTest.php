@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Tests\Radio;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use structureManager;
 use ZxArt\Radio\Dto\RadioCriteriaDto;
@@ -14,6 +15,7 @@ use ZxArt\Tunes\Repositories\TunesRepository;
 use ZxArt\Tunes\TunesTransformer;
 use zxMusicElement;
 
+#[AllowMockObjectsWithoutExpectations]
 class RadioServiceTest extends TestCase
 {
     public function testGetNextTuneReturnsTuneDto(): void
@@ -39,6 +41,8 @@ class RadioServiceTest extends TestCase
             isRealtime: false,
             compo: null,
             mp3Url: null,
+            originalFileUrl: null,
+            trackerFileUrl: null,
         );
 
         $repository = $this->createMock(TunesRepository::class);

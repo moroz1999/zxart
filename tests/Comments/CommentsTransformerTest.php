@@ -7,10 +7,12 @@ namespace ZxArt\Tests\Comments;
 use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
 use commentElement;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use privilegesManager;
 use ZxArt\Comments\CommentsTransformer;
 
+#[AllowMockObjectsWithoutExpectations]
 class CommentsTransformerTest extends TestCase
 {
     private CommentsTransformer $transformer;

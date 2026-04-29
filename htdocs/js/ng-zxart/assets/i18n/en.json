@@ -101,7 +101,8 @@
       "compilation": "Compilation",
       "corrupted": "Corrupted",
       "mia": "MIA",
-      "incomplete": "Incomplete"
+      "incomplete": "Incomplete",
+      "bugfix": "Bugfix"
     }
   },
   "parser": {
@@ -523,7 +524,6 @@
   "search": {
     "empty": "Nothing found for your query.",
     "error": "Failed to load search results.",
-    "partial": "Partial matches included.",
     "read": "Read",
     "heading": {
       "first_page": "Search results: \"{{phrase}}\"",
@@ -543,5 +543,15 @@
       "zxMusic": "Music",
       "pressArticle": "Press articles"
     }
+  },
+  "tags-quick-form": {
+    "title": "Edit tags",
+    "search-placeholder": "Add tag",
+    "remove-tag": "Remove tag",
+    "suggested": "Suggested tags",
+    "save": "Save tags",
+    "load-error": "Failed to load tags.",
+    "save-error": "Failed to save tags.",
+    "retry": "Retry"
   }
 }

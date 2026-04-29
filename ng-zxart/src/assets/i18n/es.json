@@ -101,7 +101,8 @@
       "compilation": "Compilacion",
       "corrupted": "Corrupto",
       "mia": "MIA",
-      "incomplete": "Incompleto"
+      "incomplete": "Incompleto",
+      "bugfix": "Corrección de errores"
     }
   },
   "parser": {
@@ -522,7 +523,6 @@
   "search": {
     "empty": "No se encontró nada para tu consulta.",
     "error": "No se pudieron cargar los resultados.",
-    "partial": "Se incluyen coincidencias parciales.",
     "read": "Leer",
     "heading": {
       "first_page": "Resultados de búsqueda: «{{phrase}}»",
@@ -542,5 +542,15 @@
       "zxMusic": "Música",
       "pressArticle": "Prensa"
     }
+  },
+  "tags-quick-form": {
+    "title": "Editar etiquetas",
+    "search-placeholder": "AÃ±adir etiqueta",
+    "remove-tag": "Eliminar etiqueta",
+    "suggested": "Etiquetas sugeridas",
+    "save": "Guardar etiquetas",
+    "load-error": "No se pudieron cargar las etiquetas.",
+    "save-error": "No se pudieron guardar las etiquetas.",
+    "retry": "Reintentar"
   }
 }

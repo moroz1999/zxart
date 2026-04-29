@@ -60,9 +60,7 @@
 			'flickering': '{$element->isFlickering() && ($currentMode.mode!='mix')}'
 		{rdelim};
 	</script>
-	{if isset($currentElementPrivileges.submitTags) && $currentElementPrivileges.submitTags == true}
-		{include file=$theme->template("tags.form.tpl") element=$element}
-	{/if}
+	{include file=$theme->template("tags.form.tpl") element=$element}
 	{include file=$theme->template('component.mentions.tpl')}
 	<zx-comments-list element-id="{$element->id}"></zx-comments-list>
 	{if $element->denyComments}<p>{translations name="zxitem.commentsdenied"}</p>{/if}

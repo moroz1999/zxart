@@ -1,0 +1,18 @@
+:root {
+  /* Gap between tag chips. */
+  --zx-tags-chips-gap: var(--space-4);
+  /* Gap between tag text and remove control. */
+  --zx-tags-chips-chip-gap: var(--space-4);
+  /* Tag chip background. */
+  --zx-tags-chips-chip-bg: var(--zx-button-secondary-bg);
+  /* Tag chip text color. */
+  --zx-tags-chips-chip-text: var(--zx-button-secondary-text);
+  /* Tag chip border radius. */
+  --zx-tags-chips-chip-radius: var(--radius-sm);
+  /* Tag chip inner padding. */
+  --zx-tags-chips-chip-padding: var(--space-4) var(--space-8);
+  /* Tag chip font size. */
+  --zx-tags-chips-chip-font-size: var(--zx-caption-size);
+  /* Remove icon size. */
+  --zx-tags-chips-remove-icon-size: 14px;
+}

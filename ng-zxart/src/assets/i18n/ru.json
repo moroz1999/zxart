@@ -101,7 +101,8 @@
       "compilation": "Сборник",
       "corrupted": "Поврежденный",
       "mia": "Потеряна",
-      "incomplete": "Неполный"
+      "incomplete": "Неполный",
+      "bugfix": "Исправление ошибок"
     }
   },
   "parser": {
@@ -523,7 +524,6 @@
   "search": {
     "empty": "По вашему запросу ничего не найдено.",
     "error": "Не удалось загрузить результаты поиска.",
-    "partial": "Включены частичные совпадения.",
     "read": "Читать",
     "heading": {
       "first_page": "Результаты поиска: «{{phrase}}»",
@@ -543,5 +543,15 @@
       "zxMusic": "Музыка",
       "pressArticle": "Пресса"
     }
+  },
+  "tags-quick-form": {
+    "title": "Edit tags",
+    "search-placeholder": "Add tag",
+    "remove-tag": "Remove tag",
+    "suggested": "Suggested tags",
+    "save": "Save tags",
+    "load-error": "Failed to load tags.",
+    "save-error": "Failed to save tags.",
+    "retry": "Retry"
   }
 }

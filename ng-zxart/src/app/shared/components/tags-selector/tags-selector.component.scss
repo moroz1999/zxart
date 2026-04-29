@@ -5,38 +5,6 @@
   gap: var(--space-8);
 }
 
-.tags-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-}
-
-.tags-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-4);
-  background: var(--zx-button-secondary-bg);
-  color: var(--zx-button-secondary-text);
-  border-radius: var(--radius-sm);
-  padding: var(--space-4) var(--space-8);
-  font-size: var(--zx-caption-size);
-}
-
-.tags-chip__remove {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  color: inherit;
-
-  svg-icon {
-    width: 14px;
-    height: 14px;
-  }
-}
-
 .tags-dropdown {
   background: var(--zx-panel-bg);
   border: var(--border-width-thin) solid var(--input-border-color);

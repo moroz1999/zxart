@@ -1,0 +1,35 @@
+<ng-container *ngIf="hasPrivilege === true">
+  <div
+    [appInViewport]="hasLoadedData === false && loadingData === false && loadErrorMessage === ''"
+    (inViewport)="onInViewport()"
+  >
+    <zx-panel [title]="'tags-quick-form.title' | translate" titleLevel="h2">
+      <ng-container *ngIf="hasLoadedData === true; else quickFormPendingState">
+        <zx-tags-quick-form-editor
+          [selectedTags]="selectedTags"
+          [suggestedTags]="suggestedTags"
+          [searchResults]="searchResults"
+          [searchLoading]="searchLoading"
+          [saving]="saving"
+          [errorMessage]="saveErrorMessage"
+          (searchQueryChanged)="onSearchQueryChanged($event)"
+          (selectedTagsChanged)="onSelectedTagsChanged($event)"
+          (saveRequested)="onSaveRequested($event)"
+        ></zx-tags-quick-form-editor>
+      </ng-container>
+
+      <ng-template #quickFormPendingState>
+        <ng-container *ngIf="loadErrorMessage !== ''; else quickFormSkeletonState">
+          <p>{{ loadErrorMessage }}</p>
+          <zx-button color="outlined" (click)="onRetryLoad()">
+            {{ 'tags-quick-form.retry' | translate }}
+          </zx-button>
+        </ng-container>
+      </ng-template>
+
+      <ng-template #quickFormSkeletonState>
+        <zx-skeleton variant="text" [count]="4"></zx-skeleton>
+      </ng-template>
+    </zx-panel>
+  </div>
+</ng-container>

@@ -61,9 +61,6 @@
             <h2 zxHeading2 class="zx-search-results__set-heading">
               {{ setLabelKey(set.type) | translate }}
             </h2>
-            <p *ngIf="set.partial" zxCaption class="zx-search-results__set-partial">
-              {{ 'search.partial' | translate }}
-            </p>
 
             <ng-container [ngSwitch]="true">
               <zx-authors-table
@@ -113,7 +110,7 @@
 
               <div *ngSwitchCase="isPressArticleSet(set)" class="zx-search-results__articles-grid">
                 <zx-panel
-                  *ngFor="let item of asGeneric(set.items); trackBy: trackByItemId"
+                  *ngFor="let item of asPressArticles(set.items); trackBy: trackByItemId"
                   variant="elevated"
                   padding="md"
                 >
@@ -129,16 +126,11 @@
                 </zx-panel>
               </div>
 
-              <div *ngSwitchDefault class="zx-search-results__items">
-                <zx-article-preview
-                  *ngFor="let item of asGeneric(set.items); trackBy: trackByItemId"
-                  [title]="item.title"
-                  [titleHtml]="item.titleHtml"
-                  [url]="item.url"
-                  [snippetHtml]="item.snippetHtml"
-                  [year]="item.year"
-                  [authors]="item.authors"
-                ></zx-article-preview>
+              <div *ngSwitchCase="isPartySet(set)" class="zx-search-results__parties-grid">
+                <zx-party-card
+                  *ngFor="let party of asParties(set.items); trackBy: trackByPartyId"
+                  [party]="party"
+                ></zx-party-card>
               </div>
             </ng-container>
           </div>

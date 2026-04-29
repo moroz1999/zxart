@@ -19,6 +19,10 @@ paths:
     $ref: 'menu.yaml#/paths/~1menu~1'
   /backend-links/:
     $ref: 'backend-links.yaml#/paths/~1backend-links~1'
+  /tags/:
+    $ref: 'tags.yaml#/paths/~1tags~1'
+  /element-privileges/:
+    $ref: 'element-privileges.yaml#/paths/~1element-privileges~1'
 components:
   schemas:
     CommentDto:
@@ -39,3 +43,9 @@ components:
       $ref: 'tunes.yaml#/components/schemas/ApiResponseTune'
     ApiResponseSuccess:
       $ref: 'tunes.yaml#/components/schemas/ApiResponseSuccess'
+    TagItem:
+      $ref: 'tags.yaml#/components/schemas/TagItem'
+    TagWriteItem:
+      $ref: 'tags.yaml#/components/schemas/TagWriteItem'
+    TagsPayload:
+      $ref: 'tags.yaml#/components/schemas/TagsPayload'

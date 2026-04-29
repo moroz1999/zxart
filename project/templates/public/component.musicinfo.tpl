@@ -226,10 +226,10 @@
 	{if $element->getMp3FilePath()}
 		<tr>
 			<td class='info_table_label'>
-				{translations name='zxmusic.mp3file'}:
+				{translations name='zxmusic.oggfile'}:
 			</td>
 			<td class='info_table_value'>
-				<a rel="nofollow" class='music_details_download' href="{$element->getMp3FilePath()}"><img loading="lazy" class="music_details_mp3" src="{$theme->getImageUrl("mp3.svg")}" alt="{translations name='zxmusic.mp3file'} {$element->getFileName('mp3', false)}" /> {$element->getMp3FilePath()}</a>
+				<a rel="nofollow" class='music_details_download' href="{$element->getMp3FilePath()}"><img loading="lazy" class="music_details_mp3" src="{$theme->getImageUrl("ogg.svg")}" alt="{translations name='zxmusic.oggfile'} {$element->getFileName('mp3', false)}" /> {$element->getMp3FilePath()}</a>
 			</td>
 		</tr>
 	{/if}

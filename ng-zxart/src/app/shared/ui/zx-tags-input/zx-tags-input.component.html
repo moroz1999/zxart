@@ -1,0 +1,48 @@
+<zx-stack spacing="sm">
+  <zx-tags-chips
+    *ngIf="tags.length > 0"
+    [tags]="tags"
+    [removable]="true"
+    [disabled]="disabled"
+    [removeButtonAriaLabel]="removeButtonAriaLabel"
+    (tagRemoved)="onRemoveTag($event)"
+  ></zx-tags-chips>
+
+  <div cdkOverlayOrigin #searchOrigin="cdkOverlayOrigin">
+    <zx-input
+      [placeholder]="placeholder"
+      [disabled]="disabled"
+      [(ngModel)]="query"
+      (ngModelChange)="onQueryChange($event)"
+      (keyup)="onKeyup($event)"
+    ></zx-input>
+  </div>
+</zx-stack>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="searchOrigin"
+  [cdkConnectedOverlayOpen]="dropdownOpen"
+  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  (backdropClick)="closeDropdown()"
+>
+  <div class="zx-tags-input__dropdown">
+    <div *ngIf="searchLoading" class="zx-tags-input__loading">
+      <zx-spinner size="md"></zx-spinner>
+    </div>
+
+    <div *ngIf="searchLoading !== true" class="zx-tags-input__options">
+      <zx-button
+        *ngFor="let result of searchResults"
+        size="sm"
+        color="transparent"
+        extraClass="zx-tags-input__option-button"
+        (click)="onSelectSearchResult(result)"
+      >
+        {{ result.title }}<ng-container *ngIf="result.description"> ({{ result.description }})</ng-container>
+      </zx-button>
+    </div>
+  </div>
+</ng-template>

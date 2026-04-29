@@ -43,13 +43,16 @@ class PostService
      */
     private function sendAudio(PostDto $postDto, string $text): void
     {
+        $audioResponse = $this->client->get($postDto->audio);
+        $filename = basename(parse_url($postDto->audio, PHP_URL_PATH) ?? 'audio.mp3');
+
         $this->client->post('sendAudio', [
-            'json' => [
-                'chat_id' => $this->channelId,
-                'audio' => $postDto->audio,
-                'caption' => $text,
-                'parse_mode' => 'HTML',
-                'title' => $postDto->title,
+            'multipart' => [
+                ['name' => 'chat_id', 'contents' => $this->channelId],
+                ['name' => 'audio', 'contents' => $audioResponse->getBody(), 'filename' => $filename],
+                ['name' => 'caption', 'contents' => $text],
+                ['name' => 'parse_mode', 'contents' => 'HTML'],
+                ['name' => 'title', 'contents' => $postDto->title],
             ],
         ]);
     }

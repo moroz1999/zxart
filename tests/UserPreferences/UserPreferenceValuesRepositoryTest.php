@@ -6,10 +6,12 @@ namespace ZxArt\Tests\UserPreferences;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use ZxArt\UserPreferences\Domain\UserPreferenceValue;
 use ZxArt\UserPreferences\Repositories\UserPreferenceValuesRepository;
 
+#[AllowMockObjectsWithoutExpectations]
 class UserPreferenceValuesRepositoryTest extends TestCase
 {
     public function testFindByUserIdReturnsValuesForUser(): void

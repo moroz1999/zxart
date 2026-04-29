@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace ZxArt\Tests\UserPreferences;
 
+use App\Users\CurrentUserService;
 use App\Users\CurrentUser;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use ZxArt\UserPreferences\DefaultUserPreferencesProvider;
 use ZxArt\UserPreferences\Domain\Exception\InvalidPreferenceCodeException;
@@ -18,8 +20,27 @@ use ZxArt\UserPreferences\Repositories\PreferencesRepository;
 use ZxArt\UserPreferences\Repositories\UserPreferenceValuesRepository;
 use ZxArt\UserPreferences\UserPreferencesService;
 
+#[AllowMockObjectsWithoutExpectations]
 class UserPreferencesServiceTest extends TestCase
 {
+    private function getDefaultPreferencesCount(): int
+    {
+        return count((new DefaultUserPreferencesProvider())->getDefaults());
+    }
+
+    private function getDefaultPreferenceValue(string $code): ?string
+    {
+        return (new DefaultUserPreferencesProvider())->getDefaults()[$code] ?? null;
+    }
+
+    private function createCurrentUserServiceMock(CurrentUser $user): CurrentUserService
+    {
+        $currentUserService = $this->createMock(CurrentUserService::class);
+        $currentUserService->method('getCurrentUser')->willReturn($user);
+
+        return $currentUserService;
+    }
+
     private function createUserMock(bool $isAuthorized = false, ?int $userId = null): CurrentUser
     {
         $user = $this->getMockBuilder(CurrentUser::class)
@@ -45,7 +66,7 @@ class UserPreferencesServiceTest extends TestCase
         $valuesRepo = $this->createMock(UserPreferenceValuesRepository::class);
 
         $service = new UserPreferencesService(
-            $user,
+            $this->createCurrentUserServiceMock($user),
             $preferencesRepo,
             $valuesRepo,
             new DefaultUserPreferencesProvider(),
@@ -54,10 +75,10 @@ class UserPreferencesServiceTest extends TestCase
 
         $preferences = $service->getAllPreferences();
 
-        $this->assertCount(21, $preferences);
+        $this->assertCount($this->getDefaultPreferencesCount(), $preferences);
         $this->assertInstanceOf(PreferenceDto::class, $preferences[0]);
         $this->assertSame('theme', $preferences[0]->code);
-        $this->assertSame('light', $preferences[0]->value);
+        $this->assertSame($this->getDefaultPreferenceValue('theme'), $preferences[0]->value);
     }
 
     public function testGetAllPreferencesReturnsMergedPreferencesForLoggedInUser(): void
@@ -75,7 +96,7 @@ class UserPreferencesServiceTest extends TestCase
         ]);
 
         $service = new UserPreferencesService(
-            $user,
+            $this->createCurrentUserServiceMock($user),
             $preferencesRepo,
             $valuesRepo,
             new DefaultUserPreferencesProvider(),
@@ -84,7 +105,7 @@ class UserPreferencesServiceTest extends TestCase
 
         $preferences = $service->getAllPreferences();
 
-        $this->assertCount(21, $preferences);
+        $this->assertCount($this->getDefaultPreferencesCount(), $preferences);
         $themePreference = $this->findPreferenceByCode($preferences, 'theme');
         $this->assertNotNull($themePreference);
         $this->assertSame('dark', $themePreference->value);
@@ -103,7 +124,7 @@ class UserPreferencesServiceTest extends TestCase
         $valuesRepo->method('findByUserId')->with(5)->willReturn([]);
 
         $service = new UserPreferencesService(
-            $user,
+            $this->createCurrentUserServiceMock($user),
             $preferencesRepo,
             $valuesRepo,
             new DefaultUserPreferencesProvider(),
@@ -112,10 +133,10 @@ class UserPreferencesServiceTest extends TestCase
 
         $preferences = $service->getAllPreferences();
 
-        $this->assertCount(21, $preferences);
+        $this->assertCount($this->getDefaultPreferencesCount(), $preferences);
         $themePreference = $this->findPreferenceByCode($preferences, 'theme');
         $this->assertNotNull($themePreference);
-        $this->assertSame('light', $themePreference->value);
+        $this->assertSame($this->getDefaultPreferenceValue('theme'), $themePreference->value);
     }
 
     public function testSetPreferenceThrowsExceptionForInvalidCode(): void
@@ -125,7 +146,7 @@ class UserPreferencesServiceTest extends TestCase
         $valuesRepo = $this->createMock(UserPreferenceValuesRepository::class);
 
         $service = new UserPreferencesService(
-            $user,
+            $this->createCurrentUserServiceMock($user),
             $preferencesRepo,
             $valuesRepo,
             new DefaultUserPreferencesProvider(),
@@ -143,7 +164,7 @@ class UserPreferencesServiceTest extends TestCase
         $valuesRepo = $this->createMock(UserPreferenceValuesRepository::class);
 
         $service = new UserPreferencesService(
-            $user,
+            $this->createCurrentUserServiceMock($user),
             $preferencesRepo,
             $valuesRepo,
             new DefaultUserPreferencesProvider(),
@@ -175,7 +196,7 @@ class UserPreferencesServiceTest extends TestCase
         ]);
 
         $service = new UserPreferencesService(
-            $user,
+            $this->createCurrentUserServiceMock($user),
             $preferencesRepo,
             $valuesRepo,
             new DefaultUserPreferencesProvider(),
@@ -184,7 +205,7 @@ class UserPreferencesServiceTest extends TestCase
 
         $preferences = $service->setPreference('theme', 'dark');
 
-        $this->assertCount(21, $preferences);
+        $this->assertCount($this->getDefaultPreferencesCount(), $preferences);
         $themePreference = $this->findPreferenceByCode($preferences, 'theme');
         $this->assertNotNull($themePreference);
         $this->assertSame('dark', $themePreference->value);
@@ -200,7 +221,7 @@ class UserPreferencesServiceTest extends TestCase
         $valuesRepo->expects($this->never())->method('upsert');
 
         $service = new UserPreferencesService(
-            $user,
+            $this->createCurrentUserServiceMock($user),
             $preferencesRepo,
             $valuesRepo,
             new DefaultUserPreferencesProvider(),
@@ -209,10 +230,10 @@ class UserPreferencesServiceTest extends TestCase
 
         $preferences = $service->setPreference('theme', 'dark');
 
-        $this->assertCount(21, $preferences);
+        $this->assertCount($this->getDefaultPreferencesCount(), $preferences);
         $themePreference = $this->findPreferenceByCode($preferences, 'theme');
         $this->assertNotNull($themePreference);
-        $this->assertSame('light', $themePreference->value);
+        $this->assertSame($this->getDefaultPreferenceValue('theme'), $themePreference->value);
     }
 
     public function testValidateHomepageOrderAcceptsValidModuleIds(): void

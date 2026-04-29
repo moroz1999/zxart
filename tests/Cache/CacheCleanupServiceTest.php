@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace ZxArt\Tests\Cache;
 
 use App\Paths\PathsManager;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Cache\Services\CacheCleanupService;
 
+#[AllowMockObjectsWithoutExpectations]
 class CacheCleanupServiceTest extends TestCase
 {
     private string $tempDir;

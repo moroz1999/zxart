@@ -12,14 +12,16 @@ use ZxArt\AuthorList\Dto\AuthorListItemDto;
 use ZxArt\AuthorList\Rest\AuthorListItemRestDto;
 use ZxArt\GroupList\Dto\GroupListItemDto;
 use ZxArt\GroupList\Rest\GroupListItemRestDto;
+use ZxArt\Parties\Dto\PartyDto;
+use ZxArt\Parties\Rest\PartyRestDto;
 use ZxArt\Pictures\Dto\PictureDto;
 use ZxArt\Pictures\Rest\PictureRestDto;
+use ZxArt\Press\Dto\PressArticleDto;
+use ZxArt\Press\Rest\PressArticleRestDto;
 use ZxArt\Prods\Dto\ProdDto;
 use ZxArt\Prods\Rest\ProdRestDto;
-use ZxArt\Search\Dto\SearchItemDto;
 use ZxArt\Search\Dto\SearchResultsDto;
 use ZxArt\Search\Dto\SearchResultSetDto;
-use ZxArt\Search\Rest\SearchItemRestDto;
 use ZxArt\Search\Rest\SearchResultSetRestDto;
 use ZxArt\Search\Rest\SearchResultsRestDto;
 use ZxArt\Search\Services\SearchService;
@@ -48,7 +50,7 @@ class Searchresults extends LoggedControllerApplication
             $types = $this->parseTypes($this->getParameter('types'));
 
             $searchService = $this->getService(SearchService::class);
-            $resultDto = $searchService->search($phrase, $page, SearchService::DEFAULT_PAGE_SIZE, $types);
+            $resultDto = $searchService->search($phrase, $page, $types);
             $this->assignSuccess($this->mapResult($resultDto));
         } catch (Throwable $e) {
             $this->logThrowable('Searchresults::execute', $e);
@@ -70,9 +72,7 @@ class Searchresults extends LoggedControllerApplication
             page: $dto->page,
             pageSize: $dto->pageSize,
             total: $dto->total,
-            exactMatches: $dto->exactMatches,
             sets: $sets,
-            availableTypes: $dto->availableTypes,
         );
     }
 
@@ -84,7 +84,6 @@ class Searchresults extends LoggedControllerApplication
         );
         return new SearchResultSetRestDto(
             type: $set->type,
-            partial: $set->partial,
             totalCount: $set->totalCount,
             items: $items,
         );
@@ -98,7 +97,8 @@ class Searchresults extends LoggedControllerApplication
             $item instanceof PictureDto => $mapper->map($item, PictureRestDto::class),
             $item instanceof ProdDto => $mapper->map($item, ProdRestDto::class),
             $item instanceof TuneDto => $mapper->map($item, TuneRestDto::class),
-            $item instanceof SearchItemDto => $mapper->map($item, SearchItemRestDto::class),
+            $item instanceof PressArticleDto => $mapper->map($item, PressArticleRestDto::class),
+            $item instanceof PartyDto => $mapper->map($item, PartyRestDto::class),
             default => $item,
         };
     }
