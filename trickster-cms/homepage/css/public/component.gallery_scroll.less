@@ -1,0 +1,28 @@
+/********************************************************
+/*  SCROLL GALLERY
+/********************************************************/
+.gallery_scroll {
+	position: relative;
+
+	.gallery_images {
+		white-space: nowrap;
+		overflow: hidden;
+		position: relative;
+		width: 100%;
+	}
+
+	.gallery_image {
+		display: inline-block;
+		vertical-align: top;
+		overflow: hidden;
+		position: relative;
+	}
+}
+
+// Quick workaround to permit touch scrolling in mobiles (it's blocked by buttons overlay element, at least in mall header gallery)
+// TODO: change touch scrolling implementation?
+@media (max-width: @screen_breakpoint_md_max) {
+	.gallery_scroll .gallery_buttons {
+		display: none;
+	}
+}

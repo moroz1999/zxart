@@ -1,0 +1,2 @@
+{*DEPRECATED, LEFT FOR COMPATIBILITY*}
+<section class="subcontentmodule_component{if isset($moduleSubClass)} {$moduleSubClass}{/if}" {if isset($moduleAttributes)}{$moduleAttributes}{/if}>{if isset($moduleSubContent)} {$moduleSubContent}{/if}</section>{logMessage message="Deprecated template used: component.subcontentmodule.tpl"}

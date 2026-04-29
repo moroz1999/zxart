@@ -1,0 +1,26 @@
+.form_component {
+	table {
+		padding: @33pt @50pt;
+		margin: 0 0 @32pt 0;
+		border-spacing: @19pt @12pt;
+		.form_label {
+			color: @label_color;
+			vertical-align: top;
+			text-align: right;
+			padding-top: @13pt;
+			white-space: nowrap;
+		}
+		.file_name {
+			color: @label_color;
+		}
+		.form_helper {
+			display: none;
+		}
+		& > tbody tr td {
+			.form_field;
+			&:nth-child(2) {
+				width: @509pt;
+			}
+		}
+	}
+}

@@ -1,0 +1,58 @@
+.popup_component {
+	display: none;
+	line-height: 24px;
+	text-align: left;
+	background-color: @trick_bg_color_01;
+	position: absolute;
+	top: 100%;
+	border: 0.5em solid @trick_brd_color_12;
+	padding: 0.3em 1em 0.6em 0.79em;
+	width: 27em;
+	max-width: 100%;
+	z-index: 2;
+	box-sizing: border-box;
+	box-shadow: 0 4px 9px fade(@black, 26);
+}
+
+.popup_component_close {
+	//background: url(getImageUrl('popup_close.png')) no-repeat scroll 50% 50% transparent;
+	//noinspection LessResolvedByNameOnly
+	.svg-bg(@trick_basket_close, false, @trick_brd_color_06);// svg name without ext, 'fill', stroke color
+	cursor: pointer;
+	display: block;
+	min-height: 20px;
+	min-width: 20px;
+	width: 1.5em;
+	height: 1.5em;
+	position: absolute;
+	right: 11px;
+	top: 5px;
+	background-size: 100%;
+	background-repeat: no-repeat;
+	transition: all .2s ease-in-out;
+
+	&:hover, &:focus{
+		.svg-bg(@trick_basket_close, false, @trick_brd_color_08);// svg name without ext, 'fill', stroke color
+	}
+}
+
+.popup_component_notice {
+	margin-top: 0.95em;
+	padding-top: 0.5em;
+	border-top: 1px solid @trick_brd_color_10;
+	font-size: 0.93em;
+	font-style: italic;
+	color: @trick_text_color_02;
+	text-align: center;
+	line-height: inherit;
+}
+
+.popup_component_controls {
+	margin-top: 2.15em;
+	text-align: center;
+	line-height: 2.5;
+	.popup_component_button {
+		width: 100%;
+	}
+}
+

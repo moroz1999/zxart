@@ -1,0 +1,138 @@
+/********************************************************
+/*  TREE COMPONENT
+/********************************************************/
+
+
+.treemenu_component {
+	margin: @15pt 0 0 @2pt;
+	padding-left: @3pt;
+	overflow-y: auto;
+}
+
+.treemenu_level {
+	margin: 0;
+	display: block;
+	list-style-type: none;
+	padding: @5pt 0 0;
+}
+
+.treemenu_item {
+	margin-left: @7pt;
+	display: block;
+	padding-top: @6pt;
+	padding-bottom: @6pt;
+	background: url(getImageUrl('tree_vline.png')) repeat-y, url(getImageUrl('tree_node.png')) no-repeat;
+	padding-left: @32pt;
+
+	&:last-child {
+		background: url(getImageUrl('tree_lastnode.png')) no-repeat;
+		padding-bottom: 0;
+	}
+	.treemenu_level_0 > & {
+		background: none;
+		padding: 0;
+		margin-bottom: @40pt;
+		& > .structure_element {
+			margin-bottom: @2pt;
+			& .icon:before {
+				margin-right: @5pt;
+			}
+		}
+	}
+
+	.structure_element {
+		display: flex;
+		color: @treemenu_text_color;
+		text-decoration: none;
+		transition: @text_hover_transition;
+
+		.icon {
+			color: @treemenu_text_color;
+			transition: @text_hover_transition;
+		}
+		&:hover, &:focus {
+			color: @white;
+			outline: none;
+			.icon {
+				color: @white;
+			}
+		}
+	}
+}
+
+.treemenu_item_title {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	padding-left: @10pt;
+}
+
+.treemenu_selected_item > .structure_element,
+.treemenu_selected_item > .structure_element > .icon {
+	color: @color;
+}
+.treemenu_item.treemenu_requested_item >a:after {
+	//content: '\e917';
+	font-family: 'icons';
+	display: inline-block;
+	font-size: .8em;
+	margin-left: .85em;
+	color: fade(@white,90);
+	transform: rotate(90deg);
+	transform-origin: 50% 50%;
+	line-height: inherit;
+	width: 1em;
+	height: inherit;
+	overflow: hidden;
+}
+
+.ajaxsearch_block {
+	display: flex;
+}
+
+.placeholder_icon {
+	width: 5%;
+	height: @37pt;
+	line-height: @37pt;
+	background-color: @search_background_color;
+	border-left: 1px solid @search_border_color;
+	border-top: 1px solid @search_border_color;
+	border-bottom: 1px solid @search_border_color;
+	border-right: none;
+	border-radius: 3px 0 0 3px;
+	padding-left: @7pt;
+	.icon {
+		color: @placeholder_icon_color;
+	}
+}
+
+.ajaxsearch_input {
+	width: 95%;
+	height: @35pt;
+	border-radius: 0 3px 3px 0;
+	border-right: 1px solid @search_border_color;
+	border-top: 1px solid @search_border_color;
+	border-bottom: 1px solid @search_border_color;
+	border-left: none;
+	background-color: @search_background_color;
+	text-indent: @16pt;
+	color: @white;
+	&::placeholder {
+		opacity: 1;
+		color: @white;
+		text-transform: uppercase;
+		font-size: @13pt;
+	}
+	&:focus::placeholder {
+		color: transparent;
+	}
+}
+
+/* Single item search
+-------------------------------*/
+.ajaxitemsearch {
+	margin-bottom: 10px;
+}
+
+.sales_statistics_filter_category_block {
+	position: relative;
+}

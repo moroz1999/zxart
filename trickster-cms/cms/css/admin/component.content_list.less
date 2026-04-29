@@ -1,0 +1,255 @@
+
+.content_list_block {
+	background-color: @white;
+}
+
+.content_list_controls {
+	background-color: @light_gray;
+	padding: @21pt @20pt @23pt @20pt;
+	
+	.button {
+		padding-left: @43pt;
+		padding-right: @37pt;
+	}
+}
+
+.content_list_bottom {
+	height: @52pt;
+}
+
+.below_content {
+	.content_list_bottom;
+	//deprecated, bw compatibility only
+}
+
+.content_list {
+	width: 100%;
+	max-width: 100%;
+	border-spacing: 0;
+	color: @content_text_color;
+	border-collapse: collapse;
+	border-top: 1px solid @border_color;
+	margin-bottom: @20pt;
+	
+	thead {
+		font-size: @13pt;
+		background-color: @thead_background_color;
+		text-transform: uppercase;
+		
+		th {
+			padding: 0 @10pt;
+			height: @36pt;
+			vertical-align: middle;
+		}
+		
+		a {
+			text-decoration: none;
+			color: @label_color;
+		}
+		
+		.checkbox_column {
+			text-align: center;
+			width: 1rem;
+		}
+		
+		.delete_column {
+			text-align: left;
+		}
+	}
+	
+	tr {
+		border-bottom: 1px solid @tr_border_color;
+		
+		&:hover {
+			td {
+				background-color: @hover_background_color;
+				color: @label_color;
+				
+				a {
+					color: @label_color;
+					text-decoration: none;
+				}
+				
+				.icon {
+					color: @label_color;
+				}
+				
+				.icon_delete {
+					color: @red_color;
+				}
+			}
+		}
+	}
+	
+	td {
+		transition: @text_hover_transition, @text_background_transition;
+		padding: 0 @10pt;
+		vertical-align: middle;
+		height: @40pt;
+		color: @content_text_color;
+		
+		&.name_column {
+			a {
+				color: @label_color;
+			}
+		}
+		
+		.icon_delete {
+			color: @content_text_color;
+			font-size: @8pt;
+			text-decoration: none;
+		}
+		
+		.icon {
+			color: @content_icon_color;
+			margin-right: @13pt;
+			transition: @text_hover_transition;
+		}
+		
+		a {
+			text-decoration: none;
+			color: @content_text_color;
+			
+			&:hover, &:focus {
+				outline: none;
+				cursor: pointer;
+			}
+			
+			transition: @text_hover_transition;
+		}
+		
+		&:first-child:not(.name_column) {
+			width: @25pt;
+		}
+		
+		img {
+			max-height: @72pt;
+		}
+	}
+	
+	.icon_delete {
+		transition: @text_hover_transition;
+	}
+	
+	.checkbox_column {
+		text-align: center;
+		width: 1rem;
+	}
+	
+	.image_column {
+		position: relative;
+		width: 10%;
+		text-align: center;
+		
+		img {
+			height: 100%;
+		}
+	}
+	
+	th.name_column {
+		padding-left: @44pt;
+	}
+	
+	.edit_column {
+		width: @50pt;
+		text-align: center;
+		
+		.icon {
+			margin: 0;
+		}
+	}
+	
+	.type_column {
+		width: @140pt;
+	}
+	
+	.date_column {
+		width: @140pt;
+	}
+	
+	.delete_column {
+		width: @65pt;
+		text-align: center;
+	}
+	
+	.icon_sort {
+		color: @red_color;
+	}
+	
+	.checkbox {
+		height: @16pt;
+		width: @16pt;
+		line-height: @16pt;
+	}
+}
+
+.content_list_form {
+	.controls_block {
+		.warning_button {
+			margin-left: 0;
+		}
+	}
+	
+	.checkbox_column {
+		text-align: center;
+	}
+}
+
+@media (max-width: @screen_breakpoint_sm) {
+	.content_list {
+		.name_column {
+			white-space: normal;
+			padding-right: @4pt;
+			
+			.icon {
+				display: none;
+			}
+		}
+		
+		.price_column {
+			display: none;
+		}
+		
+		.edit_column {
+			padding: 0;
+		}
+		
+		.delete_column {
+			padding: 0;
+		}
+	}
+}
+
+@media (max-width: @screen_breakpoint_md) {
+	.content_list {
+		td, th {
+			display: none;
+			
+			&.checkbox_column,
+			&.checkbox_column,
+			&.name_column,
+			&.edit_column,
+			&.delete_column,
+			&.code_column {
+				display: table-cell;
+			}
+		}
+	}
+}
+
+@media (max-width: @screen_breakpoint_lg) {
+	.content_list {
+		td, th {
+			display: none;
+			
+			&.checkbox_column,
+			&.checkbox_column,
+			&.name_column,
+			&.edit_column,
+			&.delete_column,
+			&.code_column {
+				display: table-cell;
+			}
+		}
+	}
+}

@@ -1,0 +1,48 @@
+
+.form_image_component {
+	display: inline-block;
+	position: relative;
+}
+
+.form_image_component_hidden {
+	display: none;
+}
+
+.form_image {
+	width: auto;
+	max-height: @109pt;
+	min-height: @36pt;
+	max-width: @509pt;
+	min-width: @16pt;
+	display: block;
+	border: 1px solid @border_color;
+	border-radius: 3px;
+	&:hover, &:focus {
+		outline: none;
+		border: 1px solid mix(#6bbbff, #e2e2e5, 50%);
+	}
+}
+
+.form_image_delete_button {
+	width: @36pt;
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-color: #000;
+	opacity: 0.75;
+	&:before {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		content: "\274c"; /* use the hex value here... */
+		line-height: @34pt;
+		color: #ff0000;
+		text-align: center;
+	}
+	&:hover {
+		opacity: 1;
+	}
+}
+

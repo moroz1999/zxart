@@ -1,0 +1,152 @@
+.flex_items_list {
+	//deprecated?
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: stretch;
+
+	&::after {
+		flex: auto;
+		content: "";
+		display: block;
+	}
+}
+
+.grid_container {
+	display: flex;
+	flex-wrap: wrap;
+
+	&::after {
+		content: "";
+		flex: auto;
+	}
+}
+
+.grid_item(
+	@lg_grid_span,
+	@grid_spacing: @default_grid_spacing,
+	@grid_spacing_mobile: @default_grid_spacing_mobile,
+	@md_grid_span: @lg_grid_span - 1,
+	@sm_grid_span: @lg_grid_span - 2,
+	@xs_grid_span: @lg_grid_span - 3
+) {
+	//*0.999 is required for incorrect float rounding to px in some browsers/font sizes
+	box-sizing: border-box;
+	margin: 0 @grid_spacing_mobile*0.999 / 2 @grid_spacing_mobile;
+	@media (min-width: 0) and (max-width: @screen_breakpoint_xs_max) {
+		.fit_into_grid(@xs_grid_span, @grid_spacing_mobile);
+	}
+	@media (min-width: @screen_breakpoint_sm) and (max-width: @screen_breakpoint_sm_max) {
+		.fit_into_grid(@sm_grid_span, @grid_spacing_mobile);
+	}
+	@media (min-width: @screen_breakpoint_md) and (max-width: @screen_breakpoint_md_max) {
+		.fit_into_grid(@md_grid_span, @grid_spacing_mobile);
+	}
+	@media (min-width: @screen_breakpoint_lg) {
+		margin: 0 @grid_spacing*0.999 / 2 @grid_spacing;
+		.grid_lg & {
+			.fit_into_grid(@lg_grid_span, @grid_spacing);
+		}
+
+		.grid_md & {
+			.fit_into_grid(@lg_grid_span - 1, @grid_spacing);
+		}
+
+		.grid_sm & {
+			.fit_into_grid(@lg_grid_span - 2, @grid_spacing);
+		}
+	}
+	.selectedproducts_scroll & {
+		margin-right: @grid_spacing*0.999 / 2 !important;
+		margin-left: @grid_spacing*0.999 / 2 !important;
+		&:first-child{
+			margin-left: 0 !important;
+		}
+		&:last-child{
+			margin-right: 0 !important;
+		}
+	}
+	@media (min-width: 0) and (max-width: @screen_breakpoint_md_max) {
+		.selectedproducts_scroll & {
+			margin-right: @grid_spacing_mobile*0.999 / 2 !important;
+			margin-left: @grid_spacing_mobile*0.999 / 2 !important;
+		}
+	}
+}
+
+.fit_into_grid_margins(@span) when (@span > 1) {
+	&:nth-of-type(@{span}n + 1) {
+		margin-left: 0;
+	}
+	&:nth-of-type(@{span}n) {
+		margin-right: 0;
+	}
+}
+
+.fit_into_grid_margins(@span) when (@span = 1) {
+	&:nth-of-type(n + 1) {
+		margin-left: 0;
+	}
+	&:nth-of-type(n) {
+		margin-right: 0;
+	}
+}
+
+.fit_into_grid_margins(@span) when (@span < 1) {
+	& {
+		margin-left: 0;
+		margin-right: 0;
+	}
+}
+
+.fit_into_grid(@external_grid_span, @external_grid_spacing) {
+	@internal_grid_span: max(@external_grid_span, 1);
+	@grid_span_pct: 100 / @internal_grid_span;
+	@internal_grid_spacing: @external_grid_spacing * (@internal_grid_span - 1) / @internal_grid_span;
+	width: e('calc(@{grid_span_pct}% - @{internal_grid_spacing})');
+	.fit_into_grid_margins(@external_grid_span);
+}
+
+
+.hidden_on_phone {
+	@media (max-width: @screen_breakpoint_sm_max) {
+		display: none !important;
+	}
+}
+
+//deprecated, use .clearfixin() instead.
+.clearfix {
+	display: block;
+	clear: both;
+}
+
+// SVG background-image,
+// todo: need additional code clean in CssUniter
+.svg-bg(@svgFile,@fill,@stroke,@subfolder:false) {
+	@svgContent: encodeSvgContent(@svgFile, @fill, @stroke, @subfolder); // file name, fill color, stroke color
+	background-image: url("@{svgContent}");
+}
+
+.visible(@el_type){ // like block, flex, inline etc....
+	opacity: 1;
+	visibility: visible;
+	display: @el_type;
+}
+.bg_params(@repeat,@width,@height,@posX,@posY) {
+	background-repeat: @repeat;
+	background-position: @posX @posY;
+	.bg_params_size(@width; @height);
+}
+	.bg_params_size(@width; @height) when (@height = false) {
+		background-size: @width;
+	}
+	.bg_params_size(@width; @height) when not (@height = false) {
+		background-size: @width @height;
+	}
+
+.max_width(@max_width) {
+	max-width: @max_width;
+	width: 100%;
+	margin-right: auto;
+	margin-left: auto;
+}

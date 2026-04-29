@@ -1,0 +1,122 @@
+/********************************************************
+/*  TIP POPUP
+/********************************************************/
+.tip_popup {
+    text-align: left;
+    z-index: 120;
+    position: absolute;
+    box-sizing: border-box;
+    max-width: 20rem;
+}
+
+.tip_popup_content {
+    font-size: 0.9em;
+    display: block;
+    box-sizing: border-box;
+    position: relative;
+    background-color: @trick_bg_color_01;
+    box-shadow: 0 0 0 1px @trick_brd_color_08;
+    padding: 0.5rem;
+    color: @trick_text_color_01;
+    line-height: 1.25;
+
+    &.notice_basket {
+        transition: height 1s linear;
+    }
+
+    .notice_header,
+    .notice_middle,
+    .notice_content,
+    .notice_footer,
+    .notice_continue_shopping,
+    .notice_see_basket,
+    .notice_product_name,
+    .notice_bubble_text {
+        display: block;
+    }
+
+    .notice_bubble_text {
+    }
+
+    .notice_product_amount {
+        font-weight: bolder;
+    }
+
+
+    .notice_header {
+        display: flex;
+        flex: none;
+        padding: .5em;
+        align-items: center;
+        z-index: 1001;
+        background-color: @trick_bg_color_02;
+        box-sizing: border-box;
+
+        .notice_title {
+            flex: 1 1 auto;
+            color: @trick_text_color_01;
+            font-size: 1.2em;
+            padding-left: 0;
+        }
+    }
+
+    .notice_middle {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: auto;
+        padding: 1em .5em;
+        position: relative;
+        color: @trick_text_color_02;
+    }
+
+    .notice_link {
+        color: inherit;
+        border-bottom: 1px solid currentColor;
+        display: inline;
+        text-decoration: none;
+
+        &:hover, &:focus {
+            color: @trick_text_color_08;
+            text-decoration: none;
+        }
+    }
+
+    .notice_footer {
+        text-align: center;
+        z-index: 1001;
+        display: flex;
+        flex-direction: row;
+        justify-items: center;
+        justify-content: space-between;
+        padding: 0;
+
+        .button {
+            display: block;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 1em;
+            max-width: 100%;
+            line-height: inherit;
+            padding: .75em 1.5em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-sizing: border-box;
+            box-shadow: 0 0 0 1px @trick_brd_color_08;
+
+            &.submit.button * {
+                color: inherit;
+            }
+        }
+
+        .buttons {
+            .button:nth-child(n+2) {
+                margin-top: 6px;
+            }
+        }
+    }
+}
+
+.notice_product_amount {
+    font-style: normal;
+}

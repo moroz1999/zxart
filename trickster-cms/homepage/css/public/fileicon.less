@@ -1,0 +1,89 @@
+@fileicon_basesize: 0.5em;
+.file_icon {
+  display: inline-block;
+  width: @fileicon_basesize*3;
+  height: @fileicon_basesize*4;
+  background: #018fef;
+  position: relative;
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+}
+
+.file_icon::before {
+  display: block;
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-width: @fileicon_basesize*0.625;
+  border-style: solid;
+  border-color: #fff #fff rgba(255, 255, 255, .35) rgba(255, 255, 255, .35);
+}
+
+.file_icon::after {
+  display: block;
+  content: attr(data-type);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  font-size: @fileicon_basesize*1.25;
+  color: #fff;
+  text-transform: lowercase;
+  width: 100%;
+  padding: @fileicon_basesize*0.25;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+
+/* fileicon.types */
+.file_icon[data-type=zip],
+.file_icon[data-type=rar] {
+  background: #acacac;
+}
+
+.file_icon[data-type^=doc] {
+  background: #307cf1;
+}
+
+.file_icon[data-type^=xls],
+.file_icon[data-type^=ies] {
+  background: #0f9d58;
+}
+
+.file_icon[data-type^=ppt] {
+  background: #d24726;
+}
+
+.file_icon[data-type=pdf] {
+  background: #e13d34;
+}
+
+.file_icon[data-type=txt] {
+  background: #5eb533;
+}
+
+.file_icon[data-type=mp3],
+.file_icon[data-type=wma],
+.file_icon[data-type=m4a],
+.file_icon[data-type=flac] {
+  background: #8e44ad;
+}
+
+.file_icon[data-type=mp4],
+.file_icon[data-type=wmv],
+.file_icon[data-type=mov],
+.file_icon[data-type=avi],
+.file_icon[data-type=mkv] {
+  background: #7a3ce7;
+}
+
+.file_icon[data-type=bmp],
+.file_icon[data-type=jpg],
+.file_icon[data-type=jpeg],
+.file_icon[data-type=gif],
+.file_icon[data-type=png] {
+  background: #f4b400;
+}

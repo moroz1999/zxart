@@ -1,0 +1,84 @@
+/********************************************************
+/*  GENERIC GALLERY JS COMPONENT
+/********************************************************/
+.gallery {
+	position: relative;
+	display: block;
+	z-index: 0;
+}
+
+.header_gallery {
+	z-index: 0;
+}
+
+.gallery_images{
+	position: relative;
+	z-index: 5;
+}
+/********************************************************
+/*  GENERIC GALLERY IMAGE JS COMPONENT
+/********************************************************/
+.gallery_image img,
+.gallery_image video {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: block;
+	box-sizing: border-box;
+}
+
+.gallery_image_info {
+	position: absolute;
+	opacity: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 1;
+	padding: 0.5em 1em;
+	box-sizing: border-box;
+	display: none;
+}
+
+.gallery_image_info_visible {
+	display: block;
+}
+
+.gallery_image_title {
+	font-weight: bold;
+	margin-bottom: 0.25em;
+	color: @trick_text_color_01;
+}
+
+.gallery_image_description {
+	color: @trick_text_color_01;
+}
+
+.gallery_image_info_background {
+	background-color: @trick_bg_color_02;
+	opacity: 0.6;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	z-index: -1;
+}
+
+.gallery_image_clickable {
+	cursor: pointer;
+}
+
+.gallery_image_description {
+	color: @trick_text_color_01;
+}
+
+.gallery_image_info_background {
+	background-color: @trick_bg_color_02;
+	opacity: 0.6;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	z-index: -1;
+}

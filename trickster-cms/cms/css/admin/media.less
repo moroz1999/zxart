@@ -1,0 +1,75 @@
+html {
+	font-size: 16px;
+}
+
+/********************************************************
+/*  @media
+/*******************************************************/
+@media (max-width: @screen_breakpoint_sm_max) {
+	html {
+		font-size: 16px;
+	}
+}
+
+@media (min-width: @screen_breakpoint_md) {
+	html {
+		font-size: 14px;
+	}
+}
+
+@media (min-width: @screen_breakpoint_lg) {
+
+	//screen height: 720, 768
+	//screen width: 1024
+	html {
+		font-size: 13px;
+	}
+}
+
+//screen height: 800, 840, 864
+//screen width > 1152
+@media screen and (min-height: 650px) and (min-width: 1152px) {
+	html {
+		font-size: 13.5px;
+	}
+}
+
+//screen height: 900
+//screen width > 1280
+@media screen and (min-height: 750px) and (min-width: 1280px) {
+	html {
+		font-size: 14px;
+	}
+}
+
+//screen height: 960
+//screen width > 1360
+@media screen and (min-height: 810px) and (min-width: 1360px) {
+	html {
+		font-size: 15px;
+	}
+}
+
+//screen height: 1024, 1050, 1080
+//screen width > 1440
+@media screen and (min-height: 870px) and (min-width: 1440px) {
+	html {
+		font-size: 16px;
+	}
+}
+
+//screen height: 1200
+//screen width > 1600
+@media screen and (min-height: 1050px) and (min-width: 1600px) {
+	html {
+		font-size: 17px;
+	}
+}
+
+// screen height: 1440
+// screen width > 1920
+@media screen and (min-height: 1250px) and (min-width: 1920px) {
+	html {
+		font-size: 18px;
+	}
+}

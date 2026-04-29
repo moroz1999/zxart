@@ -1,0 +1,3 @@
+<?php
+$moduleActions = [];
+$moduleActions[] = 'showFullList';

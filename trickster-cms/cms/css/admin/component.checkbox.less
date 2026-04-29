@@ -1,0 +1,35 @@
+
+.checkbox_placeholder {
+	display: inline-block;
+	margin: 0;
+	vertical-align: middle;
+}
+
+.checkbox {
+	width: @23pt;
+	height: @23pt;
+	line-height: @23pt;
+	background-color: #fff;
+	cursor: pointer;
+	display: inline-block;
+	border: 1px solid @checkbox-border;
+	border-radius: 3px;
+	vertical-align: middle;
+	text-align: center;
+	outline: none;
+	&:hover, &:focus {
+		outline: none;
+		border: 1px solid mix(#6bbbff, #e2e2e5, 50%);
+	}
+}
+
+.checkbox.checked:before {
+	content: url(getImageUrl('check_mark.png'));
+}
+
+.checkbox_label {
+	cursor: pointer;
+	display: block;
+	vertical-align: middle;
+	margin-bottom: @8pt;
+}

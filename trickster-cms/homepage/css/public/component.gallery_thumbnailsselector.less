@@ -1,0 +1,102 @@
+/********************************************************
+/*  GALLERY SELECTOR
+/********************************************************/
+.gallery_thumbnailsselector {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  height: 5em;
+  padding-top: 2em;
+  z-index: 5;
+}
+
+/********************************************************
+/*  GALLERY SELECTOR LEFT BUTTON
+/********************************************************/
+.gallery_thumbnailsselector_left {
+  background: transparent url(getImageUrl('gallery_scroll_left.png')) no-repeat scroll 50% 50%;
+  position: absolute;
+  display: block;
+  cursor: pointer;
+  text-decoration: none;
+  bottom: 0;
+  top: 2em;
+  left: 0;
+  width: 2em;
+  outline: none;
+  z-index: 5;
+}
+
+/********************************************************
+/*  GALLERY SELECTOR RIGHT BUTTON
+/********************************************************/
+.gallery_thumbnailsselector_right {
+  background: transparent url(getImageUrl('gallery_scroll_right.png')) no-repeat scroll 50% 50%;
+  position: absolute;
+  display: block;
+  cursor: pointer;
+  text-decoration: none;
+  bottom: 0;
+  top: 2em;
+  right: 0;
+  width: 2em;
+  outline: none;
+  z-index: 5;
+}
+
+/********************************************************
+/*  GALLERY SELECTOR IMAGES
+/********************************************************/
+.gallery_thumbnailsselector_images {
+  overflow: hidden;
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  white-space: nowrap;
+  margin: 0 2em;
+}
+
+.gallery_thumbnailsselector_image {
+  box-sizing: border-box;
+  position: relative;
+  display: inline-flex;
+  margin: 0 0.5% 0 0.5%;
+  cursor: pointer;
+  vertical-align: middle;
+  height: 100%;
+  width: 19%;
+  background-size: cover;
+  background: no-repeat center;
+  border: transparent solid 1px;
+  transition: border-color 0.2s ease-in-out;
+
+  &.gallery_thumbnailsselector_active {
+    border-color: @primary_color;
+  }
+
+  &.gallery_thumbnailsselector_video {
+    &::after {
+      //background-image: url(getImageUrl('video-icon.svg'));
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 50%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: block;
+      content: "";
+    }
+
+    video {
+      width: 100%;
+    }
+  }
+}
+
+.gallery_thumbnailsselector_image:last-of-type {
+  margin-right: 0;
+}

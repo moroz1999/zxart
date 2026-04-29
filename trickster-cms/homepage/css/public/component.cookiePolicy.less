@@ -1,0 +1,55 @@
+.cookie_policy_component {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.5em 1em;
+    background-color: @trick_bg_color_10;
+    z-index: 150;
+    box-shadow: 0 0 5px fade(@black, 30);
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.cookie_policy_controls {
+    display: flex;
+    align-items: center;
+}
+
+.cookie_policy_link {
+    display: block;
+}
+
+.cookie_policy_button {
+    margin: 0 1em;
+}
+
+@media (max-width: @screen_breakpoint_sm_max) {
+    .cookie_policy_component {
+        text-align: center;
+        flex-wrap: wrap;
+    }
+
+    .cookie_policy_button {
+        vertical-align: middle;
+        margin-left: 0;
+    }
+
+    .cookie_policy_link {
+        display: inline-block;
+    }
+
+    .cookie_policy_text {
+        display: block;
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .cookie_policy_controls {
+        width: 100%;
+        justify-content: center;
+    }
+
+}
+

@@ -1,0 +1,120 @@
+.search_block_statistics {
+	display: flex;
+	flex-direction: column;
+	& > .panel_heading {
+		margin-top: @20pt;
+	}
+}
+
+.sales_statistics_date_presets {
+	display: flex;
+	flex-direction: column;
+	margin: @20pt 0;
+}
+
+.sales_statistics_date {
+	height: @34pt;
+	line-height: @34pt;
+	text-decoration: none;
+	color: @form_label_text_color;
+	border: 1px solid @border_color;
+	background-color: @grey_color;
+	padding: 0 @16pt;
+	cursor: pointer;
+	&:first-child {
+		border-left: 1px solid @border_color;
+		border-radius: 3px 3px 0 0;
+	}
+	&:last-child {
+		border-radius: 0 0 3px 3px;
+	}
+	&:hover, &:focus {
+		outline: none;
+		background-color: @hover_grey_color;
+	}
+}
+
+.sales_statistics_date_active {
+	background-color: @green_color;
+	border: 1px solid @green_color;
+	color: @white;
+	&:hover, &:focus {
+		outline: none;
+		background-color: @hover_green_color;
+	}
+}
+
+.sales_statistics_filter_controls {
+	display: grid;
+	grid-template-columns: min-content 1fr 1fr;
+	grid-template-rows: 1fr min-content;
+	grid-gap: @20pt;
+}
+
+.sales_statistics_groupby {
+	grid-column-start: 1;
+	grid-column-end: 4;
+}
+
+.date_statistics {
+	border: 1px solid @border_color;
+	border-radius: 3px;
+	background-color: @background_color;
+	padding: @20pt;
+}
+
+.sales_statistics_date_range {
+	.date_statistics;
+}
+
+.search_block_statistics {
+	.date_statistics;
+	.catalogue_filter_control_label {
+		margin: @8pt 0;
+		color: #485573;
+	}
+}
+
+.sales_statistics_groupby {
+	.date_statistics;
+	& > div:first-child {
+		margin-bottom: @20pt;
+	}
+}
+
+.sales_statistics_display_like {
+	.date_statistics;
+	margin: 0;
+}
+
+.sales_statistics_listtype {
+	.date_statistics;
+	margin: @20pt 0;
+}
+
+.catalogue_filter_control_box {
+	& > .input_component {
+		width: 100%;
+	}
+}
+
+.catalogue_filter_control_date {
+	display: flex;
+	flex-direction: row;
+	.input_date {
+		width: @109pt;
+		cursor: pointer;
+	}
+	.input_date:first-child {
+		.primary_button;
+		text-align: left;
+		border-right: none;
+		border-radius: 3px 0 0 3px;
+	}
+	.input_date:last-child {
+		.primary_button;
+		text-align: right;
+		border-left: none;
+		border-radius: 0 3px 3px 0;
+	}
+}

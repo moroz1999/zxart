@@ -1,0 +1,1 @@
+{if !empty($openGraphData)}{foreach $openGraphData as $key=>$value}<meta property="og:{$key}" content="{$value}" />{/foreach}{/if}

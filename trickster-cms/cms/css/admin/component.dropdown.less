@@ -1,0 +1,114 @@
+/********************************************************
+/*  ARTWEB DROPDOWN
+/********************************************************/
+
+
+.dropdown_placeholder {
+	visibility: hidden;
+}
+
+.dropdown_block {
+	.inputs_common();
+	height: @43pt;
+	padding-right: 2rem;
+	display: inline-block;
+	cursor: pointer;
+	position: relative;
+	text-decoration: none;
+	vertical-align: middle;
+	&:after {
+		content: '';
+		position: absolute;
+		top: @19pt;
+		right: @13pt;
+		width: 0;
+		height: 0;
+		border-left: @4pt solid transparent;
+		border-right: @5pt solid transparent;
+		border-top: @8pt solid @input_focus_color;
+	}
+}
+
+.dropdown_title {
+	display: block;
+	position: relative;
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: left;
+	line-height: inherit;
+}
+
+/********************************************************
+/*  DROPDOWN LIST
+/********************************************************/
+
+.dropdown_list {
+	width: @493pt;
+	vertical-align: top;
+	background-color: #fff;
+	padding-top: @2pt;
+	border: none;
+	border-left: 1px solid @input_focus_color;
+	border-right: 1px solid @input_focus_color;
+	border-bottom: 1px solid @input_focus_color;
+	border-radius: 0 0 3px 3px;
+	display: none;
+	position: absolute;
+	z-index: 15;
+	&:before {
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: inline-block;
+		box-sizing: border-box;
+		content: ' ';
+		width: 92%;
+		margin: 0 4%;
+		height: 1px;
+		background-color: @border_color;
+	}
+}
+
+.dropdown_list_is_above {
+	border: none;
+	border-left: 1px solid @input_focus_color;
+	border-right: 1px solid @input_focus_color;
+	border-top: 1px solid @input_focus_color;
+	border-radius: 3px 3px 0 0;
+	&:after {
+		position: absolute;
+		bottom: 0;
+		width: 92%;
+		margin: 0 4%;
+		display: inline-block;
+		content: ' ';
+		height: 1px;
+		background-color: @border_color;
+	}
+}
+
+.dropdown_list_content {
+	display: block;
+	position: relative;
+	overflow: auto;
+}
+
+/********************************************************
+/*  DROPDOWN OPTION
+/********************************************************/
+.dropdown_option {
+	display: block;
+	height: @20pt;
+	color: @dropdown_text_color;
+	cursor: pointer;
+	white-space: nowrap;
+	text-decoration: none;
+	outline: none;
+	overflow: hidden;
+	padding: @10pt @16pt;
+	&:hover, &:focus {
+		outline: none;
+		background-color: @dropdown_hover_color;
+	}
+}
+

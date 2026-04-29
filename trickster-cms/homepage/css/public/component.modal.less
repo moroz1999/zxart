@@ -1,0 +1,142 @@
+@keyframes modal_display_anim {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes modal_display_anim_move {
+  0% {
+    opacity: 0;
+    transform: translateY(-60%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(-50%);
+  }
+}
+
+html.has_modal {
+  @media (max-width: @screen_breakpoint_xs_max) {
+    overflow: hidden;
+  }
+}
+
+.modal {
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  z-index: 1000;
+  opacity: 0;
+
+  &.is_open {
+    display: flex;
+    opacity: 1;
+    @media (max-width: @screen_breakpoint_xs_max) {
+      animation: modal_display_anim 0.25s ease-in-out;
+    }
+    @media (min-width: @screen_breakpoint_sm) {
+      animation: modal_display_anim_move 0.3s ease-in-out;
+    }
+  }
+
+  @media (max-width: @screen_breakpoint_xs_max) {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+  }
+
+  @media (min-width: @screen_breakpoint_sm) {
+    width: 40%;
+    max-width: 40rem;
+    top: 50%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    transform: translateY(-50%);
+    background-color: #fff;
+    border: 1px solid @light_gray;
+    box-shadow: 0 10px 20px 0 rgba(88, 88, 88, 0.3);
+    max-height: calc(100% - 4rem);
+  }
+
+}
+
+.modal_header {
+  background: @primary_color;
+  display: flex;
+  flex: none;
+  height: 3rem;
+  padding: .5rem 1rem;
+  align-items: center;
+  z-index: 1001; // raise above .concerts_filter_date_background
+  .modal_title {
+    flex: 1 1 auto;
+    color: #fff;
+    padding-left: 0.15em;
+    padding-right: 0.5em;
+  }
+
+}
+
+.modal_title {
+  font-size: 1.22rem;
+}
+
+.modal_closebutton {
+  background: center / contain no-repeat;
+
+  flex: none;
+  cursor: pointer;
+  z-index: 1002;
+
+  .svg-bg(@trick_basket_close, false, @trick_text_color_01); // svg name without ext, 'fill', stroke color
+  width: 2.5rem;
+  height: 2.5rem;
+
+  &:hover, &:focus {
+    .svg-bg(@trick_basket_close, false, @trick_brd_color_10); // svg name without ext, 'fill', stroke color
+  }
+}
+
+.modal_content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  position: relative;
+
+  @media (max-width: @screen_breakpoint_xs_max) {
+    padding: 3rem 1rem 1rem;
+  }
+
+  @media (min-width: @screen_breakpoint_sm) {
+    padding: 3rem 3rem;
+  }
+}
+
+.modal_footer {
+  flex: none;
+  background: #fff;
+  border-top: 1px solid @light_gray;
+  padding: 1.05em 1.6em 1.3em;
+  text-align: right;
+  z-index: 1001; // raise above .concerts_filter_date_background
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &:last-child,
+    &:nth-child(even) {
+      margin-left: 5.6%;
+    }
+  }
+}

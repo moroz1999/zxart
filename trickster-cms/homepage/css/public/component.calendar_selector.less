@@ -1,0 +1,143 @@
+/********************************************************
+/*  CALENDAR
+/********************************************************/
+.calendar_selector {
+	display: none;
+	position: absolute;
+	width: 16em;
+	cursor: default;
+	z-index: 100;
+	background-color: @trick_bg_color_01;
+	padding: 0.25em;
+	overflow: hidden;
+	box-shadow: 1px 2px 3px fade(@black, 25);
+}
+
+.calendar_selector table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.calendar_selector td,
+.calendar_selector th {
+	text-align: center;
+	vertical-align: middle;
+}
+
+.calendar_selector_description {
+	display: none;
+	padding: 0.25em 1em;
+	margin-bottom: 3px;
+}
+
+.calendar_selector_header {
+	position: relative;
+	padding: 0.55em 2em;
+	position: relative;
+}
+
+.calendar_selector_previousmonth,
+.calendar_selector_nextmonth {
+	position: absolute;
+	display: block;
+	min-width: 0;
+	min-height: 0;
+	width: 2em;
+	top: 0;
+	bottom: 0;
+
+	&:hover {
+		opacity: 0.7;
+	}
+}
+
+.calendar_selector_nextmonth {
+	right: 0;
+	background: transparent url(getImageUrl('calendar_forward.png')) scroll 50% 50% no-repeat;
+}
+
+.calendar_selector_previousmonth {
+	left: 0;
+	background: transparent url(getImageUrl('calendar_back.png')) scroll 50% 50% no-repeat;
+}
+
+.calendar_selector_location {
+	text-align: center;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.calendar_selector_days {
+	position: relative;
+	background-color: @trick_bg_color_07;
+	padding: 0.3em 0 0.2em;
+	margin-bottom: 2px;
+}
+
+.calendar_selector_days th {
+	font-weight: bold;
+	padding: 0 0 1px;
+}
+
+.calendar_selector_body {
+	display: block;
+	cursor: pointer;
+}
+
+.calendar_selector_body table {
+}
+
+.calendar_selector_body td {
+	font-size: 0.93em;
+	text-align: center;
+	margin: 0 auto;
+	padding: 0.25em 0;
+	border-collapse: collapse;
+	border: 1px solid @trick_brd_color_01;
+	opacity: 0.5;
+}
+
+.calendar_selector_body td.calendar_selector_activemonth {
+	opacity: 1;
+}
+
+.calendar_selector_body td.calendar_selector_weekend {
+	color: @trick_text_color_09;
+}
+
+.calendar_selector_body td.calendar_selector_hovered {
+	border: none;
+	opacity: 1;
+	box-shadow: none;
+}
+
+.calendar_selector_body td.calendar_selector_pastday {
+	cursor: default;
+}
+
+.calendar_selector_body {
+	border-color: @trick_brd_color_01;
+	background-color: @trick_bg_color_01;
+	box-shadow: none;
+}
+
+.calendar_selector_body td.calendar_selector_weekend {
+	color: @trick_text_color_10;
+}
+
+.calendar_selector_body td.calendar_selector_today {
+	background-color: @trick_bg_color_08;
+}
+
+.calendar_selector_body td {
+}
+
+.calendar_selector_body td.calendar_selector_hovered {
+	background-color: @trick_bg_color_08;
+}
+
+.calendar_selector_body td.calendar_selector_selected {
+	background-color: @trick_bg_color_13;
+	color: @trick_text_color_01;
+}

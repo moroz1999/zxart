@@ -1,0 +1,57 @@
+/************************
+LIST
+************************/
+
+.feedback_content_list_wrapper {
+	
+	.name_column{
+		&.textarea_column {
+			word-break: break-word;
+			min-width: @150pt;
+		}
+		&.input_column {
+			word-break: break-word;
+			min-width: @100pt;
+		}
+	}
+	
+	.date_column {
+		max-width: @140pt;
+		width: auto;
+	}
+	
+	.delete_column {
+		text-align: center;
+		width: auto;
+		max-width: @65pt;
+	}
+}
+
+/************************
+SINGLE
+************************/
+.feedbackanswer_details {
+	padding: @33pt @50pt;
+	margin-bottom: @32pt;
+
+	.feedbackanswer_details_table {
+		border-spacing: @8pt @10pt;
+		
+		.feedbackanswer_details_row {
+			
+			&:nth-child(2n+1) {
+				background-color: fade(@gray, 24);
+			}
+			&:nth-child(2n) {
+				background-color: fade(@gray, 10);
+			}
+			
+			td {
+				padding: @10pt @12pt;
+			}
+		}
+	}
+}
+
+
+

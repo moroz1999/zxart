@@ -1,0 +1,1 @@
+<div class="ajaxitemsearch" data-types="{$types}"></div>

@@ -1,0 +1,26 @@
+.visitors_table_referer {
+	word-break: break-all;
+}
+
+.visitors_table_orderssum {
+	text-align: right;
+	white-space: nowrap;
+}
+
+.visitors_table_lastvisittime {
+	white-space: nowrap;
+}
+
+.visitordetails {
+	display: grid;
+	grid-template-rows: auto;
+	grid-template-columns: 1fr 1fr;
+	grid-gap: @20pt;
+	padding: @20pt;
+}
+
+@media (max-width: @screen_breakpoint_lg) {
+	.visitordetails {
+		grid-template-columns: 1fr;
+	}
+}

@@ -1,0 +1,47 @@
+
+
+.input_component {
+	.inputs_common();
+	height: @43pt;
+}
+
+.inputs_common() {
+	padding: @10pt @13pt;
+	box-sizing: border-box;
+	border-radius: 3px;
+	border: 1px solid @input_border_color;
+	color: @input_text_color;
+	line-height: 1.2;
+	transition: border-color 0.5s;
+
+	&:hover {
+		border: 1px solid mix(#6bbbff, #e2e2e5, 50%);
+	}
+	&:focus {
+		border-color: @input_focus_color;
+		outline: none;
+	}
+	&::placeholder {
+		color: @label_color;
+	}
+}
+
+.gallery_form_upload_droparea {
+	background-color: #e9e9e9;
+	border: 1px dashed #fff;
+	color: #767676;
+	display: none;
+	padding: 20px;
+	text-shadow: 1px 1px #fff;
+}
+
+.gallery_form_upload_submit {
+	display: none;
+}
+
+.gallery_form_images_table {
+	.gallery_form_image_image {
+		height: @192pt;
+		width: auto;
+	}
+}

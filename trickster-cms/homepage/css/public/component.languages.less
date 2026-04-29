@@ -1,0 +1,65 @@
+/********************************************************
+/*  LANGUAGE BLOCK
+/********************************************************/
+.languages_block {
+	white-space: nowrap;
+	position: absolute;
+}
+
+/********************************************************
+/*  LANGUAGE ITEM
+/********************************************************/
+.language_item {
+	position: relative;
+	display: inline-block;
+	outline: none;
+	text-decoration: none;
+}
+
+.language_item:hover,
+.language_item:focus {
+}
+
+.language_active {
+}
+
+/********************************************************
+/*  LANGUAGES SELECTOR
+/********************************************************/
+.languages_selector {
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
+	padding: .5em 1.5em .5em 0.9em;
+	cursor: pointer;
+	z-index: 0;
+
+	&:after {
+		content: "";
+		display: block;
+		position: absolute;
+		right: .4em;
+		top: 50%;
+		margin-top: -0.12em;
+		border-left: .35em solid transparent;
+		border-right: .35em solid transparent;
+		border-top: .5em solid @trick_brd_color_02;
+		opacity: 0.4;
+	}
+}
+.languages_selector_select {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	box-sizing: border-box;
+	opacity: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+}
+.languages_selector_label {
+	position: relative;
+	display: inline-block;
+}

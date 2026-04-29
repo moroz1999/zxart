@@ -1,0 +1,22 @@
+.copydialog_component {
+	padding: @20pt;
+}
+
+.copydialog_navigation {
+	padding: @20pt;
+	border: 1px solid @border_color;
+	border-radius: 3px;
+	background-color: @background_color;
+	width: -moz-fit-content;
+	width: fit-content;
+	.structure_element {
+		color: @black;
+		&:hover, &:focus {
+			outline: none;
+			color: @hover_blue_color;
+			& > .icon {
+				color: @hover_blue_color;
+			}
+		}
+	}
+}

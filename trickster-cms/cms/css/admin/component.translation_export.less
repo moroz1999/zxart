@@ -1,0 +1,47 @@
+.translations_export_table_container {
+	margin: @20pt;
+	border: 1px solid @border_color;
+	border-radius: 3px;
+	box-sizing: border-box;
+	width: auto;
+}
+
+.translations_export_content {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: flex-start;
+}
+
+.translations_export_table {
+	border-collapse: collapse;
+	.icon {
+		padding: 0 @8pt;
+	}
+	tr {
+		border-bottom: 1px solid @border_color;
+		&:hover, &:focus {
+			background-color: @border_color;
+			td {
+				background-color: @white;
+			}
+		}
+	}
+	.translations_export_table_hover:hover {
+		td {
+			background-color: @border_color;
+		}
+	}
+	td {
+		color: @black;
+		padding: 0 @20pt;
+	}
+	.checkbox_column {
+		text-align: center;
+		width: 1rem;
+	}
+
+	tbody th {
+		text-align: left;
+	}
+}

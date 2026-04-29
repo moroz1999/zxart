@@ -1,0 +1,68 @@
+
+.calendar_selector {
+  background-color: #fff;
+  border: 1px solid @calendar_hover_color;
+  border-radius: 3px;
+  color: @calendar_text_color;
+  padding: @16pt @43pt @13pt @39pt;
+}
+
+.calendar_selector_header {
+  margin-bottom: @3pt;
+}
+
+.calendar_selector_body {
+  table {
+    border-spacing: @12pt @6pt;
+
+    td {
+      text-align: center;
+      cursor: pointer;
+
+      &:hover, &:focus {
+        outline: none;
+        color: @calendar_hover_color;
+      }
+    }
+  }
+}
+
+.calendar_selector_today {
+  font-weight: bold;
+}
+
+.calendar_selector_pastday {
+  opacity: 0.5;
+}
+
+.calendar_selector_weekend {
+  color: @calendar_weekend_color;
+}
+
+.calendar_selector_location {
+  text-align: center;
+}
+
+.calendar_selector_nextmonth {
+  position: absolute;
+  top: @92pt;
+  right: @19pt;
+  cursor: pointer;
+  color: @calendar_hover_color;
+
+  &:before {
+    content: '\003e';
+  }
+}
+
+.calendar_selector_previousmonth {
+  position: absolute;
+  top: @92pt;
+  left: @19pt;
+  cursor: pointer;
+  color: @calendar_hover_color;
+
+  &:before {
+    content: '\003c';
+  }
+}

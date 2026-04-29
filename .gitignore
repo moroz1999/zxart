@@ -1,14 +1,9 @@
 .idea
 /design
 /temporary
-/trickster-cms
 /htdocs/uploads
 /htdocs/uploads_releases
 /htdocs/userfiles
-/htdocs/crontab
-/htdocs/pouet
-/htdocs/stats
-/htdocs/wos
 /vendor
 /project/config/live
 /db/live

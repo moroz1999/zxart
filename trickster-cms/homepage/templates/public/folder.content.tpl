@@ -1,0 +1,1 @@
+{foreach $element->getContentElements() as $contentItem}{include file=$theme->template($contentItem->getTemplate()) element=$contentItem}{/foreach}

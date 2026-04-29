@@ -1,0 +1,82 @@
+
+.pager_block {
+	display: flex;
+	flex-direction: row;
+	justify-content: right;
+	padding: @9pt @16pt;
+	background-color: white;
+	width: 100%;
+	z-index: 2;
+	box-sizing: border-box;
+}
+
+.pager {
+	display: flex;
+	flex-direction: row;
+	height: @34pt;
+	text-align: center;
+	vertical-align: middle;
+	.pager_previous {
+		width: @36pt;
+		text-decoration: none;
+		color: @page_text_color;
+		padding: @6pt 0 0 0;
+		border: 1px solid @page_border_color;
+		border-radius: 3px 0 0 3px;
+		&:before {
+			content: '\003c';
+		}
+		&:hover, &:focus {
+			outline: none;
+			background-color: @page_border_color;
+			color: @white;
+		}
+	}
+	.pager_page {
+		min-width: @37pt;
+		color: @page_text_color;
+		padding: @6pt @3pt 0;
+		text-decoration: none;
+		border: 1px solid @page_border_color;
+		box-sizing: border-box;
+		&:hover, &:focus {
+			outline: none;
+			background-color: @page_border_color;
+			color: @white;
+		}
+	}
+	.pager_next {
+		width: @36pt;
+		text-decoration: none;
+		color: @page_text_color;
+		padding: @6pt 0 0 0;
+		border: 1px solid @page_border_color;
+		border-radius: 0 3px 3px 0;
+		&:before {
+			content: '\003e';
+		}
+		&:hover, &:focus {
+			outline: none;
+			background-color: @page_border_color;
+			color: @white;
+		}
+	}
+	.pager_active {
+		width: @38pt;
+		background-color: @page_active_color;
+		border: 1px solid @page_active_color;
+		color: @white;
+		&:hover, &:focus {
+			outline: none;
+			background-color: @page_active_color;
+		}
+	}
+}
+
+.sticky {
+	display: flex;
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	width: 100%;
+}

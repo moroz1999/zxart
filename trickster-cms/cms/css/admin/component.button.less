@@ -1,0 +1,127 @@
+.button {
+	display: inline-flex;
+	position: relative;
+	align-items: center;
+	padding: @5pt @30pt @7pt;
+	box-sizing: border-box;
+	cursor: pointer;
+	border-radius: 3px;
+	background-color: @grey_color;
+	color: @text_grey_button_color;
+	text-decoration: none;
+	border: 1px solid @border_grey_button_color;
+	transition: @text_background_transition;
+	&:hover, &:focus {
+		outline: none;
+		background-color: @hover_grey_color;
+	}
+	.icon {
+		font-size: @9pt;
+		position: absolute;
+		left: @11pt;
+	}
+	.icon_delete {
+		left: @15pt;
+	}
+}
+.narrow-sides-button {
+	padding: @5pt @12pt @7pt;
+}
+.button::-moz-focus-inner {
+	border: 0;
+}
+
+.button_disabled,
+.button.button_disabled:focus,
+.button.button_disabled:hover {
+	outline: none;
+	opacity: 0.5;
+	cursor: default;
+}
+
+.success_button {
+	background-color: @green_color;
+	color: @color;
+	border: none;
+	&:hover, &:focus {
+		outline: none;
+		background-color: @hover_green_color;
+	}
+	.icon {
+		color: inherit;
+	}
+}
+
+.primary_button {
+	background-color: @blue_color;
+	color: @color;
+	border: 1px solid @blue_color;
+	background-size: 100%;
+	&:hover, &:focus {
+		outline: none;
+		background-color: @hover_blue_color;
+	}
+	.icon {
+		color: inherit;
+	}
+}
+
+.warning_button {
+	background-color: @red_color;
+	color: @color;
+	border: none;
+	&:hover, &:focus {
+		outline: none;
+		background-color: @hover_red_color;
+	}
+	.icon {
+		color: inherit;
+	}
+}
+
+.classic_button {
+	background-color: @grey_dark_color;
+	color: @color;
+	border: none;
+	&:hover, &:focus {
+		outline: none;
+		background-color: @hover_grey_dark_color;
+	}
+	.icon {
+		color: inherit;
+	}
+}
+.info_button {
+	background-color: @yellow_color;
+	color: @color;
+	border: none;
+	&:hover, &:focus {
+		outline: none;
+		background-color: @hover_yellow_color;
+	}
+	.icon {
+		color: inherit;
+	}
+}
+
+.addnew_container {
+	padding-left: @12pt;
+	.icon {
+		top: @5pt;
+		left: 0;
+	}
+}
+
+@media (max-width: @screen_breakpoint_lg) {
+	.button:not(.file_input_button, . login_button) {
+		margin: @8pt;
+	}
+}
+
+@media (max-width: @screen_breakpoint_sm) {
+	.catalogue_masseditor {
+		.section_container {
+			flex-wrap: wrap;
+		}
+	}
+}

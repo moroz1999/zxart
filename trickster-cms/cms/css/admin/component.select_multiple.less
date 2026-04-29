@@ -1,0 +1,23 @@
+.select_multiple {
+	.inputs_common();
+	height: @300pt;
+
+	&.select_simple{
+		height: auto;
+		max-height: @300pt;
+	}
+
+	option {
+		padding: @5pt;
+		&:hover, &:focus {
+			outline: none;
+			background-color: mix(#6bbbff, #e2e2e5, 50%);
+		}
+
+	}
+}
+
+.label_top {
+	padding-top: @11pt;
+	vertical-align: top;
+}

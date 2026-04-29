@@ -1,0 +1,65 @@
+.pager_block {
+	white-space: nowrap;
+}
+
+.pager_previous {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.pager_previous.pager_hidden {
+	display: none;
+}
+
+.pager_page {
+	min-width: 1.25em;
+	text-align: center;
+	display: inline-block;
+	vertical-align: middle;
+	text-decoration: none;
+}
+
+a.pager_page:hover,
+a.pager_page:active {
+	text-decoration: underline;
+}
+
+.pager_page.pager_active {
+}
+
+.pager_next {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.pager_next.pager_hidden {
+	display: none;
+}
+
+@media (max-width: @screen_breakpoint_md_max) {
+	.pager_block {
+		text-align: center;
+	}
+
+	.pager_page {
+		padding: 0.5em;
+	}
+
+	.pager_previous,
+	.pager_next {
+		padding: 0.5em;
+		text-decoration: none;
+	}
+
+	.pager_boundary_label {
+		display: none;
+	}
+
+	.pager_previous::after {
+		content: "◁";
+	}
+
+	.pager_next::after {
+		content: "▷";
+	}
+}

@@ -1,0 +1,33 @@
+.table_component {
+    border-collapse: collapse;
+}
+
+.table_component > tbody > tr > td,
+.table_component > tbody > tr > th,
+.table_component > tfoot > tr > td,
+.table_component > tfoot > tr > th,
+.table_component > thead > tr > td,
+.table_component > thead > tr > th {
+    padding: 0.5rem 1rem;
+
+    @media (max-width: @screen_breakpoint_sm_max) {
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+    }
+    @media (max-width: @screen_breakpoint_xs_max) {
+        padding-left: 0.2rem;
+        padding-right: 0.2rem;
+    }
+}
+
+.table_component > thead > tr > td,
+.table_component > thead > tr > th {
+}
+
+.table_component > tbody > tr > th {
+    text-align: right;
+}
+
+.table_component_column_centeredcontent {
+    text-align: center;
+}

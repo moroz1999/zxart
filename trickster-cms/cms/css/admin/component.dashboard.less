@@ -1,0 +1,20 @@
+.dashboard_container {
+	.padded_center_block();
+	display: grid;
+	grid-template-columns: e('calc(50% - .625rem)') e('calc(50% - .625rem)');
+	grid-row-gap: @20pt;
+	column-gap: @20pt;
+}
+
+@media (max-width: @screen_breakpoint_lg) {
+	.dashboard_container {
+		grid-template-columns: 100%;
+	}
+}
+
+.dashboard_table {
+	table-layout: fixed;
+	td {
+		word-wrap: break-word;
+	}
+}

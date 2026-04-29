@@ -1,0 +1,44 @@
+<?php
+
+use App\Users\CurrentUserService;
+
+class receiveFormLogin extends structureElementAction
+{
+    protected $loggable = true;
+
+    /**
+     * @param loginElement $structureElement
+     */
+    public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
+    {
+        if ($this->validated === true) {
+            $currentUserService = $this->getService(CurrentUserService::class);
+            $user = $currentUserService->getCurrentUser();
+            $structureElement->setViewName('result');
+
+            if ($userId = $user->checkUser($structureElement->userName, $structureElement->password)) {
+                $user->switchUser($userId);
+                $controller->restart($controller->rootURL);
+            } else {
+                $structureElement->executeAction('showForm');
+            }
+        } else {
+            $structureElement->executeAction('showForm');
+        }
+    }
+
+    public function setValidators(&$validators)
+    {
+        $validators['userName'][] = 'notEmpty';
+        $validators['password'][] = 'notEmpty';
+        $validators['password'][] = 'password';
+    }
+
+    public function setExpectedFields(&$expectedFields)
+    {
+        $expectedFields = ['userName', 'password'];
+    }
+}
+
+
+

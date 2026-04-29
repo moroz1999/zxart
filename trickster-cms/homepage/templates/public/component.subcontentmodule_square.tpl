@@ -1,0 +1,4 @@
+<{if isset($moduleTag)}{$moduleTag}{else}section{/if} class="subcontentmodule_component subcontentmodule_square {if isset($moduleClass)} {$moduleClass}{/if}" {if isset($moduleAttributes)}{$moduleAttributes}{/if}>
+	{if isset($moduleTitle) && $moduleTitle !=""}<h2 class="subcontentmodule_title{if isset($moduleTitleClass)} {$moduleTitleClass}{/if}"{if isset($moduleTitleAttributes)} {$moduleTitleAttributes}{/if}>{$moduleTitle}</h2>{/if}
+	<span class="subcontentmodule_content{if isset($moduleContentClass)} {$moduleContentClass}{/if}">{if isset($moduleContent)} {$moduleContent}{/if}</span>
+</{if isset($moduleTag)}{$moduleTag}{else}section{/if}>

@@ -1,0 +1,1 @@
+{include file=$theme->template($element->privilegesForm->getTemplate()) element=$element->privilegesForm}

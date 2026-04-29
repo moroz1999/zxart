@@ -1,0 +1,1 @@
+{include file=$theme->template('deployments.list.tpl') list=$installedDeployments}

@@ -1,0 +1,196 @@
+/********************************************************
+/*  COMPONENT
+/********************************************************/
+
+.ajaxselect_container {
+	position: relative;
+	border: 1px solid @border_color;
+	border-radius: 3px;
+	padding: 0 @32pt 0 @15pt;
+	box-sizing: border-box;
+	max-width: @509pt;
+	
+	&:hover, &:focus {
+		outline: none;
+		border: 1px solid mix(@active-color, @border_color, 50%);
+	}
+	
+	.icon_search {
+		color: @active-color;
+		position: absolute;
+		top: @10pt;
+		right: @13pt;
+	}
+}
+
+.ajaxselect_searchinput {
+	border: none;
+	width: 100%;
+	padding: @11pt 0 @11pt;
+	color: @label_color;
+	
+	&:before {
+		display: block;
+		content: '\00a9';
+		position: absolute;
+		right: @13pt;
+		top: @11pt;
+	}
+	
+	&::placeholder {
+		color: @label_color;
+	}
+}
+
+.ajaxselect_item_list {
+	position: relative;
+	color: @label_color;
+}
+
+.ajaxselect_item {
+	display: flex;
+	flex-direction: row;
+	align-items: end;
+	background-color: #fff;
+	padding: @9pt 0;
+	z-index: 15;
+	cursor: pointer;
+	
+	&:after {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 1px;
+		background: #e2e2e5;
+	}
+	
+	.ajaxselect_item_remover {
+		margin-right: @8pt;
+		cursor: pointer;
+		height: @19pt;
+		width: @19pt;
+		color: @red_color;
+		font-size: @8pt;
+		font-weight: bold;
+		line-height: 2.5;
+		
+	}
+	
+	&:hover, &:focus {
+		outline: none;
+		color: @checkbox_hover_color;
+	}
+}
+
+.ajaxsearch_results_block {
+	vertical-align: top;
+	background-color: @white;
+	padding: @2pt 0 0 0;
+	display: none;
+	position: absolute;
+	z-index: 15;
+	border-left: 1px solid @active-color;
+	border-right: 1px solid @active-color;
+	border-bottom: 1px solid @active-color;
+	border-radius: 0 0 3px 3px;
+	overflow-y: auto;
+}
+
+//higher rule priority is required for CKEDitor ajax search plugin
+.ajaxsearch_results_list {
+	padding: 0 @16pt;
+	color: @label_color;
+	
+	.ajaxsearch_results_item {
+		display: flex;
+		cursor: pointer;
+		overflow: hidden;
+		padding: @4pt 0;
+		white-space: nowrap;
+		color: inherit;
+		text-decoration: none;
+		font-size: @15pt;
+		
+		&:hover, &:focus {
+			outline: none;
+			color: @active-color;
+		}
+		
+		&.ajaxsearch_results_active {
+			background-color: @text_grey_button_color;
+			color: @white;
+		}
+	}
+	
+	.ajaxsearch_results_item .icon {
+		padding: 0 @4pt;
+		
+		//duplication required for CKEditor
+		display: inline-block;
+		width: @16pt;
+		height: @16pt;
+		background-repeat: no-repeat;
+		vertical-align: middle;
+	}
+	
+}
+
+.ckeditor_trickster_search_results {
+	.ajaxsearch_results_list {
+		overflow: auto;
+		max-height: @600pt;
+	}
+}
+
+.ajaxitemsearch_result {
+	background-color: @white;
+	border-radius: 3px;
+	position: absolute;
+	top: -@42pt;
+	left: -@8pt;
+	height: @42pt;
+	font-size: @15pt;
+	padding: 0 @5pt 0 @28pt;
+	width: e('calc(100% - 2rem)');
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+
+	&:not(.ajaxitemsearch_result_single) {
+		border-bottom: 1px solid #dadada;
+	}
+	
+	&:hover {
+		overflow: visible;
+		text-overflow: unset;
+	}
+	
+	&:hover, &:focus {
+		outline: none;
+		border: 1px solid @hover_blue_color;
+	}
+}
+
+.ajaxitemsearch_result_text {
+	line-height: @41pt;
+	color: @label_color;
+}
+
+.ajaxitemsearch_result_remover {
+	.icon;
+	.icon_delete;
+	color: @red_color;
+	cursor: pointer;
+	height: @24pt;
+	position: absolute;
+	left: @4pt;
+	top: @11pt;
+	width: @19pt;
+	font-size: @8pt;
+	font-weight: bold;
+	line-height: 2.5;
+}
+
+

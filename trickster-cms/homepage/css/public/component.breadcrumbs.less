@@ -1,0 +1,33 @@
+/********************************************************
+/*  BREADCRUMBS COMPONENT
+/********************************************************/
+.breadcrumbs_block {
+    display: block;
+    max-width: 100%;
+
+    .delimiter {
+        display: inline-block;
+        vertical-align: middle;
+
+        &:after {
+            content: "/";
+            line-height: inherit;
+            display: block;
+        }
+    }
+}
+
+.breadcrumbs_item {
+    display: inline-block;
+    vertical-align: middle;
+    overflow: hidden;
+    max-width: 100%;
+    text-overflow: ellipsis;
+}
+
+.breadcrumbs_item:hover,
+.breadcrumbs_item:focus {
+}
+
+.breadcrumbs_item_last {
+}

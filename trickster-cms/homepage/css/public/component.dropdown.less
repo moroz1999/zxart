@@ -1,0 +1,85 @@
+/********************************************************
+/*  DROPDOWN
+/********************************************************/
+.dropdown_placeholder {
+    visibility: hidden;
+}
+
+.dropdown_block {
+    user-select: none; /* Non-prefixed version, currently */
+}
+
+.dropdown_block,
+.dropdown_list {
+    color: @trick_text_color_02;
+    background-color: @trick_bg_color_01;
+    border: 1px solid @trick_brd_color_02;
+}
+
+.dropdown_block {
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+    position: relative;
+    text-decoration: none;
+    outline: none;
+    user-select: none;
+
+    &:after {
+        content: "";
+        display: inline-block;
+        position: absolute;
+        right: 0.4em;
+        top: 50%;
+        margin-top: -0.25em;
+        border-left: 0.35em solid transparent;
+        border-right: 0.35em solid transparent;
+        border-top: 0.5em solid @trick_brd_color_02;
+    }
+}
+
+.dropdown_title {
+    display: block;
+    overflow: hidden;
+    position: relative;
+    white-space: nowrap;
+    text-align: left;
+    text-overflow: ellipsis;
+}
+
+/********************************************************
+/*  DROPDOWN LIST
+/********************************************************/
+
+.dropdown_list {
+    user-select: none;
+    display: none;
+    position: absolute;
+    z-index: 1015;
+    box-sizing: border-box;
+    border-top: none;
+}
+
+.dropdown_option {
+    min-height: 1em;
+    padding: 0.4em 0.7em;
+    display: block;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+    z-index: 10;
+    outline: none;
+    overflow: hidden;
+    color: @trick_text_color_02;
+
+    &:first-child {
+        border-top: none;
+    }
+}
+
+.dropdown_list_content {
+    display: block;
+    position: relative;
+    overflow: auto;
+}

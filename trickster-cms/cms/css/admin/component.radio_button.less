@@ -1,0 +1,27 @@
+/********************************************************
+/*  RADIO BUTTON COMPONENT
+/********************************************************/
+.radiobutton {
+	position: relative;
+	cursor: pointer;
+	display: inline-block;
+	width: @23pt;
+	height: @23pt;
+	vertical-align: middle;
+	outline: none;
+	border: 1px solid @input_border_color;
+	border-radius: @23pt;
+}
+
+.radiobutton_checked:after {
+	content: '';
+	cursor: pointer;
+	display: inline-block;
+	width: @10pt;
+	height: @10pt;
+	background-color: @checkbox-checked;
+	border-radius: @10pt;
+	position: absolute;
+	top: @6pt;
+	left: @7pt;
+}
