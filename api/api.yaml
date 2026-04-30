@@ -27,6 +27,16 @@ paths:
     $ref: 'prod-details.yaml#/paths/~1prod-details~1'
   /prod-releases/:
     $ref: 'prod-releases.yaml#/paths/~1prod-releases~1'
+  /prod-screenshots/:
+    $ref: 'prod-files.yaml#/paths/~1prod-screenshots~1'
+  /prod-inlays/:
+    $ref: 'prod-files.yaml#/paths/~1prod-inlays~1'
+  /prod-maps/:
+    $ref: 'prod-files.yaml#/paths/~1prod-maps~1'
+  /prod-rzx/:
+    $ref: 'prod-files.yaml#/paths/~1prod-rzx~1'
+  /release-screenshots/:
+    $ref: 'prod-files.yaml#/paths/~1release-screenshots~1'
 components:
   schemas:
     CommentDto:
@@ -57,3 +67,9 @@ components:
       $ref: 'prod-details.yaml#/components/schemas/ProdCorePayload'
     ProdReleasesPayload:
       $ref: 'prod-releases.yaml#/components/schemas/ProdReleasesPayload'
+    ProdFile:
+      $ref: 'prod-files.yaml#/components/schemas/ProdFile'
+    ProdFilesPayload:
+      $ref: 'prod-files.yaml#/components/schemas/ProdFilesPayload'
+    ProdMapsPayload:
+      $ref: 'prod-files.yaml#/components/schemas/ProdMapsPayload'

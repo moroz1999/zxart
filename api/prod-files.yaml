@@ -1,0 +1,174 @@
+openapi: 3.0.0
+paths:
+  /prod-screenshots/:
+    get:
+      summary: Screenshots gallery for a zxProd (connectedFile selector)
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Files payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdFilesPayload'
+        '400':
+          description: Bad request
+        '404':
+          description: Prod not found
+        '500':
+          description: Internal server error
+
+  /prod-inlays/:
+    get:
+      summary: Inlay images for a zxProd (inlayFilesSelector)
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Files payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdFilesPayload'
+        '400':
+          description: Bad request
+        '404':
+          description: Prod not found
+        '500':
+          description: Internal server error
+
+  /prod-maps/:
+    get:
+      summary: Map images for a zxProd (mapFilesSelector + speccyMaps URL)
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Maps payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdMapsPayload'
+        '400':
+          description: Bad request
+        '404':
+          description: Prod not found
+        '500':
+          description: Internal server error
+
+  /prod-rzx/:
+    get:
+      summary: RZX files for a zxProd
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Files payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdFilesPayload'
+        '400':
+          description: Bad request
+        '404':
+          description: Prod not found
+        '500':
+          description: Internal server error
+
+  /release-screenshots/:
+    get:
+      summary: Per-release screenshots gallery (screenshotsSelector on zxRelease)
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Files payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdFilesPayload'
+        '400':
+          description: Bad request
+        '404':
+          description: Release not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    ProdFile:
+      type: object
+      required:
+        - id
+        - title
+        - author
+        - fileName
+        - imageUrl
+        - fullImageUrl
+        - downloadUrl
+        - isImage
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        author:
+          type: string
+          nullable: true
+        fileName:
+          type: string
+        imageUrl:
+          type: string
+          nullable: true
+        fullImageUrl:
+          type: string
+          nullable: true
+        downloadUrl:
+          type: string
+        isImage:
+          type: boolean
+
+    ProdFilesPayload:
+      type: object
+      required:
+        - files
+      properties:
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdFile'
+
+    ProdMapsPayload:
+      type: object
+      required:
+        - files
+        - mapsUrl
+      properties:
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdFile'
+        mapsUrl:
+          type: string
+          nullable: true

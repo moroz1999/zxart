@@ -364,9 +364,9 @@ Phases are ordered by dependency: PHP contracts first (they unblock the Angular 
 - [x] Skeleton: empty `ProdDetails` controller + `ProdCoreService` + `ProdCoreDto`/`ProdCoreRestDto` returning a stub. OpenAPI `api/prod-details.yaml` + entry in `api/api.yaml`. Verifies the wiring (DI, routing, json renderer, HTTP status codes) before any real data shape lands.
 - [x] Fill `ProdCoreDto` with info-table fields (categoriesPaths, languages, hardware, links, party, authors, publishers, groups, year, legalStatus, externalLink) + voting state + submitter + description blocks + privileges + prodUrl. Introduces `ZxArt\Shared\StructureType` enum for `structureType` strings (distinct from `EntityType`).
 - [x] `ProdReleases` controller + `ProdReleasesService` + `ProdReleaseDto`/`ProdReleaseRestDto` with all 15 release-row fields. OpenAPI `api/prod-releases.yaml`. Shared `ProdInfoBuilder` extracted (party / languages / hardware / external links) to deduplicate across `ProdCoreService` and `ProdReleasesService`. `zxReleaseElement` magic properties (`compo`, `partyplace`, `party`, typed `hardwareRequired`/`language`/`releaseFormat`) annotated.
-- [ ] `ReleaseScreenshots` controller + media service method for per-release screenshots (`getFilesList('screenshotsSelector')` on `zxRelease`). OpenAPI.
-- [ ] `ProdScreenshots` / `ProdInlays` / `ProdMaps` controllers + `ProdMediaService` (shared helpers for file → DTO mapping). OpenAPI (likely shared `api/prod-files.yaml`).
-- [ ] `ProdRzx` controller (reuses `ProdMediaService`). OpenAPI.
+- [x] `ReleaseScreenshots` controller + media service method for per-release screenshots (`getFilesList('screenshotsSelector')` on `zxRelease`). OpenAPI.
+- [x] `ProdScreenshots` / `ProdInlays` / `ProdMaps` controllers + `ProdMediaService` (shared helpers for file → DTO mapping). OpenAPI shared `api/prod-files.yaml`.
+- [x] `ProdRzx` controller (reuses `ProdMediaService`). OpenAPI.
 - [ ] `ProdArticles` / `ProdMentions` controllers + `ProdArticlesService` + `PressArticlePreviewDto`/`...RestDto`. OpenAPI.
 - [ ] `ProdCompilationItems` / `ProdSeriesProds` / `ProdCompilations` / `ProdSeries` controllers + `ProdRelatedProdsService` + `ProdSummaryDto`/`...RestDto`. `ProdSeries` returns `[{id, title, url, prods: ProdSummaryRestDto[]}]`. OpenAPI.
 - [ ] DI definitions: bind `'publicStructureManager'` into the new services in `project/core/di-definitions.php`.
