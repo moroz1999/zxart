@@ -1,0 +1,21 @@
+:host {
+  display: block;
+}
+
+.zx-collapsible-section__details {
+  display: block;
+}
+
+.zx-collapsible-section__summary {
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+}
+
+.zx-collapsible-section__body {
+  padding-top: var(--space-12);
+}
