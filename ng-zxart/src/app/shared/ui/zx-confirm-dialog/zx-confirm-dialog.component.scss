@@ -1,0 +1,23 @@
+.zx-confirm-dialog__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding: var(--space-24);
+  min-width: 320px;
+  max-width: 480px;
+}
+
+.zx-confirm-dialog__title {
+  margin: 0;
+}
+
+.zx-confirm-dialog__message {
+  margin: 0;
+  color: var(--text-color);
+  white-space: pre-line;
+}
+
+.zx-confirm-dialog__actions {
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--border-color);
+}

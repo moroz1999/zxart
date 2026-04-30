@@ -553,5 +553,11 @@
     "load-error": "Failed to load tags.",
     "save-error": "Failed to save tags.",
     "retry": "Retry"
+  },
+  "prod-details": {
+    "delete-confirm-title": "Удалить программу",
+    "delete-confirm-message": "Вы точно хотите удалить этот раздел?",
+    "delete-confirm-yes": "Удалить",
+    "delete-confirm-cancel": "Отмена"
   }
 }

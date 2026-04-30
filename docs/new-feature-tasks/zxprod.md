@@ -370,11 +370,11 @@ Phases are ordered by dependency: PHP contracts first (they unblock the Angular 
 - [x] `ProdArticles` / `ProdMentions` controllers + `ProdArticlesService` + `PressArticlePreviewDto`/`...RestDto`. OpenAPI `api/prod-articles.yaml`. PressArticlePreview includes nested `publication` (parent press issue) for mentions.
 - [x] `ProdCompilationItems` / `ProdSeriesProds` / `ProdCompilations` / `ProdSeries` controllers + `ProdRelatedProdsService` + `ProdSummaryDto`/`...RestDto`. `ProdSeries` returns `[{id, title, url, prods: ProdSummaryRestDto[]}]`. OpenAPI.
 - [x] DI definitions: bind `'publicStructureManager'` into the new services in `project/core/di-definitions.php`.
-- [ ] `composer psalm` and `composer test` clean for PHP changes.
+- [x] `composer psalm` and `composer test` clean for PHP changes.
 
 ### Phase 2 — Angular shared primitives
 
-- [ ] `zx-confirm-dialog` + `ConfirmDialogService` (`shared/ui/zx-confirm-dialog/`). Built on `@angular/cdk/dialog`. Add `prod-details.delete-confirm-*` translation keys.
+- [x] `zx-confirm-dialog` + `ConfirmDialogService` (`shared/ui/zx-confirm-dialog/`). Built on `@angular/cdk/dialog`. Add `prod-details.delete-confirm-*` translation keys.
 - [ ] `zx-collapsible-section` (`shared/ui/zx-collapsible-section/`) — generic `<details>/<summary>` with optional `open` input.
 - [ ] `zx-youtube-embed` (`shared/ui/zx-youtube-embed/`) — iframe with `youtubeId` input.
 - [ ] `zx-press-article-card` (`shared/ui/zx-press-article-card/`) — built from scratch.

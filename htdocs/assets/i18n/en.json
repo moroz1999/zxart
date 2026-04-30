@@ -553,5 +553,11 @@
     "load-error": "Failed to load tags.",
     "save-error": "Failed to save tags.",
     "retry": "Retry"
+  },
+  "prod-details": {
+    "delete-confirm-title": "Delete production",
+    "delete-confirm-message": "Are you sure you want to proceed with deletion?",
+    "delete-confirm-yes": "Delete",
+    "delete-confirm-cancel": "Cancel"
   }
 }

@@ -552,5 +552,11 @@
     "load-error": "No se pudieron cargar las etiquetas.",
     "save-error": "No se pudieron guardar las etiquetas.",
     "retry": "Reintentar"
+  },
+  "prod-details": {
+    "delete-confirm-title": "Eliminar la producción",
+    "delete-confirm-message": "¿Está seguro de que desea continuar con la eliminación?",
+    "delete-confirm-yes": "Eliminar",
+    "delete-confirm-cancel": "Cancelar"
   }
 }
