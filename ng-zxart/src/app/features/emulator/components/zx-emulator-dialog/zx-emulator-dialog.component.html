@@ -1,0 +1,32 @@
+<div class="zx-emulator-dialog__inner">
+  <header class="zx-emulator-dialog__header">
+    <h2 zxHeading2 class="zx-emulator-dialog__title">{{ 'emulator.title' | translate }}</h2>
+    <zx-button color="transparent" size="sm" [square]="true" (click)="close()" aria-label="Close">×</zx-button>
+  </header>
+
+  <div class="zx-emulator-dialog__body">
+    <canvas #canvas class="zx-emulator-dialog__canvas" tabindex="0"></canvas>
+    <div *ngIf="loading" class="zx-emulator-dialog__overlay">
+      <span zxBodySmMuted>{{ 'emulator.loading' | translate }}</span>
+    </div>
+    <div *ngIf="error" class="zx-emulator-dialog__overlay">
+      <span zxBodySmMuted>{{ error }}</span>
+    </div>
+  </div>
+
+  <p *ngIf="showSamcoupeNote" class="zx-emulator-dialog__note" zxBodySmMuted>
+    {{ 'emulator.samcoupe' | translate }}
+  </p>
+
+  <zx-button-controls align="end" class="zx-emulator-dialog__controls">
+    <label *ngIf="showScreenshotControls" class="zx-emulator-dialog__selector">
+      <span zxBodySmMuted>{{ 'emulator.screenshot-format-label' | translate }}</span>
+      <select [(ngModel)]="screenshotSelection">
+        <option value="48">48</option>
+        <option value="128">128</option>
+        <option value="giga">giga</option>
+      </select>
+    </label>
+    <zx-button color="outlined" (click)="setFullscreen()">{{ 'emulator.fullscreen' | translate }}</zx-button>
+  </zx-button-controls>
+</div>

@@ -559,5 +559,12 @@
     "delete-confirm-message": "Are you sure you want to proceed with deletion?",
     "delete-confirm-yes": "Delete",
     "delete-confirm-cancel": "Cancel"
+  },
+  "emulator": {
+    "title": "Emulator",
+    "loading": "Loading emulator…",
+    "fullscreen": "Open in fullscreen",
+    "screenshot-format-label": "Screenshot format",
+    "samcoupe": "After loading emulator press \"Enter\", type \"boot\" and press \"Enter\" again."
   }
 }

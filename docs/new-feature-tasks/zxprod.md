@@ -84,7 +84,8 @@ All standalone, OnPush, in `features/prod-details/...`. Each section component o
 | `zx-ratings-list` | `features/ratings/` | Same. |
 | `zx-tags-quick-form` | `features/tags-quick-form/` | Same. Already lazy via `InViewportDirective`. |
 | `zx-item-controls` | `shared/ui/zx-item-controls/` | Used inside `zx-prod-vote-row`. Typed bindings, NOT the legacy bridge. |
-| `LegacyPlayButtonComponent` | `features/player/` | Used inside the releases table for play buttons. Click triggers `EmulatorModalService.open(...)` — see "Emulator: modal launcher" below. |
+
+**Release-row play button** — the per-release play button is part of `zx-prod-release-row` (Phase 5), not a reused primitive. It is a plain `zx-button` whose click handler calls `EmulatorModalService.open(...)`. It replaces the legacy Smarty `component.play-button.tpl` which currently renders inline emulator-type-dispatched `onclick="emulatorComponent.start(...)"` buttons. Note: `LegacyPlayButtonComponent` in `features/player/` is for **music tunes**, not emulators — different domain.
 
 ### Emulator: modal launcher (Angular reimplementation)
 
@@ -103,7 +104,7 @@ The emulator opens in a modal dialog on play-button click. The WASM bundles unde
 | `EmulatorEngine` (interface) | `features/emulator/engines/emulator-engine.ts` | `start(canvas, fileUrl): Promise<void>`, `setFullscreen(): void`, `captureScreenshot(format): Promise<Blob \| null>` (optional — only USP implements it), `destroy(): void`. |
 | `UspEngine`, `Zx81Engine`, `TsconfEngine`, `SamcoupeEngine`, `ZxNextEngine` | `features/emulator/engines/{usp,zx81,tsconf,samcoupe,zxnext}.engine.ts` | One adapter per WASM bundle. Each adapter lazily injects its `<script>` from `/libs/.../*.js`, sets up `window.Module` (`canvas`, `locateFile`, `onReady`), then calls `Module.ccall('OpenFile', ...)` etc. The WASM globals (`window.Module`, `FS`, etc.) are **not** changed. Adapters guard against double-load by reusing an existing `window.Module` if it already matches the engine. |
 | `EmulatorScreenshotService` | `features/emulator/services/emulator-screenshot.service.ts` | The F2 screenshot logic currently in `component.emulator.js`: reads from emscripten FS, slices VRAM by 48/128/giga selector, POSTs to `{prodUrl}id:{releaseId}/action:uploadScreenshot/format:standard\|gigascreen`. Used only by `UspEngine`. F2 keybinding registered as a `@HostListener('window:keydown.F2')` on the dialog. |
-| `LegacyPlayButtonComponent` (existing, updated) | `features/player/` | Click triggers `EmulatorModalService.open(...)`. The release row passes `emulatorType`, file URL, and `uploadUrl`. |
+| Release-row play button | inside `zx-prod-release-row` (Phase 5) | Plain `zx-button` whose click handler calls `EmulatorModalService.open({emulatorType, fileUrl, uploadUrl, canScreenshot})`. The release row passes `emulatorType`, file URL, and `uploadUrl`. Replaces the legacy Smarty `component.play-button.tpl`. |
 
 The modal is created once per launch and torn down on close. The dialog mounts the engine adapter, which loads its WASM bundle on first use of that engine in the session and reuses it on subsequent opens. The legacy `project/js/public/component.emulator.js` and `project/templates/public/component.emulator.tpl` are **deleted** after this rewrite — no `window.emulatorComponent` global, no `.emulator` DOM target.
 
@@ -385,7 +386,7 @@ Phases are ordered by dependency: PHP contracts first (they unblock the Angular 
 
 - [x] `EmulatorEngine` interface (`features/emulator/engines/emulator-engine.ts`) + scaffold for 5 engines (`usp`, `zx81`, `tsconf`, `samcoupe`, `zxnext`). Engines start as no-ops; only `UspEngine` is fully implemented in this checkbox.
 - [x] `EmulatorScreenshotService` (USP only) — port screenshot logic from `component.emulator.js`. F2 keydown via `@HostListener('window:keydown.F2')` on the dialog (wired up in the dialog checkbox).
-- [ ] `zx-emulator-dialog` component + `EmulatorModalService` (`@angular/cdk/dialog`). `LegacyPlayButtonComponent` updated to call `EmulatorModalService.open(...)` instead of mounting an inline canvas.
+- [x] `zx-emulator-dialog` component + `EmulatorModalService` (`@angular/cdk/dialog`). Adds `emulator` i18n namespace (title / loading / fullscreen / screenshot-format-label / samcoupe). The release-row play button (Phase 5) will call `EmulatorModalService.open(...)`.
 - [ ] Implement `Zx81Engine`. Verify with a release using zx81 hardware.
 - [ ] Implement `TsconfEngine`. Verify.
 - [ ] Implement `SamcoupeEngine`. Verify.

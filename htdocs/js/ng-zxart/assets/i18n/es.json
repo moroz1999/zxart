@@ -558,5 +558,12 @@
     "delete-confirm-message": "¿Está seguro de que desea continuar con la eliminación?",
     "delete-confirm-yes": "Eliminar",
     "delete-confirm-cancel": "Cancelar"
+  },
+  "emulator": {
+    "title": "Emulador",
+    "loading": "Cargando el emulador…",
+    "fullscreen": "Abrir en pantalla completa",
+    "screenshot-format-label": "Formato de captura",
+    "samcoupe": "Tras cargar el emulador, pulse \"Enter\", escriba \"boot\" y pulse \"Enter\" de nuevo."
   }
 }
