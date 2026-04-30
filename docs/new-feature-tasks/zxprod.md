@@ -368,8 +368,8 @@ Phases are ordered by dependency: PHP contracts first (they unblock the Angular 
 - [x] `ProdScreenshots` / `ProdInlays` / `ProdMaps` controllers + `ProdMediaService` (shared helpers for file → DTO mapping). OpenAPI shared `api/prod-files.yaml`.
 - [x] `ProdRzx` controller (reuses `ProdMediaService`). OpenAPI.
 - [x] `ProdArticles` / `ProdMentions` controllers + `ProdArticlesService` + `PressArticlePreviewDto`/`...RestDto`. OpenAPI `api/prod-articles.yaml`. PressArticlePreview includes nested `publication` (parent press issue) for mentions.
-- [ ] `ProdCompilationItems` / `ProdSeriesProds` / `ProdCompilations` / `ProdSeries` controllers + `ProdRelatedProdsService` + `ProdSummaryDto`/`...RestDto`. `ProdSeries` returns `[{id, title, url, prods: ProdSummaryRestDto[]}]`. OpenAPI.
-- [ ] DI definitions: bind `'publicStructureManager'` into the new services in `project/core/di-definitions.php`.
+- [x] `ProdCompilationItems` / `ProdSeriesProds` / `ProdCompilations` / `ProdSeries` controllers + `ProdRelatedProdsService` + `ProdSummaryDto`/`...RestDto`. `ProdSeries` returns `[{id, title, url, prods: ProdSummaryRestDto[]}]`. OpenAPI.
+- [x] DI definitions: bind `'publicStructureManager'` into the new services in `project/core/di-definitions.php`.
 - [ ] `composer psalm` and `composer test` clean for PHP changes.
 
 ### Phase 2 — Angular shared primitives

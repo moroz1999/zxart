@@ -41,6 +41,14 @@ paths:
     $ref: 'prod-articles.yaml#/paths/~1prod-articles~1'
   /prod-mentions/:
     $ref: 'prod-articles.yaml#/paths/~1prod-mentions~1'
+  /prod-compilation-items/:
+    $ref: 'prod-related-prods.yaml#/paths/~1prod-compilation-items~1'
+  /prod-series-prods/:
+    $ref: 'prod-related-prods.yaml#/paths/~1prod-series-prods~1'
+  /prod-compilations/:
+    $ref: 'prod-related-prods.yaml#/paths/~1prod-compilations~1'
+  /prod-series/:
+    $ref: 'prod-related-prods.yaml#/paths/~1prod-series~1'
 components:
   schemas:
     CommentDto:
@@ -81,3 +89,11 @@ components:
       $ref: 'prod-articles.yaml#/components/schemas/PressArticlePreview'
     PressArticlesPayload:
       $ref: 'prod-articles.yaml#/components/schemas/PressArticlesPayload'
+    ProdSummary:
+      $ref: 'prod-related-prods.yaml#/components/schemas/ProdSummary'
+    ProdSummariesPayload:
+      $ref: 'prod-related-prods.yaml#/components/schemas/ProdSummariesPayload'
+    ProdSeriesEntry:
+      $ref: 'prod-related-prods.yaml#/components/schemas/ProdSeriesEntry'
+    ProdSeriesPayload:
+      $ref: 'prod-related-prods.yaml#/components/schemas/ProdSeriesPayload'
