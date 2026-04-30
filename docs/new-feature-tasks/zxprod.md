@@ -376,7 +376,7 @@ Phases are ordered by dependency: PHP contracts first (they unblock the Angular 
 
 - [x] `zx-confirm-dialog` + `ConfirmDialogService` (`shared/ui/zx-confirm-dialog/`). Built on `@angular/cdk/dialog`. Add `prod-details.delete-confirm-*` translation keys.
 - [x] `zx-collapsible-section` (`shared/ui/zx-collapsible-section/`) — generic `<details>/<summary>` with optional `open` input.
-- [ ] `zx-youtube-embed` (`shared/ui/zx-youtube-embed/`) — iframe with `youtubeId` input.
+- [x] `zx-youtube-embed` (`shared/ui/zx-youtube-embed/`) — iframe with `youtubeId` input.
 - [ ] `zx-press-article-card` (`shared/ui/zx-press-article-card/`) — built from scratch.
 - [ ] `zx-prod-card` (`shared/ui/zx-prod-card/`) — extract from `entities/zx-prods-list/` if a card lives inside it; otherwise build new.
 
