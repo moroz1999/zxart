@@ -379,7 +379,7 @@ Phases are ordered by dependency: PHP contracts first (they unblock the Angular 
 - [x] `zx-collapsible-section` (`shared/ui/zx-collapsible-section/`) — generic `<details>/<summary>` with optional `open` input.
 - [x] `zx-youtube-embed` (`shared/ui/zx-youtube-embed/`) — iframe with `youtubeId` input.
 - [x] Extend existing `zx-article-preview` (`shared/ui/zx-article-preview/`) with optional `publication: {title, url, year} | null` input so it can render mention-style "Publication (Year) / Article Title" prefix. Reused by `zx-prod-articles-section` and `zx-prod-mentions-section`.
-- [ ] `zx-prod-card` (`shared/ui/zx-prod-card/`) — extract from `entities/zx-prods-list/` if a card lives inside it; otherwise build new.
+- [x] `zx-prod-card` (`shared/ui/zx-prod-card/`) — compact card for related-prods sections (image, title, year, votes, legalStatus). Built new because existing `zx-prod-block` is rich-card tied to full `ZxProd` model whereas the slim `ProdSummaryRestDto` only carries the compact subset.
 
 ### Phase 3 — Emulator (Angular reimplementation)
 
