@@ -1,0 +1,156 @@
+openapi: 3.0.0
+paths:
+  /prod-releases/:
+    get:
+      summary: List of releases for a zxProd
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Releases payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdReleasesPayload'
+        '400':
+          description: Bad request
+        '404':
+          description: Prod not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    ProdReleasesPayload:
+      type: object
+      required:
+        - releases
+      properties:
+        releases:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdRelease'
+
+    ProdRelease:
+      type: object
+      required:
+        - id
+        - title
+        - url
+        - year
+        - version
+        - releaseType
+        - releaseTypeLabel
+        - hardwareRequired
+        - description
+        - isRealtime
+        - party
+        - languages
+        - hardware
+        - releaseBy
+        - formats
+        - isDownloadable
+        - isPlayable
+        - downloadUrl
+        - playUrl
+        - fileName
+        - emulatorType
+        - prodLegalStatus
+        - prodExternalLink
+        - downloadsCount
+        - playsCount
+        - externalLinks
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        year:
+          type: integer
+        version:
+          type: string
+        releaseType:
+          type: string
+        releaseTypeLabel:
+          type: string
+          nullable: true
+        hardwareRequired:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        isRealtime:
+          type: boolean
+        party:
+          oneOf:
+            - $ref: 'prod-details.yaml#/components/schemas/ProdPartyInfo'
+            - type: 'null'
+          nullable: true
+        languages:
+          type: array
+          items:
+            $ref: 'prod-details.yaml#/components/schemas/ProdLanguageInfo'
+        hardware:
+          type: array
+          items:
+            $ref: 'prod-details.yaml#/components/schemas/ProdHardwareInfo'
+        releaseBy:
+          type: array
+          items:
+            $ref: 'prod-details.yaml#/components/schemas/ProdGroupRef'
+        formats:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdReleaseFormat'
+        isDownloadable:
+          type: boolean
+        isPlayable:
+          type: boolean
+        downloadUrl:
+          type: string
+          nullable: true
+        playUrl:
+          type: string
+          nullable: true
+        fileName:
+          type: string
+          nullable: true
+        emulatorType:
+          type: string
+          nullable: true
+        prodLegalStatus:
+          type: string
+        prodExternalLink:
+          type: string
+        downloadsCount:
+          type: integer
+        playsCount:
+          type: integer
+        externalLinks:
+          type: array
+          items:
+            $ref: 'prod-details.yaml#/components/schemas/ProdLinkInfo'
+
+    ProdReleaseFormat:
+      type: object
+      required:
+        - format
+        - label
+        - emoji
+        - catalogueUrl
+      properties:
+        format:
+          type: string
+        label:
+          type: string
+        emoji:
+          type: string
+        catalogueUrl:
+          type: string

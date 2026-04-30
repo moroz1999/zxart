@@ -9,6 +9,7 @@ readonly class ProdPartyInfoDto
     public function __construct(
         public int $id,
         public string $title,
+        public ?string $abbreviation,
         public string $url,
         public ?int $place,
         public ?string $compoLabel,

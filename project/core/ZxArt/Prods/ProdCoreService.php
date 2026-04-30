@@ -5,25 +5,17 @@ declare(strict_types=1);
 namespace ZxArt\Prods;
 
 use authorElement;
-use DesignTheme;
-use DesignThemesManager;
 use groupElement;
-use partyElement;
 use privilegesManager;
 use structureElement;
 use structureManager;
 use tagElement;
-use translationsManager;
 use userElement;
 use ZxArt\Prods\Dto\ProdAuthorInfoDto;
 use ZxArt\Prods\Dto\ProdCategoryPathDto;
 use ZxArt\Prods\Dto\ProdCategoryRefDto;
 use ZxArt\Prods\Dto\ProdCoreDto;
 use ZxArt\Prods\Dto\ProdGroupRefDto;
-use ZxArt\Prods\Dto\ProdHardwareInfoDto;
-use ZxArt\Prods\Dto\ProdLanguageInfoDto;
-use ZxArt\Prods\Dto\ProdLinkInfoDto;
-use ZxArt\Prods\Dto\ProdPartyInfoDto;
 use ZxArt\Prods\Dto\ProdPrivilegesDto;
 use ZxArt\Prods\Dto\ProdSubmitterDto;
 use ZxArt\Prods\Dto\ProdTagRefDto;
@@ -39,8 +31,7 @@ readonly class ProdCoreService
     public function __construct(
         private structureManager $structureManager,
         private privilegesManager $privilegesManager,
-        private translationsManager $translationsManager,
-        private DesignThemesManager $designThemesManager,
+        private ProdInfoBuilder $infoBuilder,
     ) {
     }
 
@@ -51,20 +42,20 @@ readonly class ProdCoreService
             throw new ProdDetailsException('Prod not found', 404);
         }
 
-        $theme = $this->resolveCurrentTheme();
+        $theme = $this->infoBuilder->resolveCurrentTheme();
         $legalStatus = $element->getLegalStatus();
         $year = $element->year;
 
         return new ProdCoreDto(
             elementId: $element->getId(),
-            title: $this->decodeText($element->title),
-            altTitle: $this->decodeText($element->altTitle),
+            title: $this->infoBuilder->decodeText($element->title),
+            altTitle: $this->infoBuilder->decodeText($element->altTitle),
             prodUrl: (string)$element->getUrl(),
             h1: (string)$element->getH1(),
             metaTitle: (string)$element->getMetaTitle(),
             year: $year,
             legalStatus: $legalStatus,
-            legalStatusLabel: $this->translate('legalstatus.' . $legalStatus),
+            legalStatusLabel: $this->infoBuilder->translate('legalstatus.' . $legalStatus),
             externalLink: $element->externalLink,
             youtubeId: $element->youtubeId,
             description: $element->getDescription(),
@@ -74,10 +65,10 @@ readonly class ProdCoreService
             dateCreated: $element->dateCreated,
             catalogueYearUrl: $year > 0 ? $element->getCatalogueUrl(['years' => $year]) : '',
             categoriesPaths: $this->buildCategoriesPaths($element),
-            languages: $this->buildLanguages($element),
-            hardware: $this->buildHardware($element),
-            links: $this->buildLinks($element, $theme),
-            party: $this->buildParty($element),
+            languages: $this->infoBuilder->buildLanguages($element),
+            hardware: $this->infoBuilder->buildHardware($element),
+            links: $this->infoBuilder->buildLinks($element, $theme),
+            party: $this->infoBuilder->buildParty($element),
             authors: $this->buildAuthors($element),
             publishers: $this->buildGroupsRefs($element->publishers),
             groups: $this->buildGroupsRefs($element->groups),
@@ -86,12 +77,6 @@ readonly class ProdCoreService
             submitter: $this->buildSubmitter($element),
             privileges: $this->buildPrivileges($elementId),
         );
-    }
-
-    private function resolveCurrentTheme(): ?DesignTheme
-    {
-        $theme = $this->designThemesManager->getCurrentTheme();
-        return $theme instanceof DesignTheme ? $theme : null;
     }
 
     /**
@@ -108,7 +93,7 @@ readonly class ProdCoreService
                 }
                 $categories[] = new ProdCategoryRefDto(
                     id: $category->getId(),
-                    title: $this->decodeText($category->title),
+                    title: $this->infoBuilder->decodeText($category->title),
                     url: (string)$category->getUrl(),
                 );
             }
@@ -117,95 +102,6 @@ readonly class ProdCoreService
             }
         }
         return $paths;
-    }
-
-    /**
-     * @return ProdLanguageInfoDto[]
-     */
-    private function buildLanguages(zxProdElement $element): array
-    {
-        $languages = [];
-        /**
-         * @var array<string, string> $map
-         */
-        $map = $element->getSupportedLanguagesMap();
-        foreach ($map as $code => $title) {
-            $languages[] = new ProdLanguageInfoDto(
-                code: $code,
-                title: $title,
-                emoji: $element->getLanguageEmoji($code),
-                catalogueUrl: $element->getCatalogueUrl(['languages' => $code]),
-            );
-        }
-        return $languages;
-    }
-
-    /**
-     * @return ProdHardwareInfoDto[]
-     */
-    private function buildHardware(zxProdElement $element): array
-    {
-        $hardware = [];
-        /**
-         * @var list<array{id: string, title: string}> $rows
-         */
-        $rows = $element->getHardwareInfo(false);
-        foreach ($rows as $row) {
-            $hardware[] = new ProdHardwareInfoDto(
-                id: $row['id'],
-                title: $row['title'],
-            );
-        }
-        return $hardware;
-    }
-
-    /**
-     * @return ProdLinkInfoDto[]
-     */
-    private function buildLinks(zxProdElement $element, ?DesignTheme $theme): array
-    {
-        $links = [];
-        /**
-         * @var list<array{url: string, name: string, image: string, type?: string, id?: string}> $rows
-         */
-        $rows = $element->getLinksInfo();
-        foreach ($rows as $linkInfo) {
-            $imageFile = $linkInfo['image'];
-            $imageUrl = '';
-            if ($imageFile !== '' && $theme !== null) {
-                $imageUrl = $theme->getImageUrl($imageFile);
-            }
-            $links[] = new ProdLinkInfoDto(
-                url: $linkInfo['url'],
-                name: $linkInfo['name'],
-                image: $imageUrl,
-            );
-        }
-        return $links;
-    }
-
-    private function buildParty(zxProdElement $element): ?ProdPartyInfoDto
-    {
-        $party = $element->getPartyElement();
-        if (!$party instanceof partyElement) {
-            return null;
-        }
-
-        $compoLabel = null;
-        $compo = $element->compo;
-        if ($compo !== '') {
-            $compoLabel = $this->translate('party.compo_' . $compo);
-        }
-
-        $partyplace = $element->partyplace;
-
-        return new ProdPartyInfoDto(
-            id: $party->getId(),
-            title: $this->decodeText($party->title),
-            url: (string)$party->getUrl(),
-            place: $partyplace > 0 ? $partyplace : null,
-            compoLabel: $compoLabel,
-        );
     }
 
     /**
@@ -225,7 +121,7 @@ readonly class ProdCoreService
             }
             $authors[] = new ProdAuthorInfoDto(
                 id: $authorElement->getId(),
-                title: $this->decodeText($authorElement->title),
+                title: $this->infoBuilder->decodeText($authorElement->title),
                 url: (string)$authorElement->getUrl(),
                 roles: $info['roles'] ?? [],
             );
@@ -246,7 +142,7 @@ readonly class ProdCoreService
             }
             $refs[] = new ProdGroupRefDto(
                 id: $group->getId(),
-                title: $this->decodeText($group->title),
+                title: $this->infoBuilder->decodeText($group->title),
                 url: (string)$group->getUrl(),
             );
         }
@@ -265,7 +161,7 @@ readonly class ProdCoreService
             }
             $tags[] = new ProdTagRefDto(
                 id: $tag->getId(),
-                title: $this->decodeText($tag->title),
+                title: $this->infoBuilder->decodeText($tag->title),
                 url: (string)$tag->getUrl(),
             );
         }
@@ -299,7 +195,7 @@ readonly class ProdCoreService
 
         return new ProdSubmitterDto(
             id: $user->getId(),
-            userName: $this->decodeText($user->userName),
+            userName: $this->infoBuilder->decodeText($user->userName),
             url: (string)$user->getUrl(),
         );
     }
@@ -321,15 +217,5 @@ readonly class ProdCoreService
     private function hasPrivilege(int $elementId, string $action, StructureType $structureType): bool
     {
         return $this->privilegesManager->checkPrivilegesForAction($elementId, $action, $structureType->value) === true;
-    }
-
-    private function translate(string $key): string
-    {
-        return (string)$this->translationsManager->getTranslationByName($key);
-    }
-
-    private function decodeText(string $value): string
-    {
-        return html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 }

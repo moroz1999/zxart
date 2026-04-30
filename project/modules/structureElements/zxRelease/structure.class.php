@@ -26,9 +26,12 @@ use ZxFiles\BasicFile;
  * @property string $releaseType
  * @property string|null $description
  * @property string $version
- * @property array $hardwareRequired
- * @property array $language
- * @property array $releaseFormat
+ * @property string[] $hardwareRequired
+ * @property string[] $language
+ * @property string[] $releaseFormat
+ * @property string $compo
+ * @property int $partyplace
+ * @property int $party
  * @property zxProdElement[] $compilations
  * @property authorElement[]|authorAliasElement[]|groupElement[]|groupAliasElement[] $publishers
  * @property float $votes

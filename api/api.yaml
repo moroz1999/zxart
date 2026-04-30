@@ -25,6 +25,8 @@ paths:
     $ref: 'element-privileges.yaml#/paths/~1element-privileges~1'
   /prod-details/:
     $ref: 'prod-details.yaml#/paths/~1prod-details~1'
+  /prod-releases/:
+    $ref: 'prod-releases.yaml#/paths/~1prod-releases~1'
 components:
   schemas:
     CommentDto:
@@ -53,3 +55,5 @@ components:
       $ref: 'tags.yaml#/components/schemas/TagsPayload'
     ProdCorePayload:
       $ref: 'prod-details.yaml#/components/schemas/ProdCorePayload'
+    ProdReleasesPayload:
+      $ref: 'prod-releases.yaml#/components/schemas/ProdReleasesPayload'
