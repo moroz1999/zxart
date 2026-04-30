@@ -384,7 +384,7 @@ Phases are ordered by dependency: PHP contracts first (they unblock the Angular 
 ### Phase 3 — Emulator (Angular reimplementation)
 
 - [x] `EmulatorEngine` interface (`features/emulator/engines/emulator-engine.ts`) + scaffold for 5 engines (`usp`, `zx81`, `tsconf`, `samcoupe`, `zxnext`). Engines start as no-ops; only `UspEngine` is fully implemented in this checkbox.
-- [ ] `EmulatorScreenshotService` (USP only) — port screenshot logic from `component.emulator.js`. F2 keydown via `@HostListener('window:keydown.F2')` on the dialog.
+- [x] `EmulatorScreenshotService` (USP only) — port screenshot logic from `component.emulator.js`. F2 keydown via `@HostListener('window:keydown.F2')` on the dialog (wired up in the dialog checkbox).
 - [ ] `zx-emulator-dialog` component + `EmulatorModalService` (`@angular/cdk/dialog`). `LegacyPlayButtonComponent` updated to call `EmulatorModalService.open(...)` instead of mounting an inline canvas.
 - [ ] Implement `Zx81Engine`. Verify with a release using zx81 hardware.
 - [ ] Implement `TsconfEngine`. Verify.
