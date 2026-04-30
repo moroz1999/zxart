@@ -26,6 +26,7 @@ use ZxArt\GroupList\GroupListService;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Logs\Log;
 use ZxArt\Menu\MenuService;
+use ZxArt\Prods\ProdCoreService;
 use ZxArt\Prods\Services\ProdsService;
 use ZxArt\Ratings\RatingsService;
 use ZxArt\Social\SocialPostsService;
@@ -51,6 +52,8 @@ return [
     MenuService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     BackendLinksService::class => autowire()
+        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
+    ProdCoreService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
 
     // Controllers with publicStructureManager

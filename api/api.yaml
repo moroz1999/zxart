@@ -23,6 +23,8 @@ paths:
     $ref: 'tags.yaml#/paths/~1tags~1'
   /element-privileges/:
     $ref: 'element-privileges.yaml#/paths/~1element-privileges~1'
+  /prod-details/:
+    $ref: 'prod-details.yaml#/paths/~1prod-details~1'
 components:
   schemas:
     CommentDto:
@@ -49,3 +51,5 @@ components:
       $ref: 'tags.yaml#/components/schemas/TagWriteItem'
     TagsPayload:
       $ref: 'tags.yaml#/components/schemas/TagsPayload'
+    ProdCorePayload:
+      $ref: 'prod-details.yaml#/components/schemas/ProdCorePayload'

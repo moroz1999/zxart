@@ -1,0 +1,40 @@
+openapi: 3.0.0
+paths:
+  /prod-details/:
+    get:
+      summary: Get core data for a zxProd details page
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Slim core payload for the prod details page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdCorePayload'
+        '400':
+          description: Bad request
+        '404':
+          description: Prod not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    ProdCorePayload:
+      type: object
+      required:
+        - elementId
+        - title
+        - prodUrl
+      properties:
+        elementId:
+          type: integer
+        title:
+          type: string
+        prodUrl:
+          type: string
