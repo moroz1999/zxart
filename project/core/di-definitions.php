@@ -26,6 +26,7 @@ use ZxArt\GroupList\GroupListService;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Logs\Log;
 use ZxArt\Menu\MenuService;
+use ZxArt\Prods\ProdArticlesService;
 use ZxArt\Prods\ProdCoreService;
 use ZxArt\Prods\ProdMediaService;
 use ZxArt\Prods\ProdReleasesService;
@@ -60,6 +61,8 @@ return [
     ProdReleasesService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     ProdMediaService::class => autowire()
+        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
+    ProdArticlesService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
 
     // Controllers with publicStructureManager

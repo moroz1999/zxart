@@ -37,6 +37,10 @@ paths:
     $ref: 'prod-files.yaml#/paths/~1prod-rzx~1'
   /release-screenshots/:
     $ref: 'prod-files.yaml#/paths/~1release-screenshots~1'
+  /prod-articles/:
+    $ref: 'prod-articles.yaml#/paths/~1prod-articles~1'
+  /prod-mentions/:
+    $ref: 'prod-articles.yaml#/paths/~1prod-mentions~1'
 components:
   schemas:
     CommentDto:
@@ -73,3 +77,7 @@ components:
       $ref: 'prod-files.yaml#/components/schemas/ProdFilesPayload'
     ProdMapsPayload:
       $ref: 'prod-files.yaml#/components/schemas/ProdMapsPayload'
+    PressArticlePreview:
+      $ref: 'prod-articles.yaml#/components/schemas/PressArticlePreview'
+    PressArticlesPayload:
+      $ref: 'prod-articles.yaml#/components/schemas/PressArticlesPayload'

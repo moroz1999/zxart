@@ -1,0 +1,119 @@
+openapi: 3.0.0
+paths:
+  /prod-articles/:
+    get:
+      summary: Press articles directly linked to a zxProd (articles property)
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Articles payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PressArticlesPayload'
+        '400':
+          description: Bad request
+        '404':
+          description: Prod not found
+        '500':
+          description: Internal server error
+
+  /prod-mentions/:
+    get:
+      summary: Press articles that mention a zxProd (via getPressMentions)
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Articles payload (mentions)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PressArticlesPayload'
+        '400':
+          description: Bad request
+        '404':
+          description: Prod not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    PressArticleAuthor:
+      type: object
+      required:
+        - id
+        - title
+        - url
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+
+    PressArticlePublication:
+      type: object
+      required:
+        - id
+        - title
+        - url
+        - year
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        year:
+          type: integer
+          nullable: true
+
+    PressArticlePreview:
+      type: object
+      required:
+        - id
+        - title
+        - url
+        - introduction
+        - authors
+        - publication
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        introduction:
+          type: string
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/PressArticleAuthor'
+        publication:
+          oneOf:
+            - $ref: '#/components/schemas/PressArticlePublication'
+            - type: 'null'
+          nullable: true
+
+    PressArticlesPayload:
+      type: object
+      required:
+        - articles
+      properties:
+        articles:
+          type: array
+          items:
+            $ref: '#/components/schemas/PressArticlePreview'
