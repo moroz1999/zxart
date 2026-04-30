@@ -12,6 +12,12 @@ export interface ZxArticlePreviewAuthor {
   readonly url: string;
 }
 
+export interface ZxArticlePreviewPublication {
+  readonly title: string;
+  readonly url: string;
+  readonly year: number | null;
+}
+
 @Component({
   selector: 'zx-article-preview',
   standalone: true,
@@ -35,4 +41,5 @@ export class ZxArticlePreviewComponent {
   @Input() authors: ZxArticlePreviewAuthor[] = [];
   @Input() typeLabel: string | null = null;
   @Input() readLinkLabel: string | null = null;
+  @Input() publication: ZxArticlePreviewPublication | null = null;
 }

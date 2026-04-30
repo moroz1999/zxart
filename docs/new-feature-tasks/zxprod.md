@@ -66,8 +66,8 @@ All standalone, OnPush, in `features/prod-details/...`. Each section component o
 | `zx-prod-maps-section` | `GET /prod-maps/?id={id}` | `PictureGalleryHostComponent` | Replaces `zxItem.images.tpl` include for `mapFilesSelector`. Includes `mapsUrl` from speccyMaps. |
 | `zx-prod-releases-section` | `GET /prod-releases/?id={id}` | internal `zx-prod-release-row` (table row component) | Full Angular rewrite of `component.releasestable.tpl` + `zxRelease.table.tpl`. ~15 columns. Uses `LegacyPlayButtonComponent` for play. The release row hosts its own screenshots block (see below). |
 | `zx-prod-release-row` | `GET /release-screenshots/?id={releaseId}` (per-release, lazy on scroll) | `PictureGalleryHostComponent` for the row's screenshots | One row per release in the releases table. Screenshots for that specific release lazy-load when the row scrolls into view. No aggregated endpoint. |
-| `zx-prod-articles-section` | `GET /prod-articles/?id={id}` | new shared `zx-press-article-card` (built from scratch — see below) | Replaces `component.pressArticles.tpl`. |
-| `zx-prod-mentions-section` | `GET /prod-mentions/?id={id}` | `zx-press-article-card` | Replaces `component.mentions.tpl`. |
+| `zx-prod-articles-section` | `GET /prod-articles/?id={id}` | existing `zx-article-preview` (extended with optional `publication` input — see below) | Replaces `component.pressArticles.tpl`. |
+| `zx-prod-mentions-section` | `GET /prod-mentions/?id={id}` | `zx-article-preview` | Replaces `component.mentions.tpl`. |
 | `zx-prod-compilation-items-section` | `GET /prod-compilation-items/?id={id}` | new shared `zx-prod-card` (or reuse existing list-card if suitable) | "Содержимое сборника" — prods this compilation includes. |
 | `zx-prod-series-prods-section` | `GET /prod-series-prods/?id={id}` | `zx-prod-card` | "Программы из серии" — prods this series includes. |
 | `zx-prod-compilations-section` | `GET /prod-compilations/?id={id}` | `zx-prod-card` | "Включён в сборники" — compilations that contain this prod. |
@@ -113,7 +113,7 @@ The modal is created once per launch and torn down on close. The dialog mounts t
 |---|---|---|
 | `zx-youtube-embed` | `shared/ui/zx-youtube-embed/` | Reusable YouTube iframe. |
 | `zx-collapsible-section` | `shared/ui/zx-collapsible-section/` | Reusable `<details>/<summary>` with optional `open` state. |
-| `zx-press-article-card` | `shared/ui/zx-press-article-card/` | **Built from scratch** — no existing equivalent. Fields: title, url, intro (sanitised HTML), authors, year. Used by both `zx-prod-articles-section` and `zx-prod-mentions-section`. |
+| `zx-article-preview` (existing, **extended**) | `shared/ui/zx-article-preview/` | The existing component already covers title, url, snippetHtml, authors, year. Add an optional `publication: {title, url, year} | null` input for mention-style "Publication (Year) / Article Title" prefix. Used by both `zx-prod-articles-section` and `zx-prod-mentions-section`. |
 | `zx-prod-card` | `shared/ui/zx-prod-card/` (or reuse if `entities/zx-prods-list` already has one extractable) | Compact prod card for related-prods sections. Fields: title, url, year, votes, primary image, legalStatus. If a suitable card already exists inside `entities/zx-prods-list/`, **extract it** rather than duplicate. |
 | `zx-section-host` (optional) | `shared/ui/zx-section-host/` | Helper that bundles "title + skeleton + InViewport trigger + error / empty branches" so each section component doesn't repeat the boilerplate. Lift only after at least 3 sections look identical. |
 | `zx-confirm-dialog` + `ConfirmDialogService` | `shared/ui/zx-confirm-dialog/` | Generic confirmation dialog. `ConfirmDialogService.confirm({title, message, confirmLabel, cancelLabel, danger?: boolean}): Observable<boolean>`. Built on `@angular/cdk/dialog` (`DialogRef`) — same API the existing `SearchDialogComponent` uses. Used here for `publicDelete`, but designed for reuse anywhere a destructive action needs confirmation. |
@@ -289,7 +289,8 @@ Pre-translated values (legalStatus label, language title, hardware title, party 
   - `engines/emulator-engine.ts` (interface) + `usp.engine.ts`, `zx81.engine.ts`, `tsconf.engine.ts`, `samcoupe.engine.ts`, `zxnext.engine.ts`
   - `components/zx-emulator-dialog/`
   - Updates to `features/player/legacy-play-button/` so clicks open the modal via `EmulatorModalService` instead of mounting an inline canvas.
-- **new shared** `ng-zxart/src/app/shared/ui/zx-youtube-embed/`, `zx-collapsible-section/`, `zx-press-article-card/`, `zx-prod-card/` (or extract from existing), `zx-confirm-dialog/` (with companion `ConfirmDialogService`).
+- **new shared** `ng-zxart/src/app/shared/ui/zx-youtube-embed/`, `zx-collapsible-section/`, `zx-prod-card/` (or extract from existing), `zx-confirm-dialog/` (with companion `ConfirmDialogService`).
+- **edit existing** `ng-zxart/src/app/shared/ui/zx-article-preview/` — add optional `publication: {title, url, year} | null` input.
 - **edit** `ng-zxart/src/app/app.module.ts` — register `zx-prod-details` (and only that one) as a custom element. All sections are inner components, not custom elements.
 - **edit** `ng-zxart/src/assets/i18n/{en,ru,es}.json` — add `prod-details` namespace.
 
@@ -317,7 +318,7 @@ The WASM bundles under `htdocs/libs/{us,zx81,mame,mamenextsam}/` are kept as-is 
 3. **Lazy sections.** Every section uses `InViewportDirective` to defer its HTTP request until in view, with `ZxSkeletonComponent` while loading.
 4. **Emulator runs in a modal** (`@angular/cdk/dialog`), not inline. The JS launcher (`component.emulator.js` + `component.emulator.tpl`) is **rewritten in Angular** as `EmulatorModalService` + per-engine adapters (`UspEngine`, `Zx81Engine`, `TsconfEngine`, `SamcoupeEngine`, `ZxNextEngine`) — one adapter per WASM bundle, dispatched by release `emulatorType`. The WASM bundles themselves (`htdocs/libs/{us,zx81,mame,mamenextsam}/`) are not modified.
 5. **Releases table: full Angular rewrite** as `zx-prod-releases-section`, fed from `/prod-releases/`.
-6. **`zx-press-article-card` is built from scratch.** No existing equivalent in `shared/ui/`.
+6. **`zx-article-preview` is reused** (existing in `shared/ui/`, currently used in search results). Extended with an optional `publication: {title, url, year} | null` input for mention-style prefix.
 7. **`zx-prod-card`**: extract from existing `entities/zx-prods-list/` if a card is already there; otherwise build new in `shared/ui/`. Decide during implementation.
 8. **Routing: no Angular router for v1.** Legacy URL still resolves via the Smarty shell; the shell mounts the page custom element.
 
@@ -377,7 +378,7 @@ Phases are ordered by dependency: PHP contracts first (they unblock the Angular 
 - [x] `zx-confirm-dialog` + `ConfirmDialogService` (`shared/ui/zx-confirm-dialog/`). Built on `@angular/cdk/dialog`. Add `prod-details.delete-confirm-*` translation keys.
 - [x] `zx-collapsible-section` (`shared/ui/zx-collapsible-section/`) — generic `<details>/<summary>` with optional `open` input.
 - [x] `zx-youtube-embed` (`shared/ui/zx-youtube-embed/`) — iframe with `youtubeId` input.
-- [ ] `zx-press-article-card` (`shared/ui/zx-press-article-card/`) — built from scratch.
+- [x] Extend existing `zx-article-preview` (`shared/ui/zx-article-preview/`) with optional `publication: {title, url, year} | null` input so it can render mention-style "Publication (Year) / Article Title" prefix. Reused by `zx-prod-articles-section` and `zx-prod-mentions-section`.
 - [ ] `zx-prod-card` (`shared/ui/zx-prod-card/`) — extract from `entities/zx-prods-list/` if a card lives inside it; otherwise build new.
 
 ### Phase 3 — Emulator (Angular reimplementation)
@@ -408,8 +409,8 @@ Each is its own checkbox: section component + per-section service + lazy `InView
 
 - [ ] `zx-prod-screenshots-section` + `/prod-screenshots/`. Reuses `PictureGalleryHostComponent`.
 - [ ] `zx-prod-releases-section` + `zx-prod-release-row` + `/prod-releases/` + `/release-screenshots/?id={releaseId}` (per row). Play buttons wired to `EmulatorModalService`.
-- [ ] `zx-prod-articles-section` + `/prod-articles/`. Uses `zx-press-article-card`.
-- [ ] `zx-prod-mentions-section` + `/prod-mentions/`. Uses `zx-press-article-card`.
+- [ ] `zx-prod-articles-section` + `/prod-articles/`. Uses `zx-article-preview`.
+- [ ] `zx-prod-mentions-section` + `/prod-mentions/`. Uses `zx-article-preview`.
 - [ ] `zx-prod-compilation-items-section` + `/prod-compilation-items/`. Uses `zx-prod-card`.
 - [ ] `zx-prod-series-prods-section` + `/prod-series-prods/`.
 - [ ] `zx-prod-compilations-section` + `/prod-compilations/`.

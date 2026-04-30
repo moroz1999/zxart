@@ -1,8 +1,18 @@
 <header class="zx-article-preview__header">
-  <a class="zx-article-preview__link" [href]="url">
-    <h3 zxHeading3 class="zx-article-preview__title"
-        [innerHTML]="titleHtml ?? title"></h3>
-  </a>
+  <h3 zxHeading3 class="zx-article-preview__title">
+    <ng-container *ngIf="publication">
+      <a
+        class="zx-article-preview__link zx-article-preview__publication"
+        [href]="publication.url"
+      >{{ publication.title }}<ng-container *ngIf="publication.year"> ({{ publication.year }})</ng-container></a>
+      <span class="zx-article-preview__publication-separator"> / </span>
+    </ng-container>
+    <a
+      class="zx-article-preview__link"
+      [href]="url"
+      [innerHTML]="titleHtml ?? title"
+    ></a>
+  </h3>
   <zx-button
     *ngIf="readLinkLabel"
     class="zx-article-preview__read"
