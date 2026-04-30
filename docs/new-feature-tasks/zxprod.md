@@ -362,7 +362,7 @@ Phases are ordered by dependency: PHP contracts first (they unblock the Angular 
 ### Phase 1 — PHP contracts and endpoints
 
 - [x] Skeleton: empty `ProdDetails` controller + `ProdCoreService` + `ProdCoreDto`/`ProdCoreRestDto` returning a stub. OpenAPI `api/prod-details.yaml` + entry in `api/api.yaml`. Verifies the wiring (DI, routing, json renderer, HTTP status codes) before any real data shape lands.
-- [ ] Fill `ProdCoreDto` with info-table fields (categoriesPaths, languages, hardware, links, party, authors, publishers, groups, year, legalStatus, externalLink) + voting state + submitter + description blocks + privileges + prodUrl.
+- [x] Fill `ProdCoreDto` with info-table fields (categoriesPaths, languages, hardware, links, party, authors, publishers, groups, year, legalStatus, externalLink) + voting state + submitter + description blocks + privileges + prodUrl. Introduces `ZxArt\Shared\StructureType` enum for `structureType` strings (distinct from `EntityType`).
 - [ ] `ProdReleases` controller + `ProdReleasesService` + `ProdReleaseDto`/`ProdReleaseRestDto` with all 15 release-row fields. OpenAPI `api/prod-releases.yaml`.
 - [ ] `ReleaseScreenshots` controller + media service method for per-release screenshots (`getFilesList('screenshotsSelector')` on `zxRelease`). OpenAPI.
 - [ ] `ProdScreenshots` / `ProdInlays` / `ProdMaps` controllers + `ProdMediaService` (shared helpers for file → DTO mapping). OpenAPI (likely shared `api/prod-files.yaml`).

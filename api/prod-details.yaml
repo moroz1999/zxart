@@ -30,11 +30,313 @@ components:
       required:
         - elementId
         - title
+        - altTitle
         - prodUrl
+        - h1
+        - metaTitle
+        - year
+        - legalStatus
+        - legalStatusLabel
+        - externalLink
+        - youtubeId
+        - description
+        - htmlDescription
+        - instructions
+        - generatedDescription
+        - dateCreated
+        - catalogueYearUrl
+        - categoriesPaths
+        - languages
+        - hardware
+        - links
+        - party
+        - authors
+        - publishers
+        - groups
+        - tags
+        - voting
+        - submitter
+        - privileges
       properties:
         elementId:
           type: integer
         title:
           type: string
+        altTitle:
+          type: string
         prodUrl:
           type: string
+        h1:
+          type: string
+        metaTitle:
+          type: string
+        year:
+          type: integer
+        legalStatus:
+          type: string
+        legalStatusLabel:
+          type: string
+        externalLink:
+          type: string
+        youtubeId:
+          type: string
+        description:
+          type: string
+        htmlDescription:
+          type: boolean
+        instructions:
+          type: string
+        generatedDescription:
+          type: string
+        dateCreated:
+          type: string
+        catalogueYearUrl:
+          type: string
+        categoriesPaths:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdCategoryPath'
+        languages:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdLanguageInfo'
+        hardware:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdHardwareInfo'
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdLinkInfo'
+        party:
+          oneOf:
+            - $ref: '#/components/schemas/ProdPartyInfo'
+            - type: 'null'
+          nullable: true
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdAuthorInfo'
+        publishers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdGroupRef'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdGroupRef'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdTagRef'
+        voting:
+          $ref: '#/components/schemas/ProdVoting'
+        submitter:
+          oneOf:
+            - $ref: '#/components/schemas/ProdSubmitter'
+            - type: 'null'
+          nullable: true
+        privileges:
+          $ref: '#/components/schemas/ProdPrivileges'
+
+    ProdCategoryRef:
+      type: object
+      required:
+        - id
+        - title
+        - url
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+
+    ProdCategoryPath:
+      type: object
+      required:
+        - categories
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdCategoryRef'
+
+    ProdLanguageInfo:
+      type: object
+      required:
+        - code
+        - title
+        - emoji
+        - catalogueUrl
+      properties:
+        code:
+          type: string
+        title:
+          type: string
+        emoji:
+          type: string
+        catalogueUrl:
+          type: string
+
+    ProdHardwareInfo:
+      type: object
+      required:
+        - id
+        - title
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+
+    ProdLinkInfo:
+      type: object
+      required:
+        - url
+        - name
+        - image
+      properties:
+        url:
+          type: string
+        name:
+          type: string
+        image:
+          type: string
+
+    ProdPartyInfo:
+      type: object
+      required:
+        - id
+        - title
+        - url
+        - place
+        - compoLabel
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        place:
+          type: integer
+          nullable: true
+        compoLabel:
+          type: string
+          nullable: true
+
+    ProdAuthorInfo:
+      type: object
+      required:
+        - id
+        - title
+        - url
+        - roles
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+
+    ProdGroupRef:
+      type: object
+      required:
+        - id
+        - title
+        - url
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+
+    ProdTagRef:
+      type: object
+      required:
+        - id
+        - title
+        - url
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+
+    ProdVoting:
+      type: object
+      required:
+        - votes
+        - votesAmount
+        - userVote
+        - denyVoting
+        - votePercent
+      properties:
+        votes:
+          type: number
+          format: float
+        votesAmount:
+          type: integer
+        userVote:
+          type: integer
+          nullable: true
+        denyVoting:
+          type: boolean
+        votePercent:
+          type: number
+          format: float
+          nullable: true
+
+    ProdSubmitter:
+      type: object
+      required:
+        - id
+        - userName
+        - url
+      properties:
+        id:
+          type: integer
+        userName:
+          type: string
+        url:
+          type: string
+
+    ProdPrivileges:
+      type: object
+      required:
+        - showPublicForm
+        - showAiForm
+        - resize
+        - join
+        - split
+        - publicDelete
+        - addRelease
+        - addPressArticle
+      properties:
+        showPublicForm:
+          type: boolean
+        showAiForm:
+          type: boolean
+        resize:
+          type: boolean
+        join:
+          type: boolean
+        split:
+          type: boolean
+        publicDelete:
+          type: boolean
+        addRelease:
+          type: boolean
+        addPressArticle:
+          type: boolean

@@ -6,6 +6,7 @@ use App\Users\CurrentUserService;
  * @property bool $volunteer
  * @property bool $supporter
  * @property bool $vip
+ * @property string $userName
  * @property string $firstName
  * @property string $lastName
  */

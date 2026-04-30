@@ -37,6 +37,12 @@
 - Pass `EntityType` directly to repository and service methods that accept it (`ImportIdOperator`, `AuthorshipRepository`, list repositories).
 - For legacy CMS methods that accept string parameters (e.g., `$element->getAuthorsInfo()`, `$element->getShortAuthorship()`), use `EntityType::Prod->value` to extract the string value.
 
+## Structure Types
+- Use `StructureType` enum (`ZxArt\Shared\StructureType`) instead of hardcoded structure-type strings (e.g., `'zxProd'`, `'zxRelease'`, `'pressArticle'`).
+- This is **distinct from `EntityType`**: `StructureType` matches CMS class names (`structureType` property), while `EntityType` covers authorship/ownership identifiers.
+- Pass `StructureType::ZxProd->value` to legacy methods that accept structure type strings (e.g., `privilegesManager::checkPrivilegesForAction()`).
+- Add a new case if you need a structure type not yet listed.
+
 ## Psalm
 - NEVER use @psalm-suppress. Instead, add clear and minimal type annotations.
 - Annotate magic variables and methods in original legacy classes.
