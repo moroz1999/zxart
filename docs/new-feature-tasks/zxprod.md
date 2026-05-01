@@ -391,7 +391,8 @@ Phases are ordered by dependency: PHP contracts first (they unblock the Angular 
 - [x] Implement `TsconfEngine`. Verify.
 - [x] Implement `SamcoupeEngine`. Verify.
 - [x] Implement `ZxNextEngine`. Verify.
-- [ ] Delete `project/js/public/component.emulator.js` and `project/templates/public/component.emulator.tpl`. Confirm no other callers via `grep -rn`.
+
+Legacy launcher deletion is deferred to Phase 6 — the four `component.{,zx81,tsconf,samcoupe,zxnext}Emulator.js` files plus `component.emulator.tpl` are still active because the Smarty `component.play-button.tpl` and the prod/release detail templates rely on them. They get removed once Phase 5's `zx-prod-releases-section` replaces the play button and Phase 4 collapses the prod-details template shell.
 
 ### Phase 4 — Angular page shell and core blocks
 
@@ -432,6 +433,14 @@ Each is its own checkbox: section component + per-section service + lazy `InView
   - [ ] `component.languagelinks.tpl`
   - [ ] `zxItem.images.tpl`
   - [ ] `zxItem.files.tpl`
+- [ ] Delete legacy emulator launchers — Angular engines + `EmulatorModalService` replace them. Confirm no callers in `.tpl` / `project.class.php` remain, then delete:
+  - [ ] `project/js/public/component.emulator.js` (USP)
+  - [ ] `project/js/public/component.zx81Emulator.js`
+  - [ ] `project/js/public/component.tsconfEmulator.js`
+  - [ ] `project/js/public/component.samcoupeEmulator.js`
+  - [ ] `project/js/public/component.zxnextEmulator.js`
+  - [ ] `project/templates/public/component.emulator.tpl`
+  - [ ] `project/templates/public/component.play-button.tpl` (replaced by inline `zx-button` in `zx-prod-release-row`)
   - [ ] `tags.form.tpl`
 - [ ] Final QA pass per the Verification section.
 
