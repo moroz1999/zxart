@@ -574,6 +574,8 @@
     "votes": "Рейтинг",
     "addedby": "Добавил",
     "added": "Добавлена",
+    "description": "Описание",
+    "instructions": "Инструкции",
     "role_code": "Код",
     "role_intro_code": "Код интро",
     "role_intro_graphics": "Графика интро",

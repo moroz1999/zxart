@@ -6,6 +6,8 @@ import {ProdCoreApiService} from '../../services/prod-core-api.service';
 import {ProdCoreDto} from '../../models/prod-core.dto';
 import {ZxProdInfoTableComponent} from '../zx-prod-info-table/zx-prod-info-table.component';
 import {ZxProdEditingControlsComponent} from '../zx-prod-editing-controls/zx-prod-editing-controls.component';
+import {ZxProdDescriptionComponent} from '../zx-prod-description/zx-prod-description.component';
+import {ZxProdInstructionsComponent} from '../zx-prod-instructions/zx-prod-instructions.component';
 
 @Component({
   selector: 'zx-prod-details',
@@ -15,6 +17,8 @@ import {ZxProdEditingControlsComponent} from '../zx-prod-editing-controls/zx-pro
     ZxSkeletonComponent,
     ZxProdInfoTableComponent,
     ZxProdEditingControlsComponent,
+    ZxProdDescriptionComponent,
+    ZxProdInstructionsComponent,
   ],
   templateUrl: './zx-prod-details.component.html',
   styleUrls: ['./zx-prod-details.component.scss'],

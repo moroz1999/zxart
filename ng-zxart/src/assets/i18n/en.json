@@ -574,6 +574,8 @@
     "votes": "Rating",
     "addedby": "Uploaded by",
     "added": "Added",
+    "description": "Description",
+    "instructions": "Instructions",
     "role_code": "Coding",
     "role_intro_code": "Intro coding",
     "role_intro_graphics": "Intro graphics",

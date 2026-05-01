@@ -573,6 +573,8 @@
     "votes": "Clasificación",
     "addedby": "Añadido por",
     "added": "Agregada",
+    "description": "Descripción",
+    "instructions": "Instrucciones",
     "role_code": "Codificación",
     "role_intro_code": "Intro codificación",
     "role_intro_graphics": "Intro gráficos",
