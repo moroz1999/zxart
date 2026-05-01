@@ -402,7 +402,7 @@ Legacy launcher deletion is deferred to Phase 6 — the four `component.{,zx81,t
 - [x] `zx-prod-editing-controls` — `publicDelete` wired through `ConfirmDialogService` before navigation.
 - [x] `zx-prod-vote-row` (wraps typed `zx-item-controls`).
 - [x] `zx-prod-description` + `zx-prod-instructions` (built on `zx-collapsible-section`).
-- [ ] YouTube embed wired via `zx-youtube-embed` (when `youtubeId` set).
+- [x] YouTube embed wired via `zx-youtube-embed` (when `youtubeId` set).
 - [x] `prod-details` i18n namespace populated for ru/en/es from `/temporary/translations/`.
 
 ### Phase 5 — Lazy sections

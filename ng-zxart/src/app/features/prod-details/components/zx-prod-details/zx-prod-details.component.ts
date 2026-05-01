@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable, of} from 'rxjs';
 import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {ZxYoutubeEmbedComponent} from '../../../../shared/ui/zx-youtube-embed/zx-youtube-embed.component';
 import {ProdCoreApiService} from '../../services/prod-core-api.service';
 import {ProdCoreDto} from '../../models/prod-core.dto';
 import {ZxProdInfoTableComponent} from '../zx-prod-info-table/zx-prod-info-table.component';
@@ -15,6 +16,7 @@ import {ZxProdInstructionsComponent} from '../zx-prod-instructions/zx-prod-instr
   imports: [
     CommonModule,
     ZxSkeletonComponent,
+    ZxYoutubeEmbedComponent,
     ZxProdInfoTableComponent,
     ZxProdEditingControlsComponent,
     ZxProdDescriptionComponent,

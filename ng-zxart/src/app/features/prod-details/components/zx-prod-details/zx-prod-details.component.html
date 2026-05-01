@@ -7,6 +7,7 @@
     </zx-prod-editing-controls>
     <h1 class="prod-details__title">{{ core.h1 }}</h1>
     <zx-prod-info-table [core]="core"></zx-prod-info-table>
+    <zx-youtube-embed *ngIf="core.youtubeId" [youtubeId]="core.youtubeId"></zx-youtube-embed>
     <div *ngIf="core.generatedDescription" class="prod-details__generated" [innerHTML]="core.generatedDescription"></div>
     <zx-prod-description *ngIf="core.description" [description]="core.description" [htmlDescription]="core.htmlDescription"></zx-prod-description>
     <zx-prod-instructions *ngIf="core.instructions" [instructions]="core.instructions"></zx-prod-instructions>
