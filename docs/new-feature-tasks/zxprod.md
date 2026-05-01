@@ -389,7 +389,7 @@ Phases are ordered by dependency: PHP contracts first (they unblock the Angular 
 - [x] `zx-emulator-dialog` component + `EmulatorModalService` (`@angular/cdk/dialog`). Adds `emulator` i18n namespace (title / loading / fullscreen / screenshot-format-label / samcoupe). The release-row play button (Phase 5) will call `EmulatorModalService.open(...)`.
 - [x] Implement `Zx81Engine`. Verify with a release using zx81 hardware.
 - [x] Implement `TsconfEngine`. Verify.
-- [ ] Implement `SamcoupeEngine`. Verify.
+- [x] Implement `SamcoupeEngine`. Verify.
 - [ ] Implement `ZxNextEngine`. Verify.
 - [ ] Delete `project/js/public/component.emulator.js` and `project/templates/public/component.emulator.tpl`. Confirm no other callers via `grep -rn`.
 
