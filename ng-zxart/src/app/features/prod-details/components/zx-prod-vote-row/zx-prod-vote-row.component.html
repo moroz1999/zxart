@@ -1,0 +1,9 @@
+<zx-item-controls
+  [elementId]="elementId"
+  [type]="type"
+  [votes]="voting.votes"
+  [votesAmount]="voting.votesAmount"
+  [userRating]="voting.userVote"
+  [denyVoting]="voting.denyVoting">
+</zx-item-controls>
+<div *ngIf="!voting.denyVoting && voting.votePercent != null" class="prod-vote-row__percent">{{ voting.votes }}</div>

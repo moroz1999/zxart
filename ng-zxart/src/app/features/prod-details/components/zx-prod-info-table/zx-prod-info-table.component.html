@@ -109,15 +109,7 @@
   <tr>
     <td class="info-table__label">{{ 'prod-details.votes' | translate }}:</td>
     <td class="info-table__value">
-      <zx-item-controls
-        [elementId]="core.elementId"
-        type="zxProd"
-        [votes]="core.voting.votes"
-        [votesAmount]="core.voting.votesAmount"
-        [userRating]="core.voting.userVote"
-        [denyVoting]="core.voting.denyVoting">
-      </zx-item-controls>
-      <div *ngIf="!core.voting.denyVoting && core.voting.votePercent != null">{{ core.voting.votes }}</div>
+      <zx-prod-vote-row [elementId]="core.elementId" [voting]="core.voting"></zx-prod-vote-row>
     </td>
   </tr>
 

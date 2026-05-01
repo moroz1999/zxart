@@ -1,9 +1,9 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {ZxItemControlsComponent} from '../../../../shared/ui/zx-item-controls/zx-item-controls.component';
 import {ZxProdLanguageLinksComponent} from '../zx-prod-language-links/zx-prod-language-links.component';
 import {ZxProdExternalLinksComponent} from '../zx-prod-external-links/zx-prod-external-links.component';
+import {ZxProdVoteRowComponent} from '../zx-prod-vote-row/zx-prod-vote-row.component';
 import {ProdCoreDto} from '../../models/prod-core.dto';
 
 @Component({
@@ -12,9 +12,9 @@ import {ProdCoreDto} from '../../models/prod-core.dto';
   imports: [
     CommonModule,
     TranslateModule,
-    ZxItemControlsComponent,
     ZxProdLanguageLinksComponent,
     ZxProdExternalLinksComponent,
+    ZxProdVoteRowComponent,
   ],
   templateUrl: './zx-prod-info-table.component.html',
   styleUrls: ['./zx-prod-info-table.component.scss'],

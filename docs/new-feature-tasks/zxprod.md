@@ -400,7 +400,7 @@ Legacy launcher deletion is deferred to Phase 6 — the four `component.{,zx81,t
 - [x] Smarty `.tpl` collapsed to the shell shown in the Architecture section. Old admin/info markup deleted.
 - [x] `zx-prod-info-table` + child blocks `zx-prod-language-links`, `zx-prod-external-links`. Reads from core payload.
 - [x] `zx-prod-editing-controls` — `publicDelete` wired through `ConfirmDialogService` before navigation.
-- [ ] `zx-prod-vote-row` (wraps typed `zx-item-controls`).
+- [x] `zx-prod-vote-row` (wraps typed `zx-item-controls`).
 - [ ] `zx-prod-description` + `zx-prod-instructions` (built on `zx-collapsible-section`).
 - [ ] YouTube embed wired via `zx-youtube-embed` (when `youtubeId` set).
 - [x] `prod-details` i18n namespace populated for ru/en/es from `/temporary/translations/`.
