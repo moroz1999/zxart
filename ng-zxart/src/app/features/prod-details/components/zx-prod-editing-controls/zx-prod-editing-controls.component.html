@@ -1,0 +1,13 @@
+<div *ngIf="hasMainActions" class="prod-editing-controls">
+  <zx-button *ngIf="privileges.showPublicForm" [href]="actionUrl('showPublicForm')">{{ 'prod-details.edit' | translate }}</zx-button>
+  <zx-button *ngIf="privileges.showAiForm" [href]="actionUrl('showAiForm')">{{ 'prod-details.showAiForm' | translate }}</zx-button>
+  <zx-button *ngIf="privileges.resize" [href]="actionUrl('resize')">{{ 'prod-details.resize' | translate }}</zx-button>
+  <zx-button *ngIf="privileges.join" [href]="actionUrl('showJoinForm')">{{ 'prod-details.join' | translate }}</zx-button>
+  <zx-button *ngIf="privileges.split" [href]="actionUrl('showSplitForm')">{{ 'prod-details.split' | translate }}</zx-button>
+  <zx-button *ngIf="privileges.publicDelete" color="danger" (click)="confirmDelete($event)">{{ 'prod-details.delete' | translate }}</zx-button>
+</div>
+
+<div *ngIf="hasAddActions" class="prod-editing-controls">
+  <zx-button *ngIf="privileges.addRelease" [href]="addActionUrl('zxRelease')">{{ 'prod-details.addrelease' | translate }}</zx-button>
+  <zx-button *ngIf="privileges.addPressArticle" [href]="addActionUrl('pressArticle')">{{ 'prod-details.addpressarticle' | translate }}</zx-button>
+</div>

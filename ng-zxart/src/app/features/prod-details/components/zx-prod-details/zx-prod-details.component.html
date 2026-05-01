@@ -1,5 +1,10 @@
 <ng-container *ngIf="core$ | async as core; else loading">
   <div class="prod-details">
+    <zx-prod-editing-controls
+      [elementId]="core.elementId"
+      [prodUrl]="core.prodUrl"
+      [privileges]="core.privileges">
+    </zx-prod-editing-controls>
     <h1 class="prod-details__title">{{ core.h1 }}</h1>
     <zx-prod-info-table [core]="core"></zx-prod-info-table>
   </div>

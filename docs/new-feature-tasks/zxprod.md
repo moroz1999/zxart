@@ -399,7 +399,7 @@ Legacy launcher deletion is deferred to Phase 6 — the four `component.{,zx81,t
 - [x] `zx-prod-details` page shell + `ProdCoreApiService` + TS DTO. Fetches `/prod-details/?id={id}` and renders a placeholder. Registered in `app.module.ts` `ngDoBootstrap()`.
 - [x] Smarty `.tpl` collapsed to the shell shown in the Architecture section. Old admin/info markup deleted.
 - [x] `zx-prod-info-table` + child blocks `zx-prod-language-links`, `zx-prod-external-links`. Reads from core payload.
-- [ ] `zx-prod-editing-controls` — `publicDelete` wired through `ConfirmDialogService` before navigation.
+- [x] `zx-prod-editing-controls` — `publicDelete` wired through `ConfirmDialogService` before navigation.
 - [ ] `zx-prod-vote-row` (wraps typed `zx-item-controls`).
 - [ ] `zx-prod-description` + `zx-prod-instructions` (built on `zx-collapsible-section`).
 - [ ] YouTube embed wired via `zx-youtube-embed` (when `youtubeId` set).

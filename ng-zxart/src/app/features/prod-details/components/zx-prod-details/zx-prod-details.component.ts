@@ -5,11 +5,17 @@ import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton
 import {ProdCoreApiService} from '../../services/prod-core-api.service';
 import {ProdCoreDto} from '../../models/prod-core.dto';
 import {ZxProdInfoTableComponent} from '../zx-prod-info-table/zx-prod-info-table.component';
+import {ZxProdEditingControlsComponent} from '../zx-prod-editing-controls/zx-prod-editing-controls.component';
 
 @Component({
   selector: 'zx-prod-details',
   standalone: true,
-  imports: [CommonModule, ZxSkeletonComponent, ZxProdInfoTableComponent],
+  imports: [
+    CommonModule,
+    ZxSkeletonComponent,
+    ZxProdInfoTableComponent,
+    ZxProdEditingControlsComponent,
+  ],
   templateUrl: './zx-prod-details.component.html',
   styleUrls: ['./zx-prod-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
