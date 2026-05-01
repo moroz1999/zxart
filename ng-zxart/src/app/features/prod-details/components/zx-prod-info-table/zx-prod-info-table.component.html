@@ -1,0 +1,136 @@
+<table class="info-table">
+  <tr>
+    <td class="info-table__label">{{ 'prod-details.title' | translate }}:</td>
+    <td class="info-table__value">{{ core.title }}</td>
+  </tr>
+
+  <tr *ngIf="core.altTitle">
+    <td class="info-table__label">{{ 'prod-details.altTitle' | translate }}:</td>
+    <td class="info-table__value">{{ core.altTitle }}</td>
+  </tr>
+
+  <tr *ngIf="core.externalLink">
+    <td class="info-table__label">{{ 'prod-details.externallink' | translate }}:</td>
+    <td class="info-table__value">
+      <a class="button"
+         [class.release-sales-button]="!!externalLinkButtonClass"
+         target="_blank"
+         rel="noopener"
+         [href]="core.externalLink">
+        {{ externalLinkLabelKey | translate }}
+      </a>
+    </td>
+  </tr>
+
+  <tr *ngIf="core.categoriesPaths.length">
+    <td class="info-table__label">{{ 'prod-details.categories' | translate }}:</td>
+    <td class="info-table__value">
+      <div *ngFor="let path of core.categoriesPaths">
+        <ng-container *ngFor="let cat of path.categories; let last = last">
+          <a [href]="cat.url">{{ cat.title }}</a><ng-container *ngIf="!last"> / </ng-container>
+        </ng-container>
+      </div>
+    </td>
+  </tr>
+
+  <tr *ngIf="core.languages.length">
+    <td class="info-table__label">{{ 'prod-details.language' | translate }}:</td>
+    <td class="info-table__value">
+      <zx-prod-language-links [languages]="core.languages"></zx-prod-language-links>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="info-table__label">{{ 'prod-details.legalstatus' | translate }}:</td>
+    <td class="info-table__value">{{ core.legalStatusLabel }}</td>
+  </tr>
+
+  <tr *ngIf="core.groups.length">
+    <td class="info-table__label">{{ 'prod-details.groups' | translate }}:</td>
+    <td class="info-table__value">
+      <ng-container *ngFor="let group of core.groups; let last = last">
+        <a [href]="group.url">{{ group.title }}</a><ng-container *ngIf="!last">, </ng-container>
+      </ng-container>
+    </td>
+  </tr>
+
+  <tr *ngIf="core.publishers.length">
+    <td class="info-table__label">{{ 'prod-details.publishers' | translate }}:</td>
+    <td class="info-table__value">
+      <ng-container *ngFor="let publisher of core.publishers; let last = last">
+        <a [href]="publisher.url">{{ publisher.title }}</a><ng-container *ngIf="!last">, </ng-container>
+      </ng-container>
+    </td>
+  </tr>
+
+  <tr *ngIf="core.authors.length">
+    <td class="info-table__label">{{ 'prod-details.authors' | translate }}:</td>
+    <td class="info-table__value">
+      <ng-container *ngFor="let author of core.authors; let last = last">
+        <a [href]="author.url">{{ author.title }}</a><ng-container *ngIf="author.roles.length && author.roles[0] !== 'unknown'">
+          (<ng-container *ngFor="let role of author.roles; let lastRole = last">{{ ('prod-details.role_' + role) | translate }}<ng-container *ngIf="!lastRole">, </ng-container></ng-container>)</ng-container><ng-container *ngIf="!last">, </ng-container>
+      </ng-container>
+    </td>
+  </tr>
+
+  <tr *ngIf="core.party as party">
+    <td class="info-table__label">{{ 'prod-details.party' | translate }}:</td>
+    <td class="info-table__value">
+      <a [href]="party.url">{{ party.title }}</a>
+      <ng-container *ngIf="party.compoLabel">
+        (<ng-container *ngIf="party.place != null">{{ party.place }}, </ng-container>{{ party.compoLabel }})
+      </ng-container>
+    </td>
+  </tr>
+
+  <tr *ngIf="core.year > 0">
+    <td class="info-table__label">{{ 'prod-details.year' | translate }}:</td>
+    <td class="info-table__value">
+      <a [href]="core.catalogueYearUrl">{{ core.year }}</a>
+    </td>
+  </tr>
+
+  <tr *ngIf="core.tags.length">
+    <td class="info-table__label">{{ 'prod-details.tags' | translate }}:</td>
+    <td class="info-table__value">
+      <ng-container *ngFor="let tag of core.tags; let last = last">
+        <a [href]="tag.url">{{ tag.title }}</a><ng-container *ngIf="!last">, </ng-container>
+      </ng-container>
+    </td>
+  </tr>
+
+  <tr *ngIf="core.links.length">
+    <td class="info-table__label">{{ 'prod-details.links' | translate }}:</td>
+    <td class="info-table__value">
+      <zx-prod-external-links [links]="core.links"></zx-prod-external-links>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="info-table__label">{{ 'prod-details.votes' | translate }}:</td>
+    <td class="info-table__value">
+      <zx-item-controls
+        [elementId]="core.elementId"
+        type="zxProd"
+        [votes]="core.voting.votes"
+        [votesAmount]="core.voting.votesAmount"
+        [userRating]="core.voting.userVote"
+        [denyVoting]="core.voting.denyVoting">
+      </zx-item-controls>
+      <div *ngIf="!core.voting.denyVoting && core.voting.votePercent != null">{{ core.voting.votes }}</div>
+    </td>
+  </tr>
+
+  <tr *ngIf="core.submitter as submitter; else justAdded">
+    <td class="info-table__label">{{ 'prod-details.addedby' | translate }}:</td>
+    <td class="info-table__value">
+      <a [href]="submitter.url">{{ submitter.userName }}</a>, {{ core.dateCreated }}
+    </td>
+  </tr>
+  <ng-template #justAdded>
+    <tr>
+      <td class="info-table__label">{{ 'prod-details.added' | translate }}:</td>
+      <td class="info-table__value">{{ core.dateCreated }}</td>
+    </tr>
+  </ng-template>
+</table>

@@ -1,0 +1,20 @@
+:host {
+  display: block;
+}
+
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.info-table__label {
+  padding: var(--space-4) var(--space-8) var(--space-4) 0;
+  vertical-align: top;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.info-table__value {
+  padding: var(--space-4) 0;
+  vertical-align: top;
+}

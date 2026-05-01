@@ -1,0 +1,13 @@
+:host {
+  display: inline;
+}
+
+.language-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.language-link-icon {
+  display: inline-block;
+}

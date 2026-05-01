@@ -1,0 +1,17 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.external-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.external-link-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}

@@ -1,7 +1,7 @@
 <ng-container *ngIf="core$ | async as core; else loading">
   <div class="prod-details">
     <h1 class="prod-details__title">{{ core.h1 }}</h1>
-    <p class="prod-details__placeholder">Prod #{{ core.elementId }} — sections are wired up in subsequent phases.</p>
+    <zx-prod-info-table [core]="core"></zx-prod-info-table>
   </div>
 </ng-container>
 

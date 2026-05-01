@@ -4,11 +4,12 @@ import {Observable, of} from 'rxjs';
 import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
 import {ProdCoreApiService} from '../../services/prod-core-api.service';
 import {ProdCoreDto} from '../../models/prod-core.dto';
+import {ZxProdInfoTableComponent} from '../zx-prod-info-table/zx-prod-info-table.component';
 
 @Component({
   selector: 'zx-prod-details',
   standalone: true,
-  imports: [CommonModule, ZxSkeletonComponent],
+  imports: [CommonModule, ZxSkeletonComponent, ZxProdInfoTableComponent],
   templateUrl: './zx-prod-details.component.html',
   styleUrls: ['./zx-prod-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

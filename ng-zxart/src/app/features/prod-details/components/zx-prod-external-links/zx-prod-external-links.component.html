@@ -1,0 +1,8 @@
+<a *ngFor="let link of links"
+   class="external-link"
+   target="_blank"
+   rel="noopener"
+   [href]="link.url">
+  <img *ngIf="link.image" loading="lazy" class="external-link-icon" [src]="link.image" [alt]="link.name">
+  <span class="external-link-name">{{ link.name }}</span>
+</a>

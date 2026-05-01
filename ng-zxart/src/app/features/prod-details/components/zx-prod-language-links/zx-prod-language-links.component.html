@@ -1,0 +1,6 @@
+<ng-container *ngFor="let lang of languages; let last = last">
+  <a class="language-link" [href]="lang.catalogueUrl">
+    <span class="language-link-icon">{{ lang.emoji }}</span>
+    {{ lang.title }}
+  </a><ng-container *ngIf="!last">, </ng-container>
+</ng-container>
