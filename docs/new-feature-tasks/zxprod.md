@@ -390,7 +390,7 @@ Phases are ordered by dependency: PHP contracts first (they unblock the Angular 
 - [x] Implement `Zx81Engine`. Verify with a release using zx81 hardware.
 - [x] Implement `TsconfEngine`. Verify.
 - [x] Implement `SamcoupeEngine`. Verify.
-- [ ] Implement `ZxNextEngine`. Verify.
+- [x] Implement `ZxNextEngine`. Verify.
 - [ ] Delete `project/js/public/component.emulator.js` and `project/templates/public/component.emulator.tpl`. Confirm no other callers via `grep -rn`.
 
 ### Phase 4 — Angular page shell and core blocks
