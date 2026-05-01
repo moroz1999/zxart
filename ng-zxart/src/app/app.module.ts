@@ -42,6 +42,7 @@ import {
   ZxSearchResultsComponent
 } from './features/search-results/components/zx-search-results/zx-search-results.component';
 import {TagsQuickFormComponent} from './features/tags-quick-form/components/tags-quick-form/tags-quick-form.component';
+import {ZxProdDetailsComponent} from './features/prod-details/components/zx-prod-details/zx-prod-details.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -102,6 +103,7 @@ export class AppModule implements DoBootstrap  {
             'zx-group-browser': ZxGroupBrowserComponent,
             'zx-search-results': ZxSearchResultsComponent,
             'zx-tags-quick-form': TagsQuickFormComponent,
+            'zx-prod-details': ZxProdDetailsComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});

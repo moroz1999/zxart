@@ -1,0 +1,10 @@
+<ng-container *ngIf="core$ | async as core; else loading">
+  <div class="prod-details">
+    <h1 class="prod-details__title">{{ core.h1 }}</h1>
+    <p class="prod-details__placeholder">Prod #{{ core.elementId }} — sections are wired up in subsequent phases.</p>
+  </div>
+</ng-container>
+
+<ng-template #loading>
+  <zx-skeleton variant="card" [count]="3"></zx-skeleton>
+</ng-template>

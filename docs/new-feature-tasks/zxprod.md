@@ -396,7 +396,7 @@ Legacy launcher deletion is deferred to Phase 6 — the four `component.{,zx81,t
 
 ### Phase 4 — Angular page shell and core blocks
 
-- [ ] `zx-prod-details` page shell + `ProdCoreApiService` + TS DTO. Fetches `/prod-details/?id={id}` and renders a placeholder. Registered in `app.module.ts` `ngDoBootstrap()`.
+- [x] `zx-prod-details` page shell + `ProdCoreApiService` + TS DTO. Fetches `/prod-details/?id={id}` and renders a placeholder. Registered in `app.module.ts` `ngDoBootstrap()`.
 - [ ] Smarty `.tpl` collapsed to the shell shown in the Architecture section. Old admin/info markup deleted.
 - [ ] `zx-prod-info-table` + child blocks `zx-prod-language-links`, `zx-prod-external-links`. Reads from core payload.
 - [ ] `zx-prod-editing-controls` — `publicDelete` wired through `ConfirmDialogService` before navigation.

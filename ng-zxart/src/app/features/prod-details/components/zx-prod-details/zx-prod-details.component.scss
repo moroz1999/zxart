@@ -1,0 +1,18 @@
+:host {
+  display: block;
+}
+
+.prod-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.prod-details__title {
+  margin: 0;
+}
+
+.prod-details__placeholder {
+  margin: 0;
+  color: var(--color-text-muted);
+}
