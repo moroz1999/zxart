@@ -51,6 +51,7 @@
 - Before widening a type, verify both sides: the callee contract and the concrete values passed by callers. Generic library signatures must not be copied into local contracts if the local code only accepts a narrower subset.
 - Do NOT hide missing types behind helper wrappers, broad casts, or normalization layers added only for static analysis. Prefer fixing the contract or the nearest reasonable source of the mixed value, as long as that can be done without disproportionate refactoring.
 - Do NOT spread complex inline `@var` array-shape annotations through application code. If a long shape annotation is needed at the usage site, treat that as a signal to type the source data earlier.
+- When a complex Psalm array shape originates in one service or repository, define a named `@psalm-type` there and import it at consumers with `@psalm-import-type` instead of repeating inline shapes at usage sites.
 - If a legacy method cannot be reasonably typed directly, introduce a named accessor with an explicit return type and keep the local cast or normalization inside that accessor, not at each call site.
 - When handling legacy values, first convert them to the target type, then validate or branch on the typed result. Do NOT scatter repeated strict checks against multiple raw legacy representations such as `false`, `''`, `0`, and `'0'`.
 - Annotate magic variables and methods in original legacy classes.
