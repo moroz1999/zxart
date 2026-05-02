@@ -5,13 +5,16 @@
 - Services orchestrate business logic; repositories handle data access.
 - Repository location: `project/core/ZxArt/{Domain}/Repositories/`.
 - Repositories are `readonly final class` with `Connection` injected via constructor.
+- Repositories MUST extend `ZxArt\Shared\Repositories\AbstractRepository` for shared table-name helpers.
 - Repository methods return primitive types (IDs, counts, arrays), not domain objects or DTOs.
 - Services use repository results (e.g. IDs) and load domain objects via `structureManager`.
 
 ## Database Table Names
 - `Illuminate\Database\Connection` automatically adds `engine_` prefix to table names.
-- In repositories, use table names WITHOUT the `engine_` prefix.
-- Example: for table `engine_preferences`, use `private const TABLE = 'preferences';`
+- In repositories, use `ZxArt\Shared\DatabaseTable` for shared table names instead of local string constants.
+- `DatabaseTable` values are table names for Query Builder WITHOUT the `engine_` prefix, e.g. `module_author`, `module_zxmusic`, `structure_links`.
+- Do NOT strip or add the `module_` prefix in repositories. `module_` is part of the table name.
+- Add the `engine_` database prefix manually only in rare places where Query Builder cannot apply it automatically.
 
 ## No Raw SQL in Repositories
 - NEVER use `$this->db->raw()` or string-concatenated SQL in repositories.
@@ -23,7 +26,7 @@
 - Example:
 ```php
 // BAD — raw SQL, bypasses prefix, injection risk:
-$this->db->table($this->db->raw('(SELECT id FROM ' . self::TABLE . ' ORDER BY votes DESC LIMIT ' . $topN . ') AS top'))
+$this->db->table($this->db->raw('(SELECT id FROM engine_' . DatabaseTable::ZxMusic->value . ' ORDER BY votes DESC LIMIT ' . $topN . ') AS top'))
 
 // GOOD — two safe queries:
 $topIds = $this->getSelectSql()->orderBy('votes', 'desc')->limit($topN)->pluck('id');
@@ -37,14 +40,17 @@ The `Connection` is configured with `PDO::FETCH_ASSOC` (set in `trickster-cms/cm
 - `get()` and `first()` return plain PHP **arrays**, not objects or Eloquent models.
 - Use array access syntax: `$row['column_name']`, NOT `$row->column_name`.
 - `pluck()` also returns a **plain PHP array**, NOT an Illuminate `Collection`. Do NOT chain `->all()` after `pluck()`.
+- Do NOT create helper wrappers only to satisfy Psalm for Query Builder result types.
+- For `pluck()`, `min()`, `max()`, and similar query results, verify the real database column type first and add a narrow local `@var` annotation to the result variable.
 - Example:
 ```php
-$rows = $this->db->table(self::TABLE)->get();
+$rows = $this->db->table(DatabaseTable::ZxMusic->value)->get();
 foreach ($rows as $row) {
     $id = (int)$row['id'];
     $name = $row['name'];
 }
 
 // pluck returns plain array directly:
-$ids = $this->db->table(self::TABLE)->pluck('id'); // int[]
+/** @var int[] $ids */
+$ids = $this->db->table(DatabaseTable::ZxMusic->value)->pluck('id'); // int[]
 ```

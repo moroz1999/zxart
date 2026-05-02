@@ -9,16 +9,13 @@ use Illuminate\Database\Query\Builder;
 use ZxArt\Helpers\AlphanumericColumnSearch;
 use ZxArt\LinkTypes;
 use ZxArt\Radio\Dto\RadioCriteriaDto;
+use ZxArt\Shared\DatabaseTable;
+use ZxArt\Shared\Repositories\AbstractRepository;
 use ZxArt\Shared\SortingParams;
+use ZxArt\Shared\StructureType;
 
-readonly final class TunesRepository
+readonly final class TunesRepository extends AbstractRepository
 {
-    public const TABLE = 'module_zxmusic';
-    private const string STRUCTURE_LINKS_TABLE = 'structure_links';
-    private const string AUTHOR_TABLE = 'module_author';
-    private const string VOTES_HISTORY_TABLE = 'votes_history';
-    private const string AUTHORSHIP_TYPE = 'authorMusic';
-
     public function __construct(
         private Connection               $db,
         private AlphanumericColumnSearch $alphanumericColumnSearch,
@@ -36,7 +33,10 @@ readonly final class TunesRepository
         $query->orWhere('internalTitle', 'like', $title);
         $query->orWhere('internalTitle', 'like', $title . '%');
 
-        return $query->pluck('id');
+        /** @var int[] $ids */
+        $ids = $query->pluck('id');
+
+        return $ids;
     }
 
     /**
@@ -44,10 +44,13 @@ readonly final class TunesRepository
      */
     public function getNewIds(int $limit): array
     {
-        return $this->getSelectSql()
+        /** @var int[] $ids */
+        $ids = $this->getSelectSql()
             ->orderBy('dateAdded', 'desc')
             ->limit($limit)
             ->pluck('id');
+
+        return $ids;
     }
 
     /**
@@ -55,6 +58,7 @@ readonly final class TunesRepository
      */
     public function getUnvotedByUserIds(int $userId, int $limit, int $topN): array
     {
+        /** @var int[] $topIds */
         $topIds = $this->getSelectSql()
             ->where('denyVoting', '=', 0)
             ->orderBy('votes', 'desc')
@@ -65,17 +69,16 @@ readonly final class TunesRepository
             return [];
         }
 
-        return $this->getSelectSql()
+        $votedIdsQuery = $this->getUserVotesQuery($userId);
+        /** @var int[] $ids */
+        $ids = $this->getSelectSql()
             ->whereIn('id', $topIds)
-            ->whereNotIn('id', function ($subQuery) use ($userId) {
-                $subQuery->select('votes_history.elementId')
-                    ->from('votes_history')
-                    ->where('votes_history.type', '=', 'zxMusic')
-                    ->where('votes_history.userId', '=', $userId);
-            })
+            ->whereNotIn('id', $votedIdsQuery)
             ->inRandomOrder()
             ->limit($limit)
             ->pluck('id');
+
+        return $ids;
     }
 
     /**
@@ -83,6 +86,7 @@ readonly final class TunesRepository
      */
     public function getRandomGoodIds(int $limit, int $topN): array
     {
+        /** @var int[] $topIds */
         $topIds = $this->getSelectSql()
             ->orderBy('votes', 'desc')
             ->limit($topN)
@@ -92,16 +96,20 @@ readonly final class TunesRepository
             return [];
         }
 
-        return $this->getSelectSql()
+        /** @var int[] $ids */
+        $ids = $this->getSelectSql()
             ->whereIn('id', $topIds)
             ->inRandomOrder()
             ->limit($limit)
             ->pluck('id');
+
+        return $ids;
     }
 
     public function findRandomIdByCriteria(RadioCriteriaDto $criteria): ?int
     {
         if ($criteria->bestVotesLimit !== null) {
+            /** @var int[] $topIds */
             $topIds = $this->applyCriteria($this->getSelectSql(), $criteria)
                 ->orderBy('votes', 'desc')
                 ->limit($criteria->bestVotesLimit)
@@ -111,12 +119,14 @@ readonly final class TunesRepository
                 return null;
             }
 
+            /** @var int[] $randomIds */
             $randomIds = $this->applyCriteria($this->getSelectSql(), $criteria)
                 ->whereIn('id', $topIds)
                 ->inRandomOrder()
                 ->limit(1)
                 ->pluck('id');
         } else {
+            /** @var int[] $randomIds */
             $randomIds = $this->applyCriteria($this->getSelectSql(), $criteria)
                 ->inRandomOrder()
                 ->limit(1)
@@ -136,128 +146,125 @@ readonly final class TunesRepository
         int $start,
         int $limit,
     ): array {
-        return $this->db->table(self::TABLE)
+        /** @var int[] $ids */
+        $ids = $this->db->table($this->tableName(DatabaseTable::ZxMusic))
             ->join(
-                self::STRUCTURE_LINKS_TABLE,
-                fn($join) => $join
-                    ->on(self::STRUCTURE_LINKS_TABLE . '.childStructureId', '=', self::TABLE . '.id')
-                    ->where(self::STRUCTURE_LINKS_TABLE . '.type', '=', $linkType)
-                    ->where(self::STRUCTURE_LINKS_TABLE . '.parentStructureId', '=', $elementId)
+                $this->tableName(DatabaseTable::StructureLinks),
+                $this->tableColumn(DatabaseTable::StructureLinks, 'childStructureId'),
+                '=',
+                $this->tableColumn(DatabaseTable::ZxMusic, 'id')
             )
-            ->orderBy(self::TABLE . '.' . $sorting->column, $sorting->direction->value)
+            ->where($this->tableColumn(DatabaseTable::StructureLinks, 'type'), '=', $linkType)
+            ->where($this->tableColumn(DatabaseTable::StructureLinks, 'parentStructureId'), '=', $elementId)
+            ->orderBy($this->tableColumn(DatabaseTable::ZxMusic, $sorting->column), $sorting->direction->value)
             ->offset($start)
             ->limit($limit)
-            ->pluck(self::TABLE . '.id');
+            ->pluck($this->tableColumn(DatabaseTable::ZxMusic, 'id'));
+
+        return $ids;
     }
 
     public function countByLinkedElement(int $elementId, string $linkType): int
     {
-        return (int)$this->db->table(self::TABLE)
+        return $this->db->table($this->tableName(DatabaseTable::ZxMusic))
             ->join(
-                self::STRUCTURE_LINKS_TABLE,
-                fn($join) => $join
-                    ->on(self::STRUCTURE_LINKS_TABLE . '.childStructureId', '=', self::TABLE . '.id')
-                    ->where(self::STRUCTURE_LINKS_TABLE . '.type', '=', $linkType)
-                    ->where(self::STRUCTURE_LINKS_TABLE . '.parentStructureId', '=', $elementId)
+                $this->tableName(DatabaseTable::StructureLinks),
+                $this->tableColumn(DatabaseTable::StructureLinks, 'childStructureId'),
+                '=',
+                $this->tableColumn(DatabaseTable::ZxMusic, 'id')
             )
+            ->where($this->tableColumn(DatabaseTable::StructureLinks, 'type'), '=', $linkType)
+            ->where($this->tableColumn(DatabaseTable::StructureLinks, 'parentStructureId'), '=', $elementId)
             ->count();
     }
 
     private function getSelectSql(): Builder
     {
-        return $this->db->table(self::TABLE);
+        return $this->db->table($this->tableName(DatabaseTable::ZxMusic));
     }
 
     private function applyCriteria(Builder $query, RadioCriteriaDto $criteria): Builder
     {
-        $query->select(self::TABLE . '.id');
-        $query->where(self::TABLE . '.mp3Name', '!=', '');
+        $query->select($this->tableColumn(DatabaseTable::ZxMusic, 'id'));
+        $query->where($this->tableColumn(DatabaseTable::ZxMusic, 'mp3Name'), '!=', '');
 
         if ($criteria->minRating !== null) {
-            $query->where(self::TABLE . '.votes', '>=', $criteria->minRating);
+            $query->where($this->tableColumn(DatabaseTable::ZxMusic, 'votes'), '>=', $criteria->minRating);
         }
         if ($criteria->maxRating !== null) {
-            $query->where(self::TABLE . '.votes', '<=', $criteria->maxRating);
+            $query->where($this->tableColumn(DatabaseTable::ZxMusic, 'votes'), '<=', $criteria->maxRating);
         }
         if ($criteria->yearsInclude !== []) {
-            $query->whereIn(self::TABLE . '.year', $criteria->yearsInclude);
+            $query->whereIn($this->tableColumn(DatabaseTable::ZxMusic, 'year'), $criteria->yearsInclude);
         }
         if ($criteria->yearsExclude !== []) {
-            $query->whereNotIn(self::TABLE . '.year', $criteria->yearsExclude);
+            $query->whereNotIn($this->tableColumn(DatabaseTable::ZxMusic, 'year'), $criteria->yearsExclude);
         }
         if ($criteria->formatGroupsInclude !== []) {
-            $query->whereIn(self::TABLE . '.formatGroup', $criteria->formatGroupsInclude);
+            $query->whereIn($this->tableColumn(DatabaseTable::ZxMusic, 'formatGroup'), $criteria->formatGroupsInclude);
         }
         if ($criteria->formatGroupsExclude !== []) {
-            $query->whereNotIn(self::TABLE . '.formatGroup', $criteria->formatGroupsExclude);
+            $query->whereNotIn($this->tableColumn(DatabaseTable::ZxMusic, 'formatGroup'), $criteria->formatGroupsExclude);
         }
         if ($criteria->formatsInclude !== []) {
-            $query->whereIn(self::TABLE . '.type', $criteria->formatsInclude);
+            $query->whereIn($this->tableColumn(DatabaseTable::ZxMusic, 'type'), $criteria->formatsInclude);
         }
         if ($criteria->formatsExclude !== []) {
-            $query->whereNotIn(self::TABLE . '.type', $criteria->formatsExclude);
+            $query->whereNotIn($this->tableColumn(DatabaseTable::ZxMusic, 'type'), $criteria->formatsExclude);
         }
         if ($criteria->minPartyPlace !== null) {
-            $query->where(self::TABLE . '.partyplace', '<=', $criteria->minPartyPlace);
-            $query->where(self::TABLE . '.partyplace', '!=', 0);
+            $query->where($this->tableColumn(DatabaseTable::ZxMusic, 'partyplace'), '<=', $criteria->minPartyPlace);
+            $query->where($this->tableColumn(DatabaseTable::ZxMusic, 'partyplace'), '!=', 0);
         }
         if ($criteria->requireGame === true) {
-            $query->where(self::TABLE . '.game', '!=', 0);
+            $query->where($this->tableColumn(DatabaseTable::ZxMusic, 'game'), '!=', 0);
         }
         if ($criteria->hasParty === true) {
-            $query->where(self::TABLE . '.partyplace', '>', 0);
+            $query->where($this->tableColumn(DatabaseTable::ZxMusic, 'partyplace'), '>', 0);
         }
         if ($criteria->hasParty === false) {
-            $query->where(self::TABLE . '.partyplace', '=', 0);
+            $query->where($this->tableColumn(DatabaseTable::ZxMusic, 'partyplace'), '=', 0);
         }
         if ($criteria->maxPlays !== null) {
-            $query->where(self::TABLE . '.plays', '<', $criteria->maxPlays);
+            $query->where($this->tableColumn(DatabaseTable::ZxMusic, 'plays'), '<', $criteria->maxPlays);
         }
         if ($criteria->notVotedByUserId !== null) {
-            $query->whereNotIn(
-                self::TABLE . '.id',
-                function (Builder $subQuery) use ($criteria) {
-                    $subQuery->select(self::VOTES_HISTORY_TABLE . '.elementId')
-                        ->from(self::VOTES_HISTORY_TABLE)
-                        ->where(self::VOTES_HISTORY_TABLE . '.type', '=', 'zxMusic')
-                        ->where(self::VOTES_HISTORY_TABLE . '.userId', '=', $criteria->notVotedByUserId);
-                }
-            );
+            $query->whereNotIn($this->tableColumn(DatabaseTable::ZxMusic, 'id'), $this->getUserVotesQuery($criteria->notVotedByUserId));
         }
         if ($criteria->countriesInclude !== [] || $criteria->countriesExclude !== []) {
             $query
                 ->join(
-                    self::STRUCTURE_LINKS_TABLE . ' as author_links',
-                    function ($join) {
-                        $join->on('author_links.childStructureId', '=', self::TABLE . '.id')
-                            ->where('author_links.type', '=', self::AUTHORSHIP_TYPE);
-                    }
+                    $this->tableAlias(DatabaseTable::StructureLinks, 'author_links'),
+                    'author_links.childStructureId',
+                    '=',
+                    $this->tableColumn(DatabaseTable::ZxMusic, 'id')
                 )
+                ->where('author_links.type', '=', LinkTypes::AUTHOR_MUSIC->value)
                 ->join(
-                    self::AUTHOR_TABLE,
-                    self::AUTHOR_TABLE . '.id',
+                    $this->tableName(DatabaseTable::Author),
+                    $this->tableColumn(DatabaseTable::Author, 'id'),
                     '=',
                     'author_links.parentStructureId'
                 )
                 ->distinct();
 
             if ($criteria->countriesInclude !== []) {
-                $query->whereIn(self::AUTHOR_TABLE . '.country', $criteria->countriesInclude);
+                $query->whereIn($this->tableColumn(DatabaseTable::Author, 'country'), $criteria->countriesInclude);
             }
             if ($criteria->countriesExclude !== []) {
-                $query->whereNotIn(self::AUTHOR_TABLE . '.country', $criteria->countriesExclude);
+                $query->whereNotIn($this->tableColumn(DatabaseTable::Author, 'country'), $criteria->countriesExclude);
             }
         }
         if ($criteria->prodCategoriesInclude !== []) {
             $query
                 ->join(
-                    self::STRUCTURE_LINKS_TABLE . ' as prod_links',
+                    $this->tableAlias(DatabaseTable::StructureLinks, 'prod_links'),
                     'prod_links.childStructureId',
                     '=',
-                    self::TABLE . '.id'
+                    $this->tableColumn(DatabaseTable::ZxMusic, 'id')
                 )
                 ->join(
-                    self::STRUCTURE_LINKS_TABLE . ' as category_links',
+                    $this->tableAlias(DatabaseTable::StructureLinks, 'category_links'),
                     'category_links.childStructureId',
                     '=',
                     'prod_links.parentStructureId'
@@ -273,49 +280,52 @@ readonly final class TunesRepository
 
     /**
      * Returns IDs of tunes linked to the given author (including all its aliases)
-     * via structure_links with type 'authorMusic'.
+     * via authorship links.
      * All entity IDs share a single sequence from structure_elements.
      *
      * @return int[]
      */
     public function findIdsByAuthorId(int $authorId): array
     {
-        return $this->db->table(self::TABLE)
-            ->select(self::TABLE . '.id')
+        $authorIds = $this->getAuthorAndAliasIds($authorId);
+
+        /** @var int[] $ids */
+        $ids = $this->db->table($this->tableName(DatabaseTable::ZxMusic))
+            ->select($this->tableColumn(DatabaseTable::ZxMusic, 'id'))
             ->join(
-                self::STRUCTURE_LINKS_TABLE,
-                fn($join) => $join
-                    ->on(self::STRUCTURE_LINKS_TABLE . '.childStructureId', '=', self::TABLE . '.id')
-                    ->where(self::STRUCTURE_LINKS_TABLE . '.type', '=', self::AUTHORSHIP_TYPE)
+                $this->tableName(DatabaseTable::StructureLinks),
+                $this->tableColumn(DatabaseTable::StructureLinks, 'childStructureId'),
+                '=',
+                $this->tableColumn(DatabaseTable::ZxMusic, 'id')
             )
-            ->where(function ($q) use ($authorId) {
-                $q->where(self::STRUCTURE_LINKS_TABLE . '.parentStructureId', '=', $authorId)
-                    ->orWhereIn(
-                        self::STRUCTURE_LINKS_TABLE . '.parentStructureId',
-                        fn($sub) => $sub->select('id')->from('module_authoralias')->where('authorId', '=', $authorId)
-                    );
-            })
+            ->where($this->tableColumn(DatabaseTable::StructureLinks, 'type'), '=', LinkTypes::AUTHOR_MUSIC->value)
+            ->whereIn($this->tableColumn(DatabaseTable::StructureLinks, 'parentStructureId'), $authorIds)
             ->distinct()
-            ->orderBy(self::TABLE . '.title')
-            ->pluck(self::TABLE . '.id');
+            ->orderBy($this->tableColumn(DatabaseTable::ZxMusic, 'title'))
+            ->pluck($this->tableColumn(DatabaseTable::ZxMusic, 'id'));
+
+        return $ids;
     }
+
 
     /**
      * @return array{min: int|null, max: int|null}
      */
     public function getYearRange(): array
     {
-        $min = $this->db->table(self::TABLE)
-            ->where(self::TABLE . '.year', '>', 0)
-            ->min(self::TABLE . '.year');
+        /** @var int|null $min */
+        $min = $this->db->table($this->tableName(DatabaseTable::ZxMusic))
+            ->where($this->tableColumn(DatabaseTable::ZxMusic, 'year'), '>', 0)
+            ->min($this->tableColumn(DatabaseTable::ZxMusic, 'year'));
 
-        $max = $this->db->table(self::TABLE)
-            ->where(self::TABLE . '.year', '>', 0)
-            ->max(self::TABLE . '.year');
+        /** @var int|null $max */
+        $max = $this->db->table($this->tableName(DatabaseTable::ZxMusic))
+            ->where($this->tableColumn(DatabaseTable::ZxMusic, 'year'), '>', 0)
+            ->max($this->tableColumn(DatabaseTable::ZxMusic, 'year'));
 
         return [
-            'min' => $min === null ? null : (int)$min,
-            'max' => $max === null ? null : (int)$max,
+            'min' => $min,
+            'max' => $max,
         ];
     }
 
@@ -324,17 +334,19 @@ readonly final class TunesRepository
      */
     public function getRatingRange(): array
     {
-        $min = $this->db->table(self::TABLE)
-            ->where(self::TABLE . '.votesAmount', '>', 0)
-            ->min(self::TABLE . '.votes');
+        /** @var float|null $min */
+        $min = $this->db->table($this->tableName(DatabaseTable::ZxMusic))
+            ->where($this->tableColumn(DatabaseTable::ZxMusic, 'votesAmount'), '>', 0)
+            ->min($this->tableColumn(DatabaseTable::ZxMusic, 'votes'));
 
-        $max = $this->db->table(self::TABLE)
-            ->where(self::TABLE . '.votesAmount', '>', 0)
-            ->max(self::TABLE . '.votes');
+        /** @var float|null $max */
+        $max = $this->db->table($this->tableName(DatabaseTable::ZxMusic))
+            ->where($this->tableColumn(DatabaseTable::ZxMusic, 'votesAmount'), '>', 0)
+            ->max($this->tableColumn(DatabaseTable::ZxMusic, 'votes'));
 
         return [
-            'min' => $min === null ? null : (float)$min,
-            'max' => $max === null ? null : (float)$max,
+            'min' => $min,
+            'max' => $max,
         ];
     }
 
@@ -343,22 +355,14 @@ readonly final class TunesRepository
      */
     public function getAvailableFormatGroups(): array
     {
-        $rows = $this->db->table(self::TABLE)
-            ->select(self::TABLE . '.formatGroup as formatGroup')
-            ->where(self::TABLE . '.formatGroup', '!=', '')
+        /** @var string[] $formatGroups */
+        $formatGroups = $this->db->table($this->tableName(DatabaseTable::ZxMusic))
+            ->where($this->tableColumn(DatabaseTable::ZxMusic, 'formatGroup'), '!=', '')
             ->distinct()
-            ->orderBy(self::TABLE . '.formatGroup')
-            ->get();
+            ->orderBy($this->tableColumn(DatabaseTable::ZxMusic, 'formatGroup'))
+            ->pluck($this->tableColumn(DatabaseTable::ZxMusic, 'formatGroup'));
 
-        $items = [];
-        foreach ($rows as $row) {
-            $value = (string)($row['formatGroup'] ?? '');
-            if ($value !== '') {
-                $items[] = $value;
-            }
-        }
-
-        return $items;
+        return $formatGroups;
     }
 
     /**
@@ -366,22 +370,14 @@ readonly final class TunesRepository
      */
     public function getAvailableFormats(): array
     {
-        $rows = $this->db->table(self::TABLE)
-            ->select(self::TABLE . '.type as type')
-            ->where(self::TABLE . '.type', '!=', '')
+        /** @var string[] $formats */
+        $formats = $this->db->table($this->tableName(DatabaseTable::ZxMusic))
+            ->where($this->tableColumn(DatabaseTable::ZxMusic, 'type'), '!=', '')
             ->distinct()
-            ->orderBy(self::TABLE . '.type')
-            ->get();
+            ->orderBy($this->tableColumn(DatabaseTable::ZxMusic, 'type'))
+            ->pluck($this->tableColumn(DatabaseTable::ZxMusic, 'type'));
 
-        $items = [];
-        foreach ($rows as $row) {
-            $value = (string)($row['type'] ?? '');
-            if ($value !== '') {
-                $items[] = $value;
-            }
-        }
-
-        return $items;
+        return $formats;
     }
 
     /**
@@ -389,33 +385,47 @@ readonly final class TunesRepository
      */
     public function getAuthorCountryIds(): array
     {
-        $rows = $this->db->table(self::TABLE)
+        /** @var int[] $countryIds */
+        $countryIds = $this->db->table($this->tableName(DatabaseTable::ZxMusic))
             ->join(
-                self::STRUCTURE_LINKS_TABLE,
-                function ($join) {
-                    $join->on(self::STRUCTURE_LINKS_TABLE . '.childStructureId', '=', self::TABLE . '.id')
-                        ->where(self::STRUCTURE_LINKS_TABLE . '.type', '=', self::AUTHORSHIP_TYPE);
-                }
-            )
-            ->join(
-                self::AUTHOR_TABLE,
-                self::AUTHOR_TABLE . '.id',
+                $this->tableName(DatabaseTable::StructureLinks),
+                $this->tableColumn(DatabaseTable::StructureLinks, 'childStructureId'),
                 '=',
-                self::STRUCTURE_LINKS_TABLE . '.parentStructureId'
+                $this->tableColumn(DatabaseTable::ZxMusic, 'id')
             )
-            ->where(self::AUTHOR_TABLE . '.country', '!=', 0)
+            ->where($this->tableColumn(DatabaseTable::StructureLinks, 'type'), '=', LinkTypes::AUTHOR_MUSIC->value)
+            ->join(
+                $this->tableName(DatabaseTable::Author),
+                $this->tableColumn(DatabaseTable::Author, 'id'),
+                '=',
+                $this->tableColumn(DatabaseTable::StructureLinks, 'parentStructureId')
+            )
+            ->where($this->tableColumn(DatabaseTable::Author, 'country'), '!=', 0)
             ->distinct()
-            ->orderBy(self::AUTHOR_TABLE . '.country')
-            ->get([self::AUTHOR_TABLE . '.country as country']);
+            ->orderBy($this->tableColumn(DatabaseTable::Author, 'country'))
+            ->pluck($this->tableColumn(DatabaseTable::Author, 'country'));
 
-        $items = [];
-        foreach ($rows as $row) {
-            $value = (int)($row['country'] ?? 0);
-            if ($value !== 0) {
-                $items[] = $value;
-            }
-        }
+        return $countryIds;
+    }
 
-        return $items;
+    private function getUserVotesQuery(int $userId): Builder
+    {
+        return $this->db->table($this->tableName(DatabaseTable::VotesHistory))
+            ->select($this->tableColumn(DatabaseTable::VotesHistory, 'elementId'))
+            ->where($this->tableColumn(DatabaseTable::VotesHistory, 'type'), '=', StructureType::ZxMusic->value)
+            ->where($this->tableColumn(DatabaseTable::VotesHistory, 'userId'), '=', $userId);
+    }
+
+    /**
+     * @return int[]
+     */
+    private function getAuthorAndAliasIds(int $authorId): array
+    {
+        /** @var int[] $aliasIds */
+        $aliasIds = $this->db->table($this->tableName(DatabaseTable::AuthorAlias))
+            ->where('authorId', '=', $authorId)
+            ->pluck('id');
+
+        return [$authorId, ...$aliasIds];
     }
 }
