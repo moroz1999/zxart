@@ -21,7 +21,7 @@ use ZxArt\ZxProdCategories\CompilationCategoryIds;
  * @property int $year
  * @property string $youtubeId
  * @property string $description
- * @property bool $htmlDescription
+ * @property bool $htmlDescription @deprecated use {@see self::isHtmlDescription()} — DB stores 0/1, magic-property returns string
  * @property string $instructions
  * @property string $legalStatus
  * @property string $compo
@@ -30,7 +30,7 @@ use ZxArt\ZxProdCategories\CompilationCategoryIds;
  * @property string $externalLink
  * @property int $party
  * @property int $commentsAmount
- * @property string $votesAmount
+ * @property string $votesAmount @deprecated use {@see self::getVotesAmount()} — magic-property returns DB string
  * @property int[] $categories
  * @property groupElement[] $publishers
  * @property groupElement[] $groups
@@ -39,7 +39,7 @@ use ZxArt\ZxProdCategories\CompilationCategoryIds;
  * @property zxProdElement[] $compilations
  * @property zxProdElement[] $series
  * @property pressArticleElement[] $articles
- * @property string $votes
+ * @property string $votes @deprecated use {@see self::getVotes()} — magic-property returns DB string
  * @property int $partyplace
  * @property int $denyVoting
  * @property int $denyComments
@@ -1189,6 +1189,21 @@ class zxProdElement extends ZxArtItem implements
             return $this->description;
         }
         return '';
+    }
+
+    public function getVotes(): float
+    {
+        return (float)$this->votes;
+    }
+
+    public function getVotesAmount(): int
+    {
+        return (int)$this->votesAmount;
+    }
+
+    public function isHtmlDescription(): bool
+    {
+        return (bool)$this->htmlDescription;
     }
 
     public function getGeneratedDescription()

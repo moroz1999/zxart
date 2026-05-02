@@ -91,8 +91,8 @@ readonly class ProdRelatedProdsService
                 year: $prod->year,
                 legalStatus: $legalStatus,
                 legalStatusLabel: $this->translate('legalstatus.' . $legalStatus),
-                votes: $prod->votes,
-                votesAmount: $prod->votesAmount,
+                votes: $prod->getVotes(),
+                votesAmount: $prod->getVotesAmount(),
                 imageUrl: $imageUrl,
             );
         }

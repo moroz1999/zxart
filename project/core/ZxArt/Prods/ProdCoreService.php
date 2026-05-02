@@ -59,7 +59,7 @@ readonly class ProdCoreService
             externalLink: $element->externalLink,
             youtubeId: $element->youtubeId,
             description: $element->getDescription(),
-            htmlDescription: (bool)$element->htmlDescription,
+            htmlDescription: $element->isHtmlDescription(),
             instructions: $element->instructions,
             generatedDescription: (string)$element->getGeneratedDescription(),
             dateCreated: $element->dateCreated,
@@ -178,8 +178,8 @@ readonly class ProdCoreService
         $userVote = $userVoteRaw === null || $userVoteRaw === '' ? null : (int)$userVoteRaw;
 
         return new ProdVotingDto(
-            votes: (float)$element->votes,
-            votesAmount: (int)$element->votesAmount,
+            votes: $element->getVotes(),
+            votesAmount: $element->getVotesAmount(),
             userVote: $userVote,
             denyVoting: $denyVoting,
             votePercent: $denyVoting ? null : (float)$element->getVotePercent(),

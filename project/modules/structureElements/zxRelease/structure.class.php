@@ -20,8 +20,8 @@ use ZxFiles\BasicFile;
  * @property string $title
  * @property string $file
  * @property string $fileName
- * @property int $downloads
- * @property int $plays
+ * @property int $downloads @deprecated use {@see self::getDownloadsCount()} — DB column is text, magic-property returns string
+ * @property int $plays @deprecated use {@see self::getPlaysCount()} — DB column is text, magic-property returns string
  * @property int $year
  * @property string $releaseType
  * @property string|null $description
@@ -493,6 +493,16 @@ class zxReleaseElement extends ZxArtItem implements
             }
         }
         return null;
+    }
+
+    public function getDownloadsCount(): int
+    {
+        return (int)$this->downloads;
+    }
+
+    public function getPlaysCount(): int
+    {
+        return (int)$this->plays;
     }
 
     /**

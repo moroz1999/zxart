@@ -80,8 +80,8 @@ readonly class ProdReleasesService
             emulatorType: $release->getEmulatorType(),
             prodLegalStatus: $prodLegalStatus,
             prodExternalLink: $prodExternalLink,
-            downloadsCount: $release->downloads,
-            playsCount: $release->plays,
+            downloadsCount: $release->getDownloadsCount(),
+            playsCount: $release->getPlaysCount(),
             externalLinks: $this->infoBuilder->buildLinks($release, $theme),
         );
     }
