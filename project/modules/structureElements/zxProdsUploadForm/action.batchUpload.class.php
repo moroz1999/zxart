@@ -79,7 +79,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                     $zxProdElement->renewPartyLink();
                     $zxProdElement->updateTagsInfo();
                     $zxProdElement->updateYear();
-                    $zxProdElement->persistAuthorship(EntityType::Prod->value);
+                    $zxProdElement->persistAuthorship(EntityType::Prod);
 
                     $zxProdElement->executeAction('receiveFiles');
 
@@ -194,7 +194,6 @@ class batchUploadZxProdsUploadForm extends structureElementAction
         ];
     }
 }
-
 
 
 

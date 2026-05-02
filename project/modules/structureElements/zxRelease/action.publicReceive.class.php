@@ -25,7 +25,7 @@ class publicReceiveZxRelease extends structureElementAction
 
             $structureElement->persistElementData();
 
-            $structureElement->persistAuthorship(EntityType::Release->value);
+            $structureElement->persistAuthorship(EntityType::Release);
 
             $structureElement->executeAction('receiveFiles');
             $structureElement->updateFileStructure();
@@ -60,5 +60,4 @@ class publicReceiveZxRelease extends structureElementAction
         $validators['zxProd'][] = 'notEmpty';
     }
 }
-
 

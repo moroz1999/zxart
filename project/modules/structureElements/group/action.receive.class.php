@@ -68,5 +68,3 @@ class receiveGroup extends structureElementAction
     {
     }
 }
-
-

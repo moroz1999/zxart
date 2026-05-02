@@ -29,7 +29,7 @@ class publicAddZxRelease extends structureElementAction
             $structureElement->userId = $currentUserService->getCurrentUser()->id;
             $structureElement->persistElementData();
 
-            $structureElement->persistAuthorship(EntityType::Release->value);
+            $structureElement->persistAuthorship(EntityType::Release);
 
             $structureElement->executeAction('receiveFiles');
 
@@ -75,7 +75,6 @@ class publicAddZxRelease extends structureElementAction
         $validators['zxProd'][] = 'notEmpty';
     }
 }
-
 
 
 

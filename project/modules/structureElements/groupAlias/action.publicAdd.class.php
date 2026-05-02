@@ -20,7 +20,7 @@ class publicAddGroupAlias extends structureElementAction
             $structureElement->structureName = $structureElement->title;
 
             $structureElement->persistElementData();
-            $structureElement->persistAuthorship(EntityType::Group->value);
+            $structureElement->persistAuthorship(EntityType::Group);
 
             $privilegesManager->setPrivilege(
                 $user->id,

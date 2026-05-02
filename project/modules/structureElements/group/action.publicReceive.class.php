@@ -23,7 +23,7 @@ class publicReceiveGroup extends structureElementAction
             $structureElement->persistElementData();
             $structureElement->checkParentLetter();
             $structureElement->persistSubGroupConnections();
-            $structureElement->persistAuthorship(EntityType::Group->value);
+            $structureElement->persistAuthorship(EntityType::Group);
             $structureElement->recalculate();
 
             $controller->redirect($structureElement->URL);
@@ -59,5 +59,4 @@ class publicReceiveGroup extends structureElementAction
     {
     }
 }
-
 

@@ -23,7 +23,7 @@ class publicAddGroup extends structureElementAction
             $structureElement->persistElementData();
             $structureElement->checkParentLetter();
             $structureElement->persistSubGroupConnections();
-            $structureElement->persistAuthorship(EntityType::Group->value);
+            $structureElement->persistAuthorship(EntityType::Group);
             $structureElement->recalculate();
 
             $privilegesManager = $this->getService(privilegesManager::class);
@@ -69,7 +69,6 @@ class publicAddGroup extends structureElementAction
     {
     }
 }
-
 
 
 

@@ -14,7 +14,7 @@ class publicReceiveGroupAlias extends structureElementAction
         if ($this->validated) {
             $structureElement->structureName = $structureElement->title;
             $structureElement->persistElementData();
-            $structureElement->persistAuthorship(EntityType::Group->value);
+            $structureElement->persistAuthorship(EntityType::Group);
 
             $controller->redirect($structureElement->URL);
         }
@@ -39,5 +39,4 @@ class publicReceiveGroupAlias extends structureElementAction
     }
 
 }
-
 

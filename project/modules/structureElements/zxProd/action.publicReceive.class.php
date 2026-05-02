@@ -26,7 +26,7 @@ class publicReceiveZxProd extends structureElementAction
 
             $structureElement->persistElementData();
             $structureElement->checkAndPersistCategories();
-            $structureElement->persistAuthorship(EntityType::Prod->value);
+            $structureElement->persistAuthorship(EntityType::Prod);
 
             $queueService = $this->getService(QueueService::class);
             $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
@@ -75,5 +75,4 @@ class publicReceiveZxProd extends structureElementAction
     {
     }
 }
-
 
