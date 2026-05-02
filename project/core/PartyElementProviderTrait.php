@@ -4,22 +4,32 @@ trait PartyElementProviderTrait
 {
     use CacheOperatingElement;
 
-    private $partyElement;
+    /**
+     * @var partyElement|null
+     */
+    private $partyElement = null;
 
+    /**
+     * @return partyElement|null
+     */
     public function getPartyElement()
     {
         if ($this->partyElement === null) {
-            $this->partyElement = false;
-
             $cache = $this->getElementsListCache('p', 60 * 60 * 24);
             if (($parties = $cache->load()) === null) {
                 if ($partyId = $this->getPartyId()) {
                     $structureManager = $this->getService('structureManager');
-                    $this->partyElement = $structureManager->getElementById($partyId);
+                    $partyElement = $structureManager->getElementById($partyId);
+                    if ($partyElement instanceof partyElement) {
+                        $this->partyElement = $partyElement;
+                    }
                 }
                 $cache->save([$this->partyElement]);
             } else {
-                $this->partyElement = reset($parties);
+                $partyElement = reset($parties);
+                if ($partyElement instanceof partyElement) {
+                    $this->partyElement = $partyElement;
+                }
             }
         }
         return $this->partyElement;

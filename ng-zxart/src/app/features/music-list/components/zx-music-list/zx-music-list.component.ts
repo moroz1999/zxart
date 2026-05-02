@@ -11,7 +11,7 @@ import {PlayerService} from '../../../player/services/player.service';
 import {MusicListService} from '../../services/music-list.service';
 
 @Component({
-  selector: 'zx-music-list',
+  selector: 'zx-music-list-inline',
   standalone: true,
   imports: [
     CommonModule,

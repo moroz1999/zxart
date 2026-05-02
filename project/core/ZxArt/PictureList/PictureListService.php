@@ -58,7 +58,8 @@ readonly class PictureListService
             return ['type' => 'none', 'items' => []];
         }
 
-        if (method_exists($pictureElement, 'getReleaseElement') && ($releaseElement = $pictureElement->getReleaseElement())) {
+        $releaseElement = $pictureElement->getReleaseElement();
+        if ($releaseElement !== null) {
             if (method_exists($releaseElement, 'getBestPictures')) {
                 $pictures = (array)($releaseElement->getBestPictures(3, $pictureId) ?? []);
                 return ['type' => 'game', 'items' => $this->transformElements($pictures)];

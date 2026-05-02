@@ -17,7 +17,8 @@ class publicReceiveZxPicture extends structureElementAction
             $structureElement->prepareActualData();
 
             if (trim($structureElement->title) === '') {
-                if ($game = $structureElement->getReleaseElement()) {
+                $game = $structureElement->getReleaseElement();
+                if ($game !== null) {
                     $structureElement->title = $game->title;
                 } elseif ($structureElement->getDataChunk("image")->originalName !== null) {
                     $info = pathinfo($structureElement->getDataChunk("image")->originalName);
@@ -109,7 +110,6 @@ class publicReceiveZxPicture extends structureElementAction
     {
     }
 }
-
 
 
 

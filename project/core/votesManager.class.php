@@ -95,25 +95,26 @@ class votesManager implements DependencyInjectionContextInterface
         return $this->elementVotesList[$elementId];
     }
 
-    public function getElementUserVote($id, $type)
+    public function getElementUserVote($id, $type): ?int
     {
         if (!isset($this->elementsTypesIndex[$type])) {
             $this->elementsTypesIndex[$type] = [];
         }
 
-        if (!isset($this->elementsTypesIndex[$type][$id])) {
+        if (!array_key_exists($id, $this->elementsTypesIndex[$type])) {
+            $this->elementsTypesIndex[$type][$id] = null;
             if ($elements = $this->getService('structureManager')->getLoadedElementsByType($type)) {
                 $idList = [];
                 foreach ($elements as $element) {
-                    if (!isset($this->elementsTypesIndex[$type][$element->id])) {
+                    if (!array_key_exists($element->id, $this->elementsTypesIndex[$type])) {
                         $idList[] = $element->id;
-                        $this->elementsTypesIndex[$type][$element->id] = false;
+                        $this->elementsTypesIndex[$type][$element->id] = null;
                     }
                 }
 
                 if ($records = $this->loadVotesByIdList($idList)) {
                     foreach ($records as $row) {
-                        $this->elementsTypesIndex[$type][$row['elementId']] = $row['value'];
+                        $this->elementsTypesIndex[$type][$row['elementId']] = (int)$row['value'];
                     }
                 }
             }
@@ -220,6 +221,4 @@ class votesManager implements DependencyInjectionContextInterface
         return $votes;
     }
 }
-
-
 

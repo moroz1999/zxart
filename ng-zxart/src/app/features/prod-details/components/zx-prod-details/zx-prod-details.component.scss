@@ -16,3 +16,20 @@
   margin: 0;
   color: var(--color-text-muted);
 }
+
+.prod-details__top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-16);
+  align-items: flex-start;
+}
+
+.prod-details__info {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.prod-details__youtube {
+  flex: 0 1 480px;
+  min-width: 0;
+}

@@ -21,7 +21,8 @@ class publicReceiveZxMusic extends structureElementAction
             }
 
             if (trim($structureElement->title) == '') {
-                if ($game = $structureElement->getReleaseElement()) {
+                $game = $structureElement->getReleaseElement();
+                if ($game !== null) {
                     $structureElement->title = $game->title;
                 } else {
                     if (!is_null($structureElement->getDataChunk("file")->originalName)) {
@@ -100,7 +101,6 @@ class publicReceiveZxMusic extends structureElementAction
     {
     }
 }
-
 
 
 

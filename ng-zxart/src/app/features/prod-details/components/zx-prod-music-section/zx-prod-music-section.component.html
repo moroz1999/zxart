@@ -5,5 +5,5 @@
 >
   <h2 zxHeading2 class="prod-music-section__title">{{ 'prod-details.music' | translate }}</h2>
   <zx-skeleton *ngIf="!mounted" variant="tune-table" [count]="3"></zx-skeleton>
-  <zx-music-list *ngIf="mounted" [elementId]="elementId"></zx-music-list>
+  <zx-music-list-inline *ngIf="mounted" [elementId]="elementId"></zx-music-list-inline>
 </div>

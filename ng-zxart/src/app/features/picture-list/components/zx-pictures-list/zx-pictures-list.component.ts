@@ -13,7 +13,7 @@ import {PictureListService} from '../../services/picture-list.service';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 
 @Component({
-  selector: 'zx-pictures-list',
+  selector: 'zx-pictures-list-inline',
   standalone: true,
   imports: [
     CommonModule,

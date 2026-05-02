@@ -44,6 +44,9 @@ abstract class structureElement implements DependencyInjectionContextInterface
     public $structurePath;
     public $requested = false;
     public $final = false;
+    /**
+     * @var string|null
+     */
     public $URL;
     public $role;
     protected $currentLanguage;
@@ -1287,6 +1290,9 @@ abstract class structureElement implements DependencyInjectionContextInterface
         return $subMenus;
     }
 
+    /**
+     * @return string|null
+     */
     public function getUrl($action = null)
     {
         if ($action) {

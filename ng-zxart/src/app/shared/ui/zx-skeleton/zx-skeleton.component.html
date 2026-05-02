@@ -65,6 +65,13 @@
         }
       </div>
     }
+    @case ('screenshot-grid') {
+      <div class="skeleton-screenshot-grid">
+        @for (i of items; track i) {
+          <div class="skeleton-screenshot skeleton-bone" [style.animation-delay.ms]="i * 80"></div>
+        }
+      </div>
+    }
     @case ('tune-table') {
       @for (i of items; track i) {
         <div class="skeleton-tune-row" [style.animation-delay.ms]="i * 50">

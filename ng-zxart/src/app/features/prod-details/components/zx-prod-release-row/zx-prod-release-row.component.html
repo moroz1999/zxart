@@ -49,7 +49,7 @@
     <div class="release-row__hardware-items">
       <span *ngFor="let hw of release.hardware" class="release-row__hardware-item">{{ hw.title }}</span>
     </div>
-    <div *ngIf="release.description" class="release-row__description">{{ release.description }}</div>
+    <div *ngIf="release.description" class="release-row__description" [innerHTML]="release.description"></div>
   </td>
 
   <td class="release-row__format">
@@ -120,7 +120,7 @@
   (inViewport)="onScreenshotsInViewport()"
 >
   <td colspan="15" class="release-row__screenshots-cell">
-    <zx-skeleton *ngIf="screenshotsLoading" variant="picture-grid" [count]="2"></zx-skeleton>
+    <zx-skeleton *ngIf="screenshotsLoading" variant="screenshot-grid" [count]="2"></zx-skeleton>
 
     <ng-container *ngIf="screenshotsLoaded && screenshots.length > 0">
       <zx-picture-gallery-host></zx-picture-gallery-host>

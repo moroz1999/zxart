@@ -33,7 +33,11 @@ abstract class ZxArtItem extends structureElement implements
     protected $userVote;
     protected $authorIds;
     protected $votesList;
-    protected $releaseElement;
+    /**
+     * @var zxReleaseElement|null
+     */
+    protected $releaseElement = null;
+    protected bool $releaseElementLoaded = false;
     protected $votesType;
     protected $authorLinkType;
     protected $partyLinkType;
@@ -117,9 +121,7 @@ abstract class ZxArtItem extends structureElement implements
 
 
     /**
-     * @param mixed $userVote
-     *
-     * @return void
+     * @param int|null $userVote
      */
     public function setUserVote($userVote)
     {
@@ -127,7 +129,7 @@ abstract class ZxArtItem extends structureElement implements
     }
 
     /**
-     * @return mixed
+     * @return int|null
      */
     public function getUserVote()
     {
@@ -288,7 +290,8 @@ abstract class ZxArtItem extends structureElement implements
             if ($party = $this->getPartyElement()) {
                 $this->year = $party->getYear();
             }
-            if ($releaseElement = $this->getReleaseElement()) {
+            $releaseElement = $this->getReleaseElement();
+            if ($releaseElement !== null) {
                 $this->year = $releaseElement->year;
             }
         }
@@ -297,7 +300,8 @@ abstract class ZxArtItem extends structureElement implements
     public function getVotePercent()
     {
         if ($this->isVotingDenied()) {
-            return $this->getUserVote() / 5 * 100;
+            $userVote = $this->getUserVote();
+            return $userVote !== null ? $userVote / 5 * 100 : 0;
         } else {
             return $this->votes / 5 * 100;
         }
@@ -357,12 +361,18 @@ abstract class ZxArtItem extends structureElement implements
         return $linksManager->getConnectedIdList($this->id, 'playlist', 'child');
     }
 
+    /**
+     * @return zxReleaseElement|null
+     */
     public function getReleaseElement()
     {
-        if ($this->releaseElement === null) {
-            $this->releaseElement = false;
+        if ($this->releaseElementLoaded === false) {
+            $this->releaseElementLoaded = true;
             if ($this->game) {
-                $this->releaseElement = $this->getService('structureManager')->getElementById($this->game);
+                $releaseElement = $this->getService('structureManager')->getElementById($this->game);
+                if ($releaseElement instanceof zxReleaseElement) {
+                    $this->releaseElement = $releaseElement;
+                }
             }
         }
         return $this->releaseElement;

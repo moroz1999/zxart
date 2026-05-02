@@ -24,6 +24,9 @@ class controller
     public $directoryName;
     public $scriptName;
     public $domainURL;
+    /**
+     * @var string
+     */
     public $baseURL;
     public $rootURL;
     public $pathURL;

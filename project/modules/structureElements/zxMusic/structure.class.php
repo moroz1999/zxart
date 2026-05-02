@@ -9,15 +9,20 @@ use ZxArt\Queue\QueueType;
 /**
  * Class zxMusicElement
  *
- * @property int $partyplace
+ * @property string $partyplace @deprecated use {@see self::getPartyPlace()} - DB column is text, magic-property returns string
  * @property int $denyPlaying
- * @property int $commentsAmount
+ * @property string $commentsAmount @deprecated use {@see self::getCommentsAmount()} - DB column is text, magic-property returns string
  * @property string $title
  * @property string $mp3Name
  * @property string $file
  * @property string $fileName
+ * @property string $trackerFile
+ * @property string $trackerFileName
  * @property float $votes
- * @property int $votesAmount
+ * @property string $votesAmount @deprecated use {@see self::getVotesAmount()} - DB column is text, magic-property returns string
+ * @property string $plays @deprecated use {@see self::getPlaysCount()} - DB column is text, magic-property returns string
+ * @property string $type
+ * @property string $compo
  */
 class zxMusicElement extends ZxArtItem implements
     OpenGraphDataProviderInterface
@@ -107,7 +112,7 @@ class zxMusicElement extends ZxArtItem implements
         $data["title"] = $this->title;
         $data["link"] = $this->URL;
         $data["votes"] = $this->votes;
-        $data["votesAmount"] = $this->votesAmount;
+        $data["votesAmount"] = $this->getVotesAmount();
         $data["userVote"] = $this->getUserVote();
         $data["votePercent"] = $this->getVotePercent();
         $data["mp3FilePath"] = $this->getMp3FilePath();
@@ -159,7 +164,7 @@ class zxMusicElement extends ZxArtItem implements
         }
 
         $releaseElement = $this->getReleaseElement();
-        if ($releaseElement) {
+        if ($releaseElement !== null) {
             $parts[] = $releaseElement->title;
         }
 
@@ -249,6 +254,56 @@ class zxMusicElement extends ZxArtItem implements
             return self::MP3_STORAGE_PATH . $this->mp3Name;
         }
         return false;
+    }
+
+    public function getFormat(): string
+    {
+        return (string)$this->type;
+    }
+
+    public function getDisplayYear(): ?string
+    {
+        $year = (int)$this->year;
+        return $year > 0 ? (string)$year : null;
+    }
+
+    public function getPlaysCount(): int
+    {
+        return (int)$this->plays;
+    }
+
+    public function getVotesAmount(): int
+    {
+        return (int)$this->votesAmount;
+    }
+
+    public function getCommentsAmount(): int
+    {
+        return (int)$this->commentsAmount;
+    }
+
+    public function getOriginalFileId(): ?string
+    {
+        $fileId = (string)$this->file;
+        return $fileId !== '' ? $fileId : null;
+    }
+
+    public function getTrackerFileId(): ?string
+    {
+        $fileId = (string)$this->trackerFile;
+        return $fileId !== '' ? $fileId : null;
+    }
+
+    public function getPartyPlace(): ?int
+    {
+        $place = (int)$this->partyplace;
+        return $place > 0 ? $place : null;
+    }
+
+    public function getCompoName(): ?string
+    {
+        $compo = (string)$this->compo;
+        return $compo !== '' ? $compo : null;
     }
 
     public function generateConvertedBaseName($extraText = ''): string|null
@@ -448,7 +503,7 @@ class zxMusicElement extends ZxArtItem implements
         ];
 
         $data["description"] = $this->getTextContent();
-        $data["commentCount"] = $this->commentsAmount;
+        $data["commentCount"] = $this->getCommentsAmount();
         $data["author"] = [
             "@type" => 'Person',
             "name" => $this->getAuthorNamesString(),
@@ -457,11 +512,12 @@ class zxMusicElement extends ZxArtItem implements
             "@type" => 'Person',
             "name" => $this->getAuthorNamesString(),
         ];
-        if ($this->votesAmount) {
+        $votesAmount = $this->getVotesAmount();
+        if ($votesAmount > 0) {
             $data["aggregateRating"] = [
                 "@type" => 'AggregateRating',
                 "ratingValue" => $this->votes,
-                "ratingCount" => $this->votesAmount,
+                "ratingCount" => $votesAmount,
             ];
         }
         if ($path = $this->getMp3FilePath()) {

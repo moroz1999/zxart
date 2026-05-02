@@ -8,3 +8,31 @@
     text-decoration: underline;
   }
 }
+
+// Standard prods/cards grid — fixed 256px columns, breakpoints match the main prods list.
+// Use everywhere a list of zx-prod-block / zx-prod-card / similar fixed-width cards is rendered.
+@mixin prods-gallery {
+  display: grid;
+  gap: var(--gap-xl);
+  justify-content: space-between;
+  grid-template-columns: 1fr;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 256px 256px;
+  }
+  @media (min-width: 810px) {
+    grid-template-columns: 256px 256px 256px;
+  }
+  @media (min-width: 977px) {
+    grid-template-columns: 256px 256px;
+  }
+  @media (min-width: 1070px) {
+    grid-template-columns: 256px 256px 256px;
+  }
+  @media (min-width: 1420px) {
+    grid-template-columns: 256px 256px 256px 256px;
+  }
+  @media (min-width: 1850px) {
+    grid-template-columns: 256px 256px 256px 256px 256px;
+  }
+}

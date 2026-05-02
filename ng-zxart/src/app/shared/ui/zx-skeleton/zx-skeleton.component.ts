@@ -8,6 +8,7 @@ export type SkeletonVariant =
   | 'text'
   | 'prod-grid'
   | 'picture-grid'
+  | 'screenshot-grid'
   | 'tune-table'
   | 'search-groups';
 

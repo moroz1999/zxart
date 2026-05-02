@@ -15,7 +15,10 @@ use ServerSessionManager;
  */
 class CurrentUser
 {
-    public $id;
+    /**
+     * @var int|null
+     */
+    public $id = null;
     public $IP;
     public $userName = "";
     public $privileges = [];

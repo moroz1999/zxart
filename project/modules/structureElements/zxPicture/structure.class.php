@@ -321,7 +321,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         }
 
         $releaseElement = $this->getReleaseElement();
-        $group = $releaseElement ? $releaseElement->title : ($this->release ?? '');
+        $group = $releaseElement !== null ? $releaseElement->title : ($this->release ?? '');
         if ($group !== '') {
             $parts[] = $group;
         }
@@ -364,7 +364,8 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
                 }
             }
         }
-        if ($releaseElement = $this->getReleaseElement()) {
+        $releaseElement = $this->getReleaseElement();
+        if ($releaseElement !== null) {
             if ($gameMaterials = $releaseElement->getMaterialsList()) {
                 $number = 0;
                 foreach ($gameMaterials as $element) {

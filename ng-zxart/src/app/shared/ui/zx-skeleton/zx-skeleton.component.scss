@@ -193,6 +193,21 @@
   padding: var(--space-12);
 }
 
+// Screenshot grid skeleton — plain 256x192 bones (ZX Spectrum screen aspect)
+.skeleton-screenshot-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-16);
+}
+
+.skeleton-screenshot {
+  width: 256px;
+  height: 192px;
+  flex-shrink: 0;
+  opacity: 0;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
 // Row skeleton
 .skeleton-row {
   opacity: 0;

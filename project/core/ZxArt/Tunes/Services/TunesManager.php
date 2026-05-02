@@ -10,7 +10,10 @@ use structureManager;
 class TunesManager extends ElementsManager
 {
     const string TABLE = 'module_zxmusic';
-    protected $columnRelations = [];
+    /**
+     * @var array<string, array<string, bool>>
+     */
+    protected array $columnRelations = [];
 
     public function __construct(
         protected Connection        $db,
