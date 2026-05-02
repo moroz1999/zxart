@@ -29,6 +29,12 @@
 - Do NOT add a BOM header to any file.
 - ALWAYS use strict comparisons (`===`, `!==`). Avoid "falsy" and "truthy" checks (e.g., use `if ($var === true)` instead of `if ($var)`).
 - When receiving data from legacy CMS methods or properties that lack explicit return type hints (e.g. from `structureElement` properties or old CMS methods), explicitly cast them to the expected type (e.g., `(int)$element->id`, `(array)$manager->getData()`). If a method already has a native PHP type hint (e.g. `isEditable(): bool`), explicit casting is prohibited as redundant. Document these expectations via PHPDoc only if native type hints are missing.
+- Do NOT scatter `(int)/(float)/(bool)/(string)` casts in DTO constructors, service mappers, or other consumer code when the source is a `structureElement` magic-property whose `@property` docblock disagrees with the runtime value (e.g. `@property int $downloads` on `zxReleaseElement` while the DB column is `text` and the magic-property returns a string). The docblock is not enforced — magic-property hands back whatever the DB stored. Type the source instead:
+  - Add a typed accessor on the element class (e.g. `public function getDownloadsCount(): int { return (int)$this->downloads; }`) so the conversion lives in exactly one place.
+  - Use the **`is` prefix** for boolean accessors (e.g. `isHtmlDescription(): bool`, `isVotingDenied(): bool`). Do NOT use `get` for booleans — `getHtmlDescription()` is wrong; the verb prefix is what makes the call site read like a predicate. Use `has` only when the meaning is presence/cardinality (`hasReleases()`), not for plain boolean flags. `get` stays for non-boolean accessors (`getDownloadsCount()`, `getVotes()`).
+  - Mark the legacy `@property` line as `@deprecated use {@see self::xxx()}` with a short reason (e.g. "DB column is text — magic-property returns string"). This gives IDE/Psalm a single source of truth and surfaces remaining direct-property readers on hover.
+  - Call the accessor from DTO builders and services.
+  Existing direct-property usages elsewhere in legacy code can stay until they're touched — the deprecation tag flags them on read.
 - Do NOT use magic numbers. Use class constants for single values or Enums for sets of related values.
 - Do NOT use `const array` for a closed set of allowed string/int values (e.g., allowed sort columns, directions, statuses). Use a backed `enum` instead — it provides type safety, exhaustiveness checks, and eliminates `in_array` validation boilerplate.
 
