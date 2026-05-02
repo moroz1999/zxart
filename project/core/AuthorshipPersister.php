@@ -5,10 +5,9 @@ use ZxArt\Shared\EntityType;
 
 trait AuthorshipPersister
 {
-    public function persistAuthorship($type): void
+    public function persistAuthorship(EntityType $entityType): void
     {
         $authorshipRepository = $this->getService(AuthorshipRepository::class);
-        $entityType = $type instanceof EntityType ? $type : EntityType::from($type);
         $existingRecords = $authorshipRepository->getElementAuthorsRecords($this->id, $entityType);
 
         $rolesInfo = $this->getValue('addAuthorRole');
