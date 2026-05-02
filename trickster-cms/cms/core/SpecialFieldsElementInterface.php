@@ -1,6 +1,6 @@
 <?php
 
-interface specialFieldsElementInterface
+interface SpecialFieldsElementInterface
 {
     public function getSpecialFields();
 

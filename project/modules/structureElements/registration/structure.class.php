@@ -44,50 +44,6 @@ class registrationElement extends menuDependantStructureElement
         $moduleStructure['dynamicFieldsData'] = 'array';
     }
 
-    /**
-     * @return (bool|mixed|string)[][]
-     *
-     * @psalm-return list{0?: array{title: mixed, code: mixed, url: mixed, connected: bool, icon: string},...}
-     */
-    public function getSocialPluginsOptions(): array
-    {
-        $result = [];
-        $existingConnections = [];
-        $currentUserService = $this->getService(CurrentUserService::class);
-        $user = $currentUserService->getCurrentUser();
-        $registrationMode = $this->type == 'registration';
-        $currentUserId = $user->userName !== 'anonymous' ? (int)$user->readUserId() : 0;
-
-        if ($currentUserId > 0) {
-            $socialDataManager = $this->getService(SocialDataManager::class);
-            $existingConnections = $socialDataManager->getCmsUserSocialNetworks($currentUserId);
-        }
-        $controller = controller::getInstance();
-        $socialDataManager = $this->getService(SocialDataManager::class);
-        $socialPlugins = $socialDataManager->getSocialPlugins();
-        foreach ($socialPlugins as $element) {
-            $iconUrl = '';
-            if ($element->icon) {
-                $iconUrl = $controller->baseURL . 'image/type:registrationSocialPluginIcon/id:'
-                    . $element->icon . '/filename:' . $element->iconOriginalName;
-            }
-            $connected = in_array($element->getName(), $existingConnections);
-            $action = 'login';
-            if (!$registrationMode) {
-                $action = $connected ? 'disconnect' : 'connect';
-            }
-            $url = $element->getSocialActionUrl($action);
-            $result[] = [
-                'title' => $element->title,
-                'code' => $element->getName(),
-                'url' => $url,
-                'connected' => $connected,
-                'icon' => $iconUrl,
-            ];
-        }
-        return $result;
-    }
-
     //TODO: investigate. Is it used anywhere?
     public function getFieldOptions()
     {

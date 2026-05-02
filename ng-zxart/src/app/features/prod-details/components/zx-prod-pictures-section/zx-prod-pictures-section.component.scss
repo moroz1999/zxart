@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+.prod-pictures-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.prod-pictures-section__title {
+  margin: 0;
+}

@@ -102,7 +102,11 @@
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('sorting', {}\\), indent=2\\)\\)\")",
       "Bash(node:*)",
       "Skill(update-config)",
-      "mcp__jetbrains__get_file_problems"
+      "mcp__jetbrains__get_file_problems",
+      "Read(//tmp/**)",
+      "Bash(composer psalm *)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(echo \"exit=$?\")"
     ]
   },
   "enabledPlugins": {

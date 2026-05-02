@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+.prod-music-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.prod-music-section__title {
+  margin: 0;
+}

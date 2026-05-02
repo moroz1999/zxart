@@ -1,0 +1,46 @@
+<div
+  class="prod-maps-section"
+  [appInViewport]="!loaded && !loading"
+  (inViewport)="onInViewport()"
+>
+  <ng-container *ngIf="loading || (loaded && hasContent)">
+    <h2 zxHeading2 class="prod-maps-section__title">{{ 'prod-details.maps' | translate }}</h2>
+
+    <zx-skeleton *ngIf="loading" variant="picture-grid" [count]="2"></zx-skeleton>
+
+    <ng-container *ngIf="loaded">
+      <zx-button
+        *ngIf="mapsUrl"
+        size="sm"
+        color="outlined"
+        [href]="mapsUrl"
+        target="_blank"
+        class="prod-maps-section__speccymaps"
+      >{{ 'prod-details.speccymaps' | translate }}</zx-button>
+
+      <ng-container *ngIf="files.length > 0">
+        <zx-picture-gallery-host></zx-picture-gallery-host>
+
+        <div class="prod-maps-section__grid">
+          <figure
+            *ngFor="let file of files; let i = index"
+            class="prod-maps-section__item"
+          >
+            <img
+              *ngIf="file.imageUrl"
+              class="prod-maps-section__thumb"
+              loading="lazy"
+              [src]="file.imageUrl"
+              [alt]="file.title"
+              [lightbox]="i"
+              [gallery]="galleryId"
+            />
+            <figcaption *ngIf="file.author" zxCaption>
+              {{ file.author }}
+            </figcaption>
+          </figure>
+        </div>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</div>

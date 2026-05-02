@@ -1,0 +1,28 @@
+<div
+  class="prod-series-section"
+  [appInViewport]="!loaded && !loading"
+  (inViewport)="onInViewport()"
+>
+  <ng-container *ngIf="loading || (loaded && series.length > 0)">
+    <h2 zxHeading2 class="prod-series-section__title">{{ 'prod-details.series' | translate }}</h2>
+
+    <zx-skeleton *ngIf="loading" variant="prod-grid" [count]="4"></zx-skeleton>
+
+    <div *ngIf="loaded && series.length > 0" class="prod-series-section__list">
+      <section
+        *ngFor="let entry of series; trackBy: trackSeriesById"
+        class="prod-series-section__entry"
+      >
+        <h3 zxHeading3 class="prod-series-section__entry-title">
+          <a [href]="entry.url">{{ entry.title }}</a>
+        </h3>
+        <div *ngIf="entry.prods.length > 0" class="prod-series-section__grid">
+          <zx-prod-card
+            *ngFor="let prod of entry.prods; trackBy: trackProdById"
+            [data]="prod"
+          ></zx-prod-card>
+        </div>
+      </section>
+    </div>
+  </ng-container>
+</div>

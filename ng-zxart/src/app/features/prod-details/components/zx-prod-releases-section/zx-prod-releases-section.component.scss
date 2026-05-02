@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+.prod-releases-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.prod-releases-section__title {
+  margin: 0;
+}

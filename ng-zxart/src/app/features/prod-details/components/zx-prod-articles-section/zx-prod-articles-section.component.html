@@ -1,0 +1,21 @@
+<div
+  class="prod-articles-section"
+  [appInViewport]="!loaded && !loading"
+  (inViewport)="onInViewport()"
+>
+  <ng-container *ngIf="loading || (loaded && articles.length > 0)">
+    <h2 zxHeading2 class="prod-articles-section__title">{{ 'prod-details.articles' | translate }}</h2>
+
+    <zx-skeleton *ngIf="loading" variant="comment" [count]="2"></zx-skeleton>
+
+    <div *ngIf="loaded && articles.length > 0" class="prod-articles-section__list">
+      <zx-article-preview
+        *ngFor="let article of articles; trackBy: trackById"
+        [title]="article.title"
+        [url]="article.url"
+        [snippetHtml]="article.introduction || null"
+        [authors]="article.authors"
+      ></zx-article-preview>
+    </div>
+  </ng-container>
+</div>

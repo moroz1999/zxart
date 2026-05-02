@@ -1,0 +1,35 @@
+<div
+  class="prod-inlays-section"
+  [appInViewport]="!loaded && !loading"
+  (inViewport)="onInViewport()"
+>
+  <ng-container *ngIf="loading || (loaded && files.length > 0)">
+    <h2 zxHeading2 class="prod-inlays-section__title">{{ 'prod-details.inlays' | translate }}</h2>
+
+    <zx-skeleton *ngIf="loading" variant="picture-grid" [count]="2"></zx-skeleton>
+
+    <ng-container *ngIf="loaded && files.length > 0">
+      <zx-picture-gallery-host></zx-picture-gallery-host>
+
+      <div class="prod-inlays-section__grid">
+        <figure
+          *ngFor="let file of files; let i = index"
+          class="prod-inlays-section__item"
+        >
+          <img
+            *ngIf="file.imageUrl"
+            class="prod-inlays-section__thumb"
+            loading="lazy"
+            [src]="file.imageUrl"
+            [alt]="file.title"
+            [lightbox]="i"
+            [gallery]="galleryId"
+          />
+          <figcaption *ngIf="file.author" zxCaption>
+            {{ file.author }}
+          </figcaption>
+        </figure>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>

@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace ZxArt\Prods\Dto;
 
+use Symfony\Component\ObjectMapper\Attribute\Map;
+use ZxArt\Prods\Rest\ProdFileRestDto;
+
+#[Map(target: ProdFileRestDto::class)]
 readonly class ProdFileDto
 {
     public function __construct(

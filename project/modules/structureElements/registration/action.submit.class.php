@@ -124,12 +124,6 @@ class submitRegistration extends structureElementAction
                                 foreach ($connectedUserGroupsIds as &$connectedUserGroupId) {
                                     $linksManager->linkElements($connectedUserGroupId, $userElement->getId(), 'userRelation');
                                 }
-                                $socialId = $user->getStorageAttribute('socialId');
-                                $socialType = $user->getStorageAttribute('socialType');
-                                if ($socialId && $socialType) {
-                                    $this->getService(SocialDataManager::class)
-                                        ->addSocialUser($socialType, $socialId, $userElement->getId());
-                                }
                             }
                             foreach ($mainData as $fieldName => $fieldValue) {
                                 $structureElement->$fieldName = $mainData[$fieldName];

@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+.prod-mentions-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.prod-mentions-section__title {
+  margin: 0;
+}
+
+.prod-mentions-section__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}

@@ -1,0 +1,146 @@
+<tr class="release-row">
+  <td class="release-row__title">
+    <a [href]="release.url">{{ release.title }}</a>
+    <span *ngIf="release.isRealtime" class="release-row__realtime" [title]="release.party?.compoLabel || ''" aria-hidden="true">⏱</span>
+  </td>
+
+  <td class="release-row__year">
+    <a *ngIf="release.year > 0" [href]="release.url">{{ release.year }}</a>
+  </td>
+
+  <td class="release-row__play">
+    <zx-button *ngIf="canPlay" size="sm" color="primary" (click)="onPlay()">
+      {{ 'release-row.play' | translate }}
+    </zx-button>
+  </td>
+
+  <td class="release-row__source">
+    <a *ngIf="release.party as party" [href]="party.url">
+      {{ party.abbreviation || party.title }}
+    </a>
+  </td>
+
+  <td class="release-row__partyplace">
+    <span *ngIf="medalClass as cls; else plainPlace" class="medal" [class]="cls">
+      {{ release.party?.place }}
+    </span>
+    <ng-template #plainPlace>
+      <ng-container *ngIf="release.party?.place as place">{{ place }}</ng-container>
+    </ng-template>
+  </td>
+
+  <td class="release-row__language">
+    <zx-prod-language-links [languages]="release.languages"></zx-prod-language-links>
+  </td>
+
+  <td class="release-row__version">{{ release.version }}</td>
+
+  <td class="release-row__releasetype">
+    <ng-container *ngIf="release.releaseTypeLabel">{{ release.releaseTypeLabel }}</ng-container>
+  </td>
+
+  <td class="release-row__releaseby">
+    <ng-container *ngFor="let group of release.releaseBy; let last = last">
+      <a [href]="group.url">{{ group.title }}</a><ng-container *ngIf="!last">, </ng-container>
+    </ng-container>
+  </td>
+
+  <td class="release-row__hardware">
+    <div class="release-row__hardware-items">
+      <span *ngFor="let hw of release.hardware" class="release-row__hardware-item">{{ hw.title }}</span>
+    </div>
+    <div *ngIf="release.description" class="release-row__description">{{ release.description }}</div>
+  </td>
+
+  <td class="release-row__format">
+    <ng-container *ngFor="let fmt of release.formats; let last = last">
+      <a class="release-row__format-link" [href]="fmt.catalogueUrl">
+        <span *ngIf="fmt.emoji" class="release-row__format-emoji">{{ fmt.emoji }}</span>
+        {{ fmt.label }}
+      </a><ng-container *ngIf="!last">, </ng-container>
+    </ng-container>
+  </td>
+
+  <td class="release-row__download">
+    <div class="release-row__download-buttons">
+      <zx-button *ngIf="showSalesButton"
+                 size="sm"
+                 color="secondary"
+                 [href]="release.prodExternalLink"
+                 target="_blank">
+        {{ 'release-row.donate' | translate }}
+      </zx-button>
+
+      <ng-container *ngIf="release.isDownloadable; else externalDownload">
+        <zx-button *ngIf="release.downloadUrl"
+                   size="sm"
+                   color="primary"
+                   [square]="true"
+                   [ariaLabel]="'release-row.download' | translate"
+                   [href]="release.downloadUrl"
+                   rel="nofollow">
+          ⬇
+        </zx-button>
+      </ng-container>
+      <ng-template #externalDownload>
+        <zx-button *ngIf="showPurchaseButton"
+                   size="sm"
+                   color="secondary"
+                   [href]="release.prodExternalLink"
+                   target="_blank">
+          {{ 'release-row.purchase' | translate }}
+        </zx-button>
+        <zx-button *ngIf="showOpenLinkButton"
+                   size="sm"
+                   color="primary"
+                   [href]="release.prodExternalLink"
+                   target="_blank">
+          {{ 'release-row.open-externallink' | translate }}
+        </zx-button>
+      </ng-template>
+    </div>
+  </td>
+
+  <td class="release-row__downloads">
+    <ng-container *ngIf="release.isDownloadable">{{ release.downloadsCount }}</ng-container>
+  </td>
+
+  <td class="release-row__plays">
+    <ng-container *ngIf="release.isDownloadable">{{ release.playsCount }}</ng-container>
+  </td>
+
+  <td class="release-row__links">
+    <zx-prod-external-links [links]="release.externalLinks"></zx-prod-external-links>
+  </td>
+</tr>
+
+<tr
+  class="release-row__screenshots-row"
+  [appInViewport]="!screenshotsLoaded && !screenshotsLoading"
+  (inViewport)="onScreenshotsInViewport()"
+>
+  <td colspan="15" class="release-row__screenshots-cell">
+    <zx-skeleton *ngIf="screenshotsLoading" variant="picture-grid" [count]="2"></zx-skeleton>
+
+    <ng-container *ngIf="screenshotsLoaded && screenshots.length > 0">
+      <zx-picture-gallery-host></zx-picture-gallery-host>
+
+      <div class="release-row__screenshots-grid">
+        <figure
+          *ngFor="let file of screenshots; let i = index"
+          class="release-row__screenshot"
+        >
+          <img
+            *ngIf="file.imageUrl"
+            class="release-row__screenshot-thumb"
+            loading="lazy"
+            [src]="file.imageUrl"
+            [alt]="file.title"
+            [lightbox]="i"
+            [gallery]="galleryId"
+          />
+        </figure>
+      </div>
+    </ng-container>
+  </td>
+</tr>

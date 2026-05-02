@@ -1,0 +1,41 @@
+<div
+  class="prod-releases-section"
+  [appInViewport]="!loaded && !loading"
+  (inViewport)="onInViewport()"
+>
+  <ng-container *ngIf="loading || (loaded && releases.length > 0)">
+    <h2 zxHeading2 class="prod-releases-section__title">{{ 'prod-details.releases' | translate }}</h2>
+
+    <zx-skeleton *ngIf="loading" variant="row" [count]="3"></zx-skeleton>
+
+    <zx-table *ngIf="loaded && releases.length > 0" size="sm">
+      <table>
+        <thead>
+          <tr>
+            <th class="prod-releases-section__col-title">{{ 'release-row.col-title' | translate }}</th>
+            <th class="prod-releases-section__col-year">{{ 'release-row.col-year' | translate }}</th>
+            <th class="prod-releases-section__col-play"></th>
+            <th class="prod-releases-section__col-source"></th>
+            <th class="prod-releases-section__col-partyplace"></th>
+            <th class="prod-releases-section__col-language">{{ 'release-row.col-language' | translate }}</th>
+            <th class="prod-releases-section__col-version"></th>
+            <th class="prod-releases-section__col-releasetype">{{ 'release-row.col-releasetype' | translate }}</th>
+            <th class="prod-releases-section__col-releaseby">{{ 'release-row.col-releaseby' | translate }}</th>
+            <th class="prod-releases-section__col-hardware">{{ 'release-row.col-hardware' | translate }}</th>
+            <th class="prod-releases-section__col-format"></th>
+            <th class="prod-releases-section__col-download"></th>
+            <th class="prod-releases-section__col-downloads">{{ 'release-row.col-downloads' | translate }}</th>
+            <th class="prod-releases-section__col-plays">{{ 'release-row.col-plays' | translate }}</th>
+            <th class="prod-releases-section__col-links"></th>
+          </tr>
+        </thead>
+        <tbody
+          *ngFor="let release of releases; trackBy: trackById"
+          zxProdReleaseRow
+          [release]="release"
+          [prodUrl]="prodUrl"
+        ></tbody>
+      </table>
+    </zx-table>
+  </ng-container>
+</div>

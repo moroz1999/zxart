@@ -7,7 +7,6 @@ lang="{$currentLanguage->iso6391}" class="{$currentThemeClass|default:'dark-mode
 	{include file=$theme->template("index.head.seo.tpl")}
 	{include file=$theme->template("index.head.opengraph.tpl")}
 	{include file=$theme->template("index.head.twitter.tpl")}
-	{include file=$theme->template("index.head.facebook.tpl")}
 	{if $theme->templateExists("index.head.extra.tpl")}
 		{include file=$theme->template("index.head.extra.tpl")}
 	{/if}

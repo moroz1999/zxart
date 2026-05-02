@@ -9,6 +9,25 @@ import {ZxProdInfoTableComponent} from '../zx-prod-info-table/zx-prod-info-table
 import {ZxProdEditingControlsComponent} from '../zx-prod-editing-controls/zx-prod-editing-controls.component';
 import {ZxProdDescriptionComponent} from '../zx-prod-description/zx-prod-description.component';
 import {ZxProdInstructionsComponent} from '../zx-prod-instructions/zx-prod-instructions.component';
+import {ZxProdScreenshotsSectionComponent,} from '../zx-prod-screenshots-section/zx-prod-screenshots-section.component';
+import {ZxProdReleasesSectionComponent,} from '../zx-prod-releases-section/zx-prod-releases-section.component';
+import {ZxProdArticlesSectionComponent,} from '../zx-prod-articles-section/zx-prod-articles-section.component';
+import {ZxProdMentionsSectionComponent,} from '../zx-prod-mentions-section/zx-prod-mentions-section.component';
+import {
+  ZxProdCompilationItemsSectionComponent,
+} from '../zx-prod-compilation-items-section/zx-prod-compilation-items-section.component';
+import {
+  ZxProdSeriesProdsSectionComponent,
+} from '../zx-prod-series-prods-section/zx-prod-series-prods-section.component';
+import {
+  ZxProdCompilationsSectionComponent,
+} from '../zx-prod-compilations-section/zx-prod-compilations-section.component';
+import {ZxProdSeriesSectionComponent,} from '../zx-prod-series-section/zx-prod-series-section.component';
+import {ZxProdMusicSectionComponent,} from '../zx-prod-music-section/zx-prod-music-section.component';
+import {ZxProdPicturesSectionComponent,} from '../zx-prod-pictures-section/zx-prod-pictures-section.component';
+import {ZxProdInlaysSectionComponent,} from '../zx-prod-inlays-section/zx-prod-inlays-section.component';
+import {ZxProdMapsSectionComponent,} from '../zx-prod-maps-section/zx-prod-maps-section.component';
+import {ZxProdRzxSectionComponent,} from '../zx-prod-rzx-section/zx-prod-rzx-section.component';
 
 @Component({
   selector: 'zx-prod-details',
@@ -21,6 +40,19 @@ import {ZxProdInstructionsComponent} from '../zx-prod-instructions/zx-prod-instr
     ZxProdEditingControlsComponent,
     ZxProdDescriptionComponent,
     ZxProdInstructionsComponent,
+    ZxProdScreenshotsSectionComponent,
+    ZxProdReleasesSectionComponent,
+    ZxProdArticlesSectionComponent,
+    ZxProdMentionsSectionComponent,
+    ZxProdCompilationItemsSectionComponent,
+    ZxProdSeriesProdsSectionComponent,
+    ZxProdCompilationsSectionComponent,
+    ZxProdSeriesSectionComponent,
+    ZxProdMusicSectionComponent,
+    ZxProdPicturesSectionComponent,
+    ZxProdInlaysSectionComponent,
+    ZxProdMapsSectionComponent,
+    ZxProdRzxSectionComponent,
   ],
   templateUrl: './zx-prod-details.component.html',
   styleUrls: ['./zx-prod-details.component.scss'],

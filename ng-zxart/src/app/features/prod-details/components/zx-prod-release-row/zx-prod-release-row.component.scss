@@ -1,0 +1,105 @@
+:host {
+  display: table-row-group;
+}
+
+.release-row__title {
+  white-space: nowrap;
+
+  a {
+    font-weight: 600;
+  }
+}
+
+.release-row__realtime {
+  display: inline-block;
+  margin-left: var(--space-4);
+  cursor: help;
+}
+
+.release-row__year,
+.release-row__version,
+.release-row__downloads,
+.release-row__plays,
+.release-row__partyplace {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.release-row__partyplace .medal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--zx-medal-size);
+  height: var(--zx-medal-size);
+  border-radius: 50%;
+  font-weight: 700;
+  color: var(--zx-medal-text-color);
+}
+
+.medal-gold {
+  background: var(--zx-medal-gold-bg);
+}
+
+.medal-silver {
+  background: var(--zx-medal-silver-bg);
+}
+
+.medal-bronze {
+  background: var(--zx-medal-bronze-bg);
+}
+
+.release-row__hardware-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-8);
+}
+
+.release-row__hardware-item {
+  white-space: nowrap;
+}
+
+.release-row__description {
+  margin-top: var(--space-4);
+  color: var(--text-color-muted);
+  font-size: var(--zx-table-cell-font-size-mobile, 13px);
+}
+
+.release-row__format-link {
+  white-space: nowrap;
+}
+
+.release-row__format-emoji {
+  margin-right: var(--space-4);
+}
+
+.release-row__download-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.release-row__links {
+  white-space: nowrap;
+}
+
+.release-row__screenshots-cell {
+  padding: var(--space-8) var(--space-12);
+}
+
+.release-row__screenshots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: var(--space-8);
+}
+
+.release-row__screenshot {
+  margin: 0;
+}
+
+.release-row__screenshot-thumb {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: pointer;
+}

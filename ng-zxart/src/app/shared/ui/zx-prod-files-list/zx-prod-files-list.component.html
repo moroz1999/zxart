@@ -1,0 +1,11 @@
+<ul class="zx-prod-files-list">
+  <li *ngFor="let file of files" class="zx-prod-files-list__item">
+    <a
+      class="zx-prod-files-list__link"
+      [href]="file.downloadUrl"
+      [target]="newWindow ? '_blank' : '_self'"
+      [rel]="newWindow ? 'noopener noreferrer' : null"
+    >{{ file.fileName }}</a>
+    <span *ngIf="file.author" zxBodySmMuted class="zx-prod-files-list__author"> — {{ file.author }}</span>
+  </li>
+</ul>

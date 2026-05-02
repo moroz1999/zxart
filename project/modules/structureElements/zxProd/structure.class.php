@@ -30,7 +30,7 @@ use ZxArt\ZxProdCategories\CompilationCategoryIds;
  * @property string $externalLink
  * @property int $party
  * @property int $commentsAmount
- * @property int $votesAmount
+ * @property string $votesAmount
  * @property int[] $categories
  * @property groupElement[] $publishers
  * @property groupElement[] $groups
@@ -39,7 +39,7 @@ use ZxArt\ZxProdCategories\CompilationCategoryIds;
  * @property zxProdElement[] $compilations
  * @property zxProdElement[] $series
  * @property pressArticleElement[] $articles
- * @property float $votes
+ * @property string $votes
  * @property int $partyplace
  * @property int $denyVoting
  * @property int $denyComments

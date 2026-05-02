@@ -4,11 +4,12 @@
         errorBaseline="psalm-baseline.xml"
         findUnusedBaselineEntry="false"
         findUnusedCode="true"
-        autoloader="project/core/psalm-bootstrap.php"
+        autoloader="./project/core/psalm-bootstrap.php"
         threads="12"
         scanThreads="12"
 >
     <projectFiles>
         <directory name="project" />
+        <directory name="trickster-cms" />
     </projectFiles>
 </psalm>

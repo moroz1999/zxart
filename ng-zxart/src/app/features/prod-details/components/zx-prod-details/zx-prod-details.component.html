@@ -11,6 +11,19 @@
     <div *ngIf="core.generatedDescription" class="prod-details__generated" [innerHTML]="core.generatedDescription"></div>
     <zx-prod-description *ngIf="core.description" [description]="core.description" [htmlDescription]="core.htmlDescription"></zx-prod-description>
     <zx-prod-instructions *ngIf="core.instructions" [instructions]="core.instructions"></zx-prod-instructions>
+    <zx-prod-screenshots-section [elementId]="core.elementId"></zx-prod-screenshots-section>
+    <zx-prod-releases-section [elementId]="core.elementId" [prodUrl]="core.prodUrl"></zx-prod-releases-section>
+    <zx-prod-articles-section [elementId]="core.elementId"></zx-prod-articles-section>
+    <zx-prod-mentions-section [elementId]="core.elementId"></zx-prod-mentions-section>
+    <zx-prod-compilation-items-section [elementId]="core.elementId"></zx-prod-compilation-items-section>
+    <zx-prod-series-prods-section [elementId]="core.elementId"></zx-prod-series-prods-section>
+    <zx-prod-compilations-section [elementId]="core.elementId"></zx-prod-compilations-section>
+    <zx-prod-series-section [elementId]="core.elementId"></zx-prod-series-section>
+    <zx-prod-music-section [elementId]="core.elementId"></zx-prod-music-section>
+    <zx-prod-pictures-section [elementId]="core.elementId"></zx-prod-pictures-section>
+    <zx-prod-inlays-section [elementId]="core.elementId"></zx-prod-inlays-section>
+    <zx-prod-maps-section [elementId]="core.elementId"></zx-prod-maps-section>
+    <zx-prod-rzx-section [elementId]="core.elementId"></zx-prod-rzx-section>
   </div>
 </ng-container>
 

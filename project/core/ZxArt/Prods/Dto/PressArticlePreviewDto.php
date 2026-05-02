@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace ZxArt\Prods\Dto;
 
+use Symfony\Component\ObjectMapper\Attribute\Map;
+use ZxArt\Prods\Rest\PressArticlePreviewRestDto;
+
+#[Map(target: PressArticlePreviewRestDto::class)]
 readonly class PressArticlePreviewDto
 {
     /**

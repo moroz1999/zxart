@@ -50,13 +50,13 @@
     }
   },
   "require-dev": {
-    "vimeo/psalm": "^6.13",
+    "vimeo/psalm": "^6.16",
     "phpunit/phpunit": "^12",
     "dg/bypass-finals": "^1.4"
   },
   "scripts": {
     "test": "vendor\\bin\\phpunit -c phpunit.xml.dist",
-    "psalm": "vendor\\bin\\psalm --use-baseline=psalm-baseline.xml --no-cache",
+    "psalm": "vendor\\bin\\psalm --use-baseline=psalm-baseline.xml --no-cache --force-jit",
     "psalm-baseline": "vendor\\bin\\psalm --set-baseline=psalm-baseline.xml --no-cache",
     "build": "cd .\\ng-zxart && npm run build"
   }

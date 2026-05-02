@@ -80,9 +80,6 @@ class publicApplication extends controllerApplication implements ThemeCodeProvid
         $this->renderer->assign('applicationName', $this->applicationName);
         $this->renderer->assign('deviceType', 'desktop');
 
-        $socialDataManager = $this->getService(SocialDataManager::class);
-        $this->renderer->assign('socialDataManager', $socialDataManager);
-
         $pageNotFound = $controller->requestedFile;
         $languagesManager = $this->getService(LanguagesManager::class);
         $visitorsManager = $this->getService(VisitorsManager::class);

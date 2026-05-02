@@ -409,40 +409,51 @@ Legacy launcher deletion is deferred to Phase 6 — the four `component.{,zx81,t
 
 Each is its own checkbox: section component + per-section service + lazy `InViewportDirective` trigger + skeleton + empty-hides-self behaviour. Order matches expected user value, but they are independent and can be done in any order.
 
-- [ ] `zx-prod-screenshots-section` + `/prod-screenshots/`. Reuses `PictureGalleryHostComponent`.
-- [ ] `zx-prod-releases-section` + `zx-prod-release-row` + `/prod-releases/` + `/release-screenshots/?id={releaseId}` (per row). Play buttons wired to `EmulatorModalService`.
-- [ ] `zx-prod-articles-section` + `/prod-articles/`. Uses `zx-article-preview`.
-- [ ] `zx-prod-mentions-section` + `/prod-mentions/`. Uses `zx-article-preview`.
-- [ ] `zx-prod-compilation-items-section` + `/prod-compilation-items/`. Uses `zx-prod-card`.
-- [ ] `zx-prod-series-prods-section` + `/prod-series-prods/`.
-- [ ] `zx-prod-compilations-section` + `/prod-compilations/`.
-- [ ] `zx-prod-series-section` + `/prod-series/` (renders each series as a header + sibling list).
-- [ ] `zx-prod-music-section` (lazy wrapper around existing `zx-music-list`).
-- [ ] `zx-prod-pictures-section` (lazy wrapper around existing `zx-pictures-list`).
-- [ ] `zx-prod-inlays-section` + `/prod-inlays/`.
-- [ ] `zx-prod-maps-section` + `/prod-maps/` (with `mapsUrl`).
-- [ ] `zx-prod-rzx-section` + `/prod-rzx/`. Uses tiny `zx-prod-files-list`.
+- [x] `zx-prod-screenshots-section` + `/prod-screenshots/`. Reuses `PictureGalleryHostComponent`.
+- [x] `zx-prod-releases-section` + `zx-prod-release-row` + `/prod-releases/` + `/release-screenshots/?id={releaseId}` (per row). Play buttons wired to `EmulatorModalService`.
+- [x] `zx-prod-articles-section` + `/prod-articles/`. Uses `zx-article-preview`.
+- [x] `zx-prod-mentions-section` + `/prod-mentions/`. Uses `zx-article-preview`.
+- [x] `zx-prod-compilation-items-section` + `/prod-compilation-items/`. Uses `zx-prod-card`.
+- [x] `zx-prod-series-prods-section` + `/prod-series-prods/`.
+- [x] `zx-prod-compilations-section` + `/prod-compilations/`.
+- [x] `zx-prod-series-section` + `/prod-series/` (renders each series as a header + sibling list).
+- [x] `zx-prod-music-section` (lazy wrapper around existing `zx-music-list`).
+- [x] `zx-prod-pictures-section` (lazy wrapper around existing `zx-pictures-list`).
+- [x] `zx-prod-inlays-section` + `/prod-inlays/`.
+- [x] `zx-prod-maps-section` + `/prod-maps/` (with `mapsUrl`).
+- [x] `zx-prod-rzx-section` + `/prod-rzx/`. Uses tiny `zx-prod-files-list`.
 
 ### Phase 6 — Legacy cleanup
 
-- [ ] Verify with `grep -rn` that the following templates have no remaining callers; delete each that's safe:
-  - [ ] `component.releasestable.tpl`
-  - [ ] `component.pressArticles.tpl`
-  - [ ] `component.mentions.tpl`
-  - [ ] `component.links.tpl`
-  - [ ] `component.languagelinks.tpl`
-  - [ ] `zxItem.images.tpl`
-  - [ ] `zxItem.files.tpl`
-- [ ] Delete legacy emulator launchers — Angular engines + `EmulatorModalService` replace them. Confirm no callers in `.tpl` / `project.class.php` remain, then delete:
-  - [ ] `project/js/public/component.emulator.js` (USP)
-  - [ ] `project/js/public/component.zx81Emulator.js`
-  - [ ] `project/js/public/component.tsconfEmulator.js`
-  - [ ] `project/js/public/component.samcoupeEmulator.js`
-  - [ ] `project/js/public/component.zxnextEmulator.js`
-  - [ ] `project/templates/public/component.emulator.tpl`
-  - [ ] `project/templates/public/component.play-button.tpl` (replaced by inline `zx-button` in `zx-prod-release-row`)
-  - [ ] `tags.form.tpl`
+**Verification done 2026-05-02**: every template and emulator launcher in the original list still has at least one caller outside `zxProd.details.tpl` (the only page rewritten in this task). Deleting any of them now would break `zxRelease.details.tpl`, `zxRelease.table.tpl`, `pressArticle.details.tpl`, the `simple/` theme stack (`simple/zxProd.details.tpl`, `simple/zxRelease.*.tpl`, `simple/zxMusic.details.tpl`, `simple/component.releasestable.tpl`, `simple/component.authorinfo.tpl`), and the author / group / music / picture detail pages. Those pages are out of scope for this task, so the cleanup is **deferred** — no deletions happen here. Each sub-item below is left unchecked with the blocking caller(s) recorded.
+
+- [x] Verify with `grep -rn` that the following templates have no remaining callers; delete each that's safe. **Findings: nothing safe to delete; deletions deferred until the listed callers are migrated.**
+  - [ ] `component.releasestable.tpl` — still included by `project/templates/simple/zxProd.details.tpl`.
+  - [ ] `component.pressArticles.tpl` — still included by `project/templates/public/pressArticle.details.tpl`.
+  - [ ] `component.mentions.tpl` — still included by 7 pages: `author.details.tpl`, `authorAlias.details.tpl`, `group.details.tpl`, `groupAlias.details.tpl`, `party.all.tpl`, `zxPicture.details.tpl`, `zxMusic.details.tpl`.
+  - [ ] `component.links.tpl` — still included by ~10 templates: `component.authorinfo.tpl`, `simple/component.authorinfo.tpl`, `authorAlias.info.tpl`, `groupAlias.info.tpl` (×2), `component.groupinfo.tpl`, `zxRelease.details.tpl`, `simple/zxRelease.details.tpl`, `simple/zxProd.details.tpl`.
+  - [ ] `component.languagelinks.tpl` — still included by `zxRelease.table.tpl`, `zxRelease.details.tpl`, `simple/zxRelease.table.tpl`, `simple/zxRelease.details.tpl`, `simple/zxProd.details.tpl`.
+  - [ ] `zxItem.images.tpl` — still included by `zxRelease.table.tpl` (×2), `zxRelease.details.tpl` (×4), `pressArticle.details.tpl`, `simple/zxRelease.table.tpl` (×2), `simple/zxRelease.details.tpl` (×3), `simple/zxProd.details.tpl`.
+  - [ ] `zxItem.files.tpl` — still included by `zxRelease.table.tpl`, `zxRelease.details.tpl`, `simple/zxRelease.details.tpl`.
+- [x] Delete legacy emulator launchers — Angular engines + `EmulatorModalService` replace them. Confirm no callers in `.tpl` / `project.class.php` remain, then delete. **Findings: all callers still present; deletion deferred until `zxRelease.details.tpl` is rewritten.** `component.emulator.tpl` is included by `zxRelease.details.tpl:222`; `component.play-button.tpl` by `zxRelease.details.tpl:216` and `zxRelease.table.tpl:13`. The five `component.*Emulator.js` files are bundled globally through `project/modules/designThemes/project.class.php:47-51` and feed the inline `window.emulatorComponent.start(...)` invocation that lives in `component.play-button.tpl` / `component.emulator.tpl`.
+  - [ ] `project/js/public/component.emulator.js` (USP) — bundled via `project.class.php:47`; consumed by `component.emulator.tpl` / `component.play-button.tpl`.
+  - [ ] `project/js/public/component.zx81Emulator.js` — bundled via `project.class.php:48`.
+  - [ ] `project/js/public/component.tsconfEmulator.js` — bundled via `project.class.php:49`.
+  - [ ] `project/js/public/component.samcoupeEmulator.js` — bundled via `project.class.php:50`.
+  - [ ] `project/js/public/component.zxnextEmulator.js` — bundled via `project.class.php:51`.
+  - [ ] `project/templates/public/component.emulator.tpl` — included by `zxRelease.details.tpl:222`.
+  - [ ] `project/templates/public/component.play-button.tpl` (replaced by inline `zx-button` in `zx-prod-release-row`) — included by `zxRelease.details.tpl:216` and `zxRelease.table.tpl:13`.
+  - [ ] `tags.form.tpl` — still included by `zxPicture.details.tpl`, `zxMusic.details.tpl`, `simple/zxMusic.details.tpl`.
 - [ ] Final QA pass per the Verification section.
+
+#### Follow-up (out of scope for this task)
+The cleanup completes only after the remaining Smarty pages stop including the legacy templates and the global emulator JS bundle. Natural successor tasks, in dependency order:
+1. Rewrite `zxRelease.details.tpl` (standalone release page) in Angular — unblocks `component.emulator.tpl`, `component.play-button.tpl`, all five `component.*Emulator.js` files, plus its own uses of `zxItem.images.tpl` / `zxItem.files.tpl` / `component.links.tpl` / `component.languagelinks.tpl`.
+2. Rewrite `pressArticle.details.tpl` — unblocks `component.pressArticles.tpl` and one caller of `zxItem.images.tpl`.
+3. Rewrite `author.details.tpl`, `authorAlias.details.tpl`, `group.details.tpl`, `groupAlias.details.tpl`, `party.all.tpl`, `zxPicture.details.tpl`, `zxMusic.details.tpl` — unblocks `component.mentions.tpl`, `tags.form.tpl`, plus most `component.links.tpl` callers.
+4. Decide the fate of the `simple/` theme — if retained, port the leftover templates; if dropped, delete the whole `project/templates/simple/` tree, which also unblocks `component.releasestable.tpl`, `component.languagelinks.tpl`, and the simple-theme uses of `zxItem.{images,files}.tpl`.
+
+Once all callers are gone, the deletions queued above can be executed in a single sweep.
 
 ---
 

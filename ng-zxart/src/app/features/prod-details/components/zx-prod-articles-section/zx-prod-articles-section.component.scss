@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+.prod-articles-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.prod-articles-section__title {
+  margin: 0;
+}
+
+.prod-articles-section__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}

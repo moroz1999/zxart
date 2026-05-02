@@ -69,5 +69,6 @@ docker compose run --rm node run build:docker
   - `/ng-zxart/src/app/shared/ui/` - Design system components
   - `/ng-zxart/src/app/shared/theme/` - CSS variables and themes
 - `/api/` - OpenAPI specs (update after any API changes)
+- `/trickster-cms/` - CMS-functions related code 
 - `/tests/` - PHPUnit tests
 - `/docs/` - All documentation

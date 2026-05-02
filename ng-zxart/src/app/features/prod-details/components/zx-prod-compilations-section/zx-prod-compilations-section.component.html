@@ -1,0 +1,18 @@
+<div
+  class="prod-related-section"
+  [appInViewport]="!loaded && !loading"
+  (inViewport)="onInViewport()"
+>
+  <ng-container *ngIf="loading || (loaded && prods.length > 0)">
+    <h2 zxHeading2 class="prod-related-section__title">{{ 'prod-details.compilations' | translate }}</h2>
+
+    <zx-skeleton *ngIf="loading" variant="prod-grid" [count]="4"></zx-skeleton>
+
+    <div *ngIf="loaded && prods.length > 0" class="prod-related-section__grid">
+      <zx-prod-card
+        *ngFor="let prod of prods; trackBy: trackById"
+        [data]="prod"
+      ></zx-prod-card>
+    </div>
+  </ng-container>
+</div>

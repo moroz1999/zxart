@@ -3,6 +3,7 @@ import {Gallery, GalleryConfig} from 'ng-gallery';
 import {Lightbox} from 'ng-gallery/lightbox';
 import {mapGalleryItemToImageItem, mapPictureToGalleryItem} from './picture-gallery.mapper';
 import {ZxPictureDto} from '../../../shared/models/zx-picture-dto';
+import {PictureGalleryItem} from '../models/picture-gallery-item';
 
 const GALLERY_ID_PREFIX = 'zx-picture-lightbox';
 
@@ -38,6 +39,14 @@ export class PictureGalleryService {
       .map(mapPictureToGalleryItem)
       .map(mapGalleryItemToImageItem);
     this.gallery.ref(galleryId).load(items);
+  }
+
+  loadItems(galleryId: string, items: readonly PictureGalleryItem[]): void {
+    if (!items.length) {
+      return;
+    }
+    this.applyConfig(galleryId);
+    this.gallery.ref(galleryId).load(items.map(mapGalleryItemToImageItem));
   }
 
   toggleZoom(): void {

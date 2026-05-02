@@ -194,7 +194,6 @@ class userElement extends structureElement implements JsonDataProvider
 
     public function deleteElementData()
     {
-        $this->getService(SocialDataManager::class)->removeSocialUser($this->id);
         parent::deleteElementData();
     }
 }

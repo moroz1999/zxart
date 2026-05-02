@@ -1,0 +1,9 @@
+<div
+  class="prod-pictures-section"
+  [appInViewport]="!mounted"
+  (inViewport)="onInViewport()"
+>
+  <h2 zxHeading2 class="prod-pictures-section__title">{{ 'prod-details.pictures' | translate }}</h2>
+  <zx-skeleton *ngIf="!mounted" variant="picture-grid" [count]="4"></zx-skeleton>
+  <zx-pictures-list *ngIf="mounted" [elementId]="elementId"></zx-pictures-list>
+</div>

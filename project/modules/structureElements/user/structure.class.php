@@ -312,7 +312,6 @@ class userElement extends structureElement
 
     public function removeExtras(): void
     {
-        $this->getService(SocialDataManager::class)->removeSocialUser($this->getId());
         $structureManager = $this->getService('structureManager');
         $db = $this->getService('db');
         if ($records = $db->table('module_comment')->select('id')->where('userId', '=', $this->getId())->get()) {

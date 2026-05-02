@@ -1,0 +1,11 @@
+<div
+  class="prod-rzx-section"
+  [appInViewport]="!loaded && !loading"
+  (inViewport)="onInViewport()"
+>
+  <ng-container *ngIf="loading || (loaded && files.length > 0)">
+    <h2 zxHeading2 class="prod-rzx-section__title">{{ 'prod-details.rzx' | translate }}</h2>
+    <zx-skeleton *ngIf="loading" variant="row" [count]="2"></zx-skeleton>
+    <zx-prod-files-list *ngIf="loaded && files.length > 0" [files]="files"></zx-prod-files-list>
+  </ng-container>
+</div>

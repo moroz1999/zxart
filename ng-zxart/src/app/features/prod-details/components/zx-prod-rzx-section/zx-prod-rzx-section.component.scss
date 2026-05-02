@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+.prod-rzx-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.prod-rzx-section__title {
+  margin: 0;
+}

@@ -106,33 +106,6 @@ class loginElement extends menuDependantStructureElement
         return $passwordReminderFormUrl;
     }
 
-    /**
-     * @return (mixed|string)[][]
-     *
-     * @psalm-return list{0?: array{title: mixed, code: mixed, url: mixed, icon: string},...}
-     */
-    public function getSocialPluginsOptions(): array
-    {
-        $result = [];
-        $controller = controller::getInstance();
-        $socialDataManager = $this->getService(SocialDataManager::class);
-        $socialPlugins = $socialDataManager->getSocialPlugins();
-        foreach ($socialPlugins as $element) {
-            $iconUrl = '';
-            if ($element->icon) {
-                $iconUrl = $controller->baseURL . 'image/type:registrationSocialPluginIcon/id:'
-                    . $element->icon . '/filename:' . $element->iconOriginalName;
-            }
-            $result[] = [
-                'title' => $element->title,
-                'code' => $element->getName(),
-                'url' => $element->getLoginUrl(),
-                'icon' => $iconUrl,
-            ];
-        }
-        return $result;
-    }
-
     public function displayForm(): bool
     {
         $currentUserService = $this->getService(CurrentUserService::class);
