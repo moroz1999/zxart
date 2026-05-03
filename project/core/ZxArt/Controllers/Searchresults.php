@@ -92,8 +92,8 @@ class Searchresults extends LoggedControllerApplication
     private function mapItem(object $item, ObjectMapper $mapper): object
     {
         return match (true) {
-            $item instanceof AuthorListItemDto => $this->mapAuthor($item),
-            $item instanceof GroupListItemDto => $this->mapGroup($item),
+            $item instanceof AuthorListItemDto => $mapper->map($item, AuthorListItemRestDto::class),
+            $item instanceof GroupListItemDto => $mapper->map($item, GroupListItemRestDto::class),
             $item instanceof PictureDto => $mapper->map($item, PictureRestDto::class),
             $item instanceof ProdDto => $mapper->map($item, ProdRestDto::class),
             $item instanceof TuneDto => $mapper->map($item, TuneRestDto::class),
@@ -101,46 +101,6 @@ class Searchresults extends LoggedControllerApplication
             $item instanceof PartyDto => $mapper->map($item, PartyRestDto::class),
             default => $item,
         };
-    }
-
-    private function mapAuthor(AuthorListItemDto $dto): AuthorListItemRestDto
-    {
-        return new AuthorListItemRestDto(
-            id: $dto->id,
-            url: $dto->url,
-            entityType: $dto->entityType->value,
-            title: $dto->title,
-            realName: $dto->realName,
-            realNameUrl: $dto->realNameUrl,
-            groups: $dto->groups,
-            countryId: $dto->countryId,
-            countryTitle: $dto->countryTitle,
-            countryUrl: $dto->countryUrl,
-            cityId: $dto->cityId,
-            cityTitle: $dto->cityTitle,
-            cityUrl: $dto->cityUrl,
-            musicRating: $dto->musicRating,
-            graphicsRating: $dto->graphicsRating,
-        );
-    }
-
-    private function mapGroup(GroupListItemDto $dto): GroupListItemRestDto
-    {
-        return new GroupListItemRestDto(
-            id: $dto->id,
-            url: $dto->url,
-            entityType: $dto->entityType->value,
-            title: $dto->title,
-            groupType: $dto->groupType,
-            realGroupTitle: $dto->realGroupTitle,
-            realGroupUrl: $dto->realGroupUrl,
-            countryId: $dto->countryId,
-            countryTitle: $dto->countryTitle,
-            countryUrl: $dto->countryUrl,
-            cityId: $dto->cityId,
-            cityTitle: $dto->cityTitle,
-            cityUrl: $dto->cityUrl,
-        );
     }
 
     /**
