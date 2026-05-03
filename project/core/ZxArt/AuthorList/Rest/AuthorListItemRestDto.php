@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace ZxArt\AuthorList\Rest;
 
+use Symfony\Component\ObjectMapper\Attribute\Map;
+use ZxArt\Shared\EntityType;
+
 readonly class AuthorListItemRestDto
 {
     /**
@@ -12,6 +15,7 @@ readonly class AuthorListItemRestDto
     public function __construct(
         public int $id,
         public string $url,
+        #[Map(transform: [self::class, 'mapEntityType'])]
         public string $entityType,
         public string $title,
         public string $realName,
@@ -26,5 +30,10 @@ readonly class AuthorListItemRestDto
         public float $musicRating,
         public float $graphicsRating,
     ) {
+    }
+
+    public static function mapEntityType(EntityType $entityType): string
+    {
+        return $entityType->value;
     }
 }
