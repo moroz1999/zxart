@@ -1,5 +1,3 @@
-@use "shared/mixins" as mixins;
-
 :host {
   display: block;
 }
@@ -28,8 +26,4 @@
 
 .prod-series-section__entry-title {
   margin: 0;
-}
-
-.prod-series-section__grid {
-  @include mixins.prods-gallery;
 }

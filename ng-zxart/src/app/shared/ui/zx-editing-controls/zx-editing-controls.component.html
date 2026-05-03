@@ -1,0 +1,9 @@
+<zx-button-controls *ngIf="visibleActions$ | async as visibleActions" align="start" [wrap]="true">
+  <zx-button
+    *ngFor="let item of visibleActions"
+    [color]="item.action.color || 'primary'"
+    (click)="runAction(item)"
+  >
+    {{ item.action.labelKey | translate }}
+  </zx-button>
+</zx-button-controls>

@@ -3,9 +3,7 @@
 }
 
 .prod-details {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-16);
+  width: 100%;
 }
 
 .prod-details__title {

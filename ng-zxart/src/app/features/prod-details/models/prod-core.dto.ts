@@ -68,17 +68,6 @@ export interface ProdSubmitterDto {
   url: string;
 }
 
-export interface ProdPrivilegesDto {
-  showPublicForm: boolean;
-  showAiForm: boolean;
-  resize: boolean;
-  join: boolean;
-  split: boolean;
-  publicDelete: boolean;
-  addRelease: boolean;
-  addPressArticle: boolean;
-}
-
 export interface ProdCoreDto {
   elementId: number;
   title: string;
@@ -108,5 +97,4 @@ export interface ProdCoreDto {
   tags: ProdTagRefDto[];
   voting: ProdVotingDto;
   submitter: ProdSubmitterDto | null;
-  privileges: ProdPrivilegesDto;
 }

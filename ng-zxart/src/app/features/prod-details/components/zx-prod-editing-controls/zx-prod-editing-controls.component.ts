@@ -1,63 +1,61 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {firstValueFrom} from 'rxjs';
-import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
-import {ConfirmDialogService} from '../../../../shared/ui/zx-confirm-dialog/confirm-dialog.service';
-import {ProdPrivilegesDto} from '../../models/prod-core.dto';
+import {
+  ZxEditingControlAction,
+  ZxEditingControlsComponent,
+} from '../../../../shared/ui/zx-editing-controls/zx-editing-controls.component';
+
+const PROD_EDITING_ACTIONS: readonly ZxEditingControlAction[] = [
+  {
+    action: 'showPublicForm',
+    privilege: 'showPublicForm',
+    labelKey: 'prod-details.edit',
+  },
+  {
+    action: 'showAiForm',
+    privilege: 'showAiForm',
+    labelKey: 'prod-details.showAiForm',
+  },
+  {
+    action: 'resize',
+    privilege: 'resize',
+    labelKey: 'prod-details.resize',
+  },
+  {
+    action: 'showJoinForm',
+    privilege: 'showJoinForm',
+    labelKey: 'prod-details.join',
+  },
+  {
+    action: 'showSplitForm',
+    privilege: 'showSplitForm',
+    labelKey: 'prod-details.split',
+  },
+  {
+    action: 'publicDelete',
+    privilege: 'publicDelete',
+    labelKey: 'prod-details.delete',
+    color: 'danger',
+    confirm: {
+      titleKey: 'prod-details.delete-confirm-title',
+      messageKey: 'prod-details.delete-confirm-message',
+      confirmLabelKey: 'prod-details.delete-confirm-yes',
+      cancelLabelKey: 'prod-details.delete-confirm-cancel',
+    },
+  },
+];
 
 @Component({
   selector: 'zx-prod-editing-controls',
   standalone: true,
-  imports: [CommonModule, TranslateModule, ZxButtonComponent],
+  imports: [ZxEditingControlsComponent],
   templateUrl: './zx-prod-editing-controls.component.html',
-  styleUrls: ['./zx-prod-editing-controls.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxProdEditingControlsComponent {
   @Input({required: true}) elementId!: number;
   @Input({required: true}) prodUrl!: string;
-  @Input({required: true}) privileges!: ProdPrivilegesDto;
 
-  constructor(
-    private readonly confirmDialog: ConfirmDialogService,
-    private readonly translate: TranslateService,
-  ) {}
+  readonly actions = PROD_EDITING_ACTIONS;
 
-  get hasMainActions(): boolean {
-    const p = this.privileges;
-    return p.showPublicForm || p.showAiForm || p.resize || p.join || p.split || p.publicDelete;
-  }
-
-  get hasAddActions(): boolean {
-    return this.privileges.addRelease || this.privileges.addPressArticle;
-  }
-
-  actionUrl(action: string): string {
-    return `${this.prodUrl}id:${this.elementId}/action:${action}/`;
-  }
-
-  addActionUrl(type: string): string {
-    return `${this.prodUrl}type:${type}/action:showPublicForm/`;
-  }
-
-  async confirmDelete(event: Event): Promise<void> {
-    event.preventDefault();
-    const data = await firstValueFrom(this.translate.get([
-      'prod-details.delete-confirm-title',
-      'prod-details.delete-confirm-message',
-      'prod-details.delete-confirm-yes',
-      'prod-details.delete-confirm-cancel',
-    ]));
-    const confirmed = await firstValueFrom(this.confirmDialog.confirm({
-      title: data['prod-details.delete-confirm-title'],
-      message: data['prod-details.delete-confirm-message'],
-      confirmLabel: data['prod-details.delete-confirm-yes'],
-      cancelLabel: data['prod-details.delete-confirm-cancel'],
-      danger: true,
-    }));
-    if (confirmed) {
-      window.location.href = this.actionUrl('publicDelete');
-    }
-  }
+  readonly buildActionUrl = (action: string, elementId: number): string => `${this.prodUrl}id:${elementId}/action:${action}/`;
 }

@@ -31,6 +31,39 @@
         </div>
       }
     }
+    @case ('prod-details') {
+      <div class="skeleton-prod-details">
+        <div class="skeleton-prod-details-title skeleton-bone"></div>
+        <div class="skeleton-prod-details-top">
+          <div class="skeleton-prod-details-info">
+            @for (i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]; track i) {
+              <div class="skeleton-prod-details-row" [style.animation-delay.ms]="i * 50">
+                <div class="skeleton-prod-details-label skeleton-text skeleton-bone"></div>
+                <div class="skeleton-prod-details-value skeleton-text skeleton-bone"></div>
+              </div>
+            }
+          </div>
+          <div class="skeleton-prod-details-video skeleton-bone"></div>
+        </div>
+        <div class="skeleton-screenshot-grid">
+          @for (i of [0, 1, 2, 3]; track i) {
+            <div class="skeleton-screenshot skeleton-bone" [style.animation-delay.ms]="i * 80"></div>
+          }
+        </div>
+        <div class="skeleton-prod-grid">
+          @for (i of [0, 1, 2, 3]; track i) {
+            <div class="skeleton-prod-card" [style.animation-delay.ms]="i * 80">
+              <div class="skeleton-prod-image skeleton-bone"></div>
+              <div class="skeleton-prod-body">
+                <div class="skeleton-title skeleton-bone"></div>
+                <div class="skeleton-text skeleton-bone"></div>
+                <div class="skeleton-text skeleton-text-short skeleton-bone"></div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
     @case ('row') {
       @for (i of items; track i) {
         <div class="skeleton-row" [style.animation-delay.ms]="i * 50">

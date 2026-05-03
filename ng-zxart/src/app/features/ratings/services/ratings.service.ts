@@ -22,7 +22,7 @@ export class RatingsService {
   }
 
   getRatings(elementId: number): Observable<RatingDto[]> {
-    return this.http.get<ElementRatingsListDto>(`/ratings/id:${elementId}/`).pipe(
+    return this.http.get<ElementRatingsListDto>(`/ratings/?id=${elementId}`).pipe(
       map(response => response.items),
       catchError(() => of([]))
     );

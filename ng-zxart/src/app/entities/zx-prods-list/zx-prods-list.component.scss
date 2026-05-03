@@ -1,8 +1,10 @@
 @use "shared/vars";
-@use "shared/mixins" as mixins;
 
 .zx-prods-gallery {
-  @include mixins.prods-gallery;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 256px), 256px));
+  gap: var(--gap-xl);
+  justify-content: space-between;
 }
 
 .zx-prods-year {

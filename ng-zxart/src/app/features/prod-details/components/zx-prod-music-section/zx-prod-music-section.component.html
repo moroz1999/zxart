@@ -1,9 +1,4 @@
-<div
-  class="prod-music-section"
-  [appInViewport]="!mounted"
-  (inViewport)="onInViewport()"
->
+<div class="prod-music-section">
   <h2 zxHeading2 class="prod-music-section__title">{{ 'prod-details.music' | translate }}</h2>
-  <zx-skeleton *ngIf="!mounted" variant="tune-table" [count]="3"></zx-skeleton>
-  <zx-music-list-inline *ngIf="mounted" [elementId]="elementId"></zx-music-list-inline>
+  <zx-music-list-inline [elementId]="elementId"></zx-music-list-inline>
 </div>

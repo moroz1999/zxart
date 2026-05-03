@@ -6,6 +6,7 @@ export type SkeletonVariant =
   | 'comment'
   | 'row'
   | 'text'
+  | 'prod-details'
   | 'prod-grid'
   | 'picture-grid'
   | 'screenshot-grid'

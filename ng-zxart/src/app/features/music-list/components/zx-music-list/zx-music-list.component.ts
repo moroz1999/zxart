@@ -1,7 +1,8 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {map} from 'rxjs';
+import {Observable, of} from 'rxjs';
+import {catchError, map, startWith} from 'rxjs/operators';
 import {ZxTuneDto} from '../../../../shared/models/zx-tune-dto';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
 import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.component';
@@ -29,9 +30,7 @@ export class ZxMusicListComponent implements OnInit {
   @Input() elementId = 0;
   @Input() compoType = '';
 
-  loading = true;
-  error = false;
-  tunes: ZxTuneDto[] = [];
+  vm$: Observable<MusicListVm> = of({loading: true, error: false, tunes: []});
   private playlistId = '';
 
   readonly playingTuneId$ = this.playerService.state$.pipe(
@@ -44,20 +43,19 @@ export class ZxMusicListComponent implements OnInit {
   constructor(
     private musicListService: MusicListService,
     private playerService: PlayerService,
-    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
     this.playlistId = `music-list-${this.elementId}${this.compoType ? '-' + this.compoType : ''}`;
-    this.loadData();
+    this.vm$ = this.buildVm();
   }
 
-  playTune(index: number): void {
-    const selected = this.tunes[index];
+  playTune(tunes: ZxTuneDto[], index: number): void {
+    const selected = tunes[index];
     if (!selected) {
       return;
     }
-    const playable = this.tunes.filter(t => t.isPlayable && t.mp3Url);
+    const playable = tunes.filter(t => t.isPlayable && t.mp3Url);
     const startIndex = playable.findIndex(t => t.id === selected.id);
     if (startIndex === -1) {
       return;
@@ -69,25 +67,21 @@ export class ZxMusicListComponent implements OnInit {
     this.playerService.pause();
   }
 
-  private loadData(): void {
+  private buildVm(): Observable<MusicListVm> {
     if (!this.elementId) {
-      this.loading = false;
-      this.error = true;
-      return;
+      return of({loading: false, error: true, tunes: []});
     }
-    this.loading = true;
-    this.error = false;
-    this.musicListService.getTunes(this.elementId, this.compoType || undefined).subscribe({
-      next: tunes => {
-        this.loading = false;
-        this.tunes = tunes;
-        this.cdr.markForCheck();
-      },
-      error: () => {
-        this.loading = false;
-        this.error = true;
-        this.cdr.markForCheck();
-      },
-    });
+
+    return this.musicListService.getTunes(this.elementId, this.compoType || undefined).pipe(
+      map(tunes => ({loading: false, error: false, tunes})),
+      catchError(() => of({loading: false, error: true, tunes: []})),
+      startWith({loading: true, error: false, tunes: []}),
+    );
   }
+}
+
+interface MusicListVm {
+  readonly loading: boolean;
+  readonly error: boolean;
+  readonly tunes: ZxTuneDto[];
 }

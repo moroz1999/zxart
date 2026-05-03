@@ -18,7 +18,7 @@ use ZxArt\Queue\QueueType;
  * @property string $fileName
  * @property string $trackerFile
  * @property string $trackerFileName
- * @property float $votes
+ * @property string $votes @deprecated use {@see self::getVotes()} - magic-property returns DB string
  * @property string $votesAmount @deprecated use {@see self::getVotesAmount()} - DB column is text, magic-property returns string
  * @property string $plays @deprecated use {@see self::getPlaysCount()} - DB column is text, magic-property returns string
  * @property string $type
@@ -270,6 +270,11 @@ class zxMusicElement extends ZxArtItem implements
     public function getPlaysCount(): int
     {
         return (int)$this->plays;
+    }
+
+    public function getVotes(): float
+    {
+        return (float)$this->votes;
     }
 
     public function getVotesAmount(): int

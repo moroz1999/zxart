@@ -23,7 +23,7 @@ import {TagsSearchService} from '../../../../shared/services/tags-search.service
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
-import {ElementPrivilegesApiService} from '../../services/element-privileges-api.service';
+import {ElementPrivilegesApiService} from '../../../../shared/services/element-privileges-api.service';
 import {TagsApiService} from '../../services/tags-api.service';
 import {TagsPayloadDto} from '../../models/tags-payload.dto';
 

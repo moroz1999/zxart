@@ -30,3 +30,7 @@
     - Delete permission depends on who is deleting:
         - **Own comment** (current user == comment author): deletion is allowed only within the time window (`EDIT_LIMIT`). After that, `canDelete = false`.
         - **Someone else's comment** (current user != comment author): if the user has the `delete` privilege (e.g. a moderator/admin), deletion is always allowed regardless of the time window.
+
+## Angular Integration
+- Comments are rendered with `<app-comments-list element-id="..."></app-comments-list>` in legacy detail templates.
+- The Angular comments component requests data through `CommentsService`; legacy templates do not include `component.comments.tpl` for the same comments list.

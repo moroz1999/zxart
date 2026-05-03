@@ -1,12 +1,13 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
-import {ZxProdCardComponent} from '../../../../shared/ui/zx-prod-card/zx-prod-card.component';
 import {ZxHeading2Directive} from '../../../../shared/directives/typography/typography.directives';
-import {ProdCompilationsApiService} from '../../services/prod-compilations-api.service';
-import {ProdSummaryDto} from '../../models/prod-summary.dto';
+import {ZxProdsListComponent} from '../../../../entities/zx-prods-list/zx-prods-list.component';
+import {Observable, of} from 'rxjs';
+import {startWith} from 'rxjs/operators';
+import {ProdRelatedProdsApiService} from '../../services/prod-related-prods-api.service';
+import {ZxProd} from '../../../../shared/models/zx-prod';
+import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
 
 @Component({
   selector: 'zx-prod-compilations-section',
@@ -14,41 +15,22 @@ import {ProdSummaryDto} from '../../models/prod-summary.dto';
   imports: [
     CommonModule,
     TranslateModule,
-    InViewportDirective,
-    ZxSkeletonComponent,
-    ZxProdCardComponent,
     ZxHeading2Directive,
+    ZxProdsListComponent,
+    ZxSkeletonComponent,
   ],
   templateUrl: './zx-prod-compilations-section.component.html',
   styleUrls: ['./zx-prod-compilations-section.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxProdCompilationsSectionComponent {
+export class ZxProdCompilationsSectionComponent implements OnInit {
   @Input({required: true}) elementId!: number;
 
-  loading = false;
-  loaded = false;
-  prods: ProdSummaryDto[] = [];
+  prods$: Observable<ZxProd[] | null> = of(null);
 
-  constructor(
-    private readonly api: ProdCompilationsApiService,
-    private readonly cdr: ChangeDetectorRef,
-  ) {}
+  constructor(private readonly relatedProdsApi: ProdRelatedProdsApiService) {}
 
-  onInViewport(): void {
-    if (this.loaded || this.loading) {
-      return;
-    }
-    this.loading = true;
-    this.api.getProds(this.elementId).subscribe(prods => {
-      this.prods = prods;
-      this.loaded = true;
-      this.loading = false;
-      this.cdr.markForCheck();
-    });
-  }
-
-  trackById(_index: number, prod: ProdSummaryDto): number {
-    return prod.id;
+  ngOnInit(): void {
+    this.prods$ = this.relatedProdsApi.getCompilations(this.elementId).pipe(startWith(null));
   }
 }

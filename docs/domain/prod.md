@@ -95,3 +95,10 @@ Software production for ZX Spectrum - games, demos, utilities and other software
 4. Prod cannot simultaneously be a compilation and be included in a compilation (cyclic links are forbidden)
 5. LegalStatus determines file distribution possibility
 6. If releasesOnly flag is set, prod is hidden, only its releases are shown
+
+### Angular Details Page
+- Related prod lists (compilation items, compilations, series products) reuse `zx-prods-list`, which renders products through `zx-prod-block`.
+- Prod details related prod lists are loaded through REST endpoints; the legacy details template must not inject inline global data.
+- Prod details core data does not include edit/delete privileges. Editing controls use shared `zx-editing-controls` and request privileges separately for authenticated users only.
+- Prod editing controls are action buttons, not links. They render through `zx-button` without `href` and navigate to legacy action URLs from click handlers.
+- The legacy details template mounts `zx-prod-details` directly; Angular renders the page title.

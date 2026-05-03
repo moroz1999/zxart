@@ -69,7 +69,7 @@ readonly class TunesTransformer
             authors: $authors,
             format: $element->getFormat(),
             year: $element->getDisplayYear(),
-            votes: $element->votes,
+            votes: $element->getVotes(),
             votesAmount: $element->getVotesAmount(),
             userVote: $userVote,
             denyVoting: $element->isVotingDenied(),

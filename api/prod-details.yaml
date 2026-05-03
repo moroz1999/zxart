@@ -56,7 +56,6 @@ components:
         - tags
         - voting
         - submitter
-        - privileges
       properties:
         elementId:
           type: integer
@@ -136,8 +135,6 @@ components:
             - $ref: '#/components/schemas/ProdSubmitter'
             - type: 'null'
           nullable: true
-        privileges:
-          $ref: '#/components/schemas/ProdPrivileges'
 
     ProdCategoryRef:
       type: object
@@ -311,32 +308,3 @@ components:
           type: string
         url:
           type: string
-
-    ProdPrivileges:
-      type: object
-      required:
-        - showPublicForm
-        - showAiForm
-        - resize
-        - join
-        - split
-        - publicDelete
-        - addRelease
-        - addPressArticle
-      properties:
-        showPublicForm:
-          type: boolean
-        showAiForm:
-          type: boolean
-        resize:
-          type: boolean
-        join:
-          type: boolean
-        split:
-          type: boolean
-        publicDelete:
-          type: boolean
-        addRelease:
-          type: boolean
-        addPressArticle:
-          type: boolean

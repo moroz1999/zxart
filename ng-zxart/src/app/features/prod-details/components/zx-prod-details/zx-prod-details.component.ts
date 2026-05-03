@@ -28,6 +28,10 @@ import {ZxProdPicturesSectionComponent,} from '../zx-prod-pictures-section/zx-pr
 import {ZxProdInlaysSectionComponent,} from '../zx-prod-inlays-section/zx-prod-inlays-section.component';
 import {ZxProdMapsSectionComponent,} from '../zx-prod-maps-section/zx-prod-maps-section.component';
 import {ZxProdRzxSectionComponent,} from '../zx-prod-rzx-section/zx-prod-rzx-section.component';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {TagsQuickFormComponent} from '../../../tags-quick-form/components/tags-quick-form/tags-quick-form.component';
+import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
+import {RatingsListComponent} from '../../../ratings/components/ratings-list/ratings-list.component';
 
 @Component({
   selector: 'zx-prod-details',
@@ -53,6 +57,10 @@ import {ZxProdRzxSectionComponent,} from '../zx-prod-rzx-section/zx-prod-rzx-sec
     ZxProdInlaysSectionComponent,
     ZxProdMapsSectionComponent,
     ZxProdRzxSectionComponent,
+    ZxStackComponent,
+    TagsQuickFormComponent,
+    CommentsListComponent,
+    RatingsListComponent,
   ],
   templateUrl: './zx-prod-details.component.html',
   styleUrls: ['./zx-prod-details.component.scss'],

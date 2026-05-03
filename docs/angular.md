@@ -5,6 +5,7 @@ The integration of Angular components into existing legacy Smarty templates is i
 #### Core Principles
 1. **Standalone Components**: All Angular components MUST be standalone. `AppModule` is used only for bootstrapping and registering custom elements.
 2. **Custom Elements**: Angular components are registered in `AppModule` as custom elements with a `zx-` prefix. This allows them to be used like standard HTML tags within `.tpl` files.
+    - If a component is registered as a custom element for legacy templates and also reused inside Angular templates, provide a separate Angular-only selector for internal usage. Do not nest the registered custom element tag inside Angular templates, because the browser custom element lifecycle can conflict with Angular input binding.
 3. **Data Passing**:
     - **Attributes**: Element IDs and simple settings are passed via tag attributes (e.g., `element-id="{$element->id}"`). These attributes are received in Angular components using the `@Input()` decorator.
 
@@ -31,15 +32,6 @@ After making any changes to the Angular part of the project (`ng-zxart`), includ
 
 **Note: Any change to angular files requires a mandatory Angular build to reflect changes in the application.**
 
-#### Example of Comments Integration
-To integrate the new comments list, the `<app-comments-list>` tag is used in the relevant detailed templates (e.g., `zxProd.details.tpl`):
-
-```html
-<app-comments-list element-id="{$element->id}"></app-comments-list>
-```
-
-The component independently requests data from the backend using the provided `element-id` via `CommentsService`. The old comments mechanism using `{include file=$theme->template('component.comments.tpl')}` in public templates is no longer used.
-
 ### Architecture and Code Structure
 
 #### Feature Sliced Design (FSD)
@@ -51,6 +43,12 @@ All new functionality in Angular must follow Feature Sliced Design principles an
 - **Angular CDK** (`@angular/cdk`) is the approved foundation for overlays, drag-and-drop, and accessibility.
 - Use design system components and theme variables. Custom CSS is forbidden without direct instruction.
 - Components must be used semantically.
+
+### Documentation Scope
+
+General Angular documentation must contain domain-neutral architecture rules only. Entity-specific behavior, feature-specific REST contracts, and business rules belong in `docs/domain/*.md` or a narrowly scoped feature document.
+
+When adding a reusable Angular pattern, document the generic rule here and place concrete entity examples in the relevant domain document.
 
 ### Static Backend Section Links
 

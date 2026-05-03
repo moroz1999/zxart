@@ -6,7 +6,6 @@ namespace ZxArt\Prods;
 
 use authorElement;
 use groupElement;
-use privilegesManager;
 use structureElement;
 use structureManager;
 use tagElement;
@@ -16,13 +15,11 @@ use ZxArt\Prods\Dto\ProdCategoryPathDto;
 use ZxArt\Prods\Dto\ProdCategoryRefDto;
 use ZxArt\Prods\Dto\ProdCoreDto;
 use ZxArt\Prods\Dto\ProdGroupRefDto;
-use ZxArt\Prods\Dto\ProdPrivilegesDto;
 use ZxArt\Prods\Dto\ProdSubmitterDto;
 use ZxArt\Prods\Dto\ProdTagRefDto;
 use ZxArt\Prods\Dto\ProdVotingDto;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArt\Shared\EntityType;
-use ZxArt\Shared\StructureType;
 use zxProdCategoryElement;
 use zxProdElement;
 
@@ -30,7 +27,6 @@ readonly class ProdCoreService
 {
     public function __construct(
         private structureManager $structureManager,
-        private privilegesManager $privilegesManager,
         private ProdInfoBuilder $infoBuilder,
     ) {
     }
@@ -75,7 +71,6 @@ readonly class ProdCoreService
             tags: $this->buildTags($element),
             voting: $this->buildVoting($element),
             submitter: $this->buildSubmitter($element),
-            privileges: $this->buildPrivileges($elementId),
         );
     }
 
@@ -200,22 +195,4 @@ readonly class ProdCoreService
         );
     }
 
-    private function buildPrivileges(int $elementId): ProdPrivilegesDto
-    {
-        return new ProdPrivilegesDto(
-            showPublicForm: $this->hasPrivilege($elementId, 'showPublicForm', StructureType::ZxProd),
-            showAiForm: $this->hasPrivilege($elementId, 'showAiForm', StructureType::ZxProd),
-            resize: $this->hasPrivilege($elementId, 'resize', StructureType::ZxProd),
-            join: $this->hasPrivilege($elementId, 'showJoinForm', StructureType::ZxProd),
-            split: $this->hasPrivilege($elementId, 'showSplitForm', StructureType::ZxProd),
-            publicDelete: $this->hasPrivilege($elementId, 'publicDelete', StructureType::ZxProd),
-            addRelease: $this->hasPrivilege($elementId, 'publicAdd', StructureType::ZxRelease),
-            addPressArticle: $this->hasPrivilege($elementId, 'publicReceive', StructureType::PressArticle),
-        );
-    }
-
-    private function hasPrivilege(int $elementId, string $action, StructureType $structureType): bool
-    {
-        return $this->privilegesManager->checkPrivilegesForAction($elementId, $action, $structureType->value) === true;
-    }
 }

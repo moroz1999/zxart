@@ -55,5 +55,7 @@ All design system components are in `ng-zxart/src/app/shared/ui/`.
 - [zxTooltip](design-system/zx-tooltip.md) — floating tooltip directive that follows the cursor
 - [zx-rating](design-system/zx-rating.md) — interactive 5-star rating with hover preview
 - [zx-item-controls](design-system/zx-item-controls.md) — unified vote + playlist (favourites) controls row
+- [zx-editing-controls](design-system/zx-editing-controls.md) — privilege-gated legacy action buttons
+- `zx-prod-block` — product block used by `zx-prods-list` for prod grids and related prod lists
 - [zxPicturesGrid](design-system/zx-pictures-grid.md) — responsive picture grid layout directive
 - [Dialogs](design-system/zx-dialog.md) — CDK dialog pattern, backdrop rules, panel classes

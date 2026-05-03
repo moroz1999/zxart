@@ -1,19 +1,7 @@
-@use "shared/mixins" as mixins;
-
 :host {
   display: block;
 }
 
-.prod-related-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-12);
-}
-
 .prod-related-section__title {
   margin: 0;
-}
-
-.prod-related-section__grid {
-  @include mixins.prods-gallery;
 }
