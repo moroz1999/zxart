@@ -15,7 +15,9 @@ import {
 } from '../../../../shared/ui/zx-filter-picker/zx-filter-picker.component';
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
 import {ZxGroupsTableComponent} from '../../../../shared/ui/zx-groups-table/zx-groups-table.component';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {
+  ZxRowSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
 import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filter-bar.component';
 
 @Component({
@@ -30,7 +32,7 @@ import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filte
     ZxFilterPickerComponent,
     ZxInputComponent,
     ZxGroupsTableComponent,
-    ZxSkeletonComponent,
+    ZxRowSkeletonComponent,
     ZxFilterBarComponent,
   ],
   templateUrl: './zx-group-browser.component.html',

@@ -1,0 +1,13 @@
+:root {
+  /* Gap between editing controls skeleton ribs. */
+  --zx-editing-controls-skeleton-gap: var(--space-8);
+
+  /* Width of each editing controls skeleton rib. */
+  --zx-editing-controls-skeleton-item-width: calc(var(--space-64) + var(--space-32));
+
+  /* Height of each editing controls skeleton rib. */
+  --zx-editing-controls-skeleton-item-height: var(--space-32);
+
+  /* Radius of each editing controls skeleton rib. */
+  --zx-editing-controls-skeleton-item-radius: var(--radius-sm);
+}

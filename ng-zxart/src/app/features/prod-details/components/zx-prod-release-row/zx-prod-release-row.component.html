@@ -120,7 +120,7 @@
   (inViewport)="onScreenshotsInViewport()"
 >
   <td colspan="15" class="release-row__screenshots-cell">
-    <zx-skeleton *ngIf="screenshotsLoading" variant="screenshot-grid" [count]="2"></zx-skeleton>
+    <zx-screenshot-grid-skeleton *ngIf="screenshotsLoading" [count]="2"></zx-screenshot-grid-skeleton>
 
     <ng-container *ngIf="screenshotsLoaded && screenshots.length > 0">
       <zx-picture-gallery-host></zx-picture-gallery-host>

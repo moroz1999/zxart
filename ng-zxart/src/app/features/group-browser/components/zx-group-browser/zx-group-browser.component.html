@@ -27,7 +27,7 @@
   ></zx-filter-picker>
 </zx-filter-bar>
 
-<zx-skeleton *ngIf="groups === null && !error" variant="row" [count]="30"></zx-skeleton>
+<zx-row-skeleton *ngIf="groups === null && !error" [count]="30"></zx-row-skeleton>
 
 <div *ngIf="error" zxCaption>{{ 'group-browser.error' | translate }}</div>
 <div *ngIf="!loading && !error && groups !== null && groups.length === 0"

@@ -8,6 +8,9 @@ import {ZxProdBlockComponent} from '../../shared/ui/zx-prod-block/zx-prod-block.
 import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {
+  ZxProdsListSkeletonComponent
+} from '../../shared/ui/zx-skeleton/components/zx-prods-list-skeleton/zx-prods-list-skeleton.component';
 
 export interface YearProds {
     readonly year: number,
@@ -15,15 +18,15 @@ export interface YearProds {
 }
 
 interface ZxProdsListVm {
-    readonly items: ZxProd[];
-    readonly years: YearProds[];
+    readonly items: ZxProd[] | null;
+    readonly years: YearProds[] | null;
 }
 
 @Component({
     selector: 'zx-prods-list, zx-prods-list-view',
     templateUrl: './zx-prods-list.component.html',
     styleUrls: ['./zx-prods-list.component.scss'],
-    imports: [TranslatePipe, ZxProdBlockComponent, NgIf, NgForOf, AsyncPipe],
+    imports: [TranslatePipe, ZxProdBlockComponent, NgIf, NgForOf, AsyncPipe, ZxProdsListSkeletonComponent],
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -31,16 +34,25 @@ export class ZxProdsListComponent implements OnInit {
     @Input() public property: 'prods' | 'publishedProds' | 'releases' | 'compilations' | 'seriesProds' = 'prods';
     @Input() elementId: number = 0;
     @Input() layout: 'years' | 'list' = 'list';
+    @Input() skeletonCount = 4;
+    @Input() imagesLayout: 'loading' | 'screenshots' | 'inlays' | 'table' = 'loading';
+    @Input() set items$(value: Observable<ZxProd[] | null> | null) {
+        this.hasItemsObservableInput = value !== null;
+        if (value !== null) {
+            this.vm$ = value.pipe(map(items => this.buildVm(items)));
+        }
+    }
     @Input() set items(value: ZxProd[] | null) {
         this.hasItemsInput = true;
-        this.itemsStore.next(value ?? []);
+        this.itemsStore.next(value);
         if (this.initialized) {
             this.useItemsInput();
         }
     }
 
     public vm$: Observable<ZxProdsListVm | null> = of(null);
-    private readonly itemsStore = new BehaviorSubject<ZxProd[]>([]);
+    private readonly itemsStore = new BehaviorSubject<ZxProd[] | null>(null);
+    private hasItemsObservableInput = false;
     private hasItemsInput = false;
     private initialized = false;
 
@@ -51,6 +63,9 @@ export class ZxProdsListComponent implements OnInit {
 
     ngOnInit(): void {
         this.initialized = true;
+        if (this.hasItemsObservableInput) {
+            return;
+        }
         if (this.hasItemsInput) {
             this.useItemsInput();
             return;
@@ -74,10 +89,10 @@ export class ZxProdsListComponent implements OnInit {
         );
     }
 
-    private buildVm(items: ZxProd[]): ZxProdsListVm {
+    private buildVm(items: ZxProd[] | null): ZxProdsListVm {
         return {
             items,
-            years: this.getYears(items),
+            years: items === null ? null : this.getYears(items),
         };
     }
 

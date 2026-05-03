@@ -2,12 +2,13 @@ import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
 import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {BehaviorSubject, combineLatest, firstValueFrom, Observable, of} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import {map, startWith, switchMap} from 'rxjs/operators';
 import {CurrentUserService} from '../../services/current-user.service';
 import {ElementPrivilegesApiService} from '../../services/element-privileges-api.service';
 import {ConfirmDialogService} from '../zx-confirm-dialog/confirm-dialog.service';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../zx-button-controls/zx-button-controls.component';
+import {ZxSkeletonBoneComponent} from '../zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
 
 export interface ZxEditingControlConfirm {
   readonly titleKey: string;
@@ -35,11 +36,25 @@ interface VisibleEditingAction {
   readonly url: string;
 }
 
+interface EditingControlsVm {
+  readonly loading: boolean;
+  readonly actions: readonly VisibleEditingAction[];
+}
+
 @Component({
   selector: 'zx-editing-controls',
   standalone: true,
-  imports: [AsyncPipe, NgForOf, NgIf, TranslateModule, ZxButtonComponent, ZxButtonControlsComponent],
+  imports: [
+    AsyncPipe,
+    NgForOf,
+    NgIf,
+    TranslateModule,
+    ZxButtonComponent,
+    ZxButtonControlsComponent,
+    ZxSkeletonBoneComponent,
+  ],
   templateUrl: './zx-editing-controls.component.html',
+  styleUrls: ['./zx-editing-controls.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxEditingControlsComponent implements OnChanges {
@@ -48,14 +63,15 @@ export class ZxEditingControlsComponent implements OnChanges {
   @Input({required: true}) buildActionUrl!: (action: string, elementId: number) => string;
 
   private readonly configStore = new BehaviorSubject<EditingControlsConfig | null>(null);
+  readonly skeletonItems = [0, 1, 2];
 
-  readonly visibleActions$: Observable<readonly VisibleEditingAction[]> = combineLatest([
+  readonly vm$: Observable<EditingControlsVm> = combineLatest([
     this.currentUserService.isAuthenticated$,
     this.configStore,
   ]).pipe(
     switchMap(([isAuthenticated, config]) => {
       if (!isAuthenticated || config === null || config.elementId <= 0 || config.actions.length === 0) {
-        return of([]);
+        return of({loading: false, actions: []});
       }
 
       const privilegeNames = Array.from(new Set(config.actions.map(action => action.privilege)));
@@ -66,6 +82,8 @@ export class ZxEditingControlsComponent implements OnChanges {
             action,
             url: config.buildActionUrl(action.action, config.elementId),
           }))),
+        map(actions => ({loading: false, actions})),
+        startWith({loading: true, actions: []}),
       );
     }),
   );

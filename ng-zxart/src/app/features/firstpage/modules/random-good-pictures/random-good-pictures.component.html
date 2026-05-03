@@ -7,9 +7,8 @@
     [loading]="vm.loading"
     [error]="vm.error"
     [empty]="vm.empty"
-    skeletonVariant="picture-grid"
-    [skeletonCount]="settings.limit"
   >
+    <zx-picture-grid-skeleton loadingSkeleton [count]="settings.limit"></zx-picture-grid-skeleton>
     <div zxPicturesGrid>
       <zx-picture-card
         *ngFor="let pic of vm.items; let i = index"

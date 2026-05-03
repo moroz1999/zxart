@@ -17,21 +17,20 @@
   </div>
 </div>
 
-<zx-spinner *ngIf="loading" size="xl"></zx-spinner>
+<zx-spinner *ngIf="loading && layout === 'table'" size="xl"></zx-spinner>
 
 <div *ngIf="error" zxCaption>{{ 'prods-browser.error' | translate }}</div>
 <div *ngIf="!loading && !error && prods.length === 0" zxCaption>{{ 'prods-browser.empty' | translate }}</div>
 
-<ng-container *ngIf="!loading && !error && prods.length > 0">
-  <div *ngIf="layout !== 'table'" zxProdsGrid>
-    <zx-prod-block
-      *ngFor="let prod of prods"
-      [model]="prod"
-      [imagesLayout]="layout"
-    ></zx-prod-block>
-  </div>
+<ng-container *ngIf="!error">
+  <zx-prods-list-view
+    *ngIf="layout !== 'table'"
+    [items$]="prods$"
+    [imagesLayout]="layout"
+    [skeletonCount]="prodSkeletonCount"
+  ></zx-prods-list-view>
 
-  <table *ngIf="layout === 'table'" class="prods-table">
+  <table *ngIf="!loading && prods.length > 0 && layout === 'table'" class="prods-table">
     <thead>
       <tr>
         <td>{{ 'zx-prod.title' | translate }}</td>

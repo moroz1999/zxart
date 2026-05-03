@@ -1,8 +1,14 @@
+import {
+  ZxRowSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
+import {
+  ZxProdsListSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-prods-list-skeleton/zx-prods-list-skeleton.component';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {merge, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, merge, Observable, Subject, Subscription} from 'rxjs';
 import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
 import {SearchResultsService} from '../../services/search-results.service';
 import {PressArticleDto, SearchItemDto, SearchResultsDto, SearchResultSetDto} from '../../models/search-item.dto';
@@ -14,7 +20,9 @@ import {ZxProd} from '../../../../shared/models/zx-prod';
 import {ZxTuneDto} from '../../../../shared/models/zx-tune-dto';
 import {PartyDto} from '../../../../shared/models/party-dto';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {
+  ZxTextSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-text-skeleton/zx-text-skeleton.component';
 import {
   ZxBodyDirective,
   ZxCaptionDirective,
@@ -33,12 +41,12 @@ import {
   ZxPictureCardSkeletonComponent
 } from '../../../../shared/ui/zx-picture-card-skeleton/zx-picture-card-skeleton.component';
 import {ZxPicturesGridDirective} from '../../../../shared/directives/pictures-grid.directive';
-import {ZxProdBlockComponent} from '../../../../shared/ui/zx-prod-block/zx-prod-block.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
 import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.component';
 import {ZxPartyCardComponent} from '../../../../shared/ui/zx-party-card/zx-party-card.component';
 import {PlayerService} from '../../../player/services/player.service';
+import {ZxProdsListComponent} from '../../../../entities/zx-prods-list/zx-prods-list.component';
 
 const AUTHOR_SET_TYPE = 'author';
 const GROUP_SET_TYPE = 'group';
@@ -55,13 +63,13 @@ interface TypeFilterOption {
 }
 
 interface SkeletonGroup {
-  readonly variant: 'row' | 'picture-grid' | 'prod-grid';
+  readonly variant: 'row' | 'picture-grid' | 'prods-list';
   readonly count: number;
 }
 
 const INITIAL_SKELETON_GROUPS: SkeletonGroup[] = [
   {variant: 'row', count: 4},
-  {variant: 'prod-grid', count: 6},
+  {variant: 'prods-list', count: 6},
   {variant: 'picture-grid', count: 6},
   {variant: 'row', count: 3},
 ];
@@ -70,11 +78,13 @@ const INITIAL_SKELETON_GROUPS: SkeletonGroup[] = [
   selector: 'zx-search-results',
   standalone: true,
   imports: [
+    ZxRowSkeletonComponent,
+    ZxProdsListSkeletonComponent,
     CommonModule,
     FormsModule,
     TranslateModule,
     ZxPaginationComponent,
-    ZxSkeletonComponent,
+    ZxTextSkeletonComponent,
     ZxArticlePreviewComponent,
     ZxCheckboxFieldComponent,
     ZxFilterBarComponent,
@@ -85,7 +95,7 @@ const INITIAL_SKELETON_GROUPS: SkeletonGroup[] = [
     ZxPictureCardComponent,
     ZxPictureCardSkeletonComponent,
     ZxPicturesGridDirective,
-    ZxProdBlockComponent,
+    ZxProdsListComponent,
     ZxPanelComponent,
     ZxTableComponent,
     ZxTuneRowComponent,
@@ -124,7 +134,8 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
       : null),
   );
 
-  private prodsBySet: Record<string, ZxProd[]> = {};
+  private prodsBySet: Record<string, BehaviorSubject<ZxProd[] | null>> = {};
+  private readonly emptyProds$ = new BehaviorSubject<ZxProd[] | null>(null);
 
   private readonly trigger = new Subject<{kind: 'initial' | 'page' | 'filter'}>();
   private readonly subscriptions = new Subscription();
@@ -172,7 +183,6 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
 
   trackBySetType = (_: number, set: SearchResultSetDto): string => set.type;
   trackByItemId = (_: number, item: SearchItemDto): number => item.id;
-  trackByProdId = (_: number, prod: ZxProd): number => prod.id;
   trackByTuneId = (_: number, tune: ZxTuneDto): number => tune.id;
   trackByPartyId = (_: number, party: PartyDto): number => party.id;
   trackByOptionValue = (_: number, opt: TypeFilterOption): string => opt.value;
@@ -257,8 +267,8 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     return items as PartyDto[];
   }
 
-  prodsFor(set: SearchResultSetDto): ZxProd[] {
-    return this.prodsBySet[set.type] ?? [];
+  prodsFor(set: SearchResultSetDto): Observable<ZxProd[] | null> {
+    return this.prodsBySet[set.type] ?? this.emptyProds$;
   }
 
   setLabelKey(type: string): string {
@@ -295,6 +305,9 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
       this.initialLoading = true;
     } else {
       this.pageLoading = true;
+      for (const prods of Object.values(this.prodsBySet)) {
+        prods.next(null);
+      }
     }
     this.error = false;
     this.cdr.markForCheck();
@@ -302,7 +315,7 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
 
   private applyResponse(response: SearchResultsDto): void {
     this.data = response;
-    this.prodsBySet = this.buildProdInstances(response);
+    this.prodsBySet = this.buildProdStores(response);
     this.pagesAmount = response.pageSize > 0 ? Math.ceil(response.total / response.pageSize) : 0;
     this.syncTypeFilters(response.sets.map(s => s.type));
     this.initialLoading = false;
@@ -317,13 +330,15 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
-  private buildProdInstances(response: SearchResultsDto): Record<string, ZxProd[]> {
-    const map: Record<string, ZxProd[]> = {};
+  private buildProdStores(response: SearchResultsDto): Record<string, BehaviorSubject<ZxProd[] | null>> {
+    const map: Record<string, BehaviorSubject<ZxProd[] | null>> = {};
     for (const set of response.sets) {
       if (!PROD_SET_TYPES.has(set.type)) {
         continue;
       }
-      map[set.type] = (set.items as ZxProdDto[]).map(dto => new ZxProd(dto));
+      map[set.type] = new BehaviorSubject<ZxProd[] | null>(
+        (set.items as ZxProdDto[]).map(dto => new ZxProd(dto)),
+      );
     }
     return map;
   }

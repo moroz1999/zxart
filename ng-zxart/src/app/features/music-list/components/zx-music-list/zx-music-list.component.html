@@ -1,6 +1,6 @@
 <ng-container *ngIf="vm$ | async as vm">
   <zx-table *ngIf="vm.loading" size="sm">
-    <zx-skeleton variant="tune-table" [count]="5"></zx-skeleton>
+    <zx-tune-table-skeleton [count]="5"></zx-tune-table-skeleton>
   </zx-table>
 
   <div *ngIf="vm.error" zxCaption>{{ 'firstpage.error' | translate }}</div>

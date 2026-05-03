@@ -2,7 +2,9 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from '@ang
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {
+  ZxRowSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
 import {ZxHeading2Directive,} from '../../../../shared/directives/typography/typography.directives';
 import {ProdReleasesApiService} from '../../services/prod-releases-api.service';
@@ -16,7 +18,7 @@ import {ZxProdReleaseRowComponent} from '../zx-prod-release-row/zx-prod-release-
     CommonModule,
     TranslateModule,
     InViewportDirective,
-    ZxSkeletonComponent,
+    ZxRowSkeletonComponent,
     ZxTableComponent,
     ZxHeading2Directive,
     ZxProdReleaseRowComponent,

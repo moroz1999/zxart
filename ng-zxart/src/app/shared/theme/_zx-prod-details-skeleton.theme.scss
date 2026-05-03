@@ -1,0 +1,73 @@
+:root {
+  /* Outer vertical gap matching the product details stack. */
+  --zx-prod-details-skeleton-stack-gap: var(--gap-xxl);
+
+  /* Product details title placeholder width. */
+  --zx-prod-details-skeleton-title-width: 60%;
+
+  /* Product details title placeholder height. */
+  --zx-prod-details-skeleton-title-height: var(--space-32);
+
+  /* Gap between editing controls placeholders. */
+  --zx-prod-details-skeleton-controls-gap: var(--space-8);
+
+  /* Editing controls placeholder width. */
+  --zx-prod-details-skeleton-control-width: calc(var(--space-64) + var(--space-32));
+
+  /* Editing controls placeholder height. */
+  --zx-prod-details-skeleton-control-height: var(--space-32);
+
+  /* Editing controls placeholder radius. */
+  --zx-prod-details-skeleton-control-radius: var(--radius-sm);
+
+  /* Gap between product info and the video placeholder. */
+  --zx-prod-details-skeleton-top-gap: var(--space-16);
+
+  /* Product info table preferred width. */
+  --zx-prod-details-skeleton-info-basis: calc(var(--space-64) * 5);
+
+  /* Minimum width of product info table labels. */
+  --zx-prod-details-skeleton-label-min-width: calc(var(--space-64) + var(--space-48) + var(--space-8));
+
+  /* Product info table label column width. */
+  --zx-prod-details-skeleton-label-width: 30%;
+
+  /* Horizontal gap between product info label and value placeholders. */
+  --zx-prod-details-skeleton-table-column-gap: var(--space-8);
+
+  /* Vertical padding for product info rows. */
+  --zx-prod-details-skeleton-table-row-padding: var(--space-8);
+
+  /* Product info row placeholder height. */
+  --zx-prod-details-skeleton-table-line-height: var(--space-16);
+
+  /* Product video placeholder preferred width. */
+  --zx-prod-details-skeleton-video-basis: calc((var(--space-64) * 7) + var(--space-32));
+
+  /* Gap between section heading placeholders and section skeleton content. */
+  --zx-prod-details-skeleton-section-gap: var(--space-12);
+
+  /* Section heading placeholder width. */
+  --zx-prod-details-skeleton-section-title-width: 28%;
+
+  /* Section heading placeholder height. */
+  --zx-prod-details-skeleton-section-title-height: var(--space-24);
+
+  /* Top padding matching collapsible section content. */
+  --zx-prod-details-skeleton-description-body-padding: var(--space-12);
+
+  /* Gap between product details description skeleton ribs. */
+  --zx-prod-details-skeleton-description-line-gap: var(--space-8);
+
+  /* Product details description skeleton rib height. */
+  --zx-prod-details-skeleton-description-line-height: var(--space-8);
+
+  /* Full-width product details description skeleton rib width. */
+  --zx-prod-details-skeleton-description-line-width-full: 100%;
+
+  /* Medium product details description skeleton rib width. */
+  --zx-prod-details-skeleton-description-line-width-medium: 86%;
+
+  /* Short product details description skeleton rib width. */
+  --zx-prod-details-skeleton-description-line-width-short: 64%;
+}

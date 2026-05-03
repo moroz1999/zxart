@@ -1,11 +1,11 @@
 <ng-container *ngIf="initialLoading; else loadedTpl">
   <div class="zx-search-results__skeleton-filters">
-    <zx-skeleton variant="row" [count]="6"></zx-skeleton>
+    <zx-row-skeleton [count]="6"></zx-row-skeleton>
   </div>
   <div class="zx-search-results__skeleton-groups">
     <div *ngFor="let group of skeletonGroups" class="zx-search-results__skeleton-group">
       <div class="zx-search-results__skeleton-heading">
-        <zx-skeleton variant="text" [count]="1" lineHeight="24px"></zx-skeleton>
+        <zx-text-skeleton [count]="1" lineHeight="24px"></zx-text-skeleton>
       </div>
       <div *ngIf="group.variant === 'picture-grid'" zxPicturesGrid>
         <zx-picture-card-skeleton
@@ -13,16 +13,14 @@
           [animationDelayMs]="i * 80"
         ></zx-picture-card-skeleton>
       </div>
-      <zx-skeleton
-        *ngIf="group.variant === 'prod-grid'"
-        variant="prod-grid"
+      <zx-prods-list-skeleton
+        *ngIf="group.variant === 'prods-list'"
         [count]="group.count"
-      ></zx-skeleton>
-      <zx-skeleton
+      ></zx-prods-list-skeleton>
+      <zx-row-skeleton
         *ngIf="group.variant === 'row'"
-        variant="row"
         [count]="group.count"
-      ></zx-skeleton>
+      ></zx-row-skeleton>
     </div>
   </div>
 </ng-container>
@@ -101,12 +99,11 @@
                 </ng-container>
               </zx-table>
 
-              <div *ngSwitchCase="isProdSet(set)" class="zx-search-results__prods-grid">
-                <zx-prod-block
-                  *ngFor="let prod of prodsFor(set); trackBy: trackByProdId"
-                  [model]="prod"
-                ></zx-prod-block>
-              </div>
+              <zx-prods-list-view
+                *ngSwitchCase="isProdSet(set)"
+                [items$]="prodsFor(set)"
+                [skeletonCount]="6"
+              ></zx-prods-list-view>
 
               <div *ngSwitchCase="isPressArticleSet(set)" class="zx-search-results__articles-grid">
                 <zx-panel

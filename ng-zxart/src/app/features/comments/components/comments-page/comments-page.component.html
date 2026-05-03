@@ -5,7 +5,7 @@
     }
 
     @if (initialLoading()) {
-      <zx-skeleton variant="comment" [count]="5"></zx-skeleton>
+      <zx-comment-skeleton [count]="5"></zx-comment-skeleton>
     } @else {
       @if (data(); as listData) {
         <div class="comments-content" [class.loading]="paginationLoading()">

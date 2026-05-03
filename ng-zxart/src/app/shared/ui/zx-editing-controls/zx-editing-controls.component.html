@@ -1,9 +1,19 @@
-<zx-button-controls *ngIf="visibleActions$ | async as visibleActions" align="start" [wrap]="true">
-  <zx-button
-    *ngFor="let item of visibleActions"
-    [color]="item.action.color || 'primary'"
-    (click)="runAction(item)"
-  >
-    {{ item.action.labelKey | translate }}
-  </zx-button>
-</zx-button-controls>
+<ng-container *ngIf="vm$ | async as vm">
+  <div *ngIf="vm.loading" class="zx-editing-controls-skeleton">
+    <zx-skeleton-bone
+      *ngFor="let item of skeletonItems; index as i"
+      class="zx-editing-controls-skeleton__item"
+      [style.animation-delay.ms]="i * 80"
+    ></zx-skeleton-bone>
+  </div>
+
+  <zx-button-controls *ngIf="!vm.loading" align="start" [wrap]="true">
+    <zx-button
+      *ngFor="let item of vm.actions"
+      [color]="item.action.color || 'primary'"
+      (click)="runAction(item)"
+    >
+      {{ item.action.labelKey | translate }}
+    </zx-button>
+  </zx-button-controls>
+</ng-container>

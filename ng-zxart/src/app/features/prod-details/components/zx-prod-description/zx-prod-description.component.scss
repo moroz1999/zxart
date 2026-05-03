@@ -5,3 +5,25 @@
 .prod-description--plain {
   white-space: pre-wrap;
 }
+
+.prod-description-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-prod-description-skeleton-gap);
+}
+
+.prod-description-skeleton__line {
+  height: var(--zx-prod-description-skeleton-line-height);
+}
+
+.prod-description-skeleton__line:first-child {
+  width: var(--zx-prod-description-skeleton-line-width-full);
+}
+
+.prod-description-skeleton__line:nth-child(2) {
+  width: var(--zx-prod-description-skeleton-line-width-medium);
+}
+
+.prod-description-skeleton__line:last-child {
+  width: var(--zx-prod-description-skeleton-line-width-short);
+}

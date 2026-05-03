@@ -16,7 +16,9 @@ import {ZxSelectComponent, ZxSelectOption} from '../../../../shared/ui/zx-select
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
 import {ZxInputRangeComponent} from '../../../../shared/ui/zx-input-range/zx-input-range.component';
 import {ZxMinMaxRangeComponent} from '../../../../shared/ui/zx-min-max-range/zx-min-max-range.component';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {
+  ZxTextSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-text-skeleton/zx-text-skeleton.component';
 import {
   ZxFilterPickerComponent,
   ZxFilterPickerItem
@@ -50,7 +52,7 @@ type PartyValue = 'any' | 'yes' | 'no';
     ZxInputComponent,
     ZxInputRangeComponent,
     ZxMinMaxRangeComponent,
-    ZxSkeletonComponent,
+    ZxTextSkeletonComponent,
     ZxFilterPickerComponent,
     ZxCheckboxFieldComponent,
     ZxItemControlsComponent,

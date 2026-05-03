@@ -1,0 +1,7 @@
+@for (i of items; track i) {
+  <zx-skeleton-bone
+    class="skeleton-screenshot"
+    [animated]="animated"
+    [style.animation-delay.ms]="i * 80"
+  ></zx-skeleton-bone>
+}

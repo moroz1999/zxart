@@ -12,7 +12,7 @@ use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArt\Prods\ProdRelatedProdsService;
-use ZxArt\Prods\Rest\ProdSeriesRestDto;
+use ZxArt\Prods\Rest\ProdSummariesRestDto;
 
 class ProdSeries extends LoggedControllerApplication
 {
@@ -40,7 +40,7 @@ class ProdSeries extends LoggedControllerApplication
         try {
             $elementId = $this->getElementId();
             $dto = $this->prodRelatedProdsService->getSeries($elementId);
-            $this->renderer->assign('body', $this->objectMapper->map($dto, ProdSeriesRestDto::class));
+            $this->renderer->assign('body', $this->objectMapper->map($dto, ProdSummariesRestDto::class));
         } catch (ProdDetailsException $e) {
             $this->logThrowable('ProdSeries::execute', $e);
             $this->assignError($e->getMessage(), $e->getStatusCode());

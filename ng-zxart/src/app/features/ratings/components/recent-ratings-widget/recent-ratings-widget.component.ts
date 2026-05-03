@@ -4,7 +4,9 @@ import {TranslateModule} from '@ngx-translate/core';
 import {RatingsService} from '../../services/ratings.service';
 import {RecentRatingDto} from '../../models/recent-rating.dto';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {
+  ZxTextSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-text-skeleton/zx-text-skeleton.component';
 import {ZxSpinnerComponent} from '../../../../shared/ui/zx-spinner/zx-spinner.component';
 import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
@@ -20,7 +22,7 @@ const PAGE_SIZE = 20;
     CommonModule,
     TranslateModule,
     ZxTableComponent,
-    ZxSkeletonComponent,
+    ZxTextSkeletonComponent,
     ZxSpinnerComponent,
     ZxUserComponent,
     ZxButtonComponent,

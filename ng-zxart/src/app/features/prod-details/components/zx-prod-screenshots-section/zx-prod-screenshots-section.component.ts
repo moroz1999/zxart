@@ -2,7 +2,9 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from '@ang
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {
+  ZxScreenshotGridSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-screenshot-grid-skeleton/zx-screenshot-grid-skeleton.component';
 import {
   PictureGalleryHostComponent,
 } from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
@@ -20,7 +22,7 @@ import {ZxCaptionDirective, ZxHeading2Directive,} from '../../../../shared/direc
     CommonModule,
     TranslateModule,
     InViewportDirective,
-    ZxSkeletonComponent,
+    ZxScreenshotGridSkeletonComponent,
     PictureGalleryHostComponent,
     LightboxModule,
     ZxCaptionDirective,

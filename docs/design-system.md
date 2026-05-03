@@ -26,7 +26,7 @@ The project follows a component-based approach for the design system.
     - **No wrapper elements**: If a component only wraps `<ng-content>`, use `:host` for all styling instead of adding a wrapper `<div>`. Apply classes via `@HostBinding('class')`. Wrapper elements are only justified when additional structural markup is needed beyond plain content projection.
     - **Parent/child styling boundary**: A parent component may only style the *external contour* of a child component host — meaning `min-width`, `max-width`, `margin`, `align-self`, `flex-grow`, and similar layout-affecting properties. A parent MUST NOT set internal properties on a child component's host: `padding`, `display`, `flex-direction`, `gap`, `font-size`, `overflow`, or any property that controls what happens *inside* the component. Internal layout and spacing belong to the component itself (in its own `:host` or inner element styles). If internal behavior must vary per usage context, expose it via `@Input()` props or CSS custom properties in the component's theme file — never by styling from outside.
 13. **Loading States**: Every list or data-driven component MUST implement proper loading states:
-    - **Initial load**: Display `zx-skeleton` component with appropriate variant (`comment`, `card`, `row`, `text`). Never show empty containers or spinners for initial page loads.
+    - **Initial load**: Display the concrete skeleton component that matches the target layout. Never use a skeleton facade that imports multiple variants. Never show empty containers or spinners for initial page loads.
     - **Pagination/reload**: Lock interactive controls (pagination, filters) with visual feedback (opacity reduction, spinner overlay). Content should blur slightly to indicate loading without disappearing completely.
     - **Error states**: Display user-friendly error messages with retry options.
 14. **Typography System**: See [Typography](design-system/typography.md) for all directives, usage rules, and how to choose between similar styles.
@@ -50,7 +50,7 @@ All design system components are in `ng-zxart/src/app/shared/ui/`.
 - [zx-pagination](design-system/zx-pagination.md) — page navigation
 - [zx-filter-picker](design-system/zx-filter-picker.md) — popover filter with checkboxes
 - [zx-user](design-system/zx-user.md) — user name with status badges
-- [zx-skeleton](design-system/zx-skeleton.md) — loading placeholder
+- [Skeletons](design-system/skeletons.md) — loading placeholders
 - [zx-spinner](design-system/zx-spinner.md) — compact loading spinner
 - [zxTooltip](design-system/zx-tooltip.md) — floating tooltip directive that follows the cursor
 - [zx-rating](design-system/zx-rating.md) — interactive 5-star rating with hover preview

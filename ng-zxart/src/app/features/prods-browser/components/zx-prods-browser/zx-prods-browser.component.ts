@@ -4,16 +4,16 @@ import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {environment} from '../../../../../environments/environment';
 import {SvgIconRegistryService} from 'angular-svg-icon';
 import {ZxProd} from '../../../../shared/models/zx-prod';
-import {ZxProdBlockComponent} from '../../../../shared/ui/zx-prod-block/zx-prod-block.component';
 import {ZxProdRowComponent} from '../../../../entities/zx-prod-row/zx-prod-row.component';
 import {ZxSpinnerComponent} from '../../../../shared/ui/zx-spinner/zx-spinner.component';
 import {ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
 import {ZxSortSelectComponent} from '../../../../shared/ui/zx-sort-select/zx-sort-select.component';
 import {ZxToggleComponent, ZxToggleOption} from '../../../../shared/ui/zx-toggle/zx-toggle.component';
-import {ZxProdsGridDirective} from '../../../../shared/directives/prods-grid.directive';
 import {ProdsBrowserService} from '../../services/prods-browser.service';
 import {BrowserBaseComponent} from '../../../../shared/browser-base.component';
+import {BehaviorSubject} from 'rxjs';
+import {ZxProdsListComponent} from '../../../../entities/zx-prods-list/zx-prods-list.component';
 
 export type ProdsBrowserLayout = 'loading' | 'screenshots' | 'table';
 
@@ -23,14 +23,13 @@ export type ProdsBrowserLayout = 'loading' | 'screenshots' | 'table';
   imports: [
     CommonModule,
     TranslateModule,
-    ZxProdBlockComponent,
     ZxProdRowComponent,
     ZxSpinnerComponent,
     ZxCaptionDirective,
     ZxPaginationComponent,
     ZxSortSelectComponent,
     ZxToggleComponent,
-    ZxProdsGridDirective,
+    ZxProdsListComponent,
   ],
   templateUrl: './zx-prods-browser.component.html',
   styleUrls: ['./zx-prods-browser.component.scss'],
@@ -38,6 +37,8 @@ export type ProdsBrowserLayout = 'loading' | 'screenshots' | 'table';
 })
 export class ZxProdsBrowserComponent extends BrowserBaseComponent {
   prods: ZxProd[] = [];
+  readonly prods$ = new BehaviorSubject<ZxProd[] | null>(null);
+  readonly prodSkeletonCount = 50;
   layout: ProdsBrowserLayout = 'loading';
 
   readonly layoutOptions: ZxToggleOption[] = [
@@ -66,10 +67,12 @@ export class ZxProdsBrowserComponent extends BrowserBaseComponent {
   }
 
   protected override fetchPage(start: number, limit: number): void {
+    this.prods$.next(null);
     this.prodsBrowserService.getPaged(this.elementId, start, limit, this.sorting).subscribe({
       next: response => {
         this.loading = false;
         this.prods = response.items.map(dto => new ZxProd(dto));
+        this.prods$.next(this.prods);
         this.total = response.total;
         this.pagesAmount = Math.ceil(this.total / limit);
         this.cdr.markForCheck();
@@ -77,6 +80,7 @@ export class ZxProdsBrowserComponent extends BrowserBaseComponent {
       error: () => {
         this.loading = false;
         this.error = true;
+        this.prods$.next([]);
         this.cdr.markForCheck();
       },
     });

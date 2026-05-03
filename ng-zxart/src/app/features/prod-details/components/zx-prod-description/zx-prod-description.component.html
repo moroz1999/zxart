@@ -1,6 +1,16 @@
 <zx-collapsible-section [title]="'prod-details.description' | translate">
-  <div *ngIf="htmlDescription; else plainText" [innerHTML]="description"></div>
-  <ng-template #plainText>
-    <div class="prod-description--plain">{{ description }}</div>
+  <div *ngIf="description === null; else descriptionContent" class="prod-description-skeleton">
+    <zx-skeleton-bone
+      *ngFor="let line of skeletonLines; index as i"
+      class="prod-description-skeleton__line"
+      [style.animation-delay.ms]="i * 80"
+    ></zx-skeleton-bone>
+  </div>
+
+  <ng-template #descriptionContent>
+    <div *ngIf="htmlDescription; else plainText" [innerHTML]="description"></div>
+    <ng-template #plainText>
+      <div class="prod-description--plain">{{ description }}</div>
+    </ng-template>
   </ng-template>
 </zx-collapsible-section>

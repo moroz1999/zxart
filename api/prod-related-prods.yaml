@@ -71,7 +71,7 @@ paths:
 
   /prod-series/:
     get:
-      summary: Series this prod belongs to (each entry inlines the sibling prods)
+      summary: Prods from the same series as this prod
       parameters:
         - in: query
           name: id
@@ -80,11 +80,11 @@ paths:
             type: integer
       responses:
         '200':
-          description: Series payload
+          description: Prod summaries payload
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProdSeriesPayload'
+                $ref: '#/components/schemas/ProdSummariesPayload'
         '400':
           description: Bad request
         '404':
@@ -137,32 +137,3 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProdSummary'
-
-    ProdSeriesEntry:
-      type: object
-      required:
-        - id
-        - title
-        - url
-        - prods
-      properties:
-        id:
-          type: integer
-        title:
-          type: string
-        url:
-          type: string
-        prods:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProdSummary'
-
-    ProdSeriesPayload:
-      type: object
-      required:
-        - series
-      properties:
-        series:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProdSeriesEntry'

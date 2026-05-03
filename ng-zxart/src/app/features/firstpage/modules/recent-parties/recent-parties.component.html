@@ -7,9 +7,8 @@
     [loading]="vm.loading"
     [error]="vm.error"
     [empty]="vm.empty"
-    skeletonVariant="prod-grid"
-    [skeletonCount]="settings.limit"
   >
+    <zx-prods-list-skeleton loadingSkeleton [count]="settings.limit"></zx-prods-list-skeleton>
     <div class="parties-grid">
       <zx-party-card *ngFor="let party of vm.items" [party]="party"></zx-party-card>
     </div>

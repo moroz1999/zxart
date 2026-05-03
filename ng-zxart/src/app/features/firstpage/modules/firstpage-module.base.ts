@@ -56,6 +56,10 @@ export abstract class FirstpageModuleBase<T> implements OnInit, OnDestroy {
     }))
   );
 
+  readonly items$: Observable<T[] | null> = this.stateStore.pipe(
+    map(state => state.loading ? null : state.items),
+  );
+
   private el = inject(ElementRef);
   private observer?: IntersectionObserver;
   private backendLinksService = inject(BackendLinksService);

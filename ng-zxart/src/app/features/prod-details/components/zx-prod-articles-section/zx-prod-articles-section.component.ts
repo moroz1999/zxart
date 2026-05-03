@@ -2,7 +2,9 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from '@ang
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {
+  ZxCommentSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-comment-skeleton/zx-comment-skeleton.component';
 import {ZxArticlePreviewComponent} from '../../../../shared/ui/zx-article-preview/zx-article-preview.component';
 import {ZxHeading2Directive} from '../../../../shared/directives/typography/typography.directives';
 import {ProdArticlesApiService} from '../../services/prod-articles-api.service';
@@ -15,7 +17,7 @@ import {PressArticlePreviewDto} from '../../models/press-article.dto';
     CommonModule,
     TranslateModule,
     InViewportDirective,
-    ZxSkeletonComponent,
+    ZxCommentSkeletonComponent,
     ZxArticlePreviewComponent,
     ZxHeading2Directive,
   ],

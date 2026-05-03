@@ -2,7 +2,9 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from '@ang
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {
+  ZxPictureGridSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
 import {ZxHeading2Directive} from '../../../../shared/directives/typography/typography.directives';
 import {ZxPicturesListComponent,} from '../../../picture-list/components/zx-pictures-list/zx-pictures-list.component';
 
@@ -13,7 +15,7 @@ import {ZxPicturesListComponent,} from '../../../picture-list/components/zx-pict
     CommonModule,
     TranslateModule,
     InViewportDirective,
-    ZxSkeletonComponent,
+    ZxPictureGridSkeletonComponent,
     ZxHeading2Directive,
     ZxPicturesListComponent,
   ],

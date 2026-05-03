@@ -99,6 +99,14 @@ Software production for ZX Spectrum - games, demos, utilities and other software
 ### Angular Details Page
 - Related prod lists (compilation items, compilations, series products) reuse `zx-prods-list`, which renders products through `zx-prod-block`.
 - Prod details related prod lists are loaded through REST endpoints; the legacy details template must not inject inline global data.
+- `/prod-series/` returns product summaries from the same series as the selected prod, not the series container entity.
 - Prod details core data does not include edit/delete privileges. Editing controls use shared `zx-editing-controls` and request privileges separately for authenticated users only.
 - Prod editing controls are action buttons, not links. They render through `zx-button` without `href` and navigate to legacy action URLs from click handlers.
 - The legacy details template mounts `zx-prod-details` directly; Angular renders the page title.
+- Product description loading state renders one paragraph skeleton with three thin ribs.
+
+### Angular Prod Lists
+- Outside category browser views, product cards must be rendered through `zx-prods-list`.
+- `zx-prods-list` accepts `Observable<ZxProd[] | null>` through `items$`; `null` means "not loaded yet" and renders the list skeleton.
+- Each usage configures the skeleton card count locally through `skeletonCount`.
+- Prod details related product sections get their observables from `ProdRelatedProdsService`; the service owns `null` loading state and starts REST loading lazily on first subscription.

@@ -6,7 +6,7 @@
   <ng-container *ngIf="loading || (loaded && articles.length > 0)">
     <h2 zxHeading2 class="prod-articles-section__title">{{ 'prod-details.articles' | translate }}</h2>
 
-    <zx-skeleton *ngIf="loading" variant="comment" [count]="2"></zx-skeleton>
+    <zx-comment-skeleton *ngIf="loading" [count]="2"></zx-comment-skeleton>
 
     <div *ngIf="loaded && articles.length > 0" class="prod-articles-section__list">
       <zx-article-preview

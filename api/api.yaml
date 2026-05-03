@@ -93,7 +93,3 @@ components:
       $ref: 'prod-related-prods.yaml#/components/schemas/ProdSummary'
     ProdSummariesPayload:
       $ref: 'prod-related-prods.yaml#/components/schemas/ProdSummariesPayload'
-    ProdSeriesEntry:
-      $ref: 'prod-related-prods.yaml#/components/schemas/ProdSeriesEntry'
-    ProdSeriesPayload:
-      $ref: 'prod-related-prods.yaml#/components/schemas/ProdSeriesPayload'

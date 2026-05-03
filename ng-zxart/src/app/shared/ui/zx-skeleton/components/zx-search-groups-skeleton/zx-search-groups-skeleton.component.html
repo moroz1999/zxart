@@ -1,0 +1,15 @@
+@for (g of items; track g) {
+  <div class="skeleton-search-group" [style.animation-delay.ms]="g * 80">
+    <zx-skeleton-bone class="skeleton-search-caption" [animated]="animated"></zx-skeleton-bone>
+    @for (i of groupItems; track i) {
+      <div class="skeleton-search-item">
+        <zx-skeleton-bone class="skeleton-search-icon" [animated]="animated"></zx-skeleton-bone>
+        <zx-skeleton-bone
+          class="skeleton-search-title"
+          [animated]="animated"
+          [style.width.%]="60 + (i % 3) * 15"
+        ></zx-skeleton-bone>
+      </div>
+    }
+  </div>
+}

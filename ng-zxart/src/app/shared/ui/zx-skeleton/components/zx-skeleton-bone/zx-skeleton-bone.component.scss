@@ -1,0 +1,33 @@
+:host {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: var(--skeleton-bg);
+  border-radius: var(--radius-sm);
+}
+
+:host::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--skeleton-shimmer) 50%,
+    transparent 100%
+  );
+}
+
+:host(.animated)::after {
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}

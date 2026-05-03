@@ -10,7 +10,7 @@
 </div>
 
 <zx-table *ngIf="loading" size="sm">
-  <zx-skeleton variant="tune-table" [count]="10"></zx-skeleton>
+  <zx-tune-table-skeleton [count]="10"></zx-tune-table-skeleton>
 </zx-table>
 
 <div *ngIf="error" zxCaption>{{ 'music-browser.error' | translate }}</div>

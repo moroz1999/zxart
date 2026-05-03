@@ -1,19 +1,23 @@
 <div *ngIf="vm$ | async as vm">
-    <div *ngIf="layout === 'list' && vm.items" class="zx-prods-gallery">
+    <zx-prods-list-skeleton
+            *ngIf="vm.items === null"
+        [count]="skeletonCount"
+    ></zx-prods-list-skeleton>
+    <div *ngIf="layout === 'list' && vm.items !== null" class="zx-prods-gallery">
         <zx-prod-block
                 *ngFor="let zxProd of vm.items"
                 [model]="zxProd"
-                [imagesLayout]="'loading'"
+                [imagesLayout]="imagesLayout"
         ></zx-prod-block>
     </div>
-    <ng-container *ngIf="layout === 'years' && vm.years">
+    <ng-container *ngIf="layout === 'years' && vm.years !== null">
         <div *ngFor="let year of vm.years" class="zx-prods-year">
             <h2>{{ year.year !== 0 ? year.year : ('prods-list.unknown-year' | translate) }}</h2>
             <div class="zx-prods-gallery">
                 <zx-prod-block
                         *ngFor="let zxProd of year.items"
                         [model]="zxProd"
-                        [imagesLayout]="'loading'"
+                        [imagesLayout]="imagesLayout"
                 ></zx-prod-block>
             </div>
         </div>

@@ -7,7 +7,9 @@ import {CommentsService} from '../../services/comments.service';
 import {CommentDto} from '../../models/comment.dto';
 import {BackendLinksService} from '../../../header/services/backend-links.service';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {
+  ZxTextSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-text-skeleton/zx-text-skeleton.component';
 import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxBodySmMutedDirective} from '../../../../shared/directives/typography/typography.directives';
@@ -21,7 +23,7 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
     CommonModule,
     TranslateModule,
     ZxStackComponent,
-    ZxSkeletonComponent,
+    ZxTextSkeletonComponent,
     ZxUserComponent,
     ZxPanelComponent,
     ZxBodySmMutedDirective,

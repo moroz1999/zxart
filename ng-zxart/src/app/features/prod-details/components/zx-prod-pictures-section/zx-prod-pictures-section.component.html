@@ -4,6 +4,6 @@
   (inViewport)="onInViewport()"
 >
   <h2 zxHeading2 class="prod-pictures-section__title">{{ 'prod-details.pictures' | translate }}</h2>
-  <zx-skeleton *ngIf="!mounted" variant="picture-grid" [count]="4"></zx-skeleton>
+  <zx-picture-grid-skeleton *ngIf="!mounted" [count]="4"></zx-picture-grid-skeleton>
   <zx-pictures-list-inline *ngIf="mounted" [elementId]="elementId"></zx-pictures-list-inline>
 </div>

@@ -1,3 +1,6 @@
+import {
+  ZxPictureGridSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
 import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable, tap} from 'rxjs';
@@ -18,7 +21,13 @@ const GALLERY_ID = 'zx-picture-lightbox-unvoted-pictures';
 @Component({
   selector: 'zx-fp-unvoted-pictures',
   standalone: true,
-  imports: [CommonModule, FirstpageModuleWrapperComponent, ZxPictureCardComponent, ZxPicturesGridDirective],
+  imports: [
+    ZxPictureGridSkeletonComponent,
+    CommonModule,
+    FirstpageModuleWrapperComponent,
+    ZxPictureCardComponent,
+    ZxPicturesGridDirective,
+  ],
   templateUrl: './unvoted-pictures.component.html',
   styleUrls: ['./unvoted-pictures.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -6,7 +6,9 @@ import {CommentsListDto} from '../../models/comment.dto';
 import {CommentChangeEvent} from '../../models/comment-change-event';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {
+  ZxCommentSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-comment-skeleton/zx-comment-skeleton.component';
 import {ZxHeading2Directive} from '../../../../shared/directives/typography/typography.directives';
 import {CommentComponent} from '../comment/comment.component';
 
@@ -18,7 +20,7 @@ import {CommentComponent} from '../comment/comment.component';
     TranslateModule,
     ZxPaginationComponent,
     ZxStackComponent,
-    ZxSkeletonComponent,
+    ZxCommentSkeletonComponent,
     ZxHeading2Directive,
     CommentComponent
   ],

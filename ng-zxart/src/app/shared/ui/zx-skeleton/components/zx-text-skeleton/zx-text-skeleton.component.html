@@ -1,0 +1,9 @@
+@for (i of items; track i) {
+  <zx-skeleton-bone
+    class="skeleton-text-line"
+    [animated]="animated"
+    [style.animation-delay.ms]="i * 50"
+    [style.width.%]="80 + (i % 3) * 10"
+    [style.height]="lineHeight"
+  ></zx-skeleton-bone>
+}

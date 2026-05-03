@@ -1,0 +1,15 @@
+@for (i of items; track i) {
+  <div class="skeleton-comment" [style.animation-delay.ms]="i * 100">
+    <zx-skeleton-bone class="skeleton-comment-image" [animated]="animated"></zx-skeleton-bone>
+    <div class="skeleton-comment-body">
+      <div class="skeleton-comment-header">
+        <zx-skeleton-bone class="skeleton-avatar" [animated]="animated"></zx-skeleton-bone>
+        <zx-skeleton-bone class="skeleton-name" [animated]="animated"></zx-skeleton-bone>
+        <zx-skeleton-bone class="skeleton-date" [animated]="animated"></zx-skeleton-bone>
+      </div>
+      <zx-skeleton-bone class="skeleton-title" [animated]="animated"></zx-skeleton-bone>
+      <zx-skeleton-bone class="skeleton-text" [animated]="animated"></zx-skeleton-bone>
+      <zx-skeleton-bone class="skeleton-text skeleton-text-short" [animated]="animated"></zx-skeleton-bone>
+    </div>
+  </div>
+}

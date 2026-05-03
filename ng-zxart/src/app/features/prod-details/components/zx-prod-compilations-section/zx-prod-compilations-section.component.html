@@ -1,11 +1,6 @@
-<ng-container *ngIf="prods$ | async as prods; else loading">
-  <ng-container *ngIf="prods.length > 0">
+<ng-container *ngIf="{ prods: prods$ | async } as vm">
+  <ng-container *ngIf="vm.prods === null || vm.prods.length > 0">
     <h2 zxHeading2 class="prod-related-section__title">{{ 'prod-details.compilations' | translate }}</h2>
-    <zx-prods-list-view [items]="prods" property="compilations"></zx-prods-list-view>
+    <zx-prods-list-view [items$]="prods$" property="compilations" [skeletonCount]="4"></zx-prods-list-view>
   </ng-container>
 </ng-container>
-
-<ng-template #loading>
-  <h2 zxHeading2 class="prod-related-section__title">{{ 'prod-details.compilations' | translate }}</h2>
-  <zx-skeleton variant="prod-grid" [count]="4"></zx-skeleton>
-</ng-template>

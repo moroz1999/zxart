@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+.zx-editing-controls-skeleton {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--zx-editing-controls-skeleton-gap);
+}
+
+.zx-editing-controls-skeleton__item {
+  width: var(--zx-editing-controls-skeleton-item-width);
+  height: var(--zx-editing-controls-skeleton-item-height);
+  border-radius: var(--zx-editing-controls-skeleton-item-radius);
+}

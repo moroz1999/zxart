@@ -6,7 +6,7 @@
   <ng-container *ngIf="loading || (loaded && hasContent)">
     <h2 zxHeading2 class="prod-maps-section__title">{{ 'prod-details.maps' | translate }}</h2>
 
-    <zx-skeleton *ngIf="loading" variant="picture-grid" [count]="2"></zx-skeleton>
+    <zx-picture-grid-skeleton *ngIf="loading" [count]="2"></zx-picture-grid-skeleton>
 
     <ng-container *ngIf="loaded">
       <zx-button

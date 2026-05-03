@@ -1,6 +1,6 @@
 <zx-stack spacing="lg">
   <zx-table *ngIf="loading" size="sm" titleLevel="h2">
-    <zx-skeleton variant="tune-table" [count]="6"></zx-skeleton>
+    <zx-tune-table-skeleton [count]="6"></zx-tune-table-skeleton>
   </zx-table>
 
   <div *ngIf="error" zxCaption>{{ 'firstpage.error' | translate }}</div>

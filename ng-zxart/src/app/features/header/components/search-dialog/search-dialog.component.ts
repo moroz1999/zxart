@@ -17,7 +17,9 @@ import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {SearchService} from '../../services/search.service';
 import {SearchResultGroup} from '../../models/search-result.dto';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {
+  ZxSearchGroupsSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-search-groups-skeleton/zx-search-groups-skeleton.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {BackendLinksService} from '../../services/backend-links.service';
 import {environment} from '../../../../../environments/environment';
@@ -34,7 +36,7 @@ const ICONS = ['person', 'list', 'videogame-asset', 'image', 'music-note'];
     TranslateModule,
     SvgIconComponent,
     ZxButtonComponent,
-    ZxSkeletonComponent,
+    ZxSearchGroupsSkeletonComponent,
     ZxButtonControlsComponent,
   ],
   templateUrl: './search-dialog.component.html',

@@ -1,3 +1,6 @@
+import {
+  ZxTuneTableSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-tune-table-skeleton/zx-tune-table-skeleton.component';
 import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs';
@@ -19,7 +22,13 @@ const PLAYLIST_ID = 'firstpage-new-tunes';
 @Component({
   selector: 'zx-fp-new-tunes',
   standalone: true,
-  imports: [CommonModule, ZxTableComponent, ZxTuneRowComponent, FirstpageModuleWrapperComponent],
+  imports: [
+    ZxTuneTableSkeletonComponent,
+    CommonModule,
+    ZxTableComponent,
+    ZxTuneRowComponent,
+    FirstpageModuleWrapperComponent,
+  ],
   templateUrl: './new-tunes.component.html',
   styleUrls: ['./new-tunes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

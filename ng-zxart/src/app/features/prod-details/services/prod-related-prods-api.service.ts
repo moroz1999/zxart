@@ -2,16 +2,9 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {catchError, map, shareReplay} from 'rxjs/operators';
-import {ProdSeriesEntryDto, ProdSeriesPayload, ProdSummariesPayload, ProdSummaryDto} from '../models/prod-summary.dto';
+import {ProdSummariesPayload, ProdSummaryDto} from '../models/prod-summary.dto';
 import {ZxProd} from '../../../shared/models/zx-prod';
 import {LegalStatus, ZxProdDto} from '../../../shared/models/zx-prod-dto';
-
-export interface ProdSeriesEntry {
-  readonly id: number;
-  readonly title: string;
-  readonly url: string;
-  readonly prods: ZxProd[];
-}
 
 @Injectable({providedIn: 'root'})
 export class ProdRelatedProdsApiService {
@@ -29,13 +22,8 @@ export class ProdRelatedProdsApiService {
     return this.getProds('/prod-compilations/', elementId);
   }
 
-  getSeries(elementId: number): Observable<ProdSeriesEntry[]> {
-    const params = new HttpParams().set('id', String(elementId));
-    return this.http.get<ProdSeriesPayload>('/prod-series/', {params}).pipe(
-      map(response => (response.series ?? []).map(entry => this.toSeriesEntry(entry))),
-      catchError(() => of([])),
-      shareReplay({bufferSize: 1, refCount: false}),
-    );
+  getSeries(elementId: number): Observable<ZxProd[]> {
+    return this.getProds('/prod-series/', elementId);
   }
 
   private getProds(url: string, elementId: number): Observable<ZxProd[]> {
@@ -45,15 +33,6 @@ export class ProdRelatedProdsApiService {
       catchError(() => of([])),
       shareReplay({bufferSize: 1, refCount: false}),
     );
-  }
-
-  private toSeriesEntry(entry: ProdSeriesEntryDto): ProdSeriesEntry {
-    return {
-      id: entry.id,
-      title: entry.title,
-      url: entry.url,
-      prods: entry.prods.map(prod => this.toZxProd(prod)),
-    };
   }
 
   toZxProd(summary: ProdSummaryDto): ZxProd {

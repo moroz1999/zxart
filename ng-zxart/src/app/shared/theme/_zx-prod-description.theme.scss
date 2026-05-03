@@ -1,0 +1,16 @@
+:root {
+  /* Vertical gap between product description skeleton ribs. */
+  --zx-prod-description-skeleton-gap: var(--space-8);
+
+  /* Height of product description skeleton ribs. */
+  --zx-prod-description-skeleton-line-height: var(--space-8);
+
+  /* Full-width product description skeleton rib width. */
+  --zx-prod-description-skeleton-line-width-full: 100%;
+
+  /* Medium product description skeleton rib width. */
+  --zx-prod-description-skeleton-line-width-medium: 86%;
+
+  /* Short product description skeleton rib width. */
+  --zx-prod-description-skeleton-line-width-short: 64%;
+}

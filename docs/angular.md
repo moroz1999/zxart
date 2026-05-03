@@ -43,6 +43,7 @@ All new functionality in Angular must follow Feature Sliced Design principles an
 - **Angular CDK** (`@angular/cdk`) is the approved foundation for overlays, drag-and-drop, and accessibility.
 - Use design system components and theme variables. Custom CSS is forbidden without direct instruction.
 - Components must be used semantically.
+- Skeleton components are listed in [Skeletons](design-system/skeletons.md). Import concrete skeleton components directly; a shared facade that imports multiple skeleton variants is forbidden.
 
 ### Documentation Scope
 

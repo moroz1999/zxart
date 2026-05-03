@@ -1,5 +1,5 @@
 import {CommonModule} from '@angular/common';
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, signal} from '@angular/core';
 import {TranslateModule} from '@ngx-translate/core';
 import {CommentDto} from '../../models/comment.dto';
 import {CommentChangeEvent} from '../../models/comment-change-event';
@@ -14,7 +14,7 @@ import {Observable, of, Subject} from 'rxjs';
 import {ZxBodyDirective} from "../../../../shared/directives/typography/typography.directives";
 
 @Component({
-  selector: 'zx-comments-list',
+  selector: 'zx-comments-list,zx-comments-list-view',
   standalone: true,
   imports: [
     CommonModule,
@@ -40,7 +40,7 @@ export class CommentsListComponent {
     return !this.elementId;
   }
 
-  showForm = false;
+  readonly showForm = signal(false);
 
   reloadSubject = new Subject<void>();
 
@@ -54,10 +54,18 @@ export class CommentsListComponent {
   };
 
   onCommentSaved(comment: CommentDto): void {
-    this.showForm = false;
+    this.showForm.set(false);
     if (this.isRoot) {
       this.reloadSubject.next();
     }
+  }
+
+  toggleForm(): void {
+    this.showForm.update(showForm => !showForm);
+  }
+
+  hideForm(): void {
+    this.showForm.set(false);
   }
 
   onCommentChanged(event: CommentChangeEvent): void {

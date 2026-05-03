@@ -1,0 +1,10 @@
+@for (i of items; track i) {
+  <div class="skeleton-tune-row" [style.animation-delay.ms]="i * 50">
+    <zx-skeleton-bone class="skeleton-tune-main" [animated]="animated"></zx-skeleton-bone>
+    <zx-skeleton-bone class="skeleton-tune-sm" [animated]="animated"></zx-skeleton-bone>
+    <zx-skeleton-bone class="skeleton-tune-sm skeleton-tune-extra" [animated]="animated"></zx-skeleton-bone>
+    <zx-skeleton-bone class="skeleton-tune-md" [animated]="animated"></zx-skeleton-bone>
+    <zx-skeleton-bone class="skeleton-tune-sm" [animated]="animated"></zx-skeleton-bone>
+    <zx-skeleton-bone class="skeleton-tune-md" [animated]="animated"></zx-skeleton-bone>
+  </div>
+}

@@ -6,8 +6,6 @@ namespace ZxArt\Prods;
 
 use structureManager;
 use translationsManager;
-use ZxArt\Prods\Dto\ProdSeriesDto;
-use ZxArt\Prods\Dto\ProdSeriesEntryDto;
 use ZxArt\Prods\Dto\ProdSummariesDto;
 use ZxArt\Prods\Dto\ProdSummaryDto;
 use ZxArt\Prods\Exception\ProdDetailsException;
@@ -41,24 +39,27 @@ readonly class ProdRelatedProdsService
         return new ProdSummariesDto(prods: $this->buildSummaries($prod->compilations));
     }
 
-    public function getSeries(int $elementId): ProdSeriesDto
+    public function getSeries(int $elementId): ProdSummariesDto
     {
         $prod = $this->getProd($elementId);
 
-        $entries = [];
+        $prods = [];
         foreach ($prod->series as $seriesElement) {
             if (!$seriesElement instanceof zxProdElement) {
                 continue;
             }
-            $entries[] = new ProdSeriesEntryDto(
-                id: $seriesElement->getId(),
-                title: $this->decodeText($seriesElement->title),
-                url: (string)$seriesElement->getUrl(),
-                prods: $this->buildSummaries($seriesElement->seriesProds),
-            );
+            foreach ($seriesElement->seriesProds as $seriesProd) {
+                $prods[$seriesProd->getId()] = $seriesProd;
+            }
         }
 
-        return new ProdSeriesDto(series: $entries);
+        if ($prods === [] && $prod->seriesProds) {
+            foreach ($prod->seriesProds as $seriesProd) {
+                $prods[$seriesProd->getId()] = $seriesProd;
+            }
+        }
+
+        return new ProdSummariesDto(prods: $this->buildSummaries($prods));
     }
 
     private function getProd(int $elementId): zxProdElement

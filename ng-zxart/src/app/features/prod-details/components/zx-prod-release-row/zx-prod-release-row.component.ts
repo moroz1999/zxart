@@ -4,7 +4,9 @@ import {TranslateModule} from '@ngx-translate/core';
 import {LightboxModule} from 'ng-gallery/lightbox';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {
+  ZxScreenshotGridSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-screenshot-grid-skeleton/zx-screenshot-grid-skeleton.component';
 import {
   PictureGalleryHostComponent,
 } from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
@@ -29,7 +31,7 @@ const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 't
     LightboxModule,
     InViewportDirective,
     ZxButtonComponent,
-    ZxSkeletonComponent,
+    ZxScreenshotGridSkeletonComponent,
     PictureGalleryHostComponent,
     ZxProdLanguageLinksComponent,
     ZxProdExternalLinksComponent,

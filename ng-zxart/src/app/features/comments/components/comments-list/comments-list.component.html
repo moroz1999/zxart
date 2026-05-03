@@ -3,12 +3,12 @@
     <zx-stack *ngIf="isRoot" spacing="lg" class="comments-header">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <h2 zxHeading2 style="margin: 0;">{{ 'comments.title' | translate }}</h2>
-        <zx-button size="md" color="primary" (click)="showForm = !showForm">
-          {{ (showForm ? 'comments.cancel' : 'comments.add') | translate }}
+        <zx-button size="md" color="primary" (click)="toggleForm()">
+          {{ (showForm() ? 'comments.cancel' : 'comments.add') | translate }}
         </zx-button>
       </div>
-      <zx-panel *ngIf="showForm && elementId" radius="lg" padding="lg">
-        <zx-comment-form [targetId]="elementId" (commentSaved)="onCommentSaved($event)" (cancelled)="showForm = false"></zx-comment-form>
+      <zx-panel *ngIf="showForm() && elementId" radius="lg" padding="lg">
+        <zx-comment-form [targetId]="elementId" (commentSaved)="onCommentSaved($event)" (cancelled)="hideForm()"></zx-comment-form>
       </zx-panel>
     </zx-stack>
 

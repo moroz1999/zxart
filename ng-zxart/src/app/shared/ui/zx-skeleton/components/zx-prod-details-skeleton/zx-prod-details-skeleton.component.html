@@ -1,0 +1,46 @@
+<zx-skeleton-bone class="skeleton-prod-details-title" [animated]="animated"></zx-skeleton-bone>
+
+<div class="skeleton-prod-details-controls">
+  @for (control of controls; track control) {
+    <zx-skeleton-bone
+      class="skeleton-prod-details-control"
+      [animated]="animated"
+      [style.animation-delay.ms]="control * 60"
+    ></zx-skeleton-bone>
+  }
+</div>
+
+<div class="skeleton-prod-details-top">
+  <div class="skeleton-prod-details-info">
+    @for (i of infoRows; track i) {
+      <div class="skeleton-prod-details-row" [style.animation-delay.ms]="i * 50">
+        <zx-skeleton-bone class="skeleton-prod-details-label" [animated]="animated"></zx-skeleton-bone>
+        <zx-skeleton-bone class="skeleton-prod-details-value" [animated]="animated"></zx-skeleton-bone>
+      </div>
+    }
+  </div>
+  <zx-skeleton-bone class="skeleton-prod-details-video" [animated]="animated"></zx-skeleton-bone>
+</div>
+
+<section class="skeleton-prod-details-section">
+  <zx-skeleton-bone class="skeleton-prod-details-section-title" [animated]="animated"></zx-skeleton-bone>
+  <zx-screenshot-grid-skeleton [count]="3" [animated]="animated"></zx-screenshot-grid-skeleton>
+</section>
+
+<section class="skeleton-prod-details-section">
+  <zx-skeleton-bone class="skeleton-prod-details-section-title" [animated]="animated"></zx-skeleton-bone>
+  <div class="skeleton-prod-description">
+    @for (line of descriptionLines; track line) {
+      <zx-skeleton-bone
+        class="skeleton-prod-description-line"
+        [animated]="animated"
+        [style.animation-delay.ms]="line * 80"
+      ></zx-skeleton-bone>
+    }
+  </div>
+</section>
+
+<section class="skeleton-prod-details-section">
+  <zx-skeleton-bone class="skeleton-prod-details-section-title" [animated]="animated"></zx-skeleton-bone>
+  <zx-prods-list-skeleton [count]="4" [animated]="animated"></zx-prods-list-skeleton>
+</section>

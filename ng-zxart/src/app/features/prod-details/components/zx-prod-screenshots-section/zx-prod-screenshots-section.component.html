@@ -6,7 +6,7 @@
   <ng-container *ngIf="loading || (loaded && files.length > 0)">
     <h2 zxHeading2 class="prod-screenshots-section__title">{{ titleKey | translate }}</h2>
 
-    <zx-skeleton *ngIf="loading" variant="screenshot-grid" [count]="3"></zx-skeleton>
+    <zx-screenshot-grid-skeleton *ngIf="loading" [count]="3"></zx-screenshot-grid-skeleton>
 
     <ng-container *ngIf="loaded && files.length > 0">
       <zx-picture-gallery-host></zx-picture-gallery-host>

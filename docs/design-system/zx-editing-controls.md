@@ -7,3 +7,5 @@ Use it for edit/delete/action controls that must call a legacy action URL after 
 The component requests privileges through `ElementPrivilegesApiService` only after `CurrentUserService.isAuthenticated$` confirms that the user is authenticated. Anonymous users must not trigger privilege requests.
 
 Feature components pass action configuration and an action URL builder. Keep entity-specific action names, labels, and confirmation text in the feature/domain layer.
+
+While authenticated privilege data is loading, the component renders three skeleton ribs that match button controls.

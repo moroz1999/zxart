@@ -22,9 +22,9 @@
     <zx-prod-compilation-items-section [elementId]="core.elementId"></zx-prod-compilation-items-section>
     <zx-prod-series-prods-section [elementId]="core.elementId"></zx-prod-series-prods-section>
     <zx-prod-compilations-section [elementId]="core.elementId"></zx-prod-compilations-section>
-    <zx-tags-quick-form [elementId]="core.elementId"></zx-tags-quick-form>
-    <zx-comments-list [elementId]="core.elementId"></zx-comments-list>
-    <zx-ratings-list [elementId]="core.elementId"></zx-ratings-list>
+    <zx-tags-quick-form-view [elementId]="core.elementId"></zx-tags-quick-form-view>
+    <zx-comments-list-view [elementId]="core.elementId"></zx-comments-list-view>
+    <zx-ratings-list-view [elementId]="core.elementId"></zx-ratings-list-view>
     <zx-prod-pictures-section [elementId]="core.elementId"></zx-prod-pictures-section>
     <zx-prod-music-section [elementId]="core.elementId"></zx-prod-music-section>
     <zx-prod-series-section [elementId]="core.elementId"></zx-prod-series-section>
@@ -32,5 +32,5 @@
 </ng-container>
 
 <ng-template #loading>
-  <zx-skeleton variant="prod-details" [count]="1"></zx-skeleton>
+  <zx-prod-details-skeleton></zx-prod-details-skeleton>
 </ng-template>

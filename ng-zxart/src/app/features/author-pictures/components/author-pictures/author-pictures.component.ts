@@ -3,7 +3,9 @@ import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
 import {ZxPictureCardComponent} from '../../../../shared/ui/zx-picture-card/zx-picture-card.component';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {
+  ZxPictureGridSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
 import {ZxCaptionDirective, ZxHeading2Directive} from '../../../../shared/directives/typography/typography.directives';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxPicturesGridDirective} from '../../../../shared/directives/pictures-grid.directive';
@@ -26,7 +28,7 @@ interface YearGroup {
     CommonModule,
     TranslateModule,
     ZxPictureCardComponent,
-    ZxSkeletonComponent,
+    ZxPictureGridSkeletonComponent,
     ZxCaptionDirective,
     ZxHeading2Directive,
     ZxStackComponent,

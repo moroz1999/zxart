@@ -1,0 +1,48 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.skeleton-search-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  opacity: 0;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.skeleton-search-caption {
+  width: 80px;
+  height: 12px;
+  margin: var(--space-8) var(--space-4) var(--space-4);
+}
+
+.skeleton-search-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-4);
+}
+
+.skeleton-search-icon {
+  flex-shrink: 0;
+  width: var(--zx-search-dialog-result-icon-size);
+  height: var(--zx-search-dialog-result-icon-size);
+}
+
+.skeleton-search-title {
+  flex: 1;
+  height: 16px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -13,14 +13,3 @@ export interface ProdSummaryDto {
 export interface ProdSummariesPayload {
   prods: ProdSummaryDto[];
 }
-
-export interface ProdSeriesEntryDto {
-  id: number;
-  title: string;
-  url: string;
-  prods: ProdSummaryDto[];
-}
-
-export interface ProdSeriesPayload {
-  series: ProdSeriesEntryDto[];
-}

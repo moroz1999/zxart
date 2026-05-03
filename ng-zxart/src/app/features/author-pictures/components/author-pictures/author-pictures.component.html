@@ -1,7 +1,7 @@
 <zx-picture-gallery-host></zx-picture-gallery-host>
 
 <zx-stack spacing="lg">
-  <zx-skeleton *ngIf="loading" variant="picture-grid" [count]="6"></zx-skeleton>
+  <zx-picture-grid-skeleton *ngIf="loading" [count]="6"></zx-picture-grid-skeleton>
 
   <div *ngIf="error" zxCaption>{{ 'firstpage.error' | translate }}</div>
   <div *ngIf="!loading && !error && yearGroups.length === 0" zxCaption>{{ 'firstpage.empty' | translate }}</div>

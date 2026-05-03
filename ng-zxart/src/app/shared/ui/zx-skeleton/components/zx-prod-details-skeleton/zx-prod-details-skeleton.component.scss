@@ -1,0 +1,94 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-prod-details-skeleton-stack-gap);
+  width: 100%;
+}
+
+.skeleton-prod-details-title {
+  width: var(--zx-prod-details-skeleton-title-width);
+  height: var(--zx-prod-details-skeleton-title-height);
+}
+
+.skeleton-prod-details-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--zx-prod-details-skeleton-controls-gap);
+}
+
+.skeleton-prod-details-control {
+  width: var(--zx-prod-details-skeleton-control-width);
+  height: var(--zx-prod-details-skeleton-control-height);
+  border-radius: var(--zx-prod-details-skeleton-control-radius);
+}
+
+.skeleton-prod-details-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--zx-prod-details-skeleton-top-gap);
+  align-items: flex-start;
+}
+
+.skeleton-prod-details-info {
+  flex: 1 1 var(--zx-prod-details-skeleton-info-basis);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.skeleton-prod-details-row {
+  display: grid;
+  grid-template-columns:
+    minmax(
+      var(--zx-prod-details-skeleton-label-min-width),
+      var(--zx-prod-details-skeleton-label-width)
+    )
+    1fr;
+  column-gap: var(--zx-prod-details-skeleton-table-column-gap);
+  padding: var(--zx-prod-details-skeleton-table-row-padding) 0;
+}
+
+.skeleton-prod-details-label,
+.skeleton-prod-details-value {
+  height: var(--zx-prod-details-skeleton-table-line-height);
+}
+
+.skeleton-prod-details-video {
+  flex: 0 1 var(--zx-prod-details-skeleton-video-basis);
+  min-width: 0;
+  aspect-ratio: 4 / 3;
+}
+
+.skeleton-prod-details-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-prod-details-skeleton-section-gap);
+}
+
+.skeleton-prod-details-section-title {
+  width: var(--zx-prod-details-skeleton-section-title-width);
+  height: var(--zx-prod-details-skeleton-section-title-height);
+}
+
+.skeleton-prod-description {
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--zx-prod-details-skeleton-description-body-padding);
+  gap: var(--zx-prod-details-skeleton-description-line-gap);
+}
+
+.skeleton-prod-description-line {
+  height: var(--zx-prod-details-skeleton-description-line-height);
+}
+
+.skeleton-prod-description-line:first-child {
+  width: var(--zx-prod-details-skeleton-description-line-width-full);
+}
+
+.skeleton-prod-description-line:nth-child(2) {
+  width: var(--zx-prod-details-skeleton-description-line-width-medium);
+}
+
+.skeleton-prod-description-line:last-child {
+  width: var(--zx-prod-details-skeleton-description-line-width-short);
+}

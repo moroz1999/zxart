@@ -4,14 +4,10 @@
     [viewAllUrl]="vm.viewAllUrl"
     [viewAllLabelKey]="vm.viewAllLabelKey"
     [usePanel]="false"
-    [loading]="vm.loading"
+    [loading]="false"
     [error]="vm.error"
-    [empty]="vm.empty"
-    skeletonVariant="prod-grid"
-    [skeletonCount]="settings.limit"
+    [empty]="!vm.loading && vm.empty"
   >
-    <div class="prods-grid">
-      <zx-prod-block *ngFor="let prod of vm.items" [model]="prod"></zx-prod-block>
-    </div>
+    <zx-prods-list-view [items$]="items$" [skeletonCount]="settings.limit"></zx-prods-list-view>
   </zx-firstpage-module-wrapper>
 </ng-container>

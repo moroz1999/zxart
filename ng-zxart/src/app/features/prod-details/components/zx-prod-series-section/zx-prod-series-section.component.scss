@@ -11,19 +11,3 @@
 .prod-series-section__title {
   margin: 0;
 }
-
-.prod-series-section__list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-16);
-}
-
-.prod-series-section__entry {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-}
-
-.prod-series-section__entry-title {
-  margin: 0;
-}

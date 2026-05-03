@@ -16,7 +16,7 @@
   </div>
 
   @if (loading) {
-    <zx-skeleton variant="search-groups" [count]="3"></zx-skeleton>
+    <zx-search-groups-skeleton [count]="3"></zx-search-groups-skeleton>
   } @else if (searched && groups.length === 0) {
     <div class="sd-empty">{{ 'header.search.empty' | translate }}</div>
   } @else if (groups.length > 0) {

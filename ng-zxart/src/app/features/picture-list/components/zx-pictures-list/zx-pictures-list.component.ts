@@ -3,7 +3,9 @@ import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
 import {ZxPictureCardComponent} from '../../../../shared/ui/zx-picture-card/zx-picture-card.component';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {
+  ZxPictureGridSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
 import {ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ZxPicturesGridDirective} from '../../../../shared/directives/pictures-grid.directive';
 import {
@@ -19,7 +21,7 @@ import {PictureGalleryService} from '../../../picture-gallery/services/picture-g
     CommonModule,
     TranslateModule,
     ZxPictureCardComponent,
-    ZxSkeletonComponent,
+    ZxPictureGridSkeletonComponent,
     ZxCaptionDirective,
     ZxPicturesGridDirective,
     PictureGalleryHostComponent,

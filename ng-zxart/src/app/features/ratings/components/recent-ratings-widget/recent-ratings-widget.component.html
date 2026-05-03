@@ -1,5 +1,5 @@
 @if (loading() && !hasLoaded()) {
-  <zx-skeleton variant="text" [count]="5"></zx-skeleton>
+  <zx-text-skeleton [count]="5"></zx-text-skeleton>
 } @else if (hasLoaded()) {
   <div [class.ratings-loading]="loading()">
     <zx-table size="xs" [title]="'ratings.title' | translate">

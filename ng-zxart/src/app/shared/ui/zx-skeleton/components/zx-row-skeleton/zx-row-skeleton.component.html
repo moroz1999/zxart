@@ -1,0 +1,5 @@
+@for (i of items; track i) {
+  <div class="skeleton-row" [style.animation-delay.ms]="i * 50">
+    <zx-skeleton-bone class="skeleton-row-content" [animated]="animated"></zx-skeleton-bone>
+  </div>
+}

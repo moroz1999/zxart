@@ -5,7 +5,9 @@ import {map} from 'rxjs';
 import {ZxTuneDto} from '../../../../shared/models/zx-tune-dto';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
 import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.component';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {
+  ZxTuneTableSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-tune-table-skeleton/zx-tune-table-skeleton.component';
 import {ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
 import {ZxSortSelectComponent} from '../../../../shared/ui/zx-sort-select/zx-sort-select.component';
@@ -21,7 +23,7 @@ import {BrowserBaseComponent} from '../../../../shared/browser-base.component';
     TranslateModule,
     ZxTableComponent,
     ZxTuneRowComponent,
-    ZxSkeletonComponent,
+    ZxTuneTableSkeletonComponent,
     ZxCaptionDirective,
     ZxPaginationComponent,
     ZxSortSelectComponent,

@@ -3,7 +3,9 @@ import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {LightboxModule} from 'ng-gallery/lightbox';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {
+  ZxPictureGridSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
 import {
   PictureGalleryHostComponent,
 } from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
@@ -21,7 +23,7 @@ import {ProdFileDto} from '../../models/prod-file.dto';
     TranslateModule,
     LightboxModule,
     InViewportDirective,
-    ZxSkeletonComponent,
+    ZxPictureGridSkeletonComponent,
     PictureGalleryHostComponent,
     ZxCaptionDirective,
     ZxHeading2Directive,

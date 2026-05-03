@@ -4,10 +4,8 @@ import {TranslateModule} from '@ngx-translate/core';
 import {ZxHeading2Directive} from '../../../../shared/directives/typography/typography.directives';
 import {ZxProdsListComponent} from '../../../../entities/zx-prods-list/zx-prods-list.component';
 import {Observable, of} from 'rxjs';
-import {startWith} from 'rxjs/operators';
-import {ProdRelatedProdsApiService} from '../../services/prod-related-prods-api.service';
 import {ZxProd} from '../../../../shared/models/zx-prod';
-import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton.component';
+import {ProdRelatedProdsService} from '../../services/prod-related-prods.service';
 
 @Component({
   selector: 'zx-prod-compilation-items-section',
@@ -17,7 +15,6 @@ import {ZxSkeletonComponent} from '../../../../shared/ui/zx-skeleton/zx-skeleton
     TranslateModule,
     ZxHeading2Directive,
     ZxProdsListComponent,
-    ZxSkeletonComponent,
   ],
   templateUrl: './zx-prod-compilation-items-section.component.html',
   styleUrls: ['./zx-prod-compilation-items-section.component.scss'],
@@ -28,9 +25,9 @@ export class ZxProdCompilationItemsSectionComponent implements OnInit {
 
   prods$: Observable<ZxProd[] | null> = of(null);
 
-  constructor(private readonly relatedProdsApi: ProdRelatedProdsApiService) {}
+  constructor(private readonly relatedProds: ProdRelatedProdsService) {}
 
   ngOnInit(): void {
-    this.prods$ = this.relatedProdsApi.getCompilationItems(this.elementId).pipe(startWith(null));
+    this.prods$ = this.relatedProds.getCompilationItems(this.elementId);
   }
 }

@@ -1,28 +1,17 @@
 <div class="prod-series-section">
-  <ng-container *ngIf="series$ | async as series; else loading">
-    <ng-container *ngIf="series.length > 0">
+  <ng-container *ngIf="prods$ | async as prods; else loading">
+    <ng-container *ngIf="prods.length > 0">
       <h2 zxHeading2 class="prod-series-section__title">{{ 'prod-details.series' | translate }}</h2>
-
-      <div class="prod-series-section__list">
-        <section
-          *ngFor="let entry of series; trackBy: trackSeriesById"
-          class="prod-series-section__entry"
-        >
-          <h3 zxHeading3 class="prod-series-section__entry-title">
-            <a [href]="entry.url">{{ entry.title }}</a>
-          </h3>
-          <zx-prods-list-view
-            *ngIf="entry.prods.length > 0"
-            [items]="entry.prods"
-            property="seriesProds"
-          ></zx-prods-list-view>
-        </section>
-      </div>
+      <zx-prods-list-view
+        [items$]="prods$"
+        property="seriesProds"
+        [skeletonCount]="4"
+      ></zx-prods-list-view>
     </ng-container>
   </ng-container>
 </div>
 
 <ng-template #loading>
   <h2 zxHeading2 class="prod-series-section__title">{{ 'prod-details.series' | translate }}</h2>
-  <zx-skeleton variant="prod-grid" [count]="4"></zx-skeleton>
+  <zx-prods-list-skeleton [count]="4"></zx-prods-list-skeleton>
 </ng-template>

@@ -6,7 +6,7 @@
   <ng-container *ngIf="loading || (loaded && releases.length > 0)">
     <h2 zxHeading2 class="prod-releases-section__title">{{ 'prod-details.releases' | translate }}</h2>
 
-    <zx-skeleton *ngIf="loading" variant="row" [count]="3"></zx-skeleton>
+    <zx-row-skeleton *ngIf="loading" [count]="3"></zx-row-skeleton>
 
     <zx-table *ngIf="loaded && releases.length > 0" size="sm">
       <table>

@@ -1,3 +1,6 @@
+import {
+  ZxProdsListSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-prods-list-skeleton/zx-prods-list-skeleton.component';
 import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs';
@@ -14,7 +17,12 @@ import {MODULE_SETTINGS} from '../../models/module-settings.token';
 @Component({
   selector: 'zx-fp-recent-parties',
   standalone: true,
-  imports: [CommonModule, FirstpageModuleWrapperComponent, ZxPartyCardComponent],
+  imports: [
+    ZxProdsListSkeletonComponent,
+    CommonModule,
+    FirstpageModuleWrapperComponent,
+    ZxPartyCardComponent,
+  ],
   templateUrl: './recent-parties.component.html',
   styleUrls: ['./recent-parties.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

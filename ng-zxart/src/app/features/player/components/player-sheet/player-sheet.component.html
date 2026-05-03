@@ -112,7 +112,7 @@
 
     <div class="player-advanced" *ngIf="expanded" @expandPanel>
       <form [formGroup]="form" class="player-advanced-form">
-        <zx-skeleton *ngIf="optionsLoading" variant="text" [count]="3"></zx-skeleton>
+        <zx-text-skeleton *ngIf="optionsLoading" [count]="3"></zx-text-skeleton>
 
         <div class="player-error" *ngIf="optionsError">
           <span zxBody>{{ 'player.filters.loadError' | translate }}</span>

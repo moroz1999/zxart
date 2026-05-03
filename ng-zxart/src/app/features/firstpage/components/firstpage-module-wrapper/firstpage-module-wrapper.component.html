@@ -20,11 +20,7 @@
 </ng-container>
 
 <ng-template #body>
-  <zx-skeleton
-    *ngIf="loading"
-    [variant]="skeletonVariant"
-    [count]="skeletonCount"
-  ></zx-skeleton>
+  <ng-content *ngIf="loading" select="[loadingSkeleton]"></ng-content>
 
   <div *ngIf="error" class="module-error" zxCaption>
     {{ 'firstpage.error' | translate }}

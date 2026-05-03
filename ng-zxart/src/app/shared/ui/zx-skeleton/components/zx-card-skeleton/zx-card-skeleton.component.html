@@ -1,0 +1,9 @@
+@for (i of items; track i) {
+  <div class="skeleton-card" [style.animation-delay.ms]="i * 100">
+    <zx-skeleton-bone class="skeleton-card-image" [animated]="animated"></zx-skeleton-bone>
+    <div class="skeleton-card-body">
+      <zx-skeleton-bone class="skeleton-title" [animated]="animated"></zx-skeleton-bone>
+      <zx-skeleton-bone class="skeleton-text" [animated]="animated"></zx-skeleton-bone>
+    </div>
+  </div>
+}

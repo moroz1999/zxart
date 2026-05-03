@@ -7,14 +7,14 @@ import {FirstpageDataService} from '../../services/firstpage-data.service';
 import {
   FirstpageModuleWrapperComponent
 } from '../../components/firstpage-module-wrapper/firstpage-module-wrapper.component';
-import {ZxProdBlockComponent} from '../../../../shared/ui/zx-prod-block/zx-prod-block.component';
 import {ModuleSettings} from '../../models/firstpage-config';
 import {MODULE_SETTINGS} from '../../models/module-settings.token';
+import {ZxProdsListComponent} from '../../../../entities/zx-prods-list/zx-prods-list.component';
 
 @Component({
   selector: 'zx-fp-new-prods',
   standalone: true,
-  imports: [CommonModule, FirstpageModuleWrapperComponent, ZxProdBlockComponent],
+  imports: [CommonModule, FirstpageModuleWrapperComponent, ZxProdsListComponent],
   templateUrl: './new-prods.component.html',
   styleUrls: ['./new-prods.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

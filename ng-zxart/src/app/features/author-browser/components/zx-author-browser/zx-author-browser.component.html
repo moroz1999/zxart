@@ -27,7 +27,7 @@
   ></zx-filter-picker>
 </zx-filter-bar>
 
-<zx-skeleton *ngIf="authors === null && !error" variant="row" [count]="8"></zx-skeleton>
+<zx-row-skeleton *ngIf="authors === null && !error" [count]="8"></zx-row-skeleton>
 
 <div *ngIf="error" zxCaption>{{ 'author-browser.error' | translate }}</div>
 <div *ngIf="!loading && !error && authors !== null && authors.length === 0"
