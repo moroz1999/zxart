@@ -9,6 +9,7 @@ import {ZxProdsListComponent} from '../../../../entities/zx-prods-list/zx-prods-
 import {Observable, of} from 'rxjs';
 import {ProdRelatedProdsService} from '../../services/prod-related-prods.service';
 import {ZxProd} from '../../../../shared/models/zx-prod';
+import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 
 @Component({
   selector: 'zx-prod-series-section',
@@ -19,6 +20,7 @@ import {ZxProd} from '../../../../shared/models/zx-prod';
     ZxProdsListSkeletonComponent,
     ZxHeading2Directive,
     ZxProdsListComponent,
+    ZxButtonComponent,
   ],
   templateUrl: './zx-prod-series-section.component.html',
   styleUrls: ['./zx-prod-series-section.component.scss'],
@@ -28,10 +30,12 @@ export class ZxProdSeriesSectionComponent implements OnInit {
   @Input({required: true}) elementId!: number;
 
   prods$: Observable<ZxProd[] | null> = of(null);
+  seriesUrl$: Observable<string | null> = of(null);
 
   constructor(private readonly relatedProds: ProdRelatedProdsService) {}
 
   ngOnInit(): void {
     this.prods$ = this.relatedProds.getSeries(this.elementId);
+    this.seriesUrl$ = this.relatedProds.getSeriesUrl(this.elementId);
   }
 }

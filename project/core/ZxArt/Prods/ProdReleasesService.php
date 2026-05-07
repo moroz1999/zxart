@@ -53,6 +53,7 @@ readonly class ProdReleasesService
     ): ProdReleaseDto {
         $isDownloadable = $release->isDownloadable();
         $isPlayable = $release->isPlayable();
+        $emulatorType = $release->getEmulatorType();
 
         return new ProdReleaseDto(
             id: $release->getId(),
@@ -75,9 +76,9 @@ readonly class ProdReleasesService
             isDownloadable: $isDownloadable,
             isPlayable: $isPlayable,
             downloadUrl: $isDownloadable && $release->fileName !== '' ? $release->getFileUrl() : null,
-            playUrl: $isPlayable ? $release->getPlayUrl() : null,
+            playUrl: $isPlayable ? $release->getPlayUrl($emulatorType === 'usp') : null,
             fileName: $release->fileName !== '' ? $release->fileName : null,
-            emulatorType: $release->getEmulatorType(),
+            emulatorType: $emulatorType,
             prodLegalStatus: $prodLegalStatus,
             prodExternalLink: $prodExternalLink,
             downloadsCount: $release->getDownloadsCount(),

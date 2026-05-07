@@ -7,10 +7,6 @@
     box-shadow: var(--zx-panel-shadow);
   }
 
-  &.zx-panel--flat {
-    border: var(--zx-panel-border);
-  }
-
   &.zx-panel--radius-sm { border-radius: var(--zx-panel-radius-sm); }
   &.zx-panel--radius-md { border-radius: var(--zx-panel-radius-md); }
   &.zx-panel--radius-lg { border-radius: var(--zx-panel-radius-lg); }

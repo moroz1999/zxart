@@ -1,7 +1,8 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit,} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit,} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {LightboxModule} from 'ng-gallery/lightbox';
+import {Subscription} from 'rxjs';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {
@@ -40,14 +41,17 @@ const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 't
   styleUrls: ['./zx-prod-release-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxProdReleaseRowComponent implements OnInit {
+export class ZxProdReleaseRowComponent implements OnInit, OnDestroy {
   @Input({required: true}) release!: ProdReleaseDto;
-  @Input({required: true}) prodUrl!: string;
+  @Input({required: true}) canUploadScreenshot!: boolean;
+  @Input({required: true}) screenshotUploadUrl!: string;
 
   screenshotsLoading = false;
   screenshotsLoaded = false;
   screenshots: ProdFileDto[] = [];
   galleryId = '';
+
+  private readonly subscriptions = new Subscription();
 
   constructor(
     private readonly api: ReleaseScreenshotsApiService,
@@ -58,6 +62,10 @@ export class ZxProdReleaseRowComponent implements OnInit {
 
   ngOnInit(): void {
     this.galleryId = `zx-release-screenshots-${this.release.id}`;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   get medalClass(): string | null {
@@ -111,8 +119,8 @@ export class ZxProdReleaseRowComponent implements OnInit {
     this.emulator.open({
       emulatorType: type,
       fileUrl: this.release.playUrl,
-      uploadUrl: `${this.prodUrl}id:${this.release.id}/action:uploadScreenshot/`,
-      canScreenshot: false,
+      uploadUrl: this.screenshotUploadUrl,
+      canScreenshot: this.canUploadScreenshot,
     });
   }
 
@@ -121,15 +129,17 @@ export class ZxProdReleaseRowComponent implements OnInit {
       return;
     }
     this.screenshotsLoading = true;
-    this.api.getScreenshots(this.release.id).subscribe(files => {
-      this.screenshots = files;
-      this.screenshotsLoaded = true;
-      this.screenshotsLoading = false;
-      if (files.length) {
-        this.gallery.loadItems(this.galleryId, files.map(this.toGalleryItem));
-      }
-      this.cdr.markForCheck();
-    });
+    this.subscriptions.add(
+      this.api.getScreenshots(this.release.id).subscribe(files => {
+        this.screenshots = files;
+        this.screenshotsLoaded = true;
+        this.screenshotsLoading = false;
+        if (files.length) {
+          this.gallery.loadItems(this.galleryId, files.map(this.toGalleryItem));
+        }
+        this.cdr.markForCheck();
+      }),
+    );
   }
 
   private toGalleryItem(file: ProdFileDto): PictureGalleryItem {

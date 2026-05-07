@@ -15,7 +15,7 @@
   --zx-prod-details-skeleton-control-width: calc(var(--space-64) + var(--space-32));
 
   /* Editing controls placeholder height. */
-  --zx-prod-details-skeleton-control-height: var(--space-32);
+  --zx-prod-details-skeleton-control-height: calc(var(--space-32) + var(--space-4));
 
   /* Editing controls placeholder radius. */
   --zx-prod-details-skeleton-control-radius: var(--radius-sm);

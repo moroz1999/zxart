@@ -1,14 +1,37 @@
 :host {
+  display: block;
+}
+
+.zx-article-preview__layout {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--zx-article-preview-layout-gap);
+}
+
+.zx-article-preview__image-link {
+  flex: 0 0 auto;
+}
+
+.zx-article-preview__image {
+  display: block;
+  width: var(--zx-article-preview-image-width);
+  height: var(--zx-article-preview-image-height);
+  border-radius: var(--zx-article-preview-image-radius);
+  object-fit: cover;
+}
+
+.zx-article-preview__content {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--zx-article-preview-content-gap);
+  min-width: 0;
 }
 
 .zx-article-preview__header {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: var(--space-8);
+  gap: var(--zx-article-preview-title-gap);
 }
 
 .zx-article-preview__link {
@@ -22,13 +45,13 @@
 }
 
 .zx-article-preview__publication-separator {
-  color: var(--text-light-color);
+  color: var(--zx-article-preview-muted-color);
 }
 
 .zx-article-preview__meta {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-8);
+  gap: var(--zx-article-preview-title-gap);
 }
 
 .zx-article-preview__snippet {
@@ -36,6 +59,6 @@
 }
 
 ::ng-deep .search_emphasized {
-  color: var(--search-emphasized-color);
+  color: var(--zx-article-preview-emphasized-color);
   font-weight: bold;
 }

@@ -1,0 +1,8 @@
+:host {
+  display: block;
+}
+
+.zx-item-data__grid {
+  display: grid;
+  gap: var(--zx-item-data-row-gap);
+}

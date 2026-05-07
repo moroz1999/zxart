@@ -8,6 +8,8 @@ import {LegalStatus, ZxProdDto} from '../../../shared/models/zx-prod-dto';
 
 @Injectable({providedIn: 'root'})
 export class ProdRelatedProdsApiService {
+  private readonly seriesPayloadRequests = new Map<number, Observable<ProdSummariesPayload>>();
+
   constructor(private readonly http: HttpClient) {}
 
   getCompilationItems(elementId: number): Observable<ZxProd[]> {
@@ -23,7 +25,15 @@ export class ProdRelatedProdsApiService {
   }
 
   getSeries(elementId: number): Observable<ZxProd[]> {
-    return this.getProds('/prod-series/', elementId);
+    return this.getSeriesPayload(elementId).pipe(
+      map(response => (response.prods ?? []).map(prod => this.toZxProd(prod))),
+    );
+  }
+
+  getSeriesUrl(elementId: number): Observable<string | null> {
+    return this.getSeriesPayload(elementId).pipe(
+      map(response => response.seriesUrl ?? null),
+    );
   }
 
   private getProds(url: string, elementId: number): Observable<ZxProd[]> {
@@ -33,6 +43,21 @@ export class ProdRelatedProdsApiService {
       catchError(() => of([])),
       shareReplay({bufferSize: 1, refCount: false}),
     );
+  }
+
+  private getSeriesPayload(elementId: number): Observable<ProdSummariesPayload> {
+    const existingRequest = this.seriesPayloadRequests.get(elementId);
+    if (existingRequest) {
+      return existingRequest;
+    }
+
+    const params = new HttpParams().set('id', String(elementId));
+    const request = this.http.get<ProdSummariesPayload>('/prod-series/', {params}).pipe(
+      catchError(() => of({prods: [], seriesUrl: null})),
+      shareReplay({bufferSize: 1, refCount: false}),
+    );
+    this.seriesPayloadRequests.set(elementId, request);
+    return request;
   }
 
   toZxProd(summary: ProdSummaryDto): ZxProd {

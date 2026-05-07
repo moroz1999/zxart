@@ -33,7 +33,8 @@
           *ngFor="let release of releases; trackBy: trackById"
           zxProdReleaseRow
           [release]="release"
-          [prodUrl]="prodUrl"
+          [canUploadScreenshot]="canUploadScreenshot"
+          [screenshotUploadUrl]="screenshotUploadUrl"
         ></tbody>
       </table>
     </zx-table>

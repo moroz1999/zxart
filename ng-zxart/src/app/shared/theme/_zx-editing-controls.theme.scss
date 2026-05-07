@@ -6,7 +6,7 @@
   --zx-editing-controls-skeleton-item-width: calc(var(--space-64) + var(--space-32));
 
   /* Height of each editing controls skeleton rib. */
-  --zx-editing-controls-skeleton-item-height: var(--space-32);
+  --zx-editing-controls-skeleton-item-height: calc(var(--space-32) + var(--space-4));
 
   /* Radius of each editing controls skeleton rib. */
   --zx-editing-controls-skeleton-item-radius: var(--radius-sm);

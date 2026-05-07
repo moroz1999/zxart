@@ -1,0 +1,15 @@
+:host {
+  display: grid;
+  grid-template-columns: minmax(var(--zx-item-data-label-min-width), var(--zx-item-data-label-width)) 1fr;
+  column-gap: var(--zx-item-data-column-gap);
+  row-gap: var(--zx-item-data-value-gap);
+  align-items: start;
+}
+
+.zx-item-data-item__label {
+  min-width: 0;
+}
+
+.zx-item-data-item__value {
+  min-width: 0;
+}

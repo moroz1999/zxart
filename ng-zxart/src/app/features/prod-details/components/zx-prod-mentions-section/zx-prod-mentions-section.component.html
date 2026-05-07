@@ -16,6 +16,9 @@
         [snippetHtml]="article.introduction || null"
         [authors]="article.authors"
         [publication]="article.publication"
+        [imageUrl]="article.publication?.imageUrl || null"
+        [imageAlt]="article.publication?.title || article.title"
+        [readLinkLabel]="'prod-details.readArticle' | translate"
       ></zx-article-preview>
     </div>
   </ng-container>

@@ -9,6 +9,7 @@ export interface PressArticlePublicationDto {
   title: string;
   url: string;
   year: number | null;
+  imageUrl: string | null;
 }
 
 export interface PressArticlePreviewDto {

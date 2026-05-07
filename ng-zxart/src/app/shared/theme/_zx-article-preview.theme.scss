@@ -1,0 +1,25 @@
+:root {
+  /* Gap between the article thumbnail and text content. */
+  --zx-article-preview-layout-gap: var(--space-12);
+
+  /* Gap between article preview title row items. */
+  --zx-article-preview-title-gap: var(--space-8);
+
+  /* Gap between article preview content rows. */
+  --zx-article-preview-content-gap: var(--space-4);
+
+  /* Width of the article publication thumbnail. */
+  --zx-article-preview-image-width: calc(var(--space-64) + var(--space-32));
+
+  /* Height of the article publication thumbnail. */
+  --zx-article-preview-image-height: calc(var(--space-64) + var(--space-8));
+
+  /* Radius of the article publication thumbnail. */
+  --zx-article-preview-image-radius: var(--radius-sm);
+
+  /* Muted color for article publication separators. */
+  --zx-article-preview-muted-color: var(--text-light-color);
+
+  /* Highlight color for emphasized search fragments. */
+  --zx-article-preview-emphasized-color: var(--search-emphasized-color);
+}

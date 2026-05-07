@@ -69,6 +69,7 @@ components:
         - title
         - url
         - year
+        - imageUrl
       properties:
         id:
           type: integer
@@ -78,6 +79,9 @@ components:
           type: string
         year:
           type: integer
+          nullable: true
+        imageUrl:
+          type: string
           nullable: true
 
     PressArticlePreview:

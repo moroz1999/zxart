@@ -132,8 +132,12 @@ components:
       type: object
       required:
         - prods
+        - seriesUrl
       properties:
         prods:
           type: array
           items:
             $ref: '#/components/schemas/ProdSummary'
+        seriesUrl:
+          type: string
+          nullable: true

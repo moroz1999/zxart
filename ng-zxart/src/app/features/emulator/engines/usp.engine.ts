@@ -2,6 +2,8 @@ import {EmscriptenModule, EmulatorEngine, EmulatorType} from './emulator-engine'
 
 const SCRIPT_URL = '/libs/us/unreal_speccy_portable.js';
 const LIB_BASE = '/libs/us/';
+const CANVAS_WIDTH = 960;
+const CANVAS_HEIGHT = 720;
 
 export class UspEngine implements EmulatorEngine {
   readonly type: EmulatorType = 'usp';
@@ -21,8 +23,12 @@ export class UspEngine implements EmulatorEngine {
 
     return new Promise<void>((resolve, reject) => {
       this.installModule(() => {
-        this.onWasmReady();
-        resolve();
+        try {
+          this.onWasmReady();
+          resolve();
+        } catch (err) {
+          reject(err);
+        }
       });
       const script = document.createElement('script');
       script.src = SCRIPT_URL;
@@ -51,6 +57,8 @@ export class UspEngine implements EmulatorEngine {
   }
 
   private onWasmReady(): void {
+    window.Module?.setCanvasSize?.(CANVAS_WIDTH, CANVAS_HEIGHT);
+
     this.openCurrentFile();
     this.callCommand('joystick=cursor');
     this.callCommand('filtering=off');

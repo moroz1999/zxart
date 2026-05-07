@@ -22,6 +22,7 @@ export interface EmscriptenModuleConfig {
 
 export interface EmscriptenModule extends EmscriptenModuleConfig {
   ccall: (name: string, returnType: string | null, argTypes: string[], args: unknown[]) => unknown;
+  setCanvasSize?: (width: number, height: number) => void;
 }
 
 declare global {

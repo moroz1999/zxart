@@ -18,6 +18,8 @@ use zxProdElement;
 
 readonly class ProdArticlesService
 {
+    private const string PUBLICATION_IMAGE_PRESET = 'prodImage';
+
     public function __construct(
         private structureManager $structureManager,
     ) {
@@ -107,7 +109,23 @@ readonly class ProdArticlesService
             title: $this->decodeText((string)$parent->getTitle()),
             url: (string)$parent->getUrl(),
             year: $year > 0 ? $year : null,
+            imageUrl: $this->resolvePublicationImageUrl($parent),
         );
+    }
+
+    private function resolvePublicationImageUrl(structureElement $publication): ?string
+    {
+        if (!$publication instanceof zxProdElement) {
+            return null;
+        }
+
+        /** @var mixed $rawImageUrl */
+        $rawImageUrl = $publication->getImageUrl(0, self::PUBLICATION_IMAGE_PRESET);
+        if (!is_string($rawImageUrl) || $rawImageUrl === '') {
+            return null;
+        }
+
+        return $rawImageUrl;
     }
 
     private function decodeText(string $value): string

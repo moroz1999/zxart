@@ -95,6 +95,11 @@ Determined by combination of:
 - **TSConf**: formats `spg`, `img`, `trd`, `scl` + TSConf hardware
 - **MB (Multiboard)**: format `tar` + MB hardware
 
+#### Angular Prod Details Emulator
+- Prod details release rows pass the ZIP play URL to USP and the first runnable file URL to non-USP emulators.
+- USP uses a 960x720 canvas by default, exactly double the 480x360 emulator viewport.
+- Emulator screenshots launched from prod details release rows are saved to the parent prod, not to the release.
+
 ### Constraints and Rules
 1. Release must always have parent zxProd
 2. Release contains concrete file, unlike abstract prod

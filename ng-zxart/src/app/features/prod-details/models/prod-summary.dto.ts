@@ -12,4 +12,5 @@ export interface ProdSummaryDto {
 
 export interface ProdSummariesPayload {
   prods: ProdSummaryDto[];
+  seriesUrl: string | null;
 }

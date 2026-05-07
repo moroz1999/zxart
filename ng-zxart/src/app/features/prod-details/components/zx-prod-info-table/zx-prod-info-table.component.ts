@@ -5,6 +5,8 @@ import {ZxProdLanguageLinksComponent} from '../zx-prod-language-links/zx-prod-la
 import {ZxProdExternalLinksComponent} from '../zx-prod-external-links/zx-prod-external-links.component';
 import {ZxProdVoteRowComponent} from '../zx-prod-vote-row/zx-prod-vote-row.component';
 import {ProdCoreDto} from '../../models/prod-core.dto';
+import {ZxItemDataComponent} from '../../../../shared/ui/zx-item-data/zx-item-data.component';
+import {ZxItemDataItemComponent} from '../../../../shared/ui/zx-item-data/zx-item-data-item.component';
 
 @Component({
   selector: 'zx-prod-info-table',
@@ -15,6 +17,8 @@ import {ProdCoreDto} from '../../models/prod-core.dto';
     ZxProdLanguageLinksComponent,
     ZxProdExternalLinksComponent,
     ZxProdVoteRowComponent,
+    ZxItemDataComponent,
+    ZxItemDataItemComponent,
   ],
   templateUrl: './zx-prod-info-table.component.html',
   styleUrls: ['./zx-prod-info-table.component.scss'],

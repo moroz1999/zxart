@@ -29,6 +29,10 @@ export class ProdRelatedProdsService {
     return this.getProds(elementId, 'series');
   }
 
+  getSeriesUrl(elementId: number): Observable<string | null> {
+    return this.api.getSeriesUrl(elementId);
+  }
+
   private getProds(elementId: number, kind: RelatedProdsKind): Observable<ZxProd[] | null> {
     return defer(() => {
       const store = this.getProdsStore(elementId, kind);

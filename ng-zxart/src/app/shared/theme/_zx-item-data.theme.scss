@@ -1,0 +1,16 @@
+:root {
+  /* Vertical gap between grouped item data rows. */
+  --zx-item-data-row-gap: var(--space-8);
+
+  /* Horizontal gap between item data labels and values. */
+  --zx-item-data-column-gap: var(--space-12);
+
+  /* Gap between wrapped value lines on compact layouts. */
+  --zx-item-data-value-gap: var(--space-4);
+
+  /* Minimum width of item data labels. */
+  --zx-item-data-label-min-width: calc(var(--space-64) + var(--space-32));
+
+  /* Preferred width of item data labels. */
+  --zx-item-data-label-width: calc(var(--space-64) + var(--space-64));
+}

@@ -1,7 +1,15 @@
 <div class="prod-series-section">
   <ng-container *ngIf="prods$ | async as prods; else loading">
     <ng-container *ngIf="prods.length > 0">
-      <h2 zxHeading2 class="prod-series-section__title">{{ 'prod-details.series' | translate }}</h2>
+      <div class="prod-series-section__header">
+        <h2 zxHeading2 class="prod-series-section__title">{{ 'prod-details.series' | translate }}</h2>
+        <zx-button
+          *ngIf="seriesUrl$ | async as seriesUrl"
+          size="xs"
+          color="outlined"
+          [href]="seriesUrl"
+        >{{ 'prod-details.openSeries' | translate }}</zx-button>
+      </div>
       <zx-prods-list-view
         [items$]="prods$"
         property="seriesProds"
@@ -12,6 +20,8 @@
 </div>
 
 <ng-template #loading>
-  <h2 zxHeading2 class="prod-series-section__title">{{ 'prod-details.series' | translate }}</h2>
+  <div class="prod-series-section__header">
+    <h2 zxHeading2 class="prod-series-section__title">{{ 'prod-details.series' | translate }}</h2>
+  </div>
   <zx-prods-list-skeleton [count]="4"></zx-prods-list-skeleton>
 </ng-template>

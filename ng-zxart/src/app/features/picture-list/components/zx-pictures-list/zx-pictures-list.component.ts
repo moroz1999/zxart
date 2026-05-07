@@ -33,6 +33,7 @@ import {PictureGalleryService} from '../../../picture-gallery/services/picture-g
 export class ZxPicturesListComponent implements OnInit {
   @Input() elementId = 0;
   @Input() compoType = '';
+  @Input() picturesInput: ZxPictureDto[] | null = null;
 
   loading = true;
   error = false;
@@ -51,6 +52,15 @@ export class ZxPicturesListComponent implements OnInit {
   }
 
   private loadData(): void {
+    if (this.picturesInput !== null) {
+      this.loading = false;
+      this.error = false;
+      this.pictures = this.picturesInput;
+      this.pictureGalleryService.ensureGalleryLoaded(this.galleryId, this.pictures);
+      this.cdr.markForCheck();
+      return;
+    }
+
     if (!this.elementId) {
       this.loading = false;
       this.error = true;

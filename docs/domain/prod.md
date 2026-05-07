@@ -104,6 +104,7 @@ Software production for ZX Spectrum - games, demos, utilities and other software
 - Prod editing controls are action buttons, not links. They render through `zx-button` without `href` and navigate to legacy action URLs from click handlers.
 - The legacy details template mounts `zx-prod-details` directly; Angular renders the page title.
 - Product description loading state renders one paragraph skeleton with three thin ribs.
+- Emulator screenshots launched from prod details release rows are uploaded to the parent prod. The `uploadScreenshot` privilege must be requested once for the prod element and reused by all release play buttons.
 
 ### Angular Prod Lists
 - Outside category browser views, product cards must be rendered through `zx-prods-list`.

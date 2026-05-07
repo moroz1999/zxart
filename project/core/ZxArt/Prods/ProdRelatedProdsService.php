@@ -59,7 +59,10 @@ readonly class ProdRelatedProdsService
             }
         }
 
-        return new ProdSummariesDto(prods: $this->buildSummaries($prods));
+        return new ProdSummariesDto(
+            prods: $this->buildSummaries($prods),
+            seriesUrl: $this->resolveSeriesUrl($prod),
+        );
     }
 
     private function getProd(int $elementId): zxProdElement
@@ -109,6 +112,19 @@ readonly class ProdRelatedProdsService
         }
 
         return $rawImageUrl;
+    }
+
+    private function resolveSeriesUrl(zxProdElement $prod): ?string
+    {
+        foreach ($prod->series as $seriesElement) {
+            if (!$seriesElement instanceof zxProdElement) {
+                continue;
+            }
+
+            return (string)$seriesElement->getUrl();
+        }
+
+        return null;
     }
 
     private function translate(string $key): string

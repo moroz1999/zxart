@@ -15,6 +15,7 @@ readonly class PressArticlePublicationDto
         public string $title,
         public string $url,
         public ?int $year,
+        public ?string $imageUrl,
     ) {
     }
 }

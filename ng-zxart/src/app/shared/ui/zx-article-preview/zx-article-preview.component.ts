@@ -1,11 +1,8 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {
-  ZxBodyDirective,
-  ZxBodySmMutedDirective,
-  ZxHeading3Directive,
-} from '../../directives/typography/typography.directives';
+import {ZxBodySmMutedDirective, ZxBodyStrongDirective,} from '../../directives/typography/typography.directives';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
+import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
 
 export interface ZxArticlePreviewAuthor {
   readonly title: string;
@@ -16,6 +13,7 @@ export interface ZxArticlePreviewPublication {
   readonly title: string;
   readonly url: string;
   readonly year: number | null;
+  readonly imageUrl: string | null;
 }
 
 @Component({
@@ -23,10 +21,10 @@ export interface ZxArticlePreviewPublication {
   standalone: true,
   imports: [
     CommonModule,
-    ZxHeading3Directive,
-    ZxBodyDirective,
+    ZxBodyStrongDirective,
     ZxBodySmMutedDirective,
     ZxButtonComponent,
+    ZxPanelComponent,
   ],
   templateUrl: './zx-article-preview.component.html',
   styleUrls: ['./zx-article-preview.component.scss'],
@@ -38,6 +36,8 @@ export class ZxArticlePreviewComponent {
   @Input() url = '';
   @Input() snippetHtml: string | null = null;
   @Input() year: number | null = null;
+  @Input() imageUrl: string | null = null;
+  @Input() imageAlt = '';
   @Input() authors: ZxArticlePreviewAuthor[] = [];
   @Input() typeLabel: string | null = null;
   @Input() readLinkLabel: string | null = null;

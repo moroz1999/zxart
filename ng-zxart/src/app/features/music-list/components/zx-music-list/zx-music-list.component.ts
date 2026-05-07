@@ -31,6 +31,7 @@ import {MusicListService} from '../../services/music-list.service';
 export class ZxMusicListComponent implements OnInit {
   @Input() elementId = 0;
   @Input() compoType = '';
+  @Input() tunesInput: ZxTuneDto[] | null = null;
 
   vm$: Observable<MusicListVm> = of({loading: true, error: false, tunes: []});
   private playlistId = '';
@@ -70,6 +71,10 @@ export class ZxMusicListComponent implements OnInit {
   }
 
   private buildVm(): Observable<MusicListVm> {
+    if (this.tunesInput !== null) {
+      return of({loading: false, error: false, tunes: this.tunesInput});
+    }
+
     if (!this.elementId) {
       return of({loading: false, error: true, tunes: []});
     }
