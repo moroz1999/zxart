@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {forkJoin, Subscription} from 'rxjs';
@@ -37,6 +37,11 @@ export class ZxProdReleasesSectionComponent implements OnDestroy {
   loaded = false;
   releases: ProdReleaseDto[] = [];
   canUploadScreenshot = false;
+
+  @HostBinding('style.display')
+  get display(): string {
+    return this.loaded && this.releases.length === 0 ? 'none' : '';
+  }
 
   private readonly subscription = new Subscription();
 

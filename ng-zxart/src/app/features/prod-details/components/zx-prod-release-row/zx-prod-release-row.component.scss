@@ -2,6 +2,10 @@
   display: table-row-group;
 }
 
+.release-row td {
+  vertical-align: middle;
+}
+
 .release-row__title {
   white-space: nowrap;
 

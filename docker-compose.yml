@@ -58,15 +58,22 @@ services:
       - db
 
   composer:
-    image: composer:2
+    build:
+      context: ./docker/php
     container_name: zxart-composer
+    user: "1000:1000"
     working_dir: /var/www/html
     volumes:
       - ./:/var/www/html
     entrypoint: ["composer"]
+    environment:
+      - GIT_CONFIG_COUNT=1
+      - GIT_CONFIG_KEY_0=safe.directory
+      - GIT_CONFIG_VALUE_0=/var/www/html
 
   node:
     image: node:20-alpine
+    user: "1000:1000"
     working_dir: /var/www/html/ng-zxart
     volumes:
       - ./:/var/www/html

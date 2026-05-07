@@ -14,6 +14,7 @@ RUN apt-get update \
         libpng-dev \
         libjpeg-dev \
         libfreetype6-dev \
+        libmagickwand-dev \
     && rm -rf /var/lib/apt/lists/* \
     && docker-php-ext-configure gd --with-jpeg --with-freetype \
     && docker-php-ext-install -j"$(nproc)" \
@@ -23,8 +24,10 @@ RUN apt-get update \
         pdo \
         pdo_mysql \
         mysqli \
-    && pecl install redis xdebug \
-    && docker-php-ext-enable redis xdebug
+    && pecl install redis xdebug imagick \
+    && docker-php-ext-enable redis xdebug imagick \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && usermod -u 1000 www-data && groupmod -g 1000 www-data
 
 # Enable Apache modules and set DocumentRoot
 RUN a2enmod rewrite headers expires \

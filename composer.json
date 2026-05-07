@@ -15,7 +15,7 @@
     "moroz1999/ckeditor-html5-video": "1.*",
     "moroz1999/cache": "1.*",
     "smarty/smarty": "4.x",
-    "pelago/emogrifier": "^7.0",
+    "pelago/emogrifier": "^8.0",
     "tedivm/jshrink": "~1.0",
     "monolog/monolog": "2.9.*",    "moroz1999/sxg": "*",
     "moroz1999/zx-image": "^5.4",
@@ -55,9 +55,9 @@
     "dg/bypass-finals": "^1.4"
   },
   "scripts": {
-    "test": "vendor\\bin\\phpunit -c phpunit.xml.dist",
-    "psalm": "vendor\\bin\\psalm --use-baseline=psalm-baseline.xml --no-cache --force-jit",
-    "psalm-baseline": "vendor\\bin\\psalm --set-baseline=psalm-baseline.xml --no-cache",
-    "build": "cd .\\ng-zxart && npm run build"
+    "test": "vendor/bin/phpunit -c phpunit.xml.dist",
+    "psalm": "vendor/bin/psalm --use-baseline=psalm-baseline.xml --no-cache --force-jit",
+    "psalm-baseline": "vendor/bin/psalm --set-baseline=psalm-baseline.xml --no-cache",
+    "build": "cd ./ng-zxart && npm run build"
   }
 }

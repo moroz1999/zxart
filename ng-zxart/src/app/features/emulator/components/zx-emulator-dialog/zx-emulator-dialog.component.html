@@ -5,7 +5,7 @@
   </header>
 
   <div class="zx-emulator-dialog__body">
-    <canvas #canvas class="zx-emulator-dialog__canvas" id="canvas" tabindex="0"></canvas>
+    <canvas #canvas class="zx-emulator-dialog__canvas" id="canvas" tabindex="0" width="960" height="720"></canvas>
     <div *ngIf="loading" class="zx-emulator-dialog__overlay">
       <span zxBodySmMuted>{{ 'emulator.loading' | translate }}</span>
     </div>

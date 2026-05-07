@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
@@ -31,6 +31,11 @@ export class ZxProdMentionsSectionComponent {
   loading = false;
   loaded = false;
   mentions: PressArticlePreviewDto[] = [];
+
+  @HostBinding('style.display')
+  get display(): string {
+    return this.loaded && this.mentions.length === 0 ? 'none' : '';
+  }
 
   constructor(
     private readonly api: ProdMentionsApiService,
