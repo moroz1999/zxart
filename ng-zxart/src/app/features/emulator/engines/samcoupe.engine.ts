@@ -28,6 +28,7 @@ export class SamcoupeEngine implements EmulatorEngine {
   destroy(): void {
     this.canvas?.removeEventListener('click', this.pointerLockHandler);
     this.canvas = null;
+    this.emulator?.stop();
     this.emulator = null;
   }
 

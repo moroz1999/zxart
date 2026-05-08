@@ -28,4 +28,20 @@
   &.zx-stack--spacing-xxl {
     gap: var(--zx-stack-spacing-xxl);
   }
+
+  &.zx-stack--align-center {
+    align-items: center;
+  }
+
+  &.zx-stack--align-start {
+    align-items: flex-start;
+  }
+
+  &.zx-stack--align-end {
+    align-items: flex-end;
+  }
+
+  &.zx-stack--align-stretch {
+    align-items: stretch;
+  }
 }

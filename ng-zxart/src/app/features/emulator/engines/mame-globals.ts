@@ -16,6 +16,7 @@ export interface MameLoaderConstructor extends MameLoaderStatic {
 export interface MameEmulatorInstance {
   start(opts: {waitAfterDownloading: boolean}): void;
   requestFullScreen(): void;
+  stop(): void;
 }
 
 export type MameEmulatorConstructor = new (

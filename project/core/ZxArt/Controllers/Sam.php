@@ -5,7 +5,10 @@ namespace ZxArt\Controllers;
 
 use App\Users\CurrentUserService;
 use Cache;
+use controller;
+use Monolog\Logger;
 use renderer;
+use structureManager;
 use ZxArt\Import\Services\WorldOfSamImport;
 
 class Sam extends LoggedControllerApplication
@@ -13,6 +16,18 @@ class Sam extends LoggedControllerApplication
     protected $applicationName = 'sam';
     public $rendererName = 'smarty';
     public $requestParameters = [];
+
+    public function __construct(
+        controller $controller,
+        Logger $logger,
+        private readonly Cache $cache,
+        private readonly renderer $rendererService,
+        private readonly CurrentUserService $currentUserService,
+        private readonly structureManager $adminStructureManager,
+        private readonly WorldOfSamImport $worldOfSamImport,
+    ) {
+        parent::__construct($controller, $logger);
+    }
 
     /**
      * @return void
@@ -30,25 +45,19 @@ class Sam extends LoggedControllerApplication
      */
     public function execute($controller)
     {
-        /**
-         * @var Cache $cache
-         */
-        $cache = $this->getService(Cache::class);
-        $cache->enable(false, false, true);
-        $renderer = $this->getService(renderer::class);
-        $renderer->endOutputBuffering();
+        $this->cache->enable(false, false, true);
+        $this->rendererService->endOutputBuffering();
         while (ob_get_level()) {
             ob_end_flush();
         }
 
-        $user = $this->getService(CurrentUserService::class)->getCurrentUser();
+        $user = $this->currentUserService->getCurrentUser();
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
 
-            $this->getService('adminStructureManager');
+            $this->adminStructureManager->setRequestedPath($controller->requestedPath);
 
-            $worldOfSamImport = $this->getService(WorldOfSamImport::class);
-            $worldOfSamImport->importAll();
+            $this->worldOfSamImport->importAll();
         }
     }
 

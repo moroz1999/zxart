@@ -1,9 +1,8 @@
 import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {DIALOG_DATA, DialogRef} from '@angular/cdk/dialog';
-import {CommonModule} from '@angular/common';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../zx-button-controls/zx-button-controls.component';
-import {ZxHeading2Directive} from '../../directives/typography/typography.directives';
+import {ZxDialogComponent} from '../zx-dialog/zx-dialog.component';
 
 export interface ConfirmDialogData {
   title: string;
@@ -17,10 +16,9 @@ export interface ConfirmDialogData {
   selector: 'zx-confirm-dialog',
   standalone: true,
   imports: [
-    CommonModule,
+    ZxDialogComponent,
     ZxButtonComponent,
     ZxButtonControlsComponent,
-    ZxHeading2Directive,
   ],
   templateUrl: './zx-confirm-dialog.component.html',
   styleUrl: './zx-confirm-dialog.component.scss',

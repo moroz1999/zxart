@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
-use ConfigManager;
 use controller;
 use LanguagesManager;
+use Monolog\Logger;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use structureManager;
 use Throwable;
 use ZxArt\UserPreferences\DefaultUserPreferencesProvider;
 use ZxArt\UserPreferences\Domain\Exception\UserPreferencesException;
@@ -18,29 +19,26 @@ use ZxArt\UserPreferences\UserPreferencesService;
 class Userpreferences extends LoggedControllerApplication
 {
     public $rendererName = 'json';
-    protected ObjectMapper $objectMapper;
-    protected UserPreferencesService $userPreferencesService;
+
+    public function __construct(
+        controller $controller,
+        Logger $logger,
+        private readonly structureManager $structureManager,
+        private readonly LanguagesManager $languagesManager,
+        private readonly ObjectMapper $objectMapper,
+        private readonly UserPreferencesService $userPreferencesService,
+        private readonly DefaultUserPreferencesProvider $defaultUserPreferencesProvider,
+    ) {
+        parent::__construct($controller, $logger);
+    }
 
     public function initialize(): void
     {
         try {
             $this->startSession('public');
             $this->createRenderer();
-            $this->objectMapper = new ObjectMapper();
 
-            $configManager = $this->getService(ConfigManager::class);
-            $structureManager = $this->getService(
-                'structureManager',
-                [
-                    'rootUrl' => controller::getInstance()->baseURL,
-                    'rootMarker' => $configManager->get('main.rootMarkerPublic'),
-                ],
-                true
-            );
-            $languagesManager = $this->getService(LanguagesManager::class);
-            $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
-
-            $this->userPreferencesService = $this->getService(UserPreferencesService::class);
+            $this->structureManager->setRequestedPath([$this->languagesManager->getCurrentLanguageCode()]);
         } catch (Throwable $e) {
             $this->logThrowable('Userpreferences::initialize', $e);
             throw $e;
@@ -87,9 +85,7 @@ class Userpreferences extends LoggedControllerApplication
     protected function handleGetDefaults(): void
     {
         try {
-            /** @var DefaultUserPreferencesProvider $defaultsProvider */
-            $defaultsProvider = $this->getService(DefaultUserPreferencesProvider::class);
-            $defaults = $defaultsProvider->getDefaults();
+            $defaults = $this->defaultUserPreferencesProvider->getDefaults();
 
             $restDtos = [];
             foreach ($defaults as $code => $value) {

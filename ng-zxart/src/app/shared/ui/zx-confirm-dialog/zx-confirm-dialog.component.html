@@ -1,10 +1,12 @@
-<div class="zx-confirm-dialog__inner">
-  <h2 zxHeading2 class="zx-confirm-dialog__title">{{ data.title }}</h2>
+<zx-dialog [title]="data.title" (closeClick)="cancel()">
   <p class="zx-confirm-dialog__message">{{ data.message }}</p>
-  <zx-button-controls align="end" class="zx-confirm-dialog__actions">
-    <zx-button color="outlined" (click)="cancel()">{{ data.cancelLabel }}</zx-button>
-    <zx-button [color]="data.danger ? 'danger' : 'primary'" (click)="confirm()">
-      {{ data.confirmLabel }}
-    </zx-button>
-  </zx-button-controls>
-</div>
+
+  <div zxDialogFooter>
+    <zx-button-controls align="end">
+      <zx-button color="outlined" (click)="cancel()">{{ data.cancelLabel }}</zx-button>
+      <zx-button [color]="data.danger ? 'danger' : 'primary'" (click)="confirm()">
+        {{ data.confirmLabel }}
+      </zx-button>
+    </zx-button-controls>
+  </div>
+</zx-dialog>

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace ZxArt\Controllers;
 
-use ConfigManager;
 use controller;
 use LanguagesManager;
+use Monolog\Logger;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use structureManager;
 use Throwable;
 use ZxArt\Radio\Exception\RadioTuneNotFoundException;
 use ZxArt\Radio\Services\RadioCriteriaFactory;
@@ -18,32 +19,26 @@ use ZxArt\Tunes\Rest\TuneRestDto;
 class Radio extends LoggedControllerApplication
 {
     public $rendererName = 'json';
-    protected ObjectMapper $objectMapper;
-    protected RadioService $radioService;
-    protected RadioOptionsService $optionsService;
-    protected RadioCriteriaFactory $criteriaFactory;
+
+    public function __construct(
+        controller $controller,
+        Logger $logger,
+        private readonly structureManager $structureManager,
+        private readonly LanguagesManager $languagesManager,
+        private readonly ObjectMapper $objectMapper,
+        private readonly RadioService $radioService,
+        private readonly RadioOptionsService $optionsService,
+        private readonly RadioCriteriaFactory $criteriaFactory,
+    ) {
+        parent::__construct($controller, $logger);
+    }
 
     public function initialize(): void
     {
         $this->startSession('public');
         $this->createRenderer();
-        $this->objectMapper = new ObjectMapper();
 
-        $configManager = $this->getService(ConfigManager::class);
-        $structureManager = $this->getService(
-            'structureManager',
-            [
-                'rootUrl' => controller::getInstance()->rootURL,
-                'rootMarker' => $configManager->get('main.rootMarkerPublic'),
-            ],
-            true
-        );
-        $languagesManager = $this->getService(LanguagesManager::class);
-        $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
-
-        $this->radioService = $this->getService(RadioService::class);
-        $this->optionsService = $this->getService(RadioOptionsService::class);
-        $this->criteriaFactory = $this->getService(RadioCriteriaFactory::class);
+        $this->structureManager->setRequestedPath([$this->languagesManager->getCurrentLanguageCode()]);
     }
 
     public function execute($controller): void

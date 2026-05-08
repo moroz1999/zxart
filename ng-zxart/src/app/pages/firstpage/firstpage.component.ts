@@ -37,7 +37,6 @@ interface ModuleEntry {
     ZxButtonComponent,
     ZxHeading1Directive,
     PictureGalleryHostComponent,
-
   ],
   templateUrl: './firstpage.component.html',
   styleUrls: ['./firstpage.component.scss'],
@@ -62,6 +61,7 @@ export class FirstpageComponent implements OnInit {
   openConfig(): void {
     this.dialog.open(FirstpageConfigDialogComponent, {
       width: '600px',
+      height: '80vh',
       panelClass: 'zx-dialog',
       backdropClass: 'zx-dialog-backdrop',
     });

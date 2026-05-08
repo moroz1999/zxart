@@ -16,6 +16,7 @@ readonly class ProdReleaseRestDto
      * @param ProdGroupRefRestDto[]      $releaseBy
      * @param ProdReleaseFormatRestDto[] $formats
      * @param ProdLinkInfoRestDto[]      $externalLinks
+     * @param ProdFileRestDto[]          $screenshots
      */
     public function __construct(
         public int $id,
@@ -49,6 +50,8 @@ readonly class ProdReleaseRestDto
         public int $playsCount,
         #[Map(transform: MapCollection::class)]
         public array $externalLinks,
+        #[Map(transform: MapCollection::class)]
+        public array $screenshots,
     ) {
     }
 }

@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
-use ConfigManager;
 use controller;
 use LanguagesManager;
+use Monolog\Logger;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use structureManager;
 use Throwable;
 use ZxArt\Pictures\Dto\PictureDto;
 use ZxArt\Pictures\Rest\PictureRestDto;
@@ -18,22 +19,23 @@ class Pictures extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 
+    public function __construct(
+        controller $controller,
+        Logger $logger,
+        private readonly structureManager $structureManager,
+        private readonly LanguagesManager $languagesManager,
+        private readonly PicturesService $picturesService,
+        private readonly ObjectMapper $objectMapper,
+    ) {
+        parent::__construct($controller, $logger);
+    }
+
     public function initialize(): void
     {
         $this->startSession('public');
         $this->createRenderer();
 
-        $configManager = $this->getService(ConfigManager::class);
-        $structureManager = $this->getService(
-            'structureManager',
-            [
-                'rootUrl' => controller::getInstance()->rootURL,
-                'rootMarker' => $configManager->get('main.rootMarkerPublic'),
-            ],
-            true
-        );
-        $languagesManager = $this->getService(LanguagesManager::class);
-        $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
+        $this->structureManager->setRequestedPath([$this->languagesManager->getCurrentLanguageCode()]);
     }
 
     public function execute($controller): void
@@ -61,10 +63,9 @@ class Pictures extends LoggedControllerApplication
         }
 
         try {
-            $dtos = $this->getService(PicturesService::class)->getByAuthor($elementId);
-            $mapper = new ObjectMapper();
+            $dtos = $this->picturesService->getByAuthor($elementId);
             $this->renderer->assign('body', array_map(
-                fn(PictureDto $dto) => $mapper->map($dto, PictureRestDto::class),
+                fn(PictureDto $dto) => $this->objectMapper->map($dto, PictureRestDto::class),
                 $dtos
             ));
         } catch (Throwable $e) {

@@ -4,10 +4,11 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
-use ConfigManager;
 use controller;
 use LanguagesManager;
+use Monolog\Logger;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use structureManager;
 use Throwable;
 use ZxArt\Firstpage\FirstpageProdsService;
 use ZxArt\Parties\Dto\PartyDto;
@@ -26,37 +27,29 @@ use ZxArt\Tunes\Services\TunesService;
 class Firstpage extends LoggedControllerApplication
 {
     public $rendererName = 'json';
-    protected ObjectMapper $objectMapper;
-    protected FirstpageProdsService $prodsService;
-    protected PicturesService $picturesService;
-    protected TunesService $tunesService;
-    protected PartiesService $partiesService;
-    protected ReleasesService $releasesService;
+
+    public function __construct(
+        controller $controller,
+        Logger $logger,
+        private readonly structureManager $structureManager,
+        private readonly LanguagesManager $languagesManager,
+        private readonly ObjectMapper $objectMapper,
+        private readonly FirstpageProdsService $prodsService,
+        private readonly PicturesService $picturesService,
+        private readonly TunesService $tunesService,
+        private readonly PartiesService $partiesService,
+        private readonly ReleasesService $releasesService,
+    ) {
+        parent::__construct($controller, $logger);
+    }
 
     public function initialize(): void
     {
         $this->startSession('public');
         $this->createRenderer();
-        $this->objectMapper = new ObjectMapper();
 
         try {
-            $configManager = $this->getService(ConfigManager::class);
-            $structureManager = $this->getService(
-                'structureManager',
-                [
-                    'rootUrl' => controller::getInstance()->rootURL,
-                    'rootMarker' => $configManager->get('main.rootMarkerPublic'),
-                ],
-                true
-            );
-            $languagesManager = $this->getService(LanguagesManager::class);
-            $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
-
-            $this->prodsService = $this->getService(FirstpageProdsService::class);
-            $this->picturesService = $this->getService(PicturesService::class);
-            $this->tunesService = $this->getService(TunesService::class);
-            $this->partiesService = $this->getService(PartiesService::class);
-            $this->releasesService = $this->getService(ReleasesService::class);
+            $this->structureManager->setRequestedPath([$this->languagesManager->getCurrentLanguageCode()]);
         } catch (Throwable $e) {
             $this->logThrowable('Firstpage::initialize', $e);
             throw $e;

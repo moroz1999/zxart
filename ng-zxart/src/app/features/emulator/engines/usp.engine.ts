@@ -43,6 +43,7 @@ export class UspEngine implements EmulatorEngine {
   }
 
   destroy(): void {
+    window.Module?.pauseMainLoop?.();
     this.canvas = null;
     this.fileUrl = null;
   }

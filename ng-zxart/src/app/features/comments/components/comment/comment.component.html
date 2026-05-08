@@ -26,7 +26,7 @@
         }
 
         <zx-stack spacing="md">
-          <zx-stack class="comment-header" direction="row" spacing="sm">
+          <zx-stack direction="row" spacing="sm">
             <zx-user *ngIf="comment.author" [user]="comment.author"></zx-user>
             <span class="comment-date" zxCaption>{{ comment.date }}</span>
           </zx-stack>

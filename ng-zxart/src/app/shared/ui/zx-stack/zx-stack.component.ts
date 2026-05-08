@@ -15,8 +15,13 @@ import {CommonModule} from '@angular/common';
 export class ZxStackComponent {
   @Input() spacing: 'sm' | 'md' | 'lg' | 'xl' | 'xxl' = 'md';
   @Input() direction: 'column' | 'row' = 'column';
+  @Input() align: 'center' | 'start' | 'end' | 'stretch' | null = null;
 
   get classList(): string {
-    return `zx-stack--${this.direction} zx-stack--spacing-${this.spacing}`;
+    const classes = [`zx-stack--${this.direction}`, `zx-stack--spacing-${this.spacing}`];
+    if (this.align) {
+      classes.push(`zx-stack--align-${this.align}`);
+    }
+    return classes.join(' ');
   }
 }

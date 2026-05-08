@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
+use controller;
 use LanguagesManager;
+use Monolog\Logger;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use structureManager;
 use Throwable;
 use ZxArt\MusicList\MusicListService;
 use ZxArt\Shared\SortingParams;
@@ -17,14 +20,23 @@ class Musiclist extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 
+    public function __construct(
+        controller $controller,
+        Logger $logger,
+        private readonly structureManager $structureManager,
+        private readonly LanguagesManager $languagesManager,
+        private readonly MusicListService $musicListService,
+        private readonly ObjectMapper $objectMapper,
+    ) {
+        parent::__construct($controller, $logger);
+    }
+
     public function initialize(): void
     {
         $this->startSession('public');
         $this->createRenderer();
 
-        $structureManager = $this->getService('publicStructureManager');
-        $languagesManager = $this->getService(LanguagesManager::class);
-        $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
+        $this->structureManager->setRequestedPath([$this->languagesManager->getCurrentLanguageCode()]);
     }
 
     public function execute($controller): void
@@ -40,22 +52,18 @@ class Musiclist extends LoggedControllerApplication
                 $this->assignError('elementId is required', 400);
             } elseif ($limit !== null) {
                 $sorting = SortingParams::fromRequest($sortingRaw, MusicListService::ALLOWED_SORT_COLUMNS);
-                $service = $this->getService(MusicListService::class);
-                $result = $service->getPagedByLinkedElement($elementId, 'tagLink', $sorting, $start, $limit);
-                $mapper = new ObjectMapper();
+                $result = $this->musicListService->getPagedByLinkedElement($elementId, 'tagLink', $sorting, $start, $limit);
                 $this->assignSuccess([
                     'total' => $result['total'],
                     'items' => array_map(
-                        fn(TuneDto $dto) => $mapper->map($dto, TuneRestDto::class),
+                        fn(TuneDto $dto) => $this->objectMapper->map($dto, TuneRestDto::class),
                         $result['items']
                     ),
                 ]);
             } else {
-                $service = $this->getService(MusicListService::class);
-                $dtos = $service->getTunes($elementId, $compoType);
-                $mapper = new ObjectMapper();
+                $dtos = $this->musicListService->getTunes($elementId, $compoType);
                 $restDtos = array_map(
-                    fn(TuneDto $dto) => $mapper->map($dto, TuneRestDto::class),
+                    fn(TuneDto $dto) => $this->objectMapper->map($dto, TuneRestDto::class),
                     $dtos
                 );
                 $this->assignSuccess($restDtos);

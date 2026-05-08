@@ -1,25 +1,7 @@
 @use "shared/breakpoints" as breakpoints;
 
-.dialog-inner {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-16);
-  padding: var(--space-24);
-}
-
-.dialog-content {
-  overflow-y: auto;
-  max-height: 60vh;
-}
-
-.dialog-actions {
-  padding-top: var(--space-8);
-  border-top: 1px solid var(--border-color);
-}
-
 .modules-list {
   min-width: 400px;
-  max-height: 60vh;
 
   @include breakpoints.media-breakpoint-down(sm) {
     min-width: 0;
@@ -32,7 +14,7 @@
   flex-wrap: wrap;
   gap: var(--space-8);
   padding: var(--space-8) var(--space-4);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: var(--border-width-thin) solid var(--border-color);
   color: var(--text-color);
 
   &:last-child {
@@ -60,7 +42,7 @@
   @include breakpoints.media-breakpoint-down(sm) {
     margin-left: 0;
     width: 100%;
-    padding-left: calc(var(--space-8) + 24px); // align with checkbox (icon width + gap)
+    padding-left: calc(var(--space-8) + 24px);
   }
 }
 

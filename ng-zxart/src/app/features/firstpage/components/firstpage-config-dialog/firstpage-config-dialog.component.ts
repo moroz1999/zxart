@@ -19,7 +19,7 @@ import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-control
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
 import {ZxSelectComponent, ZxSelectOption} from '../../../../shared/ui/zx-select/zx-select.component';
 import {ZxCheckboxFieldComponent} from '../../../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
-import {ZxHeading2Directive} from '../../../../shared/directives/typography/typography.directives';
+import {ZxDialogComponent} from '../../../../shared/ui/zx-dialog/zx-dialog.component';
 import {environment} from '../../../../../environments/environment';
 
 @Component({
@@ -31,12 +31,12 @@ import {environment} from '../../../../../environments/environment';
     SvgIconComponent,
     DragDropModule,
     TranslateModule,
+    ZxDialogComponent,
     ZxButtonComponent,
     ZxButtonControlsComponent,
     ZxInputComponent,
     ZxSelectComponent,
     ZxCheckboxFieldComponent,
-    ZxHeading2Directive,
   ],
   templateUrl: './firstpage-config-dialog.component.html',
   styleUrls: ['./firstpage-config-dialog.component.scss'],

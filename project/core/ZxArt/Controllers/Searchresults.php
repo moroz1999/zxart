@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
+use controller;
 use LanguagesManager;
+use Monolog\Logger;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use structureManager;
 use Throwable;
 use ZxArt\AuthorList\Dto\AuthorListItemDto;
 use ZxArt\AuthorList\Rest\AuthorListItemRestDto;
@@ -32,14 +35,23 @@ class Searchresults extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 
+    public function __construct(
+        controller $controller,
+        Logger $logger,
+        private readonly structureManager $structureManager,
+        private readonly LanguagesManager $languagesManager,
+        private readonly SearchService $searchService,
+        private readonly ObjectMapper $objectMapper,
+    ) {
+        parent::__construct($controller, $logger);
+    }
+
     public function initialize(): void
     {
         $this->startSession('public');
         $this->createRenderer();
 
-        $structureManager = $this->getService('publicStructureManager');
-        $languagesManager = $this->getService(LanguagesManager::class);
-        $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
+        $this->structureManager->setRequestedPath([$this->languagesManager->getCurrentLanguageCode()]);
     }
 
     public function execute($controller): void
@@ -49,8 +61,7 @@ class Searchresults extends LoggedControllerApplication
             $page = $this->parsePositiveInt('page', 1);
             $types = $this->parseTypes($this->getParameter('types'));
 
-            $searchService = $this->getService(SearchService::class);
-            $resultDto = $searchService->search($phrase, $page, $types);
+            $resultDto = $this->searchService->search($phrase, $page, $types);
             $this->assignSuccess($this->mapResult($resultDto));
         } catch (Throwable $e) {
             $this->logThrowable('Searchresults::execute', $e);
@@ -62,9 +73,8 @@ class Searchresults extends LoggedControllerApplication
 
     private function mapResult(SearchResultsDto $dto): SearchResultsRestDto
     {
-        $mapper = new ObjectMapper();
         $sets = array_map(
-            fn(SearchResultSetDto $set) => $this->mapSet($set, $mapper),
+            fn(SearchResultSetDto $set) => $this->mapSet($set),
             $dto->sets,
         );
         return new SearchResultsRestDto(
@@ -76,10 +86,10 @@ class Searchresults extends LoggedControllerApplication
         );
     }
 
-    private function mapSet(SearchResultSetDto $set, ObjectMapper $mapper): SearchResultSetRestDto
+    private function mapSet(SearchResultSetDto $set): SearchResultSetRestDto
     {
         $items = array_map(
-            fn(object $item) => $this->mapItem($item, $mapper),
+            fn(object $item) => $this->mapItem($item),
             $set->items,
         );
         return new SearchResultSetRestDto(
@@ -89,16 +99,16 @@ class Searchresults extends LoggedControllerApplication
         );
     }
 
-    private function mapItem(object $item, ObjectMapper $mapper): object
+    private function mapItem(object $item): object
     {
         return match (true) {
-            $item instanceof AuthorListItemDto => $mapper->map($item, AuthorListItemRestDto::class),
-            $item instanceof GroupListItemDto => $mapper->map($item, GroupListItemRestDto::class),
-            $item instanceof PictureDto => $mapper->map($item, PictureRestDto::class),
-            $item instanceof ProdDto => $mapper->map($item, ProdRestDto::class),
-            $item instanceof TuneDto => $mapper->map($item, TuneRestDto::class),
-            $item instanceof PressArticleDto => $mapper->map($item, PressArticleRestDto::class),
-            $item instanceof PartyDto => $mapper->map($item, PartyRestDto::class),
+            $item instanceof AuthorListItemDto => $this->objectMapper->map($item, AuthorListItemRestDto::class),
+            $item instanceof GroupListItemDto => $this->objectMapper->map($item, GroupListItemRestDto::class),
+            $item instanceof PictureDto => $this->objectMapper->map($item, PictureRestDto::class),
+            $item instanceof ProdDto => $this->objectMapper->map($item, ProdRestDto::class),
+            $item instanceof TuneDto => $this->objectMapper->map($item, TuneRestDto::class),
+            $item instanceof PressArticleDto => $this->objectMapper->map($item, PressArticleRestDto::class),
+            $item instanceof PartyDto => $this->objectMapper->map($item, PartyRestDto::class),
             default => $item,
         };
     }

@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
+use controller;
 use LanguagesManager;
+use Monolog\Logger;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use structureManager;
 use Throwable;
 use ZxArt\PictureList\PictureListService;
 use ZxArt\Pictures\Dto\PictureDto;
@@ -17,14 +20,23 @@ class Picturelist extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 
+    public function __construct(
+        controller $controller,
+        Logger $logger,
+        private readonly structureManager $structureManager,
+        private readonly LanguagesManager $languagesManager,
+        private readonly PictureListService $pictureListService,
+        private readonly ObjectMapper $objectMapper,
+    ) {
+        parent::__construct($controller, $logger);
+    }
+
     public function initialize(): void
     {
         $this->startSession('public');
         $this->createRenderer();
 
-        $structureManager = $this->getService('publicStructureManager');
-        $languagesManager = $this->getService(LanguagesManager::class);
-        $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
+        $this->structureManager->setRequestedPath([$this->languagesManager->getCurrentLanguageCode()]);
     }
 
     public function execute($controller): void
@@ -42,13 +54,11 @@ class Picturelist extends LoggedControllerApplication
                 if ($pictureId <= 0) {
                     $this->assignError('pictureId is required', 400);
                 } else {
-                    $service = $this->getService(PictureListService::class);
-                    $related = $service->getRelated($pictureId);
-                    $mapper = new ObjectMapper();
+                    $related = $this->pictureListService->getRelated($pictureId);
                     $this->assignSuccess([
                         'type' => $related['type'],
                         'items' => array_map(
-                            fn(PictureDto $dto) => $mapper->map($dto, PictureRestDto::class),
+                            fn(PictureDto $dto) => $this->objectMapper->map($dto, PictureRestDto::class),
                             $related['items']
                         ),
                     ]);
@@ -57,22 +67,18 @@ class Picturelist extends LoggedControllerApplication
                 $this->assignError('elementId is required', 400);
             } elseif ($limit !== null) {
                 $sorting = SortingParams::fromRequest($sortingRaw, PictureListService::ALLOWED_SORT_COLUMNS);
-                $service = $this->getService(PictureListService::class);
-                $result = $service->getPagedByLinkedElement($elementId, 'tagLink', $sorting, $start, $limit);
-                $mapper = new ObjectMapper();
+                $result = $this->pictureListService->getPagedByLinkedElement($elementId, 'tagLink', $sorting, $start, $limit);
                 $this->assignSuccess([
                     'total' => $result['total'],
                     'items' => array_map(
-                        fn(PictureDto $dto) => $mapper->map($dto, PictureRestDto::class),
+                        fn(PictureDto $dto) => $this->objectMapper->map($dto, PictureRestDto::class),
                         $result['items']
                     ),
                 ]);
             } else {
-                $service = $this->getService(PictureListService::class);
-                $dtos = $service->getPictures($elementId, $compoType);
-                $mapper = new ObjectMapper();
+                $dtos = $this->pictureListService->getPictures($elementId, $compoType);
                 $restDtos = array_map(
-                    fn(PictureDto $dto) => $mapper->map($dto, PictureRestDto::class),
+                    fn(PictureDto $dto) => $this->objectMapper->map($dto, PictureRestDto::class),
                     $dtos
                 );
                 $this->assignSuccess($restDtos);

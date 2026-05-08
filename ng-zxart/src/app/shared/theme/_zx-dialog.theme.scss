@@ -1,2 +1,14 @@
-// Dialog theme variables are defined inline in styles.scss
-// (background, color, radius, shadow use shared semantic variables directly)
+:root {
+  /* Dialog header padding: narrow vertical, more space on left for title */
+  --zx-dialog-header-padding: var(--space-8) var(--space-8) var(--space-8) var(--space-16);
+  /* Dialog header bottom divider */
+  --zx-dialog-header-border: var(--border-width-thin) solid var(--border-color);
+  /* Dialog body padding */
+  --zx-dialog-body-padding: var(--space-16);
+  /* Dialog footer padding */
+  --zx-dialog-footer-padding: var(--space-12) var(--space-16);
+  /* Dialog footer top divider */
+  --zx-dialog-footer-border: var(--border-width-thin) solid var(--border-color);
+  /* Dialog close button icon size */
+  --zx-dialog-close-icon-size: 20px;
+}

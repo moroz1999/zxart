@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
+use controller;
 use LanguagesManager;
+use Monolog\Logger;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use structureManager;
 use Throwable;
 use ZxArt\AuthorList\AuthorListService;
 use ZxArt\AuthorList\Dto\AuthorListItemDto;
@@ -21,14 +24,23 @@ class Authorlist extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 
+    public function __construct(
+        controller $controller,
+        Logger $logger,
+        private readonly structureManager $structureManager,
+        private readonly LanguagesManager $languagesManager,
+        private readonly AuthorListService $authorListService,
+        private readonly ObjectMapper $objectMapper,
+    ) {
+        parent::__construct($controller, $logger);
+    }
+
     public function initialize(): void
     {
         $this->startSession('public');
         $this->createRenderer();
 
-        $structureManager = $this->getService('publicStructureManager');
-        $languagesManager = $this->getService(LanguagesManager::class);
-        $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
+        $this->structureManager->setRequestedPath([$this->languagesManager->getCurrentLanguageCode()]);
     }
 
     public function execute($controller): void
@@ -44,9 +56,9 @@ class Authorlist extends LoggedControllerApplication
 
         try {
             if ($action === 'filters') {
-                $this->handleFilters($elementId);
+                $this->handleFilters();
             } else {
-                $this->handleList($elementId);
+                $this->handleList();
             }
         } catch (Throwable $e) {
             $this->logThrowable('Authorlist::execute', $e);
@@ -56,7 +68,7 @@ class Authorlist extends LoggedControllerApplication
         $this->renderer->display();
     }
 
-    private function handleList(int $elementId): void
+    private function handleList(): void
     {
         $start = (int)($this->getParameter('start') ?: 0);
         $limit = (int)($this->getParameter('limit') ?: 50);
@@ -67,45 +79,47 @@ class Authorlist extends LoggedControllerApplication
         $letter = $this->getParameter('letter') ?: null;
         $typesRaw = $this->getParameter('types') ?: null;
         $types = $typesRaw !== null
-            ? array_filter(
-                array_map(
-                    static fn(string $t) => EntityType::tryFrom($t),
-                    explode(',', $typesRaw),
-                ),
-                static fn(?EntityType $t) => $t !== null && in_array($t, [EntityType::Author, EntityType::AuthorAlias], true),
-            )
+            ? explode(',', $typesRaw)
+                |> (static fn($x) => array_map(static fn(string $t) => EntityType::tryFrom($t), $x))
+                |> (static fn($x) => array_filter($x, static fn(?EntityType $t) => $t !== null && in_array($t, [EntityType::Author, EntityType::AuthorAlias], true)))
             : [EntityType::Author, EntityType::AuthorAlias];
         $items = $this->getParameter('items') ?: null;
 
         $sorting = SortingParams::fromRequest($sortingRaw, ['title', 'graphicsRating', 'musicRating', 'id']);
-        $service = $this->getService(AuthorListService::class);
-        $result = $service->getPaged($sorting, $start, $limit, $search, $countryId, $cityId, $letter, $types, $items);
+        $result = $this->authorListService->getPaged(
+            $sorting,
+            $start,
+            $limit,
+            $search,
+            $countryId,
+            $cityId,
+            $letter,
+            $types,
+            $items
+        );
 
-        $mapper = new ObjectMapper();
         $this->assignSuccess([
             'total' => $result['total'],
             'items' => array_map(
-                static fn(AuthorListItemDto $dto) => $mapper->map($dto, AuthorListItemRestDto::class),
+                fn(AuthorListItemDto $dto) => $this->objectMapper->map($dto, AuthorListItemRestDto::class),
                 $result['items']
             ),
         ]);
     }
 
-    private function handleFilters(int $elementId): void
+    private function handleFilters(): void
     {
         $letter = $this->getParameter('letter') ?: null;
         $items = $this->getParameter('items') ?: null;
-        $service = $this->getService(AuthorListService::class);
-        $options = $service->getFilterOptions($letter, $items);
+        $options = $this->authorListService->getFilterOptions($letter, $items);
 
-        $mapper = new ObjectMapper();
         $this->assignSuccess(new AuthorFilterOptionsRestDto(
             countries: array_map(
-                static fn(FilterOptionDto $dto) => $mapper->map($dto, AuthorFilterOptionRestDto::class),
+                fn(FilterOptionDto $dto) => $this->objectMapper->map($dto, AuthorFilterOptionRestDto::class),
                 $options['countries']
             ),
             cities: array_map(
-                static fn(FilterOptionDto $dto) => $mapper->map($dto, AuthorFilterOptionRestDto::class),
+                fn(FilterOptionDto $dto) => $this->objectMapper->map($dto, AuthorFilterOptionRestDto::class),
                 $options['cities']
             ),
         ));

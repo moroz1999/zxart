@@ -4,7 +4,7 @@ namespace ZxArt\Controllers;
 
 use App\Users\CurrentUserService;
 use Cache;
-use ConfigManager;
+use controller;
 use controllerApplication;
 use Exception;
 use Illuminate\Database\Connection;
@@ -17,7 +17,6 @@ use mp3ConversionManager;
 use pressArticleElement;
 use Recalculable;
 use renderer;
-use rendererPlugin;
 use structureManager;
 use ZxArt\Ai\QueryFailException;
 use ZxArt\Ai\QuerySkipException;
@@ -64,6 +63,55 @@ class Crontab extends controllerApplication
     private ?AiTextContent $aiTextContent;
     private EventsAggregationService $eventsAggregationService;
     private CacheCleanupService $cacheCleanupService;
+    private Cache $cache;
+    private renderer $rendererService;
+    private CurrentUserService $currentUserService;
+    private mp3ConversionManager $mp3ConversionManager;
+
+    public function __construct(
+        controller $controller,
+        QueueService $queueService,
+        Connection $db,
+        ProdQueryService $prodQueryService,
+        TextBeautifier $textBeautifier,
+        Translator $translatorService,
+        LanguageDetector $languageDetector,
+        LanguagesManager $languagesManager,
+        PressArticleSeo $pressArticleSeo,
+        ArticleSeoDataUpdater $articleSeoDataUpdater,
+        PressArticleParser $pressParser,
+        ArticleParsedDataUpdater $pressDataUpdater,
+        AiTextContent $aiTextContent,
+        EventsAggregationService $eventsAggregationService,
+        CacheCleanupService $cacheCleanupService,
+        Cache $cache,
+        renderer $rendererService,
+        CurrentUserService $currentUserService,
+        structureManager $structureManager,
+        mp3ConversionManager $mp3ConversionManager,
+    ) {
+        parent::__construct($controller);
+
+        $this->queueService = $queueService;
+        $this->db = $db;
+        $this->prodQueryService = $prodQueryService;
+        $this->textBeautifier = $textBeautifier;
+        $this->translatorService = $translatorService;
+        $this->languageDetector = $languageDetector;
+        $this->languagesManager = $languagesManager;
+        $this->pressArticleSeo = $pressArticleSeo;
+        $this->articleSeoDataUpdater = $articleSeoDataUpdater;
+        $this->pressParser = $pressParser;
+        $this->pressDataUpdater = $pressDataUpdater;
+        $this->aiTextContent = $aiTextContent;
+        $this->eventsAggregationService = $eventsAggregationService;
+        $this->cacheCleanupService = $cacheCleanupService;
+        $this->cache = $cache;
+        $this->rendererService = $rendererService;
+        $this->currentUserService = $currentUserService;
+        $this->structureManager = $structureManager;
+        $this->mp3ConversionManager = $mp3ConversionManager;
+    }
     
     /**
      * @return void
@@ -73,23 +121,6 @@ class Crontab extends controllerApplication
         ignore_user_abort(1);
         set_time_limit(60 * 10);
         $this->createRenderer();
-        /**
-         * @var QueueService $queueService
-         */
-        $this->queueService = $this->getService(QueueService::class);
-        $this->db = $this->getService('db');
-        $this->prodQueryService = $this->getService(ProdQueryService::class);
-        $this->textBeautifier = $this->getService(TextBeautifier::class);
-        $this->translatorService = $this->getService(Translator::class);
-        $this->languageDetector = $this->getService(LanguageDetector::class);
-        $this->languagesManager = $this->getService(LanguagesManager::class);
-        $this->pressArticleSeo = $this->getService(PressArticleSeo::class);
-        $this->articleSeoDataUpdater = $this->getService(ArticleSeoDataUpdater::class);
-        $this->pressParser = $this->getService(PressArticleParser::class);
-        $this->pressDataUpdater = $this->getService(ArticleParsedDataUpdater::class);
-        $this->aiTextContent = $this->getService(AiTextContent::class);
-        $this->eventsAggregationService = $this->getService(EventsAggregationService::class);
-        $this->cacheCleanupService = $this->getService(CacheCleanupService::class);
         $this->logger = new Logger('error_log');
     }
 
@@ -112,31 +143,16 @@ class Crontab extends controllerApplication
         //start this before ending output buffering
         $currentLanguageCode = $this->languagesManager->getCurrentLanguageCode();
 
-        /**
-         * @var Cache $cache
-         */
-        $cache = $this->getService(Cache::class);
-        $cache->enable(false, false, true);
+        $this->cache->enable(false, false, true);
 
-        /**
-         * @var rendererPlugin $renderer
-         */
-        $renderer = $this->getService(renderer::class);
-        $renderer->endOutputBuffering();
+        $this->rendererService->endOutputBuffering();
         while (ob_get_level()) {
             ob_end_flush();
         }
 
-        $user = $this->getService(CurrentUserService::class)->getCurrentUser();
+        $user = $this->currentUserService->getCurrentUser();
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
-            $this->structureManager = $this->getService(
-                'structureManager',
-                [
-                    'rootUrl' => $controller->rootURL,
-                    'rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerPublic'),
-                ]
-            );
 
             $this->structureManager->setRequestedPath([$currentLanguageCode]);
             $this->structureManager->setPrivilegeChecking(false);
@@ -156,7 +172,6 @@ class Crontab extends controllerApplication
             $this->parseArtItems('module_zxpicture', 'image', 'originalName');
             $this->parseArtItems('module_zxmusic', 'file', 'fileName');
 
-            $this->languagesManager = $this->getService(LanguagesManager::class);
             $this->languagesManager->setCurrentLanguageCode('eng');
 
             $this->queryAiSeo();
@@ -547,8 +562,7 @@ class Crontab extends controllerApplication
 
     private function convertMp3(): void
     {
-        $mp3ConversionManager = $this->getService(mp3ConversionManager::class);
-        $mp3ConversionManager->convertQueueItems();
+        $this->mp3ConversionManager->convertQueueItems();
     }
 
     private function parseArtItems(string $table, string $fileColumn, string $fileNameColumn): void

@@ -1,7 +1,3 @@
-<div class="pd-header">
-  <span class="pd-title">{{ 'header.mobile-nav.ratings' | translate }}</span>
-  <zx-button color="transparent" [square]="true" [ariaLabel]="'header.search.close' | translate" (click)="close()">✕</zx-button>
-</div>
-<div class="pd-body">
+<zx-dialog titleKey="header.mobile-nav.ratings" (closeClick)="close()">
   <zx-recent-ratings></zx-recent-ratings>
-</div>
+</zx-dialog>

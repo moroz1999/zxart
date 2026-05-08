@@ -1,0 +1,44 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.zx-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+  padding: var(--zx-dialog-header-padding);
+  border-bottom: var(--zx-dialog-header-border);
+  flex-shrink: 0;
+}
+
+.zx-dialog__title {
+  margin: 0;
+  flex: 1;
+}
+
+.zx-dialog__close-icon {
+  width: var(--zx-dialog-close-icon-size);
+  height: var(--zx-dialog-close-icon-size);
+}
+
+.zx-dialog__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--zx-dialog-body-padding);
+  box-sizing: border-box;
+}
+
+.zx-dialog__footer {
+  flex-shrink: 0;
+  padding: var(--zx-dialog-footer-padding);
+  border-top: var(--zx-dialog-footer-border);
+
+  &:not(:has(*)) {
+    display: none;
+  }
+}

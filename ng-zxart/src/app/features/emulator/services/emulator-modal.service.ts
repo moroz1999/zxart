@@ -11,6 +11,7 @@ export class EmulatorModalService {
       ZxEmulatorDialogComponent,
       {
         data,
+        height: '95vh',
         panelClass: 'zx-dialog',
         backdropClass: 'zx-dialog-backdrop',
       },

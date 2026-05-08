@@ -1,18 +1,12 @@
-<div class="settings-dialog">
-  <zx-button [square]="true" color="transparent" (click)="close()" class="settings-dialog__close">
-    <svg-icon name="close" class="settings-dialog__close-icon"></svg-icon>
-  </zx-button>
-
-  <div class="settings-dialog__content">
-    <zx-stack spacing="lg">
-      <div class="settings-section">
-        <h3 zxHeading3 class="settings-section__title">{{ 'settings.theme' | translate }}</h3>
-        <zx-toggle
-          [options]="themeOptions"
-          [value]="currentTheme"
-          (valueChange)="onThemeChange($event)"
-        ></zx-toggle>
-      </div>
-    </zx-stack>
-  </div>
-</div>
+<zx-dialog (closeClick)="close()">
+  <zx-stack spacing="lg">
+    <div class="settings-section">
+      <h3 zxHeading3 class="settings-section__title">{{ 'settings.theme' | translate }}</h3>
+      <zx-toggle
+        [options]="themeOptions"
+        [value]="currentTheme"
+        (valueChange)="onThemeChange($event)"
+      ></zx-toggle>
+    </div>
+  </zx-stack>
+</zx-dialog>

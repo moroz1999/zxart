@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace ZxArt\Controllers;
 
-use ConfigManager;
 use controller;
 use LanguagesManager;
+use Monolog\Logger;
+use structureManager;
 
 class Zximagesdownload extends LoggedControllerApplication
 {
@@ -21,6 +22,15 @@ class Zximagesdownload extends LoggedControllerApplication
     protected ?int $rotation = 1;
 
     public $rendererName = 'zxScreen';
+
+    public function __construct(
+        controller $controller,
+        Logger $logger,
+        private readonly structureManager $structureManager,
+        private readonly LanguagesManager $languagesManager,
+    ) {
+        parent::__construct($controller, $logger);
+    }
 
     public function initialize()
     {
@@ -57,19 +67,9 @@ class Zximagesdownload extends LoggedControllerApplication
 
         $this->renderer->setContentDisposition('attachment');
 
-        $structureManager = $this->getService(
-            'structureManager',
-            [
-                'rootUrl' => $controller->rootURL,
-                'rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerPublic'),
-            ],
-            true
-        );
+        $this->structureManager->setRequestedPath([$this->languagesManager->getCurrentLanguageCode()]);
 
-        $languagesManager = $this->getService(LanguagesManager::class);
-        $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
-
-        if ($zxPictureElement = $structureManager->getElementById($this->id)) {
+        if ($zxPictureElement = $this->structureManager->getElementById($this->id)) {
             $fileName = $zxPictureElement->getFileName('image', true, false);
             if ($this->zoom !== 1) {
                 $fileName .= "_{$this->zoom}x";

@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
+use controller;
 use LanguagesManager;
+use Monolog\Logger;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use structureManager;
 use Throwable;
 use ZxArt\GroupList\Dto\FilterOptionDto;
 use ZxArt\GroupList\Dto\GroupListItemDto;
@@ -21,14 +24,23 @@ class Grouplist extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 
+    public function __construct(
+        controller $controller,
+        Logger $logger,
+        private readonly structureManager $structureManager,
+        private readonly LanguagesManager $languagesManager,
+        private readonly GroupListService $groupListService,
+        private readonly ObjectMapper $objectMapper,
+    ) {
+        parent::__construct($controller, $logger);
+    }
+
     public function initialize(): void
     {
         $this->startSession('public');
         $this->createRenderer();
 
-        $structureManager = $this->getService('publicStructureManager');
-        $languagesManager = $this->getService(LanguagesManager::class);
-        $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
+        $this->structureManager->setRequestedPath([$this->languagesManager->getCurrentLanguageCode()]);
     }
 
     public function execute($controller): void
@@ -78,14 +90,22 @@ class Grouplist extends LoggedControllerApplication
         $groupType = $this->getParameter('groupType') ?: null;
 
         $sorting = SortingParams::fromRequest($sortingRaw, ['title', 'id']);
-        $service = $this->getService(GroupListService::class);
-        $result = $service->getPaged($sorting, $start, $limit, $search, $countryId, $cityId, $letter, $types, $groupType);
+        $result = $this->groupListService->getPaged(
+            $sorting,
+            $start,
+            $limit,
+            $search,
+            $countryId,
+            $cityId,
+            $letter,
+            $types,
+            $groupType
+        );
 
-        $mapper = new ObjectMapper();
         $this->assignSuccess([
             'total' => $result['total'],
             'items' => array_map(
-                static fn(GroupListItemDto $dto) => $mapper->map($dto, GroupListItemRestDto::class),
+                fn(GroupListItemDto $dto) => $this->objectMapper->map($dto, GroupListItemRestDto::class),
                 $result['items']
             ),
         ]);
@@ -95,17 +115,15 @@ class Grouplist extends LoggedControllerApplication
     {
         $letter = $this->getParameter('letter') ?: null;
         $groupType = $this->getParameter('groupType') ?: null;
-        $service = $this->getService(GroupListService::class);
-        $options = $service->getFilterOptions($letter, $groupType);
+        $options = $this->groupListService->getFilterOptions($letter, $groupType);
 
-        $mapper = new ObjectMapper();
         $this->assignSuccess(new GroupFilterOptionsRestDto(
             countries: array_map(
-                static fn(FilterOptionDto $dto) => $mapper->map($dto, GroupFilterOptionRestDto::class),
+                fn(FilterOptionDto $dto) => $this->objectMapper->map($dto, GroupFilterOptionRestDto::class),
                 $options['countries']
             ),
             cities: array_map(
-                static fn(FilterOptionDto $dto) => $mapper->map($dto, GroupFilterOptionRestDto::class),
+                fn(FilterOptionDto $dto) => $this->objectMapper->map($dto, GroupFilterOptionRestDto::class),
                 $options['cities']
             ),
         ));

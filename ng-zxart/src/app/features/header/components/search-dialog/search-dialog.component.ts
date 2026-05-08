@@ -21,6 +21,7 @@ import {
   ZxSearchGroupsSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-search-groups-skeleton/zx-search-groups-skeleton.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
+import {ZxDialogComponent} from '../../../../shared/ui/zx-dialog/zx-dialog.component';
 import {BackendLinksService} from '../../services/backend-links.service';
 import {environment} from '../../../../../environments/environment';
 
@@ -35,6 +36,7 @@ const ICONS = ['person', 'list', 'videogame-asset', 'image', 'music-note'];
     FormsModule,
     TranslateModule,
     SvgIconComponent,
+    ZxDialogComponent,
     ZxButtonComponent,
     ZxSearchGroupsSkeletonComponent,
     ZxButtonControlsComponent,

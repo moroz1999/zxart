@@ -64,6 +64,7 @@ components:
         - downloadsCount
         - playsCount
         - externalLinks
+        - screenshots
       properties:
         id:
           type: integer
@@ -137,6 +138,10 @@ components:
           type: array
           items:
             $ref: 'prod-details.yaml#/components/schemas/ProdLinkInfo'
+        screenshots:
+          type: array
+          items:
+            $ref: 'prod-files.yaml#/components/schemas/ProdFile'
 
     ProdReleaseFormat:
       type: object

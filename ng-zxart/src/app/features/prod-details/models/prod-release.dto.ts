@@ -5,6 +5,7 @@ import {
   ProdLinkInfoDto,
   ProdPartyInfoDto,
 } from './prod-core.dto';
+import {ProdFileDto} from './prod-file.dto';
 
 export interface ProdReleaseFormatDto {
   format: string;
@@ -40,6 +41,7 @@ export interface ProdReleaseDto {
   downloadsCount: number;
   playsCount: number;
   externalLinks: ProdLinkInfoDto[];
+  screenshots: ProdFileDto[];
 }
 
 export interface ProdReleasesPayload {

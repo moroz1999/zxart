@@ -20,6 +20,7 @@ export class TsconfEngine implements EmulatorEngine {
   }
 
   destroy(): void {
+    this.emulator?.stop();
     this.emulator = null;
   }
 

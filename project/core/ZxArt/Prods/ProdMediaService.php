@@ -87,6 +87,11 @@ readonly class ProdMediaService
             throw new ProdDetailsException('Release not found', 404);
         }
 
+        return $this->buildReleaseScreenshots($release);
+    }
+
+    public function buildReleaseScreenshots(zxReleaseElement $release): ProdFilesDto
+    {
         return new ProdFilesDto(
             files: $this->buildFiles(
                 $release->getFilesList(self::RELEASE_SCREENSHOTS_SELECTOR),

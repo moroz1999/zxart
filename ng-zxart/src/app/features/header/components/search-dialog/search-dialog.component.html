@@ -1,5 +1,5 @@
-<div class="sd-wrapper">
-  <div class="sd-input-row">
+<zx-dialog [customHeader]="true">
+  <div zxDialogHeader class="sd-input-row">
     <input
       #input
       class="sd-input"
@@ -11,7 +11,7 @@
       (keydown)="onKeyDown($event)"
     />
     <zx-button color="transparent" [square]="true" [ariaLabel]="'header.search.close' | translate" (click)="close()">
-      ✕
+      <svg-icon name="close" class="sd-close-icon"></svg-icon>
     </zx-button>
   </div>
 
@@ -43,10 +43,12 @@
   }
 
   @if (searchAllUrl()) {
-    <zx-button-controls align="end" class="sd-search-all">
-      <zx-button color="primary" size="sm" [href]="searchAllUrl()!">
-        {{ 'header.search.search-all' | translate }}
-      </zx-button>
-    </zx-button-controls>
+    <div zxDialogFooter>
+      <zx-button-controls align="end">
+        <zx-button color="primary" size="sm" [href]="searchAllUrl()!">
+          {{ 'header.search.search-all' | translate }}
+        </zx-button>
+      </zx-button-controls>
+    </div>
   }
-</div>
+</zx-dialog>

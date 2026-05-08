@@ -64,15 +64,17 @@ export class MobileNavDrawerComponent {
 
   openRatings(): void {
     this.dialog.open(RatingsPanelDialogComponent, {
-      panelClass: 'zx-panel-dialog',
+      panelClass: 'zx-dialog',
       backdropClass: 'zx-dialog-backdrop',
+      width: '480px',
     });
   }
 
   openComments(): void {
     this.dialog.open(CommentsPanelDialogComponent, {
-      panelClass: 'zx-panel-dialog',
+      panelClass: 'zx-dialog',
       backdropClass: 'zx-dialog-backdrop',
+      width: '480px',
     });
   }
 

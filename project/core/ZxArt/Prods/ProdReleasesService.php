@@ -23,6 +23,7 @@ readonly class ProdReleasesService
         private structureManager $structureManager,
         private ProdInfoBuilder $infoBuilder,
         private ReleaseFormatsProvider $releaseFormatsProvider,
+        private ProdMediaService $prodMediaService,
     ) {
     }
 
@@ -84,6 +85,7 @@ readonly class ProdReleasesService
             downloadsCount: $release->getDownloadsCount(),
             playsCount: $release->getPlaysCount(),
             externalLinks: $this->infoBuilder->buildLinks($release, $theme),
+            screenshots: $this->prodMediaService->buildReleaseScreenshots($release)->files,
         );
     }
 

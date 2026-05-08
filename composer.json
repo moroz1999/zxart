@@ -33,6 +33,7 @@
     "ext-fileinfo": "*",
     "verifalia/sdk": "^3.0",
     "php-di/php-di": "^7.0",
+    "php": "8.5.*",
     "ext-libxml": "*",
     "ext-redis": "*",
     "ext-pdo": "*",

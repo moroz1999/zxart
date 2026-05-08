@@ -10,3 +10,4 @@ Flexbox-based layout container.
 |---|---|---|
 | `spacing` | `md` \| `lg` \| `xl` | — |
 | `direction` | `column` \| `row` | `column` |
+| `align` | `center` \| `start` \| `end` \| `stretch` | — |

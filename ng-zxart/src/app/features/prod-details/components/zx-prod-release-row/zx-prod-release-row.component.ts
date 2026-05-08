@@ -1,13 +1,7 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit,} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit,} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {LightboxModule} from 'ng-gallery/lightbox';
-import {Subscription} from 'rxjs';
-import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
-import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
-import {
-  ZxScreenshotGridSkeletonComponent
-} from '../../../../shared/ui/zx-skeleton/components/zx-screenshot-grid-skeleton/zx-screenshot-grid-skeleton.component';
 import {
   PictureGalleryHostComponent,
 } from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
@@ -17,7 +11,7 @@ import {EmulatorModalService} from '../../../emulator/services/emulator-modal.se
 import {EmulatorType} from '../../../emulator/engines/emulator-engine';
 import {ProdReleaseDto} from '../../models/prod-release.dto';
 import {ProdFileDto} from '../../models/prod-file.dto';
-import {ReleaseScreenshotsApiService} from '../../services/release-screenshots-api.service';
+import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxProdLanguageLinksComponent,} from '../zx-prod-language-links/zx-prod-language-links.component';
 import {ZxProdExternalLinksComponent,} from '../zx-prod-external-links/zx-prod-external-links.component';
 
@@ -30,9 +24,7 @@ const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 't
     CommonModule,
     TranslateModule,
     LightboxModule,
-    InViewportDirective,
     ZxButtonComponent,
-    ZxScreenshotGridSkeletonComponent,
     PictureGalleryHostComponent,
     ZxProdLanguageLinksComponent,
     ZxProdExternalLinksComponent,
@@ -41,31 +33,23 @@ const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 't
   styleUrls: ['./zx-prod-release-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxProdReleaseRowComponent implements OnInit, OnDestroy {
+export class ZxProdReleaseRowComponent implements OnInit {
   @Input({required: true}) release!: ProdReleaseDto;
   @Input({required: true}) canUploadScreenshot!: boolean;
   @Input({required: true}) screenshotUploadUrl!: string;
 
-  screenshotsLoading = false;
-  screenshotsLoaded = false;
-  screenshots: ProdFileDto[] = [];
   galleryId = '';
 
-  private readonly subscriptions = new Subscription();
-
   constructor(
-    private readonly api: ReleaseScreenshotsApiService,
     private readonly gallery: PictureGalleryService,
     private readonly emulator: EmulatorModalService,
-    private readonly cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
     this.galleryId = `zx-release-screenshots-${this.release.id}`;
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+    if (this.release.screenshots.length) {
+      this.gallery.loadItems(this.galleryId, this.release.screenshots.map(this.toGalleryItem));
+    }
   }
 
   get medalClass(): string | null {
@@ -122,24 +106,6 @@ export class ZxProdReleaseRowComponent implements OnInit, OnDestroy {
       uploadUrl: this.screenshotUploadUrl,
       canScreenshot: this.canUploadScreenshot,
     });
-  }
-
-  onScreenshotsInViewport(): void {
-    if (this.screenshotsLoaded || this.screenshotsLoading) {
-      return;
-    }
-    this.screenshotsLoading = true;
-    this.subscriptions.add(
-      this.api.getScreenshots(this.release.id).subscribe(files => {
-        this.screenshots = files;
-        this.screenshotsLoaded = true;
-        this.screenshotsLoading = false;
-        if (files.length) {
-          this.gallery.loadItems(this.galleryId, files.map(this.toGalleryItem));
-        }
-        this.cdr.markForCheck();
-      }),
-    );
   }
 
   private toGalleryItem(file: ProdFileDto): PictureGalleryItem {

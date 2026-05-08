@@ -20,8 +20,11 @@ use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\BackendLinks\BackendLinksService;
 use ZxArt\Comments\CommentsService;
+use ZxArt\Controllers\Pouet;
 use ZxArt\Controllers\Rss;
+use ZxArt\Controllers\Sam;
 use ZxArt\Controllers\Socialpost;
+use ZxArt\Controllers\Zxdb;
 use ZxArt\GroupList\GroupListService;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Logs\Log;
@@ -68,9 +71,16 @@ return [
     ProdRelatedProdsService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
 
-    // Controllers with publicStructureManager
+    // Controllers with custom StructureManager bindings
     Rss::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
+
+    Pouet::class => autowire()
+        ->constructorParameter('adminStructureManager', DI\get('adminStructureManager')),
+    Sam::class => autowire()
+        ->constructorParameter('adminStructureManager', DI\get('adminStructureManager')),
+    Zxdb::class => autowire()
+        ->constructorParameter('adminStructureManager', DI\get('adminStructureManager')),
 
     Socialpost::class => autowire()
         ->constructorParameter('logger', DI\get('social_posts_logger')),

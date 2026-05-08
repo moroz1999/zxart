@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
-use ConfigManager;
 use controller;
 use LanguagesManager;
+use Monolog\Logger;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use structureManager;
 use Throwable;
 use ZxArt\Tunes\Dto\TuneDto;
 use ZxArt\Tunes\Exception\TuneNotFoundException;
@@ -19,26 +20,25 @@ use ZxArt\Tunes\Services\TunesService;
 class Tunes extends LoggedControllerApplication
 {
     public $rendererName = 'json';
-    protected TunePlayService $tunePlayService;
+
+    public function __construct(
+        controller $controller,
+        Logger $logger,
+        private readonly structureManager $structureManager,
+        private readonly LanguagesManager $languagesManager,
+        private readonly TunePlayService $tunePlayService,
+        private readonly TunesService $tunesService,
+        private readonly ObjectMapper $objectMapper,
+    ) {
+        parent::__construct($controller, $logger);
+    }
 
     public function initialize(): void
     {
         $this->startSession('public');
         $this->createRenderer();
 
-        $configManager = $this->getService(ConfigManager::class);
-        $structureManager = $this->getService(
-            'structureManager',
-            [
-                'rootUrl' => controller::getInstance()->rootURL,
-                'rootMarker' => $configManager->get('main.rootMarkerPublic'),
-            ],
-            true
-        );
-        $languagesManager = $this->getService(LanguagesManager::class);
-        $structureManager->setRequestedPath([$languagesManager->getCurrentLanguageCode()]);
-
-        $this->tunePlayService = $this->getService(TunePlayService::class);
+        $this->structureManager->setRequestedPath([$this->languagesManager->getCurrentLanguageCode()]);
     }
 
     public function execute($controller): void
@@ -68,10 +68,9 @@ class Tunes extends LoggedControllerApplication
         }
 
         try {
-            $dtos = $this->getService(TunesService::class)->getByAuthor($elementId);
-            $mapper = new ObjectMapper();
+            $dtos = $this->tunesService->getByAuthor($elementId);
             $this->renderer->assign('body', array_map(
-                fn(TuneDto $dto) => $mapper->map($dto, TuneRestDto::class),
+                fn(TuneDto $dto) => $this->objectMapper->map($dto, TuneRestDto::class),
                 $dtos
             ));
         } catch (Throwable $e) {

@@ -114,33 +114,25 @@
   </td>
 </tr>
 
-<tr
-  class="release-row__screenshots-row"
-  [appInViewport]="!screenshotsLoaded && !screenshotsLoading"
-  (inViewport)="onScreenshotsInViewport()"
->
+<tr *ngIf="release.screenshots.length > 0" class="release-row__screenshots-row">
   <td colspan="15" class="release-row__screenshots-cell">
-    <zx-screenshot-grid-skeleton *ngIf="screenshotsLoading" [count]="2"></zx-screenshot-grid-skeleton>
+    <zx-picture-gallery-host></zx-picture-gallery-host>
 
-    <ng-container *ngIf="screenshotsLoaded && screenshots.length > 0">
-      <zx-picture-gallery-host></zx-picture-gallery-host>
-
-      <div class="release-row__screenshots-grid">
-        <figure
-          *ngFor="let file of screenshots; let i = index"
-          class="release-row__screenshot"
-        >
-          <img
-            *ngIf="file.imageUrl"
-            class="release-row__screenshot-thumb"
-            loading="lazy"
-            [src]="file.imageUrl"
-            [alt]="file.title"
-            [lightbox]="i"
-            [gallery]="galleryId"
-          />
-        </figure>
-      </div>
-    </ng-container>
+    <div class="release-row__screenshots-grid">
+      <figure
+        *ngFor="let file of release.screenshots; let i = index"
+        class="release-row__screenshot"
+      >
+        <img
+          *ngIf="file.imageUrl"
+          class="release-row__screenshot-thumb"
+          loading="lazy"
+          [src]="file.imageUrl"
+          [alt]="file.title"
+          [lightbox]="i"
+          [gallery]="galleryId"
+        />
+      </figure>
+    </div>
   </td>
 </tr>

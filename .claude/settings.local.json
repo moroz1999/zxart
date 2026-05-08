@@ -106,7 +106,13 @@
       "Read(//tmp/**)",
       "Bash(composer psalm *)",
       "Bash(echo \"EXIT: $?\")",
-      "Bash(echo \"exit=$?\")"
+      "Bash(echo \"exit=$?\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\({k:v for k,v in d.items\\(\\) if 'dialog' in k.lower\\(\\)}, indent=2\\)\\)\")",
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('/home/moroz/zxart/ng-zxart/src/assets/i18n/en.json'\\)\\); print\\(json.dumps\\(d.get\\('header', {}\\), indent=2\\)\\)\")",
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(gunzip -c \"/home/moroz/.claude/projects/-home-moroz-zxart/49fd78d2-1562-4a35-a8e2-f60063f83bdf/tool-results/webfetch-1778259529039-v7axyz.bin\")",
+      "Bash(tar -x -C /tmp/design-bundle)",
+      "Bash(git *)"
     ]
   },
   "enabledPlugins": {

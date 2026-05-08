@@ -1,19 +1,23 @@
-<h1 class="dialog-title" [innerHtml]="data.selectValuesLabel | translate"></h1>
-<div class="value-groups">
+<zx-dialog [titleKey]="data.selectValuesLabel" (closeClick)="close()">
+  <div class="value-groups">
     <div class="value-group" *ngFor="let group of data.selectorData">
-        <div class="value-group-title" *ngIf="group.title">{{ group.title }}</div>
-        <div class="value-columns" [style.column-count]="getColumns(group.values.length)">
-            <zx-checkbox-field class="value" *ngFor="let value of group.values" [(ngModel)]="selectedValues[value.value]">
-                {{ value.title }}
-            </zx-checkbox-field>
-        </div>
+      <div class="value-group-title" *ngIf="group.title">{{ group.title }}</div>
+      <div class="value-columns" [style.column-count]="getColumns(group.values.length)">
+        <zx-checkbox-field class="value" *ngFor="let value of group.values" [(ngModel)]="selectedValues[value.value]">
+          {{ value.title }}
+        </zx-checkbox-field>
+      </div>
     </div>
-</div>
-<div class="dialog-actions">
-    <zx-button size="sm" color="outlined" (click)="reset()">
+  </div>
+
+  <div zxDialogFooter>
+    <zx-button-controls>
+      <zx-button size="sm" color="outlined" (click)="reset()">
         {{ 'prods-list.filters.reset' | translate }}
-    </zx-button>
-    <zx-button size="sm" color="primary" (click)="apply()">
+      </zx-button>
+      <zx-button size="sm" color="primary" (click)="apply()">
         {{ 'prods-list.filters.apply' | translate }}
-    </zx-button>
-</div>
+      </zx-button>
+    </zx-button-controls>
+  </div>
+</zx-dialog>

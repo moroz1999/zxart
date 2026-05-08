@@ -6,13 +6,27 @@ namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
 use ConfigManager;
+use controller;
 use LanguageLinksService;
 use LanguagesManager;
+use Monolog\Logger;
+use structureManager;
 use Throwable;
 
 class Languages extends LoggedControllerApplication
 {
     public $rendererName = 'json';
+
+    public function __construct(
+        controller $controller,
+        Logger $logger,
+        private readonly ConfigManager $configManager,
+        private readonly LanguagesManager $languagesManager,
+        private readonly structureManager $structureManager,
+        private readonly LanguageLinksService $languageLinksService,
+    ) {
+        parent::__construct($controller, $logger);
+    }
 
     public function initialize(): void
     {
@@ -35,16 +49,12 @@ class Languages extends LoggedControllerApplication
 
     private function buildLanguageList(): array
     {
-        $configManager = $this->getService(ConfigManager::class);
-        $groupName = $configManager->get('main.rootMarkerPublic');
+        $groupName = $this->configManager->get('main.rootMarkerPublic');
 
-        $languagesManager = $this->getService(LanguagesManager::class);
-        $languages = $languagesManager->getLanguagesList($groupName);
+        $languages = $this->languagesManager->getLanguagesList($groupName);
 
         $path = trim($this->getParameter('path') ?? '', '/');
         $pathSegments = $path !== '' ? explode('/', $path) : [];
-
-        $structureManager = $this->getService('structureManager');
 
         // Detect active language from path (first segment), fall back to session detection
         $activeLanguageCode = null;
@@ -58,16 +68,15 @@ class Languages extends LoggedControllerApplication
             }
         }
         if ($activeLanguageCode === null) {
-            $activeLanguageCode = $languagesManager->getCurrentLanguageCode($groupName);
+            $activeLanguageCode = $this->languagesManager->getCurrentLanguageCode($groupName);
         }
 
         $languageLinks = [];
         if (!empty($pathSegments)) {
-            $structureManager->setRequestedPath($pathSegments);
-            $currentElement = $structureManager->getCurrentElement();
+            $this->structureManager->setRequestedPath($pathSegments);
+            $currentElement = $this->structureManager->getCurrentElement();
             if ($currentElement !== null) {
-                $languageLinksService = $this->getService(LanguageLinksService::class);
-                $languageLinks = $languageLinksService->getLanguageLinks($currentElement);
+                $languageLinks = $this->languageLinksService->getLanguageLinks($currentElement);
             }
         }
 

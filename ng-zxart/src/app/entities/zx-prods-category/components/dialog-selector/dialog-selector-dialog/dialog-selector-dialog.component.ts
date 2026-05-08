@@ -5,54 +5,62 @@ import {TranslatePipe} from '@ngx-translate/core';
 import {NgForOf, NgIf} from '@angular/common';
 import {ZxCheckboxFieldComponent} from '../../../../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 import {ZxButtonComponent} from '../../../../../shared/ui/zx-button/zx-button.component';
+import {ZxButtonControlsComponent} from '../../../../../shared/ui/zx-button-controls/zx-button-controls.component';
+import {ZxDialogComponent} from '../../../../../shared/ui/zx-dialog/zx-dialog.component';
 import {FormsModule} from '@angular/forms';
 
 interface DialogData {
-    selectValuesLabel: string;
-    selectorData: SelectorDto;
+  selectValuesLabel: string;
+  selectorData: SelectorDto;
 }
 
 @Component({
-    selector: 'zx-dialog-selector-dialog',
-    templateUrl: './dialog-selector-dialog.component.html',
-    styleUrls: ['./dialog-selector-dialog.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        ZxButtonComponent,
-        TranslatePipe,
-        ZxCheckboxFieldComponent,
-        NgForOf,
-        FormsModule,
-        NgIf,
-    ],
-    standalone: true,
+  selector: 'zx-dialog-selector-dialog',
+  templateUrl: './dialog-selector-dialog.component.html',
+  styleUrls: ['./dialog-selector-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    ZxDialogComponent,
+    ZxButtonComponent,
+    ZxButtonControlsComponent,
+    TranslatePipe,
+    ZxCheckboxFieldComponent,
+    NgForOf,
+    NgIf,
+    FormsModule,
+  ],
+  standalone: true,
 })
 export class DialogSelectorDialogComponent {
-    selectedValues: { [key: string]: boolean; } = {};
-    amountInRow = 10;
+  selectedValues: {[key: string]: boolean} = {};
+  amountInRow = 10;
 
-    constructor(
-        @Inject(DIALOG_DATA) public data: DialogData,
-        private dialogRef: DialogRef<{ [key: string]: boolean }, DialogSelectorDialogComponent>,
-    ) {
-        for (const group of data.selectorData) {
-            for (const value of group.values) {
-                if (value.selected) {
-                    this.selectedValues[value.value] = true;
-                }
-            }
+  constructor(
+    @Inject(DIALOG_DATA) public data: DialogData,
+    private dialogRef: DialogRef<{[key: string]: boolean} | undefined, DialogSelectorDialogComponent>,
+  ) {
+    for (const group of data.selectorData) {
+      for (const value of group.values) {
+        if (value.selected) {
+          this.selectedValues[value.value] = true;
         }
+      }
     }
+  }
 
-    getColumns(length: number): number {
-        return Math.ceil(length / this.amountInRow);
-    }
+  getColumns(length: number): number {
+    return Math.ceil(length / this.amountInRow);
+  }
 
-    reset(): void {
-        this.dialogRef.close({});
-    }
+  close(): void {
+    this.dialogRef.close(undefined);
+  }
 
-    apply(): void {
-        this.dialogRef.close(this.selectedValues);
-    }
+  reset(): void {
+    this.dialogRef.close({});
+  }
+
+  apply(): void {
+    this.dialogRef.close(this.selectedValues);
+  }
 }

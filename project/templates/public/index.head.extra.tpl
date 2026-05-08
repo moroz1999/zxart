@@ -1,5 +1,5 @@
 {foreach $ngScriptUrls as $url}<script src="{$url}" type="module"></script>{/foreach}
-{foreach $ngStyleUrls as $url}<link rel="stylesheet" href="{$url}">{/foreach}
+{foreach $ngStyleUrls as $url}<link rel="stylesheet" href="{$url}" crossorigin="anonymous">{/foreach}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">

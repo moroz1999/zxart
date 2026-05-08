@@ -30,8 +30,10 @@ export class SearchTriggerComponent implements OnInit {
 
   openSearch(): void {
     this.dialog.open(SearchDialogComponent, {
-      panelClass: 'zx-search-dialog',
+      panelClass: 'zx-dialog',
       backdropClass: 'zx-dialog-backdrop',
+      width: '560px',
+      height: '80vh',
     });
   }
 }

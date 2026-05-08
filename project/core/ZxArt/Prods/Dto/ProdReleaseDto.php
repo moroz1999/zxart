@@ -17,6 +17,7 @@ readonly class ProdReleaseDto
      * @param ProdGroupRefDto[]      $releaseBy
      * @param ProdReleaseFormatDto[] $formats
      * @param ProdLinkInfoDto[]      $externalLinks
+     * @param ProdFileDto[]          $screenshots
      */
     public function __construct(
         public int $id,
@@ -45,6 +46,7 @@ readonly class ProdReleaseDto
         public int $downloadsCount,
         public int $playsCount,
         public array $externalLinks,
+        public array $screenshots,
     ) {
     }
 }

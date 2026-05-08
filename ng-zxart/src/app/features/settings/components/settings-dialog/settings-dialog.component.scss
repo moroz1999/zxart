@@ -1,21 +1,3 @@
-.settings-dialog__close-icon {
-  width: 20px;
-  height: 20px;
-}
-
-.settings-dialog {
-  min-width: 300px;
-  position: relative;
-  padding: var(--space-24);
-  padding-top: var(--space-48);
-
-  &__close {
-    position: absolute;
-    top: var(--space-8);
-    right: var(--space-8);
-  }
-}
-
 .settings-section {
   &__title {
     margin: 0 0 var(--space-12) 0;
