@@ -9,8 +9,9 @@ use structureManager;
 use ZxArt\Prods\Dto\ProdFileDto;
 use ZxArt\Prods\Dto\ProdFilesDto;
 use ZxArt\Prods\Dto\ProdMapsDto;
+use ZxArt\Prods\Dto\ProdReleaseInlayDto;
+use ZxArt\Prods\Dto\ProdReleaseInlaysDto;
 use ZxArt\Prods\Exception\ProdDetailsException;
-use zxProdElement;
 use zxReleaseElement;
 
 readonly class ProdMediaService
@@ -28,12 +29,14 @@ readonly class ProdMediaService
 
     public function __construct(
         private structureManager $structureManager,
+        private ProdInfoBuilder $prodInfoBuilder,
+        private ProdElementService $prodElementService,
     ) {
     }
 
     public function getProdScreenshots(int $elementId): ProdFilesDto
     {
-        $prod = $this->getProd($elementId);
+        $prod = $this->prodElementService->get($elementId);
         return new ProdFilesDto(
             files: $this->buildFiles(
                 $prod->getFilesList(self::CONNECTED_FILE_SELECTOR),
@@ -43,21 +46,47 @@ readonly class ProdMediaService
         );
     }
 
-    public function getProdInlays(int $elementId): ProdFilesDto
+    public function getProdInlays(int $elementId): ProdReleaseInlaysDto
     {
-        $prod = $this->getProd($elementId);
-        return new ProdFilesDto(
-            files: $this->buildFiles(
-                $prod->getFilesList(self::INLAY_FILES_SELECTOR),
-                self::PROD_IMAGE_PRESET,
-                self::PROD_IMAGE_FULL_PRESET,
-            ),
-        );
+        $prod = $this->prodElementService->get($elementId);
+        $inlays = [];
+        foreach ($prod->getReleasesList() as $release) {
+            $releaseTitle = $this->prodInfoBuilder->decodeText((string)$release->getTitle());
+            $releaseUrl = (string)$release->getUrl();
+            $releaseYear = $release->getYear() ?? 0;
+            $releaseTypeLabel = $release->releaseType !== ''
+                ? $this->prodInfoBuilder->translate('zxRelease.type_' . $release->releaseType)
+                : null;
+            $releaseBy = $this->prodInfoBuilder->buildReleaseBy($release);
+
+            foreach ($release->getFilesList(self::INLAY_FILES_SELECTOR) as $file) {
+                if (!$file instanceof fileElement) {
+                    continue;
+                }
+                $isImage = $file->isImage();
+                $imageUrl = $isImage ? $file->getImageUrl(self::PROD_IMAGE_PRESET) : null;
+                $fullImageUrl = $isImage ? $file->getImageUrl(self::PROD_IMAGE_FULL_PRESET) : null;
+
+                $inlays[] = new ProdReleaseInlayDto(
+                    id: $file->getId(),
+                    title: $this->decodeText($file->title),
+                    imageUrl: $imageUrl,
+                    fullImageUrl: $fullImageUrl,
+                    downloadUrl: $isImage ? $file->getScreenshotUrl() : $file->getDownloadUrl('view', 'release'),
+                    releaseTitle: $releaseTitle,
+                    releaseUrl: $releaseUrl,
+                    releaseYear: $releaseYear,
+                    releaseTypeLabel: $releaseTypeLabel,
+                    releaseBy: $releaseBy,
+                );
+            }
+        }
+        return new ProdReleaseInlaysDto(inlays: $inlays);
     }
 
     public function getProdMaps(int $elementId): ProdMapsDto
     {
-        $prod = $this->getProd($elementId);
+        $prod = $this->prodElementService->get($elementId);
         return new ProdMapsDto(
             files: $this->buildFiles(
                 $prod->getFilesList(self::MAP_FILES_SELECTOR),
@@ -70,7 +99,7 @@ readonly class ProdMediaService
 
     public function getProdRzx(int $elementId): ProdFilesDto
     {
-        $prod = $this->getProd($elementId);
+        $prod = $this->prodElementService->get($elementId);
         return new ProdFilesDto(
             files: $this->buildFiles(
                 $prod->getFilesList(self::RZX_SELECTOR),
@@ -99,15 +128,6 @@ readonly class ProdMediaService
                 self::PROD_IMAGE_FULL_PRESET,
             ),
         );
-    }
-
-    private function getProd(int $elementId): zxProdElement
-    {
-        $element = $this->structureManager->getElementById($elementId);
-        if (!$element instanceof zxProdElement) {
-            throw new ProdDetailsException('Prod not found', 404);
-        }
-        return $element;
     }
 
     /**

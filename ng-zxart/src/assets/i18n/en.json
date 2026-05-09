@@ -637,7 +637,13 @@
     "delete-confirm-title": "Delete production",
     "delete-confirm-message": "Are you sure you want to proceed with deletion?",
     "delete-confirm-yes": "Delete",
-    "delete-confirm-cancel": "Cancel"
+    "delete-confirm-cancel": "Cancel",
+    "tab": {
+      "releases": "Releases",
+      "media": "Media",
+      "links": "Related",
+      "discussion": "Discussion"
+    }
   },
   "release-row": {
     "col-title": "Title",

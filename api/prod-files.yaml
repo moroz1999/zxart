@@ -25,7 +25,7 @@ paths:
 
   /prod-inlays/:
     get:
-      summary: Inlay images for a zxProd (inlayFilesSelector)
+      summary: Inlay images from all releases of a zxProd, each with release metadata
       parameters:
         - in: query
           name: id
@@ -34,11 +34,11 @@ paths:
             type: integer
       responses:
         '200':
-          description: Files payload
+          description: Release inlays payload
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProdFilesPayload'
+                $ref: '#/components/schemas/ProdReleaseInlaysPayload'
         '400':
           description: Bad request
         '404':
@@ -158,6 +158,83 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProdFile'
+
+    ProdGroupRef:
+      type: object
+      required:
+        - id
+        - title
+        - url
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+
+    ProdReleaseInlay:
+      type: object
+      required:
+        - id
+        - title
+        - author
+        - fileName
+        - imageUrl
+        - fullImageUrl
+        - downloadUrl
+        - isImage
+        - releaseId
+        - releaseTitle
+        - releaseUrl
+        - releaseYear
+        - releaseTypeLabel
+        - releaseBy
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        author:
+          type: string
+          nullable: true
+        fileName:
+          type: string
+        imageUrl:
+          type: string
+          nullable: true
+        fullImageUrl:
+          type: string
+          nullable: true
+        downloadUrl:
+          type: string
+        isImage:
+          type: boolean
+        releaseId:
+          type: integer
+        releaseTitle:
+          type: string
+        releaseUrl:
+          type: string
+        releaseYear:
+          type: integer
+        releaseTypeLabel:
+          type: string
+          nullable: true
+        releaseBy:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdGroupRef'
+
+    ProdReleaseInlaysPayload:
+      type: object
+      required:
+        - inlays
+      properties:
+        inlays:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdReleaseInlay'
 
     ProdMapsPayload:
       type: object

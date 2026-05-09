@@ -31,9 +31,12 @@ import {ZxProdInlaysSectionComponent,} from '../zx-prod-inlays-section/zx-prod-i
 import {ZxProdMapsSectionComponent,} from '../zx-prod-maps-section/zx-prod-maps-section.component';
 import {ZxProdRzxSectionComponent,} from '../zx-prod-rzx-section/zx-prod-rzx-section.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ZxTabsComponent} from '../../../../shared/ui/zx-tabs/zx-tabs.component';
+import {ZxTabComponent} from '../../../../shared/ui/zx-tabs/zx-tab.component';
 import {TagsQuickFormComponent} from '../../../tags-quick-form/components/tags-quick-form/tags-quick-form.component';
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {RatingsListComponent} from '../../../ratings/components/ratings-list/ratings-list.component';
+import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
   selector: 'zx-prod-details',
@@ -60,6 +63,9 @@ import {RatingsListComponent} from '../../../ratings/components/ratings-list/rat
     ZxProdMapsSectionComponent,
     ZxProdRzxSectionComponent,
     ZxStackComponent,
+    ZxTabsComponent,
+    ZxTabComponent,
+    TranslateModule,
     TagsQuickFormComponent,
     CommentsListComponent,
     RatingsListComponent,

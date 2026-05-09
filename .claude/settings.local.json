@@ -112,7 +112,8 @@
       "WebFetch(domain:api.anthropic.com)",
       "Bash(gunzip -c \"/home/moroz/.claude/projects/-home-moroz-zxart/49fd78d2-1562-4a35-a8e2-f60063f83bdf/tool-results/webfetch-1778259529039-v7axyz.bin\")",
       "Bash(tar -x -C /tmp/design-bundle)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(python3 -c ' *)"
     ]
   },
   "enabledPlugins": {

@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace ZxArt\Prods;
 
+use authorElement;
 use DesignTheme;
 use DesignThemesManager;
+use groupElement;
 use partyElement;
 use translationsManager;
+use ZxArt\Prods\Dto\ProdGroupRefDto;
 use ZxArt\Prods\Dto\ProdHardwareInfoDto;
 use ZxArt\Prods\Dto\ProdLanguageInfoDto;
 use ZxArt\Prods\Dto\ProdLinkInfoDto;
@@ -122,6 +125,25 @@ readonly class ProdInfoBuilder
             );
         }
         return $links;
+    }
+
+    /**
+     * @return ProdGroupRefDto[]
+     */
+    public function buildReleaseBy(zxReleaseElement $release): array
+    {
+        $refs = [];
+        foreach ($release->getReleaseBy() as $element) {
+            if (!$element instanceof groupElement && !$element instanceof authorElement) {
+                continue;
+            }
+            $refs[] = new ProdGroupRefDto(
+                id: $element->getId(),
+                title: $this->decodeText($element->title),
+                url: (string)$element->getUrl(),
+            );
+        }
+        return $refs;
     }
 
     public function decodeText(string $value): string

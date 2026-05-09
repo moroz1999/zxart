@@ -4,23 +4,18 @@ declare(strict_types=1);
 
 namespace ZxArt\Prods;
 
-use authorElement;
 use DesignTheme;
-use groupElement;
-use structureManager;
 use ZxArt\Prods\Dto\ProdGroupRefDto;
 use ZxArt\Prods\Dto\ProdReleaseDto;
 use ZxArt\Prods\Dto\ProdReleaseFormatDto;
 use ZxArt\Prods\Dto\ProdReleasesDto;
-use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArt\Releases\Services\ReleaseFormatsProvider;
-use zxProdElement;
 use zxReleaseElement;
 
 readonly class ProdReleasesService
 {
     public function __construct(
-        private structureManager $structureManager,
+        private ProdElementService $prodElementService,
         private ProdInfoBuilder $infoBuilder,
         private ReleaseFormatsProvider $releaseFormatsProvider,
         private ProdMediaService $prodMediaService,
@@ -29,10 +24,7 @@ readonly class ProdReleasesService
 
     public function getReleases(int $elementId): ProdReleasesDto
     {
-        $element = $this->structureManager->getElementById($elementId);
-        if (!$element instanceof zxProdElement) {
-            throw new ProdDetailsException('Prod not found', 404);
-        }
+        $element = $this->prodElementService->get($elementId);
 
         $theme = $this->infoBuilder->resolveCurrentTheme();
         $prodLegalStatus = $element->getLegalStatus();
@@ -94,18 +86,7 @@ readonly class ProdReleasesService
      */
     private function buildReleaseBy(zxReleaseElement $release): array
     {
-        $refs = [];
-        foreach ($release->getReleaseBy() as $element) {
-            if (!$element instanceof groupElement && !$element instanceof authorElement) {
-                continue;
-            }
-            $refs[] = new ProdGroupRefDto(
-                id: $element->getId(),
-                title: $this->infoBuilder->decodeText($element->title),
-                url: (string)$element->getUrl(),
-            );
-        }
-        return $refs;
+        return $this->infoBuilder->buildReleaseBy($release);
     }
 
     /**

@@ -1,0 +1,20 @@
+:root {
+  /* Tab bar separator — inset shadow avoids border-box conflict with active indicator */
+  --zx-tabs-bar-separator: inset 0 -1px 0 0 var(--secondary-200);
+  --zx-tabs-bar-margin-bottom: var(--space-16);
+
+  /* Tab buttons */
+  --zx-tabs-button-padding: var(--space-12) var(--space-16);
+  --zx-tabs-button-gap: var(--space-8);
+  --zx-tabs-button-color: var(--text-light-color);
+  --zx-tabs-button-hover-color: var(--primary-600);
+
+  /* Active indicator */
+  --zx-tabs-button-active-color: var(--primary-600);
+  --zx-tabs-button-active-indicator: var(--primary-500);
+  --zx-tabs-button-indicator-width: var(--border-width-thick);
+
+  /* Count badge */
+  --zx-tabs-count-color: var(--secondary-500);
+  --zx-tabs-count-size: var(--zx-font-size-xs);
+}

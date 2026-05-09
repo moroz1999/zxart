@@ -7,7 +7,6 @@ namespace ZxArt\Prods;
 use authorElement;
 use groupElement;
 use structureElement;
-use structureManager;
 use tagElement;
 use userElement;
 use ZxArt\Prods\Dto\ProdAuthorInfoDto;
@@ -18,7 +17,6 @@ use ZxArt\Prods\Dto\ProdGroupRefDto;
 use ZxArt\Prods\Dto\ProdSubmitterDto;
 use ZxArt\Prods\Dto\ProdTagRefDto;
 use ZxArt\Prods\Dto\ProdVotingDto;
-use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArt\Shared\EntityType;
 use zxProdCategoryElement;
 use zxProdElement;
@@ -26,17 +24,14 @@ use zxProdElement;
 readonly class ProdCoreService
 {
     public function __construct(
-        private structureManager $structureManager,
+        private ProdElementService $prodElementService,
         private ProdInfoBuilder $infoBuilder,
     ) {
     }
 
     public function getCore(int $elementId): ProdCoreDto
     {
-        $element = $this->structureManager->getElementById($elementId);
-        if (!$element instanceof zxProdElement) {
-            throw new ProdDetailsException('Prod not found', 404);
-        }
+        $element = $this->prodElementService->get($elementId);
 
         $theme = $this->infoBuilder->resolveCurrentTheme();
         $legalStatus = $element->getLegalStatus();

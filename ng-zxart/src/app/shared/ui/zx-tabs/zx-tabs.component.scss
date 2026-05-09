@@ -1,0 +1,39 @@
+:host {
+  display: block;
+}
+
+.zx-tabs__bar {
+  display: flex;
+  box-shadow: var(--zx-tabs-bar-separator);
+  margin-bottom: var(--zx-tabs-bar-margin-bottom);
+}
+
+.zx-tabs__button {
+  background: transparent;
+  border: none;
+  border-bottom: var(--zx-tabs-button-indicator-width) solid transparent;
+  padding: var(--zx-tabs-button-padding);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--zx-tabs-button-color);
+  display: flex;
+  align-items: center;
+  gap: var(--zx-tabs-button-gap);
+  transition: color var(--animation-xs);
+}
+
+.zx-tabs__button:hover {
+  color: var(--zx-tabs-button-hover-color);
+}
+
+.zx-tabs__button--active {
+  color: var(--zx-tabs-button-active-color);
+  border-bottom-color: var(--zx-tabs-button-active-indicator);
+}
+
+.zx-tabs__count {
+  color: var(--zx-tabs-count-color);
+  font-weight: 400;
+  font-size: var(--zx-tabs-count-size);
+}

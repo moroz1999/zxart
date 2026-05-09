@@ -8,26 +8,23 @@ use authorAliasElement;
 use authorElement;
 use pressArticleElement;
 use structureElement;
-use structureManager;
 use ZxArt\Prods\Dto\PressArticleAuthorDto;
 use ZxArt\Prods\Dto\PressArticlePreviewDto;
 use ZxArt\Prods\Dto\PressArticlePublicationDto;
 use ZxArt\Prods\Dto\PressArticlesDto;
-use ZxArt\Prods\Exception\ProdDetailsException;
-use zxProdElement;
 
 readonly class ProdArticlesService
 {
     private const string PUBLICATION_IMAGE_PRESET = 'prodImage';
 
     public function __construct(
-        private structureManager $structureManager,
+        private ProdElementService $prodElementService,
     ) {
     }
 
     public function getArticles(int $elementId): PressArticlesDto
     {
-        $prod = $this->getProd($elementId);
+        $prod = $this->prodElementService->get($elementId);
 
         $articles = [];
         foreach ($prod->articles as $article) {
@@ -42,7 +39,7 @@ readonly class ProdArticlesService
 
     public function getMentions(int $elementId): PressArticlesDto
     {
-        $prod = $this->getProd($elementId);
+        $prod = $this->prodElementService->get($elementId);
 
         $articles = [];
         foreach ($prod->getPressMentions() as $article) {
@@ -53,15 +50,6 @@ readonly class ProdArticlesService
         }
 
         return new PressArticlesDto(articles: $articles);
-    }
-
-    private function getProd(int $elementId): zxProdElement
-    {
-        $element = $this->structureManager->getElementById($elementId);
-        if (!$element instanceof zxProdElement) {
-            throw new ProdDetailsException('Prod not found', 404);
-        }
-        return $element;
     }
 
     private function buildArticle(pressArticleElement $article): PressArticlePreviewDto

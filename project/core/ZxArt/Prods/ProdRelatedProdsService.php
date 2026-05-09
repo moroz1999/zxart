@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace ZxArt\Prods;
 
-use structureManager;
 use translationsManager;
 use ZxArt\Prods\Dto\ProdSummariesDto;
 use ZxArt\Prods\Dto\ProdSummaryDto;
-use ZxArt\Prods\Exception\ProdDetailsException;
 use zxProdElement;
 
 readonly class ProdRelatedProdsService
@@ -16,32 +14,32 @@ readonly class ProdRelatedProdsService
     private const string PROD_LIST_IMAGE_PRESET = 'prodImage';
 
     public function __construct(
-        private structureManager $structureManager,
+        private ProdElementService $prodElementService,
         private translationsManager $translationsManager,
     ) {
     }
 
     public function getCompilationItems(int $elementId): ProdSummariesDto
     {
-        $prod = $this->getProd($elementId);
+        $prod = $this->prodElementService->get($elementId);
         return new ProdSummariesDto(prods: $this->buildSummaries($prod->compilationItems));
     }
 
     public function getSeriesProds(int $elementId): ProdSummariesDto
     {
-        $prod = $this->getProd($elementId);
+        $prod = $this->prodElementService->get($elementId);
         return new ProdSummariesDto(prods: $this->buildSummaries($prod->seriesProds));
     }
 
     public function getCompilations(int $elementId): ProdSummariesDto
     {
-        $prod = $this->getProd($elementId);
+        $prod = $this->prodElementService->get($elementId);
         return new ProdSummariesDto(prods: $this->buildSummaries($prod->compilations));
     }
 
     public function getSeries(int $elementId): ProdSummariesDto
     {
-        $prod = $this->getProd($elementId);
+        $prod = $this->prodElementService->get($elementId);
 
         $prods = [];
         foreach ($prod->series as $seriesElement) {
@@ -63,15 +61,6 @@ readonly class ProdRelatedProdsService
             prods: $this->buildSummaries($prods),
             seriesUrl: $this->resolveSeriesUrl($prod),
         );
-    }
-
-    private function getProd(int $elementId): zxProdElement
-    {
-        $element = $this->structureManager->getElementById($elementId);
-        if (!$element instanceof zxProdElement) {
-            throw new ProdDetailsException('Prod not found', 404);
-        }
-        return $element;
     }
 
     /**

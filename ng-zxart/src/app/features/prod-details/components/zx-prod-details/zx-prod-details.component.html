@@ -1,33 +1,71 @@
 <ng-container *ngIf="core$ | async as core; else loading">
   <zx-stack spacing="xxl" class="prod-details">
     <h1 class="prod-details__title">{{ core.h1 }}</h1>
+
     <zx-prod-editing-controls
       [elementId]="core.elementId"
       [prodUrl]="core.prodUrl">
     </zx-prod-editing-controls>
-    <div class="prod-details__top" [class.prod-details__top--with-youtube]="!!core.youtubeId">
+
+    <div class="prod-details__hero" [class.prod-details__hero--no-cover]="!core.youtubeId">
+      <zx-youtube-embed
+        *ngIf="core.youtubeId"
+        class="prod-details__cover"
+        [youtubeId]="core.youtubeId">
+      </zx-youtube-embed>
       <zx-prod-info-table class="prod-details__info" [core]="core"></zx-prod-info-table>
-      <zx-youtube-embed *ngIf="core.youtubeId" class="prod-details__youtube" [youtubeId]="core.youtubeId"></zx-youtube-embed>
     </div>
+
     <zx-prod-screenshots-section [elementId]="core.elementId"></zx-prod-screenshots-section>
-    <div *ngIf="core.generatedDescription" class="prod-details__generated" [innerHTML]="core.generatedDescription"></div>
-    <zx-prod-articles-section [elementId]="core.elementId"></zx-prod-articles-section>
-    <zx-prod-releases-section [elementId]="core.elementId" [prodUrl]="core.prodUrl"></zx-prod-releases-section>
-    <zx-prod-inlays-section [elementId]="core.elementId"></zx-prod-inlays-section>
-    <zx-prod-maps-section [elementId]="core.elementId"></zx-prod-maps-section>
-    <zx-prod-mentions-section [elementId]="core.elementId"></zx-prod-mentions-section>
-    <zx-prod-rzx-section [elementId]="core.elementId"></zx-prod-rzx-section>
-    <zx-prod-description *ngIf="core.description" [description]="core.description" [htmlDescription]="core.htmlDescription"></zx-prod-description>
-    <zx-prod-instructions *ngIf="core.instructions" [instructions]="core.instructions"></zx-prod-instructions>
-    <zx-prod-compilation-items-section [elementId]="core.elementId"></zx-prod-compilation-items-section>
-    <zx-prod-series-prods-section [elementId]="core.elementId"></zx-prod-series-prods-section>
-    <zx-prod-compilations-section [elementId]="core.elementId"></zx-prod-compilations-section>
-    <zx-tags-quick-form-view [elementId]="core.elementId"></zx-tags-quick-form-view>
-    <zx-comments-list-view [elementId]="core.elementId"></zx-comments-list-view>
-    <zx-ratings-list-view [elementId]="core.elementId"></zx-ratings-list-view>
-    <zx-prod-pictures-section [elementId]="core.elementId"></zx-prod-pictures-section>
-    <zx-prod-music-section [elementId]="core.elementId"></zx-prod-music-section>
-    <zx-prod-series-section [elementId]="core.elementId"></zx-prod-series-section>
+
+    <div *ngIf="core.generatedDescription" [innerHTML]="core.generatedDescription"></div>
+    <zx-prod-description
+      *ngIf="core.description"
+      [description]="core.description"
+      [htmlDescription]="core.htmlDescription">
+    </zx-prod-description>
+    <zx-prod-instructions
+      *ngIf="core.instructions"
+      [instructions]="core.instructions">
+    </zx-prod-instructions>
+
+    <zx-tabs>
+      <zx-tab [label]="'prod-details.tab.releases' | translate">
+        <zx-prod-releases-section
+          [elementId]="core.elementId"
+          [prodUrl]="core.prodUrl">
+        </zx-prod-releases-section>
+      </zx-tab>
+
+      <zx-tab [label]="'prod-details.tab.media' | translate">
+        <zx-stack spacing="xl">
+          <zx-prod-articles-section [elementId]="core.elementId"></zx-prod-articles-section>
+          <zx-prod-mentions-section [elementId]="core.elementId"></zx-prod-mentions-section>
+          <zx-prod-maps-section [elementId]="core.elementId"></zx-prod-maps-section>
+          <zx-prod-inlays-section [elementId]="core.elementId"></zx-prod-inlays-section>
+          <zx-prod-rzx-section [elementId]="core.elementId"></zx-prod-rzx-section>
+          <zx-prod-pictures-section [elementId]="core.elementId"></zx-prod-pictures-section>
+          <zx-prod-music-section [elementId]="core.elementId"></zx-prod-music-section>
+        </zx-stack>
+      </zx-tab>
+
+      <zx-tab [label]="'prod-details.tab.links' | translate">
+        <zx-stack spacing="xl">
+          <zx-prod-series-section [elementId]="core.elementId"></zx-prod-series-section>
+          <zx-prod-series-prods-section [elementId]="core.elementId"></zx-prod-series-prods-section>
+          <zx-prod-compilations-section [elementId]="core.elementId"></zx-prod-compilations-section>
+          <zx-prod-compilation-items-section [elementId]="core.elementId"></zx-prod-compilation-items-section>
+        </zx-stack>
+      </zx-tab>
+
+      <zx-tab [label]="'prod-details.tab.discussion' | translate">
+        <zx-stack spacing="xl">
+          <zx-tags-quick-form-view [elementId]="core.elementId"></zx-tags-quick-form-view>
+          <zx-comments-list-view [elementId]="core.elementId"></zx-comments-list-view>
+          <zx-ratings-list-view [elementId]="core.elementId"></zx-ratings-list-view>
+        </zx-stack>
+      </zx-tab>
+    </zx-tabs>
   </zx-stack>
 </ng-container>
 

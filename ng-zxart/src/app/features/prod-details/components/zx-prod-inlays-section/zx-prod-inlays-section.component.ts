@@ -13,7 +13,7 @@ import {PictureGalleryService} from '../../../picture-gallery/services/picture-g
 import {PictureGalleryItem} from '../../../picture-gallery/models/picture-gallery-item';
 import {ZxCaptionDirective, ZxHeading2Directive,} from '../../../../shared/directives/typography/typography.directives';
 import {ProdInlaysApiService} from '../../services/prod-inlays-api.service';
-import {ProdFileDto} from '../../models/prod-file.dto';
+import {ProdGroupRefDto, ProdReleaseInlayDto} from '../../models/prod-release-inlay.dto';
 
 @Component({
   selector: 'zx-prod-inlays-section',
@@ -37,12 +37,12 @@ export class ZxProdInlaysSectionComponent {
 
   loading = false;
   loaded = false;
-  files: ProdFileDto[] = [];
+  inlays: ProdReleaseInlayDto[] = [];
   galleryId = '';
 
   @HostBinding('style.display')
   get display(): string {
-    return this.loaded && this.files.length === 0 ? 'none' : '';
+    return this.loaded && this.inlays.length === 0 ? 'none' : '';
   }
 
   constructor(
@@ -57,24 +57,39 @@ export class ZxProdInlaysSectionComponent {
     }
     this.galleryId = `zx-prod-inlays-${this.elementId}`;
     this.loading = true;
-    this.api.getInlays(this.elementId).subscribe(files => {
-      this.files = files;
+    this.api.getInlays(this.elementId).subscribe(inlays => {
+      this.inlays = inlays;
       this.loaded = true;
       this.loading = false;
-      if (files.length) {
-        this.gallery.loadItems(this.galleryId, files.map(this.toGalleryItem));
+      if (inlays.length) {
+        this.gallery.loadItems(this.galleryId, inlays.map(this.toGalleryItem));
       }
       this.cdr.markForCheck();
     });
   }
 
-  private toGalleryItem(file: ProdFileDto): PictureGalleryItem {
+  buildReleaseLabel(inlay: ProdReleaseInlayDto): string {
+    const parts: string[] = [];
+    if (inlay.releaseBy.length > 0) {
+      parts.push(inlay.releaseBy.map((ref: ProdGroupRefDto) => ref.title).join(', '));
+    }
+    if (inlay.releaseTypeLabel) {
+      parts.push(inlay.releaseTypeLabel);
+    }
+    if (inlay.releaseYear > 0) {
+      parts.push(String(inlay.releaseYear));
+    }
+    const suffix = parts.length > 0 ? ` (${parts.join(', ')})` : '';
+    return (inlay.releaseTitle || '') + suffix;
+  }
+
+  private toGalleryItem(inlay: ProdReleaseInlayDto): PictureGalleryItem {
     return {
-      id: file.id,
-      title: file.title,
-      thumbUrl: file.imageUrl ?? file.fullImageUrl ?? '',
-      largeUrl: file.fullImageUrl ?? file.imageUrl ?? '',
-      detailsUrl: file.downloadUrl,
+      id: inlay.id,
+      title: inlay.title,
+      thumbUrl: inlay.imageUrl ?? inlay.fullImageUrl ?? '',
+      largeUrl: inlay.fullImageUrl ?? inlay.imageUrl ?? '',
+      detailsUrl: inlay.downloadUrl,
     };
   }
 }

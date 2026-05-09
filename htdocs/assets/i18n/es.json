@@ -468,12 +468,12 @@
     "download": "Descargar archivo de software"
   },
   "playlist": {
-    "button_label": "Listas de reproducci\u00f3n",
-    "login_required": "Inicia sesi\u00f3n para gestionar listas",
-    "add_hint": "A\u00f1adir a la lista",
+    "button_label": "Listas de reproducción",
+    "login_required": "Inicia sesión para gestionar listas",
+    "add_hint": "Añadir a la lista",
     "remove_hint": "Eliminar de la lista",
     "new_placeholder": "Nombre de nueva lista",
-    "add_submit": "A\u00f1adir"
+    "add_submit": "Añadir"
   },
   "picture-compo-short": {
     "realtime": "Gráficos tiempo real",
@@ -636,7 +636,13 @@
     "delete-confirm-title": "Eliminar la producción",
     "delete-confirm-message": "¿Está seguro de que desea continuar con la eliminación?",
     "delete-confirm-yes": "Eliminar",
-    "delete-confirm-cancel": "Cancelar"
+    "delete-confirm-cancel": "Cancelar",
+    "tab": {
+      "releases": "Lanzamientos",
+      "media": "Medios",
+      "links": "Relacionados",
+      "discussion": "Discusión"
+    }
   },
   "release-row": {
     "col-title": "Título",

@@ -1,0 +1,13 @@
+<div class="zx-tabs__bar">
+  <button
+    *ngFor="let tab of tabs; let i = index"
+    class="zx-tabs__button"
+    [class.zx-tabs__button--active]="activeIndex === i"
+    (click)="activateTab(i)"
+    type="button"
+  >
+    {{ tab.label }}
+    <span *ngIf="tab.count != null" class="zx-tabs__count">{{ tab.count }}</span>
+  </button>
+</div>
+<ng-content></ng-content>
