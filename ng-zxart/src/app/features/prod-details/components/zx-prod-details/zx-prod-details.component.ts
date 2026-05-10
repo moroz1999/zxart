@@ -7,7 +7,7 @@ import {
 import {ZxYoutubeEmbedComponent} from '../../../../shared/ui/zx-youtube-embed/zx-youtube-embed.component';
 import {ProdCoreApiService} from '../../services/prod-core-api.service';
 import {ProdCoreDto} from '../../models/prod-core.dto';
-import {ZxProdInfoTableComponent} from '../zx-prod-info-table/zx-prod-info-table.component';
+import {ZxProdHeroComponent} from '../zx-prod-hero/zx-prod-hero.component';
 import {ZxProdEditingControlsComponent} from '../zx-prod-editing-controls/zx-prod-editing-controls.component';
 import {ZxProdDescriptionComponent} from '../zx-prod-description/zx-prod-description.component';
 import {ZxProdInstructionsComponent} from '../zx-prod-instructions/zx-prod-instructions.component';
@@ -45,7 +45,7 @@ import {TranslateModule} from '@ngx-translate/core';
     CommonModule,
     ZxProdDetailsSkeletonComponent,
     ZxYoutubeEmbedComponent,
-    ZxProdInfoTableComponent,
+    ZxProdHeroComponent,
     ZxProdEditingControlsComponent,
     ZxProdDescriptionComponent,
     ZxProdInstructionsComponent,

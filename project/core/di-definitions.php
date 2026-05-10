@@ -31,6 +31,7 @@ use ZxArt\Logs\Log;
 use ZxArt\Menu\MenuService;
 use ZxArt\Prods\ProdArticlesService;
 use ZxArt\Prods\ProdCoreService;
+use ZxArt\Prods\ProdElementService;
 use ZxArt\Prods\ProdMediaService;
 use ZxArt\Prods\ProdRelatedProdsService;
 use ZxArt\Prods\ProdReleasesService;
@@ -60,16 +61,14 @@ return [
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     BackendLinksService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
-    ProdCoreService::class => autowire()
+    ProdElementService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
-    ProdReleasesService::class => autowire()
-        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
+    ProdCoreService::class => autowire(),
+    ProdReleasesService::class => autowire(),
     ProdMediaService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
-    ProdArticlesService::class => autowire()
-        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
-    ProdRelatedProdsService::class => autowire()
-        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
+    ProdArticlesService::class => autowire(),
+    ProdRelatedProdsService::class => autowire(),
 
     // Controllers with custom StructureManager bindings
     Rss::class => autowire()

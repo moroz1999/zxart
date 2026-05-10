@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" class="light-mode">
+<head>
+<meta charset="utf-8" />
+<title>Spacing scale</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body { margin: 0; padding: 16px; display: flex; flex-direction: column; gap: 6px; font-family: var(--font-sans); }
+  .row { display: flex; align-items: center; gap: 12px; }
+  .tag { width: 92px; flex-shrink: 0; font-family: var(--font-mono); font-size: 11px; color: var(--text-light-color); }
+  .bar { background: var(--primary-500); height: 14px; border-radius: 2px; }
+  .px { font-size: 11px; color: var(--text-light-color); }
+</style>
+</head>
+<body>
+  <div class="row"><div class="tag">--space-2</div><div class="bar" style="width:2px"></div><div class="px">2 px</div></div>
+  <div class="row"><div class="tag">--space-4</div><div class="bar" style="width:4px"></div><div class="px">4 px</div></div>
+  <div class="row"><div class="tag">--space-8</div><div class="bar" style="width:8px"></div><div class="px">8 px</div></div>
+  <div class="row"><div class="tag">--space-12</div><div class="bar" style="width:12px"></div><div class="px">12 px</div></div>
+  <div class="row"><div class="tag">--space-16</div><div class="bar" style="width:16px"></div><div class="px">16 px</div></div>
+  <div class="row"><div class="tag">--space-24</div><div class="bar" style="width:24px"></div><div class="px">24 px</div></div>
+  <div class="row"><div class="tag">--space-32</div><div class="bar" style="width:32px"></div><div class="px">32 px</div></div>
+  <div class="row"><div class="tag">--space-48</div><div class="bar" style="width:48px"></div><div class="px">48 px</div></div>
+  <div class="row"><div class="tag">--space-64</div><div class="bar" style="width:64px"></div><div class="px">64 px</div></div>
+</body>
+</html>

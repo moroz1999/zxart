@@ -1,0 +1,72 @@
+<div class="hero-title-row">
+  <h1 zxHeading1 class="hero-title">{{ core.h1 }}</h1>
+  <span *ngIf="core.year > 0" class="hero-year">{{ core.year }}</span>
+</div>
+
+<div *ngIf="core.altTitle" class="hero-alt-title">
+  {{ 'prod-details.alsoKnownAs' | translate }} <em>{{ core.altTitle }}</em>
+</div>
+
+<div class="hero-chips">
+  <a *ngFor="let cat of leafCategories" [href]="cat.url" class="hero-chip hero-chip--cat">{{ cat.title }}</a>
+  <span *ngFor="let lang of core.languages" class="hero-chip">{{ lang.emoji }} {{ lang.title }}</span>
+  <span class="hero-chip">{{ core.legalStatusLabel }}</span>
+</div>
+
+<div class="hero-rating-row">
+  <zx-prod-vote-row [elementId]="core.elementId" [voting]="core.voting"></zx-prod-vote-row>
+  <span zxBodySmMuted class="hero-added">
+    {{ 'prod-details.added' | translate }}
+    <ng-container *ngIf="core.submitter as submitter">
+      <a [href]="submitter.url">{{ submitter.userName }}</a>,
+    </ng-container>
+    {{ core.dateCreated }}
+  </span>
+</div>
+
+<div *ngIf="core.authors.length || core.publishers.length || core.groups.length || core.party" class="hero-people">
+  <ng-container *ngIf="core.authors.length">
+    <span class="hero-people__label">{{ 'prod-details.authors' | translate }}:</span>
+    <ng-container *ngFor="let author of core.authors; let last = last">
+      <a [href]="author.url" class="hero-people__link">{{ author.title }}</a><ng-container *ngIf="author.roles.length && author.roles[0] !== 'unknown'"> (<ng-container *ngFor="let role of author.roles; let lastRole = last">{{ ('prod-details.role_' + role) | translate }}<ng-container *ngIf="!lastRole">, </ng-container></ng-container>)</ng-container><ng-container *ngIf="!last">, </ng-container>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="core.publishers.length">
+    <span class="hero-people__sep">·</span>
+    <span class="hero-people__label">{{ 'prod-details.publishers' | translate }}:</span>
+    <ng-container *ngFor="let pub of core.publishers; let last = last">
+      <a [href]="pub.url" class="hero-people__link">{{ pub.title }}</a><ng-container *ngIf="!last">, </ng-container>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="core.groups.length">
+    <span class="hero-people__sep">·</span>
+    <span class="hero-people__label">{{ 'prod-details.groups' | translate }}:</span>
+    <ng-container *ngFor="let group of core.groups; let last = last">
+      <a [href]="group.url" class="hero-people__link">{{ group.title }}</a><ng-container *ngIf="!last">, </ng-container>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="core.party as party">
+    <span class="hero-people__sep">·</span>
+    <span class="hero-people__label">{{ 'prod-details.party' | translate }}:</span>
+    <a [href]="party.url" class="hero-people__link">{{ party.title }}</a>
+    <ng-container *ngIf="party.compoLabel">
+      (<ng-container *ngIf="party.place != null">{{ party.place }}, </ng-container>{{ party.compoLabel }})
+    </ng-container>
+  </ng-container>
+</div>
+
+<div *ngIf="core.links.length || core.externalLink" class="hero-actions">
+  <zx-button
+    *ngIf="core.externalLink"
+    color="secondary"
+    size="sm"
+    [href]="core.externalLink"
+    target="_blank"
+    rel="noopener">
+    {{ externalLinkLabelKey | translate }}
+  </zx-button>
+  <zx-prod-external-links *ngIf="core.links.length" [links]="core.links"></zx-prod-external-links>
+</div>

@@ -1,7 +1,5 @@
 <ng-container *ngIf="core$ | async as core; else loading">
   <zx-stack spacing="xxl" class="prod-details">
-    <h1 class="prod-details__title">{{ core.h1 }}</h1>
-
     <zx-prod-editing-controls
       [elementId]="core.elementId"
       [prodUrl]="core.prodUrl">
@@ -13,7 +11,7 @@
         class="prod-details__cover"
         [youtubeId]="core.youtubeId">
       </zx-youtube-embed>
-      <zx-prod-info-table class="prod-details__info" [core]="core"></zx-prod-info-table>
+      <zx-prod-hero class="prod-details__info" [core]="core"></zx-prod-hero>
     </div>
 
     <zx-prod-screenshots-section [elementId]="core.elementId"></zx-prod-screenshots-section>

@@ -39,6 +39,14 @@
             "scripts": []
           },
           "configurations": {
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "extractLicenses": false,
+              "vendorChunk": false,
+              "buildOptimizer": false
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -76,11 +84,11 @@
               "localhost"
             ],
             "publicHost": "localhost:4200",
-            "buildTarget": "ng-zxart:build",
+            "buildTarget": "ng-zxart:build:development",
             "host": "0.0.0.0",
             "port": 4200,
             "poll": 1000,
-            "hmr": true,
+            "hmr": false,
             "liveReload": true,
             "headers": {
               "Access-Control-Allow-Origin": "*"

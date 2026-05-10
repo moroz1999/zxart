@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ru" class="light-mode">
+<head>
+<meta charset="utf-8" />
+<title>Vote widget</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="components.css" />
+<link rel="stylesheet" href="../ui_kits/website/prod-page.css" />
+<style>
+  body { margin: 0; padding: 24px; background: var(--background-page); font-family: var(--font-body); color: var(--text-color); display: flex; flex-direction: column; gap: 18px; }
+  .row { display: flex; align-items: center; gap: 16px; }
+  .label { font-size: 11px; color: var(--text-light-color); font-family: var(--font-mono); width: 180px; }
+</style>
+</head>
+<body>
+  <div class="row">
+    <span class="label">no vote yet</span>
+    <span class="vote-widget">
+      <button class="vote-widget__clear" disabled type="button" aria-label="Снять голос">✕</button>
+      <button class="vote-widget__star" type="button" aria-label="1 star">★</button>
+      <button class="vote-widget__star" type="button" aria-label="2 stars">★</button>
+      <button class="vote-widget__star" type="button" aria-label="3 stars">★</button>
+      <button class="vote-widget__star" type="button" aria-label="4 stars">★</button>
+      <button class="vote-widget__star" type="button" aria-label="5 stars">★</button>
+      <button class="vote-widget__heart" type="button" aria-label="В избранное">♥</button>
+    </span>
+  </div>
+
+  <div class="row">
+    <span class="label">user voted 4★</span>
+    <span class="vote-widget">
+      <button class="vote-widget__clear" type="button" aria-label="Снять голос">✕</button>
+      <button class="vote-widget__star vote-widget__star--filled" type="button" aria-label="1 star">★</button>
+      <button class="vote-widget__star vote-widget__star--filled" type="button" aria-label="2 stars">★</button>
+      <button class="vote-widget__star vote-widget__star--filled" type="button" aria-label="3 stars">★</button>
+      <button class="vote-widget__star vote-widget__star--filled" type="button" aria-label="4 stars">★</button>
+      <button class="vote-widget__star" type="button" aria-label="5 stars">★</button>
+      <span class="vote-widget__my">4</span>
+      <button class="vote-widget__heart" type="button" aria-label="В избранное">♥</button>
+    </span>
+  </div>
+
+  <div class="row">
+    <span class="label">voted 5★ + favourited</span>
+    <span class="vote-widget">
+      <button class="vote-widget__clear" type="button" aria-label="Снять голос">✕</button>
+      <button class="vote-widget__star vote-widget__star--filled" type="button">★</button>
+      <button class="vote-widget__star vote-widget__star--filled" type="button">★</button>
+      <button class="vote-widget__star vote-widget__star--filled" type="button">★</button>
+      <button class="vote-widget__star vote-widget__star--filled" type="button">★</button>
+      <button class="vote-widget__star vote-widget__star--filled" type="button">★</button>
+      <span class="vote-widget__my">5</span>
+      <button class="vote-widget__heart vote-widget__heart--on" type="button" aria-label="В избранном">♥</button>
+    </span>
+  </div>
+
+  <hr style="border: 0; border-top: 1px dashed var(--secondary-200); margin: 8px 0;" />
+
+  <p style="font-size: var(--font-sm); color: var(--text-light-color); margin: 0; max-width: 600px;">
+    <b>Структура слева направо:</b><br/>
+    1. Кнопка снятия голоса (×) — прозрачная, краснеет на hover, скрыта/disabled пока пользователь не голосовал.<br/>
+    2. Пять звёзд для голосования.<br/>
+    3. Оценка пользователя (1–5) — показывается только после голоса.<br/>
+    4. Сердечко (избранное) — серое, краснеет на hover, остаётся красным когда добавлено.
+  </p>
+</body>
+</html>
