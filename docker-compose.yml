@@ -13,7 +13,6 @@ services:
     environment:
       # Adjust to match your project/config/ settings if needed
       - APP_ENV=local
-      - NG_DEV_SERVER_URL=http://localhost:4200
       - DB_HOST=db
       - DB_PORT=3306
       - DB_DATABASE=zxart
@@ -59,6 +58,7 @@ services:
       - db
 
   composer:
+    image: composer:2
     build:
       context: ./docker/php
     container_name: zxart-composer
@@ -74,15 +74,14 @@ services:
 
   node:
     image: node:20-alpine
+    user: "1000:1000"
     working_dir: /var/www/html/ng-zxart
-    ports:
-      - "4200:4200"
     volumes:
       - ./:/var/www/html
       - node_modules_ng:/var/www/html/ng-zxart/node_modules
-    entrypoint: ["sh", "-c", "mkdir -p node_modules && chown -R node:node node_modules && if [ ! -x node_modules/.bin/ng ]; then su node -c \"npm ci\"; fi; exec su node -c \"npm $*\"", "npm"]
-    command: ["run", "dev"]
+    entrypoint: ["npm"]
 
 volumes:
   db_data:
   node_modules_ng:
+

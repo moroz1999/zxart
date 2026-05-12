@@ -1,0 +1,32 @@
+:root {
+  /* Card border color. */
+  --zx-prod-release-card-border: var(--border-secondary);
+  /* Card background. */
+  --zx-prod-release-card-bg: var(--zx-panel-bg);
+  /* Cover placeholder background. */
+  --zx-prod-release-card-cover-bg: var(--background-deep);
+  /* Title text color. */
+  --zx-prod-release-card-title-color: var(--text-color);
+  /* Title font size. */
+  --zx-prod-release-card-title-size: var(--zx-font-size-sm);
+  /* Meta line (releasedBy · year) color. */
+  --zx-prod-release-card-meta-color: var(--text-light-color);
+  /* Meta line font size. */
+  --zx-prod-release-card-meta-size: var(--zx-font-size-xs);
+  /* Chip background. */
+  --zx-prod-release-card-chip-bg: var(--secondary-100);
+  /* Chip text color. */
+  --zx-prod-release-card-chip-text: var(--text-color);
+  /* Chip font size. */
+  --zx-prod-release-card-chip-size: var(--zx-font-size-xs);
+  /* Bottom stat text color. */
+  --zx-prod-release-card-stat-color: var(--text-light-color);
+  /* Bottom stat font size. */
+  --zx-prod-release-card-stat-size: var(--zx-font-size-xs);
+  /* Bottom stat icon size. */
+  --zx-prod-release-card-stat-icon-size: 12px;
+}
+
+.dark-mode {
+  --zx-prod-release-card-chip-bg: var(--secondary-200);
+}

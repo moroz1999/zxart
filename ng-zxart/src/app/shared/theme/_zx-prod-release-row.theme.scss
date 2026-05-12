@@ -1,0 +1,8 @@
+:root {
+  /* Secondary text color for releaseby, place, and description labels. */
+  --zx-prod-release-row-secondary-color: var(--text-light-color);
+  /* Width and height of the thumbnail preview in the table row. */
+  --zx-prod-release-row-thumb-size: 60px;
+  /* Size of icon used in action buttons. */
+  --zx-prod-release-row-icon-size: 16px;
+}

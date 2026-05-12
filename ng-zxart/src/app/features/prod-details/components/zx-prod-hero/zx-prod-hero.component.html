@@ -4,7 +4,7 @@
 </div>
 
 <div *ngIf="core.altTitle" class="hero-alt-title">
-  {{ 'prod-details.alsoKnownAs' | translate }} <em>{{ core.altTitle }}</em>
+  {{ 'prod-details.altTitle' | translate }} <em>{{ core.altTitle }}</em>
 </div>
 
 <div class="hero-chips">
@@ -24,16 +24,24 @@
   </span>
 </div>
 
-<div *ngIf="core.authors.length || core.publishers.length || core.groups.length || core.party" class="hero-people">
-  <ng-container *ngIf="core.authors.length">
+<div *ngIf="mainAuthors.length || musicAuthors.length || core.publishers.length || core.groups.length || core.party" class="hero-people">
+  <ng-container *ngIf="mainAuthors.length">
     <span class="hero-people__label">{{ 'prod-details.authors' | translate }}:</span>
-    <ng-container *ngFor="let author of core.authors; let last = last">
-      <a [href]="author.url" class="hero-people__link">{{ author.title }}</a><ng-container *ngIf="author.roles.length && author.roles[0] !== 'unknown'"> (<ng-container *ngFor="let role of author.roles; let lastRole = last">{{ ('prod-details.role_' + role) | translate }}<ng-container *ngIf="!lastRole">, </ng-container></ng-container>)</ng-container><ng-container *ngIf="!last">, </ng-container>
+    <ng-container *ngFor="let author of mainAuthors; let last = last">
+      <a [href]="author.url" class="hero-people__link">{{ author.title }}</a><ng-container *ngIf="!last">, </ng-container>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="musicAuthors.length">
+    <span *ngIf="mainAuthors.length" class="hero-people__sep">·</span>
+    <span class="hero-people__label">{{ 'prod-details.role_music' | translate }}:</span>
+    <ng-container *ngFor="let author of musicAuthors; let last = last">
+      <a [href]="author.url" class="hero-people__link">{{ author.title }}</a><ng-container *ngIf="!last">, </ng-container>
     </ng-container>
   </ng-container>
 
   <ng-container *ngIf="core.publishers.length">
-    <span class="hero-people__sep">·</span>
+    <span *ngIf="mainAuthors.length || musicAuthors.length" class="hero-people__sep">·</span>
     <span class="hero-people__label">{{ 'prod-details.publishers' | translate }}:</span>
     <ng-container *ngFor="let pub of core.publishers; let last = last">
       <a [href]="pub.url" class="hero-people__link">{{ pub.title }}</a><ng-container *ngIf="!last">, </ng-container>
@@ -41,7 +49,7 @@
   </ng-container>
 
   <ng-container *ngIf="core.groups.length">
-    <span class="hero-people__sep">·</span>
+    <span *ngIf="mainAuthors.length || musicAuthors.length || core.publishers.length" class="hero-people__sep">·</span>
     <span class="hero-people__label">{{ 'prod-details.groups' | translate }}:</span>
     <ng-container *ngFor="let group of core.groups; let last = last">
       <a [href]="group.url" class="hero-people__link">{{ group.title }}</a><ng-container *ngIf="!last">, </ng-container>

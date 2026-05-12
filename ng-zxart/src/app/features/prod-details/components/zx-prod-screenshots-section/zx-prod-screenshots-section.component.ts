@@ -36,10 +36,21 @@ export class ZxProdScreenshotsSectionComponent {
   @Input({required: true}) elementId!: number;
   @Input() titleKey = 'prod-details.screenshots';
 
+  readonly maxVisible = 6;
   loading = false;
   loaded = false;
   files: ProdFileDto[] = [];
   galleryId = '';
+
+  get displayedFiles(): ProdFileDto[] {
+    return this.files.length > this.maxVisible
+      ? this.files.slice(0, this.maxVisible - 1)
+      : this.files;
+  }
+
+  get moreCount(): number {
+    return Math.max(0, this.files.length - this.maxVisible + 1);
+  }
 
   @HostBinding('style.display')
   get display(): string {

@@ -2,7 +2,9 @@
     {if $firstPageElement->final}
         <zx-firstpage></zx-firstpage>
     {else}
-        {include file=$theme->template("component.breadcrumbs.tpl")}
+        {if $currentElement->getTemplate() !== 'zxProd.details.tpl'}
+            {include file=$theme->template("component.breadcrumbs.tpl")}
+        {/if}
         {include file=$theme->template("component.letters.tpl")}
         {include file=$theme->template("component.years.tpl")}
         {include file=$theme->template($currentElement->getTemplate()) element=$currentElement}

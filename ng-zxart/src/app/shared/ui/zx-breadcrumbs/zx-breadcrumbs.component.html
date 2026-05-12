@@ -1,0 +1,13 @@
+<nav class="zx-breadcrumbs" aria-label="breadcrumb">
+  <ng-container *ngIf="homeUrl$ | async as homeUrl">
+    <a *ngIf="homeUrl" [href]="homeUrl" class="zx-breadcrumbs__item">ZX-Art</a>
+    <span *ngIf="homeUrl && (categories.length || currentTitle)" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
+  </ng-container>
+
+  <ng-container *ngFor="let cat of categories; let last = last">
+    <a [href]="cat.url" class="zx-breadcrumbs__item">{{ cat.title }}</a>
+    <span *ngIf="!last || currentTitle" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
+  </ng-container>
+
+  <span *ngIf="currentTitle" class="zx-breadcrumbs__item zx-breadcrumbs__item--current" aria-current="page">{{ currentTitle }}</span>
+</nav>

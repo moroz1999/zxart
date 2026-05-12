@@ -1,0 +1,12 @@
+:root {
+  /* Gap between breadcrumb items and separators. */
+  --zx-breadcrumbs-gap: var(--space-4);
+  /* Font size of breadcrumb items. */
+  --zx-breadcrumbs-font-size: var(--font-xs);
+  /* Link color. */
+  --zx-breadcrumbs-link-color: var(--primary-600);
+  /* Color of the separator slash. */
+  --zx-breadcrumbs-sep-color: var(--secondary-400);
+  /* Color of the current (non-linked) item. */
+  --zx-breadcrumbs-current-color: var(--text-light-color);
+}

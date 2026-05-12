@@ -24,8 +24,8 @@
   --zx-prod-hero-people-color: var(--text-light-color);
   /* Bold labels inside the people line. */
   --zx-prod-hero-people-label-color: var(--text-color);
-  /* Links inside the people line. */
-  --zx-prod-hero-people-link-color: var(--primary-600);
+  /* Links inside the people line — same color as surrounding muted text, underline indicates clickability. */
+  --zx-prod-hero-people-link-color: var(--text-light-color);
   /* Separator dot color inside the people line. */
   --zx-prod-hero-people-sep-color: var(--secondary-400);
 }

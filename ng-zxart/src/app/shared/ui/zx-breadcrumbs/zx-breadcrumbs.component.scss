@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+.zx-breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--zx-breadcrumbs-gap);
+}
+
+.zx-breadcrumbs__item {
+  font-size: var(--zx-breadcrumbs-font-size);
+  color: var(--zx-breadcrumbs-link-color);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &--current {
+    color: var(--zx-breadcrumbs-current-color);
+    pointer-events: none;
+  }
+}
+
+.zx-breadcrumbs__sep {
+  font-size: var(--zx-breadcrumbs-font-size);
+  color: var(--zx-breadcrumbs-sep-color);
+  user-select: none;
+}

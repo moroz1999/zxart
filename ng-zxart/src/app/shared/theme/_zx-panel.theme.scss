@@ -16,10 +16,14 @@
   --zx-panel-bg: var(--secondary-100);
   --zx-panel-shadow: var(--shadow-md);
   --zx-panel-border: var(--border-width-thin) solid var(--border-secondary);
+  /* Deep variant: slightly lighter than dark page background. */
+  --zx-panel-deep-bg: var(--secondary-100);
 }
 
 .light-mode {
   --zx-panel-bg: var(--white);
   --zx-panel-shadow: var(--shadow-md);
   --zx-panel-border: var(--border-width-thin) solid var(--border-secondary);
+  /* Deep variant: noticeably darker than page background (#f7f7f7 → #d9d9d9). */
+  --zx-panel-deep-bg: var(--secondary-200);
 }

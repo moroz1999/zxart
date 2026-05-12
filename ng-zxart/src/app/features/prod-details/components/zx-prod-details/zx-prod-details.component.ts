@@ -30,6 +30,7 @@ import {ZxProdPicturesSectionComponent,} from '../zx-prod-pictures-section/zx-pr
 import {ZxProdInlaysSectionComponent,} from '../zx-prod-inlays-section/zx-prod-inlays-section.component';
 import {ZxProdMapsSectionComponent,} from '../zx-prod-maps-section/zx-prod-maps-section.component';
 import {ZxProdRzxSectionComponent,} from '../zx-prod-rzx-section/zx-prod-rzx-section.component';
+import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxTabsComponent} from '../../../../shared/ui/zx-tabs/zx-tabs.component';
 import {ZxTabComponent} from '../../../../shared/ui/zx-tabs/zx-tab.component';
@@ -37,6 +38,8 @@ import {TagsQuickFormComponent} from '../../../tags-quick-form/components/tags-q
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {RatingsListComponent} from '../../../ratings/components/ratings-list/ratings-list.component';
 import {TranslateModule} from '@ngx-translate/core';
+import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
+import {ZxTagsChipsComponent} from '../../../../shared/ui/zx-tags-chips/zx-tags-chips.component';
 
 @Component({
   selector: 'zx-prod-details',
@@ -62,6 +65,7 @@ import {TranslateModule} from '@ngx-translate/core';
     ZxProdInlaysSectionComponent,
     ZxProdMapsSectionComponent,
     ZxProdRzxSectionComponent,
+    ZxPanelComponent,
     ZxStackComponent,
     ZxTabsComponent,
     ZxTabComponent,
@@ -69,6 +73,8 @@ import {TranslateModule} from '@ngx-translate/core';
     TagsQuickFormComponent,
     CommentsListComponent,
     RatingsListComponent,
+    ZxBreadcrumbsComponent,
+    ZxTagsChipsComponent,
   ],
   templateUrl: './zx-prod-details.component.html',
   styleUrls: ['./zx-prod-details.component.scss'],

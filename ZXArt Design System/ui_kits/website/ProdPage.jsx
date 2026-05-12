@@ -40,7 +40,10 @@ function ProdPage() {
       <div className="va-hero">
         <div className="va-hero__cover">
           <ZxScreen seed={42} palette="forest" />
-          <div className="va-hero__shots">📷 {SCREENS.length} скринов</div>
+          <div className="va-hero__shots">
+            <img src="../../assets/icons/photo-camera.svg" width="12" height="12" alt="" style={{verticalAlign:'middle',marginRight:3}} />
+            {SCREENS.length} скринов
+          </div>
         </div>
         <div>
           <div className="va-hero__title-row">
@@ -51,8 +54,14 @@ function ProdPage() {
 
           <div className="va-hero__chips">
             {PROD.category.map(c => <span key={c} className="chip chip--cat">{c}</span>)}
-            <span className="chip">🇬🇧 English</span>
-            <span className="chip" title={PROD.status}>⚠ Распространение запрещено</span>
+            <span className="chip">
+              <img src="../../assets/icons/globe.svg" width="12" height="12" alt="" style={{verticalAlign:'middle',marginRight:3}} />
+              English
+            </span>
+            <span className="chip" title={PROD.status}>
+              <img src="../../assets/icons/close.svg" width="12" height="12" alt="" style={{verticalAlign:'middle',marginRight:3}} />
+              Распространение запрещено
+            </span>
           </div>
 
           <div className="va-hero__rating-row">
@@ -121,7 +130,7 @@ function ProdPage() {
           <div className="vb-filter-bar">
             <span className="vb-filter-bar__label">Язык:</span>
             <div className="vb-filter-bar__group">
-              {[["all","все"],["en","🇬🇧 EN"],["ru","🇷🇺 RU"]].map(([k,l]) => (
+              {[["all","все"],["en","EN"],["ru","RU"]].map(([k,l]) => (
                 <button key={k} onClick={()=>setFilterLang(k)} className={"zx-button zx-button--sm " + (filterLang===k?"zx-button--secondary":"zx-button--outlined")}>{l}</button>
               ))}
             </div>
@@ -139,7 +148,7 @@ function ProdPage() {
           </div>
 
           <div style={{ fontSize: "var(--font-xs)", color: "var(--text-light-color)", margin: "0 0 6px", fontStyle: "italic" }}>
-            Лучший релиз — тот, у которого выше рейтинг сообщества. Сортируйте по «Рейтинг», ⬇ или ▶, чтобы найти подходящий.
+            Лучший релиз — тот, у которого выше рейтинг сообщества. Сортируйте по «Рейтинг», «Загрузок» или «Воспроизведений», чтобы найти подходящий.
           </div>
 
           {view==="table" && (
@@ -153,8 +162,14 @@ function ProdPage() {
                   <th>Яз.</th>
                   <th>Платформа · формат</th>
                   <th onClick={()=>clickHeader("votes")} style={{cursor:"pointer", textAlign:"right"}} title="Рейтинг релиза по голосам сообщества">Рейтинг{arrow("votes")}</th>
-                  <th onClick={()=>clickHeader("plays")} style={{cursor:"pointer", textAlign:"right"}}>▶{arrow("plays")}</th>
-                  <th onClick={()=>clickHeader("downloads")} style={{cursor:"pointer", textAlign:"right"}}>⬇{arrow("downloads")}</th>
+                  <th onClick={()=>clickHeader("plays")} style={{cursor:"pointer", textAlign:"right"}}>
+                    <img src="../../assets/icons/play.svg" width="12" height="12" alt="plays" style={{verticalAlign:"middle"}} />
+                    {arrow("plays")}
+                  </th>
+                  <th onClick={()=>clickHeader("downloads")} style={{cursor:"pointer", textAlign:"right"}}>
+                    <img src="../../assets/icons/download.svg" width="12" height="12" alt="downloads" style={{verticalAlign:"middle"}} />
+                    {arrow("downloads")}
+                  </th>
                   <th></th>
                 </tr>
               </thead>
@@ -168,11 +183,11 @@ function ProdPage() {
                     </td>
                     <td style={{fontFamily:"var(--font-mono)"}}>{r.year || "—"}</td>
                     <td><span className={"rel-type-pill rel-type-pill--" + r.type}>{RELEASE_TYPES[r.type].label}</span></td>
-                    <td>{r.lang==="ru"?"🇷🇺":"🇬🇧"}</td>
+                    <td><span style={{fontFamily:"var(--font-mono)",fontSize:"var(--font-xs)"}}>{r.lang.toUpperCase()}</span></td>
                     <td style={{fontSize:"var(--font-xs)"}}>
                       <div className="tag-row">
-                        {r.format && <span className="tag-glyph" title={r.format}>{r.format.includes("SCL")?"💾":"📼"}</span>}
-                        {r.hardware.slice(0,3).map(h => <span key={h} className="tag-glyph" title={h}>{h.includes("AY")?"🔊":h.includes("джойстик")?"🕹":"🖥"}</span>)}
+                        {r.format && <span className="tag-glyph" title={r.format}>{r.format}</span>}
+                        {r.hardware.slice(0,3).map(h => <span key={h} className="tag-glyph" title={h}>{h}</span>)}
                       </div>
                     </td>
                     <td style={{textAlign:"right",fontFamily:"var(--font-mono)"}}>
@@ -182,9 +197,14 @@ function ProdPage() {
                     </td>
                     <td style={{textAlign:"right",fontFamily:"var(--font-mono)",color:"var(--text-light-color)"}}>{r.plays}</td>
                     <td style={{textAlign:"right",fontFamily:"var(--font-mono)"}}>
-                      <a href="#" title={`Скачать (${r.downloads})`} style={{color:"var(--primary-600)",textDecoration:"none",fontWeight:600}}>⬇ {r.downloads}</a>
+                      <a href="#" title={`Скачать (${r.downloads})`} style={{color:"var(--primary-600)",textDecoration:"none",fontWeight:600}}>
+                        <img src="../../assets/icons/download.svg" width="12" height="12" alt="" style={{verticalAlign:"middle",marginRight:2}} />
+                        {r.downloads}
+                      </a>
                     </td>
-                    <td>{r.playOnline && <button className="zx-button zx-button--sm zx-button--secondary" title="Играть онлайн">▶</button>}</td>
+                    <td>{r.playOnline && <button className="zx-button zx-button--sm zx-button--secondary" title="Играть онлайн">
+                      <img src="../../assets/icons/play.svg" width="12" height="12" alt="Play" style={{verticalAlign:"middle"}} />
+                    </button>}</td>
                   </tr>
                 ))}
               </tbody>
@@ -203,14 +223,16 @@ function ProdPage() {
                     <div className="va-rel-card__meta">{r.releasedBy || "—"}{r.year ? " · " + r.year : ""}</div>
                     <div className="va-rel-card__chips">
                       <span className={"rel-type-pill rel-type-pill--" + r.type}>{RELEASE_TYPES[r.type].label}</span>
-                      <span className="va-rel-card__chip va-rel-card__chip--lang">{r.lang==="ru"?"🇷🇺":"🇬🇧"}</span>
+                      <span className="va-rel-card__chip va-rel-card__chip--lang">{r.lang.toUpperCase()}</span>
                       {r.format && <span className="va-rel-card__chip">{r.format}</span>}
                       {r.note && <span className="va-rel-card__chip va-rel-card__chip--cheats">★ {r.note}</span>}
                     </div>
                     <div className="va-rel-card__bottom">
-                      {r.playOnline && <a className="play-link" href="#">▶ Играть</a>}
-                      <span>⬇{r.downloads}</span>
-                      <span>· ▶{r.plays}</span>
+                      {r.playOnline && <a className="play-link" href="#">
+                        <img src="../../assets/icons/play.svg" width="12" height="12" alt="" style={{verticalAlign:"middle",marginRight:2}} /> Играть
+                      </a>}
+                      <span><img src="../../assets/icons/download.svg" width="11" height="11" alt="" style={{verticalAlign:"middle"}} />{r.downloads}</span>
+                      <span>· <img src="../../assets/icons/play.svg" width="11" height="11" alt="" style={{verticalAlign:"middle"}} />{r.plays}</span>
                       <span style={{ marginLeft: "auto", color: "var(--warning-500)" }}>★{r.votes}</span>
                     </div>
                   </div>
@@ -224,17 +246,29 @@ function ProdPage() {
       {tab==="media" && (
         <div>
           <div className="vb-toggle" style={{ marginBottom: 12 }}>
-            <button className={mediaSub==="articles"?"active":""} onClick={()=>setMediaSub("articles")}>📰 Статьи и карты <span style={{opacity:0.6}}>{MENTIONS.length + MAPS.length}</span></button>
-            <button className={mediaSub==="covers"?"active":""} onClick={()=>setMediaSub("covers")}>📼 Обложки кассет</button>
-            <button className={mediaSub==="music"?"active":""} onClick={()=>setMediaSub("music")}>🎵 Музыка <span style={{opacity:0.6}}>{PROD_TUNES.length}</span></button>
-            <button className={mediaSub==="graphics"?"active":""} onClick={()=>setMediaSub("graphics")}>🎨 Графика</button>
+            <button className={mediaSub==="articles"?"active":""} onClick={()=>setMediaSub("articles")}>
+              <img src="../../assets/icons/list.svg" width="13" height="13" alt="" style={{verticalAlign:"middle",marginRight:3}} />
+              Статьи и карты <span style={{opacity:0.6}}>{MENTIONS.length + MAPS.length}</span>
+            </button>
+            <button className={mediaSub==="covers"?"active":""} onClick={()=>setMediaSub("covers")}>
+              <img src="../../assets/icons/image.svg" width="13" height="13" alt="" style={{verticalAlign:"middle",marginRight:3}} />
+              Обложки кассет
+            </button>
+            <button className={mediaSub==="music"?"active":""} onClick={()=>setMediaSub("music")}>
+              <img src="../../assets/icons/music-note.svg" width="13" height="13" alt="" style={{verticalAlign:"middle",marginRight:3}} />
+              Музыка <span style={{opacity:0.6}}>{PROD_TUNES.length}</span>
+            </button>
+            <button className={mediaSub==="graphics"?"active":""} onClick={()=>setMediaSub("graphics")}>
+              <img src="../../assets/icons/photo-camera.svg" width="13" height="13" alt="" style={{verticalAlign:"middle",marginRight:3}} />
+              Графика
+            </button>
           </div>
 
           {mediaSub==="articles" && (
             <div className="pp-card">
               <div className="pp-section-h" style={{ fontSize: "var(--font-md)" }}>Карты <span className="count">{MAPS.length}</span></div>
               <div className="va-mini">
-                <span className="va-mini__icon">🗺</span>
+                <span className="va-mini__icon"><img src="../../assets/icons/image.svg" width="16" height="16" alt="" /></span>
                 <div className="va-mini__body">
                   <div className="va-mini__title">Карта прохождения</div>
                   <div className="va-mini__sub">by {MAPS[0].author}</div>
@@ -244,7 +278,7 @@ function ProdPage() {
               <div className="pp-section-h" style={{ fontSize: "var(--font-md)", marginTop: 16 }}>Упоминания <span className="count">{MENTIONS.length}</span></div>
               {MENTIONS.map((m,i) => (
                 <div key={i} className="va-mini">
-                  <span className="va-mini__icon">📰</span>
+                  <span className="va-mini__icon"><img src="../../assets/icons/list.svg" width="16" height="16" alt="" /></span>
                   <div className="va-mini__body">
                     <div className="va-mini__title">{m.mag} #{String(m.issue).padStart(2,"0")} ({m.year}) · {m.section}</div>
                     <div className="va-mini__sub">{m.body}</div>
@@ -259,7 +293,7 @@ function ProdPage() {
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12 }}>
                 {[0,1,2,3,4,5].map(i => (
                   <div key={i} style={{ aspectRatio: "3/4", border: "1px solid var(--secondary-200)", borderRadius: "var(--radius-sm)", background: "var(--background-deep)", display:"flex", alignItems:"center", justifyContent:"center", color: "var(--text-light-color)", fontSize: "var(--font-xs)" }}>
-                    📼 обложка {i+1}
+                    <img src="../../assets/icons/image.svg" width="14" height="14" alt="" style={{verticalAlign:"middle", opacity:0.5}} /> обложка {i+1}
                   </div>
                 ))}
               </div>
@@ -271,13 +305,17 @@ function ProdPage() {
               {PROD_TUNES.map(t => (
                 <div key={t.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 4px", borderBottom: "1px solid var(--secondary-200)" }}>
                   <span style={{ fontFamily: "var(--font-mono)", color: "var(--text-light-color)", width: 24, fontSize: "var(--font-sm)" }}>{t.idx}</span>
-                  <button className="zx-button zx-button--sm zx-button--secondary zx-button--round">▶</button>
+                  <button className="zx-button zx-button--sm zx-button--secondary zx-button--round">
+                    <img src="../../assets/icons/play.svg" width="14" height="14" alt="Play" style={{verticalAlign:"middle"}} />
+                  </button>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 700, fontSize: "var(--font-sm)" }}>{t.title}</div>
                     <div style={{ fontSize: "var(--font-xs)", color: "var(--text-light-color)" }}>{t.author} · {t.chip} · {t.year}</div>
                   </div>
                   <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--font-xs)", color: "var(--text-light-color)" }}>{t.duration}</span>
-                  <span style={{ fontSize: "var(--font-xs)", color: "var(--text-light-color)", width: 60, textAlign: "right" }}>▶ {t.plays}</span>
+                  <span style={{ fontSize: "var(--font-xs)", color: "var(--text-light-color)", width: 60, textAlign: "right", display:"inline-flex", alignItems:"center", gap:2 }}>
+                    <img src="../../assets/icons/play.svg" width="11" height="11" alt="" /> {t.plays}
+                  </span>
                   <span style={{ color: "var(--warning-500)" }}>{"★".repeat(t.stars)}</span>
                 </div>
               ))}
@@ -301,8 +339,8 @@ function ProdPage() {
       {tab==="links" && (
         <div>
           <div className="vb-toggle" style={{ marginBottom: 12 }}>
-            <button className={linksSub==="series"?"active":""} onClick={()=>setLinksSub("series")}>🔗 Серия Dizzy <span style={{opacity:0.6}}>{SAME_SERIES.length}</span></button>
-            <button className={linksSub==="compilations"?"active":""} onClick={()=>setLinksSub("compilations")}>📦 В сборниках <span style={{opacity:0.6}}>{COMPILATIONS.length}</span></button>
+            <button className={linksSub==="series"?"active":""} onClick={()=>setLinksSub("series")}><img src="../../assets/icons/list.svg" width="14" height="14" alt="" style={{verticalAlign:"middle"}} /> Серия Dizzy <span style={{opacity:0.6}}>{SAME_SERIES.length}</span></button>
+            <button className={linksSub==="compilations"?"active":""} onClick={()=>setLinksSub("compilations")}><img src="../../assets/icons/disc.svg" width="14" height="14" alt="" style={{verticalAlign:"middle"}} /> В сборниках <span style={{opacity:0.6}}>{COMPILATIONS.length}</span></button>
           </div>
 
           {linksSub==="series" && (

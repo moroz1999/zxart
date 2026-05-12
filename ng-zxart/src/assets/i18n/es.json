@@ -555,7 +555,7 @@
   },
   "prod-details": {
     "title": "Título del software",
-    "altTitle": "Título alternativo",
+    "altTitle": "también conocida como",
     "externallink": "Sitio web del proyecto",
     "purchase": "Compra",
     "donate": "Donar",
@@ -573,6 +573,7 @@
     "votes": "Clasificación",
     "addedby": "Añadido por",
     "added": "Agregada",
+    "about": "Sobre el programa",
     "description": "Descripción",
     "instructions": "Instrucciones",
     "role_code": "Codificación",
@@ -639,10 +640,22 @@
     "delete-confirm-cancel": "Cancelar",
     "tab": {
       "releases": "Lanzamientos",
-      "media": "Medios",
-      "links": "Relacionados",
+      "media": {
+        "title": "Medios",
+        "articles": "Artículos y mapas",
+        "inlays": "Carátulas",
+        "rzx": "RZX",
+        "graphics": "Gráficos",
+        "music": "Música"
+      },
+      "links": {
+        "title": "Relacionados",
+        "series": "Serie",
+        "compilations": "Compilaciones"
+      },
       "discussion": "Discusión"
-    }
+    },
+    "screenshots-more": "+{count} más"
   },
   "release-row": {
     "col-title": "Título",
@@ -657,7 +670,9 @@
     "download": "Descargar",
     "donate": "Donar",
     "purchase": "Compra",
-    "open-externallink": "Abrir en Nueva ventana"
+    "open-externallink": "Abrir en Nueva ventana",
+    "view-table": "Tabla",
+    "view-cards": "Tarjetas"
   },
   "emulator": {
     "title": "Emulador",

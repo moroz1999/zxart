@@ -102,10 +102,10 @@
 
 .hero-people__link {
   color: var(--zx-prod-hero-people-link-color);
-  text-decoration: none;
+  text-decoration: underline;
 
   &:hover {
-    text-decoration: underline;
+    text-decoration: none;
   }
 }
 

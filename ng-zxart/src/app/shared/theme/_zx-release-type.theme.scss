@@ -1,0 +1,28 @@
+:root {
+  /* Base pill layout variables. */
+  --zx-release-type-font-size: var(--font-xs);
+  --zx-release-type-padding: 1px var(--space-8);
+  --zx-release-type-radius: var(--radius-xl);
+  --zx-release-type-text-color: var(--white);
+
+  /* Original release (primary blue). */
+  --zx-release-type-original-bg: var(--primary-500);
+  /* Adaptation (darker blue). */
+  --zx-release-type-adaptation-bg: var(--primary-700);
+  /* Translation (warning amber). */
+  --zx-release-type-translation-bg: var(--warning-700);
+  --zx-release-type-translation-text: var(--white);
+  /* Modification (bright yellow — needs dark text in light mode). */
+  --zx-release-type-modification-bg: var(--warning-400);
+  --zx-release-type-modification-text: var(--secondary-900);
+  /* Crack (danger red). */
+  --zx-release-type-crack-bg: var(--danger-600);
+  /* Unknown (neutral gray). */
+  --zx-release-type-unknown-bg: var(--secondary-500);
+}
+
+.dark-mode {
+  /* In dark mode the warning ramp is brighter — keep dark text for legibility. */
+  --zx-release-type-translation-text: var(--secondary-50);
+  --zx-release-type-modification-text: var(--secondary-50);
+}

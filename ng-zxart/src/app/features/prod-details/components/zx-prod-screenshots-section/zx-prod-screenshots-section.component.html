@@ -13,8 +13,9 @@
 
       <div class="prod-screenshots-section__grid">
         <figure
-          *ngFor="let file of files; let i = index"
+          *ngFor="let file of displayedFiles; let i = index"
           class="prod-screenshots-section__item"
+          [class.prod-screenshots-section__item--featured]="i === 0"
         >
           <img
             *ngIf="file.imageUrl"
@@ -25,10 +26,19 @@
             [lightbox]="i"
             [gallery]="galleryId"
           />
-          <figcaption *ngIf="file.author" zxCaption>
+          <figcaption *ngIf="file.author && i > 0" zxCaption>
             {{ file.author }}
           </figcaption>
         </figure>
+
+        <a
+          *ngIf="moreCount > 0"
+          class="prod-screenshots-section__more"
+          [lightbox]="maxVisible - 1"
+          [gallery]="galleryId"
+        >
+          {{ 'prod-details.screenshots-more' | translate:{ count: moreCount } }}
+        </a>
       </div>
     </ng-container>
   </ng-container>

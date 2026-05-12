@@ -7,6 +7,8 @@
   --zx-table-header-color: var(--secondary-500);
   /* Header cell padding */
   --zx-table-header-padding: var(--space-4) var(--space-8);
+  /* Font size for secondary text within table cells. */
+  --zx-table-cell-font-size: var(--zx-font-size-xs);
   /* Mobile cell font size */
   --zx-table-cell-font-size-mobile: var(--zx-font-size-sm);
 

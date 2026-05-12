@@ -11,3 +11,31 @@
 .prod-releases-section__title {
   margin: 0;
 }
+
+.prod-releases-section__filter-label {
+  font-size: var(--zx-table-cell-font-size);
+  color: var(--zx-prod-releases-section-filter-label-color);
+}
+
+.prod-releases-section__col-thumb {
+  width: var(--zx-prod-releases-section-col-thumb-width);
+}
+
+.prod-releases-section__col-year,
+.prod-releases-section__col-downloads,
+.prod-releases-section__col-plays {
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+
+.prod-releases-section__view-toggle {
+  margin-left: auto;
+}
+
+.prod-releases-section__cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-12);
+}

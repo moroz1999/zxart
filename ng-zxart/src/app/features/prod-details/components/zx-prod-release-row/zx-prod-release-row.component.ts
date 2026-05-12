@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, Input, OnInit,} from '@angular/core'
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {LightboxModule} from 'ng-gallery/lightbox';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {
   PictureGalleryHostComponent,
 } from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
@@ -14,6 +15,7 @@ import {ProdFileDto} from '../../models/prod-file.dto';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxProdLanguageLinksComponent,} from '../zx-prod-language-links/zx-prod-language-links.component';
 import {ZxProdExternalLinksComponent,} from '../zx-prod-external-links/zx-prod-external-links.component';
+import {environment} from '../../../../../environments/environment';
 
 const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 'tsconf', 'samcoupe', 'zxnext'];
 
@@ -24,6 +26,7 @@ const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 't
     CommonModule,
     TranslateModule,
     LightboxModule,
+    SvgIconComponent,
     ZxButtonComponent,
     PictureGalleryHostComponent,
     ZxProdLanguageLinksComponent,
@@ -43,6 +46,7 @@ export class ZxProdReleaseRowComponent implements OnInit {
   constructor(
     private readonly gallery: PictureGalleryService,
     private readonly emulator: EmulatorModalService,
+    private readonly iconReg: SvgIconRegistryService,
   ) {}
 
   ngOnInit(): void {
@@ -50,6 +54,7 @@ export class ZxProdReleaseRowComponent implements OnInit {
     if (this.release.screenshots.length) {
       this.gallery.loadItems(this.galleryId, this.release.screenshots.map(this.toGalleryItem));
     }
+    this.iconReg.loadSvg(`${environment.svgUrl}download.svg`, 'download')?.subscribe();
   }
 
   get medalClass(): string | null {

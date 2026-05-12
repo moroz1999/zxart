@@ -4,15 +4,17 @@
   /* Gap between tag text and remove control. */
   --zx-tags-chips-chip-gap: var(--space-4);
   /* Tag chip background. */
-  --zx-tags-chips-chip-bg: var(--zx-button-secondary-bg);
+  --zx-tags-chips-chip-bg: var(--secondary-100);
   /* Tag chip text color. */
-  --zx-tags-chips-chip-text: var(--zx-button-secondary-text);
-  /* Tag chip border radius. */
-  --zx-tags-chips-chip-radius: var(--radius-sm);
+  --zx-tags-chips-chip-text: var(--text-light-color);
+  /* Tag chip border. */
+  --zx-tags-chips-chip-border: 1px solid var(--secondary-200);
+  /* Tag chip border radius (pill). */
+  --zx-tags-chips-chip-radius: 999px;
   /* Tag chip inner padding. */
-  --zx-tags-chips-chip-padding: var(--space-4) var(--space-8);
+  --zx-tags-chips-chip-padding: var(--space-2) var(--space-8);
   /* Tag chip font size. */
-  --zx-tags-chips-chip-font-size: var(--zx-caption-size);
+  --zx-tags-chips-chip-font-size: var(--font-xs);
   /* Remove icon size. */
   --zx-tags-chips-remove-icon-size: 14px;
 }

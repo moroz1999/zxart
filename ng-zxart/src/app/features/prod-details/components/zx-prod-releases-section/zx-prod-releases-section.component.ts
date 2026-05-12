@@ -12,6 +12,18 @@ import {ProdReleasesApiService} from '../../services/prod-releases-api.service';
 import {ProdReleaseDto} from '../../models/prod-release.dto';
 import {ZxProdReleaseRowComponent} from '../zx-prod-release-row/zx-prod-release-row.component';
 import {ElementPrivilegesApiService} from '../../../../shared/services/element-privileges-api.service';
+import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filter-bar.component';
+import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
+import {ZxProdReleaseCardComponent} from '../zx-prod-release-card/zx-prod-release-card.component';
+
+interface LabeledOption {
+  code: string;
+  label: string;
+}
+
+type SortField = 'year' | 'downloads' | 'plays';
+type ViewMode = 'table' | 'cards';
 
 @Component({
   selector: 'zx-prod-releases-section',
@@ -24,6 +36,10 @@ import {ElementPrivilegesApiService} from '../../../../shared/services/element-p
     ZxTableComponent,
     ZxHeading2Directive,
     ZxProdReleaseRowComponent,
+    ZxFilterBarComponent,
+    ZxButtonComponent,
+    ZxButtonControlsComponent,
+    ZxProdReleaseCardComponent,
   ],
   templateUrl: './zx-prod-releases-section.component.html',
   styleUrls: ['./zx-prod-releases-section.component.scss'],
@@ -38,6 +54,12 @@ export class ZxProdReleasesSectionComponent implements OnDestroy {
   releases: ProdReleaseDto[] = [];
   canUploadScreenshot = false;
 
+  filterLang = 'all';
+  filterType = 'all';
+  activeSortField: SortField | null = null;
+  sortDir: 'asc' | 'desc' = 'desc';
+  viewMode: ViewMode = 'table';
+
   @HostBinding('style.display')
   get display(): string {
     return this.loaded && this.releases.length === 0 ? 'none' : '';
@@ -50,6 +72,98 @@ export class ZxProdReleasesSectionComponent implements OnDestroy {
     private readonly elementPrivilegesApi: ElementPrivilegesApiService,
     private readonly cdr: ChangeDetectorRef,
   ) {}
+
+  get availableLangs(): LabeledOption[] {
+    const seen = new Map<string, string>();
+    for (const r of this.releases) {
+      for (const l of r.languages) {
+        if (!seen.has(l.code)) {
+          seen.set(l.code, `${l.emoji} ${l.code.toUpperCase()}`);
+        }
+      }
+    }
+    return Array.from(seen.entries()).map(([code, label]) => ({code, label}));
+  }
+
+  get availableTypes(): LabeledOption[] {
+    const seen = new Map<string, string>();
+    for (const r of this.releases) {
+      if (r.releaseType && r.releaseTypeLabel && !seen.has(r.releaseType)) {
+        seen.set(r.releaseType, r.releaseTypeLabel);
+      }
+    }
+    return Array.from(seen.entries()).map(([code, label]) => ({code, label}));
+  }
+
+  get allLangOptions(): LabeledOption[] {
+    return [{code: 'all', label: 'All'}, ...this.availableLangs];
+  }
+
+  get allTypeOptions(): LabeledOption[] {
+    return [{code: 'all', label: 'All'}, ...this.availableTypes];
+  }
+
+  get filteredReleases(): ProdReleaseDto[] {
+    let result = this.releases;
+
+    if (this.filterLang !== 'all') {
+      result = result.filter(r => r.languages.some(l => l.code === this.filterLang));
+    }
+
+    if (this.filterType !== 'all') {
+      result = result.filter(r => r.releaseType === this.filterType);
+    }
+
+    if (this.activeSortField) {
+      const field = this.activeSortField;
+      const dir = this.sortDir;
+      result = [...result].sort((a, b) => {
+        const va = this.getSortValue(a, field);
+        const vb = this.getSortValue(b, field);
+        return dir === 'desc' ? vb - va : va - vb;
+      });
+    }
+
+    return result;
+  }
+
+  private getSortValue(r: ProdReleaseDto, field: SortField): number {
+    switch (field) {
+      case 'year': return r.year || 0;
+      case 'downloads': return r.downloadsCount || 0;
+      case 'plays': return r.playsCount || 0;
+    }
+  }
+
+  setFilterLang(code: string): void {
+    this.filterLang = code;
+    this.cdr.markForCheck();
+  }
+
+  setFilterType(code: string): void {
+    this.filterType = code;
+    this.cdr.markForCheck();
+  }
+
+  setViewMode(mode: ViewMode): void {
+    this.viewMode = mode;
+    this.cdr.markForCheck();
+  }
+
+  sortBy(field: SortField): void {
+    if (this.activeSortField === field) {
+      this.sortDir = this.sortDir === 'desc' ? 'asc' : 'desc';
+    } else {
+      this.activeSortField = field;
+      this.sortDir = 'desc';
+    }
+    this.cdr.markForCheck();
+  }
+
+  sortArrow(field: SortField): string {
+    if (this.activeSortField !== field) return '';
+    return this.sortDir === 'desc' ? ' ↓' : ' ↑';
+  }
 
   onInViewport(): void {
     if (this.loaded || this.loading) {

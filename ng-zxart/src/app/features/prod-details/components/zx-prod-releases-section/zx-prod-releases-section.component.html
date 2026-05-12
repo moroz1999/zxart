@@ -8,35 +8,95 @@
 
     <zx-row-skeleton *ngIf="loading" [count]="3"></zx-row-skeleton>
 
-    <zx-table *ngIf="loaded && releases.length > 0" size="sm">
-      <table>
-        <thead>
-          <tr>
-            <th class="prod-releases-section__col-title">{{ 'release-row.col-title' | translate }}</th>
-            <th class="prod-releases-section__col-year">{{ 'release-row.col-year' | translate }}</th>
-            <th class="prod-releases-section__col-play"></th>
-            <th class="prod-releases-section__col-source"></th>
-            <th class="prod-releases-section__col-partyplace"></th>
-            <th class="prod-releases-section__col-language">{{ 'release-row.col-language' | translate }}</th>
-            <th class="prod-releases-section__col-version"></th>
-            <th class="prod-releases-section__col-releasetype">{{ 'release-row.col-releasetype' | translate }}</th>
-            <th class="prod-releases-section__col-releaseby">{{ 'release-row.col-releaseby' | translate }}</th>
-            <th class="prod-releases-section__col-hardware">{{ 'release-row.col-hardware' | translate }}</th>
-            <th class="prod-releases-section__col-format"></th>
-            <th class="prod-releases-section__col-download"></th>
-            <th class="prod-releases-section__col-downloads">{{ 'release-row.col-downloads' | translate }}</th>
-            <th class="prod-releases-section__col-plays">{{ 'release-row.col-plays' | translate }}</th>
-            <th class="prod-releases-section__col-links"></th>
-          </tr>
-        </thead>
-        <tbody
-          *ngFor="let release of releases; trackBy: trackById"
-          zxProdReleaseRow
-          [release]="release"
-          [canUploadScreenshot]="canUploadScreenshot"
-          [screenshotUploadUrl]="screenshotUploadUrl"
-        ></tbody>
-      </table>
-    </zx-table>
+    <ng-container *ngIf="loaded && filteredReleases.length > 0 || loaded && releases.length > 0">
+      <zx-filter-bar>
+        <ng-container *ngIf="availableLangs.length > 1">
+          <span class="prod-releases-section__filter-label">{{ 'release-row.col-language' | translate }}:</span>
+          <zx-button-controls>
+            <zx-button
+              *ngFor="let lang of allLangOptions"
+              size="xs"
+              [color]="filterLang === lang.code ? 'secondary' : 'outlined'"
+              (click)="setFilterLang(lang.code)">
+              {{ lang.label }}
+            </zx-button>
+          </zx-button-controls>
+        </ng-container>
+
+        <ng-container *ngIf="availableTypes.length > 1">
+          <span class="prod-releases-section__filter-label">{{ 'release-row.col-releasetype' | translate }}:</span>
+          <zx-button-controls>
+            <zx-button
+              *ngFor="let type of allTypeOptions"
+              size="xs"
+              [color]="filterType === type.code ? 'secondary' : 'outlined'"
+              (click)="setFilterType(type.code)">
+              {{ type.label }}
+            </zx-button>
+          </zx-button-controls>
+        </ng-container>
+
+        <zx-button-controls class="prod-releases-section__view-toggle">
+          <zx-button
+            size="xs"
+            [color]="viewMode === 'table' ? 'secondary' : 'outlined'"
+            (click)="setViewMode('table')">
+            {{ 'release-row.view-table' | translate }}
+          </zx-button>
+          <zx-button
+            size="xs"
+            [color]="viewMode === 'cards' ? 'secondary' : 'outlined'"
+            (click)="setViewMode('cards')">
+            {{ 'release-row.view-cards' | translate }}
+          </zx-button>
+        </zx-button-controls>
+      </zx-filter-bar>
+
+      <ng-container *ngIf="filteredReleases.length > 0">
+
+        <zx-table *ngIf="viewMode === 'table'" size="sm">
+          <table>
+            <thead>
+              <tr>
+                <th class="prod-releases-section__col-thumb"></th>
+                <th class="prod-releases-section__col-title">{{ 'release-row.col-title' | translate }}</th>
+                <th class="prod-releases-section__col-year" (click)="sortBy('year')">
+                  {{ 'release-row.col-year' | translate }}{{ sortArrow('year') }}
+                </th>
+                <th class="prod-releases-section__col-type">{{ 'release-row.col-releasetype' | translate }}</th>
+                <th class="prod-releases-section__col-language">{{ 'release-row.col-language' | translate }}</th>
+                <th class="prod-releases-section__col-party"></th>
+                <th class="prod-releases-section__col-hardware">{{ 'release-row.col-hardware' | translate }}</th>
+                <th class="prod-releases-section__col-format"></th>
+                <th class="prod-releases-section__col-downloads" (click)="sortBy('downloads')">
+                  {{ 'release-row.col-downloads' | translate }}{{ sortArrow('downloads') }}
+                </th>
+                <th class="prod-releases-section__col-plays" (click)="sortBy('plays')">
+                  {{ 'release-row.col-plays' | translate }}{{ sortArrow('plays') }}
+                </th>
+                <th class="prod-releases-section__col-actions"></th>
+              </tr>
+            </thead>
+            <tbody
+              *ngFor="let release of filteredReleases; trackBy: trackById"
+              zxProdReleaseRow
+              [release]="release"
+              [canUploadScreenshot]="canUploadScreenshot"
+              [screenshotUploadUrl]="screenshotUploadUrl"
+            ></tbody>
+          </table>
+        </zx-table>
+
+        <div *ngIf="viewMode === 'cards'" class="prod-releases-section__cards-grid">
+          <zx-prod-release-card
+            *ngFor="let release of filteredReleases; trackBy: trackById"
+            [release]="release"
+            [canUploadScreenshot]="canUploadScreenshot"
+            [screenshotUploadUrl]="screenshotUploadUrl">
+          </zx-prod-release-card>
+        </div>
+
+      </ng-container>
+    </ng-container>
   </ng-container>
 </div>

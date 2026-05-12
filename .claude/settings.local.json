@@ -113,7 +113,11 @@
       "Bash(gunzip -c \"/home/moroz/.claude/projects/-home-moroz-zxart/49fd78d2-1562-4a35-a8e2-f60063f83bdf/tool-results/webfetch-1778259529039-v7axyz.bin\")",
       "Bash(tar -x -C /tmp/design-bundle)",
       "Bash(git *)",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); keys=[k for k in d.keys\\(\\) if 'prod-details' in k]; print\\('\\\\n'.join\\(f'{k}: {d[k]}' for k in sorted\\(keys\\)\\)\\)\")",
+      "Bash(python3 *)",
+      "Bash(xargs cat)",
+      "Bash(xargs cat -n)"
     ]
   },
   "enabledPlugins": {

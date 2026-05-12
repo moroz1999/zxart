@@ -556,7 +556,7 @@
   },
   "prod-details": {
     "title": "Название программы",
-    "altTitle": "Альтернативное название",
+    "altTitle": "также известна как",
     "externallink": "Сайт проекта",
     "purchase": "Купить",
     "donate": "Донатить",
@@ -574,6 +574,7 @@
     "votes": "Рейтинг",
     "addedby": "Добавил",
     "added": "Добавлена",
+    "about": "О программе",
     "description": "Описание",
     "instructions": "Инструкции",
     "role_code": "Код",
@@ -640,10 +641,22 @@
     "delete-confirm-cancel": "Отмена",
     "tab": {
       "releases": "Релизы",
-      "media": "Медиа",
-      "links": "Связи",
+      "media": {
+        "title": "Медиа",
+        "articles": "Статьи и карты",
+        "inlays": "Обложки",
+        "rzx": "RZX",
+        "graphics": "Графика",
+        "music": "Музыка"
+      },
+      "links": {
+        "title": "Связи",
+        "series": "Серия",
+        "compilations": "Сборники"
+      },
       "discussion": "Обсуждение"
-    }
+    },
+    "screenshots-more": "+{count} ещё"
   },
   "release-row": {
     "col-title": "Название",
@@ -658,7 +671,9 @@
     "download": "Скачать",
     "donate": "Донатить",
     "purchase": "Купить",
-    "open-externallink": "Открыть в новом окне"
+    "open-externallink": "Открыть в новом окне",
+    "view-table": "Таблица",
+    "view-cards": "Карточки"
   },
   "emulator": {
     "title": "Эмулятор",

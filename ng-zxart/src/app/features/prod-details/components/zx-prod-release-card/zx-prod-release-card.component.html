@@ -1,0 +1,47 @@
+<div class="release-card">
+  <div class="release-card__cover">
+    <img
+      *ngIf="release.screenshots.length > 0"
+      class="release-card__cover-img"
+      loading="lazy"
+      [src]="release.screenshots[0].imageUrl"
+      [alt]="release.title"
+    />
+  </div>
+
+  <div class="release-card__body">
+    <a [href]="release.url" class="release-card__title">{{ release.title }}</a>
+
+    <div *ngIf="release.releaseBy.length || release.year > 0" class="release-card__meta">
+      <ng-container *ngFor="let g of release.releaseBy; let last = last">
+        {{ g.title }}<ng-container *ngIf="!last">, </ng-container>
+      </ng-container>
+      <ng-container *ngIf="release.year > 0">
+        <ng-container *ngIf="release.releaseBy.length"> · </ng-container>
+        {{ release.year }}
+      </ng-container>
+    </div>
+
+    <div class="release-card__chips">
+      <span
+        *ngIf="release.releaseType"
+        class="release-type-pill"
+        [class]="'release-type-pill--' + release.releaseType"
+      >{{ release.releaseTypeLabel }}</span>
+      <zx-prod-language-links [languages]="release.languages"></zx-prod-language-links>
+      <span *ngFor="let fmt of release.formats" class="release-card__chip">{{ fmt.label }}</span>
+    </div>
+
+    <div class="release-card__bottom">
+      <zx-button *ngIf="canPlay" size="sm" color="secondary" (click)="onPlay()">
+        {{ 'release-row.play' | translate }}
+      </zx-button>
+      <span *ngIf="release.isDownloadable" class="release-card__stat">
+        <svg-icon class="release-card__stat-icon" name="download"></svg-icon>{{ release.downloadsCount }}
+      </span>
+      <span *ngIf="release.isDownloadable" class="release-card__stat">
+        <svg-icon class="release-card__stat-icon" name="play"></svg-icon>{{ release.playsCount }}
+      </span>
+    </div>
+  </div>
+</div>
