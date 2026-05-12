@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 @Component({
@@ -8,17 +8,15 @@ import {CommonModule} from '@angular/common';
   templateUrl: './zx-stack.component.html',
   styleUrl: './zx-stack.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '[class]': 'classList'
-  }
 })
 export class ZxStackComponent {
-  @Input() spacing: 'sm' | 'md' | 'lg' | 'xl' | 'xxl' = 'md';
-  @Input() direction: 'column' | 'row' = 'column';
+  @Input() gap: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' = 'md';
+  @Input() spacing: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | null = null;
   @Input() align: 'center' | 'start' | 'end' | 'stretch' | null = null;
 
+  @HostBinding('class')
   get classList(): string {
-    const classes = [`zx-stack--${this.direction}`, `zx-stack--spacing-${this.spacing}`];
+    const classes = [`zx-stack--gap-${this.spacing ?? this.gap}`];
     if (this.align) {
       classes.push(`zx-stack--align-${this.align}`);
     }

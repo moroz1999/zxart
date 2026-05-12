@@ -1,35 +1,35 @@
 <zx-stack spacing="lg">
   <zx-panel class="comment-panel" [class.has-target]="showTarget && comment.target && hasImage" radius="lg" padding="lg">
-    <div class="comment-layout">
+    <zx-inline class="comment-layout" gap="lg">
       @if (showTarget && comment.target && hasImage) {
-        <div class="comment-target">
+        <zx-stack class="comment-target" gap="sm">
           <a [href]="comment.target.url" class="comment-target-image">
             <img [src]="comment.target.imageUrl" [alt]="comment.target.title" loading="lazy"/>
           </a>
-          <div class="comment-target-info">
+          <zx-stack class="comment-target-info" gap="xs">
             <a [href]="comment.target.url" zxLink class="comment-target-title">{{ comment.target.title }}</a>
             @if (comment.target.authorName) {
               <span zxCaption class="comment-target-author">{{ comment.target.authorName }}</span>
             }
-          </div>
-        </div>
+          </zx-stack>
+        </zx-stack>
       }
 
       <div class="comment-main">
         @if (showTarget && comment.target && !hasImage) {
-          <div class="comment-target-inline">
+          <zx-inset class="comment-target-inline" padding="md" side="bottom">
             <a [href]="comment.target.url" zxLink>{{ comment.target.title }}</a>
             @if (comment.target.authorName) {
               <span zxCaption> — {{ comment.target.authorName }}</span>
             }
-          </div>
+          </zx-inset>
         }
 
         <zx-stack spacing="md">
-          <zx-stack direction="row" spacing="sm">
+          <zx-inline spacing="sm">
             <zx-user *ngIf="comment.author" [user]="comment.author"></zx-user>
             <span class="comment-date" zxCaption>{{ comment.date }}</span>
-          </zx-stack>
+          </zx-inline>
 
           <div class="comment-body">
             <div *ngIf="!showEditForm" class="comment-content" zxBody>
@@ -44,7 +44,7 @@
             ></zx-comment-form>
           </div>
 
-          <zx-stack *ngIf="!showEditForm" direction="row" spacing="md">
+          <zx-inline *ngIf="!showEditForm" spacing="md">
             <zx-button size="xs" color="secondary" (click)="onReply()">{{ 'comments.reply' | translate }}</zx-button>
             <zx-button *ngIf="comment.canEdit" size="xs" color="secondary"
                        (click)="onEdit()">{{ 'comments.edit' | translate }}
@@ -52,27 +52,24 @@
             <zx-button *ngIf="comment.canDelete" size="xs" color="danger"
                        (click)="onDelete()">{{ 'comments.delete' | translate }}
             </zx-button>
-          </zx-stack>
+          </zx-inline>
         </zx-stack>
       </div>
-    </div>
+    </zx-inline>
   </zx-panel>
-  <zx-panel
-    *ngIf="showReplyForm"
-    radius="lg"
-    padding="lg"
-    [style.margin-left]="'var(--margin-xl)'"
-  >
-    <zx-comment-form
-      [targetId]="comment.id"
-      (commentSaved)="onCommentSaved($event)"
-      (cancelled)="showReplyForm = false"
-    ></zx-comment-form>
-  </zx-panel>
-  <zx-comment
-    *ngFor="let child of comment.children"
-    [comment]="child"
-    (commentChanged)="onChildChanged($event)"
-    [style.margin-left]="'var(--margin-xl)'"
-  ></zx-comment>
+  <zx-inset *ngIf="showReplyForm" padding="xl" side="left">
+    <zx-panel radius="lg" padding="lg">
+      <zx-comment-form
+        [targetId]="comment.id"
+        (commentSaved)="onCommentSaved($event)"
+        (cancelled)="showReplyForm = false"
+      ></zx-comment-form>
+    </zx-panel>
+  </zx-inset>
+  <zx-inset *ngFor="let child of comment.children" padding="xl" side="left">
+    <zx-comment
+      [comment]="child"
+      (commentChanged)="onChildChanged($event)"
+    ></zx-comment>
+  </zx-inset>
 </zx-stack>

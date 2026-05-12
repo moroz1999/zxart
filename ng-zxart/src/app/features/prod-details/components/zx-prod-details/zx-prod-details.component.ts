@@ -32,6 +32,8 @@ import {ZxProdMapsSectionComponent,} from '../zx-prod-maps-section/zx-prod-maps-
 import {ZxProdRzxSectionComponent,} from '../zx-prod-rzx-section/zx-prod-rzx-section.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
+import {ZxInsetComponent} from '../../../../shared/ui/zx-inset/zx-inset.component';
 import {ZxTabsComponent} from '../../../../shared/ui/zx-tabs/zx-tabs.component';
 import {ZxTabComponent} from '../../../../shared/ui/zx-tabs/zx-tab.component';
 import {TagsQuickFormComponent} from '../../../tags-quick-form/components/tags-quick-form/tags-quick-form.component';
@@ -67,6 +69,8 @@ import {ZxTagsChipsComponent} from '../../../../shared/ui/zx-tags-chips/zx-tags-
     ZxProdRzxSectionComponent,
     ZxPanelComponent,
     ZxStackComponent,
+    ZxInlineComponent,
+    ZxInsetComponent,
     ZxTabsComponent,
     ZxTabComponent,
     TranslateModule,

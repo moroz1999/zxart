@@ -13,6 +13,7 @@ import {
 import {ZxPartyCardComponent} from '../../../../shared/ui/zx-party-card/zx-party-card.component';
 import {ModuleSettings} from '../../models/firstpage-config';
 import {MODULE_SETTINGS} from '../../models/module-settings.token';
+import {ZxGridComponent} from '../../../../shared/ui/zx-grid/zx-grid.component';
 
 @Component({
   selector: 'zx-fp-recent-parties',
@@ -22,6 +23,7 @@ import {MODULE_SETTINGS} from '../../models/module-settings.token';
     CommonModule,
     FirstpageModuleWrapperComponent,
     ZxPartyCardComponent,
+    ZxGridComponent,
   ],
   templateUrl: './recent-parties.component.html',
   styleUrls: ['./recent-parties.component.scss'],

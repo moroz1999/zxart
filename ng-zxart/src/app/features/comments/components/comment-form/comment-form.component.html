@@ -1,21 +1,23 @@
 <form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="comment-form">
-  <zx-textarea
-    formControlName="content"
-    [label]="'comments.label' | translate"
-    [rows]="4"
-    [errorMessage]="contentErrorMessage | translate"
-  ></zx-textarea>
+  <zx-stack spacing="lg">
+    <zx-textarea
+      formControlName="content"
+      [label]="'comments.label' | translate"
+      [rows]="4"
+      [errorMessage]="contentErrorMessage | translate"
+    ></zx-textarea>
 
-  <div *ngIf="errorMessage" zxCaption class="comment-form__error">
-    {{ errorMessage }}
-  </div>
+    <div *ngIf="errorMessage" zxCaption class="comment-form__error">
+      {{ errorMessage }}
+    </div>
 
-  <zx-button-controls align="start">
-    <zx-button size="sm" color="primary" type="submit" [disabled]="commentForm.invalid || isSubmitting">
-      {{ (commentToEdit ? 'comments.save' : 'comments.post') | translate }}
-    </zx-button>
-    <zx-button size="sm" color="secondary" type="button" (click)="onCancel()" [disabled]="isSubmitting">
-      {{ 'comments.cancel' | translate }}
-    </zx-button>
-  </zx-button-controls>
+    <zx-button-controls align="start">
+      <zx-button size="sm" color="primary" type="submit" [disabled]="commentForm.invalid || isSubmitting">
+        {{ (commentToEdit ? 'comments.save' : 'comments.post') | translate }}
+      </zx-button>
+      <zx-button size="sm" color="secondary" type="button" (click)="onCancel()" [disabled]="isSubmitting">
+        {{ 'comments.cancel' | translate }}
+      </zx-button>
+    </zx-button-controls>
+  </zx-stack>
 </form>

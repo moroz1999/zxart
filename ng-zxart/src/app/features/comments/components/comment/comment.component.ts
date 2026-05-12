@@ -10,6 +10,8 @@ import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.componen
 import {CommentFormComponent} from '../comment-form/comment-form.component';
 import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
 import {ZxStackComponent} from "../../../../shared/ui/zx-stack/zx-stack.component";
+import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
+import {ZxInsetComponent} from '../../../../shared/ui/zx-inset/zx-inset.component';
 import {
   ZxBodyDirective,
   ZxCaptionDirective,
@@ -27,6 +29,8 @@ import {
     ZxButtonComponent,
     ZxPanelComponent,
     ZxStackComponent,
+    ZxInlineComponent,
+    ZxInsetComponent,
     ZxBodyDirective,
     ZxCaptionDirective,
     ZxLinkDirective

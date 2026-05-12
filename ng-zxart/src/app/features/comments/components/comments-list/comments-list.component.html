@@ -1,12 +1,12 @@
 <div class="comments-list">
   <zx-stack spacing="lg">
     <zx-stack *ngIf="isRoot" spacing="lg">
-      <zx-stack direction="row" spacing="md" align="center">
+      <zx-inline spacing="md" align="center">
         <h2 zxHeading2>{{ 'comments.title' | translate }}</h2>
         <zx-button size="sm" color="primary" (click)="toggleForm()">
           {{ (showForm() ? 'comments.cancel' : 'comments.add') | translate }}
         </zx-button>
-      </zx-stack>
+      </zx-inline>
       <zx-panel *ngIf="showForm() && elementId" radius="lg" padding="lg">
         <zx-comment-form [targetId]="elementId" (commentSaved)="onCommentSaved($event)" (cancelled)="hideForm()"></zx-comment-form>
       </zx-panel>
@@ -14,11 +14,7 @@
 
     <zx-viewport-loader [enabled]="isRoot" [loader]="getCommentsLoader" [reload$]="reloadSubject">
       <ng-template #skeleton>
-        <div class="comments-skeleton">
-          <div class="skeleton-item" style="height: 100px; margin-bottom: 16px; border-radius: 8px;"></div>
-          <div class="skeleton-item" style="height: 100px; margin-bottom: 16px; border-radius: 8px;"></div>
-          <div class="skeleton-item" style="height: 100px; margin-bottom: 16px; border-radius: 8px;"></div>
-        </div>
+        <zx-comment-skeleton [count]="3"></zx-comment-skeleton>
       </ng-template>
 
       <ng-template #content let-comments>

@@ -1,8 +1,16 @@
 :root {
-  /* ZxStack Component variables */
-  --zx-stack-spacing-sm: var(--gap-sm);
-  --zx-stack-spacing-md: var(--gap-md);
-  --zx-stack-spacing-lg: var(--gap-lg);
-  --zx-stack-spacing-xl: var(--gap-xl);
-  --zx-stack-spacing-xxl: var(--gap-xxl);
+  /* Empty vertical stack gap. */
+  --zx-stack-gap-none: 0;
+  /* Extra-small vertical stack gap. */
+  --zx-stack-gap-xs: var(--space-4);
+  /* Small vertical stack gap. */
+  --zx-stack-gap-sm: var(--gap-sm);
+  /* Medium vertical stack gap. */
+  --zx-stack-gap-md: var(--gap-md);
+  /* Large vertical stack gap. */
+  --zx-stack-gap-lg: var(--gap-lg);
+  /* Extra-large vertical stack gap. */
+  --zx-stack-gap-xl: var(--gap-xl);
+  /* Double extra-large vertical stack gap. */
+  --zx-stack-gap-xxl: var(--gap-xxl);
 }

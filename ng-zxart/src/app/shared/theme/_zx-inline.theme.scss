@@ -1,0 +1,16 @@
+:root {
+  /* Empty horizontal layout gap. */
+  --zx-inline-gap-none: 0;
+  /* Extra-small horizontal layout gap. */
+  --zx-inline-gap-xs: var(--space-4);
+  /* Small horizontal layout gap. */
+  --zx-inline-gap-sm: var(--gap-sm);
+  /* Medium horizontal layout gap. */
+  --zx-inline-gap-md: var(--gap-md);
+  /* Large horizontal layout gap. */
+  --zx-inline-gap-lg: var(--gap-lg);
+  /* Extra-large horizontal layout gap. */
+  --zx-inline-gap-xl: var(--gap-xl);
+  /* Double extra-large horizontal layout gap. */
+  --zx-inline-gap-xxl: var(--gap-xxl);
+}

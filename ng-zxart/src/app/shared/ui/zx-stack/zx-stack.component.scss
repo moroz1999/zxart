@@ -1,32 +1,33 @@
 :host {
   display: flex;
+  flex-direction: column;
 
-  &.zx-stack--column {
-    flex-direction: column;
+  &.zx-stack--gap-none {
+    gap: var(--zx-stack-gap-none);
   }
 
-  &.zx-stack--row {
-    flex-direction: row;
+  &.zx-stack--gap-xs {
+    gap: var(--zx-stack-gap-xs);
   }
 
-  &.zx-stack--spacing-sm {
-    gap: var(--zx-stack-spacing-sm);
+  &.zx-stack--gap-sm {
+    gap: var(--zx-stack-gap-sm);
   }
 
-  &.zx-stack--spacing-md {
-    gap: var(--zx-stack-spacing-md);
+  &.zx-stack--gap-md {
+    gap: var(--zx-stack-gap-md);
   }
 
-  &.zx-stack--spacing-lg {
-    gap: var(--zx-stack-spacing-lg);
+  &.zx-stack--gap-lg {
+    gap: var(--zx-stack-gap-lg);
   }
 
-  &.zx-stack--spacing-xl {
-    gap: var(--zx-stack-spacing-xl);
+  &.zx-stack--gap-xl {
+    gap: var(--zx-stack-gap-xl);
   }
 
-  &.zx-stack--spacing-xxl {
-    gap: var(--zx-stack-spacing-xxl);
+  &.zx-stack--gap-xxl {
+    gap: var(--zx-stack-gap-xxl);
   }
 
   &.zx-stack--align-center {
@@ -44,4 +45,5 @@
   &.zx-stack--align-stretch {
     align-items: stretch;
   }
+
 }

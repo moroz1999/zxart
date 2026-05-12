@@ -1,8 +1,8 @@
-# zx-stack
+# zx-inline
 
-Vertical flexbox layout container.
+Horizontal flexbox layout container.
 
-`ng-zxart/src/app/shared/ui/zx-stack/`
+`ng-zxart/src/app/shared/ui/zx-inline/`
 
 ## Props
 
@@ -10,5 +10,5 @@ Vertical flexbox layout container.
 |---|---|---|
 | `gap` / `spacing` | `none` \| `xs` \| `sm` \| `md` \| `lg` \| `xl` \| `xxl` | `md` |
 | `align` | `center` \| `start` \| `end` \| `stretch` | — |
-
-Use `zx-inline` for horizontal layout.
+| `justify` | `start` \| `center` \| `end` \| `between` | — |
+| `wrap` | `boolean` | `false` |

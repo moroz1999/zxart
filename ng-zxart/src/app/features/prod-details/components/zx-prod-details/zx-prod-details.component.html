@@ -11,14 +11,14 @@
         [currentTitle]="core.h1">
       </zx-breadcrumbs>
 
-      <div class="prod-details__hero" [class.prod-details__hero--no-cover]="!core.youtubeId">
+      <zx-inline class="prod-details__hero" gap="xl" align="start" [wrap]="true">
         <zx-youtube-embed
           *ngIf="core.youtubeId"
           class="prod-details__cover"
           [youtubeId]="core.youtubeId">
         </zx-youtube-embed>
         <zx-prod-hero class="prod-details__info" [core]="core"></zx-prod-hero>
-      </div>
+      </zx-inline>
 
       <zx-panel *ngIf="core.elementId" padding="none" variant="elevated">
         <zx-prod-screenshots-section [elementId]="core.elementId"></zx-prod-screenshots-section>
@@ -40,10 +40,12 @@
             *ngIf="core.instructions"
             [instructions]="core.instructions">
           </zx-prod-instructions>
-          <div *ngIf="core.tags.length" class="prod-details__tags-section">
-            <span class="prod-details__tags-label">{{ 'prod-details.tags' | translate }}</span>
-            <zx-tags-chips [tags]="core.tags"></zx-tags-chips>
-          </div>
+          <zx-inset *ngIf="core.tags.length" class="prod-details__tags-section" padding="md" side="top">
+            <zx-inline gap="sm" align="start" [wrap]="true">
+              <span class="prod-details__tags-label">{{ 'prod-details.tags' | translate }}</span>
+              <zx-tags-chips [tags]="core.tags"></zx-tags-chips>
+            </zx-inline>
+          </zx-inset>
         </zx-stack>
       </zx-panel>
 

@@ -1,0 +1,56 @@
+:host {
+  display: block;
+  --zx-inset-active-padding: var(--zx-inset-padding-md);
+}
+
+:host.zx-inset--padding-none {
+  --zx-inset-active-padding: var(--zx-inset-padding-none);
+}
+
+:host.zx-inset--padding-xs {
+  --zx-inset-active-padding: var(--zx-inset-padding-xs);
+}
+
+:host.zx-inset--padding-sm {
+  --zx-inset-active-padding: var(--zx-inset-padding-sm);
+}
+
+:host.zx-inset--padding-md {
+  --zx-inset-active-padding: var(--zx-inset-padding-md);
+}
+
+:host.zx-inset--padding-lg {
+  --zx-inset-active-padding: var(--zx-inset-padding-lg);
+}
+
+:host.zx-inset--padding-xl {
+  --zx-inset-active-padding: var(--zx-inset-padding-xl);
+}
+
+:host.zx-inset--side-all {
+  padding: var(--zx-inset-active-padding);
+}
+
+:host.zx-inset--side-block {
+  padding-block: var(--zx-inset-active-padding);
+}
+
+:host.zx-inset--side-inline {
+  padding-inline: var(--zx-inset-active-padding);
+}
+
+:host.zx-inset--side-top {
+  padding-top: var(--zx-inset-active-padding);
+}
+
+:host.zx-inset--side-right {
+  padding-right: var(--zx-inset-active-padding);
+}
+
+:host.zx-inset--side-bottom {
+  padding-bottom: var(--zx-inset-active-padding);
+}
+
+:host.zx-inset--side-left {
+  padding-left: var(--zx-inset-active-padding);
+}

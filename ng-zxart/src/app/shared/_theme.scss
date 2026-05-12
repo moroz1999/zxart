@@ -22,6 +22,9 @@
 @forward './theme/_borders.theme.scss';
 @forward './theme/_zx-user.theme.scss';
 @forward './theme/_zx-stack.theme.scss';
+@forward './theme/_zx-inline.theme.scss';
+@forward './theme/_zx-grid.theme.scss';
+@forward './theme/_zx-inset.theme.scss';
 @forward './theme/_comment.theme.scss';
 @forward './theme/_skeleton.theme.scss';
 @forward './theme/_typography.theme.scss';
@@ -31,6 +34,7 @@
 @forward './theme/_zx-lightbox.theme.scss';
 @forward './theme/_zx-playlist-button.theme.scss';
 @forward './theme/_zx-prod-details-skeleton.theme.scss';
+@forward './theme/_zx-prod-details.theme.scss';
 @forward './theme/_zx-prod-description.theme.scss';
 @forward './theme/_zx-pagination.theme.scss';
 @forward './theme/_zx-tooltip.theme.scss';

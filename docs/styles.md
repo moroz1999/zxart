@@ -144,6 +144,8 @@ LAYOUT RULES
 
 - For related elements, layout systems are MANDATORY:
   Flexbox, Grid, zx-stack
+- Business-level components MUST NOT implement layout with SCSS. Use layout components (`zx-stack`, `zx-inline`, `zx-grid`, `zx-inset`, `zx-panel`) in templates instead.
+- SCSS layout properties (`display: flex/grid`, `gap`, `padding`, `margin`) are allowed only inside atomic UI kit components in `shared/ui` or when styling the external contour of a child component host.
 - Individual margins between related elements are FORBIDDEN.
 - Negative margins are PROHIBITED.
 - calc(-1 * ...) tricks are FORBIDDEN.

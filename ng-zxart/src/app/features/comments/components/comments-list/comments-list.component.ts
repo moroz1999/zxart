@@ -8,10 +8,14 @@ import {CommentComponent} from '../comment/comment.component';
 import {CommentFormComponent} from '../comment-form/comment-form.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ViewportLoaderComponent} from '../../../../shared/components/viewport-loader/viewport-loader.component';
 import {Observable, of, Subject} from 'rxjs';
 import {ZxBodyDirective} from "../../../../shared/directives/typography/typography.directives";
+import {
+  ZxCommentSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-comment-skeleton/zx-comment-skeleton.component';
 
 @Component({
   selector: 'zx-comments-list,zx-comments-list-view',
@@ -23,9 +27,11 @@ import {ZxBodyDirective} from "../../../../shared/directives/typography/typograp
     CommentFormComponent,
     ZxButtonComponent,
     ZxStackComponent,
+    ZxInlineComponent,
     ZxPanelComponent,
     ViewportLoaderComponent,
-    ZxBodyDirective
+    ZxBodyDirective,
+    ZxCommentSkeletonComponent,
   ],
   templateUrl: './comments-list.component.html',
   styleUrls: ['./comments-list.component.scss'],

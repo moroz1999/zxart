@@ -1,0 +1,6 @@
+:root {
+  /* Video column width in product details hero. */
+  --zx-prod-details-video-width: calc((var(--space-64) * 5) + var(--space-40));
+  /* Minimum info column width before wrapping below the video. */
+  --zx-prod-details-info-min-width: calc(var(--space-64) * 5);
+}

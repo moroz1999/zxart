@@ -1,0 +1,68 @@
+:host {
+  display: flex;
+  flex-direction: row;
+}
+
+:host.zx-inline--wrap {
+  flex-wrap: wrap;
+}
+
+:host.zx-inline--gap-none {
+  gap: var(--zx-inline-gap-none);
+}
+
+:host.zx-inline--gap-xs {
+  gap: var(--zx-inline-gap-xs);
+}
+
+:host.zx-inline--gap-sm {
+  gap: var(--zx-inline-gap-sm);
+}
+
+:host.zx-inline--gap-md {
+  gap: var(--zx-inline-gap-md);
+}
+
+:host.zx-inline--gap-lg {
+  gap: var(--zx-inline-gap-lg);
+}
+
+:host.zx-inline--gap-xl {
+  gap: var(--zx-inline-gap-xl);
+}
+
+:host.zx-inline--gap-xxl {
+  gap: var(--zx-inline-gap-xxl);
+}
+
+:host.zx-inline--align-center {
+  align-items: center;
+}
+
+:host.zx-inline--align-start {
+  align-items: flex-start;
+}
+
+:host.zx-inline--align-end {
+  align-items: flex-end;
+}
+
+:host.zx-inline--align-stretch {
+  align-items: stretch;
+}
+
+:host.zx-inline--justify-start {
+  justify-content: flex-start;
+}
+
+:host.zx-inline--justify-center {
+  justify-content: center;
+}
+
+:host.zx-inline--justify-end {
+  justify-content: flex-end;
+}
+
+:host.zx-inline--justify-between {
+  justify-content: space-between;
+}

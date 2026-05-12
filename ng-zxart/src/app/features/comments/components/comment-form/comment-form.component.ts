@@ -8,6 +8,7 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxTextareaComponent} from '../../../../shared/ui/zx-textarea/zx-textarea.component';
 import {ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 
 @Component({
   selector: 'zx-comment-form',
@@ -19,7 +20,8 @@ import {ZxCaptionDirective} from '../../../../shared/directives/typography/typog
     ZxButtonComponent,
     ZxButtonControlsComponent,
     ZxTextareaComponent,
-    ZxCaptionDirective
+    ZxCaptionDirective,
+    ZxStackComponent,
   ],
   templateUrl: './comment-form.component.html',
   styleUrls: ['./comment-form.component.scss'],
