@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ZxBodySmMutedDirective, ZxBodyStrongDirective,} from '../../directives/typography/typography.directives';
+import {TextDirective} from '../typography/directives/text.directive';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
 
@@ -21,8 +21,7 @@ export interface ZxArticlePreviewPublication {
   standalone: true,
   imports: [
     CommonModule,
-    ZxBodyStrongDirective,
-    ZxBodySmMutedDirective,
+    TextDirective,
     ZxButtonComponent,
     ZxPanelComponent,
   ],

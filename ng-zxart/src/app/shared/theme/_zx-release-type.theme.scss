@@ -1,7 +1,8 @@
 :root {
   /* Base pill layout variables. */
-  --zx-release-type-font-size: var(--font-xs);
-  --zx-release-type-padding: 1px var(--space-8);
+  --zx-release-type-font-size: var(--zx-font-size-xs);
+  --zx-release-type-letter-spacing: 0.03em;
+  --zx-release-type-padding: var(--border-width-thin) var(--space-8);
   --zx-release-type-radius: var(--radius-xl);
   --zx-release-type-text-color: var(--white);
 

@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ZxBodySmMutedDirective} from '../../directives/typography/typography.directives';
+import {TextDirective} from '../typography/directives/text.directive';
 
 export interface ZxProdFileListItem {
   readonly id: number;
@@ -13,7 +13,7 @@ export interface ZxProdFileListItem {
 @Component({
   selector: 'zx-prod-files-list',
   standalone: true,
-  imports: [CommonModule, ZxBodySmMutedDirective],
+  imports: [CommonModule, TextDirective],
   templateUrl: './zx-prod-files-list.component.html',
   styleUrls: ['./zx-prod-files-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

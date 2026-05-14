@@ -68,9 +68,6 @@
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: var(--zx-playlist-item-text-color);
-  font-size: var(--zx-playlist-item-font-size);
-  line-height: var(--zx-playlist-item-line-height);
 }
 
 .playlist-item-check {
@@ -80,7 +77,6 @@
 }
 
 .playlist-item-hint {
-  color: var(--zx-playlist-hint-color);
   opacity: 0;
   transition: opacity var(--zx-playlist-transition);
 }

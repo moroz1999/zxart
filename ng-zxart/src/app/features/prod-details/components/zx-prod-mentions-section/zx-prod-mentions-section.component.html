@@ -1,14 +1,14 @@
-<div
-  class="prod-mentions-section"
+<zx-stack
+  spacing="md"
   [appInViewport]="!loaded && !loading"
   (inViewport)="onInViewport()"
 >
   <ng-container *ngIf="loading || (loaded && mentions.length > 0)">
-    <h2 zxHeading2 class="prod-mentions-section__title">{{ 'prod-details.mentions' | translate }}</h2>
+    <h2 appHeading="headline">{{ 'prod-details.mentions' | translate }}</h2>
 
     <zx-comment-skeleton *ngIf="loading" [count]="2"></zx-comment-skeleton>
 
-    <div *ngIf="loaded && mentions.length > 0" class="prod-mentions-section__list">
+    <zx-stack *ngIf="loaded && mentions.length > 0" spacing="lg">
       <zx-article-preview
         *ngFor="let article of mentions; trackBy: trackById"
         [title]="article.title"
@@ -20,6 +20,6 @@
         [imageAlt]="article.publication?.title || article.title"
         [readLinkLabel]="'prod-details.readArticle' | translate"
       ></zx-article-preview>
-    </div>
+    </zx-stack>
   </ng-container>
-</div>
+</zx-stack>

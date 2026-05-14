@@ -2,16 +2,6 @@
   display: block;
 }
 
-.prod-maps-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-12);
-}
-
-.prod-maps-section__title {
-  margin: 0;
-}
-
 .prod-maps-section__speccymaps {
   align-self: flex-start;
 }

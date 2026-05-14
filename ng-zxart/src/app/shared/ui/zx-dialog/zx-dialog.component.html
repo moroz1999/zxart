@@ -1,6 +1,6 @@
 <header class="zx-dialog__header">
   <ng-template #defaultHeader>
-    <h2 class="zx-dialog__title" zxHeading2 *ngIf="titleKey || title">
+    <h2 class="zx-dialog__title" appHeading="headline" *ngIf="titleKey || title">
       {{ titleKey ? (titleKey | translate) : title }}
     </h2>
     <zx-button

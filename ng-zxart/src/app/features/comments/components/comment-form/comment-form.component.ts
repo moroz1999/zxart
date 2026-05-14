@@ -7,7 +7,7 @@ import {CommentsService} from '../../services/comments.service';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxTextareaComponent} from '../../../../shared/ui/zx-textarea/zx-textarea.component';
-import {ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 
 @Component({
@@ -20,11 +20,10 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
     ZxButtonComponent,
     ZxButtonControlsComponent,
     ZxTextareaComponent,
-    ZxCaptionDirective,
+    TextDirective,
     ZxStackComponent,
   ],
   templateUrl: './comment-form.component.html',
-  styleUrls: ['./comment-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentFormComponent implements OnInit {

@@ -8,7 +8,7 @@ import {AuthorBrowserService} from '../../services/author-browser.service';
 import {AuthorListItem} from '../../models/author-list-item';
 import {AuthorFilterOption} from '../../models/author-filter-options';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
-import {ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 import {
   ZxFilterPickerComponent,
   ZxFilterPickerItem
@@ -28,7 +28,7 @@ import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filte
     FormsModule,
     TranslateModule,
     ZxPaginationComponent,
-    ZxCaptionDirective,
+    TextDirective,
     ZxFilterPickerComponent,
     ZxInputComponent,
     ZxAuthorsTableComponent,

@@ -14,7 +14,11 @@
   /* Tag chip inner padding. */
   --zx-tags-chips-chip-padding: var(--space-2) var(--space-8);
   /* Tag chip font size. */
-  --zx-tags-chips-chip-font-size: var(--font-xs);
+  --zx-tags-chips-chip-font-size: var(--zx-font-size-xs);
   /* Remove icon size. */
   --zx-tags-chips-remove-icon-size: 14px;
+  /* Hover background for link chips. */
+  --zx-tags-chips-chip-hover-bg: var(--secondary-200);
+  /* Hover text color for link chips. */
+  --zx-tags-chips-chip-hover-text: var(--text-color);
 }

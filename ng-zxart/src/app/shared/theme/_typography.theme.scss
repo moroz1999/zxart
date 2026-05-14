@@ -1,13 +1,11 @@
 :root {
-  /* Font size tiers — bridge between base --font-* and semantic typography.
-     Use these in component theme variables when you need a specific size
-     without implying a semantic role (e.g. small text that is not a caption). */
-  --zx-font-size-xs: var(--font-xs);
-  --zx-font-size-sm: var(--font-sm);
-  --zx-font-size-md: var(--font-md);
-  --zx-font-size-lg: var(--font-lg);
-  --zx-font-size-xl: var(--font-xl);
-  --zx-font-size-xxl: var(--font-xxl);
+  /* Font size tiers for component theme variables. */
+  --zx-font-size-xs: 11px;
+  --zx-font-size-sm: 13px;
+  --zx-font-size-md: 14px;
+  --zx-font-size-lg: 18px;
+  --zx-font-size-xl: 21px;
+  --zx-font-size-xxl: 23px;
 
   /* Typography Variables */
   --zx-heading-1-size: var(--zx-font-size-xxl);

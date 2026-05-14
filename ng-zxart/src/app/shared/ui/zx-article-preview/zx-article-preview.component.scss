@@ -35,17 +35,12 @@
 }
 
 .zx-article-preview__link {
-  color: inherit;
-  text-decoration: none;
+  cursor: pointer;
 }
 
 .zx-article-preview__title {
   margin: 0;
   min-width: 0;
-}
-
-.zx-article-preview__publication-separator {
-  color: var(--zx-article-preview-muted-color);
 }
 
 .zx-article-preview__meta {

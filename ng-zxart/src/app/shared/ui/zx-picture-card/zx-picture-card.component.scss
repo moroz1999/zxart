@@ -36,35 +36,17 @@
 
 .picture-title {
   display: block;
-  color: currentColor;
-  text-decoration: none;
-  font-weight: 500;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   margin-bottom: var(--space-4);
-
-  &:hover {
-    text-decoration: underline;
-  }
 }
 
 .picture-authors {
-  color: var(--text-light-color);
-  font-size: var(--zx-caption-font-size);
   margin-bottom: var(--space-4);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-
-  a {
-    color: inherit;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
 }
 
 .picture-party {
@@ -75,17 +57,11 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   margin-bottom: var(--space-8);
+}
 
-  a {
-    color: var(--text-light-color);
-    text-decoration: none;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
+.picture-party a {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .medal {
@@ -95,9 +71,6 @@
   width: var(--zx-medal-size);
   height: var(--zx-medal-size);
   border-radius: 50%;
-  font-size: var(--zx-caption-font-size);
-  font-weight: 700;
-  color: var(--zx-medal-text-color);
 }
 
 .medal-gold {
@@ -113,7 +86,6 @@
 }
 
 .picture-year {
-  color: var(--pseudo-link-color);
   flex-shrink: 0;
 }
 

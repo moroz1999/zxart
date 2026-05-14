@@ -1,0 +1,168 @@
+:root {
+  /* Display typography used by page-level h1 headings. */
+  --app-typography-display-size: var(--zx-heading-1-size);
+  --app-typography-display-weight: var(--zx-heading-1-weight);
+  --app-typography-display-line-height: var(--zx-heading-1-line-height);
+
+  /* Headline typography used by section-level h2 headings. */
+  --app-typography-headline-size: var(--zx-heading-2-size);
+  --app-typography-headline-weight: var(--zx-heading-2-weight);
+  --app-typography-headline-line-height: var(--zx-heading-2-line-height);
+
+  /* Title typography used by panel and subsection headings. */
+  --app-typography-title-size: var(--zx-heading-3-size);
+  --app-typography-title-weight: var(--zx-heading-3-weight);
+  --app-typography-title-line-height: var(--zx-heading-3-line-height);
+
+  /* Body typography used by primary readable content. */
+  --app-typography-body-size: var(--zx-body-size);
+  --app-typography-body-weight: var(--zx-body-weight);
+  --app-typography-body-line-height: var(--zx-body-line-height);
+
+  /* Small body typography used by secondary readable paragraphs. */
+  --app-typography-body-sm-size: var(--zx-font-size-sm);
+  --app-typography-body-sm-weight: 400;
+  --app-typography-body-sm-line-height: 1.4;
+
+  /* Caption typography used by supporting descriptions and metadata. */
+  --app-typography-caption-size: var(--zx-caption-size);
+  --app-typography-caption-weight: var(--zx-caption-weight);
+  --app-typography-caption-line-height: var(--zx-caption-line-height);
+
+  /* Label typography used by compact labels and control captions. */
+  --app-typography-label-size: var(--zx-font-size-sm);
+  --app-typography-label-weight: 400;
+  --app-typography-label-line-height: 1.4;
+
+  /* Primary text tone. */
+  --app-text-color-primary: var(--text-color);
+
+  /* Muted text tone. */
+  --app-text-color-muted: var(--text-light-color);
+
+  /* Link text tone. */
+  --app-text-color-link: var(--zx-link-color);
+
+  /* Muted link text tone. */
+  --app-text-color-muted-link: var(--text-light-color);
+
+  /* Alternative link text tone. */
+  --app-text-color-link-alt: var(--zx-link-alt-color);
+
+  /* Error text tone. */
+  --app-text-color-danger: var(--error-color);
+
+  /* Link decoration. */
+  --app-text-decoration-link: var(--zx-link-decoration);
+
+  /* Link hover decoration. */
+  --app-text-decoration-link-hover: var(--zx-link-hover-decoration);
+}
+
+.app-typography-display {
+  font-size: var(--app-typography-display-size);
+  font-weight: var(--app-typography-display-weight);
+  line-height: var(--app-typography-display-line-height);
+  margin: 0;
+}
+
+.app-typography-headline {
+  font-size: var(--app-typography-headline-size);
+  font-weight: var(--app-typography-headline-weight);
+  line-height: var(--app-typography-headline-line-height);
+  margin: 0;
+}
+
+.app-typography-title {
+  font-size: var(--app-typography-title-size);
+  font-weight: var(--app-typography-title-weight);
+  line-height: var(--app-typography-title-line-height);
+  margin: 0;
+}
+
+.app-typography-body {
+  font-size: var(--app-typography-body-size);
+  font-weight: var(--app-typography-body-weight);
+  line-height: var(--app-typography-body-line-height);
+}
+
+.app-typography-body-sm {
+  font-size: var(--app-typography-body-sm-size);
+  font-weight: var(--app-typography-body-sm-weight);
+  line-height: var(--app-typography-body-sm-line-height);
+}
+
+.app-typography-body-sm :where(p, div, li) {
+  font-size: var(--app-typography-body-sm-size);
+  font-weight: var(--app-typography-body-sm-weight);
+  line-height: var(--app-typography-body-sm-line-height);
+}
+
+.app-typography-caption {
+  font-size: var(--app-typography-caption-size);
+  font-weight: var(--app-typography-caption-weight);
+  line-height: var(--app-typography-caption-line-height);
+}
+
+.app-typography-label {
+  font-size: var(--app-typography-label-size);
+  font-weight: var(--app-typography-label-weight);
+  line-height: var(--app-typography-label-line-height);
+}
+
+.app-typography-tone-primary {
+  color: var(--app-text-color-primary);
+}
+
+.app-typography-tone-muted {
+  color: var(--app-text-color-muted);
+}
+
+.app-typography-tone-strong {
+  color: var(--app-text-color-primary);
+  font-weight: var(--zx-body-strong-weight);
+}
+
+.app-typography-tone-link {
+  color: var(--app-text-color-link);
+  text-decoration: var(--app-text-decoration-link);
+  cursor: pointer;
+}
+
+.app-typography-tone-link:hover {
+  text-decoration: var(--app-text-decoration-link-hover);
+}
+
+.app-typography-tone-muted-link {
+  color: var(--app-text-color-muted-link);
+  text-decoration: var(--app-text-decoration-link);
+  cursor: pointer;
+}
+
+.app-typography-tone-muted-link:hover {
+  text-decoration: var(--app-text-decoration-link-hover);
+}
+
+.app-typography-tone-link-alt {
+  color: var(--app-text-color-link-alt);
+  text-decoration: var(--app-text-decoration-link);
+  cursor: pointer;
+}
+
+.app-typography-tone-link-alt:hover {
+  text-decoration: var(--app-text-decoration-link-hover);
+}
+
+.app-typography-tone-danger {
+  color: var(--app-text-color-danger);
+}
+
+.app-typography-tone-inherit {
+  color: inherit;
+}
+
+.app-typography-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,17 +1,9 @@
 :host {
   display: block;
-  font-size: var(--font-md);
-  line-height: 1.65;
 }
 
 .prod-description--plain {
   white-space: pre-wrap;
-}
-
-.prod-description-skeleton {
-  display: flex;
-  flex-direction: column;
-  gap: var(--zx-prod-description-skeleton-gap);
 }
 
 .prod-description-skeleton__line {

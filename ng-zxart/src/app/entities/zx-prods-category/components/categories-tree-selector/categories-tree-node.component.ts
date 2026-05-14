@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
 import {NgForOf, NgIf} from '@angular/common';
 import {SvgIconComponent} from 'angular-svg-icon';
 import {CategorySelectorDto} from '../../models/categories-selector-dto';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 
 @Component({
     selector: 'zx-categories-tree-node',
@@ -9,7 +10,7 @@ import {CategorySelectorDto} from '../../models/categories-selector-dto';
     styleUrls: ['./categories-tree-node.component.scss'],
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgForOf, NgIf, SvgIconComponent],
+    imports: [NgForOf, NgIf, SvgIconComponent, TextDirective],
 })
 export class CategoriesTreeNodeComponent {
     @Input() node!: CategorySelectorDto;

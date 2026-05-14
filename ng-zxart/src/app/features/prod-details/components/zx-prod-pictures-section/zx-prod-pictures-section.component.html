@@ -1,13 +1,13 @@
-<div
-  class="prod-pictures-section"
+<zx-stack
+  spacing="md"
   [appInViewport]="!mounted"
   (inViewport)="onInViewport()"
 >
-  <h2 zxHeading2 class="prod-pictures-section__title">{{ 'prod-details.pictures' | translate }}</h2>
+  <h2 appHeading="headline">{{ 'prod-details.pictures' | translate }}</h2>
   <zx-picture-grid-skeleton *ngIf="!mounted || loading" [count]="4"></zx-picture-grid-skeleton>
   <zx-pictures-list-inline
     *ngIf="mounted && !loading && !error && pictures.length > 0"
     [elementId]="elementId"
     [picturesInput]="pictures"
   ></zx-pictures-list-inline>
-</div>
+</zx-stack>

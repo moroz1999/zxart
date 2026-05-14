@@ -8,6 +8,7 @@ import {ZxButtonComponent} from '../../../../../shared/ui/zx-button/zx-button.co
 import {ZxButtonControlsComponent} from '../../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxDialogComponent} from '../../../../../shared/ui/zx-dialog/zx-dialog.component';
 import {FormsModule} from '@angular/forms';
+import {TextDirective} from '../../../../../shared/ui/typography/directives/text.directive';
 
 interface DialogData {
   selectValuesLabel: string;
@@ -28,6 +29,7 @@ interface DialogData {
     NgForOf,
     NgIf,
     FormsModule,
+    TextDirective,
   ],
   standalone: true,
 })

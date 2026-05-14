@@ -3,8 +3,8 @@
     <zx-tune-table-skeleton [count]="6"></zx-tune-table-skeleton>
   </zx-table>
 
-  <div *ngIf="error" zxCaption>{{ 'firstpage.error' | translate }}</div>
-  <div *ngIf="!loading && !error && yearGroups.length === 0" zxCaption>{{ 'firstpage.empty' | translate }}</div>
+  <div *ngIf="error" appText="caption" tone="muted">{{ 'firstpage.error' | translate }}</div>
+  <div *ngIf="!loading && !error && yearGroups.length === 0" appText="caption" tone="muted">{{ 'firstpage.empty' | translate }}</div>
 
   <ng-container *ngIf="!loading && !error && yearGroups.length > 0">
     <ng-container *ngIf="{ id: playingTuneId$ | async } as playing">

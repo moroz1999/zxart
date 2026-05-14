@@ -9,6 +9,6 @@ Horizontal flexbox layout container.
 | Prop | Values | Default |
 |---|---|---|
 | `gap` / `spacing` | `none` \| `xs` \| `sm` \| `md` \| `lg` \| `xl` \| `xxl` | `md` |
-| `align` | `center` \| `start` \| `end` \| `stretch` | — |
+| `align` | `center` \| `start` \| `end` \| `stretch` \| `baseline` | — |
 | `justify` | `start` \| `center` \| `end` \| `between` | — |
 | `wrap` | `boolean` | `false` |

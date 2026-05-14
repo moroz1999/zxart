@@ -12,7 +12,7 @@ import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/c
 export class ZxInlineComponent {
   @Input() gap: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' = 'md';
   @Input() spacing: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | null = null;
-  @Input() align: 'center' | 'start' | 'end' | 'stretch' | null = null;
+  @Input() align: 'center' | 'start' | 'end' | 'stretch' | 'baseline' | null = null;
   @Input() justify: 'start' | 'center' | 'end' | 'between' | null = null;
   @Input() wrap = false;
 

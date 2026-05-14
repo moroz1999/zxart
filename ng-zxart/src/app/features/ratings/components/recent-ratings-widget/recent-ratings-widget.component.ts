@@ -11,7 +11,7 @@ import {ZxSpinnerComponent} from '../../../../shared/ui/zx-spinner/zx-spinner.co
 import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
-import {ZxLinkDirective} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 
 const PAGE_SIZE = 20;
 
@@ -27,7 +27,7 @@ const PAGE_SIZE = 20;
     ZxUserComponent,
     ZxButtonComponent,
     ZxButtonControlsComponent,
-    ZxLinkDirective,
+    TextDirective,
   ],
   templateUrl: './recent-ratings-widget.component.html',
   styleUrls: ['./recent-ratings-widget.component.scss'],

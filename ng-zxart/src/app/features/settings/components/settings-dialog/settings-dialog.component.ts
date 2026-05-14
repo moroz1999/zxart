@@ -8,7 +8,7 @@ import {Theme} from '../../models/preference.dto';
 import {ZxToggleComponent, ZxToggleOption} from '../../../../shared/ui/zx-toggle/zx-toggle.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxDialogComponent} from '../../../../shared/ui/zx-dialog/zx-dialog.component';
-import {ZxHeading3Directive} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 
 @Component({
   selector: 'zx-settings-dialog',
@@ -19,7 +19,7 @@ import {ZxHeading3Directive} from '../../../../shared/directives/typography/typo
     ZxDialogComponent,
     ZxToggleComponent,
     ZxStackComponent,
-    ZxHeading3Directive,
+    HeadingDirective,
   ],
   templateUrl: './settings-dialog.component.html',
   styleUrls: ['./settings-dialog.component.scss'],

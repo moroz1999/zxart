@@ -1,8 +1,20 @@
 :root {
+  /* Grid column gap between screenshots. */
+  --zx-prod-screenshots-grid-gap: var(--gap-sm);
+  /* Corner radius of each screenshot item. */
+  --zx-prod-screenshots-item-radius: var(--radius-sm);
   /* "See more" cell background in the screenshots grid. */
   --zx-prod-screenshots-more-bg: var(--secondary-100);
   /* "See more" cell text color. */
   --zx-prod-screenshots-more-text: var(--text-light-color);
   /* "See more" cell border color. */
   --zx-prod-screenshots-more-border: var(--secondary-200);
+  /* "See more" cell border width. */
+  --zx-prod-screenshots-more-border-width: var(--border-width-thin);
+  /* "See more" cell corner radius. */
+  --zx-prod-screenshots-more-radius: var(--radius-sm);
+  /* "See more" cell padding. */
+  --zx-prod-screenshots-more-padding: var(--space-8);
+  /* "See more" cell font weight. */
+  --zx-prod-screenshots-more-font-weight: 700;
 }

@@ -1,20 +1,18 @@
-<div
-  class="prod-releases-section"
+<zx-stack
+  spacing="md"
   [appInViewport]="!loaded && !loading"
   (inViewport)="onInViewport()"
 >
   <ng-container *ngIf="loading || (loaded && releases.length > 0)">
-    <h2 zxHeading2 class="prod-releases-section__title">{{ 'prod-details.releases' | translate }}</h2>
-
     <zx-row-skeleton *ngIf="loading" [count]="3"></zx-row-skeleton>
 
     <ng-container *ngIf="loaded && filteredReleases.length > 0 || loaded && releases.length > 0">
       <zx-filter-bar>
-        <ng-container *ngIf="availableLangs.length > 1">
+        <ng-container *ngIf="availableLangs.length > 0">
           <span class="prod-releases-section__filter-label">{{ 'release-row.col-language' | translate }}:</span>
           <zx-button-controls>
             <zx-button
-              *ngFor="let lang of allLangOptions"
+              *ngFor="let lang of allLangOptions; trackBy: trackByCode"
               size="xs"
               [color]="filterLang === lang.code ? 'secondary' : 'outlined'"
               (click)="setFilterLang(lang.code)">
@@ -27,7 +25,7 @@
           <span class="prod-releases-section__filter-label">{{ 'release-row.col-releasetype' | translate }}:</span>
           <zx-button-controls>
             <zx-button
-              *ngFor="let type of allTypeOptions"
+              *ngFor="let type of allTypeOptions; trackBy: trackByCode"
               size="xs"
               [color]="filterType === type.code ? 'secondary' : 'outlined'"
               (click)="setFilterType(type.code)">
@@ -59,13 +57,14 @@
             <thead>
               <tr>
                 <th class="prod-releases-section__col-thumb"></th>
-                <th class="prod-releases-section__col-title">{{ 'release-row.col-title' | translate }}</th>
+                <th class="prod-releases-section__col-title" (click)="sortBy('title')">
+                  {{ 'release-row.col-title' | translate }}{{ sortArrow('title') }}
+                </th>
                 <th class="prod-releases-section__col-year" (click)="sortBy('year')">
                   {{ 'release-row.col-year' | translate }}{{ sortArrow('year') }}
                 </th>
                 <th class="prod-releases-section__col-type">{{ 'release-row.col-releasetype' | translate }}</th>
                 <th class="prod-releases-section__col-language">{{ 'release-row.col-language' | translate }}</th>
-                <th class="prod-releases-section__col-party"></th>
                 <th class="prod-releases-section__col-hardware">{{ 'release-row.col-hardware' | translate }}</th>
                 <th class="prod-releases-section__col-format"></th>
                 <th class="prod-releases-section__col-downloads" (click)="sortBy('downloads')">
@@ -99,4 +98,4 @@
       </ng-container>
     </ng-container>
   </ng-container>
-</div>
+</zx-stack>

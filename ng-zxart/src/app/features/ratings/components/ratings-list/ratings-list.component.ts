@@ -6,11 +6,7 @@ import {RatingsService} from '../../services/ratings.service';
 import {RatingDto} from '../../models/rating.dto';
 import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
-import {
-  ZxBodyDirective,
-  ZxCaptionDirective,
-  ZxHeading2Directive
-} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 import {
   ZxRowSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
@@ -23,9 +19,9 @@ import {
     TranslateModule,
     ZxUserComponent,
     ZxTableComponent,
-    ZxBodyDirective,
-    ZxCaptionDirective,
-    ZxHeading2Directive,
+    TextDirective,
+    TextDirective,
+    HeadingDirective,
     ZxRowSkeletonComponent
   ],
   templateUrl: './ratings-list.component.html',

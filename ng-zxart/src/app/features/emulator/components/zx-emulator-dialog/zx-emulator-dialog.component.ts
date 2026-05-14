@@ -16,7 +16,7 @@ import {DIALOG_DATA, DialogRef} from '@angular/cdk/dialog';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxDialogComponent} from '../../../../shared/ui/zx-dialog/zx-dialog.component';
-import {ZxBodySmMutedDirective} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 import {EmulatorEngine, EmulatorType} from '../../engines/emulator-engine';
 import {UspEngine} from '../../engines/usp.engine';
 import {Zx81Engine} from '../../engines/zx81.engine';
@@ -44,7 +44,7 @@ const F2_SCREENSHOT_DELAY_MS = 300;
     ZxDialogComponent,
     ZxButtonComponent,
     ZxButtonControlsComponent,
-    ZxBodySmMutedDirective,
+    TextDirective,
   ],
   templateUrl: './zx-emulator-dialog.component.html',
   styleUrl: './zx-emulator-dialog.component.scss',

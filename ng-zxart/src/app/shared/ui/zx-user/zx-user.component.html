@@ -5,9 +5,9 @@
   [name]="getIconName(badge)"
 ></svg-icon>
 
-<a *ngIf="user.url && !linkDisabled; else noUrl" [href]="user.url" zxLink zxCaption class="zx-user__name">
+<a *ngIf="user.url && !linkDisabled; else noUrl" [href]="user.url" appText="caption" tone="link" class="zx-user__name">
   {{ user.name }}
 </a>
 <ng-template #noUrl>
-  <span zxCaption class="zx-user__name">{{ user.name }}</span>
+  <span appText="caption" [tone]="namePrimary ? 'primary' : 'muted'" class="zx-user__name">{{ user.name }}</span>
 </ng-template>

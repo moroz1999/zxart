@@ -8,7 +8,7 @@ import {CurrentUserService} from '../../../../shared/services/current-user.servi
 import {BackendLinksService} from '../../services/backend-links.service';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxFormDirective} from '../../../../shared/directives/form/zx-form.directive';
-import {ZxBodySmMutedDirective, ZxLinkDirective} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ZxPopoverMenuItemComponent} from '../../../../shared/ui/zx-popover-menu-item/zx-popover-menu-item.component';
 import {ZxHeaderPopoverComponent} from '../../../../shared/ui/zx-header-popover/zx-header-popover.component';
 import {environment} from '../../../../../environments/environment';
@@ -25,8 +25,8 @@ import {environment} from '../../../../../environments/environment';
     SvgIconComponent,
     ZxButtonComponent,
     ZxFormDirective,
-    ZxBodySmMutedDirective,
-    ZxLinkDirective,
+    TextDirective,
+    TextDirective,
     ZxPopoverMenuItemComponent,
     ZxHeaderPopoverComponent,
   ],

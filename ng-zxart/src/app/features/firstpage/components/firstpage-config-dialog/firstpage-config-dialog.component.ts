@@ -20,6 +20,7 @@ import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.componen
 import {ZxSelectComponent, ZxSelectOption} from '../../../../shared/ui/zx-select/zx-select.component';
 import {ZxCheckboxFieldComponent} from '../../../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 import {ZxDialogComponent} from '../../../../shared/ui/zx-dialog/zx-dialog.component';
+import {LabelDirective} from '../../../../shared/ui/typography/directives/label.directive';
 import {environment} from '../../../../../environments/environment';
 
 @Component({
@@ -37,6 +38,7 @@ import {environment} from '../../../../../environments/environment';
     ZxInputComponent,
     ZxSelectComponent,
     ZxCheckboxFieldComponent,
+    LabelDirective,
   ],
   templateUrl: './firstpage-config-dialog.component.html',
   styleUrls: ['./firstpage-config-dialog.component.scss'],

@@ -1,10 +1,10 @@
-<div
-  class="prod-screenshots-section"
+<zx-stack
+  spacing="md"
   [appInViewport]="!loaded && !loading"
   (inViewport)="onInViewport()"
 >
   <ng-container *ngIf="loading || (loaded && files.length > 0)">
-    <h2 zxHeading2 class="prod-screenshots-section__title">{{ titleKey | translate }}</h2>
+    <h2 appHeading="headline">{{ titleKey | translate }}</h2>
 
     <zx-screenshot-grid-skeleton *ngIf="loading" [count]="3"></zx-screenshot-grid-skeleton>
 
@@ -26,7 +26,7 @@
             [lightbox]="i"
             [gallery]="galleryId"
           />
-          <figcaption *ngIf="file.author && i > 0" zxCaption>
+          <figcaption *ngIf="file.author && i > 0" appText="caption" tone="muted">
             {{ file.author }}
           </figcaption>
         </figure>
@@ -42,4 +42,4 @@
       </div>
     </ng-container>
   </ng-container>
-</div>
+</zx-stack>

@@ -8,7 +8,7 @@ import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.
 import {
   ZxTuneTableSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-tune-table-skeleton/zx-tune-table-skeleton.component';
-import {ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
 import {ZxSortSelectComponent} from '../../../../shared/ui/zx-sort-select/zx-sort-select.component';
 import {PlayerService} from '../../../player/services/player.service';
@@ -24,7 +24,7 @@ import {BrowserBaseComponent} from '../../../../shared/browser-base.component';
     ZxTableComponent,
     ZxTuneRowComponent,
     ZxTuneTableSkeletonComponent,
-    ZxCaptionDirective,
+    TextDirective,
     ZxPaginationComponent,
     ZxSortSelectComponent,
   ],

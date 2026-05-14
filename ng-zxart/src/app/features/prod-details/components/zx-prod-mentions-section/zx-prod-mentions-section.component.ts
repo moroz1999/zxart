@@ -6,9 +6,10 @@ import {
   ZxCommentSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-comment-skeleton/zx-comment-skeleton.component';
 import {ZxArticlePreviewComponent} from '../../../../shared/ui/zx-article-preview/zx-article-preview.component';
-import {ZxHeading2Directive} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ProdMentionsApiService} from '../../services/prod-mentions-api.service';
 import {PressArticlePreviewDto} from '../../models/press-article.dto';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 
 @Component({
   selector: 'zx-prod-mentions-section',
@@ -19,7 +20,8 @@ import {PressArticlePreviewDto} from '../../models/press-article.dto';
     InViewportDirective,
     ZxCommentSkeletonComponent,
     ZxArticlePreviewComponent,
-    ZxHeading2Directive,
+    HeadingDirective,
+    ZxStackComponent,
   ],
   templateUrl: './zx-prod-mentions-section.component.html',
   styleUrls: ['./zx-prod-mentions-section.component.scss'],

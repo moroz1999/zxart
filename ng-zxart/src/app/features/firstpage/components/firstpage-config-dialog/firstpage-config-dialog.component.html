@@ -16,7 +16,7 @@
         class="module-checkbox"
       ></zx-checkbox-field>
       <div class="module-settings" *ngIf="mod.enabled">
-        <label class="setting-label">
+        <label class="setting-label" appLabel>
           {{ 'firstpage.settings.limit' | translate }}
           <zx-input
             type="number"
@@ -26,7 +26,7 @@
             [(ngModel)]="mod.settings.limit"
           ></zx-input>
         </label>
-        <label class="setting-label" *ngIf="hasMinRating(mod.type)">
+        <label class="setting-label" appLabel *ngIf="hasMinRating(mod.type)">
           {{ 'firstpage.settings.minRating' | translate }}
           <zx-input
             type="number"
@@ -37,7 +37,7 @@
             [(ngModel)]="mod.settings.minRating"
           ></zx-input>
         </label>
-        <label class="setting-label" *ngIf="hasStartYear(mod.type)">
+        <label class="setting-label" appLabel *ngIf="hasStartYear(mod.type)">
           {{ 'firstpage.settings.startYear' | translate }}
           <zx-select
             [options]="startYearOptions"

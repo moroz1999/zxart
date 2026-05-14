@@ -7,7 +7,7 @@
       [errorMessage]="contentErrorMessage | translate"
     ></zx-textarea>
 
-    <div *ngIf="errorMessage" zxCaption class="comment-form__error">
+    <div *ngIf="errorMessage" appText="caption" tone="danger" class="comment-form__error">
       {{ errorMessage }}
     </div>
 

@@ -13,7 +13,8 @@ import {PictureGalleryItem} from '../../../picture-gallery/models/picture-galler
 import {LightboxModule} from 'ng-gallery/lightbox';
 import {ProdScreenshotsApiService} from '../../services/prod-screenshots-api.service';
 import {ProdFileDto} from '../../models/prod-file.dto';
-import {ZxCaptionDirective, ZxHeading2Directive,} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 
 @Component({
   selector: 'zx-prod-screenshots-section',
@@ -25,8 +26,9 @@ import {ZxCaptionDirective, ZxHeading2Directive,} from '../../../../shared/direc
     ZxScreenshotGridSkeletonComponent,
     PictureGalleryHostComponent,
     LightboxModule,
-    ZxCaptionDirective,
-    ZxHeading2Directive,
+    TextDirective,
+    HeadingDirective,
+    ZxStackComponent,
   ],
   templateUrl: './zx-prod-screenshots-section.component.html',
   styleUrls: ['./zx-prod-screenshots-section.component.scss'],

@@ -1,14 +1,14 @@
-<div *ngIf="description === null; else descriptionContent" class="prod-description-skeleton">
+<zx-stack *ngIf="description === null; else descriptionContent" spacing="sm">
   <zx-skeleton-bone
     *ngFor="let line of skeletonLines; index as i"
     class="prod-description-skeleton__line"
     [style.animation-delay.ms]="i * 80"
   ></zx-skeleton-bone>
-</div>
+</zx-stack>
 
 <ng-template #descriptionContent>
-  <div *ngIf="htmlDescription; else plainText" [innerHTML]="description"></div>
+  <div *ngIf="htmlDescription; else plainText" appText="bodySm" [innerHTML]="description"></div>
   <ng-template #plainText>
-    <div class="prod-description--plain">{{ description }}</div>
+    <div class="prod-description--plain" appText="bodySm">{{ description }}</div>
   </ng-template>
 </ng-template>

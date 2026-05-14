@@ -1,5 +1,3 @@
-@use "../../../../shared/theme/typography.theme" as typography;
-
 :host-context(.comment-panel:not(.has-target)) .comment-layout {
   display: block;
 }
@@ -23,13 +21,7 @@
 }
 
 .comment-target-title {
-  font-size: 13px;
-  line-height: 1.3;
   word-break: break-word;
-}
-
-.comment-target-author {
-  color: var(--color-text-secondary);
 }
 
 .comment-target-inline {
@@ -41,17 +33,6 @@
   min-width: 0;
 }
 
-.comment-date {
-  color: var(--zx-comment-date-color);
-}
-
 .comment-content {
-  line-height: 1.4;
   word-break: break-word;
-
-  ::ng-deep {
-    a {
-      @include typography.link;
-    }
-  }
 }

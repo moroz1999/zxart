@@ -51,6 +51,10 @@
   align-items: stretch;
 }
 
+:host.zx-inline--align-baseline {
+  align-items: baseline;
+}
+
 :host.zx-inline--justify-start {
   justify-content: flex-start;
 }

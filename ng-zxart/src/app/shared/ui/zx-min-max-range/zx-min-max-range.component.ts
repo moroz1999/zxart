@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {ZxCaptionDirective} from '../../directives/typography/typography.directives';
+import {TextDirective} from '../typography/directives/text.directive';
 
 export type ZxMinMaxRangeValue = {
   min: number;
@@ -23,7 +23,7 @@ type ZxRangeThumb = 'min' | 'max';
 @Component({
   selector: 'zx-min-max-range',
   standalone: true,
-  imports: [CommonModule, ZxCaptionDirective],
+  imports: [CommonModule, TextDirective],
   templateUrl: './zx-min-max-range.component.html',
   styleUrls: ['./zx-min-max-range.component.scss'],
   providers: [

@@ -27,16 +27,16 @@
 
 <ng-template #loadedTpl>
   <ng-container *ngIf="error; else dataTpl">
-    <p zxBody class="zx-search-results__error">{{ 'search.error' | translate }}</p>
+    <p appText="body" class="zx-search-results__error">{{ 'search.error' | translate }}</p>
   </ng-container>
 
   <ng-template #dataTpl>
-    <h1 zxHeading1 class="zx-search-results__heading">
+    <h1 appHeading="display" class="zx-search-results__heading">
       {{ headingTranslationKey() | translate: { phrase: phrase, page: currentPage } }}
     </h1>
 
     <zx-filter-bar *ngIf="typeFilters.length > 1" class="zx-search-results__filters">
-      <span zxCaption class="zx-search-results__filters-label">{{ 'search.filters.types' | translate }}</span>
+      <span appText="caption" tone="muted" class="zx-search-results__filters-label">{{ 'search.filters.types' | translate }}</span>
       <div class="zx-search-results__filter-options">
         <zx-checkbox-field
           *ngFor="let opt of typeFilters; trackBy: trackByOptionValue"
@@ -56,7 +56,7 @@
       <ng-container *ngIf="data && data.sets.length > 0; else emptyTpl">
         <ng-container *ngFor="let set of data.sets; trackBy: trackBySetType">
           <div class="zx-search-results__set">
-            <h2 zxHeading2 class="zx-search-results__set-heading">
+            <h2 appHeading="headline" class="zx-search-results__set-heading">
               {{ setLabelKey(set.type) | translate }}
             </h2>
 
@@ -135,7 +135,7 @@
       </ng-container>
 
       <ng-template #emptyTpl>
-        <p zxBody class="zx-search-results__empty">{{ 'search.empty' | translate }}</p>
+        <p appText="body" class="zx-search-results__empty">{{ 'search.empty' | translate }}</p>
       </ng-template>
 
       <div *ngIf="pageLoading" class="zx-search-results__overlay" aria-live="polite">

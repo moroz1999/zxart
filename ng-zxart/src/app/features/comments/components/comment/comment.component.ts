@@ -12,11 +12,7 @@ import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
 import {ZxStackComponent} from "../../../../shared/ui/zx-stack/zx-stack.component";
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxInsetComponent} from '../../../../shared/ui/zx-inset/zx-inset.component';
-import {
-  ZxBodyDirective,
-  ZxCaptionDirective,
-  ZxLinkDirective
-} from '../../../../shared/directives/typography/typography.directives';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 
 @Component({
   selector: 'zx-comment',
@@ -31,9 +27,7 @@ import {
     ZxStackComponent,
     ZxInlineComponent,
     ZxInsetComponent,
-    ZxBodyDirective,
-    ZxCaptionDirective,
-    ZxLinkDirective
+    TextDirective
   ],
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss'],

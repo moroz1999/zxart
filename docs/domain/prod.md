@@ -103,6 +103,7 @@ Software production for ZX Spectrum - games, demos, utilities and other software
 - Prod details core data does not include edit/delete privileges. Editing controls use shared `zx-editing-controls` and request privileges separately for authenticated users only.
 - Prod editing controls are action buttons, not links. They render through `zx-button` without `href` and navigate to legacy action URLs from click handlers.
 - The legacy details template mounts `zx-prod-details` directly; Angular renders the page title.
+- Prod details hero groups authors by roles before publishers, developer groups, and party metadata. Authors without roles remain under the generic authors label.
 - Product description loading state renders one paragraph skeleton with three thin ribs.
 - Emulator screenshots launched from prod details release rows are uploaded to the parent prod. The `uploadScreenshot` privilege must be requested once for the prod element and reused by all release play buttons.
 

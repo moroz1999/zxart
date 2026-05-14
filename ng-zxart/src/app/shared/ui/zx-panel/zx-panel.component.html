@@ -1,7 +1,7 @@
 <ng-container *ngIf="title">
-  <div *ngIf="titleLevel === 'h2'; else h3Title" zxHeading2 class="zx-panel__title">{{ title }}</div>
+  <h2 *ngIf="titleLevel === 'h2'; else h3Title" appHeading="headline" class="zx-panel__title">{{ title }}</h2>
   <ng-template #h3Title>
-    <div zxHeading3 class="zx-panel__title">{{ title }}</div>
+    <h3 appHeading="title" class="zx-panel__title">{{ title }}</h3>
   </ng-template>
 </ng-container>
 <div class="zx-panel__body">

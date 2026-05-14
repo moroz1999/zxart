@@ -26,7 +26,7 @@
         <ng-container *ngIf="links$ | async as links">
 
           <ng-container *ngIf="user.userName !== 'anonymous'; else loginForm">
-            <div class="lt-user-name" zxBodySmMuted>{{ user.userName }}</div>
+            <div class="lt-user-name" appText="label" tone="muted">{{ user.userName }}</div>
             <div class="lt-menu-items">
               <zx-popover-menu-item *ngIf="links.profileUrl" [href]="links.profileUrl!">
                 {{ 'login.account' | translate }}
@@ -89,13 +89,13 @@
                   *ngIf="links.registrationUrl"
                   [href]="links.registrationUrl"
                   class="lt-link"
-                  zxLink
+                  appText="body" tone="link"
                 >{{ 'login.register' | translate }}</a>
                 <a
                   *ngIf="links.passwordReminderUrl"
                   [href]="links.passwordReminderUrl"
                   class="lt-link"
-                  zxLink
+                  appText="body" tone="link"
                 >{{ 'login.forgot-password' | translate }}</a>
               </div>
             </form>

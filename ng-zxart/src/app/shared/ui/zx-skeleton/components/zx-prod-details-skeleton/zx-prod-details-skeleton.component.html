@@ -1,46 +1,114 @@
-<zx-skeleton-bone class="skeleton-prod-details-title" [animated]="animated"></zx-skeleton-bone>
-
-<div class="skeleton-prod-details-controls">
-  @for (control of controls; track control) {
-    <zx-skeleton-bone
-      class="skeleton-prod-details-control"
-      [animated]="animated"
-      [style.animation-delay.ms]="control * 60"
-    ></zx-skeleton-bone>
-  }
-</div>
-
-<div class="skeleton-prod-details-top">
-  <div class="skeleton-prod-details-info">
-    @for (i of infoRows; track i) {
-      <div class="skeleton-prod-details-row" [style.animation-delay.ms]="i * 50">
-        <zx-skeleton-bone class="skeleton-prod-details-label" [animated]="animated"></zx-skeleton-bone>
-        <zx-skeleton-bone class="skeleton-prod-details-value" [animated]="animated"></zx-skeleton-bone>
-      </div>
-    }
-  </div>
-  <zx-skeleton-bone class="skeleton-prod-details-video" [animated]="animated"></zx-skeleton-bone>
-</div>
-
-<section class="skeleton-prod-details-section">
-  <zx-skeleton-bone class="skeleton-prod-details-section-title" [animated]="animated"></zx-skeleton-bone>
-  <zx-screenshot-grid-skeleton [count]="3" [animated]="animated"></zx-screenshot-grid-skeleton>
-</section>
-
-<section class="skeleton-prod-details-section">
-  <zx-skeleton-bone class="skeleton-prod-details-section-title" [animated]="animated"></zx-skeleton-bone>
-  <div class="skeleton-prod-description">
-    @for (line of descriptionLines; track line) {
+<zx-stack spacing="md" class="skeleton-prod-details">
+  <zx-inline gap="sm" [wrap]="true">
+    @for (control of controls; track control) {
       <zx-skeleton-bone
-        class="skeleton-prod-description-line"
+        class="skeleton-prod-details-control"
         [animated]="animated"
-        [style.animation-delay.ms]="line * 80"
+        [style.animation-delay.ms]="control * 60"
       ></zx-skeleton-bone>
     }
-  </div>
-</section>
+  </zx-inline>
 
-<section class="skeleton-prod-details-section">
-  <zx-skeleton-bone class="skeleton-prod-details-section-title" [animated]="animated"></zx-skeleton-bone>
-  <zx-prods-list-skeleton [count]="4" [animated]="animated"></zx-prods-list-skeleton>
-</section>
+  <zx-inline gap="xs" align="center" [wrap]="true">
+    @for (crumb of breadcrumbs; track crumb) {
+      <zx-skeleton-bone
+        class="skeleton-prod-details-breadcrumb"
+        [animated]="animated"
+        [style.animation-delay.ms]="crumb * 40"
+      ></zx-skeleton-bone>
+    }
+  </zx-inline>
+
+  <zx-inline class="skeleton-prod-details-hero" gap="xl" align="start" [wrap]="true">
+    <zx-skeleton-bone class="skeleton-prod-details-cover" [animated]="animated"></zx-skeleton-bone>
+
+    <zx-stack spacing="md" class="skeleton-prod-details-info">
+      <zx-inline gap="md" align="baseline" [wrap]="true">
+        <zx-skeleton-bone class="skeleton-prod-details-title" [animated]="animated"></zx-skeleton-bone>
+        <zx-skeleton-bone class="skeleton-prod-details-year" [animated]="animated"></zx-skeleton-bone>
+      </zx-inline>
+
+      <zx-skeleton-bone class="skeleton-prod-details-alt-title" [animated]="animated"></zx-skeleton-bone>
+
+      <zx-inline gap="sm" [wrap]="true">
+        @for (chip of chips; track chip) {
+          <zx-skeleton-bone
+            class="skeleton-prod-details-chip"
+            [animated]="animated"
+            [style.animation-delay.ms]="chip * 50"
+          ></zx-skeleton-bone>
+        }
+      </zx-inline>
+
+      <zx-inline gap="lg" align="center" justify="between" [wrap]="true">
+        <zx-skeleton-bone class="skeleton-prod-details-vote" [animated]="animated"></zx-skeleton-bone>
+        <zx-skeleton-bone class="skeleton-prod-details-added" [animated]="animated"></zx-skeleton-bone>
+      </zx-inline>
+
+      <zx-stack spacing="xs">
+        @for (line of peopleLines; track line) {
+          <zx-skeleton-bone
+            class="skeleton-prod-details-people-line"
+            [animated]="animated"
+            [style.animation-delay.ms]="line * 60"
+          ></zx-skeleton-bone>
+        }
+      </zx-stack>
+
+      <zx-inline gap="md" align="center" [wrap]="true">
+        @for (link of links; track link) {
+          <zx-skeleton-bone
+            class="skeleton-prod-details-link"
+            [animated]="animated"
+            [style.animation-delay.ms]="link * 50"
+          ></zx-skeleton-bone>
+        }
+      </zx-inline>
+    </zx-stack>
+  </zx-inline>
+
+  <zx-panel padding="md" variant="elevated">
+    <zx-stack spacing="md">
+      <zx-skeleton-bone class="skeleton-prod-details-section-title" [animated]="animated"></zx-skeleton-bone>
+      <zx-screenshot-grid-skeleton [count]="3" [animated]="animated"></zx-screenshot-grid-skeleton>
+    </zx-stack>
+  </zx-panel>
+
+  <zx-panel variant="elevated">
+    <zx-stack spacing="md">
+      <zx-skeleton-bone class="skeleton-prod-details-section-title" [animated]="animated"></zx-skeleton-bone>
+      <zx-stack spacing="sm">
+        @for (line of descriptionLines; track line) {
+          <zx-skeleton-bone
+            class="skeleton-prod-description-line"
+            [animated]="animated"
+            [style.animation-delay.ms]="line * 80"
+          ></zx-skeleton-bone>
+        }
+      </zx-stack>
+      <zx-inline class="skeleton-prod-details-tags" gap="sm" align="start" [wrap]="true">
+        <zx-skeleton-bone class="skeleton-prod-details-tags-label" [animated]="animated"></zx-skeleton-bone>
+        @for (tag of tags; track tag) {
+          <zx-skeleton-bone
+            class="skeleton-prod-details-tag"
+            [animated]="animated"
+            [style.animation-delay.ms]="tag * 40"
+          ></zx-skeleton-bone>
+        }
+      </zx-inline>
+    </zx-stack>
+  </zx-panel>
+
+  <section class="skeleton-prod-details-tabs">
+    <zx-inline class="skeleton-prod-details-tabs-bar" gap="none">
+      @for (tab of tabs; track tab) {
+        <zx-skeleton-bone
+          class="skeleton-prod-details-tab"
+          [animated]="animated"
+          [style.animation-delay.ms]="tab * 50"
+        ></zx-skeleton-bone>
+      }
+    </zx-inline>
+    <zx-row-skeleton [count]="3" [animated]="animated"></zx-row-skeleton>
+  </section>
+</zx-stack>

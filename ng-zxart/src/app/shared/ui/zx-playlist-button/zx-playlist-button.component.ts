@@ -11,7 +11,7 @@ import {CurrentUserService} from '../../services/current-user.service';
 import {PlaylistDto} from '../../models/playlist.model';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {ZxInputComponent} from '../zx-input/zx-input.component';
-import {ZxCaptionDirective} from '../../directives/typography/typography.directives';
+import {TextDirective} from '../typography/directives/text.directive';
 import {environment} from '../../../../environments/environment';
 
 @Component({
@@ -26,7 +26,7 @@ import {environment} from '../../../../environments/environment';
     CdkOverlayOrigin,
     ZxButtonComponent,
     ZxInputComponent,
-    ZxCaptionDirective,
+    TextDirective,
   ],
   templateUrl: './zx-playlist-button.component.html',
   styleUrls: ['./zx-playlist-button.component.scss'],

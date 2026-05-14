@@ -6,7 +6,7 @@ import {map} from 'rxjs/operators';
 import {ZxPictureDto} from '../../models/zx-picture-dto';
 import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
 import {ZxBadgeComponent} from '../zx-badge/zx-badge.component';
-import {ZxCaptionDirective} from '../../directives/typography/typography.directives';
+import {TextDirective} from '../typography/directives/text.directive';
 import {LightboxModule} from 'ng-gallery/lightbox';
 import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.component';
 import {PictureSettingsService} from '../../../features/picture-settings/services/picture-settings.service';
@@ -21,7 +21,7 @@ import {PictureUrlBuilderService} from '../../services/picture-url-builder.servi
     TranslateModule,
     ZxPanelComponent,
     ZxBadgeComponent,
-    ZxCaptionDirective,
+    TextDirective,
     LightboxModule,
     ZxItemControlsComponent,
   ],

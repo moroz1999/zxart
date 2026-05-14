@@ -5,11 +5,12 @@ import {InViewportDirective} from '../../../../shared/directives/in-viewport.dir
 import {
   ZxPictureGridSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
-import {ZxHeading2Directive} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ZxPicturesListComponent} from '../../../picture-list/components/zx-pictures-list/zx-pictures-list.component';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
 import {PictureListService} from '../../../picture-list/services/picture-list.service';
 import {Subscription} from 'rxjs';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 
 @Component({
   selector: 'zx-prod-pictures-section',
@@ -19,8 +20,9 @@ import {Subscription} from 'rxjs';
     TranslateModule,
     InViewportDirective,
     ZxPictureGridSkeletonComponent,
-    ZxHeading2Directive,
+    HeadingDirective,
     ZxPicturesListComponent,
+    ZxStackComponent,
   ],
   templateUrl: './zx-prod-pictures-section.component.html',
   styleUrls: ['./zx-prod-pictures-section.component.scss'],

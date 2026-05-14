@@ -6,6 +6,6 @@
       [target]="newWindow ? '_blank' : '_self'"
       [rel]="newWindow ? 'noopener noreferrer' : null"
     >{{ file.fileName }}</a>
-    <span *ngIf="file.author" zxBodySmMuted class="zx-prod-files-list__author"> — {{ file.author }}</span>
+    <span *ngIf="file.author" appText="label" tone="muted" class="zx-prod-files-list__author"> - {{ file.author }}</span>
   </li>
 </ul>

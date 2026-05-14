@@ -10,9 +10,10 @@ import {
   ZxProdFilesListComponent,
 } from '../../../../shared/ui/zx-prod-files-list/zx-prod-files-list.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
-import {ZxHeading2Directive} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ProdRzxApiService} from '../../services/prod-rzx-api.service';
 import {ProdFileDto} from '../../models/prod-file.dto';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 
 @Component({
   selector: 'zx-prod-rzx-section',
@@ -24,7 +25,8 @@ import {ProdFileDto} from '../../models/prod-file.dto';
     ZxRowSkeletonComponent,
     ZxProdFilesListComponent,
     ZxPanelComponent,
-    ZxHeading2Directive,
+    HeadingDirective,
+    ZxStackComponent,
   ],
   templateUrl: './zx-prod-rzx-section.component.html',
   styleUrls: ['./zx-prod-rzx-section.component.scss'],

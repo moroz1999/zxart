@@ -4,12 +4,14 @@ import {TranslateModule} from '@ngx-translate/core';
 import {
   ZxProdsListSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-prods-list-skeleton/zx-prods-list-skeleton.component';
-import {ZxHeading2Directive,} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ZxProdsListComponent} from '../../../../entities/zx-prods-list/zx-prods-list.component';
 import {Observable, of, Subscription} from 'rxjs';
 import {ProdRelatedProdsService} from '../../services/prod-related-prods.service';
 import {ZxProd} from '../../../../shared/models/zx-prod';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 
 @Component({
   selector: 'zx-prod-series-section',
@@ -18,9 +20,11 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
     CommonModule,
     TranslateModule,
     ZxProdsListSkeletonComponent,
-    ZxHeading2Directive,
+    HeadingDirective,
     ZxProdsListComponent,
     ZxButtonComponent,
+    ZxStackComponent,
+    ZxInlineComponent,
   ],
   templateUrl: './zx-prod-series-section.component.html',
   styleUrls: ['./zx-prod-series-section.component.scss'],

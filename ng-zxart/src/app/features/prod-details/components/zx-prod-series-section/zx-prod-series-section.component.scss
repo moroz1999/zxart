@@ -1,20 +1,3 @@
 :host {
   display: block;
 }
-
-.prod-series-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--zx-prod-series-section-stack-gap);
-}
-
-.prod-series-section__header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--zx-prod-series-section-header-gap);
-}
-
-.prod-series-section__title {
-  margin: 0;
-}

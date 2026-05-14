@@ -7,7 +7,6 @@ import {
   ZxRowSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
-import {ZxHeading2Directive,} from '../../../../shared/directives/typography/typography.directives';
 import {ProdReleasesApiService} from '../../services/prod-releases-api.service';
 import {ProdReleaseDto} from '../../models/prod-release.dto';
 import {ZxProdReleaseRowComponent} from '../zx-prod-release-row/zx-prod-release-row.component';
@@ -16,13 +15,14 @@ import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filte
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxProdReleaseCardComponent} from '../zx-prod-release-card/zx-prod-release-card.component';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 
 interface LabeledOption {
   code: string;
   label: string;
 }
 
-type SortField = 'year' | 'downloads' | 'plays';
+type SortField = 'title' | 'year' | 'downloads' | 'plays';
 type ViewMode = 'table' | 'cards';
 
 @Component({
@@ -34,12 +34,12 @@ type ViewMode = 'table' | 'cards';
     InViewportDirective,
     ZxRowSkeletonComponent,
     ZxTableComponent,
-    ZxHeading2Directive,
     ZxProdReleaseRowComponent,
     ZxFilterBarComponent,
     ZxButtonComponent,
     ZxButtonControlsComponent,
     ZxProdReleaseCardComponent,
+    ZxStackComponent,
   ],
   templateUrl: './zx-prod-releases-section.component.html',
   styleUrls: ['./zx-prod-releases-section.component.scss'],
@@ -82,12 +82,16 @@ export class ZxProdReleasesSectionComponent implements OnDestroy {
         }
       }
     }
-    return Array.from(seen.entries()).map(([code, label]) => ({code, label}));
+    // Only include a language when selecting it would actually exclude some releases.
+    // If every release has language X, the X filter is a no-op and must be hidden.
+    return Array.from(seen.entries())
+      .filter(([code]) => this.releases.some(r => !r.languages.some(l => l.code === code)))
+      .map(([code, label]) => ({code, label}));
   }
 
   get availableTypes(): LabeledOption[] {
     const seen = new Map<string, string>();
-    for (const r of this.releases) {
+    for (const r of this.releasesForTypeOptions) {
       if (r.releaseType && r.releaseTypeLabel && !seen.has(r.releaseType)) {
         seen.set(r.releaseType, r.releaseTypeLabel);
       }
@@ -118,16 +122,25 @@ export class ZxProdReleasesSectionComponent implements OnDestroy {
       const field = this.activeSortField;
       const dir = this.sortDir;
       result = [...result].sort((a, b) => {
-        const va = this.getSortValue(a, field);
-        const vb = this.getSortValue(b, field);
-        return dir === 'desc' ? vb - va : va - vb;
+        const compareResult = this.compareReleases(a, b, field);
+        return dir === 'desc' ? -compareResult : compareResult;
       });
     }
 
     return result;
   }
 
-  private getSortValue(r: ProdReleaseDto, field: SortField): number {
+  private compareReleases(a: ProdReleaseDto, b: ProdReleaseDto, field: SortField): number {
+    if (field === 'title') {
+      return a.title.localeCompare(b.title);
+    }
+
+    const va = this.getNumericSortValue(a, field);
+    const vb = this.getNumericSortValue(b, field);
+    return va - vb;
+  }
+
+  private getNumericSortValue(r: ProdReleaseDto, field: Exclude<SortField, 'title'>): number {
     switch (field) {
       case 'year': return r.year || 0;
       case 'downloads': return r.downloadsCount || 0;
@@ -137,17 +150,20 @@ export class ZxProdReleasesSectionComponent implements OnDestroy {
 
   setFilterLang(code: string): void {
     this.filterLang = code;
-    this.cdr.markForCheck();
+    if (this.filterType !== 'all' && !this.availableTypes.some(type => type.code === this.filterType)) {
+      this.filterType = 'all';
+    }
+    this.cdr.detectChanges();
   }
 
   setFilterType(code: string): void {
     this.filterType = code;
-    this.cdr.markForCheck();
+    this.cdr.detectChanges();
   }
 
   setViewMode(mode: ViewMode): void {
     this.viewMode = mode;
-    this.cdr.markForCheck();
+    this.cdr.detectChanges();
   }
 
   sortBy(field: SortField): void {
@@ -155,9 +171,9 @@ export class ZxProdReleasesSectionComponent implements OnDestroy {
       this.sortDir = this.sortDir === 'desc' ? 'asc' : 'desc';
     } else {
       this.activeSortField = field;
-      this.sortDir = 'desc';
+      this.sortDir = field === 'title' ? 'asc' : 'desc';
     }
-    this.cdr.markForCheck();
+    this.cdr.detectChanges();
   }
 
   sortArrow(field: SortField): string {
@@ -192,7 +208,18 @@ export class ZxProdReleasesSectionComponent implements OnDestroy {
     return release.id;
   }
 
+  trackByCode(_index: number, option: LabeledOption): string {
+    return option.code;
+  }
+
   get screenshotUploadUrl(): string {
     return `${this.prodUrl}id:${this.elementId}/action:uploadScreenshot/`;
+  }
+
+  private get releasesForTypeOptions(): ProdReleaseDto[] {
+    if (this.filterLang === 'all') {
+      return this.releases;
+    }
+    return this.releases.filter(r => r.languages.some(l => l.code === this.filterLang));
   }
 }

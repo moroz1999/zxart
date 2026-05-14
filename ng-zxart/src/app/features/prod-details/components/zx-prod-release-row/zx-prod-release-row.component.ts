@@ -1,20 +1,14 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit,} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {LightboxModule} from 'ng-gallery/lightbox';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
-import {
-  PictureGalleryHostComponent,
-} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
-import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
-import {PictureGalleryItem} from '../../../picture-gallery/models/picture-gallery-item';
 import {EmulatorModalService} from '../../../emulator/services/emulator-modal.service';
 import {EmulatorType} from '../../../emulator/engines/emulator-engine';
 import {ProdReleaseDto} from '../../models/prod-release.dto';
-import {ProdFileDto} from '../../models/prod-file.dto';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxProdLanguageLinksComponent,} from '../zx-prod-language-links/zx-prod-language-links.component';
-import {ZxProdExternalLinksComponent,} from '../zx-prod-external-links/zx-prod-external-links.component';
+import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {environment} from '../../../../../environments/environment';
 
 const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 'tsconf', 'samcoupe', 'zxnext'];
@@ -25,12 +19,11 @@ const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 't
   imports: [
     CommonModule,
     TranslateModule,
-    LightboxModule,
     SvgIconComponent,
     ZxButtonComponent,
-    PictureGalleryHostComponent,
     ZxProdLanguageLinksComponent,
-    ZxProdExternalLinksComponent,
+    ZxInlineComponent,
+    ZxStackComponent,
   ],
   templateUrl: './zx-prod-release-row.component.html',
   styleUrls: ['./zx-prod-release-row.component.scss'],
@@ -41,32 +34,13 @@ export class ZxProdReleaseRowComponent implements OnInit {
   @Input({required: true}) canUploadScreenshot!: boolean;
   @Input({required: true}) screenshotUploadUrl!: string;
 
-  galleryId = '';
-
   constructor(
-    private readonly gallery: PictureGalleryService,
     private readonly emulator: EmulatorModalService,
     private readonly iconReg: SvgIconRegistryService,
   ) {}
 
   ngOnInit(): void {
-    this.galleryId = `zx-release-screenshots-${this.release.id}`;
-    if (this.release.screenshots.length) {
-      this.gallery.loadItems(this.galleryId, this.release.screenshots.map(this.toGalleryItem));
-    }
     this.iconReg.loadSvg(`${environment.svgUrl}download.svg`, 'download')?.subscribe();
-  }
-
-  get medalClass(): string | null {
-    if (!this.release.party?.place) {
-      return null;
-    }
-    switch (this.release.party.place) {
-      case 1: return 'medal-gold';
-      case 2: return 'medal-silver';
-      case 3: return 'medal-bronze';
-      default: return null;
-    }
   }
 
   get supportedEmulatorType(): EmulatorType | null {
@@ -113,13 +87,4 @@ export class ZxProdReleaseRowComponent implements OnInit {
     });
   }
 
-  private toGalleryItem(file: ProdFileDto): PictureGalleryItem {
-    return {
-      id: file.id,
-      title: file.title,
-      thumbUrl: file.imageUrl ?? file.fullImageUrl ?? '',
-      largeUrl: file.fullImageUrl ?? file.imageUrl ?? '',
-      detailsUrl: file.downloadUrl,
-    };
-  }
 }

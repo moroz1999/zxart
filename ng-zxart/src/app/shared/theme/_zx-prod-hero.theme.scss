@@ -1,11 +1,4 @@
 :root {
-  /* Title color in the hero info block. */
-  --zx-prod-hero-title-color: var(--text-color);
-  /* Muted year label next to the title. */
-  --zx-prod-hero-year-color: var(--text-light-color);
-  /* Alt-title / "also known as" line color. */
-  --zx-prod-hero-alt-title-color: var(--text-light-color);
-
   /* Neutral chip background. */
   --zx-prod-hero-chip-bg: var(--secondary-100);
   /* Neutral chip border. */
@@ -20,8 +13,6 @@
   /* Category chip text. */
   --zx-prod-hero-chip-cat-text: var(--primary-800);
 
-  /* People line text color. */
-  --zx-prod-hero-people-color: var(--text-light-color);
   /* Bold labels inside the people line. */
   --zx-prod-hero-people-label-color: var(--text-color);
   /* Links inside the people line — same color as surrounding muted text, underline indicates clickability. */

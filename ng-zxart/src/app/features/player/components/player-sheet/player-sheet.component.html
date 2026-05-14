@@ -72,7 +72,7 @@
           [style.--zx-player-progress]="getProgressPercent(state)"
           (click)="seekByClick($event, state.duration)"
         >
-          <span zxBody class="player-progress-text">{{ getCurrentTitle(state) }}</span>
+          <span appText="body" class="player-progress-text">{{ getCurrentTitle(state) }}</span>
         </div>
       </div>
 
@@ -115,7 +115,7 @@
         <zx-text-skeleton *ngIf="optionsLoading" [count]="3"></zx-text-skeleton>
 
         <div class="player-error" *ngIf="optionsError">
-          <span zxBody>{{ 'player.filters.loadError' | translate }}</span>
+          <span appText="body">{{ 'player.filters.loadError' | translate }}</span>
         </div>
 
         <div class="player-presets" *ngIf="options && !optionsLoading">
@@ -133,7 +133,7 @@
         <div class="player-advanced-grid" *ngIf="options && !optionsLoading">
           <div class="player-field player-field--range" *ngIf="hasRatingRange">
             <div class="player-field-label-row">
-              <span zxCaption class="player-field-label">{{ 'player.filters.minRating' | translate }}</span>
+              <span appText="caption" tone="muted" class="player-field-label">{{ 'player.filters.minRating' | translate }}</span>
             </div>
             <zx-input-range
               [min]="ratingMin"
@@ -143,14 +143,14 @@
             ></zx-input-range>
           </div>
           <div class="player-field">
-            <span zxCaption class="player-field-label">{{ 'player.filters.category' | translate }}</span>
+            <span appText="caption" tone="muted" class="player-field-label">{{ 'player.filters.category' | translate }}</span>
             <zx-select
               [options]="categoryOptions"
               formControlName="category"
             ></zx-select>
           </div>
           <div class="player-field">
-            <span zxCaption class="player-field-label">{{ 'player.filters.minPartyPlace' | translate }}</span>
+            <span appText="caption" tone="muted" class="player-field-label">{{ 'player.filters.minPartyPlace' | translate }}</span>
             <zx-input
               type="number"
               [min]="0"
@@ -160,8 +160,8 @@
           </div>
           <div class="player-field player-field--range" *ngIf="hasYearRange">
             <div class="player-field-label-row">
-              <span zxCaption class="player-field-label">{{ 'player.filters.yearFrom' | translate }}</span>
-              <span zxCaption class="player-field-label">{{ 'player.filters.yearTo' | translate }}</span>
+              <span appText="caption" tone="muted" class="player-field-label">{{ 'player.filters.yearFrom' | translate }}</span>
+              <span appText="caption" tone="muted" class="player-field-label">{{ 'player.filters.yearTo' | translate }}</span>
             </div>
             <zx-min-max-range
               [min]="yearMin"
@@ -204,7 +204,7 @@
             ></zx-filter-picker>
           </div>
           <div class="player-field">
-            <span zxCaption class="player-field-label">{{ 'player.filters.party' | translate }}</span>
+            <span appText="caption" tone="muted" class="player-field-label">{{ 'player.filters.party' | translate }}</span>
             <zx-select
               [options]="partyOptions"
               formControlName="party"

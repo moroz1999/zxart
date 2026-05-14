@@ -1,7 +1,10 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {ZxSkeletonBoneComponent} from '../zx-skeleton-bone/zx-skeleton-bone.component';
 import {ZxScreenshotGridSkeletonComponent} from '../zx-screenshot-grid-skeleton/zx-screenshot-grid-skeleton.component';
-import {ZxProdsListSkeletonComponent} from '../zx-prods-list-skeleton/zx-prods-list-skeleton.component';
+import {ZxRowSkeletonComponent} from '../zx-row-skeleton/zx-row-skeleton.component';
+import {ZxStackComponent} from '../../../zx-stack/zx-stack.component';
+import {ZxInlineComponent} from '../../../zx-inline/zx-inline.component';
+import {ZxPanelComponent} from '../../../zx-panel/zx-panel.component';
 
 @Component({
   selector: 'zx-prod-details-skeleton',
@@ -9,7 +12,10 @@ import {ZxProdsListSkeletonComponent} from '../zx-prods-list-skeleton/zx-prods-l
   imports: [
     ZxSkeletonBoneComponent,
     ZxScreenshotGridSkeletonComponent,
-    ZxProdsListSkeletonComponent,
+    ZxRowSkeletonComponent,
+    ZxStackComponent,
+    ZxInlineComponent,
+    ZxPanelComponent,
   ],
   templateUrl: './zx-prod-details-skeleton.component.html',
   styleUrls: ['./zx-prod-details-skeleton.component.scss'],
@@ -19,6 +25,11 @@ export class ZxProdDetailsSkeletonComponent {
   @Input() animated = true;
 
   readonly controls = [0, 1, 2];
-  readonly infoRows = Array.from({length: 12}, (_, i) => i);
+  readonly breadcrumbs = [0, 1, 2, 3];
+  readonly chips = [0, 1, 2];
   readonly descriptionLines = [0, 1, 2];
+  readonly links = [0, 1];
+  readonly peopleLines = [0, 1];
+  readonly tabs = [0, 1, 2, 3];
+  readonly tags = [0, 1, 2, 3];
 }

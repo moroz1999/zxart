@@ -1,10 +1,10 @@
-<div
-  class="prod-inlays-section"
+<zx-stack
+  spacing="md"
   [appInViewport]="!loaded && !loading"
   (inViewport)="onInViewport()"
 >
   <ng-container *ngIf="loading || (loaded && inlays.length > 0)">
-    <h2 zxHeading2 class="prod-inlays-section__title">{{ 'prod-details.inlays' | translate }}</h2>
+    <h2 appHeading="headline">{{ 'prod-details.inlays' | translate }}</h2>
 
     <zx-picture-grid-skeleton *ngIf="loading" [count]="2"></zx-picture-grid-skeleton>
 
@@ -25,11 +25,11 @@
             [lightbox]="i"
             [gallery]="galleryId"
           />
-          <figcaption zxCaption>
+          <figcaption appText="caption" tone="muted">
             <a [href]="inlay.releaseUrl">{{ buildReleaseLabel(inlay) }}</a>
           </figcaption>
         </figure>
       </div>
     </ng-container>
   </ng-container>
-</div>
+</zx-stack>

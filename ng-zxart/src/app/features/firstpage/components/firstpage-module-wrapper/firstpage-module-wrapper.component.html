@@ -5,7 +5,7 @@
 
 <ng-container *ngIf="!usePanel">
   <div class="module-title">
-    <h2 zxHeading2 class="module-title__text">{{ titleKey | translate }}</h2>
+    <h2 appHeading="headline" class="module-title__text">{{ titleKey | translate }}</h2>
     <zx-button
       *ngIf="viewAllUrl && viewAllLabelKey"
       size="xs"
@@ -22,11 +22,11 @@
 <ng-template #body>
   <ng-content *ngIf="loading" select="[loadingSkeleton]"></ng-content>
 
-  <div *ngIf="error" class="module-error" zxCaption>
+  <div *ngIf="error" class="module-error" appText="caption" tone="muted">
     {{ 'firstpage.error' | translate }}
   </div>
 
-  <div *ngIf="!loading && !error && empty" class="module-empty" zxCaption>
+  <div *ngIf="!loading && !error && empty" class="module-empty" appText="caption" tone="muted">
     {{ 'firstpage.empty' | translate }}
   </div>
 

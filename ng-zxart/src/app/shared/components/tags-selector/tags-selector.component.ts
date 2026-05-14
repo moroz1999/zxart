@@ -10,6 +10,7 @@ import {ZxInputComponent} from '../../ui/zx-input/zx-input.component';
 import {ZxTagsChipsComponent} from '../../ui/zx-tags-chips/zx-tags-chips.component';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {catchError, debounceTime, distinctUntilChanged, map, shareReplay, startWith, switchMap} from 'rxjs/operators';
+import {TextDirective} from '../../ui/typography/directives/text.directive';
 
 interface TagsSelectorVm {
     readonly foundTags: Tag[];
@@ -32,6 +33,7 @@ interface TagsSelectorVm {
         CdkOverlayOrigin,
         ZxInputComponent,
         ZxTagsChipsComponent,
+        TextDirective,
     ],
 })
 export class TagsSelectorComponent {

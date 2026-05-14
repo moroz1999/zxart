@@ -26,7 +26,7 @@
         (backdropClick)="closeDropdown()"
     >
         <div class="tags-dropdown">
-            <div *ngFor="let tag of vm.foundTags" (click)="selectTag(tag)" class="tags-option">
+            <div *ngFor="let tag of vm.foundTags" (click)="selectTag(tag)" class="tags-option" appText="body">
                 {{ tag.title }}
             </div>
         </div>

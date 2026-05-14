@@ -1,7 +1,7 @@
 <zx-dialog (closeClick)="close()">
   <zx-stack spacing="lg">
     <div class="settings-section">
-      <h3 zxHeading3 class="settings-section__title">{{ 'settings.theme' | translate }}</h3>
+      <h3 appHeading="title" class="settings-section__title">{{ 'settings.theme' | translate }}</h3>
       <zx-toggle
         [options]="themeOptions"
         [value]="currentTheme"

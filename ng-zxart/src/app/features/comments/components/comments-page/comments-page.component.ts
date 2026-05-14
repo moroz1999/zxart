@@ -9,7 +9,7 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 import {
   ZxCommentSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-comment-skeleton/zx-comment-skeleton.component';
-import {ZxHeading2Directive} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {CommentComponent} from '../comment/comment.component';
 
 @Component({
@@ -21,7 +21,7 @@ import {CommentComponent} from '../comment/comment.component';
     ZxPaginationComponent,
     ZxStackComponent,
     ZxCommentSkeletonComponent,
-    ZxHeading2Directive,
+    HeadingDirective,
     CommentComponent
   ],
   templateUrl: './comments-page.component.html',

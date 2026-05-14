@@ -1,10 +1,10 @@
-<div
-  class="prod-maps-section"
+<zx-stack
+  spacing="md"
   [appInViewport]="!loaded && !loading"
   (inViewport)="onInViewport()"
 >
   <ng-container *ngIf="loading || (loaded && hasContent)">
-    <h2 zxHeading2 class="prod-maps-section__title">{{ 'prod-details.maps' | translate }}</h2>
+    <h2 appHeading="headline">{{ 'prod-details.maps' | translate }}</h2>
 
     <zx-picture-grid-skeleton *ngIf="loading" [count]="2"></zx-picture-grid-skeleton>
 
@@ -35,7 +35,7 @@
               [lightbox]="i"
               [gallery]="galleryId"
             />
-            <figcaption *ngIf="file.author" zxCaption>
+            <figcaption *ngIf="file.author" appText="caption" tone="muted">
               {{ file.author }}
             </figcaption>
           </figure>
@@ -43,4 +43,4 @@
       </ng-container>
     </ng-container>
   </ng-container>
-</div>
+</zx-stack>

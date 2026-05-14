@@ -23,16 +23,16 @@
 }
 
 .prod-details__tags-section {
-  border-top: 1px dashed var(--secondary-200);
+  border-top: var(--zx-prod-details-tags-section-border);
 }
 
 .prod-details__tags-label {
-  font-size: var(--font-xs);
-  color: var(--text-light-color);
+  font-size: var(--zx-prod-details-tags-label-font-size);
+  color: var(--zx-prod-details-tags-label-color);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--zx-prod-details-tags-label-letter-spacing);
   white-space: nowrap;
-  line-height: 1.8;
+  line-height: var(--zx-prod-details-tags-label-line-height);
 }
 
 @include bp.media-breakpoint-down(lg) {

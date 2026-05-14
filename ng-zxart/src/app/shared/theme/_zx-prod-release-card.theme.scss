@@ -1,10 +1,16 @@
 :root {
+  /* Card border width. */
+  --zx-prod-release-card-border-width: var(--border-width-thin);
   /* Card border color. */
   --zx-prod-release-card-border: var(--border-secondary);
+  /* Card border radius. */
+  --zx-prod-release-card-border-radius: var(--radius-md);
   /* Card background. */
   --zx-prod-release-card-bg: var(--zx-panel-bg);
   /* Cover placeholder background. */
   --zx-prod-release-card-cover-bg: var(--background-deep);
+  /* Body content gap (between title, meta, chips, bottom). */
+  --zx-prod-release-card-body-gap: var(--space-8);
   /* Title text color. */
   --zx-prod-release-card-title-color: var(--text-color);
   /* Title font size. */
@@ -13,6 +19,10 @@
   --zx-prod-release-card-meta-color: var(--text-light-color);
   /* Meta line font size. */
   --zx-prod-release-card-meta-size: var(--zx-font-size-xs);
+  /* Chip padding. */
+  --zx-prod-release-card-chip-padding: var(--space-2) var(--space-8);
+  /* Chip border radius. */
+  --zx-prod-release-card-chip-radius: var(--radius-xl);
   /* Chip background. */
   --zx-prod-release-card-chip-bg: var(--secondary-100);
   /* Chip text color. */

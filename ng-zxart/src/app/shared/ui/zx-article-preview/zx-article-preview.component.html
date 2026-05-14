@@ -14,17 +14,21 @@
 
     <div class="zx-article-preview__content">
       <header class="zx-article-preview__header">
-        <div class="zx-article-preview__title" zxBodyStrong>
+        <div class="zx-article-preview__title" appText="body" tone="strong">
           <ng-container *ngIf="publication">
             <a
               class="zx-article-preview__link zx-article-preview__publication"
               [href]="publication.url"
+              appText="body"
+              tone="link"
             >{{ publication.title }}<ng-container *ngIf="publication.year"> ({{ publication.year }})</ng-container></a>
-            <span class="zx-article-preview__publication-separator"> / </span>
+            <span class="zx-article-preview__publication-separator" appText="label" tone="muted"> / </span>
           </ng-container>
           <a
             class="zx-article-preview__link"
             [href]="url"
+            appText="body"
+            tone="link"
             [innerHTML]="titleHtml ?? title"
           ></a>
         </div>
@@ -37,17 +41,17 @@
         >{{ readLinkLabel }}</zx-button>
       </header>
 
-      <div *ngIf="typeLabel || year || authors.length > 0" class="zx-article-preview__meta" zxBodySmMuted>
+      <div *ngIf="typeLabel || year || authors.length > 0" class="zx-article-preview__meta" appText="label" tone="muted">
         <span *ngIf="typeLabel" class="zx-article-preview__type">{{ typeLabel }}</span>
         <span *ngIf="year" class="zx-article-preview__year">{{ year }}</span>
         <span *ngIf="authors.length > 0" class="zx-article-preview__authors">
           <ng-container *ngFor="let author of authors; let last = last">
-            <a [href]="author.url">{{ author.title }}</a><ng-container *ngIf="!last">, </ng-container>
+            <a [href]="author.url" appText="label" tone="muted-link">{{ author.title }}</a><ng-container *ngIf="!last">, </ng-container>
           </ng-container>
         </span>
       </div>
 
-      <p *ngIf="snippetHtml" class="zx-article-preview__snippet" zxBodySmMuted [innerHTML]="snippetHtml"></p>
+      <p *ngIf="snippetHtml" class="zx-article-preview__snippet" appText="label" tone="muted" [innerHTML]="snippetHtml"></p>
     </div>
   </div>
 </zx-panel>

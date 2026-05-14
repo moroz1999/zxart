@@ -10,7 +10,7 @@ import {PlayerService} from '../../services/player.service';
 import {EMPTY_RADIO_CRITERIA, RadioCriteria} from '../../models/radio-criteria';
 import {PlayerState} from '../../models/player-state';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
-import {ZxBodyDirective, ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxSelectComponent, ZxSelectOption} from '../../../../shared/ui/zx-select/zx-select.component';
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
@@ -45,8 +45,8 @@ type PartyValue = 'any' | 'yes' | 'no';
     TranslateModule,
     SvgIconComponent,
     ZxPanelComponent,
-    ZxBodyDirective,
-    ZxCaptionDirective,
+    TextDirective,
+    TextDirective,
     ZxButtonComponent,
     ZxSelectComponent,
     ZxInputComponent,

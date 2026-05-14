@@ -1,12 +1,11 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {ZxBodyDirective, ZxBodySmMutedDirective,} from '../../directives/typography/typography.directives';
+import {TextDirective} from '../typography/directives/text.directive';
 
 @Component({
   selector: 'zx-item-data-item',
   standalone: true,
   imports: [
-    ZxBodyDirective,
-    ZxBodySmMutedDirective,
+    TextDirective,
   ],
   templateUrl: './zx-item-data-item.component.html',
   styleUrls: ['./zx-item-data-item.component.scss'],

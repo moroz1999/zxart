@@ -1,12 +1,12 @@
-<div class="prod-music-section">
-  <h2 zxHeading2 class="prod-music-section__title">{{ 'prod-details.music' | translate }}</h2>
+<zx-stack spacing="md">
+  <h2 appHeading="headline">{{ 'prod-details.music' | translate }}</h2>
   <zx-table *ngIf="loading" size="sm">
     <zx-tune-table-skeleton [count]="5"></zx-tune-table-skeleton>
   </zx-table>
-  <div *ngIf="error" zxCaption>{{ 'firstpage.error' | translate }}</div>
+  <div *ngIf="error" appText="caption" tone="muted">{{ 'firstpage.error' | translate }}</div>
   <zx-music-list-inline
     *ngIf="!loading && !error && tunes.length > 0"
     [elementId]="elementId"
     [tunesInput]="tunes"
   ></zx-music-list-inline>
-</div>
+</zx-stack>

@@ -29,9 +29,9 @@
 
 <zx-row-skeleton *ngIf="authors === null && !error" [count]="8"></zx-row-skeleton>
 
-<div *ngIf="error" zxCaption>{{ 'author-browser.error' | translate }}</div>
+<div *ngIf="error" appText="caption" tone="muted">{{ 'author-browser.error' | translate }}</div>
 <div *ngIf="!loading && !error && authors !== null && authors.length === 0"
-     zxCaption>{{ 'author-browser.empty' | translate }}
+     appText="caption" tone="muted">{{ 'author-browser.empty' | translate }}
 </div>
 
 <zx-authors-table

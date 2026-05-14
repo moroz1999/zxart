@@ -1,12 +1,8 @@
 :host {
-  display: block;
-}
-
-.release-card {
   display: flex;
   flex-direction: column;
-  border: var(--border-width-thin) solid var(--zx-prod-release-card-border);
-  border-radius: var(--radius-md);
+  border: var(--zx-prod-release-card-border-width) solid var(--zx-prod-release-card-border);
+  border-radius: var(--zx-prod-release-card-border-radius);
   overflow: hidden;
   background: var(--zx-prod-release-card-bg);
 }
@@ -26,11 +22,10 @@
 }
 
 .release-card__body {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
-  padding: var(--space-12);
-  flex: 1;
+  gap: var(--zx-prod-release-card-body-gap);
 }
 
 .release-card__title {
@@ -49,33 +44,20 @@
   color: var(--zx-prod-release-card-meta-color);
 }
 
-.release-card__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-  align-items: center;
-}
-
 .release-card__chip {
   display: inline-block;
-  padding: var(--space-2) var(--space-8);
-  border-radius: var(--radius-xl);
+  padding: var(--zx-prod-release-card-chip-padding);
+  border-radius: var(--zx-prod-release-card-chip-radius);
   font-size: var(--zx-prod-release-card-chip-size);
   background: var(--zx-prod-release-card-chip-bg);
   color: var(--zx-prod-release-card-chip-text);
 }
 
 .release-card__bottom {
-  display: flex;
-  align-items: center;
-  gap: var(--space-8);
   margin-top: auto;
 }
 
 .release-card__stat {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-4);
   font-size: var(--zx-prod-release-card-stat-size);
   color: var(--zx-prod-release-card-stat-color);
 }
@@ -93,7 +75,7 @@
   font-size: var(--zx-release-type-font-size);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: var(--zx-release-type-letter-spacing);
   color: var(--zx-release-type-text-color);
   white-space: nowrap;
 }

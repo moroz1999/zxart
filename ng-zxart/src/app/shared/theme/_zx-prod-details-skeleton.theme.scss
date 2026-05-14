@@ -1,15 +1,9 @@
 :root {
-  /* Outer vertical gap matching the product details stack. */
-  --zx-prod-details-skeleton-stack-gap: var(--gap-xxl);
-
   /* Product details title placeholder width. */
-  --zx-prod-details-skeleton-title-width: 60%;
+  --zx-prod-details-skeleton-title-width: 62%;
 
   /* Product details title placeholder height. */
   --zx-prod-details-skeleton-title-height: var(--space-32);
-
-  /* Gap between editing controls placeholders. */
-  --zx-prod-details-skeleton-controls-gap: var(--space-8);
 
   /* Editing controls placeholder width. */
   --zx-prod-details-skeleton-control-width: calc(var(--space-64) + var(--space-32));
@@ -20,44 +14,68 @@
   /* Editing controls placeholder radius. */
   --zx-prod-details-skeleton-control-radius: var(--radius-sm);
 
-  /* Gap between product info and the video placeholder. */
-  --zx-prod-details-skeleton-top-gap: var(--space-16);
+  /* Breadcrumb placeholder width. */
+  --zx-prod-details-skeleton-breadcrumb-width: var(--space-64);
 
-  /* Product info table preferred width. */
-  --zx-prod-details-skeleton-info-basis: calc(var(--space-64) * 5);
+  /* Breadcrumb placeholder height. */
+  --zx-prod-details-skeleton-breadcrumb-height: var(--space-12);
 
-  /* Minimum width of product info table labels. */
-  --zx-prod-details-skeleton-label-min-width: calc(var(--space-64) + var(--space-48) + var(--space-8));
+  /* Video column placeholder width matching the product details hero. */
+  --zx-prod-details-skeleton-cover-width: calc((var(--space-64) * 5) + var(--space-40));
 
-  /* Product info table label column width. */
-  --zx-prod-details-skeleton-label-width: 30%;
+  /* Minimum info column width before wrapping below the video. */
+  --zx-prod-details-skeleton-info-min-width: calc(var(--space-64) * 5);
 
-  /* Horizontal gap between product info label and value placeholders. */
-  --zx-prod-details-skeleton-table-column-gap: var(--space-8);
+  /* Year placeholder width. */
+  --zx-prod-details-skeleton-year-width: var(--space-48);
 
-  /* Vertical padding for product info rows. */
-  --zx-prod-details-skeleton-table-row-padding: var(--space-8);
+  /* Year placeholder height. */
+  --zx-prod-details-skeleton-year-height: var(--space-20);
 
-  /* Product info row placeholder height. */
-  --zx-prod-details-skeleton-table-line-height: var(--space-16);
+  /* Alternative title placeholder width. */
+  --zx-prod-details-skeleton-alt-title-width: 44%;
 
-  /* Product video placeholder preferred width. */
-  --zx-prod-details-skeleton-video-basis: calc((var(--space-64) * 7) + var(--space-32));
+  /* Alternative title placeholder height. */
+  --zx-prod-details-skeleton-alt-title-height: var(--space-12);
 
-  /* Gap between section heading placeholders and section skeleton content. */
-  --zx-prod-details-skeleton-section-gap: var(--space-12);
+  /* Metadata chip placeholder width. */
+  --zx-prod-details-skeleton-chip-width: calc(var(--space-64) + var(--space-16));
+
+  /* Metadata chip placeholder height. */
+  --zx-prod-details-skeleton-chip-height: var(--space-24);
+
+  /* Metadata chip placeholder radius. */
+  --zx-prod-details-skeleton-chip-radius: var(--radius-md);
+
+  /* Vote row placeholder width. */
+  --zx-prod-details-skeleton-vote-width: calc(var(--space-64) * 3);
+
+  /* Vote row placeholder height. */
+  --zx-prod-details-skeleton-vote-height: var(--space-24);
+
+  /* Added-by placeholder width. */
+  --zx-prod-details-skeleton-added-width: calc(var(--space-64) * 3);
+
+  /* Added-by placeholder height. */
+  --zx-prod-details-skeleton-added-height: var(--space-12);
+
+  /* People metadata placeholder width. */
+  --zx-prod-details-skeleton-people-line-width: 76%;
+
+  /* People metadata placeholder height. */
+  --zx-prod-details-skeleton-people-line-height: var(--space-12);
+
+  /* External link placeholder width. */
+  --zx-prod-details-skeleton-link-width: calc(var(--space-64) + var(--space-32));
+
+  /* External link placeholder height. */
+  --zx-prod-details-skeleton-link-height: var(--space-16);
 
   /* Section heading placeholder width. */
   --zx-prod-details-skeleton-section-title-width: 28%;
 
   /* Section heading placeholder height. */
   --zx-prod-details-skeleton-section-title-height: var(--space-24);
-
-  /* Top padding matching collapsible section content. */
-  --zx-prod-details-skeleton-description-body-padding: var(--space-12);
-
-  /* Gap between product details description skeleton ribs. */
-  --zx-prod-details-skeleton-description-line-gap: var(--space-8);
 
   /* Product details description skeleton rib height. */
   --zx-prod-details-skeleton-description-line-height: var(--space-8);
@@ -70,4 +88,40 @@
 
   /* Short product details description skeleton rib width. */
   --zx-prod-details-skeleton-description-line-width-short: 64%;
+
+  /* Top border of the tags area inside the about panel. */
+  --zx-prod-details-skeleton-tags-section-border: var(--border-width-thin) dashed var(--secondary-200);
+
+  /* Top padding of the tags area inside the about panel. */
+  --zx-prod-details-skeleton-tags-section-padding: var(--padding-md);
+
+  /* Tags label placeholder width. */
+  --zx-prod-details-skeleton-tags-label-width: var(--space-48);
+
+  /* Tags label placeholder height. */
+  --zx-prod-details-skeleton-tags-label-height: var(--space-12);
+
+  /* Tag chip placeholder width. */
+  --zx-prod-details-skeleton-tag-width: calc(var(--space-64) + var(--space-16));
+
+  /* Tag chip placeholder height. */
+  --zx-prod-details-skeleton-tag-height: var(--space-24);
+
+  /* Tag chip placeholder radius. */
+  --zx-prod-details-skeleton-tag-radius: var(--radius-md);
+
+  /* Tab bar separator matching zx-tabs. */
+  --zx-prod-details-skeleton-tabs-bar-separator: inset 0 -1px 0 0 var(--secondary-200);
+
+  /* Tab bar bottom margin matching zx-tabs. */
+  --zx-prod-details-skeleton-tabs-bar-margin-bottom: var(--space-16);
+
+  /* Tab placeholder width. */
+  --zx-prod-details-skeleton-tab-width: calc(var(--space-64) + var(--space-32));
+
+  /* Tab placeholder height matching zx-tabs button vertical rhythm. */
+  --zx-prod-details-skeleton-tab-height: calc(var(--space-40) + var(--space-8));
+
+  /* Tab placeholder radius. */
+  --zx-prod-details-skeleton-tab-radius: var(--radius-sm);
 }

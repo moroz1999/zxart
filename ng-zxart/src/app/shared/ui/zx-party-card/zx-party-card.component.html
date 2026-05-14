@@ -3,7 +3,7 @@
     <img [src]="party.imageUrl" [alt]="party.title" loading="lazy" />
   </a>
   <div class="party-info">
-    <a [href]="party.url" class="party-title">{{ party.title }}</a>
-    <span class="party-year" *ngIf="party.year" zxCaption>{{ party.year }}</span>
+    <a [href]="party.url" class="party-title" appText="body" tone="link">{{ party.title }}</a>
+    <span class="party-year" *ngIf="party.year" appText="caption" tone="muted">{{ party.year }}</span>
   </div>
 </zx-panel>

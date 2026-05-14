@@ -10,7 +10,7 @@
             <svg-icon name="expand-more"></svg-icon>
         </button>
         <span *ngIf="!hasChildren" class="tree-node__spacer"></span>
-        <a [href]="node.url" [class.tree-node__link--selected]="node.selected" (click)="onNodeClick($event)">
+        <a [href]="node.url" appText="body" [tone]="node.selected ? 'strong' : 'primary'" (click)="onNodeClick($event)">
             {{ node.name }}
         </a>
     </div>

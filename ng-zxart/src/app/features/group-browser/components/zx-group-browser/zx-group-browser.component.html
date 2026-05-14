@@ -29,9 +29,9 @@
 
 <zx-row-skeleton *ngIf="groups === null && !error" [count]="30"></zx-row-skeleton>
 
-<div *ngIf="error" zxCaption>{{ 'group-browser.error' | translate }}</div>
+<div *ngIf="error" appText="caption" tone="muted">{{ 'group-browser.error' | translate }}</div>
 <div *ngIf="!loading && !error && groups !== null && groups.length === 0"
-     zxCaption>{{ 'group-browser.empty' | translate }}
+     appText="caption" tone="muted">{{ 'group-browser.empty' | translate }}
 </div>
 
 <zx-groups-table

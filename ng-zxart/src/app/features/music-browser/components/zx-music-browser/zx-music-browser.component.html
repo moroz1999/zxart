@@ -13,8 +13,8 @@
   <zx-tune-table-skeleton [count]="10"></zx-tune-table-skeleton>
 </zx-table>
 
-<div *ngIf="error" zxCaption>{{ 'music-browser.error' | translate }}</div>
-<div *ngIf="!loading && !error && tunes.length === 0" zxCaption>{{ 'music-browser.empty' | translate }}</div>
+<div *ngIf="error" appText="caption" tone="muted">{{ 'music-browser.error' | translate }}</div>
+<div *ngIf="!loading && !error && tunes.length === 0" appText="caption" tone="muted">{{ 'music-browser.empty' | translate }}</div>
 
 <zx-table *ngIf="!loading && !error && tunes.length > 0" size="sm">
   <ng-container *ngIf="{ id: playingTuneId$ | async } as playing">

@@ -2,7 +2,7 @@
   <zx-stack spacing="lg">
     <zx-stack *ngIf="isRoot" spacing="lg">
       <zx-inline spacing="md" align="center">
-        <h2 zxHeading2>{{ 'comments.title' | translate }}</h2>
+        <h2 appHeading="headline">{{ 'comments.title' | translate }}</h2>
         <zx-button size="sm" color="primary" (click)="toggleForm()">
           {{ (showForm() ? 'comments.cancel' : 'comments.add') | translate }}
         </zx-button>
@@ -19,7 +19,7 @@
 
       <ng-template #content let-comments>
         @if (comments.length === 0) {
-          <p zxBody>{{ 'comments.empty' | translate }}</p>
+          <p appText="body">{{ 'comments.empty' | translate }}</p>
         } @else {
           <zx-stack spacing="lg">
             <div *ngFor="let comment of comments" class="comment-item">

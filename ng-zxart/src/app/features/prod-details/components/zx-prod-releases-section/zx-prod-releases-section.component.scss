@@ -2,18 +2,8 @@
   display: block;
 }
 
-.prod-releases-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-12);
-}
-
-.prod-releases-section__title {
-  margin: 0;
-}
-
 .prod-releases-section__filter-label {
-  font-size: var(--zx-table-cell-font-size);
+  font-size: var(--zx-prod-releases-section-filter-label-size);
   color: var(--zx-prod-releases-section-filter-label-color);
 }
 
@@ -21,13 +11,19 @@
   width: var(--zx-prod-releases-section-col-thumb-width);
 }
 
+.prod-releases-section__col-title,
+.prod-releases-section__col-year,
+.prod-releases-section__col-downloads,
+.prod-releases-section__col-plays {
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+
 .prod-releases-section__col-year,
 .prod-releases-section__col-downloads,
 .prod-releases-section__col-plays {
   text-align: center;
-  white-space: nowrap;
-  cursor: pointer;
-  user-select: none;
 }
 
 .prod-releases-section__view-toggle {
@@ -36,6 +32,6 @@
 
 .prod-releases-section__cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: var(--space-12);
+  grid-template-columns: repeat(auto-fill, minmax(var(--zx-prod-releases-section-card-min-width), 1fr));
+  gap: var(--zx-prod-releases-section-cards-gap);
 }

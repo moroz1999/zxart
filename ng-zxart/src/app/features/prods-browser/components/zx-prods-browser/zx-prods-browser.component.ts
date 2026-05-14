@@ -6,7 +6,7 @@ import {SvgIconRegistryService} from 'angular-svg-icon';
 import {ZxProd} from '../../../../shared/models/zx-prod';
 import {ZxProdRowComponent} from '../../../../entities/zx-prod-row/zx-prod-row.component';
 import {ZxSpinnerComponent} from '../../../../shared/ui/zx-spinner/zx-spinner.component';
-import {ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
 import {ZxSortSelectComponent} from '../../../../shared/ui/zx-sort-select/zx-sort-select.component';
 import {ZxToggleComponent, ZxToggleOption} from '../../../../shared/ui/zx-toggle/zx-toggle.component';
@@ -25,7 +25,7 @@ export type ProdsBrowserLayout = 'loading' | 'screenshots' | 'table';
     TranslateModule,
     ZxProdRowComponent,
     ZxSpinnerComponent,
-    ZxCaptionDirective,
+    TextDirective,
     ZxPaginationComponent,
     ZxSortSelectComponent,
     ZxToggleComponent,

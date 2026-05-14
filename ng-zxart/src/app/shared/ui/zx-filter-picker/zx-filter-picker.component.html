@@ -1,4 +1,4 @@
-<span *ngIf="label" zxCaption class="zx-filter-picker__label">{{ label }}</span>
+<span *ngIf="label" appText="caption" tone="muted" class="zx-filter-picker__label">{{ label }}</span>
 <div
   class="zx-filter-picker__control"
   [class.zx-filter-picker__control--active]="hasSelection"
@@ -13,7 +13,7 @@
     (click)="togglePopover($event)"
   >
     <span
-      zxBody
+      appText="body"
       class="zx-filter-picker__summary"
       [class.zx-filter-picker__summary--placeholder]="summaryIsPlaceholder"
     >

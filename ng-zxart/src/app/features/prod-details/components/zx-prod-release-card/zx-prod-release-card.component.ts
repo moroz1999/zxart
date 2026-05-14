@@ -7,6 +7,8 @@ import {EmulatorType} from '../../../emulator/engines/emulator-engine';
 import {ProdReleaseDto} from '../../models/prod-release.dto';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxProdLanguageLinksComponent} from '../zx-prod-language-links/zx-prod-language-links.component';
+import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
+import {ZxInsetComponent} from '../../../../shared/ui/zx-inset/zx-inset.component';
 import {environment} from '../../../../../environments/environment';
 
 const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 'tsconf', 'samcoupe', 'zxnext'];
@@ -20,6 +22,8 @@ const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 't
     SvgIconComponent,
     ZxButtonComponent,
     ZxProdLanguageLinksComponent,
+    ZxInlineComponent,
+    ZxInsetComponent,
   ],
   templateUrl: './zx-prod-release-card.component.html',
   styleUrls: ['./zx-prod-release-card.component.scss'],

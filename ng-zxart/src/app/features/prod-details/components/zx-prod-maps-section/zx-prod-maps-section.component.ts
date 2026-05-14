@@ -12,9 +12,10 @@ import {
 } from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {PictureGalleryItem} from '../../../picture-gallery/models/picture-gallery-item';
-import {ZxCaptionDirective, ZxHeading2Directive,} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ProdMapsApiService} from '../../services/prod-maps-api.service';
 import {ProdFileDto} from '../../models/prod-file.dto';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 
 @Component({
   selector: 'zx-prod-maps-section',
@@ -27,8 +28,9 @@ import {ProdFileDto} from '../../models/prod-file.dto';
     ZxPictureGridSkeletonComponent,
     ZxButtonComponent,
     PictureGalleryHostComponent,
-    ZxCaptionDirective,
-    ZxHeading2Directive,
+    TextDirective,
+    HeadingDirective,
+    ZxStackComponent,
   ],
   templateUrl: './zx-prod-maps-section.component.html',
   styleUrls: ['./zx-prod-maps-section.component.scss'],

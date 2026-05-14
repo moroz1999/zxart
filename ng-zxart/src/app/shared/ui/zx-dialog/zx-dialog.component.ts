@@ -3,13 +3,13 @@ import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
-import {ZxHeading2Directive} from '../../directives/typography/typography.directives';
+import {HeadingDirective} from '../typography/directives/heading.directive';
 import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'zx-dialog',
   standalone: true,
-  imports: [CommonModule, TranslateModule, SvgIconComponent, ZxButtonComponent, ZxHeading2Directive],
+  imports: [CommonModule, TranslateModule, SvgIconComponent, ZxButtonComponent, HeadingDirective],
   templateUrl: './zx-dialog.component.html',
   styleUrl: './zx-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

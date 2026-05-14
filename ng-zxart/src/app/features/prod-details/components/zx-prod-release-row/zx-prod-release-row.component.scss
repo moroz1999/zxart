@@ -12,14 +12,12 @@
 
 .release-row__realtime {
   display: inline-block;
-  margin-left: var(--space-4);
   cursor: help;
 }
 
 .release-row__releaseby {
-  font-size: var(--zx-table-cell-font-size);
+  font-size: var(--zx-prod-release-row-releaseby-font-size);
   color: var(--zx-prod-release-row-secondary-color);
-  margin-top: var(--space-2);
 }
 
 .release-row__year,
@@ -29,70 +27,16 @@
   white-space: nowrap;
 }
 
-.release-row__medal {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--zx-medal-size);
-  height: var(--zx-medal-size);
-  border-radius: 50%;
-  font-weight: 700;
-  color: var(--zx-medal-text-color);
-  margin-left: var(--space-4);
-  flex-shrink: 0;
-}
-
-.medal-gold {
-  background: var(--zx-medal-gold-bg);
-}
-
-.medal-silver {
-  background: var(--zx-medal-silver-bg);
-}
-
-.medal-bronze {
-  background: var(--zx-medal-bronze-bg);
-}
-
-.release-row__party {
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-}
-
-.release-row__place {
-  color: var(--zx-prod-release-row-secondary-color);
-}
-
-.release-row__hardware-items {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4) var(--space-8);
-}
-
 .release-row__hardware-item {
   white-space: nowrap;
 }
 
 .release-row__description {
-  margin-top: var(--space-4);
   color: var(--zx-prod-release-row-secondary-color);
 }
 
 .release-row__format-link {
   white-space: nowrap;
-}
-
-.release-row__format-emoji {
-  margin-right: var(--space-4);
-}
-
-.release-row__action-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-  align-items: center;
 }
 
 .release-row__download-icon {
@@ -104,7 +48,7 @@
   width: var(--zx-prod-release-row-thumb-size);
   aspect-ratio: 4/3;
   overflow: hidden;
-  border-radius: var(--radius-sm);
+  border-radius: var(--zx-prod-release-row-thumb-radius);
 }
 
 .release-row__thumb-img {
@@ -116,27 +60,8 @@
   image-rendering: pixelated;
 }
 
-.release-row__screenshots-cell {
-  padding: var(--space-8) var(--space-12);
-}
 
-.release-row__screenshots-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: var(--space-8);
-}
-
-.release-row__screenshot {
-  margin: 0;
-}
-
-.release-row__screenshot-thumb {
-  display: block;
-  width: 100%;
-  height: auto;
-  cursor: pointer;
-}
-
+// Release type pill — shared with release-card
 .release-type-pill {
   display: inline-block;
   padding: var(--zx-release-type-padding);
@@ -144,7 +69,7 @@
   font-size: var(--zx-release-type-font-size);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: var(--zx-release-type-letter-spacing);
   color: var(--zx-release-type-text-color);
   white-space: nowrap;
 }

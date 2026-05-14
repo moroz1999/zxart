@@ -1,6 +1,12 @@
 :root {
   /* Muted color for filter bar labels. */
   --zx-prod-releases-section-filter-label-color: var(--text-light-color);
+  /* Font size for filter bar labels. */
+  --zx-prod-releases-section-filter-label-size: var(--zx-font-size-xs);
   /* Width of the thumbnail column in the releases table header. */
   --zx-prod-releases-section-col-thumb-width: 68px;
+  /* Minimum card width in card view grid. */
+  --zx-prod-releases-section-card-min-width: 240px;
+  /* Gap between cards in card view grid. */
+  --zx-prod-releases-section-cards-gap: var(--space-12);
 }

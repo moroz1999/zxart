@@ -16,6 +16,18 @@
   font-size: var(--zx-tags-chips-chip-font-size);
 }
 
+.zx-tags-chips__chip--link {
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 150ms ease, border-color 150ms ease;
+
+  &:hover {
+    background: var(--zx-tags-chips-chip-hover-bg);
+    color: var(--zx-tags-chips-chip-hover-text);
+    border-color: var(--secondary-300);
+  }
+}
+
 .zx-tags-chips__remove {
   display: flex;
   align-items: center;

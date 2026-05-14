@@ -4,13 +4,23 @@ import {TranslateModule} from '@ngx-translate/core';
 import {ProdAuthorInfoDto, ProdCategoryRefDto, ProdCoreDto} from '../../models/prod-core.dto';
 import {ZxProdVoteRowComponent} from '../zx-prod-vote-row/zx-prod-vote-row.component';
 import {ZxProdExternalLinksComponent} from '../zx-prod-external-links/zx-prod-external-links.component';
-import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
-import {
-  ZxBodySmMutedDirective,
-  ZxHeading1Directive,
-} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 
-const MUSIC_ROLES = new Set(['role_music', 'role_intro_music']);
+interface ProdAuthorRoleGroup {
+  role: string | null;
+  authors: ProdAuthorInfoDto[];
+}
+
+const PRIORITY_AUTHOR_ROLES = [
+  'role_music',
+  'role_intro_music',
+  'role_graphics',
+  'role_intro_graphics',
+  'role_code',
+  'role_intro_code',
+];
 
 @Component({
   selector: 'zx-prod-hero',
@@ -20,9 +30,10 @@ const MUSIC_ROLES = new Set(['role_music', 'role_intro_music']);
     TranslateModule,
     ZxProdVoteRowComponent,
     ZxProdExternalLinksComponent,
-    ZxButtonComponent,
-    ZxHeading1Directive,
-    ZxBodySmMutedDirective,
+    HeadingDirective,
+    TextDirective,
+    ZxStackComponent,
+    ZxInlineComponent,
   ],
   templateUrl: './zx-prod-hero.component.html',
   styleUrls: ['./zx-prod-hero.component.scss'],
@@ -47,11 +58,57 @@ export class ZxProdHeroComponent {
       .filter((cat): cat is ProdCategoryRefDto => !!cat);
   }
 
-  get mainAuthors(): ProdAuthorInfoDto[] {
-    return this.core.authors.filter(a => !a.roles.every(r => MUSIC_ROLES.has(r)));
+  get showLegalStatus(): boolean {
+    return this.core.legalStatus !== 'unknown';
   }
 
-  get musicAuthors(): ProdAuthorInfoDto[] {
-    return this.core.authors.filter(a => a.roles.length > 0 && a.roles.every(r => MUSIC_ROLES.has(r)));
+  get authorRoleGroups(): ProdAuthorRoleGroup[] {
+    const groupedAuthors = new Map<string, ProdAuthorInfoDto[]>();
+    const authorsWithoutRoles: ProdAuthorInfoDto[] = [];
+
+    for (const author of this.core.authors) {
+      const roles = author.roles.length ? author.roles : [null];
+      for (const role of roles) {
+        if (role === null) {
+          authorsWithoutRoles.push(author);
+          continue;
+        }
+        groupedAuthors.set(role, [...(groupedAuthors.get(role) ?? []), author]);
+      }
+    }
+
+    const sortedRoles = Array.from(groupedAuthors.keys()).sort((a, b) => this.getRoleOrder(a) - this.getRoleOrder(b));
+    const groups: ProdAuthorRoleGroup[] = sortedRoles.map(role => ({role, authors: groupedAuthors.get(role) ?? []}));
+
+    if (authorsWithoutRoles.length > 0) {
+      groups.push({role: null, authors: authorsWithoutRoles});
+    }
+
+    return groups;
+  }
+
+  get hasAuthorRoleGroups(): boolean {
+    return this.authorRoleGroups.length > 0;
+  }
+
+  get hasPeopleInfo(): boolean {
+    return this.hasAuthorRoleGroups || this.core.publishers.length > 0 || this.core.groups.length > 0 || this.core.party !== null;
+  }
+
+  trackAuthorRoleGroup(_index: number, group: ProdAuthorRoleGroup): string {
+    return group.role ?? 'authors';
+  }
+
+  trackAuthor(_index: number, author: ProdAuthorInfoDto): number {
+    return author.id;
+  }
+
+  roleLabelKey(role: string | null): string {
+    return role === null ? 'prod-details.authors' : `author.role.${role.replace(/^role_/, '')}`;
+  }
+
+  private getRoleOrder(role: string): number {
+    const priorityIndex = PRIORITY_AUTHOR_ROLES.indexOf(role);
+    return priorityIndex === -1 ? PRIORITY_AUTHOR_ROLES.length : priorityIndex;
   }
 }

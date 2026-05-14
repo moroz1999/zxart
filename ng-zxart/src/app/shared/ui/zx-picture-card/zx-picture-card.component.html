@@ -19,15 +19,15 @@
     </div>
   </div>
   <div class="picture-info">
-    <a [href]="picture.url" class="picture-title">{{ picture.title }}</a>
-    <div class="picture-authors" *ngIf="picture.authors.length">
+    <a [href]="picture.url" class="picture-title" appText="body" tone="link">{{ picture.title }}</a>
+    <div class="picture-authors" *ngIf="picture.authors.length" appText="caption" tone="muted">
       <ng-container *ngFor="let author of picture.authors; last as last">
-        <a [href]="author.url">{{ author.name }}</a><span *ngIf="!last">, </span>
+        <a [href]="author.url" appText="caption" tone="muted-link">{{ author.name }}</a><span *ngIf="!last">, </span>
       </ng-container>
     </div>
     <div class="picture-party" *ngIf="picture.party">
-      <span *ngIf="medalClass" [class]="medalClass" class="medal">{{ picture.party.place }}</span>
-      <a [href]="picture.party.url" zxCaption>{{ picture.party.title }}</a>
+      <span *ngIf="medalClass" [class]="medalClass" class="medal" appText="caption" tone="inherit">{{ picture.party.place }}</span>
+      <a [href]="picture.party.url" appText="caption" tone="muted-link">{{ picture.party.title }}</a>
     </div>
     <div class="picture-bottom">
       <zx-item-controls
@@ -38,7 +38,7 @@
         [userRating]="picture.userVote"
         [denyVoting]="picture.denyVoting"
       ></zx-item-controls>
-      <span class="picture-year" *ngIf="picture.year">{{ picture.year }}</span>
+      <span class="picture-year" *ngIf="picture.year" appText="caption" tone="link-alt">{{ picture.year }}</span>
     </div>
   </div>
 </zx-panel>

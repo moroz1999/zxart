@@ -1,17 +1,17 @@
 :root {
   /* ZxButton Component variables */
   --zx-button-xs-height: 24px;
-  --zx-button-xs-font-size: var(--font-xs);
+  --zx-button-xs-font-size: var(--zx-font-size-xs);
   --zx-button-xs-h-padding: var(--space-8);
   --zx-button-xs-padding: 0 var(--zx-button-xs-h-padding);
 
   --zx-button-sm-height: 30px;
-  --zx-button-sm-font-size: var(--font-sm);
+  --zx-button-sm-font-size: var(--zx-font-size-sm);
   --zx-button-sm-h-padding: var(--space-12);
   --zx-button-sm-padding: 0 var(--zx-button-sm-h-padding);
 
   --zx-button-md-height: 36px;
-  --zx-button-md-font-size: var(--font-md);
+  --zx-button-md-font-size: var(--zx-font-size-md);
   --zx-button-md-h-padding: var(--space-16);
   --zx-button-md-padding: 0 var(--zx-button-md-h-padding);
 

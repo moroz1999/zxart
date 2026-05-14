@@ -24,7 +24,7 @@ VARIABLE HIERARCHY (TOP → BOTTOM)
 2. Semantic theme variables
    --primary-*, --secondary-*, --surface-*, etc.
 3. Base system variables
-   --space-*, --radius-*, --font-*, animation variables
+   --space-*, --radius-*, --zx-font-size-*, animation variables
 
 RULES
 
@@ -76,34 +76,35 @@ COMPONENT VARIABLES
 
 TYPOGRAPHY (STRICT)
 
-ALLOWED SEMANTIC STYLES
+ALLOWED TYPOGRAPHY VARIANTS
 
-- heading-1
-- heading-2
-- heading-3
+- display
+- headline
+- title
 - body
-- body-strong
+- bodySm
 - caption
-- link
-- link-alt
+- label
 
 USAGE RULES
 
-- Typography MUST be applied ONLY via directives:
-  zxHeading1, zxHeading2, zxHeading3
-  zxBody, zxBodyStrong, zxCaption
-  zxLink, zxLinkAlt
+- Typography MUST be applied only via typography directives or the standalone `app-text` component from `shared/ui/typography`.
+- Use directives when the semantic element already exists:
+  `appHeading`, `appText`, `appLabel`.
+- Use `app-text` only when creating a standalone typography wrapper.
 - Direct usage of --font-* variables in components is FORBIDDEN.
 - Custom typography variants or display styles are FORBIDDEN.
 - Typography directives MUST be applied to the host element only.
-- Combining typography directives with manual font overrides is FORBIDDEN.
+- Combining typography directives with manual typography overrides is FORBIDDEN.
+- Legacy `zx*` typography directives are compatibility-only and MUST NOT be used in new templates.
 
 FORBIDDEN EXAMPLES
 
-- zxBody with custom font-size
-- zxCaption with custom line-height
+- appText with custom font-size
+- appText="caption" with custom line-height
+- app-text with `as`, `tag`, or `element` input
 
-If a required directive is missing, ASK the user.
+If a required variant or tone is missing, ASK the user.
 
 ======================================================================
 

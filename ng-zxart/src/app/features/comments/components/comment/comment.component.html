@@ -7,9 +7,9 @@
             <img [src]="comment.target.imageUrl" [alt]="comment.target.title" loading="lazy"/>
           </a>
           <zx-stack class="comment-target-info" gap="xs">
-            <a [href]="comment.target.url" zxLink class="comment-target-title">{{ comment.target.title }}</a>
+            <a [href]="comment.target.url" appText="label" tone="link" class="comment-target-title">{{ comment.target.title }}</a>
             @if (comment.target.authorName) {
-              <span zxCaption class="comment-target-author">{{ comment.target.authorName }}</span>
+              <span appText="label" tone="muted" class="comment-target-author">{{ comment.target.authorName }}</span>
             }
           </zx-stack>
         </zx-stack>
@@ -18,9 +18,9 @@
       <div class="comment-main">
         @if (showTarget && comment.target && !hasImage) {
           <zx-inset class="comment-target-inline" padding="md" side="bottom">
-            <a [href]="comment.target.url" zxLink>{{ comment.target.title }}</a>
+            <a [href]="comment.target.url" appText="body" tone="link">{{ comment.target.title }}</a>
             @if (comment.target.authorName) {
-              <span zxCaption> — {{ comment.target.authorName }}</span>
+              <span appText="label" tone="muted"> - {{ comment.target.authorName }}</span>
             }
           </zx-inset>
         }
@@ -28,11 +28,11 @@
         <zx-stack spacing="md">
           <zx-inline spacing="sm">
             <zx-user *ngIf="comment.author" [user]="comment.author"></zx-user>
-            <span class="comment-date" zxCaption>{{ comment.date }}</span>
+            <span class="comment-date" appText="label" tone="muted">{{ comment.date }}</span>
           </zx-inline>
 
           <div class="comment-body">
-            <div *ngIf="!showEditForm" class="comment-content" zxBody>
+            <div *ngIf="!showEditForm" class="comment-content" appText="body">
               <span [innerHTML]="safeContent"></span>
             </div>
             <zx-comment-form

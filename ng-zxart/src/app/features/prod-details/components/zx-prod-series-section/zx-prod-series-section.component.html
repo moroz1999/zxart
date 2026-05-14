@@ -1,15 +1,15 @@
-<div class="prod-series-section">
+<zx-stack spacing="md">
   <ng-container *ngIf="prods$ | async as prods; else loading">
     <ng-container *ngIf="prods.length > 0">
-      <div class="prod-series-section__header">
-        <h2 zxHeading2 class="prod-series-section__title">{{ 'prod-details.series' | translate }}</h2>
+      <zx-inline spacing="sm" align="baseline" [wrap]="true">
+        <h2 appHeading="headline">{{ 'prod-details.series' | translate }}</h2>
         <zx-button
           *ngIf="seriesUrl$ | async as seriesUrl"
           size="xs"
           color="outlined"
           [href]="seriesUrl"
         >{{ 'prod-details.openSeries' | translate }}</zx-button>
-      </div>
+      </zx-inline>
       <zx-prods-list-view
         [items$]="prods$"
         property="seriesProds"
@@ -17,11 +17,11 @@
       ></zx-prods-list-view>
     </ng-container>
   </ng-container>
-</div>
+</zx-stack>
 
 <ng-template #loading>
-  <div class="prod-series-section__header">
-    <h2 zxHeading2 class="prod-series-section__title">{{ 'prod-details.series' | translate }}</h2>
-  </div>
+  <zx-inline spacing="sm" align="baseline" [wrap]="true">
+    <h2 appHeading="headline">{{ 'prod-details.series' | translate }}</h2>
+  </zx-inline>
   <zx-prods-list-skeleton [count]="4"></zx-prods-list-skeleton>
 </ng-template>

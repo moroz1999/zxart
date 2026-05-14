@@ -12,7 +12,8 @@ import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.compo
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ViewportLoaderComponent} from '../../../../shared/components/viewport-loader/viewport-loader.component';
 import {Observable, of, Subject} from 'rxjs';
-import {ZxBodyDirective} from "../../../../shared/directives/typography/typography.directives";
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
+import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {
   ZxCommentSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-comment-skeleton/zx-comment-skeleton.component';
@@ -30,7 +31,8 @@ import {
     ZxInlineComponent,
     ZxPanelComponent,
     ViewportLoaderComponent,
-    ZxBodyDirective,
+    TextDirective,
+    HeadingDirective,
     ZxCommentSkeletonComponent,
   ],
   templateUrl: './comments-list.component.html',

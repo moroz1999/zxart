@@ -1,10 +1,3 @@
 :host {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-8);
-}
-
-.prod-vote-row__percent {
-  font-size: var(--zx-prod-vote-row-count-size);
-  color: var(--zx-prod-vote-row-count-color);
+  display: block;
 }

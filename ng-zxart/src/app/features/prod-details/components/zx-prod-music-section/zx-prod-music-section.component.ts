@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {ZxCaptionDirective, ZxHeading2Directive,} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ZxMusicListComponent} from '../../../music-list/components/zx-music-list/zx-music-list.component';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
 import {
@@ -18,6 +18,7 @@ import {
 import {ZxTuneDto} from '../../../../shared/models/zx-tune-dto';
 import {MusicListService} from '../../../music-list/services/music-list.service';
 import {Subscription} from 'rxjs';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 
 @Component({
   selector: 'zx-prod-music-section',
@@ -25,11 +26,12 @@ import {Subscription} from 'rxjs';
   imports: [
     CommonModule,
     TranslateModule,
-    ZxHeading2Directive,
+    HeadingDirective,
     ZxMusicListComponent,
     ZxTableComponent,
     ZxTuneTableSkeletonComponent,
-    ZxCaptionDirective,
+    TextDirective,
+    ZxStackComponent,
   ],
   templateUrl: './zx-prod-music-section.component.html',
   styleUrls: ['./zx-prod-music-section.component.scss'],

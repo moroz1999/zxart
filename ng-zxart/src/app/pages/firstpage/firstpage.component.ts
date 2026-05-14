@@ -16,7 +16,7 @@ import {
 import {ZxInlineComponent} from '../../shared/ui/zx-inline/zx-inline.component';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
-import {ZxHeading1Directive} from '../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../shared/directives/typography/typography.directives';
 import {
   PictureGalleryHostComponent
 } from '../../features/picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
@@ -37,7 +37,7 @@ interface ModuleEntry {
     ZxInlineComponent,
     ZxStackComponent,
     ZxButtonComponent,
-    ZxHeading1Directive,
+    HeadingDirective,
     PictureGalleryHostComponent,
   ],
   templateUrl: './firstpage.component.html',

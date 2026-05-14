@@ -3,13 +3,13 @@
     <div class="zx-emulator-dialog__canvas-wrap">
       <canvas #canvas class="zx-emulator-dialog__canvas" id="canvas" tabindex="0" width="960" height="720"></canvas>
       <div *ngIf="loading" class="zx-emulator-dialog__overlay">
-        <span zxBodySmMuted>{{ 'emulator.loading' | translate }}</span>
+        <span appText="label" tone="muted">{{ 'emulator.loading' | translate }}</span>
       </div>
       <div *ngIf="error" class="zx-emulator-dialog__overlay">
-        <span zxBodySmMuted>{{ error }}</span>
+        <span appText="label" tone="muted">{{ error }}</span>
       </div>
     </div>
-    <p *ngIf="showSamcoupeNote" class="zx-emulator-dialog__note" zxBodySmMuted>
+    <p *ngIf="showSamcoupeNote" class="zx-emulator-dialog__note" appText="label" tone="muted">
       {{ 'emulator.samcoupe' | translate }}
     </p>
   </div>
@@ -17,7 +17,7 @@
   <div zxDialogFooter>
     <zx-button-controls align="end" class="zx-emulator-dialog__controls">
       <label *ngIf="showScreenshotControls" class="zx-emulator-dialog__selector">
-        <span zxBodySmMuted>{{ 'emulator.screenshot-format-label' | translate }}</span>
+        <span appText="label" tone="muted">{{ 'emulator.screenshot-format-label' | translate }}</span>
         <select [(ngModel)]="screenshotSelection">
           <option value="48">48</option>
           <option value="128">128</option>

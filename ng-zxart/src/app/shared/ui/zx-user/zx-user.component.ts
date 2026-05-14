@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, HostBinding, Input, OnInit} from '@a
 import {CommonModule} from '@angular/common';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {CommentAuthorDto} from '../../../features/comments/models/comment.dto';
-import {ZxCaptionDirective, ZxLinkDirective} from '../../directives/typography/typography.directives';
+import {TextDirective} from '../typography/directives/text.directive';
 import {environment} from '../../../../environments/environment';
 
 @Component({
@@ -11,8 +11,7 @@ import {environment} from '../../../../environments/environment';
   imports: [
     CommonModule,
     SvgIconComponent,
-    ZxCaptionDirective,
-    ZxLinkDirective,
+    TextDirective,
   ],
   templateUrl: './zx-user.component.html',
   styleUrls: ['./zx-user.component.scss'],
@@ -23,11 +22,6 @@ export class ZxUserComponent implements OnInit {
   @Input({required: true}) user!: CommentAuthorDto;
   @Input() linkDisabled = false;
   @Input() namePrimary = false;
-
-  @HostBinding('style.--zx-user-name-color')
-  get nameColorVar(): string | null {
-    return this.namePrimary ? 'var(--text-color)' : null;
-  }
 
   constructor(private iconReg: SvgIconRegistryService) {}
 

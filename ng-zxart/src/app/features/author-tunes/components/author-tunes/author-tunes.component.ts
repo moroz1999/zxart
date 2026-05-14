@@ -8,7 +8,7 @@ import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.
 import {
   ZxTuneTableSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-tune-table-skeleton/zx-tune-table-skeleton.component';
-import {ZxCaptionDirective} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {PlayerService} from '../../../player/services/player.service';
 import {AuthorTunesService} from '../../services/author-tunes.service';
@@ -28,7 +28,7 @@ interface YearGroup {
     ZxTableComponent,
     ZxTuneRowComponent,
     ZxTuneTableSkeletonComponent,
-    ZxCaptionDirective,
+    TextDirective,
     ZxStackComponent,
   ],
   templateUrl: './author-tunes.component.html',

@@ -2,22 +2,12 @@
   display: block;
 }
 
-.latest-comment {
-  line-height: 1.4;
-}
-
 .latest-comment__author {
   vertical-align: middle;
 }
 
 .latest-comment__link {
-  text-decoration: none;
-  color: var(--zx-caption-color);
   display: block;
-
-  &:hover {
-    text-decoration: underline;
-  }
 }
 
 .latest-comment__content {
@@ -27,5 +17,4 @@
 .latest-comments__all {
   display: inline-block;
   margin-top: var(--space-12);
-  text-decoration: none;
 }

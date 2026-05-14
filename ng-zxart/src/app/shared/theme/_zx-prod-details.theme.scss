@@ -3,4 +3,16 @@
   --zx-prod-details-video-width: calc((var(--space-64) * 5) + var(--space-40));
   /* Minimum info column width before wrapping below the video. */
   --zx-prod-details-info-min-width: calc(var(--space-64) * 5);
+
+  /* Top border of the tags section inside the about panel. */
+  --zx-prod-details-tags-section-border: var(--border-width-thin) dashed var(--secondary-200);
+
+  /* Font size for the tags section label. */
+  --zx-prod-details-tags-label-font-size: var(--zx-font-size-xs);
+  /* Color for the tags section label. */
+  --zx-prod-details-tags-label-color: var(--text-light-color);
+  /* Letter spacing for the tags section label. */
+  --zx-prod-details-tags-label-letter-spacing: 0.04em;
+  /* Line height for the tags section label. */
+  --zx-prod-details-tags-label-line-height: 1.8;
 }
