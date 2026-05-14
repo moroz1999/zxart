@@ -8,7 +8,6 @@ import {ZxYoutubeEmbedComponent} from '../../../../shared/ui/zx-youtube-embed/zx
 import {ProdCoreApiService} from '../../services/prod-core-api.service';
 import {ProdCoreDto} from '../../models/prod-core.dto';
 import {ZxProdHeroComponent} from '../zx-prod-hero/zx-prod-hero.component';
-import {ZxProdEditingControlsComponent} from '../zx-prod-editing-controls/zx-prod-editing-controls.component';
 import {ZxProdDescriptionComponent} from '../zx-prod-description/zx-prod-description.component';
 import {ZxProdInstructionsComponent} from '../zx-prod-instructions/zx-prod-instructions.component';
 import {ZxProdScreenshotsSectionComponent,} from '../zx-prod-screenshots-section/zx-prod-screenshots-section.component';
@@ -42,6 +41,7 @@ import {RatingsListComponent} from '../../../ratings/components/ratings-list/rat
 import {TranslateModule} from '@ngx-translate/core';
 import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
 import {ZxTagsChipsComponent} from '../../../../shared/ui/zx-tags-chips/zx-tags-chips.component';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 
 @Component({
   selector: 'zx-prod-details',
@@ -51,7 +51,6 @@ import {ZxTagsChipsComponent} from '../../../../shared/ui/zx-tags-chips/zx-tags-
     ZxProdDetailsSkeletonComponent,
     ZxYoutubeEmbedComponent,
     ZxProdHeroComponent,
-    ZxProdEditingControlsComponent,
     ZxProdDescriptionComponent,
     ZxProdInstructionsComponent,
     ZxProdScreenshotsSectionComponent,
@@ -79,6 +78,7 @@ import {ZxTagsChipsComponent} from '../../../../shared/ui/zx-tags-chips/zx-tags-
     RatingsListComponent,
     ZxBreadcrumbsComponent,
     ZxTagsChipsComponent,
+    TextDirective,
   ],
   templateUrl: './zx-prod-details.component.html',
   styleUrls: ['./zx-prod-details.component.scss'],

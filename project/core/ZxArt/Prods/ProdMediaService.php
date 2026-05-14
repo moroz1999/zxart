@@ -6,6 +6,7 @@ namespace ZxArt\Prods;
 
 use fileElement;
 use structureManager;
+use ZxArt\LinkTypes;
 use ZxArt\Prods\Dto\ProdFileDto;
 use ZxArt\Prods\Dto\ProdFilesDto;
 use ZxArt\Prods\Dto\ProdMapsDto;
@@ -16,11 +17,6 @@ use zxReleaseElement;
 
 readonly class ProdMediaService
 {
-    private const string CONNECTED_FILE_SELECTOR = 'connectedFile';
-    private const string INLAY_FILES_SELECTOR = 'inlayFilesSelector';
-    private const string MAP_FILES_SELECTOR = 'mapFilesSelector';
-    private const string RZX_SELECTOR = 'rzx';
-    private const string RELEASE_SCREENSHOTS_SELECTOR = 'screenshotsSelector';
 
     private const string PROD_IMAGE_PRESET = 'prodImage';
     private const string PROD_IMAGE_FULL_PRESET = 'prodImageFull';
@@ -39,7 +35,7 @@ readonly class ProdMediaService
         $prod = $this->prodElementService->get($elementId);
         return new ProdFilesDto(
             files: $this->buildFiles(
-                $prod->getFilesList(self::CONNECTED_FILE_SELECTOR),
+                $prod->getFilesList(LinkTypes::CONNECTED_FILE->value),
                 self::PROD_IMAGE_PRESET,
                 self::PROD_IMAGE_FULL_PRESET,
             ),
@@ -59,7 +55,7 @@ readonly class ProdMediaService
                 : null;
             $releaseBy = $this->prodInfoBuilder->buildReleaseBy($release);
 
-            foreach ($release->getFilesList(self::INLAY_FILES_SELECTOR) as $file) {
+            foreach ($release->getFilesList(LinkTypes::INLAY_FILES_SELECTOR->value) as $file) {
                 if (!$file instanceof fileElement) {
                     continue;
                 }
@@ -89,7 +85,7 @@ readonly class ProdMediaService
         $prod = $this->prodElementService->get($elementId);
         return new ProdMapsDto(
             files: $this->buildFiles(
-                $prod->getFilesList(self::MAP_FILES_SELECTOR),
+                $prod->getFilesList(LinkTypes::MAP_FILES_SELECTOR->value),
                 self::PROD_MAP_IMAGE_PRESET,
                 self::PROD_MAP_IMAGE_FULL_PRESET,
             ),
@@ -102,7 +98,7 @@ readonly class ProdMediaService
         $prod = $this->prodElementService->get($elementId);
         return new ProdFilesDto(
             files: $this->buildFiles(
-                $prod->getFilesList(self::RZX_SELECTOR),
+                $prod->getFilesList(LinkTypes::RZX->value),
                 null,
                 null,
             ),
@@ -123,7 +119,7 @@ readonly class ProdMediaService
     {
         return new ProdFilesDto(
             files: $this->buildFiles(
-                $release->getFilesList(self::RELEASE_SCREENSHOTS_SELECTOR),
+                $release->getFilesList(LinkTypes::SCREENSHOTS_SELECTOR->value),
                 self::PROD_IMAGE_PRESET,
                 self::PROD_IMAGE_FULL_PRESET,
             ),

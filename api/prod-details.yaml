@@ -56,6 +56,7 @@ components:
         - tags
         - voting
         - submitter
+        - tabs
       properties:
         elementId:
           type: integer
@@ -135,6 +136,40 @@ components:
             - $ref: '#/components/schemas/ProdSubmitter'
             - type: 'null'
           nullable: true
+        tabs:
+          $ref: '#/components/schemas/ProdTabs'
+
+    ProdTabs:
+      type: object
+      required:
+        - hasScreenshots
+        - hasInlays
+        - hasMaps
+        - hasRzx
+        - hasPictures
+        - hasTunes
+        - hasArticles
+        - hasSeries
+        - hasCompilations
+      properties:
+        hasScreenshots:
+          type: boolean
+        hasInlays:
+          type: boolean
+        hasMaps:
+          type: boolean
+        hasRzx:
+          type: boolean
+        hasPictures:
+          type: boolean
+        hasTunes:
+          type: boolean
+        hasArticles:
+          type: boolean
+        hasSeries:
+          type: boolean
+        hasCompilations:
+          type: boolean
 
     ProdCategoryRef:
       type: object

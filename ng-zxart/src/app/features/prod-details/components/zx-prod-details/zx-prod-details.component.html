@@ -1,10 +1,5 @@
 <ng-container *ngIf="core$ | async as core; else loading">
   <zx-stack spacing="md" class="prod-details">
-    <zx-prod-editing-controls
-      [elementId]="core.elementId"
-      [prodUrl]="core.prodUrl">
-    </zx-prod-editing-controls>
-
     <zx-breadcrumbs
       [categories]="core.categoriesPaths.length ? core.categoriesPaths[0].categories : []"
       [currentTitle]="core.h1">
@@ -19,7 +14,7 @@
       <zx-prod-hero class="prod-details__info" [core]="core"></zx-prod-hero>
     </zx-inline>
 
-    <zx-panel *ngIf="core.elementId" padding="md" variant="elevated">
+    <zx-panel *ngIf="core.tabs.hasScreenshots" padding="md" variant="elevated">
       <zx-prod-screenshots-section [elementId]="core.elementId"></zx-prod-screenshots-section>
     </zx-panel>
 
@@ -29,7 +24,7 @@
       titleLevel="h2"
       variant="elevated">
       <zx-stack spacing="md">
-        <div *ngIf="core.generatedDescription" [innerHTML]="core.generatedDescription"></div>
+        <div *ngIf="core.generatedDescription" appText="body" [innerHTML]="core.generatedDescription"></div>
         <zx-prod-description
           *ngIf="core.description"
           [description]="core.description"
@@ -56,41 +51,45 @@
         </zx-prod-releases-section>
       </zx-tab>
 
-      <zx-tab [label]="'prod-details.tab.media.title' | translate">
+      <zx-tab
+        *ngIf="core.tabs.hasInlays || core.tabs.hasMaps || core.tabs.hasRzx || core.tabs.hasPictures || core.tabs.hasTunes"
+        [label]="'prod-details.tab.media.title' | translate">
         <zx-tabs>
-          <zx-tab [label]="'prod-details.tab.media.inlays' | translate">
+          <zx-tab *ngIf="core.tabs.hasInlays" [label]="'prod-details.tab.media.inlays' | translate">
             <zx-prod-inlays-section [elementId]="core.elementId"></zx-prod-inlays-section>
           </zx-tab>
-          <zx-tab [label]="'prod-details.tab.media.maps' | translate">
+          <zx-tab *ngIf="core.tabs.hasMaps" [label]="'prod-details.tab.media.maps' | translate">
             <zx-prod-maps-section [elementId]="core.elementId"></zx-prod-maps-section>
           </zx-tab>
-          <zx-tab [label]="'prod-details.tab.media.rzx' | translate">
+          <zx-tab *ngIf="core.tabs.hasRzx" [label]="'prod-details.tab.media.rzx' | translate">
             <zx-prod-rzx-section [elementId]="core.elementId"></zx-prod-rzx-section>
           </zx-tab>
-          <zx-tab [label]="'prod-details.tab.media.graphics' | translate">
+          <zx-tab *ngIf="core.tabs.hasPictures" [label]="'prod-details.tab.media.graphics' | translate">
             <zx-prod-pictures-section [elementId]="core.elementId"></zx-prod-pictures-section>
           </zx-tab>
-          <zx-tab [label]="'prod-details.tab.media.music' | translate">
+          <zx-tab *ngIf="core.tabs.hasTunes" [label]="'prod-details.tab.media.music' | translate">
             <zx-prod-music-section [elementId]="core.elementId"></zx-prod-music-section>
           </zx-tab>
         </zx-tabs>
       </zx-tab>
 
-      <zx-tab [label]="'prod-details.tab.links.title' | translate">
+      <zx-tab
+        *ngIf="core.tabs.hasArticles || core.tabs.hasSeries || core.tabs.hasCompilations"
+        [label]="'prod-details.tab.links.title' | translate">
         <zx-tabs>
-          <zx-tab [label]="'prod-details.tab.links.articles' | translate">
+          <zx-tab *ngIf="core.tabs.hasArticles" [label]="'prod-details.tab.links.articles' | translate">
             <zx-stack spacing="xl">
               <zx-prod-articles-section [elementId]="core.elementId"></zx-prod-articles-section>
               <zx-prod-mentions-section [elementId]="core.elementId"></zx-prod-mentions-section>
             </zx-stack>
           </zx-tab>
-          <zx-tab [label]="'prod-details.tab.links.series' | translate">
+          <zx-tab *ngIf="core.tabs.hasSeries" [label]="'prod-details.tab.links.series' | translate">
             <zx-stack spacing="xl">
               <zx-prod-series-section [elementId]="core.elementId"></zx-prod-series-section>
               <zx-prod-series-prods-section [elementId]="core.elementId"></zx-prod-series-prods-section>
             </zx-stack>
           </zx-tab>
-          <zx-tab [label]="'prod-details.tab.links.compilations' | translate">
+          <zx-tab *ngIf="core.tabs.hasCompilations" [label]="'prod-details.tab.links.compilations' | translate">
             <zx-stack spacing="xl">
               <zx-prod-compilations-section [elementId]="core.elementId"></zx-prod-compilations-section>
               <zx-prod-compilation-items-section [elementId]="core.elementId"></zx-prod-compilation-items-section>

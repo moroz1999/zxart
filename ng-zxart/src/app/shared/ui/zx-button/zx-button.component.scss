@@ -3,6 +3,11 @@
   max-width: 100%;
 }
 
+:host(.zx-button-host--block) {
+  display: block;
+  width: 100%;
+}
+
 .zx-button {
   display: inline-flex;
   align-items: center;
@@ -166,6 +171,10 @@
     width: var(--zx-button-current-height);
     min-width: 0;
     padding: 0;
+  }
+
+  &--block {
+    width: 100%;
   }
 }
 

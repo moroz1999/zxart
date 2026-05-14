@@ -611,6 +611,7 @@
     "role_video": "Vídeo",
     "role_translation": "Traducción",
     "role_restoring": "Restaurando",
+    "actions": "Acciones de producción",
     "edit": "Editar la producción",
     "showAiForm": "AI",
     "resize": "Resize screens",
@@ -645,6 +646,7 @@
         "title": "Medios",
         "articles": "Artículos y mapas",
         "inlays": "Carátulas",
+        "maps": "Mapas",
         "rzx": "RZX",
         "graphics": "Gráficos",
         "music": "Música"

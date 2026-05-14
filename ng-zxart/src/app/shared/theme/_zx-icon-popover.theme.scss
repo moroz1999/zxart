@@ -1,0 +1,18 @@
+:root {
+  /* Trigger icon size. */
+  --zx-icon-popover-icon-size: 18px;
+  /* Popover surface background. */
+  --zx-icon-popover-bg: var(--zx-panel-bg);
+  /* Popover border. */
+  --zx-icon-popover-border: var(--border-width-thin) solid var(--border-form);
+  /* Popover corner radius. */
+  --zx-icon-popover-radius: var(--radius-md);
+  /* Popover elevation shadow. */
+  --zx-icon-popover-shadow: var(--shadow-sm);
+  /* Popover inner spacing. */
+  --zx-icon-popover-padding: var(--space-8);
+  /* Popover minimum width. */
+  --zx-icon-popover-min-width: calc(var(--space-64) * 2);
+  /* Popover maximum width. */
+  --zx-icon-popover-max-width: calc(var(--space-64) * 4);
+}

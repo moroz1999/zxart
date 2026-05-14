@@ -21,4 +21,10 @@ enum LinkTypes: string
     case COMPILATION = 'compilation';
     case STRUCTURE = 'structure';
     case COMMENT_TARGET = 'commentTarget';
+    case PROD_ARTICLE = 'prodArticle';
+    case CONNECTED_FILE = 'connectedFile';
+    case MAP_FILES_SELECTOR = 'mapFilesSelector';
+    case RZX = 'rzx';
+    case INLAY_FILES_SELECTOR = 'inlayFilesSelector';
+    case SCREENSHOTS_SELECTOR = 'screenshotsSelector';
 }

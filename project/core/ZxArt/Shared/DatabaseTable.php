@@ -11,4 +11,5 @@ enum DatabaseTable: string
     case StructureLinks = 'structure_links';
     case VotesHistory = 'votes_history';
     case ZxMusic = 'module_zxmusic';
+    case ZxPicture = 'module_zxpicture';
 }

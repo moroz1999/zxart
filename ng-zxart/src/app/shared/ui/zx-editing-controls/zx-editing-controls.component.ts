@@ -9,6 +9,7 @@ import {ConfirmDialogService} from '../zx-confirm-dialog/confirm-dialog.service'
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../zx-button-controls/zx-button-controls.component';
 import {ZxSkeletonBoneComponent} from '../zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
+import {ZxIconPopoverComponent} from '../zx-icon-popover/zx-icon-popover.component';
 
 export interface ZxEditingControlConfirm {
   readonly titleKey: string;
@@ -51,6 +52,7 @@ interface EditingControlsVm {
     TranslateModule,
     ZxButtonComponent,
     ZxButtonControlsComponent,
+    ZxIconPopoverComponent,
     ZxSkeletonBoneComponent,
   ],
   templateUrl: './zx-editing-controls.component.html',
@@ -61,6 +63,8 @@ export class ZxEditingControlsComponent implements OnChanges {
   @Input({required: true}) elementId!: number;
   @Input({required: true}) actions: readonly ZxEditingControlAction[] = [];
   @Input({required: true}) buildActionUrl!: (action: string, elementId: number) => string;
+  @Input() presentation: 'inline' | 'popover' = 'inline';
+  @Input() popoverAriaLabel = '';
 
   private readonly configStore = new BehaviorSubject<EditingControlsConfig | null>(null);
   readonly skeletonItems = [0, 1, 2];

@@ -73,6 +73,9 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
                 return [];
             },
             'importIds' => 'getImportIdsIndex',
+            'votes' => 'getVotes',
+            'votesAmount' => 'getVotesAmount',
+            'userVote' => 'getUserVote',
             'archiveFiles' => 'getArchiveFilesForHardware',
             'playUrl' => function (zxReleaseElement $element) {
                 return $element->getFileUrl(true);
@@ -103,6 +106,9 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
                 'ads',
                 'instructions',
                 'importIds',
+                'votes',
+                'votesAmount',
+                'userVote',
                 'releaseStructure',
                 'prodId',
             ],

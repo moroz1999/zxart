@@ -1,5 +1,5 @@
 <ng-container *ngIf="vm$ | async as vm">
-  <div *ngIf="vm.loading" class="zx-editing-controls-skeleton">
+  <div *ngIf="presentation === 'inline' && vm.loading" class="zx-editing-controls-skeleton">
     <zx-skeleton-bone
       *ngFor="let item of skeletonItems; index as i"
       class="zx-editing-controls-skeleton__item"
@@ -7,7 +7,7 @@
     ></zx-skeleton-bone>
   </div>
 
-  <zx-button-controls *ngIf="!vm.loading" align="start" [wrap]="true">
+  <zx-button-controls *ngIf="presentation === 'inline' && !vm.loading" align="start" [wrap]="true">
     <zx-button
       *ngFor="let item of vm.actions"
       [color]="item.action.color || 'primary'"
@@ -16,4 +16,19 @@
       {{ item.action.labelKey | translate }}
     </zx-button>
   </zx-button-controls>
+
+  <zx-icon-popover
+    *ngIf="presentation === 'popover' && !vm.loading && vm.actions.length"
+    [ariaLabel]="popoverAriaLabel"
+  >
+    <zx-button
+      *ngFor="let item of vm.actions"
+      [color]="item.action.color || 'primary'"
+      size="sm"
+      [block]="true"
+      (click)="runAction(item)"
+    >
+      {{ item.action.labelKey | translate }}
+    </zx-button>
+  </zx-icon-popover>
 </ng-container>

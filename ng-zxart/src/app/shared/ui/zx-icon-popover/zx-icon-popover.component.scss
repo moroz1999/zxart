@@ -1,0 +1,23 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+}
+
+.zx-icon-popover {
+  min-width: var(--zx-icon-popover-min-width);
+  width: max-content;
+  max-width: var(--zx-icon-popover-max-width);
+  background-color: var(--zx-icon-popover-bg);
+  border: var(--zx-icon-popover-border);
+  border-radius: var(--zx-icon-popover-radius);
+  box-shadow: var(--zx-icon-popover-shadow);
+}
+
+.zx-icon-popover__content {
+  padding: var(--zx-icon-popover-padding);
+}
+
+.zx-icon-popover__icon {
+  width: var(--zx-icon-popover-icon-size);
+  height: var(--zx-icon-popover-icon-size);
+}

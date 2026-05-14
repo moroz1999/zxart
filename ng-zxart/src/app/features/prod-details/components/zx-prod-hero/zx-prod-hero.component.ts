@@ -7,6 +7,7 @@ import {ZxProdExternalLinksComponent} from '../zx-prod-external-links/zx-prod-ex
 import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
+import {ZxProdEditingControlsComponent} from '../zx-prod-editing-controls/zx-prod-editing-controls.component';
 
 interface ProdAuthorRoleGroup {
   role: string | null;
@@ -34,6 +35,7 @@ const PRIORITY_AUTHOR_ROLES = [
     TextDirective,
     ZxStackComponent,
     ZxInlineComponent,
+    ZxProdEditingControlsComponent,
   ],
   templateUrl: './zx-prod-hero.component.html',
   styleUrls: ['./zx-prod-hero.component.scss'],

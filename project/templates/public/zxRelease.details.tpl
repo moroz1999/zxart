@@ -169,6 +169,17 @@
                 {/if}
 
                 {include file=$theme->template('component.links.tpl')}
+                <tr>
+                    <td class='info_table_label'>
+                        {translations name='field.votes'}:
+                    </td>
+                    <td class='info_table_value'>
+                        <zx-item-legacy-controls element-id="{$element->id}" type="zxRelease" votes="{$element->getVotes()}" votes-amount="{$element->getVotesAmount()}" user-vote="{$element->getUserVote()}" deny-voting="{if $element->isVotingDenied()}true{else}false{/if}"></zx-item-legacy-controls>
+                        {if !$element->isVotingDenied() && $element->getVotePercent()}
+                            <div>{$element->getVotes()}</div>
+                        {/if}
+                    </td>
+                </tr>
                 {if $element->isDownloadable()}
                     <tr>
                         <td class='info_table_label'>

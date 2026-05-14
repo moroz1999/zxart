@@ -56,6 +56,7 @@ All design system components are in `ng-zxart/src/app/shared/ui/`.
 - [Skeletons](design-system/skeletons.md) — loading placeholders
 - [zx-spinner](design-system/zx-spinner.md) — compact loading spinner
 - [zxTooltip](design-system/zx-tooltip.md) — floating tooltip directive that follows the cursor
+- [zx-icon-popover](design-system/zx-icon-popover.md) — icon trigger with a CDK popover stack for compact contextual actions
 - [zx-rating](design-system/zx-rating.md) — interactive 5-star rating with hover preview
 - [zx-item-controls](design-system/zx-item-controls.md) — unified vote + playlist (favourites) controls row
 - [zx-item-data](design-system/zx-item-data.md) — grouped key-value information panel

@@ -14,21 +14,25 @@ const PROD_EDITING_ACTIONS: readonly ZxEditingControlAction[] = [
     action: 'showAiForm',
     privilege: 'showAiForm',
     labelKey: 'prod-details.showAiForm',
+    color: 'secondary',
   },
   {
     action: 'resize',
     privilege: 'resize',
     labelKey: 'prod-details.resize',
+    color: 'secondary',
   },
   {
     action: 'showJoinForm',
     privilege: 'showJoinForm',
     labelKey: 'prod-details.join',
+    color: 'secondary',
   },
   {
     action: 'showSplitForm',
     privilege: 'showSplitForm',
     labelKey: 'prod-details.split',
+    color: 'secondary',
   },
   {
     action: 'publicDelete',
@@ -54,6 +58,8 @@ const PROD_EDITING_ACTIONS: readonly ZxEditingControlAction[] = [
 export class ZxProdEditingControlsComponent {
   @Input({required: true}) elementId!: number;
   @Input({required: true}) prodUrl!: string;
+  @Input() presentation: 'inline' | 'popover' = 'inline';
+  @Input() popoverAriaLabel = '';
 
   readonly actions = PROD_EDITING_ACTIONS;
 

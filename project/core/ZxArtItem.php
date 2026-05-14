@@ -3,6 +3,7 @@
 use App\Logging\EventsLog;
 use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\Press\Helpers\PressMentions;
+use ZxArt\Voting\VotingService;
 
 /**
  * Class ZxArtItem
@@ -407,34 +408,7 @@ abstract class ZxArtItem extends structureElement implements
      */
     public function recalculateVotes()
     {
-        if ($this->isVotingDenied()) {
-            $vote = 0;
-            $votesAmount = 0;
-        } else {
-            $vote = 0;
-
-            $votesManager = $this->getService(votesManager::class);
-            $overallAverageVote = $votesManager->getOverallAverageVote();
-            $elementVotes = $votesManager->getElementFilteredVotes($this->id);
-            $votesAmount = count($elementVotes);
-            if ($votesAmount > 0) {
-                $elementAverageVote = array_sum($elementVotes) / $votesAmount;
-                $objectiveVotesCount = 10;
-
-                $vote = ($elementAverageVote * $votesAmount + $overallAverageVote * $objectiveVotesCount) / ($votesAmount + $objectiveVotesCount);
-            }
-        }
-        $this->votes = $vote;
-        $this->votesAmount = $votesAmount;
-
-        $this->getService('db')
-            ->table($this->dataResourceName)
-            ->where('id', '=', $this->getPersistedId())
-            ->update(['votes' => $this->votes, 'votesAmount' => $this->votesAmount]);
-
-        foreach ($this->getAuthorsList() as $authorElement) {
-            $authorElement->recalculate();
-        }
+        $this->getService(VotingService::class)->recalculateZxArtItemVotes($this);
     }
 
     /**

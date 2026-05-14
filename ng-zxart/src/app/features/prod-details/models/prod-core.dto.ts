@@ -68,6 +68,18 @@ export interface ProdSubmitterDto {
   url: string;
 }
 
+export interface ProdTabsDto {
+  hasScreenshots: boolean;
+  hasInlays: boolean;
+  hasMaps: boolean;
+  hasRzx: boolean;
+  hasPictures: boolean;
+  hasTunes: boolean;
+  hasArticles: boolean;
+  hasSeries: boolean;
+  hasCompilations: boolean;
+}
+
 export interface ProdCoreDto {
   elementId: number;
   title: string;
@@ -97,4 +109,5 @@ export interface ProdCoreDto {
   tags: ProdTagRefDto[];
   voting: ProdVotingDto;
   submitter: ProdSubmitterDto | null;
+  tabs: ProdTabsDto;
 }

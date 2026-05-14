@@ -56,6 +56,7 @@ readonly class ProdCoreRestDto
         public array $tags,
         public ProdVotingRestDto $voting,
         public ?ProdSubmitterRestDto $submitter,
+        public ProdTabsRestDto $tabs,
     ) {
     }
 }

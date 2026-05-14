@@ -45,6 +45,7 @@ readonly class ProdCoreDto
         public array $tags,
         public ProdVotingDto $voting,
         public ?ProdSubmitterDto $submitter,
+        public ProdTabsDto $tabs,
     ) {
     }
 }

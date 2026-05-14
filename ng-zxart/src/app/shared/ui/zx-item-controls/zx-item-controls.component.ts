@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output} from '@angular/core';
 import {AsyncPipe} from '@angular/common';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {tap} from 'rxjs/operators';
@@ -28,6 +28,8 @@ export class ZxItemControlsComponent implements OnChanges, OnDestroy {
   @Input() userRating?: number | null = null;
   @Input() denyVoting: boolean = false;
 
+  @Output() readonly voteChange = new EventEmitter<number>();
+
   private readonly stateStore = new BehaviorSubject<VoteState>({
     overallRating: 0,
     votesAmount: 0,
@@ -54,11 +56,14 @@ export class ZxItemControlsComponent implements OnChanges, OnDestroy {
   onVote(star: number): void {
     this.subscription.add(
       this.voteService.send(this.elementId, star, this.type).pipe(
-        tap(result => this.stateStore.next({
-          overallRating: result.votes,
-          votesAmount: result.votesAmount,
-          userRating: star || undefined,
-        })),
+        tap(result => {
+          this.stateStore.next({
+            overallRating: result.votes,
+            votesAmount: result.votesAmount,
+            userRating: result.userVote !== null ? result.userVote : (star > 0 ? star : undefined),
+          });
+          this.voteChange.emit(result.votes);
+        }),
       ).subscribe({error: () => {}}),
     );
   }

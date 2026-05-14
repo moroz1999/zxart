@@ -1,0 +1,36 @@
+<zx-button
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin"
+  [attr.title]="ariaLabel || null"
+  [attr.aria-expanded]="popoverOpen"
+  [ariaLabel]="ariaLabel"
+  [color]="color"
+  [size]="size"
+  [square]="true"
+  (click)="togglePopover($event)"
+>
+  <svg-icon class="zx-icon-popover__icon" [name]="iconName"></svg-icon>
+</zx-button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="popoverOpen"
+  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  [cdkConnectedOverlayPush]="true"
+  [cdkConnectedOverlayViewportMargin]="8"
+  (backdropClick)="closePopover()"
+>
+  <div class="zx-icon-popover" (click)="$event.stopPropagation()">
+    <zx-stack
+      class="zx-icon-popover__content"
+      [spacing]="stackSpacing"
+      align="stretch"
+      (click)="closePopover()"
+    >
+      <ng-content></ng-content>
+    </zx-stack>
+  </div>
+</ng-template>

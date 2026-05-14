@@ -20,8 +20,8 @@ use ZxFiles\BasicFile;
  * @property string $title
  * @property string $file
  * @property string $fileName
- * @property int $downloads @deprecated use {@see self::getDownloadsCount()} — DB column is text, magic-property returns string
- * @property int $plays @deprecated use {@see self::getPlaysCount()} — DB column is text, magic-property returns string
+ * @property int $downloads @deprecated use {@see self::getDownloadsCount()} - DB column is text, magic-property returns string
+ * @property int $plays @deprecated use {@see self::getPlaysCount()} - DB column is text, magic-property returns string
  * @property int $year
  * @property string $releaseType
  * @property string|null $description
@@ -35,6 +35,7 @@ use ZxFiles\BasicFile;
  * @property zxProdElement[] $compilations
  * @property authorElement[]|authorAliasElement[]|groupElement[]|groupAliasElement[] $publishers
  * @property float $votes
+ * @property string $votesAmount @deprecated use {@see self::getVotesAmount()} - DB column is text, magic-property returns string
  * @property int $denyVoting
  * @property int $denyComments
  * @property int $dateAdded
@@ -104,6 +105,8 @@ class zxReleaseElement extends ZxArtItem implements
         $moduleStructure['version'] = 'text';
         $moduleStructure['downloads'] = 'text';
         $moduleStructure['plays'] = 'text';
+        $moduleStructure['votes'] = 'floatNumber';
+        $moduleStructure['votesAmount'] = 'text';
         $moduleStructure['year'] = 'naturalNumber';
         $moduleStructure['publishers'] = [
             'ConnectedElements',
@@ -503,6 +506,16 @@ class zxReleaseElement extends ZxArtItem implements
     public function getPlaysCount(): int
     {
         return (int)$this->plays;
+    }
+
+    public function getVotes(): float
+    {
+        return (float)$this->votes;
+    }
+
+    public function getVotesAmount(): int
+    {
+        return (int)$this->votesAmount;
     }
 
     /**

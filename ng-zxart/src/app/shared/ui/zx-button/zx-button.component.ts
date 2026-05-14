@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 @Component({
@@ -19,6 +19,7 @@ export class ZxButtonComponent implements OnDestroy {
   @Input() rel: string | null = null;
   @Input() square = false;
   @Input() round = false;
+  @Input() block = false;
   @Input() ariaLabel = '';
   @Input() extraClass = '';
   rippleX = 0;
@@ -28,6 +29,11 @@ export class ZxButtonComponent implements OnDestroy {
   private rippleTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(private cdr: ChangeDetectorRef) {}
+
+  @HostBinding('class.zx-button-host--block')
+  get blockHostClass(): boolean {
+    return this.block;
+  }
 
   get isLink(): boolean {
     return !!this.href;
@@ -43,6 +49,9 @@ export class ZxButtonComponent implements OnDestroy {
     }
     if (this.round) {
       classes.push('zx-button--round');
+    }
+    if (this.block) {
+      classes.push('zx-button--block');
     }
     if (this.extraClass) {
       classes.push(this.extraClass);

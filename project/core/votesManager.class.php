@@ -102,7 +102,6 @@ class votesManager implements DependencyInjectionContextInterface
         }
 
         if (!array_key_exists($id, $this->elementsTypesIndex[$type])) {
-            $this->elementsTypesIndex[$type][$id] = null;
             if ($elements = $this->getService('structureManager')->getLoadedElementsByType($type)) {
                 $idList = [];
                 foreach ($elements as $element) {
@@ -117,6 +116,10 @@ class votesManager implements DependencyInjectionContextInterface
                         $this->elementsTypesIndex[$type][$row['elementId']] = (int)$row['value'];
                     }
                 }
+            }
+
+            if (!array_key_exists($id, $this->elementsTypesIndex[$type])) {
+                $this->elementsTypesIndex[$type][$id] = null;
             }
         }
 

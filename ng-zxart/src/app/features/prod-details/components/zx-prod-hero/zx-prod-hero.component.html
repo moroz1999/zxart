@@ -1,6 +1,12 @@
 <zx-stack spacing="md">
-  <zx-inline gap="md" align="baseline" [wrap]="true">
+  <zx-inline gap="md" align="center" [wrap]="true">
     <h1 appHeading="display">{{ core.h1 }}</h1>
+    <zx-prod-editing-controls
+      [elementId]="core.elementId"
+      [prodUrl]="core.prodUrl"
+      presentation="popover"
+      [popoverAriaLabel]="'prod-details.actions' | translate">
+    </zx-prod-editing-controls>
     <span *ngIf="core.year > 0" class="hero-year">{{ core.year }}</span>
   </zx-inline>
 

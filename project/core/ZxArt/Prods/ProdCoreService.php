@@ -17,6 +17,7 @@ use ZxArt\Prods\Dto\ProdGroupRefDto;
 use ZxArt\Prods\Dto\ProdSubmitterDto;
 use ZxArt\Prods\Dto\ProdTagRefDto;
 use ZxArt\Prods\Dto\ProdVotingDto;
+use ZxArt\Prods\Repositories\ProdTabsRepository;
 use ZxArt\Shared\EntityType;
 use zxProdCategoryElement;
 use zxProdElement;
@@ -26,6 +27,7 @@ readonly class ProdCoreService
     public function __construct(
         private ProdElementService $prodElementService,
         private ProdInfoBuilder $infoBuilder,
+        private ProdTabsRepository $prodTabsRepository,
     ) {
     }
 
@@ -66,6 +68,7 @@ readonly class ProdCoreService
             tags: $this->buildTags($element),
             voting: $this->buildVoting($element),
             submitter: $this->buildSubmitter($element),
+            tabs: $this->prodTabsRepository->buildTabs($element->getId()),
         );
     }
 

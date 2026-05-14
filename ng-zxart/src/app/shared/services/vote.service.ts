@@ -27,6 +27,7 @@ export class VoteService {
                     return {
                         votes: element?.votes ?? 0,
                         votesAmount: element?.votesAmount ?? 0,
+                        userVote: element?.userVote ?? null,
                     };
                 }),
             );

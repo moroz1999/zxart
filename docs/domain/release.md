@@ -77,6 +77,7 @@ Concrete release (version) of software production. Contains files specific to th
 - **denyVoting** - deny voting
 - **commentsAmount** - number of comments
 - **denyComments** - deny comments
+- Selected release legacy details page displays the shared ZX item voting controls for the release itself.
 
 ### Metadata
 - **dateAdded** - date added

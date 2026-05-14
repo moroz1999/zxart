@@ -63,3 +63,7 @@ Detailed logic and structure: [domain/authors-groups.md](domain/authors-groups.m
 ### firstpage (main page)
 Configurable modular main page. Users can arrange, enable/disable, and configure content modules.
 Detailed logic and structure: [domain/firstpage.md](domain/firstpage.md)
+
+### voting
+Shared voting for ZX art items and comments.
+Detailed logic and structure: [domain/voting.md](domain/voting.md)
