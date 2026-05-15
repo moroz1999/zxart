@@ -6,7 +6,7 @@
 
 .prod-screenshots-section__grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, var(--zx-prod-screenshots-thumb-width));
   gap: var(--zx-prod-screenshots-grid-gap);
 
   @include bp.media-breakpoint-down(lg) {

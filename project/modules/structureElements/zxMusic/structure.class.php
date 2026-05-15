@@ -299,12 +299,6 @@ class zxMusicElement extends ZxArtItem implements
         return $fileId !== '' ? $fileId : null;
     }
 
-    public function getPartyPlace(): ?int
-    {
-        $place = (int)$this->partyplace;
-        return $place > 0 ? $place : null;
-    }
-
     public function getCompoName(): ?string
     {
         $compo = (string)$this->compo;

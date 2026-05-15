@@ -27,6 +27,12 @@ svg-icon {
   opacity: var(--zx-lightbox-backdrop-opacity) !important;
 }
 
+.g-nav-prev svg,
+.g-nav-next svg {
+  width: 56px !important;
+  height: 56px !important;
+}
+
 // Shared layout: form column layout (applied via zxForm directive)
 .zx-form {
   display: flex;

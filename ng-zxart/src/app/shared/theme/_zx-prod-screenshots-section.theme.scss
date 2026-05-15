@@ -1,4 +1,6 @@
 :root {
+  /* Fixed width of each small thumbnail column. */
+  --zx-prod-screenshots-thumb-width: 256px;
   /* Grid column gap between screenshots. */
   --zx-prod-screenshots-grid-gap: var(--gap-sm);
   /* Corner radius of each screenshot item. */

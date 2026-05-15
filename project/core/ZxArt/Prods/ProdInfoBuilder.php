@@ -50,14 +50,12 @@ readonly class ProdInfoBuilder
             $compoLabel = $this->translate('party.compo_' . $compo);
         }
 
-        $partyplace = $element->partyplace;
-
         return new ProdPartyInfoDto(
             id: $party->getId(),
             title: $this->decodeText($party->title),
             abbreviation: $party->abbreviation !== '' ? $this->decodeText($party->abbreviation) : null,
             url: (string)$party->getUrl(),
-            place: $partyplace > 0 ? $partyplace : null,
+            place: $element->getPartyPlace(),
             compoLabel: $compoLabel,
         );
     }

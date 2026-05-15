@@ -40,7 +40,7 @@ use ZxArt\ZxProdCategories\CompilationCategoryIds;
  * @property zxProdElement[] $series
  * @property pressArticleElement[] $articles
  * @property string $votes @deprecated use {@see self::getVotes()} — magic-property returns DB string
- * @property int $partyplace
+ * @property string $partyplace @deprecated use {@see self::getPartyPlace()} - DB column is text, magic-property returns string
  * @property int $denyVoting
  * @property int $denyComments
  * @property int $dateAdded

@@ -659,7 +659,7 @@
       },
       "discussion": "Discusión"
     },
-    "screenshots-more": "+{count} más"
+    "screenshots-more": "+{{count}} más"
   },
   "release-row": {
     "col-title": "Título",

@@ -12,6 +12,7 @@ use ZxArt\Voting\VotingService;
  * @property int $tagsAmount
  * @property int $year
  * @property pressArticleElement[] $mentions
+ * @property string $partyplace @deprecated use {@see self::getPartyPlace()} - DB column is text, magic-property returns string
  */
 abstract class ZxArtItem extends structureElement implements
     MetadataProviderInterface,
@@ -554,5 +555,11 @@ abstract class ZxArtItem extends structureElement implements
             }
         }
         $this->$property = $finalList;
+    }
+
+    public function getPartyPlace(): ?int
+    {
+        $place = (int)$this->partyplace;
+        return $place > 0 ? $place : null;
     }
 }

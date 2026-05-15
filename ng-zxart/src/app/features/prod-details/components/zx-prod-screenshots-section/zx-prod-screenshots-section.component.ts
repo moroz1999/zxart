@@ -46,12 +46,12 @@ export class ZxProdScreenshotsSectionComponent {
 
   get displayedFiles(): ProdFileDto[] {
     return this.files.length > this.maxVisible
-      ? this.files.slice(0, this.maxVisible - 1)
+      ? this.files.slice(0, this.maxVisible)
       : this.files;
   }
 
   get moreCount(): number {
-    return Math.max(0, this.files.length - this.maxVisible + 1);
+    return Math.max(0, this.files.length - this.maxVisible);
   }
 
   @HostBinding('style.display')

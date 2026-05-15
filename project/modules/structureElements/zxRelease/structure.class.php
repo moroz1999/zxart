@@ -30,7 +30,7 @@ use ZxFiles\BasicFile;
  * @property string[] $language
  * @property string[] $releaseFormat
  * @property string $compo
- * @property int $partyplace
+ * @property string $partyplace @deprecated use {@see self::getPartyPlace()} - DB column is text, magic-property returns string
  * @property int $party
  * @property zxProdElement[] $compilations
  * @property authorElement[]|authorAliasElement[]|groupElement[]|groupAliasElement[] $publishers

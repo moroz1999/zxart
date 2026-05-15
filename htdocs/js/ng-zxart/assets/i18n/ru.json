@@ -546,14 +546,14 @@
     }
   },
   "tags-quick-form": {
-    "title": "Edit tags",
-    "search-placeholder": "Add tag",
-    "remove-tag": "Remove tag",
-    "suggested": "Suggested tags",
-    "save": "Save tags",
-    "load-error": "Failed to load tags.",
-    "save-error": "Failed to save tags.",
-    "retry": "Retry"
+    "title": "Редактировать теги",
+    "search-placeholder": "Добавить тег",
+    "remove-tag": "Удалить тег",
+    "suggested": "Предложенные теги",
+    "save": "Сохранить теги",
+    "load-error": "Ошибка загрузки тегов.",
+    "save-error": "Ошибка сохранения тегов.",
+    "retry": "Повторить"
   },
   "prod-details": {
     "title": "Название программы",
@@ -660,7 +660,7 @@
       },
       "discussion": "Обсуждение"
     },
-    "screenshots-more": "+{count} ещё"
+    "screenshots-more": "+{{count}} ещё"
   },
   "release-row": {
     "col-title": "Название",

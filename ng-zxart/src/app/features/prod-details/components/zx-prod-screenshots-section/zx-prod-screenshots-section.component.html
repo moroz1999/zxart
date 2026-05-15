@@ -34,7 +34,7 @@
         <a
           *ngIf="moreCount > 0"
           class="prod-screenshots-section__more"
-          [lightbox]="maxVisible - 1"
+          [lightbox]="maxVisible"
           [gallery]="galleryId"
         >
           {{ 'prod-details.screenshots-more' | translate:{ count: moreCount } }}
