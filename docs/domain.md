@@ -67,3 +67,7 @@ Detailed logic and structure: [domain/firstpage.md](domain/firstpage.md)
 ### voting
 Shared voting for ZX art items and comments.
 Detailed logic and structure: [domain/voting.md](domain/voting.md)
+
+### search
+Public full search and header quick search for ZX Art entities.
+Detailed logic and structure: [domain/search.md](domain/search.md)

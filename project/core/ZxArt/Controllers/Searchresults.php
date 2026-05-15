@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
+use Cache;
 use controller;
 use LanguagesManager;
 use Monolog\Logger;
@@ -33,6 +34,8 @@ use ZxArt\Tunes\Rest\TuneRestDto;
 
 class Searchresults extends LoggedControllerApplication
 {
+    private const int QUICK_SEARCH_PAGE_SIZE = 30;
+
     public $rendererName = 'json';
 
     public function __construct(
@@ -42,6 +45,7 @@ class Searchresults extends LoggedControllerApplication
         private readonly LanguagesManager $languagesManager,
         private readonly SearchService $searchService,
         private readonly ObjectMapper $objectMapper,
+        private readonly Cache $cache,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -61,7 +65,17 @@ class Searchresults extends LoggedControllerApplication
             $page = $this->parsePositiveInt('page', 1);
             $types = $this->parseTypes($this->getParameter('types'));
 
-            $resultDto = $this->searchService->search($phrase, $page, $types);
+            if ($this->getParameter('mode') === 'quick') {
+                $this->cache->enable();
+                $resultDto = $this->searchService->quickSearch(
+                    $phrase,
+                    $types,
+                    self::QUICK_SEARCH_PAGE_SIZE,
+                    (int)$this->languagesManager->getCurrentLanguageId(),
+                );
+            } else {
+                $resultDto = $this->searchService->search($phrase, $page, $types);
+            }
             $this->assignSuccess($this->mapResult($resultDto));
         } catch (Throwable $e) {
             $this->logThrowable('Searchresults::execute', $e);

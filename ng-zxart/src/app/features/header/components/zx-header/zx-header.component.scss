@@ -18,7 +18,7 @@
 .zx-header-inner {
   padding: var(--zx-header-padding);
   display: flex;
-  align-items: start;
+  align-items: center;
   justify-content: space-between;
   width: 100%;
   max-width: var(--zx-header-max-width);
@@ -31,6 +31,10 @@
   color: inherit;
   text-decoration: none;
   display: block;
+
+  svg-icon {
+    display: block;
+  }
 }
 
 .zx-header-logo-img {

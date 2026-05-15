@@ -16,6 +16,7 @@ use Search;
 use SearchResult;
 use SearchResultSet;
 use structureElement;
+use ZxArtItem;
 use ZxArt\AuthorList\AuthorListTransformer;
 use ZxArt\AuthorList\Dto\AuthorListItemDto;
 use ZxArt\GroupList\Dto\GroupListItemDto;
@@ -24,6 +25,7 @@ use ZxArt\Parties\PartiesTransformer;
 use ZxArt\Pictures\PicturesTransformer;
 use ZxArt\Press\Dto\PressArticleDto;
 use ZxArt\Prods\ProdsTransformer;
+use ZxArt\Search\Dto\SearchResultPreviewDto;
 use ZxArt\Search\Dto\SearchResultsDto;
 use ZxArt\Search\Dto\SearchResultSetDto;
 use ZxArt\Tunes\TunesTransformer;
@@ -95,6 +97,46 @@ readonly class SearchService
             pageSize: $pageSize,
             total: (int)$result->count,
             sets: $this->buildSetDtos($result, $phrase),
+        );
+    }
+
+    /**
+     * @param string[] $requestedTypes public types to include; empty means all configured types
+     */
+    public function quickSearch(string $phrase, array $requestedTypes, int $pageSize, int $languageId): SearchResultsDto
+    {
+        $pageSize = min(max(1, $pageSize), 100);
+        $availableTypes = $this->getAvailableTypes();
+        $effectivePublicTypes = $this->filterPublicTypes($requestedTypes, $availableTypes);
+
+        $phrase = trim($phrase);
+        if ($phrase === '' || $effectivePublicTypes === []) {
+            return new SearchResultsDto(
+                phrase: $phrase,
+                page: 1,
+                pageSize: $pageSize,
+                total: 0,
+                sets: [],
+            );
+        }
+
+        $search = new Search($this->container);
+        $search->setLanguageId($languageId);
+        $search->setInput(htmlspecialchars($phrase, ENT_QUOTES, 'UTF-8'));
+        $search->setLimit($pageSize);
+        $search->setTypes($this->expandToInternalTypes($effectivePublicTypes));
+        $search->setPartialMatching(false);
+        $search->setContentMatching(false);
+        $search->setFilters([]);
+        $search->setSinglePageCombining(true);
+        $result = $search->getResult();
+
+        return new SearchResultsDto(
+            phrase: $phrase,
+            page: 1,
+            pageSize: $pageSize,
+            total: $result->getSearchTotal(),
+            sets: $this->buildQuickSetDtos($result),
         );
     }
 
@@ -220,6 +262,76 @@ readonly class SearchService
             );
         }
         return $dtos;
+    }
+
+    /**
+     * @return SearchResultSetDto[]
+     */
+    private function buildQuickSetDtos(SearchResult $result): array
+    {
+        $aliasToParent = $this->buildAliasToParentMap();
+        $bucketsOrder = [];
+        /** @var array<string, array{type: string, items: SearchResultPreviewDto[]}> $buckets */
+        $buckets = [];
+
+        foreach ($result->sets as $set) {
+            if (!$set instanceof SearchResultSet) {
+                continue;
+            }
+            $publicType = $aliasToParent[(string)$set->type] ?? (string)$set->type;
+            if (!isset($buckets[$publicType])) {
+                $buckets[$publicType] = [
+                    'type' => $publicType,
+                    'items' => [],
+                ];
+                $bucketsOrder[] = $publicType;
+            }
+            foreach ($set->elements as $element) {
+                if (!$element instanceof structureElement) {
+                    continue;
+                }
+                $buckets[$publicType]['items'][] = $this->buildQuickItem($element);
+            }
+        }
+
+        $dtos = [];
+        foreach ($bucketsOrder as $publicType) {
+            $bucket = $buckets[$publicType];
+            if ($bucket['items'] === []) {
+                continue;
+            }
+            $dtos[] = new SearchResultSetDto(
+                type: $bucket['type'],
+                totalCount: count($bucket['items']),
+                items: $bucket['items'],
+            );
+        }
+        return $dtos;
+    }
+
+    private function buildQuickItem(structureElement $element): SearchResultPreviewDto
+    {
+        return new SearchResultPreviewDto(
+            id: (int)$element->id,
+            title: $this->getQuickTitle($element),
+            url: (string)$element->getUrl(),
+            structureType: (string)$element->structureType,
+        );
+    }
+
+    private function getQuickTitle(structureElement $element): string
+    {
+        return match (true) {
+            $element instanceof authorElement,
+            $element instanceof authorAliasElement,
+            $element instanceof groupElement,
+            $element instanceof groupAliasElement,
+            $element instanceof partyElement,
+            $element instanceof pressArticleElement,
+            $element instanceof zxProdElement,
+            $element instanceof ZxArtItem => html_entity_decode($element->getSearchTitle(), ENT_QUOTES, 'UTF-8'),
+            default => html_entity_decode((string)$element->getTitle(), ENT_QUOTES, 'UTF-8'),
+        };
     }
 
     /**
