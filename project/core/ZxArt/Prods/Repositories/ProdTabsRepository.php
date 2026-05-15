@@ -31,7 +31,8 @@ readonly final class ProdTabsRepository extends AbstractRepository
             hasPictures: $this->hasGameLinkOfType($prodId, DatabaseTable::ZxPicture),
             hasTunes: $this->hasGameLinkOfType($prodId, DatabaseTable::ZxMusic),
             hasArticles: $this->hasArticleLinks($prodId),
-            hasSeries: $this->hasSymmetricLink($prodId, LinkTypes::SERIES),
+            hasSeriesProds: $this->hasParentLink($prodId, LinkTypes::SERIES),
+            isInSeries: $this->hasChildLink($prodId, LinkTypes::SERIES),
             hasCompilations: $this->hasSymmetricLink($prodId, LinkTypes::COMPILATION),
         );
     }
@@ -89,6 +90,22 @@ readonly final class ProdTabsRepository extends AbstractRepository
         return $this->db->table($this->tableName(DatabaseTable::StructureLinks))
             ->where('parentStructureId', '=', $prodId)
             ->whereIn('type', [LinkTypes::PROD_ARTICLE->value, LinkTypes::PRESS_SOFTWARE->value])
+            ->exists();
+    }
+
+    private function hasParentLink(int $prodId, LinkTypes $linkType): bool
+    {
+        return $this->db->table($this->tableName(DatabaseTable::StructureLinks))
+            ->where('parentStructureId', '=', $prodId)
+            ->where('type', '=', $linkType->value)
+            ->exists();
+    }
+
+    private function hasChildLink(int $prodId, LinkTypes $linkType): bool
+    {
+        return $this->db->table($this->tableName(DatabaseTable::StructureLinks))
+            ->where('childStructureId', '=', $prodId)
+            ->where('type', '=', $linkType->value)
             ->exists();
     }
 

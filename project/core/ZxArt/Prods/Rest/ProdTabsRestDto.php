@@ -15,7 +15,8 @@ readonly class ProdTabsRestDto
         public bool $hasPictures,
         public bool $hasTunes,
         public bool $hasArticles,
-        public bool $hasSeries,
+        public bool $hasSeriesProds,
+        public bool $isInSeries,
         public bool $hasCompilations,
     ) {
     }

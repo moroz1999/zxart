@@ -99,6 +99,10 @@ Software production for ZX Spectrum - games, demos, utilities and other software
 ### Angular Details Page
 - Related prod lists (compilation items, compilations, series products) reuse `zx-prods-list`, which renders products through `zx-prod-block`.
 - Prod details related prod lists are loaded through REST endpoints; the legacy details template must not inject inline global data.
+- The series tab is controlled by two independent flags from the tabs API:
+  - `hasSeriesProds` — this prod is a series container (e.g. "Dizzy series"); shows `zx-prod-series-prods-section` which calls `/prod-series-prods/` and returns `$prod->seriesProds`.
+  - `isInSeries` — this prod is a member of one or more series; shows `zx-prod-series-section` which calls `/prod-series/` and returns all prods from each series container this prod belongs to.
+  - Both flags can be true simultaneously; when either is true the "Series" tab is shown, and both sections appear independently under their own flag.
 - `/prod-series/` returns product summaries from the same series as the selected prod, not the series container entity.
 - Prod details core data does not include edit/delete privileges. Editing controls use shared `zx-editing-controls` and request privileges separately for authenticated users only.
 - Prod editing controls are action buttons, not links. They render through `zx-button` without `href` and navigate to legacy action URLs from click handlers.

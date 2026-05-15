@@ -18,6 +18,9 @@ import {
   ZxProdCompilationItemsSectionComponent,
 } from '../zx-prod-compilation-items-section/zx-prod-compilation-items-section.component';
 import {
+  ZxProdSeriesSectionComponent,
+} from '../zx-prod-series-section/zx-prod-series-section.component';
+import {
   ZxProdSeriesProdsSectionComponent,
 } from '../zx-prod-series-prods-section/zx-prod-series-prods-section.component';
 import {
@@ -55,6 +58,7 @@ import {TagsListComponent} from '../../../../shared/lib/tags-list/tags-list.comp
     ZxProdArticlesSectionComponent,
     ZxProdMentionsSectionComponent,
     ZxProdCompilationItemsSectionComponent,
+    ZxProdSeriesSectionComponent,
     ZxProdSeriesProdsSectionComponent,
     ZxProdCompilationsSectionComponent,
     ZxProdMusicSectionComponent,

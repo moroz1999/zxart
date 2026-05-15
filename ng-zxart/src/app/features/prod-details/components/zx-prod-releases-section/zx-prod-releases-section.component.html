@@ -8,7 +8,7 @@
 
     <ng-container *ngIf="loaded && filteredReleases.length > 0 || loaded && releases.length > 0">
       <zx-filter-bar>
-        <zx-inline *ngIf="availableLangs.length > 0" gap="sm" align="center" [wrap]="true">
+        <zx-inline *ngIf="availableLangs.length > 0" gap="sm" align="center" [wrap]="false">
           <span class="prod-releases-section__filter-label">{{ 'release-row.col-language' | translate }}:</span>
           <zx-button-controls [wrap]="true">
             <zx-button
@@ -21,7 +21,7 @@
           </zx-button-controls>
         </zx-inline>
 
-        <zx-inline *ngIf="availableTypes.length > 1" gap="sm" align="center" [wrap]="true">
+        <zx-inline *ngIf="availableTypes.length > 1" gap="sm" align="center" [wrap]="false">
           <span class="prod-releases-section__filter-label">{{ 'release-row.col-releasetype' | translate }}:</span>
           <zx-button-controls [wrap]="true">
             <zx-button

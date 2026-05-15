@@ -7,7 +7,9 @@
 .prod-releases-section__filter-label {
   font-size: var(--zx-prod-releases-section-filter-label-size);
   color: var(--zx-prod-releases-section-filter-label-color);
-  white-space: nowrap;
+  @include bp.media-breakpoint-down(md) {
+    width: 30%;
+  }
 }
 
 .prod-releases-section__col-thumb {

@@ -9,6 +9,7 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
 import {ZxProdLanguageLinksComponent} from '../zx-prod-language-links/zx-prod-language-links.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxInsetComponent} from '../../../../shared/ui/zx-inset/zx-inset.component';
+import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {environment} from '../../../../../environments/environment';
 import {ZxReleaseTypeBadgeComponent} from '../../../../shared/ui/zx-release-type-badge/zx-release-type-badge.component';
 
@@ -25,6 +26,7 @@ const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 't
     ZxProdLanguageLinksComponent,
     ZxInlineComponent,
     ZxInsetComponent,
+    ZxPanelComponent,
     ZxReleaseTypeBadgeComponent,
   ],
   templateUrl: './zx-prod-release-card.component.html',

@@ -77,7 +77,8 @@ export interface ProdTabsDto {
   hasPictures: boolean;
   hasTunes: boolean;
   hasArticles: boolean;
-  hasSeries: boolean;
+  hasSeriesProds: boolean;
+  isInSeries: boolean;
   hasCompilations: boolean;
 }
 

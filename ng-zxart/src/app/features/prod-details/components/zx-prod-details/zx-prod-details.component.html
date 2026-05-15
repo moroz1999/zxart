@@ -75,7 +75,7 @@
       </zx-tab>
 
       <zx-tab
-        *ngIf="core.tabs.hasArticles || core.tabs.hasSeries || core.tabs.hasCompilations"
+        *ngIf="core.tabs.hasArticles || core.tabs.hasSeriesProds || core.tabs.isInSeries || core.tabs.hasCompilations"
         [label]="'prod-details.tab.links.title' | translate">
         <zx-tabs>
           <zx-tab *ngIf="core.tabs.hasArticles" [label]="'prod-details.tab.links.articles' | translate">
@@ -84,8 +84,11 @@
               <zx-prod-mentions-section [elementId]="core.elementId"></zx-prod-mentions-section>
             </zx-stack>
           </zx-tab>
-          <zx-tab *ngIf="core.tabs.hasSeries" [label]="'prod-details.tab.links.series' | translate">
-            <zx-prod-series-prods-section [elementId]="core.elementId"></zx-prod-series-prods-section>
+          <zx-tab *ngIf="core.tabs.hasSeriesProds || core.tabs.isInSeries" [label]="'prod-details.tab.links.series' | translate">
+            <zx-stack spacing="xl">
+              <zx-prod-series-prods-section *ngIf="core.tabs.hasSeriesProds" [elementId]="core.elementId"></zx-prod-series-prods-section>
+              <zx-prod-series-section *ngIf="core.tabs.isInSeries" [elementId]="core.elementId"></zx-prod-series-section>
+            </zx-stack>
           </zx-tab>
           <zx-tab *ngIf="core.tabs.hasCompilations" [label]="'prod-details.tab.links.compilations' | translate">
             <zx-stack spacing="xl">

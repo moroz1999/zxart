@@ -1,12 +1,8 @@
 @use 'shared/breakpoints' as bp;
 
-:host {
+.release-card__layout {
   display: flex;
   flex-direction: column;
-  border: var(--zx-prod-release-card-border-width) solid var(--zx-prod-release-card-border);
-  border-radius: var(--zx-prod-release-card-border-radius);
-  overflow: hidden;
-  background: var(--zx-prod-release-card-bg);
 
   @include bp.media-breakpoint-down(md) {
     flex-direction: row;
