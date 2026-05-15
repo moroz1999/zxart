@@ -1,3 +1,5 @@
+@use 'shared/breakpoints' as bp;
+
 :host {
   display: flex;
   flex-direction: column;
@@ -5,12 +7,21 @@
   border-radius: var(--zx-prod-release-card-border-radius);
   overflow: hidden;
   background: var(--zx-prod-release-card-bg);
+
+  @include bp.media-breakpoint-down(md) {
+    flex-direction: row;
+    align-items: stretch;
+  }
 }
 
 .release-card__cover {
   aspect-ratio: 4/3;
   background: var(--zx-prod-release-card-cover-bg);
   overflow: hidden;
+
+  @include bp.media-breakpoint-down(md) {
+    flex-shrink: 0;
+  }
 }
 
 .release-card__cover-img {
@@ -66,23 +77,3 @@
   width: var(--zx-prod-release-card-stat-icon-size);
   height: var(--zx-prod-release-card-stat-icon-size);
 }
-
-// Release type pill — shared with release-row
-.release-type-pill {
-  display: inline-block;
-  padding: var(--zx-release-type-padding);
-  border-radius: var(--zx-release-type-radius);
-  font-size: var(--zx-release-type-font-size);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--zx-release-type-letter-spacing);
-  color: var(--zx-release-type-text-color);
-  white-space: nowrap;
-}
-
-.release-type-pill--original { background: var(--zx-release-type-original-bg); }
-.release-type-pill--adaptation { background: var(--zx-release-type-adaptation-bg); }
-.release-type-pill--translation { background: var(--zx-release-type-translation-bg); color: var(--zx-release-type-translation-text); }
-.release-type-pill--modification { background: var(--zx-release-type-modification-bg); color: var(--zx-release-type-modification-text); }
-.release-type-pill--crack { background: var(--zx-release-type-crack-bg); }
-.release-type-pill--unknown { background: var(--zx-release-type-unknown-bg); }

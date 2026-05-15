@@ -11,24 +11,53 @@
     <zx-button
       *ngFor="let item of vm.actions"
       [color]="item.action.color || 'primary'"
+      [size]="inlineButtonSize"
       (click)="runAction(item)"
     >
       {{ item.action.labelKey | translate }}
     </zx-button>
   </zx-button-controls>
 
-  <zx-icon-popover
-    *ngIf="presentation === 'popover' && !vm.loading && vm.actions.length"
-    [ariaLabel]="popoverAriaLabel"
-  >
-    <zx-button
-      *ngFor="let item of vm.actions"
-      [color]="item.action.color || 'primary'"
-      size="sm"
-      [block]="true"
-      (click)="runAction(item)"
+  <ng-container *ngIf="presentation === 'popover' && !vm.loading && vm.actions.length">
+    <zx-edit-button
+      cdkOverlayOrigin
+      #trigger="cdkOverlayOrigin"
+      [ariaLabel]="popoverAriaLabel"
+      [title]="popoverAriaLabel"
+      [size]="popoverButtonSize"
+      [expanded]="popoverOpen"
+      (editClick)="togglePopover($event)"
+    ></zx-edit-button>
+
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="trigger"
+      [cdkConnectedOverlayOpen]="popoverOpen"
+      [cdkConnectedOverlayPositions]="popoverPositions"
+      [cdkConnectedOverlayHasBackdrop]="true"
+      cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+      [cdkConnectedOverlayPush]="true"
+      [cdkConnectedOverlayViewportMargin]="8"
+      (backdropClick)="closePopover()"
     >
-      {{ item.action.labelKey | translate }}
-    </zx-button>
-  </zx-icon-popover>
+      <div class="zx-editing-controls-popover" (click)="$event.stopPropagation()">
+        <zx-stack
+          class="zx-editing-controls-popover__content"
+          spacing="xs"
+          align="stretch"
+          (click)="closePopover()"
+        >
+          <zx-button
+            *ngFor="let item of vm.actions"
+            [color]="item.action.color || 'primary'"
+            [size]="popoverButtonSize"
+            [block]="true"
+            (click)="runAction(item)"
+          >
+            {{ item.action.labelKey | translate }}
+          </zx-button>
+        </zx-stack>
+      </div>
+    </ng-template>
+  </ng-container>
 </ng-container>

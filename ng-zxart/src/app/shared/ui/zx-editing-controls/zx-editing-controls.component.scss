@@ -13,3 +13,17 @@
   height: var(--zx-editing-controls-skeleton-item-height);
   border-radius: var(--zx-editing-controls-skeleton-item-radius);
 }
+
+.zx-editing-controls-popover {
+  min-width: var(--zx-editing-controls-popover-min-width);
+  width: max-content;
+  max-width: var(--zx-editing-controls-popover-max-width);
+  background-color: var(--zx-editing-controls-popover-bg);
+  border: var(--zx-editing-controls-popover-border);
+  border-radius: var(--zx-editing-controls-popover-radius);
+  box-shadow: var(--zx-editing-controls-popover-shadow);
+}
+
+.zx-editing-controls-popover__content {
+  padding: var(--zx-editing-controls-popover-padding);
+}

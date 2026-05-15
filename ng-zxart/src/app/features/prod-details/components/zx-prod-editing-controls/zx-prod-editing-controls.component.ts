@@ -60,6 +60,7 @@ export class ZxProdEditingControlsComponent {
   @Input({required: true}) prodUrl!: string;
   @Input() presentation: 'inline' | 'popover' = 'inline';
   @Input() popoverAriaLabel = '';
+  @Input() size: 'xs' | 'sm' | 'md' | null = null;
 
   readonly actions = PROD_EDITING_ACTIONS;
 

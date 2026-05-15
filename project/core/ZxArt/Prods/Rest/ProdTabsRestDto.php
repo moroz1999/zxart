@@ -7,6 +7,7 @@ namespace ZxArt\Prods\Rest;
 readonly class ProdTabsRestDto
 {
     public function __construct(
+        public bool $hasReleases,
         public bool $hasScreenshots,
         public bool $hasInlays,
         public bool $hasMaps,

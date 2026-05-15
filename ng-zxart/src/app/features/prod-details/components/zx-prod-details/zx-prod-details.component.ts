@@ -23,7 +23,6 @@ import {
 import {
   ZxProdCompilationsSectionComponent,
 } from '../zx-prod-compilations-section/zx-prod-compilations-section.component';
-import {ZxProdSeriesSectionComponent,} from '../zx-prod-series-section/zx-prod-series-section.component';
 import {ZxProdMusicSectionComponent,} from '../zx-prod-music-section/zx-prod-music-section.component';
 import {ZxProdPicturesSectionComponent,} from '../zx-prod-pictures-section/zx-prod-pictures-section.component';
 import {ZxProdInlaysSectionComponent,} from '../zx-prod-inlays-section/zx-prod-inlays-section.component';
@@ -32,16 +31,14 @@ import {ZxProdRzxSectionComponent,} from '../zx-prod-rzx-section/zx-prod-rzx-sec
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
-import {ZxInsetComponent} from '../../../../shared/ui/zx-inset/zx-inset.component';
 import {ZxTabsComponent} from '../../../../shared/ui/zx-tabs/zx-tabs.component';
 import {ZxTabComponent} from '../../../../shared/ui/zx-tabs/zx-tab.component';
-import {TagsQuickFormComponent} from '../../../tags-quick-form/components/tags-quick-form/tags-quick-form.component';
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {RatingsListComponent} from '../../../ratings/components/ratings-list/ratings-list.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
-import {ZxTagsChipsComponent} from '../../../../shared/ui/zx-tags-chips/zx-tags-chips.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
+import {TagsListComponent} from '../../../../shared/lib/tags-list/tags-list.component';
 
 @Component({
   selector: 'zx-prod-details',
@@ -60,7 +57,6 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
     ZxProdCompilationItemsSectionComponent,
     ZxProdSeriesProdsSectionComponent,
     ZxProdCompilationsSectionComponent,
-    ZxProdSeriesSectionComponent,
     ZxProdMusicSectionComponent,
     ZxProdPicturesSectionComponent,
     ZxProdInlaysSectionComponent,
@@ -69,16 +65,14 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
     ZxPanelComponent,
     ZxStackComponent,
     ZxInlineComponent,
-    ZxInsetComponent,
     ZxTabsComponent,
     ZxTabComponent,
     TranslateModule,
-    TagsQuickFormComponent,
     CommentsListComponent,
     RatingsListComponent,
     ZxBreadcrumbsComponent,
-    ZxTagsChipsComponent,
     TextDirective,
+    TagsListComponent,
   ],
   templateUrl: './zx-prod-details.component.html',
   styleUrls: ['./zx-prod-details.component.scss'],

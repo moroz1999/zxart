@@ -22,19 +22,6 @@
   flex: 1 1 var(--zx-prod-details-info-min-width);
 }
 
-.prod-details__tags-section {
-  border-top: var(--zx-prod-details-tags-section-border);
-}
-
-.prod-details__tags-label {
-  font-size: var(--zx-prod-details-tags-label-font-size);
-  color: var(--zx-prod-details-tags-label-color);
-  text-transform: uppercase;
-  letter-spacing: var(--zx-prod-details-tags-label-letter-spacing);
-  white-space: nowrap;
-  line-height: var(--zx-prod-details-tags-label-line-height);
-}
-
 @include bp.media-breakpoint-down(lg) {
   .prod-details__cover,
   .prod-details__info {

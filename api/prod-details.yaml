@@ -142,6 +142,7 @@ components:
     ProdTabs:
       type: object
       required:
+        - hasReleases
         - hasScreenshots
         - hasInlays
         - hasMaps
@@ -152,6 +153,8 @@ components:
         - hasSeries
         - hasCompilations
       properties:
+        hasReleases:
+          type: boolean
         hasScreenshots:
           type: boolean
         hasInlays:

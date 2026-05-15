@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ZxProdsListComponent} from '../../../../entities/zx-prods-list/zx-prods-list.component';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {Observable, of, Subscription} from 'rxjs';
 import {ZxProd} from '../../../../shared/models/zx-prod';
 import {ProdRelatedProdsService} from '../../services/prod-related-prods.service';
@@ -15,6 +16,7 @@ import {ProdRelatedProdsService} from '../../services/prod-related-prods.service
     TranslateModule,
     HeadingDirective,
     ZxProdsListComponent,
+    ZxStackComponent,
   ],
   templateUrl: './zx-prod-series-prods-section.component.html',
   styleUrls: ['./zx-prod-series-prods-section.component.scss'],

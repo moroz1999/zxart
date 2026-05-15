@@ -1,0 +1,50 @@
+<zx-inline
+  *ngIf="shouldRender"
+  class="zx-tags-list"
+  [class.zx-tags-list--bordered]="bordered"
+  gap="sm"
+  align="center"
+  [wrap]="true"
+>
+  <span *ngIf="label" appLabel tone="muted" class="zx-tags-list__label">{{ label }}</span>
+  <zx-tags-chips *ngIf="visibleTags.length" [tags]="visibleTags"></zx-tags-chips>
+  <zx-edit-button
+    *ngIf="hasEditPrivilege"
+    [ariaLabel]="editAriaLabel"
+    [title]="editAriaLabel"
+    size="xs"
+    [expanded]="editExpanded"
+    (editClick)="onEditClick()"
+  ></zx-edit-button>
+</zx-inline>
+
+<div class="zx-tags-list__editor" [class.zx-tags-list__editor--expanded]="editExpanded">
+  <div class="zx-tags-list__editor-inner">
+    <ng-container *ngIf="hasLoadedData === true; else tagsListPendingState">
+      <zx-tags-quick-form-editor
+        [selectedTags]="selectedTags"
+        [suggestedTags]="suggestedTags"
+        [searchResults]="searchResults"
+        [searchLoading]="searchLoading"
+        [saving]="saving"
+        [errorMessage]="saveErrorMessage"
+        (searchQueryChanged)="onSearchQueryChanged($event)"
+        (selectedTagsChanged)="onSelectedTagsChanged($event)"
+        (saveRequested)="onSaveRequested($event)"
+      ></zx-tags-quick-form-editor>
+    </ng-container>
+
+    <ng-template #tagsListPendingState>
+      <zx-stack *ngIf="loadErrorMessage !== ''; else tagsListSkeletonState" spacing="sm">
+        <p>{{ loadErrorMessage }}</p>
+        <zx-button color="outlined" (click)="onRetryLoad()">
+          {{ 'tags-quick-form.retry' | translate }}
+        </zx-button>
+      </zx-stack>
+    </ng-template>
+
+    <ng-template #tagsListSkeletonState>
+      <zx-text-skeleton [count]="4"></zx-text-skeleton>
+    </ng-template>
+  </div>
+</div>

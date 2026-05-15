@@ -11,6 +11,7 @@ use ZxArt\Prods\Rest\ProdTabsRestDto;
 readonly class ProdTabsDto
 {
     public function __construct(
+        public bool $hasReleases,
         public bool $hasScreenshots,
         public bool $hasInlays,
         public bool $hasMaps,

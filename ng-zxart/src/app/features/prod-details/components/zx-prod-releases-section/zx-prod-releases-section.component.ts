@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Inpu
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {forkJoin, Subscription} from 'rxjs';
+import {BreakpointObserver} from '@angular/cdk/layout';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 import {
   ZxRowSkeletonComponent
@@ -16,6 +17,8 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxProdReleaseCardComponent} from '../zx-prod-release-card/zx-prod-release-card.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
+import {ZxBreakpoints} from '../../../../shared/breakpoints';
 
 interface LabeledOption {
   code: string;
@@ -40,6 +43,7 @@ type ViewMode = 'table' | 'cards';
     ZxButtonControlsComponent,
     ZxProdReleaseCardComponent,
     ZxStackComponent,
+    ZxInlineComponent,
   ],
   templateUrl: './zx-prod-releases-section.component.html',
   styleUrls: ['./zx-prod-releases-section.component.scss'],
@@ -59,6 +63,7 @@ export class ZxProdReleasesSectionComponent implements OnDestroy {
   activeSortField: SortField | null = null;
   sortDir: 'asc' | 'desc' = 'desc';
   viewMode: ViewMode = 'table';
+  isMobile = false;
 
   @HostBinding('style.display')
   get display(): string {
@@ -71,7 +76,15 @@ export class ZxProdReleasesSectionComponent implements OnDestroy {
     private readonly api: ProdReleasesApiService,
     private readonly elementPrivilegesApi: ElementPrivilegesApiService,
     private readonly cdr: ChangeDetectorRef,
-  ) {}
+    breakpointObserver: BreakpointObserver,
+  ) {
+    this.subscription.add(
+      breakpointObserver.observe(ZxBreakpoints.MobileAll).subscribe(state => {
+        this.isMobile = state.matches;
+        this.cdr.markForCheck();
+      })
+    );
+  }
 
   get availableLangs(): LabeledOption[] {
     const seen = new Map<string, string>();

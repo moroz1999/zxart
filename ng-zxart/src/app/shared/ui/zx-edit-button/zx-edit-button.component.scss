@@ -1,0 +1,9 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+}
+
+.zx-edit-button__icon {
+  width: var(--zx-edit-button-icon-size);
+  height: var(--zx-edit-button-icon-size);
+}

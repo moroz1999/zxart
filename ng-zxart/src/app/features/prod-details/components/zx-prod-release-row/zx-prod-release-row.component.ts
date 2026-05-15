@@ -10,6 +10,7 @@ import {ZxProdLanguageLinksComponent,} from '../zx-prod-language-links/zx-prod-l
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {environment} from '../../../../../environments/environment';
+import {ZxReleaseTypeBadgeComponent} from '../../../../shared/ui/zx-release-type-badge/zx-release-type-badge.component';
 
 const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 'tsconf', 'samcoupe', 'zxnext'];
 
@@ -24,6 +25,7 @@ const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 't
     ZxProdLanguageLinksComponent,
     ZxInlineComponent,
     ZxStackComponent,
+    ZxReleaseTypeBadgeComponent,
   ],
   templateUrl: './zx-prod-release-row.component.html',
   styleUrls: ['./zx-prod-release-row.component.scss'],

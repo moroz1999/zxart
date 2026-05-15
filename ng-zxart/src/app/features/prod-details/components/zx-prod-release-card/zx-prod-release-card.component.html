@@ -22,11 +22,11 @@
   </div>
 
   <zx-inline gap="xs" align="center" [wrap]="true">
-    <span
+    <zx-release-type-badge
       *ngIf="release.releaseType"
-      class="release-type-pill"
-      [class]="'release-type-pill--' + release.releaseType"
-    >{{ release.releaseTypeLabel }}</span>
+      [type]="release.releaseType"
+      [label]="release.releaseTypeLabel"
+    ></zx-release-type-badge>
     <zx-prod-language-links [languages]="release.languages"></zx-prod-language-links>
     <span *ngFor="let fmt of release.formats" class="release-card__chip">{{ fmt.label }}</span>
   </zx-inline>

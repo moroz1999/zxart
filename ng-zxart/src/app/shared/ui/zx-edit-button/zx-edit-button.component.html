@@ -1,0 +1,11 @@
+<zx-button
+  [attr.title]="title || ariaLabel || null"
+  [attr.aria-expanded]="expanded"
+  [ariaLabel]="ariaLabel"
+  [color]="color"
+  [size]="size"
+  [square]="true"
+  (click)="editClick.emit($event)"
+>
+  <svg-icon class="zx-edit-button__icon" name="edit"></svg-icon>
+</zx-button>

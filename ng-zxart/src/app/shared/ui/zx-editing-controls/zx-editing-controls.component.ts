@@ -1,5 +1,6 @@
 import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
-import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
+import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
+import {ChangeDetectionStrategy, Component, HostListener, Input, OnChanges} from '@angular/core';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {BehaviorSubject, combineLatest, firstValueFrom, Observable, of} from 'rxjs';
 import {map, startWith, switchMap} from 'rxjs/operators';
@@ -9,7 +10,8 @@ import {ConfirmDialogService} from '../zx-confirm-dialog/confirm-dialog.service'
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../zx-button-controls/zx-button-controls.component';
 import {ZxSkeletonBoneComponent} from '../zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
-import {ZxIconPopoverComponent} from '../zx-icon-popover/zx-icon-popover.component';
+import {ZxEditButtonComponent} from '../zx-edit-button/zx-edit-button.component';
+import {ZxStackComponent} from '../zx-stack/zx-stack.component';
 
 export interface ZxEditingControlConfirm {
   readonly titleKey: string;
@@ -47,13 +49,16 @@ interface EditingControlsVm {
   standalone: true,
   imports: [
     AsyncPipe,
+    CdkConnectedOverlay,
+    CdkOverlayOrigin,
     NgForOf,
     NgIf,
     TranslateModule,
     ZxButtonComponent,
     ZxButtonControlsComponent,
-    ZxIconPopoverComponent,
+    ZxEditButtonComponent,
     ZxSkeletonBoneComponent,
+    ZxStackComponent,
   ],
   templateUrl: './zx-editing-controls.component.html',
   styleUrls: ['./zx-editing-controls.component.scss'],
@@ -65,9 +70,26 @@ export class ZxEditingControlsComponent implements OnChanges {
   @Input({required: true}) buildActionUrl!: (action: string, elementId: number) => string;
   @Input() presentation: 'inline' | 'popover' = 'inline';
   @Input() popoverAriaLabel = '';
+  @Input() size: 'xs' | 'sm' | 'md' | null = null;
 
   private readonly configStore = new BehaviorSubject<EditingControlsConfig | null>(null);
   readonly skeletonItems = [0, 1, 2];
+  popoverOpen = false;
+
+  readonly popoverPositions: ConnectedPosition[] = [
+    {originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 4},
+    {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -4},
+    {originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 4},
+    {originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -4},
+  ];
+
+  get inlineButtonSize(): 'xs' | 'sm' | 'md' {
+    return this.size ?? 'md';
+  }
+
+  get popoverButtonSize(): 'xs' | 'sm' | 'md' {
+    return this.size ?? 'sm';
+  }
 
   readonly vm$: Observable<EditingControlsVm> = combineLatest([
     this.currentUserService.isAuthenticated$,
@@ -112,6 +134,15 @@ export class ZxEditingControlsComponent implements OnChanges {
     });
   }
 
+  togglePopover(event: Event): void {
+    event.stopPropagation();
+    this.popoverOpen = !this.popoverOpen;
+  }
+
+  closePopover(): void {
+    this.popoverOpen = false;
+  }
+
   async runAction(item: VisibleEditingAction): Promise<void> {
     if (item.action.confirm) {
       const confirmed = await this.confirm(item.action.confirm);
@@ -121,6 +152,13 @@ export class ZxEditingControlsComponent implements OnChanges {
     }
 
     window.location.href = item.url;
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.popoverOpen) {
+      this.closePopover();
+    }
   }
 
   private async confirm(confirm: ZxEditingControlConfirm): Promise<boolean> {

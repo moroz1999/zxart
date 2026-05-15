@@ -22,6 +22,7 @@ import {ZxBadgeComponent} from '../zx-badge/zx-badge.component';
 import {AnalyticsService} from '../../services/analytics.service';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.component';
+import {ZxReleaseTypeBadgeComponent} from '../zx-release-type-badge/zx-release-type-badge.component';
 
 @Component({
   selector: 'zx-prod-block',
@@ -41,6 +42,7 @@ import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.comp
     ZxBadgeComponent,
     ZxButtonComponent,
     ZxItemControlsComponent,
+    ZxReleaseTypeBadgeComponent,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,

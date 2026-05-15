@@ -9,46 +9,59 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChanges
+  SimpleChanges,
 } from '@angular/core';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {catchError, debounceTime, distinctUntilChanged, map, of, Subject, Subscription, switchMap} from 'rxjs';
+import {Tag} from '../../models/tag';
+import {TagChipItem} from '../../models/tag-chip-item';
+import {TagItem} from '../../models/tag-item';
+import {ElementPrivilegesApiService} from '../../services/element-privileges-api.service';
+import {TagsSearchService} from '../../services/tags-search.service';
 import {
   TagsQuickFormEditorComponent
-} from '../../../../shared/lib/tags-quick-form-editor/tags-quick-form-editor.component';
-import {TagItem} from '../../../../shared/models/tag-item';
-import {Tag} from '../../../../shared/models/tag';
-import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
-import {TagsSearchService} from '../../../../shared/services/tags-search.service';
-import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
-import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
-import {
-  ZxTextSkeletonComponent
-} from '../../../../shared/ui/zx-skeleton/components/zx-text-skeleton/zx-text-skeleton.component';
-import {ElementPrivilegesApiService} from '../../../../shared/services/element-privileges-api.service';
-import {TagsApiService} from '../../../../shared/lib/tags-list/tags-api.service';
-import {TagsPayloadDto} from '../../../../shared/lib/tags-list/tags-payload.dto';
+} from '../tags-quick-form-editor/tags-quick-form-editor.component';
+import {ZxEditButtonComponent} from '../../ui/zx-edit-button/zx-edit-button.component';
+import {LabelDirective} from '../../ui/typography/directives/label.directive';
+import {ZxButtonComponent} from '../../ui/zx-button/zx-button.component';
+import {ZxInlineComponent} from '../../ui/zx-inline/zx-inline.component';
+import {ZxTextSkeletonComponent} from '../../ui/zx-skeleton/components/zx-text-skeleton/zx-text-skeleton.component';
+import {ZxStackComponent} from '../../ui/zx-stack/zx-stack.component';
+import {ZxTagsChipsComponent} from '../../ui/zx-tags-chips/zx-tags-chips.component';
+import {TagsApiService} from './tags-api.service';
+import {TagsPayloadDto} from './tags-payload.dto';
 
 @Component({
-  selector: 'zx-tags-quick-form,zx-tags-quick-form-view',
+  selector: 'zx-tags-list',
   standalone: true,
   imports: [
     CommonModule,
-    TranslateModule,
-    InViewportDirective,
+    LabelDirective,
     TagsQuickFormEditorComponent,
+    TranslateModule,
     ZxButtonComponent,
-    ZxPanelComponent,
+    ZxEditButtonComponent,
+    ZxInlineComponent,
+    ZxStackComponent,
+    ZxTagsChipsComponent,
     ZxTextSkeletonComponent,
   ],
-  templateUrl: './tags-quick-form.component.html',
-  styleUrl: './tags-quick-form.component.scss',
+  templateUrl: './tags-list.component.html',
+  styleUrl: './tags-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TagsQuickFormComponent implements OnChanges, OnDestroy, OnInit {
-  @Input({transform: numberAttribute}) elementId = 0;
+export class TagsListComponent implements OnChanges, OnDestroy, OnInit {
+  @Input({required: true}) set tags(value: ReadonlyArray<TagChipItem>) {
+    this.inputTags = [...value];
+  }
 
-  hasPrivilege: boolean | null = null;
+  @Input({transform: numberAttribute}) elementId = 0;
+  @Input() label = '';
+  @Input() bordered = false;
+  @Input() editAriaLabel = '';
+
+  hasEditPrivilege = false;
+  editExpanded = false;
   hasLoadedData = false;
   loadingData = false;
   saving = false;
@@ -59,6 +72,8 @@ export class TagsQuickFormComponent implements OnChanges, OnDestroy, OnInit {
   suggestedTags: TagItem[] = [];
   searchResults: TagItem[] = [];
 
+  private inputTags: TagChipItem[] = [];
+  private savedTags: TagChipItem[] | null = null;
   private readonly searchQuerySubject = new Subject<string>();
   private readonly subscriptions = new Subscription();
 
@@ -69,6 +84,14 @@ export class TagsQuickFormComponent implements OnChanges, OnDestroy, OnInit {
     private readonly tagsSearchService: TagsSearchService,
     private readonly elementPrivilegesApiService: ElementPrivilegesApiService,
   ) {}
+
+  get visibleTags(): ReadonlyArray<TagChipItem> {
+    return this.savedTags ?? this.inputTags;
+  }
+
+  get shouldRender(): boolean {
+    return this.visibleTags.length > 0 || this.hasEditPrivilege;
+  }
 
   ngOnInit(): void {
     this.subscriptions.add(
@@ -105,7 +128,7 @@ export class TagsQuickFormComponent implements OnChanges, OnDestroy, OnInit {
       return;
     }
 
-    this.resetState();
+    this.resetEditState();
     if (this.elementId > 0) {
       this.requestPrivileges();
     }
@@ -115,12 +138,12 @@ export class TagsQuickFormComponent implements OnChanges, OnDestroy, OnInit {
     this.subscriptions.unsubscribe();
   }
 
-  onInViewport(): void {
-    if (this.hasPrivilege !== true || this.hasLoadedData === true || this.loadingData === true) {
-      return;
-    }
+  onEditClick(): void {
+    this.editExpanded = !this.editExpanded;
 
-    this.loadTags();
+    if (this.editExpanded && this.hasLoadedData === false && this.loadingData === false) {
+      this.loadTags();
+    }
   }
 
   onSelectedTagsChanged(tags: TagItem[]): void {
@@ -152,6 +175,7 @@ export class TagsQuickFormComponent implements OnChanges, OnDestroy, OnInit {
       this.tagsApiService.saveTags(this.elementId, tags).subscribe({
         next: response => {
           this.applyTagsPayload(response);
+          this.savedTags = response.tags.map(tag => ({title: tag.title}));
           this.saving = false;
           this.searchLoading = false;
           this.searchResults = [];
@@ -172,7 +196,7 @@ export class TagsQuickFormComponent implements OnChanges, OnDestroy, OnInit {
       this.elementPrivilegesApiService.getPrivileges(this.elementId, ['submitTags']).pipe(
         catchError(() => of({submitTags: false})),
       ).subscribe(privileges => {
-        this.hasPrivilege = privileges['submitTags'] === true;
+        this.hasEditPrivilege = privileges['submitTags'] === true;
         this.cdr.markForCheck();
       }),
     );
@@ -224,8 +248,9 @@ export class TagsQuickFormComponent implements OnChanges, OnDestroy, OnInit {
     return title.trim().toLocaleLowerCase();
   }
 
-  private resetState(): void {
-    this.hasPrivilege = null;
+  private resetEditState(): void {
+    this.hasEditPrivilege = false;
+    this.editExpanded = false;
     this.hasLoadedData = false;
     this.loadingData = false;
     this.saving = false;
@@ -235,6 +260,7 @@ export class TagsQuickFormComponent implements OnChanges, OnDestroy, OnInit {
     this.selectedTags = [];
     this.suggestedTags = [];
     this.searchResults = [];
+    this.savedTags = null;
   }
 
   private getErrorMessage(error: unknown, fallbackTranslationKey: string): string {

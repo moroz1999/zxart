@@ -69,6 +69,7 @@ export interface ProdSubmitterDto {
 }
 
 export interface ProdTabsDto {
+  hasReleases: boolean;
   hasScreenshots: boolean;
   hasInlays: boolean;
   hasMaps: boolean;

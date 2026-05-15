@@ -1,0 +1,13 @@
+:root {
+  /* Top border for separated tags lists. */
+  --zx-tags-list-border: var(--border-width-thin) dashed var(--secondary-200);
+
+  /* Top padding for separated tags lists. */
+  --zx-tags-list-padding-top: var(--padding-md);
+
+  /* Top padding before the inline tags editor. */
+  --zx-tags-list-editor-padding-top: var(--space-12);
+
+  /* Expansion transition duration for the inline tags editor. */
+  --zx-tags-list-editor-transition-duration: var(--animation-sm);
+}

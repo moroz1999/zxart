@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 
 @Component({
   selector: 'zx-filter-bar',
@@ -7,4 +7,11 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   styleUrl: './zx-filter-bar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxFilterBarComponent {}
+export class ZxFilterBarComponent {
+  @Input() scrollable = false;
+
+  @HostBinding('class.zx-filter-bar--scrollable')
+  get isScrollable(): boolean {
+    return this.scrollable;
+  }
+}

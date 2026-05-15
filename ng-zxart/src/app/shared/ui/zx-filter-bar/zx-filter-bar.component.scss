@@ -11,3 +11,13 @@
     align-items: flex-end;
   }
 }
+
+:host(.zx-filter-bar--scrollable) {
+  @include bp.media-breakpoint-down(md) {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    align-items: center;
+    scrollbar-width: none;
+  }
+}

@@ -1,0 +1,37 @@
+:host {
+  display: block;
+}
+
+.zx-tags-list {
+  width: 100%;
+}
+
+.zx-tags-list--bordered {
+  border-top: var(--zx-tags-list-border);
+  padding-top: var(--zx-tags-list-padding-top);
+}
+
+.zx-tags-list__label {
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.zx-tags-list__editor {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  overflow: hidden;
+  transition:
+    grid-template-rows var(--zx-tags-list-editor-transition-duration) ease,
+    opacity var(--zx-tags-list-editor-transition-duration) ease;
+}
+
+.zx-tags-list__editor--expanded {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.zx-tags-list__editor-inner {
+  min-height: 0;
+  padding-top: var(--zx-tags-list-editor-padding-top);
+}

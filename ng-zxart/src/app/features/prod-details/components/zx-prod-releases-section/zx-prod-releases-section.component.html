@@ -8,9 +8,9 @@
 
     <ng-container *ngIf="loaded && filteredReleases.length > 0 || loaded && releases.length > 0">
       <zx-filter-bar>
-        <ng-container *ngIf="availableLangs.length > 0">
+        <zx-inline *ngIf="availableLangs.length > 0" gap="sm" align="center" [wrap]="true">
           <span class="prod-releases-section__filter-label">{{ 'release-row.col-language' | translate }}:</span>
-          <zx-button-controls>
+          <zx-button-controls [wrap]="true">
             <zx-button
               *ngFor="let lang of allLangOptions; trackBy: trackByCode"
               size="xs"
@@ -19,11 +19,11 @@
               {{ lang.label }}
             </zx-button>
           </zx-button-controls>
-        </ng-container>
+        </zx-inline>
 
-        <ng-container *ngIf="availableTypes.length > 1">
+        <zx-inline *ngIf="availableTypes.length > 1" gap="sm" align="center" [wrap]="true">
           <span class="prod-releases-section__filter-label">{{ 'release-row.col-releasetype' | translate }}:</span>
-          <zx-button-controls>
+          <zx-button-controls [wrap]="true">
             <zx-button
               *ngFor="let type of allTypeOptions; trackBy: trackByCode"
               size="xs"
@@ -32,9 +32,9 @@
               {{ type.label }}
             </zx-button>
           </zx-button-controls>
-        </ng-container>
+        </zx-inline>
 
-        <zx-button-controls class="prod-releases-section__view-toggle">
+        <zx-button-controls *ngIf="!isMobile" class="prod-releases-section__view-toggle">
           <zx-button
             size="xs"
             [color]="viewMode === 'table' ? 'secondary' : 'outlined'"
@@ -52,7 +52,7 @@
 
       <ng-container *ngIf="filteredReleases.length > 0">
 
-        <zx-table *ngIf="viewMode === 'table'" size="sm">
+        <zx-table *ngIf="!isMobile && viewMode === 'table'" size="sm">
           <table>
             <thead>
               <tr>
@@ -86,7 +86,7 @@
           </table>
         </zx-table>
 
-        <div *ngIf="viewMode === 'cards'" class="prod-releases-section__cards-grid">
+        <div *ngIf="isMobile || viewMode === 'cards'" class="prod-releases-section__cards-grid">
           <zx-prod-release-card
             *ngFor="let release of filteredReleases; trackBy: trackById"
             [release]="release"

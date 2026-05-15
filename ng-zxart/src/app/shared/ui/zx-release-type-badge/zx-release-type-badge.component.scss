@@ -1,0 +1,52 @@
+:host {
+  display: inline-block;
+  padding: var(--zx-release-type-badge-padding);
+  border-radius: var(--zx-release-type-badge-radius);
+  font-size: var(--zx-release-type-badge-font-size);
+  font-weight: var(--zx-release-type-badge-font-weight);
+  line-height: var(--zx-release-type-badge-line-height);
+  text-transform: uppercase;
+  letter-spacing: var(--zx-release-type-badge-letter-spacing);
+  color: var(--zx-release-type-badge-text-color);
+  background: var(--zx-release-type-badge-unknown-bg);
+  white-space: nowrap;
+}
+
+:host.zx-release-type-badge--original,
+:host.zx-release-type-badge--rerelease {
+  background: var(--zx-release-type-badge-original-bg);
+}
+
+:host.zx-release-type-badge--adaptation,
+:host.zx-release-type-badge--bugfix,
+:host.zx-release-type-badge--demo,
+:host.zx-release-type-badge--demoversion {
+  background: var(--zx-release-type-badge-adaptation-bg);
+}
+
+:host.zx-release-type-badge--translation,
+:host.zx-release-type-badge--localization {
+  background: var(--zx-release-type-badge-translation-bg);
+  color: var(--zx-release-type-badge-translation-text);
+}
+
+:host.zx-release-type-badge--modification,
+:host.zx-release-type-badge--mod {
+  background: var(--zx-release-type-badge-modification-bg);
+  color: var(--zx-release-type-badge-modification-text);
+}
+
+:host.zx-release-type-badge--crack {
+  background: var(--zx-release-type-badge-crack-bg);
+}
+
+:host.zx-release-type-badge--unknown {
+  background: var(--zx-release-type-badge-unknown-bg);
+}
+
+:host.zx-release-type-badge--mia,
+:host.zx-release-type-badge--corrupted,
+:host.zx-release-type-badge--compilation,
+:host.zx-release-type-badge--incomplete {
+  background: var(--zx-release-type-badge-unknown-bg);
+}

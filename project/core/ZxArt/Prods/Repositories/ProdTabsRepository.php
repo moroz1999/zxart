@@ -23,6 +23,7 @@ readonly final class ProdTabsRepository extends AbstractRepository
     public function buildTabs(int $prodId): ProdTabsDto
     {
         return new ProdTabsDto(
+            hasReleases: $this->hasStructureLink($prodId, LinkTypes::STRUCTURE),
             hasScreenshots: $this->hasStructureLink($prodId, LinkTypes::CONNECTED_FILE),
             hasInlays: $this->hasInlayLinks($prodId),
             hasMaps: $this->hasMapFiles($prodId) || $this->hasSpeccyMapsUrl($prodId),

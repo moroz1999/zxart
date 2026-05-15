@@ -1,3 +1,5 @@
+@use 'shared/breakpoints' as bp;
+
 :host {
   display: block;
 }
@@ -5,6 +7,7 @@
 .prod-releases-section__filter-label {
   font-size: var(--zx-prod-releases-section-filter-label-size);
   color: var(--zx-prod-releases-section-filter-label-color);
+  white-space: nowrap;
 }
 
 .prod-releases-section__col-thumb {
@@ -34,4 +37,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--zx-prod-releases-section-card-min-width), 1fr));
   gap: var(--zx-prod-releases-section-cards-gap);
+
+  @include bp.media-breakpoint-down(md) {
+    grid-template-columns: 1fr;
+  }
 }

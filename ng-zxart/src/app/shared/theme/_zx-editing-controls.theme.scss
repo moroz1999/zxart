@@ -10,4 +10,25 @@
 
   /* Radius of each editing controls skeleton rib. */
   --zx-editing-controls-skeleton-item-radius: var(--radius-sm);
+
+  /* Minimum width of the editing controls popover panel. */
+  --zx-editing-controls-popover-min-width: calc(var(--space-64) * 2);
+
+  /* Maximum width of the editing controls popover panel. */
+  --zx-editing-controls-popover-max-width: calc(var(--space-64) * 4);
+
+  /* Background of the editing controls popover panel. */
+  --zx-editing-controls-popover-bg: var(--zx-panel-bg);
+
+  /* Border of the editing controls popover panel. */
+  --zx-editing-controls-popover-border: var(--border-width-thin) solid var(--border-color);
+
+  /* Radius of the editing controls popover panel. */
+  --zx-editing-controls-popover-radius: var(--radius-md);
+
+  /* Shadow of the editing controls popover panel. */
+  --zx-editing-controls-popover-shadow: var(--shadow-md);
+
+  /* Padding inside the editing controls popover panel. */
+  --zx-editing-controls-popover-padding: var(--space-8);
 }

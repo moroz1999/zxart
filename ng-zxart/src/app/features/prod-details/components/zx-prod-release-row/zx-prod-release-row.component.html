@@ -30,11 +30,11 @@
   </td>
 
   <td class="release-row__type">
-    <span
+    <zx-release-type-badge
       *ngIf="release.releaseType"
-      class="release-type-pill"
-      [class]="'release-type-pill--' + release.releaseType"
-    >{{ release.releaseTypeLabel }}</span>
+      [type]="release.releaseType"
+      [label]="release.releaseTypeLabel"
+    ></zx-release-type-badge>
   </td>
 
   <td class="release-row__language">
