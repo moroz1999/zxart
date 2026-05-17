@@ -1,6 +1,10 @@
+import {animate, group, query, stagger, style, transition, trigger} from '@angular/animations';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
+import {forkJoin} from 'rxjs';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
+import {environment} from '../../../../../environments/environment';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 import {
   ZxScreenshotGridSkeletonComponent
@@ -12,9 +16,12 @@ import {PictureGalleryService} from '../../../picture-gallery/services/picture-g
 import {PictureGalleryItem} from '../../../picture-gallery/models/picture-gallery-item';
 import {LightboxModule} from 'ng-gallery/lightbox';
 import {ProdScreenshotsApiService} from '../../services/prod-screenshots-api.service';
+import {ProdScreenshotMoveApiService} from '../../services/prod-screenshot-move-api.service';
 import {ProdFileDto} from '../../models/prod-file.dto';
 import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {ElementPrivilegesApiService} from '../../../../shared/services/element-privileges-api.service';
 
 @Component({
   selector: 'zx-prod-screenshots-section',
@@ -29,10 +36,32 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
     TextDirective,
     HeadingDirective,
     ZxStackComponent,
+    ZxButtonComponent,
+    SvgIconComponent,
   ],
   templateUrl: './zx-prod-screenshots-section.component.html',
   styleUrls: ['./zx-prod-screenshots-section.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('fileEnter', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(8px)' }),
+        animate('200ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
+      ]),
+    ]),
+    trigger('expandSection', [
+      transition(':enter', [
+        style({ height: '0', overflow: 'hidden' }),
+        group([
+          animate('350ms ease-out', style({ height: '*' })),
+          query('.prod-screenshots-section__item', [
+            style({ opacity: 0, transform: 'translateY(8px)' }),
+            stagger(40, animate('200ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))),
+          ], { optional: true }),
+        ]),
+      ]),
+    ]),
+  ],
 })
 export class ZxProdScreenshotsSectionComponent {
   @Input({required: true}) elementId!: number;
@@ -43,15 +72,28 @@ export class ZxProdScreenshotsSectionComponent {
   loaded = false;
   files: ProdFileDto[] = [];
   galleryId = '';
+  showAll = false;
+  canReorder = false;
+  moving = false;
 
-  get displayedFiles(): ProdFileDto[] {
-    return this.files.length > this.maxVisible
-      ? this.files.slice(0, this.maxVisible)
-      : this.files;
+  get visibleFiles(): ProdFileDto[] {
+    if (this.showAll && this.files.length > this.maxVisible) {
+      return this.files.slice(0, this.maxVisible + 1);
+    }
+    return this.files.slice(0, this.maxVisible);
+  }
+
+  get extraFiles(): ProdFileDto[] {
+    return this.files.slice(this.maxVisible + 1);
   }
 
   get moreCount(): number {
-    return Math.max(0, this.files.length - this.maxVisible);
+    return this.showAll ? 0 : Math.max(0, this.files.length - this.maxVisible);
+  }
+
+  expandAll(): void {
+    this.showAll = true;
+    this.cdr.markForCheck();
   }
 
   @HostBinding('style.display')
@@ -61,9 +103,16 @@ export class ZxProdScreenshotsSectionComponent {
 
   constructor(
     private readonly api: ProdScreenshotsApiService,
+    private readonly moveApi: ProdScreenshotMoveApiService,
+    private readonly elementPrivilegesApi: ElementPrivilegesApiService,
     private readonly gallery: PictureGalleryService,
     private readonly cdr: ChangeDetectorRef,
-  ) {}
+    private readonly iconReg: SvgIconRegistryService,
+  ) {
+    this.iconReg.loadSvg(`${environment.svgUrl}skip-previous.svg`, 'skip-previous')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}skip-next.svg`, 'skip-next')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}download.svg`, 'download')?.subscribe();
+  }
 
   onInViewport(): void {
     if (this.loaded || this.loading) {
@@ -71,8 +120,12 @@ export class ZxProdScreenshotsSectionComponent {
     }
     this.galleryId = `zx-prod-screenshots-${this.elementId}`;
     this.loading = true;
-    this.api.getScreenshots(this.elementId).subscribe(files => {
+    forkJoin({
+      files: this.api.getScreenshots(this.elementId),
+      privileges: this.elementPrivilegesApi.getPrivileges(this.elementId, ['showPublicForm']),
+    }).subscribe(({files, privileges}) => {
       this.files = files;
+      this.canReorder = privileges['showPublicForm'] === true;
       this.loaded = true;
       this.loading = false;
       if (files.length) {
@@ -80,6 +133,36 @@ export class ZxProdScreenshotsSectionComponent {
       }
       this.cdr.markForCheck();
     });
+  }
+
+  onMove(file: ProdFileDto, direction: 'left' | 'right'): void {
+    if (this.moving) {
+      return;
+    }
+    this.moving = true;
+    this.cdr.markForCheck();
+    this.moveApi.move(this.elementId, file.id, direction).subscribe(files => {
+      this.moving = false;
+      if (files !== null) {
+        this.files = files;
+        if (files.length) {
+          this.gallery.loadItems(this.galleryId, files.map(this.toGalleryItem));
+        }
+      }
+      this.cdr.markForCheck();
+    });
+  }
+
+  trackByFileId(_index: number, file: ProdFileDto): number {
+    return file.id;
+  }
+
+  isFirst(file: ProdFileDto): boolean {
+    return this.files[0]?.id === file.id;
+  }
+
+  isLast(file: ProdFileDto): boolean {
+    return this.files[this.files.length - 1]?.id === file.id;
   }
 
   private toGalleryItem(file: ProdFileDto): PictureGalleryItem {

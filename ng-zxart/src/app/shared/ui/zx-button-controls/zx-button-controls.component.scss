@@ -5,7 +5,11 @@
   &.zx-button-controls--wrap {
     flex-wrap: wrap;
   }
-  gap: var(--gap-md);
+  gap: var(--zx-button-controls-gap-md);
+
+  &.zx-button-controls--gap-sm {
+    gap: var(--zx-button-controls-gap-sm);
+  }
 
   &.zx-button-controls--start {
     justify-content: flex-start;

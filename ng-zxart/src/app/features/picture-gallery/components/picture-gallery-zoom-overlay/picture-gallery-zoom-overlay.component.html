@@ -10,10 +10,11 @@
 
   <div class="zx-picture-gallery-zoom-area" *ngIf="canZoom && galleryService.zoomEnabled()">
     <lib-ngx-image-zoom
-      [thumbImage]="thumb || src"
+      [thumbImage]="src"
       [fullImage]="src"
       [zoomMode]="'hover'"
-      [magnification]="3"
+      [magnification]="magnification"
+      [maxZoomRatio]="magnification * 2"
       [enableScrollZoom]="true"
     ></lib-ngx-image-zoom>
   </div>

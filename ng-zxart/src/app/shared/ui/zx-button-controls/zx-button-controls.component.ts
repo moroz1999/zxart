@@ -10,9 +10,10 @@ import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/c
 export class ZxButtonControlsComponent {
   @Input() align: 'start' | 'end' | 'distribute' | 'fill' | 'full' = 'start';
   @Input() wrap = false;
+  @Input() gap: 'sm' | 'md' = 'md';
 
   @HostBinding('class') get hostClass(): string {
-    const classes = [`zx-button-controls--${this.align}`];
+    const classes = [`zx-button-controls--${this.align}`, `zx-button-controls--gap-${this.gap}`];
     if (this.wrap) {
       classes.push('zx-button-controls--wrap');
     }

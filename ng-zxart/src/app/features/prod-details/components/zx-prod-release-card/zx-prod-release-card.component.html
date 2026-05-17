@@ -7,6 +7,8 @@
         loading="lazy"
         [src]="release.screenshots[0].imageUrl"
         [alt]="release.title"
+        [lightbox]="0"
+        [gallery]="galleryId"
       />
     </div>
 
@@ -23,7 +25,7 @@
         </ng-container>
       </div>
 
-      <zx-inline gap="xs" align="center" [wrap]="true">
+      <zx-inline gap="xs" align="center" justify="between" [wrap]="true">
         <zx-release-type-badge
           *ngIf="release.releaseType"
           [type]="release.releaseType"
@@ -37,11 +39,13 @@
         <zx-button *ngIf="canPlay" size="sm" color="secondary" (click)="onPlay()">
           {{ 'release-row.play' | translate }}
         </zx-button>
-        <zx-inline *ngIf="release.isDownloadable" gap="xs" align="center" class="release-card__stat">
-          <svg-icon class="release-card__stat-icon" name="download"></svg-icon>{{ release.downloadsCount }}
-        </zx-inline>
-        <zx-inline *ngIf="release.isDownloadable" gap="xs" align="center" class="release-card__stat">
-          <svg-icon class="release-card__stat-icon" name="play"></svg-icon>{{ release.playsCount }}
+        <zx-inline *ngIf="release.isDownloadable" gap="xs" align="center" class="release-card__stats">
+          <zx-inline gap="xs" align="center" class="release-card__stat">
+            <svg-icon class="release-card__stat-icon" name="download"></svg-icon>{{ release.downloadsCount }}
+          </zx-inline>
+          <zx-inline gap="xs" align="center" class="release-card__stat">
+            <svg-icon class="release-card__stat-icon" name="play"></svg-icon>{{ release.playsCount }}
+          </zx-inline>
         </zx-inline>
       </zx-inline>
     </zx-inset>

@@ -1,6 +1,6 @@
 :root {
   /* Text size for release type badges. */
-  --zx-release-type-badge-font-size: calc(var(--zx-font-size-xs) - var(--border-width-thin));
+  --zx-release-type-badge-font-size: var(--zx-font-size-xs);
   /* Bold weight used by release type badges. */
   --zx-release-type-badge-font-weight: 700;
   /* Compact line height for release type badges. */
@@ -8,7 +8,7 @@
   /* Letter spacing for release type badges. */
   --zx-release-type-badge-letter-spacing: 0;
   /* Inner spacing for release type badges. */
-  --zx-release-type-badge-padding: var(--border-width-thin) calc(var(--space-4) + var(--space-2));
+  --zx-release-type-badge-padding: var(--space-2) var(--space-8);
   /* Corner radius for release type badges. */
   --zx-release-type-badge-radius: calc(var(--radius-lg) + var(--radius-sm));
   /* Default text color for release type badges. */

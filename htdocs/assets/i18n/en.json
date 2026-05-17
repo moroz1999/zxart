@@ -660,15 +660,20 @@
       },
       "discussion": "Discussion"
     },
-    "screenshots-more": "+{{count}} more"
+    "screenshots-more": "+{{count}} more",
+    "screenshot-move-left": "Move left",
+    "screenshot-move-right": "Move right"
   },
   "release-row": {
     "col-title": "Title",
     "col-year": "Year",
-    "col-language": "Supported languages",
-    "col-releasetype": "Release type",
+    "col-version": "Version",
+    "col-language": "Language",
+    "col-releasetype": "Type",
     "col-releaseby": "Release by",
     "col-hardware": "Hardware",
+    "col-format": "Format",
+    "col-rating": "Rating",
     "col-downloads": "Times downloaded",
     "col-plays": "Times played",
     "play": "Play online",
@@ -677,7 +682,12 @@
     "purchase": "Purchase",
     "open-externallink": "Open in new window",
     "view-table": "Table",
-    "view-cards": "Cards"
+    "view-cards": "Cards",
+    "filter-all": "All",
+    "filter-media": "Media",
+    "filter-media-disk": "Disk",
+    "filter-media-tape": "Tape",
+    "filter-media-other": "Other"
   },
   "emulator": {
     "title": "Emulator",

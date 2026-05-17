@@ -18,6 +18,7 @@ export interface ProdLanguageInfoDto {
 export interface ProdHardwareInfoDto {
   id: string;
   title: string;
+  catalogueUrl: string;
 }
 
 export interface ProdLinkInfoDto {

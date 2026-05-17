@@ -95,6 +95,7 @@ readonly class ProdInfoBuilder
             $hardware[] = new ProdHardwareInfoDto(
                 id: $row['id'],
                 title: $row['title'],
+                catalogueUrl: $element->getCatalogueUrl(['hw' => $row['id']]),
             );
         }
         return $hardware;

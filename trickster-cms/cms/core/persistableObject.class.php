@@ -2,6 +2,12 @@
 
 /**
  * Class persistableObject
+ *
+ * @property string|null $id
+ * @property string|null $childStructureId
+ * @property string|null $parentStructureId
+ * @property string|null $position
+ * @property string|null $type
  */
 class persistableObject
 {

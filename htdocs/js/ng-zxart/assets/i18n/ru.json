@@ -665,10 +665,13 @@
   "release-row": {
     "col-title": "Название",
     "col-year": "Год",
-    "col-language": "Поддерживаемые языки",
-    "col-releasetype": "Тип релиза",
+    "col-version": "Версия",
+    "col-language": "Язык",
+    "col-releasetype": "Тип",
     "col-releaseby": "Релиз от",
-    "col-hardware": "Аппаратные требования",
+    "col-hardware": "Железо",
+    "col-format": "Формат",
+    "col-rating": "Рейтинг",
     "col-downloads": "Скачано",
     "col-plays": "Запущено",
     "play": "Играть онлайн",
@@ -677,7 +680,12 @@
     "purchase": "Купить",
     "open-externallink": "Открыть в новом окне",
     "view-table": "Таблица",
-    "view-cards": "Карточки"
+    "view-cards": "Карточки",
+    "filter-all": "Все",
+    "filter-media": "Медиа",
+    "filter-media-disk": "Диск",
+    "filter-media-tape": "Лента",
+    "filter-media-other": "Другое"
   },
   "emulator": {
     "title": "Эмулятор",

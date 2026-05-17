@@ -11,11 +11,14 @@ import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.compo
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {environment} from '../../../../../environments/environment';
 import {ZxReleaseTypeBadgeComponent} from '../../../../shared/ui/zx-release-type-badge/zx-release-type-badge.component';
+import {LightboxModule} from 'ng-gallery/lightbox';
+import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
+import {ProdFileDto} from '../../models/prod-file.dto';
 
 const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 'tsconf', 'samcoupe', 'zxnext'];
 
 @Component({
-  selector: 'tbody[zxProdReleaseRow]',
+  selector: 'tr[zxProdReleaseRow]',
   standalone: true,
   imports: [
     CommonModule,
@@ -26,6 +29,7 @@ const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 't
     ZxInlineComponent,
     ZxStackComponent,
     ZxReleaseTypeBadgeComponent,
+    LightboxModule,
   ],
   templateUrl: './zx-prod-release-row.component.html',
   styleUrls: ['./zx-prod-release-row.component.scss'],
@@ -36,13 +40,31 @@ export class ZxProdReleaseRowComponent implements OnInit {
   @Input({required: true}) canUploadScreenshot!: boolean;
   @Input({required: true}) screenshotUploadUrl!: string;
 
+  galleryId = '';
+
   constructor(
     private readonly emulator: EmulatorModalService,
     private readonly iconReg: SvgIconRegistryService,
+    private readonly gallery: PictureGalleryService,
   ) {}
 
   ngOnInit(): void {
     this.iconReg.loadSvg(`${environment.svgUrl}download.svg`, 'download')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}play.svg`, 'play')?.subscribe();
+    if (this.release.screenshots.length > 0) {
+      this.galleryId = `zx-release-screenshots-${this.release.id}`;
+      this.gallery.loadItems(this.galleryId, this.release.screenshots.map(this.toGalleryItem));
+    }
+  }
+
+  private toGalleryItem(file: ProdFileDto) {
+    return {
+      id: file.id,
+      title: file.title,
+      thumbUrl: file.imageUrl ?? file.fullImageUrl ?? '',
+      largeUrl: file.fullImageUrl ?? file.imageUrl ?? '',
+      detailsUrl: file.downloadUrl,
+    };
   }
 
   get supportedEmulatorType(): EmulatorType | null {

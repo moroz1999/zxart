@@ -1,23 +1,13 @@
-@use 'shared/breakpoints' as bp;
-
 .release-card__layout {
   display: flex;
   flex-direction: column;
-
-  @include bp.media-breakpoint-down(md) {
-    flex-direction: row;
-    align-items: stretch;
-  }
 }
 
 .release-card__cover {
+  width: 100%;
   aspect-ratio: 4/3;
   background: var(--zx-prod-release-card-cover-bg);
   overflow: hidden;
-
-  @include bp.media-breakpoint-down(md) {
-    flex-shrink: 0;
-  }
 }
 
 .release-card__cover-img {
@@ -26,10 +16,10 @@
   height: 100%;
   object-fit: cover;
   image-rendering: pixelated;
+  cursor: pointer;
 }
 
 .release-card__body {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: var(--zx-prod-release-card-body-gap);
@@ -62,6 +52,10 @@
 
 .release-card__bottom {
   margin-top: auto;
+}
+
+.release-card__stats {
+  margin-left: auto;
 }
 
 .release-card__stat {

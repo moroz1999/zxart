@@ -117,7 +117,8 @@
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); keys=[k for k in d.keys\\(\\) if 'prod-details' in k]; print\\('\\\\n'.join\\(f'{k}: {d[k]}' for k in sorted\\(keys\\)\\)\\)\")",
       "Bash(python3 *)",
       "Bash(xargs cat)",
-      "Bash(xargs cat -n)"
+      "Bash(xargs cat -n)",
+      "Bash(xargs -I{} basename {} .svg)"
     ]
   },
   "enabledPlugins": {

@@ -1,7 +1,13 @@
 @use 'shared/breakpoints' as bp;
 
 :host {
-  display: inline;
+  display: block;
+}
+
+.language-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--zx-prod-language-links-inner-gap);
 }
 
 @include bp.media-breakpoint-down(md) {

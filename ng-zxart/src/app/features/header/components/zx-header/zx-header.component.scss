@@ -9,9 +9,11 @@
   left: 0;
   right: 0;
   box-shadow: var(--zx-header-shadow);
+  min-height: var(--zx-header-height);
 
   @include bp.media-breakpoint-down(md) {
     position: fixed;
+    min-height: var(--zx-header-mobile-height);
   }
 }
 

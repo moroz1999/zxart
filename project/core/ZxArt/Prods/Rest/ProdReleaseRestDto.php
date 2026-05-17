@@ -48,6 +48,7 @@ readonly class ProdReleaseRestDto
         public string $prodExternalLink,
         public int $downloadsCount,
         public int $playsCount,
+        public float $rating,
         #[Map(transform: MapCollection::class)]
         public array $externalLinks,
         #[Map(transform: MapCollection::class)]

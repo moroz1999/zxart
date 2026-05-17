@@ -1,13 +1,22 @@
 :host {
-  display: table-row-group;
+  display: table-row;
 }
 
-.release-row td {
+td {
   vertical-align: middle;
+}
+
+a {
+  color: var(--zx-prod-release-row-link-color);
+  text-decoration: none;
 }
 
 .release-row__title-link {
   font-weight: 600;
+}
+
+.release-row__releaseby a {
+  color: var(--zx-prod-release-row-secondary-color);
 }
 
 .release-row__realtime {
@@ -21,6 +30,8 @@
 }
 
 .release-row__year,
+.release-row__version,
+.release-row__rating,
 .release-row__downloads,
 .release-row__plays {
   text-align: center;
@@ -29,10 +40,13 @@
 
 .release-row__hardware-item {
   white-space: nowrap;
+  color: inherit;
+  text-decoration: none;
 }
 
 .release-row__description {
   color: var(--zx-prod-release-row-secondary-color);
+  font-size: var(--zx-prod-release-row-description-font-size);
 }
 
 .release-row__format-link {

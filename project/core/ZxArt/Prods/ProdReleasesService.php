@@ -29,10 +29,11 @@ readonly class ProdReleasesService
         $theme = $this->infoBuilder->resolveCurrentTheme();
         $prodLegalStatus = $element->getLegalStatus();
         $prodExternalLink = $element->externalLink;
+        $prodRating = $element->getVotes();
 
         $releases = [];
         foreach ($element->getReleasesList() as $release) {
-            $releases[] = $this->buildRelease($release, $prodLegalStatus, $prodExternalLink, $theme);
+            $releases[] = $this->buildRelease($release, $prodLegalStatus, $prodExternalLink, $theme, $prodRating);
         }
 
         return new ProdReleasesDto(releases: $releases);
@@ -43,6 +44,7 @@ readonly class ProdReleasesService
         string $prodLegalStatus,
         string $prodExternalLink,
         ?DesignTheme $theme,
+        float $prodRating,
     ): ProdReleaseDto {
         $isDownloadable = $release->isDownloadable();
         $isPlayable = $release->isPlayable();
@@ -76,6 +78,7 @@ readonly class ProdReleasesService
             prodExternalLink: $prodExternalLink,
             downloadsCount: $release->getDownloadsCount(),
             playsCount: $release->getPlaysCount(),
+            rating: $prodRating,
             externalLinks: $this->infoBuilder->buildLinks($release, $theme),
             screenshots: $this->prodMediaService->buildReleaseScreenshots($release)->files,
         );

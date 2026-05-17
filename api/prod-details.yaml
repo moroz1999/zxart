@@ -220,10 +220,13 @@ components:
       required:
         - id
         - title
+        - catalogueUrl
       properties:
         id:
           type: string
         title:
+          type: string
+        catalogueUrl:
           type: string
 
     ProdLinkInfo:

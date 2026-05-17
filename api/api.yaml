@@ -27,6 +27,8 @@ paths:
     $ref: 'prod-details.yaml#/paths/~1prod-details~1'
   /prod-releases/:
     $ref: 'prod-releases.yaml#/paths/~1prod-releases~1'
+  /prod-screenshot-move/:
+    $ref: 'prod-files.yaml#/paths/~1prod-screenshot-move~1'
   /prod-screenshots/:
     $ref: 'prod-files.yaml#/paths/~1prod-screenshots~1'
   /prod-inlays/:

@@ -17,6 +17,23 @@ svg-icon {
   }
 }
 
+zx-header {
+  display: block;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  min-height: var(--zx-header-height);
+  background-color: var(--zx-header-bg);
+  z-index: var(--zx-header-z-index);
+  box-shadow: var(--zx-header-shadow);
+
+  @include breakpoints.media-breakpoint-down(md) {
+    position: fixed;
+    min-height: var(--zx-header-mobile-height);
+  }
+}
+
 .cdk-overlay-pane.g-overlay lightbox .g-image-item,
 .cdk-overlay-pane.g-overlay lightbox gallery-image img {
   image-rendering: pixelated !important;

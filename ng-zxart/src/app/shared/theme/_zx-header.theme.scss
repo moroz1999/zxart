@@ -9,6 +9,8 @@
   --zx-header-shadow: var(--shadow-lg);
   /* Maximum width of the header inner content */
   --zx-header-max-width: 1900px;
+  /* Fixed header height on desktop (used to reserve space before Angular bootstrap) */
+  --zx-header-height: 52px;
   /* Fixed height on mobile (used to offset body content below fixed header) */
   --zx-header-mobile-height: 45px;
   /* Logo image height */

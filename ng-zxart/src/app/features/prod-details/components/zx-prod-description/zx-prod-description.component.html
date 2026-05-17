@@ -7,8 +7,11 @@
 </zx-stack>
 
 <ng-template #descriptionContent>
-  <div *ngIf="htmlDescription; else plainText" appText="bodySm" [innerHTML]="description"></div>
-  <ng-template #plainText>
-    <div class="prod-description--plain" appText="bodySm">{{ description }}</div>
-  </ng-template>
+  <zx-stack spacing="sm">
+    <h3 appHeading="title">{{ 'prod-details.description' | translate }}</h3>
+    <div *ngIf="htmlDescription; else plainText" appText="body" [innerHTML]="description"></div>
+    <ng-template #plainText>
+      <div class="prod-description--plain" appText="body">{{ description }}</div>
+    </ng-template>
+  </zx-stack>
 </ng-template>

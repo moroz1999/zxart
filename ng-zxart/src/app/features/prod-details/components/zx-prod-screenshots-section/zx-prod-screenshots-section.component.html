@@ -13,19 +13,46 @@
 
       <div class="prod-screenshots-section__grid">
         <figure
-          *ngFor="let file of displayedFiles; let i = index"
+          @fileEnter
+          *ngFor="let file of visibleFiles; let i = index; trackBy: trackByFileId"
           class="prod-screenshots-section__item"
           [class.prod-screenshots-section__item--featured]="i === 0"
         >
-          <img
-            *ngIf="file.imageUrl"
-            class="prod-screenshots-section__thumb"
-            loading="lazy"
-            [src]="file.imageUrl"
-            [alt]="file.title"
-            [lightbox]="i"
-            [gallery]="galleryId"
-          />
+          <div class="prod-screenshots-section__thumb-wrap">
+            <img
+              *ngIf="file.imageUrl"
+              class="prod-screenshots-section__thumb"
+              loading="lazy"
+              [src]="file.imageUrl"
+              [alt]="file.title"
+              [lightbox]="i"
+              [gallery]="galleryId"
+            />
+            <div class="prod-screenshots-section__controls">
+              <ng-container *ngIf="canReorder">
+                <zx-button
+                  size="xs"
+                  color="secondary"
+                  [disabled]="moving || isFirst(file)"
+                  (click)="onMove(file, 'left')"
+                  [attr.aria-label]="'prod-details.screenshot-move-left' | translate"
+                ><svg-icon name="skip-previous" class="prod-screenshots-section__btn-icon"></svg-icon></zx-button>
+                <zx-button
+                  size="xs"
+                  color="secondary"
+                  [disabled]="moving || isLast(file)"
+                  (click)="onMove(file, 'right')"
+                  [attr.aria-label]="'prod-details.screenshot-move-right' | translate"
+                ><svg-icon name="skip-next" class="prod-screenshots-section__btn-icon"></svg-icon></zx-button>
+              </ng-container>
+              <zx-button
+                size="xs"
+                color="secondary"
+                [href]="file.downloadUrl"
+                [attr.aria-label]="'prod-details.screenshot-download' | translate"
+              ><svg-icon name="download" class="prod-screenshots-section__btn-icon"></svg-icon></zx-button>
+            </div>
+          </div>
           <figcaption *ngIf="file.author && i > 0" appText="caption" tone="muted">
             {{ file.author }}
           </figcaption>
@@ -34,12 +61,58 @@
         <a
           *ngIf="moreCount > 0"
           class="prod-screenshots-section__more"
-          [lightbox]="maxVisible"
-          [gallery]="galleryId"
+          (click)="expandAll()"
         >
           {{ 'prod-details.screenshots-more' | translate:{ count: moreCount } }}
         </a>
       </div>
+
+      <div *ngIf="showAll && extraFiles.length > 0" class="prod-screenshots-section__extra" [@expandSection]>
+        <figure
+          *ngFor="let file of extraFiles; let i = index"
+          class="prod-screenshots-section__item"
+        >
+          <div class="prod-screenshots-section__thumb-wrap">
+            <img
+              *ngIf="file.imageUrl"
+              class="prod-screenshots-section__thumb"
+              loading="lazy"
+              [src]="file.imageUrl"
+              [alt]="file.title"
+              [lightbox]="maxVisible + 1 + i"
+              [gallery]="galleryId"
+            />
+            <div class="prod-screenshots-section__controls">
+              <ng-container *ngIf="canReorder">
+                <zx-button
+                  size="xs"
+                  color="secondary"
+                  [disabled]="moving || isFirst(file)"
+                  (click)="onMove(file, 'left')"
+                  [attr.aria-label]="'prod-details.screenshot-move-left' | translate"
+                ><svg-icon name="skip-previous" class="prod-screenshots-section__btn-icon"></svg-icon></zx-button>
+                <zx-button
+                  size="xs"
+                  color="secondary"
+                  [disabled]="moving || isLast(file)"
+                  (click)="onMove(file, 'right')"
+                  [attr.aria-label]="'prod-details.screenshot-move-right' | translate"
+                ><svg-icon name="skip-next" class="prod-screenshots-section__btn-icon"></svg-icon></zx-button>
+              </ng-container>
+              <zx-button
+                size="xs"
+                color="secondary"
+                [href]="file.downloadUrl"
+                [attr.aria-label]="'prod-details.screenshot-download' | translate"
+              ><svg-icon name="download" class="prod-screenshots-section__btn-icon"></svg-icon></zx-button>
+            </div>
+          </div>
+          <figcaption *ngIf="file.author" appText="caption" tone="muted">
+            {{ file.author }}
+          </figcaption>
+        </figure>
+      </div>
+
     </ng-container>
   </ng-container>
 </zx-stack>

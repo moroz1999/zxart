@@ -1,3 +1,5 @@
-<ng-container *ngFor="let lang of languages; let last = last">
-  <a class="language-link" [href]="lang.catalogueUrl">{{ lang.emoji }} <span class="language-link__title">{{ lang.title }}</span></a><ng-container *ngIf="!last">, </ng-container>
-</ng-container>
+<zx-inline gap="sm" align="center" [wrap]="true">
+  <a *ngFor="let lang of languages" appText="label" tone="link" class="language-link" [href]="lang.catalogueUrl">
+    {{ lang.emoji }}<span class="language-link__title">{{ lang.title }}</span>
+  </a>
+</zx-inline>

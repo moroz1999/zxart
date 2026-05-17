@@ -40,6 +40,7 @@ export interface ProdReleaseDto {
   prodExternalLink: string;
   downloadsCount: number;
   playsCount: number;
+  rating: number;
   externalLinks: ProdLinkInfoDto[];
   screenshots: ProdFileDto[];
 }

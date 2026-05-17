@@ -1,8 +1,12 @@
-<zx-item-controls
-  [elementId]="elementId"
-  [type]="type"
-  [votes]="voting.votes"
-  [votesAmount]="voting.votesAmount"
-  [userRating]="voting.userVote"
-  [denyVoting]="voting.denyVoting">
-</zx-item-controls>
+<zx-inline gap="sm" align="center">
+  <span *ngIf="currentRating > 0" class="vote-row__rating">{{ currentRating | number:'1.0-2' }}</span>
+  <zx-item-controls
+    [elementId]="elementId"
+    [type]="type"
+    [votes]="voting.votes"
+    [votesAmount]="voting.votesAmount"
+    [userRating]="voting.userVote"
+    [denyVoting]="voting.denyVoting"
+    (voteChange)="onVoteChange($event)">
+  </zx-item-controls>
+</zx-inline>

@@ -664,10 +664,13 @@
   "release-row": {
     "col-title": "Título",
     "col-year": "Año",
-    "col-language": "Idiomas admitidos",
-    "col-releasetype": "Tipo de versión",
+    "col-version": "Versión",
+    "col-language": "Idioma",
+    "col-releasetype": "Tipo",
     "col-releaseby": "Lanzamiento por",
     "col-hardware": "Hardware",
+    "col-format": "Formato",
+    "col-rating": "Valoración",
     "col-downloads": "Descargado",
     "col-plays": "Empezado",
     "play": "Jugar en linea",
@@ -676,7 +679,12 @@
     "purchase": "Compra",
     "open-externallink": "Abrir en Nueva ventana",
     "view-table": "Tabla",
-    "view-cards": "Tarjetas"
+    "view-cards": "Tarjetas",
+    "filter-all": "Todos",
+    "filter-media": "Medio",
+    "filter-media-disk": "Disco",
+    "filter-media-tape": "Cinta",
+    "filter-media-other": "Otro"
   },
   "emulator": {
     "title": "Emulador",

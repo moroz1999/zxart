@@ -63,6 +63,7 @@ components:
         - prodExternalLink
         - downloadsCount
         - playsCount
+        - rating
         - externalLinks
         - screenshots
       properties:
@@ -134,6 +135,9 @@ components:
           type: integer
         playsCount:
           type: integer
+        rating:
+          type: number
+          format: float
         externalLinks:
           type: array
           items:

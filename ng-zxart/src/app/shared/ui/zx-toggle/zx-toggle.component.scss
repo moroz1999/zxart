@@ -12,6 +12,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-4);
   padding: 0 var(--space-12);
 
   &:hover {
@@ -39,6 +40,7 @@
 
 .zx-toggle--sm .zx-toggle__item {
   height: var(--zx-button-sm-height);
+  font-size: var(--zx-button-sm-font-size);
 }
 
 .zx-toggle--sm .zx-toggle__item svg-icon {

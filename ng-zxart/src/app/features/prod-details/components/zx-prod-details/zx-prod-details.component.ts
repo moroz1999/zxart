@@ -36,6 +36,7 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxTabsComponent} from '../../../../shared/ui/zx-tabs/zx-tabs.component';
 import {ZxTabComponent} from '../../../../shared/ui/zx-tabs/zx-tab.component';
+import {ZxTabContentDirective} from '../../../../shared/ui/zx-tabs/zx-tab-content.directive';
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {RatingsListComponent} from '../../../ratings/components/ratings-list/ratings-list.component';
 import {TranslateModule} from '@ngx-translate/core';
@@ -71,6 +72,7 @@ import {TagsListComponent} from '../../../../shared/lib/tags-list/tags-list.comp
     ZxInlineComponent,
     ZxTabsComponent,
     ZxTabComponent,
+    ZxTabContentDirective,
     TranslateModule,
     CommentsListComponent,
     RatingsListComponent,

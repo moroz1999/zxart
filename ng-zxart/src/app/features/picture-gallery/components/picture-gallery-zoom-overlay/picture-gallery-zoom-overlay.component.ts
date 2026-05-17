@@ -92,14 +92,17 @@ export class PictureGalleryZoomOverlayComponent implements OnInit, AfterViewInit
     image.src = this.src;
   }
 
-  private updateCanZoom(): void {
-    if (!this.active || !this.naturalWidth || !this.naturalHeight) {
-      this.canZoom = false;
-      return;
+  get magnification(): number {
+    const containerW = this.host.nativeElement.clientWidth;
+    const containerH = this.host.nativeElement.clientHeight;
+    if (!containerW || !containerH || !this.naturalWidth || !this.naturalHeight) {
+      return 3;
     }
-    const rect = this.host.nativeElement.getBoundingClientRect();
-    const viewWidth = Math.floor(rect.width);
-    const viewHeight = Math.floor(rect.height);
-    this.canZoom = this.naturalWidth > viewWidth || this.naturalHeight > viewHeight;
+    const baseRatio = Math.max(containerW / this.naturalWidth, containerH / this.naturalHeight);
+    return Math.max(3, baseRatio * 3);
+  }
+
+  private updateCanZoom(): void {
+    this.canZoom = !!(this.active && this.naturalWidth && this.naturalHeight);
   }
 }

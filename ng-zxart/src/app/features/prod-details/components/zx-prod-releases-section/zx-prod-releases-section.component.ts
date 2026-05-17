@@ -1,7 +1,8 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {TranslateModule} from '@ngx-translate/core';
-import {forkJoin, Subscription} from 'rxjs';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {forkJoin, Observable, Subscription} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 import {
@@ -18,15 +19,23 @@ import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-control
 import {ZxProdReleaseCardComponent} from '../zx-prod-release-card/zx-prod-release-card.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
+import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
+import {ZxToggleComponent, ZxToggleOption} from '../../../../shared/ui/zx-toggle/zx-toggle.component';
 import {ZxBreakpoints} from '../../../../shared/breakpoints';
+import {SvgIconRegistryService} from 'angular-svg-icon';
+import {environment} from '../../../../../environments/environment';
+
+const DISK_FORMATS = new Set(['dsk', 'trd', 'scl', 'fdi', 'udi', 'td0', 'mgt', 'opd', 'mld', 'mbd', 'img', 'sad', 'd40', 'd80', 'cpm']);
+const TAPE_FORMATS = new Set(['tzx', 'tap', 'mdr', 'p', 'o']);
 
 interface LabeledOption {
   code: string;
   label: string;
 }
 
-type SortField = 'title' | 'year' | 'downloads' | 'plays';
+type SortField = 'title' | 'year' | 'downloads' | 'plays' | 'rating';
 type ViewMode = 'table' | 'cards';
+type MediaFilter = 'all' | 'disk' | 'tape' | 'other';
 
 @Component({
   selector: 'zx-prod-releases-section',
@@ -44,14 +53,18 @@ type ViewMode = 'table' | 'cards';
     ZxProdReleaseCardComponent,
     ZxStackComponent,
     ZxInlineComponent,
+    ZxPanelComponent,
+    ZxToggleComponent,
   ],
   templateUrl: './zx-prod-releases-section.component.html',
   styleUrls: ['./zx-prod-releases-section.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxProdReleasesSectionComponent implements OnDestroy {
+export class ZxProdReleasesSectionComponent implements OnInit, OnDestroy {
   @Input({required: true}) elementId!: number;
   @Input({required: true}) prodUrl!: string;
+
+  readonly viewToggleOptions$: Observable<ZxToggleOption[]>;
 
   loading = false;
   loaded = false;
@@ -60,6 +73,7 @@ export class ZxProdReleasesSectionComponent implements OnDestroy {
 
   filterLang = 'all';
   filterType = 'all';
+  filterMedia: MediaFilter = 'all';
   activeSortField: SortField | null = null;
   sortDir: 'asc' | 'desc' = 'desc';
   viewMode: ViewMode = 'table';
@@ -76,14 +90,32 @@ export class ZxProdReleasesSectionComponent implements OnDestroy {
     private readonly api: ProdReleasesApiService,
     private readonly elementPrivilegesApi: ElementPrivilegesApiService,
     private readonly cdr: ChangeDetectorRef,
+    private readonly iconReg: SvgIconRegistryService,
     breakpointObserver: BreakpointObserver,
+    translateService: TranslateService,
   ) {
+    this.viewToggleOptions$ = translateService.stream([
+      'release-row.view-table',
+      'release-row.view-cards',
+    ]).pipe(
+      map(t => [
+        {value: 'table', icon: 'list', label: t['release-row.view-table'] as string},
+        {value: 'cards', icon: 'grid', label: t['release-row.view-cards'] as string},
+      ])
+    );
+
     this.subscription.add(
       breakpointObserver.observe(ZxBreakpoints.MobileAll).subscribe(state => {
         this.isMobile = state.matches;
         this.cdr.markForCheck();
       })
     );
+  }
+
+  ngOnInit(): void {
+    for (const name of ['list', 'grid']) {
+      this.iconReg.loadSvg(`${environment.svgUrl}${name}.svg`, name)?.subscribe();
+    }
   }
 
   get availableLangs(): LabeledOption[] {
@@ -95,8 +127,6 @@ export class ZxProdReleasesSectionComponent implements OnDestroy {
         }
       }
     }
-    // Only include a language when selecting it would actually exclude some releases.
-    // If every release has language X, the X filter is a no-op and must be hidden.
     return Array.from(seen.entries())
       .filter(([code]) => this.releases.some(r => !r.languages.some(l => l.code === code)))
       .map(([code, label]) => ({code, label}));
@@ -110,6 +140,16 @@ export class ZxProdReleasesSectionComponent implements OnDestroy {
       }
     }
     return Array.from(seen.entries()).map(([code, label]) => ({code, label}));
+  }
+
+  get availableMediaTypes(): MediaFilter[] {
+    const found = new Set<MediaFilter>();
+    for (const r of this.releases) {
+      for (const f of r.formats) {
+        found.add(this.getMediaCategory(f.format));
+      }
+    }
+    return Array.from(found);
   }
 
   get allLangOptions(): LabeledOption[] {
@@ -131,6 +171,11 @@ export class ZxProdReleasesSectionComponent implements OnDestroy {
       result = result.filter(r => r.releaseType === this.filterType);
     }
 
+    if (this.filterMedia !== 'all') {
+      const media = this.filterMedia;
+      result = result.filter(r => r.formats.some(f => this.getMediaCategory(f.format) === media));
+    }
+
     if (this.activeSortField) {
       const field = this.activeSortField;
       const dir = this.sortDir;
@@ -141,6 +186,13 @@ export class ZxProdReleasesSectionComponent implements OnDestroy {
     }
 
     return result;
+  }
+
+  private getMediaCategory(format: string): MediaFilter {
+    const fmt = format.toLowerCase();
+    if (DISK_FORMATS.has(fmt)) return 'disk';
+    if (TAPE_FORMATS.has(fmt)) return 'tape';
+    return 'other';
   }
 
   private compareReleases(a: ProdReleaseDto, b: ProdReleaseDto, field: SortField): number {
@@ -158,6 +210,7 @@ export class ZxProdReleasesSectionComponent implements OnDestroy {
       case 'year': return r.year || 0;
       case 'downloads': return r.downloadsCount || 0;
       case 'plays': return r.playsCount || 0;
+      case 'rating': return r.rating || 0;
     }
   }
 
@@ -174,9 +227,20 @@ export class ZxProdReleasesSectionComponent implements OnDestroy {
     this.cdr.detectChanges();
   }
 
+  setFilterMedia(value: string): void {
+    this.filterMedia = value as MediaFilter;
+    this.cdr.detectChanges();
+  }
+
   setViewMode(mode: ViewMode): void {
     this.viewMode = mode;
     this.cdr.detectChanges();
+  }
+
+  setViewModeFromToggle(value: string): void {
+    if (value === 'table' || value === 'cards') {
+      this.setViewMode(value);
+    }
   }
 
   sortBy(field: SortField): void {

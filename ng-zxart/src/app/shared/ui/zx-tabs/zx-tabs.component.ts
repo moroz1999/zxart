@@ -5,6 +5,7 @@ import {
   Component,
   ContentChildren,
   QueryList,
+  TemplateRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ZxTabComponent } from './zx-tab.component';
@@ -30,7 +31,11 @@ export class ZxTabsComponent implements AfterContentInit {
 
   activateTab(index: number): void {
     this.activeIndex = index;
-    this.tabs.forEach((tab, i) => tab.setActive(i === index));
     this.cdr.markForCheck();
+  }
+
+  get activeTemplateRef(): TemplateRef<unknown> | null {
+    const tab = this.tabs?.get(this.activeIndex);
+    return tab?.contentDirective?.templateRef ?? null;
   }
 }

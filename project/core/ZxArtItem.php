@@ -36,7 +36,7 @@ abstract class ZxArtItem extends structureElement implements
     protected $authorIds;
     protected $votesList;
     /**
-     * @var zxReleaseElement|null
+     * @var zxReleaseElement|zxProdElement|null
      */
     protected $releaseElement = null;
     protected bool $releaseElementLoaded = false;
@@ -364,16 +364,16 @@ abstract class ZxArtItem extends structureElement implements
     }
 
     /**
-     * @return zxReleaseElement|null
+     * @return zxReleaseElement|zxProdElement|null
      */
     public function getReleaseElement()
     {
         if ($this->releaseElementLoaded === false) {
             $this->releaseElementLoaded = true;
             if ($this->game) {
-                $releaseElement = $this->getService('structureManager')->getElementById($this->game);
-                if ($releaseElement instanceof zxReleaseElement) {
-                    $this->releaseElement = $releaseElement;
+                $element = $this->getService('structureManager')->getElementById($this->game);
+                if ($element instanceof zxReleaseElement || $element instanceof zxProdElement) {
+                    $this->releaseElement = $element;
                 }
             }
         }

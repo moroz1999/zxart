@@ -5,8 +5,6 @@ import {mapGalleryItemToImageItem, mapPictureToGalleryItem} from './picture-gall
 import {ZxPictureDto} from '../../../shared/models/zx-picture-dto';
 import {PictureGalleryItem} from '../models/picture-gallery-item';
 
-const GALLERY_ID_PREFIX = 'zx-picture-lightbox';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -19,10 +17,8 @@ export class PictureGalleryService {
     private gallery: Gallery,
     private lightbox: Lightbox,
   ) {
-    this.lightbox.closed.subscribe(id => {
-      if (id.startsWith(GALLERY_ID_PREFIX)) {
-        this.zoomEnabled.set(false);
-      }
+    this.lightbox.closed.subscribe(() => {
+      this.zoomEnabled.set(false);
     });
   }
 
@@ -56,6 +52,7 @@ export class PictureGalleryService {
   private applyConfig(galleryId: string): void {
     const config: GalleryConfig = {
       imageTemplate: this.imageTemplate ?? undefined,
+      thumbPosition: 'right',
     };
     this.gallery.ref(galleryId).setConfig(config);
   }

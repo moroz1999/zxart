@@ -9,6 +9,10 @@
   --zx-prod-release-row-icon-size: 16px;
   /* Font size of the releaseby / secondary text below the title. */
   --zx-prod-release-row-releaseby-font-size: var(--zx-font-size-xs);
+  /* Color for all links in the release row — body text color, no blue. */
+  --zx-prod-release-row-link-color: var(--text-color);
+  /* Font size for release description details — capped at caption size. */
+  --zx-prod-release-row-description-font-size: var(--zx-font-size-sm);
   /* Minimum column width for the screenshots grid below the row. */
   --zx-prod-release-row-screenshot-min-width: 120px;
   /* Gap between screenshots in the row grid. */

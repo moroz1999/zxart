@@ -12,6 +12,9 @@ import {ZxInsetComponent} from '../../../../shared/ui/zx-inset/zx-inset.componen
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {environment} from '../../../../../environments/environment';
 import {ZxReleaseTypeBadgeComponent} from '../../../../shared/ui/zx-release-type-badge/zx-release-type-badge.component';
+import {LightboxModule} from 'ng-gallery/lightbox';
+import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
+import {ProdFileDto} from '../../models/prod-file.dto';
 
 const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 'tsconf', 'samcoupe', 'zxnext'];
 
@@ -28,6 +31,7 @@ const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 't
     ZxInsetComponent,
     ZxPanelComponent,
     ZxReleaseTypeBadgeComponent,
+    LightboxModule,
   ],
   templateUrl: './zx-prod-release-card.component.html',
   styleUrls: ['./zx-prod-release-card.component.scss'],
@@ -38,14 +42,31 @@ export class ZxProdReleaseCardComponent implements OnInit {
   @Input({required: true}) canUploadScreenshot!: boolean;
   @Input({required: true}) screenshotUploadUrl!: string;
 
+  galleryId = '';
+
   constructor(
     private readonly emulator: EmulatorModalService,
     private readonly iconReg: SvgIconRegistryService,
+    private readonly gallery: PictureGalleryService,
   ) {}
 
   ngOnInit(): void {
     this.iconReg.loadSvg(`${environment.svgUrl}download.svg`, 'download')?.subscribe();
     this.iconReg.loadSvg(`${environment.svgUrl}play.svg`, 'play')?.subscribe();
+    if (this.release.screenshots.length > 0) {
+      this.galleryId = `zx-release-screenshots-${this.release.id}`;
+      this.gallery.loadItems(this.galleryId, this.release.screenshots.map(this.toGalleryItem));
+    }
+  }
+
+  private toGalleryItem(file: ProdFileDto) {
+    return {
+      id: file.id,
+      title: file.title,
+      thumbUrl: file.imageUrl ?? file.fullImageUrl ?? '',
+      largeUrl: file.fullImageUrl ?? file.imageUrl ?? '',
+      detailsUrl: file.downloadUrl,
+    };
   }
 
   get canPlay(): boolean {

@@ -1,11 +1,12 @@
-<tr class="release-row">
-  <td class="release-row__thumb">
+<td class="release-row__thumb">
     <div *ngIf="release.screenshots.length > 0" class="release-row__thumb-wrap">
       <img
         class="release-row__thumb-img"
         loading="lazy"
         [src]="release.screenshots[0].imageUrl"
         [alt]="release.title"
+        [lightbox]="0"
+        [gallery]="galleryId"
       />
     </div>
   </td>
@@ -29,6 +30,8 @@
     <a *ngIf="release.year > 0" [href]="release.url">{{ release.year }}</a>
   </td>
 
+  <td class="release-row__version">{{ release.version }}</td>
+
   <td class="release-row__type">
     <zx-release-type-badge
       *ngIf="release.releaseType"
@@ -43,7 +46,7 @@
 
   <td class="release-row__hardware">
     <zx-inline gap="xs" [wrap]="true">
-      <span *ngFor="let hw of release.hardware" class="release-row__hardware-item">{{ hw.title }}</span>
+      <a *ngFor="let hw of release.hardware" class="release-row__hardware-item" [href]="hw.catalogueUrl">{{ hw.title }}</a>
     </zx-inline>
   </td>
 
@@ -53,6 +56,10 @@
         <ng-container *ngIf="fmt.emoji">{{ fmt.emoji }} </ng-container>{{ fmt.label }}
       </a><ng-container *ngIf="!last">, </ng-container>
     </ng-container>
+  </td>
+
+  <td class="release-row__rating">
+    <ng-container *ngIf="release.rating > 0">{{ release.rating | number:'1.0-2' }}</ng-container>
   </td>
 
   <td class="release-row__downloads">
@@ -65,8 +72,8 @@
 
   <td class="release-row__actions">
     <zx-inline gap="xs" align="center" [wrap]="true">
-      <zx-button *ngIf="canPlay" size="sm" color="primary" (click)="onPlay()">
-        {{ 'release-row.play' | translate }}
+      <zx-button *ngIf="canPlay" size="sm" color="primary" [square]="true" [ariaLabel]="'release-row.play' | translate" (click)="onPlay()">
+        <svg-icon class="release-row__download-icon" name="play"></svg-icon>
       </zx-button>
 
       <zx-button *ngIf="showSalesButton"
@@ -107,4 +114,3 @@
 
     </zx-inline>
   </td>
-</tr>
