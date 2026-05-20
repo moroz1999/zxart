@@ -17,6 +17,7 @@ export class Zx81Engine implements EmulatorEngine {
   readonly type: EmulatorType = 'zx81';
 
   private emulatorUi: Zx81EmulatorUI | null = null;
+  private canvas: HTMLCanvasElement | null = null;
   private scriptInjected = false;
   private readonly visibilityHandler = () => {
     if (document.hidden) {
@@ -36,6 +37,7 @@ export class Zx81Engine implements EmulatorEngine {
         if (this.emulatorUi) {
           this.emulatorUi.stop();
         }
+        this.canvas = canvas;
         this.emulatorUi = new globals.ZX81EmulatorUI(document.createElement('div'), canvas, fileUrl);
         document.addEventListener('visibilitychange', this.visibilityHandler);
         resolve();
@@ -84,12 +86,13 @@ export class Zx81Engine implements EmulatorEngine {
   }
 
   setFullscreen(): void {
-    // ZX81 emulator does not expose a fullscreen API.
+    void this.canvas?.requestFullscreen();
   }
 
   destroy(): void {
     document.removeEventListener('visibilitychange', this.visibilityHandler);
     this.emulatorUi?.stop();
     this.emulatorUi = null;
+    this.canvas = null;
   }
 }
