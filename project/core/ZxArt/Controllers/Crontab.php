@@ -16,7 +16,6 @@ use Monolog\Logger;
 use mp3ConversionManager;
 use pressArticleElement;
 use Recalculable;
-use renderer;
 use structureManager;
 use ZxArt\Ai\QueryFailException;
 use ZxArt\Ai\QuerySkipException;
@@ -26,6 +25,7 @@ use ZxArt\Ai\Service\ProdQueryService;
 use ZxArt\Ai\Service\TextBeautifier;
 use ZxArt\Ai\Service\Translator;
 use ZxArt\Cache\Services\CacheCleanupService;
+use ZxArt\Comments\CommentTranslationService;
 use ZxArt\Import\Press\DataUpdater\ArticleParsedDataUpdater;
 use ZxArt\Import\Press\DataUpdater\ArticleSeoDataUpdater;
 use ZxArt\Press\Helpers\AiTextContent;
@@ -64,9 +64,9 @@ class Crontab extends controllerApplication
     private EventsAggregationService $eventsAggregationService;
     private CacheCleanupService $cacheCleanupService;
     private Cache $cache;
-    private renderer $rendererService;
     private CurrentUserService $currentUserService;
     private mp3ConversionManager $mp3ConversionManager;
+    private CommentTranslationService $commentTranslationService;
 
     public function __construct(
         controller $controller,
@@ -85,10 +85,10 @@ class Crontab extends controllerApplication
         EventsAggregationService $eventsAggregationService,
         CacheCleanupService $cacheCleanupService,
         Cache $cache,
-        renderer $rendererService,
         CurrentUserService $currentUserService,
         structureManager $structureManager,
         mp3ConversionManager $mp3ConversionManager,
+        CommentTranslationService $commentTranslationService,
     ) {
         parent::__construct($controller);
 
@@ -107,10 +107,10 @@ class Crontab extends controllerApplication
         $this->eventsAggregationService = $eventsAggregationService;
         $this->cacheCleanupService = $cacheCleanupService;
         $this->cache = $cache;
-        $this->rendererService = $rendererService;
         $this->currentUserService = $currentUserService;
         $this->structureManager = $structureManager;
         $this->mp3ConversionManager = $mp3ConversionManager;
+        $this->commentTranslationService = $commentTranslationService;
     }
     
     /**
@@ -145,7 +145,7 @@ class Crontab extends controllerApplication
 
         $this->cache->enable(false, false, true);
 
-        $this->rendererService->endOutputBuffering();
+        $this->renderer->endOutputBuffering();
         while (ob_get_level()) {
             ob_end_flush();
         }
@@ -182,8 +182,46 @@ class Crontab extends controllerApplication
             $this->queryAiPressTranslation();
             $this->queryAiPressParser();
             $this->queryAiPressSeo();
+            $this->translateComments();
 
         }
+    }
+
+    private function translateComments(): void
+    {
+        try {
+            $result = $this->commentTranslationService->translateNextBatch();
+        } catch (\Throwable $e) {
+            $this->logger->error('AI comment translation batch failed', ['exception' => $e]);
+            $this->logMessage('AI comment translation batch failed: ' . $e->getMessage(), 0);
+            return;
+        }
+        foreach ($result['attempts'] as $attempt) {
+            if ($attempt->isSuccessful()) {
+                $translation = $attempt->translation;
+                if ($translation === null) {
+                    continue;
+                }
+                $this->logMessage(
+                    'AI comment translation success ' . $attempt->commentId
+                    . ' source: ' . $attempt->sourceText
+                    . ' original_lang: ' . $translation->originalLanguageCode
+                    . ' text_en: ' . $translation->textEn
+                    . ' text_ru: ' . $translation->textRu
+                    . ' text_es: ' . $translation->textEs,
+                    0
+                );
+                continue;
+            }
+
+            $this->logMessage(
+                'AI comment translation failed ' . $attempt->commentId
+                . ' source: ' . $attempt->sourceText
+                . ' error: ' . ($attempt->error ?? ''),
+                0
+            );
+        }
+        $this->logMessage('AI comment translations processed ' . $result['processed'] . ', failed ' . $result['failed'], 0);
     }
 
     private function processQueue(QueueType $queueType, callable $processElementCallback): void

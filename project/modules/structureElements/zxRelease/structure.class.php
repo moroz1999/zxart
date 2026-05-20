@@ -296,6 +296,11 @@ class zxReleaseElement extends ZxArtItem implements
         $playableFiles = $this->getPlayableFiles();
         $item = $playableFiles[0] ?? null;
         if ($item === null) {
+            $mainFileExt = strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION));
+            $runnableTypes = $this->getRunnableTypes();
+            if ($this->fileName !== '' && in_array($mainFileExt, $runnableTypes, true)) {
+                return $controller->baseURL . 'release/play:1/id:' . $this->getId() . '/' . $this->getFileName();
+            }
             return null;
         }
 

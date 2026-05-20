@@ -17,6 +17,8 @@ export interface MameEmulatorInstance {
   start(opts: {waitAfterDownloading: boolean}): void;
   requestFullScreen(): void;
   stop(): void;
+  mute(): void;
+  unmute(): void;
 }
 
 export type MameEmulatorConstructor = new (

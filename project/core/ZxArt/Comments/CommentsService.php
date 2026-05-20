@@ -42,7 +42,7 @@ readonly class CommentsService
      * @param int $page Page number (1-based)
      * @throws CommentOperationException
      */
-    public function getAllCommentsPaginated(int $page = 1): CommentsListDto
+    public function getAllCommentsPaginated(int $page = 1, ?string $languageCode = null): CommentsListDto
     {
         $count = $this->commentsRepository->countAll();
 
@@ -63,7 +63,7 @@ readonly class CommentsService
         foreach ($ids as $id) {
             $comment = $this->structureManager->getElementById($id);
             if ($comment instanceof commentElement) {
-                $comments[] = $this->transformer->transformToDto($comment);
+                $comments[] = $this->transformer->transformToDto($comment, [], $languageCode);
             }
         }
 
@@ -82,14 +82,14 @@ readonly class CommentsService
      * @return CommentDto[]
      * @throws CommentNotFoundException|CommentOperationException If the target element is not found
      */
-    public function getCommentsTree(int $elementId): array
+    public function getCommentsTree(int $elementId, ?string $languageCode = null): array
     {
         $element = $this->structureManager->getElementById($elementId);
         if ($element === null) {
             throw new CommentNotFoundException("Target element not found: {$elementId}");
         }
 
-        return $this->buildTree($elementId);
+        return $this->buildTree($elementId, [], $languageCode);
     }
 
     /**
@@ -101,7 +101,7 @@ readonly class CommentsService
      * @throws CommentOperationException
      * @throws CommentOperationException
      */
-    private function buildTree(int $parentId, array $visited = []): array
+    private function buildTree(int $parentId, array $visited = [], ?string $languageCode = null): array
     {
         if (in_array($parentId, $visited, true)) {
             return [];
@@ -112,8 +112,8 @@ readonly class CommentsService
         $comments = $this->getCommentsList($parentId);
 
         foreach ($comments as $comment) {
-            $children = $this->buildTree((int)$comment->id, $visited);
-            $tree[] = $this->transformer->transformToDto($comment, $children);
+            $children = $this->buildTree((int)$comment->id, $visited, $languageCode);
+            $tree[] = $this->transformer->transformToDto($comment, $children, $languageCode);
         }
 
         return $tree;
@@ -191,6 +191,7 @@ readonly class CommentsService
         }
 
         $commentElement->content = $content;
+        $this->resetTranslationFields($commentElement);
         $commentElement->userId = (int)$user->id;
         $commentElement->dateTime = time();
         $commentElement->targetType = (string)$targetElement->structureType;
@@ -231,6 +232,7 @@ readonly class CommentsService
 
         if ($hasPrivilege === true || ($isAuthor === true && $commentElement->isEditable() === true)) {
             $commentElement->content = $content;
+            $this->resetTranslationFields($commentElement);
             $commentElement->persistElementData();
 
             $this->clearCommentsCache();
@@ -274,7 +276,7 @@ readonly class CommentsService
      * @return CommentDto[]
      * @throws CommentOperationException
      */
-    public function getLatestComments(int $limit = 10): array
+    public function getLatestComments(int $limit = 10, ?string $languageCode = null): array
     {
         $ids = $this->commentsRepository->getLatestIds($limit);
 
@@ -282,7 +284,7 @@ readonly class CommentsService
         foreach ($ids as $id) {
             $comment = $this->structureManager->getElementById($id);
             if ($comment instanceof commentElement) {
-                $comments[] = $this->transformer->transformToDto($comment);
+                $comments[] = $this->transformer->transformToDto($comment, [], $languageCode);
             }
         }
 
@@ -296,5 +298,13 @@ readonly class CommentsService
     {
         $currentLanguageId = $this->languagesManager->getCurrentLanguageId();
         $this->cache->delete($currentLanguageId . ':lc');
+    }
+
+    private function resetTranslationFields(commentElement $commentElement): void
+    {
+        $commentElement->setValue('text_en', '');
+        $commentElement->setValue('text_ru', '');
+        $commentElement->setValue('text_es', '');
+        $commentElement->setValue('is_translated', 0);
     }
 }

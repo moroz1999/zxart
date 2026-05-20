@@ -64,9 +64,10 @@ class Comments extends LoggedControllerApplication
     protected function handleList(): void
     {
         $page = (int)$this->getParameter('page') ?: 1;
+        $languageCode = $this->getLanguageCodeParameter();
 
         try {
-            $listDto = $this->commentsService->getAllCommentsPaginated($page);
+            $listDto = $this->commentsService->getAllCommentsPaginated($page, $languageCode);
             $this->assignSuccess($this->objectMapper->map($listDto, CommentsListRestDto::class));
         } catch (Throwable $e) {
             $this->logThrowable('Comments::handleList', $e);
@@ -81,9 +82,10 @@ class Comments extends LoggedControllerApplication
             $this->assignError('No ID provided', 400);
             return;
         }
+        $languageCode = $this->getLanguageCodeParameter();
 
         try {
-            $internalTree = $this->commentsService->getCommentsTree($elementId);
+            $internalTree = $this->commentsService->getCommentsTree($elementId, $languageCode);
             $restTree = array_map(fn($dto) => $this->objectMapper->map($dto, CommentRestDto::class), $internalTree);
             $this->assignSuccess($restTree);
         } catch (CommentsException $e) {
@@ -162,9 +164,10 @@ class Comments extends LoggedControllerApplication
     protected function handleLatest(): void
     {
         $limit = (int)$this->getParameter('limit') ?: 10;
+        $languageCode = $this->getLanguageCodeParameter();
 
         try {
-            $comments = $this->commentsService->getLatestComments($limit);
+            $comments = $this->commentsService->getLatestComments($limit, $languageCode);
             $restComments = array_map(
                 fn($dto) => $this->objectMapper->map($dto, CommentRestDto::class),
                 $comments
@@ -179,6 +182,16 @@ class Comments extends LoggedControllerApplication
     private function assignSuccess(mixed $data): void
     {
         $this->renderer->assign('body', $data);
+    }
+
+    private function getLanguageCodeParameter(): ?string
+    {
+        $languageCode = (string)($this->getParameter('lang') ?? '');
+        if ($languageCode === '') {
+            return null;
+        }
+
+        return $languageCode;
     }
 
     private function assignError(string $message, int $statusCode = 500): void

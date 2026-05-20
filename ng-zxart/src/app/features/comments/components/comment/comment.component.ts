@@ -40,6 +40,7 @@ export class CommentComponent {
 
   showReplyForm = false;
   showEditForm = false;
+  showOriginal = false;
 
   constructor(
     private commentsService: CommentsService,
@@ -52,7 +53,19 @@ export class CommentComponent {
   }
 
   get safeContent(): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(this.comment.content);
+    return this.sanitizer.bypassSecurityTrustHtml(this.displayedContent);
+  }
+
+  get hasTranslation(): boolean {
+    return this.comment.translated.trim() !== '';
+  }
+
+  get displayedContent(): string {
+    if (this.showOriginal === false && this.hasTranslation) {
+      return this.comment.translated;
+    }
+
+    return this.comment.content;
   }
 
   onReply(): void {
@@ -82,6 +95,7 @@ export class CommentComponent {
     if (comment.id === this.comment.id) {
       this.comment.content = comment.content;
       this.comment.originalContent = comment.originalContent;
+      this.comment.translated = comment.translated;
       this.comment.date = comment.date;
       this.comment.canEdit = comment.canEdit;
       this.comment.canDelete = comment.canDelete;
@@ -97,6 +111,10 @@ export class CommentComponent {
     }
 
     this.commentChanged.emit({type: 'edit', comment});
+  }
+
+  toggleTranslation(): void {
+    this.showOriginal = !this.showOriginal;
   }
 
   onChildChanged(event: CommentChangeEvent): void {

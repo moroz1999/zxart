@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace ZxArt\Comments;
 
+/**
+ * @psalm-api
+ */
 readonly class CommentDto
 {
     /**
@@ -14,6 +17,7 @@ readonly class CommentDto
         public string $date,
         public string $content,
         public string $originalContent,
+        public string $translated,
         public bool $canEdit,
         public bool $canDelete,
         public ?CommentTargetDto $target = null,

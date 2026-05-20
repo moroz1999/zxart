@@ -138,6 +138,7 @@ class PouetImport extends errorLogger
         'code (part 3)' => 'code',
         'code (part 4)' => 'code',
         'code (part 5)' => 'code',
+        'engine' => 'code',
         'scroller coding' => 'code',
         'intro code' => 'intro_code',
         'intro coding' => 'intro_code',
@@ -159,6 +160,8 @@ class PouetImport extends errorLogger
         'pixels' => 'graphics',
         'main gfx' => 'graphics',
         'some gfx' => 'graphics',
+        '(original gfx)' => 'graphics',
+        'gfx (baking soda)' => 'graphics',
         'grapchics' => 'graphics',
         'grafics' => 'graphics',
         'graphics' => 'graphics',
@@ -233,6 +236,7 @@ class PouetImport extends errorLogger
         'other (fonts)' => 'font',
         'fonts' => 'font',
         'font' => 'font',
+        'video edit' => 'video',
         'video' => 'video',
         'video montage' => 'video',
         'video editing' => 'video',
@@ -243,6 +247,7 @@ class PouetImport extends errorLogger
         'ay music' => 'music',
         'beeper music' => 'music',
         'graphic' => 'graphics',
+        'graphics (misc)' => 'graphics',
         'fullscreen picture' => 'graphics',
         'end pic.' => 'graphics',
         'anims' => 'graphics',
@@ -261,6 +266,7 @@ class PouetImport extends errorLogger
         'ascii' => 'ascii',
         'asci' => 'ascii',
         'graphics (ascii artistry)' => 'ascii',
+        'tests' => 'testing',
         'bug hunting' => 'testing',
         'digital cover design' => 'illustrating',
         'translation' => 'localization',
@@ -427,6 +433,7 @@ class PouetImport extends errorLogger
         } else {
             $id = ($this->loadMaxImportedId()) + 1;
             $this->maxId = $this->loadMaxPossibleId() ?? 0;
+            $this->markProgress("[DEBUG] startId=$id maxId={$this->maxId}");
         }
         while (
             (!$this->maxCounter || ($this->counter < $this->maxCounter)) &&

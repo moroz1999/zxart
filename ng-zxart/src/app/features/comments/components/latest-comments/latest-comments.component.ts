@@ -71,4 +71,8 @@ export class LatestCommentsComponent implements OnInit {
   sanitizeHtml(content: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(content);
   }
+
+  displayContent(comment: CommentDto): string {
+    return comment.translated.trim() !== '' ? comment.translated : comment.content;
+  }
 }

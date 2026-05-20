@@ -7,7 +7,6 @@ use App\Users\CurrentUserService;
 use Cache;
 use controller;
 use Monolog\Logger;
-use renderer;
 use structureManager;
 use ZxArt\Import\Services\WorldOfSamImport;
 
@@ -21,7 +20,6 @@ class Sam extends LoggedControllerApplication
         controller $controller,
         Logger $logger,
         private readonly Cache $cache,
-        private readonly renderer $rendererService,
         private readonly CurrentUserService $currentUserService,
         private readonly structureManager $adminStructureManager,
         private readonly WorldOfSamImport $worldOfSamImport,
@@ -46,7 +44,7 @@ class Sam extends LoggedControllerApplication
     public function execute($controller)
     {
         $this->cache->enable(false, false, true);
-        $this->rendererService->endOutputBuffering();
+        $this->renderer->endOutputBuffering();
         while (ob_get_level()) {
             ob_end_flush();
         }
@@ -56,6 +54,7 @@ class Sam extends LoggedControllerApplication
             $user->switchUser($userId);
 
             $this->adminStructureManager->setRequestedPath($controller->requestedPath);
+            $this->adminStructureManager->setPrivilegeChecking(false);
 
             $this->worldOfSamImport->importAll();
         }

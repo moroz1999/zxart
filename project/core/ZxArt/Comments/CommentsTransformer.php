@@ -26,7 +26,7 @@ readonly class CommentsTransformer
      * @param commentElement $comment Comment object
      * @param CommentDto[] $children List of child comments (already transformed)
      */
-    public function transformToDto(commentElement $comment, array $children = []): CommentDto
+    public function transformToDto(commentElement $comment, array $children = [], ?string $languageCode = null): CommentDto
     {
         $authorUser = $comment->getUserElement();
 
@@ -77,6 +77,7 @@ readonly class CommentsTransformer
             date: (string)$comment->dateCreated,
             content: $comment->getDecoratedContent(),
             originalContent: strip_tags((string)$comment->getValue('content')),
+            translated: $languageCode !== null ? $comment->getDecoratedTranslatedContent($languageCode) : '',
             canEdit: $canEdit,
             canDelete: $canDelete,
             target: $targetDto,

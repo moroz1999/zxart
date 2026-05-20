@@ -1,6 +1,7 @@
 import {EmulatorEngine, EmulatorType} from './emulator-engine';
 import {MameEmulatorInstance, MameGlobals, loadScriptOnce} from './mame-globals';
 
+const BROWSERFS_URL = '/libs/mamenextsam/browserfs.min.js';
 const LOADER_URL = '/libs/mamenextsam/loader.js';
 const LIB_BASE = '/libs/mamenextsam';
 
@@ -12,12 +13,24 @@ export class SamcoupeEngine implements EmulatorEngine {
   private readonly pointerLockHandler = () => {
     void this.canvas?.requestPointerLock();
   };
+  private readonly visibilityHandler = () => {
+    if (document.hidden) {
+      this.emulator?.mute();
+      window.Module?.pauseMainLoop?.();
+    } else {
+      window.Module?.resumeMainLoop?.();
+      this.emulator?.unmute();
+    }
+  };
+  private readonly browserFsState = {injected: false};
   private readonly scriptState = {injected: false};
 
   async start(canvas: HTMLCanvasElement, fileUrl: string): Promise<void> {
+    await loadScriptOnce(this.browserFsState, BROWSERFS_URL);
     await loadScriptOnce(this.scriptState, LOADER_URL);
     this.canvas = canvas;
     canvas.addEventListener('click', this.pointerLockHandler);
+    document.addEventListener('visibilitychange', this.visibilityHandler);
     this.emulator = this.bootEmulator(canvas, fileUrl);
   }
 
@@ -26,9 +39,11 @@ export class SamcoupeEngine implements EmulatorEngine {
   }
 
   destroy(): void {
+    document.removeEventListener('visibilitychange', this.visibilityHandler);
     this.canvas?.removeEventListener('click', this.pointerLockHandler);
     this.canvas = null;
-    this.emulator?.stop();
+    window.Module?.pauseMainLoop?.();
+    this.emulator?.mute();
     this.emulator = null;
   }
 

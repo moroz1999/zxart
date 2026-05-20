@@ -16,6 +16,13 @@ paths:
           description: ID of the entity (e.g., picture, music, etc.) to get comments for.
           schema:
             type: integer
+        - name: lang
+          in: query
+          required: false
+          description: Language code for translated comment text.
+          schema:
+            type: string
+            enum: [eng, rus, spa]
       responses:
         '200':
           description: Array of root-level comments with nested children.
@@ -48,6 +55,13 @@ paths:
           schema:
             type: integer
             default: 10
+        - name: lang
+          in: query
+          required: false
+          description: Language code for translated comment text.
+          schema:
+            type: string
+            enum: [eng, rus, spa]
       responses:
         '200':
           description: Array of recent comments.
@@ -76,6 +90,13 @@ paths:
           schema:
             type: integer
             default: 1
+        - name: lang
+          in: query
+          required: false
+          description: Language code for translated comment text.
+          schema:
+            type: string
+            enum: [eng, rus, spa]
       responses:
         '200':
           description: Paginated comments list.
@@ -163,6 +184,9 @@ components:
         originalContent:
           type: string
           description: Original raw content
+        translated:
+          type: string
+          description: Decorated translated HTML content for requested language, or empty string when unavailable
         canEdit:
           type: boolean
         canDelete:

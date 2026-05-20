@@ -12,14 +12,14 @@
               @if (comment.author) {
                 <zx-user [user]="comment.author" [linkDisabled]="true" [namePrimary]="true" class="latest-comment__author"></zx-user>:
               }
-              <span class="latest-comment__content" [innerHTML]="sanitizeHtml(comment.content)"></span>
+              <span class="latest-comment__content" [innerHTML]="sanitizeHtml(displayContent(comment))"></span>
             </a>
           } @else {
             <span appText="label" tone="muted">
               @if (comment.author) {
                 <zx-user [user]="comment.author" [linkDisabled]="true" [namePrimary]="true" class="latest-comment__author"></zx-user>:
               }
-              <span class="latest-comment__content" [innerHTML]="sanitizeHtml(comment.content)"></span>
+              <span class="latest-comment__content" [innerHTML]="sanitizeHtml(displayContent(comment))"></span>
             </span>
           }
         </div>

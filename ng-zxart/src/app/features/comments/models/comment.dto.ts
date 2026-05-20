@@ -18,6 +18,7 @@ export interface CommentDto {
   date: string;
   content: string;
   originalContent: string;
+  translated: string;
   canEdit: boolean;
   canDelete: boolean;
   target?: CommentTargetDto;

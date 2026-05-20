@@ -6,6 +6,9 @@ namespace ZxArt\Comments;
 use Symfony\Component\ObjectMapper\Attribute\Map;
 use Symfony\Component\ObjectMapper\Transform\MapCollection;
 
+/**
+ * @psalm-api
+ */
 readonly class CommentRestDto
 {
     /**
@@ -18,6 +21,7 @@ readonly class CommentRestDto
         public string $date,
         public string $content,
         public string $originalContent,
+        public string $translated,
         public bool $canEdit,
         public bool $canDelete,
         #[Map]

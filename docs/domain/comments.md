@@ -17,6 +17,15 @@
 - **Content**:
     - URLs in comment content are automatically converted into clickable HTML links.
     - To get the original content without HTML decorations (e.g., for editing), use `$comment->getValue('content')` on the `commentElement`. This method retrieves the raw storage value from the underlying `dataChunk`.
+- **Translations**:
+    - The legacy multilingual model duplicates rows per language, but comments use the new column-based model.
+    - `content` stores the original comment text.
+    - `text_en`, `text_ru`, and `text_es` store AI-generated translations for English, Russian, and Spanish.
+    - `is_translated` marks whether all translation columns were filled.
+    - **Exception handling in translation pipeline**:
+        - `CommentTranslationAiService` throws `JsonException` (unparseable response) or `UnexpectedValueException` (response is valid JSON but missing required fields). Both are retried up to `MAX_ATTEMPTS` times.
+        - `CommentTranslationService::translateNextBatch()` catches only `JsonException | UnexpectedValueException` per comment — these are expected AI response failures and must not stop the batch. Any other `Throwable` (DB error, network error, etc.) propagates up.
+        - `Crontab::translateComments()` catches the broad `Throwable`, logs it via Monolog (`logger->error`) and the cron log, then returns — so one broken batch does not abort the whole cron run.
 
 ## Technical Structure
 - **Linking**:
@@ -34,3 +43,4 @@
 ## Angular Integration
 - Comments are rendered with `<app-comments-list element-id="..."></app-comments-list>` in legacy detail templates.
 - The Angular comments component requests data through `CommentsService`; legacy templates do not include `component.comments.tpl` for the same comments list.
+- REST responses expose `translated` for the requested `lang` query parameter. Angular displays `translated` when it is non-empty and falls back to `content`.

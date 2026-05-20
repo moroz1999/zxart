@@ -8,6 +8,7 @@ enum DatabaseTable: string
 {
     case Author = 'module_author';
     case AuthorAlias = 'module_authoralias';
+    case Comment = 'module_comment';
     case StructureLinks = 'structure_links';
     case VotesHistory = 'votes_history';
     case ZxMusic = 'module_zxmusic';

@@ -1,30 +1,40 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {catchError, map, switchMap, take} from 'rxjs/operators';
 import {CommentDto, CommentsListDto} from '../models/comment.dto';
+import {CurrentLanguageService} from '../../header/services/current-language.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommentsService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private currentLanguageService: CurrentLanguageService,
+  ) {}
 
   getLatestComments(limit: number = 10): Observable<CommentDto[]> {
-    return this.http.get<CommentDto[]>(`/comments/?action=latest&limit=${limit}`).pipe(
+    return this.currentLanguageService.languageCode$.pipe(
+      take(1),
+      switchMap(languageCode => this.http.get<CommentDto[]>(`/comments/?action=latest&limit=${limit}&lang=${languageCode}`)),
       catchError(err => throwError(() => err))
     );
   }
 
   getComments(elementId: number): Observable<CommentDto[]> {
-    return this.http.get<CommentDto[]>(`/comments/id:${elementId}/`).pipe(
+    return this.currentLanguageService.languageCode$.pipe(
+      take(1),
+      switchMap(languageCode => this.http.get<CommentDto[]>(`/comments/id:${elementId}/?lang=${languageCode}`)),
       map(comments => this.normalizeComments(comments)),
       catchError(err => throwError(() => err))
     );
   }
 
   getAllComments(page: number = 1): Observable<CommentsListDto> {
-    return this.http.get<CommentsListDto>(`/comments/?action=list&page=${page}`).pipe(
+    return this.currentLanguageService.languageCode$.pipe(
+      take(1),
+      switchMap(languageCode => this.http.get<CommentsListDto>(`/comments/?action=list&page=${page}&lang=${languageCode}`)),
       catchError(err => throwError(() => err))
     );
   }

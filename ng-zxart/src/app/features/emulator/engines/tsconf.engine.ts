@@ -1,6 +1,7 @@
 import {EmulatorEngine, EmulatorType} from './emulator-engine';
 import {MameEmulatorInstance, MameGlobals, loadScriptOnce} from './mame-globals';
 
+const BROWSERFS_URL = '/libs/mame/browserfs.min.js';
 const LOADER_URL = '/libs/mame/loader.js';
 const LIB_BASE = '/libs/mame';
 
@@ -8,10 +9,22 @@ export class TsconfEngine implements EmulatorEngine {
   readonly type: EmulatorType = 'tsconf';
 
   private emulator: MameEmulatorInstance | null = null;
+  private readonly visibilityHandler = () => {
+    if (document.hidden) {
+      this.emulator?.mute();
+      window.Module?.pauseMainLoop?.();
+    } else {
+      window.Module?.resumeMainLoop?.();
+      this.emulator?.unmute();
+    }
+  };
+  private readonly browserFsState = {injected: false};
   private readonly scriptState = {injected: false};
 
   async start(canvas: HTMLCanvasElement, fileUrl: string): Promise<void> {
+    await loadScriptOnce(this.browserFsState, BROWSERFS_URL);
     await loadScriptOnce(this.scriptState, LOADER_URL);
+    document.addEventListener('visibilitychange', this.visibilityHandler);
     this.emulator = this.bootEmulator(canvas, fileUrl);
   }
 
@@ -20,7 +33,9 @@ export class TsconfEngine implements EmulatorEngine {
   }
 
   destroy(): void {
-    this.emulator?.stop();
+    document.removeEventListener('visibilitychange', this.visibilityHandler);
+    window.Module?.pauseMainLoop?.();
+    this.emulator?.mute();
     this.emulator = null;
   }
 

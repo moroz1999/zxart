@@ -163,6 +163,8 @@
     "label": "Comentario:",
     "confirm-delete": "¿Estás seguro de que quieres eliminar este comentario?",
     "error-content": "El contenido es obligatorio (mínimo 2 caracteres).",
+    "show-original": "mostrar original",
+    "show-translation": "mostrar traducción",
     "all-comments": "Todos los comentarios"
   },
   "ratings": {
@@ -303,10 +305,10 @@
       "randomgood": "Mejores",
       "games": "De juegos",
       "demoscene": "Escena",
-      "lastyear": "Del a?o pasado",
+      "lastyear": "Del año pasado",
       "ay": "AY",
       "beeper": "Beeper",
-      "exotic": "Ex?tico",
+      "exotic": "Exótico",
       "underground": "Underground"
     },
     "repeat": {
@@ -315,16 +317,16 @@
       "all": "Repetir lista"
     },
     "rating": {
-      "min": "Valoraci?n m?nima",
-      "max": "Valoraci?n m?xima"
+      "min": "Valoración mínima",
+      "max": "Valoración máxima"
     },
     "years": {
-      "include": "A?os incluidos",
-      "exclude": "A?os excluidos"
+      "include": "Años incluidos",
+      "exclude": "Años excluidos"
     },
     "countries": {
-      "include": "Pa?ses incluidos",
-      "exclude": "Pa?ses excluidos"
+      "include": "Países incluidos",
+      "exclude": "Países excluidos"
     },
     "formatGroups": {
       "include": "Grupos de formato incluidos",

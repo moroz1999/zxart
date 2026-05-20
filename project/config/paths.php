@@ -9,4 +9,5 @@
     'text_beautifier_logs' => 'temporary/logs/text_beautifier/',
     'translator_logs' => 'temporary/logs/translator/',
     'press_article_seo_logs' => 'temporary/logs/press_article_seo/',
+    'comment_translation_logs' => 'temporary/logs/comment_translation/',
 ];

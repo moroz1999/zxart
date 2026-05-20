@@ -8,8 +8,12 @@ use App\Users\CurrentUserService;
  *
  * @property string $author @deprecated use getUserElement() instead
  * @property string $email @deprecated use getUserElement() instead
- * @property string website @deprecated use getUserElement() instead
+ * @property string $website @deprecated use getUserElement() instead
  * @property string content
+ * @property string text_en
+ * @property string text_ru
+ * @property string text_es
+ * @property int is_translated
  * @property string ipAddress
  * @property string targetType
  * @property int dateTime
@@ -34,12 +38,19 @@ class commentElement extends structureElement implements MetadataProviderInterfa
     protected $userVote;
     protected $replies;
 
+    /**
+     * @param array<string, string> $moduleStructure
+     */
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['author'] = 'text';
         $moduleStructure['email'] = 'text';
         $moduleStructure['website'] = 'url';
         $moduleStructure['content'] = 'textarea';
+        $moduleStructure['text_en'] = 'textarea';
+        $moduleStructure['text_ru'] = 'textarea';
+        $moduleStructure['text_es'] = 'textarea';
+        $moduleStructure['is_translated'] = 'checkbox';
         $moduleStructure['userId'] = 'text';
         $moduleStructure['votes'] = 'naturalNumber';
 
@@ -210,6 +221,35 @@ class commentElement extends structureElement implements MetadataProviderInterfa
     public function getDecoratedContent(): string
     {
         return $this->linkifyHtml($this->content);
+    }
+
+    public function getDecoratedTranslatedContent(string $languageCode): string
+    {
+        $translation = $this->getTranslatedContent($languageCode);
+        if ($translation === '') {
+            return '';
+        }
+
+        return $this->linkifyHtml($this->convertLineBreaksToHtml($translation));
+    }
+
+    private function convertLineBreaksToHtml(string $text): string
+    {
+        return str_replace(["\r\n", "\r", "\n"], '<br>', $text);
+    }
+
+    private function getTranslatedContent(string $languageCode): string
+    {
+        if ((int)$this->getValue('is_translated') !== 1) {
+            return '';
+        }
+
+        return match ($languageCode) {
+            'eng' => (string)$this->getValue('text_en'),
+            'rus' => (string)$this->getValue('text_ru'),
+            'spa' => (string)$this->getValue('text_es'),
+            default => '',
+        };
     }
 
     public function getPrivileges()

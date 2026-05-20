@@ -7,7 +7,6 @@ use App\Users\CurrentUserService;
 use Cache;
 use controller;
 use Monolog\Logger;
-use renderer;
 use structureManager;
 use ZxArt\Import\Services\PouetImport;
 
@@ -21,7 +20,6 @@ class Pouet extends LoggedControllerApplication
         controller $controller,
         Logger $logger,
         private readonly Cache $cache,
-        private readonly renderer $rendererService,
         private readonly CurrentUserService $currentUserService,
         private readonly structureManager $adminStructureManager,
         private readonly PouetImport $pouetImport,
@@ -46,18 +44,27 @@ class Pouet extends LoggedControllerApplication
     public function execute($controller)
     {
         $this->cache->enable(false, false, true);
-        $this->rendererService->endOutputBuffering();
+        $this->renderer->endOutputBuffering();
         while (ob_get_level()) {
             ob_end_flush();
         }
 
+        flush();
+
         $user = $this->currentUserService->getCurrentUser();
-        if ($userId = $user->checkUser('crontab', null, true)) {
+        $userId = $user->checkUser('crontab', null, true);
+        flush();
+
+        if ($userId) {
             $user->switchUser($userId);
+            flush();
 
             $this->adminStructureManager->setRequestedPath($controller->requestedPath);
+            $this->adminStructureManager->setPrivilegeChecking(false);
+            flush();
 
             $this->pouetImport->importAll();
+            flush();
         }
     }
 

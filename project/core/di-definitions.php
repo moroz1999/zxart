@@ -15,6 +15,7 @@ use ZxArt\Ai\Service\ProdQueryService;
 use ZxArt\Ai\Service\PromptSender;
 use ZxArt\Ai\Service\TextBeautifier;
 use ZxArt\Ai\Service\Translator;
+use ZxArt\Comments\CommentTranslationAiService;
 use ZxArt\AuthorList\AuthorListService;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Authors\Services\AuthorsService;
@@ -139,6 +140,7 @@ return [
     'prod_query_prompt_sender' => factory(static fn(ContainerInterface $c) => $c->get('create_prompt_sender')('prod_query_logs')),
     'translator_prompt_sender' => factory(static fn(ContainerInterface $c) => $c->get('create_prompt_sender')('translator_logs')),
     'press_article_seo_prompt_sender' => factory(static fn(ContainerInterface $c) => $c->get('create_prompt_sender')('press_article_seo_logs')),
+    'comment_translation_prompt_sender' => factory(static fn(ContainerInterface $c) => $c->get('create_prompt_sender')('comment_translation_logs')),
 
     // ChunkProcessors
     'parser_chunk_processor' => factory(static fn(ContainerInterface $c) => new ChunkProcessor($c->get('parser_prompt_sender'))),
@@ -150,6 +152,7 @@ return [
     PressArticleParser::class => autowire()->constructor(DI\get('parser_chunk_processor')),
     TextBeautifier::class => autowire()->constructor(DI\get('beautifier_chunk_processor')),
     Translator::class => autowire()->constructor(DI\get('translator_chunk_processor')),
+    CommentTranslationAiService::class => autowire()->constructor(DI\get('comment_translation_prompt_sender')),
     PressArticleSeo::class => autowire()->constructor(DI\get('press_article_seo_prompt_sender')),
     SocialPostsService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager'))
