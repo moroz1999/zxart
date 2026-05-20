@@ -104,18 +104,35 @@ export class ZxEmulatorDialogComponent implements OnInit, OnDestroy {
 
   @HostListener('window:keydown.F2', ['$event'])
   onF2(event: KeyboardEvent): void {
-    if (!this.showScreenshotControls || !this.data.uploadUrl) {
+    if (!this.data.uploadUrl || !this.data.canScreenshot) {
       return;
     }
     event.preventDefault();
     const uploadUrl = this.data.uploadUrl;
-    const fileUrl = this.data.fileUrl;
-    const selection = this.screenshotSelection;
-    setTimeout(() => {
-      this.screenshotService.captureAndUpload(selection, fileUrl, uploadUrl).subscribe({
-        error: err => console.error('Emulator screenshot upload failed:', err),
-      });
-    }, F2_SCREENSHOT_DELAY_MS);
+
+    if (this.showScreenshotControls) {
+      const fileUrl = this.data.fileUrl;
+      const selection = this.screenshotSelection;
+      setTimeout(() => {
+        this.screenshotService.captureAndUpload(selection, fileUrl, uploadUrl).subscribe({
+          error: err => console.error('Emulator screenshot upload failed:', err),
+        });
+      }, F2_SCREENSHOT_DELAY_MS);
+      return;
+    }
+
+    if (this.engine?.captureScreenshot) {
+      setTimeout(() => {
+        this.engine!.captureScreenshot!('standard').then(blob => {
+          if (!blob) {
+            return;
+          }
+          this.screenshotService.uploadBlob(blob, uploadUrl, 's81').subscribe({
+            error: err => console.error('Emulator screenshot upload failed:', err),
+          });
+        });
+      }, F2_SCREENSHOT_DELAY_MS);
+    }
   }
 
   private createEngine(type: EmulatorType): EmulatorEngine {

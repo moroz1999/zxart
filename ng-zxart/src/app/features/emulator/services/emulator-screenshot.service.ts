@@ -22,6 +22,10 @@ const SECONDARY_SCREEN_OFFSET_DEFAULT = SAVESTATE_HEADER + 16384 * 3 + 4 + 16384
 export class EmulatorScreenshotService {
   constructor(private http: HttpClient) {}
 
+  uploadBlob(blob: Blob, uploadUrl: string, format: string): Observable<unknown> {
+    return this.http.post(`${uploadUrl}format:${format}`, blob);
+  }
+
   captureAndUpload(
     selection: UspScreenSelection,
     fileUrl: string,

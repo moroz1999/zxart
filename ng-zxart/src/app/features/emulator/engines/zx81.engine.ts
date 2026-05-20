@@ -1,10 +1,11 @@
-import {EmulatorEngine, EmulatorType} from './emulator-engine';
+import {EmulatorEngine, EmulatorType, ScreenshotFormat} from './emulator-engine';
 
 const SCRIPT_URL = '/libs/zx81/zx81_emu.js';
 const ROM_URL = '/libs/zx81/roms/zx81.rom';
 
 interface Zx81EmulatorUI {
   stop(): void;
+  jtyOne: {getDisplayFile(): number[]};
 }
 
 interface Zx81Globals {
@@ -17,6 +18,11 @@ export class Zx81Engine implements EmulatorEngine {
 
   private emulatorUi: Zx81EmulatorUI | null = null;
   private scriptInjected = false;
+  private readonly visibilityHandler = () => {
+    if (document.hidden) {
+      this.emulatorUi?.stop();
+    }
+  };
 
   start(canvas: HTMLCanvasElement, fileUrl: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
@@ -30,7 +36,8 @@ export class Zx81Engine implements EmulatorEngine {
         if (this.emulatorUi) {
           this.emulatorUi.stop();
         }
-        this.emulatorUi = new globals.ZX81EmulatorUI(null, canvas, fileUrl);
+        this.emulatorUi = new globals.ZX81EmulatorUI(document.createElement('div'), canvas, fileUrl);
+        document.addEventListener('visibilitychange', this.visibilityHandler);
         resolve();
       };
 
@@ -50,11 +57,20 @@ export class Zx81Engine implements EmulatorEngine {
     });
   }
 
+  captureScreenshot(_format: ScreenshotFormat): Promise<Blob | null> {
+    if (!this.emulatorUi) {
+      return Promise.resolve(null);
+    }
+    const file = this.emulatorUi.jtyOne.getDisplayFile().filter((byte: number) => byte !== 118);
+    return Promise.resolve(new Blob([new Uint8Array(file)]));
+  }
+
   setFullscreen(): void {
     // ZX81 emulator does not expose a fullscreen API.
   }
 
   destroy(): void {
+    document.removeEventListener('visibilitychange', this.visibilityHandler);
     this.emulatorUi?.stop();
     this.emulatorUi = null;
   }
