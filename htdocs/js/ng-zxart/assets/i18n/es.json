@@ -590,7 +590,6 @@
     "role_support": "Apoyo",
     "role_ascii": "Ilustración ASCII / ANSI",
     "role_illustrating": "Ilustraciones",
-    "role_unknown": "Desconocido",
     "role_tools": "Herramientas",
     "role_adaptation": "Adaptación",
     "role_localization": "Localización",
@@ -649,7 +648,8 @@
         "maps": "Mapas",
         "rzx": "RZX",
         "graphics": "Gráficos",
-        "music": "Música"
+        "music": "Música",
+        "instructions": "Instrucciones"
       },
       "links": {
         "title": "Relacionados",
@@ -659,7 +659,10 @@
       },
       "discussion": "Discusión"
     },
-    "screenshots-more": "+{{count}} más"
+    "screenshots-more": "+{{count}} más",
+    "instructions-view": "Ver",
+    "instructions-loading": "Cargando...",
+    "instructions-error": "Error al cargar el archivo"
   },
   "release-row": {
     "col-title": "Título",

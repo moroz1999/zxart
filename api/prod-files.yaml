@@ -46,6 +46,29 @@ paths:
         '500':
           description: Internal server error
 
+  /prod-instructions/:
+    get:
+      summary: Instruction files from all releases of a zxProd, each with release metadata
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Release instructions payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdReleaseInstructionsPayload'
+        '400':
+          description: Bad request
+        '404':
+          description: Prod not found
+        '500':
+          description: Internal server error
+
   /prod-maps/:
     get:
       summary: Map images for a zxProd (mapFilesSelector + speccyMaps URL)
@@ -274,6 +297,51 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProdReleaseInlay'
+
+    ProdReleaseInstructionFile:
+      type: object
+      required:
+        - id
+        - title
+        - fileName
+        - downloadUrl
+        - releaseTitle
+        - releaseUrl
+        - releaseYear
+        - releaseTypeLabel
+        - releaseBy
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        fileName:
+          type: string
+        downloadUrl:
+          type: string
+        releaseTitle:
+          type: string
+        releaseUrl:
+          type: string
+        releaseYear:
+          type: integer
+        releaseTypeLabel:
+          type: string
+          nullable: true
+        releaseBy:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdGroupRef'
+
+    ProdReleaseInstructionsPayload:
+      type: object
+      required:
+        - files
+      properties:
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdReleaseInstructionFile'
 
     ProdMapsPayload:
       type: object

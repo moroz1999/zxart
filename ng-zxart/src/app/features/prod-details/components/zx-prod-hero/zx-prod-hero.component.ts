@@ -71,7 +71,7 @@ export class ZxProdHeroComponent {
     for (const author of this.core.authors) {
       const roles = author.roles.length ? author.roles : [null];
       for (const role of roles) {
-        if (role === null) {
+        if (role === null || role === 'unknown') {
           authorsWithoutRoles.push(author);
           continue;
         }
@@ -106,7 +106,10 @@ export class ZxProdHeroComponent {
   }
 
   roleLabelKey(role: string | null): string {
-    return role === null ? 'prod-details.authors' : `author.role.${role.replace(/^role_/, '')}`;
+    if (role === null || role === 'unknown') {
+      return 'prod-details.authors';
+    }
+    return `author.role.${role.replace(/^role_/, '')}`;
   }
 
   private getRoleOrder(role: string): number {

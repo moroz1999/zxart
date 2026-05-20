@@ -24,6 +24,7 @@
     "@ngx-translate/http-loader": "^16.0.0",
     "angular-svg-icon": "^19.1.1",
     "ng-gallery": "^12.0.0",
+    "ngx-extended-pdf-viewer": "^27.0.0",
     "ngx-image-zoom": "^3.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.6.3",

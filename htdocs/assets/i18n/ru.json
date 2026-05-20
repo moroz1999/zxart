@@ -591,7 +591,6 @@
     "role_support": "Поддержка",
     "role_ascii": "ASCII/ANSI иллюстрация",
     "role_illustrating": "Иллюстрации",
-    "role_unknown": "Неизвестно",
     "role_tools": "Инструментарий",
     "role_adaptation": "Адаптация",
     "role_localization": "Локализация/перевод",
@@ -650,7 +649,8 @@
         "maps": "Карты",
         "rzx": "RZX",
         "graphics": "Графика",
-        "music": "Музыка"
+        "music": "Музыка",
+        "instructions": "Инструкции"
       },
       "links": {
         "title": "Связи",
@@ -660,7 +660,10 @@
       },
       "discussion": "Обсуждение"
     },
-    "screenshots-more": "+{{count}} ещё"
+    "screenshots-more": "+{{count}} ещё",
+    "instructions-view": "Просмотр",
+    "instructions-loading": "Загрузка...",
+    "instructions-error": "Не удалось загрузить файл"
   },
   "release-row": {
     "col-title": "Название",

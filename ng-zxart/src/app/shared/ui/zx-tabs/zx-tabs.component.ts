@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   ContentChildren,
+  Input,
   QueryList,
   TemplateRef,
 } from '@angular/core';
@@ -22,11 +23,21 @@ export class ZxTabsComponent implements AfterContentInit {
   @ContentChildren(ZxTabComponent, { descendants: false }) tabs!: QueryList<ZxTabComponent>;
 
   activeIndex = 0;
+  private pendingActiveIndex: number | null = null;
+
+  @Input() set initialActiveIndex(val: number) {
+    if (this.tabs) {
+      this.activateTab(val);
+    } else {
+      this.pendingActiveIndex = val;
+    }
+  }
 
   constructor(private readonly cdr: ChangeDetectorRef) {}
 
   ngAfterContentInit(): void {
-    this.activateTab(0);
+    this.activateTab(this.pendingActiveIndex ?? 0);
+    this.pendingActiveIndex = null;
   }
 
   activateTab(index: number): void {

@@ -5,6 +5,8 @@
       [currentTitle]="core.h1">
     </zx-breadcrumbs>
 
+    <h1 appHeading="display">{{ core.h1 }}</h1>
+
     <zx-inline class="prod-details__hero" gap="xl" align="start" [wrap]="true">
       <zx-youtube-embed
         *ngIf="core.youtubeId"
@@ -44,7 +46,8 @@
       </zx-stack>
     </zx-panel>
 
-    <zx-tabs>
+    <zx-tabs
+      [initialActiveIndex]="commentId !== null ? getDiscussionTabIndex(core.tabs) : 0">
       <zx-tab *ngIf="core.tabs.hasReleases" [label]="'prod-details.tab.releases' | translate">
         <ng-template zxTabContent>
           <zx-prod-releases-section
@@ -55,7 +58,7 @@
       </zx-tab>
 
       <zx-tab
-        *ngIf="core.tabs.hasInlays || core.tabs.hasMaps || core.tabs.hasRzx || core.tabs.hasPictures || core.tabs.hasTunes"
+        *ngIf="core.tabs.hasInlays || core.tabs.hasMaps || core.tabs.hasRzx || core.tabs.hasPictures || core.tabs.hasTunes || core.tabs.hasInstructions"
         [label]="'prod-details.tab.media.title' | translate">
         <ng-template zxTabContent>
           <zx-tabs>
@@ -82,6 +85,11 @@
             <zx-tab *ngIf="core.tabs.hasTunes" [label]="'prod-details.tab.media.music' | translate">
               <ng-template zxTabContent>
                 <zx-prod-music-section [elementId]="core.elementId"></zx-prod-music-section>
+              </ng-template>
+            </zx-tab>
+            <zx-tab *ngIf="core.tabs.hasInstructions" [label]="'prod-details.tab.media.instructions' | translate">
+              <ng-template zxTabContent>
+                <zx-prod-instructions-section [elementId]="core.elementId"></zx-prod-instructions-section>
               </ng-template>
             </zx-tab>
           </zx-tabs>

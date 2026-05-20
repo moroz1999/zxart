@@ -13,8 +13,9 @@ import {PictureGalleryService} from '../../../picture-gallery/services/picture-g
 import {PictureGalleryItem} from '../../../picture-gallery/models/picture-gallery-item';
 import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ProdInlaysApiService} from '../../services/prod-inlays-api.service';
-import {ProdGroupRefDto, ProdReleaseInlayDto} from '../../models/prod-release-inlay.dto';
+import {ProdReleaseInlayDto} from '../../models/prod-release-inlay.dto';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ProdReleaseLabelPipe} from '../../pipes/prod-release-label.pipe';
 
 @Component({
   selector: 'zx-prod-inlays-section',
@@ -29,6 +30,7 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
     TextDirective,
     HeadingDirective,
     ZxStackComponent,
+    ProdReleaseLabelPipe,
   ],
   templateUrl: './zx-prod-inlays-section.component.html',
   styleUrls: ['./zx-prod-inlays-section.component.scss'],
@@ -68,21 +70,6 @@ export class ZxProdInlaysSectionComponent {
       }
       this.cdr.markForCheck();
     });
-  }
-
-  buildReleaseLabel(inlay: ProdReleaseInlayDto): string {
-    const parts: string[] = [];
-    if (inlay.releaseBy.length > 0) {
-      parts.push(inlay.releaseBy.map((ref: ProdGroupRefDto) => ref.title).join(', '));
-    }
-    if (inlay.releaseTypeLabel) {
-      parts.push(inlay.releaseTypeLabel);
-    }
-    if (inlay.releaseYear > 0) {
-      parts.push(String(inlay.releaseYear));
-    }
-    const suffix = parts.length > 0 ? ` (${parts.join(', ')})` : '';
-    return (inlay.releaseTitle || '') + suffix;
   }
 
   private toGalleryItem(inlay: ProdReleaseInlayDto): PictureGalleryItem {

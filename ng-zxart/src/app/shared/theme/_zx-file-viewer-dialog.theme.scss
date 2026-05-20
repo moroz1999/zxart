@@ -1,0 +1,10 @@
+:root {
+  // Minimum content height before PDF or text loads
+  --zx-file-viewer-dialog-min-height: 200px;
+  // Max height for scrollable text content
+  --zx-file-viewer-dialog-max-height: 75vh;
+  // Monospace font for text file content
+  --zx-file-viewer-dialog-font-family: monospace;
+  --zx-file-viewer-dialog-font-size: var(--zx-font-size-sm);
+  --zx-file-viewer-dialog-padding: var(--space-16);
+}

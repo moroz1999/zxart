@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ru" class="light-mode">
+<head>
+<meta charset="utf-8" />
+<title>Release page — ZXArt</title>
+<link rel="stylesheet" href="../../colors_and_type.css" />
+<link rel="stylesheet" href="../../preview/components.css" />
+<link rel="stylesheet" href="kit.css" />
+<link rel="stylesheet" href="release-page.css" />
+<style>
+  body { margin: 0; background: var(--background-deep); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="ZxScreen.jsx"></script>
+<script type="text/babel" src="VoteWidget.jsx"></script>
+<script type="text/babel" src="release-data.jsx"></script>
+<script type="text/babel" src="ReleasePage.jsx"></script>
+
+<script type="text/babel">
+function App() {
+  return (
+    <DesignCanvas title="Release page — Dizzy 7 by Scorpion Soft" subtitle="Дочерняя страница одного релиза. Якорь родителя, прод-стиль метастроки, дерево файлов, инструкция в модалке, минимальный кейс.">
+      <DCSection id="states" title="Полный релиз">
+        <DCArtboard id="light" label="Light · все секции заполнены" width={1180} height={2200}>
+          <div className="light-mode" style={{ background: "var(--background-page)" }}>
+            <ReleasePage/>
+          </div>
+        </DCArtboard>
+        <DCArtboard id="dark" label="Dark mode" width={1180} height={2200}>
+          <div className="dark-mode" style={{ background: "var(--background-page)", color: "var(--text-color)" }}>
+            <ReleasePage/>
+          </div>
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="minimum" title="Минимальный кейс (99% релизов в архиве)">
+        <DCArtboard id="minimal" label="Нет описания, скринов, обложек, инструкций" width={1180} height={1450}>
+          <div className="light-mode" style={{ background: "var(--background-page)" }}>
+            <ReleasePage minimal={true}/>
+          </div>
+        </DCArtboard>
+        <DCArtboard id="minimal-dark" label="То же в dark" width={1180} height={1450}>
+          <div className="dark-mode" style={{ background: "var(--background-page)", color: "var(--text-color)" }}>
+            <ReleasePage minimal={true}/>
+          </div>
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="modal" title="Просмотр инструкции (модалка)">
+        <DCArtboard id="instruction" label="Открыт CKD-Scorpion.RU.txt" width={1180} height={2200}>
+          <div className="light-mode" style={{ background: "var(--background-page)", position:"relative", height: "100%" }}>
+            <ReleasePage showInstructionModal={true}/>
+          </div>
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>

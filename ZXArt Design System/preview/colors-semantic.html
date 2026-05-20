@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" class="light-mode">
+<head>
+<meta charset="utf-8" />
+<title>Semantic colors</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body { margin: 0; padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .tile { padding: 12px; border-radius: 6px; border: 1px solid var(--border-secondary); display: flex; flex-direction: column; gap: 4px; background: var(--surface); }
+  .tile .swatch { height: 28px; border-radius: 3px; border: 1px solid rgba(0,0,0,.06); }
+  .tile .name { font-size: 13px; font-weight: 700; }
+  .tile .var { font-family: var(--font-mono); font-size: 11px; color: var(--text-light-color); }
+</style>
+</head>
+<body>
+  <div class="tile"><div class="swatch" style="background:var(--text-color)"></div><div class="name">Text</div><div class="var">--text-color</div></div>
+  <div class="tile"><div class="swatch" style="background:var(--text-light-color)"></div><div class="name">Text light</div><div class="var">--text-light-color</div></div>
+  <div class="tile"><div class="swatch" style="background:var(--background-page); border:1px solid var(--border-secondary);"></div><div class="name">Page bg</div><div class="var">--background-page</div></div>
+  <div class="tile"><div class="swatch" style="background:var(--surface); border:1px solid var(--border-secondary);"></div><div class="name">Surface</div><div class="var">--surface</div></div>
+  <div class="tile"><div class="swatch" style="background:var(--link-color)"></div><div class="name">Link</div><div class="var">--link-color</div></div>
+  <div class="tile"><div class="swatch" style="background:var(--link-alt-color)"></div><div class="name">Link alt / yellow</div><div class="var">--link-alt-color</div></div>
+  <div class="tile"><div class="swatch" style="background:var(--error-color)"></div><div class="name">Error</div><div class="var">--error-color</div></div>
+  <div class="tile"><div class="swatch" style="background:var(--icon-yellow)"></div><div class="name">Icon yellow / star</div><div class="var">--icon-yellow</div></div>
+</body>
+</html>

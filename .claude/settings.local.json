@@ -118,7 +118,9 @@
       "Bash(python3 *)",
       "Bash(xargs cat)",
       "Bash(xargs cat -n)",
-      "Bash(xargs -I{} basename {} .svg)"
+      "Bash(xargs -I{} basename {} .svg)",
+      "Bash(docker info *)",
+      "Bash(npm install *)"
     ]
   },
   "enabledPlugins": {

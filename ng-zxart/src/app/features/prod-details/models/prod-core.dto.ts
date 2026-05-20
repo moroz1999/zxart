@@ -81,6 +81,7 @@ export interface ProdTabsDto {
   hasSeriesProds: boolean;
   isInSeries: boolean;
   hasCompilations: boolean;
+  hasInstructions: boolean;
 }
 
 export interface ProdCoreDto {

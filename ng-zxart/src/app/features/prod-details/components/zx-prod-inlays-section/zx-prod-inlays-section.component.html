@@ -26,7 +26,7 @@
             [gallery]="galleryId"
           />
           <figcaption appText="caption" tone="muted">
-            <a [href]="inlay.releaseUrl">{{ buildReleaseLabel(inlay) }}</a>
+            <a [href]="inlay.releaseUrl">{{ inlay | prodReleaseLabel }}</a>
           </figcaption>
         </figure>
       </div>

@@ -22,6 +22,7 @@ readonly class ProdTabsDto
         public bool $hasSeriesProds,
         public bool $isInSeries,
         public bool $hasCompilations,
+        public bool $hasInstructions,
     ) {
     }
 }

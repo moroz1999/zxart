@@ -3733,6 +3733,24 @@
       <code><![CDATA[ProdInlays]]></code>
     </UnusedClass>
   </file>
+  <file src="project/core/ZxArt/Controllers/ProdInstructions.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ProdInstructions]]></code>
+    </ClassMustBeFinal>
+    <MixedMethodCall>
+      <code><![CDATA[setStatusCode]]></code>
+    </MixedMethodCall>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[ProdInstructions]]></code>
+      <code><![CDATA[ProdInstructions]]></code>
+      <code><![CDATA[ProdInstructions]]></code>
+      <code><![CDATA[ProdInstructions]]></code>
+      <code><![CDATA[ProdInstructions]]></code>
+    </PropertyNotSetInConstructor>
+    <UnusedClass>
+      <code><![CDATA[ProdInstructions]]></code>
+    </UnusedClass>
+  </file>
   <file src="project/core/ZxArt/Controllers/ProdMaps.php">
     <ClassMustBeFinal>
       <code><![CDATA[ProdMaps]]></code>
@@ -7485,6 +7503,30 @@
       <code><![CDATA[$inlays]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Prods/Dto/ProdReleaseInstructionFileDto.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ProdReleaseInstructionFileDto]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$downloadUrl]]></code>
+      <code><![CDATA[$fileName]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$releaseBy]]></code>
+      <code><![CDATA[$releaseTitle]]></code>
+      <code><![CDATA[$releaseTypeLabel]]></code>
+      <code><![CDATA[$releaseUrl]]></code>
+      <code><![CDATA[$releaseYear]]></code>
+      <code><![CDATA[$title]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Prods/Dto/ProdReleaseInstructionsDto.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ProdReleaseInstructionsDto]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$files]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Prods/Dto/ProdReleasesDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[ProdReleasesDto]]></code>
@@ -7558,6 +7600,7 @@
       <code><![CDATA[$hasArticles]]></code>
       <code><![CDATA[$hasCompilations]]></code>
       <code><![CDATA[$hasInlays]]></code>
+      <code><![CDATA[$hasInstructions]]></code>
       <code><![CDATA[$hasMaps]]></code>
       <code><![CDATA[$hasPictures]]></code>
       <code><![CDATA[$hasReleases]]></code>
@@ -8096,6 +8139,36 @@
       <code><![CDATA[$inlays]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Prods/Rest/ProdReleaseInstructionFileRestDto.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ProdReleaseInstructionFileRestDto]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$downloadUrl]]></code>
+      <code><![CDATA[$fileName]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$releaseBy]]></code>
+      <code><![CDATA[$releaseTitle]]></code>
+      <code><![CDATA[$releaseTypeLabel]]></code>
+      <code><![CDATA[$releaseUrl]]></code>
+      <code><![CDATA[$releaseYear]]></code>
+      <code><![CDATA[$title]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Prods/Rest/ProdReleaseInstructionsRestDto.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ProdReleaseInstructionsRestDto]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$files]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Prods/Rest/ProdReleaseRestDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[ProdReleaseRestDto]]></code>
@@ -8253,6 +8326,7 @@
       <code><![CDATA[$hasArticles]]></code>
       <code><![CDATA[$hasCompilations]]></code>
       <code><![CDATA[$hasInlays]]></code>
+      <code><![CDATA[$hasInstructions]]></code>
       <code><![CDATA[$hasMaps]]></code>
       <code><![CDATA[$hasPictures]]></code>
       <code><![CDATA[$hasReleases]]></code>

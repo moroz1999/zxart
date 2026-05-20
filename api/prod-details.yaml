@@ -173,6 +173,8 @@ components:
           type: boolean
         hasCompilations:
           type: boolean
+        hasInstructions:
+          type: boolean
 
     ProdCategoryRef:
       type: object

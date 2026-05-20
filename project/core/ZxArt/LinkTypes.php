@@ -26,5 +26,6 @@ enum LinkTypes: string
     case MAP_FILES_SELECTOR = 'mapFilesSelector';
     case RZX = 'rzx';
     case INLAY_FILES_SELECTOR = 'inlayFilesSelector';
+    case INFO_FILES_SELECTOR = 'infoFilesSelector';
     case SCREENSHOTS_SELECTOR = 'screenshotsSelector';
 }

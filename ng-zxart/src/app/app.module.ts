@@ -13,6 +13,7 @@ import {AppComponent} from './app.component';
 import {ParserComponent} from './features/parser/parser.component';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {environment} from '../environments/environment';
+import {pdfDefaultOptions} from 'ngx-extended-pdf-viewer';
 import {CommentsListComponent} from './features/comments/components/comments-list/comments-list.component';
 import {CommentsPageComponent} from './features/comments/components/comments-page/comments-page.component';
 import {RatingsListComponent} from './features/ratings/components/ratings-list/ratings-list.component';
@@ -77,6 +78,7 @@ export class AppModule implements DoBootstrap  {
     }
 
     public ngDoBootstrap(): void {
+        pdfDefaultOptions.assetsFolder = environment.pdfAssetsFolder;
         const elements = {
             'app-root': AppComponent,
             'zx-prods-category': ZxProdsCategoryComponent,

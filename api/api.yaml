@@ -33,6 +33,8 @@ paths:
     $ref: 'prod-files.yaml#/paths/~1prod-screenshots~1'
   /prod-inlays/:
     $ref: 'prod-files.yaml#/paths/~1prod-inlays~1'
+  /prod-instructions/:
+    $ref: 'prod-files.yaml#/paths/~1prod-instructions~1'
   /prod-maps/:
     $ref: 'prod-files.yaml#/paths/~1prod-maps~1'
   /prod-rzx/:

@@ -1,0 +1,23 @@
+<div
+  [appInViewport]="!loaded && !loading"
+  (inViewport)="onInViewport()"
+>
+  <zx-table *ngIf="loaded && files.length > 0" size="sm">
+    <table>
+      <tbody>
+        <tr *ngFor="let file of files">
+          <td><a [href]="file.downloadUrl" appText="label" tone="link">{{ file.fileName }}</a></td>
+          <td><a [href]="file.releaseUrl" appText="label" tone="muted-link">{{ file | prodReleaseLabel }}</a></td>
+          <td>
+            <zx-button
+              *ngIf="isViewable(file)"
+              size="sm"
+              color="secondary"
+              (click)="openViewer(file)"
+            >{{ 'prod-details.instructions-view' | translate }}</zx-button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </zx-table>
+</div>

@@ -108,8 +108,15 @@ Software production for ZX Spectrum - games, demos, utilities and other software
 - Prod editing controls are action buttons, not links. They render through `zx-button` without `href` and navigate to legacy action URLs from click handlers.
 - The legacy details template mounts `zx-prod-details` directly; Angular renders the page title.
 - Prod details hero groups authors by roles before publishers, developer groups, and party metadata. Authors without roles remain under the generic authors label.
+- Prod details hero displays the `unknown` author role under the generic authors label, not under the global unknown-role translation.
+- Prod details core data must include author/group aliases when they are stored directly in authorship, publishers, or developer group links.
 - Product description loading state renders one paragraph skeleton with three thin ribs.
 - Emulator screenshots launched from prod details release rows are uploaded to the parent prod. The `uploadScreenshot` privilege must be requested once for the prod element and reused by all release play buttons.
+
+### Release Label Pipe
+- `ProdReleaseLabelPipe` (`features/prod-details/pipes/prod-release-label.pipe.ts`) formats a release reference into a display string: `Release Title (Publisher, Type, Year)`. Any of the optional fields (year, type label, publishers) can be omitted.
+- Input type: `ProdReleaseLabelInput` — requires `releaseTitle`; optional `releaseYear`, `releaseTypeLabel`, `releaseBy[]`.
+- Used in `zx-prod-inlays-section` (figcaption) and `zx-prod-instructions-section` (table cell). Add the pipe to `imports` in any standalone component that needs it.
 
 ### Angular Prod Lists
 - Outside category browser views, product cards must be rendered through `zx-prods-list`.

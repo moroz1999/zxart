@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru" class="light-mode">
+<head>
+<meta charset="utf-8" />
+<title>Prod page redesign — Crystal Kingdom Dizzy</title>
+<link rel="stylesheet" href="../../colors_and_type.css" />
+<link rel="stylesheet" href="../../preview/components.css" />
+<link rel="stylesheet" href="kit.css" />
+<link rel="stylesheet" href="prod-page.css" />
+<style>
+  body { margin: 0; background: var(--background-deep); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="prod-data.jsx"></script>
+<script type="text/babel" src="ZxScreen.jsx"></script>
+<script type="text/babel" src="VoteWidget.jsx"></script>
+<script type="text/babel" src="ProdPage.jsx"></script>
+
+<script type="text/babel">
+function App() {
+  return (
+    <DesignCanvas title="Prod page redesign — Crystal Kingdom Dizzy" subtitle="Light + dark. Sortable releases table, no sidebar, no “recommended”.">
+      <DCSection id="variants" title="Light & dark">
+        <DCArtboard id="prod-page-light" label="Light mode" width={1280} height={1900}>
+          <div className="light-mode" style={{ background: "var(--background-page)" }}>
+            <ProdPage />
+          </div>
+        </DCArtboard>
+        <DCArtboard id="prod-page-dark" label="Dark mode" width={1280} height={1900}>
+          <div className="dark-mode" style={{ background: "var(--background-page)", color: "var(--text-color)" }}>
+            <ProdPage />
+          </div>
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

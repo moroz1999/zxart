@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace ZxArt\Prods;
 
 use authorElement;
+use authorAliasElement;
 use groupElement;
+use groupAliasElement;
 use structureElement;
 use tagElement;
 use userElement;
@@ -109,7 +111,7 @@ readonly class ProdCoreService
         $records = $element->getAuthorsInfo(EntityType::Prod->value);
         foreach ($records as $info) {
             $authorElement = $info['authorElement'];
-            if (!$authorElement instanceof authorElement) {
+            if (!$authorElement instanceof authorElement && !$authorElement instanceof authorAliasElement) {
                 continue;
             }
             $authors[] = new ProdAuthorInfoDto(
@@ -123,14 +125,19 @@ readonly class ProdCoreService
     }
 
     /**
-     * @param iterable<groupElement> $groups
+     * @param iterable<structureElement> $groups
      * @return ProdGroupRefDto[]
      */
     private function buildGroupsRefs(iterable $groups): array
     {
         $refs = [];
         foreach ($groups as $group) {
-            if (!$group instanceof groupElement) {
+            if (
+                !$group instanceof groupElement
+                && !$group instanceof groupAliasElement
+                && !$group instanceof authorElement
+                && !$group instanceof authorAliasElement
+            ) {
                 continue;
             }
             $refs[] = new ProdGroupRefDto(

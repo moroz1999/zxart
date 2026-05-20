@@ -4,4 +4,5 @@ export const environment = {
     apiBaseUrl: `//localhost:4200/`,
     assetsUrl: `//localhost:4200/assets/`,
     svgUrl: `//localhost:4200/assets/svg/`,
+    pdfAssetsFolder: `${location.protocol}//${location.host}/assets`,
 };

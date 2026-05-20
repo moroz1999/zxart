@@ -591,7 +591,6 @@
     "role_support": "Support",
     "role_ascii": "ASCII/ANSI illustration",
     "role_illustrating": "Illustrations",
-    "role_unknown": "Unknown",
     "role_tools": "Tools",
     "role_adaptation": "Adaptation",
     "role_localization": "Localisation",
@@ -650,7 +649,8 @@
         "maps": "Maps",
         "rzx": "RZX",
         "graphics": "Graphics",
-        "music": "Music"
+        "music": "Music",
+        "instructions": "Instructions"
       },
       "links": {
         "title": "Related",
@@ -662,7 +662,10 @@
     },
     "screenshots-more": "+{{count}} more",
     "screenshot-move-left": "Move left",
-    "screenshot-move-right": "Move right"
+    "screenshot-move-right": "Move right",
+    "instructions-view": "View",
+    "instructions-loading": "Loading...",
+    "instructions-error": "Failed to load file"
   },
   "release-row": {
     "col-title": "Title",

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en" class="light-mode">
+<head>
+<meta charset="utf-8" />
+<title>Color ramps</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body { margin: 0; padding: 16px; }
+  .row { display: flex; gap: 0; margin-bottom: 12px; align-items: stretch; border-radius: 6px; overflow: hidden; box-shadow: var(--shadow-sm); }
+  .row + .row { margin-top: 4px; }
+  .label { width: 88px; flex-shrink: 0; display: flex; align-items: center; padding: 0 12px; font-size: 12px; font-weight: 700; background: var(--surface); }
+  .swatch { flex: 1; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--white); font-family: var(--font-mono); }
+  .swatch.dark-text { color: var(--neutral-900); }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div class="label">primary</div>
+    <div class="swatch dark-text" style="background:var(--blue-50)">50</div>
+    <div class="swatch dark-text" style="background:var(--blue-100)">100</div>
+    <div class="swatch dark-text" style="background:var(--blue-200)">200</div>
+    <div class="swatch dark-text" style="background:var(--blue-300)">300</div>
+    <div class="swatch" style="background:var(--blue-400)">400</div>
+    <div class="swatch" style="background:var(--blue-500)">500</div>
+    <div class="swatch" style="background:var(--blue-600)">600</div>
+    <div class="swatch" style="background:var(--blue-700)">700</div>
+    <div class="swatch" style="background:var(--blue-800)">800</div>
+    <div class="swatch" style="background:var(--blue-900)">900</div>
+  </div>
+  <div class="row">
+    <div class="label">neutral</div>
+    <div class="swatch dark-text" style="background:var(--neutral-50)">50</div>
+    <div class="swatch dark-text" style="background:var(--neutral-100)">100</div>
+    <div class="swatch dark-text" style="background:var(--neutral-200)">200</div>
+    <div class="swatch dark-text" style="background:var(--neutral-300)">300</div>
+    <div class="swatch dark-text" style="background:var(--neutral-400)">400</div>
+    <div class="swatch" style="background:var(--neutral-500)">500</div>
+    <div class="swatch" style="background:var(--neutral-600)">600</div>
+    <div class="swatch" style="background:var(--neutral-700)">700</div>
+    <div class="swatch" style="background:var(--neutral-800)">800</div>
+    <div class="swatch" style="background:var(--neutral-900)">900</div>
+  </div>
+  <div class="row">
+    <div class="label">warning</div>
+    <div class="swatch dark-text" style="background:var(--yellow-50)">50</div>
+    <div class="swatch dark-text" style="background:var(--yellow-100)">100</div>
+    <div class="swatch dark-text" style="background:var(--yellow-200)">200</div>
+    <div class="swatch dark-text" style="background:var(--yellow-300)">300</div>
+    <div class="swatch dark-text" style="background:var(--yellow-400)">400</div>
+    <div class="swatch dark-text" style="background:var(--yellow-500)">500</div>
+    <div class="swatch" style="background:var(--yellow-600)">600</div>
+    <div class="swatch" style="background:var(--yellow-700)">700</div>
+    <div class="swatch" style="background:var(--yellow-800)">800</div>
+    <div class="swatch" style="background:var(--yellow-900)">900</div>
+  </div>
+  <div class="row">
+    <div class="label">danger</div>
+    <div class="swatch dark-text" style="background:var(--red-50)">50</div>
+    <div class="swatch dark-text" style="background:var(--red-100)">100</div>
+    <div class="swatch dark-text" style="background:var(--red-200)">200</div>
+    <div class="swatch dark-text" style="background:var(--red-300)">300</div>
+    <div class="swatch" style="background:var(--red-400)">400</div>
+    <div class="swatch" style="background:var(--red-500)">500</div>
+    <div class="swatch" style="background:var(--red-600)">600</div>
+    <div class="swatch" style="background:var(--red-700)">700</div>
+    <div class="swatch" style="background:var(--red-800)">800</div>
+    <div class="swatch" style="background:var(--red-900)">900</div>
+  </div>
+</body>
+</html>

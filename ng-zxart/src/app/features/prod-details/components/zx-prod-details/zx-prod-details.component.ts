@@ -1,12 +1,13 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable, of} from 'rxjs';
+import {shareReplay, take} from 'rxjs/operators';
 import {
   ZxProdDetailsSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-prod-details-skeleton/zx-prod-details-skeleton.component';
 import {ZxYoutubeEmbedComponent} from '../../../../shared/ui/zx-youtube-embed/zx-youtube-embed.component';
 import {ProdCoreApiService} from '../../services/prod-core-api.service';
-import {ProdCoreDto} from '../../models/prod-core.dto';
+import {ProdCoreDto, ProdTabsDto} from '../../models/prod-core.dto';
 import {ZxProdHeroComponent} from '../zx-prod-hero/zx-prod-hero.component';
 import {ZxProdDescriptionComponent} from '../zx-prod-description/zx-prod-description.component';
 import {ZxProdInstructionsComponent} from '../zx-prod-instructions/zx-prod-instructions.component';
@@ -42,7 +43,9 @@ import {RatingsListComponent} from '../../../ratings/components/ratings-list/rat
 import {TranslateModule} from '@ngx-translate/core';
 import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
+import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TagsListComponent} from '../../../../shared/lib/tags-list/tags-list.component';
+import {ZxProdInstructionsSectionComponent} from '../zx-prod-instructions-section/zx-prod-instructions-section.component';
 
 @Component({
   selector: 'zx-prod-details',
@@ -78,7 +81,9 @@ import {TagsListComponent} from '../../../../shared/lib/tags-list/tags-list.comp
     RatingsListComponent,
     ZxBreadcrumbsComponent,
     TextDirective,
+    HeadingDirective,
     TagsListComponent,
+    ZxProdInstructionsSectionComponent,
   ],
   templateUrl: './zx-prod-details.component.html',
   styleUrls: ['./zx-prod-details.component.scss'],
@@ -88,6 +93,7 @@ export class ZxProdDetailsComponent implements OnInit {
   @Input() elementId = 0;
 
   core$: Observable<ProdCoreDto | null> = of(null);
+  commentId: number | null = null;
 
   constructor(private readonly api: ProdCoreApiService) {}
 
@@ -96,6 +102,34 @@ export class ZxProdDetailsComponent implements OnInit {
       this.core$ = of(null);
       return;
     }
-    this.core$ = this.api.getCore(+this.elementId);
+    this.core$ = this.api.getCore(+this.elementId).pipe(shareReplay(1));
+
+    const match = window.location.hash.match(/^#comment(\d+)$/);
+    if (match) {
+      this.commentId = parseInt(match[1], 10);
+      const commentId = this.commentId;
+      this.core$.pipe(take(1)).subscribe(() => {
+        this.scrollToComment(commentId);
+      });
+    }
+  }
+
+  getDiscussionTabIndex(tabs: ProdTabsDto): number {
+    let index = 0;
+    if (tabs.hasReleases) index++;
+    if (tabs.hasInlays || tabs.hasMaps || tabs.hasRzx || tabs.hasPictures || tabs.hasTunes || tabs.hasInstructions) index++;
+    if (tabs.hasArticles || tabs.hasSeriesProds || tabs.isInSeries || tabs.hasCompilations) index++;
+    return index;
+  }
+
+  private scrollToComment(commentId: number): void {
+    let attempts = 0;
+    const interval = setInterval(() => {
+      const el = document.getElementById('comment' + commentId);
+      if (el || ++attempts >= 15) {
+        clearInterval(interval);
+        el?.scrollIntoView({behavior: 'smooth', block: 'center'});
+      }
+    }, 200);
   }
 }

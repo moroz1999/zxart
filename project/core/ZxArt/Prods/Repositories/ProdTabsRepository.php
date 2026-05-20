@@ -34,6 +34,7 @@ readonly final class ProdTabsRepository extends AbstractRepository
             hasSeriesProds: $this->hasParentLink($prodId, LinkTypes::SERIES),
             isInSeries: $this->hasChildLink($prodId, LinkTypes::SERIES),
             hasCompilations: $this->hasSymmetricLink($prodId, LinkTypes::COMPILATION),
+            hasInstructions: $this->hasInstructionLinks($prodId),
         );
     }
 
@@ -55,6 +56,19 @@ readonly final class ProdTabsRepository extends AbstractRepository
         return $this->db->table($this->tableName(DatabaseTable::StructureLinks))
             ->whereIn('parentStructureId', $releaseIdsQuery)
             ->where('type', '=', LinkTypes::INLAY_FILES_SELECTOR->value)
+            ->exists();
+    }
+
+    private function hasInstructionLinks(int $prodId): bool
+    {
+        $releaseIdsQuery = $this->db->table($this->tableName(DatabaseTable::StructureLinks))
+            ->where('parentStructureId', '=', $prodId)
+            ->where('type', '=', LinkTypes::STRUCTURE->value)
+            ->select('childStructureId');
+
+        return $this->db->table($this->tableName(DatabaseTable::StructureLinks))
+            ->whereIn('parentStructureId', $releaseIdsQuery)
+            ->where('type', '=', LinkTypes::INFO_FILES_SELECTOR->value)
             ->exists();
     }
 

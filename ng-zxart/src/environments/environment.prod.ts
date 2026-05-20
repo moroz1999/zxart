@@ -4,4 +4,5 @@ export const environment = {
     apiBaseUrl: `//${location.hostname}/`,
     assetsUrl: `//${location.hostname}/assets/`,
     svgUrl: `//${location.hostname}/assets/svg/`,
+    pdfAssetsFolder: `${location.protocol}//${location.hostname}/js/ng-zxart/assets`,
 };

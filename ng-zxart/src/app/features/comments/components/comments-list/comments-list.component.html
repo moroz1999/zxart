@@ -22,7 +22,7 @@
           <p appText="body">{{ 'comments.empty' | translate }}</p>
         } @else {
           <zx-stack spacing="lg">
-            <div *ngFor="let comment of comments" class="comment-item">
+            <div *ngFor="let comment of comments" class="comment-item" [id]="'comment' + comment.id">
               <zx-comment [comment]="comment" [showTarget]="showTarget" (commentChanged)="onCommentChanged($event)"></zx-comment>
             </div>
           </zx-stack>

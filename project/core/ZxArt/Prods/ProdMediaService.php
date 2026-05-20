@@ -12,6 +12,8 @@ use ZxArt\Prods\Dto\ProdFilesDto;
 use ZxArt\Prods\Dto\ProdMapsDto;
 use ZxArt\Prods\Dto\ProdReleaseInlayDto;
 use ZxArt\Prods\Dto\ProdReleaseInlaysDto;
+use ZxArt\Prods\Dto\ProdReleaseInstructionFileDto;
+use ZxArt\Prods\Dto\ProdReleaseInstructionsDto;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use zxReleaseElement;
 
@@ -91,6 +93,39 @@ readonly class ProdMediaService
             ),
             mapsUrl: $prod->getSpeccyMapsUrl(),
         );
+    }
+
+    public function getProdInstructions(int $elementId): ProdReleaseInstructionsDto
+    {
+        $prod = $this->prodElementService->get($elementId);
+        $files = [];
+        foreach ($prod->getReleasesList() as $release) {
+            $releaseTitle = $this->prodInfoBuilder->decodeText((string)$release->getTitle());
+            $releaseUrl = (string)$release->getUrl();
+            $releaseYear = $release->getYear() ?? 0;
+            $releaseTypeLabel = $release->releaseType !== ''
+                ? $this->prodInfoBuilder->translate('zxRelease.type_' . $release->releaseType)
+                : null;
+            $releaseBy = $this->prodInfoBuilder->buildReleaseBy($release);
+
+            foreach ($release->getFilesList(LinkTypes::INFO_FILES_SELECTOR->value) as $file) {
+                if (!$file instanceof fileElement) {
+                    continue;
+                }
+                $files[] = new ProdReleaseInstructionFileDto(
+                    id: $file->getId(),
+                    title: $this->decodeText($file->title),
+                    fileName: $file->fileName,
+                    downloadUrl: $file->getDownloadUrl('view', 'release'),
+                    releaseTitle: $releaseTitle,
+                    releaseUrl: $releaseUrl,
+                    releaseYear: $releaseYear,
+                    releaseTypeLabel: $releaseTypeLabel,
+                    releaseBy: $releaseBy,
+                );
+            }
+        }
+        return new ProdReleaseInstructionsDto(files: $files);
     }
 
     public function getProdRzx(int $elementId): ProdFilesDto
