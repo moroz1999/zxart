@@ -61,8 +61,26 @@ export class Zx81Engine implements EmulatorEngine {
     if (!this.emulatorUi) {
       return Promise.resolve(null);
     }
-    const file = this.emulatorUi.jtyOne.getDisplayFile().filter((byte: number) => byte !== 118);
-    return Promise.resolve(new Blob([new Uint8Array(file)]));
+    const ROW_WIDTH = 32;
+    const ROW_COUNT = 24;
+    const NEWLINE = 118;
+    const output = new Uint8Array(ROW_WIDTH * ROW_COUNT); // initialised to 0 (ZX81 space)
+    const raw = this.emulatorUi.jtyOne.getDisplayFile();
+    let row = 0;
+    let col = 0;
+    for (const byte of raw) {
+      if (row >= ROW_COUNT) {
+        break;
+      }
+      if (byte === NEWLINE) {
+        row++;
+        col = 0;
+      } else if (col < ROW_WIDTH) {
+        output[row * ROW_WIDTH + col] = byte;
+        col++;
+      }
+    }
+    return Promise.resolve(new Blob([output]));
   }
 
   setFullscreen(): void {
