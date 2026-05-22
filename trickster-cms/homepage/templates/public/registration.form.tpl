@@ -16,42 +16,7 @@
 			</div>
 
 			{if $element->resultMessage == ''}
-				{$socialPlugins = $element->getSocialPluginsOptions()}
-				{if $socialPlugins}
-					{stripdomspaces}
-						<div class="registration_socialplugins">
-							<div class="registration_socialplugins_title">
-								{translations name='registration.connect_with_social_plugins'}:
-							</div>
-							<div class="registration_socialplugins_list">
-								{foreach $socialPlugins as $plugin}
-									{if !$plugin.connected}
-										<a class="registration_socialplugin registration_socialplugin_{$plugin.code}" href="{$plugin.url}" title="{$plugin.title}">
-											{if $plugin.icon}
-												<img src="{$plugin.icon}" class="registration_socialplugin_icon" alt="{$plugin.title}" />
-											{else}
-												<span class="registration_socialplugin_text">{$plugin.title}</span>
-											{/if}
-										</a>
-									{else}
-										<span class="registration_socialplugin registration_socialplugin_{$plugin.code}">
-									{if $plugin.icon}
-										<img src="{$plugin.icon}" class="registration_socialplugin_icon" alt="{$plugin.title}" />
-
-																			{else}
-
-										<span class="registration_socialplugin_text" title="{$plugin.title}">{$plugin.title}</span>
-									{/if}
-											<a class="registration_socialplugin_cancel" href="{$plugin.url}"><span class="icon icon_delete"></span></a>
-								</span>
-									{/if}
-								{/foreach}
-
-							</div>
-						</div>
-					{/stripdomspaces}
-				{/if}
-				<table class='form_table'>
+                getSocialPluginsOptions				<table class='form_table'>
 					{foreach $element->getConnectedFields() as $field}
 						<tr>
 							<td class='form_label'>
