@@ -8,6 +8,7 @@ import {
   ProdPartyInfoDto,
   ProdVotingDto,
 } from '../../prod-details/models/prod-core.dto';
+
 import {ProdFileDto} from '../../prod-details/models/prod-file.dto';
 import {ProdReleaseFormatDto} from '../../prod-details/models/prod-release.dto';
 import {ProdReleaseInlayDto} from '../../prod-details/models/prod-release-inlay.dto';
@@ -17,6 +18,19 @@ export interface ReleaseTabsDto {
   hasScreenshots: boolean;
   hasInlays: boolean;
   hasInstructions: boolean;
+  hasStructure: boolean;
+}
+
+export interface ReleaseFileStructureItemDto {
+  id: number;
+  fileName: string;
+  size: number;
+  type: string;
+  typeLabel: string;
+  viewable: boolean;
+  viewUrl: string | null;
+  downloadUrl: string | null;
+  items: ReleaseFileStructureItemDto[];
 }
 
 export interface ReleaseProdRefDto {
@@ -63,4 +77,5 @@ export interface ReleaseDetailsDto {
   instructions: ProdInstructionFileDto[];
   votes: ProdVotingDto;
   tabs: ReleaseTabsDto;
+  fileStructure: ReleaseFileStructureItemDto[];
 }

@@ -17,6 +17,7 @@ use ZxArt\Prods\Rest\ProdReleaseFormatRestDto;
 use ZxArt\Prods\Rest\ProdReleaseInlayRestDto;
 use ZxArt\Prods\Rest\ProdReleaseInstructionFileRestDto;
 use ZxArt\Prods\Rest\ProdVotingRestDto;
+use ZxArt\Releases\Rest\ReleaseFileStructureItemRestDto;
 
 readonly class ReleaseDetailsRestDto
 {
@@ -31,6 +32,7 @@ readonly class ReleaseDetailsRestDto
      * @param ProdFileRestDto[]                      $screenshots
      * @param ProdReleaseInlayRestDto[]              $inlays
      * @param ProdReleaseInstructionFileRestDto[]    $instructions
+     * @param ReleaseFileStructureItemRestDto[]      $fileStructure
      */
     public function __construct(
         public int $id,
@@ -75,6 +77,8 @@ readonly class ReleaseDetailsRestDto
         public array $instructions,
         public ProdVotingRestDto $votes,
         public ReleaseTabsRestDto $tabs,
+        #[Map(transform: MapCollection::class)]
+        public array $fileStructure,
     ) {
     }
 }

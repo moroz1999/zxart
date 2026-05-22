@@ -667,6 +667,18 @@
     "instructions-loading": "Cargando...",
     "instructions-error": "Error al cargar el archivo"
   },
+  "release-details": {
+    "actions": "Acciones del lanzamiento",
+    "edit": "Editar lanzamiento",
+    "delete": "Eliminar lanzamiento",
+    "delete-confirm-title": "Eliminar lanzamiento",
+    "delete-confirm-message": "¿Estás seguro de que quieres eliminar este lanzamiento?",
+    "delete-confirm-yes": "Eliminar",
+    "delete-confirm-cancel": "Cancelar",
+    "file-structure": "Estructura de archivos",
+    "file-structure.download": "Descargar",
+    "file-structure.view": "Ver"
+  },
   "release-row": {
     "col-title": "Título",
     "col-year": "Año",

@@ -1,0 +1,49 @@
+<section>
+  <zx-inline class="rp-section-head" align="baseline" spacing="sm">
+    <h2 appHeading="headline">{{ 'release-details.file-structure' | translate }}</h2>
+    <span appText="bodySm" tone="muted">{{ countItems(items) }}</span>
+  </zx-inline>
+
+  <div class="rp-tree">
+    <ng-container *ngTemplateOutlet="rowsTemplate; context: {items: items, depth: 0}"></ng-container>
+  </div>
+</section>
+
+<ng-template #rowsTemplate let-items="items" let-depth="depth">
+  <ng-container *ngFor="let item of items">
+    <div class="rp-tree__row">
+      <div class="rp-tree__name">
+        <span class="rp-tree__indent">
+          <span *ngFor="let _ of range(depth)" class="rp-tree__indent-rule"></span>
+        </span>
+        <span class="rp-tree__icon">
+          <svg-icon [name]="getIcon(item)"></svg-icon>
+        </span>
+        <ng-container *ngIf="item.type === 'file'; else notFile">
+          <span class="rp-tree__name--file">
+            <a *ngIf="item.viewUrl; else plainFile" [href]="item.viewUrl">{{ item.fileName }}</a>
+            <ng-template #plainFile>{{ item.fileName }}</ng-template>
+          </span>
+        </ng-container>
+        <ng-template #notFile>
+          <span [ngClass]="item.type === 'zip' ? 'rp-tree__name--zip' : 'rp-tree__name--folder'">{{ item.fileName }}</span>
+        </ng-template>
+      </div>
+      <div class="rp-tree__size">{{ item.type !== 'folder' ? item.size : '' }}</div>
+      <div class="rp-tree__type">{{ item.typeLabel }}</div>
+      <div class="rp-tree__actions">
+        <a *ngIf="item.downloadUrl" [href]="item.downloadUrl">
+          <svg-icon name="download"></svg-icon>
+          {{ 'release-details.file-structure.download' | translate }}
+        </a>
+        <a *ngIf="item.viewUrl && item.type === 'file'" [href]="item.viewUrl">
+          <svg-icon name="eye"></svg-icon>
+          {{ 'release-details.file-structure.view' | translate }}
+        </a>
+      </div>
+    </div>
+    <ng-container *ngIf="item.items?.length">
+      <ng-container *ngTemplateOutlet="rowsTemplate; context: {items: item.items, depth: depth + 1}"></ng-container>
+    </ng-container>
+  </ng-container>
+</ng-template>

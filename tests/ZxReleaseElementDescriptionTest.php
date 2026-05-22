@@ -26,24 +26,6 @@ use PHPUnit\Framework\TestCase;
  */
 class ZxReleaseElementDescriptionTest extends TestCase
 {
-    public function testGetMetaDescriptionReturnsString(): void
-    {
-        // This test documents expected behavior without deep mocking.
-        // For actual functionality testing, use integration tests.
-        $this->markTestSkipped(
-            'zxReleaseElement requires CMS infrastructure. Use integration tests instead.'
-        );
-    }
-
-    public function testTextContentReturnsString(): void
-    {
-        // This test documents expected behavior without deep mocking.
-        // For actual functionality testing, use integration tests.
-        $this->markTestSkipped(
-            'zxReleaseElement requires CMS infrastructure. Use integration tests instead.'
-        );
-    }
-
     /**
      * Test the cleanText helper logic in isolation (if it were public).
      * Since it's private, we test it indirectly through the public methods.

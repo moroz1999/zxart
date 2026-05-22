@@ -18,6 +18,16 @@
   --zx-release-tile-meta-py: var(--space-4);
   --zx-release-tile-meta-px: var(--space-8);
 
+  /* ── File tree ── */
+  --zx-release-tree-bg: var(--surface);
+  --zx-release-tree-border: var(--secondary-200);
+  --zx-release-tree-radius: var(--radius-md);
+  --zx-release-tree-row-border: var(--secondary-200);
+  --zx-release-tree-row-hover-bg: var(--primary-50);
+  --zx-release-tree-indent-border: var(--secondary-300);
+  --zx-release-tree-icon-color: var(--secondary-500);
+  --zx-release-tree-link-color: var(--primary-600);
+
   /* ── Instruction file rows ── */
   --zx-release-file-bg: var(--surface);
   --zx-release-file-border: var(--secondary-200);

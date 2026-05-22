@@ -1,0 +1,120 @@
+.rp-section-head {
+  padding-bottom: var(--zx-release-section-heading-pb);
+  border-bottom: 1px solid var(--zx-release-section-heading-border);
+  margin-bottom: var(--zx-release-section-heading-mb);
+}
+
+.rp-tree {
+  background: var(--zx-release-tree-bg);
+  border: 1px solid var(--zx-release-tree-border);
+  border-radius: var(--zx-release-tree-radius);
+  overflow: hidden;
+  font-size: var(--font-sm);
+}
+
+.rp-tree__row {
+  display: grid;
+  grid-template-columns: 1fr 90px 130px 170px;
+  align-items: center;
+  padding: 7px 14px;
+  border-bottom: 1px solid var(--zx-release-tree-row-border);
+  gap: 14px;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  &:hover {
+    background: var(--zx-release-tree-row-hover-bg);
+  }
+}
+
+.rp-tree__name {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rp-tree__indent {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.rp-tree__indent-rule {
+  display: inline-block;
+  width: 20px;
+  height: 18px;
+  border-left: 1px dashed var(--zx-release-tree-indent-border);
+  margin-right: 0;
+}
+
+.rp-tree__icon {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  color: var(--zx-release-tree-icon-color);
+  flex-shrink: 0;
+
+  svg-icon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.rp-tree__name--file {
+  a {
+    color: var(--zx-release-tree-link-color);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.rp-tree__name--folder,
+.rp-tree__name--zip {
+  color: var(--text-color);
+  font-weight: 700;
+}
+
+.rp-tree__size {
+  text-align: right;
+  color: var(--text-light-color);
+  font-family: var(--font-mono);
+  font-size: var(--font-xs);
+}
+
+.rp-tree__type {
+  color: var(--text-light-color);
+  font-size: var(--font-xs);
+}
+
+.rp-tree__actions {
+  display: flex;
+  gap: 14px;
+  justify-content: flex-end;
+
+  a {
+    color: var(--zx-release-tree-link-color);
+    text-decoration: none;
+    font-size: var(--font-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    svg-icon {
+      width: 14px;
+      height: 14px;
+    }
+  }
+}

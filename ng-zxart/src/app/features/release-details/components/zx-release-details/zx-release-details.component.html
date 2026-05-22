@@ -33,14 +33,10 @@
       [instructions]="details.instructions">
     </zx-release-instructions-section>
 
-    <div *ngIf="isMinimal(details)" class="rp-contribute">
-      <div>
-        <p appText="body" tone="strong" class="rp-contribute__title">Помогите дополнить релиз</p>
-        <p appText="bodySm" tone="muted">
-          В архиве нет описания, обложек, скринов и инструкций для этой версии.
-        </p>
-      </div>
-    </div>
+    <zx-release-file-structure
+      *ngIf="details.tabs.hasStructure"
+      [items]="details.fileStructure">
+    </zx-release-file-structure>
 
     <zx-ratings-list-view [elementId]="details.id"></zx-ratings-list-view>
 

@@ -7,6 +7,7 @@ import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.compo
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxProdPeopleRowComponent} from '../../../../shared/ui/zx-prod-people-row/zx-prod-people-row.component';
+import {ZxReleaseEditingControlsComponent} from '../zx-release-editing-controls/zx-release-editing-controls.component';
 
 @Component({
   selector: 'zx-release-hero',
@@ -19,6 +20,7 @@ import {ZxProdPeopleRowComponent} from '../../../../shared/ui/zx-prod-people-row
     HeadingDirective,
     TextDirective,
     ZxProdPeopleRowComponent,
+    ZxReleaseEditingControlsComponent,
   ],
   templateUrl: './zx-release-hero.component.html',
   styleUrl: './zx-release-hero.component.scss',

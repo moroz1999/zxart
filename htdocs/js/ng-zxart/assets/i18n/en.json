@@ -670,6 +670,18 @@
     "instructions-loading": "Loading...",
     "instructions-error": "Failed to load file"
   },
+  "release-details": {
+    "actions": "Release actions",
+    "edit": "Edit release",
+    "delete": "Delete release",
+    "delete-confirm-title": "Delete release",
+    "delete-confirm-message": "Are you sure you want to delete this release?",
+    "delete-confirm-yes": "Delete",
+    "delete-confirm-cancel": "Cancel",
+    "file-structure": "File structure",
+    "file-structure.download": "Download",
+    "file-structure.view": "View"
+  },
   "release-row": {
     "col-title": "Title",
     "col-year": "Year",

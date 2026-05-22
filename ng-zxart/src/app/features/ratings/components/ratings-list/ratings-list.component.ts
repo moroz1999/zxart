@@ -10,6 +10,7 @@ import {HeadingDirective, TextDirective} from '../../../../shared/directives/typ
 import {
   ZxRowSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 
 @Component({
   selector: 'zx-ratings-list,zx-ratings-list-view',
@@ -22,7 +23,8 @@ import {
     TextDirective,
     TextDirective,
     HeadingDirective,
-    ZxRowSkeletonComponent
+    ZxRowSkeletonComponent,
+    ZxStackComponent,
   ],
   templateUrl: './ratings-list.component.html',
   styleUrls: ['./ratings-list.component.scss'],

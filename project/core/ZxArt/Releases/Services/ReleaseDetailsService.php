@@ -6,7 +6,9 @@ namespace ZxArt\Releases\Services;
 
 use authorAliasElement;
 use authorElement;
+use controller;
 use structureManager;
+use ZxArt\FileParsing\ZxParsingManager;
 use ZxArt\Prods\Dto\ProdCategoryPathDto;
 use ZxArt\Prods\Dto\ProdCategoryRefDto;
 use ZxArt\Prods\Dto\ProdReleaseFormatDto;
@@ -15,6 +17,7 @@ use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArt\Prods\ProdInfoBuilder;
 use ZxArt\Prods\ProdMediaService;
 use ZxArt\Releases\Dto\ReleaseDetailsDto;
+use ZxArt\Releases\Dto\ReleaseFileStructureItemDto;
 use ZxArt\Releases\Dto\ReleaseProdRefDto;
 use ZxArt\Releases\Dto\ReleaseTabsDto;
 use ZxArt\Shared\EntityType;
@@ -29,6 +32,8 @@ readonly class ReleaseDetailsService
         private ProdInfoBuilder $infoBuilder,
         private ProdMediaService $prodMediaService,
         private ReleaseFormatsProvider $releaseFormatsProvider,
+        private controller $controller,
+        private ZxParsingManager $zxParsingManager,
     ) {
     }
 
@@ -47,6 +52,8 @@ readonly class ReleaseDetailsService
         $screenshots = $this->prodMediaService->buildReleaseScreenshots($release);
         $inlays = $this->prodMediaService->buildReleaseInlays($release);
         $instructions = $this->prodMediaService->buildReleaseInstructions($release);
+
+        $fileStructure = $this->buildFileStructure($release);
 
         return new ReleaseDetailsDto(
             id: $release->getId(),
@@ -87,7 +94,9 @@ readonly class ReleaseDetailsService
                 hasScreenshots: count($screenshots->files) > 0,
                 hasInlays: count($inlays->inlays) > 0,
                 hasInstructions: count($instructions->files) > 0,
+                hasStructure: count($fileStructure) > 0,
             ),
+            fileStructure: $fileStructure,
         );
     }
 
@@ -181,12 +190,73 @@ readonly class ReleaseDetailsService
 
     private function buildVoting(zxReleaseElement $release): ProdVotingDto
     {
+        $userVoteRaw = $release->getUserVote();
         return new ProdVotingDto(
             votes: $release->getVotes(),
             votesAmount: $release->getVotesAmount(),
-            userVote: null,
+            userVote: $userVoteRaw !== null && $userVoteRaw !== false ? (int)$userVoteRaw : null,
             denyVoting: (bool)$release->denyVoting,
             votePercent: null,
         );
+    }
+
+    /**
+     * @param zxReleaseElement $release
+     * @return ReleaseFileStructureItemDto[]
+     */
+    private function buildFileStructure(zxReleaseElement $release): array
+    {
+        if (!$release->parsed) {
+            return [];
+        }
+
+        $structure = $release->getReleaseStructure();
+        if (!$structure) {
+            return [];
+        }
+
+        return $this->buildFileStructureItems($structure, $release);
+    }
+
+    /**
+     * @param array $items
+     * @param zxReleaseElement $release
+     * @return ReleaseFileStructureItemDto[]
+     */
+    private function buildFileStructureItems(array $items, zxReleaseElement $release): array
+    {
+        $result = [];
+        $baseUrl = (string)$this->controller->baseURL;
+        $releaseId = $release->getId();
+        $releaseUrl = (string)$release->getUrl();
+
+        foreach ($items as $item) {
+            $isFolder = $item['type'] === 'folder';
+            $viewable = (bool)$item['viewable'];
+
+            $downloadUrl = !$isFolder
+                ? $baseUrl . 'zxfile/id:' . $releaseId . '/fileId:' . $item['id'] . '/' . rawurlencode($item['fileName'])
+                : null;
+
+            $viewUrl = (!$isFolder && $viewable)
+                ? $releaseUrl . 'action:viewFile/id:' . $releaseId . '/fileId:' . $item['id'] . '/'
+                : null;
+
+            $children = isset($item['items']) ? $this->buildFileStructureItems($item['items'], $release) : [];
+
+            $result[] = new ReleaseFileStructureItemDto(
+                id: (int)$item['id'],
+                fileName: (string)$item['fileName'],
+                size: (int)$item['size'],
+                type: (string)$item['type'],
+                typeLabel: $this->infoBuilder->translate('zxrelease.filetype_' . $item['type']),
+                viewable: $viewable,
+                viewUrl: $viewUrl,
+                downloadUrl: $downloadUrl,
+                items: $children,
+            );
+        }
+
+        return $result;
     }
 }

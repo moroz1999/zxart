@@ -17,6 +17,7 @@ import {HeadingDirective} from '../../../../shared/ui/typography/directives/head
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {RatingsListComponent} from '../../../ratings/components/ratings-list/ratings-list.component';
+import {ZxReleaseFileStructureComponent} from '../zx-release-file-structure/zx-release-file-structure.component';
 
 @Component({
   selector: 'zx-release-details',
@@ -36,6 +37,7 @@ import {RatingsListComponent} from '../../../ratings/components/ratings-list/rat
     TextDirective,
     CommentsListComponent,
     RatingsListComponent,
+    ZxReleaseFileStructureComponent,
   ],
   templateUrl: './zx-release-details.component.html',
   styleUrl: './zx-release-details.component.scss',
@@ -56,12 +58,4 @@ export class ZxReleaseDetailsComponent implements OnInit {
     this.details$ = this.api.getDetails(+this.elementId).pipe(shareReplay(1));
   }
 
-  isMinimal(details: ReleaseDetailsDto): boolean {
-    return (
-      !details.description &&
-      !details.tabs.hasScreenshots &&
-      !details.tabs.hasInlays &&
-      !details.tabs.hasInstructions
-    );
-  }
 }

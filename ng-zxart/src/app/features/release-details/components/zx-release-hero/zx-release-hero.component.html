@@ -1,5 +1,11 @@
 <zx-inline class="rp-title-row" align="baseline" spacing="sm" [wrap]="true">
   <h1 appHeading="display">{{ details.title }}</h1>
+  <zx-release-editing-controls
+    [elementId]="details.id"
+    [releaseUrl]="details.url"
+    presentation="popover"
+    [popoverAriaLabel]="'release-details.actions' | translate">
+  </zx-release-editing-controls>
   <span *ngIf="details.year" class="rp-year" appText="body" tone="muted">{{ details.year }}</span>
   <zx-release-type-badge
     *ngIf="details.releaseType"

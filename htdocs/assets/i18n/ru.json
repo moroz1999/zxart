@@ -668,6 +668,18 @@
     "instructions-loading": "Загрузка...",
     "instructions-error": "Не удалось загрузить файл"
   },
+  "release-details": {
+    "actions": "Действия с релизом",
+    "edit": "Редактировать релиз",
+    "delete": "Удалить релиз",
+    "delete-confirm-title": "Удаление релиза",
+    "delete-confirm-message": "Вы уверены, что хотите удалить этот релиз?",
+    "delete-confirm-yes": "Удалить",
+    "delete-confirm-cancel": "Отмена",
+    "file-structure": "Структура файлов",
+    "file-structure.download": "Скачать",
+    "file-structure.view": "Просмотреть"
+  },
   "release-row": {
     "col-title": "Название",
     "col-year": "Год",

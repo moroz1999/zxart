@@ -1,13 +1,12 @@
 <zx-inline align="center" spacing="md" [wrap]="true">
-  <zx-inline align="baseline" spacing="xs" class="rp-rating">
-    <ng-container *ngIf="details.votes.votesAmount > 0; else noVotes">
-      <span class="rp-rating__score" appHeading="title">{{ details.votes.votes | number:'1.1-1' }}</span>
-      <span appText="bodySm" tone="muted">/ 5 · {{ details.votes.votesAmount }} голосов</span>
-    </ng-container>
-    <ng-template #noVotes>
-      <span appText="bodySm" tone="muted">Голосов пока нет.</span>
-    </ng-template>
-  </zx-inline>
+  <zx-item-controls
+    [elementId]="details.id"
+    type="zxRelease"
+    [votes]="details.votes.votes"
+    [votesAmount]="details.votes.votesAmount"
+    [userRating]="details.votes.userVote"
+    [denyVoting]="details.votes.denyVoting">
+  </zx-item-controls>
 
   <zx-inline align="center" spacing="md" [wrap]="true" appText="caption" tone="muted">
     <span><b>{{ details.downloadsCount }}</b> скачиваний</span>
@@ -29,4 +28,5 @@
       target="_blank"
     >↓ {{ details.fileName }}</zx-button>
   </zx-button-controls>
+
 </zx-inline>

@@ -17,6 +17,7 @@ use ZxArt\Prods\Dto\ProdReleaseInlayDto;
 use ZxArt\Prods\Dto\ProdReleaseInstructionFileDto;
 use ZxArt\Prods\Dto\ProdVotingDto;
 use ZxArt\Releases\Rest\ReleaseDetailsRestDto;
+use ZxArt\Releases\Dto\ReleaseFileStructureItemDto;
 
 #[Map(target: ReleaseDetailsRestDto::class)]
 readonly class ReleaseDetailsDto
@@ -32,6 +33,7 @@ readonly class ReleaseDetailsDto
      * @param ProdFileDto[]                  $screenshots
      * @param ProdReleaseInlayDto[]          $inlays
      * @param ProdReleaseInstructionFileDto[] $instructions
+     * @param ReleaseFileStructureItemDto[]  $fileStructure
      */
     public function __construct(
         public int $id,
@@ -67,6 +69,7 @@ readonly class ReleaseDetailsDto
         public array $instructions,
         public ProdVotingDto $votes,
         public ReleaseTabsDto $tabs,
+        public array $fileStructure,
     ) {
     }
 }
