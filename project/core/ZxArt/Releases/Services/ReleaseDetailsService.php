@@ -7,6 +7,7 @@ namespace ZxArt\Releases\Services;
 use authorAliasElement;
 use authorElement;
 use controller;
+use privilegesManager;
 use structureManager;
 use ZxArt\FileParsing\ZxParsingManager;
 use ZxArt\Prods\Dto\ProdCategoryPathDto;
@@ -34,6 +35,7 @@ readonly class ReleaseDetailsService
         private ReleaseFormatsProvider $releaseFormatsProvider,
         private controller $controller,
         private ZxParsingManager $zxParsingManager,
+        private privilegesManager $privilegesManager,
     ) {
     }
 
@@ -48,6 +50,12 @@ readonly class ReleaseDetailsService
         $isDownloadable = $release->isDownloadable();
         $isPlayable = $release->isPlayable();
         $emulatorType = $release->getEmulatorType();
+        $releaseUrl = (string)$release->getUrl();
+        $canUploadScreenshot = $this->privilegesManager->checkPrivilegesForAction(
+            $release->getId(),
+            'uploadScreenshot',
+            (string)$release->structureType,
+        ) === true;
 
         $screenshots = $this->prodMediaService->buildReleaseScreenshots($release);
         $inlays = $this->prodMediaService->buildReleaseInlays($release);
@@ -58,7 +66,7 @@ readonly class ReleaseDetailsService
         return new ReleaseDetailsDto(
             id: $release->getId(),
             title: $this->infoBuilder->decodeText((string)$release->getTitle()),
-            url: (string)$release->getUrl(),
+            url: $releaseUrl,
             year: $release->getYear() ?? 0,
             version: $release->version,
             releaseType: $release->releaseType,
@@ -97,6 +105,8 @@ readonly class ReleaseDetailsService
                 hasStructure: count($fileStructure) > 0,
             ),
             fileStructure: $fileStructure,
+            canUploadScreenshot: $canUploadScreenshot,
+            screenshotUploadUrl: $releaseUrl . 'action:uploadScreenshot/',
         );
     }
 

@@ -249,10 +249,13 @@
 	</form>
 	<h2>{translations name='detailedsearch.results'} {$element->getStartElementNumber()}-{$element->getEndElementNumber()} ({$element->getTotalAmount()})</h2>
 	{if $element->getResultsType() == 'zxPicture'}
-		<div id="gallery_{$element->id}">
-			{include file=$theme->template('component.pictureslist.tpl') pictures=$element->getResultsList() pager=$element->getPager() }
-		</div>
-{*		{include file=$theme->template("component.picturestable.tpl") picturesList=$element->getResultsList() element=$element pager=$element->getPager() number=$element->getStartElementNumber()}*}
+		{if $element->getPager()}
+			<div class='zxpictures_top_controls'>{include file=$theme->template("pager.tpl") pager=$element->getPager()}</div>
+		{/if}
+		<zx-pictures-list pictures-json='{$element->getPicturesJson()}'></zx-pictures-list>
+		{if $element->getPager()}
+			<div class='zxpictures_bottom_controls'>{include file=$theme->template("pager.tpl") pager=$element->getPager()}</div>
+		{/if}
 	{elseif $element->getResultsType() == 'zxMusic'}
 		{include file=$theme->template("component.musictable.tpl") musicList=$element->getResultsList() element=$element pager=$element->getPager() number=$element->getStartElementNumber() musicListId="detailedsearch_music_{$element->id}"}
 	{elseif $element->getResultsType() == 'author'}

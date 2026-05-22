@@ -14,7 +14,7 @@
 			</div>
 		{/if}
 	{/capture}
-	{assign moduleClass "zxitemslist zxitemslist_graphics gallery_pictures"}
+	{assign moduleClass "zxitemslist zxitemslist_graphics"}
 	{assign moduleAttributes "id='gallery_{$element->id}'"}
 	{assign moduleTitleClass ""}
 	{assign moduleContentClass ""}

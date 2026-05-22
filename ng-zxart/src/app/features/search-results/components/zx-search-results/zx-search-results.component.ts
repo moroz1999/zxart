@@ -43,6 +43,8 @@ import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.
 import {ZxPartyCardComponent} from '../../../../shared/ui/zx-party-card/zx-party-card.component';
 import {PlayerService} from '../../../player/services/player.service';
 import {ZxProdsListComponent} from '../../../../entities/zx-prods-list/zx-prods-list.component';
+import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
+import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 
 const AUTHOR_SET_TYPE = 'author';
 const GROUP_SET_TYPE = 'group';
@@ -93,6 +95,7 @@ const INITIAL_SKELETON_GROUPS: SkeletonGroup[] = [
     ZxPicturesGridDirective,
     ZxProdsListComponent,
     ZxPanelComponent,
+    PictureGalleryHostComponent,
     ZxTableComponent,
     ZxTuneRowComponent,
     ZxPartyCardComponent,
@@ -138,6 +141,7 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     private readonly searchService: SearchResultsService,
     private readonly translateService: TranslateService,
     private readonly playerService: PlayerService,
+    private readonly pictureGalleryService: PictureGalleryService,
     private readonly cdr: ChangeDetectorRef,
   ) {}
 
@@ -312,6 +316,14 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     this.prodsBySet = this.buildProdStores(response);
     this.pagesAmount = response.pageSize > 0 ? Math.ceil(response.total / response.pageSize) : 0;
     this.syncTypeFilters(response.sets.map(s => s.type));
+    for (const set of response.sets) {
+      if (set.type === PICTURE_SET_TYPE) {
+        this.pictureGalleryService.ensureGalleryLoaded(
+          this.pictureGalleryId(set),
+          this.asPictures(set.items),
+        );
+      }
+    }
     this.initialLoading = false;
     this.pageLoading = false;
     this.cdr.markForCheck();

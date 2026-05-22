@@ -8,8 +8,10 @@ trait ChartDataProviderTrait
 
     public function getChartData($type = null)
     {
-        if (!isset($this->chartData[$type])) {
-            $this->chartData[$type] = false;
+        $chartDataKey = $type ?? '';
+
+        if (!isset($this->chartData[$chartDataKey])) {
+            $this->chartData[$chartDataKey] = false;
             $eventsLog = $this->getService(EventsLog::class);
 
             if ($dates = $eventsLog->countEvents(
@@ -50,17 +52,17 @@ trait ChartDataProviderTrait
                             $chartData['data'][] = 0;
                         }
                     }
-                    $this->chartData[$type] = json_encode($chartData);
+                    $this->chartData[$chartDataKey] = json_encode($chartData);
                 }
             }
         }
 
-        return $this->chartData[$type];
+        return $this->chartData[$chartDataKey];
     }
 
     protected function resetChartData(): void
     {
-        $this->chartData = null;
+        $this->chartData = [];
     }
 
     abstract public function getChartDataIds($type = null);

@@ -4,11 +4,32 @@
     [count]="inlays.length">
   </zx-release-section-head>
 
-  <zx-grid columns="5" gap="xs">
-    <zx-inlay-tile
-      *ngFor="let inlay of inlays; trackBy: trackById"
-      [inlay]="inlay"
-      (imageClick)="openDownload(inlay.downloadUrl)"
-    ></zx-inlay-tile>
-  </zx-grid>
+  <zx-picture-gallery-host></zx-picture-gallery-host>
+
+  <div class="release-inlays-section__grid">
+    <figure
+      *ngFor="let inlay of inlays; let i = index; trackBy: trackById"
+      class="release-inlays-section__item"
+    >
+      <div class="release-inlays-section__thumb-wrap">
+        <img
+          *ngIf="inlay.imageUrl"
+          class="release-inlays-section__thumb"
+          loading="lazy"
+          [src]="inlay.imageUrl"
+          [alt]="inlay.title"
+          [lightbox]="i"
+          [gallery]="galleryId"
+        />
+        <div class="release-inlays-section__controls">
+          <zx-button
+            size="xs"
+            color="secondary"
+            [href]="inlay.downloadUrl"
+            [attr.aria-label]="'prod-details.screenshot-download' | translate"
+          ><svg-icon name="download" class="release-inlays-section__btn-icon"></svg-icon></zx-button>
+        </div>
+      </div>
+    </figure>
+  </div>
 </section>

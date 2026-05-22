@@ -20,6 +20,22 @@
   /* Icon size inside release screenshot control buttons. */
   --zx-release-screenshots-button-icon-size: 16px;
 
+  /* ── Inlays ── */
+  /* Max width of each release inlay thumbnail column. */
+  --zx-release-inlays-thumb-width: 192px;
+  /* Grid gap between release inlay thumbnails. */
+  --zx-release-inlays-grid-gap: var(--gap-sm);
+  /* Corner radius of release inlay thumbnails. */
+  --zx-release-inlays-item-radius: var(--radius-sm);
+  /* Gap between controls in the release inlay hover bar. */
+  --zx-release-inlays-controls-gap: var(--space-4);
+  /* Padding inside the release inlay hover bar. */
+  --zx-release-inlays-controls-padding: var(--space-4);
+  /* Background gradient for the release inlay hover bar. */
+  --zx-release-inlays-controls-bg: linear-gradient(transparent, var(--overlay-bg));
+  /* Icon size inside release inlay control buttons. */
+  --zx-release-inlays-button-icon-size: 16px;
+
   /* ── File tree ── */
   --zx-release-tree-bg: var(--surface);
   --zx-release-tree-border: var(--secondary-200);

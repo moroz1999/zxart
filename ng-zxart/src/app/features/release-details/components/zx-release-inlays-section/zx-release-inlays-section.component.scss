@@ -1,3 +1,62 @@
+@use 'shared/breakpoints' as bp;
+
 :host {
   display: block;
+}
+
+.release-inlays-section__grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, var(--zx-release-inlays-thumb-width)));
+  justify-content: start;
+  gap: var(--zx-release-inlays-grid-gap);
+
+  @include bp.media-breakpoint-down(lg) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @include bp.media-breakpoint-down(sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.release-inlays-section__item {
+  display: block;
+  margin: 0;
+}
+
+.release-inlays-section__thumb-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--zx-release-inlays-item-radius);
+}
+
+.release-inlays-section__thumb {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+  aspect-ratio: 3/4;
+  cursor: pointer;
+}
+
+.release-inlays-section__controls {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--zx-release-inlays-controls-gap);
+  padding: var(--zx-release-inlays-controls-padding);
+  background: var(--zx-release-inlays-controls-bg);
+  opacity: 0;
+  transition: opacity var(--animation-sm) ease;
+}
+
+.release-inlays-section__thumb-wrap:hover .release-inlays-section__controls {
+  opacity: 1;
+}
+
+.release-inlays-section__btn-icon {
+  display: block;
+  width: var(--zx-release-inlays-button-icon-size);
+  height: var(--zx-release-inlays-button-icon-size);
 }

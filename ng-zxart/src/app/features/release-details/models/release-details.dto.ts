@@ -78,4 +78,6 @@ export interface ReleaseDetailsDto {
   votes: ProdVotingDto;
   tabs: ReleaseTabsDto;
   fileStructure: ReleaseFileStructureItemDto[];
+  canUploadScreenshot: boolean;
+  screenshotUploadUrl: string;
 }

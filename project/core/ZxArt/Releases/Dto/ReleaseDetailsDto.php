@@ -70,6 +70,8 @@ readonly class ReleaseDetailsDto
         public ProdVotingDto $votes,
         public ReleaseTabsDto $tabs,
         public array $fileStructure,
+        public bool $canUploadScreenshot,
+        public string $screenshotUploadUrl,
     ) {
     }
 }

@@ -3,7 +3,7 @@
         {include file=$theme->template("pager.tpl") pager=$pager}
     </div>
 {/if}
-<div class="zxpictures_list gallery_pictures">
+<div class="zxpictures_list">
 	{foreach from=$pictures item=element}{include file=$theme->template("zxPicture.short.tpl")}{/foreach}
 </div>
 {if isset($pager)}

@@ -6,6 +6,7 @@ export interface ZxPictureDto {
   readonly title: string;
   readonly url: string;
   readonly imageUrl: string;
+  readonly largeImageUrl: string;
   readonly fileId: number;
   readonly type: string;
   readonly pictureBorder: number;

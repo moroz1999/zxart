@@ -34,6 +34,8 @@ export class ZxPicturesListComponent implements OnInit {
   @Input() elementId = 0;
   @Input() compoType = '';
   @Input() picturesInput: ZxPictureDto[] | null = null;
+  @Input({ transform: (v: string) => { try { return JSON.parse(v) as ZxPictureDto[]; } catch { return null; } } })
+  picturesJson: ZxPictureDto[] | null = null;
 
   loading = true;
   error = false;
@@ -52,10 +54,11 @@ export class ZxPicturesListComponent implements OnInit {
   }
 
   private loadData(): void {
-    if (this.picturesInput !== null) {
+    const inlineData = this.picturesJson ?? this.picturesInput;
+    if (inlineData !== null) {
       this.loading = false;
       this.error = false;
-      this.pictures = this.picturesInput;
+      this.pictures = inlineData;
       this.pictureGalleryService.ensureGalleryLoaded(this.galleryId, this.pictures);
       this.cdr.markForCheck();
       return;

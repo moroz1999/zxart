@@ -79,6 +79,8 @@ readonly class ReleaseDetailsRestDto
         public ReleaseTabsRestDto $tabs,
         #[Map(transform: MapCollection::class)]
         public array $fileStructure,
+        public bool $canUploadScreenshot,
+        public string $screenshotUploadUrl,
     ) {
     }
 }

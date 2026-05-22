@@ -5,7 +5,7 @@
 {/if}
 {if !isset($number)}{$number=1}{/if}
 
-<div class='pictures_list_block gallery_pictures' id="gallery_{$element->id}">
+<div class='pictures_list_block' id="gallery_{$element->id}">
 	<table class='pictures_list_table table_component'>
 		<thead>
 			<tr>
