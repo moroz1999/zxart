@@ -1,0 +1,23 @@
+<a class="release-anchor" [href]="prod.url">
+  <zx-inline align="center" spacing="sm">
+    <span class="release-anchor__arrow" appText="label" tone="inherit">←</span>
+
+    <span class="release-anchor__thumb">
+      <img
+        *ngIf="prod.thumbnailUrl"
+        [src]="prod.thumbnailUrl"
+        [alt]="prod.title"
+        class="release-anchor__img"
+      />
+    </span>
+
+    <zx-stack spacing="none" class="release-anchor__body">
+      <span class="release-anchor__label" appText="label" tone="muted">к программе</span>
+      <span class="release-anchor__title" appText="bodySm" tone="inherit">{{ prod.title }}</span>
+    </zx-stack>
+
+    <span class="release-anchor__meta" appText="label" tone="muted">
+      {{ prod.year }}<ng-container *ngIf="prod.authorNames.length"> · {{ prod.authorNames.join(', ') }}</ng-container>
+    </span>
+  </zx-inline>
+</a>

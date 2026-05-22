@@ -1,0 +1,29 @@
+:host {
+  display: block;
+  margin-bottom: var(--zx-release-hero-mb);
+}
+
+.rp-formats {
+  margin-bottom: var(--zx-release-hero-formats-mb);
+}
+
+.rp-hw {
+  margin-bottom: var(--zx-release-hero-hw-mb);
+}
+
+.rp-hw-chip {
+  display: inline-block;
+  padding: var(--zx-release-hero-chip-py) var(--zx-release-hero-chip-px);
+  border-radius: var(--zx-release-hero-chip-radius);
+  background: var(--zx-release-hero-chip-bg);
+  border: 1px solid var(--zx-release-hero-chip-border);
+  color: inherit;
+  text-decoration: none;
+  transition: background-color var(--animation-sm), border-color var(--animation-sm), color var(--animation-sm);
+
+  &:hover {
+    background: var(--zx-release-hero-chip-hover-bg);
+    border-color: var(--zx-release-hero-chip-hover-border);
+    color: var(--zx-release-hero-chip-hover-color);
+  }
+}

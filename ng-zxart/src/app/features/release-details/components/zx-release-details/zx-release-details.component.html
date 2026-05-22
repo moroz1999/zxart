@@ -1,0 +1,53 @@
+<ng-container *ngIf="details$ | async as details; else loading">
+  <zx-breadcrumbs
+    [categories]="details.prod.categoriesPaths.length ? details.prod.categoriesPaths[0].categories : []"
+    [parentItem]="{title: details.prod.title, url: details.prod.url}"
+    [currentTitle]="details.title">
+  </zx-breadcrumbs>
+
+  <zx-release-parent-anchor [prod]="details.prod"></zx-release-parent-anchor>
+
+  <div class="rp-head">
+    <zx-release-hero [details]="details"></zx-release-hero>
+    <zx-release-action-bar [details]="details"></zx-release-action-bar>
+  </div>
+
+  <zx-stack spacing="xl">
+    <section *ngIf="details.description">
+      <h2 appHeading="headline" class="rp-section-heading">Описание</h2>
+      <p appText="body" [innerHTML]="details.description"></p>
+    </section>
+
+    <zx-release-screenshots-section
+      *ngIf="details.tabs.hasScreenshots"
+      [screenshots]="details.screenshots">
+    </zx-release-screenshots-section>
+
+    <zx-release-inlays-section
+      *ngIf="details.tabs.hasInlays"
+      [inlays]="details.inlays">
+    </zx-release-inlays-section>
+
+    <zx-release-instructions-section
+      *ngIf="details.tabs.hasInstructions"
+      [instructions]="details.instructions">
+    </zx-release-instructions-section>
+
+    <div *ngIf="isMinimal(details)" class="rp-contribute">
+      <div>
+        <p appText="body" tone="strong" class="rp-contribute__title">Помогите дополнить релиз</p>
+        <p appText="bodySm" tone="muted">
+          В архиве нет описания, обложек, скринов и инструкций для этой версии.
+        </p>
+      </div>
+    </div>
+
+    <zx-ratings-list-view [elementId]="details.id"></zx-ratings-list-view>
+
+    <zx-comments-list-view [elementId]="details.id"></zx-comments-list-view>
+  </zx-stack>
+</ng-container>
+
+<ng-template #loading>
+  <zx-release-details-skeleton></zx-release-details-skeleton>
+</ng-template>

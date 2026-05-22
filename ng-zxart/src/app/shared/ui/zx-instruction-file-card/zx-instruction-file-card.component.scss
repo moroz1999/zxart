@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+
+.ifc-row {
+  padding: var(--zx-ifc-py) var(--zx-ifc-px);
+  border: 1px solid var(--zx-ifc-border);
+  border-radius: var(--zx-ifc-radius);
+  background: var(--zx-ifc-bg);
+  transition: border-color var(--animation-sm), background-color var(--animation-sm);
+
+  &:hover {
+    border-color: var(--zx-ifc-border-hover);
+    background: var(--zx-ifc-bg-hover);
+  }
+}
+
+.ifc-icon {
+  width: var(--zx-ifc-icon-size);
+  height: var(--zx-ifc-icon-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--zx-ifc-icon-bg);
+  color: var(--zx-ifc-icon-color);
+  border-radius: var(--zx-ifc-icon-radius);
+  flex-shrink: 0;
+}
+
+.ifc-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.ifc-meta {
+  margin-top: var(--zx-ifc-meta-mt);
+}
+
+.ifc-actions {
+  flex-shrink: 0;
+}

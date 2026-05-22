@@ -1,0 +1,24 @@
+:root {
+  /* Tile card background. */
+  --zx-inlay-tile-bg: var(--surface);
+  /* Tile card border. */
+  --zx-inlay-tile-border: var(--secondary-200);
+  /* Tile card hover border. */
+  --zx-inlay-tile-border-hover: var(--primary-500);
+  /* Tile card border radius. */
+  --zx-inlay-tile-radius: var(--radius-md);
+  /* Image placeholder background. */
+  --zx-inlay-tile-img-bg: var(--secondary-100);
+  /* Meta strip background. */
+  --zx-inlay-tile-meta-bg: var(--surface);
+  /* Meta strip top border. */
+  --zx-inlay-tile-meta-border: var(--secondary-200);
+  /* Meta strip vertical padding. */
+  --zx-inlay-tile-meta-py: var(--space-4);
+  /* Meta strip horizontal padding. */
+  --zx-inlay-tile-meta-px: var(--space-8);
+  /* Min-height to reserve room for two caption lines. */
+  --zx-inlay-tile-meta-min-height: var(--space-40);
+  /* Gap between title and release label. */
+  --zx-inlay-tile-release-mt: var(--space-2);
+}

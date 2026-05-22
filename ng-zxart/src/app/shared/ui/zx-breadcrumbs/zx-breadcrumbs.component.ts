@@ -15,6 +15,7 @@ import {ProdCategoryRefDto} from '../../../features/prod-details/models/prod-cor
 })
 export class ZxBreadcrumbsComponent {
   @Input() categories: ProdCategoryRefDto[] = [];
+  @Input() parentItem: { title: string; url: string } | null = null;
   @Input() currentTitle = '';
 
   readonly homeUrl$: Observable<string | null> = this.backendLinks.links$.pipe(

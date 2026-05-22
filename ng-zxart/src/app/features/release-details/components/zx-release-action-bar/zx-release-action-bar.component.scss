@@ -1,0 +1,13 @@
+:host {
+  display: block;
+  padding-top: var(--zx-release-action-bar-pt);
+  border-top: 1px solid var(--zx-release-action-bar-border);
+}
+
+.rp-rating__score {
+  color: var(--zx-release-action-bar-score-color);
+}
+
+.rp-actions {
+  margin-left: auto;
+}

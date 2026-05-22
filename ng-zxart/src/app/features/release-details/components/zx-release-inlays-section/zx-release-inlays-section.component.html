@@ -1,0 +1,14 @@
+<section>
+  <zx-inline class="rp-section-head" align="baseline" spacing="sm">
+    <h2 appHeading="headline">Обложки</h2>
+    <span appText="bodySm" tone="muted">{{ inlays.length }}</span>
+  </zx-inline>
+
+  <div class="release-inlays-section__grid">
+    <zx-inlay-tile
+      *ngFor="let inlay of inlays; trackBy: trackById"
+      [inlay]="inlay"
+      (imageClick)="openDownload(inlay.downloadUrl)"
+    ></zx-inlay-tile>
+  </div>
+</section>

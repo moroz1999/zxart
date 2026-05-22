@@ -1,0 +1,196 @@
+openapi: 3.0.0
+paths:
+  /release-details/:
+    get:
+      summary: Get details for a zxRelease details page
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Full payload for the release details page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseDetailsPayload'
+        '400':
+          description: Bad request
+        '404':
+          description: Release not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    ReleaseDetailsPayload:
+      type: object
+      required:
+        - id
+        - title
+        - url
+        - year
+        - version
+        - releaseType
+        - releaseTypeLabel
+        - hardwareRequired
+        - description
+        - isRealtime
+        - party
+        - languages
+        - hardware
+        - releaseBy
+        - formats
+        - isDownloadable
+        - isPlayable
+        - downloadUrl
+        - playUrl
+        - fileName
+        - emulatorType
+        - prodLegalStatus
+        - prodExternalLink
+        - downloadsCount
+        - playsCount
+        - externalLinks
+        - screenshots
+        - prod
+        - inlays
+        - instructions
+        - votes
+        - tabs
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        year:
+          type: integer
+        version:
+          type: string
+        releaseType:
+          type: string
+        releaseTypeLabel:
+          type: string
+          nullable: true
+        hardwareRequired:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        isRealtime:
+          type: boolean
+        party:
+          nullable: true
+          $ref: 'prod-releases.yaml#/components/schemas/ProdPartyInfo'
+        languages:
+          type: array
+          items:
+            $ref: 'prod-releases.yaml#/components/schemas/ProdLanguageInfo'
+        hardware:
+          type: array
+          items:
+            $ref: 'prod-releases.yaml#/components/schemas/ProdHardwareInfo'
+        releaseBy:
+          type: array
+          items:
+            $ref: 'prod-releases.yaml#/components/schemas/ProdGroupRef'
+        formats:
+          type: array
+          items:
+            $ref: 'prod-releases.yaml#/components/schemas/ProdReleaseFormat'
+        isDownloadable:
+          type: boolean
+        isPlayable:
+          type: boolean
+        downloadUrl:
+          type: string
+          nullable: true
+        playUrl:
+          type: string
+          nullable: true
+        fileName:
+          type: string
+          nullable: true
+        emulatorType:
+          type: string
+          nullable: true
+        prodLegalStatus:
+          type: string
+        prodExternalLink:
+          type: string
+        downloadsCount:
+          type: integer
+        playsCount:
+          type: integer
+        externalLinks:
+          type: array
+          items:
+            $ref: 'prod-releases.yaml#/components/schemas/ProdLinkInfo'
+        screenshots:
+          type: array
+          items:
+            $ref: 'prod-files.yaml#/components/schemas/ProdFile'
+        prod:
+          $ref: '#/components/schemas/ReleaseProdRef'
+        inlays:
+          type: array
+          items:
+            $ref: 'prod-releases.yaml#/components/schemas/ProdReleaseInlay'
+        instructions:
+          type: array
+          items:
+            $ref: 'prod-releases.yaml#/components/schemas/ProdReleaseInstructionFile'
+        votes:
+          $ref: 'prod-details.yaml#/components/schemas/ProdVoting'
+        tabs:
+          $ref: '#/components/schemas/ReleaseTabs'
+
+    ReleaseProdRef:
+      type: object
+      required:
+        - id
+        - title
+        - url
+        - year
+        - authorNames
+        - thumbnailUrl
+        - categoriesPaths
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        year:
+          type: integer
+        authorNames:
+          type: array
+          items:
+            type: string
+        thumbnailUrl:
+          type: string
+          nullable: true
+        categoriesPaths:
+          type: array
+          items:
+            $ref: 'prod-details.yaml#/components/schemas/ProdCategoryPath'
+
+    ReleaseTabs:
+      type: object
+      required:
+        - hasScreenshots
+        - hasInlays
+        - hasInstructions
+      properties:
+        hasScreenshots:
+          type: boolean
+        hasInlays:
+          type: boolean
+        hasInstructions:
+          type: boolean

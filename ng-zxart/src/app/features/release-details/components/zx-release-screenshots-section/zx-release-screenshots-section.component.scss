@@ -1,0 +1,63 @@
+:host {
+  display: block;
+}
+
+.rp-section-head {
+  padding-bottom: var(--zx-release-section-heading-pb);
+  border-bottom: 1px solid var(--zx-release-section-heading-border);
+  margin-bottom: var(--zx-release-section-heading-mb);
+}
+
+.rp-tile-grid {
+  display: grid;
+  gap: var(--zx-release-tile-gap);
+}
+
+.rp-tile-grid--screens {
+  grid-template-columns: repeat(auto-fill, minmax(var(--zx-release-tile-screen-min-width), 1fr));
+}
+
+.rp-tile {
+  position: relative;
+  background: var(--zx-release-tile-bg);
+  border: 1px solid var(--zx-release-tile-border);
+  border-radius: var(--zx-release-tile-radius);
+  overflow: hidden;
+  display: block;
+  margin: 0;
+  transition: border-color var(--animation-sm);
+
+  &:hover {
+    border-color: var(--zx-release-tile-border-hover);
+  }
+}
+
+.rp-tile__img {
+  background: var(--zx-release-tile-img-bg);
+  overflow: hidden;
+  display: block;
+  aspect-ratio: 4/3;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    image-rendering: pixelated;
+    cursor: pointer;
+  }
+}
+
+.rp-tile__meta {
+  padding: var(--zx-release-tile-meta-py) var(--zx-release-tile-meta-px);
+  border-top: 1px solid var(--zx-release-tile-meta-border);
+  background: var(--zx-release-tile-meta-bg);
+  overflow: hidden;
+}
+
+.rp-tile__label {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

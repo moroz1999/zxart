@@ -1,0 +1,31 @@
+<zx-inline class="rp-title-row" align="baseline" spacing="sm" [wrap]="true">
+  <h1 appHeading="display">{{ details.title }}</h1>
+  <span *ngIf="details.year" class="rp-year" appText="body" tone="muted">{{ details.year }}</span>
+  <zx-release-type-badge
+    *ngIf="details.releaseType"
+    [type]="details.releaseType"
+    [label]="details.releaseTypeLabel">
+  </zx-release-type-badge>
+</zx-inline>
+
+<zx-prod-people-row
+  [authors]="details.authors"
+  [publishers]="details.publishers"
+  [party]="details.party">
+</zx-prod-people-row>
+
+<zx-inline *ngIf="details.formats.length" class="rp-formats" align="center" spacing="xs" [wrap]="true" appText="label" tone="muted">
+  <ng-container *ngFor="let fmt of details.formats; let last = last">
+    <span>{{ fmt.emoji }} {{ fmt.label }}</span><ng-container *ngIf="!last">, </ng-container>
+  </ng-container>
+</zx-inline>
+
+<zx-inline *ngIf="details.hardware.length" class="rp-hw" align="center" spacing="xs" [wrap]="true">
+  <span appText="bodySm" tone="strong" class="rp-hw-label">Железо:</span>
+  <a
+    *ngFor="let hw of details.hardware"
+    [href]="hw.catalogueUrl"
+    class="rp-hw-chip"
+    appText="caption"
+  >{{ 'hardware.' + hw.id | translate }}</a>
+</zx-inline>

@@ -7,17 +7,3 @@
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: var(--space-16);
 }
-
-.prod-inlays-section__item {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  margin: 0;
-}
-
-.prod-inlays-section__thumb {
-  display: block;
-  width: 100%;
-  height: auto;
-  cursor: pointer;
-}

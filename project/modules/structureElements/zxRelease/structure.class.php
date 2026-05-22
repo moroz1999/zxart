@@ -804,30 +804,31 @@ class zxReleaseElement extends ZxArtItem implements
         return $publishersInfo;
     }
 
-    public function getHardwareInfo()
+    public function getHardwareInfo(bool $short = true)
     {
-        if (!isset($this->hardwareInfo)) {
+        if (!isset($this->hardwareInfo[$short])) {
             /**
              * @var languagesManager $languagesManager
              */
             $languagesManager = $this->getService(LanguagesManager::class);
-            $key = 'hw' . $languagesManager->getCurrentLanguageId();
-            if (($this->hardwareInfo = $this->getCacheKey($key)) === null) {
-                $this->hardwareInfo = [];
+            $key = 'hw' . ($short ? 's' : 'f') . $languagesManager->getCurrentLanguageId();
+            if (($this->hardwareInfo[$short] = $this->getCacheKey($key)) === null) {
+                $this->hardwareInfo[$short] = [];
                 /**
                  * @var translationsManager $translationsManager
                  */
                 $translationsManager = $this->getService(translationsManager::class);
+                $translationGroup = $short ? 'hardware_short' : 'hardware';
                 foreach ($this->hardwareRequired as $item) {
-                    $this->hardwareInfo[] = [
+                    $this->hardwareInfo[$short][] = [
                         'id' => $item,
-                        'title' => html_entity_decode($translationsManager->getTranslationByName('hardware_short.item_' . $item), ENT_QUOTES),
+                        'title' => html_entity_decode($translationsManager->getTranslationByName($translationGroup . '.item_' . $item), ENT_QUOTES),
                     ];
                 }
-                $this->setCacheKey($key, $this->hardwareInfo, 24 * 60 * 60);
+                $this->setCacheKey($key, $this->hardwareInfo[$short], 24 * 60 * 60);
             }
         }
-        return $this->hardwareInfo;
+        return $this->hardwareInfo[$short];
     }
 
     /**

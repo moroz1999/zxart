@@ -1,0 +1,13 @@
+<section>
+  <zx-inline class="rp-section-head" align="baseline" spacing="sm">
+    <h2 appHeading="headline">Инструкция</h2>
+    <span appText="bodySm" tone="muted">{{ instructions.length }}</span>
+  </zx-inline>
+
+  <zx-stack spacing="xs">
+    <zx-instruction-file-card
+      *ngFor="let file of instructions; trackBy: trackById"
+      [file]="file"
+    ></zx-instruction-file-card>
+  </zx-stack>
+</section>

@@ -1,0 +1,10 @@
+.rp-head {
+  margin-bottom: var(--zx-release-details-head-mb);
+}
+
+.rp-contribute {
+  background: var(--zx-release-details-contribute-bg);
+  border: 1px dashed var(--zx-release-details-contribute-border);
+  border-radius: var(--zx-release-details-contribute-radius);
+  padding: var(--zx-release-details-contribute-p);
+}

@@ -1,0 +1,29 @@
+<zx-inline class="ifc-row" align="center" spacing="md">
+  <div class="ifc-icon" appText="caption">{{ getExt(file.fileName) }}</div>
+
+  <div class="ifc-body">
+    <div class="ifc-title" appText="bodySm" tone="strong">{{ file.title || file.fileName }}</div>
+    <div class="ifc-meta" appText="caption" tone="muted">
+      {{ file.fileName }}
+      <ng-container *ngIf="showReleaseInfo && file.releaseTitle">
+        · <a [href]="file.releaseUrl" class="ifc-release-link" appText="caption" tone="muted-link">{{ file | prodReleaseLabel }}</a>
+      </ng-container>
+    </div>
+  </div>
+
+  <zx-inline class="ifc-actions" spacing="xs" align="center">
+    <zx-button
+      *ngIf="isViewable()"
+      size="sm"
+      color="secondary"
+      (click)="openViewer()"
+    >{{ 'prod-details.instructions-view' | translate }}</zx-button>
+    <zx-button
+      size="sm"
+      color="outlined"
+      [href]="file.downloadUrl"
+      target="_blank"
+      rel="noopener"
+    >{{ 'prod-details.instructions-download' | translate }}</zx-button>
+  </zx-inline>
+</zx-inline>

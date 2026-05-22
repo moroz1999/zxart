@@ -11,10 +11,12 @@ The system mirrors the **`ng-zxart/`** Angular 19 frontend (the only non-legacy 
 | GitHub repo | https://github.com/moroz1999/zxart |
 | Angular app | `ng-zxart/` (Angular 19, FSD architecture, standalone components) |
 | Theme tokens | `ng-zxart/src/app/shared/theme/_*.theme.scss` |
-| Design-system docs | `docs/design-system.md`, `docs/styles.md`, `docs/angular.md` |
-| Domain docs | `docs/domain.md` (entities: picture, tune, prod, release, party, author, group, comment) |
+| Design-system docs | `_legacy/docs/design-system.md`, `_legacy/docs/design-system/*.md`, `_legacy/docs/angular.md` |
+| Domain docs | `_legacy/docs/domain.md` (entities: picture, tune, prod, release, party, author, group, comment) |
 | Icon set | `ng-zxart/src/assets/svg/*.svg` (38 SVGs — Material-style icons) |
 | Logo + fonts | `htdocs/images/logo.png`, `htdocs/fonts/pt-sans.*.woff` |
+
+> Last refreshed from upstream `master`: **2026-05-21**.
 
 > All assets in this design system are copies. Anything outside `ng-zxart/` is legacy and should not be reused.
 
@@ -70,12 +72,15 @@ The aesthetic is **utilitarian archive with one dab of brand color**. Think Wiki
 
 ### Typography
 - **PT Sans** body face — humanist sans, slightly warm, designed for screens. Regular + Bold only; no italic, no other weights.
-- Six font tiers: `--font-xs 11` / `sm 13` / `md 14` / `lg 18` / `xl 21` / `xxl 23`. **Whole pixels only**, no rem/em.
-- Three heading levels (`h1`/`h2`/`h3`) — bold, tight line-height (1.2 → 1.3). Body is 1.5.
-- No display fonts, no hand-lettering, no decorative type. The scene name on the logo is the only "branded" lettering.
+- Six font tiers: `--font-xs 11` / `sm 13` / `md 14` / `lg 18` / `xl 21` / `xxl 23`. **Whole pixels only**, no rem/em. Mirrored as `--zx-font-size-*` for component themes.
+- **Current variant system:** `display` (h1) / `headline` (h2) / `title` (h3) / `body` / `bodySm` / `caption` / `label`, paired with tones `primary` / `muted` / `strong` / `link` / `muted-link` / `link-alt` / `danger` / `inherit`. CSS classes: `.zx-display` etc. + `.tone-*`.
+- **Legacy aliases (deprecated):** `zx-heading-1/2/3` still resolve via `--zx-heading-*` vars, but new work should use the variant classes above. Direct typography props (`color`, `font-size`, `font-weight`, `text-align`…) in component SCSS are forbidden upstream.
+- Body 1.5 line-height. Three heading levels — bold, tight (1.2 → 1.3). No display fonts, no hand-lettering, no decorative type.
 
 ### Spacing & layout
 - **Strict 4px grid** (`--space-2..64`). Manual margins between layout siblings are forbidden — use `gap` on flex/grid or the `zx-stack` component.
+- Aliases on top of the same scale: `--gap-sm..xxl`, `--padding-xs..xl`, `--margin-xxs..xxl`, `--border-radius-sm..xl`. Component themes prefer the aliases; raw `--space-*` is fine in ad-hoc HTML cards.
+- **Breakpoints** (upstream SCSS, `vars.scss`): xs 320 / sm 576 / md 768 / lg 992 / xl 1200 / xxl 1400. "Mobile" = `max-width: 767.98px` (portrait + landscape phone); "mobile portrait" = `max-width: 575.98px`.
 - Header, content, player are **horizontally centered, max-width 1900px**. The page can be edge-to-edge above this — there is no fancy background.
 - Sticky desktop header (`position: sticky; top: 0`); fixed on mobile (45px tall).
 - Sticky bottom player covers chiptune playback while users browse.

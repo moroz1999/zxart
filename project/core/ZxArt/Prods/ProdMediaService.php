@@ -161,6 +161,71 @@ readonly class ProdMediaService
         );
     }
 
+    public function buildReleaseInlays(zxReleaseElement $release): ProdReleaseInlaysDto
+    {
+        $releaseTitle = $this->prodInfoBuilder->decodeText((string)$release->getTitle());
+        $releaseUrl = (string)$release->getUrl();
+        $releaseYear = $release->getYear() ?? 0;
+        $releaseTypeLabel = $release->releaseType !== ''
+            ? $this->prodInfoBuilder->translate('zxRelease.type_' . $release->releaseType)
+            : null;
+        $releaseBy = $this->prodInfoBuilder->buildReleaseBy($release);
+
+        $inlays = [];
+        foreach ($release->getFilesList(LinkTypes::INLAY_FILES_SELECTOR->value) as $file) {
+            if (!$file instanceof fileElement) {
+                continue;
+            }
+            $isImage = $file->isImage();
+            $imageUrl = $isImage ? $file->getImageUrl(self::PROD_IMAGE_PRESET) : null;
+            $fullImageUrl = $isImage ? $file->getImageUrl(self::PROD_IMAGE_FULL_PRESET) : null;
+
+            $inlays[] = new ProdReleaseInlayDto(
+                id: $file->getId(),
+                title: $this->decodeText($file->title),
+                imageUrl: $imageUrl,
+                fullImageUrl: $fullImageUrl,
+                downloadUrl: $isImage ? $file->getScreenshotUrl() : $file->getDownloadUrl('view', 'release'),
+                releaseTitle: $releaseTitle,
+                releaseUrl: $releaseUrl,
+                releaseYear: $releaseYear,
+                releaseTypeLabel: $releaseTypeLabel,
+                releaseBy: $releaseBy,
+            );
+        }
+        return new ProdReleaseInlaysDto(inlays: $inlays);
+    }
+
+    public function buildReleaseInstructions(zxReleaseElement $release): ProdReleaseInstructionsDto
+    {
+        $releaseTitle = $this->prodInfoBuilder->decodeText((string)$release->getTitle());
+        $releaseUrl = (string)$release->getUrl();
+        $releaseYear = $release->getYear() ?? 0;
+        $releaseTypeLabel = $release->releaseType !== ''
+            ? $this->prodInfoBuilder->translate('zxRelease.type_' . $release->releaseType)
+            : null;
+        $releaseBy = $this->prodInfoBuilder->buildReleaseBy($release);
+
+        $files = [];
+        foreach ($release->getFilesList(LinkTypes::INFO_FILES_SELECTOR->value) as $file) {
+            if (!$file instanceof fileElement) {
+                continue;
+            }
+            $files[] = new ProdReleaseInstructionFileDto(
+                id: $file->getId(),
+                title: $this->decodeText($file->title),
+                fileName: $file->fileName,
+                downloadUrl: $file->getDownloadUrl('view', 'release'),
+                releaseTitle: $releaseTitle,
+                releaseUrl: $releaseUrl,
+                releaseYear: $releaseYear,
+                releaseTypeLabel: $releaseTypeLabel,
+                releaseBy: $releaseBy,
+            );
+        }
+        return new ProdReleaseInstructionsDto(files: $files);
+    }
+
     /**
      * @param iterable<fileElement> $files
      * @return ProdFileDto[]

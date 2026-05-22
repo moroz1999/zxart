@@ -1,21 +1,21 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {LightboxModule} from 'ng-gallery/lightbox';
+import {Lightbox} from 'ng-gallery/lightbox';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 import {
-  ZxPictureGridSkeletonComponent
+  ZxPictureGridSkeletonComponent,
 } from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
 import {
   PictureGalleryHostComponent,
 } from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {PictureGalleryItem} from '../../../picture-gallery/models/picture-gallery-item';
-import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective} from '../../../../shared/directives/typography/typography.directives';
 import {ProdInlaysApiService} from '../../services/prod-inlays-api.service';
 import {ProdReleaseInlayDto} from '../../models/prod-release-inlay.dto';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
-import {ProdReleaseLabelPipe} from '../../pipes/prod-release-label.pipe';
+import {ZxInlayTileComponent} from '../../../../shared/ui/zx-inlay-tile/zx-inlay-tile.component';
 
 @Component({
   selector: 'zx-prod-inlays-section',
@@ -23,14 +23,12 @@ import {ProdReleaseLabelPipe} from '../../pipes/prod-release-label.pipe';
   imports: [
     CommonModule,
     TranslateModule,
-    LightboxModule,
     InViewportDirective,
     ZxPictureGridSkeletonComponent,
     PictureGalleryHostComponent,
-    TextDirective,
     HeadingDirective,
     ZxStackComponent,
-    ProdReleaseLabelPipe,
+    ZxInlayTileComponent,
   ],
   templateUrl: './zx-prod-inlays-section.component.html',
   styleUrls: ['./zx-prod-inlays-section.component.scss'],
@@ -52,6 +50,7 @@ export class ZxProdInlaysSectionComponent {
   constructor(
     private readonly api: ProdInlaysApiService,
     private readonly gallery: PictureGalleryService,
+    private readonly lightbox: Lightbox,
     private readonly cdr: ChangeDetectorRef,
   ) {}
 
@@ -70,6 +69,14 @@ export class ZxProdInlaysSectionComponent {
       }
       this.cdr.markForCheck();
     });
+  }
+
+  openAt(index: number): void {
+    this.lightbox.open(index, this.galleryId);
+  }
+
+  trackById(_: number, inlay: ProdReleaseInlayDto): number {
+    return inlay.id;
   }
 
   private toGalleryItem(inlay: ProdReleaseInlayDto): PictureGalleryItem {

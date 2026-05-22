@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en" class="light-mode">
+<head>
+<meta charset="utf-8" />
+<title>zx-rating</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="components.css" />
+<style>
+  body { margin: 0; padding: 16px; font-family: var(--font-sans); color: var(--text-color); background: var(--background-page); }
+  .row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px dashed var(--secondary-300); }
+  .row:last-child { border-bottom: 0; }
+  .label { font-family: var(--font-mono); font-size: var(--font-xs); color: var(--text-light-color); min-width: 140px; }
+  .score { font-family: var(--font-mono); font-size: var(--font-xs); color: var(--text-light-color); }
+</style>
+</head>
+<body>
+  <div class="row">
+    <span class="label">empty (0 / 5)</span>
+    <span class="zx-rating">
+      <button class="zx-rating__skip" aria-label="remove vote" disabled>×</button>
+      <span class="zx-rating__stars">
+        <span class="zx-rating__fill" style="width: 0%"></span>
+      </span>
+    </span>
+    <span class="score">0 votes</span>
+  </div>
+
+  <div class="row">
+    <span class="label">average (3.7 / 5)</span>
+    <span class="zx-rating">
+      <button class="zx-rating__skip" aria-label="remove vote">×</button>
+      <span class="zx-rating__stars">
+        <span class="zx-rating__fill" style="width: 74%"></span>
+      </span>
+    </span>
+    <span class="score">42 votes</span>
+  </div>
+
+  <div class="row">
+    <span class="label">high (4.6 / 5)</span>
+    <span class="zx-rating">
+      <button class="zx-rating__skip" aria-label="remove vote">×</button>
+      <span class="zx-rating__stars">
+        <span class="zx-rating__fill" style="width: 92%"></span>
+      </span>
+    </span>
+    <span class="score">73 votes</span>
+  </div>
+
+  <div class="row">
+    <span class="label">+ user vote (4 / 5)</span>
+    <span class="zx-rating">
+      <button class="zx-rating__skip" aria-label="remove vote">×</button>
+      <span class="zx-rating__stars">
+        <span class="zx-rating__fill" style="width: 92%"></span>
+      </span>
+      <span class="zx-rating__user-vote">4</span>
+    </span>
+    <span class="score">73 votes · вы голосовали 4</span>
+  </div>
+
+  <div class="row">
+    <span class="label">full (5 / 5)</span>
+    <span class="zx-rating">
+      <button class="zx-rating__skip" aria-label="remove vote">×</button>
+      <span class="zx-rating__stars">
+        <span class="zx-rating__fill" style="width: 100%"></span>
+      </span>
+      <span class="zx-rating__user-vote">5</span>
+    </span>
+    <span class="score">12 votes</span>
+  </div>
+</body>
+</html>

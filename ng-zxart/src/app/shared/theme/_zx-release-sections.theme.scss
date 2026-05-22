@@ -1,0 +1,36 @@
+:root {
+  /* ── Section header ── */
+  --zx-release-section-heading-border: var(--secondary-200);
+  --zx-release-section-heading-pb: var(--space-8);
+  --zx-release-section-heading-mb: var(--space-12);
+
+  /* ── Media tiles (screenshots / inlays) ── */
+  --zx-release-tile-bg: var(--surface);
+  --zx-release-tile-border: var(--secondary-200);
+  --zx-release-tile-border-hover: var(--primary-500);
+  --zx-release-tile-radius: var(--radius-md);
+  --zx-release-tile-img-bg: var(--secondary-100);
+  --zx-release-tile-meta-border: var(--secondary-200);
+  --zx-release-tile-meta-bg: var(--surface);
+  --zx-release-tile-gap: var(--space-8);
+  --zx-release-tile-screen-min-width: 180px;
+  --zx-release-tile-cover-min-width: 140px;
+  --zx-release-tile-meta-py: var(--space-4);
+  --zx-release-tile-meta-px: var(--space-8);
+
+  /* ── Instruction file rows ── */
+  --zx-release-file-bg: var(--surface);
+  --zx-release-file-border: var(--secondary-200);
+  --zx-release-file-border-hover: var(--primary-400);
+  --zx-release-file-bg-hover: var(--primary-50);
+  --zx-release-file-radius: var(--radius-md);
+  --zx-release-file-icon-bg: var(--secondary-100);
+  --zx-release-file-icon-color: var(--secondary-700);
+  --zx-release-file-icon-radius: var(--radius-sm);
+  --zx-release-file-icon-size: var(--space-40);
+  --zx-release-file-link-color: var(--primary-600);
+  --zx-release-file-gap: var(--space-8);
+  --zx-release-file-py: var(--space-8);
+  --zx-release-file-px: var(--space-12);
+  --zx-release-file-meta-mt: var(--space-2);
+}

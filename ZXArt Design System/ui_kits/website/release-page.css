@@ -18,17 +18,7 @@
   position: relative;
 }
 
-/* ── breadcrumb ── */
-.rp-crumb {
-  font-family: var(--font-mono);
-  font-size: var(--font-xs);
-  color: var(--text-light-color);
-  margin-bottom: 12px;
-  letter-spacing: 0.02em;
-}
-.rp-crumb a { color: inherit; text-decoration: none; }
-.rp-crumb a:hover { color: var(--text-color); text-decoration: underline; }
-.rp-crumb .here { color: var(--text-color); }
+/* ── breadcrumb (uses .zx-breadcrumbs from preview/components.css; nothing to add) ── */
 
 /* ── parent-prod anchor (the key visual cue that this page lives
        inside a prod). Reworded copy: short "К программе" arrow + name. ── */
@@ -111,24 +101,8 @@
 .rp-head__year a { color: inherit; text-decoration: none; }
 .rp-head__year a:hover { color: var(--primary-600); text-decoration: underline; }
 
-/* type pill */
-.rp-type {
-  display: inline-flex; align-items: center;
-  font-size: var(--font-xs);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 2px 8px;
-  border-radius: var(--radius-md);
-  color: #fff;
-  vertical-align: 1px;
-}
-.rp-type--primary      { background: var(--primary-500); }
-.rp-type--primary-deep { background: var(--primary-700); }
-.rp-type--warn         { background: var(--warning-700); color:#fff; }
-.rp-type--warn-soft    { background: var(--warning-400); color: var(--secondary-900); }
-.rp-type--danger       { background: var(--danger-600); }
-.rp-type--neutral      { background: var(--secondary-500); }
+/* type pill is the DS .zx-release-type-badge — vertical nudge to align with title baseline */
+.rp-head__title-row .zx-release-type-badge { vertical-align: 1px; }
 
 /* status chip — uses warn palette but as a thin chip, not a banner */
 .rp-status {
@@ -202,34 +176,12 @@
   display: flex; gap: 12px; flex-wrap: wrap;
 }
 .rp-bar__counters b { color: var(--text-color); font-weight: 700; }
-.rp-bar__actions { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+.rp-bar__actions { margin-left: auto; flex-wrap: wrap; }
 
-/* action buttons */
-.rp-action {
-  display: inline-flex; align-items: center; gap: 6px;
-  font: inherit; font-size: var(--font-sm); font-weight: 700;
-  padding: 8px 14px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--secondary-200);
-  cursor: pointer;
-  background: var(--surface);
-  color: var(--text-color);
-  transition: background var(--animation-sm), border-color var(--animation-sm);
-  font-family: inherit;
-}
-.rp-action:hover { background: var(--secondary-100); }
-.dark-mode .rp-action { background: var(--secondary-200); }
-.dark-mode .rp-action:hover { background: var(--secondary-300); }
-.rp-action--primary {
-  background: var(--primary-500);
-  border-color: var(--primary-600);
-  color: var(--white);
-}
-.rp-action--primary:hover { background: var(--primary-600); }
-.rp-action svg { width: 18px; height: 18px; flex-shrink: 0; }
+/* DS .zx-button overrides: the bar action buttons carry an extra "hint" span. */
+.rp-bar__actions .zx-button { gap: var(--space-4); }
 .rp-action__hint { font-family: var(--font-mono); font-size: var(--font-xs); color: var(--text-light-color); margin-left: 4px; }
-.rp-action--primary .rp-action__hint { color: rgba(255,255,255,0.7); }
-.rp-action--sm { padding: 4px 10px; font-size: var(--font-xs); }
+.zx-button--primary .rp-action__hint { color: rgba(255,255,255,0.7); }
 
 /* ── content stack (no sidebar) ── */
 .rp-content { display: flex; flex-direction: column; gap: 22px; margin-top: 24px; }
@@ -281,7 +233,7 @@
 .dark-mode .rp-contribute { background: var(--secondary-100); border-color: var(--secondary-300); }
 .rp-contribute__title { font-weight: 700; font-size: var(--font-md); margin-bottom: 2px; }
 .rp-contribute__hint { color: var(--text-light-color); font-size: var(--font-sm); }
-.rp-contribute__actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.rp-contribute__actions { flex-wrap: wrap; }
 
 /* short inline empty-state line (for description-only emptiness) */
 .rp-inline-empty {
@@ -632,16 +584,9 @@
   color: var(--text-light-color);
 }
 .rp-modal__close {
-  background: transparent;
-  border: 0;
-  color: var(--text-light-color);
-  cursor: pointer;
-  padding: 4px;
-  border-radius: var(--radius-sm);
-  display: inline-flex;
+  /* layout only; visuals come from .zx-button */
+  margin-left: auto;
 }
-.rp-modal__close:hover { background: var(--secondary-100); color: var(--text-color); }
-.rp-modal__close svg { width: 18px; height: 18px; }
 .rp-modal__body {
   padding: 18px 20px;
   overflow: auto;

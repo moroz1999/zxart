@@ -1,0 +1,10 @@
+:root {
+  /* Top border color separating the bar from the hero. */
+  --zx-release-action-bar-border: var(--secondary-200);
+  /* Top padding of the bar. */
+  --zx-release-action-bar-pt: var(--space-12);
+  /* Gap between bar sections. */
+  --zx-release-action-bar-gap: var(--space-16);
+  /* Rating score color. */
+  --zx-release-action-bar-score-color: var(--warning-700);
+}
