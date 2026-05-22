@@ -9,8 +9,8 @@
   </zx-item-controls>
 
   <zx-inline align="center" spacing="md" [wrap]="true" appText="caption" tone="muted">
-    <span><b>{{ details.downloadsCount }}</b> скачиваний</span>
-    <span><b>{{ details.playsCount }}</b> запусков</span>
+    <span><b>{{ details.downloadsCount }}</b> {{ 'release-details.downloads-label' | translate }}</span>
+    <span><b>{{ details.playsCount }}</b> {{ 'release-details.plays-label' | translate }}</span>
   </zx-inline>
 
   <zx-button-controls align="end" class="rp-actions">
@@ -19,14 +19,17 @@
       [isDownloadable]="details.isDownloadable"
       [playUrl]="details.playUrl"
       [emulatorType]="details.emulatorType"
-    >▶ Запустить</zx-emulator-play-button>
+    >{{ 'release-details.play-online' | translate }}</zx-emulator-play-button>
 
     <zx-button
       *ngIf="details.isDownloadable && details.downloadUrl"
       color="outlined"
       [href]="details.downloadUrl"
       target="_blank"
-    >↓ {{ details.fileName }}</zx-button>
+    >
+      <svg-icon class="rp-actions__download-icon" name="download"></svg-icon>
+      {{ details.fileName }}
+    </zx-button>
   </zx-button-controls>
 
 </zx-inline>

@@ -3,8 +3,8 @@
 <zx-stack spacing="lg">
   <zx-picture-grid-skeleton *ngIf="loading" [count]="6"></zx-picture-grid-skeleton>
 
-  <div *ngIf="error" appText="caption" tone="muted">{{ 'firstpage.error' | translate }}</div>
-  <div *ngIf="!loading && !error && yearGroups.length === 0" appText="caption" tone="muted">{{ 'firstpage.empty' | translate }}</div>
+  <div *ngIf="error" appText="caption" tone="danger">{{ 'firstpage.error' | translate }}</div>
+  <div *ngIf="!loading && !error && yearGroups.length === 0" appText="bodySm" tone="muted">{{ 'firstpage.empty' | translate }}</div>
 
   <ng-container *ngIf="!loading && !error && yearGroups.length > 0">
     <div *ngFor="let group of yearGroups">

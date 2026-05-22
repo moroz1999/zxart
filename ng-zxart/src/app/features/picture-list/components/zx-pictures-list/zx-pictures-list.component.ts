@@ -6,7 +6,7 @@ import {ZxPictureCardComponent} from '../../../../shared/ui/zx-picture-card/zx-p
 import {
   ZxPictureGridSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
-import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxPicturesGridDirective} from '../../../../shared/directives/pictures-grid.directive';
 import {
   PictureGalleryHostComponent

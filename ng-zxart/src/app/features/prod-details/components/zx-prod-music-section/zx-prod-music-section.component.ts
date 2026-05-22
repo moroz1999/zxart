@@ -9,7 +9,8 @@ import {
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxMusicListComponent} from '../../../music-list/components/zx-music-list/zx-music-list.component';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
 import {

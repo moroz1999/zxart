@@ -2,7 +2,7 @@
 
 <zx-picture-grid-skeleton *ngIf="loading" [count]="6"></zx-picture-grid-skeleton>
 
-<div *ngIf="error" appText="caption" tone="muted">{{ 'firstpage.error' | translate }}</div>
+<div *ngIf="error" appText="caption" tone="danger">{{ 'firstpage.error' | translate }}</div>
 
 <div *ngIf="!loading && !error && pictures.length > 0" zxPicturesGrid>
   <zx-picture-card

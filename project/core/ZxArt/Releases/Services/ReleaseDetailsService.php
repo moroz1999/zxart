@@ -78,7 +78,7 @@ readonly class ReleaseDetailsService
             isPlayable: $isPlayable,
             downloadUrl: $isDownloadable && $release->fileName !== '' ? $release->getFileUrl() : null,
             playUrl: $isPlayable ? $release->getPlayUrl($emulatorType === 'usp') : null,
-            fileName: $release->fileName !== '' ? $release->fileName : null,
+            fileName: $release->fileName !== '' ? $this->decodeFileNameForDisplay($release->fileName) : null,
             emulatorType: $emulatorType,
             prodLegalStatus: $release->getLegalStatus(),
             prodExternalLink: '',
@@ -246,7 +246,7 @@ readonly class ReleaseDetailsService
 
             $result[] = new ReleaseFileStructureItemDto(
                 id: (int)$item['id'],
-                fileName: (string)$item['fileName'],
+                fileName: $this->decodeFileNameForDisplay((string)$item['fileName']),
                 size: (int)$item['size'],
                 type: (string)$item['type'],
                 typeLabel: $this->infoBuilder->translate('zxrelease.filetype_' . $item['type']),
@@ -258,5 +258,14 @@ readonly class ReleaseDetailsService
         }
 
         return $result;
+    }
+
+    private function decodeFileNameForDisplay(string $fileName): string
+    {
+        if (!preg_match('/%[0-9A-Fa-f]{2}|\+/', $fileName)) {
+            return $fileName;
+        }
+
+        return urldecode($fileName);
     }
 }

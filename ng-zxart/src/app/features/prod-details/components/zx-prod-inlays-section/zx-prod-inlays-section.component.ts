@@ -11,7 +11,7 @@ import {
 } from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {PictureGalleryItem} from '../../../picture-gallery/models/picture-gallery-item';
-import {HeadingDirective} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {ProdInlaysApiService} from '../../services/prod-inlays-api.service';
 import {ProdReleaseInlayDto} from '../../models/prod-release-inlay.dto';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';

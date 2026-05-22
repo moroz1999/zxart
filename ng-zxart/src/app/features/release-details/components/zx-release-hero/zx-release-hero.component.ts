@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {ReleaseDetailsDto} from '../../models/release-details.dto';
+import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxReleaseTypeBadgeComponent} from '../../../../shared/ui/zx-release-type-badge/zx-release-type-badge.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
@@ -15,6 +16,7 @@ import {ZxReleaseEditingControlsComponent} from '../zx-release-editing-controls/
   imports: [
     CommonModule,
     TranslateModule,
+    ZxButtonComponent,
     ZxReleaseTypeBadgeComponent,
     ZxInlineComponent,
     HeadingDirective,

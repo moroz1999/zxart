@@ -18,12 +18,12 @@
   @if (loading) {
     <zx-search-groups-skeleton [count]="3"></zx-search-groups-skeleton>
   } @else if (searched && groups.length === 0) {
-    <div class="sd-empty">{{ 'header.search.empty' | translate }}</div>
+    <div class="sd-empty" appText="bodySm" tone="muted">{{ 'header.search.empty' | translate }}</div>
   } @else if (groups.length > 0) {
     <div class="sd-results">
       @for (group of groups; track group.type; let gi = $index) {
         <div class="sd-group">
-          <div class="sd-group-caption">{{ 'header.search.type.' + group.type | translate }}</div>
+          <div class="sd-group-caption" appText="label" tone="muted">{{ 'header.search.type.' + group.type | translate }}</div>
           @for (item of group.items; track $index; let ii = $index) {
             @if (item.url) {
               <a [href]="item.url" class="sd-result-item" [class.sd-result-item--focused]="focusedIndex === getItemFlatIndex(gi, ii)">

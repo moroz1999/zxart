@@ -22,11 +22,11 @@
 <ng-template #body>
   <ng-content *ngIf="loading" select="[loadingSkeleton]"></ng-content>
 
-  <div *ngIf="error" class="module-error" appText="caption" tone="muted">
+  <div *ngIf="error" class="module-error" appText="caption" tone="danger">
     {{ 'firstpage.error' | translate }}
   </div>
 
-  <div *ngIf="!loading && !error && empty" class="module-empty" appText="caption" tone="muted">
+  <div *ngIf="!loading && !error && empty" class="module-empty" appText="bodySm" tone="muted">
     {{ 'firstpage.empty' | translate }}
   </div>
 

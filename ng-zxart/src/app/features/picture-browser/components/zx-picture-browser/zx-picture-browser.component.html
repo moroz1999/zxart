@@ -18,8 +18,8 @@
   ></zx-picture-card-skeleton>
 </div>
 
-<div *ngIf="error" appText="caption" tone="muted">{{ 'picture-browser.error' | translate }}</div>
-<div *ngIf="!loading && !error && pictures.length === 0" appText="caption" tone="muted">{{ 'picture-browser.empty' | translate }}</div>
+<div *ngIf="error" appText="caption" tone="danger">{{ 'picture-browser.error' | translate }}</div>
+<div *ngIf="!loading && !error && pictures.length === 0" appText="bodySm" tone="muted">{{ 'picture-browser.empty' | translate }}</div>
 
 <div *ngIf="!loading && !error && pictures.length > 0" zxPicturesGrid>
   <zx-picture-card

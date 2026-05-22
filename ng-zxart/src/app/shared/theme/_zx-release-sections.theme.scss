@@ -4,19 +4,21 @@
   --zx-release-section-heading-pb: var(--space-8);
   --zx-release-section-heading-mb: var(--space-12);
 
-  /* ── Media tiles (screenshots / inlays) ── */
-  --zx-release-tile-bg: var(--surface);
-  --zx-release-tile-border: var(--secondary-200);
-  --zx-release-tile-border-hover: var(--primary-500);
-  --zx-release-tile-radius: var(--radius-md);
-  --zx-release-tile-img-bg: var(--secondary-100);
-  --zx-release-tile-meta-border: var(--secondary-200);
-  --zx-release-tile-meta-bg: var(--surface);
-  --zx-release-tile-gap: var(--space-8);
-  --zx-release-tile-screen-min-width: 180px;
-  --zx-release-tile-cover-min-width: 140px;
-  --zx-release-tile-meta-py: var(--space-4);
-  --zx-release-tile-meta-px: var(--space-8);
+  /* ── Screenshots ── */
+  /* Max width of each release screenshot thumbnail column. */
+  --zx-release-screenshots-thumb-width: 256px;
+  /* Grid gap between release screenshots. */
+  --zx-release-screenshots-grid-gap: var(--gap-sm);
+  /* Corner radius of release screenshot thumbnails. */
+  --zx-release-screenshots-item-radius: var(--radius-sm);
+  /* Gap between controls in the release screenshot hover bar. */
+  --zx-release-screenshots-controls-gap: var(--space-4);
+  /* Padding inside the release screenshot hover bar. */
+  --zx-release-screenshots-controls-padding: var(--space-4);
+  /* Background gradient for the release screenshot hover bar. */
+  --zx-release-screenshots-controls-bg: linear-gradient(transparent, var(--overlay-bg));
+  /* Icon size inside release screenshot control buttons. */
+  --zx-release-screenshots-button-icon-size: 16px;
 
   /* ── File tree ── */
   --zx-release-tree-bg: var(--surface);
@@ -24,9 +26,23 @@
   --zx-release-tree-radius: var(--radius-md);
   --zx-release-tree-row-border: var(--secondary-200);
   --zx-release-tree-row-hover-bg: var(--primary-50);
+  --zx-release-tree-row-py: var(--space-8);
+  --zx-release-tree-row-px: var(--space-16);
+  --zx-release-tree-row-gap: var(--space-16);
+  --zx-release-tree-col-size: 88px;
+  --zx-release-tree-col-type: 128px;
+  --zx-release-tree-col-actions: 168px;
   --zx-release-tree-indent-border: var(--secondary-300);
+  --zx-release-tree-indent-width: var(--space-20);
+  --zx-release-tree-indent-height: var(--space-16);
   --zx-release-tree-icon-color: var(--secondary-500);
-  --zx-release-tree-link-color: var(--primary-600);
+  --zx-release-tree-icon-size: 16px;
+  --zx-release-tree-icon-gap: var(--space-8);
+  --zx-release-tree-folder-color: var(--text-color);
+  --zx-release-tree-meta-color: var(--text-light-color);
+  --zx-release-tree-font-size: var(--zx-font-size-sm);
+  --zx-release-tree-meta-font-size: var(--zx-font-size-xs);
+  --zx-release-tree-font-family: var(--font-mono);
 
   /* ── Instruction file rows ── */
   --zx-release-file-bg: var(--surface);

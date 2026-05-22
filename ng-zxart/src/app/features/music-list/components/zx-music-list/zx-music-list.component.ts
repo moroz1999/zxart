@@ -9,7 +9,7 @@ import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.
 import {
   ZxTuneTableSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-tune-table-skeleton/zx-tune-table-skeleton.component';
-import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {PlayerService} from '../../../player/services/player.service';
 import {MusicListService} from '../../services/music-list.service';
 

@@ -23,7 +23,8 @@ import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagi
 import {
   ZxTextSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-text-skeleton/zx-text-skeleton.component';
-import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxCheckboxFieldComponent} from '../../../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filter-bar.component';
 import {ZxArticlePreviewComponent} from '../../../../shared/ui/zx-article-preview/zx-article-preview.component';
@@ -96,8 +97,6 @@ const INITIAL_SKELETON_GROUPS: SkeletonGroup[] = [
     ZxTuneRowComponent,
     ZxPartyCardComponent,
     TextDirective,
-    TextDirective,
-    HeadingDirective,
     HeadingDirective,
   ],
   templateUrl: './zx-search-results.component.html',

@@ -22,6 +22,33 @@ paths:
           description: Release not found
         '500':
           description: Internal server error
+  /release-file-content/:
+    get:
+      summary: Get formatted content for a parsed zxRelease file
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: fileId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Formatted parsed file content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseFileContent'
+        '400':
+          description: Bad request
+        '404':
+          description: Release or file not found
+        '500':
+          description: Internal server error
 
 components:
   schemas:
@@ -60,6 +87,7 @@ components:
         - instructions
         - votes
         - tabs
+        - fileStructure
       properties:
         id:
           type: integer
@@ -149,6 +177,10 @@ components:
           $ref: 'prod-details.yaml#/components/schemas/ProdVoting'
         tabs:
           $ref: '#/components/schemas/ReleaseTabs'
+        fileStructure:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReleaseFileStructureItem'
 
     ReleaseProdRef:
       type: object
@@ -187,6 +219,7 @@ components:
         - hasScreenshots
         - hasInlays
         - hasInstructions
+        - hasStructure
       properties:
         hasScreenshots:
           type: boolean
@@ -194,3 +227,62 @@ components:
           type: boolean
         hasInstructions:
           type: boolean
+        hasStructure:
+          type: boolean
+
+    ReleaseFileStructureItem:
+      type: object
+      required:
+        - id
+        - fileName
+        - size
+        - type
+        - typeLabel
+        - viewable
+        - viewUrl
+        - downloadUrl
+        - items
+      properties:
+        id:
+          type: integer
+        fileName:
+          type: string
+        size:
+          type: integer
+        type:
+          type: string
+        typeLabel:
+          type: string
+        viewable:
+          type: boolean
+        viewUrl:
+          type: string
+          nullable: true
+        downloadUrl:
+          type: string
+          nullable: true
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReleaseFileStructureItem'
+
+    ReleaseFileContent:
+      type: object
+      required:
+        - id
+        - fileName
+        - size
+        - md5
+        - contentHtml
+      properties:
+        id:
+          type: integer
+        fileName:
+          type: string
+        size:
+          type: integer
+        md5:
+          type: string
+        contentHtml:
+          type: string
+          nullable: true

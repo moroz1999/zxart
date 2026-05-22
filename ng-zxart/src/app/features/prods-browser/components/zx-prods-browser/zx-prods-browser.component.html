@@ -19,8 +19,8 @@
 
 <zx-spinner *ngIf="loading && layout === 'table'" size="xl"></zx-spinner>
 
-<div *ngIf="error" appText="caption" tone="muted">{{ 'prods-browser.error' | translate }}</div>
-<div *ngIf="!loading && !error && prods.length === 0" appText="caption" tone="muted">{{ 'prods-browser.empty' | translate }}</div>
+<div *ngIf="error" appText="caption" tone="danger">{{ 'prods-browser.error' | translate }}</div>
+<div *ngIf="!loading && !error && prods.length === 0" appText="bodySm" tone="muted">{{ 'prods-browser.empty' | translate }}</div>
 
 <ng-container *ngIf="!error">
   <zx-prods-list-view

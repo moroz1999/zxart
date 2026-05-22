@@ -20,7 +20,7 @@ readonly final class ProdTabsRepository extends AbstractRepository
     {
     }
 
-    public function buildTabs(int $prodId): ProdTabsDto
+    public function buildTabs(int $prodId, bool $hasDescription, bool $hasTextInstructions): ProdTabsDto
     {
         return new ProdTabsDto(
             hasReleases: $this->hasStructureLink($prodId, LinkTypes::STRUCTURE),
@@ -34,7 +34,9 @@ readonly final class ProdTabsRepository extends AbstractRepository
             hasSeriesProds: $this->hasParentLink($prodId, LinkTypes::SERIES),
             isInSeries: $this->hasChildLink($prodId, LinkTypes::SERIES),
             hasCompilations: $this->hasSymmetricLink($prodId, LinkTypes::COMPILATION),
+            hasDescription: $hasDescription,
             hasInstructions: $this->hasInstructionLinks($prodId),
+            hasTextInstructions: $hasTextInstructions,
         );
     }
 

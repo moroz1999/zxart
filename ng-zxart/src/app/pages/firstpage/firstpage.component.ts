@@ -16,7 +16,7 @@ import {
 import {ZxInlineComponent} from '../../shared/ui/zx-inline/zx-inline.component';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
-import {HeadingDirective, TextDirective} from '../../shared/directives/typography/typography.directives';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {
   PictureGalleryHostComponent
 } from '../../features/picture-gallery/components/picture-gallery-host/picture-gallery-host.component';

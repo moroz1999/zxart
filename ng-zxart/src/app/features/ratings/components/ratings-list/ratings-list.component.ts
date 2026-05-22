@@ -6,7 +6,8 @@ import {RatingsService} from '../../services/ratings.service';
 import {RatingDto} from '../../models/rating.dto';
 import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
-import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {
   ZxRowSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
@@ -20,7 +21,6 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
     TranslateModule,
     ZxUserComponent,
     ZxTableComponent,
-    TextDirective,
     TextDirective,
     HeadingDirective,
     ZxRowSkeletonComponent,

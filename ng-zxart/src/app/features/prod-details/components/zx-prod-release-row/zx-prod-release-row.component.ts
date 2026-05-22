@@ -13,6 +13,7 @@ import {LightboxModule} from 'ng-gallery/lightbox';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {ProdFileDto} from '../../models/prod-file.dto';
 import {ZxEmulatorPlayButtonComponent} from '../../../../shared/ui/zx-emulator-play-button/zx-emulator-play-button.component';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 
 @Component({
   selector: 'tr[zxProdReleaseRow]',
@@ -28,6 +29,7 @@ import {ZxEmulatorPlayButtonComponent} from '../../../../shared/ui/zx-emulator-p
     ZxReleaseTypeBadgeComponent,
     LightboxModule,
     ZxEmulatorPlayButtonComponent,
+    TextDirective,
   ],
   templateUrl: './zx-prod-release-row.component.html',
   styleUrls: ['./zx-prod-release-row.component.scss'],

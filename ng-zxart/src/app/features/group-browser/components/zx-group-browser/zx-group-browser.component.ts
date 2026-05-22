@@ -8,7 +8,7 @@ import {GroupBrowserService} from '../../services/group-browser.service';
 import {GroupListItem} from '../../models/group-list-item';
 import {GroupFilterOption} from '../../models/group-filter-options';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
-import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {
   ZxFilterPickerComponent,
   ZxFilterPickerItem

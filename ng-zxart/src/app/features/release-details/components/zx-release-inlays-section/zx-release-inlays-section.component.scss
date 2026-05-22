@@ -1,15 +1,3 @@
 :host {
   display: block;
 }
-
-.rp-section-head {
-  padding-bottom: var(--zx-release-section-heading-pb);
-  border-bottom: 1px solid var(--zx-release-section-heading-border);
-  margin-bottom: var(--zx-release-section-heading-mb);
-}
-
-.release-inlays-section__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: var(--space-8);
-}

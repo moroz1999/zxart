@@ -651,6 +651,7 @@
         "rzx": "RZX",
         "graphics": "Gráficos",
         "music": "Música",
+        "description": "Descripción",
         "instructions": "Instrucciones"
       },
       "links": {
@@ -677,7 +678,16 @@
     "delete-confirm-cancel": "Cancelar",
     "file-structure": "Estructura de archivos",
     "file-structure.download": "Descargar",
-    "file-structure.view": "Ver"
+    "file-structure.view": "Ver",
+    "downloads-label": "descargas",
+    "plays-label": "ejecuciones",
+    "play-online": "▶ Jugar online",
+    "description": "Descripción",
+    "hardware-label": "Hardware:",
+    "screenshots": "Capturas del lanzamiento",
+    "inlays": "Carátulas",
+    "instructions": "Instrucciones",
+    "back-to-prod": "volver al programa"
   },
   "release-row": {
     "col-title": "Título",

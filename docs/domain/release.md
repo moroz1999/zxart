@@ -66,6 +66,8 @@ Concrete release (version) of software production. Contains files specific to th
 - **inlayFilesSelector** - inlay files (covers)
 - **infoFilesSelector** - information files
 - **adFilesSelector** - advertising materials
+- Parsed release structure exposes downloadable archive entries. File downloads are triggered from the Angular release details UI as button actions, while file previews are loaded through `/release-file-content/` and rendered in a dialog instead of linking to legacy `viewFile` pages.
+- Parsed release structure file names are URL-decoded for display only; download and preview lookup URLs continue to use the original stored archive entry data.
 
 ### Usage Statistics
 - **downloads** - number of downloads

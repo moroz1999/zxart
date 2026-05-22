@@ -58,6 +58,14 @@ Most CMS objects (controllers, structure elements, actions) use this trait, whic
 ## CMS Core Mechanics
 - **Recursive Deletion**: Method `structureElement::deleteElementData()` automatically deletes all child elements linked via `structure` links (or other links returned by `getDeletionLinkTypes()`). This ensures data integrity without manual recursion in services.
 
+## Text Datachunk Encoding
+
+**All text datachunks (fields declared as `'text'` or `'html'` in `$moduleStructure`) are stored HTML-entity-encoded in the database.** Raw magic-property access on a `structureElement` returns the encoded value (e.g., `&amp;` instead of `&`).
+
+**Rule:** Always decode text datachunks before returning them from a service or building a DTO. Use `ProdInfoBuilder::decodeText()` (which calls `html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8')`) or the equivalent call directly. Never pass raw magic-property strings from `structureElement` to REST DTOs or the Angular frontend without decoding.
+
+Fields that require decoding: `title`, `altTitle`, `description`, `instructions`, `userName`, and any other string field read from a `structureElement` property declared as `'text'` or `'html'` in the module's `$moduleStructure`.
+
 ## Structure Elements and Actions
 - Keep structure elements (`structureElement`) lean by moving business logic into services.
 - Use strict typing instead of `method_exists`. If multiple types share common behavior, introduce a shared interface.

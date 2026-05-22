@@ -1,25 +1,35 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
-import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
-import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
+import {Dialog} from '@angular/cdk/dialog';
+import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ReleaseFileStructureItemDto} from '../../models/release-details.dto';
+import {ZxReleaseSectionHeadComponent} from '../zx-release-section-head/zx-release-section-head.component';
 import {environment} from '../../../../../environments/environment';
+import {
+  FileViewerDialogData,
+  ZxFileViewerDialogComponent,
+} from '../../../../shared/ui/zx-file-viewer-dialog/zx-file-viewer-dialog.component';
+import {ReleaseDetailsApiService} from '../../services/release-details-api.service';
 
 @Component({
   selector: 'zx-release-file-structure',
   standalone: true,
-  imports: [CommonModule, TranslateModule, HeadingDirective, TextDirective, ZxInlineComponent, SvgIconComponent],
+  imports: [CommonModule, TranslateModule, ZxButtonComponent, ZxReleaseSectionHeadComponent, SvgIconComponent],
   templateUrl: './zx-release-file-structure.component.html',
   styleUrl: './zx-release-file-structure.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxReleaseFileStructureComponent implements OnInit {
+  @Input({required: true}) releaseId!: number;
   @Input({required: true}) items!: ReleaseFileStructureItemDto[];
 
-  constructor(private readonly iconReg: SvgIconRegistryService) {}
+  constructor(
+    private readonly iconReg: SvgIconRegistryService,
+    private readonly dialog: Dialog,
+    private readonly api: ReleaseDetailsApiService,
+  ) {}
 
   ngOnInit(): void {
     this.iconReg.loadSvg(`${environment.svgUrl}folder.svg`, 'folder')?.subscribe();
@@ -41,5 +51,38 @@ export class ZxReleaseFileStructureComponent implements OnInit {
 
   range(n: number): number[] {
     return Array.from({length: n});
+  }
+
+  downloadFile(item: ReleaseFileStructureItemDto): void {
+    if (!item.downloadUrl) {
+      return;
+    }
+
+    window.location.assign(item.downloadUrl);
+  }
+
+  openViewer(item: ReleaseFileStructureItemDto): void {
+    if (item.type !== 'file' || !item.viewable) {
+      return;
+    }
+
+    const data: FileViewerDialogData = {
+      fileName: item.fileName,
+      title: item.fileName,
+      contentUrl: this.api.getFileContentUrl(this.releaseId, item.id),
+      contentType: 'html',
+    };
+
+    this.dialog.open<void, FileViewerDialogData, ZxFileViewerDialogComponent>(
+      ZxFileViewerDialogComponent,
+      {
+        data,
+        width: '92vw',
+        maxWidth: '1440px',
+        height: '86vh',
+        panelClass: 'zx-dialog',
+        backdropClass: 'zx-dialog-backdrop',
+      },
+    );
   }
 }

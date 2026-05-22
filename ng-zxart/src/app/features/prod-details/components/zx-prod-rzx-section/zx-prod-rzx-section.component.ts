@@ -10,7 +10,7 @@ import {
   ZxProdFilesListComponent,
 } from '../../../../shared/ui/zx-prod-files-list/zx-prod-files-list.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
-import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {ProdRzxApiService} from '../../services/prod-rzx-api.service';
 import {ProdFileDto} from '../../models/prod-file.dto';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';

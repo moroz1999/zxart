@@ -22,16 +22,19 @@
 
 <zx-inline *ngIf="details.formats.length" class="rp-formats" align="center" spacing="xs" [wrap]="true" appText="label" tone="muted">
   <ng-container *ngFor="let fmt of details.formats; let last = last">
-    <span>{{ fmt.emoji }} {{ fmt.label }}</span><ng-container *ngIf="!last">, </ng-container>
+    <zx-inline class="rp-format" align="center" spacing="xs">
+      <span *ngIf="fmt.emoji">{{ fmt.emoji }}</span>
+      <span>{{ fmt.label }}</span>
+    </zx-inline><ng-container *ngIf="!last">, </ng-container>
   </ng-container>
 </zx-inline>
 
 <zx-inline *ngIf="details.hardware.length" class="rp-hw" align="center" spacing="xs" [wrap]="true">
-  <span appText="bodySm" tone="strong" class="rp-hw-label">Железо:</span>
-  <a
+  <span appText="bodySm" tone="strong" class="rp-hw-label">{{ 'release-details.hardware-label' | translate }}</span>
+  <zx-button
     *ngFor="let hw of details.hardware"
+    color="outlined"
+    size="xs"
     [href]="hw.catalogueUrl"
-    class="rp-hw-chip"
-    appText="caption"
-  >{{ 'hardware.' + hw.id | translate }}</a>
+  >{{ 'hardware.' + hw.id | translate }}</zx-button>
 </zx-inline>

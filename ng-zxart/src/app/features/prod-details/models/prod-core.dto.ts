@@ -80,7 +80,9 @@ export interface ProdTabsDto {
   hasSeriesProds: boolean;
   isInSeries: boolean;
   hasCompilations: boolean;
+  hasDescription: boolean;
   hasInstructions: boolean;
+  hasTextInstructions: boolean;
 }
 
 export interface ProdCoreDto {
@@ -95,9 +97,6 @@ export interface ProdCoreDto {
   legalStatusLabel: string;
   externalLink: string;
   youtubeId: string;
-  description: string;
-  htmlDescription: boolean;
-  instructions: string;
   generatedDescription: string;
   dateCreated: string;
   catalogueYearUrl: string;

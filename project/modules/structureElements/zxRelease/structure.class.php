@@ -17,6 +17,8 @@ use ZxArt\Shared\EntityType;
 use ZxFiles\BasicFile;
 
 /**
+ * @psalm-import-type EngineFileRegistryRow from ZxParsingManager
+ *
  * @property string $title
  * @property string $file
  * @property string $fileName
@@ -267,7 +269,10 @@ class zxReleaseElement extends ZxArtItem implements
         return false;
     }
 
-    public function getReleaseFlatStructure()
+    /**
+     * @psalm-return EngineFileRegistryRow[]|false
+     */
+    public function getReleaseFlatStructure(): array|false
     {
         if ($this->getFilePath()) {
             return $this->getService(ZxParsingManager::class)->getStructureRecordsById($this->getId());

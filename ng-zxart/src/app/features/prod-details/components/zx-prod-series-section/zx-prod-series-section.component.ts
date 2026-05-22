@@ -4,7 +4,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {
   ZxProdsListSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-prods-list-skeleton/zx-prods-list-skeleton.component';
-import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {ZxProdsListComponent} from '../../../../entities/zx-prods-list/zx-prods-list.component';
 import {Observable, of, Subscription} from 'rxjs';
 import {ProdRelatedProdsService} from '../../services/prod-related-prods.service';

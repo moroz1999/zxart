@@ -7,14 +7,12 @@
 
   <zx-release-parent-anchor [prod]="details.prod"></zx-release-parent-anchor>
 
-  <div class="rp-head">
-    <zx-release-hero [details]="details"></zx-release-hero>
-    <zx-release-action-bar [details]="details"></zx-release-action-bar>
-  </div>
+  <zx-release-hero [details]="details"></zx-release-hero>
+  <zx-release-action-bar [details]="details"></zx-release-action-bar>
 
   <zx-stack spacing="xl">
     <section *ngIf="details.description">
-      <h2 appHeading="headline" class="rp-section-heading">Описание</h2>
+      <h2 appHeading="headline">{{ 'release-details.description' | translate }}</h2>
       <p appText="body" [innerHTML]="details.description"></p>
     </section>
 
@@ -35,6 +33,7 @@
 
     <zx-release-file-structure
       *ngIf="details.tabs.hasStructure"
+      [releaseId]="details.id"
       [items]="details.fileStructure">
     </zx-release-file-structure>
 

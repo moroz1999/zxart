@@ -25,6 +25,8 @@ paths:
     $ref: 'element-privileges.yaml#/paths/~1element-privileges~1'
   /prod-details/:
     $ref: 'prod-details.yaml#/paths/~1prod-details~1'
+  /prod-description/:
+    $ref: 'prod-description.yaml#/paths/~1prod-description~1'
   /prod-releases/:
     $ref: 'prod-releases.yaml#/paths/~1prod-releases~1'
   /prod-screenshot-move/:
@@ -41,6 +43,10 @@ paths:
     $ref: 'prod-files.yaml#/paths/~1prod-rzx~1'
   /release-screenshots/:
     $ref: 'prod-files.yaml#/paths/~1release-screenshots~1'
+  /release-details/:
+    $ref: 'release-details.yaml#/paths/~1release-details~1'
+  /release-file-content/:
+    $ref: 'release-details.yaml#/paths/~1release-file-content~1'
   /prod-articles/:
     $ref: 'prod-articles.yaml#/paths/~1prod-articles~1'
   /prod-mentions/:
@@ -81,6 +87,8 @@ components:
       $ref: 'tags.yaml#/components/schemas/TagsPayload'
     ProdCorePayload:
       $ref: 'prod-details.yaml#/components/schemas/ProdCorePayload'
+    ProdDescriptionPayload:
+      $ref: 'prod-description.yaml#/components/schemas/ProdDescriptionPayload'
     ProdReleasesPayload:
       $ref: 'prod-releases.yaml#/components/schemas/ProdReleasesPayload'
     ProdFile:
@@ -97,3 +105,7 @@ components:
       $ref: 'prod-related-prods.yaml#/components/schemas/ProdSummary'
     ProdSummariesPayload:
       $ref: 'prod-related-prods.yaml#/components/schemas/ProdSummariesPayload'
+    ReleaseDetailsPayload:
+      $ref: 'release-details.yaml#/components/schemas/ReleaseDetailsPayload'
+    ReleaseFileContent:
+      $ref: 'release-details.yaml#/components/schemas/ReleaseFileContent'

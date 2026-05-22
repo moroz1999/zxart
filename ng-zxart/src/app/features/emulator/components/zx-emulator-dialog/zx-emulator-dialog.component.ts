@@ -16,7 +16,7 @@ import {DIALOG_DATA, DialogRef} from '@angular/cdk/dialog';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxDialogComponent} from '../../../../shared/ui/zx-dialog/zx-dialog.component';
-import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {EmulatorEngine, EmulatorType} from '../../engines/emulator-engine';
 import {UspEngine} from '../../engines/usp.engine';
 import {Zx81Engine} from '../../engines/zx81.engine';

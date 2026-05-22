@@ -1,29 +1,35 @@
 <section>
-  <zx-inline class="rp-section-head" align="baseline" spacing="sm">
-    <h2 appHeading="headline">Скрины релиза</h2>
-    <span appText="bodySm" tone="muted">{{ screenshots.length }}</span>
-  </zx-inline>
+  <zx-release-section-head
+    titleKey="release-details.screenshots"
+    [count]="screenshots.length">
+  </zx-release-section-head>
 
   <zx-picture-gallery-host></zx-picture-gallery-host>
 
-  <div class="rp-tile-grid rp-tile-grid--screens">
+  <div class="release-screenshots-section__grid">
     <figure
       *ngFor="let file of screenshots; let i = index; trackBy: trackById"
-      class="rp-tile"
+      class="release-screenshots-section__item"
     >
-      <div class="rp-tile__img">
+      <div class="release-screenshots-section__thumb-wrap">
         <img
           *ngIf="file.imageUrl"
+          class="release-screenshots-section__thumb"
           loading="lazy"
           [src]="file.imageUrl"
           [alt]="file.title"
           [lightbox]="i"
           [gallery]="galleryId"
         />
+        <div class="release-screenshots-section__controls">
+          <zx-button
+            size="xs"
+            color="secondary"
+            [href]="file.downloadUrl"
+            [attr.aria-label]="'prod-details.screenshot-download' | translate"
+          ><svg-icon name="download" class="release-screenshots-section__btn-icon"></svg-icon></zx-button>
+        </div>
       </div>
-      <figcaption class="rp-tile__meta">
-        <span class="rp-tile__label" appText="caption">{{ file.title || file.fileName }}</span>
-      </figcaption>
     </figure>
   </div>
 </section>

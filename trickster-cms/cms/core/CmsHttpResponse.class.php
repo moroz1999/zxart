@@ -40,7 +40,7 @@ class CmsHttpResponse
         $this->setStatusCode('200');
     }
 
-    public static function getInstance()
+    public static function getInstance(): self
     {
         if (!self::$instance) {
             $className = __CLASS__;

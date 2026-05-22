@@ -1,8 +1,8 @@
 <section>
-  <zx-inline class="rp-section-head" align="baseline" spacing="sm">
-    <h2 appHeading="headline">{{ 'release-details.file-structure' | translate }}</h2>
-    <span appText="bodySm" tone="muted">{{ countItems(items) }}</span>
-  </zx-inline>
+  <zx-release-section-head
+    titleKey="release-details.file-structure"
+    [count]="countItems(items)">
+  </zx-release-section-head>
 
   <div class="rp-tree">
     <ng-container *ngTemplateOutlet="rowsTemplate; context: {items: items, depth: 0}"></ng-container>
@@ -21,7 +21,9 @@
         </span>
         <ng-container *ngIf="item.type === 'file'; else notFile">
           <span class="rp-tree__name--file">
-            <a *ngIf="item.viewUrl; else plainFile" [href]="item.viewUrl">{{ item.fileName }}</a>
+            <ng-container *ngIf="item.viewable; else plainFile">
+              <zx-button color="transparent" size="xs" (click)="openViewer(item)">{{ item.fileName }}</zx-button>
+            </ng-container>
             <ng-template #plainFile>{{ item.fileName }}</ng-template>
           </span>
         </ng-container>
@@ -32,14 +34,24 @@
       <div class="rp-tree__size">{{ item.type !== 'folder' ? item.size : '' }}</div>
       <div class="rp-tree__type">{{ item.typeLabel }}</div>
       <div class="rp-tree__actions">
-        <a *ngIf="item.downloadUrl" [href]="item.downloadUrl">
-          <svg-icon name="download"></svg-icon>
-          {{ 'release-details.file-structure.download' | translate }}
-        </a>
-        <a *ngIf="item.viewUrl && item.type === 'file'" [href]="item.viewUrl">
-          <svg-icon name="eye"></svg-icon>
+        <zx-button
+          *ngIf="item.viewable && item.type === 'file'"
+          color="transparent"
+          size="xs"
+          (click)="openViewer(item)"
+        >
+          <svg-icon class="rp-tree__action-icon" name="eye"></svg-icon>
           {{ 'release-details.file-structure.view' | translate }}
-        </a>
+        </zx-button>
+        <zx-button
+          *ngIf="item.downloadUrl"
+          color="transparent"
+          size="xs"
+          (click)="downloadFile(item)"
+        >
+          <svg-icon class="rp-tree__action-icon" name="download"></svg-icon>
+          {{ 'release-details.file-structure.download' | translate }}
+        </zx-button>
       </div>
     </div>
     <ng-container *ngIf="item.items?.length">

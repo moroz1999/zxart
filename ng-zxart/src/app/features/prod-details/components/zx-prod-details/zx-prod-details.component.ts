@@ -7,7 +7,7 @@ import {
 } from '../../../../shared/ui/zx-skeleton/components/zx-prod-details-skeleton/zx-prod-details-skeleton.component';
 import {ZxYoutubeEmbedComponent} from '../../../../shared/ui/zx-youtube-embed/zx-youtube-embed.component';
 import {ProdCoreApiService} from '../../services/prod-core-api.service';
-import {ProdCoreDto, ProdTabsDto} from '../../models/prod-core.dto';
+import {ProdCoreDto} from '../../models/prod-core.dto';
 import {ZxProdHeroComponent} from '../zx-prod-hero/zx-prod-hero.component';
 import {ZxProdDescriptionComponent} from '../zx-prod-description/zx-prod-description.component';
 import {ZxProdInstructionsComponent} from '../zx-prod-instructions/zx-prod-instructions.component';
@@ -114,11 +114,11 @@ export class ZxProdDetailsComponent implements OnInit {
     }
   }
 
-  getDiscussionTabIndex(tabs: ProdTabsDto): number {
+  getDiscussionTabIndex(core: ProdCoreDto): number {
     let index = 0;
-    if (tabs.hasReleases) index++;
-    if (tabs.hasInlays || tabs.hasMaps || tabs.hasRzx || tabs.hasPictures || tabs.hasTunes || tabs.hasInstructions) index++;
-    if (tabs.hasArticles || tabs.hasSeriesProds || tabs.isInSeries || tabs.hasCompilations) index++;
+    if (core.tabs.hasReleases) index++;
+    if (core.tabs.hasDescription || core.tabs.hasInlays || core.tabs.hasMaps || core.tabs.hasRzx || core.tabs.hasPictures || core.tabs.hasTunes || core.tabs.hasInstructions || core.tabs.hasTextInstructions) index++;
+    if (core.tabs.hasArticles || core.tabs.hasSeriesProds || core.tabs.isInSeries || core.tabs.hasCompilations) index++;
     return index;
   }
 

@@ -652,6 +652,7 @@
         "rzx": "RZX",
         "graphics": "Графика",
         "music": "Музыка",
+        "description": "Описание",
         "instructions": "Инструкции"
       },
       "links": {
@@ -678,7 +679,16 @@
     "delete-confirm-cancel": "Отмена",
     "file-structure": "Структура файлов",
     "file-structure.download": "Скачать",
-    "file-structure.view": "Просмотреть"
+    "file-structure.view": "Просмотреть",
+    "downloads-label": "скачиваний",
+    "plays-label": "запусков",
+    "play-online": "▶ Запустить",
+    "description": "Описание",
+    "hardware-label": "Железо:",
+    "screenshots": "Скрины релиза",
+    "inlays": "Обложки",
+    "instructions": "Инструкция",
+    "back-to-prod": "к программе"
   },
   "release-row": {
     "col-title": "Название",

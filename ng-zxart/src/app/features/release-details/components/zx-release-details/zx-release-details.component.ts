@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
 import {shareReplay} from 'rxjs/operators';
 import {ReleaseDetailsDto} from '../../models/release-details.dto';
@@ -24,6 +25,7 @@ import {ZxReleaseFileStructureComponent} from '../zx-release-file-structure/zx-r
   standalone: true,
   imports: [
     CommonModule,
+    TranslateModule,
     ZxReleaseDetailsSkeletonComponent,
     ZxReleaseParentAnchorComponent,
     ZxReleaseHeroComponent,

@@ -14,4 +14,11 @@ export class ReleaseDetailsApiService {
       catchError(() => of(null)),
     );
   }
+
+  getFileContentUrl(releaseId: number, fileId: number): string {
+    const params = new HttpParams()
+      .set('id', String(releaseId))
+      .set('fileId', String(fileId));
+    return `/release-file-content/?${params.toString()}`;
+  }
 }
