@@ -1,0 +1,90 @@
+.rp-tree {
+  background: var(--zx-release-tree-bg);
+  border: 1px solid var(--zx-release-tree-border);
+  border-radius: var(--zx-release-tree-radius);
+  overflow: hidden;
+  font-size: var(--zx-release-tree-font-size);
+}
+
+.rp-tree__row {
+  display: grid;
+  grid-template-columns: 1fr var(--zx-release-tree-col-size) var(--zx-release-tree-col-type) var(--zx-release-tree-col-actions);
+  align-items: center;
+  padding: var(--zx-release-tree-row-py) var(--zx-release-tree-row-px);
+  border-bottom: 1px solid var(--zx-release-tree-row-border);
+  gap: var(--zx-release-tree-row-gap);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  &:hover {
+    background: var(--zx-release-tree-row-hover-bg);
+  }
+}
+
+.rp-tree__name {
+  display: flex;
+  align-items: center;
+  font-family: var(--zx-release-tree-font-family);
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rp-tree__indent {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.rp-tree__indent-rule {
+  display: inline-block;
+  width: var(--zx-release-tree-indent-width);
+  height: var(--zx-release-tree-indent-height);
+  border-left: 1px dashed var(--zx-release-tree-indent-border);
+}
+
+.rp-tree__icon {
+  display: inline-flex;
+  width: var(--zx-release-tree-icon-size);
+  height: var(--zx-release-tree-icon-size);
+  margin-right: var(--zx-release-tree-icon-gap);
+  color: var(--zx-release-tree-icon-color);
+  flex-shrink: 0;
+
+  svg-icon {
+    width: var(--zx-release-tree-icon-size);
+    height: var(--zx-release-tree-icon-size);
+  }
+}
+
+
+.rp-tree__name--folder,
+.rp-tree__name--zip {
+  color: var(--zx-release-tree-folder-color);
+  font-weight: 700;
+}
+
+.rp-tree__size {
+  text-align: right;
+  color: var(--zx-release-tree-meta-color);
+  font-family: var(--zx-release-tree-font-family);
+  font-size: var(--zx-release-tree-meta-font-size);
+}
+
+.rp-tree__type {
+  color: var(--zx-release-tree-meta-color);
+  font-size: var(--zx-release-tree-meta-font-size);
+}
+
+.rp-tree__actions {
+  display: flex;
+  gap: var(--space-16);
+  justify-content: flex-end;
+}
+
+.rp-tree__action-icon {
+  width: var(--zx-release-tree-icon-size);
+  height: var(--zx-release-tree-icon-size);
+}

@@ -66,6 +66,8 @@ Concrete release (version) of software production. Contains files specific to th
 - **inlayFilesSelector** - inlay files (covers)
 - **infoFilesSelector** - information files
 - **adFilesSelector** - advertising materials
+- Parsed release structure exposes downloadable archive entries. File downloads are triggered from the Angular release details UI as button actions, while file previews are loaded through `/release-file-content/` and rendered in a dialog instead of linking to legacy `viewFile` pages.
+- Parsed release structure file names are URL-decoded for display only; download and preview lookup URLs continue to use the original stored archive entry data.
 
 ### Usage Statistics
 - **downloads** - number of downloads
@@ -100,6 +102,7 @@ Determined by combination of:
 - Prod details release rows pass the ZIP play URL to USP and the first runnable file URL to non-USP emulators.
 - USP uses a 960x720 canvas by default, exactly double the 480x360 emulator viewport.
 - Emulator screenshots launched from prod details release rows are saved to the parent prod, not to the release.
+- Emulator screenshots launched from the release details page are saved directly to the release. The `screenshotUploadUrl` and `canUploadScreenshot` fields are included in the release details API response.
 
 ### Constraints and Rules
 1. Release must always have parent zxProd

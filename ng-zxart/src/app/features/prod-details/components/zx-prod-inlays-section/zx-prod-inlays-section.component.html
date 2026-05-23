@@ -12,23 +12,12 @@
       <zx-picture-gallery-host></zx-picture-gallery-host>
 
       <div class="prod-inlays-section__grid">
-        <figure
-          *ngFor="let inlay of inlays; let i = index"
-          class="prod-inlays-section__item"
-        >
-          <img
-            *ngIf="inlay.imageUrl"
-            class="prod-inlays-section__thumb"
-            loading="lazy"
-            [src]="inlay.imageUrl"
-            [alt]="inlay.title"
-            [lightbox]="i"
-            [gallery]="galleryId"
-          />
-          <figcaption appText="caption" tone="muted">
-            <a [href]="inlay.releaseUrl">{{ inlay | prodReleaseLabel }}</a>
-          </figcaption>
-        </figure>
+        <zx-inlay-tile
+          *ngFor="let inlay of inlays; let i = index; trackBy: trackById"
+          [inlay]="inlay"
+          [showReleaseInfo]="true"
+          (imageClick)="openAt(i)"
+        ></zx-inlay-tile>
       </div>
     </ng-container>
   </ng-container>

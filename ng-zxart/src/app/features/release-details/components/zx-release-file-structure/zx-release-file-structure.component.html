@@ -1,0 +1,61 @@
+<section>
+  <zx-release-section-head
+    titleKey="release-details.file-structure"
+    [count]="countItems(items)">
+  </zx-release-section-head>
+
+  <div class="rp-tree">
+    <ng-container *ngTemplateOutlet="rowsTemplate; context: {items: items, depth: 0}"></ng-container>
+  </div>
+</section>
+
+<ng-template #rowsTemplate let-items="items" let-depth="depth">
+  <ng-container *ngFor="let item of items">
+    <div class="rp-tree__row">
+      <div class="rp-tree__name">
+        <span class="rp-tree__indent">
+          <span *ngFor="let _ of range(depth)" class="rp-tree__indent-rule"></span>
+        </span>
+        <span class="rp-tree__icon">
+          <svg-icon [name]="getIcon(item)"></svg-icon>
+        </span>
+        <ng-container *ngIf="item.type === 'file'; else notFile">
+          <span class="rp-tree__name--file">
+            <ng-container *ngIf="item.viewable; else plainFile">
+              <zx-button color="transparent" size="xs" (click)="openViewer(item)">{{ item.fileName }}</zx-button>
+            </ng-container>
+            <ng-template #plainFile>{{ item.fileName }}</ng-template>
+          </span>
+        </ng-container>
+        <ng-template #notFile>
+          <span [ngClass]="item.type === 'zip' ? 'rp-tree__name--zip' : 'rp-tree__name--folder'">{{ item.fileName }}</span>
+        </ng-template>
+      </div>
+      <div class="rp-tree__size">{{ item.type !== 'folder' ? item.size : '' }}</div>
+      <div class="rp-tree__type">{{ item.typeLabel }}</div>
+      <div class="rp-tree__actions">
+        <zx-button
+          *ngIf="item.viewable && item.type === 'file'"
+          color="transparent"
+          size="xs"
+          (click)="openViewer(item)"
+        >
+          <svg-icon class="rp-tree__action-icon" name="eye"></svg-icon>
+          {{ 'release-details.file-structure.view' | translate }}
+        </zx-button>
+        <zx-button
+          *ngIf="item.downloadUrl"
+          color="transparent"
+          size="xs"
+          (click)="downloadFile(item)"
+        >
+          <svg-icon class="rp-tree__action-icon" name="download"></svg-icon>
+          {{ 'release-details.file-structure.download' | translate }}
+        </zx-button>
+      </div>
+    </div>
+    <ng-container *ngIf="item.items?.length">
+      <ng-container *ngTemplateOutlet="rowsTemplate; context: {items: item.items, depth: depth + 1}"></ng-container>
+    </ng-container>
+  </ng-container>
+</ng-template>

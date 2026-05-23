@@ -1,0 +1,16 @@
+:host {
+  display: contents;
+}
+
+.prod-people-row__link {
+  color: var(--zx-prod-people-row-link-color);
+  text-decoration: underline;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.prod-people-row__sep {
+  color: var(--zx-prod-people-row-sep-color);
+}

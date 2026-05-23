@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" class="light-mode">
+<head>
+<meta charset="utf-8" />
+<title>zx-breadcrumbs</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="components.css" />
+<style>
+  body { margin: 0; padding: 16px; font-family: var(--font-sans); color: var(--text-color); background: var(--background-page); }
+  .demo { padding: 12px 0; border-bottom: 1px dashed var(--secondary-300); }
+  .demo:last-child { border-bottom: 0; }
+  h4 {
+    margin: 0 0 6px; font-size: var(--font-sm); font-weight: 700;
+    color: var(--text-light-color); font-family: var(--font-mono);
+    text-transform: lowercase; letter-spacing: .04em;
+  }
+</style>
+</head>
+<body>
+  <div class="demo">
+    <h4>shallow — entity catalogue</h4>
+    <nav class="zx-breadcrumbs" aria-label="breadcrumb">
+      <a href="#">Главная</a> <span class="sep">/</span>
+      <a href="#">Софт</a> <span class="sep">/</span>
+      <span class="here">Игры</span>
+    </nav>
+  </div>
+
+  <div class="demo">
+    <h4>deep — prod detail</h4>
+    <nav class="zx-breadcrumbs" aria-label="breadcrumb">
+      <a href="#">Главная</a> <span class="sep">/</span>
+      <a href="#">Софт</a> <span class="sep">/</span>
+      <a href="#">Игры</a> <span class="sep">/</span>
+      <a href="#">Приключения</a> <span class="sep">/</span>
+      <a href="#">Квесты-головоломки</a> <span class="sep">/</span>
+      <span class="here">Crystal Kingdom Dizzy</span>
+    </nav>
+  </div>
+
+  <div class="demo">
+    <h4>release — nested under prod</h4>
+    <nav class="zx-breadcrumbs" aria-label="breadcrumb">
+      <a href="#">Главная</a> <span class="sep">/</span>
+      <a href="#">Софт</a> <span class="sep">/</span>
+      <a href="#">Игры</a> <span class="sep">/</span>
+      <a href="#">Crystal Kingdom Dizzy</a> <span class="sep">/</span>
+      <span class="here">Релиз — Scorpion Soft, 1995</span>
+    </nav>
+  </div>
+</body>
+</html>

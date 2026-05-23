@@ -115,7 +115,7 @@
         <zx-text-skeleton *ngIf="optionsLoading" [count]="3"></zx-text-skeleton>
 
         <div class="player-error" *ngIf="optionsError">
-          <span appText="body">{{ 'player.filters.loadError' | translate }}</span>
+          <span appText="bodySm" tone="danger">{{ 'player.filters.loadError' | translate }}</span>
         </div>
 
         <div class="player-presets" *ngIf="options && !optionsLoading">
@@ -212,10 +212,10 @@
           </div>
           <div class="player-field player-field--bottom">
             <zx-checkbox-field
-              class="player-checkbox-caption"
-              [label]="'player.filters.unvotedOnly' | translate"
               formControlName="unvotedOnly"
-            ></zx-checkbox-field>
+            >
+              <span appText="caption" tone="muted">{{ 'player.filters.unvotedOnly' | translate }}</span>
+            </zx-checkbox-field>
           </div>
         </div>
 

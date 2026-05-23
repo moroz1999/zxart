@@ -1,0 +1,15 @@
+:host {
+  display: block;
+  padding-top: var(--zx-release-action-bar-pt);
+  border-top: 1px solid var(--zx-release-action-bar-border);
+  margin-bottom: var(--zx-release-action-bar-mb);
+}
+
+.rp-actions {
+  margin-left: auto;
+}
+
+.rp-actions__download-icon {
+  width: var(--zx-release-action-bar-download-icon-size);
+  height: var(--zx-release-action-bar-download-icon-size);
+}

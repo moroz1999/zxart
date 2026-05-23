@@ -40,6 +40,8 @@ readonly class ProdCoreService
         $theme = $this->infoBuilder->resolveCurrentTheme();
         $legalStatus = $element->getLegalStatus();
         $year = $element->year;
+        $hasDescription = $element->getDescription() !== '';
+        $hasTextInstructions = $element->instructions !== '';
 
         return new ProdCoreDto(
             elementId: $element->getId(),
@@ -53,9 +55,6 @@ readonly class ProdCoreService
             legalStatusLabel: $this->infoBuilder->translate('legalstatus.' . $legalStatus),
             externalLink: $element->externalLink,
             youtubeId: $element->youtubeId,
-            description: $element->getDescription(),
-            htmlDescription: $element->isHtmlDescription(),
-            instructions: $element->instructions,
             generatedDescription: (string)$element->getGeneratedDescription(),
             dateCreated: $element->dateCreated,
             catalogueYearUrl: $year > 0 ? $element->getCatalogueUrl(['years' => $year]) : '',
@@ -70,7 +69,7 @@ readonly class ProdCoreService
             tags: $this->buildTags($element),
             voting: $this->buildVoting($element),
             submitter: $this->buildSubmitter($element),
-            tabs: $this->prodTabsRepository->buildTabs($element->getId()),
+            tabs: $this->prodTabsRepository->buildTabs($element->getId(), $hasDescription, $hasTextInstructions),
         );
     }
 

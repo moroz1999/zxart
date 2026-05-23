@@ -38,8 +38,25 @@ function ProdPage() {
 
       {/* HERO — from Variant A, no sidebar */}
       <div className="va-hero">
-        <div className="va-hero__cover">
+        <div className="va-hero__cover va-hero__cover--video" role="button" tabIndex={0}
+             onClick={(e) => {
+               const wrap = e.currentTarget;
+               if (wrap.dataset.playing) return;
+               wrap.dataset.playing = "1";
+               wrap.innerHTML = '<iframe width="100%" height="100%" src="https://www.youtube-nocookie.com/embed/8a4DjcKdpHU?autoplay=1&rel=0" title="Crystal Kingdom Dizzy — longplay" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen style="border:0;width:100%;height:100%;display:block"></iframe>';
+             }}>
           <ZxScreen seed={42} palette="forest" />
+          <div className="va-hero__yt-grad"></div>
+          <div className="va-hero__yt-play" aria-label="Смотреть на YouTube">
+            <svg width="48" height="34" viewBox="0 0 68 48" aria-hidden="true">
+              <path d="M66.5 7.7c-.8-2.9-3-5.2-5.9-6C55.4.3 34 0 34 0S12.6.3 7.4 1.7C4.5 2.5 2.3 4.8 1.5 7.7 0 13 0 24 0 24s0 11 1.5 16.3c.8 2.9 3 5.2 5.9 6C12.6 47.7 34 48 34 48s21.4-.3 26.6-1.7c2.9-.8 5.1-3.1 5.9-6C68 35 68 24 68 24s0-11-1.5-16.3z" fill="#f00"/>
+              <path d="M27 34l18-10-18-10v20z" fill="#fff"/>
+            </svg>
+          </div>
+          <div className="va-hero__yt-meta">
+            <span className="va-hero__yt-badge">YouTube</span>
+            <span>Longplay · 38:24</span>
+          </div>
           <div className="va-hero__shots">📷 {SCREENS.length} скринов</div>
         </div>
         <div>

@@ -1,3 +1,4 @@
+<zx-picture-gallery-host></zx-picture-gallery-host>
 <ng-container *ngIf="initialLoading; else loadedTpl">
   <div class="zx-search-results__skeleton-filters">
     <zx-row-skeleton [count]="6"></zx-row-skeleton>
@@ -27,7 +28,7 @@
 
 <ng-template #loadedTpl>
   <ng-container *ngIf="error; else dataTpl">
-    <p appText="body" class="zx-search-results__error">{{ 'search.error' | translate }}</p>
+    <p appText="body" tone="danger" class="zx-search-results__error">{{ 'search.error' | translate }}</p>
   </ng-container>
 
   <ng-template #dataTpl>
@@ -135,7 +136,7 @@
       </ng-container>
 
       <ng-template #emptyTpl>
-        <p appText="body" class="zx-search-results__empty">{{ 'search.empty' | translate }}</p>
+        <p appText="bodySm" tone="muted" class="zx-search-results__empty">{{ 'search.empty' | translate }}</p>
       </ng-template>
 
       <div *ngIf="pageLoading" class="zx-search-results__overlay" aria-live="polite">

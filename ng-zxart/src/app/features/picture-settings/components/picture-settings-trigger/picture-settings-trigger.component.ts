@@ -8,7 +8,7 @@ import {PictureSettingsService} from '../../services/picture-settings.service';
 import {PictureMode, PictureSettings} from '../../models/picture-settings';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
-import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxHeaderPopoverComponent} from '../../../../shared/ui/zx-header-popover/zx-header-popover.component';
 import {environment} from '../../../../../environments/environment';
 

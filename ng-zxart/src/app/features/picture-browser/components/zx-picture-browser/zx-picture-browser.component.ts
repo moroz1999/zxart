@@ -6,7 +6,7 @@ import {ZxPictureCardComponent} from '../../../../shared/ui/zx-picture-card/zx-p
 import {
   ZxPictureCardSkeletonComponent
 } from '../../../../shared/ui/zx-picture-card-skeleton/zx-picture-card-skeleton.component';
-import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxPicturesGridDirective} from '../../../../shared/directives/pictures-grid.directive';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
 import {ZxSortSelectComponent} from '../../../../shared/ui/zx-sort-select/zx-sort-select.component';

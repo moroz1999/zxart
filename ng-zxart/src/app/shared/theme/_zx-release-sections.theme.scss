@@ -1,0 +1,78 @@
+:root {
+  /* ── Section header ── */
+  --zx-release-section-heading-border: var(--secondary-200);
+  --zx-release-section-heading-pb: var(--space-8);
+  --zx-release-section-heading-mb: var(--space-12);
+
+  /* ── Screenshots ── */
+  /* Max width of each release screenshot thumbnail column. */
+  --zx-release-screenshots-thumb-width: 256px;
+  /* Grid gap between release screenshots. */
+  --zx-release-screenshots-grid-gap: var(--gap-sm);
+  /* Corner radius of release screenshot thumbnails. */
+  --zx-release-screenshots-item-radius: var(--radius-sm);
+  /* Gap between controls in the release screenshot hover bar. */
+  --zx-release-screenshots-controls-gap: var(--space-4);
+  /* Padding inside the release screenshot hover bar. */
+  --zx-release-screenshots-controls-padding: var(--space-4);
+  /* Background gradient for the release screenshot hover bar. */
+  --zx-release-screenshots-controls-bg: linear-gradient(transparent, var(--overlay-bg));
+  /* Icon size inside release screenshot control buttons. */
+  --zx-release-screenshots-button-icon-size: 16px;
+
+  /* ── Inlays ── */
+  /* Max width of each release inlay thumbnail column. */
+  --zx-release-inlays-thumb-width: 192px;
+  /* Grid gap between release inlay thumbnails. */
+  --zx-release-inlays-grid-gap: var(--gap-sm);
+  /* Corner radius of release inlay thumbnails. */
+  --zx-release-inlays-item-radius: var(--radius-sm);
+  /* Gap between controls in the release inlay hover bar. */
+  --zx-release-inlays-controls-gap: var(--space-4);
+  /* Padding inside the release inlay hover bar. */
+  --zx-release-inlays-controls-padding: var(--space-4);
+  /* Background gradient for the release inlay hover bar. */
+  --zx-release-inlays-controls-bg: linear-gradient(transparent, var(--overlay-bg));
+  /* Icon size inside release inlay control buttons. */
+  --zx-release-inlays-button-icon-size: 16px;
+
+  /* ── File tree ── */
+  --zx-release-tree-bg: var(--surface);
+  --zx-release-tree-border: var(--secondary-200);
+  --zx-release-tree-radius: var(--radius-md);
+  --zx-release-tree-row-border: var(--secondary-200);
+  --zx-release-tree-row-hover-bg: var(--primary-50);
+  --zx-release-tree-row-py: var(--space-8);
+  --zx-release-tree-row-px: var(--space-16);
+  --zx-release-tree-row-gap: var(--space-16);
+  --zx-release-tree-col-size: 88px;
+  --zx-release-tree-col-type: 128px;
+  --zx-release-tree-col-actions: 168px;
+  --zx-release-tree-indent-border: var(--secondary-300);
+  --zx-release-tree-indent-width: var(--space-20);
+  --zx-release-tree-indent-height: var(--space-16);
+  --zx-release-tree-icon-color: var(--secondary-500);
+  --zx-release-tree-icon-size: 16px;
+  --zx-release-tree-icon-gap: var(--space-8);
+  --zx-release-tree-folder-color: var(--text-color);
+  --zx-release-tree-meta-color: var(--text-light-color);
+  --zx-release-tree-font-size: var(--zx-font-size-sm);
+  --zx-release-tree-meta-font-size: var(--zx-font-size-xs);
+  --zx-release-tree-font-family: var(--font-mono);
+
+  /* ── Instruction file rows ── */
+  --zx-release-file-bg: var(--surface);
+  --zx-release-file-border: var(--secondary-200);
+  --zx-release-file-border-hover: var(--primary-400);
+  --zx-release-file-bg-hover: var(--primary-50);
+  --zx-release-file-radius: var(--radius-md);
+  --zx-release-file-icon-bg: var(--secondary-100);
+  --zx-release-file-icon-color: var(--secondary-700);
+  --zx-release-file-icon-radius: var(--radius-sm);
+  --zx-release-file-icon-size: var(--space-40);
+  --zx-release-file-link-color: var(--primary-600);
+  --zx-release-file-gap: var(--space-8);
+  --zx-release-file-py: var(--space-8);
+  --zx-release-file-px: var(--space-12);
+  --zx-release-file-meta-mt: var(--space-2);
+}

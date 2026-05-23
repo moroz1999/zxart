@@ -28,20 +28,10 @@
   margin-bottom: var(--space-4);
 }
 
-.lt-error {
-  color: var(--zx-login-trigger-error-color);
-  font-size: var(--zx-login-trigger-error-font-size);
-}
-
 .lt-field {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-}
-
-.lt-label {
-  font-size: var(--zx-login-trigger-label-font-size);
-  color: var(--zx-login-trigger-label-color);
 }
 
 .lt-input {
@@ -69,8 +59,6 @@
   align-items: center;
   gap: var(--space-8);
   cursor: pointer;
-  font-size: var(--zx-login-trigger-label-font-size);
-  color: var(--zx-login-trigger-label-color);
 }
 
 .lt-links {
@@ -79,6 +67,3 @@
   gap: var(--space-4);
 }
 
-.lt-link {
-  font-size: var(--zx-login-trigger-link-font-size);
-}

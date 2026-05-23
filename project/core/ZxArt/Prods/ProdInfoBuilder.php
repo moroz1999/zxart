@@ -5,16 +5,19 @@ declare(strict_types=1);
 namespace ZxArt\Prods;
 
 use authorElement;
+use authorAliasElement;
 use DesignTheme;
 use DesignThemesManager;
 use groupElement;
 use partyElement;
 use translationsManager;
+use ZxArt\Prods\Dto\ProdAuthorInfoDto;
 use ZxArt\Prods\Dto\ProdGroupRefDto;
 use ZxArt\Prods\Dto\ProdHardwareInfoDto;
 use ZxArt\Prods\Dto\ProdLanguageInfoDto;
 use ZxArt\Prods\Dto\ProdLinkInfoDto;
 use ZxArt\Prods\Dto\ProdPartyInfoDto;
+use ZxArt\Shared\EntityType;
 use zxProdElement;
 use zxReleaseElement;
 
@@ -84,17 +87,16 @@ readonly class ProdInfoBuilder
     /**
      * @return ProdHardwareInfoDto[]
      */
-    public function buildHardware(zxProdElement|zxReleaseElement $element, bool $shortHardwareTitles = false): array
+    public function buildHardware(zxProdElement|zxReleaseElement $element): array
     {
         $hardware = [];
         /**
          * @var list<array{id: string, title: string}> $rows
          */
-        $rows = $element->getHardwareInfo($shortHardwareTitles);
+        $rows = $element->getHardwareInfo();
         foreach ($rows as $row) {
             $hardware[] = new ProdHardwareInfoDto(
                 id: $row['id'],
-                title: $row['title'],
                 catalogueUrl: $element->getCatalogueUrl(['hw' => $row['id']]),
             );
         }
@@ -127,6 +129,32 @@ readonly class ProdInfoBuilder
     }
 
     /**
+     * @return ProdAuthorInfoDto[]
+     */
+    public function buildReleaseAuthors(zxReleaseElement $release): array
+    {
+        $authors = [];
+        /**
+         * @var list<array{authorElement: structureElement, roles?: list<string>}> $records
+         */
+        $records = $release->getAuthorsInfo(EntityType::Release->value);
+        foreach ($records as $info) {
+            $authorElement = $info['authorElement'];
+            if (!$authorElement instanceof authorElement && !$authorElement instanceof authorAliasElement) {
+                continue;
+            }
+            $roles = $info['roles'] ?? [];
+            $authors[] = new ProdAuthorInfoDto(
+                id: $authorElement->getId(),
+                title: $this->decodeText($authorElement->title),
+                url: (string)$authorElement->getUrl(),
+                roles: $roles,
+            );
+        }
+        return $authors;
+    }
+
+    /**
      * @return ProdGroupRefDto[]
      */
     public function buildReleaseBy(zxReleaseElement $release): array
@@ -140,6 +168,25 @@ readonly class ProdInfoBuilder
                 id: $element->getId(),
                 title: $this->decodeText($element->title),
                 url: (string)$element->getUrl(),
+            );
+        }
+        return $refs;
+    }
+
+    /**
+     * @return ProdGroupRefDto[]
+     */
+    public function buildReleasePublishers(zxReleaseElement $release): array
+    {
+        $refs = [];
+        foreach ($release->publishers as $publisher) {
+            if (!$publisher instanceof groupElement) {
+                continue;
+            }
+            $refs[] = new ProdGroupRefDto(
+                id: $publisher->getId(),
+                title: $this->decodeText($publisher->title),
+                url: (string)$publisher->getUrl(),
             );
         }
         return $refs;

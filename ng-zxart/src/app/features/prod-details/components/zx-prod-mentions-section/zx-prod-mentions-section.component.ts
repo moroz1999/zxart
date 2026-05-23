@@ -6,7 +6,7 @@ import {
   ZxCommentSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-comment-skeleton/zx-comment-skeleton.component';
 import {ZxArticlePreviewComponent} from '../../../../shared/ui/zx-article-preview/zx-article-preview.component';
-import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {ProdMentionsApiService} from '../../services/prod-mentions-api.service';
 import {PressArticlePreviewDto} from '../../models/press-article.dto';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';

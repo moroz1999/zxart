@@ -45,12 +45,12 @@
 
           <ng-template #loginForm>
             <form zxForm (ngSubmit)="submitLogin()">
-              <div class="lt-error" *ngIf="loginError" role="alert">
+              <div class="lt-error" *ngIf="loginError" role="alert" appText="caption" tone="danger">
                 {{ loginError | translate }}
               </div>
 
               <div class="lt-field">
-                <label class="lt-label" for="lt-username">{{ 'login.username' | translate }}</label>
+                <label class="lt-label" for="lt-username" appText="label" tone="muted">{{ 'login.username' | translate }}</label>
                 <input
                   id="lt-username"
                   class="lt-input"
@@ -62,7 +62,7 @@
               </div>
 
               <div class="lt-field">
-                <label class="lt-label" for="lt-password">{{ 'login.password' | translate }}</label>
+                <label class="lt-label" for="lt-password" appText="label" tone="muted">{{ 'login.password' | translate }}</label>
                 <input
                   id="lt-password"
                   class="lt-input"
@@ -76,7 +76,7 @@
               <div class="lt-remember">
                 <label class="lt-remember-label">
                   <input type="checkbox" [(ngModel)]="remember" name="remember" />
-                  {{ 'login.remember' | translate }}
+                  <span appText="label" tone="muted">{{ 'login.remember' | translate }}</span>
                 </label>
               </div>
 

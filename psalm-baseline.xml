@@ -3697,6 +3697,24 @@
       <code><![CDATA[ProdCompilations]]></code>
     </UnusedClass>
   </file>
+  <file src="project/core/ZxArt/Controllers/ProdDescription.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ProdDescription]]></code>
+    </ClassMustBeFinal>
+    <MixedMethodCall>
+      <code><![CDATA[setStatusCode]]></code>
+    </MixedMethodCall>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[ProdDescription]]></code>
+      <code><![CDATA[ProdDescription]]></code>
+      <code><![CDATA[ProdDescription]]></code>
+      <code><![CDATA[ProdDescription]]></code>
+      <code><![CDATA[ProdDescription]]></code>
+    </PropertyNotSetInConstructor>
+    <UnusedClass>
+      <code><![CDATA[ProdDescription]]></code>
+    </UnusedClass>
+  </file>
   <file src="project/core/ZxArt/Controllers/ProdDetails.php">
     <ClassMustBeFinal>
       <code><![CDATA[ProdDetails]]></code>
@@ -7295,15 +7313,12 @@
       <code><![CDATA[$catalogueYearUrl]]></code>
       <code><![CDATA[$categoriesPaths]]></code>
       <code><![CDATA[$dateCreated]]></code>
-      <code><![CDATA[$description]]></code>
       <code><![CDATA[$elementId]]></code>
       <code><![CDATA[$externalLink]]></code>
       <code><![CDATA[$generatedDescription]]></code>
       <code><![CDATA[$groups]]></code>
       <code><![CDATA[$h1]]></code>
       <code><![CDATA[$hardware]]></code>
-      <code><![CDATA[$htmlDescription]]></code>
-      <code><![CDATA[$instructions]]></code>
       <code><![CDATA[$languages]]></code>
       <code><![CDATA[$legalStatus]]></code>
       <code><![CDATA[$legalStatusLabel]]></code>
@@ -7319,6 +7334,16 @@
       <code><![CDATA[$voting]]></code>
       <code><![CDATA[$year]]></code>
       <code><![CDATA[$youtubeId]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Prods/Dto/ProdDescriptionDto.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ProdDescriptionDto]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$description]]></code>
+      <code><![CDATA[$htmlDescription]]></code>
+      <code><![CDATA[$instructions]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Prods/Dto/ProdDto.php">
@@ -7599,6 +7624,7 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$hasArticles]]></code>
       <code><![CDATA[$hasCompilations]]></code>
+      <code><![CDATA[$hasDescription]]></code>
       <code><![CDATA[$hasInlays]]></code>
       <code><![CDATA[$hasInstructions]]></code>
       <code><![CDATA[$hasMaps]]></code>
@@ -7607,6 +7633,7 @@
       <code><![CDATA[$hasRzx]]></code>
       <code><![CDATA[$hasScreenshots]]></code>
       <code><![CDATA[$hasSeriesProds]]></code>
+      <code><![CDATA[$hasTextInstructions]]></code>
       <code><![CDATA[$hasTunes]]></code>
       <code><![CDATA[$isInSeries]]></code>
     </PossiblyUnusedProperty>
@@ -7648,6 +7675,14 @@
     <UndefinedClass>
       <code><![CDATA[zxProdElement]]></code>
     </UndefinedClass>
+  </file>
+  <file src="project/core/ZxArt/Prods/ProdDescriptionService.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ProdDescriptionService]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="project/core/ZxArt/Prods/ProdCoreService.php">
     <ClassMustBeFinal>
@@ -7958,15 +7993,12 @@
       <code><![CDATA[$catalogueYearUrl]]></code>
       <code><![CDATA[$categoriesPaths]]></code>
       <code><![CDATA[$dateCreated]]></code>
-      <code><![CDATA[$description]]></code>
       <code><![CDATA[$elementId]]></code>
       <code><![CDATA[$externalLink]]></code>
       <code><![CDATA[$generatedDescription]]></code>
       <code><![CDATA[$groups]]></code>
       <code><![CDATA[$h1]]></code>
       <code><![CDATA[$hardware]]></code>
-      <code><![CDATA[$htmlDescription]]></code>
-      <code><![CDATA[$instructions]]></code>
       <code><![CDATA[$languages]]></code>
       <code><![CDATA[$legalStatus]]></code>
       <code><![CDATA[$legalStatusLabel]]></code>
@@ -7982,6 +8014,19 @@
       <code><![CDATA[$voting]]></code>
       <code><![CDATA[$year]]></code>
       <code><![CDATA[$youtubeId]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Prods/Rest/ProdDescriptionRestDto.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ProdDescriptionRestDto]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$description]]></code>
+      <code><![CDATA[$htmlDescription]]></code>
+      <code><![CDATA[$instructions]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Prods/Rest/ProdFileRestDto.php">
@@ -8325,6 +8370,7 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$hasArticles]]></code>
       <code><![CDATA[$hasCompilations]]></code>
+      <code><![CDATA[$hasDescription]]></code>
       <code><![CDATA[$hasInlays]]></code>
       <code><![CDATA[$hasInstructions]]></code>
       <code><![CDATA[$hasMaps]]></code>
@@ -8333,6 +8379,7 @@
       <code><![CDATA[$hasRzx]]></code>
       <code><![CDATA[$hasScreenshots]]></code>
       <code><![CDATA[$hasSeriesProds]]></code>
+      <code><![CDATA[$hasTextInstructions]]></code>
       <code><![CDATA[$hasTunes]]></code>
       <code><![CDATA[$isInSeries]]></code>
     </PossiblyUnusedProperty>

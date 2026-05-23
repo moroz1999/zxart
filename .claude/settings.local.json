@@ -120,7 +120,8 @@
       "Bash(xargs cat -n)",
       "Bash(xargs -I{} basename {} .svg)",
       "Bash(docker info *)",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(vendor/bin/phpunit -c phpunit.xml.dist)"
     ]
   },
   "enabledPlugins": {

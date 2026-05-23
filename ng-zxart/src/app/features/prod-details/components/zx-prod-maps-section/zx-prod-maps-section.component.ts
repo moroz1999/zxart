@@ -12,7 +12,8 @@ import {
 } from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {PictureGalleryItem} from '../../../picture-gallery/models/picture-gallery-item';
-import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ProdMapsApiService} from '../../services/prod-maps-api.service';
 import {ProdFileDto} from '../../models/prod-file.dto';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';

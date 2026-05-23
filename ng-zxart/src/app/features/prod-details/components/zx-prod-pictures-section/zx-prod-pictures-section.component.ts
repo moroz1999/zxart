@@ -5,7 +5,7 @@ import {InViewportDirective} from '../../../../shared/directives/in-viewport.dir
 import {
   ZxPictureGridSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
-import {HeadingDirective, TextDirective} from '../../../../shared/directives/typography/typography.directives';
+import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {ZxPicturesListComponent} from '../../../picture-list/components/zx-pictures-list/zx-pictures-list.component';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
 import {PictureListService} from '../../../picture-list/services/picture-list.service';

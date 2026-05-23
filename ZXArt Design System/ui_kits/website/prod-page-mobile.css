@@ -35,27 +35,39 @@
 /* SCREENS: 3-col instead of 5-col, keep big tile spanning 2x2 */
 .mob-screens-grid { grid-template-columns: repeat(3, 1fr); }
 
-/* TABS + sub-toggles + chips + filter bar: horizontal scroll instead of wrap */
+/* TABS + sub-toggles + chips: horizontal scroll instead of wrap */
 .mob-tabs-scroll,
-.mob-chips-scroll,
-.mob-filter-bar {
+.mob-chips-scroll {
   overflow-x: auto;
   flex-wrap: nowrap !important;
   scrollbar-width: none;
 }
 .mob-tabs-scroll::-webkit-scrollbar,
-.mob-chips-scroll::-webkit-scrollbar,
-.mob-filter-bar::-webkit-scrollbar { display: none; }
+.mob-chips-scroll::-webkit-scrollbar { display: none; }
 .mob-tabs-scroll > *,
-.mob-chips-scroll > *,
-.mob-filter-bar > * { flex-shrink: 0; }
+.mob-chips-scroll > * { flex-shrink: 0; }
 .mob .va-tabs button { padding: 10px 12px; white-space: nowrap; }
 .mob .vb-toggle { margin-left: 0; }
 .mob .vb-toggle button { white-space: nowrap; }
 
-/* Filter bar: tighter padding on mobile */
-.mob .vb-filter-bar { padding: 8px 10px; gap: 6px; }
-.mob .vb-filter-bar__label { white-space: nowrap; }
+/* Filter bar on mobile: 2-row grid (label | scrollable button group).
+   Each group h-scrolls internally if its buttons overflow.
+   Reuses the exact same JSX/classes as desktop — only layout changes. */
+.mob .vb-filter-bar {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 10px;
+  padding: 8px 10px;
+  align-items: center;
+}
+.mob .vb-filter-bar__sep { display: none; }
+.mob .vb-filter-bar__label { white-space: nowrap; align-self: center; }
+.mob .vb-filter-bar__group {
+  flex-wrap: wrap;
+  row-gap: 4px;
+  min-width: 0;
+}
+.mob .vb-filter-bar__group > * { white-space: nowrap; }
 
 /* Release card: thumb a touch smaller; nothing else changes */
 .mob .va-rel-card { padding: 8px; gap: 8px; }

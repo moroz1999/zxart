@@ -1,17 +1,19 @@
-<zx-stack *ngIf="description === null; else descriptionContent" spacing="sm">
-  <zx-skeleton-bone
-    *ngFor="let line of skeletonLines; index as i"
-    class="prod-description-skeleton__line"
-    [style.animation-delay.ms]="i * 80"
-  ></zx-skeleton-bone>
-</zx-stack>
-
-<ng-template #descriptionContent>
+<ng-container *ngIf="data$ | async as data; else skeleton">
   <zx-stack spacing="sm">
     <h3 appHeading="title">{{ 'prod-details.description' | translate }}</h3>
-    <div *ngIf="htmlDescription; else plainText" appText="body" [innerHTML]="description"></div>
+    <div *ngIf="data.htmlDescription; else plainText" appText="body" [innerHTML]="data.description"></div>
     <ng-template #plainText>
-      <div class="prod-description--plain" appText="body">{{ description }}</div>
+      <div class="prod-description--plain" appText="body">{{ data.description }}</div>
     </ng-template>
+  </zx-stack>
+</ng-container>
+
+<ng-template #skeleton>
+  <zx-stack spacing="sm">
+    <zx-skeleton-bone
+      *ngFor="let line of skeletonLines; index as i"
+      class="prod-description-skeleton__line"
+      [style.animation-delay.ms]="i * 80"
+    ></zx-skeleton-bone>
   </zx-stack>
 </ng-template>

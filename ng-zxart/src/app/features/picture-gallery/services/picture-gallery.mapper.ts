@@ -7,7 +7,7 @@ export function mapPictureToGalleryItem(picture: ZxPictureDto): PictureGalleryIt
     id: picture.id,
     title: picture.title,
     thumbUrl: picture.imageUrl,
-    largeUrl: picture.imageUrl,
+    largeUrl: picture.largeImageUrl,
     detailsUrl: picture.url,
   };
 }

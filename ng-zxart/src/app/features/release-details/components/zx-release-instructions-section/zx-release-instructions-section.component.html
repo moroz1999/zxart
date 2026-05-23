@@ -1,0 +1,13 @@
+<section>
+  <zx-release-section-head
+    titleKey="release-details.instructions"
+    [count]="instructions.length">
+  </zx-release-section-head>
+
+  <zx-stack spacing="xs">
+    <zx-instruction-file-card
+      *ngFor="let file of instructions; trackBy: trackById"
+      [file]="file"
+    ></zx-instruction-file-card>
+  </zx-stack>
+</section>

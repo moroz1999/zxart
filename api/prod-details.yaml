@@ -39,9 +39,6 @@ components:
         - legalStatusLabel
         - externalLink
         - youtubeId
-        - description
-        - htmlDescription
-        - instructions
         - generatedDescription
         - dateCreated
         - catalogueYearUrl
@@ -79,12 +76,6 @@ components:
         externalLink:
           type: string
         youtubeId:
-          type: string
-        description:
-          type: string
-        htmlDescription:
-          type: boolean
-        instructions:
           type: string
         generatedDescription:
           type: string
@@ -173,7 +164,11 @@ components:
           type: boolean
         hasCompilations:
           type: boolean
+        hasDescription:
+          type: boolean
         hasInstructions:
+          type: boolean
+        hasTextInstructions:
           type: boolean
 
     ProdCategoryRef:
@@ -221,12 +216,9 @@ components:
       type: object
       required:
         - id
-        - title
         - catalogueUrl
       properties:
         id:
-          type: string
-        title:
           type: string
         catalogueUrl:
           type: string

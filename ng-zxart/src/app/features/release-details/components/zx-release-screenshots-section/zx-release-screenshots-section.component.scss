@@ -1,0 +1,63 @@
+@use 'shared/breakpoints' as bp;
+
+:host {
+  display: block;
+}
+
+.release-screenshots-section__grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, var(--zx-release-screenshots-thumb-width)));
+  justify-content: space-between;
+  gap: var(--zx-release-screenshots-grid-gap);
+
+  @include bp.media-breakpoint-down(lg) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @include bp.media-breakpoint-down(sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.release-screenshots-section__item {
+  display: block;
+  margin: 0;
+}
+
+.release-screenshots-section__thumb-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--zx-release-screenshots-item-radius);
+}
+
+.release-screenshots-section__thumb {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+  aspect-ratio: 4/3;
+  cursor: pointer;
+  image-rendering: pixelated;
+}
+
+.release-screenshots-section__controls {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--zx-release-screenshots-controls-gap);
+  padding: var(--zx-release-screenshots-controls-padding);
+  background: var(--zx-release-screenshots-controls-bg);
+  opacity: 0;
+  transition: opacity var(--animation-sm) ease;
+}
+
+.release-screenshots-section__thumb-wrap:hover .release-screenshots-section__controls {
+  opacity: 1;
+}
+
+.release-screenshots-section__btn-icon {
+  display: block;
+  width: var(--zx-release-screenshots-button-icon-size);
+  height: var(--zx-release-screenshots-button-icon-size);
+}

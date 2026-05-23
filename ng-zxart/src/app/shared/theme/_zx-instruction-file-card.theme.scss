@@ -1,0 +1,26 @@
+:root {
+  /* Card background. */
+  --zx-ifc-bg: var(--surface);
+  /* Card hover background. */
+  --zx-ifc-bg-hover: var(--primary-50);
+  /* Card border. */
+  --zx-ifc-border: var(--secondary-200);
+  /* Card hover border. */
+  --zx-ifc-border-hover: var(--primary-400);
+  /* Card border radius. */
+  --zx-ifc-radius: var(--radius-md);
+  /* Card vertical padding. */
+  --zx-ifc-py: var(--space-8);
+  /* Card horizontal padding. */
+  --zx-ifc-px: var(--space-12);
+  /* Icon badge size. */
+  --zx-ifc-icon-size: var(--space-40);
+  /* Icon badge background. */
+  --zx-ifc-icon-bg: var(--secondary-100);
+  /* Icon badge text color. */
+  --zx-ifc-icon-color: var(--secondary-700);
+  /* Icon badge border radius. */
+  --zx-ifc-icon-radius: var(--radius-sm);
+  /* Gap between filename and release label. */
+  --zx-ifc-meta-mt: var(--space-2);
+}

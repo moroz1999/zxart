@@ -11,10 +11,6 @@ a {
   text-decoration: none;
 }
 
-.release-row__title-link {
-  font-weight: 600;
-}
-
 .release-row__releaseby a {
   color: var(--zx-prod-release-row-secondary-color);
 }
@@ -22,11 +18,6 @@ a {
 .release-row__realtime {
   display: inline-block;
   cursor: help;
-}
-
-.release-row__releaseby {
-  font-size: var(--zx-prod-release-row-releaseby-font-size);
-  color: var(--zx-prod-release-row-secondary-color);
 }
 
 .release-row__year,
@@ -42,11 +33,6 @@ a {
   white-space: nowrap;
   color: inherit;
   text-decoration: none;
-}
-
-.release-row__description {
-  color: var(--zx-prod-release-row-secondary-color);
-  font-size: var(--zx-prod-release-row-description-font-size);
 }
 
 .release-row__format-link {

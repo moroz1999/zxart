@@ -141,15 +141,17 @@ function InstructionModal({ file, onClose }) {
         <div className="rp-modal__head">
           <span className="rp-modal__title">{file.name || file.file}</span>
           <span className="rp-modal__meta">{file.size ? (typeof file.size === "string" ? file.size : fmtBytes(file.size)) : ""}</span>
-          <button className="rp-modal__close" onClick={onClose} title="Закрыть"><I name="close"/></button>
+          <button className="rp-modal__close zx-button zx-button--transparent zx-button--sm zx-button--square" onClick={onClose} title="Закрыть"><I name="close"/></button>
         </div>
         <div className="rp-modal__body">
           <pre className="rp-modal__pre">{file.body || README_RU}</pre>
         </div>
         <div className="rp-modal__foot">
           <span className="left">Текст · UTF-8 · моноширинный шрифт</span>
-          <button className="rp-action rp-action--sm" type="button"><I name="download" size={14}/>Скачать</button>
-          <button className="rp-action rp-action--sm rp-action--primary" type="button" onClick={onClose}>Закрыть</button>
+          <div className="zx-button-controls zx-button-controls--align-end">
+            <button className="zx-button zx-button--outlined zx-button--sm" type="button"><I name="download" size={14}/>Скачать</button>
+            <button className="zx-button zx-button--primary zx-button--sm" type="button" onClick={onClose}>Закрыть</button>
+          </div>
         </div>
       </div>
     </div>
@@ -176,9 +178,9 @@ function ReleasePage({
   return (
     <div className="rp-root">
       {/* breadcrumb */}
-      <nav className="rp-crumb" aria-label="breadcrumb">
-        <a href="#">Главная</a> / <a href="#">Софт</a> / <a href="#">Игры</a> /{" "}
-        <a href="#">{RELEASE.prod.title}</a> /{" "}
+      <nav className="zx-breadcrumbs" aria-label="breadcrumb">
+        <a href="#">Главная</a> <span className="sep">/</span> <a href="#">Софт</a> <span className="sep">/</span> <a href="#">Игры</a> <span className="sep">/</span>{" "}
+        <a href="#">{RELEASE.prod.title}</a> <span className="sep">/</span>{" "}
         <span className="here">Релиз — {RELEASE.publishers[0].name}, {RELEASE.year}</span>
       </nav>
 
@@ -198,7 +200,7 @@ function ReleasePage({
         <div className="rp-head__title-row">
           <h1 className="rp-head__title">{RELEASE.title}</h1>
           <span className="rp-head__year"><a href="#">{RELEASE.year}</a></span>
-          <span className={"rp-type rp-type--" + t.tone}>{t.label}</span>
+          <span className={"zx-release-type-badge zx-release-type-badge--" + RELEASE.type}>{t.label}</span>
           <span className="rp-status"><I name="warn" size={12}/>{RELEASE.status.label}</span>
         </div>
 
@@ -246,15 +248,15 @@ function ReleasePage({
             <span>добавлен <b>{RELEASE.addedAt}</b> <a href="#" style={{color:"var(--primary-600)",textDecoration:"none"}}>{RELEASE.addedBy}</a></span>
           </div>
 
-          <div className="rp-bar__actions">
-            <button className="rp-action rp-action--primary" type="button">
+          <div className="rp-bar__actions zx-button-controls zx-button-controls--align-end">
+            <button className="zx-button zx-button--primary zx-button--md" type="button">
               <I name="play" size={18}/>Запустить
               <span className="rp-action__hint">в эмуляторе</span>
             </button>
-            <button className="rp-action" type="button" title="Полноэкранный режим эмулятора">
+            <button className="zx-button zx-button--outlined zx-button--md zx-button--square" type="button" title="Полноэкранный режим эмулятора">
               <I name="fullscreen" size={18}/>
             </button>
-            <button className="rp-action" type="button">
+            <button className="zx-button zx-button--outlined zx-button--md" type="button">
               <I name="download" size={18}/>{RELEASE.format.split(" ")[0]}
               <span className="rp-action__hint">{RELEASE.size}</span>
             </button>
@@ -354,11 +356,11 @@ function ReleasePage({
                 Если у вас сохранилась кассета или диск — поделитесь.
               </div>
             </div>
-            <div className="rp-contribute__actions">
-              <button className="rp-action rp-action--sm" type="button"><I name="plus" size={14}/>Описание</button>
-              <button className="rp-action rp-action--sm" type="button"><I name="plus" size={14}/>Обложки</button>
-              <button className="rp-action rp-action--sm" type="button"><I name="plus" size={14}/>Скрины</button>
-              <button className="rp-action rp-action--sm" type="button"><I name="plus" size={14}/>Инструкцию</button>
+            <div className="rp-contribute__actions zx-button-controls zx-button-controls--align-end">
+              <button className="zx-button zx-button--outlined zx-button--sm" type="button"><I name="plus" size={14}/>Описание</button>
+              <button className="zx-button zx-button--outlined zx-button--sm" type="button"><I name="plus" size={14}/>Обложки</button>
+              <button className="zx-button zx-button--outlined zx-button--sm" type="button"><I name="plus" size={14}/>Скрины</button>
+              <button className="zx-button zx-button--outlined zx-button--sm" type="button"><I name="plus" size={14}/>Инструкцию</button>
             </div>
           </div>
         )}
@@ -414,7 +416,7 @@ function ReleasePage({
             <textarea placeholder="Поделиться наблюдением о релизе…"></textarea>
             <div className="rp-add__foot">
               <span className="rp-add__hint">Markdown · комментарий привязывается к релизу, не к программе</span>
-              <button className="rp-action rp-action--primary rp-action--sm" type="button">Отправить</button>
+              <button className="zx-button zx-button--primary zx-button--sm" type="button">Отправить</button>
             </div>
           </div>
         </section>

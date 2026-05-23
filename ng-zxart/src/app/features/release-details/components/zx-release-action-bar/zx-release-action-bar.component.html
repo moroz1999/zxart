@@ -1,0 +1,37 @@
+<zx-inline align="center" spacing="md" [wrap]="true">
+  <zx-item-controls
+    [elementId]="details.id"
+    type="zxRelease"
+    [votes]="details.votes.votes"
+    [votesAmount]="details.votes.votesAmount"
+    [userRating]="details.votes.userVote"
+    [denyVoting]="details.votes.denyVoting">
+  </zx-item-controls>
+
+  <zx-inline align="center" spacing="md" [wrap]="true" appText="caption" tone="muted">
+    <span><b>{{ details.downloadsCount }}</b> {{ 'release-details.downloads-label' | translate }}</span>
+    <span><b>{{ details.playsCount }}</b> {{ 'release-details.plays-label' | translate }}</span>
+  </zx-inline>
+
+  <zx-button-controls align="end" class="rp-actions">
+    <zx-emulator-play-button
+      [isPlayable]="details.isPlayable"
+      [isDownloadable]="details.isDownloadable"
+      [playUrl]="details.playUrl"
+      [emulatorType]="details.emulatorType"
+      [canUploadScreenshot]="details.canUploadScreenshot"
+      [screenshotUploadUrl]="details.screenshotUploadUrl"
+    >{{ 'release-details.play-online' | translate }}</zx-emulator-play-button>
+
+    <zx-button
+      *ngIf="details.isDownloadable && details.downloadUrl"
+      color="outlined"
+      [href]="details.downloadUrl"
+      target="_blank"
+    >
+      <svg-icon class="rp-actions__download-icon" name="download"></svg-icon>
+      {{ details.fileName }}
+    </zx-button>
+  </zx-button-controls>
+
+</zx-inline>

@@ -490,6 +490,13 @@ class detailedSearchElement extends structureElement implements LocationProvider
         return $string;
     }
 
+    public function getPicturesJson(): string
+    {
+        $transformer = $this->getService(\ZxArt\Pictures\PicturesTransformer::class);
+        $dtos = array_map(fn($pic) => $transformer->toDto($pic), $this->getResultsList());
+        return json_encode($dtos, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?: '[]';
+    }
+
     public function getFormData()
     {
         $this->applyParameters();

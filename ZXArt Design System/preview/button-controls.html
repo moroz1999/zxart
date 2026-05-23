@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en" class="light-mode">
+<head>
+<meta charset="utf-8" />
+<title>zx-button-controls</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="components.css" />
+<style>
+  body { margin: 0; padding: 16px; font-family: var(--font-sans); color: var(--text-color); background: var(--background-page); }
+  .demo { padding: 12px; border: 1px dashed var(--secondary-300); border-radius: var(--radius-md); margin-bottom: 12px; }
+  .demo h4 { margin: 0 0 8px; font-size: var(--font-sm); font-weight: 700; color: var(--text-light-color); font-family: var(--font-mono); text-transform: lowercase; letter-spacing: .04em; }
+</style>
+</head>
+<body>
+  <div class="demo">
+    <h4>align="end" (default) — dialog footers</h4>
+    <div class="zx-button-controls zx-button-controls--align-end">
+      <button class="zx-button zx-button--md zx-button--outlined">Cancel</button>
+      <button class="zx-button zx-button--md zx-button--primary">Save</button>
+    </div>
+  </div>
+
+  <div class="demo">
+    <h4>align="start"</h4>
+    <div class="zx-button-controls zx-button-controls--align-start">
+      <button class="zx-button zx-button--md zx-button--primary">Add</button>
+      <button class="zx-button zx-button--md zx-button--outlined">Import</button>
+    </div>
+  </div>
+
+  <div class="demo">
+    <h4>align="distribute" — space-between</h4>
+    <div class="zx-button-controls zx-button-controls--align-distribute">
+      <button class="zx-button zx-button--md zx-button--outlined">‹ Previous</button>
+      <button class="zx-button zx-button--md zx-button--outlined">Next ›</button>
+    </div>
+  </div>
+
+  <div class="demo">
+    <h4>align="fill" — equal columns</h4>
+    <div class="zx-button-controls zx-button-controls--align-fill">
+      <button class="zx-button zx-button--md zx-button--outlined">Previous</button>
+      <button class="zx-button zx-button--md zx-button--outlined">Next</button>
+    </div>
+  </div>
+
+  <div class="demo">
+    <h4>align="full" — stacked full-width</h4>
+    <div class="zx-button-controls zx-button-controls--align-full">
+      <button class="zx-button zx-button--md zx-button--primary">Submit</button>
+      <button class="zx-button zx-button--md zx-button--outlined">Cancel</button>
+    </div>
+  </div>
+
+  <div class="demo">
+    <h4>+ [wrap]="true" — many buttons</h4>
+    <div class="zx-button-controls zx-button-controls--align-start zx-button-controls--wrap">
+      <button class="zx-button zx-button--sm zx-button--outlined">Описание</button>
+      <button class="zx-button zx-button--sm zx-button--outlined">Обложки</button>
+      <button class="zx-button zx-button--sm zx-button--outlined">Скрины</button>
+      <button class="zx-button zx-button--sm zx-button--outlined">Инструкцию</button>
+      <button class="zx-button zx-button--sm zx-button--outlined">Файлы</button>
+    </div>
+  </div>
+</body>
+</html>

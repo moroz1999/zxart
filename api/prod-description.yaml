@@ -1,0 +1,43 @@
+openapi: 3.0.0
+paths:
+  /prod-description/:
+    get:
+      summary: Get decoded description and instructions text for a zxProd
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Decoded description and instructions for the prod
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdDescriptionPayload'
+        '400':
+          description: Bad request
+        '404':
+          description: Prod not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    ProdDescriptionPayload:
+      type: object
+      required:
+        - description
+        - htmlDescription
+        - instructions
+      properties:
+        description:
+          type: string
+          description: HTML-entity-decoded description text (may contain HTML if htmlDescription is true)
+        htmlDescription:
+          type: boolean
+          description: Whether the description field contains HTML markup
+        instructions:
+          type: string
+          description: HTML-entity-decoded instructions text (always contains HTML)

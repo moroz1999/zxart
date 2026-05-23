@@ -6,7 +6,7 @@
         <span appText="label" tone="muted">{{ 'emulator.loading' | translate }}</span>
       </div>
       <div *ngIf="error" class="zx-emulator-dialog__overlay">
-        <span appText="label" tone="muted">{{ error }}</span>
+        <span appText="label" tone="danger">{{ error }}</span>
       </div>
     </div>
     <p *ngIf="showSamcoupeNote" class="zx-emulator-dialog__note" appText="label" tone="muted">

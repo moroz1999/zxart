@@ -45,9 +45,6 @@
 }
 
 .sd-group-caption {
-  font-size: var(--zx-search-dialog-group-caption-font-size);
-  font-weight: 600;
-  color: var(--zx-search-dialog-group-caption-color);
   text-transform: uppercase;
   letter-spacing: var(--zx-search-dialog-group-caption-letter-spacing);
   padding: var(--space-8) var(--space-4) var(--space-4);
@@ -86,6 +83,5 @@
 }
 
 .sd-empty {
-  color: var(--zx-search-dialog-empty-color);
   padding: var(--space-8) 0;
 }

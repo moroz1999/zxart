@@ -24,6 +24,7 @@ import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-control
 import {ZxDialogComponent} from '../../../../shared/ui/zx-dialog/zx-dialog.component';
 import {BackendLinksService} from '../../services/backend-links.service';
 import {environment} from '../../../../../environments/environment';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 
 const MIN_QUERY_LENGTH = 2;
 const ICONS = ['person', 'list', 'videogame-asset', 'image', 'music-note'];
@@ -40,6 +41,7 @@ const ICONS = ['person', 'list', 'videogame-asset', 'image', 'music-note'];
     ZxButtonComponent,
     ZxSearchGroupsSkeletonComponent,
     ZxButtonControlsComponent,
+    TextDirective,
   ],
   templateUrl: './search-dialog.component.html',
   styleUrls: ['./search-dialog.component.scss'],

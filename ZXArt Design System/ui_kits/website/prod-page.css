@@ -45,6 +45,38 @@
   background: rgba(0,0,0,.6); color: #fff;
   font-size: var(--font-xs); padding: 3px 8px; border-radius: 999px;
 }
+
+/* YouTube cover state — when the prod has a trailer / longplay on YT */
+.va-hero__cover--video { cursor: pointer; }
+.va-hero__cover--video:hover .va-hero__yt-play svg path:first-child { fill: #f00; }
+.va-hero__yt-grad {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at center, rgba(0,0,0,0) 30%, rgba(0,0,0,.35) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 65%, rgba(0,0,0,.55) 100%);
+  pointer-events: none;
+}
+.va-hero__yt-play {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,.4));
+}
+.va-hero__yt-play svg path:first-child { fill: rgba(20,20,20,.85); transition: fill 150ms; }
+.va-hero__yt-meta {
+  position: absolute; right: 8px; top: 8px;
+  display: flex; align-items: center; gap: 6px;
+  color: #fff; font-size: var(--font-xs);
+  text-shadow: 0 1px 2px rgba(0,0,0,.5);
+  pointer-events: none;
+}
+.va-hero__yt-badge {
+  background: #f00; color: #fff;
+  font-size: 10px; font-weight: 700;
+  padding: 2px 6px; border-radius: 3px;
+  letter-spacing: .02em;
+  text-shadow: none;
+}
 .va-hero__title-row { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
 .va-hero__title { font-size: var(--font-xxl); font-weight: 700; margin: 0; }
 .va-hero__year { color: var(--text-light-color); font-family: var(--font-mono); }
@@ -221,14 +253,16 @@
 .va-rel-card__bottom { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: var(--font-xs); color: var(--text-light-color); }
 .va-rel-card__bottom .play-link { color: var(--primary-600); font-weight: 700; text-decoration: none; }
 
-/* tag pill colors per type */
-.rel-type-pill { font-size: 10px; padding: 1px 6px; border-radius: 8px; color: #fff; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
-.rel-type-pill--original     { background: #1a90ff; }
-.rel-type-pill--adaptation   { background: #005cb3; }
-.rel-type-pill--translation  { background: #a57900; }
-.rel-type-pill--modification { background: #ffbd04; color: #000; }
-.rel-type-pill--crack        { background: #bb0000; }
-.rel-type-pill--unknown      { background: #8a8a8a; }
+/* Release type pill — alias of .zx-release-type-badge (DS).
+   Uses semantic tokens; cycle through these classnames everywhere via
+   `.zx-release-type-badge--<type>` for new code. */
+.rel-type-pill { font-size: 10px; padding: 1px 6px; border-radius: 8px; color: #fff; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; line-height: 1.4; }
+.rel-type-pill--original     { background: var(--primary-500); }
+.rel-type-pill--adaptation   { background: var(--primary-700); }
+.rel-type-pill--translation  { background: var(--warning-700); }
+.rel-type-pill--modification { background: var(--warning-500); color: var(--secondary-900); }
+.rel-type-pill--crack        { background: var(--danger-600); }
+.rel-type-pill--unknown      { background: var(--secondary-500); }
 
 /* sidebar mini-cards (secondary content) */
 .va-mini { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--secondary-200); font-size: var(--font-sm); }

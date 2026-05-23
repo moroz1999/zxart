@@ -1,0 +1,67 @@
+# Design System
+
+The project follows a component-based approach for the design system.
+
+## Core Principles
+
+1. **CSS Variables Only**: All colors must be specified exclusively through CSS variables.
+2. **Color System**: See [Colors](design-system/colors.md) for palette structure, semantic variables, and theming rules.
+3. **Spacing System**: All distances (margins, paddings, gaps) must be multiples of 4 and set using variables: `--space-4`, `--space-8`, `--space-12`, `--space-16`, etc.
+4. **Shadows**: See [Shadows](design-system/shadows.md) for available tokens and rules.
+5. **Borders**: See [Borders](design-system/borders.md) for available tokens and rules.
+5a. **Breakpoints**: See [Breakpoints](design-system/breakpoints.md) for SCSS breakpoints, Angular CDK constants, and mobile detection rules.
+6. **No Hardcoded Palette in Components**: In component styles, it is forbidden to use base palette variables like `--blue-dark-500` directly. Use semantic variables like `--text-color`, `--zx-button-bg`, `--primary-500`, etc. If a needed semantic variable is missing, define it in the theme.
+7. **Themes**: The project supports Dark (class `.dark-mode`) and Light (class `.light-mode`) themes. Always use semantic variables to ensure correct theme switching.
+8. **Semantic Usage**: All components must be used semantically and for their intended purpose.
+9. **Material UI — Phaseout Plan**: Material UI is being phased out entirely. No new Material imports are allowed anywhere.
+    - **Phase 1 (current)**: Remove Material from `shared/ui` design system primitives. Use native/custom markup with theme variables.
+    - **Phase 2**: Replace `MatDialog` with a custom overlay-based dialog using CDK.
+    - **Phase 3**: Replace `MatIcon` with SVG icon system (`angular-svg-icon`, already partially done).
+    - **Phase 4**: Replace remaining Material components (autocomplete, tree, chips, checkbox, etc.) with custom implementations.
+    - **CDK is approved**: Angular CDK (`@angular/cdk`) is the approved foundation for overlays, drag-and-drop, accessibility, and positioning. Use `CdkConnectedOverlay` for popovers/dropdowns instead of CSS absolute positioning.
+    - **PrimeNG** is legacy and must be replaced during refactoring.
+10. **Button Design**: ALL buttons without exception MUST use the `zx-button` component from the design system. Native `<button>` and `<a>` elements MUST NOT be used directly as interactive controls — use `zx-button` with `href` for links, `[square]="true"` for icon-only buttons, and `color="transparent"` for low-emphasis triggers. They are styled using CSS variables defined in `_zx-button.theme.scss`.
+11. **UI Components Usage**: Only components from the `shared/ui` directory (design system) should be used for building user interfaces to ensure consistency across the application. Direct usage of Material components in features is discouraged if a design system equivalent exists.
+12. **Layout Rules**: All layout (spacing, alignment, positioning) must be implemented exclusively using design system components (like `zx-stack`, `zx-inline`, `zx-grid`, `zx-inset`, `zx-panel`) or approved utility directives. Business-level components MUST NOT implement layout with SCSS; `display: flex/grid`, `gap`, `padding`, and layout margins in SCSS are reserved for atomic UI kit components in `shared/ui` or for styling the external contour of a child component host. Manual `style` attributes for margins, paddings, and other layout properties are strictly forbidden. If elements are part of a common layout, layout components are preferred over individual margins. **Negative margins are PROHIBITED** — never use `calc(-1 * ...)` or any negative margin to break out of a parent's padding. For edge-to-edge content (e.g., tables) inside `zx-panel`, use `[contentBleed]="true"` instead. Use `padding="none"` only when the entire panel needs zero padding (e.g., image cards with no title).
+    - **No wrapper elements**: If a component only wraps `<ng-content>`, use `:host` for all styling instead of adding a wrapper `<div>`. Apply classes via `@HostBinding('class')`. Wrapper elements are only justified when additional structural markup is needed beyond plain content projection.
+    - **Parent/child styling boundary**: A parent component may only style the *external contour* of a child component host — meaning `min-width`, `max-width`, `margin`, `align-self`, `flex-grow`, and similar layout-affecting properties. A parent MUST NOT set internal properties on a child component's host: `padding`, `display`, `flex-direction`, `gap`, `font-size`, `overflow`, or any property that controls what happens *inside* the component. Internal layout and spacing belong to the component itself (in its own `:host` or inner element styles). If internal behavior must vary per usage context, expose it via `@Input()` props or CSS custom properties in the component's theme file — never by styling from outside.
+13. **Loading States**: Every list or data-driven component MUST implement proper loading states:
+    - **Initial load**: Display the concrete skeleton component that matches the target layout. Never use a skeleton facade that imports multiple variants. Never show empty containers or spinners for initial page loads.
+    - **Pagination/reload**: Lock interactive controls (pagination, filters) with visual feedback (opacity reduction, spinner overlay). Content should blur slightly to indicate loading without disappearing completely.
+    - **Error states**: Display user-friendly error messages with retry options.
+14. **Typography System**: See [Typography](design-system/typography.md) for all directives, usage rules, and how to choose between similar styles.
+15. **Overlays and Popovers**: Use CDK `CdkConnectedOverlay` for all popover/dropdown/tooltip overlays. CSS `position: absolute` within `position: relative` hosts is forbidden for overlay patterns — it stretches parent layout. CDK handles positioning, scroll-aware repositioning, and backdrop closing automatically.
+
+## Reusable Subcomponents
+
+1. **Legacy Components**: Legacy components and their variables must not be modified.
+2. **Subcomponents**: To maintain consistency and reduce code duplication, repeating UI patterns must be extracted into standalone templates or components.
+3. **Shared UI Components**: All design system components are located in `ng-zxart/src/app/shared/ui/`.
+
+## Components
+
+All design system components are in `ng-zxart/src/app/shared/ui/`.
+
+- [zx-panel](design-system/zx-panel.md) — universal layout container
+- [zx-stack](design-system/zx-stack.md) — vertical flexbox layout container
+- [zx-inline](design-system/zx-inline.md) — horizontal flexbox layout container
+- [zx-grid](design-system/zx-grid.md) — flexbox-based grid layout container
+- [zx-inset](design-system/zx-inset.md) — restricted padding layout container
+- [zx-table](design-system/zx-table.md) — table wrapper with edge-to-edge rows
+- [zx-button](design-system/zx-button.md) — button with colors and sizes
+- [zx-button-controls](design-system/zx-button-controls.md) — wrapper for button groups
+- [zx-pagination](design-system/zx-pagination.md) — page navigation
+- [zx-filter-picker](design-system/zx-filter-picker.md) — popover filter with checkboxes
+- [zx-user](design-system/zx-user.md) — user name with status badges
+- [Skeletons](design-system/skeletons.md) — loading placeholders
+- [zx-spinner](design-system/zx-spinner.md) — compact loading spinner
+- [zxTooltip](design-system/zx-tooltip.md) — floating tooltip directive that follows the cursor
+- [zx-icon-popover](design-system/zx-icon-popover.md) — icon trigger with a CDK popover stack for compact contextual actions
+- [zx-rating](design-system/zx-rating.md) — interactive 5-star rating with hover preview
+- [zx-item-controls](design-system/zx-item-controls.md) — unified vote + playlist (favourites) controls row
+- [zx-item-data](design-system/zx-item-data.md) — grouped key-value information panel
+- [zx-editing-controls](design-system/zx-editing-controls.md) — privilege-gated legacy action buttons
+- [zx-release-type-badge](design-system/zx-release-type-badge.md) — compact colored release type badge
+- `zx-prod-block` — product block used by `zx-prods-list` for prod grids and related prod lists
+- [zxPicturesGrid](design-system/zx-pictures-grid.md) — responsive picture grid layout directive
+- [Dialogs](design-system/zx-dialog.md) — CDK dialog pattern, backdrop rules, panel classes

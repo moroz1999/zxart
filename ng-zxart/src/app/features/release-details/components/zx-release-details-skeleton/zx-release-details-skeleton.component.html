@@ -1,0 +1,25 @@
+<zx-stack spacing="xl">
+  <zx-inline gap="xs" align="center" [wrap]="true">
+    @for (crumb of breadcrumbs; track crumb) {
+      <zx-skeleton-bone class="release-details-skeleton__breadcrumb" [style.animation-delay.ms]="crumb * 40"></zx-skeleton-bone>
+    }
+  </zx-inline>
+
+  <zx-skeleton-bone class="release-details-skeleton__anchor"></zx-skeleton-bone>
+
+  <zx-skeleton-bone class="release-details-skeleton__title"></zx-skeleton-bone>
+
+  <zx-stack spacing="sm">
+    @for (line of metaLines; track line) {
+      <zx-skeleton-bone class="release-details-skeleton__meta-line" [style.animation-delay.ms]="line * 60"></zx-skeleton-bone>
+    }
+    <zx-skeleton-bone class="release-details-skeleton__action-bar"></zx-skeleton-bone>
+  </zx-stack>
+
+  <zx-stack spacing="sm">
+    <zx-skeleton-bone class="release-details-skeleton__section-heading"></zx-skeleton-bone>
+    @for (line of descLines; track line) {
+      <zx-skeleton-bone class="release-details-skeleton__desc-line" [style.animation-delay.ms]="line * 80"></zx-skeleton-bone>
+    }
+  </zx-stack>
+</zx-stack>

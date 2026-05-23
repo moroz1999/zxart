@@ -1,0 +1,42 @@
+:host {
+  display: block;
+  background: var(--zx-inlay-tile-bg);
+  border: 1px solid var(--zx-inlay-tile-border);
+  border-radius: var(--zx-inlay-tile-radius);
+  overflow: hidden;
+  transition: border-color var(--animation-sm);
+
+  &:hover {
+    border-color: var(--zx-inlay-tile-border-hover);
+  }
+}
+
+.inlay-tile__img {
+  background: var(--zx-inlay-tile-img-bg);
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  cursor: pointer;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.inlay-tile__meta {
+  padding: var(--zx-inlay-tile-meta-py) var(--zx-inlay-tile-meta-px);
+  border-top: 1px solid var(--zx-inlay-tile-meta-border);
+  background: var(--zx-inlay-tile-meta-bg);
+  min-height: var(--zx-inlay-tile-meta-min-height);
+}
+
+.inlay-tile__title {
+  display: block;
+}
+
+.inlay-tile__release {
+  display: block;
+  margin-top: var(--zx-inlay-tile-release-mt);
+}

@@ -51,11 +51,22 @@ readonly class PicturesTransformer
             palette: $palette,
         );
 
+        $largeParams = new ZxPictureParametersDto(
+            type: $pictureType,
+            zoom: 2,
+            id: (int)$element->image,
+            border: $pictureBorder,
+            rotation: $rotation,
+            mode: 'mix',
+            palette: $palette,
+        );
+
         return new PictureDto(
             id: (int)$element->id,
             title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
             url: $element->getUrl(),
             imageUrl: ZxPictureUrlHelper::getUrl($baseUrl, $defaultParams),
+            largeImageUrl: ZxPictureUrlHelper::getUrl($baseUrl, $largeParams),
             fileId: (int)$element->image,
             type: $pictureType,
             pictureBorder: $pictureBorder,

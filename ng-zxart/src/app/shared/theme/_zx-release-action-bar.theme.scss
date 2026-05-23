@@ -1,0 +1,14 @@
+:root {
+  /* Top border color separating the bar from the hero. */
+  --zx-release-action-bar-border: var(--secondary-200);
+  /* Top padding of the bar. */
+  --zx-release-action-bar-pt: var(--space-12);
+  /* Gap between bar sections. */
+  --zx-release-action-bar-gap: var(--space-16);
+  /* Rating score color. */
+  --zx-release-action-bar-score-color: var(--warning-700);
+  /* Bottom margin separating the bar from the page sections below. */
+  --zx-release-action-bar-mb: var(--space-16);
+  /* Download icon size inside the release action button. */
+  --zx-release-action-bar-download-icon-size: var(--space-16);
+}

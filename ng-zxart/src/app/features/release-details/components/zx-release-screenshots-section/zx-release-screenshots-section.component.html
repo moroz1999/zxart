@@ -1,0 +1,35 @@
+<section>
+  <zx-release-section-head
+    titleKey="release-details.screenshots"
+    [count]="screenshots.length">
+  </zx-release-section-head>
+
+  <zx-picture-gallery-host></zx-picture-gallery-host>
+
+  <div class="release-screenshots-section__grid">
+    <figure
+      *ngFor="let file of screenshots; let i = index; trackBy: trackById"
+      class="release-screenshots-section__item"
+    >
+      <div class="release-screenshots-section__thumb-wrap">
+        <img
+          *ngIf="file.imageUrl"
+          class="release-screenshots-section__thumb"
+          loading="lazy"
+          [src]="file.imageUrl"
+          [alt]="file.title"
+          [lightbox]="i"
+          [gallery]="galleryId"
+        />
+        <div class="release-screenshots-section__controls">
+          <zx-button
+            size="xs"
+            color="secondary"
+            [href]="file.downloadUrl"
+            [attr.aria-label]="'prod-details.screenshot-download' | translate"
+          ><svg-icon name="download" class="release-screenshots-section__btn-icon"></svg-icon></zx-button>
+        </div>
+      </div>
+    </figure>
+  </div>
+</section>

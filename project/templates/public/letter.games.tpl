@@ -13,7 +13,7 @@
 		{include file=$theme->template('game.short.tpl') element=$game}
 	{/foreach}
 {/capture}
-{assign moduleClass "games_list gallery_pictures"}
+{assign moduleClass "games_list"}
 {assign moduleAttributes "id='gallery_{$currentElement->id}'"}
 {assign moduleTitleClass ""}
 {assign moduleContentClass ""}

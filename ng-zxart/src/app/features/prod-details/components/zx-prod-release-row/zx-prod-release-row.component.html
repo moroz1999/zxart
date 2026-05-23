@@ -14,15 +14,15 @@
   <td class="release-row__title">
     <zx-stack spacing="xs">
       <zx-inline gap="xs" align="baseline">
-        <a [href]="release.url" class="release-row__title-link">{{ release.title }}</a>
+        <a [href]="release.url" class="release-row__title-link" appText="bodySm" tone="strong">{{ release.title }}</a>
         <span *ngIf="release.isRealtime" class="release-row__realtime" [title]="release.party?.compoLabel || ''" aria-hidden="true">⏱</span>
       </zx-inline>
-      <div *ngIf="release.releaseBy.length" class="release-row__releaseby">
+      <div *ngIf="release.releaseBy.length" class="release-row__releaseby" appText="label" tone="muted">
         <ng-container *ngFor="let group of release.releaseBy; let last = last">
           <a [href]="group.url">{{ group.title }}</a><ng-container *ngIf="!last">, </ng-container>
         </ng-container>
       </div>
-      <div *ngIf="release.description" class="release-row__description" [innerHTML]="release.description"></div>
+      <div *ngIf="release.description" class="release-row__description" appText="bodySm" tone="muted" [innerHTML]="release.description"></div>
     </zx-stack>
   </td>
 
@@ -46,7 +46,7 @@
 
   <td class="release-row__hardware">
     <zx-inline gap="xs" [wrap]="true">
-      <a *ngFor="let hw of release.hardware" class="release-row__hardware-item" [href]="hw.catalogueUrl">{{ hw.title }}</a>
+      <a *ngFor="let hw of release.hardware" class="release-row__hardware-item" [href]="hw.catalogueUrl">{{ 'hardware-short.' + hw.id | translate }}</a>
     </zx-inline>
   </td>
 
@@ -72,9 +72,19 @@
 
   <td class="release-row__actions">
     <zx-inline gap="xs" align="center" [wrap]="true">
-      <zx-button *ngIf="canPlay" size="sm" color="primary" [square]="true" [ariaLabel]="'release-row.play' | translate" (click)="onPlay()">
+      <zx-emulator-play-button
+        size="sm"
+        [square]="true"
+        [ariaLabel]="'release-row.play' | translate"
+        [isPlayable]="release.isPlayable"
+        [isDownloadable]="release.isDownloadable"
+        [playUrl]="release.playUrl"
+        [emulatorType]="release.emulatorType"
+        [canUploadScreenshot]="canUploadScreenshot"
+        [screenshotUploadUrl]="screenshotUploadUrl"
+      >
         <svg-icon class="release-row__download-icon" name="play"></svg-icon>
-      </zx-button>
+      </zx-emulator-play-button>
 
       <zx-button *ngIf="showSalesButton"
                  size="sm"
@@ -91,6 +101,7 @@
                    [square]="true"
                    [ariaLabel]="'release-row.download' | translate"
                    [href]="release.downloadUrl"
+                   target="_blank"
                    rel="nofollow">
           <svg-icon class="release-row__download-icon" name="download"></svg-icon>
         </zx-button>

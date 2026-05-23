@@ -83,6 +83,10 @@ class SectionLogics
 
     public function getSectionIdByType($marker)
     {
+        if ($marker === null) {
+            return false;
+        }
+
         $info = $this->getSectionsInfo();
         if (isset($info[$marker])) {
             return $info[$marker];

@@ -3,7 +3,7 @@
   <zx-table *ngIf="loading" size="sm">
     <zx-tune-table-skeleton [count]="5"></zx-tune-table-skeleton>
   </zx-table>
-  <div *ngIf="error" appText="caption" tone="muted">{{ 'firstpage.error' | translate }}</div>
+  <div *ngIf="error" appText="caption" tone="danger">{{ 'firstpage.error' | translate }}</div>
   <zx-music-list-inline
     *ngIf="!loading && !error && tunes.length > 0"
     [elementId]="elementId"

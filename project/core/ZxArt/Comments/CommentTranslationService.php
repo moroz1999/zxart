@@ -12,7 +12,7 @@ use ZxArt\Comments\Repositories\CommentsRepository;
  */
 final readonly class CommentTranslationService
 {
-    private const int BATCH_SIZE = 10;
+    private const int BATCH_SIZE = 20;
 
     public function __construct(
         private CommentsRepository $commentsRepository,

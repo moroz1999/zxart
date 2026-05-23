@@ -63,6 +63,201 @@
 .zx-badge--primary   { background: var(--primary-500); color: var(--white); border-color: var(--primary-600); }
 .zx-badge--secondary { background: var(--secondary-100); color: var(--secondary-900); border-color: var(--secondary-400); }
 
+/* ---------- zx-release-type-badge ----------
+   Source: docs/design-system/zx-release-type-badge.md
+   10px text · 1px 6px padding · 8px radius.
+   Colors map per release type. */
+.zx-release-type-badge {
+  display: inline-flex; align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 1px 6px;
+  border-radius: 8px;
+  color: var(--white);
+  white-space: nowrap;
+  line-height: 1.4;
+}
+.zx-release-type-badge--original,
+.zx-release-type-badge--rerelease    { background: var(--primary-500); }
+.zx-release-type-badge--adaptation,
+.zx-release-type-badge--bugfix,
+.zx-release-type-badge--demo,
+.zx-release-type-badge--demoversion  { background: var(--primary-700); }
+.zx-release-type-badge--localization,
+.zx-release-type-badge--translation  { background: var(--warning-700); }
+.zx-release-type-badge--mod,
+.zx-release-type-badge--modification { background: var(--warning-500); color: var(--secondary-900); }
+.zx-release-type-badge--crack        { background: var(--danger-600); }
+.zx-release-type-badge--unknown,
+.zx-release-type-badge--mia,
+.zx-release-type-badge--corrupted,
+.zx-release-type-badge--compilation,
+.zx-release-type-badge--incomplete   { background: var(--secondary-500); }
+
+/* ---------- zx-stack / zx-inline / zx-grid / zx-inset ----------
+   Layout primitives. The docs require all spacing/alignment to flow
+   through these (no inline flex/gap in feature components). */
+.zx-stack  { display: flex; flex-direction: column; gap: var(--gap-md); }
+.zx-stack--gap-none { gap: 0; }
+.zx-stack--gap-xs   { gap: var(--space-4); }
+.zx-stack--gap-sm   { gap: var(--gap-sm); }
+.zx-stack--gap-md   { gap: var(--gap-md); }
+.zx-stack--gap-lg   { gap: var(--gap-lg); }
+.zx-stack--gap-xl   { gap: var(--gap-xl); }
+.zx-stack--gap-xxl  { gap: var(--gap-xxl); }
+.zx-stack--align-start   { align-items: flex-start; }
+.zx-stack--align-center  { align-items: center; }
+.zx-stack--align-end     { align-items: flex-end; }
+.zx-stack--align-stretch { align-items: stretch; }
+
+.zx-inline { display: flex; flex-direction: row; gap: var(--gap-md); align-items: center; }
+.zx-inline--gap-none { gap: 0; }
+.zx-inline--gap-xs   { gap: var(--space-4); }
+.zx-inline--gap-sm   { gap: var(--gap-sm); }
+.zx-inline--gap-md   { gap: var(--gap-md); }
+.zx-inline--gap-lg   { gap: var(--gap-lg); }
+.zx-inline--gap-xl   { gap: var(--gap-xl); }
+.zx-inline--gap-xxl  { gap: var(--gap-xxl); }
+.zx-inline--align-start    { align-items: flex-start; }
+.zx-inline--align-center   { align-items: center; }
+.zx-inline--align-end      { align-items: flex-end; }
+.zx-inline--align-stretch  { align-items: stretch; }
+.zx-inline--align-baseline { align-items: baseline; }
+.zx-inline--justify-start   { justify-content: flex-start; }
+.zx-inline--justify-center  { justify-content: center; }
+.zx-inline--justify-end     { justify-content: flex-end; }
+.zx-inline--justify-between { justify-content: space-between; }
+.zx-inline--wrap { flex-wrap: wrap; }
+
+.zx-grid { display: grid; gap: var(--gap-md); grid-template-columns: 1fr; }
+.zx-grid--cols-1 { grid-template-columns: repeat(1, 1fr); }
+.zx-grid--cols-2 { grid-template-columns: repeat(2, 1fr); }
+.zx-grid--cols-3 { grid-template-columns: repeat(3, 1fr); }
+.zx-grid--cols-4 { grid-template-columns: repeat(4, 1fr); }
+.zx-grid--cols-5 { grid-template-columns: repeat(5, 1fr); }
+.zx-grid--cols-6 { grid-template-columns: repeat(6, 1fr); }
+.zx-grid--gap-none { gap: 0; }
+.zx-grid--gap-xs   { gap: var(--space-4); }
+.zx-grid--gap-sm   { gap: var(--gap-sm); }
+.zx-grid--gap-md   { gap: var(--gap-md); }
+.zx-grid--gap-lg   { gap: var(--gap-lg); }
+.zx-grid--gap-xl   { gap: var(--gap-xl); }
+
+.zx-inset { padding: var(--padding-md); }
+.zx-inset--padding-none { padding: 0; }
+.zx-inset--padding-xs   { padding: var(--padding-xs); }
+.zx-inset--padding-sm   { padding: var(--padding-sm); }
+.zx-inset--padding-md   { padding: var(--padding-md); }
+.zx-inset--padding-lg   { padding: var(--padding-lg); }
+.zx-inset--padding-xl   { padding: var(--padding-xl); }
+.zx-inset--side-block  { padding-left: 0; padding-right: 0; }
+.zx-inset--side-inline { padding-top: 0; padding-bottom: 0; }
+
+/* ---------- zx-button-controls ----------
+   Source: docs/design-system/zx-button-controls.md
+   Wrapper for button groups: align + wrap. Replaces ad-hoc flex/gap. */
+.zx-button-controls {
+  display: flex;
+  gap: var(--gap-md);
+  align-items: center;
+}
+.zx-button-controls--align-start      { justify-content: flex-start; }
+.zx-button-controls--align-end        { justify-content: flex-end; }
+.zx-button-controls--align-distribute { justify-content: space-between; }
+.zx-button-controls--align-fill       { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; }
+.zx-button-controls--align-fill > .zx-button { width: 100%; }
+.zx-button-controls--align-full       { display: flex; flex-direction: column; align-items: stretch; gap: var(--gap-md); }
+.zx-button-controls--align-full > .zx-button { width: 100%; }
+.zx-button-controls--wrap { flex-wrap: wrap; }
+
+/* ---------- zx-item-data ----------
+   Grouped key-value information. Labels muted, values normal body. */
+.zx-item-data {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--space-4) var(--gap-md);
+  font-size: var(--font-sm);
+  align-items: baseline;
+}
+.zx-item-data-item__label {
+  color: var(--text-light-color);
+  font-size: var(--zx-caption-size);
+  line-height: var(--zx-caption-lh);
+}
+.zx-item-data-item__value {
+  color: var(--text-color);
+  font-size: var(--zx-body-sm-size);
+  line-height: var(--zx-body-sm-lh);
+}
+.zx-item-data-item__value a { color: var(--zx-link-color); text-decoration: none; }
+.zx-item-data-item__value a:hover { text-decoration: underline; }
+
+/* ---------- zx-breadcrumbs ---------- */
+.zx-breadcrumbs {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--font-xs);
+  color: var(--text-light-color);
+  letter-spacing: 0.02em;
+}
+.zx-breadcrumbs a { color: inherit; text-decoration: none; }
+.zx-breadcrumbs a:hover { color: var(--text-color); text-decoration: underline; }
+.zx-breadcrumbs .sep { color: var(--secondary-400); }
+.zx-breadcrumbs .here { color: var(--text-color); }
+
+/* ---------- zx-rating ----------
+   Source: docs/design-system/zx-rating.md
+   Two layers: grey row + yellow overlay (width% from rating).
+   --star-size is responsive (18 desktop, 24 tablet, 32 mobile). */
+.zx-rating {
+  display: inline-flex; align-items: center;
+  gap: var(--space-4);
+  --star-size: 18px;
+}
+@media (max-width: 991.98px) { .zx-rating { --star-size: 24px; } }
+@media (max-width: 575.98px) { .zx-rating { --star-size: 32px; } }
+.zx-rating__skip {
+  width: calc(var(--star-size) - 2px);
+  height: calc(var(--star-size) - 2px);
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 0; background: transparent; padding: 0;
+  color: var(--date-color);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.zx-rating__skip:hover { color: var(--error-color); }
+.zx-rating__stars {
+  position: relative;
+  display: inline-block;
+  height: var(--star-size);
+  line-height: 1;
+  font-size: var(--star-size);
+  letter-spacing: 1px;
+  color: var(--date-color);
+  cursor: pointer;
+}
+.zx-rating__stars::before { content: "★★★★★"; }
+.zx-rating__fill {
+  position: absolute; top: 0; left: 0;
+  height: 100%;
+  overflow: hidden;
+  color: var(--icon-yellow);
+  white-space: nowrap;
+  transition: width var(--animation-sm) ease;
+}
+.zx-rating__fill::before { content: "★★★★★"; }
+.zx-rating__user-vote {
+  font-size: var(--font-sm);
+  font-family: var(--font-mono);
+  color: var(--icon-yellow);
+  font-weight: 700;
+  margin-left: var(--space-4);
+  min-width: 12px;
+}
+
 /* ---------- zx-panel ----------
    Source: ng-zxart/src/app/shared/theme/_zx-panel.theme.scss
    --zx-panel-bg: white (light) / secondary-100 (dark)

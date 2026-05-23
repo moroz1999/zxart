@@ -1,0 +1,40 @@
+:host {
+  display: block;
+}
+
+.file-viewer-dialog__body {
+  min-height: var(--zx-file-viewer-dialog-min-height);
+}
+
+.file-viewer-dialog__text {
+  font-family: var(--zx-file-viewer-dialog-font-family);
+  font-size: var(--zx-file-viewer-dialog-font-size);
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow: auto;
+  max-height: var(--zx-file-viewer-dialog-max-height);
+}
+
+.file-viewer-dialog__html {
+  font-family: var(--zx-file-viewer-dialog-font-family);
+  font-size: var(--zx-file-viewer-dialog-font-size);
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow: auto;
+  max-height: var(--zx-file-viewer-dialog-max-height);
+
+  pre {
+    white-space: pre-wrap;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.file-viewer-dialog__loading,
+.file-viewer-dialog__error {
+  padding: var(--zx-file-viewer-dialog-padding);
+}

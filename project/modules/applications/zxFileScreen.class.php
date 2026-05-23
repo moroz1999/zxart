@@ -77,7 +77,7 @@ class zxFileScreenApplication extends controllerApplication
         $this->mode = $controller->getParameter('mode');
         $this->border = $controller->getParameter('border');
         $this->rotation = $controller->getParameter('rotation');
-        $this->download = (boolean)$controller->getParameter('download');
+        $this->download = (bool)$controller->getParameter('download');
         $this->fileId = (int)$controller->getParameter('fileId');
         $this->id = (int)$controller->getParameter('id');
     }

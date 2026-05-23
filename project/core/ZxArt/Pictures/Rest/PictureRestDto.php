@@ -18,6 +18,7 @@ readonly class PictureRestDto
         public string $title,
         public string $url,
         public string $imageUrl,
+        public string $largeImageUrl,
         public int $fileId,
         public string $type,
         public int $pictureBorder,

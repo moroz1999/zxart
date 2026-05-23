@@ -1,0 +1,34 @@
+<zx-inline *ngIf="hasAnyPeople" gap="xs" align="baseline" [wrap]="true" appText="label" tone="muted">
+  <ng-container *ngFor="let group of authorRoleGroups; let firstGroup = first; trackBy: trackRoleGroup">
+    <span *ngIf="!firstGroup" class="prod-people-row__sep">·</span>
+    <span class="prod-people-row__label" appText="label" tone="strong">{{ roleLabelKey(group.role) | translate }}:</span>
+    <ng-container *ngFor="let author of group.authors; let last = last; trackBy: trackAuthor">
+      <a [href]="author.url" class="prod-people-row__link">{{ author.title }}</a><ng-container *ngIf="!last">, </ng-container>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="publishers.length">
+    <span *ngIf="hasAuthorRoleGroups" class="prod-people-row__sep">·</span>
+    <span class="prod-people-row__label" appText="label" tone="strong">{{ 'prod-details.publishers' | translate }}:</span>
+    <ng-container *ngFor="let pub of publishers; let last = last">
+      <a [href]="pub.url" class="prod-people-row__link">{{ pub.title }}</a><ng-container *ngIf="!last">, </ng-container>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="groups.length">
+    <span *ngIf="hasAuthorRoleGroups || publishers.length" class="prod-people-row__sep">·</span>
+    <span class="prod-people-row__label" appText="label" tone="strong">{{ 'prod-details.groups' | translate }}:</span>
+    <ng-container *ngFor="let group of groups; let last = last">
+      <a [href]="group.url" class="prod-people-row__link">{{ group.title }}</a><ng-container *ngIf="!last">, </ng-container>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="party as p">
+    <span *ngIf="hasAuthorRoleGroups || publishers.length || groups.length" class="prod-people-row__sep">·</span>
+    <span class="prod-people-row__label" appText="label" tone="strong">{{ 'prod-details.party' | translate }}:</span>
+    <a [href]="p.url" class="prod-people-row__link">{{ p.title }}</a>
+    <ng-container *ngIf="p.compoLabel">
+      (<ng-container *ngIf="p.place != null">{{ p.place }}, </ng-container>{{ p.compoLabel }})
+    </ng-container>
+  </ng-container>
+</zx-inline>
