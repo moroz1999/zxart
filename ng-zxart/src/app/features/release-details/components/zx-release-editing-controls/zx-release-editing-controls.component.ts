@@ -11,6 +11,12 @@ const RELEASE_EDITING_ACTIONS: readonly ZxEditingControlAction[] = [
     labelKey: 'release-details.edit',
   },
   {
+    action: 'clone',
+    privilege: 'clone',
+    labelKey: 'release-details.clone',
+    color: 'secondary',
+  },
+  {
     action: 'publicDelete',
     privilege: 'publicDelete',
     labelKey: 'release-details.delete',

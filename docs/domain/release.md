@@ -86,6 +86,9 @@ Concrete release (version) of software production. Contains files specific to th
 - **userId** - ID of user who added the element
 - **parsed** - flag that file was parsed
 
+### Special Operations
+- **clone** - creates a copy of the release under the same parent prod and resets usage counters.
+
 ### Emulator Launch Capability
 Determined by combination of:
 1. **releaseType** - file type must be in runnable list

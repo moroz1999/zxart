@@ -1,0 +1,134 @@
+<section class="ap-header">
+  <div class="ap-header__avatar">
+    <div class="ap-avatar--empty">
+      <svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor" aria-hidden="true">
+        <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-3 0-9 1.5-9 4.5V21h18v-2.5c0-3-6-4.5-9-4.5z"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="ap-header__body">
+    <div class="ap-header__title-row">
+      <h1 class="ap-header__name">{{ core.title }}</h1>
+
+      <ng-container *ngFor="let badge of core.badges">
+        <zx-badge variant="primary" [title]="'author-details.badges.' + badge | translate">
+          {{ 'author-details.badges.' + badge | translate }}
+        </zx-badge>
+      </ng-container>
+
+      <div class="ap-header__role-chips" *ngIf="core.roles.length">
+        <span *ngFor="let role of core.roles" class="ap-tag ap-tag--{{ role }}">
+          {{ 'author-details.roles.' + role | translate }}
+        </span>
+      </div>
+    </div>
+
+    <div class="ap-header__bio">
+      <span *ngIf="core.realName" class="ap-bio__name">{{ core.realName }}</span>
+
+      <ng-container *ngIf="core.location.length">
+        <span class="ap-bio__sep">·</span>
+        <span class="ap-bio__loc">
+          <ng-container *ngFor="let loc of core.location; let i = index">
+            <ng-container *ngIf="i > 0">, </ng-container>
+            <a [href]="loc.url">{{ loc.title }}</a>
+          </ng-container>
+        </span>
+      </ng-container>
+
+      <ng-container *ngIf="core.joined">
+        <span class="ap-bio__sep">·</span>
+        <span class="ap-bio__joined">
+          {{ 'author-details.header.joined' | translate }} {{ joinedYear }}
+          <ng-container *ngIf="core.siteUser">
+            ({{ 'author-details.header.login' | translate }} <code>{{ core.siteUser }}</code>)
+          </ng-container>
+        </span>
+      </ng-container>
+    </div>
+
+    <div class="ap-rating-strip" *ngIf="core.ratings.artist > 0 || core.ratings.musician > 0">
+      <span class="ap-rating-strip__label">{{ 'author-details.header.rating.label' | translate }}</span>
+      <span *ngIf="core.ratings.artist > 0" class="ap-rating-strip__item">
+        <b>{{ core.ratings.artist.toFixed(2) }}</b>
+        <span class="ap-rating-strip__sub">{{ 'author-details.header.rating.artist' | translate }}</span>
+      </span>
+      <span *ngIf="core.ratings.musician > 0" class="ap-rating-strip__item">
+        <b>{{ core.ratings.musician.toFixed(2) }}</b>
+        <span class="ap-rating-strip__sub">{{ 'author-details.header.rating.musician' | translate }}</span>
+      </span>
+    </div>
+
+    <div class="ap-meta-row" *ngIf="core.groups.length">
+      <span class="ap-meta-row__label">{{ 'author-details.header.groups' | translate }}:</span>
+      <div class="ap-chips">
+        <a *ngFor="let group of core.groups" [href]="group.url" class="ap-group-chip">
+          <span class="ap-group-chip__name">{{ group.title }}</span>
+          <span *ngIf="group.years" class="ap-group-chip__years">{{ group.years }}</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="ap-meta-row" *ngIf="core.aliases.length">
+      <span class="ap-meta-row__label">{{ 'author-details.header.aliases' | translate }}:</span>
+      <div class="ap-aliases">
+        <ng-container *ngFor="let alias of visibleAliases; let i = index; let last = last">
+          <a [href]="alias.url">{{ alias.title }}</a>
+          <ng-container *ngIf="!last">, </ng-container>
+        </ng-container>
+        <button
+          *ngIf="hiddenAliasCount > 0 && !showAllAliases"
+          type="button"
+          class="ap-aliases__more"
+          (click)="toggleAliases()">
+          {{ 'author-details.header.show-more' | translate: {count: hiddenAliasCount} }}
+        </button>
+        <button
+          *ngIf="showAllAliases && hiddenAliasCount > 0"
+          type="button"
+          class="ap-aliases__more"
+          (click)="toggleAliases()">
+          {{ 'author-details.header.collapse' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <div class="ap-meta-row" *ngIf="core.links.length">
+      <span class="ap-meta-row__label">{{ 'author-details.header.links' | translate }}:</span>
+      <div class="ap-ext-links">
+        <a *ngFor="let link of core.links" [href]="link.url" target="_blank" rel="noopener noreferrer">
+          {{ link.label }}
+        </a>
+      </div>
+    </div>
+
+    <div class="ap-meta-row ap-meta-row--tech">
+      <button type="button" class="ap-tech-toggle" (click)="toggleTech()">
+        {{ 'author-details.header.tech-toggle' | translate }}
+      </button>
+      <div class="ap-tech" *ngIf="showTech">
+        <div class="ap-tech__row" *ngIf="core.tech.palette">
+          <span class="ap-tech__k">{{ 'author-details.header.tech.palette' | translate }}</span>
+          <span class="ap-tech__v">{{ core.tech.palette }}</span>
+        </div>
+        <div class="ap-tech__row" *ngIf="core.tech.ayChip">
+          <span class="ap-tech__k">{{ 'author-details.header.tech.ay-chip' | translate }}</span>
+          <span class="ap-tech__v">{{ core.tech.ayChip }}</span>
+        </div>
+        <div class="ap-tech__row" *ngIf="core.tech.ayChannels">
+          <span class="ap-tech__k">{{ 'author-details.header.tech.ay-channels' | translate }}</span>
+          <span class="ap-tech__v">{{ core.tech.ayChannels }}</span>
+        </div>
+        <div class="ap-tech__row" *ngIf="core.tech.ayClock">
+          <span class="ap-tech__k">{{ 'author-details.header.tech.ay-clock' | translate }}</span>
+          <span class="ap-tech__v">{{ core.tech.ayClock }}</span>
+        </div>
+        <div class="ap-tech__row" *ngIf="core.tech.intFreq">
+          <span class="ap-tech__k">{{ 'author-details.header.tech.int-freq' | translate }}</span>
+          <span class="ap-tech__v">{{ core.tech.intFreq }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

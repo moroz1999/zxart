@@ -220,15 +220,19 @@
 @media (max-width: 991.98px) { .zx-rating { --star-size: 24px; } }
 @media (max-width: 575.98px) { .zx-rating { --star-size: 32px; } }
 .zx-rating__skip {
-  width: calc(var(--star-size) - 2px);
-  height: calc(var(--star-size) - 2px);
+  width: var(--star-size);
+  height: var(--star-size);
   display: inline-flex; align-items: center; justify-content: center;
   border: 0; background: transparent; padding: 0;
   color: var(--date-color);
   cursor: pointer;
   border-radius: var(--radius-sm);
+  font-size: calc(var(--star-size) + 2px);
+  line-height: 1;
+  font-weight: 400;
 }
-.zx-rating__skip:hover { color: var(--error-color); }
+.zx-rating__skip:hover { color: var(--error-color); background: var(--secondary-100); }
+.zx-rating__skip:disabled { opacity: 0.35; cursor: default; }
 .zx-rating__stars {
   position: relative;
   display: inline-block;

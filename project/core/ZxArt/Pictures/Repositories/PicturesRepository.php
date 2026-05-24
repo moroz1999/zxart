@@ -96,6 +96,89 @@ readonly final class PicturesRepository
             ->pluck('id');
     }
 
+    private const array ALLOWED_SORT_COLUMNS = ['votes', 'year', 'dateAdded'];
+
+    /**
+     * @return int[]
+     */
+    public function findPagedIdsByAuthorId(int $authorId, int $start, int $limit, string $sortColumn, string $sortDir, string $typeFilter = ''): array
+    {
+        $sortColumn = in_array($sortColumn, self::ALLOWED_SORT_COLUMNS, true) ? $sortColumn : 'votes';
+        $sortDir = strtolower($sortDir) === 'asc' ? 'asc' : 'desc';
+
+        $q = $this->db->table(self::TABLE)
+            ->select([self::TABLE . '.id', self::TABLE . '.' . $sortColumn])
+            ->join(
+                'structure_links',
+                fn($join) => $join
+                    ->on('structure_links.childStructureId', '=', self::TABLE . '.id')
+                    ->where('structure_links.type', '=', 'authorPicture')
+            )
+            ->where(function ($q) use ($authorId) {
+                $q->where('structure_links.parentStructureId', '=', $authorId)
+                    ->orWhereIn(
+                        'structure_links.parentStructureId',
+                        fn($sub) => $sub->select('id')->from('module_authoralias')->where('authorId', '=', $authorId)
+                    );
+            });
+        if ($typeFilter !== '') {
+            $q->where(self::TABLE . '.type', '=', $typeFilter);
+        }
+        return $q->distinct()
+            ->orderBy(self::TABLE . '.' . $sortColumn, $sortDir)
+            ->offset($start)
+            ->limit($limit)
+            ->pluck(self::TABLE . '.id');
+    }
+
+    public function countByAuthorId(int $authorId, string $typeFilter = ''): int
+    {
+        $q = $this->db->table(self::TABLE)
+            ->join(
+                'structure_links',
+                fn($join) => $join
+                    ->on('structure_links.childStructureId', '=', self::TABLE . '.id')
+                    ->where('structure_links.type', '=', 'authorPicture')
+            )
+            ->where(function ($q) use ($authorId) {
+                $q->where('structure_links.parentStructureId', '=', $authorId)
+                    ->orWhereIn(
+                        'structure_links.parentStructureId',
+                        fn($sub) => $sub->select('id')->from('module_authoralias')->where('authorId', '=', $authorId)
+                    );
+            });
+        if ($typeFilter !== '') {
+            $q->where(self::TABLE . '.type', '=', $typeFilter);
+        }
+        return (int)$q->distinct()->count(self::TABLE . '.id');
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getDistinctTypesByAuthorId(int $authorId): array
+    {
+        return $this->db->table(self::TABLE)
+            ->select(self::TABLE . '.type')
+            ->join(
+                'structure_links',
+                fn($join) => $join
+                    ->on('structure_links.childStructureId', '=', self::TABLE . '.id')
+                    ->where('structure_links.type', '=', 'authorPicture')
+            )
+            ->where(function ($q) use ($authorId) {
+                $q->where('structure_links.parentStructureId', '=', $authorId)
+                    ->orWhereIn(
+                        'structure_links.parentStructureId',
+                        fn($sub) => $sub->select('id')->from('module_authoralias')->where('authorId', '=', $authorId)
+                    );
+            })
+            ->where(self::TABLE . '.type', '!=', '')
+            ->distinct()
+            ->orderBy(self::TABLE . '.type')
+            ->pluck(self::TABLE . '.type');
+    }
+
     /**
      * Returns IDs of pictures linked to the given author (including all its aliases)
      * via structure_links with type 'authorPicture'.

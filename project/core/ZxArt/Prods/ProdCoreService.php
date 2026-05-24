@@ -11,6 +11,7 @@ use groupAliasElement;
 use structureElement;
 use tagElement;
 use userElement;
+use privilegesManager;
 use ZxArt\Prods\Dto\ProdAuthorInfoDto;
 use ZxArt\Prods\Dto\ProdCategoryPathDto;
 use ZxArt\Prods\Dto\ProdCategoryRefDto;
@@ -21,6 +22,7 @@ use ZxArt\Prods\Dto\ProdTagRefDto;
 use ZxArt\Prods\Dto\ProdVotingDto;
 use ZxArt\Prods\Repositories\ProdTabsRepository;
 use ZxArt\Shared\EntityType;
+use ZxArt\Shared\StructureType;
 use zxProdCategoryElement;
 use zxProdElement;
 
@@ -30,6 +32,7 @@ readonly class ProdCoreService
         private ProdElementService $prodElementService,
         private ProdInfoBuilder $infoBuilder,
         private ProdTabsRepository $prodTabsRepository,
+        private privilegesManager $privilegesManager,
     ) {
     }
 
@@ -58,6 +61,12 @@ readonly class ProdCoreService
             generatedDescription: (string)$element->getGeneratedDescription(),
             dateCreated: $element->dateCreated,
             catalogueYearUrl: $year > 0 ? $element->getCatalogueUrl(['years' => $year]) : '',
+            canAddRelease: $this->privilegesManager->checkPrivilegesForAction(
+                $element->getId(),
+                'publicAdd',
+                StructureType::ZxRelease->value,
+            ) === true,
+            addReleaseUrl: (string)$element->getUrl() . 'type:' . StructureType::ZxRelease->value . '/action:publicAdd/',
             categoriesPaths: $this->buildCategoriesPaths($element),
             languages: $this->infoBuilder->buildLanguages($element),
             hardware: $this->infoBuilder->buildHardware($element),

@@ -93,8 +93,8 @@ export class ZxPaginationComponent implements OnChanges {
 
     makeHref(number: number): string {
         if (this.urlBase.slice(-1) === '/') {
-            return this.urlBase + 'page:' + number;
+            return this.urlBase + 'page:' + number + '/';
         }
-        return this.urlBase + '/page:' + number;
+        return this.urlBase + '/page:' + number + '/';
     }
 }

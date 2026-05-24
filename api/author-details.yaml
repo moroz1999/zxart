@@ -1,0 +1,298 @@
+openapi: 3.0.0
+paths:
+  /author-details/:
+    get:
+      summary: Get core profile data for the author details page
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Full payload for the author details page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorCorePayload'
+        '400':
+          description: Bad request
+        '404':
+          description: Author not found
+        '500':
+          description: Internal server error
+  /author-prods/:
+    get:
+      summary: Get all productions for an author (for author details page)
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Array of productions with this author's roles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuthorProd'
+        '400':
+          description: Bad request
+        '404':
+          description: Author not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    AuthorLocationItem:
+      type: object
+      required:
+        - title
+        - url
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+
+    AuthorGroup:
+      type: object
+      required:
+        - id
+        - title
+        - url
+        - years
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        years:
+          type: string
+          nullable: true
+
+    AuthorAliasRef:
+      type: object
+      required:
+        - id
+        - title
+        - url
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+
+    AuthorLink:
+      type: object
+      required:
+        - url
+        - label
+      properties:
+        url:
+          type: string
+        label:
+          type: string
+
+    AuthorTech:
+      type: object
+      required:
+        - palette
+        - ayChip
+        - ayChannels
+        - ayClock
+        - intFreq
+      properties:
+        palette:
+          type: string
+        ayChip:
+          type: string
+        ayChannels:
+          type: string
+        ayClock:
+          type: string
+        intFreq:
+          type: string
+
+    AuthorCounters:
+      type: object
+      required:
+        - pictures
+        - tunes
+        - prods
+        - comments
+      properties:
+        pictures:
+          type: integer
+        tunes:
+          type: integer
+        prods:
+          type: integer
+        comments:
+          type: integer
+
+    AuthorRatings:
+      type: object
+      required:
+        - artist
+        - musician
+      properties:
+        artist:
+          type: number
+          format: float
+        musician:
+          type: number
+          format: float
+
+    AuthorTabs:
+      type: object
+      required:
+        - hasPictures
+        - hasTunes
+        - hasProds
+      properties:
+        hasPictures:
+          type: boolean
+        hasTunes:
+          type: boolean
+        hasProds:
+          type: boolean
+
+    AuthorCorePayload:
+      type: object
+      required:
+        - id
+        - title
+        - realName
+        - url
+        - parentUrl
+        - parentTitle
+        - siteUser
+        - joined
+        - roles
+        - badges
+        - location
+        - groups
+        - aliases
+        - links
+        - tech
+        - counters
+        - ratings
+        - tabs
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        realName:
+          type: string
+        url:
+          type: string
+        parentUrl:
+          type: string
+          nullable: true
+        parentTitle:
+          type: string
+          nullable: true
+        siteUser:
+          type: string
+          nullable: true
+        joined:
+          type: string
+          nullable: true
+          description: ISO date (YYYY-MM-DD) of account registration
+        roles:
+          type: array
+          items:
+            type: string
+            enum: [artist, musician, coder]
+        badges:
+          type: array
+          items:
+            type: string
+            enum: [VIP, Volunteer]
+        location:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorLocationItem'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorGroup'
+        aliases:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorAliasRef'
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorLink'
+        tech:
+          $ref: '#/components/schemas/AuthorTech'
+        counters:
+          $ref: '#/components/schemas/AuthorCounters'
+        ratings:
+          $ref: '#/components/schemas/AuthorRatings'
+        tabs:
+          $ref: '#/components/schemas/AuthorTabs'
+
+    AuthorProdCoAuthor:
+      type: object
+      required:
+        - name
+        - url
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+
+    AuthorProd:
+      type: object
+      required:
+        - id
+        - title
+        - url
+        - year
+        - thumbnailUrl
+        - category
+        - votes
+        - votesAmount
+        - rolesInProd
+        - coAuthors
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        year:
+          type: integer
+        thumbnailUrl:
+          type: string
+          nullable: true
+        category:
+          type: string
+        votes:
+          type: number
+          format: float
+        votesAmount:
+          type: integer
+        rolesInProd:
+          type: array
+          items:
+            type: string
+        coAuthors:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorProdCoAuthor'

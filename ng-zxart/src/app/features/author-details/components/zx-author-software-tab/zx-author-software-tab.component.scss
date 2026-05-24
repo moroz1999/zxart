@@ -1,0 +1,112 @@
+:host {
+  display: block;
+}
+
+.ap-toolbar__result {
+  font-size: var(--font-xs);
+  color: var(--text-light-color);
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.ap-year-group {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 12px;
+
+  &--no-rail {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ap-year-rail {
+  position: relative;
+  padding: 6px 0;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 24px;
+    top: 0;
+    bottom: -16px;
+    width: 2px;
+    background: var(--secondary-200);
+  }
+}
+
+.ap-year-rail__dot {
+  position: absolute;
+  left: 19px;
+  top: 14px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--primary-500);
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 2px var(--secondary-200);
+  z-index: 1;
+}
+
+.ap-year-rail__year {
+  font-size: var(--font-lg);
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-color);
+  padding-left: 42px;
+}
+
+.ap-year-rail__count {
+  font-size: var(--font-xs);
+  color: var(--text-light-color);
+  padding-left: 42px;
+}
+
+.ap-prod-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.ap-prodwrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  zx-prod-block {
+    display: block;
+  }
+}
+
+.ap-prodwrap__roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  padding: 0 4px;
+}
+
+.ap-role-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid currentColor;
+  background: var(--surface);
+
+  :host-context(.dark-mode) & { background: var(--secondary-100); }
+
+  &--sm { padding: 1px 6px; font-size: 10px; }
+  &--music { color: var(--primary-600); }
+  &--gfx { color: oklch(48% 0.16 165); }
+  &--code { color: oklch(48% 0.18 295); }
+  &--intro { color: oklch(50% 0.18 35); }
+
+  :host-context(.dark-mode) &--music { color: var(--primary-300); }
+  :host-context(.dark-mode) &--gfx { color: oklch(70% 0.16 165); }
+  :host-context(.dark-mode) &--code { color: oklch(72% 0.18 295); }
+  :host-context(.dark-mode) &--intro { color: oklch(70% 0.18 35); }
+}

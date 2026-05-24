@@ -1,51 +1,53 @@
-<zx-filter-bar *ngIf="mode === 'full'">
-  <zx-input
-    class="filter-search"
-    [placeholder]="'group-browser.search.placeholder' | translate"
-    [ngModel]="search"
-    (ngModelChange)="onSearchInput($event)"
-  ></zx-input>
-  <zx-filter-picker
-    class="filter-picker"
-    [label]="'group-browser.filters.country' | translate"
-    [items]="countryOptions"
-    [selectedIds]="selectedCountryIds"
-    [multi]="false"
-    [searchEnabled]="true"
-    [disabled]="countryOptions.length === 0"
-    (selectedIdsChange)="onCountryChange($event)"
-  ></zx-filter-picker>
-  <zx-filter-picker
-    class="filter-picker"
-    [label]="'group-browser.filters.city' | translate"
-    [items]="cityOptions"
-    [selectedIds]="selectedCityIds"
-    [multi]="false"
-    [searchEnabled]="true"
-    [disabled]="cityOptions.length === 0"
-    (selectedIdsChange)="onCityChange($event)"
-  ></zx-filter-picker>
-</zx-filter-bar>
+<zx-stack spacing="md">
+  <zx-filter-bar *ngIf="mode === 'full'">
+    <zx-input
+      class="filter-search"
+      [placeholder]="'group-browser.search.placeholder' | translate"
+      [ngModel]="search"
+      (ngModelChange)="onSearchInput($event)"
+    ></zx-input>
+    <zx-filter-picker
+      class="filter-picker"
+      [label]="'group-browser.filters.country' | translate"
+      [items]="countryOptions"
+      [selectedIds]="selectedCountryIds"
+      [multi]="false"
+      [searchEnabled]="true"
+      [disabled]="countryOptions.length === 0"
+      (selectedIdsChange)="onCountryChange($event)"
+    ></zx-filter-picker>
+    <zx-filter-picker
+      class="filter-picker"
+      [label]="'group-browser.filters.city' | translate"
+      [items]="cityOptions"
+      [selectedIds]="selectedCityIds"
+      [multi]="false"
+      [searchEnabled]="true"
+      [disabled]="cityOptions.length === 0"
+      (selectedIdsChange)="onCityChange($event)"
+    ></zx-filter-picker>
+  </zx-filter-bar>
 
-<zx-row-skeleton *ngIf="groups === null && !error" [count]="30"></zx-row-skeleton>
+  <zx-row-skeleton *ngIf="groups === null && !error" [count]="30"></zx-row-skeleton>
 
-<div *ngIf="error" appText="caption" tone="danger">{{ 'group-browser.error' | translate }}</div>
-<div *ngIf="!loading && !error && groups !== null && groups.length === 0"
-     appText="bodySm" tone="muted">{{ 'group-browser.empty' | translate }}
-</div>
+  <div *ngIf="error" appText="caption" tone="danger">{{ 'group-browser.error' | translate }}</div>
+  <div *ngIf="!loading && !error && groups !== null && groups.length === 0"
+       appText="bodySm" tone="muted">{{ 'group-browser.empty' | translate }}
+  </div>
 
-<zx-groups-table
-  *ngIf="groups !== null && groups.length > 0"
-  [groups]="groups"
-  [rowStartIndex]="rowStartIndex"
-  [loading]="loading"
-></zx-groups-table>
+  <zx-groups-table
+    *ngIf="groups !== null && groups.length > 0"
+    [groups]="groups"
+    [rowStartIndex]="rowStartIndex"
+    [loading]="loading"
+  ></zx-groups-table>
 
-<zx-pagination
-  *ngIf="mode === 'full' && pagesAmount > 1"
-  [currentPage]="currentPage"
-  [pagesAmount]="pagesAmount"
-  [urlBase]="urlBase"
-  [loading]="loading"
-  (pageChange)="onPageChange($event)"
-></zx-pagination>
+  <zx-pagination
+    *ngIf="mode === 'full' && pagesAmount > 1"
+    [currentPage]="currentPage"
+    [pagesAmount]="pagesAmount"
+    [urlBase]="urlBase"
+    [loading]="loading"
+    (pageChange)="onPageChange($event)"
+  ></zx-pagination>
+</zx-stack>

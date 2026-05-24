@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable, of} from 'rxjs';
-import {shareReplay, take} from 'rxjs/operators';
+import {shareReplay} from 'rxjs/operators';
 import {
   ZxProdDetailsSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-prod-details-skeleton/zx-prod-details-skeleton.component';
@@ -46,6 +46,10 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TagsListComponent} from '../../../../shared/lib/tags-list/tags-list.component';
 import {ZxProdInstructionsSectionComponent} from '../zx-prod-instructions-section/zx-prod-instructions-section.component';
+
+type ProdMainTabId = 'releases' | 'media' | 'links' | 'discussion';
+type ProdMediaTabId = 'description' | 'inlays' | 'maps' | 'rzx' | 'graphics' | 'music' | 'instructions';
+type ProdLinksTabId = 'articles' | 'series' | 'compilations';
 
 @Component({
   selector: 'zx-prod-details',
@@ -93,7 +97,6 @@ export class ZxProdDetailsComponent implements OnInit {
   @Input() elementId = 0;
 
   core$: Observable<ProdCoreDto | null> = of(null);
-  commentId: number | null = null;
 
   constructor(private readonly api: ProdCoreApiService) {}
 
@@ -103,33 +106,137 @@ export class ZxProdDetailsComponent implements OnInit {
       return;
     }
     this.core$ = this.api.getCore(+this.elementId).pipe(shareReplay(1));
+  }
 
-    const match = window.location.hash.match(/^#comment(\d+)$/);
-    if (match) {
-      this.commentId = parseInt(match[1], 10);
-      const commentId = this.commentId;
-      this.core$.pipe(take(1)).subscribe(() => {
-        this.scrollToComment(commentId);
-      });
+  getMainTabIndex(core: ProdCoreDto): number {
+    const tabs = this.getMainTabs(core);
+
+    const requestedTab = this.getRequestedTabId();
+    const requestedTabIndex = this.getRequestedTabIndex(tabs, requestedTab);
+    if (requestedTabIndex !== null) {
+      return requestedTabIndex;
     }
+
+    if (this.getRequestedTabIndex(this.getMediaTabs(core), requestedTab) !== null && tabs.includes('media')) {
+      return this.getTabIndex(tabs, 'media');
+    }
+
+    if (this.getRequestedTabIndex(this.getLinksTabs(core), requestedTab) !== null && tabs.includes('links')) {
+      return this.getTabIndex(tabs, 'links');
+    }
+
+    return 0;
   }
 
-  getDiscussionTabIndex(core: ProdCoreDto): number {
-    let index = 0;
-    if (core.tabs.hasReleases) index++;
-    if (core.tabs.hasDescription || core.tabs.hasInlays || core.tabs.hasMaps || core.tabs.hasRzx || core.tabs.hasPictures || core.tabs.hasTunes || core.tabs.hasInstructions || core.tabs.hasTextInstructions) index++;
-    if (core.tabs.hasArticles || core.tabs.hasSeriesProds || core.tabs.isInSeries || core.tabs.hasCompilations) index++;
-    return index;
+  getMediaTabIndex(core: ProdCoreDto): number {
+    return this.getTabIndex(this.getMediaTabs(core), this.getRequestedTabId());
   }
 
-  private scrollToComment(commentId: number): void {
-    let attempts = 0;
-    const interval = setInterval(() => {
-      const el = document.getElementById('comment' + commentId);
-      if (el || ++attempts >= 15) {
-        clearInterval(interval);
-        el?.scrollIntoView({behavior: 'smooth', block: 'center'});
-      }
-    }, 200);
+  getLinksTabIndex(core: ProdCoreDto): number {
+    return this.getTabIndex(this.getLinksTabs(core), this.getRequestedTabId());
+  }
+
+  getMainTabHref(tabId: ProdMainTabId): string {
+    return this.getTabHref(tabId);
+  }
+
+  getMediaTabHref(tabId: ProdMediaTabId): string {
+    return this.getTabHref(tabId);
+  }
+
+  getLinksTabHref(tabId: ProdLinksTabId): string {
+    return this.getTabHref(tabId);
+  }
+
+  private getTabHref(tabId: string): string {
+    const url = this.getCurrentUrl();
+    url.pathname = this.replaceTabPath(url.pathname, tabId);
+    url.searchParams.delete('tab');
+    url.searchParams.delete('media');
+    url.searchParams.delete('links');
+    url.hash = '';
+
+    return this.formatUrl(url);
+  }
+
+  private getMainTabs(core: ProdCoreDto): ProdMainTabId[] {
+    const tabs: ProdMainTabId[] = [];
+
+    if (core.tabs.hasReleases) {
+      tabs.push('releases');
+    }
+
+    if (this.getMediaTabs(core).length) {
+      tabs.push('media');
+    }
+
+    if (this.getLinksTabs(core).length) {
+      tabs.push('links');
+    }
+
+    tabs.push('discussion');
+
+    return tabs;
+  }
+
+  private getMediaTabs(core: ProdCoreDto): ProdMediaTabId[] {
+    const tabs: ProdMediaTabId[] = [];
+
+    if (core.tabs.hasDescription) tabs.push('description');
+    if (core.tabs.hasInlays) tabs.push('inlays');
+    if (core.tabs.hasMaps) tabs.push('maps');
+    if (core.tabs.hasRzx) tabs.push('rzx');
+    if (core.tabs.hasPictures) tabs.push('graphics');
+    if (core.tabs.hasTunes) tabs.push('music');
+    if (core.tabs.hasInstructions || core.tabs.hasTextInstructions) tabs.push('instructions');
+
+    return tabs;
+  }
+
+  private getLinksTabs(core: ProdCoreDto): ProdLinksTabId[] {
+    const tabs: ProdLinksTabId[] = [];
+
+    if (core.tabs.hasArticles) tabs.push('articles');
+    if (core.tabs.hasSeriesProds || core.tabs.isInSeries) tabs.push('series');
+    if (core.tabs.hasCompilations) tabs.push('compilations');
+
+    return tabs;
+  }
+
+  private getTabIndex<T extends string>(tabs: T[], requestedTab: string | null): number {
+    const index = requestedTab ? tabs.indexOf(requestedTab as T) : -1;
+
+    return index >= 0 ? index : 0;
+  }
+
+  private getRequestedTabIndex<T extends string>(tabs: T[], requestedTab: string | null): number | null {
+    if (!requestedTab) {
+      return null;
+    }
+
+    const index = tabs.indexOf(requestedTab as T);
+
+    return index >= 0 ? index : null;
+  }
+
+  private getRequestedTabId(): string | null {
+    const match = window.location.pathname.match(/\/tabs:([^/]+)(?=\/|$)/);
+
+    return match ? decodeURIComponent(match[1]) : null;
+  }
+
+  private getCurrentUrl(): URL {
+    return new URL(window.location.href);
+  }
+
+  private replaceTabPath(path: string, tabId: string): string {
+    const cleanPath = path.replace(/\/tabs:[^/]+(?=\/|$)/, '');
+    const normalizedPath = cleanPath.endsWith('/') ? cleanPath : `${cleanPath}/`;
+
+    return `${normalizedPath}tabs:${encodeURIComponent(tabId)}/`;
+  }
+
+  private formatUrl(url: URL): string {
+    return `${url.pathname}${url.search}${url.hash}`;
   }
 }

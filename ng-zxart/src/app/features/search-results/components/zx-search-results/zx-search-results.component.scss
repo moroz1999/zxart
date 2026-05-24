@@ -1,19 +1,7 @@
 @use 'shared/breakpoints' as bp;
 
 :host {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-16);
-}
-
-.zx-search-results__skeleton-filters {
-  margin-bottom: var(--space-12);
-}
-
-.zx-search-results__skeleton-groups {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-24);
+  display: block;
 }
 
 .zx-search-results__skeleton-group {

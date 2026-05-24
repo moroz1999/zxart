@@ -420,6 +420,110 @@
       "interlace2": "Int2"
     }
   },
+  "author-details": {
+    "roles": {
+      "artist": "Artista",
+      "musician": "Músico",
+      "coder": "Programador"
+    },
+    "badges": {
+      "VIP": "VIP sponsor",
+      "Volunteer": "Voluntario"
+    },
+    "header": {
+      "groups": "Grupos",
+      "aliases": "Alias",
+      "links": "Enlaces",
+      "location": "Ubicación",
+      "joined": "En ZX-Art desde",
+      "login": "login",
+      "tech-toggle": "Configuración de conversión predeterminada",
+      "show-more": "+{{count}} más",
+      "collapse": "colapsar",
+      "tech": {
+        "palette": "Paleta de imágenes",
+        "ay-chip": "Chip AY",
+        "ay-channels": "Disposición de canales AY",
+        "ay-clock": "Frecuencia de reloj AY",
+        "int-freq": "Frecuencia INT"
+      },
+      "rating": {
+        "label": "Calificación de la comunidad:",
+        "artist": "artista",
+        "musician": "músico"
+      }
+    },
+    "dashboard": {
+      "title": "Mejores obras",
+      "hint": "lo más destacado de cada categoría — listas completas con filtros en las pestañas de abajo",
+      "sort-label": "top por",
+      "sort": {
+        "votes": "votos ★",
+        "year-desc": "año ↓"
+      },
+      "all": "todo →",
+      "graphics": "Gráficos",
+      "music": "Música",
+      "software": "Programas"
+    },
+    "works": {
+      "graphics": "Gráficos",
+      "music": "Música",
+      "software": "Programas"
+    },
+    "graphics-tab": {
+      "error": "Error al cargar imágenes",
+      "empty": "No se encontraron imágenes",
+      "found": "{{count}} imágenes",
+      "format": {
+        "all": "Todos los tipos"
+      },
+      "sort": {
+        "votes": "Por calificación",
+        "year-desc": "Más recientes primero",
+        "year-asc": "Más antiguos primero"
+      }
+    },
+    "music-tab": {
+      "error": "Error al cargar melodías",
+      "empty": "No se encontraron melodías",
+      "found": "{{count}} melodías",
+      "chip": {
+        "all": "Todos los chips"
+      },
+      "sort": {
+        "votes": "Por calificación",
+        "year-desc": "Más recientes primero",
+        "year-asc": "Más antiguos primero"
+      }
+    },
+    "software-tab": {
+      "error": "Error al cargar producciones",
+      "empty": "No se encontraron producciones",
+      "found": "{{count}} producciones",
+      "roles": {
+        "music": "Música",
+        "gfx": "Gráficos",
+        "code": "Código",
+        "design": "Diseño",
+        "sfx": "SFX"
+      },
+      "all-roles": "Todos los roles",
+      "sort": {
+        "votes": "Por calificación",
+        "year-desc": "Más recientes primero",
+        "year-asc": "Más antiguos primero"
+      }
+    },
+    "collaborators": {
+      "title": "Trabajó con",
+      "hint": "coautores y grupos, ordenados por número de obras conjuntas",
+      "people": "Personas",
+      "groups": "Grupos",
+      "joint": "conjunta",
+      "members": "{{count}} miembros"
+    }
+  },
   "author-browser": {
     "error": "Error al cargar autores",
     "empty": "No se encontraron autores",
@@ -671,6 +775,7 @@
   "release-details": {
     "actions": "Acciones del lanzamiento",
     "edit": "Editar lanzamiento",
+    "clone": "Clonar lanzamiento",
     "delete": "Eliminar lanzamiento",
     "delete-confirm-title": "Eliminar lanzamiento",
     "delete-confirm-message": "¿Estás seguro de que quieres eliminar este lanzamiento?",

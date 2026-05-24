@@ -1,0 +1,28 @@
+<zx-tabs [initialActiveIndex]="initialTabIndex">
+  <zx-tab
+    *ngIf="tabs.hasPictures"
+    [label]="'author-details.works.graphics' | translate"
+    [href]="gfxHref">
+    <ng-template zxTabContent>
+      <zx-author-graphics-tab [elementId]="elementId" [urlBase]="gfxHref"></zx-author-graphics-tab>
+    </ng-template>
+  </zx-tab>
+
+  <zx-tab
+    *ngIf="tabs.hasTunes"
+    [label]="'author-details.works.music' | translate"
+    [href]="musicHref">
+    <ng-template zxTabContent>
+      <zx-author-music-tab [elementId]="elementId" [urlBase]="musicHref"></zx-author-music-tab>
+    </ng-template>
+  </zx-tab>
+
+  <zx-tab
+    *ngIf="tabs.hasProds"
+    [label]="'author-details.works.software' | translate"
+    [href]="softwareHref">
+    <ng-template zxTabContent>
+      <zx-author-software-tab [elementId]="elementId" [urlBase]="softwareHref"></zx-author-software-tab>
+    </ng-template>
+  </zx-tab>
+</zx-tabs>

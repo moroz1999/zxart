@@ -1,0 +1,13 @@
+<ng-container *ngIf="core$ | async as core">
+  <zx-stack spacing="xl">
+    <zx-author-header [core]="core"></zx-author-header>
+    <zx-author-works
+      *ngIf="core.tabs.hasPictures || core.tabs.hasTunes || core.tabs.hasProds"
+      [elementId]="core.id"
+      [tabs]="core.tabs">
+    </zx-author-works>
+    <zx-author-collaborators [elementId]="core.id"></zx-author-collaborators>
+    <zx-ratings-list-view [elementId]="core.id"></zx-ratings-list-view>
+    <zx-comments-list-view [elementId]="core.id"></zx-comments-list-view>
+  </zx-stack>
+</ng-container>

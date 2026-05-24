@@ -31,6 +31,8 @@ readonly class ProdCoreDto
         public string $generatedDescription,
         public string $dateCreated,
         public string $catalogueYearUrl,
+        public bool $canAddRelease,
+        public string $addReleaseUrl,
         public array $categoriesPaths,
         public array $languages,
         public array $hardware,

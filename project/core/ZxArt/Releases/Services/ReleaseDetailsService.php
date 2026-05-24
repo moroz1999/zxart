@@ -22,6 +22,7 @@ use ZxArt\Releases\Dto\ReleaseFileStructureItemDto;
 use ZxArt\Releases\Dto\ReleaseProdRefDto;
 use ZxArt\Releases\Dto\ReleaseTabsDto;
 use ZxArt\Shared\EntityType;
+use ZxArt\Shared\StructureType;
 use zxProdCategoryElement;
 use zxProdElement;
 use zxReleaseElement;
@@ -54,7 +55,7 @@ readonly class ReleaseDetailsService
         $canUploadScreenshot = $this->privilegesManager->checkPrivilegesForAction(
             $release->getId(),
             'uploadScreenshot',
-            (string)$release->structureType,
+            StructureType::ZxRelease->value,
         ) === true;
 
         $screenshots = $this->prodMediaService->buildReleaseScreenshots($release);
@@ -106,7 +107,7 @@ readonly class ReleaseDetailsService
             ),
             fileStructure: $fileStructure,
             canUploadScreenshot: $canUploadScreenshot,
-            screenshotUploadUrl: $releaseUrl . 'action:uploadScreenshot/',
+            screenshotUploadUrl: $releaseUrl . 'id:' . $release->getId() . '/action:uploadScreenshot/',
         );
     }
 

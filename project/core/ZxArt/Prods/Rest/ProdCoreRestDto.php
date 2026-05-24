@@ -34,6 +34,8 @@ readonly class ProdCoreRestDto
         public string $generatedDescription,
         public string $dateCreated,
         public string $catalogueYearUrl,
+        public bool $canAddRelease,
+        public string $addReleaseUrl,
         #[Map(transform: MapCollection::class)]
         public array $categoriesPaths,
         #[Map(transform: MapCollection::class)]

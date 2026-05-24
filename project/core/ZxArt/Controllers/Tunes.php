@@ -67,12 +67,27 @@ class Tunes extends LoggedControllerApplication
             return;
         }
 
+        $limit = (int)($this->getParameter('limit') ?? 0);
+
         try {
-            $dtos = $this->tunesService->getByAuthor($elementId);
-            $this->renderer->assign('body', array_map(
-                fn(TuneDto $dto) => $this->objectMapper->map($dto, TuneRestDto::class),
-                $dtos
-            ));
+            if ($limit > 0) {
+                $start = (int)($this->getParameter('start') ?? 0);
+                $sortColumn = (string)($this->getParameter('sortColumn') ?? 'votes');
+                $sortDir = (string)($this->getParameter('sortDir') ?? 'desc');
+                $typeFilter = (string)($this->getParameter('format') ?? '');
+                $result = $this->tunesService->getByAuthorPaged($elementId, $start, $limit, $sortColumn, $sortDir, $typeFilter);
+                $this->renderer->assign('body', [
+                    'items' => array_map(fn(TuneDto $dto) => $this->objectMapper->map($dto, TuneRestDto::class), $result['items']),
+                    'total' => $result['total'],
+                    'availableFormats' => $result['availableFormats'],
+                ]);
+            } else {
+                $dtos = $this->tunesService->getByAuthor($elementId);
+                $this->renderer->assign('body', array_map(
+                    fn(TuneDto $dto) => $this->objectMapper->map($dto, TuneRestDto::class),
+                    $dtos
+                ));
+            }
         } catch (Throwable $e) {
             $this->logThrowable('Tunes::tunesByElement', $e);
             CmsHttpResponse::getInstance()->setStatusCode('500');

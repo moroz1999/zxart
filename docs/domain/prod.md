@@ -106,6 +106,8 @@ Software production for ZX Spectrum - games, demos, utilities and other software
 - `/prod-series/` returns product summaries from the same series as the selected prod, not the series container entity.
 - Prod details core data does not include edit/delete privileges. Editing controls use shared `zx-editing-controls` and request privileges separately for authenticated users only.
 - Prod editing controls are action buttons, not links. They render through `zx-button` without `href` and navigate to legacy action URLs from click handlers.
+- Prod details core data includes the privilege-gated add-release URL. The button opens the legacy `zxRelease` public add form under the current prod.
+- Prod details tabs render real links and restore the selected tab from the `/tabs:{id}/` URL segment on load. Nested tab IDs such as `graphics`, `music`, or `series` activate their parent tab automatically.
 - The legacy details template mounts `zx-prod-details` directly; Angular renders the page title.
 - Prod details hero groups authors by roles before publishers, developer groups, and party metadata. Authors without roles remain under the generic authors label.
 - Prod details hero displays the `unknown` author role under the generic authors label, not under the global unknown-role translation.

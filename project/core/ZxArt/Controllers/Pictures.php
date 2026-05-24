@@ -62,12 +62,27 @@ class Pictures extends LoggedControllerApplication
             return;
         }
 
+        $limit = (int)($this->getParameter('limit') ?? 0);
+
         try {
-            $dtos = $this->picturesService->getByAuthor($elementId);
-            $this->renderer->assign('body', array_map(
-                fn(PictureDto $dto) => $this->objectMapper->map($dto, PictureRestDto::class),
-                $dtos
-            ));
+            if ($limit > 0) {
+                $start = (int)($this->getParameter('start') ?? 0);
+                $sortColumn = (string)($this->getParameter('sortColumn') ?? 'votes');
+                $sortDir = (string)($this->getParameter('sortDir') ?? 'desc');
+                $typeFilter = (string)($this->getParameter('format') ?? '');
+                $result = $this->picturesService->getByAuthorPaged($elementId, $start, $limit, $sortColumn, $sortDir, $typeFilter);
+                $this->renderer->assign('body', [
+                    'items' => array_map(fn(PictureDto $dto) => $this->objectMapper->map($dto, PictureRestDto::class), $result['items']),
+                    'total' => $result['total'],
+                    'availableFormats' => $result['availableFormats'],
+                ]);
+            } else {
+                $dtos = $this->picturesService->getByAuthor($elementId);
+                $this->renderer->assign('body', array_map(
+                    fn(PictureDto $dto) => $this->objectMapper->map($dto, PictureRestDto::class),
+                    $dtos
+                ));
+            }
         } catch (Throwable $e) {
             $this->logThrowable('Pictures::picturesByElement', $e);
             CmsHttpResponse::getInstance()->setStatusCode('500');

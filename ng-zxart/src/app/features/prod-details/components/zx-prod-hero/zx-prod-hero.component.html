@@ -7,6 +7,13 @@
       presentation="popover"
       [popoverAriaLabel]="'prod-details.actions' | translate">
     </zx-prod-editing-controls>
+    <zx-button
+      *ngIf="core.canAddRelease"
+      size="sm"
+      color="secondary"
+      [href]="core.addReleaseUrl">
+      {{ 'prod-details.addrelease' | translate }}
+    </zx-button>
     <span *ngIf="core.year > 0" class="hero-year">{{ core.year }}</span>
   </zx-inline>
 

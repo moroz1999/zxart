@@ -1,51 +1,53 @@
-<zx-filter-bar *ngIf="mode === 'full'">
-  <zx-input
-    class="filter-search"
-    [placeholder]="'author-browser.search.placeholder' | translate"
-    [ngModel]="search"
-    (ngModelChange)="onSearchInput($event)"
-  ></zx-input>
-  <zx-filter-picker
-    class="filter-picker"
-    [label]="'author-browser.filters.country' | translate"
-    [items]="countryOptions"
-    [selectedIds]="selectedCountryIds"
-    [multi]="false"
-    [searchEnabled]="true"
-    [disabled]="countryOptions.length === 0"
-    (selectedIdsChange)="onCountryChange($event)"
-  ></zx-filter-picker>
-  <zx-filter-picker
-    class="filter-picker"
-    [label]="'author-browser.filters.city' | translate"
-    [items]="cityOptions"
-    [selectedIds]="selectedCityIds"
-    [multi]="false"
-    [searchEnabled]="true"
-    [disabled]="cityOptions.length === 0"
-    (selectedIdsChange)="onCityChange($event)"
-  ></zx-filter-picker>
-</zx-filter-bar>
+<zx-stack spacing="md">
+  <zx-filter-bar *ngIf="mode === 'full'">
+    <zx-input
+      class="filter-search"
+      [placeholder]="'author-browser.search.placeholder' | translate"
+      [ngModel]="search"
+      (ngModelChange)="onSearchInput($event)"
+    ></zx-input>
+    <zx-filter-picker
+      class="filter-picker"
+      [label]="'author-browser.filters.country' | translate"
+      [items]="countryOptions"
+      [selectedIds]="selectedCountryIds"
+      [multi]="false"
+      [searchEnabled]="true"
+      [disabled]="countryOptions.length === 0"
+      (selectedIdsChange)="onCountryChange($event)"
+    ></zx-filter-picker>
+    <zx-filter-picker
+      class="filter-picker"
+      [label]="'author-browser.filters.city' | translate"
+      [items]="cityOptions"
+      [selectedIds]="selectedCityIds"
+      [multi]="false"
+      [searchEnabled]="true"
+      [disabled]="cityOptions.length === 0"
+      (selectedIdsChange)="onCityChange($event)"
+    ></zx-filter-picker>
+  </zx-filter-bar>
 
-<zx-row-skeleton *ngIf="authors === null && !error" [count]="8"></zx-row-skeleton>
+  <zx-row-skeleton *ngIf="authors === null && !error" [count]="8"></zx-row-skeleton>
 
-<div *ngIf="error" appText="caption" tone="danger">{{ 'author-browser.error' | translate }}</div>
-<div *ngIf="!loading && !error && authors !== null && authors.length === 0"
-     appText="bodySm" tone="muted">{{ 'author-browser.empty' | translate }}
-</div>
+  <div *ngIf="error" appText="caption" tone="danger">{{ 'author-browser.error' | translate }}</div>
+  <div *ngIf="!loading && !error && authors !== null && authors.length === 0"
+       appText="bodySm" tone="muted">{{ 'author-browser.empty' | translate }}
+  </div>
 
-<zx-authors-table
-  *ngIf="authors !== null && authors.length > 0"
-  [authors]="authors"
-  [rowStartIndex]="rowStartIndex"
-  [loading]="loading"
-></zx-authors-table>
+  <zx-authors-table
+    *ngIf="authors !== null && authors.length > 0"
+    [authors]="authors"
+    [rowStartIndex]="rowStartIndex"
+    [loading]="loading"
+  ></zx-authors-table>
 
-<zx-pagination
-  *ngIf="mode === 'full' && pagesAmount > 1"
-  [currentPage]="currentPage"
-  [pagesAmount]="pagesAmount"
-  [urlBase]="urlBase"
-  [loading]="loading"
-  (pageChange)="onPageChange($event)"
-></zx-pagination>
+  <zx-pagination
+    *ngIf="mode === 'full' && pagesAmount > 1"
+    [currentPage]="currentPage"
+    [pagesAmount]="pagesAmount"
+    [urlBase]="urlBase"
+    [loading]="loading"
+    (pageChange)="onPageChange($event)"
+  ></zx-pagination>
+</zx-stack>

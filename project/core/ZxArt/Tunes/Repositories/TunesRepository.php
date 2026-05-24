@@ -278,6 +278,82 @@ readonly final class TunesRepository extends AbstractRepository
         return $query;
     }
 
+    private const array ALLOWED_SORT_COLUMNS = ['votes', 'year', 'dateAdded'];
+
+    /**
+     * @return int[]
+     */
+    public function findPagedIdsByAuthorId(int $authorId, int $start, int $limit, string $sortColumn, string $sortDir, string $typeFilter = ''): array
+    {
+        $sortColumn = in_array($sortColumn, self::ALLOWED_SORT_COLUMNS, true) ? $sortColumn : 'votes';
+        $sortDir = strtolower($sortDir) === 'asc' ? 'asc' : 'desc';
+        $authorIds = $this->getAuthorAndAliasIds($authorId);
+
+        $q = $this->db->table($this->tableName(DatabaseTable::ZxMusic))
+            ->select([$this->tableColumn(DatabaseTable::ZxMusic, 'id'), $this->tableColumn(DatabaseTable::ZxMusic, $sortColumn)])
+            ->join(
+                $this->tableName(DatabaseTable::StructureLinks),
+                $this->tableColumn(DatabaseTable::StructureLinks, 'childStructureId'),
+                '=',
+                $this->tableColumn(DatabaseTable::ZxMusic, 'id')
+            )
+            ->where($this->tableColumn(DatabaseTable::StructureLinks, 'type'), '=', LinkTypes::AUTHOR_MUSIC->value)
+            ->whereIn($this->tableColumn(DatabaseTable::StructureLinks, 'parentStructureId'), $authorIds);
+        if ($typeFilter !== '') {
+            $q->where($this->tableColumn(DatabaseTable::ZxMusic, 'type'), '=', $typeFilter);
+        }
+        /** @var int[] $ids */
+        $ids = $q->distinct()
+            ->orderBy($this->tableColumn(DatabaseTable::ZxMusic, $sortColumn), $sortDir)
+            ->offset($start)
+            ->limit($limit)
+            ->pluck($this->tableColumn(DatabaseTable::ZxMusic, 'id'));
+
+        return $ids;
+    }
+
+    public function countByAuthorId(int $authorId, string $typeFilter = ''): int
+    {
+        $authorIds = $this->getAuthorAndAliasIds($authorId);
+        $q = $this->db->table($this->tableName(DatabaseTable::ZxMusic))
+            ->join(
+                $this->tableName(DatabaseTable::StructureLinks),
+                $this->tableColumn(DatabaseTable::StructureLinks, 'childStructureId'),
+                '=',
+                $this->tableColumn(DatabaseTable::ZxMusic, 'id')
+            )
+            ->where($this->tableColumn(DatabaseTable::StructureLinks, 'type'), '=', LinkTypes::AUTHOR_MUSIC->value)
+            ->whereIn($this->tableColumn(DatabaseTable::StructureLinks, 'parentStructureId'), $authorIds);
+        if ($typeFilter !== '') {
+            $q->where($this->tableColumn(DatabaseTable::ZxMusic, 'type'), '=', $typeFilter);
+        }
+        return (int)$q->distinct()->count($this->tableColumn(DatabaseTable::ZxMusic, 'id'));
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getDistinctTypesByAuthorId(int $authorId): array
+    {
+        $authorIds = $this->getAuthorAndAliasIds($authorId);
+        /** @var string[] $types */
+        $types = $this->db->table($this->tableName(DatabaseTable::ZxMusic))
+            ->select($this->tableColumn(DatabaseTable::ZxMusic, 'type'))
+            ->join(
+                $this->tableName(DatabaseTable::StructureLinks),
+                $this->tableColumn(DatabaseTable::StructureLinks, 'childStructureId'),
+                '=',
+                $this->tableColumn(DatabaseTable::ZxMusic, 'id')
+            )
+            ->where($this->tableColumn(DatabaseTable::StructureLinks, 'type'), '=', LinkTypes::AUTHOR_MUSIC->value)
+            ->whereIn($this->tableColumn(DatabaseTable::StructureLinks, 'parentStructureId'), $authorIds)
+            ->where($this->tableColumn(DatabaseTable::ZxMusic, 'type'), '!=', '')
+            ->distinct()
+            ->orderBy($this->tableColumn(DatabaseTable::ZxMusic, 'type'))
+            ->pluck($this->tableColumn(DatabaseTable::ZxMusic, 'type'));
+        return $types;
+    }
+
     /**
      * Returns IDs of tunes linked to the given author (including all its aliases)
      * via authorship links.

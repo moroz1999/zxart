@@ -75,4 +75,25 @@ export class LatestCommentsComponent implements OnInit {
   displayContent(comment: CommentDto): string {
     return comment.translated.trim() !== '' ? comment.translated : comment.content;
   }
+
+  getCommentUrl(comment: CommentDto): string {
+    if (!comment.target) {
+      return '';
+    }
+
+    const url = new URL(comment.target.url, window.location.origin);
+    if (comment.target.type === 'zxProd') {
+      url.pathname = this.replaceTabPath(url.pathname, 'discussion');
+    }
+    url.hash = `comment${comment.id}`;
+
+    return `${url.pathname}${url.search}${url.hash}`;
+  }
+
+  private replaceTabPath(path: string, tabId: string): string {
+    const cleanPath = path.replace(/\/tabs:[^/]+(?=\/|$)/, '');
+    const normalizedPath = cleanPath.endsWith('/') ? cleanPath : `${cleanPath}/`;
+
+    return `${normalizedPath}tabs:${encodeURIComponent(tabId)}/`;
+  }
 }

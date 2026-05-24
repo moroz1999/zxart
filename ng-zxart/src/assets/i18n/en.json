@@ -421,6 +421,110 @@
       "interlace2": "Int2"
     }
   },
+  "author-details": {
+    "roles": {
+      "artist": "Artist",
+      "musician": "Musician",
+      "coder": "Coder"
+    },
+    "badges": {
+      "VIP": "VIP sponsor",
+      "Volunteer": "Volunteer"
+    },
+    "header": {
+      "groups": "Groups",
+      "aliases": "Aliases",
+      "links": "Links",
+      "location": "Location",
+      "joined": "On ZX-Art since",
+      "login": "login",
+      "tech-toggle": "Default conversion settings",
+      "show-more": "+{{count}} more",
+      "collapse": "collapse",
+      "tech": {
+        "palette": "Picture palette",
+        "ay-chip": "AY chip",
+        "ay-channels": "AY channel layout",
+        "ay-clock": "AY clock frequency",
+        "int-freq": "INT frequency"
+      },
+      "rating": {
+        "label": "Community rating:",
+        "artist": "artist",
+        "musician": "musician"
+      }
+    },
+    "dashboard": {
+      "title": "Top works",
+      "hint": "highlights from each category — full lists with filters are in the tabs below",
+      "sort-label": "top by",
+      "sort": {
+        "votes": "votes ★",
+        "year-desc": "year ↓"
+      },
+      "all": "all →",
+      "graphics": "Graphics",
+      "music": "Music",
+      "software": "Software"
+    },
+    "works": {
+      "graphics": "Graphics",
+      "music": "Music",
+      "software": "Software"
+    },
+    "graphics-tab": {
+      "error": "Failed to load pictures",
+      "empty": "No pictures found",
+      "found": "{{count}} pictures",
+      "format": {
+        "all": "All types"
+      },
+      "sort": {
+        "votes": "By rating",
+        "year-desc": "Newest first",
+        "year-asc": "Oldest first"
+      }
+    },
+    "music-tab": {
+      "error": "Failed to load tunes",
+      "empty": "No tunes found",
+      "found": "{{count}} tunes",
+      "chip": {
+        "all": "All chips"
+      },
+      "sort": {
+        "votes": "By rating",
+        "year-desc": "Newest first",
+        "year-asc": "Oldest first"
+      }
+    },
+    "software-tab": {
+      "error": "Failed to load productions",
+      "empty": "No productions found",
+      "found": "{{count}} productions",
+      "roles": {
+        "music": "Music",
+        "gfx": "Graphics",
+        "code": "Code",
+        "design": "Design",
+        "sfx": "SFX"
+      },
+      "all-roles": "All roles",
+      "sort": {
+        "votes": "By rating",
+        "year-desc": "Newest first",
+        "year-asc": "Oldest first"
+      }
+    },
+    "collaborators": {
+      "title": "Worked with",
+      "hint": "co-authors and groups, sorted by number of joint works",
+      "people": "People",
+      "groups": "Groups",
+      "joint": "joint",
+      "members": "{{count}} members"
+    }
+  },
   "author-browser": {
     "error": "Failed to load authors",
     "empty": "No authors found",
@@ -674,6 +778,7 @@
   "release-details": {
     "actions": "Release actions",
     "edit": "Edit release",
+    "clone": "Clone release",
     "delete": "Delete release",
     "delete-confirm-title": "Delete release",
     "delete-confirm-message": "Are you sure you want to delete this release?",

@@ -76,6 +76,21 @@ readonly class PicturesService
     }
 
     /**
+     * @return array{items: PictureDto[], total: int, availableFormats: string[]}
+     */
+    public function getByAuthorPaged(int $authorId, int $start, int $limit, string $sortColumn, string $sortDir, string $typeFilter = ''): array
+    {
+        $total = $this->picturesRepository->countByAuthorId($authorId, $typeFilter);
+        $ids = $this->picturesRepository->findPagedIdsByAuthorId($authorId, $start, $limit, $sortColumn, $sortDir, $typeFilter);
+        $availableFormats = $this->picturesRepository->getDistinctTypesByAuthorId($authorId);
+        return [
+            'items' => $this->loadAndTransform($ids),
+            'total' => $total,
+            'availableFormats' => $availableFormats,
+        ];
+    }
+
+    /**
      * @param int[] $ids
      * @return PictureDto[]
      */

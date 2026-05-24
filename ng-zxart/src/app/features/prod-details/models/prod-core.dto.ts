@@ -100,6 +100,8 @@ export interface ProdCoreDto {
   generatedDescription: string;
   dateCreated: string;
   catalogueYearUrl: string;
+  canAddRelease: boolean;
+  addReleaseUrl: string;
   categoriesPaths: ProdCategoryPathDto[];
   languages: ProdLanguageInfoDto[];
   hardware: ProdHardwareInfoDto[];

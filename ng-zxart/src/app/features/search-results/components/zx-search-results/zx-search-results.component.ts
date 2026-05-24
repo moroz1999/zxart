@@ -45,6 +45,7 @@ import {PlayerService} from '../../../player/services/player.service';
 import {ZxProdsListComponent} from '../../../../entities/zx-prods-list/zx-prods-list.component';
 import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 
 const AUTHOR_SET_TYPE = 'author';
 const GROUP_SET_TYPE = 'group';
@@ -99,6 +100,7 @@ const INITIAL_SKELETON_GROUPS: SkeletonGroup[] = [
     ZxTableComponent,
     ZxTuneRowComponent,
     ZxPartyCardComponent,
+    ZxStackComponent,
     TextDirective,
     HeadingDirective,
   ],
