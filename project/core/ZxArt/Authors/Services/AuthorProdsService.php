@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Authors\Services;
 
+use authorAliasElement;
 use authorElement;
 use structureManager;
 use zxProdElement;
@@ -34,8 +35,8 @@ readonly class AuthorProdsService
         string $role,
     ): array {
         $author = $this->structureManager->getElementById($authorId);
-        if (!$author instanceof authorElement) {
-            throw new ProdDetailsException('Author not found', 404);
+        if (!($author instanceof authorElement) && !($author instanceof authorAliasElement)) {
+            throw new ProdDetailsException('Author or alias not found', 404);
         }
 
         $page = $this->authorProdsRepository->findPagedByAuthorId($authorId, $start, $limit, $sort, $sortDir, $role);

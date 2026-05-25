@@ -11,9 +11,14 @@ import {CommonModule} from '@angular/common';
 })
 export class ZxBadgeComponent {
   @Input() variant: 'primary' | 'secondary' = 'primary';
+  @Input() clickable = false;
 
   @HostBinding('class')
   get hostClass(): string {
-    return `zx-badge--${this.variant}`;
+    const classes = [`zx-badge--${this.variant}`];
+    if (this.clickable) {
+      classes.push('zx-badge--clickable');
+    }
+    return classes.join(' ');
   }
 }

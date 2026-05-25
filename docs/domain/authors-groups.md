@@ -119,6 +119,10 @@ When work is created by group:
 #### Author Votes Display
 - The author details page does not show a vote history list because votes belong to works, not people.
 
+#### Author Alias Details Page
+- Author aliases use the same Angular details component as authors.
+- An alias page keeps the alias identity and its directly attributed works and comments, while profile metadata such as location, account, links, and technical defaults comes from its referenced author.
+
 ### Authors Listing: authorsList vs authorsCatalogue (letter entities)
 
 Two different mechanisms for browsing authors exist. They must not be confused.

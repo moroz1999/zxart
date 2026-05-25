@@ -68,6 +68,7 @@
         *ngFor="let item of model.hardwareInfo"
         (click)="hardwareClicked($event, item.id)"
         variant="secondary"
+        [clickable]="true"
       >{{ item.title }}</zx-badge>
     </span>
       <span class="zx-prod-status"

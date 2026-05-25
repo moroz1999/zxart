@@ -41,8 +41,8 @@ final class AuthorCollaborators extends LoggedControllerApplication
     public function execute($controller): void
     {
         try {
-            $authorId = $this->getAuthorId();
-            $result = $this->collaboratorsService->getCollaborators($authorId);
+            $authorOrAliasId = $this->getAuthorOrAliasId();
+            $result = $this->collaboratorsService->getCollaborators($authorOrAliasId);
             $this->renderer->assign('body', [
                 'people' => array_map(
                     fn(AuthorCollaboratorPersonDto $dto) => $this->objectMapper->map($dto, AuthorCollaboratorPersonRestDto::class),
@@ -64,13 +64,13 @@ final class AuthorCollaborators extends LoggedControllerApplication
         $this->renderer->display();
     }
 
-    private function getAuthorId(): int
+    private function getAuthorOrAliasId(): int
     {
-        $authorId = (int)($this->getParameter('id') ?? 0);
-        if ($authorId <= 0) {
+        $authorOrAliasId = (int)($this->getParameter('id') ?? 0);
+        if ($authorOrAliasId <= 0) {
             throw new ProdDetailsException('Missing required parameter: id', 400);
         }
-        return $authorId;
+        return $authorOrAliasId;
     }
 
     private function assignError(string $message, int $statusCode = 500): void

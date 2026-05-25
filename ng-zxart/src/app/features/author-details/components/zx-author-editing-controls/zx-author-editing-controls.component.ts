@@ -43,13 +43,46 @@ const AUTHOR_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
   },
 ];
 
-const AUTHOR_ADD_ACTIONS: readonly ZxEditingControlAction[] = [
+const AUTHOR_ALIAS_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
   {
-    action: 'authorAlias.showPublicForm',
-    privilege: 'authorAlias.showPublicForm',
-    labelKey: 'author-details.action.add-alias',
+    action: 'showPublicForm',
+    privilege: 'publicReceive',
+    labelKey: 'author-details.action.showPublicForm',
+  },
+  {
+    action: 'showJoinForm',
+    privilege: 'join',
+    labelKey: 'author-details.action.showJoinForm',
     color: 'secondary',
   },
+  {
+    action: 'convertToAuthor',
+    privilege: 'convertToAuthor',
+    labelKey: 'author-details.action.convertToAuthor',
+    color: 'secondary',
+  },
+  {
+    action: 'publicDelete',
+    privilege: 'publicDelete',
+    labelKey: 'author-details.action.publicDelete',
+    color: 'danger',
+    confirm: {
+      titleKey: 'author-details.action.delete-confirm-title',
+      messageKey: 'author-details.action.delete-confirm-message',
+      confirmLabelKey: 'author-details.action.delete-confirm-yes',
+      cancelLabelKey: 'author-details.action.delete-confirm-cancel',
+    },
+  },
+];
+
+const ADD_ALIAS_ACTION: ZxEditingControlAction = {
+  action: 'authorAlias.showPublicForm',
+  privilege: 'authorAlias.showPublicForm',
+  labelKey: 'author-details.action.add-alias',
+  color: 'secondary',
+};
+
+const CONTENT_ADD_ACTIONS: readonly ZxEditingControlAction[] = [
   {
     action: 'picturesUploadForm.batchUploadForm',
     privilege: 'picturesUploadForm.batchUploadForm',
@@ -80,10 +113,16 @@ const AUTHOR_ADD_ACTIONS: readonly ZxEditingControlAction[] = [
 })
 export class ZxAuthorEditingControlsComponent {
   @Input({required: true}) elementId!: number;
+  @Input({required: true}) entityType!: 'author' | 'authorAlias';
   @Input({required: true}) authorUrl!: string;
 
-  readonly editActions = AUTHOR_EDIT_ACTIONS;
-  readonly addActions = AUTHOR_ADD_ACTIONS;
+  get editActions(): readonly ZxEditingControlAction[] {
+    return this.entityType === 'authorAlias' ? AUTHOR_ALIAS_EDIT_ACTIONS : AUTHOR_EDIT_ACTIONS;
+  }
+
+  get addActions(): readonly ZxEditingControlAction[] {
+    return this.entityType === 'authorAlias' ? CONTENT_ADD_ACTIONS : [ADD_ALIAS_ACTION, ...CONTENT_ADD_ACTIONS];
+  }
 
   readonly buildActionUrl = (action: string, elementId: number): string => {
     if (action.includes('.')) {

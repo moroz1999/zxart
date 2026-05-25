@@ -2,7 +2,7 @@ openapi: 3.0.0
 paths:
   /author-details/:
     get:
-      summary: Get core profile data for the author details page
+      summary: Get core profile data for an author or author alias details page
       parameters:
         - in: query
           name: id
@@ -19,12 +19,12 @@ paths:
         '400':
           description: Bad request
         '404':
-          description: Author not found
+          description: Author or author alias not found
         '500':
           description: Internal server error
   /author-prods/:
     get:
-      summary: Get paged productions for an author (for author details page)
+      summary: Get paged productions for an author or author alias details page
       parameters:
         - in: query
           name: id
@@ -66,7 +66,29 @@ paths:
         '400':
           description: Bad request
         '404':
-          description: Author not found
+          description: Author or author alias not found
+        '500':
+          description: Internal server error
+  /author-collaborators/:
+    get:
+      summary: Get collaborators for an author or author alias details page
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Collaborating people and groups
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorCollaborators'
+        '400':
+          description: Bad request
+        '404':
+          description: Author or author alias not found
         '500':
           description: Internal server error
 
@@ -194,11 +216,13 @@ components:
       type: object
       required:
         - id
+        - entityType
         - title
         - realName
         - url
         - parentUrl
         - parentTitle
+        - primaryAuthor
         - siteUser
         - joined
         - roles
@@ -214,6 +238,9 @@ components:
       properties:
         id:
           type: integer
+        entityType:
+          type: string
+          enum: [author, authorAlias]
         title:
           type: string
         realName:
@@ -225,6 +252,10 @@ components:
           nullable: true
         parentTitle:
           type: string
+          nullable: true
+        primaryAuthor:
+          allOf:
+            - $ref: '#/components/schemas/AuthorAliasRef'
           nullable: true
         siteUser:
           type: string
@@ -335,6 +366,54 @@ components:
           type: integer
         availableRoles:
           type: array
-          description: Distinct roles from all of the author's productions, independent of the selected role filter.
+          description: Distinct roles from all matching productions, independent of the selected role filter.
           items:
             type: string
+
+    AuthorCollaboratorPerson:
+      type: object
+      required: [id, title, url, jointPictures, jointTunes, jointProds, jointTotal]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        jointPictures:
+          type: integer
+        jointTunes:
+          type: integer
+        jointProds:
+          type: integer
+        jointTotal:
+          type: integer
+
+    AuthorCollaboratorGroup:
+      type: object
+      required: [id, title, url, years, membersCount]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        years:
+          type: string
+          nullable: true
+        membersCount:
+          type: integer
+
+    AuthorCollaborators:
+      type: object
+      required: [people, groups]
+      properties:
+        people:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorCollaboratorPerson'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorCollaboratorGroup'

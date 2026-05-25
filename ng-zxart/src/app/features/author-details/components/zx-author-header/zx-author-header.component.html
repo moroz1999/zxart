@@ -11,7 +11,11 @@
     <div class="ap-header__title-row">
       <h1 class="ap-header__name">{{ core.title }}</h1>
 
-      <zx-author-editing-controls [elementId]="core.id" [authorUrl]="core.url"></zx-author-editing-controls>
+      <zx-author-editing-controls
+        [elementId]="core.id"
+        [entityType]="core.entityType"
+        [authorUrl]="core.url">
+      </zx-author-editing-controls>
 
       <ng-container *ngFor="let badge of core.badges">
         <zx-badge variant="primary" [title]="'author-details.badges.' + badge | translate">
@@ -60,6 +64,11 @@
         <b>{{ core.ratings.musician.toFixed(2) }}</b>
         <span class="ap-rating-strip__sub">{{ 'author-details.header.rating.musician' | translate }}</span>
       </span>
+    </div>
+
+    <div class="ap-meta-row" *ngIf="core.primaryAuthor">
+      <span class="ap-meta-row__label">{{ 'author-details.header.primary-author' | translate }}:</span>
+      <a [href]="core.primaryAuthor.url">{{ core.primaryAuthor.title }}</a>
     </div>
 
     <div class="ap-meta-row" *ngIf="core.groups.length">

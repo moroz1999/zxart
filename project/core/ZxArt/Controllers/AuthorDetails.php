@@ -38,8 +38,8 @@ class AuthorDetails extends LoggedControllerApplication
     public function execute($controller): void
     {
         try {
-            $authorId = $this->getAuthorId();
-            $dto = $this->authorDetailsService->getDetails($authorId);
+            $authorOrAliasId = $this->getAuthorOrAliasId();
+            $dto = $this->authorDetailsService->getDetails($authorOrAliasId);
             $this->renderer->assign('body', $this->objectMapper->map($dto, AuthorCoreRestDto::class));
         } catch (ProdDetailsException $e) {
             $this->logThrowable('AuthorDetails::execute', $e);
@@ -52,13 +52,13 @@ class AuthorDetails extends LoggedControllerApplication
         $this->renderer->display();
     }
 
-    private function getAuthorId(): int
+    private function getAuthorOrAliasId(): int
     {
-        $authorId = (int)($this->getParameter('id') ?? 0);
-        if ($authorId <= 0) {
+        $authorOrAliasId = (int)($this->getParameter('id') ?? 0);
+        if ($authorOrAliasId <= 0) {
             throw new ProdDetailsException('Missing required parameter: id', 400);
         }
-        return $authorId;
+        return $authorOrAliasId;
     }
 
     private function assignError(string $message, int $statusCode = 500): void

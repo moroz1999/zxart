@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Authors\Services;
 
+use authorAliasElement;
 use authorElement;
 use groupAliasElement;
 use groupElement;
@@ -27,8 +28,8 @@ readonly final class AuthorCollaboratorsService
     public function getCollaborators(int $authorId): array
     {
         $author = $this->structureManager->getElementById($authorId);
-        if (!$author instanceof authorElement) {
-            throw new ProdDetailsException('Author not found', 404);
+        if (!($author instanceof authorElement) && !($author instanceof authorAliasElement)) {
+            throw new ProdDetailsException('Author or alias not found', 404);
         }
 
         $authorIds = $this->collaboratorsRepository->getAuthorAndAliasIds($authorId);

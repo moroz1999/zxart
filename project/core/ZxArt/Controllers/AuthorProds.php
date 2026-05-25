@@ -39,14 +39,14 @@ class AuthorProds extends LoggedControllerApplication
     public function execute($controller): void
     {
         try {
-            $authorId = $this->getAuthorId();
+            $authorOrAliasId = $this->getAuthorOrAliasId();
             $start = (int)($this->getParameter('start') ?? 0);
             $limit = (int)($this->getParameter('limit') ?? 50);
             $sort = (string)($this->getParameter('sort') ?? 'votes');
             $sortDir = (string)($this->getParameter('sortDir') ?? 'desc');
             $role = (string)($this->getParameter('role') ?? '');
 
-            $result = $this->authorProdsService->getProdsPaged($authorId, $start, $limit, $sort, $sortDir, $role);
+            $result = $this->authorProdsService->getProdsPaged($authorOrAliasId, $start, $limit, $sort, $sortDir, $role);
             $this->renderer->assign('body', [
                 'items' => array_map(
                     fn(AuthorProdDto $dto) => $this->objectMapper->map($dto, AuthorProdRestDto::class),
@@ -66,13 +66,13 @@ class AuthorProds extends LoggedControllerApplication
         $this->renderer->display();
     }
 
-    private function getAuthorId(): int
+    private function getAuthorOrAliasId(): int
     {
-        $authorId = (int)($this->getParameter('id') ?? 0);
-        if ($authorId <= 0) {
+        $authorOrAliasId = (int)($this->getParameter('id') ?? 0);
+        if ($authorOrAliasId <= 0) {
             throw new ProdDetailsException('Missing required parameter: id', 400);
         }
-        return $authorId;
+        return $authorOrAliasId;
     }
 
     private function assignError(string $message, int $statusCode = 500): void

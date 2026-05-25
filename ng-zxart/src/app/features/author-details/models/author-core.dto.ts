@@ -49,11 +49,13 @@ export interface AuthorTabsDto {
 
 export interface AuthorCoreDto {
   id: number;
+  entityType: 'author' | 'authorAlias';
   title: string;
   realName: string;
   url: string;
   parentUrl: string | null;
   parentTitle: string | null;
+  primaryAuthor: AuthorAliasRefDto | null;
   siteUser: string | null;
   joined: string | null;
   roles: string[];

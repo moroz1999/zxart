@@ -20,6 +20,7 @@ use ZxArt\Authors\Dto\AuthorRatingsDto;
 use ZxArt\Authors\Dto\AuthorTabsDto;
 use ZxArt\Authors\Dto\AuthorTechDto;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\LinkTypes;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArt\Shared\EntityType;
 
@@ -34,32 +35,35 @@ readonly class AuthorDetailsService
     public function getDetails(int $authorId): AuthorCoreDto
     {
         $author = $this->structureManager->getElementById($authorId);
-        if (!$author instanceof authorElement) {
-            throw new ProdDetailsException('Author not found', 404);
+        if (!($author instanceof authorElement) && !($author instanceof authorAliasElement)) {
+            throw new ProdDetailsException('Author or alias not found', 404);
         }
 
-        $userElement = $this->resolveUserElement($author);
-        $location = $this->buildLocation($author);
+        $profileAuthor = $this->resolveProfileAuthor($author);
+        $userElement = $this->resolveUserElement($profileAuthor);
+        $location = $this->buildLocation($profileAuthor);
         $groups = $this->buildGroups($author);
-        $aliases = $this->buildAliases($author);
-        $links = $this->buildLinks($author);
-        $roles = $this->buildRoles($author);
+        $aliases = $this->buildAliases($profileAuthor);
+        $links = $this->buildLinks($profileAuthor);
         $badges = $this->buildBadges($userElement);
-        $tech = $this->buildTech($author);
         $counters = $this->buildCounters($author);
-        $ratings = $this->buildRatings($author);
+        $roles = $this->buildRoles($author, $counters);
+        $tech = $this->buildTech($profileAuthor);
+        $ratings = $this->buildRatings($profileAuthor);
         $tabs = $this->buildTabs($counters);
         [$parentUrl, $parentTitle] = $this->resolveParent($author);
 
         return new AuthorCoreDto(
             id: $authorId,
-            title: $author->getTitle(),
-            realName: (string)$author->realName,
+            entityType: ($author instanceof authorElement ? EntityType::Author : EntityType::AuthorAlias)->value,
+            title: $this->resolveTitle($author),
+            realName: $profileAuthor instanceof authorElement ? (string)$profileAuthor->realName : '',
             url: (string)$author->getUrl(),
             parentUrl: $parentUrl,
             parentTitle: $parentTitle,
+            primaryAuthor: $this->buildPrimaryAuthor($author, $profileAuthor),
             siteUser: $userElement instanceof userElement ? (string)$userElement->userName : null,
-            joined: $userElement instanceof userElement ? $this->formatDate((int)$userElement->dateCreated) : null,
+            joined: $userElement instanceof userElement ? $this->formatDate($userElement->getCreatedTimestamp()) : null,
             location: $location,
             roles: $roles,
             badges: $badges,
@@ -73,19 +77,53 @@ readonly class AuthorDetailsService
         );
     }
 
-    private function resolveUserElement(authorElement $author): ?userElement
+    private function resolveProfileAuthor(authorElement|authorAliasElement $author): ?authorElement
     {
+        return $author instanceof authorElement ? $author : $author->getAuthorElement();
+    }
+
+    private function resolveTitle(authorElement|authorAliasElement $author): string
+    {
+        $title = $author instanceof authorElement ? (string)$author->getTitle() : (string)$author->title;
+
+        return html_entity_decode($title, ENT_QUOTES);
+    }
+
+    private function resolveUserElement(?authorElement $author): ?userElement
+    {
+        if (!$author instanceof authorElement) {
+            return null;
+        }
         $userId = $author->getUserId();
         if (!$userId) {
             return null;
         }
-        $element = $this->structureManager->getElementById($userId);
+        $element = $this->structureManager->getElementById($userId, null, true);
         return $element instanceof userElement ? $element : null;
     }
 
-    /** @return AuthorLocationItemDto[] */
-    private function buildLocation(authorElement $author): array
+    private function buildPrimaryAuthor(
+        authorElement|authorAliasElement $author,
+        ?authorElement $profileAuthor,
+    ): ?AuthorAliasRefDto
     {
+        if ($author instanceof authorElement || !($profileAuthor instanceof authorElement)) {
+            return null;
+        }
+
+        return new AuthorAliasRefDto(
+            id: (int)$profileAuthor->id,
+            title: html_entity_decode((string)$profileAuthor->getTitle(), ENT_QUOTES),
+            url: (string)$profileAuthor->getUrl(),
+        );
+    }
+
+    /** @return AuthorLocationItemDto[] */
+    private function buildLocation(?authorElement $author): array
+    {
+        if (!$author instanceof authorElement) {
+            return [];
+        }
         $items = [];
         if ($countryElement = $author->getCountryElement()) {
             $items[] = new AuthorLocationItemDto(
@@ -103,7 +141,7 @@ readonly class AuthorDetailsService
     }
 
     /** @return AuthorGroupDto[] */
-    private function buildGroups(authorElement $author): array
+    private function buildGroups(authorElement|authorAliasElement $author): array
     {
         $records = $this->authorshipRepository->getAuthorshipRecords($author->getId(), EntityType::Group);
         if (empty($records)) {
@@ -128,8 +166,11 @@ readonly class AuthorDetailsService
     }
 
     /** @return AuthorAliasRefDto[] */
-    private function buildAliases(authorElement $author): array
+    private function buildAliases(?authorElement $author): array
     {
+        if (!$author instanceof authorElement) {
+            return [];
+        }
         $aliases = [];
         foreach ($author->getAliasElements() as $alias) {
             if (!$alias instanceof authorAliasElement) {
@@ -145,8 +186,11 @@ readonly class AuthorDetailsService
     }
 
     /** @return AuthorLinkDto[] */
-    private function buildLinks(authorElement $author): array
+    private function buildLinks(?authorElement $author): array
     {
+        if (!$author instanceof authorElement) {
+            return [];
+        }
         $links = [];
         $site = (string)$author->site;
         if ($site !== '') {
@@ -167,16 +211,18 @@ readonly class AuthorDetailsService
     }
 
     /** @return string[] */
-    private function buildRoles(authorElement $author): array
+    private function buildRoles(authorElement|authorAliasElement $author, AuthorCountersDto $counters): array
     {
         $roles = [];
-        if ((int)$author->displayInGraphics > 0) {
+        $hasPictures = $author instanceof authorElement ? (int)$author->displayInGraphics > 0 : $counters->pictures > 0;
+        if ($hasPictures) {
             $roles[] = 'artist';
         }
-        if ((int)$author->displayInMusic > 0) {
+        $hasTunes = $author instanceof authorElement ? (int)$author->displayInMusic > 0 : $counters->tunes > 0;
+        if ($hasTunes) {
             $roles[] = 'musician';
         }
-        if ($author->getProdsAmount() > 0) {
+        if ($counters->prods > 0) {
             $roles[] = 'coder';
         }
         return $roles;
@@ -198,8 +244,17 @@ readonly class AuthorDetailsService
         return $badges;
     }
 
-    private function buildTech(authorElement $author): AuthorTechDto
+    private function buildTech(?authorElement $author): AuthorTechDto
     {
+        if (!$author instanceof authorElement) {
+            return new AuthorTechDto(
+                palette: '',
+                ayChip: '',
+                ayChannels: '',
+                ayClock: '',
+                intFreq: '',
+            );
+        }
         return new AuthorTechDto(
             palette: $author->getPalette(),
             ayChip: $author->getChipType(),
@@ -209,18 +264,30 @@ readonly class AuthorDetailsService
         );
     }
 
-    private function buildCounters(authorElement $author): AuthorCountersDto
+    private function buildCounters(authorElement|authorAliasElement $author): AuthorCountersDto
     {
+        if ($author instanceof authorElement) {
+            return new AuthorCountersDto(
+                pictures: (int)$author->picturesQuantity,
+                tunes: (int)$author->tunesQuantity,
+                prods: $author->getProdsAmount(),
+                comments: (int)$author->getCommentsAmount(),
+            );
+        }
+
         return new AuthorCountersDto(
-            pictures: (int)$author->picturesQuantity,
-            tunes: (int)$author->tunesQuantity,
+            pictures: count($author->getWorksList([LinkTypes::AUTHOR_PICTURE->value])),
+            tunes: count($author->getWorksList([LinkTypes::AUTHOR_MUSIC->value])),
             prods: $author->getProdsAmount(),
             comments: (int)$author->getCommentsAmount(),
         );
     }
 
-    private function buildRatings(authorElement $author): AuthorRatingsDto
+    private function buildRatings(?authorElement $author): AuthorRatingsDto
     {
+        if (!$author instanceof authorElement) {
+            return new AuthorRatingsDto(artist: 0.0, musician: 0.0);
+        }
         return new AuthorRatingsDto(
             artist: (float)$author->graphicsRating,
             musician: (float)$author->musicRating,
@@ -237,7 +304,7 @@ readonly class AuthorDetailsService
     }
 
     /** @return array{0: ?string, 1: ?string} */
-    private function resolveParent(authorElement $author): array
+    private function resolveParent(authorElement|authorAliasElement $author): array
     {
         $parent = $author->getFirstParentElement();
         if ($parent === null) {

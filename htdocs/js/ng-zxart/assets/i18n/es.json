@@ -428,6 +428,7 @@
       "claim": "Reclamar autoría",
       "showJoinForm": "Fusionar",
       "convertToGroup": "Convertir en grupo",
+      "convertToAuthor": "Convertir en autor",
       "publicDelete": "Eliminar",
       "delete-confirm-title": "Eliminar autor",
       "delete-confirm-message": "¿Está seguro de que desea eliminar este autor?",
@@ -448,6 +449,7 @@
       "Volunteer": "Voluntario"
     },
     "header": {
+      "primary-author": "Autor",
       "groups": "Grupos",
       "aliases": "Alias",
       "links": "Enlaces",

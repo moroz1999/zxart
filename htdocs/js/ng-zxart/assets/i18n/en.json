@@ -429,6 +429,7 @@
       "claim": "Claim authorship",
       "showJoinForm": "Merge",
       "convertToGroup": "Convert to group",
+      "convertToAuthor": "Convert to author",
       "publicDelete": "Delete",
       "delete-confirm-title": "Delete author",
       "delete-confirm-message": "Are you sure you want to delete this author?",
@@ -449,6 +450,7 @@
       "Volunteer": "Volunteer"
     },
     "header": {
+      "primary-author": "Author",
       "groups": "Groups",
       "aliases": "Aliases",
       "links": "Links",

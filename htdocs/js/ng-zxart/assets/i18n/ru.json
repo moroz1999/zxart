@@ -429,6 +429,7 @@
       "claim": "Заявить авторство",
       "showJoinForm": "Объединить",
       "convertToGroup": "Преобразовать в группу",
+      "convertToAuthor": "Преобразовать в автора",
       "publicDelete": "Удалить",
       "delete-confirm-title": "Удалить автора",
       "delete-confirm-message": "Вы уверены, что хотите удалить этого автора?",
@@ -449,6 +450,7 @@
       "Volunteer": "Волонтёр"
     },
     "header": {
+      "primary-author": "Автор",
       "groups": "Группы",
       "aliases": "Ники",
       "links": "Ссылки",

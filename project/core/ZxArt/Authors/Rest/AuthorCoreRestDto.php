@@ -19,11 +19,13 @@ readonly class AuthorCoreRestDto
      */
     public function __construct(
         public int $id,
+        public string $entityType,
         public string $title,
         public string $realName,
         public string $url,
         public ?string $parentUrl,
         public ?string $parentTitle,
+        public ?AuthorAliasRefRestDto $primaryAuthor,
         public ?string $siteUser,
         public ?string $joined,
         public array $roles,
