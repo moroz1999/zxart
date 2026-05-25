@@ -101,6 +101,11 @@
   --warning-800: var(--yellow-light-800);
   --warning-900: var(--yellow-light-900);
   --warning-950: var(--yellow-light-950);
+
+  /* Role palette — raw oklch values for role-based chip colors */
+  --role-artist: oklch(56% 0.16 165);
+  --role-code: oklch(48% 0.18 295);
+  --role-intro: oklch(50% 0.18 35);
 }
 
 .light-mode {

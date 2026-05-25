@@ -1,0 +1,46 @@
+:root {
+  /* Pill border radius. */
+  --zx-chip-radius: 999px;
+  /* Border width. */
+  --zx-chip-border-width: var(--border-width-thin);
+  /* Font weight (bold labels). */
+  --zx-chip-font-weight: 700;
+
+  /* Medium size: font and padding. */
+  --zx-chip-md-font-size: var(--zx-font-size-xs);
+  --zx-chip-md-padding-v: var(--space-2);
+  --zx-chip-md-padding-h: var(--space-8);
+
+  /* Small size: tighter padding. */
+  --zx-chip-sm-font-size: var(--zx-font-size-xs);
+  --zx-chip-sm-padding-v: var(--space-2);
+  --zx-chip-sm-padding-h: var(--space-4);
+
+  /* Neutral opaque: border only, muted text. */
+  --zx-chip-neutral-opaque-text: var(--secondary-600);
+  --zx-chip-neutral-opaque-bg: transparent;
+
+  /* Neutral filled: soft gray background. */
+  --zx-chip-neutral-filled-text: var(--text-color);
+  --zx-chip-neutral-filled-border: var(--secondary-200);
+  --zx-chip-neutral-filled-bg: var(--secondary-100);
+  --zx-chip-neutral-filled-hover-bg: var(--secondary-200);
+
+  /* Primary opaque: colored text, no fill. */
+  --zx-chip-primary-opaque-text: var(--primary-600);
+
+  /* Primary filled: tinted blue background. */
+  --zx-chip-primary-filled-text: var(--primary-700);
+  --zx-chip-primary-filled-border: var(--primary-200);
+  --zx-chip-primary-filled-bg: var(--primary-50);
+  --zx-chip-primary-filled-hover-bg: var(--primary-100);
+
+  /* Artist opaque: green text (for artist / gfx role). */
+  --zx-chip-artist-opaque-text: var(--role-artist);
+
+  /* Code opaque: purple text (for code / coder role). */
+  --zx-chip-code-opaque-text: var(--role-code);
+
+  /* Intro opaque: orange text (for intro / design role). */
+  --zx-chip-intro-opaque-text: var(--role-intro);
+}

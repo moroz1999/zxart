@@ -1,0 +1,7 @@
+<ng-template #content><ng-content></ng-content></ng-template>
+
+@if (isLink) {
+  <a [href]="href" [class]="chipClass"><ng-container [ngTemplateOutlet]="content"></ng-container></a>
+} @else {
+  <span [class]="chipClass"><ng-container [ngTemplateOutlet]="content"></ng-container></span>
+}

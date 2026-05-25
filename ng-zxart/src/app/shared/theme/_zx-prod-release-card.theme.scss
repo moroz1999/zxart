@@ -11,16 +11,6 @@
   --zx-prod-release-card-meta-color: var(--text-light-color);
   /* Meta line font size. */
   --zx-prod-release-card-meta-size: var(--zx-font-size-xs);
-  /* Chip padding. */
-  --zx-prod-release-card-chip-padding: var(--space-2) var(--space-8);
-  /* Chip border radius. */
-  --zx-prod-release-card-chip-radius: var(--radius-xl);
-  /* Chip background. */
-  --zx-prod-release-card-chip-bg: var(--secondary-100);
-  /* Chip text color. */
-  --zx-prod-release-card-chip-text: var(--text-color);
-  /* Chip font size. */
-  --zx-prod-release-card-chip-size: var(--zx-font-size-xs);
   /* Bottom stat text color. */
   --zx-prod-release-card-stat-color: var(--text-light-color);
   /* Bottom stat font size. */
@@ -29,6 +19,3 @@
   --zx-prod-release-card-stat-icon-size: 12px;
 }
 
-.dark-mode {
-  --zx-prod-release-card-chip-bg: var(--secondary-200);
-}

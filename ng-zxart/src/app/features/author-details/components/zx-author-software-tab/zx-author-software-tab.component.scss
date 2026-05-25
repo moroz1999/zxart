@@ -81,32 +81,7 @@
 .ap-prodwrap__roles {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: var(--space-4);
   align-items: center;
-  padding: 0 4px;
-}
-
-.ap-role-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-  border: 1px solid currentColor;
-  background: var(--surface);
-
-  :host-context(.dark-mode) & { background: var(--secondary-100); }
-
-  &--sm { padding: 1px 6px; font-size: 10px; }
-  &--music { color: var(--primary-600); }
-  &--gfx { color: oklch(48% 0.16 165); }
-  &--code { color: oklch(48% 0.18 295); }
-  &--intro { color: oklch(50% 0.18 35); }
-
-  :host-context(.dark-mode) &--music { color: var(--primary-300); }
-  :host-context(.dark-mode) &--gfx { color: oklch(70% 0.16 165); }
-  :host-context(.dark-mode) &--code { color: oklch(72% 0.18 295); }
-  :host-context(.dark-mode) &--intro { color: oklch(70% 0.18 35); }
+  padding: 0 var(--space-4);
 }

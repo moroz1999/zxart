@@ -1,36 +1,48 @@
 <zx-stack spacing="md">
   <zx-panel variant="elevated" padding="sm">
-    <zx-filter-bar>
-      <zx-button-controls [wrap]="true" gap="sm">
-        <zx-button
-          size="sm"
-          [color]="activeRole === '' ? 'secondary' : 'outlined'"
-          (click)="setRole('')">
-          {{ 'author-details.software-tab.all-roles' | translate }}
-        </zx-button>
-        <zx-button
-          *ngFor="let r of availableRoles"
-          size="sm"
-          [color]="activeRole === r.key ? 'secondary' : 'outlined'"
-          (click)="setRole(r.key)">
-          {{ r.labelKey | translate }}
-        </zx-button>
-      </zx-button-controls>
+    <zx-filter-bar gap="lg">
+      <zx-stack spacing="xs">
+        <span appText="caption" tone="muted">{{ 'author-details.filters.sort' | translate }}</span>
+        <zx-button-controls [wrap]="true" gap="sm">
+          <zx-button
+            size="sm"
+            [color]="currentSort === 'year-desc' ? 'secondary' : 'outlined'"
+            (click)="setSort('year-desc')">
+            {{ 'author-details.software-tab.sort.year-desc' | translate }}
+          </zx-button>
+          <zx-button
+            size="sm"
+            [color]="currentSort === 'year-asc' ? 'secondary' : 'outlined'"
+            (click)="setSort('year-asc')">
+            {{ 'author-details.software-tab.sort.year-asc' | translate }}
+          </zx-button>
+          <zx-button
+            size="sm"
+            [color]="currentSort === 'votes' ? 'secondary' : 'outlined'"
+            (click)="setSort('votes')">
+            {{ 'author-details.software-tab.sort.votes' | translate }}
+          </zx-button>
+        </zx-button-controls>
+      </zx-stack>
 
-      <zx-button-controls [wrap]="true" gap="sm">
-        <zx-button
-          size="sm"
-          [color]="currentSort === 'year-desc' ? 'secondary' : 'outlined'"
-          (click)="setSort('year-desc')">
-          {{ 'author-details.software-tab.sort.year-desc' | translate }}
-        </zx-button>
-        <zx-button
-          size="sm"
-          [color]="currentSort === 'votes' ? 'secondary' : 'outlined'"
-          (click)="setSort('votes')">
-          {{ 'author-details.software-tab.sort.votes' | translate }}
-        </zx-button>
-      </zx-button-controls>
+      <zx-stack spacing="xs">
+        <span appText="caption" tone="muted">{{ 'author-details.filters.show' | translate }}</span>
+        <zx-button-controls [wrap]="true" gap="sm">
+          <zx-button
+            size="sm"
+            [color]="activeRole === '' ? 'secondary' : 'outlined'"
+            (click)="setRole('')">
+            {{ 'author-details.software-tab.all-roles' | translate }}
+          </zx-button>
+          <zx-button
+            *ngFor="let role of availableRoles"
+            size="sm"
+            [color]="activeRole === role ? 'secondary' : 'outlined'"
+            (click)="setRole(role)">
+            {{ getRoleLabelKey(role) | translate }}
+          </zx-button>
+        </zx-button-controls>
+      </zx-stack>
     </zx-filter-bar>
   </zx-panel>
 
@@ -44,15 +56,15 @@
     <div *ngFor="let group of yearGroups" class="ap-year-group ap-year-group--prod" [class.ap-year-group--no-rail]="group.year === null">
       <div *ngIf="group.year !== null" class="ap-year-rail">
         <div class="ap-year-rail__dot"></div>
-        <div class="ap-year-rail__year">{{ group.year }}</div>
+        <div class="ap-year-rail__year">{{ group.year > 0 ? group.year : '???' }}</div>
         <div class="ap-year-rail__count">{{ group.prods.length }}</div>
       </div>
       <div class="ap-prod-grid">
         <div *ngFor="let prod of group.prods" class="ap-prodwrap">
           <div class="ap-prodwrap__roles" *ngIf="prod.rolesInProd.length && activeRole === ''">
-            <span *ngFor="let role of prod.rolesInProd" class="ap-role-chip ap-role-chip--sm ap-role-chip--{{ role }}">
+            <zx-chip *ngFor="let role of prod.rolesInProd" variant="opaque" size="sm" [color]="getRoleChipColor(role)">
               {{ getRoleLabelKey(role) | translate }}
-            </span>
+            </zx-chip>
           </div>
           <zx-prod-block [model]="toProdModel(prod)" [imagesLayout]="'loading'"></zx-prod-block>
         </div>

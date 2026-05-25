@@ -246,10 +246,10 @@ readonly class AuthorDetailsService
         return [(string)$parent->getUrl(), html_entity_decode((string)$parent->getTitle(), ENT_QUOTES)];
     }
 
-    private function formatDate(int $timestamp): string
+    private function formatDate(int $timestamp): ?string
     {
         if ($timestamp <= 0) {
-            return '';
+            return null;
         }
         return date('Y-m-d', $timestamp);
     }

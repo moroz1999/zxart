@@ -35,11 +35,20 @@ readonly class ElementPrivilegesService
                 continue;
             }
 
-            $normalizedPrivileges[$normalizedPrivilegeName] = $this->privilegesManager->checkPrivilegesForAction(
-                $elementId,
-                $normalizedPrivilegeName,
-                (string)$element->structureType,
-            ) === true;
+            if (str_contains($normalizedPrivilegeName, '.')) {
+                [$childType, $childAction] = explode('.', $normalizedPrivilegeName, 2);
+                $normalizedPrivileges[$normalizedPrivilegeName] = $this->privilegesManager->checkPrivilegesForAction(
+                    $elementId,
+                    $childAction,
+                    $childType,
+                ) === true;
+            } else {
+                $normalizedPrivileges[$normalizedPrivilegeName] = $this->privilegesManager->checkPrivilegesForAction(
+                    $elementId,
+                    $normalizedPrivilegeName,
+                    (string)$element->structureType,
+                ) === true;
+            }
         }
 
         return new ElementPrivilegesDto(

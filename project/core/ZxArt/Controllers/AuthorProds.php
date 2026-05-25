@@ -53,6 +53,7 @@ class AuthorProds extends LoggedControllerApplication
                     $result['items'],
                 ),
                 'total' => $result['total'],
+                'availableRoles' => $result['availableRoles'],
             ]);
         } catch (ProdDetailsException $e) {
             $this->logThrowable('AuthorProds::execute', $e);

@@ -7,6 +7,7 @@ import {AuthorProdDto} from '../models/author-prod.dto';
 export interface AuthorProdsPage {
   items: AuthorProdDto[];
   total: number;
+  availableRoles: string[];
 }
 
 @Injectable({providedIn: 'root'})
@@ -31,7 +32,7 @@ export class AuthorProdsApiService {
       params = params.set('role', role);
     }
     return this.http.get<AuthorProdsPage>('/author-prods/', {params}).pipe(
-      catchError(() => of({items: [], total: 0})),
+      catchError(() => of({items: [], total: 0, availableRoles: []})),
     );
   }
 }

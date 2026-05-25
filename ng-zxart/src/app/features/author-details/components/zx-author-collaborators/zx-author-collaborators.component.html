@@ -1,0 +1,57 @@
+<zx-panel
+  *ngIf="!loading && !error && (people.length > 0 || groups.length > 0)"
+  [title]="'author-details.collaborators.title' | translate"
+  titleLevel="h2"
+  variant="elevated">
+
+  <div class="ap-collab__cols">
+    <div class="ap-collab__col" *ngIf="people.length > 0">
+      <div class="ap-collab__col-h">
+        {{ 'author-details.collaborators.people' | translate }}
+        <span class="ap-section__count">{{ people.length }}</span>
+      </div>
+      <div class="ap-collab__people">
+        <a *ngFor="let p of people" [href]="p.url" class="ap-collab__person">
+          <div class="ap-collab__person-body">
+            <div class="ap-collab__person-name">{{ p.title }}</div>
+            <div class="ap-collab__person-stats">
+              <span *ngIf="p.jointPictures > 0" class="ap-collab__person-stat ap-collab__person-stat--gfx">
+                <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm0 13l4-4 3 3 5-5 3 3V5H5v12z"/></svg>
+                {{ p.jointPictures }}
+              </span>
+              <span *ngIf="p.jointTunes > 0" class="ap-collab__person-stat ap-collab__person-stat--music">
+                <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+                {{ p.jointTunes }}
+              </span>
+              <span *ngIf="p.jointProds > 0" class="ap-collab__person-stat ap-collab__person-stat--soft">
+                <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><path d="M21 6H3a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM11 13H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm4-3a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
+                {{ p.jointProds }}
+              </span>
+            </div>
+          </div>
+          <div class="ap-collab__person-total">
+            <b>{{ p.jointTotal }}</b>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="ap-collab__col" *ngIf="groups.length > 0">
+      <div class="ap-collab__col-h">
+        {{ 'author-details.collaborators.groups' | translate }}
+        <span class="ap-section__count">{{ groups.length }}</span>
+      </div>
+      <div class="ap-collab__groups">
+        <a *ngFor="let g of groups" [href]="g.url" class="ap-collab__group">
+          <div class="ap-collab__group-head">
+            <span class="ap-collab__group-name">{{ g.title }}</span>
+            <span *ngIf="g.years" class="ap-collab__group-years">{{ g.years }}</span>
+          </div>
+          <div class="ap-collab__group-meta">
+            {{ 'author-details.collaborators.members' | translate: {count: g.membersCount} }}
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</zx-panel>

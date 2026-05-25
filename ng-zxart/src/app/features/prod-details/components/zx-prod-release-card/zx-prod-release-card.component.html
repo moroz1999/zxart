@@ -32,7 +32,7 @@
           [label]="release.releaseTypeLabel"
         ></zx-release-type-badge>
         <zx-prod-language-links [languages]="release.languages"></zx-prod-language-links>
-        <span *ngFor="let fmt of release.formats" class="release-card__chip">{{ fmt.label }}</span>
+        <zx-chip *ngFor="let fmt of release.formats" variant="filled" color="neutral">{{ fmt.label }}</zx-chip>
       </zx-inline>
 
       <zx-inline class="release-card__bottom" gap="sm" align="center">

@@ -1,10 +1,11 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {TranslateModule} from '@ngx-translate/core';
 import {
   ZxEditingControlAction,
   ZxEditingControlsComponent,
 } from '../../../../shared/ui/zx-editing-controls/zx-editing-controls.component';
 
-const PROD_EDITING_ACTIONS: readonly ZxEditingControlAction[] = [
+const PROD_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
   {
     action: 'showPublicForm',
     privilege: 'showPublicForm',
@@ -48,21 +49,37 @@ const PROD_EDITING_ACTIONS: readonly ZxEditingControlAction[] = [
   },
 ];
 
+const PROD_ADD_ACTIONS: readonly ZxEditingControlAction[] = [
+  {
+    action: 'zxRelease.publicAdd',
+    privilege: 'zxRelease.publicAdd',
+    labelKey: 'prod-details.addrelease',
+    color: 'secondary',
+  },
+];
+
 @Component({
   selector: 'zx-prod-editing-controls',
   standalone: true,
-  imports: [ZxEditingControlsComponent],
+  imports: [ZxEditingControlsComponent, TranslateModule],
   templateUrl: './zx-prod-editing-controls.component.html',
+  styleUrl: './zx-prod-editing-controls.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxProdEditingControlsComponent {
   @Input({required: true}) elementId!: number;
   @Input({required: true}) prodUrl!: string;
-  @Input() presentation: 'inline' | 'popover' = 'inline';
-  @Input() popoverAriaLabel = '';
-  @Input() size: 'xs' | 'sm' | 'md' | null = null;
 
-  readonly actions = PROD_EDITING_ACTIONS;
+  readonly editActions = PROD_EDIT_ACTIONS;
+  readonly addActions = PROD_ADD_ACTIONS;
 
-  readonly buildActionUrl = (action: string, elementId: number): string => `${this.prodUrl}id:${elementId}/action:${action}/`;
+  readonly buildActionUrl = (action: string, elementId: number): string => {
+    if (action.includes('.')) {
+      const dot = action.indexOf('.');
+      const type = action.substring(0, dot);
+      const act = action.substring(dot + 1);
+      return `${this.prodUrl}type:${type}/action:${act}/`;
+    }
+    return `${this.prodUrl}id:${elementId}/action:${action}/`;
+  };
 }

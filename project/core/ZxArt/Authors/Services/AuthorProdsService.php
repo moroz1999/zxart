@@ -23,7 +23,7 @@ readonly class AuthorProdsService
     }
 
     /**
-     * @return array{items: AuthorProdDto[], total: int}
+     * @return array{items: AuthorProdDto[], total: int, availableRoles: string[]}
      */
     public function getProdsPaged(
         int $authorId,
@@ -38,18 +38,11 @@ readonly class AuthorProdsService
             throw new ProdDetailsException('Author not found', 404);
         }
 
-        $all = $this->authorProdsRepository->findAllByAuthorId($authorId);
-
-        if ($role !== '') {
-            $all = array_values(array_filter($all, fn(array $item) => in_array($role, $item['roles'], true)));
-        }
-
-        $all = $this->sortItems($all, $sort, $sortDir);
-        $total = count($all);
-        $page = array_slice($all, $start, $limit);
+        $page = $this->authorProdsRepository->findPagedByAuthorId($authorId, $start, $limit, $sort, $sortDir, $role);
+        $availableRoles = $this->authorProdsRepository->findAvailableRolesByAuthorId($authorId);
 
         $dtos = [];
-        foreach ($page as $item) {
+        foreach ($page['items'] as $item) {
             $element = $this->structureManager->getElementById($item['id']);
             $dto = match (true) {
                 $element instanceof zxProdElement => $this->buildProdDto($element, $item['roles'], $authorId),
@@ -61,24 +54,7 @@ readonly class AuthorProdsService
             }
         }
 
-        return ['items' => $dtos, 'total' => $total];
-    }
-
-    /**
-     * @param array<array{id: int, type: string, votes: float, year: int, roles: string[]}> $items
-     * @return array<array{id: int, type: string, votes: float, year: int, roles: string[]}>
-     */
-    private function sortItems(array $items, string $sort, string $sortDir): array
-    {
-        $desc = strtolower($sortDir) !== 'asc';
-        usort($items, function (array $a, array $b) use ($sort, $desc): int {
-            $cmp = match ($sort) {
-                'year' => $a['year'] <=> $b['year'],
-                default => $a['votes'] <=> $b['votes'],
-            };
-            return $desc ? -$cmp : $cmp;
-        });
-        return $items;
+        return ['items' => $dtos, 'total' => $page['total'], 'availableRoles' => $availableRoles];
     }
 
     /** @param string[] $rolesInProd */

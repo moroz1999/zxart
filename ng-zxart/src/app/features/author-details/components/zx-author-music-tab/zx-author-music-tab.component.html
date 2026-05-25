@@ -1,42 +1,48 @@
 <zx-stack spacing="md">
   <zx-panel variant="elevated" padding="sm">
-    <zx-filter-bar>
-      <zx-button-controls [wrap]="true" gap="sm">
-        <zx-button
-          size="sm"
-          [color]="currentSort === 'year-desc' ? 'secondary' : 'outlined'"
-          (click)="setSort('year-desc')">
-          {{ 'author-details.music-tab.sort.year-desc' | translate }}
-        </zx-button>
-        <zx-button
-          size="sm"
-          [color]="currentSort === 'year-asc' ? 'secondary' : 'outlined'"
-          (click)="setSort('year-asc')">
-          {{ 'author-details.music-tab.sort.year-asc' | translate }}
-        </zx-button>
-        <zx-button
-          size="sm"
-          [color]="currentSort === 'votes' ? 'secondary' : 'outlined'"
-          (click)="setSort('votes')">
-          {{ 'author-details.music-tab.sort.votes' | translate }}
-        </zx-button>
-      </zx-button-controls>
+    <zx-filter-bar gap="lg">
+      <zx-stack spacing="xs">
+        <span appText="caption" tone="muted">{{ 'author-details.filters.sort' | translate }}</span>
+        <zx-button-controls [wrap]="true" gap="sm">
+          <zx-button
+            size="sm"
+            [color]="currentSort === 'year-desc' ? 'secondary' : 'outlined'"
+            (click)="setSort('year-desc')">
+            {{ 'author-details.music-tab.sort.year-desc' | translate }}
+          </zx-button>
+          <zx-button
+            size="sm"
+            [color]="currentSort === 'year-asc' ? 'secondary' : 'outlined'"
+            (click)="setSort('year-asc')">
+            {{ 'author-details.music-tab.sort.year-asc' | translate }}
+          </zx-button>
+          <zx-button
+            size="sm"
+            [color]="currentSort === 'votes' ? 'secondary' : 'outlined'"
+            (click)="setSort('votes')">
+            {{ 'author-details.music-tab.sort.votes' | translate }}
+          </zx-button>
+        </zx-button-controls>
+      </zx-stack>
 
-      <zx-button-controls *ngIf="availableChips.length > 1" [wrap]="true" gap="sm">
-        <zx-button
-          size="sm"
-          [color]="currentChip === '' ? 'secondary' : 'outlined'"
-          (click)="setChip('')">
-          {{ 'author-details.music-tab.chip.all' | translate }}
-        </zx-button>
-        <zx-button
-          *ngFor="let chip of availableChips"
-          size="sm"
-          [color]="currentChip === chip ? 'secondary' : 'outlined'"
-          (click)="setChip(chip)">
-          {{ chip }}
-        </zx-button>
-      </zx-button-controls>
+      <zx-stack *ngIf="availableChips.length > 1" spacing="xs">
+        <span appText="caption" tone="muted">{{ 'author-details.filters.show' | translate }}</span>
+        <zx-button-controls [wrap]="true" gap="sm">
+          <zx-button
+            size="sm"
+            [color]="currentChip === '' ? 'secondary' : 'outlined'"
+            (click)="setChip('')">
+            {{ 'author-details.music-tab.chip.all' | translate }}
+          </zx-button>
+          <zx-button
+            *ngFor="let chip of availableChips"
+            size="sm"
+            [color]="currentChip === chip ? 'secondary' : 'outlined'"
+            (click)="setChip(chip)">
+            {{ chip }}
+          </zx-button>
+        </zx-button-controls>
+      </zx-stack>
     </zx-filter-bar>
   </zx-panel>
 
@@ -51,7 +57,7 @@
     <div *ngFor="let group of yearGroups" class="ap-year-group" [class.ap-year-group--no-rail]="group.year === null">
       <div *ngIf="group.year !== null" class="ap-year-rail">
         <div class="ap-year-rail__dot"></div>
-        <div class="ap-year-rail__year">{{ group.year }}</div>
+        <div class="ap-year-rail__year">{{ +group.year > 0 ? group.year : '???' }}</div>
         <div class="ap-year-rail__count">{{ group.tunes.length }}</div>
       </div>
       <div class="ap-tune-list">

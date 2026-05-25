@@ -1,14 +1,27 @@
 <div class="zx-tabs__bar">
-  <button
-    *ngFor="let tab of tabs; let i = index"
-    class="zx-tabs__button"
-    [class.zx-tabs__button--active]="activeIndex === i"
-    (click)="activateTab(i)"
-    type="button"
-  >
-    {{ tab.label }}
-    <span *ngIf="tab.count != null" class="zx-tabs__count">{{ tab.count }}</span>
-  </button>
+  <ng-container *ngFor="let tab of tabs; let i = index">
+    <a
+      *ngIf="tab.href; else buttonTab"
+      class="zx-tabs__button"
+      [class.zx-tabs__button--active]="activeIndex === i"
+      [href]="tab.href"
+      (click)="activateLinkedTab(i, $event)"
+    >
+      {{ tab.label }}
+      <span *ngIf="tab.count != null" class="zx-tabs__count">{{ tab.count }}</span>
+    </a>
+    <ng-template #buttonTab>
+      <button
+        class="zx-tabs__button"
+        [class.zx-tabs__button--active]="activeIndex === i"
+        (click)="activateTab(i)"
+        type="button"
+      >
+        {{ tab.label }}
+        <span *ngIf="tab.count != null" class="zx-tabs__count">{{ tab.count }}</span>
+      </button>
+    </ng-template>
+  </ng-container>
 </div>
 <ng-content></ng-content>
 <ng-container *ngTemplateOutlet="activeTemplateRef"></ng-container>

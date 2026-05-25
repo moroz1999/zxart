@@ -41,15 +41,6 @@
   color: var(--zx-prod-release-card-meta-color);
 }
 
-.release-card__chip {
-  display: inline-block;
-  padding: var(--zx-prod-release-card-chip-padding);
-  border-radius: var(--zx-prod-release-card-chip-radius);
-  font-size: var(--zx-prod-release-card-chip-size);
-  background: var(--zx-prod-release-card-chip-bg);
-  color: var(--zx-prod-release-card-chip-text);
-}
-
 .release-card__bottom {
   margin-top: auto;
 }

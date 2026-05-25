@@ -13,6 +13,7 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxPictureGridSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 
 const PAGE_SIZE = 24;
 
@@ -37,6 +38,7 @@ interface YearGroup {
     ZxPanelComponent,
     ZxStackComponent,
     ZxPictureGridSkeletonComponent,
+    TextDirective,
   ],
   templateUrl: './zx-author-graphics-tab.component.html',
   styleUrl: './zx-author-graphics-tab.component.scss',
@@ -150,7 +152,9 @@ export class ZxAuthorGraphicsTabComponent implements OnInit, OnDestroy {
     }
     const groups: YearGroup[] = [];
     let startIndex = 0;
-    const sorted = Array.from(byYear.entries()).sort(([a], [b]) => Number(b) - Number(a));
+    const sorted = Array.from(byYear.entries()).sort(([a], [b]) =>
+      sort === 'year-asc' ? Number(a) - Number(b) : Number(b) - Number(a),
+    );
     for (const [year, pics] of sorted) {
       groups.push({year, pictures: pics, startIndex});
       startIndex += pics.length;

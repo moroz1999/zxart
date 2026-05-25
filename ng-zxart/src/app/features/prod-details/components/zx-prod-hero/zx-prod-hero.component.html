@@ -3,17 +3,8 @@
     <p appHeading="headline">{{ core.title }}</p>
     <zx-prod-editing-controls
       [elementId]="core.elementId"
-      [prodUrl]="core.prodUrl"
-      presentation="popover"
-      [popoverAriaLabel]="'prod-details.actions' | translate">
+      [prodUrl]="core.prodUrl">
     </zx-prod-editing-controls>
-    <zx-button
-      *ngIf="core.canAddRelease"
-      size="sm"
-      color="secondary"
-      [href]="core.addReleaseUrl">
-      {{ 'prod-details.addrelease' | translate }}
-    </zx-button>
     <span *ngIf="core.year > 0" class="hero-year">{{ core.year }}</span>
   </zx-inline>
 
@@ -22,9 +13,9 @@
   </div>
 
   <zx-inline gap="sm" [wrap]="true">
-    <a *ngFor="let cat of leafCategories" appText="label" tone="inherit" [href]="cat.url" class="hero-chip hero-chip--cat">{{ cat.title }}</a>
-    <span *ngFor="let lang of core.languages" appText="label" tone="inherit" class="hero-chip">{{ lang.emoji }} {{ lang.title }}</span>
-    <span *ngIf="showLegalStatus" appText="label" tone="inherit" class="hero-chip">{{ core.legalStatusLabel }}</span>
+    <zx-chip *ngFor="let cat of leafCategories" variant="filled" color="primary" [href]="cat.url">{{ cat.title }}</zx-chip>
+    <zx-chip *ngFor="let lang of core.languages" variant="filled" color="neutral">{{ lang.emoji }} {{ lang.title }}</zx-chip>
+    <zx-chip *ngIf="showLegalStatus" variant="filled" color="neutral">{{ core.legalStatusLabel }}</zx-chip>
   </zx-inline>
 
   <zx-inline gap="lg" align="center" justify="between" [wrap]="true">

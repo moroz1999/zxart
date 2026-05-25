@@ -24,22 +24,45 @@ paths:
           description: Internal server error
   /author-prods/:
     get:
-      summary: Get all productions for an author (for author details page)
+      summary: Get paged productions for an author (for author details page)
       parameters:
         - in: query
           name: id
           required: true
           schema:
             type: integer
+        - in: query
+          name: start
+          schema:
+            type: integer
+            default: 0
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 50
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [year, votes]
+        - in: query
+          name: sortDir
+          schema:
+            type: string
+            enum: [asc, desc]
+        - in: query
+          name: role
+          description: Role key used to filter items; `availableRoles` remains unfiltered.
+          schema:
+            type: string
       responses:
         '200':
-          description: Array of productions with this author's roles
+          description: Paged productions and available author roles for filtering
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AuthorProd'
+                $ref: '#/components/schemas/AuthorProdsPage'
         '400':
           description: Bad request
         '404':
@@ -296,3 +319,22 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AuthorProdCoAuthor'
+
+    AuthorProdsPage:
+      type: object
+      required:
+        - items
+        - total
+        - availableRoles
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorProd'
+        total:
+          type: integer
+        availableRoles:
+          type: array
+          description: Distinct roles from all of the author's productions, independent of the selected role filter.
+          items:
+            type: string

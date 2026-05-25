@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Authors\Repositories;
 
 use Illuminate\Database\Connection;
+use Illuminate\Database\Query\Builder;
 use ZxArt\LinkTypes;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\EntityType;
@@ -15,65 +16,240 @@ readonly final class AuthorProdsRepository extends AbstractRepository
     public function __construct(private Connection $db) {}
 
     /**
-     * Returns all prod/release IDs with metadata for the author (and aliases).
-     * Releases that are children of an author's prod are excluded (no duplicates).
-     *
-     * @return array<array{id: int, type: string, votes: float, year: int, roles: string[]}>
+     * @return array{items: list<array{id: int, roles: string[]}>, total: int}
      */
-    public function findAllByAuthorId(int $authorId): array
-    {
+    public function findPagedByAuthorId(
+        int $authorId,
+        int $start,
+        int $limit,
+        string $sort,
+        string $sortDir,
+        string $role,
+    ): array {
         $authorIds = $this->getAuthorAndAliasIds($authorId);
-        $authTable = $this->tableName(DatabaseTable::Authorship);
-        $prodTable = $this->tableName(DatabaseTable::ZxProd);
-        $releaseTable = $this->tableName(DatabaseTable::ZxRelease);
-        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
 
-        /** @var list<array{id: int, votes: float, year: int, roles: string}> $prodRows */
-        $prodRows = $this->db->table($prodTable)
-            ->join($authTable, function ($join) use ($authTable, $prodTable, $authorIds) {
-                $join->on("$authTable.elementId", '=', "$prodTable.id")
-                     ->where("$authTable.type", '=', EntityType::Prod->value)
-                     ->whereIn("$authTable.authorId", $authorIds);
-            })
-            ->select(["$prodTable.id", "$prodTable.votes", "$prodTable.year", "$authTable.roles"])
+        $total = $this->countItems($authorIds, $role);
+        /** @var list<array{id: int}> $itemRows */
+        $itemRows = $this->getItemsQuery($authorIds, $sort, $sortDir, $role)
+            ->offset($start)
+            ->limit($limit)
             ->get();
 
-        $prods = $this->aggregateRows($prodRows, 'prod');
+        $itemIds = array_map(static fn(array $item): int => $item['id'], $itemRows);
+        $rolesByItemId = $this->findRolesByItemIds($itemIds, $authorIds);
 
-        if (empty($prods)) {
-            /** @var list<array{id: int, votes: float, year: int, roles: string}> $releaseRows */
-            $releaseRows = $this->db->table($releaseTable)
-                ->join($authTable, function ($join) use ($authTable, $releaseTable, $authorIds) {
-                    $join->on("$authTable.elementId", '=', "$releaseTable.id")
-                         ->where("$authTable.type", '=', EntityType::Release->value)
-                         ->whereIn("$authTable.authorId", $authorIds);
-                })
-                ->select(["$releaseTable.id", "$releaseTable.votes", "$releaseTable.year", "$authTable.roles"])
-                ->get();
-
-            return $this->aggregateRows($releaseRows, 'release');
+        $items = [];
+        foreach ($itemRows as $itemRow) {
+            $itemId = $itemRow['id'];
+            $items[] = [
+                'id' => $itemId,
+                'roles' => $rolesByItemId[$itemId] ?? [],
+            ];
         }
 
-        $prodIds = array_column($prods, 'id');
+        return ['items' => $items, 'total' => $total];
+    }
 
-        /** @var int[] $childReleaseIds */
-        $childReleaseIds = $this->db->table($linksTable)
-            ->whereIn('parentStructureId', $prodIds)
-            ->where('type', '=', LinkTypes::STRUCTURE->value)
-            ->pluck('childStructureId');
+    /**
+     * @return string[]
+     */
+    public function findAvailableRolesByAuthorId(int $authorId): array
+    {
+        $authorIds = $this->getAuthorAndAliasIds($authorId);
+        $roleRows = array_merge(
+            $this->getProdRoleRows($authorIds),
+            $this->getReleaseRoleRows($authorIds),
+        );
 
-        /** @var list<array{id: int, votes: float, year: int, roles: string}> $releaseRows */
-        $releaseRows = $this->db->table($releaseTable)
-            ->join($authTable, function ($join) use ($authTable, $releaseTable, $authorIds) {
-                $join->on("$authTable.elementId", '=', "$releaseTable.id")
-                     ->where("$authTable.type", '=', EntityType::Release->value)
-                     ->whereIn("$authTable.authorId", $authorIds);
-            })
-            ->whereNotIn("$releaseTable.id", $childReleaseIds)
-            ->select(["$releaseTable.id", "$releaseTable.votes", "$releaseTable.year", "$authTable.roles"])
+        $roleIndex = [];
+        foreach ($roleRows as $roleRow) {
+            foreach ($this->decodeRoles($roleRow['roles']) as $role) {
+                $roleIndex[$role] = true;
+            }
+        }
+
+        $availableRoles = array_keys($roleIndex);
+        sort($availableRoles);
+
+        return $availableRoles;
+    }
+
+    /**
+     * @param int[] $authorIds
+     */
+    private function countItems(array $authorIds, string $role): int
+    {
+        $prodCount = $this->getProdQuery($authorIds, $role)
+            ->distinct()
+            ->count($this->tableColumn(DatabaseTable::ZxProd, 'id'));
+        $releaseCount = $this->getReleaseQuery($authorIds, $role)
+            ->distinct()
+            ->count($this->tableColumn(DatabaseTable::ZxRelease, 'id'));
+
+        return $prodCount + $releaseCount;
+    }
+
+    /**
+     * @param int[] $authorIds
+     */
+    private function getItemsQuery(array $authorIds, string $sort, string $sortDir, string $role): Builder
+    {
+        $prodTable = $this->tableName(DatabaseTable::ZxProd);
+        $releaseTable = $this->tableName(DatabaseTable::ZxRelease);
+        $structureElementsTable = $this->tableName(DatabaseTable::StructureElements);
+        $prodQuery = $this->getProdQuery($authorIds, $role)
+            ->join($structureElementsTable, "$structureElementsTable.id", '=', "$prodTable.id")
+            ->select(["$prodTable.id", "$prodTable.votes", "$prodTable.year", "$structureElementsTable.dateCreated"])
+            ->distinct();
+        $releaseQuery = $this->getReleaseQuery($authorIds, $role)
+            ->join($structureElementsTable, "$structureElementsTable.id", '=', "$releaseTable.id")
+            ->select(["$releaseTable.id", "$releaseTable.votes", "$releaseTable.year", "$structureElementsTable.dateCreated"])
+            ->distinct();
+
+        $query = $prodQuery->unionAll($releaseQuery);
+        $direction = strtolower($sortDir) === 'asc' ? 'asc' : 'desc';
+        if ($sort === 'year') {
+            return $query
+                ->orderBy('year', $direction)
+                ->orderBy('dateCreated', $direction)
+                ->orderBy('id', $direction);
+        }
+
+        return $query
+            ->orderBy('votes', $direction)
+            ->orderBy('id', $direction);
+    }
+
+    /**
+     * @param int[] $authorIds
+     */
+    private function getProdQuery(array $authorIds, string $role): Builder
+    {
+        $prodTable = $this->tableName(DatabaseTable::ZxProd);
+        $authTable = $this->tableName(DatabaseTable::Authorship);
+        $query = $this->db->table($prodTable)
+            ->join($authTable, "$authTable.elementId", '=', "$prodTable.id")
+            ->where("$authTable.type", '=', EntityType::Prod->value)
+            ->whereIn("$authTable.authorId", $authorIds);
+
+        return $this->applyRoleFilter($query, $role);
+    }
+
+    /**
+     * @param int[] $authorIds
+     */
+    private function getReleaseQuery(array $authorIds, string $role): Builder
+    {
+        $releaseTable = $this->tableName(DatabaseTable::ZxRelease);
+        $authTable = $this->tableName(DatabaseTable::Authorship);
+        $query = $this->db->table($releaseTable)
+            ->join($authTable, "$authTable.elementId", '=', "$releaseTable.id")
+            ->where("$authTable.type", '=', EntityType::Release->value)
+            ->whereIn("$authTable.authorId", $authorIds);
+
+        $this->excludeChildReleasesOfAuthorProds($query, $authorIds);
+
+        return $this->applyRoleFilter($query, $role);
+    }
+
+    private function applyRoleFilter(Builder $query, string $role): Builder
+    {
+        if ($role !== '') {
+            $escapedRole = addcslashes($role, '\\%_');
+            $query->where(
+                $this->tableColumn(DatabaseTable::Authorship, 'roles'),
+                'like',
+                '%"' . $escapedRole . '"%'
+            );
+        }
+
+        return $query;
+    }
+
+    /**
+     * @param int[] $authorIds
+     */
+    private function excludeChildReleasesOfAuthorProds(Builder $query, array $authorIds): void
+    {
+        $releaseTable = $this->tableName(DatabaseTable::ZxRelease);
+        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
+        $prodTable = $this->tableName(DatabaseTable::ZxProd);
+        $authTable = $this->tableName(DatabaseTable::Authorship);
+
+        $query->whereNotIn("$releaseTable.id", function (Builder $childReleasesQuery) use ($linksTable, $prodTable, $authTable, $authorIds): void {
+            $childReleasesQuery->select("$linksTable.childStructureId")
+                ->from($linksTable)
+                ->where("$linksTable.type", '=', LinkTypes::STRUCTURE->value)
+                ->whereIn("$linksTable.parentStructureId", function (Builder $prodsQuery) use ($prodTable, $authTable, $authorIds): void {
+                    $prodsQuery->select("$prodTable.id")
+                        ->from($prodTable)
+                        ->join($authTable, "$authTable.elementId", '=', "$prodTable.id")
+                        ->where("$authTable.type", '=', EntityType::Prod->value)
+                        ->whereIn("$authTable.authorId", $authorIds)
+                        ->distinct();
+                });
+        });
+    }
+
+    /**
+     * @param int[] $itemIds
+     * @param int[] $authorIds
+     * @return array<int, string[]>
+     */
+    private function findRolesByItemIds(array $itemIds, array $authorIds): array
+    {
+        if ($itemIds === []) {
+            return [];
+        }
+
+        /** @var list<array{elementId: int, roles: string}> $roleRows */
+        $roleRows = $this->db->table($this->tableName(DatabaseTable::Authorship))
+            ->select(['elementId', 'roles'])
+            ->whereIn('elementId', $itemIds)
+            ->whereIn('authorId', $authorIds)
+            ->whereIn('type', [EntityType::Prod->value, EntityType::Release->value])
             ->get();
 
-        return array_merge($prods, $this->aggregateRows($releaseRows, 'release'));
+        $rolesByItemId = [];
+        foreach ($roleRows as $roleRow) {
+            $itemId = $roleRow['elementId'];
+            $roles = $this->decodeRoles($roleRow['roles']);
+            $rolesByItemId[$itemId] = array_values(array_unique(array_merge($rolesByItemId[$itemId] ?? [], $roles)));
+        }
+
+        return $rolesByItemId;
+    }
+
+    /**
+     * @param int[] $authorIds
+     * @return list<array{roles: string}>
+     */
+    private function getProdRoleRows(array $authorIds): array
+    {
+        $authTable = $this->tableName(DatabaseTable::Authorship);
+
+        /** @var list<array{roles: string}> $rows */
+        $rows = $this->getProdQuery($authorIds, '')
+            ->select("$authTable.roles")
+            ->get();
+
+        return $rows;
+    }
+
+    /**
+     * @param int[] $authorIds
+     * @return list<array{roles: string}>
+     */
+    private function getReleaseRoleRows(array $authorIds): array
+    {
+        $authTable = $this->tableName(DatabaseTable::Authorship);
+
+        /** @var list<array{roles: string}> $rows */
+        $rows = $this->getReleaseQuery($authorIds, '')
+            ->select("$authTable.roles")
+            ->get();
+
+        return $rows;
     }
 
     /**
@@ -90,34 +266,18 @@ readonly final class AuthorProdsRepository extends AbstractRepository
     }
 
     /**
-     * Deduplicates by id and merges roles from multiple authorship records.
-     *
-     * @param list<array{id: int, votes: float, year: int, roles: string}> $rows
-     * @return array<int, array{id: int, type: string, votes: float, year: int, roles: string[]}>
+     * @return string[]
      */
-    private function aggregateRows(array $rows, string $type): array
+    private function decodeRoles(string $encodedRoles): array
     {
-        $seen = [];
-        foreach ($rows as $row) {
-            $id = $row['id'];
-            /** @var mixed $decoded */
-            $decoded = json_decode($row['roles'] ?? '[]', true);
-            /** @var string[] $roles */
-            $roles = is_array($decoded) ? $decoded : [];
-
-            if (!isset($seen[$id])) {
-                $seen[$id] = [
-                    'id'    => $id,
-                    'type'  => $type,
-                    'votes' => $row['votes'],
-                    'year'  => $row['year'],
-                    'roles' => $roles,
-                ];
-            } else {
-                $seen[$id]['roles'] = array_values(array_unique(array_merge($seen[$id]['roles'], $roles)));
-            }
+        /** @var mixed $decodedRoles */
+        $decodedRoles = json_decode($encodedRoles, true);
+        if (!is_array($decodedRoles)) {
+            return [];
         }
 
-        return $seen;
+        $roles = array_filter($decodedRoles, static fn(mixed $decodedRole): bool => is_string($decodedRole));
+
+        return array_values($roles);
     }
 }

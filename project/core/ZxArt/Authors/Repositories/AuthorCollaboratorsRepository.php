@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace ZxArt\Authors\Repositories;
 
 use Illuminate\Database\Connection;
+use Illuminate\Database\Query\Builder;
 use ZxArt\Shared\DatabaseTable;
+use ZxArt\Shared\EntityType;
 use ZxArt\Shared\Repositories\AbstractRepository;
 
 readonly final class AuthorCollaboratorsRepository extends AbstractRepository
@@ -71,6 +73,81 @@ readonly final class AuthorCollaboratorsRepository extends AbstractRepository
     }
 
     /**
+     * Returns groups connected to the same prods or releases as the author.
+     *
+     * @param int[] $authorIds main author + alias IDs
+     * @return array<array{groupId: int, years: int[], total: int}>
+     */
+    public function findGroupStats(array $authorIds): array
+    {
+        if (empty($authorIds)) {
+            return [];
+        }
+
+        $authTable = $this->tableName(DatabaseTable::Authorship);
+        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
+        $prodTable = $this->tableName(DatabaseTable::ZxProd);
+        $releaseTable = $this->tableName(DatabaseTable::ZxRelease);
+
+        /** @var int[] $prodIds */
+        $prodIds = $this->db->table($authTable)
+            ->whereIn('authorId', $authorIds)
+            ->where('type', '=', EntityType::Prod->value)
+            ->distinct()
+            ->pluck('elementId');
+
+        /** @var int[] $releaseIds */
+        $releaseIds = $this->db->table($authTable)
+            ->whereIn('authorId', $authorIds)
+            ->where('type', '=', EntityType::Release->value)
+            ->distinct()
+            ->pluck('elementId');
+
+        $stats = [];
+
+        if (!empty($prodIds)) {
+            /** @var list<array{groupId: mixed, workId: mixed, year: mixed}> $rows */
+            $rows = $this->db->table($linksTable)
+                ->join($prodTable, "$prodTable.id", '=', "$linksTable.childStructureId")
+                ->whereIn("$linksTable.childStructureId", $prodIds)
+                ->whereIn("$linksTable.type", ['zxProdGroups', 'zxProdPublishers'])
+                ->select([
+                    "$linksTable.parentStructureId as groupId",
+                    "$linksTable.childStructureId as workId",
+                    "$prodTable.year as year",
+                ])
+                ->get();
+            $this->appendGroupRows($stats, $rows, 'prod');
+        }
+
+        if (!empty($releaseIds)) {
+            /** @var list<array{groupId: mixed, workId: mixed, year: mixed}> $rows */
+            $rows = $this->db->table($linksTable)
+                ->join($releaseTable, "$releaseTable.id", '=', "$linksTable.childStructureId")
+                ->whereIn("$linksTable.childStructureId", $releaseIds)
+                ->where("$linksTable.type", '=', 'zxReleasePublishers')
+                ->select([
+                    "$linksTable.parentStructureId as groupId",
+                    "$linksTable.childStructureId as workId",
+                    "$releaseTable.year as year",
+                ])
+                ->get();
+            $this->appendGroupRows($stats, $rows, 'release');
+        }
+
+        usort($stats, fn(array $a, array $b) => $b['total'] <=> $a['total']);
+
+        return array_map(
+            static fn(array $row): array => [
+                'groupId' => $row['groupId'],
+                'years' => array_values($row['years']),
+                'total' => $row['total'],
+            ],
+            array_slice($stats, 0, 30),
+        );
+    }
+
+    /**
      * Count distinct members (authors) of a group element.
      * Excludes alias IDs so each person is counted once.
      */
@@ -81,7 +158,10 @@ readonly final class AuthorCollaboratorsRepository extends AbstractRepository
         return $this->db->table($this->tableName(DatabaseTable::Authorship))
             ->where('elementId', '=', $groupId)
             ->where('type', '=', 'group')
-            ->whereNotIn('authorId', fn($q) => $q->select('id')->from($aliasTable))
+            ->whereNotIn(
+                'authorId',
+                fn(Builder $q): Builder => $q->select('id')->from($aliasTable),
+            )
             ->distinct()
             ->count('authorId');
     }
@@ -96,5 +176,37 @@ readonly final class AuthorCollaboratorsRepository extends AbstractRepository
             ->where('authorId', '=', $authorId)
             ->pluck('id');
         return [$authorId, ...$aliasIds];
+    }
+
+    /**
+     * @param array<int, array{groupId: int, years: int[], total: int, works: array<string, bool>}> $stats
+     * @param list<array{groupId: mixed, workId: mixed, year: mixed}> $rows
+     */
+    private function appendGroupRows(array &$stats, array $rows, string $workType): void
+    {
+        foreach ($rows as $row) {
+            $groupId = (int)$row['groupId'];
+            $workKey = $workType . ':' . (int)$row['workId'];
+            if (!isset($stats[$groupId])) {
+                $stats[$groupId] = [
+                    'groupId' => $groupId,
+                    'years' => [],
+                    'total' => 0,
+                    'works' => [],
+                ];
+            }
+
+            if (isset($stats[$groupId]['works'][$workKey])) {
+                continue;
+            }
+
+            $stats[$groupId]['works'][$workKey] = true;
+            $stats[$groupId]['total']++;
+
+            $year = (int)$row['year'];
+            if ($year > 0) {
+                $stats[$groupId]['years'][$year] = $year;
+            }
+        }
     }
 }

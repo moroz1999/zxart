@@ -288,6 +288,7 @@ readonly final class TunesRepository extends AbstractRepository
         $sortColumn = in_array($sortColumn, self::ALLOWED_SORT_COLUMNS, true) ? $sortColumn : 'votes';
         $sortDir = strtolower($sortDir) === 'asc' ? 'asc' : 'desc';
         $authorIds = $this->getAuthorAndAliasIds($authorId);
+        $structureElementsTable = $this->tableName(DatabaseTable::StructureElements);
 
         $q = $this->db->table($this->tableName(DatabaseTable::ZxMusic))
             ->select([$this->tableColumn(DatabaseTable::ZxMusic, 'id'), $this->tableColumn(DatabaseTable::ZxMusic, $sortColumn)])
@@ -299,12 +300,25 @@ readonly final class TunesRepository extends AbstractRepository
             )
             ->where($this->tableColumn(DatabaseTable::StructureLinks, 'type'), '=', LinkTypes::AUTHOR_MUSIC->value)
             ->whereIn($this->tableColumn(DatabaseTable::StructureLinks, 'parentStructureId'), $authorIds);
+        if ($sortColumn === 'year') {
+            $q->join(
+                $structureElementsTable,
+                $structureElementsTable . '.id',
+                '=',
+                $this->tableColumn(DatabaseTable::ZxMusic, 'id')
+            )->addSelect($structureElementsTable . '.dateCreated');
+        }
         if ($typeFilter !== '') {
             $q->where($this->tableColumn(DatabaseTable::ZxMusic, 'type'), '=', $typeFilter);
         }
+        $q->distinct()
+            ->orderBy($this->tableColumn(DatabaseTable::ZxMusic, $sortColumn), $sortDir);
+        if ($sortColumn === 'year') {
+            $q->orderBy($structureElementsTable . '.dateCreated', $sortDir)
+                ->orderBy($this->tableColumn(DatabaseTable::ZxMusic, 'id'), $sortDir);
+        }
         /** @var int[] $ids */
-        $ids = $q->distinct()
-            ->orderBy($this->tableColumn(DatabaseTable::ZxMusic, $sortColumn), $sortDir)
+        $ids = $q
             ->offset($start)
             ->limit($limit)
             ->pluck($this->tableColumn(DatabaseTable::ZxMusic, 'id'));

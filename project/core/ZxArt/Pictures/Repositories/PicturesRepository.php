@@ -7,6 +7,7 @@ namespace ZxArt\Pictures\Repositories;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use ZxArt\Helpers\AlphanumericColumnSearch;
+use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\SortingParams;
 
 readonly final class PicturesRepository
@@ -105,6 +106,7 @@ readonly final class PicturesRepository
     {
         $sortColumn = in_array($sortColumn, self::ALLOWED_SORT_COLUMNS, true) ? $sortColumn : 'votes';
         $sortDir = strtolower($sortDir) === 'asc' ? 'asc' : 'desc';
+        $structureElementsTable = DatabaseTable::StructureElements->value;
 
         $q = $this->db->table(self::TABLE)
             ->select([self::TABLE . '.id', self::TABLE . '.' . $sortColumn])
@@ -121,11 +123,20 @@ readonly final class PicturesRepository
                         fn($sub) => $sub->select('id')->from('module_authoralias')->where('authorId', '=', $authorId)
                     );
             });
+        if ($sortColumn === 'year') {
+            $q->join($structureElementsTable, $structureElementsTable . '.id', '=', self::TABLE . '.id')
+                ->addSelect($structureElementsTable . '.dateCreated');
+        }
         if ($typeFilter !== '') {
             $q->where(self::TABLE . '.type', '=', $typeFilter);
         }
-        return $q->distinct()
-            ->orderBy(self::TABLE . '.' . $sortColumn, $sortDir)
+        $q->distinct()
+            ->orderBy(self::TABLE . '.' . $sortColumn, $sortDir);
+        if ($sortColumn === 'year') {
+            $q->orderBy($structureElementsTable . '.dateCreated', $sortDir)
+                ->orderBy(self::TABLE . '.id', $sortDir);
+        }
+        return $q
             ->offset($start)
             ->limit($limit)
             ->pluck(self::TABLE . '.id');

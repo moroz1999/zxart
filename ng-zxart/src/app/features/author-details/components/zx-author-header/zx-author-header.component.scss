@@ -55,30 +55,6 @@
   letter-spacing: -0.01em;
 }
 
-.ap-header__role-chips {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.ap-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 8px;
-  border-radius: 999px;
-  font-size: var(--font-xs);
-  font-weight: 700;
-  border: 1px solid currentColor;
-
-  &--artist { color: oklch(56% 0.16 165); }
-  &--musician { color: var(--primary-600); }
-  &--coder { color: oklch(48% 0.18 295); }
-
-  :host-context(.dark-mode) &--artist { color: oklch(72% 0.16 165); }
-  :host-context(.dark-mode) &--musician { color: var(--primary-300); }
-  :host-context(.dark-mode) &--coder { color: oklch(72% 0.18 295); }
-}
 
 .ap-header__bio {
   display: flex;
@@ -182,43 +158,19 @@
   }
 }
 
-.ap-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.ap-group-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: var(--primary-50);
-  border: 1px solid var(--primary-200);
-  color: var(--primary-700);
-  font-size: var(--font-xs);
-  font-weight: 700;
-  text-decoration: none;
-
-  :host-context(.dark-mode) & {
-    background: rgba(26, 144, 255, 0.1);
-    border-color: var(--primary-700);
-    color: var(--primary-300);
-  }
-
-  &:hover { background: var(--primary-100); }
-  :host-context(.dark-mode) &:hover { background: rgba(26, 144, 255, 0.2); }
-}
-
-.ap-group-chip__years {
+.ap-chip-years {
+  margin-left: var(--space-4);
   color: var(--text-light-color);
   font-weight: 400;
   font-family: var(--font-mono);
-  font-size: 10px;
 }
 
 .ap-aliases {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+
   a {
     color: var(--link-color);
     text-decoration: none;
@@ -227,18 +179,8 @@
   }
 }
 
-.ap-aliases__more {
-  border: 1px solid var(--secondary-300);
-  background: var(--secondary-100);
-  color: var(--text-color);
-  font-size: var(--font-xs);
-  padding: 1px 8px;
-  border-radius: 999px;
-  cursor: pointer;
-  font-weight: 700;
-  margin-left: 4px;
-
-  &:hover { background: var(--secondary-200); }
+.ap-aliases__item {
+  white-space: nowrap;
 }
 
 .ap-ext-links {

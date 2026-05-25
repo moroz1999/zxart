@@ -12,6 +12,7 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxTuneTableSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-tune-table-skeleton/zx-tune-table-skeleton.component';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 
 const PAGE_SIZE = 20;
 
@@ -34,6 +35,7 @@ interface YearGroup {
     ZxPanelComponent,
     ZxStackComponent,
     ZxTuneTableSkeletonComponent,
+    TextDirective,
   ],
   templateUrl: './zx-author-music-tab.component.html',
   styleUrl: './zx-author-music-tab.component.scss',
@@ -154,8 +156,9 @@ export class ZxAuthorMusicTabComponent implements OnInit, OnDestroy {
       list.push(tune);
       byYear.set(year, list);
     }
+    const dir = sort === 'year-asc' ? 1 : -1;
     return Array.from(byYear.entries())
       .map(([year, tunes]) => ({year, tunes}))
-      .sort((a, b) => Number(b.year) - Number(a.year));
+      .sort((a, b) => dir * (Number(a.year) - Number(b.year)));
   }
 }

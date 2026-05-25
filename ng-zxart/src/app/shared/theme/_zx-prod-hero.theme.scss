@@ -1,18 +1,4 @@
 :root {
-  /* Neutral chip background. */
-  --zx-prod-hero-chip-bg: var(--secondary-100);
-  /* Neutral chip border. */
-  --zx-prod-hero-chip-border: var(--secondary-200);
-  /* Neutral chip text. */
-  --zx-prod-hero-chip-text: var(--text-color);
-
-  /* Category chip background. */
-  --zx-prod-hero-chip-cat-bg: var(--primary-100);
-  /* Category chip border. */
-  --zx-prod-hero-chip-cat-border: var(--primary-200);
-  /* Category chip text. */
-  --zx-prod-hero-chip-cat-text: var(--primary-800);
-
   /* Bold labels inside the people line. */
   --zx-prod-hero-people-label-color: var(--text-color);
   /* Links inside the people line — same color as surrounding muted text, underline indicates clickability. */
@@ -21,8 +7,3 @@
   --zx-prod-hero-people-sep-color: var(--secondary-400);
 }
 
-.dark-mode {
-  --zx-prod-hero-chip-bg: var(--secondary-200);
-  --zx-prod-hero-chip-cat-bg: var(--primary-300);
-  --zx-prod-hero-chip-cat-text: var(--primary-950);
-}

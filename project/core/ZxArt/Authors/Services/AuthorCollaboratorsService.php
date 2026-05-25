@@ -11,16 +11,13 @@ use structureManager;
 use ZxArt\Authors\Dto\AuthorCollaboratorGroupDto;
 use ZxArt\Authors\Dto\AuthorCollaboratorPersonDto;
 use ZxArt\Authors\Repositories\AuthorCollaboratorsRepository;
-use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Prods\Exception\ProdDetailsException;
-use ZxArt\Shared\EntityType;
 
 readonly final class AuthorCollaboratorsService
 {
     public function __construct(
         private structureManager $structureManager,
         private AuthorCollaboratorsRepository $collaboratorsRepository,
-        private AuthorshipRepository $authorshipRepository,
     ) {
     }
 
@@ -38,7 +35,7 @@ readonly final class AuthorCollaboratorsService
 
         return [
             'people' => $this->buildPeople($authorIds),
-            'groups' => $this->buildGroups($authorId),
+            'groups' => $this->buildGroups($authorIds),
         ];
     }
 
@@ -68,18 +65,20 @@ readonly final class AuthorCollaboratorsService
         return $people;
     }
 
-    /** @return AuthorCollaboratorGroupDto[] */
-    private function buildGroups(int $authorId): array
+    /**
+     * @param int[] $authorIds
+     * @return AuthorCollaboratorGroupDto[]
+     */
+    private function buildGroups(array $authorIds): array
     {
-        /** @var list<array{elementId: int, startDate: string, endDate: string}> $records */
-        $records = $this->authorshipRepository->getAuthorshipRecords($authorId, EntityType::Group);
+        $records = $this->collaboratorsRepository->findGroupStats($authorIds);
         $groups = [];
         foreach ($records as $record) {
-            $element = $this->structureManager->getElementById($record['elementId']);
+            $element = $this->structureManager->getElementById($record['groupId']);
             if (!($element instanceof groupElement) && !($element instanceof groupAliasElement)) {
                 continue;
             }
-            $years = $this->formatYearsRange($record['startDate'] ?? '', $record['endDate'] ?? '');
+            $years = $this->formatYears($record['years']);
             $members = $this->collaboratorsRepository->countGroupMembers((int)$element->id);
             $groups[] = new AuthorCollaboratorGroupDto(
                 id: (int)$element->id,
@@ -92,19 +91,22 @@ readonly final class AuthorCollaboratorsService
         return $groups;
     }
 
-    private function formatYearsRange(string $startDate, string $endDate): ?string
+    /**
+     * @param int[] $years
+     */
+    private function formatYears(array $years): ?string
     {
-        if ($startDate === '' && $endDate === '') {
+        if (empty($years)) {
             return null;
         }
-        $startYear = $startDate !== '' ? substr($startDate, 6, 4) : '';
-        $endYear = $endDate !== '' ? substr($endDate, 6, 4) : '';
-        if ($startYear === $endYear) {
-            return $startYear;
+
+        sort($years);
+        $first = (string)reset($years);
+        $last = (string)end($years);
+        if ($first === $last) {
+            return $first;
         }
-        if ($startYear !== '' && $endYear !== '') {
-            return $startYear . '–' . $endYear;
-        }
-        return $startYear !== '' ? $startYear . '–' : '–' . $endYear;
+
+        return $first . '-' . $last;
     }
 }

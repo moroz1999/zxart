@@ -422,6 +422,23 @@
     }
   },
   "author-details": {
+    "actions": "Действия с автором",
+    "add-actions": "Добавить контент",
+    "action": {
+      "showPublicForm": "Редактировать",
+      "claim": "Заявить авторство",
+      "showJoinForm": "Объединить",
+      "convertToGroup": "Преобразовать в группу",
+      "publicDelete": "Удалить",
+      "delete-confirm-title": "Удалить автора",
+      "delete-confirm-message": "Вы уверены, что хотите удалить этого автора?",
+      "delete-confirm-yes": "Удалить",
+      "delete-confirm-cancel": "Отмена",
+      "add-alias": "Добавить псевдоним",
+      "upload-pictures": "Загрузить картины",
+      "upload-music": "Загрузить музыку",
+      "upload-prods": "Загрузить программы"
+    },
     "roles": {
       "artist": "Художник",
       "musician": "Музыкант",
@@ -438,7 +455,7 @@
       "location": "Местоположение",
       "joined": "На ZX-Art с",
       "login": "логин",
-      "tech-toggle": "Настройки конвертации по умолчанию",
+      "tech-toggle": "Технические настройки",
       "show-more": "+{{count}} ещё",
       "collapse": "свернуть",
       "tech": {
@@ -447,6 +464,27 @@
         "ay-channels": "Раскладка каналов AY",
         "ay-clock": "Тактовая частота AY",
         "int-freq": "Частота прерываний INT"
+      },
+      "tech-value": {
+        "palette": {
+          "srgb": "sRGB",
+          "pulsar": "Pulsar",
+          "alone": "Alone",
+          "electroscale": "Electroscale"
+        },
+        "chiptype": {
+          "ay": "AY-3-8910 / AY-3-8912",
+          "ym": "YM2149F"
+        },
+        "channelstype": {
+          "abc": "ABC",
+          "acb": "ACB",
+          "bac": "BAC",
+          "cab": "CAB",
+          "bca": "BCA",
+          "cba": "CBA",
+          "mono": "Моно"
+        }
       },
       "rating": {
         "label": "Рейтинг по голосам сообщества:",
@@ -471,6 +509,10 @@
       "graphics": "Графика",
       "music": "Музыка",
       "software": "Программы"
+    },
+    "filters": {
+      "sort": "Сортировка",
+      "show": "Показать"
     },
     "graphics-tab": {
       "error": "Ошибка загрузки картин",
@@ -718,6 +760,7 @@
     "role_translation": "Перевод",
     "role_restoring": "Реставрация",
     "actions": "Действия с программой",
+    "add-actions": "Добавить контент",
     "edit": "Редактировать программу",
     "showAiForm": "ИИ",
     "resize": "Уменьшить скрины",
@@ -775,6 +818,7 @@
   },
   "release-details": {
     "actions": "Действия с релизом",
+    "add-actions": "Добавить к релизу",
     "edit": "Редактировать релиз",
     "clone": "Клонировать релиз",
     "delete": "Удалить релиз",

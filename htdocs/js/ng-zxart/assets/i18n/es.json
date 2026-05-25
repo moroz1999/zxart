@@ -421,6 +421,23 @@
     }
   },
   "author-details": {
+    "actions": "Acciones del autor",
+    "add-actions": "Añadir contenido",
+    "action": {
+      "showPublicForm": "Editar",
+      "claim": "Reclamar autoría",
+      "showJoinForm": "Fusionar",
+      "convertToGroup": "Convertir en grupo",
+      "publicDelete": "Eliminar",
+      "delete-confirm-title": "Eliminar autor",
+      "delete-confirm-message": "¿Está seguro de que desea eliminar este autor?",
+      "delete-confirm-yes": "Eliminar",
+      "delete-confirm-cancel": "Cancelar",
+      "add-alias": "Añadir alias",
+      "upload-pictures": "Subir imágenes",
+      "upload-music": "Subir música",
+      "upload-prods": "Subir software"
+    },
     "roles": {
       "artist": "Artista",
       "musician": "Músico",
@@ -437,7 +454,7 @@
       "location": "Ubicación",
       "joined": "En ZX-Art desde",
       "login": "login",
-      "tech-toggle": "Configuración de conversión predeterminada",
+      "tech-toggle": "Configuración técnica",
       "show-more": "+{{count}} más",
       "collapse": "colapsar",
       "tech": {
@@ -446,6 +463,27 @@
         "ay-channels": "Disposición de canales AY",
         "ay-clock": "Frecuencia de reloj AY",
         "int-freq": "Frecuencia INT"
+      },
+      "tech-value": {
+        "palette": {
+          "srgb": "sRGB",
+          "pulsar": "Pulsar",
+          "alone": "Alone",
+          "electroscale": "Electroscale"
+        },
+        "chiptype": {
+          "ay": "AY-3-8910 / AY-3-8912",
+          "ym": "YM2149F"
+        },
+        "channelstype": {
+          "abc": "ABC",
+          "acb": "ACB",
+          "bac": "BAC",
+          "cab": "CAB",
+          "bca": "BCA",
+          "cba": "CBA",
+          "mono": "Mono"
+        }
       },
       "rating": {
         "label": "Calificación de la comunidad:",
@@ -470,6 +508,10 @@
       "graphics": "Gráficos",
       "music": "Música",
       "software": "Programas"
+    },
+    "filters": {
+      "sort": "Ordenar",
+      "show": "Mostrar"
     },
     "graphics-tab": {
       "error": "Error al cargar imágenes",
@@ -717,6 +759,7 @@
     "role_translation": "Traducción",
     "role_restoring": "Restaurando",
     "actions": "Acciones de producción",
+    "add-actions": "Añadir contenido",
     "edit": "Editar la producción",
     "showAiForm": "AI",
     "resize": "Resize screens",
@@ -774,6 +817,7 @@
   },
   "release-details": {
     "actions": "Acciones del lanzamiento",
+    "add-actions": "Añadir al lanzamiento",
     "edit": "Editar lanzamiento",
     "clone": "Clonar lanzamiento",
     "delete": "Eliminar lanzamiento",

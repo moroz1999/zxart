@@ -2,9 +2,7 @@
   <h1 appHeading="display">{{ details.title }}</h1>
   <zx-release-editing-controls
     [elementId]="details.id"
-    [releaseUrl]="details.url"
-    presentation="popover"
-    [popoverAriaLabel]="'release-details.actions' | translate">
+    [releaseUrl]="details.url">
   </zx-release-editing-controls>
   <span *ngIf="details.year" class="rp-year" appText="body" tone="muted">{{ details.year }}</span>
   <zx-release-type-badge

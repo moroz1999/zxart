@@ -20,11 +20,15 @@ export class ZxEditButtonComponent implements OnInit {
   @Input() size: 'xs' | 'sm' | 'md' = 'sm';
   @Input() color: 'primary' | 'secondary' | 'danger' | 'transparent' | 'outlined' = 'primary';
   @Input() expanded: boolean | null = null;
+  @Input() icon: string = 'edit';
   @Output() editClick = new EventEmitter<MouseEvent>();
 
   constructor(private readonly iconReg: SvgIconRegistryService) {}
 
   ngOnInit(): void {
     this.iconReg.loadSvg(`${environment.svgUrl}edit.svg`, 'edit')?.subscribe();
+    if (this.icon !== 'edit') {
+      this.iconReg.loadSvg(`${environment.svgUrl}${this.icon}.svg`, this.icon)?.subscribe();
+    }
   }
 }

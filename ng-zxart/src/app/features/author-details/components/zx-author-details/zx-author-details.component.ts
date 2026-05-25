@@ -9,7 +9,6 @@ import {ZxAuthorWorksComponent} from '../zx-author-works/zx-author-works.compone
 import {ZxAuthorCollaboratorsComponent} from '../zx-author-collaborators/zx-author-collaborators.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
-import {RatingsListComponent} from '../../../ratings/components/ratings-list/ratings-list.component';
 
 @Component({
   selector: 'zx-author-details-view',
@@ -21,7 +20,6 @@ import {RatingsListComponent} from '../../../ratings/components/ratings-list/rat
     ZxAuthorCollaboratorsComponent,
     ZxStackComponent,
     CommentsListComponent,
-    RatingsListComponent,
   ],
   templateUrl: './zx-author-details.component.html',
   styleUrl: './zx-author-details.component.scss',

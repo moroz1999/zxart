@@ -9,7 +9,7 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxProdEditingControlsComponent} from '../zx-prod-editing-controls/zx-prod-editing-controls.component';
-import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {ZxChipComponent} from '../../../../shared/ui/zx-chip/zx-chip.component';
 
 interface ProdAuthorRoleGroup {
   role: string | null;
@@ -38,7 +38,7 @@ const PRIORITY_AUTHOR_ROLES = [
     ZxStackComponent,
     ZxInlineComponent,
     ZxProdEditingControlsComponent,
-    ZxButtonComponent,
+    ZxChipComponent,
   ],
   templateUrl: './zx-prod-hero.component.html',
   styleUrls: ['./zx-prod-hero.component.scss'],

@@ -1,6 +1,8 @@
 :root {
   /* Gap between filter items */
   --zx-filter-bar-gap: var(--gap-md);
+  /* Large gap between filter item groups */
+  --zx-filter-bar-gap-lg: var(--gap-lg);
   /* Max width of the search input on desktop */
   --zx-filter-bar-search-width: 300px;
   /* Max width of each filter picker on desktop */

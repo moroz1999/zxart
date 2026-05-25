@@ -14,16 +14,10 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxProdsListSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-prods-list-skeleton/zx-prods-list-skeleton.component';
+import {ZxChipComponent, ZxChipColor} from '../../../../shared/ui/zx-chip/zx-chip.component';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 
 const PAGE_SIZE = 12;
-const ROLE_LABELS: Record<string, string> = {
-  music: 'author-details.software-tab.roles.music',
-  gfx: 'author-details.software-tab.roles.gfx',
-  code: 'author-details.software-tab.roles.code',
-  design: 'author-details.software-tab.roles.design',
-  sfx: 'author-details.software-tab.roles.sfx',
-};
-
 interface YearGroup {
   year: number | null;
   prods: AuthorProdDto[];
@@ -64,6 +58,8 @@ function authorProdToZxProd(dto: AuthorProdDto): ZxProd {
     ZxPanelComponent,
     ZxStackComponent,
     ZxProdsListSkeletonComponent,
+    ZxChipComponent,
+    TextDirective,
   ],
   templateUrl: './zx-author-software-tab.component.html',
   styleUrl: './zx-author-software-tab.component.scss',
@@ -81,9 +77,7 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
   loading = true;
   total = 0;
   yearGroups: YearGroup[] = [];
-
-  readonly availableRoles: Array<{key: string; labelKey: string}> = Object.entries(ROLE_LABELS)
-    .map(([key, labelKey]) => ({key, labelKey}));
+  availableRoles: string[] = [];
 
   private readonly subscriptions = new Subscription();
 
@@ -112,6 +106,7 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
         next: result => {
           this.loading = false;
           this.total = result.total;
+          this.availableRoles = result.availableRoles;
           this.yearGroups = this.buildGroups(result.items, this.sortStore.getValue());
           this.cdr.markForCheck();
         },
@@ -156,7 +151,14 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
   }
 
   getRoleLabelKey(role: string): string {
-    return ROLE_LABELS[role] ?? role;
+    return role === 'unknown' ? 'author.role.unknown' : `prod-details.role_${role}`;
+  }
+
+  getRoleChipColor(role: string): ZxChipColor {
+    if (role === 'music') return 'primary';
+    if (role === 'code') return 'code';
+    if (role === 'intro' || role === 'design') return 'intro';
+    return 'artist';
   }
 
   toProdModel(dto: AuthorProdDto): ZxProd {
@@ -179,8 +181,9 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
       list.push(prod);
       byYear.set(prod.year, list);
     }
+    const dir = sort === 'year-asc' ? 1 : -1;
     return Array.from(byYear.entries())
       .map(([year, prods]) => ({year, prods}))
-      .sort((a, b) => (b.year ?? 0) - (a.year ?? 0));
+      .sort((a, b) => dir * ((a.year ?? 0) - (b.year ?? 0)));
   }
 }

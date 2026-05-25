@@ -11,17 +11,19 @@
     <div class="ap-header__title-row">
       <h1 class="ap-header__name">{{ core.title }}</h1>
 
+      <zx-author-editing-controls [elementId]="core.id" [authorUrl]="core.url"></zx-author-editing-controls>
+
       <ng-container *ngFor="let badge of core.badges">
         <zx-badge variant="primary" [title]="'author-details.badges.' + badge | translate">
           {{ 'author-details.badges.' + badge | translate }}
         </zx-badge>
       </ng-container>
 
-      <div class="ap-header__role-chips" *ngIf="core.roles.length">
-        <span *ngFor="let role of core.roles" class="ap-tag ap-tag--{{ role }}">
+      <zx-inline *ngIf="core.roles.length" gap="sm" [wrap]="true">
+        <zx-chip *ngFor="let role of core.roles" variant="opaque" [color]="getRoleChipColor(role)">
           {{ 'author-details.roles.' + role | translate }}
-        </span>
-      </div>
+        </zx-chip>
+      </zx-inline>
     </div>
 
     <div class="ap-header__bio">
@@ -37,12 +39,12 @@
         </span>
       </ng-container>
 
-      <ng-container *ngIf="core.joined">
+      <ng-container *ngIf="core.joined || core.siteUser">
         <span class="ap-bio__sep">·</span>
         <span class="ap-bio__joined">
-          {{ 'author-details.header.joined' | translate }} {{ joinedYear }}
+          <ng-container *ngIf="core.joined">{{ 'author-details.header.joined' | translate }} {{ joinedYear }}</ng-container>
           <ng-container *ngIf="core.siteUser">
-            ({{ 'author-details.header.login' | translate }} <code>{{ core.siteUser }}</code>)
+            <ng-container *ngIf="core.joined"> </ng-container>({{ 'author-details.header.login' | translate }} <code>{{ core.siteUser }}</code>)
           </ng-container>
         </span>
       </ng-container>
@@ -62,35 +64,33 @@
 
     <div class="ap-meta-row" *ngIf="core.groups.length">
       <span class="ap-meta-row__label">{{ 'author-details.header.groups' | translate }}:</span>
-      <div class="ap-chips">
-        <a *ngFor="let group of core.groups" [href]="group.url" class="ap-group-chip">
-          <span class="ap-group-chip__name">{{ group.title }}</span>
-          <span *ngIf="group.years" class="ap-group-chip__years">{{ group.years }}</span>
-        </a>
-      </div>
+      <zx-inline gap="sm" [wrap]="true">
+        <zx-chip *ngFor="let group of core.groups" variant="filled" color="primary" [href]="group.url">
+          {{ group.title }}<span *ngIf="group.years" class="ap-chip-years">{{ group.years }}</span>
+        </zx-chip>
+      </zx-inline>
     </div>
 
     <div class="ap-meta-row" *ngIf="core.aliases.length">
       <span class="ap-meta-row__label">{{ 'author-details.header.aliases' | translate }}:</span>
       <div class="ap-aliases">
-        <ng-container *ngFor="let alias of visibleAliases; let i = index; let last = last">
-          <a [href]="alias.url">{{ alias.title }}</a>
-          <ng-container *ngIf="!last">, </ng-container>
-        </ng-container>
-        <button
+        <span *ngFor="let alias of visibleAliases; let last = last" class="ap-aliases__item">
+          <a [href]="alias.url">{{ alias.title }}</a><ng-container *ngIf="!last">,</ng-container>
+        </span>
+        <zx-button
           *ngIf="hiddenAliasCount > 0 && !showAllAliases"
-          type="button"
-          class="ap-aliases__more"
+          size="xs"
+          color="outlined"
           (click)="toggleAliases()">
           {{ 'author-details.header.show-more' | translate: {count: hiddenAliasCount} }}
-        </button>
-        <button
+        </zx-button>
+        <zx-button
           *ngIf="showAllAliases && hiddenAliasCount > 0"
-          type="button"
-          class="ap-aliases__more"
+          size="xs"
+          color="outlined"
           (click)="toggleAliases()">
           {{ 'author-details.header.collapse' | translate }}
-        </button>
+        </zx-button>
       </div>
     </div>
 
@@ -110,15 +110,15 @@
       <div class="ap-tech" *ngIf="showTech">
         <div class="ap-tech__row" *ngIf="core.tech.palette">
           <span class="ap-tech__k">{{ 'author-details.header.tech.palette' | translate }}</span>
-          <span class="ap-tech__v">{{ core.tech.palette }}</span>
+          <span class="ap-tech__v">{{ techValueKey('palette', core.tech.palette) | translate }}</span>
         </div>
         <div class="ap-tech__row" *ngIf="core.tech.ayChip">
           <span class="ap-tech__k">{{ 'author-details.header.tech.ay-chip' | translate }}</span>
-          <span class="ap-tech__v">{{ core.tech.ayChip }}</span>
+          <span class="ap-tech__v">{{ techValueKey('chiptype', core.tech.ayChip) | translate }}</span>
         </div>
         <div class="ap-tech__row" *ngIf="core.tech.ayChannels">
           <span class="ap-tech__k">{{ 'author-details.header.tech.ay-channels' | translate }}</span>
-          <span class="ap-tech__v">{{ core.tech.ayChannels }}</span>
+          <span class="ap-tech__v">{{ techValueKey('channelstype', core.tech.ayChannels) | translate }}</span>
         </div>
         <div class="ap-tech__row" *ngIf="core.tech.ayClock">
           <span class="ap-tech__k">{{ 'author-details.header.tech.ay-clock' | translate }}</span>

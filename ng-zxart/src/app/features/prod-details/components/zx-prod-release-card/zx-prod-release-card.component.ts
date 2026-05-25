@@ -15,6 +15,7 @@ import {ZxReleaseTypeBadgeComponent} from '../../../../shared/ui/zx-release-type
 import {LightboxModule} from 'ng-gallery/lightbox';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {ProdFileDto} from '../../models/prod-file.dto';
+import {ZxChipComponent} from '../../../../shared/ui/zx-chip/zx-chip.component';
 
 const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 'tsconf', 'samcoupe', 'zxnext'];
 
@@ -32,6 +33,7 @@ const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 't
     ZxPanelComponent,
     ZxReleaseTypeBadgeComponent,
     LightboxModule,
+    ZxChipComponent,
   ],
   templateUrl: './zx-prod-release-card.component.html',
   styleUrls: ['./zx-prod-release-card.component.scss'],

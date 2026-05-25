@@ -8,6 +8,7 @@
 - Repositories MUST extend `ZxArt\Shared\Repositories\AbstractRepository` for shared table-name helpers.
 - Repository methods return primitive types (IDs, counts, arrays), not domain objects or DTOs.
 - Services use repository results (e.g. IDs) and load domain objects via `structureManager`.
+- Filtering, sorting, counting, and pagination of database-backed lists MUST be performed by repository queries in the database, not by loading all rows into a service and slicing arrays in PHP.
 
 ## Database Table Names
 - `Illuminate\Database\Connection` automatically adds `engine_` prefix to table names.

@@ -45,6 +45,21 @@ export class ZxTabsComponent implements AfterContentInit {
     this.cdr.markForCheck();
   }
 
+  activateLinkedTab(index: number, event: MouseEvent): void {
+    if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const href = this.tabs.get(index)?.href;
+    if (href) {
+      window.history.pushState(null, '', href);
+    }
+
+    this.activateTab(index);
+  }
+
   get activeTemplateRef(): TemplateRef<unknown> | null {
     const tab = this.tabs?.get(this.activeIndex);
     return tab?.contentDirective?.templateRef ?? null;

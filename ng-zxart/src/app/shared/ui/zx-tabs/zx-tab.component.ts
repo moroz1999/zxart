@@ -11,6 +11,7 @@ import { ZxTabContentDirective } from './zx-tab-content.directive';
 export class ZxTabComponent {
   @Input() label = '';
   @Input() count?: number;
+  @Input() href: string | null = null;
 
   @ContentChild(ZxTabContentDirective) contentDirective?: ZxTabContentDirective;
 }

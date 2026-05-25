@@ -9,9 +9,15 @@ import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/c
 })
 export class ZxFilterBarComponent {
   @Input() scrollable = false;
+  @Input() gap: 'md' | 'lg' = 'md';
 
   @HostBinding('class.zx-filter-bar--scrollable')
   get isScrollable(): boolean {
     return this.scrollable;
+  }
+
+  @HostBinding('class.zx-filter-bar--gap-lg')
+  get isLargeGap(): boolean {
+    return this.gap === 'lg';
   }
 }

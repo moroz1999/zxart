@@ -20,3 +20,7 @@
     scrollbar-width: none;
   }
 }
+
+:host(.zx-filter-bar--gap-lg) {
+  gap: var(--zx-filter-bar-gap-lg);
+}

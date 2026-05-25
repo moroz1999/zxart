@@ -71,6 +71,7 @@ export class ZxEditingControlsComponent implements OnChanges {
   @Input() presentation: 'inline' | 'popover' = 'inline';
   @Input() popoverAriaLabel = '';
   @Input() size: 'xs' | 'sm' | 'md' | null = null;
+  @Input() triggerIcon = 'edit';
 
   private readonly configStore = new BehaviorSubject<EditingControlsConfig | null>(null);
   readonly skeletonItems = [0, 1, 2];

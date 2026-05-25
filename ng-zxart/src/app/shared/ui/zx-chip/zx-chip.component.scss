@@ -1,0 +1,74 @@
+:host {
+  display: inline-block;
+}
+
+.zx-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--zx-chip-radius);
+  border: var(--zx-chip-border-width) solid transparent;
+  font-weight: var(--zx-chip-font-weight);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background var(--animation-xs) ease, border-color var(--animation-xs) ease;
+}
+
+.zx-chip--md {
+  font-size: var(--zx-chip-md-font-size);
+  padding: var(--zx-chip-md-padding-v) var(--zx-chip-md-padding-h);
+}
+
+.zx-chip--sm {
+  font-size: var(--zx-chip-sm-font-size);
+  padding: var(--zx-chip-sm-padding-v) var(--zx-chip-sm-padding-h);
+}
+
+.zx-chip--opaque.zx-chip--neutral {
+  color: var(--zx-chip-neutral-opaque-text);
+  border-color: currentColor;
+  background: var(--zx-chip-neutral-opaque-bg);
+}
+
+.zx-chip--filled.zx-chip--neutral {
+  color: var(--zx-chip-neutral-filled-text);
+  border-color: var(--zx-chip-neutral-filled-border);
+  background: var(--zx-chip-neutral-filled-bg);
+}
+
+a.zx-chip--filled.zx-chip--neutral:hover {
+  background: var(--zx-chip-neutral-filled-hover-bg);
+}
+
+.zx-chip--opaque.zx-chip--primary {
+  color: var(--zx-chip-primary-opaque-text);
+  border-color: currentColor;
+  background: transparent;
+}
+
+.zx-chip--filled.zx-chip--primary {
+  color: var(--zx-chip-primary-filled-text);
+  border-color: var(--zx-chip-primary-filled-border);
+  background: var(--zx-chip-primary-filled-bg);
+}
+
+a.zx-chip--filled.zx-chip--primary:hover {
+  background: var(--zx-chip-primary-filled-hover-bg);
+}
+
+.zx-chip--opaque.zx-chip--artist {
+  color: var(--zx-chip-artist-opaque-text);
+  border-color: currentColor;
+  background: transparent;
+}
+
+.zx-chip--opaque.zx-chip--code {
+  color: var(--zx-chip-code-opaque-text);
+  border-color: currentColor;
+  background: transparent;
+}
+
+.zx-chip--opaque.zx-chip--intro {
+  color: var(--zx-chip-intro-opaque-text);
+  border-color: currentColor;
+  background: transparent;
+}
