@@ -1,0 +1,29 @@
+@if (loading() && !hasLoaded()) {
+  <zx-panel>
+    <zx-text-skeleton [count]="5"></zx-text-skeleton>
+  </zx-panel>
+} @else if (hasLoaded() && totalCount() > 0) {
+  <zx-panel [title]="'author.votes-on-works' | translate">
+    <zx-table size="xs">
+      <table>
+        <tbody>
+          @for (item of items(); track $index) {
+            <tr>
+              <td><zx-user [user]="item.user"></zx-user></td>
+              <td class="rating-value">{{ item.rating }}</td>
+              <td><a [href]="item.targetUrl" appText="body" tone="link">{{ item.targetTitle }}</a></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </zx-table>
+    @if (pagesAmount() > 1) {
+      <zx-pagination
+        [currentPage]="currentPage()"
+        [pagesAmount]="pagesAmount()"
+        [loading]="loading()"
+        (pageChange)="onPageChange($event)">
+      </zx-pagination>
+    }
+  </zx-panel>
+}
