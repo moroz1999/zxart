@@ -1,0 +1,24 @@
+:root {
+  /* Size of the author avatar placeholder. */
+  --zx-author-details-skeleton-avatar-size: calc(var(--space-64) + var(--space-32));
+  /* Radius of the author avatar placeholder. */
+  --zx-author-details-skeleton-avatar-radius: var(--radius-sm);
+  /* Width of the author title placeholder. */
+  --zx-author-details-skeleton-title-width: 40%;
+  /* Height of the author title placeholder. */
+  --zx-author-details-skeleton-title-height: var(--space-24);
+  /* Width of the author metadata placeholder. */
+  --zx-author-details-skeleton-meta-width: 55%;
+  /* Height of the author metadata placeholder. */
+  --zx-author-details-skeleton-meta-height: var(--space-12);
+  /* Width of the author ratings strip placeholder. */
+  --zx-author-details-skeleton-rating-width: 48%;
+  /* Height of the author ratings strip placeholder. */
+  --zx-author-details-skeleton-rating-height: var(--space-32);
+  /* Width of a full author relation line placeholder. */
+  --zx-author-details-skeleton-line-width: 72%;
+  /* Width of a short author relation line placeholder. */
+  --zx-author-details-skeleton-short-line-width: 46%;
+  /* Height of an author relation line placeholder. */
+  --zx-author-details-skeleton-line-height: var(--space-16);
+}

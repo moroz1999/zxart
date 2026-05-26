@@ -2,6 +2,15 @@
   display: block;
 }
 
+.ap-results {
+  transition: opacity var(--zx-author-graphics-tab-loading-transition) ease;
+}
+
+.ap-results--loading {
+  opacity: var(--zx-author-graphics-tab-loading-opacity);
+  pointer-events: none;
+}
+
 .ap-toolbar__result {
   font-size: var(--font-xs);
   color: var(--text-light-color);

@@ -1,10 +1,13 @@
-@if (loading() && !hasLoaded()) {
-  <zx-panel>
+@if (!hasLoaded()) {
+  <zx-panel [appInViewport]="!loading()" (inViewport)="onInViewport()">
     <zx-text-skeleton [count]="10" lineHeight="52px"></zx-text-skeleton>
   </zx-panel>
 } @else if (hasLoaded() && totalCount() > 0) {
   <zx-panel [title]="'author.comments-on-works' | translate">
-    <zx-stack spacing="md">
+    <zx-stack
+      spacing="md"
+      class="author-comments__results"
+      [class.author-comments__results--loading]="loading()">
       @for (comment of comments(); track comment.id) {
         <div class="author-comment">
           @if (comment.target) {

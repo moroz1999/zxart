@@ -133,6 +133,11 @@ When work is created by group:
 - With exactly two sections present, pictures and productions show up to 6 cards in two columns; music continues to show up to 10 tunes.
 - With music as the only section, the dashboard continues to show up to 10 tunes.
 
+#### Author Details Loading
+- The author header loads with the core author response because it determines the visible page sections.
+- Dashboard, works, collaborators, votes, and comments render their initial skeletons immediately, but their API requests start only when the block reaches the viewport.
+- First loads display skeletons shaped for the target content. Paginated author blocks retain current content with a short opacity fade while the next page loads.
+
 #### Author Alias Details Page
 - Author aliases use the same Angular details component as authors.
 - An alias page keeps the alias identity and its directly attributed works and comments, while profile metadata such as location, account, links, and technical defaults comes from its referenced author.

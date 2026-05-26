@@ -1,0 +1,6 @@
+:root {
+  /* Opacity used while an existing software result page is being replaced. */
+  --zx-author-software-tab-loading-opacity: 0.55;
+  /* Duration of the software result page loading fade. */
+  --zx-author-software-tab-loading-transition: var(--animation-sm);
+}

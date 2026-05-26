@@ -25,7 +25,7 @@
     "ext-gd": "*",
     "ext-dom": "*",
     "ext-zip": "*",
-    "openai-php/client": "^0.7.3",
+    "openai-php/client": "^0.19.2",
     "http-interop/http-factory-guzzle": "^1.2",
     "guzzlehttp/guzzle": "^7",
     "php-http/discovery": "^1.19",

@@ -1,0 +1,6 @@
+:root {
+  /* Opacity used while an existing graphics result page is being replaced. */
+  --zx-author-graphics-tab-loading-opacity: 0.55;
+  /* Duration of the graphics result page loading fade. */
+  --zx-author-graphics-tab-loading-transition: var(--animation-sm);
+}

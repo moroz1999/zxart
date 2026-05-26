@@ -7,18 +7,21 @@
           <zx-button
             size="sm"
             [color]="currentSort === 'year-desc' ? 'secondary' : 'outlined'"
+            [disabled]="loading"
             (click)="setSort('year-desc')">
             {{ 'author-details.graphics-tab.sort.year-desc' | translate }}
           </zx-button>
           <zx-button
             size="sm"
             [color]="currentSort === 'year-asc' ? 'secondary' : 'outlined'"
+            [disabled]="loading"
             (click)="setSort('year-asc')">
             {{ 'author-details.graphics-tab.sort.year-asc' | translate }}
           </zx-button>
           <zx-button
             size="sm"
             [color]="currentSort === 'votes' ? 'secondary' : 'outlined'"
+            [disabled]="loading"
             (click)="setSort('votes')">
             {{ 'author-details.graphics-tab.sort.votes' | translate }}
           </zx-button>
@@ -31,6 +34,7 @@
           <zx-button
             size="sm"
             [color]="currentFormat === '' ? 'secondary' : 'outlined'"
+            [disabled]="loading"
             (click)="setFormat('')">
             {{ 'author-details.graphics-tab.format.all' | translate }}
           </zx-button>
@@ -38,6 +42,7 @@
             *ngFor="let fmt of availableFormats"
             size="sm"
             [color]="currentFormat === fmt ? 'secondary' : 'outlined'"
+            [disabled]="loading"
             (click)="setFormat(fmt)">
             {{ ('picture-format-short.' + fmt) | translate }}
           </zx-button>
@@ -48,7 +53,11 @@
 
   <zx-picture-grid-skeleton *ngIf="loading && yearGroups.length === 0" [count]="12"></zx-picture-grid-skeleton>
 
-  <ng-container *ngIf="yearGroups.length > 0">
+  <zx-stack
+    *ngIf="yearGroups.length > 0"
+    spacing="md"
+    class="ap-results"
+    [class.ap-results--loading]="loading">
     <div class="ap-toolbar__result">
       {{ 'author-details.graphics-tab.found' | translate: {count: total} }}
       <span *ngIf="currentFormat"> · {{ ('picture-format-short.' + currentFormat) | translate }}</span>
@@ -76,7 +85,8 @@
       [pagesAmount]="pagesAmount"
       [visibleAmount]="2"
       [urlBase]="urlBase"
+      [loading]="loading"
       (pageChange)="onPageChange($event)">
     </zx-pagination>
-  </ng-container>
+  </zx-stack>
 </zx-stack>

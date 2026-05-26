@@ -12,12 +12,16 @@ import {ZxAuthorMiniDashboardComponent} from '../zx-author-mini-dashboard/zx-aut
 import {ZxAuthorRatingsComponent} from '../zx-author-ratings/zx-author-ratings.component';
 import {ZxAuthorCommentsComponent} from '../zx-author-comments/zx-author-comments.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
+import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
+import {ZxSkeletonBoneComponent} from '../../../../shared/ui/zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
+import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
 
 @Component({
   selector: 'zx-author-details-view',
   standalone: true,
   imports: [
     CommonModule,
+    ZxBreadcrumbsComponent,
     ZxAuthorHeaderComponent,
     ZxAuthorWorksComponent,
     ZxAuthorCollaboratorsComponent,
@@ -26,6 +30,8 @@ import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.compo
     ZxAuthorRatingsComponent,
     ZxAuthorCommentsComponent,
     ZxInlineComponent,
+    ZxPanelComponent,
+    ZxSkeletonBoneComponent,
   ],
   templateUrl: './zx-author-details.component.html',
   styleUrl: './zx-author-details.component.scss',
@@ -44,4 +50,5 @@ export class ZxAuthorDetailsComponent implements OnInit {
     }
     this.core$ = this.api.getCore(+this.elementId).pipe(shareReplay(1));
   }
+
 }

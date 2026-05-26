@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
@@ -9,22 +9,25 @@ import {
 } from '../../services/author-collaborators-api.service';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxAuthorPersonCardComponent} from '../zx-author-person-card/zx-author-person-card.component';
+import {ZxRowSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
+import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 
 @Component({
   selector: 'zx-author-collaborators',
   standalone: true,
-  imports: [CommonModule, TranslateModule, ZxPanelComponent, ZxAuthorPersonCardComponent],
+  imports: [CommonModule, TranslateModule, ZxPanelComponent, ZxAuthorPersonCardComponent, ZxRowSkeletonComponent, InViewportDirective],
   templateUrl: './zx-author-collaborators.component.html',
   styleUrl: './zx-author-collaborators.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxAuthorCollaboratorsComponent implements OnInit, OnDestroy {
+export class ZxAuthorCollaboratorsComponent implements OnDestroy {
   @Input() elementId = 0;
 
   people: CollaboratorPersonDto[] = [];
   groups: CollaboratorGroupDto[] = [];
   loading = true;
   error = false;
+  requested = false;
 
   private readonly subscriptions = new Subscription();
 
@@ -33,7 +36,11 @@ export class ZxAuthorCollaboratorsComponent implements OnInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
   ) {}
 
-  ngOnInit(): void {
+  onInViewport(): void {
+    if (this.requested) {
+      return;
+    }
+    this.requested = true;
     this.subscriptions.add(
       this.api.getCollaborators(this.elementId).subscribe({
         next: result => {

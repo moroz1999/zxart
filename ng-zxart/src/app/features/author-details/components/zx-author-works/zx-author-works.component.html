@@ -1,4 +1,14 @@
-<zx-tabs [initialActiveIndex]="initialTabIndex">
+<zx-panel *ngIf="!mounted" [appInViewport]="!mounted" (inViewport)="onInViewport()">
+  <zx-picture-grid-skeleton *ngIf="tabs.hasPictures; else nonPictureWorks" [count]="6"></zx-picture-grid-skeleton>
+  <ng-template #nonPictureWorks>
+    <zx-tune-table-skeleton *ngIf="tabs.hasTunes; else softwareWorks" [count]="10"></zx-tune-table-skeleton>
+  </ng-template>
+  <ng-template #softwareWorks>
+    <zx-prods-list-skeleton [count]="6"></zx-prods-list-skeleton>
+  </ng-template>
+</zx-panel>
+
+<zx-tabs *ngIf="mounted" [initialActiveIndex]="initialTabIndex">
   <zx-tab
     *ngIf="tabs.hasPictures"
     [label]="'author-details.works.graphics' | translate"

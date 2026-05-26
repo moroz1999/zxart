@@ -7,18 +7,21 @@
           <zx-button
             size="sm"
             [color]="currentSort === 'year-desc' ? 'secondary' : 'outlined'"
+            [disabled]="loading"
             (click)="setSort('year-desc')">
             {{ 'author-details.software-tab.sort.year-desc' | translate }}
           </zx-button>
           <zx-button
             size="sm"
             [color]="currentSort === 'year-asc' ? 'secondary' : 'outlined'"
+            [disabled]="loading"
             (click)="setSort('year-asc')">
             {{ 'author-details.software-tab.sort.year-asc' | translate }}
           </zx-button>
           <zx-button
             size="sm"
             [color]="currentSort === 'votes' ? 'secondary' : 'outlined'"
+            [disabled]="loading"
             (click)="setSort('votes')">
             {{ 'author-details.software-tab.sort.votes' | translate }}
           </zx-button>
@@ -31,6 +34,7 @@
           <zx-button
             size="sm"
             [color]="activeRole === '' ? 'secondary' : 'outlined'"
+            [disabled]="loading"
             (click)="setRole('')">
             {{ 'author-details.software-tab.all-roles' | translate }}
           </zx-button>
@@ -38,6 +42,7 @@
             *ngFor="let role of availableRoles"
             size="sm"
             [color]="activeRole === role ? 'secondary' : 'outlined'"
+            [disabled]="loading"
             (click)="setRole(role)">
             {{ getRoleLabelKey(role) | translate }}
           </zx-button>
@@ -48,7 +53,11 @@
 
   <zx-prods-list-skeleton *ngIf="loading && yearGroups.length === 0" [count]="6"></zx-prods-list-skeleton>
 
-  <ng-container *ngIf="yearGroups.length > 0">
+  <zx-stack
+    *ngIf="yearGroups.length > 0"
+    spacing="md"
+    class="ap-results"
+    [class.ap-results--loading]="loading">
     <div class="ap-toolbar__result">
       {{ 'author-details.software-tab.found' | translate: {count: total} }}
     </div>
@@ -77,7 +86,8 @@
       [pagesAmount]="pagesAmount"
       [visibleAmount]="2"
       [urlBase]="urlBase"
+      [loading]="loading"
       (pageChange)="onPageChange($event)">
     </zx-pagination>
-  </ng-container>
+  </zx-stack>
 </zx-stack>

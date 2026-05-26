@@ -22,6 +22,10 @@ import {ZxProd} from '../../../../shared/models/zx-prod';
 import {ZxProdDto} from '../../../../shared/models/zx-prod-dto';
 import {environment} from '../../../../../environments/environment';
 import {ZxProdsGridDirective} from '../../../../shared/directives/prods-grid.directive';
+import {ZxPictureGridSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
+import {ZxTuneTableSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-tune-table-skeleton/zx-tune-table-skeleton.component';
+import {ZxProdsListSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-prods-list-skeleton/zx-prods-list-skeleton.component';
+import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 
 function authorProdToZxProd(dto: AuthorProdDto): ZxProd {
   const data: ZxProdDto = {
@@ -63,6 +67,10 @@ function authorProdToZxProd(dto: AuthorProdDto): ZxProd {
     SvgIconComponent,
     TextDirective,
     ZxProdsGridDirective,
+    ZxPictureGridSkeletonComponent,
+    ZxTuneTableSkeletonComponent,
+    ZxProdsListSkeletonComponent,
+    InViewportDirective,
   ],
   templateUrl: './zx-author-mini-dashboard.component.html',
   styleUrl: './zx-author-mini-dashboard.component.scss',
@@ -81,6 +89,7 @@ export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges {
   softwareHref = '';
   twoSectionLayout = false;
   picturesColumns: '1' | '2' = '1';
+  requested = false;
 
   constructor(
     private readonly dashboardService: AuthorMiniDashboardService,
@@ -100,7 +109,6 @@ export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.dashboardService.setContext(this.elementId, this.tabs);
     const baseUrl = this.parseBaseUrl();
     this.gfxHref = baseUrl + 'tab:gfx/';
     this.musicHref = baseUrl + 'tab:music/';
@@ -109,6 +117,18 @@ export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges {
     const sectionCount = Number(this.tabs.hasPictures) + Number(this.tabs.hasTunes) + Number(this.tabs.hasProds);
     this.twoSectionLayout = sectionCount === 2;
     this.picturesColumns = this.twoSectionLayout && this.tabs.hasPictures ? '2' : '1';
+
+    if (this.requested) {
+      this.dashboardService.setContext(this.elementId, this.tabs);
+    }
+  }
+
+  onInViewport(): void {
+    if (this.requested) {
+      return;
+    }
+    this.requested = true;
+    this.dashboardService.setContext(this.elementId, this.tabs);
   }
 
   toProdModel(dto: AuthorProdDto): ZxProd {

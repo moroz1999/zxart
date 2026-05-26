@@ -1,9 +1,44 @@
-<ng-container *ngIf="data$ | async as data">
-  <zx-panel
-    *ngIf="!data.loading && (data.pictures.length || data.tunes.length || data.prods.length)"
-    [title]="'author-details.dashboard.title' | translate"
-    titleLevel="h2"
-    variant="elevated">
+<zx-panel
+  *ngIf="!requested"
+  [appInViewport]="!requested"
+  (inViewport)="onInViewport()"
+  [title]="'author-details.dashboard.title' | translate"
+  titleLevel="h2"
+  variant="elevated">
+  <zx-stack spacing="md">
+    <zx-picture-grid-skeleton
+      *ngIf="tabs.hasPictures"
+      [count]="twoSectionLayout ? 6 : 3">
+    </zx-picture-grid-skeleton>
+    <zx-tune-table-skeleton *ngIf="tabs.hasTunes" [count]="10"></zx-tune-table-skeleton>
+    <zx-prods-list-skeleton
+      *ngIf="tabs.hasProds"
+      [count]="twoSectionLayout ? 6 : 3">
+    </zx-prods-list-skeleton>
+  </zx-stack>
+</zx-panel>
+
+<ng-container *ngIf="requested">
+  <ng-container *ngIf="data$ | async as data">
+    <zx-panel *ngIf="data.loading" [title]="'author-details.dashboard.title' | translate" titleLevel="h2" variant="elevated">
+    <zx-stack spacing="md">
+      <zx-picture-grid-skeleton
+        *ngIf="tabs.hasPictures"
+        [count]="twoSectionLayout ? 6 : 3">
+      </zx-picture-grid-skeleton>
+      <zx-tune-table-skeleton *ngIf="tabs.hasTunes" [count]="10"></zx-tune-table-skeleton>
+      <zx-prods-list-skeleton
+        *ngIf="tabs.hasProds"
+        [count]="twoSectionLayout ? 6 : 3">
+      </zx-prods-list-skeleton>
+    </zx-stack>
+    </zx-panel>
+
+    <zx-panel
+      *ngIf="!data.loading && (data.pictures.length || data.tunes.length || data.prods.length)"
+      [title]="'author-details.dashboard.title' | translate"
+      titleLevel="h2"
+      variant="elevated">
 
     <zx-inline gap="md" [wrap]="true" align="stretch">
 
@@ -90,5 +125,6 @@
       </zx-panel>
 
     </zx-inline>
-  </zx-panel>
+    </zx-panel>
+  </ng-container>
 </ng-container>

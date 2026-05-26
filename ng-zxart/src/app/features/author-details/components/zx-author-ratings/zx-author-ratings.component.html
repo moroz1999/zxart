@@ -1,10 +1,13 @@
-@if (loading() && !hasLoaded()) {
-  <zx-panel>
-    <zx-text-skeleton [count]="5"></zx-text-skeleton>
+@if (!hasLoaded()) {
+  <zx-panel [appInViewport]="!loading()" (inViewport)="onInViewport()">
+    <zx-row-skeleton [count]="5"></zx-row-skeleton>
   </zx-panel>
 } @else if (hasLoaded() && totalCount() > 0) {
   <zx-panel [title]="'author.votes-on-works' | translate">
-    <zx-table size="sm">
+    <zx-table
+      size="sm"
+      class="author-ratings__results"
+      [class.author-ratings__results--loading]="loading()">
       <table>
         <tbody>
           @for (item of items(); track $index) {

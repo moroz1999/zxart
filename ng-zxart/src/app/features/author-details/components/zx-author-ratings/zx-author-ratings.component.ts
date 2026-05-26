@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {RatingsService} from '../../../ratings/services/ratings.service';
@@ -7,8 +7,9 @@ import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.componen
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
 import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
-import {ZxTextSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-text-skeleton/zx-text-skeleton.component';
+import {ZxRowSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
+import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 
 @Component({
   selector: 'zx-author-ratings',
@@ -20,13 +21,15 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
     ZxTableComponent,
     ZxUserComponent,
     ZxPaginationComponent,
-    ZxTextSkeletonComponent,
+    ZxRowSkeletonComponent,
     TextDirective,
+    InViewportDirective,
   ],
   templateUrl: './zx-author-ratings.component.html',
+  styleUrl: './zx-author-ratings.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxAuthorRatingsComponent implements OnInit {
+export class ZxAuthorRatingsComponent {
   @Input() elementId = 0;
 
   items = signal<RecentRatingDto[]>([]);
@@ -38,8 +41,10 @@ export class ZxAuthorRatingsComponent implements OnInit {
 
   constructor(private ratingsService: RatingsService) {}
 
-  ngOnInit(): void {
-    this.loadPage(1);
+  onInViewport(): void {
+    if (!this.hasLoaded() && !this.loading()) {
+      this.loadPage(1);
+    }
   }
 
   onPageChange(page: number): void {

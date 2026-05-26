@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
@@ -10,6 +10,7 @@ import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
 import {ZxTextSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-text-skeleton/zx-text-skeleton.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
+import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 
 const COMMENTS_PAGE_SIZE = 10;
 
@@ -25,11 +26,13 @@ const COMMENTS_PAGE_SIZE = 10;
     ZxPaginationComponent,
     ZxTextSkeletonComponent,
     TextDirective,
+    InViewportDirective,
   ],
   templateUrl: './zx-author-comments.component.html',
+  styleUrl: './zx-author-comments.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxAuthorCommentsComponent implements OnInit {
+export class ZxAuthorCommentsComponent {
   @Input() elementId = 0;
 
   comments = signal<CommentDto[]>([]);
@@ -44,8 +47,10 @@ export class ZxAuthorCommentsComponent implements OnInit {
     private sanitizer: DomSanitizer,
   ) {}
 
-  ngOnInit(): void {
-    this.loadPage(1);
+  onInViewport(): void {
+    if (!this.hasLoaded() && !this.loading()) {
+      this.loadPage(1);
+    }
   }
 
   onPageChange(page: number): void {

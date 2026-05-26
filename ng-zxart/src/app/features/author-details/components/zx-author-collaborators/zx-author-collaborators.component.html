@@ -1,4 +1,14 @@
 <zx-panel
+  *ngIf="loading"
+  [appInViewport]="!requested"
+  (inViewport)="onInViewport()"
+  [title]="'author-details.collaborators.title' | translate"
+  titleLevel="h2"
+  variant="elevated">
+  <zx-row-skeleton [count]="4"></zx-row-skeleton>
+</zx-panel>
+
+<zx-panel
   *ngIf="!loading && !error && (people.length > 0 || groups.length > 0)"
   [title]="'author-details.collaborators.title' | translate"
   titleLevel="h2"

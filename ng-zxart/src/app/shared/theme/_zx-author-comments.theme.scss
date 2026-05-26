@@ -1,0 +1,6 @@
+:root {
+  /* Opacity used while an existing comments page is being replaced. */
+  --zx-author-comments-loading-opacity: 0.55;
+  /* Duration of the comments page loading fade. */
+  --zx-author-comments-loading-transition: var(--animation-sm);
+}

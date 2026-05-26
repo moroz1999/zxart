@@ -1,0 +1,6 @@
+:root {
+  /* Opacity used while an existing ratings page is being replaced. */
+  --zx-author-ratings-loading-opacity: 0.55;
+  /* Duration of the ratings page loading fade. */
+  --zx-author-ratings-loading-transition: var(--animation-sm);
+}

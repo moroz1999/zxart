@@ -6,3 +6,38 @@
   flex: 1 1 0;
   min-width: 0;
 }
+
+.author-details-skeleton__avatar {
+  width: var(--zx-author-details-skeleton-avatar-size);
+  height: var(--zx-author-details-skeleton-avatar-size);
+  border-radius: var(--zx-author-details-skeleton-avatar-radius);
+  flex-shrink: 0;
+}
+
+.author-details-skeleton__header-body {
+  flex: 1 1 auto;
+}
+
+.author-details-skeleton__title {
+  width: var(--zx-author-details-skeleton-title-width);
+  height: var(--zx-author-details-skeleton-title-height);
+}
+
+.author-details-skeleton__meta {
+  width: var(--zx-author-details-skeleton-meta-width);
+  height: var(--zx-author-details-skeleton-meta-height);
+}
+
+.author-details-skeleton__rating {
+  width: var(--zx-author-details-skeleton-rating-width);
+  height: var(--zx-author-details-skeleton-rating-height);
+}
+
+.author-details-skeleton__line {
+  width: var(--zx-author-details-skeleton-line-width);
+  height: var(--zx-author-details-skeleton-line-height);
+}
+
+.author-details-skeleton__line--short {
+  width: var(--zx-author-details-skeleton-short-line-width);
+}

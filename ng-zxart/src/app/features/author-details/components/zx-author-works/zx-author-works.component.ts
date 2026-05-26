@@ -8,6 +8,11 @@ import {ZxTabContentDirective} from '../../../../shared/ui/zx-tabs/zx-tab-conten
 import {ZxAuthorGraphicsTabComponent} from '../zx-author-graphics-tab/zx-author-graphics-tab.component';
 import {ZxAuthorMusicTabComponent} from '../zx-author-music-tab/zx-author-music-tab.component';
 import {ZxAuthorSoftwareTabComponent} from '../zx-author-software-tab/zx-author-software-tab.component';
+import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
+import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
+import {ZxPictureGridSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
+import {ZxTuneTableSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-tune-table-skeleton/zx-tune-table-skeleton.component';
+import {ZxProdsListSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-prods-list-skeleton/zx-prods-list-skeleton.component';
 
 @Component({
   selector: 'zx-author-works',
@@ -21,6 +26,11 @@ import {ZxAuthorSoftwareTabComponent} from '../zx-author-software-tab/zx-author-
     ZxAuthorGraphicsTabComponent,
     ZxAuthorMusicTabComponent,
     ZxAuthorSoftwareTabComponent,
+    InViewportDirective,
+    ZxPanelComponent,
+    ZxPictureGridSkeletonComponent,
+    ZxTuneTableSkeletonComponent,
+    ZxProdsListSkeletonComponent,
   ],
   templateUrl: './zx-author-works.component.html',
   styleUrl: './zx-author-works.component.scss',
@@ -35,6 +45,7 @@ export class ZxAuthorWorksComponent implements OnInit {
   gfxHref = '';
   musicHref = '';
   softwareHref = '';
+  mounted = false;
 
   ngOnInit(): void {
     this.baseUrl = this.parseBaseUrl();
@@ -42,6 +53,10 @@ export class ZxAuthorWorksComponent implements OnInit {
     this.musicHref = this.baseUrl + 'tab:music/';
     this.softwareHref = this.baseUrl + 'tab:software/';
     this.initialTabIndex = this.parseInitialTabIndex();
+  }
+
+  onInViewport(): void {
+    this.mounted = true;
   }
 
   private parseBaseUrl(): string {
