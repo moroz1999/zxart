@@ -1,16 +1,4 @@
 @use "shared/vars";
-@use "shared/breakpoints" as bp;
-
-.zx-prods-gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 256px), 256px));
-  gap: var(--gap-xl);
-  justify-content: space-between;
-
-  @include bp.media-breakpoint-down(md) {
-    grid-template-columns: 1fr;
-  }
-}
 
 .zx-prods-year {
   margin-bottom: var(--margin-xxl);

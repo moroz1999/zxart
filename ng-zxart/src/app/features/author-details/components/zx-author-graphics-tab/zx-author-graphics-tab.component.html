@@ -39,7 +39,7 @@
             size="sm"
             [color]="currentFormat === fmt ? 'secondary' : 'outlined'"
             (click)="setFormat(fmt)">
-            {{ fmt }}
+            {{ ('picture-format-short.' + fmt) | translate }}
           </zx-button>
         </zx-button-controls>
       </zx-stack>
@@ -51,7 +51,7 @@
   <ng-container *ngIf="yearGroups.length > 0">
     <div class="ap-toolbar__result">
       {{ 'author-details.graphics-tab.found' | translate: {count: total} }}
-      <span *ngIf="currentFormat"> · {{ currentFormat }}</span>
+      <span *ngIf="currentFormat"> · {{ ('picture-format-short.' + currentFormat) | translate }}</span>
     </div>
 
     <div *ngFor="let group of yearGroups; let gi = index" class="ap-year-group" [class.ap-year-group--no-rail]="group.year === null">

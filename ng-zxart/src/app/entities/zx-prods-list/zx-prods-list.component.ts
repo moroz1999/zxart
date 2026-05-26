@@ -11,6 +11,7 @@ import {map} from 'rxjs/operators';
 import {
   ZxProdsListSkeletonComponent
 } from '../../shared/ui/zx-skeleton/components/zx-prods-list-skeleton/zx-prods-list-skeleton.component';
+import {ZxProdsGridDirective} from '../../shared/directives/prods-grid.directive';
 
 export interface YearProds {
     readonly year: number,
@@ -26,7 +27,7 @@ interface ZxProdsListVm {
     selector: 'zx-prods-list, zx-prods-list-view',
     templateUrl: './zx-prods-list.component.html',
     styleUrls: ['./zx-prods-list.component.scss'],
-    imports: [TranslatePipe, ZxProdBlockComponent, NgIf, NgForOf, AsyncPipe, ZxProdsListSkeletonComponent],
+    imports: [TranslatePipe, ZxProdBlockComponent, NgIf, NgForOf, AsyncPipe, ZxProdsListSkeletonComponent, ZxProdsGridDirective],
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

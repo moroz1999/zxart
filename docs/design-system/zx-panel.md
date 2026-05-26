@@ -14,6 +14,7 @@ Universal layout container.
 | `title` | string | — |
 | `titleLevel` | `h2` \| `h3` | — |
 | `contentBleed` | boolean | `false` |
+| `topStripe` | `primary` \| `artist` \| `coder` \| `null` | `null` |
 
 ## Rules
 
@@ -22,3 +23,5 @@ Universal layout container.
 **Content bleed**: Use `[contentBleed]="true"` when child content (e.g., tables) needs to go edge-to-edge while the title retains consistent padding. Do NOT use `padding="none"` as a workaround for tables.
 
 **`padding="none"`**: Reserved for cases where the entire panel genuinely needs zero padding (e.g., image cards where everything is edge-to-edge and there is no title).
+
+**Top stripe**: Use `topStripe` only as a compact semantic accent on nested summary panels.

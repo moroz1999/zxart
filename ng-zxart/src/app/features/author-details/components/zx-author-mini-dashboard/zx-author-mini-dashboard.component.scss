@@ -1,4 +1,4 @@
-/* Pictures column is locked to 320px — fits one picture (min 320px) per row. */
+/* Pictures column is locked to 320px - fits one picture (min 320px) per row. */
 .ap-dash__col--pix {
   flex: 0 0 320px;
 }
@@ -9,7 +9,7 @@
   min-width: 256px;
 }
 
-/* Software column is locked to 256px — does not grow, like prod cards on the main page. */
+/* Software section starts at one fixed-width product card. */
 .ap-dash__col--soft {
   flex: 0 0 256px;
 }
@@ -19,11 +19,11 @@
   min-width: 0;
 }
 
-.ap-dash__col-icon {
-  color: var(--text-light-color);
+svg-icon.ap-dash__col-icon {
+  width: var(--zx-author-mini-dashboard-icon-size);
+  height: var(--zx-author-mini-dashboard-icon-size);
 }
 
-.ap-dash__col-label {
-  font-weight: 700;
-  font-size: var(--font-md);
-}
+svg-icon.ap-dash__col-icon--gfx   { color: var(--zx-author-mini-dashboard-icon-gfx); }
+svg-icon.ap-dash__col-icon--music { color: var(--zx-author-mini-dashboard-icon-music); }
+svg-icon.ap-dash__col-icon--soft  { color: var(--zx-author-mini-dashboard-icon-soft); }

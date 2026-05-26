@@ -1,15 +1,12 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {forkJoin, of} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
+import {Observable} from 'rxjs';
 import {AuthorTabsDto} from '../../models/author-core.dto';
-import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
 import {ZxTuneDto} from '../../../../shared/models/zx-tune-dto';
 import {AuthorProdDto} from '../../models/author-prod.dto';
-import {AuthorPicturesService} from '../../../author-pictures/services/author-pictures.service';
-import {AuthorTunesService} from '../../../author-tunes/services/author-tunes.service';
-import {AuthorProdsApiService} from '../../services/author-prods-api.service';
+import {AuthorMiniDashboardData, AuthorMiniDashboardService} from '../../services/author-mini-dashboard.service';
 import {ZxPictureCardComponent} from '../../../../shared/ui/zx-picture-card/zx-picture-card.component';
 import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.component';
 import {ZxProdBlockComponent} from '../../../../shared/ui/zx-prod-block/zx-prod-block.component';
@@ -20,13 +17,11 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 import {ZxGridComponent} from '../../../../shared/ui/zx-grid/zx-grid.component';
 import {ZxInsetComponent} from '../../../../shared/ui/zx-inset/zx-inset.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxProd} from '../../../../shared/models/zx-prod';
 import {ZxProdDto} from '../../../../shared/models/zx-prod-dto';
-
-const DASHBOARD_PICS = 3;
-const DASHBOARD_TUNES = 10;
-const DASHBOARD_PRODS = 3;
-const DASHBOARD_EXPANDED_CARDS = 6;
+import {environment} from '../../../../../environments/environment';
+import {ZxProdsGridDirective} from '../../../../shared/directives/prods-grid.directive';
 
 function authorProdToZxProd(dto: AuthorProdDto): ZxProd {
   const data: ZxProdDto = {
@@ -65,19 +60,20 @@ function authorProdToZxProd(dto: AuthorProdDto): ZxProd {
     ZxGridComponent,
     ZxInsetComponent,
     ZxButtonComponent,
+    SvgIconComponent,
+    TextDirective,
+    ZxProdsGridDirective,
   ],
   templateUrl: './zx-author-mini-dashboard.component.html',
   styleUrl: './zx-author-mini-dashboard.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [AuthorMiniDashboardService],
 })
-export class ZxAuthorMiniDashboardComponent implements OnInit {
+export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges {
   @Input() elementId = 0;
   @Input() tabs!: AuthorTabsDto;
 
-  pictures: ZxPictureDto[] = [];
-  tunes: ZxTuneDto[] = [];
-  prods: AuthorProdDto[] = [];
-  loading = true;
+  readonly data$: Observable<AuthorMiniDashboardData>;
   playingTuneId: number | null = null;
 
   gfxHref = '';
@@ -85,16 +81,26 @@ export class ZxAuthorMiniDashboardComponent implements OnInit {
   softwareHref = '';
   twoSectionLayout = false;
   picturesColumns: '1' | '2' = '1';
-  prodsColumns: '1' | '2' = '1';
 
   constructor(
-    private readonly picturesService: AuthorPicturesService,
-    private readonly tunesService: AuthorTunesService,
-    private readonly prodsService: AuthorProdsApiService,
-    private readonly cdr: ChangeDetectorRef,
-  ) {}
+    private readonly dashboardService: AuthorMiniDashboardService,
+    private readonly iconReg: SvgIconRegistryService,
+  ) {
+    this.data$ = this.dashboardService.data$;
+  }
 
   ngOnInit(): void {
+    this.iconReg.loadSvg(`${environment.svgUrl}image.svg`, 'image')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}music-note.svg`, 'music-note')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}gamepad.svg`, 'gamepad')?.subscribe();
+  }
+
+  ngOnChanges(): void {
+    if (!this.tabs) {
+      return;
+    }
+
+    this.dashboardService.setContext(this.elementId, this.tabs);
     const baseUrl = this.parseBaseUrl();
     this.gfxHref = baseUrl + 'tab:gfx/';
     this.musicHref = baseUrl + 'tab:music/';
@@ -103,40 +109,6 @@ export class ZxAuthorMiniDashboardComponent implements OnInit {
     const sectionCount = Number(this.tabs.hasPictures) + Number(this.tabs.hasTunes) + Number(this.tabs.hasProds);
     this.twoSectionLayout = sectionCount === 2;
     this.picturesColumns = this.twoSectionLayout && this.tabs.hasPictures ? '2' : '1';
-    this.prodsColumns = this.twoSectionLayout && this.tabs.hasProds ? '2' : '1';
-
-    const picturesLimit = this.picturesColumns === '2' ? DASHBOARD_EXPANDED_CARDS : DASHBOARD_PICS;
-    const prodsLimit = this.prodsColumns === '2' ? DASHBOARD_EXPANDED_CARDS : DASHBOARD_PRODS;
-
-    const pics$ = this.tabs.hasPictures
-      ? this.picturesService.getPicturesPaged(this.elementId, 0, picturesLimit, 'votes', 'desc').pipe(
-          catchError(() => of({items: [], total: 0, availableFormats: []})),
-        )
-      : of({items: [], total: 0, availableFormats: []});
-
-    const tunes$ = this.tabs.hasTunes
-      ? this.tunesService.getTunesPaged(this.elementId, 0, DASHBOARD_TUNES, 'votes', 'desc').pipe(
-          catchError(() => of({items: [], total: 0, availableFormats: []})),
-        )
-      : of({items: [], total: 0, availableFormats: []});
-
-    const prods$ = this.tabs.hasProds
-      ? this.prodsService.getProds(this.elementId, 0, prodsLimit, 'votes', 'desc', '').pipe(
-          catchError(() => of({items: [], total: 0, availableRoles: []})),
-        )
-      : of({items: [], total: 0, availableRoles: []});
-
-    forkJoin([pics$, tunes$, prods$]).subscribe(([picPage, tunePage, prodPage]) => {
-      this.pictures = picPage.items;
-      this.tunes = tunePage.items;
-      this.prods = prodPage.items;
-      this.loading = false;
-      this.cdr.markForCheck();
-    });
-  }
-
-  get hasContent(): boolean {
-    return this.pictures.length > 0 || this.tunes.length > 0 || this.prods.length > 0;
   }
 
   toProdModel(dto: AuthorProdDto): ZxProd {
@@ -145,12 +117,10 @@ export class ZxAuthorMiniDashboardComponent implements OnInit {
 
   onPlayRequested(tune: ZxTuneDto): void {
     this.playingTuneId = tune.id;
-    this.cdr.markForCheck();
   }
 
   onPauseRequested(): void {
     this.playingTuneId = null;
-    this.cdr.markForCheck();
   }
 
   private parseBaseUrl(): string {

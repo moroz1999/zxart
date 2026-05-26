@@ -47,23 +47,37 @@ readonly final class AuthorCollaboratorsService
     private function buildPeople(array $authorIds): array
     {
         $stats = $this->collaboratorsRepository->findCoAuthorStats($authorIds);
+        /** @var array<int, AuthorCollaboratorPersonDto> $people */
         $people = [];
         foreach ($stats as $row) {
             $element = $this->structureManager->getElementById($row['coAuthorId']);
+            if ($element instanceof authorAliasElement) {
+                $element = $element->getAuthorElement();
+            }
             if (!$element instanceof authorElement) {
                 continue;
             }
-            $people[] = new AuthorCollaboratorPersonDto(
-                id: (int)$element->id,
+
+            $authorId = (int)$element->id;
+            $existingPerson = $people[$authorId] ?? null;
+            $people[$authorId] = new AuthorCollaboratorPersonDto(
+                id: $authorId,
                 title: html_entity_decode($element->getTitle(), ENT_QUOTES),
                 url: (string)$element->getUrl(),
-                jointPictures: $row['pictures'],
-                jointTunes: $row['tunes'],
-                jointProds: $row['prods'],
-                jointTotal: $row['total'],
+                jointPictures: $row['pictures'] + ($existingPerson?->jointPictures ?? 0),
+                jointTunes: $row['tunes'] + ($existingPerson?->jointTunes ?? 0),
+                jointProds: $row['prods'] + ($existingPerson?->jointProds ?? 0),
+                jointTotal: $row['total'] + ($existingPerson?->jointTotal ?? 0),
             );
         }
-        return $people;
+
+        $result = array_values($people);
+        usort(
+            $result,
+            static fn(AuthorCollaboratorPersonDto $first, AuthorCollaboratorPersonDto $second): int => $second->jointTotal <=> $first->jointTotal,
+        );
+
+        return $result;
     }
 
     /**

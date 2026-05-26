@@ -1,5 +1,4 @@
-<div class="ratings-list">
-  <zx-stack spacing="lg">
+<zx-stack spacing="lg">
   <h2 appHeading="headline">{{ 'ratings.votes-title' | translate }}</h2>
 
   <ng-container *ngIf="ratings$ | async as ratings; else skeleton">
@@ -26,8 +25,7 @@
       </zx-table>
     }
   </ng-container>
-  </zx-stack>
-</div>
+</zx-stack>
 
 <ng-template #skeleton>
   <zx-row-skeleton [count]="3"></zx-row-skeleton>

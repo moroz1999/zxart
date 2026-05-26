@@ -3,7 +3,7 @@
             *ngIf="vm.items === null"
         [count]="skeletonCount"
     ></zx-prods-list-skeleton>
-    <div *ngIf="layout === 'list' && vm.items !== null" class="zx-prods-gallery">
+    <div *ngIf="layout === 'list' && vm.items !== null" zxProdsGrid>
         <zx-prod-block
                 *ngFor="let zxProd of vm.items"
                 [model]="zxProd"
@@ -13,7 +13,7 @@
     <ng-container *ngIf="layout === 'years' && vm.years !== null">
         <div *ngFor="let year of vm.years" class="zx-prods-year">
             <h2>{{ year.year !== 0 ? year.year : ('prods-list.unknown-year' | translate) }}</h2>
-            <div class="zx-prods-gallery">
+            <div zxProdsGrid>
                 <zx-prod-block
                         *ngFor="let zxProd of year.items"
                         [model]="zxProd"

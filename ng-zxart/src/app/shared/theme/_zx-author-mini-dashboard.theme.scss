@@ -1,0 +1,10 @@
+:root {
+  /* Graphics column icon color. */
+  --zx-author-mini-dashboard-icon-gfx: var(--role-artist);
+  /* Music column icon color. */
+  --zx-author-mini-dashboard-icon-music: var(--primary-500);
+  /* Software column icon color. */
+  --zx-author-mini-dashboard-icon-soft: var(--role-code);
+  /* Column header icon size. */
+  --zx-author-mini-dashboard-icon-size: 20px;
+}

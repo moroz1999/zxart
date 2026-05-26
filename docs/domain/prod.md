@@ -121,7 +121,9 @@ Software production for ZX Spectrum - games, demos, utilities and other software
 - Used in `zx-prod-inlays-section` (figcaption) and `zx-prod-instructions-section` (table cell). Add the pipe to `imports` in any standalone component that needs it.
 
 ### Angular Prod Lists
-- Outside category browser views, product cards must be rendered through `zx-prods-list`.
+- Outside specialized views, product cards must be rendered through `zx-prods-list`.
 - `zx-prods-list` accepts `Observable<ZxProd[] | null>` through `items$`; `null` means "not loaded yet" and renders the list skeleton.
+- Product card grids use `zxProdsGrid`; desktop cards are fixed at `256px` and do not stretch.
+- Author software views may render `zx-prod-block` directly because they add author-role metadata around each card, but they must use `zxProdsGrid` for card layout.
 - Each usage configures the skeleton card count locally through `skeletonCount`.
 - Prod details related product sections get their observables from `ProdRelatedProdsService`; the service owns `null` loading state and starts REST loading lazily on first subscription.

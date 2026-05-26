@@ -1,9 +1,7 @@
 <section class="ap-header">
   <div class="ap-header__avatar">
     <div class="ap-avatar--empty">
-      <svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor" aria-hidden="true">
-        <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-3 0-9 1.5-9 4.5V21h18v-2.5c0-3-6-4.5-9-4.5z"/>
-      </svg>
+      <svg-icon name="person" aria-hidden="true"></svg-icon>
     </div>
   </div>
 
@@ -36,9 +34,7 @@
       <ng-container *ngIf="core.location.city || core.location.country">
         <span class="ap-bio__sep">·</span>
         <span class="ap-bio__loc">
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
-          </svg>
+          <svg-icon name="location" aria-hidden="true"></svg-icon>
           <a *ngIf="core.location.city" [href]="core.location.city.url">{{ core.location.city.title }}</a>
           <ng-container *ngIf="core.location.city && core.location.country">, </ng-container>
           <a *ngIf="core.location.country" [href]="core.location.country.url">{{ core.location.country.title }}</a>
@@ -57,20 +53,16 @@
     </div>
 
     <div class="ap-rating-strip" *ngIf="core.ratings.artist > 0 || core.ratings.musician > 0">
-      <span class="ap-rating-strip__label">{{ 'author-details.header.rating.label' | translate }}</span>
+      <span appText="caption" tone="muted" class="ap-rating-strip__label">{{ 'author-details.header.rating.label' | translate }}</span>
       <span *ngIf="core.ratings.artist > 0" class="ap-rating-strip__item">
-        <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
-          <path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm0 13l4-4 3 3 5-5 3 3V5H5v12z"/>
-        </svg>
-        <b>{{ core.ratings.artist.toFixed(2) }}</b>
-        <span class="ap-rating-strip__sub">{{ 'author-details.header.rating.artist' | translate }}</span>
+        <svg-icon name="image" aria-hidden="true" class="ap-rating-strip__icon"></svg-icon>
+        <span appHeading="title" class="ap-rating-strip__value">{{ core.ratings.artist.toFixed(2) }}</span>
+        <span appText="caption" tone="muted" class="ap-rating-strip__sub">{{ 'author-details.header.rating.artist' | translate }}</span>
       </span>
       <span *ngIf="core.ratings.musician > 0" class="ap-rating-strip__item">
-        <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
-          <path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/>
-        </svg>
-        <b>{{ core.ratings.musician.toFixed(2) }}</b>
-        <span class="ap-rating-strip__sub">{{ 'author-details.header.rating.musician' | translate }}</span>
+        <svg-icon name="music-note" aria-hidden="true" class="ap-rating-strip__icon"></svg-icon>
+        <span appHeading="title" class="ap-rating-strip__value">{{ core.ratings.musician.toFixed(2) }}</span>
+        <span appText="caption" tone="muted" class="ap-rating-strip__sub">{{ 'author-details.header.rating.musician' | translate }}</span>
       </span>
     </div>
 
@@ -122,10 +114,8 @@
 
     <div class="ap-meta-row ap-meta-row--tech">
       <button type="button" class="ap-tech-toggle" (click)="toggleTech()">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
-          <path *ngIf="!showTech" d="M16.6 8.6L12 13.2 7.4 8.6 6 10l6 6 6-6z"/>
-          <path *ngIf="showTech" d="M7.4 15.4L12 10.8l4.6 4.6L18 14l-6-6-6 6z"/>
-        </svg>
+        <svg-icon *ngIf="!showTech" name="expand-more" aria-hidden="true"></svg-icon>
+        <svg-icon *ngIf="showTech" name="expand-less" aria-hidden="true"></svg-icon>
         {{ 'author-details.header.tech-toggle' | translate }}
       </button>
       <div class="ap-tech" *ngIf="showTech">

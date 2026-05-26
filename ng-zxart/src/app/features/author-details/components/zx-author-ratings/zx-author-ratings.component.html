@@ -4,7 +4,7 @@
   </zx-panel>
 } @else if (hasLoaded() && totalCount() > 0) {
   <zx-panel [title]="'author.votes-on-works' | translate">
-    <zx-table size="xs">
+    <zx-table size="sm">
       <table>
         <tbody>
           @for (item of items(); track $index) {

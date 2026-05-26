@@ -1,6 +1,7 @@
+@use 'shared/breakpoints' as bp;
+
 :host {
   display: block;
-  container-type: inline-size;
 }
 
 :host.zx-table-xs {
@@ -54,7 +55,7 @@
     background: var(--zx-table-row-alternate-bg);
   }
 
-  @container (max-width: 600px) {
+  @include bp.media-breakpoint-down(sm) {
     thead th {
       font-size: var(--zx-table-header-font-size-mobile);
     }

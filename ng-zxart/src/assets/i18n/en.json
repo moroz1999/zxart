@@ -638,6 +638,7 @@
     "onlineattr": "53c realtime"
   },
   "picture-format-short": {
+    "standard": "Standard",
     "flash": "Flash",
     "monochrome": "Mono",
     "tricolor": "Tricolor",

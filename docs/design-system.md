@@ -20,7 +20,7 @@ The project follows a component-based approach for the design system.
     - **Phase 4**: Replace remaining Material components (autocomplete, tree, chips, checkbox, etc.) with custom implementations.
     - **CDK is approved**: Angular CDK (`@angular/cdk`) is the approved foundation for overlays, drag-and-drop, accessibility, and positioning. Use `CdkConnectedOverlay` for popovers/dropdowns instead of CSS absolute positioning.
     - **PrimeNG** is legacy and must be replaced during refactoring.
-10. **Button Design**: ALL buttons without exception MUST use the `zx-button` component from the design system. Native `<button>` and `<a>` elements MUST NOT be used directly as interactive controls — use `zx-button` with `href` for links, `[square]="true"` for icon-only buttons, and `color="transparent"` for low-emphasis triggers. They are styled using CSS variables defined in `_zx-button.theme.scss`.
+10. **Button Design**: Application and feature components MUST use the `zx-button` component for interactive controls. Native `<button>` and `<a>` elements MUST NOT be used directly for controls there: use `zx-button` with `href` for links, `[square]="true"` for icon-only buttons, and `color="transparent"` for low-emphasis triggers. Atomic interaction components may own native markup when it is required for their semantic contract; this exception must be documented per component (for example, [zx-tabs](design-system/zx-tabs.md)).
 11. **UI Components Usage**: Only components from the `shared/ui` directory (design system) should be used for building user interfaces to ensure consistency across the application. Direct usage of Material components in features is discouraged if a design system equivalent exists.
 12. **Layout Rules**: All layout (spacing, alignment, positioning) must be implemented exclusively using design system components (like `zx-stack`, `zx-inline`, `zx-grid`, `zx-inset`, `zx-panel`) or approved utility directives. Business-level components MUST NOT implement layout with SCSS; `display: flex/grid`, `gap`, `padding`, and layout margins in SCSS are reserved for atomic UI kit components in `shared/ui` or for styling the external contour of a child component host. Manual `style` attributes for margins, paddings, and other layout properties are strictly forbidden. If elements are part of a common layout, layout components are preferred over individual margins. **Negative margins are PROHIBITED** — never use `calc(-1 * ...)` or any negative margin to break out of a parent's padding. For edge-to-edge content (e.g., tables) inside `zx-panel`, use `[contentBleed]="true"` instead. Use `padding="none"` only when the entire panel needs zero padding (e.g., image cards with no title).
     - **No wrapper elements**: If a component only wraps `<ng-content>`, use `:host` for all styling instead of adding a wrapper `<div>`. Apply classes via `@HostBinding('class')`. Wrapper elements are only justified when additional structural markup is needed beyond plain content projection.
@@ -48,6 +48,7 @@ All design system components are in `ng-zxart/src/app/shared/ui/`.
 - [zx-grid](design-system/zx-grid.md) — CSS Grid-based layout container
 - [zx-inset](design-system/zx-inset.md) — restricted padding layout container
 - [zx-table](design-system/zx-table.md) — table wrapper with edge-to-edge rows
+- [zx-tabs](design-system/zx-tabs.md) — tab navigation and active content outlet
 - [zx-button](design-system/zx-button.md) — button with colors and sizes
 - [zx-button-controls](design-system/zx-button-controls.md) — wrapper for button groups
 - [zx-pagination](design-system/zx-pagination.md) — page navigation
@@ -63,5 +64,6 @@ All design system components are in `ng-zxart/src/app/shared/ui/`.
 - [zx-editing-controls](design-system/zx-editing-controls.md) — privilege-gated legacy action buttons
 - [zx-release-type-badge](design-system/zx-release-type-badge.md) — compact colored release type badge
 - `zx-prod-block` — product block used by `zx-prods-list` for prod grids and related prod lists
+- [zxProdsGrid](design-system/zx-prods-grid.md) — fixed-width product card grid layout directive
 - [zxPicturesGrid](design-system/zx-pictures-grid.md) — responsive picture grid layout directive
 - [Dialogs](design-system/zx-dialog.md) — CDK dialog pattern, backdrop rules, panel classes

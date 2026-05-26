@@ -11,11 +11,14 @@
 
   --zx-panel-title-gap: var(--space-12);
 
-  /* Top stripe accent bar */
+  /* Primary top stripe accent color. */
   --zx-panel-stripe-primary: var(--primary-500);
+  /* Artist top stripe accent color. */
   --zx-panel-stripe-artist: var(--role-artist);
+  /* Coder top stripe accent color. */
   --zx-panel-stripe-coder: var(--role-code);
-  --zx-panel-stripe-height: 3px;
+  /* Top stripe accent border width. */
+  --zx-panel-stripe-height: var(--border-width-thick);
 
   /* Border for flat (nested) panels */
   --zx-panel-flat-border: var(--border-width-thin) solid var(--secondary-200);
@@ -24,15 +27,9 @@
 .dark-mode {
   --zx-panel-bg: var(--secondary-100);
   --zx-panel-shadow: var(--shadow-md);
-  --zx-panel-border: var(--border-width-thin) solid var(--border-secondary);
-  /* Deep variant: slightly lighter than dark page background. */
-  --zx-panel-deep-bg: var(--secondary-100);
 }
 
 .light-mode {
   --zx-panel-bg: var(--white);
   --zx-panel-shadow: var(--shadow-md);
-  --zx-panel-border: var(--border-width-thin) solid var(--border-secondary);
-  /* Deep variant: noticeably darker than page background (#f7f7f7 → #d9d9d9). */
-  --zx-panel-deep-bg: var(--secondary-200);
 }

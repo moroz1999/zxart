@@ -1,4 +1,5 @@
 @use "sass:color";
+@use 'shared/breakpoints' as bp;
 
 :host {
   display: block;
@@ -14,7 +15,7 @@
   padding: 20px;
   box-shadow: var(--shadow-sm);
 
-  @media (max-width: 700px) {
+  @include bp.media-breakpoint-down(md) {
     grid-template-columns: 1fr;
   }
 }
@@ -32,6 +33,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  svg-icon {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .ap-header__body {
@@ -79,6 +85,11 @@
   align-items: center;
   gap: 4px;
 
+  svg-icon {
+    width: 12px;
+    height: 12px;
+  }
+
   a {
     color: var(--link-color);
     text-decoration: none;
@@ -98,39 +109,37 @@
 }
 
 .ap-rating-strip {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 6px 12px;
-  background: var(--background-deep);
-  border-left: 3px solid var(--warning-400);
+  gap: var(--space-16);
+  padding: var(--space-8) var(--space-12);
+  background: var(--zx-author-header-rating-bg);
+  border-left: 3px solid var(--zx-author-header-rating-accent);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  font-size: var(--font-xs);
   flex-wrap: wrap;
 }
 
 .ap-rating-strip__label {
-  color: var(--text-light-color);
-  font-weight: 700;
+  font-weight: var(--zx-author-header-rating-label-weight);
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  font-size: 10px;
 }
 
 .ap-rating-strip__item {
   display: inline-flex;
-  align-items: baseline;
-  gap: 5px;
-  color: var(--text-light-color);
+  align-items: center;
+  gap: var(--space-4);
+}
 
-  b {
-    font-family: var(--font-mono);
-    font-size: var(--font-lg);
-    font-weight: 700;
-    color: var(--warning-700);
+.ap-rating-strip__icon {
+  width: 16px;
+  height: 16px;
+  color: var(--zx-author-header-rating-value-color);
+}
 
-    :host-context(.dark-mode) & { color: var(--warning-400); }
-  }
+.ap-rating-strip__value {
+  font-family: var(--zx-author-header-rating-value-font);
+  color: var(--zx-author-header-rating-value-color);
 }
 
 .ap-meta-row {
@@ -140,7 +149,7 @@
   font-size: var(--font-sm);
   line-height: 1.55;
 
-  @media (max-width: 700px) {
+  @include bp.media-breakpoint-down(md) {
     flex-direction: column;
   }
 }
@@ -152,7 +161,7 @@
   font-weight: 700;
   text-align: right;
 
-  @media (max-width: 700px) {
+  @include bp.media-breakpoint-down(md) {
     text-align: left;
     width: auto;
   }
@@ -218,6 +227,11 @@
   padding: 2px 0;
   font-weight: 700;
   text-align: left;
+
+  svg-icon {
+    width: 14px;
+    height: 14px;
+  }
 
   &:hover { text-decoration: underline; }
 }

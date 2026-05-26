@@ -16,6 +16,8 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 import {ZxProdsListSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-prods-list-skeleton/zx-prods-list-skeleton.component';
 import {ZxChipComponent, ZxChipColor} from '../../../../shared/ui/zx-chip/zx-chip.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
+import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
+import {ZxProdsGridDirective} from '../../../../shared/directives/prods-grid.directive';
 
 const PAGE_SIZE = 12;
 interface YearGroup {
@@ -60,6 +62,8 @@ function authorProdToZxProd(dto: AuthorProdDto): ZxProd {
     ZxProdsListSkeletonComponent,
     ZxChipComponent,
     TextDirective,
+    ZxInlineComponent,
+    ZxProdsGridDirective,
   ],
   templateUrl: './zx-author-software-tab.component.html',
   styleUrl: './zx-author-software-tab.component.scss',

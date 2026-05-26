@@ -3,7 +3,7 @@ import {Directive, HostBinding} from '@angular/core';
 /**
  * Layout directive for a responsive prods grid.
  *
- * Apply to any block element that contains `zx-prod-block` items.
+ * Apply to any block element that contains `zx-prod-block` items or item wrappers.
  * Renders a CSS Grid with auto-fill columns of 256px, collapsing to a single
  * column on small screens.
  *

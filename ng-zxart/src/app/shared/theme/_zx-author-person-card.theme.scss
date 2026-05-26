@@ -1,0 +1,30 @@
+:root {
+  /* Avatar placeholder size. */
+  --zx-author-person-card-avatar-size: 32px;
+  /* Avatar placeholder background. */
+  --zx-author-person-card-avatar-bg: var(--secondary-200);
+  /* Avatar placeholder icon color. */
+  --zx-author-person-card-avatar-color: var(--secondary-500);
+  /* Avatar placeholder border radius. */
+  --zx-author-person-card-avatar-radius: var(--radius-sm);
+  /* Avatar placeholder icon size. */
+  --zx-author-person-card-avatar-icon-size: 18px;
+  /* Card default background. */
+  --zx-author-person-card-bg: var(--background-deep);
+  /* Card hover background. */
+  --zx-author-person-card-bg-hover: var(--secondary-100);
+  /* Card border radius. */
+  --zx-author-person-card-radius: var(--radius-md);
+  /* Card default text color. */
+  --zx-author-person-card-text-color: var(--text-color);
+  /* Stat icon size. */
+  --zx-author-person-card-stat-icon-size: 16px;
+  /* Graphic works stat color. */
+  --zx-author-person-card-stat-gfx-color: var(--role-artist);
+  /* Music stat color. */
+  --zx-author-person-card-stat-music-color: var(--primary-500);
+  /* Software stat color. */
+  --zx-author-person-card-stat-soft-color: var(--role-code);
+  /* Total value mono font family. */
+  --zx-author-person-card-value-font: var(--font-mono);
+}

@@ -637,6 +637,7 @@
     "onlineattr": "53c online"
   },
   "picture-format-short": {
+    "standard": "Estándar",
     "flash": "Flash",
     "monochrome": "Mono",
     "tricolor": "Tricolor",

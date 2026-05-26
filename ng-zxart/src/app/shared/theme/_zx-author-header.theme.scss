@@ -1,0 +1,17 @@
+:root {
+  /* Rating strip background. */
+  --zx-author-header-rating-bg: var(--background-deep);
+  /* Rating strip left accent border color. */
+  --zx-author-header-rating-accent: var(--warning-400);
+  /* Rating value color in light mode. */
+  --zx-author-header-rating-value-color: var(--warning-700);
+  /* Rating value mono font family. */
+  --zx-author-header-rating-value-font: var(--font-mono);
+  /* Rating label font weight. */
+  --zx-author-header-rating-label-weight: 700;
+}
+
+.dark-mode {
+  /* Rating value color in dark mode. */
+  --zx-author-header-rating-value-color: var(--warning-400);
+}

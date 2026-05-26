@@ -17,7 +17,7 @@ readonly final class AuthorCollaboratorsRepository extends AbstractRepository
 
     /**
      * Returns co-authors of the given author (including aliases) with joint work counts.
-     * Result sorted by total joint works desc, limited to top 30.
+     * Result sorted by total joint works desc.
      *
      * @param int[] $authorIds main author + alias IDs
      * @return array<array{coAuthorId: int, pictures: int, tunes: int, prods: int, total: int}>
@@ -60,7 +60,7 @@ readonly final class AuthorCollaboratorsRepository extends AbstractRepository
 
         usort($stats, static fn(array $a, array $b): int => $b['total'] <=> $a['total']);
 
-        return array_slice($stats, 0, 30);
+        return $stats;
     }
 
     /**

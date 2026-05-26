@@ -1,4 +1,5 @@
 <div class="zx-tabs__bar">
+  <!-- Native triggers are owned here to preserve tab link and local-action semantics. -->
   <ng-container *ngFor="let tab of tabs; let i = index">
     <a
       *ngIf="tab.href; else buttonTab"

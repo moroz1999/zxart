@@ -59,15 +59,15 @@
         <div class="ap-year-rail__year">{{ group.year > 0 ? group.year : '???' }}</div>
         <div class="ap-year-rail__count">{{ group.prods.length }}</div>
       </div>
-      <div class="ap-prod-grid">
-        <div *ngFor="let prod of group.prods" class="ap-prodwrap">
-          <div class="ap-prodwrap__roles" *ngIf="prod.rolesInProd.length && activeRole === ''">
+      <div zxProdsGrid>
+        <zx-stack *ngFor="let prod of group.prods" gap="xs">
+          <zx-inline *ngIf="prod.rolesInProd.length && activeRole === ''" gap="xs" [wrap]="true" align="center">
             <zx-chip *ngFor="let role of prod.rolesInProd" variant="opaque" size="sm" [color]="getRoleChipColor(role)">
               {{ getRoleLabelKey(role) | translate }}
             </zx-chip>
-          </div>
+          </zx-inline>
           <zx-prod-block [model]="toProdModel(prod)" [imagesLayout]="'loading'"></zx-prod-block>
-        </div>
+        </zx-stack>
       </div>
     </div>
 

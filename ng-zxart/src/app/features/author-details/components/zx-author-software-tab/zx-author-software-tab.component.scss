@@ -60,28 +60,3 @@
   color: var(--text-light-color);
   padding-left: 42px;
 }
-
-.ap-prod-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 12px;
-  align-items: start;
-}
-
-.ap-prodwrap {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-
-  zx-prod-block {
-    display: block;
-  }
-}
-
-.ap-prodwrap__roles {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-  align-items: center;
-  padding: 0 var(--space-4);
-}

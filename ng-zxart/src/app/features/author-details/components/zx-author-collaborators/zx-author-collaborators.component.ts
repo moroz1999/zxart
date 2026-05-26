@@ -8,11 +8,12 @@ import {
   CollaboratorPersonDto,
 } from '../../services/author-collaborators-api.service';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
+import {ZxAuthorPersonCardComponent} from '../zx-author-person-card/zx-author-person-card.component';
 
 @Component({
   selector: 'zx-author-collaborators',
   standalone: true,
-  imports: [CommonModule, TranslateModule, ZxPanelComponent],
+  imports: [CommonModule, TranslateModule, ZxPanelComponent, ZxAuthorPersonCardComponent],
   templateUrl: './zx-author-collaborators.component.html',
   styleUrl: './zx-author-collaborators.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

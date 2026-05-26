@@ -13,7 +13,7 @@ import {HeadingDirective} from '../typography/directives/heading.directive';
 export class ZxPanelComponent {
   @Input() radius: 'sm' | 'md' | 'lg' | 'xl' = 'md';
   @Input() padding: 'none' | 'sm'  | 'md' | 'lg' = 'md';
-  @Input() variant: 'elevated' | 'flat' | 'deep' = 'elevated';
+  @Input() variant: 'elevated' | 'flat' = 'elevated';
   @Input() title = '';
   @Input() titleLevel: 'h2' | 'h3' = 'h3';
   @Input() contentBleed = false;
