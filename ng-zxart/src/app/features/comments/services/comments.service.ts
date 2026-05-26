@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
+import {Observable, of, throwError} from 'rxjs';
 import {catchError, map, switchMap, take} from 'rxjs/operators';
 import {CommentDto, CommentsListDto} from '../models/comment.dto';
 import {CurrentLanguageService} from '../../header/services/current-language.service';
@@ -36,6 +36,16 @@ export class CommentsService {
       take(1),
       switchMap(languageCode => this.http.get<CommentsListDto>(`/comments/?action=list&page=${page}&lang=${languageCode}`)),
       catchError(err => throwError(() => err))
+    );
+  }
+
+  getAuthorComments(authorId: number, page = 1): Observable<CommentsListDto> {
+    return this.currentLanguageService.languageCode$.pipe(
+      take(1),
+      switchMap(languageCode => this.http.get<CommentsListDto>(
+        `/comments/?action=byAuthor&id=${authorId}&page=${page}&lang=${languageCode}`
+      )),
+      catchError(() => of({comments: [], currentPage: 1, pagesAmount: 0, totalCount: 0})),
     );
   }
 

@@ -8,6 +8,7 @@ use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use ZxArt\Comments\CommentTranslationCandidateDto;
 use ZxArt\Comments\CommentTranslationDto;
+use ZxArt\LinkTypes;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\Repositories\AbstractRepository;
 
@@ -94,6 +95,86 @@ readonly final class CommentsRepository extends AbstractRepository
                 'text_es' => $translation->originalLanguageCode === 'es' ? '' : $translation->textEs,
                 'is_translated' => 1,
             ]);
+    }
+
+    public function countByAuthorId(int $authorId): int
+    {
+        $authorIds = $this->getAuthorAndAliasIds($authorId);
+        $workIds = $this->getAuthorWorkIds($authorIds);
+
+        if (empty($workIds)) {
+            return 0;
+        }
+
+        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
+
+        return $this->db->table($linksTable)
+            ->join(self::TABLE, self::TABLE . '.id', '=', $linksTable . '.childStructureId')
+            ->whereIn($linksTable . '.parentStructureId', $workIds)
+            ->where($linksTable . '.type', '=', LinkTypes::COMMENT_TARGET->value)
+            ->where(self::TABLE . '.structureType', '=', 'comment')
+            ->count(self::TABLE . '.id');
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getIdsByAuthorId(int $authorId, int $offset, int $limit): array
+    {
+        $authorIds = $this->getAuthorAndAliasIds($authorId);
+        $workIds = $this->getAuthorWorkIds($authorIds);
+
+        if (empty($workIds)) {
+            return [];
+        }
+
+        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
+
+        $rows = $this->db->table($linksTable)
+            ->join(self::TABLE, self::TABLE . '.id', '=', $linksTable . '.childStructureId')
+            ->whereIn($linksTable . '.parentStructureId', $workIds)
+            ->where($linksTable . '.type', '=', LinkTypes::COMMENT_TARGET->value)
+            ->where(self::TABLE . '.structureType', '=', 'comment')
+            ->orderBy(self::TABLE . '.dateCreated', 'desc')
+            ->offset($offset)
+            ->limit($limit)
+            ->select(self::TABLE . '.id')
+            ->get();
+
+        return array_map(static fn(array $row): int => (int)$row['id'], $rows);
+    }
+
+    /**
+     * @return int[]
+     */
+    private function getAuthorAndAliasIds(int $authorId): array
+    {
+        /** @var int[] $aliasIds */
+        $aliasIds = $this->db->table($this->tableName(DatabaseTable::AuthorAlias))
+            ->where('authorId', '=', $authorId)
+            ->pluck('id');
+        return [$authorId, ...$aliasIds];
+    }
+
+    /**
+     * @param int[] $authorIds
+     * @return int[]
+     */
+    private function getAuthorWorkIds(array $authorIds): array
+    {
+        /** @var int[] $pictureAndTuneIds */
+        $pictureAndTuneIds = $this->db->table($this->tableName(DatabaseTable::StructureLinks))
+            ->whereIn('parentStructureId', $authorIds)
+            ->whereIn('type', [LinkTypes::AUTHOR_PICTURE->value, LinkTypes::AUTHOR_MUSIC->value])
+            ->pluck('childStructureId');
+
+        /** @var int[] $prodIds */
+        $prodIds = $this->db->table($this->tableName(DatabaseTable::Authorship))
+            ->whereIn('authorId', $authorIds)
+            ->distinct()
+            ->pluck('elementId');
+
+        return array_values(array_unique(array_merge($pictureAndTuneIds, $prodIds)));
     }
 
     private function getCommentQuery(): Builder

@@ -148,6 +148,43 @@ readonly class CommentsService
     }
 
     /**
+     * Returns a paginated list of comments on all works of the given author.
+     *
+     * @param int $authorId Author element ID (or alias ID)
+     * @param int $page Page number (1-based)
+     */
+    public function getAuthorCommentsPaginated(int $authorId, int $page = 1, ?string $languageCode = null): CommentsListDto
+    {
+        $count = $this->commentsRepository->countByAuthorId($authorId);
+        $pagesAmount = $count > 0 ? (int)ceil($count / self::COMMENTS_PER_PAGE) : 1;
+
+        if ($page < 1) {
+            $page = 1;
+        }
+        if ($page > $pagesAmount && $pagesAmount > 0) {
+            $page = $pagesAmount;
+        }
+
+        $offset = ($page - 1) * self::COMMENTS_PER_PAGE;
+        $ids = $this->commentsRepository->getIdsByAuthorId($authorId, $offset, self::COMMENTS_PER_PAGE);
+
+        $comments = [];
+        foreach ($ids as $id) {
+            $comment = $this->structureManager->getElementById($id);
+            if ($comment instanceof commentElement) {
+                $comments[] = $this->transformer->transformToDto($comment, [], $languageCode);
+            }
+        }
+
+        return new CommentsListDto(
+            comments: $comments,
+            currentPage: $page,
+            pagesAmount: $pagesAmount,
+            totalCount: $count,
+        );
+    }
+
+    /**
      * Adds a new comment.
      *
      * @param int $targetId Target ID (element or another comment)

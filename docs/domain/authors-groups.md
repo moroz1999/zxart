@@ -117,7 +117,14 @@ When work is created by group:
 - Author production filters list only distinct roles assigned to that author's productions, independently of pagination and the active role filter.
 
 #### Author Votes Display
-- The author details page does not show a vote history list because votes belong to works, not people.
+- The author details page shows paginated votes on all works of the author via `zx-author-ratings` component.
+- Backend: `GET /ratings/?action=byAuthor&id={authorId}&page={page}&perPage=20` → `RatingsService::getAuthorRatings()`.
+- Work IDs are collected from `structure_links` (authorPicture, authorMusic) and `authorship` table, including all author alias IDs.
+
+#### Author Comments Display
+- The author details page shows paginated top-level comments on all works of the author via `zx-author-comments` component.
+- Backend: `GET /comments/?action=byAuthor&id={authorId}&page={page}&lang={lang}` → `CommentsService::getAuthorCommentsPaginated()`.
+- Comment IDs are found by joining `structure_links` (type=commentTarget) with the author's work IDs.
 
 #### Author Alias Details Page
 - Author aliases use the same Angular details component as authors.

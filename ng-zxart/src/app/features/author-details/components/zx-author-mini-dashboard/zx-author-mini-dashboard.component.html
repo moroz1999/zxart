@@ -1,0 +1,53 @@
+<zx-panel
+  *ngIf="!loading && hasContent"
+  [title]="'author-details.dashboard.title' | translate"
+  titleLevel="h2"
+  variant="elevated">
+
+  <div class="ap-dash__grid">
+    <div *ngIf="pictures.length > 0" class="ap-dash__col ap-dash__col--gfx">
+      <div class="ap-dash__col-head">
+        <span class="ap-dash__col-label">{{ 'author-details.dashboard.graphics' | translate }}</span>
+        <a [href]="gfxHref" class="ap-dash__all">{{ 'author-details.dashboard.all' | translate }}</a>
+      </div>
+      <div class="ap-dash__pics">
+        <zx-picture-card
+          *ngFor="let picture of pictures; let pi = index"
+          [picture]="picture"
+          [galleryId]="'dashboard-' + elementId"
+          [galleryIndex]="pi">
+        </zx-picture-card>
+      </div>
+    </div>
+
+    <div *ngIf="tunes.length > 0" class="ap-dash__col ap-dash__col--music">
+      <div class="ap-dash__col-head">
+        <span class="ap-dash__col-label">{{ 'author-details.dashboard.music' | translate }}</span>
+        <a [href]="musicHref" class="ap-dash__all">{{ 'author-details.dashboard.all' | translate }}</a>
+      </div>
+      <div class="ap-dash__tunes">
+        <zx-tune-row
+          *ngFor="let tune of tunes"
+          [tune]="tune"
+          [isPlaying]="playingTuneId === tune.id"
+          (playRequested)="onPlayRequested($event)"
+          (pauseRequested)="onPauseRequested()">
+        </zx-tune-row>
+      </div>
+    </div>
+
+    <div *ngIf="prods.length > 0" class="ap-dash__col ap-dash__col--soft">
+      <div class="ap-dash__col-head">
+        <span class="ap-dash__col-label">{{ 'author-details.dashboard.software' | translate }}</span>
+        <a [href]="softwareHref" class="ap-dash__all">{{ 'author-details.dashboard.all' | translate }}</a>
+      </div>
+      <div class="ap-dash__prods">
+        <zx-prod-block
+          *ngFor="let prod of prods"
+          [model]="toProdModel(prod)"
+          [imagesLayout]="'loading'">
+        </zx-prod-block>
+      </div>
+    </div>
+  </div>
+</zx-panel>

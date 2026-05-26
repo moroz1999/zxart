@@ -148,7 +148,9 @@
       "video": "Видео",
       "translation": "Перевод",
       "restoring": "Реставрация"
-    }
+    },
+    "votes-on-works": "Голоса за работы",
+    "comments-on-works": "Комментарии к работам"
   },
   "comments": {
     "title": "Комментарии",

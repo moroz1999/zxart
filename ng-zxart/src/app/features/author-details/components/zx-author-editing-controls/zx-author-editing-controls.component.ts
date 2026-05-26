@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
 import {TranslateModule} from '@ngx-translate/core';
 import {
   ZxEditingControlAction,
@@ -111,17 +111,17 @@ const CONTENT_ADD_ACTIONS: readonly ZxEditingControlAction[] = [
   styleUrl: './zx-author-editing-controls.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxAuthorEditingControlsComponent {
+export class ZxAuthorEditingControlsComponent implements OnChanges {
   @Input({required: true}) elementId!: number;
   @Input({required: true}) entityType!: 'author' | 'authorAlias';
   @Input({required: true}) authorUrl!: string;
 
-  get editActions(): readonly ZxEditingControlAction[] {
-    return this.entityType === 'authorAlias' ? AUTHOR_ALIAS_EDIT_ACTIONS : AUTHOR_EDIT_ACTIONS;
-  }
+  editActions: readonly ZxEditingControlAction[] = AUTHOR_EDIT_ACTIONS;
+  addActions: readonly ZxEditingControlAction[] = [ADD_ALIAS_ACTION, ...CONTENT_ADD_ACTIONS];
 
-  get addActions(): readonly ZxEditingControlAction[] {
-    return this.entityType === 'authorAlias' ? CONTENT_ADD_ACTIONS : [ADD_ALIAS_ACTION, ...CONTENT_ADD_ACTIONS];
+  ngOnChanges(): void {
+    this.editActions = this.entityType === 'authorAlias' ? AUTHOR_ALIAS_EDIT_ACTIONS : AUTHOR_EDIT_ACTIONS;
+    this.addActions = this.entityType === 'authorAlias' ? CONTENT_ADD_ACTIONS : [ADD_ALIAS_ACTION, ...CONTENT_ADD_ACTIONS];
   }
 
   readonly buildActionUrl = (action: string, elementId: number): string => {

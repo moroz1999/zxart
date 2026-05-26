@@ -148,7 +148,9 @@
       "video": "Vídeo",
       "translation": "Traducción",
       "restoring": "Restaurando"
-    }
+    },
+    "votes-on-works": "Votos en obras",
+    "comments-on-works": "Comentarios en obras"
   },
   "comments": {
     "title": "Comentarios",

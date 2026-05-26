@@ -148,7 +148,9 @@
       "video": "Video",
       "translation": "Translation",
       "restoring": "Restoring"
-    }
+    },
+    "votes-on-works": "Votes on works",
+    "comments-on-works": "Comments on works"
   },
   "comments": {
     "title": "Comments",

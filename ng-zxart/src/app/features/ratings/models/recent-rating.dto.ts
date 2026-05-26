@@ -11,3 +11,10 @@ export interface RecentRatingsListDto {
   items: RecentRatingDto[];
   hasMore: boolean;
 }
+
+export interface AuthorRatingsListDto {
+  items: RecentRatingDto[];
+  currentPage: number;
+  pagesAmount: number;
+  totalCount: number;
+}

@@ -196,7 +196,7 @@ Custom element: `'zx-author-details'` в `app.module.ts`.
 - [x] **5. Angular services** — `author-core-api.service.ts`, `author-prods-api.service.ts`
 - [x] **6. `zx-author-details`** — корневой компонент + регистрация в `app.module.ts`
 - [x] **7. `zx-author-header`** — avatar placeholder, bio, badges, role chips, groups, aliases, tech-specs
-- [ ] **8. `zx-author-mini-dashboard`** — 3-колонка топ работ с sort-переключателем (deferred)
+- [x] **8. `zx-author-mini-dashboard`** — 3-колонка топ работ (top 4 by votes per category)
 - [x] **9. `zx-author-graphics-tab`** — year-группировка + пагинация
 - [x] **10. `zx-author-music-tab`** — year-группировка + пагинация
 - [x] **11. `zx-author-software-tab`** — role-filter + year-группировка + пагинация

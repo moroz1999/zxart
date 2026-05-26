@@ -53,6 +53,8 @@ class Comments extends LoggedControllerApplication
             $this->handleDelete();
         } elseif ($action === 'latest') {
             $this->handleLatest();
+        } elseif ($action === 'byAuthor') {
+            $this->handleByAuthor();
         } else {
             $this->assignError('Unknown action', 400);
         }
@@ -175,6 +177,25 @@ class Comments extends LoggedControllerApplication
             $this->assignSuccess($restComments);
         } catch (Throwable $e) {
             $this->logThrowable('Comments::handleLatest', $e);
+            $this->assignError('Internal server error');
+        }
+    }
+
+    protected function handleByAuthor(): void
+    {
+        $authorId = (int)$this->getParameter('id');
+        if (!$authorId) {
+            $this->assignError('No ID provided', 400);
+            return;
+        }
+        $page = max(1, (int)($this->getParameter('page') ?: 1));
+        $languageCode = $this->getLanguageCodeParameter();
+
+        try {
+            $listDto = $this->commentsService->getAuthorCommentsPaginated($authorId, $page, $languageCode);
+            $this->assignSuccess($this->objectMapper->map($listDto, CommentsListRestDto::class));
+        } catch (Throwable $e) {
+            $this->logThrowable('Comments::handleByAuthor', $e);
             $this->assignError('Internal server error');
         }
     }

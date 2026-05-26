@@ -8,7 +8,9 @@ import {ZxAuthorHeaderComponent} from '../zx-author-header/zx-author-header.comp
 import {ZxAuthorWorksComponent} from '../zx-author-works/zx-author-works.component';
 import {ZxAuthorCollaboratorsComponent} from '../zx-author-collaborators/zx-author-collaborators.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
-import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
+import {ZxAuthorMiniDashboardComponent} from '../zx-author-mini-dashboard/zx-author-mini-dashboard.component';
+import {ZxAuthorRatingsComponent} from '../zx-author-ratings/zx-author-ratings.component';
+import {ZxAuthorCommentsComponent} from '../zx-author-comments/zx-author-comments.component';
 
 @Component({
   selector: 'zx-author-details-view',
@@ -19,7 +21,9 @@ import {CommentsListComponent} from '../../../comments/components/comments-list/
     ZxAuthorWorksComponent,
     ZxAuthorCollaboratorsComponent,
     ZxStackComponent,
-    CommentsListComponent,
+    ZxAuthorMiniDashboardComponent,
+    ZxAuthorRatingsComponent,
+    ZxAuthorCommentsComponent,
   ],
   templateUrl: './zx-author-details.component.html',
   styleUrl: './zx-author-details.component.scss',

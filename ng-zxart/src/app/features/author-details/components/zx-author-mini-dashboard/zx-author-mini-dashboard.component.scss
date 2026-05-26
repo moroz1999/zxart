@@ -1,0 +1,39 @@
+.ap-dash__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-16);
+}
+
+.ap-dash__col-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-8);
+}
+
+.ap-dash__col-label {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.ap-dash__all {
+  font-size: 0.8125rem;
+  opacity: 0.7;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.ap-dash__pics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-8);
+}
+
+.ap-dash__tunes,
+.ap-dash__prods {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}

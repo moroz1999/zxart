@@ -9,6 +9,7 @@ use Monolog\Logger;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
 use ZxArt\Ratings\RatingsService;
+use ZxArt\Ratings\Rest\AuthorRatingsListRestDto;
 use ZxArt\Ratings\Rest\ElementRatingsListRestDto;
 use ZxArt\Ratings\Rest\RecentRatingsListRestDto;
 
@@ -38,6 +39,8 @@ class Ratings extends LoggedControllerApplication
             $this->handleGet();
         } elseif ($action === 'list') {
             $this->handleList();
+        } elseif ($action === 'byAuthor') {
+            $this->handleByAuthor();
         } else {
             $this->assignError('Unknown action', 400);
         }
@@ -71,6 +74,25 @@ class Ratings extends LoggedControllerApplication
             $this->assignSuccess($this->objectMapper->map($listDto, RecentRatingsListRestDto::class));
         } catch (Throwable $e) {
             $this->logThrowable('Ratings::handleList', $e);
+            $this->assignError('Internal server error');
+        }
+    }
+
+    protected function handleByAuthor(): void
+    {
+        $authorId = (int)$this->getParameter('id');
+        if (!$authorId) {
+            $this->assignError('No ID provided', 400);
+            return;
+        }
+        $page = max(1, (int)($this->getParameter('page') ?: 1));
+        $perPage = max(1, (int)($this->getParameter('perPage') ?: 20));
+
+        try {
+            $listDto = $this->ratingsService->getAuthorRatings($authorId, $page, $perPage);
+            $this->assignSuccess($this->objectMapper->map($listDto, AuthorRatingsListRestDto::class));
+        } catch (Throwable $e) {
+            $this->logThrowable('Ratings::handleByAuthor', $e);
             $this->assignError('Internal server error');
         }
     }
