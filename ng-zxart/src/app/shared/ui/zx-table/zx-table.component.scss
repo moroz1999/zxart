@@ -1,5 +1,6 @@
 :host {
   display: block;
+  container-type: inline-size;
 }
 
 :host.zx-table-xs {
@@ -37,6 +38,9 @@
 
   tbody td {
     padding: var(--zx-table-cell-padding);
+  }
+
+  tbody > tr > td {
     font-size: var(--zx-table-font-size);
   }
 
@@ -50,12 +54,12 @@
     background: var(--zx-table-row-alternate-bg);
   }
 
-  @media (max-width: 600px) {
+  @container (max-width: 600px) {
     thead th {
       font-size: var(--zx-table-header-font-size-mobile);
     }
 
-    tbody td {
+    tbody > tr > td {
       font-size: var(--zx-table-cell-font-size-mobile);
     }
   }

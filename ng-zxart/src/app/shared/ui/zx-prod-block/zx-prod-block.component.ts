@@ -23,6 +23,11 @@ import {AnalyticsService} from '../../services/analytics.service';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.component';
 import {ZxReleaseTypeBadgeComponent} from '../zx-release-type-badge/zx-release-type-badge.component';
+import {ZxInsetComponent} from '../zx-inset/zx-inset.component';
+import {ZxInlineComponent} from '../zx-inline/zx-inline.component';
+import {ZxStackComponent} from '../zx-stack/zx-stack.component';
+import {HeadingDirective} from '../typography/directives/heading.directive';
+import {TextDirective} from '../typography/directives/text.directive';
 
 @Component({
   selector: 'zx-prod-block',
@@ -43,6 +48,11 @@ import {ZxReleaseTypeBadgeComponent} from '../zx-release-type-badge/zx-release-t
     ZxButtonComponent,
     ZxItemControlsComponent,
     ZxReleaseTypeBadgeComponent,
+    ZxInsetComponent,
+    ZxInlineComponent,
+    ZxStackComponent,
+    HeadingDirective,
+    TextDirective,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,

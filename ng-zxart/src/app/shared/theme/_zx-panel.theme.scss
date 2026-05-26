@@ -10,6 +10,15 @@
   --zx-panel-padding-lg: var(--padding-lg);
 
   --zx-panel-title-gap: var(--space-12);
+
+  /* Top stripe accent bar */
+  --zx-panel-stripe-primary: var(--primary-500);
+  --zx-panel-stripe-artist: var(--role-artist);
+  --zx-panel-stripe-coder: var(--role-code);
+  --zx-panel-stripe-height: 3px;
+
+  /* Border for flat (nested) panels */
+  --zx-panel-flat-border: var(--border-width-thin) solid var(--secondary-200);
 }
 
 .dark-mode {

@@ -107,6 +107,51 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 
+  /comments/?action=byAuthor:
+    get:
+      summary: Get paginated comments on an author's works
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [byAuthor]
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: perPage
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 50
+        - name: lang
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [eng, rus, spa]
+      responses:
+        '200':
+          description: Paginated comments on works linked to the author.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentsListDto'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
   /comments/:
     post:
       summary: Comment actions (Add, Update, Delete)

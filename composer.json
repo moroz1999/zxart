@@ -60,5 +60,10 @@
     "psalm": "vendor/bin/psalm --memory-limit=2G --use-baseline=psalm-baseline.xml --no-cache --force-jit",
     "psalm-baseline": "vendor/bin/psalm --memory-limit=2G --set-baseline=psalm-baseline.xml --no-cache",
     "build": "cd ./ng-zxart && npm run build"
+  },
+  "autoload": {
+    "psr-4": {
+      "ZxArt\\": "project/core/ZxArt/"
+    }
   }
 }

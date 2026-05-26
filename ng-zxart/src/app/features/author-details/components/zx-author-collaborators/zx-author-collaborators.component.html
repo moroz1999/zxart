@@ -12,25 +12,31 @@
       </div>
       <div class="ap-collab__people">
         <a *ngFor="let p of people" [href]="p.url" class="ap-collab__person">
+          <div class="ap-collab__person-avatar">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+              <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-3 0-9 1.5-9 4.5V21h18v-2.5c0-3-6-4.5-9-4.5z"/>
+            </svg>
+          </div>
           <div class="ap-collab__person-body">
             <div class="ap-collab__person-name">{{ p.title }}</div>
             <div class="ap-collab__person-stats">
               <span *ngIf="p.jointPictures > 0" class="ap-collab__person-stat ap-collab__person-stat--gfx">
-                <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm0 13l4-4 3 3 5-5 3 3V5H5v12z"/></svg>
+                <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor" aria-hidden="true"><path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm0 13l4-4 3 3 5-5 3 3V5H5v12z"/></svg>
                 {{ p.jointPictures }}
               </span>
               <span *ngIf="p.jointTunes > 0" class="ap-collab__person-stat ap-collab__person-stat--music">
-                <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+                <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor" aria-hidden="true"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
                 {{ p.jointTunes }}
               </span>
               <span *ngIf="p.jointProds > 0" class="ap-collab__person-stat ap-collab__person-stat--soft">
-                <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><path d="M21 6H3a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM11 13H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm4-3a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
+                <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor" aria-hidden="true"><path d="M21 6H3a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM11 13H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm4-3a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
                 {{ p.jointProds }}
               </span>
             </div>
           </div>
           <div class="ap-collab__person-total">
             <b>{{ p.jointTotal }}</b>
+            <span>{{ 'author-details.collaborators.joint' | translate }}</span>
           </div>
         </a>
       </div>

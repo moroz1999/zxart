@@ -4,50 +4,75 @@
   titleLevel="h2"
   variant="elevated">
 
-  <div class="ap-dash__grid">
-    <div *ngIf="pictures.length > 0" class="ap-dash__col ap-dash__col--gfx">
-      <div class="ap-dash__col-head">
-        <span class="ap-dash__col-label">{{ 'author-details.dashboard.graphics' | translate }}</span>
-        <a [href]="gfxHref" class="ap-dash__all">{{ 'author-details.dashboard.all' | translate }}</a>
-      </div>
-      <div class="ap-dash__pics">
-        <zx-picture-card
-          *ngFor="let picture of pictures; let pi = index"
-          [picture]="picture"
-          [galleryId]="'dashboard-' + elementId"
-          [galleryIndex]="pi">
-        </zx-picture-card>
-      </div>
-    </div>
+  <zx-inline gap="md" [wrap]="true" align="stretch">
 
-    <div *ngIf="tunes.length > 0" class="ap-dash__col ap-dash__col--music">
-      <div class="ap-dash__col-head">
-        <span class="ap-dash__col-label">{{ 'author-details.dashboard.music' | translate }}</span>
-        <a [href]="musicHref" class="ap-dash__all">{{ 'author-details.dashboard.all' | translate }}</a>
-      </div>
-      <div class="ap-dash__tunes">
-        <zx-tune-row
-          *ngFor="let tune of tunes"
-          [tune]="tune"
-          [isPlaying]="playingTuneId === tune.id"
-          (playRequested)="onPlayRequested($event)"
-          (pauseRequested)="onPauseRequested()">
-        </zx-tune-row>
-      </div>
-    </div>
+    <zx-panel *ngIf="pictures.length > 0" variant="flat" [topStripe]="'artist'" radius="lg" padding="sm" class="ap-dash__col--pix">
+      <zx-stack gap="sm">
+        <zx-inset padding="xs" side="block">
+          <zx-inline gap="sm" align="center">
+            <svg class="ap-dash__col-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+              <path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm0 13l4-4 3 3 5-5 3 3V5H5v12z"/>
+            </svg>
+            <span class="ap-dash__col-label">{{ 'author-details.dashboard.graphics' | translate }}</span>
+            <zx-button size="xs" color="outlined" [href]="gfxHref">{{ 'author-details.dashboard.all' | translate }}</zx-button>
+          </zx-inline>
+        </zx-inset>
+        <zx-grid columns="1" gap="sm">
+          <zx-picture-card
+            *ngFor="let picture of pictures; let pi = index"
+            [picture]="picture"
+            [galleryId]="'dashboard-' + elementId"
+            [galleryIndex]="pi">
+          </zx-picture-card>
+        </zx-grid>
+      </zx-stack>
+    </zx-panel>
 
-    <div *ngIf="prods.length > 0" class="ap-dash__col ap-dash__col--soft">
-      <div class="ap-dash__col-head">
-        <span class="ap-dash__col-label">{{ 'author-details.dashboard.software' | translate }}</span>
-        <a [href]="softwareHref" class="ap-dash__all">{{ 'author-details.dashboard.all' | translate }}</a>
-      </div>
-      <div class="ap-dash__prods">
-        <zx-prod-block
-          *ngFor="let prod of prods"
-          [model]="toProdModel(prod)"
-          [imagesLayout]="'loading'">
-        </zx-prod-block>
-      </div>
-    </div>
-  </div>
+    <zx-table *ngIf="tunes.length > 0" size="xs" [topStripe]="'primary'" class="ap-dash__col--flex">
+      <zx-inset padding="sm">
+        <zx-inset padding="xs" side="block">
+          <zx-inline gap="sm" align="center">
+            <svg class="ap-dash__col-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+              <path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/>
+            </svg>
+            <span class="ap-dash__col-label">{{ 'author-details.dashboard.music' | translate }}</span>
+            <zx-button size="xs" color="outlined" [href]="musicHref">{{ 'author-details.dashboard.all' | translate }}</zx-button>
+          </zx-inline>
+        </zx-inset>
+      </zx-inset>
+      <table>
+        <tbody>
+          <zx-tune-row
+            *ngFor="let tune of tunes"
+            [tune]="tune"
+            [isPlaying]="playingTuneId === tune.id"
+            (playRequested)="onPlayRequested($event)"
+            (pauseRequested)="onPauseRequested()">
+          </zx-tune-row>
+        </tbody>
+      </table>
+    </zx-table>
+
+    <zx-panel *ngIf="prods.length > 0" variant="flat" [topStripe]="'coder'" radius="lg" padding="sm" class="ap-dash__col--soft">
+      <zx-stack gap="sm">
+        <zx-inset padding="xs" side="block">
+          <zx-inline gap="sm" align="center">
+            <svg class="ap-dash__col-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+              <path d="M21 6H3a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM11 13H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm4-3a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+            </svg>
+            <span class="ap-dash__col-label">{{ 'author-details.dashboard.software' | translate }}</span>
+            <zx-button size="xs" color="outlined" [href]="softwareHref">{{ 'author-details.dashboard.all' | translate }}</zx-button>
+          </zx-inline>
+        </zx-inset>
+        <zx-stack gap="sm">
+          <zx-prod-block
+            *ngFor="let prod of prods"
+            [model]="toProdModel(prod)"
+            [imagesLayout]="'loading'">
+          </zx-prod-block>
+        </zx-stack>
+      </zx-stack>
+    </zx-panel>
+
+  </zx-inline>
 </zx-panel>

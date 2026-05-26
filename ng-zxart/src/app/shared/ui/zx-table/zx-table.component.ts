@@ -15,6 +15,7 @@ export class ZxTableComponent {
   @Input() title = '';
   @Input() titleLevel: 'h2' | 'h3' = 'h3';
   @Input() size: ZxTableSize = 'sm';
+  @Input() topStripe: 'primary' | 'artist' | 'coder' | null = null;
 
   @HostBinding('class') get sizeClass(): string {
     return `zx-table-${this.size}`;

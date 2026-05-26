@@ -1,4 +1,4 @@
-<zx-panel radius="xl" padding="none" variant="elevated">
+<zx-panel radius="xl" padding="none" variant="elevated" [contentBleed]="true">
   <div class="zx-prod-internal">
     <a
       href="{{ model.url }}"
@@ -75,33 +75,37 @@
             *ngIf="(model.legalStatus === 'mia' || model.legalStatus === 'unreleased') && !model.loadingImageUrl"
       >{{ 'zx-prod.legal-status.' + model.legalStatus | translate }}</span>
     </a>
-    <div class="zx-prod-bottom">
-      <div class="zx-prod-bottom-top">
-        <a class="zx-prod-title" href="{{ model.url }}">{{ model.title }}</a>
-        <a
+    <zx-inset padding="lg">
+      <zx-stack spacing="md">
+      <zx-inline gap="sm" align="center" justify="between">
+        <a class="zx-prod-title" appHeading="title" [truncate]="true" href="{{ model.url }}">{{ model.title }}</a>
+        <zx-button
           class="zx-prod-cart"
-          href="{{model.externalLink}}"
+          [href]="model.externalLink"
           *ngIf="(model.legalStatus==='insales' || model.legalStatus === 'donationware') && model.externalLink"
           target="_blank"
+          size="xs"
+          color="transparent"
+          [square]="true"
           (click)="cartClicked($event)"
         >
           <svg-icon name="cart"></svg-icon>
-        </a>
-      </div>
-      <div *ngIf="model.groupsInfo.length">
+        </zx-button>
+      </zx-inline>
+      <div *ngIf="model.groupsInfo.length" appText="label" tone="muted">
         <ng-container *ngFor="let group of model.groupsInfo; last as last"><a
-          [href]="group.url">{{ group.title }}</a><span
+          appText="label" tone="muted-link" [href]="group.url">{{ group.title }}</a><span
           *ngIf="!last">, </span></ng-container>
       </div>
-      <div *ngIf="!model.groupsInfo.length && model.publishersInfo.length">
+      <div *ngIf="!model.groupsInfo.length && model.publishersInfo.length" appText="label" tone="muted">
         <ng-container *ngFor="let publisher of model.publishersInfo; last as last"><a
-          [href]="publisher.url">{{ publisher.title }}</a><span *ngIf="!last">, </span></ng-container>
+          appText="label" tone="muted-link" [href]="publisher.url">{{ publisher.title }}</a><span *ngIf="!last">, </span></ng-container>
       </div>
-      <div *ngIf="!model.groupsInfo.length && !model.publishersInfo.length && model.authorsInfoShort.length">
+      <div *ngIf="!model.groupsInfo.length && !model.publishersInfo.length && model.authorsInfoShort.length" appText="label" tone="muted">
         <ng-container *ngFor="let author of model.authorsInfoShort; last as last"><a
-          [href]="author.url">{{ author.title }}</a><span *ngIf="!last">, </span></ng-container>
+          appText="label" tone="muted-link" [href]="author.url">{{ author.title }}</a><span *ngIf="!last">, </span></ng-container>
       </div>
-      <div class="zx-prod-bottom-row">
+      <zx-inline class="zx-prod-bottom-row" gap="lg" align="start" justify="between">
         <zx-item-controls
           *ngIf="model.structureType === 'zxProd'"
           [elementId]="model.id"
@@ -118,67 +122,86 @@
         ></zx-release-type-badge>
         <div
           class="zx-prod-year"
+          appText="label"
+          tone="muted-link"
           *ngIf="model.year"
           (click)="yearClicked($event, model.year)"
         >{{ model.year }}
         </div>
-      </div>
-      <div class="zx-prod-additional"
+      </zx-inline>
+      </zx-stack>
+      <zx-stack spacing="xl"
            *ngIf="displayAdditions"
            @slideInOut
            (@slideInOut.start)=captureStartEvent($event)
            (@slideInOut.done)=captureDoneEvent($event)
       >
-        <div class="zx-prod-row zx-prod-publisher" *ngIf="model.publishersInfo.length">
-          <div class="zx-prod-row-label">{{ "zx-prod.publishers" | translate }}</div>
-          <div class="zx-prod-row-value">
+        <zx-stack spacing="none">
+        <zx-inset class="zx-prod-row" side="block" padding="md" *ngIf="model.publishersInfo.length">
+          <zx-inline gap="lg" align="baseline" justify="between">
+          <span appText="label" tone="muted">{{ "zx-prod.publishers" | translate }}</span>
+          <span appText="label">
             <ng-container *ngFor="let publisher of model.publishersInfo; last as last"><a
-              [href]="publisher.url">{{ publisher.title }}</a><span *ngIf="!last">, </span></ng-container>
-          </div>
-        </div>
-        <div class="zx-prod-row zx-prod-author" *ngIf="model.authorsInfoShort.length">
-          <div class="zx-prod-row-label">{{ "zx-prod.authors" | translate }}</div>
+              appText="label" tone="link" [href]="publisher.url">{{ publisher.title }}</a><span *ngIf="!last">, </span></ng-container>
+          </span>
+          </zx-inline>
+        </zx-inset>
+        <zx-inset class="zx-prod-row" side="block" padding="md" *ngIf="model.authorsInfoShort.length">
+          <zx-inline gap="lg" align="baseline" justify="between">
+          <span appText="label" tone="muted">{{ "zx-prod.authors" | translate }}</span>
           <!-- @formatter:off -->
-                <div class="zx-prod-row-value">
+                <span appText="label">
                     <ng-container *ngFor="let author of model.authorsInfoShort; last as last"><a
-                            [href]="author.url">{{ author.title }}</a><ng-container *ngIf="author.roles && author.roles.length">&nbsp;(<ng-container *ngFor="let role of author.roles; last as last2">{{ "author.role." + role | translate }}<ng-container *ngIf="!last2">, </ng-container></ng-container>)</ng-container><ng-container *ngIf="!last">, </ng-container>
+                            appText="label" tone="link" [href]="author.url">{{ author.title }}</a><ng-container *ngIf="author.roles && author.roles.length">&nbsp;(<ng-container *ngFor="let role of author.roles; last as last2">{{ "author.role." + role | translate }}<ng-container *ngIf="!last2">, </ng-container></ng-container>)</ng-container><ng-container *ngIf="!last">, </ng-container>
                     </ng-container>
-                </div>
+                </span>
                 <!-- @formatter:on -->
-        </div>
-        <div class="zx-prod-row zx-prod-categories" *ngIf="model.categoriesInfo.length">
-          <div class="zx-prod-row-label">{{ "zx-prod.categories" | translate }}</div>
-          <div class="zx-prod-row-value">
+          </zx-inline>
+        </zx-inset>
+        <zx-inset class="zx-prod-row" side="block" padding="md" *ngIf="model.categoriesInfo.length">
+          <zx-inline gap="lg" align="baseline" justify="between">
+          <span appText="label" tone="muted">{{ "zx-prod.categories" | translate }}</span>
+          <span appText="label">
             <ng-container *ngFor="let category of model.categoriesInfo; last as last">
             <span class="zx-prod-category"
+                  appText="label"
+                  tone="muted-link"
                   (click)="categoryClicked($event, category.id)"
             >{{ category.title }}</span><span *ngIf="!last">, </span></ng-container>
-          </div>
-        </div>
-        <div class="zx-prod-row zx-prod-languages" *ngIf="model.languagesInfo.length">
-          <div class="zx-prod-row-label">{{ "zx-prod.languages" | translate }}</div>
-          <div class="zx-prod-row-value">
+          </span>
+          </zx-inline>
+        </zx-inset>
+        <zx-inset class="zx-prod-row" side="block" padding="md" *ngIf="model.languagesInfo.length">
+          <zx-inline gap="lg" align="baseline" justify="between">
+          <span appText="label" tone="muted">{{ "zx-prod.languages" | translate }}</span>
+          <span appText="label">
             <ng-container *ngFor="let language of model.languagesInfo; last as last">
             <span
               class="zx-prod-language"
+              appText="label"
+              tone="muted-link"
               (click)="languageClicked($event, language.id)"
             >{{ language.title }}</span><span *ngIf="!last">, </span>
             </ng-container>
-          </div>
-        </div>
-        <div class="zx-prod-row zx-prod-parties" *ngIf="model.partyInfo">
-          <div class="zx-prod-row-label">{{ "zx-prod.parties" | translate }}</div>
-          <div class="zx-prod-row-value">
+          </span>
+          </zx-inline>
+        </zx-inset>
+        <zx-inset class="zx-prod-row" side="block" padding="md" *ngIf="model.partyInfo">
+          <zx-inline gap="lg" align="baseline" justify="between">
+          <span appText="label" tone="muted">{{ "zx-prod.parties" | translate }}</span>
+          <span appText="label">
             <span *ngIf="model.partyPlace > 0">{{ model.partyPlace }}{{ "zx-prod.at" | translate }}</span>
-            <a [href]="model.partyInfo.url">{{ model.partyInfo.title }}</a>
-          </div>
-        </div>
-        <div class="zx-prod-buttons">
+            <a appText="label" tone="link" [href]="model.partyInfo.url">{{ model.partyInfo.title }}</a>
+          </span>
+          </zx-inline>
+        </zx-inset>
+        </zx-stack>
+        <zx-inline justify="between">
           <zx-button
             [href]="model.url"
           >{{ "zx-prod.open" | translate }}</zx-button>
-        </div>
-      </div>
-    </div>
+        </zx-inline>
+      </zx-stack>
+    </zx-inset>
   </div>
 </zx-panel>

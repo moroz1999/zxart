@@ -14,10 +14,18 @@ import {ZxPictureCardComponent} from '../../../../shared/ui/zx-picture-card/zx-p
 import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.component';
 import {ZxProdBlockComponent} from '../../../../shared/ui/zx-prod-block/zx-prod-block.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
+import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
+import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ZxGridComponent} from '../../../../shared/ui/zx-grid/zx-grid.component';
+import {ZxInsetComponent} from '../../../../shared/ui/zx-inset/zx-inset.component';
+import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxProd} from '../../../../shared/models/zx-prod';
 import {ZxProdDto} from '../../../../shared/models/zx-prod-dto';
 
-const DASHBOARD_SIZE = 4;
+const DASHBOARD_PICS = 3;
+const DASHBOARD_TUNES = 10;
+const DASHBOARD_PRODS = 3;
 
 function authorProdToZxProd(dto: AuthorProdDto): ZxProd {
   const data: ZxProdDto = {
@@ -50,6 +58,12 @@ function authorProdToZxProd(dto: AuthorProdDto): ZxProd {
     ZxTuneRowComponent,
     ZxProdBlockComponent,
     ZxPanelComponent,
+    ZxTableComponent,
+    ZxInlineComponent,
+    ZxStackComponent,
+    ZxGridComponent,
+    ZxInsetComponent,
+    ZxButtonComponent,
   ],
   templateUrl: './zx-author-mini-dashboard.component.html',
   styleUrl: './zx-author-mini-dashboard.component.scss',
@@ -83,19 +97,19 @@ export class ZxAuthorMiniDashboardComponent implements OnInit {
     this.softwareHref = baseUrl + 'tab:software/';
 
     const pics$ = this.tabs.hasPictures
-      ? this.picturesService.getPicturesPaged(this.elementId, 0, DASHBOARD_SIZE, 'votes', 'desc').pipe(
+      ? this.picturesService.getPicturesPaged(this.elementId, 0, DASHBOARD_PICS, 'votes', 'desc').pipe(
           catchError(() => of({items: [], total: 0, availableFormats: []})),
         )
       : of({items: [], total: 0, availableFormats: []});
 
     const tunes$ = this.tabs.hasTunes
-      ? this.tunesService.getTunesPaged(this.elementId, 0, DASHBOARD_SIZE, 'votes', 'desc').pipe(
+      ? this.tunesService.getTunesPaged(this.elementId, 0, DASHBOARD_TUNES, 'votes', 'desc').pipe(
           catchError(() => of({items: [], total: 0, availableFormats: []})),
         )
       : of({items: [], total: 0, availableFormats: []});
 
     const prods$ = this.tabs.hasProds
-      ? this.prodsService.getProds(this.elementId, 0, DASHBOARD_SIZE, 'votes', 'desc', '').pipe(
+      ? this.prodsService.getProds(this.elementId, 0, DASHBOARD_PRODS, 'votes', 'desc', '').pipe(
           catchError(() => of({items: [], total: 0, availableRoles: []})),
         )
       : of({items: [], total: 0, availableRoles: []});

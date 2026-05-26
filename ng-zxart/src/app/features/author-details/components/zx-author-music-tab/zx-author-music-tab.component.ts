@@ -13,6 +13,7 @@ import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.componen
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxTuneTableSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-tune-table-skeleton/zx-tune-table-skeleton.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
+import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
 
 const PAGE_SIZE = 20;
 
@@ -36,6 +37,7 @@ interface YearGroup {
     ZxStackComponent,
     ZxTuneTableSkeletonComponent,
     TextDirective,
+    ZxTableComponent,
   ],
   templateUrl: './zx-author-music-tab.component.html',
   styleUrl: './zx-author-music-tab.component.scss',

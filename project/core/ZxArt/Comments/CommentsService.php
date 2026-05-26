@@ -22,7 +22,7 @@ use ZxArt\LinkTypes;
  */
 readonly class CommentsService
 {
-    private const int COMMENTS_PER_PAGE = 50;
+    public const int COMMENTS_PER_PAGE = 50;
 
     public function __construct(
         private structureManager    $structureManager,
@@ -153,10 +153,15 @@ readonly class CommentsService
      * @param int $authorId Author element ID (or alias ID)
      * @param int $page Page number (1-based)
      */
-    public function getAuthorCommentsPaginated(int $authorId, int $page = 1, ?string $languageCode = null): CommentsListDto
+    public function getAuthorCommentsPaginated(
+        int $authorId,
+        int $page = 1,
+        ?string $languageCode = null,
+        int $perPage = self::COMMENTS_PER_PAGE,
+    ): CommentsListDto
     {
         $count = $this->commentsRepository->countByAuthorId($authorId);
-        $pagesAmount = $count > 0 ? (int)ceil($count / self::COMMENTS_PER_PAGE) : 1;
+        $pagesAmount = $count > 0 ? (int)ceil($count / $perPage) : 1;
 
         if ($page < 1) {
             $page = 1;
@@ -165,8 +170,8 @@ readonly class CommentsService
             $page = $pagesAmount;
         }
 
-        $offset = ($page - 1) * self::COMMENTS_PER_PAGE;
-        $ids = $this->commentsRepository->getIdsByAuthorId($authorId, $offset, self::COMMENTS_PER_PAGE);
+        $offset = ($page - 1) * $perPage;
+        $ids = $this->commentsRepository->getIdsByAuthorId($authorId, $offset, $perPage);
 
         $comments = [];
         foreach ($ids as $id) {

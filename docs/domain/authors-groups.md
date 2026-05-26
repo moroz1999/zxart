@@ -104,6 +104,7 @@ When work is created by group:
 3. This allows reflecting both collective and individual authorship
 
 #### Author Collaborators
+- Co-author statistics include shared pictures (`authorPicture`), tunes (`authorMusic`), productions, and releases.
 - The author collaborators block lists groups connected to the same works as the author.
 - Product collaborators include developer groups (`zxProdGroups`) and publishers (`zxProdPublishers`) of products where the author has prod authorship.
 - Release collaborators include publishers (`zxReleasePublishers`) of releases where the author has release authorship.

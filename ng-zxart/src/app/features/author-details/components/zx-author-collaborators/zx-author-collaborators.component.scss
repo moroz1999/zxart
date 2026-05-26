@@ -1,17 +1,18 @@
 @use 'shared/breakpoints' as bp;
 
 .ap-section__count {
-  font-size: var(--font-sm, 13px);
+  font-size: var(--font-xs);
   color: var(--text-light-color);
-  background: var(--bg-secondary, rgba(128,128,128,.1));
+  background: var(--secondary-100);
+  border: 1px solid var(--secondary-200);
+  border-radius: var(--radius-md);
   padding: 1px 6px;
-  border-radius: 10px;
 }
 
 .ap-collab__cols {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-16);
 
   @include bp.media-breakpoint-down(md) {
     grid-template-columns: 1fr;
@@ -21,21 +22,21 @@
 .ap-collab__col-h {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: var(--font-sm, 13px);
-  font-weight: 600;
-  color: var(--text-light-color);
+  gap: var(--space-8);
+  font-size: var(--font-xs);
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: .05em;
-  margin-bottom: 8px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--border-color);
+  letter-spacing: 0.04em;
+  color: var(--text-light-color);
+  margin-bottom: var(--space-8);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--secondary-200);
 }
 
 .ap-collab__people {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 2px;
+  gap: var(--space-8);
 
   @include bp.media-breakpoint-down(md) {
     grid-template-columns: 1fr;
@@ -43,30 +44,43 @@
 }
 
 .ap-collab__person {
-  display: flex;
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
   align-items: center;
-  justify-content: space-between;
-  padding: 6px 8px;
-  border-radius: 6px;
+  gap: var(--space-8);
+  padding: var(--space-8);
+  border-radius: var(--radius-md);
   text-decoration: none;
-  color: inherit;
-  gap: 8px;
+  color: var(--text-color);
+  background: var(--background-deep);
 
   &:hover {
-    background: var(--hover-bg, rgba(128,128,128,.08));
+    background: var(--secondary-100);
   }
+}
+
+.ap-collab__person-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--secondary-200);
+  color: var(--secondary-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .ap-collab__person-body {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-2);
   min-width: 0;
 }
 
 .ap-collab__person-name {
-  font-weight: 500;
-  font-size: var(--font-sm, 13px);
+  font-weight: 700;
+  font-size: var(--font-sm);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -74,65 +88,80 @@
 
 .ap-collab__person-stats {
   display: flex;
-  gap: 8px;
-  font-size: 11px;
+  gap: var(--space-8);
+  font-size: var(--font-xs);
   color: var(--text-light-color);
 }
 
 .ap-collab__person-stat {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 3px;
-
-  &--gfx { color: var(--color-gfx, #e0a020); }
-  &--music { color: var(--color-music, #2080e0); }
-  &--soft { color: var(--color-code, #20b060); }
+  gap: var(--space-4);
 }
 
-.ap-collab__person-total {
-  min-width: 32px;
-  text-align: center;
+.ap-collab__person-stat--gfx   { color: var(--role-artist); }
+.ap-collab__person-stat--music { color: var(--primary-500); }
+.ap-collab__person-stat--soft  { color: var(--role-code); }
 
-  b { font-size: var(--font-base, 14px); }
+.ap-collab__person-total {
+  text-align: right;
+  min-width: var(--space-32);
+  display: flex;
+  flex-direction: column;
+  font-size: var(--font-xs);
+  color: var(--text-light-color);
+
+  b {
+    font-size: var(--font-lg);
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: var(--text-color);
+  }
 }
 
 .ap-collab__groups {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-4);
 }
 
 .ap-collab__group {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 6px 8px;
-  border-radius: 6px;
+  gap: var(--space-2);
+  padding: var(--space-8);
+  border-radius: var(--radius-md);
   text-decoration: none;
-  color: inherit;
+  color: var(--text-color);
+  background: var(--background-deep);
 
   &:hover {
-    background: var(--hover-bg, rgba(128,128,128,.08));
+    background: var(--secondary-100);
   }
 }
 
 .ap-collab__group-head {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: var(--space-8);
+  flex-wrap: wrap;
 }
 
 .ap-collab__group-name {
-  font-weight: 500;
-  font-size: var(--font-sm, 13px);
+  font-weight: 700;
+  font-size: var(--font-sm);
 }
 
 .ap-collab__group-years {
-  font-size: 11px;
+  font-family: var(--font-mono);
+  font-size: var(--font-xs);
   color: var(--text-light-color);
+  background: var(--secondary-100);
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
 }
 
 .ap-collab__group-meta {
-  font-size: 11px;
+  font-size: var(--font-xs);
   color: var(--text-light-color);
 }

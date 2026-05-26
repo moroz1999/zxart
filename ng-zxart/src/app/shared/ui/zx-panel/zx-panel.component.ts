@@ -17,9 +17,12 @@ export class ZxPanelComponent {
   @Input() title = '';
   @Input() titleLevel: 'h2' | 'h3' = 'h3';
   @Input() contentBleed = false;
+  @Input() topStripe: 'primary' | 'artist' | 'coder' | null = null;
 
   @HostBinding('class') get hostClass(): string {
-    const classes = `zx-panel--radius-${this.radius} zx-panel--padding-${this.padding} zx-panel--${this.variant}`;
-    return this.contentBleed ? `${classes} zx-panel--content-bleed` : classes;
+    let classes = `zx-panel--radius-${this.radius} zx-panel--padding-${this.padding} zx-panel--${this.variant}`;
+    if (this.contentBleed) classes += ' zx-panel--content-bleed';
+    if (this.topStripe) classes += ` zx-panel--stripe-${this.topStripe}`;
+    return classes;
   }
 }

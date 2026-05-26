@@ -12,7 +12,9 @@
       [tabs]="core.tabs">
     </zx-author-works>
     <zx-author-collaborators [elementId]="core.id"></zx-author-collaborators>
-    <zx-author-ratings [elementId]="core.id"></zx-author-ratings>
-    <zx-author-comments [elementId]="core.id"></zx-author-comments>
+    <zx-inline gap="xl" align="start">
+      <zx-author-ratings class="author-details__activity-column" [elementId]="core.id"></zx-author-ratings>
+      <zx-author-comments class="author-details__activity-column" [elementId]="core.id"></zx-author-comments>
+    </zx-inline>
   </zx-stack>
 </ng-container>

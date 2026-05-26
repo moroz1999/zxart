@@ -1,3 +1,8 @@
 :host {
   display: block;
 }
+
+.author-details__activity-column {
+  flex: 1 1 0;
+  min-width: 0;
+}

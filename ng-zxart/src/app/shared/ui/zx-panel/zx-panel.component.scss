@@ -24,6 +24,30 @@
   &.zx-panel--content-bleed {
     overflow: hidden;
   }
+
+  &.zx-panel--flat {
+    border: var(--zx-panel-flat-border);
+  }
+
+  &.zx-panel--stripe-primary,
+  &.zx-panel--stripe-artist,
+  &.zx-panel--stripe-coder {
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--zx-panel-stripe-height);
+    }
+  }
+
+  &.zx-panel--stripe-primary::before { background: var(--zx-panel-stripe-primary); }
+  &.zx-panel--stripe-artist::before  { background: var(--zx-panel-stripe-artist); }
+  &.zx-panel--stripe-coder::before   { background: var(--zx-panel-stripe-coder); }
 }
 
 .zx-panel__title {

@@ -189,10 +189,11 @@ class Comments extends LoggedControllerApplication
             return;
         }
         $page = max(1, (int)($this->getParameter('page') ?: 1));
+        $perPage = max(1, (int)($this->getParameter('perPage') ?: CommentsService::COMMENTS_PER_PAGE));
         $languageCode = $this->getLanguageCodeParameter();
 
         try {
-            $listDto = $this->commentsService->getAuthorCommentsPaginated($authorId, $page, $languageCode);
+            $listDto = $this->commentsService->getAuthorCommentsPaginated($authorId, $page, $languageCode, $perPage);
             $this->assignSuccess($this->objectMapper->map($listDto, CommentsListRestDto::class));
         } catch (Throwable $e) {
             $this->logThrowable('Comments::handleByAuthor', $e);

@@ -61,11 +61,3 @@
   padding-left: 42px;
 }
 
-.ap-tune-list {
-  background: var(--surface);
-  border: 1px solid var(--secondary-200);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-
-  :host-context(.dark-mode) & { background: var(--secondary-100); }
-}

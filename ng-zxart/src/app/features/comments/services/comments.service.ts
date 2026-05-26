@@ -39,11 +39,11 @@ export class CommentsService {
     );
   }
 
-  getAuthorComments(authorId: number, page = 1): Observable<CommentsListDto> {
+  getAuthorComments(authorId: number, page = 1, perPage = 50): Observable<CommentsListDto> {
     return this.currentLanguageService.languageCode$.pipe(
       take(1),
       switchMap(languageCode => this.http.get<CommentsListDto>(
-        `/comments/?action=byAuthor&id=${authorId}&page=${page}&lang=${languageCode}`
+        `/comments/?action=byAuthor&id=${authorId}&page=${page}&perPage=${perPage}&lang=${languageCode}`
       )),
       catchError(() => of({comments: [], currentPage: 1, pagesAmount: 0, totalCount: 0})),
     );

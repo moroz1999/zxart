@@ -1,5 +1,5 @@
-<td class="tune-index" *ngIf="index !== undefined">{{ index + 1 }}</td>
-<td class="tune-play">
+<td class="tune-index" *ngIf="index !== undefined" appText="label" tone="muted">{{ index + 1 }}</td>
+<td class="tune-play" appText="label" tone="muted">
   <zx-button
     [square]="true"
     color="transparent"
@@ -11,31 +11,31 @@
     <svg-icon [name]="isPlaying ? 'pause' : 'play'"></svg-icon>
   </zx-button>
 </td>
-<td class="tune-main">
+<td class="tune-main" appText="label" tone="muted">
   <div class="tune-title-line">
-    <a [href]="tune.url" class="tune-title">{{ tune.title }}</a>
+    <a [href]="tune.url" class="tune-title" appText="label" tone="link">{{ tune.title }}</a>
     <zx-badge *ngIf="tune.isRealtime" variant="secondary" class="tune-realtime">
       {{ realtimeBadgeLabel }}
     </zx-badge>
   </div>
   <div class="tune-authors" *ngIf="tune.authors.length">
     <ng-container *ngFor="let author of tune.authors; last as last">
-      <a [href]="author.url">{{ author.name }}</a><span *ngIf="!last">, </span>
+      <a [href]="author.url" appText="label" tone="muted-link">{{ author.name }}</a><span *ngIf="!last">, </span>
     </ng-container>
   </div>
 </td>
-<td class="tune-format">{{ tune.format }}</td>
-<td class="tune-year">{{ tune.year }}</td>
-<td class="tune-party">
+<td class="tune-format" appText="label" tone="muted">{{ tune.format }}</td>
+<td class="tune-year" appText="label" tone="muted">{{ tune.year }}</td>
+<td class="tune-party" appText="label" tone="muted">
   <ng-container *ngIf="tune.party">
     <span *ngIf="medalClass" [class]="medalClass" class="medal">{{ tune.party.place }}</span>
-    <a [href]="tune.party.url">{{ tune.party.title }}</a>
+    <a [href]="tune.party.url" appText="label" tone="muted-link">{{ tune.party.title }}</a>
   </ng-container>
   <div *ngIf="tune.release" class="tune-release">
-    <a [href]="tune.release.url">{{ tune.release.title }}</a>
+    <a [href]="tune.release.url" appText="label" tone="muted-link">{{ tune.release.title }}</a>
   </div>
 </td>
-<td class="tune-stats">
+<td class="tune-stats" appText="label" tone="muted">
   <span *ngIf="tune.plays > 0" class="tune-stat">
     {{ tune.plays }}
   </span>
@@ -43,7 +43,7 @@
     {{ tune.commentsAmount }}
   </span>
 </td>
-<td>
+<td appText="label" tone="muted">
   <zx-item-controls
     [elementId]="tune.id"
     type="zxMusic"
@@ -53,7 +53,7 @@
     [denyVoting]="tune.denyVoting"
   ></zx-item-controls>
 </td>
-<td class="tune-download">
+<td class="tune-download" appText="label" tone="muted">
   <span class="tune-download-actions">
     <a *ngIf="tune.originalFileUrl" [href]="tune.originalFileUrl" rel="nofollow" class="download-link" [attr.aria-label]="'tune.download.original' | translate">
       <svg-icon name="download" class="download-icon download-original"></svg-icon>

@@ -382,12 +382,16 @@ components:
           type: string
         jointPictures:
           type: integer
+          description: Number of shared pictures linked to both authors.
         jointTunes:
           type: integer
+          description: Number of shared tunes linked to both authors.
         jointProds:
           type: integer
+          description: Number of shared productions and releases authored by both authors.
         jointTotal:
           type: integer
+          description: Total number of shared pictures, tunes, productions, and releases.
 
     AuthorCollaboratorGroup:
       type: object

@@ -25,6 +25,7 @@ class CommentsServiceTest extends TestCase
     private structureManager&MockObject $structureManager;
     private CurrentUserService&MockObject $currentUserService;
     private CurrentUser&MockObject $user;
+    private CommentsRepository&MockObject $commentsRepository;
     private CommentsService $service;
 
     protected function setUp(): void
@@ -36,6 +37,7 @@ class CommentsServiceTest extends TestCase
             ->getMock();
         $this->currentUserService = $this->createMock(CurrentUserService::class);
         $this->currentUserService->method('getCurrentUser')->willReturn($this->user);
+        $this->commentsRepository = $this->createMock(CommentsRepository::class);
 
         $this->service = new CommentsService(
             structureManager: $this->structureManager,
@@ -44,7 +46,7 @@ class CommentsServiceTest extends TestCase
             privilegesManager: $this->createMock(privilegesManager::class),
             cache: $this->createMock(Cache::class),
             transformer: $this->createMock(CommentsTransformer::class),
-            commentsRepository: $this->createMock(CommentsRepository::class),
+            commentsRepository: $this->commentsRepository,
         );
     }
 
@@ -72,5 +74,24 @@ class CommentsServiceTest extends TestCase
         $this->expectException(CommentOperationException::class);
         $this->expectExceptionMessage('empty');
         $this->service->addComment(1, '   ');
+    }
+
+    public function testAuthorCommentsUseRequestedPageSize(): void
+    {
+        $this->commentsRepository
+            ->method('countByAuthorId')
+            ->with(7)
+            ->willReturn(40);
+        $this->commentsRepository
+            ->expects($this->once())
+            ->method('getIdsByAuthorId')
+            ->with(7, 16, 16)
+            ->willReturn([]);
+
+        $result = $this->service->getAuthorCommentsPaginated(7, 2, null, 16);
+
+        $this->assertSame(2, $result->currentPage);
+        $this->assertSame(3, $result->pagesAmount);
+        $this->assertSame(40, $result->totalCount);
     }
 }

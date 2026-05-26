@@ -6,6 +6,7 @@ namespace ZxArt\Authors\Repositories;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use ZxArt\LinkTypes;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\Repositories\AbstractRepository;
@@ -27,47 +28,37 @@ readonly final class AuthorCollaboratorsRepository extends AbstractRepository
             return [];
         }
 
+        $stats = [];
+
         /** @var int[] $elementIds */
         $elementIds = $this->db->table($this->tableName(DatabaseTable::Authorship))
             ->whereIn('authorId', $authorIds)
             ->distinct()
             ->pluck('elementId');
 
-        if (empty($elementIds)) {
-            return [];
-        }
+        if (!empty($elementIds)) {
+            /** @var array<array{authorId: int, type: string}> $rows */
+            $rows = $this->db->table($this->tableName(DatabaseTable::Authorship))
+                ->whereIn('elementId', $elementIds)
+                ->whereNotIn('authorId', $authorIds)
+                ->select(['authorId', 'type'])
+                ->get();
 
-        /** @var array<array{authorId: int, type: string}> $rows */
-        $rows = $this->db->table($this->tableName(DatabaseTable::Authorship))
-            ->whereIn('elementId', $elementIds)
-            ->whereNotIn('authorId', $authorIds)
-            ->select(['authorId', 'type'])
-            ->get();
-
-        $stats = [];
-        foreach ($rows as $row) {
-            $coAuthorId = $row['authorId'];
-            if (!isset($stats[$coAuthorId])) {
-                $stats[$coAuthorId] = [
-                    'coAuthorId' => $coAuthorId,
-                    'pictures'   => 0,
-                    'tunes'      => 0,
-                    'prods'      => 0,
-                    'total'      => 0,
-                ];
-            }
-            $stats[$coAuthorId]['total']++;
-            $type = $row['type'];
-            if ($type === 'picture') {
-                $stats[$coAuthorId]['pictures']++;
-            } elseif ($type === 'music') {
-                $stats[$coAuthorId]['tunes']++;
-            } elseif ($type === 'prod' || $type === 'release') {
-                $stats[$coAuthorId]['prods']++;
+            foreach ($rows as $row) {
+                $type = match ($row['type']) {
+                    EntityType::Prod->value, EntityType::Release->value => 'prods',
+                    default => null,
+                };
+                if ($type !== null) {
+                    $this->appendCoAuthorWork($stats, $row['authorId'], $type);
+                }
             }
         }
 
-        usort($stats, fn(array $a, array $b) => $b['total'] <=> $a['total']);
+        $this->appendLinkedCoAuthorStats($stats, $authorIds, LinkTypes::AUTHOR_PICTURE, 'pictures');
+        $this->appendLinkedCoAuthorStats($stats, $authorIds, LinkTypes::AUTHOR_MUSIC, 'tunes');
+
+        usort($stats, static fn(array $a, array $b): int => $b['total'] <=> $a['total']);
 
         return array_slice($stats, 0, 30);
     }
@@ -208,5 +199,62 @@ readonly final class AuthorCollaboratorsRepository extends AbstractRepository
                 $stats[$groupId]['years'][$year] = $year;
             }
         }
+    }
+
+    /**
+     * @param array<int, array{coAuthorId: int, pictures: int, tunes: int, prods: int, total: int}> $stats
+     * @param int[] $authorIds
+     * @param 'pictures'|'tunes' $statsKey
+     */
+    private function appendLinkedCoAuthorStats(
+        array &$stats,
+        array $authorIds,
+        LinkTypes $linkType,
+        string $statsKey,
+    ): void {
+        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
+
+        /** @var int[] $workIds */
+        $workIds = $this->db->table($linksTable)
+            ->whereIn('parentStructureId', $authorIds)
+            ->where('type', '=', $linkType->value)
+            ->distinct()
+            ->pluck('childStructureId');
+        if (empty($workIds)) {
+            return;
+        }
+
+        /** @var list<array{authorId: int}> $rows */
+        $rows = $this->db->table($linksTable)
+            ->whereIn('childStructureId', $workIds)
+            ->where('type', '=', $linkType->value)
+            ->whereNotIn('parentStructureId', $authorIds)
+            ->select(['parentStructureId as authorId', 'childStructureId'])
+            ->distinct()
+            ->get();
+
+        foreach ($rows as $row) {
+            $this->appendCoAuthorWork($stats, $row['authorId'], $statsKey);
+        }
+    }
+
+    /**
+     * @param array<int, array{coAuthorId: int, pictures: int, tunes: int, prods: int, total: int}> $stats
+     * @param 'pictures'|'tunes'|'prods' $statsKey
+     */
+    private function appendCoAuthorWork(array &$stats, int $coAuthorId, string $statsKey): void
+    {
+        if (!isset($stats[$coAuthorId])) {
+            $stats[$coAuthorId] = [
+                'coAuthorId' => $coAuthorId,
+                'pictures' => 0,
+                'tunes' => 0,
+                'prods' => 0,
+                'total' => 0,
+            ];
+        }
+
+        $stats[$coAuthorId][$statsKey]++;
+        $stats[$coAuthorId]['total']++;
     }
 }

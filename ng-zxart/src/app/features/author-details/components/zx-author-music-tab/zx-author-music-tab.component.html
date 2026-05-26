@@ -60,15 +60,19 @@
         <div class="ap-year-rail__year">{{ +group.year > 0 ? group.year : '???' }}</div>
         <div class="ap-year-rail__count">{{ group.tunes.length }}</div>
       </div>
-      <div class="ap-tune-list">
-        <zx-tune-row
-          *ngFor="let tune of group.tunes"
-          [tune]="tune"
-          [isPlaying]="playingTuneId === tune.id"
-          (playRequested)="onPlayRequested($event)"
-          (pauseRequested)="onPauseRequested()">
-        </zx-tune-row>
-      </div>
+      <zx-table size="sm">
+        <table>
+          <tbody>
+            <zx-tune-row
+              *ngFor="let tune of group.tunes"
+              [tune]="tune"
+              [isPlaying]="playingTuneId === tune.id"
+              (playRequested)="onPlayRequested($event)"
+              (pauseRequested)="onPauseRequested()">
+            </zx-tune-row>
+          </tbody>
+        </table>
+      </zx-table>
     </div>
 
     <zx-pagination

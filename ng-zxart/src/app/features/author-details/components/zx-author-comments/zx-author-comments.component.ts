@@ -11,6 +11,8 @@ import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagi
 import {ZxTextSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-text-skeleton/zx-text-skeleton.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 
+const COMMENTS_PAGE_SIZE = 16;
+
 @Component({
   selector: 'zx-author-comments',
   standalone: true,
@@ -77,7 +79,7 @@ export class ZxAuthorCommentsComponent implements OnInit {
       return;
     }
     this.loading.set(true);
-    this.commentsService.getAuthorComments(this.elementId, page).subscribe(response => {
+    this.commentsService.getAuthorComments(this.elementId, page, COMMENTS_PAGE_SIZE).subscribe(response => {
       this.comments.set(response.comments);
       this.currentPage.set(response.currentPage);
       this.pagesAmount.set(response.pagesAmount);
