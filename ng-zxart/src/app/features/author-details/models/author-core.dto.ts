@@ -3,6 +3,11 @@ export interface AuthorLocationItemDto {
   url: string;
 }
 
+export interface AuthorLocationDto {
+  city: AuthorLocationItemDto | null;
+  country: AuthorLocationItemDto | null;
+}
+
 export interface AuthorGroupDto {
   id: number;
   title: string;
@@ -60,7 +65,7 @@ export interface AuthorCoreDto {
   joined: string | null;
   roles: string[];
   badges: string[];
-  location: AuthorLocationItemDto[];
+  location: AuthorLocationDto;
   groups: AuthorGroupDto[];
   aliases: AuthorAliasRefDto[];
   links: AuthorLinkDto[];

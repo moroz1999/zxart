@@ -1,8 +1,10 @@
 # zx-grid
 
-Flexbox-based grid layout container.
+CSS Grid-based layout container with a fixed number of columns at desktop breakpoints.
 
 `ng-zxart/src/app/shared/ui/zx-grid/`
+
+`align` and `justify` position items within their grid cells; they do not define item dimensions.
 
 ## Props
 
@@ -13,4 +15,5 @@ Flexbox-based grid layout container.
 | `gap` | `none` \| `xs` \| `sm` \| `md` \| `lg` \| `xl` \| `xxl` | `md` |
 | `rowGap` | `none` \| `xs` \| `sm` \| `md` \| `lg` \| `xl` \| `xxl` | `gap` |
 | `columnGap` | `none` \| `xs` \| `sm` \| `md` \| `lg` \| `xl` \| `xxl` | `gap` |
-| `align` | `start` \| `center` \| `end` \| `stretch` | — |
+| `align` | `start` \| `center` \| `end` \| `stretch` | `stretch` |
+| `justify` | `start` \| `center` \| `end` \| `stretch` | `stretch` |

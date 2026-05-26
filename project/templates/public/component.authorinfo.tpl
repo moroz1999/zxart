@@ -19,16 +19,15 @@
 			</td>
 		</tr>
 	{/if}
-	{if $element->getCityElement() || $element->getCountryElement()}
+	{$city = $element->getCityElement()}
+	{$country = $element->getCountryElement()}
+	{if $city || $country}
 		<tr>
 			<td class='info_table_label'>
 				{translations name='field.livinglocation'}:
 			</td>
 			<td class='info_table_value'>
-				{if $city = $element->getCityElement()}<a href="{$city->getUrl('author')}">{$city->title}</a>, {/if}
-				{if $country = $element->getCountryElement()}
-					<a href="{$country->getUrl('author')}">{$country->title}</a>
-				{/if}
+				{if $city}<a href="{$city->getUrl('author')}">{$city->title}</a>{/if}{if $city && $country}, {/if}{if $country}<a href="{$country->getUrl('author')}">{$country->title}</a>{/if}
 			</td>
 		</tr>
 	{/if}

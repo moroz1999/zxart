@@ -15,7 +15,8 @@ export class ZxGridComponent {
   @Input() gap: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' = 'md';
   @Input() rowGap: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | null = null;
   @Input() columnGap: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | null = null;
-  @Input() align: 'start' | 'center' | 'end' | 'stretch' | null = null;
+  @Input() align: 'start' | 'center' | 'end' | 'stretch' = 'stretch';
+  @Input() justify: 'start' | 'center' | 'end' | 'stretch' = 'stretch';
 
   @HostBinding('class')
   get classList(): string {
@@ -24,10 +25,9 @@ export class ZxGridComponent {
       `zx-grid--rows-${this.rows}`,
       `zx-grid--row-gap-${this.rowGap ?? this.gap}`,
       `zx-grid--column-gap-${this.columnGap ?? this.gap}`,
+      `zx-grid--align-${this.align}`,
+      `zx-grid--justify-${this.justify}`,
     ];
-    if (this.align) {
-      classes.push(`zx-grid--align-${this.align}`);
-    }
     return classes.join(' ');
   }
 }

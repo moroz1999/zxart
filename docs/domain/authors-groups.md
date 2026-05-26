@@ -127,6 +127,11 @@ When work is created by group:
 - Backend: `GET /comments/?action=byAuthor&id={authorId}&page={page}&lang={lang}` → `CommentsService::getAuthorCommentsPaginated()`.
 - Comment IDs are found by joining `structure_links` (type=commentTarget) with the author's work IDs.
 
+#### Author Mini Dashboard
+- With graphics, music, and software sections present, the dashboard previews 3 pictures, 10 tunes, and 3 productions.
+- With exactly two sections present, pictures and productions show up to 6 cards in two columns; music continues to show up to 10 tunes.
+- With music as the only section, the dashboard continues to show up to 10 tunes.
+
 #### Author Alias Details Page
 - Author aliases use the same Angular details component as authors.
 - An alias page keeps the alias identity and its directly attributed works and comments, while profile metadata such as location, account, links, and technical defaults comes from its referenced author.

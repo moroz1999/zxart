@@ -11,7 +11,7 @@ import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagi
 import {ZxTextSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-text-skeleton/zx-text-skeleton.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 
-const COMMENTS_PAGE_SIZE = 16;
+const COMMENTS_PAGE_SIZE = 10;
 
 @Component({
   selector: 'zx-author-comments',

@@ -6,7 +6,14 @@
 
   <zx-inline gap="md" [wrap]="true" align="stretch">
 
-    <zx-panel *ngIf="pictures.length > 0" variant="flat" [topStripe]="'artist'" radius="lg" padding="sm" class="ap-dash__col--pix">
+    <zx-panel
+      *ngIf="pictures.length > 0"
+      variant="flat"
+      [topStripe]="'artist'"
+      radius="lg"
+      padding="sm"
+      class="ap-dash__col--pix"
+      [class.ap-dash__col--expanded]="twoSectionLayout">
       <zx-stack gap="sm">
         <zx-inset padding="xs" side="block">
           <zx-inline gap="sm" align="center">
@@ -17,7 +24,7 @@
             <zx-button size="xs" color="outlined" [href]="gfxHref">{{ 'author-details.dashboard.all' | translate }}</zx-button>
           </zx-inline>
         </zx-inset>
-        <zx-grid columns="1" gap="sm">
+        <zx-grid [columns]="picturesColumns" gap="sm">
           <zx-picture-card
             *ngFor="let picture of pictures; let pi = index"
             [picture]="picture"
@@ -28,7 +35,12 @@
       </zx-stack>
     </zx-panel>
 
-    <zx-table *ngIf="tunes.length > 0" size="xs" [topStripe]="'primary'" class="ap-dash__col--flex">
+    <zx-table
+      *ngIf="tunes.length > 0"
+      size="xs"
+      [topStripe]="'primary'"
+      class="ap-dash__col--flex"
+      [class.ap-dash__col--expanded]="twoSectionLayout">
       <zx-inset padding="sm">
         <zx-inset padding="xs" side="block">
           <zx-inline gap="sm" align="center">
@@ -53,7 +65,14 @@
       </table>
     </zx-table>
 
-    <zx-panel *ngIf="prods.length > 0" variant="flat" [topStripe]="'coder'" radius="lg" padding="sm" class="ap-dash__col--soft">
+    <zx-panel
+      *ngIf="prods.length > 0"
+      variant="flat"
+      [topStripe]="'coder'"
+      radius="lg"
+      padding="sm"
+      class="ap-dash__col--soft"
+      [class.ap-dash__col--expanded]="twoSectionLayout">
       <zx-stack gap="sm">
         <zx-inset padding="xs" side="block">
           <zx-inline gap="sm" align="center">
@@ -64,13 +83,13 @@
             <zx-button size="xs" color="outlined" [href]="softwareHref">{{ 'author-details.dashboard.all' | translate }}</zx-button>
           </zx-inline>
         </zx-inset>
-        <zx-stack gap="sm">
+        <zx-grid [columns]="prodsColumns" gap="sm" justify="start">
           <zx-prod-block
             *ngFor="let prod of prods"
             [model]="toProdModel(prod)"
             [imagesLayout]="'loading'">
           </zx-prod-block>
-        </zx-stack>
+        </zx-grid>
       </zx-stack>
     </zx-panel>
 

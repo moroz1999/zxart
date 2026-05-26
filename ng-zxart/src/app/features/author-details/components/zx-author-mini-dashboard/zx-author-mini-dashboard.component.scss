@@ -14,6 +14,11 @@
   flex: 0 0 256px;
 }
 
+.ap-dash__col--expanded {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
 .ap-dash__col-icon {
   color: var(--text-light-color);
 }

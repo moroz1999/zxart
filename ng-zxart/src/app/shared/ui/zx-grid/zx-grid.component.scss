@@ -1,52 +1,51 @@
 @use 'shared/breakpoints' as bp;
 
 :host {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
 }
 
-:host.zx-grid--columns-1 > * {
-  flex-basis: var(--zx-grid-column-1);
+:host.zx-grid--columns-1 {
+  grid-template-columns: minmax(0, 1fr);
 }
 
-:host.zx-grid--columns-2 > * {
-  flex-basis: var(--zx-grid-column-2);
+:host.zx-grid--columns-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-:host.zx-grid--columns-3 > * {
-  flex-basis: var(--zx-grid-column-3);
+:host.zx-grid--columns-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-:host.zx-grid--columns-4 > * {
-  flex-basis: var(--zx-grid-column-4);
+:host.zx-grid--columns-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-:host.zx-grid--columns-5 > * {
-  flex-basis: var(--zx-grid-column-5);
+:host.zx-grid--columns-5 {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
-:host.zx-grid--columns-6 > * {
-  flex-basis: var(--zx-grid-column-6);
+:host.zx-grid--columns-6 {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
-:host.zx-grid--rows-auto > * {
-  flex-grow: 0;
+:host.zx-grid--rows-auto {
+  grid-auto-rows: auto;
 }
 
-:host.zx-grid--rows-1 > * {
-  flex-grow: 1;
+:host.zx-grid--rows-1 {
+  grid-template-rows: minmax(0, 1fr);
 }
 
-:host.zx-grid--rows-2 > * {
-  flex-grow: 1;
+:host.zx-grid--rows-2 {
+  grid-template-rows: repeat(2, minmax(0, 1fr));
 }
 
-:host.zx-grid--rows-3 > * {
-  flex-grow: 1;
+:host.zx-grid--rows-3 {
+  grid-template-rows: repeat(3, minmax(0, 1fr));
 }
 
-:host.zx-grid--rows-4 > * {
-  flex-grow: 1;
+:host.zx-grid--rows-4 {
+  grid-template-rows: repeat(4, minmax(0, 1fr));
 }
 
 :host.zx-grid--row-gap-none {
@@ -79,37 +78,30 @@
 
 :host.zx-grid--column-gap-none {
   column-gap: var(--zx-grid-gap-none);
-  --zx-grid-active-column-gap: var(--zx-grid-gap-none);
 }
 
 :host.zx-grid--column-gap-xs {
   column-gap: var(--zx-grid-gap-xs);
-  --zx-grid-active-column-gap: var(--zx-grid-gap-xs);
 }
 
 :host.zx-grid--column-gap-sm {
   column-gap: var(--zx-grid-gap-sm);
-  --zx-grid-active-column-gap: var(--zx-grid-gap-sm);
 }
 
 :host.zx-grid--column-gap-md {
   column-gap: var(--zx-grid-gap-md);
-  --zx-grid-active-column-gap: var(--zx-grid-gap-md);
 }
 
 :host.zx-grid--column-gap-lg {
   column-gap: var(--zx-grid-gap-lg);
-  --zx-grid-active-column-gap: var(--zx-grid-gap-lg);
 }
 
 :host.zx-grid--column-gap-xl {
   column-gap: var(--zx-grid-gap-xl);
-  --zx-grid-active-column-gap: var(--zx-grid-gap-xl);
 }
 
 :host.zx-grid--column-gap-xxl {
   column-gap: var(--zx-grid-gap-xxl);
-  --zx-grid-active-column-gap: var(--zx-grid-gap-xxl);
 }
 
 :host.zx-grid--align-start {
@@ -128,8 +120,24 @@
   align-items: stretch;
 }
 
+:host.zx-grid--justify-start {
+  justify-items: start;
+}
+
+:host.zx-grid--justify-center {
+  justify-items: center;
+}
+
+:host.zx-grid--justify-end {
+  justify-items: end;
+}
+
+:host.zx-grid--justify-stretch {
+  justify-items: stretch;
+}
+
 @include bp.media-breakpoint-down(lg) {
-  :host > * {
-    flex-basis: var(--zx-grid-column-1);
+  :host {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

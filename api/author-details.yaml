@@ -105,6 +105,21 @@ components:
         url:
           type: string
 
+    AuthorLocation:
+      type: object
+      required:
+        - city
+        - country
+      properties:
+        city:
+          allOf:
+            - $ref: '#/components/schemas/AuthorLocationItem'
+          nullable: true
+        country:
+          allOf:
+            - $ref: '#/components/schemas/AuthorLocationItem'
+          nullable: true
+
     AuthorGroup:
       type: object
       required:
@@ -275,9 +290,7 @@ components:
             type: string
             enum: [VIP, Volunteer]
         location:
-          type: array
-          items:
-            $ref: '#/components/schemas/AuthorLocationItem'
+          $ref: '#/components/schemas/AuthorLocation'
         groups:
           type: array
           items:

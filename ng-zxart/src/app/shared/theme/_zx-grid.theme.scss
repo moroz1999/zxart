@@ -1,16 +1,4 @@
 :root {
-  /* Full-width grid item basis. */
-  --zx-grid-column-1: 100%;
-  /* Two-column grid item basis. */
-  --zx-grid-column-2: calc((100% - var(--zx-grid-active-column-gap)) / 2);
-  /* Three-column grid item basis. */
-  --zx-grid-column-3: calc((100% - var(--zx-grid-active-column-gap) - var(--zx-grid-active-column-gap)) / 3);
-  /* Four-column grid item basis. */
-  --zx-grid-column-4: calc((100% - var(--zx-grid-active-column-gap) - var(--zx-grid-active-column-gap) - var(--zx-grid-active-column-gap)) / 4);
-  /* Five-column grid item basis. */
-  --zx-grid-column-5: calc((100% - var(--zx-grid-active-column-gap) - var(--zx-grid-active-column-gap) - var(--zx-grid-active-column-gap) - var(--zx-grid-active-column-gap)) / 5);
-  /* Six-column grid item basis. */
-  --zx-grid-column-6: calc((100% - var(--zx-grid-active-column-gap) - var(--zx-grid-active-column-gap) - var(--zx-grid-active-column-gap) - var(--zx-grid-active-column-gap) - var(--zx-grid-active-column-gap)) / 6);
   /* Empty grid gap. */
   --zx-grid-gap-none: 0;
   /* Extra-small grid gap. */

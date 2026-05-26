@@ -26,6 +26,7 @@ import {ZxProdDto} from '../../../../shared/models/zx-prod-dto';
 const DASHBOARD_PICS = 3;
 const DASHBOARD_TUNES = 10;
 const DASHBOARD_PRODS = 3;
+const DASHBOARD_EXPANDED_CARDS = 6;
 
 function authorProdToZxProd(dto: AuthorProdDto): ZxProd {
   const data: ZxProdDto = {
@@ -82,6 +83,9 @@ export class ZxAuthorMiniDashboardComponent implements OnInit {
   gfxHref = '';
   musicHref = '';
   softwareHref = '';
+  twoSectionLayout = false;
+  picturesColumns: '1' | '2' = '1';
+  prodsColumns: '1' | '2' = '1';
 
   constructor(
     private readonly picturesService: AuthorPicturesService,
@@ -96,8 +100,16 @@ export class ZxAuthorMiniDashboardComponent implements OnInit {
     this.musicHref = baseUrl + 'tab:music/';
     this.softwareHref = baseUrl + 'tab:software/';
 
+    const sectionCount = Number(this.tabs.hasPictures) + Number(this.tabs.hasTunes) + Number(this.tabs.hasProds);
+    this.twoSectionLayout = sectionCount === 2;
+    this.picturesColumns = this.twoSectionLayout && this.tabs.hasPictures ? '2' : '1';
+    this.prodsColumns = this.twoSectionLayout && this.tabs.hasProds ? '2' : '1';
+
+    const picturesLimit = this.picturesColumns === '2' ? DASHBOARD_EXPANDED_CARDS : DASHBOARD_PICS;
+    const prodsLimit = this.prodsColumns === '2' ? DASHBOARD_EXPANDED_CARDS : DASHBOARD_PRODS;
+
     const pics$ = this.tabs.hasPictures
-      ? this.picturesService.getPicturesPaged(this.elementId, 0, DASHBOARD_PICS, 'votes', 'desc').pipe(
+      ? this.picturesService.getPicturesPaged(this.elementId, 0, picturesLimit, 'votes', 'desc').pipe(
           catchError(() => of({items: [], total: 0, availableFormats: []})),
         )
       : of({items: [], total: 0, availableFormats: []});
@@ -109,7 +121,7 @@ export class ZxAuthorMiniDashboardComponent implements OnInit {
       : of({items: [], total: 0, availableFormats: []});
 
     const prods$ = this.tabs.hasProds
-      ? this.prodsService.getProds(this.elementId, 0, DASHBOARD_PRODS, 'votes', 'desc', '').pipe(
+      ? this.prodsService.getProds(this.elementId, 0, prodsLimit, 'votes', 'desc', '').pipe(
           catchError(() => of({items: [], total: 0, availableRoles: []})),
         )
       : of({items: [], total: 0, availableRoles: []});

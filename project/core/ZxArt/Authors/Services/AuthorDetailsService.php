@@ -15,6 +15,7 @@ use ZxArt\Authors\Dto\AuthorCoreDto;
 use ZxArt\Authors\Dto\AuthorCountersDto;
 use ZxArt\Authors\Dto\AuthorGroupDto;
 use ZxArt\Authors\Dto\AuthorLinkDto;
+use ZxArt\Authors\Dto\AuthorLocationDto;
 use ZxArt\Authors\Dto\AuthorLocationItemDto;
 use ZxArt\Authors\Dto\AuthorRatingsDto;
 use ZxArt\Authors\Dto\AuthorTabsDto;
@@ -118,26 +119,26 @@ readonly class AuthorDetailsService
         );
     }
 
-    /** @return AuthorLocationItemDto[] */
-    private function buildLocation(?authorElement $author): array
+    private function buildLocation(?authorElement $author): AuthorLocationDto
     {
         if (!$author instanceof authorElement) {
-            return [];
+            return new AuthorLocationDto(city: null, country: null);
         }
-        $items = [];
-        if ($countryElement = $author->getCountryElement()) {
-            $items[] = new AuthorLocationItemDto(
-                title: (string)$countryElement->title,
-                url: (string)$countryElement->getUrl(),
-            );
-        }
+        $city = null;
         if ($cityElement = $author->getCityElement()) {
-            $items[] = new AuthorLocationItemDto(
+            $city = new AuthorLocationItemDto(
                 title: (string)$cityElement->title,
                 url: (string)$cityElement->getUrl(),
             );
         }
-        return $items;
+        $country = null;
+        if ($countryElement = $author->getCountryElement()) {
+            $country = new AuthorLocationItemDto(
+                title: (string)$countryElement->title,
+                url: (string)$countryElement->getUrl(),
+            );
+        }
+        return new AuthorLocationDto(city: $city, country: $country);
     }
 
     /** @return AuthorGroupDto[] */

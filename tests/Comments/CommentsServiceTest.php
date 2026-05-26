@@ -85,13 +85,13 @@ class CommentsServiceTest extends TestCase
         $this->commentsRepository
             ->expects($this->once())
             ->method('getIdsByAuthorId')
-            ->with(7, 16, 16)
+            ->with(7, 10, 10)
             ->willReturn([]);
 
-        $result = $this->service->getAuthorCommentsPaginated(7, 2, null, 16);
+        $result = $this->service->getAuthorCommentsPaginated(7, 2, null, 10);
 
         $this->assertSame(2, $result->currentPage);
-        $this->assertSame(3, $result->pagesAmount);
+        $this->assertSame(4, $result->pagesAmount);
         $this->assertSame(40, $result->totalCount);
     }
 }

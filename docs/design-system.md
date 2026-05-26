@@ -45,7 +45,7 @@ All design system components are in `ng-zxart/src/app/shared/ui/`.
 - [zx-panel](design-system/zx-panel.md) — universal layout container
 - [zx-stack](design-system/zx-stack.md) — vertical flexbox layout container
 - [zx-inline](design-system/zx-inline.md) — horizontal flexbox layout container
-- [zx-grid](design-system/zx-grid.md) — flexbox-based grid layout container
+- [zx-grid](design-system/zx-grid.md) — CSS Grid-based layout container
 - [zx-inset](design-system/zx-inset.md) — restricted padding layout container
 - [zx-table](design-system/zx-table.md) — table wrapper with edge-to-edge rows
 - [zx-button](design-system/zx-button.md) — button with colors and sizes
