@@ -1,6 +1,6 @@
 /* Pictures column is locked to 320px - fits one picture (min 320px) per row. */
 .ap-dash__col--pix {
-  flex: 0 0 320px;
+  //flex: 0 0 320px;
 }
 
 /* Music column grows to fill remaining space between the two fixed columns. */
@@ -11,7 +11,7 @@
 
 /* Software section starts at one fixed-width product card. */
 .ap-dash__col--soft {
-  flex: 0 0 256px;
+  //flex: 0 0 256px;
 }
 
 .ap-dash__col--expanded {

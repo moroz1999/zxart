@@ -16,7 +16,7 @@ import {PictureGalleryService} from '../../../picture-gallery/services/picture-g
 import {PictureGalleryItem} from '../../../picture-gallery/models/picture-gallery-item';
 import {LightboxModule} from 'ng-gallery/lightbox';
 import {ProdScreenshotsApiService} from '../../services/prod-screenshots-api.service';
-import {ProdScreenshotMoveApiService} from '../../services/prod-screenshot-move-api.service';
+import {ScreenshotMoveApiService} from '../../services/screenshot-move-api.service';
 import {ProdFileDto} from '../../models/prod-file.dto';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
@@ -104,7 +104,7 @@ export class ZxProdScreenshotsSectionComponent {
 
   constructor(
     private readonly api: ProdScreenshotsApiService,
-    private readonly moveApi: ProdScreenshotMoveApiService,
+    private readonly moveApi: ScreenshotMoveApiService,
     private readonly elementPrivilegesApi: ElementPrivilegesApiService,
     private readonly gallery: PictureGalleryService,
     private readonly cdr: ChangeDetectorRef,
@@ -123,10 +123,10 @@ export class ZxProdScreenshotsSectionComponent {
     this.loading = true;
     forkJoin({
       files: this.api.getScreenshots(this.elementId),
-      privileges: this.elementPrivilegesApi.getPrivileges(this.elementId, ['showPublicForm']),
+      privileges: this.elementPrivilegesApi.getPrivileges(this.elementId, ['publicReceive']),
     }).subscribe(({files, privileges}) => {
       this.files = files;
-      this.canReorder = privileges['showPublicForm'] === true;
+      this.canReorder = privileges['publicReceive'] === true;
       this.loaded = true;
       this.loading = false;
       if (files.length) {

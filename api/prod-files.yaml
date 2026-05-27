@@ -117,7 +117,7 @@ paths:
 
   /prod-screenshot-move/:
     post:
-      summary: Move a prod screenshot left or right (requires publicReceive privilege)
+      summary: Move a prod or release screenshot left or right (requires publicReceive privilege)
       requestBody:
         required: true
         content:
@@ -131,7 +131,7 @@ paths:
               properties:
                 id:
                   type: integer
-                  description: Prod element ID
+                  description: Prod or release element ID
                 fileId:
                   type: integer
                   description: File element ID to move
@@ -150,7 +150,7 @@ paths:
         '403':
           description: Access denied
         '404':
-          description: Prod or file not found
+          description: Element or file not found
         '500':
           description: Internal server error
 

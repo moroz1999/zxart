@@ -11,19 +11,18 @@ use Override;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
 use ZxArt\Prods\Exception\ProdDetailsException;
-use ZxArt\Prods\ProdScreenshotMoveService;
 use ZxArt\Prods\Rest\ProdFilesRestDto;
+use ZxArt\Prods\ScreenshotMoveDirection;
+use ZxArt\Prods\ScreenshotMoveService;
 
 final class ProdScreenshotMove extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 
-    private const array ALLOWED_DIRECTIONS = ['left', 'right'];
-
     public function __construct(
         controller $controller,
         Logger $logger,
-        private readonly ProdScreenshotMoveService $prodScreenshotMoveService,
+        private readonly ScreenshotMoveService $screenshotMoveService,
         private readonly ObjectMapper $objectMapper,
     ) {
         parent::__construct($controller, $logger);
@@ -41,13 +40,13 @@ final class ProdScreenshotMove extends LoggedControllerApplication
     {
         try {
             [$elementId, $fileId, $direction] = $this->getValidatedParams();
-            $dto = $this->prodScreenshotMoveService->move($elementId, $fileId, $direction);
+            $dto = $this->screenshotMoveService->move($elementId, $fileId, $direction);
             $this->renderer->assign('body', $this->objectMapper->map($dto, ProdFilesRestDto::class));
-        } catch (ProdDetailsException $e) {
-            $this->logThrowable('ProdScreenshotMove::execute', $e);
-            $this->assignError($e->getMessage(), $e->getStatusCode());
-        } catch (Throwable $e) {
-            $this->logThrowable('ProdScreenshotMove::execute', $e);
+        } catch (ProdDetailsException $exception) {
+            $this->logThrowable('ProdScreenshotMove::execute', $exception);
+            $this->assignError($exception->getMessage(), $exception->getStatusCode());
+        } catch (Throwable $exception) {
+            $this->logThrowable('ProdScreenshotMove::execute', $exception);
             $this->assignError('Internal server error');
         }
 
@@ -55,7 +54,7 @@ final class ProdScreenshotMove extends LoggedControllerApplication
     }
 
     /**
-     * @return array{int, int, string}
+     * @return array{int, int, ScreenshotMoveDirection}
      */
     private function getValidatedParams(): array
     {
@@ -69,8 +68,8 @@ final class ProdScreenshotMove extends LoggedControllerApplication
             throw new ProdDetailsException('Missing required parameter: fileId', 400);
         }
 
-        $direction = (string)($this->getParameter('direction') ?? '');
-        if (!in_array($direction, self::ALLOWED_DIRECTIONS, true)) {
+        $direction = ScreenshotMoveDirection::tryFrom((string)($this->getParameter('direction') ?? ''));
+        if ($direction === null) {
             throw new ProdDetailsException('Invalid direction, expected left or right', 400);
         }
 

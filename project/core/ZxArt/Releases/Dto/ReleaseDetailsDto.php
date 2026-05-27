@@ -72,6 +72,7 @@ readonly class ReleaseDetailsDto
         public array $fileStructure,
         public bool $canUploadScreenshot,
         public string $screenshotUploadUrl,
+        public bool $canReorderScreenshots,
     ) {
     }
 }

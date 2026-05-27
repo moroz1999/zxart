@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding, Input, OnInit} from '@angular/core';
 import {AsyncPipe, CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable} from 'rxjs';
@@ -47,6 +47,11 @@ export class ZxPictureCardComponent implements OnInit {
     this.imageUrl$ = this.pictureSettingsService.settings.pipe(
       map(settings => this.pictureUrlBuilderService.buildUrl(this.picture, settings, 1)),
     );
+  }
+
+  @HostBinding('class.zx-picture-card--no-border')
+  get noBorderClass(): boolean {
+    return !this.pictureSettingsService.currentSettings.border;
   }
 
   get medalClass(): string | null {

@@ -114,6 +114,7 @@ Software production for ZX Spectrum - games, demos, utilities and other software
 - Prod details core data must include author/group aliases when they are stored directly in authorship, publishers, or developer group links.
 - Product description loading state renders one paragraph skeleton with three thin ribs.
 - Emulator screenshots launched from prod details release rows are uploaded to the parent prod. The `uploadScreenshot` privilege must be requested once for the prod element and reused by all release play buttons.
+- Screenshot ordering for prods and releases uses the shared `/prod-screenshot-move/` operation; the historical prod URL is retained for client compatibility, while the operation checks `publicReceive` on the target element and reorders its appropriate file link collection.
 
 ### Release Label Pipe
 - `ProdReleaseLabelPipe` (`features/prod-details/pipes/prod-release-label.pipe.ts`) formats a release reference into a display string: `Release Title (Publisher, Type, Year)`. Any of the optional fields (year, type label, publishers) can be omitted.

@@ -1,5 +1,19 @@
+@use 'shared/breakpoints' as bp;
+
 :host {
   display: block;
+  width: var(--zx-picture-card-width-border);
+}
+
+:host(.zx-picture-card--no-border) {
+  width: var(--zx-picture-card-width-no-border);
+}
+
+@include bp.media-breakpoint-down(sm) {
+  :host,
+  :host(.zx-picture-card--no-border) {
+    width: 100%;
+  }
 }
 
 .picture-image {

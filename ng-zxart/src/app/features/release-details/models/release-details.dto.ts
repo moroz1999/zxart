@@ -80,4 +80,5 @@ export interface ReleaseDetailsDto {
   fileStructure: ReleaseFileStructureItemDto[];
   canUploadScreenshot: boolean;
   screenshotUploadUrl: string;
+  canReorderScreenshots: boolean;
 }

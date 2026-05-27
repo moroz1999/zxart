@@ -57,6 +57,11 @@ readonly class ReleaseDetailsService
             'uploadScreenshot',
             StructureType::ZxRelease->value,
         ) === true;
+        $canReorderScreenshots = $this->privilegesManager->checkPrivilegesForAction(
+            $release->getId(),
+            'publicReceive',
+            StructureType::ZxRelease->value,
+        ) === true;
 
         $screenshots = $this->prodMediaService->buildReleaseScreenshots($release);
         $inlays = $this->prodMediaService->buildReleaseInlays($release);
@@ -108,6 +113,7 @@ readonly class ReleaseDetailsService
             fileStructure: $fileStructure,
             canUploadScreenshot: $canUploadScreenshot,
             screenshotUploadUrl: $releaseUrl . 'id:' . $release->getId() . '/action:uploadScreenshot/',
+            canReorderScreenshots: $canReorderScreenshots,
         );
     }
 

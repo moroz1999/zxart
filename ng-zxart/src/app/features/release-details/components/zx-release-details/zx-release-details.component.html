@@ -18,7 +18,9 @@
 
     <zx-release-screenshots-section
       *ngIf="details.tabs.hasScreenshots"
-      [screenshots]="details.screenshots">
+      [elementId]="details.id"
+      [screenshots]="details.screenshots"
+      [canReorder]="details.canReorderScreenshots">
     </zx-release-screenshots-section>
 
     <zx-release-inlays-section

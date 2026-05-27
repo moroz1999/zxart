@@ -1,14 +1,14 @@
 <section>
   <zx-release-section-head
     titleKey="release-details.screenshots"
-    [count]="screenshots.length">
+    [count]="files.length">
   </zx-release-section-head>
 
   <zx-picture-gallery-host></zx-picture-gallery-host>
 
   <div class="release-screenshots-section__grid">
     <figure
-      *ngFor="let file of screenshots; let i = index; trackBy: trackById"
+      *ngFor="let file of files; let i = index; trackBy: trackById"
       class="release-screenshots-section__item"
     >
       <div class="release-screenshots-section__thumb-wrap">
@@ -22,6 +22,22 @@
           [gallery]="galleryId"
         />
         <div class="release-screenshots-section__controls">
+          <ng-container *ngIf="canReorder">
+            <zx-button
+              size="xs"
+              color="secondary"
+              [disabled]="moving || isFirst(file)"
+              (click)="onMove(file, 'left')"
+              [attr.aria-label]="'prod-details.screenshot-move-left' | translate"
+            ><svg-icon name="skip-previous" class="release-screenshots-section__btn-icon"></svg-icon></zx-button>
+            <zx-button
+              size="xs"
+              color="secondary"
+              [disabled]="moving || isLast(file)"
+              (click)="onMove(file, 'right')"
+              [attr.aria-label]="'prod-details.screenshot-move-right' | translate"
+            ><svg-icon name="skip-next" class="release-screenshots-section__btn-icon"></svg-icon></zx-button>
+          </ng-container>
           <zx-button
             size="xs"
             color="secondary"

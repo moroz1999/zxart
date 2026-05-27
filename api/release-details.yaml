@@ -88,6 +88,9 @@ components:
         - votes
         - tabs
         - fileStructure
+        - canUploadScreenshot
+        - screenshotUploadUrl
+        - canReorderScreenshots
       properties:
         id:
           type: integer
@@ -181,6 +184,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ReleaseFileStructureItem'
+        canUploadScreenshot:
+          type: boolean
+        screenshotUploadUrl:
+          type: string
+        canReorderScreenshots:
+          type: boolean
 
     ReleaseProdRef:
       type: object

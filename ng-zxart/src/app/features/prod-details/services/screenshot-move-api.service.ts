@@ -5,7 +5,7 @@ import {catchError, map} from 'rxjs/operators';
 import {ProdFileDto, ProdFilesPayload} from '../models/prod-file.dto';
 
 @Injectable({providedIn: 'root'})
-export class ProdScreenshotMoveApiService {
+export class ScreenshotMoveApiService {
   constructor(private readonly http: HttpClient) {}
 
   move(elementId: number, fileId: number, direction: 'left' | 'right'): Observable<ProdFileDto[] | null> {
