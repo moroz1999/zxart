@@ -28,7 +28,7 @@
 <td class="tune-year" appText="label" tone="muted">{{ tune.year }}</td>
 <td class="tune-party" appText="label" tone="muted">
   <ng-container *ngIf="tune.party">
-    <span *ngIf="medalClass" [class]="medalClass" class="medal">{{ tune.party.place }}</span>
+    <zx-party-place [place]="tune.party.place"></zx-party-place>
     <a [href]="tune.party.url" appText="label" tone="muted-link">{{ tune.party.title }}</a>
   </ng-container>
   <div *ngIf="tune.release" class="tune-release">

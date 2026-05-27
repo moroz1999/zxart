@@ -59,6 +59,11 @@ td {
   overflow: hidden;
   text-overflow: ellipsis;
 
+  zx-party-place {
+    margin-right: var(--space-4);
+    vertical-align: middle;
+  }
+
   a {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -70,30 +75,6 @@ td {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.medal {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--zx-medal-size);
-  height: var(--zx-medal-size);
-  border-radius: 50%;
-  font-weight: 700;
-  color: var(--zx-medal-text-color);
-  margin-right: var(--space-4);
-}
-
-.medal-gold {
-  background: var(--zx-medal-gold-bg);
-}
-
-.medal-silver {
-  background: var(--zx-medal-silver-bg);
-}
-
-.medal-bronze {
-  background: var(--zx-medal-bronze-bg);
 }
 
 .tune-stats {

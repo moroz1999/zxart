@@ -53,7 +53,14 @@ export class UspEngine implements EmulatorEngine {
       canvas: this.canvas ?? undefined,
       locateFile: (file: string) => LIB_BASE + file,
       onReady,
+      onRuntimeInitialized: function () {
+        setTimeout(function () {
+          window.dispatchEvent(new Event('resize'));
+          console.log('USP WASM ready');
+        }, 10);
+      }
     };
+
     window.Module = config as EmscriptenModule;
   }
 

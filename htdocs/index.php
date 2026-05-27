@@ -1,14 +1,19 @@
 <?php
 declare(strict_types=1);
 
+use ZxArt\Exception\CrawlerBlockedException;
 use ZxArt\IpBan\RequestGuard;
 
 define('PUBLIC_PATH', __DIR__ . '/');
 define('ROOT_PATH', __DIR__ . '/../');
-//include_once(ROOT_PATH . 'vendor/artweb-ou/trickster-cms/cms/core/controller.class.php');
 include_once(ROOT_PATH . 'trickster-cms/cms/core/controller.class.php');
 $controller = controller::getInstance(ROOT_PATH . 'project/config/');
-$app = $controller->getApplication();
+try {
+    $app = $controller->getApplication();
+} catch (CrawlerBlockedException $e) {
+    http_response_code(403);
+    exit;
+}
 if (!$app) {
     echo 'Application not found';
     exit;

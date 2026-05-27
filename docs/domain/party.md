@@ -50,6 +50,13 @@ Works within each compo are sorted by:
 
 Sort key format: `{partyplace}_{id}`
 
+#### Angular Party Place Display
+- Party place numbers are rendered through shared-lib `zx-party-place`.
+- `zx-party-place` uses the design system `zx-medal` primitive.
+- Places 1, 2, and 3 use gold, silver, and bronze medal variants.
+- Any place greater than 3 is still shown and uses the outlined medal variant.
+- Place 0 or null is not shown.
+
 #### Grouping by Compo
 If work has no compo specified, it goes to group `'none'`
 

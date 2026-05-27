@@ -59,7 +59,7 @@
       <span class="hero-people__label">{{ 'prod-details.party' | translate }}:</span>
       <a [href]="party.url" class="hero-people__link">{{ party.title }}</a>
       <ng-container *ngIf="party.compoLabel">
-        (<ng-container *ngIf="party.place != null">{{ party.place }}, </ng-container>{{ party.compoLabel }})
+        (<zx-party-place [place]="party.place"></zx-party-place><ng-container *ngIf="party.place && party.place > 0">, </ng-container>{{ party.compoLabel }})
       </ng-container>
     </ng-container>
   </zx-inline>

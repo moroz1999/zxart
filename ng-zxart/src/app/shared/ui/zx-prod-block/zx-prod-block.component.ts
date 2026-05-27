@@ -28,6 +28,7 @@ import {ZxInlineComponent} from '../zx-inline/zx-inline.component';
 import {ZxStackComponent} from '../zx-stack/zx-stack.component';
 import {HeadingDirective} from '../typography/directives/heading.directive';
 import {TextDirective} from '../typography/directives/text.directive';
+import {ZxPartyPlaceComponent} from '../../lib/zx-party-place/zx-party-place.component';
 
 @Component({
   selector: 'zx-prod-block',
@@ -53,6 +54,7 @@ import {TextDirective} from '../typography/directives/text.directive';
     ZxStackComponent,
     HeadingDirective,
     TextDirective,
+    ZxPartyPlaceComponent,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,

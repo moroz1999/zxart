@@ -78,27 +78,6 @@
   text-overflow: ellipsis;
 }
 
-.medal {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--zx-medal-size);
-  height: var(--zx-medal-size);
-  border-radius: 50%;
-}
-
-.medal-gold {
-  background: var(--zx-medal-gold-bg);
-}
-
-.medal-silver {
-  background: var(--zx-medal-silver-bg);
-}
-
-.medal-bronze {
-  background: var(--zx-medal-bronze-bg);
-}
-
 .picture-year {
   flex-shrink: 0;
 }

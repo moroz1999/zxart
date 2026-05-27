@@ -9,7 +9,7 @@ class printApplication extends controllerApplication
     {
         $this->createRenderer();
         if ($this->isCrawlerDetected()){
-            throw new RuntimeException('');
+            throw new \ZxArt\Exception\CrawlerBlockedException();
         }
     }
 

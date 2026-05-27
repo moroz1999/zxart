@@ -1,11 +1,26 @@
 :root {
+  /* Fixed medal circle size. */
   --zx-medal-size: 20px;
-  --zx-medal-text-color: var(--background-deep);
+  /* Fully rounded medal shape. */
+  --zx-medal-radius: 50%;
+  /* Strong number weight inside the medal. */
+  --zx-medal-font-weight: 700;
+  /* Text color for podium medals. */
+  --zx-medal-podium-text: var(--background-deep);
+  /* Gold medal background. */
   --zx-medal-gold-bg: var(--warning-400);
+  /* Silver medal background. */
   --zx-medal-silver-bg: var(--secondary-500);
+  /* Bronze medal background. */
   --zx-medal-bronze-bg: var(--warning-700);
+  /* Text color for non-podium outlined medals. */
+  --zx-medal-outlined-text: var(--text-color);
+  /* Border color for non-podium outlined medals. */
+  --zx-medal-outlined-border: var(--border-secondary);
+  /* Border width for non-podium outlined medals. */
+  --zx-medal-outlined-border-width: var(--border-width-thin);
 }
 
 .light-mode {
-  --zx-medal-text-color: var(--white);
+  --zx-medal-podium-text: var(--white);
 }

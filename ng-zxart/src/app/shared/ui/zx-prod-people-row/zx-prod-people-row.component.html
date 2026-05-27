@@ -28,7 +28,7 @@
     <span class="prod-people-row__label" appText="label" tone="strong">{{ 'prod-details.party' | translate }}:</span>
     <a [href]="p.url" class="prod-people-row__link">{{ p.title }}</a>
     <ng-container *ngIf="p.compoLabel">
-      (<ng-container *ngIf="p.place != null">{{ p.place }}, </ng-container>{{ p.compoLabel }})
+      (<zx-party-place [place]="p.place"></zx-party-place><ng-container *ngIf="p.place && p.place > 0">, </ng-container>{{ p.compoLabel }})
     </ng-container>
   </ng-container>
 </zx-inline>

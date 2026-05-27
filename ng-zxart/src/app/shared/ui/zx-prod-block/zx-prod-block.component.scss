@@ -139,6 +139,11 @@ $fixedHeight: 192px;
   min-width: 0;
 }
 
+.zx-prod-title-row {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
 .zx-prod-cart {
   flex-shrink: 0;
 
@@ -172,4 +177,3 @@ $fixedHeight: 192px;
     border-bottom: 0;
   }
 }
-

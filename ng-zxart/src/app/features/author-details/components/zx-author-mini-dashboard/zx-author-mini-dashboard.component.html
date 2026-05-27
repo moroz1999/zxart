@@ -1,3 +1,4 @@
+<zx-picture-gallery-host></zx-picture-gallery-host>
 <zx-panel
   *ngIf="!requested"
   [appInViewport]="!requested"
@@ -8,12 +9,12 @@
   <zx-stack spacing="md">
     <zx-picture-grid-skeleton
       *ngIf="tabs.hasPictures"
-      [count]="twoSectionLayout ? 4 : 2">
+      [count]="expandedCardsLayout ? 4 : 2">
     </zx-picture-grid-skeleton>
     <zx-tune-table-skeleton *ngIf="tabs.hasTunes" [count]="10"></zx-tune-table-skeleton>
     <zx-prods-list-skeleton
       *ngIf="tabs.hasProds"
-      [count]="twoSectionLayout ? 4 : 2">
+      [count]="expandedCardsLayout ? 4 : 2">
     </zx-prods-list-skeleton>
   </zx-stack>
 </zx-panel>
@@ -24,12 +25,12 @@
     <zx-stack spacing="md">
       <zx-picture-grid-skeleton
         *ngIf="tabs.hasPictures"
-        [count]="twoSectionLayout ? 4 : 2">
+        [count]="expandedCardsLayout ? 4 : 2">
       </zx-picture-grid-skeleton>
       <zx-tune-table-skeleton *ngIf="tabs.hasTunes" [count]="10"></zx-tune-table-skeleton>
       <zx-prods-list-skeleton
         *ngIf="tabs.hasProds"
-        [count]="twoSectionLayout ? 4 : 2">
+        [count]="expandedCardsLayout ? 4 : 2">
       </zx-prods-list-skeleton>
     </zx-stack>
     </zx-panel>
@@ -49,7 +50,7 @@
         radius="lg"
         padding="sm"
         class="ap-dash__col--pix"
-        [class.ap-dash__col--expanded]="twoSectionLayout">
+        [class.ap-dash__col--expanded]="expandedCardsLayout">
         <zx-stack gap="sm">
           <zx-inset padding="xs" side="block">
             <zx-inline gap="sm" align="center">
@@ -58,14 +59,24 @@
               <zx-button size="xs" color="outlined" [href]="gfxHref">{{ 'author-details.dashboard.all' | translate }}</zx-button>
             </zx-inline>
           </zx-inset>
-          <zx-grid [columns]="picturesColumns" gap="sm">
+          <div *ngIf="expandedCardsLayout && !twoSectionLayout; else compactPicturesGrid" zxPicturesGrid>
             <zx-picture-card
               *ngFor="let picture of data.pictures; let pi = index"
               [picture]="picture"
               [galleryId]="'dashboard-' + elementId"
               [galleryIndex]="pi">
             </zx-picture-card>
-          </zx-grid>
+          </div>
+          <ng-template #compactPicturesGrid>
+            <zx-grid [columns]="picturesColumns" gap="sm">
+              <zx-picture-card
+                *ngFor="let picture of data.pictures; let pi = index"
+                [picture]="picture"
+                [galleryId]="'dashboard-' + elementId"
+                [galleryIndex]="pi">
+              </zx-picture-card>
+            </zx-grid>
+          </ng-template>
         </zx-stack>
       </zx-panel>
 
@@ -99,20 +110,19 @@
 
       <zx-panel
         *ngIf="data.prods.length > 0"
+        variant="flat"
         [topStripe]="'coder'"
         radius="lg"
         padding="sm"
         class="ap-dash__col--soft"
-        [class.ap-dash__col--expanded]="twoSectionLayout">
+        [class.ap-dash__col--expanded]="expandedCardsLayout">
         <zx-stack gap="sm">
-          <zx-inset padding="sm">
-            <zx-inset padding="xs" side="block">
-              <zx-inline gap="sm" align="center">
-                <svg-icon name="gamepad" class="ap-dash__col-icon ap-dash__col-icon--soft" aria-hidden="true"></svg-icon>
-                <span appText="label" tone="strong">{{ 'author-details.dashboard.software' | translate }}</span>
-                <zx-button size="xs" color="outlined" [href]="softwareHref">{{ 'author-details.dashboard.all' | translate }}</zx-button>
-              </zx-inline>
-            </zx-inset>
+          <zx-inset padding="xs" side="block">
+            <zx-inline gap="sm" align="center">
+              <svg-icon name="gamepad" class="ap-dash__col-icon ap-dash__col-icon--soft" aria-hidden="true"></svg-icon>
+              <span appText="label" tone="strong">{{ 'author-details.dashboard.software' | translate }}</span>
+              <zx-button size="xs" color="outlined" [href]="softwareHref">{{ 'author-details.dashboard.all' | translate }}</zx-button>
+            </zx-inline>
           </zx-inset>
           <div zxProdsGrid>
             <zx-prod-block

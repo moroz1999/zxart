@@ -1,0 +1,30 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--zx-medal-size);
+  height: var(--zx-medal-size);
+  border-radius: var(--zx-medal-radius);
+  font-weight: var(--zx-medal-font-weight);
+  box-sizing: border-box;
+}
+
+:host(.zx-medal--gold) {
+  color: var(--zx-medal-podium-text);
+  background: var(--zx-medal-gold-bg);
+}
+
+:host(.zx-medal--silver) {
+  color: var(--zx-medal-podium-text);
+  background: var(--zx-medal-silver-bg);
+}
+
+:host(.zx-medal--bronze) {
+  color: var(--zx-medal-podium-text);
+  background: var(--zx-medal-bronze-bg);
+}
+
+:host(.zx-medal--outlined) {
+  color: var(--zx-medal-outlined-text);
+  border: var(--zx-medal-outlined-border-width) solid var(--zx-medal-outlined-border);
+}

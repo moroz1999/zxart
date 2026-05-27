@@ -26,8 +26,8 @@
   display: block;
   max-width: 100%;
   max-height: 100%;
-  width: auto;
-  height: auto;
+  width: auto !important;
+  height: auto !important;;
   image-rendering: pixelated;
   outline: none;
 }

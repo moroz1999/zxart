@@ -19,6 +19,7 @@ import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.comp
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {TextDirective} from '../typography/directives/text.directive';
 import {environment} from '../../../../environments/environment';
+import {ZxPartyPlaceComponent} from '../../lib/zx-party-place/zx-party-place.component';
 
 @Component({
   selector: 'zx-tune-row',
@@ -31,6 +32,7 @@ import {environment} from '../../../../environments/environment';
     ZxBadgeComponent,
     ZxItemControlsComponent,
     TextDirective,
+    ZxPartyPlaceComponent,
   ],
   templateUrl: './zx-tune-row.component.html',
   styleUrls: ['./zx-tune-row.component.scss'],
@@ -67,16 +69,6 @@ export class ZxTuneRowComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.labelSub?.unsubscribe();
-  }
-
-  get medalClass(): string | null {
-    if (!this.tune.party?.place) return null;
-    switch (this.tune.party.place) {
-      case 1: return 'medal-gold';
-      case 2: return 'medal-silver';
-      case 3: return 'medal-bronze';
-      default: return null;
-    }
   }
 
   requestPlay(): void {

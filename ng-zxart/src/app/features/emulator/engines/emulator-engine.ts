@@ -25,6 +25,7 @@ export interface EmscriptenModule extends EmscriptenModuleConfig {
   setCanvasSize?: (width: number, height: number) => void;
   pauseMainLoop?: () => void;
   resumeMainLoop?: () => void;
+  onRuntimeInitialized: () => void;
 }
 
 declare global {

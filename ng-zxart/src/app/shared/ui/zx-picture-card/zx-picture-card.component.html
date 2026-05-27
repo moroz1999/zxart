@@ -26,7 +26,7 @@
       </ng-container>
     </div>
     <div class="picture-party" *ngIf="picture.party">
-      <span *ngIf="medalClass" [class]="medalClass" class="medal" appText="caption" tone="inherit">{{ picture.party.place }}</span>
+      <zx-party-place [place]="picture.party.place"></zx-party-place>
       <a [href]="picture.party.url" appText="caption" tone="muted-link">{{ picture.party.title }}</a>
     </div>
     <div class="picture-bottom">

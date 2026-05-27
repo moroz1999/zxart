@@ -4,6 +4,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {ZxInlineComponent} from '../zx-inline/zx-inline.component';
 import {TextDirective} from '../typography/directives/text.directive';
 import {ProdAuthorInfoDto, ProdGroupRefDto, ProdPartyInfoDto} from '../../../features/prod-details/models/prod-core.dto';
+import {ZxPartyPlaceComponent} from '../../lib/zx-party-place/zx-party-place.component';
 
 interface ProdAuthorRoleGroup {
   role: string | null;
@@ -22,7 +23,7 @@ const PRIORITY_AUTHOR_ROLES = [
 @Component({
   selector: 'zx-prod-people-row',
   standalone: true,
-  imports: [CommonModule, TranslateModule, ZxInlineComponent, TextDirective],
+  imports: [CommonModule, TranslateModule, ZxInlineComponent, TextDirective, ZxPartyPlaceComponent],
   templateUrl: './zx-prod-people-row.component.html',
   styleUrl: './zx-prod-people-row.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

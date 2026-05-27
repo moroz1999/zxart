@@ -22,10 +22,13 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 import {ZxProd} from '../../../../shared/models/zx-prod';
 import {environment} from '../../../../../environments/environment';
 import {ZxProdsGridDirective} from '../../../../shared/directives/prods-grid.directive';
+import {ZxPicturesGridDirective} from '../../../../shared/directives/pictures-grid.directive';
 import {ZxPictureGridSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
 import {ZxTuneTableSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-tune-table-skeleton/zx-tune-table-skeleton.component';
 import {ZxProdsListSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-prods-list-skeleton/zx-prods-list-skeleton.component';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
+import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
+import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 
 
 @Component({
@@ -47,10 +50,12 @@ import {InViewportDirective} from '../../../../shared/directives/in-viewport.dir
     SvgIconComponent,
     TextDirective,
     ZxProdsGridDirective,
+    ZxPicturesGridDirective,
     ZxPictureGridSkeletonComponent,
     ZxTuneTableSkeletonComponent,
     ZxProdsListSkeletonComponent,
     InViewportDirective,
+    PictureGalleryHostComponent,
   ],
   templateUrl: './zx-author-mini-dashboard.component.html',
   styleUrl: './zx-author-mini-dashboard.component.scss',
@@ -72,6 +77,7 @@ export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges, OnDest
   musicHref = '';
   softwareHref = '';
   twoSectionLayout = false;
+  expandedCardsLayout = false;
   picturesColumns: '1' | '2' = '1';
   requested = false;
 
@@ -80,6 +86,7 @@ export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges, OnDest
     private readonly playerService: PlayerService,
     private readonly iconReg: SvgIconRegistryService,
     private readonly cdr: ChangeDetectorRef,
+    private readonly pictureGalleryService: PictureGalleryService,
   ) {
     this.data$ = this.dashboardService.data$;
   }
@@ -92,6 +99,9 @@ export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges, OnDest
     this.subscriptions.add(
       this.data$.subscribe(data => {
         this.dashboardTunes = data.tunes;
+        if (!data.loading && data.pictures.length > 0) {
+          this.pictureGalleryService.ensureGalleryLoaded(`dashboard-${this.elementId}`, data.pictures);
+        }
       }),
     );
     this.subscriptions.add(
@@ -123,6 +133,7 @@ export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges, OnDest
 
     const sectionCount = Number(this.tabs.hasPictures) + Number(this.tabs.hasTunes) + Number(this.tabs.hasProds);
     this.twoSectionLayout = sectionCount === 2;
+    this.expandedCardsLayout = sectionCount <= 2;
     this.picturesColumns = this.twoSectionLayout && this.tabs.hasPictures ? '2' : '1';
 
     if (this.requested) {

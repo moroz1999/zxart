@@ -11,6 +11,7 @@ import {LightboxModule} from 'ng-gallery/lightbox';
 import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.component';
 import {PictureSettingsService} from '../../../features/picture-settings/services/picture-settings.service';
 import {PictureUrlBuilderService} from '../../services/picture-url-builder.service';
+import {ZxPartyPlaceComponent} from '../../lib/zx-party-place/zx-party-place.component';
 
 @Component({
   selector: 'zx-picture-card',
@@ -24,6 +25,7 @@ import {PictureUrlBuilderService} from '../../services/picture-url-builder.servi
     TextDirective,
     LightboxModule,
     ZxItemControlsComponent,
+    ZxPartyPlaceComponent,
   ],
   templateUrl: './zx-picture-card.component.html',
   styleUrls: ['./zx-picture-card.component.scss'],
@@ -54,13 +56,4 @@ export class ZxPictureCardComponent implements OnInit {
     return !this.pictureSettingsService.currentSettings.border;
   }
 
-  get medalClass(): string | null {
-    if (!this.picture.party?.place) return null;
-    switch (this.picture.party.place) {
-      case 1: return 'medal-gold';
-      case 2: return 'medal-silver';
-      case 3: return 'medal-bronze';
-      default: return null;
-    }
-  }
 }

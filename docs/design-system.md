@@ -63,6 +63,7 @@ All design system components are in `ng-zxart/src/app/shared/ui/`.
 - [zx-item-data](design-system/zx-item-data.md) — grouped key-value information panel
 - [zx-editing-controls](design-system/zx-editing-controls.md) — privilege-gated legacy action buttons
 - [zx-release-type-badge](design-system/zx-release-type-badge.md) — compact colored release type badge
+- [zx-medal](design-system/zx-medal.md) — compact circular placement badge
 - `zx-prod-block` — product block used by `zx-prods-list` for prod grids and related prod lists
 - [zxProdsGrid](design-system/zx-prods-grid.md) — fixed-width product card grid layout directive
 - [zxPicturesGrid](design-system/zx-pictures-grid.md) — responsive picture grid layout directive

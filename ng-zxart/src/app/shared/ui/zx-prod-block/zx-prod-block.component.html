@@ -78,7 +78,10 @@
     <zx-inset padding="lg">
       <zx-stack spacing="md">
       <zx-inline gap="sm" align="center" justify="between">
-        <a class="zx-prod-title" appHeading="title" [truncate]="true" href="{{ model.url }}">{{ model.title }}</a>
+        <zx-inline class="zx-prod-title-row" gap="sm" align="center">
+          <a class="zx-prod-title" appHeading="title" [truncate]="true" href="{{ model.url }}">{{ model.title }}</a>
+          <zx-party-place [place]="model.partyPlace"></zx-party-place>
+        </zx-inline>
         <zx-button
           class="zx-prod-cart"
           [href]="model.externalLink"
@@ -189,10 +192,10 @@
         <zx-inset class="zx-prod-row" side="block" padding="md" *ngIf="model.partyInfo">
           <zx-inline gap="lg" align="baseline" justify="between">
           <span appText="label" tone="muted">{{ "zx-prod.parties" | translate }}</span>
-          <span appText="label">
-            <span *ngIf="model.partyPlace > 0">{{ model.partyPlace }}{{ "zx-prod.at" | translate }}</span>
+          <zx-inline gap="xs" align="center" appText="label">
+            <zx-party-place [place]="model.partyPlace"></zx-party-place>
             <a appText="label" tone="link" [href]="model.partyInfo.url">{{ model.partyInfo.title }}</a>
-          </span>
+          </zx-inline>
           </zx-inline>
         </zx-inset>
         </zx-stack>

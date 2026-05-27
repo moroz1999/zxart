@@ -32,10 +32,11 @@ export class AuthorMiniDashboardService {
   readonly data$: Observable<AuthorMiniDashboardData> = this.contextStore.pipe(
     filter((context): context is AuthorMiniDashboardContext => context !== null),
     switchMap(context => {
-      const twoSectionLayout =
-        Number(context.tabs.hasPictures) + Number(context.tabs.hasTunes) + Number(context.tabs.hasProds) === 2;
-      const picturesLimit = twoSectionLayout && context.tabs.hasPictures ? DASHBOARD_EXPANDED_CARDS : DASHBOARD_PICS;
-      const prodsLimit = twoSectionLayout && context.tabs.hasProds ? DASHBOARD_EXPANDED_CARDS : DASHBOARD_PRODS;
+      const sectionCount =
+        Number(context.tabs.hasPictures) + Number(context.tabs.hasTunes) + Number(context.tabs.hasProds);
+      const expandedCardsLayout = sectionCount <= 2;
+      const picturesLimit = expandedCardsLayout && context.tabs.hasPictures ? DASHBOARD_EXPANDED_CARDS : DASHBOARD_PICS;
+      const prodsLimit = expandedCardsLayout && context.tabs.hasProds ? DASHBOARD_EXPANDED_CARDS : DASHBOARD_PRODS;
 
       const pictures$ = context.tabs.hasPictures
         ? this.picturesService.getPicturesPaged(context.elementId, 0, picturesLimit, 'votes', 'desc')
