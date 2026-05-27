@@ -8,12 +8,12 @@
   <zx-stack spacing="md">
     <zx-picture-grid-skeleton
       *ngIf="tabs.hasPictures"
-      [count]="twoSectionLayout ? 6 : 3">
+      [count]="twoSectionLayout ? 4 : 2">
     </zx-picture-grid-skeleton>
     <zx-tune-table-skeleton *ngIf="tabs.hasTunes" [count]="10"></zx-tune-table-skeleton>
     <zx-prods-list-skeleton
       *ngIf="tabs.hasProds"
-      [count]="twoSectionLayout ? 6 : 3">
+      [count]="twoSectionLayout ? 4 : 2">
     </zx-prods-list-skeleton>
   </zx-stack>
 </zx-panel>
@@ -24,12 +24,12 @@
     <zx-stack spacing="md">
       <zx-picture-grid-skeleton
         *ngIf="tabs.hasPictures"
-        [count]="twoSectionLayout ? 6 : 3">
+        [count]="twoSectionLayout ? 4 : 2">
       </zx-picture-grid-skeleton>
       <zx-tune-table-skeleton *ngIf="tabs.hasTunes" [count]="10"></zx-tune-table-skeleton>
       <zx-prods-list-skeleton
         *ngIf="tabs.hasProds"
-        [count]="twoSectionLayout ? 6 : 3">
+        [count]="twoSectionLayout ? 4 : 2">
       </zx-prods-list-skeleton>
     </zx-stack>
     </zx-panel>

@@ -2,11 +2,6 @@
   display: block;
 }
 
-.author-details__activity-column {
-  flex: 1 1 0;
-  min-width: 0;
-}
-
 .author-details-skeleton__avatar {
   width: var(--zx-author-details-skeleton-avatar-size);
   height: var(--zx-author-details-skeleton-avatar-size);

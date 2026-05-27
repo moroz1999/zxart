@@ -67,17 +67,17 @@ readonly class TunesService
     }
 
     /**
-     * @return array{items: TuneDto[], total: int, availableFormats: string[]}
+     * @return array{items: TuneDto[], total: int, availableFormatGroups: string[]}
      */
-    public function getByAuthorPaged(int $authorId, int $start, int $limit, string $sortColumn, string $sortDir, string $typeFilter = ''): array
+    public function getByAuthorPaged(int $authorId, int $start, int $limit, string $sortColumn, string $sortDir, string $formatGroupFilter = ''): array
     {
-        $total = $this->tunesRepository->countByAuthorId($authorId, $typeFilter);
-        $ids = $this->tunesRepository->findPagedIdsByAuthorId($authorId, $start, $limit, $sortColumn, $sortDir, $typeFilter);
-        $availableFormats = $this->tunesRepository->getDistinctTypesByAuthorId($authorId);
+        $total = $this->tunesRepository->countByAuthorId($authorId, $formatGroupFilter);
+        $ids = $this->tunesRepository->findPagedIdsByAuthorId($authorId, $start, $limit, $sortColumn, $sortDir, $formatGroupFilter);
+        $availableFormatGroups = $this->tunesRepository->getDistinctFormatGroupsByAuthorId($authorId);
         return [
             'items' => $this->loadAndTransform($ids),
             'total' => $total,
-            'availableFormats' => $availableFormats,
+            'availableFormatGroups' => $availableFormatGroups,
         ];
     }
 

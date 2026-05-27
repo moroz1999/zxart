@@ -2,12 +2,10 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy,
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {BehaviorSubject, combineLatest, Subscription, switchMap} from 'rxjs';
-import {AuthorProdDto} from '../../models/author-prod.dto';
-import {AuthorProdsApiService} from '../../services/author-prods-api.service';
+import {AuthorProdItem, AuthorProdsApiService} from '../../services/author-prods-api.service';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
 import {ZxProdBlockComponent} from '../../../../shared/ui/zx-prod-block/zx-prod-block.component';
 import {ZxProd} from '../../../../shared/models/zx-prod';
-import {ZxProdDto} from '../../../../shared/models/zx-prod-dto';
 import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filter-bar.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
@@ -20,30 +18,10 @@ import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.compo
 import {ZxProdsGridDirective} from '../../../../shared/directives/prods-grid.directive';
 
 const PAGE_SIZE = 12;
+
 interface YearGroup {
   year: number | null;
-  prods: AuthorProdDto[];
-}
-
-function authorProdToZxProd(dto: AuthorProdDto): ZxProd {
-  const data: ZxProdDto = {
-    id: dto.id,
-    url: dto.url,
-    title: dto.title,
-    structureType: dto.type === 'release' ? 'zxRelease' : 'zxProd',
-    dateCreated: 0,
-    year: dto.year > 0 ? String(dto.year) : undefined,
-    listImagesUrls: dto.thumbnailUrl ? [dto.thumbnailUrl] : [],
-    authorsInfoShort: dto.coAuthors.map(co => ({title: co.name, url: co.url, roles: []})),
-    categoriesInfo: dto.category ? [{id: 0, title: dto.category, url: ''}] : [],
-    votes: dto.votes,
-    votesAmount: dto.votesAmount,
-    userVote: 0,
-    denyVoting: false,
-    legalStatus: 'unknown',
-    externalLink: '',
-  };
-  return new ZxProd(data);
+  prods: AuthorProdItem[];
 }
 
 @Component({
@@ -165,8 +143,8 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
     return 'artist';
   }
 
-  toProdModel(dto: AuthorProdDto): ZxProd {
-    return authorProdToZxProd(dto);
+  toProdModel(dto: AuthorProdItem): ZxProd {
+    return new ZxProd(dto);
   }
 
   private parseSortKey(sort: string): {sortKey: string; sortDir: string} {
@@ -175,15 +153,16 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
     return {sortKey: 'votes', sortDir: 'desc'};
   }
 
-  private buildGroups(prods: AuthorProdDto[], sort: string): YearGroup[] {
+  private buildGroups(prods: AuthorProdItem[], sort: string): YearGroup[] {
     if (sort === 'votes') {
       return [{year: null, prods}];
     }
-    const byYear = new Map<number, AuthorProdDto[]>();
+    const byYear = new Map<number, AuthorProdItem[]>();
     for (const prod of prods) {
-      const list = byYear.get(prod.year) ?? [];
+      const year = prod.year ? Number(prod.year) : 0;
+      const list = byYear.get(year) ?? [];
       list.push(prod);
-      byYear.set(prod.year, list);
+      byYear.set(year, list);
     }
     const dir = sort === 'year-asc' ? 1 : -1;
     return Array.from(byYear.entries())

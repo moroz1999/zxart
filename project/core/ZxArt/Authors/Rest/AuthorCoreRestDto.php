@@ -10,11 +10,12 @@ use Symfony\Component\ObjectMapper\Transform\MapCollection;
 readonly class AuthorCoreRestDto
 {
     /**
-     * @param string[]                $roles
-     * @param string[]                $badges
-     * @param AuthorGroupRestDto[]    $groups
-     * @param AuthorAliasRefRestDto[] $aliases
-     * @param AuthorLinkRestDto[]     $links
+     * @param string[]                    $roles
+     * @param string[]                    $badges
+     * @param AuthorGroupRestDto[]        $groups
+     * @param AuthorAliasRefRestDto[]     $aliases
+     * @param AuthorLinkRestDto[]         $links
+     * @param AuthorBreadcrumbRestDto[]   $breadcrumbs
      */
     public function __construct(
         public int $id,
@@ -40,6 +41,8 @@ readonly class AuthorCoreRestDto
         public AuthorCountersRestDto $counters,
         public AuthorRatingsRestDto $ratings,
         public AuthorTabsRestDto $tabs,
+        #[Map(transform: MapCollection::class)]
+        public array $breadcrumbs,
     ) {
     }
 }

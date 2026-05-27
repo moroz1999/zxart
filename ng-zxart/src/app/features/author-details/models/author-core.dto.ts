@@ -52,6 +52,11 @@ export interface AuthorTabsDto {
   hasProds: boolean;
 }
 
+export interface AuthorBreadcrumbDto {
+  title: string;
+  url: string;
+}
+
 export interface AuthorCoreDto {
   id: number;
   entityType: 'author' | 'authorAlias';
@@ -73,4 +78,5 @@ export interface AuthorCoreDto {
   counters: AuthorCountersDto;
   ratings: AuthorRatingsDto;
   tabs: AuthorTabsDto;
+  breadcrumbs: AuthorBreadcrumbDto[];
 }

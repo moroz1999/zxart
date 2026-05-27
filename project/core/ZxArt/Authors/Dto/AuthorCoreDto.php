@@ -11,11 +11,12 @@ use ZxArt\Authors\Rest\AuthorCoreRestDto;
 readonly class AuthorCoreDto
 {
     /**
-     * @param string[]            $roles
-     * @param string[]            $badges
-     * @param AuthorGroupDto[]    $groups
-     * @param AuthorAliasRefDto[] $aliases
-     * @param AuthorLinkDto[]     $links
+     * @param string[]                $roles
+     * @param string[]                $badges
+     * @param AuthorGroupDto[]        $groups
+     * @param AuthorAliasRefDto[]     $aliases
+     * @param AuthorLinkDto[]         $links
+     * @param AuthorBreadcrumbDto[]   $breadcrumbs
      */
     public function __construct(
         public int $id,
@@ -38,6 +39,7 @@ readonly class AuthorCoreDto
         public AuthorCountersDto $counters,
         public AuthorRatingsDto $ratings,
         public AuthorTabsDto $tabs,
+        public array $breadcrumbs,
     ) {
     }
 }

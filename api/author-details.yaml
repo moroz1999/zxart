@@ -227,6 +227,17 @@ components:
         hasProds:
           type: boolean
 
+    AuthorBreadcrumb:
+      type: object
+      required:
+        - title
+        - url
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+
     AuthorCorePayload:
       type: object
       required:
@@ -250,6 +261,7 @@ components:
         - counters
         - ratings
         - tabs
+        - breadcrumbs
       properties:
         id:
           type: integer
@@ -311,31 +323,33 @@ components:
           $ref: '#/components/schemas/AuthorRatings'
         tabs:
           $ref: '#/components/schemas/AuthorTabs'
+        breadcrumbs:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorBreadcrumb'
 
-    AuthorProdCoAuthor:
+    AuthorshipRef:
       type: object
       required:
-        - name
+        - title
         - url
+        - roles
       properties:
-        name:
+        title:
           type: string
         url:
           type: string
+        roles:
+          type: array
+          items:
+            type: string
 
-    AuthorProd:
+    ConnectedElement:
       type: object
       required:
         - id
         - title
         - url
-        - year
-        - thumbnailUrl
-        - category
-        - votes
-        - votesAmount
-        - rolesInProd
-        - coAuthors
       properties:
         id:
           type: integer
@@ -343,26 +357,113 @@ components:
           type: string
         url:
           type: string
+          nullable: true
+
+    ConnectedItem:
+      type: object
+      required:
+        - id
+        - title
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+
+    ProdItem:
+      type: object
+      required:
+        - id
+        - url
+        - structureType
+        - dateCreated
+        - title
+        - votes
+        - votesAmount
+        - userVote
+        - denyVoting
+        - hardwareInfo
+        - authorsInfoShort
+        - categoriesInfo
+        - partyPlace
+        - languagesInfo
+        - groupsInfo
+      properties:
+        id:
+          type: integer
+        url:
+          type: string
+        structureType:
+          type: string
+          enum: [zxProd, zxRelease]
+        dateCreated:
+          type: integer
+        title:
+          type: string
         year:
           type: integer
-        thumbnailUrl:
-          type: string
           nullable: true
-        category:
-          type: string
+        listImagesUrls:
+          type: array
+          items:
+            type: string
         votes:
           type: number
           format: float
         votesAmount:
           type: integer
-        rolesInProd:
+        userVote:
+          type: integer
+          nullable: true
+        denyVoting:
+          type: boolean
+        hardwareInfo:
           type: array
           items:
-            type: string
-        coAuthors:
+            $ref: '#/components/schemas/ConnectedItem'
+        authorsInfoShort:
           type: array
           items:
-            $ref: '#/components/schemas/AuthorProdCoAuthor'
+            $ref: '#/components/schemas/AuthorshipRef'
+        categoriesInfo:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConnectedElement'
+        partyInfo:
+          allOf:
+            - $ref: '#/components/schemas/ConnectedElement'
+          nullable: true
+        partyPlace:
+          type: integer
+        legalStatus:
+          type: string
+          nullable: true
+        languagesInfo:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConnectedItem'
+        groupsInfo:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConnectedElement'
+        youtubeId:
+          type: string
+          nullable: true
+        releaseType:
+          type: string
+          nullable: true
+
+    AuthorProdItem:
+      allOf:
+        - $ref: '#/components/schemas/ProdItem'
+        - type: object
+          required:
+            - rolesInProd
+          properties:
+            rolesInProd:
+              type: array
+              items:
+                type: string
 
     AuthorProdsPage:
       type: object
@@ -374,7 +475,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/AuthorProd'
+            $ref: '#/components/schemas/AuthorProdItem'
         total:
           type: integer
         availableRoles:

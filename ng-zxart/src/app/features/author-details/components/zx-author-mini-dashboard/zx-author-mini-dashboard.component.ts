@@ -1,12 +1,13 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {AuthorTabsDto} from '../../models/author-core.dto';
 import {ZxTuneDto} from '../../../../shared/models/zx-tune-dto';
-import {AuthorProdDto} from '../../models/author-prod.dto';
 import {AuthorMiniDashboardData, AuthorMiniDashboardService} from '../../services/author-mini-dashboard.service';
+import {PlayerService} from '../../../player/services/player.service';
+import {AuthorProdItem} from '../../services/author-prods-api.service';
 import {ZxPictureCardComponent} from '../../../../shared/ui/zx-picture-card/zx-picture-card.component';
 import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.component';
 import {ZxProdBlockComponent} from '../../../../shared/ui/zx-prod-block/zx-prod-block.component';
@@ -19,7 +20,6 @@ import {ZxInsetComponent} from '../../../../shared/ui/zx-inset/zx-inset.componen
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxProd} from '../../../../shared/models/zx-prod';
-import {ZxProdDto} from '../../../../shared/models/zx-prod-dto';
 import {environment} from '../../../../../environments/environment';
 import {ZxProdsGridDirective} from '../../../../shared/directives/prods-grid.directive';
 import {ZxPictureGridSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
@@ -27,26 +27,6 @@ import {ZxTuneTableSkeletonComponent} from '../../../../shared/ui/zx-skeleton/co
 import {ZxProdsListSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-prods-list-skeleton/zx-prods-list-skeleton.component';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 
-function authorProdToZxProd(dto: AuthorProdDto): ZxProd {
-  const data: ZxProdDto = {
-    id: dto.id,
-    url: dto.url,
-    title: dto.title,
-    structureType: dto.type === 'release' ? 'zxRelease' : 'zxProd',
-    dateCreated: 0,
-    year: dto.year > 0 ? String(dto.year) : undefined,
-    listImagesUrls: dto.thumbnailUrl ? [dto.thumbnailUrl] : [],
-    authorsInfoShort: dto.coAuthors.map(co => ({title: co.name, url: co.url, roles: []})),
-    categoriesInfo: dto.category ? [{id: 0, title: dto.category, url: ''}] : [],
-    votes: dto.votes,
-    votesAmount: dto.votesAmount,
-    userVote: 0,
-    denyVoting: false,
-    legalStatus: 'unknown',
-    externalLink: '',
-  };
-  return new ZxProd(data);
-}
 
 @Component({
   selector: 'zx-author-mini-dashboard',
@@ -77,12 +57,16 @@ function authorProdToZxProd(dto: AuthorProdDto): ZxProd {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [AuthorMiniDashboardService],
 })
-export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges {
+export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges, OnDestroy {
   @Input() elementId = 0;
   @Input() tabs!: AuthorTabsDto;
 
   readonly data$: Observable<AuthorMiniDashboardData>;
   playingTuneId: number | null = null;
+
+  private playlistId = '';
+  private dashboardTunes: ZxTuneDto[] = [];
+  private readonly subscriptions = new Subscription();
 
   gfxHref = '';
   musicHref = '';
@@ -93,15 +77,38 @@ export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges {
 
   constructor(
     private readonly dashboardService: AuthorMiniDashboardService,
+    private readonly playerService: PlayerService,
     private readonly iconReg: SvgIconRegistryService,
+    private readonly cdr: ChangeDetectorRef,
   ) {
     this.data$ = this.dashboardService.data$;
   }
 
   ngOnInit(): void {
+    this.playlistId = `author-dashboard-${this.elementId}`;
     this.iconReg.loadSvg(`${environment.svgUrl}image.svg`, 'image')?.subscribe();
     this.iconReg.loadSvg(`${environment.svgUrl}music-note.svg`, 'music-note')?.subscribe();
     this.iconReg.loadSvg(`${environment.svgUrl}gamepad.svg`, 'gamepad')?.subscribe();
+    this.subscriptions.add(
+      this.data$.subscribe(data => {
+        this.dashboardTunes = data.tunes;
+      }),
+    );
+    this.subscriptions.add(
+      this.playerService.state$.subscribe(state => {
+        const id = state.isPlaying && state.playlistId === this.playlistId
+          ? (state.playlist[state.currentIndex]?.id ?? null)
+          : null;
+        if (id !== this.playingTuneId) {
+          this.playingTuneId = id;
+          this.cdr.markForCheck();
+        }
+      }),
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   ngOnChanges(): void {
@@ -131,16 +138,21 @@ export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges {
     this.dashboardService.setContext(this.elementId, this.tabs);
   }
 
-  toProdModel(dto: AuthorProdDto): ZxProd {
-    return authorProdToZxProd(dto);
+  toProdModel(dto: AuthorProdItem): ZxProd {
+    return new ZxProd(dto);
   }
 
   onPlayRequested(tune: ZxTuneDto): void {
-    this.playingTuneId = tune.id;
+    const playable = this.dashboardTunes.filter(t => t.isPlayable && t.mp3Url);
+    const startIndex = playable.findIndex(t => t.id === tune.id);
+    if (startIndex === -1) {
+      return;
+    }
+    this.playerService.startPlaylist(this.playlistId, playable, startIndex);
   }
 
   onPauseRequested(): void {
-    this.playingTuneId = null;
+    this.playerService.pause();
   }
 
   private parseBaseUrl(): string {

@@ -1,25 +1,70 @@
 <ng-container *ngIf="core$ | async as core; else headerLoading">
   <zx-stack spacing="xl">
     <zx-breadcrumbs
-      [parentItem]="core.parentTitle && core.parentUrl ? { title: core.parentTitle, url: core.parentUrl } : null"
+      [categories]="core.breadcrumbs"
       [currentTitle]="core.title">
     </zx-breadcrumbs>
     <zx-author-header [core]="core"></zx-author-header>
-    <zx-author-mini-dashboard
-      *ngIf="core.tabs.hasPictures || core.tabs.hasTunes || core.tabs.hasProds"
-      [elementId]="core.id"
-      [tabs]="core.tabs">
-    </zx-author-mini-dashboard>
-    <zx-author-works
-      *ngIf="core.tabs.hasPictures || core.tabs.hasTunes || core.tabs.hasProds"
-      [elementId]="core.id"
-      [tabs]="core.tabs">
-    </zx-author-works>
-    <zx-author-collaborators [elementId]="core.id"></zx-author-collaborators>
-    <zx-inline gap="xl" align="start">
-      <zx-author-ratings class="author-details__activity-column" [elementId]="core.id"></zx-author-ratings>
-      <zx-author-comments class="author-details__activity-column" [elementId]="core.id"></zx-author-comments>
-    </zx-inline>
+
+    <zx-tabs [initialActiveIndex]="getInitialTabIndex(core)">
+      <zx-tab
+        *ngIf="core.tabs.hasPictures || core.tabs.hasTunes || core.tabs.hasProds"
+        [label]="'author-details.tabs.best' | translate"
+        [href]="getTabHref('best')">
+        <ng-template zxTabContent>
+          <zx-author-mini-dashboard [elementId]="core.id" [tabs]="core.tabs"></zx-author-mini-dashboard>
+        </ng-template>
+      </zx-tab>
+
+      <zx-tab
+        *ngIf="core.tabs.hasPictures"
+        [label]="'author-details.works.graphics' | translate"
+        [href]="getTabHref('gfx')">
+        <ng-template zxTabContent>
+          <zx-author-graphics-tab [elementId]="core.id" [urlBase]="getTabHref('gfx')"></zx-author-graphics-tab>
+        </ng-template>
+      </zx-tab>
+
+      <zx-tab
+        *ngIf="core.tabs.hasTunes"
+        [label]="'author-details.works.music' | translate"
+        [href]="getTabHref('music')">
+        <ng-template zxTabContent>
+          <zx-author-music-tab [elementId]="core.id" [urlBase]="getTabHref('music')"></zx-author-music-tab>
+        </ng-template>
+      </zx-tab>
+
+      <zx-tab
+        *ngIf="core.tabs.hasProds"
+        [label]="'author-details.works.software' | translate"
+        [href]="getTabHref('software')">
+        <ng-template zxTabContent>
+          <zx-author-software-tab [elementId]="core.id" [urlBase]="getTabHref('software')"></zx-author-software-tab>
+        </ng-template>
+      </zx-tab>
+
+      <zx-tab
+        [label]="'author-details.collaborators.title' | translate"
+        [href]="getTabHref('collaborators')">
+        <ng-template zxTabContent>
+          <zx-author-collaborators [elementId]="core.id"></zx-author-collaborators>
+        </ng-template>
+      </zx-tab>
+
+      <zx-tab
+        [label]="'author-details.tabs.discussion' | translate"
+        [href]="getTabHref('discussion')">
+        <ng-template zxTabContent>
+          <zx-stack spacing="xl">
+            <zx-inline gap="xl" align="start">
+              <zx-author-ratings [elementId]="core.id"></zx-author-ratings>
+              <zx-author-comments [elementId]="core.id"></zx-author-comments>
+            </zx-inline>
+            <zx-comments-list-view [elementId]="core.id"></zx-comments-list-view>
+          </zx-stack>
+        </ng-template>
+      </zx-tab>
+    </zx-tabs>
   </zx-stack>
 </ng-container>
 

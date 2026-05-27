@@ -7,7 +7,7 @@ import {ZxTuneDto} from '../../../shared/models/zx-tune-dto';
 export interface AuthorTunesPage {
   items: ZxTuneDto[];
   total: number;
-  availableFormats: string[];
+  availableFormatGroups: string[];
 }
 
 @Injectable({
@@ -28,7 +28,7 @@ export class AuthorTunesService {
     limit: number,
     sortColumn: string,
     sortDir: string,
-    format = '',
+    formatGroup = '',
   ): Observable<AuthorTunesPage> {
     let params = new HttpParams()
       .set('action', 'tunesByElement')
@@ -37,11 +37,11 @@ export class AuthorTunesService {
       .set('limit', String(limit))
       .set('sortColumn', sortColumn)
       .set('sortDir', sortDir);
-    if (format) {
-      params = params.set('format', format);
+    if (formatGroup) {
+      params = params.set('formatGroup', formatGroup);
     }
     return this.http.get<AuthorTunesPage>('/tunes/', {params}).pipe(
-      catchError(() => of({items: [], total: 0, availableFormats: []})),
+      catchError(() => of({items: [], total: 0, availableFormatGroups: []})),
     );
   }
 }

@@ -6,11 +6,13 @@ namespace ZxArt\Authors\Services;
 
 use authorAliasElement;
 use authorElement;
+use breadcrumbsManager;
 use groupAliasElement;
 use groupElement;
 use structureManager;
 use userElement;
 use ZxArt\Authors\Dto\AuthorAliasRefDto;
+use ZxArt\Authors\Dto\AuthorBreadcrumbDto;
 use ZxArt\Authors\Dto\AuthorCoreDto;
 use ZxArt\Authors\Dto\AuthorCountersDto;
 use ZxArt\Authors\Dto\AuthorGroupDto;
@@ -29,6 +31,7 @@ readonly class AuthorDetailsService
 {
     public function __construct(
         private structureManager $structureManager,
+        private breadcrumbsManager $breadcrumbsManager,
         private AuthorshipRepository $authorshipRepository,
     ) {
     }
@@ -53,6 +56,7 @@ readonly class AuthorDetailsService
         $ratings = $this->buildRatings($profileAuthor);
         $tabs = $this->buildTabs($counters);
         [$parentUrl, $parentTitle] = $this->resolveParent($author);
+        $breadcrumbs = $this->buildBreadcrumbs($author);
 
         return new AuthorCoreDto(
             id: $authorId,
@@ -75,6 +79,7 @@ readonly class AuthorDetailsService
             counters: $counters,
             ratings: $ratings,
             tabs: $tabs,
+            breadcrumbs: $breadcrumbs,
         );
     }
 
@@ -342,5 +347,30 @@ readonly class AuthorDetailsService
     {
         $host = parse_url($url, PHP_URL_HOST);
         return $host !== false && $host !== null ? (string)$host : $url;
+    }
+
+    /** @return AuthorBreadcrumbDto[] */
+    private function buildBreadcrumbs(authorElement|authorAliasElement $author): array
+    {
+        $authorUrl = (string)$author->getUrl();
+        $path = trim(parse_url($authorUrl, PHP_URL_PATH) ?? '', '/');
+        if ($path === '') {
+            return [];
+        }
+        $segments = array_values(array_filter(explode('/', $path)));
+        $raw = $this->breadcrumbsManager->getBreadcrumbsForPath($segments);
+
+        // Drop first item (language element = home, handled by the home link in zx-breadcrumbs)
+        // and last item (the author itself, shown as currentTitle in zx-breadcrumbs)
+        $ancestors = array_slice($raw, 1, -1);
+
+        $breadcrumbs = [];
+        foreach ($ancestors as $item) {
+            $breadcrumbs[] = new AuthorBreadcrumbDto(
+                title: html_entity_decode((string)$item['title'], ENT_QUOTES),
+                url: (string)$item['URL'],
+            );
+        }
+        return $breadcrumbs;
     }
 }

@@ -11,6 +11,8 @@ paths:
     $ref: 'radio.yaml#/paths/~1radio~1?action=next-tune'
   /tunes/?action=play:
     $ref: 'tunes.yaml#/paths/~1tunes~1?action=play'
+  /tunes/:
+    $ref: 'tunes.yaml#/paths/~1tunes~1'
   /firstpage/?action=catalogueBaseUrls:
     $ref: 'firstpage.yaml#/paths/~1firstpage~1?action=catalogueBaseUrls'
   /userpreferences/:
@@ -75,6 +77,8 @@ components:
       $ref: 'tunes.yaml#/components/schemas/PartyInfoDto'
     TuneDto:
       $ref: 'tunes.yaml#/components/schemas/TuneDto'
+    AuthorTunesPage:
+      $ref: 'tunes.yaml#/components/schemas/AuthorTunesPage'
     ApiResponseTune:
       $ref: 'tunes.yaml#/components/schemas/ApiResponseTune'
     ApiResponseSuccess:

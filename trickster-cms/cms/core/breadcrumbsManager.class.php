@@ -62,6 +62,40 @@ class breadcrumbsManager implements DependencyInjectionContextInterface
         return $this->breadcrumbs;
     }
 
+    public function getBreadcrumbsForPath(array $path): array
+    {
+        /**
+         * @var structureManager $structureManager
+         */
+        $structureManager = $this->getService('structureManager');
+        $minLevel = $this->getMinLevel();
+        $minAmount = $this->getMinAmount();
+        $chain = $structureManager->getElementsChain($path);
+        $breadcrumbs = [];
+        foreach ($chain as $crumb) {
+            if ($crumb->level >= $minLevel) {
+                if ($crumb instanceof BreadcrumbsInfoProvider) {
+                    if (!$crumb->isBreadCrumb()) {
+                        continue;
+                    }
+                    $title = $crumb->getBreadcrumbsTitle();
+                    $url = $crumb->getBreadcrumbsUrl();
+                } else {
+                    $title = $crumb->getTitle();
+                    $url = $crumb->getUrl();
+                }
+                $breadcrumbs[] = [
+                    'URL' => $url,
+                    'title' => $title,
+                ];
+            }
+        }
+        if ($minAmount && count($breadcrumbs) < $minAmount) {
+            return [];
+        }
+        return $breadcrumbs;
+    }
+
     public function appendBreadcrumb($link, $title)
     {
         $this->breadcrumbs[] = [

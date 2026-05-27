@@ -2,9 +2,58 @@ openapi: 3.0.0
 info:
   title: ZxArt Tunes API
   version: 1.0.0
-  description: API for tune playback events.
+  description: API for tunes and tune playback events.
 
 paths:
+  /tunes/:
+    get:
+      summary: Get tunes linked to an element
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [tunesByElement]
+        - name: elementId
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: start
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: sortColumn
+          in: query
+          schema:
+            type: string
+            enum: [votes, year, dateAdded]
+        - name: sortDir
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+        - name: formatGroup
+          in: query
+          description: Sound type used to filter author tunes, such as `ay` or `beeper`.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Tunes, with pagination and sound type options when `limit` is provided.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/TuneDto'
+                  - $ref: '#/components/schemas/AuthorTunesPage'
   /tunes/?action=play:
     post:
       summary: Report tune play
@@ -127,6 +176,25 @@ components:
         mp3Url:
           type: string
           nullable: true
+
+    AuthorTunesPage:
+      type: object
+      required:
+        - items
+        - total
+        - availableFormatGroups
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TuneDto'
+        total:
+          type: integer
+        availableFormatGroups:
+          type: array
+          description: Distinct `formatGroup` values for all linked tunes, independent of the selected filter.
+          items:
+            type: string
 
     ApiResponseTune:
       type: object

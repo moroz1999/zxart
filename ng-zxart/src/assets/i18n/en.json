@@ -514,6 +514,10 @@
       "music": "Music",
       "software": "Software"
     },
+    "tabs": {
+      "best": "Best",
+      "discussion": "Discussion"
+    },
     "filters": {
       "sort": "Sort",
       "show": "Show"
@@ -535,8 +539,8 @@
       "error": "Failed to load tunes",
       "empty": "No tunes found",
       "found": "{{count}} tunes",
-      "chip": {
-        "all": "All chips"
+      "format-group": {
+        "all": "All"
       },
       "sort": {
         "votes": "By rating",

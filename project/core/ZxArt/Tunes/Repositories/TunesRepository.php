@@ -283,7 +283,7 @@ readonly final class TunesRepository extends AbstractRepository
     /**
      * @return int[]
      */
-    public function findPagedIdsByAuthorId(int $authorId, int $start, int $limit, string $sortColumn, string $sortDir, string $typeFilter = ''): array
+    public function findPagedIdsByAuthorId(int $authorId, int $start, int $limit, string $sortColumn, string $sortDir, string $formatGroupFilter = ''): array
     {
         $sortColumn = in_array($sortColumn, self::ALLOWED_SORT_COLUMNS, true) ? $sortColumn : 'votes';
         $sortDir = strtolower($sortDir) === 'asc' ? 'asc' : 'desc';
@@ -308,8 +308,8 @@ readonly final class TunesRepository extends AbstractRepository
                 $this->tableColumn(DatabaseTable::ZxMusic, 'id')
             )->addSelect($structureElementsTable . '.dateCreated');
         }
-        if ($typeFilter !== '') {
-            $q->where($this->tableColumn(DatabaseTable::ZxMusic, 'type'), '=', $typeFilter);
+        if ($formatGroupFilter !== '') {
+            $q->where($this->tableColumn(DatabaseTable::ZxMusic, 'formatGroup'), '=', $formatGroupFilter);
         }
         $q->distinct()
             ->orderBy($this->tableColumn(DatabaseTable::ZxMusic, $sortColumn), $sortDir);
@@ -326,7 +326,7 @@ readonly final class TunesRepository extends AbstractRepository
         return $ids;
     }
 
-    public function countByAuthorId(int $authorId, string $typeFilter = ''): int
+    public function countByAuthorId(int $authorId, string $formatGroupFilter = ''): int
     {
         $authorIds = $this->getAuthorAndAliasIds($authorId);
         $q = $this->db->table($this->tableName(DatabaseTable::ZxMusic))
@@ -338,8 +338,8 @@ readonly final class TunesRepository extends AbstractRepository
             )
             ->where($this->tableColumn(DatabaseTable::StructureLinks, 'type'), '=', LinkTypes::AUTHOR_MUSIC->value)
             ->whereIn($this->tableColumn(DatabaseTable::StructureLinks, 'parentStructureId'), $authorIds);
-        if ($typeFilter !== '') {
-            $q->where($this->tableColumn(DatabaseTable::ZxMusic, 'type'), '=', $typeFilter);
+        if ($formatGroupFilter !== '') {
+            $q->where($this->tableColumn(DatabaseTable::ZxMusic, 'formatGroup'), '=', $formatGroupFilter);
         }
         return (int)$q->distinct()->count($this->tableColumn(DatabaseTable::ZxMusic, 'id'));
     }
@@ -347,12 +347,12 @@ readonly final class TunesRepository extends AbstractRepository
     /**
      * @return string[]
      */
-    public function getDistinctTypesByAuthorId(int $authorId): array
+    public function getDistinctFormatGroupsByAuthorId(int $authorId): array
     {
         $authorIds = $this->getAuthorAndAliasIds($authorId);
-        /** @var string[] $types */
-        $types = $this->db->table($this->tableName(DatabaseTable::ZxMusic))
-            ->select($this->tableColumn(DatabaseTable::ZxMusic, 'type'))
+        /** @var string[] $formatGroups */
+        $formatGroups = $this->db->table($this->tableName(DatabaseTable::ZxMusic))
+            ->select($this->tableColumn(DatabaseTable::ZxMusic, 'formatGroup'))
             ->join(
                 $this->tableName(DatabaseTable::StructureLinks),
                 $this->tableColumn(DatabaseTable::StructureLinks, 'childStructureId'),
@@ -361,11 +361,11 @@ readonly final class TunesRepository extends AbstractRepository
             )
             ->where($this->tableColumn(DatabaseTable::StructureLinks, 'type'), '=', LinkTypes::AUTHOR_MUSIC->value)
             ->whereIn($this->tableColumn(DatabaseTable::StructureLinks, 'parentStructureId'), $authorIds)
-            ->where($this->tableColumn(DatabaseTable::ZxMusic, 'type'), '!=', '')
+            ->where($this->tableColumn(DatabaseTable::ZxMusic, 'formatGroup'), '!=', '')
             ->distinct()
-            ->orderBy($this->tableColumn(DatabaseTable::ZxMusic, 'type'))
-            ->pluck($this->tableColumn(DatabaseTable::ZxMusic, 'type'));
-        return $types;
+            ->orderBy($this->tableColumn(DatabaseTable::ZxMusic, 'formatGroup'))
+            ->pluck($this->tableColumn(DatabaseTable::ZxMusic, 'formatGroup'));
+        return $formatGroups;
     }
 
     /**

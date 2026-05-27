@@ -4,6 +4,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {BehaviorSubject, combineLatest, Subscription, switchMap} from 'rxjs';
 import {ZxTuneDto} from '../../../../shared/models/zx-tune-dto';
 import {AuthorTunesService} from '../../../author-tunes/services/author-tunes.service';
+import {PlayerService} from '../../../player/services/player.service';
 import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.component';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
 import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filter-bar.component';
@@ -48,46 +49,62 @@ export class ZxAuthorMusicTabComponent implements OnInit, OnDestroy {
   @Input() urlBase = '';
 
   private readonly sortStore = new BehaviorSubject<string>('year-desc');
-  private readonly chipStore = new BehaviorSubject<string>('');
+  private readonly formatGroupStore = new BehaviorSubject<string>('');
   private pageStore = new BehaviorSubject<number>(1);
 
   error = false;
   loading = true;
   total = 0;
   yearGroups: YearGroup[] = [];
-  availableChips: string[] = [];
+  availableFormatGroups: string[] = [];
   playingTuneId: number | null = null;
 
+  private playlist: ZxTuneDto[] = [];
+  private playlistId = '';
   private readonly subscriptions = new Subscription();
 
   get currentSort(): string { return this.sortStore.getValue(); }
-  get currentChip(): string { return this.chipStore.getValue(); }
+  get currentFormatGroup(): string { return this.formatGroupStore.getValue(); }
   get currentPage(): number { return this.pageStore.getValue(); }
   get pagesAmount(): number { return Math.ceil(this.total / PAGE_SIZE); }
 
   constructor(
     private readonly authorTunesService: AuthorTunesService,
+    private readonly playerService: PlayerService,
     private readonly cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
+    this.playlistId = `author-music-${this.elementId}`;
     this.pageStore = new BehaviorSubject<number>(this.parsePageFromUrl());
     this.subscriptions.add(
-      combineLatest([this.sortStore, this.chipStore, this.pageStore]).pipe(
-        switchMap(([sort, chip, page]) => {
+      this.playerService.state$.subscribe(state => {
+        const id = state.isPlaying && state.playlistId === this.playlistId
+          ? (state.playlist[state.currentIndex]?.id ?? null)
+          : null;
+        if (id !== this.playingTuneId) {
+          this.playingTuneId = id;
+          this.cdr.markForCheck();
+        }
+      }),
+    );
+    this.subscriptions.add(
+      combineLatest([this.sortStore, this.formatGroupStore, this.pageStore]).pipe(
+        switchMap(([sort, formatGroup, page]) => {
           this.loading = true;
           this.cdr.markForCheck();
           const {column, dir} = this.parseSortKey(sort);
           const start = (page - 1) * PAGE_SIZE;
-          return this.authorTunesService.getTunesPaged(this.elementId, start, PAGE_SIZE, column, dir, chip);
+          return this.authorTunesService.getTunesPaged(this.elementId, start, PAGE_SIZE, column, dir, formatGroup);
         }),
       ).subscribe({
         next: result => {
           this.loading = false;
           this.total = result.total;
+          this.playlist = result.items;
           this.yearGroups = this.buildGroups(result.items, this.sortStore.getValue());
-          if (result.availableFormats?.length) {
-            this.availableChips = result.availableFormats;
+          if (result.availableFormatGroups?.length) {
+            this.availableFormatGroups = result.availableFormatGroups;
           }
           this.cdr.markForCheck();
         },
@@ -109,8 +126,8 @@ export class ZxAuthorMusicTabComponent implements OnInit, OnDestroy {
     this.pageStore.next(1);
   }
 
-  setChip(chip: string): void {
-    this.chipStore.next(chip);
+  setFormatGroup(formatGroup: string): void {
+    this.formatGroupStore.next(formatGroup);
     this.pageStore.next(1);
   }
 
@@ -132,13 +149,16 @@ export class ZxAuthorMusicTabComponent implements OnInit, OnDestroy {
   }
 
   onPlayRequested(tune: ZxTuneDto): void {
-    this.playingTuneId = tune.id;
-    this.cdr.markForCheck();
+    const playable = this.playlist.filter(t => t.isPlayable && t.mp3Url);
+    const startIndex = playable.findIndex(t => t.id === tune.id);
+    if (startIndex === -1) {
+      return;
+    }
+    this.playerService.startPlaylist(this.playlistId, playable, startIndex);
   }
 
   onPauseRequested(): void {
-    this.playingTuneId = null;
-    this.cdr.markForCheck();
+    this.playerService.pause();
   }
 
   private parseSortKey(sort: string): {column: string; dir: string} {

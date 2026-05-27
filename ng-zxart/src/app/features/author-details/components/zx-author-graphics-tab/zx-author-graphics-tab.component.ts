@@ -14,6 +14,8 @@ import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.componen
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxPictureGridSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
+import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
+import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 
 const PAGE_SIZE = 24;
 
@@ -39,6 +41,7 @@ interface YearGroup {
     ZxStackComponent,
     ZxPictureGridSkeletonComponent,
     TextDirective,
+    PictureGalleryHostComponent,
   ],
   templateUrl: './zx-author-graphics-tab.component.html',
   styleUrl: './zx-author-graphics-tab.component.scss',
@@ -69,6 +72,7 @@ export class ZxAuthorGraphicsTabComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly authorPicturesService: AuthorPicturesService,
+    private readonly pictureGalleryService: PictureGalleryService,
     private readonly cdr: ChangeDetectorRef,
   ) {}
 
@@ -91,6 +95,7 @@ export class ZxAuthorGraphicsTabComponent implements OnInit, OnDestroy {
           if (result.availableFormats?.length) {
             this.availableFormats = result.availableFormats;
           }
+          this.pictureGalleryService.ensureGalleryLoaded(this.galleryId, result.items);
           this.cdr.markForCheck();
         },
         error: () => {

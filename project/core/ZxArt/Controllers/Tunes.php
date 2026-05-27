@@ -74,12 +74,12 @@ class Tunes extends LoggedControllerApplication
                 $start = (int)($this->getParameter('start') ?? 0);
                 $sortColumn = (string)($this->getParameter('sortColumn') ?? 'votes');
                 $sortDir = (string)($this->getParameter('sortDir') ?? 'desc');
-                $typeFilter = (string)($this->getParameter('format') ?? '');
-                $result = $this->tunesService->getByAuthorPaged($elementId, $start, $limit, $sortColumn, $sortDir, $typeFilter);
+                $formatGroupFilter = (string)($this->getParameter('formatGroup') ?? '');
+                $result = $this->tunesService->getByAuthorPaged($elementId, $start, $limit, $sortColumn, $sortDir, $formatGroupFilter);
                 $this->renderer->assign('body', [
                     'items' => array_map(fn(TuneDto $dto) => $this->objectMapper->map($dto, TuneRestDto::class), $result['items']),
                     'total' => $result['total'],
-                    'availableFormats' => $result['availableFormats'],
+                    'availableFormatGroups' => $result['availableFormatGroups'],
                 ]);
             } else {
                 $dtos = $this->tunesService->getByAuthor($elementId);

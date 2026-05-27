@@ -28,23 +28,23 @@
         </zx-button-controls>
       </zx-stack>
 
-      <zx-stack *ngIf="availableChips.length > 1" spacing="xs">
+      <zx-stack *ngIf="availableFormatGroups.length > 1" spacing="xs">
         <span appText="caption" tone="muted">{{ 'author-details.filters.show' | translate }}</span>
         <zx-button-controls [wrap]="true" gap="sm">
           <zx-button
             size="sm"
-            [color]="currentChip === '' ? 'secondary' : 'outlined'"
+            [color]="currentFormatGroup === '' ? 'secondary' : 'outlined'"
             [disabled]="loading"
-            (click)="setChip('')">
-            {{ 'author-details.music-tab.chip.all' | translate }}
+            (click)="setFormatGroup('')">
+            {{ 'author-details.music-tab.format-group.all' | translate }}
           </zx-button>
           <zx-button
-            *ngFor="let chip of availableChips"
+            *ngFor="let formatGroup of availableFormatGroups"
             size="sm"
-            [color]="currentChip === chip ? 'secondary' : 'outlined'"
+            [color]="currentFormatGroup === formatGroup ? 'secondary' : 'outlined'"
             [disabled]="loading"
-            (click)="setChip(chip)">
-            {{ chip }}
+            (click)="setFormatGroup(formatGroup)">
+            {{ 'player.formatGroup.' + formatGroup | translate }}
           </zx-button>
         </zx-button-controls>
       </zx-stack>
@@ -60,7 +60,7 @@
     [class.ap-results--loading]="loading">
     <div class="ap-toolbar__result">
       {{ 'author-details.music-tab.found' | translate: {count: total} }}
-      <span *ngIf="currentChip"> · {{ currentChip }}</span>
+      <span *ngIf="currentFormatGroup"> · {{ 'player.formatGroup.' + currentFormatGroup | translate }}</span>
     </div>
 
     <div *ngFor="let group of yearGroups" class="ap-year-group" [class.ap-year-group--no-rail]="group.year === null">

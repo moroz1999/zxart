@@ -117,6 +117,11 @@ When work is created by group:
 
 #### Author Production Role Filters
 - Author production filters list only distinct roles assigned to that author's productions, independently of pagination and the active role filter.
+- Production and release cards on an author page show the complete recorded author list, including the author whose page is open.
+
+#### Author Music Sound Type Filters
+- Author music filters use the tune `formatGroup` sound type (for example, `ay` or `beeper`), not its file format.
+- The available sound types are collected from all tunes attributed to that author, independently of pagination and the selected sound type.
 
 #### Author Votes Display
 - The author details page shows paginated votes on all works of the author via `zx-author-ratings` component.
@@ -129,14 +134,18 @@ When work is created by group:
 - Comment IDs are found by joining `structure_links` (type=commentTarget) with the author's work IDs.
 
 #### Author Mini Dashboard
-- With graphics, music, and software sections present, the dashboard previews 3 pictures, 10 tunes, and 3 productions.
-- With exactly two sections present, pictures and productions show up to 6 cards in two columns; music continues to show up to 10 tunes.
+- With graphics, music, and software sections present, the dashboard previews 2 pictures, 10 tunes, and 2 productions.
+- With exactly two sections present, pictures and productions show up to 4 cards in two columns; music continues to show up to 10 tunes.
 - With music as the only section, the dashboard continues to show up to 10 tunes.
 
 #### Author Details Loading
 - The author header loads with the core author response because it determines the visible page sections.
-- Dashboard, works, collaborators, votes, and comments render their initial skeletons immediately, but their API requests start only when the block reaches the viewport.
+- Content for dashboard, works, collaborators, votes, and comments is mounted only for its active author tab; its API request starts when the rendered block reaches the viewport.
 - First loads display skeletons shaped for the target content. Paginated author blocks retain current content with a short opacity fade while the next page loads.
+
+#### Author Details Tabs
+- The author details content is organized as tabs: best works, each available work type, collaborators, and discussion.
+- Discussion displays votes and comments on the author's works, followed by comments attached directly to the author.
 
 #### Author Alias Details Page
 - Author aliases use the same Angular details component as authors.

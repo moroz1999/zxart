@@ -1,17 +1,17 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, filter, forkJoin, map, of, shareReplay, startWith, switchMap} from 'rxjs';
 import {AuthorTabsDto} from '../models/author-core.dto';
-import {AuthorProdDto} from '../models/author-prod.dto';
+import {AuthorProdItem} from './author-prods-api.service';
 import {ZxPictureDto} from '../../../shared/models/zx-picture-dto';
 import {ZxTuneDto} from '../../../shared/models/zx-tune-dto';
 import {AuthorPicturesService} from '../../author-pictures/services/author-pictures.service';
 import {AuthorTunesService} from '../../author-tunes/services/author-tunes.service';
 import {AuthorProdsApiService} from './author-prods-api.service';
 
-const DASHBOARD_PICS = 3;
+const DASHBOARD_PICS = 2;
 const DASHBOARD_TUNES = 10;
-const DASHBOARD_PRODS = 3;
-const DASHBOARD_EXPANDED_CARDS = 6;
+const DASHBOARD_PRODS = 2;
+const DASHBOARD_EXPANDED_CARDS = 4;
 
 interface AuthorMiniDashboardContext {
   elementId: number;
@@ -22,7 +22,7 @@ export interface AuthorMiniDashboardData {
   loading: boolean;
   pictures: ZxPictureDto[];
   tunes: ZxTuneDto[];
-  prods: AuthorProdDto[];
+  prods: AuthorProdItem[];
 }
 
 @Injectable()
@@ -42,10 +42,10 @@ export class AuthorMiniDashboardService {
         : of({items: [] as ZxPictureDto[], total: 0, availableFormats: []});
       const tunes$ = context.tabs.hasTunes
         ? this.tunesService.getTunesPaged(context.elementId, 0, DASHBOARD_TUNES, 'votes', 'desc')
-        : of({items: [] as ZxTuneDto[], total: 0, availableFormats: []});
+        : of({items: [] as ZxTuneDto[], total: 0, availableFormatGroups: []});
       const prods$ = context.tabs.hasProds
         ? this.prodsService.getProds(context.elementId, 0, prodsLimit, 'votes', 'desc', '')
-        : of({items: [] as AuthorProdDto[], total: 0, availableRoles: []});
+        : of({items: [] as AuthorProdItem[], total: 0, availableRoles: []});
 
       return forkJoin([pictures$, tunes$, prods$]).pipe(
         map(([pictures, tunes, prods]) => ({

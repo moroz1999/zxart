@@ -513,6 +513,10 @@
       "music": "Música",
       "software": "Programas"
     },
+    "tabs": {
+      "best": "Mejor",
+      "discussion": "Discusión"
+    },
     "filters": {
       "sort": "Ordenar",
       "show": "Mostrar"
@@ -534,8 +538,8 @@
       "error": "Error al cargar melodías",
       "empty": "No se encontraron melodías",
       "found": "{{count}} melodías",
-      "chip": {
-        "all": "Todos los chips"
+      "format-group": {
+        "all": "Todos"
       },
       "sort": {
         "votes": "Por calificación",

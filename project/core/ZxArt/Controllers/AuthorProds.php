@@ -10,10 +10,10 @@ use Monolog\Logger;
 use Override;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
-use ZxArt\Authors\Dto\AuthorProdDto;
-use ZxArt\Authors\Rest\AuthorProdRestDto;
 use ZxArt\Authors\Services\AuthorProdsService;
+use ZxArt\Prods\Dto\ProdDto;
 use ZxArt\Prods\Exception\ProdDetailsException;
+use ZxArt\Prods\Rest\ProdRestDto;
 
 class AuthorProds extends LoggedControllerApplication
 {
@@ -49,7 +49,10 @@ class AuthorProds extends LoggedControllerApplication
             $result = $this->authorProdsService->getProdsPaged($authorOrAliasId, $start, $limit, $sort, $sortDir, $role);
             $this->renderer->assign('body', [
                 'items' => array_map(
-                    fn(AuthorProdDto $dto) => $this->objectMapper->map($dto, AuthorProdRestDto::class),
+                    function (array $item): array {
+                        $restDto = $this->objectMapper->map($item['prod'], ProdRestDto::class);
+                        return [...(array) $restDto, 'rolesInProd' => $item['rolesInProd']];
+                    },
                     $result['items'],
                 ),
                 'total' => $result['total'],
