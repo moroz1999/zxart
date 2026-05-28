@@ -55,9 +55,15 @@ readonly final class ProdTabsRepository extends AbstractRepository
             ->where('type', '=', LinkTypes::STRUCTURE->value)
             ->select('childStructureId');
 
-        return $this->db->table($this->tableName(DatabaseTable::StructureLinks))
-            ->whereIn('parentStructureId', $releaseIdsQuery)
-            ->where('type', '=', LinkTypes::INLAY_FILES_SELECTOR->value)
+        $table = $this->tableName(DatabaseTable::StructureLinks);
+        $inlayType = LinkTypes::INLAY_FILES_SELECTOR->value;
+
+        return $this->db->table($table)
+            ->where(function (Builder $query) use ($prodId, $releaseIdsQuery, $inlayType): void {
+                $query->where('parentStructureId', '=', $prodId)
+                    ->orWhereIn('parentStructureId', $releaseIdsQuery);
+            })
+            ->where('type', '=', $inlayType)
             ->exists();
     }
 

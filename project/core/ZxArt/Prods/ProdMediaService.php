@@ -48,6 +48,27 @@ readonly class ProdMediaService
     {
         $prod = $this->prodElementService->get($elementId);
         $inlays = [];
+        foreach ($prod->getFilesList(LinkTypes::INLAY_FILES_SELECTOR->value) as $file) {
+            if (!$file instanceof fileElement) {
+                continue;
+            }
+            $isImage = $file->isImage();
+            $imageUrl = $isImage ? $file->getImageUrl(self::PROD_IMAGE_PRESET) : null;
+            $fullImageUrl = $isImage ? $file->getImageUrl(self::PROD_IMAGE_FULL_PRESET) : null;
+
+            $inlays[] = new ProdReleaseInlayDto(
+                id: $file->getId(),
+                title: $this->decodeText($file->title),
+                imageUrl: $imageUrl,
+                fullImageUrl: $fullImageUrl,
+                downloadUrl: $isImage ? $file->getScreenshotUrl() : $file->getDownloadUrl('view', 'release'),
+                releaseTitle: '',
+                releaseUrl: '',
+                releaseYear: 0,
+                releaseTypeLabel: null,
+                releaseBy: [],
+            );
+        }
         foreach ($prod->getReleasesList() as $release) {
             $releaseTitle = $this->prodInfoBuilder->decodeText((string)$release->getTitle());
             $releaseUrl = (string)$release->getUrl();
