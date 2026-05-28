@@ -17,7 +17,7 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxProdsGridDirective} from '../../../../shared/directives/prods-grid.directive';
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 15;
 
 interface YearGroup {
   year: number | null;

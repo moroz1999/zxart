@@ -74,6 +74,11 @@ readonly final class AuthorProdsRepository extends AbstractRepository
         return $availableRoles;
     }
 
+    public function countByAuthorId(int $authorId): int
+    {
+        return $this->countItems($this->getAuthorAndAliasIds($authorId), '');
+    }
+
     /**
      * @param int[] $authorIds
      */

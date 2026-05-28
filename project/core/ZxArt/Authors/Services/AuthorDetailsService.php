@@ -22,6 +22,7 @@ use ZxArt\Authors\Dto\AuthorLocationItemDto;
 use ZxArt\Authors\Dto\AuthorRatingsDto;
 use ZxArt\Authors\Dto\AuthorTabsDto;
 use ZxArt\Authors\Dto\AuthorTechDto;
+use ZxArt\Authors\Repositories\AuthorProdsRepository;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\Exception\ProdDetailsException;
@@ -33,6 +34,7 @@ readonly class AuthorDetailsService
         private structureManager $structureManager,
         private breadcrumbsManager $breadcrumbsManager,
         private AuthorshipRepository $authorshipRepository,
+        private AuthorProdsRepository $authorProdsRepository,
     ) {
     }
 
@@ -276,7 +278,7 @@ readonly class AuthorDetailsService
             return new AuthorCountersDto(
                 pictures: (int)$author->picturesQuantity,
                 tunes: (int)$author->tunesQuantity,
-                prods: $author->getProdsAmount(),
+                prods: $this->authorProdsRepository->countByAuthorId($author->getId()),
                 comments: (int)$author->getCommentsAmount(),
             );
         }
@@ -284,7 +286,7 @@ readonly class AuthorDetailsService
         return new AuthorCountersDto(
             pictures: count($author->getWorksList([LinkTypes::AUTHOR_PICTURE->value])),
             tunes: count($author->getWorksList([LinkTypes::AUTHOR_MUSIC->value])),
-            prods: $author->getProdsAmount(),
+            prods: $this->authorProdsRepository->countByAuthorId($author->getId()),
             comments: (int)$author->getCommentsAmount(),
         );
     }

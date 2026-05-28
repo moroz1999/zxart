@@ -147,7 +147,7 @@ zx-header {
   justify-content: space-between;
   gap: var(--space-32) var(--space-16);
 
-  @include breakpoints.media-breakpoint-down(sm) {
-    grid-template-columns: min(100%, 256px);
+  @include breakpoints.media-breakpoint-down(md) {
+    grid-template-columns: 1fr;
   }
 }

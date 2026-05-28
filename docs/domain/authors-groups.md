@@ -118,6 +118,7 @@ When work is created by group:
 #### Author Production Role Filters
 - Author production filters list only distinct roles assigned to that author's productions, independently of pagination and the active role filter.
 - Production and release cards on an author page show the complete recorded author list, including the author whose page is open.
+- The software tab includes direct prod authorship and release authorship. A release is shown only when its parent prod is not already listed for the same author; release role filters apply to these release rows.
 
 #### Author Music Sound Type Filters
 - Author music filters use the tune `formatGroup` sound type (for example, `ay` or `beeper`), not its file format.
