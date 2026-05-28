@@ -16,7 +16,7 @@
 
   <div class="ap-collab__cols">
     <div class="ap-collab__col" *ngIf="people.length > 0">
-      <div class="ap-collab__col-h">
+      <div class="ap-collab__col-h" appText="label" tone="muted">
         {{ 'author-details.collaborators.people' | translate }}
         <span class="ap-section__count">{{ people.length }}</span>
       </div>
@@ -26,7 +26,7 @@
     </div>
 
     <div class="ap-collab__col" *ngIf="groups.length > 0">
-      <div class="ap-collab__col-h">
+      <div class="ap-collab__col-h" appText="label" tone="muted">
         {{ 'author-details.collaborators.groups' | translate }}
         <span class="ap-section__count">{{ groups.length }}</span>
       </div>
@@ -34,10 +34,10 @@
         <a *ngFor="let g of groups" [href]="g.url" class="ap-collab__group">
           <div class="ap-collab__group-body">
             <div class="ap-collab__group-head">
-              <span class="ap-collab__group-name">{{ g.title }}</span>
-              <span *ngIf="g.years" class="ap-collab__group-years">{{ g.years }}</span>
+              <span appText="bodySm" tone="strong" [truncate]="true">{{ g.title }}</span>
+              <span *ngIf="g.years" appText="caption" tone="muted" class="ap-collab__group-years">{{ g.years }}</span>
             </div>
-            <div *ngIf="g.membersCount > 0" class="ap-collab__group-meta">
+            <div *ngIf="g.membersCount > 0" appText="label" tone="muted">
               {{ 'author-details.collaborators.members' | translate: {count: g.membersCount} }}
             </div>
           </div>

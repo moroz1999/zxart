@@ -572,7 +572,6 @@
       "people": "People",
       "groups": "Groups",
       "joint": "joint",
-      "prods": "{{count}} programs",
       "members": "{{count}} members"
     }
   },
