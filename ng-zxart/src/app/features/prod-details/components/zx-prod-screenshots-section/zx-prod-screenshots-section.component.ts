@@ -81,6 +81,9 @@ export class ZxProdScreenshotsSectionComponent {
     if (this.showAll && this.files.length > this.maxVisible) {
       return this.files.slice(0, this.maxVisible + 1);
     }
+    if (this.files.length <= this.maxVisible + 1) {
+      return this.files;
+    }
     return this.files.slice(0, this.maxVisible);
   }
 
@@ -89,7 +92,10 @@ export class ZxProdScreenshotsSectionComponent {
   }
 
   get moreCount(): number {
-    return this.showAll ? 0 : Math.max(0, this.files.length - this.maxVisible);
+    if (this.showAll || this.files.length <= this.maxVisible + 1) {
+      return 0;
+    }
+    return this.files.length - this.maxVisible;
   }
 
   expandAll(): void {
