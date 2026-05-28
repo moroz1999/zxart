@@ -45,7 +45,7 @@ readonly class ProdReleaseDto
         public string $prodExternalLink,
         public int $downloadsCount,
         public int $playsCount,
-        public float $rating,
+        public ProdVotingDto $voting,
         public array $externalLinks,
         public array $screenshots,
     ) {

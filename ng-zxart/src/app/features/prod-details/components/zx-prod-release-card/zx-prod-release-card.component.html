@@ -1,12 +1,12 @@
 <zx-panel padding="none" [contentBleed]="true">
   <div class="release-card__layout">
-    <div class="release-card__cover">
+    <a [href]="release.url" class="release-card__cover">
       <zx-card-screenshot-gallery
         *ngIf="screenshotUrls.length > 0"
         [imageUrls]="screenshotUrls"
         [alt]="release.title"
       ></zx-card-screenshot-gallery>
-    </div>
+    </a>
 
     <zx-inset class="release-card__body" padding="md">
       <a [href]="release.url" class="release-card__title">{{ release.title }}</a>
@@ -44,6 +44,15 @@
           </zx-inline>
         </zx-inline>
       </zx-inline>
+
+      <zx-item-controls
+        [elementId]="release.id"
+        type="zxRelease"
+        [votes]="release.voting.votes"
+        [votesAmount]="release.voting.votesAmount"
+        [userRating]="release.voting.userVote"
+        [denyVoting]="release.voting.denyVoting">
+      </zx-item-controls>
     </zx-inset>
   </div>
 </zx-panel>

@@ -59,7 +59,7 @@
   </td>
 
   <td class="release-row__rating">
-    <ng-container *ngIf="release.rating > 0">{{ release.rating | number:'1.0-2' }}</ng-container>
+    <ng-container *ngIf="release.voting.votes > 0">{{ release.voting.votes | number:'1.0-2' }}</ng-container>
   </td>
 
   <td class="release-row__downloads">

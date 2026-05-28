@@ -912,7 +912,7 @@ class zxReleaseElement extends ZxArtItem implements
 
     public function recalculate(): void
     {
-        $this->persistElementData();
+        parent::recalculate();
     }
 
     public function incrementPlays(): void

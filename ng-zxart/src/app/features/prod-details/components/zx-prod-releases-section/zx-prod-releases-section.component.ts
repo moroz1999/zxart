@@ -210,7 +210,7 @@ export class ZxProdReleasesSectionComponent implements OnInit, OnDestroy {
       case 'year': return r.year || 0;
       case 'downloads': return r.downloadsCount || 0;
       case 'plays': return r.playsCount || 0;
-      case 'rating': return r.rating || 0;
+      case 'rating': return r.voting.votes || 0;
     }
   }
 

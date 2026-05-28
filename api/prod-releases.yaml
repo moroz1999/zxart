@@ -63,7 +63,7 @@ components:
         - prodExternalLink
         - downloadsCount
         - playsCount
-        - rating
+        - voting
         - externalLinks
         - screenshots
       properties:
@@ -135,9 +135,8 @@ components:
           type: integer
         playsCount:
           type: integer
-        rating:
-          type: number
-          format: float
+        voting:
+          $ref: 'prod-details.yaml#/components/schemas/ProdVoting'
         externalLinks:
           type: array
           items:

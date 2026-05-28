@@ -9,6 +9,7 @@ use ZxArt\Prods\Dto\ProdGroupRefDto;
 use ZxArt\Prods\Dto\ProdReleaseDto;
 use ZxArt\Prods\Dto\ProdReleaseFormatDto;
 use ZxArt\Prods\Dto\ProdReleasesDto;
+use ZxArt\Prods\Dto\ProdVotingDto;
 use ZxArt\Releases\Services\ReleaseFormatsProvider;
 use zxReleaseElement;
 
@@ -29,11 +30,10 @@ readonly class ProdReleasesService
         $theme = $this->infoBuilder->resolveCurrentTheme();
         $prodLegalStatus = $element->getLegalStatus();
         $prodExternalLink = $element->externalLink;
-        $prodRating = $element->getVotes();
 
         $releases = [];
         foreach ($element->getReleasesList() as $release) {
-            $releases[] = $this->buildRelease($release, $prodLegalStatus, $prodExternalLink, $theme, $prodRating);
+            $releases[] = $this->buildRelease($release, $prodLegalStatus, $prodExternalLink, $theme);
         }
 
         return new ProdReleasesDto(releases: $releases);
@@ -44,7 +44,6 @@ readonly class ProdReleasesService
         string $prodLegalStatus,
         string $prodExternalLink,
         ?DesignTheme $theme,
-        float $prodRating,
     ): ProdReleaseDto {
         $isDownloadable = $release->isDownloadable();
         $isPlayable = $release->isPlayable();
@@ -78,9 +77,24 @@ readonly class ProdReleasesService
             prodExternalLink: $prodExternalLink,
             downloadsCount: $release->getDownloadsCount(),
             playsCount: $release->getPlaysCount(),
-            rating: $prodRating,
+            voting: $this->buildReleaseVoting($release),
             externalLinks: $this->infoBuilder->buildLinks($release, $theme),
             screenshots: $this->prodMediaService->buildReleaseScreenshots($release)->files,
+        );
+    }
+
+    private function buildReleaseVoting(zxReleaseElement $release): ProdVotingDto
+    {
+        $denyVoting = $release->isVotingDenied();
+        $userVoteRaw = $release->getUserVote();
+        $userVote = $userVoteRaw === null || $userVoteRaw === '' ? null : (int)$userVoteRaw;
+
+        return new ProdVotingDto(
+            votes: $release->getVotes(),
+            votesAmount: $release->getVotesAmount(),
+            userVote: $userVote,
+            denyVoting: $denyVoting,
+            votePercent: $denyVoting ? null : (float)$release->getVotePercent(),
         );
     }
 

@@ -4,6 +4,7 @@ import {
   ProdLanguageInfoDto,
   ProdLinkInfoDto,
   ProdPartyInfoDto,
+  ProdVotingDto,
 } from './prod-core.dto';
 import {ProdFileDto} from './prod-file.dto';
 
@@ -40,7 +41,7 @@ export interface ProdReleaseDto {
   prodExternalLink: string;
   downloadsCount: number;
   playsCount: number;
-  rating: number;
+  voting: ProdVotingDto;
   externalLinks: ProdLinkInfoDto[];
   screenshots: ProdFileDto[];
 }
