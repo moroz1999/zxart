@@ -62,11 +62,7 @@
 
 	<td class='zxrelease_table_download'>
 		<div class="zxrelease_table_download_buttons">
-			{if $prod->getLegalStatus() === 'donationware'}
-			<a class="button release-sales-button" href="{$prod->externalLink}"
-			   target="_blank">{translations name='zxprod.donate'}</a>
-			{/if}
-			{if $element->isDownloadable()}
+{if $element->isDownloadable()}
 				{if $element->fileName}
 					<a rel="nofollow" href="{$element->getFileUrl()}"><img loading="lazy" src="{$theme->getImageUrl("disk.png")}" alt="{translations name='label.download'} {$element->getFileName('original', false)}" /></a>
 				{/if}

@@ -66,11 +66,7 @@ export class ZxProdReleaseRowComponent implements OnInit {
     };
   }
 
-  get showSalesButton(): boolean {
-    return this.release.prodLegalStatus === 'donationware' && this.release.prodExternalLink !== '';
-  }
-
-  get showPurchaseButton(): boolean {
+get showPurchaseButton(): boolean {
     return !this.release.isDownloadable
       && this.release.prodExternalLink !== ''
       && this.release.prodLegalStatus === 'insales';

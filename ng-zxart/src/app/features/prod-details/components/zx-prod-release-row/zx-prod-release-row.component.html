@@ -86,15 +86,7 @@
         <svg-icon class="release-row__download-icon" name="play"></svg-icon>
       </zx-emulator-play-button>
 
-      <zx-button *ngIf="showSalesButton"
-                 size="sm"
-                 color="secondary"
-                 [href]="release.prodExternalLink"
-                 target="_blank">
-        {{ 'release-row.donate' | translate }}
-      </zx-button>
-
-      <ng-container *ngIf="release.isDownloadable; else externalDownload">
+<ng-container *ngIf="release.isDownloadable; else externalDownload">
         <zx-button *ngIf="release.downloadUrl"
                    size="sm"
                    color="primary"
