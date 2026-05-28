@@ -31,7 +31,7 @@
             role="option"
             [attr.aria-selected]="isInPlaylist(activeIds, item.id)"
           >
-            <span class="playlist-item-title" appText="label">{{ item.title }}</span>
+            <span class="playlist-item-title" appText="label" tone="primary">{{ item.title }}</span>
             <svg-icon *ngIf="isInPlaylist(activeIds, item.id)" name="check" class="playlist-item-check"></svg-icon>
             <span *ngIf="!isInPlaylist(activeIds, item.id)" class="playlist-item-hint" appText="caption" tone="muted">{{ 'playlist.add_hint' | translate }}</span>
           </div>

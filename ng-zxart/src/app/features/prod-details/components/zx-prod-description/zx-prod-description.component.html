@@ -1,9 +1,9 @@
 <ng-container *ngIf="data$ | async as data; else skeleton">
   <zx-stack spacing="sm">
     <h3 appHeading="title">{{ 'prod-details.description' | translate }}</h3>
-    <div *ngIf="data.htmlDescription; else plainText" appText="body" [innerHTML]="data.description"></div>
+    <div *ngIf="data.htmlDescription; else plainText" appText="body" tone="primary" [innerHTML]="data.description"></div>
     <ng-template #plainText>
-      <div class="prod-description--plain" appText="body">{{ data.description }}</div>
+      <div class="prod-description--plain" appText="body" tone="primary">{{ data.description }}</div>
     </ng-template>
   </zx-stack>
 </ng-container>

@@ -26,7 +26,7 @@
       titleLevel="h2"
       variant="elevated">
       <zx-stack spacing="md">
-        <div *ngIf="core.generatedDescription" appText="body" [innerHTML]="core.generatedDescription"></div>
+        <div *ngIf="core.generatedDescription" appText="body" tone="primary" [innerHTML]="core.generatedDescription"></div>
         <zx-tags-list
           [tags]="core.tags"
           [elementId]="core.elementId"

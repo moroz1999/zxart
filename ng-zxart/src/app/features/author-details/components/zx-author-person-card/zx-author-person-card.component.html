@@ -7,15 +7,15 @@
     <div class="person-card__stats">
       <span *ngIf="person.jointPictures > 0" class="person-card__stat person-card__stat--gfx">
         <svg-icon name="image" aria-hidden="true" class="person-card__stat-icon"></svg-icon>
-        <span appText="caption" tone="inherit">{{ person.jointPictures }}</span>
+        <span appText="caption">{{ person.jointPictures }}</span>
       </span>
       <span *ngIf="person.jointTunes > 0" class="person-card__stat person-card__stat--music">
         <svg-icon name="music-note" aria-hidden="true" class="person-card__stat-icon"></svg-icon>
-        <span appText="caption" tone="inherit">{{ person.jointTunes }}</span>
+        <span appText="caption">{{ person.jointTunes }}</span>
       </span>
       <span *ngIf="person.jointProds > 0" class="person-card__stat person-card__stat--soft">
         <svg-icon name="gamepad" aria-hidden="true" class="person-card__stat-icon"></svg-icon>
-        <span appText="caption" tone="inherit">{{ person.jointProds }}</span>
+        <span appText="caption">{{ person.jointProds }}</span>
       </span>
     </div>
   </div>

@@ -1,6 +1,6 @@
 <ng-container *ngIf="data$ | async as data">
   <zx-stack spacing="sm">
     <h3 appHeading="title">{{ 'prod-details.instructions' | translate }}</h3>
-    <div appText="body" [innerHTML]="data.instructions"></div>
+    <div appText="body" tone="primary" [innerHTML]="data.instructions"></div>
   </zx-stack>
 </ng-container>

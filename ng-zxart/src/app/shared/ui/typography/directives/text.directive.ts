@@ -9,7 +9,7 @@ type TextVariant = Extract<TypographyVariant, 'body' | 'bodySm' | 'caption' | 'l
 })
 export class TextDirective {
   readonly appText = input<TextVariant>('body');
-  readonly tone = input<TypographyTone>('primary');
+  readonly tone = input<TypographyTone>('inherit');
   readonly truncate = input(false);
 
   @HostBinding('class.app-typography-body')

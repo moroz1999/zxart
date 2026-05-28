@@ -47,14 +47,14 @@
 .sd-group-caption {
   text-transform: uppercase;
   letter-spacing: var(--zx-search-dialog-group-caption-letter-spacing);
-  padding: var(--space-8) var(--space-4) var(--space-4);
+  padding: var(--space-8) 0 var(--space-4);
 }
 
 .sd-result-item {
   display: flex;
   align-items: center;
   gap: var(--space-8);
-  padding: var(--space-4) var(--space-4);
+  padding: var(--space-8) 0;
   border-radius: var(--zx-search-dialog-item-radius);
   text-decoration: none;
   color: inherit;

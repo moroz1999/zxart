@@ -3,7 +3,7 @@
 
   <ng-container *ngIf="ratings$ | async as ratings; else skeleton">
     @if (ratings.length === 0) {
-      <p appText="body">{{ 'ratings.empty' | translate }}</p>
+      <p appText="body" tone="primary">{{ 'ratings.empty' | translate }}</p>
     } @else {
       <zx-table size="xs">
         <table>

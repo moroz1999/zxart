@@ -1,6 +1,11 @@
 import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 
+type GridColumns = '1' | '2' | '3' | '4' | '5' | '6';
+type GridRows = 'auto' | '1' | '2' | '3' | '4';
+type GridGap = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
+type GridAlignment = 'start' | 'center' | 'end' | 'stretch';
+
 @Component({
   selector: 'zx-grid',
   standalone: true,
@@ -10,24 +15,42 @@ import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/c
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxGridComponent {
-  @Input() columns: '1' | '2' | '3' | '4' | '5' | '6' = '1';
-  @Input() rows: 'auto' | '1' | '2' | '3' | '4' = 'auto';
-  @Input() gap: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' = 'md';
-  @Input() rowGap: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | null = null;
-  @Input() columnGap: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | null = null;
-  @Input() align: 'start' | 'center' | 'end' | 'stretch' = 'stretch';
-  @Input() justify: 'start' | 'center' | 'end' | 'stretch' = 'stretch';
+  @Input() columns: GridColumns = '1';
+  @Input() mobileColumns: GridColumns | null = null;
+  @Input() tabletColumns: GridColumns | null = null;
+
+  @Input() rows: GridRows = 'auto';
+
+  @Input() gap: GridGap = 'md';
+  @Input() rowGap: GridGap | null = null;
+  @Input() columnGap: GridGap | null = null;
+
+  @Input() align: GridAlignment = 'stretch';
+  @Input() justify: GridAlignment = 'stretch';
+
+  @HostBinding('style.--zx-grid-columns')
+  get hostColumns(): GridColumns {
+    return this.columns;
+  }
+
+  @HostBinding('style.--zx-grid-mobile-columns')
+  get hostMobileColumns(): GridColumns {
+    return this.mobileColumns ?? this.columns;
+  }
+
+  @HostBinding('style.--zx-grid-tablet-columns')
+  get hostTabletColumns(): GridColumns {
+    return this.tabletColumns ?? this.columns;
+  }
 
   @HostBinding('class')
   get classList(): string {
-    const classes = [
-      `zx-grid--columns-${this.columns}`,
+    return [
       `zx-grid--rows-${this.rows}`,
       `zx-grid--row-gap-${this.rowGap ?? this.gap}`,
       `zx-grid--column-gap-${this.columnGap ?? this.gap}`,
       `zx-grid--align-${this.align}`,
       `zx-grid--justify-${this.justify}`,
-    ];
-    return classes.join(' ');
+    ].join(' ');
   }
 }

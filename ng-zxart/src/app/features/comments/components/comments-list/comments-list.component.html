@@ -19,7 +19,7 @@
 
       <ng-template #content let-comments>
         @if (comments.length === 0) {
-          <p appText="body">{{ 'comments.empty' | translate }}</p>
+          <p appText="body" tone="primary">{{ 'comments.empty' | translate }}</p>
         } @else {
           <zx-stack spacing="lg">
             <div *ngFor="let comment of comments" class="comment-item" [id]="'comment' + comment.id">

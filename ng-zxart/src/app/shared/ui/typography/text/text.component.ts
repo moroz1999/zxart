@@ -10,7 +10,7 @@ import {TypographyTone, TypographyVariant} from '../typography.types';
 })
 export class TextComponent {
   readonly variant = input<TypographyVariant>('body');
-  readonly tone = input<TypographyTone>('primary');
+  readonly tone = input<TypographyTone>('inherit');
   readonly truncate = input(false);
 
   @HostBinding('class.app-text')

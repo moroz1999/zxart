@@ -34,7 +34,7 @@
           <div class="comment-body">
             <div *ngIf="!showEditForm" class="comment-content">
               <zx-stack spacing="xs">
-                <div appText="body" [innerHTML]="safeContent"></div>
+                <div appText="body" tone="primary" [innerHTML]="safeContent"></div>
                 @if (hasTranslation) {
                   <zx-inline>
                     <zx-button size="xs" color="transparent" class="comment-translation-toggle" (click)="toggleTranslation()">

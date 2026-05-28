@@ -72,7 +72,7 @@
           [style.--zx-player-progress]="getProgressPercent(state)"
           (click)="seekByClick($event, state.duration)"
         >
-          <span appText="body" class="player-progress-text">{{ getCurrentTitle(state) }}</span>
+          <span appText="body" tone="primary" class="player-progress-text">{{ getCurrentTitle(state) }}</span>
         </div>
       </div>
 

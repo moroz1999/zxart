@@ -1,6 +1,6 @@
 :root {
-  /* Dialog header padding: narrow vertical, more space on left for title */
-  --zx-dialog-header-padding: var(--space-8) var(--space-8) var(--space-8) var(--space-16);
+  /* Dialog header padding: equal on left, top, right to match body; smaller bottom before border */
+  --zx-dialog-header-padding: var(--space-16) var(--space-16) var(--space-8) var(--space-16);
   /* Dialog header bottom divider */
   --zx-dialog-header-border: var(--border-width-thin) solid var(--border-color);
   /* Dialog body padding */

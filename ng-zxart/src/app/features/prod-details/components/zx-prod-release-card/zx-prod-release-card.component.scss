@@ -4,19 +4,73 @@
 }
 
 .release-card__cover {
+  position: relative;
   width: 100%;
   aspect-ratio: 4/3;
   background: var(--zx-prod-release-card-cover-bg);
   overflow: hidden;
 }
 
-.release-card__cover-img {
+.zx-prod-screenshots {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
   display: block;
+  overflow: hidden;
+}
+
+.zx-prod-screenshot {
+  display: block;
+  top: 0;
+  left: 0;
+  position: absolute;
   width: 100%;
   height: 100%;
   object-fit: cover;
   image-rendering: pixelated;
-  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.zx-prod-screenshot-selected {
+  opacity: 1;
+}
+
+.zx-prod-screenshots-selector {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background: linear-gradient(0deg, rgba(var(--zx-prod-overlay-rgb), 0.27) 0%, rgba(var(--zx-prod-overlay-rgb), 0) 35%);
+}
+
+.zx-prod-screenshots-button {
+  width: 15%;
+  height: 100%;
+  display: block;
+  position: relative;
+
+  &::after {
+    display: block;
+    content: "";
+    position: absolute;
+    bottom: var(--padding-md);
+    left: var(--padding-sm);
+    right: var(--padding-sm);
+    background: var(--text-color);
+    opacity: 0.7;
+    border-radius: var(--border-radius-md);
+    height: 0.4rem;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  &:hover::after {
+    opacity: 1;
+  }
 }
 
 .release-card__body {

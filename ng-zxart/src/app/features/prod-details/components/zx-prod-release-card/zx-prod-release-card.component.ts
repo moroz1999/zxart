@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
@@ -12,9 +12,6 @@ import {ZxInsetComponent} from '../../../../shared/ui/zx-inset/zx-inset.componen
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {environment} from '../../../../../environments/environment';
 import {ZxReleaseTypeBadgeComponent} from '../../../../shared/ui/zx-release-type-badge/zx-release-type-badge.component';
-import {LightboxModule} from 'ng-gallery/lightbox';
-import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
-import {ProdFileDto} from '../../models/prod-file.dto';
 import {ZxChipComponent} from '../../../../shared/ui/zx-chip/zx-chip.component';
 
 const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 'tsconf', 'samcoupe', 'zxnext'];
@@ -32,43 +29,37 @@ const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 't
     ZxInsetComponent,
     ZxPanelComponent,
     ZxReleaseTypeBadgeComponent,
-    LightboxModule,
     ZxChipComponent,
   ],
   templateUrl: './zx-prod-release-card.component.html',
   styleUrls: ['./zx-prod-release-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxProdReleaseCardComponent implements OnInit {
+export class ZxProdReleaseCardComponent implements OnChanges, OnInit {
   @Input({required: true}) release!: ProdReleaseDto;
   @Input({required: true}) canUploadScreenshot!: boolean;
   @Input({required: true}) screenshotUploadUrl!: string;
 
-  galleryId = '';
+  screenshotUrls: string[] = [];
+  activeScreenshotUrl = '';
 
   constructor(
     private readonly emulator: EmulatorModalService,
     private readonly iconReg: SvgIconRegistryService,
-    private readonly gallery: PictureGalleryService,
   ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['release']) {
+      this.screenshotUrls = this.release.screenshots
+        .map(screenshot => screenshot.imageUrl ?? screenshot.fullImageUrl ?? '')
+        .filter((imageUrl): imageUrl is string => imageUrl !== '');
+      this.activeScreenshotUrl = this.screenshotUrls[0] ?? '';
+    }
+  }
 
   ngOnInit(): void {
     this.iconReg.loadSvg(`${environment.svgUrl}download.svg`, 'download')?.subscribe();
     this.iconReg.loadSvg(`${environment.svgUrl}play.svg`, 'play')?.subscribe();
-    if (this.release.screenshots.length > 0) {
-      this.galleryId = `zx-release-screenshots-${this.release.id}`;
-      this.gallery.loadItems(this.galleryId, this.release.screenshots.map(this.toGalleryItem));
-    }
-  }
-
-  private toGalleryItem(file: ProdFileDto) {
-    return {
-      id: file.id,
-      title: file.title,
-      thumbUrl: file.imageUrl ?? file.fullImageUrl ?? '',
-      largeUrl: file.fullImageUrl ?? file.imageUrl ?? '',
-      detailsUrl: file.downloadUrl,
-    };
   }
 
   get canPlay(): boolean {
@@ -91,5 +82,9 @@ export class ZxProdReleaseCardComponent implements OnInit {
       uploadUrl: this.screenshotUploadUrl,
       canScreenshot: this.canUploadScreenshot,
     });
+  }
+
+  setActiveScreenshotUrl(imageUrl: string): void {
+    this.activeScreenshotUrl = imageUrl;
   }
 }

@@ -1,15 +1,27 @@
 <zx-panel padding="none" [contentBleed]="true">
   <div class="release-card__layout">
     <div class="release-card__cover">
-      <img
-        *ngIf="release.screenshots.length > 0"
-        class="release-card__cover-img"
-        loading="lazy"
-        [src]="release.screenshots[0].imageUrl"
-        [alt]="release.title"
-        [lightbox]="0"
-        [gallery]="galleryId"
-      />
+      <span
+        *ngIf="screenshotUrls.length > 0"
+        class="zx-prod-screenshots"
+      >
+        <ng-container *ngFor="let imageUrl of screenshotUrls">
+          <img
+            class="zx-prod-screenshot"
+            [ngClass]="{'zx-prod-screenshot-selected': imageUrl === activeScreenshotUrl}"
+            [src]="imageUrl"
+            [alt]="release.title"
+            loading="lazy"
+          />
+        </ng-container>
+        <span class="zx-prod-screenshots-selector" *ngIf="screenshotUrls.length > 1">
+          <span
+            *ngFor="let imageUrl of screenshotUrls"
+            class="zx-prod-screenshots-button"
+            (pointerenter)="setActiveScreenshotUrl(imageUrl)"
+          ></span>
+        </span>
+      </span>
     </div>
 
     <zx-inset class="release-card__body" padding="md">

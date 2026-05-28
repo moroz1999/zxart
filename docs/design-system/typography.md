@@ -37,7 +37,7 @@ Use directives when the semantic element already exists:
 
 ```html
 <h1 appHeading="display">Title</h1>
-<p appText="body">Content</p>
+<p appText="body" tone="primary">Content</p>
 <p appText="bodySm">Secondary content</p>
 <span appText="label" tone="muted">Metadata</span>
 <label appLabel>Field label</label>
@@ -46,7 +46,7 @@ Use directives when the semantic element already exists:
 Use `app-text` only when creating a standalone typography wrapper:
 
 ```html
-<app-text variant="body" tone="muted">Generated content</app-text>
+<app-text variant="body" tone="primary">Generated content</app-text>
 ```
 
 ## Rules

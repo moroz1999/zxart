@@ -143,7 +143,7 @@
         <zx-inset class="zx-prod-row" side="block" padding="md" *ngIf="model.publishersInfo.length">
           <zx-inline gap="lg" align="baseline" justify="between">
           <span appText="label" tone="muted">{{ "zx-prod.publishers" | translate }}</span>
-          <span appText="label">
+          <span appText="label" tone="primary">
             <ng-container *ngFor="let publisher of model.publishersInfo; last as last"><a
               appText="label" tone="link" [href]="publisher.url">{{ publisher.title }}</a><span *ngIf="!last">, </span></ng-container>
           </span>
@@ -153,7 +153,7 @@
           <zx-inline gap="lg" align="baseline" justify="between">
           <span appText="label" tone="muted">{{ "zx-prod.authors" | translate }}</span>
           <!-- @formatter:off -->
-                <span appText="label">
+                <span appText="label" tone="primary">
                     <ng-container *ngFor="let author of model.authorsInfoShort; last as last"><a
                             appText="label" tone="link" [href]="author.url">{{ author.title }}</a><ng-container *ngIf="author.roles && author.roles.length">&nbsp;(<ng-container *ngFor="let role of author.roles; last as last2">{{ "author.role." + role | translate }}<ng-container *ngIf="!last2">, </ng-container></ng-container>)</ng-container><ng-container *ngIf="!last">, </ng-container>
                     </ng-container>
@@ -164,7 +164,7 @@
         <zx-inset class="zx-prod-row" side="block" padding="md" *ngIf="model.categoriesInfo.length">
           <zx-inline gap="lg" align="baseline" justify="between">
           <span appText="label" tone="muted">{{ "zx-prod.categories" | translate }}</span>
-          <span appText="label">
+          <span appText="label" tone="primary">
             <ng-container *ngFor="let category of model.categoriesInfo; last as last">
             <span class="zx-prod-category"
                   appText="label"
@@ -177,7 +177,7 @@
         <zx-inset class="zx-prod-row" side="block" padding="md" *ngIf="model.languagesInfo.length">
           <zx-inline gap="lg" align="baseline" justify="between">
           <span appText="label" tone="muted">{{ "zx-prod.languages" | translate }}</span>
-          <span appText="label">
+          <span appText="label" tone="primary">
             <ng-container *ngFor="let language of model.languagesInfo; last as last">
             <span
               class="zx-prod-language"
@@ -192,7 +192,7 @@
         <zx-inset class="zx-prod-row" side="block" padding="md" *ngIf="model.partyInfo">
           <zx-inline gap="lg" align="baseline" justify="between">
           <span appText="label" tone="muted">{{ "zx-prod.parties" | translate }}</span>
-          <zx-inline gap="xs" align="center" appText="label">
+          <zx-inline gap="xs" align="center" appText="label" tone="primary">
             <zx-party-place [place]="model.partyPlace"></zx-party-place>
             <a appText="label" tone="link" [href]="model.partyInfo.url">{{ model.partyInfo.title }}</a>
           </zx-inline>

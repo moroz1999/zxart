@@ -13,7 +13,7 @@
   <zx-stack spacing="xl">
     <section *ngIf="details.description">
       <h2 appHeading="headline">{{ 'release-details.description' | translate }}</h2>
-      <p appText="body" [innerHTML]="details.description"></p>
+      <p appText="body" tone="primary" [innerHTML]="details.description"></p>
     </section>
 
     <zx-release-screenshots-section

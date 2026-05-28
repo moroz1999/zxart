@@ -2,30 +2,19 @@
 
 :host {
   display: grid;
+  grid-template-columns: repeat(var(--zx-grid-columns), minmax(0, 1fr));
 }
 
-:host.zx-grid--columns-1 {
-  grid-template-columns: minmax(0, 1fr);
+@include bp.media-breakpoint-down(lg) {
+  :host {
+    grid-template-columns: repeat(var(--zx-grid-tablet-columns), minmax(0, 1fr));
+  }
 }
 
-:host.zx-grid--columns-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-:host.zx-grid--columns-3 {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-:host.zx-grid--columns-4 {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-:host.zx-grid--columns-5 {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-}
-
-:host.zx-grid--columns-6 {
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+@include bp.media-breakpoint-down(md) {
+  :host {
+    grid-template-columns: repeat(var(--zx-grid-mobile-columns), minmax(0, 1fr));
+  }
 }
 
 :host.zx-grid--rows-auto {
@@ -134,10 +123,4 @@
 
 :host.zx-grid--justify-stretch {
   justify-items: stretch;
-}
-
-@include bp.media-breakpoint-down(lg) {
-  :host {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
