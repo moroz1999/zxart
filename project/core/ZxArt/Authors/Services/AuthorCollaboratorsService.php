@@ -101,6 +101,7 @@ readonly final class AuthorCollaboratorsService
                 url: (string)$element->getUrl(),
                 years: $years,
                 membersCount: $members,
+                jointProds: $record['prods'],
             );
         }
         return $groups;

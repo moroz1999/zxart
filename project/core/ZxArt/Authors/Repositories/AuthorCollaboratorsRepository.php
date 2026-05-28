@@ -67,7 +67,7 @@ readonly final class AuthorCollaboratorsRepository extends AbstractRepository
      * Returns groups connected to the same prods or releases as the author.
      *
      * @param int[] $authorIds main author + alias IDs
-     * @return array<array{groupId: int, years: int[], total: int}>
+     * @return array<array{groupId: int, years: int[], total: int, prods: int}>
      */
     public function findGroupStats(array $authorIds): array
     {
@@ -133,6 +133,7 @@ readonly final class AuthorCollaboratorsRepository extends AbstractRepository
                 'groupId' => $row['groupId'],
                 'years' => array_values($row['years']),
                 'total' => $row['total'],
+                'prods' => $row['prods'],
             ],
             array_slice($stats, 0, 30),
         );
@@ -183,6 +184,7 @@ readonly final class AuthorCollaboratorsRepository extends AbstractRepository
                     'groupId' => $groupId,
                     'years' => [],
                     'total' => 0,
+                    'prods' => 0,
                     'works' => [],
                 ];
             }
@@ -193,6 +195,9 @@ readonly final class AuthorCollaboratorsRepository extends AbstractRepository
 
             $stats[$groupId]['works'][$workKey] = true;
             $stats[$groupId]['total']++;
+            if ($workType === 'prod') {
+                $stats[$groupId]['prods']++;
+            }
 
             $year = (int)$row['year'];
             if ($year > 0) {

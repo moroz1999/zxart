@@ -11,11 +11,13 @@ import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.componen
 import {ZxAuthorPersonCardComponent} from '../zx-author-person-card/zx-author-person-card.component';
 import {ZxRowSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
+import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 
 @Component({
   selector: 'zx-author-collaborators',
   standalone: true,
-  imports: [CommonModule, TranslateModule, ZxPanelComponent, ZxAuthorPersonCardComponent, ZxRowSkeletonComponent, InViewportDirective],
+  imports: [CommonModule, TranslateModule, ZxPanelComponent, ZxAuthorPersonCardComponent, ZxRowSkeletonComponent, InViewportDirective, HeadingDirective, TextDirective],
   templateUrl: './zx-author-collaborators.component.html',
   styleUrl: './zx-author-collaborators.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

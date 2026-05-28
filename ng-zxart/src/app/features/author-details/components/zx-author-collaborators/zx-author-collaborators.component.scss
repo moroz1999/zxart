@@ -50,9 +50,10 @@
 }
 
 .ap-collab__group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--space-8);
   padding: var(--space-8);
   border-radius: var(--radius-md);
   text-decoration: none;
@@ -62,6 +63,13 @@
   &:hover {
     background: var(--secondary-100);
   }
+}
+
+.ap-collab__group-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
 }
 
 .ap-collab__group-head {
@@ -88,4 +96,16 @@
 .ap-collab__group-meta {
   font-size: var(--font-xs);
   color: var(--text-light-color);
+}
+
+.ap-collab__group-total {
+  text-align: right;
+  min-width: var(--space-32);
+  display: flex;
+  flex-direction: column;
+}
+
+.ap-collab__group-total-value {
+  font-family: var(--zx-author-person-card-value-font);
+  color: var(--text-color);
 }

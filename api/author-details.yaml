@@ -509,7 +509,7 @@ components:
 
     AuthorCollaboratorGroup:
       type: object
-      required: [id, title, url, years, membersCount]
+      required: [id, title, url, years, membersCount, jointProds]
       properties:
         id:
           type: integer
@@ -521,6 +521,8 @@ components:
           type: string
           nullable: true
         membersCount:
+          type: integer
+        jointProds:
           type: integer
 
     AuthorCollaborators:

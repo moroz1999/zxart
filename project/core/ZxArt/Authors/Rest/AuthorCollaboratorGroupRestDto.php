@@ -12,6 +12,7 @@ readonly final class AuthorCollaboratorGroupRestDto
         public string $url,
         public ?string $years,
         public int $membersCount,
+        public int $jointProds,
     ) {
     }
 }

@@ -571,6 +571,7 @@
       "people": "Personas",
       "groups": "Grupos",
       "joint": "conjunta",
+      "prods": "{{count}} programas",
       "members": "{{count}} miembros"
     }
   },

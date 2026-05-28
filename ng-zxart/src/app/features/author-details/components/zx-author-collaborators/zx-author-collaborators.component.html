@@ -32,12 +32,18 @@
       </div>
       <div class="ap-collab__groups">
         <a *ngFor="let g of groups" [href]="g.url" class="ap-collab__group">
-          <div class="ap-collab__group-head">
-            <span class="ap-collab__group-name">{{ g.title }}</span>
-            <span *ngIf="g.years" class="ap-collab__group-years">{{ g.years }}</span>
+          <div class="ap-collab__group-body">
+            <div class="ap-collab__group-head">
+              <span class="ap-collab__group-name">{{ g.title }}</span>
+              <span *ngIf="g.years" class="ap-collab__group-years">{{ g.years }}</span>
+            </div>
+            <div *ngIf="g.membersCount > 0" class="ap-collab__group-meta">
+              {{ 'author-details.collaborators.members' | translate: {count: g.membersCount} }}
+            </div>
           </div>
-          <div class="ap-collab__group-meta">
-            {{ 'author-details.collaborators.members' | translate: {count: g.membersCount} }}
+          <div class="ap-collab__group-total">
+            <span appHeading="title" class="ap-collab__group-total-value">{{ g.jointProds }}</span>
+            <span appText="caption" tone="muted">{{ 'author-details.collaborators.joint' | translate }}</span>
           </div>
         </a>
       </div>

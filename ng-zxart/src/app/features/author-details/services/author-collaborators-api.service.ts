@@ -19,6 +19,7 @@ export interface CollaboratorGroupDto {
   url: string;
   years: string | null;
   membersCount: number;
+  jointProds: number;
 }
 
 export interface AuthorCollaboratorsDto {
