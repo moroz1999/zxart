@@ -9,12 +9,14 @@ use authorElement;
 use controller;
 use privilegesManager;
 use structureManager;
+use userElement;
 use ZxArt\FileParsing\ZxParsingManager;
 use ZxArt\Prods\Dto\ProdCategoryPathDto;
 use ZxArt\Prods\Dto\ProdCategoryRefDto;
 use ZxArt\Prods\Dto\ProdReleaseFormatDto;
 use ZxArt\Prods\Dto\ProdVotingDto;
 use ZxArt\Prods\Exception\ProdDetailsException;
+use ZxArt\Prods\Dto\ProdSubmitterDto;
 use ZxArt\Prods\ProdInfoBuilder;
 use ZxArt\Prods\ProdMediaService;
 use ZxArt\Releases\Dto\ReleaseDetailsDto;
@@ -114,6 +116,22 @@ readonly class ReleaseDetailsService
             canUploadScreenshot: $canUploadScreenshot,
             screenshotUploadUrl: $releaseUrl . 'id:' . $release->getId() . '/action:uploadScreenshot/',
             canReorderScreenshots: $canReorderScreenshots,
+            dateCreated: $release->dateCreated,
+            submitter: $this->buildSubmitter($release),
+        );
+    }
+
+    private function buildSubmitter(zxReleaseElement $release): ?ProdSubmitterDto
+    {
+        $user = $release->getUserElement();
+        if (!$user instanceof userElement) {
+            return null;
+        }
+
+        return new ProdSubmitterDto(
+            id: $user->getId(),
+            userName: $this->infoBuilder->decodeText($user->userName),
+            url: (string)$user->getUrl(),
         );
     }
 

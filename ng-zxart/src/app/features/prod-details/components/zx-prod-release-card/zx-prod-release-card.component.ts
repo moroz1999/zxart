@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {ZxCardScreenshotGalleryComponent} from '../../../../shared/ui/zx-card-screenshot-preview/zx-card-screenshot-gallery.component';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
@@ -30,6 +31,7 @@ const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 't
     ZxPanelComponent,
     ZxReleaseTypeBadgeComponent,
     ZxChipComponent,
+    ZxCardScreenshotGalleryComponent,
   ],
   templateUrl: './zx-prod-release-card.component.html',
   styleUrls: ['./zx-prod-release-card.component.scss'],
@@ -41,7 +43,6 @@ export class ZxProdReleaseCardComponent implements OnChanges, OnInit {
   @Input({required: true}) screenshotUploadUrl!: string;
 
   screenshotUrls: string[] = [];
-  activeScreenshotUrl = '';
 
   constructor(
     private readonly emulator: EmulatorModalService,
@@ -53,7 +54,6 @@ export class ZxProdReleaseCardComponent implements OnChanges, OnInit {
       this.screenshotUrls = this.release.screenshots
         .map(screenshot => screenshot.imageUrl ?? screenshot.fullImageUrl ?? '')
         .filter((imageUrl): imageUrl is string => imageUrl !== '');
-      this.activeScreenshotUrl = this.screenshotUrls[0] ?? '';
     }
   }
 
@@ -84,7 +84,4 @@ export class ZxProdReleaseCardComponent implements OnChanges, OnInit {
     });
   }
 
-  setActiveScreenshotUrl(imageUrl: string): void {
-    this.activeScreenshotUrl = imageUrl;
-  }
 }

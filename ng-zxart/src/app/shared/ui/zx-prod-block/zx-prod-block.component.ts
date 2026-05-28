@@ -5,8 +5,7 @@ import {
   HostBinding,
   HostListener,
   Input,
-  OnChanges,
-  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {FadeInOut} from '../../animations/fade-in-out';
 import {AnimationEvent, trigger} from '@angular/animations';
@@ -29,6 +28,7 @@ import {ZxStackComponent} from '../zx-stack/zx-stack.component';
 import {HeadingDirective} from '../typography/directives/heading.directive';
 import {TextDirective} from '../typography/directives/text.directive';
 import {ZxPartyPlaceComponent} from '../../lib/zx-party-place/zx-party-place.component';
+import {ZxCardScreenshotGalleryComponent} from '../zx-card-screenshot-preview/zx-card-screenshot-gallery.component';
 
 @Component({
   selector: 'zx-prod-block',
@@ -55,20 +55,22 @@ import {ZxPartyPlaceComponent} from '../../lib/zx-party-place/zx-party-place.com
     HeadingDirective,
     TextDirective,
     ZxPartyPlaceComponent,
+    ZxCardScreenshotGalleryComponent,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxProdBlockComponent extends ZxProdComponent implements OnChanges {
+export class ZxProdBlockComponent extends ZxProdComponent {
   @Input() imagesLayout: ZxProdsListLayout = 'loading';
 
   @HostBinding('class.inlays') get inlays(): boolean {
     return this.imagesLayout === 'inlays';
   }
 
+  @ViewChild('inlaysGallery') private inlaysGallery?: ZxCardScreenshotGalleryComponent;
+
   displayScreenshots = false;
   displayAdditions = false;
-  activeScreenshotUrl = '';
 
   slideOpenInProgress = false;
   slideCloseInProgress = false;
@@ -82,30 +84,15 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnChanges {
     this.iconReg.loadSvg(`${environment.svgUrl}cart.svg`, 'cart')?.subscribe();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['imagesLayout']) {
-      if (this.imagesLayout !== 'inlays' && this.model.imagesUrls.length > 0) {
-        this.activeScreenshotUrl = this.model.imagesUrls[0];
-      } else if (this.imagesLayout === 'inlays' && this.model.inlaysUrls.length > 0) {
-        this.activeScreenshotUrl = this.model.inlaysUrls[0];
-      } else {
-        this.activeScreenshotUrl = '';
-      }
-    }
-  }
-
   @HostListener('pointerenter', ['$event'])
   enterHandler(event: PointerEvent): void {
     event.preventDefault();
     this.displayAdditions = true;
 
     if (this.imagesLayout === 'inlays') {
-      this.activeScreenshotUrl = this.model.inlaysUrls[0];
-    } else {
-      if (this.model.imagesUrls.length > 0) {
-        this.displayScreenshots = true;
-      }
-      this.activeScreenshotUrl = this.model.imagesUrls[0];
+      this.inlaysGallery?.reset();
+    } else if (this.model.imagesUrls.length > 0) {
+      this.displayScreenshots = true;
     }
   }
 
@@ -123,10 +110,6 @@ export class ZxProdBlockComponent extends ZxProdComponent implements OnChanges {
 
   @HostListener('contextmenu')
   onContextMenu(): void {}
-
-  setActiveScreenshotUrl(imageUrl: string): void {
-    this.activeScreenshotUrl = imageUrl;
-  }
 
   captureStartEvent(event: AnimationEvent) {
     if (event.fromState === 'void' && event.toState === null) {

@@ -1,0 +1,5 @@
+{{ 'zx-added-by.label' | translate }}
+<ng-container *ngIf="submitter">
+  <a [href]="submitter.url" class="added-by__link">{{ submitter.userName }}</a>,
+</ng-container>
+{{ dateAdded }}

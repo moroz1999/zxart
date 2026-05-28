@@ -81,4 +81,6 @@ export interface ReleaseDetailsDto {
   canUploadScreenshot: boolean;
   screenshotUploadUrl: string;
   canReorderScreenshots: boolean;
+  dateCreated: string;
+  submitter: {id: number; userName: string; url: string} | null;
 }

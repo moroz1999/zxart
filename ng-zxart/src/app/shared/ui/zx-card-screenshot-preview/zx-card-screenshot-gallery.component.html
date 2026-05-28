@@ -1,0 +1,15 @@
+<img
+  *ngFor="let url of imageUrls"
+  class="screenshot"
+  [ngClass]="{'screenshot--active': url === activeUrl}"
+  [src]="url"
+  [alt]="alt"
+  loading="lazy"
+/>
+<span class="selector" *ngIf="imageUrls.length > 1">
+  <span
+    *ngFor="let url of imageUrls"
+    class="selector__button"
+    (pointerenter)="setActive(url)"
+  ></span>
+</span>

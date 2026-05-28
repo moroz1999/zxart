@@ -15,6 +15,7 @@ use ZxArt\Prods\Dto\ProdPartyInfoDto;
 use ZxArt\Prods\Dto\ProdReleaseFormatDto;
 use ZxArt\Prods\Dto\ProdReleaseInlayDto;
 use ZxArt\Prods\Dto\ProdReleaseInstructionFileDto;
+use ZxArt\Prods\Dto\ProdSubmitterDto;
 use ZxArt\Prods\Dto\ProdVotingDto;
 use ZxArt\Releases\Rest\ReleaseDetailsRestDto;
 use ZxArt\Releases\Dto\ReleaseFileStructureItemDto;
@@ -73,6 +74,8 @@ readonly class ReleaseDetailsDto
         public bool $canUploadScreenshot,
         public string $screenshotUploadUrl,
         public bool $canReorderScreenshots,
+        public string $dateCreated,
+        public ?ProdSubmitterDto $submitter,
     ) {
     }
 }

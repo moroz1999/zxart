@@ -1124,5 +1124,8 @@
     "hires": "Hires",
     "hgfx": "HGFX",
     "amxmouse": "AMX-Mouse"
+  },
+  "zx-added-by": {
+    "label": "Added"
   }
 }

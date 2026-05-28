@@ -1,0 +1,12 @@
+:host {
+  display: inline;
+}
+
+.added-by__link {
+  color: var(--zx-added-by-link-color);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

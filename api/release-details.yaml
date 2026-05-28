@@ -91,6 +91,8 @@ components:
         - canUploadScreenshot
         - screenshotUploadUrl
         - canReorderScreenshots
+        - dateCreated
+        - submitter
       properties:
         id:
           type: integer
@@ -190,6 +192,13 @@ components:
           type: string
         canReorderScreenshots:
           type: boolean
+        dateCreated:
+          type: string
+        submitter:
+          oneOf:
+            - $ref: 'prod-details.yaml#/components/schemas/ProdSubmitter'
+            - type: 'null'
+          nullable: true
 
     ReleaseProdRef:
       type: object

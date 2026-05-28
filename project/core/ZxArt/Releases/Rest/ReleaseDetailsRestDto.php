@@ -16,6 +16,7 @@ use ZxArt\Prods\Rest\ProdPartyInfoRestDto;
 use ZxArt\Prods\Rest\ProdReleaseFormatRestDto;
 use ZxArt\Prods\Rest\ProdReleaseInlayRestDto;
 use ZxArt\Prods\Rest\ProdReleaseInstructionFileRestDto;
+use ZxArt\Prods\Rest\ProdSubmitterRestDto;
 use ZxArt\Prods\Rest\ProdVotingRestDto;
 use ZxArt\Releases\Rest\ReleaseFileStructureItemRestDto;
 
@@ -82,6 +83,8 @@ readonly class ReleaseDetailsRestDto
         public bool $canUploadScreenshot,
         public string $screenshotUploadUrl,
         public bool $canReorderScreenshots,
+        public string $dateCreated,
+        public ?ProdSubmitterRestDto $submitter,
     ) {
     }
 }

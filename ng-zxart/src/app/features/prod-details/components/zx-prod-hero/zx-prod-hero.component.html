@@ -20,13 +20,10 @@
 
   <zx-inline gap="lg" align="center" justify="between" [wrap]="true">
     <zx-prod-vote-row [elementId]="core.elementId" [voting]="core.voting"></zx-prod-vote-row>
-    <span appText="label" tone="muted" class="hero-added">
-      {{ 'prod-details.added' | translate }}
-      <ng-container *ngIf="core.submitter as submitter">
-        <a [href]="submitter.url">{{ submitter.userName }}</a>,
-      </ng-container>
-      {{ core.dateCreated }}
-    </span>
+    <zx-added-by
+      [dateAdded]="core.dateCreated"
+      [submitter]="core.submitter"
+    ></zx-added-by>
   </zx-inline>
 
   <zx-inline *ngIf="hasPeopleInfo" gap="xs" align="baseline" [wrap]="true" appText="label" tone="muted">

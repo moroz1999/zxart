@@ -36,3 +36,9 @@
     [href]="hw.catalogueUrl"
   >{{ 'hardware.' + hw.id | translate }}</zx-button>
 </zx-inline>
+
+<zx-added-by
+  *ngIf="details.dateCreated"
+  [dateAdded]="details.dateCreated"
+  [submitter]="details.submitter"
+></zx-added-by>

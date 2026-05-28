@@ -7,17 +7,6 @@
 }
 
 
-.hero-added {
-  a {
-    color: var(--zx-prod-hero-people-link-color);
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-}
-
 .hero-people__label {
   color: var(--zx-prod-hero-people-label-color);
   font-weight: 700;

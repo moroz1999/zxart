@@ -9,6 +9,7 @@ import {HeadingDirective} from '../../../../shared/ui/typography/directives/head
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxProdPeopleRowComponent} from '../../../../shared/ui/zx-prod-people-row/zx-prod-people-row.component';
 import {ZxReleaseEditingControlsComponent} from '../zx-release-editing-controls/zx-release-editing-controls.component';
+import {ZxAddedByComponent} from '../../../../shared/ui/zx-added-by/zx-added-by.component';
 
 @Component({
   selector: 'zx-release-hero',
@@ -23,6 +24,7 @@ import {ZxReleaseEditingControlsComponent} from '../zx-release-editing-controls/
     TextDirective,
     ZxProdPeopleRowComponent,
     ZxReleaseEditingControlsComponent,
+    ZxAddedByComponent,
   ],
   templateUrl: './zx-release-hero.component.html',
   styleUrl: './zx-release-hero.component.scss',
