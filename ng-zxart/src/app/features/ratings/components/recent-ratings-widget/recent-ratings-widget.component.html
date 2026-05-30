@@ -8,7 +8,7 @@
           @for (item of items(); track $index) {
             <tr>
               <td><zx-user [user]="item.user"></zx-user></td>
-              <td class="rating-value">{{ item.rating }}</td>
+              <td class="rating-value"><span appText="label" tone="muted">{{ item.rating }}</span></td>
               <td><a [href]="item.targetUrl" appText="bodySm" tone="link">{{ item.targetTitle }}</a></td>
             </tr>
           }

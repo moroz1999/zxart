@@ -10,6 +10,7 @@ readonly class AuthorTabsRestDto
         public bool $hasPictures,
         public bool $hasTunes,
         public bool $hasProds,
+        public bool $hasCollaborators,
     ) {
     }
 }

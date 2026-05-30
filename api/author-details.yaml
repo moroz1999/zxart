@@ -219,12 +219,15 @@ components:
         - hasPictures
         - hasTunes
         - hasProds
+        - hasCollaborators
       properties:
         hasPictures:
           type: boolean
         hasTunes:
           type: boolean
         hasProds:
+          type: boolean
+        hasCollaborators:
           type: boolean
 
     AuthorBreadcrumb:

@@ -11,7 +11,7 @@
   }
 }
 
-@include bp.media-breakpoint-down(md) {
+@include bp.media-breakpoint-down(sm) {
   :host {
     grid-template-columns: repeat(var(--zx-grid-mobile-columns), minmax(0, 1fr));
   }

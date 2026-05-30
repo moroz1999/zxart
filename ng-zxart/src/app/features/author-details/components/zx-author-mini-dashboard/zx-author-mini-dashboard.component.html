@@ -66,7 +66,7 @@
             </zx-picture-card>
           </div>
           <ng-template #compactPicturesGrid>
-            <zx-grid [desktopColumns]="picturesColumns" mobileColumns="1" gap="sm">
+            <zx-grid [desktopColumns]="picturesColumns" tabletColumns="2" mobileColumns="1" gap="sm">
               <zx-picture-card
                 *ngFor="let picture of data.pictures; let pi = index"
                 [picture]="picture"

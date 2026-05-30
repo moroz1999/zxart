@@ -122,7 +122,7 @@
           <!-- @formatter:off -->
                 <span appText="label" tone="primary">
                     <ng-container *ngFor="let author of model.authorsInfoShort; last as last"><a
-                            appText="label" tone="link" [href]="author.url">{{ author.title }}</a><ng-container *ngIf="author.roles && author.roles.length">&nbsp;(<ng-container *ngFor="let role of author.roles; last as last2">{{ "author.role." + role | translate }}<ng-container *ngIf="!last2">, </ng-container></ng-container>)</ng-container><ng-container *ngIf="!last">, </ng-container>
+                            appText="label" tone="link" [href]="author.url">{{ author.title }}</a><ng-container *ngIf="author.roles && filterRoles(author.roles).length">&nbsp;(<ng-container *ngFor="let role of filterRoles(author.roles); last as last2">{{ "author.role." + role | translate }}<ng-container *ngIf="!last2">, </ng-container></ng-container>)</ng-container><ng-container *ngIf="!last">, </ng-container>
                     </ng-container>
                 </span>
                 <!-- @formatter:on -->

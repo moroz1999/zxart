@@ -11,16 +11,22 @@
             @if (comment.target) {
               <a [href]="getCommentUrl(comment)" class="latest-comment__link" appText="label" tone="muted-link">
                 @if (comment.author) {
-                  <zx-user [user]="comment.author" [linkDisabled]="true" [namePrimary]="true" class="latest-comment__author"></zx-user>:
+                  <zx-user [user]="comment.author" [linkDisabled]="true" [namePrimary]="true" class="latest-comment__author"></zx-user>
                 }
-                <span class="latest-comment__content" [innerHTML]="sanitizeHtml(displayContent(comment))"></span>
+                <span appText="label" tone="inherit" class="latest-comment__content">
+                  @if (comment.author) {: }
+                  <span [innerHTML]="sanitizeHtml(displayContent(comment))"></span>
+                </span>
               </a>
             } @else {
-              <span appText="label" tone="muted">
+              <span class="latest-comment__link" appText="label" tone="muted">
                 @if (comment.author) {
-                  <zx-user [user]="comment.author" [linkDisabled]="true" [namePrimary]="true" class="latest-comment__author"></zx-user>:
+                  <zx-user [user]="comment.author" [linkDisabled]="true" [namePrimary]="true" class="latest-comment__author"></zx-user>
                 }
-                <span class="latest-comment__content" [innerHTML]="sanitizeHtml(displayContent(comment))"></span>
+                <span appText="label" tone="inherit" class="latest-comment__content">
+                  @if (comment.author) {: }
+                  <span [innerHTML]="sanitizeHtml(displayContent(comment))"></span>
+                </span>
               </span>
             }
           </div>

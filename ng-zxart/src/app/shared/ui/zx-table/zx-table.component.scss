@@ -41,10 +41,6 @@
     padding: var(--zx-table-cell-padding);
   }
 
-  tbody > tr > td {
-    font-size: var(--zx-table-font-size);
-  }
-
   tbody > :nth-child(odd) th,
   tbody > :nth-child(odd) td {
     background: var(--zx-table-row-bg);
@@ -60,8 +56,5 @@
       font-size: var(--zx-table-header-font-size-mobile);
     }
 
-    tbody > tr > td {
-      font-size: var(--zx-table-cell-font-size-mobile);
-    }
   }
 }

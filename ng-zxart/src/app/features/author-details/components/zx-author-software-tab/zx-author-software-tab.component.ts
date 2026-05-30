@@ -132,8 +132,12 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
     window.history.pushState(null, '', newUrl);
   }
 
+  getVisibleRoles(roles: string[]): string[] {
+    return roles.filter(r => r !== 'unknown');
+  }
+
   getRoleLabelKey(role: string): string {
-    return role === 'unknown' ? 'author.role.unknown' : `prod-details.role_${role}`;
+    return `prod-details.role_${role}`;
   }
 
   getRoleChipColor(role: string): ZxChipColor {

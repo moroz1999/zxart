@@ -70,8 +70,8 @@
       </div>
       <div zxProdsGrid>
         <zx-stack *ngFor="let prod of group.prods" gap="xs">
-          <zx-inline *ngIf="prod.rolesInProd.length && activeRole === ''" gap="xs" [wrap]="true" align="center">
-            <zx-chip *ngFor="let role of prod.rolesInProd" variant="opaque" size="sm" [color]="getRoleChipColor(role)">
+          <zx-inline *ngIf="getVisibleRoles(prod.rolesInProd).length && activeRole === ''" gap="xs" [wrap]="true" align="center">
+            <zx-chip *ngFor="let role of getVisibleRoles(prod.rolesInProd)" variant="opaque" size="sm" [color]="getRoleChipColor(role)">
               {{ getRoleLabelKey(role) | translate }}
             </zx-chip>
           </zx-inline>

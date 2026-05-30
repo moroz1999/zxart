@@ -6,6 +6,7 @@ namespace ZxArt\Authors\Repositories;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use ZxArt\Authors\ProdCodingRole;
 use ZxArt\LinkTypes;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\EntityType;
@@ -77,6 +78,20 @@ readonly final class AuthorProdsRepository extends AbstractRepository
     public function countByAuthorId(int $authorId): int
     {
         return $this->countItems($this->getAuthorAndAliasIds($authorId), '');
+    }
+
+    public function hasCodingRoles(int $authorId): bool
+    {
+        $authorIds = $this->getAuthorAndAliasIds($authorId);
+        $roles = array_map(static fn(ProdCodingRole $role): string => $role->value, ProdCodingRole::cases());
+
+        $prodQuery = $this->applyRolesFilter($this->getProdQuery($authorIds, ''), $roles);
+        if ($prodQuery->exists()) {
+            return true;
+        }
+
+        $releaseQuery = $this->applyRolesFilter($this->getReleaseQuery($authorIds, ''), $roles);
+        return $releaseQuery->exists();
     }
 
     /**
@@ -167,6 +182,21 @@ readonly final class AuthorProdsRepository extends AbstractRepository
                 '%"' . $escapedRole . '"%'
             );
         }
+
+        return $query;
+    }
+
+    /**
+     * @param string[] $roles
+     */
+    private function applyRolesFilter(Builder $query, array $roles): Builder
+    {
+        $column = $this->tableColumn(DatabaseTable::Authorship, 'roles');
+        $query->where(static function (Builder $q) use ($column, $roles): void {
+            foreach ($roles as $role) {
+                $q->orWhere($column, 'like', '%"' . $role . '"%');
+            }
+        });
 
         return $query;
     }

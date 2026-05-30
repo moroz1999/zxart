@@ -230,7 +230,7 @@ readonly class AuthorDetailsService
         if ($hasTunes) {
             $roles[] = 'musician';
         }
-        if ($counters->prods > 0) {
+        if ($this->authorProdsRepository->hasCodingRoles($author->getId())) {
             $roles[] = 'coder';
         }
         return $roles;
@@ -304,10 +304,15 @@ readonly class AuthorDetailsService
 
     private function buildTabs(AuthorCountersDto $counters): AuthorTabsDto
     {
+        $hasPictures = $counters->pictures > 0;
+        $hasTunes = $counters->tunes > 0;
+        $hasProds = $counters->prods > 0;
+
         return new AuthorTabsDto(
-            hasPictures: $counters->pictures > 0,
-            hasTunes: $counters->tunes > 0,
-            hasProds: $counters->prods > 0,
+            hasPictures: $hasPictures,
+            hasTunes: $hasTunes,
+            hasProds: $hasProds,
+            hasCollaborators: $hasPictures || $hasTunes || $hasProds,
         );
     }
 

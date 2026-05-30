@@ -93,7 +93,8 @@ export class ZxAuthorDetailsComponent implements OnInit {
     if (core.tabs.hasTunes) tabs.push('music');
     if (core.tabs.hasProds) tabs.push('software');
 
-    tabs.push('collaborators', 'discussion');
+    if (core.tabs.hasCollaborators) tabs.push('collaborators');
+    tabs.push('discussion');
 
     return tabs;
   }

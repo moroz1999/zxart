@@ -91,7 +91,7 @@ class Firstpage extends LoggedControllerApplication
         $limit = $this->getIntParam('limit', 10);
         $minRating = $this->getFloatParam('minRating', 0.0);
         $startYearOffset = $this->getIntParam('startYearOffset', 0);
-        $startYear = $startYearOffset > 0 ? (int)date('Y') - $startYearOffset : null;
+        $startYear = $startYearOffset >= 0 ? (int)date('Y') - $startYearOffset : null;
         $dtos = $this->prodsService->getNewProds($limit, $minRating, 30, $startYear);
         $this->assignSuccess($this->mapProds($dtos));
     }

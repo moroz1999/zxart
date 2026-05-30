@@ -138,6 +138,10 @@ export class ZxProdBlockComponent extends ZxProdComponent {
     }
   }
 
+  filterRoles(roles: string[]): string[] {
+    return roles.filter(r => r !== 'unknown');
+  }
+
   cartClicked(event: MouseEvent) {
     event.preventDefault();
     this.analyticsService.reachGoal('open-cart-link', {}, () => window.open(this.model.externalLink));
