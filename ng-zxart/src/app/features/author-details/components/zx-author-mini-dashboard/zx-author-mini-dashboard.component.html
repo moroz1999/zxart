@@ -41,16 +41,14 @@
       titleLevel="h2"
       variant="elevated">
 
-    <zx-inline gap="md" [wrap]="true" align="stretch">
+    <zx-grid [desktopColumns]="dashboardColumns" tabletColumns="1" gap="md" align="stretch">
 
       <zx-panel
         *ngIf="data.pictures.length > 0"
         variant="flat"
         [topStripe]="'artist'"
         radius="lg"
-        padding="sm"
-        class="ap-dash__col--pix"
-        [class.ap-dash__col--expanded]="expandedCardsLayout">
+        padding="sm">
         <zx-stack gap="sm">
           <zx-inset padding="xs" side="block">
             <zx-inline gap="sm" align="center">
@@ -68,7 +66,7 @@
             </zx-picture-card>
           </div>
           <ng-template #compactPicturesGrid>
-            <zx-grid [columns]="picturesColumns" gap="sm">
+            <zx-grid [desktopColumns]="picturesColumns" mobileColumns="1" gap="sm">
               <zx-picture-card
                 *ngFor="let picture of data.pictures; let pi = index"
                 [picture]="picture"
@@ -83,9 +81,7 @@
       <zx-table
         *ngIf="data.tunes.length > 0"
         size="xs"
-        [topStripe]="'primary'"
-        class="ap-dash__col--flex"
-        [class.ap-dash__col--expanded]="twoSectionLayout">
+        [topStripe]="'primary'">
         <zx-inset padding="sm">
           <zx-inset padding="xs" side="block">
             <zx-inline gap="sm" align="center">
@@ -113,9 +109,7 @@
         variant="flat"
         [topStripe]="'coder'"
         radius="lg"
-        padding="sm"
-        class="ap-dash__col--soft"
-        [class.ap-dash__col--expanded]="expandedCardsLayout">
+        padding="sm">
         <zx-stack gap="sm">
           <zx-inset padding="xs" side="block">
             <zx-inline gap="sm" align="center">
@@ -134,7 +128,7 @@
         </zx-stack>
       </zx-panel>
 
-    </zx-inline>
+    </zx-grid>
     </zx-panel>
   </ng-container>
 </ng-container>

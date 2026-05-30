@@ -4,6 +4,7 @@ import {Lightbox} from 'ng-gallery/lightbox';
 import {mapGalleryItemToImageItem, mapPictureToGalleryItem} from './picture-gallery.mapper';
 import {ZxPictureDto} from '../../../shared/models/zx-picture-dto';
 import {PictureGalleryItem} from '../models/picture-gallery-item';
+import {AnalyticsService} from '../../../shared/services/analytics.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,11 @@ export class PictureGalleryService {
   constructor(
     private gallery: Gallery,
     private lightbox: Lightbox,
+    private analytics: AnalyticsService,
   ) {
+    this.lightbox.opened.subscribe(() => {
+      this.analytics.reachGoal('viewimage');
+    });
     this.lightbox.closed.subscribe(() => {
       this.zoomEnabled.set(false);
     });

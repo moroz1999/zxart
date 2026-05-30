@@ -1,0 +1,14 @@
+@use 'shared/breakpoints' as bp;
+
+[zxGridItem] {
+  grid-column: span var(--zx-grid-item-desktop-span);
+  min-width: 0;
+
+  @include bp.media-breakpoint-down(lg) {
+    grid-column: span var(--zx-grid-item-tablet-span);
+  }
+
+  @include bp.media-breakpoint-down(md) {
+    grid-column: span var(--zx-grid-item-mobile-span);
+  }
+}

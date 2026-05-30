@@ -11,6 +11,8 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 import {ZxAuthorMiniDashboardComponent} from '../zx-author-mini-dashboard/zx-author-mini-dashboard.component';
 import {ZxAuthorRatingsComponent} from '../zx-author-ratings/zx-author-ratings.component';
 import {ZxAuthorCommentsComponent} from '../zx-author-comments/zx-author-comments.component';
+import {ZxGridComponent} from '../../../../shared/ui/zx-grid/zx-grid.component';
+import {ZxGridItemDirective} from '../../../../shared/ui/zx-grid/zx-grid-item.directive';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxSkeletonBoneComponent} from '../../../../shared/ui/zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
@@ -38,6 +40,8 @@ type AuthorTabId = 'best' | 'gfx' | 'music' | 'software' | 'collaborators' | 'di
     ZxAuthorMiniDashboardComponent,
     ZxAuthorRatingsComponent,
     ZxAuthorCommentsComponent,
+    ZxGridComponent,
+    ZxGridItemDirective,
     ZxInlineComponent,
     ZxPanelComponent,
     ZxSkeletonBoneComponent,

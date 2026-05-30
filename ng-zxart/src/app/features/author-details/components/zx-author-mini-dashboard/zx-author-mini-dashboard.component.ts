@@ -79,6 +79,7 @@ export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges, OnDest
   twoSectionLayout = false;
   expandedCardsLayout = false;
   picturesColumns: '1' | '2' = '1';
+  dashboardColumns: '1' | '2' | '3' = '1';
   requested = false;
 
   constructor(
@@ -135,6 +136,7 @@ export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges, OnDest
     this.twoSectionLayout = sectionCount === 2;
     this.expandedCardsLayout = sectionCount <= 2;
     this.picturesColumns = this.twoSectionLayout && this.tabs.hasPictures ? '2' : '1';
+    this.dashboardColumns = sectionCount >= 3 ? '3' : sectionCount === 2 ? '2' : '1';
 
     if (this.requested) {
       this.dashboardService.setContext(this.elementId, this.tabs);

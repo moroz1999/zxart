@@ -56,10 +56,10 @@
         [href]="getTabHref('discussion')">
         <ng-template zxTabContent>
           <zx-stack spacing="xl">
-            <zx-inline gap="xl" align="start">
-              <zx-author-ratings [elementId]="core.id"></zx-author-ratings>
-              <zx-author-comments [elementId]="core.id"></zx-author-comments>
-            </zx-inline>
+            <zx-grid desktopColumns="5" mobileColumns="1" gap="xl" align="start">
+              <zx-author-ratings zxGridItem zxGridDesktopSpan="2" [elementId]="core.id"></zx-author-ratings>
+              <zx-author-comments zxGridItem zxGridDesktopSpan="3" [elementId]="core.id"></zx-author-comments>
+            </zx-grid>
             <zx-comments-list-view [elementId]="core.id"></zx-comments-list-view>
           </zx-stack>
         </ng-template>

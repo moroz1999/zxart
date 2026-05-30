@@ -15,7 +15,7 @@ type GridAlignment = 'start' | 'center' | 'end' | 'stretch';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxGridComponent {
-  @Input() columns: GridColumns = '1';
+  @Input() desktopColumns: GridColumns = '1';
   @Input() mobileColumns: GridColumns | null = null;
   @Input() tabletColumns: GridColumns | null = null;
 
@@ -30,17 +30,17 @@ export class ZxGridComponent {
 
   @HostBinding('style.--zx-grid-columns')
   get hostColumns(): GridColumns {
-    return this.columns;
+    return this.desktopColumns;
   }
 
   @HostBinding('style.--zx-grid-mobile-columns')
   get hostMobileColumns(): GridColumns {
-    return this.mobileColumns ?? this.columns;
+    return this.mobileColumns ?? this.tabletColumns ?? this.desktopColumns;
   }
 
   @HostBinding('style.--zx-grid-tablet-columns')
   get hostTabletColumns(): GridColumns {
-    return this.tabletColumns ?? this.columns;
+    return this.tabletColumns ?? this.desktopColumns;
   }
 
   @HostBinding('class')

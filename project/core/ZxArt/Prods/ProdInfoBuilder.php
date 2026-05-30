@@ -8,8 +8,10 @@ use authorElement;
 use authorAliasElement;
 use DesignTheme;
 use DesignThemesManager;
+use groupAliasElement;
 use groupElement;
 use partyElement;
+use structureElement;
 use translationsManager;
 use ZxArt\Prods\Dto\ProdAuthorInfoDto;
 use ZxArt\Prods\Dto\ProdGroupRefDto;
@@ -159,18 +161,7 @@ readonly class ProdInfoBuilder
      */
     public function buildReleaseBy(zxReleaseElement $release): array
     {
-        $refs = [];
-        foreach ($release->getReleaseBy() as $element) {
-            if (!$element instanceof groupElement && !$element instanceof authorElement) {
-                continue;
-            }
-            $refs[] = new ProdGroupRefDto(
-                id: $element->getId(),
-                title: $this->decodeText($element->title),
-                url: (string)$element->getUrl(),
-            );
-        }
-        return $refs;
+        return $this->buildPublisherRefs($release->getReleaseBy());
     }
 
     /**
@@ -178,9 +169,23 @@ readonly class ProdInfoBuilder
      */
     public function buildReleasePublishers(zxReleaseElement $release): array
     {
+        return $this->buildPublisherRefs($release->publishers);
+    }
+
+    /**
+     * @param iterable<mixed> $publishers
+     * @return ProdGroupRefDto[]
+     */
+    private function buildPublisherRefs(iterable $publishers): array
+    {
         $refs = [];
-        foreach ($release->publishers as $publisher) {
-            if (!$publisher instanceof groupElement) {
+        foreach ($publishers as $publisher) {
+            if (
+                !$publisher instanceof groupElement
+                && !$publisher instanceof groupAliasElement
+                && !$publisher instanceof authorElement
+                && !$publisher instanceof authorAliasElement
+            ) {
                 continue;
             }
             $refs[] = new ProdGroupRefDto(

@@ -24,6 +24,7 @@ import {TsconfEngine} from '../../engines/tsconf.engine';
 import {SamcoupeEngine} from '../../engines/samcoupe.engine';
 import {ZxNextEngine} from '../../engines/zxnext.engine';
 import {EmulatorScreenshotService, UspScreenSelection} from '../../services/emulator-screenshot.service';
+import {AnalyticsService} from '../../../../shared/services/analytics.service';
 
 export interface EmulatorDialogData {
   emulatorType: EmulatorType;
@@ -64,6 +65,7 @@ export class ZxEmulatorDialogComponent implements OnInit, OnDestroy {
     private dialogRef: DialogRef<void, ZxEmulatorDialogComponent>,
     private screenshotService: EmulatorScreenshotService,
     private cdr: ChangeDetectorRef,
+    private analytics: AnalyticsService,
   ) {}
 
   get showSamcoupeNote(): boolean {
@@ -81,6 +83,7 @@ export class ZxEmulatorDialogComponent implements OnInit, OnDestroy {
       .then(() => {
         this.loading = false;
         this.cdr.markForCheck();
+        this.analytics.reachGoal('emulatorstart');
       })
       .catch((err: unknown) => {
         this.loading = false;
