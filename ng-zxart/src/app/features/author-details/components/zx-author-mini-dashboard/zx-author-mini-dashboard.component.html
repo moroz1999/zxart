@@ -119,11 +119,19 @@
             </zx-inline>
           </zx-inset>
           <div zxProdsGrid>
-            <zx-prod-block
-              *ngFor="let prod of data.prods"
-              [model]="toProdModel(prod)"
-              [imagesLayout]="'loading'">
-            </zx-prod-block>
+            <ng-container *ngFor="let prod of data.prods" [ngSwitch]="prod.type">
+              <zx-prod-release-card
+                *ngSwitchCase="'release'"
+                [release]="asRelease(prod)"
+                [canUploadScreenshot]="false"
+                screenshotUploadUrl="">
+              </zx-prod-release-card>
+              <zx-prod-block
+                *ngSwitchDefault
+                [model]="toProdModel(asProd(prod))"
+                [imagesLayout]="'loading'">
+              </zx-prod-block>
+            </ng-container>
           </div>
         </zx-stack>
       </zx-panel>

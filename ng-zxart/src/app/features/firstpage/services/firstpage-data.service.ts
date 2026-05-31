@@ -7,6 +7,7 @@ import {ZxTuneDto} from '../../../shared/models/zx-tune-dto';
 import {ZxProdDto} from '../../../shared/models/zx-prod-dto';
 import {PartyDto} from '../../../shared/models/party-dto';
 import {ZxProd} from '../../../shared/models/zx-prod';
+import {ProdReleaseDto} from '../../prod-details/models/prod-release.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -54,10 +55,8 @@ export class FirstpageDataService {
     );
   }
 
-  getLatestAddedReleases(limit: number): Observable<ZxProd[]> {
-    return this.get<ZxProdDto[]>('latestAddedReleases', {limit}).pipe(
-      map(dtos => dtos.map(dto => new ZxProd(dto)))
-    );
+  getLatestAddedReleases(limit: number): Observable<ProdReleaseDto[]> {
+    return this.get<ProdReleaseDto[]>('latestAddedReleases', {limit});
   }
 
   getSupportProds(limit: number): Observable<ZxProd[]> {

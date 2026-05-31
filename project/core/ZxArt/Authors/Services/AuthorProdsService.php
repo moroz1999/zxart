@@ -11,9 +11,10 @@ use zxProdElement;
 use zxReleaseElement;
 use ZxArt\Authors\Repositories\AuthorProdsRepository;
 use ZxArt\Prods\Dto\ProdDto;
+use ZxArt\Prods\Dto\ProdReleaseDto;
 use ZxArt\Prods\Exception\ProdDetailsException;
+use ZxArt\Prods\ProdReleasesService;
 use ZxArt\Prods\ProdsTransformer;
-use ZxArt\Releases\ReleasesTransformer;
 
 readonly class AuthorProdsService
 {
@@ -21,12 +22,12 @@ readonly class AuthorProdsService
         private structureManager $structureManager,
         private AuthorProdsRepository $authorProdsRepository,
         private ProdsTransformer $prodsTransformer,
-        private ReleasesTransformer $releasesTransformer,
+        private ProdReleasesService $prodReleasesService,
     ) {
     }
 
     /**
-     * @return array{items: list<array{prod: ProdDto, rolesInProd: string[]}>, total: int, availableRoles: string[]}
+     * @return array{items: list<array{type: 'prod', prod: ProdDto, rolesInProd: string[]}|array{type: 'release', release: ProdReleaseDto, rolesInProd: string[]}>, total: int, availableRoles: string[]}
      */
     public function getProdsPaged(
         int $authorId,
@@ -47,13 +48,18 @@ readonly class AuthorProdsService
         $items = [];
         foreach ($page['items'] as $item) {
             $element = $this->structureManager->getElementById($item['id']);
-            $prod = match (true) {
-                $element instanceof zxProdElement => $this->prodsTransformer->toDto($element),
-                $element instanceof zxReleaseElement => $this->releasesTransformer->toProdDto($element),
-                default => null,
-            };
-            if ($prod !== null) {
-                $items[] = ['prod' => $prod, 'rolesInProd' => $item['roles']];
+            if ($element instanceof zxProdElement) {
+                $items[] = [
+                    'type' => 'prod',
+                    'prod' => $this->prodsTransformer->toDto($element),
+                    'rolesInProd' => $item['roles'],
+                ];
+            } elseif ($element instanceof zxReleaseElement) {
+                $items[] = [
+                    'type' => 'release',
+                    'release' => $this->prodReleasesService->buildStandaloneRelease($element),
+                    'rolesInProd' => $item['roles'],
+                ];
             }
         }
 

@@ -39,7 +39,7 @@
             {{ 'author-details.software-tab.all-roles' | translate }}
           </zx-button>
           <zx-button
-            *ngFor="let role of availableRoles"
+            *ngFor="let role of getVisibleRoles(availableRoles)"
             size="sm"
             [color]="activeRole === role ? 'secondary' : 'outlined'"
             [disabled]="loading"
@@ -75,7 +75,19 @@
               {{ getRoleLabelKey(role) | translate }}
             </zx-chip>
           </zx-inline>
-          <zx-prod-block [model]="toProdModel(prod)" [imagesLayout]="'loading'"></zx-prod-block>
+          <ng-container [ngSwitch]="prod.type">
+            <zx-prod-release-card
+              *ngSwitchCase="'release'"
+              [release]="asRelease(prod)"
+              [canUploadScreenshot]="false"
+              screenshotUploadUrl="">
+            </zx-prod-release-card>
+            <zx-prod-block
+              *ngSwitchDefault
+              [model]="toProdModel(asProd(prod))"
+              [imagesLayout]="'loading'">
+            </zx-prod-block>
+          </ng-container>
         </zx-stack>
       </div>
     </div>

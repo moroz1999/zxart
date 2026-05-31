@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy,
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {BehaviorSubject, combineLatest, Subscription, switchMap} from 'rxjs';
-import {AuthorProdItem, AuthorProdsApiService} from '../../services/author-prods-api.service';
+import {AuthorProdEntry, AuthorProdItem, AuthorReleaseEntry, AuthorProdsApiService} from '../../services/author-prods-api.service';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
 import {ZxProdBlockComponent} from '../../../../shared/ui/zx-prod-block/zx-prod-block.component';
 import {ZxProd} from '../../../../shared/models/zx-prod';
@@ -16,6 +16,7 @@ import {ZxChipComponent, ZxChipColor} from '../../../../shared/ui/zx-chip/zx-chi
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxProdsGridDirective} from '../../../../shared/directives/prods-grid.directive';
+import {ZxProdReleaseCardComponent} from '../../../prod-details/components/zx-prod-release-card/zx-prod-release-card.component';
 
 const PAGE_SIZE = 15;
 
@@ -42,6 +43,7 @@ interface YearGroup {
     TextDirective,
     ZxInlineComponent,
     ZxProdsGridDirective,
+    ZxProdReleaseCardComponent,
   ],
   templateUrl: './zx-author-software-tab.component.html',
   styleUrl: './zx-author-software-tab.component.scss',
@@ -147,8 +149,20 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
     return 'artist';
   }
 
-  toProdModel(dto: AuthorProdItem): ZxProd {
-    return new ZxProd(dto);
+  isProdEntry(item: AuthorProdItem): item is AuthorProdEntry {
+    return item.type === 'prod';
+  }
+
+  toProdModel(item: AuthorProdEntry): ZxProd {
+    return new ZxProd(item);
+  }
+
+  asRelease(item: AuthorProdItem): AuthorReleaseEntry {
+    return item as AuthorReleaseEntry;
+  }
+
+  asProd(item: AuthorProdItem): AuthorProdEntry {
+    return item as AuthorProdEntry;
   }
 
   private parseSortKey(sort: string): {sortKey: string; sortDir: string} {
@@ -157,15 +171,22 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
     return {sortKey: 'votes', sortDir: 'desc'};
   }
 
-  private buildGroups(prods: AuthorProdItem[], sort: string): YearGroup[] {
+  private getItemYear(item: AuthorProdItem): number {
+    if (item.type === 'release') {
+      return item.year ?? 0;
+    }
+    return item.year ? Number(item.year) : 0;
+  }
+
+  private buildGroups(items: AuthorProdItem[], sort: string): YearGroup[] {
     if (sort === 'votes') {
-      return [{year: null, prods}];
+      return [{year: null, prods: items}];
     }
     const byYear = new Map<number, AuthorProdItem[]>();
-    for (const prod of prods) {
-      const year = prod.year ? Number(prod.year) : 0;
+    for (const item of items) {
+      const year = this.getItemYear(item);
       const list = byYear.get(year) ?? [];
-      list.push(prod);
+      list.push(item);
       byYear.set(year, list);
     }
     const dir = sort === 'year-asc' ? 1 : -1;

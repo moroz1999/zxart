@@ -3,8 +3,19 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {ZxProdDto} from '../../../shared/models/zx-prod-dto';
+import {ProdReleaseDto} from '../../prod-details/models/prod-release.dto';
 
-export type AuthorProdItem = ZxProdDto & {rolesInProd: string[]};
+export interface AuthorProdEntry extends ZxProdDto {
+  readonly type: 'prod';
+  readonly rolesInProd: string[];
+}
+
+export interface AuthorReleaseEntry extends ProdReleaseDto {
+  readonly type: 'release';
+  readonly rolesInProd: string[];
+}
+
+export type AuthorProdItem = AuthorProdEntry | AuthorReleaseEntry;
 
 export interface AuthorProdsPage {
   items: AuthorProdItem[];

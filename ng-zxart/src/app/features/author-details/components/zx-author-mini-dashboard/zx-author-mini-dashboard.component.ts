@@ -7,7 +7,7 @@ import {AuthorTabsDto} from '../../models/author-core.dto';
 import {ZxTuneDto} from '../../../../shared/models/zx-tune-dto';
 import {AuthorMiniDashboardData, AuthorMiniDashboardService} from '../../services/author-mini-dashboard.service';
 import {PlayerService} from '../../../player/services/player.service';
-import {AuthorProdItem} from '../../services/author-prods-api.service';
+import {AuthorProdEntry, AuthorProdItem, AuthorReleaseEntry} from '../../services/author-prods-api.service';
 import {ZxPictureCardComponent} from '../../../../shared/ui/zx-picture-card/zx-picture-card.component';
 import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.component';
 import {ZxProdBlockComponent} from '../../../../shared/ui/zx-prod-block/zx-prod-block.component';
@@ -29,6 +29,7 @@ import {ZxProdsListSkeletonComponent} from '../../../../shared/ui/zx-skeleton/co
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
+import {ZxProdReleaseCardComponent} from '../../../prod-details/components/zx-prod-release-card/zx-prod-release-card.component';
 
 
 @Component({
@@ -56,6 +57,7 @@ import {PictureGalleryService} from '../../../picture-gallery/services/picture-g
     ZxProdsListSkeletonComponent,
     InViewportDirective,
     PictureGalleryHostComponent,
+    ZxProdReleaseCardComponent,
   ],
   templateUrl: './zx-author-mini-dashboard.component.html',
   styleUrl: './zx-author-mini-dashboard.component.scss',
@@ -151,8 +153,16 @@ export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges, OnDest
     this.dashboardService.setContext(this.elementId, this.tabs);
   }
 
-  toProdModel(dto: AuthorProdItem): ZxProd {
-    return new ZxProd(dto);
+  toProdModel(item: AuthorProdEntry): ZxProd {
+    return new ZxProd(item);
+  }
+
+  asRelease(item: AuthorProdItem): AuthorReleaseEntry {
+    return item as AuthorReleaseEntry;
+  }
+
+  asProd(item: AuthorProdItem): AuthorProdEntry {
+    return item as AuthorProdEntry;
   }
 
   onPlayRequested(tune: ZxTuneDto): void {

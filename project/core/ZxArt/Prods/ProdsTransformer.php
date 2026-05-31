@@ -54,6 +54,7 @@ readonly class ProdsTransformer
             legalStatus: $element->legalStatus ? (string)$element->legalStatus : null,
             languagesInfo: $element->getLanguagesInfo(),
             groupsInfo: $element->getGroupsInfo(),
+            publishersInfo: $element->getPublishersInfo(),
             youtubeId: $element->youtubeId ? (string)$element->youtubeId : null,
         );
     }

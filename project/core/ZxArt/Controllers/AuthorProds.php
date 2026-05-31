@@ -11,8 +11,8 @@ use Override;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
 use ZxArt\Authors\Services\AuthorProdsService;
-use ZxArt\Prods\Dto\ProdDto;
 use ZxArt\Prods\Exception\ProdDetailsException;
+use ZxArt\Prods\Rest\ProdReleaseRestDto;
 use ZxArt\Prods\Rest\ProdRestDto;
 
 class AuthorProds extends LoggedControllerApplication
@@ -50,8 +50,12 @@ class AuthorProds extends LoggedControllerApplication
             $this->renderer->assign('body', [
                 'items' => array_map(
                     function (array $item): array {
-                        $restDto = $this->objectMapper->map($item['prod'], ProdRestDto::class);
-                        return [...(array) $restDto, 'rolesInProd' => $item['rolesInProd']];
+                        if ($item['type'] === 'prod') {
+                            $restDto = $this->objectMapper->map($item['prod'], ProdRestDto::class);
+                            return [...(array) $restDto, 'type' => 'prod', 'rolesInProd' => $item['rolesInProd']];
+                        }
+                        $restDto = $this->objectMapper->map($item['release'], ProdReleaseRestDto::class);
+                        return [...(array) $restDto, 'type' => 'release', 'rolesInProd' => $item['rolesInProd']];
                     },
                     $result['items'],
                 ),

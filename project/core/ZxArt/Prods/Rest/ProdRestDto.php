@@ -14,6 +14,7 @@ readonly class ProdRestDto
      * @param array{id: int, title: string, url: string}|null $partyInfo
      * @param array<array{id: string, title: string, url: string|null}> $languagesInfo
      * @param array<array{id: int, title: string, url: string}> $groupsInfo
+     * @param array<array{id: int, title: string, url: string}> $publishersInfo
      */
     public function __construct(
         public int $id,
@@ -35,6 +36,7 @@ readonly class ProdRestDto
         public ?string $legalStatus,
         public array $languagesInfo,
         public array $groupsInfo,
+        public array $publishersInfo,
         public ?string $youtubeId,
         public ?string $releaseType = null,
     ) {

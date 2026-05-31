@@ -66,7 +66,8 @@ return [
     ProdElementService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     ProdCoreService::class => autowire(),
-    ProdReleasesService::class => autowire(),
+    ProdReleasesService::class => autowire()
+        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     ProdMediaService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     ProdArticlesService::class => autowire(),

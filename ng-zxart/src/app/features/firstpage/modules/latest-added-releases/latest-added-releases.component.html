@@ -8,6 +8,14 @@
     [error]="vm.error"
     [empty]="!vm.loading && vm.empty"
   >
-    <zx-prods-list-view [items$]="items$" [skeletonCount]="settings.limit"></zx-prods-list-view>
+    <zx-prods-list-skeleton *ngIf="vm.loading" [count]="settings.limit"></zx-prods-list-skeleton>
+    <div *ngIf="!vm.loading && vm.items.length > 0" zxProdsGrid>
+      <zx-prod-release-card
+        *ngFor="let release of vm.items"
+        [release]="release"
+        [canUploadScreenshot]="false"
+        screenshotUploadUrl="">
+      </zx-prod-release-card>
+    </div>
   </zx-firstpage-module-wrapper>
 </ng-container>

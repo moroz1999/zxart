@@ -18,8 +18,10 @@ use ZxArt\Pictures\Dto\PictureDto;
 use ZxArt\Pictures\Rest\PictureRestDto;
 use ZxArt\Pictures\Services\PicturesService;
 use ZxArt\Prods\Dto\ProdDto;
+use ZxArt\Prods\Dto\ProdReleaseDto;
+use ZxArt\Prods\ProdReleasesService;
+use ZxArt\Prods\Rest\ProdReleaseRestDto;
 use ZxArt\Prods\Rest\ProdRestDto;
-use ZxArt\Releases\Services\ReleasesService;
 use ZxArt\Tunes\Dto\TuneDto;
 use ZxArt\Tunes\Rest\TuneRestDto;
 use ZxArt\Tunes\Services\TunesService;
@@ -38,7 +40,7 @@ class Firstpage extends LoggedControllerApplication
         private readonly PicturesService $picturesService,
         private readonly TunesService $tunesService,
         private readonly PartiesService $partiesService,
-        private readonly ReleasesService $releasesService,
+        private readonly ProdReleasesService $prodReleasesService,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -154,8 +156,11 @@ class Firstpage extends LoggedControllerApplication
     protected function handleLatestAddedReleases(): void
     {
         $limit = $this->getIntParam('limit', 10);
-        $dtos = $this->releasesService->getLatestAddedAsProds($limit);
-        $this->assignSuccess($this->mapProds($dtos));
+        $dtos = $this->prodReleasesService->getLatestAdded($limit);
+        $this->assignSuccess(array_map(
+            fn(ProdReleaseDto $dto) => $this->objectMapper->map($dto, ProdReleaseRestDto::class),
+            $dtos
+        ));
     }
 
     protected function handleSupportProds(): void

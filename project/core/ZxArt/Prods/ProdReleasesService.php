@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace ZxArt\Prods;
 
 use DesignTheme;
+use structureManager;
 use ZxArt\Prods\Dto\ProdGroupRefDto;
 use ZxArt\Prods\Dto\ProdReleaseDto;
 use ZxArt\Prods\Dto\ProdReleaseFormatDto;
 use ZxArt\Prods\Dto\ProdReleasesDto;
 use ZxArt\Prods\Dto\ProdVotingDto;
+use ZxArt\Releases\Repositories\ReleasesRepository;
 use ZxArt\Releases\Services\ReleaseFormatsProvider;
 use zxReleaseElement;
 
@@ -20,6 +22,8 @@ readonly class ProdReleasesService
         private ProdInfoBuilder $infoBuilder,
         private ReleaseFormatsProvider $releaseFormatsProvider,
         private ProdMediaService $prodMediaService,
+        private ReleasesRepository $releasesRepository,
+        private structureManager $structureManager,
     ) {
     }
 
@@ -37,6 +41,28 @@ readonly class ProdReleasesService
         }
 
         return new ProdReleasesDto(releases: $releases);
+    }
+
+    /**
+     * @return ProdReleaseDto[]
+     */
+    public function getLatestAdded(int $limit): array
+    {
+        $ids = $this->releasesRepository->getLatestAddedIds($limit);
+        $theme = $this->infoBuilder->resolveCurrentTheme();
+        $result = [];
+        foreach ($ids as $id) {
+            $element = $this->structureManager->getElementById($id);
+            if ($element instanceof zxReleaseElement) {
+                $result[] = $this->buildRelease($element, '', '', $theme);
+            }
+        }
+        return $result;
+    }
+
+    public function buildStandaloneRelease(zxReleaseElement $release): ProdReleaseDto
+    {
+        return $this->buildRelease($release, '', '', $this->infoBuilder->resolveCurrentTheme());
     }
 
     private function buildRelease(
