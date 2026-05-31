@@ -1,0 +1,10 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.zx-hw-icon__svg {
+  width: var(--zx-hardware-icon-size);
+  height: var(--zx-hardware-icon-size);
+}

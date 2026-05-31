@@ -14,10 +14,10 @@
   <td class="release-row__title">
     <zx-stack spacing="xs">
       <zx-inline gap="xs" align="baseline">
-        <a [href]="release.url" class="release-row__title-link" appText="bodySm" tone="strong">{{ release.title }}</a>
+        <a [href]="release.url" class="release-row__title-link" appText="body" tone="strong">{{ release.title }}</a>
         <span *ngIf="release.isRealtime" class="release-row__realtime" [title]="release.party?.compoLabel || ''" aria-hidden="true">⏱</span>
       </zx-inline>
-      <div *ngIf="release.releaseBy.length" class="release-row__releaseby" appText="label" tone="muted">
+      <div *ngIf="release.releaseBy.length" class="release-row__releaseby" appText="body" tone="muted">
         <ng-container *ngFor="let group of release.releaseBy; let last = last">
           <a [href]="group.url">{{ group.title }}</a><ng-container *ngIf="!last">, </ng-container>
         </ng-container>
@@ -27,10 +27,10 @@
   </td>
 
   <td class="release-row__year">
-    <a *ngIf="release.year > 0" [href]="release.url">{{ release.year }}</a>
+    <a *ngIf="release.year > 0" appText="body" [href]="release.url">{{ release.year }}</a>
   </td>
 
-  <td class="release-row__version">{{ release.version }}</td>
+  <td class="release-row__version" appText="body" tone="muted">{{ release.version }}</td>
 
   <td class="release-row__type">
     <zx-release-type-badge
@@ -46,27 +46,29 @@
 
   <td class="release-row__hardware">
     <zx-inline gap="xs" [wrap]="true">
-      <a *ngFor="let hw of release.hardware" class="release-row__hardware-item" [href]="hw.catalogueUrl">{{ 'hardware-short.' + hw.id | translate }}</a>
+      <a *ngFor="let hw of release.hardware" appText="body" class="release-row__hardware-item" [href]="hw.catalogueUrl">
+        <zx-hardware-icon [id]="hw.id"></zx-hardware-icon>{{ 'hardware-short.' + hw.id | translate }}
+      </a>
     </zx-inline>
   </td>
 
   <td class="release-row__format">
     <ng-container *ngFor="let fmt of release.formats; let last = last">
-      <a class="release-row__format-link" [href]="fmt.catalogueUrl">
+      <a appText="body" class="release-row__format-link" [href]="fmt.catalogueUrl">
         <ng-container *ngIf="fmt.emoji">{{ fmt.emoji }} </ng-container>{{ fmt.label }}
       </a><ng-container *ngIf="!last">, </ng-container>
     </ng-container>
   </td>
 
-  <td class="release-row__rating">
+  <td class="release-row__rating" appText="body" tone="muted">
     <ng-container *ngIf="release.voting.votes > 0">{{ release.voting.votes | number:'1.0-2' }}</ng-container>
   </td>
 
-  <td class="release-row__downloads">
+  <td class="release-row__downloads" appText="body" tone="muted">
     <ng-container *ngIf="release.isDownloadable">{{ release.downloadsCount }}</ng-container>
   </td>
 
-  <td class="release-row__plays">
+  <td class="release-row__plays" appText="body" tone="muted">
     <ng-container *ngIf="release.isDownloadable">{{ release.playsCount }}</ng-container>
   </td>
 

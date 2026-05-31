@@ -10,6 +10,7 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 import {ZxProdPeopleRowComponent} from '../../../../shared/ui/zx-prod-people-row/zx-prod-people-row.component';
 import {ZxReleaseEditingControlsComponent} from '../zx-release-editing-controls/zx-release-editing-controls.component';
 import {ZxAddedByComponent} from '../../../../shared/ui/zx-added-by/zx-added-by.component';
+import {ZxHardwareIconComponent} from '../../../../shared/ui/zx-hardware-icon/zx-hardware-icon.component';
 
 @Component({
   selector: 'zx-release-hero',
@@ -25,6 +26,7 @@ import {ZxAddedByComponent} from '../../../../shared/ui/zx-added-by/zx-added-by.
     ZxProdPeopleRowComponent,
     ZxReleaseEditingControlsComponent,
     ZxAddedByComponent,
+    ZxHardwareIconComponent,
   ],
   templateUrl: './zx-release-hero.component.html',
   styleUrl: './zx-release-hero.component.scss',

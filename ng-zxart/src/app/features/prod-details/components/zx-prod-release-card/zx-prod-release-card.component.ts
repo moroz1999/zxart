@@ -15,6 +15,7 @@ import {environment} from '../../../../../environments/environment';
 import {ZxReleaseTypeBadgeComponent} from '../../../../shared/ui/zx-release-type-badge/zx-release-type-badge.component';
 import {ZxChipComponent} from '../../../../shared/ui/zx-chip/zx-chip.component';
 import {ZxItemControlsComponent} from '../../../../shared/ui/zx-item-controls/zx-item-controls.component';
+import {ZxHardwareIconComponent} from '../../../../shared/ui/zx-hardware-icon/zx-hardware-icon.component';
 
 const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 'tsconf', 'samcoupe', 'zxnext'];
 
@@ -34,6 +35,7 @@ const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 't
     ZxChipComponent,
     ZxCardScreenshotGalleryComponent,
     ZxItemControlsComponent,
+    ZxHardwareIconComponent,
   ],
   templateUrl: './zx-prod-release-card.component.html',
   styleUrls: ['./zx-prod-release-card.component.scss'],

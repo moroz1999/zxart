@@ -30,6 +30,9 @@ a {
 }
 
 .release-row__hardware-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
   white-space: nowrap;
   color: inherit;
   text-decoration: none;

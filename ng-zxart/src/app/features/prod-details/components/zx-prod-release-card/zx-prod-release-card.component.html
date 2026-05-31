@@ -31,6 +31,12 @@
         <zx-chip *ngFor="let fmt of release.formats" variant="filled" color="neutral">{{ fmt.label }}</zx-chip>
       </zx-inline>
 
+      <zx-inline *ngIf="release.hardware.length" gap="xs" [wrap]="true" class="release-card__hardware">
+        <a *ngFor="let hw of release.hardware" class="release-card__hw-item" [href]="hw.catalogueUrl" [title]="'hardware-short.' + hw.id | translate">
+          <zx-hardware-icon [id]="hw.id"></zx-hardware-icon>{{ 'hardware-short.' + hw.id | translate }}
+        </a>
+      </zx-inline>
+
       <zx-inline class="release-card__bottom" gap="sm" align="center">
         <zx-button *ngIf="canPlay" size="sm" color="secondary" (click)="onPlay()">
           {{ 'release-row.play' | translate }}

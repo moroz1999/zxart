@@ -35,6 +35,19 @@
   color: var(--zx-prod-release-card-meta-color);
 }
 
+.release-card__hw-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-size: var(--zx-prod-release-card-meta-size);
+  color: var(--zx-prod-release-card-meta-color);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .release-card__bottom {
   margin-top: auto;
 }

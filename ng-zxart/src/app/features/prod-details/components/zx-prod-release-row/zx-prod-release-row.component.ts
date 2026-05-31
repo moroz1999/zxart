@@ -14,6 +14,7 @@ import {PictureGalleryService} from '../../../picture-gallery/services/picture-g
 import {ProdFileDto} from '../../models/prod-file.dto';
 import {ZxEmulatorPlayButtonComponent} from '../../../../shared/ui/zx-emulator-play-button/zx-emulator-play-button.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
+import {ZxHardwareIconComponent} from '../../../../shared/ui/zx-hardware-icon/zx-hardware-icon.component';
 
 @Component({
   selector: 'tr[zxProdReleaseRow]',
@@ -30,6 +31,7 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
     LightboxModule,
     ZxEmulatorPlayButtonComponent,
     TextDirective,
+    ZxHardwareIconComponent,
   ],
   templateUrl: './zx-prod-release-row.component.html',
   styleUrls: ['./zx-prod-release-row.component.scss'],
