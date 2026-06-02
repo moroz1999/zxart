@@ -1,64 +1,105 @@
-<zx-panel padding="none" [contentBleed]="true">
-  <div class="release-card__layout">
+<zx-panel radius="xl" padding="none" variant="elevated" [contentBleed]="true">
+  <div class="release-card__internal">
+
     <a [href]="release.url" class="release-card__cover">
+      <img
+        *ngIf="screenshotUrls.length > 0 && !displayScreenshots"
+        class="release-card__cover-img"
+        [src]="screenshotUrls[0]"
+        [alt]="release.title"
+        loading="lazy"
+        @fadeInOut
+      />
       <zx-card-screenshot-gallery
-        *ngIf="screenshotUrls.length > 0"
+        *ngIf="screenshotUrls.length > 0 && displayScreenshots"
+        @fadeInOut
         [imageUrls]="screenshotUrls"
         [alt]="release.title"
       ></zx-card-screenshot-gallery>
+      <span
+        *ngIf="release.hardware.length"
+        class="release-card__hw-overlay"
+        [class.release-card__hw-overlay--opaque]="displayScreenshots"
+      >
+        <zx-badge
+          *ngFor="let hw of release.hardware"
+          variant="secondary"
+        >{{ 'hardware-short.' + hw.id | translate }}</zx-badge>
+      </span>
+      <zx-release-type-badge
+        *ngIf="release.releaseType"
+        class="release-card__type-overlay"
+        [type]="release.releaseType"
+        [label]="release.releaseTypeLabel"
+      ></zx-release-type-badge>
     </a>
 
-    <zx-inset class="release-card__body" padding="md">
-      <a [href]="release.url" class="release-card__title">{{ release.title }}</a>
-
-      <div *ngIf="release.releaseBy.length || release.year > 0" class="release-card__meta">
-        <ng-container *ngFor="let g of release.releaseBy; let last = last">
-          {{ g.title }}<ng-container *ngIf="!last">, </ng-container>
-        </ng-container>
-        <ng-container *ngIf="release.year > 0">
-          <ng-container *ngIf="release.releaseBy.length"> · </ng-container>
-          {{ release.year }}
-        </ng-container>
-      </div>
-
-      <zx-inline gap="xs" align="center" justify="between" [wrap]="true">
-        <zx-release-type-badge
-          *ngIf="release.releaseType"
-          [type]="release.releaseType"
-          [label]="release.releaseTypeLabel"
-        ></zx-release-type-badge>
-        <zx-prod-language-links [languages]="release.languages"></zx-prod-language-links>
-        <zx-chip *ngFor="let fmt of release.formats" variant="filled" color="neutral">{{ fmt.label }}</zx-chip>
-      </zx-inline>
-
-      <zx-inline *ngIf="release.hardware.length" gap="xs" [wrap]="true" class="release-card__hardware">
-        <a *ngFor="let hw of release.hardware" class="release-card__hw-item" [href]="hw.catalogueUrl" [title]="'hardware-short.' + hw.id | translate">
-          <zx-hardware-icon [id]="hw.id"></zx-hardware-icon>{{ 'hardware-short.' + hw.id | translate }}
-        </a>
-      </zx-inline>
-
-      <zx-inline class="release-card__bottom" gap="sm" align="center">
-        <zx-button *ngIf="canPlay" size="sm" color="secondary" (click)="onPlay()">
-          {{ 'release-row.play' | translate }}
-        </zx-button>
-        <zx-inline *ngIf="release.isDownloadable" gap="xs" align="center" class="release-card__stats">
-          <zx-inline gap="xs" align="center" class="release-card__stat">
-            <svg-icon class="release-card__stat-icon" name="download"></svg-icon>{{ release.downloadsCount }}
-          </zx-inline>
-          <zx-inline gap="xs" align="center" class="release-card__stat">
-            <svg-icon class="release-card__stat-icon" name="play"></svg-icon>{{ release.playsCount }}
-          </zx-inline>
+    <zx-inset padding="lg">
+      <zx-stack spacing="md">
+        <zx-inline class="release-card__title-row" gap="sm" align="center">
+          <a class="release-card__title" appHeading="title" [truncate]="true" [href]="release.url">{{ release.title }}</a>
         </zx-inline>
-      </zx-inline>
 
-      <zx-item-controls
-        [elementId]="release.id"
-        type="zxRelease"
-        [votes]="release.voting.votes"
-        [votesAmount]="release.voting.votesAmount"
-        [userRating]="release.voting.userVote"
-        [denyVoting]="release.voting.denyVoting">
-      </zx-item-controls>
+        <div *ngIf="release.releaseBy.length" appText="label" tone="muted">
+          <ng-container *ngFor="let g of release.releaseBy; let last = last">
+            <a appText="label" tone="muted-link" [href]="g.url">{{ g.title }}</a><ng-container *ngIf="!last">, </ng-container>
+          </ng-container>
+        </div>
+
+        <zx-inline class="release-card__bottom-row" gap="lg" align="start" justify="between">
+          <zx-item-controls
+            [elementId]="release.id"
+            type="zxRelease"
+            [votes]="release.voting.votes"
+            [votesAmount]="release.voting.votesAmount"
+            [userRating]="release.voting.userVote"
+            [denyVoting]="release.voting.denyVoting"
+          ></zx-item-controls>
+          <div *ngIf="release.year > 0" class="release-card__year" appText="label" tone="muted-link">{{ release.year }}</div>
+        </zx-inline>
+      </zx-stack>
+
+      <zx-stack spacing="xl"
+        *ngIf="displayAdditions"
+        @slideInOut
+        (@slideInOut.start)="captureStartEvent($event)"
+        (@slideInOut.done)="captureDoneEvent($event)"
+      >
+        <zx-stack spacing="none">
+          <zx-inset class="release-card__row" side="block" padding="sm" *ngIf="release.languages.length">
+            <zx-inline gap="lg" align="baseline" justify="between">
+              <span appText="label" tone="muted">{{ 'zx-prod.languages' | translate }}</span>
+              <zx-prod-language-links class="release-card__row-value" [languages]="release.languages"></zx-prod-language-links>
+            </zx-inline>
+          </zx-inset>
+          <zx-inset class="release-card__row" side="block" padding="sm" *ngIf="release.formats.length">
+            <zx-inline gap="lg" align="baseline" justify="between">
+              <span appText="label" tone="muted">{{ 'release-row.col-format' | translate }}</span>
+              <span class="release-card__row-value" appText="label" tone="primary">
+                <ng-container *ngFor="let fmt of release.formats; let last = last">
+                  {{ fmt.label }}<ng-container *ngIf="!last">, </ng-container>
+                </ng-container>
+              </span>
+            </zx-inline>
+          </zx-inset>
+        </zx-stack>
+
+        <zx-inline justify="between" align="center">
+          <zx-button *ngIf="canPlay" color="secondary" (click)="onPlay()">
+            {{ 'release-row.play' | translate }}
+          </zx-button>
+          <zx-inline *ngIf="release.isDownloadable" gap="xs" align="center" class="release-card__stats">
+            <zx-inline gap="xs" align="center" class="release-card__stat">
+              <svg-icon class="release-card__stat-icon" name="download"></svg-icon>{{ release.downloadsCount }}
+            </zx-inline>
+            <zx-inline gap="xs" align="center" class="release-card__stat">
+              <svg-icon class="release-card__stat-icon" name="play"></svg-icon>{{ release.playsCount }}
+            </zx-inline>
+          </zx-inline>
+          <zx-button [href]="release.url">{{ 'zx-prod.open' | translate }}</zx-button>
+        </zx-inline>
+      </zx-stack>
     </zx-inset>
+
   </div>
 </zx-panel>

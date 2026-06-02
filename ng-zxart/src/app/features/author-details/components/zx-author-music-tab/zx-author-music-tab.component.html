@@ -25,6 +25,13 @@
             (click)="setSort('votes')">
             {{ 'author-details.music-tab.sort.votes' | translate }}
           </zx-button>
+          <zx-button
+            size="sm"
+            [color]="currentSort === 'plays' ? 'secondary' : 'outlined'"
+            [disabled]="loading"
+            (click)="setSort('plays')">
+            {{ 'author-details.music-tab.sort.plays' | translate }}
+          </zx-button>
         </zx-button-controls>
       </zx-stack>
 

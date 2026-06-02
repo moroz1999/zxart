@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
@@ -24,6 +24,7 @@ import {ZxAuthorGraphicsTabComponent} from '../zx-author-graphics-tab/zx-author-
 import {ZxAuthorMusicTabComponent} from '../zx-author-music-tab/zx-author-music-tab.component';
 import {ZxAuthorSoftwareTabComponent} from '../zx-author-software-tab/zx-author-software-tab.component';
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
+import {scrollToElementIfHidden} from '../../scroll-to-tabs';
 
 type AuthorTabId = 'best' | 'gfx' | 'music' | 'software' | 'collaborators' | 'discussion';
 
@@ -59,6 +60,7 @@ type AuthorTabId = 'best' | 'gfx' | 'music' | 'software' | 'collaborators' | 'di
 })
 export class ZxAuthorDetailsComponent implements OnInit {
   @Input() elementId = 0;
+  @ViewChild(ZxTabsComponent, {read: ElementRef}) private tabsRef!: ElementRef<HTMLElement>;
 
   core$: Observable<AuthorCoreDto | null> = of(null);
 
@@ -97,6 +99,10 @@ export class ZxAuthorDetailsComponent implements OnInit {
     tabs.push('discussion');
 
     return tabs;
+  }
+
+  onTabChange(_: number): void {
+    scrollToElementIfHidden(this.tabsRef?.nativeElement);
   }
 
   private getRequestedTabId(): string | null {

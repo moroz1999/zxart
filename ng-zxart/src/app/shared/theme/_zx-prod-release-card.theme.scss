@@ -17,5 +17,7 @@
   --zx-prod-release-card-stat-size: var(--zx-font-size-xs);
   /* Bottom stat icon size. */
   --zx-prod-release-card-stat-icon-size: 12px;
+  /* Border between detail rows in the expandable section. */
+  --zx-prod-release-card-row-border: var(--border-width-thin) solid var(--border-color-dark);
 }
 

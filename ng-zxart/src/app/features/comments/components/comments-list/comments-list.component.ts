@@ -12,6 +12,7 @@ import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.compo
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ViewportLoaderComponent} from '../../../../shared/components/viewport-loader/viewport-loader.component';
 import {Observable, of, Subject} from 'rxjs';
+import {tap} from 'rxjs/operators';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {
@@ -56,7 +57,9 @@ export class CommentsListComponent {
 
   getCommentsLoader = (): Observable<CommentDto[]> => {
     if (this.isRoot && this.elementId) {
-      return this.commentsService.getComments(this.elementId);
+      return this.commentsService.getComments(this.elementId).pipe(
+        tap(() => this.scrollToHashedComment()),
+      );
     }
     return of(this.comments);
   };
@@ -74,6 +77,15 @@ export class CommentsListComponent {
 
   hideForm(): void {
     this.showForm.set(false);
+  }
+
+  private scrollToHashedComment(): void {
+    const hash = window.location.hash;
+    if (!hash) return;
+    setTimeout(() => {
+      const el = document.querySelector(hash);
+      el?.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }, 100);
   }
 
   onCommentChanged(event: CommentChangeEvent): void {

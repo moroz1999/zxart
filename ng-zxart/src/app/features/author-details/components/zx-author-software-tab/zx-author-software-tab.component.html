@@ -25,6 +25,20 @@
             (click)="setSort('votes')">
             {{ 'author-details.software-tab.sort.votes' | translate }}
           </zx-button>
+          <zx-button
+            size="sm"
+            [color]="currentSort === 'downloads' ? 'secondary' : 'outlined'"
+            [disabled]="loading"
+            (click)="setSort('downloads')">
+            {{ 'author-details.software-tab.sort.downloads' | translate }}
+          </zx-button>
+          <zx-button
+            size="sm"
+            [color]="currentSort === 'plays' ? 'secondary' : 'outlined'"
+            [disabled]="loading"
+            (click)="setSort('plays')">
+            {{ 'author-details.software-tab.sort.plays' | translate }}
+          </zx-button>
         </zx-button-controls>
       </zx-stack>
 

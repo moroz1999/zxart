@@ -278,7 +278,7 @@ readonly final class TunesRepository extends AbstractRepository
         return $query;
     }
 
-    private const array ALLOWED_SORT_COLUMNS = ['votes', 'year', 'dateAdded'];
+    private const array ALLOWED_SORT_COLUMNS = ['votes', 'year', 'dateAdded', 'plays'];
 
     /**
      * @return int[]

@@ -26,6 +26,13 @@
             (click)="setSort('votes')">
             {{ 'author-details.graphics-tab.sort.votes' | translate }}
           </zx-button>
+          <zx-button
+            size="sm"
+            [color]="currentSort === 'views' ? 'secondary' : 'outlined'"
+            [disabled]="loading"
+            (click)="setSort('views')">
+            {{ 'author-details.graphics-tab.sort.views' | translate }}
+          </zx-button>
         </zx-button-controls>
       </zx-stack>
 

@@ -532,7 +532,8 @@
       "sort": {
         "votes": "By rating",
         "year-desc": "Newest first",
-        "year-asc": "Oldest first"
+        "year-asc": "Oldest first",
+        "views": "By views"
       }
     },
     "music-tab": {
@@ -545,7 +546,8 @@
       "sort": {
         "votes": "By rating",
         "year-desc": "Newest first",
-        "year-asc": "Oldest first"
+        "year-asc": "Oldest first",
+        "plays": "By plays"
       }
     },
     "software-tab": {
@@ -563,7 +565,9 @@
       "sort": {
         "votes": "By rating",
         "year-desc": "Newest first",
-        "year-asc": "Oldest first"
+        "year-asc": "Oldest first",
+        "downloads": "By downloads",
+        "plays": "By launches"
       }
     },
     "collaborators": {
@@ -840,6 +844,9 @@
     "file-structure": "File structure",
     "file-structure.download": "Download",
     "file-structure.view": "View",
+    "file-structure.audio-play": "Play audio",
+    "file-structure.audio-pause": "Pause audio",
+    "file-structure.audio-loading": "Preparing audio...",
     "downloads-label": "downloads",
     "plays-label": "plays",
     "play-online": "▶ Play online",

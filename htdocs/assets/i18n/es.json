@@ -531,7 +531,8 @@
       "sort": {
         "votes": "Por calificación",
         "year-desc": "Más recientes primero",
-        "year-asc": "Más antiguos primero"
+        "year-asc": "Más antiguos primero",
+        "views": "Por vistas"
       }
     },
     "music-tab": {
@@ -544,7 +545,8 @@
       "sort": {
         "votes": "Por calificación",
         "year-desc": "Más recientes primero",
-        "year-asc": "Más antiguos primero"
+        "year-asc": "Más antiguos primero",
+        "plays": "Por reproducciones"
       }
     },
     "software-tab": {
@@ -562,7 +564,9 @@
       "sort": {
         "votes": "Por calificación",
         "year-desc": "Más recientes primero",
-        "year-asc": "Más antiguos primero"
+        "year-asc": "Más antiguos primero",
+        "downloads": "Por descargas",
+        "plays": "Por lanzamientos"
       }
     },
     "collaborators": {
@@ -837,6 +841,9 @@
     "file-structure": "Estructura de archivos",
     "file-structure.download": "Descargar",
     "file-structure.view": "Ver",
+    "file-structure.audio-play": "Reproducir audio",
+    "file-structure.audio-pause": "Pausar audio",
+    "file-structure.audio-loading": "Preparando audio...",
     "downloads-label": "descargas",
     "plays-label": "ejecuciones",
     "play-online": "▶ Jugar online",

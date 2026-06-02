@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {BehaviorSubject, combineLatest, Subscription, switchMap} from 'rxjs';
@@ -16,6 +16,7 @@ import {ZxPictureGridSkeletonComponent} from '../../../../shared/ui/zx-skeleton/
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
+import {scrollToElementIfHidden} from '../../scroll-to-tabs';
 
 const PAGE_SIZE = 24;
 
@@ -74,6 +75,7 @@ export class ZxAuthorGraphicsTabComponent implements OnInit, OnDestroy {
     private readonly authorPicturesService: AuthorPicturesService,
     private readonly pictureGalleryService: PictureGalleryService,
     private readonly cdr: ChangeDetectorRef,
+    private readonly element: ElementRef<HTMLElement>,
   ) {}
 
   ngOnInit(): void {
@@ -124,6 +126,7 @@ export class ZxAuthorGraphicsTabComponent implements OnInit, OnDestroy {
   onPageChange(page: number): void {
     this.pageStore.next(page);
     this.pushPageToUrl(page);
+    scrollToElementIfHidden(this.element.nativeElement.closest('zx-tabs'));
   }
 
   private parsePageFromUrl(): number {
@@ -141,11 +144,12 @@ export class ZxAuthorGraphicsTabComponent implements OnInit, OnDestroy {
   private parseSortKey(sort: string): {column: string; dir: string} {
     if (sort === 'year-asc') return {column: 'year', dir: 'asc'};
     if (sort === 'year-desc') return {column: 'year', dir: 'desc'};
+    if (sort === 'views') return {column: 'views', dir: 'desc'};
     return {column: 'votes', dir: 'desc'};
   }
 
   private buildGroups(pictures: ZxPictureDto[], sort: string): YearGroup[] {
-    if (sort === 'votes') {
+    if (sort === 'votes' || sort === 'views') {
       return [{year: null, pictures, startIndex: 0}];
     }
     const byYear = new Map<string, ZxPictureDto[]>();

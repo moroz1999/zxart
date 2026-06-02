@@ -4,7 +4,9 @@ import {
   ChangeDetectorRef,
   Component,
   ContentChildren,
+  EventEmitter,
   Input,
+  Output,
   QueryList,
   TemplateRef,
 } from '@angular/core';
@@ -21,6 +23,7 @@ import { ZxTabComponent } from './zx-tab.component';
 })
 export class ZxTabsComponent implements AfterContentInit {
   @ContentChildren(ZxTabComponent, { descendants: false }) tabs!: QueryList<ZxTabComponent>;
+  @Output() readonly tabChange = new EventEmitter<number>();
 
   activeIndex = 0;
   private pendingActiveIndex: number | null = null;
@@ -58,6 +61,7 @@ export class ZxTabsComponent implements AfterContentInit {
     }
 
     this.activateTab(index);
+    this.tabChange.emit(index);
   }
 
   get activeTemplateRef(): TemplateRef<unknown> | null {

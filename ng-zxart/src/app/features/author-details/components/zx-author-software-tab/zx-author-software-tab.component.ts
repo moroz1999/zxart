@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {BehaviorSubject, combineLatest, Subscription, switchMap} from 'rxjs';
@@ -17,6 +17,7 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxProdsGridDirective} from '../../../../shared/directives/prods-grid.directive';
 import {ZxProdReleaseCardComponent} from '../../../prod-details/components/zx-prod-release-card/zx-prod-release-card.component';
+import {scrollToElementIfHidden} from '../../scroll-to-tabs';
 
 const PAGE_SIZE = 15;
 
@@ -73,6 +74,7 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
   constructor(
     private readonly prodsApiService: AuthorProdsApiService,
     private readonly cdr: ChangeDetectorRef,
+    private readonly element: ElementRef<HTMLElement>,
   ) {}
 
   ngOnInit(): void {
@@ -120,6 +122,7 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
   onPageChange(page: number): void {
     this.pageStore.next(page);
     this.pushPageToUrl(page);
+    scrollToElementIfHidden(this.element.nativeElement.closest('zx-tabs'));
   }
 
   private parsePageFromUrl(): number {
@@ -168,6 +171,8 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
   private parseSortKey(sort: string): {sortKey: string; sortDir: string} {
     if (sort === 'year-asc') return {sortKey: 'year', sortDir: 'asc'};
     if (sort === 'year-desc') return {sortKey: 'year', sortDir: 'desc'};
+    if (sort === 'downloads') return {sortKey: 'downloads', sortDir: 'desc'};
+    if (sort === 'plays') return {sortKey: 'plays', sortDir: 'desc'};
     return {sortKey: 'votes', sortDir: 'desc'};
   }
 
@@ -179,7 +184,7 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
   }
 
   private buildGroups(items: AuthorProdItem[], sort: string): YearGroup[] {
-    if (sort === 'votes') {
+    if (sort === 'votes' || sort === 'downloads' || sort === 'plays') {
       return [{year: null, prods: items}];
     }
     const byYear = new Map<number, AuthorProdItem[]>();

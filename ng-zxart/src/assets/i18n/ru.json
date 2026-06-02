@@ -532,7 +532,8 @@
       "sort": {
         "votes": "По рейтингу",
         "year-desc": "Сначала новые",
-        "year-asc": "Сначала старые"
+        "year-asc": "Сначала старые",
+        "views": "По просмотрам"
       }
     },
     "music-tab": {
@@ -545,7 +546,8 @@
       "sort": {
         "votes": "По рейтингу",
         "year-desc": "Сначала новые",
-        "year-asc": "Сначала старые"
+        "year-asc": "Сначала старые",
+        "plays": "По прослушиваниям"
       }
     },
     "software-tab": {
@@ -563,7 +565,9 @@
       "sort": {
         "votes": "По рейтингу",
         "year-desc": "Сначала новые",
-        "year-asc": "Сначала старые"
+        "year-asc": "Сначала старые",
+        "downloads": "По скачкам",
+        "plays": "По запускам"
       }
     },
     "collaborators": {
@@ -838,6 +842,9 @@
     "file-structure": "Структура файлов",
     "file-structure.download": "Скачать",
     "file-structure.view": "Просмотреть",
+    "file-structure.audio-play": "Играть аудио",
+    "file-structure.audio-pause": "Пауза аудио",
+    "file-structure.audio-loading": "Подготовка аудио...",
     "downloads-label": "скачиваний",
     "plays-label": "запусков",
     "play-online": "▶ Запустить",

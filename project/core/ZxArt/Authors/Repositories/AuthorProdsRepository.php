@@ -117,13 +117,32 @@ readonly final class AuthorProdsRepository extends AbstractRepository
         $prodTable = $this->tableName(DatabaseTable::ZxProd);
         $releaseTable = $this->tableName(DatabaseTable::ZxRelease);
         $structureElementsTable = $this->tableName(DatabaseTable::StructureElements);
+        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
+        $prefix = $this->db->getTablePrefix();
+        $rawProd = $prefix . $prodTable;
+        $rawRelease = $prefix . $releaseTable;
+        $rawLinks = $prefix . $linksTable;
         $prodQuery = $this->getProdQuery($authorIds, $role)
             ->join($structureElementsTable, "$structureElementsTable.id", '=', "$prodTable.id")
-            ->select(["$prodTable.id", "$prodTable.votes", "$prodTable.year", "$structureElementsTable.dateCreated"])
+            ->select([
+                "$prodTable.id",
+                "$prodTable.votes",
+                "$prodTable.year",
+                "$structureElementsTable.dateCreated",
+                $this->db->raw("COALESCE((SELECT SUM(r.downloads) FROM $rawRelease r INNER JOIN $rawLinks sl ON sl.childStructureId = r.id AND sl.type = 'structure' AND sl.parentStructureId = $rawProd.id), 0) as downloads"),
+                $this->db->raw("COALESCE((SELECT SUM(r.plays) FROM $rawRelease r INNER JOIN $rawLinks sl ON sl.childStructureId = r.id AND sl.type = 'structure' AND sl.parentStructureId = $rawProd.id), 0) as plays"),
+            ])
             ->distinct();
         $releaseQuery = $this->getReleaseQuery($authorIds, $role)
             ->join($structureElementsTable, "$structureElementsTable.id", '=', "$releaseTable.id")
-            ->select(["$releaseTable.id", "$releaseTable.votes", "$releaseTable.year", "$structureElementsTable.dateCreated"])
+            ->select([
+                "$releaseTable.id",
+                "$releaseTable.votes",
+                "$releaseTable.year",
+                "$structureElementsTable.dateCreated",
+                "$releaseTable.downloads",
+                "$releaseTable.plays",
+            ])
             ->distinct();
 
         $query = $prodQuery->unionAll($releaseQuery);
@@ -132,6 +151,11 @@ readonly final class AuthorProdsRepository extends AbstractRepository
             return $query
                 ->orderBy('year', $direction)
                 ->orderBy('dateCreated', $direction)
+                ->orderBy('id', $direction);
+        }
+        if ($sort === 'downloads' || $sort === 'plays') {
+            return $query
+                ->orderBy($sort, $direction)
                 ->orderBy('id', $direction);
         }
 

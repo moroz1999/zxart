@@ -6,7 +6,7 @@
     </zx-breadcrumbs>
     <zx-author-header [core]="core"></zx-author-header>
 
-    <zx-tabs [initialActiveIndex]="getInitialTabIndex(core)">
+    <zx-tabs [initialActiveIndex]="getInitialTabIndex(core)" (tabChange)="onTabChange($event)">
       <zx-tab
         *ngIf="core.tabs.hasPictures || core.tabs.hasTunes || core.tabs.hasProds"
         [label]="'author-details.tabs.best' | translate"

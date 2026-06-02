@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {BehaviorSubject, combineLatest, Subscription, switchMap} from 'rxjs';
@@ -15,6 +15,7 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 import {ZxTuneTableSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-tune-table-skeleton/zx-tune-table-skeleton.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
+import {scrollToElementIfHidden} from '../../scroll-to-tabs';
 
 const PAGE_SIZE = 20;
 
@@ -72,6 +73,7 @@ export class ZxAuthorMusicTabComponent implements OnInit, OnDestroy {
     private readonly authorTunesService: AuthorTunesService,
     private readonly playerService: PlayerService,
     private readonly cdr: ChangeDetectorRef,
+    private readonly element: ElementRef<HTMLElement>,
   ) {}
 
   ngOnInit(): void {
@@ -134,6 +136,7 @@ export class ZxAuthorMusicTabComponent implements OnInit, OnDestroy {
   onPageChange(page: number): void {
     this.pageStore.next(page);
     this.pushPageToUrl(page);
+    scrollToElementIfHidden(this.element.nativeElement.closest('zx-tabs'));
   }
 
   private parsePageFromUrl(): number {
@@ -164,11 +167,12 @@ export class ZxAuthorMusicTabComponent implements OnInit, OnDestroy {
   private parseSortKey(sort: string): {column: string; dir: string} {
     if (sort === 'year-asc') return {column: 'year', dir: 'asc'};
     if (sort === 'year-desc') return {column: 'year', dir: 'desc'};
+    if (sort === 'plays') return {column: 'plays', dir: 'desc'};
     return {column: 'votes', dir: 'desc'};
   }
 
   private buildGroups(tunes: ZxTuneDto[], sort: string): YearGroup[] {
-    if (sort === 'votes') {
+    if (sort === 'votes' || sort === 'plays') {
       return [{year: null, tunes}];
     }
     const byYear = new Map<string, ZxTuneDto[]>();

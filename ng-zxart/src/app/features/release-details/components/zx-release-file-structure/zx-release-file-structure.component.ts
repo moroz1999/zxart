@@ -12,6 +12,7 @@ import {
   ZxFileViewerDialogComponent,
 } from '../../../../shared/ui/zx-file-viewer-dialog/zx-file-viewer-dialog.component';
 import {ReleaseDetailsApiService} from '../../services/release-details-api.service';
+import {TapeAudioService} from '../../services/tape-audio.service';
 
 @Component({
   selector: 'zx-release-file-structure',
@@ -29,6 +30,7 @@ export class ZxReleaseFileStructureComponent implements OnInit {
     private readonly iconReg: SvgIconRegistryService,
     private readonly dialog: Dialog,
     private readonly api: ReleaseDetailsApiService,
+    readonly tapeAudio: TapeAudioService,
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +39,8 @@ export class ZxReleaseFileStructureComponent implements OnInit {
     this.iconReg.loadSvg(`${environment.svgUrl}zip.svg`, 'zip')?.subscribe();
     this.iconReg.loadSvg(`${environment.svgUrl}download.svg`, 'download')?.subscribe();
     this.iconReg.loadSvg(`${environment.svgUrl}eye.svg`, 'eye')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}play.svg`, 'play')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}pause.svg`, 'pause')?.subscribe();
   }
 
   getIcon(item: ReleaseFileStructureItemDto): string {
@@ -59,6 +63,32 @@ export class ZxReleaseFileStructureComponent implements OnInit {
     }
 
     window.location.assign(item.downloadUrl);
+  }
+
+  canPlayAudio(item: ReleaseFileStructureItemDto): boolean {
+    return this.tapeAudio.isPlayableFormat(item.type) && !!item.downloadUrl;
+  }
+
+  getAudioUrl(item: ReleaseFileStructureItemDto): string | null {
+    if (!item.downloadUrl) {
+      return null;
+    }
+
+    if (item.downloadUrl.includes('/play:1/')) {
+      return item.downloadUrl;
+    }
+
+    return item.downloadUrl.replace(/\/([^/?#]+)([?#].*)?$/, '/play:1/$1$2');
+  }
+
+  playAudio(item: ReleaseFileStructureItemDto): void {
+    const audioUrl = this.getAudioUrl(item);
+
+    if (!audioUrl) {
+      return;
+    }
+
+    void this.tapeAudio.toggle(audioUrl, item.type);
   }
 
   openViewer(item: ReleaseFileStructureItemDto): void {

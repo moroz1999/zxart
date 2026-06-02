@@ -10,6 +10,7 @@
 </section>
 
 <ng-template #rowsTemplate let-items="items" let-depth="depth">
+  <ng-container *ngIf="tapeAudio.state$ | async as audioState">
   <ng-container *ngFor="let item of items">
     <div class="rp-tree__row">
       <div class="rp-tree__name">
@@ -44,6 +45,28 @@
           {{ 'release-details.file-structure.view' | translate }}
         </zx-button>
         <zx-button
+          *ngIf="canPlayAudio(item)"
+          color="transparent"
+          size="xs"
+          [disabled]="audioState.loadingUrl === getAudioUrl(item)"
+          (click)="playAudio(item)"
+        >
+          <svg-icon
+            class="rp-tree__action-icon"
+            [name]="audioState.sourceUrl === getAudioUrl(item) && audioState.playing ? 'pause' : 'play'"
+          ></svg-icon>
+          <ng-container *ngIf="audioState.loadingUrl === getAudioUrl(item); else playAudioLabel">
+            {{ 'release-details.file-structure.audio-loading' | translate }}
+          </ng-container>
+          <ng-template #playAudioLabel>
+            {{ (
+              audioState.sourceUrl === getAudioUrl(item) && audioState.playing
+                ? 'release-details.file-structure.audio-pause'
+                : 'release-details.file-structure.audio-play'
+            ) | translate }}
+          </ng-template>
+        </zx-button>
+        <zx-button
           *ngIf="item.downloadUrl"
           color="transparent"
           size="xs"
@@ -57,5 +80,6 @@
     <ng-container *ngIf="item.items?.length">
       <ng-container *ngTemplateOutlet="rowsTemplate; context: {items: item.items, depth: depth + 1}"></ng-container>
     </ng-container>
+  </ng-container>
   </ng-container>
 </ng-template>

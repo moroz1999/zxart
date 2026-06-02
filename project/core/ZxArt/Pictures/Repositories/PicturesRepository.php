@@ -97,7 +97,7 @@ readonly final class PicturesRepository
             ->pluck('id');
     }
 
-    private const array ALLOWED_SORT_COLUMNS = ['votes', 'year', 'dateAdded'];
+    private const array ALLOWED_SORT_COLUMNS = ['votes', 'year', 'dateAdded', 'views'];
 
     /**
      * @return int[]
