@@ -29,6 +29,13 @@
       <zx-party-place [place]="picture.party.place"></zx-party-place>
       <a [href]="picture.party.url" appText="caption" tone="muted-link">{{ picture.party.title }}</a>
     </div>
+    <a
+      *ngIf="picture.release"
+      class="picture-release"
+      [href]="picture.release.url"
+      appText="caption"
+      tone="muted-link"
+    >{{ picture.release.title }}</a>
     <div class="picture-bottom">
       <zx-item-controls
         [elementId]="picture.id"

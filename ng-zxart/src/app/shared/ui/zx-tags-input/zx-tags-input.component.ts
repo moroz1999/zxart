@@ -9,6 +9,7 @@ import {ZxInputComponent} from '../zx-input/zx-input.component';
 import {ZxSpinnerComponent} from '../zx-spinner/zx-spinner.component';
 import {ZxStackComponent} from '../zx-stack/zx-stack.component';
 import {ZxTagsChipsComponent} from '../zx-tags-chips/zx-tags-chips.component';
+import {DropdownPopoverAnimation} from '../../animations/popover-animations';
 
 @Component({
   selector: 'zx-tags-input',
@@ -27,6 +28,7 @@ import {ZxTagsChipsComponent} from '../zx-tags-chips/zx-tags-chips.component';
   templateUrl: './zx-tags-input.component.html',
   styleUrl: './zx-tags-input.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [DropdownPopoverAnimation],
 })
 export class ZxTagsInputComponent {
   @Input() tags: TagItem[] = [];
@@ -35,6 +37,7 @@ export class ZxTagsInputComponent {
   @Input() disabled = false;
   @Input() searchLoading = false;
   @Input() removeButtonAriaLabel = '';
+  @Input() addButtonLabel = '';
   @Output() queryChanged = new EventEmitter<string>();
   @Output() tagSelected = new EventEmitter<TagItem>();
   @Output() customTagAdded = new EventEmitter<string>();
@@ -47,7 +50,16 @@ export class ZxTagsInputComponent {
   ];
 
   get dropdownOpen(): boolean {
-    return this.disabled !== true && this.query.trim() !== '' && (this.searchLoading || this.searchResults.length > 0);
+    return this.disabled !== true
+      && this.query.trim() !== ''
+      && (this.searchLoading || this.searchResults.length > 0 || this.canAddCustomTag);
+  }
+
+  get canAddCustomTag(): boolean {
+    const normalizedQuery = this.normalizeTitle(this.query);
+    return normalizedQuery !== ''
+      && this.tags.every(tag => this.normalizeTitle(tag.title) !== normalizedQuery)
+      && this.searchResults.every(result => this.normalizeTitle(result.title) !== normalizedQuery);
   }
 
   onQueryChange(value: string): void {
@@ -90,5 +102,9 @@ export class ZxTagsInputComponent {
   private clearQuery(): void {
     this.query = '';
     this.queryChanged.emit('');
+  }
+
+  private normalizeTitle(title: string): string {
+    return title.trim().toLocaleLowerCase();
   }
 }

@@ -6,6 +6,7 @@ namespace ZxArt\Pictures\Dto;
 
 use ZxArt\Shared\Dto\AuthorDto;
 use ZxArt\Shared\Dto\PartyInfoDto;
+use ZxArt\Shared\Dto\ReleaseInfoDto;
 
 readonly class PictureDto
 {
@@ -26,6 +27,7 @@ readonly class PictureDto
         public ?string $year,
         public array $authors,
         public ?PartyInfoDto $party,
+        public ?ReleaseInfoDto $release,
         public bool $isRealtime,
         public bool $isFlickering,
         public ?string $compo,

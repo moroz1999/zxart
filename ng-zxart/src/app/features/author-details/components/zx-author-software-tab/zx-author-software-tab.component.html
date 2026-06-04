@@ -82,7 +82,7 @@
         <div class="ap-year-rail__year">{{ group.year > 0 ? group.year : '???' }}</div>
         <div class="ap-year-rail__count">{{ group.prods.length }}</div>
       </div>
-      <div zxProdsGrid>
+      <div zxProdsGrid class="ap-works-grid">
         <zx-stack *ngFor="let prod of group.prods" gap="xs">
           <zx-inline *ngIf="getVisibleRoles(prod.rolesInProd).length && activeRole === ''" gap="xs" [wrap]="true" align="center">
             <zx-chip *ngFor="let role of getVisibleRoles(prod.rolesInProd)" variant="opaque" size="sm" [color]="getRoleChipColor(role)">

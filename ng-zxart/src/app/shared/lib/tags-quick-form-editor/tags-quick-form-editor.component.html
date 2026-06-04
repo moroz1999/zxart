@@ -6,6 +6,7 @@
     [disabled]="disabled || saving"
     [searchLoading]="searchLoading"
     [removeButtonAriaLabel]="'tags-quick-form.remove-tag' | translate"
+    [addButtonLabel]="'tags-quick-form.add-new' | translate"
     (queryChanged)="searchQueryChanged.emit($event)"
     (tagSelected)="onTagSelected($event)"
     (customTagAdded)="onCustomTagAdded($event)"

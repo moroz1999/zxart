@@ -1,5 +1,10 @@
-<td class="release-row__thumb">
-    <div *ngIf="release.screenshots.length > 0" class="release-row__thumb-wrap">
+<td class="release-row__thumb" cdkOverlayOrigin #previewOrigin="cdkOverlayOrigin">
+    <div
+      *ngIf="release.screenshots.length > 0"
+      class="release-row__thumb-wrap"
+      (pointerenter)="showPreview()"
+      (pointerleave)="hidePreview()"
+    >
       <img
         class="release-row__thumb-img"
         loading="lazy"
@@ -9,6 +14,19 @@
         [gallery]="galleryId"
       />
     </div>
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="previewOrigin"
+      [cdkConnectedOverlayOpen]="previewOpen"
+      [cdkConnectedOverlayPositions]="previewPositions"
+    >
+      <img
+        class="release-row__preview"
+        @screenshotPreview
+        [src]="previewImageUrl"
+        [alt]="release.title"
+      />
+    </ng-template>
   </td>
 
   <td class="release-row__title">

@@ -77,7 +77,7 @@
         <div class="ap-year-rail__year">{{ +group.year > 0 ? group.year : '???' }}</div>
         <div class="ap-year-rail__count">{{ group.pictures.length }}</div>
       </div>
-      <div zxPicturesGrid>
+      <div zxPicturesGrid class="ap-works-grid">
         <zx-picture-card
           *ngFor="let picture of group.pictures; let pi = index"
           [picture]="picture"

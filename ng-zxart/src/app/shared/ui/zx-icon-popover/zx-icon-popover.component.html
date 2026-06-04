@@ -23,7 +23,7 @@
   [cdkConnectedOverlayViewportMargin]="8"
   (backdropClick)="closePopover()"
 >
-  <div class="zx-icon-popover" (click)="$event.stopPropagation()">
+  <div class="zx-icon-popover" @popover (click)="$event.stopPropagation()">
     <zx-stack
       class="zx-icon-popover__content"
       [spacing]="stackSpacing"

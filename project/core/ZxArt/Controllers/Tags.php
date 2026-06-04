@@ -68,7 +68,15 @@ class Tags extends LoggedControllerApplication
             throw new TagsException('Missing required parameter: tags', 400);
         }
 
-        $tagsDto = $this->tagsService->saveTags($elementId, $tagsParameter);
+        $tags = [];
+        foreach ($tagsParameter as $tagParameter) {
+            if (!is_string($tagParameter)) {
+                throw new TagsException('Tags must be strings', 400);
+            }
+            $tags[] = $tagParameter;
+        }
+
+        $tagsDto = $this->tagsService->saveTags($elementId, $tags);
         $this->renderer->assign('body', $this->objectMapper->map($tagsDto, TagsRestDto::class));
     }
 

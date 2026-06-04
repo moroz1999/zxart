@@ -113,6 +113,7 @@ When work is created by group:
 #### Author Works Ordering
 - Author pictures, tunes, productions, and releases sorted by year use `structure_elements.dateCreated` as the secondary key and element ID as the final stable key.
 - In year-grouped author works, an unspecified year (`0`) is displayed as `???`.
+- Year-grouped author picture and software lists display one work per row on mobile.
 - Author pictures, tunes, productions, and releases apply list filtering, result counting, sorting, and pagination in database queries; services resolve only the selected page of works.
 
 #### Author Production Role Filters

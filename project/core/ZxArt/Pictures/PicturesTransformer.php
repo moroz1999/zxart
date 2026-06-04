@@ -8,6 +8,7 @@ use controller;
 use ZxArt\Pictures\Dto\PictureDto;
 use ZxArt\Shared\Dto\AuthorDto;
 use ZxArt\Shared\Dto\PartyInfoDto;
+use ZxArt\Shared\Dto\ReleaseInfoDto;
 use ZxArt\ZxScreen\ZxPictureParametersDto;
 use ZxArt\ZxScreen\ZxPictureUrlHelper;
 use zxPictureElement;
@@ -31,6 +32,15 @@ readonly class PicturesTransformer
                 title: html_entity_decode((string)$partyElement->getTitle(), ENT_QUOTES),
                 url: $partyElement->getUrl(),
                 place: (int)$element->partyplace ?: null,
+            );
+        }
+
+        $release = null;
+        $releaseElement = $element->getReleaseElement();
+        if ($releaseElement !== null) {
+            $release = new ReleaseInfoDto(
+                title: html_entity_decode((string)$releaseElement->getTitle(), ENT_QUOTES),
+                url: (string)$releaseElement->getUrl(),
             );
         }
 
@@ -75,6 +85,7 @@ readonly class PicturesTransformer
             year: $element->year ? (string)$element->year : null,
             authors: $authors,
             party: $party,
+            release: $release,
             isRealtime: $element->isRealtime(),
             isFlickering: $element->isFlickering(),
             compo: $element->compo ? html_entity_decode((string)$element->compo, ENT_QUOTES) : null,

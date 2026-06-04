@@ -62,3 +62,18 @@ a {
   cursor: pointer;
   image-rendering: pixelated;
 }
+
+.release-row__preview {
+  display: block;
+  width: var(--zx-prod-release-row-preview-width);
+  max-width: var(--zx-prod-release-row-preview-max-width);
+  max-height: var(--zx-prod-release-row-preview-max-height);
+  object-fit: contain;
+  image-rendering: pixelated;
+  border: var(--zx-prod-release-row-preview-border);
+  border-radius: var(--zx-prod-release-row-preview-radius);
+  background: var(--zx-prod-release-row-preview-bg);
+  box-shadow: var(--zx-prod-release-row-preview-shadow);
+  pointer-events: none;
+  transform-origin: center;
+}

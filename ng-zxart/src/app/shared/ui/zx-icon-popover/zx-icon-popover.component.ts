@@ -4,6 +4,7 @@ import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {environment} from '../../../../environments/environment';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {ZxStackComponent} from '../zx-stack/zx-stack.component';
+import {PopoverAnimation} from '../../animations/popover-animations';
 
 @Component({
   selector: 'zx-icon-popover',
@@ -18,6 +19,7 @@ import {ZxStackComponent} from '../zx-stack/zx-stack.component';
   templateUrl: './zx-icon-popover.component.html',
   styleUrls: ['./zx-icon-popover.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [PopoverAnimation],
 })
 export class ZxIconPopoverComponent implements OnInit {
   @Input() iconName = 'edit';

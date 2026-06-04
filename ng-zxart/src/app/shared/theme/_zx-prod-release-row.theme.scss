@@ -19,4 +19,18 @@
   --zx-prod-release-row-screenshots-gap: var(--space-8);
   /* Padding inside the screenshots cell. */
   --zx-prod-release-row-screenshots-cell-padding: var(--space-8) var(--space-12);
+  /* Width of the hover screenshot preview. */
+  --zx-prod-release-row-preview-width: 480px;
+  /* Maximum viewport-aware width of the hover screenshot preview. */
+  --zx-prod-release-row-preview-max-width: calc(100vw - var(--space-32));
+  /* Maximum height of the hover screenshot preview. */
+  --zx-prod-release-row-preview-max-height: 70vh;
+  /* Border of the hover screenshot preview. */
+  --zx-prod-release-row-preview-border: var(--border-width-thin) solid var(--border-color);
+  /* Border radius of the hover screenshot preview. */
+  --zx-prod-release-row-preview-radius: var(--radius-md);
+  /* Background of the hover screenshot preview. */
+  --zx-prod-release-row-preview-bg: var(--zx-panel-bg);
+  /* Shadow of the hover screenshot preview. */
+  --zx-prod-release-row-preview-shadow: var(--shadow-lg);
 }

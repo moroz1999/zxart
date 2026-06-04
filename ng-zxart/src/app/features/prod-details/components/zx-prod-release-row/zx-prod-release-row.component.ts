@@ -15,6 +15,8 @@ import {ProdFileDto} from '../../models/prod-file.dto';
 import {ZxEmulatorPlayButtonComponent} from '../../../../shared/ui/zx-emulator-play-button/zx-emulator-play-button.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxHardwareIconComponent} from '../../../../shared/ui/zx-hardware-icon/zx-hardware-icon.component';
+import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
+import {animate, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'tr[zxProdReleaseRow]',
@@ -32,10 +34,23 @@ import {ZxHardwareIconComponent} from '../../../../shared/ui/zx-hardware-icon/zx
     ZxEmulatorPlayButtonComponent,
     TextDirective,
     ZxHardwareIconComponent,
+    CdkConnectedOverlay,
+    CdkOverlayOrigin,
   ],
   templateUrl: './zx-prod-release-row.component.html',
   styleUrls: ['./zx-prod-release-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('screenshotPreview', [
+      transition(':enter', [
+        style({opacity: 0, transform: 'scale(0.94)'}),
+        animate('180ms cubic-bezier(0.22, 1, 0.36, 1)', style({opacity: 1, transform: 'scale(1)'})),
+      ]),
+      transition(':leave', [
+        animate('120ms cubic-bezier(0.64, 0, 0.78, 0)', style({opacity: 0, transform: 'scale(0.97)'})),
+      ]),
+    ]),
+  ],
 })
 export class ZxProdReleaseRowComponent implements OnInit {
   @Input({required: true}) release!: ProdReleaseDto;
@@ -43,6 +58,12 @@ export class ZxProdReleaseRowComponent implements OnInit {
   @Input({required: true}) screenshotUploadUrl!: string;
 
   galleryId = '';
+  previewOpen = false;
+
+  readonly previewPositions: ConnectedPosition[] = [
+    {originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top', offsetX: 8},
+    {originX: 'start', originY: 'top', overlayX: 'end', overlayY: 'top', offsetX: -8},
+  ];
 
   constructor(
     private readonly iconReg: SvgIconRegistryService,
@@ -68,7 +89,20 @@ export class ZxProdReleaseRowComponent implements OnInit {
     };
   }
 
-get showPurchaseButton(): boolean {
+  showPreview(): void {
+    this.previewOpen = true;
+  }
+
+  hidePreview(): void {
+    this.previewOpen = false;
+  }
+
+  get previewImageUrl(): string {
+    const screenshot = this.release.screenshots[0];
+    return screenshot?.fullImageUrl ?? screenshot?.imageUrl ?? '';
+  }
+
+  get showPurchaseButton(): boolean {
     return !this.release.isDownloadable
       && this.release.prodExternalLink !== ''
       && this.release.prodLegalStatus === 'insales';

@@ -709,6 +709,7 @@
   "tags-quick-form": {
     "title": "Edit tags",
     "search-placeholder": "Add tag",
+    "add-new": "Create new tag",
     "remove-tag": "Remove tag",
     "suggested": "Suggested tags",
     "save": "Save tags",

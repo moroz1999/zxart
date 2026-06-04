@@ -12,6 +12,7 @@ import {ZxButtonControlsComponent} from '../zx-button-controls/zx-button-control
 import {ZxSkeletonBoneComponent} from '../zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
 import {ZxEditButtonComponent} from '../zx-edit-button/zx-edit-button.component';
 import {ZxStackComponent} from '../zx-stack/zx-stack.component';
+import {PopoverAnimation} from '../../animations/popover-animations';
 
 export interface ZxEditingControlConfirm {
   readonly titleKey: string;
@@ -63,6 +64,7 @@ interface EditingControlsVm {
   templateUrl: './zx-editing-controls.component.html',
   styleUrls: ['./zx-editing-controls.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [PopoverAnimation],
 })
 export class ZxEditingControlsComponent implements OnChanges {
   @Input({required: true}) elementId!: number;

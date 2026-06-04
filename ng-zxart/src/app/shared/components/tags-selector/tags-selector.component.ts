@@ -11,6 +11,7 @@ import {ZxTagsChipsComponent} from '../../ui/zx-tags-chips/zx-tags-chips.compone
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {catchError, debounceTime, distinctUntilChanged, map, shareReplay, startWith, switchMap} from 'rxjs/operators';
 import {TextDirective} from '../../ui/typography/directives/text.directive';
+import {DropdownPopoverAnimation} from '../../animations/popover-animations';
 
 interface TagsSelectorVm {
     readonly foundTags: Tag[];
@@ -23,6 +24,7 @@ interface TagsSelectorVm {
     styleUrls: ['./tags-selector.component.scss'],
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [DropdownPopoverAnimation],
     imports: [
         NgForOf,
         NgIf,

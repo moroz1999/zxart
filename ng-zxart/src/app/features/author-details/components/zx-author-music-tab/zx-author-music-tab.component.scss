@@ -1,3 +1,5 @@
+@use 'shared/breakpoints' as bp;
+
 :host {
   display: block;
 }
@@ -24,6 +26,10 @@
   gap: 12px;
 
   &--no-rail {
+    grid-template-columns: 1fr;
+  }
+
+  @include bp.media-breakpoint-down(md) {
     grid-template-columns: 1fr;
   }
 }

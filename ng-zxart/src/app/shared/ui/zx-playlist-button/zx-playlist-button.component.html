@@ -19,7 +19,7 @@
   cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
   (backdropClick)="onBackdropClick()"
 >
-  <div class="playlist-popover" (click)="$event.stopPropagation()">
+  <div class="playlist-popover" @popover (click)="$event.stopPropagation()">
     <div class="playlist-popover-content">
       <ng-container *ngIf="activePlaylistIds$ | async as activeIds">
         <div class="playlist-list" role="listbox">

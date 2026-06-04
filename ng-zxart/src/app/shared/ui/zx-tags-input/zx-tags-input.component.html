@@ -28,12 +28,21 @@
   cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
   (backdropClick)="closeDropdown()"
 >
-  <div class="zx-tags-input__dropdown">
+  <div class="zx-tags-input__dropdown" @dropdownPopover>
     <div *ngIf="searchLoading" class="zx-tags-input__loading">
       <zx-spinner size="md"></zx-spinner>
     </div>
 
     <div *ngIf="searchLoading !== true" class="zx-tags-input__options">
+      <zx-button
+        *ngIf="canAddCustomTag"
+        size="sm"
+        color="secondary"
+        extraClass="zx-tags-input__option-button"
+        (click)="addCustomTag()"
+      >
+        {{ addButtonLabel }} "{{ query.trim() }}"
+      </zx-button>
       <zx-button
         *ngFor="let result of searchResults"
         size="sm"

@@ -13,6 +13,7 @@ import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {ZxInputComponent} from '../zx-input/zx-input.component';
 import {TextDirective} from '../typography/directives/text.directive';
 import {environment} from '../../../../environments/environment';
+import {PopoverAnimation} from '../../animations/popover-animations';
 
 @Component({
   selector: 'zx-playlist-button',
@@ -31,6 +32,7 @@ import {environment} from '../../../../environments/environment';
   templateUrl: './zx-playlist-button.component.html',
   styleUrls: ['./zx-playlist-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [PopoverAnimation],
 })
 export class ZxPlaylistButtonComponent implements OnInit {
   @Input() elementId!: number;

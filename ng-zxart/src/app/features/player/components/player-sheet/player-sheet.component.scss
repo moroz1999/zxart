@@ -8,6 +8,10 @@
   z-index: var(--zx-player-z-index);
 }
 
+:host:hover {
+  z-index: var(--zx-player-hover-z-index);
+}
+
 .player-panel {
   width: 100%;
   user-select: none;

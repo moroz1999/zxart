@@ -7,6 +7,7 @@ namespace ZxArt\Pictures\Rest;
 use Symfony\Component\ObjectMapper\Attribute\Map;
 use ZxArt\Shared\Dto\AuthorDto;
 use ZxArt\Shared\Dto\PartyInfoDto;
+use ZxArt\Shared\Dto\ReleaseInfoDto;
 
 readonly class PictureRestDto
 {
@@ -28,6 +29,8 @@ readonly class PictureRestDto
         public array $authors,
         #[Map]
         public ?PartyInfoDto $party,
+        #[Map]
+        public ?ReleaseInfoDto $release,
         public bool $isRealtime,
         public bool $isFlickering,
         public ?string $compo,

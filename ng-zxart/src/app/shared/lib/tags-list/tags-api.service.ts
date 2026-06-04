@@ -21,7 +21,7 @@ export class TagsApiService {
   }
 
   saveTags(elementId: number, tags: TagItem[]): Observable<TagsPayloadDto> {
-    return this.http.post<TagsPayloadDto>(this.apiUrl, {tags}, {
+    return this.http.post<TagsPayloadDto>(this.apiUrl, {tags: tags.map(tag => tag.title)}, {
       params: {
         id: elementId,
       },

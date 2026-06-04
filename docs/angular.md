@@ -42,6 +42,11 @@ The PHP app uses `NG_DEV_SERVER_URL` to load Angular dev-server modules instead 
 
 ### Architecture and Code Structure
 
+#### Popover Motion
+
+- Header and other panel-style CDK popovers use `PopoverAnimation`.
+- Search-result CDK dropdowns use the shorter `DropdownPopoverAnimation`.
+
 #### Feature Sliced Design (FSD)
 All new functionality in Angular must follow Feature Sliced Design principles and the [Design System](design-system.md).
 

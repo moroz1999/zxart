@@ -29,9 +29,7 @@ readonly class TagsService
         return $this->buildTagsDto($elementId, $element);
     }
 
-    /**
-     * @param array<array{id?: mixed, title?: mixed}> $rawTags
-     */
+    /** @param string[] $rawTags */
     public function saveTags(int $elementId, array $rawTags): TagsDto
     {
         $element = $this->resolveAuthorizedElement($elementId);
@@ -46,7 +44,7 @@ readonly class TagsService
     }
 
     /**
-     * @param array<array{id?: mixed, title?: mixed}> $rawTags
+     * @param string[] $rawTags
      * @return string[]
      */
     private function normalizeTitles(array $rawTags): array
@@ -54,11 +52,7 @@ readonly class TagsService
         $normalizedTags = [];
 
         foreach ($rawTags as $rawTag) {
-            if (!is_array($rawTag)) {
-                continue;
-            }
-
-            $title = trim((string)($rawTag['title'] ?? ''));
+            $title = trim($rawTag);
             if ($title === '') {
                 continue;
             }

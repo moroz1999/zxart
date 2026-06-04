@@ -17,6 +17,7 @@ class Zximages extends LoggedControllerApplication
 
     public function initialize()
     {
+        ini_set("max_execution_time", 20);
         $this->createRenderer();
     }
 

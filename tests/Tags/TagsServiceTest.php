@@ -94,12 +94,10 @@ class TagsServiceTest extends TestCase
             ->with(42);
 
         $result = $this->service->saveTags(42, [
-            ['title' => '  Demo '],
-            ['title' => 'demo'],
-            ['title' => ' Another'],
-            ['title' => ''],
-            ['other' => 'ignored'],
-            'invalid',
+            '  Demo ',
+            'demo',
+            ' Another',
+            '',
         ]);
 
         $this->assertSame(['Demo', 'Another'], $element->updateTagsFromListTitles);

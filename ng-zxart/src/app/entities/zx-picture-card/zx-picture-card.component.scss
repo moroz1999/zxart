@@ -73,6 +73,14 @@
   margin-bottom: var(--space-8);
 }
 
+.picture-release {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: var(--space-8);
+}
+
 .picture-party a {
   overflow: hidden;
   text-overflow: ellipsis;

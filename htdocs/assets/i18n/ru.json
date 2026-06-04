@@ -709,6 +709,7 @@
   "tags-quick-form": {
     "title": "Редактировать теги",
     "search-placeholder": "Добавить тег",
+    "add-new": "Создать новый тег",
     "remove-tag": "Удалить тег",
     "suggested": "Предложенные теги",
     "save": "Сохранить теги",

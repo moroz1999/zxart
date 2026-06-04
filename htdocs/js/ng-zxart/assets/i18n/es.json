@@ -708,6 +708,7 @@
   "tags-quick-form": {
     "title": "Editar etiquetas",
     "search-placeholder": "AÃ±adir etiqueta",
+    "add-new": "Crear etiqueta nueva",
     "remove-tag": "Eliminar etiqueta",
     "suggested": "Etiquetas sugeridas",
     "save": "Guardar etiquetas",

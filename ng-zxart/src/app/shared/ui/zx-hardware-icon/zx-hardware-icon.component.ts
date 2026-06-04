@@ -82,7 +82,7 @@ const HW_ICON_MAP: Readonly<Record<string, string>> = {
   isdos: 'hw-os',
   cpm: 'hw-os',
   esxdos: 'hw-os',
-  '3dos': 'hw-os',
+  '3dos': 'hw-disk',
   mdos: 'hw-os',
   nedoos: 'hw-os',
   tos: 'hw-os',

@@ -1,5 +1,6 @@
 import {AuthorDto} from './author-dto';
 import {PartyInfoDto} from './party-info-dto';
+import {ReleaseInfoDto} from './release-info-dto';
 
 export interface ZxPictureDto {
   readonly id: number;
@@ -15,6 +16,7 @@ export interface ZxPictureDto {
   readonly year: string | null;
   readonly authors: AuthorDto[];
   readonly party: PartyInfoDto | null;
+  readonly release: ReleaseInfoDto | null;
   readonly isRealtime: boolean;
   readonly isFlickering: boolean;
   readonly compo: string | null;

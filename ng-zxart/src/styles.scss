@@ -97,6 +97,7 @@ zx-header {
 
 // All dialogs: max-height on desktop, fullscreen on mobile, internal scroll via zx-dialog component
 .cdk-overlay-pane.zx-dialog {
+  max-height: 80vh;
 
   @include breakpoints.media-breakpoint-down(lg) {
     position: fixed !important;
@@ -117,9 +118,12 @@ zx-header {
     display: grid;
     width: 100%;
     height: 100%;
+    max-height: inherit;
 
     > * {
+      display: block;
       height: 100%;
+      max-height: inherit;
       min-height: 0;
     }
 

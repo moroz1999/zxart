@@ -44,7 +44,7 @@ paths:
                 tags:
                   type: array
                   items:
-                    $ref: '#/components/schemas/TagWriteItem'
+                    type: string
       responses:
         '200':
           description: Saved tags payload
@@ -71,19 +71,6 @@ components:
       properties:
         id:
           type: integer
-        title:
-          type: string
-        description:
-          type: string
-          nullable: true
-    TagWriteItem:
-      type: object
-      required:
-        - title
-      properties:
-        id:
-          type: integer
-          nullable: true
         title:
           type: string
         description:
