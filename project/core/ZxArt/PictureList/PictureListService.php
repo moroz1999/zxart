@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace ZxArt\PictureList;
 
 use structureManager;
+use ZxArt\LinkTypes;
 use ZxArt\Pictures\Dto\PictureDto;
 use ZxArt\Pictures\PicturesTransformer;
 use ZxArt\Pictures\Repositories\PicturesRepository;
 use ZxArt\Shared\SortingParams;
 use zxPictureElement;
+use zxReleaseElement;
 
 readonly class PictureListService
 {
@@ -116,8 +118,35 @@ readonly class PictureListService
         return ['total' => $total, 'items' => $items];
     }
 
+    /**
+     * Returns pictures linked to the release via gameLink, sorted by votes descending.
+     *
+     * @return zxPictureElement[]
+     */
+    public function getReleasePictures(int $releaseId): array
+    {
+        $sorting = SortingParams::fromRequest('votes,desc', self::ALLOWED_SORT_COLUMNS, 'votes');
+        $ids = $this->picturesRepository->findPagedByLinkedElement($releaseId, LinkTypes::GAME_LINK->value, $sorting, 0, 500);
+        $result = [];
+        foreach ($ids as $id) {
+            $el = $this->structureManager->getElementById($id) ?? $this->structureManager->getElementById($id, null, true);
+            if ($el instanceof zxPictureElement) {
+                $result[] = $el;
+            }
+        }
+        return $result;
+    }
+
+    public function countReleasePictures(int $releaseId): int
+    {
+        return $this->picturesRepository->countByLinkedElement($releaseId, LinkTypes::GAME_LINK->value);
+    }
+
     private function resolvePictureElements(mixed $element, ?string $compoType): array
     {
+        if ($element instanceof zxReleaseElement) {
+            return $this->getReleasePictures($element->getId());
+        }
         if ($compoType !== null && method_exists($element, 'getPicturesCompos')) {
             $compos = $element->getPicturesCompos();
             return $compos[$compoType] ?? [];

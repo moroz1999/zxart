@@ -14,7 +14,7 @@ import {
   ZxFilterPickerItem
 } from '../../../../shared/ui/zx-filter-picker/zx-filter-picker.component';
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
-import {ZxGroupsTableComponent} from '../../../../shared/ui/zx-groups-table/zx-groups-table.component';
+import {ZxGroupsTableComponent} from '../../../../entities/zx-groups-table/zx-groups-table.component';
 import {
   ZxRowSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';

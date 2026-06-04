@@ -8,7 +8,7 @@ import {CommentsService} from '../../services/comments.service';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {CommentFormComponent} from '../comment-form/comment-form.component';
-import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
+import {ZxUserComponent} from '../../../../entities/zx-user/zx-user.component';
 import {ZxStackComponent} from "../../../../shared/ui/zx-stack/zx-stack.component";
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxInsetComponent} from '../../../../shared/ui/zx-inset/zx-inset.component';

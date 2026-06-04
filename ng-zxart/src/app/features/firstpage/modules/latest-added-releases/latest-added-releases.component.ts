@@ -9,7 +9,7 @@ import {
 import {ModuleSettings} from '../../models/firstpage-config';
 import {MODULE_SETTINGS} from '../../models/module-settings.token';
 import {ProdReleaseDto} from '../../../prod-details/models/prod-release.dto';
-import {ZxProdReleaseCardComponent} from '../../../prod-details/components/zx-prod-release-card/zx-prod-release-card.component';
+import {ZxProdReleaseCardComponent} from '../../../../entities/zx-prod-release-card/zx-prod-release-card.component';
 import {ZxProdsListSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-prods-list-skeleton/zx-prods-list-skeleton.component';
 import {ZxProdsGridDirective} from '../../../../shared/directives/prods-grid.directive';
 

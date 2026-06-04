@@ -8,9 +8,9 @@ import {ZxTuneDto} from '../../../../shared/models/zx-tune-dto';
 import {AuthorMiniDashboardData, AuthorMiniDashboardService} from '../../services/author-mini-dashboard.service';
 import {PlayerService} from '../../../player/services/player.service';
 import {AuthorProdEntry, AuthorProdItem, AuthorReleaseEntry} from '../../services/author-prods-api.service';
-import {ZxPictureCardComponent} from '../../../../shared/ui/zx-picture-card/zx-picture-card.component';
+import {ZxPictureCardComponent} from '../../../../entities/zx-picture-card/zx-picture-card.component';
 import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.component';
-import {ZxProdBlockComponent} from '../../../../shared/ui/zx-prod-block/zx-prod-block.component';
+import {ZxProdBlockComponent} from '../../../../entities/zx-prod-block/zx-prod-block.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
@@ -29,7 +29,7 @@ import {ZxProdsListSkeletonComponent} from '../../../../shared/ui/zx-skeleton/co
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
-import {ZxProdReleaseCardComponent} from '../../../prod-details/components/zx-prod-release-card/zx-prod-release-card.component';
+import {ZxProdReleaseCardComponent} from '../../../../entities/zx-prod-release-card/zx-prod-release-card.component';
 
 
 @Component({

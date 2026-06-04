@@ -4,7 +4,7 @@ import {ElementsService} from '../../shared/services/elements.service';
 import {ZxProdsListDto} from './models/zx-prods-list-dto';
 import {ZxProd} from '../../shared/models/zx-prod';
 import {TranslatePipe} from '@ngx-translate/core';
-import {ZxProdBlockComponent} from '../../shared/ui/zx-prod-block/zx-prod-block.component';
+import {ZxProdBlockComponent} from '../zx-prod-block/zx-prod-block.component';
 import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';

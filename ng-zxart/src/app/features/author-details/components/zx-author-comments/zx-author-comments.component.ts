@@ -6,7 +6,7 @@ import {CommentsService} from '../../../comments/services/comments.service';
 import {CommentDto} from '../../../comments/models/comment.dto';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
-import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
+import {ZxUserComponent} from '../../../../entities/zx-user/zx-user.component';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
 import {ZxTextSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-text-skeleton/zx-text-skeleton.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';

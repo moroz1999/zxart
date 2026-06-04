@@ -7,28 +7,28 @@ import {
   Input,
   ViewChild,
 } from '@angular/core';
-import {FadeInOut} from '../../animations/fade-in-out';
+import {FadeInOut} from '../../shared/animations/fade-in-out';
 import {AnimationEvent, trigger} from '@angular/animations';
-import {SlideInOut} from '../../animations/slide-in-out';
-import {ZxProdsListLayout} from '../../../entities/zx-prods-category/zx-prods-category.component';
-import {ZxProdComponent} from '../../components/zx-prod-component';
+import {SlideInOut} from '../../shared/animations/slide-in-out';
+import {ZxProdsListLayout} from '../zx-prods-category/zx-prods-category.component';
+import {ZxProdComponent} from '../../shared/components/zx-prod-component';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
-import {environment} from '../../../../environments/environment';
+import {environment} from '../../../environments/environment';
 import {TranslatePipe} from '@ngx-translate/core';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
-import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
-import {ZxBadgeComponent} from '../zx-badge/zx-badge.component';
-import {AnalyticsService} from '../../services/analytics.service';
-import {ZxButtonComponent} from '../zx-button/zx-button.component';
-import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.component';
-import {ZxReleaseTypeBadgeComponent} from '../zx-release-type-badge/zx-release-type-badge.component';
-import {ZxInsetComponent} from '../zx-inset/zx-inset.component';
-import {ZxInlineComponent} from '../zx-inline/zx-inline.component';
-import {ZxStackComponent} from '../zx-stack/zx-stack.component';
-import {HeadingDirective} from '../typography/directives/heading.directive';
-import {TextDirective} from '../typography/directives/text.directive';
-import {ZxPartyPlaceComponent} from '../../lib/zx-party-place/zx-party-place.component';
-import {ZxCardScreenshotGalleryComponent} from '../zx-card-screenshot-preview/zx-card-screenshot-gallery.component';
+import {ZxPanelComponent} from '../../shared/ui/zx-panel/zx-panel.component';
+import {ZxBadgeComponent} from '../../shared/ui/zx-badge/zx-badge.component';
+import {AnalyticsService} from '../../shared/services/analytics.service';
+import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
+import {ZxItemControlsComponent} from '../../shared/ui/zx-item-controls/zx-item-controls.component';
+import {ZxReleaseTypeBadgeComponent} from '../../shared/ui/zx-release-type-badge/zx-release-type-badge.component';
+import {ZxInsetComponent} from '../../shared/ui/zx-inset/zx-inset.component';
+import {ZxInlineComponent} from '../../shared/ui/zx-inline/zx-inline.component';
+import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {TextDirective} from '../../shared/ui/typography/directives/text.directive';
+import {ZxPartyPlaceComponent} from '../../shared/lib/zx-party-place/zx-party-place.component';
+import {ZxCardScreenshotGalleryComponent} from '../../shared/ui/zx-card-screenshot-preview/zx-card-screenshot-gallery.component';
 
 @Component({
   selector: 'zx-prod-block',

@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} fr
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
-import {ZxPictureCardComponent} from '../../../../shared/ui/zx-picture-card/zx-picture-card.component';
+import {ZxPictureCardComponent} from '../../../../entities/zx-picture-card/zx-picture-card.component';
 import {ZxPicturesGridDirective} from '../../../../shared/directives/pictures-grid.directive';
 import {
   PictureGalleryHostComponent

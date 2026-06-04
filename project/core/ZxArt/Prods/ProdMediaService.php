@@ -15,6 +15,7 @@ use ZxArt\Prods\Dto\ProdReleaseInlaysDto;
 use ZxArt\Prods\Dto\ProdReleaseInstructionFileDto;
 use ZxArt\Prods\Dto\ProdReleaseInstructionsDto;
 use ZxArt\Prods\Exception\ProdDetailsException;
+use zxProdElement;
 use zxReleaseElement;
 
 readonly class ProdMediaService
@@ -180,6 +181,19 @@ readonly class ProdMediaService
                 self::PROD_IMAGE_FULL_PRESET,
             ),
         );
+    }
+
+    public function buildReleaseScreenshotsWithProdFallback(zxReleaseElement $release): ProdFilesDto
+    {
+        $own = $this->buildReleaseScreenshots($release);
+        if (!empty($own->files)) {
+            return $own;
+        }
+        $prod = $release->getProd();
+        if (!$prod instanceof zxProdElement) {
+            return $own;
+        }
+        return $this->getProdScreenshots($prod->getId());
     }
 
     public function buildReleaseInlays(zxReleaseElement $release): ProdReleaseInlaysDto

@@ -16,7 +16,7 @@ import {ElementPrivilegesApiService} from '../../../../shared/services/element-p
 import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filter-bar.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
-import {ZxProdReleaseCardComponent} from '../zx-prod-release-card/zx-prod-release-card.component';
+import {ZxProdReleaseCardComponent} from '../../../../entities/zx-prod-release-card/zx-prod-release-card.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';

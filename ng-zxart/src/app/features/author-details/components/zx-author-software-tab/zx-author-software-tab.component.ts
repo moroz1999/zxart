@@ -4,7 +4,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {BehaviorSubject, combineLatest, Subscription, switchMap} from 'rxjs';
 import {AuthorProdEntry, AuthorProdItem, AuthorReleaseEntry, AuthorProdsApiService} from '../../services/author-prods-api.service';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
-import {ZxProdBlockComponent} from '../../../../shared/ui/zx-prod-block/zx-prod-block.component';
+import {ZxProdBlockComponent} from '../../../../entities/zx-prod-block/zx-prod-block.component';
 import {ZxProd} from '../../../../shared/models/zx-prod';
 import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filter-bar.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
@@ -16,7 +16,7 @@ import {ZxChipComponent, ZxChipColor} from '../../../../shared/ui/zx-chip/zx-chi
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxProdsGridDirective} from '../../../../shared/directives/prods-grid.directive';
-import {ZxProdReleaseCardComponent} from '../../../prod-details/components/zx-prod-release-card/zx-prod-release-card.component';
+import {ZxProdReleaseCardComponent} from '../../../../entities/zx-prod-release-card/zx-prod-release-card.component';
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
 
 const PAGE_SIZE = 15;

@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {TextDirective} from '../typography/directives/text.directive';
+import {TextDirective} from '../../shared/ui/typography/directives/text.directive';
 
 export interface ZxProdFileListItem {
   readonly id: number;

@@ -65,8 +65,9 @@ docker compose run --rm node run build:docker
   - `/project/templates/public/` - Smarty templates (legacy view system)
   - `/project/css/public/` - Legacy CSS (auto-bundled)
 - `/ng-zxart/` - Angular 19 frontend
+  - `/ng-zxart/src/app/entities/` - Domain entity components and DTOs (FSD entities layer)
   - `/ng-zxart/src/app/features/` - Feature modules (FSD structure)
-  - `/ng-zxart/src/app/shared/ui/` - Design system components
+  - `/ng-zxart/src/app/shared/ui/` - Design system primitives (domain-agnostic)
   - `/ng-zxart/src/app/shared/theme/` - CSS variables and themes
 - `/api/` - OpenAPI specs (update after any API changes)
 - `/trickster-cms/` - CMS-functions related code 

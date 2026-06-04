@@ -4,7 +4,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {BehaviorSubject, combineLatest, Subscription, switchMap} from 'rxjs';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
 import {AuthorPicturesService} from '../../../author-pictures/services/author-pictures.service';
-import {ZxPictureCardComponent} from '../../../../shared/ui/zx-picture-card/zx-picture-card.component';
+import {ZxPictureCardComponent} from '../../../../entities/zx-picture-card/zx-picture-card.component';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
 import {ZxPicturesGridDirective} from '../../../../shared/directives/pictures-grid.directive';
 import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filter-bar.component';

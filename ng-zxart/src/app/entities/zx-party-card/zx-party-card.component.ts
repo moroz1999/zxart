@@ -1,8 +1,8 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PartyDto} from '../../models/party-dto';
-import {TextDirective} from '../typography/directives/text.directive';
-import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
+import {PartyDto} from '../../shared/models/party-dto';
+import {TextDirective} from '../../shared/ui/typography/directives/text.directive';
+import {ZxPanelComponent} from '../../shared/ui/zx-panel/zx-panel.component';
 
 @Component({
   selector: 'zx-party-card',

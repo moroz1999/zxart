@@ -19,6 +19,7 @@ export interface ReleaseTabsDto {
   hasInlays: boolean;
   hasInstructions: boolean;
   hasStructure: boolean;
+  hasPictures: boolean;
 }
 
 export interface ReleaseFileStructureItemDto {

@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {ProdInstructionsApiService} from '../../services/prod-instructions-api.service';
 import {ProdInstructionFileDto} from '../../models/prod-instruction-file.dto';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
-import {ZxInstructionFileCardComponent} from '../../../../shared/ui/zx-instruction-file-card/zx-instruction-file-card.component';
+import {ZxInstructionFileCardComponent} from '../../../../entities/zx-instruction-file-card/zx-instruction-file-card.component';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 
 @Component({

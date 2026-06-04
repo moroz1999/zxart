@@ -10,7 +10,7 @@ import {FirstpageDataService} from '../../services/firstpage-data.service';
 import {
   FirstpageModuleWrapperComponent
 } from '../../components/firstpage-module-wrapper/firstpage-module-wrapper.component';
-import {ZxPictureCardComponent} from '../../../../shared/ui/zx-picture-card/zx-picture-card.component';
+import {ZxPictureCardComponent} from '../../../../entities/zx-picture-card/zx-picture-card.component';
 import {ZxPicturesGridDirective} from '../../../../shared/directives/pictures-grid.directive';
 import {ModuleSettings} from '../../models/firstpage-config';
 import {MODULE_SETTINGS} from '../../models/module-settings.token';

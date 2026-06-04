@@ -1,8 +1,8 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {TextDirective} from '../typography/directives/text.directive';
-import {ZxButtonComponent} from '../zx-button/zx-button.component';
-import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
+import {TextDirective} from '../../shared/ui/typography/directives/text.directive';
+import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
+import {ZxPanelComponent} from '../../shared/ui/zx-panel/zx-panel.component';
 
 export interface ZxArticlePreviewAuthor {
   readonly title: string;

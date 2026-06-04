@@ -23,6 +23,11 @@
       [canReorder]="details.canReorderScreenshots">
     </zx-release-screenshots-section>
 
+    <zx-prod-pictures-section
+      *ngIf="details.tabs.hasPictures"
+      [elementId]="details.id">
+    </zx-prod-pictures-section>
+
     <zx-release-inlays-section
       *ngIf="details.tabs.hasInlays"
       [inlays]="details.inlays">

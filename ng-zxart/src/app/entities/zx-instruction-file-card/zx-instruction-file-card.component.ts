@@ -2,12 +2,12 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Dialog} from '@angular/cdk/dialog';
-import {ZxInlineComponent} from '../zx-inline/zx-inline.component';
-import {ZxButtonComponent} from '../zx-button/zx-button.component';
-import {TextDirective} from '../typography/directives/text.directive';
-import {FileViewerDialogData, ZxFileViewerDialogComponent} from '../zx-file-viewer-dialog/zx-file-viewer-dialog.component';
-import {ProdInstructionFileDto} from '../../../features/prod-details/models/prod-instruction-file.dto';
-import {ProdReleaseLabelPipe} from '../../../features/prod-details/pipes/prod-release-label.pipe';
+import {ZxInlineComponent} from '../../shared/ui/zx-inline/zx-inline.component';
+import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
+import {TextDirective} from '../../shared/ui/typography/directives/text.directive';
+import {FileViewerDialogData, ZxFileViewerDialogComponent} from '../../shared/ui/zx-file-viewer-dialog/zx-file-viewer-dialog.component';
+import {ProdInstructionFileDto} from '../../features/prod-details/models/prod-instruction-file.dto';
+import {ProdReleaseLabelPipe} from '../../features/prod-details/pipes/prod-release-label.pipe';
 
 @Component({
   selector: 'zx-instruction-file-card',

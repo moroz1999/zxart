@@ -10,7 +10,7 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 import {
   ZxTextSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-text-skeleton/zx-text-skeleton.component';
-import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
+import {ZxUserComponent} from '../../../../entities/zx-user/zx-user.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';

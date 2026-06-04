@@ -19,6 +19,7 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {RatingsListComponent} from '../../../ratings/components/ratings-list/ratings-list.component';
 import {ZxReleaseFileStructureComponent} from '../zx-release-file-structure/zx-release-file-structure.component';
+import {ZxProdPicturesSectionComponent} from '../../../prod-details/components/zx-prod-pictures-section/zx-prod-pictures-section.component';
 
 @Component({
   selector: 'zx-release-details',
@@ -40,6 +41,7 @@ import {ZxReleaseFileStructureComponent} from '../zx-release-file-structure/zx-r
     CommentsListComponent,
     RatingsListComponent,
     ZxReleaseFileStructureComponent,
+    ZxProdPicturesSectionComponent,
   ],
   templateUrl: './zx-release-details.component.html',
   styleUrl: './zx-release-details.component.scss',

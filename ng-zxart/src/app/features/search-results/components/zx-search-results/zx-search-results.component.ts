@@ -27,20 +27,20 @@ import {HeadingDirective} from '../../../../shared/ui/typography/directives/head
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxCheckboxFieldComponent} from '../../../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filter-bar.component';
-import {ZxArticlePreviewComponent} from '../../../../shared/ui/zx-article-preview/zx-article-preview.component';
+import {ZxArticlePreviewComponent} from '../../../../entities/zx-article-preview/zx-article-preview.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxSpinnerComponent} from '../../../../shared/ui/zx-spinner/zx-spinner.component';
-import {ZxAuthorsTableComponent} from '../../../../shared/ui/zx-authors-table/zx-authors-table.component';
-import {ZxGroupsTableComponent} from '../../../../shared/ui/zx-groups-table/zx-groups-table.component';
-import {ZxPictureCardComponent} from '../../../../shared/ui/zx-picture-card/zx-picture-card.component';
+import {ZxAuthorsTableComponent} from '../../../../entities/zx-authors-table/zx-authors-table.component';
+import {ZxGroupsTableComponent} from '../../../../entities/zx-groups-table/zx-groups-table.component';
+import {ZxPictureCardComponent} from '../../../../entities/zx-picture-card/zx-picture-card.component';
 import {
   ZxPictureCardSkeletonComponent
-} from '../../../../shared/ui/zx-picture-card-skeleton/zx-picture-card-skeleton.component';
+} from '../../../../entities/zx-picture-card-skeleton/zx-picture-card-skeleton.component';
 import {ZxPicturesGridDirective} from '../../../../shared/directives/pictures-grid.directive';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
 import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.component';
-import {ZxPartyCardComponent} from '../../../../shared/ui/zx-party-card/zx-party-card.component';
+import {ZxPartyCardComponent} from '../../../../entities/zx-party-card/zx-party-card.component';
 import {PlayerService} from '../../../player/services/player.service';
 import {ZxProdsListComponent} from '../../../../entities/zx-prods-list/zx-prods-list.component';
 import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';

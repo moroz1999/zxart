@@ -8,7 +8,7 @@ import {
 import {
   ZxProdFileListItem,
   ZxProdFilesListComponent,
-} from '../../../../shared/ui/zx-prod-files-list/zx-prod-files-list.component';
+} from '../../../../entities/zx-prod-files-list/zx-prod-files-list.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {ProdRzxApiService} from '../../services/prod-rzx-api.service';

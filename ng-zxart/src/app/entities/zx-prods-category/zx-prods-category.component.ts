@@ -23,7 +23,7 @@ import {SortingSelectorComponent} from './components/sorting-selector/sorting-se
 import {DialogSelectorComponent} from './components/dialog-selector/dialog-selector.component';
 import {LetterSelectorComponent} from './components/letter-selector/letter-selector.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
-import {ZxProdBlockComponent} from '../../shared/ui/zx-prod-block/zx-prod-block.component';
+import {ZxProdBlockComponent} from '../zx-prod-block/zx-prod-block.component';
 import {ZxProdRowComponent} from '../zx-prod-row/zx-prod-row.component';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';

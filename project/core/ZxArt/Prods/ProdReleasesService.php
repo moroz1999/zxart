@@ -105,7 +105,7 @@ readonly class ProdReleasesService
             playsCount: $release->getPlaysCount(),
             voting: $this->buildReleaseVoting($release),
             externalLinks: $this->infoBuilder->buildLinks($release, $theme),
-            screenshots: $this->prodMediaService->buildReleaseScreenshots($release)->files,
+            screenshots: $this->prodMediaService->buildReleaseScreenshotsWithProdFallback($release)->files,
         );
     }
 

@@ -5,7 +5,7 @@ import {RatingsService} from '../../../ratings/services/ratings.service';
 import {RecentRatingDto} from '../../../ratings/models/recent-rating.dto';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
-import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
+import {ZxUserComponent} from '../../../../entities/zx-user/zx-user.component';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
 import {ZxRowSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';

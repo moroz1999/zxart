@@ -255,7 +255,32 @@ This applies to `BackendLinksService` URLs, `CurrentUserService` data, and any o
 4. **Legacy CSS**: Custom styles that duplicate Material functionality or legacy theme styles should be avoided.
 5. **CSS-based popover positioning**: Do not use `position: absolute` inside `position: relative` hosts for overlay patterns. Use CDK `CdkConnectedOverlay` instead.
 
-- Code is divided into layers, such as `features`, `entities`, and `shared`.
+#### Layer Hierarchy (FSD)
+
+Code is strictly divided into layers with a one-directional dependency rule: upper layers may import from lower ones, never the reverse.
+
+```
+shared/    ← no domain knowledge; no imports from entities or features
+entities/  ← domain objects and their UI; may import from shared only
+features/  ← user scenarios and business logic; may import from entities and shared
+```
+
+**`shared/ui/`** — domain-agnostic design system primitives: buttons, inputs, layout components, typography, skeletons. Must contain no domain DTOs or business rules.
+
+**`entities/{entity-name}/`** — UI representation of a single domain object (e.g. `release`, `prod`, `tune`, `picture`). Contains:
+- `components/` — the card/row/block component for that entity
+- `models/` — the entity's DTO and interfaces
+
+Rules for entities:
+- An entity component receives its DTO as `@Input()` and renders it — nothing more.
+- Entity components MUST NOT trigger data loading or contain business logic.
+- Entity components MAY import from `shared/` only.
+- The DTO used by the component lives in the same `entities/{entity}/models/` folder.
+
+If a component is used in more than one feature, it belongs in `entities/`, not inside any single feature.
+
+**`features/{feature-name}/`** — one user scenario per directory. May import from `entities/` and `shared/`.
+
 - Each feature must be located in its own directory within `src/app/features/`.
 - Example of the `comments` feature structure:
   ```

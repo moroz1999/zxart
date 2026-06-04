@@ -15,6 +15,7 @@ readonly class ReleaseTabsDto
         public bool $hasInlays,
         public bool $hasInstructions,
         public bool $hasStructure,
+        public bool $hasPictures,
     ) {
     }
 }

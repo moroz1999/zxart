@@ -11,6 +11,7 @@ use privilegesManager;
 use structureManager;
 use userElement;
 use ZxArt\FileParsing\ZxParsingManager;
+use ZxArt\PictureList\PictureListService;
 use ZxArt\Prods\Dto\ProdCategoryPathDto;
 use ZxArt\Prods\Dto\ProdCategoryRefDto;
 use ZxArt\Prods\Dto\ProdReleaseFormatDto;
@@ -39,6 +40,7 @@ readonly class ReleaseDetailsService
         private controller $controller,
         private ZxParsingManager $zxParsingManager,
         private privilegesManager $privilegesManager,
+        private PictureListService $pictureListService,
     ) {
     }
 
@@ -70,6 +72,7 @@ readonly class ReleaseDetailsService
         $instructions = $this->prodMediaService->buildReleaseInstructions($release);
 
         $fileStructure = $this->buildFileStructure($release);
+        $hasPictures = $this->pictureListService->countReleasePictures($release->getId()) > 0;
 
         return new ReleaseDetailsDto(
             id: $release->getId(),
@@ -111,6 +114,7 @@ readonly class ReleaseDetailsService
                 hasInlays: count($inlays->inlays) > 0,
                 hasInstructions: count($instructions->files) > 0,
                 hasStructure: count($fileStructure) > 0,
+                hasPictures: $hasPictures,
             ),
             fileStructure: $fileStructure,
             canUploadScreenshot: $canUploadScreenshot,

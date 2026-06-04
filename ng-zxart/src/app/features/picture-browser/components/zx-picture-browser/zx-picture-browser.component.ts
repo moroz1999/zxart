@@ -2,10 +2,10 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/co
 import {CommonModule} from '@angular/common';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
-import {ZxPictureCardComponent} from '../../../../shared/ui/zx-picture-card/zx-picture-card.component';
+import {ZxPictureCardComponent} from '../../../../entities/zx-picture-card/zx-picture-card.component';
 import {
   ZxPictureCardSkeletonComponent
-} from '../../../../shared/ui/zx-picture-card-skeleton/zx-picture-card-skeleton.component';
+} from '../../../../entities/zx-picture-card-skeleton/zx-picture-card-skeleton.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxPicturesGridDirective} from '../../../../shared/directives/pictures-grid.directive';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';

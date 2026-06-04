@@ -1,9 +1,9 @@
 import {ChangeDetectionStrategy, Component, HostBinding, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
-import {CommentAuthorDto} from '../../../features/comments/models/comment.dto';
-import {TextDirective} from '../typography/directives/text.directive';
-import {environment} from '../../../../environments/environment';
+import {CommentAuthorDto} from '../../features/comments/models/comment.dto';
+import {TextDirective} from '../../shared/ui/typography/directives/text.directive';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'zx-user',

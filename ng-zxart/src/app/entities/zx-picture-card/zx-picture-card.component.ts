@@ -3,15 +3,15 @@ import {AsyncPipe, CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {ZxPictureDto} from '../../models/zx-picture-dto';
-import {ZxPanelComponent} from '../zx-panel/zx-panel.component';
-import {ZxBadgeComponent} from '../zx-badge/zx-badge.component';
-import {TextDirective} from '../typography/directives/text.directive';
+import {ZxPictureDto} from '../../shared/models/zx-picture-dto';
+import {ZxPanelComponent} from '../../shared/ui/zx-panel/zx-panel.component';
+import {ZxBadgeComponent} from '../../shared/ui/zx-badge/zx-badge.component';
+import {TextDirective} from '../../shared/ui/typography/directives/text.directive';
 import {LightboxModule} from 'ng-gallery/lightbox';
-import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.component';
-import {PictureSettingsService} from '../../../features/picture-settings/services/picture-settings.service';
-import {PictureUrlBuilderService} from '../../services/picture-url-builder.service';
-import {ZxPartyPlaceComponent} from '../../lib/zx-party-place/zx-party-place.component';
+import {ZxItemControlsComponent} from '../../shared/ui/zx-item-controls/zx-item-controls.component';
+import {PictureSettingsService} from '../../features/picture-settings/services/picture-settings.service';
+import {PictureUrlBuilderService} from '../../shared/services/picture-url-builder.service';
+import {ZxPartyPlaceComponent} from '../../shared/lib/zx-party-place/zx-party-place.component';
 
 @Component({
   selector: 'zx-picture-card',

@@ -8,7 +8,7 @@ import {
   ZxTextSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-text-skeleton/zx-text-skeleton.component';
 import {ZxSpinnerComponent} from '../../../../shared/ui/zx-spinner/zx-spinner.component';
-import {ZxUserComponent} from '../../../../shared/ui/zx-user/zx-user.component';
+import {ZxUserComponent} from '../../../../entities/zx-user/zx-user.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
