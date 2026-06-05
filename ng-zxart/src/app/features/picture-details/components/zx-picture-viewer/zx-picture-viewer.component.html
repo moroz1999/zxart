@@ -1,0 +1,83 @@
+<zx-picture-gallery-host></zx-picture-gallery-host>
+
+<zx-stack spacing="sm">
+  <div
+    #stage
+    class="pix-stage"
+    [class.pix-stage--fixed]="scaled"
+    [style.width.px]="scaled ? displayWidth : null"
+    [style.height.px]="scaled ? displayHeight : null"
+    [style.--pix-zoom-w]="displayWidth + 'px'"
+    [style.--pix-zoom-h]="displayHeight + 'px'"
+  >
+    <lib-ngx-image-zoom
+      *ngFor="let key of zoomInstances; trackBy: trackZoom"
+      class="pix-stage__zoom"
+      [thumbImage]="imageUrl"
+      [fullImage]="fullImageUrl"
+      zoomMode="hover"
+      [magnification]="magnification"
+      [maxZoomRatio]="magnification * 2"
+      [enableScrollZoom]="true"
+      [enableLens]="true"
+      [lensWidth]="200"
+      [lensHeight]="150"
+      [altText]="picture.title"
+    ></lib-ngx-image-zoom>
+  </div>
+
+  <zx-inline align="center" justify="between" [wrap]="true" spacing="sm">
+    <span appText="caption" tone="muted" class="pix-viewer__dim">{{ naturalWidth }}×{{ naturalHeight }}</span>
+    <zx-button-controls gap="sm" [wrap]="true">
+      <zx-button
+        *ngFor="let opt of availableScaleOptions"
+        size="xs"
+        [color]="scale === opt.value ? 'primary' : 'outlined'"
+        (click)="setScale(opt.value)"
+      >{{ opt.labelKey | translate }}</zx-button>
+      <zx-button size="xs" color="secondary" (click)="openLightbox()">
+        {{ 'picture-details.fullscreen' | translate }}
+      </zx-button>
+    </zx-button-controls>
+  </zx-inline>
+
+  <zx-panel variant="flat">
+   <zx-stack spacing="xs">
+    <zx-inline align="center" spacing="sm" [wrap]="true">
+      <span appText="label" tone="muted" class="pix-render__label">{{ 'picture-details.render-border' | translate }}</span>
+      <zx-button-controls gap="sm">
+        <zx-button
+          *ngFor="let opt of borderOptions"
+          size="xs"
+          [color]="borderOverride === opt.value ? 'primary' : 'outlined'"
+          (click)="setBorder(opt.value)"
+        >{{ opt.labelKey | translate }}</zx-button>
+      </zx-button-controls>
+    </zx-inline>
+
+    <zx-inline *ngIf="isFlickering" align="center" spacing="sm" [wrap]="true">
+      <span appText="label" tone="muted" class="pix-render__label">{{ 'picture-details.render-gigascreen' | translate }}</span>
+      <zx-button-controls gap="sm">
+        <zx-button
+          *ngFor="let opt of gigaOptions"
+          size="xs"
+          [color]="gigaOverride === opt.value ? 'primary' : 'outlined'"
+          (click)="setGiga(opt.value)"
+        >{{ opt.labelKey | translate }}</zx-button>
+      </zx-button-controls>
+    </zx-inline>
+
+    <zx-inline align="center" spacing="sm" [wrap]="true">
+      <span appText="label" tone="muted" class="pix-render__label">{{ 'picture-details.render-hidden' | translate }}</span>
+      <zx-button-controls gap="sm">
+        <zx-button
+          *ngFor="let opt of hiddenOptions"
+          size="xs"
+          [color]="hiddenOverride === opt.value ? 'primary' : 'outlined'"
+          (click)="setHidden(opt.value)"
+        >{{ opt.labelKey | translate }}</zx-button>
+      </zx-button-controls>
+    </zx-inline>
+   </zx-stack>
+  </zx-panel>
+</zx-stack>

@@ -1,0 +1,37 @@
+:host {
+  display: block;
+}
+
+.pix-mini {
+  display: block;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  transition: background-color var(--animation-sm) ease;
+
+  &:hover {
+    background: var(--background-deep);
+  }
+}
+
+.pix-mini__thumb {
+  width: 64px;
+  height: 48px;
+  flex-shrink: 0;
+  object-fit: contain;
+  background: var(--background-deep);
+  image-rendering: pixelated;
+  border-radius: var(--radius-sm);
+}
+
+.pix-mini__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.pix-mini__year {
+  flex-shrink: 0;
+}

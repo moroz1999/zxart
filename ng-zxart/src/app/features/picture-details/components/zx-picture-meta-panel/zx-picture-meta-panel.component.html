@@ -1,0 +1,36 @@
+<zx-panel [title]="'picture-details.info' | translate" titleLevel="h3">
+  <zx-stack spacing="md">
+    <zx-stack spacing="sm">
+      <zx-item-data-item *ngIf="picture.year" [label]="'picture-details.year' | translate">
+        {{ picture.year }}
+      </zx-item-data-item>
+      <zx-item-data-item [label]="'picture-details.format' | translate">
+        {{ picture.formatLabel }}<span *ngIf="picture.resolution"> · {{ picture.resolution }}</span>
+      </zx-item-data-item>
+      <zx-item-data-item [label]="'picture-details.palette' | translate">
+        {{ picture.paletteLabel }}
+      </zx-item-data-item>
+      <zx-item-data-item [label]="'picture-details.realtime' | translate">
+        {{ (picture.isRealtime ? 'picture-details.yes' : 'picture-details.no') | translate }}
+      </zx-item-data-item>
+      <zx-item-data-item *ngIf="picture.partyContext" [label]="'picture-details.party' | translate">
+        <a [href]="picture.partyContext.url" appText="body" tone="link">{{ picture.partyContext.title }}</a>
+        <span *ngIf="picture.partyContext.compoLabel" appText="body" tone="muted"> · {{ picture.partyContext.compoLabel }}</span>
+      </zx-item-data-item>
+      <zx-item-data-item *ngIf="picture.originalName" [label]="'picture-details.original-name' | translate">
+        {{ picture.originalName }}
+      </zx-item-data-item>
+    </zx-stack>
+
+    <zx-collapsible-section
+      *ngIf="picture.techInfo.length"
+      [title]="'picture-details.tech-info' | translate"
+    >
+      <zx-stack spacing="sm">
+        <zx-item-data-item *ngFor="let row of picture.techInfo" [label]="row.label">
+          {{ row.value }}
+        </zx-item-data-item>
+      </zx-stack>
+    </zx-collapsible-section>
+  </zx-stack>
+</zx-panel>

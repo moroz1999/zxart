@@ -8,6 +8,9 @@
   --border-primary: var(--primary-600);
   --border-focused: var(--secondary-950);
   --border-form: var(--secondary-400);
+
+  /* Light border shorthand (thin, subtle) — nested panels, chips, etc. */
+  --border-light: var(--border-width-thin) solid var(--secondary-200);
 }
 
 .dark-mode {

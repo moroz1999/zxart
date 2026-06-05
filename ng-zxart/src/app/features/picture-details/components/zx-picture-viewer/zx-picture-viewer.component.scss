@@ -1,0 +1,54 @@
+:host {
+  display: block;
+  /* As a flex item in the wrapping hero row, keep the picture block at its real
+     size (320/640/960) so it is never squeezed or clipped. */
+  flex-shrink: 0;
+}
+
+/* "Wide" takes the full row, so the metadata wraps to the next line. */
+:host(.pix-viewer--wide) {
+  flex: 1 1 100%;
+}
+
+/* Image stage — structural sizing for pixel-art display. */
+.pix-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: var(--background-deep);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+/* Fixed pixel block for 1×/2×/3× — width/height are set inline
+   (320×240 · 640×480 · 960×720). aspect-ratio is dropped so they win. */
+.pix-stage--fixed {
+  aspect-ratio: auto;
+  max-width: none;
+  cursor: default;
+}
+
+/* Hover magnifier — reuses the project's ngx-image-zoom (as the fullscreen
+   gallery does). The thumbnail is sized to the exact display px so the library
+   measures the real size (its zoom math reads imageThumbnail.width on load);
+   the instance is recreated when the size changes. */
+.pix-stage__zoom {
+  display: block;
+}
+
+.pix-stage__zoom ::ng-deep .ngxImageZoomThumbnail {
+  width: var(--pix-zoom-w) !important;
+  height: var(--pix-zoom-h) !important;
+  object-fit: contain;
+}
+
+.pix-stage__zoom ::ng-deep img {
+  image-rendering: pixelated !important;
+}
+
+.pix-render__label {
+  min-width: 96px;
+}

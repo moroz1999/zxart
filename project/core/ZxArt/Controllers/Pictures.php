@@ -14,6 +14,7 @@ use Throwable;
 use ZxArt\Pictures\Dto\PictureDto;
 use ZxArt\Pictures\Rest\PictureRestDto;
 use ZxArt\Pictures\Services\PicturesService;
+use zxPictureElement;
 
 class Pictures extends LoggedControllerApplication
 {
@@ -45,6 +46,8 @@ class Pictures extends LoggedControllerApplication
 
         if ($method === 'GET' && $action === 'picturesByElement') {
             $this->handlePicturesByElement();
+        } elseif ($method === 'POST' && $action === 'logView') {
+            $this->handleLogView();
         } else {
             CmsHttpResponse::getInstance()->setStatusCode('400');
             $this->renderer->assign('body', ['errorMessage' => 'Unknown action']);
@@ -88,6 +91,26 @@ class Pictures extends LoggedControllerApplication
             CmsHttpResponse::getInstance()->setStatusCode('500');
             $this->renderer->assign('body', ['errorMessage' => 'Internal server error']);
         }
+    }
+
+    private function handleLogView(): void
+    {
+        $elementId = (int)($this->getParameter('id') ?? 0);
+        if ($elementId <= 0) {
+            CmsHttpResponse::getInstance()->setStatusCode('400');
+            $this->renderer->assign('body', ['errorMessage' => 'id is required']);
+            return;
+        }
+
+        $element = $this->structureManager->getElementById($elementId);
+        if (!$element instanceof zxPictureElement) {
+            CmsHttpResponse::getInstance()->setStatusCode('404');
+            $this->renderer->assign('body', ['errorMessage' => 'Picture not found']);
+            return;
+        }
+
+        $element->logView();
+        $this->renderer->assign('body', ['success' => true]);
     }
 
     public function getUrlName()

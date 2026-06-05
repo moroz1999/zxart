@@ -18,7 +18,9 @@
 
 .zx-tags-list__editor {
   display: grid;
-  grid-template-rows: 0fr;
+  /* minmax(0, …) so the collapsed row is truly 0 — plain `0fr` keeps the
+     content min-content (incl. the inner padding-top), leaving a gap. */
+  grid-template-rows: minmax(0, 0fr);
   opacity: 0;
   overflow: hidden;
   transition:
@@ -27,7 +29,7 @@
 }
 
 .zx-tags-list__editor--expanded {
-  grid-template-rows: 1fr;
+  grid-template-rows: minmax(0, 1fr);
   opacity: 1;
 }
 

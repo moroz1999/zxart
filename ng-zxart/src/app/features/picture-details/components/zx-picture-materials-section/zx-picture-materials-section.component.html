@@ -1,0 +1,20 @@
+<zx-stack spacing="md">
+  <h2 appHeading="headline">
+    {{ 'picture-details.materials' | translate }}
+    <span appText="caption" tone="muted">({{ materials.length }})</span>
+  </h2>
+
+  <zx-picture-gallery-host></zx-picture-gallery-host>
+
+  <zx-grid [desktopColumns]="'3'" [tabletColumns]="'2'" [mobileColumns]="'1'" gap="md">
+    <zx-panel *ngFor="let material of materials; let i = index" padding="none" radius="lg">
+      <button type="button" class="pix-tile" (click)="openAt(i)">
+        <img class="pix-tile__img" [src]="material.imageUrl" [alt]="material.label" loading="lazy" />
+        <span class="pix-tile__meta">
+          <span appText="body" tone="strong">{{ material.label }}</span>
+          <span appText="caption" tone="muted">{{ labelKey(material) | translate }}</span>
+        </span>
+      </button>
+    </zx-panel>
+  </zx-grid>
+</zx-stack>

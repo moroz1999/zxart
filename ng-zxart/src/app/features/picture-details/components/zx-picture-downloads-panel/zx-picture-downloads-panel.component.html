@@ -1,0 +1,22 @@
+<zx-panel
+  [title]="'picture-details.downloads' | translate"
+  titleLevel="h3"
+>
+  <zx-stack spacing="none">
+    <a
+      *ngFor="let item of downloads"
+      class="pix-dl__row"
+      rel="nofollow"
+      [href]="item.url"
+    >
+      <zx-inline align="center" spacing="md" [wrap]="false">
+        <zx-badge variant="secondary">{{ item.ext | uppercase }}</zx-badge>
+        <span class="pix-dl__body">
+          <span appText="body" tone="strong">{{ item.label }}</span>
+          <span *ngIf="item.sub" appText="caption" tone="muted">{{ item.sub }}</span>
+        </span>
+        <span *ngIf="item.size" class="pix-dl__size" appText="caption" tone="muted">{{ item.size }}</span>
+      </zx-inline>
+    </a>
+  </zx-stack>
+</zx-panel>

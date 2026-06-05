@@ -53,7 +53,7 @@ composer test
 composer psalm
 
 # Angular build (required after any changes to ng-zxart/ — see docs/angular.md)
-docker compose run --rm node run build:docker
+composer build
 ```
 
 ## PROJECT STRUCTURE

@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace ZxArt\Pictures\Dto;
 
+use Symfony\Component\ObjectMapper\Attribute\Map;
+use ZxArt\Pictures\Rest\PictureRestDto;
 use ZxArt\Shared\Dto\AuthorDto;
 use ZxArt\Shared\Dto\PartyInfoDto;
 use ZxArt\Shared\Dto\ReleaseInfoDto;
 
+#[Map(target: PictureRestDto::class)]
 readonly class PictureDto
 {
     /**

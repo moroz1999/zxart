@@ -1,0 +1,47 @@
+<zx-stack spacing="md" *ngIf="loading || frameCount">
+  <h2 appHeading="headline">
+    {{ 'picture-details.stages' | translate }}
+    <span *ngIf="frameCount" appText="caption" tone="muted">
+      ({{ frameCount }} {{ 'picture-details.frames' | translate }})
+    </span>
+  </h2>
+
+  <p *ngIf="loading" appText="body" tone="muted">{{ 'picture-details.stages-loading' | translate }}</p>
+
+  <zx-grid *ngIf="frameCount" [desktopColumns]="'2'" [mobileColumns]="'1'" gap="lg" align="start">
+    <div class="pix-stages__view">
+      <img [src]="currentFrame?.dataUrl" [alt]="'picture-details.stages' | translate" />
+      <span class="pix-stages__caption" appText="caption">{{ index + 1 }} / {{ frameCount }}</span>
+    </div>
+
+    <zx-stack spacing="md">
+      <zx-inline align="center" spacing="md" [wrap]="false">
+        <zx-button size="sm" color="outlined" (click)="togglePlay()">
+          <svg-icon class="pix-stages__icon" [name]="playing ? 'pause' : 'play'"></svg-icon>
+          {{ (playing ? 'picture-details.pause' : 'picture-details.play') | translate }}
+        </zx-button>
+        <zx-input-range
+          class="pix-stages__range"
+          [min]="0"
+          [max]="frameCount - 1"
+          [step]="1"
+          [showValue]="false"
+          [ngModel]="index"
+          (ngModelChange)="onScrub(+$event)"
+        ></zx-input-range>
+        <span class="pix-stages__num" appText="caption" tone="muted">{{ index + 1 }} / {{ frameCount }}</span>
+      </zx-inline>
+
+      <zx-grid [desktopColumns]="'5'" [mobileColumns]="'5'" gap="sm">
+        <img
+          *ngFor="let frameIndex of milestones"
+          class="pix-stages__ms"
+          [class.pix-stages__ms--active]="frameIndex === index"
+          [src]="frames[frameIndex].dataUrl"
+          alt=""
+          (click)="jumpTo(frameIndex)"
+        />
+      </zx-grid>
+    </zx-stack>
+  </zx-grid>
+</zx-stack>

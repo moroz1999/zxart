@@ -1,0 +1,29 @@
+:host {
+  display: block;
+}
+
+.pix-tile {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: zoom-in;
+}
+
+.pix-tile__img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  background: var(--background-deep);
+  image-rendering: pixelated;
+}
+
+.pix-tile__meta {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-8);
+}

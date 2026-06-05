@@ -1,0 +1,30 @@
+:host {
+  display: block;
+}
+
+.pix-dl__row {
+  display: block;
+  padding: var(--space-8) var(--space-4);
+  text-decoration: none;
+  color: inherit;
+  transition: background-color var(--animation-sm) ease;
+
+  & + & {
+    border-top: var(--border-light);
+  }
+
+  &:hover {
+    background: var(--background-deep);
+  }
+}
+
+.pix-dl__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.pix-dl__size {
+  flex-shrink: 0;
+}

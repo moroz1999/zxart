@@ -16,10 +16,6 @@ window.zxPicturesLogics = new function() {
 		for (i = 0; i < elements.length; i++) {
 			new PictureTagsFormComponent(elements[i]);
 		}
-		elements = _('.picture_details_block');
-		for (i = 0; i < elements.length; i++) {
-			new PictureDetailsComponent(elements[i]);
-		}
 	};
 	this.getReplaceFlickering = function() {
 		return replaceFlickering;

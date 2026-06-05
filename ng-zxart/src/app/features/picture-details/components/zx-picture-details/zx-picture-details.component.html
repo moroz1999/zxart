@@ -1,0 +1,135 @@
+<ng-container *ngIf="details$ | async as details; else loading">
+  <zx-breadcrumbs
+    [parentItem]="details.authors.length ? {title: details.authors[0].name, url: details.authors[0].url} : null"
+    [currentTitle]="details.title">
+  </zx-breadcrumbs>
+
+  <zx-stack spacing="xl">
+    <!-- Hero -->
+    <zx-inline [wrap]="true" align="start" gap="xl">
+      <zx-picture-viewer [picture]="details"></zx-picture-viewer>
+
+      <zx-stack spacing="md" class="pix-head">
+        <zx-inline class="pix-head__top" align="baseline" spacing="sm" [wrap]="true">
+          <h1 appHeading="display">{{ details.title }}</h1>
+          <zx-badge variant="secondary">#{{ details.id }}</zx-badge>
+          <zx-picture-editing-controls
+            [elementId]="details.id"
+            [pictureUrl]="details.url">
+          </zx-picture-editing-controls>
+        </zx-inline>
+
+        <div appText="body" tone="muted">
+          <ng-container *ngFor="let author of details.authors; let last = last">
+            <a [href]="author.url" appText="body" tone="link">{{ author.name }}</a><ng-container *ngIf="!last">, </ng-container>
+          </ng-container>
+          <span *ngIf="details.year"> · {{ details.year }}</span>
+        </div>
+
+        <div *ngIf="details.originalAuthors.length" appText="body" tone="muted">
+          {{ 'picture-details.original-author' | translate }}:
+          <ng-container *ngFor="let author of details.originalAuthors; let last = last">
+            <a [href]="author.url" appText="body" tone="link">{{ author.name }}</a><ng-container *ngIf="!last">, </ng-container>
+          </ng-container>
+        </div>
+
+        <!-- Context box (party / prod) — approved yellow-accent exception -->
+        <div *ngIf="details.partyContext || details.prodContext" class="pix-context">
+          <zx-inline *ngIf="details.partyContext" align="center" spacing="sm" [wrap]="true">
+            <zx-party-place [place]="details.partyContext.place"></zx-party-place>
+            <span appText="body">
+              <a [href]="details.partyContext.url" appText="body" tone="link">{{ details.partyContext.title }}</a>
+              <span *ngIf="details.partyContext.compoLabel" appText="body" tone="muted"> · {{ details.partyContext.compoLabel }}</span>
+            </span>
+          </zx-inline>
+          <zx-inline *ngIf="details.prodContext" align="center" spacing="sm" [wrap]="true">
+            <span appText="body">
+              {{ 'picture-details.from' | translate }} {{ details.prodContext.kindLabel }}
+              <a [href]="details.prodContext.url" appText="body" tone="link">«{{ details.prodContext.title }}»</a>
+              <span *ngIf="details.prodContext.year" appText="body" tone="muted"> · {{ details.prodContext.year }}</span>
+            </span>
+          </zx-inline>
+        </div>
+
+        <zx-inline align="center" spacing="md" [wrap]="true">
+          <zx-item-controls
+            [elementId]="details.id"
+            type="zxPicture"
+            [votes]="details.votes"
+            [votesAmount]="details.votesAmount"
+            [userRating]="details.userVote"
+            [denyVoting]="details.denyVoting">
+          </zx-item-controls>
+          <zx-inline align="center" spacing="md" [wrap]="true" appText="caption" tone="muted">
+            <span><b>{{ details.votesAmount }}</b> {{ 'picture-details.votes' | translate }}</span>
+            <span><b>{{ details.views }}</b> {{ 'picture-details.views' | translate }}</span>
+          </zx-inline>
+        </zx-inline>
+
+        <zx-added-by
+          *ngIf="details.dateCreated"
+          [dateAdded]="details.dateCreated"
+          [submitter]="details.submitter">
+        </zx-added-by>
+      </zx-stack>
+    </zx-inline>
+
+    <!-- Tags (reusable list with quick-form editing, as in prod) -->
+    <zx-panel>
+      <zx-tags-list
+        [tags]="details.tags"
+        [elementId]="details.id"
+        [label]="'picture-details.tags' | translate"
+        [editAriaLabel]="'tags-quick-form.title' | translate"
+      ></zx-tags-list>
+    </zx-panel>
+
+    <!-- Meta + downloads -->
+    <zx-grid [desktopColumns]="'2'" [mobileColumns]="'1'" gap="xl" align="start">
+      <zx-picture-meta-panel [picture]="details"></zx-picture-meta-panel>
+      <zx-picture-downloads-panel
+        *ngIf="details.downloads.length"
+        [downloads]="details.downloads">
+      </zx-picture-downloads-panel>
+    </zx-grid>
+
+    <zx-picture-materials-section
+      *ngIf="details.materials.length"
+      [materials]="details.materials">
+    </zx-picture-materials-section>
+
+    <zx-picture-stages-section
+      *ngIf="details.sequenceUrl"
+      [sequenceUrl]="details.sequenceUrl">
+    </zx-picture-stages-section>
+
+    <!-- Mentions -->
+    <zx-panel *ngIf="details.mentions.length" [title]="'picture-details.mentions' | translate" titleLevel="h3">
+      <zx-stack spacing="xs">
+        <a *ngFor="let mention of details.mentions" [href]="mention.url" appText="body" tone="link">
+          {{ mention.title }}
+        </a>
+      </zx-stack>
+    </zx-panel>
+
+    <!-- Votes + comments -->
+    <zx-grid [desktopColumns]="'2'" [mobileColumns]="'1'" gap="xl" align="start">
+      <zx-stack spacing="sm">
+        <zx-ratings-list-view [elementId]="details.id"></zx-ratings-list-view>
+        <p *ngIf="details.denyVoting" appText="caption" tone="muted">
+          {{ 'picture-details.voting-denied' | translate }}
+        </p>
+      </zx-stack>
+      <zx-comments-list-view [elementId]="details.id"></zx-comments-list-view>
+    </zx-grid>
+
+    <zx-picture-related-section
+      *ngIf="details.related.length"
+      [rails]="details.related">
+    </zx-picture-related-section>
+  </zx-stack>
+</ng-container>
+
+<ng-template #loading>
+  <zx-picture-details-skeleton></zx-picture-details-skeleton>
+</ng-template>

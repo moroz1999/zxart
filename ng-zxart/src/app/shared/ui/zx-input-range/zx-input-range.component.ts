@@ -1,9 +1,11 @@
 import {ChangeDetectionStrategy, Component, forwardRef, Input} from '@angular/core';
+import {NgIf} from '@angular/common';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 @Component({
   selector: 'zx-input-range',
   standalone: true,
+  imports: [NgIf],
   templateUrl: './zx-input-range.component.html',
   styleUrl: './zx-input-range.component.scss',
   providers: [
@@ -19,6 +21,7 @@ export class ZxInputRangeComponent implements ControlValueAccessor {
   @Input() min = 0;
   @Input() max = 100;
   @Input() step = 1;
+  @Input() showValue = true;
 
   value = '';
   disabled = false;
