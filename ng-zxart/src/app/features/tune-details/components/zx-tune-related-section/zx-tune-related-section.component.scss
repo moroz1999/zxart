@@ -1,0 +1,27 @@
+:host {
+  display: block;
+}
+
+.tn-mini {
+  display: block;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  transition: background-color var(--animation-sm) ease;
+
+  &:hover {
+    background: var(--background-deep);
+  }
+}
+
+.tn-mini__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tn-mini__year {
+  flex-shrink: 0;
+}

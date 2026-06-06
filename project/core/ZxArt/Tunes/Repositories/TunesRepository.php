@@ -397,6 +397,60 @@ readonly final class TunesRepository extends AbstractRepository
         return $ids;
     }
 
+    /**
+     * Tunes sharing the most tags with the given one (tag-similarity ranking),
+     * ordered by shared-tag count then votes. Mirrors the picture-side query.
+     *
+     * @param int[] $tagIds
+     * @return int[]
+     */
+    public function findSimilarByTags(int $tuneId, array $tagIds, int $limit): array
+    {
+        if ($tagIds === []) {
+            return [];
+        }
+
+        /** @var int[] $ids */
+        $ids = $this->db->table($this->tableName(DatabaseTable::StructureLinks))
+            ->join(
+                $this->tableName(DatabaseTable::ZxMusic),
+                $this->tableColumn(DatabaseTable::ZxMusic, 'id'),
+                '=',
+                $this->tableColumn(DatabaseTable::StructureLinks, 'childStructureId')
+            )
+            ->where($this->tableColumn(DatabaseTable::StructureLinks, 'type'), '=', 'tagLink')
+            ->whereIn($this->tableColumn(DatabaseTable::StructureLinks, 'parentStructureId'), $tagIds)
+            ->where($this->tableColumn(DatabaseTable::StructureLinks, 'childStructureId'), '!=', $tuneId)
+            ->groupBy($this->tableColumn(DatabaseTable::StructureLinks, 'childStructureId'))
+            // Unqualified column in the raw expression: the query builder does not
+            // apply the table prefix inside orderByRaw, and parentStructureId is
+            // unique to structure_links, so it resolves unambiguously.
+            ->orderByRaw('COUNT(DISTINCT parentStructureId) DESC')
+            ->orderBy($this->tableColumn(DatabaseTable::ZxMusic, 'votes'), 'desc')
+            ->limit($limit)
+            ->pluck($this->tableColumn(DatabaseTable::StructureLinks, 'childStructureId'));
+
+        return $ids;
+    }
+
+    /**
+     * Tunes made with the same tracker/program, ordered by votes descending.
+     *
+     * @return int[]
+     */
+    public function findByProgram(string $program, int $excludeId, int $limit): array
+    {
+        /** @var int[] $ids */
+        $ids = $this->getSelectSql()
+            ->where($this->tableColumn(DatabaseTable::ZxMusic, 'program'), '=', $program)
+            ->where($this->tableColumn(DatabaseTable::ZxMusic, 'id'), '!=', $excludeId)
+            ->orderBy($this->tableColumn(DatabaseTable::ZxMusic, 'votes'), 'desc')
+            ->limit($limit)
+            ->pluck($this->tableColumn(DatabaseTable::ZxMusic, 'id'));
+
+        return $ids;
+    }
+
 
     /**
      * @return array{min: int|null, max: int|null}

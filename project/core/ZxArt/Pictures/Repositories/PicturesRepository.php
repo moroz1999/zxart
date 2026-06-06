@@ -242,6 +242,34 @@ readonly final class PicturesRepository
             ->pluck(self::TABLE . '.id');
     }
 
+    /**
+     * Returns picture IDs that share the most tags with the given tag set,
+     * ordered by the number of matched tags (desc), then votes.
+     *
+     * @param int[] $tagIds
+     * @return int[]
+     */
+    public function findSimilarByTags(int $pictureId, array $tagIds, int $limit): array
+    {
+        if ($tagIds === []) {
+            return [];
+        }
+
+        return $this->db->table('structure_links')
+            ->join(self::TABLE, self::TABLE . '.id', '=', 'structure_links.childStructureId')
+            ->where('structure_links.type', '=', 'tagLink')
+            ->whereIn('structure_links.parentStructureId', $tagIds)
+            ->where('structure_links.childStructureId', '!=', $pictureId)
+            ->groupBy('structure_links.childStructureId')
+            // Unqualified column in the raw expression: the query builder does not
+            // apply the table prefix inside orderByRaw, and parentStructureId is
+            // unique to structure_links, so it resolves unambiguously.
+            ->orderByRaw('COUNT(DISTINCT parentStructureId) DESC')
+            ->orderBy(self::TABLE . '.votes', 'desc')
+            ->limit($limit)
+            ->pluck('structure_links.childStructureId');
+    }
+
     public function countByLinkedElement(int $elementId, string $linkType): int
     {
         return (int)$this->db->table(self::TABLE)

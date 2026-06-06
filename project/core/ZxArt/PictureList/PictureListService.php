@@ -142,6 +142,93 @@ readonly class PictureListService
         return $this->picturesRepository->countByLinkedElement($releaseId, LinkTypes::GAME_LINK->value);
     }
 
+    /**
+     * Best pictures from the same authors (excluding the picture itself).
+     *
+     * @return PictureDto[]
+     */
+    public function getRelatedByAuthors(int $pictureId, int $limit = 6): array
+    {
+        $element = $this->structureManager->getElementById($pictureId);
+        if (!$element instanceof zxPictureElement) {
+            return [];
+        }
+        $pictures = (array)($element->getBestAuthorsPictures($limit + 1) ?? []);
+        return $this->limitPictures($pictures, $pictureId, $limit);
+    }
+
+    /**
+     * Best pictures from the same game/release (excluding the picture itself).
+     *
+     * @return PictureDto[]
+     */
+    public function getRelatedFromGame(int $pictureId, int $limit = 6): array
+    {
+        $element = $this->structureManager->getElementById($pictureId);
+        if (!$element instanceof zxPictureElement) {
+            return [];
+        }
+        $release = $element->getReleaseElement();
+        if ($release === null) {
+            return [];
+        }
+        return $this->limitPictures($this->getReleasePictures($release->getId()), $pictureId, $limit);
+    }
+
+    /**
+     * Pictures sharing the most tags with this one (tag-similarity ranking).
+     *
+     * @return PictureDto[]
+     */
+    public function getRelatedByTags(int $pictureId, int $limit = 6): array
+    {
+        $element = $this->structureManager->getElementById($pictureId);
+        if (!$element instanceof zxPictureElement) {
+            return [];
+        }
+
+        $tagIds = [];
+        foreach (($element->getTagsList() ?: []) as $tag) {
+            $tagIds[] = (int)$tag->getId();
+        }
+        if ($tagIds === []) {
+            return [];
+        }
+
+        $ids = $this->picturesRepository->findSimilarByTags($pictureId, $tagIds, $limit);
+        $items = [];
+        foreach ($ids as $id) {
+            $el = $this->structureManager->getElementById($id)
+                ?? $this->structureManager->getElementById($id, null, true);
+            if ($el instanceof zxPictureElement) {
+                $items[] = $this->picturesTransformer->toDto($el);
+            }
+        }
+        return $items;
+    }
+
+    /**
+     * @param mixed[] $elements
+     * @return PictureDto[]
+     */
+    private function limitPictures(array $elements, int $currentId, int $limit): array
+    {
+        $items = [];
+        foreach ($elements as $element) {
+            if (!$element instanceof zxPictureElement) {
+                continue;
+            }
+            if ($element->getId() === $currentId) {
+                continue;
+            }
+            $items[] = $this->picturesTransformer->toDto($element);
+            if (count($items) >= $limit) {
+                break;
+            }
+        }
+        return $items;
+    }
+
     private function resolvePictureElements(mixed $element, ?string $compoType): array
     {
         if ($element instanceof zxReleaseElement) {

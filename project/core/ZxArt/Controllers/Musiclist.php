@@ -41,14 +41,34 @@ class Musiclist extends LoggedControllerApplication
 
     public function execute($controller): void
     {
+        $action = $this->getParameter('action') ?: '';
         $elementId = (int)($this->getParameter('elementId') ?? 0);
         $compoType = $this->getParameter('compoType') ?: null;
+        $tuneId = (int)($this->getParameter('tuneId') ?? 0);
         $limit = $this->getParameter('limit') !== false ? (int)$this->getParameter('limit') : null;
         $start = (int)($this->getParameter('start') ?? 0);
         $sortingRaw = $this->getParameter('sorting') ?: 'title,asc';
 
         try {
-            if ($elementId <= 0) {
+            if ($action === 'related') {
+                if ($tuneId <= 0) {
+                    $this->assignError('tuneId is required', 400);
+                } else {
+                    $kind = $this->getParameter('kind') ?: '';
+                    $items = match ($kind) {
+                        'author' => $this->musicListService->getRelatedByAuthors($tuneId),
+                        'tags' => $this->musicListService->getRelatedByTags($tuneId),
+                        'tracker' => $this->musicListService->getRelatedByTracker($tuneId),
+                        default => [],
+                    };
+                    $this->assignSuccess([
+                        'items' => array_map(
+                            fn(TuneDto $dto) => $this->objectMapper->map($dto, TuneRestDto::class),
+                            $items
+                        ),
+                    ]);
+                }
+            } elseif ($elementId <= 0) {
                 $this->assignError('elementId is required', 400);
             } elseif ($limit !== null) {
                 $sorting = SortingParams::fromRequest($sortingRaw, MusicListService::ALLOWED_SORT_COLUMNS);

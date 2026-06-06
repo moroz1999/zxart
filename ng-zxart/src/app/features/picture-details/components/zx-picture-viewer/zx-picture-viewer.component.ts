@@ -36,6 +36,8 @@ type Device = 'phone' | 'tablet' | 'desktop';
 
 const BASE_WIDTH = 320;
 const BASE_HEIGHT = 240;
+const STANDARD_TYPE = 'standard';
+const SCA_TYPE = 'sca';
 
 // Available scale options per device (matches shared/breakpoints: md=768, lg=992).
 const SCALES_BY_DEVICE: Record<Device, ReadonlyArray<ScaleOption>> = {
@@ -182,6 +184,18 @@ export class ZxPictureViewerComponent implements OnInit, AfterViewInit, OnDestro
     return this.picture.isFlickering;
   }
 
+  get isStandard(): boolean {
+    return this.picture.type === STANDARD_TYPE;
+  }
+
+  get isSca(): boolean {
+    return this.picture.type === SCA_TYPE;
+  }
+
+  get hasRenderControls(): boolean {
+    return !this.isSca || this.isFlickering || this.isStandard;
+  }
+
   get scaled(): boolean {
     return this.scale !== 'wide';
   }
@@ -289,8 +303,8 @@ export class ZxPictureViewerComponent implements OnInit, AfterViewInit, OnDestro
   private effectiveSettings(): PictureSettings {
     const base = this.globalSettings!;
     return {
-      border: this.borderOverride === 'g' ? base.border : this.borderOverride === 'on',
-      hidden: this.hiddenOverride === 'g' ? base.hidden : this.hiddenOverride === 'on',
+      border: !this.isSca && (this.borderOverride === 'g' ? base.border : this.borderOverride === 'on'),
+      hidden: this.isStandard && (this.hiddenOverride === 'g' ? base.hidden : this.hiddenOverride === 'on'),
       mode: this.gigaOverride === 'g' ? base.mode : this.gigaOverride,
     };
   }

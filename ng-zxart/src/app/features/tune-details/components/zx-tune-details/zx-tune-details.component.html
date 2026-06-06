@@ -1,0 +1,114 @@
+<ng-container *ngIf="details$ | async as details; else loading">
+  <zx-breadcrumbs
+    [parentItem]="details.authors.length ? {title: details.authors[0].name, url: details.authors[0].url} : null"
+    [currentTitle]="details.title">
+  </zx-breadcrumbs>
+
+  <zx-stack spacing="xl">
+    <!-- Hero -->
+    <zx-inline [wrap]="true" align="start" gap="xl">
+      <zx-tune-player [tune]="details"></zx-tune-player>
+
+      <zx-stack spacing="md" class="tn-head">
+        <zx-inline class="tn-head__top" align="baseline" spacing="sm" [wrap]="true">
+          <h1 appHeading="display">{{ details.title }}</h1>
+          <zx-badge variant="secondary">#{{ details.id }}</zx-badge>
+          <zx-tune-editing-controls
+            [elementId]="details.id"
+            [tuneUrl]="details.url">
+          </zx-tune-editing-controls>
+        </zx-inline>
+
+        <div appText="body" tone="muted">
+          <ng-container *ngFor="let author of details.authors; let last = last">
+            <a [href]="author.url" appText="body" tone="link">{{ author.name }}</a><ng-container *ngIf="!last">, </ng-container>
+          </ng-container>
+          <span *ngIf="details.year"> · {{ details.year }}</span>
+        </div>
+
+        <!-- Context box (party / chip) — approved yellow-accent exception -->
+        <div *ngIf="details.partyContext || details.chip" class="tn-context">
+          <zx-inline *ngIf="details.partyContext" align="center" spacing="sm" [wrap]="true">
+            <zx-party-place [place]="details.partyContext.place"></zx-party-place>
+            <span appText="body">
+              <a [href]="details.partyContext.url" appText="body" tone="link">{{ details.partyContext.title }}</a>
+              <span *ngIf="details.partyContext.compoLabel" appText="body" tone="muted"> · {{ details.partyContext.compoLabel }}</span>
+            </span>
+          </zx-inline>
+          <span *ngIf="details.chip" appText="body">
+            <b>{{ details.chip }}</b>
+            <span *ngIf="details.channelsType" appText="body" tone="muted"> · {{ details.channelsType }}</span>
+          </span>
+        </div>
+
+        <!-- Embedded module metadata parsed from the file -->
+        <zx-stack *ngIf="details.internalTitle || details.internalAuthor" spacing="xs">
+          <span appText="caption" tone="muted">{{ 'tune-details.in-module' | translate }}</span>
+          <zx-item-data-item *ngIf="details.internalTitle" [label]="'tune-details.internal-title' | translate">
+            {{ details.internalTitle }}
+          </zx-item-data-item>
+          <zx-item-data-item *ngIf="details.internalAuthor" [label]="'tune-details.internal-author' | translate">
+            {{ details.internalAuthor }}
+          </zx-item-data-item>
+        </zx-stack>
+
+        <zx-inline align="center" spacing="md" [wrap]="true">
+          <zx-item-controls
+            [elementId]="details.id"
+            type="zxMusic"
+            [votes]="details.votes"
+            [votesAmount]="details.votesAmount"
+            [userRating]="details.userVote"
+            [denyVoting]="details.denyVoting">
+          </zx-item-controls>
+          <zx-inline align="center" spacing="md" [wrap]="true" appText="caption" tone="muted">
+            <span><b>{{ details.votesAmount }}</b> {{ 'tune-details.votes' | translate }}</span>
+            <span><b>{{ details.plays }}</b> {{ 'tune-details.plays' | translate }}</span>
+          </zx-inline>
+        </zx-inline>
+
+        <zx-added-by
+          *ngIf="details.dateCreated"
+          [dateAdded]="details.dateCreated"
+          [submitter]="details.submitter">
+        </zx-added-by>
+      </zx-stack>
+    </zx-inline>
+
+    <!-- Tags (reusable list with quick-form editing, as in picture/prod) -->
+    <zx-panel>
+      <zx-tags-list
+        [tags]="details.tags"
+        [elementId]="details.id"
+        [label]="'tune-details.tags' | translate"
+        [editAriaLabel]="'tags-quick-form.title' | translate"
+      ></zx-tags-list>
+    </zx-panel>
+
+    <!-- Meta + downloads -->
+    <zx-grid [desktopColumns]="'2'" [mobileColumns]="'1'" gap="xl" align="start">
+      <zx-tune-meta-panel [tune]="details"></zx-tune-meta-panel>
+      <zx-tune-downloads-panel
+        *ngIf="details.downloads.length"
+        [downloads]="details.downloads">
+      </zx-tune-downloads-panel>
+    </zx-grid>
+
+    <!-- Votes + comments -->
+    <zx-grid [desktopColumns]="'2'" [mobileColumns]="'1'" gap="xl" align="start">
+      <zx-stack spacing="sm">
+        <zx-ratings-list-view [elementId]="details.id"></zx-ratings-list-view>
+        <p *ngIf="details.denyVoting" appText="caption" tone="muted">
+          {{ 'tune-details.voting-denied' | translate }}
+        </p>
+      </zx-stack>
+      <zx-comments-list-view [elementId]="details.id"></zx-comments-list-view>
+    </zx-grid>
+
+    <zx-tune-related-section [tuneId]="details.id"></zx-tune-related-section>
+  </zx-stack>
+</ng-container>
+
+<ng-template #loading>
+  <zx-tune-details-skeleton></zx-tune-details-skeleton>
+</ng-template>

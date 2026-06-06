@@ -47,6 +47,7 @@ import {ZxProdDetailsComponent} from './features/prod-details/components/zx-prod
 import {ZxReleaseDetailsComponent} from './features/release-details/components/zx-release-details/zx-release-details.component';
 import {ZxAuthorDetailsComponent} from './features/author-details/components/zx-author-details/zx-author-details.component';
 import {ZxPictureDetailsComponent} from './features/picture-details/components/zx-picture-details/zx-picture-details.component';
+import {ZxTuneDetailsComponent} from './features/tune-details/components/zx-tune-details/zx-tune-details.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -112,6 +113,7 @@ export class AppModule implements DoBootstrap  {
             'zx-release-details': ZxReleaseDetailsComponent,
             'zx-author-details': ZxAuthorDetailsComponent,
             'zx-picture-details': ZxPictureDetailsComponent,
+            'zx-tune-details': ZxTuneDetailsComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});

@@ -26,7 +26,7 @@
         }
 
         <zx-stack spacing="md">
-          <zx-inline spacing="sm">
+          <zx-inline spacing="sm" [wrap]="true">
             <zx-user *ngIf="comment.author" [user]="comment.author"></zx-user>
             <span class="comment-date" appText="label" tone="muted">{{ comment.date }}</span>
           </zx-inline>

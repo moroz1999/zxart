@@ -50,10 +50,9 @@ export interface PictureTechInfoDto {
 
 export type PictureRelatedRailKind = 'prod' | 'author' | 'tags';
 
+/** A lazily-loaded related rail (items fetched per kind on demand). */
 export interface PictureRelatedRailDto {
   readonly kind: PictureRelatedRailKind;
-  readonly title: string;
-  readonly kicker: string | null;
   readonly items: ZxPictureDto[];
 }
 
@@ -80,5 +79,4 @@ export interface PictureDetailsDto extends ZxPictureDto {
   readonly techInfo: PictureTechInfoDto[];
   readonly sequenceUrl: string | null;
   readonly mentions: PictureMentionDto[];
-  readonly related: PictureRelatedRailDto[];
 }

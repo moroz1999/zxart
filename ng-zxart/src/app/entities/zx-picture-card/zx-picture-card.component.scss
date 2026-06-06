@@ -52,7 +52,6 @@
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
   margin-bottom: var(--space-4);
 }
 
@@ -60,7 +59,6 @@
   margin-bottom: var(--space-4);
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .picture-party {
@@ -69,7 +67,6 @@
   gap: var(--space-4);
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
   margin-bottom: var(--space-8);
 }
 

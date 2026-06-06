@@ -71,6 +71,89 @@ readonly class MusicListService
         return ['total' => $total, 'items' => $items];
     }
 
+    /**
+     * Tunes from the same authors (excluding the tune itself).
+     *
+     * @return TuneDto[]
+     */
+    public function getRelatedByAuthors(int $tuneId, int $limit = 6): array
+    {
+        $element = $this->structureManager->getElementById($tuneId);
+        if (!$element instanceof zxMusicElement) {
+            return [];
+        }
+        $authorIds = $element->getAuthorIds() ?: [];
+        if ($authorIds === []) {
+            return [];
+        }
+        $ids = $this->tunesRepository->findIdsByAuthorId((int)reset($authorIds));
+        return $this->collectTunes($ids, $tuneId, $limit);
+    }
+
+    /**
+     * Tunes sharing the most tags with this one.
+     *
+     * @return TuneDto[]
+     */
+    public function getRelatedByTags(int $tuneId, int $limit = 6): array
+    {
+        $element = $this->structureManager->getElementById($tuneId);
+        if (!$element instanceof zxMusicElement) {
+            return [];
+        }
+        $tagIds = [];
+        foreach (($element->getTagsList() ?: []) as $tag) {
+            $tagIds[] = (int)$tag->getId();
+        }
+        if ($tagIds === []) {
+            return [];
+        }
+        $ids = $this->tunesRepository->findSimilarByTags($tuneId, $tagIds, $limit);
+        return $this->collectTunes($ids, $tuneId, $limit);
+    }
+
+    /**
+     * Tunes made with the same tracker/program.
+     *
+     * @return TuneDto[]
+     */
+    public function getRelatedByTracker(int $tuneId, int $limit = 6): array
+    {
+        $element = $this->structureManager->getElementById($tuneId);
+        if (!$element instanceof zxMusicElement) {
+            return [];
+        }
+        $program = (string)$element->program;
+        if ($program === '') {
+            return [];
+        }
+        $ids = $this->tunesRepository->findByProgram($program, $tuneId, $limit + 1);
+        return $this->collectTunes($ids, $tuneId, $limit);
+    }
+
+    /**
+     * @param int[] $ids
+     * @return TuneDto[]
+     */
+    private function collectTunes(array $ids, int $excludeId, int $limit): array
+    {
+        $items = [];
+        foreach ($ids as $id) {
+            if ((int)$id === $excludeId) {
+                continue;
+            }
+            $element = $this->structureManager->getElementById($id)
+                ?? $this->structureManager->getElementById($id, null, true);
+            if ($element instanceof zxMusicElement) {
+                $items[] = $this->tunesTransformer->toDto($element);
+            }
+            if (count($items) >= $limit) {
+                break;
+            }
+        }
+        return $items;
+    }
+
     private function resolveMusicElements(mixed $element, ?string $compoType): array
     {
         if ($compoType !== null && method_exists($element, 'getTunesCompos')) {

@@ -1,0 +1,30 @@
+:host {
+  display: block;
+  flex: 1 1 360px;
+  min-width: 0;
+}
+
+/* Placeholder stage for the oscilloscope / spectral analyser (stub). */
+.tp-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  text-align: center;
+  background: var(--background-deep);
+  border-radius: var(--radius-md);
+}
+
+/* Inert progress track shown to mirror the prototype's transport. */
+.tp-progress {
+  height: 6px;
+  background: var(--background-deep);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.tp-progress__fill {
+  width: 0;
+  height: 100%;
+  background: var(--primary-400);
+}

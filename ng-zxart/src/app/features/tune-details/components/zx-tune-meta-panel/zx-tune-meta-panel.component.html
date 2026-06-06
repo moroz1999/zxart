@@ -1,0 +1,54 @@
+<zx-panel [title]="'tune-details.info' | translate" titleLevel="h3">
+  <zx-stack spacing="md">
+    <zx-stack spacing="sm">
+      <zx-item-data-item *ngIf="tune.year" [label]="'tune-details.year' | translate">
+        {{ tune.year }}
+      </zx-item-data-item>
+      <zx-item-data-item [label]="'tune-details.format' | translate">
+        {{ tune.format }}
+      </zx-item-data-item>
+      <zx-item-data-item *ngIf="tune.chip" [label]="'tune-details.chip' | translate">
+        {{ tune.chip }}
+      </zx-item-data-item>
+      <zx-item-data-item *ngIf="tune.channelsType" [label]="'tune-details.channels-type' | translate">
+        {{ tune.channelsType }}
+      </zx-item-data-item>
+      <zx-item-data-item *ngIf="tune.channels" [label]="'tune-details.channels' | translate">
+        {{ tune.channels }}
+      </zx-item-data-item>
+      <zx-item-data-item *ngIf="tune.duration" [label]="'tune-details.duration' | translate">
+        {{ tune.duration }}
+      </zx-item-data-item>
+      <zx-item-data-item *ngIf="tune.container" [label]="'tune-details.container' | translate">
+        {{ tune.container }}
+      </zx-item-data-item>
+      <zx-item-data-item *ngIf="tune.tracker" [label]="'tune-details.tracker' | translate">
+        {{ tune.tracker }}
+      </zx-item-data-item>
+      <zx-item-data-item *ngIf="tune.partyContext" [label]="'tune-details.compo' | translate">
+        <a [href]="tune.partyContext.url" appText="body" tone="link">{{ tune.partyContext.title }}</a>
+        <span *ngIf="tune.partyContext.compoLabel" appText="body" tone="muted"> · {{ tune.partyContext.compoLabel }}</span>
+      </zx-item-data-item>
+    </zx-stack>
+
+    <zx-collapsible-section
+      *ngIf="hasTechInfo"
+      [title]="'tune-details.tech-info' | translate"
+    >
+      <zx-stack spacing="sm">
+        <zx-item-data-item *ngIf="tune.frequency" [label]="'tune-details.frequency' | translate">
+          {{ tune.frequency }}
+        </zx-item-data-item>
+        <zx-item-data-item *ngIf="tune.intFrequency" [label]="'tune-details.int-frequency' | translate">
+          {{ tune.intFrequency }}
+        </zx-item-data-item>
+        <zx-item-data-item *ngIf="tune.fileName" [label]="'tune-details.file-name' | translate">
+          {{ tune.fileName }}
+        </zx-item-data-item>
+        <zx-item-data-item *ngIf="tune.converterVersion" [label]="'tune-details.converter' | translate">
+          ZXTune r{{ tune.converterVersion }}
+        </zx-item-data-item>
+      </zx-stack>
+    </zx-collapsible-section>
+  </zx-stack>
+</zx-panel>

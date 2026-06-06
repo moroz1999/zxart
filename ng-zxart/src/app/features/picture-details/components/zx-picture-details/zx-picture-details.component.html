@@ -123,10 +123,7 @@
       <zx-comments-list-view [elementId]="details.id"></zx-comments-list-view>
     </zx-grid>
 
-    <zx-picture-related-section
-      *ngIf="details.related.length"
-      [rails]="details.related">
-    </zx-picture-related-section>
+    <zx-picture-related-section [pictureId]="details.id"></zx-picture-related-section>
   </zx-stack>
 </ng-container>
 

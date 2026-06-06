@@ -54,14 +54,30 @@ class Picturelist extends LoggedControllerApplication
                 if ($pictureId <= 0) {
                     $this->assignError('pictureId is required', 400);
                 } else {
-                    $related = $this->pictureListService->getRelated($pictureId);
-                    $this->assignSuccess([
-                        'type' => $related['type'],
-                        'items' => array_map(
-                            fn(PictureDto $dto) => $this->objectMapper->map($dto, PictureRestDto::class),
-                            $related['items']
-                        ),
-                    ]);
+                    $kind = $this->getParameter('kind') ?: '';
+                    if ($kind !== '') {
+                        $items = match ($kind) {
+                            'author' => $this->pictureListService->getRelatedByAuthors($pictureId),
+                            'tags' => $this->pictureListService->getRelatedByTags($pictureId),
+                            'prod' => $this->pictureListService->getRelatedFromGame($pictureId),
+                            default => [],
+                        };
+                        $this->assignSuccess([
+                            'items' => array_map(
+                                fn(PictureDto $dto) => $this->objectMapper->map($dto, PictureRestDto::class),
+                                $items
+                            ),
+                        ]);
+                    } else {
+                        $related = $this->pictureListService->getRelated($pictureId);
+                        $this->assignSuccess([
+                            'type' => $related['type'],
+                            'items' => array_map(
+                                fn(PictureDto $dto) => $this->objectMapper->map($dto, PictureRestDto::class),
+                                $related['items']
+                            ),
+                        ]);
+                    }
                 }
             } elseif ($elementId <= 0) {
                 $this->assignError('elementId is required', 400);

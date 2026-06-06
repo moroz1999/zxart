@@ -20,7 +20,6 @@ readonly class PictureDetailsRestDto
      * @param PictureDownloadRestDto[]                         $downloads
      * @param PictureMaterialRestDto[]                         $materials
      * @param PictureMentionRestDto[]                          $mentions
-     * @param PictureRelatedRailRestDto[]                      $related
      */
     public function __construct(
         public int $id,
@@ -71,8 +70,6 @@ readonly class PictureDetailsRestDto
         public ?string $sequenceUrl,
         #[Map(transform: MapCollection::class)]
         public array $mentions,
-        #[Map(transform: MapCollection::class)]
-        public array $related,
     ) {
     }
 }

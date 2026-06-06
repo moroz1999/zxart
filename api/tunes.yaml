@@ -82,6 +82,61 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponseSuccess'
 
+  /tune-details/:
+    get:
+      summary: Get the full details of a single tune
+      description: Rich payload for the Angular `<zx-tune-details>` page.
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Tune details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TuneDetailsDto'
+        '404':
+          description: Tune not found.
+
+  /musiclist/?action=related:
+    get:
+      summary: Get a related-tunes rail for a tune
+      description: Returns one rail of related tunes by the given kind.
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [related]
+        - name: kind
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [author, tags, tracker]
+        - name: tuneId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Related tunes.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TuneDto'
+
 components:
   schemas:
     TunePlayRequest:
@@ -206,3 +261,170 @@ components:
           $ref: '#/components/schemas/TuneDto'
         errorMessage:
           type: string
+
+    ReleaseInfoDto:
+      type: object
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+
+    TuneTagDto:
+      type: object
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+
+    TunePartyContextDto:
+      type: object
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+        place:
+          type: integer
+          nullable: true
+        compoLabel:
+          type: string
+          nullable: true
+
+    TuneSubmitterDto:
+      type: object
+      properties:
+        userName:
+          type: string
+        url:
+          type: string
+
+    TuneDownloadDto:
+      type: object
+      properties:
+        id:
+          type: string
+        ext:
+          type: string
+        label:
+          type: string
+        sub:
+          type: string
+          nullable: true
+        size:
+          type: string
+          nullable: true
+        url:
+          type: string
+
+    TuneDetailsDto:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorDto'
+        format:
+          type: string
+        year:
+          type: string
+          nullable: true
+        votes:
+          type: number
+          format: float
+        votesAmount:
+          type: integer
+        userVote:
+          type: integer
+          nullable: true
+        denyVoting:
+          type: boolean
+        commentsAmount:
+          type: integer
+        plays:
+          type: integer
+        party:
+          $ref: '#/components/schemas/PartyInfoDto'
+          nullable: true
+        release:
+          $ref: '#/components/schemas/ReleaseInfoDto'
+          nullable: true
+        isPlayable:
+          type: boolean
+        isRealtime:
+          type: boolean
+        compo:
+          type: string
+          nullable: true
+        mp3Url:
+          type: string
+          nullable: true
+        originalFileUrl:
+          type: string
+          nullable: true
+        trackerFileUrl:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TuneTagDto'
+        partyContext:
+          $ref: '#/components/schemas/TunePartyContextDto'
+          nullable: true
+        chip:
+          type: string
+          nullable: true
+        channelsType:
+          type: string
+          nullable: true
+        channels:
+          type: integer
+          nullable: true
+        duration:
+          type: string
+          nullable: true
+        container:
+          type: string
+          nullable: true
+        tracker:
+          type: string
+          nullable: true
+        internalTitle:
+          type: string
+          nullable: true
+        internalAuthor:
+          type: string
+          nullable: true
+        frequency:
+          type: string
+          nullable: true
+        intFrequency:
+          type: string
+          nullable: true
+        fileName:
+          type: string
+          nullable: true
+        converterVersion:
+          type: string
+          nullable: true
+        dateCreated:
+          type: string
+          nullable: true
+        submitter:
+          $ref: '#/components/schemas/TuneSubmitterDto'
+          nullable: true
+        downloads:
+          type: array
+          items:
+            $ref: '#/components/schemas/TuneDownloadDto'

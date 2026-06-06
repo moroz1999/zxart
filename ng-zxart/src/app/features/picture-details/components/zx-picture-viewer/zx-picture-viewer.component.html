@@ -41,9 +41,9 @@
     </zx-button-controls>
   </zx-inline>
 
-  <zx-panel variant="flat">
+  <zx-panel *ngIf="hasRenderControls" variant="flat">
    <zx-stack spacing="xs">
-    <zx-inline align="center" spacing="sm" [wrap]="true">
+    <zx-inline *ngIf="!isSca" align="center" spacing="sm" [wrap]="true">
       <span appText="label" tone="muted" class="pix-render__label">{{ 'picture-details.render-border' | translate }}</span>
       <zx-button-controls gap="sm">
         <zx-button
@@ -67,7 +67,7 @@
       </zx-button-controls>
     </zx-inline>
 
-    <zx-inline align="center" spacing="sm" [wrap]="true">
+    <zx-inline *ngIf="isStandard" align="center" spacing="sm" [wrap]="true">
       <span appText="label" tone="muted" class="pix-render__label">{{ 'picture-details.render-hidden' | translate }}</span>
       <zx-button-controls gap="sm">
         <zx-button

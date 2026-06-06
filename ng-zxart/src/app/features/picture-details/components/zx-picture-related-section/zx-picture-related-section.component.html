@@ -1,27 +1,26 @@
-<zx-grid [desktopColumns]="'3'" [tabletColumns]="'2'" [mobileColumns]="'1'" gap="lg" align="start">
-  <zx-panel *ngFor="let rail of rails">
-    <zx-stack spacing="sm">
-      <div>
+<div [appInViewport]="!loaded && !loading" (inViewport)="onInViewport()">
+  <zx-grid *ngIf="rails.length" [desktopColumns]="'3'" [tabletColumns]="'2'" [mobileColumns]="'1'" gap="lg" align="start">
+    <zx-panel *ngFor="let rail of rails">
+      <zx-stack spacing="sm">
         <h3 appHeading="title">{{ railTitleKey(rail.kind) | translate }}</h3>
-        <span *ngIf="rail.kicker" appText="caption" tone="muted">{{ rail.kicker }}</span>
-      </div>
-      <a
-        *ngFor="let item of rail.items"
-        class="pix-mini"
-        [href]="item.url"
-      >
-        <zx-inline align="center" spacing="sm" [wrap]="false">
-          <img class="pix-mini__thumb" [src]="item.imageUrl" [alt]="item.title" loading="lazy" />
-          <span class="pix-mini__body">
-            <span appText="bodySm" tone="strong" [truncate]="true">{{ item.title }}</span>
-            <span *ngIf="item.authors.length" appText="caption" tone="muted" [truncate]="true">
-              {{ authorNames(item.authors) }}
+        <a
+          *ngFor="let item of rail.items"
+          class="pix-mini"
+          [href]="item.url"
+        >
+          <zx-inline align="center" spacing="sm" [wrap]="false">
+            <img class="pix-mini__thumb" [src]="item.imageUrl" [alt]="item.title" loading="lazy" />
+            <span class="pix-mini__body">
+              <span appText="bodySm" tone="strong" [truncate]="true">{{ item.title }}</span>
+              <span *ngIf="item.authors.length" appText="caption" tone="muted" [truncate]="true">
+                {{ authorNames(item.authors) }}
+              </span>
             </span>
-          </span>
-          <zx-party-place *ngIf="item.party" [place]="item.party.place"></zx-party-place>
-          <span *ngIf="item.year" class="pix-mini__year" appText="caption" tone="link-alt">{{ item.year }}</span>
-        </zx-inline>
-      </a>
-    </zx-stack>
-  </zx-panel>
-</zx-grid>
+            <zx-party-place *ngIf="item.party" [place]="item.party.place"></zx-party-place>
+            <span *ngIf="item.year" class="pix-mini__year" appText="caption" tone="link-alt">{{ item.year }}</span>
+          </zx-inline>
+        </a>
+      </zx-stack>
+    </zx-panel>
+  </zx-grid>
+</div>

@@ -7,15 +7,12 @@ namespace ZxArt\Pictures\Services;
 use controller;
 use structureManager;
 use translationsManager;
-use ZxArt\PictureList\PictureListService;
 use ZxArt\Pictures\Dto\PictureDetailsDto;
 use ZxArt\Pictures\Dto\PictureDownloadDto;
-use ZxArt\Pictures\Dto\PictureDto;
 use ZxArt\Pictures\Dto\PictureMaterialDto;
 use ZxArt\Pictures\Dto\PictureMentionDto;
 use ZxArt\Pictures\Dto\PicturePartyContextDto;
 use ZxArt\Pictures\Dto\PictureProdContextDto;
-use ZxArt\Pictures\Dto\PictureRelatedRailDto;
 use ZxArt\Pictures\Dto\PictureSubmitterDto;
 use ZxArt\Pictures\Dto\PictureTagDto;
 use ZxArt\Pictures\Exception\PictureDetailsException;
@@ -30,12 +27,13 @@ use zxPictureElement;
  */
 readonly class PictureDetailsService
 {
+    private const string TYPE_SCA = 'sca';
+
     public function __construct(
         private structureManager $structureManager,
         private controller $controller,
         private translationsManager $translationsManager,
         private PicturesTransformer $picturesTransformer,
-        private PictureListService $pictureListService,
         private ProdInfoBuilder $infoBuilder,
     ) {
     }
@@ -98,7 +96,6 @@ readonly class PictureDetailsService
                 ? $baseUrl . 'file/id:' . $element->sequence . '/filename:' . rawurlencode((string)$element->sequenceName)
                 : null,
             mentions: $this->buildMentions($element),
-            related: $this->buildRelated($element),
         );
     }
 
@@ -195,9 +192,10 @@ readonly class PictureDetailsService
             );
 
             for ($zoom = 1; $zoom <= 4; $zoom++) {
+                $pcFormat = $element->type === self::TYPE_SCA ? 'gif' : 'png';
                 $downloads[] = new PictureDownloadDto(
-                    id: 'png-' . $zoom,
-                    ext: 'png',
+                    id: $pcFormat . '-' . $zoom,
+                    ext: $pcFormat,
                     label: (string)$this->translationsManager->getTranslationByName('zxpicture.download_pc'),
                     sub: $zoom . '×',
                     size: null,
@@ -270,106 +268,5 @@ readonly class PictureDetailsService
             );
         }
         return $result;
-    }
-
-    /**
-     * Builds up to three related rails: from the prod, by the author, by tags.
-     *
-     * @return PictureRelatedRailDto[]
-     */
-    private function buildRelated(zxPictureElement $element): array
-    {
-        $rails = [];
-        $currentId = $element->getId();
-
-        $release = $element->getReleaseElement();
-        if ($release !== null) {
-            $items = $this->limitPictures(
-                $this->pictureListService->getReleasePictures($release->getId()),
-                $currentId,
-                6
-            );
-            if ($items) {
-                $rails[] = new PictureRelatedRailDto(
-                    kind: 'prod',
-                    title: (string)$this->translationsManager->getTranslationByName('picture.morefromgame'),
-                    kicker: $release->year ? (string)$release->year : null,
-                    items: $items,
-                );
-            }
-        }
-
-        $authorPictures = (array)($element->getBestAuthorsPictures(6) ?? []);
-        $items = $this->limitPictures($authorPictures, $currentId, 6);
-        if ($items) {
-            $rails[] = new PictureRelatedRailDto(
-                kind: 'author',
-                title: (string)$this->translationsManager->getTranslationByName('picture.morefromauthor'),
-                kicker: null,
-                items: $items,
-            );
-        }
-
-        $tagRail = $this->buildTagRail($element, $currentId);
-        if ($tagRail !== null) {
-            $rails[] = $tagRail;
-        }
-
-        return $rails;
-    }
-
-    private function buildTagRail(zxPictureElement $element, int $currentId): ?PictureRelatedRailDto
-    {
-        $tags = $element->getTagsList();
-        if (!$tags) {
-            return null;
-        }
-        $firstTag = reset($tags);
-        $tagId = (int)$firstTag->getId();
-        if ($tagId <= 0) {
-            return null;
-        }
-
-        $sorting = \ZxArt\Shared\SortingParams::fromRequest('votes,desc', PictureListService::ALLOWED_SORT_COLUMNS, 'votes');
-        $page = $this->pictureListService->getPagedByLinkedElement($tagId, 'tagLink', $sorting, 0, 8);
-
-        $items = [];
-        foreach ($page['items'] as $item) {
-            if ($item->id !== $currentId && count($items) < 6) {
-                $items[] = $item;
-            }
-        }
-        if (!$items) {
-            return null;
-        }
-
-        return new PictureRelatedRailDto(
-            kind: 'tags',
-            title: (string)$this->translationsManager->getTranslationByName('picture.morebytags'),
-            kicker: $this->infoBuilder->decodeText((string)$firstTag->getTitle()),
-            items: $items,
-        );
-    }
-
-    /**
-     * @param mixed[] $elements
-     * @return PictureDto[]
-     */
-    private function limitPictures(array $elements, int $currentId, int $limit): array
-    {
-        $items = [];
-        foreach ($elements as $candidate) {
-            if (!$candidate instanceof zxPictureElement) {
-                continue;
-            }
-            if ($candidate->getId() === $currentId) {
-                continue;
-            }
-            $items[] = $this->picturesTransformer->toDto($candidate);
-            if (count($items) >= $limit) {
-                break;
-            }
-        }
-        return $items;
     }
 }

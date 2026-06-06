@@ -21,7 +21,6 @@ readonly class PictureDetailsDto
      * @param PictureDownloadDto[]     $downloads
      * @param PictureMaterialDto[]     $materials
      * @param PictureMentionDto[]      $mentions
-     * @param PictureRelatedRailDto[]  $related
      */
     public function __construct(
         public int $id,
@@ -63,7 +62,6 @@ readonly class PictureDetailsDto
         public array $techInfo,
         public ?string $sequenceUrl,
         public array $mentions,
-        public array $related,
     ) {
     }
 }
