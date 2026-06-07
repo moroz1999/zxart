@@ -56,7 +56,11 @@
     },
     "filters": {
       "sort": "Sort",
-      "type": "Release type"
+      "type": "Release type",
+      "category": "Category"
+    },
+    "category": {
+      "all": "All categories"
     },
     "sort": {
       "year-desc": "Newest first",

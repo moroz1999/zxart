@@ -52,7 +52,7 @@
 
   <td class="release-row__type">
     <zx-release-type-badge
-      *ngIf="release.releaseType"
+      *ngIf="release.releaseType && release.releaseType !== 'unknown'"
       [type]="release.releaseType"
       [label]="release.releaseTypeLabel"
     ></zx-release-type-badge>

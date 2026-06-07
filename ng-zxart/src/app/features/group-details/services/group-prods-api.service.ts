@@ -7,6 +7,11 @@ import {ProdReleaseDto} from '../../prod-details/models/prod-release.dto';
 
 export type GroupProdsScope = 'own' | 'published' | 'releases';
 
+export interface GroupProdCategory {
+  id: number;
+  title: string;
+}
+
 export interface GroupProdEntry extends ZxProdDto {
   readonly type: 'prod';
 }
@@ -21,6 +26,7 @@ export interface GroupProdsPage {
   items: GroupProdItem[];
   total: number;
   availableTypes: string[];
+  availableCategories: GroupProdCategory[];
 }
 
 @Injectable({providedIn: 'root'})
@@ -35,6 +41,7 @@ export class GroupProdsApiService {
     sort: string,
     sortDir: string,
     type: string,
+    categoryId: number,
   ): Observable<GroupProdsPage> {
     let params = new HttpParams()
       .set('id', String(elementId))
@@ -46,8 +53,11 @@ export class GroupProdsApiService {
     if (type !== '') {
       params = params.set('type', type);
     }
+    if (categoryId > 0) {
+      params = params.set('category', String(categoryId));
+    }
     return this.http.get<GroupProdsPage>('/group-prods/', {params}).pipe(
-      catchError(() => of({items: [], total: 0, availableTypes: []})),
+      catchError(() => of({items: [], total: 0, availableTypes: [], availableCategories: []})),
     );
   }
 }

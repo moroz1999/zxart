@@ -48,6 +48,27 @@
           </zx-button>
         </zx-button-controls>
       </zx-stack>
+
+      <zx-stack *ngIf="showCategoryFilter" spacing="xs">
+        <span appText="caption" tone="muted">{{ 'group-details.filters.category' | translate }}</span>
+        <zx-button-controls [wrap]="true" gap="sm">
+          <zx-button
+            size="sm"
+            [color]="activeCategory === 0 ? 'secondary' : 'outlined'"
+            [disabled]="loading"
+            (click)="setCategory(0)">
+            {{ 'group-details.category.all' | translate }}
+          </zx-button>
+          <zx-button
+            *ngFor="let category of availableCategories"
+            size="sm"
+            [color]="activeCategory === category.id ? 'secondary' : 'outlined'"
+            [disabled]="loading"
+            (click)="setCategory(category.id)">
+            {{ category.title }}
+          </zx-button>
+        </zx-button-controls>
+      </zx-stack>
     </zx-filter-bar>
   </zx-panel>
 

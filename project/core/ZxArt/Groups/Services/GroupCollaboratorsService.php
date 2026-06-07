@@ -48,6 +48,23 @@ readonly final class GroupCollaboratorsService
         ];
     }
 
+    public function hasCollaborators(int $groupId): bool
+    {
+        $group = $this->structureManager->getElementById($groupId);
+        if (!($group instanceof groupElement) && !($group instanceof groupAliasElement)) {
+            throw new ProdDetailsException('Group or alias not found', 404);
+        }
+
+        $groupIds = $this->collaboratorsRepository->getGroupAndAliasIds($groupId);
+        $memberIds = $this->collaboratorsRepository->getMemberAuthorAndAliasIds($groupIds);
+        $ownProdIds = $this->collaboratorsRepository->getLinkedChildIds($groupIds, LinkTypes::ZX_PROD_GROUPS);
+        $publishedProdIds = $this->collaboratorsRepository->getLinkedChildIds($groupIds, LinkTypes::ZX_PROD_PUBLISHERS);
+        $publishedReleaseIds = $this->collaboratorsRepository->getLinkedChildIds($groupIds, LinkTypes::ZX_RELEASE_PUBLISHERS);
+
+        return $this->collaboratorsRepository->findPeopleStats($ownProdIds, $publishedReleaseIds, $memberIds) !== []
+            || $this->collaboratorsRepository->findPublishedGroupStats($publishedProdIds, $groupIds) !== [];
+    }
+
     /**
      * @param array<array{authorId: int, roles: string[], jointTotal: int}> $stats
      * @return GroupCollaboratorPersonDto[]

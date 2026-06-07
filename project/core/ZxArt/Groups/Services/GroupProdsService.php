@@ -28,7 +28,7 @@ readonly class GroupProdsService
     }
 
     /**
-     * @return array{items: list<array{type: 'prod', prod: ProdDto}|array{type: 'release', release: ProdReleaseDto}>, total: int, availableTypes: string[]}
+     * @return array{items: list<array{type: 'prod', prod: ProdDto}|array{type: 'release', release: ProdReleaseDto}>, total: int, availableTypes: string[], availableCategories: list<array{id: int, title: string}>}
      */
     public function getProdsPaged(
         int $groupId,
@@ -38,28 +38,30 @@ readonly class GroupProdsService
         string $sort,
         string $sortDir,
         string $type,
+        int $categoryId,
     ): array {
         $group = $this->structureManager->getElementById($groupId);
         if (!($group instanceof groupElement) && !($group instanceof groupAliasElement)) {
             throw new ProdDetailsException('Group or alias not found', 404);
         }
 
-        $page = $this->groupProdsRepository->findPaged($groupId, $scope, $start, $limit, $sort, $sortDir, $type);
+        $page = $this->groupProdsRepository->findPaged($groupId, $scope, $start, $limit, $sort, $sortDir, $type, $categoryId);
         $availableTypes = $scope->isReleases()
             ? $this->groupProdsRepository->findAvailableReleaseTypes($groupId)
+            : [];
+        $availableCategories = !$scope->isReleases()
+            ? $this->buildAvailableCategories($this->groupProdsRepository->findAvailableCategoryIds($groupId, $scope))
             : [];
 
         $items = [];
         foreach ($page['items'] as $item) {
             $element = $this->structureManager->getElementById($item['id']);
-            if ($scope->isReleases()) {
-                if ($element instanceof zxReleaseElement) {
-                    $items[] = [
-                        'type' => 'release',
-                        'release' => $this->prodReleasesService->buildStandaloneRelease($element),
-                    ];
-                }
-            } elseif ($element instanceof zxProdElement) {
+            if ($item['type'] === 'release' && $element instanceof zxReleaseElement) {
+                $items[] = [
+                    'type' => 'release',
+                    'release' => $this->prodReleasesService->buildStandaloneRelease($element),
+                ];
+            } elseif ($item['type'] === 'prod' && $element instanceof zxProdElement) {
                 $items[] = [
                     'type' => 'prod',
                     'prod' => $this->prodsTransformer->toDto($element),
@@ -67,6 +69,36 @@ readonly class GroupProdsService
             }
         }
 
-        return ['items' => $items, 'total' => $page['total'], 'availableTypes' => $availableTypes];
+        return [
+            'items' => $items,
+            'total' => $page['total'],
+            'availableTypes' => $availableTypes,
+            'availableCategories' => $availableCategories,
+        ];
+    }
+
+    /**
+     * @param int[] $categoryIds
+     * @return list<array{id: int, title: string}>
+     */
+    private function buildAvailableCategories(array $categoryIds): array
+    {
+        $categories = [];
+        foreach ($categoryIds as $categoryId) {
+            $category = $this->structureManager->getElementById($categoryId);
+            if ($category === null) {
+                continue;
+            }
+            $categories[] = [
+                'id' => $category->getId(),
+                'title' => html_entity_decode((string)$category->getTitle(), ENT_QUOTES),
+            ];
+        }
+        usort(
+            $categories,
+            static fn(array $a, array $b): int => strcasecmp((string)$a['title'], (string)$b['title']),
+        );
+
+        return $categories;
     }
 }

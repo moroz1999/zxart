@@ -107,3 +107,50 @@
   flex-wrap: wrap;
   gap: var(--space-8);
 }
+
+.gp-member--skeleton {
+  pointer-events: none;
+}
+
+.gp-roster-skeleton__filter-label {
+  width: var(--space-48);
+  height: var(--space-12);
+}
+
+.gp-roster-skeleton__filter-chip {
+  width: calc(var(--space-64) + var(--space-16));
+  height: var(--space-32);
+  border-radius: var(--radius-md);
+}
+
+.gp-roster-skeleton__avatar {
+  width: var(--space-40);
+  height: var(--space-40);
+  border-radius: var(--radius-sm);
+}
+
+.gp-roster-skeleton__title {
+  width: 62%;
+  height: var(--space-16);
+}
+
+.gp-roster-skeleton__years {
+  width: var(--space-48);
+  height: var(--space-12);
+}
+
+.gp-roster-skeleton__real-name {
+  width: 48%;
+  height: var(--space-12);
+}
+
+.gp-roster-skeleton__role {
+  width: var(--space-64);
+  height: var(--space-24);
+  border-radius: var(--radius-md);
+}
+
+.gp-roster-skeleton__subgroup {
+  width: 72%;
+  height: var(--space-12);
+}

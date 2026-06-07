@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {BehaviorSubject, combineLatest, Subscription, switchMap} from 'rxjs';
 import {
+  GroupProdCategory,
   GroupProdEntry,
   GroupProdItem,
   GroupProdsApiService,
@@ -23,7 +24,8 @@ import {ZxProdsGridDirective} from '../../../../shared/directives/prods-grid.dir
 import {ZxProdReleaseCardComponent} from '../../../../entities/zx-prod-release-card/zx-prod-release-card.component';
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
 
-const PAGE_SIZE = 12;
+const DEFAULT_PAGE_SIZE = 12;
+const OWN_PAGE_SIZE = 15;
 
 interface YearGroup {
   year: number | null;
@@ -58,6 +60,7 @@ export class ZxGroupProdsTabComponent implements OnInit, OnDestroy {
   @Input() urlBase = '';
 
   private readonly typeStore = new BehaviorSubject<string>('');
+  private readonly categoryStore = new BehaviorSubject<number>(0);
   private readonly sortStore = new BehaviorSubject<string>('year-desc');
   private pageStore = new BehaviorSubject<number>(1);
 
@@ -66,14 +69,18 @@ export class ZxGroupProdsTabComponent implements OnInit, OnDestroy {
   total = 0;
   yearGroups: YearGroup[] = [];
   availableTypes: string[] = [];
+  availableCategories: GroupProdCategory[] = [];
 
   private readonly subscriptions = new Subscription();
 
   get activeType(): string { return this.typeStore.getValue(); }
+  get activeCategory(): number { return this.categoryStore.getValue(); }
   get currentSort(): string { return this.sortStore.getValue(); }
   get currentPage(): number { return this.pageStore.getValue(); }
-  get pagesAmount(): number { return Math.ceil(this.total / PAGE_SIZE); }
+  get pageSize(): number { return this.scope === 'own' ? OWN_PAGE_SIZE : DEFAULT_PAGE_SIZE; }
+  get pagesAmount(): number { return Math.ceil(this.total / this.pageSize); }
   get isReleases(): boolean { return this.scope === 'releases'; }
+  get showCategoryFilter(): boolean { return !this.isReleases && this.availableCategories.length > 0; }
 
   constructor(
     private readonly prodsApiService: GroupProdsApiService,
@@ -84,19 +91,20 @@ export class ZxGroupProdsTabComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.pageStore = new BehaviorSubject<number>(this.parsePageFromUrl());
     this.subscriptions.add(
-      combineLatest([this.typeStore, this.sortStore, this.pageStore]).pipe(
-        switchMap(([type, sort, page]) => {
+      combineLatest([this.typeStore, this.categoryStore, this.sortStore, this.pageStore]).pipe(
+        switchMap(([type, categoryId, sort, page]) => {
           this.loading = true;
           this.cdr.markForCheck();
           const {sortKey, sortDir} = this.parseSortKey(sort);
-          const start = (page - 1) * PAGE_SIZE;
-          return this.prodsApiService.getProds(this.elementId, this.scope, start, PAGE_SIZE, sortKey, sortDir, type);
+          const start = (page - 1) * this.pageSize;
+          return this.prodsApiService.getProds(this.elementId, this.scope, start, this.pageSize, sortKey, sortDir, type, categoryId);
         }),
       ).subscribe({
         next: result => {
           this.loading = false;
           this.total = result.total;
           this.availableTypes = result.availableTypes;
+          this.availableCategories = result.availableCategories;
           this.yearGroups = this.buildGroups(result.items, this.sortStore.getValue());
           this.cdr.markForCheck();
         },
@@ -115,6 +123,11 @@ export class ZxGroupProdsTabComponent implements OnInit, OnDestroy {
 
   setType(type: string): void {
     this.typeStore.next(type);
+    this.pageStore.next(1);
+  }
+
+  setCategory(categoryId: number): void {
+    this.categoryStore.next(categoryId);
     this.pageStore.next(1);
   }
 

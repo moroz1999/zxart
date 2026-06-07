@@ -77,7 +77,6 @@
       </div>
       <zx-inline class="zx-prod-bottom-row" gap="lg" align="start" justify="between">
         <zx-item-controls
-          *ngIf="model.structureType === 'zxProd'"
           [elementId]="model.id"
           type="zxProd"
           [votes]="model.votes"
@@ -85,11 +84,6 @@
           [userRating]="model.userVote"
           [denyVoting]="model.denyVoting"
         ></zx-item-controls>
-        <zx-release-type-badge
-          *ngIf="model.releaseType && model.structureType === 'zxRelease'"
-          [type]="model.releaseType"
-          [label]="'zx-prod.release-type.' + model.releaseType | translate"
-        ></zx-release-type-badge>
         <div
           class="zx-prod-year"
           appText="label"

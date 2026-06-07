@@ -123,6 +123,7 @@ Software production for ZX Spectrum - games, demos, utilities and other software
 
 ### Angular Prod Lists
 - Outside specialized views, product cards must be rendered through `zx-prods-list`.
+- `zx-prod-block` is product-only: it must not read or render release-specific fields. Release lists must use `zx-prod-release-card` with `ProdReleaseDto`.
 - `zx-prods-list` accepts `Observable<ZxProd[] | null>` through `items$`; `null` means "not loaded yet" and renders the list skeleton.
 - Product card grids use `zxProdsGrid`; desktop cards are fixed at `256px` and do not stretch.
 - Author software views may render `zx-prod-block` directly because they add author-role metadata around each card, but they must use `zxProdsGrid` for card layout.

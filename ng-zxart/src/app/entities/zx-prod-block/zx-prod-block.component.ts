@@ -21,7 +21,6 @@ import {ZxBadgeComponent} from '../../shared/ui/zx-badge/zx-badge.component';
 import {AnalyticsService} from '../../shared/services/analytics.service';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxItemControlsComponent} from '../../shared/ui/zx-item-controls/zx-item-controls.component';
-import {ZxReleaseTypeBadgeComponent} from '../../shared/ui/zx-release-type-badge/zx-release-type-badge.component';
 import {ZxInsetComponent} from '../../shared/ui/zx-inset/zx-inset.component';
 import {ZxInlineComponent} from '../../shared/ui/zx-inline/zx-inline.component';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
@@ -48,7 +47,6 @@ import {ZxCardScreenshotGalleryComponent} from '../../shared/ui/zx-card-screensh
     ZxBadgeComponent,
     ZxButtonComponent,
     ZxItemControlsComponent,
-    ZxReleaseTypeBadgeComponent,
     ZxInsetComponent,
     ZxInlineComponent,
     ZxStackComponent,

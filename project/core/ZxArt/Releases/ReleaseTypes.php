@@ -29,14 +29,33 @@ enum ReleaseTypes: string
     }
 
     /**
-     * Release types that must not appear in a group's "releases & cracks" listing:
-     * an "original" release is the prod's own first release and a "demoversion" is a
-     * demo, neither is a group re-release or crack.
+     * Group "releases & cracks" is a hacker-release list, not a generic list of
+     * published releases.
      *
      * @return string[]
      */
-    public static function getGroupExcludedValues(): array
+    public static function getGroupHackerValues(): array
     {
-        return [self::original->value, self::demoversion->value];
+        return [
+            self::adaptation->value,
+            self::localization->value,
+            self::bugfix->value,
+            self::mod->value,
+            self::crack->value,
+        ];
+    }
+
+    /**
+     * Non-hacker release publisher links are publication events, so group pages
+     * show them in "Published" instead of "Releases & cracks".
+     *
+     * @return string[]
+     */
+    public static function getGroupPublishedValues(): array
+    {
+        return array_values(array_filter(
+            self::getAllValues(),
+            static fn(string $value): bool => !in_array($value, self::getGroupHackerValues(), true),
+        ));
     }
 }

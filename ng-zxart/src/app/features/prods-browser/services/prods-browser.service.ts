@@ -26,7 +26,6 @@ interface ProdRestItem {
   readonly languagesInfo: Array<{id: string; title: string; url: string | null}>;
   readonly groupsInfo: Array<{id: number; title: string; url: string}>;
   readonly youtubeId: string | null;
-  readonly releaseType: string | null;
 }
 
 interface ProdRestResponse {
@@ -62,7 +61,7 @@ export class ProdsBrowserService {
       id: item.id,
       url: item.url,
       title: item.title,
-      structureType: item.structureType as 'zxProd' | 'zxRelease',
+      structureType: 'zxProd',
       dateCreated: item.dateCreated,
       year: item.year != null ? String(item.year) : undefined,
       youtubeId: item.youtubeId ?? undefined,
@@ -75,7 +74,6 @@ export class ProdsBrowserService {
       legalStatus: (item.legalStatus as any) ?? undefined,
       languagesInfo: item.languagesInfo,
       groupsInfo: item.groupsInfo,
-      releaseType: item.releaseType ?? undefined,
       votes: item.votes,
       votesAmount: item.votesAmount,
       userVote: item.userVote ?? 0,

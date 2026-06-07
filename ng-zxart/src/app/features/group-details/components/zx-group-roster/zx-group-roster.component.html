@@ -1,11 +1,12 @@
+<ng-container *ngIf="roster$ | async as roster; else rosterLoading">
 <zx-stack spacing="xl">
   <zx-panel
-    *ngIf="subgroups.length"
+    *ngIf="roster.subgroups.length"
     [title]="'group-details.subgroups.title' | translate"
     titleLevel="h2"
     variant="elevated">
     <div class="gp-subs__grid">
-      <a *ngFor="let subgroup of subgroups" [href]="subgroup.url" class="gp-sub-card">
+      <a *ngFor="let subgroup of roster.subgroups" [href]="subgroup.url" class="gp-sub-card">
         <span appText="bodySm" tone="strong" [truncate]="true">{{ subgroup.title }}</span>
         <div class="gp-sub-card__meta">
           <span appText="caption" tone="muted">{{ 'group-details.subgroups.members' | translate: {count: subgroup.membersCount} }}</span>
@@ -17,12 +18,12 @@
   </zx-panel>
 
   <zx-panel
-    *ngIf="core.members.length"
+    *ngIf="roster.members.length"
     [title]="'group-details.roster.title' | translate"
     titleLevel="h2"
     variant="elevated">
     <zx-stack spacing="md">
-      <zx-stack *ngIf="filterableSubgroups.length" spacing="xs">
+      <zx-stack *ngIf="filterableSubgroups(roster).length" spacing="xs">
         <span appText="caption" tone="muted">{{ 'group-details.roster.subgroup' | translate }}</span>
         <zx-button-controls [wrap]="true" gap="sm">
           <zx-button
@@ -32,16 +33,16 @@
             {{ 'group-details.roster.all' | translate }}
           </zx-button>
           <zx-button
-            *ngFor="let subgroup of filterableSubgroups"
+            *ngFor="let subgroup of filterableSubgroups(roster)"
             size="sm"
             [color]="activeSubgroup === subgroup.title ? 'secondary' : 'outlined'"
             (click)="setSubgroup(subgroup.title)">
-            {{ subgroup.title }} ({{ membersInSubgroup(subgroup.title) }})
+            {{ subgroup.title }} ({{ membersInSubgroup(roster, subgroup.title) }})
           </zx-button>
         </zx-button-controls>
       </zx-stack>
 
-      <zx-stack *ngIf="presentRoles.length" spacing="xs">
+      <zx-stack *ngIf="presentRoles(roster).length" spacing="xs">
         <span appText="caption" tone="muted">{{ 'group-details.roster.role' | translate }}</span>
         <zx-button-controls [wrap]="true" gap="sm">
           <zx-button
@@ -51,17 +52,17 @@
             {{ 'group-details.roster.all' | translate }}
           </zx-button>
           <zx-button
-            *ngFor="let role of presentRoles"
+            *ngFor="let role of presentRoles(roster)"
             size="sm"
             [color]="roleFilter === role ? 'secondary' : 'outlined'"
             (click)="setRole(role)">
-            {{ roleLabelKey(role) | translate }} ({{ roleCounts[role] }})
+            {{ roleLabelKey(role) | translate }} ({{ roleCounts(roster)[role] }})
           </zx-button>
         </zx-button-controls>
       </zx-stack>
 
       <div class="gp-roster__grid">
-        <a *ngFor="let member of filteredMembers" [href]="member.url" class="gp-member">
+        <a *ngFor="let member of filteredMembers(roster)" [href]="member.url" class="gp-member">
           <div class="gp-member__avatar">
             <svg-icon name="person" aria-hidden="true"></svg-icon>
           </div>
@@ -83,9 +84,49 @@
         </a>
       </div>
 
-      <zx-panel *ngIf="filteredMembers.length === 0" variant="flat">
+      <zx-panel *ngIf="filteredMembers(roster).length === 0" variant="flat">
         <span appText="bodySm" tone="muted">{{ 'group-details.roster.empty' | translate }}</span>
       </zx-panel>
     </zx-stack>
   </zx-panel>
 </zx-stack>
+</ng-container>
+
+<ng-template #rosterLoading>
+  <zx-panel
+    [title]="'group-details.roster.title' | translate"
+    titleLevel="h2"
+    variant="elevated">
+    <zx-stack spacing="md">
+      <zx-stack spacing="xs">
+        <zx-skeleton-bone class="gp-roster-skeleton__filter-label"></zx-skeleton-bone>
+        <zx-inline gap="sm" [wrap]="true">
+          <zx-skeleton-bone
+            *ngFor="let item of skeletonChipItems"
+            class="gp-roster-skeleton__filter-chip">
+          </zx-skeleton-bone>
+        </zx-inline>
+      </zx-stack>
+
+      <div class="gp-roster__grid">
+        <div *ngFor="let item of skeletonMemberItems" class="gp-member gp-member--skeleton">
+          <zx-skeleton-bone class="gp-roster-skeleton__avatar"></zx-skeleton-bone>
+          <div class="gp-member__body">
+            <div class="gp-member__top">
+              <zx-skeleton-bone class="gp-roster-skeleton__title"></zx-skeleton-bone>
+              <zx-skeleton-bone class="gp-roster-skeleton__years"></zx-skeleton-bone>
+            </div>
+            <zx-skeleton-bone class="gp-roster-skeleton__real-name"></zx-skeleton-bone>
+            <zx-inline gap="xs" [wrap]="true">
+              <zx-skeleton-bone
+                *ngFor="let chip of skeletonChipItems"
+                class="gp-roster-skeleton__role">
+              </zx-skeleton-bone>
+            </zx-inline>
+            <zx-skeleton-bone class="gp-roster-skeleton__subgroup"></zx-skeleton-bone>
+          </div>
+        </div>
+      </div>
+    </zx-stack>
+  </zx-panel>
+</ng-template>

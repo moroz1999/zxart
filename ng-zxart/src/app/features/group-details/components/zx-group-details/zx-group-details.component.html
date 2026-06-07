@@ -30,7 +30,7 @@
         [label]="'group-details.tabs.group' | translate"
         [href]="getTabHref('group')">
         <ng-template zxTabContent>
-          <zx-group-roster [core]="core"></zx-group-roster>
+          <zx-group-roster [elementId]="core.id"></zx-group-roster>
         </ng-template>
       </zx-tab>
 

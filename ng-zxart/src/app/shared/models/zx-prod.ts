@@ -9,7 +9,7 @@ import {
 } from './zx-prod-dto';
 
 export class ZxProd extends StructureElement {
-    public structureType: string;
+    public structureType: 'zxProd';
     public title: string;
     public year: string = '';
     public youtubeId: string = '';
@@ -23,8 +23,6 @@ export class ZxProd extends StructureElement {
     public categoriesInfo: ZxProdConnectedElements = [];
     public languagesInfo: ZxProdConnectedItems = [];
     public partyInfo?: ZxProdConnectedElementDto;
-    public releaseType?: string;
-    public releaseFormat?: string;
     public partyPlace: number = 0;
     public votes: number;
     public votesAmount: number;
@@ -68,12 +66,6 @@ export class ZxProd extends StructureElement {
         }
         if (data.partyPlace) {
             this.partyPlace = data.partyPlace;
-        }
-        if (data.releaseType) {
-            this.releaseType = data.releaseType;
-        }
-        if (data.releaseFormat) {
-            this.releaseFormat = data.releaseFormat;
         }
         if (data.listImagesUrls) {
             this.imagesUrls = data.listImagesUrls;

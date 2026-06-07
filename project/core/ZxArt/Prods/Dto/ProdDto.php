@@ -38,7 +38,6 @@ readonly class ProdDto
         public array $groupsInfo,
         public array $publishersInfo,
         public ?string $youtubeId,
-        public ?string $releaseType = null,
     ) {
     }
 }

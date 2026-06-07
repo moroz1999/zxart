@@ -14,10 +14,10 @@ use ZxArt\Groups\Dto\GroupCountersDto;
 use ZxArt\Groups\Dto\GroupLinkDto;
 use ZxArt\Groups\Dto\GroupLocationDto;
 use ZxArt\Groups\Dto\GroupLocationItemDto;
-use ZxArt\Groups\Dto\GroupMemberDto;
 use ZxArt\Groups\Dto\GroupRefDto;
-use ZxArt\Groups\Dto\GroupSubgroupDto;
 use ZxArt\Groups\Dto\GroupTabsDto;
+use ZxArt\Groups\GroupProdsScope;
+use ZxArt\Groups\Repositories\GroupProdsRepository;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArt\Prods\PressArticlePreviewFactory;
 use ZxArt\Releases\ReleaseTypes;
@@ -29,6 +29,9 @@ readonly class GroupDetailsService
         private structureManager $structureManager,
         private breadcrumbsManager $breadcrumbsManager,
         private PressArticlePreviewFactory $pressArticlePreviewFactory,
+        private GroupRosterService $groupRosterService,
+        private GroupProdsRepository $groupProdsRepository,
+        private GroupCollaboratorsService $groupCollaboratorsService,
     ) {
     }
 
@@ -40,9 +43,7 @@ readonly class GroupDetailsService
         }
 
         $profileGroup = $this->resolveProfileGroup($group);
-        $subgroups = $this->buildSubgroups($group);
-        $members = $this->buildMembers($group);
-        $counters = $this->buildCounters($group, $members, $subgroups);
+        $counters = $this->buildCounters($group);
 
         return new GroupCoreDto(
             id: (int)$group->getId(),
@@ -59,11 +60,11 @@ readonly class GroupDetailsService
             links: $this->buildLinks($group),
             parentGroups: $this->buildParentGroups($group),
             aliases: $this->buildAliases($group),
-            subgroups: $subgroups,
-            members: $members,
+            subgroups: [],
+            members: [],
             mentions: $this->buildMentions($group),
             counters: $counters,
-            tabs: $this->buildTabs($counters),
+            tabs: $this->buildTabs($counters, $this->groupCollaboratorsService->hasCollaborators($group->getId())),
             breadcrumbs: $this->buildBreadcrumbs($group),
         );
     }
@@ -140,85 +141,6 @@ readonly class GroupDetailsService
     }
 
     /**
-     * @return GroupSubgroupDto[]
-     */
-    private function buildSubgroups(groupElement|groupAliasElement $group): array
-    {
-        if (!$group instanceof groupElement) {
-            return [];
-        }
-        $subgroups = [];
-        foreach ($group->getSubGroups() as $subgroup) {
-            if (!$subgroup instanceof groupElement) {
-                continue;
-            }
-            $subgroups[] = new GroupSubgroupDto(
-                id: (int)$subgroup->getId(),
-                title: $this->decode((string)$subgroup->getTitle()),
-                abbreviation: $this->decode((string)$subgroup->abbreviation),
-                url: (string)$subgroup->getUrl(),
-                membersCount: count($subgroup->getAuthorsInfo(EntityType::Group->value)),
-                prodsCount: count($subgroup->getGroupProds()),
-                years: $this->buildYears($subgroup),
-            );
-        }
-        return $subgroups;
-    }
-
-    /**
-     * @return GroupMemberDto[]
-     */
-    private function buildMembers(groupElement|groupAliasElement $group): array
-    {
-        $subgroupMembership = $this->buildSubgroupMembership($group);
-        $members = [];
-        foreach ($group->getAuthorsInfo(EntityType::Group->value) as $record) {
-            $authorElement = $record['authorElement'];
-            $authorId = (int)$authorElement->getId();
-            $rawRoles = is_array($record['roles']) ? $record['roles'] : [];
-            $roles = array_values(array_filter(
-                $rawRoles,
-                static fn(mixed $role): bool => is_string($role) && $role !== 'unknown',
-            ));
-            $members[] = new GroupMemberDto(
-                id: $authorId,
-                title: $this->decode((string)$authorElement->getTitle()),
-                url: (string)$authorElement->getUrl(),
-                realName: $this->decode((string)$authorElement->realName),
-                roles: array_values($roles),
-                years: $this->joinYears(
-                    $this->yearFromDateString((string)$record['startDate']),
-                    $this->yearFromDateString((string)$record['endDate']),
-                ),
-                subgroups: $subgroupMembership[$authorId] ?? [],
-            );
-        }
-        return $members;
-    }
-
-    /**
-     * @return array<int, string[]>
-     */
-    private function buildSubgroupMembership(groupElement|groupAliasElement $group): array
-    {
-        if (!$group instanceof groupElement) {
-            return [];
-        }
-        $membership = [];
-        foreach ($group->getSubGroups() as $subgroup) {
-            if (!$subgroup instanceof groupElement) {
-                continue;
-            }
-            $subgroupTitle = $this->decode((string)$subgroup->getTitle());
-            foreach ($subgroup->getAuthorsInfo(EntityType::Group->value) as $record) {
-                $authorId = (int)$record['authorElement']->getId();
-                $membership[$authorId][] = $subgroupTitle;
-            }
-        }
-        return $membership;
-    }
-
-    /**
      * @return GroupRefDto[]
      */
     private function buildParentGroups(groupElement|groupAliasElement $group): array
@@ -272,20 +194,13 @@ readonly class GroupDetailsService
         return $this->pressArticlePreviewFactory->createList($group->getPressMentions());
     }
 
-    /**
-     * @param GroupMemberDto[]   $members
-     * @param GroupSubgroupDto[] $subgroups
-     */
-    private function buildCounters(
-        groupElement|groupAliasElement $group,
-        array $members,
-        array $subgroups,
-    ): GroupCountersDto {
+    private function buildCounters(groupElement|groupAliasElement $group): GroupCountersDto
+    {
         return new GroupCountersDto(
-            members: count($members),
-            subgroups: count($subgroups),
+            members: $this->groupRosterService->countMembers($group),
+            subgroups: $this->groupRosterService->countSubgroups($group),
             prods: count($group->getGroupProds()),
-            published: count($group->getPublisherProds()),
+            published: $this->groupProdsRepository->count((int)$group->getId(), GroupProdsScope::Published),
             releases: $this->countReleases($group),
             mentions: count($group->getPressMentions()),
             comments: (int)$group->getCommentsAmount(),
@@ -294,21 +209,14 @@ readonly class GroupDetailsService
 
     /**
      * Counts the group's published releases, excluding types that are not shown in the
-     * "releases & cracks" listing (see {@see ReleaseTypes::getGroupExcludedValues()}).
+     * "releases & cracks" listing (see {@see ReleaseTypes::getGroupHackerValues()}).
      */
     private function countReleases(groupElement|groupAliasElement $group): int
     {
-        $excluded = ReleaseTypes::getGroupExcludedValues();
-        $count = 0;
-        foreach ($group->getReleases() as $release) {
-            if (!in_array((string)$release->releaseType, $excluded, true)) {
-                $count++;
-            }
-        }
-        return $count;
+        return $this->groupProdsRepository->count((int)$group->getId(), GroupProdsScope::Releases);
     }
 
-    private function buildTabs(GroupCountersDto $counters): GroupTabsDto
+    private function buildTabs(GroupCountersDto $counters, bool $hasConnections): GroupTabsDto
     {
         $hasProds = $counters->prods > 0;
         $hasReleases = $counters->releases > 0;
@@ -318,7 +226,7 @@ readonly class GroupDetailsService
             hasReleases: $hasReleases,
             hasMembers: $counters->members > 0,
             hasSubgroups: $counters->subgroups > 0,
-            hasConnections: $hasProds || $hasReleases || $counters->published > 0,
+            hasConnections: $hasConnections,
             hasMentions: $counters->mentions > 0,
         );
     }

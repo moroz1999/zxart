@@ -10,7 +10,7 @@ import {ZxProdsListSkeletonComponent} from '../../../../shared/ui/zx-skeleton/co
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxProdsGridDirective} from '../../../../shared/directives/prods-grid.directive';
 
-const BEST_LIMIT = 8;
+const BEST_LIMIT = 5;
 
 @Component({
   selector: 'zx-group-best-works',
@@ -44,7 +44,7 @@ export class ZxGroupBestWorksComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions.add(
-      this.prodsApiService.getProds(this.elementId, 'own', 0, BEST_LIMIT, 'votes', 'desc', '').subscribe(result => {
+      this.prodsApiService.getProds(this.elementId, 'own', 0, BEST_LIMIT, 'votes', 'desc', '', 0).subscribe(result => {
         this.loading = false;
         this.prods = result.items
           .filter((item): item is GroupProdEntry => item.type === 'prod')

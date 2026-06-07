@@ -56,7 +56,11 @@
     },
     "filters": {
       "sort": "Ordenar",
-      "type": "Tipo de lanzamiento"
+      "type": "Tipo de lanzamiento",
+      "category": "Categoría"
+    },
+    "category": {
+      "all": "Todas las categorías"
     },
     "sort": {
       "year-desc": "Más recientes primero",

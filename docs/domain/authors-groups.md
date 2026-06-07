@@ -71,6 +71,10 @@ Group of authors - team, company, demoscene group. Unites authors for collaborat
 - **zxReleasePublishers** - release publishers
   - Link with zxRelease, role child
   - Group published specific release
+  - Group release lists exclude releases whose parent prod is already linked to the same group as developer or publisher
+  - Group release lists show only hacker-release/crack-like release types: adaptation, localization, bugfix, mod, and crack
+  - Non-hacker release publisher links are shown in the group's Published tab
+- Group own works and Published lists expose filters by linked production categories. Published release rows use their parent production categories for this filter.
 
 #### Difference Between Group and Publisher
 - **groups** (zxProdGroups) - creators, developers
@@ -96,7 +100,9 @@ Authors can be members of groups:
 - One author can be member of multiple groups
 - Membership can change over time
 - Group can have multiple members
+- Group roster data is loaded through a separate endpoint after the group core response.
 - Group connections exclude group members and their author aliases from collaborator people.
+- The group connections tab is shown only when the core group response confirms real collaborator people or published developer groups.
 
 #### Authorship Through Group
 When work is created by group:
