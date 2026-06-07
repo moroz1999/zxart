@@ -51,6 +51,7 @@ export interface AuthorTabsDto {
   hasTunes: boolean;
   hasProds: boolean;
   hasCollaborators: boolean;
+  hasMentions: boolean;
 }
 
 export interface AuthorBreadcrumbDto {

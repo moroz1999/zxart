@@ -13,6 +13,8 @@ use ZxArt\LinkTypes;
  * @property string $wikiLink
  * @property string $slogan
  * @property string $type
+ * @property int $startDate
+ * @property int $endDate
  * @property int $city
  * @property int $country
  * @property int[] $subGroupsSelector
@@ -107,6 +109,14 @@ class groupElement extends structureElement implements
     protected function getCityId()
     {
         return $this->city;
+    }
+
+    public function getImageUrl(string $preset = 'groupImage'): string
+    {
+        if ($this->image) {
+            return controller::getInstance()->baseURL . 'image/type:' . $preset . '/id:' . $this->image . '/filename:' . $this->originalName;
+        }
+        return '';
     }
 
     /**

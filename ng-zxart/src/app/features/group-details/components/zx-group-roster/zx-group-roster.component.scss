@@ -1,0 +1,109 @@
+@use 'shared/breakpoints' as bp;
+
+:host {
+  display: block;
+}
+
+.gp-subs__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-8);
+
+  @include bp.media-breakpoint-down(sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gp-sub-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-12);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--text-color);
+  background: var(--background-deep);
+  border: var(--border-light);
+
+  &:hover {
+    background: var(--secondary-100);
+  }
+}
+
+.gp-sub-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  align-items: baseline;
+}
+
+.gp-sub-card__years {
+  font-family: var(--font-mono);
+  margin-left: auto;
+}
+
+.gp-roster__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-8);
+
+  @include bp.media-breakpoint-down(sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gp-member {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: var(--space-12);
+  padding: var(--space-12);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--text-color);
+  background: var(--background-deep);
+
+  &:hover {
+    background: var(--secondary-100);
+  }
+}
+
+.gp-member__avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  background: var(--secondary-200);
+  color: var(--secondary-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg-icon {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.gp-member__body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.gp-member__top {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-8);
+  justify-content: space-between;
+}
+
+.gp-member__years {
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+
+.gp-member__subs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}

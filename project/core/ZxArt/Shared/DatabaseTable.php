@@ -10,6 +10,8 @@ enum DatabaseTable: string
     case AuthorAlias = 'module_authoralias';
     case Authorship = 'authorship';
     case Comment = 'module_comment';
+    case Group = 'module_group';
+    case GroupAlias = 'module_groupalias';
     case StructureElements = 'structure_elements';
     case StructureLinks = 'structure_links';
     case VotesHistory = 'votes_history';

@@ -1,0 +1,38 @@
+<zx-panel
+  *ngIf="!loaded"
+  [appInViewport]="!loading"
+  (inViewport)="load.emit()"
+  [title]="title"
+  titleLevel="h2"
+  variant="elevated">
+  <zx-row-skeleton [count]="4"></zx-row-skeleton>
+</zx-panel>
+
+<zx-panel
+  *ngIf="loaded && (people.length > 0 || groups.length > 0)"
+  [title]="title"
+  titleLevel="h2"
+  variant="elevated">
+
+  <div class="collab__cols">
+    <div class="collab__col" *ngIf="people.length > 0">
+      <div class="collab__col-h" appText="label" tone="muted">
+        {{ peopleLabel }}
+        <span class="collab__count">{{ people.length }}</span>
+      </div>
+      <div class="collab__people">
+        <zx-collaborator-person-card *ngFor="let person of people" [person]="person"></zx-collaborator-person-card>
+      </div>
+    </div>
+
+    <div class="collab__col" *ngIf="groups.length > 0">
+      <div class="collab__col-h" appText="label" tone="muted">
+        {{ groupsLabel }}
+        <span class="collab__count">{{ groups.length }}</span>
+      </div>
+      <div class="collab__groups">
+        <zx-collaborator-group-card *ngFor="let group of groups" [group]="group"></zx-collaborator-group-card>
+      </div>
+    </div>
+  </div>
+</zx-panel>

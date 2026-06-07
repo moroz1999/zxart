@@ -11,6 +11,7 @@ readonly class AuthorTabsRestDto
         public bool $hasTunes,
         public bool $hasProds,
         public bool $hasCollaborators,
+        public bool $hasMentions,
     ) {
     }
 }

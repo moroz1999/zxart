@@ -1,0 +1,13 @@
+<zx-stack spacing="lg">
+  <zx-article-preview
+    *ngFor="let article of articles; trackBy: trackById"
+    [title]="article.title"
+    [url]="article.url"
+    [snippetHtml]="article.introduction || null"
+    [authors]="article.authors"
+    [publication]="article.publication"
+    [imageUrl]="article.publication?.imageUrl || null"
+    [imageAlt]="article.publication?.title || article.title"
+    [readLinkLabel]="readLinkLabel"
+  ></zx-article-preview>
+</zx-stack>

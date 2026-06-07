@@ -56,7 +56,7 @@ readonly class AuthorDetailsService
         $roles = $this->buildRoles($author, $counters);
         $tech = $this->buildTech($profileAuthor);
         $ratings = $this->buildRatings($profileAuthor);
-        $tabs = $this->buildTabs($counters);
+        $tabs = $this->buildTabs($counters, $author);
         [$parentUrl, $parentTitle] = $this->resolveParent($author);
         $breadcrumbs = $this->buildBreadcrumbs($author);
 
@@ -302,7 +302,7 @@ readonly class AuthorDetailsService
         );
     }
 
-    private function buildTabs(AuthorCountersDto $counters): AuthorTabsDto
+    private function buildTabs(AuthorCountersDto $counters, authorElement|authorAliasElement $author): AuthorTabsDto
     {
         $hasPictures = $counters->pictures > 0;
         $hasTunes = $counters->tunes > 0;
@@ -313,6 +313,7 @@ readonly class AuthorDetailsService
             hasTunes: $hasTunes,
             hasProds: $hasProds,
             hasCollaborators: $hasPictures || $hasTunes || $hasProds,
+            hasMentions: count($author->getPressMentions()) > 0,
         );
     }
 

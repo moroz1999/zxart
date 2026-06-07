@@ -1,0 +1,84 @@
+<ng-container *ngIf="core$ | async as core; else headerLoading">
+  <zx-stack spacing="xl">
+    <zx-breadcrumbs
+      [categories]="core.breadcrumbs"
+      [currentTitle]="core.title">
+    </zx-breadcrumbs>
+    <zx-group-header [core]="core"></zx-group-header>
+
+    <zx-tabs [initialActiveIndex]="getInitialTabIndex(core)" (tabChange)="onTabChange($event)">
+      <zx-tab
+        *ngIf="core.tabs.hasProds"
+        [label]="'group-details.tabs.overview' | translate"
+        [href]="getTabHref('overview')">
+        <ng-template zxTabContent>
+          <zx-group-best-works [elementId]="core.id" [viewAllUrl]="getTabHref('works')"></zx-group-best-works>
+        </ng-template>
+      </zx-tab>
+
+      <zx-tab
+        *ngIf="core.tabs.hasProds || core.tabs.hasPublished || core.tabs.hasReleases"
+        [label]="'group-details.tabs.works' | translate"
+        [href]="getTabHref('works')">
+        <ng-template zxTabContent>
+          <zx-group-works [core]="core" [urlBase]="getTabHref('works')"></zx-group-works>
+        </ng-template>
+      </zx-tab>
+
+      <zx-tab
+        *ngIf="core.tabs.hasMembers || core.tabs.hasSubgroups"
+        [label]="'group-details.tabs.group' | translate"
+        [href]="getTabHref('group')">
+        <ng-template zxTabContent>
+          <zx-group-roster [core]="core"></zx-group-roster>
+        </ng-template>
+      </zx-tab>
+
+      <zx-tab
+        *ngIf="core.tabs.hasConnections"
+        [label]="'group-details.tabs.connections' | translate"
+        [href]="getTabHref('connections')">
+        <ng-template zxTabContent>
+          <zx-group-connections [elementId]="core.id"></zx-group-connections>
+        </ng-template>
+      </zx-tab>
+
+      <zx-tab
+        *ngIf="core.tabs.hasMentions"
+        [label]="'group-details.tabs.media' | translate"
+        [href]="getTabHref('media')">
+        <ng-template zxTabContent>
+          <zx-group-mentions [mentions]="core.mentions"></zx-group-mentions>
+        </ng-template>
+      </zx-tab>
+
+      <zx-tab
+        [label]="'group-details.tabs.discussion' | translate"
+        [href]="getTabHref('discussion')">
+        <ng-template zxTabContent>
+          <zx-stack spacing="xl">
+            <zx-grid desktopColumns="5" mobileColumns="1" gap="xl" align="start">
+              <zx-group-ratings zxGridItem zxGridDesktopSpan="2" [elementId]="core.id"></zx-group-ratings>
+              <zx-group-comments zxGridItem zxGridDesktopSpan="3" [elementId]="core.id"></zx-group-comments>
+            </zx-grid>
+            <zx-comments-list-view [elementId]="core.id"></zx-comments-list-view>
+          </zx-stack>
+        </ng-template>
+      </zx-tab>
+    </zx-tabs>
+  </zx-stack>
+</ng-container>
+
+<ng-template #headerLoading>
+  <zx-panel>
+    <zx-inline gap="lg" align="start">
+      <zx-skeleton-bone class="group-details-skeleton__avatar"></zx-skeleton-bone>
+      <zx-stack spacing="sm" class="group-details-skeleton__header-body">
+        <zx-skeleton-bone class="group-details-skeleton__title"></zx-skeleton-bone>
+        <zx-skeleton-bone class="group-details-skeleton__meta"></zx-skeleton-bone>
+        <zx-skeleton-bone class="group-details-skeleton__line"></zx-skeleton-bone>
+        <zx-skeleton-bone class="group-details-skeleton__line group-details-skeleton__line--short"></zx-skeleton-bone>
+      </zx-stack>
+    </zx-inline>
+  </zx-panel>
+</ng-template>

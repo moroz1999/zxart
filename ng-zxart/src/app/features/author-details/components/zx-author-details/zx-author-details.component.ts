@@ -7,6 +7,7 @@ import {AuthorCoreDto} from '../../models/author-core.dto';
 import {AuthorCoreApiService} from '../../services/author-core-api.service';
 import {ZxAuthorHeaderComponent} from '../zx-author-header/zx-author-header.component';
 import {ZxAuthorCollaboratorsComponent} from '../zx-author-collaborators/zx-author-collaborators.component';
+import {ZxAuthorMentionsComponent} from '../zx-author-mentions/zx-author-mentions.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxAuthorMiniDashboardComponent} from '../zx-author-mini-dashboard/zx-author-mini-dashboard.component';
 import {ZxAuthorRatingsComponent} from '../zx-author-ratings/zx-author-ratings.component';
@@ -26,7 +27,7 @@ import {ZxAuthorSoftwareTabComponent} from '../zx-author-software-tab/zx-author-
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
 
-type AuthorTabId = 'best' | 'gfx' | 'music' | 'software' | 'collaborators' | 'discussion';
+type AuthorTabId = 'best' | 'gfx' | 'music' | 'software' | 'collaborators' | 'mentions' | 'discussion';
 
 @Component({
   selector: 'zx-author-details-view',
@@ -52,6 +53,7 @@ type AuthorTabId = 'best' | 'gfx' | 'music' | 'software' | 'collaborators' | 'di
     ZxAuthorGraphicsTabComponent,
     ZxAuthorMusicTabComponent,
     ZxAuthorSoftwareTabComponent,
+    ZxAuthorMentionsComponent,
     CommentsListComponent,
   ],
   templateUrl: './zx-author-details.component.html',
@@ -96,6 +98,7 @@ export class ZxAuthorDetailsComponent implements OnInit {
     if (core.tabs.hasProds) tabs.push('software');
 
     if (core.tabs.hasCollaborators) tabs.push('collaborators');
+    if (core.tabs.hasMentions) tabs.push('mentions');
     tabs.push('discussion');
 
     return tabs;

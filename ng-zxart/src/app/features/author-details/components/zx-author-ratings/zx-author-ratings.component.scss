@@ -1,8 +1,0 @@
-.author-ratings__results {
-  transition: opacity var(--zx-author-ratings-loading-transition) ease;
-}
-
-.author-ratings__results--loading {
-  opacity: var(--zx-author-ratings-loading-opacity);
-  pointer-events: none;
-}

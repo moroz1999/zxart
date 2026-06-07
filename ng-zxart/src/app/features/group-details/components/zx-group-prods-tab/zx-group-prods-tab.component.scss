@@ -1,0 +1,83 @@
+@use 'shared/breakpoints' as bp;
+
+:host {
+  display: block;
+}
+
+.gp-results {
+  transition: opacity var(--animation-sm) ease;
+}
+
+.gp-results--loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.gp-toolbar__result {
+  font-size: var(--font-xs);
+  color: var(--text-light-color);
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.gp-year-group {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 12px;
+
+  @include bp.media-breakpoint-down(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gp-year-group--no-rail {
+  grid-template-columns: 1fr;
+}
+
+.gp-works-grid {
+  @include bp.media-breakpoint-down(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gp-year-rail {
+  position: relative;
+  padding: 6px 0;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 24px;
+    top: 0;
+    bottom: -16px;
+    width: 2px;
+    background: var(--secondary-200);
+  }
+}
+
+.gp-year-rail__dot {
+  position: absolute;
+  left: 19px;
+  top: 14px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--primary-500);
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 2px var(--secondary-200);
+  z-index: 1;
+}
+
+.gp-year-rail__year {
+  font-size: var(--font-lg);
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-color);
+  padding-left: 42px;
+}
+
+.gp-year-rail__count {
+  font-size: var(--font-xs);
+  color: var(--text-light-color);
+  padding-left: 42px;
+}

@@ -1,8 +1,0 @@
-.author-comments__results {
-  transition: opacity var(--zx-author-comments-loading-transition) ease;
-}
-
-.author-comments__results--loading {
-  opacity: var(--zx-author-comments-loading-opacity);
-  pointer-events: none;
-}

@@ -1,0 +1,91 @@
+<zx-stack spacing="xl">
+  <zx-panel
+    *ngIf="subgroups.length"
+    [title]="'group-details.subgroups.title' | translate"
+    titleLevel="h2"
+    variant="elevated">
+    <div class="gp-subs__grid">
+      <a *ngFor="let subgroup of subgroups" [href]="subgroup.url" class="gp-sub-card">
+        <span appText="bodySm" tone="strong" [truncate]="true">{{ subgroup.title }}</span>
+        <div class="gp-sub-card__meta">
+          <span appText="caption" tone="muted">{{ 'group-details.subgroups.members' | translate: {count: subgroup.membersCount} }}</span>
+          <span appText="caption" tone="muted">{{ 'group-details.subgroups.prods' | translate: {count: subgroup.prodsCount} }}</span>
+          <span *ngIf="subgroup.years" appText="caption" tone="muted" class="gp-sub-card__years">{{ subgroup.years }}</span>
+        </div>
+      </a>
+    </div>
+  </zx-panel>
+
+  <zx-panel
+    *ngIf="core.members.length"
+    [title]="'group-details.roster.title' | translate"
+    titleLevel="h2"
+    variant="elevated">
+    <zx-stack spacing="md">
+      <zx-stack *ngIf="filterableSubgroups.length" spacing="xs">
+        <span appText="caption" tone="muted">{{ 'group-details.roster.subgroup' | translate }}</span>
+        <zx-button-controls [wrap]="true" gap="sm">
+          <zx-button
+            size="sm"
+            [color]="activeSubgroup === 'all' ? 'secondary' : 'outlined'"
+            (click)="setSubgroup('all')">
+            {{ 'group-details.roster.all' | translate }}
+          </zx-button>
+          <zx-button
+            *ngFor="let subgroup of filterableSubgroups"
+            size="sm"
+            [color]="activeSubgroup === subgroup.title ? 'secondary' : 'outlined'"
+            (click)="setSubgroup(subgroup.title)">
+            {{ subgroup.title }} ({{ membersInSubgroup(subgroup.title) }})
+          </zx-button>
+        </zx-button-controls>
+      </zx-stack>
+
+      <zx-stack *ngIf="presentRoles.length" spacing="xs">
+        <span appText="caption" tone="muted">{{ 'group-details.roster.role' | translate }}</span>
+        <zx-button-controls [wrap]="true" gap="sm">
+          <zx-button
+            size="sm"
+            [color]="roleFilter === 'all' ? 'secondary' : 'outlined'"
+            (click)="roleFilter = 'all'">
+            {{ 'group-details.roster.all' | translate }}
+          </zx-button>
+          <zx-button
+            *ngFor="let role of presentRoles"
+            size="sm"
+            [color]="roleFilter === role ? 'secondary' : 'outlined'"
+            (click)="setRole(role)">
+            {{ roleLabelKey(role) | translate }} ({{ roleCounts[role] }})
+          </zx-button>
+        </zx-button-controls>
+      </zx-stack>
+
+      <div class="gp-roster__grid">
+        <a *ngFor="let member of filteredMembers" [href]="member.url" class="gp-member">
+          <div class="gp-member__avatar">
+            <svg-icon name="person" aria-hidden="true"></svg-icon>
+          </div>
+          <div class="gp-member__body">
+            <div class="gp-member__top">
+              <span appText="bodySm" tone="strong" [truncate]="true">{{ member.title }}</span>
+              <span *ngIf="member.years" appText="caption" tone="muted" class="gp-member__years">{{ member.years }}</span>
+            </div>
+            <span *ngIf="member.realName" appText="caption" tone="muted">{{ member.realName }}</span>
+            <zx-inline *ngIf="member.roles.length" gap="xs" [wrap]="true">
+              <zx-chip *ngFor="let role of member.roles" variant="opaque" size="sm" [color]="roleChipColor(role)">
+                {{ roleLabelKey(role) | translate }}
+              </zx-chip>
+            </zx-inline>
+            <div *ngIf="member.subgroups.length" class="gp-member__subs">
+              <span *ngFor="let sub of member.subgroups" appText="caption" tone="muted" class="gp-member__sub">↳ {{ sub }}</span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <zx-panel *ngIf="filteredMembers.length === 0" variant="flat">
+        <span appText="bodySm" tone="muted">{{ 'group-details.roster.empty' | translate }}</span>
+      </zx-panel>
+    </zx-stack>
+  </zx-panel>
+</zx-stack>

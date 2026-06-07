@@ -5,7 +5,7 @@ import {InViewportDirective} from '../../../../shared/directives/in-viewport.dir
 import {
   ZxCommentSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-comment-skeleton/zx-comment-skeleton.component';
-import {ZxArticlePreviewComponent} from '../../../../entities/zx-article-preview/zx-article-preview.component';
+import {ZxPressMentionsListComponent} from '../../../../entities/zx-press-mentions-list/zx-press-mentions-list.component';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {ProdMentionsApiService} from '../../services/prod-mentions-api.service';
 import {PressArticlePreviewDto} from '../../models/press-article.dto';
@@ -19,7 +19,7 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
     TranslateModule,
     InViewportDirective,
     ZxCommentSkeletonComponent,
-    ZxArticlePreviewComponent,
+    ZxPressMentionsListComponent,
     HeadingDirective,
     ZxStackComponent,
   ],
@@ -55,9 +55,5 @@ export class ZxProdMentionsSectionComponent {
       this.loading = false;
       this.cdr.markForCheck();
     });
-  }
-
-  trackById(_index: number, article: PressArticlePreviewDto): number {
-    return article.id;
   }
 }

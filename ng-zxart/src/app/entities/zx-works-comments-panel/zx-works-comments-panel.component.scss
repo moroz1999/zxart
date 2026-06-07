@@ -1,0 +1,20 @@
+:host {
+  display: block;
+}
+
+.works-comments__results {
+  transition: opacity var(--zx-author-comments-loading-transition) ease;
+}
+
+.works-comments__results--loading {
+  opacity: var(--zx-author-comments-loading-opacity);
+  pointer-events: none;
+}
+
+.works-comment__author {
+  display: inline;
+}
+
+.works-comment__content {
+  word-break: break-word;
+}

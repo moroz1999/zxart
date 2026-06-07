@@ -7,19 +7,13 @@ import {
   CollaboratorGroupDto,
   CollaboratorPersonDto,
 } from '../../services/author-collaborators-api.service';
-import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
-import {ZxAuthorPersonCardComponent} from '../zx-author-person-card/zx-author-person-card.component';
-import {ZxRowSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
-import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
-import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
-import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
+import {ZxCollaboratorsSectionComponent} from '../../../../entities/zx-collaborators-section/zx-collaborators-section.component';
 
 @Component({
   selector: 'zx-author-collaborators',
   standalone: true,
-  imports: [CommonModule, TranslateModule, ZxPanelComponent, ZxAuthorPersonCardComponent, ZxRowSkeletonComponent, InViewportDirective, HeadingDirective, TextDirective],
+  imports: [CommonModule, TranslateModule, ZxCollaboratorsSectionComponent],
   templateUrl: './zx-author-collaborators.component.html',
-  styleUrl: './zx-author-collaborators.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxAuthorCollaboratorsComponent implements OnDestroy {
@@ -27,8 +21,8 @@ export class ZxAuthorCollaboratorsComponent implements OnDestroy {
 
   people: CollaboratorPersonDto[] = [];
   groups: CollaboratorGroupDto[] = [];
-  loading = true;
-  error = false;
+  loading = false;
+  loaded = false;
   requested = false;
 
   private readonly subscriptions = new Subscription();
@@ -38,22 +32,24 @@ export class ZxAuthorCollaboratorsComponent implements OnDestroy {
     private readonly cdr: ChangeDetectorRef,
   ) {}
 
-  onInViewport(): void {
+  onLoad(): void {
     if (this.requested) {
       return;
     }
     this.requested = true;
+    this.loading = true;
     this.subscriptions.add(
       this.api.getCollaborators(this.elementId).subscribe({
         next: result => {
-          this.loading = false;
           this.people = result.people;
           this.groups = result.groups;
+          this.loading = false;
+          this.loaded = true;
           this.cdr.markForCheck();
         },
         error: () => {
           this.loading = false;
-          this.error = true;
+          this.loaded = true;
           this.cdr.markForCheck();
         },
       }),

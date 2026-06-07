@@ -1,0 +1,51 @@
+@use 'shared/breakpoints' as bp;
+
+:host {
+  display: block;
+}
+
+.collab__cols {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-16);
+
+  @include bp.media-breakpoint-down(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.collab__col-h {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: var(--space-8);
+  padding-bottom: var(--space-8);
+  border-bottom: var(--border-light);
+}
+
+.collab__count {
+  font-size: var(--font-xs);
+  color: var(--text-light-color);
+  background: var(--secondary-100);
+  border: var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 1px 6px;
+}
+
+.collab__people {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-8);
+
+  @include bp.media-breakpoint-down(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.collab__groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}

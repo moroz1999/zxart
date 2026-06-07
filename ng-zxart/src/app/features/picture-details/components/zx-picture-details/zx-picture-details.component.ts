@@ -12,6 +12,7 @@ import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.componen
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxGridComponent} from '../../../../shared/ui/zx-grid/zx-grid.component';
+import {ZxGridItemDirective} from '../../../../shared/ui/zx-grid/zx-grid-item.directive';
 import {ZxBadgeComponent} from '../../../../shared/ui/zx-badge/zx-badge.component';
 import {TagsListComponent} from '../../../../shared/lib/tags-list/tags-list.component';
 import {ZxItemControlsComponent} from '../../../../shared/ui/zx-item-controls/zx-item-controls.component';
@@ -43,6 +44,7 @@ import {RatingsListComponent} from '../../../ratings/components/ratings-list/rat
     ZxStackComponent,
     ZxInlineComponent,
     ZxGridComponent,
+    ZxGridItemDirective,
     ZxBadgeComponent,
     TagsListComponent,
     ZxItemControlsComponent,

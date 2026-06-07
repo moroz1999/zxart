@@ -23,6 +23,7 @@
     "@ngx-translate/core": "^16.0.0",
     "@ngx-translate/http-loader": "^16.0.0",
     "angular-svg-icon": "^19.1.1",
+    "audiomotion-analyzer": "^4.5.4",
     "ng-gallery": "^12.0.0",
     "ngx-extended-pdf-viewer": "^27.0.0",
     "ngx-image-zoom": "^3.0.0",

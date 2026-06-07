@@ -37,6 +37,8 @@ const INITIAL_STATE: PlayerState = {
 export class PlayerService {
   private readonly audio = new Audio();
   private readonly stateSubject = new BehaviorSubject<PlayerState>(INITIAL_STATE);
+  private audioContext: AudioContext | null = null;
+  private audioSourceNode: MediaElementAudioSourceNode | null = null;
   private readonly tabId = this.createTabId();
   private shuffleOrder: number[] = [];
   private shufflePosition = 0;
@@ -63,6 +65,7 @@ export class PlayerService {
     private analyticsService: AnalyticsService,
     private localStorage: LocalStorageService,
   ) {
+    this.audio.crossOrigin = 'anonymous';
     this.attachAudioEvents();
     this.initBroadcast();
     this.criteriaStorageService.loadCriteria().subscribe(criteria => {
@@ -80,6 +83,10 @@ export class PlayerService {
       return null;
     }
     return this.state.playlist[this.state.currentIndex] ?? null;
+  }
+
+  getAnalyzerSource(): AudioNode | null {
+    return this.ensureAudioSourceNode();
   }
 
   startPlaylist(playlistId: string, playlist: ZxTuneDto[], index: number): void {
@@ -129,6 +136,7 @@ export class PlayerService {
     if (!this.currentTune) {
       return;
     }
+    this.resumeAudioContext();
     this.audio.play().catch(() => undefined);
   }
 
@@ -260,7 +268,27 @@ export class PlayerService {
     }
     this.audio.src = tune.mp3Url;
     this.audio.currentTime = 0;
+    this.resumeAudioContext();
     this.audio.play().catch(() => undefined);
+  }
+
+  private ensureAudioSourceNode(): AudioNode | null {
+    if (this.audioSourceNode) {
+      return this.audioSourceNode;
+    }
+    if (typeof AudioContext === 'undefined') {
+      return null;
+    }
+    this.audioContext = this.audioContext ?? new AudioContext();
+    this.audioSourceNode = this.audioContext.createMediaElementSource(this.audio);
+    this.audioSourceNode.connect(this.audioContext.destination);
+    return this.audioSourceNode;
+  }
+
+  private resumeAudioContext(): void {
+    if (this.audioContext?.state === 'suspended') {
+      this.audioContext.resume().catch(() => undefined);
+    }
   }
 
   private playNextInPlaylist(): void {

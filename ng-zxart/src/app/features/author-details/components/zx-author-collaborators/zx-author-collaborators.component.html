@@ -1,52 +1,10 @@
-<zx-panel
-  *ngIf="loading"
-  [appInViewport]="!requested"
-  (inViewport)="onInViewport()"
+<zx-collaborators-section
   [title]="'author-details.collaborators.title' | translate"
-  titleLevel="h2"
-  variant="elevated">
-  <zx-row-skeleton [count]="4"></zx-row-skeleton>
-</zx-panel>
-
-<zx-panel
-  *ngIf="!loading && !error && (people.length > 0 || groups.length > 0)"
-  [title]="'author-details.collaborators.title' | translate"
-  titleLevel="h2"
-  variant="elevated">
-
-  <div class="ap-collab__cols">
-    <div class="ap-collab__col" *ngIf="people.length > 0">
-      <div class="ap-collab__col-h" appText="label" tone="muted">
-        {{ 'author-details.collaborators.people' | translate }}
-        <span class="ap-section__count">{{ people.length }}</span>
-      </div>
-      <div class="ap-collab__people">
-        <zx-author-person-card *ngFor="let p of people" [person]="p"></zx-author-person-card>
-      </div>
-    </div>
-
-    <div class="ap-collab__col" *ngIf="groups.length > 0">
-      <div class="ap-collab__col-h" appText="label" tone="muted">
-        {{ 'author-details.collaborators.groups' | translate }}
-        <span class="ap-section__count">{{ groups.length }}</span>
-      </div>
-      <div class="ap-collab__groups">
-        <a *ngFor="let g of groups" [href]="g.url" class="ap-collab__group">
-          <div class="ap-collab__group-body">
-            <div class="ap-collab__group-head">
-              <span appText="bodySm" tone="strong" [truncate]="true">{{ g.title }}</span>
-              <span *ngIf="g.years" appText="caption" tone="muted" class="ap-collab__group-years">{{ g.years }}</span>
-            </div>
-            <div *ngIf="g.membersCount > 0" appText="label" tone="muted">
-              {{ 'author-details.collaborators.members' | translate: {count: g.membersCount} }}
-            </div>
-          </div>
-          <div class="ap-collab__group-total">
-            <span appHeading="title" class="ap-collab__group-total-value">{{ g.jointProds }}</span>
-            <span appText="caption" tone="muted">{{ 'author-details.collaborators.joint' | translate }}</span>
-          </div>
-        </a>
-      </div>
-    </div>
-  </div>
-</zx-panel>
+  [peopleLabel]="'author-details.collaborators.people' | translate"
+  [groupsLabel]="'author-details.collaborators.groups' | translate"
+  [loading]="loading"
+  [loaded]="loaded"
+  [people]="people"
+  [groups]="groups"
+  (load)="onLoad()">
+</zx-collaborators-section>

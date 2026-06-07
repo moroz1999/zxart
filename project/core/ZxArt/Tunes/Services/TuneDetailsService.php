@@ -78,8 +78,8 @@ readonly class TuneDetailsService
             duration: $this->nullableString($element->time),
             container: $this->nullableString($element->container),
             tracker: $this->nullableString($element->program),
-            internalTitle: $this->nullableString($element->internalTitle),
-            internalAuthor: $this->nullableString($element->internalAuthor),
+            internalTitle: $this->decodeNullable($element->internalTitle),
+            internalAuthor: $this->decodeNullable($element->internalAuthor),
             frequency: $hasChip
                 ? $this->resolveLabel('zxmusic.frequency_' . $element->getFrequency(), (string)$element->getFrequency())
                 : null,
@@ -204,5 +204,11 @@ readonly class TuneDetailsService
     {
         $string = (string)$value;
         return $string !== '' ? $string : null;
+    }
+
+    private function decodeNullable(mixed $value): ?string
+    {
+        $string = $this->nullableString($value);
+        return $string !== null ? $this->infoBuilder->decodeText($string) : null;
     }
 }

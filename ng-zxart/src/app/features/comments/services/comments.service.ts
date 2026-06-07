@@ -49,6 +49,16 @@ export class CommentsService {
     );
   }
 
+  getGroupComments(groupId: number, page = 1, perPage = 50): Observable<CommentsListDto> {
+    return this.currentLanguageService.languageCode$.pipe(
+      take(1),
+      switchMap(languageCode => this.http.get<CommentsListDto>(
+        `/group-comments/?id=${groupId}&page=${page}&perPage=${perPage}&lang=${languageCode}`
+      )),
+      catchError(() => of({comments: [], currentPage: 1, pagesAmount: 0, totalCount: 0})),
+    );
+  }
+
   addComment(targetId: number, content: string): Observable<CommentDto> {
     const body = new HttpParams()
       .set('id', targetId.toString())

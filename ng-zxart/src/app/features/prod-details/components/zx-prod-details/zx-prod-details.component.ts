@@ -34,6 +34,8 @@ import {ZxProdMapsSectionComponent,} from '../zx-prod-maps-section/zx-prod-maps-
 import {ZxProdRzxSectionComponent,} from '../zx-prod-rzx-section/zx-prod-rzx-section.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ZxGridComponent} from '../../../../shared/ui/zx-grid/zx-grid.component';
+import {ZxGridItemDirective} from '../../../../shared/ui/zx-grid/zx-grid-item.directive';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxTabsComponent} from '../../../../shared/ui/zx-tabs/zx-tabs.component';
 import {ZxTabComponent} from '../../../../shared/ui/zx-tabs/zx-tab.component';
@@ -76,6 +78,8 @@ type ProdLinksTabId = 'articles' | 'series' | 'compilations';
     ZxProdRzxSectionComponent,
     ZxPanelComponent,
     ZxStackComponent,
+    ZxGridComponent,
+    ZxGridItemDirective,
     ZxInlineComponent,
     ZxTabsComponent,
     ZxTabComponent,

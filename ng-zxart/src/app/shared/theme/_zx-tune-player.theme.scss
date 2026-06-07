@@ -1,0 +1,20 @@
+:root {
+  /* Preferred width basis for the tune details player column. */
+  --zx-tune-player-flex-basis: 360px;
+  /* Height of the spectrum analyser stage. */
+  --zx-tune-player-stage-height: 200px;
+  /* Background of the spectrum analyser stage. */
+  --zx-tune-player-stage-bg: var(--background-deep);
+  /* Corner radius of the spectrum analyser stage. */
+  --zx-tune-player-stage-radius: var(--radius-md);
+  /* Cursor shown over the interactive spectrum analyser stage. */
+  --zx-tune-player-stage-cursor: pointer;
+  /* Height of the tune playback progress track. */
+  --zx-tune-player-progress-height: 6px;
+  /* Background of the tune playback progress track. */
+  --zx-tune-player-progress-bg: var(--background-deep);
+  /* Corner radius of the tune playback progress track. */
+  --zx-tune-player-progress-radius: var(--radius-sm);
+  /* Fill color of the tune playback progress track. */
+  --zx-tune-player-progress-fill: var(--primary-400);
+}

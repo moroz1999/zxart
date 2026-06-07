@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+
+.works-ratings__results {
+  transition: opacity var(--zx-author-ratings-loading-transition) ease;
+}
+
+.works-ratings__results--loading {
+  opacity: var(--zx-author-ratings-loading-opacity);
+  pointer-events: none;
+}

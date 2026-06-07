@@ -113,14 +113,14 @@
     </zx-panel>
 
     <!-- Votes + comments -->
-    <zx-grid [desktopColumns]="'2'" [mobileColumns]="'1'" gap="xl" align="start">
-      <zx-stack spacing="sm">
+    <zx-grid desktopColumns="5" mobileColumns="1" gap="xl" align="start">
+      <zx-stack zxGridItem zxGridDesktopSpan="2" spacing="sm">
         <zx-ratings-list-view [elementId]="details.id"></zx-ratings-list-view>
         <p *ngIf="details.denyVoting" appText="caption" tone="muted">
           {{ 'picture-details.voting-denied' | translate }}
         </p>
       </zx-stack>
-      <zx-comments-list-view [elementId]="details.id"></zx-comments-list-view>
+      <zx-comments-list-view zxGridItem zxGridDesktopSpan="3" [elementId]="details.id"></zx-comments-list-view>
     </zx-grid>
 
     <zx-picture-related-section [pictureId]="details.id"></zx-picture-related-section>

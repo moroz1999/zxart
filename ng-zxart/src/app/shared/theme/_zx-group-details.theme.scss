@@ -1,0 +1,20 @@
+:root {
+  /* Size of the group avatar placeholder. */
+  --zx-group-details-skeleton-avatar-size: calc(var(--space-64) + var(--space-32));
+  /* Radius of the group avatar placeholder. */
+  --zx-group-details-skeleton-avatar-radius: var(--radius-sm);
+  /* Width of the group title placeholder. */
+  --zx-group-details-skeleton-title-width: 40%;
+  /* Height of the group title placeholder. */
+  --zx-group-details-skeleton-title-height: var(--space-24);
+  /* Width of the group metadata placeholder. */
+  --zx-group-details-skeleton-meta-width: 55%;
+  /* Height of the group metadata placeholder. */
+  --zx-group-details-skeleton-meta-height: var(--space-16);
+  /* Width of a full group relation line placeholder. */
+  --zx-group-details-skeleton-line-width: 72%;
+  /* Width of a short group relation line placeholder. */
+  --zx-group-details-skeleton-short-line-width: 46%;
+  /* Height of a group relation line placeholder. */
+  --zx-group-details-skeleton-line-height: var(--space-16);
+}

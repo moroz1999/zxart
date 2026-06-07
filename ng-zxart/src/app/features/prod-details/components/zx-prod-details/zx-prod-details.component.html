@@ -174,10 +174,10 @@
         [label]="'prod-details.tab.discussion' | translate"
         [href]="getMainTabHref('discussion')">
         <ng-template zxTabContent>
-          <zx-stack spacing="xl">
-            <zx-comments-list-view [elementId]="core.elementId"></zx-comments-list-view>
-            <zx-ratings-list-view [elementId]="core.elementId"></zx-ratings-list-view>
-          </zx-stack>
+          <zx-grid desktopColumns="5" mobileColumns="1" gap="xl" align="start">
+            <zx-ratings-list-view zxGridItem zxGridDesktopSpan="2" [elementId]="core.elementId"></zx-ratings-list-view>
+            <zx-comments-list-view zxGridItem zxGridDesktopSpan="3" [elementId]="core.elementId"></zx-comments-list-view>
+          </zx-grid>
         </ng-template>
       </zx-tab>
     </zx-tabs>

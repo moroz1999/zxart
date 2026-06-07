@@ -1,21 +1,32 @@
 <zx-panel padding="md">
   <zx-stack spacing="md">
-    <!-- Oscilloscope / spectral analyser — stub until wired separately. -->
-    <div class="tp-stage">
-      <span appText="caption" tone="muted">{{ 'tune-details.analyser-stub' | translate }}</span>
-    </div>
+    <div
+      #analyserHost
+      class="tp-stage"
+      role="button"
+      tabindex="0"
+      [attr.aria-label]="'tune-details.switch-analyser' | translate"
+      (click)="cycleAnalyserMode()"
+      (keydown)="handleAnalyserKeydown($event)"
+    ></div>
 
-    <zx-inline align="center" spacing="md" [wrap]="true">
-      <zx-button color="primary" [disabled]="true">
-        {{ 'tune-details.listen' | translate }}
-      </zx-button>
-      <span appText="caption" tone="muted">
-        {{ tune.format }}<span *ngIf="tune.duration"> · {{ tune.duration }}</span>
-      </span>
-    </zx-inline>
+    <ng-container *ngIf="state$ | async as state">
+      <zx-inline align="center" spacing="md" [wrap]="true">
+        <zx-button
+          color="primary"
+          [disabled]="!tune.isPlayable || !tune.mp3Url"
+          (click)="togglePlayback(state)"
+        >
+          {{ (isPlaying(state) ? 'player.pause' : 'tune-details.listen') | translate }}
+        </zx-button>
+        <span appText="caption" tone="muted">
+          {{ tune.format }}<span *ngIf="tune.duration"> · {{ tune.duration }}</span>
+        </span>
+      </zx-inline>
 
-    <div class="tp-progress" aria-hidden="true">
-      <div class="tp-progress__fill"></div>
-    </div>
+      <div class="tp-progress" [style.--zx-tune-player-progress]="getProgressPercent(state)" aria-hidden="true">
+        <div class="tp-progress__fill"></div>
+      </div>
+    </ng-container>
   </zx-stack>
 </zx-panel>

@@ -46,6 +46,7 @@ import {TagsQuickFormComponent} from './features/tags-quick-form/components/tags
 import {ZxProdDetailsComponent} from './features/prod-details/components/zx-prod-details/zx-prod-details.component';
 import {ZxReleaseDetailsComponent} from './features/release-details/components/zx-release-details/zx-release-details.component';
 import {ZxAuthorDetailsComponent} from './features/author-details/components/zx-author-details/zx-author-details.component';
+import {ZxGroupDetailsComponent} from './features/group-details/components/zx-group-details/zx-group-details.component';
 import {ZxPictureDetailsComponent} from './features/picture-details/components/zx-picture-details/zx-picture-details.component';
 import {ZxTuneDetailsComponent} from './features/tune-details/components/zx-tune-details/zx-tune-details.component';
 
@@ -112,6 +113,7 @@ export class AppModule implements DoBootstrap  {
             'zx-prod-details': ZxProdDetailsComponent,
             'zx-release-details': ZxReleaseDetailsComponent,
             'zx-author-details': ZxAuthorDetailsComponent,
+            'zx-group-details': ZxGroupDetailsComponent,
             'zx-picture-details': ZxPictureDetailsComponent,
             'zx-tune-details': ZxTuneDetailsComponent,
         } as { [key: string]: Type<Object> };

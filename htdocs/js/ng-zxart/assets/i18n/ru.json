@@ -1,4 +1,117 @@
 {
+  "collaborators": {
+    "joint": "совм.",
+    "members": "{{count}} участников"
+  },
+  "group-details": {
+    "actions": "Действия группы",
+    "add-actions": "Добавить контент",
+    "action": {
+      "showPublicForm": "Редактировать",
+      "showJoinForm": "Объединить",
+      "convertToAuthor": "Сделать автором",
+      "convertToGroup": "Сделать группой",
+      "publicDelete": "Удалить",
+      "upload-prods": "Загрузить софт",
+      "delete-confirm-title": "Удаление группы",
+      "delete-confirm-message": "Вы уверены, что хотите удалить эту группу?",
+      "delete-confirm-yes": "Удалить",
+      "delete-confirm-cancel": "Отмена"
+    },
+    "tabs": {
+      "overview": "Обзор",
+      "works": "Работы",
+      "group": "Группа",
+      "connections": "Связи",
+      "media": "Медиа",
+      "discussion": "Обсуждение"
+    },
+    "nature": {
+      "developer": "Разработчик",
+      "publisher": "Издатель",
+      "cracker": "Кракерская группа"
+    },
+    "type": {
+      "company": "Компания",
+      "studio": "Студия",
+      "scene": "Демосценовая группа",
+      "store": "Магазин",
+      "education": "Образование"
+    },
+    "header": {
+      "parent-groups": "В составе",
+      "aliases": "Псевдонимы",
+      "links": "Ссылки"
+    },
+    "best": {
+      "title": "Заметные работы",
+      "view-all": "Все работы"
+    },
+    "works": {
+      "own": "Свои продукты",
+      "published": "Издано",
+      "releases": "Релизы и взломы",
+      "found": "Найдено: {{count}}",
+      "empty": "Работы не найдены"
+    },
+    "filters": {
+      "sort": "Сортировка",
+      "type": "Тип релиза"
+    },
+    "sort": {
+      "year-desc": "Сначала новые",
+      "year-asc": "Сначала старые",
+      "votes": "По рейтингу"
+    },
+    "release-type": {
+      "all": "Все типы",
+      "original": "Оригинал",
+      "rerelease": "Переиздание",
+      "adaptation": "Адаптация",
+      "localization": "Локализация",
+      "bugfix": "Исправление",
+      "mod": "Модификация",
+      "crack": "Взлом",
+      "mia": "Утеряно",
+      "corrupted": "Повреждено",
+      "compilation": "Сборник",
+      "incomplete": "Неполный",
+      "demoversion": "Демоверсия",
+      "unknown": "Неизвестный"
+    },
+    "subgroups": {
+      "title": "Подгруппы",
+      "members": "Участников: {{count}}",
+      "prods": "Работ: {{count}}"
+    },
+    "roster": {
+      "title": "Состав группы",
+      "subgroup": "Подгруппа",
+      "role": "Роль",
+      "all": "Все",
+      "empty": "Нет участников по выбранным фильтрам."
+    },
+    "roles": {
+      "coder": "Программист",
+      "graphician": "Художник",
+      "musician": "Музыкант",
+      "support": "Поддержка",
+      "cracker": "Кракер",
+      "organizer": "Организатор",
+      "hardware": "Железо",
+      "tester": "Тестер",
+      "gamedesigner": "Геймдизайнер"
+    },
+    "connections": {
+      "title": "Связи",
+      "people": "Частые соавторы",
+      "published": "Кого издавали"
+    },
+    "mentions": {
+      "title": "Упоминания в прессе",
+      "read": "Читать статью"
+    }
+  },
   "pages": {
     "previous": "Предыдущая",
     "next": "Следующая"
@@ -348,8 +461,8 @@
     "morefromauthor": "Другие картинки автора"
   },
   "tune-details": {
-    "analyser-stub": "Спектроанализатор — скоро",
     "listen": "Прослушать в браузере",
+    "switch-analyser": "Переключить режим спектроанализатора",
     "info": "Сведения",
     "year": "Год",
     "format": "Формат файла",
@@ -665,9 +778,11 @@
       "title": "С кем работал",
       "hint": "соавторы и группы, отсортированы по числу совместных работ",
       "people": "Люди",
-      "groups": "Группы",
-      "joint": "совм.",
-      "members": "{{count}} участников"
+      "groups": "Группы"
+    },
+    "mentions": {
+      "title": "Упоминания в прессе",
+      "read": "Читать статью"
     }
   },
   "author-browser": {

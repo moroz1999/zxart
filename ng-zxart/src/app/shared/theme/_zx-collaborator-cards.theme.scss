@@ -1,0 +1,30 @@
+:root {
+  /* Avatar placeholder size. */
+  --zx-collaborator-card-avatar-size: 32px;
+  /* Avatar placeholder background. */
+  --zx-collaborator-card-avatar-bg: var(--secondary-200);
+  /* Avatar placeholder icon color. */
+  --zx-collaborator-card-avatar-color: var(--secondary-500);
+  /* Avatar placeholder border radius. */
+  --zx-collaborator-card-avatar-radius: var(--radius-sm);
+  /* Avatar placeholder icon size. */
+  --zx-collaborator-card-avatar-icon-size: 18px;
+  /* Card default background. */
+  --zx-collaborator-card-bg: var(--background-deep);
+  /* Card hover background. */
+  --zx-collaborator-card-bg-hover: var(--secondary-100);
+  /* Card border radius. */
+  --zx-collaborator-card-radius: var(--radius-md);
+  /* Card default text color. */
+  --zx-collaborator-card-text-color: var(--text-color);
+  /* Stat icon size. */
+  --zx-collaborator-card-stat-icon-size: 16px;
+  /* Graphic works stat color. */
+  --zx-collaborator-card-stat-gfx-color: var(--role-artist);
+  /* Music stat color. */
+  --zx-collaborator-card-stat-music-color: var(--primary-500);
+  /* Software stat color. */
+  --zx-collaborator-card-stat-soft-color: var(--role-code);
+  /* Total value mono font family. */
+  --zx-collaborator-card-value-font: var(--font-mono);
+}

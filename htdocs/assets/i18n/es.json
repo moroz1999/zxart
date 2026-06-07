@@ -1,4 +1,117 @@
 {
+  "collaborators": {
+    "joint": "conjunta",
+    "members": "{{count}} miembros"
+  },
+  "group-details": {
+    "actions": "Acciones del grupo",
+    "add-actions": "Añadir contenido",
+    "action": {
+      "showPublicForm": "Editar",
+      "showJoinForm": "Combinar",
+      "convertToAuthor": "Convertir en autor",
+      "convertToGroup": "Convertir en grupo",
+      "publicDelete": "Eliminar",
+      "upload-prods": "Subir software",
+      "delete-confirm-title": "Eliminar grupo",
+      "delete-confirm-message": "¿Seguro que quieres eliminar este grupo?",
+      "delete-confirm-yes": "Eliminar",
+      "delete-confirm-cancel": "Cancelar"
+    },
+    "tabs": {
+      "overview": "Resumen",
+      "works": "Obras",
+      "group": "Grupo",
+      "connections": "Conexiones",
+      "media": "Medios",
+      "discussion": "Discusión"
+    },
+    "nature": {
+      "developer": "Desarrollador",
+      "publisher": "Editor",
+      "cracker": "Grupo cracker"
+    },
+    "type": {
+      "company": "Compañía",
+      "studio": "Estudio",
+      "scene": "Grupo de demoscene",
+      "store": "Tienda",
+      "education": "Educación"
+    },
+    "header": {
+      "parent-groups": "Parte de",
+      "aliases": "Alias",
+      "links": "Enlaces"
+    },
+    "best": {
+      "title": "Obras destacadas",
+      "view-all": "Todas las obras"
+    },
+    "works": {
+      "own": "Software propio",
+      "published": "Publicado",
+      "releases": "Lanzamientos y cracks",
+      "found": "{{count}} obras",
+      "empty": "No se encontraron obras"
+    },
+    "filters": {
+      "sort": "Ordenar",
+      "type": "Tipo de lanzamiento"
+    },
+    "sort": {
+      "year-desc": "Más recientes primero",
+      "year-asc": "Más antiguos primero",
+      "votes": "Por valoración"
+    },
+    "release-type": {
+      "all": "Todos los tipos",
+      "original": "Original",
+      "rerelease": "Reedición",
+      "adaptation": "Adaptación",
+      "localization": "Localización",
+      "bugfix": "Corrección",
+      "mod": "Modificación",
+      "crack": "Crack",
+      "mia": "Perdido",
+      "corrupted": "Corrupto",
+      "compilation": "Compilación",
+      "incomplete": "Incompleto",
+      "demoversion": "Versión demo",
+      "unknown": "Desconocido"
+    },
+    "subgroups": {
+      "title": "Subgrupos",
+      "members": "{{count}} miembros",
+      "prods": "{{count}} obras"
+    },
+    "roster": {
+      "title": "Miembros",
+      "subgroup": "Subgrupo",
+      "role": "Rol",
+      "all": "Todos",
+      "empty": "Ningún miembro coincide con los filtros seleccionados."
+    },
+    "roles": {
+      "coder": "Programador",
+      "graphician": "Artista",
+      "musician": "Músico",
+      "support": "Apoyo",
+      "cracker": "Cracker",
+      "organizer": "Organizador",
+      "hardware": "Hardware",
+      "tester": "Tester",
+      "gamedesigner": "Diseñador de juegos"
+    },
+    "connections": {
+      "title": "Conexiones",
+      "people": "Colaboradores frecuentes",
+      "published": "Grupos publicados"
+    },
+    "mentions": {
+      "title": "Menciones en prensa",
+      "read": "Leer artículo"
+    }
+  },
   "pages": {
     "previous": "Anterior",
     "next": "Siguiente"
@@ -347,8 +460,8 @@
     "morefromauthor": "Más de este autor"
   },
   "tune-details": {
-    "analyser-stub": "Analizador de espectro — próximamente",
     "listen": "Escuchar en el navegador",
+    "switch-analyser": "Cambiar modo del analizador de espectro",
     "info": "Información",
     "year": "Año",
     "format": "Formato de archivo",
@@ -664,9 +777,11 @@
       "title": "Trabajó con",
       "hint": "coautores y grupos, ordenados por número de obras conjuntas",
       "people": "Personas",
-      "groups": "Grupos",
-      "joint": "conjunta",
-      "members": "{{count}} miembros"
+      "groups": "Grupos"
+    },
+    "mentions": {
+      "title": "Menciones en prensa",
+      "read": "Leer artículo"
     }
   },
   "author-browser": {

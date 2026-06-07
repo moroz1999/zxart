@@ -53,6 +53,15 @@
       </zx-tab>
 
       <zx-tab
+        *ngIf="core.tabs.hasMentions"
+        [label]="'author-details.mentions.title' | translate"
+        [href]="getTabHref('mentions')">
+        <ng-template zxTabContent>
+          <zx-author-mentions [elementId]="core.id"></zx-author-mentions>
+        </ng-template>
+      </zx-tab>
+
+      <zx-tab
         [label]="'author-details.tabs.discussion' | translate"
         [href]="getTabHref('discussion')">
         <ng-template zxTabContent>

@@ -1,0 +1,40 @@
+@if (!hasLoaded()) {
+  <zx-panel [appInViewport]="!loading()" (inViewport)="onInViewport()" [title]="title">
+    <zx-text-skeleton [count]="10" lineHeight="52px"></zx-text-skeleton>
+  </zx-panel>
+} @else if (hasLoaded() && totalCount() > 0) {
+  <zx-panel [title]="title">
+    <zx-stack
+      spacing="md"
+      class="works-comments__results"
+      [class.works-comments__results--loading]="loading()">
+      @for (comment of comments(); track comment.id) {
+        <div class="works-comment">
+          @if (comment.target) {
+            <a [href]="getCommentUrl(comment)" class="works-comment__link" appText="label" tone="muted-link">
+              @if (comment.author) {
+                <zx-user [user]="comment.author" [linkDisabled]="true" [namePrimary]="true" class="works-comment__author"></zx-user>:
+              }
+              <span class="works-comment__content" [innerHTML]="sanitizeHtml(displayContent(comment))"></span>
+            </a>
+          } @else {
+            <span appText="label" tone="muted">
+              @if (comment.author) {
+                <zx-user [user]="comment.author" [linkDisabled]="true" [namePrimary]="true" class="works-comment__author"></zx-user>:
+              }
+              <span class="works-comment__content" [innerHTML]="sanitizeHtml(displayContent(comment))"></span>
+            </span>
+          }
+        </div>
+      }
+    </zx-stack>
+    @if (pagesAmount() > 1) {
+      <zx-pagination
+        [currentPage]="currentPage()"
+        [pagesAmount]="pagesAmount()"
+        [loading]="loading()"
+        (pageChange)="onPageChange($event)">
+      </zx-pagination>
+    }
+  </zx-panel>
+}

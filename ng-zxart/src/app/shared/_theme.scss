@@ -19,6 +19,7 @@
 @forward './theme/_zx-checkbox.theme.scss';
 @forward './theme/_zx-panel.theme.scss';
 @forward './theme/_zx-player.theme.scss';
+@forward './theme/_zx-tune-player.theme.scss';
 @forward './theme/_zx-radio-remote.theme.scss';
 @forward './theme/_zx-dialog.theme.scss';
 @forward './theme/_zx-spinner.theme.scss';
@@ -87,10 +88,11 @@
 @forward './theme/_zx-release-sections.theme.scss';
 @forward './theme/_zx-author-header.theme.scss';
 @forward './theme/_zx-author-mini-dashboard.theme.scss';
-@forward './theme/_zx-author-person-card.theme.scss';
+@forward './theme/_zx-collaborator-cards.theme.scss';
 @forward './theme/_zx-author-graphics-tab.theme.scss';
 @forward './theme/_zx-author-music-tab.theme.scss';
 @forward './theme/_zx-author-software-tab.theme.scss';
 @forward './theme/_zx-author-ratings.theme.scss';
 @forward './theme/_zx-author-comments.theme.scss';
 @forward './theme/_zx-author-details.theme.scss';
+@forward './theme/_zx-group-details.theme.scss';

@@ -11,10 +11,10 @@ import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.componen
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxGridComponent} from '../../../../shared/ui/zx-grid/zx-grid.component';
+import {ZxGridItemDirective} from '../../../../shared/ui/zx-grid/zx-grid-item.directive';
 import {ZxBadgeComponent} from '../../../../shared/ui/zx-badge/zx-badge.component';
 import {TagsListComponent} from '../../../../shared/lib/tags-list/tags-list.component';
 import {ZxItemControlsComponent} from '../../../../shared/ui/zx-item-controls/zx-item-controls.component';
-import {ZxItemDataItemComponent} from '../../../../shared/ui/zx-item-data/zx-item-data-item.component';
 import {ZxAddedByComponent} from '../../../../shared/ui/zx-added-by/zx-added-by.component';
 import {ZxPartyPlaceComponent} from '../../../../shared/lib/zx-party-place/zx-party-place.component';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
@@ -41,10 +41,10 @@ import {RatingsListComponent} from '../../../ratings/components/ratings-list/rat
     ZxStackComponent,
     ZxInlineComponent,
     ZxGridComponent,
+    ZxGridItemDirective,
     ZxBadgeComponent,
     TagsListComponent,
     ZxItemControlsComponent,
-    ZxItemDataItemComponent,
     ZxAddedByComponent,
     ZxPartyPlaceComponent,
     HeadingDirective,

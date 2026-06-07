@@ -1,0 +1,23 @@
+<zx-panel
+  [title]="'group-details.best.title' | translate"
+  titleLevel="h2"
+  variant="elevated">
+
+  <zx-prods-list-skeleton *ngIf="loading" [count]="4"></zx-prods-list-skeleton>
+
+  <div *ngIf="!loading && prods.length > 0" zxProdsGrid>
+    <zx-prod-block
+      *ngFor="let prod of prods"
+      [model]="prod"
+      [imagesLayout]="'loading'">
+    </zx-prod-block>
+  </div>
+
+  <zx-button
+    *ngIf="!loading && viewAllUrl"
+    size="sm"
+    color="outlined"
+    [href]="viewAllUrl">
+    {{ 'group-details.best.view-all' | translate }}
+  </zx-button>
+</zx-panel>

@@ -1,0 +1,16 @@
+<zx-stack
+  spacing="md"
+  [appInViewport]="!requested"
+  (inViewport)="onInViewport()">
+  <ng-container *ngIf="loading || (loaded && mentions.length > 0)">
+    <h2 appHeading="headline">{{ 'author-details.mentions.title' | translate }}</h2>
+
+    <zx-row-skeleton *ngIf="loading" [count]="4"></zx-row-skeleton>
+
+    <zx-press-mentions-list
+      *ngIf="loaded && mentions.length > 0"
+      [articles]="mentions"
+      [readLinkLabel]="'author-details.mentions.read' | translate">
+    </zx-press-mentions-list>
+  </ng-container>
+</zx-stack>

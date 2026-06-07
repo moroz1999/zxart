@@ -1,0 +1,561 @@
+openapi: 3.0.0
+paths:
+  /group-details/:
+    get:
+      summary: Get core data for a group or group alias details page
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Full core payload for the group details page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupCorePayload'
+        '400':
+          description: Bad request
+        '404':
+          description: Group or group alias not found
+        '500':
+          description: Internal server error
+  /group-prods/:
+    get:
+      summary: Get paged works (own prods, published prods, or releases) for a group
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: scope
+          required: true
+          schema:
+            type: string
+            enum: [own, published, releases]
+        - in: query
+          name: start
+          schema:
+            type: integer
+            default: 0
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 50
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [year, votes]
+        - in: query
+          name: sortDir
+          schema:
+            type: string
+            enum: [asc, desc]
+        - in: query
+          name: type
+          description: Release type key used to filter items in the `releases` scope; `availableTypes` remains unfiltered.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Paged works and available release types for filtering
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupProdsPage'
+        '400':
+          description: Bad request
+        '404':
+          description: Group or group alias not found
+        '500':
+          description: Internal server error
+  /group-collaborators/:
+    get:
+      summary: Get connections (frequent collaborators and published-for groups) for a group
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Collaborating people and the groups whose works this group published
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupCollaborators'
+        '400':
+          description: Bad request
+        '404':
+          description: Group or group alias not found
+        '500':
+          description: Internal server error
+  /group-activity/:
+    get:
+      summary: Get recent comments and votes on the group's works
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Recent votes and comments around the group's works
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupActivity'
+        '400':
+          description: Bad request
+        '404':
+          description: Group or group alias not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    GroupLocationItem:
+      type: object
+      required: [title, url]
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+
+    GroupLocation:
+      type: object
+      required: [city, country]
+      properties:
+        city:
+          allOf:
+            - $ref: '#/components/schemas/GroupLocationItem'
+          nullable: true
+        country:
+          allOf:
+            - $ref: '#/components/schemas/GroupLocationItem'
+          nullable: true
+
+    GroupLink:
+      type: object
+      required: [url, label]
+      properties:
+        url:
+          type: string
+        label:
+          type: string
+
+    GroupRef:
+      type: object
+      required: [id, title, url, years]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        years:
+          type: string
+          nullable: true
+
+    GroupSubgroup:
+      type: object
+      required: [id, title, abbreviation, url, membersCount, prodsCount, years]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        abbreviation:
+          type: string
+        url:
+          type: string
+        membersCount:
+          type: integer
+        prodsCount:
+          type: integer
+        years:
+          type: string
+          nullable: true
+
+    GroupMember:
+      type: object
+      required: [id, title, url, realName, roles, years, subgroups]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        realName:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+        years:
+          type: string
+          nullable: true
+        subgroups:
+          type: array
+          items:
+            type: string
+
+    PressArticleAuthor:
+      type: object
+      required: [id, title, url]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+
+    PressArticlePublication:
+      type: object
+      required: [id, title, url, year, imageUrl]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        year:
+          type: integer
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+
+    PressArticlePreview:
+      type: object
+      description: Press article preview, shared with the prod-details mentions API and rendered by zx-article-preview.
+      required: [id, title, url, introduction, authors, publication]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        introduction:
+          type: string
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/PressArticleAuthor'
+        publication:
+          oneOf:
+            - $ref: '#/components/schemas/PressArticlePublication'
+            - type: 'null'
+
+    GroupCounters:
+      type: object
+      required: [members, subgroups, prods, published, releases, mentions, comments]
+      properties:
+        members:
+          type: integer
+        subgroups:
+          type: integer
+        prods:
+          type: integer
+        published:
+          type: integer
+        releases:
+          type: integer
+        mentions:
+          type: integer
+        comments:
+          type: integer
+
+    GroupTabs:
+      type: object
+      required: [hasProds, hasPublished, hasReleases, hasMembers, hasSubgroups, hasConnections, hasMentions]
+      properties:
+        hasProds:
+          type: boolean
+        hasPublished:
+          type: boolean
+        hasReleases:
+          type: boolean
+        hasMembers:
+          type: boolean
+        hasSubgroups:
+          type: boolean
+        hasConnections:
+          type: boolean
+        hasMentions:
+          type: boolean
+
+    GroupBreadcrumb:
+      type: object
+      required: [title, url]
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+
+    GroupCorePayload:
+      type: object
+      required:
+        - id
+        - entityType
+        - title
+        - abbreviation
+        - url
+        - type
+        - slogan
+        - imageUrl
+        - years
+        - nature
+        - location
+        - links
+        - parentGroups
+        - aliases
+        - subgroups
+        - members
+        - mentions
+        - counters
+        - tabs
+        - breadcrumbs
+      properties:
+        id:
+          type: integer
+        entityType:
+          type: string
+          enum: [group, groupAlias]
+        title:
+          type: string
+        abbreviation:
+          type: string
+        url:
+          type: string
+        type:
+          type: string
+        slogan:
+          type: string
+        imageUrl:
+          type: string
+          description: Group image URL, or empty string when no image is set.
+        years:
+          type: string
+          nullable: true
+        nature:
+          type: array
+          items:
+            type: string
+            enum: [developer, publisher, cracker]
+        location:
+          $ref: '#/components/schemas/GroupLocation'
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupLink'
+        parentGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupRef'
+        aliases:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupRef'
+        subgroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupSubgroup'
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupMember'
+        mentions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PressArticlePreview'
+        counters:
+          $ref: '#/components/schemas/GroupCounters'
+        tabs:
+          $ref: '#/components/schemas/GroupTabs'
+        breadcrumbs:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupBreadcrumb'
+
+    GroupProdItem:
+      type: object
+      description: A productions or release card payload (see prod-details API for the full prod/release shape) with a `type` discriminator.
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [prod, release]
+      additionalProperties: true
+
+    GroupProdsPage:
+      type: object
+      required: [items, total, availableTypes]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupProdItem'
+        total:
+          type: integer
+        availableTypes:
+          type: array
+          description: Distinct release types among the group's releases (only populated for the `releases` scope).
+          items:
+            type: string
+
+    GroupCollaboratorPerson:
+      type: object
+      required: [id, title, url, roles, jointTotal]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+        jointTotal:
+          type: integer
+          description: Number of the group's works this person is credited on.
+
+    GroupCollaboratorGroup:
+      type: object
+      required: [id, title, url, years, jointProds]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        years:
+          type: string
+          nullable: true
+        jointProds:
+          type: integer
+
+    GroupCollaborators:
+      type: object
+      required: [people, publishedGroups]
+      properties:
+        people:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupCollaboratorPerson'
+        publishedGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupCollaboratorGroup'
+
+    CommentAuthor:
+      type: object
+      required: [name, badges]
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+          nullable: true
+        badges:
+          type: array
+          items:
+            type: string
+
+    CommentTarget:
+      type: object
+      required: [title, url, type]
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+        type:
+          type: string
+          description: Target element structure type (e.g. zxProd, zxPicture, zxMusic, zxRelease).
+        imageUrl:
+          type: string
+          nullable: true
+        authorName:
+          type: string
+          nullable: true
+
+    RecentRating:
+      type: object
+      description: A single vote, shared with the ratings API and rendered by zx-user inside a zx-table.
+      required: [user, rating, targetTitle, targetUrl]
+      properties:
+        user:
+          $ref: '#/components/schemas/CommentAuthor'
+        rating:
+          type: string
+        targetTitle:
+          type: string
+        targetUrl:
+          type: string
+
+    Comment:
+      type: object
+      description: A comment, shared with the comments API and rendered by zx-user.
+      required: [id, author, date, content, originalContent, translated, canEdit, canDelete]
+      properties:
+        id:
+          type: integer
+        author:
+          oneOf:
+            - $ref: '#/components/schemas/CommentAuthor'
+            - type: 'null'
+        date:
+          type: string
+        content:
+          type: string
+        originalContent:
+          type: string
+        translated:
+          type: string
+        canEdit:
+          type: boolean
+        canDelete:
+          type: boolean
+        target:
+          oneOf:
+            - $ref: '#/components/schemas/CommentTarget'
+            - type: 'null'
+        parentId:
+          type: integer
+          nullable: true
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+
+    GroupActivity:
+      type: object
+      required: [votes, comments]
+      properties:
+        votes:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecentRating'
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'

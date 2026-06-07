@@ -1,0 +1,33 @@
+:host {
+  display: block;
+}
+
+.group-details-skeleton__avatar {
+  width: var(--zx-group-details-skeleton-avatar-size);
+  height: var(--zx-group-details-skeleton-avatar-size);
+  border-radius: var(--zx-group-details-skeleton-avatar-radius);
+  flex-shrink: 0;
+}
+
+.group-details-skeleton__header-body {
+  flex: 1 1 auto;
+}
+
+.group-details-skeleton__title {
+  width: var(--zx-group-details-skeleton-title-width);
+  height: var(--zx-group-details-skeleton-title-height);
+}
+
+.group-details-skeleton__meta {
+  width: var(--zx-group-details-skeleton-meta-width);
+  height: var(--zx-group-details-skeleton-meta-height);
+}
+
+.group-details-skeleton__line {
+  width: var(--zx-group-details-skeleton-line-width);
+  height: var(--zx-group-details-skeleton-line-height);
+}
+
+.group-details-skeleton__line--short {
+  width: var(--zx-group-details-skeleton-short-line-width);
+}

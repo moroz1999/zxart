@@ -1,0 +1,15 @@
+<a [href]="group.url" class="collab-group-card">
+  <div class="collab-group-card__body">
+    <div class="collab-group-card__head">
+      <span appText="bodySm" tone="strong" [truncate]="true">{{ group.title }}</span>
+      <span *ngIf="group.years" appText="caption" tone="muted" class="collab-group-card__years">{{ group.years }}</span>
+    </div>
+    <div *ngIf="group.membersCount > 0" appText="label" tone="muted">
+      {{ 'collaborators.members' | translate: {count: group.membersCount} }}
+    </div>
+  </div>
+  <div class="collab-group-card__total">
+    <span appHeading="title" class="collab-group-card__total-value">{{ group.jointProds }}</span>
+    <span appText="caption" tone="muted">{{ 'collaborators.joint' | translate }}</span>
+  </div>
+</a>

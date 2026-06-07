@@ -1,0 +1,15 @@
+<zx-editing-controls
+  [elementId]="elementId"
+  [actions]="editActions"
+  [buildActionUrl]="buildActionUrl"
+  presentation="popover"
+  [popoverAriaLabel]="'group-details.actions' | translate"
+></zx-editing-controls>
+<zx-editing-controls
+  [elementId]="elementId"
+  [actions]="addActions"
+  [buildActionUrl]="buildActionUrl"
+  presentation="popover"
+  triggerIcon="plus"
+  [popoverAriaLabel]="'group-details.add-actions' | translate"
+></zx-editing-controls>

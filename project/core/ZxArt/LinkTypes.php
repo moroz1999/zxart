@@ -12,6 +12,9 @@ enum LinkTypes: string
     case PRESS_PEOPLE = 'pressPeople';
     case PRESS_GROUPS = 'pressGroups';
     case GROUP_SUBGROUP = 'groupSub';
+    case ZX_PROD_GROUPS = 'zxProdGroups';
+    case ZX_PROD_PUBLISHERS = 'zxProdPublishers';
+    case ZX_RELEASE_PUBLISHERS = 'zxReleasePublishers';
     case PRESS_SOFTWARE = 'pressSoftware';
     case PRESS_PARTIES = 'pressParties';
     case PRESS_TUNES = 'pressTunes';

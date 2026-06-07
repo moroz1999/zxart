@@ -1,0 +1,50 @@
+:host {
+  display: block;
+}
+
+.collab-group-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-8);
+  border-radius: var(--zx-collaborator-card-radius);
+  text-decoration: none;
+  color: var(--zx-collaborator-card-text-color);
+  background: var(--zx-collaborator-card-bg);
+  transition: background-color var(--animation-xs);
+}
+
+.collab-group-card:hover {
+  background: var(--zx-collaborator-card-bg-hover);
+}
+
+.collab-group-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.collab-group-card__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.collab-group-card__years {
+  font-family: var(--font-mono);
+}
+
+.collab-group-card__total {
+  text-align: right;
+  min-width: var(--space-32);
+  display: flex;
+  flex-direction: column;
+}
+
+.collab-group-card__total-value {
+  font-family: var(--zx-collaborator-card-value-font);
+  color: var(--zx-collaborator-card-text-color);
+}

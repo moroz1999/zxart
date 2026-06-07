@@ -44,12 +44,14 @@
         <!-- Embedded module metadata parsed from the file -->
         <zx-stack *ngIf="details.internalTitle || details.internalAuthor" spacing="xs">
           <span appText="caption" tone="muted">{{ 'tune-details.in-module' | translate }}</span>
-          <zx-item-data-item *ngIf="details.internalTitle" [label]="'tune-details.internal-title' | translate">
-            {{ details.internalTitle }}
-          </zx-item-data-item>
-          <zx-item-data-item *ngIf="details.internalAuthor" [label]="'tune-details.internal-author' | translate">
-            {{ details.internalAuthor }}
-          </zx-item-data-item>
+          <zx-inline *ngIf="details.internalTitle" spacing="xs" align="baseline" [wrap]="true">
+            <span appText="caption" tone="muted">{{ 'tune-details.internal-title' | translate }}:</span>
+            <span appText="caption">{{ details.internalTitle }}</span>
+          </zx-inline>
+          <zx-inline *ngIf="details.internalAuthor" spacing="xs" align="baseline" [wrap]="true">
+            <span appText="caption" tone="muted">{{ 'tune-details.internal-author' | translate }}:</span>
+            <span appText="caption">{{ details.internalAuthor }}</span>
+          </zx-inline>
         </zx-stack>
 
         <zx-inline align="center" spacing="md" [wrap]="true">
@@ -95,14 +97,14 @@
     </zx-grid>
 
     <!-- Votes + comments -->
-    <zx-grid [desktopColumns]="'2'" [mobileColumns]="'1'" gap="xl" align="start">
-      <zx-stack spacing="sm">
+    <zx-grid desktopColumns="5" mobileColumns="1" gap="xl" align="start">
+      <zx-stack zxGridItem zxGridDesktopSpan="2" spacing="sm">
         <zx-ratings-list-view [elementId]="details.id"></zx-ratings-list-view>
         <p *ngIf="details.denyVoting" appText="caption" tone="muted">
           {{ 'tune-details.voting-denied' | translate }}
         </p>
       </zx-stack>
-      <zx-comments-list-view [elementId]="details.id"></zx-comments-list-view>
+      <zx-comments-list-view zxGridItem zxGridDesktopSpan="3" [elementId]="details.id"></zx-comments-list-view>
     </zx-grid>
 
     <zx-tune-related-section [tuneId]="details.id"></zx-tune-related-section>

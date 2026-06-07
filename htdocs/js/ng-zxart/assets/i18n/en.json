@@ -1,4 +1,117 @@
 {
+  "collaborators": {
+    "joint": "joint",
+    "members": "{{count}} members"
+  },
+  "group-details": {
+    "actions": "Group actions",
+    "add-actions": "Add content",
+    "action": {
+      "showPublicForm": "Edit",
+      "showJoinForm": "Merge",
+      "convertToAuthor": "Convert to author",
+      "convertToGroup": "Convert to group",
+      "publicDelete": "Delete",
+      "upload-prods": "Upload software",
+      "delete-confirm-title": "Delete group",
+      "delete-confirm-message": "Are you sure you want to delete this group?",
+      "delete-confirm-yes": "Delete",
+      "delete-confirm-cancel": "Cancel"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "works": "Works",
+      "group": "Group",
+      "connections": "Connections",
+      "media": "Media",
+      "discussion": "Discussion"
+    },
+    "nature": {
+      "developer": "Developer",
+      "publisher": "Publisher",
+      "cracker": "Cracker group"
+    },
+    "type": {
+      "company": "Company",
+      "studio": "Studio",
+      "scene": "Demoscene group",
+      "store": "Store",
+      "education": "Education"
+    },
+    "header": {
+      "parent-groups": "Part of",
+      "aliases": "Aliases",
+      "links": "Links"
+    },
+    "best": {
+      "title": "Notable works",
+      "view-all": "All works"
+    },
+    "works": {
+      "own": "Own software",
+      "published": "Published",
+      "releases": "Releases & cracks",
+      "found": "{{count}} works",
+      "empty": "No works found"
+    },
+    "filters": {
+      "sort": "Sort",
+      "type": "Release type"
+    },
+    "sort": {
+      "year-desc": "Newest first",
+      "year-asc": "Oldest first",
+      "votes": "By rating"
+    },
+    "release-type": {
+      "all": "All types",
+      "original": "Original",
+      "rerelease": "Re-release",
+      "adaptation": "Adaptation",
+      "localization": "Localization",
+      "bugfix": "Bugfix",
+      "mod": "Modification",
+      "crack": "Crack",
+      "mia": "MIA",
+      "corrupted": "Corrupted",
+      "compilation": "Compilation",
+      "incomplete": "Incomplete",
+      "demoversion": "Demo version",
+      "unknown": "Unknown"
+    },
+    "subgroups": {
+      "title": "Subgroups",
+      "members": "{{count}} members",
+      "prods": "{{count}} works"
+    },
+    "roster": {
+      "title": "Members",
+      "subgroup": "Subgroup",
+      "role": "Role",
+      "all": "All",
+      "empty": "No members match the selected filters."
+    },
+    "roles": {
+      "coder": "Coder",
+      "graphician": "Artist",
+      "musician": "Musician",
+      "support": "Support",
+      "cracker": "Cracker",
+      "organizer": "Organizer",
+      "hardware": "Hardware",
+      "tester": "Tester",
+      "gamedesigner": "Game designer"
+    },
+    "connections": {
+      "title": "Connections",
+      "people": "Frequent collaborators",
+      "published": "Published groups"
+    },
+    "mentions": {
+      "title": "Press mentions",
+      "read": "Read article"
+    }
+  },
   "pages": {
     "previous": "Previous",
     "next": "Next"
@@ -348,8 +461,8 @@
     "morefromauthor": "More from this author"
   },
   "tune-details": {
-    "analyser-stub": "Spectrum analyser — coming soon",
     "listen": "Listen in browser",
+    "switch-analyser": "Switch spectrum analyser mode",
     "info": "Information",
     "year": "Year",
     "format": "File format",
@@ -665,9 +778,11 @@
       "title": "Worked with",
       "hint": "co-authors and groups, sorted by number of joint works",
       "people": "People",
-      "groups": "Groups",
-      "joint": "joint",
-      "members": "{{count}} members"
+      "groups": "Groups"
+    },
+    "mentions": {
+      "title": "Press mentions",
+      "read": "Read article"
     }
   },
   "author-browser": {

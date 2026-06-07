@@ -27,4 +27,16 @@ enum ReleaseTypes: string
     {
         return array_map(static fn(self $case) => $case->value, self::cases());
     }
+
+    /**
+     * Release types that must not appear in a group's "releases & cracks" listing:
+     * an "original" release is the prod's own first release and a "demoversion" is a
+     * demo, neither is a group re-release or crack.
+     *
+     * @return string[]
+     */
+    public static function getGroupExcludedValues(): array
+    {
+        return [self::original->value, self::demoversion->value];
+    }
 }
