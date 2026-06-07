@@ -96,6 +96,7 @@ Authors can be members of groups:
 - One author can be member of multiple groups
 - Membership can change over time
 - Group can have multiple members
+- Group connections exclude group members and their author aliases from collaborator people.
 
 #### Authorship Through Group
 When work is created by group:

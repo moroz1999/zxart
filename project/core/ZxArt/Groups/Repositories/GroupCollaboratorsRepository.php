@@ -33,12 +33,12 @@ readonly final class GroupCollaboratorsRepository extends AbstractRepository
     }
 
     /**
-     * Author IDs that are members of the group (authorship type=group).
+     * Author and author alias IDs that belong to members of the group (authorship type=group).
      *
      * @param int[] $groupIds
      * @return int[]
      */
-    public function getMemberAuthorIds(array $groupIds): array
+    public function getMemberAuthorAndAliasIds(array $groupIds): array
     {
         /** @var int[] $authorIds */
         $authorIds = $this->db->table($this->tableName(DatabaseTable::Authorship))
@@ -47,7 +47,16 @@ readonly final class GroupCollaboratorsRepository extends AbstractRepository
             ->distinct()
             ->pluck('authorId');
 
-        return $authorIds;
+        if ($authorIds === []) {
+            return [];
+        }
+
+        /** @var int[] $aliasIds */
+        $aliasIds = $this->db->table($this->tableName(DatabaseTable::AuthorAlias))
+            ->whereIn('authorId', $authorIds)
+            ->pluck('id');
+
+        return $this->uniqueIntIds([...$authorIds, ...$aliasIds]);
     }
 
     /**
@@ -103,7 +112,7 @@ readonly final class GroupCollaboratorsRepository extends AbstractRepository
         $result = array_map(
             static fn(array $row): array => [
                 'authorId' => $row['authorId'],
-                'roles' => array_values(array_keys($row['roles'])),
+                'roles' => array_keys($row['roles']),
                 'jointTotal' => $row['jointTotal'],
             ],
             array_values($stats),
@@ -129,7 +138,7 @@ readonly final class GroupCollaboratorsRepository extends AbstractRepository
         $linksTable = $this->tableName(DatabaseTable::StructureLinks);
         $prodTable = $this->tableName(DatabaseTable::ZxProd);
 
-        /** @var list<array{groupId: int, workId: int, year: int|null}> $rows */
+        /** @var list<array{groupId: int|string, workId: int|string, year: int|string|null}> $rows */
         $rows = $this->db->table($linksTable)
             ->join($prodTable, "$prodTable.id", '=', "$linksTable.childStructureId")
             ->whereIn("$linksTable.childStructureId", $publishedProdIds)
@@ -187,7 +196,7 @@ readonly final class GroupCollaboratorsRepository extends AbstractRepository
             $query->whereNotIn('authorId', $excludeAuthorIds);
         }
 
-        /** @var list<array{authorId: int, roles: string}> $rows */
+        /** @var list<array{authorId: int|string, roles: string}> $rows */
         $rows = $query->get();
         foreach ($rows as $row) {
             $authorId = (int)$row['authorId'];
@@ -214,5 +223,20 @@ readonly final class GroupCollaboratorsRepository extends AbstractRepository
         $roles = array_filter($decodedRoles, static fn(mixed $role): bool => is_string($role) && $role !== 'unknown');
 
         return array_values($roles);
+    }
+
+    /**
+     * @param array<int|string> $ids
+     * @return int[]
+     */
+    private function uniqueIntIds(array $ids): array
+    {
+        $uniqueIds = [];
+        foreach ($ids as $id) {
+            $intId = (int)$id;
+            $uniqueIds[$intId] = $intId;
+        }
+
+        return array_values($uniqueIds);
     }
 }

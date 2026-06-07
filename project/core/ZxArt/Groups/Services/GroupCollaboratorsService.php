@@ -34,7 +34,7 @@ readonly final class GroupCollaboratorsService
         }
 
         $groupIds = $this->collaboratorsRepository->getGroupAndAliasIds($groupId);
-        $memberIds = $this->collaboratorsRepository->getMemberAuthorIds($groupIds);
+        $memberIds = $this->collaboratorsRepository->getMemberAuthorAndAliasIds($groupIds);
         $ownProdIds = $this->collaboratorsRepository->getLinkedChildIds($groupIds, LinkTypes::ZX_PROD_GROUPS);
         $publishedProdIds = $this->collaboratorsRepository->getLinkedChildIds($groupIds, LinkTypes::ZX_PROD_PUBLISHERS);
         $publishedReleaseIds = $this->collaboratorsRepository->getLinkedChildIds($groupIds, LinkTypes::ZX_RELEASE_PUBLISHERS);
@@ -64,8 +64,8 @@ readonly final class GroupCollaboratorsService
                 continue;
             }
             $people[] = new GroupCollaboratorPersonDto(
-                id: (int)$element->getId(),
-                title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
+                id: $element->getId(),
+                title: html_entity_decode($element->getTitle(), ENT_QUOTES),
                 url: (string)$element->getUrl(),
                 roles: $row['roles'],
                 jointTotal: $row['jointTotal'],
@@ -87,11 +87,11 @@ readonly final class GroupCollaboratorsService
                 continue;
             }
             $groups[] = new GroupCollaboratorGroupDto(
-                id: (int)$element->getId(),
+                id: $element->getId(),
                 title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
                 url: (string)$element->getUrl(),
                 years: $this->formatYears($row['years']),
-                membersCount: $this->collaboratorsRepository->countMembers((int)$element->getId()),
+                membersCount: $this->collaboratorsRepository->countMembers($element->getId()),
                 jointProds: $row['jointProds'],
             );
         }
