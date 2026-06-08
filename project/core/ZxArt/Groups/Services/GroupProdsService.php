@@ -7,6 +7,7 @@ namespace ZxArt\Groups\Services;
 use groupAliasElement;
 use groupElement;
 use structureManager;
+use zxProdCategoryElement;
 use zxProdElement;
 use zxReleaseElement;
 use ZxArt\Groups\GroupProdsScope;
@@ -45,7 +46,8 @@ readonly class GroupProdsService
             throw new ProdDetailsException('Group or alias not found', 404);
         }
 
-        $page = $this->groupProdsRepository->findPaged($groupId, $scope, $start, $limit, $sort, $sortDir, $type, $categoryId);
+        $categoryIds = $this->buildCategoryTreeIds($categoryId);
+        $page = $this->groupProdsRepository->findPaged($groupId, $scope, $start, $limit, $sort, $sortDir, $type, $categoryIds);
         $availableTypes = $scope->isReleases()
             ? $this->groupProdsRepository->findAvailableReleaseTypes($groupId)
             : [];
@@ -100,5 +102,31 @@ readonly class GroupProdsService
         );
 
         return $categories;
+    }
+
+    /**
+     * @return int[]
+     */
+    private function buildCategoryTreeIds(int $categoryId): array
+    {
+        if ($categoryId <= 0) {
+            return [];
+        }
+
+        $category = $this->structureManager->getElementById($categoryId);
+        if (!($category instanceof zxProdCategoryElement)) {
+            return [$categoryId];
+        }
+
+        $rawCategoryIds = [];
+        $category->getSubCategoriesTreeIds($rawCategoryIds);
+
+        /** @var array<int|string> $rawCategoryIds */
+        $categoryIds = [];
+        foreach ($rawCategoryIds as $treeCategoryId) {
+            $categoryIds[] = (int)$treeCategoryId;
+        }
+
+        return $categoryIds;
     }
 }

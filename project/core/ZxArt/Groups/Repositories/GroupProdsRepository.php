@@ -20,6 +20,7 @@ readonly final class GroupProdsRepository extends AbstractRepository
 
     /**
      * @return array{items: list<array{id: int, type: 'prod'|'release'}>, total: int}
+     * @param int[] $categoryIds
      */
     public function findPaged(
         int $groupId,
@@ -29,17 +30,17 @@ readonly final class GroupProdsRepository extends AbstractRepository
         string $sort,
         string $sortDir,
         string $type,
-        int $categoryId,
+        array $categoryIds,
     ): array {
         $groupIds = $this->getGroupAndAliasIds($groupId);
         if ($scope === GroupProdsScope::Published) {
-            return $this->findPublishedPaged($groupIds, $start, $limit, $sort, $sortDir, $categoryId);
+            return $this->findPublishedPaged($groupIds, $start, $limit, $sort, $sortDir, $categoryIds);
         }
 
-        $total = $this->countByGroupIds($groupIds, $scope, $type, $categoryId);
+        $total = $this->countByGroupIds($groupIds, $scope, $type, $categoryIds);
 
         /** @var list<array{id: int|string}> $rows */
-        $rows = $this->applySort($this->buildItemsQuery($groupIds, $scope, $type, $categoryId), $sort, $sortDir)
+        $rows = $this->applySort($this->buildItemsQuery($groupIds, $scope, $type, $categoryIds), $sort, $sortDir)
             ->offset($start)
             ->limit($limit)
             ->get();
@@ -52,9 +53,9 @@ readonly final class GroupProdsRepository extends AbstractRepository
         return ['items' => $items, 'total' => $total];
     }
 
-    public function count(int $groupId, GroupProdsScope $scope, string $type = '', int $categoryId = 0): int
+    public function count(int $groupId, GroupProdsScope $scope, string $type = ''): int
     {
-        return $this->countByGroupIds($this->getGroupAndAliasIds($groupId), $scope, $type, $categoryId);
+        return $this->countByGroupIds($this->getGroupAndAliasIds($groupId), $scope, $type, []);
     }
 
     /**
@@ -107,8 +108,9 @@ readonly final class GroupProdsRepository extends AbstractRepository
 
     /**
      * @param int[] $groupIds
+     * @param int[] $categoryIds
      */
-    private function buildItemsQuery(array $groupIds, GroupProdsScope $scope, string $type, int $categoryId): Builder
+    private function buildItemsQuery(array $groupIds, GroupProdsScope $scope, string $type, array $categoryIds): Builder
     {
         $itemTable = $this->tableName($this->itemTable($scope));
         $linksTable = $this->tableName(DatabaseTable::StructureLinks);
@@ -129,8 +131,8 @@ readonly final class GroupProdsRepository extends AbstractRepository
 
         if ($scope->isReleases()) {
             $this->applyReleaseFilters($query, $itemTable, $linksTable, $groupIds, $type);
-        } elseif ($categoryId > 0) {
-            $this->applyProdCategoryFilter($query, "$itemTable.id", $categoryId);
+        } elseif ($categoryIds !== []) {
+            $this->applyProdCategoryFilter($query, "$itemTable.id", $categoryIds);
         }
 
         return $query;
@@ -138,20 +140,22 @@ readonly final class GroupProdsRepository extends AbstractRepository
 
     /**
      * @param int[] $groupIds
+     * @param int[] $categoryIds
      */
-    private function countByGroupIds(array $groupIds, GroupProdsScope $scope, string $type, int $categoryId): int
+    private function countByGroupIds(array $groupIds, GroupProdsScope $scope, string $type, array $categoryIds): int
     {
         if ($scope === GroupProdsScope::Published) {
-            return count($this->getPublishedRows($groupIds, $categoryId));
+            return count($this->getPublishedRows($groupIds, $categoryIds));
         }
 
         /** @var int */
-        return $this->buildItemsQuery($groupIds, $scope, $type, $categoryId)
+        return $this->buildItemsQuery($groupIds, $scope, $type, $categoryIds)
             ->count($this->tableColumn($this->itemTable($scope), 'id'));
     }
 
     /**
      * @param int[] $groupIds
+     * @param int[] $categoryIds
      * @return array{items: list<array{id: int, type: 'prod'|'release'}>, total: int}
      */
     private function findPublishedPaged(
@@ -160,9 +164,9 @@ readonly final class GroupProdsRepository extends AbstractRepository
         int $limit,
         string $sort,
         string $sortDir,
-        int $categoryId,
+        array $categoryIds,
     ): array {
-        $rows = $this->getPublishedRows($groupIds, $categoryId);
+        $rows = $this->getPublishedRows($groupIds, $categoryIds);
         $this->sortRows($rows, $sort, $sortDir);
 
         $items = array_map(
@@ -175,21 +179,23 @@ readonly final class GroupProdsRepository extends AbstractRepository
 
     /**
      * @param int[] $groupIds
+     * @param int[] $categoryIds
      * @return list<array{id: int, type: 'prod'|'release', votes: float, year: int, dateCreated: int}>
      */
-    private function getPublishedRows(array $groupIds, int $categoryId): array
+    private function getPublishedRows(array $groupIds, array $categoryIds): array
     {
         return [
-            ...$this->getPublishedProdRows($groupIds, $categoryId),
-            ...$this->getPublishedReleaseRows($groupIds, $categoryId),
+            ...$this->getPublishedProdRows($groupIds, $categoryIds),
+            ...$this->getPublishedReleaseRows($groupIds, $categoryIds),
         ];
     }
 
     /**
      * @param int[] $groupIds
+     * @param int[] $categoryIds
      * @return list<array{id: int, type: 'prod', votes: float, year: int, dateCreated: int}>
      */
-    private function getPublishedProdRows(array $groupIds, int $categoryId): array
+    private function getPublishedProdRows(array $groupIds, array $categoryIds): array
     {
         $prodTable = $this->tableName(DatabaseTable::ZxProd);
         $linksTable = $this->tableName(DatabaseTable::StructureLinks);
@@ -208,8 +214,8 @@ readonly final class GroupProdsRepository extends AbstractRepository
                 "$structureElementsTable.dateCreated",
             ])
             ->distinct();
-        if ($categoryId > 0) {
-            $this->applyProdCategoryFilter($query, "$prodTable.id", $categoryId);
+        if ($categoryIds !== []) {
+            $this->applyProdCategoryFilter($query, "$prodTable.id", $categoryIds);
         }
 
         /** @var list<array{id: int|string, votes: float|string|null, year: int|string|null, dateCreated: int|string|null}> $rows */
@@ -229,9 +235,10 @@ readonly final class GroupProdsRepository extends AbstractRepository
 
     /**
      * @param int[] $groupIds
+     * @param int[] $categoryIds
      * @return list<array{id: int, type: 'release', votes: float, year: int, dateCreated: int}>
      */
-    private function getPublishedReleaseRows(array $groupIds, int $categoryId): array
+    private function getPublishedReleaseRows(array $groupIds, array $categoryIds): array
     {
         $releaseTable = $this->tableName(DatabaseTable::ZxRelease);
         $linksTable = $this->tableName(DatabaseTable::StructureLinks);
@@ -251,8 +258,8 @@ readonly final class GroupProdsRepository extends AbstractRepository
                 "$structureElementsTable.dateCreated",
             ])
             ->distinct();
-        if ($categoryId > 0) {
-            $this->applyReleaseParentCategoryFilter($query, "$releaseTable.id", $categoryId);
+        if ($categoryIds !== []) {
+            $this->applyReleaseParentCategoryFilter($query, "$releaseTable.id", $categoryIds);
         }
 
         /** @var list<array{id: int|string, votes: float|string|null, year: int|string|null, dateCreated: int|string|null}> $rows */
@@ -375,22 +382,28 @@ readonly final class GroupProdsRepository extends AbstractRepository
         return $this->uniqueIntIds($ids);
     }
 
-    private function applyProdCategoryFilter(Builder $query, string $prodIdColumn, int $categoryId): void
+    /**
+     * @param int[] $categoryIds
+     */
+    private function applyProdCategoryFilter(Builder $query, string $prodIdColumn, array $categoryIds): void
     {
         $linksTable = $this->tableName(DatabaseTable::StructureLinks);
         $query->whereIn(
             $prodIdColumn,
-            static function (Builder $categoryQuery) use ($linksTable, $categoryId): void {
+            static function (Builder $categoryQuery) use ($linksTable, $categoryIds): void {
                 $categoryQuery
                     ->select('childStructureId')
                     ->from($linksTable)
                     ->where('type', '=', LinkTypes::ZX_PROD_CATEGORY->value)
-                    ->where('parentStructureId', '=', $categoryId);
+                    ->whereIn('parentStructureId', $categoryIds);
             },
         );
     }
 
-    private function applyReleaseParentCategoryFilter(Builder $query, string $releaseIdColumn, int $categoryId): void
+    /**
+     * @param int[] $categoryIds
+     */
+    private function applyReleaseParentCategoryFilter(Builder $query, string $releaseIdColumn, array $categoryIds): void
     {
         $linksTable = $this->tableName(DatabaseTable::StructureLinks);
         $releaseParentLinksAlias = 'release_parent_links';
@@ -402,7 +415,7 @@ readonly final class GroupProdsRepository extends AbstractRepository
                 $linksTable,
                 $releaseParentLinksAlias,
                 $categoryLinksAlias,
-                $categoryId,
+                $categoryIds,
             ): void {
                 $categoryQuery
                     ->select("$releaseParentLinksAlias.childStructureId")
@@ -415,7 +428,7 @@ readonly final class GroupProdsRepository extends AbstractRepository
                     )
                     ->where("$releaseParentLinksAlias.type", '=', LinkTypes::STRUCTURE->value)
                     ->where("$categoryLinksAlias.type", '=', LinkTypes::ZX_PROD_CATEGORY->value)
-                    ->where("$categoryLinksAlias.parentStructureId", '=', $categoryId);
+                    ->whereIn("$categoryLinksAlias.parentStructureId", $categoryIds);
             },
         );
     }

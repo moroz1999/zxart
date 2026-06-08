@@ -74,7 +74,7 @@ Group of authors - team, company, demoscene group. Unites authors for collaborat
   - Group release lists exclude releases whose parent prod is already linked to the same group as developer or publisher
   - Group release lists show only hacker-release/crack-like release types: adaptation, localization, bugfix, mod, and crack
   - Non-hacker release publisher links are shown in the group's Published tab
-- Group own works and Published lists expose filters by linked production categories. Published release rows use their parent production categories for this filter.
+- Group own works and Published lists expose filters by linked production categories. Selecting a category includes productions from its full subcategory tree. Published release rows use their parent production categories for this filter.
 
 #### Difference Between Group and Publisher
 - **groups** (zxProdGroups) - creators, developers
