@@ -25,4 +25,5 @@ export interface ZxPictureDto {
   readonly userVote: number | null;
   readonly denyVoting: boolean;
   readonly commentsAmount: number;
+  readonly views: number;
 }

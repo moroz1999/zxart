@@ -1,0 +1,86 @@
+<ng-container *ngIf="core$ | async as core; else headerLoading">
+  <zx-stack spacing="xl">
+    <zx-breadcrumbs
+      [categories]="core.breadcrumbs"
+      [currentTitle]="core.title">
+    </zx-breadcrumbs>
+
+    <zx-button-controls *ngIf="core.editions.length > 1" [wrap]="true" gap="sm">
+      <zx-button
+        *ngFor="let edition of core.editions"
+        size="sm"
+        [color]="edition.current ? 'secondary' : 'outlined'"
+        [href]="edition.url">
+        {{ edition.year }}
+      </zx-button>
+    </zx-button-controls>
+
+    <zx-party-header [core]="core"></zx-party-header>
+
+    <zx-tabs [initialActiveIndex]="getInitialTabIndex(core)" (tabChange)="onTabChange($event)">
+      <zx-tab
+        *ngIf="core.tabs.hasOverview"
+        [label]="'party-details.tabs.overview' | translate"
+        [href]="getTabHref('overview')">
+        <ng-template zxTabContent>
+          <zx-party-overview [core]="core"></zx-party-overview>
+        </ng-template>
+      </zx-tab>
+
+      <zx-tab
+        *ngFor="let compo of core.compos"
+        [label]="compo.name"
+        [count]="compo.count"
+        [href]="getTabHref(compo.compoType)">
+        <ng-template zxTabContent>
+          <zx-party-compo [core]="core" [compo]="compo"></zx-party-compo>
+        </ng-template>
+      </zx-tab>
+
+      <zx-tab
+        *ngIf="core.tabs.hasActivity"
+        [label]="'party-details.tabs.activity' | translate"
+        [href]="getTabHref('activity')">
+        <ng-template zxTabContent>
+          <zx-stack spacing="xl">
+            <zx-grid desktopColumns="5" mobileColumns="1" gap="xl" align="start">
+              <zx-party-ratings zxGridItem zxGridDesktopSpan="2" [elementId]="core.id"></zx-party-ratings>
+              <zx-party-comments zxGridItem zxGridDesktopSpan="3" [elementId]="core.id"></zx-party-comments>
+            </zx-grid>
+            <zx-comments-list-view [elementId]="core.id"></zx-comments-list-view>
+          </zx-stack>
+        </ng-template>
+      </zx-tab>
+    </zx-tabs>
+  </zx-stack>
+</ng-container>
+
+<ng-template #headerLoading>
+  <zx-stack spacing="xl">
+    <zx-breadcrumbs [loading]="true"></zx-breadcrumbs>
+
+    <div class="party-details-skeleton__hero">
+      <zx-skeleton-bone class="party-details-skeleton__logo"></zx-skeleton-bone>
+      <zx-stack spacing="sm" class="party-details-skeleton__header-body">
+        <zx-skeleton-bone class="party-details-skeleton__title"></zx-skeleton-bone>
+        <zx-skeleton-bone class="party-details-skeleton__meta"></zx-skeleton-bone>
+        <zx-skeleton-bone class="party-details-skeleton__line"></zx-skeleton-bone>
+        <zx-skeleton-bone class="party-details-skeleton__button"></zx-skeleton-bone>
+      </zx-stack>
+    </div>
+
+    <zx-stack spacing="lg">
+      <zx-inline gap="sm" class="party-details-skeleton__tabs">
+        <zx-skeleton-bone
+          *ngFor="let tab of skeletonTabs; index as i"
+          class="party-details-skeleton__tab"
+          [style.animation-delay.ms]="i * 80">
+        </zx-skeleton-bone>
+      </zx-inline>
+
+      <zx-panel variant="elevated">
+        <zx-prods-list-skeleton [count]="4"></zx-prods-list-skeleton>
+      </zx-panel>
+    </zx-stack>
+  </zx-stack>
+</ng-template>

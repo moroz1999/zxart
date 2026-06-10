@@ -1,0 +1,131 @@
+@use 'shared/breakpoints' as bp;
+
+:host {
+  display: block;
+}
+
+.pp-header {
+  display: grid;
+  grid-template-columns: 195px 1fr;
+  gap: 24px;
+  background: var(--surface);
+  border: var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+
+  @include bp.media-breakpoint-down(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pp-header__logo-img {
+  width: 195px;
+  height: 144px;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  background: var(--secondary-100);
+  display: block;
+
+  @include bp.media-breakpoint-down(md) {
+    width: 100%;
+  }
+}
+
+.pp-header__body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pp-header__title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pp-header__name {
+  margin: 0;
+}
+
+.pp-header__bio {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  font-size: var(--font-sm);
+  color: var(--text-light-color);
+}
+
+.pp-bio__abbr {
+  color: var(--text-color);
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.pp-bio__sep {
+  color: var(--secondary-400);
+}
+
+.pp-bio__loc {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  svg-icon {
+    width: 12px;
+    height: 12px;
+  }
+
+  a {
+    color: var(--link-color);
+    text-decoration: none;
+
+    &:hover { text-decoration: underline; }
+  }
+}
+
+.pp-header__bio code {
+  font-family: var(--font-mono);
+  background: var(--secondary-100);
+  border: var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 0 4px;
+  font-size: var(--font-xs);
+  color: var(--text-color);
+}
+
+.pp-header__stats {
+  margin: 0;
+  color: var(--text-color);
+}
+
+.pp-header__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.pp-ext-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+
+  a {
+    color: var(--link-color);
+    text-decoration: none;
+    font-size: var(--font-sm);
+
+    &:hover { text-decoration: underline; }
+  }
+}
+
+.pp-header__foot svg-icon {
+  width: 14px;
+  height: 14px;
+}

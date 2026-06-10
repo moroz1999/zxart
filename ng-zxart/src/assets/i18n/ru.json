@@ -1,4 +1,46 @@
 {
+  "party-details": {
+    "actions": "Действия с пати",
+    "add-actions": "Добавить работы",
+    "action": {
+      "showPublicForm": "Редактировать",
+      "publicDelete": "Удалить",
+      "upload-pictures": "Загрузить графику",
+      "upload-music": "Загрузить музыку",
+      "upload-prods": "Загрузить софт",
+      "delete-confirm-title": "Удалить пати",
+      "delete-confirm-message": "Вы уверены, что хотите удалить эту пати?",
+      "delete-confirm-yes": "Удалить",
+      "delete-confirm-cancel": "Отмена"
+    },
+    "tabs": {
+      "overview": "Обзор",
+      "compos": "Конкурсы",
+      "activity": "Активность"
+    },
+    "header": {
+      "stats": "{{compos}} конкурсов, {{entries}} работ от {{authors}} авторов.",
+      "download-zip": "Скачать ZIP-архив"
+    },
+    "overview": {
+      "prods": "Победители: программы",
+      "graphics": "Победители: графика",
+      "music": "Победители: музыка",
+      "view-all": "Все конкурсы",
+      "empty": "На этой пати пока нет работ."
+    },
+    "activity": {
+      "votes": "Голоса",
+      "comments": "Комментарии"
+    },
+    "compo": {
+      "sort": "Сортировка",
+      "sort-place": "По месту",
+      "sort-rating": "По рейтингу",
+      "sort-views": "По просмотрам",
+      "sort-listens": "По прослушиваниям"
+    }
+  },
   "collaborators": {
     "joint": "совм.",
     "members": "{{count}} участников"

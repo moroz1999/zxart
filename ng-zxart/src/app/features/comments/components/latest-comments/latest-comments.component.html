@@ -1,6 +1,9 @@
 @if (loading() && !hasLoaded()) {
   <zx-panel>
-    <zx-text-skeleton [count]="10" lineHeight="52px"></zx-text-skeleton>
+    <zx-stack spacing="lg">
+      <zx-skeleton-bone class="latest-comments__skeleton-title"></zx-skeleton-bone>
+      <zx-text-skeleton [count]="10" lineHeight="52px"></zx-text-skeleton>
+    </zx-stack>
   </zx-panel>
 } @else if (hasLoaded()) {
   <zx-panel [title]="'comments.title' | translate">

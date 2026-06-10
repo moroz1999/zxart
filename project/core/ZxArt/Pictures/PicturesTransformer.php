@@ -94,6 +94,7 @@ readonly class PicturesTransformer
             userVote: $userVote !== null && $userVote !== false ? (int)$userVote : null,
             denyVoting: $element->isVotingDenied(),
             commentsAmount: (int)$element->commentsAmount,
+            views: (int)$element->views,
         );
     }
 }

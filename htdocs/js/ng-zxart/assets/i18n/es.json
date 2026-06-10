@@ -1,4 +1,46 @@
 {
+  "party-details": {
+    "actions": "Acciones de la party",
+    "add-actions": "Añadir trabajos",
+    "action": {
+      "showPublicForm": "Editar",
+      "publicDelete": "Eliminar",
+      "upload-pictures": "Subir gráficos",
+      "upload-music": "Subir música",
+      "upload-prods": "Subir software",
+      "delete-confirm-title": "Eliminar party",
+      "delete-confirm-message": "¿Seguro que quieres eliminar esta party?",
+      "delete-confirm-yes": "Eliminar",
+      "delete-confirm-cancel": "Cancelar"
+    },
+    "tabs": {
+      "overview": "Resumen",
+      "compos": "Competiciones",
+      "activity": "Actividad"
+    },
+    "header": {
+      "stats": "{{compos}} competiciones, {{entries}} trabajos de {{authors}} autores.",
+      "download-zip": "Descargar archivo ZIP"
+    },
+    "overview": {
+      "prods": "Ganadores: software",
+      "graphics": "Ganadores: gráficos",
+      "music": "Ganadores: música",
+      "view-all": "Todas las competiciones",
+      "empty": "Esta party aún no tiene trabajos."
+    },
+    "activity": {
+      "votes": "Votos",
+      "comments": "Comentarios"
+    },
+    "compo": {
+      "sort": "Ordenar",
+      "sort-place": "Por puesto",
+      "sort-rating": "Por valoración",
+      "sort-views": "Por vistas",
+      "sort-listens": "Por escuchas"
+    }
+  },
   "collaborators": {
     "joint": "conjunta",
     "members": "{{count}} miembros"

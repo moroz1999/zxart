@@ -10,6 +10,9 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 import {
   ZxTextSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-text-skeleton/zx-text-skeleton.component';
+import {
+  ZxSkeletonBoneComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
 import {ZxUserComponent} from '../../../../entities/zx-user/zx-user.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
@@ -24,6 +27,7 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
     TranslateModule,
     ZxStackComponent,
     ZxTextSkeletonComponent,
+    ZxSkeletonBoneComponent,
     ZxUserComponent,
     ZxPanelComponent,
     TextDirective,

@@ -39,6 +39,7 @@ readonly class PictureDto
         public ?int $userVote,
         public bool $denyVoting,
         public int $commentsAmount,
+        public int $views,
     ) {
     }
 }

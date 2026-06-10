@@ -4,19 +4,19 @@ import {TranslateModule} from '@ngx-translate/core';
 import {Observable} from 'rxjs';
 import {CommentsService} from '../../../comments/services/comments.service';
 import {CommentsListDto} from '../../../comments/models/comment.dto';
-import {ZxWorksCommentsPanelComponent} from '../../../../entities/zx-works-comments-panel/zx-works-comments-panel.component';
+import {WorksCommentsComponent} from '../../../comments/components/works-comments/works-comments.component';
 
 const COMMENTS_PAGE_SIZE = 10;
 
 @Component({
   selector: 'zx-author-comments',
   standalone: true,
-  imports: [CommonModule, TranslateModule, ZxWorksCommentsPanelComponent],
+  imports: [CommonModule, TranslateModule, WorksCommentsComponent],
   template: `
-    <zx-works-comments-panel
+    <zx-works-comments
       [title]="'author.comments-on-works' | translate"
       [loader]="loader">
-    </zx-works-comments-panel>
+    </zx-works-comments>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

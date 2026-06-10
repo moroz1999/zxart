@@ -1,0 +1,44 @@
+<zx-stack spacing="lg">
+  <zx-inline *ngIf="sortOptions.length > 1" gap="sm" align="center" [wrap]="true">
+    <span appText="label" tone="muted">{{ 'party-details.compo.sort' | translate }}:</span>
+    <zx-button-controls [wrap]="true" gap="sm">
+      <zx-button
+        *ngFor="let option of sortOptions"
+        size="sm"
+        [color]="option.key === activeSort ? 'secondary' : 'outlined'"
+        (click)="setSort(option.key)">
+        {{ option.labelKey | translate }}
+      </zx-button>
+    </zx-button-controls>
+  </zx-inline>
+
+  <ng-container *ngIf="vm$ | async as vm">
+    <ng-container *ngIf="vm.loading; else loaded" [ngSwitch]="compo.medium">
+      <zx-picture-grid-skeleton *ngSwitchCase="'picture'" [count]="8"></zx-picture-grid-skeleton>
+      <zx-prods-list-skeleton *ngSwitchDefault [count]="4"></zx-prods-list-skeleton>
+    </ng-container>
+
+    <ng-template #loaded>
+      <ng-container [ngSwitch]="compo.medium">
+        <zx-prods-list-view
+          *ngSwitchCase="'prod'"
+          [items]="vm.prods">
+        </zx-prods-list-view>
+
+        <zx-pictures-list-inline
+          *ngSwitchCase="'picture'"
+          [elementId]="core.id"
+          [compoType]="compo.compoType"
+          [picturesInput]="vm.pictures">
+        </zx-pictures-list-inline>
+
+        <zx-music-list-inline
+          *ngSwitchCase="'music'"
+          [elementId]="core.id"
+          [compoType]="compo.compoType"
+          [tunesInput]="vm.tunes">
+        </zx-music-list-inline>
+      </ng-container>
+    </ng-template>
+  </ng-container>
+</zx-stack>

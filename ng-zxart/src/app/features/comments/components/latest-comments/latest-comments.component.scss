@@ -9,3 +9,8 @@
 .latest-comment__content {
   overflow-wrap: anywhere;
 }
+
+.latest-comments__skeleton-title {
+  width: var(--zx-latest-comments-skeleton-title-width);
+  height: var(--zx-latest-comments-skeleton-title-height);
+}

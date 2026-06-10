@@ -1,0 +1,52 @@
+:host {
+  display: block;
+}
+
+/* Mirrors the real hero container (.pp-header in zx-party-header). */
+.party-details-skeleton__hero {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  background: var(--surface);
+  border: var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.party-details-skeleton__logo {
+  width: 195px;
+  height: 144px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.party-details-skeleton__header-body {
+  flex: 1 1 auto;
+}
+
+.party-details-skeleton__title {
+  width: 60%;
+  height: 28px;
+}
+
+.party-details-skeleton__meta {
+  width: 40%;
+  height: 16px;
+}
+
+.party-details-skeleton__line {
+  width: 80%;
+  height: 16px;
+}
+
+.party-details-skeleton__button {
+  width: 140px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+}
+
+.party-details-skeleton__tab {
+  width: 110px;
+  height: 40px;
+}

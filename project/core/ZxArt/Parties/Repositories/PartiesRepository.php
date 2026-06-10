@@ -53,6 +53,25 @@ final class PartiesRepository
     }
 
     /**
+     * Ids of all parties sharing the same abbreviation (the different editions/years of one series).
+     *
+     * @return int[]
+     */
+    public function getIdsByAbbreviation(string $abbreviation): array
+    {
+        if ($abbreviation === '') {
+            return [];
+        }
+
+        /** @var int[] $ids */
+        $ids = $this->db->table(self::TABLE)
+            ->where('abbreviation', '=', $abbreviation)
+            ->pluck('id');
+
+        return array_values($ids);
+    }
+
+    /**
      * @return int[]
      */
     public function getRecentIds(int $limit): array

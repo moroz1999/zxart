@@ -107,6 +107,9 @@ readonly class CommentsTransformer
         } elseif ($type === 'zxMusic') {
             /** @var \zxMusicElement $target */
             $authorName = $this->getTargetAuthorName($target);
+        } elseif ($type === 'party') {
+            /** @var \partyElement $target */
+            $imageUrl = $target->image ? $target->getImageUrl() : null;
         }
 
         return new CommentTargetDto(

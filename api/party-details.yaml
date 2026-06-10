@@ -1,0 +1,474 @@
+openapi: 3.0.0
+paths:
+  /party-details/:
+    get:
+      summary: Get core data for a party (demoparty / competition) details page
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Full core payload for the party details page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartyCorePayload'
+        '400':
+          description: Bad request
+        '404':
+          description: Party not found
+        '500':
+          description: Internal server error
+  /party-prods/:
+    get:
+      summary: Get one compo's software entries (loaded lazily, per tab)
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: compoType
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Prod cards of the requested compo in the standard prods-list (`ProdRestDto`) shape
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+        '400':
+          description: Bad request
+        '404':
+          description: Party not found
+        '500':
+          description: Internal server error
+  /party-pictures/:
+    get:
+      summary: Get one compo's picture entries (loaded lazily, per tab)
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: compoType
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Pictures of the requested compo in the standard picture-list (`PictureRestDto`) shape
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+        '400':
+          description: Bad request
+        '404':
+          description: Party not found
+        '500':
+          description: Internal server error
+  /party-music/:
+    get:
+      summary: Get one compo's tune entries (loaded lazily, per tab)
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: compoType
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Tunes of the requested compo in the standard music-list (`TuneRestDto`) shape
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+        '400':
+          description: Bad request
+        '404':
+          description: Party not found
+        '500':
+          description: Internal server error
+  /party-overview/:
+    get:
+      summary: Get the winning entry of each compo (the "best works" dashboard), grouped by medium
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Winners grouped by medium (full card shapes)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartyOverview'
+        '400':
+          description: Bad request
+        '404':
+          description: Party not found
+        '500':
+          description: Internal server error
+  /party-ratings/:
+    get:
+      summary: Get paginated votes on the party's competition works
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: perPage
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Paginated votes around the party's works
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartyRatingsList'
+        '400':
+          description: Bad request
+        '404':
+          description: Party not found
+        '500':
+          description: Internal server error
+  /party-comments/:
+    get:
+      summary: Get paginated comments on the party's competition works
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: perPage
+          schema:
+            type: integer
+            default: 50
+        - in: query
+          name: lang
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Paginated comments around the party's works
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartyCommentsList'
+        '400':
+          description: Bad request
+        '404':
+          description: Party not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    PartyLocationItem:
+      type: object
+      required: [title, url]
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+
+    PartyLocation:
+      type: object
+      required: [city, country]
+      properties:
+        city:
+          allOf:
+            - $ref: '#/components/schemas/PartyLocationItem'
+          nullable: true
+        country:
+          allOf:
+            - $ref: '#/components/schemas/PartyLocationItem'
+          nullable: true
+
+    PartyLink:
+      type: object
+      required: [url, label]
+      properties:
+        url:
+          type: string
+        label:
+          type: string
+
+    PartyCompo:
+      type: object
+      description: Metadata for one competition. `compoType` matches the `compo` key of the linked pictures/tunes and the prods grouping key.
+      required: [compoType, medium, name, count]
+      properties:
+        compoType:
+          type: string
+        medium:
+          type: string
+          enum: [prod, picture, music]
+        name:
+          type: string
+        count:
+          type: integer
+
+    PartyEdition:
+      type: object
+      description: Another edition (year) of the same party series, for the year navigation strip.
+      required: [id, year, url, current]
+      properties:
+        id:
+          type: integer
+        year:
+          type: string
+        url:
+          type: string
+        current:
+          type: boolean
+
+    PartyCounters:
+      type: object
+      required: [compos, entries, authors, pictures, tunes, prods, comments]
+      properties:
+        compos:
+          type: integer
+        entries:
+          type: integer
+        authors:
+          type: integer
+        pictures:
+          type: integer
+        tunes:
+          type: integer
+        prods:
+          type: integer
+        comments:
+          type: integer
+
+    PartyTabs:
+      type: object
+      required: [hasOverview, hasCompos, hasActivity]
+      properties:
+        hasOverview:
+          type: boolean
+        hasCompos:
+          type: boolean
+        hasActivity:
+          type: boolean
+
+    PartyBreadcrumb:
+      type: object
+      required: [title, url]
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+
+    PartyCorePayload:
+      type: object
+      required:
+        - id
+        - title
+        - abbreviation
+        - originalName
+        - url
+        - imageUrl
+        - year
+        - location
+        - links
+        - compos
+        - editions
+        - zipUrl
+        - counters
+        - tabs
+        - breadcrumbs
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        abbreviation:
+          type: string
+        originalName:
+          type: string
+        url:
+          type: string
+        imageUrl:
+          type: string
+        year:
+          type: string
+          nullable: true
+        location:
+          $ref: '#/components/schemas/PartyLocation'
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/PartyLink'
+        compos:
+          type: array
+          items:
+            $ref: '#/components/schemas/PartyCompo'
+        editions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PartyEdition'
+        zipUrl:
+          type: string
+          description: URL to download all party works as a ZIP archive.
+        counters:
+          $ref: '#/components/schemas/PartyCounters'
+        tabs:
+          $ref: '#/components/schemas/PartyTabs'
+        breadcrumbs:
+          type: array
+          items:
+            $ref: '#/components/schemas/PartyBreadcrumb'
+
+    PartyOverview:
+      type: object
+      description: The place-1 winner of each compo, grouped by medium, in full card shapes.
+      required: [prods, pictures, tunes]
+      properties:
+        prods:
+          type: array
+          description: Winning prod of each prod compo, in the standard prods-list (`ProdRestDto`) shape.
+          items:
+            type: object
+            additionalProperties: true
+        pictures:
+          type: array
+          description: Winning picture of each picture compo, in the `PictureRestDto` shape.
+          items:
+            type: object
+            additionalProperties: true
+        tunes:
+          type: array
+          description: Winning tune of each music compo, in the `TuneRestDto` shape.
+          items:
+            type: object
+            additionalProperties: true
+
+    PartyRatingUser:
+      type: object
+      required: [name, badges]
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+          nullable: true
+        badges:
+          type: array
+          items:
+            type: string
+
+    PartyRating:
+      type: object
+      description: A single vote, shared with the ratings API and rendered by zx-user inside a zx-table.
+      required: [user, rating, targetTitle, targetUrl]
+      properties:
+        user:
+          $ref: '#/components/schemas/PartyRatingUser'
+        rating:
+          type: string
+        targetTitle:
+          type: string
+        targetUrl:
+          type: string
+
+    PartyRatingsList:
+      type: object
+      required: [items, currentPage, pagesAmount, totalCount]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PartyRating'
+        currentPage:
+          type: integer
+        pagesAmount:
+          type: integer
+        totalCount:
+          type: integer
+
+    PartyComment:
+      type: object
+      description: A comment, shared with the comments API and rendered by zx-user.
+      required: [id, author, date, content, originalContent, translated, canEdit, canDelete]
+      properties:
+        id:
+          type: integer
+        author:
+          oneOf:
+            - $ref: '#/components/schemas/PartyRatingUser'
+            - type: 'null'
+        date:
+          type: string
+        content:
+          type: string
+        originalContent:
+          type: string
+        translated:
+          type: string
+        canEdit:
+          type: boolean
+        canDelete:
+          type: boolean
+        parentId:
+          type: integer
+          nullable: true
+
+    PartyCommentsList:
+      type: object
+      required: [comments, currentPage, pagesAmount, totalCount]
+      properties:
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/PartyComment'
+        currentPage:
+          type: integer
+        pagesAmount:
+          type: integer
+        totalCount:
+          type: integer

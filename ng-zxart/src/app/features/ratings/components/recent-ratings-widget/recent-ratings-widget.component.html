@@ -1,5 +1,10 @@
 @if (loading() && !hasLoaded()) {
-  <zx-text-skeleton [count]="5"></zx-text-skeleton>
+  <zx-panel>
+    <zx-stack spacing="lg">
+      <zx-skeleton-bone class="recent-ratings__skeleton-title"></zx-skeleton-bone>
+      <zx-text-skeleton [count]="5"></zx-text-skeleton>
+    </zx-stack>
+  </zx-panel>
 } @else if (hasLoaded()) {
   <div [class.ratings-loading]="loading()">
     <zx-table size="xs" [title]="'ratings.title' | translate">

@@ -7,11 +7,16 @@ import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.componen
 import {
   ZxTextSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-text-skeleton/zx-text-skeleton.component';
+import {
+  ZxSkeletonBoneComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
 import {ZxSpinnerComponent} from '../../../../shared/ui/zx-spinner/zx-spinner.component';
 import {ZxUserComponent} from '../../../../entities/zx-user/zx-user.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
+import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 
 const PAGE_SIZE = 20;
 
@@ -23,11 +28,14 @@ const PAGE_SIZE = 20;
     TranslateModule,
     ZxTableComponent,
     ZxTextSkeletonComponent,
+    ZxSkeletonBoneComponent,
     ZxSpinnerComponent,
     ZxUserComponent,
     ZxButtonComponent,
     ZxButtonControlsComponent,
     TextDirective,
+    ZxPanelComponent,
+    ZxStackComponent,
   ],
   templateUrl: './recent-ratings-widget.component.html',
   styleUrls: ['./recent-ratings-widget.component.scss'],

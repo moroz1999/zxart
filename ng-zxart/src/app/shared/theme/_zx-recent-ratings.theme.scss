@@ -3,4 +3,8 @@
   --zx-recent-ratings-value-min-width: 20px;
   /* Horizontal padding for the pagination row */
   --zx-recent-ratings-pagination-padding: var(--padding-md);
+  /* Width of the recent ratings loading title placeholder. */
+  --zx-recent-ratings-skeleton-title-width: 55%;
+  /* Height of the recent ratings loading title placeholder. */
+  --zx-recent-ratings-skeleton-title-height: var(--space-20);
 }

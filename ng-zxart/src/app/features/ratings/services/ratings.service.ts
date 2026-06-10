@@ -37,6 +37,14 @@ export class RatingsService {
     );
   }
 
+  getPartyRatings(partyId: number, page = 1, perPage = 20): Observable<AuthorRatingsListDto> {
+    return this.http.get<AuthorRatingsListDto>(
+      `/party-ratings/?id=${partyId}&page=${page}&perPage=${perPage}`
+    ).pipe(
+      catchError(() => of({items: [], currentPage: 1, pagesAmount: 0, totalCount: 0})),
+    );
+  }
+
   getRatings(elementId: number): Observable<RatingDto[]> {
     return this.http.get<ElementRatingsListDto>(`/ratings/?id=${elementId}`).pipe(
       map(response => response.items ?? []),

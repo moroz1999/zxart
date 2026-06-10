@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
@@ -28,13 +28,14 @@ import {MusicListService} from '../../services/music-list.service';
   styleUrls: ['./zx-music-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxMusicListComponent implements OnInit {
+export class ZxMusicListComponent implements OnInit, OnChanges {
   @Input() elementId = 0;
   @Input() compoType = '';
   @Input() tunesInput: ZxTuneDto[] | null = null;
 
   vm$: Observable<MusicListVm> = of({loading: true, error: false, tunes: []});
   private playlistId = '';
+  private initialized = false;
 
   readonly playingTuneId$ = this.playerService.state$.pipe(
     map(state => state.isPlaying && state.playlistId === this.playlistId
@@ -51,6 +52,14 @@ export class ZxMusicListComponent implements OnInit {
   ngOnInit(): void {
     this.playlistId = `music-list-${this.elementId}${this.compoType ? '-' + this.compoType : ''}`;
     this.vm$ = this.buildVm();
+    this.initialized = true;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // React to a new pre-fetched/re-sorted input array after init (e.g. compo sorting).
+    if (this.initialized && changes['tunesInput'] && !changes['tunesInput'].firstChange) {
+      this.vm$ = this.buildVm();
+    }
   }
 
   playTune(tunes: ZxTuneDto[], index: number): void {

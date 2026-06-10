@@ -11,6 +11,7 @@ use structureManager;
 use userElement;
 use ZxArt\Comments\CommentAuthorDto;
 use ZxArt\Comments\CommentsListDto;
+use ZxArt\Comments\CommentsService;
 use ZxArt\Comments\CommentsTransformer;
 use ZxArt\Groups\Repositories\GroupActivityRepository;
 use ZxArt\Prods\Exception\ProdDetailsException;
@@ -24,6 +25,7 @@ readonly final class GroupActivityService
         private structureManager $structureManager,
         private GroupActivityRepository $activityRepository,
         private CommentsTransformer $commentsTransformer,
+        private CommentsService $commentsService,
     ) {
     }
 
@@ -90,7 +92,8 @@ readonly final class GroupActivityService
             if (!$comment instanceof commentElement) {
                 continue;
             }
-            $comments[] = $this->commentsTransformer->transformToDto($comment, [], $languageCode);
+            $children = $this->commentsService->getReplies((int)$comment->id, $languageCode);
+            $comments[] = $this->commentsTransformer->transformToDto($comment, $children, $languageCode);
         }
 
         return new CommentsListDto($comments, $page, $pagesAmount, $total);

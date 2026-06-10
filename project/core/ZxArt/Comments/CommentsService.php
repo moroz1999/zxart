@@ -93,6 +93,16 @@ readonly class CommentsService
     }
 
     /**
+     * Returns the reply tree (nested children) of a single comment, transformed to DTOs.
+     *
+     * @return CommentDto[]
+     */
+    public function getReplies(int $commentId, ?string $languageCode = null): array
+    {
+        return $this->buildTree($commentId, [], $languageCode);
+    }
+
+    /**
      * Recursively builds the comment tree.
      *
      * @param int $parentId Parent element ID
@@ -177,7 +187,8 @@ readonly class CommentsService
         foreach ($ids as $id) {
             $comment = $this->structureManager->getElementById($id);
             if ($comment instanceof commentElement) {
-                $comments[] = $this->transformer->transformToDto($comment, [], $languageCode);
+                $children = $this->buildTree((int)$comment->id, [], $languageCode);
+                $comments[] = $this->transformer->transformToDto($comment, $children, $languageCode);
             }
         }
 

@@ -5,21 +5,6 @@
   /* Product details title placeholder height. */
   --zx-prod-details-skeleton-title-height: var(--space-32);
 
-  /* Editing controls placeholder width. */
-  --zx-prod-details-skeleton-control-width: calc(var(--space-64) + var(--space-32));
-
-  /* Editing controls placeholder height. */
-  --zx-prod-details-skeleton-control-height: calc(var(--space-32) + var(--space-4));
-
-  /* Editing controls placeholder radius. */
-  --zx-prod-details-skeleton-control-radius: var(--radius-sm);
-
-  /* Breadcrumb placeholder width. */
-  --zx-prod-details-skeleton-breadcrumb-width: var(--space-64);
-
-  /* Breadcrumb placeholder height. */
-  --zx-prod-details-skeleton-breadcrumb-height: var(--space-12);
-
   /* Video column placeholder width matching the product details hero. */
   --zx-prod-details-skeleton-cover-width: calc((var(--space-64) * 5) + var(--space-40));
 

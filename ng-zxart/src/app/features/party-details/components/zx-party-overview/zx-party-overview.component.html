@@ -1,0 +1,49 @@
+<ng-container *ngIf="vm$ | async as vm; else loading">
+  <zx-stack spacing="xl" *ngIf="vm.hasAny; else empty">
+    <zx-panel
+      *ngIf="vm.prods.length > 0"
+      [title]="'party-details.overview.prods' | translate"
+      titleLevel="h2"
+      variant="elevated">
+      <zx-prods-list-view [items]="vm.prods"></zx-prods-list-view>
+    </zx-panel>
+
+    <zx-panel
+      *ngIf="vm.pictures.length > 0"
+      [title]="'party-details.overview.graphics' | translate"
+      titleLevel="h2"
+      variant="elevated">
+      <zx-pictures-list-inline
+        [elementId]="core.id"
+        compoType="overview-graphics"
+        [picturesInput]="vm.pictures">
+      </zx-pictures-list-inline>
+    </zx-panel>
+
+    <zx-panel
+      *ngIf="vm.tunes.length > 0"
+      [title]="'party-details.overview.music' | translate"
+      titleLevel="h2"
+      variant="elevated">
+      <zx-music-list-inline
+        [elementId]="core.id"
+        compoType="overview-music"
+        [tunesInput]="vm.tunes">
+      </zx-music-list-inline>
+    </zx-panel>
+
+  </zx-stack>
+</ng-container>
+
+<ng-template #empty>
+  <zx-panel variant="flat">{{ 'party-details.overview.empty' | translate }}</zx-panel>
+</ng-template>
+
+<ng-template #loading>
+  <zx-panel variant="elevated">
+    <zx-stack spacing="md">
+      <zx-skeleton-bone class="party-overview-skeleton__title"></zx-skeleton-bone>
+      <zx-prods-list-skeleton [count]="4"></zx-prods-list-skeleton>
+    </zx-stack>
+  </zx-panel>
+</ng-template>

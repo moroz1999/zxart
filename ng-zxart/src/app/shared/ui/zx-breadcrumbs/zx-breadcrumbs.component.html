@@ -1,18 +1,32 @@
-<nav class="zx-breadcrumbs" aria-label="breadcrumb">
-  <ng-container *ngIf="homeUrl$ | async as homeUrl">
-    <a *ngIf="homeUrl" [href]="homeUrl" class="zx-breadcrumbs__item">ZX-Art</a>
-    <span *ngIf="homeUrl && (categories.length || parentItem || currentTitle)" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
+<nav class="zx-breadcrumbs" aria-label="breadcrumb" [attr.aria-busy]="loading ? 'true' : null">
+  <ng-container *ngIf="loading; else breadcrumbsContent">
+    <ng-container *ngFor="let item of skeletonItems; let last = last">
+      <zx-skeleton-bone
+        class="zx-breadcrumbs__skeleton-item"
+        [style.animation-delay.ms]="item.delayMs"
+        aria-hidden="true">
+        <span class="zx-breadcrumbs__skeleton-label">{{ item.label }}</span>
+      </zx-skeleton-bone>
+      <span *ngIf="!last" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
+    </ng-container>
   </ng-container>
 
-  <ng-container *ngFor="let cat of categories; let last = last">
-    <a [href]="cat.url" class="zx-breadcrumbs__item">{{ cat.title }}</a>
-    <span *ngIf="!last || parentItem || currentTitle" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
-  </ng-container>
+  <ng-template #breadcrumbsContent>
+    <ng-container *ngIf="homeUrl$ | async as homeUrl">
+      <a *ngIf="homeUrl" [href]="homeUrl" class="zx-breadcrumbs__item">ZX-Art</a>
+      <span *ngIf="homeUrl && (categories.length || parentItem || currentTitle)" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
+    </ng-container>
 
-  <ng-container *ngIf="parentItem">
-    <a [href]="parentItem.url" class="zx-breadcrumbs__item">{{ parentItem.title }}</a>
-    <span *ngIf="currentTitle" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
-  </ng-container>
+    <ng-container *ngFor="let cat of categories; let last = last">
+      <a [href]="cat.url" class="zx-breadcrumbs__item">{{ cat.title }}</a>
+      <span *ngIf="!last || parentItem || currentTitle" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
+    </ng-container>
 
-  <span *ngIf="currentTitle" class="zx-breadcrumbs__item zx-breadcrumbs__item--current" aria-current="page">{{ currentTitle }}</span>
+    <ng-container *ngIf="parentItem">
+      <a [href]="parentItem.url" class="zx-breadcrumbs__item">{{ parentItem.title }}</a>
+      <span *ngIf="currentTitle" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
+    </ng-container>
+
+    <span *ngIf="currentTitle" class="zx-breadcrumbs__item zx-breadcrumbs__item--current" aria-current="page">{{ currentTitle }}</span>
+  </ng-template>
 </nav>

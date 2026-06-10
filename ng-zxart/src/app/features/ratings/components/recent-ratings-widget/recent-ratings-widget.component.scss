@@ -16,3 +16,8 @@
   opacity: 0.5;
   transition: opacity var(--animation-sm);
 }
+
+.recent-ratings__skeleton-title {
+  width: var(--zx-recent-ratings-skeleton-title-width);
+  height: var(--zx-recent-ratings-skeleton-title-height);
+}

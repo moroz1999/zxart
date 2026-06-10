@@ -5,6 +5,10 @@ import {ZxRowSkeletonComponent} from '../zx-row-skeleton/zx-row-skeleton.compone
 import {ZxStackComponent} from '../../../zx-stack/zx-stack.component';
 import {ZxInlineComponent} from '../../../zx-inline/zx-inline.component';
 import {ZxPanelComponent} from '../../../zx-panel/zx-panel.component';
+import {ZxBreadcrumbsComponent} from '../../../zx-breadcrumbs/zx-breadcrumbs.component';
+import {ZxGridComponent} from '../../../zx-grid/zx-grid.component';
+import {ZxGridItemDirective} from '../../../zx-grid/zx-grid-item.directive';
+import {ZxCommentSkeletonComponent} from '../zx-comment-skeleton/zx-comment-skeleton.component';
 
 @Component({
   selector: 'zx-prod-details-skeleton',
@@ -16,6 +20,10 @@ import {ZxPanelComponent} from '../../../zx-panel/zx-panel.component';
     ZxStackComponent,
     ZxInlineComponent,
     ZxPanelComponent,
+    ZxBreadcrumbsComponent,
+    ZxGridComponent,
+    ZxGridItemDirective,
+    ZxCommentSkeletonComponent,
   ],
   templateUrl: './zx-prod-details-skeleton.component.html',
   styleUrls: ['./zx-prod-details-skeleton.component.scss'],
@@ -24,8 +32,6 @@ import {ZxPanelComponent} from '../../../zx-panel/zx-panel.component';
 export class ZxProdDetailsSkeletonComponent {
   @Input() animated = true;
 
-  readonly controls = [0, 1, 2];
-  readonly breadcrumbs = [0, 1, 2, 3];
   readonly chips = [0, 1, 2];
   readonly descriptionLines = [0, 1, 2];
   readonly links = [0, 1];

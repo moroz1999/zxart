@@ -1,0 +1,58 @@
+<section class="pp-header">
+  <div class="pp-header__logo">
+    <img [src]="core.imageUrl" [alt]="core.title" class="pp-header__logo-img"/>
+  </div>
+
+  <div class="pp-header__body">
+    <div class="pp-header__title-row">
+      <h1 appHeading="headline" class="pp-header__name">{{ core.title }}</h1>
+
+      <zx-party-editing-controls
+        [elementId]="core.id"
+        [partyUrl]="core.url">
+      </zx-party-editing-controls>
+    </div>
+
+    <div class="pp-header__bio">
+      <span *ngIf="core.abbreviation" class="pp-bio__abbr">{{ core.abbreviation }}</span>
+
+      <ng-container *ngIf="core.location.city || core.location.country">
+        <span *ngIf="core.abbreviation" class="pp-bio__sep">·</span>
+        <span class="pp-bio__loc">
+          <svg-icon name="location" aria-hidden="true"></svg-icon>
+          <a *ngIf="core.location.city" [href]="core.location.city.url">{{ core.location.city.title }}</a>
+          <ng-container *ngIf="core.location.city && core.location.country">, </ng-container>
+          <a *ngIf="core.location.country" [href]="core.location.country.url">{{ core.location.country.title }}</a>
+        </span>
+      </ng-container>
+
+      <ng-container *ngIf="core.year">
+        <span class="pp-bio__sep">·</span>
+        <code>{{ core.year }}</code>
+      </ng-container>
+    </div>
+
+    <p appText="body" class="pp-header__stats">
+      {{ 'party-details.header.stats' | translate:{
+        compos: core.counters.compos,
+        entries: core.counters.entries,
+        authors: core.counters.authors
+      } }}
+    </p>
+
+    <div class="pp-header__foot">
+      <div class="pp-ext-links" *ngIf="core.links.length">
+        <a *ngFor="let link of core.links" [href]="link.url" target="_blank" rel="noopener noreferrer">
+          {{ link.label }}
+        </a>
+      </div>
+
+      <zx-inline gap="sm" [wrap]="true">
+        <zx-button size="sm" color="secondary" [href]="core.zipUrl">
+          <svg-icon name="download" aria-hidden="true"></svg-icon>
+          {{ 'party-details.header.download-zip' | translate }}
+        </zx-button>
+      </zx-inline>
+    </div>
+  </div>
+</section>

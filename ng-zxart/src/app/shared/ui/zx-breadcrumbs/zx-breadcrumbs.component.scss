@@ -13,19 +13,27 @@
   font-size: var(--zx-breadcrumbs-font-size);
   color: var(--zx-breadcrumbs-link-color);
   text-decoration: none;
+}
 
-  &:hover {
-    text-decoration: underline;
-  }
+.zx-breadcrumbs__item:hover {
+  text-decoration: underline;
+}
 
-  &--current {
-    color: var(--zx-breadcrumbs-current-color);
-    pointer-events: none;
-  }
+.zx-breadcrumbs__item--current {
+  color: var(--zx-breadcrumbs-current-color);
+  pointer-events: none;
 }
 
 .zx-breadcrumbs__sep {
   font-size: var(--zx-breadcrumbs-font-size);
   color: var(--zx-breadcrumbs-sep-color);
   user-select: none;
+}
+
+.zx-breadcrumbs__skeleton-item {
+  font-size: var(--zx-breadcrumbs-font-size);
+}
+
+.zx-breadcrumbs__skeleton-label {
+  visibility: hidden;
 }

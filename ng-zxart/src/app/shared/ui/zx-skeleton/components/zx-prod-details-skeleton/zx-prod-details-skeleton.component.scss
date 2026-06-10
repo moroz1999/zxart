@@ -14,17 +14,6 @@
   height: var(--zx-prod-details-skeleton-title-height);
 }
 
-.skeleton-prod-details-control {
-  width: var(--zx-prod-details-skeleton-control-width);
-  height: var(--zx-prod-details-skeleton-control-height);
-  border-radius: var(--zx-prod-details-skeleton-control-radius);
-}
-
-.skeleton-prod-details-breadcrumb {
-  width: var(--zx-prod-details-skeleton-breadcrumb-width);
-  height: var(--zx-prod-details-skeleton-breadcrumb-height);
-}
-
 .skeleton-prod-details-cover,
 .skeleton-prod-details-info {
   min-width: 0;

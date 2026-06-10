@@ -1,9 +1,5 @@
 <zx-stack spacing="xl">
-  <zx-inline gap="xs" align="center" [wrap]="true">
-    @for (crumb of breadcrumbs; track crumb) {
-      <zx-skeleton-bone class="release-details-skeleton__breadcrumb" [style.animation-delay.ms]="crumb * 40"></zx-skeleton-bone>
-    }
-  </zx-inline>
+  <zx-breadcrumbs [loading]="true"></zx-breadcrumbs>
 
   <zx-skeleton-bone class="release-details-skeleton__anchor"></zx-skeleton-bone>
 

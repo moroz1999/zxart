@@ -31,4 +31,7 @@ enum LinkTypes: string
     case INLAY_FILES_SELECTOR = 'inlayFilesSelector';
     case INFO_FILES_SELECTOR = 'infoFilesSelector';
     case SCREENSHOTS_SELECTOR = 'screenshotsSelector';
+    case PARTY_PICTURE = 'partyPicture';
+    case PARTY_MUSIC = 'partyMusic';
+    case PARTY_PROD = 'partyProd';
 }

@@ -1,4 +1,46 @@
 {
+  "party-details": {
+    "actions": "Party actions",
+    "add-actions": "Add party works",
+    "action": {
+      "showPublicForm": "Edit",
+      "publicDelete": "Delete",
+      "upload-pictures": "Upload graphics",
+      "upload-music": "Upload music",
+      "upload-prods": "Upload software",
+      "delete-confirm-title": "Delete party",
+      "delete-confirm-message": "Are you sure you want to delete this party?",
+      "delete-confirm-yes": "Delete",
+      "delete-confirm-cancel": "Cancel"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "compos": "Competitions",
+      "activity": "Activity"
+    },
+    "header": {
+      "stats": "{{compos}} competitions, {{entries}} works by {{authors}} authors.",
+      "download-zip": "Download ZIP archive"
+    },
+    "overview": {
+      "prods": "Winning software",
+      "graphics": "Winning graphics",
+      "music": "Winning music",
+      "view-all": "All competitions",
+      "empty": "This party has no works yet."
+    },
+    "activity": {
+      "votes": "Votes",
+      "comments": "Comments"
+    },
+    "compo": {
+      "sort": "Sort",
+      "sort-place": "By place",
+      "sort-rating": "By rating",
+      "sort-views": "By views",
+      "sort-listens": "By listens"
+    }
+  },
   "collaborators": {
     "joint": "joint",
     "members": "{{count}} members"

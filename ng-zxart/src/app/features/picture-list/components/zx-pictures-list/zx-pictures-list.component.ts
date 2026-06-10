@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
@@ -30,7 +30,7 @@ import {PictureGalleryService} from '../../../picture-gallery/services/picture-g
   styleUrls: ['./zx-pictures-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxPicturesListComponent implements OnInit {
+export class ZxPicturesListComponent implements OnInit, OnChanges {
   @Input() elementId = 0;
   @Input() compoType = '';
   @Input() picturesInput: ZxPictureDto[] | null = null;
@@ -51,6 +51,13 @@ export class ZxPicturesListComponent implements OnInit {
   ngOnInit(): void {
     this.galleryId = `zx-pictures-list-${this.elementId}${this.compoType ? '-' + this.compoType : ''}`;
     this.loadData();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // React to a new pre-fetched/re-sorted input array after init (e.g. compo sorting).
+    if (this.galleryId && changes['picturesInput'] && !changes['picturesInput'].firstChange) {
+      this.loadData();
+    }
   }
 
   private loadData(): void {

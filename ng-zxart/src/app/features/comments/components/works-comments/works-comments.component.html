@@ -1,0 +1,24 @@
+@if (!hasLoaded()) {
+  <zx-panel [appInViewport]="!loading()" (inViewport)="onInViewport()" [title]="title">
+    <zx-comment-skeleton [count]="3"></zx-comment-skeleton>
+  </zx-panel>
+} @else if (totalCount() > 0) {
+  <zx-panel [title]="title">
+    <zx-stack spacing="lg" [class.works-comments--loading]="loading()">
+      <zx-comment
+        *ngFor="let comment of comments()"
+        [comment]="comment"
+        [showTarget]="true"
+        (commentChanged)="onCommentChanged($event)">
+      </zx-comment>
+    </zx-stack>
+    @if (pagesAmount() > 1) {
+      <zx-pagination
+        [currentPage]="currentPage()"
+        [pagesAmount]="pagesAmount()"
+        [loading]="loading()"
+        (pageChange)="onPageChange($event)">
+      </zx-pagination>
+    }
+  </zx-panel>
+}

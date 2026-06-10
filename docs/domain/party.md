@@ -96,6 +96,19 @@ Party provides methods for exporting results in various formats:
 - Default preset: `'partyFull'`
 - Fallback: `/images/zxprod_default.png`
 
+### Party Page REST API
+The Angular party page (`zx-party-details`) loads data through dedicated endpoints; full schemas in `api/party-details.yaml`.
+- `GET /party-details/?id=` - core payload: header, location, compos metadata, editions, counters, tabs, breadcrumbs.
+- `GET /party-overview/?id=` - "best works" dashboard: the winning entry (lowest positive `partyplace`) of each compo, grouped by medium (`prods`/`pictures`/`tunes`) in full card shapes.
+- `GET /party-prods/?id=&compoType=` - one compo's prods (standard prods-list shape).
+- `GET /party-pictures/?id=&compoType=` - one compo's pictures (`PictureRestDto` shape).
+- `GET /party-music/?id=&compoType=` - one compo's tunes (`TuneRestDto` shape).
+- `GET /party-ratings/?id=&page=&perPage=` and `GET /party-comments/?id=&page=&perPage=&lang=` - paginated votes / comments on the party's works (activity tab).
+
+The heavy media (compos tab) is fetched lazily, one compo per request; Overview loads once. Compo names are resolved per medium by `PartyCompoNameResolver` (sections `party`/`zxPicture`/`musiccompo`).
+
+Party edit/delete and upload actions are rendered inside Angular through `zx-party-editing-controls`, using the shared `zx-editing-controls` popover. The legacy `party.all.tpl` only mounts `zx-party-details`; it must not render separate editing buttons.
+
 ### Constraints and Rules
 1. Party must always be child element of year
 2. Each work can participate in only one party

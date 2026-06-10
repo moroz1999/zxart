@@ -7,6 +7,7 @@ namespace ZxArt\Pictures\Repositories;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use ZxArt\Helpers\AlphanumericColumnSearch;
+use ZxArt\LinkTypes;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\SortingParams;
 
@@ -268,6 +269,27 @@ readonly final class PicturesRepository
             ->orderBy(self::TABLE . '.votes', 'desc')
             ->limit($limit)
             ->pluck('structure_links.childStructureId');
+    }
+
+    /**
+     * Picture IDs of one party compo, ordered by party place.
+     *
+     * @return int[]
+     */
+    public function findIdsByPartyAndCompo(int $partyId, string $compo): array
+    {
+        return $this->db->table(self::TABLE)
+            ->join(
+                'structure_links',
+                fn($join) => $join
+                    ->on('structure_links.childStructureId', '=', self::TABLE . '.id')
+                    ->where('structure_links.type', '=', LinkTypes::PARTY_PICTURE->value)
+                    ->where('structure_links.parentStructureId', '=', $partyId)
+            )
+            ->where(self::TABLE . '.compo', '=', $compo)
+            ->orderBy(self::TABLE . '.partyplace')
+            ->orderBy(self::TABLE . '.id')
+            ->pluck(self::TABLE . '.id');
     }
 
     public function countByLinkedElement(int $elementId, string $linkType): int
