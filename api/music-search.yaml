@@ -1,0 +1,138 @@
+openapi: 3.0.0
+info:
+  title: ZXArt Music Search API
+  version: 1.0.0
+paths:
+  /music-search/:
+    get:
+      summary: Detailed music search (AJAX replacement of the legacy detailedSearch music page)
+      parameters:
+        - in: query
+          name: action
+          required: false
+          schema:
+            type: string
+            enum: [search, locations]
+            default: search
+        - in: query
+          name: titleWord
+          required: false
+          schema:
+            type: string
+          description: Tune title substring
+        - in: query
+          name: startYear
+          required: false
+          schema:
+            type: integer
+          description: Start of the publication year range; defaults to 1970 when only endYear is given
+        - in: query
+          name: endYear
+          required: false
+          schema:
+            type: integer
+          description: End of the publication year range; defaults to the current year when only startYear is given
+        - in: query
+          name: rating
+          required: false
+          schema:
+            type: number
+          description: Minimum tune rating
+        - in: query
+          name: partyPlace
+          required: false
+          schema:
+            type: integer
+          description: Minimum (best) party place
+        - in: query
+          name: formatGroup
+          required: false
+          schema:
+            type: string
+          description: Music sound format group
+        - in: query
+          name: format
+          required: false
+          schema:
+            type: string
+          description: Music file format code
+        - in: query
+          name: realtime
+          required: false
+          schema:
+            type: string
+            enum: ['1']
+          description: Only realtime-compo entries when set to 1
+        - in: query
+          name: tagsInclude
+          required: false
+          schema:
+            type: string
+          description: Comma-separated tag names to include
+        - in: query
+          name: tagsExclude
+          required: false
+          schema:
+            type: string
+          description: Comma-separated tag names to exclude
+        - in: query
+          name: authorCountry
+          required: false
+          schema:
+            type: string
+          description: Comma-separated country element ids
+        - in: query
+          name: authorCity
+          required: false
+          schema:
+            type: string
+          description: Comma-separated city element ids
+        - in: query
+          name: resultsType
+          required: false
+          schema:
+            type: string
+            enum: [zxitem, author]
+            default: zxitem
+        - in: query
+          name: sortParameter
+          required: false
+          schema:
+            type: string
+            enum: [year, title, place, date, votes, commentsAmount, plays]
+            default: date
+        - in: query
+          name: sortOrder
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc, rand]
+            default: desc
+        - in: query
+          name: start
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 60
+        - in: query
+          name: ids
+          required: false
+          schema:
+            type: string
+          description: Comma-separated location ids for action=locations
+      responses:
+        '200':
+          description: Search result or location resolution payload
+        '400':
+          description: Invalid action or missing ids for action=locations
+        '500':
+          description: Internal server error
