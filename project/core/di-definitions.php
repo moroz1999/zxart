@@ -193,4 +193,5 @@ return [
     tagsManager::class => autowire()->method('setContainer', DI\get(Container::class)),
     mp3ConversionManager::class => autowire()->method('setContainer', DI\get(Container::class)),
     ApiQueryResultResolver::class => autowire()->method('setContainer', DI\get(Container::class)),
+    ApiQueriesManager::class => autowire()->method('setContainer', DI\get(Container::class)),
 ];

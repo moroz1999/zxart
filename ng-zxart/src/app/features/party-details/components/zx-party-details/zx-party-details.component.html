@@ -30,7 +30,6 @@
       <zx-tab
         *ngFor="let compo of core.compos"
         [label]="compo.name"
-        [count]="compo.count"
         [href]="getTabHref(compo.compoType)">
         <ng-template zxTabContent>
           <zx-party-compo [core]="core" [compo]="compo"></zx-party-compo>

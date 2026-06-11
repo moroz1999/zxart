@@ -1,4 +1,47 @@
 :root {
-  /* Gap between form elements */
+  /* Gap between form rows and between section content blocks */
   --zx-form-gap: var(--space-12);
+  /* Default form max-width; removed when sectionWrap is enabled */
+  --zx-form-max-width: 640px;
+  /* Minimum section width used as flex-basis in sectionWrap mode */
+  --zx-form-section-min-width: 280px;
+  /* Gap between label and control inside a vertical form field */
+  --zx-form-field-gap: var(--space-4);
+  /* Gap between label column and control column in horizontal layout */
+  --zx-form-field-column-gap: var(--space-16);
+  /* Label column width in horizontal layout */
+  --zx-form-label-width: 200px;
+  /* Vertical offset aligning labels with control text in horizontal layout */
+  --zx-form-label-horizontal-offset: var(--space-8);
+  /* Gap between label text and the required marker */
+  --zx-form-label-required-gap: var(--space-4);
+  /* Field label typography */
+  --zx-form-label-color: var(--text-color);
+  --zx-form-label-font-size: var(--zx-font-size-sm);
+  --zx-form-label-font-weight: 700;
+  /* Fieldset legend (group title) typography */
+  --zx-form-legend-color: var(--text-light-color);
+  --zx-form-legend-font-size: var(--zx-font-size-xs);
+  --zx-form-legend-font-weight: 700;
+  --zx-form-legend-letter-spacing: 1px;
+  /* Gap between the legend icon and the legend text */
+  --zx-form-legend-gap: var(--space-8);
+  /* Legend icon size and color */
+  --zx-form-legend-icon-size: 16px;
+  --zx-form-legend-icon-color: var(--text-light-color);
+  /* Gap between the legend and the fieldset fields */
+  --zx-form-fieldset-gap: var(--space-12);
+  /* Divider line used by the divided form appearance */
+  --zx-form-divider: var(--border-light);
+  /* Fieldset padding in the divided form appearance */
+  --zx-form-fieldset-padding: var(--space-16) var(--space-20);
+  /* Action row background and padding in the divided form appearance */
+  --zx-form-footer-bg: var(--background-deep);
+  --zx-form-footer-padding: var(--space-12) var(--space-20);
+  /* Gap between elements stacked inside a form control cell */
+  --zx-form-control-gap: var(--space-4);
+  /* Gap between form action buttons */
+  --zx-form-actions-gap: var(--space-8);
+  /* Space separating the action row from the fields above */
+  --zx-form-actions-offset: var(--space-8);
 }

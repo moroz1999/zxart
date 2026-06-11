@@ -1,0 +1,193 @@
+openapi: 3.0.0
+info:
+  title: ZXArt Picture Search API
+  version: 1.0.0
+paths:
+  /picture-search/:
+    get:
+      summary: Detailed picture search (AJAX replacement of the legacy detailedSearch graphics page)
+      parameters:
+        - in: query
+          name: action
+          required: false
+          schema:
+            type: string
+            enum: [search, locations]
+            default: search
+        - in: query
+          name: titleWord
+          required: false
+          schema:
+            type: string
+          description: Picture title substring
+        - in: query
+          name: startYear
+          required: false
+          schema:
+            type: integer
+          description: Start of the publication year range; defaults to 1970 when only endYear is given
+        - in: query
+          name: endYear
+          required: false
+          schema:
+            type: integer
+          description: End of the publication year range; defaults to the current year when only startYear is given
+        - in: query
+          name: rating
+          required: false
+          schema:
+            type: number
+          description: Minimum picture rating (1-5)
+        - in: query
+          name: partyPlace
+          required: false
+          schema:
+            type: integer
+          description: Minimum (best) party place
+        - in: query
+          name: pictureType
+          required: false
+          schema:
+            type: string
+          description: ZX picture format code (standard, gigascreen, mc, ...)
+        - in: query
+          name: realtime
+          required: false
+          schema:
+            type: string
+            enum: ['1']
+          description: Only realtime-compo entries when set to 1
+        - in: query
+          name: inspiration
+          required: false
+          schema:
+            type: string
+            enum: ['1']
+          description: Only pictures with reference images when set to 1
+        - in: query
+          name: stages
+          required: false
+          schema:
+            type: string
+            enum: ['1']
+          description: Only pictures with work stages images when set to 1
+        - in: query
+          name: tagsInclude
+          required: false
+          schema:
+            type: string
+          description: Comma-separated tag names to include
+        - in: query
+          name: tagsExclude
+          required: false
+          schema:
+            type: string
+          description: Comma-separated tag names to exclude
+        - in: query
+          name: authorCountry
+          required: false
+          schema:
+            type: string
+          description: Comma-separated country element ids
+        - in: query
+          name: authorCity
+          required: false
+          schema:
+            type: string
+          description: Comma-separated city element ids
+        - in: query
+          name: resultsType
+          required: false
+          schema:
+            type: string
+            enum: [zxitem, author]
+            default: zxitem
+        - in: query
+          name: sortParameter
+          required: false
+          schema:
+            type: string
+            enum: [year, title, place, date, votes, commentsAmount, views]
+            default: date
+        - in: query
+          name: sortOrder
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc, rand]
+            default: desc
+        - in: query
+          name: start
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            default: 60
+            maximum: 100
+        - in: query
+          name: ids
+          required: false
+          schema:
+            type: string
+          description: Comma-separated location element ids (action=locations only)
+      responses:
+        '200':
+          description: Search results or resolved locations
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/PictureSearchResponse'
+                  - $ref: '#/components/schemas/LocationsResponse'
+        '400':
+          description: Bad request (unknown action or missing ids)
+        '500':
+          description: Internal server error
+components:
+  schemas:
+    PictureSearchResponse:
+      type: object
+      required: [totalAmount, resultsType, pictures, authors, apiUrl, zipUrl]
+      properties:
+        totalAmount:
+          type: integer
+        resultsType:
+          type: string
+          enum: [zxitem, author]
+        pictures:
+          type: array
+          description: Filled when resultsType=zxitem; standard PictureRestDto shape
+          items:
+            type: object
+            additionalProperties: true
+        authors:
+          type: array
+          description: Filled when resultsType=author; standard AuthorListItemRestDto shape
+          items:
+            type: object
+            additionalProperties: true
+        apiUrl:
+          type: string
+          description: Public legacy /api/ URL reproducing these results
+        zipUrl:
+          type: string
+          description: Legacy /zipItems/ URL downloading these results as a ZIP archive
+    LocationsResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required: [id, title]
+            properties:
+              id:
+                type: integer
+              title:
+                type: string

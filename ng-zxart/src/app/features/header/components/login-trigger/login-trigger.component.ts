@@ -7,7 +7,7 @@ import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {CurrentUserService} from '../../../../shared/services/current-user.service';
 import {BackendLinksService} from '../../services/backend-links.service';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
-import {ZxFormDirective} from '../../../../shared/directives/form/zx-form.directive';
+import {ZxFormDirective} from '../../../../shared/ui/zx-form/zx-form.directive';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxPopoverMenuItemComponent} from '../../../../shared/ui/zx-popover-menu-item/zx-popover-menu-item.component';
 import {ZxHeaderPopoverComponent} from '../../../../shared/ui/zx-header-popover/zx-header-popover.component';

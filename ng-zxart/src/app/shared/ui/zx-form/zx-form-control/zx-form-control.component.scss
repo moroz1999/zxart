@@ -1,0 +1,6 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-form-control-gap);
+  min-width: 0;
+}

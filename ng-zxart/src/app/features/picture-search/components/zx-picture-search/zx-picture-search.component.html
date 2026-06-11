@@ -1,0 +1,323 @@
+<zx-picture-gallery-host></zx-picture-gallery-host>
+
+<zx-stack gap="lg">
+  <h1 appHeading="display">{{ 'picture-search.title' | translate }}</h1>
+
+  <zx-panel variant="elevated" radius="lg" padding="none">
+    <form zxForm [sectionWrap]="true" [divided]="true" (ngSubmit)="onSubmit()">
+      @if (isMobile) {
+        <zx-button color="transparent" [block]="true" type="button" (click)="toggleFilters()">
+          <svg-icon name="settings" class="ps-toggle-icon" aria-hidden="true"></svg-icon>
+          {{ 'picture-search.filters' | translate }}
+          @if (activeFiltersCount > 0) {
+            <zx-badge variant="primary">{{ activeFiltersCount }}</zx-badge>
+          }
+          <svg-icon
+            [name]="filtersCollapsed ? 'expand-more' : 'expand-less'"
+            class="ps-toggle-icon"
+            aria-hidden="true"
+          ></svg-icon>
+        </zx-button>
+      }
+
+      @if (!isMobile || !filtersCollapsed) {
+        <zx-form-section>
+          <zx-form-fieldset icon="search" [legend]="'picture-search.section-query' | translate">
+            <zx-form-field>
+              <zx-form-label>{{ 'picture-search.title-word' | translate }}</zx-form-label>
+              <zx-form-control>
+                <zx-input
+                  name="titleWord"
+                  [(ngModel)]="filters.titleWord"
+                  [placeholder]="'picture-search.title-word-placeholder' | translate"
+                ></zx-input>
+              </zx-form-control>
+            </zx-form-field>
+
+            <zx-grid desktopColumns="2" mobileColumns="1" gap="sm" align="start">
+              <zx-form-field>
+                <zx-form-label>{{ 'picture-search.tags-include' | translate }}</zx-form-label>
+                <zx-form-control>
+                  <zx-tags-input
+                    [tags]="tagsIncludeItems"
+                    [searchResults]="tagsIncludeResults"
+                    [searchLoading]="tagsIncludeLoading"
+                    [placeholder]="'picture-search.tags-placeholder' | translate"
+                    [addButtonLabel]="'picture-search.tag-add' | translate"
+                    [removeButtonAriaLabel]="'picture-search.tag-remove' | translate"
+                    (queryChanged)="onTagsIncludeQuery($event)"
+                    (tagSelected)="onTagIncludeAdded($event)"
+                    (customTagAdded)="onTagIncludeCustom($event)"
+                    (tagRemoved)="onTagIncludeRemoved($event)"
+                  ></zx-tags-input>
+                </zx-form-control>
+              </zx-form-field>
+
+              <zx-form-field>
+                <zx-form-label>{{ 'picture-search.tags-exclude' | translate }}</zx-form-label>
+                <zx-form-control>
+                  <zx-tags-input
+                    [tags]="tagsExcludeItems"
+                    [searchResults]="tagsExcludeResults"
+                    [searchLoading]="tagsExcludeLoading"
+                    [placeholder]="'picture-search.tags-placeholder' | translate"
+                    [addButtonLabel]="'picture-search.tag-add' | translate"
+                    [removeButtonAriaLabel]="'picture-search.tag-remove' | translate"
+                    (queryChanged)="onTagsExcludeQuery($event)"
+                    (tagSelected)="onTagExcludeAdded($event)"
+                    (customTagAdded)="onTagExcludeCustom($event)"
+                    (tagRemoved)="onTagExcludeRemoved($event)"
+                  ></zx-tags-input>
+                </zx-form-control>
+              </zx-form-field>
+            </zx-grid>
+          </zx-form-fieldset>
+
+          <zx-form-fieldset icon="star" [legend]="'picture-search.section-period' | translate">
+            <zx-form-field>
+              <zx-form-label>{{ 'picture-search.year' | translate }}</zx-form-label>
+              <zx-form-control>
+                <zx-grid desktopColumns="2" gap="sm">
+                  <zx-input
+                    name="startYear"
+                    size="sm"
+                    [(ngModel)]="filters.startYear"
+                    [placeholder]="'picture-search.year-from-placeholder' | translate"
+                  ></zx-input>
+                  <zx-input
+                    name="endYear"
+                    size="sm"
+                    [(ngModel)]="filters.endYear"
+                    [placeholder]="'picture-search.year-to-placeholder' | translate"
+                  ></zx-input>
+                </zx-grid>
+              </zx-form-control>
+            </zx-form-field>
+
+            <zx-grid desktopColumns="2" mobileColumns="1" gap="sm" align="start">
+              <zx-form-field>
+                <zx-form-label>{{ 'picture-search.rating' | translate }}</zx-form-label>
+                <zx-form-control>
+                  <zx-select name="rating" [options]="ratingOptions" [(ngModel)]="filters.rating"></zx-select>
+                </zx-form-control>
+              </zx-form-field>
+
+              <zx-form-field>
+                <zx-form-label>{{ 'picture-search.party-place' | translate }}</zx-form-label>
+                <zx-form-control>
+                  <zx-input
+                    name="partyPlace"
+                    [(ngModel)]="filters.partyPlace"
+                    [placeholder]="'picture-search.party-place-placeholder' | translate"
+                  ></zx-input>
+                </zx-form-control>
+              </zx-form-field>
+            </zx-grid>
+          </zx-form-fieldset>
+
+          <zx-form-fieldset icon="image" [legend]="'picture-search.section-format' | translate">
+            <zx-form-field>
+              <zx-form-label>{{ 'picture-search.format-label' | translate }}</zx-form-label>
+              <zx-form-control>
+                <zx-select name="pictureType" [options]="pictureTypeOptions" [(ngModel)]="filters.pictureType"></zx-select>
+                <span appText="caption" tone="muted">{{ 'picture-search.format-hint' | translate }}</span>
+              </zx-form-control>
+            </zx-form-field>
+          </zx-form-fieldset>
+        </zx-form-section>
+
+        <zx-form-section>
+          <zx-form-fieldset icon="person" [legend]="'picture-search.section-author' | translate">
+            <zx-form-field>
+              <zx-form-label>{{ 'picture-search.author-country' | translate }}</zx-form-label>
+              <zx-form-control>
+                <zx-tags-input
+                  [tags]="countryItems"
+                  [searchResults]="countryResults"
+                  [searchLoading]="countryLoading"
+                  [allowCustomTags]="false"
+                  [placeholder]="'picture-search.country-placeholder' | translate"
+                  [removeButtonAriaLabel]="'picture-search.tag-remove' | translate"
+                  (queryChanged)="onCountryQuery($event)"
+                  (tagSelected)="onCountryAdded($event)"
+                  (tagRemoved)="onCountryRemoved($event)"
+                ></zx-tags-input>
+              </zx-form-control>
+            </zx-form-field>
+
+            <zx-form-field>
+              <zx-form-label>{{ 'picture-search.author-city' | translate }}</zx-form-label>
+              <zx-form-control>
+                <zx-tags-input
+                  [tags]="cityItems"
+                  [searchResults]="cityResults"
+                  [searchLoading]="cityLoading"
+                  [allowCustomTags]="false"
+                  [placeholder]="'picture-search.city-placeholder' | translate"
+                  [removeButtonAriaLabel]="'picture-search.tag-remove' | translate"
+                  (queryChanged)="onCityQuery($event)"
+                  (tagSelected)="onCityAdded($event)"
+                  (tagRemoved)="onCityRemoved($event)"
+                ></zx-tags-input>
+              </zx-form-control>
+            </zx-form-field>
+          </zx-form-fieldset>
+
+          <zx-form-fieldset icon="settings" [legend]="'picture-search.section-traits' | translate">
+            <zx-checkbox-field
+              name="realtime"
+              [(ngModel)]="filters.realtime"
+              [label]="'picture-search.realtime' | translate"
+            ></zx-checkbox-field>
+            <zx-checkbox-field
+              name="inspiration"
+              [(ngModel)]="filters.inspiration"
+              [label]="'picture-search.inspiration' | translate"
+            ></zx-checkbox-field>
+            <zx-checkbox-field
+              name="stages"
+              [(ngModel)]="filters.stages"
+              [label]="'picture-search.stages' | translate"
+            ></zx-checkbox-field>
+          </zx-form-fieldset>
+
+          <zx-form-fieldset icon="list" [legend]="'picture-search.section-results' | translate">
+            <zx-form-field>
+              <zx-form-label>{{ 'picture-search.results-type' | translate }}</zx-form-label>
+              <zx-form-control>
+                <zx-button-controls align="start" [wrap]="true" gap="sm">
+                  <zx-button
+                    size="sm"
+                    type="button"
+                    [color]="filters.resultsType === 'zxitem' ? 'primary' : 'outlined'"
+                    (click)="setResultsType('zxitem')"
+                  >{{ 'picture-search.results-type-zxitem' | translate }}</zx-button>
+                  <zx-button
+                    size="sm"
+                    type="button"
+                    [color]="filters.resultsType === 'author' ? 'primary' : 'outlined'"
+                    (click)="setResultsType('author')"
+                  >{{ 'picture-search.results-type-author' | translate }}</zx-button>
+                </zx-button-controls>
+              </zx-form-control>
+            </zx-form-field>
+
+            <zx-form-field>
+              <zx-form-label>{{ 'picture-search.sort-by' | translate }}</zx-form-label>
+              <zx-form-control>
+                <zx-select name="sortParameter" [options]="sortOptions" [(ngModel)]="filters.sortParameter"></zx-select>
+              </zx-form-control>
+            </zx-form-field>
+
+            <zx-form-field>
+              <zx-form-label>{{ 'picture-search.order' | translate }}</zx-form-label>
+              <zx-form-control>
+                <zx-button-controls align="start" [wrap]="true" gap="sm">
+                  <zx-button
+                    size="sm"
+                    type="button"
+                    [color]="filters.sortOrder === 'asc' ? 'primary' : 'outlined'"
+                    (click)="setSortOrder('asc')"
+                  >{{ 'picture-search.order-asc' | translate }}</zx-button>
+                  <zx-button
+                    size="sm"
+                    type="button"
+                    [color]="filters.sortOrder === 'desc' ? 'primary' : 'outlined'"
+                    (click)="setSortOrder('desc')"
+                  >{{ 'picture-search.order-desc' | translate }}</zx-button>
+                  <zx-button
+                    size="sm"
+                    type="button"
+                    [color]="filters.sortOrder === 'rand' ? 'primary' : 'outlined'"
+                    (click)="setSortOrder('rand')"
+                  >{{ 'picture-search.order-rand' | translate }}</zx-button>
+                </zx-button-controls>
+              </zx-form-control>
+            </zx-form-field>
+          </zx-form-fieldset>
+        </zx-form-section>
+      }
+
+      @if (!isMobile || !filtersCollapsed) {
+        <zx-form-actions align="between">
+          <zx-inline gap="sm" align="center" [wrap]="true">
+            @if (apiUrl !== '') {
+              <zx-button color="transparent" size="sm" [href]="apiUrl" target="_blank" rel="noopener">
+                <svg-icon name="open-in-new" class="ps-link-icon" aria-hidden="true"></svg-icon>
+                {{ 'picture-search.api-link' | translate }}
+              </zx-button>
+            }
+            @if (zipUrl !== '') {
+              <zx-button color="transparent" size="sm" [href]="zipUrl">
+                <svg-icon name="download" class="ps-link-icon" aria-hidden="true"></svg-icon>
+                {{ 'picture-search.zip-link' | translate }}
+              </zx-button>
+            }
+          </zx-inline>
+
+          <zx-button-controls align="end">
+            <zx-button color="outlined" type="button" (click)="onReset()">
+              {{ 'picture-search.reset' | translate }}
+            </zx-button>
+            <zx-button color="primary" type="submit">
+              <svg-icon name="search" class="ps-link-icon" aria-hidden="true"></svg-icon>
+              {{ 'picture-search.search' | translate }}
+            </zx-button>
+          </zx-button-controls>
+        </zx-form-actions>
+      }
+    </form>
+  </zx-panel>
+
+  <zx-inline gap="md" align="baseline" justify="between" [wrap]="true">
+    <h2 appHeading="headline">{{ 'picture-search.results-title' | translate }}</h2>
+    @if (!loading && !error) {
+      <span appText="label" tone="muted">
+        {{ 'picture-search.results-range' | translate: {start: rangeStart, end: rangeEnd, total: totalAmount} }}
+      </span>
+    }
+  </zx-inline>
+
+  @if (error) {
+    <div appText="caption" tone="danger">{{ 'picture-search.error' | translate }}</div>
+  } @else if (resultsType === 'zxitem') {
+    @if (loading) {
+      <div zxPicturesGrid>
+        <zx-picture-card-skeleton
+          *ngFor="let i of skeletonItems"
+          [animationDelayMs]="i * 80"
+        ></zx-picture-card-skeleton>
+      </div>
+    } @else if (pictures.length === 0) {
+      <div appText="bodySm" tone="muted">{{ 'picture-search.empty' | translate }}</div>
+    } @else {
+      <div zxPicturesGrid>
+        <zx-picture-card
+          *ngFor="let pic of pictures; let i = index"
+          [picture]="pic"
+          [galleryIndex]="i"
+          [galleryId]="galleryId"
+        ></zx-picture-card>
+      </div>
+    }
+  } @else {
+    @if (!loading && authors.length === 0) {
+      <div appText="bodySm" tone="muted">{{ 'picture-search.empty' | translate }}</div>
+    } @else {
+      <zx-authors-table
+        [authors]="authors"
+        [loading]="loading"
+        [rowStartIndex]="rangeStart > 0 ? rangeStart - 1 : 0"
+      ></zx-authors-table>
+    }
+  }
+
+  <zx-pagination
+    *ngIf="pagesAmount > 1"
+    [currentPage]="currentPage"
+    [pagesAmount]="pagesAmount"
+    [urlBase]="paginationUrlBase"
+    [loading]="loading"
+    (pageChange)="onPageChange($event)"
+  ></zx-pagination>
+</zx-stack>

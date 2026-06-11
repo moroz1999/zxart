@@ -38,6 +38,8 @@ export class ZxTagsInputComponent {
   @Input() searchLoading = false;
   @Input() removeButtonAriaLabel = '';
   @Input() addButtonLabel = '';
+  /** When false, only items picked from search results can be added (no free-text tags). */
+  @Input() allowCustomTags = true;
   @Output() queryChanged = new EventEmitter<string>();
   @Output() tagSelected = new EventEmitter<TagItem>();
   @Output() customTagAdded = new EventEmitter<string>();
@@ -56,6 +58,9 @@ export class ZxTagsInputComponent {
   }
 
   get canAddCustomTag(): boolean {
+    if (this.allowCustomTags !== true) {
+      return false;
+    }
     const normalizedQuery = this.normalizeTitle(this.query);
     return normalizedQuery !== ''
       && this.tags.every(tag => this.normalizeTitle(tag.title) !== normalizedQuery)
@@ -86,6 +91,9 @@ export class ZxTagsInputComponent {
   }
 
   addCustomTag(): void {
+    if (this.allowCustomTags !== true) {
+      return;
+    }
     const normalizedQuery = this.query.trim();
     if (normalizedQuery === '') {
       return;

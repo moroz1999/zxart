@@ -1,6 +1,7 @@
 :host {
   display: inline-block;
   position: relative;
+  max-width: 100%;
 }
 
 select {
@@ -15,6 +16,9 @@ select {
   font-size: var(--input-font-size);
   cursor: pointer;
   min-width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  text-overflow: ellipsis;
   appearance: none;
 
   &:focus {

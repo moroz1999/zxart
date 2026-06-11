@@ -1,0 +1,6 @@
+<label [attr.for]="for ?? null" class="zx-form-label__label">
+  <ng-content></ng-content>
+  @if (required) {
+    <span appText="label" tone="danger" aria-hidden="true">*</span>
+  }
+</label>

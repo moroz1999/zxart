@@ -1,0 +1,22 @@
+@use 'shared/breakpoints' as bp;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-form-field-gap);
+  min-width: 0;
+}
+
+:host-context(.zx-form--fields-horizontal) {
+  display: grid;
+  grid-template-columns: var(--zx-form-label-width) 1fr;
+  column-gap: var(--zx-form-field-column-gap);
+  align-items: start;
+}
+
+:host-context(.zx-form--fields-horizontal.zx-form--mobile-vertical) {
+  @include bp.media-breakpoint-down(md) {
+    display: flex;
+    flex-direction: column;
+  }
+}

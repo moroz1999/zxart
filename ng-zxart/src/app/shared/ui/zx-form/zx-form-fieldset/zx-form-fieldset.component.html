@@ -1,0 +1,9 @@
+<span class="zx-form-fieldset__legend">
+  @if (icon !== '') {
+    <svg-icon [name]="icon" class="zx-form-fieldset__legend-icon" aria-hidden="true"></svg-icon>
+  }
+  {{ legend }}
+</span>
+<div class="zx-form-fieldset__fields">
+  <ng-content></ng-content>
+</div>

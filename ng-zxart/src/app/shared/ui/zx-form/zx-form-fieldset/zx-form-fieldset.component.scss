@@ -1,0 +1,50 @@
+@use 'shared/breakpoints' as bp;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-form-fieldset-gap);
+  min-width: 0;
+}
+
+:host-context(.zx-form--fields-horizontal) {
+  display: grid;
+  grid-template-columns: var(--zx-form-label-width) 1fr;
+  column-gap: var(--zx-form-field-column-gap);
+  align-items: start;
+}
+
+:host-context(.zx-form--fields-horizontal.zx-form--mobile-vertical) {
+  @include bp.media-breakpoint-down(md) {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.zx-form-fieldset__legend {
+  display: flex;
+  align-items: center;
+  gap: var(--zx-form-legend-gap);
+  color: var(--zx-form-legend-color);
+  font-size: var(--zx-form-legend-font-size);
+  font-weight: var(--zx-form-legend-font-weight);
+  letter-spacing: var(--zx-form-legend-letter-spacing);
+  text-transform: uppercase;
+}
+
+.zx-form-fieldset__legend-icon {
+  width: var(--zx-form-legend-icon-size);
+  height: var(--zx-form-legend-icon-size);
+  color: var(--zx-form-legend-icon-color);
+}
+
+:host-context(.zx-form--fields-horizontal) .zx-form-fieldset__legend {
+  padding-top: var(--zx-form-label-horizontal-offset);
+}
+
+.zx-form-fieldset__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-form-gap);
+  min-width: 0;
+}

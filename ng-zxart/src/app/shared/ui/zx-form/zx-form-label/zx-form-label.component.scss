@@ -1,0 +1,17 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+:host-context(.zx-form--fields-horizontal) {
+  padding-top: var(--zx-form-label-horizontal-offset);
+}
+
+.zx-form-label__label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--zx-form-label-required-gap);
+  color: var(--zx-form-label-color);
+  font-size: var(--zx-form-label-font-size);
+  font-weight: var(--zx-form-label-font-weight);
+}

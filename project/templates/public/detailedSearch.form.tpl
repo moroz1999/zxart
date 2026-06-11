@@ -1,3 +1,6 @@
+{if $element->items == 'graphics'}
+	<zx-picture-search></zx-picture-search>
+{else}
 {if $element->title}
 	{capture assign="moduleTitle"}
 		{$element->title}
@@ -267,3 +270,4 @@
 {assign moduleContentClass ""}
 
 {include file=$theme->template("component.contentmodule.tpl")}
+{/if}

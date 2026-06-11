@@ -1,0 +1,59 @@
+// Form layout applied via the zxForm directive (see zx-form.directive.ts).
+// Loaded globally via styles.scss because directives cannot carry styles.
+// This file owns the layout interplay between the zx-form family members.
+
+@use 'shared/breakpoints' as bp;
+
+.zx-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-form-gap);
+  max-width: var(--zx-form-max-width);
+}
+
+.zx-form--section-wrap {
+  flex-direction: row;
+  flex-wrap: wrap;
+  max-width: none;
+}
+
+.zx-form--section-wrap > zx-form-section {
+  flex: 1 1 var(--zx-form-section-min-width);
+}
+
+.zx-form--section-wrap > zx-form-actions {
+  flex: 1 1 100%;
+}
+
+// Divided appearance: fieldsets become bordered blocks with their own padding,
+// section columns are separated by a divider, the action row becomes a footer strip.
+.zx-form--divided {
+  gap: 0;
+}
+
+.zx-form--divided zx-form-section {
+  gap: 0;
+}
+
+.zx-form--divided zx-form-fieldset {
+  padding: var(--zx-form-fieldset-padding);
+}
+
+.zx-form--divided zx-form-fieldset + zx-form-fieldset {
+  border-top: var(--zx-form-divider);
+}
+
+.zx-form--divided.zx-form--section-wrap > zx-form-section + zx-form-section {
+  border-left: var(--zx-form-divider);
+
+  @include bp.media-breakpoint-down(md) {
+    border-left: none;
+    border-top: var(--zx-form-divider);
+  }
+}
+
+.zx-form--divided > zx-form-actions {
+  border-top: var(--zx-form-divider);
+  background: var(--zx-form-footer-bg);
+  padding: var(--zx-form-footer-padding);
+}

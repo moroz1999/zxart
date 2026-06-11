@@ -1,0 +1,23 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--zx-form-actions-gap);
+  padding-top: var(--zx-form-actions-offset);
+}
+
+:host(.zx-form-actions--start) {
+  justify-content: flex-start;
+}
+
+:host(.zx-form-actions--center) {
+  justify-content: center;
+}
+
+:host(.zx-form-actions--end) {
+  justify-content: flex-end;
+}
+
+:host(.zx-form-actions--between) {
+  justify-content: space-between;
+}

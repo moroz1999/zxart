@@ -50,6 +50,9 @@ import {ZxGroupDetailsComponent} from './features/group-details/components/zx-gr
 import {ZxPartyDetailsComponent} from './features/party-details/components/zx-party-details/zx-party-details.component';
 import {ZxPictureDetailsComponent} from './features/picture-details/components/zx-picture-details/zx-picture-details.component';
 import {ZxTuneDetailsComponent} from './features/tune-details/components/zx-tune-details/zx-tune-details.component';
+import {
+  ZxPictureSearchComponent
+} from './features/picture-search/components/zx-picture-search/zx-picture-search.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -118,6 +121,7 @@ export class AppModule implements DoBootstrap  {
             'zx-party-details': ZxPartyDetailsComponent,
             'zx-picture-details': ZxPictureDetailsComponent,
             'zx-tune-details': ZxTuneDetailsComponent,
+            'zx-picture-search': ZxPictureSearchComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});

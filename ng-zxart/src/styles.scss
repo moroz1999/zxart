@@ -1,6 +1,7 @@
 @use 'app/shared/theme';
 @use 'shared/breakpoints' as breakpoints;
 @use 'app/shared/ui/zx-grid/zx-grid-item.directive';
+@use 'app/shared/ui/zx-form/zx-form.directive';
 
 
 
@@ -49,13 +50,6 @@ zx-header {
 .g-nav-next svg {
   width: 56px !important;
   height: 56px !important;
-}
-
-// Shared layout: form column layout (applied via zxForm directive)
-.zx-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--zx-form-gap);
 }
 
 .zx-dialog-backdrop {
