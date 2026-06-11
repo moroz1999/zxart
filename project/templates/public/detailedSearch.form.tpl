@@ -1,5 +1,7 @@
 {if $element->items == 'graphics'}
 	<zx-picture-search></zx-picture-search>
+{elseif $element->items == 'music'}
+	<zx-music-search></zx-music-search>
 {else}
 {if $element->title}
 	{capture assign="moduleTitle"}

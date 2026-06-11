@@ -1,0 +1,325 @@
+@if (vm$ | async; as vm) {
+<zx-stack gap="lg">
+  <h1 appHeading="display">{{ 'music-search.title' | translate }}</h1>
+
+  <zx-panel variant="elevated" radius="lg" padding="none">
+    <form zxForm [sectionWrap]="true" [divided]="true" (ngSubmit)="onSubmit()">
+      @if (vm.isMobile) {
+        <zx-button color="transparent" [block]="true" type="button" (click)="toggleFilters(vm.filtersCollapsed)">
+          <svg-icon name="settings" class="ms-toggle-icon" aria-hidden="true"></svg-icon>
+          {{ 'music-search.filters' | translate }}
+          @if (activeFiltersCount > 0) {
+            <zx-badge variant="primary">{{ activeFiltersCount }}</zx-badge>
+          }
+          <svg-icon
+            [name]="vm.filtersCollapsed ? 'expand-more' : 'expand-less'"
+            class="ms-toggle-icon"
+            aria-hidden="true"
+          ></svg-icon>
+        </zx-button>
+      }
+
+      @if (!vm.isMobile || !vm.filtersCollapsed) {
+        <zx-form-section>
+          <zx-form-fieldset icon="search" [legend]="'music-search.section-query' | translate">
+            <zx-form-field>
+              <zx-form-label>{{ 'music-search.title-word' | translate }}</zx-form-label>
+              <zx-form-control>
+                <zx-input
+                  name="titleWord"
+                  [(ngModel)]="filters.titleWord"
+                  [placeholder]="'music-search.title-word-placeholder' | translate"
+                ></zx-input>
+              </zx-form-control>
+            </zx-form-field>
+
+            <zx-grid desktopColumns="2" mobileColumns="1" gap="sm" align="start">
+              <zx-form-field>
+                <zx-form-label>{{ 'music-search.tags-include' | translate }}</zx-form-label>
+                <zx-form-control>
+                  <zx-tags-input
+                    [tags]="vm.tagsIncludeItems"
+                    [searchResults]="vm.tagsIncludeSearch.results"
+                    [searchLoading]="vm.tagsIncludeSearch.loading"
+                    [placeholder]="'music-search.tags-placeholder' | translate"
+                    [addButtonLabel]="'music-search.tag-add' | translate"
+                    [removeButtonAriaLabel]="'music-search.tag-remove' | translate"
+                    (queryChanged)="onTagsIncludeQuery($event)"
+                    (tagSelected)="onTagIncludeAdded($event)"
+                    (customTagAdded)="onTagIncludeCustom($event)"
+                    (tagRemoved)="onTagIncludeRemoved($event)"
+                  ></zx-tags-input>
+                </zx-form-control>
+              </zx-form-field>
+
+              <zx-form-field>
+                <zx-form-label>{{ 'music-search.tags-exclude' | translate }}</zx-form-label>
+                <zx-form-control>
+                  <zx-tags-input
+                    [tags]="vm.tagsExcludeItems"
+                    [searchResults]="vm.tagsExcludeSearch.results"
+                    [searchLoading]="vm.tagsExcludeSearch.loading"
+                    [placeholder]="'music-search.tags-placeholder' | translate"
+                    [addButtonLabel]="'music-search.tag-add' | translate"
+                    [removeButtonAriaLabel]="'music-search.tag-remove' | translate"
+                    (queryChanged)="onTagsExcludeQuery($event)"
+                    (tagSelected)="onTagExcludeAdded($event)"
+                    (customTagAdded)="onTagExcludeCustom($event)"
+                    (tagRemoved)="onTagExcludeRemoved($event)"
+                  ></zx-tags-input>
+                </zx-form-control>
+              </zx-form-field>
+            </zx-grid>
+          </zx-form-fieldset>
+
+          <zx-form-fieldset icon="star" [legend]="'music-search.section-period' | translate">
+            <zx-form-field>
+              <zx-form-label>{{ 'music-search.year' | translate }}</zx-form-label>
+              <zx-form-control>
+                <zx-grid desktopColumns="2" gap="sm">
+                  <zx-input
+                    name="startYear"
+                    size="sm"
+                    [(ngModel)]="filters.startYear"
+                    [placeholder]="'music-search.year-from-placeholder' | translate"
+                  ></zx-input>
+                  <zx-input
+                    name="endYear"
+                    size="sm"
+                    [(ngModel)]="filters.endYear"
+                    [placeholder]="'music-search.year-to-placeholder' | translate"
+                  ></zx-input>
+                </zx-grid>
+              </zx-form-control>
+            </zx-form-field>
+
+            <zx-grid desktopColumns="2" mobileColumns="1" gap="sm" align="start">
+              <zx-form-field>
+                <zx-form-label>{{ 'music-search.rating' | translate }}</zx-form-label>
+                <zx-form-control>
+                  <zx-select name="rating" [options]="vm.ratingOptions" [(ngModel)]="filters.rating"></zx-select>
+                </zx-form-control>
+              </zx-form-field>
+
+              <zx-form-field>
+                <zx-form-label>{{ 'music-search.party-place' | translate }}</zx-form-label>
+                <zx-form-control>
+                  <zx-input
+                    name="partyPlace"
+                    [(ngModel)]="filters.partyPlace"
+                    [placeholder]="'music-search.party-place-placeholder' | translate"
+                  ></zx-input>
+                </zx-form-control>
+              </zx-form-field>
+            </zx-grid>
+          </zx-form-fieldset>
+
+          <zx-form-fieldset icon="music-note" [legend]="'music-search.section-format' | translate">
+            <zx-form-field>
+              <zx-form-label>{{ 'music-search.format-group-label' | translate }}</zx-form-label>
+              <zx-form-control>
+                <zx-select name="formatGroup" [options]="vm.formatGroupOptions" [(ngModel)]="filters.formatGroup"></zx-select>
+              </zx-form-control>
+            </zx-form-field>
+
+            <zx-form-field>
+              <zx-form-label>{{ 'music-search.format-label' | translate }}</zx-form-label>
+              <zx-form-control>
+                <zx-select name="format" [options]="vm.formatOptions" [(ngModel)]="filters.format"></zx-select>
+                <span appText="caption" tone="muted">{{ 'music-search.format-hint' | translate }}</span>
+              </zx-form-control>
+            </zx-form-field>
+          </zx-form-fieldset>
+        </zx-form-section>
+
+        <zx-form-section>
+          <zx-form-fieldset icon="person" [legend]="'music-search.section-author' | translate">
+            <zx-form-field>
+              <zx-form-label>{{ 'music-search.author-country' | translate }}</zx-form-label>
+              <zx-form-control>
+                <zx-tags-input
+                  [tags]="vm.countryItems"
+                  [searchResults]="vm.countrySearch.results"
+                  [searchLoading]="vm.countrySearch.loading"
+                  [allowCustomTags]="false"
+                  [placeholder]="'music-search.country-placeholder' | translate"
+                  [removeButtonAriaLabel]="'music-search.tag-remove' | translate"
+                  (queryChanged)="onCountryQuery($event)"
+                  (tagSelected)="onCountryAdded($event)"
+                  (tagRemoved)="onCountryRemoved($event)"
+                ></zx-tags-input>
+              </zx-form-control>
+            </zx-form-field>
+
+            <zx-form-field>
+              <zx-form-label>{{ 'music-search.author-city' | translate }}</zx-form-label>
+              <zx-form-control>
+                <zx-tags-input
+                  [tags]="vm.cityItems"
+                  [searchResults]="vm.citySearch.results"
+                  [searchLoading]="vm.citySearch.loading"
+                  [allowCustomTags]="false"
+                  [placeholder]="'music-search.city-placeholder' | translate"
+                  [removeButtonAriaLabel]="'music-search.tag-remove' | translate"
+                  (queryChanged)="onCityQuery($event)"
+                  (tagSelected)="onCityAdded($event)"
+                  (tagRemoved)="onCityRemoved($event)"
+                ></zx-tags-input>
+              </zx-form-control>
+            </zx-form-field>
+          </zx-form-fieldset>
+
+          <zx-form-fieldset icon="settings" [legend]="'music-search.section-traits' | translate">
+            <zx-checkbox-field
+              name="realtime"
+              [(ngModel)]="filters.realtime"
+              [label]="'music-search.realtime' | translate"
+            ></zx-checkbox-field>
+          </zx-form-fieldset>
+
+          <zx-form-fieldset icon="list" [legend]="'music-search.section-results' | translate">
+            <zx-form-field>
+              <zx-form-label>{{ 'music-search.results-type' | translate }}</zx-form-label>
+              <zx-form-control>
+                <zx-button-controls align="start" [wrap]="true" gap="sm">
+                  <zx-button
+                    size="sm"
+                    type="button"
+                    [color]="filters.resultsType === 'zxitem' ? 'primary' : 'outlined'"
+                    (click)="setResultsType('zxitem')"
+                  >{{ 'music-search.results-type-zxitem' | translate }}</zx-button>
+                  <zx-button
+                    size="sm"
+                    type="button"
+                    [color]="filters.resultsType === 'author' ? 'primary' : 'outlined'"
+                    (click)="setResultsType('author')"
+                  >{{ 'music-search.results-type-author' | translate }}</zx-button>
+                </zx-button-controls>
+              </zx-form-control>
+            </zx-form-field>
+
+            <zx-form-field>
+              <zx-form-label>{{ 'music-search.sort-by' | translate }}</zx-form-label>
+              <zx-form-control>
+                <zx-select name="sortParameter" [options]="vm.sortOptions" [(ngModel)]="filters.sortParameter"></zx-select>
+              </zx-form-control>
+            </zx-form-field>
+
+            <zx-form-field>
+              <zx-form-label>{{ 'music-search.order' | translate }}</zx-form-label>
+              <zx-form-control>
+                <zx-button-controls align="start" [wrap]="true" gap="sm">
+                  <zx-button
+                    size="sm"
+                    type="button"
+                    [color]="filters.sortOrder === 'asc' ? 'primary' : 'outlined'"
+                    (click)="setSortOrder('asc')"
+                  >{{ 'music-search.order-asc' | translate }}</zx-button>
+                  <zx-button
+                    size="sm"
+                    type="button"
+                    [color]="filters.sortOrder === 'desc' ? 'primary' : 'outlined'"
+                    (click)="setSortOrder('desc')"
+                  >{{ 'music-search.order-desc' | translate }}</zx-button>
+                  <zx-button
+                    size="sm"
+                    type="button"
+                    [color]="filters.sortOrder === 'rand' ? 'primary' : 'outlined'"
+                    (click)="setSortOrder('rand')"
+                  >{{ 'music-search.order-rand' | translate }}</zx-button>
+                </zx-button-controls>
+              </zx-form-control>
+            </zx-form-field>
+          </zx-form-fieldset>
+        </zx-form-section>
+      }
+
+      @if (!vm.isMobile || !vm.filtersCollapsed) {
+        <zx-form-actions align="between">
+          <zx-inline gap="sm" align="center" [wrap]="true">
+            @if (vm.apiUrl !== '') {
+              <zx-button color="transparent" size="sm" [href]="vm.apiUrl" target="_blank" rel="noopener">
+                <svg-icon name="open-in-new" class="ms-link-icon" aria-hidden="true"></svg-icon>
+                {{ 'music-search.api-link' | translate }}
+              </zx-button>
+            }
+            @if (vm.zipUrl !== '') {
+              <zx-button color="transparent" size="sm" [href]="vm.zipUrl">
+                <svg-icon name="download" class="ms-link-icon" aria-hidden="true"></svg-icon>
+                {{ 'music-search.zip-link' | translate }}
+              </zx-button>
+            }
+          </zx-inline>
+
+          <zx-button-controls align="end">
+            <zx-button color="outlined" type="button" (click)="onReset()">
+              {{ 'music-search.reset' | translate }}
+            </zx-button>
+            <zx-button color="primary" type="submit">
+              <svg-icon name="search" class="ms-link-icon" aria-hidden="true"></svg-icon>
+              {{ 'music-search.search' | translate }}
+            </zx-button>
+          </zx-button-controls>
+        </zx-form-actions>
+      }
+    </form>
+  </zx-panel>
+
+  <zx-inline gap="md" align="baseline" justify="between" [wrap]="true">
+    <h2 appHeading="headline">{{ 'music-search.results-title' | translate }}</h2>
+    @if (!vm.loading && !vm.error) {
+      <span appText="label" tone="muted">
+        {{ 'music-search.results-range' | translate: {start: vm.rangeStart, end: vm.rangeEnd, total: vm.totalAmount} }}
+      </span>
+    }
+  </zx-inline>
+
+  @if (vm.error) {
+    <div appText="caption" tone="danger">{{ 'music-search.error' | translate }}</div>
+  } @else if (vm.resultsType === 'zxitem') {
+    @if (vm.loading) {
+      <zx-table size="sm">
+        <zx-tune-table-skeleton [count]="10"></zx-tune-table-skeleton>
+      </zx-table>
+    } @else if (vm.tunes.length === 0) {
+      <div appText="bodySm" tone="muted">{{ 'music-search.empty' | translate }}</div>
+    } @else {
+      <zx-table size="sm">
+        <ng-container *ngIf="{ id: playingTuneId$ | async } as playing">
+          <table class="tunes-table">
+            <tbody>
+              <zx-tune-row
+                *ngFor="let tune of vm.tunes; index as i"
+                [tune]="tune"
+                [index]="vm.rangeStart + i - 1"
+                [isPlaying]="tune.id === playing.id"
+                (playRequested)="playTune(vm.tunes, i)"
+                (pauseRequested)="pauseTune()"
+              ></zx-tune-row>
+            </tbody>
+          </table>
+        </ng-container>
+      </zx-table>
+    }
+  } @else {
+    @if (!vm.loading && vm.authors.length === 0) {
+      <div appText="bodySm" tone="muted">{{ 'music-search.empty' | translate }}</div>
+    } @else {
+      <zx-authors-table
+        [authors]="vm.authors"
+        [loading]="vm.loading"
+        [rowStartIndex]="vm.rangeStart > 0 ? vm.rangeStart - 1 : 0"
+      ></zx-authors-table>
+    }
+  }
+
+  <zx-pagination
+    *ngIf="vm.pagesAmount > 1"
+    [currentPage]="vm.currentPage"
+    [pagesAmount]="vm.pagesAmount"
+    [urlBase]="vm.paginationUrlBase"
+    [loading]="vm.loading"
+    (pageChange)="onPageChange($event)"
+  ></zx-pagination>
+</zx-stack>
+}

@@ -53,6 +53,9 @@ import {ZxTuneDetailsComponent} from './features/tune-details/components/zx-tune
 import {
   ZxPictureSearchComponent
 } from './features/picture-search/components/zx-picture-search/zx-picture-search.component';
+import {
+  ZxMusicSearchComponent
+} from './features/music-search/components/zx-music-search/zx-music-search.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -122,6 +125,7 @@ export class AppModule implements DoBootstrap  {
             'zx-picture-details': ZxPictureDetailsComponent,
             'zx-tune-details': ZxTuneDetailsComponent,
             'zx-picture-search': ZxPictureSearchComponent,
+            'zx-music-search': ZxMusicSearchComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});
