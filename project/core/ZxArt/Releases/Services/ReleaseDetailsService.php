@@ -71,7 +71,7 @@ readonly class ReleaseDetailsService
         $inlays = $this->prodMediaService->buildReleaseInlays($release);
         $instructions = $this->prodMediaService->buildReleaseInstructions($release);
 
-        $fileStructure = $this->buildFileStructure($release);
+        $fileStructure = $isDownloadable ? $this->buildFileStructure($release) : [];
         $hasPictures = $this->pictureListService->countReleasePictures($release->getId()) > 0;
 
         return new ReleaseDetailsDto(

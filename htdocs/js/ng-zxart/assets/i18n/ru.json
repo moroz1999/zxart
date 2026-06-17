@@ -1,4 +1,20 @@
 {
+  "feedback": {
+    "name": "Имя",
+    "email": "Email",
+    "message": "Сообщение",
+    "name-placeholder": "Ваше имя",
+    "email-placeholder": "your@email.com",
+    "message-placeholder": "Ваше сообщение",
+    "submit": "Отправить",
+    "success": "Спасибо! Ваше сообщение отправлено.",
+    "error-name": "Введите ваше имя",
+    "error-email": "Введите ваш email",
+    "error-email-format": "Введите корректный email",
+    "error-message": "Введите ваше сообщение",
+    "error-email-rejected": "Этот email-адрес отклонён. Используйте другой.",
+    "error-send": "Не удалось отправить. Попробуйте позже."
+  },
   "party-details": {
     "actions": "Действия с пати",
     "add-actions": "Добавить работы",

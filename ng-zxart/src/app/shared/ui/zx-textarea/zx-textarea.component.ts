@@ -21,7 +21,6 @@ export class ZxTextareaComponent implements ControlValueAccessor {
   @Input() label = '';
   @Input() placeholder = '';
   @Input() rows = 4;
-  @Input() errorMessage = '';
 
   value = '';
   disabled = false;

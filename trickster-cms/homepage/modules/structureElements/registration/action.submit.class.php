@@ -1,6 +1,7 @@
 <?php
 
 use App\Users\CurrentUserService;
+use ZxArt\Email\EmailValidationService;
 
 class submitRegistration extends structureElementAction
 {
@@ -69,8 +70,8 @@ class submitRegistration extends structureElementAction
             }
         }
         if ($this->validated && $this->validateAjaxRequest()) {
-            $spamChecker = $this->getService(SpamChecker::class);
-            if ($emailToCheck && !$spamChecker->checkEmail($emailToCheck)) {
+            $emailValidationService = $this->getService(EmailValidationService::class);
+            if ($emailToCheck && !$emailValidationService->isAllowed($emailToCheck)) {
                 $structureElement->errorMessage = $translationsManager->getTranslationByName('userdata.bad_email');
             } else {
                 $userDbFields = [

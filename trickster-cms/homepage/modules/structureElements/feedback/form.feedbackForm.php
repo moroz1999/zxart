@@ -9,9 +9,6 @@ class FeedbackFormStructure extends ElementForm
         'destination' => [
             'type' => 'input.email',
         ],
-        'buttonTitle' => [
-            'type' => 'input.text',
-        ],
         'content' => [
             'type' => 'input.html',
         ],

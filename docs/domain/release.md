@@ -68,6 +68,14 @@ Concrete release (version) of software production. Contains files specific to th
 - **adFilesSelector** - advertising materials
 - Release details permits users with `publicReceive` privilege to reorder screenshots stored in `screenshotsSelector` through the shared screenshot move API.
 - Parsed release structure exposes downloadable archive entries. File downloads are triggered from the Angular release details UI as button actions, while file previews are loaded through `/release-file-content/` and rendered in a dialog instead of linking to legacy `viewFile` pages.
+- The parsed file structure is only built and returned when `isDownloadable()` is true (`fileStructure` is empty otherwise, which also hides the Structure tab). This mirrors the legacy gate `{if $element->parsed && $element->isDownloadable()}` and prevents per-file download links from leaking for non-downloadable releases (e.g. `insales` prods, or old forbidden prods to anonymous users).
+
+### Download Gating (legalStatus)
+- `zxReleaseElement::isDownloadable()` is the single source of truth for whether a release file may be downloaded; the release inherits its legal status from its parent prod (`getLegalStatus()` delegates to the prod).
+- A release is downloadable when its (prod's) status is not `forbidden`/`forbiddenzxart`/`insales`, OR it is a `demoversion` release, OR the `downloadDenied` privilege is set, OR — for non-`insales` statuses only — the current user is authorized and the prod year is known and older than 20 years (the "old prods for registered users" case).
+- `insales` ("in sales") is always excluded, including from the old-prod allowance: such prods/releases must never expose a download link. The legacy release row shows a "purchase" external-link button instead.
+- API responses gate `downloadUrl` (and the parsed `fileStructure`) by `isDownloadable()`, evaluated per request against the current session, so authorized-only download URLs are never emitted to anonymous users.
+- Known residual risk (pre-existing in legacy, UI-only protection): the `release` and `zxfile` download applications themselves do not enforce `isDownloadable()`; protection relies on hiding the link rather than blocking the endpoint.
 - Parsed release structure file names are URL-decoded for display only; download and preview lookup URLs continue to use the original stored archive entry data.
 - Parsed release structure can play TAP and supported TZX entries as generated browser audio from the Angular release details UI.
 - Release table thumbnails show an animated larger first-screenshot preview on pointer hover.

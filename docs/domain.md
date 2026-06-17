@@ -71,3 +71,7 @@ Detailed logic and structure: [domain/voting.md](domain/voting.md)
 ### search
 Public full search and header quick search for ZX Art entities.
 Detailed logic and structure: [domain/search.md](domain/search.md)
+
+### feedback form
+Fixed name/email/message contact form. Sends an email only (no storage).
+Detailed logic and structure: [domain/feedback.md](domain/feedback.md)

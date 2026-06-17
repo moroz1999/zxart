@@ -9,17 +9,15 @@ class receiveFeedback extends structureElementAction
      */
     public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
-        if ($this->validated) {
+        if ($this->validated === true) {
             $structureElement->prepareActualData();
-
             $structureElement->structureName = $structureElement->title;
-
             $structureElement->persistElementData();
             $structureElement->persistDisplayMenusLinks();
             $controller->redirect($structureElement->URL);
-            $structureElement->setViewName('result');
+        } else {
+            $structureElement->executeAction('showForm');
         }
-        $structureElement->executeAction("showForm");
     }
 
     public function setExpectedFields(&$expectedFields)
@@ -28,9 +26,7 @@ class receiveFeedback extends structureElementAction
             'title',
             'destination',
             'content',
-            'buttonTitle',
-            'role',
-            'displayMenus'
+            'displayMenus',
         ];
     }
 
@@ -39,5 +35,3 @@ class receiveFeedback extends structureElementAction
         $validators['destination'][] = 'email';
     }
 }
-
-

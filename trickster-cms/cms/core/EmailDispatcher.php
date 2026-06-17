@@ -217,7 +217,7 @@ class EmailDispatcher extends errorLogger
         return $result;
     }
 
-    public function getEmptyDispatchment()
+    public function getEmptyDispatchment(): EmailDispatchment
     {
         $emailDispatchment = new EmailDispatchment();
         $emailDispatchment->setEmailDispatcher($this);

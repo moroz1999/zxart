@@ -1,6 +1,6 @@
 <?php
 
-class feedbackEmailDispatchmentType extends designThemeEmailDispatchmentType
+class feedbackFormEmailDispatchmentType extends designThemeEmailDispatchmentType
 {
     protected $displayUnsubscribeLink = false;
     protected $displayWebLink = false;
@@ -18,6 +18,6 @@ class feedbackEmailDispatchmentType extends designThemeEmailDispatchmentType
         $this->emailTemplateThemeName = 'projectEmail';
         $this->emailTemplateName = 'standardLayout.tpl';
         $this->contentTemplateThemeName = 'projectDocument';
-        $this->contentTemplateName = 'content.feedback.tpl';
+        $this->contentTemplateName = 'content.feedbackForm.tpl';
     }
 }

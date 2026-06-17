@@ -218,5 +218,6 @@ return [
     // DependencyInjectionContextTrait users created as PHP-DI factory dependencies
     privilegesManager::class => autowire()->method('setContainer', DI\get(Container::class)),
     ActionFactory::class => autowire()->method('setContainer', DI\get(Container::class)),
+    settingsManager::class => autowire()->method('setContainer', DI\get(Container::class)),
 
 ];

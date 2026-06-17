@@ -11,7 +11,8 @@ class EmailDispatchmentSender extends errorLogger
         $fromName,
         $subject,
         $attachmentsList = [],
-        $unsubscribeLink = null
+        $unsubscribeLink = null,
+        $replyTo = null
     )
     {
         $phpmailerObject = new PHPMailer();
@@ -49,6 +50,10 @@ class EmailDispatchmentSender extends errorLogger
         $phpmailerObject->From = $fromEmail;
         $phpmailerObject->FromName = $fromName;
         $phpmailerObject->Subject = $subject;
+
+        if ($replyTo) {
+            $phpmailerObject->AddReplyTo($replyTo);
+        }
 
         if ($unsubscribeLink) {
             $phpmailerObject->AddCustomHeader("List-Unsubscribe: " . $unsubscribeLink);

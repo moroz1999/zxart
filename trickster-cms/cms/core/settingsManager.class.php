@@ -14,7 +14,7 @@ class settingsManager implements DependencyInjectionContextInterface
     {
     }
 
-    public function getSettingsList()
+    public function getSettingsList(): array
     {
         if (!isset($this->settingsList)) {
             $this->loadSettingsList();

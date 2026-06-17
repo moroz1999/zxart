@@ -1,4 +1,20 @@
 {
+  "feedback": {
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "name-placeholder": "Your name",
+    "email-placeholder": "your@email.com",
+    "message-placeholder": "Your message",
+    "submit": "Send",
+    "success": "Thank you! Your message has been sent.",
+    "error-name": "Please enter your name",
+    "error-email": "Please enter your email",
+    "error-email-format": "Please enter a valid email address",
+    "error-message": "Please enter your message",
+    "error-email-rejected": "This email address was rejected. Please use a different one.",
+    "error-send": "Sending failed. Please try again later."
+  },
   "party-details": {
     "actions": "Party actions",
     "add-actions": "Add party works",

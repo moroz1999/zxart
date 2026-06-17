@@ -1,0 +1,55 @@
+<zx-form-message *ngIf="submitted" variant="success">
+  {{ 'feedback.success' | translate }}
+</zx-form-message>
+
+<form *ngIf="!submitted" zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
+  <zx-stack spacing="lg">
+    <zx-form-field>
+      <zx-form-label for="feedback-name" [required]="true">{{ 'feedback.name' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-input
+          id="feedback-name"
+          formControlName="name"
+          type="text"
+          [placeholder]="'feedback.name-placeholder' | translate"
+        ></zx-input>
+        <zx-control-errors [control]="form.controls['name']" [messages]="nameMessages"></zx-control-errors>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="feedback-email" [required]="true">{{ 'feedback.email' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-input
+          id="feedback-email"
+          formControlName="email"
+          type="email"
+          [placeholder]="'feedback.email-placeholder' | translate"
+        ></zx-input>
+        <zx-control-errors [control]="form.controls['email']" [messages]="emailMessages"></zx-control-errors>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="feedback-message" [required]="true">{{ 'feedback.message' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-textarea
+          formControlName="message"
+          [rows]="6"
+          [placeholder]="'feedback.message-placeholder' | translate"
+        ></zx-textarea>
+        <zx-control-errors [control]="form.controls['message']" [messages]="messageMessages"></zx-control-errors>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-message *ngIf="errorMessage" variant="error">
+      {{ errorMessage }}
+    </zx-form-message>
+
+    <zx-form-actions align="start">
+      <zx-button color="primary" type="submit" [disabled]="submitting">
+        {{ 'feedback.submit' | translate }}
+      </zx-button>
+    </zx-form-actions>
+  </zx-stack>
+</form>

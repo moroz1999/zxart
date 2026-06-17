@@ -1,4 +1,20 @@
 {
+  "feedback": {
+    "name": "Nombre",
+    "email": "Email",
+    "message": "Mensaje",
+    "name-placeholder": "Tu nombre",
+    "email-placeholder": "tu@email.com",
+    "message-placeholder": "Tu mensaje",
+    "submit": "Enviar",
+    "success": "¡Gracias! Tu mensaje ha sido enviado.",
+    "error-name": "Introduce tu nombre",
+    "error-email": "Introduce tu email",
+    "error-email-format": "Introduce un email válido",
+    "error-message": "Introduce tu mensaje",
+    "error-email-rejected": "Esta dirección de email fue rechazada. Usa otra.",
+    "error-send": "Error al enviar. Inténtalo más tarde."
+  },
   "party-details": {
     "actions": "Acciones de la party",
     "add-actions": "Añadir trabajos",

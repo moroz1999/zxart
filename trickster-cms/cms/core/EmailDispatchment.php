@@ -13,6 +13,7 @@ class EmailDispatchment
     protected $priority;
     protected $fromName;
     protected $fromEmail;
+    protected $replyTo;
     protected $subject;
     protected $unsubscribeLink;
     /**
@@ -169,6 +170,16 @@ class EmailDispatchment
         return $this->fromName;
     }
 
+    public function setReplyTo($replyTo)
+    {
+        $this->replyTo = $replyTo;
+    }
+
+    public function getReplyTo()
+    {
+        return $this->replyTo;
+    }
+
     public function setSubject($subject)
     {
         $this->subject = $subject;
@@ -200,6 +211,7 @@ class EmailDispatchment
         $dataObject->priority = $this->priority;
         $dataObject->fromName = $this->fromName;
         $dataObject->fromEmail = $this->fromEmail;
+        $dataObject->replyTo = $this->replyTo;
         $dataObject->subject = $this->subject;
 
         $dataObject->persist();
@@ -240,6 +252,7 @@ class EmailDispatchment
         $this->priority = $dataObject->priority;
         $this->fromName = $dataObject->fromName;
         $this->fromEmail = $dataObject->fromEmail;
+        $this->replyTo = $dataObject->replyTo;
         $this->subject = $dataObject->subject;
     }
 
@@ -318,7 +331,7 @@ class EmailDispatchment
     protected function sendEmail($content, $receiverEmail)
     {
         $sender = new EmailDispatchmentSender();
-        return $sender->sendEmail($content, $receiverEmail, $this->fromEmail, $this->fromName, $this->subject, $this->loadAttachmentsList(), $this->receiver->getUnsubscribeLink());
+        return $sender->sendEmail($content, $receiverEmail, $this->fromEmail, $this->fromName, $this->subject, $this->loadAttachmentsList(), $this->receiver->getUnsubscribeLink(), $this->replyTo);
     }
 
     protected function getNextAwaitingItem()

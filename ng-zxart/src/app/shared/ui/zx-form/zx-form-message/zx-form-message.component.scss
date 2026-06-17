@@ -1,0 +1,7 @@
+:host {
+  display: block;
+}
+
+:host(.zx-form-message--success) {
+  color: var(--success-color);
+}

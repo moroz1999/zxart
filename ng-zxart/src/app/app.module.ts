@@ -56,6 +56,9 @@ import {
 import {
   ZxMusicSearchComponent
 } from './features/music-search/components/zx-music-search/zx-music-search.component';
+import {
+  ZxFeedbackFormComponent
+} from './features/feedback/components/zx-feedback-form/zx-feedback-form.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -126,6 +129,7 @@ export class AppModule implements DoBootstrap  {
             'zx-tune-details': ZxTuneDetailsComponent,
             'zx-picture-search': ZxPictureSearchComponent,
             'zx-music-search': ZxMusicSearchComponent,
+            'zx-feedback-form': ZxFeedbackFormComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});

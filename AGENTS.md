@@ -13,6 +13,7 @@ You MUST read the MD files linked in this document which are relevant to the cur
 - After finishing the task code, it is necessary to read the rules on this topic from the .md docs once again and double-check your changes.
 - Before starting a task, you MUST read the relevant documents from the DOCUMENTATION TREE below.
 - Documentation updates must be placed in the appropriate .md file (e.g., PHP rules in php.md).
+- Documentation must describe only the CURRENT state of the code. Do NOT mention services, classes, practices, or techniques that were removed or replaced, and do NOT describe the prior state of refactored code (no "replaces X", "formerly Y", "no longer uses Z", "previously did W"). Git history is the record of the past. (Referencing currently-existing legacy code is fine — the ban is on describing what no longer exists.)
 - Any new knowledge about functionality must be added to separate sub-documents within `domain.md`.
 - Documentation additions in `docs` must be concise, clear, and only about the core points.
 - ALWAYS add newly created files to GIT immediately after creation.

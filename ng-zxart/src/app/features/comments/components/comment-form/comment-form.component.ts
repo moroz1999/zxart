@@ -7,7 +7,9 @@ import {CommentsService} from '../../services/comments.service';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxTextareaComponent} from '../../../../shared/ui/zx-textarea/zx-textarea.component';
-import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
+import {ZxControlErrorsComponent} from '../../../../shared/ui/zx-form/zx-control-errors/zx-control-errors.component';
+import {ZxFormControlComponent} from '../../../../shared/ui/zx-form/zx-form-control/zx-form-control.component';
+import {ZxFormMessageComponent} from '../../../../shared/ui/zx-form/zx-form-message/zx-form-message.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 
 @Component({
@@ -20,7 +22,9 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
     ZxButtonComponent,
     ZxButtonControlsComponent,
     ZxTextareaComponent,
-    TextDirective,
+    ZxControlErrorsComponent,
+    ZxFormControlComponent,
+    ZxFormMessageComponent,
     ZxStackComponent,
   ],
   templateUrl: './comment-form.component.html',
@@ -36,6 +40,8 @@ export class CommentFormComponent implements OnInit {
   isSubmitting = false;
   errorMessage?: string;
 
+  readonly contentMessages = {required: 'comments.error-content', minlength: 'comments.error-content'};
+
   constructor(
     private fb: FormBuilder,
     private commentsService: CommentsService,
@@ -43,14 +49,6 @@ export class CommentFormComponent implements OnInit {
     this.commentForm = this.fb.group({
       content: ['', [Validators.required, Validators.minLength(2)]]
     });
-  }
-
-  get contentErrorMessage(): string {
-    const control = this.commentForm.get('content');
-    if (control?.hasError('required') && control.touched) {
-      return 'comments.error-content';
-    }
-    return '';
   }
 
   ngOnInit(): void {
