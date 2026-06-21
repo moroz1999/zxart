@@ -30,6 +30,26 @@ class cityElement extends structureElement
         $multiLanguageFields[] = 'title';
     }
 
+    public function getUrl($action = null)
+    {
+        if ($action === null && ($sectionUrl = $this->getGeoSectionUrl()) !== null) {
+            return $sectionUrl . '?city=' . $this->getId();
+        }
+        return parent::getUrl($action);
+    }
+
+    private function getGeoSectionUrl(): ?string
+    {
+        $element = $this->getFirstParentElement();
+        while ($element !== null) {
+            if ($element->structureType === 'countriesList') {
+                return $element->getUrl();
+            }
+            $element = $element->getFirstParentElement();
+        }
+        return null;
+    }
+
     public function getCountryId()
     {
         if ($firstParent = $this->getFirstParentElement()) {

@@ -52,19 +52,11 @@
       </ng-container>
     </div>
 
-    <div class="ap-rating-strip" *ngIf="core.ratings.artist > 0 || core.ratings.musician > 0">
-      <span appText="caption" tone="muted" class="ap-rating-strip__label">{{ 'author-details.header.rating.label' | translate }}</span>
-      <span *ngIf="core.ratings.artist > 0" class="ap-rating-strip__item">
-        <svg-icon name="image" aria-hidden="true" class="ap-rating-strip__icon"></svg-icon>
-        <span appHeading="title" class="ap-rating-strip__value">{{ core.ratings.artist.toFixed(2) }}</span>
-        <span appText="caption" tone="muted" class="ap-rating-strip__sub">{{ 'author-details.header.rating.artist' | translate }}</span>
-      </span>
-      <span *ngIf="core.ratings.musician > 0" class="ap-rating-strip__item">
-        <svg-icon name="music-note" aria-hidden="true" class="ap-rating-strip__icon"></svg-icon>
-        <span appHeading="title" class="ap-rating-strip__value">{{ core.ratings.musician.toFixed(2) }}</span>
-        <span appText="caption" tone="muted" class="ap-rating-strip__sub">{{ 'author-details.header.rating.musician' | translate }}</span>
-      </span>
-    </div>
+    <zx-rating-strip
+      *ngIf="core.ratings.artist > 0 || core.ratings.musician > 0"
+      [label]="'author-details.header.rating.label' | translate"
+      [items]="ratingItems">
+    </zx-rating-strip>
 
     <div class="ap-meta-row" *ngIf="core.primaryAuthor">
       <span class="ap-meta-row__label">{{ 'author-details.header.primary-author' | translate }}:</span>
@@ -112,34 +104,11 @@
       </div>
     </div>
 
-    <div class="ap-meta-row ap-meta-row--tech">
-      <button type="button" class="ap-tech-toggle" (click)="toggleTech()">
-        <svg-icon *ngIf="!showTech" name="expand-more" aria-hidden="true"></svg-icon>
-        <svg-icon *ngIf="showTech" name="expand-less" aria-hidden="true"></svg-icon>
-        {{ 'author-details.header.tech-toggle' | translate }}
-      </button>
-      <div class="ap-tech" *ngIf="showTech">
-        <div class="ap-tech__row" *ngIf="core.tech.palette">
-          <span class="ap-tech__k">{{ 'author-details.header.tech.palette' | translate }}</span>
-          <span class="ap-tech__v">{{ techValueKey('palette', core.tech.palette) | translate }}</span>
-        </div>
-        <div class="ap-tech__row" *ngIf="core.tech.ayChip">
-          <span class="ap-tech__k">{{ 'author-details.header.tech.ay-chip' | translate }}</span>
-          <span class="ap-tech__v">{{ techValueKey('chiptype', core.tech.ayChip) | translate }}</span>
-        </div>
-        <div class="ap-tech__row" *ngIf="core.tech.ayChannels">
-          <span class="ap-tech__k">{{ 'author-details.header.tech.ay-channels' | translate }}</span>
-          <span class="ap-tech__v">{{ techValueKey('channelstype', core.tech.ayChannels) | translate }}</span>
-        </div>
-        <div class="ap-tech__row" *ngIf="core.tech.ayClock">
-          <span class="ap-tech__k">{{ 'author-details.header.tech.ay-clock' | translate }}</span>
-          <span class="ap-tech__v">{{ core.tech.ayClock }}</span>
-        </div>
-        <div class="ap-tech__row" *ngIf="core.tech.intFreq">
-          <span class="ap-tech__k">{{ 'author-details.header.tech.int-freq' | translate }}</span>
-          <span class="ap-tech__v">{{ core.tech.intFreq }}</span>
-        </div>
-      </div>
+    <div class="ap-meta-row ap-meta-row--tech" *ngIf="techRows.length">
+      <zx-tech-settings
+        [title]="'author-details.header.tech-toggle' | translate"
+        [rows]="techRows">
+      </zx-tech-settings>
     </div>
   </div>
 </section>

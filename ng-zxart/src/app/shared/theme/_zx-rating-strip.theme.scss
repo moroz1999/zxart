@@ -1,0 +1,11 @@
+:root {
+  /* Rating value color in light mode. */
+  --zx-rating-strip-value-color: var(--warning-700);
+  /* Rating value mono font family. */
+  --zx-rating-strip-value-font: var(--font-mono);
+}
+
+.dark-mode {
+  /* Rating value color in dark mode. */
+  --zx-rating-strip-value-color: var(--warning-400);
+}

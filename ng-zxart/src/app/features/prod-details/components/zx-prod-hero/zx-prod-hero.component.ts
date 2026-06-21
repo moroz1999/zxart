@@ -12,6 +12,7 @@ import {ZxProdEditingControlsComponent} from '../zx-prod-editing-controls/zx-pro
 import {ZxChipComponent} from '../../../../shared/ui/zx-chip/zx-chip.component';
 import {ZxPartyPlaceComponent} from '../../../../shared/lib/zx-party-place/zx-party-place.component';
 import {ZxAddedByComponent} from '../../../../shared/ui/zx-added-by/zx-added-by.component';
+import {ZxRatingStripComponent} from '../../../../shared/components/zx-rating-strip/zx-rating-strip.component';
 
 interface ProdAuthorRoleGroup {
   role: string | null;
@@ -43,6 +44,7 @@ const PRIORITY_AUTHOR_ROLES = [
     ZxChipComponent,
     ZxPartyPlaceComponent,
     ZxAddedByComponent,
+    ZxRatingStripComponent,
   ],
   templateUrl: './zx-prod-hero.component.html',
   styleUrls: ['./zx-prod-hero.component.scss'],

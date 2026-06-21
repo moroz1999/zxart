@@ -15,8 +15,11 @@ import {ZxGridItemDirective} from '../../../../shared/ui/zx-grid/zx-grid-item.di
 import {ZxBadgeComponent} from '../../../../shared/ui/zx-badge/zx-badge.component';
 import {TagsListComponent} from '../../../../shared/lib/tags-list/tags-list.component';
 import {ZxItemControlsComponent} from '../../../../shared/ui/zx-item-controls/zx-item-controls.component';
+import {ZxRatingStripComponent} from '../../../../shared/components/zx-rating-strip/zx-rating-strip.component';
+import {ZxCalloutComponent} from '../../../../shared/ui/zx-callout/zx-callout.component';
 import {ZxAddedByComponent} from '../../../../shared/ui/zx-added-by/zx-added-by.component';
 import {ZxPartyPlaceComponent} from '../../../../shared/lib/zx-party-place/zx-party-place.component';
+import {ZxProdContextComponent} from '../../../../entities/zx-prod-context/components/zx-prod-context/zx-prod-context.component';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 
@@ -45,8 +48,11 @@ import {RatingsListComponent} from '../../../ratings/components/ratings-list/rat
     ZxBadgeComponent,
     TagsListComponent,
     ZxItemControlsComponent,
+    ZxRatingStripComponent,
+    ZxCalloutComponent,
     ZxAddedByComponent,
     ZxPartyPlaceComponent,
+    ZxProdContextComponent,
     HeadingDirective,
     TextDirective,
     ZxTunePlayerComponent,

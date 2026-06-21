@@ -5,12 +5,14 @@ import {ReleaseDetailsDto} from '../../models/release-details.dto';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxReleaseTypeBadgeComponent} from '../../../../shared/ui/zx-release-type-badge/zx-release-type-badge.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxProdPeopleRowComponent} from '../../../../shared/ui/zx-prod-people-row/zx-prod-people-row.component';
 import {ZxReleaseEditingControlsComponent} from '../zx-release-editing-controls/zx-release-editing-controls.component';
 import {ZxAddedByComponent} from '../../../../shared/ui/zx-added-by/zx-added-by.component';
 import {ZxHardwareIconComponent} from '../../../../shared/ui/zx-hardware-icon/zx-hardware-icon.component';
+import {ZxRatingStripComponent} from '../../../../shared/components/zx-rating-strip/zx-rating-strip.component';
 
 @Component({
   selector: 'zx-release-hero',
@@ -21,12 +23,14 @@ import {ZxHardwareIconComponent} from '../../../../shared/ui/zx-hardware-icon/zx
     ZxButtonComponent,
     ZxReleaseTypeBadgeComponent,
     ZxInlineComponent,
+    ZxStackComponent,
     HeadingDirective,
     TextDirective,
     ZxProdPeopleRowComponent,
     ZxReleaseEditingControlsComponent,
     ZxAddedByComponent,
     ZxHardwareIconComponent,
+    ZxRatingStripComponent,
   ],
   templateUrl: './zx-release-hero.component.html',
   styleUrl: './zx-release-hero.component.scss',

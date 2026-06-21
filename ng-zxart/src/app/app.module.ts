@@ -59,6 +59,9 @@ import {
 import {
   ZxFeedbackFormComponent
 } from './features/feedback/components/zx-feedback-form/zx-feedback-form.component';
+import {ZxGeoComponent} from './features/geo/components/zx-geo/zx-geo.component';
+import {ZxStatsComponent} from './features/stats/components/zx-stats/zx-stats.component';
+import {provideCharts, withDefaultRegisterables} from 'ng2-charts';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, `${environment.assetsUrl}i18n/`, '.json');
@@ -78,6 +81,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ],
     providers: [
         provideHttpClient(),
+        provideCharts(withDefaultRegisterables()),
         provideTranslateService({
             loader: {
                 provide: TranslateLoader,
@@ -130,6 +134,8 @@ export class AppModule implements DoBootstrap  {
             'zx-picture-search': ZxPictureSearchComponent,
             'zx-music-search': ZxMusicSearchComponent,
             'zx-feedback-form': ZxFeedbackFormComponent,
+            'zx-geo': ZxGeoComponent,
+            'zx-stats': ZxStatsComponent,
         } as { [key: string]: Type<Object> };
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});

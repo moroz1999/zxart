@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+.zx-stats-section-skeleton__value {
+  height: 28px;
+  width: 60%;
+}
+
+.zx-stats-section-skeleton__label {
+  height: 12px;
+  width: 80%;
+  margin-top: var(--space-8);
+}
+
+.zx-stats-section-skeleton__title {
+  height: 18px;
+  width: 40%;
+  margin-bottom: var(--space-16);
+}
+
+.zx-stats-section-skeleton__chart {
+  height: 180px;
+  width: 100%;
+}

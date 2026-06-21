@@ -6,7 +6,9 @@ namespace ZxArt\GroupList\Repositories;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use LanguagesManager;
 use ZxArt\GroupList\GroupSortColumn;
+use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\LatinCyrillicMap;
 use ZxArt\Shared\SortDirection;
@@ -18,6 +20,7 @@ final readonly class GroupListRepository
 
     public function __construct(
         private Connection $db,
+        private LanguagesManager $languagesManager,
     ) {
     }
 
@@ -36,8 +39,12 @@ final readonly class GroupListRepository
         ?string $letter = null,
         array $types = [EntityType::Group, EntityType::GroupAlias],
         ?string $groupType = null,
+        ?float $north = null,
+        ?float $south = null,
+        ?float $east = null,
+        ?float $west = null,
     ): array {
-        $queries = $this->buildTypedQueries($types, $search, $countryId, $cityId, $letter, $groupType);
+        $queries = $this->buildTypedQueries($types, $search, $countryId, $cityId, $letter, $groupType, $north, $south, $east, $west);
         if ($queries === []) {
             return [];
         }
@@ -47,11 +54,14 @@ final readonly class GroupListRepository
             $combined->unionAll($q);
         }
 
-        return $combined
+        /** @var int[] $ids */
+        $ids = $combined
             ->orderBy($sortColumn->value, $sortDirection->value)
             ->offset($start)
             ->limit($limit)
             ->pluck('id');
+
+        return $ids;
     }
 
     /**
@@ -64,15 +74,19 @@ final readonly class GroupListRepository
         ?string $letter = null,
         array $types = [EntityType::Group, EntityType::GroupAlias],
         ?string $groupType = null,
+        ?float $north = null,
+        ?float $south = null,
+        ?float $east = null,
+        ?float $west = null,
     ): int {
         $total = 0;
 
         if (in_array(EntityType::Group, $types, true)) {
-            $total += $this->buildGroupsQuery($search, $countryId, $cityId, $letter, $groupType)->count(self::GROUPS_TABLE . '.id');
+            $total += $this->buildGroupsQuery($search, $countryId, $cityId, $letter, $groupType, $north, $south, $east, $west)->count(self::GROUPS_TABLE . '.id');
         }
 
         if (in_array(EntityType::GroupAlias, $types, true)) {
-            $total += $this->buildAliasesQuery($search, $countryId, $cityId, $letter, $groupType)->count(self::ALIASES_TABLE . '.id');
+            $total += $this->buildAliasesQuery($search, $countryId, $cityId, $letter, $groupType, $north, $south, $east, $west)->count(self::ALIASES_TABLE . '.id');
         }
 
         return $total;
@@ -89,15 +103,19 @@ final readonly class GroupListRepository
         ?int $cityId,
         ?string $letter,
         ?string $groupType = null,
+        ?float $north = null,
+        ?float $south = null,
+        ?float $east = null,
+        ?float $west = null,
     ): array {
         $queries = [];
 
         if (in_array(EntityType::Group, $types, true)) {
-            $queries[] = $this->buildGroupsQuery($search, $countryId, $cityId, $letter, $groupType);
+            $queries[] = $this->buildGroupsQuery($search, $countryId, $cityId, $letter, $groupType, $north, $south, $east, $west);
         }
 
         if (in_array(EntityType::GroupAlias, $types, true)) {
-            $queries[] = $this->buildAliasesQuery($search, $countryId, $cityId, $letter, $groupType);
+            $queries[] = $this->buildAliasesQuery($search, $countryId, $cityId, $letter, $groupType, $north, $south, $east, $west);
         }
 
         return $queries;
@@ -159,6 +177,10 @@ final readonly class GroupListRepository
         ?int $cityId,
         ?string $letter = null,
         ?string $groupType = null,
+        ?float $north = null,
+        ?float $south = null,
+        ?float $east = null,
+        ?float $west = null,
     ): Builder {
         $query = $this->db->table(self::GROUPS_TABLE)
             ->distinct()
@@ -175,13 +197,7 @@ final readonly class GroupListRepository
             });
         }
 
-        if ($countryId !== null) {
-            $query->where(self::GROUPS_TABLE . '.country', '=', $countryId);
-        }
-
-        if ($cityId !== null) {
-            $query->where(self::GROUPS_TABLE . '.city', '=', $cityId);
-        }
+        $this->applyLocationFilters($query, self::GROUPS_TABLE, $countryId, $cityId, $north, $south, $east, $west);
 
         $this->applyLetterFilter($query, self::GROUPS_TABLE . '.title', $letter);
         $this->applyGroupTypeFilter($query, self::GROUPS_TABLE, $groupType);
@@ -195,6 +211,10 @@ final readonly class GroupListRepository
         ?int $cityId,
         ?string $letter = null,
         ?string $groupType = null,
+        ?float $north = null,
+        ?float $south = null,
+        ?float $east = null,
+        ?float $west = null,
     ): Builder {
         $grpAlias = 'grp';
 
@@ -216,13 +236,7 @@ final readonly class GroupListRepository
             $query->where(self::ALIASES_TABLE . '.title', 'like', $likeSearch);
         }
 
-        if ($countryId !== null) {
-            $query->where($grpAlias . '.country', '=', $countryId);
-        }
-
-        if ($cityId !== null) {
-            $query->where($grpAlias . '.city', '=', $cityId);
-        }
+        $this->applyLocationFilters($query, $grpAlias, $countryId, $cityId, $north, $south, $east, $west);
 
         $this->applyLetterFilter($query, self::ALIASES_TABLE . '.title', $letter);
         $this->applyGroupTypeFilter($query, $grpAlias, $groupType);
@@ -237,6 +251,86 @@ final readonly class GroupListRepository
         }
 
         $query->where($groupTableOrAlias . '.type', '=', $groupType);
+    }
+
+    private function applyLocationFilters(
+        Builder $query,
+        string $groupTableOrAlias,
+        ?int $countryId,
+        ?int $cityId,
+        ?float $north,
+        ?float $south,
+        ?float $east,
+        ?float $west,
+    ): void {
+        if ($countryId !== null) {
+            $query->where($groupTableOrAlias . '.country', '=', $countryId);
+            return;
+        }
+
+        if ($cityId !== null) {
+            $query->where($groupTableOrAlias . '.city', '=', $cityId);
+            return;
+        }
+
+        if (!$this->hasBounds($north, $south, $east, $west)) {
+            return;
+        }
+
+        $boundsNorth = (float)$north;
+        $boundsSouth = (float)$south;
+        $boundsEast = (float)$east;
+        $boundsWest = (float)$west;
+
+        $query->where(function (Builder $locationQuery) use ($groupTableOrAlias, $boundsNorth, $boundsSouth, $boundsEast, $boundsWest) {
+            $locationQuery
+                ->whereIn($groupTableOrAlias . '.country', $this->buildLocationBoundsQuery(DatabaseTable::Country, $boundsNorth, $boundsSouth, $boundsEast, $boundsWest))
+                ->orWhereIn($groupTableOrAlias . '.city', $this->buildLocationBoundsQuery(DatabaseTable::City, $boundsNorth, $boundsSouth, $boundsEast, $boundsWest));
+        });
+    }
+
+    private function buildLocationBoundsQuery(
+        DatabaseTable $table,
+        float $north,
+        float $south,
+        float $east,
+        float $west,
+    ): Builder {
+        $query = $this->db->table($table->value)
+            ->select('id')
+            ->where('languageId', '=', $this->getCurrentLanguageId())
+            ->where('latitude', '<=', $north)
+            ->where('latitude', '>=', $south)
+            ->where('longitude', '!=', 0)
+            ->where('latitude', '!=', 0);
+
+        $this->applyLongitudeBounds($query, $east, $west);
+
+        return $query;
+    }
+
+    private function applyLongitudeBounds(Builder $query, float $east, float $west): void
+    {
+        if ($west <= $east) {
+            $query->where('longitude', '>=', $west)
+                ->where('longitude', '<=', $east);
+            return;
+        }
+
+        $query->where(function (Builder $longitudeQuery) use ($east, $west) {
+            $longitudeQuery->where('longitude', '>=', $west)
+                ->orWhere('longitude', '<=', $east);
+        });
+    }
+
+    private function hasBounds(?float $north, ?float $south, ?float $east, ?float $west): bool
+    {
+        return $north !== null && $south !== null && $east !== null && $west !== null;
+    }
+
+    private function getCurrentLanguageId(): int
+    {
+        return (int)$this->languagesManager->getCurrentLanguageId();
     }
 
     private function applyLetterFilter(Builder $query, string $titleColumn, ?string $letter): void

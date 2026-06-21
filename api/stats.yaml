@@ -1,0 +1,169 @@
+paths:
+  /stats/:
+    get:
+      summary: Statistics section overview, per-category sections and top users
+      parameters:
+        - in: query
+          name: action
+          schema:
+            type: string
+            enum: [overview, soft, music, gfx, users]
+            default: overview
+      responses:
+        '200':
+          description: Statistics payload for the requested action
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/StatsOverview'
+                  - $ref: '#/components/schemas/StatsCategorySection'
+                  - $ref: '#/components/schemas/StatsUsersSection'
+        '400':
+          description: Invalid action
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+
+components:
+  schemas:
+    StatsOverview:
+      type: object
+      required: [prods, releases, authors, authorsWithAliases, groups, groupsWithAliases, music, pictures]
+      properties:
+        prods:
+          type: integer
+        releases:
+          type: integer
+        authors:
+          type: integer
+        authorsWithAliases:
+          type: integer
+        groups:
+          type: integer
+        groupsWithAliases:
+          type: integer
+        music:
+          type: integer
+        pictures:
+          type: integer
+    StatsYearSeries:
+      type: object
+      required: [years, all, rated, avg]
+      properties:
+        years:
+          type: array
+          items:
+            type: integer
+        all:
+          type: array
+          items:
+            type: integer
+        rated:
+          type: array
+          items:
+            type: integer
+        avg:
+          type: array
+          items:
+            type: number
+            format: float
+    StatsDistribution:
+      type: object
+      required: [titleKey, classes, rows]
+      properties:
+        titleKey:
+          type: string
+        classes:
+          type: array
+          items:
+            type: string
+        rows:
+          type: array
+          description: One row per year; each row holds the count per class in the same order as classes.
+          items:
+            type: array
+            items:
+              type: integer
+    StatsDailySeries:
+      type: object
+      required: [labelKey, dates, data]
+      properties:
+        labelKey:
+          type: string
+        dates:
+          type: array
+          items:
+            type: string
+        data:
+          type: array
+          items:
+            type: integer
+    StatsTopUser:
+      type: object
+      required: [name, url, badge, count]
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+          nullable: true
+        badge:
+          type: string
+          nullable: true
+          enum: [vip, volunteer, supporter, null]
+        count:
+          type: integer
+    StatsCategorySection:
+      type: object
+      required: [totalWorks, peakYear, dailyTotal, topUnitKey, series, distributions, daily, top]
+      properties:
+        totalWorks:
+          type: integer
+        peakYear:
+          type: integer
+        dailyTotal:
+          type: integer
+        topUnitKey:
+          type: string
+        series:
+          $ref: '#/components/schemas/StatsYearSeries'
+        distributions:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatsDistribution'
+        daily:
+          $ref: '#/components/schemas/StatsDailySeries'
+        top:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatsTopUser'
+    StatsUsersSection:
+      type: object
+      required: [voters, comments, tags]
+      properties:
+        voters:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatsTopUser'
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatsTopUser'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatsTopUser'
+    ErrorPayload:
+      type: object
+      required: [errorMessage]
+      properties:
+        errorMessage:
+          type: string

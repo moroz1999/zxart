@@ -519,6 +519,11 @@
   "zx-vote": {
     "votes": "{{count}} votos"
   },
+  "zx-rating-strip": {
+    "label": "Calificación:",
+    "artist": "artista",
+    "musician": "músico"
+  },
   "picture": {
     "morefromgame": "Más de este juego",
     "morefromauthor": "Más de este autor"
@@ -597,7 +602,6 @@
     "stages-loading": "Decodificando fotogramas…",
     "play": "Reproducir",
     "pause": "Pausa",
-    "from": "De",
     "tags": "Etiquetas",
     "votes": "votos",
     "views": "visitas",
@@ -758,9 +762,7 @@
         }
       },
       "rating": {
-        "label": "Calificación de la comunidad:",
-        "artist": "artista",
-        "musician": "músico"
+        "label": "Calificación de la comunidad:"
       }
     },
     "dashboard": {
@@ -1042,6 +1044,7 @@
     "role_video": "Vídeo",
     "role_translation": "Traducción",
     "role_restoring": "Restaurando",
+    "role_publisher": "Editor",
     "actions": "Acciones de producción",
     "add-actions": "Añadir contenido",
     "edit": "Editar la producción",
@@ -1400,6 +1403,9 @@
     "hgfx": "HGFX",
     "amxmouse": "AMX-Ratón"
   },
+  "zx-prod-context": {
+    "from-release": "Del lanzamiento"
+  },
   "zx-added-by": {
     "label": "Agregado"
   },
@@ -1558,5 +1564,100 @@
     "results-range": "{{start}}–{{end}} de {{total}}",
     "error": "No se pudieron cargar los resultados.",
     "empty": "No se encontró nada."
+  },
+  "geo": {
+    "country": "País",
+    "city": "Ciudad",
+    "clear": "Limpiar",
+    "entity": {
+      "authors": "Autores",
+      "groups": "Grupos",
+      "parties": "Parties"
+    },
+    "places": {
+      "countries": "Países",
+      "cities": "Ciudades"
+    },
+    "search": {
+      "placeholder": "Buscar",
+      "in": "Buscar en {{name}}"
+    },
+    "sort": {
+      "title": "A-Z",
+      "latest": "Recientes"
+    },
+    "entries": "{{count}} trabajos",
+    "empty": "No se encontraron elementos.",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "range": "{{from}}-{{to}} de {{total}}"
+  },
+  "stats": {
+    "intro": "Toda la colección de ZXArt en cifras: gráficos, música y software añadidos a lo largo de los años, la actividad de los últimos 30 días y los colaboradores más activos del archivo.",
+    "tab": {
+      "soft": "Software",
+      "music": "Música",
+      "gfx": "Gráficos",
+      "users": "Usuarios"
+    },
+    "kpi": {
+      "prods": "Programas",
+      "releases": "Lanzamientos",
+      "authors": "Autores",
+      "authors_sub": "personas / con alias",
+      "groups": "Grupos",
+      "music": "Melodías",
+      "pics": "Imágenes",
+      "peak": "Año pico",
+      "daily30": "Últimos 30 días"
+    },
+    "total": {
+      "soft": "Total de programas",
+      "music": "Total de melodías",
+      "gfx": "Total de imágenes"
+    },
+    "year": {
+      "soft": "Programas por año",
+      "music": "Melodías por año",
+      "gfx": "Imágenes por año"
+    },
+    "section": {
+      "avg": "Valoración media por año"
+    },
+    "days30": "30 días",
+    "legend": {
+      "all": "todo en la base",
+      "rated": "valorado por encima de la media"
+    },
+    "dist": {
+      "prod_category": "Categoría por año",
+      "music_format": "Formato por año",
+      "gfx_type": "Técnica por año",
+      "other": "Otros"
+    },
+    "daily": {
+      "uploads": "Subidas",
+      "plays": "Reproducciones",
+      "views": "Vistas"
+    },
+    "top": {
+      "user": "Miembro"
+    },
+    "top_title": {
+      "soft": "Más programas subidos",
+      "music": "Más música añadida",
+      "gfx": "Más gráficos añadidos",
+      "voters": "Más votos emitidos",
+      "comments": "Más comentarios",
+      "tags": "Más etiquetas añadidas"
+    },
+    "unit": {
+      "prods": "prog.",
+      "music": "melodías",
+      "pics": "imágenes",
+      "votes": "votos",
+      "comments": "coment.",
+      "tags": "etiquetas"
+    }
   }
 }

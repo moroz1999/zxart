@@ -26,8 +26,8 @@
           <span *ngIf="details.year"> · {{ details.year }}</span>
         </div>
 
-        <!-- Context box (party / chip) — approved yellow-accent exception -->
-        <div *ngIf="details.partyContext || details.chip" class="tn-context">
+        <!-- Provenance (party / release / chip) -->
+        <zx-callout *ngIf="details.partyContext || details.release || details.chip">
           <zx-inline *ngIf="details.partyContext" align="center" spacing="sm" [wrap]="true">
             <zx-party-place [place]="details.partyContext.place"></zx-party-place>
             <span appText="body">
@@ -35,11 +35,12 @@
               <span *ngIf="details.partyContext.compoLabel" appText="body" tone="muted"> · {{ details.partyContext.compoLabel }}</span>
             </span>
           </zx-inline>
+          <zx-prod-context *ngIf="details.release" [context]="details.release"></zx-prod-context>
           <span *ngIf="details.chip" appText="body">
             <b>{{ details.chip }}</b>
             <span *ngIf="details.channelsType" appText="body" tone="muted"> · {{ details.channelsType }}</span>
           </span>
-        </div>
+        </zx-callout>
 
         <!-- Embedded module metadata parsed from the file -->
         <zx-stack *ngIf="details.internalTitle || details.internalAuthor" spacing="xs">
@@ -53,6 +54,13 @@
             <span appText="caption">{{ details.internalAuthor }}</span>
           </zx-inline>
         </zx-stack>
+
+        <zx-rating-strip
+          *ngIf="details.votes > 0"
+          [label]="'zx-rating-strip.label' | translate"
+          [items]="[{type: 'musician', value: details.votes}]"
+          [showTypeLabel]="false">
+        </zx-rating-strip>
 
         <zx-inline align="center" spacing="md" [wrap]="true">
           <zx-item-controls
@@ -74,6 +82,8 @@
           [dateAdded]="details.dateCreated"
           [submitter]="details.submitter">
         </zx-added-by>
+
+        <div *ngIf="details.description" appText="body" tone="primary" [innerHTML]="details.description"></div>
       </zx-stack>
     </zx-inline>
 

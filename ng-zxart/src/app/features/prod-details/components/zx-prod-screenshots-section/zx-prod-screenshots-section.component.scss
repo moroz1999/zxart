@@ -27,6 +27,13 @@
 .prod-screenshots-section__item--featured {
   grid-column: span 2;
   grid-row: span 2;
+  display: grid;
+  place-items: center;
+}
+
+.prod-screenshots-section__item--featured .prod-screenshots-section__thumb-wrap {
+  width: var(--zx-prod-screenshots-featured-width);
+  max-width: 100%;
 }
 
 .prod-screenshots-section__thumb-wrap {

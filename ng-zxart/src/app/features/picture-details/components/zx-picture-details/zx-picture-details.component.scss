@@ -8,15 +8,3 @@
   flex: 1 1 320px;
   min-width: 0;
 }
-
-/* Context box — approved custom exception: a yellow left accent grouping the
-   party/prod provenance. Content uses design-system components. */
-.pix-context {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-  padding: var(--space-8) var(--space-12);
-  border-left: 3px solid var(--warning-400);
-  background: var(--background-deep);
-  border-radius: var(--radius-md);
-}

@@ -27,6 +27,7 @@ use ZxArt\Controllers\Sam;
 use ZxArt\Controllers\Socialpost;
 use ZxArt\Controllers\Zxdb;
 use ZxArt\GroupList\GroupListService;
+use ZxArt\Geo\GeoService;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Logs\Log;
 use ZxArt\Menu\MenuService;
@@ -40,6 +41,7 @@ use ZxArt\Prods\ScreenshotMoveService;
 use ZxArt\Prods\Services\ProdsService;
 use ZxArt\Ratings\RatingsService;
 use ZxArt\Social\SocialPostsService;
+use ZxArt\Stats\Services\StatsService;
 use ZxArt\Telegram\PostService;
 use ZxArt\Users\AuthorPageUrlProvider;
 use function DI\autowire;
@@ -49,6 +51,10 @@ return [
     AuthorListService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     GroupListService::class => autowire()
+        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
+    GeoService::class => autowire()
+        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
+    StatsService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     CommentsService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),

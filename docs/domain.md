@@ -75,3 +75,11 @@ Detailed logic and structure: [domain/search.md](domain/search.md)
 ### feedback form
 Fixed name/email/message contact form. Sends an email only (no storage).
 Detailed logic and structure: [domain/feedback.md](domain/feedback.md)
+
+### geo section
+Interactive map section for authors, groups, and demoparties grouped by country and city.
+Detailed logic and structure: [domain/geo.md](domain/geo.md)
+
+### statistics section
+Dashboard of collection counts by year, daily activity, distributions and most active members.
+Detailed logic and structure: [domain/stats.md](domain/stats.md)

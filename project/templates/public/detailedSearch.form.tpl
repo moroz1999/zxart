@@ -267,7 +267,7 @@
 		{include file=$theme->template("component.authorstable.tpl") authorsList=$element->getResultsList() element=$element pager=$element->getPager() number=$element->getStartElementNumber()}
 	{/if}
 {/capture}
-{assign moduleClass "detailedsearch_block"}
+{assign moduleClass ""}
 {assign moduleTitleClass ""}
 {assign moduleContentClass ""}
 

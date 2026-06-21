@@ -18,6 +18,13 @@
     <zx-chip *ngIf="showLegalStatus" variant="filled" color="neutral">{{ core.legalStatusLabel }}</zx-chip>
   </zx-inline>
 
+  <zx-rating-strip
+    *ngIf="core.voting.votes > 0"
+    [label]="'zx-rating-strip.label' | translate"
+    [items]="[{type: 'overall', value: core.voting.votes}]"
+    [showTypeLabel]="false">
+  </zx-rating-strip>
+
   <zx-inline gap="lg" align="center" justify="between" [wrap]="true">
     <zx-prod-vote-row [elementId]="core.elementId" [voting]="core.voting"></zx-prod-vote-row>
     <zx-added-by

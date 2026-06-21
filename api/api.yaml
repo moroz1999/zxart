@@ -61,6 +61,8 @@ paths:
     $ref: 'prod-related-prods.yaml#/paths/~1prod-compilations~1'
   /prod-series/:
     $ref: 'prod-related-prods.yaml#/paths/~1prod-series~1'
+  /geo/:
+    $ref: 'geo.yaml#/paths/~1geo~1'
 components:
   schemas:
     CommentDto:

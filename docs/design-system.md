@@ -43,6 +43,7 @@ The project follows a component-based approach for the design system.
 All design system components are in `ng-zxart/src/app/shared/ui/`.
 
 - [zx-panel](design-system/zx-panel.md) — universal layout container
+- [zx-callout](design-system/zx-callout.md) — recessed accent inset box (left rule), optional full-area link
 - [zx-stack](design-system/zx-stack.md) — vertical flexbox layout container
 - [zx-inline](design-system/zx-inline.md) — horizontal flexbox layout container
 - [zx-grid](design-system/zx-grid.md) — CSS Grid-based layout container; use `zxGridItem` directive on children for asymmetric column spans

@@ -1,0 +1,7 @@
+<zx-callout accent="warning" orientation="row" align="center" [label]="label">
+  <span *ngFor="let item of visibleItems" class="zx-rating-strip__item">
+    <svg-icon [name]="iconFor(item.type)" aria-hidden="true" class="zx-rating-strip__icon"></svg-icon>
+    <span appHeading="title" class="zx-rating-strip__value">{{ item.value.toFixed(2) }}</span>
+    <span *ngIf="showTypeLabel" appText="caption" tone="muted" class="zx-rating-strip__sub">{{ 'zx-rating-strip.' + item.type | translate }}</span>
+  </span>
+</zx-callout>

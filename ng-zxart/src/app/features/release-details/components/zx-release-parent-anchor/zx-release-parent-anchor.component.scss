@@ -3,23 +3,6 @@
   margin-bottom: var(--zx-release-anchor-mb);
 }
 
-.release-anchor {
-  display: block;
-  padding: var(--zx-release-anchor-py) var(--zx-release-anchor-px);
-  background: var(--zx-release-anchor-bg);
-  border: 1px solid var(--zx-release-anchor-border);
-  border-left: 3px solid var(--zx-release-anchor-accent);
-  border-radius: var(--zx-release-anchor-radius);
-  text-decoration: none;
-  color: inherit;
-  max-width: 100%;
-  transition: background-color var(--animation-sm);
-
-  &:hover {
-    background: var(--zx-release-anchor-bg-hover);
-  }
-}
-
 .release-anchor__arrow {
   color: var(--zx-release-anchor-arrow-color);
   flex-shrink: 0;

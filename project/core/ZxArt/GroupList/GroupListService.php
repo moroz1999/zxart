@@ -35,10 +35,14 @@ readonly class GroupListService
         ?string $letter = null,
         array $types = [EntityType::Group, EntityType::GroupAlias],
         ?string $groupType = null,
+        ?float $north = null,
+        ?float $south = null,
+        ?float $east = null,
+        ?float $west = null,
     ): array {
-        $total = $this->repository->count($search, $countryId, $cityId, $letter, $types, $groupType);
+        $total = $this->repository->count($search, $countryId, $cityId, $letter, $types, $groupType, $north, $south, $east, $west);
         $sortColumn = GroupSortColumn::fromString($sorting->column);
-        $ids = $this->repository->findPaged($start, $limit, $sortColumn, $sorting->direction, $search, $countryId, $cityId, $letter, $types, $groupType);
+        $ids = $this->repository->findPaged($start, $limit, $sortColumn, $sorting->direction, $search, $countryId, $cityId, $letter, $types, $groupType, $north, $south, $east, $west);
 
         $items = [];
         foreach ($ids as $id) {

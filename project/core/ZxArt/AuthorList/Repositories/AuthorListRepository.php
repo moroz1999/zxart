@@ -6,7 +6,9 @@ namespace ZxArt\AuthorList\Repositories;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use LanguagesManager;
 use ZxArt\AuthorList\AuthorSortColumn;
+use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\LatinCyrillicMap;
 use ZxArt\Shared\SortDirection;
@@ -18,6 +20,7 @@ final readonly class AuthorListRepository
 
     public function __construct(
         private Connection $db,
+        private LanguagesManager $languagesManager,
     ) {
     }
 
@@ -36,8 +39,12 @@ final readonly class AuthorListRepository
         ?string $letter = null,
         array $types = [EntityType::Author, EntityType::AuthorAlias],
         ?string $items = null,
+        ?float $north = null,
+        ?float $south = null,
+        ?float $east = null,
+        ?float $west = null,
     ): array {
-        $queries = $this->buildTypedQueries($types, $search, $countryId, $cityId, $letter, $items);
+        $queries = $this->buildTypedQueries($types, $search, $countryId, $cityId, $letter, $items, $north, $south, $east, $west);
         if ($queries === []) {
             return [];
         }
@@ -47,11 +54,14 @@ final readonly class AuthorListRepository
             $combined->unionAll($q);
         }
 
-        return $combined
+        /** @var int[] $ids */
+        $ids = $combined
             ->orderBy($sortColumn->value, $sortDirection->value)
             ->offset($start)
             ->limit($limit)
             ->pluck('id');
+
+        return $ids;
     }
 
     /**
@@ -64,15 +74,19 @@ final readonly class AuthorListRepository
         ?string $letter = null,
         array $types = [EntityType::Author, EntityType::AuthorAlias],
         ?string $items = null,
+        ?float $north = null,
+        ?float $south = null,
+        ?float $east = null,
+        ?float $west = null,
     ): int {
         $total = 0;
 
         if (in_array(EntityType::Author, $types, true)) {
-            $total += $this->buildAuthorsQuery($search, $countryId, $cityId, $letter, $items)->count(self::AUTHORS_TABLE . '.id');
+            $total += $this->buildAuthorsQuery($search, $countryId, $cityId, $letter, $items, $north, $south, $east, $west)->count(self::AUTHORS_TABLE . '.id');
         }
 
         if (in_array(EntityType::AuthorAlias, $types, true)) {
-            $total += $this->buildAliasesQuery($search, $countryId, $cityId, $letter, $items)->count(self::ALIASES_TABLE . '.id');
+            $total += $this->buildAliasesQuery($search, $countryId, $cityId, $letter, $items, $north, $south, $east, $west)->count(self::ALIASES_TABLE . '.id');
         }
 
         return $total;
@@ -89,15 +103,19 @@ final readonly class AuthorListRepository
         ?int $cityId,
         ?string $letter,
         ?string $items = null,
+        ?float $north = null,
+        ?float $south = null,
+        ?float $east = null,
+        ?float $west = null,
     ): array {
         $queries = [];
 
         if (in_array(EntityType::Author, $types, true)) {
-            $queries[] = $this->buildAuthorsQuery($search, $countryId, $cityId, $letter, $items);
+            $queries[] = $this->buildAuthorsQuery($search, $countryId, $cityId, $letter, $items, $north, $south, $east, $west);
         }
 
         if (in_array(EntityType::AuthorAlias, $types, true)) {
-            $queries[] = $this->buildAliasesQuery($search, $countryId, $cityId, $letter, $items);
+            $queries[] = $this->buildAliasesQuery($search, $countryId, $cityId, $letter, $items, $north, $south, $east, $west);
         }
 
         return $queries;
@@ -111,6 +129,7 @@ final readonly class AuthorListRepository
         $authorsQuery = $this->db->table(self::AUTHORS_TABLE)
             ->distinct()
             ->where(self::AUTHORS_TABLE . '.country', '>', 0)
+            ->where(self::AUTHORS_TABLE . '.languageId', '=', $this->getCurrentLanguageId())
             ->select(self::AUTHORS_TABLE . '.country');
         $this->applyLetterFilter($authorsQuery, self::AUTHORS_TABLE . '.title', $letter);
         $this->applyItemsFilter($authorsQuery, self::AUTHORS_TABLE, $items);
@@ -119,6 +138,7 @@ final readonly class AuthorListRepository
             ->distinct()
             ->leftJoin(self::AUTHORS_TABLE, self::AUTHORS_TABLE . '.id', '=', self::ALIASES_TABLE . '.authorId')
             ->where(self::AUTHORS_TABLE . '.country', '>', 0)
+            ->where(self::AUTHORS_TABLE . '.languageId', '=', $this->getCurrentLanguageId())
             ->select(self::AUTHORS_TABLE . '.country');
         $this->applyLetterFilter($aliasesQuery, self::ALIASES_TABLE . '.title', $letter);
         $this->applyItemsFilter($aliasesQuery, self::AUTHORS_TABLE, $items);
@@ -136,6 +156,7 @@ final readonly class AuthorListRepository
         $authorsQuery = $this->db->table(self::AUTHORS_TABLE)
             ->distinct()
             ->where(self::AUTHORS_TABLE . '.city', '>', 0)
+            ->where(self::AUTHORS_TABLE . '.languageId', '=', $this->getCurrentLanguageId())
             ->select(self::AUTHORS_TABLE . '.city');
         $this->applyLetterFilter($authorsQuery, self::AUTHORS_TABLE . '.title', $letter);
         $this->applyItemsFilter($authorsQuery, self::AUTHORS_TABLE, $items);
@@ -144,6 +165,7 @@ final readonly class AuthorListRepository
             ->distinct()
             ->leftJoin(self::AUTHORS_TABLE, self::AUTHORS_TABLE . '.id', '=', self::ALIASES_TABLE . '.authorId')
             ->where(self::AUTHORS_TABLE . '.city', '>', 0)
+            ->where(self::AUTHORS_TABLE . '.languageId', '=', $this->getCurrentLanguageId())
             ->select(self::AUTHORS_TABLE . '.city');
         $this->applyLetterFilter($aliasesQuery, self::ALIASES_TABLE . '.title', $letter);
         $this->applyItemsFilter($aliasesQuery, self::AUTHORS_TABLE, $items);
@@ -159,9 +181,14 @@ final readonly class AuthorListRepository
         ?int $cityId,
         ?string $letter = null,
         ?string $items = null,
+        ?float $north = null,
+        ?float $south = null,
+        ?float $east = null,
+        ?float $west = null,
     ): Builder {
         $query = $this->db->table(self::AUTHORS_TABLE)
             ->distinct()
+            ->where(self::AUTHORS_TABLE . '.languageId', '=', $this->getCurrentLanguageId())
             ->select([
                 self::AUTHORS_TABLE . '.id',
                 self::AUTHORS_TABLE . '.title',
@@ -177,13 +204,7 @@ final readonly class AuthorListRepository
             });
         }
 
-        if ($countryId !== null) {
-            $query->where(self::AUTHORS_TABLE . '.country', '=', $countryId);
-        }
-
-        if ($cityId !== null) {
-            $query->where(self::AUTHORS_TABLE . '.city', '=', $cityId);
-        }
+        $this->applyLocationFilters($query, self::AUTHORS_TABLE, $countryId, $cityId, $north, $south, $east, $west);
 
         $this->applyLetterFilter($query, self::AUTHORS_TABLE . '.title', $letter);
         $this->applyItemsFilter($query, self::AUTHORS_TABLE, $items);
@@ -197,6 +218,10 @@ final readonly class AuthorListRepository
         ?int $cityId,
         ?string $letter = null,
         ?string $items = null,
+        ?float $north = null,
+        ?float $south = null,
+        ?float $east = null,
+        ?float $west = null,
     ): Builder {
         $authAlias = 'auth';
 
@@ -208,6 +233,7 @@ final readonly class AuthorListRepository
                 '=',
                 self::ALIASES_TABLE . '.authorId'
             )
+            ->where($authAlias . '.languageId', '=', $this->getCurrentLanguageId())
             ->select([
                 self::ALIASES_TABLE . '.id',
                 self::ALIASES_TABLE . '.title',
@@ -220,13 +246,7 @@ final readonly class AuthorListRepository
             $query->where(self::ALIASES_TABLE . '.title', 'like', $likeSearch);
         }
 
-        if ($countryId !== null) {
-            $query->where($authAlias . '.country', '=', $countryId);
-        }
-
-        if ($cityId !== null) {
-            $query->where($authAlias . '.city', '=', $cityId);
-        }
+        $this->applyLocationFilters($query, $authAlias, $countryId, $cityId, $north, $south, $east, $west);
 
         $this->applyLetterFilter($query, self::ALIASES_TABLE . '.title', $letter);
         $this->applyItemsFilter($query, $authAlias, $items);
@@ -280,4 +300,83 @@ final readonly class AuthorListRepository
         });
     }
 
+    private function applyLocationFilters(
+        Builder $query,
+        string $authorTableOrAlias,
+        ?int $countryId,
+        ?int $cityId,
+        ?float $north,
+        ?float $south,
+        ?float $east,
+        ?float $west,
+    ): void {
+        if ($countryId !== null) {
+            $query->where($authorTableOrAlias . '.country', '=', $countryId);
+            return;
+        }
+
+        if ($cityId !== null) {
+            $query->where($authorTableOrAlias . '.city', '=', $cityId);
+            return;
+        }
+
+        if (!$this->hasBounds($north, $south, $east, $west)) {
+            return;
+        }
+
+        $boundsNorth = (float)$north;
+        $boundsSouth = (float)$south;
+        $boundsEast = (float)$east;
+        $boundsWest = (float)$west;
+
+        $query->where(function (Builder $locationQuery) use ($authorTableOrAlias, $boundsNorth, $boundsSouth, $boundsEast, $boundsWest) {
+            $locationQuery
+                ->whereIn($authorTableOrAlias . '.country', $this->buildLocationBoundsQuery(DatabaseTable::Country, $boundsNorth, $boundsSouth, $boundsEast, $boundsWest))
+                ->orWhereIn($authorTableOrAlias . '.city', $this->buildLocationBoundsQuery(DatabaseTable::City, $boundsNorth, $boundsSouth, $boundsEast, $boundsWest));
+        });
+    }
+
+    private function buildLocationBoundsQuery(
+        DatabaseTable $table,
+        float $north,
+        float $south,
+        float $east,
+        float $west,
+    ): Builder {
+        $query = $this->db->table($table->value)
+            ->select('id')
+            ->where('languageId', '=', $this->getCurrentLanguageId())
+            ->where('latitude', '<=', $north)
+            ->where('latitude', '>=', $south)
+            ->where('longitude', '!=', 0)
+            ->where('latitude', '!=', 0);
+
+        $this->applyLongitudeBounds($query, $east, $west);
+
+        return $query;
+    }
+
+    private function applyLongitudeBounds(Builder $query, float $east, float $west): void
+    {
+        if ($west <= $east) {
+            $query->where('longitude', '>=', $west)
+                ->where('longitude', '<=', $east);
+            return;
+        }
+
+        $query->where(function (Builder $longitudeQuery) use ($east, $west) {
+            $longitudeQuery->where('longitude', '>=', $west)
+                ->orWhere('longitude', '<=', $east);
+        });
+    }
+
+    private function hasBounds(?float $north, ?float $south, ?float $east, ?float $west): bool
+    {
+        return $north !== null && $south !== null && $east !== null && $west !== null;
+    }
+
+    private function getCurrentLanguageId(): int
+    {
+        return (int)$this->languagesManager->getCurrentLanguageId();
+    }
 }

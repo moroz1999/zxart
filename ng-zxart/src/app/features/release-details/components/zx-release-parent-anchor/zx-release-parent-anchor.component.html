@@ -1,4 +1,4 @@
-<a class="release-anchor" [href]="prod.url">
+<zx-callout accent="primary" surface="raised" [bordered]="true" [href]="prod.url" [ariaLabel]="prod.title">
   <zx-inline align="center" spacing="sm">
     <span class="release-anchor__arrow" appText="label">←</span>
 
@@ -20,4 +20,4 @@
       {{ prod.year }}<ng-container *ngIf="prod.authorNames.length"> · {{ prod.authorNames.join(', ') }}</ng-container>
     </span>
   </zx-inline>
-</a>
+</zx-callout>

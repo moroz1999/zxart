@@ -1,0 +1,5 @@
+<span appText="body">
+  {{ 'zx-prod-context.from-release' | translate }}
+  <a [href]="context.url" appText="body" tone="link">«{{ context.title }}»</a>
+  <span *ngIf="context.year" appText="body" tone="muted"> · {{ context.year }}</span>
+</span>

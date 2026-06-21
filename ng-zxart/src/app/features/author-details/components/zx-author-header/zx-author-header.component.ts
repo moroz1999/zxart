@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {AuthorCoreDto} from '../../models/author-core.dto';
 import {ZxBadgeComponent} from '../../../../shared/ui/zx-badge/zx-badge.component';
@@ -8,8 +8,11 @@ import {ZxChipComponent, ZxChipColor} from '../../../../shared/ui/zx-chip/zx-chi
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxAuthorEditingControlsComponent} from '../zx-author-editing-controls/zx-author-editing-controls.component';
-import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
-import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
+import {
+  RatingStripItem,
+  ZxRatingStripComponent,
+} from '../../../../shared/components/zx-rating-strip/zx-rating-strip.component';
+import {TechSettingRow, ZxTechSettingsComponent} from '../../../../shared/ui/zx-tech-settings/zx-tech-settings.component';
 import {environment} from '../../../../../environments/environment';
 
 const VISIBLE_ALIASES = 7;
@@ -26,8 +29,8 @@ const VISIBLE_ALIASES = 7;
     ZxButtonComponent,
     ZxAuthorEditingControlsComponent,
     SvgIconComponent,
-    TextDirective,
-    HeadingDirective,
+    ZxRatingStripComponent,
+    ZxTechSettingsComponent,
   ],
   templateUrl: './zx-author-header.component.html',
   styleUrl: './zx-author-header.component.scss',
@@ -37,17 +40,15 @@ export class ZxAuthorHeaderComponent implements OnInit {
   @Input() core!: AuthorCoreDto;
 
   showAllAliases = false;
-  showTech = false;
 
-  constructor(private readonly iconReg: SvgIconRegistryService) {}
+  constructor(
+    private readonly iconReg: SvgIconRegistryService,
+    private readonly translate: TranslateService,
+  ) {}
 
   ngOnInit(): void {
     this.iconReg.loadSvg(`${environment.svgUrl}person.svg`, 'person')?.subscribe();
     this.iconReg.loadSvg(`${environment.svgUrl}location.svg`, 'location')?.subscribe();
-    this.iconReg.loadSvg(`${environment.svgUrl}image.svg`, 'image')?.subscribe();
-    this.iconReg.loadSvg(`${environment.svgUrl}music-note.svg`, 'music-note')?.subscribe();
-    this.iconReg.loadSvg(`${environment.svgUrl}expand-more.svg`, 'expand-more')?.subscribe();
-    this.iconReg.loadSvg(`${environment.svgUrl}expand-less.svg`, 'expand-less')?.subscribe();
   }
 
   get visibleAliases() {
@@ -65,16 +66,43 @@ export class ZxAuthorHeaderComponent implements OnInit {
     return this.core.joined ? this.core.joined.slice(0, 4) : '';
   }
 
+  get ratingItems(): RatingStripItem[] {
+    return [
+      {type: 'artist', value: this.core.ratings.artist},
+      {type: 'musician', value: this.core.ratings.musician},
+    ];
+  }
+
   toggleAliases(): void {
     this.showAllAliases = !this.showAllAliases;
   }
 
-  toggleTech(): void {
-    this.showTech = !this.showTech;
+  get techRows(): TechSettingRow[] {
+    const tech = this.core.tech;
+    const rows: TechSettingRow[] = [];
+    if (tech.palette) {
+      rows.push(this.techRow('palette', 'palette', tech.palette));
+    }
+    if (tech.ayChip) {
+      rows.push(this.techRow('ay-chip', 'chiptype', tech.ayChip));
+    }
+    if (tech.ayChannels) {
+      rows.push(this.techRow('ay-channels', 'channelstype', tech.ayChannels));
+    }
+    if (tech.ayClock) {
+      rows.push({label: this.translate.instant('author-details.header.tech.ay-clock'), value: tech.ayClock});
+    }
+    if (tech.intFreq) {
+      rows.push({label: this.translate.instant('author-details.header.tech.int-freq'), value: tech.intFreq});
+    }
+    return rows;
   }
 
-  techValueKey(field: 'palette' | 'chiptype' | 'channelstype', value: string): string {
-    return `author-details.header.tech-value.${field}.${value.toLowerCase()}`;
+  private techRow(labelKey: string, valueField: 'palette' | 'chiptype' | 'channelstype', value: string): TechSettingRow {
+    return {
+      label: this.translate.instant(`author-details.header.tech.${labelKey}`),
+      value: this.translate.instant(`author-details.header.tech-value.${valueField}.${value.toLowerCase()}`),
+    };
   }
 
   getRoleChipColor(role: string): ZxChipColor {

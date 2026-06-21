@@ -4,9 +4,7 @@
     {/capture}
 {/if}
 {capture assign="moduleContent"}
-    {include file=$theme->template("component.location_controls.tpl")}
-    {include file=$theme->template('component.zxmap.tpl') locations=$element->getCitiesList()}
-    {include file=$theme->template("component.location_lists.tpl")}
+    <zx-geo></zx-geo>
 {/capture}
 {assign moduleClass ""}
 {assign moduleTitleClass ""}

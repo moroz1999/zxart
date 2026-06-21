@@ -20,12 +20,9 @@ class projectDesignTheme extends DesignTheme
         $this->imagesPath = PUBLIC_PATH . $this->imagesFolder;
         $this->javascriptFiles = [
             'logics.zxPictures.js',
-            'logics.detailedSearch.js',
             'logics.chart.js',
-            'logics.broadcast.js',
             'logics.playlist.js',
             'basic.libgif.js',
-            'logics.stagesAnimation.js',
             'logics.groupForm.js',
             'logics.authorForm.js',
             'logics.authorAliasForm.js',
@@ -35,20 +32,12 @@ class projectDesignTheme extends DesignTheme
             'logics.formHelper.js',
             'logics.editingControls.js',
             'logics.prods.js',
-            'logics.zxMap.js',
             'tape2Wav.js',
             'logics.zxReleases.js',
             'mixin.autoAdjustedPopup.js',
             'component.pictureTagsForm.js',
             'component.pictureDetails.js',
-            'component.detailedSearch.js',
             'component.chart.js',
-            'component.emulator.js',
-            'component.zx81Emulator.js',
-            'component.tsconfEmulator.js',
-            'component.samcoupeEmulator.js',
-            'component.zxnextEmulator.js',
-            'component.stagesAnimation.js',
             'component.flickerImage.js',
             'component.groupForm.js',
             'component.authorForm.js',
@@ -62,9 +51,7 @@ class projectDesignTheme extends DesignTheme
             'component.userPlaylistTableItemComponent.js',
             'component.playlistControls.js',
             'component.SettingsBlock.js',
-            'component.ZxMap.js',
             'component.ZxReleaseDetails.js',
-            'component.PurchaseButton.js',
         ];
     }
 }

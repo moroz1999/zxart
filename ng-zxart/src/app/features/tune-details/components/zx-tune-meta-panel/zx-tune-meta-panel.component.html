@@ -5,7 +5,9 @@
         {{ tune.year }}
       </zx-item-data-item>
       <zx-item-data-item [label]="'tune-details.format' | translate">
-        {{ tune.format }}
+        <a *ngIf="musicBaseUrl$ | async as baseUrl; else plainFormat"
+           [href]="baseUrl + 'format:' + tune.format + '/'" appText="body" tone="link">{{ tune.format }}</a>
+        <ng-template #plainFormat>{{ tune.format }}</ng-template>
       </zx-item-data-item>
       <zx-item-data-item *ngIf="tune.chip" [label]="'tune-details.chip' | translate">
         {{ tune.chip }}
@@ -31,24 +33,10 @@
       </zx-item-data-item>
     </zx-stack>
 
-    <zx-collapsible-section
-      *ngIf="hasTechInfo"
+    <zx-tech-settings
+      *ngIf="techRows.length"
       [title]="'tune-details.tech-info' | translate"
-    >
-      <zx-stack spacing="sm">
-        <zx-item-data-item *ngIf="tune.frequency" [label]="'tune-details.frequency' | translate">
-          {{ tune.frequency }}
-        </zx-item-data-item>
-        <zx-item-data-item *ngIf="tune.intFrequency" [label]="'tune-details.int-frequency' | translate">
-          {{ tune.intFrequency }}
-        </zx-item-data-item>
-        <zx-item-data-item *ngIf="tune.fileName" [label]="'tune-details.file-name' | translate">
-          {{ tune.fileName }}
-        </zx-item-data-item>
-        <zx-item-data-item *ngIf="tune.converterVersion" [label]="'tune-details.converter' | translate">
-          ZXTune r{{ tune.converterVersion }}
-        </zx-item-data-item>
-      </zx-stack>
-    </zx-collapsible-section>
+      [rows]="techRows">
+    </zx-tech-settings>
   </zx-stack>
 </zx-panel>

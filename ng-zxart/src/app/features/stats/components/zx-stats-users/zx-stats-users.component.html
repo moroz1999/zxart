@@ -1,0 +1,23 @@
+<ng-container *ngIf="(loaded$ | async); else skeleton">
+  <zx-grid *ngIf="section$ | async as section" desktopColumns="3" tabletColumns="1" mobileColumns="1" gap="lg">
+    <zx-stats-top-table
+      [title]="'stats.top_title.voters' | translate"
+      unitKey="stats.unit.votes"
+      [users]="section.voters"
+    ></zx-stats-top-table>
+    <zx-stats-top-table
+      [title]="'stats.top_title.comments' | translate"
+      unitKey="stats.unit.comments"
+      [users]="section.comments"
+    ></zx-stats-top-table>
+    <zx-stats-top-table
+      [title]="'stats.top_title.tags' | translate"
+      unitKey="stats.unit.tags"
+      [users]="section.tags"
+    ></zx-stats-top-table>
+  </zx-grid>
+</ng-container>
+
+<ng-template #skeleton>
+  <zx-stats-section-skeleton></zx-stats-section-skeleton>
+</ng-template>

@@ -5,6 +5,7 @@ import {ReleaseProdRefDto} from '../../models/release-details.dto';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ZxCalloutComponent} from '../../../../shared/ui/zx-callout/zx-callout.component';
 
 @Component({
   selector: 'zx-release-parent-anchor',
@@ -15,6 +16,7 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
     TextDirective,
     ZxInlineComponent,
     ZxStackComponent,
+    ZxCalloutComponent,
   ],
   templateUrl: './zx-release-parent-anchor.component.html',
   styleUrl: './zx-release-parent-anchor.component.scss',

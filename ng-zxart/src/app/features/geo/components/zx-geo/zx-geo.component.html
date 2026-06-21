@@ -1,0 +1,111 @@
+<section class="zx-geo">
+  <div class="zx-geo__map-column">
+    <div #mapContainer class="zx-geo__map"></div>
+  </div>
+
+  <aside class="zx-geo__panel">
+    <header *ngIf="selectedFilter" class="zx-geo__header">
+      <div class="zx-geo__title-block">
+        <span class="zx-geo__eyebrow">{{ (selectedFilter.kind === 'city' ? 'geo.city' : 'geo.country') | translate }}</span>
+        <h2 class="zx-geo__title">{{ filterTitle }}</h2>
+      </div>
+      <zx-button
+        size="xs"
+        color="transparent"
+        (click)="clearFilter()"
+      >{{ 'geo.clear' | translate }}</zx-button>
+    </header>
+
+    <div class="zx-geo__layers">
+      <button type="button" class="zx-geo__layer" [class.zx-geo__layer--on]="layers.authors" (click)="toggleLayer('authors')">
+        <strong class="zx-geo__layer-count">{{ scopeCounters.authors }}</strong>
+        <span class="zx-geo__layer-name">
+          <span class="zx-geo__swatch zx-geo__swatch--authors"></span>
+          {{ 'geo.entity.authors' | translate }}
+        </span>
+      </button>
+      <button type="button" class="zx-geo__layer" [class.zx-geo__layer--on]="layers.groups" (click)="toggleLayer('groups')">
+        <strong class="zx-geo__layer-count">{{ scopeCounters.groups }}</strong>
+        <span class="zx-geo__layer-name">
+          <span class="zx-geo__swatch zx-geo__swatch--groups"></span>
+          {{ 'geo.entity.groups' | translate }}
+        </span>
+      </button>
+      <button type="button" class="zx-geo__layer" [class.zx-geo__layer--on]="layers.parties" (click)="toggleLayer('parties')">
+        <strong class="zx-geo__layer-count">{{ scopeCounters.parties }}</strong>
+        <span class="zx-geo__layer-name">
+          <span class="zx-geo__swatch zx-geo__swatch--parties"></span>
+          {{ 'geo.entity.parties' | translate }}
+        </span>
+      </button>
+    </div>
+
+    <div class="zx-geo__body">
+      <section class="zx-geo__places" *ngIf="showPlaces">
+        <div class="zx-geo__section-head">
+          <span>{{ placesTitle | translate }}</span>
+          <b>{{ placeRows.length }}</b>
+        </div>
+        <button
+          *ngFor="let place of placeRows"
+          type="button"
+          class="zx-geo__place"
+          (click)="selectPlace(place)"
+        >
+          <span>{{ place.title }}</span>
+          <small>{{ total(place.counters) }}</small>
+        </button>
+      </section>
+
+      <section class="zx-geo__entities">
+        <div class="zx-geo__tabs">
+          <button
+            *ngFor="let type of enabledEntityTypes"
+            type="button"
+            class="zx-geo__tab"
+            [class.zx-geo__tab--active]="activeType === type"
+            (click)="setType(type)"
+          >{{ ('geo.entity.' + type) | translate }}</button>
+        </div>
+
+        <div class="zx-geo__toolbar">
+          <zx-input
+            size="sm"
+            [placeholder]="filterTitle !== '' ? ('geo.search.in' | translate:{name: filterTitle}) : ('geo.search.placeholder' | translate)"
+            [ngModel]="search"
+            (ngModelChange)="updateSearch($event)"
+          ></zx-input>
+          <zx-select
+            [options]="sortOptions"
+            [ngModel]="sorting"
+            (ngModelChange)="updateSorting($event)"
+          ></zx-select>
+        </div>
+
+        <div class="zx-geo__list" [class.zx-geo__list--loading]="listLoading">
+          <a *ngFor="let item of list.items" class="zx-geo__item" [href]="item.url">
+            <span class="zx-geo__item-title">{{ item.title }}</span>
+            <span class="zx-geo__item-sub">
+              <ng-container *ngIf="isAuthorItem(item)">
+                {{ authorSubtitle(item) }}
+              </ng-container>
+              <ng-container *ngIf="isGroupItem(item)">
+                {{ groupSubtitle(item) }}
+              </ng-container>
+              <ng-container *ngIf="!isAuthorItem(item) && !isGroupItem(item)">
+                {{ partySubtitle(item) }}
+              </ng-container>
+            </span>
+          </a>
+          <div *ngIf="list.items.length === 0" class="zx-geo__empty">{{ 'geo.empty' | translate }}</div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="zx-geo__pager">
+      <zx-button size="xs" color="outlined" [disabled]="page === 1" (click)="setPage(page - 1)">{{ 'geo.prev' | translate }}</zx-button>
+      <span>{{ 'geo.range' | translate:{from: firstShown, to: lastShown, total: list.total} }}</span>
+      <zx-button size="xs" color="outlined" [disabled]="page === pages" (click)="setPage(page + 1)">{{ 'geo.next' | translate }}</zx-button>
+    </footer>
+  </aside>
+</section>

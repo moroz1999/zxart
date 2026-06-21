@@ -1,0 +1,20 @@
+:host {
+  display: block;
+}
+
+.zx-rating-strip__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.zx-rating-strip__icon {
+  width: 16px;
+  height: 16px;
+  color: var(--zx-rating-strip-value-color);
+}
+
+.zx-rating-strip__value {
+  font-family: var(--zx-rating-strip-value-font);
+  color: var(--zx-rating-strip-value-color);
+}

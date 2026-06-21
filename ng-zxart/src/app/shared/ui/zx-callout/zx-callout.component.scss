@@ -1,0 +1,57 @@
+:host {
+  position: relative;
+  display: flex;
+  padding: var(--zx-callout-py) var(--zx-callout-px);
+  background: var(--zx-callout-bg);
+  border-left: var(--zx-callout-accent-width) solid var(--zx-callout-accent);
+  border-radius: var(--radius-md);
+  box-sizing: border-box;
+}
+
+:host.zx-callout--column {
+  flex-direction: column;
+  gap: var(--zx-callout-gap-col);
+}
+
+:host.zx-callout--row {
+  flex-direction: row;
+  gap: var(--zx-callout-gap-row);
+}
+
+:host.zx-callout--align-center { align-items: center; }
+:host.zx-callout--align-start { align-items: flex-start; }
+:host.zx-callout--align-stretch { align-items: stretch; }
+:host.zx-callout--wrap { flex-wrap: wrap; }
+
+:host.zx-callout--surface-deep { --zx-callout-bg: var(--zx-callout-bg-deep); }
+:host.zx-callout--surface-raised { --zx-callout-bg: var(--zx-callout-bg-raised); }
+
+:host.zx-callout--bordered {
+  border: var(--zx-callout-border);
+  border-left: var(--zx-callout-accent-width) solid var(--zx-callout-accent);
+}
+
+:host.zx-callout--interactive {
+  transition: background-color var(--animation-sm);
+}
+
+:host.zx-callout--interactive:hover { --zx-callout-bg: var(--zx-callout-bg-hover); }
+
+:host.zx-callout--accent-warning { --zx-callout-accent: var(--zx-callout-accent-warning); }
+:host.zx-callout--accent-primary { --zx-callout-accent: var(--zx-callout-accent-primary); }
+:host.zx-callout--accent-none {
+  --zx-callout-accent: transparent;
+  border-left-color: transparent;
+}
+
+.zx-callout__link {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.zx-callout__label {
+  font-weight: var(--zx-callout-label-weight);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}

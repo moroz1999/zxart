@@ -1,0 +1,21 @@
+:root {
+  /* Recessed (deep) vs raised (surface) background. */
+  --zx-callout-bg-deep: var(--background-deep);
+  --zx-callout-bg-raised: var(--surface);
+  --zx-callout-bg-hover: var(--primary-50);
+  --zx-callout-bg: var(--zx-callout-bg-deep);
+  /* Optional full hairline border (bordered variant). */
+  --zx-callout-border: 1px solid var(--secondary-200);
+  /* Left accent rule. */
+  --zx-callout-accent-width: 3px;
+  --zx-callout-accent: var(--zx-callout-accent-warning);
+  --zx-callout-accent-warning: var(--warning-400);
+  --zx-callout-accent-primary: var(--primary-500);
+  /* Padding and per-orientation gaps. */
+  --zx-callout-px: var(--space-12);
+  --zx-callout-py: var(--space-8);
+  --zx-callout-gap-col: var(--space-8);
+  --zx-callout-gap-row: var(--space-16);
+  /* Standardized header label weight. */
+  --zx-callout-label-weight: 700;
+}

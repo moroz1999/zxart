@@ -14,6 +14,8 @@ use ZxArt\Shared\Repositories\AbstractRepository;
 
 readonly final class AuthorProdsRepository extends AbstractRepository
 {
+    private const PUBLISHER_ROLE = 'publisher';
+
     public function __construct(private Connection $db) {}
 
     /**
@@ -69,6 +71,10 @@ readonly final class AuthorProdsRepository extends AbstractRepository
             }
         }
 
+        if ($this->hasPublisherProds($authorIds)) {
+            $roleIndex[self::PUBLISHER_ROLE] = true;
+        }
+
         $availableRoles = array_keys($roleIndex);
         sort($availableRoles);
 
@@ -85,7 +91,7 @@ readonly final class AuthorProdsRepository extends AbstractRepository
         $authorIds = $this->getAuthorAndAliasIds($authorId);
         $roles = array_map(static fn(ProdCodingRole $role): string => $role->value, ProdCodingRole::cases());
 
-        $prodQuery = $this->applyRolesFilter($this->getProdQuery($authorIds, ''), $roles);
+        $prodQuery = $this->applyRolesFilter($this->getProdAuthorshipQuery($authorIds), $roles);
         if ($prodQuery->exists()) {
             return true;
         }
@@ -170,13 +176,45 @@ readonly final class AuthorProdsRepository extends AbstractRepository
     private function getProdQuery(array $authorIds, string $role): Builder
     {
         $prodTable = $this->tableName(DatabaseTable::ZxProd);
+        $includeAuthorship = $role !== self::PUBLISHER_ROLE;
+        $includePublisher = $role === '' || $role === self::PUBLISHER_ROLE;
+
+        return $this->db->table($prodTable)
+            ->where(function (Builder $query) use ($prodTable, $authorIds, $role, $includeAuthorship, $includePublisher): void {
+                if ($includeAuthorship) {
+                    $query->orWhereExists(function (Builder $sub) use ($prodTable, $authorIds, $role): void {
+                        $authTable = $this->tableName(DatabaseTable::Authorship);
+                        $sub->from($authTable)
+                            ->whereColumn("$authTable.elementId", "$prodTable.id")
+                            ->where("$authTable.type", '=', EntityType::Prod->value)
+                            ->whereIn("$authTable.authorId", $authorIds);
+                        $this->applyRoleFilter($sub, $role);
+                    });
+                }
+                if ($includePublisher) {
+                    $query->orWhereExists(function (Builder $sub) use ($prodTable, $authorIds): void {
+                        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
+                        $sub->from($linksTable)
+                            ->whereColumn("$linksTable.childStructureId", "$prodTable.id")
+                            ->where("$linksTable.type", '=', LinkTypes::ZX_PROD_PUBLISHERS->value)
+                            ->whereIn("$linksTable.parentStructureId", $authorIds);
+                    });
+                }
+            });
+    }
+
+    /**
+     * @param int[] $authorIds
+     */
+    private function getProdAuthorshipQuery(array $authorIds): Builder
+    {
+        $prodTable = $this->tableName(DatabaseTable::ZxProd);
         $authTable = $this->tableName(DatabaseTable::Authorship);
-        $query = $this->db->table($prodTable)
+
+        return $this->db->table($prodTable)
             ->join($authTable, "$authTable.elementId", '=', "$prodTable.id")
             ->where("$authTable.type", '=', EntityType::Prod->value)
             ->whereIn("$authTable.authorId", $authorIds);
-
-        return $this->applyRoleFilter($query, $role);
     }
 
     /**
@@ -276,7 +314,44 @@ readonly final class AuthorProdsRepository extends AbstractRepository
             $rolesByItemId[$itemId] = array_values(array_unique(array_merge($rolesByItemId[$itemId] ?? [], $roles)));
         }
 
+        foreach ($this->findPublisherProdIds($itemIds, $authorIds) as $prodId) {
+            $rolesByItemId[$prodId] = array_values(array_unique(array_merge($rolesByItemId[$prodId] ?? [], [self::PUBLISHER_ROLE])));
+        }
+
         return $rolesByItemId;
+    }
+
+    /**
+     * @param int[] $itemIds
+     * @param int[] $authorIds
+     * @return int[]
+     */
+    private function findPublisherProdIds(array $itemIds, array $authorIds): array
+    {
+        if ($itemIds === []) {
+            return [];
+        }
+
+        /** @var int[] $prodIds */
+        $prodIds = $this->db->table($this->tableName(DatabaseTable::StructureLinks))
+            ->where('type', '=', LinkTypes::ZX_PROD_PUBLISHERS->value)
+            ->whereIn('parentStructureId', $authorIds)
+            ->whereIn('childStructureId', $itemIds)
+            ->distinct()
+            ->pluck('childStructureId');
+
+        return array_values(array_unique($prodIds));
+    }
+
+    /**
+     * @param int[] $authorIds
+     */
+    private function hasPublisherProds(array $authorIds): bool
+    {
+        return $this->db->table($this->tableName(DatabaseTable::StructureLinks))
+            ->where('type', '=', LinkTypes::ZX_PROD_PUBLISHERS->value)
+            ->whereIn('parentStructureId', $authorIds)
+            ->exists();
     }
 
     /**
@@ -288,7 +363,7 @@ readonly final class AuthorProdsRepository extends AbstractRepository
         $authTable = $this->tableName(DatabaseTable::Authorship);
 
         /** @var list<array{roles: string}> $rows */
-        $rows = $this->getProdQuery($authorIds, '')
+        $rows = $this->getProdAuthorshipQuery($authorIds)
             ->select("$authTable.roles")
             ->get();
 

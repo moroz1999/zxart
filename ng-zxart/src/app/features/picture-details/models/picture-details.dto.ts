@@ -17,7 +17,6 @@ export interface PictureProdContextDto {
   readonly title: string;
   readonly url: string;
   readonly year: string | null;
-  readonly kindLabel: string;
 }
 
 /** A single downloadable artifact (original file, rendered PNG, print, EXE). */

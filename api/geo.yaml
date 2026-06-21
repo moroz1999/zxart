@@ -1,0 +1,162 @@
+paths:
+  /geo/:
+    get:
+      summary: Geo section map and entity lists
+      parameters:
+        - in: query
+          name: action
+          schema:
+            type: string
+            enum: [map, authors, groups, parties]
+            default: map
+        - in: query
+          name: start
+          schema:
+            type: integer
+            minimum: 0
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+        - in: query
+          name: sorting
+          schema:
+            type: string
+            example: title,asc
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: countryId
+          schema:
+            type: integer
+        - in: query
+          name: cityId
+          schema:
+            type: integer
+        - in: query
+          name: north
+          schema:
+            type: number
+            format: float
+        - in: query
+          name: south
+          schema:
+            type: number
+            format: float
+        - in: query
+          name: east
+          schema:
+            type: number
+            format: float
+        - in: query
+          name: west
+          schema:
+            type: number
+            format: float
+      responses:
+        '200':
+          description: Geo map payload or paginated entity list
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/GeoMapPayload'
+                  - $ref: '#/components/schemas/GeoListPayload'
+        '400':
+          description: Invalid action
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+
+components:
+  schemas:
+    GeoCounters:
+      type: object
+      required: [authors, groups, parties]
+      properties:
+        authors:
+          type: integer
+        groups:
+          type: integer
+        parties:
+          type: integer
+    GeoCity:
+      type: object
+      required: [id, countryId, title, url, latitude, longitude, counters]
+      properties:
+        id:
+          type: integer
+        countryId:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        latitude:
+          type: number
+          format: float
+        longitude:
+          type: number
+          format: float
+        counters:
+          $ref: '#/components/schemas/GeoCounters'
+    GeoCountry:
+      type: object
+      required: [id, title, url, latitude, longitude, counters, cities]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        latitude:
+          type: number
+          format: float
+        longitude:
+          type: number
+          format: float
+        counters:
+          $ref: '#/components/schemas/GeoCounters'
+        cities:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeoCity'
+    GeoMapPayload:
+      type: object
+      required: [countries, counters]
+      properties:
+        countries:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeoCountry'
+        counters:
+          $ref: '#/components/schemas/GeoCounters'
+    GeoListPayload:
+      type: object
+      required: [total, items]
+      properties:
+        total:
+          type: integer
+        items:
+          type: array
+          items:
+            type: object
+    ErrorPayload:
+      type: object
+      required: [errorMessage]
+      properties:
+        errorMessage:
+          type: string

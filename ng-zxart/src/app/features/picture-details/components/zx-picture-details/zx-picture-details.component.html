@@ -33,8 +33,8 @@
           </ng-container>
         </div>
 
-        <!-- Context box (party / prod) — approved yellow-accent exception -->
-        <div *ngIf="details.partyContext || details.prodContext" class="pix-context">
+        <!-- Provenance (party / prod) -->
+        <zx-callout *ngIf="details.partyContext || details.prodContext">
           <zx-inline *ngIf="details.partyContext" align="center" spacing="sm" [wrap]="true">
             <zx-party-place [place]="details.partyContext.place"></zx-party-place>
             <span appText="body">
@@ -42,14 +42,15 @@
               <span *ngIf="details.partyContext.compoLabel" appText="body" tone="muted"> · {{ details.partyContext.compoLabel }}</span>
             </span>
           </zx-inline>
-          <zx-inline *ngIf="details.prodContext" align="center" spacing="sm" [wrap]="true">
-            <span appText="body">
-              {{ 'picture-details.from' | translate }} {{ details.prodContext.kindLabel }}
-              <a [href]="details.prodContext.url" appText="body" tone="link">«{{ details.prodContext.title }}»</a>
-              <span *ngIf="details.prodContext.year" appText="body" tone="muted"> · {{ details.prodContext.year }}</span>
-            </span>
-          </zx-inline>
-        </div>
+          <zx-prod-context *ngIf="details.prodContext" [context]="details.prodContext"></zx-prod-context>
+        </zx-callout>
+
+        <zx-rating-strip
+          *ngIf="details.votes > 0"
+          [label]="'zx-rating-strip.label' | translate"
+          [items]="[{type: 'artist', value: details.votes}]"
+          [showTypeLabel]="false">
+        </zx-rating-strip>
 
         <zx-inline align="center" spacing="md" [wrap]="true">
           <zx-item-controls
@@ -71,6 +72,8 @@
           [dateAdded]="details.dateCreated"
           [submitter]="details.submitter">
         </zx-added-by>
+
+        <div *ngIf="details.description" appText="body" tone="primary" [innerHTML]="details.description"></div>
       </zx-stack>
     </zx-inline>
 

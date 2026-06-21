@@ -35,10 +35,14 @@ readonly class AuthorListService
         ?string $letter = null,
         array $types = [EntityType::Author, EntityType::AuthorAlias],
         ?string $items = null,
+        ?float $north = null,
+        ?float $south = null,
+        ?float $east = null,
+        ?float $west = null,
     ): array {
-        $total = $this->repository->count($search, $countryId, $cityId, $letter, $types, $items);
+        $total = $this->repository->count($search, $countryId, $cityId, $letter, $types, $items, $north, $south, $east, $west);
         $sortColumn = AuthorSortColumn::fromString($sorting->column);
-        $ids = $this->repository->findPaged($start, $limit, $sortColumn, $sorting->direction, $search, $countryId, $cityId, $letter, $types, $items);
+        $ids = $this->repository->findPaged($start, $limit, $sortColumn, $sorting->direction, $search, $countryId, $cityId, $letter, $types, $items, $north, $south, $east, $west);
 
         $dtos = [];
         foreach ($ids as $id) {

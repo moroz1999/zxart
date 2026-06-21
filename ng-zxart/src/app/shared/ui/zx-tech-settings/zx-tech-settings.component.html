@@ -1,0 +1,11 @@
+<button type="button" class="zx-tech__toggle" (click)="toggle()">
+  <svg-icon *ngIf="!open" name="expand-more" aria-hidden="true"></svg-icon>
+  <svg-icon *ngIf="open" name="expand-less" aria-hidden="true"></svg-icon>
+  {{ title }}
+</button>
+<div class="zx-tech" *ngIf="open">
+  <div class="zx-tech__row" *ngFor="let row of rows">
+    <span class="zx-tech__k">{{ row.label }}</span>
+    <span class="zx-tech__v">{{ row.value }}</span>
+  </div>
+</div>

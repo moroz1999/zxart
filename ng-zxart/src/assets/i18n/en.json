@@ -520,6 +520,11 @@
   "zx-vote": {
     "votes": "{{count}} votes"
   },
+  "zx-rating-strip": {
+    "label": "Rating:",
+    "artist": "artist",
+    "musician": "musician"
+  },
   "picture": {
     "morefromgame": "More from this game",
     "morefromauthor": "More from this author"
@@ -598,7 +603,6 @@
     "stages-loading": "Decoding frames…",
     "play": "Play",
     "pause": "Pause",
-    "from": "From",
     "tags": "Tags",
     "votes": "votes",
     "views": "views",
@@ -759,9 +763,7 @@
         }
       },
       "rating": {
-        "label": "Community rating:",
-        "artist": "artist",
-        "musician": "musician"
+        "label": "Community rating:"
       }
     },
     "dashboard": {
@@ -1043,6 +1045,7 @@
     "role_video": "Video",
     "role_translation": "Translation",
     "role_restoring": "Restoring",
+    "role_publisher": "Publisher",
     "actions": "Production actions",
     "add-actions": "Add content",
     "edit": "Edit production",
@@ -1403,6 +1406,9 @@
     "hgfx": "HGFX",
     "amxmouse": "AMX-Mouse"
   },
+  "zx-prod-context": {
+    "from-release": "From release"
+  },
   "zx-added-by": {
     "label": "Added"
   },
@@ -1561,5 +1567,100 @@
     "results-range": "{{start}}–{{end}} of {{total}}",
     "error": "Failed to load search results.",
     "empty": "Nothing found."
+  },
+  "geo": {
+    "country": "Country",
+    "city": "City",
+    "clear": "Clear",
+    "entity": {
+      "authors": "Authors",
+      "groups": "Groups",
+      "parties": "Parties"
+    },
+    "places": {
+      "countries": "Countries",
+      "cities": "Cities"
+    },
+    "search": {
+      "placeholder": "Search",
+      "in": "Search in {{name}}"
+    },
+    "sort": {
+      "title": "A-Z",
+      "latest": "Latest"
+    },
+    "entries": "{{count}} works",
+    "empty": "No items found.",
+    "prev": "Previous",
+    "next": "Next",
+    "range": "{{from}}-{{to}} of {{total}}"
+  },
+  "stats": {
+    "intro": "The whole ZXArt collection in numbers: graphics, music and software added over the years, the activity of the last 30 days, and the archive's most active contributors.",
+    "tab": {
+      "soft": "Software",
+      "music": "Music",
+      "gfx": "Graphics",
+      "users": "Users"
+    },
+    "kpi": {
+      "prods": "Programs",
+      "releases": "Program releases",
+      "authors": "Authors",
+      "authors_sub": "people / with aliases",
+      "groups": "Groups",
+      "music": "Tunes",
+      "pics": "Pictures",
+      "peak": "Peak year",
+      "daily30": "Last 30 days"
+    },
+    "total": {
+      "soft": "Total programs",
+      "music": "Total tunes",
+      "gfx": "Total pictures"
+    },
+    "year": {
+      "soft": "Programs by year",
+      "music": "Tunes by year",
+      "gfx": "Pictures by year"
+    },
+    "section": {
+      "avg": "Average rating by year"
+    },
+    "days30": "30 days",
+    "legend": {
+      "all": "all in the database",
+      "rated": "rated above average"
+    },
+    "dist": {
+      "prod_category": "Category by year",
+      "music_format": "Format by year",
+      "gfx_type": "Technique by year",
+      "other": "Other"
+    },
+    "daily": {
+      "uploads": "Uploads",
+      "plays": "Plays",
+      "views": "Views"
+    },
+    "top": {
+      "user": "Member"
+    },
+    "top_title": {
+      "soft": "Top software uploaders",
+      "music": "Top music uploaders",
+      "gfx": "Top graphics uploaders",
+      "voters": "Most votes cast",
+      "comments": "Most comments",
+      "tags": "Most tags added"
+    },
+    "unit": {
+      "prods": "prog.",
+      "music": "tunes",
+      "pics": "pics",
+      "votes": "votes",
+      "comments": "comments",
+      "tags": "tags"
+    }
   }
 }

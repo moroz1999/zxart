@@ -158,7 +158,6 @@ readonly class PictureDetailsService
             title: $this->infoBuilder->decodeText((string)$release->getTitle()),
             url: (string)$release->getUrl(),
             year: $release->year ? (string)$release->year : null,
-            kindLabel: (string)$this->translationsManager->getTranslationByName('zxpicture.release'),
         );
     }
 

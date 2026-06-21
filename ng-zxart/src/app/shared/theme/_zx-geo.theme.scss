@@ -1,0 +1,99 @@
+@use 'shared/breakpoints' as bp;
+
+:root {
+  /* Geo section viewport height after the site header. */
+  --zx-geo-height: calc(100vh - var(--zx-header-height));
+  /* Geo panel width on desktop. */
+  --zx-geo-panel-width: 400px;
+  /* Geo map height follows the section height. */
+  --zx-geo-map-height: var(--zx-geo-height);
+  /* Geo root background. */
+  --zx-geo-background: var(--background-page);
+  /* Geo primary text color. */
+  --zx-geo-text: var(--text-color);
+  /* Geo muted text color. */
+  --zx-geo-muted-text: var(--text-light-color);
+  /* Geo link text color. */
+  --zx-geo-link-text: var(--link-color);
+  /* Geo active control text color. */
+  --zx-geo-active-text: var(--primary-600);
+  /* Geo right panel background. */
+  --zx-geo-panel-background: var(--surface);
+  /* Geo panel and mobile divider border. */
+  --zx-geo-panel-border: var(--border-width-thin) solid var(--secondary-200);
+  /* Geo repeated row divider border. */
+  --zx-geo-row-border: var(--border-width-thin) solid var(--secondary-100);
+  /* Geo generic control border. */
+  --zx-geo-control-border: var(--border-width-thin) solid var(--secondary-200);
+  /* Geo active control border color. */
+  --zx-geo-active-border: var(--primary-500);
+  /* Geo control background. */
+  --zx-geo-control-background: var(--surface);
+  /* Geo control corner radius. */
+  --zx-geo-control-radius: var(--radius-md);
+  /* Geo marker corner radius. */
+  --zx-geo-marker-radius: var(--radius-round);
+  /* Geo marker border. */
+  --zx-geo-marker-border: var(--border-width-md) solid var(--surface);
+  /* Geo marker text color. */
+  --zx-geo-marker-text: var(--white);
+  /* Geo marker inner padding. */
+  --zx-geo-marker-padding: var(--space-4) var(--space-8);
+  /* Geo marker gap between type segments. */
+  --zx-geo-marker-segment-gap: var(--space-8);
+  /* Geo marker gap between an icon and its number. */
+  --zx-geo-marker-icon-gap: var(--space-2);
+  /* Geo marker type icon size. */
+  --zx-geo-marker-icon-size: 12px;
+  /* Geo marker font size. */
+  --zx-geo-marker-font-size: var(--zx-font-size-xs);
+  /* Geo marker drop shadow. */
+  --zx-geo-marker-shadow: var(--shadow-sm);
+  /* Geo country marker background. */
+  --zx-geo-country-marker-background: var(--secondary-700);
+  /* Geo city marker background. */
+  --zx-geo-city-marker-background: var(--primary-600);
+  /* Geo author layer color. */
+  --zx-geo-authors-color: var(--primary-600);
+  /* Geo group layer color. */
+  --zx-geo-groups-color: var(--secondary-700);
+  /* Geo party layer color. */
+  --zx-geo-parties-color: var(--warning-700);
+  /* Geo standard panel padding. */
+  --zx-geo-panel-padding: var(--space-12) var(--space-16);
+  /* Geo inner element gap. */
+  --zx-geo-gap: var(--space-8);
+  /* Geo layer toggle inner gap between count and name. */
+  --zx-geo-layer-gap: var(--space-4);
+  /* Geo layer toggle opacity while the layer is disabled. */
+  --zx-geo-layer-off-opacity: 0.45;
+  /* Geo control inner padding. */
+  --zx-geo-control-padding: var(--space-8);
+  /* Geo row inner padding. */
+  --zx-geo-row-padding: var(--space-8) var(--space-16);
+  /* Geo tab inner padding. */
+  --zx-geo-tab-padding: var(--space-8) var(--space-12);
+  /* Geo section heading padding. */
+  --zx-geo-section-head-padding: var(--space-12) var(--space-16) var(--space-8);
+  /* Geo empty state padding. */
+  --zx-geo-empty-padding: var(--space-24) var(--space-16);
+  /* Geo layer swatch size. */
+  --zx-geo-swatch-size: 12px;
+  /* Geo layer swatch radius. */
+  --zx-geo-swatch-radius: var(--radius-sm);
+  /* Geo title font size. */
+  --zx-geo-title-size: var(--zx-font-size-lg);
+  /* Geo caption font size. */
+  --zx-geo-caption-size: var(--zx-font-size-xs);
+  /* Geo list opacity while loading next page. */
+  --zx-geo-loading-opacity: 0.55;
+}
+
+@include bp.media-breakpoint-down(md) {
+  :root {
+    /* Geo section viewport height after the mobile site header. */
+    --zx-geo-height: calc(100vh - var(--zx-header-mobile-height));
+    /* Geo map height on mobile. */
+    --zx-geo-map-height: 50vh;
+  }
+}

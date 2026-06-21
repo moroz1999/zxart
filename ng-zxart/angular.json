@@ -26,6 +26,7 @@
             "tsConfig": "tsconfig.app.json",
             "aot": true,
             "styles": [
+              "node_modules/leaflet/dist/leaflet.css",
               "src/styles.scss"
             ],
             "stylePreprocessorOptions": {
@@ -40,6 +41,9 @@
                 "input": "node_modules/ngx-extended-pdf-viewer/assets/",
                 "output": "assets/"
               }
+            ],
+            "allowedCommonJsDependencies": [
+              "leaflet"
             ],
             "scripts": []
           },
@@ -70,7 +74,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "1mb",
-                  "maximumError": "3mb"
+                  "maximumError": "4mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -118,4 +122,3 @@
     "analytics": false
   }
 }
-
