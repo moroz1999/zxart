@@ -38,15 +38,7 @@
     </zx-panel>
 
     <zx-panel *ngFor="let distribution of vm.distributions" [title]="distribution.title | translate">
-      <zx-stack gap="md">
-        <zx-inline gap="lg" [wrap]="true">
-          <zx-inline *ngFor="let dataset of distribution.datasets" align="center" gap="xs">
-            <i class="zx-stats-category__legend-swatch" [ngClass]="dataset.colorClass"></i>
-            <span appText="caption" tone="muted">{{ dataset.label }}</span>
-          </zx-inline>
-        </zx-inline>
-        <zx-stats-bar-chart [labels]="distribution.labels" [datasets]="distribution.datasets" [stacked]="true" [percentage]="true" height="lg"></zx-stats-bar-chart>
-      </zx-stack>
+      <zx-stats-bar-chart [labels]="distribution.labels" [datasets]="distribution.datasets" [stacked]="true" [interactiveLegend]="true" height="lg"></zx-stats-bar-chart>
     </zx-panel>
 
     <zx-panel [title]="(vm.section.daily.labelKey | translate) + ' · ' + ('stats.days30' | translate)">

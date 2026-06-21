@@ -19,14 +19,12 @@
         <zx-stack gap="xs">
           <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.authors | number }} <span class="zx-stats__kpi-slash">/</span> {{ overview.authorsWithAliases | number }}</div>
           <div appText="bodySm" class="zx-stats__kpi-label">{{ 'stats.kpi.authors' | translate }}</div>
-          <div appText="caption" tone="muted">{{ 'stats.kpi.authors_sub' | translate }}</div>
         </zx-stack>
       </zx-panel>
       <zx-panel padding="md">
         <zx-stack gap="xs">
           <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.groups | number }} <span class="zx-stats__kpi-slash">/</span> {{ overview.groupsWithAliases | number }}</div>
           <div appText="bodySm" class="zx-stats__kpi-label">{{ 'stats.kpi.groups' | translate }}</div>
-          <div appText="caption" tone="muted">{{ 'stats.kpi.authors_sub' | translate }}</div>
         </zx-stack>
       </zx-panel>
       <zx-panel padding="md">
@@ -53,17 +51,17 @@
   </zx-grid>
 
   <zx-tabs>
-    <zx-tab [label]="'stats.tab.soft' | translate" [count]="(overview$ | async)?.prods">
+    <zx-tab [label]="'stats.tab.soft' | translate">
       <ng-template zxTabContent>
         <zx-stats-category category="soft"></zx-stats-category>
       </ng-template>
     </zx-tab>
-    <zx-tab [label]="'stats.tab.music' | translate" [count]="(overview$ | async)?.music">
+    <zx-tab [label]="'stats.tab.music' | translate">
       <ng-template zxTabContent>
         <zx-stats-category category="music"></zx-stats-category>
       </ng-template>
     </zx-tab>
-    <zx-tab [label]="'stats.tab.gfx' | translate" [count]="(overview$ | async)?.pictures">
+    <zx-tab [label]="'stats.tab.gfx' | translate">
       <ng-template zxTabContent>
         <zx-stats-category category="gfx"></zx-stats-category>
       </ng-template>

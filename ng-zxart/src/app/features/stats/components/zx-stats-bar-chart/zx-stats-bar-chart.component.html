@@ -1,3 +1,21 @@
-<div class="zx-stats-bar-chart__canvas" [class]="heightClass">
-  <canvas baseChart type="bar" [data]="chartData" [options]="chartOptions"></canvas>
+<div class="zx-stats-bar-chart">
+  <div *ngIf="interactiveLegend && datasets.length" class="zx-stats-bar-chart__legend">
+    <button
+      *ngFor="let dataset of datasets; let i = index"
+      type="button"
+      class="zx-stats-bar-chart__legend-item"
+      [class.zx-stats-bar-chart__legend-item--inactive]="hiddenFlags[i]"
+      (click)="toggle(i)"
+    >
+      <i class="zx-stats-bar-chart__legend-swatch" [style.background-color]="dataset.color"></i>
+      <span appText="caption" tone="muted">{{ dataset.label }}</span>
+    </button>
+    <button type="button" class="zx-stats-bar-chart__legend-toggle-all" (click)="toggleAll()">
+      <span appText="caption">{{ (allHidden ? 'stats.legend.showAll' : 'stats.legend.hideAll') | translate }}</span>
+    </button>
+  </div>
+
+  <div class="zx-stats-bar-chart__canvas" [class]="heightClass">
+    <canvas baseChart type="bar" [data]="chartData" [options]="chartOptions"></canvas>
+  </div>
 </div>

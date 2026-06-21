@@ -13,6 +13,18 @@
   --zx-stats-chart-tick-auto-skip-padding: 16;
   /* Statistics chart grid line color. */
   --zx-stats-chart-grid-color: var(--border-color-light);
+  /* Statistics chart interactive legend gap between items. */
+  --zx-stats-chart-legend-gap: var(--gap-lg);
+  /* Statistics chart interactive legend gap between swatch and label. */
+  --zx-stats-chart-legend-item-gap: var(--space-4);
+  /* Statistics chart interactive legend swatch size. */
+  --zx-stats-chart-legend-swatch-size: 12px;
+  /* Statistics chart interactive legend swatch border radius. */
+  --zx-stats-chart-legend-swatch-radius: var(--radius-sm);
+  /* Statistics chart interactive legend opacity for a toggled-off class. */
+  --zx-stats-chart-legend-inactive-opacity: 0.4;
+  /* Statistics chart interactive legend "toggle all" button color. */
+  --zx-stats-chart-legend-toggle-all-color: var(--text-color-muted);
   /* Statistics chart primary series color. */
   --zx-stats-chart-series-primary: var(--primary-600);
   /* Statistics chart secondary series color. */
@@ -27,8 +39,12 @@
   --zx-stats-chart-series-soft: var(--primary-300);
   /* Statistics chart warm series color. */
   --zx-stats-chart-series-warm: var(--warning-700);
-  /* Statistics chart other bucket color. */
-  --zx-stats-chart-series-other: var(--secondary-300);
+  /* Statistics chart bold series color. */
+  --zx-stats-chart-series-bold: var(--danger-700);
+  /* Statistics chart cool series color. */
+  --zx-stats-chart-series-cool: var(--secondary-700);
+  /* Statistics chart mellow series color. */
+  --zx-stats-chart-series-mellow: var(--warning-300);
   /* Statistics chart daily series color. */
   --zx-stats-chart-series-daily: var(--primary-500);
   /* Statistics chart area fill color. */

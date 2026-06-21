@@ -53,16 +53,14 @@ final readonly class StatsRepository extends AbstractRepository
      */
     public function averageVoteByYear(DatabaseTable $table): array
     {
-        $result = [];
-        $query = $this->baseYearQuery($table)->where('votes', '>', 0);
+        $query = $this->baseYearQuery($table)
+            ->where('votes', '>', 0)
+            ->selectRaw('year, AVG(votes) AS average');
 
-        foreach ($this->getYears($query) as $year) {
-            /** @var int|float|string|null $average */
-            $average = (clone $query)->where('year', '=', $year)->avg('votes');
-            $result[$year] = round((float)$average, 2);
-        }
+        /** @var array<int, array{year: int|string, average: int|float|string|null}> $rows */
+        $rows = $this->groupBy($query, 'year')->get();
 
-        return $result;
+        return $this->averageRowsToResult($rows);
     }
 
     /**
@@ -73,61 +71,82 @@ final readonly class StatsRepository extends AbstractRepository
     public function distributionByColumn(DatabaseTable $table, StatsDistributionColumn $column): array
     {
         $query = $this->baseYearQuery($table)
-            ->where($column->value, '!=', '');
+            ->where($column->value, '!=', '')
+            ->select([$column->value . ' AS label', 'year'])
+            ->selectRaw('COUNT(*) AS amount');
+
+        /** @var array<int, array{label: string, year: int|string, amount: int|string}> $rows */
+        $rows = $this->groupBy($query, 'year', $column->value)->get();
+
+        return $this->distributionRowsToResult($rows);
+    }
+
+    /**
+     * Prod counts grouped by their directly linked category id and year.
+     *
+     * Titles and the top-level rollup are resolved from the structure tree by the caller.
+     *
+     * @return array<int, array<int, int>> categoryId => (year => count)
+     */
+    public function prodCategoryYearCounts(): array
+    {
+        $prodTable = $this->tableName(DatabaseTable::ZxProd);
+        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
+
+        $query = $this->db->table($prodTable)
+            ->join($linksTable, $linksTable . '.childStructureId', '=', $prodTable . '.id')
+            ->where($linksTable . '.type', '=', LinkTypes::ZX_PROD_CATEGORY->value)
+            ->where($prodTable . '.year', '>', 0)
+            ->select([$linksTable . '.parentStructureId AS categoryId', $prodTable . '.year AS year'])
+            ->selectRaw('COUNT(*) AS amount');
+
+        /** @var array<int, array{categoryId: int|string, year: int|string, amount: int|string}> $rows */
+        $rows = $this->groupBy($query, $linksTable . '.parentStructureId', $prodTable . '.year')->get();
 
         $result = [];
-        $years = $this->getYears($query);
-        $labels = $this->getColumnValues($query, $column->value);
-
-        foreach ($years as $year) {
-            foreach ($labels as $label) {
-                $count = (clone $query)
-                    ->where('year', '=', $year)
-                    ->where($column->value, '=', $label)
-                    ->count();
-
-                if ($count > 0) {
-                    $result[$year][$label] = $count;
-                }
-            }
+        foreach ($rows as $row) {
+            $result[(int)$row['categoryId']][(int)$row['year']] = (int)$row['amount'];
         }
 
         return $result;
     }
 
     /**
-     * Distribution of prods by their linked category, grouped by year.
+     * Prod counts grouped by the computer model required by their releases and by year.
      *
-     * @return array<int, array<string, int>> year => (categoryTitle => count)
+     * A prod is counted once per (year, computer model), even if several of its releases require the same model.
+     *
+     * @param string[] $computerModels hardware item values to keep
+     *
+     * @return array<int, array<string, int>> year => (computerModel => count)
      */
-    public function prodCategoryDistribution(): array
+    public function prodComputerModelDistribution(array $computerModels): array
     {
-        $prodTable = $this->tableName(DatabaseTable::ZxProd);
-        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
-        $categoryTable = $this->tableName(DatabaseTable::ZxProdCategory);
-
-        $query = $this->prodCategoryQuery($prodTable, $linksTable, $categoryTable)
-            ->select([$categoryTable . '.title AS label', $prodTable . '.year AS year'])
-            ->distinct();
-
-        /** @var array<int, array{label: string, year: int|string}> $rows */
-        $rows = $query->get();
-
-        $result = [];
-        foreach ($rows as $row) {
-            $year = (int)$row['year'];
-            $label = $row['label'];
-            $count = $this->prodCategoryQuery($prodTable, $linksTable, $categoryTable)
-                ->where($prodTable . '.year', '=', $year)
-                ->where($categoryTable . '.title', '=', $label)
-                ->count();
-
-            if ($count > 0) {
-                $result[$year][$label] = $count;
-            }
+        if ($computerModels === []) {
+            return [];
         }
 
-        return $result;
+        $prodTable = $this->tableName(DatabaseTable::ZxProd);
+        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
+        $releaseTable = $this->tableName(DatabaseTable::ZxRelease);
+        $hardwareTable = $this->tableName(DatabaseTable::ZxReleaseHardware);
+        // selectRaw is not processed by the grammar, so the table prefix must be applied manually here.
+        $prodIdColumn = $this->db->getTablePrefix() . $prodTable . '.id';
+
+        $query = $this->db->table($prodTable)
+            ->join($linksTable, $linksTable . '.parentStructureId', '=', $prodTable . '.id')
+            ->join($releaseTable, $releaseTable . '.id', '=', $linksTable . '.childStructureId')
+            ->join($hardwareTable, $hardwareTable . '.elementId', '=', $releaseTable . '.id')
+            ->where($linksTable . '.type', '=', LinkTypes::STRUCTURE->value)
+            ->where($prodTable . '.year', '>', 0)
+            ->whereIn($hardwareTable . '.value', $computerModels)
+            ->select([$hardwareTable . '.value AS label', $prodTable . '.year AS year'])
+            ->selectRaw('COUNT(DISTINCT ' . $prodIdColumn . ') AS amount');
+
+        /** @var array<int, array{label: string, year: int|string, amount: int|string}> $rows */
+        $rows = $this->groupBy($query, $prodTable . '.year', $hardwareTable . '.value')->get();
+
+        return $this->distributionRowsToResult($rows);
     }
 
     /**
@@ -136,21 +155,23 @@ final readonly class StatsRepository extends AbstractRepository
     public function topVoters(int $limit): array
     {
         $query = $this->db->table($this->tableName(DatabaseTable::VotesHistory))
+            ->select(['userId'])
+            ->selectRaw('COUNT(id) AS amount')
             ->where('type', '!=', 'comment')
             ->where('userId', '>', 0);
 
-        /** @var array<int, int|string> $userIds */
-        $userIds = (clone $query)->select(['userId'])->distinct()->pluck('userId');
+        /** @var array<int, array{userId: int|string, amount: int|string}> $rows */
+        $rows = $this->groupBy($query, 'userId')
+            ->orderBy('amount', 'desc')
+            ->limit($limit)
+            ->get();
 
         $result = [];
-        foreach ($userIds as $userId) {
-            $typedUserId = (int)$userId;
-            $result[$typedUserId] = (clone $query)->where('userId', '=', $typedUserId)->count();
+        foreach ($rows as $row) {
+            $result[(int)$row['userId']] = (int)$row['amount'];
         }
 
-        arsort($result);
-
-        return array_slice($result, 0, $limit, true);
+        return $result;
     }
 
     private function baseYearQuery(DatabaseTable $table): Builder
@@ -158,51 +179,73 @@ final readonly class StatsRepository extends AbstractRepository
         return $this->db->table($this->tableName($table))->where('year', '>', 0);
     }
 
-    private function prodCategoryQuery(string $prodTable, string $linksTable, string $categoryTable): Builder
-    {
-        return $this->db->table($prodTable)
-            ->join($linksTable, $linksTable . '.childStructureId', '=', $prodTable . '.id')
-            ->join($categoryTable, $categoryTable . '.id', '=', $linksTable . '.parentStructureId')
-            ->where($linksTable . '.type', '=', LinkTypes::ZX_PROD_CATEGORY->value)
-            ->where($categoryTable . '.languageId', '=', $this->getCurrentLanguageId())
-            ->where($categoryTable . '.title', '!=', '')
-            ->where($prodTable . '.year', '>', 0);
-    }
-
     /**
      * @return array<int, int> year => count
      */
     private function yearCounts(Builder $query): array
     {
-        $result = [];
+        $query = $query
+            ->select(['year'])
+            ->selectRaw('COUNT(*) AS amount');
 
-        foreach ($this->getYears($query) as $year) {
-            $result[$year] = (clone $query)->where('year', '=', $year)->count();
+        /** @var array<int, array{year: int|string, amount: int|string}> $rows */
+        $rows = $this->groupBy($query, 'year')
+            ->orderBy('year')
+            ->get();
+
+        return $this->yearCountRowsToResult($rows);
+    }
+
+    /**
+     * @param array<int, array{year: int|string, amount: int|string}> $rows
+     *
+     * @return array<int, int>
+     */
+    private function yearCountRowsToResult(array $rows): array
+    {
+        $result = [];
+        foreach ($rows as $row) {
+            $result[(int)$row['year']] = (int)$row['amount'];
         }
 
         return $result;
     }
 
     /**
-     * @return int[]
+     * @param array<int, array{year: int|string, average: int|float|string|null}> $rows
+     *
+     * @return array<int, float>
      */
-    private function getYears(Builder $query): array
+    private function averageRowsToResult(array $rows): array
     {
-        /** @var array<int, int|string> $years */
-        $years = (clone $query)->select(['year'])->distinct()->orderBy('year')->pluck('year');
+        $result = [];
+        foreach ($rows as $row) {
+            $result[(int)$row['year']] = round((float)$row['average'], 2);
+        }
 
-        return array_map(static fn(int|string $year): int => (int)$year, $years);
+        return $result;
     }
 
     /**
-     * @return string[]
+     * @param array<int, array{label: string, year: int|string, amount: int|string}> $rows
+     *
+     * @return array<int, array<string, int>>
      */
-    private function getColumnValues(Builder $query, string $column): array
+    private function distributionRowsToResult(array $rows): array
     {
-        /** @var array<int, string> $values */
-        $values = (clone $query)->select([$column])->distinct()->orderBy($column)->pluck($column);
+        $result = [];
+        foreach ($rows as $row) {
+            $result[(int)$row['year']][$row['label']] = (int)$row['amount'];
+        }
 
-        return $values;
+        return $result;
+    }
+
+    private function groupBy(Builder $query, string ...$columns): Builder
+    {
+        call_user_func_array([$query, 'groupBy'], $columns);
+
+        return $query;
     }
 
     private function getCurrentLanguageId(): int

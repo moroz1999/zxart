@@ -2,6 +2,49 @@
   display: block;
 }
 
+.zx-stats-bar-chart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--zx-stats-chart-legend-gap);
+  margin-bottom: var(--zx-stats-chart-legend-gap);
+}
+
+.zx-stats-bar-chart__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--zx-stats-chart-legend-item-gap);
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.zx-stats-bar-chart__legend-item--inactive {
+  opacity: var(--zx-stats-chart-legend-inactive-opacity);
+}
+
+.zx-stats-bar-chart__legend-swatch {
+  width: var(--zx-stats-chart-legend-swatch-size);
+  height: var(--zx-stats-chart-legend-swatch-size);
+  border-radius: var(--zx-stats-chart-legend-swatch-radius);
+  display: inline-block;
+  flex: none;
+}
+
+.zx-stats-bar-chart__legend-toggle-all {
+  appearance: none;
+  margin: 0 0 0 auto;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--zx-stats-chart-legend-toggle-all-color);
+  text-decoration: underline;
+}
+
 .zx-stats-bar-chart__canvas {
   position: relative;
   width: 100%;

@@ -1603,8 +1603,7 @@
     "kpi": {
       "prods": "Programas",
       "releases": "Lanzamientos",
-      "authors": "Autores",
-      "authors_sub": "personas / con alias",
+      "authors": "Autores / con alias",
       "groups": "Grupos",
       "music": "Melodías",
       "pics": "Imágenes",
@@ -1627,10 +1626,13 @@
     "days30": "30 días",
     "legend": {
       "all": "todo en la base",
-      "rated": "valorado por encima de la media"
+      "rated": "valorado por encima de la media",
+      "hideAll": "Ocultar todo",
+      "showAll": "Mostrar todo"
     },
     "dist": {
       "prod_category": "Categoría por año",
+      "computer_model": "Modelo de ordenador por año",
       "music_format": "Formato por año",
       "gfx_type": "Técnica por año",
       "other": "Otros"

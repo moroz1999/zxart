@@ -23,4 +23,5 @@ enum DatabaseTable: string
     case ZxProd = 'module_zxprod';
     case ZxProdCategory = 'module_zxprodcategory';
     case ZxRelease = 'module_zxrelease';
+    case ZxReleaseHardware = 'module_zxrelease_hw_required';
 }

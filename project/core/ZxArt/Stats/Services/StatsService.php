@@ -6,8 +6,12 @@ namespace ZxArt\Stats\Services;
 
 use App\Logging\EventsLog;
 use ConfigManager;
+use LanguagesManager;
 use structureManager;
 use userElement;
+use ZxArt\Hardware\HardwareCatalog;
+use ZxArt\Hardware\HardwareGroup;
+use zxProdCategoryElement;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Stats\Dto\StatsCategorySectionDto;
 use ZxArt\Stats\Dto\StatsDailySeriesDto;
@@ -22,15 +26,15 @@ use ZxArt\Stats\StatsUserBadge;
 
 readonly class StatsService
 {
-    private const string OTHER_CLASS = 'other';
     private const int DAILY_DAYS = 30;
-    private const int DISTRIBUTION_LIMIT = 6;
 
     public function __construct(
         private StatsRepository $repository,
         private EventsLog $eventsLog,
         private structureManager $structureManager,
         private ConfigManager $configManager,
+        private LanguagesManager $languagesManager,
+        private HardwareCatalog $hardwareCatalog,
     ) {
     }
 
@@ -55,7 +59,8 @@ readonly class StatsService
     {
         [$years, $series] = $this->buildYearSeries(DatabaseTable::ZxProd);
         $distributions = [
-            $this->buildDistribution('stats.dist.prod_category', $this->repository->prodCategoryDistribution(), $years),
+            $this->buildSoftCategoryDistribution($years),
+            $this->buildComputerModelDistribution($years),
         ];
         $daily = $this->buildDaily('stats.daily.uploads', ['addZxProd']);
         $top = $this->topEventUsers(['addZxProd'], 10);
@@ -169,34 +174,107 @@ readonly class StatsService
         }
         arsort($totals);
 
-        $topLabels = array_slice(array_keys($totals), 0, self::DISTRIBUTION_LIMIT);
-        $hasOther = count($totals) > count($topLabels);
-
-        $classes = $topLabels;
-        if ($hasOther) {
-            $classes[] = self::OTHER_CLASS;
-        }
+        $labels = array_map('strval', array_keys($totals));
 
         $rows = [];
         foreach ($years as $year) {
             $yearClasses = $perYear[$year] ?? [];
             $row = [];
-            foreach ($topLabels as $label) {
+            foreach ($labels as $label) {
                 $row[] = $yearClasses[$label] ?? 0;
-            }
-            if ($hasOther) {
-                $other = 0;
-                foreach ($yearClasses as $label => $count) {
-                    if (!in_array($label, $topLabels, true)) {
-                        $other += $count;
-                    }
-                }
-                $row[] = $other;
             }
             $rows[] = $row;
         }
 
+        return new StatsDistributionDto($titleKey, $labels, $rows);
+    }
+
+    /**
+     * Prods rolled up to the top-level soft categories (direct children of the soft catalogue), per year.
+     *
+     * @param int[] $years
+     */
+    private function buildSoftCategoryDistribution(array $years): StatsDistributionDto
+    {
+        $titleKey = 'stats.dist.prod_category';
+        $topCategories = $this->getTopSoftCategories();
+        if ($topCategories === []) {
+            return new StatsDistributionDto($titleKey, [], []);
+        }
+
+        $topByCategory = [];
+        foreach ($topCategories as $topId => $category) {
+            $treeIds = [];
+            $category->getSubCategoriesTreeIds($treeIds);
+            foreach ($treeIds as $treeId) {
+                $topByCategory[$treeId] = $topId;
+            }
+        }
+
+        $perYear = [];
+        foreach ($this->repository->prodCategoryYearCounts() as $categoryId => $yearCounts) {
+            $topId = $topByCategory[$categoryId] ?? null;
+            if ($topId === null) {
+                continue;
+            }
+            foreach ($yearCounts as $year => $count) {
+                $perYear[$topId][$year] = ($perYear[$topId][$year] ?? 0) + $count;
+            }
+        }
+
+        $totals = [];
+        foreach ($perYear as $topId => $yearCounts) {
+            $totals[$topId] = array_sum($yearCounts);
+        }
+        arsort($totals);
+
+        $classes = [];
+        $rows = array_fill(0, count($years), []);
+        foreach (array_keys($totals) as $topId) {
+            $classes[] = (string)$topCategories[$topId]->getTitle();
+            foreach ($years as $index => $year) {
+                $rows[$index][] = $perYear[$topId][$year] ?? 0;
+            }
+        }
+
         return new StatsDistributionDto($titleKey, $classes, $rows);
+    }
+
+    /**
+     * Prods grouped by the computer model required by their releases, per year.
+     *
+     * @param int[] $years
+     */
+    private function buildComputerModelDistribution(array $years): StatsDistributionDto
+    {
+        $computerModels = $this->hardwareCatalog->getGroupItems(HardwareGroup::COMPUTERS);
+        $perYear = $this->repository->prodComputerModelDistribution($computerModels);
+
+        return $this->buildDistribution('stats.dist.computer_model', $perYear, $years);
+    }
+
+    /**
+     * @return array<int, zxProdCategoryElement> categoryId => top-level category element
+     */
+    private function getTopSoftCategories(): array
+    {
+        $catalogues = $this->structureManager->getElementsByType(
+            'zxProdCategoriesCatalogue',
+            $this->languagesManager->getCurrentLanguageId(),
+        );
+        $catalogue = reset($catalogues);
+        if ($catalogue === false) {
+            return [];
+        }
+
+        $result = [];
+        foreach ($catalogue->getCategories() as $category) {
+            if ($category instanceof zxProdCategoryElement) {
+                $result[$category->getId()] = $category;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -285,7 +363,7 @@ readonly class StatsService
     {
         $url = $element->getUrl();
 
-        return $url !== '' ? $url : null;
+        return is_string($url) && $url !== '' ? $url : null;
     }
 
     private function resolveBadge(userElement $element): ?string

@@ -61,12 +61,15 @@ interface CategoryVm {
 })
 export class ZxStatsCategoryComponent implements OnInit {
   private static readonly palette = [
-    {variable: '--zx-stats-chart-series-primary', colorClass: 'zx-stats-category__legend-swatch--primary'},
-    {variable: '--zx-stats-chart-series-tertiary', colorClass: 'zx-stats-category__legend-swatch--tertiary'},
-    {variable: '--zx-stats-chart-series-danger', colorClass: 'zx-stats-category__legend-swatch--danger'},
-    {variable: '--zx-stats-chart-series-alternate', colorClass: 'zx-stats-category__legend-swatch--alternate'},
-    {variable: '--zx-stats-chart-series-soft', colorClass: 'zx-stats-category__legend-swatch--soft'},
-    {variable: '--zx-stats-chart-series-warm', colorClass: 'zx-stats-category__legend-swatch--warm'},
+    '--zx-stats-chart-series-primary',
+    '--zx-stats-chart-series-tertiary',
+    '--zx-stats-chart-series-danger',
+    '--zx-stats-chart-series-alternate',
+    '--zx-stats-chart-series-soft',
+    '--zx-stats-chart-series-warm',
+    '--zx-stats-chart-series-bold',
+    '--zx-stats-chart-series-cool',
+    '--zx-stats-chart-series-mellow',
   ];
 
   @Input({required: true}) category!: StatsCategoryKey;
@@ -82,7 +85,7 @@ export class ZxStatsCategoryComponent implements OnInit {
 
   ngOnInit(): void {
     const section$ = this.getSection();
-    const labels$ = this.translate.stream(['stats.legend.all', 'stats.legend.rated', 'stats.dist.other']);
+    const labels$ = this.translate.stream(['stats.legend.all', 'stats.legend.rated']);
 
     this.loaded$ = section$.pipe(map(section => section !== null), startWith(false));
     this.vm$ = combineLatest([section$, this.themeService.theme$, labels$]).pipe(
@@ -109,21 +112,20 @@ export class ZxStatsCategoryComponent implements OnInit {
       },
     ];
 
-    const distributions = section.distributions.map(distribution => ({
-      title: distribution.titleKey,
-      labels: yearLabels,
-      datasets: distribution.classes.map((className, index) => {
-        const paletteItem = ZxStatsCategoryComponent.palette[index % ZxStatsCategoryComponent.palette.length];
+    const distributions = section.distributions.map(distribution => {
+      const prefix = this.distributionLabelPrefix(distribution.titleKey);
+      const colors = this.distributionColors(distribution.classes.length);
 
-        return {
-          label: className === 'other' ? labels['stats.dist.other'] : className,
+      return {
+        title: distribution.titleKey,
+        labels: yearLabels,
+        datasets: distribution.classes.map((className, index) => ({
+          label: this.translateClass(prefix, className),
           data: distribution.rows.map(row => row[index] ?? 0),
-          color: className === 'other' ? this.color('--zx-stats-chart-series-other') : this.color(paletteItem.variable),
-          colorClass:
-            className === 'other' ? 'zx-stats-category__legend-swatch--other' : paletteItem.colorClass,
-        };
-      }),
-    }));
+          color: colors[index],
+        })),
+      };
+    });
 
     return {
       section,
@@ -156,5 +158,37 @@ export class ZxStatsCategoryComponent implements OnInit {
     const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
     return value;
+  }
+
+  private distributionLabelPrefix(titleKey: string): string | null {
+    // Format and hardware codes have ready-made short translations; category titles are already localized server-side.
+    switch (titleKey) {
+      case 'stats.dist.gfx_type':
+        return 'picture-format-short';
+      case 'stats.dist.computer_model':
+        return 'hardware-short';
+      default:
+        return null;
+    }
+  }
+
+  private translateClass(prefix: string | null, className: string): string {
+    if (!prefix) {
+      return className;
+    }
+    const key = `${prefix}.${className}`;
+    const translated = this.translate.instant(key);
+
+    return translated === key ? className : translated;
+  }
+
+  private distributionColors(count: number): string[] {
+    const brand = ZxStatsCategoryComponent.palette.map(variable => this.color(variable));
+    if (count <= brand.length) {
+      return brand.slice(0, count);
+    }
+
+    // More classes than the curated palette offers: spread hues evenly so every class stays distinct.
+    return Array.from({length: count}, (_, index) => `hsl(${Math.round((360 / count) * index)}, 62%, 52%)`);
   }
 }

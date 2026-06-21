@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace ZxArt\Stats\Dto;
 
+use Symfony\Component\ObjectMapper\Attribute\Map;
+use ZxArt\Stats\Rest\StatsDailySeriesRestDto;
+
+#[Map(target: StatsDailySeriesRestDto::class)]
 readonly class StatsDailySeriesDto
 {
     /**

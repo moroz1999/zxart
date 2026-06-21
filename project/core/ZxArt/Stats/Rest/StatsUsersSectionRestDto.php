@@ -15,11 +15,11 @@ readonly class StatsUsersSectionRestDto
      * @param StatsTopUserRestDto[] $tags
      */
     public function __construct(
-        #[Map(transform: MapCollection::class)]
+        #[Map(transform: new MapCollection())]
         public array $voters,
-        #[Map(transform: MapCollection::class)]
+        #[Map(transform: new MapCollection())]
         public array $comments,
-        #[Map(transform: MapCollection::class)]
+        #[Map(transform: new MapCollection())]
         public array $tags,
     ) {
     }

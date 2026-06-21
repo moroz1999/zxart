@@ -19,10 +19,10 @@ readonly class StatsCategorySectionRestDto
         public int $dailyTotal,
         public string $topUnitKey,
         public StatsYearSeriesRestDto $series,
-        #[Map(transform: MapCollection::class)]
+        #[Map(transform: new MapCollection())]
         public array $distributions,
         public StatsDailySeriesRestDto $daily,
-        #[Map(transform: MapCollection::class)]
+        #[Map(transform: new MapCollection())]
         public array $top,
     ) {
     }

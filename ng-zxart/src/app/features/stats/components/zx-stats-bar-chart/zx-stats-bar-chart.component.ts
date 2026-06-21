@@ -1,6 +1,9 @@
+import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
+import {TranslateModule} from '@ngx-translate/core';
 import {ChartConfiguration, ChartData} from 'chart.js';
 import {BaseChartDirective} from 'ng2-charts';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 
 export interface StatsBarDataset {
   label: string;
@@ -14,7 +17,7 @@ type StatsChartHeight = 'sm' | 'md' | 'lg';
 @Component({
   selector: 'zx-stats-bar-chart',
   standalone: true,
-  imports: [BaseChartDirective],
+  imports: [CommonModule, TranslateModule, BaseChartDirective, TextDirective],
   templateUrl: './zx-stats-bar-chart.component.html',
   styleUrl: './zx-stats-bar-chart.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,16 +27,40 @@ export class ZxStatsBarChartComponent implements OnChanges {
   @Input() datasets: StatsBarDataset[] = [];
   @Input() stacked = false;
   @Input() percentage = false;
+  @Input() interactiveLegend = false;
   @Input() height: StatsChartHeight = 'lg';
 
   chartData: ChartData<'bar'> = {labels: [], datasets: []};
   chartOptions: ChartConfiguration<'bar'>['options'] = {};
+  hiddenFlags: boolean[] = [];
 
   get heightClass(): string {
     return `zx-stats-bar-chart__canvas zx-stats-bar-chart__canvas--${this.height}`;
   }
 
+  get allHidden(): boolean {
+    return this.datasets.length > 0 && this.hiddenFlags.every(flag => flag);
+  }
+
   ngOnChanges(): void {
+    if (this.hiddenFlags.length !== this.datasets.length) {
+      this.hiddenFlags = new Array(this.datasets.length).fill(false);
+    }
+    this.render();
+  }
+
+  toggle(index: number): void {
+    this.hiddenFlags = this.hiddenFlags.map((flag, i) => (i === index ? !flag : flag));
+    this.render();
+  }
+
+  toggleAll(): void {
+    const next = !this.allHidden;
+    this.hiddenFlags = this.hiddenFlags.map(() => next);
+    this.render();
+  }
+
+  private render(): void {
     const data = this.percentage ? this.toPercentages() : this.datasets.map(dataset => dataset.data);
     const tickFontSize = this.cssNumber('--zx-stats-chart-tick-font-size');
     const tickAutoSkipPadding = this.cssNumber('--zx-stats-chart-tick-auto-skip-padding');
@@ -53,6 +80,7 @@ export class ZxStatsBarChartComponent implements OnChanges {
         barPercentage: 0.96,
         categoryPercentage: 0.96,
         stack: this.stacked ? 'stack' : String(index),
+        hidden: this.hiddenFlags[index] ?? false,
       })),
     };
 

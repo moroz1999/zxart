@@ -1607,7 +1607,6 @@
       "prods": "Programs",
       "releases": "Program releases",
       "authors": "Authors",
-      "authors_sub": "people / with aliases",
       "groups": "Groups",
       "music": "Tunes",
       "pics": "Pictures",
@@ -1630,10 +1629,13 @@
     "days30": "30 days",
     "legend": {
       "all": "all in the database",
-      "rated": "rated above average"
+      "rated": "rated above average",
+      "hideAll": "Hide all",
+      "showAll": "Show all"
     },
     "dist": {
       "prod_category": "Category by year",
+      "computer_model": "Computer model by year",
       "music_format": "Format by year",
       "gfx_type": "Technique by year",
       "other": "Other"
