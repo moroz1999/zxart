@@ -64,6 +64,12 @@ class ServerSessionManager
             $this->sessionId = $sessionId;
         }
         if ($this->enabled && !$this->started) {
+            if (headers_sent()) {
+                // The response is already flushed (e.g. a late write from CurrentUser::__destruct()).
+                // A session can no longer be started, so skip it instead of emitting PHP warnings.
+                $this->started = true;
+                return;
+            }
             $this->started = true;
             session_name($this->sessionName);
             if ($this->sessionId !== null) {

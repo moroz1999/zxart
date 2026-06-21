@@ -1623,9 +1623,6 @@
       "music": "Tunes by year",
       "gfx": "Pictures by year"
     },
-    "section": {
-      "avg": "Average rating by year"
-    },
     "days30": "30 days",
     "legend": {
       "all": "all in the database",
@@ -1636,6 +1633,7 @@
     "dist": {
       "prod_category": "Category by year",
       "computer_model": "Computer model by year",
+      "country": "Works by country",
       "music_format": "Format by year",
       "gfx_type": "Technique by year",
       "other": "Other"

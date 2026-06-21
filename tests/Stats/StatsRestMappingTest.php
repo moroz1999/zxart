@@ -30,7 +30,7 @@ final class StatsRestMappingTest extends TestCase
             1984,
             2,
             'stats.unit.prods',
-            new StatsYearSeriesDto([1984], [1], [1], [4.5]),
+            new StatsYearSeriesDto([1984], [1], [1]),
             [new StatsDistributionDto('stats.dist.category', ['Arcade'], [[1]])],
             new StatsDailySeriesDto('stats.daily.soft', ['21.06.2026'], [2]),
             [new StatsTopUserDto('User', null, null, 3)],

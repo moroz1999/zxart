@@ -27,6 +27,7 @@ use ZxArt\Stats\StatsUserBadge;
 readonly class StatsService
 {
     private const int DAILY_DAYS = 30;
+    private const int COUNTRY_LIMIT = 15;
 
     public function __construct(
         private StatsRepository $repository,
@@ -61,6 +62,7 @@ readonly class StatsService
         $distributions = [
             $this->buildSoftCategoryDistribution($years),
             $this->buildComputerModelDistribution($years),
+            $this->buildDistribution('stats.dist.country', $this->repository->prodCountryDistribution(), $years, self::COUNTRY_LIMIT),
         ];
         $daily = $this->buildDaily('stats.daily.uploads', ['addZxProd']);
         $top = $this->topEventUsers(['addZxProd'], 10);
@@ -86,6 +88,7 @@ readonly class StatsService
                 $this->repository->distributionByColumn(DatabaseTable::ZxMusic, StatsDistributionColumn::Type),
                 $years,
             ),
+            $this->buildDistribution('stats.dist.country', $this->repository->musicCountryDistribution(), $years, self::COUNTRY_LIMIT),
         ];
         $daily = $this->buildDaily('stats.daily.plays', ['play']);
         $top = $this->topEventUsers(['addZxMusic'], 10);
@@ -111,6 +114,7 @@ readonly class StatsService
                 $this->repository->distributionByColumn(DatabaseTable::ZxPicture, StatsDistributionColumn::Type),
                 $years,
             ),
+            $this->buildDistribution('stats.dist.country', $this->repository->pictureCountryDistribution(), $years, self::COUNTRY_LIMIT),
         ];
         $daily = $this->buildDaily('stats.daily.views', ['view']);
         $top = $this->topEventUsers(['addZxPicture'], 10);
@@ -143,28 +147,26 @@ readonly class StatsService
     {
         $all = $this->repository->countByYear($table);
         $rated = $this->repository->countRatedByYear($table, $this->averageVote());
-        $average = $this->repository->averageVoteByYear($table);
 
         $years = array_keys($all);
         sort($years);
 
         $allValues = [];
         $ratedValues = [];
-        $avgValues = [];
         foreach ($years as $year) {
             $allValues[] = $all[$year];
             $ratedValues[] = $rated[$year] ?? 0;
-            $avgValues[] = $average[$year] ?? 0.0;
         }
 
-        return [$years, new StatsYearSeriesDto($years, $allValues, $ratedValues, $avgValues)];
+        return [$years, new StatsYearSeriesDto($years, $allValues, $ratedValues)];
     }
 
     /**
      * @param array<int, array<string, int>> $perYear
      * @param int[] $years
+     * @param int|null $limit keep only the $limit most populous classes, or all when null
      */
-    private function buildDistribution(string $titleKey, array $perYear, array $years): StatsDistributionDto
+    private function buildDistribution(string $titleKey, array $perYear, array $years, ?int $limit = null): StatsDistributionDto
     {
         $totals = [];
         foreach ($perYear as $classes) {
@@ -173,6 +175,10 @@ readonly class StatsService
             }
         }
         arsort($totals);
+
+        if ($limit !== null) {
+            $totals = array_slice($totals, 0, $limit, true);
+        }
 
         $labels = array_map('strval', array_keys($totals));
 

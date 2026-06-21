@@ -1620,9 +1620,6 @@
       "music": "Melodías por año",
       "gfx": "Imágenes por año"
     },
-    "section": {
-      "avg": "Valoración media por año"
-    },
     "days30": "30 días",
     "legend": {
       "all": "todo en la base",
@@ -1633,6 +1630,7 @@
     "dist": {
       "prod_category": "Categoría por año",
       "computer_model": "Modelo de ordenador por año",
+      "country": "Trabajos por país",
       "music_format": "Formato por año",
       "gfx_type": "Técnica por año",
       "other": "Otros"
