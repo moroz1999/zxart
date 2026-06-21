@@ -1,0 +1,36 @@
+:root {
+  /* Statistics chart compact height. */
+  --zx-stats-chart-height-sm: 140px;
+  /* Statistics chart regular height. */
+  --zx-stats-chart-height-md: 180px;
+  /* Statistics chart large height. */
+  --zx-stats-chart-height-lg: 200px;
+  /* Statistics chart bar corner radius. */
+  --zx-stats-chart-bar-radius: 2px;
+  /* Statistics chart tick font size in pixels for Chart.js. */
+  --zx-stats-chart-tick-font-size: 10;
+  /* Statistics chart x-axis tick auto-skip padding in pixels for Chart.js. */
+  --zx-stats-chart-tick-auto-skip-padding: 16;
+  /* Statistics chart grid line color. */
+  --zx-stats-chart-grid-color: var(--border-color-light);
+  /* Statistics chart primary series color. */
+  --zx-stats-chart-series-primary: var(--primary-600);
+  /* Statistics chart secondary series color. */
+  --zx-stats-chart-series-secondary: var(--primary-200);
+  /* Statistics chart tertiary series color. */
+  --zx-stats-chart-series-tertiary: var(--warning-500);
+  /* Statistics chart danger series color. */
+  --zx-stats-chart-series-danger: var(--danger-500);
+  /* Statistics chart alternate series color. */
+  --zx-stats-chart-series-alternate: var(--secondary-500);
+  /* Statistics chart soft series color. */
+  --zx-stats-chart-series-soft: var(--primary-300);
+  /* Statistics chart warm series color. */
+  --zx-stats-chart-series-warm: var(--warning-700);
+  /* Statistics chart other bucket color. */
+  --zx-stats-chart-series-other: var(--secondary-300);
+  /* Statistics chart daily series color. */
+  --zx-stats-chart-series-daily: var(--primary-500);
+  /* Statistics chart area fill color. */
+  --zx-stats-chart-fill-primary: var(--primary-100);
+}

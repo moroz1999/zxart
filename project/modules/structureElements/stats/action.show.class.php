@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class showStats extends structureElementAction
 {
     /**
@@ -7,7 +9,9 @@ class showStats extends structureElementAction
      */
     public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
-        $structureElement->setViewName('content');
+        if ($structureElement->requested === true) {
+            $structureElement->setViewName('content');
+        }
     }
 }
 

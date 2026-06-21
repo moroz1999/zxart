@@ -16,7 +16,7 @@ The statistics section is an Angular-powered dashboard exposed through the `zx-s
 - `action=overview` (default) returns collection totals for the KPI strip.
 - `action=soft`, `action=music`, `action=gfx` return a category section: year series (all/rated/avg), distributions, daily history and top uploaders.
 - `action=users` returns the top voters, commenters and taggers.
-- Response shapes are defined in `api/stats.yaml`. The JSON renderer serialises the DTOs in `ZxArt\Stats\Dto` directly.
+- Response shapes are defined in `api/stats.yaml`. The controller maps service DTOs from `ZxArt\Stats\Dto` to REST DTOs from `ZxArt\Stats\Rest`.
 
 ### Frontend Behaviour
 - The KPI strip loads `overview` once on mount and shows skeleton bones until it arrives.

@@ -2,6 +2,8 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/cor
 import {ChartConfiguration, ChartData} from 'chart.js';
 import {BaseChartDirective} from 'ng2-charts';
 
+type StatsChartHeight = 'sm' | 'md' | 'lg';
+
 @Component({
   selector: 'zx-stats-line-chart',
   standalone: true,
@@ -13,16 +15,24 @@ import {BaseChartDirective} from 'ng2-charts';
 export class ZxStatsLineChartComponent implements OnChanges {
   @Input() labels: string[] = [];
   @Input() data: number[] = [];
-  @Input() color = '#000';
-  @Input() fill = 'rgba(0,0,0,0.1)';
+  @Input() color = '';
+  @Input() fill = '';
   @Input() min = 2.5;
   @Input() max = 5;
-  @Input() height = 200;
+  @Input() height: StatsChartHeight = 'lg';
 
   chartData: ChartData<'line'> = {labels: [], datasets: []};
   chartOptions: ChartConfiguration<'line'>['options'] = {};
 
+  get heightClass(): string {
+    return `zx-stats-line-chart__canvas zx-stats-line-chart__canvas--${this.height}`;
+  }
+
   ngOnChanges(): void {
+    const tickFontSize = this.cssNumber('--zx-stats-chart-tick-font-size');
+    const tickAutoSkipPadding = this.cssNumber('--zx-stats-chart-tick-auto-skip-padding');
+    const gridColor = this.cssValue('--zx-stats-chart-grid-color');
+
     this.chartData = {
       labels: this.labels,
       datasets: [
@@ -50,14 +60,22 @@ export class ZxStatsLineChartComponent implements OnChanges {
         tooltip: {callbacks: {label: context => (context.parsed.y ?? 0).toFixed(1)}},
       },
       scales: {
-        x: {grid: {display: false}, ticks: {maxRotation: 0, autoSkipPadding: 16, font: {size: 10}}},
+        x: {grid: {display: false}, ticks: {maxRotation: 0, autoSkipPadding: tickAutoSkipPadding, font: {size: tickFontSize}}},
         y: {
           min: this.min,
           max: this.max,
-          grid: {color: 'rgba(127,127,127,0.15)'},
-          ticks: {font: {size: 10}, stepSize: 0.5},
+          grid: {color: gridColor},
+          ticks: {font: {size: tickFontSize}, stepSize: 0.5},
         },
       },
     };
+  }
+
+  private cssValue(name: string): string {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  private cssNumber(name: string): number {
+    return Number(this.cssValue(name));
   }
 }

@@ -6,3 +6,15 @@
   position: relative;
   width: 100%;
 }
+
+.zx-stats-line-chart__canvas--sm {
+  height: var(--zx-stats-chart-height-sm);
+}
+
+.zx-stats-line-chart__canvas--md {
+  height: var(--zx-stats-chart-height-md);
+}
+
+.zx-stats-line-chart__canvas--lg {
+  height: var(--zx-stats-chart-height-lg);
+}

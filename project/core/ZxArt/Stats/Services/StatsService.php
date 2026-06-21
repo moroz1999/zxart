@@ -17,13 +17,14 @@ use ZxArt\Stats\Dto\StatsTopUserDto;
 use ZxArt\Stats\Dto\StatsUsersSectionDto;
 use ZxArt\Stats\Dto\StatsYearSeriesDto;
 use ZxArt\Stats\Repositories\StatsRepository;
+use ZxArt\Stats\StatsDistributionColumn;
+use ZxArt\Stats\StatsUserBadge;
 
 readonly class StatsService
 {
     private const string OTHER_CLASS = 'other';
     private const int DAILY_DAYS = 30;
     private const int DISTRIBUTION_LIMIT = 6;
-    private const array BADGE_PRIORITY = ['vip', 'volunteer', 'supporter'];
 
     public function __construct(
         private StatsRepository $repository,
@@ -77,7 +78,7 @@ readonly class StatsService
         $distributions = [
             $this->buildDistribution(
                 'stats.dist.music_format',
-                $this->repository->distributionByColumn(DatabaseTable::ZxMusic, 'type'),
+                $this->repository->distributionByColumn(DatabaseTable::ZxMusic, StatsDistributionColumn::Type),
                 $years,
             ),
         ];
@@ -102,7 +103,7 @@ readonly class StatsService
         $distributions = [
             $this->buildDistribution(
                 'stats.dist.gfx_type',
-                $this->repository->distributionByColumn(DatabaseTable::ZxPicture, 'type'),
+                $this->repository->distributionByColumn(DatabaseTable::ZxPicture, StatsDistributionColumn::Type),
                 $years,
             ),
         ];
@@ -203,6 +204,7 @@ readonly class StatsService
      */
     private function buildDaily(string $labelKey, array $types): StatsDailySeriesDto
     {
+        /** @var array<string, int|string> $counts */
         $counts = $this->eventsLog->countEvents(
             $types,
             null,
@@ -234,12 +236,14 @@ readonly class StatsService
      */
     private function topEventUsers(array $types, int $limit): array
     {
+        /** @var array<int|string, int|string> $counts */
         $counts = $this->eventsLog->countEvents($types, null, null, null, null, 'count', 'desc', $limit, 'userId');
 
         $result = [];
         foreach ($counts as $userId => $count) {
-            if ($dto = $this->buildTopUser((int)$userId, (int)$count)) {
-                $result[] = $dto;
+            $topUser = $this->buildTopUser((int)$userId, (int)$count);
+            if ($topUser !== null) {
+                $result[] = $topUser;
             }
         }
 
@@ -253,8 +257,9 @@ readonly class StatsService
     {
         $result = [];
         foreach ($this->repository->topVoters($limit) as $userId => $count) {
-            if ($dto = $this->buildTopUser($userId, $count)) {
-                $result[] = $dto;
+            $topUser = $this->buildTopUser($userId, $count);
+            if ($topUser !== null) {
+                $result[] = $topUser;
             }
         }
 
@@ -269,23 +274,38 @@ readonly class StatsService
         }
 
         return new StatsTopUserDto(
-            name: html_entity_decode((string)$element->userName, ENT_QUOTES),
-            url: $element->getUrl() ?: null,
+            name: html_entity_decode($element->userName, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+            url: $this->getUserUrl($element),
             badge: $this->resolveBadge($element),
             count: $count,
         );
     }
 
+    private function getUserUrl(userElement $element): ?string
+    {
+        $url = $element->getUrl();
+
+        return $url !== '' ? $url : null;
+    }
+
     private function resolveBadge(userElement $element): ?string
     {
         $badges = $element->getBadgetTypes();
-        foreach (self::BADGE_PRIORITY as $badge) {
-            if (in_array($badge, $badges, true)) {
-                return $badge;
+        foreach ($this->badgePriority() as $badge) {
+            if (in_array($badge->value, $badges, true)) {
+                return $badge->value;
             }
         }
 
         return null;
+    }
+
+    /**
+     * @return StatsUserBadge[]
+     */
+    private function badgePriority(): array
+    {
+        return [StatsUserBadge::Vip, StatsUserBadge::Volunteer, StatsUserBadge::Supporter];
     }
 
     /**

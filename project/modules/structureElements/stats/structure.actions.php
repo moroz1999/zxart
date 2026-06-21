@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 $moduleActions = [];
 $moduleActions[] = 'delete';
 $moduleActions[] = 'receive';

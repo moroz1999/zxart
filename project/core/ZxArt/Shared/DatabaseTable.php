@@ -21,5 +21,6 @@ enum DatabaseTable: string
     case ZxMusic = 'module_zxmusic';
     case ZxPicture = 'module_zxpicture';
     case ZxProd = 'module_zxprod';
+    case ZxProdCategory = 'module_zxprodcategory';
     case ZxRelease = 'module_zxrelease';
 }

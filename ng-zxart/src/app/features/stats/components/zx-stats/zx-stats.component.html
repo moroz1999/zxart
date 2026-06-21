@@ -1,39 +1,53 @@
 <zx-stack gap="lg" class="zx-stats">
-  <p class="zx-stats__intro">{{ 'stats.intro' | translate }}</p>
+  <p appText="body" tone="muted">{{ 'stats.intro' | translate }}</p>
 
   <zx-grid desktopColumns="3" tabletColumns="2" mobileColumns="1" gap="md">
     <ng-container *ngIf="overview$ | async as overview; else kpiSkeleton">
       <zx-panel padding="md">
-        <div class="zx-stats__kpi-value">{{ overview.prods | number }}</div>
-        <div class="zx-stats__kpi-label">{{ 'stats.kpi.prods' | translate }}</div>
+        <zx-stack gap="xs">
+          <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.prods | number }}</div>
+          <div appText="bodySm" class="zx-stats__kpi-label">{{ 'stats.kpi.prods' | translate }}</div>
+        </zx-stack>
       </zx-panel>
       <zx-panel padding="md">
-        <div class="zx-stats__kpi-value">{{ overview.releases | number }}</div>
-        <div class="zx-stats__kpi-label">{{ 'stats.kpi.releases' | translate }}</div>
+        <zx-stack gap="xs">
+          <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.releases | number }}</div>
+          <div appText="bodySm" class="zx-stats__kpi-label">{{ 'stats.kpi.releases' | translate }}</div>
+        </zx-stack>
       </zx-panel>
       <zx-panel padding="md">
-        <div class="zx-stats__kpi-value">{{ overview.authors | number }}<span class="zx-stats__kpi-slash">/</span>{{ overview.authorsWithAliases | number }}</div>
-        <div class="zx-stats__kpi-label">{{ 'stats.kpi.authors' | translate }}</div>
-        <div class="zx-stats__kpi-sub">{{ 'stats.kpi.authors_sub' | translate }}</div>
+        <zx-stack gap="xs">
+          <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.authors | number }} <span class="zx-stats__kpi-slash">/</span> {{ overview.authorsWithAliases | number }}</div>
+          <div appText="bodySm" class="zx-stats__kpi-label">{{ 'stats.kpi.authors' | translate }}</div>
+          <div appText="caption" tone="muted">{{ 'stats.kpi.authors_sub' | translate }}</div>
+        </zx-stack>
       </zx-panel>
       <zx-panel padding="md">
-        <div class="zx-stats__kpi-value">{{ overview.groups | number }}<span class="zx-stats__kpi-slash">/</span>{{ overview.groupsWithAliases | number }}</div>
-        <div class="zx-stats__kpi-label">{{ 'stats.kpi.groups' | translate }}</div>
-        <div class="zx-stats__kpi-sub">{{ 'stats.kpi.authors_sub' | translate }}</div>
+        <zx-stack gap="xs">
+          <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.groups | number }} <span class="zx-stats__kpi-slash">/</span> {{ overview.groupsWithAliases | number }}</div>
+          <div appText="bodySm" class="zx-stats__kpi-label">{{ 'stats.kpi.groups' | translate }}</div>
+          <div appText="caption" tone="muted">{{ 'stats.kpi.authors_sub' | translate }}</div>
+        </zx-stack>
       </zx-panel>
       <zx-panel padding="md">
-        <div class="zx-stats__kpi-value">{{ overview.music | number }}</div>
-        <div class="zx-stats__kpi-label">{{ 'stats.kpi.music' | translate }}</div>
+        <zx-stack gap="xs">
+          <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.music | number }}</div>
+          <div appText="bodySm" class="zx-stats__kpi-label">{{ 'stats.kpi.music' | translate }}</div>
+        </zx-stack>
       </zx-panel>
       <zx-panel padding="md">
-        <div class="zx-stats__kpi-value">{{ overview.pictures | number }}</div>
-        <div class="zx-stats__kpi-label">{{ 'stats.kpi.pics' | translate }}</div>
+        <zx-stack gap="xs">
+          <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.pictures | number }}</div>
+          <div appText="bodySm" class="zx-stats__kpi-label">{{ 'stats.kpi.pics' | translate }}</div>
+        </zx-stack>
       </zx-panel>
     </ng-container>
     <ng-template #kpiSkeleton>
       <zx-panel *ngFor="let placeholder of kpiPlaceholders" padding="md">
-        <zx-skeleton-bone class="zx-stats__kpi-skeleton-value"></zx-skeleton-bone>
-        <zx-skeleton-bone class="zx-stats__kpi-skeleton-label"></zx-skeleton-bone>
+        <zx-stack gap="sm">
+          <zx-skeleton-bone class="zx-stats__kpi-skeleton-value"></zx-skeleton-bone>
+          <zx-skeleton-bone class="zx-stats__kpi-skeleton-label"></zx-skeleton-bone>
+        </zx-stack>
       </zx-panel>
     </ng-template>
   </zx-grid>

@@ -11,15 +11,15 @@
       <tr *ngFor="let user of users; let i = index">
         <td class="col-rank">
           <zx-medal *ngIf="medalVariant(i) as variant; else plainRank" [variant]="variant">{{ i + 1 }}</zx-medal>
-          <ng-template #plainRank><span class="zx-stats-top-table__rank">{{ i + 1 }}</span></ng-template>
+          <ng-template #plainRank><span appText="caption" tone="muted" class="zx-stats-top-table__rank">{{ i + 1 }}</span></ng-template>
         </td>
         <td class="col-user">
-          <span class="zx-stats-top-table__user">
+          <zx-inline align="center" gap="sm">
             <zx-badge *ngIf="user.badge === 'vip'" variant="primary" class="zx-stats-top-table__badge" title="VIP">★</zx-badge>
             <zx-badge *ngIf="user.badge === 'volunteer'" variant="secondary" class="zx-stats-top-table__badge" title="Volunteer">✓</zx-badge>
-            <a *ngIf="user.url; else plainName" class="zx-stats-top-table__name" [href]="user.url">{{ user.name }}</a>
-            <ng-template #plainName><span class="zx-stats-top-table__name zx-stats-top-table__name--plain">{{ user.name }}</span></ng-template>
-          </span>
+            <a *ngIf="user.url; else plainName" appText="bodySm" tone="link" [href]="user.url">{{ user.name }}</a>
+            <ng-template #plainName><span appText="bodySm" tone="strong">{{ user.name }}</span></ng-template>
+          </zx-inline>
         </td>
         <td class="col-count">{{ user.count | number }}</td>
       </tr>

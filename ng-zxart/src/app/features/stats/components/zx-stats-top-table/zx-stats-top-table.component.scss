@@ -3,38 +3,14 @@
 }
 
 .col-rank {
-  width: var(--zx-stats-rank-width);
+  width: var(--zx-stats-top-table-rank-width);
 }
 
 .col-count {
   text-align: right;
-  font-family: var(--font-mono, monospace);
-  font-weight: 700;
   white-space: nowrap;
-}
-
-.zx-stats-top-table__rank {
-  font-family: var(--font-mono, monospace);
-  color: var(--text-light-color);
-  font-size: var(--zx-font-size-xs);
-  padding-left: var(--space-4);
-}
-
-.zx-stats-top-table__user {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-8);
-  font-weight: 700;
 }
 
 .zx-stats-top-table__badge {
   flex: none;
-}
-
-.zx-stats-top-table__name {
-  color: var(--link-color);
-}
-
-.zx-stats-top-table__name--plain {
-  color: var(--text-color);
 }

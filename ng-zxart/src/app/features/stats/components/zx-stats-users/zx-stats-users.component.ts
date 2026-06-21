@@ -30,7 +30,7 @@ export class ZxStatsUsersComponent implements OnInit {
   constructor(private readonly statsService: StatsService) {}
 
   ngOnInit(): void {
-    this.section$ = this.statsService.getUsers();
+    this.section$ = this.statsService.users$;
     this.loaded$ = this.section$.pipe(map(section => section !== null), startWith(false));
   }
 }

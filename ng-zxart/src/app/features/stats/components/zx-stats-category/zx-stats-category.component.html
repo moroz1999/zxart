@@ -2,43 +2,55 @@
   <zx-stack *ngIf="vm$ | async as vm" gap="lg">
     <zx-grid desktopColumns="3" tabletColumns="3" mobileColumns="1" gap="md">
       <zx-panel padding="md">
-        <div class="zx-stats-category__kpi-value">{{ vm.section.totalWorks | number }}</div>
-        <div class="zx-stats-category__kpi-label">{{ 'stats.total.' + category | translate }}</div>
+        <zx-stack gap="xs">
+          <div appHeading="title" class="zx-stats-category__kpi-value">{{ vm.section.totalWorks | number }}</div>
+          <div appLabel tone="muted" class="zx-stats-category__kpi-label">{{ 'stats.total.' + category | translate }}</div>
+        </zx-stack>
       </zx-panel>
       <zx-panel padding="md">
-        <div class="zx-stats-category__kpi-value">{{ vm.section.peakYear }}</div>
-        <div class="zx-stats-category__kpi-label">{{ 'stats.kpi.peak' | translate }}</div>
+        <zx-stack gap="xs">
+          <div appHeading="title" class="zx-stats-category__kpi-value">{{ vm.section.peakYear }}</div>
+          <div appLabel tone="muted" class="zx-stats-category__kpi-label">{{ 'stats.kpi.peak' | translate }}</div>
+        </zx-stack>
       </zx-panel>
       <zx-panel padding="md">
-        <div class="zx-stats-category__kpi-value">{{ vm.section.dailyTotal | number }}</div>
-        <div class="zx-stats-category__kpi-label">{{ 'stats.kpi.daily30' | translate }}</div>
+        <zx-stack gap="xs">
+          <div appHeading="title" class="zx-stats-category__kpi-value">{{ vm.section.dailyTotal | number }}</div>
+          <div appLabel tone="muted" class="zx-stats-category__kpi-label">{{ 'stats.kpi.daily30' | translate }}</div>
+        </zx-stack>
       </zx-panel>
     </zx-grid>
 
     <zx-panel [title]="'stats.year.' + category | translate">
-      <div class="zx-stats-category__legend">
-        <span *ngFor="let dataset of vm.yearDatasets">
-          <i [style.background]="dataset.color"></i>{{ dataset.label }}
-        </span>
-      </div>
-      <zx-stats-bar-chart [labels]="vm.yearLabels" [datasets]="vm.yearDatasets" [stacked]="true" [height]="200"></zx-stats-bar-chart>
+      <zx-stack gap="md">
+        <zx-inline gap="lg" [wrap]="true">
+          <zx-inline *ngFor="let dataset of vm.yearDatasets" align="center" gap="xs">
+            <i class="zx-stats-category__legend-swatch" [ngClass]="dataset.colorClass"></i>
+            <span appText="caption" tone="muted">{{ dataset.label }}</span>
+          </zx-inline>
+        </zx-inline>
+        <zx-stats-bar-chart [labels]="vm.yearLabels" [datasets]="vm.yearDatasets" [stacked]="true" height="lg"></zx-stats-bar-chart>
+      </zx-stack>
     </zx-panel>
 
     <zx-panel [title]="'stats.section.avg' | translate">
-      <zx-stats-line-chart [labels]="vm.avgLabels" [data]="vm.avgData" [color]="vm.avgColor" [fill]="vm.avgFill" [height]="180"></zx-stats-line-chart>
+      <zx-stats-line-chart [labels]="vm.avgLabels" [data]="vm.avgData" [color]="vm.avgColor" [fill]="vm.avgFill" height="md"></zx-stats-line-chart>
     </zx-panel>
 
     <zx-panel *ngFor="let distribution of vm.distributions" [title]="distribution.title | translate">
-      <div class="zx-stats-category__legend">
-        <span *ngFor="let dataset of distribution.datasets">
-          <i [style.background]="dataset.color"></i>{{ dataset.label }}
-        </span>
-      </div>
-      <zx-stats-bar-chart [labels]="distribution.labels" [datasets]="distribution.datasets" [stacked]="true" [percentage]="true" [height]="200"></zx-stats-bar-chart>
+      <zx-stack gap="md">
+        <zx-inline gap="lg" [wrap]="true">
+          <zx-inline *ngFor="let dataset of distribution.datasets" align="center" gap="xs">
+            <i class="zx-stats-category__legend-swatch" [ngClass]="dataset.colorClass"></i>
+            <span appText="caption" tone="muted">{{ dataset.label }}</span>
+          </zx-inline>
+        </zx-inline>
+        <zx-stats-bar-chart [labels]="distribution.labels" [datasets]="distribution.datasets" [stacked]="true" [percentage]="true" height="lg"></zx-stats-bar-chart>
+      </zx-stack>
     </zx-panel>
 
     <zx-panel [title]="(vm.section.daily.labelKey | translate) + ' · ' + ('stats.days30' | translate)">
-      <zx-stats-bar-chart [labels]="vm.dailyLabels" [datasets]="vm.dailyDatasets" [height]="140"></zx-stats-bar-chart>
+      <zx-stats-bar-chart [labels]="vm.dailyLabels" [datasets]="vm.dailyDatasets" height="sm"></zx-stats-bar-chart>
     </zx-panel>
 
     <zx-stats-top-table

@@ -6,7 +6,10 @@ export interface StatsBarDataset {
   label: string;
   data: number[];
   color: string;
+  colorClass?: string;
 }
+
+type StatsChartHeight = 'sm' | 'md' | 'lg';
 
 @Component({
   selector: 'zx-stats-bar-chart',
@@ -21,13 +24,21 @@ export class ZxStatsBarChartComponent implements OnChanges {
   @Input() datasets: StatsBarDataset[] = [];
   @Input() stacked = false;
   @Input() percentage = false;
-  @Input() height = 200;
+  @Input() height: StatsChartHeight = 'lg';
 
   chartData: ChartData<'bar'> = {labels: [], datasets: []};
   chartOptions: ChartConfiguration<'bar'>['options'] = {};
 
+  get heightClass(): string {
+    return `zx-stats-bar-chart__canvas zx-stats-bar-chart__canvas--${this.height}`;
+  }
+
   ngOnChanges(): void {
     const data = this.percentage ? this.toPercentages() : this.datasets.map(dataset => dataset.data);
+    const tickFontSize = this.cssNumber('--zx-stats-chart-tick-font-size');
+    const tickAutoSkipPadding = this.cssNumber('--zx-stats-chart-tick-auto-skip-padding');
+    const gridColor = this.cssValue('--zx-stats-chart-grid-color');
+    const barRadius = this.cssNumber('--zx-stats-chart-bar-radius');
 
     this.chartData = {
       labels: this.labels,
@@ -37,7 +48,7 @@ export class ZxStatsBarChartComponent implements OnChanges {
         backgroundColor: dataset.color,
         hoverBackgroundColor: dataset.color,
         borderWidth: 0,
-        borderRadius: 2,
+        borderRadius: barRadius,
         borderSkipped: false,
         barPercentage: 0.96,
         categoryPercentage: 0.96,
@@ -62,14 +73,14 @@ export class ZxStatsBarChartComponent implements OnChanges {
         x: {
           stacked: this.stacked,
           grid: {display: false},
-          ticks: {maxRotation: 0, autoSkipPadding: 16, font: {size: 10}},
+          ticks: {maxRotation: 0, autoSkipPadding: tickAutoSkipPadding, font: {size: tickFontSize}},
         },
         y: {
           stacked: this.stacked,
           beginAtZero: true,
           max: this.percentage ? 100 : undefined,
-          grid: {color: 'rgba(127,127,127,0.15)'},
-          ticks: {font: {size: 10}, precision: 0},
+          grid: {color: gridColor},
+          ticks: {font: {size: tickFontSize}, precision: 0},
         },
       },
     };
@@ -83,5 +94,13 @@ export class ZxStatsBarChartComponent implements OnChanges {
     return this.datasets.map(dataset =>
       dataset.data.map((value, index) => (totals[index] > 0 ? (value / totals[index]) * 100 : 0)),
     );
+  }
+
+  private cssValue(name: string): string {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  private cssNumber(name: string): number {
+    return Number(this.cssValue(name));
   }
 }

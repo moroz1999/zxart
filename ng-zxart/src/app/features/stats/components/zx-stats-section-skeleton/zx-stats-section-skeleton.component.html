@@ -1,13 +1,17 @@
 <zx-stack gap="lg">
   <zx-grid desktopColumns="3" tabletColumns="3" mobileColumns="1" gap="md">
     <zx-panel *ngFor="let kpi of kpis" padding="md">
-      <zx-skeleton-bone class="zx-stats-section-skeleton__value"></zx-skeleton-bone>
-      <zx-skeleton-bone class="zx-stats-section-skeleton__label"></zx-skeleton-bone>
+      <zx-stack gap="sm">
+        <zx-skeleton-bone class="zx-stats-section-skeleton__value"></zx-skeleton-bone>
+        <zx-skeleton-bone class="zx-stats-section-skeleton__label"></zx-skeleton-bone>
+      </zx-stack>
     </zx-panel>
   </zx-grid>
 
   <zx-panel *ngFor="let panel of panels" padding="md">
-    <zx-skeleton-bone class="zx-stats-section-skeleton__title"></zx-skeleton-bone>
-    <zx-skeleton-bone class="zx-stats-section-skeleton__chart"></zx-skeleton-bone>
+    <zx-stack gap="md">
+      <zx-skeleton-bone class="zx-stats-section-skeleton__title"></zx-skeleton-bone>
+      <zx-skeleton-bone class="zx-stats-section-skeleton__chart"></zx-skeleton-bone>
+    </zx-stack>
   </zx-panel>
 </zx-stack>

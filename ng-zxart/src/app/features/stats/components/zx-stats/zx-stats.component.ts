@@ -10,6 +10,8 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 import {
   ZxSkeletonBoneComponent,
 } from '../../../../shared/ui/zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
+import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {StatsService} from '../../services/stats.service';
 import {ZxStatsCategoryComponent} from '../zx-stats-category/zx-stats-category.component';
 import {ZxStatsUsersComponent} from '../zx-stats-users/zx-stats-users.component';
@@ -27,6 +29,8 @@ import {ZxStatsUsersComponent} from '../zx-stats-users/zx-stats-users.component'
     ZxGridComponent,
     ZxStackComponent,
     ZxSkeletonBoneComponent,
+    HeadingDirective,
+    TextDirective,
     ZxStatsCategoryComponent,
     ZxStatsUsersComponent,
   ],

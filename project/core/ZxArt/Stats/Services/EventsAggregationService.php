@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace ZxArt\Stats\Services;
 
 use App\Logging\EventsLog;
+use DateTimeImmutable;
+use ZxArt\Stats\StatsEventAggregation;
 
-class EventsAggregationService
+final readonly class EventsAggregationService
 {
     public function __construct(
         private EventsLog $eventsLog
@@ -15,22 +17,11 @@ class EventsAggregationService
 
     public function aggregate(): void
     {
-        $todayStart = strtotime("today");
+        $todayStart = (new DateTimeImmutable('today'))->getTimestamp();
 
-        $eventsToAggregate = [
-            ['view', 'elementId'],
-            ['play', 'elementId'],
-            ['vote', 'userId'],
-            ['addZxPicture', 'userId'],
-            ['addZxMusic', 'userId'],
-            ['addZxProd', 'userId'],
-            ['comment', 'userId'],
-            ['tagAdded', 'userId'],
-        ];
-
-        foreach ($eventsToAggregate as [$type, $groupColumn]) {
-            $this->eventsLog->aggregateEvents($type, $todayStart, $groupColumn);
-            $this->eventsLog->deleteEvents($type, $todayStart);
+        foreach (StatsEventAggregation::cases() as $event) {
+            $this->eventsLog->aggregateEvents($event->value, $todayStart, $event->groupColumn());
+            $this->eventsLog->deleteEvents($event->value, $todayStart);
         }
     }
 }

@@ -5,45 +5,52 @@ declare(strict_types=1);
 namespace ZxArt\Tests\Stats;
 
 use App\Logging\EventsLog;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
+use ZxArt\Stats\StatsEventAggregation;
 use ZxArt\Stats\Services\EventsAggregationService;
 
 class EventsAggregationServiceTest extends TestCase
 {
-    public function testAggregateCallsEventsLogCorrect()
+    public function testAggregateCallsEventsLogCorrect(): void
     {
         $eventsLogMock = $this->createMock(EventsLog::class);
 
-        $eventsToAggregate = [
-            ['view', 'elementId'],
-            ['play', 'elementId'],
-            ['vote', 'userId'],
-            ['addZxPicture', 'userId'],
-            ['addZxMusic', 'userId'],
-            ['addZxProd', 'userId'],
-            ['comment', 'userId'],
-            ['tagAdded', 'userId'],
-        ];
+        $eventsToAggregate = StatsEventAggregation::cases();
 
-        $todayStart = strtotime("today");
+        $todayStart = (new DateTimeImmutable('today'))->getTimestamp();
+        $aggregateCalls = [];
+        $deleteCalls = [];
 
-        $matcher = $this->exactly(count($eventsToAggregate));
-        $eventsLogMock->expects($matcher)
+        $eventsLogMock->expects($this->exactly(count($eventsToAggregate)))
             ->method('aggregateEvents')
-            ->with($this->callback(function ($type) use ($eventsToAggregate, $matcher) {
-                return $type === $eventsToAggregate[$matcher->numberOfInvocations() - 1][0];
-            }), $todayStart, $this->callback(function ($groupColumn) use ($eventsToAggregate, $matcher) {
-                return $groupColumn === $eventsToAggregate[$matcher->numberOfInvocations() - 1][1];
-            }));
+            ->willReturnCallback(
+                static function (string $type, int $startTime, string $groupColumn) use (&$aggregateCalls): void {
+                    $aggregateCalls[] = [$type, $startTime, $groupColumn];
+                }
+            );
 
-        $deleteMatcher = $this->exactly(count($eventsToAggregate));
-        $eventsLogMock->expects($deleteMatcher)
+        $eventsLogMock->expects($this->exactly(count($eventsToAggregate)))
             ->method('deleteEvents')
-            ->with($this->callback(function ($type) use ($eventsToAggregate, $deleteMatcher) {
-                return $type === $eventsToAggregate[$deleteMatcher->numberOfInvocations() - 1][0];
-            }), $todayStart);
+            ->willReturnCallback(
+                static function (string $type, int $startTime) use (&$deleteCalls): void {
+                    $deleteCalls[] = [$type, $startTime];
+                }
+            );
 
         $service = new EventsAggregationService($eventsLogMock);
         $service->aggregate();
+
+        $expectedAggregateCalls = array_map(
+            static fn(StatsEventAggregation $event): array => [$event->value, $todayStart, $event->groupColumn()],
+            $eventsToAggregate,
+        );
+        $expectedDeleteCalls = array_map(
+            static fn(StatsEventAggregation $event): array => [$event->value, $todayStart],
+            $eventsToAggregate,
+        );
+
+        $this->assertSame($expectedAggregateCalls, $aggregateCalls);
+        $this->assertSame($expectedDeleteCalls, $deleteCalls);
     }
 }

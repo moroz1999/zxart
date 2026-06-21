@@ -9,8 +9,12 @@ use controller;
 use LanguagesManager;
 use Monolog\Logger;
 use Override;
+use Symfony\Component\ObjectMapper\ObjectMapper;
 use structureManager;
 use Throwable;
+use ZxArt\Stats\Rest\StatsCategorySectionRestDto;
+use ZxArt\Stats\Rest\StatsOverviewRestDto;
+use ZxArt\Stats\Rest\StatsUsersSectionRestDto;
 use ZxArt\Stats\Services\StatsService;
 
 class Stats extends LoggedControllerApplication
@@ -23,6 +27,7 @@ class Stats extends LoggedControllerApplication
         private readonly structureManager $structureManager,
         private readonly LanguagesManager $languagesManager,
         private readonly StatsService $statsService,
+        private readonly ObjectMapper $objectMapper,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -43,11 +48,21 @@ class Stats extends LoggedControllerApplication
 
         try {
             match ($action) {
-                'overview' => $this->assignSuccess($this->statsService->getOverview()),
-                'soft' => $this->assignSuccess($this->statsService->getSoftSection()),
-                'music' => $this->assignSuccess($this->statsService->getMusicSection()),
-                'gfx' => $this->assignSuccess($this->statsService->getGfxSection()),
-                'users' => $this->assignSuccess($this->statsService->getUsersSection()),
+                'overview' => $this->assignSuccess(
+                    $this->objectMapper->map($this->statsService->getOverview(), StatsOverviewRestDto::class),
+                ),
+                'soft' => $this->assignSuccess(
+                    $this->objectMapper->map($this->statsService->getSoftSection(), StatsCategorySectionRestDto::class),
+                ),
+                'music' => $this->assignSuccess(
+                    $this->objectMapper->map($this->statsService->getMusicSection(), StatsCategorySectionRestDto::class),
+                ),
+                'gfx' => $this->assignSuccess(
+                    $this->objectMapper->map($this->statsService->getGfxSection(), StatsCategorySectionRestDto::class),
+                ),
+                'users' => $this->assignSuccess(
+                    $this->objectMapper->map($this->statsService->getUsersSection(), StatsUsersSectionRestDto::class),
+                ),
                 default => $this->assignError('Unknown action', 400),
             };
         } catch (Throwable $e) {
