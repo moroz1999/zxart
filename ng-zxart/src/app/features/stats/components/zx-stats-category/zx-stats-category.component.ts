@@ -1,22 +1,41 @@
 import {CommonModule} from '@angular/common';
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {combineLatest, Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {filter, map, shareReplay, switchMap, take} from 'rxjs/operators';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxGridComponent} from '../../../../shared/ui/zx-grid/zx-grid.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ThemeService} from '../../../settings/services/theme.service';
-import {StatsCategoryKey, StatsCategorySection} from '../../models/stats.models';
+import {
+  StatsCategoryKey,
+  StatsCategorySummary,
+  StatsDailySeries,
+  StatsDistribution,
+  StatsTopUsersSection,
+  StatsYearSeries,
+} from '../../models/stats.models';
 import {StatsService} from '../../services/stats.service';
 import {ZxStatsBarChartComponent, StatsBarDataset} from '../zx-stats-bar-chart/zx-stats-bar-chart.component';
-import {ZxStatsLineChartComponent} from '../zx-stats-line-chart/zx-stats-line-chart.component';
 import {ZxStatsTopTableComponent} from '../zx-stats-top-table/zx-stats-top-table.component';
 import {ZxStatsSectionSkeletonComponent} from '../zx-stats-section-skeleton/zx-stats-section-skeleton.component';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {LabelDirective} from '../../../../shared/ui/typography/directives/label.directive';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
+import {StatsNumberPipe} from '../../pipes/stats-number.pipe';
 
 interface DistributionVm {
   title: string;
@@ -24,17 +43,21 @@ interface DistributionVm {
   datasets: StatsBarDataset[];
 }
 
-interface CategoryVm {
-  section: StatsCategorySection;
-  yearLabels: string[];
-  yearDatasets: StatsBarDataset[];
-  avgLabels: string[];
-  avgData: number[];
-  avgColor: string;
-  avgFill: string;
-  distributions: DistributionVm[];
-  dailyLabels: string[];
-  dailyDatasets: StatsBarDataset[];
+interface DistributionBlock {
+  action: string;
+  visible$: BehaviorSubject<boolean>;
+  vm$: Observable<DistributionVm | null>;
+}
+
+interface YearVm {
+  labels: string[];
+  datasets: StatsBarDataset[];
+}
+
+interface DailyVm {
+  title: string;
+  labels: string[];
+  datasets: StatsBarDataset[];
 }
 
 @Component({
@@ -48,18 +71,18 @@ interface CategoryVm {
     ZxStackComponent,
     ZxInlineComponent,
     ZxStatsBarChartComponent,
-    ZxStatsLineChartComponent,
     ZxStatsTopTableComponent,
     ZxStatsSectionSkeletonComponent,
     HeadingDirective,
     LabelDirective,
     TextDirective,
+    StatsNumberPipe,
   ],
   templateUrl: './zx-stats-category.component.html',
   styleUrl: './zx-stats-category.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxStatsCategoryComponent implements OnInit {
+export class ZxStatsCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
   private static readonly palette = [
     '--zx-stats-chart-series-primary',
     '--zx-stats-chart-series-tertiary',
@@ -74,83 +97,162 @@ export class ZxStatsCategoryComponent implements OnInit {
 
   @Input({required: true}) category!: StatsCategoryKey;
 
-  vm$!: Observable<CategoryVm | null>;
-  loaded$!: Observable<boolean>;
+  @ViewChild('summaryBlock', {static: true}) private summaryBlock!: ElementRef<HTMLElement>;
+  @ViewChild('seriesBlock', {static: true}) private seriesBlock!: ElementRef<HTMLElement>;
+  @ViewChild('dailyBlock', {static: true}) private dailyBlock!: ElementRef<HTMLElement>;
+  @ViewChild('topBlock', {static: true}) private topBlock!: ElementRef<HTMLElement>;
+  @ViewChildren('distributionBlock') private distributionBlockElements!: QueryList<ElementRef<HTMLElement>>;
+
+  summary$!: Observable<StatsCategorySummary | null>;
+  yearVm$!: Observable<YearVm | null>;
+  dailyVm$!: Observable<DailyVm | null>;
+  top$!: Observable<StatsTopUsersSection | null>;
+  distributionBlocks: DistributionBlock[] = [];
+
+  private readonly summaryVisible$ = new BehaviorSubject(false);
+  private readonly seriesVisible$ = new BehaviorSubject(false);
+  private readonly dailyVisible$ = new BehaviorSubject(false);
+  private readonly topVisible$ = new BehaviorSubject(false);
+  private readonly intersectionObservers: IntersectionObserver[] = [];
 
   constructor(
     private readonly statsService: StatsService,
     private readonly themeService: ThemeService,
     private readonly translate: TranslateService,
+    private readonly changeDetector: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
-    const section$ = this.getSection();
     const labels$ = this.translate.stream(['stats.legend.all', 'stats.legend.rated']);
 
-    this.loaded$ = section$.pipe(map(section => section !== null), startWith(false));
-    this.vm$ = combineLatest([section$, this.themeService.theme$, labels$]).pipe(
-      map(([section, , labels]) => (section ? this.buildVm(section, labels) : null)),
+    this.distributionBlocks = this.createDistributionBlocks();
+    this.summary$ = this.visibleOnce(this.summaryVisible$).pipe(
+      switchMap(() => this.statsService.categorySummary(this.category)),
+      shareReplay({bufferSize: 1, refCount: false}),
+    );
+    this.yearVm$ = this.visibleOnce(this.seriesVisible$).pipe(
+      switchMap(() => combineLatest([this.statsService.categorySeries(this.category), this.themeService.theme$, labels$])),
+      map(([series, , labels]) => (series ? this.buildYearVm(series, labels) : null)),
+      shareReplay({bufferSize: 1, refCount: false}),
+    );
+    this.dailyVm$ = this.visibleOnce(this.dailyVisible$).pipe(
+      switchMap(() => combineLatest([this.statsService.categoryDaily(this.category), this.themeService.theme$])),
+      map(([daily]) => (daily ? this.buildDailyVm(daily) : null)),
+      shareReplay({bufferSize: 1, refCount: false}),
+    );
+    this.top$ = this.visibleOnce(this.topVisible$).pipe(
+      switchMap(() => this.statsService.categoryTop(this.category)),
+      shareReplay({bufferSize: 1, refCount: false}),
     );
   }
 
-  private buildVm(section: StatsCategorySection, labels: Record<string, string>): CategoryVm {
-    const remainder = section.series.all.map((total, index) => Math.max(0, total - section.series.rated[index]));
-    const yearLabels = section.series.years.map(year => String(year));
-
-    const yearDatasets: StatsBarDataset[] = [
-      {
-        label: labels['stats.legend.rated'],
-        data: section.series.rated,
-        color: this.color('--zx-stats-chart-series-primary'),
-        colorClass: 'zx-stats-category__legend-swatch--primary',
-      },
-      {
-        label: labels['stats.legend.all'],
-        data: remainder,
-        color: this.color('--zx-stats-chart-series-secondary'),
-        colorClass: 'zx-stats-category__legend-swatch--secondary',
-      },
-    ];
-
-    const distributions = section.distributions.map(distribution => {
-      const prefix = this.distributionLabelPrefix(distribution.titleKey);
-      const colors = this.distributionColors(distribution.classes.length);
-
-      return {
-        title: distribution.titleKey,
-        labels: yearLabels,
-        datasets: distribution.classes.map((className, index) => ({
-          label: this.translateClass(prefix, className),
-          data: distribution.rows.map(row => row[index] ?? 0),
-          color: colors[index],
-        })),
-      };
+  ngAfterViewInit(): void {
+    this.observeBlock(this.summaryBlock, this.summaryVisible$);
+    this.observeBlock(this.seriesBlock, this.seriesVisible$);
+    this.distributionBlockElements.forEach((elementRef, index) => {
+      const block = this.distributionBlocks[index];
+      if (block) {
+        this.observeBlock(elementRef, block.visible$);
+      }
     });
+    this.observeBlock(this.dailyBlock, this.dailyVisible$);
+    this.observeBlock(this.topBlock, this.topVisible$);
+  }
+
+  ngOnDestroy(): void {
+    this.intersectionObservers.forEach(observer => observer.disconnect());
+  }
+
+  private buildYearVm(series: StatsYearSeries, labels: Record<string, string>): YearVm {
+    const remainder = series.all.map((total, index) => Math.max(0, total - series.rated[index]));
 
     return {
-      section,
-      yearLabels,
-      yearDatasets,
-      avgLabels: yearLabels,
-      avgData: section.series.avg,
-      avgColor: this.color('--zx-stats-chart-series-primary'),
-      avgFill: this.color('--zx-stats-chart-fill-primary'),
-      distributions,
-      dailyLabels: section.daily.dates,
-      dailyDatasets: [
-        {label: section.daily.labelKey, data: section.daily.data, color: this.color('--zx-stats-chart-series-daily')},
+      labels: series.years.map(year => String(year)),
+      datasets: [
+        {
+          label: labels['stats.legend.rated'],
+          data: series.rated,
+          color: this.color('--zx-stats-chart-series-primary'),
+          colorClass: 'zx-stats-category__legend-swatch--primary',
+        },
+        {
+          label: labels['stats.legend.all'],
+          data: remainder,
+          color: this.color('--zx-stats-chart-series-secondary'),
+          colorClass: 'zx-stats-category__legend-swatch--secondary',
+        },
       ],
     };
   }
 
-  private getSection(): Observable<StatsCategorySection | null> {
+  private buildDistributionVm(years: number[], distribution: StatsDistribution): DistributionVm {
+    const labels = years.map(year => String(year));
+    const prefix = this.distributionLabelPrefix(distribution.titleKey);
+    const colors = this.distributionColors(distribution.classes.length);
+
+    return {
+      title: distribution.titleKey,
+      labels,
+      datasets: distribution.classes.map((className, index) => ({
+        label: this.translateClass(prefix, className),
+        data: distribution.rows.map(row => row[index] ?? 0),
+        color: colors[index],
+      })),
+    };
+  }
+
+  private buildDailyVm(daily: StatsDailySeries): DailyVm {
+    return {
+      title: daily.labelKey,
+      labels: daily.dates,
+      datasets: [
+        {label: daily.labelKey, data: daily.data, color: this.color('--zx-stats-chart-series-daily')},
+      ],
+    };
+  }
+
+  private visibleOnce(source$: Observable<boolean>): Observable<boolean> {
+    return source$.pipe(
+      filter(Boolean),
+      take(1),
+    );
+  }
+
+  private observeBlock(elementRef: ElementRef<HTMLElement>, visible$: BehaviorSubject<boolean>): void {
+    const observer = new IntersectionObserver(entries => {
+      if (!entries.some(entry => entry.isIntersecting)) {
+        return;
+      }
+
+      visible$.next(true);
+      observer.disconnect();
+      this.changeDetector.markForCheck();
+    }, {rootMargin: '0px'});
+    observer.observe(elementRef.nativeElement);
+    this.intersectionObservers.push(observer);
+  }
+
+  private createDistributionBlocks(): DistributionBlock[] {
+    return this.distributionActions().map(action => {
+      const visible$ = new BehaviorSubject(false);
+      const vm$ = this.visibleOnce(visible$).pipe(
+        switchMap(() => combineLatest([this.statsService.distributionBlock(action), this.themeService.theme$])),
+        map(([block]) => (block ? this.buildDistributionVm(block.years, block.distribution) : null)),
+        shareReplay({bufferSize: 1, refCount: false}),
+      );
+
+      return {action, visible$, vm$};
+    });
+  }
+
+  private distributionActions(): string[] {
     switch (this.category) {
       case 'soft':
-        return this.statsService.soft$;
+        return ['soft-category-distribution', 'soft-computer-distribution', 'soft-country-distribution'];
       case 'music':
-        return this.statsService.music$;
+        return ['music-format-distribution', 'music-country-distribution'];
       case 'gfx':
-        return this.statsService.gfx$;
+        return ['gfx-type-distribution', 'gfx-country-distribution'];
     }
   }
 
@@ -188,7 +290,6 @@ export class ZxStatsCategoryComponent implements OnInit {
       return brand.slice(0, count);
     }
 
-    // More classes than the curated palette offers: spread hues evenly so every class stays distinct.
     return Array.from({length: count}, (_, index) => `hsl(${Math.round((360 / count) * index)}, 62%, 52%)`);
   }
 }

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxGridComponent} from '../../../../shared/ui/zx-grid/zx-grid.component';
@@ -17,5 +17,12 @@ import {
 })
 export class ZxStatsSectionSkeletonComponent {
   readonly kpis = [0, 1, 2];
-  readonly panels = [0, 1];
+
+  @Input() variant: 'summary' | 'chart-lg' | 'chart-sm' | 'top-table' = 'chart-lg';
+  @Input() interactiveLegend = false;
+  @Input() rowCount = 10;
+
+  get tableRows(): unknown[] {
+    return Array.from({length: this.rowCount});
+  }
 }

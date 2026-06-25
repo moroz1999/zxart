@@ -871,6 +871,27 @@
       "graphicsRating": "Graphics rating"
     }
   },
+  "authors-page": {
+    "active": {
+      "graphics": "Active artists",
+      "music": "Active musicians",
+      "period": "Activity period",
+      "yearsShort": "{{count}} yr",
+      "empty": "No active authors"
+    },
+    "top": {
+      "graphics": "Top artists",
+      "music": "Top musicians"
+    },
+    "latest": {
+      "graphics": "Recently added artists",
+      "music": "Recently added musicians"
+    },
+    "all": {
+      "graphics": "All artists",
+      "music": "All musicians"
+    }
+  },
   "group-browser": {
     "error": "Failed to load groups",
     "empty": "No groups found",
@@ -1611,7 +1632,11 @@
       "music": "Tunes",
       "pics": "Pictures",
       "peak": "Peak year",
-      "daily30": "Last 30 days"
+      "daily30": {
+        "soft": "Uploads in 30 days",
+        "music": "Plays in 30 days",
+        "gfx": "Views in 30 days"
+      }
     },
     "total": {
       "soft": "Total programs",
@@ -1623,12 +1648,9 @@
       "music": "Tunes by year",
       "gfx": "Pictures by year"
     },
-    "section": {
-      "avg": "Average rating by year"
-    },
     "days30": "30 days",
     "legend": {
-      "all": "all in the database",
+      "all": "the rest",
       "rated": "rated above average",
       "hideAll": "Hide all",
       "showAll": "Show all"
@@ -1636,6 +1658,7 @@
     "dist": {
       "prod_category": "Category by year",
       "computer_model": "Computer model by year",
+      "country": "Works by country",
       "music_format": "Format by year",
       "gfx_type": "Technique by year",
       "other": "Other"

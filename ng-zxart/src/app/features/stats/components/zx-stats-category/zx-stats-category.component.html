@@ -1,58 +1,88 @@
-<ng-container *ngIf="(loaded$ | async); else skeleton">
-  <zx-stack *ngIf="vm$ | async as vm" gap="lg">
-    <zx-grid desktopColumns="3" tabletColumns="3" mobileColumns="1" gap="md">
-      <zx-panel padding="md">
-        <zx-stack gap="xs">
-          <div appHeading="title" class="zx-stats-category__kpi-value">{{ vm.section.totalWorks | number }}</div>
-          <div appLabel tone="muted" class="zx-stats-category__kpi-label">{{ 'stats.total.' + category | translate }}</div>
-        </zx-stack>
-      </zx-panel>
-      <zx-panel padding="md">
-        <zx-stack gap="xs">
-          <div appHeading="title" class="zx-stats-category__kpi-value">{{ vm.section.peakYear }}</div>
-          <div appLabel tone="muted" class="zx-stats-category__kpi-label">{{ 'stats.kpi.peak' | translate }}</div>
-        </zx-stack>
-      </zx-panel>
-      <zx-panel padding="md">
-        <zx-stack gap="xs">
-          <div appHeading="title" class="zx-stats-category__kpi-value">{{ vm.section.dailyTotal | number }}</div>
-          <div appLabel tone="muted" class="zx-stats-category__kpi-label">{{ 'stats.kpi.daily30' | translate }}</div>
-        </zx-stack>
-      </zx-panel>
-    </zx-grid>
+<zx-stack gap="lg">
+  <div #summaryBlock>
+    <ng-container *ngIf="summary$ | async as summary; else summarySkeleton">
+      <zx-grid desktopColumns="3" tabletColumns="3" mobileColumns="1" gap="md">
+        <zx-panel padding="md">
+          <zx-stack gap="xs">
+            <div appHeading="title" class="zx-stats-category__kpi-value">{{ summary.totalWorks | statsNumber }}</div>
+            <div appLabel tone="muted" class="zx-stats-category__kpi-label">{{ 'stats.total.' + category | translate }}</div>
+          </zx-stack>
+        </zx-panel>
+        <zx-panel padding="md">
+          <zx-stack gap="xs">
+            <div appHeading="title" class="zx-stats-category__kpi-value">{{ summary.peakYear }}</div>
+            <div appLabel tone="muted" class="zx-stats-category__kpi-label">{{ 'stats.kpi.peak' | translate }}</div>
+          </zx-stack>
+        </zx-panel>
+        <zx-panel padding="md">
+          <zx-stack gap="xs">
+            <div appHeading="title" class="zx-stats-category__kpi-value">{{ summary.dailyTotal | statsNumber }}</div>
+            <div appLabel tone="muted" class="zx-stats-category__kpi-label">{{ 'stats.kpi.daily30.' + category | translate }}</div>
+          </zx-stack>
+        </zx-panel>
+      </zx-grid>
+    </ng-container>
+  </div>
 
-    <zx-panel [title]="'stats.year.' + category | translate">
-      <zx-stack gap="md">
-        <zx-inline gap="lg" [wrap]="true">
-          <zx-inline *ngFor="let dataset of vm.yearDatasets" align="center" gap="xs">
-            <i class="zx-stats-category__legend-swatch" [ngClass]="dataset.colorClass"></i>
-            <span appText="caption" tone="muted">{{ dataset.label }}</span>
+  <div #seriesBlock>
+    <ng-container *ngIf="yearVm$ | async as yearVm; else chartSkeleton">
+      <zx-panel [title]="'stats.year.' + category | translate">
+        <zx-stack gap="md">
+          <zx-inline gap="lg" [wrap]="true">
+            <zx-inline *ngFor="let dataset of yearVm.datasets" align="center" gap="xs">
+              <i class="zx-stats-category__legend-swatch" [ngClass]="dataset.colorClass"></i>
+              <span appText="caption" tone="muted">{{ dataset.label }}</span>
+            </zx-inline>
           </zx-inline>
-        </zx-inline>
-        <zx-stats-bar-chart [labels]="vm.yearLabels" [datasets]="vm.yearDatasets" [stacked]="true" height="lg"></zx-stats-bar-chart>
-      </zx-stack>
-    </zx-panel>
+          <zx-stats-bar-chart [labels]="yearVm.labels" [datasets]="yearVm.datasets" [stacked]="true" height="lg"></zx-stats-bar-chart>
+        </zx-stack>
+      </zx-panel>
+    </ng-container>
+  </div>
 
-    <zx-panel [title]="'stats.section.avg' | translate">
-      <zx-stats-line-chart [labels]="vm.avgLabels" [data]="vm.avgData" [color]="vm.avgColor" [fill]="vm.avgFill" height="md"></zx-stats-line-chart>
-    </zx-panel>
+  <div *ngFor="let block of distributionBlocks" #distributionBlock>
+    <ng-container *ngIf="block.vm$ | async as distribution; else distributionSkeleton">
+      <zx-panel [title]="distribution.title | translate">
+        <zx-stats-bar-chart [labels]="distribution.labels" [datasets]="distribution.datasets" [stacked]="true" [interactiveLegend]="true" height="lg"></zx-stats-bar-chart>
+      </zx-panel>
+    </ng-container>
+  </div>
 
-    <zx-panel *ngFor="let distribution of vm.distributions" [title]="distribution.title | translate">
-      <zx-stats-bar-chart [labels]="distribution.labels" [datasets]="distribution.datasets" [stacked]="true" [interactiveLegend]="true" height="lg"></zx-stats-bar-chart>
-    </zx-panel>
+  <div #dailyBlock>
+    <ng-container *ngIf="dailyVm$ | async as dailyVm; else dailySkeleton">
+      <zx-panel [title]="(dailyVm.title | translate) + ' · ' + ('stats.days30' | translate)">
+        <zx-stats-bar-chart [labels]="dailyVm.labels" [datasets]="dailyVm.datasets" height="sm"></zx-stats-bar-chart>
+      </zx-panel>
+    </ng-container>
+  </div>
 
-    <zx-panel [title]="(vm.section.daily.labelKey | translate) + ' · ' + ('stats.days30' | translate)">
-      <zx-stats-bar-chart [labels]="vm.dailyLabels" [datasets]="vm.dailyDatasets" height="sm"></zx-stats-bar-chart>
-    </zx-panel>
+  <div #topBlock>
+    <ng-container *ngIf="top$ | async as top; else topSkeleton">
+      <zx-stats-top-table
+        [title]="'stats.top_title.' + category | translate"
+        [unitKey]="top.unitKey"
+        [users]="top.users"
+      ></zx-stats-top-table>
+    </ng-container>
+  </div>
+</zx-stack>
 
-    <zx-stats-top-table
-      [title]="'stats.top_title.' + category | translate"
-      [unitKey]="vm.section.topUnitKey"
-      [users]="vm.section.top"
-    ></zx-stats-top-table>
-  </zx-stack>
-</ng-container>
+<ng-template #summarySkeleton>
+  <zx-stats-section-skeleton variant="summary"></zx-stats-section-skeleton>
+</ng-template>
 
-<ng-template #skeleton>
-  <zx-stats-section-skeleton></zx-stats-section-skeleton>
+<ng-template #chartSkeleton>
+  <zx-stats-section-skeleton variant="chart-lg"></zx-stats-section-skeleton>
+</ng-template>
+
+<ng-template #distributionSkeleton>
+  <zx-stats-section-skeleton variant="chart-lg" [interactiveLegend]="true"></zx-stats-section-skeleton>
+</ng-template>
+
+<ng-template #dailySkeleton>
+  <zx-stats-section-skeleton variant="chart-sm"></zx-stats-section-skeleton>
+</ng-template>
+
+<ng-template #topSkeleton>
+  <zx-stats-section-skeleton variant="top-table"></zx-stats-section-skeleton>
 </ng-template>

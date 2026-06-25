@@ -1,0 +1,21 @@
+<ng-container [ngSwitch]="variant">
+  <zx-grid *ngSwitchCase="'users'" desktopColumns="3" tabletColumns="1" mobileColumns="1" gap="lg">
+    <zx-stats-section-skeleton
+      *ngFor="let placeholder of usersPlaceholders"
+      variant="top-table"
+      [rowCount]="20"
+    ></zx-stats-section-skeleton>
+  </zx-grid>
+
+  <zx-stack *ngSwitchDefault gap="lg">
+    <zx-stats-section-skeleton variant="summary"></zx-stats-section-skeleton>
+    <zx-stats-section-skeleton variant="chart-lg"></zx-stats-section-skeleton>
+    <zx-stats-section-skeleton
+      *ngFor="let placeholder of categoryDistributionPlaceholders"
+      variant="chart-lg"
+      [interactiveLegend]="true"
+    ></zx-stats-section-skeleton>
+    <zx-stats-section-skeleton variant="chart-sm"></zx-stats-section-skeleton>
+    <zx-stats-section-skeleton variant="top-table"></zx-stats-section-skeleton>
+  </zx-stack>
+</ng-container>

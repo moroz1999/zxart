@@ -1,0 +1,35 @@
+<zx-stack gap="sm">
+  <h2 appHeading="title">{{ 'authors-page.active.' + items | translate }}</h2>
+
+  <zx-panel padding="md">
+    <zx-stack gap="md">
+      <zx-inline align="center" gap="sm">
+        <span appText="bodySm" tone="muted">{{ 'authors-page.active.period' | translate }}</span>
+        <zx-select
+          [options]="yearsOptions"
+          [ngModel]="selectedYears"
+          (ngModelChange)="onYearsChange($event)"
+        ></zx-select>
+      </zx-inline>
+
+      <div *ngIf="loading" class="zx-active-authors__columns" aria-hidden="true">
+        <div *ngFor="let item of skeletonItems" class="zx-active-authors__item">
+          <zx-skeleton-bone class="zx-active-authors__skeleton-bone"></zx-skeleton-bone>
+        </div>
+      </div>
+
+      <div *ngIf="!loading && authors.length === 0" appText="bodySm" tone="muted">
+        {{ 'authors-page.active.empty' | translate }}
+      </div>
+
+      <div *ngIf="!loading && authors.length > 0" class="zx-active-authors__columns">
+        <a
+          *ngFor="let author of authors"
+          class="zx-active-authors__item"
+          appText="body"
+          [href]="author.url"
+        >{{ author.title }}</a>
+      </div>
+    </zx-stack>
+  </zx-panel>
+</zx-stack>

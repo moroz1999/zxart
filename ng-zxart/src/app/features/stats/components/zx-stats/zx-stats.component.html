@@ -5,37 +5,37 @@
     <ng-container *ngIf="overview$ | async as overview; else kpiSkeleton">
       <zx-panel padding="md">
         <zx-stack gap="xs">
-          <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.prods | number }}</div>
+          <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.prods | statsNumber }}</div>
           <div appText="bodySm" class="zx-stats__kpi-label">{{ 'stats.kpi.prods' | translate }}</div>
         </zx-stack>
       </zx-panel>
       <zx-panel padding="md">
         <zx-stack gap="xs">
-          <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.releases | number }}</div>
+          <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.releases | statsNumber }}</div>
           <div appText="bodySm" class="zx-stats__kpi-label">{{ 'stats.kpi.releases' | translate }}</div>
         </zx-stack>
       </zx-panel>
       <zx-panel padding="md">
         <zx-stack gap="xs">
-          <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.authors | number }} <span class="zx-stats__kpi-slash">/</span> {{ overview.authorsWithAliases | number }}</div>
+          <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.authors | statsNumber }} <span class="zx-stats__kpi-slash">/</span> {{ overview.authorsWithAliases | statsNumber }}</div>
           <div appText="bodySm" class="zx-stats__kpi-label">{{ 'stats.kpi.authors' | translate }}</div>
         </zx-stack>
       </zx-panel>
       <zx-panel padding="md">
         <zx-stack gap="xs">
-          <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.groups | number }} <span class="zx-stats__kpi-slash">/</span> {{ overview.groupsWithAliases | number }}</div>
+          <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.groups | statsNumber }} <span class="zx-stats__kpi-slash">/</span> {{ overview.groupsWithAliases | statsNumber }}</div>
           <div appText="bodySm" class="zx-stats__kpi-label">{{ 'stats.kpi.groups' | translate }}</div>
         </zx-stack>
       </zx-panel>
       <zx-panel padding="md">
         <zx-stack gap="xs">
-          <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.music | number }}</div>
+          <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.music | statsNumber }}</div>
           <div appText="bodySm" class="zx-stats__kpi-label">{{ 'stats.kpi.music' | translate }}</div>
         </zx-stack>
       </zx-panel>
       <zx-panel padding="md">
         <zx-stack gap="xs">
-          <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.pictures | number }}</div>
+          <div appHeading="headline" class="zx-stats__kpi-value">{{ overview.pictures | statsNumber }}</div>
           <div appText="bodySm" class="zx-stats__kpi-label">{{ 'stats.kpi.pics' | translate }}</div>
         </zx-stack>
       </zx-panel>
@@ -50,26 +50,34 @@
     </ng-template>
   </zx-grid>
 
-  <zx-tabs>
-    <zx-tab [label]="'stats.tab.soft' | translate">
-      <ng-template zxTabContent>
-        <zx-stats-category category="soft"></zx-stats-category>
-      </ng-template>
-    </zx-tab>
-    <zx-tab [label]="'stats.tab.music' | translate">
-      <ng-template zxTabContent>
-        <zx-stats-category category="music"></zx-stats-category>
-      </ng-template>
-    </zx-tab>
-    <zx-tab [label]="'stats.tab.gfx' | translate">
-      <ng-template zxTabContent>
-        <zx-stats-category category="gfx"></zx-stats-category>
-      </ng-template>
-    </zx-tab>
-    <zx-tab [label]="'stats.tab.users' | translate">
-      <ng-template zxTabContent>
-        <zx-stats-users></zx-stats-users>
-      </ng-template>
-    </zx-tab>
-  </zx-tabs>
+  <ng-container *ngIf="tabsMounted; else tabsSkeleton">
+    <zx-tabs>
+      <zx-tab [label]="'stats.tab.soft' | translate">
+        <ng-template zxTabContent>
+          <zx-stats-category category="soft"></zx-stats-category>
+        </ng-template>
+      </zx-tab>
+      <zx-tab [label]="'stats.tab.music' | translate">
+        <ng-template zxTabContent>
+          <zx-stats-category category="music"></zx-stats-category>
+        </ng-template>
+      </zx-tab>
+      <zx-tab [label]="'stats.tab.gfx' | translate">
+        <ng-template zxTabContent>
+          <zx-stats-category category="gfx"></zx-stats-category>
+        </ng-template>
+      </zx-tab>
+      <zx-tab [label]="'stats.tab.users' | translate">
+        <ng-template zxTabContent>
+          <zx-stats-users></zx-stats-users>
+        </ng-template>
+      </zx-tab>
+    </zx-tabs>
+  </ng-container>
+
+  <ng-template #tabsSkeleton>
+    <div [appInViewport]="!tabsMounted" (inViewport)="onTabsInViewport()">
+      <zx-stats-tab-skeleton variant="category"></zx-stats-tab-skeleton>
+    </div>
+  </ng-template>
 </zx-stack>

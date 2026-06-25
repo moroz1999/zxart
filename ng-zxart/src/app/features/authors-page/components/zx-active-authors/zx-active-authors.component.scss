@@ -1,0 +1,48 @@
+@use "shared/breakpoints" as breakpoints;
+
+:host {
+  display: block;
+}
+
+.zx-active-authors__columns {
+  columns: 2;
+
+  @include breakpoints.media-breakpoint-up(sm) {
+    columns: 3;
+  }
+  @include breakpoints.media-breakpoint-up(md) {
+    columns: 4;
+  }
+  @include breakpoints.media-breakpoint-up(lg) {
+    columns: 5;
+  }
+  @include breakpoints.media-breakpoint-up(xl) {
+    columns: 6;
+  }
+  @include breakpoints.media-breakpoint-up(xxl) {
+    columns: 7;
+  }
+}
+
+.zx-active-authors__item {
+  display: block;
+  padding-bottom: var(--padding-sm);
+  break-inside: avoid;
+}
+
+.zx-active-authors__skeleton-bone {
+  height: 1em;
+  width: 75%;
+}
+
+.zx-active-authors__item:nth-child(4n + 1) .zx-active-authors__skeleton-bone {
+  width: 55%;
+}
+
+.zx-active-authors__item:nth-child(4n + 2) .zx-active-authors__skeleton-bone {
+  width: 85%;
+}
+
+.zx-active-authors__item:nth-child(4n + 3) .zx-active-authors__skeleton-bone {
+  width: 45%;
+}

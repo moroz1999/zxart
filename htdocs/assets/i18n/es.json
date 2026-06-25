@@ -870,6 +870,27 @@
       "graphicsRating": "Clasificación de gráficos"
     }
   },
+  "authors-page": {
+    "active": {
+      "graphics": "Artistas activos",
+      "music": "Músicos activos",
+      "period": "Período de actividad",
+      "yearsShort": "{{count}} a.",
+      "empty": "No hay autores activos"
+    },
+    "top": {
+      "graphics": "Mejores artistas",
+      "music": "Mejores músicos"
+    },
+    "latest": {
+      "graphics": "Artistas añadidos recientemente",
+      "music": "Músicos añadidos recientemente"
+    },
+    "all": {
+      "graphics": "Todos los artistas",
+      "music": "Todos los músicos"
+    }
+  },
   "group-browser": {
     "error": "Error al cargar grupos",
     "empty": "No se encontraron grupos",
@@ -1608,7 +1629,11 @@
       "music": "Melodías",
       "pics": "Imágenes",
       "peak": "Año pico",
-      "daily30": "Últimos 30 días"
+      "daily30": {
+        "soft": "Subidas en 30 días",
+        "music": "Reproducciones en 30 días",
+        "gfx": "Vistas en 30 días"
+      }
     },
     "total": {
       "soft": "Total de programas",
@@ -1622,7 +1647,7 @@
     },
     "days30": "30 días",
     "legend": {
-      "all": "todo en la base",
+      "all": "el resto",
       "rated": "valorado por encima de la media",
       "hideAll": "Ocultar todo",
       "showAll": "Mostrar todo"

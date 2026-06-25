@@ -12,9 +12,12 @@ import {
 } from '../../../../shared/ui/zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
+import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 import {StatsService} from '../../services/stats.service';
 import {ZxStatsCategoryComponent} from '../zx-stats-category/zx-stats-category.component';
+import {ZxStatsTabSkeletonComponent} from '../zx-stats-tab-skeleton/zx-stats-tab-skeleton.component';
 import {ZxStatsUsersComponent} from '../zx-stats-users/zx-stats-users.component';
+import {StatsNumberPipe} from '../../pipes/stats-number.pipe';
 
 @Component({
   selector: 'zx-stats',
@@ -29,10 +32,13 @@ import {ZxStatsUsersComponent} from '../zx-stats-users/zx-stats-users.component'
     ZxGridComponent,
     ZxStackComponent,
     ZxSkeletonBoneComponent,
+    InViewportDirective,
     HeadingDirective,
     TextDirective,
     ZxStatsCategoryComponent,
+    ZxStatsTabSkeletonComponent,
     ZxStatsUsersComponent,
+    StatsNumberPipe,
   ],
   templateUrl: './zx-stats.component.html',
   styleUrl: './zx-stats.component.scss',
@@ -41,6 +47,11 @@ import {ZxStatsUsersComponent} from '../zx-stats-users/zx-stats-users.component'
 export class ZxStatsComponent {
   readonly overview$ = this.statsService.overview$;
   readonly kpiPlaceholders = [0, 1, 2, 3, 4, 5];
+  tabsMounted = false;
 
   constructor(private readonly statsService: StatsService) {}
+
+  onTabsInViewport(): void {
+    this.tabsMounted = true;
+  }
 }

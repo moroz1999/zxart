@@ -39,6 +39,8 @@ import {
   ZxAuthorBrowserComponent
 } from './features/author-browser/components/zx-author-browser/zx-author-browser.component';
 import {ZxGroupBrowserComponent} from './features/group-browser/components/zx-group-browser/zx-group-browser.component';
+import {ZxAuthorsPageComponent} from './features/authors-page/components/zx-authors-page/zx-authors-page.component';
+import {ZxActiveAuthorsComponent} from './features/authors-page/components/zx-active-authors/zx-active-authors.component';
 import {
   ZxSearchResultsComponent
 } from './features/search-results/components/zx-search-results/zx-search-results.component';
@@ -121,6 +123,8 @@ export class AppModule implements DoBootstrap  {
             'zx-music-browser': ZxMusicBrowserComponent,
             'zx-prods-browser': ZxProdsBrowserComponent,
             'zx-author-browser': ZxAuthorBrowserComponent,
+            'zx-authors-page': ZxAuthorsPageComponent,
+            'zx-active-authors': ZxActiveAuthorsComponent,
             'zx-group-browser': ZxGroupBrowserComponent,
             'zx-search-results': ZxSearchResultsComponent,
             'zx-tags-quick-form': TagsQuickFormComponent,

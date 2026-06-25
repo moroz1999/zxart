@@ -1,0 +1,43 @@
+<zx-stack gap="xl" class="zx-authors-page">
+  <section class="zx-authors-page__section">
+    <zx-active-authors-view [elementId]="elementId" [items]="items"></zx-active-authors-view>
+  </section>
+
+  <section class="zx-authors-page__section">
+    <zx-stack gap="sm">
+      <h2 appHeading="title">{{ 'authors-page.top.' + items | translate }}</h2>
+      <zx-author-browser-view
+        [elementId]="elementId"
+        mode="simple"
+        [sorting]="popularSorting"
+        limit="50"
+        types="author"
+        [items]="items"
+      ></zx-author-browser-view>
+    </zx-stack>
+  </section>
+
+  <section class="zx-authors-page__section">
+    <zx-stack gap="sm">
+      <h2 appHeading="title">{{ 'authors-page.latest.' + items | translate }}</h2>
+      <zx-author-browser-view
+        [elementId]="elementId"
+        mode="simple"
+        sorting="id,desc"
+        limit="300"
+        [items]="items"
+      ></zx-author-browser-view>
+    </zx-stack>
+  </section>
+
+  <section class="zx-authors-page__section">
+    <zx-stack gap="sm">
+      <h2 appHeading="title">{{ 'authors-page.all.' + items | translate }}</h2>
+      <zx-author-browser-view
+        [elementId]="elementId"
+        mode="full"
+        [items]="items"
+      ></zx-author-browser-view>
+    </zx-stack>
+  </section>
+</zx-stack>

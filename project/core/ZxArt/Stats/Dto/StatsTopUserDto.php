@@ -10,10 +10,13 @@ use ZxArt\Stats\Rest\StatsTopUserRestDto;
 #[Map(target: StatsTopUserRestDto::class)]
 readonly class StatsTopUserDto
 {
+    /**
+     * @param string[] $badges
+     */
     public function __construct(
         public string $name,
         public ?string $url,
-        public ?string $badge,
+        public array $badges,
         public int $count,
     ) {
     }

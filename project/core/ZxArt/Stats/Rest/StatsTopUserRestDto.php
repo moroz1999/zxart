@@ -6,10 +6,13 @@ namespace ZxArt\Stats\Rest;
 
 readonly class StatsTopUserRestDto
 {
+    /**
+     * @param string[] $badges
+     */
     public function __construct(
         public string $name,
         public ?string $url,
-        public ?string $badge,
+        public array $badges,
         public int $count,
     ) {
     }

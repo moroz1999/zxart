@@ -16,6 +16,8 @@ use ZxArt\Stats\StatsDistributionColumn;
 
 final readonly class StatsRepository extends AbstractRepository
 {
+    private const string VOTES_HISTORY_USER_INDEX = 'userId';
+
     public function __construct(
         private Connection $db,
         private LanguagesManager $languagesManager,
@@ -260,9 +262,12 @@ final readonly class StatsRepository extends AbstractRepository
      */
     public function topVoters(int $limit): array
     {
-        $query = $this->db->table($this->tableName(DatabaseTable::VotesHistory))
+        $votesHistoryTable = $this->db->getTablePrefix() . $this->tableName(DatabaseTable::VotesHistory);
+        $query = $this->db->table(
+            $this->db->raw($votesHistoryTable . ' FORCE INDEX (' . self::VOTES_HISTORY_USER_INDEX . ')'),
+        )
             ->select(['userId'])
-            ->selectRaw('COUNT(id) AS amount')
+            ->selectRaw('COUNT(*) AS amount')
             ->where('type', '!=', 'comment')
             ->where('userId', '>', 0);
 

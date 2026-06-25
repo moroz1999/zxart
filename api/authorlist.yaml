@@ -1,0 +1,210 @@
+openapi: 3.0.0
+info:
+  title: Author List API
+  version: 1.0.0
+paths:
+  /authorlist/:
+    get:
+      summary: Author listings (paged list, filter options, or active authors)
+      description: >
+        Multiplexed endpoint selected by the `action` parameter.
+        Without `action` it returns a paged author list; `action=filters`
+        returns country/city filter options; `action=active` returns authors
+        with works published in the last years.
+      parameters:
+        - name: action
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [filters, active]
+          description: Omit for the paged list.
+        - name: elementId
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: Owning authorsList element id (request guard).
+        - name: items
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [graphics, music, all]
+          description: Content scope.
+        - name: years
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+            default: 2
+          description: "For `action=active`: activity window in years (clamped 1-5)."
+        - name: start
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Paged list offset.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Paged list page size.
+        - name: sorting
+          in: query
+          required: false
+          schema:
+            type: string
+          description: "Paged list sorting, e.g. `graphicsRating,desc`."
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: countryId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: cityId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: letter
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: types
+          in: query
+          required: false
+          schema:
+            type: string
+          description: "Comma-separated entity types: `author`, `authorAlias`."
+      responses:
+        '200':
+          description: Result depending on the requested action
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/AuthorListResponse'
+                  - $ref: '#/components/schemas/AuthorFilterOptions'
+                  - $ref: '#/components/schemas/ActiveAuthorsResponse'
+        '400':
+          description: Missing elementId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    AuthorListResponse:
+      type: object
+      properties:
+        total:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorListItem'
+    AuthorListItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        url:
+          type: string
+        entityType:
+          type: string
+        title:
+          type: string
+        realName:
+          type: string
+        realNameUrl:
+          type: string
+          nullable: true
+        groups:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              title:
+                type: string
+              url:
+                type: string
+        countryId:
+          type: integer
+          nullable: true
+        countryTitle:
+          type: string
+          nullable: true
+        countryUrl:
+          type: string
+          nullable: true
+        cityId:
+          type: integer
+          nullable: true
+        cityTitle:
+          type: string
+          nullable: true
+        cityUrl:
+          type: string
+          nullable: true
+        musicRating:
+          type: number
+        graphicsRating:
+          type: number
+    AuthorFilterOptions:
+      type: object
+      properties:
+        countries:
+          type: array
+          items:
+            $ref: '#/components/schemas/FilterOption'
+        cities:
+          type: array
+          items:
+            $ref: '#/components/schemas/FilterOption'
+    FilterOption:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+    ActiveAuthorsResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActiveAuthor'
+    ActiveAuthor:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+    ErrorResponse:
+      type: object
+      properties:
+        errorMessage:
+          type: string

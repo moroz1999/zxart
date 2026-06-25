@@ -14,15 +14,18 @@ use ZxArt\Hardware\HardwareGroup;
 use zxProdCategoryElement;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Stats\Dto\StatsCategorySectionDto;
+use ZxArt\Stats\Dto\StatsCategorySummaryDto;
 use ZxArt\Stats\Dto\StatsDailySeriesDto;
+use ZxArt\Stats\Dto\StatsDistributionBlockDto;
 use ZxArt\Stats\Dto\StatsDistributionDto;
+use ZxArt\Stats\Dto\StatsDistributionsDto;
 use ZxArt\Stats\Dto\StatsOverviewDto;
 use ZxArt\Stats\Dto\StatsTopUserDto;
+use ZxArt\Stats\Dto\StatsTopUsersDto;
 use ZxArt\Stats\Dto\StatsUsersSectionDto;
 use ZxArt\Stats\Dto\StatsYearSeriesDto;
 use ZxArt\Stats\Repositories\StatsRepository;
 use ZxArt\Stats\StatsDistributionColumn;
-use ZxArt\Stats\StatsUserBadge;
 
 readonly class StatsService
 {
@@ -68,7 +71,7 @@ readonly class StatsService
         $top = $this->topEventUsers(['addZxProd'], 10);
 
         return new StatsCategorySectionDto(
-            totalWorks: array_sum($series->all),
+            totalWorks: $this->repository->countRows(DatabaseTable::ZxProd),
             peakYear: $this->peakYear($years, $series->all),
             dailyTotal: array_sum($daily->data),
             topUnitKey: 'stats.unit.prods',
@@ -94,7 +97,7 @@ readonly class StatsService
         $top = $this->topEventUsers(['addZxMusic'], 10);
 
         return new StatsCategorySectionDto(
-            totalWorks: array_sum($series->all),
+            totalWorks: $this->repository->countRows(DatabaseTable::ZxMusic),
             peakYear: $this->peakYear($years, $series->all),
             dailyTotal: array_sum($daily->data),
             topUnitKey: 'stats.unit.music',
@@ -120,7 +123,7 @@ readonly class StatsService
         $top = $this->topEventUsers(['addZxPicture'], 10);
 
         return new StatsCategorySectionDto(
-            totalWorks: array_sum($series->all),
+            totalWorks: $this->repository->countRows(DatabaseTable::ZxPicture),
             peakYear: $this->peakYear($years, $series->all),
             dailyTotal: array_sum($daily->data),
             topUnitKey: 'stats.unit.pics',
@@ -137,6 +140,210 @@ readonly class StatsService
             voters: $this->topVoters(20),
             comments: $this->topEventUsers(['comment'], 20),
             tags: $this->topEventUsers(['tagAdded'], 20),
+        );
+    }
+
+    public function getSoftSummary(): StatsCategorySummaryDto
+    {
+        return $this->buildCategorySummary(DatabaseTable::ZxProd, 'stats.daily.uploads', ['addZxProd']);
+    }
+
+    public function getMusicSummary(): StatsCategorySummaryDto
+    {
+        return $this->buildCategorySummary(DatabaseTable::ZxMusic, 'stats.daily.plays', ['play']);
+    }
+
+    public function getGfxSummary(): StatsCategorySummaryDto
+    {
+        return $this->buildCategorySummary(DatabaseTable::ZxPicture, 'stats.daily.views', ['view']);
+    }
+
+    public function getSoftSeries(): StatsYearSeriesDto
+    {
+        return $this->buildYearSeries(DatabaseTable::ZxProd)[1];
+    }
+
+    public function getMusicSeries(): StatsYearSeriesDto
+    {
+        return $this->buildYearSeries(DatabaseTable::ZxMusic)[1];
+    }
+
+    public function getGfxSeries(): StatsYearSeriesDto
+    {
+        return $this->buildYearSeries(DatabaseTable::ZxPicture)[1];
+    }
+
+    public function getSoftDistributions(): StatsDistributionsDto
+    {
+        $years = $this->buildYears(DatabaseTable::ZxProd);
+
+        return new StatsDistributionsDto($years, [
+            $this->buildSoftCategoryDistribution($years),
+            $this->buildComputerModelDistribution($years),
+            $this->buildDistribution('stats.dist.country', $this->repository->prodCountryDistribution(), $years, self::COUNTRY_LIMIT),
+        ]);
+    }
+
+    public function getSoftCategoryDistribution(): StatsDistributionBlockDto
+    {
+        $years = $this->buildYears(DatabaseTable::ZxProd);
+
+        return new StatsDistributionBlockDto($years, $this->buildSoftCategoryDistribution($years));
+    }
+
+    public function getSoftComputerDistribution(): StatsDistributionBlockDto
+    {
+        $years = $this->buildYears(DatabaseTable::ZxProd);
+
+        return new StatsDistributionBlockDto($years, $this->buildComputerModelDistribution($years));
+    }
+
+    public function getSoftCountryDistribution(): StatsDistributionBlockDto
+    {
+        $years = $this->buildYears(DatabaseTable::ZxProd);
+
+        return new StatsDistributionBlockDto(
+            $years,
+            $this->buildDistribution('stats.dist.country', $this->repository->prodCountryDistribution(), $years, self::COUNTRY_LIMIT),
+        );
+    }
+
+    public function getMusicDistributions(): StatsDistributionsDto
+    {
+        $years = $this->buildYears(DatabaseTable::ZxMusic);
+
+        return new StatsDistributionsDto($years, [
+            $this->buildDistribution(
+                'stats.dist.music_format',
+                $this->repository->distributionByColumn(DatabaseTable::ZxMusic, StatsDistributionColumn::Type),
+                $years,
+            ),
+            $this->buildDistribution('stats.dist.country', $this->repository->musicCountryDistribution(), $years, self::COUNTRY_LIMIT),
+        ]);
+    }
+
+    public function getMusicFormatDistribution(): StatsDistributionBlockDto
+    {
+        $years = $this->buildYears(DatabaseTable::ZxMusic);
+
+        return new StatsDistributionBlockDto(
+            $years,
+            $this->buildDistribution(
+                'stats.dist.music_format',
+                $this->repository->distributionByColumn(DatabaseTable::ZxMusic, StatsDistributionColumn::Type),
+                $years,
+            ),
+        );
+    }
+
+    public function getMusicCountryDistribution(): StatsDistributionBlockDto
+    {
+        $years = $this->buildYears(DatabaseTable::ZxMusic);
+
+        return new StatsDistributionBlockDto(
+            $years,
+            $this->buildDistribution('stats.dist.country', $this->repository->musicCountryDistribution(), $years, self::COUNTRY_LIMIT),
+        );
+    }
+
+    public function getGfxDistributions(): StatsDistributionsDto
+    {
+        $years = $this->buildYears(DatabaseTable::ZxPicture);
+
+        return new StatsDistributionsDto($years, [
+            $this->buildDistribution(
+                'stats.dist.gfx_type',
+                $this->repository->distributionByColumn(DatabaseTable::ZxPicture, StatsDistributionColumn::Type),
+                $years,
+            ),
+            $this->buildDistribution('stats.dist.country', $this->repository->pictureCountryDistribution(), $years, self::COUNTRY_LIMIT),
+        ]);
+    }
+
+    public function getGfxTypeDistribution(): StatsDistributionBlockDto
+    {
+        $years = $this->buildYears(DatabaseTable::ZxPicture);
+
+        return new StatsDistributionBlockDto(
+            $years,
+            $this->buildDistribution(
+                'stats.dist.gfx_type',
+                $this->repository->distributionByColumn(DatabaseTable::ZxPicture, StatsDistributionColumn::Type),
+                $years,
+            ),
+        );
+    }
+
+    public function getGfxCountryDistribution(): StatsDistributionBlockDto
+    {
+        $years = $this->buildYears(DatabaseTable::ZxPicture);
+
+        return new StatsDistributionBlockDto(
+            $years,
+            $this->buildDistribution('stats.dist.country', $this->repository->pictureCountryDistribution(), $years, self::COUNTRY_LIMIT),
+        );
+    }
+
+    public function getSoftDaily(): StatsDailySeriesDto
+    {
+        return $this->buildDaily('stats.daily.uploads', ['addZxProd']);
+    }
+
+    public function getMusicDaily(): StatsDailySeriesDto
+    {
+        return $this->buildDaily('stats.daily.plays', ['play']);
+    }
+
+    public function getGfxDaily(): StatsDailySeriesDto
+    {
+        return $this->buildDaily('stats.daily.views', ['view']);
+    }
+
+    public function getSoftTop(): StatsTopUsersDto
+    {
+        return new StatsTopUsersDto('stats.unit.prods', $this->topEventUsers(['addZxProd'], 10));
+    }
+
+    public function getMusicTop(): StatsTopUsersDto
+    {
+        return new StatsTopUsersDto('stats.unit.music', $this->topEventUsers(['addZxMusic'], 10));
+    }
+
+    public function getGfxTop(): StatsTopUsersDto
+    {
+        return new StatsTopUsersDto('stats.unit.pics', $this->topEventUsers(['addZxPicture'], 10));
+    }
+
+    public function getVotersTop(): StatsTopUsersDto
+    {
+        return new StatsTopUsersDto('stats.unit.votes', $this->topVoters(20));
+    }
+
+    public function getCommentersTop(): StatsTopUsersDto
+    {
+        return new StatsTopUsersDto('stats.unit.comments', $this->topEventUsers(['comment'], 20));
+    }
+
+    public function getTaggersTop(): StatsTopUsersDto
+    {
+        return new StatsTopUsersDto('stats.unit.tags', $this->topEventUsers(['tagAdded'], 20));
+    }
+
+    /**
+     * @param string[] $dailyTypes
+     */
+    private function buildCategorySummary(
+        DatabaseTable $table,
+        string $dailyLabelKey,
+        array $dailyTypes,
+    ): StatsCategorySummaryDto {
+        [$years, $series] = $this->buildYearSeries($table);
+        $daily = $this->buildDaily($dailyLabelKey, $dailyTypes);
+
+        return new StatsCategorySummaryDto(
+            totalWorks: $this->repository->countRows($table),
+            peakYear: $this->peakYear($years, $series->all),
+            dailyTotal: array_sum($daily->data),
         );
     }
 
@@ -159,6 +366,17 @@ readonly class StatsService
         }
 
         return [$years, new StatsYearSeriesDto($years, $allValues, $ratedValues)];
+    }
+
+    /**
+     * @return int[]
+     */
+    private function buildYears(DatabaseTable $table): array
+    {
+        $years = array_keys($this->repository->countByYear($table));
+        sort($years);
+
+        return $years;
     }
 
     /**
@@ -360,7 +578,7 @@ readonly class StatsService
         return new StatsTopUserDto(
             name: html_entity_decode($element->userName, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
             url: $this->getUserUrl($element),
-            badge: $this->resolveBadge($element),
+            badges: $element->getBadgetTypes(),
             count: $count,
         );
     }
@@ -370,26 +588,6 @@ readonly class StatsService
         $url = $element->getUrl();
 
         return is_string($url) && $url !== '' ? $url : null;
-    }
-
-    private function resolveBadge(userElement $element): ?string
-    {
-        $badges = $element->getBadgetTypes();
-        foreach ($this->badgePriority() as $badge) {
-            if (in_array($badge->value, $badges, true)) {
-                return $badge->value;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @return StatsUserBadge[]
-     */
-    private function badgePriority(): array
-    {
-        return [StatsUserBadge::Vip, StatsUserBadge::Volunteer, StatsUserBadge::Supporter];
     }
 
     /**

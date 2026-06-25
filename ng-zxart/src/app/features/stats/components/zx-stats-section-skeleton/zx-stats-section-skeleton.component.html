@@ -1,17 +1,47 @@
-<zx-stack gap="lg">
-  <zx-grid desktopColumns="3" tabletColumns="3" mobileColumns="1" gap="md">
+<ng-container [ngSwitch]="variant">
+  <zx-grid *ngSwitchCase="'summary'" desktopColumns="3" tabletColumns="3" mobileColumns="1" gap="md">
     <zx-panel *ngFor="let kpi of kpis" padding="md">
-      <zx-stack gap="sm">
+      <zx-stack gap="xs">
         <zx-skeleton-bone class="zx-stats-section-skeleton__value"></zx-skeleton-bone>
         <zx-skeleton-bone class="zx-stats-section-skeleton__label"></zx-skeleton-bone>
       </zx-stack>
     </zx-panel>
   </zx-grid>
 
-  <zx-panel *ngFor="let panel of panels" padding="md">
+  <zx-panel *ngSwitchCase="'chart-sm'" padding="md">
     <zx-stack gap="md">
       <zx-skeleton-bone class="zx-stats-section-skeleton__title"></zx-skeleton-bone>
-      <zx-skeleton-bone class="zx-stats-section-skeleton__chart"></zx-skeleton-bone>
+      <zx-skeleton-bone class="zx-stats-section-skeleton__chart zx-stats-section-skeleton__chart--sm"></zx-skeleton-bone>
     </zx-stack>
   </zx-panel>
-</zx-stack>
+
+  <zx-panel *ngSwitchCase="'top-table'" padding="none">
+    <zx-stack gap="none">
+      <div class="zx-stats-section-skeleton__table-title">
+        <zx-skeleton-bone class="zx-stats-section-skeleton__title"></zx-skeleton-bone>
+      </div>
+      <div class="zx-stats-section-skeleton__table-header">
+        <zx-skeleton-bone class="zx-stats-section-skeleton__table-cell zx-stats-section-skeleton__table-cell--rank"></zx-skeleton-bone>
+        <zx-skeleton-bone class="zx-stats-section-skeleton__table-cell"></zx-skeleton-bone>
+        <zx-skeleton-bone class="zx-stats-section-skeleton__table-cell zx-stats-section-skeleton__table-cell--count"></zx-skeleton-bone>
+      </div>
+      <div *ngFor="let row of tableRows" class="zx-stats-section-skeleton__table-row">
+        <zx-skeleton-bone class="zx-stats-section-skeleton__table-cell zx-stats-section-skeleton__table-cell--rank"></zx-skeleton-bone>
+        <zx-skeleton-bone class="zx-stats-section-skeleton__table-cell"></zx-skeleton-bone>
+        <zx-skeleton-bone class="zx-stats-section-skeleton__table-cell zx-stats-section-skeleton__table-cell--count"></zx-skeleton-bone>
+      </div>
+    </zx-stack>
+  </zx-panel>
+
+  <zx-panel *ngSwitchDefault padding="md">
+    <zx-stack gap="md">
+      <zx-skeleton-bone class="zx-stats-section-skeleton__title"></zx-skeleton-bone>
+      <div *ngIf="interactiveLegend" class="zx-stats-section-skeleton__legend">
+        <zx-skeleton-bone class="zx-stats-section-skeleton__legend-item"></zx-skeleton-bone>
+        <zx-skeleton-bone class="zx-stats-section-skeleton__legend-item"></zx-skeleton-bone>
+        <zx-skeleton-bone class="zx-stats-section-skeleton__legend-item"></zx-skeleton-bone>
+      </div>
+      <zx-skeleton-bone class="zx-stats-section-skeleton__chart zx-stats-section-skeleton__chart--lg"></zx-skeleton-bone>
+    </zx-stack>
+  </zx-panel>
+</ng-container>

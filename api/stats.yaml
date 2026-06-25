@@ -1,13 +1,43 @@
 paths:
   /stats/:
     get:
-      summary: Statistics section overview, per-category sections and top users
+      summary: Statistics overview, per-category blocks and top users
       parameters:
         - in: query
           name: action
           schema:
             type: string
-            enum: [overview, soft, music, gfx, users]
+            enum:
+              - overview
+              - soft
+              - music
+              - gfx
+              - users
+              - soft-summary
+              - music-summary
+              - gfx-summary
+              - soft-series
+              - music-series
+              - gfx-series
+              - soft-distributions
+              - soft-category-distribution
+              - soft-computer-distribution
+              - soft-country-distribution
+              - music-distributions
+              - music-format-distribution
+              - music-country-distribution
+              - gfx-distributions
+              - gfx-type-distribution
+              - gfx-country-distribution
+              - soft-daily
+              - music-daily
+              - gfx-daily
+              - soft-top
+              - music-top
+              - gfx-top
+              - users-voters
+              - users-comments
+              - users-tags
             default: overview
       responses:
         '200':
@@ -19,6 +49,12 @@ paths:
                   - $ref: '#/components/schemas/StatsOverview'
                   - $ref: '#/components/schemas/StatsCategorySection'
                   - $ref: '#/components/schemas/StatsUsersSection'
+                  - $ref: '#/components/schemas/StatsCategorySummary'
+                  - $ref: '#/components/schemas/StatsYearSeries'
+                  - $ref: '#/components/schemas/StatsDistributionsSection'
+                  - $ref: '#/components/schemas/StatsDistributionBlock'
+                  - $ref: '#/components/schemas/StatsDailySeries'
+                  - $ref: '#/components/schemas/StatsTopUsersSection'
         '400':
           description: Invalid action
           content:
@@ -56,7 +92,7 @@ components:
           type: integer
     StatsYearSeries:
       type: object
-      required: [years, all, rated, avg]
+      required: [years, all, rated]
       properties:
         years:
           type: array
@@ -70,11 +106,16 @@ components:
           type: array
           items:
             type: integer
-        avg:
-          type: array
-          items:
-            type: number
-            format: float
+    StatsCategorySummary:
+      type: object
+      required: [totalWorks, peakYear, dailyTotal]
+      properties:
+        totalWorks:
+          type: integer
+        peakYear:
+          type: integer
+        dailyTotal:
+          type: integer
     StatsDistribution:
       type: object
       required: [titleKey, classes, rows]
@@ -106,19 +147,42 @@ components:
           type: array
           items:
             type: integer
+    StatsDistributionsSection:
+      type: object
+      required: [years, distributions]
+      properties:
+        years:
+          type: array
+          items:
+            type: integer
+        distributions:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatsDistribution'
+    StatsDistributionBlock:
+      type: object
+      required: [years, distribution]
+      properties:
+        years:
+          type: array
+          items:
+            type: integer
+        distribution:
+          $ref: '#/components/schemas/StatsDistribution'
     StatsTopUser:
       type: object
-      required: [name, url, badge, count]
+      required: [name, url, badges, count]
       properties:
         name:
           type: string
         url:
           type: string
           nullable: true
-        badge:
-          type: string
-          nullable: true
-          enum: [vip, volunteer, supporter, null]
+        badges:
+          type: array
+          items:
+            type: string
+            enum: [vip, volunteer, supporter]
         count:
           type: integer
     StatsCategorySection:
@@ -158,6 +222,16 @@ components:
           items:
             $ref: '#/components/schemas/StatsTopUser'
         tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatsTopUser'
+    StatsTopUsersSection:
+      type: object
+      required: [unitKey, users]
+      properties:
+        unitKey:
+          type: string
+        users:
           type: array
           items:
             $ref: '#/components/schemas/StatsTopUser'

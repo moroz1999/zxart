@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace ZxArt\AuthorList;
 
+use ApiQueriesManager;
 use authorAliasElement;
 use authorElement;
 use structureManager;
+use ZxArt\AuthorList\Dto\ActiveAuthorDto;
 use ZxArt\AuthorList\Dto\AuthorListItemDto;
 use ZxArt\AuthorList\Dto\FilterOptionDto;
 use ZxArt\AuthorList\Repositories\AuthorListRepository;
@@ -15,11 +17,59 @@ use ZxArt\Shared\SortingParams;
 
 readonly class AuthorListService
 {
+    public const int ACTIVE_YEARS_DEFAULT = 2;
+    public const int ACTIVE_YEARS_MIN = 1;
+    public const int ACTIVE_YEARS_MAX = 5;
+
     public function __construct(
         private structureManager $structureManager,
         private AuthorListRepository $repository,
         private AuthorListTransformer $transformer,
+        private ApiQueriesManager $apiQueriesManager,
     ) {
+    }
+
+    /**
+     * Authors with works (pictures or music) published within the last $yearsBack years.
+     *
+     * @return ActiveAuthorDto[]
+     */
+    public function getActive(?string $items, int $yearsBack = self::ACTIVE_YEARS_DEFAULT): array
+    {
+        $yearsBack = max(self::ACTIVE_YEARS_MIN, min(self::ACTIVE_YEARS_MAX, $yearsBack));
+
+        $currentYear = (int)date('Y');
+        $years = [];
+        for ($offset = 0; $offset < $yearsBack; $offset++) {
+            $years[] = $currentYear - $offset;
+        }
+
+        $parameters = [];
+        if ($items === 'music') {
+            $parameters['zxMusicYear'] = $years;
+        } else {
+            $parameters['zxPictureYear'] = $years;
+            $parameters['zxPictureNotType'] = 'attributes';
+        }
+
+        $query = $this->apiQueriesManager->getQuery();
+        $query->setFiltrationParameters($parameters);
+        $query->setExportType('author');
+        $query->setOrder(['title' => 'asc']);
+        $result = (array)$query->getQueryResult();
+
+        $authors = [];
+        foreach ((array)($result['author'] ?? []) as $element) {
+            if ($element instanceof authorElement) {
+                $authors[] = new ActiveAuthorDto(
+                    id: (int)$element->id,
+                    title: html_entity_decode($element->title, ENT_QUOTES),
+                    url: $element->getUrl(),
+                );
+            }
+        }
+
+        return $authors;
     }
 
     /**

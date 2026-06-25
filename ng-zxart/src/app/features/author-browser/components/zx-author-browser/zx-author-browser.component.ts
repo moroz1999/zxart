@@ -22,7 +22,7 @@ import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filte
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 
 @Component({
-  selector: 'zx-author-browser',
+  selector: 'zx-author-browser, zx-author-browser-view',
   standalone: true,
   imports: [
     CommonModule,

@@ -1,23 +1,35 @@
-<ng-container *ngIf="(loaded$ | async); else skeleton">
-  <zx-grid *ngIf="section$ | async as section" desktopColumns="3" tabletColumns="1" mobileColumns="1" gap="lg">
-    <zx-stats-top-table
-      [title]="'stats.top_title.voters' | translate"
-      unitKey="stats.unit.votes"
-      [users]="section.voters"
-    ></zx-stats-top-table>
-    <zx-stats-top-table
-      [title]="'stats.top_title.comments' | translate"
-      unitKey="stats.unit.comments"
-      [users]="section.comments"
-    ></zx-stats-top-table>
-    <zx-stats-top-table
-      [title]="'stats.top_title.tags' | translate"
-      unitKey="stats.unit.tags"
-      [users]="section.tags"
-    ></zx-stats-top-table>
-  </zx-grid>
-</ng-container>
+<zx-grid desktopColumns="3" tabletColumns="1" mobileColumns="1" gap="lg">
+  <div #votersBlock>
+    <ng-container *ngIf="voters$ | async as voters; else skeleton">
+      <zx-stats-top-table
+        [title]="'stats.top_title.voters' | translate"
+        [unitKey]="voters.unitKey"
+        [users]="voters.users"
+      ></zx-stats-top-table>
+    </ng-container>
+  </div>
+
+  <div #commentsBlock>
+    <ng-container *ngIf="comments$ | async as comments; else skeleton">
+      <zx-stats-top-table
+        [title]="'stats.top_title.comments' | translate"
+        [unitKey]="comments.unitKey"
+        [users]="comments.users"
+      ></zx-stats-top-table>
+    </ng-container>
+  </div>
+
+  <div #tagsBlock>
+    <ng-container *ngIf="tags$ | async as tags; else skeleton">
+      <zx-stats-top-table
+        [title]="'stats.top_title.tags' | translate"
+        [unitKey]="tags.unitKey"
+        [users]="tags.users"
+      ></zx-stats-top-table>
+    </ng-container>
+  </div>
+</zx-grid>
 
 <ng-template #skeleton>
-  <zx-stats-section-skeleton></zx-stats-section-skeleton>
+  <zx-stats-section-skeleton variant="top-table" [rowCount]="20"></zx-stats-section-skeleton>
 </ng-template>

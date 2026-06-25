@@ -173,9 +173,18 @@ A standalone listing module with built-in filtering. Does NOT contain letter chi
 - **`items`** property — content scope: `'music'` (music authors), `'graphics'` (graphics authors), `'all'` (both).
 - Letter filtering uses a URL parameter: `letter:s/` → `getParameter('letter')`. The letter is NOT a child entity — it is just a query filter passed to the API.
 - The Angular component `<zx-author-browser>` receives `element-id`, `letter`, and `items` as HTML attributes.
-- API endpoint: `/authorlist/` — accepts `letter`, `elementId`, `types`, `search`, `countryId`, `cityId`, pagination params.
+- API endpoint: `/authorlist/` — accepts `letter`, `elementId`, `types`, `search`, `countryId`, `cityId`, pagination params; `action=filters` returns country/city options, `action=active` returns recently-active authors. See `api/authorlist.yaml`.
 
 URL example: `https://zxart.ee/rus/grafika/avtory/filter/letter:s/`
+
+#### Unified authors page: `<zx-authors-page>`
+
+A folder whose content children are `authorsList` modules including one of `type='letters'` is rendered as a single Angular component instead of stacking separate modules. This covers the graphics and music authors pages (e.g. `rus/grafika/avtory/`, `rus/muzyka/avtory/`) across all languages.
+
+- `project/templates/public/folder.content.tpl` detects the `letters` child (anchor) and renders one `<zx-authors-page element-id items>`; folders without a `letters` child fall back to the default per-child loop.
+- `element-id` is the anchor (letters) element id (used only as the API guard), `items` is `'graphics'` or `'music'`.
+- The component renders four sections — active, top (rating sort), latest (`id,desc`), and the full filterable list — reusing `<zx-author-browser>` (selector `zx-author-browser-view`) and `<zx-active-authors>` (selector `zx-active-authors-view`).
+- `<zx-active-authors>` is a self-contained, reusable section (graphics or music via `items`). It fetches via `GET /authorlist/?action=active&items=` (`AuthorListService::getActive()` — recent-activity query via `ApiQueriesManager`, returns `ActiveAuthorDto`) and renders the names in a responsive multi-column layout.
 
 #### authorsCatalogue + letter entities
 

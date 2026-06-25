@@ -1,3 +1,5 @@
+import {CommentAuthorDto} from '../../comments/models/comment.dto';
+
 export interface StatsOverview {
   prods: number;
   releases: number;
@@ -13,7 +15,6 @@ export interface StatsYearSeries {
   years: number[];
   all: number[];
   rated: number[];
-  avg: number[];
 }
 
 export interface StatsDistribution {
@@ -28,11 +29,29 @@ export interface StatsDailySeries {
   data: number[];
 }
 
-export interface StatsTopUser {
-  name: string;
-  url: string | null;
-  badge: string | null;
+export interface StatsTopUser extends CommentAuthorDto {
   count: number;
+}
+
+export interface StatsCategorySummary {
+  totalWorks: number;
+  peakYear: number;
+  dailyTotal: number;
+}
+
+export interface StatsDistributionsSection {
+  years: number[];
+  distributions: StatsDistribution[];
+}
+
+export interface StatsDistributionBlock {
+  years: number[];
+  distribution: StatsDistribution;
+}
+
+export interface StatsTopUsersSection {
+  unitKey: string;
+  users: StatsTopUser[];
 }
 
 export interface StatsCategorySection {

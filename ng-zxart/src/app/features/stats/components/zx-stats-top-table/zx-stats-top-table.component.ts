@@ -3,10 +3,10 @@ import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
 import {ZxMedalComponent, ZxMedalVariant} from '../../../../shared/ui/zx-medal/zx-medal.component';
-import {ZxBadgeComponent} from '../../../../shared/ui/zx-badge/zx-badge.component';
+import {ZxUserComponent} from '../../../../entities/zx-user/zx-user.component';
 import {StatsTopUser} from '../../models/stats.models';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
-import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
+import {StatsNumberPipe} from '../../pipes/stats-number.pipe';
 
 @Component({
   selector: 'zx-stats-top-table',
@@ -16,9 +16,9 @@ import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.compo
     TranslateModule,
     ZxTableComponent,
     ZxMedalComponent,
-    ZxBadgeComponent,
+    ZxUserComponent,
     TextDirective,
-    ZxInlineComponent,
+    StatsNumberPipe,
   ],
   templateUrl: './zx-stats-top-table.component.html',
   styleUrl: './zx-stats-top-table.component.scss',
