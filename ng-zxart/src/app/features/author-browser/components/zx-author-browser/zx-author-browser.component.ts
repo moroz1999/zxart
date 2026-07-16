@@ -1,4 +1,5 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit,} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit,} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
@@ -43,6 +44,8 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 })
 export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
   @Input() elementId = 0;
+  /** Legacy mounts sync state to `window.location`/`pushState`; the SPA route disables that. */
+  @Input() manageUrl = true;
   /** 'full' shows filters, pagination and URL state; 'simple' shows table only */
   @Input() mode: 'full' | 'simple' = 'full';
   /** Override default sorting (e.g. 'graphicsRating,desc' for best-authors list) */
@@ -73,6 +76,7 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
 
   private readonly subscriptions = new Subscription();
   private readonly searchSubject = new Subject<string>();
+  private readonly route = inject(ActivatedRoute, {optional: true});
 
   constructor(
     private readonly authorBrowserService: AuthorBrowserService,
@@ -80,13 +84,18 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
     private readonly translateService: TranslateService,
   ) {}
 
+  /** SPA route mode: the content-type filter (`items`) comes from the router query params. */
+  private get useRouter(): boolean {
+    return !this.manageUrl && this.route != null;
+  }
+
   ngOnInit(): void {
     if (this.mode === 'full') {
-      this.urlBase = this.parseUrlBase();
-      this.currentPage = this.parsePageFromUrl();
-      this.parseFiltersFromUrl();
-
-      this.loadFilterOptions();
+      if (this.manageUrl) {
+        this.urlBase = this.parseUrlBase();
+        this.currentPage = this.parsePageFromUrl();
+        this.parseFiltersFromUrl();
+      }
 
       this.subscriptions.add(
         this.searchSubject.pipe(
@@ -130,6 +139,19 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
           },
         }),
       );
+
+      if (this.useRouter) {
+        // SPA route: the `items` content-type filter is driven by the query params.
+        this.subscriptions.add(this.route!.queryParams.subscribe(params => {
+          this.items = params['items'] ?? '';
+          this.currentPage = 1;
+          this.loadFilterOptions();
+          this.loadPage();
+        }));
+        return;
+      }
+
+      this.loadFilterOptions();
     }
 
     this.loadPage();
@@ -180,13 +202,7 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
   }
 
   private loadPage(): void {
-    if (!this.elementId) {
-      this.loading = false;
-      this.error = true;
-      this.cdr.markForCheck();
-      return;
-    }
-
+    // elementId 0 = SPA collection mount: the author list resolves globally on the backend.
     this.loading = true;
     this.error = false;
     const pageLimit = Number(this.limit) || 50;
@@ -260,7 +276,7 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
   }
 
   private updateUrl(): void {
-    if (this.mode !== 'full') {
+    if (this.mode !== 'full' || !this.manageUrl) {
       return;
     }
     const pagePath = this.currentPage > 1

@@ -1,0 +1,11 @@
+<div class="zx-file-upload">
+  <div *ngIf="displayName" class="zx-file-upload__current">
+    <span class="zx-file-upload__name">{{ displayName }}</span>
+    <zx-button size="sm" color="danger" (click)="onRemove()">×</zx-button>
+  </div>
+
+  <label class="zx-file-upload__picker">
+    <input type="file" [accept]="accept" (change)="onFileSelected($event)" hidden />
+    <span class="zx-file-upload__button">{{ 'common.choose-file' | translate }}</span>
+  </label>
+</div>

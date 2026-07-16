@@ -1,0 +1,31 @@
+<section class="playlists">
+  <h1 class="playlists__title">{{ 'playlists.title' | translate }}</h1>
+
+  <div *ngIf="loading" class="playlists__loading">
+    <zx-spinner size="lg"></zx-spinner>
+  </div>
+
+  <ng-container *ngIf="!loading">
+    <div class="playlists__create">
+      <zx-input [(ngModel)]="newTitle" [placeholder]="'playlists.new-placeholder' | translate" (keyup.enter)="onCreate()"></zx-input>
+      <zx-button color="primary" [disabled]="busy" (click)="onCreate()">{{ 'playlists.create' | translate }}</zx-button>
+    </div>
+
+    <ul class="playlists__list">
+      <li *ngFor="let playlist of playlists; trackBy: trackById" class="playlists__item">
+        <ng-container *ngIf="editingId === playlist.id; else view">
+          <zx-input [(ngModel)]="editingTitle" (keyup.enter)="saveRename(playlist.id)"></zx-input>
+          <zx-button size="sm" color="primary" [disabled]="busy" (click)="saveRename(playlist.id)">{{ 'playlists.save' | translate }}</zx-button>
+          <zx-button size="sm" color="transparent" (click)="cancelRename()">{{ 'playlists.cancel' | translate }}</zx-button>
+        </ng-container>
+        <ng-template #view>
+          <a class="playlists__name" [routerLink]="['/playlist', playlist.id]">{{ playlist.title }}</a>
+          <zx-button size="sm" color="secondary" (click)="startRename(playlist)">{{ 'playlists.rename' | translate }}</zx-button>
+          <zx-button size="sm" color="danger" [disabled]="busy" (click)="onDelete(playlist.id)">{{ 'playlists.delete' | translate }}</zx-button>
+        </ng-template>
+      </li>
+    </ul>
+
+    <p *ngIf="!playlists.length" class="playlists__empty">{{ 'playlists.empty' | translate }}</p>
+  </ng-container>
+</section>

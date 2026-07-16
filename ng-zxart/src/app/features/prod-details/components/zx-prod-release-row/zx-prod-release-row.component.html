@@ -32,12 +32,12 @@
   <td class="release-row__title">
     <zx-stack spacing="xs">
       <zx-inline gap="xs" align="baseline">
-        <a [href]="release.url" class="release-row__title-link" appText="body" tone="strong">{{ release.title }}</a>
+        <a [routerLink]="release.url" class="release-row__title-link" appText="body" tone="strong">{{ release.title }}</a>
         <span *ngIf="release.isRealtime" class="release-row__realtime" [title]="release.party?.compoLabel || ''" aria-hidden="true">⏱</span>
       </zx-inline>
       <div *ngIf="release.releaseBy.length" class="release-row__releaseby" appText="body" tone="muted">
         <ng-container *ngFor="let group of release.releaseBy; let last = last">
-          <a [href]="group.url">{{ group.title }}</a><ng-container *ngIf="!last">, </ng-container>
+          <a [routerLink]="group.url">{{ group.title }}</a><ng-container *ngIf="!last">, </ng-container>
         </ng-container>
       </div>
       <div *ngIf="release.description" class="release-row__description" appText="bodySm" tone="muted" [innerHTML]="release.description"></div>
@@ -45,7 +45,7 @@
   </td>
 
   <td class="release-row__year">
-    <a *ngIf="release.year > 0" appText="body" [href]="release.url">{{ release.year }}</a>
+    <a *ngIf="release.year > 0" appText="body" [routerLink]="release.url">{{ release.year }}</a>
   </td>
 
   <td class="release-row__version" appText="body" tone="muted">{{ release.version }}</td>

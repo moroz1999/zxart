@@ -36,10 +36,11 @@ import {ZxPictureDetailsSkeletonComponent} from '../zx-picture-details-skeleton/
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {RatingsListComponent} from '../../../ratings/components/ratings-list/ratings-list.component';
 
-@Component({
-  selector: 'zx-picture-details',
+
+import {RouterLink} from '@angular/router';@Component({
+  selector: 'zx-picture-details-view',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     ZxBreadcrumbsComponent,

@@ -1,0 +1,26 @@
+:host {
+  display: block;
+}
+
+.zx-category-tree-select {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 320px;
+  overflow: auto;
+  border: var(--zx-tags-input-dropdown-border);
+  border-radius: var(--zx-tags-input-dropdown-radius);
+  padding: var(--zx-tags-input-dropdown-padding);
+  background: var(--zx-tags-input-dropdown-bg);
+}
+
+.zx-category-tree-select__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.zx-category-tree-select__title {
+  flex: 1;
+}

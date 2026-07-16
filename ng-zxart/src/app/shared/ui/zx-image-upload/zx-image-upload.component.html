@@ -1,0 +1,9 @@
+<div class="zx-image-upload">
+  <img *ngIf="displayUrl" [src]="displayUrl" class="zx-image-upload__preview" alt="" />
+  <div class="zx-image-upload__controls">
+    <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+    <zx-button *ngIf="displayUrl" size="sm" color="danger" (click)="onRemove()">
+      {{ 'common.remove' | translate }}
+    </zx-button>
+  </div>
+</div>

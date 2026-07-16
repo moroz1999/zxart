@@ -1,4 +1,5 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
@@ -23,6 +24,7 @@ import {
   PictureSearchSortOrder,
 } from '../../models/picture-search-filters';
 import {buildPictureSearchPath, parsePictureSearchUrl} from '../../models/picture-search-url';
+import {paramsToPictureSearchFilters, pictureSearchFiltersToParams} from '../../models/picture-search-query-params';
 import {PictureSearchLocation} from '../../models/picture-search-response';
 import {ZX_PICTURE_TYPES} from '../../models/zx-picture-types';
 import {ZxSelectOption} from '../../../../shared/ui/zx-select/zx-select.component';
@@ -137,8 +139,14 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
   readonly galleryId = 'picture-search';
   readonly skeletonItems = [0, 1, 2, 3, 4, 5];
 
+  /** Legacy embeds sync filter state to the slug path; the SPA route uses router query params. */
+  @Input() manageUrl = true;
+
   protected urlBase = '/';
   private appliedFilters: PictureSearchFilters = createDefaultPictureSearchFilters();
+
+  private readonly router = inject(Router, {optional: true});
+  private readonly route = inject(ActivatedRoute, {optional: true});
 
   private readonly subscriptions = new Subscription();
   private readonly tagsIncludeQuery = new Subject<string>();
@@ -159,16 +167,6 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadIcons();
-    const parsed = parsePictureSearchUrl(window.location.pathname);
-    this.urlBase = parsed.urlBase;
-    this.filters = parsed.filters;
-    this.appliedFilters = {...parsed.filters};
-    this.currentPage = parsed.page;
-
-    this.tagsIncludeItems = this.filters.tagsInclude.map(title => this.toTagItem(title));
-    this.tagsExcludeItems = this.filters.tagsExclude.map(title => this.toTagItem(title));
-    this.restoreLocations();
-
     this.observeMobile();
     this.buildStaticOptions();
     this.connectTagSearch(this.tagsIncludeQuery, results => {
@@ -188,11 +186,38 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
       this.cityLoading = false;
     }, () => this.cityLoading = true);
 
-    this.load();
+    if (this.useRouter) {
+      this.subscriptions.add(this.route!.queryParams.subscribe(params => {
+        const parsed = paramsToPictureSearchFilters(params);
+        this.applyState(parsed.filters, parsed.page);
+      }));
+    } else {
+      const parsed = parsePictureSearchUrl(window.location.pathname);
+      this.urlBase = parsed.urlBase;
+      this.applyState(parsed.filters, parsed.page);
+    }
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  /** SPA route mode: filter state lives in / comes from the router query params. */
+  private get useRouter(): boolean {
+    return !this.manageUrl && this.router != null && this.route != null;
+  }
+
+  /** Applies a parsed filter state (from the URL) to the form and reloads results. */
+  private applyState(filters: PictureSearchFilters, page: number): void {
+    this.filters = filters;
+    this.appliedFilters = {...filters};
+    this.currentPage = page;
+    this.tagsIncludeItems = filters.tagsInclude.map(title => this.toTagItem(title));
+    this.tagsExcludeItems = filters.tagsExclude.map(title => this.toTagItem(title));
+    this.countryItems = [];
+    this.cityItems = [];
+    this.restoreLocations();
+    this.load();
   }
 
   get activeFiltersCount(): number {
@@ -200,7 +225,7 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
   }
 
   get paginationUrlBase(): string {
-    return buildPictureSearchPath(this.urlBase, this.appliedFilters, 1);
+    return this.useRouter ? '' : buildPictureSearchPath(this.urlBase, this.appliedFilters, 1);
   }
 
   get rangeStart(): number {
@@ -217,8 +242,12 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.appliedFilters = {...this.filters};
     this.currentPage = 1;
-    this.updateUrl();
-    this.load();
+    if (this.useRouter) {
+      this.navigateWithParams();
+    } else {
+      this.updateUrl();
+      this.load();
+    }
   }
 
   onReset(): void {
@@ -231,8 +260,12 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
 
   onPageChange(page: number): void {
     this.currentPage = page;
-    this.updateUrl();
-    this.load();
+    if (this.useRouter) {
+      this.navigateWithParams();
+    } else {
+      this.updateUrl();
+      this.load();
+    }
   }
 
   toggleFilters(): void {
@@ -340,6 +373,12 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
   private updateUrl(): void {
     const newPath = buildPictureSearchPath(this.urlBase, this.appliedFilters, this.currentPage);
     window.history.pushState(null, '', newPath);
+  }
+
+  /** SPA route mode: write the applied filters + page to the router query params. */
+  private navigateWithParams(): void {
+    const queryParams: Params = pictureSearchFiltersToParams(this.appliedFilters, this.currentPage);
+    this.router!.navigate([], {relativeTo: this.route!, queryParams});
   }
 
   private restoreLocations(): void {

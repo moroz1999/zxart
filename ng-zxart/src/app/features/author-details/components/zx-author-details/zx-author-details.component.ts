@@ -26,7 +26,6 @@ import {ZxAuthorMusicTabComponent} from '../zx-author-music-tab/zx-author-music-
 import {ZxAuthorSoftwareTabComponent} from '../zx-author-software-tab/zx-author-software-tab.component';
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
-
 type AuthorTabId = 'best' | 'gfx' | 'music' | 'software' | 'collaborators' | 'mentions' | 'discussion';
 
 @Component({
@@ -62,6 +61,8 @@ type AuthorTabId = 'best' | 'gfx' | 'music' | 'software' | 'collaborators' | 'me
 })
 export class ZxAuthorDetailsComponent implements OnInit {
   @Input() elementId = 0;
+  /** Active tab id from the route (`author/:id/:tab`); null = default tab. */
+  @Input() activeTab: string | null = null;
   @ViewChild(ZxTabsComponent, {read: ElementRef}) private tabsRef!: ElementRef<HTMLElement>;
 
   core$: Observable<AuthorCoreDto | null> = of(null);
@@ -76,17 +77,13 @@ export class ZxAuthorDetailsComponent implements OnInit {
   }
 
   getInitialTabIndex(core: AuthorCoreDto): number {
-    const requestedTab = this.getRequestedTabId();
-    const index = requestedTab ? this.getTabs(core).indexOf(requestedTab as AuthorTabId) : -1;
+    const index = this.activeTab ? this.getTabs(core).indexOf(this.activeTab as AuthorTabId) : -1;
 
     return index >= 0 ? index : 0;
   }
 
   getTabHref(tabId: AuthorTabId): string {
-    const path = window.location.pathname.replace(/\/tab:[^/]+(?=\/|$)/, '').replace(/\/page:\d+(?=\/|$)/, '');
-    const normalizedPath = path.endsWith('/') ? path : `${path}/`;
-
-    return `${normalizedPath}tab:${encodeURIComponent(tabId)}/`;
+    return `/author/${this.elementId}/${encodeURIComponent(tabId)}`;
   }
 
   private getTabs(core: AuthorCoreDto): AuthorTabId[] {
@@ -106,11 +103,5 @@ export class ZxAuthorDetailsComponent implements OnInit {
 
   onTabChange(_: number): void {
     scrollToElementIfHidden(this.tabsRef?.nativeElement);
-  }
-
-  private getRequestedTabId(): string | null {
-    const match = window.location.pathname.match(/\/tab:([^/]+)(?=\/|$)/);
-
-    return match ? decodeURIComponent(match[1]) : null;
   }
 }

@@ -128,6 +128,7 @@ class PictureSearch extends LoggedControllerApplication
             realtimeOnly: $this->getFlagParameter('realtime'),
             inspirationOnly: $this->getFlagParameter('inspiration'),
             stagesOnly: $this->getFlagParameter('stages'),
+            fromGameOnly: $this->getFlagParameter('fromGame'),
             tagsInclude: $this->getStringListParameter('tagsInclude'),
             tagsExclude: $this->getStringListParameter('tagsExclude'),
             authorCountryIds: $this->getIdListParameter('authorCountry'),

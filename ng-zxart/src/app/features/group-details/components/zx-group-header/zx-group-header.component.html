@@ -12,8 +12,7 @@
 
       <zx-group-editing-controls
         [elementId]="core.id"
-        [entityType]="core.entityType"
-        [groupUrl]="core.url">
+        [entityType]="core.entityType">
       </zx-group-editing-controls>
 
       <zx-inline *ngIf="core.nature.length" gap="sm" [wrap]="true">
@@ -62,7 +61,7 @@
       <span class="gp-meta-row__label">{{ 'group-details.header.aliases' | translate }}:</span>
       <div class="gp-aliases">
         <span *ngFor="let alias of core.aliases; let last = last" class="gp-aliases__item">
-          <a [href]="alias.url">{{ alias.title }}</a><ng-container *ngIf="!last">,</ng-container>
+          <a [routerLink]="alias.url">{{ alias.title }}</a><ng-container *ngIf="!last">,</ng-container>
         </span>
       </div>
     </div>

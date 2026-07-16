@@ -1,0 +1,18 @@
+<div class="zx-file-selector">
+  <div *ngIf="visibleFiles.length" class="zx-file-selector__existing">
+    <div *ngFor="let file of visibleFiles; trackBy: trackById" class="zx-file-selector__item">
+      <img *ngIf="file.isImage && file.imageUrl" [src]="file.imageUrl" [alt]="file.title" class="zx-file-selector__thumb" />
+      <span class="zx-file-selector__name">{{ file.title }}</span>
+      <zx-button size="sm" color="danger" (click)="onRemoveExisting(file.id)">×</zx-button>
+    </div>
+  </div>
+
+  <label class="zx-file-selector__picker">
+    <input type="file" multiple [accept]="accept" (change)="onFilesSelected($event)" hidden />
+    <span class="zx-file-selector__button">{{ 'common.choose-file' | translate }}</span>
+  </label>
+
+  <ul *ngIf="stagedFiles.length" class="zx-file-selector__staged">
+    <li *ngFor="let file of stagedFiles; trackBy: trackByName">{{ file.name }}</li>
+  </ul>
+</div>

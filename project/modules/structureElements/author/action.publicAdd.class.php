@@ -40,7 +40,7 @@ class publicAddAuthor extends structureElementAction
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'author', 'deleteFile', 'allow');
             $user->refreshPrivileges();
 
-            $controller->redirect($structureElement->URL);
+            $this->respondFormSaved($controller, $structureElement); return;
         }
         $structureElement->setViewName('form');
     }

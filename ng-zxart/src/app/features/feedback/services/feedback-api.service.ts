@@ -7,13 +7,13 @@ import {FeedbackRequest, FeedbackResponse} from '../models/feedback-request';
   providedIn: 'root',
 })
 export class FeedbackApiService {
-  private readonly apiUrl = '/feedback/';
+  private readonly apiUrl = '/feedback-data/';
 
   constructor(private readonly http: HttpClient) {}
 
   submit(elementId: number, request: FeedbackRequest): Observable<FeedbackResponse> {
-    return this.http.post<FeedbackResponse>(this.apiUrl, request, {
-      params: {id: String(elementId)},
-    });
+    // elementId 0 = SPA mount: the backend resolves the feedback form by type.
+    const params: Record<string, string> = elementId > 0 ? {id: String(elementId)} : {};
+    return this.http.post<FeedbackResponse>(this.apiUrl, request, {params});
   }
 }

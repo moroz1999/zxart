@@ -1,0 +1,16 @@
+<div class="zx-multi-entity-autocomplete">
+  <div *ngIf="items.length" class="zx-multi-entity-autocomplete__items">
+    <div *ngFor="let item of items" class="zx-multi-entity-autocomplete__item">
+      <span class="zx-multi-entity-autocomplete__title">{{ item.title }}</span>
+      <zx-button *ngIf="!disabled" size="sm" color="danger" (click)="onRemove(item.id)">×</zx-button>
+    </div>
+  </div>
+
+  <zx-entity-autocomplete
+    *ngIf="!disabled"
+    [ngModel]="picked"
+    (ngModelChange)="onSelected($event)"
+    [types]="types"
+    [placeholder]="placeholder"
+  ></zx-entity-autocomplete>
+</div>

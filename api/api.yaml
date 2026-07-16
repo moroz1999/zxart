@@ -3,10 +3,10 @@ info:
   title: ZxArt API
   version: 1.0.0
 paths:
-  /comments/:
-    $ref: 'comments.yaml#/paths/~1comments~1'
-  /comments/id:{id}/:
-    $ref: 'comments.yaml#/paths/~1comments~1id:{id}~1'
+  /comments-data/:
+    $ref: 'comments.yaml#/paths/~1comments-data~1'
+  /comments-data/id:{id}/:
+    $ref: 'comments.yaml#/paths/~1comments-data~1id:{id}~1'
   /radio/?action=next-tune:
     $ref: 'radio.yaml#/paths/~1radio~1?action=next-tune'
   /tunes/?action=play:
@@ -61,8 +61,8 @@ paths:
     $ref: 'prod-related-prods.yaml#/paths/~1prod-compilations~1'
   /prod-series/:
     $ref: 'prod-related-prods.yaml#/paths/~1prod-series~1'
-  /geo/:
-    $ref: 'geo.yaml#/paths/~1geo~1'
+  /geo-data/:
+    $ref: 'geo.yaml#/paths/~1geo-data~1'
 components:
   schemas:
     CommentDto:

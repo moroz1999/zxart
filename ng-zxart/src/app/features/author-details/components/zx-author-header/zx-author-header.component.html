@@ -11,8 +11,7 @@
 
       <zx-author-editing-controls
         [elementId]="core.id"
-        [entityType]="core.entityType"
-        [authorUrl]="core.url">
+        [entityType]="core.entityType">
       </zx-author-editing-controls>
 
       <ng-container *ngFor="let badge of core.badges">
@@ -60,7 +59,7 @@
 
     <div class="ap-meta-row" *ngIf="core.primaryAuthor">
       <span class="ap-meta-row__label">{{ 'author-details.header.primary-author' | translate }}:</span>
-      <a [href]="core.primaryAuthor.url">{{ core.primaryAuthor.title }}</a>
+      <a [routerLink]="core.primaryAuthor.url">{{ core.primaryAuthor.title }}</a>
     </div>
 
     <div class="ap-meta-row" *ngIf="core.groups.length">
@@ -76,7 +75,7 @@
       <span class="ap-meta-row__label">{{ 'author-details.header.aliases' | translate }}:</span>
       <div class="ap-aliases">
         <span *ngFor="let alias of visibleAliases; let last = last" class="ap-aliases__item">
-          <a [href]="alias.url">{{ alias.title }}</a><ng-container *ngIf="!last">,</ng-container>
+          <a [routerLink]="alias.url">{{ alias.title }}</a><ng-container *ngIf="!last">,</ng-container>
         </span>
         <zx-button
           *ngIf="hiddenAliasCount > 0 && !showAllAliases"

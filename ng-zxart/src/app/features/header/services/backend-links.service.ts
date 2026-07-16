@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, Observable, of, pairwise, startWith} from 'rxjs';
 import {catchError, distinctUntilChanged, filter, shareReplay, switchMap} from 'rxjs/operators';
 import {BackendLinks} from '../models/backend-links';
-import {CurrentLanguageService} from './current-language.service';
+import {LanguageService} from '../../settings/services/language.service';
 import {LocalStorageService} from '../../../shared/services/local-storage.service';
 import {CurrentUserService} from '../../../shared/services/current-user.service';
 
@@ -18,7 +18,7 @@ export class BackendLinksService {
   private loadedCode: string | null = null;
   private readonly cachedLanguageCodes = new Set<string>();
 
-  readonly links$: Observable<BackendLinks> = this.currentLanguageService.languageCode$.pipe(
+  readonly links$: Observable<BackendLinks> = this.languageService.languageCode$.pipe(
     distinctUntilChanged(),
     switchMap(code => {
       if (this.loadedCode !== code) {
@@ -38,7 +38,7 @@ export class BackendLinksService {
 
   constructor(
     private readonly http: HttpClient,
-    private readonly currentLanguageService: CurrentLanguageService,
+    private readonly languageService: LanguageService,
     private readonly localStorage: LocalStorageService,
     private readonly currentUserService: CurrentUserService,
   ) {

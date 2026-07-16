@@ -1,4 +1,5 @@
-import {ChangeDetectorRef, Directive, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Directive, inject, Input, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
 import {ZxSelectOption} from './ui/zx-select/zx-select.component';
@@ -15,6 +16,12 @@ const SORT_TRANSLATION_PREFIX = 'prods-list.sorting.';
 @Directive()
 export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
   @Input() elementId = 0;
+  /**
+   * Legacy web-component mounts manage pagination through `window.location` +
+   * `history.pushState` (`page:N/`). When mounted by the SPA route this is off:
+   * page/sorting live in the router query params.
+   */
+  @Input() manageUrl = true;
 
   loading = true;
   error = false;
@@ -29,15 +36,21 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
   protected readonly itemsPerPage: number = 50;
   protected urlBase = '';
 
+  protected readonly router = inject(Router, {optional: true});
+  protected readonly route = inject(ActivatedRoute, {optional: true});
+
   protected constructor(
     protected readonly translateService: TranslateService,
     protected readonly cdr: ChangeDetectorRef,
   ) {}
 
+  /** SPA route mode: page + sorting come from / go to the router query params. */
+  protected get useRouter(): boolean {
+    return !this.manageUrl && this.router != null && this.route != null;
+  }
+
   ngOnInit(): void {
     this.onBeforeInit();
-    this.urlBase = this.parseUrlBase();
-    this.currentPage = this.parsePageFromUrl();
     this.subscriptions.add(
       this.translateService.stream(this.sortKeys.map(k => SORT_TRANSLATION_PREFIX + k)).subscribe(translations => {
         this.sortingOptions = this.sortKeys.map(k => ({
@@ -47,7 +60,18 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       })
     );
-    this.loadPage();
+
+    if (this.useRouter) {
+      this.subscriptions.add(this.route!.queryParams.subscribe(params => {
+        this.currentPage = params['page'] ? +params['page'] : 1;
+        this.sorting = params['sorting'] ?? 'title,asc';
+        this.loadPage();
+      }));
+    } else {
+      this.urlBase = this.parseUrlBase();
+      this.currentPage = this.parsePageFromUrl();
+      this.loadPage();
+    }
   }
 
   ngOnDestroy(): void {
@@ -57,14 +81,34 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
   onSortingChange(value: string): void {
     this.sorting = value;
     this.currentPage = 1;
-    this.updateUrl(1);
-    this.loadPage();
+    if (this.useRouter) {
+      this.navigateWithParams();
+    } else {
+      this.updateUrl(1);
+      this.loadPage();
+    }
   }
 
   onPageChange(page: number): void {
     this.currentPage = page;
-    this.updateUrl(page);
-    this.loadPage();
+    if (this.useRouter) {
+      this.navigateWithParams();
+    } else {
+      this.updateUrl(page);
+      this.loadPage();
+    }
+  }
+
+  /** SPA route mode: write page + sorting to the URL; the queryParams subscription reloads. */
+  private navigateWithParams(): void {
+    const queryParams: Params = {};
+    if (this.currentPage > 1) {
+      queryParams['page'] = this.currentPage;
+    }
+    if (this.sorting && this.sorting !== 'title,asc') {
+      queryParams['sorting'] = this.sorting;
+    }
+    this.router!.navigate([], {relativeTo: this.route!, queryParams});
   }
 
   protected onBeforeInit(): void {}
@@ -89,12 +133,7 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
   }
 
   protected loadPage(): void {
-    if (!this.elementId) {
-      this.loading = false;
-      this.error = true;
-      this.cdr.markForCheck();
-      return;
-    }
+    // elementId 0 = SPA collection mount: the backend resolves the catalogue root by type.
     this.loading = true;
     this.error = false;
     const start = (this.currentPage - 1) * this.itemsPerPage;

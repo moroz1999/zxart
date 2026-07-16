@@ -48,13 +48,12 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TagsListComponent} from '../../../../shared/lib/tags-list/tags-list.component';
 import {ZxProdInstructionsSectionComponent} from '../zx-prod-instructions-section/zx-prod-instructions-section.component';
-
 type ProdMainTabId = 'releases' | 'media' | 'links' | 'discussion';
 type ProdMediaTabId = 'description' | 'inlays' | 'maps' | 'rzx' | 'graphics' | 'music' | 'instructions';
 type ProdLinksTabId = 'articles' | 'series' | 'compilations';
 
 @Component({
-  selector: 'zx-prod-details',
+  selector: 'zx-prod-details-view',
   standalone: true,
   imports: [
     CommonModule,
@@ -99,6 +98,8 @@ type ProdLinksTabId = 'articles' | 'series' | 'compilations';
 })
 export class ZxProdDetailsComponent implements OnInit {
   @Input() elementId = 0;
+  /** Active tab id from the route (`prod/:id/:tab`); null = default tab. */
+  @Input() activeTab: string | null = null;
 
   core$: Observable<ProdCoreDto | null> = of(null);
 
@@ -153,14 +154,7 @@ export class ZxProdDetailsComponent implements OnInit {
   }
 
   private getTabHref(tabId: string): string {
-    const url = this.getCurrentUrl();
-    url.pathname = this.replaceTabPath(url.pathname, tabId);
-    url.searchParams.delete('tab');
-    url.searchParams.delete('media');
-    url.searchParams.delete('links');
-    url.hash = '';
-
-    return this.formatUrl(url);
+    return `/prod/${this.elementId}/${encodeURIComponent(tabId)}`;
   }
 
   private getMainTabs(core: ProdCoreDto): ProdMainTabId[] {
@@ -224,23 +218,6 @@ export class ZxProdDetailsComponent implements OnInit {
   }
 
   private getRequestedTabId(): string | null {
-    const match = window.location.pathname.match(/\/tabs:([^/]+)(?=\/|$)/);
-
-    return match ? decodeURIComponent(match[1]) : null;
-  }
-
-  private getCurrentUrl(): URL {
-    return new URL(window.location.href);
-  }
-
-  private replaceTabPath(path: string, tabId: string): string {
-    const cleanPath = path.replace(/\/tabs:[^/]+(?=\/|$)/, '');
-    const normalizedPath = cleanPath.endsWith('/') ? cleanPath : `${cleanPath}/`;
-
-    return `${normalizedPath}tabs:${encodeURIComponent(tabId)}/`;
-  }
-
-  private formatUrl(url: URL): string {
-    return `${url.pathname}${url.search}${url.hash}`;
+    return this.activeTab;
   }
 }

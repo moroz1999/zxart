@@ -27,6 +27,7 @@ use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArt\Shared\EntityType;
+use ZxArt\Urls\EntityUrlResolver;
 
 readonly class AuthorDetailsService
 {
@@ -35,6 +36,7 @@ readonly class AuthorDetailsService
         private breadcrumbsManager $breadcrumbsManager,
         private AuthorshipRepository $authorshipRepository,
         private AuthorProdsRepository $authorProdsRepository,
+        private EntityUrlResolver $entityUrlResolver,
     ) {
     }
 
@@ -65,7 +67,7 @@ readonly class AuthorDetailsService
             entityType: ($author instanceof authorElement ? EntityType::Author : EntityType::AuthorAlias)->value,
             title: $this->resolveTitle($author),
             realName: $profileAuthor instanceof authorElement ? (string)$profileAuthor->realName : '',
-            url: (string)$author->getUrl(),
+            url: $this->entityUrlResolver->resolve($author) ?? (string)$author->getUrl(),
             parentUrl: $parentUrl,
             parentTitle: $parentTitle,
             primaryAuthor: $this->buildPrimaryAuthor($author, $profileAuthor),
@@ -122,7 +124,7 @@ readonly class AuthorDetailsService
         return new AuthorAliasRefDto(
             id: (int)$profileAuthor->id,
             title: html_entity_decode((string)$profileAuthor->getTitle(), ENT_QUOTES),
-            url: (string)$profileAuthor->getUrl(),
+            url: $this->entityUrlResolver->resolve($profileAuthor) ?? (string)$profileAuthor->getUrl(),
         );
     }
 
@@ -166,7 +168,7 @@ readonly class AuthorDetailsService
             $groups[] = new AuthorGroupDto(
                 id: (int)$element->id,
                 title: html_entity_decode((string)$element->title, ENT_QUOTES),
-                url: (string)$element->getUrl(),
+                url: $this->entityUrlResolver->resolve($element) ?? (string)$element->getUrl(),
                 years: $years,
             );
         }
@@ -187,7 +189,7 @@ readonly class AuthorDetailsService
             $aliases[] = new AuthorAliasRefDto(
                 id: (int)$alias->id,
                 title: html_entity_decode((string)$alias->title, ENT_QUOTES),
-                url: (string)$alias->getUrl(),
+                url: $this->entityUrlResolver->resolve($alias) ?? (string)$alias->getUrl(),
             );
         }
         return $aliases;

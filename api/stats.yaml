@@ -1,5 +1,5 @@
 paths:
-  /stats/:
+  /stats-data/:
     get:
       summary: Statistics section overview, per-category sections and top users
       parameters:

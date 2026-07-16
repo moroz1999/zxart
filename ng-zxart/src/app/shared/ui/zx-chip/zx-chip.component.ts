@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
-
+import {RouterLink} from '@angular/router';
+import {isSpaUrl} from '../../utils/spa-url';
 export type ZxChipVariant = 'opaque' | 'filled';
 export type ZxChipColor = 'neutral' | 'primary' | 'artist' | 'code' | 'intro';
 export type ZxChipSize = 'sm' | 'md';
@@ -8,7 +9,7 @@ export type ZxChipSize = 'sm' | 'md';
 @Component({
   selector: 'zx-chip',
   standalone: true,
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, RouterLink],
   templateUrl: './zx-chip.component.html',
   styleUrl: './zx-chip.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,4 +28,6 @@ export class ZxChipComponent {
   }
 
   get isLink(): boolean { return this.href !== null; }
+
+  get isInternal(): boolean { return isSpaUrl(this.href); }
 }

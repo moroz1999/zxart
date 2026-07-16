@@ -5,10 +5,11 @@ import {CollaboratorGroupCardData} from './collaborator-group-card.model';
 import {TextDirective} from '../../shared/ui/typography/directives/text.directive';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 
-@Component({
+
+import {RouterLink} from '@angular/router';@Component({
   selector: 'zx-collaborator-group-card',
   standalone: true,
-  imports: [CommonModule, TranslateModule, TextDirective, HeadingDirective],
+  imports: [RouterLink, CommonModule, TranslateModule, TextDirective, HeadingDirective],
   templateUrl: './zx-collaborator-group-card.component.html',
   styleUrl: './zx-collaborator-group-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

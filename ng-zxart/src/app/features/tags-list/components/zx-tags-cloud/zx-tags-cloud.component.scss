@@ -1,0 +1,25 @@
+:host {
+  display: block;
+  padding: var(--space-16);
+}
+
+.tags-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-8) var(--space-16);
+  line-height: 1.2;
+
+  &__item {
+    color: var(--primary-500);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__status {
+    color: var(--text-light-color);
+  }
+}

@@ -13,7 +13,7 @@ import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.compo
 import {ZxPartyPlaceComponent} from '../../../../shared/lib/zx-party-place/zx-party-place.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
-
+import {RouterLink} from '@angular/router';
 interface RelatedRail {
   readonly kind: PictureRelatedRailKind;
   readonly items: ZxPictureDto[];
@@ -22,7 +22,7 @@ interface RelatedRail {
 @Component({
   selector: 'zx-picture-related-section',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     InViewportDirective,

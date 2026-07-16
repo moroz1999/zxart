@@ -1277,6 +1277,11 @@ class zxProdElement extends ZxArtItem implements
                 $checkedCategories[] = $categoryId;
             }
         }
+        // a prod's categories are its structural parents; never leave it
+        // orphaned (e.g. when a form posts an empty set) — fall back to MISC.
+        if (!$checkedCategories) {
+            $checkedCategories[] = CategoryIds::MISC->value;
+        }
         $this->categories = $checkedCategories;
         $this->checkLinks('categories', 'zxProdCategory');
     }

@@ -4,10 +4,11 @@ import {TranslateModule} from '@ngx-translate/core';
 import {AuthorListItem} from '../../features/author-browser/models/author-list-item';
 import {ZxTableComponent} from '../../shared/ui/zx-table/zx-table.component';
 
-@Component({
+
+import {RouterLink} from '@angular/router';@Component({
   selector: 'zx-authors-table',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     ZxTableComponent,

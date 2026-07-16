@@ -1,0 +1,46 @@
+<div cdkOverlayOrigin #searchOrigin="cdkOverlayOrigin">
+  <div *ngIf="value" class="zx-entity-autocomplete__selected">
+    <span class="zx-entity-autocomplete__selected-title">{{ value.title }}</span>
+    <zx-button
+      *ngIf="!disabled"
+      size="sm"
+      color="transparent"
+      extraClass="zx-entity-autocomplete__clear"
+      (click)="onClear()"
+    >×</zx-button>
+  </div>
+
+  <zx-input
+    *ngIf="!value"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    [(ngModel)]="query"
+    (ngModelChange)="onQueryChange($event)"
+  ></zx-input>
+</div>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="searchOrigin"
+  [cdkConnectedOverlayOpen]="dropdownOpen"
+  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  (backdropClick)="closeDropdown()"
+>
+  <div class="zx-entity-autocomplete__dropdown" @dropdownPopover>
+    <div *ngIf="loading" class="zx-entity-autocomplete__loading">
+      <zx-spinner size="md"></zx-spinner>
+    </div>
+
+    <div *ngIf="!loading" class="zx-entity-autocomplete__options">
+      <zx-button
+        *ngFor="let result of searchResults"
+        size="sm"
+        color="transparent"
+        extraClass="zx-entity-autocomplete__option-button"
+        (click)="onSelect(result)"
+      >{{ result.title }}</zx-button>
+    </div>
+  </div>
+</ng-template>

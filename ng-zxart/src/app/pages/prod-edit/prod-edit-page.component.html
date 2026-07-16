@@ -1,0 +1,155 @@
+<div *ngIf="loading" class="prod-edit__loading">
+  <zx-spinner size="lg"></zx-spinner>
+</div>
+
+<form *ngIf="!loading" zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
+  <zx-stack spacing="lg">
+    <zx-form-field>
+      <zx-form-label for="prod-title" [required]="true">{{ 'prod-form.title' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-input id="prod-title" formControlName="title" type="text"></zx-input>
+        <zx-control-errors [control]="form.controls['title']" [messages]="titleMessages"></zx-control-errors>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="prod-alt-title">{{ 'prod-form.alt-title' | translate }}</zx-form-label>
+      <zx-form-control><zx-input id="prod-alt-title" formControlName="altTitle" type="text"></zx-input></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="prod-external-link">{{ 'prod-form.external-link' | translate }}</zx-form-label>
+      <zx-form-control><zx-input id="prod-external-link" formControlName="externalLink" type="text"></zx-input></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="prod-legal-status">{{ 'prod-form.legal-status' | translate }}</zx-form-label>
+      <zx-form-control><zx-select id="prod-legal-status" formControlName="legalStatus" [options]="legalStatusOptions"></zx-select></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'prod-form.categories' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-category-tree-select formControlName="categories" [nodes]="categoriesTree"></zx-category-tree-select>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'prod-form.groups' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-multi-entity-autocomplete formControlName="groups" types="group,groupAlias" [placeholder]="'prod-form.add-group' | translate"></zx-multi-entity-autocomplete>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'prod-form.publishers' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-multi-entity-autocomplete formControlName="publishers" types="group,groupAlias" [placeholder]="'prod-form.add-publisher' | translate"></zx-multi-entity-autocomplete>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'prod-form.party' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-entity-autocomplete formControlName="party" types="party" [placeholder]="'prod-form.party' | translate"></zx-entity-autocomplete>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="prod-partyplace">{{ 'prod-form.partyplace' | translate }}</zx-form-label>
+      <zx-form-control><zx-input id="prod-partyplace" formControlName="partyplace" type="text"></zx-input></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="prod-compo">{{ 'prod-form.compo' | translate }}</zx-form-label>
+      <zx-form-control><zx-select id="prod-compo" formControlName="compo" [options]="enums['compo'] || []"></zx-select></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="prod-language">{{ 'prod-form.language' | translate }}</zx-form-label>
+      <zx-form-control><zx-select id="prod-language" formControlName="language" [options]="enums['language'] || []" [multiple]="true" [listSize]="6"></zx-select></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="prod-year">{{ 'prod-form.year' | translate }}</zx-form-label>
+      <zx-form-control><zx-input id="prod-year" formControlName="year" type="text"></zx-input></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="prod-youtube">{{ 'prod-form.youtube-id' | translate }}</zx-form-label>
+      <zx-form-control><zx-input id="prod-youtube" formControlName="youtubeId" type="text"></zx-input></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'prod-form.compilation-items' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-multi-entity-autocomplete formControlName="compilationItems" types="zxProd,zxRelease" [placeholder]="'prod-form.add-item' | translate"></zx-multi-entity-autocomplete>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'prod-form.series-prods' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-multi-entity-autocomplete formControlName="seriesProds" types="zxProd" [placeholder]="'prod-form.add-item' | translate"></zx-multi-entity-autocomplete>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-checkbox-field formControlName="htmlDescription" [label]="'prod-form.html-description' | translate"></zx-checkbox-field>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="prod-description">{{ 'prod-form.description' | translate }}</zx-form-label>
+      <zx-form-control><zx-textarea id="prod-description" formControlName="description" [rows]="6"></zx-textarea></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="prod-instructions">{{ 'prod-form.instructions' | translate }}</zx-form-label>
+      <zx-form-control><zx-textarea id="prod-instructions" formControlName="instructions" [rows]="4"></zx-textarea></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="prod-tags">{{ 'prod-form.tags-text' | translate }}</zx-form-label>
+      <zx-form-control><zx-input id="prod-tags" formControlName="tagsText" type="text"></zx-input></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-checkbox-field formControlName="denyVoting" [label]="'prod-form.deny-voting' | translate"></zx-checkbox-field>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-checkbox-field formControlName="denyComments" [label]="'prod-form.deny-comments' | translate"></zx-checkbox-field>
+    </zx-form-field>
+
+    <zx-form-field *ngFor="let def of fileSelectorDefs">
+      <zx-form-label>{{ def.labelKey | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-file-selector
+          [files]="fileSelectors[def.prop] || []"
+          (filesChange)="onSelectorFiles(def.prop, $event)"
+          (removeExisting)="onSelectorRemove($event)"
+        ></zx-file-selector>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'prod-form.authors' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-member-role-editor
+          [members]="members"
+          [availableRoles]="roles"
+          [showDates]="false"
+          roleLabelKey="group-details.roles"
+          (fieldsChange)="onMemberFields($event)"
+          (removeMember)="onRemoveMember($event)"
+        ></zx-member-role-editor>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+
+    <zx-form-actions align="start">
+      <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'prod-form.save' | translate }}</zx-button>
+    </zx-form-actions>
+  </zx-stack>
+</form>

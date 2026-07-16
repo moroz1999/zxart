@@ -6,23 +6,7 @@ import {
 } from '../../../../shared/ui/zx-editing-controls/zx-editing-controls.component';
 
 const TUNE_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
-  {
-    action: 'showPublicForm',
-    privilege: 'showPublicForm',
-    labelKey: 'tune-details.edit',
-  },
-  {
-    action: 'publicDelete',
-    privilege: 'publicDelete',
-    labelKey: 'tune-details.delete',
-    color: 'danger',
-    confirm: {
-      titleKey: 'tune-details.delete-confirm-title',
-      messageKey: 'tune-details.delete-confirm-message',
-      confirmLabelKey: 'tune-details.delete-confirm-yes',
-      cancelLabelKey: 'tune-details.delete-confirm-cancel',
-    },
-  },
+  {action: 'showPublicForm', privilege: 'showPublicForm', labelKey: 'tune-details.edit'},
 ];
 
 @Component({
@@ -34,10 +18,8 @@ const TUNE_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
 })
 export class ZxTuneEditingControlsComponent {
   @Input({required: true}) elementId!: number;
-  @Input({required: true}) tuneUrl!: string;
 
   readonly editActions = TUNE_EDIT_ACTIONS;
 
-  readonly buildActionUrl = (action: string, elementId: number): string =>
-    `${this.tuneUrl}id:${elementId}/action:${action}/`;
+  readonly buildActionUrl = (_action: string, elementId: number): string => `/tune/${elementId}/edit`;
 }

@@ -1,0 +1,15 @@
+<div class="zx-subgroups-editor">
+  <div *ngFor="let item of items" class="zx-subgroups-editor__item">
+    <span>{{ item.title }}</span>
+    <zx-button size="sm" color="danger" (click)="onRemove(item.id)">×</zx-button>
+  </div>
+
+  <div class="zx-subgroups-editor__add">
+    <zx-entity-autocomplete
+      [ngModel]="newGroup"
+      (ngModelChange)="onSelected($event)"
+      types="group"
+      placeholder="Add subgroup…"
+    ></zx-entity-autocomplete>
+  </div>
+</div>

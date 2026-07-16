@@ -30,6 +30,7 @@ readonly class PictureDetailsService
     private const string TYPE_SCA = 'sca';
 
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
         private controller $controller,
         private translationsManager $translationsManager,
@@ -109,7 +110,7 @@ readonly class PictureDetailsService
         foreach ($authors as $author) {
             $result[] = new AuthorDto(
                 name: $this->infoBuilder->decodeText((string)$author->getTitle()),
-                url: (string)$author->getUrl(),
+                url: $this->entityUrlResolver->urlFor($author),
             );
         }
         return $result;
@@ -142,7 +143,7 @@ readonly class PictureDetailsService
         }
         return new PicturePartyContextDto(
             title: $this->infoBuilder->decodeText((string)$party->getTitle()),
-            url: (string)$party->getUrl(),
+            url: $this->entityUrlResolver->urlFor($party),
             place: (int)$element->partyplace ?: null,
             compoLabel: $compoLabel,
         );
@@ -156,7 +157,7 @@ readonly class PictureDetailsService
         }
         return new PictureProdContextDto(
             title: $this->infoBuilder->decodeText((string)$release->getTitle()),
-            url: (string)$release->getUrl(),
+            url: $this->entityUrlResolver->urlFor($release),
             year: $release->year ? (string)$release->year : null,
         );
     }

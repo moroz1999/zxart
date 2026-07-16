@@ -31,7 +31,6 @@ import {PictureGalleryHostComponent} from '../../../picture-gallery/components/p
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {ZxProdReleaseCardComponent} from '../../../../entities/zx-prod-release-card/zx-prod-release-card.component';
 
-
 @Component({
   selector: 'zx-author-mini-dashboard',
   standalone: true,

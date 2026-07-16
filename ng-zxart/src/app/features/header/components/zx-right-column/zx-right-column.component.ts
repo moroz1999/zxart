@@ -16,7 +16,7 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 
 @Component({
-  selector: 'zx-right-column',
+  selector: 'zx-right-column, zx-right-column-view',
   standalone: true,
   imports: [
     TranslateModule,

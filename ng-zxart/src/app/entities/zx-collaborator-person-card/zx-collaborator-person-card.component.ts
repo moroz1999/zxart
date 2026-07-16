@@ -7,10 +7,11 @@ import {TextDirective} from '../../shared/ui/typography/directives/text.directiv
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {environment} from '../../../environments/environment';
 
-@Component({
+
+import {RouterLink} from '@angular/router';@Component({
   selector: 'zx-collaborator-person-card',
   standalone: true,
-  imports: [CommonModule, TranslateModule, SvgIconComponent, TextDirective, HeadingDirective],
+  imports: [RouterLink, CommonModule, TranslateModule, SvgIconComponent, TextDirective, HeadingDirective],
   templateUrl: './zx-collaborator-person-card.component.html',
   styleUrl: './zx-collaborator-person-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

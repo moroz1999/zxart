@@ -32,11 +32,13 @@ export class ElementsService {
 
     getModel<T, U extends StructureElement>(elementId: number, className: {
         new(dto: T): U
-    }, postParameters: PostParameters, preset: string): Observable<U> {
-        const allParameters = {
+    }, postParameters: PostParameters, preset: string, structureType = ''): Observable<U> {
+        // When there is no element id the backend resolves the collection root by
+        // structure type (SPA collection pages carry no hardcoded wrapper id).
+        const allParameters: PostParameters = {
             ...postParameters,
-            elementId,
             preset,
+            ...(elementId > 0 ? {elementId} : structureType ? {structureType} : {elementId}),
         };
         const options: Object = {
             'params': allParameters,

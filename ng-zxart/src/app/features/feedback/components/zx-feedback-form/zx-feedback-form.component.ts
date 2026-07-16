@@ -79,7 +79,8 @@ export class ZxFeedbackFormComponent implements OnDestroy {
   }
 
   onSubmit(): void {
-    if (this.elementId <= 0 || this.submitting) {
+    // elementId 0 = SPA mount: the backend resolves the feedback form by type.
+    if (this.submitting) {
       return;
     }
     if (this.form.invalid) {

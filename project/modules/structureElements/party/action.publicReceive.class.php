@@ -23,7 +23,8 @@ class publicReceiveParty extends structureElementAction
             $structureElement->recalculate();
 
             $structureElement->persistElementData();
-            $controller->redirect($structureElement->URL);
+            $this->respondFormSaved($controller, $structureElement);
+            return;
         }
 
         $structureElement->setViewName('form');

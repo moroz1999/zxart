@@ -1,0 +1,110 @@
+<div *ngIf="loading" class="release-edit__loading">
+  <zx-spinner size="lg"></zx-spinner>
+</div>
+
+<form *ngIf="!loading" zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
+  <zx-stack spacing="lg">
+    <zx-form-field>
+      <zx-form-label for="release-title" [required]="true">{{ 'release-form.title' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-input id="release-title" formControlName="title" type="text"></zx-input>
+        <zx-control-errors [control]="form.controls['title']" [messages]="titleMessages"></zx-control-errors>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'release-form.prod' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-entity-autocomplete formControlName="prod" types="zxProd" [placeholder]="'release-form.prod' | translate"></zx-entity-autocomplete>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="release-version">{{ 'release-form.version' | translate }}</zx-form-label>
+      <zx-form-control><zx-input id="release-version" formControlName="version" type="text"></zx-input></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="release-year">{{ 'release-form.year' | translate }}</zx-form-label>
+      <zx-form-control><zx-input id="release-year" formControlName="year" type="text"></zx-input></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="release-type">{{ 'release-form.release-type' | translate }}</zx-form-label>
+      <zx-form-control><zx-select id="release-type" formControlName="releaseType" [options]="enums['releaseType'] || []"></zx-select></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="release-format">{{ 'release-form.release-format' | translate }}</zx-form-label>
+      <zx-form-control><zx-select id="release-format" formControlName="releaseFormat" [options]="enums['releaseFormat'] || []" [multiple]="true" [listSize]="6"></zx-select></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="release-language">{{ 'release-form.language' | translate }}</zx-form-label>
+      <zx-form-control><zx-select id="release-language" formControlName="language" [options]="enums['language'] || []" [multiple]="true" [listSize]="6"></zx-select></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="release-hardware">{{ 'release-form.hardware-required' | translate }}</zx-form-label>
+      <zx-form-control><zx-select id="release-hardware" formControlName="hardwareRequired" [options]="enums['hardwareRequired'] || []" [multiple]="true" [listSize]="8"></zx-select></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'release-form.publishers' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-multi-entity-autocomplete formControlName="publishers" types="group,groupAlias" [placeholder]="'release-form.add-publisher' | translate"></zx-multi-entity-autocomplete>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'release-form.file' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-file-upload [fileName]="fileNames['file'] || null" (changed)="onFileChanged('file', $event)"></zx-file-upload>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="release-description">{{ 'release-form.description' | translate }}</zx-form-label>
+      <zx-form-control><zx-textarea id="release-description" formControlName="description" [rows]="4"></zx-textarea></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-checkbox-field formControlName="denyVoting" [label]="'release-form.deny-voting' | translate"></zx-checkbox-field>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-checkbox-field formControlName="denyComments" [label]="'release-form.deny-comments' | translate"></zx-checkbox-field>
+    </zx-form-field>
+
+    <zx-form-field *ngFor="let def of fileSelectorDefs">
+      <zx-form-label>{{ def.labelKey | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-file-selector
+          [files]="fileSelectors[def.prop] || []"
+          (filesChange)="onSelectorFiles(def.prop, $event)"
+          (removeExisting)="onSelectorRemove($event)"
+        ></zx-file-selector>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'release-form.authors' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-member-role-editor
+          [members]="members"
+          [availableRoles]="roles"
+          [showDates]="false"
+          roleLabelKey="group-details.roles"
+          (fieldsChange)="onMemberFields($event)"
+          (removeMember)="onRemoveMember($event)"
+        ></zx-member-role-editor>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+
+    <zx-form-actions align="start">
+      <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'release-form.save' | translate }}</zx-button>
+    </zx-form-actions>
+  </zx-stack>
+</form>

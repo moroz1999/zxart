@@ -1,0 +1,15 @@
+<div class="zx-category-tree-select">
+  <label
+    *ngFor="let row of rows"
+    class="zx-category-tree-select__row"
+    [style.padding-left.px]="row.indent * 16"
+  >
+    <input
+      type="checkbox"
+      [checked]="isSelected(row.id)"
+      [disabled]="disabled"
+      (change)="onToggle(row.id, $any($event.target).checked)"
+    />
+    <span class="zx-category-tree-select__title">{{ row.title }}</span>
+  </label>
+</div>

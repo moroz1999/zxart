@@ -13,16 +13,28 @@ The graphics and music branches of the legacy `detailedSearch` element are repla
 - Graphics: `zx-picture-search` (`features/picture-search/`)
 - Music: `zx-music-search` (`features/music-search/`)
 
+- Standalone SPA entrypoint: `/pictures/search` (`pages/picture-search`), mounting `zx-picture-search` with `manageUrl=false`.
 - REST: `GET /picture-search/` (`ZxArt\Controllers\PictureSearch` → `ZxArt\PictureSearch\PictureSearchService`). Spec: `api/picture-search.yaml`.
-- The service ports `detailedSearchElement::getQueryParameters()` (graphics branch) and runs it through `ApiQueriesManager`/`ApiQuery` with export type `zxPicture` or `author` (`resultsType=author` adds the `authorOfItemType=authorPicture` filter).
-- The response includes legacy-compatible `apiUrl` (`/api/...`) and `zipUrl` (`/zipItems/...`) links built from the same filtration parameters.
-- **URL scheme is preserved from legacy**: filters are `name:value/` path segments appended to the page URL (`titleWord`, `startYear`, `endYear`, `rating`, `partyPlace`, `pictureType`, `realtime`, `inspiration`, `stages`, `tagsInclude`, `tagsExclude`, `authorCountry`, `authorCity`, `resultsType`, `sortParameter`, `sortOrder`, `page`). The Angular component parses them on load and pushes them via `history.pushState` on every search/page change (`models/picture-search-url.ts`).
+- `PictureSearchService` builds the query in `ZxArt\PictureSearch\Repositories\PictureSearchRepository` — SQL directly against `module_zxpicture`, `module_author` and `structure_links` (author-location via the `authorPicture` link, tags via `tagsManager`) — and applies ordering, pagination and element loading through `PicturesManager` (`resultsType=author` runs the authors query through `AuthorsService`, narrowed to `displayInGraphics` authors of matching pictures).
+- The response includes legacy-compatible `apiUrl` (`/api/...`) and `zipUrl` (`/zipItems/...`) links built from the request filters.
+- **SPA URL scheme**: filters live in the router query params (`titleWord`, `startYear`, `endYear`, `rating`, `partyPlace`, `pictureType`, `realtime`, `inspiration`, `stages`, `fromGame`, `tagsInclude`, `tagsExclude`, `authorCountry`, `authorCity`, `resultsType`, `sortParameter`, `sortOrder`, `page`); only non-default values are emitted (`models/picture-search-query-params.ts`). `fromGame=1` restricts to pictures that belong to a game (`module_zxpicture.game`); the graphics "games" menu links here. When embedded in a legacy page (`manageUrl=true`) the component still parses/pushes the legacy `name:value/` path segments (`models/picture-search-url.ts`).
 - `action=locations&ids=...` resolves country/city element titles for restoring filter chips from URL ids.
 - Picture format codes are duplicated in `features/picture-search/models/zx-picture-types.ts` and must stay in sync with the backend `ZxPictureTypesProvider` trait; labels live in the `picture-search.format.*` i18n keys.
 
-Music search uses the same URL and response principles via `GET /music-search/` (`ZxArt\Controllers\MusicSearch` → `ZxArt\MusicSearch\MusicSearchService`). Spec: `api/music-search.yaml`.
+Music search uses the same principles via `GET /music-search/` (`ZxArt\Controllers\MusicSearch` → `ZxArt\MusicSearch\MusicSearchService` → `ZxArt\MusicSearch\Repositories\MusicSearchRepository`). Standalone entrypoint `/music/search` (`pages/music-search`). Spec: `api/music-search.yaml`.
 
-- Music-only URL/filter segments: `formatGroup`, `format`, `realtime`.
-- Music result export type is `zxMusic`; `resultsType=author` adds `authorOfItemType=authorMusic`.
+- Music-only filters: `formatGroup`, `format`, `realtime`; title search also matches `internalTitle`.
+- Music search runs against `module_zxmusic` and loads elements through `TunesManager`; author location uses the `authorMusic` link and `displayInMusic`.
 - The response includes distinct `formats` for the music format select.
-- Tags exclusion uses the `zxMusicTagsExclude` query filter.
+
+## File search
+
+Standalone SPA route `/file-search` (`pages/file-search` → `zx-file-search`): searches
+the file registry by file name (substring) or md5 (exact, 32 hex chars) and links each
+match to the entity it belongs to.
+
+- Endpoint: `GET /file-search-data/?q=<term>` (`ZxArt\Controllers\FileSearchData` →
+  `ZxArt\FileSearch\FileSearchService`). Spec: `api/file-search.yaml`.
+- `FileSearchRepository` queries `files_registry` (each row maps a file's `fileName`/`md5`
+  to its `elementId`); the service loads the elements and resolves their SPA URL via
+  `EntityUrlResolver`. Results are capped and require a 2+ character query.

@@ -1,0 +1,516 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ZxArt\Controllers;
+
+use CmsHttpResponse;
+use controller;
+use DbLoggableApplication;
+use imageDataChunk;
+use LanguagesManager;
+use Monolog\Logger;
+use structureElement;
+use structureManager;
+use Throwable;
+use ZxArt\ElementPrivileges\ElementPrivilegesService;
+use ZxArt\Shared\EntityType;
+
+/**
+ * Generic read endpoint for entity edit forms (`/formdata/?id=&refs=`).
+ *
+ * Returns the element's current form values for any entity, so each form does
+ * not need its own load endpoint. Saving is done by the legacy `publicReceive`
+ * action via `/ajax/`. Gated by the element's `showPublicForm` privilege.
+ *
+ * Response: `{ fields: {name: value}, refs: {name: {id, title}}, images: {name: url} }`
+ * - `fields` — raw form values (`getFormData()`), for text/checkbox/date inputs.
+ * - `refs`   — relation fields named in `?refs=a,b` resolved to id + title, for
+ *              the entity-autocomplete pickers.
+ * - `images` — display URLs for image fields (auto-detected).
+ */
+class Formdata extends LoggedControllerApplication
+{
+    use DbLoggableApplication;
+
+    public $rendererName = 'json';
+
+    public function __construct(
+        controller $controller,
+        Logger $logger,
+        private readonly structureManager $structureManager,
+        private readonly ElementPrivilegesService $elementPrivilegesService,
+        private readonly LanguagesManager $languagesManager,
+    ) {
+        parent::__construct($controller, $logger);
+    }
+
+    public function initialize(): void
+    {
+        $this->startSession('public');
+        $this->createRenderer();
+    }
+
+    public function execute($controller): void
+    {
+        $this->startDbLogging();
+
+        $id = (int)$this->getParameter('id');
+        if (!$id || !$this->hasPrivilege($id, 'showPublicForm')) {
+            $this->assignError('Forbidden', 403);
+        } else {
+            try {
+                $this->assignSuccess($this->buildFormData($id, $this->getRefFields()));
+            } catch (Throwable $e) {
+                $this->logThrowable('Formdata::execute', $e);
+                $this->assignError('Element not found', 404);
+            }
+        }
+
+        $this->renderer->display();
+        $this->saveDbLog();
+    }
+
+    /** @return string[] */
+    private function getRefFields(): array
+    {
+        $refs = (string)$this->getParameter('refs');
+        if ($refs === '') {
+            return [];
+        }
+        return array_filter(array_map('trim', explode(',', $refs)));
+    }
+
+    /**
+     * @param string[] $refFields
+     * @return array{fields: array<string, mixed>, multilang: array<string, array<int, string>>, refs: array<string, array{id: int, title: string}>, multiRefs: array<string, list<array{id: int, title: string}>>, images: array<string, string>, files: array<string, string>, languages: list<array{id: int, name: string}>, categoriesTree: list<array{id: int, title: string, level: int, selected: bool}>, authorRefs: list<array{id: int, title: string}>, originalAuthorRefs: list<array{id: int, title: string}>, enums: array<string, list<array{value: string, label: string}>>, fileSelectors: array<string, list<array{id: int, title: string, isImage: bool, imageUrl: string|null}>>, aiStatuses: array<string, string>, splitGroups: list<array{group: string, items: list<array{key: string, label: string}>}>}
+     */
+    private function buildFormData(int $id, array $refFields): array
+    {
+        $element = $this->structureManager->getElementById($id);
+        if (!$element instanceof structureElement) {
+            throw new \RuntimeException('Element not found');
+        }
+
+        $fields = [];
+        $multilang = [];
+        $refs = [];
+        $multiRefs = [];
+        $images = [];
+        $files = [];
+        $baseUrl = (string)controller::getInstance()->baseURL;
+
+        foreach ($element->getFormData() as $field => $value) {
+            if (is_array($value)) {
+                // relation lists (ConnectedElements) come back as arrays of
+                // elements; resolve them to {id,title} for the multi-pickers and
+                // keep the bare id list in `fields` for passthrough/save.
+                $objects = array_filter($value, 'is_object');
+                if ($objects !== []) {
+                    $list = [];
+                    $ids = [];
+                    foreach ($objects as $item) {
+                        if (!method_exists($item, 'getId')) {
+                            continue;
+                        }
+                        $itemId = (int)$item->getId();
+                        $ids[] = $itemId;
+                        $title = method_exists($item, 'getSearchTitle')
+                            ? (string)$item->getSearchTitle()
+                            : (string)$item->title;
+                        $list[] = ['id' => $itemId, 'title' => $this->decode($title)];
+                    }
+                    $multiRefs[$field] = $list;
+                    $fields[$field] = $ids;
+                    continue;
+                }
+                // multi-language fields ({languageId: value}); also exposed raw in
+                // `fields` so forms can pass through non-multilang arrays (lists,
+                // per-key maps) unchanged on save.
+                $multilang[$field] = $value;
+                $fields[$field] = $value;
+                continue;
+            }
+            $fields[$field] = $value;
+            $chunk = $element->getDataChunk($field);
+            if ($chunk instanceof imageDataChunk) {
+                if ($value !== '' && $value !== null) {
+                    $images[$field] = $baseUrl . 'image/type:adminImage/id:' . $value
+                        . '/filename:' . rawurlencode((string)$element->originalName);
+                }
+                continue;
+            }
+            if ($chunk instanceof \fileDataChunk) {
+                // the persisted filename lives in `{field}Name` on the element
+                // (fileName, trackerFileName, exeFileName, …)
+                $name = (string)($element->{$field . 'Name'} ?? '');
+                if ($name !== '') {
+                    $files[$field] = $name;
+                }
+                continue;
+            }
+            if (in_array($field, $refFields, true) && is_numeric($value) && (int)$value > 0) {
+                $ref = $this->structureManager->getElementById((int)$value);
+                if ($ref instanceof structureElement) {
+                    $refs[$field] = [
+                        'id' => (int)$value,
+                        'title' => html_entity_decode((string)$ref->title, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+                    ];
+                }
+            }
+        }
+
+        return [
+            'fields' => $fields,
+            'multilang' => $multilang,
+            'refs' => $refs,
+            'multiRefs' => $multiRefs,
+            'images' => $images,
+            'files' => $files,
+            'languages' => $this->buildLanguages(),
+            'members' => $this->buildMembers($element),
+            'roles' => method_exists($element, 'getAuthorRoles') ? array_values($element->getAuthorRoles()) : [],
+            'subgroups' => $this->buildSubgroups($element),
+            'categoriesTree' => $this->buildCategoriesTree($element),
+            'authorRefs' => $this->buildAuthorRefs($element),
+            'originalAuthorRefs' => $this->buildConnectedRefs($element, 'getOriginalAuthorsList'),
+            'enums' => $this->buildEnums($element),
+            'fileSelectors' => $this->buildFileSelectors($element),
+            'aiStatuses' => $this->buildAiStatuses($element),
+            'splitGroups' => $this->buildSplitGroups($element),
+        ];
+    }
+
+    /**
+     * Splittable items grouped for the prod split form (`getSplitData()` returns
+     * [group => [key => label]]). Each checked item is split off into a new prod.
+     *
+     * @return list<array{group: string, items: list<array{key: string, label: string}>}>
+     */
+    private function buildSplitGroups(structureElement $element): array
+    {
+        if (!method_exists($element, 'getSplitData')) {
+            return [];
+        }
+        $groups = [];
+        foreach ($element->getSplitData() as $groupKey => $itemsGroup) {
+            $items = [];
+            foreach ((array)$itemsGroup as $key => $label) {
+                $items[] = ['key' => (string)$key, 'label' => $this->decode((string)$label)];
+            }
+            $groups[] = ['group' => (string)$groupKey, 'items' => $items];
+        }
+        return $groups;
+    }
+
+    /**
+     * Current AI queue status per re-queue field, for the AI form (prod/press).
+     *
+     * @return array<string, string>
+     */
+    private function buildAiStatuses(structureElement $element): array
+    {
+        if (!method_exists($element, 'getQueueStatus')) {
+            return [];
+        }
+        $map = match ((string)$element->structureType) {
+            'zxProd' => [
+                'aiRestartSeo' => \ZxArt\Queue\QueueType::AI_SEO,
+                'aiRestartIntro' => \ZxArt\Queue\QueueType::AI_INTRO,
+                'aiRestartCategories' => \ZxArt\Queue\QueueType::AI_CATEGORIES_TAGS,
+            ],
+            'pressArticle' => [
+                'aiRestartFix' => \ZxArt\Queue\QueueType::AI_PRESS_FIX,
+                'aiRestartTranslate' => \ZxArt\Queue\QueueType::AI_PRESS_TRANSLATE,
+                'aiRestartParse' => \ZxArt\Queue\QueueType::AI_PRESS_PARSE,
+                'aiRestartSeo' => \ZxArt\Queue\QueueType::AI_PRESS_SEO,
+            ],
+            default => [],
+        };
+        $statuses = [];
+        foreach ($map as $field => $queueType) {
+            $statuses[$field] = (string)$element->getQueueStatus($queueType);
+        }
+        return $statuses;
+    }
+
+    /**
+     * Existing files of each multi-file selector (screenshots, inlays, …) for
+     * the file-selector manager. Uploads go back through `publicReceive` →
+     * `receiveFiles`; deletes hit the shared `delete` action per file element.
+     *
+     * @return array<string, list<array{id: int, title: string, isImage: bool, imageUrl: string|null}>>
+     */
+    private function buildFileSelectors(structureElement $element): array
+    {
+        if (!method_exists($element, 'getFileSelectorPropertyNames') || !method_exists($element, 'getFilesList')) {
+            return [];
+        }
+        $selectors = [];
+        foreach ($element->getFileSelectorPropertyNames() as $propertyName) {
+            $items = [];
+            foreach ($element->getFilesList($propertyName) as $file) {
+                if (!is_object($file) || !method_exists($file, 'getId')) {
+                    continue;
+                }
+                $isImage = method_exists($file, 'isImage') && $file->isImage();
+                $items[] = [
+                    'id' => (int)$file->getId(),
+                    'title' => $this->decode((string)$file->title),
+                    'isImage' => $isImage,
+                    'imageUrl' => $isImage && method_exists($file, 'getImageUrl')
+                        ? (string)$file->getImageUrl('adminImage')
+                        : null,
+                ];
+            }
+            $selectors[$propertyName] = $items;
+        }
+        return $selectors;
+    }
+
+    /**
+     * Backend-driven select options ({value,label}) for enum fields, with labels
+     * already translated to the current language (so the SPA needs no extra i18n
+     * keys). Fixed enums (border colour, rotation) stay hardcoded in Angular.
+     *
+     * @return array<string, list<array{value: string, label: string}>>
+     */
+    private function buildEnums(structureElement $element): array
+    {
+        $specs = $this->enumSpecs((string)$element->structureType);
+        if (!$specs) {
+            return [];
+        }
+        $tm = $this->getService(\translationsManager::class);
+        $enums = [];
+        foreach ($specs as $field => $spec) {
+            if (!method_exists($element, $spec['method'])) {
+                continue;
+            }
+            $options = [];
+            if (isset($spec['emptyLabelKey'])) {
+                $options[] = ['value' => '', 'label' => (string)$tm->getTranslationByName($spec['emptyLabelKey'])];
+            } elseif (!empty($spec['emptyBlank'])) {
+                $options[] = ['value' => '', 'label' => ''];
+            }
+            $rawItems = $element->{$spec['method']}();
+            $mode = $spec['mode'] ?? 'list';
+            if ($mode === 'grouped') {
+                // method returns [groupName => [items]] — flatten to a plain list
+                $flat = [];
+                foreach ($rawItems as $group) {
+                    foreach ((array)$group as $item) {
+                        $flat[] = $item;
+                    }
+                }
+                $rawItems = $flat;
+                $mode = 'list';
+            }
+            foreach ($rawItems as $key => $item) {
+                if ($mode === 'map') {
+                    // method returns [value => translationKey]
+                    $value = (string)$key;
+                    $label = (string)$tm->getTranslationByName((string)$item);
+                } else {
+                    $value = (string)$item;
+                    $labelKey = !empty($spec['stripDots']) ? str_replace('.', '', $value) : $value;
+                    $label = (string)$tm->getTranslationByName($spec['prefix'] . $labelKey);
+                }
+                $options[] = ['value' => $value, 'label' => $label !== '' ? $label : $value];
+            }
+            $enums[$field] = $options;
+        }
+        return $enums;
+    }
+
+    /**
+     * Per-entity enum field definitions (option source method + label strategy).
+     *
+     * @return array<string, array{method: string, mode?: string, prefix?: string, stripDots?: bool, emptyBlank?: bool, emptyLabelKey?: string}>
+     */
+    private function enumSpecs(string $structureType): array
+    {
+        return match ($structureType) {
+            'zxMusic' => [
+                'compo' => ['method' => 'getCompoTypes', 'prefix' => 'musiccompo.compo_', 'emptyBlank' => true],
+                'chipType' => ['method' => 'getChipTypes', 'prefix' => 'zxmusic.chiptype_', 'emptyLabelKey' => 'zxmusic.chiptype_default'],
+                'channelsType' => ['method' => 'getChannelsTypes', 'prefix' => 'zxmusic.channelstype_', 'emptyLabelKey' => 'zxmusic.channelstype_default'],
+                'frequency' => ['method' => 'getFrequencies', 'prefix' => 'zxmusic.frequency_', 'emptyLabelKey' => 'zxmusic.frequency_default'],
+                'intFrequency' => ['method' => 'getIntFrequencies', 'prefix' => 'zxmusic.intfrequency_', 'stripDots' => true, 'emptyLabelKey' => 'zxmusic.frequency_default'],
+            ],
+            'zxProd' => [
+                'compo' => ['method' => 'getCompoTypes', 'prefix' => 'party.compo_', 'emptyBlank' => true],
+                'language' => ['method' => 'getLanguageCodes', 'prefix' => 'language.item_'],
+            ],
+            'zxPicture' => [
+                'compo' => ['method' => 'getCompoTypes', 'prefix' => 'zxPicture.compo_', 'emptyBlank' => true],
+                'palette' => ['method' => 'getPaletteTypes', 'prefix' => 'zxpicture.palette_', 'emptyLabelKey' => 'zxpicture.palette_auto'],
+                'type' => ['method' => 'getZxPictureTypes', 'mode' => 'map'],
+            ],
+            'zxRelease' => [
+                'releaseType' => ['method' => 'getReleaseTypes', 'prefix' => 'zxRelease.type_'],
+                'releaseFormat' => ['method' => 'getReleaseFormats', 'prefix' => 'zxRelease.filetype_'],
+                'language' => ['method' => 'getLanguageCodes', 'prefix' => 'language.item_'],
+                'hardwareRequired' => ['method' => 'getHardwareList', 'mode' => 'grouped', 'prefix' => 'hardware.item_'],
+            ],
+            default => [],
+        };
+    }
+
+    /**
+     * Flat connected-author list ({id,title}) for entities that store authorship
+     * as a plain `author` list (tune, picture) rather than role-based members.
+     * Like categories, this is link-backed and absent from getFormData(), so the
+     * form must reload and round-trip it.
+     *
+     * @return list<array{id: int, title: string}>
+     */
+    private function buildAuthorRefs(structureElement $element): array
+    {
+        return $this->buildConnectedRefs($element, 'getAuthorsList');
+    }
+
+    /**
+     * Resolve a link-backed element list (returned by `$method`) to {id,title}.
+     * Such lists live in the links table and are absent from getFormData(), so
+     * the form must reload and round-trip them (see categories/author trap).
+     *
+     * @return list<array{id: int, title: string}>
+     */
+    private function buildConnectedRefs(structureElement $element, string $method): array
+    {
+        if (!method_exists($element, $method)) {
+            return [];
+        }
+        $refs = [];
+        foreach ($element->$method() as $item) {
+            if (!is_object($item) || !method_exists($item, 'getId')) {
+                continue;
+            }
+            $title = method_exists($item, 'getSearchTitle')
+                ? (string)$item->getSearchTitle()
+                : (string)$item->title;
+            $refs[] = ['id' => (int)$item->getId(), 'title' => $this->decode($title)];
+        }
+        return $refs;
+    }
+
+    /**
+     * Full prod-category tree with the element's current selection. The
+     * connected categories are the element's structural parents, so the form
+     * must round-trip them on save (an empty `categories` post wipes the links
+     * and orphans the element).
+     *
+     * @return list<array{id: int, title: string, level: int, selected: bool}>
+     */
+    private function buildCategoriesTree(structureElement $element): array
+    {
+        if (!method_exists($element, 'getCategoriesSelectorInfo')) {
+            return [];
+        }
+        $tree = [];
+        foreach ($element->getCategoriesSelectorInfo() as $info) {
+            $tree[] = [
+                'id' => (int)$info['id'],
+                'title' => $this->decode((string)$info['title']),
+                'level' => (int)$info['level'],
+                'selected' => (bool)$info['selected'],
+            ];
+        }
+        return $tree;
+    }
+
+    /** @return list<array{id: int, title: string, startDate: string, endDate: string, roles: list<string>}> */
+    private function buildMembers(structureElement $element): array
+    {
+        // authorship is keyed by EntityType, which differs from structureType for
+        // some entities (zxProd→Prod, …) and aliases store it under their parent type
+        $entityType = match ((string)$element->structureType) {
+            'author', 'authorAlias' => EntityType::Author,
+            'group', 'groupAlias' => EntityType::Group,
+            'party' => EntityType::Party,
+            'zxProd' => EntityType::Prod,
+            'zxRelease' => EntityType::Release,
+            'zxPicture' => EntityType::Picture,
+            'zxMusic' => EntityType::Tune,
+            default => null,
+        };
+        if ($entityType === null || !method_exists($element, 'getAuthorsInfo')) {
+            return [];
+        }
+        $members = [];
+        foreach ($element->getAuthorsInfo($entityType) as $info) {
+            $author = $info['authorElement'] ?? null;
+            if (!is_object($author)) {
+                continue;
+            }
+            $members[] = [
+                'id' => (int)($info['authorId'] ?? 0),
+                'title' => $this->decode((string)$author->title),
+                'startDate' => (string)($info['startDate'] ?? ''),
+                'endDate' => (string)($info['endDate'] ?? ''),
+                'roles' => array_values($info['roles'] ?? []),
+            ];
+        }
+        return $members;
+    }
+
+    /** @return list<array{id: int, title: string}> */
+    private function buildSubgroups(structureElement $element): array
+    {
+        if (!method_exists($element, 'getSubGroupIds')) {
+            return [];
+        }
+        $subgroups = [];
+        foreach ($element->getSubGroupIds() as $subGroupId) {
+            $subGroup = $this->structureManager->getElementById((int)$subGroupId);
+            if (is_object($subGroup)) {
+                $subgroups[] = ['id' => (int)$subGroupId, 'title' => $this->decode((string)$subGroup->title)];
+            }
+        }
+        return $subgroups;
+    }
+
+    private function decode(string $value): string
+    {
+        return html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    }
+
+    /** @return list<array{id: int, name: string}> */
+    private function buildLanguages(): array
+    {
+        $languages = [];
+        foreach ($this->languagesManager->getLanguagesList() as $language) {
+            $languages[] = [
+                'id' => (int)$language->id,
+                'name' => html_entity_decode((string)$language->title, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+            ];
+        }
+        return $languages;
+    }
+
+    private function hasPrivilege(int $id, string $privilege): bool
+    {
+        try {
+            return $this->elementPrivilegesService->getPrivileges($id, [$privilege])->privileges[$privilege] ?? false;
+        } catch (Throwable $e) {
+            return false;
+        }
+    }
+
+    private function assignSuccess(mixed $data): void
+    {
+        $this->renderer->assign('body', $data);
+    }
+
+    private function assignError(string $message, int $statusCode = 500): void
+    {
+        CmsHttpResponse::getInstance()->setStatusCode((string)$statusCode);
+        $this->renderer->assign('body', ['errorMessage' => $message]);
+    }
+
+    public function getUrlName()
+    {
+        return '';
+    }
+}

@@ -43,6 +43,8 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 })
 export class ZxGroupBrowserComponent implements OnInit, OnDestroy {
   @Input() elementId = 0;
+  /** Legacy mounts sync state to `window.location`/`pushState`; the SPA route disables that. */
+  @Input() manageUrl = true;
   @Input() mode: 'full' | 'simple' = 'full';
   @Input() sorting = 'title,asc';
   @Input() limit = '50';
@@ -76,9 +78,11 @@ export class ZxGroupBrowserComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.mode === 'full') {
-      this.urlBase = this.parseUrlBase();
-      this.currentPage = this.parsePageFromUrl();
-      this.parseFiltersFromUrl();
+      if (this.manageUrl) {
+        this.urlBase = this.parseUrlBase();
+        this.currentPage = this.parsePageFromUrl();
+        this.parseFiltersFromUrl();
+      }
 
       this.loadFilterOptions();
 
@@ -174,13 +178,7 @@ export class ZxGroupBrowserComponent implements OnInit, OnDestroy {
   }
 
   private loadPage(): void {
-    if (!this.elementId) {
-      this.loading = false;
-      this.error = true;
-      this.cdr.markForCheck();
-      return;
-    }
-
+    // elementId 0 = SPA collection mount: the group list resolves globally on the backend.
     this.loading = true;
     this.error = false;
     const pageLimit = Number(this.limit) || 50;
@@ -254,7 +252,7 @@ export class ZxGroupBrowserComponent implements OnInit, OnDestroy {
   }
 
   private updateUrl(): void {
-    if (this.mode !== 'full') {
+    if (this.mode !== 'full' || !this.manageUrl) {
       return;
     }
     const pagePath = this.currentPage > 1

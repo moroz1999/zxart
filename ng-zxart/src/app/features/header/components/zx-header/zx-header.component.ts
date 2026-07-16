@@ -15,7 +15,7 @@ import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {environment} from '../../../../../environments/environment';
 
 @Component({
-  selector: 'zx-header',
+  selector: 'zx-header, zx-header-view',
   standalone: true,
   imports: [
     MobileNavComponent,

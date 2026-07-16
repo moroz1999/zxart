@@ -25,6 +25,7 @@ use zxMusicElement;
 readonly class TuneDetailsService
 {
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
         private translationsManager $translationsManager,
         private TunesTransformer $tunesTransformer,
@@ -125,7 +126,7 @@ readonly class TuneDetailsService
         }
         return new TunePartyContextDto(
             title: $this->infoBuilder->decodeText((string)$party->getTitle()),
-            url: (string)$party->getUrl(),
+            url: $this->entityUrlResolver->urlFor($party),
             place: $place,
             compoLabel: $compoLabel,
         );

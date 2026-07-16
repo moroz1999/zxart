@@ -1,0 +1,57 @@
+paths:
+  /file-search-data/:
+    get:
+      summary: Search the file registry by file name or md5
+      parameters:
+        - in: query
+          name: q
+          required: true
+          schema:
+            type: string
+          description: File name substring, or a 32-char md5 for an exact match
+      responses:
+        '200':
+          description: Matching files with their containing entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileSearchPayload'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+components:
+  schemas:
+    FileSearchPayload:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileSearchResult'
+    FileSearchResult:
+      type: object
+      required: [fileName, md5, title, url, type]
+      properties:
+        fileName:
+          type: string
+        md5:
+          type: string
+        title:
+          type: string
+          description: Title of the entity the file belongs to
+        url:
+          type: string
+          description: SPA URL of the entity (legacy URL fallback for unrouted types)
+        type:
+          type: string
+          description: Structure type of the containing entity (e.g. zxRelease, zxProd)
+    ErrorPayload:
+      type: object
+      required: [errorMessage]
+      properties:
+        errorMessage:
+          type: string

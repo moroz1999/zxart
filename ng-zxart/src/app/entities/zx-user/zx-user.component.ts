@@ -5,10 +5,11 @@ import {CommentAuthorDto} from '../../features/comments/models/comment.dto';
 import {TextDirective} from '../../shared/ui/typography/directives/text.directive';
 import {environment} from '../../../environments/environment';
 
-@Component({
+
+import {RouterLink} from '@angular/router';@Component({
   selector: 'zx-user',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     SvgIconComponent,
     TextDirective,

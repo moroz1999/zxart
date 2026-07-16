@@ -1,0 +1,29 @@
+<div class="file-search">
+  <input
+    type="search"
+    class="file-search__input"
+    [ngModel]="query"
+    (ngModelChange)="onInput($event)"
+    [placeholder]="'file-search.placeholder' | translate"
+    autocomplete="off"
+  />
+
+  @if (loading()) {
+    <p class="file-search__status">{{ 'file-search.searching' | translate }}</p>
+  } @else if (searched() && results().length === 0) {
+    <p class="file-search__status">{{ 'file-search.empty' | translate }}</p>
+  } @else if (results().length > 0) {
+    <ul class="file-search__results">
+      @for (result of results(); track $index) {
+        <li class="file-search__item">
+          <span class="file-search__file">{{ result.fileName }}</span>
+          @if (isInternal(result.url)) {
+            <a class="file-search__link" [routerLink]="result.url">{{ result.title }}</a>
+          } @else {
+            <a class="file-search__link" [routerLink]="result.url">{{ result.title }}</a>
+          }
+        </li>
+      }
+    </ul>
+  }
+</div>

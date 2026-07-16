@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+.zx-file-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.zx-file-upload__current {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.zx-file-upload__name {
+  word-break: break-all;
+}
+
+.zx-file-upload__picker {
+  cursor: pointer;
+}
+
+.zx-file-upload__button {
+  display: inline-block;
+  padding: 4px 10px;
+  border: var(--zx-tags-input-dropdown-border);
+  border-radius: var(--zx-tags-input-dropdown-radius);
+  background: var(--zx-tags-input-dropdown-bg);
+}

@@ -13,10 +13,11 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 
-@Component({
+
+import {RouterLink} from '@angular/router';@Component({
   selector: 'zx-prod-series-section',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     ZxProdsListSkeletonComponent,

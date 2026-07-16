@@ -1,0 +1,3 @@
+<div class="parties" *ngIf="parties$ | async as parties">
+  <zx-party-card *ngFor="let party of parties; trackBy: trackById" [party]="party"></zx-party-card>
+</div>

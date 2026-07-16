@@ -1,7 +1,8 @@
 import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 import {NgIf} from '@angular/common';
+import {RouterLink} from '@angular/router';
 import {TextDirective} from '../typography/directives/text.directive';
-
+import {isSpaUrl} from '../../utils/spa-url';
 export type CalloutAccent = 'warning' | 'primary' | 'none';
 export type CalloutSurface = 'deep' | 'raised';
 export type CalloutOrientation = 'row' | 'column';
@@ -16,7 +17,7 @@ export type CalloutAlign = 'start' | 'center' | 'stretch';
 @Component({
   selector: 'zx-callout',
   standalone: true,
-  imports: [NgIf, TextDirective],
+  imports: [NgIf, RouterLink, TextDirective],
   templateUrl: './zx-callout.component.html',
   styleUrl: './zx-callout.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,6 +33,8 @@ export class ZxCalloutComponent {
   @Input() label = '';
   @Input() href = '';
   @Input() ariaLabel = '';
+
+  get isInternal(): boolean { return isSpaUrl(this.href); }
 
   @HostBinding('class') get hostClass(): string {
     return [

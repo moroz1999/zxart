@@ -11,6 +11,11 @@ use ZxArt\Shared\EntityType;
 
 readonly class AuthorListTransformer
 {
+    public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
+    ) {
+    }
+
     public function authorToDto(authorElement $element): AuthorListItemDto
     {
         $countryElement = $element->getCountryElement();
@@ -18,7 +23,7 @@ readonly class AuthorListTransformer
 
         return new AuthorListItemDto(
             id: (int)$element->id,
-            url: $element->getUrl(),
+            url: $this->entityUrlResolver->urlFor($element),
             entityType: EntityType::Author,
             title: html_entity_decode($element->title, ENT_QUOTES),
             realName: html_entity_decode($element->realName, ENT_QUOTES),
@@ -45,11 +50,11 @@ readonly class AuthorListTransformer
 
         return new AuthorListItemDto(
             id: (int)$alias->id,
-            url: $alias->getUrl(),
+            url: $this->entityUrlResolver->urlFor($alias),
             entityType: EntityType::AuthorAlias,
             title: html_entity_decode($alias->title, ENT_QUOTES),
             realName: $parentAuthor !== null ? html_entity_decode($parentAuthor->title, ENT_QUOTES) : '',
-            realNameUrl: $parentAuthor?->getUrl(),
+            realNameUrl: $parentAuthor !== null ? $this->entityUrlResolver->urlFor($parentAuthor) : null,
             groups: $groups,
             countryId: $countryElement !== null ? (int)$countryElement->id : null,
             countryTitle: $countryElement !== null ? html_entity_decode($countryElement->title, ENT_QUOTES) : null,
@@ -73,7 +78,7 @@ readonly class AuthorListTransformer
             $groups[] = [
                 'id' => (int)$group->id,
                 'title' => html_entity_decode($group->title, ENT_QUOTES),
-                'url' => $group->getUrl(),
+                'url' => $this->entityUrlResolver->urlFor($group),
             ];
         }
         return $groups;

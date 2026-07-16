@@ -5,7 +5,7 @@
   [name]="getIconName(badge)"
 ></svg-icon>
 
-<a *ngIf="user.url && !linkDisabled; else noUrl" [href]="user.url" appText="caption" tone="link" class="zx-user__name">
+<a *ngIf="user.url && !linkDisabled; else noUrl" [routerLink]="user.url" appText="caption" tone="link" class="zx-user__name">
   {{ user.name }}
 </a>
 <ng-template #noUrl>

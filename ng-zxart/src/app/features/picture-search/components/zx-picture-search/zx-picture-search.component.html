@@ -179,6 +179,11 @@
               [(ngModel)]="filters.stages"
               [label]="'picture-search.stages' | translate"
             ></zx-checkbox-field>
+            <zx-checkbox-field
+              name="fromGame"
+              [(ngModel)]="filters.fromGame"
+              [label]="'picture-search.from-game' | translate"
+            ></zx-checkbox-field>
           </zx-form-fieldset>
 
           <zx-form-fieldset icon="list" [legend]="'picture-search.section-results' | translate">

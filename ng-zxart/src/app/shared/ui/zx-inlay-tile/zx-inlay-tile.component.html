@@ -11,7 +11,7 @@
   <a
     *ngIf="showReleaseInfo && inlay.releaseTitle"
     class="inlay-tile__release"
-    [href]="inlay.releaseUrl"
+    [routerLink]="inlay.releaseUrl"
     appText="caption"
     tone="muted-link"
     (click)="$event.stopPropagation()"

@@ -1,0 +1,54 @@
+<div *ngIf="loading" class="author-alias-edit__loading">
+  <zx-spinner size="lg"></zx-spinner>
+</div>
+
+<form *ngIf="!loading" zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
+  <zx-stack spacing="lg">
+    <zx-form-field>
+      <zx-form-label for="alias-title" [required]="true">{{ 'author-alias-form.title' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-input id="alias-title" formControlName="title" type="text"></zx-input>
+        <zx-control-errors [control]="form.controls['title']" [messages]="titleMessages"></zx-control-errors>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'author-alias-form.author' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-entity-autocomplete
+          formControlName="author"
+          types="author"
+          [placeholder]="'author-alias-form.search-placeholder' | translate"
+        ></zx-entity-autocomplete>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="alias-start">{{ 'author-alias-form.start-date' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-input id="alias-start" formControlName="startDate" type="text"></zx-input>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="alias-end">{{ 'author-alias-form.end-date' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-input id="alias-end" formControlName="endDate" type="text"></zx-input>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-checkbox-field formControlName="displayInMusic" [label]="'author-alias-form.display-in-music' | translate"></zx-checkbox-field>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-checkbox-field formControlName="displayInGraphics" [label]="'author-alias-form.display-in-graphics' | translate"></zx-checkbox-field>
+    </zx-form-field>
+
+    <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+
+    <zx-form-actions align="start">
+      <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'author-alias-form.save' | translate }}</zx-button>
+    </zx-form-actions>
+  </zx-stack>
+</form>

@@ -25,7 +25,7 @@ class publicReceivePressArticle extends structureElementAction
                 $linksManager->linkElements($parentElement->getId(), $structureElement->getId(), 'prodArticle');
             }
 
-            $controller->redirect($structureElement->URL);
+            $this->respondFormSaved($controller, $structureElement); return;
         }
 
         $structureElement->setViewName('form');

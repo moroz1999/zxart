@@ -1,6 +1,7 @@
 import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
 import {ChangeDetectionStrategy, Component, HostListener, Input, OnChanges} from '@angular/core';
+import {Router} from '@angular/router';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {BehaviorSubject, combineLatest, firstValueFrom, Observable, of} from 'rxjs';
 import {map, startWith, switchMap} from 'rxjs/operators';
@@ -122,6 +123,7 @@ export class ZxEditingControlsComponent implements OnChanges {
     private readonly elementPrivilegesApi: ElementPrivilegesApiService,
     private readonly confirmDialog: ConfirmDialogService,
     private readonly translate: TranslateService,
+    private readonly router: Router,
   ) {}
 
   ngOnChanges(): void {
@@ -154,7 +156,7 @@ export class ZxEditingControlsComponent implements OnChanges {
       }
     }
 
-    window.location.href = item.url;
+    void this.router.navigateByUrl(item.url);
   }
 
   @HostListener('document:keydown.escape')

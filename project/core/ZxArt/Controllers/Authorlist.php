@@ -46,13 +46,6 @@ class Authorlist extends LoggedControllerApplication
     public function execute($controller): void
     {
         $action = $this->getParameter('action') ?: '';
-        $elementId = (int)($this->getParameter('elementId') ?? 0);
-
-        if ($elementId <= 0) {
-            $this->assignError('elementId is required', 400);
-            $this->renderer->display();
-            return;
-        }
 
         try {
             if ($action === 'filters') {

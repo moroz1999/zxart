@@ -13,14 +13,14 @@
 </td>
 <td class="tune-main" appText="label" tone="muted">
   <div class="tune-title-line">
-    <a [href]="tune.url" class="tune-title" appText="label" tone="link">{{ tune.title }}</a>
+    <a [routerLink]="tune.url" class="tune-title" appText="label" tone="link">{{ tune.title }}</a>
     <zx-badge *ngIf="tune.isRealtime" variant="secondary" class="tune-realtime">
       {{ realtimeBadgeLabel }}
     </zx-badge>
   </div>
   <div class="tune-authors" *ngIf="tune.authors.length">
     <ng-container *ngFor="let author of tune.authors; last as last">
-      <a [href]="author.url" appText="label" tone="muted-link">{{ author.name }}</a><span *ngIf="!last">, </span>
+      <a [routerLink]="author.url" appText="label" tone="muted-link">{{ author.name }}</a><span *ngIf="!last">, </span>
     </ng-container>
   </div>
 </td>
@@ -29,10 +29,10 @@
 <td class="tune-party" appText="label" tone="muted">
   <ng-container *ngIf="tune.party">
     <zx-party-place [place]="tune.party.place"></zx-party-place>
-    <a [href]="tune.party.url" appText="label" tone="muted-link">{{ tune.party.title }}</a>
+    <a [routerLink]="tune.party.url" appText="label" tone="muted-link">{{ tune.party.title }}</a>
   </ng-container>
   <div *ngIf="tune.release" class="tune-release">
-    <a [href]="tune.release.url" appText="label" tone="muted-link">{{ tune.release.title }}</a>
+    <a [routerLink]="tune.release.url" appText="label" tone="muted-link">{{ tune.release.title }}</a>
   </div>
 </td>
 <td class="tune-stats" appText="label" tone="muted">

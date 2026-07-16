@@ -34,7 +34,8 @@ class receiveAiFormPressArticle extends structureElementAction
                 $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_PRESS_SEO, QueueStatus::STATUS_TODO);
             }
 
-            $controller->redirect($structureElement->getUrl());
+            $this->respondFormSaved($controller, $structureElement);
+            return;
         }
 
         $structureElement->setViewName('form');

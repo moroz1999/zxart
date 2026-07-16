@@ -29,6 +29,7 @@ use zxProdElement;
 readonly class ProdCoreService
 {
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private ProdElementService $prodElementService,
         private ProdInfoBuilder $infoBuilder,
         private ProdTabsRepository $prodTabsRepository,
@@ -50,7 +51,7 @@ readonly class ProdCoreService
             elementId: $element->getId(),
             title: $this->infoBuilder->decodeText($element->title),
             altTitle: $this->infoBuilder->decodeText($element->altTitle),
-            prodUrl: (string)$element->getUrl(),
+            prodUrl: $this->entityUrlResolver->urlFor($element),
             h1: (string)$element->getH1(),
             metaTitle: (string)$element->getMetaTitle(),
             year: $year,
@@ -125,7 +126,7 @@ readonly class ProdCoreService
             $authors[] = new ProdAuthorInfoDto(
                 id: $authorElement->getId(),
                 title: $this->infoBuilder->decodeText($authorElement->title),
-                url: (string)$authorElement->getUrl(),
+                url: $this->entityUrlResolver->urlFor($authorElement),
                 roles: $info['roles'] ?? [],
             );
         }
@@ -151,7 +152,7 @@ readonly class ProdCoreService
             $refs[] = new ProdGroupRefDto(
                 id: $group->getId(),
                 title: $this->infoBuilder->decodeText($group->title),
-                url: (string)$group->getUrl(),
+                url: $this->entityUrlResolver->urlFor($group),
             );
         }
         return $refs;

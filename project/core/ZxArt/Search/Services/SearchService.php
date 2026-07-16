@@ -48,6 +48,7 @@ readonly class SearchService
     ];
 
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private Container $container,
         private ConfigManager $configManager,
         private AuthorListTransformer $authorTransformer,
@@ -314,7 +315,7 @@ readonly class SearchService
         return new SearchResultPreviewDto(
             id: (int)$element->id,
             title: $this->getQuickTitle($element),
-            url: (string)$element->getUrl(),
+            url: $this->entityUrlResolver->urlFor($element),
             structureType: (string)$element->structureType,
         );
     }
@@ -413,7 +414,7 @@ readonly class SearchService
             id: (int)$element->id,
             title: $title,
             titleHtml: $this->highlightTitle($title, $phrase),
-            url: $element->getUrl(),
+            url: $this->entityUrlResolver->urlFor($element),
             snippetHtml: $this->buildSnippet($element, $phrase),
             year: $year,
             authors: $this->collectAuthors($element),
@@ -510,7 +511,7 @@ readonly class SearchService
             }
             $result[] = [
                 'title' => html_entity_decode((string)$author->getTitle(), ENT_QUOTES, 'UTF-8'),
-                'url' => $author->getUrl(),
+                'url' => $this->entityUrlResolver->urlFor($author),
             ];
         }
         return $result;

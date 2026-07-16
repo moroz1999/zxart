@@ -18,7 +18,7 @@ type GeoListItem = GeoAuthorItem | GeoGroupItem | GeoPartyItem;
   providedIn: 'root',
 })
 export class GeoService {
-  readonly map$: Observable<GeoMapResponse> = this.http.get<GeoMapResponse>('/geo/', {params: {action: 'map'}}).pipe(
+  readonly map$: Observable<GeoMapResponse> = this.http.get<GeoMapResponse>('/geo-data/', {params: {action: 'map'}}).pipe(
     catchError(() => of({countries: [], counters: {authors: 0, groups: 0, parties: 0}})),
     shareReplay({bufferSize: 1, refCount: false}),
   );
@@ -57,7 +57,7 @@ export class GeoService {
       params['search'] = search;
     }
 
-    return this.http.get<GeoListResponse<GeoListItem>>('/geo/', {params}).pipe(
+    return this.http.get<GeoListResponse<GeoListItem>>('/geo-data/', {params}).pipe(
       catchError(() => of({total: 0, items: []})),
     );
   }

@@ -23,7 +23,7 @@
     </ng-container>
 
     <ng-container *ngIf="parentItem">
-      <a [href]="parentItem.url" class="zx-breadcrumbs__item">{{ parentItem.title }}</a>
+      <a [routerLink]="parentItem.url" class="zx-breadcrumbs__item">{{ parentItem.title }}</a>
       <span *ngIf="currentTitle" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
     </ng-container>
 

@@ -10,7 +10,7 @@
         *ngFor="let edition of core.editions"
         size="sm"
         [color]="edition.current ? 'secondary' : 'outlined'"
-        [href]="edition.url">
+        [routerLink]="edition.url">
         {{ edition.year }}
       </zx-button>
     </zx-button-controls>

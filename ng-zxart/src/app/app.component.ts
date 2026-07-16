@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {LanguageService} from './features/settings/services/language.service';
 
 @Component({
     selector: 'app-root',
@@ -8,24 +8,9 @@ import {TranslateService} from '@ngx-translate/core';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-    @Input() language?: 'eng' | 'rus' | 'spa';
-    private languages = {
-        eng: 'en',
-        rus: 'ru',
-        spa: 'es',
-    };
-
-    constructor(
-        public translate: TranslateService,
-    ) {}
+    constructor(private languageService: LanguageService) {}
 
     ngOnInit(): void {
-        if (this.language && this.languages[this.language]) {
-            const language = this.languages[this.language];
-            this.translate.addLangs([language]);
-            this.translate.setDefaultLang(language);
-        }
+        this.languageService.initialize();
     }
-
-
 }

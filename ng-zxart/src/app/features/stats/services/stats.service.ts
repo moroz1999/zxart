@@ -9,7 +9,7 @@ import {StatsCategorySection, StatsOverview, StatsUsersSection} from '../models/
 })
 export class StatsService {
   readonly overview$: Observable<StatsOverview | null> = this.http
-    .get<StatsOverview>('/stats/', {params: {action: 'overview'}})
+    .get<StatsOverview>('/stats-data/', {params: {action: 'overview'}})
     .pipe(
       catchError(() => of(null)),
       shareReplay({bufferSize: 1, refCount: false}),
@@ -19,7 +19,7 @@ export class StatsService {
   readonly music$: Observable<StatsCategorySection | null> = this.getSection('music');
   readonly gfx$: Observable<StatsCategorySection | null> = this.getSection('gfx');
   readonly users$: Observable<StatsUsersSection | null> = this.http
-    .get<StatsUsersSection>('/stats/', {params: {action: 'users'}})
+    .get<StatsUsersSection>('/stats-data/', {params: {action: 'users'}})
     .pipe(
       catchError(() => of(null)),
       shareReplay({bufferSize: 1, refCount: false}),
@@ -28,7 +28,7 @@ export class StatsService {
   constructor(private readonly http: HttpClient) {}
 
   private getSection(action: string): Observable<StatsCategorySection | null> {
-    return this.http.get<StatsCategorySection>('/stats/', {params: {action}}).pipe(
+    return this.http.get<StatsCategorySection>('/stats-data/', {params: {action}}).pipe(
       catchError(() => of(null)),
       shareReplay({bufferSize: 1, refCount: false}),
     );

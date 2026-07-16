@@ -17,7 +17,7 @@
           <zx-inline align="center" gap="sm">
             <zx-badge *ngIf="user.badge === 'vip'" variant="primary" class="zx-stats-top-table__badge" title="VIP">★</zx-badge>
             <zx-badge *ngIf="user.badge === 'volunteer'" variant="secondary" class="zx-stats-top-table__badge" title="Volunteer">✓</zx-badge>
-            <a *ngIf="user.url; else plainName" appText="bodySm" tone="link" [href]="user.url">{{ user.name }}</a>
+            <a *ngIf="user.url; else plainName" appText="bodySm" tone="link" [routerLink]="user.url">{{ user.name }}</a>
             <ng-template #plainName><span appText="bodySm" tone="strong">{{ user.name }}</span></ng-template>
           </zx-inline>
         </td>

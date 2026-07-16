@@ -36,7 +36,7 @@ class publicAddGroup extends structureElementAction
             $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'deleteAuthor', 'allow');
             $user->refreshPrivileges();
 
-            $controller->redirect($structureElement->URL);
+            $this->respondFormSaved($controller, $structureElement); return;
         }
 
         $structureElement->setViewName('form');

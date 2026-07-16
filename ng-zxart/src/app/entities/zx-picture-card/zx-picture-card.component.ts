@@ -13,10 +13,11 @@ import {PictureSettingsService} from '../../features/picture-settings/services/p
 import {PictureUrlBuilderService} from '../../shared/services/picture-url-builder.service';
 import {ZxPartyPlaceComponent} from '../../shared/lib/zx-party-place/zx-party-place.component';
 
-@Component({
+
+import {RouterLink} from '@angular/router';@Component({
   selector: 'zx-picture-card',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     AsyncPipe,
     TranslateModule,

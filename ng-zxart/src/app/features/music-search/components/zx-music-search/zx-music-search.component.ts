@@ -1,11 +1,12 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {environment} from '../../../../../environments/environment';
-import {BehaviorSubject, combineLatest, Observable, of, Subject} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
 import {
   catchError,
   debounceTime,
@@ -34,6 +35,7 @@ import {
   MusicSearchSortOrder,
 } from '../../models/music-search-filters';
 import {buildMusicSearchPath, parseMusicSearchUrl} from '../../models/music-search-url';
+import {musicSearchFiltersToParams, paramsToMusicSearchFilters} from '../../models/music-search-query-params';
 import {MusicSearchLocation, MusicSearchResponse} from '../../models/music-search-response';
 import {ZxSelectOption} from '../../../../shared/ui/zx-select/zx-select.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
@@ -63,7 +65,6 @@ import {ZxFormActionsComponent} from '../../../../shared/ui/zx-form/zx-form-acti
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {ZxAuthorsTableComponent} from '../../../../entities/zx-authors-table/zx-authors-table.component';
-
 const ELEMENTS_ON_PAGE = 60;
 const SEARCH_DEBOUNCE_MS = 250;
 const PLAYLIST_ID = 'music-search';
@@ -172,7 +173,10 @@ const EMPTY_TAGS_SEARCH_STATE: TagsSearchState = {
   styleUrls: ['./zx-music-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxMusicSearchComponent implements OnInit {
+export class ZxMusicSearchComponent implements OnInit, OnDestroy {
+  /** Legacy embeds sync filter state to the slug path; the SPA route uses router query params. */
+  @Input() manageUrl = true;
+
   filters: MusicSearchFilters = createDefaultMusicSearchFilters();
 
   readonly playingTuneId$ = this.playerService.state$.pipe(
@@ -187,6 +191,10 @@ export class ZxMusicSearchComponent implements OnInit {
   protected urlBase = '/';
   private appliedFilters: MusicSearchFilters = createDefaultMusicSearchFilters();
   private currentPage = 1;
+
+  private readonly subscriptions = new Subscription();
+  private readonly router = inject(Router, {optional: true});
+  private readonly route = inject(ActivatedRoute, {optional: true});
 
   private readonly requestStore = new BehaviorSubject<MusicSearchRequest | null>(null);
   private readonly filtersCollapsedStore = new BehaviorSubject<boolean | null>(null);
@@ -270,7 +278,7 @@ export class ZxMusicSearchComponent implements OnInit {
         filtersCollapsed: collapsedOverride ?? isMobile,
         rangeStart: this.getRangeStart(searchState),
         rangeEnd: this.getRangeEnd(searchState),
-        paginationUrlBase: buildMusicSearchPath(this.urlBase, this.appliedFilters, 1),
+        paginationUrlBase: this.useRouter ? '' : buildMusicSearchPath(this.urlBase, this.appliedFilters, 1),
         tagsIncludeItems,
         tagsExcludeItems,
         countryItems,
@@ -286,30 +294,58 @@ export class ZxMusicSearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadIcons();
-    const parsed = parseMusicSearchUrl(window.location.pathname);
-    this.urlBase = parsed.urlBase;
-    this.filters = parsed.filters;
-    this.appliedFilters = {...parsed.filters};
-    this.currentPage = parsed.page;
+    if (this.useRouter) {
+      this.subscriptions.add(this.route!.queryParams.subscribe(params => {
+        const parsed = paramsToMusicSearchFilters(params);
+        this.applyState(parsed.filters, parsed.page);
+      }));
+    } else {
+      const parsed = parseMusicSearchUrl(window.location.pathname);
+      this.urlBase = parsed.urlBase;
+      this.applyState(parsed.filters, parsed.page);
+    }
+  }
 
-    this.tagsIncludeItemsStore.next(this.filters.tagsInclude.map(title => this.toTagItem(title)));
-    this.tagsExcludeItemsStore.next(this.filters.tagsExclude.map(title => this.toTagItem(title)));
-    this.restoredLocationIdsStore.next({
-      countryIds: this.filters.authorCountryIds,
-      cityIds: this.filters.authorCityIds,
-    });
-    this.requestStore.next({filters: {...this.appliedFilters}, page: this.currentPage});
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   get activeFiltersCount(): number {
     return countActiveMusicSearchFilters(this.filters);
   }
 
+  /** SPA route mode: filter state lives in / comes from the router query params. */
+  private get useRouter(): boolean {
+    return !this.manageUrl && this.router != null && this.route != null;
+  }
+
+  /** Applies a parsed filter state (from the URL) to the form and reloads results. */
+  private applyState(filters: MusicSearchFilters, page: number): void {
+    this.filters = filters;
+    this.appliedFilters = {...filters};
+    this.currentPage = page;
+    this.tagsIncludeItemsStore.next(filters.tagsInclude.map(title => this.toTagItem(title)));
+    this.tagsExcludeItemsStore.next(filters.tagsExclude.map(title => this.toTagItem(title)));
+    this.manualCountryItemsStore.next([]);
+    this.manualCityItemsStore.next([]);
+    this.removedCountryIdsStore.next([]);
+    this.removedCityIdsStore.next([]);
+    this.restoredLocationIdsStore.next({
+      countryIds: filters.authorCountryIds,
+      cityIds: filters.authorCityIds,
+    });
+    this.requestStore.next({filters: {...this.appliedFilters}, page: this.currentPage});
+  }
+
   onSubmit(): void {
     this.appliedFilters = {...this.filters};
     this.currentPage = 1;
-    this.updateUrl();
-    this.requestStore.next({filters: {...this.appliedFilters}, page: this.currentPage});
+    if (this.useRouter) {
+      this.navigateWithParams();
+    } else {
+      this.updateUrl();
+      this.requestStore.next({filters: {...this.appliedFilters}, page: this.currentPage});
+    }
   }
 
   onReset(): void {
@@ -324,8 +360,12 @@ export class ZxMusicSearchComponent implements OnInit {
 
   onPageChange(page: number): void {
     this.currentPage = page;
-    this.updateUrl();
-    this.requestStore.next({filters: {...this.appliedFilters}, page: this.currentPage});
+    if (this.useRouter) {
+      this.navigateWithParams();
+    } else {
+      this.updateUrl();
+      this.requestStore.next({filters: {...this.appliedFilters}, page: this.currentPage});
+    }
   }
 
   toggleFilters(currentValue: boolean): void {
@@ -601,6 +641,12 @@ export class ZxMusicSearchComponent implements OnInit {
   private updateUrl(): void {
     const newPath = buildMusicSearchPath(this.urlBase, this.appliedFilters, this.currentPage);
     window.history.pushState(null, '', newPath);
+  }
+
+  /** SPA route mode: write the applied filters + page to the router query params. */
+  private navigateWithParams(): void {
+    const queryParams: Params = musicSearchFiltersToParams(this.appliedFilters, this.currentPage);
+    this.router!.navigate([], {relativeTo: this.route!, queryParams});
   }
 
   private pickLocations(locations: MusicSearchLocation[], ids: number[]): TagItem[] {

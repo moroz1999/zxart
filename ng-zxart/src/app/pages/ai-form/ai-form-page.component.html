@@ -1,0 +1,20 @@
+<div *ngIf="loading" class="ai-form__loading">
+  <zx-spinner size="lg"></zx-spinner>
+</div>
+
+<form *ngIf="!loading" zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
+  <zx-stack spacing="lg">
+    <zx-form-field *ngFor="let item of fields">
+      <zx-form-control>
+        <zx-checkbox-field [formControlName]="item.field" [label]="item.labelKey | translate"></zx-checkbox-field>
+        <span *ngIf="statuses[item.field]" class="ai-form__status">{{ statuses[item.field] }}</span>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+
+    <zx-form-actions align="start">
+      <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'ai-form.submit' | translate }}</zx-button>
+    </zx-form-actions>
+  </zx-stack>
+</form>

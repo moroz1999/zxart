@@ -68,6 +68,34 @@ When adding a reusable Angular pattern, document the generic rule here and place
 
 All static section URLs (comments, support, search, registration, password reminder, profile, playlists, home, catalogue base URLs) for the current language are fetched via a single `GET /backend-links/?lang={code}` call. Use `BackendLinksService.links$` (`features/header/services/backend-links.service.ts`) to access them. The service caches results in LocalStorage per language code and emits once via a BehaviorSubject — all consumers subscribe and wait for the single emission.
 
+### Interface Language
+
+The SPA owns the interface language (`LanguageService`, `shared/services/`). The
+selected language lives in localStorage; `languageInterceptor`
+(`shared/interceptors/`) sends it to every same-origin request as an `X-Language`
+header so backend responses are localized. Never read the language from the URL or
+the backend session. Full behavior: [domain/language-auth.md](domain/language-auth.md).
+
+### Internal Links
+
+Links to routed SPA pages use Angular `RouterLink` directly on the anchor:
+`<a [routerLink]="entity.url">`. Entity URLs come from the backend
+`EntityUrlResolver` and are always clean SPA paths (`/prod/123`), so the string
+form of `routerLink` is enough and it renders the `href` for right-click /
+open-in-new-tab. Keep plain `[href]` only for genuinely external, download or
+not-yet-routed legacy URLs. Link-rendering primitives that take a single URL
+input (`zx-button`, `zx-chip`, `zx-callout`, `zx-popover-menu-item`) pick
+`routerLink` vs `href` internally via `isSpaUrl`, so their callers just pass the
+URL. Do not add global click interception.
+
+### Route Guards
+
+Cross-cutting per-navigation logic belongs in a route guard, not in components.
+`authGuard` (a blocking `canActivateChild` on a pathless parent that wraps all
+routes) resolves the current user before the first render (auto-login) and applies
+the user's language once. Guards that must complete before rendering return an
+Observable that emits when ready.
+
 ### LocalStorage
 
 All localStorage access MUST go through `LocalStorageService` (`shared/services/local-storage.service.ts`). Direct use of `localStorage` (e.g. `localStorage.getItem/setItem/removeItem`) is **forbidden**.

@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+.zx-multi-entity-autocomplete {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.zx-multi-entity-autocomplete__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.zx-multi-entity-autocomplete__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: var(--zx-tags-input-dropdown-border);
+  border-radius: var(--zx-tags-input-dropdown-radius);
+  padding: 2px 6px;
+  background: var(--zx-tags-input-dropdown-bg);
+}

@@ -26,6 +26,7 @@ readonly class PictureSearchQuery
         public bool $realtimeOnly,
         public bool $inspirationOnly,
         public bool $stagesOnly,
+        public bool $fromGameOnly,
         public array $tagsInclude,
         public array $tagsExclude,
         public array $authorCountryIds,

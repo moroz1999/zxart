@@ -6,7 +6,7 @@
     <div class="ifc-meta" appText="caption" tone="muted">
       {{ file.fileName }}
       <ng-container *ngIf="showReleaseInfo && file.releaseTitle">
-        · <a [href]="file.releaseUrl" class="ifc-release-link" appText="caption" tone="muted-link">{{ file | prodReleaseLabel }}</a>
+        · <a [routerLink]="file.releaseUrl" class="ifc-release-link" appText="caption" tone="muted-link">{{ file | prodReleaseLabel }}</a>
       </ng-container>
     </div>
   </div>

@@ -34,7 +34,7 @@ class publicAddAuthorAlias extends structureElementAction
             $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'authorAlias', 'publicDelete', 'allow');
             $user->refreshPrivileges();
 
-            $controller->redirect($structureElement->URL);
+            $this->respondFormSaved($controller, $structureElement); return;
         }
 
         $structureElement->setViewName('form');

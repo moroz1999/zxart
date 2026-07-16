@@ -45,7 +45,7 @@ class publicAddGroupAlias extends structureElementAction
             );
             $user->refreshPrivileges();
 
-            $controller->redirect($structureElement->URL);
+            $this->respondFormSaved($controller, $structureElement); return;
         }
 
         $structureElement->setViewName('form');

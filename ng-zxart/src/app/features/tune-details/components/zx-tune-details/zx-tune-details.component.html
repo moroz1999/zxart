@@ -14,14 +14,13 @@
           <h1 appHeading="display">{{ details.title }}</h1>
           <zx-badge variant="secondary">#{{ details.id }}</zx-badge>
           <zx-tune-editing-controls
-            [elementId]="details.id"
-            [tuneUrl]="details.url">
+            [elementId]="details.id">
           </zx-tune-editing-controls>
         </zx-inline>
 
         <div appText="body" tone="muted">
           <ng-container *ngFor="let author of details.authors; let last = last">
-            <a [href]="author.url" appText="body" tone="link">{{ author.name }}</a><ng-container *ngIf="!last">, </ng-container>
+            <a [routerLink]="author.url" appText="body" tone="link">{{ author.name }}</a><ng-container *ngIf="!last">, </ng-container>
           </ng-container>
           <span *ngIf="details.year"> · {{ details.year }}</span>
         </div>
@@ -31,7 +30,7 @@
           <zx-inline *ngIf="details.partyContext" align="center" spacing="sm" [wrap]="true">
             <zx-party-place [place]="details.partyContext.place"></zx-party-place>
             <span appText="body">
-              <a [href]="details.partyContext.url" appText="body" tone="link">{{ details.partyContext.title }}</a>
+              <a [routerLink]="details.partyContext.url" appText="body" tone="link">{{ details.partyContext.title }}</a>
               <span *ngIf="details.partyContext.compoLabel" appText="body" tone="muted"> · {{ details.partyContext.compoLabel }}</span>
             </span>
           </zx-inline>

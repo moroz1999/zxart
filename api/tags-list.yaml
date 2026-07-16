@@ -1,0 +1,51 @@
+paths:
+  /tags-list-data/:
+    get:
+      summary: Tag cloud for a collection section (graphics, music)
+      parameters:
+        - in: query
+          name: section
+          required: true
+          schema:
+            type: string
+            enum: [graphics, music]
+      responses:
+        '200':
+          description: Tags connected to the section, ordered by title
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagsListPayload'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+components:
+  schemas:
+    TagsListPayload:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagListItem'
+    TagListItem:
+      type: object
+      required: [id, title, amount]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        amount:
+          type: integer
+          description: Global usage count of the tag, used for cloud font sizing
+    ErrorPayload:
+      type: object
+      required: [errorMessage]
+      properties:
+        errorMessage:
+          type: string

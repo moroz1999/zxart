@@ -1,5 +1,5 @@
 paths:
-  /geo/:
+  /geo-data/:
     get:
       summary: Geo section map and entity lists
       parameters:

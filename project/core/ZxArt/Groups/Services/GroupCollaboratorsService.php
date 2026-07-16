@@ -18,6 +18,7 @@ use ZxArt\Prods\Exception\ProdDetailsException;
 readonly final class GroupCollaboratorsService
 {
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
         private GroupCollaboratorsRepository $collaboratorsRepository,
     ) {
@@ -83,7 +84,7 @@ readonly final class GroupCollaboratorsService
             $people[] = new GroupCollaboratorPersonDto(
                 id: $element->getId(),
                 title: html_entity_decode($element->getTitle(), ENT_QUOTES),
-                url: (string)$element->getUrl(),
+                url: $this->entityUrlResolver->urlFor($element),
                 roles: $row['roles'],
                 jointTotal: $row['jointTotal'],
             );
@@ -106,7 +107,7 @@ readonly final class GroupCollaboratorsService
             $groups[] = new GroupCollaboratorGroupDto(
                 id: $element->getId(),
                 title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
-                url: (string)$element->getUrl(),
+                url: $this->entityUrlResolver->urlFor($element),
                 years: $this->formatYears($row['years']),
                 membersCount: $this->collaboratorsRepository->countMembers($element->getId()),
                 jointProds: $row['jointProds'],

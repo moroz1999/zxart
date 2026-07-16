@@ -7,7 +7,7 @@
           *ngIf="seriesUrl$ | async as seriesUrl"
           size="xs"
           color="outlined"
-          [href]="seriesUrl"
+          [routerLink]="seriesUrl"
         >{{ 'prod-details.openSeries' | translate }}</zx-button>
       </zx-inline>
       <zx-prods-list-view

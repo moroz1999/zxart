@@ -28,7 +28,8 @@ class publicReceiveAuthor extends structureElementAction
             $structureElement->recalculate();
             $structureElement->reconvertMusic();
 
-            $controller->redirect($structureElement->URL);
+            $this->respondFormSaved($controller, $structureElement);
+            return;
         }
         $structureElement->setViewName('form');
     }

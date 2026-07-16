@@ -33,7 +33,7 @@ import {
 import {GeoService} from '../../services/geo.service';
 import {ThemeService} from '../../../settings/services/theme.service';
 import {Theme} from '../../../settings/models/preference.dto';
-
+import {RouterLink} from '@angular/router';
 type GeoListItem = GeoAuthorItem | GeoGroupItem | GeoPartyItem;
 
 interface GeoLayerState {
@@ -45,7 +45,7 @@ interface GeoLayerState {
 @Component({
   selector: 'zx-geo',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, ZxButtonComponent, ZxInputComponent, ZxSelectComponent],
+  imports: [RouterLink, CommonModule, FormsModule, TranslateModule, ZxButtonComponent, ZxInputComponent, ZxSelectComponent],
   templateUrl: './zx-geo.component.html',
   styleUrl: './zx-geo.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

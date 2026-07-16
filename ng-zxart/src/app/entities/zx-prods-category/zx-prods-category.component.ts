@@ -6,9 +6,13 @@ import {
   HostBinding,
   HostListener,
   Input,
+  OnDestroy,
   OnInit,
+  Optional,
   ViewChild
 } from '@angular/core';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {Subscription} from 'rxjs';
 import {ElementsService, PostParameters} from '../../shared/services/elements.service';
 import {ZxProdCategory} from './models/zx-prod-category';
 import {Tag} from '../../shared/models/tag';
@@ -61,7 +65,7 @@ export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxProdsCategoryComponent implements OnInit {
+export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
     public model!: ZxProdCategory;
     public pagesAmount = 0;
     public currentPage = 1;
@@ -98,12 +102,35 @@ export class ZxProdsCategoryComponent implements OnInit {
     }
 
     @Input() elementId: number = 0;
+    /**
+     * Legacy pages prefetch the model into `window` and drive the URL via
+     * `history.pushState`. When mounted by the SPA route this is off: the model
+     * is fetched over HTTP and the URL is left to the Angular router.
+     */
+    @Input() manageUrl = true;
+    /**
+     * SPA collection mount point without a hardcoded id: the backend resolves the
+     * catalogue root by this structure type. The `cat` query param then overrides
+     * it per category.
+     */
+    @Input() rootType = '';
+
+    /** Catalogue root id; resolved from the loaded root model, or from the `cat` query param. */
+    private rootElementId = 0;
+    private routerSub?: Subscription;
 
     constructor(
         private elementsService: ElementsService,
         private cdr: ChangeDetectorRef,
         private iconReg: SvgIconRegistryService,
+        @Optional() private router: Router | null,
+        @Optional() private route: ActivatedRoute | null,
     ) {}
+
+    /** SPA route mode: drive category + filters through the Angular router (no slugs, no pushState). */
+    private get useRouter(): boolean {
+        return !this.manageUrl && this.router != null && this.route != null;
+    }
 
     @HostListener('window:popstate', ['$event'])
     historyUpdateHandler(event: PopStateEvent): void {
@@ -136,52 +163,49 @@ export class ZxProdsCategoryComponent implements OnInit {
         for (const name of ['image', 'videogame-asset', 'photo-camera', 'list']) {
             this.iconReg.loadSvg(`${environment.svgUrl}${name}.svg`, name)?.subscribe();
         }
-        this.fetchPrefetchedModel();
+        if (this.useRouter) {
+            // SPA route: category (`cat`) + filters + page live in the URL query params
+            this.rootElementId = this.elementId;
+            this.routerSub = this.route!.queryParams.subscribe(params => this.applyQueryParams(params));
+        } else {
+            this.fetchModel();
+        }
     }
 
-    private fetchPrefetchedModel(): void {
-        this.elementsService.getPrefetchedModel<ZxProdCategoryDto, ZxProdCategory>(this.elementId, ZxProdCategory).subscribe(
-            model => {
-                this.model = model;
-                this.pagesAmount = Math.ceil(this.model.prodsAmount / this.elementsOnPage);
-                this.currentPage = this.model.selectorValues.page;
-                this.letter = this.model.selectorValues.letter;
-                this.years = this.model.selectorValues.years;
-                this.legalStatuses = this.model.selectorValues.statuses;
-                // this.tags = this.model.selectorValues.tags;
-                this.countries = this.model.selectorValues.countries;
-                this.hw = this.model.selectorValues.hw;
-                this.formats = this.model.selectorValues.formats;
-                this.releaseTypes = this.model.selectorValues.releaseTypes;
-                this.languages = this.model.selectorValues.languages;
-                this.releases = this.model.selectorValues.releases;
-                this.includeSubcategoriesProds = this.model.selectorValues.includeSubcategoriesProds;
-                this.sorting = this.model.sortingSelector[0]?.values.find(item => item.selected)?.value;
+    ngOnDestroy(): void {
+        this.routerSub?.unsubscribe();
+    }
 
-                let urlBase = this.model.url;
-                const parameters = this.gatherParameters();
-                for (const [key, value] of Object.entries(parameters)) {
-                    if (key !== 'page') {
-                        urlBase += `${key}:${value}/`;
-                    }
-                }
+    /** Reads the full filter state from the URL query params and loads the page. */
+    private applyQueryParams(params: Params): void {
+        this.elementId = params['cat'] ? +params['cat'] : this.rootElementId;
+        this.years = this.splitParam(params['years']);
+        this.hw = this.splitParam(params['hw']);
+        this.languages = this.splitParam(params['languages']);
+        this.legalStatuses = params['statuses'] ? params['statuses'].split(',') : [...defaultStatuses];
+        this.formats = this.splitParam(params['formats']);
+        this.releaseTypes = this.splitParam(params['types']);
+        this.letter = params['letter'] ?? '';
+        this.sorting = params['sorting'] ?? 'votes,desc';
+        this.tags = params['tags'] ? params['tags'].split(',').map(Number) : [];
+        this.countries = this.splitParam(params['countries']);
+        this.releases = params['releases'] === '1';
+        this.includeSubcategoriesProds = params['includeSubcategoriesProds'] !== '0';
+        this.currentPage = params['page'] ? +params['page'] : 1;
+        this.loadData();
+    }
 
-                this.urlBase = urlBase;
-            },
-            () => {
+    private splitParam(value: string | undefined): string[] {
+        return value ? value.split(',') : [];
+    }
 
-            },
-            () => {
-                this.loading = false;
-                this.cdr.markForCheck();
-                this.contentElement?.nativeElement.scrollIntoView({
-                    block: 'start',
-                    inline: 'start',
-                    behavior: 'smooth',
-                });
-            },
-        );
-
+    /** Pushes the current filter state to the URL as query params (no slugs). */
+    private navigateWithParams(): void {
+        const queryParams: Params = {...this.gatherParameters()};
+        if (this.elementId !== this.rootElementId) {
+            queryParams['cat'] = this.elementId;
+        }
+        this.router!.navigate([], {relativeTo: this.route!, queryParams});
     }
 
     private gatherParameters(): PostParameters {
@@ -238,11 +262,30 @@ export class ZxProdsCategoryComponent implements OnInit {
     }
 
     private fetchModel(): void {
+        // SPA route: write the state to the URL; the queryParams subscription reloads.
+        if (this.useRouter) {
+            this.navigateWithParams();
+            return;
+        }
+        this.loadData();
+    }
+
+    private loadData(): void {
         this.loading = true;
         const parameters = this.gatherParameters();
-        this.elementsService.getModel<ZxProdCategoryDto, ZxProdCategory>(this.elementId, ZxProdCategory, parameters, 'zxProdsList').subscribe(
+        this.elementsService.getModel<ZxProdCategoryDto, ZxProdCategory>(this.elementId, ZxProdCategory, parameters, 'zxProdsList', this.rootType).subscribe(
             model => {
                 this.model = model;
+                // Type-resolved root: adopt its real id so category navigation and the
+                // `cat != root` URL check work without a hardcoded wrapper id.
+                if (this.useRouter && model.id) {
+                    if (!this.rootElementId) {
+                        this.rootElementId = model.id;
+                    }
+                    if (!this.elementId) {
+                        this.elementId = model.id;
+                    }
+                }
                 this.pagesAmount = Math.ceil(this.model.prodsAmount / this.elementsOnPage);
                 this.currentPage = this.model.selectorValues.page;
                 this.letter = this.model.selectorValues.letter;
@@ -270,7 +313,7 @@ export class ZxProdsCategoryComponent implements OnInit {
                 }
 
                 this.urlBase = urlBase;
-                if (environment.production) {
+                if (this.manageUrl && environment.production) {
                     if (window.location.href !== reqUrl) {
                         window.history.pushState({parameters, elementId: this.elementId}, '', reqUrl);
                     }

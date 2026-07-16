@@ -18,6 +18,7 @@ use zxReleaseElement;
 readonly class ProdReleasesService
 {
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private ProdElementService $prodElementService,
         private ProdInfoBuilder $infoBuilder,
         private ReleaseFormatsProvider $releaseFormatsProvider,
@@ -78,7 +79,7 @@ readonly class ProdReleasesService
         return new ProdReleaseDto(
             id: $release->getId(),
             title: $this->infoBuilder->decodeText((string)$release->getTitle()),
-            url: (string)$release->getUrl(),
+            url: $this->entityUrlResolver->urlFor($release),
             year: $release->getYear() ?? 0,
             version: $release->version,
             releaseType: $release->releaseType,

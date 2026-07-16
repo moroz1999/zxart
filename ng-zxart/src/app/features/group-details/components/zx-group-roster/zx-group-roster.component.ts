@@ -14,7 +14,7 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 import {ZxSkeletonBoneComponent} from '../../../../shared/ui/zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {environment} from '../../../../../environments/environment';
-
+import {RouterLink} from '@angular/router';
 const ROLE_ORDER = ['coder', 'graphician', 'musician', 'support', 'cracker', 'organizer', 'hardware', 'tester', 'gamedesigner'];
 const SKELETON_MEMBER_ITEMS = [0, 1, 2, 3, 4, 5];
 const SKELETON_CHIP_ITEMS = [0, 1, 2];
@@ -22,7 +22,7 @@ const SKELETON_CHIP_ITEMS = [0, 1, 2];
 @Component({
   selector: 'zx-group-roster',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     SvgIconComponent,

@@ -80,10 +80,12 @@ readonly class BackendLinksService
 
     private function getRegistrationUrl(int $languageId): ?string
     {
+        // migrated to the Angular SPA static registration page; only expose it
+        // when a registration element actually exists in this structure
         $elements = $this->structureManager->getElementsByType('registration', $languageId);
         foreach ($elements as $element) {
             if ($element->type === 'registration') {
-                return (string)$element->URL;
+                return '/register';
             }
         }
         return null;
@@ -101,24 +103,14 @@ readonly class BackendLinksService
 
     private function getProfileUrl(int $languageId): ?string
     {
-        $elements = $this->structureManager->getElementsByType('registration', $languageId);
-        foreach ($elements as $element) {
-            if ($element->type === 'userdata') {
-                $parent = $this->structureManager->getElementsFirstParent($element->id);
-                return $parent !== null ? (string)$parent->URL : null;
-            }
-        }
-        return null;
+        // migrated to the Angular SPA self-service profile page
+        return '/profile';
     }
 
     private function getPlaylistsUrl(int $languageId): ?string
     {
-        $elements = $this->structureManager->getElementsByType('userPlaylists', $languageId);
-        if (!empty($elements)) {
-            $element = reset($elements);
-            return (string)$element->URL;
-        }
-        return null;
+        // migrated to the Angular SPA playlists page
+        return '/playlists';
     }
 
     private function getProdCatalogueBaseUrl(int $languageId): ?string

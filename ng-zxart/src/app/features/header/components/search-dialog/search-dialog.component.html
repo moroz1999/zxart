@@ -26,7 +26,7 @@
           <div class="sd-group-caption" appText="label" tone="muted">{{ 'header.search.type.' + group.type | translate }}</div>
           @for (item of group.items; track $index; let ii = $index) {
             @if (item.url) {
-              <a [href]="item.url" class="sd-result-item" [class.sd-result-item--focused]="focusedIndex === getItemFlatIndex(gi, ii)">
+              <a [routerLink]="item.url" (click)="close()" class="sd-result-item" [class.sd-result-item--focused]="focusedIndex === getItemFlatIndex(gi, ii)">
                 <svg-icon [name]="group.icon" class="sd-result-icon"></svg-icon>
                 <span class="sd-result-title" appText="body">{{ item.title }}</span>
               </a>
@@ -45,7 +45,7 @@
   @if (searchAllUrl()) {
     <div zxDialogFooter>
       <zx-button-controls align="end">
-        <zx-button color="primary" size="sm" [href]="searchAllUrl()!">
+        <zx-button color="primary" size="sm" [href]="searchAllUrl()!" (click)="close()">
           {{ 'header.search.search-all' | translate }}
         </zx-button>
       </zx-button-controls>

@@ -15,7 +15,7 @@ class convertToGroupGroupAlias extends structureElementAction
             $groupsService = $this->getService(GroupsService::class);
 
             if ($newElement = $groupsService->convertGroupAliasToGroup($structureElement)) {
-                $controller->redirect($newElement->getUrl());
+                $this->respondFormSaved($controller, $newElement); return;
             }
         }
 

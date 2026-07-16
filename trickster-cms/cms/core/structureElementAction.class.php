@@ -104,6 +104,24 @@ abstract class structureElementAction extends errorLogger implements DependencyI
     {
         return $this->structureElement->title . " " . $this->structureElement->structureType . " " . $this->structureElement->id;
     }
+
+    /**
+     * Response after a successful form save. On a JSON/ajax request (the SPA
+     * forms, run through `/ajax/`) it returns a bare `{"id": <id>}` body (200) —
+     * the Angular app navigates to that entity and refreshes; also covers create,
+     * where the id is the newly created element. On a legacy full-page request it
+     * performs the redirect. Public form `*-receive` actions call this instead of
+     * `$controller->redirect()`.
+     */
+    protected function respondFormSaved(controller $controller, structureElement $structureElement): void
+    {
+        $renderer = $this->getService(renderer::class);
+        if ($renderer instanceof RendererPluginAppendInterface) {
+            $renderer->assign('body', ['id' => $structureElement->getId()]);
+            return;
+        }
+        $controller->redirect($structureElement->URL);
+    }
 }
 
 

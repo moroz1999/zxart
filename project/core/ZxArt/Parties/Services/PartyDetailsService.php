@@ -32,6 +32,7 @@ readonly class PartyDetailsService
     ];
 
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
         private breadcrumbsManager $breadcrumbsManager,
         private PartyCompoNameResolver $compoNameResolver,
@@ -54,7 +55,7 @@ readonly class PartyDetailsService
             title: $this->decode((string)$party->getTitle()),
             abbreviation: $this->decode((string)$party->abbreviation),
             originalName: $this->decode((string)$party->originalName),
-            url: (string)$party->getUrl(),
+            url: $this->entityUrlResolver->urlFor($party),
             imageUrl: $party->getImageUrl(),
             year: ($year = $party->getYear()) !== '' ? $year : null,
             location: $this->buildLocation($party),
@@ -191,7 +192,7 @@ readonly class PartyDetailsService
             $editions[] = new PartyEditionDto(
                 id: (int)$edition->getId(),
                 year: $year,
-                url: (string)$edition->getUrl(),
+                url: $this->entityUrlResolver->urlFor($edition),
                 current: (int)$edition->getId() === (int)$party->getId(),
             );
         }

@@ -2,8 +2,7 @@
   <zx-inline gap="md" align="center" [wrap]="true">
     <p appHeading="headline">{{ core.title }}</p>
     <zx-prod-editing-controls
-      [elementId]="core.elementId"
-      [prodUrl]="core.prodUrl">
+      [elementId]="core.elementId">
     </zx-prod-editing-controls>
     <span *ngIf="core.year > 0" class="hero-year">{{ core.year }}</span>
   </zx-inline>
@@ -38,7 +37,7 @@
       <span *ngIf="!firstGroup" class="hero-people__sep">·</span>
       <span class="hero-people__label">{{ roleLabelKey(group.role) | translate }}:</span>
       <ng-container *ngFor="let author of group.authors; let last = last; trackBy: trackAuthor">
-        <a [href]="author.url" class="hero-people__link">{{ author.title }}</a><ng-container *ngIf="!last">, </ng-container>
+        <a [routerLink]="author.url" class="hero-people__link">{{ author.title }}</a><ng-container *ngIf="!last">, </ng-container>
       </ng-container>
     </ng-container>
 
@@ -46,7 +45,7 @@
       <span *ngIf="hasAuthorRoleGroups" class="hero-people__sep">·</span>
       <span class="hero-people__label">{{ 'prod-details.publishers' | translate }}:</span>
       <ng-container *ngFor="let pub of core.publishers; let last = last">
-        <a [href]="pub.url" class="hero-people__link">{{ pub.title }}</a><ng-container *ngIf="!last">, </ng-container>
+        <a [routerLink]="pub.url" class="hero-people__link">{{ pub.title }}</a><ng-container *ngIf="!last">, </ng-container>
       </ng-container>
     </ng-container>
 
@@ -54,14 +53,14 @@
       <span *ngIf="hasAuthorRoleGroups || core.publishers.length" class="hero-people__sep">·</span>
       <span class="hero-people__label">{{ 'prod-details.groups' | translate }}:</span>
       <ng-container *ngFor="let group of core.groups; let last = last">
-        <a [href]="group.url" class="hero-people__link">{{ group.title }}</a><ng-container *ngIf="!last">, </ng-container>
+        <a [routerLink]="group.url" class="hero-people__link">{{ group.title }}</a><ng-container *ngIf="!last">, </ng-container>
       </ng-container>
     </ng-container>
 
     <ng-container *ngIf="core.party as party">
       <span *ngIf="hasAuthorRoleGroups || core.publishers.length || core.groups.length" class="hero-people__sep">·</span>
       <span class="hero-people__label">{{ 'prod-details.party' | translate }}:</span>
-      <a [href]="party.url" class="hero-people__link">{{ party.title }}</a>
+      <a [routerLink]="party.url" class="hero-people__link">{{ party.title }}</a>
       <ng-container *ngIf="party.compoLabel">
         (<zx-party-place [place]="party.place"></zx-party-place><ng-container *ngIf="party.place && party.place > 0">, </ng-container>{{ party.compoLabel }})
       </ng-container>

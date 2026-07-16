@@ -33,6 +33,7 @@ readonly class ProdInfoBuilder
     public function __construct(
         private translationsManager $translationsManager,
         private DesignThemesManager $designThemesManager,
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
     ) {
     }
 
@@ -59,7 +60,7 @@ readonly class ProdInfoBuilder
             id: $party->getId(),
             title: $this->decodeText($party->title),
             abbreviation: $party->abbreviation !== '' ? $this->decodeText($party->abbreviation) : null,
-            url: (string)$party->getUrl(),
+            url: $this->entityUrlResolver->urlFor($party),
             place: $element->getPartyPlace(),
             compoLabel: $compoLabel,
         );
@@ -149,7 +150,7 @@ readonly class ProdInfoBuilder
             $authors[] = new ProdAuthorInfoDto(
                 id: $authorElement->getId(),
                 title: $this->decodeText($authorElement->title),
-                url: (string)$authorElement->getUrl(),
+                url: $this->entityUrlResolver->urlFor($authorElement),
                 roles: $roles,
             );
         }
@@ -191,7 +192,7 @@ readonly class ProdInfoBuilder
             $refs[] = new ProdGroupRefDto(
                 id: $publisher->getId(),
                 title: $this->decodeText($publisher->title),
-                url: (string)$publisher->getUrl(),
+                url: $this->entityUrlResolver->urlFor($publisher),
             );
         }
         return $refs;

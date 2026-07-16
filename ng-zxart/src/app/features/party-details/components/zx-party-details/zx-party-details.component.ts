@@ -25,14 +25,14 @@ import {ZxTabComponent} from '../../../../shared/ui/zx-tabs/zx-tab.component';
 import {ZxTabContentDirective} from '../../../../shared/ui/zx-tabs/zx-tab-content.directive';
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
-
+import {RouterLink} from '@angular/router';
 /** Static tab ids; competition tabs use their raw `compoType` as the id. */
 type PartyTabId = 'overview' | 'activity' | string;
 
 @Component({
   selector: 'zx-party-details-view',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     ZxBreadcrumbsComponent,
@@ -61,6 +61,8 @@ type PartyTabId = 'overview' | 'activity' | string;
 })
 export class ZxPartyDetailsComponent implements OnInit {
   @Input() elementId = 0;
+  /** Active tab id from the route (`party/:id/:tab`); null = default tab. */
+  @Input() activeTab: string | null = null;
   @ViewChild(ZxTabsComponent, {read: ElementRef}) private tabsRef!: ElementRef<HTMLElement>;
 
   readonly skeletonTabs = [0, 1, 2, 3];
@@ -77,17 +79,13 @@ export class ZxPartyDetailsComponent implements OnInit {
   }
 
   getInitialTabIndex(core: PartyCoreDto): number {
-    const requestedTab = this.getRequestedTabId();
-    const index = requestedTab ? this.getTabs(core).indexOf(requestedTab) : -1;
+    const index = this.activeTab ? this.getTabs(core).indexOf(this.activeTab) : -1;
 
     return index >= 0 ? index : 0;
   }
 
   getTabHref(tabId: PartyTabId): string {
-    const path = window.location.pathname.replace(/\/tab:[^/]+(?=\/|$)/, '').replace(/\/page:\d+(?=\/|$)/, '');
-    const normalizedPath = path.endsWith('/') ? path : `${path}/`;
-
-    return `${normalizedPath}tab:${encodeURIComponent(tabId)}/`;
+    return `/party/${this.elementId}/${encodeURIComponent(tabId)}`;
   }
 
   onTabChange(_: number): void {
@@ -102,11 +100,5 @@ export class ZxPartyDetailsComponent implements OnInit {
     if (core.tabs.hasActivity) tabs.push('activity');
 
     return tabs;
-  }
-
-  private getRequestedTabId(): string | null {
-    const match = window.location.pathname.match(/\/tab:([^/]+)(?=\/|$)/);
-
-    return match ? decodeURIComponent(match[1]) : null;
   }
 }

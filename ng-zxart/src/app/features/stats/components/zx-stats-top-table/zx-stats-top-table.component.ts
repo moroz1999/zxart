@@ -8,10 +8,11 @@ import {StatsTopUser} from '../../models/stats.models';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 
-@Component({
+
+import {RouterLink} from '@angular/router';@Component({
   selector: 'zx-stats-top-table',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     ZxTableComponent,

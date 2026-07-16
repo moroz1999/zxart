@@ -14,10 +14,11 @@ import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.compo
 import {ZxInsetComponent} from '../../../../shared/ui/zx-inset/zx-inset.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 
-@Component({
+
+import {RouterLink} from '@angular/router';@Component({
   selector: 'zx-comment',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     CommentFormComponent,

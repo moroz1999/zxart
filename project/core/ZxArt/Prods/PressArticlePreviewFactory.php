@@ -19,6 +19,11 @@ use ZxArt\Prods\Dto\PressArticlePublicationDto;
  */
 readonly class PressArticlePreviewFactory
 {
+    public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
+    ) {
+    }
+
     private const string PUBLICATION_IMAGE_PRESET = 'prodImage';
 
     /**
@@ -42,7 +47,7 @@ readonly class PressArticlePreviewFactory
         return new PressArticlePreviewDto(
             id: $article->getId(),
             title: $this->decodeText((string)$article->title),
-            url: (string)$article->getUrl(),
+            url: $this->entityUrlResolver->urlFor($article),
             introduction: (string)$article->introduction,
             authors: $this->buildAuthors($article),
             publication: $this->buildPublication($article),
@@ -62,7 +67,7 @@ readonly class PressArticlePreviewFactory
             $authors[] = new PressArticleAuthorDto(
                 id: $author->getId(),
                 title: $this->decodeText((string)$author->getTitle()),
-                url: (string)$author->getUrl(),
+                url: $this->entityUrlResolver->urlFor($author),
             );
         }
         return $authors;
@@ -80,7 +85,7 @@ readonly class PressArticlePreviewFactory
         return new PressArticlePublicationDto(
             id: $parent->getId(),
             title: $this->decodeText((string)$parent->getTitle()),
-            url: (string)$parent->getUrl(),
+            url: $this->entityUrlResolver->urlFor($parent),
             year: $year > 0 ? $year : null,
             imageUrl: $this->resolvePublicationImageUrl($parent),
         );

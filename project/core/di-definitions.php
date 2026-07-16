@@ -30,7 +30,6 @@ use ZxArt\GroupList\GroupListService;
 use ZxArt\Geo\GeoService;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Logs\Log;
-use ZxArt\Menu\MenuService;
 use ZxArt\Prods\ProdArticlesService;
 use ZxArt\Prods\ProdCoreService;
 use ZxArt\Prods\ProdElementService;
@@ -64,8 +63,6 @@ return [
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
 
     AuthorPageUrlProvider::class => autowire()
-        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
-    MenuService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     BackendLinksService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),

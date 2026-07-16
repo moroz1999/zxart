@@ -1,13 +1,17 @@
 import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
-import {DoBootstrap, Injector, NgModule, Type} from '@angular/core';
+import {ApplicationRef, DoBootstrap, Injector, NgModule, Type} from '@angular/core';
 import {ZxProdsCategoryComponent} from './entities/zx-prods-category/zx-prods-category.component';
 import {createCustomElement} from '@angular/elements';
 import {AngularSvgIconModule} from 'angular-svg-icon';
 import {provideTranslateService, TranslateLoader, TranslatePipe} from '@ngx-translate/core';
-import {HttpClient, HttpClientModule, provideHttpClient} from '@angular/common/http';
+import {HttpClient, provideHttpClient, withInterceptors} from '@angular/common/http';
+import {languageInterceptor} from './features/settings/interceptors/language.interceptor';
 import {FormsModule} from '@angular/forms';
+import {RouterModule} from '@angular/router';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {APP_ROUTES} from './app.routes';
+import {SpaRootComponent} from './spa-root.component';
 import {ZxProdsListComponent} from './entities/zx-prods-list/zx-prods-list.component';
 import {AppComponent} from './app.component';
 import {ParserComponent} from './features/parser/parser.component';
@@ -73,14 +77,17 @@ export function HttpLoaderFactory(http: HttpClient) {
     imports: [
         CommonModule,
         BrowserModule,
-        HttpClientModule,
         AngularSvgIconModule.forRoot(),
         FormsModule,
         BrowserAnimationsModule,
         TranslatePipe,
+        RouterModule.forRoot(APP_ROUTES, {
+            initialNavigation: 'disabled',
+            bindToComponentInputs: true,
+        }),
     ],
     providers: [
-        provideHttpClient(),
+        provideHttpClient(withInterceptors([languageInterceptor])),
         provideCharts(withDefaultRegisterables()),
         provideTranslateService({
             loader: {
@@ -96,7 +103,7 @@ export class AppModule implements DoBootstrap  {
     constructor(private injector: Injector) {
     }
 
-    public ngDoBootstrap(): void {
+    public ngDoBootstrap(appRef: ApplicationRef): void {
         pdfDefaultOptions.assetsFolder = environment.pdfAssetsFolder;
         const elements = {
             'app-root': AppComponent,
@@ -140,6 +147,13 @@ export class AppModule implements DoBootstrap  {
         for (const selector of Object.keys(elements)) {
             const element = createCustomElement(elements[selector], {injector: this.injector});
             customElements.define(selector, element);
+        }
+
+        // Bootstrap the routed SPA only on pages that the PHP SPA shell serves
+        // (those contain <zx-spa-root>). Legacy pages have no such tag, so the
+        // router stays idle there (initial navigation is disabled at module level).
+        if (document.querySelector('zx-spa-root')) {
+            appRef.bootstrap(SpaRootComponent);
         }
     }
 }

@@ -2,13 +2,14 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ZxProdComponent} from '../../shared/components/zx-prod-component';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
 
-@Component({
+
+import {RouterLink} from '@angular/router';@Component({
     selector: 'zx-prod-row',
     templateUrl: './zx-prod-row.component.html',
     styleUrls: ['./zx-prod-row.component.scss'],
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
+    imports: [RouterLink, 
         DatePipe,
         NgForOf,
         NgIf,

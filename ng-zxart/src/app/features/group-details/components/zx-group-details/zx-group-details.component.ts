@@ -25,7 +25,6 @@ import {ZxTabComponent} from '../../../../shared/ui/zx-tabs/zx-tab.component';
 import {ZxTabContentDirective} from '../../../../shared/ui/zx-tabs/zx-tab-content.directive';
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
-
 type GroupTabId = 'overview' | 'works' | 'group' | 'connections' | 'media' | 'discussion';
 
 @Component({
@@ -60,6 +59,8 @@ type GroupTabId = 'overview' | 'works' | 'group' | 'connections' | 'media' | 'di
 })
 export class ZxGroupDetailsComponent implements OnInit {
   @Input() elementId = 0;
+  /** Active tab id from the route (`group/:id/:tab`); null = default tab. */
+  @Input() activeTab: string | null = null;
   @ViewChild(ZxTabsComponent, {read: ElementRef}) private tabsRef!: ElementRef<HTMLElement>;
 
   core$: Observable<GroupCoreDto | null> = of(null);
@@ -74,17 +75,13 @@ export class ZxGroupDetailsComponent implements OnInit {
   }
 
   getInitialTabIndex(core: GroupCoreDto): number {
-    const requestedTab = this.getRequestedTabId();
-    const index = requestedTab ? this.getTabs(core).indexOf(requestedTab as GroupTabId) : -1;
+    const index = this.activeTab ? this.getTabs(core).indexOf(this.activeTab as GroupTabId) : -1;
 
     return index >= 0 ? index : 0;
   }
 
   getTabHref(tabId: GroupTabId): string {
-    const path = window.location.pathname.replace(/\/tab:[^/]+(?=\/|$)/, '').replace(/\/page:\d+(?=\/|$)/, '');
-    const normalizedPath = path.endsWith('/') ? path : `${path}/`;
-
-    return `${normalizedPath}tab:${encodeURIComponent(tabId)}/`;
+    return `/group/${this.elementId}/${encodeURIComponent(tabId)}`;
   }
 
   onTabChange(_: number): void {
@@ -102,11 +99,5 @@ export class ZxGroupDetailsComponent implements OnInit {
     tabs.push('discussion');
 
     return tabs;
-  }
-
-  private getRequestedTabId(): string | null {
-    const match = window.location.pathname.match(/\/tab:([^/]+)(?=\/|$)/);
-
-    return match ? decodeURIComponent(match[1]) : null;
   }
 }

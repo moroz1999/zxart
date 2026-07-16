@@ -33,10 +33,11 @@ import {ZxTuneDetailsSkeletonComponent} from '../zx-tune-details-skeleton/zx-tun
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {RatingsListComponent} from '../../../ratings/components/ratings-list/ratings-list.component';
 
-@Component({
-  selector: 'zx-tune-details',
+
+import {RouterLink} from '@angular/router';@Component({
+  selector: 'zx-tune-details-view',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     ZxBreadcrumbsComponent,

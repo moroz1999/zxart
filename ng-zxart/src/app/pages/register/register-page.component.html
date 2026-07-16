@@ -1,0 +1,50 @@
+<form zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
+  <zx-stack spacing="lg">
+    <h1>{{ 'register.title' | translate }}</h1>
+
+    <zx-form-field>
+      <zx-form-label for="reg-username" [required]="true">{{ 'register.username' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-input id="reg-username" formControlName="userName" type="text"></zx-input>
+        <zx-control-errors [control]="form.controls['userName']" [messages]="userNameMessages"></zx-control-errors>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="reg-email" [required]="true">{{ 'register.email' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-input id="reg-email" formControlName="email" type="text"></zx-input>
+        <zx-control-errors [control]="form.controls['email']" [messages]="emailMessages"></zx-control-errors>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="reg-password" [required]="true">{{ 'register.password' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-input id="reg-password" formControlName="password" type="password"></zx-input>
+        <zx-control-errors [control]="form.controls['password']" [messages]="passwordMessages"></zx-control-errors>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="reg-password-repeat" [required]="true">{{ 'register.password-repeat' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-input id="reg-password-repeat" formControlName="passwordRepeat" type="password"></zx-input>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field *ngFor="let item of optionalFields">
+      <zx-form-label [for]="'reg-' + item.field">{{ item.labelKey | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-input [id]="'reg-' + item.field" [formControlName]="item.field" type="text"></zx-input>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-message *ngIf="successMessage" variant="success">{{ successMessage }}</zx-form-message>
+    <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+
+    <zx-form-actions align="start">
+      <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'register.submit' | translate }}</zx-button>
+    </zx-form-actions>
+  </zx-stack>
+</form>

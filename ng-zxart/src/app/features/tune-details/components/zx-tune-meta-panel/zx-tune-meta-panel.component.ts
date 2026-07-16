@@ -11,10 +11,11 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 import {TechSettingRow, ZxTechSettingsComponent} from '../../../../shared/ui/zx-tech-settings/zx-tech-settings.component';
 import {BackendLinksService} from '../../../header/services/backend-links.service';
 
-@Component({
+
+import {RouterLink} from '@angular/router';@Component({
   selector: 'zx-tune-meta-panel',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     ZxPanelComponent,

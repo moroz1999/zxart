@@ -13,13 +13,18 @@ use zxMusicElement;
 
 readonly class TunesTransformer
 {
+    public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
+    ) {
+    }
+
     public function toDto(zxMusicElement $element): TuneDto
     {
         $authors = [];
         foreach ($element->getAuthorsList() as $author) {
             $authors[] = new AuthorDto(
                 name: html_entity_decode((string)$author->getTitle(), ENT_QUOTES),
-                url: (string)$author->getUrl(),
+                url: $this->entityUrlResolver->urlFor($author),
             );
         }
 
@@ -28,7 +33,7 @@ readonly class TunesTransformer
         if ($partyElement !== null) {
             $party = new PartyInfoDto(
                 title: html_entity_decode((string)$partyElement->getTitle(), ENT_QUOTES),
-                url: $partyElement->getUrl() ?? '',
+                url: $this->entityUrlResolver->urlFor($partyElement),
                 place: $element->getPartyPlace(),
             );
         }
@@ -38,7 +43,7 @@ readonly class TunesTransformer
         if ($releaseElement !== null) {
             $release = new ReleaseInfoDto(
                 title: html_entity_decode((string)$releaseElement->getTitle(), ENT_QUOTES),
-                url: (string)$releaseElement->getUrl(),
+                url: $this->entityUrlResolver->urlFor($releaseElement),
             );
         }
 
@@ -65,7 +70,7 @@ readonly class TunesTransformer
         return new TuneDto(
             id: (int)$element->id,
             title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
-            url: (string)$element->getUrl(),
+            url: $this->entityUrlResolver->urlFor($element),
             authors: $authors,
             format: $element->getFormat(),
             year: $element->getDisplayYear(),

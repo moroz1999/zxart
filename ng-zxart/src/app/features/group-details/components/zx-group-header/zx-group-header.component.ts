@@ -10,10 +10,11 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {environment} from '../../../../../environments/environment';
 
-@Component({
+
+import {RouterLink} from '@angular/router';@Component({
   selector: 'zx-group-header',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     ZxChipComponent,

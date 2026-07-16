@@ -46,19 +46,12 @@ class Grouplist extends LoggedControllerApplication
     public function execute($controller): void
     {
         $action = $this->getParameter('action') ?: '';
-        $elementId = (int)($this->getParameter('elementId') ?? 0);
-
-        if ($elementId <= 0) {
-            $this->assignError('elementId is required', 400);
-            $this->renderer->display();
-            return;
-        }
 
         try {
             if ($action === 'filters') {
-                $this->handleFilters($elementId);
+                $this->handleFilters();
             } else {
-                $this->handleList($elementId);
+                $this->handleList();
             }
         } catch (Throwable $e) {
             $this->logThrowable('Grouplist::execute', $e);
@@ -68,7 +61,7 @@ class Grouplist extends LoggedControllerApplication
         $this->renderer->display();
     }
 
-    private function handleList(int $elementId): void
+    private function handleList(): void
     {
         $start = (int)($this->getParameter('start') ?: 0);
         $limit = (int)($this->getParameter('limit') ?: 50);
@@ -111,7 +104,7 @@ class Grouplist extends LoggedControllerApplication
         ]);
     }
 
-    private function handleFilters(int $elementId): void
+    private function handleFilters(): void
     {
         $letter = $this->getParameter('letter') ?: null;
         $groupType = $this->getParameter('groupType') ?: null;

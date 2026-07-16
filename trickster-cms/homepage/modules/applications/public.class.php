@@ -2,6 +2,8 @@
 
 use App\Users\CurrentUserService;
 use ZxArt\NgAssetsProvider;
+use ZxArt\Spa\SpaRouter;
+use ZxArt\Urls\EntityUrlResolver;
 use ZxArt\UserPreferences\CurrentThemeProvider;
 
 class publicApplication extends controllerApplication implements ThemeCodeProviderInterface
@@ -89,6 +91,15 @@ class publicApplication extends controllerApplication implements ThemeCodeProvid
         $themeProvider = $this->getService(CurrentThemeProvider::class);
         $this->renderer->assign('currentThemeClass', $themeProvider->getThemeClass());
 
+        $spaRouter = $this->getService(SpaRouter::class);
+        if ($spaRouter->isSpaRequest($this->getService(requestHeadersManager::class)->getUri())) {
+            $this->renderer->setCacheControl('no-cache');
+            $this->renderer->template = $currentTheme->template('index.spa.tpl');
+            $this->renderer->display();
+            $this->saveDbLog();
+            return;
+        }
+
         if (!$pageNotFound) {
             if ($currentElement = $structureManager->getCurrentElement()) {
                 /**
@@ -99,6 +110,17 @@ class publicApplication extends controllerApplication implements ThemeCodeProvid
                     $redirectionManager->checkProtocolRedirection();
                 }
                 $redirectionManager->checkDomainRedirection();
+
+                // Legacy entity view URL → new clean SPA URL (301). Driven by the
+                // resolved element's type, no per-URL table. SPA requests never
+                // reach here (SpaRouter short-circuits earlier). Action/form URLs
+                // (action:showForm, join, etc.) are left on legacy until their
+                // forms are migrated.
+                if (!$controller->getParameter('action')) {
+                    if ($newEntityUrl = $this->getService(EntityUrlResolver::class)->resolve($currentElement)) {
+                        $controller->redirect($controller->baseURL . ltrim($newEntityUrl, '/'), '301');
+                    }
+                }
 
                 //check if we need to redirect user to display firstpage
                 if ($currentElement->structureType === 'root' || $currentElement->structureType === 'language') {

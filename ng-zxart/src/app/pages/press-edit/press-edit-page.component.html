@@ -1,0 +1,55 @@
+<div *ngIf="loading" class="press-edit__loading">
+  <zx-spinner size="lg"></zx-spinner>
+</div>
+
+<form *ngIf="!loading" zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
+  <zx-stack spacing="lg">
+    <zx-form-field>
+      <zx-form-label>{{ 'press-form.title' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-multilang-field formControlName="title" [languages]="languages"></zx-multilang-field>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="press-external-link">{{ 'press-form.external-link' | translate }}</zx-form-label>
+      <zx-form-control><zx-input id="press-external-link" formControlName="externalLink" type="text"></zx-input></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field *ngFor="let field of relationFields">
+      <zx-form-label>{{ 'press-form.' + field | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-multi-entity-autocomplete [formControlName]="field" [types]="relationTypes[field]" [placeholder]="'press-form.add' | translate"></zx-multi-entity-autocomplete>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'press-form.introduction' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-multilang-field formControlName="introduction" [languages]="languages" [multiline]="true" [rows]="4"></zx-multilang-field>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'press-form.content' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-multilang-field formControlName="content" [languages]="languages" [multiline]="true" [rows]="8"></zx-multilang-field>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="press-original-content">{{ 'press-form.original-content' | translate }}</zx-form-label>
+      <zx-form-control><zx-textarea id="press-original-content" formControlName="originalContent" [rows]="6"></zx-textarea></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-checkbox-field formControlName="allowComments" [label]="'press-form.allow-comments' | translate"></zx-checkbox-field>
+    </zx-form-field>
+
+    <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+
+    <zx-form-actions align="start">
+      <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'press-form.save' | translate }}</zx-button>
+    </zx-form-actions>
+  </zx-stack>
+</form>

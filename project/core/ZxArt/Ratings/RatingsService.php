@@ -23,6 +23,7 @@ readonly class RatingsService
     private const int CACHE_TTL = 300;
 
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
         private LanguagesManager $languagesManager,
         private Cache $cache,
@@ -80,7 +81,7 @@ readonly class RatingsService
                 ),
                 rating: $rating,
                 targetTitle: html_entity_decode((string)$targetElement->getTitle(), ENT_QUOTES),
-                targetUrl: (string)$targetElement->getUrl(),
+                targetUrl: $this->entityUrlResolver->urlFor($targetElement),
             );
         }
 
@@ -149,7 +150,7 @@ readonly class RatingsService
                 ),
                 rating: (string)$value,
                 targetTitle: html_entity_decode((string)$targetElement->getTitle(), ENT_QUOTES),
-                targetUrl: (string)$targetElement->getUrl(),
+                targetUrl: $this->entityUrlResolver->urlFor($targetElement),
             );
         }
 

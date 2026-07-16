@@ -9,10 +9,11 @@ import {FileViewerDialogData, ZxFileViewerDialogComponent} from '../../shared/ui
 import {ProdInstructionFileDto} from '../../features/prod-details/models/prod-instruction-file.dto';
 import {ProdReleaseLabelPipe} from '../../features/prod-details/pipes/prod-release-label.pipe';
 
-@Component({
+
+import {RouterLink} from '@angular/router';@Component({
   selector: 'zx-instruction-file-card',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     ZxInlineComponent,

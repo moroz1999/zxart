@@ -22,7 +22,7 @@ import {ZxReleaseFileStructureComponent} from '../zx-release-file-structure/zx-r
 import {ZxProdPicturesSectionComponent} from '../../../prod-details/components/zx-prod-pictures-section/zx-prod-pictures-section.component';
 
 @Component({
-  selector: 'zx-release-details',
+  selector: 'zx-release-details-view',
   standalone: true,
   imports: [
     CommonModule,

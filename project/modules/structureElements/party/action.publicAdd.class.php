@@ -35,7 +35,7 @@ class publicAddParty extends structureElementAction
 
             $structureElement->recalculate();
 
-            $controller->redirect($structureElement->URL);
+            $this->respondFormSaved($controller, $structureElement); return;
         }
 
         $structureElement->setViewName('form');

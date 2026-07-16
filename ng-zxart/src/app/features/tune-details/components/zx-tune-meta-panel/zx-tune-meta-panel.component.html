@@ -28,7 +28,7 @@
         {{ tune.tracker }}
       </zx-item-data-item>
       <zx-item-data-item *ngIf="tune.partyContext" [label]="'tune-details.compo' | translate">
-        <a [href]="tune.partyContext.url" appText="body" tone="link">{{ tune.partyContext.title }}</a>
+        <a [routerLink]="tune.partyContext.url" appText="body" tone="link">{{ tune.partyContext.title }}</a>
         <span *ngIf="tune.partyContext.compoLabel" appText="body" tone="muted"> · {{ tune.partyContext.compoLabel }}</span>
       </zx-item-data-item>
     </zx-stack>

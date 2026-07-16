@@ -1,5 +1,5 @@
 <td class="zx-prod-title">
-    <a [href]="model.url">
+    <a [routerLink]="model.url">
         {{ model.title }}
     </a>
 </td>
@@ -11,11 +11,11 @@
 </td>
 <td class="zx-prod-groups">
     <ng-container *ngFor="let group of model.groupsInfo; last as last"><a
-            [href]="group.url">{{ group.title }}</a><span *ngIf="!last">, </span></ng-container>
+            [routerLink]="group.url">{{ group.title }}</a><span *ngIf="!last">, </span></ng-container>
 </td>
 <td class="zx-prod-publishers">
     <ng-container *ngFor="let publisher of model.publishersInfo; last as last"><a
-            [href]="publisher.url">{{ publisher.title }}</a><span *ngIf="!last">, </span></ng-container>
+            [routerLink]="publisher.url">{{ publisher.title }}</a><span *ngIf="!last">, </span></ng-container>
 </td>
 <td class="zx-prod-year"><span class="zx-prod-year-link"
                                (click)="yearClicked($event, model.year)">{{ model.year }}</span>

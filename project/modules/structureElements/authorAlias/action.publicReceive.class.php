@@ -16,7 +16,8 @@ class publicReceiveAuthorAlias extends structureElementAction
             $structureElement->persistElementData();
             $structureElement->checkParentLetter();
 
-            $controller->redirect($structureElement->URL);
+            $this->respondFormSaved($controller, $structureElement);
+            return;
         }
 
         $structureElement->setViewName('form');

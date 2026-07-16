@@ -1,0 +1,142 @@
+import {CommonModule} from '@angular/common';
+import {HttpErrorResponse} from '@angular/common/http';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {TranslateModule} from '@ngx-translate/core';
+import {Subscription} from 'rxjs';
+import {EntityRef} from '../../shared/models/entity-ref';
+import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
+import {ZxControlErrorsComponent} from '../../shared/ui/zx-form/zx-control-errors/zx-control-errors.component';
+import {ZxFormActionsComponent} from '../../shared/ui/zx-form/zx-form-actions/zx-form-actions.component';
+import {ZxFormControlComponent} from '../../shared/ui/zx-form/zx-form-control/zx-form-control.component';
+import {ZxFormFieldComponent} from '../../shared/ui/zx-form/zx-form-field/zx-form-field.component';
+import {ZxFormLabelComponent} from '../../shared/ui/zx-form/zx-form-label/zx-form-label.component';
+import {ZxFormMessageComponent} from '../../shared/ui/zx-form/zx-form-message/zx-form-message.component';
+import {ZxFormDirective} from '../../shared/ui/zx-form/zx-form.directive';
+import {ZxInputComponent} from '../../shared/ui/zx-input/zx-input.component';
+import {ZxEntityAutocompleteComponent} from '../../shared/ui/zx-entity-autocomplete/zx-entity-autocomplete.component';
+import {ImageUploadChange, ZxImageUploadComponent} from '../../shared/ui/zx-image-upload/zx-image-upload.component';
+import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
+import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
+import {FormDataApiService} from '../../shared/services/form-data-api.service';
+import {FormSaveApiService} from '../../shared/services/form-save-api.service';
+
+/** Routed page for `party/:id/edit`. */
+@Component({
+  selector: 'zx-party-edit-page',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    ZxButtonComponent,
+    ZxControlErrorsComponent,
+    ZxFormActionsComponent,
+    ZxFormControlComponent,
+    ZxFormFieldComponent,
+    ZxFormLabelComponent,
+    ZxFormMessageComponent,
+    ZxFormDirective,
+    ZxInputComponent,
+    ZxEntityAutocompleteComponent,
+    ZxImageUploadComponent,
+    ZxStackComponent,
+    ZxSpinnerComponent,
+  ],
+  templateUrl: './party-edit-page.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class PartyEditPageComponent implements OnInit, OnDestroy {
+  readonly form: FormGroup = this.fb.group({
+    title: this.fb.nonNullable.control('', Validators.required),
+    abbreviation: this.fb.nonNullable.control(''),
+    country: this.fb.control<EntityRef | null>(null),
+    city: this.fb.control<EntityRef | null>(null),
+  });
+
+  readonly titleMessages = {required: 'party-form.error-title-required'};
+
+  loading = true;
+  submitting = false;
+  errorMessage = '';
+  imageUrl: string | null = null;
+
+  private elementId = 0;
+  private imageFile: File | null = null;
+  private removeImage = false;
+  private readonly subscriptions = new Subscription();
+
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly cdr: ChangeDetectorRef,
+    private readonly formData: FormDataApiService,
+    private readonly formSave: FormSaveApiService,
+  ) {}
+
+  ngOnInit(): void {
+    this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+    this.subscriptions.add(
+      this.formData.load(this.elementId, ['country', 'city']).subscribe({
+        next: data => {
+          this.form.patchValue({
+            title: String(data.fields['title'] ?? ''),
+            abbreviation: String(data.fields['abbreviation'] ?? ''),
+            country: data.refs['country'] ?? null,
+            city: data.refs['city'] ?? null,
+          });
+          this.imageUrl = data.images['image'] ?? null;
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+        error: (err: HttpErrorResponse) => {
+          this.loading = false;
+          this.errorMessage = err.error?.errorMessage ?? 'party-form.error-load';
+          this.cdr.markForCheck();
+        },
+      }),
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  onImageChanged(change: ImageUploadChange): void {
+    this.imageFile = change.file;
+    this.removeImage = change.removed;
+  }
+
+  onSubmit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.submitting = true;
+    this.errorMessage = '';
+    const value = this.form.getRawValue();
+    this.subscriptions.add(
+      this.formSave.save(this.elementId, {
+        fields: {
+          title: value.title,
+          abbreviation: value.abbreviation,
+          country: value.country ? String(value.country.id) : '',
+          city: value.city ? String(value.city.id) : '',
+        },
+        image: {field: 'image', file: this.imageFile, remove: this.removeImage},
+      }).subscribe({
+        next: result => {
+          this.router.navigateByUrl(`/party/${result.id}`);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.submitting = false;
+          this.errorMessage = err.error?.errorMessage ?? 'party-form.error-save';
+          this.cdr.markForCheck();
+        },
+      }),
+    );
+  }
+}

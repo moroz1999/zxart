@@ -11,6 +11,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {DialogRef} from '@angular/cdk/dialog';
+import {isSpaUrl} from '../../../../shared/utils/spa-url';
 import {Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
@@ -25,14 +26,14 @@ import {ZxDialogComponent} from '../../../../shared/ui/zx-dialog/zx-dialog.compo
 import {BackendLinksService} from '../../services/backend-links.service';
 import {environment} from '../../../../../environments/environment';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
-
+import {Router, RouterLink} from '@angular/router';
 const MIN_QUERY_LENGTH = 2;
 const ICONS = ['person', 'list', 'videogame-asset', 'image', 'music-note'];
 
 @Component({
   selector: 'zx-search-dialog',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     FormsModule,
     TranslateModule,
@@ -67,7 +68,17 @@ export class SearchDialogComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private backendLinksService: BackendLinksService,
     private el: ElementRef<HTMLElement>,
+    private router: Router,
   ) {}
+
+  private navigate(url: string): void {
+    this.close();
+    if (isSpaUrl(url)) {
+      void this.router.navigateByUrl(url);
+    } else {
+      window.location.href = url;
+    }
+  }
 
   ngOnInit(): void {
     ICONS.forEach(name => this.iconReg.loadSvg(`${environment.svgUrl}${name}.svg`, name)?.subscribe());
@@ -132,12 +143,12 @@ export class SearchDialogComponent implements OnInit, OnDestroy {
         const flat = this.groups.flatMap(g => g.items);
         const item = flat[this.focusedIndex];
         if (item?.url) {
-          window.location.href = item.url;
+          this.navigate(item.url);
         }
       } else {
         const url = this.searchAllUrl();
         if (url) {
-          window.location.href = url;
+          this.navigate(url);
         }
       }
     }

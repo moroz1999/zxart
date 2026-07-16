@@ -14,13 +14,13 @@ import {
 } from '../../../../shared/components/zx-rating-strip/zx-rating-strip.component';
 import {TechSettingRow, ZxTechSettingsComponent} from '../../../../shared/ui/zx-tech-settings/zx-tech-settings.component';
 import {environment} from '../../../../../environments/environment';
-
+import {RouterLink} from '@angular/router';
 const VISIBLE_ALIASES = 7;
 
 @Component({
   selector: 'zx-author-header',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     ZxBadgeComponent,

@@ -1,7 +1,7 @@
 <zx-panel radius="xl" padding="none" variant="elevated" [contentBleed]="true">
   <div class="release-card__internal">
 
-    <a [href]="release.url" class="release-card__cover">
+    <a [routerLink]="release.url" class="release-card__cover">
       <img
         *ngIf="screenshotUrls.length > 0 && !displayScreenshots"
         class="release-card__cover-img"
@@ -37,12 +37,12 @@
     <zx-inset padding="lg">
       <zx-stack spacing="md">
         <zx-inline class="release-card__title-row" gap="sm" align="center">
-          <a class="release-card__title" appHeading="title" [truncate]="true" [href]="release.url">{{ release.title }}</a>
+          <a class="release-card__title" appHeading="title" [truncate]="true" [routerLink]="release.url">{{ release.title }}</a>
         </zx-inline>
 
         <div *ngIf="release.releaseBy.length" appText="label" tone="muted">
           <ng-container *ngFor="let g of release.releaseBy; let last = last">
-            <a appText="label" tone="muted-link" [href]="g.url">{{ g.title }}</a><ng-container *ngIf="!last">, </ng-container>
+            <a appText="label" tone="muted-link" [routerLink]="g.url">{{ g.title }}</a><ng-container *ngIf="!last">, </ng-container>
           </ng-container>
         </div>
 
@@ -96,7 +96,7 @@
               <svg-icon class="release-card__stat-icon" name="play"></svg-icon>{{ release.playsCount }}
             </zx-inline>
           </zx-inline>
-          <zx-button [href]="release.url">{{ 'zx-prod.open' | translate }}</zx-button>
+          <zx-button [routerLink]="release.url">{{ 'zx-prod.open' | translate }}</zx-button>
         </zx-inline>
       </zx-stack>
     </zx-inset>

@@ -1,0 +1,7 @@
+<ng-container *ngIf="vm$ | async as vm" [ngSwitch]="vm.kind">
+  <zx-prods-category *ngSwitchCase="'prods'" rootType="zxProdCategoriesCatalogue" [manageUrl]="false"></zx-prods-category>
+  <zx-group-browser *ngSwitchCase="'groups'" [letter]="vm.letter" [manageUrl]="false"></zx-group-browser>
+  <zx-picture-browser *ngSwitchCase="'pictures'" [manageUrl]="false"></zx-picture-browser>
+  <zx-music-browser *ngSwitchCase="'music'" [manageUrl]="false"></zx-music-browser>
+  <zx-author-browser *ngSwitchCase="'authors'" [letter]="vm.letter" [manageUrl]="false"></zx-author-browser>
+</ng-container>

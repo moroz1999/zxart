@@ -14,13 +14,13 @@
     <tr *ngFor="let group of groups; let i = index">
       <td *ngIf="showRowNumbers" class="col-num">{{ rowStartIndex + i + 1 }}</td>
       <td class="col-title">
-        <a [href]="group.url">{{ group.title || 'n/a' }}</a>
+        <a [routerLink]="group.url">{{ group.title || 'n/a' }}</a>
       </td>
       <td class="col-type">
         <span *ngIf="group.groupType && group.groupType !== 'unknown'">{{ 'group-browser.types.' + group.groupType | translate }}</span>
       </td>
       <td class="col-realname">
-        <a *ngIf="group.realGroupUrl; else plainRealName" [href]="group.realGroupUrl">{{ group.realGroupTitle }}</a>
+        <a *ngIf="group.realGroupUrl; else plainRealName" [routerLink]="group.realGroupUrl">{{ group.realGroupTitle }}</a>
         <ng-template #plainRealName>{{ group.realGroupTitle }}</ng-template>
       </td>
       <td class="col-country">

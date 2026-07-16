@@ -33,6 +33,7 @@ use zxReleaseElement;
 readonly class ReleaseDetailsService
 {
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
         private ProdInfoBuilder $infoBuilder,
         private ProdMediaService $prodMediaService,
@@ -158,7 +159,7 @@ readonly class ReleaseDetailsService
         return new ReleaseProdRefDto(
             id: $prod->getId(),
             title: $this->infoBuilder->decodeText($prod->title),
-            url: (string)$prod->getUrl(),
+            url: $this->entityUrlResolver->urlFor($prod),
             year: $prod->year,
             authorNames: $this->buildProdAuthorNames($prod),
             thumbnailUrl: $prod->getImageUrl(1) ?: null,

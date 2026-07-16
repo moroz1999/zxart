@@ -16,7 +16,7 @@ class publicReceiveGroupAlias extends structureElementAction
             $structureElement->persistElementData();
             $structureElement->persistAuthorship(EntityType::Group);
 
-            $controller->redirect($structureElement->URL);
+            $this->respondFormSaved($controller, $structureElement); return;
         }
 
         $structureElement->setViewName('form');

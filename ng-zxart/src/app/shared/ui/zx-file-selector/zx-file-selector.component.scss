@@ -1,0 +1,54 @@
+:host {
+  display: block;
+}
+
+.zx-file-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.zx-file-selector__existing {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.zx-file-selector__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  max-width: 140px;
+  border: var(--zx-tags-input-dropdown-border);
+  border-radius: var(--zx-tags-input-dropdown-radius);
+  padding: 6px;
+  background: var(--zx-tags-input-dropdown-bg);
+}
+
+.zx-file-selector__thumb {
+  max-width: 120px;
+  max-height: 90px;
+  object-fit: contain;
+}
+
+.zx-file-selector__name {
+  font-size: 0.85em;
+  text-align: center;
+  word-break: break-all;
+}
+
+.zx-file-selector__button {
+  display: inline-block;
+  padding: 4px 10px;
+  border: var(--zx-tags-input-dropdown-border);
+  border-radius: var(--zx-tags-input-dropdown-radius);
+  background: var(--zx-tags-input-dropdown-bg);
+  cursor: pointer;
+}
+
+.zx-file-selector__staged {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.85em;
+}

@@ -1,0 +1,45 @@
+:host {
+  display: block;
+}
+
+.zx-member-role-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.zx-member-role-editor__row,
+.zx-member-role-editor__add {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  border: var(--zx-tags-input-dropdown-border);
+  border-radius: var(--zx-tags-input-dropdown-radius);
+}
+
+.zx-member-role-editor__name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.zx-member-role-editor__roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.zx-member-role-editor__role {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9em;
+}
+
+.zx-member-role-editor__dates {
+  display: flex;
+  gap: 8px;
+}

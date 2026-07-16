@@ -15,13 +15,18 @@ use zxPictureElement;
 
 readonly class PicturesTransformer
 {
+    public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
+    ) {
+    }
+
     public function toDto(zxPictureElement $element): PictureDto
     {
         $authors = [];
         foreach ($element->getAuthorsList() as $author) {
             $authors[] = new AuthorDto(
                 name: html_entity_decode((string)$author->getTitle(), ENT_QUOTES),
-                url: $author->getUrl(),
+                url: $this->entityUrlResolver->urlFor($author),
             );
         }
 
@@ -30,7 +35,7 @@ readonly class PicturesTransformer
         if ($partyElement) {
             $party = new PartyInfoDto(
                 title: html_entity_decode((string)$partyElement->getTitle(), ENT_QUOTES),
-                url: $partyElement->getUrl(),
+                url: $this->entityUrlResolver->urlFor($partyElement),
                 place: (int)$element->partyplace ?: null,
             );
         }
@@ -40,7 +45,7 @@ readonly class PicturesTransformer
         if ($releaseElement !== null) {
             $release = new ReleaseInfoDto(
                 title: html_entity_decode((string)$releaseElement->getTitle(), ENT_QUOTES),
-                url: (string)$releaseElement->getUrl(),
+                url: $this->entityUrlResolver->urlFor($releaseElement),
             );
         }
 
@@ -74,7 +79,7 @@ readonly class PicturesTransformer
         return new PictureDto(
             id: (int)$element->id,
             title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
-            url: $element->getUrl(),
+            url: $this->entityUrlResolver->urlFor($element),
             imageUrl: ZxPictureUrlHelper::getUrl($baseUrl, $defaultParams),
             largeImageUrl: ZxPictureUrlHelper::getUrl($baseUrl, $largeParams),
             fileId: (int)$element->image,

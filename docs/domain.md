@@ -83,3 +83,15 @@ Detailed logic and structure: [domain/geo.md](domain/geo.md)
 ### statistics section
 Dashboard of collection counts by year, daily activity, distributions and most active members.
 Detailed logic and structure: [domain/stats.md](domain/stats.md)
+
+### tags
+Tag clouds per collection section, linking into the section search.
+Detailed logic and structure: [domain/tags.md](domain/tags.md)
+
+### static content pages
+Non-editable About/FAQ/support/API pages served as bundled HTML.
+Detailed logic and structure: [domain/content.md](domain/content.md)
+
+### interface language & auto-login
+Frontend-owned interface language and route-guard auto-login for the SPA.
+Detailed logic and structure: [domain/language-auth.md](domain/language-auth.md)

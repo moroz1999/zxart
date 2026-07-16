@@ -1,0 +1,19 @@
+<ng-container *ngIf="profile$ | async as profile; else notAuthed">
+  <section class="profile">
+    <header class="profile__header">
+      <h1 class="profile__title">{{ profile.userName }}</h1>
+      <a routerLink="/profile/edit"><zx-button color="primary">{{ 'profile.edit' | translate }}</zx-button></a>
+    </header>
+
+    <dl class="profile__details">
+      <ng-container *ngFor="let row of rows(profile)">
+        <dt>{{ row.labelKey | translate }}</dt>
+        <dd>{{ row.value }}</dd>
+      </ng-container>
+    </dl>
+  </section>
+</ng-container>
+
+<ng-template #notAuthed>
+  <p class="profile__notice">{{ 'profile.please-log-in' | translate }}</p>
+</ng-template>

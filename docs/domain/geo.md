@@ -1,6 +1,6 @@
 ## Geo Section
 
-The geo section is an Angular-powered map interface exposed through the `zx-geo` custom element.
+The geo section is an Angular-powered map interface exposed through the `zx-geo` custom element and the standalone SPA route `/geo` (`pages/countries`).
 
 ### Data Scope
 - The map displays authors, groups, and demoparties as independent layers.
@@ -11,7 +11,7 @@ The geo section is an Angular-powered map interface exposed through the `zx-geo`
 - Direct public requests to country or city legacy URLs return a 301 redirect to the geo section with the matching `country` or `city` query.
 
 ### API
-- Endpoint: `/geo/`
+- Endpoint: `/geo-data/` (`ZxArt\Controllers\GeoData`)
 - `action=map` returns countries, cities, coordinates, and aggregate counters.
 - `action=authors`, `action=groups`, and `action=parties` return paginated entity lists.
 - List actions accept `start`, `limit`, `sorting`, `search`, `countryId`, `cityId`, `north`, `south`, `east`, and `west`.

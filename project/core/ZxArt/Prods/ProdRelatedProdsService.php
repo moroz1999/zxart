@@ -14,6 +14,7 @@ readonly class ProdRelatedProdsService
     private const string PROD_LIST_IMAGE_PRESET = 'prodImage';
 
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private ProdElementService $prodElementService,
         private translationsManager $translationsManager,
     ) {
@@ -80,7 +81,7 @@ readonly class ProdRelatedProdsService
             $summaries[] = new ProdSummaryDto(
                 id: $prod->getId(),
                 title: $this->decodeText($prod->title),
-                url: (string)$prod->getUrl(),
+                url: $this->entityUrlResolver->urlFor($prod),
                 year: $prod->year,
                 legalStatus: $legalStatus,
                 legalStatusLabel: $this->translate('legalstatus.' . $legalStatus),
@@ -110,7 +111,7 @@ readonly class ProdRelatedProdsService
                 continue;
             }
 
-            return (string)$seriesElement->getUrl();
+            return $this->entityUrlResolver->urlFor($seriesElement);
         }
 
         return null;

@@ -13,7 +13,16 @@
   </span>
 </ng-template>
 
-@if (isLink) {
+@if (routerLink || isInternalHref) {
+  <a
+    [routerLink]="routerLink || href"
+    [class]="classList"
+    [attr.aria-label]="ariaLabel || null"
+    (pointerdown)="onPointerDown($event)"
+  >
+    <ng-container [ngTemplateOutlet]="content"></ng-container>
+  </a>
+} @else if (isLink) {
   <a
     [href]="href"
     [attr.target]="target"

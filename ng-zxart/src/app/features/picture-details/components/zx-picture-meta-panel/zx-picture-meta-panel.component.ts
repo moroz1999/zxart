@@ -11,10 +11,11 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {BackendLinksService} from '../../../header/services/backend-links.service';
 
-@Component({
+
+import {RouterLink} from '@angular/router';@Component({
   selector: 'zx-picture-meta-panel',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     ZxPanelComponent,

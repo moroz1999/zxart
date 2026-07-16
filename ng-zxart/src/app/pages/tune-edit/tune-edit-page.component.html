@@ -1,0 +1,118 @@
+<div *ngIf="loading" class="tune-edit__loading">
+  <zx-spinner size="lg"></zx-spinner>
+</div>
+
+<form *ngIf="!loading" zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
+  <zx-stack spacing="lg">
+    <zx-form-field>
+      <zx-form-label for="tune-title" [required]="true">{{ 'tune-form.title' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-input id="tune-title" formControlName="title" type="text"></zx-input>
+        <zx-control-errors [control]="form.controls['title']" [messages]="titleMessages"></zx-control-errors>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'tune-form.authors' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-multi-entity-autocomplete formControlName="authors" types="author,authorAlias" [placeholder]="'tune-form.add-author' | translate"></zx-multi-entity-autocomplete>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="tune-format">{{ 'tune-form.format-group' | translate }}</zx-form-label>
+      <zx-form-control><zx-select id="tune-format" formControlName="formatGroup" [options]="formatGroupOptions"></zx-select></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'tune-form.party' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-entity-autocomplete formControlName="party" types="party" [placeholder]="'tune-form.party' | translate"></zx-entity-autocomplete>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="tune-partyplace">{{ 'tune-form.partyplace' | translate }}</zx-form-label>
+      <zx-form-control><zx-input id="tune-partyplace" formControlName="partyplace" type="text"></zx-input></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="tune-compo">{{ 'tune-form.compo' | translate }}</zx-form-label>
+      <zx-form-control><zx-select id="tune-compo" formControlName="compo" [options]="enums['compo'] || []"></zx-select></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="tune-chip">{{ 'tune-form.chip-type' | translate }}</zx-form-label>
+      <zx-form-control><zx-select id="tune-chip" formControlName="chipType" [options]="enums['chipType'] || []"></zx-select></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="tune-channels">{{ 'tune-form.channels-type' | translate }}</zx-form-label>
+      <zx-form-control><zx-select id="tune-channels" formControlName="channelsType" [options]="enums['channelsType'] || []"></zx-select></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="tune-frequency">{{ 'tune-form.frequency' | translate }}</zx-form-label>
+      <zx-form-control><zx-select id="tune-frequency" formControlName="frequency" [options]="enums['frequency'] || []"></zx-select></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="tune-int-frequency">{{ 'tune-form.int-frequency' | translate }}</zx-form-label>
+      <zx-form-control><zx-select id="tune-int-frequency" formControlName="intFrequency" [options]="enums['intFrequency'] || []"></zx-select></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="tune-year">{{ 'tune-form.year' | translate }}</zx-form-label>
+      <zx-form-control><zx-input id="tune-year" formControlName="year" type="text"></zx-input></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'tune-form.release' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-entity-autocomplete formControlName="game" types="zxRelease" [placeholder]="'tune-form.release' | translate"></zx-entity-autocomplete>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="tune-tags">{{ 'tune-form.tags-text' | translate }}</zx-form-label>
+      <zx-form-control><zx-input id="tune-tags" formControlName="tagsText" type="text"></zx-input></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="tune-description">{{ 'tune-form.description' | translate }}</zx-form-label>
+      <zx-form-control><zx-textarea id="tune-description" formControlName="description" [rows]="4"></zx-textarea></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-checkbox-field formControlName="denyPlaying" [label]="'tune-form.deny-playing' | translate"></zx-checkbox-field>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-checkbox-field formControlName="denyVoting" [label]="'tune-form.deny-voting' | translate"></zx-checkbox-field>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-checkbox-field formControlName="denyComments" [label]="'tune-form.deny-comments' | translate"></zx-checkbox-field>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'tune-form.file' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-file-upload [fileName]="fileNames['file'] || null" (changed)="onFileChanged('file', $event)"></zx-file-upload>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label>{{ 'tune-form.tracker-file' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-file-upload [fileName]="fileNames['trackerFile'] || null" (changed)="onFileChanged('trackerFile', $event)"></zx-file-upload>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+
+    <zx-form-actions align="start">
+      <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'tune-form.save' | translate }}</zx-button>
+    </zx-form-actions>
+  </zx-stack>
+</form>

@@ -15,7 +15,7 @@ class convertToGroupAuthor extends structureElementAction
             $groupsService = $this->getService(GroupsService::class);
 
             if ($newElement = $groupsService->convertAuthorToGroup($structureElement)) {
-                $controller->redirect($newElement->getUrl());
+                $this->respondFormSaved($controller, $newElement); return;
             }
         }
 

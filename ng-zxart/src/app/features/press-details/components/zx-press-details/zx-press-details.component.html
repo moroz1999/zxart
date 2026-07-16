@@ -1,0 +1,43 @@
+<ng-container *ngIf="details$ | async as details; else loading">
+  <article class="press-details">
+    <header class="press-details__header">
+      <h1 class="press-details__title">{{ details.title }}</h1>
+      <zx-press-editing-controls [elementId]="details.id"></zx-press-editing-controls>
+    </header>
+
+    <div *ngIf="details.tags.length" class="press-details__tags">
+      <span class="press-details__tags-label">{{ 'press-details.tags' | translate }}:</span>
+      <ng-container *ngFor="let tag of details.tags; let last = last">
+        <a [href]="tag.url" class="press-details__tag">{{ tag.title }}</a><span *ngIf="!last">, </span>
+      </ng-container>
+    </div>
+
+    <p *ngIf="details.externalLink" class="press-details__source">
+      <a [href]="details.externalLink" target="_blank" rel="noopener">{{ 'press-details.source' | translate }}</a>
+    </p>
+
+    <section *ngFor="let group of mentionGroups(details); trackBy: trackByGroup" class="press-details__mentions">
+      <h3 class="press-details__mentions-title">{{ group.labelKey | translate }}</h3>
+      <ul class="press-details__mentions-list">
+        <li *ngFor="let item of group.items; trackBy: trackByMention">
+          <a [routerLink]="item.url">{{ item.title }}</a>
+        </li>
+      </ul>
+    </section>
+
+    <div *ngIf="details.introduction" class="press-details__introduction" [innerHTML]="details.introduction"></div>
+
+    <pre *ngIf="details.content" class="press-details__content">{{ details.content }}</pre>
+
+    <p *ngIf="details.publication" class="press-details__publication">
+      {{ 'press-details.morefromsame' | translate }}:
+      <a [routerLink]="details.publication.url">{{ details.publication.title }}</a>
+    </p>
+  </article>
+</ng-container>
+
+<ng-template #loading>
+  <div class="press-details__loading">
+    <zx-spinner size="lg"></zx-spinner>
+  </div>
+</ng-template>

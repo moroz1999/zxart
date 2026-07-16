@@ -9,12 +9,17 @@ use ZxArt\Parties\Dto\PartyDto;
 
 readonly class PartiesTransformer
 {
+    public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
+    ) {
+    }
+
     public function toDto(partyElement $element): PartyDto
     {
         return new PartyDto(
             id: (int)$element->id,
             title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),
-            url: $element->getUrl(),
+            url: $this->entityUrlResolver->urlFor($element),
             year: $element->getYear(),
             imageUrl: $element->getImageUrl('partyShort'),
         );

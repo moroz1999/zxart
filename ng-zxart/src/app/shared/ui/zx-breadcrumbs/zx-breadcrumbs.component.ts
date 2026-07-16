@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {BackendLinksService} from '../../../features/header/services/backend-links.service';
+import {RouterLink} from '@angular/router';
 import {
   ZxSkeletonBoneComponent,
 } from '../zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
@@ -15,7 +16,7 @@ export interface BreadcrumbItemDto {
 @Component({
   selector: 'zx-breadcrumbs',
   standalone: true,
-  imports: [CommonModule, ZxSkeletonBoneComponent],
+  imports: [RouterLink, CommonModule, ZxSkeletonBoneComponent],
   templateUrl: './zx-breadcrumbs.component.html',
   styleUrl: './zx-breadcrumbs.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

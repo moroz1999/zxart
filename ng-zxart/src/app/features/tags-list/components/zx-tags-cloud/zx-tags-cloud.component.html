@@ -1,0 +1,18 @@
+<div class="tags-cloud">
+  @if (loading) {
+    <p class="tags-cloud__status">{{ 'tags-cloud.loading' | translate }}</p>
+  } @else if (error) {
+    <p class="tags-cloud__status">{{ 'tags-cloud.error' | translate }}</p>
+  } @else if (tags.length === 0) {
+    <p class="tags-cloud__status">{{ 'tags-cloud.empty' | translate }}</p>
+  } @else {
+    @for (tag of tags; track tag.id) {
+      <a
+        class="tags-cloud__item"
+        [routerLink]="searchBasePath"
+        [queryParams]="queryParamsFor(tag)"
+        [style.fontSize.em]="fontSizeEm(tag.amount)"
+      >{{ tag.title }}</a>
+    }
+  }
+</div>

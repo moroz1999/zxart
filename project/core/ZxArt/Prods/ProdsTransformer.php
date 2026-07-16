@@ -10,6 +10,11 @@ use zxProdElement;
 
 readonly class ProdsTransformer
 {
+    public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
+    ) {
+    }
+
     public function toDto(zxProdElement $element): ProdDto
     {
         $partyInfo = null;
@@ -19,7 +24,7 @@ readonly class ProdsTransformer
             $partyInfo = [
                 'id' => (int)$partyElement->id,
                 'title' => html_entity_decode((string)$partyElement->getTitle(), ENT_QUOTES),
-                'url' => $partyElement->getUrl(),
+                'url' => $this->entityUrlResolver->urlFor($partyElement),
             ];
             $partyPlace = (int)$element->partyplace;
         }
@@ -36,7 +41,7 @@ readonly class ProdsTransformer
 
         return new ProdDto(
             id: (int)$element->id,
-            url: $element->getUrl(),
+            url: $this->entityUrlResolver->urlFor($element),
             structureType: 'zxProd',
             dateCreated: (int)$element->dateAdded,
             title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),

@@ -13,7 +13,7 @@ import {ZxChipComponent} from '../../../../shared/ui/zx-chip/zx-chip.component';
 import {ZxPartyPlaceComponent} from '../../../../shared/lib/zx-party-place/zx-party-place.component';
 import {ZxAddedByComponent} from '../../../../shared/ui/zx-added-by/zx-added-by.component';
 import {ZxRatingStripComponent} from '../../../../shared/components/zx-rating-strip/zx-rating-strip.component';
-
+import {RouterLink} from '@angular/router';
 interface ProdAuthorRoleGroup {
   role: string | null;
   authors: ProdAuthorInfoDto[];
@@ -31,7 +31,7 @@ const PRIORITY_AUTHOR_ROLES = [
 @Component({
   selector: 'zx-prod-hero',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     ZxProdVoteRowComponent,

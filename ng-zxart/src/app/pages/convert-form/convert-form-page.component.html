@@ -1,0 +1,9 @@
+<zx-stack spacing="lg">
+  <p>{{ messageKey | translate }}</p>
+
+  <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+
+  <zx-form-actions align="start">
+    <zx-button color="primary" [disabled]="submitting" (click)="onConfirm()">{{ 'convert-form.confirm' | translate }}</zx-button>
+  </zx-form-actions>
+</zx-stack>

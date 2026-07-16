@@ -288,14 +288,14 @@ class zxReleaseElement extends ZxArtItem implements
     public function getFileUrl(bool $play = false): string
     {
         $controller = $this->getService(controller::class);
-        return $controller->baseURL . 'release/id:' . $this->getId() . '/' . $this->getFileName();
+        return $controller->baseURL . 'releasefile/id:' . $this->getId() . '/' . $this->getFileName();
     }
 
     public function getPlayUrl($serveZip = true): ?string
     {
         $controller = $this->getService(controller::class);
         if ($serveZip) {
-            return $controller->baseURL . 'release/play:1/id:' . $this->getId() . '/' . $this->getFileName();
+            return $controller->baseURL . 'releasefile/play:1/id:' . $this->getId() . '/' . $this->getFileName();
         }
 
         $playableFiles = $this->getPlayableFiles();
@@ -304,7 +304,7 @@ class zxReleaseElement extends ZxArtItem implements
             $mainFileExt = strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION));
             $runnableTypes = $this->getRunnableTypes();
             if ($this->fileName !== '' && in_array($mainFileExt, $runnableTypes, true)) {
-                return $controller->baseURL . 'release/play:1/id:' . $this->getId() . '/' . $this->getFileName();
+                return $controller->baseURL . 'releasefile/play:1/id:' . $this->getId() . '/' . $this->getFileName();
             }
             return null;
         }
@@ -399,6 +399,17 @@ class zxReleaseElement extends ZxArtItem implements
     public function getReleaseTypes(): array
     {
         return ReleaseTypes::getAllValues();
+    }
+
+    /**
+     * Flat list of available release formats (proxy to the formats provider) so
+     * the SPA form-data endpoint can expose them as enum options.
+     *
+     * @return string[]
+     */
+    public function getReleaseFormats(): array
+    {
+        return $this->getService(\ZxArt\Releases\Services\ReleaseFormatsProvider::class)->getReleaseFormats();
     }
 
     public function getCurrentReleaseContentFormatted()
