@@ -17,6 +17,7 @@ use ZxArt\Parties\Dto\PartyLocationDto;
 use ZxArt\Parties\Dto\PartyLocationItemDto;
 use ZxArt\Parties\Dto\PartyTabsDto;
 use ZxArt\Parties\Repositories\PartiesRepository;
+use ZxArt\Parties\Repositories\PartyAuthorsRepository;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArtItem;
 
@@ -36,6 +37,7 @@ readonly class PartyDetailsService
         private breadcrumbsManager $breadcrumbsManager,
         private PartyCompoNameResolver $compoNameResolver,
         private PartiesRepository $partiesRepository,
+        private PartyAuthorsRepository $partyAuthorsRepository,
     ) {
     }
 
@@ -95,7 +97,6 @@ readonly class PartyDetailsService
      */
     private function buildCounters(partyElement $party, array $compos): PartyCountersDto
     {
-        $authorIds = [];
         $byMedium = ['prod' => 0, 'picture' => 0, 'music' => 0];
         $entries = 0;
 
@@ -103,22 +104,16 @@ readonly class PartyDetailsService
             /** @var array<string, ZxArtItem[]> $grouped */
             $grouped = $party->{$method}();
             foreach ($grouped as $items) {
-                foreach ($items as $item) {
-                    $entries++;
-                    $byMedium[$medium]++;
-                    /** @var list<int|string> $ids */
-                    $ids = (array)$item->getAuthorIds();
-                    foreach ($ids as $authorId) {
-                        $authorIds[(int)$authorId] = true;
-                    }
-                }
+                $itemsCount = count($items);
+                $entries += $itemsCount;
+                $byMedium[$medium] += $itemsCount;
             }
         }
 
         return new PartyCountersDto(
             compos: count($compos),
             entries: $entries,
-            authors: count($authorIds),
+            authors: $this->partyAuthorsRepository->countByPartyId($party->getId()),
             pictures: $byMedium['picture'],
             tunes: $byMedium['music'],
             prods: $byMedium['prod'],

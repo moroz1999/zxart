@@ -187,7 +187,8 @@ readonly class PictureDetailsService
                 label: (string)$this->translationsManager->getTranslationByName('field.originalfile'),
                 sub: null,
                 size: null,
-                url: $baseUrl . 'file/id:' . $element->getId() . '/filename:' . rawurlencode((string)$element->getFileName()),
+                url: $baseUrl . 'file/id:' . $element->getId() . '/filename:'
+                    . rawurlencode($element->getFileName('original', true, false)),
             );
 
             for ($zoom = 1; $zoom <= 4; $zoom++) {
@@ -209,7 +210,7 @@ readonly class PictureDetailsService
                 sub: null,
                 size: null,
                 url: $baseUrl . 'print/id:' . $element->image
-                    . '/fileName:' . rawurlencode((string)$element->getFileName('image', true, true)) . '/',
+                    . '/fileName:' . rawurlencode($element->getFileName('image', true, false)) . '/',
             );
         }
 
@@ -220,7 +221,8 @@ readonly class PictureDetailsService
                 label: (string)$element->getFileName('exe', false, false),
                 sub: null,
                 size: null,
-                url: $baseUrl . 'file/id:' . $element->exeFile . '/filename:' . rawurlencode((string)$element->getFileName('exe')),
+                url: $baseUrl . 'file/id:' . $element->exeFile . '/filename:'
+                    . rawurlencode($element->getFileName('exe', true, false)),
             );
         }
 

@@ -24,6 +24,22 @@
     >{{ 'release-details.play-online' | translate }}</zx-emulator-play-button>
 
     <zx-button
+      *ngIf="showDonateButton"
+      color="secondary"
+      [href]="details.prodExternalLink"
+      target="_blank"
+      rel="noopener"
+    ><svg-icon class="rp-actions__download-icon" name="dollar"></svg-icon>{{ 'release-details.donate' | translate }}</zx-button>
+
+    <zx-button
+      *ngIf="showBuyButton"
+      color="secondary"
+      [href]="details.prodExternalLink"
+      target="_blank"
+      rel="noopener"
+    ><svg-icon class="rp-actions__download-icon" name="cart"></svg-icon>{{ 'release-details.buy' | translate }}</zx-button>
+
+    <zx-button
       *ngIf="details.isDownloadable && details.downloadUrl"
       color="outlined"
       [href]="details.downloadUrl"

@@ -64,6 +64,7 @@ If work has no compo specified, it goes to group `'none'`
 - **picturesQuantity** - number of pictures at party
 - **tunesQuantity** - number of tracks at party
 - Recalculated automatically through `recalculate()`
+- The party author counter includes picture and tune link authors plus all production and release authorship roles. Author aliases are counted as their main author.
 
 ### Press
 - **mentions** - press mentions (link `PRESS_PARTIES`, role parent)

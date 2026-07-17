@@ -19,13 +19,26 @@
     [party]="details.party">
   </zx-prod-people-row>
 
-  <zx-inline *ngIf="details.formats.length" align="center" spacing="xs" [wrap]="true" appText="label" tone="muted">
-    <ng-container *ngFor="let fmt of details.formats; let last = last">
-      <zx-inline class="rp-format" align="center" spacing="xs">
-        <span *ngIf="fmt.emoji">{{ fmt.emoji }}</span>
-        <span>{{ fmt.label }}</span>
-      </zx-inline><ng-container *ngIf="!last">, </ng-container>
-    </ng-container>
+  <zx-inline *ngIf="details.formats.length" align="center" spacing="xs" [wrap]="true">
+    <span appText="bodySm" tone="strong" class="rp-hw-label">{{ 'release-details.format-label' | translate }}</span>
+    <zx-inline align="center" spacing="xs" [wrap]="true" appText="label" tone="muted">
+      <ng-container *ngFor="let fmt of details.formats; let last = last">
+        <zx-inline class="rp-format" align="center" spacing="xs">
+          <span *ngIf="fmt.emoji">{{ fmt.emoji }}</span>
+          <span>{{ fmt.label }}</span>
+        </zx-inline><ng-container *ngIf="!last">, </ng-container>
+      </ng-container>
+    </zx-inline>
+  </zx-inline>
+
+  <zx-inline *ngIf="details.version" align="center" spacing="xs" [wrap]="true">
+    <span appText="bodySm" tone="strong" class="rp-hw-label">{{ 'release-details.version-label' | translate }}</span>
+    <span appText="label" tone="muted">{{ details.version }}</span>
+  </zx-inline>
+
+  <zx-inline *ngIf="details.languages.length" align="center" spacing="xs" [wrap]="true">
+    <span appText="bodySm" tone="strong" class="rp-hw-label">{{ 'release-details.language-label' | translate }}</span>
+    <a *ngFor="let lang of details.languages" appText="label" tone="link" [href]="lang.catalogueUrl">{{ lang.emoji }} {{ lang.title }}</a>
   </zx-inline>
 
   <zx-inline *ngIf="details.hardware.length" align="center" spacing="xs" [wrap]="true">

@@ -73,6 +73,8 @@ export class ZxProdReleaseRowComponent implements OnInit {
   ngOnInit(): void {
     this.iconReg.loadSvg(`${environment.svgUrl}download.svg`, 'download')?.subscribe();
     this.iconReg.loadSvg(`${environment.svgUrl}play.svg`, 'play')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}cart.svg`, 'cart')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}dollar.svg`, 'dollar')?.subscribe();
     if (this.release.screenshots.length > 0) {
       this.galleryId = `zx-release-screenshots-${this.release.id}`;
       this.gallery.loadItems(this.galleryId, this.release.screenshots.map(this.toGalleryItem));
@@ -102,16 +104,21 @@ export class ZxProdReleaseRowComponent implements OnInit {
     return screenshot?.fullImageUrl ?? screenshot?.imageUrl ?? '';
   }
 
-  get showPurchaseButton(): boolean {
-    return !this.release.isDownloadable
-      && this.release.prodExternalLink !== ''
-      && this.release.prodLegalStatus === 'insales';
+  get showDonateButton(): boolean {
+    return this.release.prodLegalStatus === 'donationware'
+      && this.release.prodExternalLink !== '';
+  }
+
+  get showBuyButton(): boolean {
+    return this.release.prodLegalStatus === 'insales'
+      && this.release.prodExternalLink !== '';
   }
 
   get showOpenLinkButton(): boolean {
     return !this.release.isDownloadable
       && this.release.prodExternalLink !== ''
-      && this.release.prodLegalStatus !== 'insales';
+      && this.release.prodLegalStatus !== 'insales'
+      && this.release.prodLegalStatus !== 'donationware';
   }
 
 }

@@ -1,6 +1,8 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
+import {environment} from '../../../../../environments/environment';
 import {ProdAuthorInfoDto, ProdCategoryRefDto, ProdCoreDto} from '../../models/prod-core.dto';
 import {ZxProdVoteRowComponent} from '../zx-prod-vote-row/zx-prod-vote-row.component';
 import {ZxProdExternalLinksComponent} from '../zx-prod-external-links/zx-prod-external-links.component';
@@ -10,6 +12,7 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxProdEditingControlsComponent} from '../zx-prod-editing-controls/zx-prod-editing-controls.component';
 import {ZxChipComponent} from '../../../../shared/ui/zx-chip/zx-chip.component';
+import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxPartyPlaceComponent} from '../../../../shared/lib/zx-party-place/zx-party-place.component';
 import {ZxAddedByComponent} from '../../../../shared/ui/zx-added-by/zx-added-by.component';
 import {ZxRatingStripComponent} from '../../../../shared/components/zx-rating-strip/zx-rating-strip.component';
@@ -42,6 +45,8 @@ const PRIORITY_AUTHOR_ROLES = [
     ZxInlineComponent,
     ZxProdEditingControlsComponent,
     ZxChipComponent,
+    ZxButtonComponent,
+    SvgIconComponent,
     ZxPartyPlaceComponent,
     ZxAddedByComponent,
     ZxRatingStripComponent,
@@ -53,14 +58,24 @@ const PRIORITY_AUTHOR_ROLES = [
 export class ZxProdHeroComponent {
   @Input({required: true}) core!: ProdCoreDto;
 
+  constructor(private readonly iconReg: SvgIconRegistryService) {
+    this.iconReg.loadSvg(`${environment.svgUrl}cart.svg`, 'cart')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}dollar.svg`, 'dollar')?.subscribe();
+  }
+
   get externalLinkLabelKey(): string {
-    if (this.core.legalStatus === 'insales') {
-      return 'prod-details.purchase';
-    }
-    if (this.core.legalStatus === 'donationware') {
-      return 'prod-details.donate';
+    if (this.core.legalStatus === 'insales' || this.core.legalStatus === 'donationware') {
+      return 'prod-details.homepage';
     }
     return 'prod-details.open_externallink';
+  }
+
+  get showDonateButton(): boolean {
+    return this.core.legalStatus === 'donationware' && this.core.externalLink !== '';
+  }
+
+  get showBuyButton(): boolean {
+    return this.core.legalStatus === 'insales' && this.core.externalLink !== '';
   }
 
   get leafCategories(): ProdCategoryRefDto[] {

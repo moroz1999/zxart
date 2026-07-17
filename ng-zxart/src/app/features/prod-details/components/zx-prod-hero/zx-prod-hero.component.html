@@ -69,6 +69,24 @@
   </zx-inline>
 
   <zx-inline *ngIf="core.links.length || core.externalLink" gap="md" align="center" [wrap]="true">
+    <zx-button
+      *ngIf="showDonateButton"
+      color="secondary"
+      [href]="core.externalLink"
+      target="_blank"
+      rel="noopener">
+      <svg-icon class="hero-cta-icon" name="dollar"></svg-icon>
+      {{ 'prod-details.donate' | translate }}
+    </zx-button>
+    <zx-button
+      *ngIf="showBuyButton"
+      color="secondary"
+      [href]="core.externalLink"
+      target="_blank"
+      rel="noopener">
+      <svg-icon class="hero-cta-icon" name="cart"></svg-icon>
+      {{ 'prod-details.purchase' | translate }}
+    </zx-button>
     <a
       *ngIf="core.externalLink"
       appText="label"

@@ -100,7 +100,7 @@ readonly class ReleaseDetailsService
             fileName: $release->fileName !== '' ? $this->decodeFileNameForDisplay($release->fileName) : null,
             emulatorType: $emulatorType,
             prodLegalStatus: $release->getLegalStatus(),
-            prodExternalLink: '',
+            prodExternalLink: $release->getProd()?->externalLink ?? '',
             downloadsCount: $release->getDownloadsCount(),
             playsCount: $release->getPlaysCount(),
             externalLinks: $this->infoBuilder->buildLinks($release, $theme),

@@ -91,25 +91,27 @@
   </td>
 
   <td class="release-row__actions">
-    <zx-inline gap="xs" align="center" [wrap]="true">
-      <zx-emulator-play-button
-        size="sm"
-        [square]="true"
-        [ariaLabel]="'release-row.play' | translate"
-        [isPlayable]="release.isPlayable"
-        [isDownloadable]="release.isDownloadable"
-        [playUrl]="release.playUrl"
-        [emulatorType]="release.emulatorType"
-        [canUploadScreenshot]="canUploadScreenshot"
-        [screenshotUploadUrl]="screenshotUploadUrl"
-      >
-        <svg-icon class="release-row__download-icon" name="play"></svg-icon>
-      </zx-emulator-play-button>
+    <zx-inline gap="xs" align="center">
+      <span class="release-row__play-slot">
+        <zx-emulator-play-button
+          size="sm"
+          [square]="true"
+          [ariaLabel]="'release-row.play' | translate"
+          [isPlayable]="release.isPlayable"
+          [isDownloadable]="release.isDownloadable"
+          [playUrl]="release.playUrl"
+          [emulatorType]="release.emulatorType"
+          [canUploadScreenshot]="canUploadScreenshot"
+          [screenshotUploadUrl]="screenshotUploadUrl"
+        >
+          <svg-icon class="release-row__download-icon" name="play"></svg-icon>
+        </zx-emulator-play-button>
+      </span>
 
 <ng-container *ngIf="release.isDownloadable; else externalDownload">
         <zx-button *ngIf="release.downloadUrl"
                    size="sm"
-                   color="primary"
+                   color="secondary"
                    [square]="true"
                    [ariaLabel]="'release-row.download' | translate"
                    [href]="release.downloadUrl"
@@ -119,13 +121,6 @@
         </zx-button>
       </ng-container>
       <ng-template #externalDownload>
-        <zx-button *ngIf="showPurchaseButton"
-                   size="sm"
-                   color="secondary"
-                   [href]="release.prodExternalLink"
-                   target="_blank">
-          {{ 'release-row.purchase' | translate }}
-        </zx-button>
         <zx-button *ngIf="showOpenLinkButton"
                    size="sm"
                    color="primary"
@@ -134,6 +129,27 @@
           {{ 'release-row.open-externallink' | translate }}
         </zx-button>
       </ng-template>
+
+      <zx-button *ngIf="showBuyButton"
+                 size="sm"
+                 color="secondary"
+                 [square]="true"
+                 [ariaLabel]="'release-row.purchase' | translate"
+                 [href]="release.prodExternalLink"
+                 target="_blank"
+                 rel="noopener">
+        <svg-icon class="release-row__download-icon" name="cart"></svg-icon>
+      </zx-button>
+      <zx-button *ngIf="showDonateButton"
+                 size="sm"
+                 color="secondary"
+                 [square]="true"
+                 [ariaLabel]="'release-row.donate' | translate"
+                 [href]="release.prodExternalLink"
+                 target="_blank"
+                 rel="noopener">
+        <svg-icon class="release-row__download-icon" name="dollar"></svg-icon>
+      </zx-button>
 
     </zx-inline>
   </td>

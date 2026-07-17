@@ -47,6 +47,15 @@ a {
   height: var(--zx-prod-release-row-icon-size);
 }
 
+// Reserve the play button's square slot so the download button keeps its
+// column when the release is not playable (empty slot instead of shifting left).
+.release-row__play-slot {
+  display: inline-flex;
+  flex: 0 0 auto;
+  justify-content: center;
+  width: var(--zx-button-sm-height);
+}
+
 .release-row__thumb-wrap {
   width: var(--zx-prod-release-row-thumb-size);
   aspect-ratio: 4/3;

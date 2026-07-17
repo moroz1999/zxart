@@ -111,6 +111,7 @@ Determined by combination of:
 - **ZX80**: ZX80 hardware
 - **TSConf**: formats `spg`, `img`, `trd`, `scl` + TSConf hardware
 - **MB (Multiboard)**: format `tar` + MB hardware
+- A release requiring hardware the online emulators cannot emulate is not playable regardless of format. `EmulatorResolverService::UNSUPPORTED_HARDWARE` lists such hardware (currently General Sound, `gs`): when present in `hardwareRequired`, `resolveEmulator()` returns `null`, so `isPlayable()`/`getEmulatorType()` are false/null and the play button is hidden.
 
 #### Angular Prod Details Emulator
 - Prod details release rows pass the ZIP play URL to USP and the first runnable file URL to non-USP emulators.

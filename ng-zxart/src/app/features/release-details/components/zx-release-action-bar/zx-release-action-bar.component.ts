@@ -34,5 +34,15 @@ export class ZxReleaseActionBarComponent {
 
   constructor(private readonly iconReg: SvgIconRegistryService) {
     this.iconReg.loadSvg(`${environment.svgUrl}download.svg`, 'download')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}cart.svg`, 'cart')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}dollar.svg`, 'dollar')?.subscribe();
+  }
+
+  get showDonateButton(): boolean {
+    return this.details.prodLegalStatus === 'donationware' && this.details.prodExternalLink !== '';
+  }
+
+  get showBuyButton(): boolean {
+    return this.details.prodLegalStatus === 'insales' && this.details.prodExternalLink !== '';
   }
 }

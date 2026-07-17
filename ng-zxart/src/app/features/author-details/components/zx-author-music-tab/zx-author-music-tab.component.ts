@@ -17,7 +17,7 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 40;
 
 interface YearGroup {
   year: string | null;

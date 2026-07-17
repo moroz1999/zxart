@@ -6,6 +6,12 @@ namespace ZxArt\Releases\Services;
 
 final class EmulatorResolverService
 {
+    /**
+     * Hardware the online emulators cannot emulate; a release requiring any of it
+     * cannot be launched online (e.g. General Sound).
+     */
+    private const UNSUPPORTED_HARDWARE = ['gs'];
+
     private const EMULATORS = [
         'zx80' => [
             'hardware' => ['zx80'],
@@ -35,6 +41,9 @@ final class EmulatorResolverService
 
     public function resolveEmulator(array $hardwareRequired, array $releaseFormats): ?string
     {
+        if (array_intersect($hardwareRequired, self::UNSUPPORTED_HARDWARE)) {
+            return null;
+        }
         if ($this->matchHardwareAndFormat($hardwareRequired, $releaseFormats, 'zx80')) {
             return 'zx80';
         }
