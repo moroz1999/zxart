@@ -5,7 +5,6 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  HostListener,
   OnDestroy,
   ViewChild,
 } from '@angular/core';
@@ -13,7 +12,7 @@ import {FormsModule} from '@angular/forms';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import * as L from 'leaflet';
 import {Observable, Subject, Subscription} from 'rxjs';
-import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, filter, startWith, switchMap} from 'rxjs/operators';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
 import {ZxSelectComponent, ZxSelectOption} from '../../../../shared/ui/zx-select/zx-select.component';
@@ -33,8 +32,10 @@ import {
 import {GeoService} from '../../services/geo.service';
 import {ThemeService} from '../../../settings/services/theme.service';
 import {Theme} from '../../../settings/models/preference.dto';
-import {RouterLink} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router, RouterLink} from '@angular/router';
 type GeoListItem = GeoAuthorItem | GeoGroupItem | GeoPartyItem;
+
+type PendingPlace = {kind: 'country' | 'city'; id: number};
 
 interface GeoLayerState {
   authors: boolean;
@@ -81,12 +82,15 @@ export class ZxGeoComponent implements AfterViewInit, OnDestroy {
   private map?: L.Map;
   private markerLayer = L.layerGroup();
   private tileLayer?: L.TileLayer;
+  private pendingPlace: PendingPlace | null = null;
 
   constructor(
     private readonly geoService: GeoService,
     private readonly changeDetector: ChangeDetectorRef,
     private readonly translate: TranslateService,
     private readonly themeService: ThemeService,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
   ) {}
 
   ngAfterViewInit(): void {
@@ -116,7 +120,15 @@ export class ZxGeoComponent implements AfterViewInit, OnDestroy {
     }));
     this.subscription.add(this.geoService.map$.subscribe(data => {
       this.data = data;
-      this.applyUrlState();
+      this.applyRouteState();
+      this.changeDetector.markForCheck();
+    }));
+    this.subscription.add(this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      startWith(null),
+    ).subscribe(() => {
+      this.readRoute();
+      this.applyRouteState();
       this.changeDetector.markForCheck();
     }));
   }
@@ -137,6 +149,7 @@ export class ZxGeoComponent implements AfterViewInit, OnDestroy {
   }
 
   selectCountry(country: GeoCountry, updateHistory = true): void {
+    this.pendingPlace = {kind: 'country', id: country.id};
     this.selectedFilter = {kind: 'country', country};
     this.page = 1;
     this.search = '';
@@ -144,11 +157,12 @@ export class ZxGeoComponent implements AfterViewInit, OnDestroy {
     this.refreshMap();
     this.refreshPanel();
     if (updateHistory) {
-      this.updateUrl();
+      this.router.navigate(['/geo/country', country.id]);
     }
   }
 
   selectCity(city: GeoCity, updateHistory = true): void {
+    this.pendingPlace = {kind: 'city', id: city.id};
     this.selectedFilter = {kind: 'city', city};
     this.page = 1;
     this.search = '';
@@ -156,7 +170,7 @@ export class ZxGeoComponent implements AfterViewInit, OnDestroy {
     this.refreshMap();
     this.refreshPanel();
     if (updateHistory) {
-      this.updateUrl();
+      this.router.navigate(['/geo/city', city.id]);
     }
   }
 
@@ -170,53 +184,60 @@ export class ZxGeoComponent implements AfterViewInit, OnDestroy {
   }
 
   clearFilter(updateHistory = true): void {
+    this.pendingPlace = null;
     this.selectedFilter = null;
     this.page = 1;
     this.refreshMap();
     this.refreshPanel();
     if (updateHistory) {
-      this.updateUrl();
+      this.router.navigate(['/geo']);
     }
   }
 
-  @HostListener('window:popstate')
-  onPopState(): void {
-    this.applyUrlState();
-    this.changeDetector.markForCheck();
+  /** Reads the active `/geo/country/:id` or `/geo/city/:id` child route into pendingPlace. */
+  private readRoute(): void {
+    const child = this.route.firstChild?.snapshot;
+    const kind = child?.data['placeKind'] as 'country' | 'city' | undefined;
+    const id = child ? Number(child.paramMap.get('id')) : NaN;
+    this.pendingPlace = kind && Number.isFinite(id) && id > 0 ? {kind, id} : null;
   }
 
-  private applyUrlState(): void {
-    const params = new URLSearchParams(window.location.search);
-    const cityId = Number(params.get('city'));
-    const city = cityId ? this.findCity(cityId) : undefined;
-    if (city) {
-      this.selectCity(city, false);
+  /** Syncs the map selection to pendingPlace once the map data is available. */
+  private applyRouteState(): void {
+    if (this.filterMatchesPlace(this.selectedFilter, this.pendingPlace)) {
       return;
     }
 
-    const countryId = Number(params.get('country'));
-    const country = countryId ? this.data.countries.find(item => item.id === countryId) : undefined;
-    if (country) {
-      this.selectCountry(country, false);
+    if (this.pendingPlace?.kind === 'city') {
+      const city = this.findCity(this.pendingPlace.id);
+      if (city) {
+        this.selectCity(city, false);
+      }
+      return;
+    }
+
+    if (this.pendingPlace?.kind === 'country') {
+      const country = this.data.countries.find(item => item.id === this.pendingPlace?.id);
+      if (country) {
+        this.selectCountry(country, false);
+      }
       return;
     }
 
     this.clearFilter(false);
   }
 
-  private updateUrl(): void {
-    const params = new URLSearchParams(window.location.search);
-    params.delete('country');
-    params.delete('city');
-    if (this.selectedFilter?.kind === 'country') {
-      params.set('country', String(this.selectedFilter.country.id));
-    } else if (this.selectedFilter?.kind === 'city') {
-      params.set('city', String(this.selectedFilter.city.id));
+  private filterMatchesPlace(selected: GeoFilter | null, place: PendingPlace | null): boolean {
+    if (selected === null && place === null) {
+      return true;
+    }
+    if (selected === null || place === null || selected.kind !== place.kind) {
+      return false;
     }
 
-    const query = params.toString();
-    const url = window.location.pathname + (query ? '?' + query : '') + window.location.hash;
-    window.history.pushState(null, '', url);
+    return selected.kind === 'country'
+      ? selected.country.id === place.id
+      : selected.city.id === place.id;
   }
 
   private findCity(id: number): GeoCity | undefined {

@@ -88,14 +88,14 @@ readonly class GroupDetailsService
         if ($cityElement = $group->getCityElement()) {
             $city = new GroupLocationItemDto(
                 title: $this->decode((string)$cityElement->title),
-                url: (string)$cityElement->getUrl('group'),
+                url: $this->entityUrlResolver->urlFor($cityElement),
             );
         }
         $country = null;
         if ($countryElement = $group->getCountryElement()) {
             $country = new GroupLocationItemDto(
                 title: $this->decode((string)$countryElement->title),
-                url: (string)$countryElement->getUrl('group'),
+                url: $this->entityUrlResolver->urlFor($countryElement),
             );
         }
         return new GroupLocationDto(city: $city, country: $country);

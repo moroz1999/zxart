@@ -29,11 +29,11 @@
         <ng-template #plainRealName>{{ author.realName }}</ng-template>
       </td>
       <td class="col-country">
-        <a *ngIf="author.countryUrl; else countryText" [href]="author.countryUrl">{{ author.countryTitle }}</a>
+        <a *ngIf="author.countryUrl; else countryText" [routerLink]="author.countryUrl">{{ author.countryTitle }}</a>
         <ng-template #countryText>{{ author.countryTitle }}</ng-template>
       </td>
       <td class="col-city">
-        <a *ngIf="author.cityUrl; else cityText" [href]="author.cityUrl">{{ author.cityTitle }}</a>
+        <a *ngIf="author.cityUrl; else cityText" [routerLink]="author.cityUrl">{{ author.cityTitle }}</a>
         <ng-template #cityText>{{ author.cityTitle }}</ng-template>
       </td>
       <td class="col-rating">

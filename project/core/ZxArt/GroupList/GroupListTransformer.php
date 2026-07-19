@@ -39,10 +39,10 @@ readonly class GroupListTransformer
             realGroupUrl: null,
             countryId: $countryElement !== null ? (int)$countryElement->id : null,
             countryTitle: $countryElement !== null ? html_entity_decode($countryElement->title, ENT_QUOTES) : null,
-            countryUrl: $countryElement?->getUrl(EntityType::Group->value),
+            countryUrl: $countryElement !== null ? $this->entityUrlResolver->urlFor($countryElement) : null,
             cityId: $cityElement !== null ? (int)$cityElement->id : null,
             cityTitle: $cityElement !== null ? html_entity_decode($cityElement->title, ENT_QUOTES) : null,
-            cityUrl: $cityElement?->getUrl(EntityType::Group->value),
+            cityUrl: $cityElement !== null ? $this->entityUrlResolver->urlFor($cityElement) : null,
         );
     }
 
@@ -64,10 +64,10 @@ readonly class GroupListTransformer
             realGroupUrl: $parentGroup !== null ? $this->entityUrlResolver->urlFor($parentGroup) : null,
             countryId: $countryElement !== null ? (int)$countryElement->id : null,
             countryTitle: $countryElement !== null ? html_entity_decode($countryElement->title, ENT_QUOTES) : null,
-            countryUrl: $countryElement?->getUrl(EntityType::Group->value),
+            countryUrl: $countryElement !== null ? $this->entityUrlResolver->urlFor($countryElement) : null,
             cityId: $cityElement !== null ? (int)$cityElement->id : null,
             cityTitle: $cityElement !== null ? html_entity_decode($cityElement->title, ENT_QUOTES) : null,
-            cityUrl: $cityElement?->getUrl(EntityType::Group->value),
+            cityUrl: $cityElement !== null ? $this->entityUrlResolver->urlFor($cityElement) : null,
         );
     }
 }

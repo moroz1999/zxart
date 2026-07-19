@@ -143,14 +143,14 @@ readonly class PartyDetailsService
         if ($cityElement = $party->getCityElement()) {
             $city = new PartyLocationItemDto(
                 title: $this->decode((string)$cityElement->title),
-                url: (string)$cityElement->getUrl(),
+                url: $this->entityUrlResolver->urlFor($cityElement),
             );
         }
         $country = null;
         if ($countryElement = $party->getCountryElement()) {
             $country = new PartyLocationItemDto(
                 title: $this->decode((string)$countryElement->title),
-                url: (string)$countryElement->getUrl(),
+                url: $this->entityUrlResolver->urlFor($countryElement),
             );
         }
         return new PartyLocationDto(city: $city, country: $country);

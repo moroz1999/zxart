@@ -47,6 +47,8 @@ class EntityUrlResolver
         'zxPicture' => 'picture',
         'zxMusic' => 'tune',
         'pressArticle' => 'press',
+        'country' => 'geo/country',
+        'city' => 'geo/city',
     ];
 
     public function resolveByType(string $structureType, int $id): ?string

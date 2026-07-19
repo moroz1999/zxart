@@ -140,14 +140,14 @@ readonly class AuthorDetailsService
         if ($cityElement = $author->getCityElement()) {
             $city = new AuthorLocationItemDto(
                 title: (string)$cityElement->title,
-                url: (string)$cityElement->getUrl(),
+                url: $this->entityUrlResolver->urlFor($cityElement),
             );
         }
         $country = null;
         if ($countryElement = $author->getCountryElement()) {
             $country = new AuthorLocationItemDto(
                 title: (string)$countryElement->title,
-                url: (string)$countryElement->getUrl(),
+                url: $this->entityUrlResolver->urlFor($countryElement),
             );
         }
         return new AuthorLocationDto(city: $city, country: $country);

@@ -34,9 +34,9 @@
         <span class="ap-bio__sep">·</span>
         <span class="ap-bio__loc">
           <svg-icon name="location" aria-hidden="true"></svg-icon>
-          <a *ngIf="core.location.city" [href]="core.location.city.url">{{ core.location.city.title }}</a>
+          <a *ngIf="core.location.city" [routerLink]="core.location.city.url">{{ core.location.city.title }}</a>
           <ng-container *ngIf="core.location.city && core.location.country">, </ng-container>
-          <a *ngIf="core.location.country" [href]="core.location.country.url">{{ core.location.country.title }}</a>
+          <a *ngIf="core.location.country" [routerLink]="core.location.country.url">{{ core.location.country.title }}</a>
         </span>
       </ng-container>
 

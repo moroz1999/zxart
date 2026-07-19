@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {RouterLink} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {PartyCoreDto} from '../../models/party-core.dto';
@@ -15,6 +16,7 @@ import {ZxPartyEditingControlsComponent} from '../zx-party-editing-controls/zx-p
   standalone: true,
   imports: [
     CommonModule,
+    RouterLink,
     TranslateModule,
     ZxInlineComponent,
     ZxButtonComponent,

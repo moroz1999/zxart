@@ -19,6 +19,23 @@ class EntityUrlResolverTest extends TestCase
         self::assertSame($expectedUrl, $resolver->resolveByType($structureType->value, 1));
     }
 
+    #[DataProvider('entityUrls')]
+    public function testEntityTypeResolvesToSpaUrl(string $structureType, int $id, string $expectedUrl): void
+    {
+        $resolver = new EntityUrlResolver();
+
+        self::assertSame($expectedUrl, $resolver->resolveByType($structureType, $id));
+    }
+
+    public static function entityUrls(): iterable
+    {
+        yield 'author' => ['author', 42, '/author/42'];
+        yield 'authorAlias' => ['authorAlias', 42, '/author/42'];
+        yield 'group' => ['group', 7, '/group/7'];
+        yield 'country' => ['country', 47608, '/geo/country/47608'];
+        yield 'city' => ['city', 1234, '/geo/city/1234'];
+    }
+
     public static function sectionUrls(): iterable
     {
         yield [StructureType::AuthorsCatalogue, '/authors'];
