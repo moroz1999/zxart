@@ -12,8 +12,12 @@ class zxProdCategoriesCatalogueDataResponseConverter extends StructuredDataRespo
     {
         return [
             'id' => 'id',
-            'title' => 'title',
-            'h1' => 'getH1',
+            'title' => function ($element) {
+                return html_entity_decode($element->title, ENT_QUOTES);
+            },
+            'h1' => function ($element) {
+                return html_entity_decode($element->getH1(), ENT_QUOTES);
+            },
             'structureType' => 'structureType',
             'categories' => 'getCategoriesIds',
             'prods' => 'getProdsInfo',

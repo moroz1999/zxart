@@ -36,6 +36,9 @@ details use the same query parameters.
 Catalogue responses expose entity identifiers and structure types. Angular
 templates build internal routes from those identifiers and do not receive routed
 URLs from the API.
+Prod and release detail responses expose category IDs and raw language, hardware,
+year, and format values. Angular templates build catalogue filter links from
+those values.
 
 ### Relations with Other Entities
 

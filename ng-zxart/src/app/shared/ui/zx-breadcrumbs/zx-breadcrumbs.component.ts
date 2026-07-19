@@ -7,7 +7,8 @@ import {
 
 export interface BreadcrumbItemDto {
   title: string;
-  url: string;
+  id?: number;
+  url?: string;
 }
 
 @Component({
@@ -20,6 +21,7 @@ export interface BreadcrumbItemDto {
 })
 export class ZxBreadcrumbsComponent {
   @Input() categories: BreadcrumbItemDto[] = [];
+  @Input() categoryCataloguePath: string | null = null;
   @Input() parentItem: { title: string; url: string } | null = null;
   @Input() currentTitle = '';
   @Input() loading = false;

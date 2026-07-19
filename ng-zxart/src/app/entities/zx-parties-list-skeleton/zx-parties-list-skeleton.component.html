@@ -1,0 +1,28 @@
+<zx-grid *ngIf="viewMode === 'cards'" desktopColumns="5" tabletColumns="3" mobileColumns="1" gap="lg">
+  <zx-panel *ngFor="let item of items" radius="xl" padding="none" variant="elevated">
+    <zx-skeleton-bone class="parties-list-skeleton__image"></zx-skeleton-bone>
+    <zx-inset padding="sm">
+      <zx-inline align="center" justify="between" spacing="sm">
+        <zx-skeleton-bone class="parties-list-skeleton__title"></zx-skeleton-bone>
+        <zx-skeleton-bone class="parties-list-skeleton__year"></zx-skeleton-bone>
+      </zx-inline>
+    </zx-inset>
+  </zx-panel>
+</zx-grid>
+
+<zx-table *ngIf="viewMode === 'table'" size="md">
+  <table>
+    <thead>
+      <tr>
+        <th>{{ 'parties-page.col-title' | translate }}</th>
+        <th>{{ 'parties-page.col-year' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items">
+        <td><zx-skeleton-bone class="parties-list-skeleton__table-title"></zx-skeleton-bone></td>
+        <td><zx-skeleton-bone class="parties-list-skeleton__table-year"></zx-skeleton-bone></td>
+      </tr>
+    </tbody>
+  </table>
+</zx-table>

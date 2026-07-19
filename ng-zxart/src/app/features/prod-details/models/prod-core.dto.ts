@@ -1,7 +1,8 @@
+import {PageMetadataDto} from '../../../shared/models/page-metadata.dto';
+
 export interface ProdCategoryRefDto {
   id: number;
   title: string;
-  url: string;
 }
 
 export interface ProdCategoryPathDto {
@@ -12,12 +13,10 @@ export interface ProdLanguageInfoDto {
   code: string;
   title: string;
   emoji: string;
-  catalogueUrl: string;
 }
 
 export interface ProdHardwareInfoDto {
   id: string;
-  catalogueUrl: string;
 }
 
 export interface ProdLinkInfoDto {
@@ -86,6 +85,7 @@ export interface ProdTabsDto {
 }
 
 export interface ProdCoreDto {
+  metadata: PageMetadataDto;
   elementId: number;
   title: string;
   altTitle: string;
@@ -99,7 +99,6 @@ export interface ProdCoreDto {
   youtubeId: string;
   generatedDescription: string;
   dateCreated: string;
-  catalogueYearUrl: string;
   canAddRelease: boolean;
   addReleaseUrl: string;
   categoriesPaths: ProdCategoryPathDto[];

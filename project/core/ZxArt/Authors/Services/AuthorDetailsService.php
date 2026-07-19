@@ -25,6 +25,7 @@ use ZxArt\Authors\Dto\AuthorTechDto;
 use ZxArt\Authors\Repositories\AuthorProdsRepository;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\LinkTypes;
+use ZxArt\PageMetadata\PageMetadataService;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArt\Shared\EntityType;
 use ZxArt\Urls\EntityUrlResolver;
@@ -37,6 +38,7 @@ readonly class AuthorDetailsService
         private AuthorshipRepository $authorshipRepository,
         private AuthorProdsRepository $authorProdsRepository,
         private EntityUrlResolver $entityUrlResolver,
+        private PageMetadataService $pageMetadataService,
     ) {
     }
 
@@ -84,6 +86,7 @@ readonly class AuthorDetailsService
             ratings: $ratings,
             tabs: $tabs,
             breadcrumbs: $breadcrumbs,
+            metadata: $this->pageMetadataService->getForPath('/author/' . $authorId),
         );
     }
 

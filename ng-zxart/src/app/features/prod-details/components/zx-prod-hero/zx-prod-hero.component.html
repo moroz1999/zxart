@@ -12,7 +12,7 @@
   </div>
 
   <zx-inline gap="sm" [wrap]="true">
-    <zx-chip *ngFor="let cat of leafCategories" variant="filled" color="primary" [href]="cat.url">{{ cat.title }}</zx-chip>
+    <zx-chip *ngFor="let cat of leafCategories" variant="filled" color="primary" [href]="'/prods?cat=' + cat.id">{{ cat.title }}</zx-chip>
     <zx-chip *ngFor="let lang of core.languages" variant="filled" color="neutral">{{ lang.emoji }} {{ lang.title }}</zx-chip>
     <zx-chip *ngIf="showLegalStatus" variant="filled" color="neutral">{{ core.legalStatusLabel }}</zx-chip>
   </zx-inline>

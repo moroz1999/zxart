@@ -198,7 +198,6 @@ readonly class ReleaseDetailsService
                 $categories[] = new ProdCategoryRefDto(
                     id: $category->getId(),
                     title: $this->infoBuilder->decodeText($category->title),
-                    url: (string)$category->getUrl(),
                 );
             }
             if ($categories) {
@@ -222,7 +221,6 @@ readonly class ReleaseDetailsService
                 format: $format,
                 label: $this->infoBuilder->translate('zxRelease.filetype_' . $format),
                 emoji: $this->releaseFormatsProvider->getFormatEmoji($format),
-                catalogueUrl: $release->getCatalogueUrlByFiletype($format),
             );
         }
         return $formats;

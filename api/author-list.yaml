@@ -1,0 +1,82 @@
+openapi: 3.0.0
+paths:
+  /authorlist/:
+    get:
+      summary: List authors and aliases
+      responses:
+        '200':
+          description: Paginated author list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorListResponse'
+
+components:
+  schemas:
+    AuthorListResponse:
+      type: object
+      required: [total, items]
+      properties:
+        total:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorListItem'
+    AuthorListItem:
+      type: object
+      required: [id, url, entityType, title, realName, groups, musicRating, graphicsRating]
+      properties:
+        id:
+          type: integer
+        url:
+          type: string
+        entityType:
+          type: string
+          enum: [author, authorAlias]
+        title:
+          type: string
+        realName:
+          type: string
+        realNameId:
+          type: integer
+          nullable: true
+        realNameUrl:
+          type: string
+          nullable: true
+        groups:
+          type: array
+          items:
+            type: object
+            required: [id, title, url]
+            properties:
+              id:
+                type: integer
+              title:
+                type: string
+              url:
+                type: string
+        countryId:
+          type: integer
+          nullable: true
+        countryTitle:
+          type: string
+          nullable: true
+        countryUrl:
+          type: string
+          nullable: true
+        cityId:
+          type: integer
+          nullable: true
+        cityTitle:
+          type: string
+          nullable: true
+        cityUrl:
+          type: string
+          nullable: true
+        musicRating:
+          type: number
+          format: float
+        graphicsRating:
+          type: number
+          format: float

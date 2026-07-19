@@ -1,11 +1,10 @@
 import {DOCUMENT} from '@angular/common';
-import {HttpClient, HttpParams} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
 import {Meta, Title} from '@angular/platform-browser';
-import {NavigationEnd, Router} from '@angular/router';
-import {Observable, of} from 'rxjs';
-import {catchError, distinctUntilChanged, filter, map, shareReplay, switchMap, tap} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
+import {ActivatedRouteSnapshot, NavigationEnd, Router} from '@angular/router';
+import {TranslateService} from '@ngx-translate/core';
+import {EMPTY, merge, Observable, of, Subject} from 'rxjs';
+import {distinctUntilChanged, filter, map, shareReplay, startWith, switchMap, tap} from 'rxjs/operators';
 import {PageMetadataDto} from '../models/page-metadata.dto';
 
 const EMPTY_METADATA: PageMetadataDto = {
@@ -20,24 +19,50 @@ const EMPTY_METADATA: PageMetadataDto = {
 
 @Injectable({providedIn: 'root'})
 export class PageMetadataService {
-  readonly metadata$: Observable<PageMetadataDto> = this.router.events.pipe(
+  private readonly entityMetadata = new Subject<PageMetadataDto>();
+
+  private readonly routeMetadata$: Observable<PageMetadataDto> = this.router.events.pipe(
     filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-    map(event => event.urlAfterRedirects),
+    map(() => this.deepestRoute(this.router.routerState.snapshot.root)),
     distinctUntilChanged(),
-    switchMap(path => this.http.get<PageMetadataDto>(`${environment.apiBaseUrl}page-metadata/`, {
-      params: new HttpParams().set('path', path),
-    }).pipe(catchError(() => of(EMPTY_METADATA)))),
+    switchMap(route => route.data['metadataSource'] === 'entity'
+      ? EMPTY
+      : this.loadLocalMetadata(route)),
+  );
+
+  readonly metadata$: Observable<PageMetadataDto> = merge(this.routeMetadata$, this.entityMetadata).pipe(
     tap(metadata => this.apply(metadata)),
     shareReplay({bufferSize: 1, refCount: false}),
   );
 
   constructor(
     private readonly router: Router,
-    private readonly http: HttpClient,
     private readonly title: Title,
     private readonly meta: Meta,
+    private readonly translate: TranslateService,
     @Inject(DOCUMENT) private readonly document: Document,
   ) {}
+
+  applyEntityMetadata(metadata: PageMetadataDto): void {
+    this.entityMetadata.next(metadata);
+  }
+
+  private loadLocalMetadata(route: ActivatedRouteSnapshot): Observable<PageMetadataDto> {
+    const titleKey = route.data['titleKey'] as string | undefined;
+    if (!titleKey) {
+      return of({...EMPTY_METADATA, title: 'ZX-Art', noIndex: route.data['noIndex'] === true});
+    }
+
+    return this.translate.onLangChange.pipe(
+      startWith(null),
+      map(() => this.translate.instant(titleKey)),
+      map(title => ({...EMPTY_METADATA, title: `${title} - ZX-Art`, noIndex: route.data['noIndex'] === true})),
+    );
+  }
+
+  private deepestRoute(route: ActivatedRouteSnapshot): ActivatedRouteSnapshot {
+    return route.firstChild ? this.deepestRoute(route.firstChild) : route;
+  }
 
   private apply(metadata: PageMetadataDto): void {
     this.title.setTitle(metadata.title);

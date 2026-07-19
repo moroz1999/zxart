@@ -152,13 +152,10 @@ components:
         - format
         - label
         - emoji
-        - catalogueUrl
       properties:
         format:
           type: string
         label:
           type: string
         emoji:
-          type: string
-        catalogueUrl:
           type: string

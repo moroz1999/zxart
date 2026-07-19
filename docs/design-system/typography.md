@@ -51,6 +51,7 @@ Use `app-text` only when creating a standalone typography wrapper:
 
 ## Rules
 
+- Native anchors use the global link color and decoration tokens, including the hover and focus decoration.
 - Typography styling and HTML semantics are separate responsibilities.
 - Existing semantic elements must use directives.
 - `app-text` must not emulate semantic tags.

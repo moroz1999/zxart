@@ -1,6 +1,7 @@
 <ng-container *ngIf="core$ | async as core; else loading">
   <zx-stack spacing="xl" class="prod-details">
     <zx-breadcrumbs
+      categoryCataloguePath="/prods"
       [categories]="core.categoriesPaths.length ? core.categoriesPaths[0].categories : []"
       [currentTitle]="core.h1">
     </zx-breadcrumbs>

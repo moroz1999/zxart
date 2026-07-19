@@ -12,6 +12,7 @@ use structureElement;
 use tagElement;
 use userElement;
 use privilegesManager;
+use ZxArt\PageMetadata\PageMetadataService;
 use ZxArt\Prods\Dto\ProdAuthorInfoDto;
 use ZxArt\Prods\Dto\ProdCategoryPathDto;
 use ZxArt\Prods\Dto\ProdCategoryRefDto;
@@ -34,6 +35,7 @@ readonly class ProdCoreService
         private ProdInfoBuilder $infoBuilder,
         private ProdTabsRepository $prodTabsRepository,
         private privilegesManager $privilegesManager,
+        private PageMetadataService $pageMetadataService,
     ) {
     }
 
@@ -61,7 +63,6 @@ readonly class ProdCoreService
             youtubeId: $element->youtubeId,
             generatedDescription: (string)$element->getGeneratedDescription(),
             dateCreated: $element->dateCreated,
-            catalogueYearUrl: $year > 0 ? $element->getCatalogueUrl(['years' => $year]) : '',
             canAddRelease: $this->privilegesManager->checkPrivilegesForAction(
                 $element->getId(),
                 'publicAdd',
@@ -80,6 +81,7 @@ readonly class ProdCoreService
             voting: $this->buildVoting($element),
             submitter: $this->buildSubmitter($element),
             tabs: $this->prodTabsRepository->buildTabs($element->getId(), $hasDescription, $hasTextInstructions),
+            metadata: $this->pageMetadataService->getForPath('/prod/' . $elementId),
         );
     }
 
@@ -98,7 +100,6 @@ readonly class ProdCoreService
                 $categories[] = new ProdCategoryRefDto(
                     id: $category->getId(),
                     title: $this->infoBuilder->decodeText($category->title),
-                    url: (string)$category->getUrl(),
                 );
             }
             if ($categories) {

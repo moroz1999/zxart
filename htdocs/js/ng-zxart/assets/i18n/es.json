@@ -1092,6 +1092,11 @@
     }
   },
   "author-browser": {
+    "title": {
+      "all": "Autores",
+      "graphics": "Artistas",
+      "music": "Músicos"
+    },
     "error": "Error al cargar autores",
     "empty": "No se encontraron autores",
     "search": {
@@ -1997,6 +2002,12 @@
     "failed": "No se pudo enviar la solicitud (quizá ya estás vinculado a un autor).",
     "error": "Error en la solicitud"
   },
+  "parties-page": {
+    "view-cards": "Tarjetas",
+    "view-table": "Tabla",
+    "col-title": "Título",
+    "col-year": "Año"
+  },
   "menu": {
     "home": "Inicio",
     "software": "Software",
@@ -2023,7 +2034,7 @@
     "gfx": {
       "home": "Inicio",
       "search": "Búsqueda en la base",
-      "authors": "Autores",
+      "authors": "Artistas",
       "top": "Top",
       "tags": "Etiquetas",
       "games": "Juegos"
@@ -2031,7 +2042,7 @@
     "music-sub": {
       "home": "Inicio",
       "search": "Búsqueda en la base",
-      "authors": "Autores",
+      "authors": "Músicos",
       "top": "Top",
       "tags": "Etiquetas"
     },
@@ -2056,11 +2067,18 @@
     "empty": "No se encontraron archivos."
   },
   "password-reminder": {
-    "title": "Recuperación de contraseña", "email": "Correo electrónico", "password": "Nueva contraseña", "password-repeat": "Repetir contraseña",
-    "request": "Enviar enlace", "reset": "Cambiar contraseña",
-    "requested": "Si existe una cuenta con este correo, se ha enviado un enlace de recuperación.", "changed": "La contraseña ha sido cambiada.",
-    "error-email": "Introduce un correo válido.", "error-password": "Introduce una nueva contraseña.",
-    "error-password-match": "Las contraseñas no coinciden.", "error-invalid": "Este enlace no es válido o ha caducado.",
+    "title": "Recuperación de contraseña",
+    "email": "Correo electrónico",
+    "password": "Nueva contraseña",
+    "password-repeat": "Repetir contraseña",
+    "request": "Enviar enlace",
+    "reset": "Cambiar contraseña",
+    "requested": "Si existe una cuenta con este correo, se ha enviado un enlace de recuperación.",
+    "changed": "La contraseña ha sido cambiada.",
+    "error-email": "Introduce un correo válido.",
+    "error-password": "Introduce una nueva contraseña.",
+    "error-password-match": "Las contraseñas no coinciden.",
+    "error-invalid": "Este enlace no es válido o ha caducado.",
     "error-generic": "No se pudo recuperar la contraseña. Inténtalo más tarde."
   }
 }

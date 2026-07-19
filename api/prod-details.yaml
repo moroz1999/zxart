@@ -41,7 +41,6 @@ components:
         - youtubeId
         - generatedDescription
         - dateCreated
-        - catalogueYearUrl
         - categoriesPaths
         - languages
         - hardware
@@ -54,6 +53,7 @@ components:
         - voting
         - submitter
         - tabs
+        - metadata
       properties:
         elementId:
           type: integer
@@ -80,8 +80,6 @@ components:
         generatedDescription:
           type: string
         dateCreated:
-          type: string
-        catalogueYearUrl:
           type: string
         categoriesPaths:
           type: array
@@ -129,6 +127,8 @@ components:
           nullable: true
         tabs:
           $ref: '#/components/schemas/ProdTabs'
+        metadata:
+          $ref: 'page-metadata-schema.yaml#/components/schemas/PageMetadata'
 
     ProdTabs:
       type: object
@@ -176,13 +176,10 @@ components:
       required:
         - id
         - title
-        - url
       properties:
         id:
           type: integer
         title:
-          type: string
-        url:
           type: string
 
     ProdCategoryPath:
@@ -201,7 +198,6 @@ components:
         - code
         - title
         - emoji
-        - catalogueUrl
       properties:
         code:
           type: string
@@ -209,18 +205,13 @@ components:
           type: string
         emoji:
           type: string
-        catalogueUrl:
-          type: string
 
     ProdHardwareInfo:
       type: object
       required:
         - id
-        - catalogueUrl
       properties:
         id:
-          type: string
-        catalogueUrl:
           type: string
 
     ProdLinkInfo:

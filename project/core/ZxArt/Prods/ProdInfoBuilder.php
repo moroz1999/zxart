@@ -81,7 +81,6 @@ readonly class ProdInfoBuilder
                 code: $code,
                 title: $title,
                 emoji: $element->getLanguageEmoji($code),
-                catalogueUrl: $element->getCatalogueUrl(['languages' => $code]),
             );
         }
         return $languages;
@@ -100,7 +99,6 @@ readonly class ProdInfoBuilder
         foreach ($rows as $row) {
             $hardware[] = new ProdHardwareInfoDto(
                 id: $row['id'],
-                catalogueUrl: $element->getCatalogueUrl(['hw' => $row['id']]),
             );
         }
         return $hardware;

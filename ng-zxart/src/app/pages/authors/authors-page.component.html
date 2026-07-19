@@ -1,0 +1,9 @@
+<ng-container *ngIf="vm$ | async as vm">
+  <h1 appHeading="headline">{{ vm.titleKey | translate }}</h1>
+  <zx-author-browser
+    [items]="vm.items"
+    [basePath]="vm.basePath"
+    [letter]="vm.letter"
+    [manageUrl]="false"
+  ></zx-author-browser>
+</ng-container>

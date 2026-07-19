@@ -1,7 +1,8 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable, of} from 'rxjs';
-import {shareReplay} from 'rxjs/operators';
+import {shareReplay, tap} from 'rxjs/operators';
+import {PageMetadataService} from '../../../../shared/services/page-metadata.service';
 import {
   ZxProdDetailsSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-prod-details-skeleton/zx-prod-details-skeleton.component';
@@ -103,14 +104,20 @@ export class ZxProdDetailsComponent implements OnInit {
 
   core$: Observable<ProdCoreDto | null> = of(null);
 
-  constructor(private readonly api: ProdCoreApiService) {}
+  constructor(
+    private readonly api: ProdCoreApiService,
+    private readonly pageMetadataService: PageMetadataService,
+  ) {}
 
   ngOnInit(): void {
     if (!this.elementId || +this.elementId <= 0) {
       this.core$ = of(null);
       return;
     }
-    this.core$ = this.api.getCore(+this.elementId).pipe(shareReplay(1));
+    this.core$ = this.api.getCore(+this.elementId).pipe(
+      tap(core => core && this.pageMetadataService.applyEntityMetadata(core.metadata)),
+      shareReplay(1),
+    );
   }
 
   getMainTabIndex(core: ProdCoreDto): number {

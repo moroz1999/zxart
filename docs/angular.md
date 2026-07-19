@@ -5,9 +5,9 @@ resolved by the backend and redirected to clean SPA URLs with HTTP 301. Unknown
 routes are logged by the backend and return the Angular shell with HTTP 404.
 
 The Smarty shell body contains only the `<app-root>` host. Its head contains the
-Angular assets and server-rendered crawler metadata. Angular retrieves the same
-metadata object from `GET /page-metadata/` and updates the document head after
-client-side navigation. Canonical links are not emitted.
+Angular assets and server-rendered crawler metadata. After client-side navigation,
+Angular applies entity-page metadata from each entity's core response and builds
+fixed-route metadata from route translation keys. Canonical links are not emitted.
 
 All Angular components MUST be standalone. The application is bootstrapped with
 `bootstrapApplication`, and public navigation is owned by the Angular router.

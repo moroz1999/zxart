@@ -6,6 +6,7 @@ namespace ZxArt\Pictures\Dto;
 
 use Symfony\Component\ObjectMapper\Attribute\Map;
 use ZxArt\Pictures\Rest\PictureDetailsRestDto;
+use ZxArt\PageMetadata\PageMetadataDto;
 use ZxArt\Shared\Dto\AuthorDto;
 use ZxArt\Shared\Dto\PartyInfoDto;
 use ZxArt\Shared\Dto\ReleaseInfoDto;
@@ -62,6 +63,7 @@ readonly class PictureDetailsDto
         public array $techInfo,
         public ?string $sequenceUrl,
         public array $mentions,
+        public PageMetadataDto $metadata,
     ) {
     }
 }

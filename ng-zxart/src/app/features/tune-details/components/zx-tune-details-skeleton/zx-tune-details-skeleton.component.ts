@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ZxSkeletonVisibilityDirective} from 'src/app/shared/ui/zx-skeleton/zx-skeleton-visibility.directive';
 import {ZxSkeletonBoneComponent} from '../../../../shared/ui/zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxGridComponent} from '../../../../shared/ui/zx-grid/zx-grid.component';
@@ -7,6 +8,7 @@ import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-br
 @Component({
   selector: 'zx-tune-details-skeleton',
   standalone: true,
+  hostDirectives: [ZxSkeletonVisibilityDirective],
   imports: [ZxSkeletonBoneComponent, ZxStackComponent, ZxGridComponent, ZxBreadcrumbsComponent],
   templateUrl: './zx-tune-details-skeleton.component.html',
   styleUrls: ['./zx-tune-details-skeleton.component.scss'],

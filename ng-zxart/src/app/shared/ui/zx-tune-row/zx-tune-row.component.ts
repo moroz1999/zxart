@@ -17,7 +17,6 @@ import {ZxTuneDto} from '../../models/zx-tune-dto';
 import {ZxBadgeComponent} from '../zx-badge/zx-badge.component';
 import {ZxItemControlsComponent} from '../zx-item-controls/zx-item-controls.component';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
-import {TextDirective} from '../typography/directives/text.directive';
 import {environment} from '../../../../environments/environment';
 import {ZxPartyPlaceComponent} from '../../lib/zx-party-place/zx-party-place.component';
 
@@ -32,7 +31,6 @@ import {RouterLink} from '@angular/router';@Component({
     ZxButtonComponent,
     ZxBadgeComponent,
     ZxItemControlsComponent,
-    TextDirective,
     ZxPartyPlaceComponent,
   ],
   templateUrl: './zx-tune-row.component.html',

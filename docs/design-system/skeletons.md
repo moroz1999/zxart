@@ -2,19 +2,28 @@
 
 Angular loading placeholders must use concrete standalone skeleton components. Import only the skeleton that matches the current template.
 
+Every skeleton component uses `ZxSkeletonVisibilityDirective` as a host directive. The directive sets `visibility: hidden` while the host is outside the viewport so off-screen skeleton animations do not consume rendering resources.
+
 Do not add a facade skeleton component that imports multiple variants.
 
 ## Components
 
 - `zx-card-skeleton`
 - `zx-comment-skeleton`
+- `zx-picture-card-skeleton`
+- `zx-picture-details-skeleton`
 - `zx-picture-grid-skeleton`
+- `zx-parties-list-skeleton`
 - `zx-prod-details-skeleton`
 - `zx-prods-list-skeleton`
+- `zx-prods-category-skeleton`
+- `zx-release-details-skeleton`
 - `zx-row-skeleton`
 - `zx-screenshot-grid-skeleton`
 - `zx-search-groups-skeleton`
+- `zx-stats-section-skeleton`
 - `zx-text-skeleton`
+- `zx-tune-details-skeleton`
 - `zx-tune-table-skeleton`
 - `zx-skeleton-bone`
 

@@ -25,7 +25,15 @@ body {
   background-color: var(--main-background);
 }
 
+a {
+  color: var(--zx-link-color);
+  text-decoration: var(--zx-link-decoration);
+}
 
+a:hover,
+a:focus {
+  text-decoration: var(--zx-link-hover-decoration);
+}
 
 // angular-svg-icon: custom elements are display:inline by default, which ignores CSS width/height.
 // Setting display:inline-flex makes the host respect explicit dimensions,

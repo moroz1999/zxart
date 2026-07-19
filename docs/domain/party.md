@@ -99,6 +99,12 @@ Party provides methods for exporting results in various formats:
 ### Party Collections
 - Party collections use the shared responsive party-card list with five desktop, three tablet, and one mobile column.
 - The recent-parties homepage module and the routed `/parties` collection use the same list presentation while loading their data independently.
+- The routed party collection displays a page heading and an always-visible year link selector whose options match the party-year routes in the main menu.
+- `GET /parties-data/` returns only the 20 most recent parties; `GET /parties-data/?year=YYYY` returns only the parties from that year.
+- The base `/parties` route shows the recent response; a year route requests and shows the selected year's response.
+- The year selector is ordered from oldest to newest. Parties within a selected year are ordered alphabetically; the recent collection retains newest-first order.
+- The collection can be viewed as responsive cards or a table with party title and year.
+- Initial loading uses a view-specific skeleton that mirrors the active cards or table layout.
 
 ### Party Page REST API
 The Angular party page (`zx-party-details`) loads data through dedicated endpoints; full schemas in `api/party-details.yaml`.

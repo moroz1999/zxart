@@ -12,7 +12,6 @@ export interface ProdReleaseFormatDto {
   format: string;
   label: string;
   emoji: string;
-  catalogueUrl: string;
 }
 
 export interface ProdReleaseDto {

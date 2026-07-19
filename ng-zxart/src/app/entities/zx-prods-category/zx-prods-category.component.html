@@ -1,5 +1,6 @@
+<zx-prods-category-skeleton *ngIf="!model"></zx-prods-category-skeleton>
 <div *ngIf="model">
-    <h1>{{ model.h1 }}</h1>
+    <h1 appHeading="display">{{ model.h1 }}</h1>
     <div class="zx-prods-list-presets" #contentElement>
         <zx-button color="outlined" (click)="updatesPresetClicked()">{{ 'prods-list.presets.updates' | translate }}</zx-button>
         <zx-button color="outlined" *ngIf="yearPresetActive()" (click)="yearPresetClicked()">{{ 'prods-list.presets.year' | translate }}</zx-button>

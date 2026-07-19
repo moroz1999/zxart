@@ -16,7 +16,13 @@
     <span *ngIf="categories.length || parentItem || currentTitle" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
 
     <ng-container *ngFor="let cat of categories; let last = last">
-      <a [href]="cat.url" class="zx-breadcrumbs__item">{{ cat.title }}</a>
+      <a *ngIf="categoryCataloguePath && cat.id; else categoryUrl"
+         [routerLink]="categoryCataloguePath"
+         [queryParams]="{cat: cat.id}"
+         class="zx-breadcrumbs__item">{{ cat.title }}</a>
+      <ng-template #categoryUrl>
+        <a [href]="cat.url" class="zx-breadcrumbs__item">{{ cat.title }}</a>
+      </ng-template>
       <span *ngIf="!last || parentItem || currentTitle" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
     </ng-container>
 

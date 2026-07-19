@@ -6,28 +6,25 @@ namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
 use controller;
-use LanguagesManager;
 use Monolog\Logger;
-use partyElement;
-use structureManager;
 use Throwable;
-use ZxArt\Parties\PartiesTransformer;
+use ZxArt\Parties\Services\PartiesService;
 
 /**
  * Parties list endpoint for the SPA `/parties` page (`/parties-data/`). Returns
- * every party as a card DTO, newest first. Named *PartiesData* so `/parties`
- * stays free for the SPA page.
+ * the 20 recent parties or the parties for one requested year. Named
+ * *PartiesData* so `/parties` stays free for the SPA page.
  */
 class PartiesData extends LoggedControllerApplication
 {
+    private const int RECENT_LIMIT = 20;
+
     public $rendererName = 'json';
 
     public function __construct(
         controller $controller,
         Logger $logger,
-        private readonly structureManager $structureManager,
-        private readonly LanguagesManager $languagesManager,
-        private readonly PartiesTransformer $partiesTransformer,
+        private readonly PartiesService $partiesService,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -54,16 +51,12 @@ class PartiesData extends LoggedControllerApplication
     /** @return list<\ZxArt\Parties\Dto\PartyDto> */
     private function buildParties(): array
     {
-        $languageId = $this->languagesManager->getCurrentLanguageId();
-        $elements = $this->structureManager->getElementsByType('party', $languageId);
-        $parties = [];
-        foreach ($elements as $element) {
-            if ($element instanceof partyElement) {
-                $parties[] = $this->partiesTransformer->toDto($element);
-            }
+        $year = (int)($this->getParameter('year') ?: 0);
+        if ($year > 0) {
+            return $this->partiesService->getByYear($year);
         }
-        usort($parties, static fn($a, $b) => ((int)$b->year) <=> ((int)$a->year) ?: strcmp($a->title, $b->title));
-        return $parties;
+
+        return $this->partiesService->getRecent(self::RECENT_LIMIT);
     }
 
     public function getUrlName(): string

@@ -2,36 +2,83 @@ import {CommonModule} from '@angular/common';
 import {HttpClient} from '@angular/common/http';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {catchError, combineLatest, map, Observable, of, shareReplay} from 'rxjs';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {catchError, map, Observable, of, shareReplay, startWith, switchMap} from 'rxjs';
 import {PartyDto} from '../../shared/models/party-dto';
-import {ZxPartiesListComponent} from '../../entities/zx-parties-list/zx-parties-list.component';
+import {
+  PartyListViewMode,
+  ZxPartiesListComponent,
+} from '../../entities/zx-parties-list/zx-parties-list.component';
+import {PARTY_YEARS} from '../../features/menu/menu.config';
+import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
+import {ZxInlineComponent} from '../../shared/ui/zx-inline/zx-inline.component';
+import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
+import {ZxToggleComponent, ZxToggleOption} from '../../shared/ui/zx-toggle/zx-toggle.component';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {
+  ZxPartiesListSkeletonComponent,
+} from '../../entities/zx-parties-list-skeleton/zx-parties-list-skeleton.component';
+
+interface PartiesPageVm {
+  parties: PartyDto[] | null;
+  selectedYear: string;
+}
 
 /** Routed collection page for `parties` (and `parties/:year`) — party cards. */
 @Component({
   selector: 'zx-parties-page',
   standalone: true,
-  imports: [CommonModule, ZxPartiesListComponent],
+  imports: [
+    CommonModule,
+    TranslateModule,
+    ZxPartiesListComponent,
+    ZxPartiesListSkeletonComponent,
+    ZxButtonComponent,
+    ZxInlineComponent,
+    ZxStackComponent,
+    ZxToggleComponent,
+    HeadingDirective,
+  ],
   templateUrl: './parties-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PartiesPageComponent {
-  private readonly all$: Observable<PartyDto[]> = this.http
-    .get<{parties: PartyDto[]}>('/parties-data/')
-    .pipe(
-      map(response => response?.parties ?? []),
-      catchError(() => of([])),
-      shareReplay({bufferSize: 1, refCount: false}),
-    );
+  readonly years = PARTY_YEARS;
+  readonly viewToggleOptions$: Observable<ZxToggleOption[]>;
+  viewMode: PartyListViewMode = 'cards';
 
-  readonly parties$: Observable<PartyDto[]> = combineLatest([this.all$, this.route.paramMap]).pipe(
-    map(([parties, params]) => {
+  readonly vm$: Observable<PartiesPageVm> = this.route.paramMap.pipe(
+    switchMap(params => {
       const year = params.get('year');
-      return year ? parties.filter(party => party.year === year) : parties;
+      const url = year ? `/parties-data/?year=${encodeURIComponent(year)}` : '/parties-data/';
+      return this.http.get<{parties: PartyDto[]}>(url).pipe(
+        map(response => ({parties: response?.parties ?? [], selectedYear: year ?? ''})),
+        catchError(() => of({parties: [], selectedYear: year ?? ''})),
+        startWith({parties: null, selectedYear: year ?? ''}),
+      );
     }),
+    shareReplay({bufferSize: 1, refCount: false}),
   );
 
   constructor(
     private readonly http: HttpClient,
     private readonly route: ActivatedRoute,
-  ) {}
+    translateService: TranslateService,
+  ) {
+    this.viewToggleOptions$ = translateService.stream([
+      'parties-page.view-cards',
+      'parties-page.view-table',
+    ]).pipe(
+      map(translations => [
+        {value: 'cards', label: translations['parties-page.view-cards'] as string},
+        {value: 'table', label: translations['parties-page.view-table'] as string},
+      ]),
+    );
+  }
+
+  setViewMode(value: string): void {
+    if (value === 'cards' || value === 'table') {
+      this.viewMode = value;
+    }
+  }
 }

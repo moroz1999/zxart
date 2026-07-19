@@ -5,11 +5,10 @@ import {TranslateModule} from '@ngx-translate/core';
 import {map, Observable} from 'rxjs';
 import {ZxProdsCategoryComponent} from '../../entities/zx-prods-category/zx-prods-category.component';
 import {ZxGroupBrowserComponent} from '../../features/group-browser/components/zx-group-browser/zx-group-browser.component';
-import {ZxAuthorBrowserComponent} from '../../features/author-browser/components/zx-author-browser/zx-author-browser.component';
 import {PicturesHomeComponent} from '../../features/catalogue-home/components/pictures-home/pictures-home.component';
 import {MusicHomeComponent} from '../../features/catalogue-home/components/music-home/music-home.component';
 
-type CollectionKind = 'prods' | 'groups' | 'pictures' | 'music' | 'authors';
+type CollectionKind = 'prods' | 'groups' | 'pictures' | 'music';
 
 interface CollectionVm {
   kind: CollectionKind;
@@ -17,9 +16,9 @@ interface CollectionVm {
 }
 
 /**
- * Routed collection/list page (`/prods`, `/groups`, `/pictures`, `/music`,
- * `/authors`). The `kind` comes from route data; graphics and music roots mount
- * their catalogue homepages, while the remaining kinds mount their browsers.
+ * Routed collection/list page (`/prods`, `/groups`, `/pictures`, `/music`).
+ * The `kind` comes from route data; graphics and music roots mount their
+ * catalogue homepages, while the remaining kinds mount their browsers.
  */
 @Component({
   selector: 'zx-collection-page',
@@ -29,7 +28,6 @@ interface CollectionVm {
     TranslateModule,
     ZxProdsCategoryComponent,
     ZxGroupBrowserComponent,
-    ZxAuthorBrowserComponent,
     PicturesHomeComponent,
     MusicHomeComponent,
   ],

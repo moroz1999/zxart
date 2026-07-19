@@ -8,11 +8,12 @@ use authorAliasElement;
 use authorElement;
 use ZxArt\AuthorList\Dto\AuthorListItemDto;
 use ZxArt\Shared\EntityType;
+use ZxArt\Urls\EntityUrlResolver;
 
 readonly class AuthorListTransformer
 {
     public function __construct(
-        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
+        private EntityUrlResolver $entityUrlResolver,
     ) {
     }
 
@@ -27,6 +28,7 @@ readonly class AuthorListTransformer
             entityType: EntityType::Author,
             title: html_entity_decode($element->title, ENT_QUOTES),
             realName: html_entity_decode($element->realName, ENT_QUOTES),
+            realNameId: null,
             realNameUrl: null,
             groups: $this->buildGroupsInfo($element->getGroupsList()),
             countryId: $countryElement !== null ? (int)$countryElement->id : null,
@@ -54,6 +56,7 @@ readonly class AuthorListTransformer
             entityType: EntityType::AuthorAlias,
             title: html_entity_decode($alias->title, ENT_QUOTES),
             realName: $parentAuthor !== null ? html_entity_decode($parentAuthor->title, ENT_QUOTES) : '',
+            realNameId: $parentAuthor?->getId(),
             realNameUrl: $parentAuthor !== null ? $this->entityUrlResolver->urlFor($parentAuthor) : null,
             groups: $groups,
             countryId: $countryElement !== null ? (int)$countryElement->id : null,

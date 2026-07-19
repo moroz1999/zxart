@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ZxSkeletonVisibilityDirective} from 'src/app/shared/ui/zx-skeleton/zx-skeleton-visibility.directive';
 import {CommonModule} from '@angular/common';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxGridComponent} from '../../../../shared/ui/zx-grid/zx-grid.component';
@@ -10,6 +11,7 @@ import {
 @Component({
   selector: 'zx-stats-section-skeleton',
   standalone: true,
+  hostDirectives: [ZxSkeletonVisibilityDirective],
   imports: [CommonModule, ZxPanelComponent, ZxGridComponent, ZxStackComponent, ZxSkeletonBoneComponent],
   templateUrl: './zx-stats-section-skeleton.component.html',
   styleUrl: './zx-stats-section-skeleton.component.scss',

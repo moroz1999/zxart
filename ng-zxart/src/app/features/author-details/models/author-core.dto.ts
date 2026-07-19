@@ -1,3 +1,5 @@
+import {PageMetadataDto} from '../../../shared/models/page-metadata.dto';
+
 export interface AuthorLocationItemDto {
   title: string;
   url: string;
@@ -60,6 +62,7 @@ export interface AuthorBreadcrumbDto {
 }
 
 export interface AuthorCoreDto {
+  metadata: PageMetadataDto;
   id: number;
   entityType: 'author' | 'authorAlias';
   title: string;

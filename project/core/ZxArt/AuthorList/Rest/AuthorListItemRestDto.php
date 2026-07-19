@@ -19,6 +19,7 @@ readonly class AuthorListItemRestDto
         public string $entityType,
         public string $title,
         public string $realName,
+        public ?int $realNameId,
         public ?string $realNameUrl,
         public array $groups,
         public ?int $countryId,

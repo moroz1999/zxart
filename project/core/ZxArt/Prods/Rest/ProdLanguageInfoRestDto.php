@@ -10,7 +10,6 @@ readonly class ProdLanguageInfoRestDto
         public string $code,
         public string $title,
         public string $emoji,
-        public string $catalogueUrl,
     ) {
     }
 }

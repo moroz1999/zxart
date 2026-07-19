@@ -36,7 +36,7 @@
           </zx-inline>
           <zx-prod-context *ngIf="details.release" [context]="details.release"></zx-prod-context>
           <span *ngIf="details.chip" appText="body">
-            <b>{{ details.chip }}</b>
+            <span appText="body" tone="strong">{{ details.chip }}</span>
             <span *ngIf="details.channelsType" appText="body" tone="muted"> · {{ details.channelsType }}</span>
           </span>
         </zx-callout>

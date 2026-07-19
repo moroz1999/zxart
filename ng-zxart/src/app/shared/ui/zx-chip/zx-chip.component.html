@@ -2,7 +2,7 @@
 
 @if (isLink) {
   @if (isInternal) {
-    <a [routerLink]="href" [class]="chipClass"><ng-container [ngTemplateOutlet]="content"></ng-container></a>
+    <a [routerLink]="internalUrlTree" [class]="chipClass"><ng-container [ngTemplateOutlet]="content"></ng-container></a>
   } @else {
     <a [href]="href" [class]="chipClass"><ng-container [ngTemplateOutlet]="content"></ng-container></a>
   }

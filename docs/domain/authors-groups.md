@@ -161,32 +161,24 @@ When work is created by group:
 - Author aliases use the same Angular details component as authors.
 - An alias page keeps the alias identity and its directly attributed works and comments, while profile metadata such as location, account, links, and technical defaults comes from its referenced author.
 
-### Authors Listing: authorsList vs authorsCatalogue (letter entities)
+### Authors Listing
 
-Two different mechanisms for browsing authors exist. They must not be confused.
+The flat author and alias list is loaded from `/authorlist/`. Each content type
+has its own named route with its own `<h1>`, all reusing the shared author
+browser (filters + table):
 
-#### authorsList (structureElement)
+- `/authors` — all authors (heading `author-browser.title.all`)
+- `/artists` — graphics authors (heading `author-browser.title.graphics`)
+- `/musicians` — music authors (heading `author-browser.title.music`)
 
-A standalone listing module with built-in filtering. Does NOT contain letter child entities.
+The content type is fixed per route via the `items` route data (`''`,
+`graphics`, or `music`) and forwarded to `/authorlist/` as the `items` query
+parameter. The optional `/:letter` path segment applies the A–Z selector;
+country, city, search, and pagination are query parameters. The browser builds
+its letter, filter, and pagination links against the route's `basePath`.
 
-- **`type`** property — view mode: `'letters'`, `'popular'`, etc. Determines which template is rendered.
-- **`items`** property — content scope: `'music'` (music authors), `'graphics'` (graphics authors), `'all'` (both).
-- Letter filtering uses a URL parameter: `letter:s/` → `getParameter('letter')`. The letter is NOT a child entity — it is just a query filter passed to the API.
-- The Angular component `<zx-author-browser>` receives `element-id`, `letter`, and `items` as HTML attributes.
-- API endpoint: `/authorlist/` — accepts `letter`, `elementId`, `types`, `search`, `countryId`, `cityId`, pagination params.
-
-URL example: `https://zxart.ee/rus/grafika/avtory/filter/letter:s/`
-
-#### authorsCatalogue + letter entities
-
-A catalogue where each letter is a real CMS structure element (child of the catalogue). Letters contain authors/aliases (or groups in other sections) as child entities.
-
-- The letter entity resolves as `currentElement` via the URL path (not a query parameter).
-- `letter/structure.class.php` → `getAuthorsList()` retrieves child authors from the structure tree.
-- The Smarty template `letter.authors.tpl` passes the letter title as attribute: `letter="{$element->title}"`.
-- Each letter has its own privileges, actions, and templates.
-
-These are completely separate systems. `authorsList` is a flat query-based listing; `authorsCatalogue` is a tree of letter → author entities.
+Author-list responses contain identifiers and display data. Angular builds
+author, group, country-filter, and city-filter links from those identifiers.
 
 ### Constraints and Rules
 

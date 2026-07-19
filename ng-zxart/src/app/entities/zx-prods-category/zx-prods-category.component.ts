@@ -27,6 +27,9 @@ import {SortingSelectorComponent} from './components/sorting-selector/sorting-se
 import {DialogSelectorComponent} from './components/dialog-selector/dialog-selector.component';
 import {LetterSelectorComponent} from './components/letter-selector/letter-selector.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
+import {
+  ZxProdsCategorySkeletonComponent,
+} from '../../shared/ui/zx-skeleton/components/zx-prods-category-skeleton/zx-prods-category-skeleton.component';
 import {ZxProdBlockComponent} from '../zx-prod-block/zx-prod-block.component';
 import {ZxProdRowComponent} from '../zx-prod-row/zx-prod-row.component';
 import {FormsModule} from '@angular/forms';
@@ -36,6 +39,7 @@ import {ZxCheckboxFieldComponent} from '../../shared/ui/zx-checkbox-field/zx-che
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxToggleComponent, ZxToggleOption} from '../../shared/ui/zx-toggle/zx-toggle.component';
 import {SvgIconRegistryService} from 'angular-svg-icon';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 
 const defaultStatuses: string[] = ['allowed', 'forbidden', 'forbiddenzxart', 'allowedzxart', 'insales', 'donationware', 'recovered', 'unknown'];
 
@@ -58,9 +62,11 @@ export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
         CommonModule,
         TagsSelectorComponent,
         ZxSpinnerComponent,
+        ZxProdsCategorySkeletonComponent,
         ZxButtonComponent,
         ZxToggleComponent,
         ZxCheckboxFieldComponent,
+        HeadingDirective,
     ],
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,

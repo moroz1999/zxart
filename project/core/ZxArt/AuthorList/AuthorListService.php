@@ -98,7 +98,6 @@ readonly class AuthorListService
                 $options[] = new FilterOptionDto(
                     id: (int)$locationElement->id,
                     title: html_entity_decode($locationElement->title, ENT_QUOTES),
-                    url: $locationElement->getUrl(EntityType::Author->value),
                 );
             }
         }

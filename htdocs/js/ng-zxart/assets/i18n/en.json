@@ -1093,6 +1093,11 @@
     }
   },
   "author-browser": {
+    "title": {
+      "all": "Authors",
+      "graphics": "Artists",
+      "music": "Musicians"
+    },
     "error": "Failed to load authors",
     "empty": "No authors found",
     "search": {
@@ -2000,6 +2005,12 @@
     "failed": "Could not send the request (you may already be linked to an author).",
     "error": "Request failed"
   },
+  "parties-page": {
+    "view-cards": "Cards",
+    "view-table": "Table",
+    "col-title": "Title",
+    "col-year": "Year"
+  },
   "menu": {
     "home": "Home",
     "software": "Software",
@@ -2026,7 +2037,7 @@
     "gfx": {
       "home": "Home",
       "search": "Database search",
-      "authors": "Authors",
+      "authors": "Artists",
       "top": "Top",
       "tags": "Tags",
       "games": "Games"
@@ -2034,7 +2045,7 @@
     "music-sub": {
       "home": "Home",
       "search": "Database search",
-      "authors": "Authors",
+      "authors": "Musicians",
       "top": "Top",
       "tags": "Tags"
     },
@@ -2059,11 +2070,18 @@
     "empty": "No files found."
   },
   "password-reminder": {
-    "title": "Password recovery", "email": "Email", "password": "New password", "password-repeat": "Repeat password",
-    "request": "Send recovery link", "reset": "Change password",
-    "requested": "If an account uses this email, a recovery link has been sent.", "changed": "Your password has been changed.",
-    "error-email": "Enter a valid email address.", "error-password": "Enter a new password.",
-    "error-password-match": "Passwords do not match.", "error-invalid": "This recovery link is invalid or expired.",
+    "title": "Password recovery",
+    "email": "Email",
+    "password": "New password",
+    "password-repeat": "Repeat password",
+    "request": "Send recovery link",
+    "reset": "Change password",
+    "requested": "If an account uses this email, a recovery link has been sent.",
+    "changed": "Your password has been changed.",
+    "error-email": "Enter a valid email address.",
+    "error-password": "Enter a new password.",
+    "error-password-match": "Passwords do not match.",
+    "error-invalid": "This recovery link is invalid or expired.",
     "error-generic": "Could not recover the password. Try again later."
   }
 }

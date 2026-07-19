@@ -265,6 +265,7 @@ components:
         - ratings
         - tabs
         - breadcrumbs
+        - metadata
       properties:
         id:
           type: integer
@@ -330,6 +331,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AuthorBreadcrumb'
+        metadata:
+          $ref: 'page-metadata-schema.yaml#/components/schemas/PageMetadata'
 
     AuthorshipRef:
       type: object

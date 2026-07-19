@@ -2,10 +2,11 @@ import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@ang
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of, Subscription} from 'rxjs';
-import {filter, shareReplay, take} from 'rxjs/operators';
+import {filter, shareReplay, take, tap} from 'rxjs/operators';
 import {PictureDetailsDto} from '../../models/picture-details.dto';
 import {PictureDetailsApiService} from '../../services/picture-details-api.service';
 import {AnalyticsService} from '../../../../shared/services/analytics.service';
+import {PageMetadataService} from '../../../../shared/services/page-metadata.service';
 
 import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
@@ -84,6 +85,7 @@ export class ZxPictureDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private readonly api: PictureDetailsApiService,
     private readonly analytics: AnalyticsService,
+    private readonly pageMetadataService: PageMetadataService,
   ) {}
 
   ngOnInit(): void {
@@ -91,7 +93,10 @@ export class ZxPictureDetailsComponent implements OnInit, OnDestroy {
       this.details$ = of(null);
       return;
     }
-    this.details$ = this.api.getDetails(+this.elementId).pipe(shareReplay(1));
+    this.details$ = this.api.getDetails(+this.elementId).pipe(
+      tap(details => details && this.pageMetadataService.applyEntityMetadata(details.metadata)),
+      shareReplay(1),
+    );
 
     // Log the view once, after the details have loaded (replaces the legacy
     // server-side/AJAX logging) and report the tracking goal as in legacy.

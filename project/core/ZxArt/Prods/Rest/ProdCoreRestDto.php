@@ -6,6 +6,7 @@ namespace ZxArt\Prods\Rest;
 
 use Symfony\Component\ObjectMapper\Attribute\Map;
 use Symfony\Component\ObjectMapper\Transform\MapCollection;
+use ZxArt\PageMetadata\PageMetadataDto;
 
 readonly class ProdCoreRestDto
 {
@@ -33,7 +34,6 @@ readonly class ProdCoreRestDto
         public string $youtubeId,
         public string $generatedDescription,
         public string $dateCreated,
-        public string $catalogueYearUrl,
         public bool $canAddRelease,
         public string $addReleaseUrl,
         #[Map(transform: MapCollection::class)]
@@ -56,6 +56,7 @@ readonly class ProdCoreRestDto
         public ProdVotingRestDto $voting,
         public ?ProdSubmitterRestDto $submitter,
         public ProdTabsRestDto $tabs,
+        public PageMetadataDto $metadata,
     ) {
     }
 }

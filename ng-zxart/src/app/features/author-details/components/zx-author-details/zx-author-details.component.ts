@@ -2,7 +2,8 @@ import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
-import {shareReplay} from 'rxjs/operators';
+import {shareReplay, tap} from 'rxjs/operators';
+import {PageMetadataService} from '../../../../shared/services/page-metadata.service';
 import {AuthorCoreDto} from '../../models/author-core.dto';
 import {AuthorCoreApiService} from '../../services/author-core-api.service';
 import {ZxAuthorHeaderComponent} from '../zx-author-header/zx-author-header.component';
@@ -67,13 +68,19 @@ export class ZxAuthorDetailsComponent implements OnInit {
 
   core$: Observable<AuthorCoreDto | null> = of(null);
 
-  constructor(private readonly api: AuthorCoreApiService) {}
+  constructor(
+    private readonly api: AuthorCoreApiService,
+    private readonly pageMetadataService: PageMetadataService,
+  ) {}
 
   ngOnInit(): void {
     if (!this.elementId || +this.elementId <= 0) {
       return;
     }
-    this.core$ = this.api.getCore(+this.elementId).pipe(shareReplay(1));
+    this.core$ = this.api.getCore(+this.elementId).pipe(
+      tap(core => core && this.pageMetadataService.applyEntityMetadata(core.metadata)),
+      shareReplay(1),
+    );
   }
 
   getInitialTabIndex(core: AuthorCoreDto): number {

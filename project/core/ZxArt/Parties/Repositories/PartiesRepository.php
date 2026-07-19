@@ -79,6 +79,19 @@ final class PartiesRepository
         return $this->db->table(self::TABLE . ' AS parties')
             ->select('parties.id')
             ->leftJoin('structure_elements AS partystruct', 'partystruct.id', '=', 'parties.id')
+            ->orderBy('partystruct.dateCreated', 'desc')
+            ->orderBy('parties.id', 'desc')
+            ->limit($limit)
+            ->pluck('parties.id');
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getIdsByYear(int $year): array
+    {
+        return $this->db->table(self::TABLE . ' AS parties')
+            ->select('parties.id')
             ->leftJoin(
                 'structure_links AS links',
                 static function ($join) {
@@ -86,10 +99,9 @@ final class PartiesRepository
                         ->where('links.type', '=', 'structure');
                 }
             )
-            ->leftJoin('structure_elements AS el2', 'el2.id', '=', 'links.parentStructureId')
-            ->orderBy('el2.structureName', 'desc')
-            ->orderBy('partystruct.dateCreated', 'desc')
-            ->limit($limit)
+            ->leftJoin('structure_elements AS years', 'years.id', '=', 'links.parentStructureId')
+            ->where('years.structureName', '=', (string)$year)
+            ->orderBy('parties.title')
             ->pluck('parties.id');
     }
 }

@@ -3,7 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {Subject, Subscription} from 'rxjs';
+import {combineLatest, Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators';
 import {AuthorBrowserService} from '../../services/author-browser.service';
 import {AuthorListItem} from '../../models/author-list-item';
@@ -21,6 +21,8 @@ import {
 } from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
 import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filter-bar.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
+import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 
 @Component({
   selector: 'zx-author-browser',
@@ -37,6 +39,8 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
     ZxRowSkeletonComponent,
     ZxFilterBarComponent,
     ZxStackComponent,
+    ZxInlineComponent,
+    ZxButtonComponent,
   ],
   templateUrl: './zx-author-browser.component.html',
   styleUrls: ['./zx-author-browser.component.scss'],
@@ -56,8 +60,10 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
   @Input() letter = '';
   /** Comma-separated entity types to include: 'author', 'authorAlias' */
   @Input() types = '';
-  /** Content type of the authors list: 'music', 'graphics', or 'all' */
+  /** Content type of the authors list: 'music', 'graphics', or '' (all) */
   @Input() items = '';
+  /** Base route the browser builds letter, filter and pagination links against */
+  @Input() basePath = '/authors';
 
   loading = true;
   error = false;
@@ -73,6 +79,7 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
   cityOptions: ZxFilterPickerItem[] = [];
 
   protected urlBase = '';
+  readonly letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
   private readonly subscriptions = new Subscription();
   private readonly searchSubject = new Subject<string>();
@@ -84,7 +91,7 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
     private readonly translateService: TranslateService,
   ) {}
 
-  /** SPA route mode: the content-type filter (`items`) comes from the router query params. */
+  /** SPA route mode: letter and filters come from the router; `items` is a fixed input. */
   private get useRouter(): boolean {
     return !this.manageUrl && this.route != null;
   }
@@ -141,10 +148,15 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
       );
 
       if (this.useRouter) {
-        // SPA route: the `items` content-type filter is driven by the query params.
-        this.subscriptions.add(this.route!.queryParams.subscribe(params => {
-          this.items = params['items'] ?? '';
-          this.currentPage = 1;
+        this.subscriptions.add(combineLatest([
+          this.route!.paramMap,
+          this.route!.queryParamMap,
+        ]).subscribe(([pathParams, queryParams]) => {
+          this.letter = pathParams.get('letter') ?? '';
+          this.search = queryParams.get('q') ?? '';
+          this.selectedCountryIds = queryParams.get('country') ? [queryParams.get('country')!] : [];
+          this.selectedCityIds = queryParams.get('city') ? [queryParams.get('city')!] : [];
+          this.currentPage = Math.max(1, Number(queryParams.get('page')) || 1);
           this.loadFilterOptions();
           this.loadPage();
         }));
@@ -186,6 +198,10 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
     this.currentPage = page;
     this.updateUrl();
     this.loadPage();
+  }
+
+  letterUrl(letter: string): string {
+    return letter ? `${this.basePath}/${letter.toLowerCase()}` : this.basePath;
   }
 
   get activeCountryId(): number | null {

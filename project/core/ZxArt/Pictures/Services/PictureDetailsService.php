@@ -17,6 +17,7 @@ use ZxArt\Pictures\Dto\PictureSubmitterDto;
 use ZxArt\Pictures\Dto\PictureTagDto;
 use ZxArt\Pictures\Exception\PictureDetailsException;
 use ZxArt\Pictures\PicturesTransformer;
+use ZxArt\PageMetadata\PageMetadataService;
 use ZxArt\Prods\ProdInfoBuilder;
 use ZxArt\Shared\Dto\AuthorDto;
 use zxPictureElement;
@@ -36,6 +37,7 @@ readonly class PictureDetailsService
         private translationsManager $translationsManager,
         private PicturesTransformer $picturesTransformer,
         private ProdInfoBuilder $infoBuilder,
+        private PageMetadataService $pageMetadataService,
     ) {
     }
 
@@ -97,6 +99,7 @@ readonly class PictureDetailsService
                 ? $baseUrl . 'file/id:' . $element->sequence . '/filename:' . rawurlencode((string)$element->sequenceName)
                 : null,
             mentions: $this->buildMentions($element),
+            metadata: $this->pageMetadataService->getForPath('/picture/' . $pictureId),
         );
     }
 

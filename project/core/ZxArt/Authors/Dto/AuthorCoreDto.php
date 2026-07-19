@@ -6,6 +6,7 @@ namespace ZxArt\Authors\Dto;
 
 use Symfony\Component\ObjectMapper\Attribute\Map;
 use ZxArt\Authors\Rest\AuthorCoreRestDto;
+use ZxArt\PageMetadata\PageMetadataDto;
 
 #[Map(target: AuthorCoreRestDto::class)]
 readonly class AuthorCoreDto
@@ -40,6 +41,7 @@ readonly class AuthorCoreDto
         public AuthorRatingsDto $ratings,
         public AuthorTabsDto $tabs,
         public array $breadcrumbs,
+        public PageMetadataDto $metadata,
     ) {
     }
 }

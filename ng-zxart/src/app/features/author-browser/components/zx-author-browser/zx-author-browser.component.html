@@ -28,6 +28,20 @@
     ></zx-filter-picker>
   </zx-filter-bar>
 
+  <zx-inline *ngIf="mode === 'full'" gap="xs" [wrap]="true">
+    <zx-button
+      size="xs"
+      [color]="letter ? 'transparent' : 'primary'"
+      [href]="letterUrl('')"
+    >{{ 'prods-list.filters.letters.all' | translate }}</zx-button>
+    <zx-button
+      *ngFor="let option of letters"
+      size="xs"
+      [color]="letter.toUpperCase() === option ? 'primary' : 'transparent'"
+      [href]="letterUrl(option)"
+    >{{ option }}</zx-button>
+  </zx-inline>
+
   <zx-row-skeleton *ngIf="authors === null && !error" [count]="8"></zx-row-skeleton>
 
   <div *ngIf="error" appText="caption" tone="danger">{{ 'author-browser.error' | translate }}</div>
@@ -47,6 +61,7 @@
     [currentPage]="currentPage"
     [pagesAmount]="pagesAmount"
     [urlBase]="urlBase"
+    [queryParams]="{q: search || null, country: activeCountryId, city: activeCityId}"
     [loading]="loading"
     (pageChange)="onPageChange($event)"
   ></zx-pagination>

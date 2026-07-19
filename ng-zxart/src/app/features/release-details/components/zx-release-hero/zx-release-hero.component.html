@@ -33,7 +33,7 @@
       *ngFor="let hw of details.hardware"
       color="outlined"
       size="xs"
-      [href]="hw.catalogueUrl"
+      [href]="'/prods?hw=' + hw.id"
     ><zx-hardware-icon [id]="hw.id"></zx-hardware-icon>{{ 'hardware.' + hw.id | translate }}</zx-button>
   </zx-inline>
 

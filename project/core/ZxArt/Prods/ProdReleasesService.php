@@ -147,7 +147,6 @@ readonly class ProdReleasesService
                 format: $format,
                 label: $this->infoBuilder->translate('zxRelease.filetype_' . $format),
                 emoji: $this->releaseFormatsProvider->getFormatEmoji($format),
-                catalogueUrl: $release->getCatalogueUrlByFiletype($format),
             );
         }
         return $formats;

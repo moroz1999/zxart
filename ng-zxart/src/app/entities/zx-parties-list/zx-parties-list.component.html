@@ -1,6 +1,23 @@
-<zx-grid desktopColumns="5" tabletColumns="3" mobileColumns="1" gap="lg">
+<zx-grid *ngIf="viewMode === 'cards'" desktopColumns="5" tabletColumns="3" mobileColumns="1" gap="lg">
   <zx-party-card
     *ngFor="let party of parties; trackBy: trackById"
     [party]="party"
   ></zx-party-card>
 </zx-grid>
+
+<zx-table *ngIf="viewMode === 'table'" size="md">
+  <table>
+    <thead>
+      <tr>
+        <th>{{ 'parties-page.col-title' | translate }}</th>
+        <th>{{ 'parties-page.col-year' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let party of parties; trackBy: trackById">
+        <td><a [routerLink]="party.url">{{ party.title }}</a></td>
+        <td>{{ party.year }}</td>
+      </tr>
+    </tbody>
+  </table>
+</zx-table>

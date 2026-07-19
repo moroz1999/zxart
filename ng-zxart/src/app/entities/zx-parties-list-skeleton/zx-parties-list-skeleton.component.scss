@@ -1,0 +1,20 @@
+:host {
+  display: block;
+}
+
+.parties-list-skeleton__image {
+  width: var(--zx-parties-list-skeleton-image-width);
+  aspect-ratio: var(--zx-parties-list-skeleton-image-ratio);
+}
+
+.parties-list-skeleton__title,
+.parties-list-skeleton__table-title {
+  width: var(--zx-parties-list-skeleton-title-width);
+  height: var(--zx-parties-list-skeleton-line-height);
+}
+
+.parties-list-skeleton__year,
+.parties-list-skeleton__table-year {
+  width: var(--zx-parties-list-skeleton-year-width);
+  height: var(--zx-parties-list-skeleton-line-height);
+}

@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ZxSkeletonVisibilityDirective} from 'src/app/shared/ui/zx-skeleton/zx-skeleton-visibility.directive';
 import {ZxSkeletonBoneComponent} from '../zx-skeleton-bone/zx-skeleton-bone.component';
 import {ZxScreenshotGridSkeletonComponent} from '../zx-screenshot-grid-skeleton/zx-screenshot-grid-skeleton.component';
 import {ZxRowSkeletonComponent} from '../zx-row-skeleton/zx-row-skeleton.component';
@@ -13,6 +14,7 @@ import {ZxCommentSkeletonComponent} from '../zx-comment-skeleton/zx-comment-skel
 @Component({
   selector: 'zx-prod-details-skeleton',
   standalone: true,
+  hostDirectives: [ZxSkeletonVisibilityDirective],
   imports: [
     ZxSkeletonBoneComponent,
     ZxScreenshotGridSkeletonComponent,

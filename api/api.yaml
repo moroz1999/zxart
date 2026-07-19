@@ -3,6 +3,8 @@ info:
   title: ZxArt API
   version: 1.0.0
 paths:
+  /parties-data/:
+    $ref: 'parties.yaml#/paths/~1parties-data~1'
   /password-reminder-data/:
     $ref: 'password-reminder.yaml#/paths/~1password-reminder-data~1'
   /comments-data/:
@@ -21,8 +23,6 @@ paths:
     $ref: 'user-preferences.yaml#/paths/~1userpreferences~1'
   /menu/:
     $ref: 'menu.yaml#/paths/~1menu~1'
-  /page-metadata/:
-    $ref: 'page-metadata.yaml#/paths/~1page-metadata~1'
   /tags/:
     $ref: 'tags.yaml#/paths/~1tags~1'
   /element-privileges/:
@@ -65,6 +65,8 @@ paths:
     $ref: 'prod-related-prods.yaml#/paths/~1prod-series~1'
   /geo-data/:
     $ref: 'geo.yaml#/paths/~1geo-data~1'
+  /authorlist/:
+    $ref: 'author-list.yaml#/paths/~1authorlist~1'
 components:
   schemas:
     CommentDto:
@@ -115,3 +117,7 @@ components:
       $ref: 'release-details.yaml#/components/schemas/ReleaseDetailsPayload'
     ReleaseFileContent:
       $ref: 'release-details.yaml#/components/schemas/ReleaseFileContent'
+    AuthorListResponse:
+      $ref: 'author-list.yaml#/components/schemas/AuthorListResponse'
+    AuthorListItem:
+      $ref: 'author-list.yaml#/components/schemas/AuthorListItem'

@@ -28,7 +28,7 @@ function letters(basePath: string): MenuEntry[] {
 }
 
 /** Party years present in the catalogue (1991–1993 have no parties). */
-const PARTY_YEARS = [
+export const PARTY_YEARS = [
   1986, 1987, 1988, 1989, 1990, 1994, 1995, 1996, 1997, 1998, 1999,
   2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,
   2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021,
@@ -70,7 +70,7 @@ export const MAIN_MENU: MenuEntry[] = [
     children: [
       {labelKey: 'menu.gfx.home', url: '/pictures', children: []},
       {labelKey: 'menu.gfx.search', url: '/pictures/search', children: []},
-      {labelKey: 'menu.gfx.authors', url: '/authors', queryParams: {items: 'graphics'}, children: []},
+      {labelKey: 'menu.gfx.authors', url: '/artists', children: []},
       {labelKey: 'menu.gfx.top', url: '/pictures/top', children: []},
       {labelKey: 'menu.gfx.tags', url: '/pictures/tags', children: []},
       {labelKey: 'menu.gfx.games', url: '/pictures/search', queryParams: {fromGame: '1'}, children: []},
@@ -82,7 +82,7 @@ export const MAIN_MENU: MenuEntry[] = [
     children: [
       {labelKey: 'menu.music-sub.home', url: '/music', children: []},
       {labelKey: 'menu.music-sub.search', url: '/music/search', children: []},
-      {labelKey: 'menu.music-sub.authors', url: '/authors', queryParams: {items: 'music'}, children: []},
+      {labelKey: 'menu.music-sub.authors', url: '/musicians', children: []},
       {labelKey: 'menu.music-sub.top', url: '/music/top', children: []},
       {labelKey: 'menu.music-sub.tags', url: '/music/tags', children: []},
     ],
