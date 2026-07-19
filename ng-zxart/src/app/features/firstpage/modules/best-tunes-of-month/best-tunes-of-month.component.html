@@ -1,0 +1,29 @@
+<ng-container *ngIf="vm$ | async as vm">
+  <zx-firstpage-module-wrapper
+    titleKey="firstpage.modules.bestTunesOfMonth"
+    [viewAllUrl]="vm.viewAllUrl"
+    [viewAllLabelKey]="vm.viewAllLabelKey"
+    [usePanel]="false"
+    [loading]="vm.loading"
+    [error]="vm.error"
+    [empty]="vm.empty"
+  >
+    <zx-tune-table-skeleton loadingSkeleton [count]="settings.limit"></zx-tune-table-skeleton>
+    <zx-table *ngIf="vm.items.length > 0" size="sm" titleLevel="h2">
+      <ng-container *ngIf="{ id: playingTuneId$ | async } as playing">
+        <table class="tunes-table">
+          <tbody>
+            <zx-tune-row
+              *ngFor="let tune of vm.items; index as i"
+              [tune]="tune"
+              [index]="i"
+              [isPlaying]="tune.id === playing.id"
+              (playRequested)="playTune(i)"
+              (pauseRequested)="pauseTune()"
+            ></zx-tune-row>
+          </tbody>
+        </table>
+      </ng-container>
+    </zx-table>
+  </zx-firstpage-module-wrapper>
+</ng-container>

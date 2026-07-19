@@ -64,7 +64,8 @@
 
   <td class="release-row__hardware">
     <zx-inline gap="xs" [wrap]="true">
-      <a *ngFor="let hw of release.hardware" appText="body" class="release-row__hardware-item" [href]="hw.catalogueUrl">
+      <a *ngFor="let hw of release.hardware" appText="body" class="release-row__hardware-item"
+         routerLink="/prods" [queryParams]="{hw: hw.id}">
         <zx-hardware-icon [id]="hw.id"></zx-hardware-icon>{{ 'hardware-short.' + hw.id | translate }}
       </a>
     </zx-inline>
@@ -72,7 +73,8 @@
 
   <td class="release-row__format">
     <ng-container *ngFor="let fmt of release.formats; let last = last">
-      <a appText="body" class="release-row__format-link" [href]="fmt.catalogueUrl">
+      <a appText="body" class="release-row__format-link"
+         routerLink="/prods" [queryParams]="{formats: fmt.format}">
         <ng-container *ngIf="fmt.emoji">{{ fmt.emoji }} </ng-container>{{ fmt.label }}
       </a><ng-container *ngIf="!last">, </ng-container>
     </ng-container>

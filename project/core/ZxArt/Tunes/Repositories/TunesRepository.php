@@ -56,6 +56,24 @@ readonly final class TunesRepository extends AbstractRepository
     /**
      * @return int[]
      */
+    public function getBestOfMonthIds(int $limit, int $year): array
+    {
+        $thirtyDaysAgo = time() - (30 * 86400);
+
+        /** @var int[] $ids */
+        $ids = $this->getSelectSql()
+            ->where('dateAdded', '>=', $thirtyDaysAgo)
+            ->where('year', '=', $year)
+            ->orderBy('votes', 'desc')
+            ->limit($limit)
+            ->pluck('id');
+
+        return $ids;
+    }
+
+    /**
+     * @return int[]
+     */
     public function getUnvotedByUserIds(int $userId, int $limit, int $topN): array
     {
         /** @var int[] $topIds */

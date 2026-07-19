@@ -592,6 +592,12 @@
     "theme.light": "Light",
     "theme.dark": "Dark"
   },
+  "top-pictures": {
+    "title": "Top Graphics"
+  },
+  "top-music": {
+    "title": "Top Music"
+  },
   "firstpage": {
     "title": "Games, Demoscene, Graphics & Music of ZX Spectrum",
     "configure": "Configure homepage",
@@ -602,12 +608,13 @@
     "realtime": "Realtime",
     "modules": {
       "newProds": "New Programs",
-      "newPictures": "New Pictures",
-      "newTunes": "New Tunes",
+      "newPictures": "Newly Added Pictures",
+      "newTunes": "Newly Added Tunes",
       "bestNewDemos": "Best New Demos",
       "bestNewGames": "Best New Games",
       "recentParties": "Recent Parties",
       "bestPicturesOfMonth": "Best Pictures of the Month",
+      "bestTunesOfMonth": "Best Tunes of the Month",
       "latestAddedProds": "Latest Added Programs",
       "latestAddedReleases": "Latest Added Releases",
       "supportProds": "Support by Purchase",
@@ -2050,5 +2057,13 @@
     "placeholder": "File name or md5…",
     "searching": "Searching…",
     "empty": "No files found."
+  },
+  "password-reminder": {
+    "title": "Password recovery", "email": "Email", "password": "New password", "password-repeat": "Repeat password",
+    "request": "Send recovery link", "reset": "Change password",
+    "requested": "If an account uses this email, a recovery link has been sent.", "changed": "Your password has been changed.",
+    "error-email": "Enter a valid email address.", "error-password": "Enter a new password.",
+    "error-password-match": "Passwords do not match.", "error-invalid": "This recovery link is invalid or expired.",
+    "error-generic": "Could not recover the password. Try again later."
   }
 }

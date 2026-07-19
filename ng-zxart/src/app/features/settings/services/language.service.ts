@@ -95,6 +95,7 @@ export class LanguageService {
 
   private apply(short: string): void {
     this.translate.use(short);
+    document.documentElement.lang = short;
     this.store.next(short);
   }
 

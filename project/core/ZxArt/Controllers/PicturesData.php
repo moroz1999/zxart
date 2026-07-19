@@ -16,7 +16,7 @@ use ZxArt\Pictures\Rest\PictureRestDto;
 use ZxArt\Pictures\Services\PicturesService;
 use zxPictureElement;
 
-class Pictures extends LoggedControllerApplication
+class PicturesData extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 
@@ -87,7 +87,7 @@ class Pictures extends LoggedControllerApplication
                 ));
             }
         } catch (Throwable $e) {
-            $this->logThrowable('Pictures::picturesByElement', $e);
+            $this->logThrowable('PicturesData::picturesByElement', $e);
             CmsHttpResponse::getInstance()->setStatusCode('500');
             $this->renderer->assign('body', ['errorMessage' => 'Internal server error']);
         }

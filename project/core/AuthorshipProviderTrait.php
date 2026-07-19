@@ -91,10 +91,12 @@ trait AuthorshipProviderTrait
     {
         $result = [];
         foreach ($this->getAuthorsInfo($type) as $item) {
-            if ($item['authorElement']) {
+            $authorElement = $item['authorElement'] ?? null;
+            if ($authorElement instanceof structureElement) {
                 $result[] = [
-                    'title' => html_entity_decode($item['authorElement']->getTitle(), ENT_QUOTES),
-                    'url' => $item['authorElement']->getUrl(),
+                    'id' => $authorElement->getId(),
+                    'structureType' => $authorElement->structureType,
+                    'title' => html_entity_decode($authorElement->getTitle(), ENT_QUOTES),
                     'roles' => $item['roles']
                 ];
             }

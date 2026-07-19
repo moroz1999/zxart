@@ -191,11 +191,14 @@ privileges-matrix, coordinates, captcha, BE error-mapping all dropped):
 - [x] Detail pages for author/group/party/prod/release/picture/tune as separate FSD `pages/` components
       (id from route param → `[elementId]`). Collection routes are sequenced to **Phase 10** (they need
       the wrapper-element id removed first).
-- [ ] **Legacy→new 301 redirects (simple, no URL table).** Let the existing mechanisms resolve the
+- [x] **Legacy→new 301 redirects (simple, no URL table).** Let the existing mechanisms resolve the
       incoming legacy URL as they do today: if it resolves to a structureElement of a **migrated
       business-entity type**, 301 to its new clean URL. A small backend **type→URL resolver**
       (`structureType` + id → `/prod/{id}`, `/author/{id}`, …) builds the target. No per-URL redirect
-      map — the redirect is driven by the resolved entity's type. Done in `publicApplication::execute()`
+      map — the redirect is driven by the resolved entity or section type. Migrated catalogue and
+      standalone section roots resolve to their SPA routes and preserve the request query string.
+      Language roots and their configured legacy first pages redirect to the SPA root.
+      Done in `publicApplication::execute()`
       right after `getCurrentElement()`.
 - [ ] Language resolved in-app (cookie/preference), removed from URLs.
 - [ ] Map all existing web-component views onto routes.
@@ -212,7 +215,6 @@ swap-in happens later once legacy content pages are retired.
 - [x] Author DTOs (`AuthorDetailsService`, `AuthorCollaboratorsService`) emit new URLs via the resolver.
 - [ ] Roll the resolver through the remaining entity DTO builders (prod, group, picture, tune, release,
       party, press, lists, prod authors/links, breadcrumbs) so every `url` field is new-standard + `id`.
-- [ ] Delete `features/header/services/backend-links.service.ts`, its model, and `Controllers/BackendLinks.php` usage.
 - [ ] **Menu becomes hardcoded in the frontend.** Since all links are routing links, the menu needs
       nothing from the backend: hardcode it in the Angular app and **remove the `/menu` endpoint** (and
       its controller/service) entirely.
@@ -279,7 +281,6 @@ catalogue/list wrapper elements) are removed from the data model.
 ## Critical files
 - Router/bootstrap: `ng-zxart/src/app/app-routing.module.ts`, `app.module.ts`.
 - Replace redirect entry points: `shared/ui/zx-editing-controls/*`, `features/*/components/*-editing-controls/*`.
-- Remove links: `features/header/services/backend-links.service.ts` (+ model), DTOs, `project/core/ZxArt/Controllers/BackendLinks.php`.
 - Privileges: `shared/services/element-privileges-api.service.ts`, `shared/services/current-user.service.ts`.
 - Reuse for form controls: `shared/ui/zx-tags-input`, `shared/services/tags-search.service.ts`,
   `entities/zx-prods-category/components/categories-tree-selector`, `entities/zx-collaborator-person-card`,

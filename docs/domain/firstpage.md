@@ -17,6 +17,7 @@ The main page displays a configurable set of content modules. Each user can cust
 | `bestNewGames` | Best New Games | Random games from current/previous year with high rating |
 | `recentParties` | Recent Parties | Most recent demoparties |
 | `bestPicturesOfMonth` | Best Pictures of Month | Best-rated pictures of the current month |
+| `bestTunesOfMonth` | Best Tunes of Month | Best-rated tunes added during the last 30 days in the current year |
 | `latestAddedProds` | Latest Added Programs | Prods sorted by `dateAdded` desc (no date cutoff) |
 | `latestAddedReleases` | Latest Added Releases | Releases sorted by `dateAdded` desc |
 | `supportProds` | Support Programs | Prods with `legalStatus` in (`insales`, `donationware`), random |
@@ -57,6 +58,14 @@ Some modules support additional settings:
 - Module settings are injected via `MODULE_SETTINGS` token (`InjectionToken<ModuleSettings>`).
 - Modules are lazy-loaded using `IntersectionObserver` with `rootMargin: 200px` — data fetching starts only when the module approaches the viewport.
 - Data is fetched from `/firstpage/?action={moduleType}&...params` via `FirstpageDataService`.
+- Module catalogue links use the routed `/prods`, `/pictures/search`, and
+  `/music/search` URLs with query parameters.
+
+## Catalogue Homepages
+
+- `/pictures` without query parameters displays newly added, unvoted, and best pictures of the month.
+- `/music` without query parameters displays newly added, unvoted, and best tunes of the month.
+- Each section is an independent lazy firstpage module with its own backend request and loading skeleton.
 
 ## User Configuration Dialog
 

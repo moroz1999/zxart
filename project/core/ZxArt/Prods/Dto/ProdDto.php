@@ -9,16 +9,15 @@ readonly class ProdDto
     /**
      * @param string[] $listImagesUrls
      * @param array<array{id: string, title: string}> $hardwareInfo
-     * @param array<array{title: string, url: string, roles: string[]}> $authorsInfoShort
-     * @param array<array{id: int, title: string, url: string}> $categoriesInfo
-     * @param array{id: int, title: string, url: string}|null $partyInfo
-     * @param array<array{id: string, title: string, url: string|null}> $languagesInfo
-     * @param array<array{id: int, title: string, url: string}> $groupsInfo
-     * @param array<array{id: int, title: string, url: string}> $publishersInfo
+     * @param array<array{id: int, structureType: string, title: string, roles: string[]}> $authorsInfoShort
+     * @param array<array{id: int, structureType: string, title: string}> $categoriesInfo
+     * @param array{id: int, structureType: string, title: string}|null $partyInfo
+     * @param array<array{id: string, title: string}> $languagesInfo
+     * @param array<array{id: int, structureType: string, title: string}> $groupsInfo
+     * @param array<array{id: int, structureType: string, title: string}> $publishersInfo
      */
     public function __construct(
         public int $id,
-        public string $url,
         public string $structureType,
         public int $dateCreated,
         public string $title,

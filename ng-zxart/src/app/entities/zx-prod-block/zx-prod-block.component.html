@@ -1,7 +1,7 @@
 <zx-panel radius="xl" padding="none" variant="elevated" [contentBleed]="true">
   <div class="zx-prod-internal">
     <a
-      [routerLink]="model.url"
+      [routerLink]="['/', model.structureType === 'zxRelease' ? 'release' : 'prod', model.id]"
       class="zx-prod-images"
     >
       <img
@@ -46,7 +46,7 @@
       <zx-stack spacing="md">
       <zx-inline gap="sm" align="center" justify="between">
         <zx-inline class="zx-prod-title-row" gap="sm" align="center">
-          <a class="zx-prod-title" appHeading="title" [truncate]="true" [routerLink]="model.url">{{ model.title }}</a>
+          <a class="zx-prod-title" appHeading="title" [truncate]="true" [routerLink]="['/', model.structureType === 'zxRelease' ? 'release' : 'prod', model.id]">{{ model.title }}</a>
           <zx-party-place [place]="model.partyPlace"></zx-party-place>
         </zx-inline>
         <zx-button
@@ -64,16 +64,16 @@
       </zx-inline>
       <div *ngIf="model.groupsInfo.length" appText="label" tone="muted">
         <ng-container *ngFor="let group of model.groupsInfo; last as last"><a
-          appText="label" tone="muted-link" [routerLink]="group.url">{{ group.title }}</a><span
+          appText="label" tone="muted-link" [routerLink]="['/group', group.id]">{{ group.title }}</a><span
           *ngIf="!last">, </span></ng-container>
       </div>
       <div *ngIf="!model.groupsInfo.length && model.publishersInfo.length" appText="label" tone="muted">
         <ng-container *ngFor="let publisher of model.publishersInfo; last as last"><a
-          appText="label" tone="muted-link" [routerLink]="publisher.url">{{ publisher.title }}</a><span *ngIf="!last">, </span></ng-container>
+          appText="label" tone="muted-link" [routerLink]="[publisher.structureType === 'author' || publisher.structureType === 'authorAlias' ? '/author' : '/group', publisher.id]">{{ publisher.title }}</a><span *ngIf="!last">, </span></ng-container>
       </div>
       <div *ngIf="!model.groupsInfo.length && !model.publishersInfo.length && model.authorsInfoShort.length" appText="label" tone="muted">
         <ng-container *ngFor="let author of model.authorsInfoShort; last as last"><a
-          appText="label" tone="muted-link" [routerLink]="author.url">{{ author.title }}</a><span *ngIf="!last">, </span></ng-container>
+          appText="label" tone="muted-link" [routerLink]="['/author', author.id]">{{ author.title }}</a><span *ngIf="!last">, </span></ng-container>
       </div>
       <zx-inline class="zx-prod-bottom-row" gap="lg" align="start" justify="between">
         <zx-item-controls
@@ -106,7 +106,7 @@
           <span appText="label" tone="muted">{{ "zx-prod.publishers" | translate }}</span>
           <span class="zx-prod-row__value" appText="label" tone="primary">
             <ng-container *ngFor="let publisher of model.publishersInfo; last as last"><a
-              appText="label" tone="link" [routerLink]="publisher.url">{{ publisher.title }}</a><span *ngIf="!last">, </span></ng-container>
+              appText="label" tone="link" [routerLink]="[publisher.structureType === 'author' || publisher.structureType === 'authorAlias' ? '/author' : '/group', publisher.id]">{{ publisher.title }}</a><span *ngIf="!last">, </span></ng-container>
           </span>
           </zx-inline>
         </zx-inset>
@@ -116,7 +116,7 @@
           <!-- @formatter:off -->
                 <span class="zx-prod-row__value" appText="label" tone="primary">
                     <ng-container *ngFor="let author of model.authorsInfoShort; last as last"><a
-                            appText="label" tone="link" [routerLink]="author.url">{{ author.title }}</a><ng-container *ngIf="author.roles && filterRoles(author.roles).length">&nbsp;(<ng-container *ngFor="let role of filterRoles(author.roles); last as last2">{{ "author.role." + role | translate }}<ng-container *ngIf="!last2">, </ng-container></ng-container>)</ng-container><ng-container *ngIf="!last">, </ng-container>
+                            appText="label" tone="link" [routerLink]="['/author', author.id]">{{ author.title }}</a><ng-container *ngIf="author.roles && filterRoles(author.roles).length">&nbsp;(<ng-container *ngFor="let role of filterRoles(author.roles); last as last2">{{ "author.role." + role | translate }}<ng-container *ngIf="!last2">, </ng-container></ng-container>)</ng-container><ng-container *ngIf="!last">, </ng-container>
                     </ng-container>
                 </span>
                 <!-- @formatter:on -->
@@ -155,14 +155,14 @@
           <span appText="label" tone="muted">{{ "zx-prod.parties" | translate }}</span>
           <zx-inline class="zx-prod-row__value" gap="xs" align="center" appText="label" tone="primary">
             <zx-party-place [place]="model.partyPlace"></zx-party-place>
-            <a appText="label" tone="link" [routerLink]="model.partyInfo.url">{{ model.partyInfo.title }}</a>
+            <a appText="label" tone="link" [routerLink]="['/party', model.partyInfo.id]">{{ model.partyInfo.title }}</a>
           </zx-inline>
           </zx-inline>
         </zx-inset>
         </zx-stack>
         <zx-inline justify="between">
           <zx-button
-            [routerLink]="model.url"
+            [routerLink]="'/' + (model.structureType === 'zxRelease' ? 'release' : 'prod') + '/' + model.id"
           >{{ "zx-prod.open" | translate }}</zx-button>
         </zx-inline>
       </zx-stack>

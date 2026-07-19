@@ -1,6 +1,7 @@
 ## Search
 
 Public full search is served by `ZxArt\Controllers\Searchresults` at `/searchresults/`.
+The routed Angular entrypoint is `/search`; its `phrase`, `types`, and `page` state lives in query parameters.
 
 Angular header quick search uses the same REST endpoint with `mode=quick`. Quick mode uses title-oriented instant search filters and does not search full content.
 

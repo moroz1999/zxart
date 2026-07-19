@@ -79,6 +79,11 @@ Graphic artwork for ZX Spectrum - pictures in native formats (SCR, MC, MG, etc.)
 - **userId** - ID of user who added the element
 - **artCityId** - city ID (for Art City projects)
 
+### Top Graphics Route
+- `/pictures/top` is the dedicated top-graphics page.
+- Author picture lists and picture view logging use the `/pictures-data/` JSON endpoint.
+- The page encapsulates the picture browser with descending vote sorting and does not expose the generic sorting control.
+
 ### Constraints and Rules
 1. Image must be in one of native ZX Spectrum formats
 2. Palette and type must correspond to each other

@@ -1,7 +1,7 @@
 export type ModuleType =
   'newProds' | 'newPictures' | 'newTunes' |
   'bestNewDemos' | 'bestNewGames' |
-  'recentParties' | 'bestPicturesOfMonth' |
+  'recentParties' | 'bestPicturesOfMonth' | 'bestTunesOfMonth' |
   'latestAddedProds' | 'latestAddedReleases' |
   'supportProds' |
   'unvotedPictures' | 'randomGoodPictures' |
@@ -10,7 +10,7 @@ export type ModuleType =
 export const ALL_MODULE_TYPES: ModuleType[] = [
   'newProds', 'newPictures', 'newTunes',
   'bestNewDemos', 'bestNewGames',
-  'recentParties', 'bestPicturesOfMonth',
+  'recentParties', 'bestPicturesOfMonth', 'bestTunesOfMonth',
   'latestAddedProds', 'latestAddedReleases',
   'supportProds',
   'unvotedPictures', 'randomGoodPictures',
@@ -42,6 +42,7 @@ export const MODULE_LIMIT_PREF_CODES: Record<ModuleType, string> = {
   bestNewGames: 'homepage_best_games_limit',
   recentParties: 'homepage_recent_parties_limit',
   bestPicturesOfMonth: 'homepage_best_pictures_month_limit',
+  bestTunesOfMonth: 'homepage_best_tunes_month_limit',
   latestAddedProds: 'homepage_latest_prods_limit',
   latestAddedReleases: 'homepage_latest_releases_limit',
   supportProds: 'homepage_support_prods_limit',

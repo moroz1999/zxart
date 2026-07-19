@@ -5,9 +5,9 @@ import {TranslateModule} from '@ngx-translate/core';
 import {map, Observable} from 'rxjs';
 import {ZxProdsCategoryComponent} from '../../entities/zx-prods-category/zx-prods-category.component';
 import {ZxGroupBrowserComponent} from '../../features/group-browser/components/zx-group-browser/zx-group-browser.component';
-import {ZxPictureBrowserComponent} from '../../features/picture-browser/components/zx-picture-browser/zx-picture-browser.component';
-import {ZxMusicBrowserComponent} from '../../features/music-browser/components/zx-music-browser/zx-music-browser.component';
 import {ZxAuthorBrowserComponent} from '../../features/author-browser/components/zx-author-browser/zx-author-browser.component';
+import {PicturesHomeComponent} from '../../features/catalogue-home/components/pictures-home/pictures-home.component';
+import {MusicHomeComponent} from '../../features/catalogue-home/components/music-home/music-home.component';
 
 type CollectionKind = 'prods' | 'groups' | 'pictures' | 'music' | 'authors';
 
@@ -18,9 +18,8 @@ interface CollectionVm {
 
 /**
  * Routed collection/list page (`/prods`, `/groups`, `/pictures`, `/music`,
- * `/authors`). Mounts the matching browser with no wrapper element id: each
- * browser's backend endpoint resolves the catalogue root by type. The `kind`
- * comes from route data.
+ * `/authors`). The `kind` comes from route data; graphics and music roots mount
+ * their catalogue homepages, while the remaining kinds mount their browsers.
  */
 @Component({
   selector: 'zx-collection-page',
@@ -30,9 +29,9 @@ interface CollectionVm {
     TranslateModule,
     ZxProdsCategoryComponent,
     ZxGroupBrowserComponent,
-    ZxPictureBrowserComponent,
-    ZxMusicBrowserComponent,
     ZxAuthorBrowserComponent,
+    PicturesHomeComponent,
+    MusicHomeComponent,
   ],
   templateUrl: './collection-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

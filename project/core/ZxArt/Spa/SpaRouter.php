@@ -1,21 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ZxArt\Spa;
 
-/**
- * Decides whether an incoming public request must be served by the Angular SPA
- * shell instead of the legacy structure-tree page rendering.
- *
- * The pattern list mirrors the new clean-URL routing defined in the Angular
- * router (ng-zxart/src/app/app.routes.ts) and grows as entities are migrated.
- */
-class SpaRouter
+final class SpaRouter
 {
     /** @var string[] */
-    private const ROUTE_PATTERNS = [
+    private const array ROUTE_PATTERNS = [
         '#^/author/\d+(/[a-z0-9-]+)?/?$#',
-        '#^/author-alias/\d+/edit/?$#',
+        '#^/author-alias/\d+/[a-z0-9-]+/?$#',
         '#^/group/\d+(/[a-z0-9-]+)?/?$#',
+        '#^/group-alias/\d+/[a-z0-9-]+/?$#',
         '#^/party/\d+(/[a-z0-9-]+)?/?$#',
         '#^/prod/\d+(/[a-z0-9-]+)?/?$#',
         '#^/release/\d+(/[a-z0-9-]+)?/?$#',
@@ -26,13 +22,14 @@ class SpaRouter
         '#^/playlists/?$#',
         '#^/playlist/\d+/?$#',
         '#^/register/?$#',
+        '#^/password-reminder/?$#',
+        '#^/search/?$#',
         '#^/$#',
         '#^/(prods|pictures|music)/?$#',
-        '#^/(pictures|music)/search/?$#',
-        '#^/(pictures|music)/tags/?$#',
+        '#^/(pictures|music)/(search|tags|top)/?$#',
         '#^/(groups|authors)(/[a-zA-Z])?/?$#',
         '#^/parties(/\d+)?/?$#',
-        '#^/stats/?$#',
+        '#^/stats(/[a-z0-9-]+)?/?$#',
         '#^/geo/?$#',
         '#^/comments/?$#',
         '#^/feedback/?$#',
@@ -46,6 +43,7 @@ class SpaRouter
         if (!is_string($path)) {
             return false;
         }
+
         foreach (self::ROUTE_PATTERNS as $pattern) {
             if (preg_match($pattern, $path) === 1) {
                 return true;

@@ -101,6 +101,10 @@ Musical work for ZX Spectrum - chiptunes in various tracker and chip formats. Re
 - **userId** - ID of user who added the element
 - **zxTunesId** - ID in ZXTunes database
 
+### Top Music Route
+- `/music/top` is the dedicated top-music page.
+- The page encapsulates the music browser with descending vote sorting and does not expose the generic sorting control.
+
 ### Integration with External Services
 - **MP3 Storage**: `https://music.zxart.ee/music/` - MP3 files storage
 - **ZXTunes**: integration through zxTunesId

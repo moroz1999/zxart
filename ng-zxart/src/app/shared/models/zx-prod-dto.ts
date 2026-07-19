@@ -1,5 +1,3 @@
-import {StructureElementDto} from './structure-element-dto';
-
 export interface ZxProdConnectedItem {
     readonly id: string;
     readonly title: string;
@@ -7,15 +5,16 @@ export interface ZxProdConnectedItem {
 
 export type ZxProdConnectedItems = Array<ZxProdConnectedItem>;
 
-export interface ZxProdConnectedElementDto extends StructureElementDto {
+export interface ZxProdConnectedElementDto {
     readonly id: number;
     readonly title: string;
-    readonly url: string;
+    readonly structureType: 'author' | 'authorAlias' | 'group' | 'groupAlias' | 'party' | 'zxProdCategory';
 }
 
 export interface ZxProdAuthorship {
+    readonly id: number;
+    readonly structureType: 'author' | 'authorAlias';
     readonly title: string;
-    readonly url: string;
     readonly roles: string[];
 }
 
@@ -33,9 +32,10 @@ export type LegalStatus =
     'recovered' |
     'donationware';
 
-export interface ZxProdDto extends StructureElementDto {
+export interface ZxProdDto {
+    readonly id: number;
     readonly title: string;
-    readonly structureType: 'zxProd';
+    readonly structureType: 'zxProd' | 'zxRelease';
     readonly dateCreated: number;
     readonly year?: string;
     readonly youtubeId?: string;

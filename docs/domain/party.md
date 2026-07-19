@@ -96,6 +96,10 @@ Party provides methods for exporting results in various formats:
 - Default preset: `'partyFull'`
 - Fallback: `/images/zxprod_default.png`
 
+### Party Collections
+- Party collections use the shared responsive party-card list with five desktop, three tablet, and one mobile column.
+- The recent-parties homepage module and the routed `/parties` collection use the same list presentation while loading their data independently.
+
 ### Party Page REST API
 The Angular party page (`zx-party-details`) loads data through dedicated endpoints; full schemas in `api/party-details.yaml`.
 - `GET /party-details/?id=` - core payload: header, location, compos metadata, editions, counters, tabs, breadcrumbs.

@@ -87,6 +87,7 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
     public layout: ZxProdsListLayout = 'loading';
     public loading = false;
     public urlBase = '';
+    public paginationQueryParams: Params | null = null;
 
     public layoutOptions: ZxToggleOption[] = [
         {value: 'loading', icon: 'image'},
@@ -201,11 +202,19 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
 
     /** Pushes the current filter state to the URL as query params (no slugs). */
     private navigateWithParams(): void {
+        const queryParams = this.buildRouteQueryParams(true);
+        this.router!.navigate([], {relativeTo: this.route!, queryParams});
+    }
+
+    private buildRouteQueryParams(includePage: boolean): Params {
         const queryParams: Params = {...this.gatherParameters()};
+        if (!includePage) {
+            delete queryParams['page'];
+        }
         if (this.elementId !== this.rootElementId) {
             queryParams['cat'] = this.elementId;
         }
-        this.router!.navigate([], {relativeTo: this.route!, queryParams});
+        return queryParams;
     }
 
     private gatherParameters(): PostParameters {
@@ -301,8 +310,8 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
                 this.includeSubcategoriesProds = this.model.selectorValues.includeSubcategoriesProds;
                 this.sorting = this.model.sortingSelector[0]?.values.find(item => item.selected)?.value;
 
-                let reqUrl = this.model.url;
-                let urlBase = this.model.url;
+                let reqUrl = '/prods';
+                let urlBase = '/prods';
 
                 for (const [key, value] of Object.entries(parameters)) {
                     reqUrl += `${key}:${value}/`;
@@ -313,6 +322,9 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
                 }
 
                 this.urlBase = urlBase;
+                this.paginationQueryParams = this.useRouter
+                    ? this.buildRouteQueryParams(false)
+                    : null;
                 if (this.manageUrl && environment.production) {
                     if (window.location.href !== reqUrl) {
                         window.history.pushState({parameters, elementId: this.elementId}, '', reqUrl);

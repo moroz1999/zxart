@@ -1,0 +1,6 @@
+<zx-grid desktopColumns="5" tabletColumns="3" mobileColumns="1" gap="lg">
+  <zx-party-card
+    *ngFor="let party of parties; trackBy: trackById"
+    [party]="party"
+  ></zx-party-card>
+</zx-grid>

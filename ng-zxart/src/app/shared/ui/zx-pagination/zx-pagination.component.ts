@@ -3,6 +3,7 @@ import {PageItemInterface} from './page-item.interface';
 import {NgForOf, NgIf} from '@angular/common';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {ZxSpinnerComponent} from '../zx-spinner/zx-spinner.component';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 
 @Component({
     selector: 'zx-pagination',
@@ -22,10 +23,16 @@ export class ZxPaginationComponent implements OnChanges {
     @Input() pagesAmount = 0;
     @Input() visibleAmount = 1;
     @Input() urlBase = '';
+    @Input() queryParams: Params | null = null;
     @Input() loading = false;
     @Output() pageChange = new EventEmitter<number>();
 
     pageItems: PageItemInterface[] = [];
+
+    constructor(
+        private readonly router: Router,
+        private readonly route: ActivatedRoute,
+    ) {}
 
     ngOnChanges(): void {
         if (this.currentPage > this.pagesAmount) {
@@ -92,6 +99,15 @@ export class ZxPaginationComponent implements OnChanges {
     }
 
     makeHref(number: number): string {
+        if (this.queryParams !== null) {
+            return this.router.serializeUrl(this.router.createUrlTree([], {
+                relativeTo: this.route,
+                queryParams: {
+                    ...this.queryParams,
+                    page: number > 1 ? number : null,
+                },
+            }));
+        }
         if (this.urlBase.slice(-1) === '/') {
             return this.urlBase + 'page:' + number + '/';
         }

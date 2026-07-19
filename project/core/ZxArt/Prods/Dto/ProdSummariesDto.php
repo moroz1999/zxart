@@ -11,7 +11,7 @@ readonly class ProdSummariesDto
      */
     public function __construct(
         public array $prods,
-        public ?string $seriesUrl = null,
+        public ?int $seriesId = null,
     ) {
     }
 }

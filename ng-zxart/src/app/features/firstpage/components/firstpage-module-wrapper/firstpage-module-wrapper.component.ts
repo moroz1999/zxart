@@ -6,12 +6,10 @@ import {HeadingDirective} from '../../../../shared/ui/typography/directives/head
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 
-
-import {RouterLink} from '@angular/router';@Component({
+@Component({
   selector: 'zx-firstpage-module-wrapper',
   standalone: true,
-  imports: [RouterLink, 
-    CommonModule,
+  imports: [CommonModule,
     TranslateModule,
     ZxPanelComponent,
     HeadingDirective,

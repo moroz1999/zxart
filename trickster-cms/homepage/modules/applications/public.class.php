@@ -1,30 +1,27 @@
 <?php
 
-use App\Users\CurrentUserService;
 use ZxArt\NgAssetsProvider;
+use ZxArt\PageMetadata\PageMetadataDto;
+use ZxArt\PageMetadata\PageMetadataService;
+use ZxArt\Shared\StructureType;
 use ZxArt\Spa\SpaRouter;
 use ZxArt\Urls\EntityUrlResolver;
 use ZxArt\UserPreferences\CurrentThemeProvider;
 
 class publicApplication extends controllerApplication implements ThemeCodeProviderInterface
 {
-    use JsTranslationsTrait;
     use DbLoggableApplication;
 
     protected $applicationName = 'public';
-    /**
-     * @var DesignTheme
-     */
+    /** @var DesignTheme */
     protected $currentTheme;
     protected $themeCode = '';
-    protected $requestsLogging = false;
     protected $protocolRedirection = true;
     public $rendererName = 'smarty';
-    /**
-     * @var ConfigManager
-     */
+    /** @var ConfigManager */
     protected $configManager;
 
+    #[Override]
     public function initialize()
     {
         $this->configManager = $this->getService(ConfigManager::class);
@@ -33,364 +30,249 @@ class publicApplication extends controllerApplication implements ThemeCodeProvid
         $this->createRenderer();
     }
 
-    /**
-     * @param controller $controller
-     * @return mixed|void
-     * @throws Exception
-     */
+    #[Override]
     public function execute($controller)
     {
         $this->startDbLogging();
         $this->checkBotUAs();
-        $this->logRequest();
-        /**
-         * @var Cache $cache
-         */
+
         $cache = $this->getService(Cache::class);
         $cache->enable();
 
         $designThemesManager = $this->getService(DesignThemesManager::class);
         $designThemesManager->setCurrentThemeCode($this->getThemeCode());
-        $currentTheme = $this->currentTheme = $designThemesManager->getCurrentTheme();
-        $structureManager = $this->getService('structureManager');
-        $this->processRequestParameters();
-        $this->renderer->assign('js_translations', $this->loadJsTranslations());
+        $this->currentTheme = $designThemesManager->getCurrentTheme();
 
-        $resourcesUniterHelper = $this->getService(ResourcesUniterHelper::class);
-        $resourcesUniterHelper->setCurrentThemeCode($this->getThemeCode());
-        $this->renderer->assign('CSSFileName', $resourcesUniterHelper->getResourceCacheFileName('css'));
-
-        $this->renderer->assign('controller', $controller);
-        $this->renderer->assign('configManager', $this->configManager);
-        /**
-         * @var $settingsManager settingsManager
-         */
-        $settingsManager = $this->getService(settingsManager::class);
-        $currentUserService = $this->getService(CurrentUserService::class);
-        $user = $currentUserService->getCurrentUser();
-        $this->renderer->assign('settings', $settingsManager->getSettingsList());
-        $this->renderer->assign('currentUser', $user);
-        $this->renderer->assign('theme', $currentTheme);
-
-        $ngAssetsProvider = $this->getService(NgAssetsProvider::class);
-        $this->renderer->assign('ngScriptUrls', $ngAssetsProvider->getScriptUrls());
-        $this->renderer->assign('ngStyleUrls', $ngAssetsProvider->getStyleUrls());
-
-        $themeColor = $settingsManager->getSetting('primary_color');
-        $themeColor = $themeColor ?: $this->configManager->get('colors.primary_color');
-        $this->renderer->assign('themeColor', $themeColor);
-        $this->renderer->assign('applicationName', $this->applicationName);
-        $this->renderer->assign('deviceType', 'desktop');
-
-        $pageNotFound = $controller->requestedFile;
-        $languagesManager = $this->getService(LanguagesManager::class);
-        $visitorsManager = $this->getService(VisitorsManager::class);
-        $visitorRecorded = $visitorsManager->isVisitationRecorded();
-        $this->renderer->assign('newVisitor', !$visitorRecorded);
-
-        $themeProvider = $this->getService(CurrentThemeProvider::class);
-        $this->renderer->assign('currentThemeClass', $themeProvider->getThemeClass());
-
-        $spaRouter = $this->getService(SpaRouter::class);
-        if ($spaRouter->isSpaRequest($this->getService(requestHeadersManager::class)->getUri())) {
-            $this->renderer->setCacheControl('no-cache');
-            $this->renderer->template = $currentTheme->template('index.spa.tpl');
-            $this->renderer->display();
+        $requestUri = (string)$this->getService(requestHeadersManager::class)->getUri();
+        if ($this->getService(SpaRouter::class)->isSpaRequest($requestUri)) {
+            $pageExists = $this->getService(PageMetadataService::class)->pathExists($requestUri);
+            if (!$pageExists) {
+                $this->log404Error($requestUri);
+                $this->deleteOld404();
+                CmsHttpResponse::getInstance()->setStatusCode('404');
+            }
+            $this->renderSpa($requestUri, !$pageExists);
             $this->saveDbLog();
+            return null;
+        }
+
+        $this->redirectLegacyRequest($controller, $requestUri);
+        $this->handle404($requestUri);
+        $this->saveDbLog();
+
+        return null;
+    }
+
+    private function redirectLegacyRequest(controller $controller, string $requestUri): void
+    {
+        if ($controller->requestedFile) {
             return;
         }
 
-        if (!$pageNotFound) {
-            if ($currentElement = $structureManager->getCurrentElement()) {
-                /**
-                 * @var $redirectionManager RedirectionManager
-                 */
-                $redirectionManager = $this->getService(RedirectionManager::class);
-                if ($this->protocolRedirection) {
-                    $redirectionManager->checkProtocolRedirection();
-                }
-                $redirectionManager->checkDomainRedirection();
-
-                // Legacy entity view URL → new clean SPA URL (301). Driven by the
-                // resolved element's type, no per-URL table. SPA requests never
-                // reach here (SpaRouter short-circuits earlier). Action/form URLs
-                // (action:showForm, join, etc.) are left on legacy until their
-                // forms are migrated.
-                if (!$controller->getParameter('action')) {
-                    if ($newEntityUrl = $this->getService(EntityUrlResolver::class)->resolve($currentElement)) {
-                        $controller->redirect($controller->baseURL . ltrim($newEntityUrl, '/'), '301');
-                    }
-                }
-
-                //check if we need to redirect user to display firstpage
-                if ($currentElement->structureType === 'root' || $currentElement->structureType === 'language') {
-                    if ($currentLanguageId = $languagesManager->getCurrentLanguageId()) {
-                        /**
-                         * @var $currentLanguageElement languageElement
-                         */
-                        if ($currentLanguageElement = $structureManager->getElementById($currentLanguageId)) {
-                            if ($firstPageElement = $currentLanguageElement->getFirstPageElement()) {
-                                $controller->restart($firstPageElement->URL);
-                            } elseif ($contentElements = $currentLanguageElement->getChildrenList('content')) {
-                                $firstMenu = reset($contentElements);
-                                $controller->restart($firstMenu->URL);
-                            } elseif ($currentElement->structureType === 'root') {
-                                // site doesn't work if root is current
-                                $controller->restart($currentLanguageElement->URL);
-                            }
-                        }
-                    }
-                }
-
-                $privileges = $this->getService(privilegesManager::class)->getElementPrivileges($currentElement->id);
-                $this->renderer->assign('privileges', $privileges);
-                $this->renderer->assign('currentElementPrivileges', $privileges[$currentElement->structureType]);
-
-                $breadcrumbsManager = $this->getService(breadcrumbsManager::class);
-                $this->renderer->assign('breadcrumbsManager', $breadcrumbsManager);
-
-                if ($currentElement instanceof MetadataProviderInterface) {
-                    $currentMetaTitle = $currentElement->getMetaTitle();
-                    $currentMetaKeywords = $currentElement->getMetaKeywords();
-                    $currentMetaDescription = $currentElement->getMetaDescription();
-                    $currentCanonicalUrl = $currentElement->getCanonicalUrl();
-                    $currentNoIndexing = $currentElement->getMetaDenyIndex();
-                } else {
-                    if ($currentElement && $currentElement->title) {
-                        $currentMetaTitle = $currentElement->title;
-                    } else {
-                        $currentMetaTitle = '';
-                    }
-                    $currentMetaKeywords = "";
-                    $currentMetaDescription = "";
-                    $currentCanonicalUrl = $currentElement->URL;
-                    $currentNoIndexing = false;
-                }
-
-                if ($siteName = $this->getService(translationsManager::class)
-                    ->getTranslationByName('site.name', null, false)) {
-                    $currentMetaTitle .= ' - ' . $siteName;
-                }
-
-                if ($currentElement instanceof OpenGraphDataProviderInterface
-                ) {
-                    $this->renderer->assign('openGraphData', $currentElement->getOpenGraphData());
-                }
-                if ($currentElement instanceof TwitterDataProviderInterface
-                ) {
-                    $this->renderer->assign('twitterData', $currentElement->getTwitterData());
-                }
-
-                $languageLinksService = $this->getService(LanguageLinksService::class);
-                $languageLinks = $languageLinksService->getLanguageLinks($currentElement);
-
-                $this->renderer->assign('languageLinks', $languageLinks);
-                $this->renderer->assign('jsScripts', $this->getJsScripts($currentElement));
-                $this->renderer->assign('application', $this);
-                $this->renderer->assign('currentMetaDescription', $currentMetaDescription);
-                $this->renderer->assign('currentMetaKeywords', $currentMetaKeywords);
-                $this->renderer->assign('currentMetaTitle', $currentMetaTitle);
-                $this->renderer->assign('currentNoIndexing', $currentNoIndexing);
-                $this->renderer->assign('currentCanonicalUrl', $currentCanonicalUrl);
-                $this->renderer->assign('currentElement', $currentElement);
-                $this->renderer->assign('structureManager', $structureManager);
-                $this->renderer->assign('LanguagesManager', $languagesManager);
-                $requestHeadersManager = $this->getService(requestHeadersManager::class);
-                $this->renderer->assign('userAgent', $requestHeadersManager->getUserAgent());
-                $this->renderer->setCacheControl('no-cache');
-                $this->renderer->template = $currentTheme->template('index.tpl');
-                $this->renderer->display();
-            } else {
-                $pageNotFound = true;
-            }
+        $structureManager = $this->getService(structureManager::class);
+        $currentElement = $structureManager->getCurrentElement();
+        if (!$currentElement instanceof structureElement) {
+            return;
         }
-        if ($pageNotFound) {
-            $this->handle404();
+
+        $redirectionManager = $this->getService(RedirectionManager::class);
+        if ($this->protocolRedirection === true) {
+            $redirectionManager->checkProtocolRedirection();
         }
-        $this->saveDbLog();
+        $redirectionManager->checkDomainRedirection();
+
+        if ($controller->getParameter('action')) {
+            return;
+        }
+
+        $query = parse_url($requestUri, PHP_URL_QUERY);
+        $query = is_string($query) && $query !== '' ? $query : null;
+        if ($this->redirectLanguageRoot($controller, $structureManager, $currentElement, $query)) {
+            return;
+        }
+
+        $spaUrl = $this->getService(EntityUrlResolver::class)->resolve($currentElement);
+        if ($spaUrl === null) {
+            return;
+        }
+
+        if ($query !== null) {
+            $spaUrl .= '?' . $query;
+        }
+        $controller->redirect($controller->baseURL . ltrim($spaUrl, '/'), '301');
     }
 
-    protected function handle404()
+    private function redirectLanguageRoot(
+        controller $controller,
+        structureManager $structureManager,
+        structureElement $currentElement,
+        ?string $query,
+    ): bool {
+        $languagesManager = $this->getService(LanguagesManager::class);
+        $currentLanguageId = (int)$languagesManager->getCurrentLanguageId();
+        $currentLanguageElement = $currentLanguageId > 0
+            ? $structureManager->getElementById($currentLanguageId)
+            : null;
+        $firstPageElement = $currentLanguageElement instanceof languageElement
+            ? $currentLanguageElement->getFirstPageElement()
+            : null;
+        $isLanguageRoot = $currentElement->structureType === StructureType::Root->value
+            || $currentElement->structureType === StructureType::Language->value;
+        $isFirstPage = $firstPageElement instanceof structureElement
+            && (int)$firstPageElement->id === (int)$currentElement->id;
+        if (!$isLanguageRoot && !$isFirstPage) {
+            return false;
+        }
+
+        $homeUrl = $controller->baseURL;
+        if ($query !== null) {
+            $homeUrl .= '?' . $query;
+        }
+        $controller->redirect($homeUrl, '301');
+        return true;
+    }
+
+    private function handle404(string $requestUri): void
     {
-        /**
-         * @var RedirectionManager $redirectionManager
-         */
-        $redirectionManager = $this->getService(RedirectionManager::class);
-        /**
-         * @var requestHeadersManager $requestHeadersManager
-         */
-        $requestHeadersManager = $this->getService(requestHeadersManager::class);
-        $controller = controller::getInstance();
-        $errorUrl = $requestHeadersManager->getUri();
-        if ($word = $this->checkBotWords($errorUrl)) {
+        if ($this->checkBotWords($requestUri) !== null) {
             $this->renderer->fileNotFound();
             exit;
         }
 
-        if (!$redirectionManager->checkRedirectionUrl($errorUrl)) {
-            $this->log404Error($errorUrl);
-            $this->deleteOld404();
-            $this->renderer->fileNotFound();
-            $structureManager = $this->getService('publicStructureManager');
+        $redirectionManager = $this->getService(RedirectionManager::class);
+        if ($redirectionManager->checkRedirectionUrl($requestUri)) {
+            return;
+        }
 
-            $languagesManager = $this->getService(LanguagesManager::class);
-            $languageId = $languagesManager->getCurrentLanguageId();
-            if ($languageElement = $structureManager->getElementById($languageId)) {
-                if ($currentElement = $this->getErrorPageElement()) {
-                    $breadcrumbsManager = $this->getService(breadcrumbsManager::class);
-                    $this->renderer->assign('breadcrumbsManager', $breadcrumbsManager);
-                    $this->renderer->assign('currentElement', $currentElement);
-                    $this->renderer->assign('structureManager', $structureManager);
-                    $this->renderer->setCacheControl('no-cache');
-                    $this->renderer->template = $this->currentTheme->template('index.tpl');
-                    $this->renderer->display();
-                }
+        $this->log404Error($requestUri);
+        $this->deleteOld404();
+        CmsHttpResponse::getInstance()->setStatusCode('404');
+        $this->renderSpa($requestUri, true);
+    }
+
+    private function renderSpa(string $requestUri, bool $forceNoIndex = false): void
+    {
+        $ngAssetsProvider = $this->getService(NgAssetsProvider::class);
+        $languagesManager = $this->getService(LanguagesManager::class);
+        $currentLanguage = $languagesManager->getCurrentLanguage();
+        $settingsManager = $this->getService(settingsManager::class);
+        $themeColor = $settingsManager->getSetting('primary_color');
+        $themeColor = $themeColor ?: $this->configManager->get('colors.primary_color');
+        $metadata = $this->getService(PageMetadataService::class)->getForPath($requestUri);
+        if ($forceNoIndex) {
+            $metadata = new PageMetadataDto(
+                $metadata->title,
+                $metadata->description,
+                true,
+                $metadata->openGraph,
+                $metadata->twitter,
+                $metadata->languageLinks,
+                $metadata->structuredData,
+            );
+        }
+
+        $this->renderer->assign('ngScriptUrls', $ngAssetsProvider->getScriptUrls());
+        $this->renderer->assign('ngStyleUrls', $ngAssetsProvider->getStyleUrls());
+        $this->renderer->assign('currentThemeClass', $this->getService(CurrentThemeProvider::class)->getThemeClass());
+        $this->renderer->assign('currentLanguage', $currentLanguage);
+        $this->renderer->assign('themeColor', $themeColor);
+        $this->renderer->assign('pageMetadata', $metadata);
+        $this->renderer->assign('structuredDataJson', $this->encodeStructuredData($metadata));
+        $this->renderer->assign('controller', controller::getInstance());
+        $this->renderer->setCacheControl('no-cache');
+        $this->renderer->template = $this->currentTheme->template('index.spa.tpl');
+        $this->renderer->display();
+    }
+
+    private function encodeStructuredData(PageMetadataDto $metadata): ?string
+    {
+        if ($metadata->structuredData === null) {
+            return null;
+        }
+
+        return json_encode(
+            $metadata->structuredData,
+            JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+            | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT,
+        );
+    }
+
+    private function checkBotWords(string $errorUrl): ?string
+    {
+        $botWordsConfig = $this->configManager->getConfig('botrequests');
+        if ($botWordsConfig === null) {
+            return null;
+        }
+
+        $botWords = (array)$botWordsConfig->getData();
+        foreach ($botWords as $botWord => $value) {
+            if (is_string($botWord) && stripos($errorUrl, $botWord) !== false) {
+                return $botWord;
             }
         }
+
+        return null;
     }
 
-    protected function checkBotWords($errorUrl)
+    private function log404Error(string $errorUrl): void
     {
-        if ($botWords = $this->configManager->getConfig('botrequests')) {
-            foreach ($botWords as $botWord => $value) {
-                if (stripos($errorUrl, $botWord) !== false) {
-                    return $botWord;
-                }
-            }
+        $referer = (string)($this->getService(requestHeadersManager::class)->getReferer() ?: '');
+        $database = $this->getService('db');
+        $row = $database->table('404_log')->where('errorUrl', '=', $errorUrl)->take(1)->get();
+        $record = array_shift($row);
+        if ($record) {
+            $database->table('404_log')->whereId($record['id'])->increment('count', 1, [
+                'date' => time(),
+                'httpReferer' => $referer,
+            ]);
+            return;
         }
-        return false;
+
+        $database->table('404_log')->insert([
+            'errorUrl' => $errorUrl,
+            'count' => 1,
+            'httpReferer' => $referer,
+            'date' => time(),
+        ]);
     }
 
-    public function processRequestParameters()
+    private function deleteOld404(): void
     {
-        $structureManager = $this->getService('structureManager');
-        $controller = controller::getInstance();
-        if ($controller->getParameter('type')) {
-            if ($controller->getParameter('action')) {
-                $requestedPath = implode('/', $controller->requestedPath) . '/';
-                $structureManager->newElementParameters[$requestedPath]['action'] = $controller->getParameter('action');
-                $structureManager->newElementParameters[$requestedPath]['type'] = $controller->getParameter('type');
-            }
-        } elseif ($controller->getParameter('action') && $controller->getParameter('id')) {
-            $structureManager->customActions[$controller->getParameter('id')] = $controller->getParameter('action');
-        }
-    }
-
-    protected function log404Error($errorUrl)
-    {
-        $requestHeadersManager = $this->getService(requestHeadersManager::class);
-        $referer = $requestHeadersManager->getReferer();
-        $db = $this->getService('db');
-        // seek and update existing record
-        $row = $db->table('404_log')->where('errorUrl', '=', $errorUrl)->take(1)->get();
-        $row = array_shift($row);
-        if ($row) {
-            $fields = [];
-            $fields['date'] = time();
-            $fields['httpReferer'] = $referer ? $referer : "";
-            $db->table('404_log')->whereId($row['id'])->increment('count', 1, $fields);
-        } // if record not found, add new
-        else {
-            $record = [];
-            $record['errorUrl'] = $errorUrl;
-            $record['count'] = 1;
-            $record['httpReferer'] = $referer ? $referer : "";
-            $record['date'] = time();
-            $db->table('404_log')->insert($record);
-        }
-    }
-
-    protected function deleteOld404()
-    {
-        $db = $this->getService('db');
-        $db->table('404_log')
+        $this->getService('db')->table('404_log')
             ->where('date', '<', time() - 3600 * 24 * 7)
             ->where('redirectionId', '=', 0)
             ->delete();
     }
 
-    public function getErrorPageElement()
-    {
-        $errorPageElement = false;
-        $db = $this->getService('db');
-        if ($errorPageElementId = $db->table('module_errorpage')->select('id')->limit(1)->value('id')) {
-            $structureManager = $this->getService('structureManager');
-            $languagesManager = $this->getService(LanguagesManager::class);
-            $currentLanguageElementId = $languagesManager->getCurrentLanguageId();
-            $errorPageElement = $structureManager->getElementById($errorPageElementId, $currentLanguageElementId, true);
-        }
-        return $errorPageElement;
-    }
-
+    #[Override]
     public function getUrlName()
     {
         return '';
     }
 
+    #[Override]
     public function getThemeCode()
     {
         return $this->themeCode;
     }
 
-    /**
-     * @return DesignTheme
-     */
-    public function getCurrentTheme()
+    public function getCurrentTheme(): DesignTheme
     {
         return $this->currentTheme;
     }
 
-    public function checkBotUAs()
+    public function checkBotUAs(): void
     {
-        $bots = [
-            'IZaBEE',
-            'DotBot',
-            'SemrushBot',
-            'AhrefsBot',
-            'BLEXBot',
-            'ubermetrics',
-            'Cliqzbot',
-        ];
-        if (!empty($_SERVER['HTTP_USER_AGENT'])) {
-            foreach ($bots as $bot) {
-                if (stripos($_SERVER['HTTP_USER_AGENT'], $bot) !== false) {
-                    exit;
-                }
+        $bots = ['IZaBEE', 'DotBot', 'SemrushBot', 'AhrefsBot', 'BLEXBot', 'ubermetrics', 'Cliqzbot'];
+        $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+        if ($userAgent === '') {
+            return;
+        }
+
+        foreach ($bots as $bot) {
+            if (stripos($userAgent, $bot) !== false) {
+                exit;
             }
         }
-    }
-
-    protected function logRequest()
-    {
-        if ($this->requestsLogging) {
-            $todayDate = date('Y-m-d');
-            $pathsManager = controller::getInstance()->getPathsManager();
-            $logFilePath = $pathsManager->getPath('logs') . 'access/';
-            if (!is_dir($logFilePath)) {
-                mkdir($logFilePath, 0775, true);
-            }
-
-            $string = date('Y.m.d H:i:s') . ' ' . $_SERVER['REMOTE_ADDR'] . ' ' . $_SERVER['HTTP_USER_AGENT'] . ' ' . $_SERVER['REQUEST_URI'] . "\n";
-            file_put_contents($logFilePath . $todayDate . '.txt', $string, FILE_APPEND);
-        }
-    }
-
-    protected function getJsScripts($currentElement)
-    {
-        $controller = controller::getInstance();
-        $jsScripts = [];
-
-        $resourcesUniterHelper = $this->getService(ResourcesUniterHelper::class);
-        $resourcesUniterHelper->setCurrentThemeCode($this->currentTheme->getCode());
-        $jsScripts[] = $controller->baseURL . 'javascript/set:' . $this->currentTheme->getCode() . '/file:' . $resourcesUniterHelper->getResourceCacheFileName('js') . '.js';
-
-        if ($currentElement instanceof clientScriptsProviderInterface
-        ) {
-            $jsScripts = array_merge($jsScripts, $currentElement->getClientScripts());
-        }
-        return $jsScripts;
     }
 }
-
-
-

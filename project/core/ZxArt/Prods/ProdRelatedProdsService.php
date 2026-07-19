@@ -14,7 +14,6 @@ readonly class ProdRelatedProdsService
     private const string PROD_LIST_IMAGE_PRESET = 'prodImage';
 
     public function __construct(
-        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private ProdElementService $prodElementService,
         private translationsManager $translationsManager,
     ) {
@@ -60,7 +59,7 @@ readonly class ProdRelatedProdsService
 
         return new ProdSummariesDto(
             prods: $this->buildSummaries($prods),
-            seriesUrl: $this->resolveSeriesUrl($prod),
+            seriesId: $this->resolveSeriesId($prod),
         );
     }
 
@@ -81,7 +80,6 @@ readonly class ProdRelatedProdsService
             $summaries[] = new ProdSummaryDto(
                 id: $prod->getId(),
                 title: $this->decodeText($prod->title),
-                url: $this->entityUrlResolver->urlFor($prod),
                 year: $prod->year,
                 legalStatus: $legalStatus,
                 legalStatusLabel: $this->translate('legalstatus.' . $legalStatus),
@@ -104,14 +102,14 @@ readonly class ProdRelatedProdsService
         return $rawImageUrl;
     }
 
-    private function resolveSeriesUrl(zxProdElement $prod): ?string
+    private function resolveSeriesId(zxProdElement $prod): ?int
     {
         foreach ($prod->series as $seriesElement) {
             if (!$seriesElement instanceof zxProdElement) {
                 continue;
             }
 
-            return $this->entityUrlResolver->urlFor($seriesElement);
+            return $seriesElement->getId();
         }
 
         return null;

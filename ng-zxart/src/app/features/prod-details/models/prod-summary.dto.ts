@@ -1,7 +1,6 @@
 export interface ProdSummaryDto {
   id: number;
   title: string;
-  url: string;
   year: number;
   legalStatus: string;
   legalStatusLabel: string;
@@ -12,5 +11,5 @@ export interface ProdSummaryDto {
 
 export interface ProdSummariesPayload {
   prods: ProdSummaryDto[];
-  seriesUrl: string | null;
+  seriesId: number | null;
 }

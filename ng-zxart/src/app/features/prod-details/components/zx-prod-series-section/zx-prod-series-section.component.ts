@@ -35,7 +35,7 @@ export class ZxProdSeriesSectionComponent implements OnInit, OnDestroy {
   @Input({required: true}) elementId!: number;
 
   prods$: Observable<ZxProd[] | null> = of(null);
-  seriesUrl$: Observable<string | null> = of(null);
+  seriesId$: Observable<number | null> = of(null);
 
   private hidden = false;
   private readonly subscription = new Subscription();
@@ -52,7 +52,7 @@ export class ZxProdSeriesSectionComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.prods$ = this.relatedProds.getSeries(this.elementId);
-    this.seriesUrl$ = this.relatedProds.getSeriesUrl(this.elementId);
+    this.seriesId$ = this.relatedProds.getSeriesId(this.elementId);
     this.subscription.add(
       this.prods$.subscribe(prods => {
         this.hidden = prods !== null && prods.length === 0;

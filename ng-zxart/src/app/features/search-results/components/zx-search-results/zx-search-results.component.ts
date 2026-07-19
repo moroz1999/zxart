@@ -46,6 +46,7 @@ import {ZxProdsListComponent} from '../../../../entities/zx-prods-list/zx-prods-
 import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 
 const AUTHOR_SET_TYPE = 'author';
 const GROUP_SET_TYPE = 'group';
@@ -111,6 +112,7 @@ const INITIAL_SKELETON_GROUPS: SkeletonGroup[] = [
 export class ZxSearchResultsComponent implements OnInit, OnDestroy {
   @Input() elementId = '';
   @Input() baseUrl = '';
+  @Input() manageUrl = true;
 
   readonly skeletonGroups = INITIAL_SKELETON_GROUPS;
   readonly pictureSkeletonItems = [0, 1, 2, 3, 4, 5];
@@ -124,6 +126,7 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
   currentPage = 1;
   pagesAmount = 0;
   urlBase = '';
+  paginationQueryParams: Params | null = null;
 
   typeFilters: TypeFilterOption[] = [];
 
@@ -145,19 +148,11 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     private readonly playerService: PlayerService,
     private readonly pictureGalleryService: PictureGalleryService,
     private readonly cdr: ChangeDetectorRef,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
-    const parsed = this.parseUrl();
-    this.phrase = parsed.phrase;
-    this.currentPage = parsed.page;
-    this.urlBase = this.computeUrlBase();
-
-    const urlTypes = this.parseTypesParam();
-    if (urlTypes.length > 0) {
-      this.typeFilters = urlTypes.map(value => ({value, label: value, selected: true}));
-    }
-
     const filterStream$ = this.trigger.pipe(filter(t => t.kind === 'filter'), debounceTime(500));
     const immediateStream$ = this.trigger.pipe(filter(t => t.kind !== 'filter'));
     this.subscriptions.add(
@@ -173,7 +168,19 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
       }),
     );
 
-    this.trigger.next({kind: 'initial'});
+    if (this.manageUrl) {
+      this.applyUrlState(this.parseUrl(), this.parseTypesParam());
+      this.urlBase = this.computeUrlBase();
+      this.trigger.next({kind: 'initial'});
+    } else {
+      this.subscriptions.add(this.route.queryParamMap.subscribe(params => {
+        const page = Math.max(1, Number.parseInt(params.get('page') ?? '1', 10) || 1);
+        const types = (params.get('types') ?? '').split(',').map(value => value.trim()).filter(Boolean);
+        this.applyUrlState({phrase: params.get('phrase')?.trim() ?? '', page}, types);
+        this.updatePaginationQueryParams();
+        this.trigger.next({kind: this.data === null ? 'initial' : 'page'});
+      }));
+    }
   }
 
   ngOnDestroy(): void {
@@ -193,7 +200,9 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     }
     this.currentPage = page;
     this.updateUrl();
-    this.trigger.next({kind: 'page'});
+    if (this.manageUrl) {
+      this.trigger.next({kind: 'page'});
+    }
     window.scrollTo({top: 0, behavior: 'smooth'});
   }
 
@@ -201,7 +210,9 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     option.selected = checked;
     this.currentPage = 1;
     this.updateUrl();
-    this.trigger.next({kind: 'filter'});
+    if (this.manageUrl) {
+      this.trigger.next({kind: 'filter'});
+    }
   }
 
   onSelectAllTypes(): void {
@@ -212,7 +223,9 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     this.typeFilters = this.typeFilters.map(opt => ({...opt, selected: true}));
     this.currentPage = 1;
     this.updateUrl();
-    this.trigger.next({kind: 'filter'});
+    if (this.manageUrl) {
+      this.trigger.next({kind: 'filter'});
+    }
   }
 
   isAuthorSet(set: SearchResultSetDto): boolean {
@@ -425,6 +438,12 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     return raw.split(',').map(p => p.trim()).filter(p => p.length > 0);
   }
 
+  private applyUrlState(state: {phrase: string; page: number}, types: string[]): void {
+    this.phrase = state.phrase;
+    this.currentPage = state.page;
+    this.typeFilters = types.map(value => ({value, label: value, selected: true}));
+  }
+
   private computeUrlBase(): string {
     if (this.baseUrl && this.elementId && this.phrase !== '') {
       const base = this.baseUrl.endsWith('/') ? this.baseUrl : this.baseUrl + '/';
@@ -435,6 +454,18 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
   }
 
   private updateUrl(): void {
+    if (!this.manageUrl) {
+      const selectedTypes = this.selectedTypes();
+      void this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: {
+          phrase: this.phrase || null,
+          types: selectedTypes.length > 0 ? selectedTypes.join(',') : null,
+          page: this.currentPage > 1 ? this.currentPage : null,
+        },
+      });
+      return;
+    }
     const pagePath = this.currentPage > 1
       ? this.urlBase + 'page:' + this.currentPage + '/'
       : this.urlBase;
@@ -450,5 +481,13 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     const queryString = params.toString();
     const newUrl = queryString ? pagePath + '?' + queryString : pagePath;
     window.history.pushState(null, '', newUrl);
+  }
+
+  private updatePaginationQueryParams(): void {
+    const selectedTypes = this.selectedTypes();
+    this.paginationQueryParams = {
+      phrase: this.phrase || null,
+      types: selectedTypes.length > 0 ? selectedTypes.join(',') : null,
+    };
   }
 }

@@ -47,3 +47,7 @@ parent wrapping all routes. It resolves `CurrentUserService.user$` before the
 first render; the request to `/currentuser/` makes the backend restore the session
 from the remember cookie. Activation always proceeds — the guard only blocks the
 first render until the user is known.
+
+## Password recovery
+
+The public `/password-reminder` Angular route requests and applies password-reset links through `POST /password-reminder-data/`. A reset token is invalidated when the user's `dateModified` value changes.

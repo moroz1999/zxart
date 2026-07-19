@@ -146,33 +146,16 @@ class zxMusicElement extends ZxArtItem implements
     public function getTextContent(): string
     {
         $translationsManager = $this->getService(translationsManager::class);
-        $parts = [];
-
-        $translation = $translationsManager->getTranslationByName("descriptions.music") ?? '';
-        if ($translation !== '') {
-            $parts[] = $translation;
-        }
-
-        $parts[] = '"' . $this->title . '"';
-
-        if ($authorNames = $this->getAuthorNames()) {
-            $parts[] = 'от ' . implode(', ', $authorNames);
-        }
-
-        if ($partyElement = $this->getPartyElement()) {
-            $parts[] = $partyElement->title;
-        }
-
-        $releaseElement = $this->getReleaseElement();
-        if ($releaseElement !== null) {
-            $parts[] = $releaseElement->title;
-        }
-
-        if ($this->year) {
-            $parts[] = $this->year;
-        }
-
-        $text = implode(', ', $parts);
+        $description = (string)($translationsManager->getTranslationByName("descriptions.music") ?? '');
+        $authorNames = implode(', ', array_map('strval', $this->getAuthorNames()));
+        $partyTitle = $this->getPartyElement()?->title ?? '';
+        $releaseTitle = $this->getReleaseElement()?->title ?? '';
+        $text = (string)str_ireplace(
+            ['%t', '%a', '%p', '%g', '%y'],
+            [$this->title, $authorNames, $partyTitle, $releaseTitle, $this->year],
+            $description,
+        );
+        $text = preg_replace('/,\s*,/u', ',', $text) ?? $text;
 
         if ($tagsTexts = $this->getTagsTexts()) {
             $text .= '. ' . implode(', ', $tagsTexts);

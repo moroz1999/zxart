@@ -1,24 +1,71 @@
-import {Injectable} from '@angular/core';
+import {DOCUMENT} from '@angular/common';
+import {Inject, Injectable} from '@angular/core';
 
-type YmFunction = (
-  id: number,
-  action: string,
-  goal: string,
-  params?: Record<string, unknown>,
-  callback?: () => void
-) => void;
+type YmFunction = {
+  (id: number, action: 'init', options: Record<string, unknown>): void;
+  (id: number, action: 'hit', url: string, options: Record<string, unknown>): void;
+  (id: number, action: 'reachGoal', goal: string, params: Record<string, unknown>, callback: () => void): void;
+  a?: unknown[][];
+  l?: number;
+};
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class AnalyticsService {
   private readonly metrikaId = 94686067;
+  private initialized = false;
 
-  reachGoal(goal: string, params?: Record<string, unknown>, callback?: () => void): void {
-    const ym = (window as {ym?: YmFunction}).ym;
-    if (!ym) {
+  constructor(
+    @Inject(DOCUMENT) private readonly document: Document,
+  ) {}
+
+  initialize(): void {
+    if (this.initialized) {
       return;
     }
-    ym(this.metrikaId, 'reachGoal', goal, params ?? {}, callback ?? (() => undefined));
+    this.initialized = true;
+
+    const windowWithMetrika = window as typeof window & {ym?: YmFunction};
+    if (!windowWithMetrika.ym) {
+      const queue: YmFunction = ((...args: unknown[]) => {
+        queue.a = queue.a ?? [];
+        queue.a.push(args);
+      }) as YmFunction;
+      queue.l = Date.now();
+      windowWithMetrika.ym = queue;
+    }
+
+    const script = this.document.createElement('script');
+    script.async = true;
+    script.src = `https://mc.yandex.ru/metrika/tag.js?id=${this.metrikaId}`;
+    this.document.head.appendChild(script);
+
+    windowWithMetrika.ym(this.metrikaId, 'init', {
+      ssr: true,
+      defer: true,
+      clickmap: false,
+      trackLinks: true,
+      accurateTrackBounce: true,
+    });
+  }
+
+  reachGoal(goal: string, params?: Record<string, unknown>, callback?: () => void): void {
+    this.getYm()?.(
+      this.metrikaId,
+      'reachGoal',
+      goal,
+      params ?? {},
+      callback ?? (() => undefined),
+    );
+  }
+
+  trackPageView(url: string): void {
+    this.getYm()?.(this.metrikaId, 'hit', url, {
+      title: this.document.title,
+      referer: this.document.referrer,
+    });
+  }
+
+  private getYm(): YmFunction | undefined {
+    return (window as typeof window & {ym?: YmFunction}).ym;
   }
 }

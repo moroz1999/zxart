@@ -30,4 +30,18 @@ enum StructureType: string
     case Tag = 'tag';
     case Comment = 'comment';
     case User = 'user';
+    case AuthorsCatalogue = 'authorsCatalogue';
+    case GroupsCatalogue = 'groupsCatalogue';
+    case PartiesCatalogue = 'partiesCatalogue';
+    case ZxProdCategoriesCatalogue = 'zxProdCategoriesCatalogue';
+    case PicturesCatalogue = 'picturesCatalogue';
+    case MusicCatalogue = 'musicCatalogue';
+    case CountriesList = 'countriesList';
+    case Stats = 'stats';
+    case CommentsList = 'commentsList';
+    case Feedback = 'feedback';
+    case Registration = 'registration';
+    case UserPlaylists = 'userPlaylists';
+    case Root = 'root';
+    case Language = 'language';
 }

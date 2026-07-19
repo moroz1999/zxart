@@ -3,6 +3,8 @@ info:
   title: ZxArt API
   version: 1.0.0
 paths:
+  /password-reminder-data/:
+    $ref: 'password-reminder.yaml#/paths/~1password-reminder-data~1'
   /comments-data/:
     $ref: 'comments.yaml#/paths/~1comments-data~1'
   /comments-data/id:{id}/:
@@ -19,8 +21,8 @@ paths:
     $ref: 'user-preferences.yaml#/paths/~1userpreferences~1'
   /menu/:
     $ref: 'menu.yaml#/paths/~1menu~1'
-  /backend-links/:
-    $ref: 'backend-links.yaml#/paths/~1backend-links~1'
+  /page-metadata/:
+    $ref: 'page-metadata.yaml#/paths/~1page-metadata~1'
   /tags/:
     $ref: 'tags.yaml#/paths/~1tags~1'
   /element-privileges/:

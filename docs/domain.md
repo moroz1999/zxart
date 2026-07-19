@@ -95,3 +95,7 @@ Detailed logic and structure: [domain/content.md](domain/content.md)
 ### interface language & auto-login
 Frontend-owned interface language and route-guard auto-login for the SPA.
 Detailed logic and structure: [domain/language-auth.md](domain/language-auth.md)
+
+### public page metadata
+Server and Angular ownership of crawler metadata, redirects, HTTP 404 responses, and analytics page views.
+Detailed logic and structure: [domain/page-metadata.md](domain/page-metadata.md)

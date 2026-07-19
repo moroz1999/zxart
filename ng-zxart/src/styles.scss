@@ -3,6 +3,28 @@
 @use 'app/shared/ui/zx-grid/zx-grid-item.directive';
 @use 'app/shared/ui/zx-form/zx-form.directive';
 
+// Base document styles. The SPA shell no longer loads the legacy CSS bundle,
+// so the base font and body reset live here. The Roboto webfont is linked from
+// the PHP shell head (index.head.extra.tpl).
+html,
+input,
+textarea,
+select {
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+html {
+  color: var(--text-color);
+}
+
+body {
+  min-height: 100%;
+  width: 100%;
+  margin: 0;
+  position: relative;
+  background-color: var(--main-background);
+}
+
 
 
 // angular-svg-icon: custom elements are display:inline by default, which ignores CSS width/height.

@@ -23,7 +23,6 @@ import {
 } from '../../../../shared/ui/zx-skeleton/components/zx-search-groups-skeleton/zx-search-groups-skeleton.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxDialogComponent} from '../../../../shared/ui/zx-dialog/zx-dialog.component';
-import {BackendLinksService} from '../../services/backend-links.service';
 import {environment} from '../../../../../environments/environment';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {Router, RouterLink} from '@angular/router';
@@ -55,7 +54,6 @@ export class SearchDialogComponent implements OnInit, OnDestroy {
   groups: SearchResultGroup[] = [];
   loading = false;
   searched = false;
-  searchUrl: string | null = null;
   focusedIndex = -1;
 
   private readonly querySubject = new Subject<string>();
@@ -66,7 +64,6 @@ export class SearchDialogComponent implements OnInit, OnDestroy {
     private searchService: SearchService,
     private iconReg: SvgIconRegistryService,
     private cdr: ChangeDetectorRef,
-    private backendLinksService: BackendLinksService,
     private el: ElementRef<HTMLElement>,
     private router: Router,
   ) {}
@@ -83,13 +80,6 @@ export class SearchDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     ICONS.forEach(name => this.iconReg.loadSvg(`${environment.svgUrl}${name}.svg`, name)?.subscribe());
     this.inputRef.nativeElement.focus();
-    this.subscription.add(
-      this.backendLinksService.links$.subscribe(links => {
-        this.searchUrl = links.searchUrl;
-        this.cdr.markForCheck();
-      }),
-    );
-
     this.subscription.add(
       this.querySubject.pipe(
         debounceTime(400),
@@ -172,9 +162,10 @@ export class SearchDialogComponent implements OnInit, OnDestroy {
   }
 
   searchAllUrl(): string | null {
-    if (!this.searchUrl || !this.query.trim()) {
+    const query = this.query.trim();
+    if (!query) {
       return null;
     }
-    return `${this.searchUrl}phrase:${this.query.trim()}/`;
+    return `/search?phrase=${encodeURIComponent(query)}`;
   }
 }

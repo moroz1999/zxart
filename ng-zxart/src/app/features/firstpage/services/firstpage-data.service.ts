@@ -49,6 +49,10 @@ export class FirstpageDataService {
     return this.get<ZxPictureDto[]>('bestPicturesOfMonth', {limit});
   }
 
+  getBestTunesOfMonth(limit: number): Observable<ZxTuneDto[]> {
+    return this.get<ZxTuneDto[]>('bestTunesOfMonth', {limit});
+  }
+
   getLatestAddedProds(limit: number): Observable<ZxProd[]> {
     return this.get<ZxProdDto[]>('latestAddedProds', {limit}).pipe(
       map(dtos => dtos.map(dto => new ZxProd(dto)))

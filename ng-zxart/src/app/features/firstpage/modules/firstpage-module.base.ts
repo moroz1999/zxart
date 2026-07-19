@@ -3,9 +3,7 @@ import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {ModuleSettings, ModuleType} from '../models/firstpage-config';
 import {MODULE_SETTINGS} from '../models/module-settings.token';
-import {CatalogueCategory, MODULE_LINK_CONFIG, ModuleLinkConfig} from '../models/firstpage-view-all-links';
-import {BackendLinksService} from '../../header/services/backend-links.service';
-import {BackendLinks} from '../../header/models/backend-links';
+import {MODULE_LINK_CONFIG, ModuleLinkConfig} from '../models/firstpage-view-all-links';
 
 export interface ModuleVm<T> {
   items: T[];
@@ -62,7 +60,6 @@ export abstract class FirstpageModuleBase<T> implements OnInit, OnDestroy {
 
   private el = inject(ElementRef);
   private observer?: IntersectionObserver;
-  private backendLinksService = inject(BackendLinksService);
   private subscription = new Subscription();
 
   protected constructor(
@@ -100,28 +97,7 @@ export abstract class FirstpageModuleBase<T> implements OnInit, OnDestroy {
       return;
     }
 
-    this.linkStore.next({url: undefined, labelKey: config.titleKey});
-
-    this.subscription.add(
-      this.backendLinksService.links$.subscribe(links => {
-        const baseUrl = this.getBaseUrlForCategory(links, config.category);
-        if (baseUrl) {
-          this.linkStore.next({url: baseUrl + config.searchParams, labelKey: config.titleKey});
-        }
-      })
-    );
-  }
-
-  private getBaseUrlForCategory(baseUrls: BackendLinks, category: CatalogueCategory): string | null {
-    switch (category) {
-      case 'zxProd':
-      case 'zxRelease':
-        return baseUrls.prodCatalogueBaseUrl;
-      case 'graphics':
-        return baseUrls.graphicsBaseUrl;
-      case 'music':
-        return baseUrls.musicBaseUrl;
-    }
+    this.linkStore.next({url: config.spaUrl, labelKey: config.titleKey});
   }
 
   private fetchData(): void {

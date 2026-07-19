@@ -7,7 +7,6 @@ import {ZxProdDto} from '../../../shared/models/zx-prod-dto';
 /** Raw shape returned by the /prodlist/ REST endpoint. */
 interface ProdRestItem {
   readonly id: number;
-  readonly url: string;
   readonly structureType: string;
   readonly dateCreated: number;
   readonly title: string;
@@ -18,13 +17,13 @@ interface ProdRestItem {
   readonly userVote: number | null;
   readonly denyVoting: boolean;
   readonly hardwareInfo: Array<{id: string; title: string}>;
-  readonly authorsInfoShort: Array<{title: string; url: string; roles: string[]}>;
-  readonly categoriesInfo: Array<{id: number; title: string; url: string}>;
-  readonly partyInfo: {id: number; title: string; url: string} | null;
+  readonly authorsInfoShort: Array<{id: number; structureType: 'author' | 'authorAlias'; title: string; roles: string[]}>;
+  readonly categoriesInfo: Array<{id: number; structureType: 'zxProdCategory'; title: string}>;
+  readonly partyInfo: {id: number; structureType: 'party'; title: string} | null;
   readonly partyPlace: number;
   readonly legalStatus: string | null;
-  readonly languagesInfo: Array<{id: string; title: string; url: string | null}>;
-  readonly groupsInfo: Array<{id: number; title: string; url: string}>;
+  readonly languagesInfo: Array<{id: string; title: string}>;
+  readonly groupsInfo: Array<{id: number; structureType: 'group' | 'groupAlias'; title: string}>;
   readonly youtubeId: string | null;
 }
 
@@ -59,7 +58,6 @@ export class ProdsBrowserService {
   private mapToDto(item: ProdRestItem): ZxProdDto {
     return {
       id: item.id,
-      url: item.url,
       title: item.title,
       structureType: 'zxProd',
       dateCreated: item.dateCreated,

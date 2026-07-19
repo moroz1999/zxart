@@ -18,10 +18,12 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
   @Input() elementId = 0;
   /**
    * Legacy web-component mounts manage pagination through `window.location` +
-   * `history.pushState` (`page:N/`). When mounted by the SPA route this is off:
-   * page/sorting live in the router query params.
+   * `history.pushState` (`page:N/`). SPA routes keep pagination in router query
+   * params and may either expose sorting there or provide a fixed page sort.
    */
   @Input() manageUrl = true;
+  @Input() fixedSorting: string | null = null;
+  @Input() showSorting = true;
 
   loading = true;
   error = false;
@@ -64,7 +66,7 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
     if (this.useRouter) {
       this.subscriptions.add(this.route!.queryParams.subscribe(params => {
         this.currentPage = params['page'] ? +params['page'] : 1;
-        this.sorting = params['sorting'] ?? 'title,asc';
+        this.sorting = this.fixedSorting ?? params['sorting'] ?? 'title,asc';
         this.loadPage();
       }));
     } else {
@@ -105,7 +107,7 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
     if (this.currentPage > 1) {
       queryParams['page'] = this.currentPage;
     }
-    if (this.sorting && this.sorting !== 'title,asc') {
+    if (this.fixedSorting === null && this.sorting && this.sorting !== 'title,asc') {
       queryParams['sorting'] = this.sorting;
     }
     this.router!.navigate([], {relativeTo: this.route!, queryParams});

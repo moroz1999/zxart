@@ -19,7 +19,6 @@ use ZxArt\Comments\CommentTranslationAiService;
 use ZxArt\AuthorList\AuthorListService;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Authors\Services\AuthorsService;
-use ZxArt\BackendLinks\BackendLinksService;
 use ZxArt\Comments\CommentsService;
 use ZxArt\Controllers\Pouet;
 use ZxArt\Controllers\Rss;
@@ -63,8 +62,6 @@ return [
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
 
     AuthorPageUrlProvider::class => autowire()
-        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
-    BackendLinksService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     ProdElementService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),

@@ -33,6 +33,15 @@ readonly class TunesService
     /**
      * @return TuneDto[]
      */
+    public function getBestOfMonth(int $limit): array
+    {
+        $ids = $this->tunesRepository->getBestOfMonthIds($limit, (int)date('Y'));
+        return $this->loadAndTransform($ids);
+    }
+
+    /**
+     * @return TuneDto[]
+     */
     public function getUnvotedByCurrentUser(int $limit, int $topN = 500): array
     {
         $user = $this->currentUserService->getCurrentUser();

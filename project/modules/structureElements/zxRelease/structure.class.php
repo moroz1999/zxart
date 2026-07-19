@@ -813,8 +813,8 @@ class zxReleaseElement extends ZxArtItem implements
         foreach ($this->publishers as $publisher) {
             $publishersInfo[] = [
                 'id' => $publisher->id,
+                'structureType' => $publisher->structureType,
                 'title' => html_entity_decode($publisher->title, ENT_QUOTES),
-                'url' => $publisher->getUrl(),
             ];
         }
         return $publishersInfo;

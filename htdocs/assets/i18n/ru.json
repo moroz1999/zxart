@@ -592,6 +592,12 @@
     "theme.light": "Светлая",
     "theme.dark": "Тёмная"
   },
+  "top-pictures": {
+    "title": "Топ графики"
+  },
+  "top-music": {
+    "title": "Топ музыки"
+  },
   "firstpage": {
     "title": "Игры, демосцена, графика и музыка ZX Spectrum",
     "configure": "Настроить главную",
@@ -602,18 +608,19 @@
     "realtime": "Реалтайм",
     "modules": {
       "newProds": "Новые программы",
-      "newPictures": "Новые картинки",
-      "newTunes": "Новая музыка",
+      "newPictures": "Новые добавленные картинки",
+      "newTunes": "Новые добавленные мелодии",
       "bestNewDemos": "Лучшие новые демо",
       "bestNewGames": "Лучшие новые игры",
       "recentParties": "Последние пати",
       "bestPicturesOfMonth": "Лучшие картинки месяца",
+      "bestTunesOfMonth": "Лучшие мелодии месяца",
       "latestAddedProds": "Последние добавленные программы",
       "latestAddedReleases": "Последние добавленные релизы",
       "supportProds": "Поддержать покупкой",
-      "unvotedPictures": "Неоцененные картинки",
+      "unvotedPictures": "Непроголосованные картинки",
       "randomGoodPictures": "Случайные хорошие картинки",
-      "unvotedTunes": "Неоцененная музыка",
+      "unvotedTunes": "Непроголосованные мелодии",
       "randomGoodTunes": "Случайная хорошая музыка",
       "viewAllButton": {
         "newProds": "Смотреть новые программы",
@@ -2048,5 +2055,13 @@
     "placeholder": "Имя файла или md5…",
     "searching": "Поиск…",
     "empty": "Файлы не найдены."
+  },
+  "password-reminder": {
+    "title": "Восстановление пароля", "email": "Email", "password": "Новый пароль", "password-repeat": "Повторите пароль",
+    "request": "Отправить ссылку", "reset": "Изменить пароль",
+    "requested": "Если аккаунт с таким email существует, ссылка для восстановления отправлена.", "changed": "Пароль изменён.",
+    "error-email": "Введите корректный email.", "error-password": "Введите новый пароль.",
+    "error-password-match": "Пароли не совпадают.", "error-invalid": "Ссылка для восстановления недействительна или устарела.",
+    "error-generic": "Не удалось восстановить пароль. Попробуйте позже."
   }
 }

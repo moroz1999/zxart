@@ -1,18 +1,15 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
 import {TuneDetailsDto} from '../../models/tune-details.dto';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxItemDataItemComponent} from '../../../../shared/ui/zx-item-data/zx-item-data-item.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {TechSettingRow, ZxTechSettingsComponent} from '../../../../shared/ui/zx-tech-settings/zx-tech-settings.component';
-import {BackendLinksService} from '../../../header/services/backend-links.service';
+import {RouterLink} from '@angular/router';
 
-
-import {RouterLink} from '@angular/router';@Component({
+@Component({
   selector: 'zx-tune-meta-panel',
   standalone: true,
   imports: [RouterLink, 
@@ -30,12 +27,7 @@ import {RouterLink} from '@angular/router';@Component({
 export class ZxTuneMetaPanelComponent {
   @Input({required: true}) tune!: TuneDetailsDto;
 
-  readonly musicBaseUrl$: Observable<string | null> = this.backendLinks.links$.pipe(
-    map(links => links.musicBaseUrl),
-  );
-
   constructor(
-    private readonly backendLinks: BackendLinksService,
     private readonly translate: TranslateService,
   ) {}
 

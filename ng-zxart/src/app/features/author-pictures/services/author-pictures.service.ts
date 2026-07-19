@@ -17,7 +17,7 @@ export class AuthorPicturesService {
   constructor(private http: HttpClient) {}
 
   getPictures(elementId: number): Observable<ZxPictureDto[]> {
-    return this.http.get<ZxPictureDto[]>('/pictures/', {
+    return this.http.get<ZxPictureDto[]>('/pictures-data/', {
       params: {action: 'picturesByElement', elementId: String(elementId)},
     }).pipe(catchError(() => of([])));
   }
@@ -40,7 +40,7 @@ export class AuthorPicturesService {
     if (format) {
       params = params.set('format', format);
     }
-    return this.http.get<AuthorPicturesPage>('/pictures/', {params}).pipe(
+    return this.http.get<AuthorPicturesPage>('/pictures-data/', {params}).pipe(
       catchError(() => of({items: [], total: 0, availableFormats: []})),
     );
   }

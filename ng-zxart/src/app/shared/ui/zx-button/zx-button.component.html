@@ -15,7 +15,7 @@
 
 @if (routerLink || isInternalHref) {
   <a
-    [routerLink]="routerLink || href"
+    [routerLink]="routerLink || internalUrlTree"
     [class]="classList"
     [attr.aria-label]="ariaLabel || null"
     (pointerdown)="onPointerDown($event)"

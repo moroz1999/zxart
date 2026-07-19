@@ -13,7 +13,6 @@ readonly class ProdSummaryDto
     public function __construct(
         public int $id,
         public string $title,
-        public string $url,
         public int $year,
         public string $legalStatus,
         public string $legalStatusLabel,

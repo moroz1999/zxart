@@ -38,6 +38,7 @@ final readonly class LanguageLinksService
         return $this->findConnectedUrl($element->id, $language->id);
     }
 
+    /** @return array<string, string> */
     public function getLanguageLinks(structureElement $element): array
     {
         $links = [];

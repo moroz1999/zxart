@@ -1,4 +1,3 @@
-import {StructureElement} from './structure-element';
 import {
   LegalStatus,
   ZxProdAuthorship,
@@ -8,8 +7,9 @@ import {
   ZxProdDto,
 } from './zx-prod-dto';
 
-export class ZxProd extends StructureElement {
-    public structureType: 'zxProd';
+export class ZxProd {
+    public id: number;
+    public structureType: 'zxProd' | 'zxRelease';
     public title: string;
     public year: string = '';
     public youtubeId: string = '';
@@ -33,7 +33,7 @@ export class ZxProd extends StructureElement {
     public loadingImageUrl?: string;
 
     constructor(data: ZxProdDto) {
-        super(data);
+        this.id = data.id;
         this.title = data.title;
         this.structureType = data.structureType;
         this.dateCreated = data.dateCreated * 1000;
@@ -86,4 +86,5 @@ export class ZxProd extends StructureElement {
             this.loadingImageUrl = this.imagesUrls.splice(0, 1)[0];
         }
     }
+
 }

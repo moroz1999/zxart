@@ -5,9 +5,9 @@
         {{ picture.year }}
       </zx-item-data-item>
       <zx-item-data-item [label]="'picture-details.format' | translate">
-        <a *ngIf="graphicsBaseUrl$ | async as baseUrl; else plainFormat"
-           [href]="baseUrl + 'pictureType:' + picture.type + '/'" appText="body" tone="link">{{ picture.formatLabel }}</a>
-        <ng-template #plainFormat>{{ picture.formatLabel }}</ng-template><span *ngIf="picture.resolution"> · {{ picture.resolution }}</span>
+        <a routerLink="/pictures/search"
+           [queryParams]="{pictureType: picture.type}"
+           appText="body" tone="link">{{ picture.formatLabel }}</a><span *ngIf="picture.resolution"> · {{ picture.resolution }}</span>
       </zx-item-data-item>
       <zx-item-data-item [label]="'picture-details.palette' | translate">
         {{ picture.paletteLabel }}

@@ -1,46 +1,6 @@
 import {Routes} from '@angular/router';
-import {AuthorPageComponent} from './pages/author/author-page.component';
-import {GroupPageComponent} from './pages/group/group-page.component';
-import {PartyPageComponent} from './pages/party/party-page.component';
-import {ProdPageComponent} from './pages/prod/prod-page.component';
-import {ReleasePageComponent} from './pages/release/release-page.component';
-import {PicturePageComponent} from './pages/picture/picture-page.component';
-import {TunePageComponent} from './pages/tune/tune-page.component';
-import {PartyEditPageComponent} from './pages/party-edit/party-edit-page.component';
-import {AuthorAliasEditPageComponent} from './pages/author-alias-edit/author-alias-edit-page.component';
-import {AuthorEditPageComponent} from './pages/author-edit/author-edit-page.component';
-import {GroupEditPageComponent} from './pages/group-edit/group-edit-page.component';
-import {ReleaseEditPageComponent} from './pages/release-edit/release-edit-page.component';
-import {ProdEditPageComponent} from './pages/prod-edit/prod-edit-page.component';
-import {TuneEditPageComponent} from './pages/tune-edit/tune-edit-page.component';
-import {PictureEditPageComponent} from './pages/picture-edit/picture-edit-page.component';
-import {PressPageComponent} from './pages/press/press-page.component';
-import {PressEditPageComponent} from './pages/press-edit/press-edit-page.component';
-import {AiFormPageComponent} from './pages/ai-form/ai-form-page.component';
-import {ProfilePageComponent} from './pages/profile/profile-page.component';
-import {ProfileEditPageComponent} from './pages/profile-edit/profile-edit-page.component';
-import {PlaylistsPageComponent} from './pages/playlists/playlists-page.component';
-import {PlaylistPageComponent} from './pages/playlist/playlist-page.component';
-import {RegisterPageComponent} from './pages/register/register-page.component';
-import {JoinFormPageComponent} from './pages/join-form/join-form-page.component';
-import {ConvertFormPageComponent} from './pages/convert-form/convert-form-page.component';
-import {SplitFormPageComponent} from './pages/split-form/split-form-page.component';
-import {ClaimPageComponent} from './pages/claim/claim-page.component';
-import {CollectionPageComponent} from './pages/collection/collection-page.component';
-import {PictureSearchPageComponent} from './pages/picture-search/picture-search-page.component';
-import {MusicSearchPageComponent} from './pages/music-search/music-search-page.component';
-import {StatsPageComponent} from './pages/stats/stats-page.component';
-import {CountriesPageComponent} from './pages/countries/countries-page.component';
-import {CommentsRoutePageComponent} from './pages/comments/comments-route-page.component';
-import {TagsPageComponent} from './pages/tags/tags-page.component';
-import {FeedbackPageComponent} from './pages/feedback/feedback-page.component';
-import {ContentPageComponent} from './pages/content/content-page.component';
-import {FileSearchPageComponent} from './pages/file-search/file-search-page.component';
-import {PartiesPageComponent} from './pages/parties/parties-page.component';
 import {editPrivilegeGuard} from './shared/guards/edit-privilege.guard';
 import {authGuard} from './shared/guards/auth.guard';
-import {NotFoundComponent} from './pages/not-found/not-found.component';
-import {FirstpageComponent} from './pages/firstpage/firstpage.component';
 
 /**
  * New clean-URL routing standard (no language segment). Plural = collection,
@@ -50,18 +10,22 @@ import {FirstpageComponent} from './pages/firstpage/firstpage.component';
  *
  * All routes sit under a pathless `authGuard` parent: it resolves the current
  * user (auto-login) and applies their language before the first render.
+ *
+ * Every page is loaded lazily via `loadComponent`/`loadChildren` so each page
+ * (and its heavy dependencies) ships in its own chunk instead of the initial
+ * bundle. Do not statically import page components here.
  */
 const ROUTED_CHILDREN: Routes = [
-  {path: 'author/:id', component: AuthorPageComponent},
+  {path: 'author/:id', loadComponent: () => import('./pages/author/author-page.component').then(m => m.AuthorPageComponent)},
   {
     path: 'author/:id/edit',
-    component: AuthorEditPageComponent,
+    loadComponent: () => import('./pages/author-edit/author-edit-page.component').then(m => m.AuthorEditPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {privilege: 'publicReceive', entityPath: 'author'},
   },
   {
     path: 'author/:id/join',
-    component: JoinFormPageComponent,
+    loadComponent: () => import('./pages/join-form/join-form-page.component').then(m => m.JoinFormPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {
       privilege: 'showJoinForm',
@@ -74,32 +38,32 @@ const ROUTED_CHILDREN: Routes = [
   },
   {
     path: 'author/:id/claim',
-    component: ClaimPageComponent,
+    loadComponent: () => import('./pages/claim/claim-page.component').then(m => m.ClaimPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {privilege: 'claim'},
   },
   {
     path: 'author/:id/convert-to-group',
-    component: ConvertFormPageComponent,
+    loadComponent: () => import('./pages/convert-form/convert-form-page.component').then(m => m.ConvertFormPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {privilege: 'convertToGroup', action: 'convertToGroup', targetPath: 'group', messageKey: 'convert-form.author-to-group'},
   },
-  {path: 'author/:id/:tab', component: AuthorPageComponent},
+  {path: 'author/:id/:tab', loadComponent: () => import('./pages/author/author-page.component').then(m => m.AuthorPageComponent)},
   {
     path: 'author-alias/:id/convert-to-author',
-    component: ConvertFormPageComponent,
+    loadComponent: () => import('./pages/convert-form/convert-form-page.component').then(m => m.ConvertFormPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {privilege: 'convertToAuthor', action: 'convertToAuthor', targetPath: 'author', messageKey: 'convert-form.alias-to-author'},
   },
   {
     path: 'author-alias/:id/edit',
-    component: AuthorAliasEditPageComponent,
+    loadComponent: () => import('./pages/author-alias-edit/author-alias-edit-page.component').then(m => m.AuthorAliasEditPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {privilege: 'publicReceive', entityPath: 'author'},
   },
   {
     path: 'author-alias/:id/join',
-    component: JoinFormPageComponent,
+    loadComponent: () => import('./pages/join-form/join-form-page.component').then(m => m.JoinFormPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {
       privilege: 'showJoinForm',
@@ -107,16 +71,16 @@ const ROUTED_CHILDREN: Routes = [
       pickers: [{field: 'joinAndDelete', labelKey: 'join-form.join-and-delete', types: 'author,authorAlias'}],
     },
   },
-  {path: 'group/:id', component: GroupPageComponent},
+  {path: 'group/:id', loadComponent: () => import('./pages/group/group-page.component').then(m => m.GroupPageComponent)},
   {
     path: 'group/:id/edit',
-    component: GroupEditPageComponent,
+    loadComponent: () => import('./pages/group-edit/group-edit-page.component').then(m => m.GroupEditPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {privilege: 'publicReceive', entityPath: 'group'},
   },
   {
     path: 'group/:id/join',
-    component: JoinFormPageComponent,
+    loadComponent: () => import('./pages/join-form/join-form-page.component').then(m => m.JoinFormPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {
       privilege: 'showJoinForm',
@@ -129,26 +93,26 @@ const ROUTED_CHILDREN: Routes = [
   },
   {
     path: 'group/:id/convert-to-author',
-    component: ConvertFormPageComponent,
+    loadComponent: () => import('./pages/convert-form/convert-form-page.component').then(m => m.ConvertFormPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {privilege: 'convertToAuthor', action: 'convertToAuthor', targetPath: 'author', messageKey: 'convert-form.group-to-author'},
   },
-  {path: 'group/:id/:tab', component: GroupPageComponent},
+  {path: 'group/:id/:tab', loadComponent: () => import('./pages/group/group-page.component').then(m => m.GroupPageComponent)},
   {
     path: 'group-alias/:id/edit',
-    component: GroupEditPageComponent,
+    loadComponent: () => import('./pages/group-edit/group-edit-page.component').then(m => m.GroupEditPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {privilege: 'publicReceive', entityPath: 'group'},
   },
   {
     path: 'group-alias/:id/convert-to-group',
-    component: ConvertFormPageComponent,
+    loadComponent: () => import('./pages/convert-form/convert-form-page.component').then(m => m.ConvertFormPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {privilege: 'convertToGroup', action: 'convertToGroup', targetPath: 'group', messageKey: 'convert-form.alias-to-group'},
   },
   {
     path: 'group-alias/:id/join',
-    component: JoinFormPageComponent,
+    loadComponent: () => import('./pages/join-form/join-form-page.component').then(m => m.JoinFormPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {
       privilege: 'showJoinForm',
@@ -156,24 +120,24 @@ const ROUTED_CHILDREN: Routes = [
       pickers: [{field: 'joinAndDelete', labelKey: 'join-form.join-and-delete', types: 'group,groupAlias'}],
     },
   },
-  {path: 'party/:id', component: PartyPageComponent},
+  {path: 'party/:id', loadComponent: () => import('./pages/party/party-page.component').then(m => m.PartyPageComponent)},
   {
     path: 'party/:id/edit',
-    component: PartyEditPageComponent,
+    loadComponent: () => import('./pages/party-edit/party-edit-page.component').then(m => m.PartyEditPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {privilege: 'publicReceive', entityPath: 'party'},
   },
-  {path: 'party/:id/:tab', component: PartyPageComponent},
-  {path: 'prod/:id', component: ProdPageComponent},
+  {path: 'party/:id/:tab', loadComponent: () => import('./pages/party/party-page.component').then(m => m.PartyPageComponent)},
+  {path: 'prod/:id', loadComponent: () => import('./pages/prod/prod-page.component').then(m => m.ProdPageComponent)},
   {
     path: 'prod/:id/edit',
-    component: ProdEditPageComponent,
+    loadComponent: () => import('./pages/prod-edit/prod-edit-page.component').then(m => m.ProdEditPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {privilege: 'publicReceive', entityPath: 'prod'},
   },
   {
     path: 'prod/:id/ai',
-    component: AiFormPageComponent,
+    loadComponent: () => import('./pages/ai-form/ai-form-page.component').then(m => m.AiFormPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {
       privilege: 'showAiForm',
@@ -187,7 +151,7 @@ const ROUTED_CHILDREN: Routes = [
   },
   {
     path: 'prod/:id/join',
-    component: JoinFormPageComponent,
+    loadComponent: () => import('./pages/join-form/join-form-page.component').then(m => m.JoinFormPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {
       privilege: 'showJoinForm',
@@ -198,42 +162,42 @@ const ROUTED_CHILDREN: Routes = [
   },
   {
     path: 'prod/:id/split',
-    component: SplitFormPageComponent,
+    loadComponent: () => import('./pages/split-form/split-form-page.component').then(m => m.SplitFormPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {privilege: 'showSplitForm', entityPath: 'prod'},
   },
-  {path: 'prod/:id/:tab', component: ProdPageComponent},
-  {path: 'release/:id', component: ReleasePageComponent},
+  {path: 'prod/:id/:tab', loadComponent: () => import('./pages/prod/prod-page.component').then(m => m.ProdPageComponent)},
+  {path: 'release/:id', loadComponent: () => import('./pages/release/release-page.component').then(m => m.ReleasePageComponent)},
   {
     path: 'release/:id/edit',
-    component: ReleaseEditPageComponent,
+    loadComponent: () => import('./pages/release-edit/release-edit-page.component').then(m => m.ReleaseEditPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {privilege: 'publicReceive', entityPath: 'release'},
   },
-  {path: 'picture/:id', component: PicturePageComponent},
+  {path: 'picture/:id', loadComponent: () => import('./pages/picture/picture-page.component').then(m => m.PicturePageComponent)},
   {
     path: 'picture/:id/edit',
-    component: PictureEditPageComponent,
+    loadComponent: () => import('./pages/picture-edit/picture-edit-page.component').then(m => m.PictureEditPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {privilege: 'publicReceive', entityPath: 'picture'},
   },
-  {path: 'tune/:id', component: TunePageComponent},
+  {path: 'tune/:id', loadComponent: () => import('./pages/tune/tune-page.component').then(m => m.TunePageComponent)},
   {
     path: 'tune/:id/edit',
-    component: TuneEditPageComponent,
+    loadComponent: () => import('./pages/tune-edit/tune-edit-page.component').then(m => m.TuneEditPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {privilege: 'publicReceive', entityPath: 'tune'},
   },
-  {path: 'press/:id', component: PressPageComponent},
+  {path: 'press/:id', loadComponent: () => import('./pages/press/press-page.component').then(m => m.PressPageComponent)},
   {
     path: 'press/:id/edit',
-    component: PressEditPageComponent,
+    loadComponent: () => import('./pages/press-edit/press-edit-page.component').then(m => m.PressEditPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {privilege: 'publicReceive', entityPath: 'press'},
   },
   {
     path: 'press/:id/ai',
-    component: AiFormPageComponent,
+    loadComponent: () => import('./pages/ai-form/ai-form-page.component').then(m => m.AiFormPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {
       privilege: 'showAiForm',
@@ -246,35 +210,39 @@ const ROUTED_CHILDREN: Routes = [
       ],
     },
   },
-  {path: 'profile', component: ProfilePageComponent},
-  {path: 'profile/edit', component: ProfileEditPageComponent},
-  {path: 'playlists', component: PlaylistsPageComponent},
-  {path: 'playlist/:id', component: PlaylistPageComponent},
-  {path: 'register', component: RegisterPageComponent},
-  {path: 'prods', component: CollectionPageComponent, data: {kind: 'prods'}},
-  {path: 'groups', component: CollectionPageComponent, data: {kind: 'groups'}},
-  {path: 'groups/:letter', component: CollectionPageComponent, data: {kind: 'groups'}},
-  {path: 'pictures/search', component: PictureSearchPageComponent},
-  {path: 'pictures/tags', component: TagsPageComponent, data: {section: 'graphics', searchBasePath: '/pictures/search'}},
-  {path: 'pictures', component: CollectionPageComponent, data: {kind: 'pictures'}},
-  {path: 'music/search', component: MusicSearchPageComponent},
-  {path: 'music/tags', component: TagsPageComponent, data: {section: 'music', searchBasePath: '/music/search'}},
-  {path: 'music', component: CollectionPageComponent, data: {kind: 'music'}},
-  {path: 'authors', component: CollectionPageComponent, data: {kind: 'authors'}},
-  {path: 'authors/:letter', component: CollectionPageComponent, data: {kind: 'authors'}},
-  {path: 'parties', component: PartiesPageComponent},
-  {path: 'parties/:year', component: PartiesPageComponent},
-  {path: 'stats', component: StatsPageComponent},
-  {path: 'geo', component: CountriesPageComponent},
-  {path: 'comments', component: CommentsRoutePageComponent},
-  {path: 'feedback', component: FeedbackPageComponent},
-  {path: 'about', component: ContentPageComponent, data: {page: 'about', titleKey: 'menu.about'}},
-  {path: 'about/faq', component: ContentPageComponent, data: {page: 'faq', titleKey: 'menu.about-sub.faq'}},
-  {path: 'about/support', component: ContentPageComponent, data: {page: 'support', titleKey: 'menu.about-sub.support'}},
-  {path: 'about/api', component: ContentPageComponent, data: {page: 'api', titleKey: 'menu.about-sub.api'}},
-  {path: 'file-search', component: FileSearchPageComponent},
-  {path: '', component: FirstpageComponent},
-  {path: '**', component: NotFoundComponent},
+  {path: 'profile', loadComponent: () => import('./pages/profile/profile-page.component').then(m => m.ProfilePageComponent)},
+  {path: 'profile/edit', loadComponent: () => import('./pages/profile-edit/profile-edit-page.component').then(m => m.ProfileEditPageComponent)},
+  {path: 'playlists', loadComponent: () => import('./pages/playlists/playlists-page.component').then(m => m.PlaylistsPageComponent)},
+  {path: 'playlist/:id', loadComponent: () => import('./pages/playlist/playlist-page.component').then(m => m.PlaylistPageComponent)},
+  {path: 'register', loadComponent: () => import('./pages/register/register-page.component').then(m => m.RegisterPageComponent)},
+  {path: 'password-reminder', loadComponent: () => import('./pages/password-reminder/password-reminder-page.component').then(m => m.PasswordReminderPageComponent)},
+  {path: 'search', loadComponent: () => import('./pages/search/search-page.component').then(m => m.SearchPageComponent)},
+  {path: 'prods', loadComponent: () => import('./pages/collection/collection-page.component').then(m => m.CollectionPageComponent), data: {kind: 'prods'}},
+  {path: 'groups', loadComponent: () => import('./pages/collection/collection-page.component').then(m => m.CollectionPageComponent), data: {kind: 'groups'}},
+  {path: 'groups/:letter', loadComponent: () => import('./pages/collection/collection-page.component').then(m => m.CollectionPageComponent), data: {kind: 'groups'}},
+  {path: 'pictures/search', loadComponent: () => import('./pages/picture-search/picture-search-page.component').then(m => m.PictureSearchPageComponent)},
+  {path: 'pictures/tags', loadComponent: () => import('./pages/tags/tags-page.component').then(m => m.TagsPageComponent), data: {section: 'graphics', searchBasePath: '/pictures/search'}},
+  {path: 'pictures/top', loadComponent: () => import('./pages/top-pictures/top-pictures-page.component').then(m => m.TopPicturesPageComponent)},
+  {path: 'pictures', loadComponent: () => import('./pages/collection/collection-page.component').then(m => m.CollectionPageComponent), data: {kind: 'pictures'}},
+  {path: 'music/search', loadComponent: () => import('./pages/music-search/music-search-page.component').then(m => m.MusicSearchPageComponent)},
+  {path: 'music/tags', loadComponent: () => import('./pages/tags/tags-page.component').then(m => m.TagsPageComponent), data: {section: 'music', searchBasePath: '/music/search'}},
+  {path: 'music/top', loadComponent: () => import('./pages/top-music/top-music-page.component').then(m => m.TopMusicPageComponent)},
+  {path: 'music', loadComponent: () => import('./pages/collection/collection-page.component').then(m => m.CollectionPageComponent), data: {kind: 'music'}},
+  {path: 'authors', loadComponent: () => import('./pages/collection/collection-page.component').then(m => m.CollectionPageComponent), data: {kind: 'authors'}},
+  {path: 'authors/:letter', loadComponent: () => import('./pages/collection/collection-page.component').then(m => m.CollectionPageComponent), data: {kind: 'authors'}},
+  {path: 'parties', loadComponent: () => import('./pages/parties/parties-page.component').then(m => m.PartiesPageComponent)},
+  {path: 'parties/:year', loadComponent: () => import('./pages/parties/parties-page.component').then(m => m.PartiesPageComponent)},
+  {path: 'stats', loadChildren: () => import('./pages/stats/stats.routes').then(m => m.STATS_ROUTES)},
+  {path: 'geo', loadComponent: () => import('./pages/countries/countries-page.component').then(m => m.CountriesPageComponent)},
+  {path: 'comments', loadComponent: () => import('./pages/comments/comments-route-page.component').then(m => m.CommentsRoutePageComponent)},
+  {path: 'feedback', loadComponent: () => import('./pages/feedback/feedback-page.component').then(m => m.FeedbackPageComponent)},
+  {path: 'about', loadComponent: () => import('./pages/content/content-page.component').then(m => m.ContentPageComponent), data: {page: 'about', titleKey: 'menu.about'}},
+  {path: 'about/faq', loadComponent: () => import('./pages/content/content-page.component').then(m => m.ContentPageComponent), data: {page: 'faq', titleKey: 'menu.about-sub.faq'}},
+  {path: 'about/support', loadComponent: () => import('./pages/content/content-page.component').then(m => m.ContentPageComponent), data: {page: 'support', titleKey: 'menu.about-sub.support'}},
+  {path: 'about/api', loadComponent: () => import('./pages/content/content-page.component').then(m => m.ContentPageComponent), data: {page: 'api', titleKey: 'menu.about-sub.api'}},
+  {path: 'file-search', loadComponent: () => import('./pages/file-search/file-search-page.component').then(m => m.FileSearchPageComponent)},
+  {path: '', loadComponent: () => import('./pages/firstpage/firstpage.component').then(m => m.FirstpageComponent)},
+  {path: '**', loadComponent: () => import('./pages/not-found/not-found.component').then(m => m.NotFoundComponent)},
 ];
 
 export const APP_ROUTES: Routes = [

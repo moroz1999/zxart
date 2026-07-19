@@ -67,7 +67,7 @@
 .zx-geo__eyebrow,
 .zx-geo__section-head {
   text-transform: uppercase;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .zx-geo__title {
@@ -187,7 +187,7 @@
 }
 
 .zx-geo__item-title {
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .zx-geo__empty {
@@ -216,7 +216,7 @@
   border-radius: var(--zx-geo-marker-radius);
   background: var(--zx-geo-country-marker-background);
   color: var(--zx-geo-marker-text);
-  font-weight: 700;
+  font-weight: 500;
   font-size: var(--zx-geo-marker-font-size);
   line-height: 1;
   white-space: nowrap;

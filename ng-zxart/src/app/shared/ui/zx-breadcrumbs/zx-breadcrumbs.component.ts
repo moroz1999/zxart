@@ -1,8 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {BackendLinksService} from '../../../features/header/services/backend-links.service';
 import {RouterLink} from '@angular/router';
 import {
   ZxSkeletonBoneComponent,
@@ -27,10 +24,6 @@ export class ZxBreadcrumbsComponent {
   @Input() currentTitle = '';
   @Input() loading = false;
 
-  readonly homeUrl$: Observable<string | null> = this.backendLinks.links$.pipe(
-    map(l => l.homeUrl),
-  );
-
   readonly skeletonItems = [
     {id: 'home', delayMs: 0, label: 'ZX-Art'},
     {id: 'category', delayMs: 40, label: 'Category'},
@@ -38,5 +31,4 @@ export class ZxBreadcrumbsComponent {
     {id: 'current', delayMs: 120, label: 'Current page'},
   ];
 
-  constructor(private readonly backendLinks: BackendLinksService) {}
 }

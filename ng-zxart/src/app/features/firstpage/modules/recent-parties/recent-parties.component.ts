@@ -10,10 +10,9 @@ import {FirstpageDataService} from '../../services/firstpage-data.service';
 import {
   FirstpageModuleWrapperComponent
 } from '../../components/firstpage-module-wrapper/firstpage-module-wrapper.component';
-import {ZxPartyCardComponent} from '../../../../entities/zx-party-card/zx-party-card.component';
 import {ModuleSettings} from '../../models/firstpage-config';
 import {MODULE_SETTINGS} from '../../models/module-settings.token';
-import {ZxGridComponent} from '../../../../shared/ui/zx-grid/zx-grid.component';
+import {ZxPartiesListComponent} from '../../../../entities/zx-parties-list/zx-parties-list.component';
 
 @Component({
   selector: 'zx-fp-recent-parties',
@@ -22,8 +21,7 @@ import {ZxGridComponent} from '../../../../shared/ui/zx-grid/zx-grid.component';
     ZxProdsListSkeletonComponent,
     CommonModule,
     FirstpageModuleWrapperComponent,
-    ZxPartyCardComponent,
-    ZxGridComponent,
+    ZxPartiesListComponent,
   ],
   templateUrl: './recent-parties.component.html',
   styleUrls: ['./recent-parties.component.scss'],

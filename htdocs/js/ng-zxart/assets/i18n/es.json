@@ -592,6 +592,12 @@
     "theme.light": "Claro",
     "theme.dark": "Oscuro"
   },
+  "top-pictures": {
+    "title": "Top de gráficos"
+  },
+  "top-music": {
+    "title": "Top de música"
+  },
   "firstpage": {
     "title": "Juegos, Demoscene, Graficos y Musica de ZX Spectrum",
     "configure": "Configurar página principal",
@@ -602,12 +608,13 @@
     "realtime": "Tiempo real",
     "modules": {
       "newProds": "Nuevos programas",
-      "newPictures": "Nuevas imágenes",
-      "newTunes": "Nueva música",
+      "newPictures": "Imágenes añadidas recientemente",
+      "newTunes": "Melodías añadidas recientemente",
       "bestNewDemos": "Mejores demos nuevas",
       "bestNewGames": "Mejores juegos nuevos",
       "recentParties": "Parties recientes",
       "bestPicturesOfMonth": "Mejores imágenes del mes",
+      "bestTunesOfMonth": "Mejores melodías del mes",
       "latestAddedProds": "Últimos programas añadidos",
       "latestAddedReleases": "Últimos lanzamientos añadidos",
       "supportProds": "Apoyar con compra",
@@ -2047,5 +2054,13 @@
     "placeholder": "Nombre de archivo o md5…",
     "searching": "Buscando…",
     "empty": "No se encontraron archivos."
+  },
+  "password-reminder": {
+    "title": "Recuperación de contraseña", "email": "Correo electrónico", "password": "Nueva contraseña", "password-repeat": "Repetir contraseña",
+    "request": "Enviar enlace", "reset": "Cambiar contraseña",
+    "requested": "Si existe una cuenta con este correo, se ha enviado un enlace de recuperación.", "changed": "La contraseña ha sido cambiada.",
+    "error-email": "Introduce un correo válido.", "error-password": "Introduce una nueva contraseña.",
+    "error-password-match": "Las contraseñas no coinciden.", "error-invalid": "Este enlace no es válido o ha caducado.",
+    "error-generic": "No se pudo recuperar la contraseña. Inténtalo más tarde."
   }
 }

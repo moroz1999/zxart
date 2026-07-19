@@ -1,6 +1,6 @@
 <zx-picture-gallery-host></zx-picture-gallery-host>
 
-<div class="selectors">
+<div *ngIf="showSorting" class="selectors">
   <div class="selectors-top">
     <zx-sort-select
       labelKey="picture-browser.sorting"

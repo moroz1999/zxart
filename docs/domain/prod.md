@@ -26,6 +26,17 @@ Software production for ZX Spectrum - games, demos, utilities and other software
 - **compo** - competition name (compo)
 - **language** - interface languages (array)
 
+### Catalogue Route
+
+The software catalogue uses `/prods` with Angular Router query parameters. Its
+filter state includes `cat`, `years`, `hw`, `languages`, `statuses`, `formats`,
+`types`, `letter`, `sorting`, `tags`, `countries`, `releases`,
+`includeSubcategoriesProds`, and `page`. Links from production and release
+details use the same query parameters.
+Catalogue responses expose entity identifiers and structure types. Angular
+templates build internal routes from those identifiers and do not receive routed
+URLs from the API.
+
 ### Relations with Other Entities
 
 #### Authorship

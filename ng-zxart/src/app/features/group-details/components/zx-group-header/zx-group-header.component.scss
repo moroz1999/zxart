@@ -76,7 +76,7 @@
 
 .gp-bio__abbr {
   color: var(--text-color);
-  font-weight: 700;
+  font-weight: 500;
   font-family: var(--font-mono);
 }
 
@@ -134,7 +134,7 @@
   flex-shrink: 0;
   width: 88px;
   color: var(--text-light-color);
-  font-weight: 700;
+  font-weight: 500;
   text-align: right;
 
   @include bp.media-breakpoint-down(md) {

@@ -14,6 +14,7 @@ import {UnvotedPicturesComponent} from '../modules/unvoted-pictures/unvoted-pict
 import {RandomGoodPicturesComponent} from '../modules/random-good-pictures/random-good-pictures.component';
 import {UnvotedTunesComponent} from '../modules/unvoted-tunes/unvoted-tunes.component';
 import {RandomGoodTunesComponent} from '../modules/random-good-tunes/random-good-tunes.component';
+import {BestTunesOfMonthComponent} from '../modules/best-tunes-of-month/best-tunes-of-month.component';
 
 export const MODULE_COMPONENTS: Record<ModuleType, Type<unknown>> = {
   newProds: NewProdsComponent,
@@ -23,6 +24,7 @@ export const MODULE_COMPONENTS: Record<ModuleType, Type<unknown>> = {
   bestNewGames: BestNewGamesComponent,
   recentParties: RecentPartiesComponent,
   bestPicturesOfMonth: BestPicturesOfMonthComponent,
+  bestTunesOfMonth: BestTunesOfMonthComponent,
   latestAddedProds: LatestAddedProdsComponent,
   latestAddedReleases: LatestAddedReleasesComponent,
   supportProds: SupportProdsComponent,

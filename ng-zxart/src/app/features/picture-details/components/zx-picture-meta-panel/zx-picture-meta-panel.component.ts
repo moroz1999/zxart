@@ -1,18 +1,15 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
 import {PictureDetailsDto} from '../../models/picture-details.dto';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxItemDataItemComponent} from '../../../../shared/ui/zx-item-data/zx-item-data-item.component';
 import {ZxCollapsibleSectionComponent} from '../../../../shared/ui/zx-collapsible-section/zx-collapsible-section.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
-import {BackendLinksService} from '../../../header/services/backend-links.service';
+import {RouterLink} from '@angular/router';
 
-
-import {RouterLink} from '@angular/router';@Component({
+@Component({
   selector: 'zx-picture-meta-panel',
   standalone: true,
   imports: [RouterLink, 
@@ -29,10 +26,4 @@ import {RouterLink} from '@angular/router';@Component({
 })
 export class ZxPictureMetaPanelComponent {
   @Input({required: true}) picture!: PictureDetailsDto;
-
-  readonly graphicsBaseUrl$: Observable<string | null> = this.backendLinks.links$.pipe(
-    map(links => links.graphicsBaseUrl),
-  );
-
-  constructor(private readonly backendLinks: BackendLinksService) {}
 }

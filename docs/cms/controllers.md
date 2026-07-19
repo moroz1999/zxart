@@ -9,7 +9,6 @@ Routing is **purely code-based** — no CMS structure elements or database entri
 ```
 GET /languages/?path=...   → toPascalCase('languages')    → ZxArt\Controllers\Languages    ✓
 GET /menu/?lang=eng        → toPascalCase('menu')         → ZxArt\Controllers\Menu         ✓
-GET /backend-links/?lang=  → toPascalCase('backend-links') → ZxArt\Controllers\BackendLinks ✓
 ```
 
 Kebab-case URL segments are converted to PascalCase via `toPascalCase()` (= `str_replace('-', '', ucwords($name, '-'))`), so multi-word controller names work with kebab URLs naturally.

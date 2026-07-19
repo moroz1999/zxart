@@ -7,7 +7,6 @@ class zxProdCategoryDataResponseConverter extends StructuredDataResponseConverte
     /**
      * @return string[]
      *
-     * @psalm-return array{id: 'id', title: 'title', h1: 'getH1', url: 'getUrl', structureType: 'structureType', categories: 'getCategoriesIds', prods: 'getProdsInfo', languagesSelector: 'getLanguagesSelector', formatsSelector: 'getFormatsSelector', releaseTypesSelector: 'getReleaseTypesSelector', countriesSelector: 'getCountriesSelector', categoriesSelector: 'getCategoriesSelector', yearsSelector: 'getYearsSelector', legalStatusesSelector: 'getLegalStatusesSelector', hardwareSelector: 'getHardwareSelector', lettersSelector: 'getLettersSelector', sortingSelector: 'getSortingSelector', tagsSelector: 'getTagsSelector', prodsAmount: 'getProdsAmount', selectorValues: 'getSelectorValues'}
      */
     protected function getRelationStructure()
     {
@@ -15,7 +14,6 @@ class zxProdCategoryDataResponseConverter extends StructuredDataResponseConverte
             'id' => 'id',
             'title' => 'title',
             'h1' => 'getH1',
-            'url' => 'getUrl',
             'structureType' => 'structureType',
             'categories' => 'getCategoriesIds',
             'prods' => 'getProdsInfo',
@@ -38,7 +36,6 @@ class zxProdCategoryDataResponseConverter extends StructuredDataResponseConverte
     /**
      * @return string[][]
      *
-     * @psalm-return array{api: list{'id', 'title', 'categories'}, search: list{'id', 'title', 'url', 'structureType'}, zxProdsList: list{'id', 'h1', 'title', 'url', 'prodsAmount', 'prods', 'languagesSelector', 'formatsSelector', 'releaseTypesSelector', 'countriesSelector', 'tagsSelector', 'yearsSelector', 'categoriesSelector', 'legalStatusesSelector', 'hardwareSelector', 'lettersSelector', 'sortingSelector', 'selectorValues'}}
      */
     protected function getPresetsStructure()
     {
@@ -51,14 +48,12 @@ class zxProdCategoryDataResponseConverter extends StructuredDataResponseConverte
             'search' => [
                 'id',
                 'title',
-                'url',
                 'structureType',
             ],
             'zxProdsList' => [
                 'id',
                 'h1',
                 'title',
-                'url',
                 'prodsAmount',
                 'prods',
                 'languagesSelector',
