@@ -17,6 +17,8 @@ import {ZxEntityAutocompleteComponent} from '../../shared/ui/zx-entity-autocompl
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 
 interface JoinPicker {
   field: string;
@@ -51,6 +53,8 @@ interface JoinCheckbox {
     ZxFormDirective,
     ZxEntityAutocompleteComponent,
     ZxStackComponent,
+    HeadingDirective,
+    ZxPageLayoutComponent,
   ],
   templateUrl: './join-form-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

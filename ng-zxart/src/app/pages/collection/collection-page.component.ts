@@ -8,6 +8,7 @@ import {ZxGroupBrowserComponent} from '../../features/group-browser/components/z
 import {PicturesHomeComponent} from '../../features/catalogue-home/components/pictures-home/pictures-home.component';
 import {MusicHomeComponent} from '../../features/catalogue-home/components/music-home/music-home.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 
 type CollectionKind = 'prods' | 'groups' | 'pictures' | 'music';
 
@@ -33,6 +34,7 @@ interface CollectionVm {
     PicturesHomeComponent,
     MusicHomeComponent,
     HeadingDirective,
+    ZxPageLayoutComponent,
   ],
   templateUrl: './collection-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

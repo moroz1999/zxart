@@ -1,8 +1,8 @@
-import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
-import {shareReplay} from 'rxjs/operators';
+import {shareReplay, tap} from 'rxjs/operators';
 import {GroupCoreDto} from '../../models/group-core.dto';
 import {GroupCoreApiService} from '../../services/group-core-api.service';
 import {ZxGroupHeaderComponent} from '../zx-group-header/zx-group-header.component';
@@ -61,6 +61,7 @@ export class ZxGroupDetailsComponent implements OnChanges {
   @Input() elementId = 0;
   /** Active tab id from the route (`group/:id/:tab`); null = default tab. */
   @Input() activeTab: string | null = null;
+  @Output() pageTitleChange = new EventEmitter<string>();
   @ViewChild(ZxTabsComponent, {read: ElementRef}) private tabsRef!: ElementRef<HTMLElement>;
 
   core$: Observable<GroupCoreDto | null> = of(null);
@@ -75,7 +76,10 @@ export class ZxGroupDetailsComponent implements OnChanges {
       this.core$ = of(null);
       return;
     }
-    this.core$ = this.api.getCore(+this.elementId).pipe(shareReplay(1));
+    this.core$ = this.api.getCore(+this.elementId).pipe(
+      tap(core => core && this.pageTitleChange.emit(core.title)),
+      shareReplay(1),
+    );
   }
 
   getInitialTabIndex(core: GroupCoreDto): number {

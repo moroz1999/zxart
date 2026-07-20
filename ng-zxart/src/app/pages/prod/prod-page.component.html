@@ -1,1 +1,8 @@
-<zx-prod-details-view [elementId]="(elementId$ | async) ?? 0" [activeTab]="tab$ | async"></zx-prod-details-view>
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">{{ title }}</h1>
+  <zx-prod-details-view
+    [elementId]="(elementId$ | async) ?? 0"
+    [activeTab]="tab$ | async"
+    (pageTitleChange)="title = $event"
+  ></zx-prod-details-view>
+</zx-page-layout>

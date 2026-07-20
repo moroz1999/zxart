@@ -1,9 +1,11 @@
-<div *ngIf="loading" class="split-form__loading">
-  <zx-spinner size="lg"></zx-spinner>
-</div>
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">{{ 'split-form.submit' | translate }}</h1>
+  <div *ngIf="loading" class="split-form__loading">
+    <zx-spinner size="lg"></zx-spinner>
+  </div>
 
-<form *ngIf="!loading" (ngSubmit)="onSubmit()">
-  <zx-stack spacing="lg">
+  <form *ngIf="!loading" (ngSubmit)="onSubmit()">
+    <zx-stack spacing="lg">
     <p>{{ 'split-form.intro' | translate }}</p>
 
     <section *ngFor="let group of groups" class="split-form__group">
@@ -25,5 +27,6 @@
     <zx-form-actions align="start">
       <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'split-form.submit' | translate }}</zx-button>
     </zx-form-actions>
-  </zx-stack>
-</form>
+    </zx-stack>
+  </form>
+</zx-page-layout>

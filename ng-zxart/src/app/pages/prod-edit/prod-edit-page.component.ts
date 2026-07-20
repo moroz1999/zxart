@@ -26,6 +26,8 @@ import {ZxMemberRoleEditorComponent} from '../../shared/ui/zx-member-role-editor
 import {MemberFields, MemberRoleItem} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.models';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {FormFieldValue} from '../../shared/services/form-save-api.service';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
@@ -68,6 +70,8 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthor: '', addAuthorRole: {}, add
     ZxMemberRoleEditorComponent,
     ZxStackComponent,
     ZxSpinnerComponent,
+    HeadingDirective,
+    ZxPageLayoutComponent,
   ],
   templateUrl: './prod-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -22,6 +22,8 @@ import {ZxImageUploadComponent, ImageUploadChange} from '../../shared/ui/zx-imag
 import {ZxMultilangFieldComponent} from '../../shared/ui/zx-multilang-field/zx-multilang-field.component';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 
@@ -51,6 +53,8 @@ const PASSTHROUGH_FIELDS = ['chipType', 'channelsType', 'frequency', 'intFrequen
     ZxMultilangFieldComponent,
     ZxStackComponent,
     ZxSpinnerComponent,
+    HeadingDirective,
+    ZxPageLayoutComponent,
   ],
   templateUrl: './author-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -9,6 +9,8 @@ import {ZxFormActionsComponent} from '../../shared/ui/zx-form/zx-form-actions/zx
 import {ZxFormMessageComponent} from '../../shared/ui/zx-form/zx-form-message/zx-form-message.component';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 
 /**
  * Author claim confirmation page (`author/:id/claim`). Sends a claim request
@@ -17,7 +19,16 @@ import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 @Component({
   selector: 'zx-claim-page',
   standalone: true,
-  imports: [CommonModule, TranslateModule, ZxButtonComponent, ZxFormActionsComponent, ZxFormMessageComponent, ZxStackComponent],
+  imports: [
+    CommonModule,
+    TranslateModule,
+    ZxButtonComponent,
+    ZxFormActionsComponent,
+    ZxFormMessageComponent,
+    ZxStackComponent,
+    HeadingDirective,
+    ZxPageLayoutComponent,
+  ],
   templateUrl: './claim-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

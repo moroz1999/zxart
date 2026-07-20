@@ -6,6 +6,7 @@ import {combineLatest, map, Observable} from 'rxjs';
 import {ZxAuthorBrowserComponent} from '../../features/author-browser/components/zx-author-browser/zx-author-browser.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxAuthorsDashboardComponent} from '../../features/authors-page/components/zx-authors-dashboard/zx-authors-dashboard.component';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 
 interface AuthorsVm {
   items: '' | 'graphics' | 'music';
@@ -30,6 +31,7 @@ interface AuthorsVm {
     ZxAuthorBrowserComponent,
     HeadingDirective,
     ZxAuthorsDashboardComponent,
+    ZxPageLayoutComponent,
   ],
   templateUrl: './authors-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

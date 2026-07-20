@@ -32,10 +32,6 @@
 
   <ng-template #dataTpl>
     <zx-stack spacing="md">
-      <h1 appHeading="display" class="zx-search-results__heading">
-        {{ headingTranslationKey() | translate: { phrase: phrase, page: currentPage } }}
-      </h1>
-
       <zx-filter-bar *ngIf="typeFilters.length > 1" class="zx-search-results__filters">
         <span appText="caption" tone="muted" class="zx-search-results__filters-label">{{ 'search.filters.types' | translate }}</span>
         <div class="zx-search-results__filter-options">

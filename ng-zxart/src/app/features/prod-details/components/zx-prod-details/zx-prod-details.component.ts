@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable, of} from 'rxjs';
 import {shareReplay, tap} from 'rxjs/operators';
@@ -46,7 +46,6 @@ import {RatingsListComponent} from '../../../ratings/components/ratings-list/rat
 import {TranslateModule} from '@ngx-translate/core';
 import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
-import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TagsListComponent} from '../../../../shared/lib/tags-list/tags-list.component';
 import {ZxProdInstructionsSectionComponent} from '../zx-prod-instructions-section/zx-prod-instructions-section.component';
 type ProdMainTabId = 'releases' | 'media' | 'links' | 'discussion';
@@ -89,7 +88,6 @@ type ProdLinksTabId = 'articles' | 'series' | 'compilations';
     RatingsListComponent,
     ZxBreadcrumbsComponent,
     TextDirective,
-    HeadingDirective,
     TagsListComponent,
     ZxProdInstructionsSectionComponent,
   ],
@@ -101,6 +99,7 @@ export class ZxProdDetailsComponent implements OnChanges {
   @Input() elementId = 0;
   /** Active tab id from the route (`prod/:id/:tab`); null = default tab. */
   @Input() activeTab: string | null = null;
+  @Output() pageTitleChange = new EventEmitter<string>();
 
   core$: Observable<ProdCoreDto | null> = of(null);
 
@@ -118,7 +117,12 @@ export class ZxProdDetailsComponent implements OnChanges {
       return;
     }
     this.core$ = this.api.getCore(+this.elementId).pipe(
-      tap(core => core && this.pageMetadataService.applyEntityMetadata(core.metadata)),
+      tap(core => {
+        if (core) {
+          this.pageTitleChange.emit(core.h1);
+          this.pageMetadataService.applyEntityMetadata(core.metadata);
+        }
+      }),
       shareReplay(1),
     );
   }

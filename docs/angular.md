@@ -12,6 +12,11 @@ fixed-route metadata from route translation keys. Canonical links are not emitte
 All Angular components MUST be standalone. The application is bootstrapped with
 `bootstrapApplication`, and public navigation is owned by the Angular router.
 
+Every component referenced by a route is stored in `pages/` and composed with
+`zx-page-layout`. Each routed page provides one page-level
+`<h1 appHeading="display" zxPageHeader>`; the layout owns spacing below the
+header and between independent page content blocks.
+
 #### Pagination and URL
 
 Components with pagination **must** reflect the current page in the URL and restore it on load.

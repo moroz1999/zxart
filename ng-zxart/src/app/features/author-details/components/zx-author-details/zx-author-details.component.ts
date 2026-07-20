@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
@@ -64,6 +64,7 @@ export class ZxAuthorDetailsComponent implements OnChanges {
   @Input() elementId = 0;
   /** Active tab id from the route (`author/:id/:tab`); null = default tab. */
   @Input() activeTab: string | null = null;
+  @Output() pageTitleChange = new EventEmitter<string>();
   @ViewChild(ZxTabsComponent, {read: ElementRef}) private tabsRef!: ElementRef<HTMLElement>;
 
   core$: Observable<AuthorCoreDto | null> = of(null);
@@ -82,7 +83,12 @@ export class ZxAuthorDetailsComponent implements OnChanges {
       return;
     }
     this.core$ = this.api.getCore(+this.elementId).pipe(
-      tap(core => core && this.pageMetadataService.applyEntityMetadata(core.metadata)),
+      tap(core => {
+        if (core) {
+          this.pageTitleChange.emit(core.title);
+          this.pageMetadataService.applyEntityMetadata(core.metadata);
+        }
+      }),
       shareReplay(1),
     );
   }

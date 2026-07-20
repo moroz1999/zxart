@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of, Subscription} from 'rxjs';
@@ -22,7 +22,6 @@ import {ZxCalloutComponent} from '../../../../shared/ui/zx-callout/zx-callout.co
 import {ZxAddedByComponent} from '../../../../shared/ui/zx-added-by/zx-added-by.component';
 import {ZxPartyPlaceComponent} from '../../../../shared/lib/zx-party-place/zx-party-place.component';
 import {ZxProdContextComponent} from '../../../../entities/zx-prod-context/components/zx-prod-context/zx-prod-context.component';
-import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 
 import {ZxPictureViewerComponent} from '../zx-picture-viewer/zx-picture-viewer.component';
@@ -58,7 +57,6 @@ import {RouterLink} from '@angular/router';@Component({
     ZxAddedByComponent,
     ZxPartyPlaceComponent,
     ZxProdContextComponent,
-    HeadingDirective,
     TextDirective,
     ZxPictureViewerComponent,
     ZxPictureMetaPanelComponent,
@@ -77,6 +75,7 @@ import {RouterLink} from '@angular/router';@Component({
 })
 export class ZxPictureDetailsComponent implements OnChanges, OnDestroy {
   @Input() elementId = 0;
+  @Output() pageTitleChange = new EventEmitter<string>();
 
   details$: Observable<PictureDetailsDto | null> = of(null);
 
@@ -99,7 +98,12 @@ export class ZxPictureDetailsComponent implements OnChanges, OnDestroy {
       return;
     }
     this.details$ = this.api.getDetails(+this.elementId).pipe(
-      tap(details => details && this.pageMetadataService.applyEntityMetadata(details.metadata)),
+      tap(details => {
+        if (details) {
+          this.pageTitleChange.emit(details.title);
+          this.pageMetadataService.applyEntityMetadata(details.metadata);
+        }
+      }),
       shareReplay(1),
     );
 

@@ -19,6 +19,8 @@ import {ZxInputComponent} from '../../shared/ui/zx-input/zx-input.component';
 import {ZxEntityAutocompleteComponent} from '../../shared/ui/zx-entity-autocomplete/zx-entity-autocomplete.component';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 
@@ -43,6 +45,8 @@ import {FormSaveApiService} from '../../shared/services/form-save-api.service';
     ZxEntityAutocompleteComponent,
     ZxStackComponent,
     ZxSpinnerComponent,
+    HeadingDirective,
+    ZxPageLayoutComponent,
   ],
   templateUrl: './author-alias-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

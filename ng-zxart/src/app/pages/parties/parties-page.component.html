@@ -1,15 +1,14 @@
-<zx-stack *ngIf="vm$ | async as vm" spacing="lg">
-  <h1 appHeading="headline">{{ 'menu.parties' | translate }}</h1>
-  <zx-inline align="center" justify="between" [wrap]="true">
-    <zx-nav-chips [chips]="yearChips(vm.selectedYear)"></zx-nav-chips>
-    <zx-toggle
-      *ngIf="viewToggleOptions$ | async as viewToggleOptions"
-      size="sm"
-      [options]="viewToggleOptions"
-      [value]="viewMode"
-      (valueChange)="setViewMode($event)"
-    ></zx-toggle>
-  </zx-inline>
+<zx-page-layout *ngIf="vm$ | async as vm">
+  <h1 zxPageHeader appHeading="display">{{ 'menu.parties' | translate }}</h1>
+  <zx-toggle
+    *ngIf="viewToggleOptions$ | async as viewToggleOptions"
+    zxPageHeader
+    size="sm"
+    [options]="viewToggleOptions"
+    [value]="viewMode"
+    (valueChange)="setViewMode($event)"
+  ></zx-toggle>
+  <zx-nav-chips [chips]="yearChips(vm.selectedYear)"></zx-nav-chips>
   <zx-parties-list-skeleton
     *ngIf="vm.parties === null"
     [viewMode]="viewMode"
@@ -19,4 +18,4 @@
     [parties]="vm.parties"
     [viewMode]="viewMode"
   ></zx-parties-list>
-</zx-stack>
+</zx-page-layout>

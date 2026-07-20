@@ -8,12 +8,24 @@ import {PlaylistsApiService, UserPlaylist} from '../../features/playlists/servic
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxInputComponent} from '../../shared/ui/zx-input/zx-input.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 
 /** Routed page for `playlists` — manage the current user's playlists. */
 @Component({
   selector: 'zx-playlists-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, TranslateModule, ZxButtonComponent, ZxInputComponent, ZxSpinnerComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterLink,
+    TranslateModule,
+    ZxButtonComponent,
+    ZxInputComponent,
+    ZxSpinnerComponent,
+    HeadingDirective,
+    ZxPageLayoutComponent,
+  ],
   templateUrl: './playlists-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

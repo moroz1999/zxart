@@ -1,11 +1,12 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {RouterLink} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable} from 'rxjs';
 import {UserProfileDto} from '../../features/profile/models/user-profile.dto';
 import {ProfileApiService} from '../../features/profile/services/profile-api.service';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 
 interface ProfileRow {
   labelKey: string;
@@ -16,7 +17,7 @@ interface ProfileRow {
 @Component({
   selector: 'zx-profile-page',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule, ZxButtonComponent],
+  imports: [CommonModule, TranslateModule, ZxButtonComponent, HeadingDirective, ZxPageLayoutComponent],
   templateUrl: './profile-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

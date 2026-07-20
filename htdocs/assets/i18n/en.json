@@ -1930,6 +1930,7 @@
     }
   },
   "ai-form": {
+    "title": "AI processing",
     "submit": "Re-run AI",
     "prod-seo": "Restart SEO",
     "prod-intro": "Restart intro",
@@ -1942,6 +1943,7 @@
     "error-save": "Failed to save"
   },
   "profile": {
+    "title": "Profile",
     "edit": "Edit profile",
     "save": "Save",
     "first-name": "First name",
@@ -1961,6 +1963,7 @@
   },
   "playlists": {
     "title": "My playlists",
+    "playlist-title": "Playlist",
     "new-placeholder": "New playlist name",
     "create": "Create",
     "rename": "Rename",

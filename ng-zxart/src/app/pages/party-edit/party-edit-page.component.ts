@@ -19,6 +19,8 @@ import {ZxEntityAutocompleteComponent} from '../../shared/ui/zx-entity-autocompl
 import {ImageUploadChange, ZxImageUploadComponent} from '../../shared/ui/zx-image-upload/zx-image-upload.component';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 
@@ -43,6 +45,8 @@ import {FormSaveApiService} from '../../shared/services/form-save-api.service';
     ZxImageUploadComponent,
     ZxStackComponent,
     ZxSpinnerComponent,
+    HeadingDirective,
+    ZxPageLayoutComponent,
   ],
   templateUrl: './party-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

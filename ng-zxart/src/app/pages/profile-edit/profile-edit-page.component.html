@@ -1,9 +1,11 @@
-<div *ngIf="loading" class="profile-edit__loading">
-  <zx-spinner size="lg"></zx-spinner>
-</div>
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">{{ 'profile.edit' | translate }}</h1>
+  <div *ngIf="loading" class="profile-edit__loading">
+    <zx-spinner size="lg"></zx-spinner>
+  </div>
 
-<form *ngIf="!loading" zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
-  <zx-stack spacing="lg">
+  <form *ngIf="!loading" zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
+    <zx-stack spacing="lg">
     <zx-form-field *ngFor="let item of textFields">
       <zx-form-label [for]="'profile-' + item.field">{{ item.labelKey | translate }}</zx-form-label>
       <zx-form-control>
@@ -24,5 +26,6 @@
     <zx-form-actions align="start">
       <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'profile.save' | translate }}</zx-button>
     </zx-form-actions>
-  </zx-stack>
-</form>
+    </zx-stack>
+  </form>
+</zx-page-layout>

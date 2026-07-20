@@ -124,6 +124,8 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
      * it per category.
      */
     @Input() rootType = '';
+    /** The routed collection page owns its page-level heading. */
+    @Input() showHeading = true;
 
     /** Catalogue root id; resolved from the loaded root model, or from the `cat` query param. */
     private rootElementId = 0;

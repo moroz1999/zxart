@@ -10,12 +10,11 @@ import {
   ZxPartiesListComponent,
 } from '../../entities/zx-parties-list/zx-parties-list.component';
 import {PARTY_YEARS} from '../../features/menu/menu.config';
-import {ZxInlineComponent} from '../../shared/ui/zx-inline/zx-inline.component';
 import {ZxNavChipsComponent} from '../../shared/ui/zx-nav-chips/zx-nav-chips.component';
 import {ZxNavChip} from '../../shared/ui/zx-nav-chips/nav-chip';
-import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {ZxToggleComponent, ZxToggleOption} from '../../shared/ui/zx-toggle/zx-toggle.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {
   ZxPartiesListSkeletonComponent,
 } from '../../entities/zx-parties-list-skeleton/zx-parties-list-skeleton.component';
@@ -35,10 +34,9 @@ interface PartiesPageVm {
     ZxPartiesListComponent,
     ZxPartiesListSkeletonComponent,
     ZxNavChipsComponent,
-    ZxInlineComponent,
-    ZxStackComponent,
     ZxToggleComponent,
     HeadingDirective,
+    ZxPageLayoutComponent,
   ],
   templateUrl: './parties-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

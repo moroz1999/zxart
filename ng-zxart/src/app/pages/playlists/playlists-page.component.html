@@ -1,5 +1,5 @@
-<section class="playlists">
-  <h1 class="playlists__title">{{ 'playlists.title' | translate }}</h1>
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">{{ 'playlists.title' | translate }}</h1>
 
   <div *ngIf="loading" class="playlists__loading">
     <zx-spinner size="lg"></zx-spinner>
@@ -28,4 +28,4 @@
 
     <p *ngIf="!playlists.length" class="playlists__empty">{{ 'playlists.empty' | translate }}</p>
   </ng-container>
-</section>
+</zx-page-layout>

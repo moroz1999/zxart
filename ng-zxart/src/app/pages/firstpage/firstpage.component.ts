@@ -13,10 +13,9 @@ import {MODULE_SETTINGS} from '../../features/firstpage/models/module-settings.t
 import {
   FirstpageConfigDialogComponent
 } from '../../features/firstpage/components/firstpage-config-dialog/firstpage-config-dialog.component';
-import {ZxInlineComponent} from '../../shared/ui/zx-inline/zx-inline.component';
-import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {
   PictureGalleryHostComponent
 } from '../../features/picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
@@ -34,11 +33,10 @@ interface ModuleEntry {
     CommonModule,
     SvgIconComponent,
     TranslateModule,
-    ZxInlineComponent,
-    ZxStackComponent,
     ZxButtonComponent,
     HeadingDirective,
     PictureGalleryHostComponent,
+    ZxPageLayoutComponent,
   ],
   templateUrl: './firstpage.component.html',
   styleUrls: ['./firstpage.component.scss'],

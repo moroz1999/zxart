@@ -288,10 +288,6 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     return 'search.types.' + type;
   }
 
-  headingTranslationKey(): string {
-    return this.currentPage > 1 ? 'search.heading.with_page' : 'search.heading.first_page';
-  }
-
   pictureGalleryId(set: SearchResultSetDto): string {
     return 'search-' + set.type;
   }

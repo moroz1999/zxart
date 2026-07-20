@@ -22,6 +22,8 @@ import {ImageUploadChange, ZxImageUploadComponent} from '../../shared/ui/zx-imag
 import {ZxFileUploadComponent} from '../../shared/ui/zx-file-upload/zx-file-upload.component';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {ZxSelectComponent, ZxSelectOption} from '../../shared/ui/zx-select/zx-select.component';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {EnumOption} from '../../shared/models/form-data-response';
@@ -83,6 +85,8 @@ const ROTATION_OPTIONS: ZxSelectOption[] = [
     ZxFileUploadComponent,
     ZxStackComponent,
     ZxSpinnerComponent,
+    HeadingDirective,
+    ZxPageLayoutComponent,
   ],
   templateUrl: './picture-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

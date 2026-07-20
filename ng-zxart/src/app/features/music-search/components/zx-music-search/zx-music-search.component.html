@@ -1,7 +1,5 @@
 @if (vm$ | async; as vm) {
 <zx-stack gap="lg">
-  <h1 appHeading="display">{{ 'music-search.title' | translate }}</h1>
-
   <zx-panel variant="elevated" radius="lg" padding="none">
     <form zxForm [sectionWrap]="true" [divided]="true" (ngSubmit)="onSubmit()">
       @if (vm.isMobile) {

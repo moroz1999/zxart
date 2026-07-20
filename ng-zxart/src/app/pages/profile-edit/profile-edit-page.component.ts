@@ -17,6 +17,8 @@ import {ZxInputComponent} from '../../shared/ui/zx-input/zx-input.component';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {ProfileApiService} from '../../features/profile/services/profile-api.service';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 
 /** Text fields shown on the profile edit form: control name → label key. */
 const TEXT_FIELDS = [
@@ -51,6 +53,8 @@ const TEXT_FIELDS = [
     ZxInputComponent,
     ZxStackComponent,
     ZxSpinnerComponent,
+    HeadingDirective,
+    ZxPageLayoutComponent,
   ],
   templateUrl: './profile-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

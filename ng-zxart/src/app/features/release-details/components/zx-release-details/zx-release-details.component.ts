@@ -1,8 +1,8 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
-import {shareReplay} from 'rxjs/operators';
+import {shareReplay, tap} from 'rxjs/operators';
 import {ReleaseDetailsDto} from '../../models/release-details.dto';
 import {ReleaseDetailsApiService} from '../../services/release-details-api.service';
 import {ZxReleaseDetailsSkeletonComponent} from '../zx-release-details-skeleton/zx-release-details-skeleton.component';
@@ -49,6 +49,7 @@ import {ZxProdPicturesSectionComponent} from '../../../prod-details/components/z
 })
 export class ZxReleaseDetailsComponent implements OnChanges {
   @Input() elementId = 0;
+  @Output() pageTitleChange = new EventEmitter<string>();
 
   details$: Observable<ReleaseDetailsDto | null> = of(null);
 
@@ -62,7 +63,10 @@ export class ZxReleaseDetailsComponent implements OnChanges {
       this.details$ = of(null);
       return;
     }
-    this.details$ = this.api.getDetails(+this.elementId).pipe(shareReplay(1));
+    this.details$ = this.api.getDetails(+this.elementId).pipe(
+      tap(details => details && this.pageTitleChange.emit(details.title)),
+      shareReplay(1),
+    );
   }
 
 }

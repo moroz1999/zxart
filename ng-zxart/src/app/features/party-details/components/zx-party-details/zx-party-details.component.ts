@@ -1,8 +1,8 @@
-import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
-import {shareReplay} from 'rxjs/operators';
+import {shareReplay, tap} from 'rxjs/operators';
 import {PartyCoreDto} from '../../models/party-core.dto';
 import {PartyCoreApiService} from '../../services/party-core-api.service';
 import {ZxPartyHeaderComponent} from '../zx-party-header/zx-party-header.component';
@@ -63,6 +63,7 @@ export class ZxPartyDetailsComponent implements OnChanges {
   @Input() elementId = 0;
   /** Active tab id from the route (`party/:id/:tab`); null = default tab. */
   @Input() activeTab: string | null = null;
+  @Output() pageTitleChange = new EventEmitter<string>();
   @ViewChild(ZxTabsComponent, {read: ElementRef}) private tabsRef!: ElementRef<HTMLElement>;
 
   readonly skeletonTabs = [0, 1, 2, 3];
@@ -79,7 +80,10 @@ export class ZxPartyDetailsComponent implements OnChanges {
       this.core$ = of(null);
       return;
     }
-    this.core$ = this.api.getCore(+this.elementId).pipe(shareReplay(1));
+    this.core$ = this.api.getCore(+this.elementId).pipe(
+      tap(core => core && this.pageTitleChange.emit(core.title)),
+      shareReplay(1),
+    );
   }
 
   getInitialTabIndex(core: PartyCoreDto): number {

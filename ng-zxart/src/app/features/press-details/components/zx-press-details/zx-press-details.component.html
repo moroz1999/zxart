@@ -1,7 +1,6 @@
 <ng-container *ngIf="details$ | async as details; else loading">
   <article class="press-details">
     <header class="press-details__header">
-      <h1 class="press-details__title">{{ details.title }}</h1>
       <zx-press-editing-controls [elementId]="details.id"></zx-press-editing-controls>
     </header>
 

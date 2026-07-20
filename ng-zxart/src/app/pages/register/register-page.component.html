@@ -1,6 +1,7 @@
-<form zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
-  <zx-stack spacing="lg">
-    <h1>{{ 'register.title' | translate }}</h1>
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">{{ 'register.title' | translate }}</h1>
+  <form zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
+    <zx-stack spacing="lg">
 
     <zx-form-field>
       <zx-form-label for="reg-username" [required]="true">{{ 'register.username' | translate }}</zx-form-label>
@@ -46,5 +47,6 @@
     <zx-form-actions align="start">
       <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'register.submit' | translate }}</zx-button>
     </zx-form-actions>
-  </zx-stack>
-</form>
+    </zx-stack>
+  </form>
+</zx-page-layout>

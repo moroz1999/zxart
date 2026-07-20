@@ -1,7 +1,8 @@
 <ng-container *ngIf="(elementId$ | async) ?? 0 as elementId">
-  <section class="playlist">
+  <zx-page-layout>
+    <h1 zxPageHeader appHeading="display">{{ 'playlists.playlist-title' | translate }}</h1>
     <zx-pictures-list-inline [elementId]="elementId"></zx-pictures-list-inline>
     <zx-music-list-inline [elementId]="elementId"></zx-music-list-inline>
     <zx-prods-list [elementId]="elementId" property="prods"></zx-prods-list>
-  </section>
+  </zx-page-layout>
 </ng-container>

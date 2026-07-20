@@ -19,6 +19,8 @@ import {ZxMultilangFieldComponent} from '../../shared/ui/zx-multilang-field/zx-m
 import {ZxMultiEntityAutocompleteComponent} from '../../shared/ui/zx-multi-entity-autocomplete/zx-multi-entity-autocomplete.component';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {FormLanguage} from '../../shared/models/form-data-response';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
@@ -57,6 +59,8 @@ const RELATION_TYPES: Record<string, string> = {
     ZxMultiEntityAutocompleteComponent,
     ZxStackComponent,
     ZxSpinnerComponent,
+    HeadingDirective,
+    ZxPageLayoutComponent,
   ],
   templateUrl: './press-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

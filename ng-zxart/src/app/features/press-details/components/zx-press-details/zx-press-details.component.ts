@@ -1,9 +1,9 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterLink} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
-import {shareReplay} from 'rxjs/operators';
+import {shareReplay, tap} from 'rxjs/operators';
 import {PressDetailsDto, PressMentionDto} from '../../models/press-details.dto';
 import {PressDetailsApiService} from '../../services/press-details-api.service';
 import {ZxPressEditingControlsComponent} from '../zx-press-editing-controls/zx-press-editing-controls.component';
@@ -24,6 +24,7 @@ interface MentionGroup {
 })
 export class ZxPressDetailsComponent implements OnChanges {
   @Input() elementId = 0;
+  @Output() pageTitleChange = new EventEmitter<string>();
 
   details$: Observable<PressDetailsDto | null> = of(null);
 
@@ -37,7 +38,10 @@ export class ZxPressDetailsComponent implements OnChanges {
       this.details$ = of(null);
       return;
     }
-    this.details$ = this.api.getDetails(+this.elementId).pipe(shareReplay(1));
+    this.details$ = this.api.getDetails(+this.elementId).pipe(
+      tap(details => details && this.pageTitleChange.emit(details.title)),
+      shareReplay(1),
+    );
   }
 
   mentionGroups(details: PressDetailsDto): MentionGroup[] {

@@ -1927,6 +1927,7 @@
     }
   },
   "ai-form": {
+    "title": "Procesamiento con IA",
     "submit": "Reejecutar IA",
     "prod-seo": "Reiniciar SEO",
     "prod-intro": "Reiniciar introducción",
@@ -1939,6 +1940,7 @@
     "error-save": "No se pudo guardar"
   },
   "profile": {
+    "title": "Perfil",
     "edit": "Editar perfil",
     "save": "Guardar",
     "first-name": "Nombre",
@@ -1958,6 +1960,7 @@
   },
   "playlists": {
     "title": "Mis listas",
+    "playlist-title": "Lista de reproducción",
     "new-placeholder": "Nombre de la nueva lista",
     "create": "Crear",
     "rename": "Renombrar",

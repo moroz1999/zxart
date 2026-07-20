@@ -6,7 +6,6 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
 import {ZxReleaseTypeBadgeComponent} from '../../../../shared/ui/zx-release-type-badge/zx-release-type-badge.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
-import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxProdPeopleRowComponent} from '../../../../shared/ui/zx-prod-people-row/zx-prod-people-row.component';
 import {ZxReleaseEditingControlsComponent} from '../zx-release-editing-controls/zx-release-editing-controls.component';
@@ -24,7 +23,6 @@ import {ZxRatingStripComponent} from '../../../../shared/components/zx-rating-st
     ZxReleaseTypeBadgeComponent,
     ZxInlineComponent,
     ZxStackComponent,
-    HeadingDirective,
     TextDirective,
     ZxProdPeopleRowComponent,
     ZxReleaseEditingControlsComponent,

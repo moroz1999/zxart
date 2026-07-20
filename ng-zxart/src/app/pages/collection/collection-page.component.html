@@ -1,9 +1,14 @@
-<ng-container *ngIf="vm$ | async as vm" [ngSwitch]="vm.kind">
-  <zx-prods-category *ngSwitchCase="'prods'" rootType="zxProdCategoriesCatalogue" [manageUrl]="false"></zx-prods-category>
-  <ng-container *ngSwitchCase="'groups'">
-    <h1 appHeading="display">{{ vm.titleKey | translate }}</h1>
-    <zx-group-browser [letter]="vm.letter" [manageUrl]="false"></zx-group-browser>
+<zx-page-layout *ngIf="vm$ | async as vm">
+  <h1 zxPageHeader appHeading="display">{{ vm.titleKey | translate }}</h1>
+  <ng-container [ngSwitch]="vm.kind">
+    <zx-prods-category
+      *ngSwitchCase="'prods'"
+      rootType="zxProdCategoriesCatalogue"
+      [manageUrl]="false"
+      [showHeading]="false"
+    ></zx-prods-category>
+    <zx-group-browser *ngSwitchCase="'groups'" [letter]="vm.letter" [manageUrl]="false"></zx-group-browser>
+    <zx-pictures-home *ngSwitchCase="'pictures'"></zx-pictures-home>
+    <zx-music-home *ngSwitchCase="'music'"></zx-music-home>
   </ng-container>
-  <zx-pictures-home *ngSwitchCase="'pictures'"></zx-pictures-home>
-  <zx-music-home *ngSwitchCase="'music'"></zx-music-home>
-</ng-container>
+</zx-page-layout>

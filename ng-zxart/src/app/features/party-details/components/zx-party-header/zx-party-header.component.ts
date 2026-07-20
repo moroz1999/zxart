@@ -7,7 +7,6 @@ import {PartyCoreDto} from '../../models/party-core.dto';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
-import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {environment} from '../../../../../environments/environment';
 import {ZxPartyEditingControlsComponent} from '../zx-party-editing-controls/zx-party-editing-controls.component';
 
@@ -23,7 +22,6 @@ import {ZxPartyEditingControlsComponent} from '../zx-party-editing-controls/zx-p
     ZxPartyEditingControlsComponent,
     SvgIconComponent,
     TextDirective,
-    HeadingDirective,
   ],
   templateUrl: './zx-party-header.component.html',
   styleUrl: './zx-party-header.component.scss',

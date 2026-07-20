@@ -1,8 +1,6 @@
 <zx-picture-gallery-host></zx-picture-gallery-host>
 
 <zx-stack gap="lg">
-  <h1 appHeading="display">{{ 'picture-search.title' | translate }}</h1>
-
   <zx-panel variant="elevated" radius="lg" padding="none">
     <form zxForm [sectionWrap]="true" [divided]="true" (ngSubmit)="onSubmit()">
       @if (isMobile) {

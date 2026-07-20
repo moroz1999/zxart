@@ -1,8 +1,8 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
-import {shareReplay} from 'rxjs/operators';
+import {shareReplay, tap} from 'rxjs/operators';
 import {TuneDetailsDto} from '../../models/tune-details.dto';
 import {TuneDetailsApiService} from '../../services/tune-details-api.service';
 
@@ -20,7 +20,6 @@ import {ZxCalloutComponent} from '../../../../shared/ui/zx-callout/zx-callout.co
 import {ZxAddedByComponent} from '../../../../shared/ui/zx-added-by/zx-added-by.component';
 import {ZxPartyPlaceComponent} from '../../../../shared/lib/zx-party-place/zx-party-place.component';
 import {ZxProdContextComponent} from '../../../../entities/zx-prod-context/components/zx-prod-context/zx-prod-context.component';
-import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 
 import {ZxTunePlayerComponent} from '../zx-tune-player/zx-tune-player.component';
@@ -54,7 +53,6 @@ import {RouterLink} from '@angular/router';@Component({
     ZxAddedByComponent,
     ZxPartyPlaceComponent,
     ZxProdContextComponent,
-    HeadingDirective,
     TextDirective,
     ZxTunePlayerComponent,
     ZxTuneMetaPanelComponent,
@@ -71,6 +69,7 @@ import {RouterLink} from '@angular/router';@Component({
 })
 export class ZxTuneDetailsComponent implements OnChanges {
   @Input() elementId = 0;
+  @Output() pageTitleChange = new EventEmitter<string>();
 
   details$: Observable<TuneDetailsDto | null> = of(null);
 
@@ -84,6 +83,9 @@ export class ZxTuneDetailsComponent implements OnChanges {
       this.details$ = of(null);
       return;
     }
-    this.details$ = this.api.getDetails(+this.elementId).pipe(shareReplay(1));
+    this.details$ = this.api.getDetails(+this.elementId).pipe(
+      tap(details => details && this.pageTitleChange.emit(details.title)),
+      shareReplay(1),
+    );
   }
 }

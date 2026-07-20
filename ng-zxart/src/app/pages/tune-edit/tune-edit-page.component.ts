@@ -22,6 +22,8 @@ import {ZxMultiEntityAutocompleteComponent} from '../../shared/ui/zx-multi-entit
 import {FileUploadChange, ZxFileUploadComponent} from '../../shared/ui/zx-file-upload/zx-file-upload.component';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {EnumOption} from '../../shared/models/form-data-response';
 import {FileUploadField, FormFieldValue} from '../../shared/services/form-save-api.service';
@@ -76,6 +78,8 @@ const PASSTHROUGH_FIELDS = ['inspired', 'embedCode'];
     ZxFileUploadComponent,
     ZxStackComponent,
     ZxSpinnerComponent,
+    HeadingDirective,
+    ZxPageLayoutComponent,
   ],
   templateUrl: './tune-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -27,6 +27,8 @@ import {EntityRef} from '../../shared/models/entity-ref';
 import {EnumOption, FileSelectorItem} from '../../shared/models/form-data-response';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {FileUploadField} from '../../shared/services/form-save-api.service';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
@@ -60,6 +62,8 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthor: '', addAuthorRole: {}, add
     ZxFileUploadComponent,
     ZxStackComponent,
     ZxSpinnerComponent,
+    HeadingDirective,
+    ZxPageLayoutComponent,
   ],
   templateUrl: './release-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

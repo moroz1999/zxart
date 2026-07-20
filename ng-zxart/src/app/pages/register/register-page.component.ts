@@ -15,6 +15,8 @@ import {ZxFormDirective} from '../../shared/ui/zx-form/zx-form.directive';
 import {ZxInputComponent} from '../../shared/ui/zx-input/zx-input.component';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {RegistrationApiService} from '../../features/registration/services/registration-api.service';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 
 /** Optional text fields shown below the required ones: control → label key. */
 const OPTIONAL_FIELDS = [
@@ -47,6 +49,8 @@ const OPTIONAL_FIELDS = [
     ZxFormDirective,
     ZxInputComponent,
     ZxStackComponent,
+    HeadingDirective,
+    ZxPageLayoutComponent,
   ],
   templateUrl: './register-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

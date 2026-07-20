@@ -20,6 +20,7 @@ import {ZxProdsListSkeletonComponent} from '../zx-prods-list-skeleton/zx-prods-l
 export class ZxProdsCategorySkeletonComponent {
   @Input() animated = true;
   @Input() cardCount = 12;
+  @Input() showHeading = true;
 
   readonly presets = this.range(4);
   readonly filters = this.range(7);

@@ -7,7 +7,6 @@ import {ZxChipComponent, ZxChipColor} from '../../../../shared/ui/zx-chip/zx-chi
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxGroupEditingControlsComponent} from '../zx-group-editing-controls/zx-group-editing-controls.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
-import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {environment} from '../../../../../environments/environment';
 
 
@@ -22,7 +21,6 @@ import {RouterLink} from '@angular/router';@Component({
     ZxGroupEditingControlsComponent,
     SvgIconComponent,
     TextDirective,
-    HeadingDirective,
   ],
   templateUrl: './zx-group-header.component.html',
   styleUrl: './zx-group-header.component.scss',

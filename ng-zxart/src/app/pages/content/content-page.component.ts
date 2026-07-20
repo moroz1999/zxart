@@ -5,6 +5,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {map, Observable, switchMap} from 'rxjs';
 import {ContentService} from '../../features/content/services/content.service';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 
 interface ContentVm {
   titleKey: string;
@@ -19,7 +20,7 @@ interface ContentVm {
 @Component({
   selector: 'zx-content-page',
   standalone: true,
-  imports: [CommonModule, TranslateModule, HeadingDirective],
+  imports: [CommonModule, TranslateModule, HeadingDirective, ZxPageLayoutComponent],
   templateUrl: './content-page.component.html',
   styleUrls: ['./content-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

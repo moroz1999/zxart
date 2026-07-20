@@ -15,13 +15,16 @@ import {ZxFormMessageComponent} from '../../shared/ui/zx-form/zx-form-message/zx
 import {ZxFormDirective} from '../../shared/ui/zx-form/zx-form.directive';
 import {ZxInputComponent} from '../../shared/ui/zx-input/zx-input.component';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 
 @Component({
   selector: 'zx-password-reminder-page',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TranslateModule, ZxButtonComponent, ZxControlErrorsComponent,
     ZxFormActionsComponent, ZxFormControlComponent, ZxFormFieldComponent, ZxFormLabelComponent,
-    ZxFormMessageComponent, ZxFormDirective, ZxInputComponent, ZxStackComponent],
+    ZxFormMessageComponent, ZxFormDirective, ZxInputComponent, ZxStackComponent, HeadingDirective,
+    ZxPageLayoutComponent],
   templateUrl: './password-reminder-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
