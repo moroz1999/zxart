@@ -13,6 +13,7 @@ import {
   distinctUntilChanged,
   filter,
   map,
+  scan,
   shareReplay,
   startWith,
   switchMap,
@@ -75,6 +76,7 @@ interface MusicSearchRequest {
 }
 
 interface SearchState {
+  initialLoading: boolean;
   loading: boolean;
   error: boolean;
   totalAmount: number;
@@ -117,6 +119,7 @@ interface MusicSearchVm extends SearchState, SearchOptionsState {
 }
 
 const EMPTY_SEARCH_STATE: SearchState = {
+  initialLoading: true,
   loading: true,
   error: false,
   totalAmount: 0,
@@ -487,14 +490,23 @@ export class ZxMusicSearchComponent implements OnInit, OnDestroy {
       switchMap(request => {
         const start = (request.page - 1) * ELEMENTS_ON_PAGE;
         return this.api.search(request.filters, start, ELEMENTS_ON_PAGE).pipe(
-          map(response => this.toSearchState(response, request.page)),
+          map(response => ({response, page: request.page})),
           startWith({
-            ...EMPTY_SEARCH_STATE,
-            currentPage: request.page,
-            loading: true,
+            response: undefined,
+            page: request.page,
           }),
         );
       }),
+      scan((state, update): SearchState => {
+        if (update.response === undefined) {
+          return {
+            ...state,
+            loading: true,
+            error: false,
+          };
+        }
+        return this.toSearchState(update.response, update.page);
+      }, EMPTY_SEARCH_STATE),
       shareReplay({bufferSize: 1, refCount: false}),
     );
   }
@@ -503,6 +515,7 @@ export class ZxMusicSearchComponent implements OnInit, OnDestroy {
     if (response === null) {
       return {
         ...EMPTY_SEARCH_STATE,
+        initialLoading: false,
         loading: false,
         error: true,
         currentPage,
@@ -510,6 +523,7 @@ export class ZxMusicSearchComponent implements OnInit, OnDestroy {
     }
 
     return {
+      initialLoading: false,
       loading: false,
       error: false,
       totalAmount: response.totalAmount,

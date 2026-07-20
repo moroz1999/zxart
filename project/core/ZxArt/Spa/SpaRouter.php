@@ -27,7 +27,7 @@ final class SpaRouter
         '#^/$#',
         '#^/(prods|pictures|music)/?$#',
         '#^/(pictures|music)/(search|tags|top)/?$#',
-        '#^/(groups|authors)(/[a-zA-Z])?/?$#',
+        '#^/(groups|authors|artists|musicians)(/[a-zA-Z])?/?$#',
         '#^/parties(/\d+)?/?$#',
         '#^/stats(/[a-z0-9-]+)?/?$#',
         '#^/geo/?$#',

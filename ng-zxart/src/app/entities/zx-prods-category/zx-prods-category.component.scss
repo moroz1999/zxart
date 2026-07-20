@@ -136,10 +136,6 @@ $amount: 5;
   margin-left: auto;
 }
 
-zx-letter-selector {
-  margin: var(--margin-lg) 0 0;
-}
-
 zx-pagination {
   z-index: 10;
   @include breakpoints.media-breakpoint-up(sm) {

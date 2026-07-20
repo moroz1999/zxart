@@ -18,14 +18,16 @@ import {ZxProdCategory} from './models/zx-prod-category';
 import {Tag} from '../../shared/models/tag';
 import {ZxProdCategoryDto} from './models/zx-prod-category-dto';
 import {environment} from '../../../environments/environment';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import {ZxPaginationComponent} from '../../shared/ui/zx-pagination/zx-pagination.component';
 import {
   CategoriesTreeSelectorComponent,
 } from './components/categories-tree-selector/categories-tree-selector.component';
 import {SortingSelectorComponent} from './components/sorting-selector/sorting-selector.component';
 import {DialogSelectorComponent} from './components/dialog-selector/dialog-selector.component';
-import {LetterSelectorComponent} from './components/letter-selector/letter-selector.component';
+import {ZxNavChipsComponent} from '../../shared/ui/zx-nav-chips/zx-nav-chips.component';
+import {ZxNavChip} from '../../shared/ui/zx-nav-chips/nav-chip';
+import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {
   ZxProdsCategorySkeletonComponent,
@@ -55,7 +57,8 @@ export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
         CategoriesTreeSelectorComponent,
         SortingSelectorComponent,
         DialogSelectorComponent,
-        LetterSelectorComponent,
+        ZxNavChipsComponent,
+        ZxStackComponent,
         ZxProdBlockComponent,
         ZxProdRowComponent,
         FormsModule,
@@ -125,6 +128,7 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
     /** Catalogue root id; resolved from the loaded root model, or from the `cat` query param. */
     private rootElementId = 0;
     private routerSub?: Subscription;
+    private langSub?: Subscription;
 
     constructor(
         private elementsService: ElementsService,
@@ -132,7 +136,25 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
         private iconReg: SvgIconRegistryService,
         @Optional() private router: Router | null,
         @Optional() private route: ActivatedRoute | null,
+        private translate: TranslateService,
     ) {}
+
+    /** Letter filter rendered as a chip strip; letters come from the backend, `''` is the "all" reset chip. */
+    get letterChips(): ZxNavChip[] {
+        const selector = this.model?.lettersSelector?.[0];
+        if (!selector) {
+            return [];
+        }
+        const chips: ZxNavChip[] = [{
+            label: this.translate.instant('prods-list.filters.letters.all'),
+            value: '',
+            active: !selector.values.some(letter => letter.selected),
+        }];
+        for (const letter of selector.values) {
+            chips.push({label: letter.title, value: letter.value, active: letter.selected});
+        }
+        return chips;
+    }
 
     /** SPA route mode: drive category + filters through the Angular router (no slugs, no pushState). */
     private get useRouter(): boolean {
@@ -177,10 +199,13 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
         } else {
             this.fetchModel();
         }
+        // Re-render the translated "all" letter chip when the language changes.
+        this.langSub = this.translate.onLangChange.subscribe(() => this.cdr.markForCheck());
     }
 
     ngOnDestroy(): void {
         this.routerSub?.unsubscribe();
+        this.langSub?.unsubscribe();
     }
 
     /** Reads the full filter state from the URL query params and loads the page. */

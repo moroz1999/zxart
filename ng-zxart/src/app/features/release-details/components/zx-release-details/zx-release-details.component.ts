@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
@@ -47,14 +47,17 @@ import {ZxProdPicturesSectionComponent} from '../../../prod-details/components/z
   styleUrl: './zx-release-details.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxReleaseDetailsComponent implements OnInit {
+export class ZxReleaseDetailsComponent implements OnChanges {
   @Input() elementId = 0;
 
   details$: Observable<ReleaseDetailsDto | null> = of(null);
 
   constructor(private readonly api: ReleaseDetailsApiService) {}
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['elementId']) {
+      return;
+    }
     if (!this.elementId || +this.elementId <= 0) {
       this.details$ = of(null);
       return;

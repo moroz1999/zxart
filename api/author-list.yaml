@@ -2,14 +2,34 @@ openapi: 3.0.0
 paths:
   /authorlist/:
     get:
-      summary: List authors and aliases
+      summary: List authors and aliases or active authors
+      parameters:
+        - in: query
+          name: action
+          schema:
+            type: string
+            enum: [active, filters]
+        - in: query
+          name: items
+          schema:
+            type: string
+            enum: [graphics, music]
+        - in: query
+          name: years
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+            default: 2
       responses:
         '200':
           description: Paginated author list
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthorListResponse'
+                oneOf:
+                  - $ref: '#/components/schemas/AuthorListResponse'
+                  - $ref: '#/components/schemas/ActiveAuthorsResponse'
 
 components:
   schemas:
@@ -80,3 +100,19 @@ components:
         graphicsRating:
           type: number
           format: float
+    ActiveAuthorsResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActiveAuthor'
+    ActiveAuthor:
+      type: object
+      required: [id, title]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string

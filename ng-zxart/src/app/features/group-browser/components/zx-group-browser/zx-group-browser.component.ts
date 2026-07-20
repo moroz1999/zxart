@@ -1,8 +1,9 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit,} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit,} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {Subject, Subscription} from 'rxjs';
+import {combineLatest, Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators';
 import {GroupBrowserService} from '../../services/group-browser.service';
 import {GroupListItem} from '../../models/group-list-item';
@@ -20,6 +21,9 @@ import {
 } from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
 import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filter-bar.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ZxNavChipsComponent} from '../../../../shared/ui/zx-nav-chips/zx-nav-chips.component';
+import {buildLetterChips, ZxNavChip} from '../../../../shared/ui/zx-nav-chips/nav-chip';
+import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 
 @Component({
   selector: 'zx-group-browser',
@@ -36,6 +40,8 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
     ZxRowSkeletonComponent,
     ZxFilterBarComponent,
     ZxStackComponent,
+    ZxNavChipsComponent,
+    HeadingDirective,
   ],
   templateUrl: './zx-group-browser.component.html',
   styleUrls: ['./zx-group-browser.component.scss'],
@@ -51,6 +57,8 @@ export class ZxGroupBrowserComponent implements OnInit, OnDestroy {
   @Input() letter = '';
   @Input() types = '';
   @Input() groupType = '';
+  /** Base route the browser builds letter and pagination links against */
+  @Input() basePath = '/groups';
 
   loading = true;
   error = false;
@@ -69,12 +77,18 @@ export class ZxGroupBrowserComponent implements OnInit, OnDestroy {
 
   private readonly subscriptions = new Subscription();
   private readonly searchSubject = new Subject<string>();
+  private readonly route = inject(ActivatedRoute, {optional: true});
 
   constructor(
     private readonly groupBrowserService: GroupBrowserService,
     private readonly cdr: ChangeDetectorRef,
     private readonly translateService: TranslateService,
   ) {}
+
+  /** SPA route mode: the letter comes from the router; `manageUrl` is disabled. */
+  private get useRouter(): boolean {
+    return !this.manageUrl && this.route != null;
+  }
 
   ngOnInit(): void {
     if (this.mode === 'full') {
@@ -83,8 +97,6 @@ export class ZxGroupBrowserComponent implements OnInit, OnDestroy {
         this.currentPage = this.parsePageFromUrl();
         this.parseFiltersFromUrl();
       }
-
-      this.loadFilterOptions();
 
       this.subscriptions.add(
         this.searchSubject.pipe(
@@ -103,7 +115,7 @@ export class ZxGroupBrowserComponent implements OnInit, OnDestroy {
               this.elementId,
               0,
               pageLimit,
-              this.sorting,
+              this.effectiveSorting,
               this.search,
               this.activeCountryId,
               this.activeCityId,
@@ -128,6 +140,24 @@ export class ZxGroupBrowserComponent implements OnInit, OnDestroy {
           },
         }),
       );
+
+      if (this.useRouter) {
+        this.subscriptions.add(combineLatest([
+          this.route!.paramMap,
+          this.route!.queryParamMap,
+        ]).subscribe(([pathParams, queryParams]) => {
+          this.letter = pathParams.get('letter') ?? '';
+          this.search = queryParams.get('q') ?? '';
+          this.selectedCountryIds = queryParams.get('country') ? [queryParams.get('country')!] : [];
+          this.selectedCityIds = queryParams.get('city') ? [queryParams.get('city')!] : [];
+          this.currentPage = Math.max(1, Number(queryParams.get('page')) || 1);
+          this.loadFilterOptions();
+          this.loadPage();
+        }));
+        return;
+      }
+
+      this.loadFilterOptions();
     }
 
     this.loadPage();
@@ -177,6 +207,24 @@ export class ZxGroupBrowserComponent implements OnInit, OnDestroy {
     return (this.currentPage - 1) * pageLimit;
   }
 
+  get letterChips(): ZxNavChip[] {
+    return buildLetterChips(this.basePath, this.letter);
+  }
+
+  /** No letter selected in full mode: list the most recently added groups instead of the full A–Z catalogue. */
+  get isRecentView(): boolean {
+    return this.mode === 'full' && !this.letter;
+  }
+
+  get effectiveSorting(): string {
+    return this.isRecentView ? 'id,desc' : this.sorting;
+  }
+
+  /** The "recently added" heading belongs to the default listing only, not to search/filter results. */
+  get showRecentHeading(): boolean {
+    return this.isRecentView && !this.search && this.activeCountryId === null && this.activeCityId === null;
+  }
+
   private loadPage(): void {
     // elementId 0 = SPA collection mount: the group list resolves globally on the backend.
     this.loading = true;
@@ -189,7 +237,7 @@ export class ZxGroupBrowserComponent implements OnInit, OnDestroy {
         this.elementId,
         start,
         pageLimit,
-        this.sorting,
+        this.effectiveSorting,
         this.mode === 'full' ? this.search : '',
         this.mode === 'full' ? this.activeCountryId : null,
         this.mode === 'full' ? this.activeCityId : null,

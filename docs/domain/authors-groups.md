@@ -163,19 +163,36 @@ When work is created by group:
 
 ### Authors Listing
 
+The `/artists` and `/musicians` roots are catalogue dashboards. Each dashboard
+shows active authors for a selectable period of one to five years (two years by
+default), the top 50 authors by the relevant work rating, and the 100 most
+recently added matching authors and aliases. Active-work authorship recorded
+through an alias is displayed as the main author.
+Dashboard sections request their data when they enter the viewport. Their initial
+loading states use 18 active-author placeholders and table-shaped placeholders
+matching the configured 50- and 100-row result limits.
+
 The flat author and alias list is loaded from `/authorlist/`. Each content type
 has its own named route with its own `<h1>`, all reusing the shared author
 browser (filters + table):
 
 - `/authors` — all authors (heading `author-browser.title.all`)
-- `/artists` — graphics authors (heading `author-browser.title.graphics`)
-- `/musicians` — music authors (heading `author-browser.title.music`)
+- `/artists/:letter` — graphics authors (heading `author-browser.title.graphics`)
+- `/musicians/:letter` — music authors (heading `author-browser.title.music`)
 
 The content type is fixed per route via the `items` route data (`''`,
 `graphics`, or `music`) and forwarded to `/authorlist/` as the `items` query
 parameter. The optional `/:letter` path segment applies the A–Z selector;
 country, city, search, and pagination are query parameters. The browser builds
 its letter, filter, and pagination links against the route's `basePath`.
+
+With no letter selected and no active search or filter, the browser lists the
+most recently added authors (sorted by descending id) under an
+`author-browser.recent` heading instead of the full alphabetical catalogue; the
+A–Z selector offers letters only (no "all" option). The shared group browser
+(`/groups`, `/groups/:letter`) renders a page-level `menu.groups` display
+heading, the same letters-only A–Z selector, and the same recent-default rule
+under a `group-browser.recent` heading, reading its letter from the route.
 
 Author-list responses contain identifiers and display data. Angular builds
 author, group, country-filter, and city-filter links from those identifiers.

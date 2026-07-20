@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\AuthorList;
 
+use ApiQueriesManager;
 use authorAliasElement;
 use authorElement;
 use structureManager;
@@ -15,11 +16,50 @@ use ZxArt\Shared\SortingParams;
 
 readonly class AuthorListService
 {
+    public const int ACTIVE_YEARS_DEFAULT = 2;
+    public const int ACTIVE_YEARS_MIN = 1;
+    public const int ACTIVE_YEARS_MAX = 5;
+
     public function __construct(
         private structureManager $structureManager,
         private AuthorListRepository $repository,
         private AuthorListTransformer $transformer,
+        private ApiQueriesManager $apiQueriesManager,
     ) {
+    }
+
+    /**
+     * @return array<int, array{id: int, title: string}>
+     */
+    public function getActive(?string $items, int $yearsBack = self::ACTIVE_YEARS_DEFAULT): array
+    {
+        $yearsBack = max(self::ACTIVE_YEARS_MIN, min(self::ACTIVE_YEARS_MAX, $yearsBack));
+        $currentYear = (int)date('Y');
+        $years = [];
+        for ($offset = 0; $offset < $yearsBack; $offset++) {
+            $years[] = $currentYear - $offset;
+        }
+        $parameters = $items === 'music'
+            ? ['zxMusicYear' => $years]
+            : ['zxPictureYear' => $years, 'zxPictureNotType' => 'attributes'];
+
+        $query = $this->apiQueriesManager->getQuery();
+        $query->setFiltrationParameters($parameters);
+        $query->setExportType(EntityType::Author->value);
+        $query->setOrder(['title' => 'asc']);
+        $result = (array)$query->getQueryResult();
+
+        $authors = [];
+        /** @var authorElement[] $authorElements */
+        $authorElements = (array)($result[EntityType::Author->value] ?? []);
+        foreach ($authorElements as $element) {
+            $authors[] = [
+                'id' => (int)$element->id,
+                'title' => html_entity_decode($element->title, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+            ];
+        }
+
+        return $authors;
     }
 
     /**

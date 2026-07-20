@@ -1,14 +1,7 @@
 <zx-stack *ngIf="vm$ | async as vm" spacing="lg">
   <h1 appHeading="headline">{{ 'menu.parties' | translate }}</h1>
   <zx-inline align="center" justify="between" [wrap]="true">
-    <zx-inline gap="xs" [wrap]="true">
-      <zx-button
-        *ngFor="let year of years"
-        size="xs"
-        [color]="vm.selectedYear === year.toString() ? 'primary' : 'transparent'"
-        [href]="'/parties/' + year"
-      >{{ year }}</zx-button>
-    </zx-inline>
+    <zx-nav-chips [chips]="yearChips(vm.selectedYear)"></zx-nav-chips>
     <zx-toggle
       *ngIf="viewToggleOptions$ | async as viewToggleOptions"
       size="sm"

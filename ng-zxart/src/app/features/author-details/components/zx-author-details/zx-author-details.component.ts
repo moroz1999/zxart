@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
@@ -60,7 +60,7 @@ type AuthorTabId = 'best' | 'gfx' | 'music' | 'software' | 'collaborators' | 'me
   styleUrl: './zx-author-details.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxAuthorDetailsComponent implements OnInit {
+export class ZxAuthorDetailsComponent implements OnChanges {
   @Input() elementId = 0;
   /** Active tab id from the route (`author/:id/:tab`); null = default tab. */
   @Input() activeTab: string | null = null;
@@ -73,8 +73,12 @@ export class ZxAuthorDetailsComponent implements OnInit {
     private readonly pageMetadataService: PageMetadataService,
   ) {}
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['elementId']) {
+      return;
+    }
     if (!this.elementId || +this.elementId <= 0) {
+      this.core$ = of(null);
       return;
     }
     this.core$ = this.api.getCore(+this.elementId).pipe(

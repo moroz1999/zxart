@@ -6,6 +6,7 @@ namespace ZxArt\MusicSearch\Repositories;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use LanguagesManager;
 use tagsManager;
 use ZxArt\MusicSearch\Dto\MusicSearchQuery;
 
@@ -28,6 +29,7 @@ readonly final class MusicSearchRepository
     public function __construct(
         private Connection $db,
         private tagsManager $tagsManager,
+        private LanguagesManager $languagesManager,
     ) {
     }
 
@@ -48,7 +50,9 @@ readonly final class MusicSearchRepository
      */
     public function buildAuthorsQuery(MusicSearchQuery $query): Builder
     {
-        $builder = $this->db->table(self::AUTHORS_TABLE)->where('displayInMusic', '=', 1);
+        $builder = $this->db->table(self::AUTHORS_TABLE)
+            ->where('languageId', '=', $this->getCurrentLanguageId())
+            ->where('displayInMusic', '=', 1);
         if ($query->authorCountryIds !== []) {
             $builder->whereIn('country', $query->authorCountryIds);
         }
@@ -125,7 +129,9 @@ readonly final class MusicSearchRepository
                 ->from(self::LINKS_TABLE)
                 ->where(self::LINKS_TABLE . '.type', '=', self::AUTHOR_MUSIC_LINK)
                 ->whereIn(self::LINKS_TABLE . '.parentStructureId', function (Builder $authorSub) use ($countryIds, $cityIds) {
-                    $authorSub->select('id')->from(self::AUTHORS_TABLE);
+                    $authorSub->select('id')
+                        ->from(self::AUTHORS_TABLE)
+                        ->where('languageId', '=', $this->getCurrentLanguageId());
                     if ($countryIds !== []) {
                         $authorSub->whereIn('country', $countryIds);
                     }
@@ -134,6 +140,11 @@ readonly final class MusicSearchRepository
                     }
                 });
         });
+    }
+
+    private function getCurrentLanguageId(): int
+    {
+        return (int)$this->languagesManager->getCurrentLanguageId();
     }
 
     private function hasContentFilters(MusicSearchQuery $query): bool

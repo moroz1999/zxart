@@ -17,12 +17,14 @@ import {
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
 import {ZxAuthorsTableComponent} from '../../../../entities/zx-authors-table/zx-authors-table.component';
 import {
-  ZxRowSkeletonComponent
-} from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
+  ZxAuthorsTableSkeletonComponent
+} from '../../../../entities/zx-authors-table-skeleton/zx-authors-table-skeleton.component';
 import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filter-bar.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
-import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
-import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {ZxNavChipsComponent} from '../../../../shared/ui/zx-nav-chips/zx-nav-chips.component';
+import {buildLetterChips, ZxNavChip} from '../../../../shared/ui/zx-nav-chips/nav-chip';
+import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
+import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 
 @Component({
   selector: 'zx-author-browser',
@@ -36,11 +38,12 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
     ZxFilterPickerComponent,
     ZxInputComponent,
     ZxAuthorsTableComponent,
-    ZxRowSkeletonComponent,
+    ZxAuthorsTableSkeletonComponent,
     ZxFilterBarComponent,
     ZxStackComponent,
-    ZxInlineComponent,
-    ZxButtonComponent,
+    ZxNavChipsComponent,
+    HeadingDirective,
+    InViewportDirective,
   ],
   templateUrl: './zx-author-browser.component.html',
   styleUrls: ['./zx-author-browser.component.scss'],
@@ -64,6 +67,8 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
   @Input() items = '';
   /** Base route the browser builds letter, filter and pagination links against */
   @Input() basePath = '/authors';
+  /** Defers the initial request until the browser enters the viewport. */
+  @Input() loadOnViewport = false;
 
   loading = true;
   error = false;
@@ -79,7 +84,7 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
   cityOptions: ZxFilterPickerItem[] = [];
 
   protected urlBase = '';
-  readonly letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  loadStarted = false;
 
   private readonly subscriptions = new Subscription();
   private readonly searchSubject = new Subject<string>();
@@ -121,7 +126,7 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
               this.elementId,
               0,
               pageLimit,
-              this.sorting,
+              this.effectiveSorting,
               this.search,
               this.activeCountryId,
               this.activeCityId,
@@ -166,7 +171,10 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
       this.loadFilterOptions();
     }
 
-    this.loadPage();
+    if (!this.loadOnViewport) {
+      this.loadStarted = true;
+      this.loadPage();
+    }
   }
 
   ngOnDestroy(): void {
@@ -200,8 +208,16 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
     this.loadPage();
   }
 
-  letterUrl(letter: string): string {
-    return letter ? `${this.basePath}/${letter.toLowerCase()}` : this.basePath;
+  onInViewport(): void {
+    if (!this.loadOnViewport || this.loadStarted) {
+      return;
+    }
+    this.loadStarted = true;
+    this.loadPage();
+  }
+
+  get letterChips(): ZxNavChip[] {
+    return buildLetterChips(this.basePath, this.letter);
   }
 
   get activeCountryId(): number | null {
@@ -217,6 +233,25 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
     return (this.currentPage - 1) * pageLimit;
   }
 
+  get skeletonCount(): number {
+    const pageLimit = Number(this.limit) || 50;
+    return this.mode === 'simple' ? pageLimit : Math.min(pageLimit, 8);
+  }
+
+  /** No letter selected in full mode: list the most recently added authors instead of the full A–Z catalogue. */
+  get isRecentView(): boolean {
+    return this.mode === 'full' && !this.letter;
+  }
+
+  get effectiveSorting(): string {
+    return this.isRecentView ? 'id,desc' : this.sorting;
+  }
+
+  /** The "recently added" heading belongs to the default listing only, not to search/filter results. */
+  get showRecentHeading(): boolean {
+    return this.isRecentView && !this.search && this.activeCountryId === null && this.activeCityId === null;
+  }
+
   private loadPage(): void {
     // elementId 0 = SPA collection mount: the author list resolves globally on the backend.
     this.loading = true;
@@ -229,7 +264,7 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
         this.elementId,
         start,
         pageLimit,
-        this.sorting,
+        this.effectiveSorting,
         this.mode === 'full' ? this.search : '',
         this.mode === 'full' ? this.activeCountryId : null,
         this.mode === 'full' ? this.activeCityId : null,

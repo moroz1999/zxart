@@ -1,0 +1,50 @@
+<zx-table size="md">
+  <table aria-hidden="true">
+    <thead>
+      <tr>
+        @if (showRowNumbers) {
+          <th class="col-num"></th>
+        }
+        <th class="col-nick">{{ 'author-browser.columns.nick' | translate }}</th>
+        <th class="col-groups">{{ 'author-browser.columns.groups' | translate }}</th>
+        <th class="col-realname">{{ 'author-browser.columns.realname' | translate }}</th>
+        <th class="col-country">{{ 'author-browser.columns.country' | translate }}</th>
+        <th class="col-city">{{ 'author-browser.columns.city' | translate }}</th>
+        <th class="col-rating">{{ 'author-browser.columns.musicRating' | translate }}</th>
+        <th class="col-rating">{{ 'author-browser.columns.graphicsRating' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of rows; track row) {
+        <tr>
+          @if (showRowNumbers) {
+            <td class="col-num">
+              <zx-skeleton-bone class="skeleton-cell skeleton-cell--number" [inline]="true"></zx-skeleton-bone>
+            </td>
+          }
+          <td class="col-nick">
+            <zx-skeleton-bone class="skeleton-cell skeleton-cell--nick" [inline]="true"></zx-skeleton-bone>
+          </td>
+          <td class="col-groups">
+            <zx-skeleton-bone class="skeleton-cell skeleton-cell--groups" [inline]="true"></zx-skeleton-bone>
+          </td>
+          <td class="col-realname">
+            <zx-skeleton-bone class="skeleton-cell skeleton-cell--realname" [inline]="true"></zx-skeleton-bone>
+          </td>
+          <td class="col-country">
+            <zx-skeleton-bone class="skeleton-cell skeleton-cell--location" [inline]="true"></zx-skeleton-bone>
+          </td>
+          <td class="col-city">
+            <zx-skeleton-bone class="skeleton-cell skeleton-cell--location" [inline]="true"></zx-skeleton-bone>
+          </td>
+          <td class="col-rating">
+            <zx-skeleton-bone class="skeleton-cell skeleton-cell--rating" [inline]="true"></zx-skeleton-bone>
+          </td>
+          <td class="col-rating">
+            <zx-skeleton-bone class="skeleton-cell skeleton-cell--rating" [inline]="true"></zx-skeleton-bone>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</zx-table>

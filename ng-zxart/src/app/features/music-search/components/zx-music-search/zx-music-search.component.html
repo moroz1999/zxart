@@ -277,7 +277,7 @@
   @if (vm.error) {
     <div appText="caption" tone="danger">{{ 'music-search.error' | translate }}</div>
   } @else if (vm.resultsType === 'zxitem') {
-    @if (vm.loading) {
+    @if (vm.initialLoading) {
       <zx-table size="sm">
         <zx-tune-table-skeleton [count]="10"></zx-tune-table-skeleton>
       </zx-table>
@@ -302,7 +302,7 @@
       </zx-table>
     }
   } @else {
-    @if (!vm.loading && vm.authors.length === 0) {
+    @if (!vm.initialLoading && vm.authors.length === 0) {
       <div appText="bodySm" tone="muted">{{ 'music-search.empty' | translate }}</div>
     } @else {
       <zx-authors-table

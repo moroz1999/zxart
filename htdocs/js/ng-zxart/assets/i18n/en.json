@@ -1092,6 +1092,23 @@
       "read": "Read article"
     }
   },
+  "authors-page": {
+    "active": {
+      "graphics": "Active artists",
+      "music": "Active musicians",
+      "period": "Activity period",
+      "yearsShort": "{{count}} yr",
+      "empty": "No active authors"
+    },
+    "top": {
+      "graphics": "Top artists",
+      "music": "Top musicians"
+    },
+    "latest": {
+      "graphics": "Recently added artists",
+      "music": "Recently added musicians"
+    }
+  },
   "author-browser": {
     "title": {
       "all": "Authors",
@@ -1100,6 +1117,7 @@
     },
     "error": "Failed to load authors",
     "empty": "No authors found",
+    "recent": "Recently added authors",
     "search": {
       "placeholder": "Search by nick, name or alias..."
     },
@@ -1120,6 +1138,7 @@
   "group-browser": {
     "error": "Failed to load groups",
     "empty": "No groups found",
+    "recent": "Recently added groups",
     "search": {
       "placeholder": "Search by name or abbreviation..."
     },

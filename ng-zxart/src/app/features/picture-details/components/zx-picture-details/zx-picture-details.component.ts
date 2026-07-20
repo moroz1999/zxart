@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of, Subscription} from 'rxjs';
@@ -75,7 +75,7 @@ import {RouterLink} from '@angular/router';@Component({
   styleUrls: ['./zx-picture-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxPictureDetailsComponent implements OnInit, OnDestroy {
+export class ZxPictureDetailsComponent implements OnChanges, OnDestroy {
   @Input() elementId = 0;
 
   details$: Observable<PictureDetailsDto | null> = of(null);
@@ -88,7 +88,12 @@ export class ZxPictureDetailsComponent implements OnInit, OnDestroy {
     private readonly pageMetadataService: PageMetadataService,
   ) {}
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['elementId']) {
+      return;
+    }
+
+    this.viewSubscription?.unsubscribe();
     if (!this.elementId || +this.elementId <= 0) {
       this.details$ = of(null);
       return;

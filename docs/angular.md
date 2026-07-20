@@ -96,6 +96,12 @@ routes) resolves the current user before the first render (auto-login) and appli
 the user's language once. Guards that must complete before rendering return an
 Observable that emits when ready.
 
+### Reused Parameterized Routes
+
+Angular reuses a routed component when only a route parameter changes. A child
+detail component that receives the parameter through an input must reload its
+data when that input changes; initialization-only loading is not sufficient.
+
 ### LocalStorage
 
 All localStorage access MUST go through `LocalStorageService` (`shared/services/local-storage.service.ts`). Direct use of `localStorage` (e.g. `localStorage.getItem/setItem/removeItem`) is **forbidden**.

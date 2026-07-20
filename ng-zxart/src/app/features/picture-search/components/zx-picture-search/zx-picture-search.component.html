@@ -286,7 +286,7 @@
   @if (error) {
     <div appText="caption" tone="danger">{{ 'picture-search.error' | translate }}</div>
   } @else if (resultsType === 'zxitem') {
-    @if (loading) {
+    @if (initialLoading) {
       <div zxPicturesGrid>
         <zx-picture-card-skeleton
           *ngFor="let i of skeletonItems"
@@ -306,7 +306,7 @@
       </div>
     }
   } @else {
-    @if (!loading && authors.length === 0) {
+    @if (!initialLoading && authors.length === 0) {
       <div appText="bodySm" tone="muted">{{ 'picture-search.empty' | translate }}</div>
     } @else {
       <zx-authors-table

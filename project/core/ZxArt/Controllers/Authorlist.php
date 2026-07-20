@@ -50,6 +50,8 @@ class Authorlist extends LoggedControllerApplication
         try {
             if ($action === 'filters') {
                 $this->handleFilters();
+            } elseif ($action === 'active') {
+                $this->handleActive();
             } else {
                 $this->handleList();
             }
@@ -59,6 +61,15 @@ class Authorlist extends LoggedControllerApplication
         }
 
         $this->renderer->display();
+    }
+
+    private function handleActive(): void
+    {
+        $items = $this->getParameter('items') ?: null;
+        $years = (int)($this->getParameter('years') ?: AuthorListService::ACTIVE_YEARS_DEFAULT);
+        $authors = $this->authorListService->getActive($items, $years);
+
+        $this->assignSuccess(['items' => $authors]);
     }
 
     private function handleList(): void

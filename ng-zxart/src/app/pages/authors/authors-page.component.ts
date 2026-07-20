@@ -5,12 +5,14 @@ import {TranslateModule} from '@ngx-translate/core';
 import {combineLatest, map, Observable} from 'rxjs';
 import {ZxAuthorBrowserComponent} from '../../features/author-browser/components/zx-author-browser/zx-author-browser.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxAuthorsDashboardComponent} from '../../features/authors-page/components/zx-authors-dashboard/zx-authors-dashboard.component';
 
 interface AuthorsVm {
-  items: string;
+  items: '' | 'graphics' | 'music';
   basePath: string;
   titleKey: string;
   letter: string;
+  dashboard: boolean;
 }
 
 /**
@@ -27,6 +29,7 @@ interface AuthorsVm {
     TranslateModule,
     ZxAuthorBrowserComponent,
     HeadingDirective,
+    ZxAuthorsDashboardComponent,
   ],
   templateUrl: './authors-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,10 +37,11 @@ interface AuthorsVm {
 export class AuthorsPageComponent {
   readonly vm$: Observable<AuthorsVm> = combineLatest([this.route.data, this.route.paramMap]).pipe(
     map(([data, params]) => ({
-      items: (data['items'] ?? '') as string,
+      items: (data['items'] ?? '') as '' | 'graphics' | 'music',
       basePath: (data['basePath'] ?? '/authors') as string,
       titleKey: (data['titleKey'] ?? 'author-browser.title.all') as string,
       letter: params.get('letter') ?? '',
+      dashboard: data['dashboard'] === true,
     })),
   );
 

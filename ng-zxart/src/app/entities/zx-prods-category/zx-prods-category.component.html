@@ -68,6 +68,7 @@
                     class="selectors"
                     [ngClass]="{'disabled': loading}"
             >
+                <zx-stack gap="lg">
                 <div class="selectors-top">
                     <zx-dialog-selector
                             [selectorData]="model.yearsSelector"
@@ -104,10 +105,14 @@
                         ></zx-toggle>
                     </div>
                 </div>
-                <zx-letter-selector
-                        [lettersSelector]="model.lettersSelector"
-                        (letterSelected)="letterSelected($event)"
-                ></zx-letter-selector>
+                <zx-nav-chips
+                        *ngIf="letterChips.length"
+                        [chips]="letterChips"
+                        size="md"
+                        [square]="true"
+                        (chipSelect)="letterSelected($event)"
+                ></zx-nav-chips>
+                </zx-stack>
             </div>
             <div class="zx-prods-list-center">
                 <zx-spinner class="zx-prods-list-spinner" *ngIf="loading" size="xl"></zx-spinner>

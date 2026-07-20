@@ -56,8 +56,15 @@ export class ZxMusicListComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // React to a new pre-fetched/re-sorted input array after init (e.g. compo sorting).
-    if (this.initialized && changes['tunesInput'] && !changes['tunesInput'].firstChange) {
+    if (!this.initialized) {
+      return;
+    }
+    if (changes['elementId'] || changes['compoType']) {
+      this.playlistId = `music-list-${this.elementId}${this.compoType ? '-' + this.compoType : ''}`;
+      this.vm$ = this.buildVm();
+      return;
+    }
+    if (changes['tunesInput']) {
       this.vm$ = this.buildVm();
     }
   }

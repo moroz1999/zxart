@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
@@ -13,6 +13,7 @@ import {
 } from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureListService} from '../../services/picture-list.service';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'zx-pictures-list-inline',
@@ -30,7 +31,7 @@ import {PictureGalleryService} from '../../../picture-gallery/services/picture-g
   styleUrls: ['./zx-pictures-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxPicturesListComponent implements OnInit, OnChanges {
+export class ZxPicturesListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() elementId = 0;
   @Input() compoType = '';
   @Input() picturesInput: ZxPictureDto[] | null = null;
@@ -41,6 +42,7 @@ export class ZxPicturesListComponent implements OnInit, OnChanges {
   error = false;
   pictures: ZxPictureDto[] = [];
   galleryId = '';
+  private dataSubscription?: Subscription;
 
   constructor(
     private pictureListService: PictureListService,
@@ -54,13 +56,25 @@ export class ZxPicturesListComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // React to a new pre-fetched/re-sorted input array after init (e.g. compo sorting).
-    if (this.galleryId && changes['picturesInput'] && !changes['picturesInput'].firstChange) {
+    if (!this.galleryId) {
+      return;
+    }
+    if (changes['elementId'] || changes['compoType']) {
+      this.galleryId = `zx-pictures-list-${this.elementId}${this.compoType ? '-' + this.compoType : ''}`;
+      this.loadData();
+      return;
+    }
+    if (changes['picturesInput'] || changes['picturesJson']) {
       this.loadData();
     }
   }
 
+  ngOnDestroy(): void {
+    this.dataSubscription?.unsubscribe();
+  }
+
   private loadData(): void {
+    this.dataSubscription?.unsubscribe();
     const inlineData = this.picturesJson ?? this.picturesInput;
     if (inlineData !== null) {
       this.loading = false;
@@ -79,7 +93,7 @@ export class ZxPicturesListComponent implements OnInit, OnChanges {
     }
     this.loading = true;
     this.error = false;
-    this.pictureListService.getPictures(this.elementId, this.compoType || undefined).subscribe({
+    this.dataSubscription = this.pictureListService.getPictures(this.elementId, this.compoType || undefined).subscribe({
       next: pictures => {
         this.loading = false;
         this.pictures = pictures;

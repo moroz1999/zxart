@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable, of} from 'rxjs';
 import {shareReplay, tap} from 'rxjs/operators';
@@ -97,7 +97,7 @@ type ProdLinksTabId = 'articles' | 'series' | 'compilations';
   styleUrls: ['./zx-prod-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxProdDetailsComponent implements OnInit {
+export class ZxProdDetailsComponent implements OnChanges {
   @Input() elementId = 0;
   /** Active tab id from the route (`prod/:id/:tab`); null = default tab. */
   @Input() activeTab: string | null = null;
@@ -109,7 +109,10 @@ export class ZxProdDetailsComponent implements OnInit {
     private readonly pageMetadataService: PageMetadataService,
   ) {}
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['elementId']) {
+      return;
+    }
     if (!this.elementId || +this.elementId <= 0) {
       this.core$ = of(null);
       return;

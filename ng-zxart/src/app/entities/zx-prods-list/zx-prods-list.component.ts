@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ZxProdsList} from './models/zx-prods-list';
 import {ElementsService} from '../../shared/services/elements.service';
 import {ZxProdsListDto} from './models/zx-prods-list-dto';
@@ -31,7 +31,7 @@ interface ZxProdsListVm {
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxProdsListComponent implements OnInit {
+export class ZxProdsListComponent implements OnInit, OnChanges {
     @Input() public property: 'prods' | 'publishedProds' | 'releases' | 'compilations' | 'seriesProds' = 'prods';
     @Input() elementId: number = 0;
     @Input() layout: 'years' | 'list' = 'list';
@@ -72,6 +72,15 @@ export class ZxProdsListComponent implements OnInit {
             return;
         }
         this.fetchPrefetchedModel();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (!this.initialized || this.hasItemsObservableInput || this.hasItemsInput) {
+            return;
+        }
+        if (changes['elementId'] || changes['property']) {
+            this.fetchPrefetchedModel();
+        }
     }
 
     private useItemsInput(): void {

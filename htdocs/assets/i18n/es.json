@@ -1091,6 +1091,23 @@
       "read": "Leer artículo"
     }
   },
+  "authors-page": {
+    "active": {
+      "graphics": "Artistas activos",
+      "music": "Músicos activos",
+      "period": "Período de actividad",
+      "yearsShort": "{{count}} a.",
+      "empty": "No hay autores activos"
+    },
+    "top": {
+      "graphics": "Mejores artistas",
+      "music": "Mejores músicos"
+    },
+    "latest": {
+      "graphics": "Artistas añadidos recientemente",
+      "music": "Músicos añadidos recientemente"
+    }
+  },
   "author-browser": {
     "title": {
       "all": "Autores",
@@ -1099,6 +1116,7 @@
     },
     "error": "Error al cargar autores",
     "empty": "No se encontraron autores",
+    "recent": "Autores añadidos recientemente",
     "search": {
       "placeholder": "Buscar por nick, nombre o alias..."
     },
@@ -1119,6 +1137,7 @@
   "group-browser": {
     "error": "Error al cargar grupos",
     "empty": "No se encontraron grupos",
+    "recent": "Grupos añadidos recientemente",
     "search": {
       "placeholder": "Buscar por nombre o abreviatura..."
     },

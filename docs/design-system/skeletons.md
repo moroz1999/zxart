@@ -9,6 +9,7 @@ Do not add a facade skeleton component that imports multiple variants.
 ## Components
 
 - `zx-card-skeleton`
+- `zx-authors-table-skeleton`
 - `zx-comment-skeleton`
 - `zx-picture-card-skeleton`
 - `zx-picture-details-skeleton`
@@ -26,6 +27,8 @@ Do not add a facade skeleton component that imports multiple variants.
 - `zx-tune-details-skeleton`
 - `zx-tune-table-skeleton`
 - `zx-skeleton-bone`
+
+`zx-skeleton-bone` supports `inline=true` when a text placeholder must participate in the same line box as the content it represents.
 
 ## Structural Mimicry Rule
 

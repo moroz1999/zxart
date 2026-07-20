@@ -10,8 +10,9 @@ import {
   ZxPartiesListComponent,
 } from '../../entities/zx-parties-list/zx-parties-list.component';
 import {PARTY_YEARS} from '../../features/menu/menu.config';
-import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxInlineComponent} from '../../shared/ui/zx-inline/zx-inline.component';
+import {ZxNavChipsComponent} from '../../shared/ui/zx-nav-chips/zx-nav-chips.component';
+import {ZxNavChip} from '../../shared/ui/zx-nav-chips/nav-chip';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {ZxToggleComponent, ZxToggleOption} from '../../shared/ui/zx-toggle/zx-toggle.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
@@ -33,7 +34,7 @@ interface PartiesPageVm {
     TranslateModule,
     ZxPartiesListComponent,
     ZxPartiesListSkeletonComponent,
-    ZxButtonComponent,
+    ZxNavChipsComponent,
     ZxInlineComponent,
     ZxStackComponent,
     ZxToggleComponent,
@@ -74,6 +75,14 @@ export class PartiesPageComponent {
         {value: 'table', label: translations['parties-page.view-table'] as string},
       ]),
     );
+  }
+
+  yearChips(selectedYear: string): ZxNavChip[] {
+    return this.years.map(year => ({
+      label: String(year),
+      href: `/parties/${year}`,
+      active: selectedYear === String(year),
+    }));
   }
 
   setViewMode(value: string): void {

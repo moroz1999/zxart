@@ -11,9 +11,15 @@ import {ZxSkeletonVisibilityDirective} from 'src/app/shared/ui/zx-skeleton/zx-sk
 })
 export class ZxSkeletonBoneComponent {
   @Input() animated = true;
+  @Input() inline = false;
 
   @HostBinding('class.animated')
   get animatedClass(): boolean {
     return this.animated;
+  }
+
+  @HostBinding('class.inline')
+  get inlineClass(): boolean {
+    return this.inline;
   }
 }

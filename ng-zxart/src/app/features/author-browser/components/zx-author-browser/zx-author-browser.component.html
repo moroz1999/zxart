@@ -1,4 +1,8 @@
-<zx-stack spacing="md">
+<zx-stack
+  spacing="md"
+  [appInViewport]="loadOnViewport && !loadStarted"
+  (inViewport)="onInViewport()"
+>
   <zx-filter-bar *ngIf="mode === 'full'">
     <zx-input
       class="filter-search"
@@ -28,21 +32,14 @@
     ></zx-filter-picker>
   </zx-filter-bar>
 
-  <zx-inline *ngIf="mode === 'full'" gap="xs" [wrap]="true">
-    <zx-button
-      size="xs"
-      [color]="letter ? 'transparent' : 'primary'"
-      [href]="letterUrl('')"
-    >{{ 'prods-list.filters.letters.all' | translate }}</zx-button>
-    <zx-button
-      *ngFor="let option of letters"
-      size="xs"
-      [color]="letter.toUpperCase() === option ? 'primary' : 'transparent'"
-      [href]="letterUrl(option)"
-    >{{ option }}</zx-button>
-  </zx-inline>
+  <zx-nav-chips *ngIf="mode === 'full'" [chips]="letterChips"></zx-nav-chips>
 
-  <zx-row-skeleton *ngIf="authors === null && !error" [count]="8"></zx-row-skeleton>
+  <h2 *ngIf="showRecentHeading" appHeading="title">{{ 'author-browser.recent' | translate }}</h2>
+
+  <zx-authors-table-skeleton
+    *ngIf="authors === null && !error"
+    [count]="skeletonCount"
+  ></zx-authors-table-skeleton>
 
   <div *ngIf="error" appText="caption" tone="danger">{{ 'author-browser.error' | translate }}</div>
   <div *ngIf="!loading && !error && authors !== null && authors.length === 0"

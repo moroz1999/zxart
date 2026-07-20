@@ -21,6 +21,8 @@ The graphics and music branches of the legacy `detailedSearch` element are repla
 - **SPA URL scheme**: filters live in the router query params (`titleWord`, `startYear`, `endYear`, `rating`, `partyPlace`, `pictureType`, `realtime`, `inspiration`, `stages`, `fromGame`, `tagsInclude`, `tagsExclude`, `authorCountry`, `authorCity`, `resultsType`, `sortParameter`, `sortOrder`, `page`); only non-default values are emitted (`models/picture-search-query-params.ts`). `fromGame=1` restricts to pictures that belong to a game (`module_zxpicture.game`); the graphics "games" menu links here. When embedded in a legacy page (`manageUrl=true`) the component still parses/pushes the legacy `name:value/` path segments (`models/picture-search-url.ts`).
 - `action=locations&ids=...` resolves country/city element titles for restoring filter chips from URL ids.
 - Picture format codes are duplicated in `features/picture-search/models/zx-picture-types.ts` and must stay in sync with the backend `ZxPictureTypesProvider` trait; labels live in the `picture-search.format.*` i18n keys.
+- Author-result queries use only the current-language `module_author` row, so totals and pagination count each logical author once.
+- Result skeletons are shown only during the initial request; subsequent pagination keeps the current results visible while pagination is locked.
 
 Music search uses the same principles via `GET /music-search/` (`ZxArt\Controllers\MusicSearch` → `ZxArt\MusicSearch\MusicSearchService` → `ZxArt\MusicSearch\Repositories\MusicSearchRepository`). Standalone entrypoint `/music/search` (`pages/music-search`). Spec: `api/music-search.yaml`.
 

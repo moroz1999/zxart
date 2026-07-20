@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterLink} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
@@ -22,14 +22,17 @@ interface MentionGroup {
   styleUrls: ['./zx-press-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxPressDetailsComponent implements OnInit {
+export class ZxPressDetailsComponent implements OnChanges {
   @Input() elementId = 0;
 
   details$: Observable<PressDetailsDto | null> = of(null);
 
   constructor(private readonly api: PressDetailsApiService) {}
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['elementId']) {
+      return;
+    }
     if (!this.elementId || +this.elementId <= 0) {
       this.details$ = of(null);
       return;

@@ -28,6 +28,10 @@
     ></zx-filter-picker>
   </zx-filter-bar>
 
+  <zx-nav-chips *ngIf="mode === 'full'" [chips]="letterChips"></zx-nav-chips>
+
+  <h2 *ngIf="showRecentHeading" appHeading="title">{{ 'group-browser.recent' | translate }}</h2>
+
   <zx-row-skeleton *ngIf="groups === null && !error" [count]="30"></zx-row-skeleton>
 
   <div *ngIf="error" appText="caption" tone="danger">{{ 'group-browser.error' | translate }}</div>

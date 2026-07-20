@@ -104,6 +104,7 @@ const SEARCH_DEBOUNCE_MS = 250;
 export class ZxPictureSearchComponent implements OnInit, OnDestroy {
   filters: PictureSearchFilters = createDefaultPictureSearchFilters();
 
+  initialLoading = true;
   loading = true;
   error = false;
   totalAmount = 0;
@@ -144,6 +145,7 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
 
   protected urlBase = '/';
   private appliedFilters: PictureSearchFilters = createDefaultPictureSearchFilters();
+  private resultsPage = 1;
 
   private readonly router = inject(Router, {optional: true});
   private readonly route = inject(ActivatedRoute, {optional: true});
@@ -232,11 +234,11 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
     if (this.totalAmount === 0) {
       return 0;
     }
-    return (this.currentPage - 1) * ELEMENTS_ON_PAGE + 1;
+    return (this.resultsPage - 1) * ELEMENTS_ON_PAGE + 1;
   }
 
   get rangeEnd(): number {
-    return Math.min(this.currentPage * ELEMENTS_ON_PAGE, this.totalAmount);
+    return Math.min(this.resultsPage * ELEMENTS_ON_PAGE, this.totalAmount);
   }
 
   onSubmit(): void {
@@ -348,15 +350,18 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.error = false;
     this.cdr.markForCheck();
-    const start = (this.currentPage - 1) * ELEMENTS_ON_PAGE;
+    const requestedPage = this.currentPage;
+    const start = (requestedPage - 1) * ELEMENTS_ON_PAGE;
     this.subscriptions.add(
       this.api.search(this.appliedFilters, start, ELEMENTS_ON_PAGE).subscribe(response => {
+        this.initialLoading = false;
         this.loading = false;
         if (response === null) {
           this.error = true;
           this.cdr.markForCheck();
           return;
         }
+        this.resultsPage = requestedPage;
         this.totalAmount = response.totalAmount;
         this.resultsType = response.resultsType;
         this.pictures = response.pictures;

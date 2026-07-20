@@ -6,6 +6,7 @@ namespace ZxArt\PictureSearch\Repositories;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use LanguagesManager;
 use tagsManager;
 use ZxArt\PictureSearch\Dto\PictureSearchQuery;
 
@@ -25,6 +26,7 @@ readonly final class PictureSearchRepository
     public function __construct(
         private Connection $db,
         private tagsManager $tagsManager,
+        private LanguagesManager $languagesManager,
     ) {
     }
 
@@ -45,7 +47,9 @@ readonly final class PictureSearchRepository
      */
     public function buildAuthorsQuery(PictureSearchQuery $query): Builder
     {
-        $builder = $this->db->table(self::AUTHORS_TABLE)->where('displayInGraphics', '=', 1);
+        $builder = $this->db->table(self::AUTHORS_TABLE)
+            ->where('languageId', '=', $this->getCurrentLanguageId())
+            ->where('displayInGraphics', '=', 1);
         if ($query->authorCountryIds !== []) {
             $builder->whereIn('country', $query->authorCountryIds);
         }
@@ -125,7 +129,9 @@ readonly final class PictureSearchRepository
                 ->from(self::LINKS_TABLE)
                 ->where(self::LINKS_TABLE . '.type', '=', self::AUTHOR_PICTURE_LINK)
                 ->whereIn(self::LINKS_TABLE . '.parentStructureId', function (Builder $authorSub) use ($countryIds, $cityIds) {
-                    $authorSub->select('id')->from(self::AUTHORS_TABLE);
+                    $authorSub->select('id')
+                        ->from(self::AUTHORS_TABLE)
+                        ->where('languageId', '=', $this->getCurrentLanguageId());
                     if ($countryIds !== []) {
                         $authorSub->whereIn('country', $countryIds);
                     }
@@ -134,6 +140,11 @@ readonly final class PictureSearchRepository
                     }
                 });
         });
+    }
+
+    private function getCurrentLanguageId(): int
+    {
+        return (int)$this->languagesManager->getCurrentLanguageId();
     }
 
     private function hasContentFilters(PictureSearchQuery $query): bool

@@ -7,12 +7,14 @@ import {ZxProdsCategoryComponent} from '../../entities/zx-prods-category/zx-prod
 import {ZxGroupBrowserComponent} from '../../features/group-browser/components/zx-group-browser/zx-group-browser.component';
 import {PicturesHomeComponent} from '../../features/catalogue-home/components/pictures-home/pictures-home.component';
 import {MusicHomeComponent} from '../../features/catalogue-home/components/music-home/music-home.component';
+import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 
 type CollectionKind = 'prods' | 'groups' | 'pictures' | 'music';
 
 interface CollectionVm {
   kind: CollectionKind;
   letter: string;
+  titleKey: string;
 }
 
 /**
@@ -30,6 +32,7 @@ interface CollectionVm {
     ZxGroupBrowserComponent,
     PicturesHomeComponent,
     MusicHomeComponent,
+    HeadingDirective,
   ],
   templateUrl: './collection-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,11 +42,16 @@ export class CollectionPageComponent {
     map(params => ({
       kind: this.kind,
       letter: params.get('letter') ?? '',
+      titleKey: this.titleKey,
     })),
   );
 
   private get kind(): CollectionKind {
     return (this.route.snapshot.data['kind'] ?? 'prods') as CollectionKind;
+  }
+
+  private get titleKey(): string {
+    return (this.route.snapshot.data['titleKey'] ?? '') as string;
   }
 
   constructor(private readonly route: ActivatedRoute) {}
