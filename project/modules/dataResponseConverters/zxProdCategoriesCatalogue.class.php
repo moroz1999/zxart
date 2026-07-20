@@ -1,23 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 class zxProdCategoriesCatalogueDataResponseConverter extends StructuredDataResponseConverter
 {
     protected $defaultPreset = 'api';
 
     /**
-     * @return string[]
-     *
+     * @return array<string, string|Closure>
      */
-    protected function getRelationStructure()
+    #[Override]
+    protected function getRelationStructure(): array
     {
+        $titleResolver = static function (zxProdCategoriesCatalogueElement $element): string {
+            return html_entity_decode($element->title, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        };
+
         return [
             'id' => 'id',
-            'title' => function ($element) {
-                return html_entity_decode($element->title, ENT_QUOTES);
-            },
-            'h1' => function ($element) {
-                return html_entity_decode($element->getH1(), ENT_QUOTES);
-            },
+            'title' => $titleResolver,
+            'h1' => $titleResolver,
             'structureType' => 'structureType',
             'categories' => 'getCategoriesIds',
             'prods' => 'getProdsInfo',
@@ -38,10 +40,10 @@ class zxProdCategoriesCatalogueDataResponseConverter extends StructuredDataRespo
     }
 
     /**
-     * @return string[][]
-     *
+     * @return array<string, list<string>>
      */
-    protected function getPresetsStructure()
+    #[Override]
+    protected function getPresetsStructure(): array
     {
         return [
             'zxProdsList' => [

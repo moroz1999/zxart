@@ -1,10 +1,10 @@
 <ng-container *ngIf="details$ | async as details; else loading">
-  <zx-breadcrumbs
-    [parentItem]="details.authors.length ? {title: details.authors[0].name, url: details.authors[0].url} : null"
-    [currentTitle]="details.title">
-  </zx-breadcrumbs>
-
   <zx-stack spacing="xl">
+    <zx-breadcrumbs
+      [parentItem]="details.authors.length ? {title: details.authors[0].name, url: details.authors[0].url} : null"
+      [currentTitle]="details.title">
+    </zx-breadcrumbs>
+
     <!-- Hero -->
     <zx-inline [wrap]="true" align="start" gap="xl">
       <zx-tune-player [tune]="details"></zx-tune-player>
@@ -84,7 +84,9 @@
         <div *ngIf="details.description" appText="body" tone="primary" [innerHTML]="details.description"></div>
       </zx-stack>
     </zx-inline>
+  </zx-stack>
 
+  <zx-stack spacing="xl">
     <!-- Tags (reusable list with quick-form editing, as in picture/prod) -->
     <zx-panel>
       <zx-tags-list

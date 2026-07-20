@@ -1,0 +1,6 @@
+:host {
+  /* Dissolve the feature host so its content blocks become direct flex items
+     of zx-page-layout's content area, which owns the page-level vertical
+     rhythm. See docs/design-system/zx-page-layout.md. */
+  display: contents;
+}
