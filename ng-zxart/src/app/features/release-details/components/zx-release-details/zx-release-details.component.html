@@ -1,12 +1,5 @@
 <ng-container *ngIf="details$ | async as details; else loading">
   <zx-stack spacing="xl">
-    <zx-breadcrumbs
-      categoryCataloguePath="/prods"
-      [categories]="details.prod.categoriesPaths.length ? details.prod.categoriesPaths[0].categories : []"
-      [parentItem]="{title: details.prod.title, url: details.prod.url}"
-      [currentTitle]="details.title">
-    </zx-breadcrumbs>
-
     <zx-release-parent-anchor [prod]="details.prod"></zx-release-parent-anchor>
 
     <zx-release-hero [details]="details"></zx-release-hero>

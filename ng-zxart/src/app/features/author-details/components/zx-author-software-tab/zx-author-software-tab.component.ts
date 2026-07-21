@@ -18,6 +18,7 @@ import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.compo
 import {ZxProdsGridDirective} from '../../../../shared/directives/prods-grid.directive';
 import {ZxProdReleaseCardComponent} from '../../../../entities/zx-prod-release-card/zx-prod-release-card.component';
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
+import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 
 const PAGE_SIZE = 15;
 
@@ -45,6 +46,7 @@ interface YearGroup {
     ZxInlineComponent,
     ZxProdsGridDirective,
     ZxProdReleaseCardComponent,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './zx-author-software-tab.component.html',
   styleUrl: './zx-author-software-tab.component.scss',

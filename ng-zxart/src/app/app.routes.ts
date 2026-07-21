@@ -217,6 +217,7 @@ const ROUTED_CHILDREN: Routes = [
   {path: 'register', loadComponent: () => import('./pages/register/register-page.component').then(m => m.RegisterPageComponent)},
   {path: 'password-reminder', loadComponent: () => import('./pages/password-reminder/password-reminder-page.component').then(m => m.PasswordReminderPageComponent)},
   {path: 'search', loadComponent: () => import('./pages/search/search-page.component').then(m => m.SearchPageComponent), data: {titleKey: 'menu.gfx.search'}},
+  {path: 'prods/tags', loadComponent: () => import('./pages/tags/tags-page.component').then(m => m.TagsPageComponent), data: {section: 'software', searchBasePath: '/prods', titleKey: 'menu.soft.tags', tagQueryParam: 'tags', tagQueryValue: 'id'}},
   {path: 'prods', loadComponent: () => import('./pages/collection/collection-page.component').then(m => m.CollectionPageComponent), data: {kind: 'prods', titleKey: 'menu.software'}},
   {path: 'groups', loadComponent: () => import('./pages/collection/collection-page.component').then(m => m.CollectionPageComponent), data: {kind: 'groups', titleKey: 'menu.groups'}},
   {path: 'groups/:letter', loadComponent: () => import('./pages/collection/collection-page.component').then(m => m.CollectionPageComponent), data: {kind: 'groups', titleKey: 'menu.groups'}},

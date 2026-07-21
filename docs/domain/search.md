@@ -32,12 +32,15 @@ Music search uses the same principles via `GET /music-search/` (`ZxArt\Controlle
 
 ## File search
 
-Standalone SPA route `/file-search` (`pages/file-search` → `zx-file-search`): searches
-the file registry by file name (substring) or md5 (exact, 32 hex chars) and links each
-match to the entity it belongs to.
+Standalone SPA route `/file-search` (`pages/file-search` → `zx-parser`): the visitor
+uploads a file and gets back the releases the archive's contents belong to. There is no
+search by typed file name or md5.
 
-- Endpoint: `GET /file-search-data/?q=<term>` (`ZxArt\Controllers\FileSearchData` →
-  `ZxArt\FileSearch\FileSearchService`). Spec: `api/file-search.yaml`.
-- `FileSearchRepository` queries `files_registry` (each row maps a file's `fileName`/`md5`
-  to its `elementId`); the service loads the elements and resolves their SPA URL via
-  `EntityUrlResolver`. Results are capped and require a 2+ character query.
+- Endpoint: `POST /parser/` with a multipart `file` field (`parserApplication`,
+  `project/modules/applications/parser.class.php`). Accepts up to 50 MB.
+- `ZxParsingManager::parseFileStructure()` walks the upload recursively (archives, disk
+  images, tapes) and yields a tree of items, each with its own md5.
+- Every item's md5 is looked up in `files_registry`; matched elements are returned as
+  `releases` with title, year, authors and clean SPA URLs from `EntityUrlResolver`.
+- Items with neither matches nor children are flagged `notFound`, which drives the
+  "not found only" filter in the UI.

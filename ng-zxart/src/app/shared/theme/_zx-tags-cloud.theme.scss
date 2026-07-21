@@ -1,0 +1,10 @@
+:root {
+  /* Font size of the least-used tags in the cloud. */
+  --zx-tags-cloud-font-size-small: var(--zx-font-size-md);
+  /* Font size of moderately used tags in the cloud. */
+  --zx-tags-cloud-font-size-medium: var(--zx-font-size-lg);
+  /* Font size of frequently used tags in the cloud. */
+  --zx-tags-cloud-font-size-large: var(--zx-font-size-xl);
+  /* Font size of the most-used tags in the cloud. */
+  --zx-tags-cloud-font-size-extra-large: var(--zx-font-size-xxl);
+}

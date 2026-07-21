@@ -11,7 +11,7 @@
   </div>
 </div>
 
-<div *ngIf="loading" zxPicturesGrid>
+<div *ngIf="loading && pictures.length === 0" zxPicturesGrid>
   <zx-picture-card-skeleton
     *ngFor="let i of skeletonItems"
     [animationDelayMs]="i * 80"
@@ -21,7 +21,7 @@
 <div *ngIf="error" appText="caption" tone="danger">{{ 'picture-browser.error' | translate }}</div>
 <div *ngIf="!loading && !error && pictures.length === 0" appText="bodySm" tone="muted">{{ 'picture-browser.empty' | translate }}</div>
 
-<div *ngIf="!loading && !error && pictures.length > 0" zxPicturesGrid>
+<div *ngIf="!error && pictures.length > 0" zxPicturesGrid [zxLoadingState]="loading">
   <zx-picture-card
     *ngFor="let pic of pictures; let i = index"
     [picture]="pic"
@@ -35,6 +35,7 @@
   [currentPage]="currentPage"
   [pagesAmount]="pagesAmount"
   [urlBase]="urlBase"
+  [queryParams]="paginationQueryParams"
   [loading]="loading"
   (pageChange)="onPageChange($event)"
 ></zx-pagination>

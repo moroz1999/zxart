@@ -1,12 +1,12 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
 import {shareReplay, tap} from 'rxjs/operators';
 import {TuneDetailsDto} from '../../models/tune-details.dto';
 import {TuneDetailsApiService} from '../../services/tune-details-api.service';
 
-import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
+import {BreadcrumbService} from '../../../../shared/services/breadcrumb.service';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
@@ -39,7 +39,6 @@ import {RouterLink} from '@angular/router';@Component({
   imports: [RouterLink, 
     CommonModule,
     TranslateModule,
-    ZxBreadcrumbsComponent,
     ZxPanelComponent,
     ZxStackComponent,
     ZxInlineComponent,
@@ -73,7 +72,11 @@ export class ZxTuneDetailsComponent implements OnChanges {
 
   details$: Observable<TuneDetailsDto | null> = of(null);
 
-  constructor(private readonly api: TuneDetailsApiService) {}
+  constructor(
+    private readonly api: TuneDetailsApiService,
+    private readonly breadcrumbService: BreadcrumbService,
+    private readonly translate: TranslateService,
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['elementId']) {
@@ -84,7 +87,18 @@ export class ZxTuneDetailsComponent implements OnChanges {
       return;
     }
     this.details$ = this.api.getDetails(+this.elementId).pipe(
-      tap(details => details && this.pageTitleChange.emit(details.title)),
+      tap(details => {
+        if (details) {
+          this.pageTitleChange.emit(details.title);
+          this.breadcrumbService.setEntityTrail({
+            items: [
+              {title: this.translate.instant('menu.music'), url: '/music'},
+              ...(details.authors.length ? [{title: details.authors[0].name, url: details.authors[0].url}] : []),
+            ],
+            currentTitle: details.title,
+          });
+        }
+      }),
       shareReplay(1),
     );
   }

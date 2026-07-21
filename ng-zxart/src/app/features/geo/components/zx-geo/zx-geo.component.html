@@ -82,7 +82,7 @@
           ></zx-select>
         </div>
 
-        <div class="zx-geo__list" [class.zx-geo__list--loading]="listLoading">
+        <div class="zx-geo__list" [zxLoadingState]="listLoading">
           <a *ngFor="let item of list.items" class="zx-geo__item" [routerLink]="item.url">
             <span class="zx-geo__item-title">{{ item.title }}</span>
             <span class="zx-geo__item-sub">

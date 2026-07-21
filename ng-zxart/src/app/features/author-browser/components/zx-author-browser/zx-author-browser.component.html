@@ -3,6 +3,8 @@
   [appInViewport]="loadOnViewport && !loadStarted"
   (inViewport)="onInViewport()"
 >
+  <zx-nav-chips *ngIf="mode === 'full'" [chips]="letterChips"></zx-nav-chips>
+
   <zx-filter-bar *ngIf="mode === 'full'">
     <zx-input
       class="filter-search"
@@ -31,8 +33,6 @@
       (selectedIdsChange)="onCityChange($event)"
     ></zx-filter-picker>
   </zx-filter-bar>
-
-  <zx-nav-chips *ngIf="mode === 'full'" [chips]="letterChips"></zx-nav-chips>
 
   <h2 *ngIf="showRecentHeading" appHeading="title">{{ 'author-browser.recent' | translate }}</h2>
 

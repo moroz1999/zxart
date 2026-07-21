@@ -21,7 +21,13 @@
          [queryParams]="{cat: cat.id}"
          class="zx-breadcrumbs__item">{{ cat.title }}</a>
       <ng-template #categoryUrl>
-        <a [href]="cat.url" class="zx-breadcrumbs__item">{{ cat.title }}</a>
+        <a *ngIf="cat.url && cat.url.startsWith('/'); else externalCategory"
+           [routerLink]="cat.url"
+           [queryParams]="cat.queryParams ?? null"
+           class="zx-breadcrumbs__item">{{ cat.title }}</a>
+        <ng-template #externalCategory>
+          <a [href]="cat.url" class="zx-breadcrumbs__item">{{ cat.title }}</a>
+        </ng-template>
       </ng-template>
       <span *ngIf="!last || parentItem || currentTitle" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
     </ng-container>

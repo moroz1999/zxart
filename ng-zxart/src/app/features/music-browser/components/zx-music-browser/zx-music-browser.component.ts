@@ -14,6 +14,7 @@ import {ZxSortSelectComponent} from '../../../../shared/ui/zx-sort-select/zx-sor
 import {PlayerService} from '../../../player/services/player.service';
 import {MusicBrowserService} from '../../services/music-browser.service';
 import {BrowserBaseComponent} from '../../../../shared/browser-base.component';
+import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 
 @Component({
   selector: 'zx-music-browser',
@@ -27,6 +28,7 @@ import {BrowserBaseComponent} from '../../../../shared/browser-base.component';
     TextDirective,
     ZxPaginationComponent,
     ZxSortSelectComponent,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './zx-music-browser.component.html',
   styleUrls: ['./zx-music-browser.component.scss'],

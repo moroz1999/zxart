@@ -1,10 +1,5 @@
 <ng-container *ngIf="details$ | async as details; else loading">
   <zx-stack spacing="xl">
-    <zx-breadcrumbs
-      [parentItem]="details.authors.length ? {title: details.authors[0].name, url: details.authors[0].url} : null"
-      [currentTitle]="details.title">
-    </zx-breadcrumbs>
-
     <!-- Hero -->
     <zx-inline [wrap]="true" align="start" gap="xl">
       <zx-tune-player [tune]="details"></zx-tune-player>

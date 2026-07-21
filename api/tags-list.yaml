@@ -1,14 +1,22 @@
 paths:
   /tags-list-data/:
     get:
-      summary: Tag cloud for a collection section (graphics, music)
+      summary: Tag cloud for a collection section (graphics, music, software)
       parameters:
         - in: query
           name: section
           required: true
           schema:
             type: string
-            enum: [graphics, music]
+            enum: [graphics, music, software]
+        - in: query
+          name: minimumAmount
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+          description: Minimum usage count within the requested section
       responses:
         '200':
           description: Tags connected to the section, ordered by title
@@ -42,7 +50,7 @@ components:
           type: string
         amount:
           type: integer
-          description: Global usage count of the tag, used for cloud font sizing
+          description: Usage count within the requested section, used for cloud font sizing
     ErrorPayload:
       type: object
       required: [errorMessage]

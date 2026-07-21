@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
@@ -10,7 +9,7 @@ import {ParserData} from '../../features/parser/models/parser-data';
     providedIn: 'root',
 })
 export class ParserService {
-    private apiUrl: string = `//${environment.apiBaseUrl}parser/`;
+    private readonly apiUrl = '/parser/';
 
     constructor(
         private http: HttpClient,

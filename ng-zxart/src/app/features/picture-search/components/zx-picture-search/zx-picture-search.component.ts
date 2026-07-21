@@ -58,6 +58,7 @@ import {ZxPicturesGridDirective} from '../../../../shared/directives/pictures-gr
 import {
   PictureGalleryHostComponent
 } from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
+import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 
 const ELEMENTS_ON_PAGE = 60;
 const SEARCH_DEBOUNCE_MS = 250;
@@ -96,6 +97,7 @@ const SEARCH_DEBOUNCE_MS = 250;
     ZxAuthorsTableComponent,
     ZxPicturesGridDirective,
     PictureGalleryHostComponent,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './zx-picture-search.component.html',
   styleUrls: ['./zx-picture-search.component.scss'],

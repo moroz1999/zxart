@@ -282,7 +282,7 @@
     } @else if (vm.tunes.length === 0) {
       <div appText="bodySm" tone="muted">{{ 'music-search.empty' | translate }}</div>
     } @else {
-      <zx-table size="sm">
+      <zx-table size="sm" [zxLoadingState]="vm.loading">
         <ng-container *ngIf="{ id: playingTuneId$ | async } as playing">
           <table class="tunes-table">
             <tbody>

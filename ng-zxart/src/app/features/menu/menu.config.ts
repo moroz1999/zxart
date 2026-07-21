@@ -62,6 +62,7 @@ export const MAIN_MENU: MenuEntry[] = [
       {labelKey: 'menu.soft.press', url: '/prods', queryParams: {cat: 244858}, children: []},
       {labelKey: 'menu.soft.applications', url: '/prods', queryParams: {cat: 244880}, children: []},
       {labelKey: 'menu.soft.series', url: '/prods', queryParams: {cat: 551860}, children: []},
+      {labelKey: 'menu.soft.tags', url: '/prods/tags', children: []},
     ],
   },
   {
@@ -73,7 +74,6 @@ export const MAIN_MENU: MenuEntry[] = [
       {labelKey: 'menu.gfx.authors', url: '/artists', children: []},
       {labelKey: 'menu.gfx.top', url: '/pictures/top', children: []},
       {labelKey: 'menu.gfx.tags', url: '/pictures/tags', children: []},
-      {labelKey: 'menu.gfx.games', url: '/pictures/search', queryParams: {fromGame: '1'}, children: []},
     ],
   },
   {

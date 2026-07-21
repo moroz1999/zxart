@@ -43,8 +43,8 @@ import {ZxTabComponent} from '../../../../shared/ui/zx-tabs/zx-tab.component';
 import {ZxTabContentDirective} from '../../../../shared/ui/zx-tabs/zx-tab-content.directive';
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {RatingsListComponent} from '../../../ratings/components/ratings-list/ratings-list.component';
-import {TranslateModule} from '@ngx-translate/core';
-import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {BreadcrumbService} from '../../../../shared/services/breadcrumb.service';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {TagsListComponent} from '../../../../shared/lib/tags-list/tags-list.component';
 import {ZxProdInstructionsSectionComponent} from '../zx-prod-instructions-section/zx-prod-instructions-section.component';
@@ -86,7 +86,6 @@ type ProdLinksTabId = 'articles' | 'series' | 'compilations';
     TranslateModule,
     CommentsListComponent,
     RatingsListComponent,
-    ZxBreadcrumbsComponent,
     TextDirective,
     TagsListComponent,
     ZxProdInstructionsSectionComponent,
@@ -106,6 +105,8 @@ export class ZxProdDetailsComponent implements OnChanges {
   constructor(
     private readonly api: ProdCoreApiService,
     private readonly pageMetadataService: PageMetadataService,
+    private readonly breadcrumbService: BreadcrumbService,
+    private readonly translate: TranslateService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -121,6 +122,14 @@ export class ZxProdDetailsComponent implements OnChanges {
         if (core) {
           this.pageTitleChange.emit(core.h1);
           this.pageMetadataService.applyEntityMetadata(core.metadata);
+          const categories = core.categoriesPaths.length ? core.categoriesPaths[0].categories : [];
+          this.breadcrumbService.setEntityTrail({
+            items: [
+              {title: this.translate.instant('menu.software'), url: '/prods'},
+              ...categories.map(category => ({title: category.title, url: '/prods', queryParams: {cat: category.id}})),
+            ],
+            currentTitle: core.h1,
+          });
         }
       }),
       shareReplay(1),

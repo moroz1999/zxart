@@ -103,7 +103,8 @@ Party provides methods for exporting results in various formats:
 - `GET /parties-data/` returns only the 20 most recent parties; `GET /parties-data/?year=YYYY` returns only the parties from that year.
 - The base `/parties` route shows the recent response; a year route requests and shows the selected year's response.
 - The year selector is ordered from oldest to newest. Parties within a selected year are ordered alphabetically; the recent collection retains newest-first order.
-- The collection can be viewed as responsive cards or a table with party title and year.
+- The base `/parties` route carries a section heading above the list; a year route drops it, since the selected year chip already names the listing.
+- The collection can be viewed as responsive cards or a table with party title, year, country and city. Country and city are links to their geo pages and are each omitted when the party has no such link; they are part of the collection payload only (search results carry the plain party shape).
 - Initial loading uses a view-specific skeleton that mirrors the active cards or table layout.
 
 ### Party Page REST API

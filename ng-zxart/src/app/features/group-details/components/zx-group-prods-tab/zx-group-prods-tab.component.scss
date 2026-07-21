@@ -4,15 +4,6 @@
   display: block;
 }
 
-.gp-results {
-  transition: opacity var(--animation-sm) ease;
-}
-
-.gp-results--loading {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
 .gp-toolbar__result {
   font-size: var(--font-xs);
   color: var(--text-light-color);

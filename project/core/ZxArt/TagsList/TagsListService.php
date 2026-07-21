@@ -7,6 +7,7 @@ namespace ZxArt\TagsList;
 use LanguagesManager;
 use structureManager;
 use tagElement;
+use ZxArt\Shared\DatabaseTable;
 use ZxArt\TagsList\Dto\TagListItemDto;
 use ZxArt\TagsList\Repositories\TagsListRepository;
 
@@ -17,10 +18,8 @@ use ZxArt\TagsList\Repositories\TagsListRepository;
  */
 readonly class TagsListService
 {
-    private const array SECTION_TABLES = [
-        'graphics' => 'module_zxpicture',
-        'music' => 'module_zxmusic',
-    ];
+    public const int MINIMUM_ALLOWED_AMOUNT = 1;
+    public const int DEFAULT_MINIMUM_AMOUNT = 10;
 
     public function __construct(
         private TagsListRepository $tagsListRepository,
@@ -32,20 +31,25 @@ readonly class TagsListService
     /**
      * @return TagListItemDto[]
      */
-    public function getSectionTags(string $section): array
+    public function getSectionTags(string $section, int $minimumAmount = self::DEFAULT_MINIMUM_AMOUNT): array
     {
-        $table = self::SECTION_TABLES[$section] ?? null;
+        $table = match ($section) {
+            'graphics' => DatabaseTable::ZxPicture,
+            'music' => DatabaseTable::ZxMusic,
+            'software' => DatabaseTable::ZxProd,
+            default => null,
+        };
         if ($table === null) {
             return [];
         }
 
-        $ids = $this->tagsListRepository->getSectionTagIds($table);
-        if ($ids === []) {
+        $amounts = $this->tagsListRepository->getSectionTagAmounts($table, $minimumAmount);
+        if ($amounts === []) {
             return [];
         }
 
+        $ids = array_keys($amounts);
         // The language element id doubles as the parent scope, resolving titles for the current language.
-        /** @psalm-suppress InvalidArgument — legacy signature types the language/parent argument as bool */
         $elements = $this->structureManager->getElementsByIdList($ids, (int)$this->languagesManager->getCurrentLanguageId());
 
         $items = [];
@@ -53,13 +57,13 @@ readonly class TagsListService
             if (!$element instanceof tagElement) {
                 continue;
             }
-            /** @psalm-suppress UndefinedMagicPropertyFetch — module field on the tag element */
-            $amount = (int)$element->amount;
-            if ($amount <= 0) {
+            $id = (int)$element->id;
+            $amount = $amounts[$id] ?? null;
+            if ($amount === null) {
                 continue;
             }
             $items[] = new TagListItemDto(
-                id: (int)$element->id,
+                id: $id,
                 title: html_entity_decode($element->title, ENT_QUOTES),
                 amount: $amount,
             );

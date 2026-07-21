@@ -6,16 +6,18 @@ namespace ZxArt\TagsList\Repositories;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use ZxArt\LinkTypes;
+use ZxArt\Shared\DatabaseTable;
+use ZxArt\Shared\Repositories\AbstractRepository;
 
 /**
- * Resolves the tag ids connected to a collection section (graphics, music, …)
- * directly from the structure-link table. Ordering, localization and usage
- * amounts are applied by the caller on the loaded tag elements.
+ * Resolves tag usage amounts within a collection section directly from the
+ * structure-link table.
  */
-readonly final class TagsListRepository
+readonly final class TagsListRepository extends AbstractRepository
 {
-    private const string LINKS_TABLE = 'structure_links';
-    private const string TAG_LINK = 'tagLink';
+    private const string LINKS_ALIAS = 'links';
+    private const string ITEMS_ALIAS = 'items';
 
     public function __construct(
         private Connection $db,
@@ -23,22 +25,51 @@ readonly final class TagsListRepository
     }
 
     /**
-     * Tag element ids linked (via tagLink) to at least one item in the given table.
-     *
-     * @return int[]
+     * @return array<int, int> Tag id to section-specific usage amount.
      */
-    public function getSectionTagIds(string $itemsTable): array
+    public function getSectionTagAmounts(DatabaseTable $itemsTable, int $minimumAmount): array
     {
-        $query = $this->db->table(self::LINKS_TABLE)
-            ->where('type', '=', self::TAG_LINK)
-            ->whereIn('childStructureId', function (Builder $sub) use ($itemsTable) {
-                $sub->select('id')->from($itemsTable);
-            })
-            ->distinct();
+        $linksTable = $this->tableAlias(DatabaseTable::StructureLinks, self::LINKS_ALIAS);
+        $itemsTableName = $this->tableAlias($itemsTable, self::ITEMS_ALIAS);
+
+        $query = $this->db->table($linksTable)
+            ->join(
+                $itemsTableName,
+                self::ITEMS_ALIAS . '.id',
+                '=',
+                self::LINKS_ALIAS . '.childStructureId',
+            )
+            ->where(self::LINKS_ALIAS . '.type', '=', LinkTypes::TAG->value);
+        $this->groupBy($query, self::LINKS_ALIAS . '.parentStructureId');
+        $query->orderBy(self::LINKS_ALIAS . '.parentStructureId');
 
         /** @var list<int|string> $ids */
-        $ids = $query->pluck('parentStructureId');
+        $ids = (clone $query)->pluck(self::LINKS_ALIAS . '.parentStructureId');
 
-        return array_map(static fn(int|string $id): int => (int)$id, $ids);
+        $amountsQuery = clone $query;
+        $amountsQuery->distinct();
+        $amountsQuery->aggregate = [
+            'function' => 'count',
+            'columns' => [self::LINKS_ALIAS . '.childStructureId'],
+        ];
+
+        /** @var list<array{aggregate: int|string}> $rows */
+        $rows = $amountsQuery->get();
+
+        $amounts = [];
+        foreach ($ids as $index => $id) {
+            $amount = (int)($rows[$index]['aggregate'] ?? 0);
+            if ($amount >= $minimumAmount) {
+                $amounts[(int)$id] = $amount;
+            }
+        }
+
+        return $amounts;
     }
+
+    private function groupBy(Builder $query, string $column): void
+    {
+        call_user_func_array([$query, 'groupBy'], [$column]);
+    }
+
 }

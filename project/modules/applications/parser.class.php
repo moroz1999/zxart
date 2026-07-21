@@ -2,6 +2,7 @@
 
 use ZxArt\FileParsing\ZxParsingItem;
 use ZxArt\FileParsing\ZxParsingManager;
+use ZxArt\Urls\EntityUrlResolver;
 
 // parser app for search by file
 
@@ -123,9 +124,7 @@ class parserApplication extends controllerApplication
     }
 
     /**
-     * @return ((mixed|string)[][]|int|mixed|string)[][]
-     *
-     * @psalm-return list{0?: array{title: string, id: int, url: mixed, year: mixed, authors: list{0?: array{url: mixed, title: string, id: mixed, type: mixed},...}},...}
+     * @return list<array{title: string, id: int, url: string, year: mixed, authors: list<array{url: string, title: string, id: mixed, type: mixed}>}>
      */
     private function loadReleasesData($md5): array
     {
@@ -141,41 +140,46 @@ class parserApplication extends controllerApplication
                      * @var zxReleaseElement $element
                      */
                     $authors = $element->getReleaseBy();
-                    $releaseBy = [];
-                    foreach ($authors as $author) {
-                        $releaseBy[] = [
-                            'url' => $author->getUrl(),
-                            'title' => html_entity_decode($author->getTitle(), ENT_QUOTES),
-                            'id' => $author->getId(),
-                            'type' => $author->structureType,
-                        ];
-                    }
                 } else {
-                    /**
-                     * @var ZxArtItem
-                     */
                     $authors = $element->getAuthorsList();
-                    $releaseBy = [];
-                    foreach ($authors as $author) {
-                        $releaseBy[] = [
-                            'url' => $author->getUrl(),
-                            'title' => html_entity_decode($author->getTitle(), ENT_QUOTES),
-                            'id' => $author->getId(),
-                            'type' => $author->structureType,
-                        ];
-                    }
                 }
                 $releases[] = [
                     'title' => html_entity_decode($element->getTitle(), ENT_QUOTES),
                     'id' => $element->getPersistedId(),
-                    'url' => $element->getUrl(),
+                    'url' => $this->urlFor($element),
                     'year' => $element->getYear(),
-                    'authors' => $releaseBy,
+                    'authors' => $this->exportAuthors($authors),
                 ];
             }
         }
 
         return $releases;
+    }
+
+    /**
+     * @return list<array{url: string, title: string, id: mixed, type: mixed}>
+     */
+    private function exportAuthors(mixed $authors): array
+    {
+        $releaseBy = [];
+        foreach (is_array($authors) ? $authors : [] as $author) {
+            if (!$author instanceof structureElement) {
+                continue;
+            }
+            $releaseBy[] = [
+                'url' => $this->urlFor($author),
+                'title' => html_entity_decode((string)$author->getTitle(), ENT_QUOTES),
+                'id' => $author->getId(),
+                'type' => $author->structureType,
+            ];
+        }
+        return $releaseBy;
+    }
+
+    /** Clean SPA URL for a matched element, so the results link inside the Angular app. */
+    private function urlFor(structureElement $element): string
+    {
+        return $this->getService(EntityUrlResolver::class)->urlFor($element);
     }
 
     public function getUrlName()

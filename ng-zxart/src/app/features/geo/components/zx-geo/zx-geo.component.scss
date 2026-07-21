@@ -170,14 +170,6 @@
   flex: 1;
 }
 
-.zx-geo__list {
-  transition: opacity var(--animation-sm) ease;
-}
-
-.zx-geo__list--loading {
-  opacity: var(--zx-geo-loading-opacity);
-}
-
 .zx-geo__item {
   flex-direction: column;
   padding: var(--zx-geo-row-padding);

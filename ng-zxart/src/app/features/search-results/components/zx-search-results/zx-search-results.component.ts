@@ -29,7 +29,6 @@ import {ZxCheckboxFieldComponent} from '../../../../shared/ui/zx-checkbox-field/
 import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filter-bar.component';
 import {ZxArticlePreviewComponent} from '../../../../entities/zx-article-preview/zx-article-preview.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
-import {ZxSpinnerComponent} from '../../../../shared/ui/zx-spinner/zx-spinner.component';
 import {ZxAuthorsTableComponent} from '../../../../entities/zx-authors-table/zx-authors-table.component';
 import {ZxGroupsTableComponent} from '../../../../entities/zx-groups-table/zx-groups-table.component';
 import {ZxPictureCardComponent} from '../../../../entities/zx-picture-card/zx-picture-card.component';
@@ -47,6 +46,7 @@ import {PictureGalleryHostComponent} from '../../../picture-gallery/components/p
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ActivatedRoute, Params, Router} from '@angular/router';
+import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 
 const AUTHOR_SET_TYPE = 'author';
 const GROUP_SET_TYPE = 'group';
@@ -89,7 +89,6 @@ const INITIAL_SKELETON_GROUPS: SkeletonGroup[] = [
     ZxCheckboxFieldComponent,
     ZxFilterBarComponent,
     ZxButtonComponent,
-    ZxSpinnerComponent,
     ZxAuthorsTableComponent,
     ZxGroupsTableComponent,
     ZxPictureCardComponent,
@@ -104,6 +103,7 @@ const INITIAL_SKELETON_GROUPS: SkeletonGroup[] = [
     ZxStackComponent,
     TextDirective,
     HeadingDirective,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './zx-search-results.component.html',
   styleUrls: ['./zx-search-results.component.scss'],

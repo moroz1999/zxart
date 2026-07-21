@@ -1,20 +1,12 @@
 <ng-container *ngIf="core$ | async as core; else loading">
-  <zx-stack spacing="xl">
-    <zx-breadcrumbs
-      categoryCataloguePath="/prods"
-      [categories]="core.categoriesPaths.length ? core.categoriesPaths[0].categories : []"
-      [currentTitle]="core.h1">
-    </zx-breadcrumbs>
-
-    <zx-inline class="prod-details__hero" gap="xl" align="start" [wrap]="true">
-      <zx-youtube-embed
-        *ngIf="core.youtubeId"
-        class="prod-details__cover"
-        [youtubeId]="core.youtubeId">
-      </zx-youtube-embed>
-      <zx-prod-hero class="prod-details__info" [core]="core"></zx-prod-hero>
-    </zx-inline>
-  </zx-stack>
+  <zx-inline class="prod-details__hero" gap="xl" align="start" [wrap]="true">
+    <zx-youtube-embed
+      *ngIf="core.youtubeId"
+      class="prod-details__cover"
+      [youtubeId]="core.youtubeId">
+    </zx-youtube-embed>
+    <zx-prod-hero class="prod-details__info" [core]="core"></zx-prod-hero>
+  </zx-inline>
 
   <zx-stack spacing="xl" class="prod-details">
     <zx-panel *ngIf="core.tabs.hasScreenshots" padding="md" variant="elevated">

@@ -16,6 +16,7 @@ import {ZxTuneTableSkeletonComponent} from '../../../../shared/ui/zx-skeleton/co
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxTableComponent} from '../../../../shared/ui/zx-table/zx-table.component';
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
+import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 
 const PAGE_SIZE = 20;
 
@@ -40,6 +41,7 @@ interface YearGroup {
     ZxTuneTableSkeletonComponent,
     TextDirective,
     ZxTableComponent,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './zx-author-music-tab.component.html',
   styleUrl: './zx-author-music-tab.component.scss',

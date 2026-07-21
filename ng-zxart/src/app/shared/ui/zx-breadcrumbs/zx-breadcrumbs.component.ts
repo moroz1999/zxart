@@ -9,6 +9,8 @@ export interface BreadcrumbItemDto {
   title: string;
   id?: number;
   url?: string;
+  /** Query params for the SPA routerLink when `url` is an internal path. */
+  queryParams?: Record<string, string | number>;
 }
 
 @Component({

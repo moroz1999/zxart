@@ -1,8 +1,9 @@
 {
   "tags-cloud": {
-    "loading": "Loading tags…",
     "error": "Failed to load tags.",
-    "empty": "No tags found."
+    "empty": "No tags found.",
+    "minimumAmount": "Minimum works per tag",
+    "allTags": "All tags"
   },
   "common": {
     "not-found": "Page not found",
@@ -593,7 +594,12 @@
     "theme.dark": "Dark"
   },
   "top-pictures": {
-    "title": "Top Graphics"
+    "title": "Top Graphics",
+    "filter": {
+      "all": "All",
+      "loading-screens": "Game loading screens",
+      "game-graphics": "Game graphics"
+    }
   },
   "top-music": {
     "title": "Top Music"
@@ -1890,6 +1896,9 @@
       "gfx": "Pictures by year"
     },
     "days30": "30 days",
+    "section": {
+      "avg": "Average rating by year"
+    },
     "legend": {
       "all": "all in the database",
       "rated": "rated above average",
@@ -2028,10 +2037,13 @@
     "error": "Request failed"
   },
   "parties-page": {
+    "recent": "Recent parties",
     "view-cards": "Cards",
     "view-table": "Table",
     "col-title": "Title",
-    "col-year": "Year"
+    "col-year": "Year",
+    "col-country": "Country",
+    "col-city": "City"
   },
   "menu": {
     "home": "Home",
@@ -2061,8 +2073,7 @@
       "search": "Database search",
       "authors": "Artists",
       "top": "Top",
-      "tags": "Tags",
-      "games": "Games"
+      "tags": "Tags"
     },
     "music-sub": {
       "home": "Home",
@@ -2085,11 +2096,6 @@
   },
   "content": {
     "error": "Failed to load content."
-  },
-  "file-search": {
-    "placeholder": "File name or md5…",
-    "searching": "Searching…",
-    "empty": "No files found."
   },
   "password-reminder": {
     "title": "Password recovery",

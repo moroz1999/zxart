@@ -23,6 +23,7 @@ Do not add a facade skeleton component that imports multiple variants.
 - `zx-screenshot-grid-skeleton`
 - `zx-search-groups-skeleton`
 - `zx-stats-section-skeleton`
+- `zx-tags-cloud-skeleton`
 - `zx-text-skeleton`
 - `zx-tune-details-skeleton`
 - `zx-tune-table-skeleton`

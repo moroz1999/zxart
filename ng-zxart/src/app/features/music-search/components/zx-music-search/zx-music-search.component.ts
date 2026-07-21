@@ -66,6 +66,7 @@ import {ZxFormActionsComponent} from '../../../../shared/ui/zx-form/zx-form-acti
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {ZxAuthorsTableComponent} from '../../../../entities/zx-authors-table/zx-authors-table.component';
+import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 const ELEMENTS_ON_PAGE = 60;
 const SEARCH_DEBOUNCE_MS = 250;
 const PLAYLIST_ID = 'music-search';
@@ -171,6 +172,7 @@ const EMPTY_TAGS_SEARCH_STATE: TagsSearchState = {
     TextDirective,
     HeadingDirective,
     ZxAuthorsTableComponent,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './zx-music-search.component.html',
   styleUrls: ['./zx-music-search.component.scss'],

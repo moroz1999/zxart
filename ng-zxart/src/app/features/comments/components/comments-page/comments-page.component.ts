@@ -13,6 +13,7 @@ import {
 } from '../../../../shared/ui/zx-skeleton/components/zx-comment-skeleton/zx-comment-skeleton.component';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {CommentComponent} from '../comment/comment.component';
+import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 
 @Component({
   selector: 'zx-comments-page',
@@ -24,7 +25,8 @@ import {CommentComponent} from '../comment/comment.component';
     ZxStackComponent,
     ZxCommentSkeletonComponent,
     HeadingDirective,
-    CommentComponent
+    CommentComponent,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './comments-page.component.html',
   styleUrls: ['./comments-page.component.scss'],

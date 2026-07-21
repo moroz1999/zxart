@@ -1,8 +1,4 @@
 <div *ngIf="pagesAmount > 1" class="zx-pagination" [class.loading]="loading">
-    <div class="pagination-spinner" *ngIf="loading">
-        <zx-spinner size="sm"></zx-spinner>
-    </div>
-
     <div class="pagination-controls">
         <a
             [href]="previousPageActive() ? makeHref(currentPage - 1) : null"

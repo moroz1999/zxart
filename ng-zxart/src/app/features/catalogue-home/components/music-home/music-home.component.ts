@@ -15,7 +15,7 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
     BestTunesOfMonthComponent,
   ],
   providers: [
-    {provide: MODULE_SETTINGS, useValue: {limit: 10}},
+    {provide: MODULE_SETTINGS, useValue: {limit: 30}},
   ],
   templateUrl: './music-home.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

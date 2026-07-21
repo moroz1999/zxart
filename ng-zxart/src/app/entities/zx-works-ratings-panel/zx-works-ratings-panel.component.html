@@ -6,8 +6,7 @@
   <zx-panel [title]="title">
     <zx-table
       size="sm"
-      class="works-ratings__results"
-      [class.works-ratings__results--loading]="loading()">
+      [zxLoadingState]="loading()">
       <table>
         <tbody>
           @for (item of items(); track $index) {

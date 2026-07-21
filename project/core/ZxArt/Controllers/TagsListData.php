@@ -42,7 +42,11 @@ class TagsListData extends LoggedControllerApplication
     {
         try {
             $section = (string)($this->getParameter('section') ?: '');
-            $tags = $this->tagsListService->getSectionTags($section);
+            $minimumAmountParameter = $this->getParameter('minimumAmount');
+            $minimumAmount = $minimumAmountParameter === false
+                ? TagsListService::DEFAULT_MINIMUM_AMOUNT
+                : max(TagsListService::MINIMUM_ALLOWED_AMOUNT, (int)$minimumAmountParameter);
+            $tags = $this->tagsListService->getSectionTags($section, $minimumAmount);
             $this->assignSuccess([
                 'items' => array_map(
                     fn(TagListItemDto $dto) => $this->objectMapper->map($dto, TagListItemRestDto::class),

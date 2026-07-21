@@ -5,7 +5,7 @@ import {environment} from '../../../../../environments/environment';
 import {SvgIconRegistryService} from 'angular-svg-icon';
 import {ZxProd} from '../../../../shared/models/zx-prod';
 import {ZxProdRowComponent} from '../../../../entities/zx-prod-row/zx-prod-row.component';
-import {ZxSpinnerComponent} from '../../../../shared/ui/zx-spinner/zx-spinner.component';
+import {ZxRowSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
 import {ZxSortSelectComponent} from '../../../../shared/ui/zx-sort-select/zx-sort-select.component';
@@ -14,6 +14,7 @@ import {ProdsBrowserService} from '../../services/prods-browser.service';
 import {BrowserBaseComponent} from '../../../../shared/browser-base.component';
 import {BehaviorSubject} from 'rxjs';
 import {ZxProdsListComponent} from '../../../../entities/zx-prods-list/zx-prods-list.component';
+import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 
 export type ProdsBrowserLayout = 'loading' | 'screenshots' | 'table';
 
@@ -24,12 +25,13 @@ export type ProdsBrowserLayout = 'loading' | 'screenshots' | 'table';
     CommonModule,
     TranslateModule,
     ZxProdRowComponent,
-    ZxSpinnerComponent,
+    ZxRowSkeletonComponent,
     TextDirective,
     ZxPaginationComponent,
     ZxSortSelectComponent,
     ZxToggleComponent,
     ZxProdsListComponent,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './zx-prods-browser.component.html',
   styleUrls: ['./zx-prods-browser.component.scss'],

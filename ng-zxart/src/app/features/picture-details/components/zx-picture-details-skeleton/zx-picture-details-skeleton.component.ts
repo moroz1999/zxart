@@ -3,13 +3,12 @@ import {ZxSkeletonVisibilityDirective} from 'src/app/shared/ui/zx-skeleton/zx-sk
 import {ZxSkeletonBoneComponent} from '../../../../shared/ui/zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxGridComponent} from '../../../../shared/ui/zx-grid/zx-grid.component';
-import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
 
 @Component({
   selector: 'zx-picture-details-skeleton',
   standalone: true,
   hostDirectives: [ZxSkeletonVisibilityDirective],
-  imports: [ZxSkeletonBoneComponent, ZxStackComponent, ZxGridComponent, ZxBreadcrumbsComponent],
+  imports: [ZxSkeletonBoneComponent, ZxStackComponent, ZxGridComponent],
   templateUrl: './zx-picture-details-skeleton.component.html',
   styleUrls: ['./zx-picture-details-skeleton.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

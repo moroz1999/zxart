@@ -6,7 +6,6 @@ import {ZxRowSkeletonComponent} from '../zx-row-skeleton/zx-row-skeleton.compone
 import {ZxStackComponent} from '../../../zx-stack/zx-stack.component';
 import {ZxInlineComponent} from '../../../zx-inline/zx-inline.component';
 import {ZxPanelComponent} from '../../../zx-panel/zx-panel.component';
-import {ZxBreadcrumbsComponent} from '../../../zx-breadcrumbs/zx-breadcrumbs.component';
 import {ZxGridComponent} from '../../../zx-grid/zx-grid.component';
 import {ZxGridItemDirective} from '../../../zx-grid/zx-grid-item.directive';
 import {ZxCommentSkeletonComponent} from '../zx-comment-skeleton/zx-comment-skeleton.component';
@@ -22,7 +21,6 @@ import {ZxCommentSkeletonComponent} from '../zx-comment-skeleton/zx-comment-skel
     ZxStackComponent,
     ZxInlineComponent,
     ZxPanelComponent,
-    ZxBreadcrumbsComponent,
     ZxGridComponent,
     ZxGridItemDirective,
     ZxCommentSkeletonComponent,

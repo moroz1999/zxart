@@ -1,6 +1,6 @@
 # zx-pagination
 
-Page navigation with loading state support.
+Page navigation with loading state support. The page selector for every paginated list; hand-rolled prev/next controls are only for panels too narrow for numbered pages (the geo sidebar).
 
 `ng-zxart/src/app/shared/ui/zx-pagination/`
 
@@ -12,7 +12,7 @@ Page navigation with loading state support.
 | `pagesAmount` | number |
 | `urlBase` | string |
 | `visibleAmount` | number |
-| `loading` | boolean — shows spinner overlay and disables controls |
+| `loading` | boolean — dims and disables the controls; the spinner belongs to [zxLoadingState](loading-states.md) on the list |
 
 ## Events
 

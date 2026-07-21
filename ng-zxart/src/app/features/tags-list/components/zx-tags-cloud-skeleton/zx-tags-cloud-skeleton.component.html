@@ -1,0 +1,7 @@
+<zx-inline [wrap]="true" align="baseline" gap="md" aria-hidden="true">
+  @for (size of items; track $index) {
+    <zx-skeleton-bone
+      class="tags-cloud-skeleton__item tags-cloud-skeleton__item--{{ size }}"
+    ></zx-skeleton-bone>
+  }
+</zx-inline>

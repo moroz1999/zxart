@@ -28,7 +28,6 @@ import {DialogSelectorComponent} from './components/dialog-selector/dialog-selec
 import {ZxNavChipsComponent} from '../../shared/ui/zx-nav-chips/zx-nav-chips.component';
 import {ZxNavChip} from '../../shared/ui/zx-nav-chips/nav-chip';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
-import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {
   ZxProdsCategorySkeletonComponent,
 } from '../../shared/ui/zx-skeleton/components/zx-prods-category-skeleton/zx-prods-category-skeleton.component';
@@ -42,6 +41,7 @@ import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxToggleComponent, ZxToggleOption} from '../../shared/ui/zx-toggle/zx-toggle.component';
 import {SvgIconRegistryService} from 'angular-svg-icon';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxLoadingStateDirective} from '../../shared/ui/zx-loading-state/zx-loading-state.directive';
 
 const defaultStatuses: string[] = ['allowed', 'forbidden', 'forbiddenzxart', 'allowedzxart', 'insales', 'donationware', 'recovered', 'unknown'];
 
@@ -64,12 +64,12 @@ export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
         FormsModule,
         CommonModule,
         TagsSelectorComponent,
-        ZxSpinnerComponent,
         ZxProdsCategorySkeletonComponent,
         ZxButtonComponent,
         ZxToggleComponent,
         ZxCheckboxFieldComponent,
         HeadingDirective,
+        ZxLoadingStateDirective,
     ],
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,

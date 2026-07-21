@@ -1,11 +1,5 @@
 <ng-container *ngIf="core$ | async as core; else headerLoading">
-  <zx-stack spacing="xl">
-    <zx-breadcrumbs
-      [categories]="core.breadcrumbs"
-      [currentTitle]="core.title">
-    </zx-breadcrumbs>
-    <zx-group-header [core]="core"></zx-group-header>
-  </zx-stack>
+  <zx-group-header [core]="core"></zx-group-header>
 
   <zx-tabs [initialActiveIndex]="getInitialTabIndex(core)" (tabChange)="onTabChange($event)">
     <zx-tab
@@ -70,19 +64,15 @@
 </ng-container>
 
 <ng-template #headerLoading>
-  <zx-stack spacing="xl">
-    <zx-breadcrumbs [loading]="true"></zx-breadcrumbs>
-
-    <zx-panel>
-      <zx-inline gap="lg" align="start">
-        <zx-skeleton-bone class="group-details-skeleton__avatar"></zx-skeleton-bone>
-        <zx-stack spacing="sm" class="group-details-skeleton__header-body">
-          <zx-skeleton-bone class="group-details-skeleton__title"></zx-skeleton-bone>
-          <zx-skeleton-bone class="group-details-skeleton__meta"></zx-skeleton-bone>
-          <zx-skeleton-bone class="group-details-skeleton__line"></zx-skeleton-bone>
-          <zx-skeleton-bone class="group-details-skeleton__line group-details-skeleton__line--short"></zx-skeleton-bone>
-        </zx-stack>
-      </zx-inline>
-    </zx-panel>
-  </zx-stack>
+  <zx-panel>
+    <zx-inline gap="lg" align="start">
+      <zx-skeleton-bone class="group-details-skeleton__avatar"></zx-skeleton-bone>
+      <zx-stack spacing="sm" class="group-details-skeleton__header-body">
+        <zx-skeleton-bone class="group-details-skeleton__title"></zx-skeleton-bone>
+        <zx-skeleton-bone class="group-details-skeleton__meta"></zx-skeleton-bone>
+        <zx-skeleton-bone class="group-details-skeleton__line"></zx-skeleton-bone>
+        <zx-skeleton-bone class="group-details-skeleton__line group-details-skeleton__line--short"></zx-skeleton-bone>
+      </zx-stack>
+    </zx-inline>
+  </zx-panel>
 </ng-template>

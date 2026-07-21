@@ -4,7 +4,6 @@ import {
   ZxSkeletonBoneComponent,
 } from '../../../../shared/ui/zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
-import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
 
 @Component({
   selector: 'zx-release-details-skeleton',
@@ -13,7 +12,6 @@ import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-br
   imports: [
     ZxSkeletonBoneComponent,
     ZxStackComponent,
-    ZxBreadcrumbsComponent,
   ],
   templateUrl: './zx-release-details-skeleton.component.html',
   styleUrl: './zx-release-details-skeleton.component.scss',

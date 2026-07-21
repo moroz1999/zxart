@@ -23,6 +23,7 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 import {ZxProdsGridDirective} from '../../../../shared/directives/prods-grid.directive';
 import {ZxProdReleaseCardComponent} from '../../../../entities/zx-prod-release-card/zx-prod-release-card.component';
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
+import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 
 const DEFAULT_PAGE_SIZE = 12;
 const OWN_PAGE_SIZE = 15;
@@ -49,6 +50,7 @@ interface YearGroup {
     TextDirective,
     ZxProdsGridDirective,
     ZxProdReleaseCardComponent,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './zx-group-prods-tab.component.html',
   styleUrl: './zx-group-prods-tab.component.scss',

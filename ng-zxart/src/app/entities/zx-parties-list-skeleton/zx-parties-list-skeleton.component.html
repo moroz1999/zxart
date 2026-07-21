@@ -16,12 +16,16 @@
       <tr>
         <th>{{ 'parties-page.col-title' | translate }}</th>
         <th>{{ 'parties-page.col-year' | translate }}</th>
+        <th>{{ 'parties-page.col-country' | translate }}</th>
+        <th>{{ 'parties-page.col-city' | translate }}</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let item of items">
         <td><zx-skeleton-bone class="parties-list-skeleton__table-title"></zx-skeleton-bone></td>
         <td><zx-skeleton-bone class="parties-list-skeleton__table-year"></zx-skeleton-bone></td>
+        <td><zx-skeleton-bone class="parties-list-skeleton__table-place"></zx-skeleton-bone></td>
+        <td><zx-skeleton-bone class="parties-list-skeleton__table-place"></zx-skeleton-bone></td>
       </tr>
     </tbody>
   </table>

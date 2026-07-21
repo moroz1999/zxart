@@ -115,8 +115,7 @@
                 </zx-stack>
             </div>
             <div class="zx-prods-list-center">
-                <zx-spinner class="zx-prods-list-spinner" *ngIf="loading" size="xl"></zx-spinner>
-                <div *ngIf="model.prods && layout!=='table'" class="zx-prods-gallery" [ngClass]="{'disabled': loading}">
+                <div *ngIf="model.prods && layout!=='table'" class="zx-prods-gallery" [zxLoadingState]="loading">
                     <zx-prod-block
                             *ngFor="let zxProd of model.prods"
                             [model]="zxProd"
@@ -127,7 +126,7 @@
                             (languageChanged)="languagesChanged($event)"
                     ></zx-prod-block>
                 </div>
-                <table *ngIf="layout==='table'" class="zx-prods-table" [ngClass]="{'disabled': loading}">
+                <table *ngIf="layout==='table'" class="zx-prods-table" [zxLoadingState]="loading">
                     <thead>
                     <tr>
                         <td class="zx-prods-table-sortable"

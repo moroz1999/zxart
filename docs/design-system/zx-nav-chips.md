@@ -24,4 +24,6 @@ A chip either **navigates** (when `href` is set — renders a link) or acts as a
 
 ## Letter helper
 
+In the author and group browsers the letter strip is placed above the filter bar: the letter narrows the collection first, the filters refine what it selected.
+
 `buildLetterChips(basePath, activeLetter)` (`nav-chip.ts`) returns an A–Z `ZxNavChip[]` of link chips pointing at `${basePath}/<letter>`, marking `activeLetter` active (case-insensitive). Pass an empty `activeLetter` for landing pages where no letter is selected.

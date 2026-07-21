@@ -4,6 +4,7 @@ import {Subscription} from 'rxjs';
 import {LanguageService} from './features/settings/services/language.service';
 import {ZxHeaderComponent} from './features/header/components/zx-header/zx-header.component';
 import {ZxRightColumnComponent} from './features/header/components/zx-right-column/zx-right-column.component';
+import {ZxBreadcrumbBarComponent} from './shared/ui/zx-breadcrumb-bar/zx-breadcrumb-bar.component';
 import {PlayerHostComponent} from './features/player/components/player-host/player-host.component';
 import {AnalyticsService} from './shared/services/analytics.service';
 import {PageMetadataService} from './shared/services/page-metadata.service';
@@ -21,7 +22,7 @@ import {PageMetadataService} from './shared/services/page-metadata.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ZxHeaderComponent, ZxRightColumnComponent, PlayerHostComponent],
+  imports: [RouterOutlet, ZxHeaderComponent, ZxRightColumnComponent, ZxBreadcrumbBarComponent, PlayerHostComponent],
   templateUrl: './spa-root.component.html',
   styleUrls: ['./spa-root.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

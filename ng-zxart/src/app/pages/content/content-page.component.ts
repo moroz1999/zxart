@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {ActivatedRoute} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {map, Observable, switchMap} from 'rxjs';
@@ -9,7 +10,7 @@ import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layo
 
 interface ContentVm {
   titleKey: string;
-  html: string | null;
+  html: SafeHtml | null;
 }
 
 /**
@@ -28,12 +29,18 @@ interface ContentVm {
 export class ContentPageComponent {
   readonly vm$: Observable<ContentVm> = this.route.data.pipe(
     switchMap(data => this.contentService.getContent(data['page'] as string).pipe(
-      map(html => ({titleKey: (data['titleKey'] ?? '') as string, html})),
+      map(html => ({
+        titleKey: (data['titleKey'] ?? '') as string,
+        // The copy is bundled with the backend, not user input; keep it verbatim so
+        // the in-page anchors (`id`/`name`, stripped by the sanitizer) keep working.
+        html: html === null ? null : this.sanitizer.bypassSecurityTrustHtml(html),
+      })),
     )),
   );
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly contentService: ContentService,
+    private readonly sanitizer: DomSanitizer,
   ) {}
 }

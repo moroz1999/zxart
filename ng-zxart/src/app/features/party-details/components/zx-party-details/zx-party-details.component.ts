@@ -19,7 +19,7 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxSkeletonBoneComponent} from '../../../../shared/ui/zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
 import {ZxProdsListSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-prods-list-skeleton/zx-prods-list-skeleton.component';
-import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
+import {BreadcrumbService} from '../../../../shared/services/breadcrumb.service';
 import {ZxTabsComponent} from '../../../../shared/ui/zx-tabs/zx-tabs.component';
 import {ZxTabComponent} from '../../../../shared/ui/zx-tabs/zx-tab.component';
 import {ZxTabContentDirective} from '../../../../shared/ui/zx-tabs/zx-tab-content.directive';
@@ -35,7 +35,6 @@ type PartyTabId = 'overview' | 'activity' | string;
   imports: [RouterLink, 
     CommonModule,
     TranslateModule,
-    ZxBreadcrumbsComponent,
     ZxPartyHeaderComponent,
     ZxPartyOverviewComponent,
     ZxPartyCompoComponent,
@@ -70,7 +69,10 @@ export class ZxPartyDetailsComponent implements OnChanges {
 
   core$: Observable<PartyCoreDto | null> = of(null);
 
-  constructor(private readonly api: PartyCoreApiService) {}
+  constructor(
+    private readonly api: PartyCoreApiService,
+    private readonly breadcrumbService: BreadcrumbService,
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['elementId']) {
@@ -81,7 +83,12 @@ export class ZxPartyDetailsComponent implements OnChanges {
       return;
     }
     this.core$ = this.api.getCore(+this.elementId).pipe(
-      tap(core => core && this.pageTitleChange.emit(core.title)),
+      tap(core => {
+        if (core) {
+          this.pageTitleChange.emit(core.title);
+          this.breadcrumbService.setEntityTrail({items: core.breadcrumbs, currentTitle: core.title});
+        }
+      }),
       shareReplay(1),
     );
   }

@@ -28,6 +28,11 @@ Components with pagination **must** reflect the current page in the URL and rest
   page links have correct shareable `href` attributes.
 - Page 1 omits the `page` query parameter.
 - Embedded CMS components may use `urlBase` for their path-based pagination.
+- A `BrowserBaseComponent` subclass reads its own filter query params in
+  `onQueryParams` and stores them in `filterParams`; the base keeps them in the URL
+  on page/sorting changes and exposes them as `paginationQueryParams` for
+  `<zx-pagination [queryParams]>`. Filters must not be passed in as `@Input()` — the
+  router emits the new params before input bindings are updated.
 
 **Reference implementation:** `CommentsPageComponent` (`features/comments/components/comments-page/`) and `BrowserBaseComponent` (`shared/browser-base.component.ts`).
 

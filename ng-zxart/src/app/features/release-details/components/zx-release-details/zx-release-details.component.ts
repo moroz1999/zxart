@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
 import {shareReplay, tap} from 'rxjs/operators';
 import {ReleaseDetailsDto} from '../../models/release-details.dto';
@@ -12,7 +12,7 @@ import {ZxReleaseActionBarComponent} from '../zx-release-action-bar/zx-release-a
 import {ZxReleaseScreenshotsSectionComponent} from '../zx-release-screenshots-section/zx-release-screenshots-section.component';
 import {ZxReleaseInlaysSectionComponent} from '../zx-release-inlays-section/zx-release-inlays-section.component';
 import {ZxReleaseInstructionsSectionComponent} from '../zx-release-instructions-section/zx-release-instructions-section.component';
-import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
+import {BreadcrumbService} from '../../../../shared/services/breadcrumb.service';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
@@ -34,7 +34,6 @@ import {ZxProdPicturesSectionComponent} from '../../../prod-details/components/z
     ZxReleaseScreenshotsSectionComponent,
     ZxReleaseInlaysSectionComponent,
     ZxReleaseInstructionsSectionComponent,
-    ZxBreadcrumbsComponent,
     ZxStackComponent,
     HeadingDirective,
     TextDirective,
@@ -53,7 +52,11 @@ export class ZxReleaseDetailsComponent implements OnChanges {
 
   details$: Observable<ReleaseDetailsDto | null> = of(null);
 
-  constructor(private readonly api: ReleaseDetailsApiService) {}
+  constructor(
+    private readonly api: ReleaseDetailsApiService,
+    private readonly breadcrumbService: BreadcrumbService,
+    private readonly translate: TranslateService,
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['elementId']) {
@@ -64,7 +67,20 @@ export class ZxReleaseDetailsComponent implements OnChanges {
       return;
     }
     this.details$ = this.api.getDetails(+this.elementId).pipe(
-      tap(details => details && this.pageTitleChange.emit(details.title)),
+      tap(details => {
+        if (details) {
+          this.pageTitleChange.emit(details.title);
+          const categories = details.prod.categoriesPaths.length ? details.prod.categoriesPaths[0].categories : [];
+          this.breadcrumbService.setEntityTrail({
+            items: [
+              {title: this.translate.instant('menu.software'), url: '/prods'},
+              ...categories.map(category => ({title: category.title, url: '/prods', queryParams: {cat: category.id}})),
+              {title: details.prod.title, url: details.prod.url},
+            ],
+            currentTitle: details.title,
+          });
+        }
+      }),
       shareReplay(1),
     );
   }

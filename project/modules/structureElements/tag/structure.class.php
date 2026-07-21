@@ -17,10 +17,10 @@ class tagElement extends structureElement implements JsonDataProvider
     /**
      * @return void
      */
+    #[\Override]
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
-        $moduleStructure['amount'] = 'text';
         $moduleStructure['userId'] = 'text';
         $moduleStructure['synonym'] = 'text';
         $moduleStructure['description'] = 'text';
@@ -33,30 +33,6 @@ class tagElement extends structureElement implements JsonDataProvider
         $multiLanguageFields[] = 'title';
         $multiLanguageFields[] = 'synonym';
         $multiLanguageFields[] = 'description';
-    }
-
-    public function updateAmount(): void
-    {
-        $db = $this->getService('db');
-        $linksManager = $this->getService(linksManager::class);
-        $amount = count($linksManager->getConnectedIdList($this->getId(), 'tagLink', 'parent'));
-        $db->table('module_tag')->where('id', '=', $this->getId())->update(['amount'=>$amount]);
-    }
-
-    public function getFontSize($maxAmount = 10)
-    {
-        if (!$maxAmount) {
-            $maxAmount = 10;
-        }
-
-        $min = 1;
-        $max = 4;
-
-        if ($this->amount > $this->getService(ConfigManager::class)->get('zx.maxTagsAmount')) {
-            return $min + ($max - $min) * (99) / $maxAmount;
-        }
-
-        return $min + ($max - $min) * ($this->amount - 1) / $maxAmount;
     }
 
     public function updateTagsListLinks(): void
@@ -74,6 +50,7 @@ class tagElement extends structureElement implements JsonDataProvider
     /**
      * @return void
      */
+    #[\Override]
     public function persistElementData()
     {
         parent::persistElementData();

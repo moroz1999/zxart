@@ -38,6 +38,12 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
   protected readonly itemsPerPage: number = 50;
   protected urlBase = '';
 
+  /**
+   * Filter query params owned by the concrete browser (SPA route mode). Filled
+   * in `onQueryParams` and kept in the URL when the page or the sorting changes.
+   */
+  protected filterParams: Params = {};
+
   protected readonly router = inject(Router, {optional: true});
   protected readonly route = inject(ActivatedRoute, {optional: true});
 
@@ -67,6 +73,7 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
       this.subscriptions.add(this.route!.queryParams.subscribe(params => {
         this.currentPage = params['page'] ? +params['page'] : 1;
         this.sorting = this.fixedSorting ?? params['sorting'] ?? 'title,asc';
+        this.onQueryParams(params);
         this.loadPage();
       }));
     } else {
@@ -101,9 +108,17 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Filter state for the pagination links; `null` keeps the legacy `urlBase` paths. */
+  get paginationQueryParams(): Params | null {
+    return this.useRouter ? this.filterParams : null;
+  }
+
+  /** SPA route mode: read the browser's own filter params before the page loads. */
+  protected onQueryParams(_params: Params): void {}
+
   /** SPA route mode: write page + sorting to the URL; the queryParams subscription reloads. */
   private navigateWithParams(): void {
-    const queryParams: Params = {};
+    const queryParams: Params = {...this.filterParams};
     if (this.currentPage > 1) {
       queryParams['page'] = this.currentPage;
     }

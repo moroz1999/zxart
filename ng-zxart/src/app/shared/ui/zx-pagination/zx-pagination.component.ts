@@ -2,7 +2,6 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Outp
 import {PageItemInterface} from './page-item.interface';
 import {NgForOf, NgIf} from '@angular/common';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
-import {ZxSpinnerComponent} from '../zx-spinner/zx-spinner.component';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 
 @Component({
@@ -15,7 +14,6 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
         NgIf,
         NgForOf,
         ZxButtonComponent,
-        ZxSpinnerComponent,
     ],
 })
 export class ZxPaginationComponent implements OnChanges {

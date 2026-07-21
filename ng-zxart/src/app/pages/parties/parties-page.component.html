@@ -9,13 +9,16 @@
     (valueChange)="setViewMode($event)"
   ></zx-toggle>
   <zx-nav-chips [chips]="yearChips(vm.selectedYear)"></zx-nav-chips>
-  <zx-parties-list-skeleton
-    *ngIf="vm.parties === null"
-    [viewMode]="viewMode"
-  ></zx-parties-list-skeleton>
-  <zx-parties-list
-    *ngIf="vm.parties !== null"
-    [parties]="vm.parties"
-    [viewMode]="viewMode"
-  ></zx-parties-list>
+  <zx-stack spacing="sm">
+    <h2 *ngIf="!vm.selectedYear" appHeading="title">{{ 'parties-page.recent' | translate }}</h2>
+    <zx-parties-list-skeleton
+      *ngIf="vm.parties === null"
+      [viewMode]="viewMode"
+    ></zx-parties-list-skeleton>
+    <zx-parties-list
+      *ngIf="vm.parties !== null"
+      [parties]="vm.parties"
+      [viewMode]="viewMode"
+    ></zx-parties-list>
+  </zx-stack>
 </zx-page-layout>

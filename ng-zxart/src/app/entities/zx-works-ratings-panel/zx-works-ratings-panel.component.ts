@@ -11,6 +11,7 @@ import {ZxRowSkeletonComponent} from '../../shared/ui/zx-skeleton/components/zx-
 import {TextDirective} from '../../shared/ui/typography/directives/text.directive';
 import {InViewportDirective} from '../../shared/directives/in-viewport.directive';
 import {RouterLink} from '@angular/router';
+import {ZxLoadingStateDirective} from '../../shared/ui/zx-loading-state/zx-loading-state.directive';
 /**
  * Shared "votes on works" panel: a paginated, lazy-loaded list of votes rendered with
  * zx-table + zx-user. Reused by the author and group discussion tabs; the host supplies
@@ -29,6 +30,7 @@ import {RouterLink} from '@angular/router';
     ZxRowSkeletonComponent,
     TextDirective,
     InViewportDirective,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './zx-works-ratings-panel.component.html',
   styleUrl: './zx-works-ratings-panel.component.scss',

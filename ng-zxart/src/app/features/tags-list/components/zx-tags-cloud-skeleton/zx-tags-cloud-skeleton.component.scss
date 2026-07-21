@@ -1,0 +1,23 @@
+:host {
+  display: block;
+}
+
+.tags-cloud-skeleton__item--small {
+  width: var(--zx-tags-cloud-skeleton-small-width);
+  height: var(--zx-tags-cloud-skeleton-small-height);
+}
+
+.tags-cloud-skeleton__item--medium {
+  width: var(--zx-tags-cloud-skeleton-medium-width);
+  height: var(--zx-tags-cloud-skeleton-medium-height);
+}
+
+.tags-cloud-skeleton__item--large {
+  width: var(--zx-tags-cloud-skeleton-large-width);
+  height: var(--zx-tags-cloud-skeleton-large-height);
+}
+
+.tags-cloud-skeleton__item--extra-large {
+  width: var(--zx-tags-cloud-skeleton-extra-large-width);
+  height: var(--zx-tags-cloud-skeleton-extra-large-height);
+}

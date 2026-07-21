@@ -2,6 +2,7 @@
 @use 'shared/breakpoints' as breakpoints;
 @use 'app/shared/ui/zx-grid/zx-grid-item.directive';
 @use 'app/shared/ui/zx-form/zx-form.directive';
+@use 'app/shared/ui/zx-loading-state/zx-loading-state.directive';
 
 // Base document styles. The SPA shell no longer loads the legacy CSS bundle,
 // so the base font and body reset live here. The Roboto webfont is linked from

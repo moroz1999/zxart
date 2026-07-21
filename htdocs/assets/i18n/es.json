@@ -1,8 +1,9 @@
 {
   "tags-cloud": {
-    "loading": "Cargando etiquetas…",
     "error": "No se pudieron cargar las etiquetas.",
-    "empty": "No se encontraron etiquetas."
+    "empty": "No se encontraron etiquetas.",
+    "minimumAmount": "Mínimo de obras por etiqueta",
+    "allTags": "Todas las etiquetas"
   },
   "common": {
     "not-found": "Página no encontrada",
@@ -593,7 +594,12 @@
     "theme.dark": "Oscuro"
   },
   "top-pictures": {
-    "title": "Top de gráficos"
+    "title": "Top de gráficos",
+    "filter": {
+      "all": "Todos",
+      "loading-screens": "Pantallas de carga",
+      "game-graphics": "Gráficos del juego"
+    }
   },
   "top-music": {
     "title": "Top de música"
@@ -1887,6 +1893,9 @@
       "gfx": "Imágenes por año"
     },
     "days30": "30 días",
+    "section": {
+      "avg": "Valoración media por año"
+    },
     "legend": {
       "all": "todo en la base",
       "rated": "valorado por encima de la media",
@@ -2025,10 +2034,13 @@
     "error": "Error en la solicitud"
   },
   "parties-page": {
+    "recent": "Parties recientes",
     "view-cards": "Tarjetas",
     "view-table": "Tabla",
     "col-title": "Título",
-    "col-year": "Año"
+    "col-year": "Año",
+    "col-country": "País",
+    "col-city": "Ciudad"
   },
   "menu": {
     "home": "Inicio",
@@ -2058,8 +2070,7 @@
       "search": "Búsqueda en la base",
       "authors": "Artistas",
       "top": "Top",
-      "tags": "Etiquetas",
-      "games": "Juegos"
+      "tags": "Etiquetas"
     },
     "music-sub": {
       "home": "Inicio",
@@ -2082,11 +2093,6 @@
   },
   "content": {
     "error": "No se pudo cargar el contenido."
-  },
-  "file-search": {
-    "placeholder": "Nombre de archivo o md5…",
-    "searching": "Buscando…",
-    "empty": "No se encontraron archivos."
   },
   "password-reminder": {
     "title": "Recuperación de contraseña",

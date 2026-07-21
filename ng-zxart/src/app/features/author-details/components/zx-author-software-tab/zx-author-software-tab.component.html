@@ -70,8 +70,7 @@
   <zx-stack
     *ngIf="yearGroups.length > 0"
     spacing="md"
-    class="ap-results"
-    [class.ap-results--loading]="loading">
+    [zxLoadingState]="loading">
     <div class="ap-toolbar__result">
       {{ 'author-details.software-tab.found' | translate: {count: total} }}
     </div>
@@ -105,15 +104,15 @@
         </zx-stack>
       </div>
     </div>
-
-    <zx-pagination
-      *ngIf="pagesAmount > 1"
-      [currentPage]="currentPage"
-      [pagesAmount]="pagesAmount"
-      [visibleAmount]="2"
-      [urlBase]="urlBase"
-      [loading]="loading"
-      (pageChange)="onPageChange($event)">
-    </zx-pagination>
   </zx-stack>
+
+  <zx-pagination
+    *ngIf="pagesAmount > 1"
+    [currentPage]="currentPage"
+    [pagesAmount]="pagesAmount"
+    [visibleAmount]="2"
+    [urlBase]="urlBase"
+    [loading]="loading"
+    (pageChange)="onPageChange($event)">
+  </zx-pagination>
 </zx-stack>

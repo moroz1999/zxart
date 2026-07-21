@@ -85,8 +85,6 @@
   --zx-geo-title-size: var(--zx-font-size-lg);
   /* Geo caption font size. */
   --zx-geo-caption-size: var(--zx-font-size-xs);
-  /* Geo list opacity while loading next page. */
-  --zx-geo-loading-opacity: 0.55;
 }
 
 @include bp.media-breakpoint-down(md) {

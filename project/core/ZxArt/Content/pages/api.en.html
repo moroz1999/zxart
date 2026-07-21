@@ -1,2 +1,720 @@
-<p>ZX-Art exposes a public API for querying the archive.</p>
-<!-- TODO: replace this placeholder with the real API documentation. -->
+<p>
+    NB: Providing non-empty User Agent header with all requests is required. Otherwise you will be banned by IP instantly.
+</p>
+<h2>
+    Common description
+</h2>
+<ol>
+    <li data-list-item-id="ec450f8bde42eb08fad25b6a63414570b">
+        API is publicly accessable via HTTP and JSON
+    </li>
+    <li data-list-item-id="ef681c40076b9f1b5bca39ad7698f8325">
+        Information accuracy is not guaranteed, the information in databased is constantly being cleaned/rechecked/added.
+    </li>
+    <li data-list-item-id="ee20d8dd0747e4fcfacb56447d390f9dc">
+        Information copying/backing up/usage for other databases is totally encouraged
+    </li>
+    <li data-list-item-id="ebd1e551488f03c813396dd814fdd7658">
+        API format is subject to change without notification
+    </li>
+</ol>
+<h3>
+    Common parameters:
+</h3>
+<ul>
+    <li data-list-item-id="e5455e16178086987fc99ec309b8037a1">
+        export - entity name quieried from API. All limiting and sorting parameters are being applied to this list.<br>
+        Possible values:
+        <ul>
+            <li data-list-item-id="e1840cb958e0d02cdf4d1d1ac9ca214ca">
+                author
+            </li>
+            <li data-list-item-id="e6635b3b1872c6d9cf45b9f294169b419">
+                authorAlias
+            </li>
+            <li data-list-item-id="e17a24d96467b7987f527f510ce5e1181">
+                group
+            </li>
+            <li data-list-item-id="ef7643a3da89f28ec66ef81be39add6c2">
+                groupAlias
+            </li>
+            <li data-list-item-id="e3799112839ae6eb6345fdafbec996779">
+                zxProdCategory
+            </li>
+            <li data-list-item-id="e1e0278c84c1adef205c78b6d19beade7">
+                zxProd
+            </li>
+            <li data-list-item-id="e5625c3912d3fe9c49407fa43ced4e9c7">
+                zxRelease
+            </li>
+            <li data-list-item-id="e5185c206f90f46884879ee52b1b418e8">
+                zxPicture
+            </li>
+            <li data-list-item-id="ef73d09aea60f3b1bebe43786f509cee1">
+                zxMusic
+            </li>
+        </ul>
+    </li>
+    <li data-list-item-id="e1aa2b1bfacc4a04579ca99fe5b08e409">
+        language - language code for all translatable information.<br>
+        Possible values:
+        <ul>
+            <li data-list-item-id="e7d159cd6b5d5191f970a1e76a92004d6">
+                eng
+            </li>
+            <li data-list-item-id="e28b2b6b6367cb04e19c26312966a6ba6">
+                rus
+            </li>
+            <li data-list-item-id="ee154580309dff388b0d21efca17e8b2b">
+                spa
+            </li>
+        </ul>
+    </li>
+    <li data-list-item-id="e699c4af332be97b70e485d3ffe8bb160">
+        start - number of the first required element from list
+    </li>
+    <li data-list-item-id="e97b495369ecbc11f69e18d32277c09fd">
+        limit - quantity of elements in list
+    </li>
+    <li data-list-item-id="e9491c4038b46620e5fe5fdf81317e8e7">
+        filter - can vary for different types of entities. Please contact if you require any specific filtration functionality
+    </li>
+</ul>
+<h3>
+    External database codenames:
+</h3>
+<ul>
+    <li data-list-item-id="e647f4eeb0df605e4fa665482a17c47a1">
+        3a - ZXAAA
+    </li>
+    <li data-list-item-id="eb49b5d3331c92f9d37cd64fdd6b21aad">
+        dzoo - DemoZoo
+    </li>
+    <li data-list-item-id="e4e00b7523420af3c01f4004a0090ad4d">
+        pouet - Pouet.net
+    </li>
+    <li data-list-item-id="e44fa551a22f737cd2fb4785941d195b4">
+        sc - Spectrum Computing or ZXDB
+    </li>
+    <li data-list-item-id="e6d7c5db72cfe6db94427d619b91254df">
+        wos - World Of Spectrum
+    </li>
+    <li data-list-item-id="e7f2d268d1f51fe6935edf980f3966297">
+        vt - Virtual TR-DOS
+    </li>
+    <li data-list-item-id="e03c548c3c58fe9302895a67f7866e779">
+        zxd - Demotopia
+    </li>
+</ul>
+<h2>
+    Software category
+</h2>
+<p>
+    All the software production are grouped into the software categories by genre or type.
+</p>
+<p>
+    Query example to get all the available software categories:<br>
+    <a target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:zxProdCategory/filter:zxProdCategoryAll/">http://zxart.ee/api/export:zxProdCategory/filter:zxProdCategoryAll/</a>
+</p>
+<p>
+    Fields:
+</p>
+<ul>
+    <li data-list-item-id="eb2c9d794d04372d813a54af6c97d369b">
+        id
+    </li>
+    <li data-list-item-id="e49605e8c5e5a2a1f90264a836db11caa">
+        title
+    </li>
+    <li data-list-item-id="e1049f09f3d25abda45523936bbb3f6ad">
+        categories - a list of subcategory IDs residing in this category.
+    </li>
+</ul>
+<h2>
+    Software production
+</h2>
+<p>
+    This entity groups all the related releases into a single page.
+</p>
+<p>
+    First 10 productions:<br>
+    <a target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:zxProd/limit:10/">http://zxart.ee/api/export:zxProd/limit:10/</a>
+</p>
+<p>
+    First 10 prods sorted by title:<br>
+    <a href="/api/export:zxProd/limit:10/order:title,asc">http://zxart.ee/api/export:zxProd/limit:10/order:title,asc</a><br>
+    <br>
+    Last 10 uploaded prods:<br>
+    <a href="/api/export:zxProd/limit:10/order:date,desc">http://zxart.ee/api/export:zxProd/limit:10/order:date,desc</a>
+</p>
+<p>
+    First 10 productions for category with ID 92177:<br>
+    <a style="text-decoration:none;" target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:zxProd/start:0/limit:10/filter:zxProdCategory=92177/">http://zxart.ee/api/export:zxProd/start:0/limit:10/filter:zxProdCategory=92177/</a>
+</p>
+<p>
+    Production with ID 92841:<br>
+    <a target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:zxProd/filter:zxProdId=92841">http://zxart.ee/api/export:zxProd/filter:zxProdId=92841</a>
+</p>
+<h3>
+    Fields:
+</h3>
+<ul>
+    <li data-list-item-id="e3cffe5ba7928eb344360f647c489e51d">
+        id
+    </li>
+    <li data-list-item-id="e7f5bf0a246cf61bd1797b109660401cd">
+        title
+    </li>
+    <li data-list-item-id="eb49b1c7ebb759974f7027cf146f5d109">
+        dateCreated - creation date’s timestamp
+    </li>
+    <li data-list-item-id="e5dad52ab8c0eec43a634675221ebabbc">
+        dateModified - modification date’s timestamp
+    </li>
+    <li data-list-item-id="e8ca99bfb82391a583225ca2a9d3d861e">
+        language - ISO 639-1 codes of supported languages
+    </li>
+    <li data-list-item-id="e39143312e4881616de24b5134053b3cf">
+        partyId - ID of demoparty/competition
+    </li>
+    <li data-list-item-id="e8482a0eef8b57907fd89c9f204a246f1">
+        partyPlace - place taken in party
+    </li>
+    <li data-list-item-id="ea27428f304e1a71251a6b60a5466c5df">
+        compo - compo name
+    </li>
+    <li data-list-item-id="ecb265f82e026cab16bfe9f9f084cdddc">
+        year - year of first publication
+    </li>
+    <li data-list-item-id="e1b909637e9fc677a1869eaddb37bb43e">
+        youtubeId - youtube video ID
+    </li>
+    <li data-list-item-id="ef47e3951de56defcd83b743e365c51c2">
+        description - description text
+    </li>
+    <li data-list-item-id="ed5c73fa99498fd0e5d76abe90846abc2">
+        legalStatus - status of distribution
+    </li>
+    <li data-list-item-id="e59722f894adbcf9f4ffac9b052d0e42b">
+        groupsIds - producing groups IDs
+    </li>
+    <li data-list-item-id="e998ed9985a3e082532cfb8664a631845">
+        publishersIds - publisher groups IDs
+    </li>
+    <li data-list-item-id="eeea6841538977e00b97eeea8f587cffd">
+        releasesIds - IDs of releases
+    </li>
+    <li data-list-item-id="edd7e32028b6b04c5fe505b82f0a9ca06">
+        maps - list of game maps images URLs
+    </li>
+    <li data-list-item-id="e779887abc846a6342e0e66362c106513">
+        authorsInfo - authorship information
+        <ul>
+            <li data-list-item-id="e14b82c75f95f3668393ee75559755060">
+                authorId
+            </li>
+            <li data-list-item-id="e7505fbfb484ac2e5819f6bb4dd95ab45">
+                roles
+            </li>
+        </ul>
+    </li>
+    <li data-list-item-id="e6614e5f76e6aaa468cb62796cb2b6016">
+        importIds - IDs used for this production in other databases.
+    </li>
+</ul>
+<h2>
+    Software production release
+</h2>
+<p>
+    This is a version or release of a software production.
+</p>
+<p>
+    First 10 releases:<br>
+    <a target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/action:filter/export:zxRelease/limit:10/">http://zxart.ee/api/action:filter/export:zxRelease/limit:10/</a>
+</p>
+<p>
+    Last 10 uploaded releases:<br>
+    <a href="/api/action:filter/export:zxRelease/limit:10/order:date,desc">http://zxart.ee/api/action:filter/export:zxRelease/limit:10/order:date,desc</a>
+</p>
+<p>
+    Releases of production with ID 92841:<br>
+    <a style="text-decoration:none;" target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/action:filter/export:zxRelease/filter:zxProdId=92841">http://zxart.ee/api/action:filter/export:zxRelease/filter:zxProdId=92841</a>
+</p>
+<p>
+    Release with ID 92844:<br>
+    <a target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/action:filter/export:zxRelease/filter:zxReleaseId=92844">http://zxart.ee/api/action:filter/export:zxRelease/filter:zxReleaseId=92844</a>
+</p>
+<h3>
+    Fields:
+</h3>
+<ul>
+    <li data-list-item-id="e05edebe3d9f56e21af4a73992894950b">
+        id
+    </li>
+    <li data-list-item-id="e80fa59709bfdb1b51928d8a8ea7fc63f">
+        title
+    </li>
+    <li data-list-item-id="e89cdfb1293ebae0486fadf2854809b50">
+        dateCreated - creation date’s timestamp
+    </li>
+    <li data-list-item-id="e806bab80cbc37c33aa6e6530cf71f337">
+        dateModified - modification date’s timestamp
+    </li>
+    <li data-list-item-id="edd8d75c0894db35f6b8d3a7f2b957156">
+        file - URL of file download
+    </li>
+    <li data-list-item-id="ee8739e0598c5a79ef006460af9b9e223">
+        fileName - original filename
+    </li>
+    <li data-list-item-id="e17d439d8e1d0ffe45c08e1395929eed1">
+        year - year of first publication. Zero if it’s the same as production’s one
+    </li>
+    <li data-list-item-id="e98b50c35e7b452dcda98367ca89600fa">
+        publishersIds - publisher groups IDs
+    </li>
+    <li data-list-item-id="ed6bdacb83e422f0baf22439995ace5af">
+        language - ISO 639-1 codes of supported languages. Empty if it’s the same as production’s one
+    </li>
+    <li data-list-item-id="e76e3f4e452925c63132587f40bc101f6">
+        description
+    </li>
+    <li data-list-item-id="e99f567ab5d4a8205e7312206fc953dda">
+        authorsInfo - additional authors of this release
+        <ul>
+            <li data-list-item-id="ec7b23b912e39dcb5f981fa167ed6d9c4">
+                authorId
+            </li>
+            <li data-list-item-id="ea3e99cda6566a91a8b5fef1f5f87a591">
+                roles
+            </li>
+        </ul>
+    </li>
+    <li data-list-item-id="edc72f7bba9405bf489afb7185829af85">
+        hardwareRequired - list of minimum required hardware
+    </li>
+    <li data-list-item-id="e2bff3ac8cad4bf3082aeeb96b7661e30">
+        hardwareOptional - list of additionally supported hardware
+    </li>
+    <li data-list-item-id="e4814051f22d5c8e48e5d42baae3bd711">
+        releaseType - type of release
+        <ul>
+            <li data-list-item-id="ef5b280ae1f0666231299c749b2f2cef0">
+                unknown
+            </li>
+            <li data-list-item-id="e13655c00af0afeb479583138b3c47a30">
+                original
+            </li>
+            <li data-list-item-id="ea37ab0df10ffb4df3592372af34811ac">
+                rerelease
+            </li>
+            <li data-list-item-id="e28b44de42a170f82b3a8a2c7dc070b1e">
+                adaptation
+            </li>
+            <li data-list-item-id="ef50afc3310e1e2b11fe2d8a36cdfb407">
+                localization
+            </li>
+            <li data-list-item-id="ec5b88f9a47dcc8552fe80733d36eac9f">
+                mod
+            </li>
+            <li data-list-item-id="e0974fb3ed35647da9f38fcf25d88902d">
+                crack
+            </li>
+            <li data-list-item-id="eeafeb6e5fc2bc7d2d510d9cdf107e389">
+                mia
+            </li>
+            <li data-list-item-id="ebb33d8b434d87910d36b0715010b0afa">
+                corrupted
+            </li>
+            <li data-list-item-id="e7e72dd97ee3c07e5643609f3e4cfddb6">
+                compilation
+            </li>
+            <li data-list-item-id="e27abefa853a95cff40c828c12b25355e">
+                incomplete
+            </li>
+            <li data-list-item-id="e7a07cfdd4352b1d3567195e9db0f7805">
+                demoversion
+            </li>
+        </ul>
+    </li>
+    <li data-list-item-id="ef0446b1370fbeee10515dc36fcd331ba">
+        releaseFormat
+        <ul>
+            <li data-list-item-id="e3d2663ed5a4a2bd5acc3baddbc7bbd78">
+                dsk
+            </li>
+            <li data-list-item-id="ea4a302ba25c469e76ffd5dac4a0c2de1">
+                tzx
+            </li>
+            <li data-list-item-id="e7416de1d4aac24c2a793eeb52fcc657d">
+                tap
+            </li>
+            <li data-list-item-id="e4a859810bd7d056e0a886aa90490921a">
+                trd
+            </li>
+            <li data-list-item-id="eeed4e191fb19744337bb109abebe5803">
+                scl
+            </li>
+            <li data-list-item-id="e4218b293901515d2b0d31419172e60ab">
+                bin
+            </li>
+            <li data-list-item-id="eaea93b30636a5c71e6cb3bd116f90444">
+                sna
+            </li>
+            <li data-list-item-id="e16f10da0afb12d5aad65a548dd01aa87">
+                z80
+            </li>
+            <li data-list-item-id="ec31f143179a7d6b0082fbdd0fa3caef2">
+                fdi
+            </li>
+            <li data-list-item-id="e1c315689dbc5f00fd6e0e985213737b9">
+                udi
+            </li>
+            <li data-list-item-id="e0ed5fb38e9659cd1f4a6c9f9e30402b4">
+                td0
+            </li>
+            <li data-list-item-id="e0f77f0db832b7b42cb9fb78bd618e21b">
+                rom
+            </li>
+            <li data-list-item-id="ec5543ec904b013bdfc206da94aad2635">
+                spg
+            </li>
+        </ul>
+    </li>
+    <li data-list-item-id="e13d246e312583b2667b0c9f246eb70ae">
+        version - version number of a release
+    </li>
+    <li data-list-item-id="eea637e9cbee2e1d88efef0c21cb32f57">
+        inlays - URLs of cover inlay files
+    </li>
+    <li data-list-item-id="e20f98f509c5aa640e32295b7591d580f">
+        ads - URLs of advertisement files
+    </li>
+    <li data-list-item-id="e96b267621eb73250e4c13e7e676e5518">
+        instructions - URLs of manuals
+    </li>
+    <li data-list-item-id="eb37c920a6bc9f64da4e77f6cdb61bb22">
+        importIds - IDs used for this release in other databases.
+    </li>
+</ul>
+<h2>
+    Author
+</h2>
+<p>
+    Author is a person.
+</p>
+<p>
+    All authors:<br>
+    <a style="text-decoration:none;" target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:author/limit:10/filter:authorAll">http://zxart.ee/api/export:author/limit:10/filter:authorAll</a>
+</p>
+<p>
+    10 last added authors:<br>
+    <a target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:author/limit:10/filter:authorAll/order:date,desc">http://zxart.ee/api/export:author/limit:10/filter:authorAll/order:date,desc</a>
+</p>
+<p>
+    Author with ID 2202:<br>
+    <a target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:author/filter:authorId=2202">http://zxart.ee/api/export:author/filter:authorId=2202</a>
+</p>
+<h3>
+    Fields:
+</h3>
+<ul>
+    <li data-list-item-id="e135f9e8483858753544114622b050987">
+        id
+    </li>
+    <li data-list-item-id="e47f1c4c1c9b915f2c9fe9d61175652af">
+        title - author’s nickname
+    </li>
+    <li data-list-item-id="ecddd7da0443005be585a2880f7f9311a">
+        url - URL on ZX-Art
+    </li>
+    <li data-list-item-id="e38d1bccc8db1ed889bac3938c896cfcf">
+        dateCreated
+    </li>
+    <li data-list-item-id="e192229eeb3758e4930c59eb8761cd80e">
+        dateModified
+    </li>
+    <li data-list-item-id="ea7ceafd1d29802087512477d4a226504">
+        realName
+    </li>
+    <li data-list-item-id="ef24f85ae0fa41e76026dd6b199cf7c24">
+        tunesQuantity
+    </li>
+    <li data-list-item-id="ecc4574072287fdbbce2619707cab2b91">
+        picturesQuantity
+    </li>
+    <li data-list-item-id="e8cb6be61529ae09df5398c2a6ce8fc0a">
+        city - name of author’s city
+    </li>
+    <li data-list-item-id="e482a0e71936428c81ecf66601eca5e67">
+        country - name of author’s country
+    </li>
+    <li data-list-item-id="ef9151d3a19b3633d3f93c46ccbd1f886">
+        importIds - IDs used for this author in other databases
+    </li>
+    <li data-list-item-id="e0a69914f0d96972f9ac9d57c7338a375">
+        aliases - list of author’s aliases IDs
+    </li>
+</ul>
+<h2>
+    Author’s alias
+</h2>
+<p>
+    Author’s alias is an alternative nickname of author.
+</p>
+<p>
+    All authors’ aliases:<br>
+    <a target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:authorAlias/filter:authorAliasAll">http://zxart.ee/api/export:authorAlias/filter:authorAliasAll</a>
+</p>
+<p>
+    Author’s alias with ID 86146:<br>
+    <a target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:authorAlias/filter:authorAliasId=86146">http://zxart.ee/api/export:authorAlias/filter:authorAliasId=86146</a>
+</p>
+<h3>
+    Fields:
+</h3>
+<ul>
+    <li data-list-item-id="e93b090cb56e3eea8638a52457bd32031">
+        id
+    </li>
+    <li data-list-item-id="e1028f8e2c22ce70a05e5c29f1ae83afa">
+        title - author aliases nickname
+    </li>
+    <li data-list-item-id="e4b192a057b7abc62501fe8f8e6529b5c">
+        url - URL on ZX-Art
+    </li>
+    <li data-list-item-id="ebeceacd118f383e6ee828e545fef1093">
+        authorId - original author ID
+    </li>
+    <li data-list-item-id="e421c0a6ef38f8a91093702b5afc57c98">
+        importIds - IDs used for this author alias in other databases
+    </li>
+</ul>
+<h2>
+    Picture
+</h2>
+<p>
+    A picture of author.
+</p>
+<p>
+    First 10 pictures:<br>
+    <a style="text-decoration:none;" target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:zxPicture/filter:zxPicture/limit:10">http://zxart.ee/api/export:zxPicture/filter:zxPicture/limit:10</a>
+</p>
+<p>
+    10 last added pictures:<br>
+    <a href="/api/export:zxPicture/filter:zxPicture/limit:10/order:date,desc">http://zxart.ee/api/export:zxPicture/filter:zxPicture/limit:10/order:date,desc</a>
+</p>
+<p>
+    Picture with ID 2232:<br>
+    <a style="text-decoration:none;" target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:zxPicture/limit:10/filter:zxPictureId=2232">http://zxart.ee/api/export:zxPicture/limit:10/filter:zxPictureId=2232</a>
+</p>
+<p>
+    Pictures by author:<br>
+    <a target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:zxPicture/limit:10/filter:authorId=2333">http://zxart.ee/api/export:zxPicture/limit:10/filter:authorId=2333</a>
+</p>
+<h3>
+    Fields:
+</h3>
+<ul>
+    <li data-list-item-id="eb3c69be5ef575f3edb4cc217786cd77d">
+        id
+    </li>
+    <li data-list-item-id="e4e6306b793c5e68027b2d67e1d62915b">
+        title - picture name
+    </li>
+    <li data-list-item-id="eae652f2deb535b1ff1a5dcd1c9cec545">
+        url - URL on ZX-Art
+    </li>
+    <li data-list-item-id="e2ed951663c313cdbdbfd34b9e618670d">
+        dateCreated - creation date’s timestamp
+    </li>
+    <li data-list-item-id="e0ec3bbd883e0b5ac981f74ce0426abb4">
+        dateModified - modification date’s timestamp
+    </li>
+    <li data-list-item-id="efe5b02cc5a50ca8f5401d4c7c4920a15">
+        partyId - ID of demoparty/competition
+    </li>
+    <li data-list-item-id="ea06d620bea0294c6b97651d686d32a76">
+        partyPlace - place taken in party
+    </li>
+    <li data-list-item-id="e6abd4c238793de48e7e6a2b2dd6ec841">
+        compo - compo name
+    </li>
+    <li data-list-item-id="e4d1b9956df16eb1ad6707aaa6ec599e1">
+        authorIds - list of picture authors’ IDs
+    </li>
+    <li data-list-item-id="e307fdacb1b77342f3a602c1efd86edd4">
+        tags - tag names in selected language
+    </li>
+    <li data-list-item-id="e76f6d64a9c8f6d6c86c3f036c4235bd4">
+        type - image format type
+    </li>
+    <li data-list-item-id="e5ede1ad861c5e21da95baee5e7705ee3">
+        rating - ZX-Art’s rating
+    </li>
+    <li data-list-item-id="e33a2fafef0d841c275434e7cafcd4a63">
+        views - quantity of views
+    </li>
+    <li data-list-item-id="e220499963b180784ee717f05bf32255d">
+        year - year of publication
+    </li>
+    <li data-list-item-id="ef161b3112bb94cf1e822fe4a5cf8263f">
+        description
+    </li>
+    <li data-list-item-id="eb94e6f0d2bf0fe7b55f30e7e392faacb">
+        imageUrl - image URL in PC format
+    </li>
+    <li data-list-item-id="e921a994bde26b4c15164b29f819bb8ac">
+        originalUrl - original binary file’s URL
+    </li>
+</ul>
+<h2>
+    Tune
+</h2>
+<p>
+    Musical tune of author.
+</p>
+<p>
+    First 10 tunes:<br>
+    <a target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:zxMusic/limit:10/">http://zxart.ee/api/export:zxMusic/limit:10/</a>
+</p>
+<p>
+    Last 10 added tunes:<br>
+    <a href="/api/export:zxMusic/limit:10/order:date,desc">http://zxart.ee/api/export:zxMusic/limit:10/order:date,desc</a>
+</p>
+<p>
+    Tune with ID 19717:<br>
+    <a style="text-decoration:none;" target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:zxMusic/limit:10/filter:zxMusicId=19717">http://zxart.ee/api/export:zxMusic/limit:10/filter:zxMusicId=19717</a>
+</p>
+<p>
+    Tunes by author:<br>
+    <a target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:zxMusic/limit:10/filter:authorId=2333">http://zxart.ee/api/export:zxMusic/limit:10/filter:authorId=2333</a>
+</p>
+<h3>
+    Fields:
+</h3>
+<ul>
+    <li data-list-item-id="e9166c5e6beda3d3b77fbc2fd774ab1e0">
+        id
+    </li>
+    <li data-list-item-id="ebb5046779561be7d559565974eb6bb1a">
+        title - tune name
+    </li>
+    <li data-list-item-id="ea3a21f377dfb0dd3c41e8fd5332aba5f">
+        url - URL on ZX-Art
+    </li>
+    <li data-list-item-id="e31d04ee8ed0d749d421200ac9095b84d">
+        dateCreated - creation date’s timestamp
+    </li>
+    <li data-list-item-id="e047ffa0451b558d9ff64d9d3831386df">
+        dateModified - modification date’s timestamp
+    </li>
+    <li data-list-item-id="efe716557a5ecba89d946b83349e2256c">
+        partyId - ID of demoparty/competition
+    </li>
+    <li data-list-item-id="e29532b96df7d27ea84663f5473da0455">
+        partyPlace - place taken in party
+    </li>
+    <li data-list-item-id="e4aab80ab7f03bc48e6740dce1c9033ef">
+        compo - compo name
+    </li>
+    <li data-list-item-id="eccae5dfb6413678fe2e8dc48dfc71c89">
+        authorIds - list of picture authors’ IDs
+    </li>
+    <li data-list-item-id="e39c5594a2cc21d71e3c250ce52584b74">
+        time - duration of tune
+    </li>
+    <li data-list-item-id="ea728d8b354cef639796495dfa2bace67">
+        originalUrl - original binary file’s URL
+    </li>
+</ul>
+<h2>
+    Group
+</h2>
+<p>
+    Group can be a demoscene group, publisher, company or any other group of authors.
+</p>
+<p>
+    First 10 groups:<br>
+    <a target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:group/limit:10/">http://zxart.ee/api/export:group/limit:10/</a>
+</p>
+<p>
+    Group with ID 87126:
+</p>
+<p>
+    <a target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:group/filter:groupId=87126">http://zxart.ee/api/export:group/filter:groupId=87126</a>
+</p>
+<h3>
+    Fields
+</h3>
+<ul>
+    <li data-list-item-id="e1856aea2eb61fab3c73814a63befcea6">
+        id
+    </li>
+    <li data-list-item-id="e0bed40acacb60f00262af6dc9529203b">
+        title - group name
+    </li>
+    <li data-list-item-id="e63be03212eb2f7488b04e1ea61196bff">
+        url - URL on ZX-Art
+    </li>
+    <li data-list-item-id="eaa02b52a3695089e284717e22e17fff8">
+        dateCreated - creation date’s timestamp
+    </li>
+    <li data-list-item-id="e686d319926a0f73737e853b454b327fc">
+        dateModified - modification date’s timestamp
+    </li>
+    <li data-list-item-id="e1e0a0ab19b4a76c2f7eb9aed58da45ea">
+        city - name of group’s city
+    </li>
+    <li data-list-item-id="ed3f481ef5bbda231c06fc53acdb6cbf6">
+        country - name of group’s country
+    </li>
+    <li data-list-item-id="ea9258927e5642c89871a662535a2dcab">
+        subGroupIds - group’s subgroups. Appropriate for associations.
+    </li>
+    <li data-list-item-id="e71dc204fb5b7a08d85412ffdd30225a5">
+        importIds - IDs used for this group in other databases
+    </li>
+    <li data-list-item-id="ee47b3e97f868d608298fe305c5046821">
+        aliases - list of group aliases’ IDs
+    </li>
+</ul>
+<h2>
+    Group’s alias
+</h2>
+<p>
+    Group’s alias is an alternative title of group.
+</p>
+<p>
+    All groups’ aliases:<br>
+    <a target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:groupAlias/filter:groupAliasAll">http://zxart.ee/api/export:groupAlias/filter:groupAliasAll</a>
+</p>
+<p>
+    Group’s alias with ID 176109:<br>
+    <a target="_blank" rel="noopener noreferrer" href="http://zxart.ee/api/export:groupAlias/filter:groupAliasId=176109">http://zxart.ee/api/export:groupAlias/filter:groupAliasId=176109</a>
+</p>
+<h3>
+    Fields:
+</h3>
+<ul>
+    <li data-list-item-id="e2aee79c023432a27f98c4031997d16ae">
+        id
+    </li>
+    <li data-list-item-id="e9bbc72ffea2b62d6ec0c9da6f11c5836">
+        title - group aliases nickname
+    </li>
+    <li data-list-item-id="e55cea4aa18518c90b38e4683d957e56c">
+        url - URL on ZX-Art
+    </li>
+    <li data-list-item-id="ef80efe4c5fdba498fafbd4810ac6857b">
+        dateCreated - creation date’s timestamp
+    </li>
+    <li data-list-item-id="eafb3de861540a5a7f9972eef0201ab98">
+        dateModified - modification date’s timestamp
+    </li>
+    <li data-list-item-id="e02764c8182926802cf5de58dd57d7532">
+        groupId - parent group ID
+    </li>
+    <li data-list-item-id="ed2f225343d866acab75eec8b71a6e641">
+        importIds - IDs used for this group’s alias in other databases
+    </li>
+</ul>

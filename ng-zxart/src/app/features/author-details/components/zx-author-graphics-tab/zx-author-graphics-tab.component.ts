@@ -17,6 +17,7 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
+import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 
 const PAGE_SIZE = 24;
 
@@ -43,6 +44,7 @@ interface YearGroup {
     ZxPictureGridSkeletonComponent,
     TextDirective,
     PictureGalleryHostComponent,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './zx-author-graphics-tab.component.html',
   styleUrl: './zx-author-graphics-tab.component.scss',

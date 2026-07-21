@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {Observable, of, Subscription} from 'rxjs';
 import {filter, shareReplay, take, tap} from 'rxjs/operators';
 import {PictureDetailsDto} from '../../models/picture-details.dto';
@@ -8,7 +8,7 @@ import {PictureDetailsApiService} from '../../services/picture-details-api.servi
 import {AnalyticsService} from '../../../../shared/services/analytics.service';
 import {PageMetadataService} from '../../../../shared/services/page-metadata.service';
 
-import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
+import {BreadcrumbService} from '../../../../shared/services/breadcrumb.service';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
@@ -43,7 +43,6 @@ import {RouterLink} from '@angular/router';@Component({
   imports: [RouterLink, 
     CommonModule,
     TranslateModule,
-    ZxBreadcrumbsComponent,
     ZxPanelComponent,
     ZxStackComponent,
     ZxInlineComponent,
@@ -85,6 +84,8 @@ export class ZxPictureDetailsComponent implements OnChanges, OnDestroy {
     private readonly api: PictureDetailsApiService,
     private readonly analytics: AnalyticsService,
     private readonly pageMetadataService: PageMetadataService,
+    private readonly breadcrumbService: BreadcrumbService,
+    private readonly translate: TranslateService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -102,6 +103,13 @@ export class ZxPictureDetailsComponent implements OnChanges, OnDestroy {
         if (details) {
           this.pageTitleChange.emit(details.title);
           this.pageMetadataService.applyEntityMetadata(details.metadata);
+          this.breadcrumbService.setEntityTrail({
+            items: [
+              {title: this.translate.instant('menu.graphics'), url: '/pictures'},
+              ...(details.authors.length ? [{title: details.authors[0].name, url: details.authors[0].url}] : []),
+            ],
+            currentTitle: details.title,
+          });
         }
       }),
       shareReplay(1),

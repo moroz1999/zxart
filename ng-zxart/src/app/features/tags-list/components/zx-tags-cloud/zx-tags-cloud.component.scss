@@ -1,25 +1,19 @@
 :host {
   display: block;
-  padding: var(--space-16);
 }
 
-.tags-cloud {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-8) var(--space-16);
-  line-height: 1.2;
+.tags-cloud__item--small {
+  font-size: var(--zx-tags-cloud-font-size-small);
+}
 
-  &__item {
-    color: var(--primary-500);
-    text-decoration: none;
+.tags-cloud__item--medium {
+  font-size: var(--zx-tags-cloud-font-size-medium);
+}
 
-    &:hover {
-      text-decoration: underline;
-    }
-  }
+.tags-cloud__item--large {
+  font-size: var(--zx-tags-cloud-font-size-large);
+}
 
-  &__status {
-    color: var(--text-light-color);
-  }
+.tags-cloud__item--extra-large {
+  font-size: var(--zx-tags-cloud-font-size-extra-large);
 }

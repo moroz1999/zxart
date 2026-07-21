@@ -8,7 +8,6 @@ use CmsHttpResponse;
 use controller;
 use LanguagesManager;
 use Monolog\Logger;
-use persistableCollection;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use structureManager;
 use Throwable;
@@ -80,29 +79,27 @@ class Picturelist extends LoggedControllerApplication
                         ]);
                     }
                 }
-            } else {
-                // No wrapper element id from the SPA: resolve the catalogue root by type.
-                $elementId = $elementId > 0 ? $elementId : $this->resolveRootId('picturesCatalogue');
-                if ($elementId <= 0) {
-                    $this->assignError('picturesCatalogue root not found');
-                } elseif ($limit !== null) {
-                    $sorting = SortingParams::fromRequest($sortingRaw, PictureListService::ALLOWED_SORT_COLUMNS);
-                    $result = $this->pictureListService->getPagedByLinkedElement($elementId, 'tagLink', $sorting, $start, $limit);
-                    $this->assignSuccess([
-                        'total' => $result['total'],
-                        'items' => array_map(
-                            fn(PictureDto $dto) => $this->objectMapper->map($dto, PictureRestDto::class),
-                            $result['items']
-                        ),
-                    ]);
-                } else {
-                    $dtos = $this->pictureListService->getPictures($elementId, $compoType);
-                    $restDtos = array_map(
+            } elseif ($limit !== null) {
+                // Paged collection browsing: the whole catalogue, optionally narrowed to one tag.
+                $tagId = (int)($this->getParameter('tagId') ?? 0);
+                $sorting = SortingParams::fromRequest($sortingRaw, PictureListService::ALLOWED_SORT_COLUMNS);
+                $result = $this->pictureListService->getPagedCollection($tagId, $sorting, $start, $limit);
+                $this->assignSuccess([
+                    'total' => $result['total'],
+                    'items' => array_map(
                         fn(PictureDto $dto) => $this->objectMapper->map($dto, PictureRestDto::class),
-                        $dtos
-                    );
-                    $this->assignSuccess($restDtos);
-                }
+                        $result['items']
+                    ),
+                ]);
+            } elseif ($elementId <= 0) {
+                $this->assignError('elementId is required', 400);
+            } else {
+                $dtos = $this->pictureListService->getPictures($elementId, $compoType);
+                $restDtos = array_map(
+                    fn(PictureDto $dto) => $this->objectMapper->map($dto, PictureRestDto::class),
+                    $dtos
+                );
+                $this->assignSuccess($restDtos);
             }
         } catch (Throwable $e) {
             $this->logThrowable('Picturelist::execute', $e);
@@ -115,26 +112,6 @@ class Picturelist extends LoggedControllerApplication
     private function assignSuccess(mixed $data): void
     {
         $this->renderer->assign('body', $data);
-    }
-
-    /**
-     * Resolves the unique collection root element id by structure type. The
-     * catalogue roots live outside the public language tree, so the id is read
-     * straight from the elements table instead of walking the navigable tree.
-     */
-    private function resolveRootId(string $structureType): int
-    {
-        /** @var persistableCollection $collection */
-        $collection = persistableCollection::getInstance('structure_elements');
-        /** @var list<array{id: scalar}> $rows */
-        $rows = $collection->conditionalLoad(
-            ['id'],
-            [['column' => 'structureType', 'action' => '=', 'argument' => $structureType]]
-        );
-        foreach ($rows as $row) {
-            return (int)$row['id'];
-        }
-        return 0;
     }
 
     private function assignError(string $message, int $statusCode = 500): void

@@ -49,7 +49,7 @@
         >{{ 'search.filters.selectAll' | translate }}</zx-button>
       </zx-filter-bar>
 
-      <div class="zx-search-results__body" [class.zx-search-results__body--loading]="pageLoading">
+      <div class="zx-search-results__body" [zxLoadingState]="pageLoading">
         <ng-container *ngIf="data && data.sets.length > 0; else emptyTpl">
           <ng-container *ngFor="let set of data.sets; trackBy: trackBySetType">
             <div class="zx-search-results__set">
@@ -134,10 +134,6 @@
         <ng-template #emptyTpl>
           <p appText="bodySm" tone="muted" class="zx-search-results__empty">{{ 'search.empty' | translate }}</p>
         </ng-template>
-
-        <div *ngIf="pageLoading" class="zx-search-results__overlay" aria-live="polite">
-          <zx-spinner size="lg"></zx-spinner>
-        </div>
       </div>
 
       <zx-pagination

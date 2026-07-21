@@ -17,10 +17,10 @@
   </div>
 </div>
 
-<zx-spinner *ngIf="loading && layout === 'table'" size="xl"></zx-spinner>
-
 <div *ngIf="error" appText="caption" tone="danger">{{ 'prods-browser.error' | translate }}</div>
 <div *ngIf="!loading && !error && prods.length === 0" appText="bodySm" tone="muted">{{ 'prods-browser.empty' | translate }}</div>
+
+<zx-row-skeleton *ngIf="loading && prods.length === 0 && layout === 'table'" [count]="10"></zx-row-skeleton>
 
 <ng-container *ngIf="!error">
   <zx-prods-list-view
@@ -30,7 +30,7 @@
     [skeletonCount]="prodSkeletonCount"
   ></zx-prods-list-view>
 
-  <table *ngIf="!loading && prods.length > 0 && layout === 'table'" class="prods-table">
+  <table *ngIf="prods.length > 0 && layout === 'table'" class="prods-table" [zxLoadingState]="loading">
     <thead>
       <tr>
         <td>{{ 'zx-prod.title' | translate }}</td>

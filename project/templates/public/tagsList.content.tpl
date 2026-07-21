@@ -5,8 +5,9 @@
 {/if}
 {capture assign="moduleContent"}
 	{foreach from=$element->getAllTags() item=tagItem}
-		{if $tagItem->amount > 0}
-			<a href='{$tagItem->URL}' class="tagslist_item" style="font-size: {$tagItem->getFontSize($element->maxAmount)}em">{$tagItem->title}</a>
+		{assign var='tagAmount' value=$element->getTagAmount($tagItem)}
+		{if $tagAmount > 0}
+			<a href='{$tagItem->URL}' class="tagslist_item" style="font-size: {$element->getTagFontSize($tagAmount)}em">{$tagItem->title}</a>
 		{/if}
 	{/foreach}
 {/capture}

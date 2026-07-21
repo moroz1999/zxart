@@ -1,10 +1,5 @@
 <ng-container *ngIf="core$ | async as core; else headerLoading">
   <zx-stack spacing="xl">
-    <zx-breadcrumbs
-      [categories]="core.breadcrumbs"
-      [currentTitle]="core.title">
-    </zx-breadcrumbs>
-
     <zx-button-controls *ngIf="core.editions.length > 1" [wrap]="true" gap="sm">
       <zx-button
         *ngFor="let edition of core.editions"
@@ -55,19 +50,15 @@
 </ng-container>
 
 <ng-template #headerLoading>
-  <zx-stack spacing="xl">
-    <zx-breadcrumbs [loading]="true"></zx-breadcrumbs>
-
-    <div class="party-details-skeleton__hero">
-      <zx-skeleton-bone class="party-details-skeleton__logo"></zx-skeleton-bone>
-      <zx-stack spacing="sm" class="party-details-skeleton__header-body">
-        <zx-skeleton-bone class="party-details-skeleton__title"></zx-skeleton-bone>
-        <zx-skeleton-bone class="party-details-skeleton__meta"></zx-skeleton-bone>
-        <zx-skeleton-bone class="party-details-skeleton__line"></zx-skeleton-bone>
-        <zx-skeleton-bone class="party-details-skeleton__button"></zx-skeleton-bone>
-      </zx-stack>
-    </div>
-  </zx-stack>
+  <div class="party-details-skeleton__hero">
+    <zx-skeleton-bone class="party-details-skeleton__logo"></zx-skeleton-bone>
+    <zx-stack spacing="sm" class="party-details-skeleton__header-body">
+      <zx-skeleton-bone class="party-details-skeleton__title"></zx-skeleton-bone>
+      <zx-skeleton-bone class="party-details-skeleton__meta"></zx-skeleton-bone>
+      <zx-skeleton-bone class="party-details-skeleton__line"></zx-skeleton-bone>
+      <zx-skeleton-bone class="party-details-skeleton__button"></zx-skeleton-bone>
+    </zx-stack>
+  </div>
 
   <zx-stack spacing="lg">
     <zx-inline gap="sm" class="party-details-skeleton__tabs">

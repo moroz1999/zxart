@@ -1434,7 +1434,7 @@ class structureManager implements DependencyInjectionContextInterface
     }
 
     /**
-     * @param bool $parentElementId
+     * @param bool|int $parentElementId
      * @param bool $directlyToParent
      * @return structureElement[]
      */
@@ -1442,7 +1442,7 @@ class structureManager implements DependencyInjectionContextInterface
     {
         $elementsList = [];
         if ($idList) {
-            if (!$parentElementId) {
+            if ($parentElementId === false || $parentElementId === 0) {
                 $parentElementId = $this->getRootElementId();
             }
             if ($directlyToParent) {

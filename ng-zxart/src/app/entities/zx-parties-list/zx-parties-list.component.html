@@ -11,12 +11,16 @@
       <tr>
         <th>{{ 'parties-page.col-title' | translate }}</th>
         <th>{{ 'parties-page.col-year' | translate }}</th>
+        <th>{{ 'parties-page.col-country' | translate }}</th>
+        <th>{{ 'parties-page.col-city' | translate }}</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let party of parties; trackBy: trackById">
         <td><a [routerLink]="party.url">{{ party.title }}</a></td>
         <td>{{ party.year }}</td>
+        <td><a *ngIf="party.country" [routerLink]="party.country.url">{{ party.country.title }}</a></td>
+        <td><a *ngIf="party.city" [routerLink]="party.city.url">{{ party.city.title }}</a></td>
       </tr>
     </tbody>
   </table>

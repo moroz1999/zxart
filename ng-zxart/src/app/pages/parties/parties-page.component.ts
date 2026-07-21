@@ -15,6 +15,7 @@ import {ZxNavChip} from '../../shared/ui/zx-nav-chips/nav-chip';
 import {ZxToggleComponent, ZxToggleOption} from '../../shared/ui/zx-toggle/zx-toggle.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
+import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {
   ZxPartiesListSkeletonComponent,
 } from '../../entities/zx-parties-list-skeleton/zx-parties-list-skeleton.component';
@@ -37,6 +38,7 @@ interface PartiesPageVm {
     ZxToggleComponent,
     HeadingDirective,
     ZxPageLayoutComponent,
+    ZxStackComponent,
   ],
   templateUrl: './parties-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

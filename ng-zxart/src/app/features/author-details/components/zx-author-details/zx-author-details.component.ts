@@ -18,7 +18,7 @@ import {ZxGridItemDirective} from '../../../../shared/ui/zx-grid/zx-grid-item.di
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxSkeletonBoneComponent} from '../../../../shared/ui/zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
-import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
+import {BreadcrumbService} from '../../../../shared/services/breadcrumb.service';
 import {ZxTabsComponent} from '../../../../shared/ui/zx-tabs/zx-tabs.component';
 import {ZxTabComponent} from '../../../../shared/ui/zx-tabs/zx-tab.component';
 import {ZxTabContentDirective} from '../../../../shared/ui/zx-tabs/zx-tab-content.directive';
@@ -35,7 +35,6 @@ type AuthorTabId = 'best' | 'gfx' | 'music' | 'software' | 'collaborators' | 'me
   imports: [
     CommonModule,
     TranslateModule,
-    ZxBreadcrumbsComponent,
     ZxAuthorHeaderComponent,
     ZxAuthorCollaboratorsComponent,
     ZxStackComponent,
@@ -72,6 +71,7 @@ export class ZxAuthorDetailsComponent implements OnChanges {
   constructor(
     private readonly api: AuthorCoreApiService,
     private readonly pageMetadataService: PageMetadataService,
+    private readonly breadcrumbService: BreadcrumbService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -87,6 +87,7 @@ export class ZxAuthorDetailsComponent implements OnChanges {
         if (core) {
           this.pageTitleChange.emit(core.title);
           this.pageMetadataService.applyEntityMetadata(core.metadata);
+          this.breadcrumbService.setEntityTrail({items: core.breadcrumbs, currentTitle: core.title});
         }
       }),
       shareReplay(1),

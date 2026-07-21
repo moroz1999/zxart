@@ -3,15 +3,17 @@ import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {GroupListItem} from '../../features/group-browser/models/group-list-item';
 import {ZxTableComponent} from '../../shared/ui/zx-table/zx-table.component';
+import {ZxLoadingStateDirective} from '../../shared/ui/zx-loading-state/zx-loading-state.directive';
+import {RouterLink} from '@angular/router';
 
-
-import {RouterLink} from '@angular/router';@Component({
+@Component({
   selector: 'zx-groups-table',
   standalone: true,
-  imports: [RouterLink, 
+  imports: [RouterLink,
     CommonModule,
     TranslateModule,
     ZxTableComponent,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './zx-groups-table.component.html',
   styleUrls: ['./zx-groups-table.component.scss'],

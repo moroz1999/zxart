@@ -11,9 +11,11 @@ interface TagsVm {
   section: string;
   searchBasePath: string;
   titleKey: string;
+  tagQueryParam: string;
+  tagQueryValue: 'id' | 'title';
 }
 
-/** Routed tag-cloud entrypoint (`/pictures/tags`, `/music/tags`); section comes from route data. */
+/** Routed tag-cloud entrypoint; section and target search filter come from route data. */
 @Component({
   selector: 'zx-tags-page',
   standalone: true,
@@ -27,6 +29,8 @@ export class TagsPageComponent {
       section: (data['section'] ?? 'graphics') as string,
       searchBasePath: (data['searchBasePath'] ?? '/pictures/search') as string,
       titleKey: (data['titleKey'] ?? 'menu.gfx.tags') as string,
+      tagQueryParam: (data['tagQueryParam'] ?? 'tagsInclude') as string,
+      tagQueryValue: (data['tagQueryValue'] ?? 'title') as 'id' | 'title',
     })),
   );
 

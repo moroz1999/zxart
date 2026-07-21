@@ -27,7 +27,7 @@ The project follows a component-based approach for the design system.
     - **Parent/child styling boundary**: A parent component may only style the *external contour* of a child component host — meaning `min-width`, `max-width`, `margin`, `align-self`, `flex-grow`, and similar layout-affecting properties. A parent MUST NOT set internal properties on a child component's host: `padding`, `display`, `flex-direction`, `gap`, `font-size`, `overflow`, or any property that controls what happens *inside* the component. Internal layout and spacing belong to the component itself (in its own `:host` or inner element styles). If internal behavior must vary per usage context, expose it via `@Input()` props or CSS custom properties in the component's theme file — never by styling from outside.
 13. **Loading States**: Every list or data-driven component MUST implement proper loading states:
     - **Initial load**: Display the concrete skeleton component that matches the target layout. Never use a skeleton facade that imports multiple variants. Never show empty containers or spinners for initial page loads.
-    - **Pagination/reload**: Lock interactive controls (pagination, filters) with visual feedback (opacity reduction, spinner overlay). Content should blur slightly to indicate loading without disappearing completely.
+    - **Pagination/reload**: Mark the refreshed content with the `zxLoadingState` directive (dim, soft blur, overlay spinner) and pass the same flag to `zx-pagination` so its controls lock. See [Loading states](design-system/loading-states.md).
     - **Error states**: Display user-friendly error messages with retry options.
 14. **Typography System**: See [Typography](design-system/typography.md) for all directives, usage rules, and how to choose between similar styles.
 15. **Overlays and Popovers**: Use CDK `CdkConnectedOverlay` for all popover/dropdown/tooltip overlays. CSS `position: absolute` within `position: relative` hosts is forbidden for overlay patterns — it stretches parent layout. CDK handles positioning, scroll-aware repositioning, and backdrop closing automatically.
@@ -59,6 +59,7 @@ All design system components are in `ng-zxart/src/app/shared/ui/`.
 - [zx-form](design-system/zx-form.md) — form layout family: `[zxForm]` directive, fields, labels, fieldsets, sections, actions
 - [zx-user](design-system/zx-user.md) — user name with status badges
 - [Skeletons](design-system/skeletons.md) — loading placeholders
+- [Loading states](design-system/loading-states.md) — non-destructive content refresh feedback
 - [zx-spinner](design-system/zx-spinner.md) — compact loading spinner
 - [zxTooltip](design-system/zx-tooltip.md) — floating tooltip directive that follows the cursor
 - [zx-icon-popover](design-system/zx-icon-popover.md) — icon trigger with a CDK popover stack for compact contextual actions

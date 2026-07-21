@@ -16,6 +16,7 @@ import {debounceTime, distinctUntilChanged, filter, startWith, switchMap} from '
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
 import {ZxSelectComponent, ZxSelectOption} from '../../../../shared/ui/zx-select/zx-select.component';
+import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 import {
   GeoAuthorItem,
   GeoCity,
@@ -46,7 +47,16 @@ interface GeoLayerState {
 @Component({
   selector: 'zx-geo',
   standalone: true,
-  imports: [RouterLink, CommonModule, FormsModule, TranslateModule, ZxButtonComponent, ZxInputComponent, ZxSelectComponent],
+  imports: [
+    RouterLink,
+    CommonModule,
+    FormsModule,
+    TranslateModule,
+    ZxButtonComponent,
+    ZxInputComponent,
+    ZxSelectComponent,
+    ZxLoadingStateDirective,
+  ],
   templateUrl: './zx-geo.component.html',
   styleUrl: './zx-geo.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -118,17 +128,17 @@ export class ZxGeoComponent implements AfterViewInit, OnDestroy {
       this.listLoading = false;
       this.changeDetector.markForCheck();
     }));
-    this.subscription.add(this.geoService.map$.subscribe(data => {
-      this.data = data;
-      this.applyRouteState();
-      this.changeDetector.markForCheck();
-    }));
     this.subscription.add(this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       startWith(null),
     ).subscribe(() => {
       this.readRoute();
       this.applyRouteState();
+      this.changeDetector.markForCheck();
+    }));
+    this.subscription.add(this.geoService.map$.subscribe(data => {
+      this.data = data;
+      this.applyMapData();
       this.changeDetector.markForCheck();
     }));
   }
@@ -200,6 +210,21 @@ export class ZxGeoComponent implements AfterViewInit, OnDestroy {
     const kind = child?.data['placeKind'] as 'country' | 'city' | undefined;
     const id = child ? Number(child.paramMap.get('id')) : NaN;
     this.pendingPlace = kind && Number.isFinite(id) && id > 0 ? {kind, id} : null;
+  }
+
+  /**
+   * Countries arrive after the map is built. Without a place in the route there is nothing to sync,
+   * so the markers and the panel are filled in from the viewport here.
+   */
+  private applyMapData(): void {
+    const selectionInSync = this.filterMatchesPlace(this.selectedFilter, this.pendingPlace);
+    if (selectionInSync) {
+      this.refreshMap();
+      this.refreshPanel();
+      return;
+    }
+
+    this.applyRouteState();
   }
 
   /** Syncs the map selection to pendingPlace once the map data is available. */
