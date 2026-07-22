@@ -1,4 +1,5 @@
 import {ApplicationConfig, importProvidersFrom} from '@angular/core';
+import {APP_BASE_HREF} from '@angular/common';
 import {
   provideRouter,
   withComponentInputBinding,
@@ -21,9 +22,14 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
  * Root application configuration for the standalone SPA. Initial navigation is
  * disabled here and started manually in SpaRootComponent, so the interface
  * language is set up before the first navigation resolves.
+ *
+ * The router's base href comes from `APP_BASE_HREF` rather than a `<base>` tag:
+ * a `<base>` element would also become the resolution root for bare `#anchor`
+ * links, sending in-page anchors to the home page.
  */
 export const appConfig: ApplicationConfig = {
   providers: [
+    {provide: APP_BASE_HREF, useValue: '/'},
     provideRouter(APP_ROUTES, withDisabledInitialNavigation(), withComponentInputBinding()),
     provideHttpClient(withInterceptors([languageInterceptor])),
     provideAnimations(),

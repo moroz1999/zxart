@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {TranslateService} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
+import {LanguageService} from '../../settings/services/language.service';
 
 /** Fetches static, non-editable content pages (About, FAQ, support, API). */
 @Injectable({
@@ -11,15 +11,16 @@ import {catchError, map} from 'rxjs/operators';
 export class ContentService {
   constructor(
     private readonly http: HttpClient,
-    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService,
   ) {}
 
-  /** Returns the page HTML, or null on error. */
+  /** Returns the page HTML in the current interface language, or null on error. Re-emits when the language changes. */
   getContent(page: string): Observable<string | null> {
-    const lang = this.translate.currentLang || this.translate.defaultLang || 'en';
-    return this.http.get<{html: string}>('/content-data/', {params: {page, lang}}).pipe(
-      map(response => response?.html ?? ''),
-      catchError(() => of(null)),
+    return this.languageService.current$.pipe(
+      switchMap(lang => this.http.get<{html: string}>('/content-data/', {params: {page, lang}}).pipe(
+        map(response => response?.html ?? ''),
+        catchError(() => of(null)),
+      )),
     );
   }
 }

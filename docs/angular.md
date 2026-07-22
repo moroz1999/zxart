@@ -9,6 +9,11 @@ Angular assets and server-rendered crawler metadata. After client-side navigatio
 Angular applies entity-page metadata from each entity's core response and builds
 fixed-route metadata from route translation keys. Canonical links are not emitted.
 
+The shell must **not** contain a `<base>` element: the browser resolves bare
+`#anchor` links against the document base URL, so a `<base href="/">` would send
+every in-page anchor to the home page. The router gets its base href from the
+`APP_BASE_HREF` provider in `app.config.ts` instead.
+
 All Angular components MUST be standalone. The application is bootstrapped with
 `bootstrapApplication`, and public navigation is owned by the Angular router.
 
