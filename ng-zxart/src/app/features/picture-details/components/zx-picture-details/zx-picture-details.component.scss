@@ -4,10 +4,3 @@
      rhythm. See docs/design-system/zx-page-layout.md. */
   display: contents;
 }
-
-/* Metadata column: takes the space beside the picture, wraps below it when the
-   picture block is too wide (handled by the wrapping hero row). */
-.pix-head {
-  flex: 1 1 320px;
-  min-width: 0;
-}

@@ -101,6 +101,10 @@ export interface ProdCoreDto {
   dateCreated: string;
   canAddRelease: boolean;
   addReleaseUrl: string;
+  /** Downloads summed over the prod's releases. */
+  downloadsCount: number;
+  /** Online plays summed over the prod's releases. */
+  playsCount: number;
   categoriesPaths: ProdCategoryPathDto[];
   languages: ProdLanguageInfoDto[];
   hardware: ProdHardwareInfoDto[];

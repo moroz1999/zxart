@@ -1,0 +1,6 @@
+:root {
+  /* Gap between facts and between the parts of a single fact. */
+  --zx-facts-gap: var(--space-8);
+  /* Color of the `·` separator drawn between facts. */
+  --zx-facts-separator-color: var(--secondary-400);
+}

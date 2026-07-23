@@ -6,9 +6,7 @@ import {shareReplay, tap} from 'rxjs/operators';
 import {ReleaseDetailsDto} from '../../models/release-details.dto';
 import {ReleaseDetailsApiService} from '../../services/release-details-api.service';
 import {ZxReleaseDetailsSkeletonComponent} from '../zx-release-details-skeleton/zx-release-details-skeleton.component';
-import {ZxReleaseParentAnchorComponent} from '../zx-release-parent-anchor/zx-release-parent-anchor.component';
 import {ZxReleaseHeroComponent} from '../zx-release-hero/zx-release-hero.component';
-import {ZxReleaseActionBarComponent} from '../zx-release-action-bar/zx-release-action-bar.component';
 import {ZxReleaseScreenshotsSectionComponent} from '../zx-release-screenshots-section/zx-release-screenshots-section.component';
 import {ZxReleaseInlaysSectionComponent} from '../zx-release-inlays-section/zx-release-inlays-section.component';
 import {ZxReleaseInstructionsSectionComponent} from '../zx-release-instructions-section/zx-release-instructions-section.component';
@@ -28,9 +26,7 @@ import {ZxProdPicturesSectionComponent} from '../../../prod-details/components/z
     CommonModule,
     TranslateModule,
     ZxReleaseDetailsSkeletonComponent,
-    ZxReleaseParentAnchorComponent,
     ZxReleaseHeroComponent,
-    ZxReleaseActionBarComponent,
     ZxReleaseScreenshotsSectionComponent,
     ZxReleaseInlaysSectionComponent,
     ZxReleaseInstructionsSectionComponent,

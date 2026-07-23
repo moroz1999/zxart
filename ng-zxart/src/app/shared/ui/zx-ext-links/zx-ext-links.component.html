@@ -1,0 +1,9 @@
+<a
+  *ngFor="let link of links; trackBy: trackByUrl"
+  class="zx-ext-links__item"
+  appText="label"
+  tone="link"
+  target="_blank"
+  rel="noopener noreferrer"
+  [href]="link.url"
+>{{ link.label }}<svg-icon class="zx-ext-links__icon" name="open-in-new" aria-hidden="true"></svg-icon></a>

@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/c
 import {NgTemplateOutlet} from '@angular/common';
 import {Router, RouterLink, UrlTree} from '@angular/router';
 import {isSpaUrl} from '../../utils/spa-url';
-export type ZxChipVariant = 'opaque' | 'filled';
+export type ZxChipVariant = 'opaque' | 'filled' | 'mono' | 'mono-outline';
 export type ZxChipColor = 'neutral' | 'primary' | 'artist' | 'code' | 'intro';
 export type ZxChipSize = 'sm' | 'md';
 

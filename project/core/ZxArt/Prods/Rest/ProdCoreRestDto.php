@@ -36,6 +36,8 @@ readonly class ProdCoreRestDto
         public string $dateCreated,
         public bool $canAddRelease,
         public string $addReleaseUrl,
+        public int $downloadsCount,
+        public int $playsCount,
         #[Map(transform: MapCollection::class)]
         public array $categoriesPaths,
         #[Map(transform: MapCollection::class)]

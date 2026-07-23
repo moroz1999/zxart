@@ -1,0 +1,10 @@
+:root {
+  /* Width of the party logo in the hero media slot. */
+  --zx-party-header-logo-width: 195px;
+  /* Height of the party logo in the hero media slot. */
+  --zx-party-header-logo-height: 144px;
+  /* Corner radius of the party logo. */
+  --zx-party-header-logo-radius: var(--radius-sm);
+  /* Backdrop behind a logo that does not fill its box. */
+  --zx-party-header-logo-bg: var(--secondary-100);
+}

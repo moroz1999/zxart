@@ -43,6 +43,7 @@ The project follows a component-based approach for the design system.
 All design system components are in `ng-zxart/src/app/shared/ui/`.
 
 - [zx-panel](design-system/zx-panel.md) — universal layout container
+- [zx-hero](design-system/zx-hero.md) — entity hero panel and its slot standard (`zx-hero-title`, `zx-hero-bar`, `zx-facts`, `zx-location`, `zx-counters`, `zx-meta-row`, `zx-ext-links`, `zx-credits-row`)
 - [zx-callout](design-system/zx-callout.md) — recessed accent inset box (left rule), optional full-area link
 - [zx-stack](design-system/zx-stack.md) — vertical flexbox layout container
 - [zx-inline](design-system/zx-inline.md) — horizontal flexbox layout container

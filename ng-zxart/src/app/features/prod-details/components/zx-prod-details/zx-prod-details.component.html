@@ -1,12 +1,5 @@
 <ng-container *ngIf="core$ | async as core; else loading">
-  <zx-inline class="prod-details__hero" gap="xl" align="start" [wrap]="true">
-    <zx-youtube-embed
-      *ngIf="core.youtubeId"
-      class="prod-details__cover"
-      [youtubeId]="core.youtubeId">
-    </zx-youtube-embed>
-    <zx-prod-hero class="prod-details__info" [core]="core"></zx-prod-hero>
-  </zx-inline>
+  <zx-prod-hero [core]="core"></zx-prod-hero>
 
   <zx-stack spacing="xl" class="prod-details">
     <zx-panel *ngIf="core.tabs.hasScreenshots" padding="md" variant="elevated">

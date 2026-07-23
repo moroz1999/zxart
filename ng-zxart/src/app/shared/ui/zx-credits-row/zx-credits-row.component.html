@@ -1,0 +1,12 @@
+<span
+  *ngFor="let group of visibleGroups; trackBy: trackByLabel"
+  class="zx-credits-row__group"
+  appText="label"
+  tone="muted"
+>
+  <span class="zx-credits-row__label" appText="label" tone="strong">{{ group.labelKey | translate }}:</span>
+  <span class="zx-credits-row__people"><ng-container
+    *ngFor="let person of group.people; let last = last; trackBy: trackByUrl"
+  ><a class="zx-credits-row__link" appText="label" tone="muted-link" [routerLink]="person.url">{{ person.title }}</a><ng-container *ngIf="!last">, </ng-container></ng-container></span>
+  <span *ngIf="group.note" class="zx-credits-row__note">{{ group.note }}</span>
+</span>

@@ -1,0 +1,14 @@
+:host {
+  display: contents;
+}
+
+.zx-ext-links__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--zx-ext-links-gap);
+}
+
+.zx-ext-links__icon {
+  width: var(--zx-ext-links-icon-size);
+  height: var(--zx-ext-links-icon-size);
+}

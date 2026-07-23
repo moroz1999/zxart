@@ -1,10 +1,5 @@
 <ng-container *ngIf="details$ | async as details; else loading">
-  <zx-stack spacing="xl">
-    <zx-release-parent-anchor [prod]="details.prod"></zx-release-parent-anchor>
-
-    <zx-release-hero [details]="details"></zx-release-hero>
-    <zx-release-action-bar [details]="details"></zx-release-action-bar>
-  </zx-stack>
+  <zx-release-hero [details]="details"></zx-release-hero>
 
   <zx-stack spacing="xl">
     <section *ngIf="details.description">

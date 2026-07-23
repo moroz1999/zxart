@@ -270,8 +270,13 @@
       "activity": "Активность"
     },
     "header": {
-      "stats": "{{compos}} конкурсов, {{entries}} работ от {{authors}} авторов.",
-      "download-zip": "Скачать ZIP-архив"
+      "download-zip": "Скачать ZIP-архив",
+      "links": "Ссылки",
+      "counter": {
+        "compos": "конкурсов",
+        "entries": "работ",
+        "authors": "авторов"
+      }
     },
     "overview": {
       "prods": "Победители: программы",
@@ -768,7 +773,6 @@
     "votes": "{{count}} голосов"
   },
   "zx-rating-strip": {
-    "label": "Рейтинг:",
     "artist": "художник",
     "musician": "музыкант"
   },
@@ -811,7 +815,8 @@
     "delete-confirm-title": "Удаление мелодии",
     "delete-confirm-message": "Вы уверены, что хотите удалить эту мелодию?",
     "delete-confirm-yes": "Удалить",
-    "delete-confirm-cancel": "Отмена"
+    "delete-confirm-cancel": "Отмена",
+    "musician": "Музыкант"
   },
   "picture-details": {
     "scale-1x": "1×",
@@ -864,7 +869,8 @@
     "delete-confirm-title": "Удаление картинки",
     "delete-confirm-message": "Вы уверены, что хотите удалить эту картинку?",
     "delete-confirm-yes": "Удалить",
-    "delete-confirm-cancel": "Отмена"
+    "delete-confirm-cancel": "Отмена",
+    "artist": "Художник"
   },
   "header": {
     "language-trigger": {
@@ -1273,7 +1279,6 @@
     "groups": "Производитель",
     "publishers": "Издатели",
     "authors": "Авторы",
-    "party": "Конкурс",
     "year": "Год публикации",
     "tags": "Теги",
     "links": "Ссылки",
@@ -1372,7 +1377,8 @@
     "instructions-view": "Просмотр",
     "instructions-download": "Скачать",
     "instructions-loading": "Загрузка...",
-    "instructions-error": "Не удалось загрузить файл"
+    "instructions-error": "Не удалось загрузить файл",
+    "see-also": "См. также"
   },
   "release-details": {
     "actions": "Действия с релизом",
@@ -1394,11 +1400,11 @@
     "plays-label": "запусков",
     "play-online": "▶ Запустить",
     "description": "Описание",
-    "hardware-label": "Железо:",
     "screenshots": "Скрины релиза",
     "inlays": "Обложки",
     "instructions": "Инструкция",
-    "back-to-prod": "к программе"
+    "back-to-prod": "к программе",
+    "version": "Версия"
   },
   "release-row": {
     "col-title": "Название",
@@ -2109,5 +2115,11 @@
     "error-password-match": "Пароли не совпадают.",
     "error-invalid": "Ссылка для восстановления недействительна или устарела.",
     "error-generic": "Не удалось восстановить пароль. Попробуйте позже."
+  },
+  "hero": {
+    "rating": "рейтинг",
+    "votes": "оценок",
+    "downloads": "скачиваний",
+    "plays": "запусков"
   }
 }

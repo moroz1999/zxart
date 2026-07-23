@@ -270,8 +270,13 @@
       "activity": "Activity"
     },
     "header": {
-      "stats": "{{compos}} competitions, {{entries}} works by {{authors}} authors.",
-      "download-zip": "Download ZIP archive"
+      "download-zip": "Download ZIP archive",
+      "links": "Links",
+      "counter": {
+        "compos": "compos",
+        "entries": "entries",
+        "authors": "authors"
+      }
     },
     "overview": {
       "prods": "Winning software",
@@ -768,7 +773,6 @@
     "votes": "{{count}} votes"
   },
   "zx-rating-strip": {
-    "label": "Rating:",
     "artist": "artist",
     "musician": "musician"
   },
@@ -811,7 +815,8 @@
     "delete-confirm-title": "Delete tune",
     "delete-confirm-message": "Are you sure you want to delete this tune?",
     "delete-confirm-yes": "Delete",
-    "delete-confirm-cancel": "Cancel"
+    "delete-confirm-cancel": "Cancel",
+    "musician": "Musician"
   },
   "picture-details": {
     "scale-1x": "1×",
@@ -864,7 +869,8 @@
     "delete-confirm-title": "Delete picture",
     "delete-confirm-message": "Are you sure you want to delete this picture?",
     "delete-confirm-yes": "Delete",
-    "delete-confirm-cancel": "Cancel"
+    "delete-confirm-cancel": "Cancel",
+    "artist": "Artist"
   },
   "header": {
     "language-trigger": {
@@ -1273,7 +1279,6 @@
     "groups": "Produced by",
     "publishers": "Published by",
     "authors": "Authors",
-    "party": "Competition",
     "year": "Publication year",
     "tags": "Tags",
     "links": "Links",
@@ -1374,7 +1379,8 @@
     "instructions-view": "View",
     "instructions-download": "Download",
     "instructions-loading": "Loading...",
-    "instructions-error": "Failed to load file"
+    "instructions-error": "Failed to load file",
+    "see-also": "See also"
   },
   "release-details": {
     "actions": "Release actions",
@@ -1396,11 +1402,11 @@
     "plays-label": "plays",
     "play-online": "▶ Play online",
     "description": "Description",
-    "hardware-label": "Hardware:",
     "screenshots": "Release screenshots",
     "inlays": "Covers",
     "instructions": "Instructions",
-    "back-to-prod": "Back to program"
+    "back-to-prod": "Back to program",
+    "version": "Version"
   },
   "release-row": {
     "col-title": "Title",
@@ -2111,5 +2117,11 @@
     "error-password-match": "Passwords do not match.",
     "error-invalid": "This recovery link is invalid or expired.",
     "error-generic": "Could not recover the password. Try again later."
+  },
+  "hero": {
+    "rating": "rating",
+    "votes": "ratings",
+    "downloads": "downloads",
+    "plays": "plays"
   }
 }

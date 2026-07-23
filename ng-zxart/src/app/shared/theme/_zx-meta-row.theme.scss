@@ -1,0 +1,8 @@
+:root {
+  /* Gap between the label column and the value column. */
+  --zx-meta-row-gap: var(--space-12);
+  /* Width of the right-aligned label column. */
+  --zx-meta-row-label-width: 88px;
+  /* Gap between the items projected into the value column. */
+  --zx-meta-row-value-gap: var(--space-8);
+}

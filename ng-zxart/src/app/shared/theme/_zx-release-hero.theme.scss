@@ -1,3 +1,6 @@
 :root {
-  --zx-release-hero-mb: var(--space-12);
+  /* Aspect ratio of the release screenshot in the hero media slot (ZX 4:3). */
+  --zx-release-hero-screenshot-ratio: 4 / 3;
+  /* Corner radius of the release screenshot. */
+  --zx-release-hero-screenshot-radius: var(--radius-sm);
 }

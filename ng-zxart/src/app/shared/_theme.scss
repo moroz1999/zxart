@@ -43,7 +43,6 @@
 @forward './theme/_zx-playlist-button.theme.scss';
 @forward './theme/_zx-prod-details-skeleton.theme.scss';
 @forward './theme/_zx-prods-category-skeleton.theme.scss';
-@forward './theme/_zx-prod-details.theme.scss';
 @forward './theme/_zx-prod-description.theme.scss';
 @forward './theme/_zx-pagination.theme.scss';
 @forward './theme/_zx-tooltip.theme.scss';
@@ -83,7 +82,6 @@
 @forward './theme/_zx-article-preview.theme.scss';
 @forward './theme/_zx-item-data.theme.scss';
 @forward './theme/_zx-tabs.theme.scss';
-@forward './theme/_zx-prod-hero.theme.scss';
 @forward './theme/_zx-prod-release-card.theme.scss';
 @forward './theme/_zx-added-by.theme.scss';
 @forward './theme/_zx-prod-language-links.theme.scss';
@@ -94,13 +92,11 @@
 @forward './theme/_zx-hardware-icon.theme.scss';
 @forward './theme/_zx-breadcrumbs.theme.scss';
 @forward './theme/_zx-file-viewer-dialog.theme.scss';
-@forward './theme/_zx-prod-people-row.theme.scss';
 @forward './theme/_zx-instruction-file-card.theme.scss';
 @forward './theme/_zx-inlay-tile.theme.scss';
 @forward './theme/_zx-release-details.theme.scss';
 @forward './theme/_zx-chip.theme.scss';
 @forward './theme/_zx-release-hero.theme.scss';
-@forward './theme/_zx-release-action-bar.theme.scss';
 @forward './theme/_zx-release-parent-anchor.theme.scss';
 @forward './theme/_zx-release-sections.theme.scss';
 @forward './theme/_zx-rating-strip.theme.scss';
@@ -108,3 +104,16 @@
 @forward './theme/_zx-collaborator-cards.theme.scss';
 @forward './theme/_zx-author-details.theme.scss';
 @forward './theme/_zx-group-details.theme.scss';
+@forward './theme/_zx-hero.theme.scss';
+@forward './theme/_zx-hero-title.theme.scss';
+@forward './theme/_zx-hero-bar.theme.scss';
+@forward './theme/_zx-facts.theme.scss';
+@forward './theme/_zx-location.theme.scss';
+@forward './theme/_zx-counters.theme.scss';
+@forward './theme/_zx-meta-row.theme.scss';
+@forward './theme/_zx-ext-links.theme.scss';
+@forward './theme/_zx-credits-row.theme.scss';
+@forward './theme/_zx-party-header.theme.scss';
+@forward './theme/_zx-download-button.theme.scss';
+@forward './theme/_zx-author-header.theme.scss';
+@forward './theme/_zx-group-header.theme.scss';

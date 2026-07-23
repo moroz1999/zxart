@@ -270,8 +270,13 @@
       "activity": "Actividad"
     },
     "header": {
-      "stats": "{{compos}} competiciones, {{entries}} trabajos de {{authors}} autores.",
-      "download-zip": "Descargar archivo ZIP"
+      "download-zip": "Descargar archivo ZIP",
+      "links": "Enlaces",
+      "counter": {
+        "compos": "concursos",
+        "entries": "obras",
+        "authors": "autores"
+      }
     },
     "overview": {
       "prods": "Ganadores: software",
@@ -767,7 +772,6 @@
     "votes": "{{count}} votos"
   },
   "zx-rating-strip": {
-    "label": "Calificación:",
     "artist": "artista",
     "musician": "músico"
   },
@@ -810,7 +814,8 @@
     "delete-confirm-title": "Eliminar melodía",
     "delete-confirm-message": "¿Seguro que quieres eliminar esta melodía?",
     "delete-confirm-yes": "Eliminar",
-    "delete-confirm-cancel": "Cancelar"
+    "delete-confirm-cancel": "Cancelar",
+    "musician": "Músico"
   },
   "picture-details": {
     "scale-1x": "1×",
@@ -863,7 +868,8 @@
     "delete-confirm-title": "Eliminar imagen",
     "delete-confirm-message": "¿Seguro que quieres eliminar esta imagen?",
     "delete-confirm-yes": "Eliminar",
-    "delete-confirm-cancel": "Cancelar"
+    "delete-confirm-cancel": "Cancelar",
+    "artist": "Artista"
   },
   "header": {
     "language-trigger": {
@@ -1272,7 +1278,6 @@
     "groups": "Producido por",
     "publishers": "Editores",
     "authors": "Autores",
-    "party": "Competencia",
     "year": "Año de publicación",
     "tags": "Etiquetas",
     "links": "Enlaces",
@@ -1371,7 +1376,8 @@
     "instructions-view": "Ver",
     "instructions-download": "Descargar",
     "instructions-loading": "Cargando...",
-    "instructions-error": "Error al cargar el archivo"
+    "instructions-error": "Error al cargar el archivo",
+    "see-also": "Véase también"
   },
   "release-details": {
     "actions": "Acciones del lanzamiento",
@@ -1393,11 +1399,11 @@
     "plays-label": "ejecuciones",
     "play-online": "▶ Jugar online",
     "description": "Descripción",
-    "hardware-label": "Hardware:",
     "screenshots": "Capturas del lanzamiento",
     "inlays": "Carátulas",
     "instructions": "Instrucciones",
-    "back-to-prod": "volver al programa"
+    "back-to-prod": "volver al programa",
+    "version": "Versión"
   },
   "release-row": {
     "col-title": "Título",
@@ -2108,5 +2114,11 @@
     "error-password-match": "Las contraseñas no coinciden.",
     "error-invalid": "Este enlace no es válido o ha caducado.",
     "error-generic": "No se pudo recuperar la contraseña. Inténtalo más tarde."
+  },
+  "hero": {
+    "rating": "valoración",
+    "votes": "valoraciones",
+    "downloads": "descargas",
+    "plays": "reproducciones"
   }
 }

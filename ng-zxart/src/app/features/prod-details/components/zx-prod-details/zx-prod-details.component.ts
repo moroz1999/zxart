@@ -6,7 +6,6 @@ import {PageMetadataService} from '../../../../shared/services/page-metadata.ser
 import {
   ZxProdDetailsSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-prod-details-skeleton/zx-prod-details-skeleton.component';
-import {ZxYoutubeEmbedComponent} from '../../../../shared/ui/zx-youtube-embed/zx-youtube-embed.component';
 import {ProdCoreApiService} from '../../services/prod-core-api.service';
 import {ProdCoreDto} from '../../models/prod-core.dto';
 import {ZxProdHeroComponent} from '../zx-prod-hero/zx-prod-hero.component';
@@ -37,7 +36,6 @@ import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.componen
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxGridComponent} from '../../../../shared/ui/zx-grid/zx-grid.component';
 import {ZxGridItemDirective} from '../../../../shared/ui/zx-grid/zx-grid-item.directive';
-import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxTabsComponent} from '../../../../shared/ui/zx-tabs/zx-tabs.component';
 import {ZxTabComponent} from '../../../../shared/ui/zx-tabs/zx-tab.component';
 import {ZxTabContentDirective} from '../../../../shared/ui/zx-tabs/zx-tab-content.directive';
@@ -58,7 +56,6 @@ type ProdLinksTabId = 'articles' | 'series' | 'compilations';
   imports: [
     CommonModule,
     ZxProdDetailsSkeletonComponent,
-    ZxYoutubeEmbedComponent,
     ZxProdHeroComponent,
     ZxProdDescriptionComponent,
     ZxProdInstructionsComponent,
@@ -79,7 +76,6 @@ type ProdLinksTabId = 'articles' | 'series' | 'compilations';
     ZxStackComponent,
     ZxGridComponent,
     ZxGridItemDirective,
-    ZxInlineComponent,
     ZxTabsComponent,
     ZxTabComponent,
     ZxTabContentDirective,

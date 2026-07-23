@@ -1,0 +1,15 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--zx-hero-title-gap);
+  min-width: 0;
+}
+
+.zx-hero-title__text {
+  min-width: 0;
+}
+
+.zx-hero-title__edit:empty {
+  display: none;
+}

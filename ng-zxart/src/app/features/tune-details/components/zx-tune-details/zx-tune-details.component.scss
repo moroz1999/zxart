@@ -4,10 +4,3 @@
      rhythm. See docs/design-system/zx-page-layout.md. */
   display: contents;
 }
-
-/* Metadata column: takes the space beside the player, wraps below it when the
-   player block is too wide (handled by the wrapping hero row). */
-.tn-head {
-  flex: 1 1 320px;
-  min-width: 0;
-}

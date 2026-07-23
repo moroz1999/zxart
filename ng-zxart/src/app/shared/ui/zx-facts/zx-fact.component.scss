@@ -1,0 +1,15 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--zx-facts-gap);
+  min-width: 0;
+}
+
+:host::before {
+  content: '·';
+  color: var(--zx-facts-separator-color);
+}
+
+:host(:first-child)::before {
+  content: none;
+}

@@ -41,6 +41,8 @@ components:
         - youtubeId
         - generatedDescription
         - dateCreated
+        - downloadsCount
+        - playsCount
         - categoriesPaths
         - languages
         - hardware
@@ -81,6 +83,12 @@ components:
           type: string
         dateCreated:
           type: string
+        downloadsCount:
+          type: integer
+          description: Total downloads summed over the prod's releases.
+        playsCount:
+          type: integer
+          description: Total online plays summed over the prod's releases.
         categoriesPaths:
           type: array
           items:

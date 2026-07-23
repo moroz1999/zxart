@@ -1,51 +1,80 @@
-<zx-stack spacing="md">
-  <zx-inline class="rp-title-row" align="baseline" spacing="sm" [wrap]="true">
-    <zx-release-editing-controls
-      [elementId]="details.id">
-    </zx-release-editing-controls>
-    <span *ngIf="details.year" class="rp-year" appText="body" tone="muted">{{ details.year }}</span>
+<zx-hero [media]="screenshotUrls.length ? 'md' : 'none'">
+  <div *ngIf="screenshotUrls.length" zxHeroMedia class="rp-screenshot">
+    <zx-card-screenshot-gallery
+      [imageUrls]="screenshotUrls"
+      [alt]="details.title">
+    </zx-card-screenshot-gallery>
+  </div>
+
+  <zx-hero-title [title]="details.title" [entityId]="details.id" [year]="details.year">
     <zx-release-type-badge
       *ngIf="details.releaseType"
       [type]="details.releaseType"
       [label]="details.releaseTypeLabel">
     </zx-release-type-badge>
+
+    <zx-release-editing-controls zxHeroEdit [elementId]="details.id"></zx-release-editing-controls>
+  </zx-hero-title>
+
+  <zx-facts *ngIf="details.version || details.languages.length">
+    <zx-fact *ngIf="details.version">
+      {{ 'release-details.version' | translate }} <zx-chip variant="mono">{{ details.version }}</zx-chip>
+    </zx-fact>
+    <zx-fact *ngFor="let lang of details.languages">{{ lang.emoji }} {{ lang.title }}</zx-fact>
+  </zx-facts>
+
+  <zx-inline *ngIf="details.hardware.length || details.formats.length" spacing="sm" align="center" [wrap]="true">
+    <zx-chip *ngFor="let hw of details.hardware" variant="mono" [href]="'/prods?hw=' + hw.id">
+      <zx-hardware-icon [id]="hw.id"></zx-hardware-icon>{{ 'hardware.' + hw.id | translate }}
+    </zx-chip>
+    <zx-chip *ngFor="let fmt of details.formats" variant="mono-outline"><span *ngIf="fmt.emoji">{{ fmt.emoji }}</span>{{ fmt.label }}</zx-chip>
   </zx-inline>
 
   <zx-prod-people-row
     [authors]="details.authors"
-    [publishers]="details.publishers"
-    [party]="details.party">
+    [publishers]="details.publishers">
   </zx-prod-people-row>
 
-  <zx-inline *ngIf="details.formats.length" align="center" spacing="xs" [wrap]="true" appText="label" tone="muted">
-    <ng-container *ngFor="let fmt of details.formats; let last = last">
-      <zx-inline class="rp-format" align="center" spacing="xs">
-        <span *ngIf="fmt.emoji">{{ fmt.emoji }}</span>
-        <span>{{ fmt.label }}</span>
-      </zx-inline><ng-container *ngIf="!last">, </ng-container>
-    </ng-container>
-  </zx-inline>
+  <zx-callout *ngIf="details.party">
+    <zx-party-provenance [party]="details.party"></zx-party-provenance>
+  </zx-callout>
 
-  <zx-inline *ngIf="details.hardware.length" align="center" spacing="xs" [wrap]="true">
-    <span appText="bodySm" tone="strong" class="rp-hw-label">{{ 'release-details.hardware-label' | translate }}</span>
-    <zx-button
-      *ngFor="let hw of details.hardware"
-      color="outlined"
-      size="xs"
-      [href]="'/prods?hw=' + hw.id"
-    ><zx-hardware-icon [id]="hw.id"></zx-hardware-icon>{{ 'hardware.' + hw.id | translate }}</zx-button>
-  </zx-inline>
-
-  <zx-rating-strip
-    *ngIf="details.votes.votes > 0"
-    [label]="'zx-rating-strip.label' | translate"
-    [items]="[{type: 'overall', value: details.votes.votes}]"
-    [showTypeLabel]="false">
-  </zx-rating-strip>
+  <zx-release-parent-anchor [prod]="details.prod"></zx-release-parent-anchor>
 
   <zx-added-by
     *ngIf="details.dateCreated"
     [dateAdded]="details.dateCreated"
     [submitter]="details.submitter"
   ></zx-added-by>
-</zx-stack>
+
+  <zx-hero-bar zxHeroBar>
+    <zx-item-controls
+      [elementId]="details.id"
+      type="zxRelease"
+      [votes]="details.votes.votes"
+      [votesAmount]="details.votes.votesAmount"
+      [userRating]="details.votes.userVote"
+      [denyVoting]="details.votes.denyVoting">
+    </zx-item-controls>
+
+    <zx-counters zxHeroBarCounters [items]="counters"></zx-counters>
+
+    <zx-button-controls zxHeroBarActions align="end" [wrap]="true" gap="sm">
+      <zx-emulator-play-button
+        [isPlayable]="details.isPlayable"
+        [isDownloadable]="details.isDownloadable"
+        [playUrl]="details.playUrl"
+        [emulatorType]="details.emulatorType"
+        [canUploadScreenshot]="details.canUploadScreenshot"
+        [screenshotUploadUrl]="details.screenshotUploadUrl"
+      >{{ 'release-details.play-online' | translate }}</zx-emulator-play-button>
+
+      <zx-download-button
+        *ngIf="details.isDownloadable && details.downloadUrl"
+        target="_blank"
+        [href]="details.downloadUrl"
+        [label]="details.fileName ?? ''">
+      </zx-download-button>
+    </zx-button-controls>
+  </zx-hero-bar>
+</zx-hero>

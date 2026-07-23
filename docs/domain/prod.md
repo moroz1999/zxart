@@ -123,8 +123,9 @@ those values.
 - Prod details core data includes the privilege-gated add-release URL. The button opens the legacy `zxRelease` public add form under the current prod.
 - Prod details tabs render real links and restore the selected tab from the `/tabs:{id}/` URL segment on load. Nested tab IDs such as `graphics`, `music`, or `series` activate their parent tab automatically.
 - The legacy details template mounts `zx-prod-details` directly; Angular renders the page title.
-- Prod details hero groups authors by roles before publishers, developer groups, and party metadata. Authors without roles remain under the generic authors label.
+- Prod details hero groups authors by roles before publishers and developer groups. Authors without roles remain under the generic authors label. The party appearance is rendered separately, in the hero provenance callout.
 - Prod details hero displays the `unknown` author role under the generic authors label, not under the global unknown-role translation.
+- Prod details core data includes `downloadsCount` and `playsCount` summed over the prod's releases: a prod owns no files of its own, so its hero statistics aggregate the release counters.
 - Prod details core data must include author/group aliases when they are stored directly in authorship, publishers, or developer group links.
 - Product description loading state renders one paragraph skeleton with three thin ribs.
 - Emulator screenshots launched from prod details release rows are uploaded to the parent prod. The `uploadScreenshot` privilege must be requested once for the prod element and reused by all release play buttons.

@@ -5,8 +5,14 @@ import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {AuthorCoreDto} from '../../models/author-core.dto';
 import {ZxBadgeComponent} from '../../../../shared/ui/zx-badge/zx-badge.component';
 import {ZxChipComponent, ZxChipColor} from '../../../../shared/ui/zx-chip/zx-chip.component';
-import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {ZxHeroComponent} from '../../../../shared/ui/zx-hero/zx-hero.component';
+import {ZxHeroTitleComponent} from '../../../../shared/ui/zx-hero-title/zx-hero-title.component';
+import {ZxFactsComponent} from '../../../../shared/ui/zx-facts/zx-facts.component';
+import {ZxFactComponent} from '../../../../shared/ui/zx-facts/zx-fact.component';
+import {ZxLocationComponent} from '../../../../shared/ui/zx-location/zx-location.component';
+import {ZxMetaRowComponent} from '../../../../shared/ui/zx-meta-row/zx-meta-row.component';
+import {ZxExtLinksComponent} from '../../../../shared/ui/zx-ext-links/zx-ext-links.component';
 import {ZxAuthorEditingControlsComponent} from '../zx-author-editing-controls/zx-author-editing-controls.component';
 import {
   RatingStripItem,
@@ -25,12 +31,18 @@ const VISIBLE_ALIASES = 7;
     TranslateModule,
     ZxBadgeComponent,
     ZxChipComponent,
-    ZxInlineComponent,
     ZxButtonComponent,
     ZxAuthorEditingControlsComponent,
     SvgIconComponent,
     ZxRatingStripComponent,
     ZxTechSettingsComponent,
+    ZxHeroComponent,
+    ZxHeroTitleComponent,
+    ZxFactsComponent,
+    ZxFactComponent,
+    ZxLocationComponent,
+    ZxMetaRowComponent,
+    ZxExtLinksComponent,
   ],
   templateUrl: './zx-author-header.component.html',
   styleUrl: './zx-author-header.component.scss',
@@ -48,7 +60,6 @@ export class ZxAuthorHeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.iconReg.loadSvg(`${environment.svgUrl}person.svg`, 'person')?.subscribe();
-    this.iconReg.loadSvg(`${environment.svgUrl}location.svg`, 'location')?.subscribe();
   }
 
   get visibleAliases() {

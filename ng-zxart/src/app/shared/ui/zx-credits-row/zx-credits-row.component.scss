@@ -1,0 +1,24 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--zx-credits-row-group-gap);
+  min-width: 0;
+}
+
+/* No credit groups had any people — do not leave a phantom gap. */
+:host:empty {
+  display: none;
+}
+
+.zx-credits-row__group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--zx-credits-row-gap);
+}
+
+.zx-credits-row__group + .zx-credits-row__group::before {
+  content: '·';
+  color: var(--zx-credits-row-separator-color);
+}

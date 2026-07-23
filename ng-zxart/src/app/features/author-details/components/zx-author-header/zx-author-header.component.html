@@ -1,111 +1,82 @@
-<section class="ap-header">
-  <div class="ap-header__avatar">
-    <div class="ap-avatar--empty">
-      <svg-icon name="person" aria-hidden="true"></svg-icon>
-    </div>
+<zx-hero media="xs">
+  <div zxHeroMedia class="ap-avatar--empty">
+    <svg-icon name="person" aria-hidden="true"></svg-icon>
   </div>
 
-  <div class="ap-header__body">
-    <div class="ap-header__title-row">
-      <zx-author-editing-controls
-        [elementId]="core.id"
-        [entityType]="core.entityType">
-      </zx-author-editing-controls>
+  <zx-hero-title [title]="core.title" [entityId]="core.id">
+    <zx-badge *ngFor="let badge of core.badges" variant="primary" [title]="'author-details.badges.' + badge | translate">
+      {{ 'author-details.badges.' + badge | translate }}
+    </zx-badge>
 
-      <ng-container *ngFor="let badge of core.badges">
-        <zx-badge variant="primary" [title]="'author-details.badges.' + badge | translate">
-          {{ 'author-details.badges.' + badge | translate }}
-        </zx-badge>
+    <zx-chip *ngFor="let role of core.roles" variant="opaque" [color]="getRoleChipColor(role)">
+      {{ 'author-details.roles.' + role | translate }}
+    </zx-chip>
+
+    <zx-author-editing-controls
+      zxHeroEdit
+      [elementId]="core.id"
+      [entityType]="core.entityType">
+    </zx-author-editing-controls>
+  </zx-hero-title>
+
+  <zx-facts>
+    <zx-fact *ngIf="core.realName">{{ core.realName }}</zx-fact>
+
+    <zx-fact *ngIf="core.location.city || core.location.country">
+      <zx-location [city]="core.location.city" [country]="core.location.country"></zx-location>
+    </zx-fact>
+
+    <zx-fact *ngIf="core.joined || core.siteUser">
+      <ng-container *ngIf="core.joined">{{ 'author-details.header.joined' | translate }} {{ joinedYear }}</ng-container>
+      <ng-container *ngIf="core.siteUser">
+        <ng-container *ngIf="core.joined"> </ng-container>({{ 'author-details.header.login' | translate }} <zx-chip variant="mono">{{ core.siteUser }}</zx-chip>)
       </ng-container>
+    </zx-fact>
+  </zx-facts>
 
-      <zx-inline *ngIf="core.roles.length" gap="sm" [wrap]="true">
-        <zx-chip *ngFor="let role of core.roles" variant="opaque" [color]="getRoleChipColor(role)">
-          {{ 'author-details.roles.' + role | translate }}
-        </zx-chip>
-      </zx-inline>
-    </div>
+  <zx-rating-strip
+    *ngIf="core.ratings.artist > 0 || core.ratings.musician > 0"
+    [label]="'author-details.header.rating.label' | translate"
+    [items]="ratingItems">
+  </zx-rating-strip>
 
-    <div class="ap-header__bio">
-      <span *ngIf="core.realName" class="ap-bio__name">{{ core.realName }}</span>
+  <zx-meta-row *ngIf="core.primaryAuthor" [label]="'author-details.header.primary-author' | translate">
+    <a [routerLink]="core.primaryAuthor.url">{{ core.primaryAuthor.title }}</a>
+  </zx-meta-row>
 
-      <ng-container *ngIf="core.location.city || core.location.country">
-        <span class="ap-bio__sep">·</span>
-        <span class="ap-bio__loc">
-          <svg-icon name="location" aria-hidden="true"></svg-icon>
-          <a *ngIf="core.location.city" [routerLink]="core.location.city.url">{{ core.location.city.title }}</a>
-          <ng-container *ngIf="core.location.city && core.location.country">, </ng-container>
-          <a *ngIf="core.location.country" [routerLink]="core.location.country.url">{{ core.location.country.title }}</a>
-        </span>
-      </ng-container>
+  <zx-meta-row *ngIf="core.groups.length" [label]="'author-details.header.groups' | translate">
+    <zx-chip *ngFor="let group of core.groups" variant="filled" color="primary" [href]="group.url">
+      {{ group.title }}<span *ngIf="group.years" class="ap-chip-years">{{ group.years }}</span>
+    </zx-chip>
+  </zx-meta-row>
 
-      <ng-container *ngIf="core.joined || core.siteUser">
-        <span class="ap-bio__sep">·</span>
-        <span class="ap-bio__joined">
-          <ng-container *ngIf="core.joined">{{ 'author-details.header.joined' | translate }} {{ joinedYear }}</ng-container>
-          <ng-container *ngIf="core.siteUser">
-            <ng-container *ngIf="core.joined"> </ng-container>({{ 'author-details.header.login' | translate }} <code>{{ core.siteUser }}</code>)
-          </ng-container>
-        </span>
-      </ng-container>
-    </div>
+  <zx-meta-row *ngIf="core.aliases.length" [label]="'author-details.header.aliases' | translate">
+    <span *ngFor="let alias of visibleAliases; let last = last" class="ap-aliases__item">
+      <a [routerLink]="alias.url">{{ alias.title }}</a><ng-container *ngIf="!last">,</ng-container>
+    </span>
+    <zx-button
+      *ngIf="hiddenAliasCount > 0 && !showAllAliases"
+      size="xs"
+      color="outlined"
+      (click)="toggleAliases()">
+      {{ 'author-details.header.show-more' | translate: {count: hiddenAliasCount} }}
+    </zx-button>
+    <zx-button
+      *ngIf="showAllAliases && hiddenAliasCount > 0"
+      size="xs"
+      color="outlined"
+      (click)="toggleAliases()">
+      {{ 'author-details.header.collapse' | translate }}
+    </zx-button>
+  </zx-meta-row>
 
-    <zx-rating-strip
-      *ngIf="core.ratings.artist > 0 || core.ratings.musician > 0"
-      [label]="'author-details.header.rating.label' | translate"
-      [items]="ratingItems">
-    </zx-rating-strip>
+  <zx-meta-row *ngIf="core.links.length" [label]="'author-details.header.links' | translate">
+    <zx-ext-links [links]="core.links"></zx-ext-links>
+  </zx-meta-row>
 
-    <div class="ap-meta-row" *ngIf="core.primaryAuthor">
-      <span class="ap-meta-row__label">{{ 'author-details.header.primary-author' | translate }}:</span>
-      <a [routerLink]="core.primaryAuthor.url">{{ core.primaryAuthor.title }}</a>
-    </div>
-
-    <div class="ap-meta-row" *ngIf="core.groups.length">
-      <span class="ap-meta-row__label">{{ 'author-details.header.groups' | translate }}:</span>
-      <zx-inline gap="sm" [wrap]="true">
-        <zx-chip *ngFor="let group of core.groups" variant="filled" color="primary" [href]="group.url">
-          {{ group.title }}<span *ngIf="group.years" class="ap-chip-years">{{ group.years }}</span>
-        </zx-chip>
-      </zx-inline>
-    </div>
-
-    <div class="ap-meta-row" *ngIf="core.aliases.length">
-      <span class="ap-meta-row__label">{{ 'author-details.header.aliases' | translate }}:</span>
-      <div class="ap-aliases">
-        <span *ngFor="let alias of visibleAliases; let last = last" class="ap-aliases__item">
-          <a [routerLink]="alias.url">{{ alias.title }}</a><ng-container *ngIf="!last">,</ng-container>
-        </span>
-        <zx-button
-          *ngIf="hiddenAliasCount > 0 && !showAllAliases"
-          size="xs"
-          color="outlined"
-          (click)="toggleAliases()">
-          {{ 'author-details.header.show-more' | translate: {count: hiddenAliasCount} }}
-        </zx-button>
-        <zx-button
-          *ngIf="showAllAliases && hiddenAliasCount > 0"
-          size="xs"
-          color="outlined"
-          (click)="toggleAliases()">
-          {{ 'author-details.header.collapse' | translate }}
-        </zx-button>
-      </div>
-    </div>
-
-    <div class="ap-meta-row" *ngIf="core.links.length">
-      <span class="ap-meta-row__label">{{ 'author-details.header.links' | translate }}:</span>
-      <div class="ap-ext-links">
-        <a *ngFor="let link of core.links" [href]="link.url" target="_blank" rel="noopener noreferrer">
-          {{ link.label }}
-        </a>
-      </div>
-    </div>
-
-    <div class="ap-meta-row ap-meta-row--tech" *ngIf="techRows.length">
-      <zx-tech-settings
-        [title]="'author-details.header.tech-toggle' | translate"
-        [rows]="techRows">
-      </zx-tech-settings>
-    </div>
-  </div>
-</section>
+  <zx-tech-settings
+    *ngIf="techRows.length"
+    [title]="'author-details.header.tech-toggle' | translate"
+    [rows]="techRows">
+  </zx-tech-settings>
+</zx-hero>

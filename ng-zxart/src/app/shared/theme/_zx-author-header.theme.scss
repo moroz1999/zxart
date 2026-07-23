@@ -1,0 +1,16 @@
+:root {
+  /* Side of the square avatar placeholder in the author hero. */
+  --zx-author-header-avatar-size: calc(var(--space-64) + var(--space-32));
+  /* Corner radius of the avatar placeholder. */
+  --zx-author-header-avatar-radius: var(--radius-sm);
+  /* Fill of the avatar placeholder. */
+  --zx-author-header-avatar-bg: var(--secondary-200);
+  /* Person glyph color inside the avatar placeholder. */
+  --zx-author-header-avatar-icon-color: var(--secondary-500);
+  /* Person glyph box size. */
+  --zx-author-header-avatar-icon-size: var(--space-40);
+  /* Left offset of the membership years inside a group chip. */
+  --zx-author-header-chip-years-gap: var(--space-4);
+  /* Color of the membership years inside a group chip. */
+  --zx-author-header-chip-years-color: var(--text-light-color);
+}

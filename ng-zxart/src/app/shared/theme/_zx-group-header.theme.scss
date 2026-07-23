@@ -1,0 +1,12 @@
+:root {
+  /* Side of the square group logo in the hero. */
+  --zx-group-header-avatar-size: calc(var(--space-64) + var(--space-32));
+  /* Corner radius of the group logo. */
+  --zx-group-header-avatar-radius: var(--radius-sm);
+  /* Fill of the logo placeholder when the group has no image. */
+  --zx-group-header-avatar-bg: var(--secondary-200);
+  /* Person glyph color inside the logo placeholder. */
+  --zx-group-header-avatar-icon-color: var(--secondary-500);
+  /* Person glyph box size. */
+  --zx-group-header-avatar-icon-size: var(--space-40);
+}

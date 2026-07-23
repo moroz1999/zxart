@@ -1,0 +1,25 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--zx-hero-bar-column-gap);
+}
+
+.zx-hero-bar__vote,
+.zx-hero-bar__counters {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--zx-hero-bar-column-gap);
+}
+
+.zx-hero-bar__actions {
+  display: inline-flex;
+  align-items: center;
+  margin-inline-start: auto;
+}
+
+.zx-hero-bar__vote:empty,
+.zx-hero-bar__counters:empty,
+.zx-hero-bar__actions:empty {
+  display: none;
+}

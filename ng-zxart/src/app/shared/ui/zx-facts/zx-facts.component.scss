@@ -1,0 +1,12 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--zx-facts-gap);
+  min-width: 0;
+}
+
+/* No facts rendered (every `zx-fact` was hidden) — do not leave a phantom gap. */
+:host:empty {
+  display: none;
+}

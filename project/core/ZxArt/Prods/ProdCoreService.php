@@ -69,6 +69,8 @@ readonly class ProdCoreService
                 StructureType::ZxRelease->value,
             ) === true,
             addReleaseUrl: (string)$element->getUrl() . 'type:' . StructureType::ZxRelease->value . '/action:publicAdd/',
+            downloadsCount: $this->sumReleaseDownloads($element),
+            playsCount: $this->sumReleasePlays($element),
             categoriesPaths: $this->buildCategoriesPaths($element),
             languages: $this->infoBuilder->buildLanguages($element),
             hardware: $this->infoBuilder->buildHardware($element),
@@ -83,6 +85,27 @@ readonly class ProdCoreService
             tabs: $this->prodTabsRepository->buildTabs($element->getId(), $hasDescription, $hasTextInstructions),
             metadata: $this->pageMetadataService->getForPath('/prod/' . $elementId),
         );
+    }
+
+    /**
+     * A prod has no downloads of its own: the files belong to its releases.
+     */
+    private function sumReleaseDownloads(zxProdElement $element): int
+    {
+        $total = 0;
+        foreach ($element->getReleasesList() as $release) {
+            $total += $release->getDownloadsCount();
+        }
+        return $total;
+    }
+
+    private function sumReleasePlays(zxProdElement $element): int
+    {
+        $total = 0;
+        foreach ($element->getReleasesList() as $release) {
+            $total += $release->getPlaysCount();
+        }
+        return $total;
     }
 
     /**

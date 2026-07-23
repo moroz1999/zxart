@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="format-detection" content="telephone=no" />
 	{if !empty($themeColor)}<meta name="theme-color" content="{$themeColor|escape:'html'}" />{/if}
-	<title>{$pageMetadata->title|/escape:'html'}</title>
+	<title>{$pageMetadata->title|escape:'html'}</title>
 	{if $pageMetadata->description !== ''}<meta name="description" content="{$pageMetadata->description|escape:'html'}" />{/if}
 	{if $pageMetadata->noIndex}<meta name="robots" content="noindex" />{/if}
 	{foreach $pageMetadata->openGraph as $key=>$value}<meta property="og:{$key|escape:'html'}" content="{$value|escape:'html'}" />{/foreach}

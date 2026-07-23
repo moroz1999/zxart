@@ -1,0 +1,3 @@
+<svg-icon class="zx-location__icon" name="location" aria-hidden="true"></svg-icon>
+<a *ngIf="city" [routerLink]="city.url">{{ city.title }}</a><ng-container *ngIf="city && country">, </ng-container>
+<a *ngIf="country" [routerLink]="country.url">{{ country.title }}</a>
