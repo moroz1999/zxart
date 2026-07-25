@@ -1,9 +1,10 @@
 import {CommonModule} from '@angular/common';
-import {ChangeDetectionStrategy, Component, forwardRef, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, forwardRef, HostBinding, Input} from '@angular/core';
 import {ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {FormLanguage} from '../../models/form-data-response';
 import {ZxInputComponent} from '../zx-input/zx-input.component';
 import {ZxTextareaComponent} from '../zx-textarea/zx-textarea.component';
+import {TextDirective} from '../typography/directives/text.directive';
 
 /**
  * Multi-language text field for forms: one input per language. Implements
@@ -13,7 +14,7 @@ import {ZxTextareaComponent} from '../zx-textarea/zx-textarea.component';
 @Component({
   selector: 'zx-multilang-field',
   standalone: true,
-  imports: [CommonModule, FormsModule, ZxInputComponent, ZxTextareaComponent],
+  imports: [CommonModule, FormsModule, ZxInputComponent, ZxTextareaComponent, TextDirective],
   templateUrl: './zx-multilang-field.component.html',
   styleUrl: './zx-multilang-field.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,9 +28,15 @@ import {ZxTextareaComponent} from '../zx-textarea/zx-textarea.component';
 })
 export class ZxMultilangFieldComponent implements ControlValueAccessor {
   @Input() languages: FormLanguage[] = [];
+  @Input() columns = 1;
   /** Render a textarea per language instead of a single-line input. */
   @Input() multiline = false;
   @Input() rows = 4;
+
+  @HostBinding('style.--zx-multilang-field-columns')
+  get columnsVariable(): string {
+    return String(this.columns);
+  }
 
   value: Record<string, string> = {};
   disabled = false;

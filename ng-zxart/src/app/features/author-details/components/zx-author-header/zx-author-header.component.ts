@@ -13,6 +13,7 @@ import {ZxFactComponent} from '../../../../shared/ui/zx-facts/zx-fact.component'
 import {ZxLocationComponent} from '../../../../shared/ui/zx-location/zx-location.component';
 import {ZxMetaRowComponent} from '../../../../shared/ui/zx-meta-row/zx-meta-row.component';
 import {ZxExtLinksComponent} from '../../../../shared/ui/zx-ext-links/zx-ext-links.component';
+import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxAuthorEditingControlsComponent} from '../zx-author-editing-controls/zx-author-editing-controls.component';
 import {
   RatingStripItem,
@@ -43,6 +44,7 @@ const VISIBLE_ALIASES = 7;
     ZxLocationComponent,
     ZxMetaRowComponent,
     ZxExtLinksComponent,
+    TextDirective,
   ],
   templateUrl: './zx-author-header.component.html',
   styleUrl: './zx-author-header.component.scss',

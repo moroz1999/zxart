@@ -7,13 +7,8 @@ export interface MemberRoleItem {
   roles: string[];
 }
 
-/**
- * The legacy `publicReceive` member fields produced by the editor:
- * `addAuthor` is the id of a member being added (or ''), the maps are keyed by
- * existing author id plus `'new'` for the member being added.
- */
+/** Per-author fields submitted by the editor, keyed by author id. */
 export interface MemberFields {
-  addAuthor: string;
   addAuthorRole: Record<string, string[]>;
   addAuthorStartDate: Record<string, string>;
   addAuthorEndDate: Record<string, string>;

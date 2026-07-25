@@ -1,6 +1,6 @@
-<div class="zx-multilang-field">
+<div class="zx-multilang-field" [class.zx-multilang-field--multi-column]="columns > 1">
   <div *ngFor="let lang of languages" class="zx-multilang-field__row">
-    <span class="zx-multilang-field__lang">{{ lang.name }}</span>
+    <span class="zx-multilang-field__lang" appText="label" tone="muted">{{ lang.name }}</span>
     <zx-textarea
       *ngIf="multiline; else singleLine"
       [ngModel]="valueFor(lang.id)"

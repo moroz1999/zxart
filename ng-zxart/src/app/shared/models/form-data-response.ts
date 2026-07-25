@@ -1,7 +1,6 @@
 import {EntityRef} from './entity-ref';
 import {FormFieldValue} from '../services/form-save-api.service';
 import {MemberRoleItem} from '../ui/zx-member-role-editor/zx-member-role-editor.models';
-import {SubgroupItem} from '../ui/zx-subgroups-editor/zx-subgroups-editor.component';
 
 export interface FormLanguage {
   id: number;
@@ -45,7 +44,7 @@ export interface FormDataResponse {
   languages: FormLanguage[];
   members: MemberRoleItem[];
   roles: string[];
-  subgroups: SubgroupItem[];
+  subgroups: EntityRef[];
   categoriesTree: CategoryTreeNode[];
   /** Flat connected-author list for tune/picture (plain `author` list, no roles). */
   authorRefs: EntityRef[];

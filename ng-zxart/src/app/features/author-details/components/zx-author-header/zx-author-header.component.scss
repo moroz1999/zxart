@@ -2,6 +2,14 @@
   display: block;
 }
 
+.ap-header__avatar-img {
+  display: block;
+  width: var(--zx-author-header-avatar-size);
+  height: var(--zx-author-header-avatar-size);
+  border-radius: var(--zx-author-header-avatar-radius);
+  object-fit: cover;
+}
+
 .ap-avatar--empty {
   display: flex;
   align-items: center;

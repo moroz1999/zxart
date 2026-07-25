@@ -8,6 +8,7 @@ Author of works for ZX Spectrum - artist, musician, programmer. Can have real na
 #### Main Fields
 - **realName** - author's real name
 - **nickname** - pseudonym/nickname
+- **artCityId** - external author identifier on the Artcity website
 - Supports localization (different names for different languages)
 
 #### Relations with Works
@@ -100,6 +101,7 @@ Authors can be members of groups:
 - One author can be member of multiple groups
 - Membership can change over time
 - Group can have multiple members
+- Edit forms can queue multiple new authors before saving; authorship roles and membership dates are submitted per author ID.
 - Group roster data is loaded through a separate endpoint after the group core response.
 - Group connections exclude group members and their author aliases from collaborator people.
 - The group connections tab is shown only when the core group response confirms real collaborator people or published developer groups.
@@ -150,6 +152,7 @@ When work is created by group:
 
 #### Author Details Loading
 - The author header loads with the core author response because it determines the visible page sections.
+- The author header image uses the `authorPhoto` preset; alias pages use the main author's image.
 - Content for dashboard, works, collaborators, votes, and comments is mounted only for its active author tab; its API request starts when the rendered block reaches the viewport.
 - First loads display skeletons shaped for the target content. Paginated author blocks retain current content with a short opacity fade while the next page loads.
 

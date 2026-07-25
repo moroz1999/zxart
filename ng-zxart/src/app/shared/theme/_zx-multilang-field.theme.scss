@@ -1,0 +1,8 @@
+:root {
+  /* Gap between language fields. */
+  --zx-multilang-field-gap: var(--space-8);
+  /* Width of the language label in the default single-column layout. */
+  --zx-multilang-field-label-width: var(--space-48);
+  /* Gap between a language label and its control. */
+  --zx-multilang-field-label-gap: var(--space-4);
+}
